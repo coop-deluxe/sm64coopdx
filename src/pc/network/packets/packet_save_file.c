@@ -42,6 +42,7 @@ void network_send_save_file(void) {
     packet_init(&p, PACKET_SAVE_FILE, true);
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
+    packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
     network_send(&p);
 }
@@ -54,6 +55,7 @@ void network_receive_save_file(struct Packet* p) {
     // find all reserved objects
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gServerSettings.playerInteractions, sizeof(u8));
+    packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
     save_file_load_all(TRUE);

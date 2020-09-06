@@ -631,7 +631,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
 
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
-        f32 mag = m->interactObj->oDamageOrCoinValue * 25.0f * sign;
+        f32 mag = m->interactObj->oDamageOrCoinValue * (f32)gServerSettings.playerKnockbackStrength * sign;
         m->forwardVel = mag;
         if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
         m->vel[0] = mag * sins(angleToObject);

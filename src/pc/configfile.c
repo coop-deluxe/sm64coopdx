@@ -101,6 +101,7 @@ unsigned int configJoinPort                  = DEFAULT_PORT;
 unsigned int configHostPort                  = DEFAULT_PORT;
 unsigned int configHostSaveSlot              = 1;
 unsigned int configPlayerInteraction         = 1;
+unsigned int configPlayerKnockbackStrength   = 25;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -150,11 +151,12 @@ static const struct ConfigOption options[] = {
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif
     // coop-specific
-    {.name = "coop_join_ip",            .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp},
-    {.name = "coop_join_port",          .type = CONFIG_TYPE_UINT  , .uintValue   = &configJoinPort},
-    {.name = "coop_host_port",          .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
-    {.name = "coop_host_save_slot",     .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
-    {.name = "coop_player_interaction", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
+    {.name = "coop_join_ip",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp},
+    {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configJoinPort},
+    {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
+    {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
+    {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue = &configPlayerInteraction},
+    {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue = &configPlayerKnockbackStrength},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

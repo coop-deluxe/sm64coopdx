@@ -19,6 +19,7 @@ bool gNetworkLevelLoaded = false;
 
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
+    .playerKnockbackStrength = 25,
 };
 
 void network_init(enum NetworkType inNetworkType, char* ip, unsigned int port) {
@@ -35,6 +36,7 @@ void network_init(enum NetworkType inNetworkType, char* ip, unsigned int port) {
     // set server settings
     if (gNetworkType == NT_SERVER) {
         gServerSettings.playerInteractions = configPlayerInteraction;
+        gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     }
 
     // create a receiver socket to receive datagrams
