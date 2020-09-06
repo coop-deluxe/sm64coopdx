@@ -19,6 +19,7 @@
 #include "object_helpers.h"
 #include "obj_behaviors.h"
 #include "level_update.h"
+#include "mario_step.h"
 
 #define POLE_NONE 0
 #define POLE_TOUCHED_FLOOR 1

@@ -42,6 +42,7 @@ void network_receive_player(struct Packet* p) {
     u16 oldActionState = gMarioStates[1].actionState;
     u16 oldActionArg = gMarioStates[1].actionArg;
     u16 playerIndex = gMarioStates[1].playerIndex;
+    u32 oldBehParams = gMarioStates[1].marioObj->oBehParams;
 
     // load mario information from packet
     packet_read(p, &gMarioStates[1], sizeof(u32) * 24);
@@ -59,6 +60,7 @@ void network_receive_player(struct Packet* p) {
 
     // reset player index
     gMarioStates[1].playerIndex = playerIndex;
+    gMarioStates[1].marioObj->oBehParams = oldBehParams;
 
     // reset mario sound play flag so that their jump sounds work
     if (gMarioStates[1].action != oldAction) {

@@ -425,15 +425,28 @@ static void level_cmd_23(void) {
 }
 
 static void level_cmd_init_mario(void) {
-    vec3s_set(gMarioSpawnInfo->startPos, 0, 0, 0);
-    vec3s_set(gMarioSpawnInfo->startAngle, 0, 0, 0);
+    u32 behaviorArg = CMD_GET(u32, 4);
+    void* behaviorScript = CMD_GET(void*, 8);
+    struct GraphNode* unk18 = gLoadedGraphNodes[CMD_GET(u8, 3)];
 
-    gMarioSpawnInfo->activeAreaIndex = -1;
-    gMarioSpawnInfo->areaIndex = 0;
-    gMarioSpawnInfo->behaviorArg = CMD_GET(u32, 4);
-    gMarioSpawnInfo->behaviorScript = CMD_GET(void *, 8);
-    gMarioSpawnInfo->unk18 = gLoadedGraphNodes[CMD_GET(u8, 3)];
-    gMarioSpawnInfo->next = NULL;
+    struct SpawnInfo* lastSpawnInfo = NULL;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[i];
+        vec3s_set(spawnInfo->startPos, 0, 0, 0);
+        vec3s_set(spawnInfo->startAngle, 0, 0, 0);
+
+        spawnInfo->activeAreaIndex = -1;
+        spawnInfo->areaIndex = 0;
+        spawnInfo->behaviorArg = i;
+        spawnInfo->behaviorScript = behaviorScript;
+        spawnInfo->unk18 = unk18;
+        spawnInfo->next = NULL;
+
+        if (lastSpawnInfo != NULL) {
+            lastSpawnInfo->next = spawnInfo;
+        }
+        lastSpawnInfo = spawnInfo;
+    }
 
     sCurrentCmd = CMD_NEXT;
 }

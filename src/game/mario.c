@@ -2075,11 +2075,7 @@ void init_mario(void) {
     }
 
     // set mario/luigi model
-    if (isLocal) {
-        gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_MARIO : MODEL_LUIGI];
-    } else {
-        gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_LUIGI2 : MODEL_MARIO2];
-    }
+    gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_MARIO : MODEL_LUIGI];
 
 skippy:
     if (isLocal) {

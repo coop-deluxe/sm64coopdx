@@ -146,6 +146,8 @@ s32 gMtxTblSize;
 static Gfx *sViewportPos;
 static Vp sPrevViewport;
 
+struct Object* gCurGraphNodeProcessingObject;
+
 void mtx_patch_interpolated(void) {
     s32 i;
 
@@ -1065,10 +1067,10 @@ static void interpolate_matrix(Mat4 result, Mat4 a, Mat4 b) {
  * Process an object node.
  */
 static void geo_process_object(struct Object *node) {
+    gCurGraphNodeProcessingObject = node;
     Mat4 mtxf;
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
     Vec3f scaleInterpolated;
-
     if (node->header.gfx.unk18 == gCurGraphNodeRoot->areaIndex) {
         if (node->header.gfx.throwMatrix != NULL) {
             mtxf_mul(gMatStack[gMatStackIndex + 1], *node->header.gfx.throwMatrix,
@@ -1184,6 +1186,7 @@ static void geo_process_object(struct Object *node) {
         node->header.gfx.throwMatrix = NULL;
         node->header.gfx.throwMatrixInterpolated = NULL;
     }
+    gCurGraphNodeProcessingObject = NULL;
 }
 
 /**
