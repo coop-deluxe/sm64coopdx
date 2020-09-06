@@ -22,14 +22,17 @@
 #include "text_strings.h"
 
 #include "game/ingame_menu.h"
-#include "pc/controller/controller_keyboard.h"
-#include "pc/network/network.h"
 
 #include "eu_translation.h"
 #ifdef VERSION_EU
 #undef LANGUAGE_FUNCTION
 #define LANGUAGE_FUNCTION sLanguageMode
 #endif
+
+#include <stdio.h>
+#include "pc/configfile.h"
+#include "pc/controller/controller_keyboard.h"
+#include "pc/network/network.h"
 
 /**
  * @file file_select.c
@@ -404,8 +407,12 @@ void join_server_as_client(void) {
 
     char delims[] = { ' ' };
 
+    // copy input
+    char buffer[MAX_TEXT_INPUT] = { 0 };
+    strncpy(buffer, gTextInput, MAX_TEXT_INPUT);
+    char* text = buffer;
+
     // trim whitespace
-    char* text = textInput;
     while (*text == ' ') { text++; }
 
     // grab IP
@@ -414,16 +421,23 @@ void join_server_as_client(void) {
         exit_join_to_network_menu();
         return;
     }
+    strncpy(configJoinIp, ip, MAX_CONFIG_STRING);
 
     // grab port
     char* port = strtok(NULL, delims);
-    if (port != NULL && atoi(port) == 0) {
-        exit_join_to_network_menu();
-        return;
+    if (port != NULL) {
+        unsigned int intPort = atoi(port);
+        if (intPort == 0) {
+            exit_join_to_network_menu();
+            return;
+        }
+        configJoinPort = intPort;
+    } else {
+        configJoinPort = DEFAULT_PORT;
     }
 
     keyboard_stop_text_input();
-    network_init(NT_CLIENT, textInput, port);
+    network_init(NT_CLIENT, configJoinIp, configJoinPort);
 }
 
 void joined_server_as_client(s16 fileIndex) {
@@ -467,7 +481,16 @@ void check_network_mode_menu_clicked_buttons(struct Object* networkModeButton) {
                     play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gDefaultSoundArgs);
                     sMainMenuButtons[buttonID]->oMenuButtonState = MENU_BUTTON_STATE_GROWING;
                     sSelectedButtonID = buttonID;
+
+                    // start input
                     keyboard_start_text_input(TIM_IP, keyboard_exit_join_to_network_menu, join_server_as_client);
+
+                    // fill in config ip/port
+                    static u8 openedJoinMenu = FALSE;
+                    if (!openedJoinMenu && strlen(configJoinIp) > 0) {
+                        if (configJoinPort == 0) { configJoinPort = DEFAULT_PORT; }
+                        sprintf(gTextInput, "%s %d", configJoinIp, configJoinPort);
+                    }
                 }
                 sCurrentMenuLevel = MENU_LAYER_SUBMENU;
 
@@ -494,8 +517,8 @@ void print_network_mode_menu_strings(void) {
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
 
-#define TEXT_HOST 0x11,0x18,0x1C,0x1D,0xFF
-#define TEXT_JOIN 0x13,0x18,0x12,0x17,0xFF
+    #define TEXT_HOST 0x11,0x18,0x1C,0x1D,0xFF
+    #define TEXT_JOIN 0x13,0x18,0x12,0x17,0xFF
     static unsigned char textNetworkModes[][5] = { { TEXT_HOST }, { TEXT_JOIN } };
 
     // Print network mode names
@@ -535,9 +558,12 @@ void print_join_mode_menu_strings(void) {
 
     // Print level name
     print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 0), "Type or paste the host's IP.");
-    print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 2), textInput);
+    print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 2), gTextInput);
 
-    if (strlen(textInput) > 0) {
+    // Print status
+    if (networkType == NT_CLIENT) {
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Connecting...");
+    } else if (strlen(gTextInput) > 0) {
         print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Press (ENTER) to join.");
     }
 
@@ -1304,7 +1330,8 @@ void check_sound_mode_menu_clicked_buttons(struct Object *soundModeButton) {
 void load_main_menu_save_file(struct Object *fileButton, s32 fileNum) {
     if (fileButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
         sSelectedFileNum = fileNum;
-        network_init(NT_SERVER, "", NETWORK_DEFAULT_PORT);
+        configHostSaveSlot = fileNum;
+        network_init(NT_SERVER, "", configHostPort);
     }
 }
 
@@ -3092,7 +3119,7 @@ s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused) {
 
     // immediately jump in
     if (networkType == NT_SERVER) {
-        sSelectedFileNum = 1;
+        sSelectedFileNum = configHostSaveSlot;
     }
 
     //! no return value

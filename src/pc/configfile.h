@@ -7,6 +7,9 @@
 
 #define MAX_BINDS  3
 #define MAX_VOLUME 127
+#define MAX_CONFIG_STRING 64
+
+#define DEFAULT_PORT 7777
 
 typedef struct {
     unsigned int x, y, w, h;
@@ -59,6 +62,11 @@ extern bool         configSkipIntro;
 #ifdef DISCORDRPC
 extern bool         configDiscordRPC;
 #endif
+extern char         configJoinIp[];
+extern unsigned int configJoinPort;
+extern unsigned int configHostPort;
+extern unsigned int configHostSaveSlot;
+extern unsigned int configPlayerInteraction;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

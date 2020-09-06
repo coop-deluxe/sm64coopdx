@@ -57,12 +57,12 @@ void parse_cli_opts(int argc, char* argv[]) {
 
         else if (strcmp(argv[i], "--server") == 0 && (i + 1) < argc) { // Host server
             gCLIOpts.Network = NT_SERVER;
-            arg_string("--server <port>", argv[++i], gCLIOpts.NetworkPort, PORT_MAX_LEN);
+            arg_uint("--server <port>", argv[++i], &gCLIOpts.NetworkPort);
 
         } else if (strcmp(argv[i], "--client") == 0 && (i + 2) < argc) { // Join server
             gCLIOpts.Network = NT_CLIENT;
             arg_string("--client <ip>", argv[++i], gCLIOpts.JoinIp, IP_MAX_LEN);
-            arg_string("--client <port>", argv[++i], gCLIOpts.NetworkPort, PORT_MAX_LEN);
+            arg_uint("--client <port>", argv[++i], &gCLIOpts.NetworkPort);
 
         } else if (strcmp(argv[i], "--cheats") == 0) // Enable cheats menu
             Cheats.EnableCheats = true;

@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 #define MAX_TEXT_INPUT 256
-extern char textInput[];
+extern char gTextInput[];
 
 enum TextInputMode {
     TIM_IP,

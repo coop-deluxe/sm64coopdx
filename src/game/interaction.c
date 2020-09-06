@@ -635,7 +635,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->forwardVel = mag;
         if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
         m->vel[0] = mag * sins(angleToObject);
-        m->vel[1] = abs(mag);
+        m->vel[1] = (mag < 0) ? -mag : mag;
         m->vel[2] = mag * coss(angleToObject);
     }
 
@@ -1150,14 +1150,14 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 
     f32 marioRelY = localTorso[1] - remoteTorso[1];
     if (marioRelY < 0) { marioRelY = -marioRelY; }
-    if (marioRelY >= extentY) { return; }
+    if (marioRelY >= extentY) { return FALSE; }
 
 
     f32 marioRelX = localTorso[0] - remoteTorso[0];
     f32 marioRelZ = localTorso[2] - remoteTorso[2];
     f32 marioDist = sqrtf(sqr(marioRelX) + sqr(marioRelZ));
 
-    if (marioDist >= radius) { return; }
+    if (marioDist >= radius) { return FALSE; }
 
     // bounce
     u32 interaction = determine_interaction(m, m2->marioObj);

@@ -3,6 +3,7 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "socket/socket.h"
+#include "pc/configfile.h"
 
 enum NetworkType networkType;
 static SOCKET gSocket;
@@ -16,12 +17,19 @@ struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
 };
 
-void network_init(enum NetworkType inNetworkType, char* ip, char* port) {
+void network_init(enum NetworkType inNetworkType, char* ip, unsigned int port) {
     networkType = inNetworkType;
 
     if (networkType == NT_NONE) { return; }
-    if (port == NULL) {
-        port = NETWORK_DEFAULT_PORT;
+
+    // sanity check port
+    if (port == 0) {
+        port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
+        if (port == 0) { port = DEFAULT_PORT; }
+    }
+
+    if (networkType == NT_SERVER) {
+        gServerSettings.playerInteractions = configPlayerInteraction;
     }
 
     // Create a receiver socket to receive datagrams
@@ -30,12 +38,12 @@ void network_init(enum NetworkType inNetworkType, char* ip, char* port) {
 
     // Bind the socket to any address and the specified port.
     if (networkType == NT_SERVER) {
-        int rc = socket_bind(gSocket, atoi(port));
+        int rc = socket_bind(gSocket, port);
         if (rc != NO_ERROR) { return; }
     } else {
         // Save the port to send to
         txAddr.sin_family = AF_INET;
-        txAddr.sin_port = htons(atoi(port));
+        txAddr.sin_port = htons(port);
         txAddr.sin_addr.s_addr = inet_addr(ip);
     }
 

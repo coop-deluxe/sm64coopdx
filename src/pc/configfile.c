@@ -21,6 +21,7 @@ enum ConfigOptionType {
     CONFIG_TYPE_UINT,
     CONFIG_TYPE_FLOAT,
     CONFIG_TYPE_BIND,
+    CONFIG_TYPE_STRING,
 };
 
 struct ConfigOption {
@@ -29,7 +30,8 @@ struct ConfigOption {
     union {
         bool *boolValue;
         unsigned int *uintValue;
-        float *floatValue;
+        float* floatValue;
+        char* stringValue;
     };
 };
 
@@ -83,7 +85,7 @@ unsigned int configCameraAggr    = 0;
 unsigned int configCameraPan     = 0;
 unsigned int configCameraDegrade = 50; // 0 - 100%
 bool         configCameraInvertX = false;
-bool         configCameraInvertY = false;
+bool         configCameraInvertY = true;
 bool         configEnableCamera  = true;
 bool         configCameraAnalog  = true;
 bool         configCameraMouse   = false;
@@ -93,6 +95,12 @@ bool         configHUD           = true;
 #ifdef DISCORDRPC
 bool         configDiscordRPC    = true;
 #endif
+// coop-specific
+char         configJoinIp[MAX_CONFIG_STRING] = "";
+unsigned int configJoinPort                  = DEFAULT_PORT;
+unsigned int configHostPort                  = DEFAULT_PORT;
+unsigned int configHostSaveSlot              = 1;
+unsigned int configPlayerInteraction         = 1;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -141,6 +149,12 @@ static const struct ConfigOption options[] = {
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif
+    // coop-specific
+    {.name = "coop_join_ip",            .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp},
+    {.name = "coop_join_port",          .type = CONFIG_TYPE_UINT  , .uintValue   = &configJoinPort},
+    {.name = "coop_host_port",          .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
+    {.name = "coop_host_save_slot",     .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
+    {.name = "coop_player_interaction", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
@@ -281,6 +295,10 @@ void configfile_load(const char *filename) {
                         case CONFIG_TYPE_FLOAT:
                             sscanf(tokens[1], "%f", option->floatValue);
                             break;
+                        case CONFIG_TYPE_STRING:
+                            memset(option->stringValue, '\0', MAX_CONFIG_STRING);
+                            strncpy(option->stringValue, tokens[1], MAX_CONFIG_STRING);
+                            break;
                         default:
                             assert(0); // bad type
                     }
@@ -327,6 +345,9 @@ void configfile_save(const char *filename) {
                 for (int i = 0; i < MAX_BINDS; ++i)
                     fprintf(file, "%04x ", option->uintValue[i]);
                 fprintf(file, "\n");
+                break;
+            case CONFIG_TYPE_STRING:
+                fprintf(file, "%s %s\n", option->name, option->stringValue);
                 break;
             default:
                 assert(0); // unknown type

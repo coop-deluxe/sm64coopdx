@@ -14,7 +14,6 @@
 #define MAX_SYNC_OBJECT_FIELDS 64
 #define PACKET_LENGTH 1024
 #define NETWORKTYPESTR (networkType == NT_CLIENT ? "Client" : "Server")
-#define NETWORK_DEFAULT_PORT "7777"
 
 enum PacketType {
     PACKET_ACK,
@@ -82,7 +81,7 @@ extern bool networkLevelLoaded;
 extern struct ServerSettings gServerSettings;
 
 
-void network_init(enum NetworkType inNetworkType, char* ip, char* port);
+void network_init(enum NetworkType inNetworkType, char* ip, unsigned int port);
 void network_on_init_level(void);
 void network_on_loaded_level(void);
 

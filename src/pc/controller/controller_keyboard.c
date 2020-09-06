@@ -29,7 +29,7 @@ static int num_keybinds = 0;
 
 static u32 keyboard_lastkey = VK_INVALID;
 
-char textInput[MAX_TEXT_INPUT];
+char gTextInput[MAX_TEXT_INPUT];
 static bool inTextInput = false;
 
 u8 held_ctrl, held_shift, held_alt;
@@ -77,7 +77,7 @@ bool keyboard_on_key_down(int scancode) {
         // perform text-input-specific actions
         switch (scancode) {
             case SCANCODE_BACKSPACE:
-                textInput[max(strlen(textInput) - 1, 0)] = '\0';
+                gTextInput[max(strlen(gTextInput) - 1, 0)] = '\0';
                 break;
             case SCANCODE_ESCAPE:
                 if (textInputOnEscape != NULL) { textInputOnEscape(); }
@@ -129,7 +129,7 @@ char* keyboard_start_text_input(enum TextInputMode inInputMode, void (*onEscape)
     textInputOnEnter = onEnter;
 
     // clear buffer
-    for (int i = 0; i < MAX_TEXT_INPUT; i++) { textInput[i] = '\0'; }
+    for (int i = 0; i < MAX_TEXT_INPUT; i++) { gTextInput[i] = '\0'; }
 
     // clear held-value for modifiers
     held_ctrl = 0;
@@ -182,14 +182,14 @@ void keyboard_on_text_input(char* text) {
     // sanity check input
     if (text == NULL) { return; }
 
-    int i = strlen(textInput);
+    int i = strlen(gTextInput);
     while (*text != '\0') {
         // make sure we don't overrun the buffer
         if (i >= MAX_TEXT_INPUT) { break; }
 
         // copy over character if we're allowed to input it
         if (keyboard_allow_character_input(*text)) {
-            textInput[i++] = *text;
+            gTextInput[i++] = *text;
         }
 
         text++;

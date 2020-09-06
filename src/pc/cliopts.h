@@ -17,7 +17,7 @@ struct PCCLIOptions  {
     unsigned int FullScreen;
     enum NetworkType Network;
     char JoinIp[IP_MAX_LEN];
-    char NetworkPort[PORT_MAX_LEN];
+    unsigned int NetworkPort;
     unsigned int PoolSize;
     char ConfigFile[SYS_MAX_PATH];
     char SavePath[SYS_MAX_PATH];
