@@ -12,6 +12,10 @@ struct sockaddr_in txAddr;
 u8 networkLoadingLevel = 0;
 bool networkLevelLoaded = false;
 
+struct ServerSettings gServerSettings = {
+    .playerInteractions = PLAYER_INTERACTIONS_SOLID,
+};
+
 void network_init(enum NetworkType inNetworkType, char* ip, char* port) {
     networkType = inNetworkType;
 

@@ -63,12 +63,24 @@ struct SyncObject {
     void* extraFields[MAX_SYNC_OBJECT_FIELDS];
 };
 
+enum PlayerInteractions {
+    PLAYER_INTERACTIONS_NONE,
+    PLAYER_INTERACTIONS_SOLID,
+    PLAYER_INTERACTIONS_PVP,
+};
+
+struct ServerSettings {
+    enum PlayerInteractions playerInteractions;
+};
+
 extern struct MarioState gMarioStates[];
 extern u8 gInsidePainting;
 extern s16 sCurrPlayMode;
 extern enum NetworkType networkType;
 extern struct SyncObject syncObjects[];
 extern bool networkLevelLoaded;
+extern struct ServerSettings gServerSettings;
+
 
 void network_init(enum NetworkType inNetworkType, char* ip, char* port);
 void network_on_init_level(void);

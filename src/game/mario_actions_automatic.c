@@ -928,7 +928,7 @@ s32 act_bubbled(struct MarioState* m) {
     }
 
     // pop bubble
-    if (m->playerIndex == 0 && distanceToPlayer < 200 && is_player_active(targetMarioState) && m->numLives != -1) {
+    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1) {
         m->hurtCounter = 0;
         m->healCounter = 31;
         m->health = 0x100;

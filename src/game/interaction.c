@@ -187,6 +187,14 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     u32 interaction = 0;
     u32 action = m->action;
 
+    // hack: make water punch actually do something
+    if (m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
+        s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
+        if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
+            return INT_PUNCH;
+        }
+    }
+
     if (action & ACT_FLAG_ATTACKING) {
         if (action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
@@ -611,12 +619,24 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         }
     }
 
+    f32 sign = 1.0f;
     if (-0x4000 <= facingDYaw && facingDYaw <= 0x4000) {
+        sign = -1.0f;
         m->forwardVel *= -1.0f;
         bonkAction = sBackwardKnockbackActions[terrainIndex][strengthIndex];
     } else {
         m->faceAngle[1] += 0x8000;
         bonkAction = sForwardKnockbackActions[terrainIndex][strengthIndex];
+    }
+
+    // set knockback very high when dealing with player attacks
+    if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
+        f32 mag = m->interactObj->oDamageOrCoinValue * 25.0f * sign;
+        m->forwardVel = mag;
+        if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
+        m->vel[0] = mag * sins(angleToObject);
+        m->vel[1] = abs(mag);
+        m->vel[2] = mag * coss(angleToObject);
     }
 
     return bonkAction;
@@ -704,6 +724,13 @@ u32 take_damage_from_interact_object(struct MarioState *m) {
 
     if (m->flags & MARIO_METAL_CAP) {
         damage = 0;
+    }
+
+    // disable player-to-player damage if the server says so
+    if (m->interactObj != NULL && m->interactObj->oInteractType & INTERACT_PLAYER) {
+        if (gServerSettings.playerInteractions != PLAYER_INTERACTIONS_PVP) {
+            damage = 0;
+        }
     }
 
     m->hurtCounter += 4 * damage;
@@ -1113,7 +1140,7 @@ u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct O
     return FALSE;
 }
 
-static void resolve_player_collision(struct MarioState* m, struct MarioState* m2) {
+static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) {
     // move player outside of other player
     f32 extentY = m->marioObj->hitboxHeight;
     f32 radius = m->marioObj->hitboxRadius * 2.0f;
@@ -1130,17 +1157,38 @@ static void resolve_player_collision(struct MarioState* m, struct MarioState* m2
     f32 marioRelZ = localTorso[2] - remoteTorso[2];
     f32 marioDist = sqrtf(sqr(marioRelX) + sqr(marioRelZ));
 
-    if (marioDist < radius) {
-        //! If this function pushes Mario out of bounds, it will trigger Mario's
-        //  oob failsafe
-        m->pos[0] += (radius - marioDist) / radius * marioRelX;
-        m->pos[2] += (radius - marioDist) / radius * marioRelZ;
-        m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
-        m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
+    if (marioDist >= radius) { return; }
+
+    // bounce
+    u32 interaction = determine_interaction(m, m2->marioObj);
+    if (interaction & INT_HIT_FROM_ABOVE) {
+        if (m2->playerIndex == 0) {
+            m2->squishTimer = max(m2->squishTimer, 4);
+        }
+        bounce_off_object(m, m2->marioObj, 30.0f);
+        queue_rumble_data_mario(m, 5, 80);
+        // don't do further interactions if we've hopped on top
+        return TRUE;
     }
+
+    //! If this function pushes Mario out of bounds, it will trigger Mario's
+    //  oob failsafe
+    m->pos[0] += (radius - marioDist) / radius * marioRelX;
+    m->pos[2] += (radius - marioDist) / radius * marioRelZ;
+    m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
+    m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
+    return FALSE;
+}
+
+u8 determine_player_damage_value(u32 interaction) {
+    if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
+    if (interaction & INT_KICK) { return 2; }
+    return 1;
 }
 
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
+    if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
+
     struct MarioState* m2 = NULL;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (o == gMarioStates[i].marioObj) {
@@ -1149,35 +1197,33 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         }
     }
     if (m2 == NULL) { return FALSE; }
-    u8 inCutscene = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((m2->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
 
-    u32 interaction = determine_interaction(m, o);
-
-    // bounce
-    if (interaction & INT_HIT_FROM_ABOVE) {
-        if (m2->playerIndex == 0) {
-            m2->squishTimer = max(m2->squishTimer, 4);
-        }
-        bounce_off_object(m, o, 30.0f);
-        queue_rumble_data_mario(m, 5, 80);
+    // don't do further interactions if we've hopped on top
+    if (resolve_player_collision(m, m2)) {
         return FALSE;
     }
 
+    u32 interaction = determine_interaction(m, o);
+
     // attacked
-    if (!inCutscene && m2->invincTimer <= 0 && (interaction & INT_ANY_ATTACK)) {
+    u8 isInCutscene = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((m2->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
+    u8 isInvulnerable = (m2->action & ACT_FLAG_INVULNERABLE) || m2->invincTimer != 0 || m2->hurtCounter != 0 || isInCutscene;
+    if ((interaction & INT_ANY_ATTACK) && !isInvulnerable) {
         if (m->action == ACT_GROUND_POUND) {
             m2->squishTimer = max(m2->squishTimer, 20);
         }
         if (m2->playerIndex == 0) {
             m2->interactObj = m->marioObj;
+            if (interaction & INT_KICK) {
+                set_mario_action(m2, ACT_FREEFALL, 0);
+            }
+            m->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
         }
         m2->invincTimer = max(m2->invincTimer, 3);
         take_damage_and_knock_back(m2, m->marioObj);
         bounce_back_from_attack(m, interaction);
         return FALSE;
     }
-
-    resolve_player_collision(m, m2);
 
     return FALSE;
 }

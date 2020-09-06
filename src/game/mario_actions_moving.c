@@ -1615,11 +1615,13 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
 #endif
     }
 
-    if (m->forwardVel > 32.0f) {
-        m->forwardVel = 32.0f;
-    }
-    if (m->forwardVel < -32.0f) {
-        m->forwardVel = -32.0f;
+    if (m->interactObj == NULL || !(m->interactObj->oInteractType & INTERACT_PLAYER)) {
+        if (m->forwardVel > 32.0f) {
+            m->forwardVel = 32.0f;
+        }
+        if (m->forwardVel < -32.0f) {
+            m->forwardVel = -32.0f;
+        }
     }
 
     val04 = set_mario_animation(m, animation);
