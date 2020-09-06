@@ -15,7 +15,7 @@ extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
 void network_send_save_file_request(void) {
-    assert(networkType == NT_CLIENT);
+    assert(gNetworkType == NT_CLIENT);
 
     gOverrideEeprom = eeprom;
 
@@ -25,12 +25,12 @@ void network_send_save_file_request(void) {
 }
 
 void network_receive_save_file_request(UNUSED struct Packet* p) {
-    assert(networkType == NT_SERVER);
+    assert(gNetworkType == NT_SERVER);
     network_send_save_file();
 }
 
 void network_send_save_file(void) {
-    assert(networkType == NT_SERVER);
+    assert(gNetworkType == NT_SERVER);
 
     fs_file_t* fp = fs_open(SAVE_FILENAME);
     if (fp != NULL) {
@@ -47,7 +47,7 @@ void network_send_save_file(void) {
 }
 
 void network_receive_save_file(struct Packet* p) {
-    assert(networkType == NT_CLIENT);
+    assert(gNetworkType == NT_CLIENT);
 
     gOverrideEeprom = eeprom;
 

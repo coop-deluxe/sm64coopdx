@@ -53,7 +53,7 @@ void network_receive_level_warp(struct Packet* p) {
                 case WARP_TYPE_CHANGE_LEVEL: sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL; break;
             }
         } else {
-            if (networkType == NT_CLIENT) {
+            if (gNetworkType == NT_CLIENT) {
                 if (remoteWarpDest.type == WARP_TYPE_NOT_WARPING) { return; }
                 // two-player hack: would need to use player index as priority
                 sWarpDest = remoteWarpDest;

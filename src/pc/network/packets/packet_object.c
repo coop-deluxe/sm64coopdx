@@ -9,10 +9,10 @@
 #include "src/game/object_helpers.h"
 
 static u8 nextSyncID = 1;
-struct SyncObject syncObjects[MAX_SYNC_OBJECTS] = { 0 };
+struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
 
 // todo: move this to somewhere more general
-float player_distance(struct MarioState* marioState, struct Object* o) {
+static float player_distance(struct MarioState* marioState, struct Object* o) {
     if (marioState->marioObj == NULL) { return 0; }
     f32 mx = marioState->marioObj->header.gfx.pos[0] - o->oPosX;
     f32 my = marioState->marioObj->header.gfx.pos[1] - o->oPosY;
@@ -23,29 +23,16 @@ float player_distance(struct MarioState* marioState, struct Object* o) {
     return sqrt(mx + my + mz);
 }
 
-void network_clear_sync_objects(void) {
-    for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        network_forget_sync_object(&syncObjects[i]);
+static bool should_own_object(struct SyncObject* so) {
+    if (gMarioStates[0].heldByObj == so->o) { return true; }
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].heldByObj == so->o) { return false; }
     }
-    nextSyncID = 1;
-}
 
-void network_set_sync_id(struct Object* o) {
-    if (o->oSyncID != 0) { return; }
-
-    // two-player hack
-    u8 reserveId = (networkLevelLoaded && networkType == NT_CLIENT) ? 1 : 0;
-
-    for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        if (syncObjects[nextSyncID].reserved == reserveId && syncObjects[nextSyncID].o == NULL) { break; }
-        nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
-    }
-    assert(syncObjects[nextSyncID].o == NULL);
-    assert(syncObjects[nextSyncID].reserved == reserveId);
-    o->oSyncID = nextSyncID;
-    nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
-
-    assert(o->oSyncID < MAX_SYNC_OBJECTS);
+    if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
+    if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[1], so->o)) { return false; }
+    if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex != 0) { return false; }
+    return true;
 }
 
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
@@ -53,7 +40,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     network_set_sync_id(o);
 
     // set default values for sync object
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     so->o = o;
     so->reserved = 0;
     so->maxSyncDistance = maxSyncDistance;
@@ -77,27 +64,52 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
 void network_init_object_field(struct Object *o, void* field) {
     assert(o->oSyncID != 0);
     // remember to synchronize this extra field
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     u8 index = so->extraFieldCount++;
     so->extraFields[index] = field;
 }
 
 bool network_owns_object(struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return false; }
     return so->owned;
 }
 
 bool network_sync_object_initialized(struct Object* o) {
     if (o->oSyncID == 0) { return false; }
-    if (syncObjects[o->oSyncID].behavior == NULL) { return false; }
+    if (gSyncObjects[o->oSyncID].behavior == NULL) { return false; }
     return true;
+}
+
+void network_clear_sync_objects(void) {
+    for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        network_forget_sync_object(&gSyncObjects[i]);
+    }
+    nextSyncID = 1;
+}
+
+void network_set_sync_id(struct Object* o) {
+    if (o->oSyncID != 0) { return; }
+
+    // two-player hack
+    u8 reserveId = (gNetworkLevelLoaded && gNetworkType == NT_CLIENT) ? 1 : 0;
+
+    for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        if (gSyncObjects[nextSyncID].reserved == reserveId && gSyncObjects[nextSyncID].o == NULL) { break; }
+        nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
+    }
+    assert(gSyncObjects[nextSyncID].o == NULL);
+    assert(gSyncObjects[nextSyncID].reserved == reserveId);
+    o->oSyncID = nextSyncID;
+    nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
+
+    assert(o->oSyncID < MAX_SYNC_OBJECTS);
 }
 
 // ----- header ----- //
 
 static void packet_write_object_header(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
 
     packet_write(p, &o->oSyncID, sizeof(u32));
@@ -130,14 +142,14 @@ static struct SyncObject* packet_read_object_header(struct Packet* p) {
     }
 
     // extract object, sanity check
-    struct Object* o = syncObjects[syncId].o;
+    struct Object* o = gSyncObjects[syncId].o;
     if (o == NULL) {
         printf("%s invalid SyncObject!\n", NETWORKTYPESTR);
         return NULL;
     }
 
     // retrieve SyncObject, check if we should update using callback
-    struct SyncObject* so = &syncObjects[syncId];
+    struct SyncObject* so = &gSyncObjects[syncId];
     if (so->ignore_if_true != NULL && (*so->ignore_if_true)(so->o)) {
         return NULL;
     }
@@ -167,7 +179,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p) {
 // ----- full sync ----- //
 
 static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (!so->fullObjectSync) { return; }
 
     // write all of raw data
@@ -175,7 +187,7 @@ static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
 }
 
 static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (!so->fullObjectSync) { return; }
 
     // read all of raw data
@@ -185,7 +197,7 @@ static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
 // ----- standard fields ----- //
 
 static void packet_write_object_standard_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS) { return; }
@@ -205,7 +217,7 @@ static void packet_write_object_standard_fields(struct Packet* p, struct Object*
 }
 
 static void packet_read_object_standard_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS) { return; }
@@ -227,7 +239,7 @@ static void packet_read_object_standard_fields(struct Packet* p, struct Object* 
 // ----- extra fields ----- //
 
 static void packet_write_object_extra_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
 
     // write the count
@@ -241,7 +253,7 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
 }
 
 static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
 
     // read the count and sanity check
@@ -261,13 +273,13 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
 // ----- only death ----- //
 
 static void packet_write_object_only_death(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
     packet_write(p, &o->activeFlags, sizeof(s16));
 }
 
 static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
     s16 activeFlags;
     packet_read(p, &activeFlags, sizeof(u16));
@@ -283,7 +295,7 @@ static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
 void network_send_object(struct Object* o) {
     // sanity check SyncObject
     if (!network_sync_object_initialized(o)) { return; }
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return; }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
         printf("network_send_object() BEHAVIOR MISMATCH!\n");
@@ -303,7 +315,7 @@ void network_send_object(struct Object* o) {
 void network_send_object_reliability(struct Object* o, bool reliable) {
     // sanity check SyncObject
     if (!network_sync_object_initialized(o)) { return; }
-    struct SyncObject* so = &syncObjects[o->oSyncID];
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return; }
 
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
@@ -362,18 +374,6 @@ void network_receive_object(struct Packet* p) {
     }
 }
 
-bool should_own_object(struct SyncObject* so) {
-    if (gMarioStates[0].heldByObj == so->o) { return true; }
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (gMarioStates[i].heldByObj == so->o) { return false; }
-    }
-
-    if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
-    if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[1], so->o)) { return false; }
-    if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex != 0) { return false; }
-    return true;
-}
-
 void network_forget_sync_object(struct SyncObject* so) {
     so->o = NULL;
     so->behavior = NULL;
@@ -383,7 +383,7 @@ void network_forget_sync_object(struct SyncObject* so) {
 
 void network_update_objects(void) {
     for (u32 i = 1; i < nextSyncID; i++) {
-        struct SyncObject* so = &syncObjects[i];
+        struct SyncObject* so = &gSyncObjects[i];
         if (so->o == NULL) { continue; }
 
         // check for stale sync object
@@ -400,7 +400,7 @@ void network_update_objects(void) {
         // check for 'only death' event
         if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) {
             if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED) { continue; }
-            network_send_object(syncObjects[i].o);
+            network_send_object(gSyncObjects[i].o);
             continue;
         }
 
@@ -419,7 +419,7 @@ void network_update_objects(void) {
         if (timeSinceUpdate < updateRate) { continue; }
 
         // update!
-        network_send_object(syncObjects[i].o);
+        network_send_object(gSyncObjects[i].o);
     }
 
 }

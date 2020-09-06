@@ -4,7 +4,7 @@ void bhv_cannon_closed_init(void) {
     struct Object *cannon;
 
     if (save_file_is_cannon_unlocked() == 1) {
-        if (!networkLevelLoaded || networkType == NT_SERVER) {
+        if (!gNetworkLevelLoaded || gNetworkType == NT_SERVER) {
             // If the cannon is open, spawn a cannon and despawn the object.
             cannon = spawn_object(o, MODEL_CANNON_BASE, bhvCannon);
             cannon->parentObj = cannon;
@@ -12,7 +12,7 @@ void bhv_cannon_closed_init(void) {
             cannon->oPosX = o->oHomeX;
             cannon->oPosY = o->oHomeY;
             cannon->oPosZ = o->oHomeZ;
-            if (networkLevelLoaded) {
+            if (gNetworkLevelLoaded) {
                 network_set_sync_id(cannon);
                 struct Object* spawn_objects[] = { cannon };
                 u32 models[] = { MODEL_CANNON_BASE };

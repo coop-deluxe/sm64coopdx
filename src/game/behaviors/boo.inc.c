@@ -537,7 +537,7 @@ void bhv_boo_loop(void) {
     else {
         if (network_sync_object_initialized(o)) {
             network_send_object_reliability(o, TRUE);
-            network_forget_sync_object(&syncObjects[o->oSyncID]);
+            network_forget_sync_object(&gSyncObjects[o->oSyncID]);
         }
     }
 
@@ -752,7 +752,7 @@ void bhv_big_boo_loop(void) {
     } else if (o->oHealth <= 0) {
         if (network_sync_object_initialized(o)) {
             network_send_object_reliability(o, TRUE);
-            network_forget_sync_object(&syncObjects[o->oSyncID]);
+            network_forget_sync_object(&gSyncObjects[o->oSyncID]);
         }
     }
 
@@ -858,7 +858,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
     switch (o->oAction) {
         case 0:
             if (distanceToPlayer < 1000.0f) {
-                if (networkType == NT_SERVER && o->oMerryGoRoundBooManagerNumBoosKilled < 5) {
+                if (gNetworkType == NT_SERVER && o->oMerryGoRoundBooManagerNumBoosKilled < 5) {
                     if (o->oMerryGoRoundBooManagerNumBoosSpawned < 5) {
                         if (o->oMerryGoRoundBooManagerNumBoosSpawned - o->oMerryGoRoundBooManagerNumBoosKilled < 2) {
                             struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBoo);
@@ -877,7 +877,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
                 }
 
                 if (o->oMerryGoRoundBooManagerNumBoosKilled > 4) {
-                    if (networkType == NT_SERVER) {
+                    if (gNetworkType == NT_SERVER) {
                         struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBigBoo);
                         obj_copy_behavior_params(boo, o);
 

@@ -681,7 +681,7 @@ void initiate_painting_warp(void) {
             } else if (pWarpNode->id != 0) {
                 initiate_painting_warp_node(pWarpNode, false);
                 gControlPainting = true;
-                gWaitingForRemotePainting = (networkType != NT_NONE);
+                gWaitingForRemotePainting = (gNetworkType != NT_NONE);
                 set_mario_action(gMarioState, ACT_DISAPPEARED, 0);
                 gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
             }
@@ -1028,14 +1028,14 @@ s32 play_mode_normal(void) {
             if (sWarpDest.type == WARP_TYPE_NOT_WARPING) {
                 set_play_mode(PLAY_MODE_CHANGE_LEVEL);
             } else {
-                set_play_mode((networkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
+                set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
                 network_send_level_warp();
             }
         } else if (sTransitionTimer != 0) {
             if (sWarpDest.type == WARP_TYPE_NOT_WARPING || gCurrentArea->index == sWarpDest.areaIdx) {
                 set_play_mode(PLAY_MODE_CHANGE_AREA);
             } else {
-                set_play_mode((networkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_AREA);
+                set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_AREA);
                 network_send_level_warp();
             }
         } else if (pressed_pause()) {
@@ -1065,7 +1065,7 @@ s32 play_mode_paused(void) {
             fade_into_special_warp(0, 0);
             gSavedCourseNum = COURSE_NONE;
         }
-        set_play_mode((networkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
+        set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
         network_send_level_warp();
     } else if (gPauseScreenMode == 3) {
         // We should only be getting "int 3" to here

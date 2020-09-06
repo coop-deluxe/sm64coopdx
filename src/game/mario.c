@@ -1877,7 +1877,7 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         }
 
         // two-player hack: drop held object if server is holding it
-        if (networkType == NT_CLIENT && gMarioState->playerIndex == 0 && gMarioState->heldObj != NULL) {
+        if (gNetworkType == NT_CLIENT && gMarioState->playerIndex == 0 && gMarioState->heldObj != NULL) {
             u8 inCutscene = ((gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE);
             if (!inCutscene && gMarioState->heldObj == gMarioStates[0].heldObj) {
                 drop_and_set_mario_action(gMarioState, ACT_IDLE, 0);
@@ -2027,7 +2027,7 @@ void init_mario(void) {
     vec3f_set(gMarioState->vel, 0, 0, 0);
 
     // two-player hack
-    if ((networkType == NT_CLIENT && isLocal) || (networkType == NT_SERVER && !isLocal)) {
+    if ((gNetworkType == NT_CLIENT && isLocal) || (gNetworkType == NT_SERVER && !isLocal)) {
         gMarioState->pos[0] += 50.0f * coss(gMarioState->faceAngle[1]);
         gMarioState->pos[2] += 50.0f * sins(gMarioState->faceAngle[1]);
     } else {
@@ -2076,9 +2076,9 @@ void init_mario(void) {
 
     // set mario/luigi model
     if (isLocal) {
-        gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(networkType == NT_SERVER) ? MODEL_MARIO : MODEL_LUIGI];
+        gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_MARIO : MODEL_LUIGI];
     } else {
-        gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(networkType == NT_SERVER) ? MODEL_LUIGI2 : MODEL_MARIO2];
+        gMarioState->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_LUIGI2 : MODEL_MARIO2];
     }
 
 skippy:

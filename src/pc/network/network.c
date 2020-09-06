@@ -5,67 +5,76 @@
 #include "socket/socket.h"
 #include "pc/configfile.h"
 
-enum NetworkType networkType;
+// Mario 64 specific externs
+extern u8 gInsidePainting;
+extern s16 sCurrPlayMode;
+
+enum NetworkType gNetworkType;
 static SOCKET gSocket;
 struct sockaddr_in txAddr;
 
 #define LOADING_LEVEL_THRESHOLD 10
 u8 networkLoadingLevel = 0;
-bool networkLevelLoaded = false;
+bool gNetworkLevelLoaded = false;
 
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
 };
 
 void network_init(enum NetworkType inNetworkType, char* ip, unsigned int port) {
-    networkType = inNetworkType;
-
-    if (networkType == NT_NONE) { return; }
+    // set network type
+    gNetworkType = inNetworkType;
+    if (gNetworkType == NT_NONE) { return; }
 
     // sanity check port
     if (port == 0) {
-        port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
+        port = (gNetworkType == NT_CLIENT) ? configJoinPort : configHostPort;
         if (port == 0) { port = DEFAULT_PORT; }
     }
 
-    if (networkType == NT_SERVER) {
+    // set server settings
+    if (gNetworkType == NT_SERVER) {
         gServerSettings.playerInteractions = configPlayerInteraction;
     }
 
-    // Create a receiver socket to receive datagrams
+    // create a receiver socket to receive datagrams
     gSocket = socket_initialize();
     if (gSocket == INVALID_SOCKET) { return; }
 
-    // Bind the socket to any address and the specified port.
-    if (networkType == NT_SERVER) {
+    // connect
+    if (gNetworkType == NT_SERVER) {
+        // bind the socket to any address and the specified port.
         int rc = socket_bind(gSocket, port);
         if (rc != NO_ERROR) { return; }
     } else {
-        // Save the port to send to
+        // save the port to send to
         txAddr.sin_family = AF_INET;
         txAddr.sin_port = htons(port);
         txAddr.sin_addr.s_addr = inet_addr(ip);
     }
 
-    if (networkType == NT_CLIENT) {
+    // send connection request
+    if (gNetworkType == NT_CLIENT) {
         network_send_save_file_request();
     }
 }
 
 void network_on_init_level(void) {
+    // reset loading timer
     networkLoadingLevel = 0;
-    networkLevelLoaded = false;
+    gNetworkLevelLoaded = false;
 }
 
 void network_on_loaded_level(void) {
-    if (networkType == NT_CLIENT) {
+    // request my chunk of reserved sync ids
+    if (gNetworkType == NT_CLIENT) {
         network_send_reservation_request();
     }
 }
 
 void network_send(struct Packet* p) {
     // sanity checks
-    if (networkType == NT_NONE) { return; }
+    if (gNetworkType == NT_NONE) { return; }
     if (p->error) { printf("%s packet error!\n", NETWORKTYPESTR); return; }
 
     // remember reliable packets
@@ -82,14 +91,17 @@ void network_send(struct Packet* p) {
 }
 
 void network_update(void) {
-    if (networkType == NT_NONE) { return; }
-    if (!networkLevelLoaded) {
+    if (gNetworkType == NT_NONE) { return; }
+
+    // check for level loaded event
+    if (!gNetworkLevelLoaded) {
         if (networkLoadingLevel++ >= LOADING_LEVEL_THRESHOLD) {
-            networkLevelLoaded = true;
+            gNetworkLevelLoaded = true;
             network_on_loaded_level();
         }
     }
 
+    // figure out which update loop to run
     if (gInsidePainting && sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) {
         network_update_inside_painting();
     } else if (sCurrPlayMode == PLAY_MODE_NORMAL) {
@@ -97,6 +109,7 @@ void network_update(void) {
         network_update_objects();
     }
 
+    // receive packets
     do {
         // receive packet
         struct Packet p = { .cursor = 3 };
@@ -139,7 +152,8 @@ void network_update(void) {
 }
 
 void network_shutdown(void) {
-    if (networkType == NT_NONE) { return; }
+    if (gNetworkType == NT_NONE) { return; }
+    // close down socket
     socket_close(gSocket);
-    networkType = NT_NONE;
+    gNetworkType = NT_NONE;
 }

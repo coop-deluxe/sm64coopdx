@@ -296,7 +296,7 @@ void render_hud_mario_lives(void) {
 #ifdef VERSION_JP
     char* displayHead = ",";
 #else
-    char* displayHead = (networkType == NT_SERVER) ? "," : ".";
+    char* displayHead = (gNetworkType == NT_SERVER) ? "," : ".";
 #endif
     print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22), HUD_TOP_Y, displayHead); // 'Mario Head' glyph
     if (gHudDisplay.lives == -1) { return; }

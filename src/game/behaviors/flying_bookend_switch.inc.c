@@ -173,11 +173,11 @@ void bookshelf_manager_act_0(void) {
 void bookshelf_manager_act_1(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (o->oBookSwitchManagerUnkF8 == 0) {
-        if (networkType == NT_SERVER && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
+        if (gNetworkType == NT_SERVER && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
             o->oBookSwitchManagerUnkF8 = 1;
             network_send_object(o);
         }
-    } else if (o->oTimer > 60 && networkType == NT_SERVER) {
+    } else if (o->oTimer > 60 && gNetworkType == NT_SERVER) {
         o->oAction = 2;
         o->oBookSwitchManagerUnkF8 = 0;
         network_send_object(o);
@@ -188,12 +188,12 @@ void bookshelf_manager_act_2(void) {
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         if (o->oBookSwitchManagerUnkF4 < 0) {
             if (o->oTimer > 30) {
-                if (networkType == NT_SERVER) {
+                if (gNetworkType == NT_SERVER) {
                     o->oBookSwitchManagerUnkF4 = o->oBookSwitchManagerUnkF8 = 0;
                     network_send_object(o);
                 }
             } else if (o->oTimer > 10) {
-                if (networkType == NT_SERVER) {
+                if (gNetworkType == NT_SERVER) {
                     o->oBookSwitchManagerUnkF8 = 1;
                     network_send_object(o);
                 }
@@ -201,7 +201,7 @@ void bookshelf_manager_act_2(void) {
         } else {
             if (o->oBookSwitchManagerUnkF4 >= 3) {
                 if (o->oTimer > 100) {
-                    if (networkType == NT_SERVER) {
+                    if (gNetworkType == NT_SERVER) {
                         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
                         o->parentObj->oAction = 1;
                         o->oPosX = o->parentObj->oPosX;
@@ -216,7 +216,7 @@ void bookshelf_manager_act_2(void) {
                 o->oTimer = 0;
             }
         }
-    } else if (networkType == NT_SERVER) {
+    } else if (gNetworkType == NT_SERVER) {
         o->oAction = 4;
         network_send_object(o);
     }
@@ -224,7 +224,7 @@ void bookshelf_manager_act_2(void) {
 
 void bookshelf_manager_act_3(void) {
     if (o->oTimer > 85) {
-        if (networkType == NT_SERVER) {
+        if (gNetworkType == NT_SERVER) {
             o->oAction = 4;
             network_send_object(o);
         }
@@ -237,7 +237,7 @@ void bookshelf_manager_act_3(void) {
 void bookshelf_manager_act_4(void) {
     if (o->oBookSwitchManagerUnkF4 >= 3) {
         obj_mark_for_deletion(o);
-    } else if (networkType == NT_SERVER) {
+    } else if (gNetworkType == NT_SERVER) {
         o->oAction = 0;
         network_send_object(o);
     }
@@ -308,7 +308,7 @@ void bhv_book_switch_loop(void) {
                 cur_obj_become_intangible();
             }
 
-            if (networkType == NT_SERVER && o->oAction != 1) {
+            if (gNetworkType == NT_SERVER && o->oAction != 1) {
                 o->oAction = 1;
                 network_send_object(o);
             }
@@ -320,7 +320,7 @@ void bhv_book_switch_loop(void) {
             if (approach_f32_ptr(&o->oBookSwitchUnkF4, 50.0f, 20.0f)) {
                 if (o->parentObj->oBookSwitchManagerUnkF4 >= 0 && o->oTimer > 60) {
                     if (sp3C == 1 || sp3C == 2 || sp3C == 6) {
-                        if (networkType == NT_SERVER && o->oAction != 2) {
+                        if (gNetworkType == NT_SERVER && o->oAction != 2) {
                             o->oAction = 2;
                             network_send_object(o);
                         }
@@ -335,7 +335,7 @@ void bhv_book_switch_loop(void) {
                 if (o->oAction != 0) {
                     if (o->parentObj->oBookSwitchManagerUnkF4 == o->oBehParams2ndByte) {
                         play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gDefaultSoundArgs);
-                        if (networkType == NT_SERVER) {
+                        if (gNetworkType == NT_SERVER) {
                             o->parentObj->oBookSwitchManagerUnkF4 += 1;
                             network_send_object(o->parentObj);
                         }
@@ -348,7 +348,7 @@ void bhv_book_switch_loop(void) {
                             sp34 = 0;
                         }
 
-                        if (networkType == NT_SERVER) {
+                        if (gNetworkType == NT_SERVER) {
                             book = spawn_object_abs_with_rot(o, 0, MODEL_BOOKEND, bhvFlyingBookend,
                                                              0x1FC * sp36 - 0x8CA, 890, sp34, 0,
                                                              0x8000 * sp36 + 0x4000, 0);
@@ -361,13 +361,13 @@ void bhv_book_switch_loop(void) {
                             }
                         }
 
-                        if (networkType == NT_SERVER) {
+                        if (gNetworkType == NT_SERVER) {
                             o->parentObj->oBookSwitchManagerUnkF4 = -1;
                             network_send_object(o->parentObj);
                         }
                     }
 
-                    if (networkType == NT_SERVER && o->oAction != 0) {
+                    if (gNetworkType == NT_SERVER && o->oAction != 0) {
                         o->oAction = 0;
                         network_send_object(o);
                     }

@@ -42,7 +42,7 @@ void network_receive_inside_painting(struct Packet* p) {
     struct PacketDataInsidePainting remote = { 0 };
     packet_read(p, &remote, sizeof(struct PacketDataInsidePainting));
 
-    if (networkType == NT_CLIENT && gControlPainting && remote.controlPainting) {
+    if (gNetworkType == NT_CLIENT && gControlPainting && remote.controlPainting) {
         // we both think we should control the painting, host wins the tie
         gControlPainting = false;
     }

@@ -87,7 +87,7 @@ void network_receive_spawn_objects(struct Packet* p) {
     onRemoteSpawnId = (onRemoteSpawnId + 1) % MAX_REMOTE_SPAWN_IDS;
 
     // two-player hack
-    u8 reserveId = (networkLevelLoaded && networkType == NT_SERVER) ? 1 : 0;
+    u8 reserveId = (gNetworkLevelLoaded && gNetworkType == NT_SERVER) ? 1 : 0;
     bool receivedReservedSyncObject = false;
 
     struct Object* spawned[MAX_SPAWN_OBJECTS_PER_PACKET] = { 0 };
@@ -106,7 +106,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         } else {
             // this object has a known parent
             parentObj = (i == 0)
-                      ? syncObjects[data.parentId].o
+                      ? gSyncObjects[data.parentId].o
                       : spawned[data.parentId];
             if (parentObj == NULL) { continue; }
         }
@@ -119,9 +119,9 @@ void network_receive_spawn_objects(struct Packet* p) {
         if (data.parentId == (u8)-1) { o->parentObj = o; }
 
         // they've allocated one of their reserved sync objects
-        if (o->oSyncID != 0 && syncObjects[o->oSyncID].reserved == reserveId) {
-            syncObjects[o->oSyncID].o = o;
-            syncObjects[o->oSyncID].reserved = 0;
+        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].reserved == reserveId) {
+            gSyncObjects[o->oSyncID].o = o;
+            gSyncObjects[o->oSyncID].reserved = 0;
             receivedReservedSyncObject = true;
         }
 
@@ -129,7 +129,7 @@ void network_receive_spawn_objects(struct Packet* p) {
     }
 
     // update their block of reserved ids
-    if (networkType == NT_SERVER && receivedReservedSyncObject) {
+    if (gNetworkType == NT_SERVER && receivedReservedSyncObject) {
         network_send_reservation();
     }
 }

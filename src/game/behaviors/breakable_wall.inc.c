@@ -12,7 +12,7 @@ void bhv_wf_breakable_wall_loop(void) {
             if (!o->oBreakableWallForce) {
                 o->oBreakableWallForce = TRUE;
                 network_send_object(o);
-                syncObjects[o->oSyncID].syncDeathEvent = FALSE;
+                gSyncObjects[o->oSyncID].syncDeathEvent = FALSE;
             }
             if (cur_obj_has_behavior(bhvWfBreakableWallRight))
                 play_puzzle_jingle();

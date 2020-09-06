@@ -198,7 +198,7 @@ void unload_object(struct Object *obj) {
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_CYLBOARD;
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
-    if (obj->oSyncID != 0 && syncObjects[obj->oSyncID].syncDeathEvent) {
+    if (obj->oSyncID != 0 && gSyncObjects[obj->oSyncID].syncDeathEvent) {
         network_send_object(obj);
     }
 

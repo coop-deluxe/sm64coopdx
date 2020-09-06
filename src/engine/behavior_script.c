@@ -72,7 +72,7 @@ u16 random_u16(void) {
 
     // override this function for synchronized entities
     if (gCurrentObject->oSyncID != 0) {
-        struct SyncObject* so = &syncObjects[gCurrentObject->oSyncID];
+        struct SyncObject* so = &gSyncObjects[gCurrentObject->oSyncID];
         if (so->o != NULL && !so->keepRandomSeed) {
             gSavedSeed16 = gRandomSeed16;
             force_replicable_seed(FALSE);

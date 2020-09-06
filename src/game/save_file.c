@@ -347,7 +347,7 @@ void save_file_do_save(s32 fileIndex) {
         return;
 
 #ifdef TEXTSAVES
-    if (gSaveFileModified && networkType != NT_CLIENT) {
+    if (gSaveFileModified && gNetworkType != NT_CLIENT) {
         // Write to text file
         write_text_save(fileIndex);
         gSaveFileModified = FALSE;

@@ -403,7 +403,7 @@ void keyboard_exit_join_to_network_menu(void) {
 }
 
 void join_server_as_client(void) {
-    if (networkType != NT_NONE) { return; }
+    if (gNetworkType != NT_NONE) { return; }
 
     char delims[] = { ' ' };
 
@@ -441,7 +441,7 @@ void join_server_as_client(void) {
 }
 
 void joined_server_as_client(s16 fileIndex) {
-    if (networkType != NT_CLIENT) { return; }
+    if (gNetworkType != NT_CLIENT) { return; }
     sSelectedFileNum = fileIndex;
 }
 
@@ -561,7 +561,7 @@ void print_join_mode_menu_strings(void) {
     print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 2), gTextInput);
 
     // Print status
-    if (networkType == NT_CLIENT) {
+    if (gNetworkType == NT_CLIENT) {
         print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Connecting...");
     } else if (strlen(gTextInput) > 0) {
         print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Press (ENTER) to join.");
@@ -1856,7 +1856,7 @@ void handle_cursor_button_input(void) {
             sClickPos[1] = sCursorPos[1];
             sCursorClickingTimer = 1;
         }
-        if (networkType == NT_SERVER) {
+        if (gNetworkType == NT_SERVER) {
             sClickPos[0] = sCursorPos[0];
             sClickPos[1] = sCursorPos[1];
             sCursorClickingTimer = 1;
@@ -3092,7 +3092,7 @@ s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused) {
     sClickPos[0] = -10000;
     sClickPos[1] = -10000;
     sCursorClickingTimer = 0;
-    if (networkType != NT_CLIENT) { sSelectedFileNum = 0; }
+    if (gNetworkType != NT_CLIENT) { sSelectedFileNum = 0; }
     sSelectedFileIndex = MENU_BUTTON_NONE;
     sFadeOutText = FALSE;
     sStatusMessageID = 0;
@@ -3118,7 +3118,7 @@ s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused) {
     sCursorPos[1] = -24.0f;
 
     // immediately jump in
-    if (networkType == NT_SERVER) {
+    if (gNetworkType == NT_SERVER) {
         sSelectedFileNum = configHostSaveSlot;
     }
 
