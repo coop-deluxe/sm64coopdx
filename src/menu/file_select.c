@@ -405,7 +405,7 @@ void keyboard_exit_join_to_network_menu(void) {
 void join_server_as_client(void) {
     if (gNetworkType != NT_NONE) { return; }
 
-    char delims[] = { ' ' };
+    char delims[2] = " ";
 
     // copy input
     char buffer[MAX_TEXT_INPUT] = { 0 };

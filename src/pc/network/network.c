@@ -9,9 +9,9 @@
 extern u8 gInsidePainting;
 extern s16 sCurrPlayMode;
 
-enum NetworkType gNetworkType;
-static SOCKET gSocket;
-struct sockaddr_in txAddr;
+enum NetworkType gNetworkType = NT_NONE;
+static SOCKET gSocket = NULL;
+struct sockaddr_in txAddr = { 0 };
 
 #define LOADING_LEVEL_THRESHOLD 10
 u8 networkLoadingLevel = 0;
