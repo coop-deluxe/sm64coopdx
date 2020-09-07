@@ -16,6 +16,7 @@ struct MarioState* king_bobomb_nearest_mario_state() {
                 nearestDist = dist;
             }
         }
+        if (!checkActive) { break; }
         checkActive = FALSE;
     } while (nearest == NULL);
 
