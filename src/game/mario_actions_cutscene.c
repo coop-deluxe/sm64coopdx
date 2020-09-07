@@ -1036,7 +1036,7 @@ s32 act_warp_door_spawn(struct MarioState *m) {
                 m->usedObj->oInteractStatus = 0x00080000;
             }
         }
-    } else if (m->usedObj == NULL || m->usedObj->oAction == 0) {
+    } else if (m->usedObj == NULL || (m->usedObj->oAction == 0 || m->usedObj->oAction == 100)) {
         if (gShouldNotPlayCastleMusic == TRUE && gCurrLevelNum == LEVEL_CASTLE) {
             set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, DIALOG_021);
         } else {

@@ -14,11 +14,24 @@ s32 D_8032F330[] = { SOUND_GENERAL_CLOSE_WOOD_DOOR, SOUND_GENERAL_CLOSE_IRON_DOO
 
 void door_animation_and_reset(s32 sp18) {
     cur_obj_init_animation_with_sound(sp18);
-    if (cur_obj_check_if_near_animation_end())
+    if (cur_obj_check_if_near_animation_end()) {
         o->oAction = 0;
+    }
+}
+
+u8 door_allow_walk_through(void) {
+    if (gCurrCourseNum != COURSE_NONE && gMarioStates[0].action == ACT_BUBBLED) { return TRUE; }
+    if (o->oAction == 0 || o->oAction > 2) { return FALSE; }
+    s32 cur = o->header.gfx.unk38.animFrame;
+    s32 max = o->header.gfx.unk38.curAnim->unk08 - 2;
+    return (cur >= max / 4 && cur <= 7 * max / 8);
 }
 
 void set_door_camera_event(void) {
+    if (gCamera->mode == CAMERA_MODE_NEWCAM) {
+        return;
+    }
+
     if (segmented_to_virtual(bhvDoor) == o->behavior)
         gPlayerCameraState->cameraEvent = CAM_EVENT_DOOR;
     else
@@ -46,20 +59,22 @@ void play_warp_door_open_noise(void) {
 void bhv_door_loop(void) {
     s32 sp1C = 0;
     
-    while (D_8032F300[sp1C].flag != (u32)~0) {
-        if (cur_obj_clear_interact_status_flag(D_8032F300[sp1C].flag)) {
-            if (gMarioStates[0].usedObj == o) {
-                u32 marioAction = gMarioStates[0].marioBodyState->action;
-                u8 inActDoor = marioAction == ACT_PULLING_DOOR
-                            || marioAction == ACT_PUSHING_DOOR
-                            || marioAction == ACT_WARP_DOOR_SPAWN;
-                if (inActDoor) {
-                    set_door_camera_event();
+    if (o->oAction != 100) {
+        while (D_8032F300[sp1C].flag != (u32)~0) {
+            if (cur_obj_clear_interact_status_flag(D_8032F300[sp1C].flag)) {
+                if (gMarioStates[0].usedObj == o) {
+                    u32 marioAction = gMarioStates[0].marioBodyState->action;
+                    u8 inActDoor = marioAction == ACT_PULLING_DOOR
+                        || marioAction == ACT_PUSHING_DOOR
+                        || marioAction == ACT_WARP_DOOR_SPAWN;
+                    if (inActDoor) {
+                        set_door_camera_event();
+                    }
                 }
+                cur_obj_change_action(D_8032F300[sp1C].action);
             }
-            cur_obj_change_action(D_8032F300[sp1C].action);
+            sp1C++;
         }
-        sp1C++;
     }
 
     switch (o->oAction) {
@@ -85,13 +100,11 @@ void bhv_door_loop(void) {
     }
 
     // make doors intangible when you're bubbled
-    if (o->oAction == 0) {
-        if (gCurrCourseNum != COURSE_NONE && gMarioStates[0].action == ACT_BUBBLED) {
-            o->oIntangibleTimer = -1;
-        } else {
-            load_object_collision_model();
-            o->oIntangibleTimer = 0;
-        }
+    if (door_allow_walk_through()) {
+        o->oIntangibleTimer = -1;
+    } else {
+        load_object_collision_model();
+        o->oIntangibleTimer = 0;
     }
     bhv_star_door_loop_2();
 }
