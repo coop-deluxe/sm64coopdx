@@ -643,9 +643,11 @@ static void newcam_stick_input(void) {
 
 //Main loop.
 void newcam_loop(struct Camera *c) {
-    newcam_stick_input();
-    newcam_rotate_button();
-    newcam_zoom_button();
+    if (sCurrPlayMode != PLAY_MODE_PAUSED) {
+        newcam_stick_input();
+        newcam_rotate_button();
+        newcam_zoom_button();
+    }
     newcam_position_cam();
     newcam_find_fixed();
     if (gMarioObject)

@@ -54,7 +54,7 @@
 #define INPUT_OFF_FLOOR              0x0004
 #define INPUT_ABOVE_SLIDE            0x0008
 #define INPUT_FIRST_PERSON           0x0010
-#define INPUT_UNKNOWN_5              0x0020
+#define INPUT_ZERO_MOVEMENT          0x0020
 #define INPUT_SQUISHED               0x0040
 #define INPUT_A_DOWN                 0x0080
 #define INPUT_IN_POISON_GAS          0x0100

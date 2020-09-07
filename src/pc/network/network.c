@@ -106,7 +106,7 @@ void network_update(void) {
     // figure out which update loop to run
     if (gInsidePainting && sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) {
         network_update_inside_painting();
-    } else if (sCurrPlayMode == PLAY_MODE_NORMAL) {
+    } else if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
         network_update_player();
         network_update_objects();
     }

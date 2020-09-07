@@ -1239,7 +1239,7 @@ static s32 act_metal_water_walking(struct MarioState *m) {
         return set_mario_action(m, ACT_METAL_WATER_JUMP, 0);
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return set_mario_action(m, ACT_METAL_WATER_STANDING, 0);
     }
 
@@ -1279,7 +1279,7 @@ static s32 act_hold_metal_water_walking(struct MarioState *m) {
         return set_mario_action(m, ACT_HOLD_METAL_WATER_JUMP, 0);
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return set_mario_action(m, ACT_HOLD_METAL_WATER_STANDING, 0);
     }
 

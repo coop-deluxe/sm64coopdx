@@ -1183,11 +1183,11 @@ void mode_8_directions_camera(struct Camera *c) {
 
     radial_camera_input(c, 0.f);
 
-    if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_CBUTTONS) {
         s8DirModeYawOffset += DEGREES(45);
         play_sound_cbutton_side();
     }
-    if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & L_CBUTTONS) {
         s8DirModeYawOffset -= DEGREES(45);
         play_sound_cbutton_side();
     }
@@ -2499,7 +2499,7 @@ s32 update_slide_or_0f_camera(UNUSED struct Camera *c, Vec3f focus, Vec3f pos) {
 }
 
 static UNUSED void unused_mode_0f_camera(struct Camera *c) {
-    if (gPlayer1Controller->buttonPressed & U_CBUTTONS) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & U_CBUTTONS) {
         gCameraMovementFlags |= CAM_MOVE_C_UP_MODE;
     }
     c->nextYaw = update_slide_camera(c);
@@ -2514,7 +2514,7 @@ void mode_slide_camera(struct Camera *c) {
         sMarioGeometry.currFloorType == SURFACE_NO_CAM_COL_SLIPPERY) {
         mode_lakitu_camera(c);
     } else {
-        if (gPlayer1Controller->buttonPressed & U_CBUTTONS) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & U_CBUTTONS) {
             gCameraMovementFlags |= CAM_MOVE_C_UP_MODE;
         }
         c->nextYaw = update_slide_camera(c);
@@ -2767,7 +2767,7 @@ s32 mode_c_up_camera(struct Camera *c) {
     sPanDistance = 0.f;
 
     // Exit C-Up mode
-    if (gPlayer1Controller->buttonPressed & (A_BUTTON | B_BUTTON | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & (A_BUTTON | B_BUTTON | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)) {
         exit_c_up(c);
     }
     return 0;
@@ -2792,7 +2792,7 @@ void mode_cannon_camera(struct Camera *c) {
     sLakituPitch = 0;
     gCameraMovementFlags &= ~CAM_MOVING_INTO_MODE;
     c->nextYaw = update_in_cannon(c, c->focus, c->pos);
-    if (gPlayer1Controller->buttonPressed & A_BUTTON) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & A_BUTTON) {
         set_camera_mode(c, CAMERA_MODE_BEHIND_MARIO, 1);
         sPanDistance = 0.f;
         sCannonYOffset = 0.f;
@@ -3037,7 +3037,7 @@ void update_camera(struct Camera *c) {
             && c->mode != CAMERA_MODE_NEWCAM
 #endif
             ) {
-            if (gPlayer1Controller->buttonPressed & R_TRIG) {
+            if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_TRIG) {
                 if (set_cam_angle(0) == CAM_ANGLE_LAKITU) {
                     set_cam_angle(CAM_ANGLE_MARIO);
                 } else {
@@ -3214,7 +3214,7 @@ void update_camera(struct Camera *c) {
             || (sMarioCamState->action) == ACT_GETTING_BLOWN) {
 
             // If this is the first frame that R_TRIG is held, play the "click" sound
-            if (c->cutscene == 0 && (gPlayer1Controller->buttonPressed & R_TRIG)
+            if ((sCurrPlayMode != PLAY_MODE_PAUSED) && c->cutscene == 0 && (gPlayer1Controller->buttonPressed & R_TRIG)
                 && cam_select_alt_mode(0) == CAM_SELECTION_FIXED) {
                 sCameraSoundFlags |= CAM_SOUND_FIXED_ACTIVE;
                 play_sound_rbutton_changed();
@@ -3236,7 +3236,7 @@ void update_camera(struct Camera *c) {
             }
         }
     } else {
-        if ((gPlayer1Controller->buttonPressed & R_TRIG) && cam_select_alt_mode(0) == CAM_SELECTION_FIXED) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && (gPlayer1Controller->buttonPressed & R_TRIG) && cam_select_alt_mode(0) == CAM_SELECTION_FIXED) {
             play_sound_button_change_blocked();
         }
     }
@@ -3895,6 +3895,7 @@ void shake_camera_handheld(Vec3f pos, Vec3f focus) {
  * Updates C Button input state and stores it in `currentState`
  */
 s32 find_c_buttons_pressed(u16 currentState, u16 buttonsPressed, u16 buttonsDown) {
+    if (sCurrPlayMode == PLAY_MODE_PAUSED) { return 0; }
     buttonsPressed &= CBUTTON_MASK;
     buttonsDown &= CBUTTON_MASK;
 
@@ -4903,7 +4904,7 @@ s32 radial_camera_input(struct Camera *c, UNUSED f32 unused) {
     if ((gCameraMovementFlags & CAM_MOVE_ENTERED_ROTATE_SURFACE) || !(gCameraMovementFlags & CAM_MOVE_ROTATE)) {
 
         // If C-L or C-R are pressed, the camera is rotating
-        if (gPlayer1Controller->buttonPressed & (L_CBUTTONS | R_CBUTTONS)) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & (L_CBUTTONS | R_CBUTTONS)) {
             gCameraMovementFlags &= ~CAM_MOVE_ENTERED_ROTATE_SURFACE;
             //  @bug this does not clear the rotation flags set by the surface. It's possible to set
             //       both ROTATE_LEFT and ROTATE_RIGHT, locking the camera.
@@ -4912,7 +4913,7 @@ s32 radial_camera_input(struct Camera *c, UNUSED f32 unused) {
         }
 
         // Rotate Right and left
-        if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_CBUTTONS) {
             if (sModeOffsetYaw > -0x800) {
                 // The camera is now rotating right
                 if (!(gCameraMovementFlags & CAM_MOVE_ROTATE_RIGHT)) {
@@ -4942,7 +4943,7 @@ s32 radial_camera_input(struct Camera *c, UNUSED f32 unused) {
                 play_sound_cbutton_up();
             }
         }
-        if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & L_CBUTTONS) {
             if (sModeOffsetYaw < 0x800) {
                 if (!(gCameraMovementFlags & CAM_MOVE_ROTATE_LEFT)) {
                     gCameraMovementFlags |= CAM_MOVE_ROTATE_LEFT;
@@ -4974,7 +4975,7 @@ s32 radial_camera_input(struct Camera *c, UNUSED f32 unused) {
     }
 
     // Zoom in / enter C-Up
-    if (gPlayer1Controller->buttonPressed & U_CBUTTONS) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & U_CBUTTONS) {
         if (gCameraMovementFlags & CAM_MOVE_ZOOMED_OUT) {
             gCameraMovementFlags &= ~CAM_MOVE_ZOOMED_OUT;
             play_sound_cbutton_up();
@@ -4984,7 +4985,7 @@ s32 radial_camera_input(struct Camera *c, UNUSED f32 unused) {
     }
 
     // Zoom out
-    if (gPlayer1Controller->buttonPressed & D_CBUTTONS) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & D_CBUTTONS) {
         if (gCameraMovementFlags & CAM_MOVE_ZOOMED_OUT) {
             gCameraMovementFlags |= CAM_MOVE_ALREADY_ZOOMED_OUT;
 #ifndef VERSION_JP
@@ -5022,7 +5023,7 @@ void handle_c_button_movement(struct Camera *c) {
     s16 cSideYaw;
 
     // Zoom in
-    if (gPlayer1Controller->buttonPressed & U_CBUTTONS) {
+    if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & U_CBUTTONS) {
         if (c->mode != CAMERA_MODE_FIXED && (gCameraMovementFlags & CAM_MOVE_ZOOMED_OUT)) {
             gCameraMovementFlags &= ~CAM_MOVE_ZOOMED_OUT;
             play_sound_cbutton_up();
@@ -5037,7 +5038,7 @@ void handle_c_button_movement(struct Camera *c) {
     }
     if (c->mode != CAMERA_MODE_FIXED) {
         // Zoom out
-        if (gPlayer1Controller->buttonPressed & D_CBUTTONS) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & D_CBUTTONS) {
             if (gCameraMovementFlags & CAM_MOVE_ZOOMED_OUT) {
                 gCameraMovementFlags |= CAM_MOVE_ALREADY_ZOOMED_OUT;
                 sZoomAmount = gCameraZoomDist + 400.f;
@@ -5053,7 +5054,7 @@ void handle_c_button_movement(struct Camera *c) {
 
         // Rotate left or right
         cSideYaw = 0x1000;
-        if (gPlayer1Controller->buttonPressed & R_CBUTTONS) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_CBUTTONS) {
             if (gCameraMovementFlags & CAM_MOVE_ROTATE_LEFT) {
                 gCameraMovementFlags &= ~CAM_MOVE_ROTATE_LEFT;
             } else {
@@ -5064,7 +5065,7 @@ void handle_c_button_movement(struct Camera *c) {
                 sCSideButtonYaw = -cSideYaw;
             }
         }
-        if (gPlayer1Controller->buttonPressed & L_CBUTTONS) {
+        if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & L_CBUTTONS) {
             if (gCameraMovementFlags & CAM_MOVE_ROTATE_RIGHT) {
                 gCameraMovementFlags &= ~CAM_MOVE_ROTATE_RIGHT;
             } else {

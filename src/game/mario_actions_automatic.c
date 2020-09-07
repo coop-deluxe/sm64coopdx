@@ -481,7 +481,7 @@ s32 act_hang_moving(struct MarioState *m) {
 
     if (is_anim_past_end(m)) {
         m->actionArg ^= 1;
-        if (m->input & INPUT_UNKNOWN_5) {
+        if (m->input & INPUT_ZERO_MOVEMENT) {
             return set_mario_action(m, ACT_HANGING, m->actionArg);
         }
     }

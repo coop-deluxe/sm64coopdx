@@ -810,7 +810,7 @@ s32 act_walking(struct MarioState *m) {
         return TRUE;
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return begin_braking_action(m);
     }
 
@@ -907,7 +907,7 @@ s32 act_hold_walking(struct MarioState *m) {
         return set_jumping_action(m, ACT_HOLD_JUMP, 0);
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return set_mario_action(m, ACT_HOLD_DECELERATING, 0);
     }
 
@@ -949,7 +949,7 @@ s32 act_hold_heavy_walking(struct MarioState *m) {
         return drop_and_set_mario_action(m, ACT_BEGIN_SLIDING, 0);
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return set_mario_action(m, ACT_HOLD_HEAVY_IDLE, 0);
     }
 
@@ -982,7 +982,7 @@ s32 act_turning_around(struct MarioState *m) {
         return set_jumping_action(m, ACT_SIDE_FLIP, 0);
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return set_mario_action(m, ACT_BRAKING, 0);
     }
 
@@ -1276,7 +1276,7 @@ s32 act_crawling(struct MarioState *m) {
         return TRUE;
     }
 
-    if (m->input & INPUT_UNKNOWN_5) {
+    if (m->input & INPUT_ZERO_MOVEMENT) {
         return set_mario_action(m, ACT_STOP_CRAWLING, 0);
     }
 

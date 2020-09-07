@@ -1317,7 +1317,7 @@ void debug_print_speed_action_normal(struct MarioState *m) {
  */
 void update_mario_button_inputs(struct MarioState *m) {
     // don't update remote inputs
-    if (m != &gMarioStates[0]) { return; }
+    if (m->playerIndex != 0) { return; }
 
     if (m->controller->buttonPressed & A_BUTTON) {
         m->input |= INPUT_A_PRESSED;
@@ -1369,7 +1369,7 @@ void update_mario_joystick_inputs(struct MarioState *m) {
     }
 
     // don't update remote inputs past this point
-    if (m != &gMarioStates[0]) { return; }
+    if ((sCurrPlayMode == PLAY_MODE_PAUSED) || m->playerIndex != 0) { return; }
 
     if (m->intendedMag > 0.0f) {
 #ifndef BETTERCAMERA
@@ -1452,11 +1452,20 @@ void update_mario_inputs(struct MarioState *m) {
     m->particleFlags = 0;
     if (m->playerIndex == 0) { m->input = 0; }
 
+    u8 localIsPaused = (m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED);
+
     m->collidedObjInteractTypes = m->marioObj->collidedObjInteractTypes;
     m->flags &= 0xFFFFFF;
 
     update_mario_button_inputs(m);
     update_mario_joystick_inputs(m);
+
+    // prevent any inputs when paused
+    if ((m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED)) {
+        m->input = 0;
+        m->intendedMag = 0;
+    }
+
     update_mario_geometry_inputs(m);
 
     debug_print_speed_action_normal(m);
@@ -1469,7 +1478,7 @@ void update_mario_inputs(struct MarioState *m) {
     /*End of moonjump cheat */
 
     if (m->playerIndex == 0) {
-        if (gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
+        if (!localIsPaused && gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
             if (m->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
                 m->input |= INPUT_FIRST_PERSON;
             } else {
@@ -1478,7 +1487,7 @@ void update_mario_inputs(struct MarioState *m) {
         }
 
         if (!(m->input & (INPUT_NONZERO_ANALOG | INPUT_A_PRESSED))) {
-            m->input |= INPUT_UNKNOWN_5;
+            m->input |= INPUT_ZERO_MOVEMENT;
         }
 
         if (m->marioObj->oInteractStatus
