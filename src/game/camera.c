@@ -2924,7 +2924,13 @@ void update_lakitu(struct Camera *c) {
     s16 newYaw;
     UNUSED u8 unused1[8];
 
-    if (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN) {
+#ifdef BETTERCAMERA
+    u8 allowPauseCheck = (c->mode != CAMERA_MODE_NEWCAM);
+#else
+    u8 allowPauseCheck = TRUE;
+#endif
+
+    if (allowPauseCheck && (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN)) {
     } else {
         if (c->cutscene) {
         }

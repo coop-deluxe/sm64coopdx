@@ -608,7 +608,7 @@ static void newcam_apply_values(struct Camera *c) {
     if (gMarioStates[0].floor != NULL) {
         if (gMarioStates[0].floor->type == SURFACE_LOOK_UP_WARP) {
             if (save_file_get_total_star_count(gCurrSaveFileNum - 1, 0, 0x18) >= 10) {
-                if (newcam_tilt < -8000 && gMarioStates[0].forwardVel == 0) {
+                if (newcam_tilt < -8000 && gMarioStates[0].forwardVel == 0 && sCurrPlayMode != PLAY_MODE_PAUSED) {
                     level_trigger_warp(gMarioState, 1);
                 }
             }
@@ -647,6 +647,9 @@ void newcam_loop(struct Camera *c) {
         newcam_stick_input();
         newcam_rotate_button();
         newcam_zoom_button();
+    } else {
+        newcam_yaw_acc *= 0.6f;
+        newcam_tilt_acc *= 0.6f;
     }
     newcam_position_cam();
     newcam_find_fixed();
