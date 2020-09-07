@@ -32,7 +32,7 @@
 void add_tree_leaf_particles(struct MarioState *m) {
     f32 leafHeight;
 
-    if (m->usedObj->behavior == segmented_to_virtual(bhvTree)) {
+    if (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(bhvTree)) {
         // make leaf effect spawn higher on the Shifting Sand Land palm tree
         if (gCurrLevelNum == LEVEL_SSL) {
             leafHeight = 250.0f;
@@ -46,7 +46,7 @@ void add_tree_leaf_particles(struct MarioState *m) {
 }
 
 void play_climbing_sounds(struct MarioState *m, s32 b) {
-    s32 isOnTree = (m->usedObj->behavior == segmented_to_virtual(bhvTree));
+    s32 isOnTree = (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(bhvTree));
 
     if (b == 1) {
         if (is_anim_past_frame(m, 1)) {
@@ -61,6 +61,7 @@ void play_climbing_sounds(struct MarioState *m, s32 b) {
 
 s32 set_pole_position(struct MarioState *m, f32 offsetY) {
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
+    if (m->usedObj == NULL) { return POLE_NONE; }
 
     UNUSED s32 unused1;
     UNUSED s32 unused2;
@@ -121,6 +122,7 @@ s32 set_pole_position(struct MarioState *m, f32 offsetY) {
 s32 act_holding_pole(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
+    if (m->usedObj == NULL) { return FALSE; }
 
 #ifdef VERSION_JP
     if (m->input & INPUT_A_PRESSED) {

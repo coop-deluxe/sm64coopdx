@@ -678,7 +678,7 @@ f32 calc_y_to_curr_floor(f32 *posOff, f32 posMul, f32 posBound, f32 *focOff, f32
     }
 
     if (sMarioCamState->action & ACT_FLAG_ON_POLE) {
-        if (sMarioGeometry.currFloorHeight >= gMarioStates[0].usedObj->oPosY && sMarioCamState->pos[1]
+        if (gMarioStates[0].usedObj != NULL && sMarioGeometry.currFloorHeight >= gMarioStates[0].usedObj->oPosY && sMarioCamState->pos[1]
                    < 0.7f * gMarioStates[0].usedObj->hitboxHeight + gMarioStates[0].usedObj->oPosY) {
             posBound = 1200;
         }
@@ -2341,7 +2341,7 @@ s16 update_default_camera(struct Camera *c) {
         vec3f_copy(c->focus, sMarioCamState->pos);
     }
 
-    if (sMarioCamState->action & ACT_FLAG_ON_POLE) {
+    if ((sMarioCamState->action & ACT_FLAG_ON_POLE) && gMarioStates[0].usedObj != NULL) {
         camFloorHeight = gMarioStates[0].usedObj->oPosY + 125.f;
         if (sMarioCamState->pos[1] - 100.f > camFloorHeight) {
             camFloorHeight = sMarioCamState->pos[1] - 100.f;

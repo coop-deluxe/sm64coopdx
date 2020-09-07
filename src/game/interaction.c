@@ -299,7 +299,7 @@ void mario_stop_riding_object(struct MarioState *m) {
 
 void mario_grab_used_object(struct MarioState *m) {
     if (m->usedObj == NULL || m->usedObj->oHeldState == HELD_HELD) { return; }
-    if (m->heldObj == NULL) {
+    if (m->heldObj == NULL && m->usedObj != NULL) {
         m->heldObj = m->usedObj;
         m->heldObj->heldByPlayerIndex = m->playerIndex;
         obj_set_held_state(m->heldObj, bhvCarrySomething3);
@@ -349,7 +349,7 @@ void mario_stop_riding_and_holding(struct MarioState *m) {
     mario_drop_held_object(m);
     mario_stop_riding_object(m);
 
-    if (m->action == ACT_RIDING_HOOT) {
+    if (m->action == ACT_RIDING_HOOT && m->usedObj != NULL) {
         m->usedObj->oInteractStatus = 0;
         m->usedObj->oHootMarioReleaseTime = gGlobalTimer;
     }
@@ -421,7 +421,7 @@ struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType)
     for (i = 0; i < m->marioObj->numCollidedObjs; i++) {
         object = m->marioObj->collidedObjs[i];
 
-        if (object->oInteractType == interactType) {
+        if (object != NULL && object->oInteractType == interactType) {
             return object;
         }
     }
@@ -574,6 +574,10 @@ static u32 unused_determine_knockback_action(struct MarioState *m) {
 }
 
 u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
+    if (m->interactObj == NULL) {
+        return sForwardKnockbackActions[0][0];
+    }
+
     u32 bonkAction;
 
     s16 terrainIndex = 0; // 1 = air, 2 = water, 0 = default
@@ -707,6 +711,7 @@ u32 should_push_or_pull_door(struct MarioState *m, struct Object *o) {
 }
 
 u32 take_damage_from_interact_object(struct MarioState *m) {
+    if (m->interactObj == NULL) { return 0; }
     s32 shake;
     s32 damage = m->interactObj->oDamageOrCoinValue;
 
@@ -1688,7 +1693,7 @@ u32 interact_hoot(struct MarioState *m, UNUSED u32 interactType, struct Object *
 
     //! Can pause to advance the global timer without falling too far, allowing
     // you to regrab after letting go.
-    if (actionId >= 0x080 && actionId < 0x098
+    if (m->usedObj != NULL && actionId >= 0x080 && actionId < 0x098
         && (gGlobalTimer - m->usedObj->oHootMarioReleaseTime > 30)) {
         mario_stop_riding_and_holding(m);
         o->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;

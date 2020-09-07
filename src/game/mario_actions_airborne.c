@@ -1928,11 +1928,11 @@ s32 act_flying(struct MarioState *m) {
 s32 act_riding_hoot(struct MarioState *m) {
     if (m->usedObj == NULL || m->usedObj->behavior != bhvHoot) {
         m->usedObj = cur_obj_nearest_object_with_behavior(bhvHoot);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (m != &gMarioStates[i]) { continue; }
-            m->usedObj->heldByPlayerIndex = i;
-        }
+        if (m->usedObj == NULL) { return FALSE; }
+        m->usedObj->heldByPlayerIndex = m->playerIndex;
     }
+
+    if (m->usedObj == NULL) { return FALSE; }
 
     if (!(m->input & INPUT_A_DOWN) || (m->marioObj->oInteractStatus & INT_STATUS_MARIO_UNK7)) {
         m->usedObj->oInteractStatus = 0;

@@ -377,7 +377,7 @@ s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg) {
     } else if (actionArg != 0 && mario_ready_to_speak(m)) {
         m->usedObj = gCurrentObject;
         set_mario_action(m, ACT_READING_NPC_DIALOG, actionArg);
-        if (m->playerIndex == 0) { localDialogNPCBehavior = (BehaviorScript*)m->usedObj->behavior; }
+        if (m->playerIndex == 0 && m->usedObj != NULL) { localDialogNPCBehavior = (BehaviorScript*)m->usedObj->behavior; }
         dialogState = 1; // starting dialog
     }
 
@@ -559,7 +559,7 @@ s32 act_reading_sign(struct MarioState *m) {
             m->pos[2] += marioObj->oMarioReadingSignDPosZ / 11.0f;
             // create the text box
             if (m->actionTimer++ == 10) {
-                if (m == &gMarioStates[0]) {
+                if (m == &gMarioStates[0] && m->usedObj != NULL) {
                     create_dialog_inverted_box(m->usedObj->oBehParams2ndByte);
                 }
                 m->actionState = 2;
@@ -831,10 +831,12 @@ s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, 
 }
 
 s32 act_unlocking_key_door(struct MarioState *m) {
-    m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
+    if (m->usedObj != NULL) {
+        m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
 
-    m->pos[0] = m->usedObj->oPosX + coss(m->faceAngle[1]) * 75.0f;
-    m->pos[2] = m->usedObj->oPosZ + sins(m->faceAngle[1]) * 75.0f;
+        m->pos[0] = m->usedObj->oPosX + coss(m->faceAngle[1]) * 75.0f;
+        m->pos[2] = m->usedObj->oPosZ + sins(m->faceAngle[1]) * 75.0f;
+    }
 
     if (m->actionArg & 2) {
         m->faceAngle[1] += 0x8000;
@@ -858,7 +860,7 @@ s32 act_unlocking_key_door(struct MarioState *m) {
     stop_and_set_height_to_floor(m);
 
     if (is_anim_at_end(m)) {
-        if (m->usedObj->oBehParams >> 24 == 1) {
+        if (m->usedObj != NULL && ((m->usedObj->oBehParams >> 24) == 1)) {
             save_file_set_flags(SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR);
             save_file_clear_flags(SAVE_FLAG_HAVE_KEY_2);
         } else {
@@ -875,7 +877,9 @@ s32 act_unlocking_key_door(struct MarioState *m) {
 s32 act_unlocking_star_door(struct MarioState *m) {
     switch (m->actionState) {
         case 0:
-            m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
+            if (m->usedObj != NULL) {
+                m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
+            }
             if (m->actionArg & 2) {
                 m->faceAngle[1] += 0x8000;
             }
@@ -920,10 +924,12 @@ s32 act_entering_star_door(struct MarioState *m) {
     s16 targetAngle;
 
     if (m->actionTimer++ == 0) {
-        m->interactObj->oInteractStatus = 0x00010000;
+        if (m->interactObj != NULL) {
+            m->interactObj->oInteractStatus = 0x00010000;
+        }
 
         // ~30 degrees / 1/12 rot
-        targetAngle = m->usedObj->oMoveAngleYaw + 0x1555;
+        if (m->usedObj != NULL) { targetAngle = m->usedObj->oMoveAngleYaw + 0x1555; }
         if (m->actionArg & 2) {
             targetAngle += 0x5556; // ~120 degrees / 1/3 rot (total 150d / 5/12)
         }
@@ -931,8 +937,10 @@ s32 act_entering_star_door(struct MarioState *m) {
         // targetDX and targetDZ are the offsets to add to Mario's position to
         // have Mario stand 150 units in front of the door
 
-        targetDX = m->usedObj->oPosX + 150.0f * sins(targetAngle) - m->pos[0];
-        targetDZ = m->usedObj->oPosZ + 150.0f * coss(targetAngle) - m->pos[2];
+        if (m->usedObj != NULL) {
+            targetDX = m->usedObj->oPosX + 150.0f * sins(targetAngle) - m->pos[0];
+            targetDZ = m->usedObj->oPosZ + 150.0f * coss(targetAngle) - m->pos[2];
+        }
 
         m->marioObj->oMarioReadingSignDPosX = targetDX / 20.0f;
         m->marioObj->oMarioReadingSignDPosZ = targetDZ / 20.0f;
@@ -954,7 +962,9 @@ s32 act_entering_star_door(struct MarioState *m) {
     }
 
     else {
-        m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
+        if (m->usedObj != NULL) {
+            m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
+        }
 
         if (m->actionArg & 2) {
             m->faceAngle[1] += 0x8000;
@@ -978,10 +988,14 @@ s32 act_entering_star_door(struct MarioState *m) {
 s32 act_going_through_door(struct MarioState *m) {
     if (m->actionTimer == 0) {
         if (m->actionArg & 1) {
-            m->interactObj->oInteractStatus = 0x00010000;
+            if (m->interactObj != NULL) {
+                m->interactObj->oInteractStatus = 0x00010000;
+            }
             set_mario_animation(m, MARIO_ANIM_PULL_DOOR_WALK_IN);
         } else {
-            m->interactObj->oInteractStatus = 0x00020000;
+            if (m->interactObj != NULL) {
+                m->interactObj->oInteractStatus = 0x00020000;
+            }
             set_mario_animation(m, MARIO_ANIM_PUSH_DOOR_WALK_IN);
         }
     }

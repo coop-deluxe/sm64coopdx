@@ -793,12 +793,14 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_UNKNOWN_02: // bbh enter
+                if (m->usedObj == NULL) { break; }
                 sDelayedWarpTimer = 30;
                 sSourceWarpNodeId = (m->usedObj->oBehParams & 0x00FF0000) >> 16;
                 play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 0x1E, 0xFF, 0xFF, 0xFF);
                 break;
 
             case WARP_OP_TELEPORT:
+                if (m->usedObj == NULL) { break; }
                 sDelayedWarpTimer = 20;
                 sSourceWarpNodeId = (m->usedObj->oBehParams & 0x00FF0000) >> 16;
                 val04 = !music_changed_through_warp(sSourceWarpNodeId);
@@ -806,6 +808,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_WARP_DOOR:
+                if (m->usedObj == NULL) { break; }
                 sDelayedWarpTimer = 20;
                 sDelayedWarpArg = m->actionArg;
                 sSourceWarpNodeId = (m->usedObj->oBehParams & 0x00FF0000) >> 16;
@@ -814,6 +817,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_WARP_OBJECT:
+                if (m->usedObj == NULL) { break; }
                 sDelayedWarpTimer = 20;
                 sSourceWarpNodeId = (m->usedObj->oBehParams & 0x00FF0000) >> 16;
                 val04 = !music_changed_through_warp(sSourceWarpNodeId);
