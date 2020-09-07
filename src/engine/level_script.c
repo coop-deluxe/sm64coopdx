@@ -437,7 +437,7 @@ static void level_cmd_init_mario(void) {
 
         spawnInfo->activeAreaIndex = -1;
         spawnInfo->areaIndex = 0;
-        spawnInfo->behaviorArg = i;
+        spawnInfo->behaviorArg = (u32)i | (1 << 31);
         spawnInfo->behaviorScript = behaviorScript;
         spawnInfo->unk18 = unk18;
         spawnInfo->next = NULL;
@@ -447,21 +447,6 @@ static void level_cmd_init_mario(void) {
         }
         lastSpawnInfo = spawnInfo;
     }
-
-    sCurrentCmd = CMD_NEXT;
-}
-
-static void level_cmd_init_mario2(void) {
-    vec3s_set(gPlayerSpawnInfos[1].startPos, 0, 0, 0);
-    vec3s_set(gPlayerSpawnInfos[1].startAngle, 0, 0, 0);
-
-    gPlayerSpawnInfos[1].activeAreaIndex = -1;
-    gPlayerSpawnInfos[1].areaIndex = 0;
-    gPlayerSpawnInfos[1].behaviorArg = CMD_GET(u32, 4);
-    gPlayerSpawnInfos[1].behaviorScript = CMD_GET(void *, 8);
-    gPlayerSpawnInfos[1].unk18 = gLoadedGraphNodes[CMD_GET(u8, 3)];
-    gPlayerSpawnInfos[1].next = NULL;
-    gMarioSpawnInfo->next = &gPlayerSpawnInfos[1];
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -887,7 +872,6 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*3C*/ level_cmd_get_or_set_var,
     /*3D*/ level_cmd_advdemo,
     /*3E*/ level_cmd_cleardemoptr,
-    /*3F*/ level_cmd_init_mario2,
 };
 
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {

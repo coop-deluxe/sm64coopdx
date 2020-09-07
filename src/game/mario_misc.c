@@ -318,10 +318,16 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
     return gfxHead;
 }
 
+struct MarioState* geo_get_mario_state(void) {
+    return (gCurGraphNodeProcessingObject == NULL)
+        ? &gMarioStates[0]
+        : &gMarioStates[gCurGraphNodeProcessingObject->oBehParams - 1];
+}
+
 struct MarioBodyState* geo_get_body_state(void) {
     return (gCurGraphNodeProcessingObject == NULL)
-        ? &gBodyStates[0]
-        : &gBodyStates[gCurGraphNodeProcessingObject->oBehParams - 1];
+           ? &gBodyStates[0]
+           : &gBodyStates[gCurGraphNodeProcessingObject->oBehParams - 1];
 }
 
 /**
@@ -546,11 +552,12 @@ Gfx* geo_switch_mario_cap_on_off(s32 callContext, struct GraphNode* node, UNUSED
 Gfx* geo_mario_rotate_wing_cap_wings(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
     s16 rotX;
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
+    struct MarioBodyState* bodyState = geo_get_body_state();
 
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
 
-        if (gBodyStates[asGenerated->parameter >> 1].wingFlutter == FALSE) {
+        if (bodyState->wingFlutter == FALSE) {
             rotX = (coss((gAreaUpdateCounter & 0xF) << 12) + 1.0f) * 4096.0f;
         }
         else {
@@ -572,7 +579,7 @@ Gfx* geo_mario_rotate_wing_cap_wings(s32 callContext, struct GraphNode* node, UN
 Gfx* geo_switch_mario_hand_grab_pos(s32 callContext, struct GraphNode* b, Mat4* mtx) {
     struct GraphNodeHeldObject* asHeldObj = (struct GraphNodeHeldObject*) b;
     Mat4* curTransform = mtx;
-    struct MarioState* marioState = &gMarioStates[asHeldObj->playerIndex];
+    struct MarioState* marioState = geo_get_mario_state();
 
     if (callContext == GEO_CONTEXT_RENDER) {
         asHeldObj->objNode = NULL;
@@ -615,7 +622,8 @@ Gfx* geo_switch_mario_hand_grab_pos(s32 callContext, struct GraphNode* b, Mat4* 
  */
 Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
     f32 mirroredX;
-    struct Object* mario = gMarioStates->marioObj;
+    struct MarioState* marioState = geo_get_mario_state();
+    struct Object* mario = marioState->marioObj;
 
     switch (callContext) {
     case GEO_CONTEXT_CREATE:

@@ -16,6 +16,7 @@
 #include "surface_load.h"
 #include "game/game_init.h"
 #include "engine/math_util.h"
+#include "game/level_update.h"
 
 s32 unused8038BE90;
 
@@ -704,7 +705,7 @@ void transform_object_vertices(s16 **data, s16 *vertexData) {
 /**
  * Load in the surfaces for the gCurrentObject. This includes setting the flags, exertion, and room.
  */
-void load_object_surfaces(s16 **data, s16 *vertexData) {
+void load_object_surfaces(s16** data, s16* vertexData) {
     s32 surfaceType;
     s32 i;
     s32 numSurfaces;
@@ -732,7 +733,7 @@ void load_object_surfaces(s16 **data, s16 *vertexData) {
     }
 
     for (i = 0; i < numSurfaces; i++) {
-        struct Surface *surface = read_surface_data(vertexData, data);
+        struct Surface* surface = read_surface_data(vertexData, data);
 
         if (surface != NULL) {
             surface->object = gCurrentObject;
@@ -745,7 +746,7 @@ void load_object_surfaces(s16 **data, s16 *vertexData) {
             }
 
             surface->flags |= flags;
-            surface->room = (s8) room;
+            surface->room = (s8)room;
             add_surface(surface, TRUE);
         }
 
@@ -764,18 +765,16 @@ void load_object_collision_model(void) {
     UNUSED s32 unused;
     s16 vertexData[600];
 
-    s16 *collisionData = gCurrentObject->collisionData;
-    f32 marioDist = gCurrentObject->oDistanceToMario;
-    f32 mario2Dist = gCurrentObject->oDistanceToMario;
+    s16* collisionData = gCurrentObject->collisionData;
     f32 tangibleDist = gCurrentObject->oCollisionDistance;
 
-    // On an object's first frame, the distance is set to 19000.0f.
-    // If the distance hasn't been updated, update it now.
-    if (gCurrentObject->oDistanceToMario == 19000.0f) {
-        marioDist = dist_between_objects(gCurrentObject, gMarioObject);
+    u8 anyPlayerInTangibleRange = FALSE;
+    u8 anyPlayerInDrawRange = FALSE;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
+        if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
+        if (dist < gCurrentObject->oDrawingDistance) { anyPlayerInDrawRange = TRUE; }
     }
-    // two-player hack
-    mario2Dist = dist_between_objects(gCurrentObject, gMario2Object);
 
     // If the object collision is supposed to be loaded more than the
     // drawing distance of 4000, extend the drawing range.
@@ -785,7 +784,7 @@ void load_object_collision_model(void) {
 
     // Update if no Time Stop, in range, and in the current room.
     if (!(gTimeStopState & TIME_STOP_ACTIVE)
-        && (marioDist < tangibleDist || mario2Dist < tangibleDist)
+        && (anyPlayerInTangibleRange)
         && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         collisionData++;
         transform_object_vertices(&collisionData, vertexData);
@@ -797,7 +796,7 @@ void load_object_collision_model(void) {
     }
 
 #ifndef NODRAWINGDISTANCE
-    if (marioDist < gCurrentObject->oDrawingDistance) {
+    if (anyPlayerInDrawRange) {
 #endif
         gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
 #ifndef NODRAWINGDISTANCE

@@ -3837,19 +3837,6 @@ const BehaviorScript bhvMario[] = {
     END_LOOP(),
 };
 
-const BehaviorScript bhvMario2[] = {
-    BEGIN(OBJ_LIST_PLAYER),
-    ID(id_bhvMario2),
-    SET_INT(oIntangibleTimer, 0),
-    OR_INT(oFlags, OBJ_FLAG_0100),
-    OR_INT(oUnk94, 0x0001),
-    SET_HITBOX(/*Radius*/ 37, /*Height*/ 160),
-    SET_INTERACT_TYPE(INTERACT_PLAYER),
-    BEGIN_LOOP(),
-        CALL_NATIVE(bhv_mario2_update),
-    END_LOOP(),
-};
-
 const BehaviorScript bhvToadMessage[] = {
     BEGIN(OBJ_LIST_GENACTOR),
     ID(id_bhvToadMessage),

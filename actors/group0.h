@@ -263,57 +263,6 @@ extern const Gfx mario_cap_wings_transparent[];
 extern const Gfx mario_metal_cap_wings[];
 extern const Gfx mario_metal_cap_wings_transparent[];
 
-// mario (player 2)
-extern const GeoLayout mario2_geo_face_and_wings[];
-extern const GeoLayout mario2_geo_left_hand[];
-extern const GeoLayout mario2_geo_right_hand[];
-extern const GeoLayout mario2_geo_body[];
-extern const GeoLayout mario2_geo_medium_poly_left_hand[];
-extern const GeoLayout mario2_geo_medium_poly_right_hand[];
-extern const GeoLayout mario2_geo_medium_poly_body[];
-extern const GeoLayout mario2_geo_low_poly_face_and_wings[];
-extern const GeoLayout mario2_geo_low_poly_left_hand[];
-extern const GeoLayout mario2_geo_low_poly_right_hand[];
-extern const GeoLayout mario2_geo_low_poly_body[];
-extern const GeoLayout mario2_vanish_geo_face_and_wings[];
-extern const GeoLayout mario2_vanish_geo_left_hand[];
-extern const GeoLayout mario2_vanish_geo_right_hand[];
-extern const GeoLayout mario2_vanish_geo_body[];
-extern const GeoLayout mario2_vanish_geo_medium_poly_left_hand[];
-extern const GeoLayout mario2_vanish_geo_medium_poly_right_hand[];
-extern const GeoLayout mario2_vanish_geo_medium_poly_body[];
-extern const GeoLayout mario2_vanish_geo_low_poly_face_and_wings[];
-extern const GeoLayout mario2_vanish_geo_low_poly_left_hand[];
-extern const GeoLayout mario2_vanish_geo_low_poly_right_hand[];
-extern const GeoLayout mario2_vanish_geo_low_poly_body[];
-extern const GeoLayout mario2_metal_geo_face_and_wings[];
-extern const GeoLayout mario2_metal_geo_left_hand[];
-extern const GeoLayout mario2_metal_geo_right_hand[];
-extern const GeoLayout mario2_metal_geo_body[];
-extern const GeoLayout mario2_metal_geo_medium_poly_left_hand[];
-extern const GeoLayout mario2_metal_geo_medium_poly_right_hand[];
-extern const GeoLayout mario2_metal_geo_medium_poly_body[];
-extern const GeoLayout mario2_metal_geo_low_poly_face_and_wings[];
-extern const GeoLayout mario2_metal_geo_low_poly_left_hand[];
-extern const GeoLayout mario2_metal_geo_low_poly_right_hand[];
-extern const GeoLayout mario2_metal_geo_low_poly_body[];
-extern const GeoLayout mario2_metal_vanish_geo_face_and_wings[];
-extern const GeoLayout mario2_metal_vanish_geo_left_hand[];
-extern const GeoLayout mario2_metal_vanish_geo_right_hand[];
-extern const GeoLayout mario2_metal_vanish_geo_body[];
-extern const GeoLayout mario2_metal_vanish_geo_medium_poly_left_hand[];
-extern const GeoLayout mario2_metal_vanish_geo_medium_poly_right_hand[];
-extern const GeoLayout mario2_metal_vanish_geo_medium_poly_body[];
-extern const GeoLayout mario2_metal_vanish_geo_low_poly_face_and_wings[];
-extern const GeoLayout mario2_metal_vanish_geo_low_poly_left_hand[];
-extern const GeoLayout mario2_metal_vanish_geo_low_poly_right_hand[];
-extern const GeoLayout mario2_metal_vanish_geo_low_poly_body[];
-extern const GeoLayout mario2_geo_load_body[];
-extern const GeoLayout mario2_geo_load_medium_poly_body[];
-extern const GeoLayout mario2_geo_load_low_poly_body[];
-extern const GeoLayout mario2_geo_render_body[];
-extern const GeoLayout mario2_geo[];
-
 // luigi
 #include "actors/luigi/geo_header.h"
 

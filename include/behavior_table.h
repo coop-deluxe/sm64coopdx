@@ -294,7 +294,6 @@ enum BehaviorId {
     id_bhvSLWalkingPenguin,
     id_bhvYellowBall,
     id_bhvMario,
-    id_bhvMario2,
     id_bhvToadMessage,
     id_bhvUnlockDoorStar,
     id_bhvRandomAnimatedTexture,

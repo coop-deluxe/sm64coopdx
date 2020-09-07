@@ -290,7 +290,6 @@ const BehaviorScript* gBehaviorTable[id_bhv_max_count] = {
     [id_bhvSLWalkingPenguin] = bhvSLWalkingPenguin,
     [id_bhvYellowBall] = bhvYellowBall,
     [id_bhvMario] = bhvMario,
-    [id_bhvMario2] = bhvMario2,
     [id_bhvToadMessage] = bhvToadMessage,
     [id_bhvUnlockDoorStar] = bhvUnlockDoorStar,
     [id_bhvRandomAnimatedTexture] = bhvRandomAnimatedTexture,

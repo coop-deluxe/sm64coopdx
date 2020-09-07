@@ -145,7 +145,7 @@ struct CreditsEntry sCreditsSequence[] = {
     { LEVEL_NONE, 0, 1, 0, { 0, 0, 0 }, NULL },
 };
 
-struct MarioState gMarioStates[MAX_PLAYERS];
+struct MarioState gMarioStates[MAX_PLAYERS] = { 0 };
 struct HudDisplay gHudDisplay;
 s16 sCurrPlayMode;
 u16 D_80339ECA;
