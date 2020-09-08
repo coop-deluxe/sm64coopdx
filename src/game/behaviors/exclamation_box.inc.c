@@ -36,6 +36,7 @@ void bhv_rotating_exclamation_box_loop(void) {
 }
 
 void exclamation_box_act_0(void) {
+    o->oExclamationBoxForce = FALSE;
     if (o->oBehParams2ndByte < 3) {
         o->oAnimState = o->oBehParams2ndByte;
         if ((save_file_get_flags() & D_8032F0C0[o->oBehParams2ndByte])
@@ -71,11 +72,15 @@ void exclamation_box_act_2(void) {
         o->oPosY = o->oHomeY;
         o->oGraphYOffset = 0.0f;
     }
-    if (nearest_mario_state_to_object(o) == &gMarioStates[0]) {
-        if (o->oExclamationBoxUnkFC == 0x4000 || cur_obj_was_attacked_or_ground_pounded()) {
-            o->oExclamationBoxForce = TRUE;
-            network_send_object(o);
-            o->oExclamationBoxForce = FALSE;
+
+    u8 isNearest = (nearest_mario_state_to_object(o) == &gMarioStates[0]);
+    if (o->oExclamationBoxForce || isNearest) {
+        if (o->oExclamationBoxForce || (isNearest && cur_obj_was_attacked_or_ground_pounded())) {
+            if (!o->oExclamationBoxForce) {
+                o->oExclamationBoxForce = TRUE;
+                network_send_object(o);
+                o->oExclamationBoxForce = FALSE;
+            }
             cur_obj_become_intangible();
             o->oExclamationBoxUnkFC = 0x4000;
             o->oVelY = 30.0f;
@@ -110,7 +115,6 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
     struct Object *sp1C = NULL;
 
     if (o->oExclamationBoxForce) {
-        o->oExclamationBoxForce = FALSE;
         return;
     }
 
@@ -138,7 +142,6 @@ void exclamation_box_act_4(void) {
     spawn_mist_particles_variable(0, 0, 46.0f);
     spawn_triangle_break_particles(20, 139, 0.3f, o->oAnimState);
     create_sound_spawner(SOUND_GENERAL_BREAK_BOX);
-    o->oExclamationBoxForce = FALSE;
     if (o->oBehParams2ndByte < 3) {
         o->oAction = 5;
         cur_obj_hide();
@@ -157,17 +160,9 @@ void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_bo
 
 void bhv_exclamation_box_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->syncDeathEvent = FALSE;
         network_init_object_field(o, &o->oExclamationBoxForce);
-    }
-    if (o->oExclamationBoxForce && o->oAction < 3) {
-        cur_obj_become_intangible();
-        o->oExclamationBoxUnkFC = 0x4000;
-        o->oVelY = 30.0f;
-        o->oGravity = -8.0f;
-        o->oFloorHeight = o->oPosY;
-        o->oAction = 3;
-        queue_rumble_data_object(o, 5, 80);
     }
     cur_obj_scale(2.0f);
     cur_obj_call_action_function(sExclamationBoxActions);
