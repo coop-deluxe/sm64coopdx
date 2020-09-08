@@ -318,16 +318,20 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
     return gfxHead;
 }
 
-struct MarioState* geo_get_mario_state(void) {
-    return (gCurGraphNodeProcessingObject == NULL)
-        ? &gMarioStates[0]
-        : &gMarioStates[gCurGraphNodeProcessingObject->oBehParams - 1];
+static u8 geo_get_processing_object_index(void) {
+    if (gCurGraphNodeProcessingObject == NULL) { return 0; }
+    u8 index = gCurGraphNodeProcessingObject->oBehParams - 1;
+    return (index >= MAX_PLAYERS) ? 0 : index;
 }
 
-struct MarioBodyState* geo_get_body_state(void) {
-    return (gCurGraphNodeProcessingObject == NULL)
-           ? &gBodyStates[0]
-           : &gBodyStates[gCurGraphNodeProcessingObject->oBehParams - 1];
+static struct MarioState* geo_get_mario_state(void) {
+    u8 index = geo_get_processing_object_index();
+    return &gMarioStates[index];
+}
+
+static struct MarioBodyState* geo_get_body_state(void) {
+    u8 index = geo_get_processing_object_index();
+    return &gBodyStates[index];
 }
 
 /**

@@ -260,6 +260,13 @@ void spawn_particle(u32 activeParticleFlag, s16 model, const BehaviorScript *beh
  * Mario's primary behavior update function.
  */
 void bhv_mario_update(void) {
+    // force indices to be well behaved
+    // this may cause unintended side effects
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].marioObj == NULL) { continue; }
+        gMarioStates[i].marioObj->oBehParams = i + 1;
+    }
+
     // set mario state to the current player
     gMarioState = &gMarioStates[gCurrentObject->oBehParams - 1];
 
