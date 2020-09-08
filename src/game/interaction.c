@@ -47,6 +47,9 @@
 #define INT_ATTACK_NOT_WEAK_FROM_ABOVE                                                \
     (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_HIT_FROM_BELOW)
 
+#define INT_ATTACK_SLIDE                                                              \
+    (INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL)
+
 u8 sDelayInvincTimer;
 s16 sInvulnerable;
 u32 interact_coin(struct MarioState *, u32, struct Object *);
@@ -1189,6 +1192,21 @@ u8 determine_player_damage_value(u32 interaction) {
     return 1;
 }
 
+u8 player_is_sliding(struct MarioState* m) {
+    if (m->action & (ACT_FLAG_BUTT_OR_STOMACH_SLIDE | ACT_FLAG_DIVING)) {
+        return TRUE;
+    }
+
+    switch (m->action) {
+        case ACT_CROUCH_SLIDE:
+        case ACT_SLIDE_KICK_SLIDE:
+        case ACT_BUTT_SLIDE_AIR:
+        case ACT_HOLD_BUTT_SLIDE_AIR:
+            return TRUE;
+    }
+    return FALSE;
+}
+
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
 
@@ -1212,9 +1230,27 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     u8 isInCutscene = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((m2->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
     u8 isInvulnerable = (m2->action & ACT_FLAG_INVULNERABLE) || m2->invincTimer != 0 || m2->hurtCounter != 0 || isInCutscene;
     if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable) {
+
+        // determine if slide attack should be ignored
+        if ((interaction & INT_ATTACK_SLIDE) && player_is_sliding(m2)) {
+            // determine the difference in velocities
+            Vec3f velDiff;
+            vec3f_dif(velDiff, m->vel, m2->vel);
+
+            if (vec3f_length(velDiff) < 40) {
+                // the difference vectors are not different enough, do not attack
+                return FALSE;
+            }
+            if (vec3f_length(m2->vel) > vec3f_length(m->vel)) {
+                // the one being attacked is going faster, do not attack
+                return FALSE;
+            }
+        }
+
         if (m->action == ACT_GROUND_POUND) {
             m2->squishTimer = max(m2->squishTimer, 20);
         }
+
         if (m2->playerIndex == 0) {
             m2->interactObj = m->marioObj;
             if (interaction & INT_KICK) {
