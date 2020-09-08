@@ -47,7 +47,7 @@ void bhv_star_spawn_init(void) {
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
         else
             cutscene_object(CUTSCENE_RED_COIN_STAR_SPAWN, o);
-        gFreezeMario = 1000;
+        gMarioStates[0].freeze = 200;
     }
 
     //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
@@ -99,7 +99,7 @@ void bhv_star_spawn_loop(void) {
         case 3:
             o->oFaceAngleYaw += 0x800;
             if (o->oTimer == 20) {
-                gFreezeMario = 0;
+                gMarioStates[0].freeze = 0;
                 gObjCutsceneDone = TRUE;
                 clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
                 o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;

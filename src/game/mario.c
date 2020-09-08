@@ -47,8 +47,6 @@
 
 #define MAX_HANG_PREVENTION 64
 
-u16 gFreezeMario = 0;
-
 u32 unused80339F10;
 s8 filler80339F1C[20];
 
@@ -1452,7 +1450,7 @@ void update_mario_inputs(struct MarioState *m) {
     m->particleFlags = 0;
     if (m->playerIndex == 0) { m->input = 0; }
 
-    u8 localIsPaused = (m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED);
+    u8 localIsPaused = (m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED || m->freeze > 0);
 
     m->collidedObjInteractTypes = m->marioObj->collidedObjInteractTypes;
     m->flags &= 0xFFFFFF;
@@ -1461,7 +1459,7 @@ void update_mario_inputs(struct MarioState *m) {
     update_mario_joystick_inputs(m);
 
     // prevent any inputs when paused
-    if ((m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED)) {
+    if ((m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED || m->freeze > 0)) {
         m->input = 0;
         m->intendedMag = 0;
     }
@@ -1881,8 +1879,9 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         // don't update mario when in a cutscene
         if (gMarioState->playerIndex == 0) {
             extern s16 gDialogID;
-            if (gFreezeMario > 0) { gFreezeMario--; }
-            if (gFreezeMario < 1 && gDialogID != -1) { gFreezeMario = 1; }
+            if (gMarioState->freeze > 0) { gMarioState->freeze--; }
+            if (gMarioState->freeze < 2 && gDialogID != -1) { gMarioState->freeze = 2; }
+            if (gMarioState->freeze < 2 && sCurrPlayMode == PLAY_MODE_PAUSED) { gMarioState->freeze = 2; }
         }
 
         // two-player hack: drop held object if server is holding it
@@ -1901,9 +1900,9 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         // if a loop of actions were found, but there has not been a situation found.
         while (inLoop) {
             // don't update mario when in a cutscene
-            if (gMarioState->playerIndex == 0 && gFreezeMario > 0 && (gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE) {
+            /*if (gMarioState->freeze > 0 && (gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE) {
                 break;
-            }
+            }*/
 
             // this block can get stuck in an infinite loop due to unexpected circumstances arising from networked players
             if (prevent_hang(hangPreventionActions, &hangPreventionIndex)) {
@@ -1985,6 +1984,8 @@ static void init_single_mario(struct MarioState* m) {
     u16 playerIndex = m->playerIndex;
     struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[playerIndex];
     unused80339F10 = 0;
+
+    m->freeze = 0;
 
     m->actionTimer = 0;
     m->framesSinceA = 0xFF;
@@ -2082,7 +2083,6 @@ static void init_single_mario(struct MarioState* m) {
 }
 
 void init_mario(void) {
-    gFreezeMario = 0;
     gInsidePainting = false;
 
     for (int i = 0; i < MAX_PLAYERS; i++) {

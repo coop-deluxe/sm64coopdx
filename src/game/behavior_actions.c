@@ -93,8 +93,6 @@ struct OpenableGrill {
     const Collision *collision;
 };
 
-extern u16 gFreezeMario;
-
 s32 D_8032F0C0[] = { SAVE_FLAG_HAVE_WING_CAP, SAVE_FLAG_HAVE_METAL_CAP, SAVE_FLAG_HAVE_VANISH_CAP };
 
 // Boo Roll

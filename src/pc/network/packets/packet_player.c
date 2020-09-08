@@ -5,6 +5,9 @@
 #include "sm64.h"
 #include "src/audio/external.h"
 
+#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
+#define GET_BIT(val, num) (((val) >> (num)) & 0x01)
+
 void network_send_player(void) {
     if (gMarioStates[0].marioObj == NULL) { return; }
     u32 heldSyncID = (gMarioStates[0].heldObj != NULL)
@@ -13,6 +16,8 @@ void network_send_player(void) {
     u32 heldBySyncID = (gMarioStates[0].heldByObj != NULL)
                      ? gMarioStates[0].heldByObj->oSyncID
                      : 0;
+
+    u8 customFlags = SET_BIT((gMarioStates[0].freeze > 0), 0);
 
     struct Packet p;
     packet_init(&p, PACKET_PLAYER, false);
@@ -26,7 +31,7 @@ void network_send_player(void) {
     packet_write(&p, &gMarioStates[0].actionArg, sizeof(u32));
     packet_write(&p, &gMarioStates[0].currentRoom, sizeof(s16));
     packet_write(&p, &gMarioStates[0].squishTimer, sizeof(u8));
-
+    packet_write(&p, &customFlags, sizeof(u8));
     packet_write(&p, &heldSyncID, sizeof(u32));
     packet_write(&p, &heldBySyncID, sizeof(u32));
     network_send(&p);
@@ -38,10 +43,11 @@ void network_receive_player(struct Packet* p) {
     // save previous state
     u32 heldSyncID = 0;
     u32 heldBySyncID = 0;
+    u16 playerIndex = gMarioStates[1].playerIndex;
+    u8 customFlags = 0;
     u32 oldAction = gMarioStates[1].action;
     u16 oldActionState = gMarioStates[1].actionState;
     u16 oldActionArg = gMarioStates[1].actionArg;
-    u16 playerIndex = gMarioStates[1].playerIndex;
     u32 oldBehParams = gMarioStates[1].marioObj->oBehParams;
 
     // load mario information from packet
@@ -55,8 +61,12 @@ void network_receive_player(struct Packet* p) {
     packet_read(p, &gMarioStates[1].actionArg, sizeof(u32));
     packet_read(p, &gMarioStates[1].currentRoom, sizeof(s16));
     packet_read(p, &gMarioStates[1].squishTimer, sizeof(u8));
+    packet_read(p, &customFlags, sizeof(u8));
     packet_read(p, &heldSyncID, sizeof(u32));
     packet_read(p, &heldBySyncID, sizeof(u32));
+
+    // read custom flags
+    gMarioStates[1].freeze = GET_BIT(customFlags, 0);
 
     // reset player index
     gMarioStates[1].playerIndex = playerIndex;
