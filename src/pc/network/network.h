@@ -135,7 +135,7 @@ void network_receive_level_warp(struct Packet* p);
 
 // packet_inside_painting.c
 void network_update_inside_painting(void);
-void network_send_inside_painting(void);
+void network_send_inside_painting(bool reliable);
 void network_receive_inside_painting(struct Packet* p);
 
 // packet_collect_star.c

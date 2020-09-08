@@ -464,6 +464,6 @@ void star_select_finish_selection(void) {
 
     gInsidePainting = FALSE;
     if (gControlPainting) {
-        network_send_inside_painting();
+        network_send_inside_painting(TRUE);
     }
 }

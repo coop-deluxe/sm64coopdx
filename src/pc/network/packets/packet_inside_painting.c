@@ -25,12 +25,12 @@ static void populate_packet_data(struct PacketDataInsidePainting* data) {
     data->actIndex = sSelectedActIndex;
 }
 
-void network_send_inside_painting(void) {
+void network_send_inside_painting(bool reliable) {
     struct PacketDataInsidePainting data = { 0 };
     populate_packet_data(&data);
 
     struct Packet p;
-    packet_init(&p, PACKET_INSIDE_PAINTING, false);
+    packet_init(&p, PACKET_INSIDE_PAINTING, reliable);
     packet_write(&p, &data, sizeof(struct PacketDataInsidePainting));
     network_send(&p);
 
@@ -60,7 +60,7 @@ void network_receive_inside_painting(struct Packet* p) {
 
     if (gControlPainting && !remote.controlPainting && !gInsidePainting && remote.insidePainting) {
         // we're in control and no longer in the painting, let remote know
-        network_send_inside_painting();
+        network_send_inside_painting(false);
     }
 
     if (!gControlPainting && remote.controlPainting && !remote.insidePainting) {
@@ -77,6 +77,6 @@ void network_update_inside_painting(void) {
     float timeSinceSend = (clock() - lastSentTime) / CLOCKS_PER_SEC;
 
     if (compareData != 0 || timeSinceSend > minUpdateRate) {
-        network_send_inside_painting();
+        network_send_inside_painting(timeSinceSend > 5);
     }
 }
