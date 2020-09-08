@@ -14,6 +14,9 @@
 #include "pc/ini.h"
 #include "pc/network/network.h"
 
+// note: force-disable TEXTSAVES until it's synchronized
+#undef TEXTSAVES
+
 #define MENU_DATA_MAGIC 0x4849
 #define SAVE_FILE_MAGIC 0x4441
 
