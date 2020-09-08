@@ -185,7 +185,7 @@ void bookshelf_manager_act_1(void) {
 }
 
 void bookshelf_manager_act_2(void) {
-    if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
+    //if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         if (o->oBookSwitchManagerUnkF4 < 0) {
             if (o->oTimer > 30) {
                 if (gNetworkType == NT_SERVER) {
@@ -216,13 +216,16 @@ void bookshelf_manager_act_2(void) {
                 o->oTimer = 0;
             }
         }
-    } else if (gNetworkType == NT_SERVER) {
+    /*} else if (gNetworkType == NT_SERVER) {
         o->oAction = 4;
         network_send_object(o);
-    }
+    }*/
 }
 
 void bookshelf_manager_act_3(void) {
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvHauntedBookshelf) {
+        o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
+    }
     if (o->oTimer > 85) {
         if (gNetworkType == NT_SERVER) {
             o->oAction = 4;
@@ -245,7 +248,8 @@ void bookshelf_manager_act_4(void) {
 
 void bhv_haunted_bookshelf_manager_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->syncDeathEvent = FALSE;
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->activeFlags);
         network_init_object_field(o, &o->oBookSwitchManagerUnkF8);

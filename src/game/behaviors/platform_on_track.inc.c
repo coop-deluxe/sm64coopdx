@@ -117,7 +117,13 @@ static void platform_on_track_act_init(void) {
  * Wait for mario to stand on the platform for 20 frames, then begin moving.
  */
 static void platform_on_track_act_wait_for_mario(void) {
-    if (gMarioObject->platform == o) {
+    u8 anyMarioOnPlatform = FALSE;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].marioObj->platform == o) { anyMarioOnPlatform = TRUE; }
+    }
+
+    if (anyMarioOnPlatform) {
         if (o->oTimer > 20) {
             o->oAction = PLATFORM_ON_TRACK_ACT_MOVE_ALONG_TRACK;
             if (network_owns_object(o)) { network_send_object(o); }

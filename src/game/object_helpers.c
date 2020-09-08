@@ -2523,28 +2523,33 @@ void bhv_init_room(void) {
 }
 
 void cur_obj_enable_rendering_if_mario_in_room(void) {
-    register s32 marioInRoom;
+    if (o->oRoom == -1) { return; }
+    if (gMarioCurrentRoom == 0) { return; }
 
-    if (o->oRoom != -1 && gMarioCurrentRoom != 0) {
-        if (gMarioCurrentRoom == o->oRoom) {
-            marioInRoom = TRUE;
-        } else if (gDoorAdjacentRooms[gMarioCurrentRoom][0] == o->oRoom) {
-            marioInRoom = TRUE;
-        } else if (gDoorAdjacentRooms[gMarioCurrentRoom][1] == o->oRoom) {
-            marioInRoom = TRUE;
-        } else {
-            marioInRoom = FALSE;
-        }
+    u8 marioInRoom = FALSE;
 
-        if (marioInRoom) {
-            cur_obj_enable_rendering();
-            o->activeFlags &= ~ACTIVE_FLAG_IN_DIFFERENT_ROOM;
-            gNumRoomedObjectsInMarioRoom++;
-        } else {
-            cur_obj_disable_rendering();
-            o->activeFlags |= ACTIVE_FLAG_IN_DIFFERENT_ROOM;
-            gNumRoomedObjectsNotInMarioRoom++;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].currentRoom != 0) {
+            s16 currentRoom = gMarioStates[i].currentRoom;
+            if (currentRoom == o->oRoom) {
+                marioInRoom = TRUE;
+            } else if (gDoorAdjacentRooms[currentRoom][0] == o->oRoom) {
+                marioInRoom = TRUE;
+            } else if (gDoorAdjacentRooms[currentRoom][1] == o->oRoom) {
+                marioInRoom = TRUE;
+            }
         }
+    }
+
+    if (marioInRoom) {
+        cur_obj_enable_rendering();
+        o->activeFlags &= ~ACTIVE_FLAG_IN_DIFFERENT_ROOM;
+        gNumRoomedObjectsInMarioRoom++;
+    }
+    else {
+        cur_obj_disable_rendering();
+        o->activeFlags |= ACTIVE_FLAG_IN_DIFFERENT_ROOM;
+        gNumRoomedObjectsNotInMarioRoom++;
     }
 }
 
