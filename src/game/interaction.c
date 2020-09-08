@@ -1252,7 +1252,10 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
             }
         }
 
+        // determine if ground pound should be ignored
         if (m->action == ACT_GROUND_POUND) {
+            // not moving down yet?
+            if (m->actionState == 0) { return FALSE; }
             m2->squishTimer = max(m2->squishTimer, 20);
         }
 
