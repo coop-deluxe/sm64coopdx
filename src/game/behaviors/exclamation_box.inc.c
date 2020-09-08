@@ -128,9 +128,13 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
             if (a0->model == 122)
                 o->oFlags |= 0x4000;
 
-            struct Object* spawn_objects[] = { sp1C };
-            u32 models[] = { a0->model };
-            network_send_spawn_objects(spawn_objects, models, 1);
+            // send non-star spawn events
+            // stars cant be sent here to due jankiness in oBehParams
+            if (a0->behavior != bhvSpawnedStar) {
+                struct Object* spawn_objects[] = { sp1C };
+                u32 models[] = { a0->model };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
             break;
         }
         a0++;
@@ -145,18 +149,26 @@ void exclamation_box_act_4(void) {
     if (o->oBehParams2ndByte < 3) {
         o->oAction = 5;
         cur_obj_hide();
-    } else
-        obj_mark_for_deletion(o);
+    } else {
+        o->oAction = 6;
+        cur_obj_become_intangible();
+        cur_obj_hide();
+    }
 }
 
 void exclamation_box_act_5(void) {
     if (o->oTimer > 300)
         o->oAction = 2;
 }
+void exclamation_box_act_6(void) {
+    if (o->oTimer > 1000)
+        obj_mark_for_deletion(o);
+}
 
 void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_box_act_1,
                                            exclamation_box_act_2, exclamation_box_act_3,
-                                           exclamation_box_act_4, exclamation_box_act_5 };
+                                           exclamation_box_act_4, exclamation_box_act_5,
+                                           exclamation_box_act_6 };
 
 void bhv_exclamation_box_loop(void) {
     if (!network_sync_object_initialized(o)) {

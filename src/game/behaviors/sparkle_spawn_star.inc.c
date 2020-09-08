@@ -20,6 +20,17 @@ void bhv_spawned_star_init(void) {
     if (bit_shift_left(sp24) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1))
         cur_obj_set_model(MODEL_TRANSPARENT_STAR);
     cur_obj_play_sound_2(SOUND_GENERAL2_STAR_APPEARS);
+
+    // exclamation box stars are not sent through the normal exclamation box
+    // path due to jankiness in oBehParams. Send the spawn event here instead.
+    u8 spawnedFromExclamationBox = (o->parentObj != NULL && o->parentObj->behavior == bhvExclamationBox);
+    if (gNetworkLevelLoaded && spawnedFromExclamationBox) {
+        o->parentObj = o;
+        struct Object* spawn_objects[] = { o };
+        u32 models[] = { MODEL_STAR };
+        network_send_spawn_objects(spawn_objects, models, 1);
+    }
+
 }
 
 void set_sparkle_spawn_star_hitbox(void) {
