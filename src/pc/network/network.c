@@ -35,8 +35,9 @@ void network_init(enum NetworkType inNetworkType, char* ip, unsigned int port) {
 
     // set server settings
     if (gNetworkType == NT_SERVER) {
-        gServerSettings.playerInteractions = configPlayerInteraction;
+        gServerSettings.playerInteractions      = configPlayerInteraction;
         gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
+        gServerSettings.stayInLevelAfterStar    = configStayInLevelAfterStar;
     }
 
     // create a receiver socket to receive datagrams

@@ -820,6 +820,9 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
     u32 noExit = (o->oInteractionSubtype & INT_SUBTYPE_NO_EXIT) != 0;
     u32 grandStar = (o->oInteractionSubtype & INT_SUBTYPE_GRAND_STAR) != 0;
 
+    u8 stayInLevelCommon = !(gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3);
+    if (stayInLevelCommon && gServerSettings.stayInLevelAfterStar) { noExit = TRUE; }
+
     if (m->health >= 0x100) {
         mario_stop_riding_and_holding(m);
         queue_rumble_data_mario(m, 5, 80);

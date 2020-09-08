@@ -68,6 +68,7 @@ extern unsigned int configHostPort;
 extern unsigned int configHostSaveSlot;
 extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
+extern unsigned int configStayInLevelAfterStar;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

@@ -74,6 +74,7 @@ enum PlayerInteractions {
 struct ServerSettings {
     enum PlayerInteractions playerInteractions;
     u8 playerKnockbackStrength;
+    u8 stayInLevelAfterStar;
 };
 
 // Networking-specific externs

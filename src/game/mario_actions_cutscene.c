@@ -30,6 +30,7 @@
 #include "thread6.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/pc_main.h"
+#include "pc/network/network.h"
 
 // TODO: put this elsewhere
 enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME, SAVE_OPT_CONTINUE_DONT_SAVE };

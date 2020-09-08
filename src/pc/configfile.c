@@ -102,6 +102,7 @@ unsigned int configHostPort                  = DEFAULT_PORT;
 unsigned int configHostSaveSlot              = 1;
 unsigned int configPlayerInteraction         = 1;
 unsigned int configPlayerKnockbackStrength   = 25;
+unsigned int configStayInLevelAfterStar      = 0;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -157,6 +158,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue = &configPlayerKnockbackStrength},
+    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue = &configStayInLevelAfterStar},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
