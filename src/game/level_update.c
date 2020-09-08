@@ -382,24 +382,27 @@ void init_mario_after_warp(void) {
             // set to a minimum of two lives on level change
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
                 gMarioStates[i].numLives = max(gMarioStates[i].numLives, 2);
-                gMarioStates[i].health = 0x880;
-                gMarioStates[i].healCounter = 0;
-                gMarioStates[i].hurtCounter = 0;
             }
 
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL || sWarpDest.type == WARP_TYPE_CHANGE_AREA) {
                 gPlayerSpawnInfos[i].areaIndex = sWarpDest.areaIdx;
+                // reset health
+                gMarioStates[i].health = 0x880;
+                gMarioStates[i].healCounter = 0;
+                gMarioStates[i].hurtCounter = 0;
+
                 if (i == 0) { load_mario_area(); }
+            }
+
+            // enforce bubble on area change
+            if (i == 0 && gMarioStates[i].numLives == -1) {
+                mario_set_bubbled(&gMarioStates[i]);
+                gMarioStates[i].health = 0xFF;
             }
         }
 
         init_mario();
         set_mario_initial_action(gMarioState, marioSpawnType, sWarpDest.arg);
-
-        // enforce bubble on area change
-        if (gMarioState->playerIndex == 0 && gMarioState->numLives == -1) {
-            mario_set_bubbled(gMarioState);
-        }
 
         gMarioState->interactObj = spawnNode->object;
         gMarioState->usedObj = spawnNode->object;
