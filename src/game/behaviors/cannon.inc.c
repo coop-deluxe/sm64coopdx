@@ -120,7 +120,9 @@ void opened_cannon_act_1(void) {
         o->oMoveAngleYaw = marioState->marioObj->oMarioCannonObjectYaw + marioState->marioObj->oMarioCannonInputYaw;
     }
     o->oCannonUnk10C = 0;
-    gMarioShotFromCannon = 1;
+    if (o->oCannonIsLocal) {
+        gMarioShotFromCannon = 1;
+    }
 }
 
 void opened_cannon_act_2(void) {

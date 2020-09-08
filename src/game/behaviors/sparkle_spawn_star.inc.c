@@ -51,15 +51,16 @@ void set_home_to_mario(void) {
             break;
         }
     }
+    struct Object* player = nearest_player_to_object(o);
     if (parentIsMario) {
         o->oHomeX = o->parentObj->oPosX;
         o->oHomeZ = o->parentObj->oPosZ;
         o->oHomeY = o->parentObj->oPosY;
-
     } else {
-        o->oHomeX = gMarioObject->oPosX;
-        o->oHomeZ = gMarioObject->oPosZ;
-        o->oHomeY = gMarioObject->oPosY;
+        struct Object* player = nearest_player_to_object(o);
+        o->oHomeX = player->oPosX;
+        o->oHomeZ = player->oPosZ;
+        o->oHomeY = player->oPosY;
     }
     o->oHomeY += 250.0f;
     o->oPosY = o->oHomeY;

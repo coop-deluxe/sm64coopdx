@@ -913,14 +913,7 @@ void koopa_the_quick_force_end_race(void) {
     level_control_timer(TIMER_CONTROL_STOP);
 
     if (!o->oKoopaRaceEndpointKoopaFinished) {
-        network_send_object(o);
         play_race_fanfare();
-        if (gMarioShotFromCannon) {
-            o->oKoopaRaceEndpointRaceStatus = -1;
-        }
-        else {
-            o->oKoopaRaceEndpointRaceStatus = 1;
-        }
     }
     koopaForceEndRace = FALSE;
 }
@@ -931,6 +924,7 @@ void koopa_the_quick_force_end_race(void) {
 void bhv_koopa_race_endpoint_update(void) {
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oKoopaRaceEndpointRaceStatus);
         network_init_object_field(o, &koopaForceEndRace);
     }
 
@@ -944,16 +938,15 @@ void bhv_koopa_race_endpoint_update(void) {
             level_control_timer(TIMER_CONTROL_STOP);
 
             if (!o->oKoopaRaceEndpointKoopaFinished) {
-                koopaForceEndRace = TRUE;
-                network_send_object(o);
-                koopaForceEndRace = FALSE;
-
                 play_race_fanfare();
                 if (gMarioShotFromCannon) {
                     o->oKoopaRaceEndpointRaceStatus = -1;
                 } else {
                     o->oKoopaRaceEndpointRaceStatus = 1;
                 }
+                koopaForceEndRace = TRUE;
+                network_send_object(o);
+                koopaForceEndRace = FALSE;
             }
         }
     }
