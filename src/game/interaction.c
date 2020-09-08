@@ -1233,6 +1233,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
 
     // attacked
     u8 isInCutscene = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((m2->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
+    isInCutscene = isInCutscene || (m->action == ACT_IN_CANNON) || (m2->action == ACT_IN_CANNON);
     u8 isInvulnerable = (m2->action & ACT_FLAG_INVULNERABLE) || m2->invincTimer != 0 || m2->hurtCounter != 0 || isInCutscene;
     if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable) {
 

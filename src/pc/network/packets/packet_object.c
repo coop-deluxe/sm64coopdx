@@ -55,6 +55,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->hasStandardFields = (maxSyncDistance >= 0);
     so->maxUpdateRate = 0;
     so->ignore_if_true = NULL;
+    so->on_received = NULL;
     so->syncDeathEvent = true;
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
@@ -371,6 +372,15 @@ void network_receive_object(struct Packet* p) {
     // deactivated
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         network_forget_sync_object(so);
+    }
+
+    // trigger on-received callback
+    if (so->on_received != NULL) {
+        extern struct Object* gCurrentObject;
+        struct Object* tmp = gCurrentObject;
+        gCurrentObject = so->o;
+        (*so->on_received)();
+        gCurrentObject = tmp;
     }
 }
 

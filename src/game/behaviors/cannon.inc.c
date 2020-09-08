@@ -146,14 +146,47 @@ u8 unused0EA1FC[] = { 2,  0,   0, 0, 0,  0,   0, 0, 63, 128, 0, 0, 2,  0,   0, 0
                       63, 128, 0, 0, 2,  0,   0, 0, 65, 160, 0, 0, 63, 128, 0, 0, 2,  0,   0, 0,
                       65, 160, 0, 0, 63, 128, 0, 0, 8,  0,   0, 0, 65, 32,  0, 0, 63, 128, 0, 0 };
 
-u8 cannon_ignore_remote_updates(struct Object* object) { return object->oCannonIsLocal; }
+u8 cannon_ignore_remote_updates(struct Object* object) {
+    // two-player hack
+    return ((gNetworkType == NT_SERVER) && object->oCannonIsLocal);
+}
+
+static void cannon_on_received(void) {
+    // check if we're on in the cannon too
+    struct MarioState* m = &gMarioStates[0];
+    if (m->action != ACT_IN_CANNON) { return; }
+    if (m->interactObj != o) { return; }
+    // two-player hack
+    if (gNetworkType == NT_SERVER) { return; }
+
+    // eject the player by shooting out of the cannon weakly
+    m->forwardVel = 10.0f * coss(m->faceAngle[0]);
+    m->vel[1] = 10.0f * sins(m->faceAngle[0]);
+    m->pos[0] += 120.0f * coss(m->faceAngle[0]) * sins(m->faceAngle[1]);
+    m->pos[1] += 120.0f * sins(m->faceAngle[0]);
+    m->pos[2] += 120.0f * coss(m->faceAngle[0]) * coss(m->faceAngle[1]);
+    set_mario_action(m, ACT_SHOT_FROM_CANNON, 0);
+
+    // reset things that got messed up
+    m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
+    reset_camera(gCamera);
+    o->oCannonIsLocal = FALSE;
+    cur_obj_become_tangible();
+    cur_obj_enable_rendering();
+}
 
 void bhv_cannon_base_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         so->ignore_if_true = &cannon_ignore_remote_updates;
+        so->on_received = &cannon_on_received;
         network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
         network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oPosX);
+        network_init_object_field(o, &o->oPosY);
+        network_init_object_field(o, &o->oPosZ);
+        network_init_object_field(o, &o->oCannonUnk10C);
         network_init_object_field(o, &o->oCannonUnk10C);
         network_init_object_field(o, &o->oCannonUnkF8);
         network_init_object_field(o, &o->oCannonUnkF4);
