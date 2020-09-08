@@ -27,7 +27,8 @@ void bhv_racing_penguin_init(void) {
 }
 
 static void racing_penguin_act_wait_for_mario(void) {
-    if (o->oTimer > o->oRacingPenguinInitTextCooldown && o->oPosY - gMarioObject->oPosY <= 0.0f
+    struct Object* player = nearest_player_to_object(o);
+    if (o->oTimer > o->oRacingPenguinInitTextCooldown && o->oPosY - player->oPosY <= 0.0f
         && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
         o->oAction = RACING_PENGUIN_ACT_SHOW_INIT_TEXT;
     }
@@ -99,7 +100,8 @@ static void racing_penguin_act_race(void) {
         o->oRacingPenguinReachedBottom = TRUE;
         o->oAction = RACING_PENGUIN_ACT_FINISH_RACE;
     } else {
-        targetSpeed = o->oPosY - gMarioObject->oPosY;
+        struct Object* player = nearest_player_to_object(o);
+        targetSpeed = o->oPosY - player->oPosY;
         minSpeed = 70.0f;
 
         cur_obj_play_sound_1(SOUND_AIR_ROUGH_SLIDE);
@@ -126,7 +128,10 @@ static void racing_penguin_act_race(void) {
         }
     }
 
-    u8 isInAir = FALSE;
+    // Removed the in-air shortcut check due to inconsistent detection and the
+    // fact that one player can fall off while the other player completes the
+    // race.
+    /*u8 isInAir = FALSE;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         isInAir = isInAir || mario_is_in_air_action(&gMarioStates[i]);
@@ -139,7 +144,7 @@ static void racing_penguin_act_race(void) {
         }
     } else {
         o->oTimer = 0;
-    }
+    }*/
 }
 
 static void racing_penguin_act_finish_race(void) {
