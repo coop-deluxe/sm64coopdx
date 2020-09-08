@@ -687,6 +687,8 @@ s32 act_in_cannon(struct MarioState *m) {
     s16 startFacePitch = m->faceAngle[0];
     s16 startFaceYaw = m->faceAngle[1];
 
+    f32 cannonSensitivity = 5.0f;
+
     if (m->usedObj != NULL) {
         switch (m->actionState) {
             case 0:
@@ -720,8 +722,8 @@ s32 act_in_cannon(struct MarioState *m) {
                 break;
 
             case 2:
-                m->faceAngle[0] -= (s16)(m->controller->stickY * 10.0f);
-                marioObj->oMarioCannonInputYaw -= (s16)(m->controller->stickX * 10.0f);
+                m->faceAngle[0] -= (s16)(m->controller->stickY * cannonSensitivity);
+                marioObj->oMarioCannonInputYaw -= (s16)(m->controller->stickX * cannonSensitivity);
 
                 if (m->faceAngle[0] > 0x38E3) {
                     m->faceAngle[0] = 0x38E3;
