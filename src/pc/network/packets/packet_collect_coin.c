@@ -21,9 +21,9 @@ static u8 remoteCoinIds[MAX_REMOTE_COIN_IDS] = { 0 };
 static u8 onRemoteCoinId = 0;
 
 static f32 dist_to_pos(struct Object* o, f32* pos) {
-    f32 x = (f32)o->oPosX - pos[0]; x *= x;
-    f32 y = (f32)o->oPosY - pos[1]; y *= y;
-    f32 z = (f32)o->oPosZ - pos[2]; z *= z;
+    f32 x = o->oPosX - pos[0]; x *= x;
+    f32 y = o->oPosY - pos[1]; y *= y;
+    f32 z = o->oPosZ - pos[2]; z *= z;
     return (f32)sqrt(x + y + z);
 }
 

@@ -12,14 +12,14 @@
 extern s16 gCurrSaveFileNum;
 extern s16 gCurrCourseNum;
 
-static f32 dist_to_pos(struct Object* o, u32* pos) {
-    f32 x = (f32)o->oPosX - pos[0]; x *= x;
-    f32 y = (f32)o->oPosY - pos[1]; y *= y;
-    f32 z = (f32)o->oPosZ - pos[2]; z *= z;
+static f32 dist_to_pos(struct Object* o, f32* pos) {
+    f32 x = o->oPosX - pos[0]; x *= x;
+    f32 y = o->oPosY - pos[1]; y *= y;
+    f32 z = o->oPosZ - pos[2]; z *= z;
     return (f32)sqrt(x + y + z);
 }
 
-static struct Object* find_nearest_star(const BehaviorScript* behavior, u32* pos, float minDist) {
+static struct Object* find_nearest_star(const BehaviorScript* behavior, f32* pos, f32 minDist) {
     uintptr_t* behaviorAddr = segmented_to_virtual(behavior);
     struct Object* closestObj = NULL;
     struct Object* obj;
@@ -51,7 +51,7 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
 
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gCurrCourseNum, sizeof(s16));
-    packet_write(&p, &o->oPosX, sizeof(u32) * 3);
+    packet_write(&p, &o->oPosX, sizeof(f32) * 3);
     packet_write(&p, &behaviorId, sizeof(enum BehaviorId));
     packet_write(&p, &coinScore, sizeof(s16));
     packet_write(&p, &starIndex, sizeof(s16));
@@ -60,7 +60,7 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
 }
 
 void network_receive_collect_star(struct Packet* p) {
-    u32 pos[3] = { 0 };
+    f32 pos[3] = { 0 };
     enum BehaviorId behaviorId;
     s16 coinScore, starIndex;
     s16 lastSaveFileNum = gCurrSaveFileNum;
@@ -68,7 +68,7 @@ void network_receive_collect_star(struct Packet* p) {
 
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gCurrCourseNum, sizeof(s16));
-    packet_read(p, &pos, sizeof(u32) * 3);
+    packet_read(p, &pos, sizeof(f32) * 3);
     packet_read(p, &behaviorId, sizeof(enum BehaviorId));
     packet_read(p, &coinScore, sizeof(s16));
     packet_read(p, &starIndex, sizeof(s16));
