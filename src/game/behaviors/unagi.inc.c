@@ -36,7 +36,6 @@ void bhv_unagi_init(void) {
     network_init_object_field(o, &o->oFaceAngleYaw);
     network_init_object_field(o, &o->oForwardVel);
     network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->oPathedPrevWaypoint);
     network_init_object_field(o, &o->oPathedPrevWaypointFlags);
     network_init_object_field(o, &o->oPathedTargetPitch);
     network_init_object_field(o, &o->oPathedTargetYaw);
