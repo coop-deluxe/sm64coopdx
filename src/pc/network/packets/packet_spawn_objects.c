@@ -108,7 +108,13 @@ void network_receive_spawn_objects(struct Packet* p) {
             parentObj = (i == 0)
                       ? gSyncObjects[data.parentId].o
                       : spawned[data.parentId];
-            if (parentObj == NULL) { continue; }
+            if (parentObj == NULL) {
+                // failed to find parent, make it it's own parent
+                // may cause issues, but we want it to spawn!
+                printf("ERROR: failed to find spawn object's parent (%d)!\n", data.parentId);
+                parentObj = gMarioStates[0].marioObj;
+                data.parentId = (u8)-1;
+            }
         }
 
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
