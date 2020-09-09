@@ -20,6 +20,7 @@
 #include "text_strings.h"
 #include "prevent_bss_reordering.h"
 #include "pc/network/network.h"
+#include "engine/math_util.h"
 
 /**
  * @file star_select.c
@@ -259,20 +260,6 @@ void print_course_number(void) {
  * Print act selector strings, some with special checks.
  */
 void print_act_selector_strings(void) {
-    // synchronizing text
-    if (!gControlPainting || gWaitingForRemotePainting) {
-        static int fadeTimer = 0;
-        u8 colorFade = sin(fadeTimer++ * 0.2f) * 50.0f + 200.0f;
-        gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
-        gDPSetEnvColor(gDisplayListHead++, colorFade, colorFade, colorFade, 255);
-
-        #define TEXT_SYNCHRONIZING 0x1C,0x22,0x17,0x0C,0x11,0x1B,0x18,0x17,0x12,0x02,0x12,0x17,0x10,0xFF
-        u8 synchronizing[] = { TEXT_SYNCHRONIZING };
-
-        print_hud_lut_string(HUD_LUT_GLOBAL, 80, 8, synchronizing);
-        gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
-    }
-
 #ifdef VERSION_EU
     unsigned char myScore[][10] = { {TEXT_MYSCORE}, {TEXT_MY_SCORE_FR}, {TEXT_MY_SCORE_DE} };
 #else
@@ -300,6 +287,15 @@ void print_act_selector_strings(void) {
 #endif
 
     create_dl_ortho_matrix();
+
+    // display disclaimer that the other player has to select
+    if (!gControlPainting || gWaitingForRemotePainting) {
+        gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+        u8 a = ((gGlobalTimer % 24) >= 12) ? 160 : 130;
+        gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, a);
+        print_generic_ascii_string(66, 212, "Waiting for other player's selection...");
+        gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+    }
 
 #ifdef VERSION_EU
     switch (language) {
