@@ -769,11 +769,9 @@ void load_object_collision_model(void) {
     f32 tangibleDist = gCurrentObject->oCollisionDistance;
 
     u8 anyPlayerInTangibleRange = FALSE;
-    u8 anyPlayerInDrawRange = FALSE;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
         if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
-        if (dist < gCurrentObject->oDrawingDistance) { anyPlayerInDrawRange = TRUE; }
     }
 
     // If the object collision is supposed to be loaded more than the
@@ -796,6 +794,11 @@ void load_object_collision_model(void) {
     }
 
 #ifndef NODRAWINGDISTANCE
+    u8 anyPlayerInDrawRange = FALSE;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
+        if (dist < gCurrentObject->oDrawingDistance) { anyPlayerInDrawRange = TRUE; }
+    }
     if (anyPlayerInDrawRange) {
 #endif
         gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
