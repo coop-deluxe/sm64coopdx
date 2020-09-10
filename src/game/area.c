@@ -254,6 +254,7 @@ void load_area(s32 index) {
 }
 
 void unload_area(void) {
+    network_clear_sync_objects();
     if (gCurrentArea != NULL) {
         unload_objects_from_area(0, gCurrentArea->index);
         geo_call_global_function_nodes(&gCurrentArea->unk04->node, GEO_CONTEXT_AREA_UNLOAD);

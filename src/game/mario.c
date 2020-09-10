@@ -2083,8 +2083,6 @@ static void init_single_mario(struct MarioState* m) {
 }
 
 void init_mario(void) {
-    gInsidePainting = false;
-
     for (int i = 0; i < MAX_PLAYERS; i++) {
         gMarioStates[i].playerIndex = i;
         init_single_mario(&gMarioStates[i]);

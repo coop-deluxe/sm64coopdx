@@ -15928,5 +15928,8 @@
     <ClInclude Include="..\include\behavior_table.h">
       <Filter>Header Files\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\pc\debuglog.h">
+      <Filter>Source Files\src\pc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,7 +6,6 @@
 #include "pc/configfile.h"
 
 // Mario 64 specific externs
-extern u8 gInsidePainting;
 extern s16 sCurrPlayMode;
 
 enum NetworkType gNetworkType = NT_NONE;
@@ -105,9 +104,7 @@ void network_update(void) {
     }
 
     // figure out which update loop to run
-    if (gInsidePainting && sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) {
-        network_update_inside_painting();
-    } else if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
+    if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
         network_update_player();
         network_update_objects();
     }

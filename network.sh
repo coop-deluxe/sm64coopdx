@@ -12,6 +12,8 @@ if [ ! -f "$FILE" ]; then
 fi
 
 $FILE --server 27015 --configfile sm64config_server.txt  &
+#$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
+#exit
 
 # debug if cgdb exists
 if ! [ -x "$(command -v cgdb)" ]; then

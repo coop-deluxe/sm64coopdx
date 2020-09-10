@@ -3123,12 +3123,6 @@ s16 render_course_complete_screen(void) {
     gInGameLanguage = eu_get_language();
 #endif
 
-    // if we went into a painting, no more save menu!
-    if (gInsidePainting == TRUE) {
-        gMenuMode = -1;
-        return 0;
-    }
-
     switch (gDialogBoxState) {
         case DIALOG_STATE_OPENING:
             render_course_complete_lvl_info_and_hud_str();

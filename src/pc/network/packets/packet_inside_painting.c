@@ -2,81 +2,83 @@
 #include "../network.h"
 #include "src/game/level_update.h"
 #include "src/game/area.h"
+#define DISABLE_MODULE_LOG
+#include "pc/debuglog.h"
 
-extern struct WarpNode gPaintingWarpNode;
+extern u8 gControlledWarp;
+
 extern u8 sSelectableStarIndex;
 extern u8 sSelectedActIndex;
+extern s8 sLoadedActNum;
 
-struct PacketDataInsidePainting {
-    u8 insidePainting;
-    u8 controlPainting;
+#pragma pack(1)
+struct PacketInsidePaintingData {
+    u8 seqId;
+    u8 eventId;
     u8 starIndex;
     u8 actIndex;
+    u8 loadedActNum;
 };
 
-static clock_t lastSentTime = 0;
-static float minUpdateRate = 5.0f;
-static struct PacketDataInsidePainting lastSentData = { 0 };
+static u8 eventId = 0;
+static u8 remoteFinishedEventId = (u8)-1;
 
-static void populate_packet_data(struct PacketDataInsidePainting* data) {
-    data->insidePainting = gInsidePainting;
-    data->controlPainting = gControlPainting;
+static u8 seqId = 0;
+static u8 remoteLastSeqId = (u8)-1;
+
+static void populate_packet_data(struct PacketInsidePaintingData* data) {
+    data->seqId = seqId;
+    data->eventId = eventId;
     data->starIndex = sSelectableStarIndex;
     data->actIndex = sSelectedActIndex;
+    data->loadedActNum = sLoadedActNum;
 }
 
-void network_send_inside_painting(bool reliable) {
-    struct PacketDataInsidePainting data = { 0 };
+void network_send_inside_painting(u8 startOfEvent, u8 endOfEvent) {
+    if (startOfEvent) { eventId++; }
+    struct PacketInsidePaintingData data = { 0 };
     populate_packet_data(&data);
 
     struct Packet p;
-    packet_init(&p, PACKET_INSIDE_PAINTING, reliable);
-    packet_write(&p, &data, sizeof(struct PacketDataInsidePainting));
+    packet_init(&p, PACKET_INSIDE_PAINTING, true);
+    packet_write(&p, &data, sizeof(struct PacketInsidePaintingData));
     network_send(&p);
-
-    lastSentData = data;
-    lastSentTime = clock();
+    seqId++;
 }
 
 void network_receive_inside_painting(struct Packet* p) {
-    struct PacketDataInsidePainting remote = { 0 };
-    packet_read(p, &remote, sizeof(struct PacketDataInsidePainting));
+    struct PacketInsidePaintingData local = { 0 };
+    populate_packet_data(&local);
 
-    if (gNetworkType == NT_CLIENT && gControlPainting && remote.controlPainting) {
-        // we both think we should control the painting, host wins the tie
-        gControlPainting = false;
+    struct PacketInsidePaintingData remote = { 0 };
+    packet_read(p, &remote, sizeof(struct PacketInsidePaintingData));
+
+    // de-dup
+    if (remote.seqId == remoteLastSeqId) {
+        LOG_INFO("we've seen this packet, escape!");
+        return;
+    }
+    remoteLastSeqId = remote.seqId;
+    if (remote.eventId == remoteFinishedEventId || (remote.eventId == remoteFinishedEventId - 1)) {
+        LOG_INFO("we've finished this event, escape!");
+        return;
     }
 
-    if (!gControlPainting && remote.controlPainting) {
-        // update star/act index to show the one in control's selection
-        sSelectableStarIndex = remote.starIndex;
-        sSelectedActIndex = remote.actIndex;
+    // two-player hack: gControlledWarp is a bool instead of an index
+    if (gControlledWarp) {
+        LOG_INFO("this should never happen, received inside_painting when gControlledWarp");
+        return;
     }
 
-    if (gControlPainting && !remote.controlPainting) {
-        // remote is well behaved now, we can control the painting
-        gWaitingForRemotePainting = false;
-    }
+    LOG_INFO("received update");
+    eventId = remote.eventId;
+    sSelectableStarIndex = remote.starIndex;
+    sSelectedActIndex = remote.actIndex;
+    sLoadedActNum = remote.loadedActNum;
 
-    if (gControlPainting && !remote.controlPainting && !gInsidePainting && remote.insidePainting) {
-        // we're in control and no longer in the painting, let remote know
-        network_send_inside_painting(false);
-    }
-
-    if (!gControlPainting && remote.controlPainting && !remote.insidePainting) {
-        // remote is in control and in game, we should be too
-        star_select_finish_selection();
-    }
-}
-
-void network_update_inside_painting(void) {
-    struct PacketDataInsidePainting data = { 0 };
-    populate_packet_data(&data);
-    int compareData = memcmp(&data, &lastSentData, sizeof(struct PacketDataInsidePainting));
-
-    float timeSinceSend = (clock() - lastSentTime) / CLOCKS_PER_SEC;
-
-    if (compareData != 0 || timeSinceSend > minUpdateRate) {
-        network_send_inside_painting(timeSinceSend > 5);
+    if (sLoadedActNum != 0) {
+        LOG_INFO("finished with painting");
+        remoteFinishedEventId = remote.eventId;
     }
 }
+

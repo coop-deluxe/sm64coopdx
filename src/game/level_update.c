@@ -46,6 +46,10 @@
 
 #define WARP_NODE_CREDITS_MIN 0xF8
 
+u8 gControlledWarp = 0;
+u8 gReceiveWarp = 0;
+struct WarpDest gReceiveWarpDest = { 0 };
+
 #ifdef VERSION_JP
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
 const char *credits02[] = { "2ASSISTANT DIRECTORS", "YOSHIAKI KOIZUMI", "TAKASHI TEZUKA" };
@@ -168,11 +172,6 @@ u8 unused1[4] = { 0 };
 s8 D_8032C9E0 = 0;
 u8 unused3[4];
 u8 unused4[2];
-
-u8 gInsidePainting = false;
-u8 gControlPainting = false;
-u8 gWaitingForRemotePainting = false;
-struct WarpNode gPaintingWarpNode = { 0 };
 
 u16 level_control_timer(s32 timerOp) {
     switch (timerOp) {
@@ -361,7 +360,17 @@ void set_mario_initial_action(struct MarioState *m, u32 spawnType, u32 actionArg
     set_mario_initial_cap_powerup(m);
 }
 
+#include <stdio.h>
+
 void init_mario_after_warp(void) {
+    printf("===== init mario =====\n");
+    printf("areaIdx = %d\n", sWarpDest.areaIdx);
+    printf("arg = %d\n", sWarpDest.arg);
+    printf("levelNum = %d\n", sWarpDest.levelNum);
+    printf("nodeId = %d\n", sWarpDest.nodeId);
+    printf("type = %d\n", sWarpDest.type);
+    fflush(stdout);
+
     struct ObjectWarpNode *spawnNode = area_get_warp_node(sWarpDest.nodeId);
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
@@ -671,35 +680,7 @@ struct WarpNode *get_painting_warp_node(void) {
     return warpNode;
 }
 
-/**
- * Check is Mario has entered a painting, and if so, initiate a warp.
- */
-void initiate_painting_warp(void) {
-    if (gCurrentArea->paintingWarpNodes != NULL && gMarioState->floor != NULL) {
-        struct WarpNode *pWarpNode = get_painting_warp_node();
-
-        if (pWarpNode != NULL) {
-            if (gMarioState->action & ACT_FLAG_INTANGIBLE) {
-                play_painting_eject_sound();
-            } else if (pWarpNode->id != 0) {
-                initiate_painting_warp_node(pWarpNode, false);
-                gControlPainting = true;
-                gWaitingForRemotePainting = (gNetworkType != NT_NONE);
-                set_mario_action(gMarioState, ACT_DISAPPEARED, 0);
-                gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
-            }
-        }
-    }
-}
-
-void initiate_painting_warp_node(struct WarpNode *pWarpNode, u8 instant) {
-    if (pWarpNode->id == 0) { return; }
-
-    gControlPainting = false;
-    gWaitingForRemotePainting = false;
-    gInsidePainting = true;
-
-    gPaintingWarpNode = *pWarpNode;
+static void initiate_painting_warp_node(struct WarpNode *pWarpNode, u8 instant) {
     struct WarpNode warpNode = *pWarpNode;
 
     if (!(warpNode.destLevel & 0x80)) {
@@ -719,6 +700,26 @@ void initiate_painting_warp_node(struct WarpNode *pWarpNode, u8 instant) {
 }
 
 /**
+ * Check is Mario has entered a painting, and if so, initiate a warp.
+ */
+void initiate_painting_warp(void) {
+    if (gCurrentArea->paintingWarpNodes != NULL && gMarioState->floor != NULL) {
+        struct WarpNode *pWarpNode = get_painting_warp_node();
+
+        if (pWarpNode != NULL) {
+            if (gMarioState->action & ACT_FLAG_INTANGIBLE) {
+                play_painting_eject_sound();
+            } else if (pWarpNode->id != 0) {
+                initiate_painting_warp_node(pWarpNode, false);
+                set_mario_action(gMarioState, ACT_DISAPPEARED, 0);
+                gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+            }
+        }
+    }
+}
+
+
+/**
  * If there is not already a delayed warp, schedule one. The source node is
  * based on the warp operation and sometimes Mario's used object.
  * Return the time left until the delayed warp is initiated.
@@ -727,7 +728,6 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
     // only allow for local player
     if (m != &gMarioStates[0]) { return 0; }
 
-    gControlPainting = TRUE;
     s32 val04 = TRUE;
 
     if (sDelayedWarpOp == WARP_OP_NONE) {
@@ -996,6 +996,29 @@ void basic_update(UNUSED s16 *arg) {
     }
 }
 
+static void check_for_received_warp(void) {
+    if (!gReceiveWarp) { return; }
+    gReceiveWarp = FALSE;
+    sWarpDest = gReceiveWarpDest;
+
+    if (!gControlledWarp) {
+        // force well behaved state
+        extern s16 gMenuMode;
+        reset_dialog_render_state();
+        level_set_transition(0, 0);
+        sTransitionUpdate = NULL;
+        gMenuMode = -1;
+        gPauseScreenMode = 1;
+        gSaveOptSelectIndex = 0;
+        gMarioStates[0].action = (gMarioStates[0].pos[1] <= gMarioStates[0].waterLevel) ? ACT_WATER_IDLE : ACT_IDLE;
+        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+    }
+
+    set_play_mode((sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
+                  ? PLAY_MODE_CHANGE_LEVEL
+                  : PLAY_MODE_CHANGE_AREA);
+}
+
 int gPressedStart = 0;
 
 s32 play_mode_normal(void) {
@@ -1036,14 +1059,14 @@ s32 play_mode_normal(void) {
                 set_play_mode(PLAY_MODE_CHANGE_LEVEL);
             } else {
                 set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
-                network_send_level_warp();
+                network_send_level_warp(FALSE);
             }
         } else if (sTransitionTimer != 0) {
             if (sWarpDest.type == WARP_TYPE_NOT_WARPING || gCurrentArea->index == sWarpDest.areaIdx) {
                 set_play_mode(PLAY_MODE_CHANGE_AREA);
             } else {
                 set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_AREA);
-                network_send_level_warp();
+                network_send_level_warp(FALSE);
             }
         } else if (pressed_pause()) {
             lower_background_noise(1);
@@ -1052,6 +1075,8 @@ s32 play_mode_normal(void) {
             set_play_mode(PLAY_MODE_PAUSED);
         }
     }
+
+    check_for_received_warp();
 
     return 0;
 }
@@ -1073,7 +1098,7 @@ s32 play_mode_paused(void) {
             gSavedCourseNum = COURSE_NONE;
         }
         set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
-        network_send_level_warp();
+        network_send_level_warp(FALSE);
     } else if (gPauseScreenMode == 3) {
         // We should only be getting "int 3" to here
         initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
@@ -1087,6 +1112,7 @@ s32 play_mode_paused(void) {
 }
 
 s32 play_mode_sync_level(void) {
+    check_for_received_warp();
     return 0;
 }
 
@@ -1123,8 +1149,6 @@ void level_set_transition(s16 length, void (*updateFunction)(s16 *)) {
  * Play the transition and then return to normal play mode.
  */
 s32 play_mode_change_area(void) {
-    network_on_init_level();
-
     //! This maybe was supposed to be sTransitionTimer == -1? sTransitionUpdate
     // is never set to -1.
     if (sTransitionUpdate == (void (*)(s16 *)) - 1) {
@@ -1222,7 +1246,6 @@ s32 update_level(void) {
 
 s32 init_level(void) {
     reset_dialog_render_state();
-    network_on_init_level();
 
     s32 val4 = 0;
 

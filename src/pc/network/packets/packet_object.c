@@ -83,6 +83,7 @@ bool network_sync_object_initialized(struct Object* o) {
 }
 
 void network_clear_sync_objects(void) {
+    network_on_init_level();
     for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         network_forget_sync_object(&gSyncObjects[i]);
     }

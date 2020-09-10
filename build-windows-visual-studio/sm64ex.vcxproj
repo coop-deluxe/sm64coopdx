@@ -4305,6 +4305,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\behavior_table.h" />
+    <ClInclude Include="..\src\pc\debuglog.h" />
     <ClInclude Include="..\src\pc\network\network.h" />
     <ClInclude Include="..\src\pc\network\socket\socket.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_linux.h" />

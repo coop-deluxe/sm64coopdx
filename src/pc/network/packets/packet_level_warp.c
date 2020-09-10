@@ -1,73 +1,114 @@
 #include <stdio.h>
-#include "../network.h"
-#include "src/game/level_update.h"
-#include "src/game/area.h"
-#include "src/game/ingame_menu.h"
 #include "sm64.h"
+#include "../network.h"
+#include "game/level_update.h"
+#include "game/area.h"
+#include "game/ingame_menu.h"
+#define DISABLE_MODULE_LOG
+#include "pc/debuglog.h"
 
-int matchCount = 0;
+static u8 eventId = 0;
+static u8 remoteFinishedEventId = (u8)-1;
 
-extern s16 gMenuMode;
+static u8 seqId = 0;
+static u8 remoteLastSeqId = (u8)-1;
 
-void network_send_level_warp(void) {
-    struct Packet p;
-    packet_init(&p, PACKET_LEVEL_WARP, true);
-    packet_write(&p, &sCurrPlayMode, sizeof(s16));
-    packet_write(&p, &sWarpDest, sizeof(struct WarpDest));
+extern u8 gControlledWarp; // two-player hack
+extern u8 gReceiveWarp;
+extern struct WarpDest gReceiveWarpDest;
 
-    network_send(&p);
+struct WarpDest savedWarpNode = { 0 };
+
+#pragma pack(1)
+struct PacketLevelWarpData {
+    u8 seqId;
+    u8 eventId;
+    u8 done;
+    u8 controlledWarp;
+    struct WarpDest warpDest;
+};
+
+static void populate_packet_data(struct PacketLevelWarpData* data, bool done) {
+    data->seqId = seqId;
+    data->eventId = eventId;
+    data->done = done;
+    data->controlledWarp = gControlledWarp;
+    data->warpDest = savedWarpNode;
 }
 
-static void force_well_behaved_state(void) {
-    reset_dialog_render_state();
-    level_set_transition(0, 0);
-    gMenuMode = -1;
-    gPauseScreenMode = 1;
-    gSaveOptSelectIndex = 0;
-    gMarioStates[0].action = (gMarioStates[0].pos[1] <= (gMarioStates[0].waterLevel - 100)) ? ACT_WATER_IDLE : ACT_IDLE;
-    gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+void network_send_level_warp(u8 done) {
+    if (!done) {
+        savedWarpNode = sWarpDest;
+        gControlledWarp = true;
+        eventId++;
+        LOG_INFO("new event [%d]!", eventId);
+    }
+
+    struct PacketLevelWarpData data = { 0 };
+    populate_packet_data(&data, done);
+
+    struct Packet p;
+    packet_init(&p, PACKET_LEVEL_WARP, true);
+    packet_write(&p, &data, sizeof(struct PacketLevelWarpData));
+    network_send(&p);
+
+    seqId++;
+}
+
+static void do_warp(void) {
+    gReceiveWarpDest = savedWarpNode;
+    gReceiveWarp = TRUE;
 }
 
 void network_receive_level_warp(struct Packet* p) {
-    s16 remotePlayMode;
-    struct WarpDest remoteWarpDest;
+    struct PacketLevelWarpData remote = { 0 };
+    packet_read(p, &remote, sizeof(struct PacketLevelWarpData));
 
-    packet_read(p, &remotePlayMode, sizeof(s16));
-    packet_read(p, &remoteWarpDest, sizeof(struct WarpDest));
-
-    bool matchingDest = memcmp(&remoteWarpDest, &sWarpDest, sizeof(struct WarpDest)) == 0;
-
-    if (remotePlayMode == PLAY_MODE_SYNC_LEVEL && (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED)) {
-        if (remoteWarpDest.type == WARP_TYPE_NOT_WARPING) { return; }
-        sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
-        sWarpDest = remoteWarpDest;
-        force_well_behaved_state();
-        network_send_level_warp();
+    // de-dup
+    if (remote.seqId == remoteLastSeqId) {
+        LOG_INFO("we've seen this packet, escape!");
+        return;
+    }
+    remoteLastSeqId = remote.seqId;
+    LOG_INFO("rx event [%d] last [%d]!", remote.eventId, remoteFinishedEventId);
+    if (remote.eventId == remoteFinishedEventId || (remote.eventId == remoteFinishedEventId - 1)) {
+        LOG_INFO("we've finished this event, escape!");
         return;
     }
 
-    if (remotePlayMode == PLAY_MODE_SYNC_LEVEL && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
-        if (matchingDest) {
-            switch (sWarpDest.type) {
-                case WARP_TYPE_CHANGE_AREA: sCurrPlayMode = PLAY_MODE_CHANGE_AREA; break;
-                case WARP_TYPE_CHANGE_LEVEL: sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL; break;
-            }
+    if (gNetworkType == NT_SERVER) {
+        if (sCurrPlayMode != PLAY_MODE_SYNC_LEVEL) {
+            // client initiated warp
+            LOG_INFO("client initiated warp!");
+            gControlledWarp = FALSE;
+            savedWarpNode = remote.warpDest;
+            eventId = remote.eventId;
+            remoteFinishedEventId = remote.eventId;
+            LOG_INFO("finished event [%d]!", remote.eventId);
+            do_warp();
+            network_send_level_warp(TRUE);
+            return;
+        } else if (remote.done) {
+            // client done with warp
+            LOG_INFO("client is done with warp, lets-a-go!");
+            remoteFinishedEventId = remote.eventId;
+            do_warp();
+            return;
         } else {
-            if (gNetworkType == NT_CLIENT) {
-                if (remoteWarpDest.type == WARP_TYPE_NOT_WARPING) { return; }
-                // two-player hack: would need to use player index as priority
-                sWarpDest = remoteWarpDest;
-            }
+            LOG_INFO("client initiated warp, but server is already warping!");
+            return;
         }
-        network_send_level_warp();
-        return;
     }
 
-    if ((remotePlayMode == PLAY_MODE_CHANGE_LEVEL || remotePlayMode == PLAY_MODE_CHANGE_AREA) && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
-        if (remoteWarpDest.type == WARP_TYPE_NOT_WARPING) { return; }
-        switch (sWarpDest.type) {
-            case WARP_TYPE_CHANGE_AREA: sCurrPlayMode = PLAY_MODE_CHANGE_AREA; break;
-            case WARP_TYPE_CHANGE_LEVEL: sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL; break;
-        }
-    }
+    assert(gNetworkType == NT_CLIENT);
+
+    // server initiated warp
+    LOG_INFO("server initiated warp!");
+    gControlledWarp = !remote.controlledWarp; // two-player hack
+    savedWarpNode = remote.warpDest;
+    eventId = remote.eventId;
+    remoteFinishedEventId = remote.eventId;
+    LOG_INFO("finished event [%d]!", remote.eventId);
+    do_warp();
+    network_send_level_warp(TRUE);
 }
