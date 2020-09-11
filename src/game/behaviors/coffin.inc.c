@@ -52,7 +52,7 @@ void bhv_coffin_spawner_loop(void) {
             o->oAction += 1;
         }
     } else if (o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM) {
-        o->oAction = COFFIN_SPAWNER_ACT_COFFINS_UNLOADED;
+        //o->oAction = COFFIN_SPAWNER_ACT_COFFINS_UNLOADED;
     }
 }
 
@@ -166,6 +166,12 @@ void bhv_coffin_loop(void) {
                 break;
         }
 
-        load_object_collision_model();
+        // allow bubbled players to pass through if crushed by it
+        if (gMarioStates[0].action == ACT_BUBBLED && gMarioStates[0].pos[1] <= o->oPosY) {
+            cur_obj_become_intangible();
+        } else {
+            cur_obj_become_tangible();
+            load_object_collision_model();
+        }
     }
 }
