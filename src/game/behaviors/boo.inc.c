@@ -733,12 +733,8 @@ static void (*sBooGivingStarActions[])(void) = {
     big_boo_act_4
 };
 
-u8 big_boo_ignore_update(struct Object* obj) {
-    struct Object* tmp = gCurrentObject;
-    gCurrentObject = obj;
-    u8 rc = cur_obj_has_behavior(bhvGhostHuntBigBoo) && !bigBooActivated;
-    gCurrentObject = tmp;
-    return rc;
+u8 big_boo_ignore_update(void) {
+    return cur_obj_has_behavior(bhvGhostHuntBigBoo) && !bigBooActivated;
 }
 
 void bhv_big_boo_loop(void) {

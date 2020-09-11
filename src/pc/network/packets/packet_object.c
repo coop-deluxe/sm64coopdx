@@ -152,9 +152,14 @@ static struct SyncObject* packet_read_object_header(struct Packet* p) {
 
     // retrieve SyncObject, check if we should update using callback
     struct SyncObject* so = &gSyncObjects[syncId];
-    if (so->ignore_if_true != NULL && (*so->ignore_if_true)(so->o)) {
+    extern struct Object* gCurrentObject;
+    struct Object* tmp = gCurrentObject;
+    gCurrentObject = o;
+    if ((so->ignore_if_true != NULL) && ((*so->ignore_if_true)() != FALSE)) {
+        gCurrentObject = tmp;
         return NULL;
     }
+    gCurrentObject = tmp;
     so->clockSinceUpdate = clock();
 
     // make sure this is the newest event possible

@@ -215,7 +215,16 @@ u8 king_bobomb_act_7_continue_dialog(void) { return o->oAction == 7; }
 
 void king_bobomb_act_7(void) {
     cur_obj_init_animation_with_sound(2);
-    if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, DIALOG_116, king_bobomb_act_7_continue_dialog)) {
+
+    u8 updateDialog = (nearest_mario_state_to_object(o) == &gMarioStates[0]) || (gMarioStates[0].pos[1] >= o->oPosY - 100.0f);
+    if (updateDialog && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, DIALOG_116, king_bobomb_act_7_continue_dialog)) {
+        o->oAction = 8;
+        network_send_object(o);
+    }
+}
+
+void king_bobomb_act_8(void) {
+    if (!(o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE)) {
         create_sound_spawner(SOUND_OBJ_KING_WHOMP_DEATH);
         cur_obj_hide();
         cur_obj_become_intangible();
@@ -228,11 +237,7 @@ void king_bobomb_act_7(void) {
         o->oPosY += 100.0f;
         spawn_default_star(2000.0f, 4500.0f, -4500.0f);
 #endif
-        o->oAction = 8;
     }
-}
-
-void king_bobomb_act_8(void) {
     if (o->oTimer == 60)
         stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
 }
@@ -354,14 +359,15 @@ void king_bobomb_move(void) {
 #endif
 }
 
+u8 king_bobomb_ignore_if_true(void) { return o->oAction == 8; }
+
 void bhv_king_bobomb_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        so->ignore_if_true = &king_bobomb_ignore_if_true;
         network_init_object_field(o, &o->oKingBobombUnk88);
         network_init_object_field(o, &o->oFlags);
         network_init_object_field(o, &o->oHealth);
-        network_init_object_field(o, &o->oDialogState);
-        network_init_object_field(o, &o->oDialogResponse);
     }
 
     f32 sp34 = 20.0f;

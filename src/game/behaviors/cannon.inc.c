@@ -146,9 +146,9 @@ u8 unused0EA1FC[] = { 2,  0,   0, 0, 0,  0,   0, 0, 63, 128, 0, 0, 2,  0,   0, 0
                       63, 128, 0, 0, 2,  0,   0, 0, 65, 160, 0, 0, 63, 128, 0, 0, 2,  0,   0, 0,
                       65, 160, 0, 0, 63, 128, 0, 0, 8,  0,   0, 0, 65, 32,  0, 0, 63, 128, 0, 0 };
 
-u8 cannon_ignore_remote_updates(struct Object* object) {
+u8 cannon_ignore_remote_updates(void) {
     // two-player hack
-    return ((gNetworkType == NT_SERVER) && object->oCannonIsLocal);
+    return ((gNetworkType == NT_SERVER) && o->oCannonIsLocal);
 }
 
 static void cannon_on_received(void) {

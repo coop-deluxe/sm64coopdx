@@ -360,17 +360,7 @@ void set_mario_initial_action(struct MarioState *m, u32 spawnType, u32 actionArg
     set_mario_initial_cap_powerup(m);
 }
 
-#include <stdio.h>
-
 void init_mario_after_warp(void) {
-    printf("===== init mario =====\n");
-    printf("areaIdx = %d\n", sWarpDest.areaIdx);
-    printf("arg = %d\n", sWarpDest.arg);
-    printf("levelNum = %d\n", sWarpDest.levelNum);
-    printf("nodeId = %d\n", sWarpDest.nodeId);
-    printf("type = %d\n", sWarpDest.type);
-    fflush(stdout);
-
     struct ObjectWarpNode *spawnNode = area_get_warp_node(sWarpDest.nodeId);
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
