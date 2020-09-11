@@ -679,6 +679,14 @@ s32 act_grabbed(struct MarioState *m) {
     }
     if (m->usedObj != NULL) { m->heldByObj = m->usedObj; }
     set_mario_animation(m, MARIO_ANIM_BEING_GRABBED);
+
+    // check if they should still be grabbed
+    if (m->playerIndex == 0) {
+        if (m->heldByObj == NULL || !(m->heldByObj->oInteractStatus | INT_STATUS_GRABBED_MARIO)) {
+            return set_mario_action(m, (m->forwardVel >= 0.0f) ? ACT_THROWN_FORWARD : ACT_THROWN_BACKWARD, FALSE);
+        }
+    }
+
     return FALSE;
 }
 
