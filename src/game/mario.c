@@ -2027,13 +2027,14 @@ static void init_single_mario(struct MarioState* m) {
 
     // two-player hack
     u8 isLocal = (m->playerIndex == 0);
+    f32 spawnAngle = m->faceAngle[1] + 0x4000;
     if ((gNetworkType == NT_CLIENT && isLocal) || (gNetworkType == NT_SERVER && !isLocal)) {
-        m->pos[0] += 50.0f * coss(m->faceAngle[1]);
-        m->pos[2] += 50.0f * sins(m->faceAngle[1]);
+        m->pos[0] += 60.0f * sins(spawnAngle);
+        m->pos[2] += 60.0f * coss(spawnAngle);
     }
     else {
-        m->pos[0] -= 50.0f * coss(m->faceAngle[1]);
-        m->pos[2] -= 50.0f * sins(m->faceAngle[1]);
+        m->pos[0] -= 60.0f * sins(spawnAngle);
+        m->pos[2] -= 60.0f * coss(spawnAngle);
     }
 
     m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
