@@ -270,8 +270,7 @@ static void chain_chomp_released_trigger_cutscene(void) {
 
     //! Can delay this if we get into a cutscene-unfriendly action after the
     //  last post ground pound and before this
-    if (set_mario_npc_dialog(&gMarioStates[0], 2) == 2 && (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND)
-        && cutscene_object(CUTSCENE_STAR_SPAWN, o) == 1) {
+    if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         o->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_LUNGE_AROUND;
         o->oTimer = 0;
     }
@@ -286,24 +285,14 @@ static void chain_chomp_released_lunge_around(void) {
 
     // Finish bounce
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
-        struct Object* player = nearest_player_to_object(o);
-        int angleToPlayer = obj_angle_to_object(o, player);
-
-        // Before first bounce, turn toward mario and wait 2 seconds
         if (o->oChainChompNumLunges == 0) {
-            if (cur_obj_rotate_yaw_toward(angleToPlayer, 0x320)) {
-                if (o->oTimer > 60) {
-                    o->oChainChompNumLunges += 1;
-                    // enable wall collision
-                    o->oWallHitboxRadius = 200.0f;
-                }
-            } else {
-                o->oTimer = 0;
-            }
+                o->oChainChompNumLunges += 1;
+                // enable wall collision
+                o->oWallHitboxRadius = 200.0f;
         } else {
             if (++o->oChainChompNumLunges <= 5) {
                 cur_obj_play_sound_2(SOUND_GENERAL_CHAIN_CHOMP1);
-                o->oMoveAngleYaw = angleToPlayer + random_sign() * 0x2000;
+                o->oMoveAngleYaw = cur_obj_angle_to_home() + random_sign() * 0x2000;
                 o->oForwardVel = 30.0f;
                 o->oVelY = 50.0f;
             } else {
@@ -358,10 +347,7 @@ static void chain_chomp_released_jump_away(void) {
  * Release mario and transition to the unload chain action.
  */
 static void chain_chomp_released_end_cutscene(void) {
-    if (cutscene_object(CUTSCENE_STAR_SPAWN, o) == -1) {
-        set_mario_npc_dialog(&gMarioStates[0], 0);
-        o->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
-    }
+    o->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
 }
 
 /**
