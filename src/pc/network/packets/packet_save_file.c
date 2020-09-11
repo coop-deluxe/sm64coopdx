@@ -11,6 +11,7 @@
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 
+#define HASH_LENGTH 8
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
@@ -38,8 +39,11 @@ void network_send_save_file(void) {
         fs_close(fp);
     }
 
+    char hash[HASH_LENGTH] = GIT_HASH;
+
     struct Packet p;
     packet_init(&p, PACKET_SAVE_FILE, true);
+    packet_write(&p, &hash, sizeof(u8) * HASH_LENGTH);
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
@@ -52,8 +56,11 @@ void network_receive_save_file(struct Packet* p) {
     assert(gNetworkType == NT_CLIENT);
 
     gOverrideEeprom = eeprom;
+    char hash[HASH_LENGTH] = GIT_HASH;
+    char remoteHash[HASH_LENGTH] = { 0 };
 
     // find all reserved objects
+    packet_read(p, &remoteHash, sizeof(u8) * HASH_LENGTH);
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gServerSettings.playerInteractions, sizeof(u8));
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
@@ -61,5 +68,10 @@ void network_receive_save_file(struct Packet* p) {
     packet_read(p, eeprom, sizeof(u8) * 512);
 
     save_file_load_all(TRUE);
+    if (memcmp(hash, remoteHash, HASH_LENGTH) != 0) {
+        joined_server_version_mismatch();
+        network_shutdown();
+        return;
+    }
     joined_server_as_client(gCurrSaveFileNum);
 }

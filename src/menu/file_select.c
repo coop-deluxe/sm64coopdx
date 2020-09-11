@@ -41,6 +41,8 @@
  * special menu messages and phases, button states and button clicked checks.
  */
 
+static u8 joinVersionMismatch = FALSE;
+
 #ifdef VERSION_US
 // The current sound mode is automatically centered on US due to
 // the large length difference between options.
@@ -437,12 +439,18 @@ void join_server_as_client(void) {
     }
 
     keyboard_stop_text_input();
+    joinVersionMismatch = FALSE;
     network_init(NT_CLIENT, configJoinIp, configJoinPort);
 }
 
 void joined_server_as_client(s16 fileIndex) {
     if (gNetworkType != NT_CLIENT) { return; }
     sSelectedFileNum = fileIndex;
+}
+
+void joined_server_version_mismatch(void) {
+    if (gNetworkType != NT_CLIENT) { return; }
+    joinVersionMismatch = TRUE;
 }
 
 void render_network_mode_menu_buttons(struct Object* soundModeButton) {
@@ -561,7 +569,9 @@ void print_join_mode_menu_strings(void) {
     print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 2), gTextInput);
 
     // Print status
-    if (gNetworkType == NT_CLIENT) {
+    if (joinVersionMismatch) {
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Error - versions don't match. Both should rebuild!");
+    } else if (gNetworkType == NT_CLIENT) {
         print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Connecting...");
     } else if (strlen(gTextInput) > 0) {
         print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Press (ENTER) to join.");

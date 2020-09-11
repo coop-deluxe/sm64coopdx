@@ -244,8 +244,8 @@ void main_func(void) {
 
     char window_title[96] =
     "Super Mario 64 EX coop (" RAPI_NAME ")"
-    #ifdef NIGHTLY
-    " nightly " GIT_HASH
+    #ifdef GIT_HASH
+    " [" GIT_HASH "]"
     #endif
     ;
 
