@@ -49,6 +49,7 @@
 u8 gControlledWarp = 0;
 u8 gReceiveWarp = 0;
 struct WarpDest gReceiveWarpDest = { 0 };
+extern s8 sReceivedLoadedActNum;
 
 #ifdef VERSION_JP
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
@@ -986,7 +987,7 @@ void basic_update(UNUSED s16 *arg) {
     }
 }
 
-static void check_for_received_warp(void) {
+static void check_received_warp(void) {
     if (!gReceiveWarp) { return; }
     gReceiveWarp = FALSE;
     sWarpDest = gReceiveWarpDest;
@@ -995,8 +996,7 @@ static void check_for_received_warp(void) {
         // force well behaved state
         extern s16 gMenuMode;
         reset_dialog_render_state();
-        level_set_transition(0, 0);
-        sTransitionUpdate = NULL;
+        level_set_transition(1, 0);
         gMenuMode = -1;
         gPauseScreenMode = 1;
         gSaveOptSelectIndex = 0;
@@ -1007,6 +1007,15 @@ static void check_for_received_warp(void) {
     set_play_mode((sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
                   ? PLAY_MODE_CHANGE_LEVEL
                   : PLAY_MODE_CHANGE_AREA);
+
+    s8 warpCourse = gLevelToCourseNumTable[sWarpDest.levelNum - 1];
+    if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL && warpCourse == COURSE_NONE) {
+        sReceivedLoadedActNum = 0;
+    }
+
+    /*return (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
+           ? sWarpDest.levelNum
+           : 0;*/
 }
 
 int gPressedStart = 0;
@@ -1044,29 +1053,27 @@ s32 play_mode_normal(void) {
     // If either initiate_painting_warp or initiate_delayed_warp initiated a
     // warp, change play mode accordingly.
     if (sCurrPlayMode == PLAY_MODE_NORMAL) {
-        if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
-            if (sWarpDest.type == WARP_TYPE_NOT_WARPING) {
-                set_play_mode(PLAY_MODE_CHANGE_LEVEL);
-            } else {
+        if (!gReceiveWarp) {
+            if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
                 set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
-                network_send_level_warp(FALSE);
+                network_send_level_warp_begin();
+            } else if (sTransitionTimer != 0) {
+                if (sWarpDest.type == WARP_TYPE_CHANGE_AREA) {
+                    set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_AREA);
+                    network_send_level_warp_begin();
+                } else {
+                    set_play_mode(PLAY_MODE_CHANGE_AREA);
+                }
+            } else if (pressed_pause()) {
+                lower_background_noise(1);
+                cancel_rumble();
+                gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
+                set_play_mode(PLAY_MODE_PAUSED);
             }
-        } else if (sTransitionTimer != 0) {
-            if (sWarpDest.type == WARP_TYPE_NOT_WARPING || gCurrentArea->index == sWarpDest.areaIdx) {
-                set_play_mode(PLAY_MODE_CHANGE_AREA);
-            } else {
-                set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_AREA);
-                network_send_level_warp(FALSE);
-            }
-        } else if (pressed_pause()) {
-            lower_background_noise(1);
-            cancel_rumble();
-            gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
-            set_play_mode(PLAY_MODE_PAUSED);
         }
+        check_received_warp();
     }
 
-    check_for_received_warp();
 
     return 0;
 }
@@ -1088,7 +1095,7 @@ s32 play_mode_paused(void) {
             gSavedCourseNum = COURSE_NONE;
         }
         set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
-        network_send_level_warp(FALSE);
+        network_send_level_warp_begin();
     } else if (gPauseScreenMode == 3) {
         // We should only be getting "int 3" to here
         initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
@@ -1098,11 +1105,12 @@ s32 play_mode_paused(void) {
 
     gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
 
+    check_received_warp();
     return 0;
 }
 
 s32 play_mode_sync_level(void) {
-    check_for_received_warp();
+    check_received_warp();
     return 0;
 }
 
@@ -1151,8 +1159,7 @@ s32 play_mode_change_area(void) {
         sTransitionTimer -= 1;
     }
 
-    if (sTransitionTimer < 0) { sTransitionTimer = 0; }
-
+    //! If sTransitionTimer is -1, this will miss.
     if (sTransitionTimer == 0) {
         sTransitionUpdate = NULL;
         set_play_mode(PLAY_MODE_NORMAL);
@@ -1210,7 +1217,8 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
-            changeLevel = play_mode_normal() | play_mode_paused();
+            play_mode_normal();
+            changeLevel = play_mode_paused();
             break;
         case PLAY_MODE_CHANGE_AREA:
             changeLevel = play_mode_change_area();
