@@ -951,8 +951,7 @@ s32 act_bubbled(struct MarioState* m) {
         m->vel[1] = 0;
         m->vel[2] = 0;
         m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-        u8 underWater = (m->pos[1] < ((f32)m->waterLevel));
-        return set_mario_action(m, underWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
+        return force_idle_state(m);
     }
 
     return FALSE;

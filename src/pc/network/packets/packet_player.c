@@ -3,7 +3,9 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "sm64.h"
-#include "src/audio/external.h"
+#include "game/interaction.h"
+#include "game/mario.h"
+#include "audio/external.h"
 
 #define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
 #define GET_BIT(val, num) (((val) >> (num)) & 0x01)
@@ -81,6 +83,10 @@ void network_receive_player(struct Packet* p) {
     if (heldSyncID != 0 && gSyncObjects[heldSyncID].o != NULL) {
         // TODO: do we have to move graphics nodes around to make this visible?
         struct Object* heldObj = gSyncObjects[heldSyncID].o;
+        if (gMarioStates[0].heldObj == heldObj && gNetworkType == NT_CLIENT) { // two-player hack: needs priority
+            mario_drop_held_object(&gMarioStates[0]);
+            force_idle_state(&gMarioStates[0]);
+        }
         gMarioStates[1].heldObj = heldObj;
         heldObj->oHeldState = HELD_HELD;
         heldObj->heldByPlayerIndex = 1;

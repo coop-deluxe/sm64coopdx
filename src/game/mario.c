@@ -1492,6 +1492,9 @@ void update_mario_inputs(struct MarioState *m) {
             & (INT_STATUS_HOOT_GRABBED_BY_MARIO | INT_STATUS_MARIO_UNK1 | INT_STATUS_MARIO_UNK4)) {
             m->input |= INPUT_UNKNOWN_10;
         }
+        if (m->heldObj != NULL) {
+            m->heldObj->heldByPlayerIndex = 0;
+        }
     }
 
     // This function is located near other unused trampoline functions,
@@ -1971,6 +1974,11 @@ s32 execute_mario_action(UNUSED struct Object *o) {
     }
 
     return 0;
+}
+
+s32 force_idle_state(struct MarioState* m) {
+    u8 underWater = (m->pos[1] < ((f32)m->waterLevel));
+    return set_mario_action(m, underWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
 }
 
 /**************************************************

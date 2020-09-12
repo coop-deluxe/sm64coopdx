@@ -364,10 +364,12 @@ void network_receive_object(struct Packet* p) {
     if (so == NULL) { return; }
     struct Object* o = so->o;
     if (!network_sync_object_initialized(o)) { return; }
-    if (gMarioStates[0].heldByObj == o) { return; }
 
     // make sure no one can update an object we're holding
-    if (gMarioStates[0].heldObj == o) { return; }
+    if (gNetworkType == NT_SERVER) { // two-player hack: needs priority
+        if (gMarioStates[0].heldObj == o) { return; }
+        if (gMarioStates[0].heldByObj == o) { return; }
+    }
 
     // read the rest of the packet data
     packet_read_object_full_sync(p, o);
@@ -424,7 +426,7 @@ void network_update_objects(void) {
         float dist = player_distance(&gMarioStates[0], so->o);
         if (so->maxSyncDistance != SYNC_DISTANCE_INFINITE && dist > so->maxSyncDistance) { continue; }
         float updateRate = dist / 1000.0f;
-        if (gMarioStates[0].heldObj == so->o) { updateRate = 0; }
+        if (gMarioStates[0].heldObj == so->o) { updateRate = 0.33f; }
 
         // set max and min update rate
         if (so->maxUpdateRate > 0 && updateRate < so->maxUpdateRate) { updateRate = so->maxUpdateRate; }
