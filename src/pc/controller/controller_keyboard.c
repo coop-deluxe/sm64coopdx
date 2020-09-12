@@ -10,16 +10,24 @@
 
 #include "../configfile.h"
 #include "controller_keyboard.h"
+#include "controller_keyboard_debug.h"
 
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
 
+// TODO: use some common lookup header
 #define SCANCODE_BACKSPACE 0x0E
-#define SCANCODE_ESCAPE 0x01
-#define SCANCODE_ENTER 0x1C
-#define SCANCODE_V 0x2F
-#define SCANCODE_INSERT 0x152
+#define SCANCODE_ESCAPE    0x01
+#define SCANCODE_ENTER     0x1C
+#define SCANCODE_V         0x2F
+#define SCANCODE_INSERT    0x152
+#define SCANCODE_CTRL1     0x1D
+#define SCANCODE_CTRL2     0x11D
+#define SCANCODE_SHIFT1    0x2A
+#define SCANCODE_SHIFT2    0x36
+#define SCANCODE_ALT1      0x38
+#define SCANCODE_ALT2      0x138
 
 static int keyboard_buttons_down;
 
@@ -50,26 +58,29 @@ static int keyboard_map_scancode(int scancode) {
 static void keyboard_alter_text_input_modifier(int scancode, bool down) {
     if (down) {
         switch (scancode) {
-            case 0x1D:  held_ctrl  |= (1 << 0); break;
-            case 0x11D: held_ctrl  |= (1 << 1); break;
-            case 0x2A:  held_shift |= (1 << 0); break;
-            case 0x36:  held_shift |= (1 << 1); break;
-            case 0x38:  held_alt   |= (1 << 0); break;
-            case 0x138: held_alt   |= (1 << 1); break;
+            case SCANCODE_CTRL1:  held_ctrl  |= (1 << 0); break;
+            case SCANCODE_CTRL2:  held_ctrl  |= (1 << 1); break;
+            case SCANCODE_SHIFT1: held_shift |= (1 << 0); break;
+            case SCANCODE_SHIFT2: held_shift |= (1 << 1); break;
+            case SCANCODE_ALT1:   held_alt   |= (1 << 0); break;
+            case SCANCODE_ALT2:   held_alt   |= (1 << 1); break;
         }
     } else {
         switch (scancode) {
-            case 0x1D:  held_ctrl  &= ~(1 << 0); break;
-            case 0x11D: held_ctrl  &= ~(1 << 1); break;
-            case 0x2A:  held_shift &= ~(1 << 0); break;
-            case 0x36:  held_shift &= ~(1 << 1); break;
-            case 0x38:  held_alt   &= ~(1 << 0); break;
-            case 0x138: held_alt   &= ~(1 << 1); break;
+            case SCANCODE_CTRL1:  held_ctrl  &= ~(1 << 0); break;
+            case SCANCODE_CTRL2:  held_ctrl  &= ~(1 << 1); break;
+            case SCANCODE_SHIFT1: held_shift &= ~(1 << 0); break;
+            case SCANCODE_SHIFT2: held_shift &= ~(1 << 1); break;
+            case SCANCODE_ALT1:   held_alt   &= ~(1 << 0); break;
+            case SCANCODE_ALT2:   held_alt   &= ~(1 << 1); break;
         }
     }
 }
 
 bool keyboard_on_key_down(int scancode) {
+#ifdef DEBUG
+    debug_keyboard_on_key_down(scancode);
+#endif
     if (inTextInput) {
         // alter the held value of modifier keys
         keyboard_alter_text_input_modifier(scancode, true);
@@ -234,16 +245,7 @@ static void keyboard_init(void) {
 #endif
 }
 
-static void debug_breakpoint_here(void) {
-    // create easy breakpoint position for debugging
-}
-
 static void keyboard_read(OSContPad *pad) {
-    // create easy breakpoint position for debugging
-    if (keyboard_buttons_down & L_TRIG) {
-        debug_breakpoint_here();
-    }
-
     pad->button |= keyboard_buttons_down;
     const u32 xstick = keyboard_buttons_down & STICK_XMASK;
     const u32 ystick = keyboard_buttons_down & STICK_YMASK;

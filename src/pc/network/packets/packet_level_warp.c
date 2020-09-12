@@ -44,7 +44,6 @@ static void populate_packet_data(struct PacketLevelWarpData* data, bool done, u8
 }
 
 void network_send_level_warp_begin(void) {
-    assert(!isInWarp);
     isInWarp = TRUE;
     savedWarpNode = sWarpDest;
     saved_D_80339EE0 = D_80339EE0;

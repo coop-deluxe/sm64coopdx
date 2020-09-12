@@ -15012,6 +15012,9 @@
     <ClCompile Include="..\src\pc\network\packets\packet_save_file.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\controller\controller_keyboard_debug.c">
+      <Filter>Source Files\src\pc\controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -15930,6 +15933,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\debuglog.h">
       <Filter>Source Files\src\pc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h">
+      <Filter>Source Files\src\pc\controller</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

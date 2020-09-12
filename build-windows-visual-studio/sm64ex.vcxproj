@@ -99,7 +99,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -3930,6 +3930,7 @@
     <ClCompile Include="..\src\pc\controller\controller_emscripten_keyboard.c" />
     <ClCompile Include="..\src\pc\controller\controller_entry_point.c" />
     <ClCompile Include="..\src\pc\controller\controller_keyboard.c" />
+    <ClCompile Include="..\src\pc\controller\controller_keyboard_debug.c" />
     <ClCompile Include="..\src\pc\controller\controller_recorded_tas.c" />
     <ClCompile Include="..\src\pc\controller\controller_sdl.c" />
     <ClCompile Include="..\src\pc\discord\discordrpc.c" />
@@ -4305,6 +4306,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\behavior_table.h" />
+    <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h" />
     <ClInclude Include="..\src\pc\debuglog.h" />
     <ClInclude Include="..\src\pc\network\network.h" />
     <ClInclude Include="..\src\pc\network\socket\socket.h" />
