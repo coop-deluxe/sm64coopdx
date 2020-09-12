@@ -1263,6 +1263,12 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         if (m2->playerIndex == 0) {
             m2->interactObj = m->marioObj;
             if (interaction & INT_KICK) {
+                if (m2->action == ACT_FIRST_PERSON) {
+                    // without this branch, the player will be stuck in first person
+                    raise_background_noise(2);
+                    set_camera_mode(m2->area->camera, -1, 1);
+                    m2->input &= ~INPUT_FIRST_PERSON;
+                }
                 set_mario_action(m2, ACT_FREEFALL, 0);
             }
             m->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
