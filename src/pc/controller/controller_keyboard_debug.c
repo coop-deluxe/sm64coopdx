@@ -7,6 +7,7 @@
 
 static u8 warpToLevel = LEVEL_BITDW;
 
+#define SCANCODE_0 0x0B
 #define SCANCODE_3 0x04
 #define SCANCODE_6 0x07
 #define SCANCODE_7 0x08
@@ -89,12 +90,17 @@ static void debug_warp_area() {
     }
 }
 
+static void debug_suicide(void) {
+    gMarioStates[0].hurtCounter = 31;
+}
+
 void debug_keyboard_on_key_down(int scancode) {
     scancode = scancode;
     switch (scancode) {
         case SCANCODE_3: debug_breakpoint_here(); break;
         case SCANCODE_6: debug_warp_level(warpToLevel); break;
         case SCANCODE_7: debug_warp_area(); break;
+        case SCANCODE_0: debug_suicide(); break;
     }
 }
 
