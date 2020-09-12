@@ -1563,7 +1563,7 @@ s32 act_lava_boost(struct MarioState *m) {
             m->health = 0x100;
         } else {
             m->health = 0xFF;
-            return drop_and_set_mario_action(m, ACT_DEATH_ON_BACK, 0);
+            mario_set_bubbled(m);
         }
     }
 

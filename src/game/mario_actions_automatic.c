@@ -875,7 +875,7 @@ s32 act_bubbled(struct MarioState* m) {
     if (m->playerIndex == 0) {
         u8 allInBubble = TRUE;
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].action != ACT_BUBBLED) {
+            if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
                 allInBubble = FALSE;
                 break;
             }
