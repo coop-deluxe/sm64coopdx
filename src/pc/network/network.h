@@ -131,11 +131,11 @@ void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z,
 void network_receive_spawn_star(struct Packet* p);
 
 // packet_level_warp.c
-void network_send_level_warp_begin(void);
+void network_send_level_warp(u8 done);
 void network_receive_level_warp(struct Packet* p);
 
 // packet_inside_painting.c
-void network_send_inside_painting(void);
+void network_send_inside_painting(u8 startOfEvent, u8 endOfEvent);
 void network_receive_inside_painting(struct Packet* p);
 
 // packet_collect_star.c
