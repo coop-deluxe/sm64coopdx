@@ -2076,7 +2076,7 @@ const u8 *const main_credits_font_lut[] = {
 // HUD camera table 0x020087CC-0x020087E3
 const u8 *const main_hud_camera_lut[] = {
     texture_hud_char_camera, texture_hud_char_mario_head, texture_hud_char_lakitu, texture_hud_char_no_camera,
-    texture_hud_char_arrow_up, texture_hud_char_arrow_down,
+    texture_hud_char_arrow_up, texture_hud_char_arrow_down, texture_hud_char_luigi_head,
 };
 
 // If you change the language here, the following Makefile rule also needs to
