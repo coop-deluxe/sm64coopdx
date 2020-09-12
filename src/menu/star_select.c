@@ -34,6 +34,7 @@ static struct Object *sStarSelectorModels[8];
 
 // The act the course is loaded as, affects whether some objects spawn.
 s8 sLoadedActNum;
+s8 sReceivedLoadedActNum = 0;
 
 // Number of obtained stars, excluding the coin star.
 static u8 sObtainedStars;
@@ -158,10 +159,6 @@ void bhv_act_selector_init(void) {
     }
 
     render_100_coin_star(stars);
-
-    if (gControlledWarp) {
-        network_send_inside_painting(TRUE, FALSE);
-    }
 }
 
 /**
@@ -183,7 +180,7 @@ void bhv_act_selector_loop(void) {
         if (gControlledWarp) {
             s8 oldIndex = sSelectableStarIndex;
             handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, &sSelectableStarIndex, 0, sObtainedStars);
-            if (oldIndex != sSelectableStarIndex) { network_send_inside_painting(FALSE, FALSE); }
+            if (oldIndex != sSelectableStarIndex) { network_send_inside_painting(); }
         }
         starIndexCounter = sSelectableStarIndex;
         for (i = 0; i < sVisibleStars; i++) {
@@ -201,7 +198,7 @@ void bhv_act_selector_loop(void) {
         if (gControlledWarp) {
             s8 oldIndex = sSelectableStarIndex;
             handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, &sSelectableStarIndex, 0, sVisibleStars - 1);
-            if (oldIndex != sSelectableStarIndex) { network_send_inside_painting(FALSE, FALSE); }
+            if (oldIndex != sSelectableStarIndex) { network_send_inside_painting(); }
         }
         sSelectedActIndex = sSelectableStarIndex;
     }
@@ -452,6 +449,12 @@ s32 lvl_update_obj_and_load_act_button_actions(UNUSED s32 arg, UNUSED s32 unused
         }
     }
 
+    // apply the received act num
+    if (sReceivedLoadedActNum != 0) {
+        sLoadedActNum = sReceivedLoadedActNum;
+        sReceivedLoadedActNum = 0;
+    }
+
     area_update_objects();
     sActSelectorMenuTimer++;
     return sLoadedActNum;
@@ -470,5 +473,5 @@ void star_select_finish_selection(void) {
     }
     gDialogCourseActNum = sSelectedActIndex + 1;
 
-    if (gControlledWarp) { network_send_inside_painting(FALSE, TRUE); }
+    if (gControlledWarp) { network_send_inside_painting(); }
 }
