@@ -265,7 +265,7 @@ void load_level_init_text(u32 arg) {
     }
 
     if (!gotAchievement) {
-        level_set_transition(-1, NULL);
+        //level_set_transition(-1, NULL);
         create_dialog_box(dialogID);
     }
 }
@@ -995,13 +995,8 @@ static void check_received_warp(void) {
     if (!gControlledWarp) {
         // force well behaved state
         extern s16 gMenuMode;
-        reset_dialog_render_state();
-        level_set_transition(1, 0);
         gMenuMode = -1;
-        gPauseScreenMode = 1;
-        gSaveOptSelectIndex = 0;
-        gMarioStates[0].action = (gMarioStates[0].pos[1] <= gMarioStates[0].waterLevel) ? ACT_WATER_IDLE : ACT_IDLE;
-        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        reset_dialog_render_state();
     }
 
     set_play_mode((sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
@@ -1012,10 +1007,6 @@ static void check_received_warp(void) {
     if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL && warpCourse == COURSE_NONE) {
         sReceivedLoadedActNum = 0;
     }
-
-    /*return (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
-           ? sWarpDest.levelNum
-           : 0;*/
 }
 
 int gPressedStart = 0;

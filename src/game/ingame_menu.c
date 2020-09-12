@@ -2698,7 +2698,7 @@ s16 render_pause_courses_and_castle(void) {
         case DIALOG_STATE_OPENING:
             gDialogLineNum = 1;
             gDialogTextAlpha = 0;
-            level_set_transition(-1, 0);
+            //level_set_transition(-1, 0);
 #if defined(VERSION_JP) || defined(VERSION_SH)
             play_sound(SOUND_MENU_PAUSE, gDefaultSoundArgs);
 #else
@@ -3128,7 +3128,7 @@ s16 render_course_complete_screen(void) {
             render_course_complete_lvl_info_and_hud_str();
             if (gCourseDoneMenuTimer > 100 && gCourseCompleteCoinsEqual == 1) {
                 gDialogBoxState = DIALOG_STATE_VERTICAL;
-                level_set_transition(-1, 0);
+                //level_set_transition(-1, 0);
                 gDialogTextAlpha = 0;
                 gDialogLineNum = 1;
             }
