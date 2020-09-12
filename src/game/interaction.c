@@ -2038,8 +2038,11 @@ void pss_end_slide(struct MarioState *m) {
     if (sPssSlideStarted) {
         u16 slideTime = level_control_timer(TIMER_CONTROL_STOP);
         if (slideTime < 630) {
-            //m->marioObj->oBehParams = (1 << 24);
+            // PSS secret star uses oBehParams to spawn
+            s32 tmp = m->marioObj->oBehParams;
+            m->marioObj->oBehParams = (1 << 24);
             spawn_default_star(-6358.0f, -4300.0f, 4700.0f);
+            m->marioObj->oBehParams = tmp;
         }
         sPssSlideStarted = FALSE;
     }
