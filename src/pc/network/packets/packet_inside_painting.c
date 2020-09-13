@@ -57,7 +57,7 @@ void network_receive_inside_painting(struct Packet* p) {
 
     // two-player hack: gControlledWarp is a bool instead of an index
     if (gControlledWarp) {
-        LOG_INFO("this should never happen, received inside_painting when gControlledWarp");
+        LOG_ERROR("this should never happen, received inside_painting when gControlledWarp");
         return;
     }
 

@@ -13,6 +13,10 @@
         printf(" [%s] ", NETWORKTYPESTR);
     }
 
+    static void debuglog_print_log_type(char* logType) {
+        printf("[%s] ", logType);
+    }
+
     static void debuglog_print_short_filename(char* filename) {
         char* last = strrchr(filename, '/');
         if (last != NULL) {
@@ -22,13 +26,16 @@
         }
     }
 
-    static void debuglog_print_log(char* filename) {
+    static void debuglog_print_log(char* logType, char* filename) {
         debuglog_print_timestamp();
         debuglog_print_network_type();
+        debuglog_print_log_type(logType);
         debuglog_print_short_filename(filename);
     }
 
-    #define LOG_INFO(...) ( debuglog_print_log(__FILE__), printf(__VA_ARGS__), printf("\n") )
+    #define LOG_INFO(...)  ( debuglog_print_log("INFO ", __FILE__), printf(__VA_ARGS__), printf("\n") )
+    #define LOG_ERROR(...) ( debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") )
 #else
     #define LOG_INFO(...)
+    #define LOG_ERROR(...)
 #endif

@@ -261,7 +261,15 @@ void main_func(void) {
         audio_api = &audio_null;
     }
 
-    network_init(gCLIOpts.Network, gCLIOpts.JoinIp, gCLIOpts.NetworkPort);
+    if (gCLIOpts.Network == NT_CLIENT) {
+        strncpy(configJoinIp, gCLIOpts.JoinIp, IP_MAX_LEN);
+        configJoinPort = gCLIOpts.NetworkPort;
+        network_init(NT_CLIENT);
+    } else if (gCLIOpts.Network == NT_SERVER) {
+        configHostPort = gCLIOpts.NetworkPort;
+        network_init(NT_SERVER);
+    }
+
     audio_init();
     sound_init();
 

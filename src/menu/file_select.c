@@ -440,7 +440,7 @@ void join_server_as_client(void) {
 
     keyboard_stop_text_input();
     joinVersionMismatch = FALSE;
-    network_init(NT_CLIENT, configJoinIp, configJoinPort);
+    network_init(NT_CLIENT);
 }
 
 void joined_server_as_client(s16 fileIndex) {
@@ -1341,7 +1341,7 @@ void load_main_menu_save_file(struct Object *fileButton, s32 fileNum) {
     if (fileButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
         sSelectedFileNum = fileNum;
         configHostSaveSlot = fileNum;
-        network_init(NT_SERVER, "", configHostPort);
+        network_init(NT_SERVER);
     }
 }
 
