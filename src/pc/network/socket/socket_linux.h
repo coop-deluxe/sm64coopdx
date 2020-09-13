@@ -1,13 +1,11 @@
 #ifndef SOCKET_LINUX_H
 #define SOCKET_LINUX_H
-#ifndef WINSOCK
 
 #include <errno.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <fcntl.h>
-#include "socket.h"
 
 #define SOCKET unsigned int
 #define INVALID_SOCKET (unsigned int)(-1)
@@ -19,5 +17,4 @@
 #define SOCKET_EWOULDBLOCK EWOULDBLOCK
 #define SOCKET_ECONNRESET ECONNRESET
 
-#endif
 #endif
