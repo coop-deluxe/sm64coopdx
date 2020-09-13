@@ -22,6 +22,7 @@ struct PCCLIOptions  {
     char ConfigFile[SYS_MAX_PATH];
     char SavePath[SYS_MAX_PATH];
     char GameDir[SYS_MAX_PATH];
+    unsigned int Discord;
 };
 
 extern struct PCCLIOptions gCLIOpts;

@@ -11,9 +11,15 @@ if [ ! -f "$FILE" ]; then
     FILE=./build/us_pc/sm64.us.f3dex2e
 fi
 
-$FILE --server 27015 --configfile sm64config_server.txt  &
+#$FILE --discord 2 --configfile sm64config_server.txt  &
+#$FILE --discord 1 --configfile sm64config_client.txt  &
+#exit
+
+#$FILE --server 27015 --configfile sm64config_server.txt  &
 #$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
 #exit
+
+$FILE --server 27015 --configfile sm64config_server.txt  &
 
 # debug if cgdb exists
 if ! [ -x "$(command -v cgdb)" ]; then

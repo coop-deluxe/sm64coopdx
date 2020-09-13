@@ -262,12 +262,16 @@ void main_func(void) {
     }
 
     if (gCLIOpts.Network == NT_CLIENT) {
+        network_set_system(NS_SOCKET);
         strncpy(configJoinIp, gCLIOpts.JoinIp, IP_MAX_LEN);
         configJoinPort = gCLIOpts.NetworkPort;
         network_init(NT_CLIENT);
     } else if (gCLIOpts.Network == NT_SERVER) {
+        network_set_system(NS_SOCKET);
         configHostPort = gCLIOpts.NetworkPort;
         network_init(NT_SERVER);
+    } else {
+        network_init(NT_NONE);
     }
 
     audio_init();

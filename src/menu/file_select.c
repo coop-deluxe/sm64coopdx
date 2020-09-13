@@ -42,6 +42,8 @@
  */
 
 static u8 joinVersionMismatch = FALSE;
+static char joinMenuCustomText[64] = { 0 };
+static u8 forceOpenJoinMenu = 0;
 
 #ifdef VERSION_US
 // The current sound mode is automatically centered on US due to
@@ -385,6 +387,9 @@ void exit_join_to_network_menu(void) {
     // Begin exit
     if (sMainMenuButtons[MENU_BUTTON_JOIN]->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN
         && sCursorClickingTimer == 2) {
+        // clear custom text
+        joinMenuCustomText[0] = '\0';
+
         play_sound(SOUND_MENU_CAMERA_ZOOM_OUT, gDefaultSoundArgs);
         sMainMenuButtons[MENU_BUTTON_JOIN]->oMenuButtonState = MENU_BUTTON_STATE_SHRINKING;
         network_shutdown();
@@ -468,8 +473,37 @@ void render_network_mode_menu_buttons(struct Object* soundModeButton) {
     sMainMenuButtons[MENU_BUTTON_JOIN]->oFaceAngleRoll = 0;
 }
 
+void open_join_menu(char* customText) {
+    if (sMainMenuButtons[MENU_BUTTON_JOIN] == NULL) {
+        forceOpenJoinMenu = (forceOpenJoinMenu == 0) ? 1 : forceOpenJoinMenu;
+    } else if (sMainMenuButtons[MENU_BUTTON_JOIN]->oMenuButtonState != MENU_BUTTON_STATE_FULLSCREEN) {
+        forceOpenJoinMenu = 0;
+        play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gDefaultSoundArgs);
+        sMainMenuButtons[MENU_BUTTON_JOIN]->oMenuButtonState = MENU_BUTTON_STATE_GROWING;
+        sSelectedButtonID = MENU_BUTTON_JOIN;
+        sCurrentMenuLevel = MENU_LAYER_SUBMENU;
+    } else {
+        forceOpenJoinMenu = 0;
+    }
+
+    if (customText == joinMenuCustomText) { return; }
+
+    if (customText != NULL) {
+        strncpy(joinMenuCustomText, customText, 63);
+    } else if (*gTextInput == '\0') {
+        joinMenuCustomText[0] = '\0';
+    }
+}
+
 void check_network_mode_menu_clicked_buttons(struct Object* networkModeButton) {
     if (networkModeButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
+
+        if (forceOpenJoinMenu && forceOpenJoinMenu++ > 3) {
+            forceOpenJoinMenu = 0;
+            open_join_menu(joinMenuCustomText);
+            return;
+        }
+
         s32 buttonID;
         // Configure sound mode menu button group
         for (buttonID = MENU_BUTTON_NETWORK_MIN; buttonID < MENU_BUTTON_NETWORK_MAX; buttonID++) {
@@ -486,9 +520,7 @@ void check_network_mode_menu_clicked_buttons(struct Object* networkModeButton) {
                     }
                 }
                 else if (buttonID == MENU_BUTTON_JOIN) {
-                    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gDefaultSoundArgs);
-                    sMainMenuButtons[buttonID]->oMenuButtonState = MENU_BUTTON_STATE_GROWING;
-                    sSelectedButtonID = buttonID;
+                    open_join_menu(NULL);
 
                     // start input
                     keyboard_start_text_input(TIM_IP, keyboard_exit_join_to_network_menu, join_server_as_client);
@@ -565,16 +597,21 @@ void print_join_mode_menu_strings(void) {
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, sTextBaseAlpha);
 
     // Print level name
-    print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 0), "Type or paste the host's IP.");
-    print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 2), gTextInput);
+    if (joinMenuCustomText[0] != '\0') {
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (14 * 3), joinMenuCustomText);
+    } else {
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (14 * 0), "Accept a Discord invite.");
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (14 * 1), "Alternatively, type or paste the host's IP.");
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (14 * 3), gTextInput);
+    }
 
     // Print status
     if (joinVersionMismatch) {
-        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Error - versions don't match. Both should rebuild!");
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (13 * 14), "Error - versions don't match. Both should rebuild!");
     } else if (gNetworkType == NT_CLIENT) {
-        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Connecting...");
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (13 * 14), "Connecting...");
     } else if (strlen(gTextInput) > 0) {
-        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (12 * 14), "Press (ENTER) to join.");
+        print_generic_ascii_string(JOIN_LEVEL_NAME_X, 191 - (13 * 14), "Press (ENTER) to directly connect.");
     }
 
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
@@ -1619,6 +1656,7 @@ void check_main_menu_clicked_buttons(void) {
         button->oMenuButtonTimer = 0;
 
         sSelectedButtonID = MENU_BUTTON_NETWORK_MODE;
+
         networkInit = TRUE;
     }
 

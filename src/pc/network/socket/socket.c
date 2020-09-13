@@ -2,6 +2,7 @@
 #include "socket.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
+#include "menu/file_select.h"
 
 static SOCKET curSocket = INVALID_SOCKET;
 struct sockaddr_in txAddr = { 0 };
@@ -68,6 +69,16 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
         txAddr.sin_port = htons(port);
         txAddr.sin_addr.s_addr = inet_addr(configJoinIp);
         LOG_INFO("connecting to %s %u", configJoinIp, port);
+    }
+
+    // kick off first packet
+    if (networkType == NT_CLIENT) {
+        char joinText[128] = { 0 };
+        snprintf(joinText, 63, "%s %d", configJoinIp, configJoinPort);
+        open_join_menu(joinText);
+
+        gNetworkType = NT_CLIENT;
+        network_on_joined();
     }
 
     LOG_INFO("initialized");

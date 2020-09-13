@@ -54,8 +54,9 @@ DISCORDRPC ?= 0
 DOCKERBUILD ?= 0
 
 # Force various options due since coop assumes they are set this way
-NODRAWINGDISTANCE = 1
-TEXTSAVES = 0
+NODRAWINGDISTANCE := 1
+TEXTSAVES := 0
+DISCORDRPC := 0
 
 # Various workarounds for weird toolchains
 
@@ -292,7 +293,8 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 # Directories containing source files
 
 # Hi, I'm a PC
-SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/network src/pc/network/packets src/pc/network/socket
+SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
+SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/discord
 ASM_DIRS :=
 
 ifeq ($(DISCORDRPC),1)
@@ -425,6 +427,16 @@ ifeq ($(DISCORDRPC),1)
   else
     RPC_LIBS := lib/discord/libdiscord-rpc.so
   endif
+endif
+
+DISCORD_SDK_LIBS :=
+ifeq ($(WINDOWS_BUILD),1)
+  DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dll
+else ifeq ($(OSX_BUILD),1)
+  # needs testing
+  DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib
+else
+  DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.so
 endif
 
 # Automatic dependency files
@@ -659,7 +671,7 @@ ifeq ($(TARGET_WEB),1)
 LDFLAGS := -lm -lGL -lSDL2 -no-pie -s TOTAL_MEMORY=20MB -g4 --source-map-base http://localhost:8080/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
 
 else ifeq ($(WINDOWS_BUILD),1)
-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -L"ws2_32" -lwsock32 -lpthread $(BACKEND_LDFLAGS) -static
+  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
   endif
@@ -679,7 +691,17 @@ else
     LDFLAGS += -ldl -Wl,-rpath .
   endif
 
-endif # End of LDFLAGS
+endif
+
+# coop specific libraries
+
+ifeq ($(WINDOWS_BUILD),1)
+  LDFLAGS += -L"ws2_32" -lwsock32
+endif
+
+LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk
+
+# End of LDFLAGS
 
 # Prevent a crash with -sopt
 export LANG := C
@@ -767,6 +789,9 @@ load: $(ROM)
 
 $(BUILD_DIR)/$(RPC_LIBS):
 	@$(CP) -f $(RPC_LIBS) $(BUILD_DIR)
+
+$(BUILD_DIR)/$(DISCORD_SDK_LIBS):
+	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
 
 libultra: $(BUILD_DIR)/libultra.a
 
@@ -1022,7 +1047,7 @@ $(BUILD_DIR)/%.o: %.s
 
 
 
-$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS)
+$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS)
 	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 
 .PHONY: all clean distclean default diff test load libultra res

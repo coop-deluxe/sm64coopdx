@@ -3949,6 +3949,11 @@
     <ClCompile Include="..\src\pc\gfx\gfx_sdl2.c" />
     <ClCompile Include="..\src\pc\ini.c" />
     <ClCompile Include="..\src\pc\mixer.c" />
+    <ClCompile Include="..\src\pc\network\discord\activity.c" />
+    <ClCompile Include="..\src\pc\network\discord\discord.c" />
+    <ClCompile Include="..\src\pc\network\discord\lobby.c" />
+    <ClCompile Include="..\src\pc\network\discord\discord_network.c" />
+    <ClCompile Include="..\src\pc\network\discord\user.c" />
     <ClCompile Include="..\src\pc\network\network.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_collect_coin.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_collect_item.c" />
@@ -4308,6 +4313,12 @@
     <ClInclude Include="..\include\behavior_table.h" />
     <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h" />
     <ClInclude Include="..\src\pc\debuglog.h" />
+    <ClInclude Include="..\src\pc\network\discord\activity.h" />
+    <ClInclude Include="..\src\pc\network\discord\discord.h" />
+    <ClInclude Include="..\src\pc\network\discord\discord_game_sdk.h" />
+    <ClInclude Include="..\src\pc\network\discord\lobby.h" />
+    <ClInclude Include="..\src\pc\network\discord\discord_network.h" />
+    <ClInclude Include="..\src\pc\network\discord\user.h" />
     <ClInclude Include="..\src\pc\network\network.h" />
     <ClInclude Include="..\src\pc\network\socket\socket.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_linux.h" />

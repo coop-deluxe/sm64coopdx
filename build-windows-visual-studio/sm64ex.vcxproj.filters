@@ -3427,6 +3427,12 @@
     <Filter Include="Header Files\src\pc\network\socket">
       <UniqueIdentifier>{b1b4937e-775c-4a0c-92f5-48b010783e4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\src\pc\network\discord">
+      <UniqueIdentifier>{6d48a98e-e5ac-4409-a834-f2756dabfa4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\pc\network\discord">
+      <UniqueIdentifier>{7fd7fed2-3f22-4bbf-a118-8ff54107c341}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\amp\anims\anim_0800401C.inc.c">
@@ -15015,6 +15021,21 @@
     <ClCompile Include="..\src\pc\controller\controller_keyboard_debug.c">
       <Filter>Source Files\src\pc\controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\discord\activity.c">
+      <Filter>Source Files\src\pc\network\discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\discord\discord.c">
+      <Filter>Source Files\src\pc\network\discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\discord\lobby.c">
+      <Filter>Source Files\src\pc\network\discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\discord\user.c">
+      <Filter>Source Files\src\pc\network\discord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\discord\discord_network.c">
+      <Filter>Source Files\src\pc\network\discord</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -15936,6 +15957,24 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h">
       <Filter>Source Files\src\pc\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\discord\activity.h">
+      <Filter>Header Files\src\pc\network\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\discord\discord.h">
+      <Filter>Header Files\src\pc\network\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\discord\discord_game_sdk.h">
+      <Filter>Header Files\src\pc\network\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\discord\lobby.h">
+      <Filter>Header Files\src\pc\network\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\discord\user.h">
+      <Filter>Header Files\src\pc\network\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\discord\discord_network.h">
+      <Filter>Header Files\src\pc\network\discord</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,7 +16,14 @@ extern struct MarioState gMarioStates[];
 #define MAX_SYNC_OBJECTS 256 // note: increasing this requires code to be rewritten
 #define MAX_SYNC_OBJECT_FIELDS 64
 #define PACKET_LENGTH 1024
-#define NETWORKTYPESTR (gNetworkType == NT_CLIENT ? "Client" : "Server")
+#define NETWORKTYPESTR (gNetworkType == NT_CLIENT                            \
+                        ? "Client"                                           \
+                        : (gNetworkType == NT_SERVER ? "Server" : " None ")) \
+
+enum NetworkSystemType {
+    NS_SOCKET,
+    NS_DISCORD,
+};
 
 struct NetworkSystem {
     bool (*initialize)(enum NetworkType);
@@ -92,11 +99,13 @@ extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 
 // network.c
+void network_set_system(enum NetworkSystemType nsType);
 bool network_init(enum NetworkType inNetworkType);
 void network_on_init_level(void);
 void network_on_loaded_level(void);
 void network_send(struct Packet* p);
 void network_receive(u8* data, u16 dataLength);
+void network_on_joined(void);
 void network_update(void);
 void network_shutdown(void);
 

@@ -3,6 +3,7 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "socket/socket.h"
+#include "discord/discord.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 
@@ -10,7 +11,7 @@
 extern s16 sCurrPlayMode;
 
 enum NetworkType gNetworkType = NT_NONE;
-struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
+struct NetworkSystem* gNetworkSystem = &gNetworkSystemDiscord;
 
 #define LOADING_LEVEL_THRESHOLD 10
 u8 networkLoadingLevel = 0;
@@ -21,12 +22,26 @@ struct ServerSettings gServerSettings = {
     .playerKnockbackStrength = 25,
 };
 
+
+void network_set_system(enum NetworkSystemType nsType) {
+    switch (nsType) {
+        case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
+        case NS_DISCORD: gNetworkSystem = &gNetworkSystemDiscord; break;
+        default: LOG_ERROR("Unknown network system: %d", nsType);
+    }
+}
+
 bool network_init(enum NetworkType inNetworkType) {
     // sanity check network system
     if (gNetworkSystem == NULL) {
         LOG_ERROR("no network system attached");
         return false;
     }
+
+    // set server settings
+    gServerSettings.playerInteractions = configPlayerInteraction;
+    gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
+    gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
 
     // initialize the network system
     int rc = gNetworkSystem->initialize(inNetworkType);
@@ -38,24 +53,13 @@ bool network_init(enum NetworkType inNetworkType) {
     // set network type
     gNetworkType = inNetworkType;
 
-    // set server settings
-    if (gNetworkType == NT_SERVER) {
-        gServerSettings.playerInteractions      = configPlayerInteraction;
-        gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
-        gServerSettings.stayInLevelAfterStar    = configStayInLevelAfterStar;
-    }
-
-    // exit early if we're not really initializing the network
-    if (gNetworkType == NT_NONE) {
-        return true;
-    }
-
-    // send connection request
-    if (gNetworkType == NT_CLIENT) {
-        network_send_save_file_request();
-    }
+    LOG_INFO("initialized");
 
     return true;
+}
+
+void network_on_joined(void) {
+    network_send_save_file_request();
 }
 
 void network_on_init_level(void) {
@@ -131,7 +135,6 @@ void network_receive(u8* data, u16 dataLength) {
 }
 
 void network_update(void) {
-    if (gNetworkType == NT_NONE) { return; }
 
     // check for level loaded event
     if (!gNetworkLevelLoaded) {
@@ -141,10 +144,12 @@ void network_update(void) {
         }
     }
 
-    // figure out which update loop to run
-    if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
-        network_update_player();
-        network_update_objects();
+    // send out update packets
+    if (gNetworkType != NT_NONE) {
+        if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
+            network_update_player();
+            network_update_objects();
+        }
     }
 
     // receive packets
@@ -153,13 +158,16 @@ void network_update(void) {
     }
 
     // update reliable packets
-    network_update_reliable();
+    if (gNetworkType != NT_NONE) {
+        network_update_reliable();
+    }
 }
 
 void network_shutdown(void) {
     if (gNetworkType == NT_NONE) { return; }
-    gNetworkType = NT_NONE;
 
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
     gNetworkSystem->shutdown();
+
+    gNetworkType = NT_NONE;
 }
