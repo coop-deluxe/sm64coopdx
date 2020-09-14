@@ -87,14 +87,7 @@ enum MenuButtonTypes {
     MENU_BUTTON_LANGUAGE_RETURN,
 #endif
 
-    MENU_BUTTON_OPTION_MAX,
-
-    MENU_BUTTON_NETWORK_MODE,
-    MENU_BUTTON_NETWORK_MIN,
-    MENU_BUTTON_HOST = MENU_BUTTON_NETWORK_MIN,
-    MENU_BUTTON_JOIN,
-    MENU_BUTTON_NETWORK_MAX,
-
+    MENU_BUTTON_OPTION_MAX
 };
 
 enum ScoreMenuMessageID {
@@ -134,6 +127,10 @@ enum SoundModeMenuActionPhase {
     SOUND_MODE_PHASE_MAIN
 };
 
+extern f32 sCursorPos[2];
+extern s8 sSelectedFileNum;
+extern u8 gInCustomMenu;
+
 void beh_yellow_background_menu_init(void);
 void beh_yellow_background_menu_loop(void);
 void bhv_menu_button_init(void);
@@ -143,8 +140,5 @@ void bhv_menu_button_manager_loop(void);
 Gfx *geo_file_select_strings_and_menu_cursor(s32 callContext, UNUSED struct GraphNode *node, UNUSED Mat4 mtx);
 s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused);
 s32 lvl_update_obj_and_load_file_selected(UNUSED s32 arg, UNUSED s32 unused);
-void joined_server_as_client(s16 fileIndex);
-void joined_server_version_mismatch(void);
-void open_join_menu(char* customText);
 
 #endif // FILE_SELECT_H

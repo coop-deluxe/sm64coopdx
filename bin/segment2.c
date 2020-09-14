@@ -82,6 +82,11 @@ ALIGNED8 static const u8 texture_hud_char_I[] = {
 #include "textures/segment2/segment2.02400.rgba16.inc.c"
 };
 
+ALIGNED8 static const u8 texture_hud_char_J[] = {
+#include "textures/segment2/custom_hud_j.rgba16.inc.c"
+};
+
+
 #if defined(VERSION_JP) || defined(VERSION_SH)
 ALIGNED8 static const u8 texture_hud_char_J[] = {
 #include "textures/segment2/segment2.02600.rgba16.inc.c"
@@ -1811,7 +1816,7 @@ const u8 *const main_hud_lut[] = {
     texture_hud_char_4, texture_hud_char_5, texture_hud_char_6, texture_hud_char_7,
     texture_hud_char_8, texture_hud_char_9, texture_hud_char_A, texture_hud_char_B,
     texture_hud_char_C, texture_hud_char_D, texture_hud_char_E, texture_hud_char_F,
-    texture_hud_char_G, texture_hud_char_H, texture_hud_char_I,               0x0,
+    texture_hud_char_G, texture_hud_char_H, texture_hud_char_I, texture_hud_char_J,
     texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
     texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U, texture_hud_char_V,
@@ -1827,7 +1832,7 @@ const u8 *const main_hud_lut[] = {
     texture_hud_char_4, texture_hud_char_5, texture_hud_char_6, texture_hud_char_7,
     texture_hud_char_8, texture_hud_char_9, texture_hud_char_A, texture_hud_char_B,
     texture_hud_char_C, texture_hud_char_D, texture_hud_char_E, texture_hud_char_F,
-    texture_hud_char_G, texture_hud_char_H, texture_hud_char_I,               0x0,
+    texture_hud_char_G, texture_hud_char_H, texture_hud_char_I, texture_hud_char_J,
     texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
     texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U,               0x0,

@@ -2,7 +2,7 @@
 #include "lobby.h"
 #include "discord_network.h"
 #include "pc/debuglog.h"
-#include "menu/file_select.h"
+#include "menu/custom_menu.h"
 
 #define HASH_LENGTH 8
 struct DiscordActivity gCurActivity = { 0 };
@@ -32,7 +32,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
 
 static void on_activity_join(UNUSED void* data, const char* secret) {
     LOG_INFO("> on_activity_join, secret: %s", secret);
-    open_join_menu("Joining Discord invite...");
+    gOpenConnectMenu = TRUE;
     app.lobbies->connect_lobby_with_activity_secret(app.lobbies, (char*)secret, NULL, on_activity_join_callback);
 }
 

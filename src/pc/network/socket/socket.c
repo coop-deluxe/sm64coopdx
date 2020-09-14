@@ -2,7 +2,7 @@
 #include "socket.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
-#include "menu/file_select.h"
+#include "menu/custom_menu.h"
 
 static SOCKET curSocket = INVALID_SOCKET;
 struct sockaddr_in txAddr = { 0 };
@@ -75,7 +75,7 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
     if (networkType == NT_CLIENT) {
         char joinText[128] = { 0 };
         snprintf(joinText, 63, "%s %d", configJoinIp, configJoinPort);
-        open_join_menu(joinText);
+        gOpenConnectMenu = TRUE;
 
         gNetworkType = NT_CLIENT;
         network_on_joined();
@@ -88,6 +88,7 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
 }
 
 static void ns_socket_update(void) {
+    if (gNetworkType == NT_NONE) { return; }
     do {
         // receive packet
         u8 data[PACKET_LENGTH];

@@ -25,6 +25,7 @@ void keyboard_on_all_keys_up(void);
 void keyboard_on_text_input(char* text);
 char* keyboard_start_text_input(enum TextInputMode, void (*onEscape)(void), void (*onEnter)(void));
 void keyboard_stop_text_input(void);
+bool keyboard_in_text_input(void);
 
 #ifdef __cplusplus
 }

@@ -15036,6 +15036,12 @@
     <ClCompile Include="..\src\pc\network\discord\discord_network.c">
       <Filter>Source Files\src\pc\network\discord</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\menu\custom_menu_system.c">
+      <Filter>Source Files\src\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\menu\custom_menu.c">
+      <Filter>Source Files\src\menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -15975,6 +15981,12 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\network\discord\discord_network.h">
       <Filter>Header Files\src\pc\network\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\menu\custom_menu_system.h">
+      <Filter>Header Files\src\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\menu\custom_menu.h">
+      <Filter>Header Files\src\menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

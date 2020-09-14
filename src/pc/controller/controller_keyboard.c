@@ -79,7 +79,9 @@ static void keyboard_alter_text_input_modifier(int scancode, bool down) {
 
 bool keyboard_on_key_down(int scancode) {
 #ifdef DEBUG
-    debug_keyboard_on_key_down(scancode);
+    if (!inTextInput) {
+        debug_keyboard_on_key_down(scancode);
+    }
 #endif
     if (inTextInput) {
         // alter the held value of modifier keys
@@ -155,9 +157,11 @@ char* keyboard_start_text_input(enum TextInputMode inInputMode, void (*onEscape)
 
 void keyboard_stop_text_input(void) {
     // stop allowing text input
-    wm_api->stop_text_input();
     inTextInput = false;
+    wm_api->stop_text_input();
 }
+
+bool keyboard_in_text_input(void) { return inTextInput; }
 
 static bool keyboard_allow_character_input(char c) {
     switch (textInputMode) {
@@ -190,6 +194,7 @@ static bool keyboard_allow_character_input(char c) {
 }
 
 void keyboard_on_text_input(char* text) {
+    if (!inTextInput) { return; }
     // sanity check input
     if (text == NULL) { return; }
 

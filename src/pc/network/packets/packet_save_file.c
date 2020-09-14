@@ -7,7 +7,7 @@
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
 #include "src/game/save_file.h"
-#include "src/menu/file_select.h"
+#include "src/menu/custom_menu.h"
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 
@@ -69,9 +69,9 @@ void network_receive_save_file(struct Packet* p) {
 
     save_file_load_all(TRUE);
     if (memcmp(hash, remoteHash, HASH_LENGTH) != 0) {
-        joined_server_version_mismatch();
+        strcpy(gConnectionJoinError, "Your versions don't match, both should rebuild!");
         network_shutdown();
         return;
     }
-    joined_server_as_client(gCurrSaveFileNum);
+    custom_menu_goto_game(gCurrSaveFileNum);
 }
