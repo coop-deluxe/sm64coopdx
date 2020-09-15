@@ -69,8 +69,7 @@ void network_receive_save_file(struct Packet* p) {
 
     save_file_load_all(TRUE);
     if (memcmp(hash, remoteHash, HASH_LENGTH) != 0) {
-        strcpy(gConnectionJoinError, "Your versions don't match, both should rebuild!");
-        network_shutdown();
+        custom_menu_version_mismatch();
         return;
     }
     custom_menu_goto_game(gCurrSaveFileNum);

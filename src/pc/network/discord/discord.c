@@ -4,6 +4,7 @@
 #include "lobby.h"
 #include "discord_network.h"
 #include "pc/debuglog.h"
+#include "menu/custom_menu_system.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -83,6 +84,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
         int rc = DiscordCreate(DISCORD_VERSION, &params, &app.core);
         if (rc) {
             LOG_ERROR("DiscordCreate failed: %d", rc);
+            custom_menu_error("Could not detect Discord.\n\nTry closing the game,\nrestarting Discord,\nand opening the game again.");
             return false;
         }
 

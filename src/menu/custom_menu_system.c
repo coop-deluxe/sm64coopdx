@@ -14,15 +14,20 @@
 #include "behavior_data.h"
 #include "audio_defines.h"
 #include "audio/external.h"
+#include "gfx_dimensions.h"
+#include "config.h"
 
-#define MAIN_MENU_HEADER_TEXT "SM64 COOP"
+#define MAX_ERROR_MESSAGE_LENGTH 128
 
 static struct CustomMenu* sHead = NULL;
 static struct CustomMenu* sCurrentMenu = NULL;
 static struct CustomMenu* sLastMenu = NULL;
-u8 gMenuStringAlpha = 255;
 
-struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, void (*on_click)(void)) {
+u8 gMenuStringAlpha = 255;
+static u8 sErrorDialog[MAX_ERROR_MESSAGE_LENGTH] = { 0 };
+static u8 sErrorDialogShow = FALSE;
+
+struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, s32 clickSound, void (*on_click)(void)) {
     struct CustomMenuButton* button = calloc(1, sizeof(struct CustomMenuButton));
     if (parent->buttons == NULL) {
         parent->buttons = button;
@@ -35,6 +40,7 @@ struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, ch
     strcpy(button->label, label);
 
     button->on_click = on_click;
+    button->clickSound = clickSound;
 
     struct Object* obj = spawn_object_rel_with_rot(parent->me->object, MODEL_MAIN_MENU_MARIO_NEW_BUTTON, bhvMenuButton, x * -1, y, -1, 0, 0x8000, 0);
     obj->oMenuButtonScale = 0.11111111f;
@@ -50,7 +56,7 @@ struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, ch
 }
 
 struct CustomMenu* custom_menu_create(struct CustomMenu* parent, char* label, u16 x, u16 y) {
-    struct CustomMenuButton* button = custom_menu_create_button(parent, label, x, y, NULL);
+    struct CustomMenuButton* button = custom_menu_create_button(parent, label, x, y, SOUND_MENU_CAMERA_ZOOM_IN, NULL);
     struct CustomMenu* menu = calloc(1, sizeof(struct CustomMenu));
     menu->parent = parent;
     menu->depth = parent->depth + 1;
@@ -154,7 +160,6 @@ void custom_menu_open(struct CustomMenu* menu) {
     gMenuStringAlpha = 0;
     sLastMenu = sCurrentMenu;
     sCurrentMenu = menu;
-    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gDefaultSoundArgs);
 }
 
 void custom_menu_close(void) {
@@ -167,13 +172,11 @@ void custom_menu_close(void) {
     if (sCurrentMenu->parent != NULL) {
         sCurrentMenu = sCurrentMenu->parent;
     }
-    play_sound(SOUND_MENU_CAMERA_ZOOM_OUT, gDefaultSoundArgs);
 }
 
 void custom_menu_close_system(void) {
     sHead->me->object->oMenuButtonState = MENU_BUTTON_STATE_SHRINKING;
     gInCustomMenu = FALSE;
-    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gDefaultSoundArgs);
 }
 
 static s32 cursor_inside_button(struct CustomMenuButton* button, f32 cursorX, f32 cursorY) {
@@ -191,6 +194,7 @@ static s32 cursor_inside_button(struct CustomMenuButton* button, f32 cursorX, f3
 }
 
 void custom_menu_cursor_click(f32 cursorX, f32 cursorY) {
+
 #ifdef VERSION_EU
     u16 cursorClickButtons = (A_BUTTON | B_BUTTON | START_BUTTON | Z_TRIG);
 #else
@@ -199,12 +203,31 @@ void custom_menu_cursor_click(f32 cursorX, f32 cursorY) {
     if (!(gPlayer3Controller->buttonPressed & cursorClickButtons)) { return; }
     if (sCurrentMenu->me->object->oMenuButtonState != MENU_BUTTON_STATE_FULLSCREEN) { return; }
 
+    if (sErrorDialogShow) {
+        sErrorDialogShow = FALSE;
+        play_sound(SOUND_ACTION_BONK, gDefaultSoundArgs);
+        return;
+    }
+
     struct CustomMenuButton* button = sCurrentMenu->buttons;
     while (button != NULL) {
         if (cursor_inside_button(button, cursorX, cursorY)) {
             u8 didSomething = FALSE;
-            if (button->menu != NULL) { custom_menu_open(button->menu); didSomething = TRUE; }
-            if (button->on_click != NULL) { button->on_click(); didSomething = TRUE; }
+
+            if (button->menu != NULL) {
+                custom_menu_open(button->menu);
+                didSomething = TRUE;
+            }
+
+            if (button->on_click != NULL) {
+                button->on_click();
+                didSomething = TRUE;
+            }
+
+            if (button->clickSound != 0) {
+                play_sound(button->clickSound, gDefaultSoundArgs);
+            }
+
             if (didSomething) { break; }
         } 
         button = button->next;
@@ -260,7 +283,34 @@ void custom_menu_print_strings(void) {
     }
     if (sCurrentMenu->draw_strings != NULL) { sCurrentMenu->draw_strings(); }
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+}
 
+void custom_menu_render_top(void) {
+    // print error message
+    if (sErrorDialogShow) {
+        // black screen
+        create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.0f, 0);
+        create_dl_scale_matrix(MENU_MTX_NOPUSH, GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 130.0f, 3.0f, 1.0f);
+        gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 240);
+        gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
+        gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+
+        // print text
+        gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+        f32 textWidth = get_generic_dialog_width(sErrorDialog);
+        f32 textHeight = get_generic_dialog_height(sErrorDialog);
+
+        f32 xPos = (SCREEN_WIDTH - textWidth) / 2.0f;
+        f32 yPos = (SCREEN_HEIGHT + textHeight) / 2.0f;
+
+        gDPSetEnvColor(gDisplayListHead++, 30, 30, 30, 255);
+        print_generic_string(xPos, yPos, sErrorDialog);
+
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+        print_generic_string((xPos - 1), (yPos + 1), sErrorDialog);
+
+        gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+    }
 }
 
 /**
@@ -320,4 +370,10 @@ void bhv_menu_button_shrinking_to_custom(struct Object* button) {
         button->oMenuButtonState = MENU_BUTTON_STATE_DEFAULT;
         button->oMenuButtonTimer = 0;
     }
+}
+
+void custom_menu_error(char* message) {
+    str_ascii_to_dialog(message, sErrorDialog, MIN(strlen(message), MAX_ERROR_MESSAGE_LENGTH - 1));
+    if (!sErrorDialogShow) { play_sound(SOUND_MARIO_OOOF2, gDefaultSoundArgs); }
+    sErrorDialogShow = TRUE;
 }

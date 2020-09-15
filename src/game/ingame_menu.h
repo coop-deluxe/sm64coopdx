@@ -119,6 +119,8 @@ void create_dl_ortho_matrix(void);
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length);
 f32 get_generic_dialog_width(u8* dialog);
 f32 get_generic_ascii_string_width(const char* ascii);
+f32 get_generic_dialog_height(u8* dialog);
+f32 get_generic_ascii_string_height(const char* ascii);
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii);
 void print_generic_string(s16 x, s16 y, const u8 *str);
 void print_hud_lut_string(s8 hudLUT, s16 x, s16 y, const u8 *str);

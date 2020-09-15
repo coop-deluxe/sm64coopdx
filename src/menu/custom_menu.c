@@ -15,10 +15,12 @@
 #include "object_fields.h"
 #include "model_ids.h"
 #include "behavior_data.h"
+#include "audio_defines.h"
+#include "audio/external.h"
 
 #define MAIN_MENU_HEADER_TEXT "SM64 COOP"
 
-char gConnectionJoinError[128] = { 0 };
+char sConnectionJoinError[128] = { 0 };
 char gConnectionText[128] = { 0 };
 struct CustomMenu* sConnectMenu = NULL;
 u8 gOpenConnectMenu = FALSE;
@@ -118,10 +120,10 @@ static void connect_menu_draw_strings(void) {
         return;
     }
 
-    if (*gConnectionJoinError) {
+    if (*sConnectionJoinError) {
         f32 red = (f32)fabs(sin(gGlobalTimer / 20.0f));
         gDPSetEnvColor(gDisplayListHead++, 222, 222 * red, 222 * red, gMenuStringAlpha);
-        print_generic_ascii_string(30, 130, gConnectionJoinError);
+        print_generic_ascii_string(30, 130, sConnectionJoinError);
         return;
     }
 
@@ -141,6 +143,8 @@ static void connect_menu_draw_strings(void) {
 }
 
 static void connect_menu_on_connection_attempt(void) {
+    play_sound(SOUND_GENERAL_COIN, gDefaultSoundArgs);
+
     keyboard_stop_text_input();
     if (gNetworkType != NT_NONE) { return; }
 
@@ -176,7 +180,7 @@ static void connect_menu_on_connection_attempt(void) {
 }
 
 static void connect_menu_on_click(void) {
-    gConnectionJoinError[0] = '\0';
+    sConnectionJoinError[0] = '\0';
 
     keyboard_start_text_input(TIM_IP, MAX_TEXT_INPUT, custom_menu_close, connect_menu_on_connection_attempt);
 
@@ -204,22 +208,22 @@ void custom_menu_init(struct CustomMenu* head) {
     // create sub menus and buttons
     struct CustomMenu* hostMenu = custom_menu_create(head, "HOST", -266, 0);
     hostMenu->draw_strings = host_menu_draw_strings;
-    custom_menu_create_button(hostMenu, "CANCEL", 700, -400 + (250 * 3), custom_menu_close);
-    custom_menu_create_button(hostMenu, "HOST", 700, -400, host_menu_do_host);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 3), host_menu_setting_network_system);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 2), host_menu_setting_interaction);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 1), host_menu_setting_knockback);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 0), host_menu_setting_stay_in_level);
+    custom_menu_create_button(hostMenu, "CANCEL", 700, -400 + (250 * 3), SOUND_MENU_CAMERA_ZOOM_OUT, custom_menu_close);
+    custom_menu_create_button(hostMenu, "HOST", 700, -400, SOUND_MENU_CAMERA_ZOOM_IN, host_menu_do_host);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 3), SOUND_ACTION_BONK, host_menu_setting_network_system);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 2), SOUND_ACTION_BONK, host_menu_setting_interaction);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 1), SOUND_ACTION_BONK, host_menu_setting_knockback);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 0), SOUND_ACTION_BONK, host_menu_setting_stay_in_level);
 
     struct CustomMenu* joinMenu = custom_menu_create(head, "JOIN", 266, 0);
-    custom_menu_create_button(joinMenu, "CANCEL", -266, -320, custom_menu_close);
+    custom_menu_create_button(joinMenu, "CANCEL", -266, -320, SOUND_MENU_CAMERA_ZOOM_OUT, custom_menu_close);
     joinMenu->draw_strings = join_menu_draw_strings;
 
     struct CustomMenu* connectMenu = custom_menu_create(joinMenu, "CONNECT", 266, -320);
     connectMenu->me->on_click = connect_menu_on_click;
     connectMenu->on_close = connect_menu_on_close;
     connectMenu->draw_strings = connect_menu_draw_strings;
-    custom_menu_create_button(connectMenu, "CANCEL", 0, -400, custom_menu_close);
+    custom_menu_create_button(connectMenu, "CANCEL", 0, -400, SOUND_MENU_CAMERA_ZOOM_OUT, custom_menu_close);
     sConnectMenu = connectMenu;
 }
 
@@ -247,4 +251,10 @@ void custom_menu_on_load_save_file(s8 saveFileNum) {
 
 void custom_menu_goto_game(s16 saveFileNum) {
     sGotoGame = saveFileNum;
+}
+
+void custom_menu_version_mismatch(void) {
+    play_sound(SOUND_MARIO_MAMA_MIA, gDefaultSoundArgs);
+    strcpy(sConnectionJoinError, "Your versions don't match, both should rebuild!");
+    network_shutdown();
 }

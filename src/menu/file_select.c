@@ -2804,6 +2804,7 @@ Gfx *geo_file_select_strings_and_menu_cursor(s32 callContext, UNUSED struct Grap
     if (callContext == GEO_CONTEXT_RENDER) {
         print_file_select_strings();
         print_menu_cursor();
+        custom_menu_render_top();
     }
     return NULL;
 }

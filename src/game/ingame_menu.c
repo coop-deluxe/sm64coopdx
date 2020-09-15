@@ -438,19 +438,42 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
 }
 
 f32 get_generic_dialog_width(u8* dialog) {
+    f32 largestWidth = 0;
     f32 width = 0;
     u8* d = dialog;
     while (*d != DIALOG_CHAR_TERMINATOR) {
+        if (*d == DIALOG_CHAR_NEWLINE) {
+            width = 0;
+            d++;
+            continue;
+        }
         width += (f32)(gDialogCharWidths[*d]);
+        largestWidth = MAX(width, largestWidth);
         d++;
     }
-    return width;
+    return largestWidth;
 }
 
 f32 get_generic_ascii_string_width(const char* ascii) {
     u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
     str_ascii_to_dialog(ascii, dialog, strlen(ascii));
     return get_generic_dialog_width(dialog);
+}
+
+f32 get_generic_dialog_height(u8* dialog) {
+    int lines = 0;
+    u8* d = dialog;
+    while (*d != DIALOG_CHAR_TERMINATOR) {
+        if (*d == DIALOG_CHAR_NEWLINE) { lines++; }
+        d++;
+    }
+    return lines * 14;
+}
+
+f32 get_generic_ascii_string_height(const char* ascii) {
+    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
+    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
+    return get_generic_dialog_height(dialog);
 }
 
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii) {

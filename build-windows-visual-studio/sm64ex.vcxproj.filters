@@ -15042,6 +15042,12 @@
     <ClCompile Include="..\src\menu\custom_menu.c">
       <Filter>Source Files\src\menu</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\game\chat.c">
+      <Filter>Source Files\src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_chat.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -15987,6 +15993,9 @@
     </ClInclude>
     <ClInclude Include="..\src\menu\custom_menu.h">
       <Filter>Header Files\src\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\chat.h">
+      <Filter>Header Files\src\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
