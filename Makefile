@@ -53,11 +53,6 @@ DISCORDRPC ?= 0
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
 
-# Force various options due since coop assumes they are set this way
-NODRAWINGDISTANCE := 1
-TEXTSAVES := 0
-DISCORDRPC := 0
-
 # Various workarounds for weird toolchains
 
 NO_BZERO_BCOPY ?= 0
@@ -297,9 +292,9 @@ SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels
 SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/discord
 ASM_DIRS :=
 
-ifeq ($(DISCORDRPC),1)
-  SRC_DIRS += src/pc/discord
-endif
+#ifeq ($(DISCORDRPC),1)
+#  SRC_DIRS += src/pc/discord
+#endif
 
 BIN_DIRS := bin bin/$(VERSION)
 
@@ -418,16 +413,16 @@ ULTRA_O_FILES := $(foreach file,$(ULTRA_S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 GODDARD_O_FILES := $(foreach file,$(GODDARD_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 RPC_LIBS :=
-ifeq ($(DISCORDRPC),1)
-  ifeq ($(WINDOWS_BUILD),1)
-    RPC_LIBS := lib/discord/libdiscord-rpc.dll
-  else ifeq ($(OSX_BUILD),1) 
-    # needs testing
-    RPC_LIBS := lib/discord/libdiscord-rpc.dylib
-  else
-    RPC_LIBS := lib/discord/libdiscord-rpc.so
-  endif
-endif
+#ifeq ($(DISCORDRPC),1)
+#  ifeq ($(WINDOWS_BUILD),1)
+#    RPC_LIBS := lib/discord/libdiscord-rpc.dll
+#  else ifeq ($(OSX_BUILD),1) 
+#    # needs testing
+#    RPC_LIBS := lib/discord/libdiscord-rpc.dylib
+#  else
+#    RPC_LIBS := lib/discord/libdiscord-rpc.so
+#  endif
+#endif
 
 DISCORD_SDK_LIBS :=
 ifeq ($(WINDOWS_BUILD),1)
@@ -467,17 +462,17 @@ endif
 
 LD := $(CC)
 
-ifeq ($(DISCORDRPC),1)
-  LD := $(CXX)
-else ifeq ($(WINDOWS_BUILD),1)
-  ifeq ($(CROSS),i686-w64-mingw32.static-) # fixes compilation in MXE on Linux and WSL
-    LD := $(CC)
-  else ifeq ($(CROSS),x86_64-w64-mingw32.static-)
-    LD := $(CC)
-  else
-    LD := $(CXX)
-  endif
-endif
+#ifeq ($(DISCORDRPC),1)
+#  LD := $(CXX)
+#else ifeq ($(WINDOWS_BUILD),1)
+#  ifeq ($(CROSS),i686-w64-mingw32.static-) # fixes compilation in MXE on Linux and WSL
+#    LD := $(CC)
+#  else ifeq ($(CROSS),x86_64-w64-mingw32.static-)
+#    LD := $(CC)
+#  else
+#    LD := $(CXX)
+#  endif
+#endif
 
 ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   CPP := cpp -P
@@ -609,22 +604,22 @@ ifeq ($(BETTERCAMERA),1)
   EXT_OPTIONS_MENU := 1
 endif
 
-ifeq ($(TEXTSAVES),1)
-  CC_CHECK += -DTEXTSAVES
-  CFLAGS += -DTEXTSAVES
-endif
+#ifeq ($(TEXTSAVES),1)
+#  CC_CHECK += -DTEXTSAVES
+#  CFLAGS += -DTEXTSAVES
+#endif
 
 # Check for no drawing distance option
-ifeq ($(NODRAWINGDISTANCE),1)
+#ifeq ($(NODRAWINGDISTANCE),1)
   CC_CHECK += -DNODRAWINGDISTANCE
   CFLAGS += -DNODRAWINGDISTANCE
-endif
+#endif
 
 # Check for Discord Rich Presence option
-ifeq ($(DISCORDRPC),1)
-  CC_CHECK += -DDISCORDRPC
-  CFLAGS += -DDISCORDRPC
-endif
+#ifeq ($(DISCORDRPC),1)
+#  CC_CHECK += -DDISCORDRPC
+#  CFLAGS += -DDISCORDRPC
+#endif
 
 # Check for texture fix option
 ifeq ($(TEXTURE_FIX),1)
@@ -687,9 +682,9 @@ else ifeq ($(OSX_BUILD),1)
 
 else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
-  ifeq ($(DISCORDRPC),1)
-    LDFLAGS += -ldl -Wl,-rpath .
-  endif
+#  ifeq ($(DISCORDRPC),1)
+#    LDFLAGS += -ldl -Wl,-rpath .
+#  endif
 
 endif
 
@@ -699,7 +694,7 @@ ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
 endif
 
-LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk
+LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk -Wl,-Bstatic
 
 # End of LDFLAGS
 
@@ -858,17 +853,17 @@ $(BUILD_DIR)/src/menu/star_select.o: $(BUILD_DIR)/include/text_strings.h $(BUILD
 $(BUILD_DIR)/src/game/ingame_menu.o: $(BUILD_DIR)/include/text_strings.h $(BUILD_DIR)/bin/eu/translation_en.o $(BUILD_DIR)/bin/eu/translation_de.o $(BUILD_DIR)/bin/eu/translation_fr.o
 $(BUILD_DIR)/src/game/options_menu.o: $(BUILD_DIR)/include/text_strings.h $(BUILD_DIR)/bin/eu/translation_en.o $(BUILD_DIR)/bin/eu/translation_de.o $(BUILD_DIR)/bin/eu/translation_fr.o
 O_FILES += $(BUILD_DIR)/bin/eu/translation_en.o $(BUILD_DIR)/bin/eu/translation_de.o $(BUILD_DIR)/bin/eu/translation_fr.o
-ifeq ($(DISCORDRPC),1)
-  $(BUILD_DIR)/src/pc/discord/discordrpc.o: $(BUILD_DIR)/include/text_strings.h $(BUILD_DIR)/bin/eu/translation_en.o $(BUILD_DIR)/bin/eu/translation_de.o $(BUILD_DIR)/bin/eu/translation_fr.o
-endif
+#ifeq ($(DISCORDRPC),1)
+#  $(BUILD_DIR)/src/pc/discord/discordrpc.o: $(BUILD_DIR)/include/text_strings.h $(BUILD_DIR)/bin/eu/translation_en.o $(BUILD_DIR)/bin/eu/translation_de.o $(BUILD_DIR)/bin/eu/translation_fr.o
+#endif
 else
 $(BUILD_DIR)/src/menu/file_select.o: $(BUILD_DIR)/include/text_strings.h
 $(BUILD_DIR)/src/menu/star_select.o: $(BUILD_DIR)/include/text_strings.h
 $(BUILD_DIR)/src/game/ingame_menu.o: $(BUILD_DIR)/include/text_strings.h
 $(BUILD_DIR)/src/game/options_menu.o: $(BUILD_DIR)/include/text_strings.h
-ifeq ($(DISCORDRPC),1)
-  $(BUILD_DIR)/src/pc/discord/discordrpc.o: $(BUILD_DIR)/include/text_strings.h
-endif
+#ifeq ($(DISCORDRPC),1)
+#  $(BUILD_DIR)/src/pc/discord/discordrpc.o: $(BUILD_DIR)/include/text_strings.h
+#endif
 endif
 
 ################################################################
