@@ -178,7 +178,7 @@ static void connect_menu_on_connection_attempt(void) {
 static void connect_menu_on_click(void) {
     gConnectionJoinError[0] = '\0';
 
-    keyboard_start_text_input(TIM_IP, custom_menu_close, connect_menu_on_connection_attempt);
+    keyboard_start_text_input(TIM_IP, MAX_TEXT_INPUT, custom_menu_close, connect_menu_on_connection_attempt);
 
     // fill in our last attempt
     if (configJoinPort == 0) { configJoinPort = DEFAULT_PORT; }

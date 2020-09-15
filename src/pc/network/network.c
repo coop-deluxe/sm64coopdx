@@ -126,6 +126,7 @@ void network_receive(u8* data, u16 dataLength) {
         case PACKET_RESERVATION:         network_receive_reservation(&p);         break;
         case PACKET_SAVE_FILE_REQUEST:   network_receive_save_file_request(&p);   break;
         case PACKET_SAVE_FILE:           network_receive_save_file(&p);           break;
+        case PACKET_CHAT:                network_receive_chat(&p);                break;
         case PACKET_CUSTOM:              network_receive_custom(&p);              break;
         default: LOG_ERROR("received unknown packet: %d", p.buffer[0]);
     }

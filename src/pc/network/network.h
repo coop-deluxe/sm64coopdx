@@ -47,6 +47,7 @@ enum PacketType {
     PACKET_RESERVATION,
     PACKET_SAVE_FILE_REQUEST,
     PACKET_SAVE_FILE,
+    PACKET_CHAT,
     PACKET_CUSTOM = 255,
 };
 
@@ -183,5 +184,9 @@ void network_receive_save_file(struct Packet* p);
 u8 network_register_custom_packet(void (*send_callback)(struct Packet* p, void* params), void (*receive_callback)(struct Packet* p));
 void network_send_custom(u8 customId, bool reliable, void* params);
 void network_receive_custom(struct Packet* p);
+
+// packet_chat.c
+void network_send_chat(char* message);
+void network_receive_chat(struct Packet* p);
 
 #endif

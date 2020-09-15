@@ -15,6 +15,8 @@
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
+#include "menu/file_select.h"
+#include "game/chat.h"
 
 // TODO: use some common lookup header
 #define SCANCODE_BACKSPACE 0x0E
@@ -39,6 +41,7 @@ static u32 keyboard_lastkey = VK_INVALID;
 
 char gTextInput[MAX_TEXT_INPUT];
 static bool inTextInput = false;
+static u8 maxTextInput = 0;
 
 u8 held_ctrl, held_shift, held_alt;
 static enum TextInputMode textInputMode;
@@ -110,6 +113,13 @@ bool keyboard_on_key_down(int scancode) {
         return FALSE;
     }
 
+    if (scancode == SCANCODE_ENTER) {
+        if (sSelectedFileNum != 0) {
+            chat_start_input();
+            return FALSE;
+        }
+    }
+
     int mapped = keyboard_map_scancode(scancode);
     keyboard_buttons_down |= mapped;
     keyboard_lastkey = scancode;
@@ -136,10 +146,11 @@ void keyboard_on_all_keys_up(void) {
     keyboard_buttons_down = 0;
 }
 
-char* keyboard_start_text_input(enum TextInputMode inInputMode, void (*onEscape)(void), void (*onEnter)(void)) {
+char* keyboard_start_text_input(enum TextInputMode inInputMode, u8 inMaxTextInput, void (*onEscape)(void), void (*onEnter)(void)) {
     // set text-input events
     textInputOnEscape = onEscape;
     textInputOnEnter = onEnter;
+    maxTextInput = inMaxTextInput;
 
     // clear buffer
     for (int i = 0; i < MAX_TEXT_INPUT; i++) { gTextInput[i] = '\0'; }
@@ -202,6 +213,7 @@ void keyboard_on_text_input(char* text) {
     while (*text != '\0') {
         // make sure we don't overrun the buffer
         if (i >= MAX_TEXT_INPUT) { break; }
+        if (i >= maxTextInput)   { break; }
 
         // copy over character if we're allowed to input it
         if (keyboard_allow_character_input(*text)) {

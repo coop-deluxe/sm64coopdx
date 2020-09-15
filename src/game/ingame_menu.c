@@ -31,6 +31,7 @@
 #ifdef EXT_OPTIONS_MENU
 #include "options_menu.h"
 #endif
+#include "chat.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -415,25 +416,41 @@ void render_multi_text_string(s16 *xPos, s16 *yPos, s8 multiTextID)
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
     for (int i = 0; i < length; i++) {
         switch (string[i]) {
-        case '\'': dialog[i] = 0x3E; break;
-        case '.': dialog[i] = 0x3F; break;
-        case ',': dialog[i] = DIALOG_CHAR_COMMA; break;
-        case '-': dialog[i] = 0x9F; break;
-        case '(': dialog[i] = 0xE1; break;
-        case ')': dialog[i] = 0xE3; break;
-        case '&': dialog[i] = 0xE5; break;
-        case '!': dialog[i] = 0xF2; break;
-        case '%': dialog[i] = 0xF3; break;
-        case '?': dialog[i] = 0xF4; break;
-        case '"': dialog[i] = 0xF6; break; // 0xF5 is opening quote
-        case '~': dialog[i] = 0xF7; break;
-        case '*': dialog[i] = 0xFB; break;
-        case ' ': dialog[i] = DIALOG_CHAR_SPACE; break;
-        case '\n': dialog[i] = DIALOG_CHAR_NEWLINE; break;
-        default: dialog[i] = ASCII_TO_DIALOG(string[i]);
+            case '\'': dialog[i] = 0x3E; break;
+            case '.': dialog[i] = 0x3F; break;
+            case ',': dialog[i] = DIALOG_CHAR_COMMA; break;
+            case '-': dialog[i] = 0x9F; break;
+            case '(': dialog[i] = 0xE1; break;
+            case ')': dialog[i] = 0xE3; break;
+            case '&': dialog[i] = 0xE5; break;
+            case '!': dialog[i] = 0xF2; break;
+            case '%': dialog[i] = 0xF3; break;
+            case '?': dialog[i] = 0xF4; break;
+            case '"': dialog[i] = 0xF6; break; // 0xF5 is opening quote
+            case '~': dialog[i] = 0xF7; break;
+            case '*': dialog[i] = 0xFB; break;
+            case ' ': dialog[i] = DIALOG_CHAR_SPACE; break;
+            case '\n': dialog[i] = DIALOG_CHAR_NEWLINE; break;
+            default: dialog[i] = ((u8)string[i] < 0xF0) ? ASCII_TO_DIALOG(string[i]) : string[i];
         }
     }
     dialog[length] = DIALOG_CHAR_TERMINATOR;
+}
+
+f32 get_generic_dialog_width(u8* dialog) {
+    f32 width = 0;
+    u8* d = dialog;
+    while (*d != DIALOG_CHAR_TERMINATOR) {
+        width += (f32)(gDialogCharWidths[*d]);
+        d++;
+    }
+    return width;
+}
+
+f32 get_generic_ascii_string_width(const char* ascii) {
+    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
+    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
+    return get_generic_dialog_width(dialog);
 }
 
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii) {
@@ -3177,6 +3194,8 @@ s16 render_menus_and_dialogs() {
     s16 mode = 0;
 
     create_dl_ortho_matrix();
+
+    render_chat();
 
     if (gMenuMode != -1) {
         switch (gMenuMode) {

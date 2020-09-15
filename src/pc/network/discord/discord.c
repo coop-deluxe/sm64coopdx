@@ -49,7 +49,11 @@ static void register_launch_command(void) {
     }
 #endif
     strncat(cmd, " --discord 1", MAX_LAUNCH_CMD - 1);
-    DISCORD_REQUIRE(app.activities->register_command(app.activities, cmd));
+    int rc = app.activities->register_command(app.activities, cmd);
+    if (rc != DiscordResult_Ok) {
+        LOG_ERROR("register command failed %d", rc);
+        return;
+    }
     LOG_INFO("cmd: %s", cmd);
 }
 
