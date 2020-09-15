@@ -431,7 +431,7 @@ else ifeq ($(OSX_BUILD),1)
   # needs testing
   DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib
 else
-  DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.so
+  DISCORD_SDK_LIBS := lib/discordsdk/libdiscord_game_sdk.so
 endif
 
 # Automatic dependency files
@@ -692,9 +692,11 @@ endif
 
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
+  LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk -Wl,-Bstatic
+else
+  LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
 endif
 
-LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk -Wl,-Bstatic
 
 # End of LDFLAGS
 

@@ -9,6 +9,7 @@
 #include <windows.h>
 #else
 #include <unistd.h>
+#define MAX_PATH 1024
 #endif
 
 #define MAX_LAUNCH_CMD (MAX_PATH + 12)
