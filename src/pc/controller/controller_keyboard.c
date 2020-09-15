@@ -58,7 +58,7 @@ static int keyboard_map_scancode(int scancode) {
     return ret;
 }
 
-static void keyboard_alter_text_input_modifier(int scancode, bool down) {
+static void keyboard_alter_modifier(int scancode, bool down) {
     if (down) {
         switch (scancode) {
             case SCANCODE_CTRL1:  held_ctrl  |= (1 << 0); break;
@@ -81,15 +81,15 @@ static void keyboard_alter_text_input_modifier(int scancode, bool down) {
 }
 
 bool keyboard_on_key_down(int scancode) {
+    // alter the held value of modifier keys
+    keyboard_alter_modifier(scancode, true);
+
 #ifdef DEBUG
     if (!inTextInput) {
         debug_keyboard_on_key_down(scancode);
     }
 #endif
     if (inTextInput) {
-        // alter the held value of modifier keys
-        keyboard_alter_text_input_modifier(scancode, true);
-
         // perform text-input-specific actions
         switch (scancode) {
             case SCANCODE_BACKSPACE:
@@ -113,7 +113,7 @@ bool keyboard_on_key_down(int scancode) {
         return FALSE;
     }
 
-    if (scancode == SCANCODE_ENTER) {
+    if (!held_alt && (scancode == SCANCODE_ENTER)) {
         if (sSelectedFileNum != 0) {
             chat_start_input();
             return FALSE;
@@ -127,10 +127,10 @@ bool keyboard_on_key_down(int scancode) {
 }
 
 bool keyboard_on_key_up(int scancode) {
-    if (inTextInput) {
-        // alter the held value of modifier keys
-        keyboard_alter_text_input_modifier(scancode, false);
+    // alter the held value of modifier keys
+    keyboard_alter_modifier(scancode, false);
 
+    if (inTextInput) {
         // ignore any key up event if we're in text-input mode
         return FALSE;
     }
