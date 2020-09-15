@@ -35,6 +35,7 @@ static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult res
 
 static void register_launch_command(void) {
     char cmd[MAX_LAUNCH_CMD];
+    int rc;
 #if defined(_WIN32) || defined(_WIN64)
     HMODULE hModule = GetModuleHandle(NULL);
     if (hModule == NULL) {
@@ -43,14 +44,14 @@ static void register_launch_command(void) {
     }
     GetModuleFileName(hModule, cmd, sizeof(cmd));
 #else
-    int rc = readlink("/proc/self/exe", cmd, sizeof(MAX_LAUNCH_CMD) - 1);
+    rc = readlink("/proc/self/exe", cmd, sizeof(MAX_LAUNCH_CMD) - 1);
     if (rc) {
         LOG_ERROR("unable to retrieve absolute path! rc = %d", rc);
         return;
     }
 #endif
     strncat(cmd, " --discord 1", MAX_LAUNCH_CMD - 1);
-    int rc = app.activities->register_command(app.activities, cmd);
+    rc = app.activities->register_command(app.activities, cmd);
     if (rc != DiscordResult_Ok) {
         LOG_ERROR("register command failed %d", rc);
         return;
