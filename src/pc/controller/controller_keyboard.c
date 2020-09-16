@@ -1,7 +1,8 @@
 #include <stdbool.h>
 #include <ultra64.h>
+#include <time.h>
 #include <string.h>
-
+#include "pc/configfile.h"
 #include "controller_api.h"
 
 #ifdef TARGET_WEB
@@ -40,11 +41,12 @@ static int num_keybinds = 0;
 static u32 keyboard_lastkey = VK_INVALID;
 
 char gTextInput[MAX_TEXT_INPUT];
-static bool inTextInput = false;
-static u8 maxTextInput = 0;
+static u8 sInTextInput = false;
+static u8 sMaxTextInput = 0;
+static clock_t sIgnoreTextInput = 0;
 
 u8 held_ctrl, held_shift, held_alt;
-static enum TextInputMode textInputMode;
+static enum TextInputMode sTextInputMode;
 void (*textInputOnEscape)(void) = NULL;
 void (*textInputOnEnter)(void) = NULL;
 
@@ -85,11 +87,11 @@ bool keyboard_on_key_down(int scancode) {
     keyboard_alter_modifier(scancode, true);
 
 #ifdef DEBUG
-    if (!inTextInput) {
+    if (!sInTextInput) {
         debug_keyboard_on_key_down(scancode);
     }
 #endif
-    if (inTextInput) {
+    if (sInTextInput) {
         // perform text-input-specific actions
         switch (scancode) {
             case SCANCODE_BACKSPACE:
@@ -113,10 +115,10 @@ bool keyboard_on_key_down(int scancode) {
         return FALSE;
     }
 
-    if (!held_alt && (scancode == SCANCODE_ENTER)) {
+    if (!held_alt && (scancode == (int)configKeyChat[0])) {
         if (sSelectedFileNum != 0) {
+            sIgnoreTextInput = clock() + CLOCKS_PER_SEC * 0.01f;
             chat_start_input();
-            return FALSE;
         }
     }
 
@@ -130,7 +132,7 @@ bool keyboard_on_key_up(int scancode) {
     // alter the held value of modifier keys
     keyboard_alter_modifier(scancode, false);
 
-    if (inTextInput) {
+    if (sInTextInput) {
         // ignore any key up event if we're in text-input mode
         return FALSE;
     }
@@ -150,7 +152,7 @@ char* keyboard_start_text_input(enum TextInputMode inInputMode, u8 inMaxTextInpu
     // set text-input events
     textInputOnEscape = onEscape;
     textInputOnEnter = onEnter;
-    maxTextInput = inMaxTextInput;
+    sMaxTextInput = inMaxTextInput;
 
     // clear buffer
     for (int i = 0; i < MAX_TEXT_INPUT; i++) { gTextInput[i] = '\0'; }
@@ -162,20 +164,20 @@ char* keyboard_start_text_input(enum TextInputMode inInputMode, u8 inMaxTextInpu
 
     // start allowing text input
     wm_api->start_text_input();
-    textInputMode = inInputMode;
-    inTextInput = true;
+    sTextInputMode = inInputMode;
+    sInTextInput = true;
 }
 
 void keyboard_stop_text_input(void) {
     // stop allowing text input
-    inTextInput = false;
+    sInTextInput = false;
     wm_api->stop_text_input();
 }
 
-bool keyboard_in_text_input(void) { return inTextInput; }
+bool keyboard_in_text_input(void) { return sInTextInput; }
 
 static bool keyboard_allow_character_input(char c) {
-    switch (textInputMode) {
+    switch (sTextInputMode) {
         case TIM_IP:
             // IP only allows numbers, periods, and spaces
             return (c >= '0' && c <= '9')
@@ -205,7 +207,12 @@ static bool keyboard_allow_character_input(char c) {
 }
 
 void keyboard_on_text_input(char* text) {
-    if (!inTextInput) { return; }
+    if (sIgnoreTextInput != 0 && clock() <= sIgnoreTextInput) {
+        sIgnoreTextInput = 0;
+        return;
+    }
+
+    if (!sInTextInput) { return; }
     // sanity check input
     if (text == NULL) { return; }
 
@@ -213,7 +220,7 @@ void keyboard_on_text_input(char* text) {
     while (*text != '\0') {
         // make sure we don't overrun the buffer
         if (i >= MAX_TEXT_INPUT) { break; }
-        if (i >= maxTextInput)   { break; }
+        if (i >= sMaxTextInput)   { break; }
 
         // copy over character if we're allowed to input it
         if (keyboard_allow_character_input(*text)) {
