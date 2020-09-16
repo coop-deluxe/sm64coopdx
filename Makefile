@@ -460,7 +460,7 @@ else
   CXX := emcc
 endif
 
-LD := $(CC)
+LD := $(CXX)
 
 #ifeq ($(DISCORDRPC),1)
 #  LD := $(CXX)

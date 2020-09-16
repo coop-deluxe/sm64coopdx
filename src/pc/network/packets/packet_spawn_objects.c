@@ -117,6 +117,11 @@ void network_receive_spawn_objects(struct Packet* p) {
             }
         }
 
+        if (parentObj == NULL) {
+            printf("ERROR: failed to attach to mario!\n");
+            return;
+        }
+
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
         struct Object* o = spawn_object(parentObj, data.model, behavior);
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);
