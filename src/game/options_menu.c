@@ -104,6 +104,8 @@ static const u8 optsCheatsStr[][64] = {
     { TEXT_OPT_CHEAT9 },
 };
 
+#define TEXT_BIND_CHAT    0x0C,0x2B,0x24,0x37,0xFF
+
 static const u8 bindStr[][32] = {
     { TEXT_OPT_UNBOUND },
     { TEXT_OPT_PRESSKEY },
