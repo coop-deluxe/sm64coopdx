@@ -78,7 +78,6 @@ void network_on_init_level(void);
 void network_on_loaded_level(void);
 void network_send(struct Packet* p);
 void network_receive(u8* data, u16 dataLength);
-void network_on_joined(void);
 void network_update(void);
 void network_shutdown(void);
 

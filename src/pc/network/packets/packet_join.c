@@ -15,22 +15,22 @@
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
-void network_send_save_file_request(void) {
+void network_send_join_request(void) {
     assert(gNetworkType == NT_CLIENT);
 
     gOverrideEeprom = eeprom;
 
     struct Packet p;
-    packet_init(&p, PACKET_SAVE_FILE_REQUEST, true);
+    packet_init(&p, PACKET_JOIN_REQUEST, true);
     network_send(&p);
 }
 
-void network_receive_save_file_request(UNUSED struct Packet* p) {
+void network_receive_join_request(UNUSED struct Packet* p) {
     assert(gNetworkType == NT_SERVER);
-    network_send_save_file();
+    network_send_join();
 }
 
-void network_send_save_file(void) {
+void network_send_join(void) {
     assert(gNetworkType == NT_SERVER);
 
     fs_file_t* fp = fs_open(SAVE_FILENAME);
@@ -42,7 +42,7 @@ void network_send_save_file(void) {
     char hash[HASH_LENGTH] = GIT_HASH;
 
     struct Packet p;
-    packet_init(&p, PACKET_SAVE_FILE, true);
+    packet_init(&p, PACKET_JOIN, true);
     packet_write(&p, &hash, sizeof(u8) * HASH_LENGTH);
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
@@ -52,7 +52,7 @@ void network_send_save_file(void) {
     network_send(&p);
 }
 
-void network_receive_save_file(struct Packet* p) {
+void network_receive_join(struct Packet* p) {
     assert(gNetworkType == NT_CLIENT);
 
     gOverrideEeprom = eeprom;

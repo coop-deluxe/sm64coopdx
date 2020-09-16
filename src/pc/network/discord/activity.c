@@ -27,7 +27,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     discord_network_init(lobby->id);
     discord_activity_update(false);
 
-    network_on_joined();
+    network_send_join_request();
 }
 
 static void on_activity_join(UNUSED void* data, const char* secret) {

@@ -58,10 +58,6 @@ bool network_init(enum NetworkType inNetworkType) {
     return true;
 }
 
-void network_on_joined(void) {
-    network_send_save_file_request();
-}
-
 void network_on_init_level(void) {
     // reset loading timer
     networkLoadingLevel = 0;

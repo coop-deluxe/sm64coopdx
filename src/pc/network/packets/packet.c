@@ -16,8 +16,8 @@ void packet_receive(struct Packet* p) {
         case PACKET_COLLECT_ITEM:        network_receive_collect_item(p);        break;
         case PACKET_RESERVATION_REQUEST: network_receive_reservation_request(p); break;
         case PACKET_RESERVATION:         network_receive_reservation(p);         break;
-        case PACKET_SAVE_FILE_REQUEST:   network_receive_save_file_request(p);   break;
-        case PACKET_SAVE_FILE:           network_receive_save_file(p);           break;
+        case PACKET_JOIN_REQUEST:        network_receive_join_request(p);        break;
+        case PACKET_JOIN:                network_receive_join(p);                break;
         case PACKET_CHAT:                network_receive_chat(p);                break;
         case PACKET_CUSTOM:              network_receive_custom(p);              break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
