@@ -16,103 +16,85 @@ static struct ObjectHitbox sTreasureChestBottomHitbox = {
 };
 
 void bhv_treasure_chest_top_loop(void) {
-    struct Object *sp34 = o->parentObj->parentObj;
+    struct Object* sp34 = o->parentObj->parentObj;
 
     switch (o->oAction) {
-        case 0:
-            if (o->parentObj->oAction == 1)
-                o->oAction = 1;
-            break;
+    case 0:
+        if (o->parentObj->oAction == 1)
+            o->oAction = 1;
+        break;
 
-        case 1:
-            if (o->oTimer == 0) {
-                if (sp34->oTreasureChestUnkFC == 0) {
-                    spawn_object_relative(0, 0, -80, 120, o, MODEL_BUBBLE, bhvWaterAirBubble);
-                    play_sound(SOUND_GENERAL_CLAM_SHELL1, o->header.gfx.cameraToObject);
-                } else {
-                    play_sound(SOUND_GENERAL_OPEN_CHEST, o->header.gfx.cameraToObject);
-                }
+    case 1:
+        if (o->oTimer == 0) {
+            if (sp34->oTreasureChestUnkFC == 0) {
+                spawn_object_relative(0, 0, -80, 120, o, MODEL_BUBBLE, bhvWaterAirBubble);
+                play_sound(SOUND_GENERAL_CLAM_SHELL1, o->header.gfx.cameraToObject);
             }
-
-            o->oFaceAnglePitch += -0x200;
-            if (o->oFaceAnglePitch < -0x4000) {
-                o->oFaceAnglePitch = -0x4000;
-                o->oAction++;
-                if (o->parentObj->oBehParams2ndByte != 4)
-                    spawn_orange_number(o->parentObj->oBehParams2ndByte, 0, -40, 0);
+            else {
+                play_sound(SOUND_GENERAL_OPEN_CHEST, o->header.gfx.cameraToObject);
             }
-            break;
+        }
 
-        case 2:
-            if (o->parentObj->oAction == 0)
-                o->oAction = 3;
-            break;
+        o->oFaceAnglePitch += -0x200;
+        if (o->oFaceAnglePitch < -0x4000) {
+            o->oFaceAnglePitch = -0x4000;
+            o->oAction++;
+            if (o->parentObj->oBehParams2ndByte != 4)
+                spawn_orange_number(o->parentObj->oBehParams2ndByte, 0, -40, 0);
+        }
+        break;
 
-        case 3:
-            o->oFaceAnglePitch += 0x800;
-            if (o->oFaceAnglePitch > 0) {
-                o->oFaceAnglePitch = 0;
-                o->oAction = 0;
-            }
+    case 2:
+        if (o->parentObj->oAction == 0)
+            o->oAction = 3;
+        break;
+
+    case 3:
+        o->oFaceAnglePitch += 0x800;
+        if (o->oFaceAnglePitch > 0) {
+            o->oFaceAnglePitch = 0;
+            o->oAction = 0;
+        }
     }
 }
 
 void bhv_treasure_chest_bottom_init(void) {
     spawn_object_relative(0, 0, 102, -77, o, MODEL_TREASURE_CHEST_LID, bhvTreasureChestTop);
     obj_set_hitbox(o, &sTreasureChestBottomHitbox);
-
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &o->oTreasureChestOpen);
-    network_init_object_field(o, &o->oAction);
-}
-
-void bhv_treasure_chest_force_open(void) {
-    if (o->oTreasureChestOpen == 1 && o->oAction != 1) {
-        play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gDefaultSoundArgs);
-        o->parentObj->oTreasureChestUnkF4++;
-        o->oAction = 1;
-    }
-
-    if (o->oTreasureChestOpen == 2 && o->oAction != 2) {
-        o->parentObj->oTreasureChestUnkF4 = 1;
-        o->parentObj->oTreasureChestUnkF8 = 1;
-        o->oAction = 2;
-        cur_obj_become_tangible();
-        play_sound(SOUND_MENU_CAMERA_BUZZ, gDefaultSoundArgs);
-    }
-    o->oTreasureChestOpen = 0;
 }
 
 void bhv_treasure_chest_bottom_loop(void) {
-    if (o->oTreasureChestOpen != 0) {
-        bhv_treasure_chest_force_open();
+    if (o->parentObj != NULL && o->parentObj->oTreasureChestSound != 0) {
+        switch (o->parentObj->oTreasureChestSound) {
+            case 1: play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gDefaultSoundArgs); break;
+            case 2: play_sound(SOUND_MENU_CAMERA_BUZZ, gDefaultSoundArgs);      break;
+            case 3: play_puzzle_jingle(); fade_volume_scale(0, 127, 1000);      break;
+            case 4: play_puzzle_jingle();                                       break;
+        }
+        o->parentObj->oTreasureChestSound = 0;
     }
-
+    struct Object* player = nearest_player_to_object(o);
     switch (o->oAction) {
         case 0:
-            if (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, gMarioStates[0].marioObj->header.gfx.angle[1] + 0x8000, 0x3000)) {
+            if (network_owns_object(o->parentObj) && obj_check_if_facing_toward_angle(o->oMoveAngleYaw, player->header.gfx.angle[1] + 0x8000, 0x3000)) {
                 if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 150)) {
                     if (!o->parentObj->oTreasureChestUnkF8) {
                         if (o->parentObj->oTreasureChestUnkF4 == o->oBehParams2ndByte) {
-                            if (o->oTreasureChestOpen != 1 && network_owns_object(o)) {
-                                o->oTreasureChestOpen = 1;
-                                network_send_object(o);
-                            }
-                            o->oTreasureChestOpen = 0;
                             play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gDefaultSoundArgs);
                             o->parentObj->oTreasureChestUnkF4++;
                             o->oAction = 1;
+                            o->parentObj->oTreasureChestSound = 1;
+                            network_send_object(o->parentObj);
+                            o->parentObj->oTreasureChestSound = 0;
                         } else {
-                            if (o->oTreasureChestOpen != 2 && network_owns_object(o)) {
-                                o->oTreasureChestOpen = 2;
-                                network_send_object(o);
-                            }
-                            o->oTreasureChestOpen = 0;
                             o->parentObj->oTreasureChestUnkF4 = 1;
                             o->parentObj->oTreasureChestUnkF8 = 1;
                             o->oAction = 2;
                             cur_obj_become_tangible();
                             play_sound(SOUND_MENU_CAMERA_BUZZ, gDefaultSoundArgs);
+                            o->parentObj->oTreasureChestSound = 2;
+                            network_send_object(o->parentObj);
+                            o->parentObj->oTreasureChestSound = 0;
                         }
                     }
                 }
@@ -120,13 +102,12 @@ void bhv_treasure_chest_bottom_loop(void) {
             break;
 
         case 1:
-            o->oTreasureChestOpen = 0;
-            if (o->parentObj->oTreasureChestUnkF8 == 1)
+            if (o->parentObj->oTreasureChestUnkF8 == 1) {
                 o->oAction = 0;
+            }
             break;
 
         case 2:
-            o->oTreasureChestOpen = 0;
             cur_obj_become_intangible();
             if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 500)) {
                 o->parentObj->oTreasureChestUnkF8 = 0;
@@ -138,29 +119,50 @@ void bhv_treasure_chest_bottom_loop(void) {
     o->oInteractStatus = 0;
 }
 
-void spawn_treasure_chest(s8 sp3B, s32 sp3C, s32 sp40, s32 sp44, s16 sp4A) {
-    struct Object *sp34;
+struct Object* spawn_treasure_chest(s8 sp3B, s32 sp3C, s32 sp40, s32 sp44, s16 sp4A) {
+    struct Object* sp34;
     sp34 = spawn_object_abs_with_rot(o, 0, MODEL_TREASURE_CHEST_BASE, bhvTreasureChestBottom, sp3C,
-                                     sp40, sp44, 0, sp4A, 0);
+        sp40, sp44, 0, sp4A, 0);
     sp34->oBehParams2ndByte = sp3B;
+    return sp34;
 }
 
 void bhv_treasure_chest_ship_init(void) {
-    spawn_treasure_chest(1, 400, -350, -2700, 0);
-    spawn_treasure_chest(2, 650, -350, -940, -0x6001);
-    spawn_treasure_chest(3, -550, -350, -770, 0x5FFF);
-    spawn_treasure_chest(4, 100, -350, -1700, 0);
+    struct Object* chests[4] = { 0 };
+    chests[0] = spawn_treasure_chest(1, 400, -350, -2700, 0);
+    chests[1] = spawn_treasure_chest(2, 650, -350, -940, -0x6001);
+    chests[2] = spawn_treasure_chest(3, -550, -350, -770, 0x5FFF);
+    chests[3] = spawn_treasure_chest(4, 100, -350, -1700, 0);
     o->oTreasureChestUnkF4 = 1;
     o->oTreasureChestUnkFC = 0;
+
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oPrevAction);
+    network_init_object_field(o, &o->oTimer);
+    network_init_object_field(o, &o->oTreasureChestUnkF4);
+    network_init_object_field(o, &o->oTreasureChestUnkF8);
+    network_init_object_field(o, &o->oTreasureChestUnkFC);
+    network_init_object_field(o, &o->oTreasureChestSound);
+    for (int i = 0; i < 4; i++) {
+        struct Object* chest = chests[i];
+        network_init_object_field(o, &chest->oAction);
+        network_init_object_field(o, &chest->oPrevAction);
+        network_init_object_field(o, &chest->oTimer);
+        network_init_object_field(o, &chest->oIntangibleTimer);
+    }
 }
 
 void bhv_treasure_chest_ship_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (o->oTreasureChestUnkF4 == 5) {
+            if (network_owns_object(o) && o->oTreasureChestUnkF4 == 5) {
                 play_puzzle_jingle();
                 fade_volume_scale(0, 127, 1000);
                 o->oAction = 1;
+                o->oTreasureChestSound = 3;
+                network_send_object(o);
+                o->oTreasureChestSound = 0;
             }
             break;
 
@@ -171,7 +173,7 @@ void bhv_treasure_chest_ship_loop(void) {
                 set_environmental_camera_shake(SHAKE_ENV_JRB_SHIP_DRAIN);
                 if (gEnvironmentRegions[6] < -335) {
                     gEnvironmentRegions[6] = -335;
-                    o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+                    o->activeFlags = 0;
                 }
             }
             break;
@@ -179,20 +181,40 @@ void bhv_treasure_chest_ship_loop(void) {
 }
 
 void bhv_treasure_chest_jrb_init(void) {
-    spawn_treasure_chest(1, -1700, -2812, -1150, 0x7FFF);
-    spawn_treasure_chest(2, -1150, -2812, -1550, 0x7FFF);
-    spawn_treasure_chest(3, -2400, -2812, -1800, 0x7FFF);
-    spawn_treasure_chest(4, -1800, -2812, -2100, 0x7FFF);
+    struct Object* chests[4] = { 0 };
+    chests[0] = spawn_treasure_chest(1, -1700, -2812, -1150, 0x7FFF);
+    chests[1] = spawn_treasure_chest(2, -1150, -2812, -1550, 0x7FFF);
+    chests[2] = spawn_treasure_chest(3, -2400, -2812, -1800, 0x7FFF);
+    chests[3] = spawn_treasure_chest(4, -1800, -2812, -2100, 0x7FFF);
     o->oTreasureChestUnkF4 = 1;
     o->oTreasureChestUnkFC = 1;
+
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oPrevAction);
+    network_init_object_field(o, &o->oTimer);
+    network_init_object_field(o, &o->oTreasureChestUnkF4);
+    network_init_object_field(o, &o->oTreasureChestUnkF8);
+    network_init_object_field(o, &o->oTreasureChestUnkFC);
+    network_init_object_field(o, &o->oTreasureChestSound);
+    for (int i = 0; i < 4; i++) {
+        struct Object* chest = chests[i];
+        network_init_object_field(o, &chest->oAction);
+        network_init_object_field(o, &chest->oPrevAction);
+        network_init_object_field(o, &chest->oTimer);
+        network_init_object_field(o, &chest->oIntangibleTimer);
+    }
 }
 
 void bhv_treasure_chest_jrb_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (o->oTreasureChestUnkF4 == 5) {
+            if (network_owns_object(o) && o->oTreasureChestUnkF4 == 5) {
                 play_puzzle_jingle();
                 o->oAction = 1;
+                o->oTreasureChestSound = 4;
+                network_send_object(o);
+                o->oTreasureChestSound = 0;
             }
             break;
 
@@ -210,21 +232,41 @@ void bhv_treasure_chest_jrb_loop(void) {
 }
 
 void bhv_treasure_chest_init(void) {
-    spawn_treasure_chest(1, -4500, -5119, 1300, -0x6001);
-    spawn_treasure_chest(2, -1800, -5119, 1050, 0x1FFF);
-    spawn_treasure_chest(3, -4500, -5119, -1100, 9102);
-    spawn_treasure_chest(4, -2400, -4607, 125, 16019);
+    struct Object* chests[4] = { 0 };
+    chests[0] = spawn_treasure_chest(1, -4500, -5119, 1300, -0x6001);
+    chests[1] = spawn_treasure_chest(2, -1800, -5119, 1050, 0x1FFF);
+    chests[2] = spawn_treasure_chest(3, -4500, -5119, -1100, 9102);
+    chests[3] = spawn_treasure_chest(4, -2400, -4607, 125, 16019);
 
     o->oTreasureChestUnkF4 = 1;
     o->oTreasureChestUnkFC = 0;
+
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oPrevAction);
+    network_init_object_field(o, &o->oTimer);
+    network_init_object_field(o, &o->oTreasureChestUnkF4);
+    network_init_object_field(o, &o->oTreasureChestUnkF8);
+    network_init_object_field(o, &o->oTreasureChestUnkFC);
+    network_init_object_field(o, &o->oTreasureChestSound);
+    for (int i = 0; i < 4; i++) {
+        struct Object* chest = chests[i];
+        network_init_object_field(o, &chest->oAction);
+        network_init_object_field(o, &chest->oPrevAction);
+        network_init_object_field(o, &chest->oTimer);
+        network_init_object_field(o, &chest->oIntangibleTimer);
+    }
 }
 
 void bhv_treasure_chest_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (o->oTreasureChestUnkF4 == 5) {
+            if (network_owns_object(o) && o->oTreasureChestUnkF4 == 5) {
                 play_puzzle_jingle();
                 o->oAction = 1;
+                o->oTreasureChestSound = 4;
+                network_send_object(o);
+                o->oTreasureChestSound = 0;
             }
             break;
 
