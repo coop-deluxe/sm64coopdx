@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_LLL;
+static u8 warpToLevel = LEVEL_CCM;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_3 0x04
@@ -98,9 +98,11 @@ void debug_keyboard_on_key_down(int scancode) {
     scancode = scancode;
     switch (scancode) {
         case SCANCODE_3: debug_breakpoint_here(); break;
+#ifdef DEVELOPMENT
         case SCANCODE_6: debug_warp_level(warpToLevel); break;
         case SCANCODE_7: debug_warp_area(); break;
         case SCANCODE_0: debug_suicide(); break;
+#endif
     }
 }
 

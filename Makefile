@@ -54,6 +54,8 @@ DISCORDRPC ?= 0
 DISCORD_SDK ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
+# Enable development/testing flags
+DEVELOPMENT ?= 0
 
 # Various workarounds for weird toolchains
 
@@ -632,6 +634,12 @@ endif
 ifeq ($(DISCORD_SDK),1)
   CC_CHECK += -DDISCORD_SDK
   CFLAGS += -DDISCORD_SDK
+endif
+
+# Check for development option
+ifeq ($(DEVELOPMENT),1)
+  CC_CHECK += -DDEVELOPMENT
+  CFLAGS += -DDEVELOPMENT
 endif
 
 # Check for texture fix option
