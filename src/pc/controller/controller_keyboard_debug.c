@@ -31,7 +31,7 @@ static void debug_warp_level(u8 level) {
             sWarpDest.nodeId = node->destNode;
             sWarpDest.arg = 0;
 
-            sCurrPlayMode = (gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL;
+            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
             network_send_level_warp_begin();
             return;
         }
@@ -47,7 +47,7 @@ static void debug_warp_level(u8 level) {
             sWarpDest.nodeId = node->destNode;
             sWarpDest.arg = 0;
 
-            sCurrPlayMode = (gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL;
+            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
             network_send_level_warp_begin();
             return;
         }
@@ -82,7 +82,7 @@ static void debug_warp_area() {
             sWarpDest.nodeId = node->destNode;
             sWarpDest.arg = 0;
 
-            sCurrPlayMode = (gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL;
+            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
             network_send_level_warp_begin();
             return;
         }

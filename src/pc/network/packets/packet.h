@@ -25,10 +25,15 @@ enum PacketType {
     PACKET_JOIN_REQUEST,
     PACKET_JOIN,
     PACKET_CHAT,
+    PACKET_KICK,
+    PACKET_KEEP_ALIVE,
+    PACKET_LEAVING,
+    ///
     PACKET_CUSTOM = 255,
 };
 
 struct Packet {
+    u8 localIndex;
     u16 dataLength;
     u16 cursor;
     bool error;
@@ -36,6 +41,11 @@ struct Packet {
     u16 seqId;
     bool sent;
     u8 buffer[PACKET_LENGTH];
+};
+
+enum KickReasonType {
+    EKT_CLOSE_CONNECTION,
+    EKT_FULL_PARTY,
 };
 
 // packet.c
@@ -107,8 +117,8 @@ void network_receive_reservation(struct Packet* p);
 
 // packet_join.c
 void network_send_join_request(void);
-void network_receive_join_request(UNUSED struct Packet* p);
-void network_send_join(void);
+void network_receive_join_request(struct Packet* p);
+void network_send_join(struct Packet* joinRequestPacket);
 void network_receive_join(struct Packet* p);
 
 // packet_custom.c
@@ -119,5 +129,17 @@ void network_receive_custom(struct Packet* p);
 // packet_chat.c
 void network_send_chat(char* message);
 void network_receive_chat(struct Packet* p);
+
+// packet_kick.c
+void network_send_kick(enum KickReasonType kickReason);
+void network_receive_kick(struct Packet* p);
+
+// packet_keep_alive.c
+void network_send_keep_alive(void);
+void network_receive_keep_alive(struct Packet* p);
+
+// packet_leaving.c
+void network_send_leaving(u8 globalIndex);
+void network_receive_leaving(struct Packet* p);
 
 #endif

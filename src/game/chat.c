@@ -13,6 +13,7 @@
 #include "pc/network/network.h"
 #include "audio_defines.h"
 #include "audio/external.h"
+#include "menu/file_select.h"
 
 #define CHAT_DIALOG_MAX 96
 #define CHAT_MESSAGES_MAX 16
@@ -90,14 +91,21 @@ static void render_chat_message(struct ChatMessage* chatMessage, u8 index) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void chat_add_message(char* ascii, u8 isLocal) {
-    message[onMessageIndex].dialog[0] = isLocal ? 0xFD : 0xFA;
-    message[onMessageIndex].dialog[1] = 0x9E;
-    str_ascii_to_dialog(ascii, &message[onMessageIndex].dialog[2], MIN(strlen(ascii), CHAT_DIALOG_MAX - 3));
-    message[onMessageIndex].life = CHAT_LIFE_MAX;
-    message[onMessageIndex].isLocal = isLocal ? 1 : 0;
+void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
+    u8 character = '?';
+    switch (chatMessageType) {
+        case CMT_LOCAL: character = 0xFD; break;
+        case CMT_REMOTE: character = 0xFA; break;
+        case CMT_SYSTEM: character = 0xF9; break;
+    }
+    struct ChatMessage* msg = &message[onMessageIndex];
+    msg->dialog[0] = character;
+    msg->dialog[1] = 0x9E;
+    str_ascii_to_dialog(ascii, &msg->dialog[2], MIN(strlen(ascii), CHAT_DIALOG_MAX - 3));
+    msg->life = (sSelectedFileNum != 0) ? CHAT_LIFE_MAX : CHAT_LIFE_MAX / 3;
+    msg->isLocal = (chatMessageType == CMT_LOCAL);
     onMessageIndex = (onMessageIndex + 1) % CHAT_MESSAGES_MAX;
-    play_sound(isLocal ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
+    play_sound(msg->isLocal ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
 }
 
 static void chat_stop_input(void) {
@@ -117,7 +125,6 @@ void chat_start_input(void) {
     sInChatInput = TRUE;
     keyboard_start_text_input(TIM_SINGLE_LINE, CHAT_DIALOG_MAX - 3, chat_stop_input, chat_send_input);
 }
-
 
 void render_chat(void) {
     u8 count = 0;

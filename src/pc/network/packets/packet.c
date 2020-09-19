@@ -3,7 +3,15 @@
 #include "pc/debuglog.h"
 
 void packet_receive(struct Packet* p) {
-    switch ((u8)p->buffer[0]) {
+    u8 packetType = (u8)p->buffer[0];
+
+    // refuse packets from unknown players other than join request
+    if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && packetType != PACKET_JOIN_REQUEST) {
+        network_send_kick(EKT_CLOSE_CONNECTION);
+        return;
+    }
+
+    switch (packetType) {
         case PACKET_ACK:                 network_receive_ack(p);                 break;
         case PACKET_PLAYER:              network_receive_player(p);              break;
         case PACKET_OBJECT:              network_receive_object(p);              break;
@@ -19,6 +27,10 @@ void packet_receive(struct Packet* p) {
         case PACKET_JOIN_REQUEST:        network_receive_join_request(p);        break;
         case PACKET_JOIN:                network_receive_join(p);                break;
         case PACKET_CHAT:                network_receive_chat(p);                break;
+        case PACKET_KICK:                network_receive_kick(p);                break;
+        case PACKET_KEEP_ALIVE:          network_receive_keep_alive(p);          break;
+        case PACKET_LEAVING:             network_receive_leaving(p);             break;
+        ///
         case PACKET_CUSTOM:              network_receive_custom(p);              break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
     }

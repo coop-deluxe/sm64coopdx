@@ -1,8 +1,14 @@
 #ifndef CHAT_H
 #define CHAT_H
 
+enum ChatMessageType {
+    CMT_LOCAL,
+    CMT_REMOTE,
+    CMT_SYSTEM,
+};
+
 void render_chat(void);
-void chat_add_message(char* ascii, u8 isLocal);
+void chat_add_message(char* ascii, enum ChatMessageType chatMessageType);
 void chat_start_input(void);
 
 #endif

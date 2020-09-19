@@ -13,8 +13,13 @@ static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult r
 }
 
 static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordLobby* lobby) {
-    LOG_INFO("> on_activity_join_callback returned %d, lobby %lld", result, lobby->id);
+    LOG_INFO("> on_activity_join_callback returned %d, lobby %lld, owner %lld", result, lobby->id, lobby->owner_id);
     DISCORD_REQUIRE(result);
+    if (gNetworkType != NT_NONE) {
+        LOG_ERROR("Joined lobby when already connected somewhere!");
+        exit(0);
+        return;
+    }
     network_init(NT_CLIENT);
 
     gCurActivity.type = DiscordActivityType_Playing;
@@ -27,6 +32,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     discord_network_init(lobby->id);
     discord_activity_update(false);
 
+    gNetworkUserIds[0] = lobby->owner_id;
     network_send_join_request();
 }
 

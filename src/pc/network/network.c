@@ -16,6 +16,7 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemDiscord;
 #define LOADING_LEVEL_THRESHOLD 10
 u8 networkLoadingLevel = 0;
 bool gNetworkLevelLoaded = false;
+clock_t gLastNetworkSend = 0;
 
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
@@ -53,6 +54,12 @@ bool network_init(enum NetworkType inNetworkType) {
     // set network type
     gNetworkType = inNetworkType;
 
+    if (gNetworkType == NT_SERVER) {
+        network_player_connected(NPT_LOCAL, 0);
+        extern u8* gOverrideEeprom;
+        gOverrideEeprom = NULL;
+    }
+
     LOG_INFO("initialized");
 
     return true;
@@ -71,11 +78,13 @@ void network_on_loaded_level(void) {
     }
 }
 
-void network_send(struct Packet* p) {
+void network_send_to(u8 localIndex, struct Packet* p) {
     // sanity checks
     if (gNetworkType == NT_NONE) { return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
+
+    p->localIndex = localIndex;
 
     // remember reliable packets
     network_remember_reliable(p);
@@ -85,19 +94,34 @@ void network_send(struct Packet* p) {
     memcpy(&p->buffer[p->dataLength], &hash, sizeof(u32));
 
     // send
-    int rc = gNetworkSystem->send(p->buffer, p->cursor + sizeof(u32));
+    int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
     if (rc != NO_ERROR) { return; }
     p->sent = true;
+
+    gLastNetworkSend = clock();
 }
 
-void network_receive(u8* data, u16 dataLength) {
+void network_send(struct Packet* p) {
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        if (!gNetworkPlayers[i].connected) { continue; }
+        p->localIndex = i;
+        network_send_to(i, p);
+    }
+}
+
+void network_receive(u8 localIndex, u8* data, u16 dataLength) {
     // receive packet
     struct Packet p = {
+        .localIndex = localIndex,
         .cursor = 3,
         .buffer = { 0 },
         .dataLength = dataLength,
     };
     memcpy(p.buffer, data, dataLength);
+
+    if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
+        gNetworkPlayers[localIndex].lastReceived = clock();
+    }
 
     // subtract and check hash
     p.dataLength -= sizeof(u32);
@@ -121,7 +145,8 @@ void network_update(void) {
     }
 
     // send out update packets
-    if (gNetworkType != NT_NONE) {
+    if (gNetworkType != NT_NONE && network_player_any_connected()) {
+        network_player_update();
         if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
             network_update_player();
             network_update_objects();
@@ -141,8 +166,10 @@ void network_update(void) {
 
 void network_shutdown(void) {
     if (gNetworkType == NT_NONE) { return; }
-
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
+
+    if (gNetworkPlayerLocal != NULL) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
+    network_player_shutdown();
     gNetworkSystem->shutdown();
 
     gNetworkType = NT_NONE;

@@ -5,7 +5,7 @@
 #include "menu/custom_menu.h"
 
 static SOCKET curSocket = INVALID_SOCKET;
-struct sockaddr_in txAddr = { 0 };
+static struct sockaddr_in addr[MAX_PLAYERS] = { 0 };
 
 static int socket_bind(SOCKET socket, unsigned int port) {
     struct sockaddr_in rxAddr;
@@ -31,11 +31,19 @@ static int socket_send(SOCKET socket, struct sockaddr_in* addr, u8* buffer, u16 
     return rc;
 }
 
-static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer, u16 bufferLength, u16* receiveLength) {
+static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer, u16 bufferLength, u16* receiveLength, u8* localIndex) {
     *receiveLength = 0;
 
     int rxAddrSize = sizeof(struct sockaddr_in);
     int rc = recvfrom(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)rxAddr, &rxAddrSize);
+
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        if (memcmp(rxAddr, &addr[i], sizeof(struct sockaddr_in)) == 0) {
+            *localIndex = i;
+            break;
+        }
+    }
+
     if (rc == SOCKET_ERROR) {
         int error = SOCKET_LAST_ERROR;
         if (error != SOCKET_EWOULDBLOCK && error != SOCKET_ECONNRESET) {
@@ -49,6 +57,7 @@ static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer,
 }
 
 static bool ns_socket_initialize(enum NetworkType networkType) {
+
     // sanity check port
     unsigned int port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
     if (port == 0) { port = DEFAULT_PORT; }
@@ -65,9 +74,9 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
         LOG_INFO("bound to port %u", port);
     } else {
         // save the port to send to
-        txAddr.sin_family = AF_INET;
-        txAddr.sin_port = htons(port);
-        txAddr.sin_addr.s_addr = inet_addr(configJoinIp);
+        addr[0].sin_family = AF_INET;
+        addr[0].sin_port = htons(port);
+        addr[0].sin_addr.s_addr = inet_addr(configJoinIp);
         LOG_INFO("connecting to %s %u", configJoinIp, port);
     }
 
@@ -87,20 +96,39 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
     return true;
 }
 
+static void ns_socket_save_id(u8 localId) {
+    assert(localId > 0);
+    assert(localId < MAX_PLAYERS);
+    addr[localId] = addr[0];
+    LOG_INFO("saved addr for id %d", localId);
+}
+
+static void ns_socket_clear_id(u8 localId) {
+    assert(localId > 0);
+    assert(localId < MAX_PLAYERS);
+    memset(&addr[localId], 0, sizeof(struct sockaddr_in));
+    LOG_INFO("cleared addr for id %d", localId);
+}
+
 static void ns_socket_update(void) {
     if (gNetworkType == NT_NONE) { return; }
     do {
         // receive packet
         u8 data[PACKET_LENGTH];
         u16 dataLength = 0;
-        int rc = socket_receive(curSocket, &txAddr, data, PACKET_LENGTH, &dataLength);
+        u8 localIndex = UNKNOWN_LOCAL_INDEX;
+        int rc = socket_receive(curSocket, &addr[0], data, PACKET_LENGTH, &dataLength, &localIndex);
         if (rc != NO_ERROR) { break; }
-        network_receive(data, dataLength);
+        network_receive(localIndex, data, dataLength);
     } while (true);
 }
 
-static int ns_socket_send(u8* data, u16 dataLength) {
-    return socket_send(curSocket, &txAddr, data, dataLength);
+static int ns_socket_send(u8 localIndex, u8* data, u16 dataLength) {
+    if (localIndex != 0) {
+        if (gNetworkType == NT_SERVER && gNetworkPlayers[localIndex].type != NPT_CLIENT) { return SOCKET_ERROR; }
+        if (gNetworkType == NT_CLIENT && gNetworkPlayers[localIndex].type != NPT_SERVER) { return SOCKET_ERROR; }
+    }
+    return socket_send(curSocket, &addr[localIndex], data, dataLength);
 }
 
 static void ns_socket_shutdown(void) {
@@ -111,6 +139,8 @@ static void ns_socket_shutdown(void) {
 
 struct NetworkSystem gNetworkSystemSocket = {
     .initialize = ns_socket_initialize,
+    .save_id    = ns_socket_save_id,
+    .clear_id   = ns_socket_clear_id,
     .update     = ns_socket_update,
     .send       = ns_socket_send,
     .shutdown   = ns_socket_shutdown,

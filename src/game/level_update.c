@@ -1046,11 +1046,11 @@ s32 play_mode_normal(void) {
     if (sCurrPlayMode == PLAY_MODE_NORMAL) {
         if (!gReceiveWarp) {
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
-                set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
+                set_play_mode(PLAY_MODE_SYNC_LEVEL);
                 network_send_level_warp_begin();
             } else if (sTransitionTimer != 0) {
                 if (sWarpDest.type == WARP_TYPE_CHANGE_AREA) {
-                    set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_AREA);
+                    set_play_mode(PLAY_MODE_SYNC_LEVEL);
                     network_send_level_warp_begin();
                 } else {
                     set_play_mode(PLAY_MODE_CHANGE_AREA);
@@ -1085,7 +1085,7 @@ s32 play_mode_paused(void) {
             fade_into_special_warp(0, 0);
             gSavedCourseNum = COURSE_NONE;
         }
-        set_play_mode((gNetworkType != NT_NONE) ? PLAY_MODE_SYNC_LEVEL : PLAY_MODE_CHANGE_LEVEL);
+        set_play_mode(PLAY_MODE_SYNC_LEVEL);
         network_send_level_warp_begin();
     } else if (gPauseScreenMode == 3) {
         // We should only be getting "int 3" to here

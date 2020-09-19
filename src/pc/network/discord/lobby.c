@@ -7,13 +7,13 @@ static bool isHosting = false;
 DiscordLobbyId gCurLobbyId = 0;
 
 static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordLobby* lobby) {
-    LOG_INFO("> on_lobby_update returned %d\n", (int)result);
-    LOG_INFO("Lobby id: %lld\n", lobby->id);
-    LOG_INFO("Lobby type: %u\n", lobby->type);
-    LOG_INFO("Lobby owner id: %lld\n", lobby->owner_id);
-    LOG_INFO("Lobby secret: %s\n", lobby->secret);
-    LOG_INFO("Lobby capacity: %u\n", lobby->capacity);
-    LOG_INFO("Lobby locked: %d\n", lobby->locked);
+    LOG_INFO("> on_lobby_update returned %d", (int)result);
+    LOG_INFO("Lobby id: %lld", lobby->id);
+    LOG_INFO("Lobby type: %u", lobby->type);
+    LOG_INFO("Lobby owner id: %lld", lobby->owner_id);
+    LOG_INFO("Lobby secret: %s", lobby->secret);
+    LOG_INFO("Lobby capacity: %u", lobby->capacity);
+    LOG_INFO("Lobby locked: %d", lobby->locked);
 
     gCurActivity.type = DiscordActivityType_Playing;
     snprintf(gCurActivity.party.id, 128, "%lld", lobby->id);
@@ -47,6 +47,10 @@ static void on_member_update(UNUSED void* data, int64_t lobbyId, int64_t userId)
 
 static void on_member_disconnect(UNUSED void* data, int64_t lobbyId, int64_t userId) {
     LOG_INFO("> on_member_disconnect lobby: %lld, user: %lld", lobbyId, userId);
+    u8 localIndex = discord_user_id_to_local_index(userId);
+    if (localIndex != UNKNOWN_LOCAL_INDEX && gNetworkPlayers[localIndex].connected) {
+        network_player_disconnected(gNetworkPlayers[localIndex].globalIndex);
+    }
     gCurActivity.party.size.current_size--;
     discord_activity_update(isHosting);
 }

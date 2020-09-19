@@ -5,6 +5,7 @@
 #include <time.h>
 #include <types.h>
 #include <assert.h>
+#include "network_player.h"
 #include "packets/packet.h"
 #include "../cliopts.h"
 
@@ -28,8 +29,10 @@ enum NetworkSystemType {
 
 struct NetworkSystem {
     bool (*initialize)(enum NetworkType);
+    void (*save_id)(u8 localIndex);
+    void (*clear_id)(u8 localIndex);
     void (*update)(void);
-    int  (*send)(u8* data, u16 dataLength);
+    int  (*send)(u8 localIndex, u8* data, u16 dataLength);
     void (*shutdown)(void);
 };
 
@@ -66,18 +69,21 @@ struct ServerSettings {
 };
 
 // Networking-specific externs
-extern bool gNetworkLevelLoaded;
+extern struct NetworkSystem* gNetworkSystem;
 extern enum NetworkType gNetworkType;
+extern bool gNetworkLevelLoaded;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
+extern clock_t gLastNetworkSend;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);
 bool network_init(enum NetworkType inNetworkType);
 void network_on_init_level(void);
 void network_on_loaded_level(void);
+void network_send_to(u8 localIndex, struct Packet* p);
 void network_send(struct Packet* p);
-void network_receive(u8* data, u16 dataLength);
+void network_receive(u8 localIndex, u8* data, u16 dataLength);
 void network_update(void);
 void network_shutdown(void);
 

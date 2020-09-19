@@ -25,6 +25,7 @@
 #include "types.h"
 #include "macros.h"
 #include "pc/cheats.h"
+#include "pc/network/network.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
@@ -2823,25 +2824,45 @@ s16 render_pause_courses_and_castle(void) {
 }
 
 s16 render_sync_level_screen(void) {
+    char* message;
+
+    if (gNetworkType == NT_SERVER) {
+        message = network_player_any_connected() ? "Waiting for player..." : "Waiting for player to connect...";
+    } else {
+        message = network_player_any_connected() ? "Waiting for player..." : "Not connected to anyone.\nPlease restart the game.";
+    }
+
+    static f32 alphaScalar = 0.0f;
+    static clock_t lastDisplay = 0;
+    f32 elapsed = (clock() - lastDisplay) / (f32)CLOCKS_PER_SEC;
+    if (elapsed > 1.0f) {
+        alphaScalar = 0;
+    } else if (alphaScalar < 1.0f) {
+        alphaScalar += 0.3f;
+        if (alphaScalar > 1) { alphaScalar = 1; }
+    }
+    u8 alpha = (((f32)fabs(sin(gGlobalTimer / 20.0f)) * alphaScalar) * 255);
+    lastDisplay = clock();
+
     // black screen
     create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.0f, 0);
-    create_dl_scale_matrix(MENU_MTX_NOPUSH,
-        GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 130.0f, 3.0f, 1.0f);
+    create_dl_scale_matrix(MENU_MTX_NOPUSH, GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 130.0f, 3.0f, 1.0f);
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
     gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
+    // print text
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+    f32 textWidth = get_generic_ascii_string_width(message);
+    f32 textHeight = get_generic_ascii_string_height(message);
 
-    // synchronizing text
-    u8 colorFade = sins(gDialogColorFadeTimer) * 50.0f + 200.0f;
-    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
-    gDPSetEnvColor(gDisplayListHead++, colorFade, colorFade, colorFade, 255);
+    f32 xPos = (SCREEN_WIDTH - textWidth) / 2.0f;
+    f32 yPos = (SCREEN_HEIGHT + textHeight) / 2.0f;
 
-    #define TEXT_SYNCHRONIZING 0x1C,0x22,0x17,0x0C,0x11,0x1B,0x18,0x17,0x12,0x02,0x12,0x17,0x10,0xFF
-    u8 synchronizing[] = { TEXT_SYNCHRONIZING };
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha);
+    print_generic_ascii_string(xPos, yPos, message);
 
-    print_hud_lut_string(HUD_LUT_GLOBAL, 80, 200, synchronizing);
-    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
     return 0;
 }

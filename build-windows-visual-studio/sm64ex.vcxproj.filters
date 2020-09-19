@@ -15048,6 +15048,24 @@
     <ClCompile Include="..\src\pc\network\packets\packet_chat.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\network_player.c">
+      <Filter>Source Files\src\pc\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_join.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_keep_alive.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_kick.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_leaving.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -15996,6 +16014,9 @@
     </ClInclude>
     <ClInclude Include="..\src\game\chat.h">
       <Filter>Header Files\src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\network_player.h">
+      <Filter>Header Files\src\pc\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

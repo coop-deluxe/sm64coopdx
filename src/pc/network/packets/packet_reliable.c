@@ -2,6 +2,8 @@
 #include "../network.h"
 #include "pc/debuglog.h"
 
+// two-player hack: the localIndex for resending packets can be 0... this means reply to last person received from. THIS WILL NOT WORK with more than two players
+
 #define RELIABLE_RESEND_RATE 0.10f
 #define MAX_RESEND_ATTEMPTS 20
 
@@ -41,7 +43,7 @@ void network_send_ack(struct Packet* p) {
     struct Packet ack = { 0 };
     packet_init(&ack, PACKET_ACK, false);
     packet_write(&ack, &seqId, sizeof(u16));
-    network_send(&ack);
+    network_send_to(0, &ack);
 }
 
 void network_receive_ack(struct Packet* p) {
@@ -94,7 +96,7 @@ void network_update_reliable(void) {
         float maxElapsed = (node->sendAttempts * node->sendAttempts * RELIABLE_RESEND_RATE) / ((float)MAX_RESEND_ATTEMPTS);
         if (elapsed > maxElapsed) {
             // resend
-            network_send(&node->p);
+            network_send_to(node->p.localIndex, &node->p);
             node->lastSend = clock();
             node->sendAttempts++;
             if (node->sendAttempts >= MAX_RESEND_ATTEMPTS) {
