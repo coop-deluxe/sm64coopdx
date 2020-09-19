@@ -399,6 +399,10 @@ void mario_set_bubbled(struct MarioState* m) {
     m->statusForCamera->cameraEvent = 0;
     extern s16 gCutsceneTimer;
     gCutsceneTimer = 0;
+
+    if (m->playerIndex == 0) {
+        set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
+    }
 }
 
 /**
