@@ -115,6 +115,7 @@ void network_send(struct Packet* p) {
         p->localIndex = i;
         network_send_to(i, p);
     }
+    gLastNetworkSend = clock();
 }
 
 void network_receive(u8 localIndex, u8* data, u16 dataLength) {
