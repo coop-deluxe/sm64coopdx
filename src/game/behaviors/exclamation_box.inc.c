@@ -157,10 +157,12 @@ void exclamation_box_act_4(void) {
 }
 
 void exclamation_box_act_5(void) {
+    o->oExclamationBoxForce = FALSE;
     if (o->oTimer > 300)
         o->oAction = 2;
 }
 void exclamation_box_act_6(void) {
+    o->oExclamationBoxForce = FALSE;
     if (o->oTimer > 1000)
         obj_mark_for_deletion(o);
 }
