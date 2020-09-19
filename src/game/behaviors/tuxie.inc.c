@@ -12,7 +12,7 @@ void play_penguin_walking_sound(s32 walk) {
 }
 
 void tuxies_mother_act_2(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object* player = gMarioStates[0].marioObj;
     int angleToPlayer = obj_angle_to_object(o, player);
 
     f32 sp24;
@@ -62,7 +62,7 @@ void tuxies_mother_act_1(void) {
                     dialogID = DIALOG_058;
                 else
                     dialogID = DIALOG_059;
-                if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, dialogID, tuxies_mother_act_1_continue_dialog)) {
+                if (cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, dialogID, tuxies_mother_act_1_continue_dialog)) {
                     if (dialogID == DIALOG_058)
                         o->oSubAction = 1;
                     else
@@ -132,7 +132,7 @@ void tuxies_mother_act_0(void) {
                         o->oSubAction++;
                 break;
             case 1:
-                if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, DIALOG_057, tuxies_mother_act_0_continue_dialog))
+                if (cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, DIALOG_057, tuxies_mother_act_0_continue_dialog))
                     o->oSubAction++;
                 break;
             case 2:
