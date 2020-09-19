@@ -368,7 +368,6 @@ void network_receive_object(struct Packet* p) {
     // make sure no one can update an object we're holding
     if (gNetworkType == NT_SERVER) { // two-player hack: needs priority
         if (gMarioStates[0].heldObj == o) { return; }
-        if (gMarioStates[0].heldByObj == o) { return; }
     }
 
     // read the rest of the packet data
