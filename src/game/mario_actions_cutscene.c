@@ -882,6 +882,7 @@ s32 act_unlocking_key_door(struct MarioState *m) {
 }
 
 s32 act_unlocking_star_door(struct MarioState *m) {
+    static u8 allowRemoteStarSpawn = TRUE;
     switch (m->actionState) {
         case 0:
             if (m->usedObj != NULL) {
@@ -893,11 +894,17 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             m->marioObj->oMarioReadingSignDPosX = m->pos[0];
             m->marioObj->oMarioReadingSignDPosZ = m->pos[2];
             set_mario_animation(m, MARIO_ANIM_SUMMON_STAR);
+            if (m->playerIndex != 0) { allowRemoteStarSpawn = TRUE; }
             m->actionState++;
             break;
         case 1:
             if (is_anim_at_end(m)) {
-                spawn_object(m->marioObj, MODEL_STAR, bhvUnlockDoorStar);
+                if (m->playerIndex == 0 || allowRemoteStarSpawn) {
+                    if (m->playerIndex != 0) {
+                        allowRemoteStarSpawn = FALSE;
+                        spawn_object(m->marioObj, MODEL_STAR, bhvUnlockDoorStar);
+                    }
+                }
                 m->actionState++;
             }
             break;
@@ -908,6 +915,7 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             }
             break;
         case 3:
+            if (m->playerIndex != 0) { allowRemoteStarSpawn = TRUE; }
             if (is_anim_at_end(m)) {
                 save_file_set_flags(get_door_save_file_flag(m->usedObj));
                 set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, DIALOG_038);
