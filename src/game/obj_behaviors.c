@@ -513,6 +513,7 @@ s32 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
 
 u8 is_player_active(struct MarioState* m) {
     if (m->action == ACT_BUBBLED) { return FALSE; }
+    if (gNetworkPlayers[m->playerIndex].type != NPT_LOCAL && !gNetworkPlayers[m->playerIndex].connected) { return FALSE; }
     return TRUE;
 }
 
