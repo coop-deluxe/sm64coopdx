@@ -67,6 +67,9 @@ bool network_init(enum NetworkType inNetworkType) {
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
     }
+    else if (gNetworkType == NT_CLIENT) {
+        network_player_connected(NPT_SERVER, 0);
+    }
 
     LOG_INFO("initialized");
 

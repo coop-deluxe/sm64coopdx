@@ -46,7 +46,7 @@ void ns_discord_save_id(u8 localId) {
 }
 
 void ns_discord_clear_id(u8 localId) {
-    assert(localId > 0);
+    if (localId == 0) { return; }
     assert(localId < MAX_PLAYERS);
     gNetworkUserIds[localId] = 0;
     LOG_INFO("cleared user id %d == %lld", localId, gNetworkUserIds[localId]);

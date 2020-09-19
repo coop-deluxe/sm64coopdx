@@ -83,6 +83,10 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
         chat_add_message("player connected", CMT_SYSTEM);
         LOG_INFO("player connected, local %d, global %d", i, globalIndex);
+        extern s16 sCurrPlayMode;
+        if (gNetworkType == NT_SERVER && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
+            network_send_level_warp_repeat();
+        }
         return i;
     }
 
@@ -122,7 +126,7 @@ u8 network_player_disconnected(u8 globalIndex) {
 void network_player_shutdown(void) {
     gNetworkPlayerLocal = NULL;
     gNetworkPlayerServer = NULL;
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* networkPlayer = &gNetworkPlayers[i];
         networkPlayer->connected = false;
         gNetworkSystem->clear_id(i);

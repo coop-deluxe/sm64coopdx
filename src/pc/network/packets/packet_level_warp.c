@@ -68,8 +68,12 @@ void network_send_level_warp_begin(void) {
     seqId++;
 }
 
-static void network_send_level_warp_repeat(void) {
-    assert(isInWarp);
+void network_send_level_warp_repeat(void) {
+    if (!isInWarp) {
+        network_send_level_warp_begin();
+        LOG_ERROR("sending repeat, but we're not warping!");
+        return;
+    }
 
     struct PacketLevelWarpData data = { 0 };
     populate_packet_data(&data, false, eventId);

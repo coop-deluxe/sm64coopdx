@@ -74,7 +74,7 @@ void network_receive_join(struct Packet* p) {
     char remoteHash[HASH_LENGTH] = { 0 };
     u8 myGlobalIndex = UNKNOWN_GLOBAL_INDEX;
 
-    if (network_player_any_connected()) {
+    if (gNetworkPlayerLocal != NULL && gNetworkPlayerLocal->connected) {
         LOG_ERROR("Received join packet, but already in-game!");
         return;
     }
@@ -93,7 +93,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
-    network_player_connected(NPT_SERVER, 0);
     network_player_connected(NPT_LOCAL, myGlobalIndex);
 
     save_file_load_all(TRUE);

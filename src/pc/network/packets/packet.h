@@ -91,6 +91,7 @@ void network_receive_spawn_star(struct Packet* p);
 
 // packet_level_warp.c
 void network_send_level_warp_begin(void);
+void network_send_level_warp_repeat(void);
 void network_receive_level_warp(struct Packet* p);
 
 // packet_inside_painting.c

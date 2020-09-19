@@ -104,7 +104,7 @@ static void ns_socket_save_id(u8 localId) {
 }
 
 static void ns_socket_clear_id(u8 localId) {
-    assert(localId > 0);
+    if (localId == 0) { return; }
     assert(localId < MAX_PLAYERS);
     memset(&addr[localId], 0, sizeof(struct sockaddr_in));
     LOG_INFO("cleared addr for id %d", localId);
