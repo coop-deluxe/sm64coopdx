@@ -536,7 +536,7 @@ s32 obj_begin_race(s32 noTimer) {
         }
 
         // Unfreeze mario and disable time stop to begin the race
-        set_mario_npc_dialog(&gMarioStates[0], 0);
+        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
         disable_time_stop_including_mario();
     } else if (o->oTimer > 50) {
         return TRUE;

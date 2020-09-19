@@ -21,6 +21,10 @@ void bhv_camera_lakitu_init(void) {
     }
 }
 
+static u8 camera_lakitu_intro_act_trigger_cutscene_continue_dialog(void) {
+    return (o->oAction == CAMERA_LAKITU_INTRO_ACT_TRIGGER_CUTSCENE);
+}
+
 /**
  * Wait for mario to stand on the bridge, then interrupt his action and enter
  * the spawn cloud action.
@@ -32,17 +36,20 @@ static void camera_lakitu_intro_act_trigger_cutscene(void) {
         && gMarioObject->oPosZ > -2000.0f && gMarioObject->oPosZ < -177.0f
         && gMarioObject->oPosZ < -177.0f) // always double check your conditions
     {
-        if (set_mario_npc_dialog(&gMarioStates[0], 2) == 1) {
+        if (set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_trigger_cutscene_continue_dialog) == 1) {
             o->oAction = CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD;
         }
     }
 }
 
+static u8 camera_lakitu_intro_act_spawn_cloud_continue_dialog(void) {
+    return (o->oAction == CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD);
+}
 /**
  * Warp up into the air and spawn cloud, then enter the TODO action.
  */
 static void camera_lakitu_intro_act_spawn_cloud(void) {
-    if (set_mario_npc_dialog(&gMarioStates[0], 2) == 2) {
+    if (set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_spawn_cloud_continue_dialog) == 2) {
         o->oAction = CAMERA_LAKITU_INTRO_ACT_UNK2;
 
         o->oPosX = 1800.0f;

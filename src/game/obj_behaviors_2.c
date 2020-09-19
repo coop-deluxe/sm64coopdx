@@ -101,7 +101,7 @@ static s32 obj_update_race_proposition_dialog(struct MarioState* m, s16 dialogID
     s32 dialogResponse = cur_obj_update_dialog_with_cutscene(m, 2, DIALOG_UNK2_FLAG_0 | DIALOG_UNK2_LEAVE_TIME_STOP_ENABLED, CUTSCENE_RACE_DIALOG, dialogID, inContinueDialogFunction);
 
     if (dialogResponse == 2) {
-        set_mario_npc_dialog(m, 0);
+        set_mario_npc_dialog(m, 0, NULL);
         disable_time_stop_including_mario();
     }
 

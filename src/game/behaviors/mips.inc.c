@@ -220,6 +220,10 @@ void bhv_mips_free(void) {
     }
 }
 
+static u8 bhv_mips_held_continue_dialog(void) {
+    return (o->oHeldState == HELD_HELD && o->oMipsStarStatus == MIPS_STAR_STATUS_HAVENT_SPAWNED_STAR);
+}
+
 /**
  * Handles MIPS being held by Mario.
  */
@@ -239,13 +243,13 @@ void bhv_mips_held(void) {
         else
             dialogID = DIALOG_162;
 
-        if (set_mario_npc_dialog(&gMarioStates[0], 1) == 2) {
+        if (set_mario_npc_dialog(&gMarioStates[0], 1, bhv_mips_held_continue_dialog) == 2) {
             //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
             if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, dialogID)) {
                 o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                 o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
                 o->oMipsStarStatus = MIPS_STAR_STATUS_SHOULD_SPAWN_STAR;
-                set_mario_npc_dialog(&gMarioStates[0], 0);
+                set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
             }
         }
     }

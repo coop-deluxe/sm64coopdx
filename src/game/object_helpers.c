@@ -28,8 +28,8 @@
 #include "spawn_sound.h"
 #include "pc/network/network.h"
 
-u8 (*continueDialogFunction)(void) = NULL;
-struct Object* continueDialogFunctionObject = NULL;
+u8 (*gContinueDialogFunction)(void) = NULL;
+struct Object* gContinueDialogFunctionObject = NULL;
 
 s8 D_8032F0A0[] = { 0xF8, 0x08, 0xFC, 0x04 };
 s16 D_8032F0A4[] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
@@ -2689,7 +2689,7 @@ static void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialog
     o->oDialogState++;
 
     if (!(dialogFlags & DIALOG_UNK1_FLAG_4)) {
-        set_mario_npc_dialog(m, 0);
+        set_mario_npc_dialog(m, 0, NULL);
     }
 }
 
@@ -2698,8 +2698,6 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
     UNUSED s32 doneTurning = TRUE;
 
     if (m->playerIndex != 0) { return 0; }
-    continueDialogFunctionObject = gCurrentObject;
-    continueDialogFunction = inContinueDialogFunction;
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP
@@ -2729,7 +2727,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
 #endif
 
         case DIALOG_UNK1_INTERRUPT_MARIO_ACTION:
-            if (set_mario_npc_dialog(m, actionArg) == 2) {
+            if (set_mario_npc_dialog(m, actionArg, inContinueDialogFunction) == 2) {
                 o->oDialogState++;
             }
             break;
@@ -2779,8 +2777,6 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
     s32 doneTurning = TRUE;
 
     if (m->playerIndex != 0) { return 0; }
-    continueDialogFunctionObject = gCurrentObject;
-    continueDialogFunction = inContinueDialogFunction;
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP
@@ -2818,7 +2814,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
                 }
             }
 
-            if (set_mario_npc_dialog(m, actionArg) == 2 && doneTurning) {
+            if (set_mario_npc_dialog(m, actionArg, inContinueDialogFunction) == 2 && doneTurning) {
                 o->oDialogResponse = 0;
                 o->oDialogState++;
             } else {
@@ -2848,7 +2844,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
                 dialogResponse = o->oDialogResponse;
                 o->oDialogState = DIALOG_UNK2_ENABLE_TIME_STOP;
             } else {
-                set_mario_npc_dialog(m, 0);
+                set_mario_npc_dialog(m, 0, NULL);
             }
             break;
     }

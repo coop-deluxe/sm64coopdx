@@ -946,7 +946,7 @@ s32 bowser_dead_not_bits_end(void) {
         bowser_dead_hide();
         spawn_triangle_break_particles(20, 116, 1.0f, 0);
         bowser_spawn_grand_star_key();
-        if (marioState->playerIndex) { set_mario_npc_dialog(marioState, 0); }
+        if (marioState->playerIndex) { set_mario_npc_dialog(marioState, 0, NULL); }
         ret = 1;
     }
     return ret;

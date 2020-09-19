@@ -726,7 +726,7 @@ s8 current_mario_room_check(s16 room) {
 /**
  * Triggers dialog when Mario is facing an object and controls it while in the dialog.
  */
-s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dialogID, f32 dist, s32 actionArg) {
+s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
     s16 dialogueResponse;
 
     int angleToPlayer = obj_angle_to_object(o, m->marioObj);
@@ -737,10 +737,10 @@ s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dial
         || (*inDialog == 1)) {
         *inDialog = 1;
 
-        if (set_mario_npc_dialog(m, actionArg) == 2) { //If Mario is speaking.
+        if (set_mario_npc_dialog(m, actionArg, inContinueDialogFunction) == 2) { //If Mario is speaking.
             dialogueResponse = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, dialogID);
             if (dialogueResponse != 0) {
-                set_mario_npc_dialog(m, 0);
+                set_mario_npc_dialog(m, 0, NULL);
                 *inDialog = 0;
                 return dialogueResponse;
             }

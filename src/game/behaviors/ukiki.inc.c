@@ -511,6 +511,10 @@ static void ukiki_blink_timer(void) {
     }
 }
 
+static u8 cage_ukiki_held_default_continue_dialog(void) {
+    return (o->oHeldState == HELD_HELD && o->oUkikiTextState == UKIKI_TEXT_DEFAULT);
+}
+
 /**
  * Called by the main behavior function for the cage ukiki whenever it is held.
  */
@@ -518,7 +522,7 @@ void cage_ukiki_held_loop(void) {
     if (o->oPosY - o->oHomeY > -100.0f) {
         switch(o->oUkikiTextState) {
             case UKIKI_TEXT_DEFAULT:
-                if (set_mario_npc_dialog(&gMarioStates[0], 2) == 2) {
+                if (set_mario_npc_dialog(&gMarioStates[0], 2, cage_ukiki_held_default_continue_dialog) == 2) {
                     create_dialog_box_with_response(DIALOG_079);
                     o->oUkikiTextState = UKIKI_TEXT_CAGE_TEXTBOX;
                 }
@@ -526,7 +530,7 @@ void cage_ukiki_held_loop(void) {
 
             case UKIKI_TEXT_CAGE_TEXTBOX:
                 if (gDialogResponse != 0) {
-                    set_mario_npc_dialog(&gMarioStates[0], 0);
+                    set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
                     if (gDialogResponse == 1) {
                         o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                         o->oUkikiTextState = UKIKI_TEXT_GO_TO_CAGE;
@@ -584,7 +588,7 @@ void hat_ukiki_held_loop(void) {
         case UKIKI_TEXT_HAS_HAT:
             if (cur_obj_update_dialog(&gMarioStates[0], 2, 18, DIALOG_101, 0, hat_ukiki_held_loop_2)) {
                 mario_retrieve_cap();
-                set_mario_npc_dialog(&gMarioStates[0], 0);
+                set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
                 o->oUkikiHasHat &= ~UKIKI_HAT_ON;
                 o->oUkikiTextState = UKIKI_TEXT_GAVE_HAT_BACK;
             }

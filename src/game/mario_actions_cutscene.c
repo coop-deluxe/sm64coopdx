@@ -354,13 +354,18 @@ s32 mario_ready_to_speak(struct MarioState* m) {
 // 0 = not in dialog
 // 1 = starting dialog
 // 2 = speaking
-s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg) {
+s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
     s32 dialogState = 0;
 
-    if (m->playerIndex == 0 && actionArg == 0) {
-        localDialogNPCBehavior = NULL;
-        continueDialogFunction = NULL;
-        continueDialogFunctionObject = NULL;
+    if (m->playerIndex == 0) {
+        if (actionArg == 0 || inContinueDialogFunction == NULL) {
+            localDialogNPCBehavior = NULL;
+            gContinueDialogFunction = NULL;
+            gContinueDialogFunctionObject = NULL;
+        } else {
+            gContinueDialogFunction = inContinueDialogFunction;
+            gContinueDialogFunctionObject = gCurrentObject;
+        }
     }
 
     // in dialog
@@ -400,14 +405,14 @@ s32 act_reading_npc_dialog(struct MarioState *m) {
 
     if (m->playerIndex == 0) {
         u8 continueDialogCallback = TRUE;
-        if (continueDialogFunction != NULL && continueDialogFunctionObject != NULL) {
+        if (gContinueDialogFunction != NULL && gContinueDialogFunctionObject != NULL) {
             struct Object* tmp = gCurrentObject;
-            gCurrentObject = continueDialogFunctionObject;
-            continueDialogCallback = continueDialogFunction();
+            gCurrentObject = gContinueDialogFunctionObject;
+            continueDialogCallback = gContinueDialogFunction();
             gCurrentObject = tmp;
         }
         if (!continueDialogCallback || m->usedObj == NULL || m->usedObj->activeFlags == ACTIVE_FLAG_DEACTIVATED || m->usedObj->behavior != localDialogNPCBehavior) {
-            set_mario_npc_dialog(m, 0);
+            set_mario_npc_dialog(m, 0, NULL);
         }
     }
 

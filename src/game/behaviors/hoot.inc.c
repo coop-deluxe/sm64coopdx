@@ -252,6 +252,10 @@ void hoot_awake_loop(void) {
     set_object_visibility(o, 2000);
 }
 
+static u8 hoot_wants_to_talk_continue_dialog(void) {
+    return (o->oHootAvailability == HOOT_AVAIL_WANTS_TO_TALK && localTalkToHoot == 1);
+}
+
 void bhv_hoot_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     static u8 forceFlySanity = TRUE;
@@ -272,9 +276,9 @@ void bhv_hoot_loop(void) {
                 localTalkToHoot = 1;
             }
 
-            if (localTalkToHoot == 1 && set_mario_npc_dialog(&gMarioStates[0], 2) == 2 && cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_044)) {
+            if (localTalkToHoot == 1 && set_mario_npc_dialog(&gMarioStates[0], 2, hoot_wants_to_talk_continue_dialog) == 2 && cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_044)) {
                 localTalkToHoot = 2;
-                set_mario_npc_dialog(&gMarioStates[0], 0);
+                set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
                 cur_obj_become_tangible();
                 o->oHootAvailability = HOOT_AVAIL_READY_TO_FLY;
                 network_send_object(o);
@@ -283,7 +287,7 @@ void bhv_hoot_loop(void) {
 
         case HOOT_AVAIL_READY_TO_FLY:
             if (forceFlySanity) {
-                set_mario_npc_dialog(&gMarioStates[0], 0);
+                set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
                 cur_obj_become_tangible();
                 forceFlySanity = FALSE;
             }
