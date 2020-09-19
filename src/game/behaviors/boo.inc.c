@@ -35,6 +35,7 @@ struct SyncObject* boo_network_init_object(void) {
     network_init_object_field(o, &o->oInteractType);
     network_init_object_field(o, &o->oOpacity);
     network_init_object_field(o, &o->oRoom);
+    network_init_object_field(o, &o->oIntangibleTimer);
     return so;
 }
 
