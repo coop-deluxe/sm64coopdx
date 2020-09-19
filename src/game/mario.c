@@ -1852,6 +1852,16 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         if (Cheats.SuperSpeed && gMarioState->forwardVel > 0)
             gMarioState->forwardVel += 100;
     }
+
+    // hide unconnected players
+    if (gNetworkPlayers[gMarioState->playerIndex].type != NPT_LOCAL) {
+        if (!gNetworkPlayers[gMarioState->playerIndex].connected) {
+            gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+            gMarioState->marioObj->oIntangibleTimer = -1;
+            return 0;
+        }
+    }
+
     /**
     * End of cheat stuff
     */
