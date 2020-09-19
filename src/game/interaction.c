@@ -1027,6 +1027,7 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
 }
 
 u32 get_door_save_file_flag(struct Object *door) {
+    if (door == NULL) { return 0; }
     u32 saveFileFlag = 0;
     s16 requiredNumStars = door->oBehParams >> 24;
 
@@ -1067,6 +1068,7 @@ u32 get_door_save_file_flag(struct Object *door) {
 }
 
 u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
+    if (m->playerIndex != 0 && o == NULL) { return FALSE; }
     s16 requiredNumStars = o->oBehParams >> 24;
     s16 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
 
