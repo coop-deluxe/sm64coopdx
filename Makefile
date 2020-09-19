@@ -48,8 +48,10 @@ EXT_OPTIONS_MENU ?= 1
 TEXTSAVES ?= 0
 # Load resources from external files
 EXTERNAL_DATA ?= 0
-# Enable Discord Rich Presence
+# Enable Discord Rich Presence (outdated, no longer supported)
 DISCORDRPC ?= 0
+# Enable Discord Game SDK (used for Discord server hosting)
+DISCORD_SDK ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
 
@@ -289,12 +291,16 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 
 # Hi, I'm a PC
 SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
-SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/discord
+SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket
 ASM_DIRS :=
 
 #ifeq ($(DISCORDRPC),1)
 #  SRC_DIRS += src/pc/discord
 #endif
+
+ifeq ($(DISCORD_SDK),1)
+  SRC_DIRS += src/pc/network/discord
+endif
 
 BIN_DIRS := bin bin/$(VERSION)
 
@@ -425,13 +431,15 @@ RPC_LIBS :=
 #endif
 
 DISCORD_SDK_LIBS :=
-ifeq ($(WINDOWS_BUILD),1)
-  DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dll
-else ifeq ($(OSX_BUILD),1)
-  # needs testing
-  DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib
-else
-  DISCORD_SDK_LIBS := lib/discordsdk/libdiscord_game_sdk.so
+ifeq ($(DISCORD_SDK), 1)
+  ifeq ($(WINDOWS_BUILD),1)
+    DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dll
+  else ifeq ($(OSX_BUILD),1)
+    # needs testing
+    DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib
+  else
+    DISCORD_SDK_LIBS := lib/discordsdk/libdiscord_game_sdk.so
+  endif
 endif
 
 # Automatic dependency files
@@ -460,19 +468,18 @@ else
   CXX := emcc
 endif
 
-LD := $(CXX)
-
 #ifeq ($(DISCORDRPC),1)
-#  LD := $(CXX)
-#else ifeq ($(WINDOWS_BUILD),1)
-#  ifeq ($(CROSS),i686-w64-mingw32.static-) # fixes compilation in MXE on Linux and WSL
-#    LD := $(CC)
-#  else ifeq ($(CROSS),x86_64-w64-mingw32.static-)
-#    LD := $(CC)
-#  else
-#    LD := $(CXX)
-#  endif
-#endif
+ifeq ($(DISCORD_SDK),1)
+  LD := $(CXX)
+else ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(CROSS),i686-w64-mingw32.static-) # fixes compilation in MXE on Linux and WSL
+    LD := $(CC)
+  else ifeq ($(CROSS),x86_64-w64-mingw32.static-)
+    LD := $(CC)
+  else
+    LD := $(CXX)
+  endif
+endif
 
 ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   CPP := cpp -P
@@ -621,6 +628,12 @@ endif
 #  CFLAGS += -DDISCORDRPC
 #endif
 
+# Check for Discord SDK option
+ifeq ($(DISCORD_SDK),1)
+  CC_CHECK += -DDISCORD_SDK
+  CFLAGS += -DDISCORD_SDK
+endif
+
 # Check for texture fix option
 ifeq ($(TEXTURE_FIX),1)
   CC_CHECK += -DTEXTURE_FIX
@@ -692,9 +705,13 @@ endif
 
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
-  LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk -Wl,-Bstatic
+  ifeq ($(DISCORD_SDK),1)
+    LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk -Wl,-Bstatic
+  endif
 else
-  LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+  ifeq ($(DISCORD_SDK),1)
+    LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+  endif
 endif
 
 

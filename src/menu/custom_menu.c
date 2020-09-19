@@ -72,17 +72,23 @@ static void host_menu_draw_strings(void) {
 }
 
 static void host_menu_do_host(void) {
+#ifndef DISCORD_SDK
+    configNetworkSystem = 1;
+#endif
     if (configNetworkSystem == 0) {
         network_set_system(NS_DISCORD);
-    }
-    else {
+    } else {
         network_set_system(NS_SOCKET);
     }
     custom_menu_close_system();
 }
 
 static void host_menu_setting_network_system(void) {
+#ifdef DISCORD_SDK
     configNetworkSystem = (configNetworkSystem == 0) ? 1 : 0;
+#else
+    configNetworkSystem = 1;
+#endif
 }
 
 static void host_menu_setting_interaction(void) {

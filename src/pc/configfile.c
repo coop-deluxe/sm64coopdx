@@ -321,6 +321,10 @@ void configfile_load(const char *filename) {
     }
 
     fs_close(file);
+
+#ifndef DISCORD_SDK
+    configNetworkSystem = 1;
+#endif
 }
 
 // Writes the config file to 'filename'

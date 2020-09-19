@@ -10,6 +10,7 @@
 #define NETWORK_PLAYER_TIMEOUT 10
 
 enum NetworkPlayerType {
+    NPT_UNKNOWN,
     NPT_LOCAL,
     NPT_SERVER,
     NPT_CLIENT,

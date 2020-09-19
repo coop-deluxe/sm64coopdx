@@ -3,7 +3,9 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "socket/socket.h"
+#ifdef DISCORD_SDK
 #include "discord/discord.h"
+#endif
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 
@@ -11,7 +13,11 @@
 extern s16 sCurrPlayMode;
 
 enum NetworkType gNetworkType = NT_NONE;
+#ifdef DISCORD_SDK
 struct NetworkSystem* gNetworkSystem = &gNetworkSystemDiscord;
+#else
+struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
+#endif
 
 #define LOADING_LEVEL_THRESHOLD 10
 u8 networkLoadingLevel = 0;
@@ -27,7 +33,9 @@ struct ServerSettings gServerSettings = {
 void network_set_system(enum NetworkSystemType nsType) {
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
+#ifdef DISCORD_SDK
         case NS_DISCORD: gNetworkSystem = &gNetworkSystemDiscord; break;
+#endif
         default: LOG_ERROR("Unknown network system: %d", nsType);
     }
 }
