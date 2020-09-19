@@ -126,12 +126,13 @@ struct Object *spawn_star(struct Object *sp30, f32 sp34, f32 sp38, f32 sp3C) {
 }
 
 struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
-    if (gSpawnedStarDefault) { return NULL; }
+    if (sCurrPlayMode != PLAY_MODE_NORMAL && sCurrPlayMode != PLAY_MODE_PAUSED) { return NULL; }
+    if (gSpawnedStarDefault == (1 + o->oBehParams)) { return NULL; }
     struct Object *star;
     u32 behParams = o->oBehParams;
     star = spawn_star(star, x, y, z);
     star->oBehParams2ndByte = 0;
-    gSpawnedStarDefault = TRUE;
+    gSpawnedStarDefault = (1 + o->oBehParams);
     network_send_spawn_star(star, 0, x, y, z, behParams);
     return star;
 }
