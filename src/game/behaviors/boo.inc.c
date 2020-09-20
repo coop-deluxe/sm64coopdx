@@ -19,8 +19,13 @@ static s16 sCourtyardBooTripletPositions[][3] = {
     {-210, 70, -210}
 };
 
+static u8 boo_ignore_update(void) {
+    return (o->oHealth == 0);
+}
+
 struct SyncObject* boo_network_init_object(void) {
     struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->ignore_if_true = boo_ignore_update;
     network_init_object_field(o, &o->oBooBaseScale);
     network_init_object_field(o, &o->oBooNegatedAggressiveness);
     network_init_object_field(o, &o->oBooOscillationTimer);
@@ -735,7 +740,7 @@ static void (*sBooGivingStarActions[])(void) = {
 };
 
 u8 big_boo_ignore_update(void) {
-    return cur_obj_has_behavior(bhvGhostHuntBigBoo) && !bigBooActivated;
+    return o->oHealth == 0 || (cur_obj_has_behavior(bhvGhostHuntBigBoo) && !bigBooActivated);
 }
 
 void bhv_big_boo_loop(void) {
@@ -744,7 +749,7 @@ void bhv_big_boo_loop(void) {
             bigBooActivated = FALSE;
             struct SyncObject* so = boo_network_init_object();
             so->syncDeathEvent = FALSE;
-            so->ignore_if_true = &big_boo_ignore_update;
+            so->ignore_if_true = big_boo_ignore_update;
         }
     } else if (o->oHealth <= 0) {
         if (network_sync_object_initialized(o)) {

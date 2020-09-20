@@ -178,8 +178,8 @@ static void cannon_on_received(void) {
 void bhv_cannon_base_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->ignore_if_true = &cannon_ignore_remote_updates;
-        so->on_received = &cannon_on_received;
+        so->ignore_if_true = cannon_ignore_remote_updates;
+        so->on_received = cannon_on_received;
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oPrevAction);
         network_init_object_field(o, &o->oTimer);
