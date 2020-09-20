@@ -859,7 +859,12 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
             starGrabAction = ACT_FALL_AFTER_STAR_GRAB;
         }
 
-        spawn_object(o, MODEL_NONE, bhvStarKeyCollectionPuffSpawner);
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            struct MarioState* marioState = &gMarioStates[i];
+            if (!is_player_active(marioState)) { continue; }
+            if (marioState->marioObj == NULL) { continue; }
+            spawn_object(marioState->marioObj, MODEL_NONE, bhvStarKeyCollectionPuffSpawner);
+        }
 
         o->oInteractStatus = INT_STATUS_INTERACTED;
         m->interactObj = o;

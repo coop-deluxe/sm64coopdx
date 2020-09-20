@@ -28,6 +28,7 @@
 #include "seq_ids.h"
 #include "sound_init.h"
 #include "thread6.h"
+#include "obj_behaviors.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/pc_main.h"
 #include "pc/network/network.h"
@@ -647,7 +648,15 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
     if (m->actionState == 0) {
         switch (++m->actionTimer) {
             case 1:
-                spawn_object(m->marioObj, MODEL_STAR, bhvCelebrationStar);
+                for (int i = 0; i < MAX_PLAYERS; i++) {
+                    struct MarioState* marioState = &gMarioStates[i];
+                    if (!is_player_active(marioState)) { continue; }
+                    if (marioState->marioObj == NULL) { continue; }
+                    struct Object* celebStar = spawn_object(marioState->marioObj, MODEL_STAR, bhvCelebrationStar);
+                    if (m != marioState && celebStar != NULL) {
+                        celebStar->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+                    }
+                }
                 disable_background_sound();
                 if (m->actionArg & 1) {
                     play_course_clear();
