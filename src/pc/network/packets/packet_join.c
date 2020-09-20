@@ -93,6 +93,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
+    network_player_connected(NPT_SERVER, 0);
     network_player_connected(NPT_LOCAL, myGlobalIndex);
 
     save_file_load_all(TRUE);
