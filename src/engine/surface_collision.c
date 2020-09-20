@@ -977,11 +977,14 @@ void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Ve
 		return;
 	}
 
+    // increase collision checking precision (normally 1)
+    f32 precision = 2;
+
     // Get cells we cross using DDA
     if (absx(dir[0]) >= absx(dir[2]))
-        step = absx(dir[0]) / CELL_SIZE;
+        step = precision * absx(dir[0]) / CELL_SIZE;
     else
-        step = absx(dir[2]) / CELL_SIZE;
+        step = precision * absx(dir[2]) / CELL_SIZE;
 
     dx = dir[0] / step / CELL_SIZE;
     dz = dir[2] / step / CELL_SIZE;
