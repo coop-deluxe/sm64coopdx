@@ -706,7 +706,7 @@ void newcam_loop(struct Camera *c) {
         newcam_tilt_acc *= 0.6f;
     }
     newcam_position_cam();
-    newcam_find_fixed();
+    //newcam_find_fixed();
     if (gMarioObject)
         newcam_apply_values(c);
     newcam_fade_target_closeup();
