@@ -325,6 +325,7 @@ void bhv_celebration_star_init(void);
 void bhv_celebration_star_loop(void);
 void bhv_celebration_star_sparkle_loop(void);
 void bhv_star_key_collection_puff_spawner_loop(void);
+void bhv_lll_drawbridge_spawner_init(void);
 void bhv_lll_drawbridge_spawner_loop(void);
 void bhv_lll_drawbridge_loop(void);
 void bhv_small_bomp_init(void);

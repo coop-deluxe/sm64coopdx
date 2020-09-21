@@ -15,12 +15,17 @@ void hexagonal_ring_spawn_flames(void) {
 }
 
 void bhv_lll_rotating_hexagonal_ring_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        so->keepRandomSeed = FALSE;
+        network_init_object_field(o, &o->oAngleVelYaw);
+    }
     UNUSED s32 unused;
     o->oCollisionDistance = 4000.0f;
     o->oDrawingDistance = 8000.0f;
     switch (o->oAction) {
         case 0:
-            if (gMarioObject->platform == o)
+            if (cur_obj_is_any_player_on_platform())
                 o->oAction++;
             o->oAngleVelYaw = 0x100;
             break;
@@ -30,7 +35,7 @@ void bhv_lll_rotating_hexagonal_ring_loop(void) {
                 o->oAction++;
             break;
         case 2:
-            if (gMarioObject->platform != o)
+            if (cur_obj_is_any_player_on_platform())
                 o->oAction++;
             if (o->oTimer > 128)
                 o->oAction++;

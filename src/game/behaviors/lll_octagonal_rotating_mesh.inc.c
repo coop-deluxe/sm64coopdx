@@ -41,7 +41,7 @@ s32 lll_octagonal_mesh_move(s16 *a0, s32 a1) {
 }
 
 s32 lll_octagonal_mesh_find_y_offset(s32 *a0, f32 *a1, s32 a2, s32 a3) {
-    if (cur_obj_is_mario_on_platform()) {
+    if (cur_obj_is_any_player_on_platform()) {
         if (a0[0] < 0x4000)
             a0[0] += a2;
         else
@@ -60,6 +60,13 @@ s32 lll_octagonal_mesh_find_y_offset(s32 *a0, f32 *a1, s32 a2, s32 a3) {
 }
 
 void bhv_lll_moving_octagonal_mesh_platform_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oHorizontalMovementUnkF8);
+        network_init_object_field(o, &o->oHorizontalMovementUnkF4);
+        network_init_object_field(o, &o->oHorizontalMovementUnk100);
+        network_init_object_field(o, &o->oForwardVel);
+    }
     if (o->oAction == 0) {
         o->oHorizontalMovementUnkF8 = 0;
         o->oAction++;

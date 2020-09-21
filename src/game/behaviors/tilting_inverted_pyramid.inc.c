@@ -81,19 +81,36 @@ void bhv_tilting_inverted_pyramid_loop(void) {
     Mat4 *transform = &o->transform;
     UNUSED s32 unused2[7];
 
-    if (gMarioObject->platform == o) {
+    f32 x = 0;
+    f32 y = 0;
+    f32 z = 0;
+    u8 playersTouched = 0;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].marioObj->platform != o) { continue; }
+        x += gMarioStates[i].marioObj->oPosX;
+        y += gMarioStates[i].marioObj->oPosY;
+        z += gMarioStates[i].marioObj->oPosZ;
+        playersTouched++;
+        if (i == 0) { marioOnPlatform = TRUE; }
+    }
+
+    if (playersTouched > 0) {
+        x /= (f32)playersTouched;
+        y /= (f32)playersTouched;
+        z /= (f32)playersTouched;
         get_mario_pos(&mx, &my, &mz);
 
-        dist[0] = gMarioObject->oPosX - o->oPosX;
-        dist[1] = gMarioObject->oPosY - o->oPosY;
-        dist[2] = gMarioObject->oPosZ - o->oPosZ;
+        dist[0] = x - o->oPosX;
+        dist[1] = y - o->oPosY;
+        dist[2] = z - o->oPosZ;
         linear_mtxf_mul_vec3f(*transform, posBeforeRotation, dist);
 
-        dx = gMarioObject->oPosX - o->oPosX;
+        dx = x - o->oPosX;
         dy = 500.0f;
-        dz = gMarioObject->oPosZ - o->oPosZ;
+        dz = z - o->oPosZ;
         d = sqrtf(dx * dx + dy * dy + dz * dz);
-    
+
         //! Always true since dy = 500, making d >= 500.
         if (d != 0.0f) {
             // Normalizing
@@ -107,8 +124,8 @@ void bhv_tilting_inverted_pyramid_loop(void) {
             dz = 0.0f;
         }
 
-        if (o->oTiltingPyramidMarioOnPlatform == TRUE)
-            marioOnPlatform++;
+        /*if (o->oTiltingPyramidMarioOnPlatform == TRUE)
+            marioOnPlatform++;*/
 
         o->oTiltingPyramidMarioOnPlatform = TRUE;
     } else {

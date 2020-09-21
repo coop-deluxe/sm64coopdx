@@ -185,12 +185,7 @@ void king_whomp_on_ground(void) {
 void whomp_on_ground(void) {
 
     if (o->oSubAction == 0) {
-        u8 anyMarioOnPlatform = FALSE;
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (!is_player_active(&gMarioStates[i])) { continue; }
-            if (gMarioStates[i].marioObj->platform == o) { anyMarioOnPlatform = TRUE; }
-        }
-        if (anyMarioOnPlatform) {
+        if (cur_obj_is_any_player_on_platform()) {
             if (cur_obj_is_mario_ground_pounding_platform()) {
                 o->oNumLootCoins = 5;
                 obj_spawn_loot_yellow_coins(o, 5, 20.0f);

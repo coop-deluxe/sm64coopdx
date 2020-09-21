@@ -117,13 +117,7 @@ static void platform_on_track_act_init(void) {
  * Wait for mario to stand on the platform for 20 frames, then begin moving.
  */
 static void platform_on_track_act_wait_for_mario(void) {
-    u8 anyMarioOnPlatform = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) { anyMarioOnPlatform = TRUE; }
-    }
-
-    if (anyMarioOnPlatform) {
+    if (cur_obj_is_any_player_on_platform()) {
         if (o->oTimer > 20) {
             o->oAction = PLATFORM_ON_TRACK_ACT_MOVE_ALONG_TRACK;
             if (network_owns_object(o)) { network_send_object(o); }
@@ -223,13 +217,7 @@ static void platform_on_track_act_move_along_track(void) {
         }
     }
 
-    u8 anyMarioOnPlatform = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) { anyMarioOnPlatform = TRUE; }
-    }
-
-    if (!anyMarioOnPlatform) {
+    if (!cur_obj_is_any_player_on_platform()) {
         platform_on_track_mario_not_on_platform();
     } else {
         o->oTimer = 0;
@@ -253,13 +241,7 @@ static void platform_on_track_act_pause_briefly(void) {
 static void platform_on_track_act_fall(void) {
     cur_obj_move_using_vel_and_gravity();
 
-    u8 anyMarioOnPlatform = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) { anyMarioOnPlatform = TRUE; }
-    }
-
-    if (!anyMarioOnPlatform) {
+    if (!cur_obj_is_any_player_on_platform()) {
         platform_on_track_mario_not_on_platform();
     } else {
         o->oTimer = 0;
@@ -324,16 +306,10 @@ void bhv_platform_on_track_update(void) {
             break;
     }
 
-    u8 anyMarioOnPlatform = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) { anyMarioOnPlatform = TRUE; }
-    }
-
     if (!o->oPlatformOnTrackIsNotSkiLift) {
         platform_on_track_rock_ski_lift();
     } else if (o->oPlatformOnTrackType == PLATFORM_ON_TRACK_TYPE_CARPET) {
-        if (!o->oPlatformOnTrackWasStoodOn && anyMarioOnPlatform) {
+        if (!o->oPlatformOnTrackWasStoodOn && cur_obj_is_any_player_on_platform()) {
             o->oPlatformOnTrackOffsetY = -8.0f;
             o->oPlatformOnTrackWasStoodOn = TRUE;
         }

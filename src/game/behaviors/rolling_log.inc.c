@@ -6,6 +6,16 @@
 // hypothesis is that the object in the middle here used to be
 // a rolling log of another variation.
 
+static void bhv_rolling_log_network_init(void) {
+    network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oAngleVelPitch);
+    network_init_object_field(o, &o->oFaceAnglePitch);
+    network_init_object_field(o, &o->oMoveAnglePitch);
+    network_init_object_field(o, &o->oPitouneUnkF4);
+    network_init_object_field(o, &o->oPitouneUnkF8);
+    network_init_object_field(o, &o->oPitouneUnkFC);
+}
+
 void bhv_ttm_rolling_log_init(void) {
     o->oPitouneUnkF8 = 3970.0f;
     o->oPitouneUnkFC = 3654.0f;
@@ -16,14 +26,32 @@ void bhv_ttm_rolling_log_init(void) {
     o->oVelZ = 0;
     o->oFaceAnglePitch = 0;
     o->oAngleVelPitch = 0;
+    bhv_rolling_log_network_init();
 }
 
 void rolling_log_roll_log(void) {
     f32 sp24;
 
-    if (gMarioObject->platform == o) {
-        sp24 = (gMarioObject->header.gfx.pos[2] - o->oPosZ) * coss(-1*o->oMoveAngleYaw)
-               - (gMarioObject->header.gfx.pos[0] - o->oPosX) * sins(-1*o->oMoveAngleYaw);
+    f32 x = 0;
+    f32 y = 0;
+    f32 z = 0;
+    u8 playersTouched = 0;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].marioObj->platform != o) { continue; }
+        x += gMarioObject->header.gfx.pos[0];
+        y += gMarioObject->header.gfx.pos[1];
+        z += gMarioObject->header.gfx.pos[2];
+        playersTouched++;
+        if (i == 0) { marioOnPlatform = TRUE; }
+    }
+
+    if (playersTouched > 0) {
+        x /= (f32)playersTouched;
+        y /= (f32)playersTouched;
+        z /= (f32)playersTouched;
+
+        sp24 = (z - o->oPosZ) * coss(-1*o->oMoveAngleYaw) - (x - o->oPosX) * sins(-1*o->oMoveAngleYaw);
         if (sp24 > 0)
             o->oAngleVelPitch += 0x10;
         else
@@ -112,6 +140,13 @@ void volcano_act_3(void) {
 }
 
 void bhv_volcano_trap_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oRollingLogUnkF4);
+        network_init_object_field(o, &o->oAngleVelPitch);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+    }
+
     switch (o->oAction) {
         case 0:
             if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1000)) {
@@ -151,4 +186,5 @@ void bhv_lll_rolling_log_init(void) {
     o->oVelZ = 0;
     o->oFaceAnglePitch = 0;
     o->oAngleVelPitch = 0;
+    bhv_rolling_log_network_init();
 }

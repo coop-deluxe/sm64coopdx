@@ -61,6 +61,10 @@ void (*sRotatingCwFireBarsActions[])(void) = { fire_bar_act_0, fire_bar_act_1,
                                                fire_bar_act_2, fire_bar_act_3 };
 
 void bhv_lll_rotating_block_fire_bars_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oAngleVelYaw);
+    }
     cur_obj_call_action_function(sRotatingCwFireBarsActions);
     if (o->oBehParams2ndByte == 0)
         load_object_collision_model();

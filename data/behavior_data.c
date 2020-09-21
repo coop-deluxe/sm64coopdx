@@ -4603,6 +4603,7 @@ const BehaviorScript bhvLllDrawbridgeSpawner[] = {
     BEGIN(OBJ_LIST_DEFAULT),
     ID(id_bhvLllDrawbridgeSpawner),
     HIDE(),
+    CALL_NATIVE(bhv_lll_drawbridge_spawner_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_lll_drawbridge_spawner_loop),
     END_LOOP(),
