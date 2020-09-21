@@ -1220,7 +1220,6 @@ const BehaviorScript bhvTumblingBridgePlatform[] = {
     SET_FLOAT(oCollisionDistance, 300),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_tumbling_bridge_platform_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 

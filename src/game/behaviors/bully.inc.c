@@ -24,6 +24,23 @@ static struct ObjectHitbox sBigBullyHitbox = {
     /* hurtboxHeight:     */ 225,
 };
 
+static u8 bhv_bully_ignore_if_true(void) {
+    return (o->oAction == BULLY_ACT_LAVA_DEATH) || (o->oAction == BULLY_ACT_DEATH_PLANE_DEATH);
+}
+
+static void bhv_bully_network_init(void) {
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oFlags);
+    network_init_object_field(o, &o->oBullyKBTimerAndMinionKOCounter);
+    network_init_object_field(o, &o->oForwardVel);
+    network_init_object_field(o, &o->oBullyPrevX);
+    network_init_object_field(o, &o->oBullyPrevY);
+    network_init_object_field(o, &o->oBullyPrevZ);
+    network_init_object_field(o, &o->oBullyMarioCollisionAngle);
+    so->syncDeathEvent = FALSE;
+    so->ignore_if_true = bhv_bully_ignore_if_true;
+}
+
 void bhv_small_bully_init(void) {
     cur_obj_init_animation(0);
 
@@ -35,6 +52,7 @@ void bhv_small_bully_init(void) {
     o->oBuoyancy = 1.3;
 
     obj_set_hitbox(o, &sSmallBullyHitbox);
+    bhv_bully_network_init();
 }
 
 void bhv_big_bully_init(void) {
@@ -49,6 +67,11 @@ void bhv_big_bully_init(void) {
     o->oBuoyancy = 1.3;
 
     obj_set_hitbox(o, &sBigBullyHitbox);
+    bhv_bully_network_init();
+
+    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvLllTumblingBridge, 0, 154, -5631, 0, 0, 0);
+    struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
+    if (lllTumblingBridge != NULL) { lllTumblingBridge->oIntangibleTimer = -1; }
 }
 
 void bully_check_mario_collision(void) {
@@ -71,9 +94,11 @@ void bully_act_chase_mario(void) {
     f32 posY = o->oPosY;
     f32 homeZ = o->oHomeZ;
 
+    struct Object* player = nearest_player_to_object(o);
+
     if (o->oTimer < 10) {
         o->oForwardVel = 3.0;
-        obj_turn_toward_object(o, gMarioObject, 16, 4096);
+        obj_turn_toward_object(o, player, 16, 4096);
     } else if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL) {
         o->oForwardVel = 20.0;
         if (o->oTimer >= 31)
@@ -91,12 +116,13 @@ void bully_act_chase_mario(void) {
 }
 
 void bully_act_knockback(void) {
+    struct Object* player = nearest_player_to_object(o);
     if (o->oForwardVel < 10.0 && (s32) o->oVelY == 0) {
         o->oForwardVel = 1.0;
         o->oBullyKBTimerAndMinionKOCounter++;
         o->oFlags |= 0x8; /* bit 3 */
         o->oMoveAngleYaw = o->oFaceAngleYaw;
-        obj_turn_toward_object(o, gMarioObject, 16, 1280);
+        obj_turn_toward_object(o, player, 16, 1280);
     } else
         o->header.gfx.unk38.animFrame = 0;
 
@@ -204,8 +230,8 @@ void bully_act_level_death(void) {
                 spawn_default_star(130.0f, 1600.0f, -4335.0f);
             else {
                 spawn_default_star(0, 950.0f, -6800.0f);
-                spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvLllTumblingBridge, 0, 154, -5631, 0, 0,
-                                          0);
+                struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
+                if (lllTumblingBridge != NULL) { lllTumblingBridge->oIntangibleTimer = 0; }
             }
         }
     }
@@ -283,6 +309,7 @@ void bhv_big_bully_with_minions_init(void) {
     cur_obj_become_intangible();
 
     o->oAction = BULLY_ACT_INACTIVE;
+    bhv_bully_network_init();
 }
 
 void big_bully_spawn_star(void) {

@@ -1208,7 +1208,9 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
+#ifndef DEVELOPMENT
             play_mode_normal();
+#endif
             changeLevel = play_mode_paused();
             break;
         case PLAY_MODE_CHANGE_AREA:

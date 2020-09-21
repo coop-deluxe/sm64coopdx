@@ -13,6 +13,15 @@ struct Struct8032F34C sTumblingBridgeParams[] = {
 };
 
 void bhv_tumbling_bridge_platform_loop(void) {
+    if (o->parentObj != NULL && gCurrCourseNum == COURSE_LLL) {
+        if (o->parentObj->oIntangibleTimer == -1) {
+            cur_obj_hide();
+            o->oIntangibleTimer = o->parentObj->oIntangibleTimer;
+        } else {
+            cur_obj_unhide();
+            o->oIntangibleTimer = o->parentObj->oIntangibleTimer;
+        }
+    }
     switch (o->oAction) {
         case 0:
             if ((o->oInteractStatus & INT_STATUS_INTERACTED) || gMarioStates[0].marioObj->platform == o) {
@@ -47,6 +56,12 @@ void bhv_tumbling_bridge_platform_loop(void) {
     }
     if (o->parentObj->oAction == 3)
         obj_mark_for_deletion(o);
+
+    if (o->parentObj != NULL && o->parentObj->oIntangibleTimer != -1) {
+        load_object_collision_model();
+    } else if (gCurrCourseNum != COURSE_LLL) {
+        load_object_collision_model();
+    }
 }
 
 void tumbling_bridge_act_1(void) {
