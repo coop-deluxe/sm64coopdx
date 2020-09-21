@@ -35,6 +35,7 @@ void rolling_log_roll_log(void) {
     f32 x = 0;
     f32 y = 0;
     f32 z = 0;
+
     u8 playersTouched = 0;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -43,7 +44,6 @@ void rolling_log_roll_log(void) {
         y += gMarioObject->header.gfx.pos[1];
         z += gMarioObject->header.gfx.pos[2];
         playersTouched++;
-        if (i == 0) { marioOnPlatform = TRUE; }
     }
 
     if (playersTouched > 0) {
