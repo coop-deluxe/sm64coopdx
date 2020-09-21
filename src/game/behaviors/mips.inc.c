@@ -2,6 +2,18 @@
  * Behavior for MIPS (everyone's favorite yellow rabbit).
  */
 
+static u32 mipsPrevHeldState = 0;
+
+static void bhv_mips_on_received_pre(void) {
+    mipsPrevHeldState = o->oHeldState;
+}
+
+static void bhv_mips_on_received_post(void) {
+    if (mipsPrevHeldState == HELD_HELD && o->oHeldState == HELD_FREE) {
+        cur_obj_init_animation(0);
+    }
+}
+
 /**
  * Initializes MIPS' physics parameters and checks if he should be active,
  * hiding him if necessary.
@@ -41,6 +53,17 @@ void bhv_mips_init(void) {
     o->oBuoyancy = 1.2f;
 
     cur_obj_init_animation(0);
+
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oMipsStartWaypointIndex);
+    network_init_object_field(o, &o->oForwardVel);
+    network_init_object_field(o, &o->oMipsStarStatus);
+    network_init_object_field(o, &o->oBehParams2ndByte);
+    network_init_object_field(o, &o->oHeldState);
+    network_init_object_field(o, &o->oFlags);
+    network_init_object_field(o, &o->oIntangibleTimer);
+    so->on_received_pre = bhv_mips_on_received_pre;
+    so->on_received_post = bhv_mips_on_received_post;
 }
 
 /**
@@ -58,6 +81,8 @@ s16 bhv_mips_find_furthest_waypoint_to_mario(void) {
 
     pathBase = segmented_to_virtual(&inside_castle_seg7_trajectory_mips);
 
+    struct Object* player = nearest_player_to_object(o);
+
     // For each waypoint in MIPS path...
     for (i = 0; i < 10; i++) {
         waypoint = segmented_to_virtual(*(pathBase + i));
@@ -68,8 +93,7 @@ s16 bhv_mips_find_furthest_waypoint_to_mario(void) {
         // Is the waypoint within 800 units of MIPS?
         if (is_point_close_to_object(o, x, y, z, 800)) {
             // Is this further from Mario than the last waypoint?
-            distanceToMario =
-                sqr(x - gMarioObject->header.gfx.pos[0]) + sqr(z - gMarioObject->header.gfx.pos[2]);
+            distanceToMario = sqr(x - player->header.gfx.pos[0]) + sqr(z - player->header.gfx.pos[2]);
             if (furthestWaypointDistance < distanceToMario) {
                 furthestWaypointIndex = i;
                 furthestWaypointDistance = distanceToMario;
@@ -221,7 +245,7 @@ void bhv_mips_free(void) {
 }
 
 static u8 bhv_mips_held_continue_dialog(void) {
-    return (o->oHeldState == HELD_HELD && o->oMipsStarStatus == MIPS_STAR_STATUS_HAVENT_SPAWNED_STAR);
+    return (o->heldByPlayerIndex == 0 && o->oHeldState == HELD_HELD && o->oMipsStarStatus == MIPS_STAR_STATUS_HAVENT_SPAWNED_STAR);
 }
 
 /**
@@ -230,9 +254,11 @@ static u8 bhv_mips_held_continue_dialog(void) {
 void bhv_mips_held(void) {
     s16 dialogID;
 
+    struct Object* player = gMarioStates[o->heldByPlayerIndex].marioObj;
+
     o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
     cur_obj_init_animation(4); // Held animation.
-    cur_obj_set_pos_relative(gMarioObject, 0, 60.0f, 100.0f);
+    cur_obj_set_pos_relative(player, 0, 60.0f, 100.0f);
     cur_obj_become_intangible();
 
     // If MIPS hasn't spawned his star yet...
@@ -243,7 +269,7 @@ void bhv_mips_held(void) {
         else
             dialogID = DIALOG_162;
 
-        if (set_mario_npc_dialog(&gMarioStates[0], 1, bhv_mips_held_continue_dialog) == 2) {
+        if (o->heldByPlayerIndex == 0 && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_mips_held_continue_dialog) == 2) {
             //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
             if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, dialogID)) {
                 o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
@@ -266,6 +292,9 @@ void bhv_mips_dropped(void) {
     cur_obj_become_tangible();
     o->oForwardVel = 3.0f;
     o->oAction = MIPS_ACT_IDLE;
+    if (network_owns_object(o)) {
+        network_send_object(o);
+    }
 }
 
 /**
@@ -281,6 +310,9 @@ void bhv_mips_thrown(void) {
     o->oForwardVel = 25.0f;
     o->oVelY = 20.0f;
     o->oAction = MIPS_ACT_FALL_DOWN;
+    if (network_owns_object(o)) {
+        network_send_object(o);
+    }
 }
 
 /**

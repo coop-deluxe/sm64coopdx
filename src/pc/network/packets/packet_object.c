@@ -55,7 +55,8 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->hasStandardFields = (maxSyncDistance >= 0);
     so->maxUpdateRate = 0;
     so->ignore_if_true = NULL;
-    so->on_received = NULL;
+    so->on_received_pre = NULL;
+    so->on_received_post = NULL;
     so->syncDeathEvent = true;
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
@@ -370,6 +371,15 @@ void network_receive_object(struct Packet* p) {
         if (gMarioStates[0].heldObj == o) { return; }
     }
 
+    // trigger on-received callback
+    if (so->on_received_pre != NULL) {
+        extern struct Object* gCurrentObject;
+        struct Object* tmp = gCurrentObject;
+        gCurrentObject = so->o;
+        (*so->on_received_pre)();
+        gCurrentObject = tmp;
+    }
+
     // read the rest of the packet data
     packet_read_object_full_sync(p, o);
     packet_read_object_standard_fields(p, o);
@@ -382,11 +392,11 @@ void network_receive_object(struct Packet* p) {
     }
 
     // trigger on-received callback
-    if (so->on_received != NULL) {
+    if (so->on_received_post != NULL) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
-        (*so->on_received)();
+        (*so->on_received_post)();
         gCurrentObject = tmp;
     }
 }
