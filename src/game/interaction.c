@@ -1131,6 +1131,11 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
             text += requiredNumStars - numStars;
 
             if (display_door_dialog(m, text)) {
+                if (requiredNumStars == 70) {
+                    m->interactObj = o;
+                    m->usedObj = o;
+                    set_mario_action(m, ACT_ENTERING_STAR_DOOR, should_push_or_pull_door(m, o));
+                }
                 sDisplayingDoorText = TRUE;
                 return TRUE;
             }
