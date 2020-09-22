@@ -138,7 +138,8 @@ extern struct Area *gCurrentArea;
 extern s16 gCurrSaveFileNum;
 extern s16 gCurrLevelNum;
 
-extern u8 gSpawnedStarDefault;
+extern u32 gSpawnedStarDefault[];
+extern u8 gSpawnedStarDefaultCount;
 extern u8 gSpawnedStarRedCoin;
 extern u8 gSpawnedStarHidden;
 

@@ -54,7 +54,8 @@ u8 gWarpTransBlue = 0;
 s16 gCurrSaveFileNum = 1;
 s16 gCurrLevelNum = LEVEL_MIN;
 
-u8 gSpawnedStarDefault = 0;
+u32 gSpawnedStarDefault[8] = { 0 };
+u8 gSpawnedStarDefaultCount = 0;
 u8 gSpawnedStarRedCoin = 0;
 u8 gSpawnedStarHidden = 0;
 

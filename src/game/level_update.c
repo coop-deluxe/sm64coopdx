@@ -1246,7 +1246,10 @@ s32 init_level(void) {
     sTransitionTimer = 0;
     D_80339EE0 = 0;
 
-    gSpawnedStarDefault = 0;
+    for (int i = 0; i < 8; i++) {
+        gSpawnedStarDefault[i] = 0;
+    }
+    gSpawnedStarDefaultCount = 0;
     gSpawnedStarRedCoin = 0;
     gSpawnedStarHidden = 0;
 
