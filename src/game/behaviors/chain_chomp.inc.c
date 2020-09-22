@@ -452,6 +452,9 @@ static void chain_chomp_act_move(void) {
 #ifndef NODRAWINGDISTANCE
     }
 #endif
+    if (o->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
+        cur_obj_become_intangible();
+    }
 }
 
 /**
