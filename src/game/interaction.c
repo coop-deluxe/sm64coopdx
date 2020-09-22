@@ -543,7 +543,7 @@ void bounce_off_object(struct MarioState *m, struct Object *o, f32 velY) {
 
 void hit_object_from_below(struct MarioState *m, UNUSED struct Object *o) {
     m->vel[1] = 0.0f;
-    set_camera_shake_from_hit(SHAKE_HIT_FROM_BELOW);
+    if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_HIT_FROM_BELOW); }
 }
 
 static u32 unused_determine_knockback_action(struct MarioState *m) {
@@ -700,7 +700,7 @@ void bounce_back_from_attack(struct MarioState *m, u32 interaction) {
             mario_set_forward_vel(m, -48.0f);
         }
 
-        set_camera_shake_from_hit(SHAKE_ATTACK);
+        if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_ATTACK); }
         m->particleFlags |= PARTICLE_TRIANGLE;
     }
 
@@ -749,7 +749,7 @@ u32 take_damage_from_interact_object(struct MarioState *m) {
     m->hurtCounter += 4 * damage;
 
     queue_rumble_data_mario(m, 5, 80);
-    set_camera_shake_from_hit(shake);
+    if (m->playerIndex == 0) { set_camera_shake_from_hit(shake); }
     return damage;
 }
 
