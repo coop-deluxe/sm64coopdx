@@ -61,7 +61,6 @@ void bhv_mips_init(void) {
     network_init_object_field(o, &o->oBehParams2ndByte);
     network_init_object_field(o, &o->oHeldState);
     network_init_object_field(o, &o->oFlags);
-    network_init_object_field(o, &o->oIntangibleTimer);
     so->on_received_pre = bhv_mips_on_received_pre;
     so->on_received_post = bhv_mips_on_received_post;
 }

@@ -222,6 +222,7 @@ static void packet_write_object_standard_fields(struct Packet* p, struct Object*
     packet_write(p, &o->oTimer, sizeof(u32));
     packet_write(p, &o->activeFlags, sizeof(s16));
     packet_write(p, &o->header.gfx.node.flags, sizeof(s16));
+    packet_write(p, &o->oIntangibleTimer, sizeof(s32));
 }
 
 static void packet_read_object_standard_fields(struct Packet* p, struct Object* o) {
@@ -242,6 +243,7 @@ static void packet_read_object_standard_fields(struct Packet* p, struct Object* 
     packet_read(p, &o->oTimer, sizeof(u32));
     packet_read(p, &o->activeFlags, sizeof(u16));
     packet_read(p, &o->header.gfx.node.flags, sizeof(s16));
+    packet_read(p, &o->oIntangibleTimer, sizeof(s32));
 }
 
 // ----- extra fields ----- //

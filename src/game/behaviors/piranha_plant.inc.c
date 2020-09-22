@@ -238,7 +238,6 @@ void piranha_plant_act_respawn(void) {
     } else {
         o->oPiranhaPlantScale = 1.0f;
         o->oAction = PIRANHA_PLANT_ACT_IDLE;
-        if (network_owns_object(o)) { network_send_object(o); }
     }
     cur_obj_scale(o->oPiranhaPlantScale);
 }
@@ -283,7 +282,6 @@ void piranha_plant_act_biting(void) {
     if (distanceToPlayer > 500.0f) {
         if (cur_obj_check_if_near_animation_end()) {
             o->oAction = PIRANHA_PLANT_ACT_STOPPED_BITING;
-            if (network_owns_object(o)) { network_send_object(o); }
         }
     }
 
@@ -292,7 +290,6 @@ void piranha_plant_act_biting(void) {
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         if (marioState->flags & MARIO_METAL_CAP) {
             o->oAction = PIRANHA_PLANT_ACT_ATTACKED;
-            if (network_owns_object(o)) { network_send_object(o); }
         }
     }
 }
@@ -323,7 +320,6 @@ void piranha_plant_act_stopped_biting(void) {
 
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = PIRANHA_PLANT_ACT_SLEEPING;
-        if (network_owns_object(o)) { network_send_object(o); }
     }
 
     /**
@@ -336,7 +332,6 @@ void piranha_plant_act_stopped_biting(void) {
     if (o->oDistanceToMario < 400.0f) {
         if (mario_moving_fast_enough_to_make_piranha_plant_bite()) {
             o->oAction = PIRANHA_PLANT_ACT_BITING;
-            if (network_owns_object(o)) { network_send_object(o); }
         }
     }
 }
@@ -361,7 +356,7 @@ void (*TablePiranhaPlantActions[])(void) = {
  */
 void bhv_piranha_plant_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object(o, 2000.0f);
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oInteractStatus);
         network_init_object_field(o, &o->oInteractType);
