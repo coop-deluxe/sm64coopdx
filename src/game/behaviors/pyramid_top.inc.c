@@ -90,12 +90,24 @@ void bhv_pyramid_top_explode(void) {
     o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }
 
+static u8 bhv_pyramid_top_ignore_if_true(void) {
+    return (o->oAction != PYRAMID_TOP_ACT_SPINNING);
+}
+
 void bhv_pyramid_top_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->ignore_if_true = bhv_pyramid_top_ignore_if_true;
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+    }
     switch (o->oAction) {
         case PYRAMID_TOP_ACT_CHECK_IF_SOLVED:
             if (o->oPyramidTopPillarsTouched == 4) {
                 play_puzzle_jingle();
                 o->oAction = PYRAMID_TOP_ACT_SPINNING;
+                network_send_object(o);
             }
             break;
 
@@ -147,9 +159,12 @@ void bhv_pyramid_top_fragment_loop(void) {
  */
 void bhv_pyramid_pillar_touch_detector_loop(void) {
     cur_obj_become_tangible();
-    if (obj_check_if_collided_with_object(o, gMarioObject) == 1) {
+    if ((o->oInteractStatus & INT_STATUS_INTERACTED) || obj_check_if_collided_with_object(o, gMarioStates[0].marioObj) == 1) {
         // Increase the pyramid top's count of pillars touched.
         o->parentObj->oPyramidTopPillarsTouched++;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        if (!(o->oInteractStatus & INT_STATUS_INTERACTED)) {
+            network_send_collect_item(o);
+        }
     }
 }
