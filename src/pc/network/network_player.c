@@ -14,6 +14,14 @@ bool network_player_any_connected(void) {
     return false;
 }
 
+u8 network_player_connected_count(void) {
+    u8 count = 0;
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        if (gNetworkPlayers[i].connected) { count++; }
+    }
+    return count;
+}
+
 void network_player_update(void) {
     float elapsed = (clock() - gLastNetworkSend) / (float)CLOCKS_PER_SEC;
     if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {

@@ -151,7 +151,7 @@ u8 cannon_ignore_remote_updates(void) {
     return ((gNetworkType == NT_SERVER) && o->oCannonIsLocal);
 }
 
-static void cannon_on_received_pos(void) {
+static void cannon_on_received_pos(u8 fromLocalIndex) {
     // check if we're on in the cannon too
     struct MarioState* m = &gMarioStates[0];
     if (m->action != ACT_IN_CANNON) { return; }

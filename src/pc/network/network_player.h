@@ -29,6 +29,7 @@ extern struct NetworkPlayer* gNetworkPlayerLocal;
 extern struct NetworkPlayer* gNetworkPlayerServer;
 
 bool network_player_any_connected(void);
+u8 network_player_connected_count(void);
 void network_player_update(void);
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex);
 u8 network_player_disconnected(u8 globalIndex);

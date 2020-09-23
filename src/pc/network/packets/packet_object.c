@@ -378,7 +378,7 @@ void network_receive_object(struct Packet* p) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
-        (*so->on_received_pre)();
+        (*so->on_received_pre)(p->localIndex);
         gCurrentObject = tmp;
     }
 
@@ -398,7 +398,7 @@ void network_receive_object(struct Packet* p) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
-        (*so->on_received_post)();
+        (*so->on_received_post)(p->localIndex);
         gCurrentObject = tmp;
     }
 }

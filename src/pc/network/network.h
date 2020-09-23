@@ -52,8 +52,8 @@ struct SyncObject {
     bool hasStandardFields;
     float maxUpdateRate;
     u8 (*ignore_if_true)(void);
-    void (*on_received_pre)(void);
-    void (*on_received_post)(void);
+    void (*on_received_pre)(u8 fromLocalIndex);
+    void (*on_received_post)(u8 fromLocalIndex);
     void* extraFields[MAX_SYNC_OBJECT_FIELDS];
 };
 

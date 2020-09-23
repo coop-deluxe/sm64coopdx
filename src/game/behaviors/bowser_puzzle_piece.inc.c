@@ -114,19 +114,87 @@ void bhv_lll_bowser_puzzle_spawn_pieces(f32 pieceWidth) {
     o->oAction++;
 }
 
+static u8 bowserPuzzleTimer = 0;
+static u8 bowserPuzzleOnAction = 0;
+static u8 bowserPuzzleServerAction = 0;
+static u32 bowserPuzzleTxRxAction = 0;
+static u8 bowserPuzzleRx[MAX_PLAYERS] = { 0 };
+
+static void bhv_lll_bowser_puzzle_networking_received(u8 fromLocalIndex) {
+    if (gNetworkType == NT_CLIENT) {
+        if (bowserPuzzleTxRxAction != (u8)(bowserPuzzleOnAction + 1)) { return; }
+        bowserPuzzleServerAction = bowserPuzzleTxRxAction;
+        return;
+    }
+    if (bowserPuzzleTxRxAction != bowserPuzzleOnAction) { return; }
+    bowserPuzzleRx[fromLocalIndex] = bowserPuzzleTxRxAction;
+}
+
+static void bhv_lll_bowser_puzzle_networking(void) {
+    if (!network_sync_object_initialized(o)) {
+        bowserPuzzleTimer = 0;
+        bowserPuzzleOnAction = 0;
+        bowserPuzzleServerAction = 0;
+        bowserPuzzleTxRxAction = 0;
+        for (int i = 0; i < MAX_PLAYERS; i++) { bowserPuzzleRx[i] = 0; }
+
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &bowserPuzzleTxRxAction);
+        so->on_received_post = bhv_lll_bowser_puzzle_networking_received;
+    }
+
+    if (bowserPuzzleTimer < 24) {
+        bowserPuzzleTimer++;
+        return;
+    }
+
+    if (gNetworkType == NT_SERVER) {
+        if (bowserPuzzleTimer == 24) {
+            bowserPuzzleTimer++;
+            bowserPuzzleOnAction++;
+            bowserPuzzleTxRxAction = bowserPuzzleOnAction;
+            network_send_object(o);
+            return;
+        }
+
+        for (int i = 1; i < MAX_PLAYERS; i++) {
+            if (gNetworkPlayers[i].connected && bowserPuzzleRx[i] != bowserPuzzleOnAction) { return; }
+        }
+
+        // received from all, continue
+        bowserPuzzleTimer = 0;
+        return;
+    }
+
+    if (gNetworkType == NT_CLIENT) {
+        if (bowserPuzzleServerAction == (u8)(bowserPuzzleOnAction + 1)) {
+            bowserPuzzleOnAction++;
+            bowserPuzzleTimer = 0;
+            bowserPuzzleTxRxAction = bowserPuzzleServerAction;
+            network_send_object(o);
+        }
+        return;
+    }
+}
+
 /*
  * Does the initial spawn of the puzzle pieces and then waits to spawn 5 coins.
  */
 void bhv_lll_bowser_puzzle_loop(void) {
     s32 i;
     UNUSED struct Object *sp28;
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+
+    bhv_lll_bowser_puzzle_networking();
+
     switch (o->oAction) {
         case BOWSER_PUZZLE_ACT_SPAWN_PIECES:
             bhv_lll_bowser_puzzle_spawn_pieces(480.0f);
             break;
         case BOWSER_PUZZLE_ACT_WAIT_FOR_COMPLETE:
             // If both completion flags are set and Mario is within 1000 units...
-            if (o->oBowserPuzzleCompletionFlags == 3 && o->oDistanceToMario < 1000.0f) {
+            if (o->oBowserPuzzleCompletionFlags == 3 && distanceToPlayer < 1000.0f) {
                 // Spawn 5 coins.
                 for (i = 0; i < 5; i++)
                     sp28 = spawn_object(o, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned);
@@ -164,11 +232,17 @@ void bhv_lll_bowser_puzzle_piece_update(void) {
     s8 *nextAction = o->oBowserPuzzlePieceNextAction;
 
     // If Mario is standing on this puzzle piece, set a flag in the parent.
-    if (gMarioObject->platform == o)
+    if (cur_obj_is_any_player_on_platform())
         o->parentObj->oBowserPuzzleCompletionFlags = 1;
 
     // If we should advance to the next action...
     if (o->oBowserPuzzlePieceContinuePerformingAction == 0) {
+        // if we haven't received an event from everyone, do not continue execution
+        if (bowserPuzzleTimer >= 24) {
+            cur_obj_change_action(0);
+            return;
+        }
+
         // Start doing the next action.
         cur_obj_change_action(*nextAction);
 
