@@ -374,7 +374,7 @@ void network_receive_object(struct Packet* p) {
     }
 
     // trigger on-received callback
-    if (so->on_received_pre != NULL) {
+    if (so->on_received_pre != NULL && so->o != NULL) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
@@ -394,7 +394,7 @@ void network_receive_object(struct Packet* p) {
     }
 
     // trigger on-received callback
-    if (so->on_received_post != NULL) {
+    if (so->on_received_post != NULL && so->o != NULL) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
