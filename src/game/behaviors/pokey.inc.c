@@ -45,6 +45,11 @@ void bhv_pokey_body_part_update(void) {
     s16 offsetAngle;
     f32 baseHeight;
 
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvPokey || o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
+        obj_mark_for_deletion(o);
+        return;
+    }
+
     if (obj_update_standard_actions(3.0f)) {
         if (o->parentObj->oAction == POKEY_ACT_UNLOAD_PARTS) {
             obj_mark_for_deletion(o);
