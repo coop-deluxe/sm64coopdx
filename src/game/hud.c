@@ -288,6 +288,50 @@ void render_hud_power_meter(void) {
 #define HUD_TOP_Y 209
 #endif
 
+static u8 unsupportedR = 255;
+static s16 unsupportedX = 100;
+static s16 unsupportedY = 1;
+
+void render_hud_unsupported_level(void) {
+    // do not display for supported levels
+    switch (gCurrCourseNum) {
+        case COURSE_NONE:     // (0) Course Hub (Castle Grounds)
+        case COURSE_BOB:      // (1) Bob Omb Battlefield
+        case COURSE_WF:       // (2) Whomp's Fortress
+        case COURSE_JRB:      // (3) Jolly Rodger's Bay
+        case COURSE_CCM:      // (4) Cool Cool Mountain
+        case COURSE_BBH:      // (5) Big Boo's Haunt
+        //case COURSE_HMC:      // (6) Hazy Maze Cave
+        case COURSE_LLL:      // (7) Lethal Lava Land
+        //case COURSE_SSL:      // (8) Shifting Sand Land
+        //case COURSE_DDD:      // (9) Dire Dire Docks
+        //case COURSE_SL:       // (10) Snowman's Land
+        //case COURSE_WDW:      // (11) Wet Dry World
+        //case COURSE_TTM:      // (12) Tall Tall Mountain
+        //case COURSE_THI:      // (13) Tiny Huge Island
+        //case COURSE_TTC:      // (14) Tick Tock Clock
+        //case COURSE_RR:       // (15) Rainbow Ride
+        case COURSE_BITDW:    // (16) Bowser in the Dark World
+        //case COURSE_BITFS:    // (17) Bowser in the Fire Sea
+        //case COURSE_BITS:     // (18) Bowser in the Sky
+        case COURSE_PSS:      // (19) Princess's Secret Slide
+        //case COURSE_COTMC:    // (20) Cavern of the Metal Cap
+        case COURSE_TOTWC:    // (21) Tower of the Wing Cap
+        case COURSE_VCUTM:    // (22) Vanish Cap Under the Moat
+        case COURSE_WMOTR:    // (23) Winged Mario over the Rainbow
+        case COURSE_SA:       // (24) Secret Aquarium
+        //case COURSE_CAKE_END: // (25) The End (Cake Scene)
+            return;
+    }
+
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+    u8 r = ((gGlobalTimer % 24) >= 12) ? unsupportedR : 0;
+    u8 a = ((gGlobalTimer % 24) >= 12) ? 200 : 170;
+    gDPSetEnvColor(gDisplayListHead++, r, 0, 0, a);
+    print_generic_ascii_string(GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(unsupportedX), unsupportedY, "unsupported level");
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+}
+
 /**
  * Renders the amount of lives Mario has.
  */
@@ -516,5 +560,7 @@ void render_hud(void) {
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && configHUD) {
             render_hud_timer();
         }
+
+        render_hud_unsupported_level();
     }
 }

@@ -59,6 +59,7 @@
         assert(DISCORD_REQUIRE_RC != DiscordResult_InvalidGiftCode);                 \
         assert(DISCORD_REQUIRE_RC != DiscordResult_PurchaseError);                   \
         assert(DISCORD_REQUIRE_RC != DiscordResult_TransactionAborted);              \
+        assert(DISCORD_REQUIRE_RC == DiscordResult_Ok);                              \
     }                                                                                \
 }
 
