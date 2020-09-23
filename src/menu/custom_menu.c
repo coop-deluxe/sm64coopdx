@@ -35,27 +35,37 @@ static void menu_main_draw_strings(void) {
 }
 
 static void host_menu_draw_strings(void) {
+    #ifdef DISCORD_SDK
+        #define HOST_MENU_MAX_ITEMS 4
+    #else
+        #define HOST_MENU_MAX_ITEMS 3
+    #endif
+
     // set up server setting strings
-    char* buttonText[4];
-    buttonText[0] = (configNetworkSystem == 0) ? "Host through Discord." : "Host direct connection.";
+    char* buttonText[HOST_MENU_MAX_ITEMS];
+
     switch (configPlayerInteraction) {
-        case 0:  buttonText[1] = "Non-solid players."; break;
-        case 1:  buttonText[1] = "Solid players.";     break;
-        case 2:  buttonText[1] = "Friendly fire.";     break;
-        default: buttonText[1] = "UNKNOWN";            break;
+        case 0:  buttonText[0] = "Non-solid players."; break;
+        case 1:  buttonText[0] = "Solid players.";     break;
+        case 2:  buttonText[0] = "Friendly fire.";     break;
+        default: buttonText[0] = "UNKNOWN";            break;
     }
     if (configPlayerKnockbackStrength <= 20) {
-        buttonText[2] = "Weak knockback.";
+        buttonText[1] = "Weak knockback.";
     } else if (configPlayerKnockbackStrength <= 40) {
-        buttonText[2] = "Normal knockback.";
+        buttonText[1] = "Normal knockback.";
     } else {
-        buttonText[2] = "Too much knockback.";
+        buttonText[1] = "Too much knockback.";
     }
 
-    buttonText[3] = configStayInLevelAfterStar ? "Stay in level after star." : "Leave level after star.";
+    buttonText[2] = configStayInLevelAfterStar ? "Stay in level after star." : "Leave level after star.";
+
+    #ifdef DISCORD_SDK
+        buttonText[3] = (configNetworkSystem == 0) ? "Host through Discord." : "Host direct connection.";
+    #endif
 
     // display server setting strings
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < HOST_MENU_MAX_ITEMS; i++) {
         print_generic_ascii_string(95, 158 + -35 * i, buttonText[i]);
     }
 
@@ -113,10 +123,12 @@ static void host_menu_setting_stay_in_level(void) {
     configStayInLevelAfterStar = (configStayInLevelAfterStar == 0) ? 1 : 0;
 }
 
+#ifdef DISCORD_SDK
 static void join_menu_draw_strings(void) {
     print_generic_ascii_string(30, 155, "Accept a Discord game invite in order to join.");
     print_generic_ascii_string(30, 130, "For direct connections, click connect to type in an IP.");
 }
+#endif
 
 static void connect_menu_draw_strings(void) {
     if (gNetworkType == NT_CLIENT) {
@@ -173,7 +185,7 @@ static void connect_menu_on_connection_attempt(void) {
     char* port = strtok(NULL, delims);
     if (port != NULL) {
         unsigned int intPort = atoi(port);
-        if (intPort == 0) { custom_menu_close(); return; }
+        if (intPort == 0 || intPort > 65535) { configJoinPort = DEFAULT_PORT; custom_menu_close(); return; }
         configJoinPort = intPort;
     }
     else {
@@ -191,9 +203,15 @@ static void connect_menu_on_click(void) {
     keyboard_start_text_input(TIM_IP, MAX_TEXT_INPUT, custom_menu_close, connect_menu_on_connection_attempt);
 
     // fill in our last attempt
-    if (configJoinPort == 0) { configJoinPort = DEFAULT_PORT; }
-    sprintf(gTextInput, "%s %d", configJoinIp, configJoinPort);
-
+    if (configJoinPort == 0 || configJoinPort > 65535) { configJoinPort = DEFAULT_PORT; }
+    
+    // only print custom port
+    if (configJoinPort == DEFAULT_PORT) {
+        sprintf(gTextInput, "%s", configJoinIp);
+    }
+    else {
+        sprintf(gTextInput, "%s %d", configJoinIp, configJoinPort);
+    }
 }
 
 static void connect_menu_on_close(void) {
@@ -216,16 +234,21 @@ void custom_menu_init(struct CustomMenu* head) {
     hostMenu->draw_strings = host_menu_draw_strings;
     custom_menu_create_button(hostMenu, "CANCEL", 700, -400 + (250 * 3), SOUND_MENU_CAMERA_ZOOM_OUT, custom_menu_close);
     custom_menu_create_button(hostMenu, "HOST", 700, -400, SOUND_MENU_CAMERA_ZOOM_IN, host_menu_do_host);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 3), SOUND_ACTION_BONK, host_menu_setting_network_system);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 2), SOUND_ACTION_BONK, host_menu_setting_interaction);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 1), SOUND_ACTION_BONK, host_menu_setting_knockback);
-    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 0), SOUND_ACTION_BONK, host_menu_setting_stay_in_level);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 3), SOUND_ACTION_BONK, host_menu_setting_interaction);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 2), SOUND_ACTION_BONK, host_menu_setting_knockback);
+    custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 1), SOUND_ACTION_BONK, host_menu_setting_stay_in_level);
+    #ifdef DISCORD_SDK
+        custom_menu_create_button(hostMenu, "", -700, -400 + (250 * 0), SOUND_ACTION_BONK, host_menu_setting_network_system);
+    #endif
 
-    struct CustomMenu* joinMenu = custom_menu_create(head, "JOIN", 266, 0);
-    custom_menu_create_button(joinMenu, "CANCEL", -266, -320, SOUND_MENU_CAMERA_ZOOM_OUT, custom_menu_close);
-    joinMenu->draw_strings = join_menu_draw_strings;
-
-    struct CustomMenu* connectMenu = custom_menu_create(joinMenu, "CONNECT", 266, -320);
+    #ifdef DISCORD_SDK
+        struct CustomMenu* joinMenu = custom_menu_create(head, "JOIN", 266, 0);
+        custom_menu_create_button(joinMenu, "CANCEL", -266, -320, SOUND_MENU_CAMERA_ZOOM_OUT, custom_menu_close);
+        joinMenu->draw_strings = join_menu_draw_strings;
+        struct CustomMenu* connectMenu = custom_menu_create(joinMenu, "CONNECT", 266, -320);
+    #else
+        struct CustomMenu* connectMenu = custom_menu_create(head, "CONNECT", 266, 0);
+    #endif
     connectMenu->me->on_click = connect_menu_on_click;
     connectMenu->on_close = connect_menu_on_close;
     connectMenu->draw_strings = connect_menu_draw_strings;
