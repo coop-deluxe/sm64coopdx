@@ -28,19 +28,37 @@ void bhv_bouncing_fireball_flame_loop(void) {
 }
 
 void bhv_bouncing_fireball_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+    }
+
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+
     struct Object *sp2C;
     f32 sp28;
     switch (o->oAction) {
         case 0:
-            if (o->oDistanceToMario < 2000.0f)
+            if (distanceToPlayer < 2000.0f)
                 o->oAction = 1;
             break;
         case 1:
-            sp2C = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
-            sp28 = (10 - o->oTimer) * 0.5;
-            obj_scale_xyz(sp2C, sp28, sp28, sp28);
-            if (o->oTimer == 0)
-                obj_become_tangible(sp2C);
+            if (network_owns_object(o)) {
+                sp2C = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
+                sp28 = (10 - o->oTimer) * 0.5;
+                obj_scale_xyz(sp2C, sp28, sp28, sp28);
+                if (o->oTimer == 0)
+                    obj_become_tangible(sp2C);
+
+                struct Object* spawn_objects[] = { sp2C };
+                u32 models[] = { MODEL_RED_FLAME };
+                network_send_spawn_objects(spawn_objects, models, 1);
+
+                network_send_object(o);
+            }
             if (o->oTimer > 10)
                 o->oAction++;
             break;
