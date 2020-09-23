@@ -14,6 +14,7 @@ static void bhv_rolling_log_network_init(void) {
     network_init_object_field(o, &o->oPitouneUnkF4);
     network_init_object_field(o, &o->oPitouneUnkF8);
     network_init_object_field(o, &o->oPitouneUnkFC);
+    network_init_object_field(o, &o->oForwardVel);
 }
 
 void bhv_ttm_rolling_log_init(void) {
@@ -39,10 +40,11 @@ void rolling_log_roll_log(void) {
     u8 playersTouched = 0;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (gMarioStates[i].marioObj->platform != o) { continue; }
-        x += gMarioObject->header.gfx.pos[0];
-        y += gMarioObject->header.gfx.pos[1];
-        z += gMarioObject->header.gfx.pos[2];
+        struct Object* player = gMarioStates[i].marioObj;
+        if (player->platform != o) { continue; }
+        x += player->header.gfx.pos[0];
+        y += player->header.gfx.pos[1];
+        z += player->header.gfx.pos[2];
         playersTouched++;
     }
 
@@ -141,7 +143,7 @@ void volcano_act_3(void) {
 
 void bhv_volcano_trap_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
+        network_init_object(o, 2000.0f);
         network_init_object_field(o, &o->oRollingLogUnkF4);
         network_init_object_field(o, &o->oAngleVelPitch);
         network_init_object_field(o, &o->oFaceAnglePitch);
