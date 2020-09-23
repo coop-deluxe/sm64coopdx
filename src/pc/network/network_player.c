@@ -89,7 +89,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->lastReceived = clock();
         gNetworkSystem->save_id(i);
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
-        chat_add_message("player connected", CMT_SYSTEM);
+        else { chat_add_message("player connected", CMT_SYSTEM); }
         LOG_INFO("player connected, local %d, global %d", i, globalIndex);
         extern s16 sCurrPlayMode;
         if (gNetworkType == NT_SERVER && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
