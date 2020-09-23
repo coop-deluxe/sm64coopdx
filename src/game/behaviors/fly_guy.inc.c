@@ -28,13 +28,17 @@ static s16 sFlyGuyJitterAmounts[] = { 0x1000, -0x2000, 0x2000 };
  * turn toward mario/home and enter the approach mario action.
  */
 static void fly_guy_act_idle(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     o->oForwardVel = 0.0f;
     if (approach_f32_ptr(&o->header.gfx.scale[0], 1.5f, 0.02f)) {
         // If we are >2000 units from home or Mario is <2000 units from us
-        if (o->oDistanceToMario >= 25000.0f || o->oDistanceToMario < 2000.0f) {
+        if (distanceToPlayer >= 25000.0f || distanceToPlayer < 2000.0f) {
             // Turn toward home or Mario
-            obj_face_yaw_approach(o->oAngleToMario, 0x300);
-            if (cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x300)) {
+            obj_face_yaw_approach(angleToPlayer, 0x300);
+            if (cur_obj_rotate_yaw_toward(angleToPlayer, 0x300)) {
                 o->oAction = FLY_GUY_ACT_APPROACH_MARIO;
             }
         } else {
@@ -56,25 +60,30 @@ static void fly_guy_act_idle(void) {
  * fire. If mario is far away, stop and return to the idle action.
  */
 static void fly_guy_act_approach_mario(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     // If we are >2000 units from home or Mario is <2000 units from us
-    if (o->oDistanceToMario >= 25000.0f || o->oDistanceToMario < 2000.0f) {
+    if (distanceToPlayer >= 25000.0f || distanceToPlayer < 2000.0f) {
         obj_forward_vel_approach(10.0f, 0.5f);
 
         // Turn toward home or Mario
-        obj_face_yaw_approach(o->oAngleToMario, 0x400);
-        cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x200);
+        obj_face_yaw_approach(angleToPlayer, 0x400);
+        cur_obj_rotate_yaw_toward(angleToPlayer, 0x200);
 
         // If facing toward mario and we are either near mario laterally or
         // far above him
-        if (abs_angle_diff(o->oAngleToMario, o->oFaceAngleYaw) < 0x2000) {
-            if (o->oPosY - gMarioObject->oPosY > 400.0f || o->oDistanceToMario < 400.0f) {
+        if (abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x2000) {
+            if (o->oPosY - player->oPosY > 400.0f || distanceToPlayer < 400.0f) {
                 // Either shoot fire or lunge
                 if (o->oBehParams2ndByte != 0 && random_u16() % 2) {
                     o->oAction = FLY_GUY_ACT_SHOOT_FIRE;
                     o->oFlyGuyScaleVel = 0.06f;
                 } else {
                     o->oAction = FLY_GUY_ACT_LUNGE;
-                    o->oFlyGuyLungeTargetPitch = obj_turn_pitch_toward_mario(&gMarioStates[0], -200.0f, 0);
+                    o->oFlyGuyLungeTargetPitch = obj_turn_pitch_toward_mario(marioState, -200.0f, 0);
 
                     o->oForwardVel = 25.0f * coss(o->oFlyGuyLungeTargetPitch);
                     o->oVelY = 25.0f * -sins(o->oFlyGuyLungeTargetPitch);
@@ -92,6 +101,8 @@ static void fly_guy_act_approach_mario(void) {
  * afterward.
  */
 static void fly_guy_act_lunge(void) {
+    struct Object* player = nearest_player_to_object(o);
+
     if (o->oVelY < 0.0f) {
         // Lunge downward
 
@@ -114,7 +125,7 @@ static void fly_guy_act_lunge(void) {
         obj_face_yaw_approach(o->oMoveAngleYaw, 0x800);
 
         // Continue moving upward until at least 200 units above mario
-        if (o->oPosY < gMarioObject->oPosY + 200.0f) {
+        if (o->oPosY < player->oPosY + 200.0f) {
             obj_y_vel_approach(20.0f, 0.5f);
         } else if (obj_y_vel_approach(0.0f, 0.5f)) {
             // Wait until roll is zero
@@ -131,11 +142,15 @@ static void fly_guy_act_lunge(void) {
  * Turn toward mario, then shoot fire. Then enter the idle action.
  */
 static void fly_guy_act_shoot_fire(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     s32 scaleStatus;
 
     o->oForwardVel = 0.0f;
 
-    if (obj_face_yaw_approach(o->oAngleToMario, 0x800)) {
+    if (obj_face_yaw_approach(angleToPlayer, 0x800)) {
         o->oMoveAngleYaw = o->oFaceAngleYaw;
 
         // Increase scale by 0.06, 0.05, ..., -0.03. Then wait ~8 frames, then
@@ -148,17 +163,23 @@ static void fly_guy_act_shoot_fire(void) {
                 o->oAction = FLY_GUY_ACT_IDLE;
             } else {
                 // We have reached below scale 1.2 in the shrinking portion
-                s16 fireMovePitch = obj_turn_pitch_toward_mario(&gMarioStates[0], 0.0f, 0);
+                s16 fireMovePitch = obj_turn_pitch_toward_mario(marioState, 0.0f, 0);
                 cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
                 clamp_s16(&fireMovePitch, 0x800, 0x3000);
 
-                obj_spit_fire(
-                    /*relativePos*/ 0, 38, 20,
-                    /*scale      */ 2.5f,
-                    /*model      */ MODEL_RED_FLAME_SHADOW,
-                    /*startSpeed */ 25.0f,
-                    /*endSpeed   */ 20.0f,
-                    /*movePitch  */ fireMovePitch);
+                if (network_owns_object(o)) {
+                    struct Object* fire = obj_spit_fire(
+                        /*relativePos*/ 0, 38, 20,
+                        /*scale      */ 2.5f,
+                        /*model      */ MODEL_RED_FLAME_SHADOW,
+                        /*startSpeed */ 25.0f,
+                        /*endSpeed   */ 20.0f,
+                        /*movePitch  */ fireMovePitch);
+
+                    struct Object* spawn_objects[] = { fire };
+                    u32 models[] = { MODEL_RED_FLAME_SHADOW };
+                    network_send_spawn_objects(spawn_objects, models, 1);
+                }
             }
         }
     } else {
@@ -175,6 +196,15 @@ static void fly_guy_act_shoot_fire(void) {
  */
 void bhv_fly_guy_update(void) {
     // PARTIAL_UPDATE (appears in non-roomed levels)
+
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oFlyGuyOscTimer);
+        network_init_object_field(o, &o->oFlyGuyLungeYDecel);
+        network_init_object_field(o, &o->oFlyGuyLungeTargetPitch);
+        network_init_object_field(o, &o->oFlyGuyTargetRoll);
+        network_init_object_field(o, &o->oFlyGuyLungeTargetPitch);
+    }
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         o->oDeathSound = SOUND_OBJ_KOOPA_FLYGUY_DEATH;

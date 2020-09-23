@@ -939,7 +939,7 @@ static void treat_far_home_as_mario(f32 threshold) {
 /**
  * Used by fly guy, piranha plant, and fire spitters.
  */
-void obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model,
+struct Object* obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model,
                    f32 startSpeed, f32 endSpeed, s16 movePitch) {
     struct Object *sp2C;
 
@@ -952,6 +952,7 @@ void obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 sca
         sp2C->oSmallPiranhaFlameUnkFC = model;
         sp2C->oMoveAnglePitch = movePitch;
     }
+    return sp2C;
 }
 
 #include "behaviors/fire_piranha_plant.inc.c"
