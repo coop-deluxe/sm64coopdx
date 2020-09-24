@@ -26,6 +26,12 @@ void bhv_ssl_moving_pyramid_wall_init(void) {
             o->oAction = PYRAMID_WALL_ACT_MOVING_UP;
             break;
     }
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &o->oPrevAction);
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oTimer);
+    network_init_object_field(o, &o->oVelY);
+    network_init_object_field(o, &o->oPosY);
 }
 
 /**
@@ -36,8 +42,12 @@ void bhv_ssl_moving_pyramid_wall_loop(void) {
     switch (o->oAction) {
         case PYRAMID_WALL_ACT_MOVING_DOWN:
             o->oVelY = -5.12f;
-            if (o->oTimer == 100)
+            if (o->oTimer == 100) {
                 o->oAction = PYRAMID_WALL_ACT_MOVING_UP;
+                if (network_owns_object(o)) {
+                    network_send_object(o);
+                }
+            }
             break;
 
         case PYRAMID_WALL_ACT_MOVING_UP:
