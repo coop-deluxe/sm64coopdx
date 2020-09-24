@@ -1,6 +1,14 @@
 
 void bhv_horizontal_grindel_init(void) {
     o->oHorizontalGrindelTargetYaw = o->oMoveAngleYaw;
+
+    network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oHorizontalGrindelOnGround);
+    network_init_object_field(o, &o->oHorizontalGrindelTargetYaw);
+    network_init_object_field(o, &o->oHorizontalGrindelDistToHome);
+    network_init_object_field(o, &o->oMoveFlags);
+    network_init_object_field(o, &o->oForwardVel);
+    network_init_object_field(o, &o->oGravity);
 }
 
 void bhv_horizontal_grindel_update(void) {
