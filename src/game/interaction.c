@@ -1248,7 +1248,8 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     u8 isInCutscene = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((m2->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
     isInCutscene = isInCutscene || (m->action == ACT_IN_CANNON) || (m2->action == ACT_IN_CANNON);
     u8 isInvulnerable = (m2->action & ACT_FLAG_INVULNERABLE) || m2->invincTimer != 0 || m2->hurtCounter != 0 || isInCutscene;
-    if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable) {
+    u8 isIgnoredAttack = (m->action == ACT_JUMP || m->action == ACT_DOUBLE_JUMP);
+    if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable && !isIgnoredAttack) {
 
         // determine if slide attack should be ignored
         if ((interaction & INT_ATTACK_SLIDE) && player_is_sliding(m2)) {
