@@ -346,6 +346,11 @@ static void save_file_bswap(struct SaveBuffer *buf) {
 }
 
 void save_file_do_save(s32 fileIndex) {
+    if (gNetworkType != NT_SERVER) {
+        if (gNetworkType == NT_CLIENT) { network_send_save_file(fileIndex); }
+        return;
+    }
+
     if (fileIndex < 0 || fileIndex >= NUM_SAVE_FILES)
         return;
 

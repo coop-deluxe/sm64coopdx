@@ -30,6 +30,7 @@ void packet_receive(struct Packet* p) {
         case PACKET_KICK:                network_receive_kick(p);                break;
         case PACKET_KEEP_ALIVE:          network_receive_keep_alive(p);          break;
         case PACKET_LEAVING:             network_receive_leaving(p);             break;
+        case PACKET_SAVE_FILE:           network_receive_save_file(p);           break;
         ///
         case PACKET_CUSTOM:              network_receive_custom(p);              break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
