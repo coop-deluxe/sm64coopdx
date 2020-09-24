@@ -646,9 +646,10 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         f32 mag = scaler * (f32)gServerSettings.playerKnockbackStrength * sign;
         m->forwardVel = mag;
         if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
-        m->vel[0] = mag * sins(angleToObject);
+        m->vel[0] = -mag * sins(m->interactObj->oFaceAngleYaw);
         m->vel[1] = (mag < 0) ? -mag : mag;
-        m->vel[2] = mag * coss(angleToObject);
+        m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
+        m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
 
     return bonkAction;
