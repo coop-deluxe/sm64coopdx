@@ -5,6 +5,10 @@
  * well as the small marker balls that demarcate its trajactory.
  */
 
+u8 bhv_pyramid_elevator_ignore_if_true(void) {
+    return (o->oAction != PYRAMID_ELEVATOR_IDLE);
+}
+
 /**
  * Generate the ten trajectory marker balls that indicate where the elevator
  * moves.
@@ -17,6 +21,13 @@ void bhv_pyramid_elevator_init(void) {
         ball = spawn_object(o, MODEL_TRAJECTORY_MARKER_BALL, bhvPyramidElevatorTrajectoryMarkerBall);
         ball->oPosY = 4600 - i * 460;
     }
+
+    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    so->ignore_if_true = bhv_pyramid_elevator_ignore_if_true;
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oPrevAction);
+    network_init_object_field(o, &o->oTimer);
+    network_init_object_field(o, &o->oPosY);
 }
 
 void bhv_pyramid_elevator_loop(void) {
@@ -26,8 +37,10 @@ void bhv_pyramid_elevator_loop(void) {
          * transition to the starting state.
          */
         case PYRAMID_ELEVATOR_IDLE:
-            if (gMarioObject->platform == o)
+            if (cur_obj_is_any_player_on_platform()) {
                 o->oAction = PYRAMID_ELEVATOR_START_MOVING;
+                network_send_object(o);
+            }
             break;
 
         /**
