@@ -2186,6 +2186,7 @@ const BehaviorScript bhvTiltingBowserLavaPlatform[] = {
     SET_FLOAT(oCollisionDistance, 20000),
     SET_INT(oFaceAngleYaw, 0),
     SET_HOME(),
+    CALL_NATIVE(bhv_tilting_bowser_lava_platform_init),
     BEGIN_LOOP(),
         CALL_NATIVE(cur_obj_rotate_face_angle_using_vel),
         CALL_NATIVE(load_object_collision_model),

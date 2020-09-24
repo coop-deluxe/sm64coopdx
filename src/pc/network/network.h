@@ -54,6 +54,7 @@ struct SyncObject {
     u8 (*ignore_if_true)(void);
     void (*on_received_pre)(u8 fromLocalIndex);
     void (*on_received_post)(u8 fromLocalIndex);
+    void (*override_ownership)(u8* shouldOverride, u8* shouldOwn);
     void* extraFields[MAX_SYNC_OBJECT_FIELDS];
 };
 

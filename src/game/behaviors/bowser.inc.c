@@ -1018,7 +1018,17 @@ void bowser_act_dead(void) {
     }
 }
 
-void bowser_tilt_platform(struct Object *platform, s16 a1) {
+void bhv_tilting_bowser_lava_platform_init(void) {
+    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &o->oAngleVelPitch);
+    network_init_object_field(o, &o->oAngleVelRoll);
+    network_init_object_field(o, &o->oFaceAnglePitch);
+    network_init_object_field(o, &o->oFaceAngleRoll);
+    network_init_object_field(o, &o->oMoveAnglePitch);
+    network_init_object_field(o, &o->oMoveAngleRoll);
+}
+
+void bowser_tilt_platform(struct Object* platform, s16 a1) {
     s16 angle;
     angle = o->oBowserAngleToCentre + 0x8000;
     platform->oAngleVelPitch = coss(angle) * a1;
@@ -1026,7 +1036,7 @@ void bowser_tilt_platform(struct Object *platform, s16 a1) {
 }
 
 void bowser_act_ride_tilting_platform(void) {
-    struct Object *platform = cur_obj_nearest_object_with_behavior(bhvTiltingBowserLavaPlatform);
+    struct Object* platform = cur_obj_nearest_object_with_behavior(bhvTiltingBowserLavaPlatform);
     UNUSED s16 sp2A = o->oBowserAngleToCentre + 0x8000;
     s16 sp28;
     UNUSED s32 unused;
@@ -1058,10 +1068,14 @@ void bowser_act_ride_tilting_platform(void) {
             platform->oAngleVelRoll = 0;
             platform->oFaceAnglePitch = 0;
             platform->oFaceAngleRoll = 0;
+            if (network_owns_object(o)) {
+                network_send_object(platform);
+            }
         }
     }
     cur_obj_extend_animation_if_at_end();
 }
+
 
 s32 bowser_check_fallen_off_stage(void) // bowser off stage?
 {
@@ -1278,6 +1292,13 @@ void bhv_bowser_loop(void) {
     }
 }
 
+void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    if (o->oAction == 19) { // tilting platform
+        *shouldOverride = TRUE;
+        *shouldOwn = (gNetworkType == NT_SERVER);
+    }
+}
+
 void bhv_bowser_init(void) {
     s32 level; // 0 is dw, 1 is fs, 2 is sky
     o->oBowserUnk110 = 1;
@@ -1298,6 +1319,7 @@ void bhv_bowser_init(void) {
     o->oBowserEyesShut = 0;
 
     struct SyncObject* so = network_init_object(o, 8000.0f);
+    so->override_ownership = bhv_bowser_override_ownership;
     so->fullObjectSync = TRUE;
     network_init_object_field(o, &o->header.gfx.node.flags);
     network_init_object_field(o, &networkBowserAnimationIndex);

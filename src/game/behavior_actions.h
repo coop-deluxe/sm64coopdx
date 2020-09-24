@@ -156,6 +156,7 @@ void bhv_bowser_loop(void);
 void bhv_bowser_body_anchor_init(void);
 void bhv_bowser_body_anchor_loop(void);
 void bhv_bowser_flame_spawn_loop(void);
+void bhv_tilting_bowser_lava_platform_init(void);
 void bhv_falling_bowser_platform_loop(void);
 void bhv_blue_bowser_flame_init(void);
 void bhv_blue_bowser_flame_loop(void);

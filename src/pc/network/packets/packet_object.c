@@ -24,11 +24,22 @@ static float player_distance(struct MarioState* marioState, struct Object* o) {
 }
 
 static bool should_own_object(struct SyncObject* so) {
+    // check for override
+    u8 shouldOverride = FALSE;
+    u8 shouldOwn = FALSE;
+    if (so->override_ownership != NULL) {
+        extern struct Object* gCurrentObject;
+        struct Object* tmp = gCurrentObject;
+        gCurrentObject = so->o;
+        so->override_ownership(&shouldOverride, &shouldOwn);
+        gCurrentObject = tmp;
+        if (shouldOverride) { return shouldOwn; }
+    }
+
     if (gMarioStates[0].heldByObj == so->o) { return true; }
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].heldByObj == so->o) { return false; }
     }
-
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
     if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[1], so->o)) { return false; }
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex != 0) { return false; }
