@@ -657,7 +657,9 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                         celebStar->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
                     }
                 }
-                disable_background_sound();
+                if (m->playerIndex == 0) {
+                    disable_background_sound();
+                }
                 if (m->actionArg & 1) {
                     play_course_clear();
                 } else {
@@ -676,13 +678,17 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
             case 80:
                 if ((m->actionArg & 1) == 0) {
                     level_trigger_warp(m, WARP_OP_STAR_EXIT);
-                } else {
+                } else if (m->playerIndex == 0) {
                     //enable_time_stop();
                     create_dialog_box_with_response(gLastCompletedStarNum == 7 ? DIALOG_013 : DIALOG_014);
                     m->actionState = 1;
+                } else {
+                    set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
                 }
                 break;
         }
+    } else if (m->playerIndex != 0) {
+        set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
     } else if (m->actionState == 1 && gDialogResponse) {
         if (gDialogResponse == 1) {
             save_file_do_save(gCurrSaveFileNum - 1);
