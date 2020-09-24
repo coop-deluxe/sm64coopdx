@@ -29,6 +29,7 @@ static void bhv_bowser_bomb_interacted(void) {
 
 void bhv_bowser_bomb_loop(void) {
     if (!network_sync_object_initialized(o)) {
+        networkBowserBombHit = 0;
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         so->syncDeathEvent = FALSE;
         network_init_object_field(o, &networkBowserBombHit);
