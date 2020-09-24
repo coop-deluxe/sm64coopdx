@@ -106,7 +106,7 @@ void mario_throw_held_object(struct MarioState *m);
 void mario_stop_riding_and_holding(struct MarioState *m);
 u32 does_mario_have_hat(struct MarioState *m);
 void mario_blow_off_cap(struct MarioState *m, f32 capSpeed);
-u32 mario_lose_cap_to_enemy(u32 arg);
+u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);
 void mario_retrieve_cap(void);
 struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType);
 u32 mario_check_object_grab(struct MarioState *m);

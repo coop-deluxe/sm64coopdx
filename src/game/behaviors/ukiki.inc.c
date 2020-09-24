@@ -569,7 +569,7 @@ u8 hat_ukiki_held_loop_2(void) { return o->oHeldState == HELD_HELD && o->oUkikiT
 void hat_ukiki_held_loop(void) {
     switch(o->oUkikiTextState) {
         case UKIKI_TEXT_DEFAULT:
-            if (mario_lose_cap_to_enemy(2)) {
+            if (mario_lose_cap_to_enemy(&gMarioStates[0], 2)) {
                 o->oUkikiTextState = UKIKI_TEXT_STEAL_HAT;
                 o->oUkikiHasHat |= UKIKI_HAT_ON;
             } else {}
