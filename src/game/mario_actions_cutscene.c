@@ -2146,9 +2146,11 @@ static void end_peach_cutscene_mario_landing(struct MarioState *m) {
         // make wing cap run out
         m->capTimer = 60;
 
-        sEndJumboStarObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR, bhvStaticObject, 0,
-                                                     2528, -1800, 0, 0, 0);
-        obj_scale(sEndJumboStarObj, 3.0);
+        if (m->playerIndex == 0) {
+            sEndJumboStarObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR, bhvStaticObject, 0,
+                                                         2528, -1800, 0, 0, 0);
+            obj_scale(sEndJumboStarObj, 3.0);
+        }
         advance_cutscene_step(m);
     }
 }
@@ -2157,7 +2159,7 @@ static void end_peach_cutscene_mario_landing(struct MarioState *m) {
 static void end_peach_cutscene_summon_jumbo_star(struct MarioState *m) {
     set_mario_animation(m, m->actionState == 0 ? MARIO_ANIM_CREDITS_RAISE_HAND
                                                : MARIO_ANIM_CREDITS_LOWER_HAND);
-
+    if (m->playerIndex != 0) { return; }
     if (m->actionState == 0 && is_anim_past_end(m)) {
         m->actionState++;
     }
@@ -2183,6 +2185,7 @@ static void end_peach_cutscene_summon_jumbo_star(struct MarioState *m) {
 
 // free peach from the stained glass window
 static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
+    if (m->playerIndex != 0) { return; }
     if (m->actionTimer == 1) {
         play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 14, 255, 255, 255);
     }
@@ -2240,6 +2243,7 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
 
 // descend peach
 static void end_peach_cutscene_descend_peach(struct MarioState *m) {
+    if (m->playerIndex != 0) { return; }
     generate_yellow_sparkles(0, sEndPeachObj->oPosY, -1300, 150.0f);
 
     if (sEndPeachObj->oPosY >= 1300.0f) {
@@ -2305,6 +2309,8 @@ static void end_peach_cutscene_dialog_1(struct MarioState *m) {
         }
     }
 
+    if (m->playerIndex != 0) { return; }
+
     switch (m->actionTimer) {
         case 80:
             sEndPeachAnimation = 6;
@@ -2362,6 +2368,7 @@ static void end_peach_cutscene_dialog_1(struct MarioState *m) {
 // "Thank you Mario!"
 // "We have to do something special for you..."
 static void end_peach_cutscene_dialog_2(struct MarioState *m) {
+    if (m->playerIndex != 0) { return; }
     sEndPeachAnimation = 9;
 
     switch (m->actionTimer) {
@@ -2452,15 +2459,16 @@ static void end_peach_cutscene_kiss_from_peach(struct MarioState *m) {
 }
 
 static void end_peach_cutscene_star_dance(struct MarioState *m) {
-    s32 animFrame = set_mario_animation(m, MARIO_ANIM_CREDITS_PEACE_SIGN);
+    u8 sadLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    s32 animFrame = set_mario_animation(m, sadLuigi ? MARIO_ANIM_START_SLEEP_SITTING : MARIO_ANIM_CREDITS_PEACE_SIGN);
 
-    if (animFrame == 77) {
+    if (animFrame == (sadLuigi ? 0 : 77)) {
         cutscene_put_cap_on(m);
     }
-    if (animFrame == 88) {
+    if (animFrame == 88 && m->playerIndex == 0) {
         play_sound(SOUND_MARIO_HERE_WE_GO, m->marioObj->header.gfx.cameraToObject);
     }
-    if (animFrame >= 98) {
+    if (!sadLuigi && animFrame >= 98) {
         m->marioBodyState->handState = MARIO_HAND_PEACE_SIGN;
     }
 
@@ -2486,10 +2494,12 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
             break;
 
         case 140:
+            if (m->playerIndex == 0) {
 #ifndef VERSION_JP
-            sequence_player_unlower(SEQ_PLAYER_LEVEL, 60);
+                sequence_player_unlower(SEQ_PLAYER_LEVEL, 60);
 #endif
-            play_cutscene_music(SEQUENCE_ARGS(15, SEQ_EVENT_CUTSCENE_CREDITS));
+                play_cutscene_music(SEQUENCE_ARGS(15, SEQ_EVENT_CUTSCENE_CREDITS));
+            }
             break;
 
         case 142:
@@ -2503,8 +2513,9 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
 // "let's bake a delicious cake..."
 // "...for Mario..."
 static void end_peach_cutscene_dialog_3(struct MarioState *m) {
-    set_mario_animation(m, MARIO_ANIM_FIRST_PERSON);
-
+    u8 sadLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    set_mario_animation(m, sadLuigi ? MARIO_ANIM_SLEEP_IDLE : MARIO_ANIM_FIRST_PERSON);
+    if (m->playerIndex != 0) { return; }
     sEndPeachObj->oPosY = end_obj_set_visual_pos(sEndPeachObj);
     sEndRightToadObj->oPosY = end_obj_set_visual_pos(sEndRightToadObj);
     sEndLeftToadObj->oPosY = end_obj_set_visual_pos(sEndLeftToadObj);
@@ -2540,16 +2551,21 @@ static void end_peach_cutscene_dialog_3(struct MarioState *m) {
 
 // "Mario!"
 static void end_peach_cutscene_run_to_castle(struct MarioState *m) {
-    set_mario_animation(m, m->actionState == 0 ? MARIO_ANIM_CREDITS_START_WALK_LOOK_UP
-                                               : MARIO_ANIM_CREDITS_LOOK_BACK_THEN_RUN);
-
-    m->marioObj->header.gfx.pos[1] = end_obj_set_visual_pos(m->marioObj);
+    u8 sadLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    if (sadLuigi) {
+        set_mario_animation(m, m->actionState == 0 ? MARIO_ANIM_SLEEP_START_LYING
+                                                   : MARIO_ANIM_SLEEP_LYING);
+    } else {
+        set_mario_animation(m, m->actionState == 0 ? MARIO_ANIM_CREDITS_START_WALK_LOOK_UP
+                                                   : MARIO_ANIM_CREDITS_LOOK_BACK_THEN_RUN);
+        m->marioObj->header.gfx.pos[1] = end_obj_set_visual_pos(m->marioObj);
+    }
 
     if (m->actionState == 0 && is_anim_past_end(m)) {
         m->actionState = 1;
     }
 
-    if (m->actionTimer == 95) {
+    if (m->actionTimer == 95 && m->playerIndex == 0) {
         set_cutscene_message(160, 227, 0, 40);
 #ifndef VERSION_JP
         play_sound(SOUND_PEACH_MARIO2, sEndPeachObj->header.gfx.cameraToObject);
@@ -2561,7 +2577,7 @@ static void end_peach_cutscene_run_to_castle(struct MarioState *m) {
 }
 
 static void end_peach_cutscene_fade_out(struct MarioState *m) {
-    if (m->actionState == 0) {
+    if (m->actionState == 0 && m->playerIndex == 0) {
         level_trigger_warp(m, WARP_OP_CREDITS_NEXT);
         gPaintingMarioYEntry = 1500.0f; // ensure medium water level in WDW credits cutscene
         m->actionState = 1;
@@ -2629,11 +2645,13 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
 
     m->actionTimer++;
 
-    sEndCutsceneVp.vp.vscale[0] = 640;
-    sEndCutsceneVp.vp.vscale[1] = 360;
-    sEndCutsceneVp.vp.vtrans[0] = 640;
-    sEndCutsceneVp.vp.vtrans[1] = 480;
-    override_viewport_and_clip(NULL, &sEndCutsceneVp, 0, 0, 0);
+    if (m->playerIndex == 0) {
+        sEndCutsceneVp.vp.vscale[0] = 640;
+        sEndCutsceneVp.vp.vscale[1] = 360;
+        sEndCutsceneVp.vp.vtrans[0] = 640;
+        sEndCutsceneVp.vp.vtrans[1] = 480;
+        override_viewport_and_clip(NULL, &sEndCutsceneVp, 0, 0, 0);
+    }
 
     return FALSE;
 }

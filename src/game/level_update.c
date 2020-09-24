@@ -517,6 +517,10 @@ void warp_credits(void) {
 
     load_area(sWarpDest.areaIdx);
 
+    if (gCurrCreditsEntry == NULL) {
+        gCurrCreditsEntry = &sCreditsSequence[0];
+    }
+
     for (int i = 0; i < MAX_PLAYERS; i++) {
         vec3s_set(gPlayerSpawnInfos[i].startPos, gCurrCreditsEntry->marioPos[0],
                   gCurrCreditsEntry->marioPos[1], gCurrCreditsEntry->marioPos[2]);
@@ -885,7 +889,6 @@ void initiate_delayed_warp(void) {
 
                 case WARP_OP_CREDITS_NEXT:
                     sound_banks_disable(2, 0x03FF);
-
                     gCurrCreditsEntry += 1;
                     gCurrActNum = gCurrCreditsEntry->unk02 & 0x07;
                     if ((gCurrCreditsEntry + 1)->levelNum == LEVEL_NONE) {
@@ -1044,7 +1047,14 @@ s32 play_mode_normal(void) {
     // If either initiate_painting_warp or initiate_delayed_warp initiated a
     // warp, change play mode accordingly.
     if (sCurrPlayMode == PLAY_MODE_NORMAL) {
-        if (!gReceiveWarp) {
+        if (gCurrCreditsEntry != NULL && gCurrCreditsEntry != &sCreditsSequence[0]) {
+            // special case for credit warps
+            if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
+                set_play_mode(PLAY_MODE_CHANGE_LEVEL);
+            } else if (sTransitionTimer != 0) {
+                set_play_mode(PLAY_MODE_CHANGE_AREA);
+            }
+        } else if (!gReceiveWarp) {
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
                 set_play_mode(PLAY_MODE_SYNC_LEVEL);
                 network_send_level_warp_begin();

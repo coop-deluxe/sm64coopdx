@@ -69,9 +69,11 @@ void bhv_big_bully_init(void) {
     obj_set_hitbox(o, &sBigBullyHitbox);
     bhv_bully_network_init();
 
-    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvLllTumblingBridge, 0, 154, -5631, 0, 0, 0);
-    struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
-    if (lllTumblingBridge != NULL) { lllTumblingBridge->oIntangibleTimer = -1; }
+    if (gCurrCourseNum == COURSE_LLL) {
+        spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvLllTumblingBridge, 0, 154, -5631, 0, 0, 0);
+        struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
+        if (lllTumblingBridge != NULL) { lllTumblingBridge->oIntangibleTimer = -1; }
+    }
 }
 
 void bully_check_mario_collision(void) {
