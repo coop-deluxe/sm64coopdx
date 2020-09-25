@@ -2776,6 +2776,8 @@ static s32 check_for_instant_quicksand(struct MarioState *m) {
         // never kill remote marios
         return FALSE;
     }
+    if (m->action == ACT_BUBBLED) { return FALSE; }
+
     if (m->floor->type == SURFACE_INSTANT_QUICKSAND && m->action & ACT_FLAG_INVULNERABLE
         && m->action != ACT_QUICKSAND_DEATH) {
         update_mario_sound_and_camera(m);
