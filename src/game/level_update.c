@@ -1006,6 +1006,7 @@ static void check_received_warp(void) {
         extern s16 gMenuMode;
         gMenuMode = -1;
         reset_dialog_render_state();
+        gWarpTransition.isActive = FALSE;
     }
 
     set_play_mode((sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
