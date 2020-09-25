@@ -1,5 +1,6 @@
 // bowser.c.inc
 static u32 networkBowserAnimationIndex = 0;
+static u8 bowserIsDying = FALSE;
 
 void bowser_tail_anchor_act_0(void) {
     struct Object* bowser = o->parentObj;
@@ -838,24 +839,28 @@ void bowser_act_dance(void) {
 }
 
 void bowser_spawn_grand_star_key(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState->playerIndex != 0) { return; }
     struct Object* reward = NULL;
     if (BITS) {
-        reward = spawn_object(o, MODEL_STAR, bhvGrandStar);
+        struct Object* prevReward = cur_obj_nearest_object_with_behavior(bhvGrandStar);
+        reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_STAR, bhvGrandStar);
         gSecondCameraFocus = reward;
 
-        struct Object* spawn_objects[] = { reward };
-        u32 models[] = { MODEL_STAR };
-        network_send_spawn_objects(spawn_objects, models, 1);
+        if (prevReward == NULL) {
+            struct Object* spawn_objects[] = { reward };
+            u32 models[] = { MODEL_STAR };
+            network_send_spawn_objects(spawn_objects, models, 1);
+        }
     } else {
-        reward = spawn_object(o, MODEL_BOWSER_KEY, bhvBowserKey);
+        struct Object* prevReward = cur_obj_nearest_object_with_behavior(bhvBowserKey);
+        reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_BOWSER_KEY, bhvBowserKey);
         gSecondCameraFocus = reward;
         cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_KEY);
 
-        struct Object* spawn_objects[] = { reward };
-        u32 models[] = { MODEL_BOWSER_KEY };
-        network_send_spawn_objects(spawn_objects, models, 1);
+        if (prevReward == NULL) {
+            struct Object* spawn_objects[] = { reward };
+            u32 models[] = { MODEL_BOWSER_KEY };
+            network_send_spawn_objects(spawn_objects, models, 1);
+        }
     }
     gSecondCameraFocus->oAngleVelYaw = o->oAngleVelYaw;
 }
@@ -899,6 +904,7 @@ s32 bowser_dead_wait_for_mario(void) {
 }
 
 s32 bowser_dead_twirl_into_trophy(void) {
+    bowserIsDying = TRUE;
     s32 ret = 0;
     if (o->header.gfx.scale[0] < 0.8)
         o->oAngleVelYaw += 0x80;
@@ -941,12 +947,13 @@ s32 bowser_dead_not_bits_end(void) {
             cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_EXPLODE);
             sequence_player_unlower(SEQ_PLAYER_LEVEL, 60);
             sequence_player_fade_out(0, 1);
+            network_send_object(o);
         }
     } else if (bowser_dead_twirl_into_trophy()) {
         bowser_dead_hide();
         spawn_triangle_break_particles(20, 116, 1.0f, 0);
         bowser_spawn_grand_star_key();
-        if (marioState->playerIndex) { set_mario_npc_dialog(marioState, 0, NULL); }
+        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
         ret = 1;
     }
     return ret;
@@ -1293,13 +1300,25 @@ void bhv_bowser_loop(void) {
 }
 
 void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
-    if (o->oAction == 19) { // tilting platform
+    // waiting for text / walking up
+    if (o->oAction == 5 || o->oAction == 6) {
+        *shouldOverride = TRUE;
+        *shouldOwn = FALSE;
+    }
+
+    // tilting platform
+    if (o->oAction == 19) {
         *shouldOverride = TRUE;
         *shouldOwn = (gNetworkType == NT_SERVER);
     }
 }
 
+static u8 bhv_bowser_ignore_if_true(void) {
+    return bowserIsDying;
+}
+
 void bhv_bowser_init(void) {
+    bowserIsDying = FALSE;
     s32 level; // 0 is dw, 1 is fs, 2 is sky
     o->oBowserUnk110 = 1;
     o->oOpacity = 0xFF;
@@ -1320,6 +1339,7 @@ void bhv_bowser_init(void) {
 
     struct SyncObject* so = network_init_object(o, 8000.0f);
     so->override_ownership = bhv_bowser_override_ownership;
+    so->ignore_if_true = bhv_bowser_ignore_if_true;
     so->fullObjectSync = TRUE;
     network_init_object_field(o, &o->header.gfx.node.flags);
     network_init_object_field(o, &networkBowserAnimationIndex);

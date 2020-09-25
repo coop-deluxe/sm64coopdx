@@ -12,7 +12,15 @@ struct ObjectHitbox sBowserKeyHitbox = {
     /* hurtboxHeight: */ 100,
 };
 
+void bhv_bowser_key_init(void) {
+    struct Object* other = cur_obj_nearest_object_with_behavior(bhvBowserKey);
+    if (other == NULL) { return; }
+    obj_mark_for_deletion(o);
+    if (gSecondCameraFocus == o) { gSecondCameraFocus = other; }
+}
+
 void bhv_bowser_key_loop(void) {
+    if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) { return; }
     cur_obj_scale(0.5f);
     if (o->oAngleVelYaw > 0x400)
         o->oAngleVelYaw -= 0x100;
