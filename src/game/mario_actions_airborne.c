@@ -372,6 +372,10 @@ u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, 
     update_air_without_turn(m);
 
     stepResult = perform_air_step(m, stepArg);
+    if (m->action == ACT_BUBBLED && stepResult == AIR_STEP_HIT_LAVA_WALL) {
+        stepResult = AIR_STEP_HIT_WALL;
+    }
+
     switch (stepResult) {
         case AIR_STEP_NONE:
             set_mario_animation(m, animation);
