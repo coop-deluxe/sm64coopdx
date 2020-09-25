@@ -280,9 +280,6 @@ static struct Option optsCheats[] = {
     DEF_OPT_TOGGLE( optsCheatsStr[3], &Cheats.InfiniteLives ),
     DEF_OPT_TOGGLE( optsCheatsStr[4], &Cheats.SuperSpeed ),
     DEF_OPT_TOGGLE( optsCheatsStr[5], &Cheats.Responsive ),
-    DEF_OPT_TOGGLE( optsCheatsStr[6], &Cheats.ExitAnywhere ),
-    DEF_OPT_TOGGLE( optsCheatsStr[7], &Cheats.HugeMario ),
-    DEF_OPT_TOGGLE( optsCheatsStr[8], &Cheats.TinyMario ),
 
 };
 

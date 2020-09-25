@@ -1261,21 +1261,7 @@ void squish_mario_model(struct MarioState *m) {
         // If no longer squished, scale back to default.
         // Also handles the Tiny Mario and Huge Mario cheats.
         if (m->squishTimer == 0) {
-            if (Cheats.EnableCheats) {
-                if (Cheats.HugeMario) {
-                    vec3f_set(m->marioObj->header.gfx.scale, 2.5f, 2.5f, 2.5f);
-                }
-                else if (Cheats.TinyMario) {
-                    vec3f_set(m->marioObj->header.gfx.scale, 0.2f, 0.2f, 0.2f);
-                }
-                else {
-                    vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
-                }
-            }
-            else {
-                vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
-            }
-
+            vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
         }
         // If timer is less than 16, rubber-band Mario's size scale up and down.
         else if (m->squishTimer <= 16) {
@@ -1847,21 +1833,6 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
  */
 s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
-    /**
-    * Cheat stuff
-    */
-    if (Cheats.EnableCheats)
-    {
-        if (Cheats.GodMode)
-            gMarioState->health = 0x880;
-
-        if (Cheats.InfiniteLives && gMarioState->numLives < 99)
-            gMarioState->numLives += 1;
-
-        if (Cheats.SuperSpeed && gMarioState->forwardVel > 0)
-            gMarioState->forwardVel += 100;
-    }
-
     // hide unconnected players
     if (gNetworkPlayers[gMarioState->playerIndex].type != NPT_LOCAL) {
         if (!gNetworkPlayers[gMarioState->playerIndex].connected) {
@@ -1872,8 +1843,22 @@ s32 execute_mario_action(UNUSED struct Object *o) {
     }
 
     /**
+    * Cheat stuff
+    */
+    if (Cheats.EnableCheats) {
+        if (Cheats.GodMode)
+            gMarioState->health = 0x880;
+
+        if (Cheats.InfiniteLives && gMarioState->numLives < 99)
+            gMarioState->numLives += 1;
+
+        if (Cheats.SuperSpeed && gMarioState->controller->stickMag > 0.5f)
+            gMarioState->forwardVel += 100;
+    }
+    /**
     * End of cheat stuff
     */
+
     if (gMarioState->action) {
         if (gMarioState->action != ACT_BUBBLED) {
             gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
