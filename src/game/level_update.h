@@ -84,6 +84,15 @@ struct WarpDest {
     u32 arg;
 };
 
+struct SavedWarpValues {
+    u8 received;
+    struct WarpDest warpDest;
+    s8 inWarpCheckpoint;
+    s16 ttcSpeedSetting;
+    s16 D_80339EE0;
+    f32 paintingMarioYEntry;
+};
+
 extern struct WarpDest sWarpDest;
 extern s8 gInWarpCheckpoint;
 

@@ -15,16 +15,11 @@ static u8 remoteLastSeqId = (u8)-1;
 
 extern s16 gTTCSpeedSetting;
 extern s16 D_80339EE0;
+extern float gPaintingMarioYEntry;
 extern u8 gControlledWarp; // two-player hack
-extern u8 gReceiveWarp;
-extern struct WarpDest gReceiveWarpDest;
 
-struct SavedWarpValues {
-    struct WarpDest warpDest;
-    s8 inWarpCheckpoint;
-    s16 ttcSpeedSetting;
-    s16 D_80339EE0;
-} saved = { 0 };
+extern struct SavedWarpValues gReceiveWarp;
+struct SavedWarpValues saved = { 0 };
 
 static clock_t lastDoneEvent = 0;
 static bool isInWarp = FALSE;
@@ -39,6 +34,7 @@ struct PacketLevelWarpData {
     s8 inWarpCheckpoint;
     s16 ttcSpeedSetting;
     s16 D_80339EE0;
+    f32 paintingMarioYEntry;
 };
 
 static void populate_packet_data(struct PacketLevelWarpData* data, bool done, u8 packetEventId) {
@@ -50,6 +46,7 @@ static void populate_packet_data(struct PacketLevelWarpData* data, bool done, u8
     data->inWarpCheckpoint = saved.inWarpCheckpoint;
     data->ttcSpeedSetting = saved.ttcSpeedSetting;
     data->D_80339EE0 = saved.D_80339EE0;
+    data->paintingMarioYEntry = saved.paintingMarioYEntry;
 }
 
 void network_send_level_warp_begin(void) {
@@ -58,6 +55,7 @@ void network_send_level_warp_begin(void) {
     saved.inWarpCheckpoint = gInWarpCheckpoint;
     saved.ttcSpeedSetting = gTTCSpeedSetting;
     saved.D_80339EE0 = D_80339EE0;
+    saved.paintingMarioYEntry = gPaintingMarioYEntry;
 
     float elapsedSinceDone = (clock() - lastDoneEvent) / CLOCKS_PER_SEC;
     gControlledWarp = (elapsedSinceDone < 1.0f)
@@ -113,11 +111,13 @@ static void network_send_level_warp_done(u8 remoteEventId) {
 }
 
 static void do_warp(void) {
-    gReceiveWarpDest = saved.warpDest;
+    // keep check_received_warp(void) in sync with this
+    gReceiveWarp = saved;
+    gReceiveWarp.received = TRUE;
     gInWarpCheckpoint = saved.inWarpCheckpoint;
     gTTCSpeedSetting = saved.ttcSpeedSetting;
     D_80339EE0 = saved.D_80339EE0;
-    gReceiveWarp = TRUE;
+    gPaintingMarioYEntry = saved.paintingMarioYEntry;
 }
 
 void network_receive_level_warp(struct Packet* p) {
@@ -160,6 +160,7 @@ void network_receive_level_warp(struct Packet* p) {
             saved.inWarpCheckpoint = remote.inWarpCheckpoint;
             saved.ttcSpeedSetting = remote.ttcSpeedSetting;
             saved.D_80339EE0 = remote.D_80339EE0;
+            saved.paintingMarioYEntry = remote.paintingMarioYEntry;
 
             do_warp();
             network_send_level_warp_done(remote.eventId);
@@ -188,6 +189,7 @@ void network_receive_level_warp(struct Packet* p) {
     saved.inWarpCheckpoint = remote.inWarpCheckpoint;
     saved.ttcSpeedSetting = remote.ttcSpeedSetting;
     saved.D_80339EE0 = remote.D_80339EE0;
+    saved.paintingMarioYEntry = remote.paintingMarioYEntry;
 
     LOG_INFO("finished event [%d]!", remote.eventId);
     do_warp();

@@ -46,9 +46,8 @@
 
 #define WARP_NODE_CREDITS_MIN 0xF8
 
+struct SavedWarpValues gReceiveWarp = { 0 };
 u8 gControlledWarp = 0;
-u8 gReceiveWarp = 0;
-struct WarpDest gReceiveWarpDest = { 0 };
 extern s8 sReceivedLoadedActNum;
 
 #ifdef VERSION_JP
@@ -991,9 +990,16 @@ void basic_update(UNUSED s16 *arg) {
 }
 
 static void check_received_warp(void) {
-    if (!gReceiveWarp) { return; }
-    gReceiveWarp = FALSE;
-    sWarpDest = gReceiveWarpDest;
+    extern float gPaintingMarioYEntry;
+    if (!gReceiveWarp.received) { return; }
+    gReceiveWarp.received = FALSE;
+
+    // keep do_warp(void) in sync with this
+    sWarpDest = gReceiveWarp.warpDest;
+    gInWarpCheckpoint = gReceiveWarp.inWarpCheckpoint;
+    gTTCSpeedSetting = gReceiveWarp.ttcSpeedSetting;
+    D_80339EE0 = gReceiveWarp.D_80339EE0;
+    gPaintingMarioYEntry = gReceiveWarp.paintingMarioYEntry;
 
     if (!gControlledWarp) {
         // force well behaved state
@@ -1054,7 +1060,7 @@ s32 play_mode_normal(void) {
             } else if (sTransitionTimer != 0) {
                 set_play_mode(PLAY_MODE_CHANGE_AREA);
             }
-        } else if (!gReceiveWarp) {
+        } else if (!gReceiveWarp.received) {
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
                 set_play_mode(PLAY_MODE_SYNC_LEVEL);
                 network_send_level_warp_begin();
