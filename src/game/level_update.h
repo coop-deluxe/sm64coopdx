@@ -85,6 +85,7 @@ struct WarpDest {
 };
 
 extern struct WarpDest sWarpDest;
+extern s8 gInWarpCheckpoint;
 
 extern s16 D_80339EE0;
 extern s16 sDelayedWarpOp;

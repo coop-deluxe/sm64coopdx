@@ -170,7 +170,7 @@ s8 gShouldNotPlayCastleMusic;
 
 struct MarioState *gMarioState = &gMarioStates[0];
 u8 unused1[4] = { 0 };
-s8 D_8032C9E0 = 0;
+s8 gInWarpCheckpoint = 0;
 u8 unused3[4];
 u8 unused4[2];
 
@@ -675,18 +675,18 @@ struct WarpNode *get_painting_warp_node(void) {
     return warpNode;
 }
 
-static void initiate_painting_warp_node(struct WarpNode *pWarpNode, u8 instant) {
+static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
     struct WarpNode warpNode = *pWarpNode;
 
     if (!(warpNode.destLevel & 0x80)) {
-        D_8032C9E0 = check_warp_checkpoint(&warpNode);
+        gInWarpCheckpoint = check_warp_checkpoint(&warpNode);
     }
 
     initiate_warp(warpNode.destLevel & 0x7F, warpNode.destArea, warpNode.destNode, 0);
     check_if_should_set_warp_checkpoint(&warpNode);
 
-    play_transition_after_delay(WARP_TRANSITION_FADE_INTO_COLOR, 30, 255, 255, 255, instant ? 1 : 45);
-    level_set_transition(instant ? 1 : 74, basic_update);
+    play_transition_after_delay(WARP_TRANSITION_FADE_INTO_COLOR, 30, 255, 255, 255, 45);
+    level_set_transition(74, basic_update);
 
     play_sound(SOUND_MENU_STAR_SOUND, gDefaultSoundArgs);
     fadeout_music(398);
@@ -705,7 +705,7 @@ void initiate_painting_warp(void) {
             if (gMarioState->action & ACT_FLAG_INTANGIBLE) {
                 play_painting_eject_sound();
             } else if (pWarpNode->id != 0) {
-                initiate_painting_warp_node(pWarpNode, false);
+                initiate_painting_warp_node(pWarpNode);
                 set_mario_action(gMarioState, ACT_DISAPPEARED, 0);
                 gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
             }
@@ -1384,9 +1384,9 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum) {
 }
 
 s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
-    s32 val4 = D_8032C9E0;
+    s32 val4 = gInWarpCheckpoint;
 
-    D_8032C9E0 = 0;
+    gInWarpCheckpoint = 0;
     gCurrLevelNum = levelNum;
     gCurrCourseNum = gLevelToCourseNumTable[levelNum - 1];
 
