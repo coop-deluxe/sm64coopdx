@@ -397,6 +397,8 @@ void mario_set_bubbled(struct MarioState* m) {
     gCamera->cutscene = 0;
     m->statusForCamera->action = m->action;
     m->statusForCamera->cameraEvent = 0;
+    m->marioObj->activeFlags |= ACTIVE_FLAG_MOVE_THROUGH_GRATE;
+
     extern s16 gCutsceneTimer;
     gCutsceneTimer = 0;
 
