@@ -30,7 +30,14 @@ u8 door_allow_walk_through(void) {
 
     s32 cur = o->header.gfx.unk38.animFrame;
     s32 max = o->header.gfx.unk38.curAnim->unk08 - 2;
-    return (cur >= max / 4 && cur <= 7 * max / 8);
+    s32 min = max / 4;
+
+    // make non-solid immediately for local actions so the camera doesn't glitch out
+    if (gMarioStates[0].marioObj != NULL && (gMarioStates[0].action == ACT_PULLING_DOOR || gMarioStates[0].action == ACT_PUSHING_DOOR)) {
+        min = 0;
+    }
+
+    return (cur >= min && cur <= 7 * max / 8);
 }
 
 void set_door_camera_event(void) {
