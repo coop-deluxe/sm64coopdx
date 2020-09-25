@@ -96,7 +96,8 @@ void network_receive_collect_coin(struct Packet* p) {
     if (behavior == NULL) { goto SANITY_CHECK_COINS; }
 
     // find the coin
-    struct Object* coin = find_nearest_coin(behavior, pos, coinValue, 1000);
+    float minDist = (behavior == bhvRedCoin) ? 200 : 1000;
+    struct Object* coin = find_nearest_coin(behavior, pos, coinValue, minDist);
     if (coin == NULL) { goto SANITY_CHECK_COINS; }
 
     // destroy coin
