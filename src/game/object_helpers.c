@@ -188,7 +188,6 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node) {
             gFindFloorIncludeSurfaceIntangible = TRUE;
 
             find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &sp20);
-
             if (sp20) {
                 gMarioCurrentRoom = sp20->room;
                 gMarioStates[0].currentRoom = gMarioCurrentRoom;
@@ -198,6 +197,29 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node) {
                 if (sp26 >= 0) {
                     switchCase->selectedCase = sp26;
                 }
+            }
+
+            // display both sides of door
+            gDoorCurrentRoom = 0;
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                struct MarioState* m = &gMarioStates[i];
+                if (!is_player_active(m)) { continue; }
+
+                struct Object* door = m->interactObj;
+                if (door == NULL) { continue; }
+                if (door->oInteractType != INTERACT_DOOR) { continue; }
+                if (door->oAction == 0) { continue; }
+                if (gDoorAdjacentRooms[door->oDoorUnkF8][0] != gMarioCurrentRoom && gDoorAdjacentRooms[door->oDoorUnkF8][1] != gMarioCurrentRoom) { continue; }
+
+                find_floor(door->oHomeX, door->oHomeY, door->oHomeZ, &sp20);
+                if (!sp20) { continue; }
+
+                sp26 = sp20->room - 1;
+                if (sp26 == 0) { continue; }
+
+                gDoorCurrentRoom = sp20->room;
+                switchCase->selectedCase = sp26;
+                break;
             }
         }
     } else {
@@ -2541,12 +2563,14 @@ void cur_obj_enable_rendering_if_mario_in_room(void) {
         }
     }
 
-    if (marioInRoom) {
+    u8 inViewOfOpenDoor = (gDoorCurrentRoom != 0)
+                       && (gDoorAdjacentRooms[gDoorCurrentRoom][0] == o->oRoom || gDoorAdjacentRooms[gDoorCurrentRoom][1] == o->oRoom);
+
+    if (marioInRoom || inViewOfOpenDoor) {
         cur_obj_enable_rendering();
         o->activeFlags &= ~ACTIVE_FLAG_IN_DIFFERENT_ROOM;
         gNumRoomedObjectsInMarioRoom++;
-    }
-    else {
+    } else {
         cur_obj_disable_rendering();
         o->activeFlags |= ACTIVE_FLAG_IN_DIFFERENT_ROOM;
         gNumRoomedObjectsNotInMarioRoom++;
