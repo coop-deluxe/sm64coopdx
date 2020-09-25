@@ -1075,9 +1075,6 @@ void bowser_act_ride_tilting_platform(void) {
             platform->oAngleVelRoll = 0;
             platform->oFaceAnglePitch = 0;
             platform->oFaceAngleRoll = 0;
-            if (network_owns_object(o)) {
-                network_send_object(platform);
-            }
         }
     }
     cur_obj_extend_animation_if_at_end();
@@ -1307,14 +1304,19 @@ void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
     }
 
     // tilting platform
-    if (o->oAction == 19) {
+    static u8 tiltingTimer = 0;
+    if (o->oAction == 19) { tiltingTimer = 5; }
+    if (tiltingTimer > 0) {
+        tiltingTimer--;
         *shouldOverride = TRUE;
         *shouldOwn = (gNetworkType == NT_SERVER);
     }
 }
 
 static u8 bhv_bowser_ignore_if_true(void) {
-    return bowserIsDying;
+    if (bowserIsDying) { return TRUE; }
+    if (o->oAction == 19) { return TRUE; } // let the platform get to a stable state
+    return FALSE;
 }
 
 void bhv_bowser_init(void) {
