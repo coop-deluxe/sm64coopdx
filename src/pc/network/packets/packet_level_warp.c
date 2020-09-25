@@ -13,14 +13,18 @@ static u8 remoteFinishedEventId[2] = { (u8)-1, (u8)-1 };
 static u8 seqId = 0;
 static u8 remoteLastSeqId = (u8)-1;
 
+extern s16 gTTCSpeedSetting;
 extern s16 D_80339EE0;
 extern u8 gControlledWarp; // two-player hack
 extern u8 gReceiveWarp;
 extern struct WarpDest gReceiveWarpDest;
 
-s16 saved_D_80339EE0 = 0;
-struct WarpDest savedWarpNode = { 0 };
-s8 savedInWarpCheckpoint = 0;
+struct SavedWarpValues {
+    struct WarpDest warpDest;
+    s8 inWarpCheckpoint;
+    s16 ttcSpeedSetting;
+    s16 D_80339EE0;
+} saved = { 0 };
 
 static clock_t lastDoneEvent = 0;
 static bool isInWarp = FALSE;
@@ -33,6 +37,7 @@ struct PacketLevelWarpData {
     u8 controlledWarp;
     struct WarpDest warpDest;
     s8 inWarpCheckpoint;
+    s16 ttcSpeedSetting;
     s16 D_80339EE0;
 };
 
@@ -41,16 +46,18 @@ static void populate_packet_data(struct PacketLevelWarpData* data, bool done, u8
     data->eventId = packetEventId;
     data->done = done;
     data->controlledWarp = gControlledWarp;
-    data->warpDest = savedWarpNode;
-    data->inWarpCheckpoint = savedInWarpCheckpoint;
-    data->D_80339EE0 = saved_D_80339EE0;
+    data->warpDest = saved.warpDest;
+    data->inWarpCheckpoint = saved.inWarpCheckpoint;
+    data->ttcSpeedSetting = saved.ttcSpeedSetting;
+    data->D_80339EE0 = saved.D_80339EE0;
 }
 
 void network_send_level_warp_begin(void) {
     isInWarp = TRUE;
-    savedWarpNode = sWarpDest;
-    savedInWarpCheckpoint = gInWarpCheckpoint;
-    saved_D_80339EE0 = D_80339EE0;
+    saved.warpDest = sWarpDest;
+    saved.inWarpCheckpoint = gInWarpCheckpoint;
+    saved.ttcSpeedSetting = gTTCSpeedSetting;
+    saved.D_80339EE0 = D_80339EE0;
 
     float elapsedSinceDone = (clock() - lastDoneEvent) / CLOCKS_PER_SEC;
     gControlledWarp = (elapsedSinceDone < 1.0f)
@@ -106,9 +113,10 @@ static void network_send_level_warp_done(u8 remoteEventId) {
 }
 
 static void do_warp(void) {
-    gReceiveWarpDest = savedWarpNode;
-    gInWarpCheckpoint = savedInWarpCheckpoint;
-    D_80339EE0 = saved_D_80339EE0;
+    gReceiveWarpDest = saved.warpDest;
+    gInWarpCheckpoint = saved.inWarpCheckpoint;
+    gTTCSpeedSetting = saved.ttcSpeedSetting;
+    D_80339EE0 = saved.D_80339EE0;
     gReceiveWarp = TRUE;
 }
 
@@ -147,9 +155,12 @@ void network_receive_level_warp(struct Packet* p) {
             // client initiated warp
             LOG_INFO("client initiated warp!");
             gControlledWarp = !remote.controlledWarp; // two-player hack
-            savedWarpNode = remote.warpDest;
-            savedInWarpCheckpoint = remote.inWarpCheckpoint;
-            saved_D_80339EE0 = remote.D_80339EE0;
+
+            saved.warpDest = remote.warpDest;
+            saved.inWarpCheckpoint = remote.inWarpCheckpoint;
+            saved.ttcSpeedSetting = remote.ttcSpeedSetting;
+            saved.D_80339EE0 = remote.D_80339EE0;
+
             do_warp();
             network_send_level_warp_done(remote.eventId);
             return;
@@ -172,9 +183,12 @@ void network_receive_level_warp(struct Packet* p) {
     // server initiated warp
     LOG_INFO("server initiated warp!");
     gControlledWarp = !remote.controlledWarp; // two-player hack
-    savedWarpNode = remote.warpDest;
-    savedInWarpCheckpoint = remote.inWarpCheckpoint;
-    saved_D_80339EE0 = remote.D_80339EE0;
+
+    saved.warpDest = remote.warpDest;
+    saved.inWarpCheckpoint = remote.inWarpCheckpoint;
+    saved.ttcSpeedSetting = remote.ttcSpeedSetting;
+    saved.D_80339EE0 = remote.D_80339EE0;
+
     LOG_INFO("finished event [%d]!", remote.eventId);
     do_warp();
     network_send_level_warp_done(remote.eventId);
