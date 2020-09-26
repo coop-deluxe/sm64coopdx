@@ -4,7 +4,7 @@
 
 void network_send_keep_alive(void) {
     struct Packet p;
-    packet_init(&p, PACKET_KEEP_ALIVE, FALSE);
+    packet_init(&p, PACKET_KEEP_ALIVE, false, false);
     network_send(&p);
     gLastNetworkSend = clock();
     LOG_INFO("sending keep alive");

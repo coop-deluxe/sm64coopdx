@@ -70,7 +70,7 @@ void network_send_level_warp_begin(void) {
     populate_packet_data(&data, false, eventId);
 
     struct Packet p;
-    packet_init(&p, PACKET_LEVEL_WARP, true);
+    packet_init(&p, PACKET_LEVEL_WARP, true, false);
     packet_write(&p, &data, sizeof(struct PacketLevelWarpData));
     network_send(&p);
 
@@ -88,7 +88,7 @@ void network_send_level_warp_repeat(void) {
     populate_packet_data(&data, false, eventId);
 
     struct Packet p;
-    packet_init(&p, PACKET_LEVEL_WARP, false);
+    packet_init(&p, PACKET_LEVEL_WARP, false, false);
     packet_write(&p, &data, sizeof(struct PacketLevelWarpData));
     network_send(&p);
 
@@ -103,7 +103,7 @@ static void network_send_level_warp_done(u8 remoteEventId) {
     populate_packet_data(&data, true, remoteEventId);
 
     struct Packet p;
-    packet_init(&p, PACKET_LEVEL_WARP, true);
+    packet_init(&p, PACKET_LEVEL_WARP, true, false);
     packet_write(&p, &data, sizeof(struct PacketLevelWarpData));
     network_send(&p);
 

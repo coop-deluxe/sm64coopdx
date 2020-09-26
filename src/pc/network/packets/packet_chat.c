@@ -13,7 +13,7 @@ static u8 onRemoteChatId = 0;
 void network_send_chat(char* message) {
     u16 messageLength = strlen(message);
     struct Packet p;
-    packet_init(&p, PACKET_CHAT, true);
+    packet_init(&p, PACKET_CHAT, true, false);
     packet_write(&p, &localChatId, sizeof(u8));
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));

@@ -5,7 +5,7 @@
 
 void network_send_kick(enum KickReasonType kickReason) {
     struct Packet p;
-    packet_init(&p, PACKET_KICK, FALSE);
+    packet_init(&p, PACKET_KICK, false, false);
     packet_write(&p, &kickReason, sizeof(enum KickReasonType));
     network_send_to(0, &p);
 }

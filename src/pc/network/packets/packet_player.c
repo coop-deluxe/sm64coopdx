@@ -8,9 +8,6 @@
 #include "game/area.h"
 #include "audio/external.h"
 
-#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
-#define GET_BIT(val, num) (((val) >> (num)) & 0x01)
-
 #pragma pack(1)
 struct PacketPlayerData {
     u32 rawData[80];
@@ -147,7 +144,7 @@ void network_send_player(void) {
     read_packet_data(&data, &gMarioStates[0]);
 
     struct Packet p;
-    packet_init(&p, PACKET_PLAYER, false);
+    packet_init(&p, PACKET_PLAYER, false, false);
     packet_write(&p, &data, sizeof(struct PacketPlayerData));
     network_send(&p);
 }

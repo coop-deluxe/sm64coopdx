@@ -39,6 +39,7 @@ struct Packet {
     u16 cursor;
     bool error;
     bool reliable;
+    bool levelAreaMustMatch;
     u16 seqId;
     bool sent;
     u8 buffer[PACKET_LENGTH];
@@ -53,8 +54,9 @@ enum KickReasonType {
 void packet_receive(struct Packet* packet);
 
 // packet_read_write.c
-void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable);
+void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch);
 void packet_write(struct Packet* packet, void* data, u16 length);
+u8 packet_initial_read(struct Packet* packet);
 void packet_read(struct Packet* packet, void* data, u16 length);
 u32 packet_hash(struct Packet* packet);
 bool packet_check_hash(struct Packet* packet);
@@ -125,7 +127,7 @@ void network_receive_join(struct Packet* p);
 
 // packet_custom.c
 u8 network_register_custom_packet(void (*send_callback)(struct Packet* p, void* params), void (*receive_callback)(struct Packet* p));
-void network_send_custom(u8 customId, bool reliable, void* params);
+void network_send_custom(u8 customId, bool reliable, bool levelAreaMustMatch, void* params);
 void network_receive_custom(struct Packet* p);
 
 // packet_chat.c

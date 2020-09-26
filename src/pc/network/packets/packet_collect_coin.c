@@ -55,7 +55,7 @@ void network_send_collect_coin(struct Object* o) {
     enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
-    packet_init(&p, PACKET_COLLECT_COIN, true);
+    packet_init(&p, PACKET_COLLECT_COIN, true, true);
     packet_write(&p, &localCoinId, sizeof(u8));
     packet_write(&p, &behaviorId, sizeof(enum BehaviorId));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);

@@ -35,7 +35,7 @@ void network_send_inside_painting(void) {
     populate_packet_data(&data);
 
     struct Packet p;
-    packet_init(&p, PACKET_INSIDE_PAINTING, true);
+    packet_init(&p, PACKET_INSIDE_PAINTING, true, false);
     packet_write(&p, &data, sizeof(struct PacketInsidePaintingData));
     network_send(&p);
     seqId++;

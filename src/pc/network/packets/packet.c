@@ -11,6 +11,12 @@ void packet_receive(struct Packet* p) {
         return;
     }
 
+    // send an ACK if requested
+    network_send_ack(p);
+
+    // check if we should drop packet
+    if (!packet_initial_read(p)) { return; }
+
     switch (packetType) {
         case PACKET_ACK:                 network_receive_ack(p);                 break;
         case PACKET_PLAYER:              network_receive_player(p);              break;
@@ -35,7 +41,4 @@ void packet_receive(struct Packet* p) {
         case PACKET_CUSTOM:              network_receive_custom(p);              break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
     }
-
-    // send an ACK if requested
-    network_send_ack(p);
 }

@@ -13,7 +13,7 @@ void network_send_reservation_request(void) {
     assert(gNetworkType == NT_CLIENT);
 
     struct Packet p;
-    packet_init(&p, PACKET_RESERVATION_REQUEST, true);
+    packet_init(&p, PACKET_RESERVATION_REQUEST, true, false);
     network_send(&p);
 }
 
@@ -48,7 +48,7 @@ void network_send_reservation(void) {
     }
 
     struct Packet p;
-    packet_init(&p, PACKET_RESERVATION, true);
+    packet_init(&p, PACKET_RESERVATION, true, false);
     packet_write(&p, reservedObjs, sizeof(u8) * RESERVATION_COUNT);
     network_send(&p);
 }

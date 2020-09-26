@@ -1,7 +1,8 @@
 #include "../network.h"
+#include "game/area.h"
 
 static u16 nextSeqNum = 1;
-void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable) {
+void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
     packet->buffer[0] = (char)packetType;
     if (reliable) {
@@ -14,7 +15,18 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet->cursor = 3;
     packet->error = false;
     packet->reliable = reliable;
+    packet->levelAreaMustMatch = levelAreaMustMatch;
     packet->sent = false;
+
+    // write packet flags
+    u8 flags;
+    flags |= SET_BIT(packet->levelAreaMustMatch, 0);
+    packet_write(packet, &flags, sizeof(u8));
+
+    if (levelAreaMustMatch) {
+        packet_write(packet, &gCurrLevelNum, sizeof(s16));
+        packet_write(packet, &gCurrAreaIndex, sizeof(s16));
+    }
 }
 
 void packet_write(struct Packet* packet, void* data, u16 length) {
@@ -22,6 +34,27 @@ void packet_write(struct Packet* packet, void* data, u16 length) {
     memcpy(&packet->buffer[packet->cursor], data, length);
     packet->dataLength += length;
     packet->cursor += length;
+}
+
+u8 packet_initial_read(struct Packet* packet) {
+    // read packet flags
+    u8 flags = 0;
+    packet_read(packet, &flags, sizeof(u8));
+    packet->levelAreaMustMatch = GET_BIT(flags, 0);
+
+    if (packet->levelAreaMustMatch) {
+        s16 currLevelNum;
+        s16 currAreaIndex;
+        packet_read(packet, &currLevelNum, sizeof(s16));
+        packet_read(packet, &currAreaIndex, sizeof(s16));
+        if (currLevelNum != gCurrLevelNum || currAreaIndex != gCurrAreaIndex) {
+            // drop packet
+            return FALSE;
+        }
+    }
+
+    // don't drop packet
+    return TRUE;
 }
 
 void packet_read(struct Packet* packet, void* data, u16 length) {

@@ -47,7 +47,7 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
     enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
-    packet_init(&p, PACKET_COLLECT_STAR, true);
+    packet_init(&p, PACKET_COLLECT_STAR, true, false);
 
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gCurrCourseNum, sizeof(s16));

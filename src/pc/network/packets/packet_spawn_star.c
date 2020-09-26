@@ -7,7 +7,7 @@ extern struct Object* gCurrentObject;
 
 void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams) {
     struct Packet p;
-    packet_init(&p, PACKET_SPAWN_STAR, true);
+    packet_init(&p, PACKET_SPAWN_STAR, true, true);
     packet_write(&p, &starType, sizeof(u8));
     packet_write(&p, &x, sizeof(f32));
     packet_write(&p, &y, sizeof(f32));

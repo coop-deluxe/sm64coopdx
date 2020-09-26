@@ -9,6 +9,9 @@
 #include "packets/packet.h"
 #include "../cliopts.h"
 
+#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
+#define GET_BIT(val, num) (((val) >> (num)) & 0x01)
+
 // Mario 64 specific externs
 extern struct MarioState gMarioStates[];
 

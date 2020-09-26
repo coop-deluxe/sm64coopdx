@@ -46,7 +46,7 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
     assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
 
     struct Packet p;
-    packet_init(&p, PACKET_SPAWN_OBJECTS, true);
+    packet_init(&p, PACKET_SPAWN_OBJECTS, true, true);
     packet_write(&p, &localSpawnId, sizeof(u8));
     packet_write(&p, &objectCount, sizeof(u8));
 

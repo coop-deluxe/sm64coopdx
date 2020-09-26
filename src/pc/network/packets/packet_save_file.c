@@ -5,7 +5,7 @@
 void network_send_save_file(s32 fileIndex) {
     assert(gNetworkType == NT_CLIENT);
     struct Packet p;
-    packet_init(&p, PACKET_SAVE_FILE, true);
+    packet_init(&p, PACKET_SAVE_FILE, true, false);
     packet_write(&p, &fileIndex, sizeof(s32));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
 }

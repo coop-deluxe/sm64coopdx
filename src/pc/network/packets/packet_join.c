@@ -22,7 +22,7 @@ void network_send_join_request(void) {
     gOverrideEeprom = eeprom;
 
     struct Packet p;
-    packet_init(&p, PACKET_JOIN_REQUEST, true);
+    packet_init(&p, PACKET_JOIN_REQUEST, true, false);
     network_send_to(0, &p);
     LOG_INFO("sending join request");
 }
@@ -52,7 +52,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     char hash[HASH_LENGTH] = GIT_HASH;
 
     struct Packet p;
-    packet_init(&p, PACKET_JOIN, true);
+    packet_init(&p, PACKET_JOIN, true, false);
     packet_write(&p, &hash, sizeof(u8) * HASH_LENGTH);
     packet_write(&p, &joinRequestPacket->localIndex, sizeof(u8));
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));

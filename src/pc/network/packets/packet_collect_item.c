@@ -52,7 +52,7 @@ void network_send_collect_item(struct Object* o) {
     enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
-    packet_init(&p, PACKET_COLLECT_ITEM, true);
+    packet_init(&p, PACKET_COLLECT_ITEM, true, true);
     packet_write(&p, &localItemId, sizeof(u8));
     packet_write(&p, &behaviorId, sizeof(enum BehaviorId));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
