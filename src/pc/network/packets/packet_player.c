@@ -10,120 +10,221 @@
 #define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
 #define GET_BIT(val, num) (((val) >> (num)) & 0x01)
 
+#pragma pack(1)
+struct PacketPlayerData {
+    u32 rawData[80];
+    struct Controller controller;
+    s16 nodeFlags;
+
+    u16 input;
+    u32 flags;
+    u32 particleFlags;
+    u32 action;
+    u32 prevAction;
+    u16 actionState;
+    u16 actionTimer;
+    u32 actionArg;
+    f32 intendedMag;
+    s16 intendedYaw;
+    s16 invincTimer;
+    u8  framesSinceA;
+    u8  framesSinceB;
+    u8  wallKickTimer;
+    u8  doubleJumpTimer;
+    Vec3s faceAngle;
+    Vec3s angleVel;
+    s16 slideYaw;
+    s16 twirlYaw;
+    Vec3f pos;
+    Vec3f vel;
+    f32 forwardVel;
+    f32 slideVelX;
+    f32 slideVelZ;
+    s16 health;
+    u8  squishTimer;
+    f32 peakHeight;
+    s16 currentRoom;
+
+    u8  customFlags;
+    u32 heldSyncID;
+    u32 heldBySyncID;
+};
+
+static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
+    u32 heldSyncID   = (m->heldObj != NULL)   ? m->heldObj->oSyncID   : 0;
+    u32 heldBySyncID = (m->heldByObj != NULL) ? m->heldByObj->oSyncID : 0;
+    u8 customFlags   = SET_BIT((m->freeze > 0), 0);
+
+    memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * 80);
+    data->nodeFlags    = m->marioObj->header.gfx.node.flags;
+    data->controller   = *m->controller;
+
+    data->input           = m->input;
+    data->flags           = m->flags;
+    data->particleFlags   = m->particleFlags;
+    data->action          = m->action;
+    data->prevAction      = m->prevAction;
+    data->actionState     = m->actionState;
+    data->actionTimer     = m->actionTimer;
+    data->actionArg       = m->actionArg;
+    data->intendedMag     = m->intendedMag;
+    data->intendedYaw     = m->intendedYaw;
+    data->invincTimer     = m->invincTimer;
+    data->framesSinceA    = m->framesSinceA;
+    data->framesSinceB    = m->framesSinceB;
+    data->wallKickTimer   = m->wallKickTimer;
+    data->doubleJumpTimer = m->doubleJumpTimer;
+    memcpy(data->faceAngle, m->faceAngle, sizeof(s16) * 3);
+    memcpy(data->angleVel,  m->angleVel,  sizeof(s16) * 3);
+    data->slideYaw        = m->slideYaw;
+    data->twirlYaw        = m->twirlYaw;
+    memcpy(data->pos, m->pos, sizeof(f32) * 3);
+    memcpy(data->vel, m->vel, sizeof(f32) * 3);
+    data->forwardVel      = m->forwardVel;
+    data->slideVelX       = m->slideVelX;
+    data->slideVelZ       = m->slideVelZ;
+    data->health          = m->health;
+    data->squishTimer     = m->squishTimer;
+    data->peakHeight      = m->peakHeight;
+    data->currentRoom     = m->currentRoom;
+
+    data->customFlags  = customFlags;
+    data->heldSyncID   = heldSyncID;
+    data->heldBySyncID = heldBySyncID;
+}
+
+static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
+                              u8* customFlags, u32* heldSyncID, u32* heldBySyncID) {
+    memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
+    m->marioObj->header.gfx.node.flags = data->nodeFlags;
+    *m->controller = data->controller;
+
+    m->input           = data->input;
+    m->flags           = data->flags;
+    m->particleFlags   = data->particleFlags;
+    m->action          = data->action;
+    m->prevAction      = data->prevAction;
+    m->actionState     = data->actionState;
+    m->actionTimer     = data->actionTimer;
+    m->actionArg       = data->actionArg;
+    m->intendedMag     = data->intendedMag;
+    m->intendedYaw     = data->intendedYaw;
+    m->invincTimer     = data->invincTimer;
+    m->framesSinceA    = data->framesSinceA;
+    m->framesSinceB    = data->framesSinceB;
+    m->wallKickTimer   = data->wallKickTimer;
+    m->doubleJumpTimer = data->doubleJumpTimer;
+    memcpy(m->faceAngle, data->faceAngle, sizeof(s16) * 3);
+    memcpy(m->angleVel,  data->angleVel,  sizeof(s16) * 3);
+    m->slideYaw        = data->slideYaw;
+    m->twirlYaw        = data->twirlYaw;
+    memcpy(m->pos, data->pos, sizeof(f32) * 3);
+    memcpy(m->vel, data->vel, sizeof(f32) * 3);
+    m->forwardVel      = data->forwardVel;
+    m->slideVelX       = data->slideVelX;
+    m->slideVelZ       = data->slideVelZ;
+    m->health          = data->health;
+    m->squishTimer     = data->squishTimer;
+    m->peakHeight      = data->peakHeight;
+    m->currentRoom     = data->currentRoom;
+
+    *customFlags  = data->customFlags;
+    *heldSyncID   = data->heldSyncID;
+    *heldBySyncID = data->heldBySyncID;
+}
+
 void network_send_player(void) {
     if (gMarioStates[0].marioObj == NULL) { return; }
-    u32 heldSyncID = (gMarioStates[0].heldObj != NULL)
-                   ? gMarioStates[0].heldObj->oSyncID
-                   : 0;
-    u32 heldBySyncID = (gMarioStates[0].heldByObj != NULL)
-                     ? gMarioStates[0].heldByObj->oSyncID
-                     : 0;
 
-    u8 customFlags = SET_BIT((gMarioStates[0].freeze > 0), 0);
+    struct PacketPlayerData data = { 0 };
+    read_packet_data(&data, &gMarioStates[0]);
 
     struct Packet p;
     packet_init(&p, PACKET_PLAYER, false);
-    packet_write(&p, &gMarioStates[0], sizeof(u32) * 24);
-    packet_write(&p, gMarioStates[0].controller, 20);
-    packet_write(&p, gMarioStates[0].marioObj->rawData.asU32, sizeof(u32) * 80);
-    packet_write(&p, &gMarioStates[0].health, sizeof(s16));
-    packet_write(&p, &gMarioStates[0].marioObj->header.gfx.node.flags, sizeof(s16));
-    packet_write(&p, &gMarioStates[0].actionState, sizeof(u16));
-    packet_write(&p, &gMarioStates[0].actionTimer, sizeof(u16));
-    packet_write(&p, &gMarioStates[0].actionArg, sizeof(u32));
-    packet_write(&p, &gMarioStates[0].currentRoom, sizeof(s16));
-    packet_write(&p, &gMarioStates[0].squishTimer, sizeof(u8));
-    packet_write(&p, &gMarioStates[0].peakHeight, sizeof(f32));
-    packet_write(&p, &customFlags, sizeof(u8));
-    packet_write(&p, &heldSyncID, sizeof(u32));
-    packet_write(&p, &heldBySyncID, sizeof(u32));
+    packet_write(&p, &data, sizeof(struct PacketPlayerData));
     network_send(&p);
 }
 
 void network_receive_player(struct Packet* p) {
-    if (gMarioStates[1].marioObj == NULL) { return; }
+    struct MarioState* m = &gMarioStates[1];
+    if (m == NULL || m->marioObj == NULL) { return; }
 
     // save previous state
-    u32 heldSyncID = 0;
-    u32 heldBySyncID = 0;
-    u16 playerIndex = gMarioStates[1].playerIndex;
-    u8 customFlags = 0;
-    u32 oldAction = gMarioStates[1].action;
-    u16 oldActionState = gMarioStates[1].actionState;
-    u16 oldActionArg = gMarioStates[1].actionArg;
-    u32 oldBehParams = gMarioStates[1].marioObj->oBehParams;
+    struct PacketPlayerData oldData = { 0 };
+    read_packet_data(&oldData, m);
+    u16 playerIndex  = m->playerIndex;
+    u32 oldBehParams = m->marioObj->oBehParams;
 
     // load mario information from packet
-    packet_read(p, &gMarioStates[1], sizeof(u32) * 24);
-    packet_read(p, gMarioStates[1].controller, 20);
-    packet_read(p, &gMarioStates[1].marioObj->rawData.asU32, sizeof(u32) * 80);
-    packet_read(p, &gMarioStates[1].health, sizeof(s16));
-    packet_read(p, &gMarioStates[1].marioObj->header.gfx.node.flags, sizeof(s16));
-    packet_read(p, &gMarioStates[1].actionState, sizeof(u16));
-    packet_read(p, &gMarioStates[1].actionTimer, sizeof(u16));
-    packet_read(p, &gMarioStates[1].actionArg, sizeof(u32));
-    packet_read(p, &gMarioStates[1].currentRoom, sizeof(s16));
-    packet_read(p, &gMarioStates[1].squishTimer, sizeof(u8));
-    packet_read(p, &gMarioStates[1].peakHeight, sizeof(f32));
-    packet_read(p, &customFlags, sizeof(u8));
-    packet_read(p, &heldSyncID, sizeof(u32));
-    packet_read(p, &heldBySyncID, sizeof(u32));
+    struct PacketPlayerData data = { 0 };
+    packet_read(p, &data, sizeof(struct PacketPlayerData));
+
+    // check to see if we should just drop this packet
+    if (oldData.action == ACT_JUMBO_STAR_CUTSCENE && data.action == ACT_JUMBO_STAR_CUTSCENE) {
+        return;
+    }
+
+    // apply data from packet to mario state
+    u32 heldSyncID   = 0;
+    u32 heldBySyncID = 0;
+    u8 customFlags   = 0;
+    write_packet_data(&data, m, &customFlags, &heldSyncID, &heldBySyncID);
 
     // read custom flags
-    gMarioStates[1].freeze = GET_BIT(customFlags, 0);
+    m->freeze = GET_BIT(customFlags, 0);
 
     // reset player index
-    gMarioStates[1].playerIndex = playerIndex;
-    gMarioStates[1].marioObj->oBehParams = oldBehParams;
+    m->playerIndex = playerIndex;
+    m->marioObj->oBehParams = oldBehParams;
 
     // reset mario sound play flag so that their jump sounds work
-    if (gMarioStates[1].action != oldAction) {
-        gMarioStates[1].flags &= ~(MARIO_ACTION_SOUND_PLAYED | MARIO_MARIO_SOUND_PLAYED);
+    if (m->action != oldData.action) {
+        m->flags &= ~(MARIO_ACTION_SOUND_PLAYED | MARIO_MARIO_SOUND_PLAYED);
     }
 
     // find and set their held object
     if (heldSyncID != 0 && gSyncObjects[heldSyncID].o != NULL) {
         // TODO: do we have to move graphics nodes around to make this visible?
         struct Object* heldObj = gSyncObjects[heldSyncID].o;
-        if (gMarioStates[0].heldObj == heldObj && gNetworkType == NT_CLIENT) { // two-player hack: needs priority
+        if (m->heldObj == heldObj && gNetworkType == NT_CLIENT) { // two-player hack: needs priority
             mario_drop_held_object(&gMarioStates[0]);
             force_idle_state(&gMarioStates[0]);
         }
-        gMarioStates[1].heldObj = heldObj;
+        m->heldObj = heldObj;
         heldObj->oHeldState = HELD_HELD;
         heldObj->heldByPlayerIndex = 1;
     } else {
-        gMarioStates[1].heldObj = NULL;
+        m->heldObj = NULL;
     }
 
     // find and set their held-by object
     if (heldBySyncID != 0 && gSyncObjects[heldBySyncID].o != NULL) {
         // TODO: do we have to move graphics nodes around to make this visible?
-        gMarioStates[1].heldByObj = gSyncObjects[heldBySyncID].o;
+        m->heldByObj = gSyncObjects[heldBySyncID].o;
     } else {
-        gMarioStates[1].heldByObj = NULL;
+        m->heldByObj = NULL;
     }
 
     // jump kicking: restore action state, otherwise it won't play
-    if (gMarioStates[1].action == ACT_JUMP_KICK) {
-        gMarioStates[1].actionState = oldActionState;
+    if (m->action == ACT_JUMP_KICK) {
+        m->actionState = oldData.actionState;
     }
 
     // punching:
-    if ((gMarioStates[1].action == ACT_PUNCHING || gMarioStates[1].action == ACT_MOVE_PUNCHING)) {
+    if ((m->action == ACT_PUNCHING || m->action == ACT_MOVE_PUNCHING)) {
         // play first punching sound, otherwise it will be missed
-        if (gMarioStates[1].action != oldAction) {
-            play_sound(SOUND_MARIO_PUNCH_YAH, gMarioStates[1].marioObj->header.gfx.cameraToObject);
+        if (m->action != oldData.action) {
+            play_sound(SOUND_MARIO_PUNCH_YAH, m->marioObj->header.gfx.cameraToObject);
         }
         // make the first punch large, otherwise it will be missed
-        if (gMarioStates[1].actionArg == 2 && oldActionArg == 1) {
-            gMarioStates[1].marioBodyState->punchState = (0 << 6) | 4;
+        if (m->actionArg == 2 && oldData.actionArg == 1) {
+            m->marioBodyState->punchState = (0 << 6) | 4;
         }
     }
 
     // action changed, reset timer
-    if (gMarioStates[1].action != oldAction) {
-        gMarioStates[1].actionTimer = 0;
+    if (m->action != oldData.action) {
+        m->actionTimer = 0;
     }
 }
 

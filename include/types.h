@@ -370,6 +370,11 @@ struct MarioState
     /*????*/ u8 isSnoring;
     /*????*/ struct Object* bubbleObj;
     /*????*/ u8 freeze;
+
+    // Variables for a spline curve animation (used for the flight path in the grand star cutscene)
+    /*????*/ Vec4s* splineKeyframe;
+    /*????*/ float splineKeyframeFraction;
+    /*????*/ int splineState;
 };
 
 #define PLAY_MODE_NORMAL 0

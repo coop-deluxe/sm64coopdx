@@ -68,6 +68,9 @@ void bhv_grand_star_loop(void) {
     } else {
         cur_obj_become_tangible();
         if (o->oInteractStatus & INT_STATUS_INTERACTED) {
+            if (gMarioStates[0].action != ACT_JUMBO_STAR_CUTSCENE) {
+                set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
+            }
             obj_mark_for_deletion(o);
             o->oInteractStatus = 0;
         }

@@ -2,15 +2,23 @@
 #include "game/level_update.h"
 #include "game/camera.h"
 #include "pc/network/network.h"
+#include "game/mario.h"
+#include "sm64.h"
 
 #ifdef DEBUG
 
 static u8 warpToLevel = LEVEL_CCM;
 
 #define SCANCODE_0 0x0B
+#define SCANCODE_1 0x02
+#define SCANCODE_2 0x03
 #define SCANCODE_3 0x04
+#define SCANCODE_4 0x05
+#define SCANCODE_5 0x06
 #define SCANCODE_6 0x07
 #define SCANCODE_7 0x08
+#define SCANCODE_8 0x09
+#define SCANCODE_9 0x0A
 
 static void debug_breakpoint_here(void) {
     // create easy breakpoint position for debugging
@@ -92,6 +100,10 @@ static void debug_warp_area() {
     }
 }
 
+static void debug_grand_star(void) {
+    set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
+}
+
 static void debug_suicide(void) {
     gMarioStates[0].hurtCounter = 31;
 }
@@ -103,6 +115,7 @@ void debug_keyboard_on_key_down(int scancode) {
 #ifdef DEVELOPMENT
         case SCANCODE_6: debug_warp_level(warpToLevel); break;
         case SCANCODE_7: debug_warp_area(); break;
+        case SCANCODE_9: debug_grand_star(); break;
         case SCANCODE_0: debug_suicide(); break;
 #endif
     }

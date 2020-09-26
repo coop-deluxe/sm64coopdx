@@ -1228,6 +1228,7 @@ u8 player_is_sliding(struct MarioState* m) {
 
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
+    if (m->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
     struct MarioState* m2 = NULL;
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1237,6 +1238,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         }
     }
     if (m2 == NULL) { return FALSE; }
+    if (m2->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
     // don't do further interactions if we've hopped on top
     if (resolve_player_collision(m, m2)) {

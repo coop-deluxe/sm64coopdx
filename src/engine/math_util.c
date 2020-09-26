@@ -7,11 +7,6 @@
 
 #include "trig_tables.inc.c"
 
-// Variables for a spline curve animation (used for the flight path in the grand star cutscene)
-Vec4s *gSplineKeyframe;
-float gSplineKeyframeFraction;
-int gSplineState;
-
 // These functions have bogus return values.
 // Disable the compiler warning.
 #pragma GCC diagnostic push
@@ -824,14 +819,14 @@ f32 atan2f(f32 y, f32 x) {
  * [0, 0, 0, 0, 1, 2, ... n-1, n, n, n, n]
  * TODO: verify the classification of the spline / figure out how polynomials were computed
  */
-void spline_get_weights(Vec4f result, f32 t, UNUSED s32 c) {
+void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c) {
     f32 tinv = 1 - t;
     f32 tinv2 = tinv * tinv;
     f32 tinv3 = tinv2 * tinv;
     f32 t2 = t * t;
     f32 t3 = t2 * t;
 
-    switch (gSplineState) {
+    switch (m->splineState) {
         case CURVE_BEGIN_1:
             result[0] = tinv3;
             result[1] = t3 * 1.75f - t2 * 4.5f + t * 3.0f;
@@ -873,10 +868,10 @@ void spline_get_weights(Vec4f result, f32 t, UNUSED s32 c) {
  * The array should end with three entries with s=0 (infinite keyframe duration).
  * That's because the spline has a 3rd degree polynomial, so it looks 3 points ahead.
  */
-void anim_spline_init(Vec4s *keyFrames) {
-    gSplineKeyframe = keyFrames;
-    gSplineKeyframeFraction = 0;
-    gSplineState = 1;
+void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
+    m->splineKeyframe = keyFrames;
+    m->splineKeyframeFraction = 0;
+    m->splineState = 1;
 }
 
 /**
@@ -884,33 +879,33 @@ void anim_spline_init(Vec4s *keyFrames) {
  * anim_spline_init should be called before polling for vectors.
  * Returns TRUE when the last point is reached, FALSE otherwise.
  */
-s32 anim_spline_poll(Vec3f result) {
+s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
     Vec4f weights;
     s32 i;
     s32 hasEnded = FALSE;
 
     vec3f_copy(result, gVec3fZero);
-    spline_get_weights(weights, gSplineKeyframeFraction, gSplineState);
+    spline_get_weights(m, weights, m->splineKeyframeFraction, m->splineState);
     for (i = 0; i < 4; i++) {
-        result[0] += weights[i] * gSplineKeyframe[i][1];
-        result[1] += weights[i] * gSplineKeyframe[i][2];
-        result[2] += weights[i] * gSplineKeyframe[i][3];
+        result[0] += weights[i] * m->splineKeyframe[i][1];
+        result[1] += weights[i] * m->splineKeyframe[i][2];
+        result[2] += weights[i] * m->splineKeyframe[i][3];
     }
 
-    if ((gSplineKeyframeFraction += gSplineKeyframe[0][0] / 1000.0f) >= 1) {
-        gSplineKeyframe++;
-        gSplineKeyframeFraction--;
-        switch (gSplineState) {
+    if ((m->splineKeyframeFraction += m->splineKeyframe[0][0] / 1000.0f) >= 1) {
+        m->splineKeyframe++;
+        m->splineKeyframeFraction--;
+        switch (m->splineState) {
             case CURVE_END_2:
                 hasEnded = TRUE;
                 break;
             case CURVE_MIDDLE:
-                if (gSplineKeyframe[2][0] == 0) {
-                    gSplineState = CURVE_END_1;
+                if (m->splineKeyframe[2][0] == 0) {
+                    m->splineState = CURVE_END_1;
                 }
                 break;
             default:
-                gSplineState++;
+                m->splineState++;
                 break;
         }
     }

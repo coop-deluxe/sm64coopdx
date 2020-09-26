@@ -1940,6 +1940,11 @@ static s32 act_intro_cutscene(struct MarioState *m) {
     return FALSE;
 }
 
+static void jumbo_star_offset(struct MarioState* m) {
+    m->pos[0] += 300.0f * sins(m->faceAngle[1] + 0x4000 * m->playerIndex);
+    m->pos[2] += 300.0f * coss(m->faceAngle[1] + 0x4000 * m->playerIndex);
+}
+
 // jumbo star cutscene: Mario lands after grabbing the jumbo star
 static void jumbo_star_cutscene_falling(struct MarioState *m) {
     if (m->actionState == 0) {
@@ -1947,7 +1952,7 @@ static void jumbo_star_cutscene_falling(struct MarioState *m) {
         m->flags |= (MARIO_WING_CAP | MARIO_CAP_ON_HEAD);
 
         m->faceAngle[1] = -0x8000;
-        m->pos[0] = 0.0f;
+        m->pos[0] = 100.0f * m->playerIndex;
         m->pos[2] = 0.0f;
 
         mario_set_forward_vel(m, 0.0f);
@@ -2011,6 +2016,8 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
     }
 
     vec3f_set(m->pos, 0.0f, 307.0, marioObj->rawData.asF32[0x22]);
+    m->pos[0] += 100.0f * m->playerIndex;
+
     update_mario_pos_for_anim(m);
     vec3f_copy(marioObj->header.gfx.pos, m->pos);
     vec3s_set(marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
@@ -2033,15 +2040,19 @@ static s32 jumbo_star_cutscene_flying(struct MarioState *m) {
     switch (m->actionState) {
         case 0:
             set_mario_animation(m, MARIO_ANIM_WING_CAP_FLY);
-            anim_spline_init(sJumboStarKeyframes);
+            anim_spline_init(m, sJumboStarKeyframes);
             m->actionState++;
             // fall through
         case 1:
-            if (anim_spline_poll(targetPos)) {
+            if (anim_spline_poll(m, targetPos)) {
                 // does this twice
                 set_mario_action(m, ACT_FREEFALL, 0);
                 m->actionState++;
             } else {
+                targetPos[0] += 100.0f * m->playerIndex;
+                float heightScalar = min(m->actionTimer / 30.0f, 1.0f);
+                targetPos[1] -= 100.0f * m->playerIndex * heightScalar;
+
                 targetDX = targetPos[0] - m->pos[0];
                 targetDY = targetPos[1] - m->pos[1];
                 targetDZ = targetPos[2] - m->pos[2];
@@ -2064,7 +2075,7 @@ static s32 jumbo_star_cutscene_flying(struct MarioState *m) {
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
     m->particleFlags |= PARTICLE_SPARKLES;
 
-    if (m->actionTimer++ == 500) {
+    if (m->actionTimer++ == 500 && m->playerIndex == 0) {
         level_trigger_warp(m, WARP_OP_CREDITS_START);
     }
 
