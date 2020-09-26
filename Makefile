@@ -118,6 +118,21 @@ ifneq ($(TARGET_BITS),0)
   BITS := -m$(TARGET_BITS)
 endif
 
+# Determine default windows target bits
+
+ifeq ($(WINDOWS_BUILD), 1)
+  ifeq ($(TARGET_BITS), 0)
+    CPU_TYPE := $(firstword $(subst -, ,$(shell $(CC) -dumpmachine)))
+    ifeq ($(CPU_TYPE), x86_64)
+      TARGET_BITS := 64
+    else ifeq ($(CPU_TYPE), i686)
+      TARGET_BITS := 32
+    else ifeq ($(CPU_TYPE), mingw32)
+      TARGET_BITS := 32
+    endif
+  endif
+endif
+
 # Release (version) flag defs
 
 ifeq ($(VERSION),jp)
@@ -435,7 +450,11 @@ RPC_LIBS :=
 DISCORD_SDK_LIBS :=
 ifeq ($(DISCORD_SDK), 1)
   ifeq ($(WINDOWS_BUILD),1)
-    DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dll
+    ifeq ($(TARGET_BITS), 32)
+      DISCORD_SDK_LIBS := lib/discordsdk/x86/discord_game_sdk.dll
+    else
+      DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dll
+    endif
   else ifeq ($(OSX_BUILD),1)
     # needs testing
     DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib
