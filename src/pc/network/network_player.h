@@ -22,6 +22,9 @@ struct NetworkPlayer {
     u8 localIndex;
     u8 globalIndex;
     clock_t lastReceived;
+    s16 currLevelNum;
+    s16 currAreaIndex;
+    u8 fadeOpacity;
 };
 
 extern struct NetworkPlayer gNetworkPlayers[];

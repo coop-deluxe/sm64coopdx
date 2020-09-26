@@ -5,6 +5,7 @@
 #include "sm64.h"
 #include "game/interaction.h"
 #include "game/mario.h"
+#include "game/area.h"
 #include "audio/external.h"
 
 #define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
@@ -48,6 +49,9 @@ struct PacketPlayerData {
     u8  customFlags;
     u32 heldSyncID;
     u32 heldBySyncID;
+
+    s16 currLevelNum;
+    s16 currAreaIndex;
 };
 
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
@@ -91,6 +95,9 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->customFlags  = customFlags;
     data->heldSyncID   = heldSyncID;
     data->heldBySyncID = heldBySyncID;
+
+    data->currLevelNum = gCurrLevelNum;
+    data->currAreaIndex = gCurrAreaIndex;
 }
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
@@ -163,6 +170,17 @@ void network_receive_player(struct Packet* p) {
     if (oldData.action == ACT_JUMBO_STAR_CUTSCENE && data.action == ACT_JUMBO_STAR_CUTSCENE) {
         return;
     }
+
+    // check player level/area
+    u8 levelAreaMismatch = TRUE;
+    if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
+        struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
+        np->currLevelNum = data.currLevelNum;
+        np->currAreaIndex = data.currAreaIndex;
+        levelAreaMismatch = (data.currLevelNum != gCurrLevelNum || data.currAreaIndex != gCurrAreaIndex);
+        if (levelAreaMismatch) { np->fadeOpacity = 0; }
+    }
+    if (levelAreaMismatch) { return; }
 
     // apply data from packet to mario state
     u32 heldSyncID   = 0;

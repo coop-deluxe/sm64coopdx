@@ -1751,7 +1751,9 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
         m->marioObj->hitboxHeight = 160.0f;
     }
 
-    if ((m->flags & MARIO_TELEPORTING) && (m->fadeWarpOpacity != 0xFF)) {
+    struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
+    u8 teleportFade = (m->flags & MARIO_TELEPORTING) || (np->type != NPT_LOCAL && np->connected && np->fadeOpacity < 32);
+    if (teleportFade && (m->fadeWarpOpacity != 0xFF)) {
         bodyState->modelState &= ~0xFF;
         bodyState->modelState |= (0x100 | m->fadeWarpOpacity);
     }
@@ -1833,12 +1835,19 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
  */
 s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
-    // hide unconnected players
-    if (gNetworkPlayers[gMarioState->playerIndex].type != NPT_LOCAL) {
-        if (!gNetworkPlayers[gMarioState->playerIndex].connected) {
+    // hide inactive players
+    struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
+    if (np->type != NPT_LOCAL) {
+        if (!np->connected || np->currLevelNum != gCurrLevelNum || np->currAreaIndex != gCurrAreaIndex) {
             gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
             gMarioState->marioObj->oIntangibleTimer = -1;
             return 0;
+        }
+        if (np->fadeOpacity < 32) {
+            if (!(gMarioState->flags & MARIO_TELEPORTING)) {
+                np->fadeOpacity += 2;
+                gMarioState->fadeWarpOpacity = np->fadeOpacity << 3;
+            }
         }
     }
 

@@ -83,6 +83,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (np->connected) { continue; }
         np->connected = true;
+        np->currLevelNum = -1;
+        np->currAreaIndex = -1;
+        np->fadeOpacity = 0;
         np->localIndex = i;
         np->globalIndex = (gNetworkType == NT_SERVER) ? i : globalIndex;
         np->type = type;
