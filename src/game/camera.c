@@ -7127,6 +7127,9 @@ void reset_pan_distance(UNUSED struct Camera *c) {
  * Easter egg: the player 2 controller can move the camera's focus in the ending and credits.
  */
 void player2_rotate_cam(struct Camera *c, s16 minPitch, s16 maxPitch, s16 minYaw, s16 maxYaw) {
+    // disable for co-op
+    return;
+
     f32 distCamToFocus;
     s16 pitch, yaw, pitchCap;
 
