@@ -1297,12 +1297,6 @@ void bhv_bowser_loop(void) {
 }
 
 void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
-    // waiting for text / walking up
-    if (o->oAction == 5 || o->oAction == 6) {
-        *shouldOverride = TRUE;
-        *shouldOwn = FALSE;
-    }
-
     // tilting platform
     static u8 tiltingTimer = 0;
     if (o->oAction == 19) { tiltingTimer = 5; }
