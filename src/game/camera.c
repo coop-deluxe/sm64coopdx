@@ -7026,7 +7026,7 @@ void stop_cutscene_and_retrieve_stored_info(struct Camera *c) {
 
 void cap_switch_save(s16 dummy) {
     UNUSED s16 unused = dummy;
-    save_file_do_save(gCurrSaveFileNum - 1);
+    save_file_do_save(gCurrSaveFileNum - 1, FALSE);
 }
 
 void init_spline_point(struct CutsceneSplinePoint *splinePoint, s8 index, u8 speed, Vec3s point) {

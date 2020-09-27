@@ -14,5 +14,5 @@ void network_receive_save_file(struct Packet* p) {
     if (gNetworkType != NT_SERVER) { return; }
     s32 fileIndex = 0;
     packet_read(p, &fileIndex, sizeof(s32));
-    save_file_do_save(fileIndex);
+    save_file_do_save(fileIndex, FALSE);
 }
