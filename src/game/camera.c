@@ -5320,6 +5320,7 @@ void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ) {
     vec3f_add(start->pos, displacement);
     vec3f_add(end->focus, displacement);
     vec3f_add(end->pos, displacement);
+    skip_camera_interpolation();
 }
 
 /**

@@ -917,7 +917,8 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             gCurGraphNodeHeldObject->prevShadowPosTimestamp = gGlobalTimer;
         } else {
             if (gGlobalTimer == gCurGraphNodeObject->prevShadowPosTimestamp + 1 &&
-                gGlobalTimer != gCurGraphNodeObject->skipInterpolationTimestamp) {
+                gGlobalTimer != gCurGraphNodeObject->skipInterpolationTimestamp &&
+                gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
                 interpolate_vectors(shadowPosInterpolated, gCurGraphNodeObject->prevShadowPos, shadowPos);
             } else {
                 vec3f_copy(shadowPosInterpolated, shadowPos);
@@ -1076,7 +1077,8 @@ static void geo_process_object(struct Object *node) {
             mtxf_mul(gMatStack[gMatStackIndex + 1], *node->header.gfx.throwMatrix,
                      gMatStack[gMatStackIndex]);
             if (gGlobalTimer == node->header.gfx.prevThrowMatrixTimestamp + 1 &&
-                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp) {
+                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&
+                gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
                 interpolate_matrix(mtxf, *node->header.gfx.throwMatrix, node->header.gfx.prevThrowMatrix);
                 mtxf_mul(gMatStackInterpolated[gMatStackIndex + 1], mtxf,
                      gMatStackInterpolated[gMatStackIndex]);
@@ -1089,7 +1091,8 @@ static void geo_process_object(struct Object *node) {
         } else if (node->header.gfx.node.flags & GRAPH_RENDER_CYLBOARD) {
             Vec3f posInterpolated;
             if (gGlobalTimer == node->header.gfx.prevTimestamp + 1 &&
-                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp) {
+                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&
+                gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
                 interpolate_vectors(posInterpolated, node->header.gfx.prevPos, node->header.gfx.pos);
             } else {
                 vec3f_copy(posInterpolated, node->header.gfx.pos);
@@ -1103,7 +1106,8 @@ static void geo_process_object(struct Object *node) {
         } else if (node->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD) {
             Vec3f posInterpolated;
             if (gGlobalTimer == node->header.gfx.prevTimestamp + 1 &&
-                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp) {
+                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&
+                gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
                 interpolate_vectors(posInterpolated, node->header.gfx.prevPos, node->header.gfx.pos);
             } else {
                 vec3f_copy(posInterpolated, node->header.gfx.pos);
@@ -1118,7 +1122,8 @@ static void geo_process_object(struct Object *node) {
             Vec3f posInterpolated;
             Vec3s angleInterpolated;
             if (gGlobalTimer == node->header.gfx.prevTimestamp + 1 &&
-                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp) {
+                gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&
+                gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
                 interpolate_vectors(posInterpolated, node->header.gfx.prevPos, node->header.gfx.pos);
                 interpolate_angles(angleInterpolated, node->header.gfx.prevAngle, node->header.gfx.angle);
             } else {
@@ -1135,7 +1140,8 @@ static void geo_process_object(struct Object *node) {
         }
 
         if (gGlobalTimer == node->header.gfx.prevScaleTimestamp + 1 &&
-            gGlobalTimer != node->header.gfx.skipInterpolationTimestamp) {
+            gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&
+            gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
             interpolate_vectors(scaleInterpolated, node->header.gfx.prevScale, node->header.gfx.scale);
         } else {
             vec3f_copy(scaleInterpolated, node->header.gfx.scale);
