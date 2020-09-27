@@ -132,11 +132,11 @@ static u8 bhv_snowmans_bottom_loop_continue_dialog(void) {
 void bhv_snowmans_bottom_loop(void) {
     s16 sp1E;
 
-    int distanceToLocal = dist_between_objects(o, gMarioStates[0].marioObj);
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
 
     switch (o->oAction) {
         case 0:
-            if (distanceToLocal < 400 && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog) == 2) {
+            if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog) == 2) {
                 sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_110);
                 if (sp1E) {
                     o->oForwardVel = 10.0f;

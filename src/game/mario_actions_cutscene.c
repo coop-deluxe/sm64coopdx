@@ -349,6 +349,11 @@ s32 mario_ready_to_speak(struct MarioState* m) {
     return isReadyToSpeak;
 }
 
+u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
+    if (m->playerIndex == 0) { return TRUE; }
+    return (gContinueDialogFunctionObject == object);
+}
+
 // (can) place Mario in dialog?
 // initiate dialog?
 // return values:

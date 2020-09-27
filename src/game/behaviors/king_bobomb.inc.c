@@ -50,17 +50,18 @@ void king_bobomb_act_0(void) {
     o->oForwardVel = 0;
     o->oVelY = 0;
 #endif
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (o->oSubAction == 0) {
         cur_obj_become_intangible();
         gSecondCameraFocus = o;
         cur_obj_init_animation_with_sound(5);
         cur_obj_set_pos_to_home();
         o->oHealth = 3;
-        if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 500.0f, 100.0f)) {
+        if (should_start_or_continue_dialog(marioState, o) && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 500.0f, 100.0f)) {
             o->oSubAction++;
             func_8031FFB4(SEQ_PLAYER_LEVEL, 60, 40);
         }
-    } else if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, DIALOG_017, king_bobomb_act_0_continue_dialog)) {
+    } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, DIALOG_017, king_bobomb_act_0_continue_dialog)) {
         o->oAction = 2;
         o->oFlags |= OBJ_FLAG_HOLDABLE;
     }
@@ -216,7 +217,8 @@ u8 king_bobomb_act_7_continue_dialog(void) { return o->oAction == 7; }
 void king_bobomb_act_7(void) {
     cur_obj_init_animation_with_sound(2);
 
-    u8 updateDialog = (nearest_mario_state_to_object(o) == &gMarioStates[0]) || (gMarioStates[0].pos[1] >= o->oPosY - 100.0f);
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    u8 updateDialog = should_start_or_continue_dialog(marioState, o) || (gMarioStates[0].pos[1] >= o->oPosY - 100.0f);
     if (updateDialog && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, DIALOG_116, king_bobomb_act_7_continue_dialog)) {
         o->oAction = 8;
         network_send_object(o);
@@ -273,6 +275,7 @@ void king_bobomb_act_4(void) { // bobomb been thrown
 u8 king_bobomb_act_5_continue_dialog(void) { return o->oAction == 5 && o->oSubAction == 4; }
 
 void king_bobomb_act_5(void) { // bobomb returns home
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
     switch (o->oSubAction) {
         case 0:
             if (o->oTimer == 0)
@@ -310,11 +313,11 @@ void king_bobomb_act_5(void) { // bobomb returns home
                 o->oAction = 0;
                 stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
             }
-            if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 500.0f, 100.0f))
+            if (should_start_or_continue_dialog(marioState, o) && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 500.0f, 100.0f))
                 o->oSubAction++;
             break;
         case 4:
-            if (nearest_mario_state_to_object(o) == &gMarioStates[0] && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, DIALOG_128, king_bobomb_act_5_continue_dialog))
+            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, DIALOG_128, king_bobomb_act_5_continue_dialog))
                 o->oAction = 2;
             break;
     }

@@ -588,7 +588,7 @@ u8 koopa_the_quick_act_show_init_text_continue_dialog(void) { return o->oAction 
 static void koopa_the_quick_act_show_init_text(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     s32 response = 0;
-    if (marioState == &gMarioStates[0]) {
+    if (should_start_or_continue_dialog(marioState, o)) {
         response = obj_update_race_proposition_dialog(&gMarioStates[0], sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].initText, koopa_the_quick_act_show_init_text_continue_dialog);
     }
 
@@ -814,7 +814,7 @@ static void koopa_the_quick_act_after_race(void) {
             o->oFlags &= ~OBJ_FLAG_ACTIVE_FROM_AFAR;
         }
     } else if (o->parentObj->oKoopaRaceEndpointUnk100 > 0) {
-        if (marioState == &gMarioStates[0]) {
+        if (should_start_or_continue_dialog(marioState, o)) {
             s32 dialogResponse = cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, o->parentObj->oKoopaRaceEndpointUnk100, koopa_the_quick_act_after_race_continue_dialog);
             if (dialogResponse != 0) {
                 o->parentObj->oKoopaRaceEndpointUnk100 = -1;
