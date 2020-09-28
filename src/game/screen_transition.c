@@ -19,6 +19,11 @@ u16 sTransitionTextureFadeCount[2] = { 0 };
 static Gfx *sScreenTransitionVerticesPos[2];
 static Vtx *sScreenTransitionVertices;
 
+void reset_screen_transition_timers(void) {
+    memset(sTransitionColorFadeCount, 0, sizeof(u8) * 4);
+    memset(sTransitionTextureFadeCount, 0, sizeof(u16) * 2);
+}
+
 void patch_screen_transition_interpolated(void) {
     if (sScreenTransitionVerticesPos[0] != NULL) {
         gSPVertex(sScreenTransitionVerticesPos[0], VIRTUAL_TO_PHYSICAL(sScreenTransitionVertices), 8, 0);

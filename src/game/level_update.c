@@ -36,6 +36,8 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 
+#include "game/screen_transition.h"
+
 #define WARP_NODE_F0 0xF0
 #define WARP_NODE_DEATH 0xF1
 #define WARP_NODE_F2 0xF2
@@ -1006,7 +1008,7 @@ static void check_received_warp(void) {
         extern s16 gMenuMode;
         gMenuMode = -1;
         reset_dialog_render_state();
-        gWarpTransition.isActive = FALSE;
+        reset_screen_transition_timers();
     }
 
     set_play_mode((sWarpDest.type == WARP_TYPE_CHANGE_LEVEL)
