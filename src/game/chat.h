@@ -5,6 +5,7 @@ enum ChatMessageType {
     CMT_LOCAL,
     CMT_REMOTE,
     CMT_SYSTEM,
+    CMT_INPUT,
 };
 
 void render_chat(void);

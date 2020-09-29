@@ -45,7 +45,7 @@ void network_receive_chat(struct Packet* p) {
     onRemoteChatId = (onRemoteChatId + 1) % MAX_CHAT_IDS;
 
     // add the message
-    chat_add_message(remoteMessage, FALSE);
+    chat_add_message(remoteMessage, CMT_REMOTE);
 
     return;
 }

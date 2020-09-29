@@ -21,7 +21,7 @@
 
 struct ChatMessage {
     u8 dialog[CHAT_DIALOG_MAX];
-    u8 isLocal;
+    enum ChatMessageType type;
     u16 life;
 };
 
@@ -51,13 +51,13 @@ static void render_chat_message(struct ChatMessage* chatMessage, u8 index) {
     create_dl_scale_matrix(MENU_MTX_NOPUSH, chatBoxWidth, CHATBOX_SCALE_Y, 1.0f);
 
     u8 boxR, boxG, boxB;
-    if (chatMessage->isLocal == 2) {
+    if (chatMessage->type == CMT_INPUT) {
         boxR = 150;
         boxG = 150;
         boxB = 255;
     } else {
         f32 rgbScale = (((f32)chatMessage->life - ((f32)CHAT_LIFE_MAX * 0.98f)) / ((f32)CHAT_LIFE_MAX * 0.02f));
-        if (chatMessage->isLocal || rgbScale < 0) { rgbScale = 0; }
+        if (chatMessage->type == CMT_LOCAL || rgbScale < 0) { rgbScale = 0; }
         boxR = 255 * rgbScale;
         boxG = 255 * rgbScale;
         boxB = 255 * rgbScale;
@@ -69,18 +69,11 @@ static void render_chat_message(struct ChatMessage* chatMessage, u8 index) {
     create_dl_scale_matrix(MENU_MTX_NOPUSH, CHAT_SCALE / chatBoxWidth, CHAT_SCALE / CHATBOX_SCALE_Y, 1.0f);
 
     u8 textR, textG, textB;
-    if (chatMessage->isLocal == 1) {
-        textR = 200;
-        textG = 200;
-        textB = 255;
-    } else if (chatMessage->isLocal == 2) {
-        textR = 0;
-        textG = 0;
-        textB = 0;
-    } else {
-        textR = 255;
-        textG = 255;
-        textB = 255;
+    switch (chatMessage->type) {
+        case CMT_LOCAL:  textR = 200; textG = 200; textB = 255; break;
+        case CMT_INPUT:  textR =   0; textG =   0; textB =   0; break;
+        case CMT_SYSTEM: textR = 255; textG = 255; textB = 190; break;
+        default:         textR = 255; textG = 255; textB = 255;
     }
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
@@ -94,6 +87,7 @@ static void render_chat_message(struct ChatMessage* chatMessage, u8 index) {
 void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
     u8 character = '?';
     switch (chatMessageType) {
+        case CMT_INPUT:
         case CMT_LOCAL: character = 0xFD; break;
         case CMT_REMOTE: character = 0xFA; break;
         case CMT_SYSTEM: character = 0xF9; break;
@@ -103,9 +97,9 @@ void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
     msg->dialog[1] = 0x9E;
     str_ascii_to_dialog(ascii, &msg->dialog[2], MIN(strlen(ascii), CHAT_DIALOG_MAX - 3));
     msg->life = (sSelectedFileNum != 0) ? CHAT_LIFE_MAX : CHAT_LIFE_MAX / 3;
-    msg->isLocal = (chatMessageType == CMT_LOCAL);
+    msg->type = chatMessageType;
     onMessageIndex = (onMessageIndex + 1) % CHAT_MESSAGES_MAX;
-    play_sound(msg->isLocal ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
+    play_sound((msg->type == CMT_LOCAL) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
 }
 
 static void chat_stop_input(void) {
@@ -117,7 +111,7 @@ static void chat_send_input(void) {
     sInChatInput = FALSE;
     keyboard_stop_text_input();
     if (strlen(gTextInput) == 0) { return; }
-    chat_add_message(gTextInput, TRUE);
+    chat_add_message(gTextInput, CMT_LOCAL);
     network_send_chat(gTextInput);
 }
 
@@ -130,10 +124,10 @@ void render_chat(void) {
     u8 count = 0;
     if (sInChatInput) {
         struct ChatMessage inputMessage = { 0 };
+        inputMessage.type = CMT_INPUT;
         inputMessage.dialog[0] = 0xFD;
         inputMessage.dialog[1] = 0x9E;
         str_ascii_to_dialog(gTextInput, &inputMessage.dialog[2], MIN(strlen(gTextInput), CHAT_DIALOG_MAX - 3));
-        inputMessage.isLocal = 2;
         inputMessage.life = CHAT_LIFE_MAX;
         render_chat_message(&inputMessage, count++);
     }
