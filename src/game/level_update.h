@@ -95,6 +95,7 @@ struct SavedWarpValues {
 
 extern struct WarpDest sWarpDest;
 extern s8 gInWarpCheckpoint;
+extern u8 gRejectInstantWarp;
 
 extern s16 D_80339EE0;
 extern s16 sDelayedWarpOp;

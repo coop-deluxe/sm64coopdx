@@ -375,6 +375,8 @@ struct MarioState
     /*????*/ Vec4s* splineKeyframe;
     /*????*/ float splineKeyframeFraction;
     /*????*/ int splineState;
+
+    /*????*/ Vec3f nonInstantWarpPos;
 };
 
 #define PLAY_MODE_NORMAL 0

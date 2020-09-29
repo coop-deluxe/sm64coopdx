@@ -29,6 +29,7 @@ enum PacketType {
     PACKET_KEEP_ALIVE,
     PACKET_LEAVING,
     PACKET_SAVE_FILE,
+    PACKET_INSTANT_WARP,
     ///
     PACKET_CUSTOM = 255,
 };
@@ -149,5 +150,9 @@ void network_receive_leaving(struct Packet* p);
 // packet_save_file.c
 void network_send_save_file(s32 fileIndex);
 void network_receive_save_file(struct Packet* p);
+
+// packet_instant_warp.c
+void network_send_instant_warp(void);
+void network_receive_instant_warp(struct Packet* p);
 
 #endif

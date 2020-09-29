@@ -51,6 +51,7 @@
 struct SavedWarpValues gReceiveWarp = { 0 };
 u8 gControlledWarp = 0;
 extern s8 sReceivedLoadedActNum;
+u8 gRejectInstantWarp = 0;
 
 #ifdef VERSION_JP
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
@@ -552,29 +553,43 @@ void check_instant_warp(void) {
     s16 cameraAngle;
     struct Surface *floor;
 
+    if (gRejectInstantWarp > 0) {
+        gRejectInstantWarp--;
+    }
+
     if (gCurrLevelNum == LEVEL_CASTLE
         && save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) >= 70) {
         return;
     }
 
-    if ((floor = gMarioState->floor) != NULL) {
+    if ((floor = gMarioStates[0].floor) != NULL) {
         s32 index = floor->type - SURFACE_INSTANT_WARP_1B;
         if (index >= INSTANT_WARP_INDEX_START && index < INSTANT_WARP_INDEX_STOP
             && gCurrentArea->instantWarps != NULL) {
             struct InstantWarp *warp = &gCurrentArea->instantWarps[index];
-
             if (warp->id != 0) {
-                for (int i = 0; i < MAX_PLAYERS; i++) {
-                    gMarioStates[i].pos[0] += warp->displacement[0];
-                    gMarioStates[i].pos[1] += warp->displacement[1];
-                    gMarioStates[i].pos[2] += warp->displacement[2];
+                if (gRejectInstantWarp > 0) {
+                    vec3f_copy(gMarioStates[0].pos, gMarioStates[0].nonInstantWarpPos);
+                    //vec3f_mul(gMarioStates[0].vel, -0.8f);
+                    return;
+                }
+                u8 changeOfArea = (gCurrAreaIndex != warp->area);
+                gMarioStates[0].pos[0] += warp->displacement[0];
+                gMarioStates[0].pos[1] += warp->displacement[1];
+                gMarioStates[0].pos[2] += warp->displacement[2];
+                vec3f_copy(gMarioStates[0].nonInstantWarpPos, gMarioStates[0].pos);
 
-                    gMarioStates[i].marioObj->oPosX = gMarioStates[i].pos[0];
-                    gMarioStates[i].marioObj->oPosY = gMarioStates[i].pos[1];
-                    gMarioStates[i].marioObj->oPosZ = gMarioStates[i].pos[2];
+                if (changeOfArea) {
+                    for (int i = 0; i < MAX_PLAYERS; i++) {
+                        gMarioStates[i].marioObj->oIntangibleTimer = 30;
+                    }
                 }
 
-                cameraAngle = gMarioState->area->camera->yaw;
+                gMarioStates[0].marioObj->oPosX = gMarioStates[0].pos[0];
+                gMarioStates[0].marioObj->oPosY = gMarioStates[0].pos[1];
+                gMarioStates[0].marioObj->oPosZ = gMarioStates[0].pos[2];
+
+                cameraAngle = gMarioStates[0].area->camera->yaw;
                 change_area(warp->area);
 
                 for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -582,10 +597,17 @@ void check_instant_warp(void) {
                 }
 
                 warp_camera(warp->displacement[0], warp->displacement[1], warp->displacement[2]);
-                gMarioState->area->camera->yaw = cameraAngle;
+                gMarioStates[0].area->camera->yaw = cameraAngle;
+
+                if (changeOfArea) {
+                    set_play_mode(PLAY_MODE_SYNC_LEVEL);
+                    network_send_instant_warp();
+                }
+                return;
             }
         }
     }
+    vec3f_copy(gMarioStates[0].nonInstantWarpPos, gMarioStates[0].pos);
 }
 
 s16 music_changed_through_warp(s16 arg) {
