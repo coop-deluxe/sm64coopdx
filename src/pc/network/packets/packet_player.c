@@ -201,7 +201,7 @@ void network_receive_player(struct Packet* p) {
     if (heldSyncID != 0 && gSyncObjects[heldSyncID].o != NULL) {
         // TODO: do we have to move graphics nodes around to make this visible?
         struct Object* heldObj = gSyncObjects[heldSyncID].o;
-        if (m->heldObj == heldObj && gNetworkType == NT_CLIENT) { // two-player hack: needs priority
+        if (gMarioStates[0].heldObj == heldObj && gNetworkType == NT_CLIENT) { // two-player hack: needs priority
             mario_drop_held_object(&gMarioStates[0]);
             force_idle_state(&gMarioStates[0]);
         }

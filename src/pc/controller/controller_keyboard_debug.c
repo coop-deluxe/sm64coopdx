@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_CCM;
+static u8 warpToLevel = LEVEL_SSL;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
