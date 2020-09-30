@@ -1077,7 +1077,7 @@ s32 play_mode_normal(void) {
 
     // If either initiate_painting_warp or initiate_delayed_warp initiated a
     // warp, change play mode accordingly.
-    if (sCurrPlayMode == PLAY_MODE_NORMAL) {
+    if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
         if (gCurrCreditsEntry != NULL && gCurrCreditsEntry != &sCreditsSequence[0]) {
             // special case for credit warps
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
@@ -1096,7 +1096,7 @@ s32 play_mode_normal(void) {
                 } else {
                     set_play_mode(PLAY_MODE_CHANGE_AREA);
                 }
-            } else if (pressed_pause()) {
+            } else if (sCurrPlayMode == PLAY_MODE_NORMAL && pressed_pause()) {
                 lower_background_noise(1);
                 cancel_rumble();
                 gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
@@ -1142,6 +1142,11 @@ s32 play_mode_paused(void) {
 }
 
 s32 play_mode_sync_level(void) {
+    // force unpause state
+    raise_background_noise(1);
+    set_menu_mode(-1);
+    gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+
     check_received_warp();
     return 0;
 }
@@ -1252,7 +1257,7 @@ static s32 play_mode_unused(void) {
 }
 
 s32 update_level(void) {
-    s32 changeLevel;
+    s32 changeLevel = 0;
 
     switch (sCurrPlayMode) {
         case PLAY_MODE_NORMAL:
@@ -1260,9 +1265,11 @@ s32 update_level(void) {
             break;
         case PLAY_MODE_PAUSED:
 #ifndef DEVELOPMENT
-            play_mode_normal();
+            changeLevel = play_mode_normal();
 #endif
-            changeLevel = play_mode_paused();
+            if (sCurrPlayMode == PLAY_MODE_PAUSED) {
+                changeLevel = play_mode_paused();
+            }
             break;
         case PLAY_MODE_CHANGE_AREA:
             changeLevel = play_mode_change_area();
