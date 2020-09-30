@@ -33,6 +33,10 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
     free(node);
 }
 
+void network_forget_all_reliable(void) {
+    while (head != NULL) { remove_node_from_list(head); }
+}
+
 void network_send_ack(struct Packet* p) {
     // grab seq num
     u16 seqId = 0;

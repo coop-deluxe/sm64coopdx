@@ -63,6 +63,7 @@ u32 packet_hash(struct Packet* packet);
 bool packet_check_hash(struct Packet* packet);
 
 // packet_reliable.c
+void network_forget_all_reliable(void);
 void network_send_ack(struct Packet* p);
 void network_receive_ack(struct Packet* p);
 void network_remember_reliable(struct Packet* p);

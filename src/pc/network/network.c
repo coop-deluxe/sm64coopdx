@@ -177,6 +177,7 @@ void network_update(void) {
 }
 
 void network_shutdown(void) {
+    network_forget_all_reliable();
     if (gNetworkType == NT_NONE) { return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
 
