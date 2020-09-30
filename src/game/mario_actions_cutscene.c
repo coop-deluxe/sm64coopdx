@@ -710,8 +710,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
             set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
         }
         if (gServerSettings.stayInLevelAfterStar) {
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-            m->area->camera->cutscene = 0;
+            reset_camera(m->area->camera);
         }
     }
 }
