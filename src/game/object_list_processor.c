@@ -271,6 +271,13 @@ void bhv_mario_update(void) {
     // set mario state to the current player
     gMarioState = &gMarioStates[gCurrentObject->oBehParams - 1];
 
+    // sanity check torsoPos, it isn't updated off-screen otherwise
+    Vec3f torsoDiff = { 0 };
+    vec3f_dif(torsoDiff, gMarioState->pos, gMarioState->marioBodyState->torsoPos);
+    if (vec3f_length(torsoDiff) > 300) {
+        vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
+    }
+
     u32 particleFlags = 0;
     s32 i;
 
