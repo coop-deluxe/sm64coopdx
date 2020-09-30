@@ -378,6 +378,9 @@ void render_hud_coins(void) {
 void render_hud_stars(void) {
     s8 showX = 0;
 
+    // prevent star count from flashing outside of castle
+    if (gCurrCourseNum != COURSE_NONE) { gHudFlash = 0; }
+
     if (gHudFlash == 1 && gGlobalTimer & 0x08) {
         return;
     }
