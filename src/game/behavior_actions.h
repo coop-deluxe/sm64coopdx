@@ -531,6 +531,7 @@ void bhv_snufit_loop(void);
 void bhv_snufit_balls_loop(void);
 void bhv_horizontal_grindel_init(void);
 void bhv_horizontal_grindel_update(void);
+void bhv_eyerok_boss_init(void);
 void bhv_eyerok_boss_loop(void);
 void bhv_eyerok_hand_loop(void);
 void bhv_klepto_init(void);

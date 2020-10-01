@@ -303,7 +303,7 @@ void render_hud_unsupported_level(void) {
         case COURSE_BBH:      // (5) Big Boo's Haunt
         //case COURSE_HMC:      // (6) Hazy Maze Cave
         case COURSE_LLL:      // (7) Lethal Lava Land
-        //case COURSE_SSL:      // (8) Shifting Sand Land
+        case COURSE_SSL:      // (8) Shifting Sand Land
         //case COURSE_DDD:      // (9) Dire Dire Docks
         //case COURSE_SL:       // (10) Snowman's Land
         //case COURSE_WDW:      // (11) Wet Dry World

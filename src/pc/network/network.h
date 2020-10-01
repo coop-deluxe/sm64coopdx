@@ -53,6 +53,7 @@ struct SyncObject {
     bool keepRandomSeed;
     bool syncDeathEvent;
     bool hasStandardFields;
+    float minUpdateRate;
     float maxUpdateRate;
     u8 (*ignore_if_true)(void);
     void (*on_received_pre)(u8 fromLocalIndex);

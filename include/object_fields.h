@@ -475,6 +475,7 @@
 #define /*0x0F8*/ oEyerokReceivedAttack  OBJECT_FIELD_S32(0x1C)
 #define /*0x0FC*/ oEyerokHandUnkFC       OBJECT_FIELD_S32(0x1D)
 #define /*0x100*/ oEyerokHandUnk100      OBJECT_FIELD_S32(0x1E)
+#define /*0x100*/ oEyerokHandDead        OBJECT_FIELD_S32(0x1F)
 
 /* Falling Pillar */
 #define /*0x0F4*/ oFallingPillarPitchAcceleration OBJECT_FIELD_F32(0x1B)

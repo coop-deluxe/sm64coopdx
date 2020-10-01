@@ -64,7 +64,8 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->fullObjectSync = false;
     so->keepRandomSeed = false;
     so->hasStandardFields = (maxSyncDistance >= 0);
-    so->maxUpdateRate = 0;
+    so->minUpdateRate = 0.33f;
+    so->maxUpdateRate = 0.00f;
     so->ignore_if_true = NULL;
     so->on_received_pre = NULL;
     so->on_received_post = NULL;
@@ -85,6 +86,19 @@ void network_init_object_field(struct Object *o, void* field) {
 bool network_owns_object(struct Object* o) {
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return false; }
+
+    // check for override
+    u8 shouldOverride = FALSE;
+    u8 shouldOwn = FALSE;
+    if (so->override_ownership != NULL) {
+        extern struct Object* gCurrentObject;
+        struct Object* tmp = gCurrentObject;
+        gCurrentObject = so->o;
+        so->override_ownership(&shouldOverride, &shouldOwn);
+        gCurrentObject = tmp;
+        if (shouldOverride) { return shouldOwn; }
+    }
+
     return so->owned;
 }
 
@@ -452,7 +466,7 @@ void network_update_objects(void) {
 
         // set max and min update rate
         if (so->maxUpdateRate > 0 && updateRate < so->maxUpdateRate) { updateRate = so->maxUpdateRate; }
-        if (updateRate < 0.33f) { updateRate = 0.33f; }
+        if (updateRate < so->minUpdateRate) { updateRate = so->minUpdateRate; }
 
         // see if we should update
         float timeSinceUpdate = ((float)clock() - (float)so->clockSinceUpdate) / (float)CLOCKS_PER_SEC;

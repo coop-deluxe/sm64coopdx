@@ -6380,6 +6380,7 @@ const BehaviorScript bhvEyerokBoss[] = {
     ID(id_bhvEyerokBoss),
     OR_INT(oFlags, (OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
     SET_HOME(),
+    CALL_NATIVE(bhv_eyerok_boss_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_eyerok_boss_loop),
     END_LOOP(),

@@ -844,6 +844,8 @@
     #define EYEROK_BOSS_ACT_SHOW_INTRO_TEXT 2
     #define EYEROK_BOSS_ACT_FIGHT 3
     #define EYEROK_BOSS_ACT_DIE 4
+    #define EYEROK_BOSS_ACT_DEAD 5
+    #define EYEROK_BOSS_ACT_PAUSE 6
 
 /* Eyerok hand */
     /* oAction */
@@ -863,6 +865,8 @@
     #define EYEROK_HAND_ACT_RECOVER 13
     #define EYEROK_HAND_ACT_BECOME_ACTIVE 14
     #define EYEROK_HAND_ACT_DIE 15
+    #define EYEROK_HAND_ACT_DEAD 16
+    #define EYEROK_HAND_ACT_PAUSE 17
 
 /* Klepto */
     /* oAction */
