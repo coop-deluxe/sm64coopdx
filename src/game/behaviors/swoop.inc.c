@@ -24,10 +24,14 @@ static struct ObjectHitbox sSwoopHitbox = {
  * toward him and enter the move action.
  */
 static void swoop_act_idle(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     cur_obj_init_animation_with_sound(1);
 
-    if (approach_f32_ptr(&o->header.gfx.scale[0], 1.0f, 0.05f) && o->oDistanceToMario < 1500.0f) {
-        if (cur_obj_rotate_yaw_toward(o->oAngleToMario, 800)) {
+    if (approach_f32_ptr(&o->header.gfx.scale[0], 1.0f, 0.05f) && distanceToPlayer < 1500.0f) {
+        if (cur_obj_rotate_yaw_toward(angleToPlayer, 800)) {
             cur_obj_play_sound_2(SOUND_OBJ2_SWOOP);
             o->oAction = SWOOP_ACT_MOVE;
             o->oVelY = -12.0f;
@@ -42,6 +46,10 @@ static void swoop_act_idle(void) {
  * him. Return to home once mario is far away.
  */
 static void swoop_act_move(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     cur_obj_init_animation_with_accel_and_sound(0, 2.0f);
     if (cur_obj_check_if_near_animation_end()) {
         cur_obj_play_sound_2(SOUND_OBJ_UNKNOWN6);
@@ -65,8 +73,8 @@ static void swoop_act_move(void) {
         } else if (o->oVelY != 0.0f) {
             // If we're not done swooping, turn toward mario. When between
             // 0 and 200 units above mario, increase speed and stop swooping
-            o->oSwoopTargetYaw = o->oAngleToMario;
-            if (o->oPosY < gMarioObject->oPosY + 200.0f) {
+            o->oSwoopTargetYaw = angleToPlayer;
+            if (o->oPosY < player->oPosY + 200.0f) {
                 if (obj_y_vel_approach(0.0f, 0.5f)) {
                     o->oForwardVel *= 2.0f;
                 }
@@ -98,6 +106,16 @@ static void swoop_act_move(void) {
  * Update function for swoop.
  */
 void bhv_swoop_update(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oFaceAngleRoll);
+        network_init_object_field(o, &o->header.gfx.scale[0]);
+        network_init_object_field(o, &o->oSwoopBonkCountdown);
+        network_init_object_field(o, &o->oSwoopTargetPitch);
+        network_init_object_field(o, &o->oSwoopTargetYaw);
+        network_init_object_field(o, &o->oDeathSound);
+    }
+
     // No partial update (only appears in roomed levels)
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
