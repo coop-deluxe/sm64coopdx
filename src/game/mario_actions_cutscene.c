@@ -260,7 +260,7 @@ void handle_save_menu(struct MarioState *m) {
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
         if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE || gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
-            save_file_do_save(gCurrSaveFileNum - 1);
+            save_file_do_save(gCurrSaveFileNum - 1, FALSE);
 
             if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
                 fade_into_special_warp(-2, 0); // reset game
@@ -696,7 +696,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
         set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
     } else if (m->actionState == 1 && gDialogResponse) {
         if (gDialogResponse == 1) {
-            save_file_do_save(gCurrSaveFileNum - 1);
+            save_file_do_save(gCurrSaveFileNum - 1, FALSE);
         }
         m->actionState = 2;
     } else if (m->actionState == 2 && is_anim_at_end(m)) {

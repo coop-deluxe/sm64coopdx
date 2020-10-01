@@ -345,10 +345,10 @@ static void save_file_bswap(struct SaveBuffer *buf) {
     }
 }
 
-void save_file_do_save(s32 fileIndex) {
+void save_file_do_save(s32 fileIndex, s8 forceSave) {
     if (gNetworkType != NT_SERVER) {
-        if (gNetworkType == NT_CLIENT) { network_send_save_file(fileIndex); }
-        return;
+        if (gNetworkType == NT_CLIENT) { network_send_save_file(fileIndex); return; }
+        else if (gNetworkType == NT_NONE && !forceSave) { return; }
     }
 
     if (fileIndex < 0 || fileIndex >= NUM_SAVE_FILES)
@@ -389,7 +389,7 @@ void save_file_erase(s32 fileIndex) {
     bzero(&gSaveBuffer.files[fileIndex][0], sizeof(gSaveBuffer.files[fileIndex][0]));
 
     gSaveFileModified = TRUE;
-    save_file_do_save(fileIndex);
+    save_file_do_save(fileIndex, TRUE);
 }
 
 //! Needs to be s32 to match on -O2, despite no return value.
@@ -402,7 +402,7 @@ BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
           sizeof(gSaveBuffer.files[destFileIndex][0]));
 
     gSaveFileModified = TRUE;
-    save_file_do_save(destFileIndex);
+    save_file_do_save(destFileIndex, TRUE);
 }
 
 #ifdef TEXTSAVES
