@@ -71,12 +71,14 @@ Gfx *geo_snufit_scale_body(s32 callContext, struct GraphNode *node, UNUSED Mat4 
  * then prepares to shoot after a period.
  */
 void snufit_act_idle(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
     s32 marioDist;
 
     // This line would could cause a crash in certain PU situations,
     // if the game would not have already crashed.
-    marioDist = (s32)(o->oDistanceToMario / 10.0f);
-    if (o->oTimer > marioDist && o->oDistanceToMario < 800.0f) {
+    marioDist = (s32)(distanceToPlayer / 10.0f);
+    if (o->oTimer > marioDist && distanceToPlayer < 800.0f) {
         
         // Controls an alternating scaling factor in a cos.
         o->oSnufitBodyScalePeriod
@@ -105,11 +107,21 @@ void snufit_act_shoot(void) {
     if ((u16) o->oSnufitBodyScalePeriod == 0x8000 && o->oSnufitBodyBaseScale == 167) {
         o->oAction = SNUFIT_ACT_IDLE;
     } else if (o->oSnufitBullets < 3 && o->oTimer >= 3) {
-        o->oSnufitBullets += 1;
-        cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
-        spawn_object_relative(0, 0, -20, 40, o, MODEL_BOWLING_BALL, bhvSnufitBalls);
-        o->oSnufitRecoil = -30;
-        o->oTimer = 0;
+        if (network_owns_object(o)) {
+            o->oSnufitBullets += 1;
+            cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
+            struct Object* bullet = spawn_object_relative(0, 0, -20, 40, o, MODEL_BOWLING_BALL, bhvSnufitBalls);
+            o->oSnufitRecoil = -30;
+            o->oTimer = 0;
+
+            struct Object* spawn_objects[] = { bullet };
+            u32 models[] = { MODEL_BOWLING_BALL };
+            network_send_spawn_objects(spawn_objects, models, 1);
+        } else {
+            cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
+            o->oSnufitRecoil = -30;
+            o->oTimer = 0;
+        }
     }
 }
 
@@ -118,13 +130,32 @@ void snufit_act_shoot(void) {
  * and the action brain of the object.
  */
 void bhv_snufit_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oSnufitBullets);
+        network_init_object_field(o, &o->oSnufitRecoil);
+        network_init_object_field(o, &o->oSnufitYOffset);
+        network_init_object_field(o, &o->oSnufitZOffset);
+        network_init_object_field(o, &o->oSnufitScale);
+        network_init_object_field(o, &o->oSnufitBodyScale);
+        network_init_object_field(o, &o->oMoveAnglePitch);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+        network_init_object_field(o, &o->oGravity);
+        network_init_object_field(o, &o->oDeathSound);
+    }
+
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     // Only update if Mario is in the current room.
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
         
         // Face Mario if he is within range.
-        if (o->oDistanceToMario < 800.0f) {
-            obj_turn_pitch_toward_mario(&gMarioStates[0], 120.0f, 2000);
+        if (distanceToPlayer < 800.0f) {
+            obj_turn_pitch_toward_mario(marioState, 120.0f, 2000);
 
             if ((s16) o->oMoveAnglePitch > 0x2000) {
                 o->oMoveAnglePitch = 0x2000;
@@ -132,7 +163,7 @@ void bhv_snufit_loop(void) {
                 o->oMoveAnglePitch = -0x2000;
             }
 
-            cur_obj_rotate_yaw_toward(o->oAngleToMario, 2000);
+            cur_obj_rotate_yaw_toward(angleToPlayer, 2000);
         } else {
             obj_move_pitch_approach(0, 0x200);
             o->oMoveAngleYaw += 200;
