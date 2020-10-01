@@ -1,6 +1,7 @@
 // controllable_platform.c.inc
 
 static s8 D_80331694 = 0;
+static struct Object* controllablePlatformSubs[4] = { 0 };
 
 void controllable_platform_act_1(void) {
     o->oParentRelativePosY -= 4.0f;
@@ -27,7 +28,7 @@ void bhv_controllable_platform_sub_loop(void) {
             if (o->oTimer < 30)
                 break;
 
-            if (gMarioObject->platform == o) {
+            if (cur_obj_is_any_player_on_platform()) {
                 D_80331694 = o->oBehParams2ndByte;
                 o->oAction = 1;
                 cur_obj_play_sound_2(SOUND_GENERAL_MOVING_PLATFORM_SWITCH);
@@ -52,22 +53,40 @@ void bhv_controllable_platform_sub_loop(void) {
 
 void bhv_controllable_platform_init(void) {
     struct Object *sp34;
-    sp34 = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
-                                     51, 204, 0, 0, 0);
-    sp34->oBehParams2ndByte = 1;
-    sp34 = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
-                                     51, -204, 0, -0x8000, 0);
-    sp34->oBehParams2ndByte = 2;
-    sp34 = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 204,
-                                     51, 0, 0, 0x4000, 0);
-    sp34->oBehParams2ndByte = 3;
-    sp34 = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub,
-                                     -204, 51, 0, 0, -0x4000, 0);
-    sp34->oBehParams2ndByte = 4;
+    controllablePlatformSubs[0] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
+                                                            51, 204, 0, 0, 0);
+    controllablePlatformSubs[0]->oBehParams2ndByte = 1;
+
+    controllablePlatformSubs[1] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
+                                                            51, -204, 0, -0x8000, 0);
+    controllablePlatformSubs[1]->oBehParams2ndByte = 2;
+
+    controllablePlatformSubs[2] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 204,
+                                                            51, 0, 0, 0x4000, 0);
+    controllablePlatformSubs[2]->oBehParams2ndByte = 3;
+
+    controllablePlatformSubs[3] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub,
+                                                            -204, 51, 0, 0, -0x4000, 0);
+    controllablePlatformSubs[3]->oBehParams2ndByte = 4;
 
     D_80331694 = 0;
 
     o->oControllablePlatformUnkFC = o->oPosY;
+
+    network_init_object(o, 4000.0f);
+    network_init_object_field(o, &D_80331694);
+    network_init_object_field(o, &o->oControllablePlatformUnkF8);
+    network_init_object_field(o, &o->oControllablePlatformUnkFC);
+    network_init_object_field(o, &o->oControllablePlatformUnk100);
+    network_init_object_field(o, &o->oFaceAnglePitch);
+    network_init_object_field(o, &o->oFaceAngleRoll);
+    network_init_object_field(o, &o->header.gfx.node.flags);
+    for (int i = 0; i < 4; i++) {
+        network_init_object_field(o, &controllablePlatformSubs[i]->oAction);
+        network_init_object_field(o, &controllablePlatformSubs[i]->oPrevAction);
+        network_init_object_field(o, &controllablePlatformSubs[i]->oTimer);
+        network_init_object_field(o, &controllablePlatformSubs[i]->oParentRelativePosY);
+    }
 }
 
 void controllable_platform_hit_wall(s8 sp1B) {
@@ -128,11 +147,27 @@ void controllable_platform_shake_on_wall_hit(void) {
 }
 
 void controllable_platform_tilt_from_mario(void) {
-    s16 sp1E = gMarioObject->header.gfx.pos[0] - o->oPosX;
-    s16 sp1C = gMarioObject->header.gfx.pos[2] - o->oPosZ;
+    struct Object* player = nearest_player_to_object(o);
 
-    if (gMarioObject->platform == o
-        || gMarioObject->platform == cur_obj_nearest_object_with_behavior(bhvControllablePlatformSub)) {
+    u8 playerCount = 0;
+    f32 x = 0;
+    f32 z = 0;
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].marioObj->platform == o || gMarioStates[i].marioObj->platform == cur_obj_nearest_object_with_behavior(bhvControllablePlatformSub)) {
+            x += gMarioStates[i].pos[0];
+            z += gMarioStates[i].pos[2];
+            playerCount++;
+        }
+    }
+
+    if (playerCount > 0) {
+        x /= (f32)playerCount;
+        z /= (f32)playerCount;
+
+        s16 sp1E = player->header.gfx.pos[0] - x;
+        s16 sp1C = player->header.gfx.pos[2] - z;
+
         o->oFaceAnglePitch = sp1C * 4;
         o->oFaceAngleRoll = -sp1E * 4;
         if (D_80331694 == 6) {
@@ -203,9 +238,28 @@ void bhv_controllable_platform_loop(void) {
             break;
 
         case 6:
-            if (obj_flicker_and_disappear(o, 150))
-                spawn_object_abs_with_rot(o, 0, MODEL_HMC_METAL_PLATFORM, bhvControllablePlatform,
-                                          o->oHomeX, o->oHomeY, o->oHomeZ, 0, 0, 0);
+            if (obj_flicker_and_disappear(o, 150)) {
+                o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+                o->activeFlags = ACTIVE_FLAG_ACTIVE;
+                o->oControllablePlatformUnk100 = 0;
+                o->oPosX = o->oHomeX;
+                o->oPosY = o->oHomeY;
+                o->oPosZ = o->oHomeZ;
+                o->oAngleVelRoll = 0;
+                o->oAngleVelPitch = 0;
+                o->oVelX = 0;
+                o->oVelZ = 0;
+                o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+                D_80331694 = 0;
+                o->oTimer = 0;
+                for (int i = 0; i < 4; i++) {
+                    controllablePlatformSubs[i]->oParentRelativePosY = 51.0f;
+                    controllablePlatformSubs[i]->oAction = 0;
+                    controllablePlatformSubs[i]->oTimer = 0;
+                    controllablePlatformSubs[i]->oVelX = 0;
+                    controllablePlatformSubs[i]->oVelZ = 0;
+                }
+            }
             break;
     }
 
