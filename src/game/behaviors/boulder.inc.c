@@ -46,24 +46,42 @@ void bhv_big_boulder_loop(void) {
 }
 
 void bhv_big_boulder_generator_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oTimer);
+    }
+
     struct Object *sp1C;
     if (o->oTimer >= 256) {
         o->oTimer = 0;
+        if (network_owns_object(o)) {
+            network_send_object(o);
+        }
     }
 
     // TODO: current_mario_room_check() isn't remote-aware!!!!
     if (!current_mario_room_check(4) || is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1500))
         return;
 
-    if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)) {
-        if ((o->oTimer & 0x3F) == 0) {
-            sp1C = spawn_object(o, MODEL_HMC_ROLLING_ROCK, bhvBigBoulder);
-            sp1C->oMoveAngleYaw = random_float() * 4096.0f;
-        }
-    } else {
-        if ((o->oTimer & 0x7F) == 0) {
-            sp1C = spawn_object(o, MODEL_HMC_ROLLING_ROCK, bhvBigBoulder);
-            sp1C->oMoveAngleYaw = random_float() * 4096.0f;
+    if (network_owns_object(o)) {
+        if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)) {
+            if ((o->oTimer & 0x3F) == 0) {
+                sp1C = spawn_object(o, MODEL_HMC_ROLLING_ROCK, bhvBigBoulder);
+                sp1C->oMoveAngleYaw = random_float() * 4096.0f;
+
+                struct Object* spawn_objects[] = { sp1C };
+                u32 models[] = { MODEL_HMC_ROLLING_ROCK };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
+        } else {
+            if ((o->oTimer & 0x7F) == 0) {
+                sp1C = spawn_object(o, MODEL_HMC_ROLLING_ROCK, bhvBigBoulder);
+                sp1C->oMoveAngleYaw = random_float() * 4096.0f;
+
+                struct Object* spawn_objects[] = { sp1C };
+                u32 models[] = { MODEL_HMC_ROLLING_ROCK };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
         }
     }
 }
