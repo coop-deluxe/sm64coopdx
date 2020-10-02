@@ -73,19 +73,19 @@ void update_mario_platform(void) {
 /**
  * Get Mario's position and store it in x, y, and z.
  */
-void get_mario_pos(f32 *x, f32 *y, f32 *z) {
-    *x = gMarioStates[0].pos[0];
-    *y = gMarioStates[0].pos[1];
-    *z = gMarioStates[0].pos[2];
+void get_mario_pos(struct MarioState* m, f32 *x, f32 *y, f32 *z) {
+    *x = m->pos[0];
+    *y = m->pos[1];
+    *z = m->pos[2];
 }
 
 /**
  * Set Mario's position.
  */
-void set_mario_pos(f32 x, f32 y, f32 z) {
-    gMarioStates[0].pos[0] = x;
-    gMarioStates[0].pos[1] = y;
-    gMarioStates[0].pos[2] = z;
+void set_mario_pos(struct MarioState* m, f32 x, f32 y, f32 z) {
+    m->pos[0] = x;
+    m->pos[1] = y;
+    m->pos[2] = z;
 }
 
 /**

@@ -1,3 +1,8 @@
+static u8 dorrieLiftingPlayer[MAX_PLAYERS] = { 0 };
+
+static u8 bhv_dorrie_ignore_if_true(void) {
+    return (o->oAction == DORRIE_ACT_RAISE_HEAD) && (gMarioStates[0].marioObj->platform == o || dorrieLiftingPlayer[0]);
+}
 
 void dorrie_raise_head(void) {
     s16 startAngle;
@@ -11,8 +16,15 @@ void dorrie_raise_head(void) {
     xzDisp = 440.0f * (coss(o->oDorrieNeckAngle) - coss(startAngle));
     yDisp = 440.0f * (sins(o->oDorrieNeckAngle) - sins(startAngle));
 
-    set_mario_pos(gMarioObject->oPosX + xzDisp * sins(o->oMoveAngleYaw), gMarioObject->oPosY - yDisp,
-                  gMarioObject->oPosZ + xzDisp * coss(o->oMoveAngleYaw));
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (!dorrieLiftingPlayer[i]) { continue; }
+        struct Object* player = gMarioStates[i].marioObj;
+        set_mario_pos(&gMarioStates[i],
+                      player->oPosX + xzDisp * sins(o->oMoveAngleYaw),
+                      player->oPosY - yDisp,
+                      player->oPosZ + xzDisp * coss(o->oMoveAngleYaw));
+    }
 }
 
 void dorrie_act_move(void) {
@@ -32,10 +44,21 @@ void dorrie_act_move(void) {
         o->oForwardVel = 0.0f;
         o->oDorrieYawVel = 0;
     } else {
-        if (gMarioObject->platform == o) {
-            targetYaw = gMarioObject->oFaceAngleYaw;
+
+        u8 anyPlayerOnPlatform = FALSE;
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
+            struct Object* player = gMarioStates[i].marioObj;
+            if (player->platform != o) { continue; }
+
+            targetYaw = player->oFaceAngleYaw;
             targetSpeed = 10;
-        } else {
+
+            anyPlayerOnPlatform = TRUE;
+            break;
+        }
+
+        if (!anyPlayerOnPlatform) {
             circularTurn = 0x4000 - atan2s(2000.0f, o->oDorrieDistToHome - 2000.0f);
             if ((s16)(o->oMoveAngleYaw - o->oDorrieAngleToHome) < 0) {
                 circularTurn = -circularTurn;
@@ -65,6 +88,8 @@ static u8 dorrie_act_lower_head_continue_dialog(void) {
 }
 
 void dorrie_act_lower_head(void) {
+    int distanceToLocalPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
+
     if (cur_obj_init_anim_check_frame(2, 35)) {
         cur_obj_reverse_animation();
 
@@ -79,10 +104,12 @@ void dorrie_act_lower_head(void) {
             }
         }
 #else
-        if (gMarioObject->platform == o) {
-            if (o->oDorrieOffsetY == -17.0f && o->oDorrieForwardDistToMario > 780.0f
+        if (cur_obj_is_any_player_on_platform()) {
+            if (gMarioStates[0].marioObj->platform == o
+                && o->oDorrieOffsetY == -17.0f && distanceToLocalPlayer > 780.0f
                 && set_mario_npc_dialog(&gMarioStates[0], 2, dorrie_act_lower_head_continue_dialog) == 1) {
                 dorrie_begin_head_raise(TRUE);
+                network_send_object(o);
             } else if (o->oDorrieForwardDistToMario > 320.0f) {
                 o->oTimer = 0;
             }
@@ -101,30 +128,62 @@ static u8 dorrie_act_raise_head_continue_dialog(void) {
 }
 
 void dorrie_act_raise_head(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+
     o->collisionData = segmented_to_virtual(dorrie_seg6_collision_0600F644);
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = DORRIE_ACT_MOVE;
+        for (int i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
     } else if (o->oDorrieLiftingMario && o->header.gfx.unk38.animFrame < 74) {
-        if (set_mario_npc_dialog(&gMarioStates[0], 2, dorrie_act_raise_head_continue_dialog) == 2) {
+
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (gMarioStates[i].marioObj->platform != o) { continue; }
+            int dist = dist_between_objects(o, gMarioStates[0].marioObj);
+            if (dist <= 780.0f) { continue; }
+            dorrieLiftingPlayer[i] = TRUE;
+        }
+
+        if (dorrieLiftingPlayer[0]) {
+            set_mario_npc_dialog(&gMarioStates[0], 2, dorrie_act_raise_head_continue_dialog);
+        }
+        //if (set_mario_npc_dialog(&gMarioStates[0], 2, dorrie_act_raise_head_continue_dialog) == 2) {
             o->oDorrieHeadRaiseSpeed += 0x1CC;
-            if (cur_obj_check_anim_frame(73)) {
+            if (cur_obj_check_anim_frame(73) && dorrieLiftingPlayer[0]) {
                 set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
             }
             dorrie_raise_head();
-        } else {
+        /*} else {
             cur_obj_reverse_animation();
-        }
+        }*/
     }
 }
 
 void bhv_dorrie_update(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
+    if (!network_sync_object_initialized(o)) {
+        for (int i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        so->ignore_if_true = bhv_dorrie_ignore_if_true;
+        network_init_object_field(o, &o->oDorrieOffsetY);
+        network_init_object_field(o, &o->oDorrieVelY);
+        network_init_object_field(o, &o->oDorrieYawVel);
+        network_init_object_field(o, &o->oDorrieLiftingMario);
+        network_init_object_field(o, &o->oDorrieNeckAngle);
+        network_init_object_field(o, &o->oAngleVelYaw);
+    }
+
     f32 boundsShift;
     UNUSED s32 unused1;
     UNUSED s32 unused2;
     f32 maxOffsetY;
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
-        o->oDorrieForwardDistToMario = o->oDistanceToMario * coss(o->oAngleToMario - o->oMoveAngleYaw);
+
+        o->oDorrieForwardDistToMario = distanceToPlayer * coss(angleToPlayer - o->oMoveAngleYaw);
 
         obj_perform_position_op(0);
         cur_obj_move_using_fvel_and_gravity();
@@ -133,8 +192,7 @@ void bhv_dorrie_update(void) {
         o->oDorrieDistToHome = cur_obj_lateral_dist_to_home();
 
         // Shift dorrie's bounds to account for her neck
-        boundsShift =
-            440.0f * coss(o->oDorrieNeckAngle) * coss(o->oMoveAngleYaw - o->oDorrieAngleToHome);
+        boundsShift = 440.0f * coss(o->oDorrieNeckAngle) * coss(o->oMoveAngleYaw - o->oDorrieAngleToHome);
 
         if (clamp_f32(&o->oDorrieDistToHome, 1650.0f + boundsShift, 2300.0f + boundsShift)) {
             o->oPosX = o->oHomeX - o->oDorrieDistToHome * sins(o->oDorrieAngleToHome);
@@ -143,7 +201,7 @@ void bhv_dorrie_update(void) {
 
         o->oDorrieGroundPounded = cur_obj_is_mario_ground_pounding_platform();
 
-        if (gMarioObject->platform == o) {
+        if (cur_obj_is_any_player_on_platform()) {
             maxOffsetY = -17.0f;
             if (o->oDorrieOffsetY >= 0.0f) {
                 if (o->oDorrieGroundPounded) {

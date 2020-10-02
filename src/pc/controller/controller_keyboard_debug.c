@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_SSL;
+static u8 warpToLevel = LEVEL_HMC;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
@@ -104,6 +104,13 @@ static void debug_grand_star(void) {
     set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
 }
 
+static void debug_warp_to(void) {
+    gMarioStates[0].pos[0] = gMarioStates[1].pos[0];
+    gMarioStates[0].pos[1] = gMarioStates[1].pos[1];
+    gMarioStates[0].pos[2] = gMarioStates[1].pos[2];
+    gMarioStates[0].marioObj->oRoom = gMarioStates[1].marioObj->oRoom;
+}
+
 static void debug_suicide(void) {
     gMarioStates[0].hurtCounter = 31;
 }
@@ -115,7 +122,7 @@ void debug_keyboard_on_key_down(int scancode) {
 #ifdef DEVELOPMENT
         case SCANCODE_6: debug_warp_level(warpToLevel); break;
         case SCANCODE_7: debug_warp_area(); break;
-        case SCANCODE_9: debug_grand_star(); break;
+        case SCANCODE_9: debug_warp_to(); break;
         case SCANCODE_0: debug_suicide(); break;
 #endif
     }
