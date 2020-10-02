@@ -7,6 +7,7 @@
 #include "behavior_table.h"
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
+#include "src/game/obj_behaviors.h"
 
 static u8 nextSyncID = 1;
 struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
@@ -398,6 +399,12 @@ void network_receive_object(struct Packet* p) {
         if (gMarioStates[0].heldObj == o) { return; }
     }
 
+    // save old pos for platform displacement
+    Vec3f oldPos = { 0 };
+    oldPos[0] = o->oPosX;
+    oldPos[1] = o->oPosY;
+    oldPos[2] = o->oPosZ;
+
     // trigger on-received callback
     if (so->on_received_pre != NULL && so->o != NULL) {
         extern struct Object* gCurrentObject;
@@ -425,6 +432,19 @@ void network_receive_object(struct Packet* p) {
         gCurrentObject = so->o;
         (*so->on_received_post)(p->localIndex);
         gCurrentObject = tmp;
+    }
+
+    // apply platform displacement
+    if (o != NULL) {
+        Vec3f deltaPos = { 0 };
+        deltaPos[0] = o->oPosX - oldPos[0];
+        deltaPos[2] = o->oPosY - oldPos[1];
+        deltaPos[1] = o->oPosZ - oldPos[2];
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (gMarioStates[i].marioObj->platform != o) { continue; }
+            for (int j = 0; j < 3; j++) { gMarioStates[i].pos[j] += deltaPos[j]; }
+        }
     }
 }
 
