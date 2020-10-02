@@ -687,6 +687,7 @@ void move_mario_head_c_up(UNUSED struct Camera *c);
 void transition_next_state(UNUSED struct Camera *c, s16 frames);
 void set_camera_mode(struct Camera *c, s16 mode, s16 frames);
 void update_camera(struct Camera *c);
+void semi_reset_camera(struct Camera* c);
 void reset_camera(struct Camera *c);
 void init_camera(struct Camera *c);
 void select_mario_cam_mode(void);
