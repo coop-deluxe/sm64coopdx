@@ -301,7 +301,7 @@ void render_hud_unsupported_level(void) {
         case COURSE_JRB:      // (3) Jolly Rodger's Bay
         case COURSE_CCM:      // (4) Cool Cool Mountain
         case COURSE_BBH:      // (5) Big Boo's Haunt
-        //case COURSE_HMC:      // (6) Hazy Maze Cave
+        case COURSE_HMC:      // (6) Hazy Maze Cave
         case COURSE_LLL:      // (7) Lethal Lava Land
         case COURSE_SSL:      // (8) Shifting Sand Land
         //case COURSE_DDD:      // (9) Dire Dire Docks
@@ -315,7 +315,7 @@ void render_hud_unsupported_level(void) {
         //case COURSE_BITFS:    // (17) Bowser in the Fire Sea
         //case COURSE_BITS:     // (18) Bowser in the Sky
         case COURSE_PSS:      // (19) Princess's Secret Slide
-        //case COURSE_COTMC:    // (20) Cavern of the Metal Cap
+        case COURSE_COTMC:    // (20) Cavern of the Metal Cap
         case COURSE_TOTWC:    // (21) Tower of the Wing Cap
         case COURSE_VCUTM:    // (22) Vanish Cap Under the Moat
         case COURSE_WMOTR:    // (23) Winged Mario over the Rainbow
