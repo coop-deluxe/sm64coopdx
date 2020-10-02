@@ -28,10 +28,11 @@ void bhv_controllable_platform_sub_loop(void) {
             if (o->oTimer < 30)
                 break;
 
-            if (cur_obj_is_any_player_on_platform()) {
+            if (gMarioStates[0].marioObj->platform == o) {
                 D_80331694 = o->oBehParams2ndByte;
                 o->oAction = 1;
                 cur_obj_play_sound_2(SOUND_GENERAL_MOVING_PLATFORM_SWITCH);
+                network_send_object(o->parentObj);
             }
             break;
 
@@ -73,8 +74,20 @@ void bhv_controllable_platform_init(void) {
 
     o->oControllablePlatformUnkFC = o->oPosY;
 
-    network_init_object(o, 4000.0f);
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
     network_init_object_field(o, &D_80331694);
+    network_init_object_field(o, &o->oPosX);
+    network_init_object_field(o, &o->oPosY);
+    network_init_object_field(o, &o->oPosZ);
+    network_init_object_field(o, &o->oVelX);
+    network_init_object_field(o, &o->oVelY);
+    network_init_object_field(o, &o->oVelZ);
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oPrevAction);
+    network_init_object_field(o, &o->oTimer);
+    network_init_object_field(o, &o->activeFlags);
+    network_init_object_field(o, &o->header.gfx.node.flags);
+
     network_init_object_field(o, &o->oControllablePlatformUnkF8);
     network_init_object_field(o, &o->oControllablePlatformUnkFC);
     network_init_object_field(o, &o->oControllablePlatformUnk100);
@@ -190,6 +203,8 @@ void bhv_controllable_platform_loop(void) {
     o->oVelX = 0;
     o->oVelZ = 0;
 
+    s8 oldD_80331694 = D_80331694;
+
     switch (D_80331694) {
         case 0:
             o->oFaceAnglePitch /= 2;
@@ -259,6 +274,7 @@ void bhv_controllable_platform_loop(void) {
                     controllablePlatformSubs[i]->oVelX = 0;
                     controllablePlatformSubs[i]->oVelZ = 0;
                 }
+                network_send_object(o);
             }
             break;
     }
@@ -268,4 +284,8 @@ void bhv_controllable_platform_loop(void) {
     o->oPosZ += o->oVelZ;
     if (D_80331694 != 0 && D_80331694 != 6)
         cur_obj_play_sound_1(SOUND_ENV_ELEVATOR2);
+
+    if (network_owns_object(o) && oldD_80331694 != D_80331694) {
+        network_send_object(o);
+    }
 }
