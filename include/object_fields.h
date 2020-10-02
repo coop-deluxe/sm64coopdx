@@ -701,6 +701,9 @@
 /* Monty Mole */
 #define /*0x0F4*/ oMontyMoleCurrentHole           OBJECT_FIELD_OBJ(0x1B)
 #define /*0x0F8*/ oMontyMoleHeightRelativeToFloor OBJECT_FIELD_F32(0x1C)
+#define /*0x0FC*/ oMontyMoleHoleX                 OBJECT_FIELD_F32(0x1D)
+#define /*0x100*/ oMontyMoleHoleY                 OBJECT_FIELD_F32(0x1E)
+#define /*0x104*/ oMontyMoleHoleZ                 OBJECT_FIELD_F32(0x1F)
 
 /* Monty Mole Hole */
 #define /*0x0F4*/ oMontyMoleHoleCooldown OBJECT_FIELD_S32(0x1B)

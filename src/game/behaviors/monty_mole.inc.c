@@ -58,12 +58,17 @@ static struct Object *link_objects_with_behavior(const BehaviorScript *behavior)
  * whose cooldown is zero. Return NULL if no hole is available.
  */
 static struct Object *monty_mole_select_available_hole(f32 minDistToMario) {
+    struct Object* player;
+    int distanceToPlayer;
+
     struct Object *hole = sMontyMoleHoleList;
     s32 numAvailableHoles = 0;
 
     while (hole != NULL) {
+        player = nearest_player_to_object(hole);
+        distanceToPlayer = dist_between_objects(hole, player);
         if (hole->oMontyMoleHoleCooldown == 0) {
-            if (hole->oDistanceToMario < 1500.0f && hole->oDistanceToMario > minDistToMario) {
+            if (distanceToPlayer < 1500.0f && distanceToPlayer > minDistToMario) {
                 numAvailableHoles++;
             }
         }
@@ -78,8 +83,10 @@ static struct Object *monty_mole_select_available_hole(f32 minDistToMario) {
         numAvailableHoles = 0;
 
         while (hole != NULL) {
+            player = nearest_player_to_object(hole);
+            distanceToPlayer = dist_between_objects(hole, player);
             if (hole->oMontyMoleHoleCooldown == 0) {
-                if (hole->oDistanceToMario < 1500.0f && hole->oDistanceToMario > minDistToMario) {
+                if (distanceToPlayer < 1500.0f && distanceToPlayer > minDistToMario) {
                     if (numAvailableHoles == selectedHole) {
                         return hole;
                     }
@@ -132,11 +139,46 @@ void monty_mole_spawn_dirt_particles(s8 offsetY, s8 velYBase) {
     cur_obj_spawn_particles(&sMontyMoleRiseFromGroundParticles);
 }
 
+static void bhv_monty_mole_on_received_post(u8 fromLocalIndex) {
+    if (o->oMontyMoleHoleX == 0 && o->oMontyMoleHoleY == 0 && o->oMontyMoleHoleZ == 0) { return; }
+
+    o->oMontyMoleCurrentHole = NULL;
+
+    f32 savePosX = o->oPosX;
+    f32 savePosY = o->oPosY;
+    f32 savePosZ = o->oPosZ;
+
+    o->oPosX = o->oMontyMoleHoleX;
+    o->oPosY = o->oMontyMoleHoleY;
+    o->oPosZ = o->oMontyMoleHoleZ;
+
+    o->oMontyMoleCurrentHole = cur_obj_nearest_object_with_behavior(bhvMontyMoleHole);
+
+    o->oPosX = savePosX;
+    o->oPosY = savePosY;
+    o->oPosZ = savePosZ;
+}
+
 /**
  * Init function for bhvMontyMole.
  */
 void bhv_monty_mole_init(void) {
     o->oMontyMoleCurrentHole = NULL;
+    o->oMontyMoleHoleX = 0;
+    o->oMontyMoleHoleY = 0;
+    o->oMontyMoleHoleZ = 0;
+
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->on_received_post = bhv_monty_mole_on_received_post;
+    network_init_object_field(o, &o->oMontyMoleHeightRelativeToFloor);
+    network_init_object_field(o, &o->oMontyMoleHoleX);
+    network_init_object_field(o, &o->oMontyMoleHoleY);
+    network_init_object_field(o, &o->oMontyMoleHoleZ);
+    network_init_object_field(o, &o->oFaceAnglePitch);
+    network_init_object_field(o, &o->oGravity);
+    network_init_object_field(o, &o->header.gfx.node.flags);
+    network_init_object_field(o, &o->oIntangibleTimer);
+    network_init_object_field(o, &o->oFaceAnglePitch);
 }
 
 /**
@@ -144,11 +186,14 @@ void bhv_monty_mole_init(void) {
  * either the rise from hole or jump out of hole action.
  */
 static void monty_mole_act_select_hole(void) {
+    u8 networkOwns = network_owns_object(o);
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+
     f32 minDistToMario;
 
     if (o->oBehParams2ndByte != MONTY_MOLE_BP_NO_ROCK) {
         minDistToMario = 200.0f;
-    } else if (gMarioStates[0].forwardVel < 8.0f) {
+    } else if (marioState->forwardVel < 8.0f) {
         minDistToMario = 100.0f;
     } else {
         minDistToMario = 500.0f;
@@ -156,6 +201,10 @@ static void monty_mole_act_select_hole(void) {
 
     // Select a hole to pop out of
     if ((o->oMontyMoleCurrentHole = monty_mole_select_available_hole(minDistToMario)) != NULL) {
+        o->oMontyMoleHoleX = o->oMontyMoleCurrentHole->oPosX;
+        o->oMontyMoleHoleY = o->oMontyMoleCurrentHole->oPosY;
+        o->oMontyMoleHoleZ = o->oMontyMoleCurrentHole->oPosZ;
+
         cur_obj_play_sound_2(SOUND_OBJ2_MONTY_MOLE_APPEAR);
 
         // Mark hole as unavailable
@@ -169,7 +218,10 @@ static void monty_mole_act_select_hole(void) {
         o->oFaceAnglePitch = 0;
         o->oMoveAngleYaw = o->oMontyMoleCurrentHole->oAngleToMario;
 
-        if (o->oDistanceToMario > 500.0f || minDistToMario > 100.0f || random_sign() < 0) {
+        struct Object* player = nearest_player_to_object(o);
+        int distanceToPlayer = dist_between_objects(o, player);
+
+        if (distanceToPlayer > 500.0f || minDistToMario > 100.0f || random_sign() < 0) {
             o->oAction = MONTY_MOLE_ACT_RISE_FROM_HOLE;
             o->oVelY = 3.0f;
             o->oGravity = 0.0f;
@@ -183,6 +235,8 @@ static void monty_mole_act_select_hole(void) {
 
         cur_obj_unhide();
         cur_obj_become_tangible();
+
+        if (networkOwns) { network_send_object(o); }
     }
 }
 
@@ -207,12 +261,21 @@ static void monty_mole_act_rise_from_hole(void) {
  * Otherwise, enter the begin jump into hole action.
  */
 static void monty_mole_act_spawn_rock(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     struct Object *rock;
 
     if (cur_obj_init_anim_and_check_if_end(2)) {
         if (o->oBehParams2ndByte != MONTY_MOLE_BP_NO_ROCK
-            && abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x4000
+            && abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x4000
+            && network_owns_object(o)
             && (rock = spawn_object(o, MODEL_PEBBLE, bhvMontyMoleRock)) != NULL) {
+
+            struct Object* spawn_objects[] = { rock };
+            u32 models[] = { MODEL_PEBBLE };
+            network_send_spawn_objects(spawn_objects, models, 1);
+
             o->prevObj = rock;
             o->oAction = MONTY_MOLE_ACT_THROW_ROCK;
         } else {
@@ -226,7 +289,8 @@ static void monty_mole_act_spawn_rock(void) {
  * into hole action.
  */
 static void monty_mole_act_begin_jump_into_hole(void) {
-    if (cur_obj_init_anim_and_check_if_end(3) || obj_is_near_to_and_facing_mario(&gMarioStates[0], 1000.0f, 0x4000)) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (cur_obj_init_anim_and_check_if_end(3) || obj_is_near_to_and_facing_mario(marioState, 1000.0f, 0x4000)) {
         o->oAction = MONTY_MOLE_ACT_JUMP_INTO_HOLE;
         o->oVelY = 40.0f;
         o->oGravity = -6.0f;
@@ -266,6 +330,7 @@ static void monty_mole_act_jump_into_hole(void) {
  * Become intangible and enter the select hole action.
  */
 static void monty_mole_hide_in_hole(void) {
+    if (o->oMontyMoleCurrentHole == NULL) { return; }
     o->oMontyMoleCurrentHole->oMontyMoleHoleCooldown = 30;
     o->oAction = MONTY_MOLE_ACT_SELECT_HOLE;
     o->oVelY = 0.0f;
@@ -378,9 +443,13 @@ void bhv_monty_mole_update(void) {
             //  1500 units away from each other, so the counter resets if you
             //  attack moles in these holes consecutively.
             if (distToLastKill < 1500.0f) {
-                if (sMontyMoleKillStreak == 7) {
+                if (sMontyMoleKillStreak == 7 && network_owns_object(o)) {
                     play_puzzle_jingle();
-                    spawn_object(o, MODEL_1UP, bhv1upWalking);
+                    struct Object* oneUp = spawn_object(o, MODEL_1UP, bhv1upWalking);
+
+                    struct Object* spawn_objects[] = { oneUp };
+                    u32 models[] = { MODEL_1UP };
+                    network_send_spawn_objects(spawn_objects, models, 1);
                 }
             } else {
                 sMontyMoleKillStreak = 0;
@@ -412,19 +481,22 @@ static void monty_mole_rock_act_held(void) {
     o->oParentRelativePosY = -50.0f;
     o->oParentRelativePosZ = 0.0f;
 
-    if (o->parentObj->prevObj == NULL) {
-        f32 distToMario = o->oDistanceToMario;
-        if (distToMario > 600.0f) {
-            distToMario = 600.0f;
+    if (o->parentObj == NULL || o->parentObj->prevObj == NULL) {
+        struct Object* player = nearest_player_to_object(o);
+        int distanceToPlayer = dist_between_objects(o, player);
+        if (distanceToPlayer > 600.0f) {
+            distanceToPlayer = 600.0f;
         }
 
         o->oAction = MONTY_MOLE_ROCK_ACT_MOVE;
 
         // The angle is adjusted to compensate for the start position offset
-        o->oMoveAngleYaw = (s32)(o->parentObj->oMoveAngleYaw + 0x1F4 - distToMario * 0.1f);
+        if (o->parentObj != NULL) {
+            o->oMoveAngleYaw = (s32)(o->parentObj->oMoveAngleYaw + 0x1F4 - distanceToPlayer * 0.1f);
+        }
 
         o->oForwardVel = 40.0f;
-        o->oVelY = distToMario * 0.08f + 8.0f;
+        o->oVelY = distanceToPlayer * 0.08f + 8.0f;
 
         o->oMoveFlags = 0;
     }
