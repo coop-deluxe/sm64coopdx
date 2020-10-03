@@ -35,6 +35,15 @@ void whirpool_orient_graph(void) {
 }
 
 void bhv_whirlpool_loop(void) {
+    if (o->oWhirlpoolTimeout > 0) {
+        o->oWhirlpoolTimeout--;
+        if (o->oWhirlpoolTimeout <= 0) {
+            o->oInteractStatus = 0;
+        }
+    } else if (o->oInteractStatus == INT_STATUS_INTERACTED) {
+        o->oWhirlpoolTimeout = 30;
+    }
+
 #ifndef NODRAWINGDISTANCE
     if (o->oDistanceToMario < 5000.0f) {
 #endif

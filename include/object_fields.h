@@ -1130,6 +1130,7 @@
 /* Whirlpool */
 #define /*0x0F4*/ oWhirlpoolInitFacePitch OBJECT_FIELD_S32(0x1B)
 #define /*0x0F8*/ oWhirlpoolInitFaceRoll  OBJECT_FIELD_S32(0x1C)
+#define /*0x0FC*/ oWhirlpoolTimeout       OBJECT_FIELD_S32(0x1D)
 
 /* White Puff Explode */
 #define /*0x0F4*/ oWhitePuffUnkF4 OBJECT_FIELD_F32(0x1B)
