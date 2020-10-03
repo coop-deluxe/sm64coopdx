@@ -30,6 +30,14 @@ void bhv_manta_ray_init(void) {
     o->parentObj = sp1C;
     obj_set_hitbox(o, &sMantaRayHitbox);
     cur_obj_scale(2.5f);
+
+    network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oMantaUnkF4);
+    network_init_object_field(o, &o->oMantaUnkF8);
+    network_init_object_field(o, &o->oMantaUnk1AC);
+    network_init_object_field(o, &o->oMoveAnglePitch);
+    network_init_object_field(o, &o->oMoveAngleRoll);
+    network_init_object_field(o, &sp1C->oWaterRingMgrNextRingIndex);
 }
 
 void manta_ray_move(void) {
@@ -66,6 +74,8 @@ void manta_ray_act_spawn_ring(void) {
     if (o->oTimer == 300)
         o->oTimer = 0;
 
+    if (!network_owns_object(o)) { return; }
+
     if (o->oTimer == 0 || o->oTimer == 50 || o->oTimer == 150 || o->oTimer == 200 || o->oTimer == 250) {
         sp18 = spawn_object(o, MODEL_WATER_RING, bhvMantaRayWaterRing);
         sp18->oFaceAngleYaw = o->oMoveAngleYaw;
@@ -78,6 +88,12 @@ void manta_ray_act_spawn_ring(void) {
         sp1C->oWaterRingMgrNextRingIndex++;
         if (sp1C->oWaterRingMgrNextRingIndex > 0x2710)
             sp1C->oWaterRingMgrNextRingIndex = 0;
+
+        struct Object* spawn_objects[] = { sp18 };
+        u32 models[] = { MODEL_WATER_RING };
+        network_send_spawn_objects(spawn_objects, models, 1);
+
+        network_send_object(o);
     }
 }
 
