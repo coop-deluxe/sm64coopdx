@@ -1,9 +1,11 @@
 // water_ring.c.inc
 
 f32 water_ring_calc_mario_dist(void) {
-    f32 marioDistX = o->oPosX - gMarioObject->header.gfx.pos[0];
-    f32 marioDistY = o->oPosY - (gMarioObject->header.gfx.pos[1] + 80.0f);
-    f32 marioDistZ = o->oPosZ - gMarioObject->header.gfx.pos[2];
+    struct Object* player = nearest_player_to_object(o);
+
+    f32 marioDistX = o->oPosX - player->header.gfx.pos[0];
+    f32 marioDistY = o->oPosY - (player->header.gfx.pos[1] + 80.0f);
+    f32 marioDistZ = o->oPosZ - player->header.gfx.pos[2];
     f32 marioDistInFront = marioDistX * o->oWaterRingNormalX + marioDistY * o->oWaterRingNormalY
                            + marioDistZ * o->oWaterRingNormalZ;
 
@@ -45,11 +47,12 @@ void bhv_jet_stream_water_ring_init(void) {
 // sp2c = ringManager
 
 void water_ring_check_collection(f32 avgScale, struct Object *ringManager) {
+    struct Object* player = nearest_player_to_object(o);
     f32 marioDistInFront = water_ring_calc_mario_dist();
     struct Object *ringSpawner;
 
-    if (!is_point_close_to_object(o, gMarioObject->header.gfx.pos[0],
-                              gMarioObject->header.gfx.pos[1] + 80.0f, gMarioObject->header.gfx.pos[2],
+    if (!is_point_close_to_object(o, player->header.gfx.pos[0],
+                              player->header.gfx.pos[1] + 80.0f, player->header.gfx.pos[2],
                               (avgScale + 0.2) * 120.0)) {
         o->oWaterRingMarioDistInFront = marioDistInFront;
         return;
@@ -173,6 +176,14 @@ void water_ring_spawner_act_inactive(void) {
 }
 
 void bhv_jet_stream_ring_spawner_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oWaterRingSpawnerRingsCollected);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+    }
+
     switch (o->oAction) {
         case JS_RING_SPAWNER_ACT_ACTIVE:
             water_ring_spawner_act_inactive();
@@ -183,6 +194,7 @@ void bhv_jet_stream_ring_spawner_loop(void) {
                 spawn_default_star(3400.0f, -3200.0f, -500.0f);
 
                 o->oAction = JS_RING_SPAWNER_ACT_INACTIVE;
+                network_send_object(o);
             }
             break;
 
