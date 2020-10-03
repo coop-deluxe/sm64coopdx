@@ -304,7 +304,7 @@ void render_hud_unsupported_level(void) {
         case COURSE_HMC:      // (6) Hazy Maze Cave
         case COURSE_LLL:      // (7) Lethal Lava Land
         case COURSE_SSL:      // (8) Shifting Sand Land
-        //case COURSE_DDD:      // (9) Dire Dire Docks
+        case COURSE_DDD:      // (9) Dire Dire Docks
         //case COURSE_SL:       // (10) Snowman's Land
         //case COURSE_WDW:      // (11) Wet Dry World
         //case COURSE_TTM:      // (12) Tall Tall Mountain
@@ -320,7 +320,7 @@ void render_hud_unsupported_level(void) {
         case COURSE_VCUTM:    // (22) Vanish Cap Under the Moat
         case COURSE_WMOTR:    // (23) Winged Mario over the Rainbow
         case COURSE_SA:       // (24) Secret Aquarium
-        //case COURSE_CAKE_END: // (25) The End (Cake Scene)
+        case COURSE_CAKE_END: // (25) The End (Cake Scene)
             return;
     }
 
