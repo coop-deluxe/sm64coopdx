@@ -953,7 +953,7 @@ s32 act_bubbled(struct MarioState* m) {
         m->vel[2] = 0;
         m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         if (m->playerIndex == 0) {
-            semi_reset_camera(m->area->camera);
+            reset_camera(m->area->camera);
         }
         return force_idle_state(m);
     }

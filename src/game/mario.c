@@ -403,7 +403,7 @@ void mario_set_bubbled(struct MarioState* m) {
     gCutsceneTimer = 0;
 
     if (m->playerIndex == 0) {
-        semi_reset_camera(m->area->camera);
+        reset_camera(m->area->camera);
     }
 }
 

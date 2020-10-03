@@ -3252,13 +3252,6 @@ void update_camera(struct Camera *c) {
     gLakituState.lastFrameAction = sMarioCamState->action;
 }
 
-void semi_reset_camera(struct Camera* c) {
-    s16 oldMovementFlags = gCameraMovementFlags;
-    reset_camera(c);
-
-    // don't cause a reset of position/rotation
-    gCameraMovementFlags = oldMovementFlags;
-}
 /**
  * Reset all the camera variables to their arcane defaults
  */
