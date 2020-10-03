@@ -312,7 +312,7 @@ void render_hud_unsupported_level(void) {
         //case COURSE_TTC:      // (14) Tick Tock Clock
         //case COURSE_RR:       // (15) Rainbow Ride
         case COURSE_BITDW:    // (16) Bowser in the Dark World
-        //case COURSE_BITFS:    // (17) Bowser in the Fire Sea
+        case COURSE_BITFS:    // (17) Bowser in the Fire Sea
         //case COURSE_BITS:     // (18) Bowser in the Sky
         case COURSE_PSS:      // (19) Princess's Secret Slide
         case COURSE_COTMC:    // (20) Cavern of the Metal Cap

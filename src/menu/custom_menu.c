@@ -31,7 +31,7 @@ static void menu_main_draw_strings(void) {
     u8 red = (gGlobalTimer % 20 > 10) ? 0 : 222;
     if (gGlobalTimer > 200) { red = 222; }
     gDPSetEnvColor(gDisplayListHead++, 222, red, red, gMenuStringAlpha);
-    print_generic_ascii_string(71, 55, "For now, most levels are unsupported.");
+    print_generic_ascii_string(39, 55, "For now, levels after Bowser 2 are unsupported.");
 }
 
 static void host_menu_draw_strings(void) {
