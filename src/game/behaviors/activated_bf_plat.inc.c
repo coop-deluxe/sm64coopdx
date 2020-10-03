@@ -55,17 +55,37 @@ void bhv_activated_back_and_forth_platform_init(void) {
     o->oActivatedBackAndForthPlatformVertical = (u16)(o->oBehParams >> 16) & 0x0080;
 
     o->oActivatedBackAndForthPlatformStartYaw = o->oFaceAngleYaw;
+
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &o->oPosX);
+    network_init_object_field(o, &o->oPosY);
+    network_init_object_field(o, &o->oPosZ);
+    network_init_object_field(o, &o->oVelX);
+    network_init_object_field(o, &o->oVelY);
+    network_init_object_field(o, &o->oVelZ);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformMaxOffset);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformOffset);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformVel);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformCountdown);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformStartYaw);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformVertical);
+    network_init_object_field(o, &o->oActivatedBackAndForthPlatformFlipRotation);
 }
 
 /**
  * Activated back-and-forth platform update function.	
  */
 void bhv_activated_back_and_forth_platform_update(void) {
+    u8 doSendNetwork = FALSE;
     UNUSED s32 unused[3];
+
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
 
     // oVelY is used for vertical platforms' movement and also for
     // horizontal platforms' dipping up/down when Mario gets on/off them
-    if (gMarioObject->platform == o) {
+    if (cur_obj_is_any_player_on_platform()) {
         o->oVelY = -6.0f;
     } else {
         o->oVelY = 6.0f;
@@ -91,7 +111,7 @@ void bhv_activated_back_and_forth_platform_update(void) {
                           o->oActivatedBackAndForthPlatformMaxOffset)
                 ||
                 // The platform will not reset if Mario goes far away and it's travelling backwards
-                (o->oActivatedBackAndForthPlatformVel > 0.0f && o->oDistanceToMario > 3000.0f)) {
+                (o->oActivatedBackAndForthPlatformVel > 0.0f && distanceToPlayer > 3000.0f)) {
                 // Reset the wait timer
                 o->oActivatedBackAndForthPlatformCountdown = 20;
 
@@ -115,6 +135,7 @@ void bhv_activated_back_and_forth_platform_update(void) {
         // oVelY is only negative if Mario is on the platform
         if (o->oVelY < 0.0f) {
             o->oActivatedBackAndForthPlatformVel = 10.0f;
+            doSendNetwork = TRUE;
         }
 
         // Set waiting countdown to 20 frames
@@ -143,4 +164,5 @@ void bhv_activated_back_and_forth_platform_update(void) {
 
     // Compute the object's velocity using the old saved position.
     obj_perform_position_op(POS_OP_COMPUTE_VELOCITY);
+    if (doSendNetwork) { network_send_object(o); }
 }

@@ -34,18 +34,13 @@ void bhv_sliding_plat_2_init(void) {
 }
 
 void bhv_sliding_plat_2_loop(void) {
-    if (network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 1000.0f);
-        so->maxUpdateRate = 5.0f;
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        so->minUpdateRate = 5.0f;
+        network_init_object_field(o, &o->oBackAndForthPlatformUnkF4);
+        network_init_object_field(o, &o->oBackAndForthPlatformUnkF8);
         network_init_object_field(o, &o->oBackAndForthPlatformUnkFC);
         network_init_object_field(o, &o->oBackAndForthPlatformUnk100);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oPosY);
-        network_init_object_field(o, &o->oPosZ);
-        network_init_object_field(o, &o->oVelX);
-        network_init_object_field(o, &o->oVelY);
-        network_init_object_field(o, &o->oVelZ);
-        network_init_object_field(o, &o->oTimer);
     }
 
     if (o->oTimer > 10) {
