@@ -46,15 +46,20 @@ struct PacketPlayerData {
     u8  customFlags;
     u32 heldSyncID;
     u32 heldBySyncID;
+    u32 interactSyncID;
+    u32 usedSyncID;
 
     s16 currLevelNum;
     s16 currAreaIndex;
 };
 
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
-    u32 heldSyncID   = (m->heldObj != NULL)   ? m->heldObj->oSyncID   : 0;
-    u32 heldBySyncID = (m->heldByObj != NULL) ? m->heldByObj->oSyncID : 0;
-    u8 customFlags   = SET_BIT((m->freeze > 0), 0);
+    u32 heldSyncID     = (m->heldObj != NULL)     ? m->heldObj->oSyncID     : 0;
+    u32 heldBySyncID   = (m->heldByObj != NULL)   ? m->heldByObj->oSyncID   : 0;
+    u32 interactSyncID = (m->interactObj != NULL) ? m->interactObj->oSyncID : 0;
+    u32 usedSyncID     = (m->usedObj != NULL)     ? m->usedObj->oSyncID     : 0;
+
+    u8 customFlags     = SET_BIT((m->freeze > 0), 0);
 
     memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * 80);
     data->nodeFlags    = m->marioObj->header.gfx.node.flags;
@@ -89,16 +94,19 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->peakHeight      = m->peakHeight;
     data->currentRoom     = m->currentRoom;
 
-    data->customFlags  = customFlags;
-    data->heldSyncID   = heldSyncID;
-    data->heldBySyncID = heldBySyncID;
+    data->customFlags    = customFlags;
+    data->heldSyncID     = heldSyncID;
+    data->heldBySyncID   = heldBySyncID;
+    data->interactSyncID = interactSyncID;
+    data->usedSyncID     = usedSyncID;
 
     data->currLevelNum = gCurrLevelNum;
     data->currAreaIndex = gCurrAreaIndex;
 }
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
-                              u8* customFlags, u32* heldSyncID, u32* heldBySyncID) {
+                              u8* customFlags, u32* heldSyncID, u32* heldBySyncID,
+                              u32* interactSyncID, u32* usedSyncID) {
     memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
     *m->controller = data->controller;
@@ -132,9 +140,11 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     m->peakHeight      = data->peakHeight;
     m->currentRoom     = data->currentRoom;
 
-    *customFlags  = data->customFlags;
-    *heldSyncID   = data->heldSyncID;
-    *heldBySyncID = data->heldBySyncID;
+    *customFlags    = data->customFlags;
+    *heldSyncID     = data->heldSyncID;
+    *heldBySyncID   = data->heldBySyncID;
+    *interactSyncID = data->interactSyncID;
+    *usedSyncID     = data->usedSyncID;
 }
 
 void network_send_player(void) {
@@ -180,10 +190,14 @@ void network_receive_player(struct Packet* p) {
     if (levelAreaMismatch) { return; }
 
     // apply data from packet to mario state
-    u32 heldSyncID   = 0;
-    u32 heldBySyncID = 0;
-    u8 customFlags   = 0;
-    write_packet_data(&data, m, &customFlags, &heldSyncID, &heldBySyncID);
+    u32 heldSyncID     = 0;
+    u32 heldBySyncID   = 0;
+    u32 interactSyncID = 0;
+    u32 usedSyncID     = 0;
+    u8 customFlags     = 0;
+    write_packet_data(&data, m, &customFlags,
+                      &heldSyncID, &heldBySyncID,
+                      &interactSyncID, &usedSyncID);
 
     // read custom flags
     m->freeze = GET_BIT(customFlags, 0);
@@ -218,6 +232,16 @@ void network_receive_player(struct Packet* p) {
         m->heldByObj = gSyncObjects[heldBySyncID].o;
     } else {
         m->heldByObj = NULL;
+    }
+
+    // find and set their interact object
+    if (interactSyncID != 0 && gSyncObjects[interactSyncID].o != NULL) {
+        m->interactObj = gSyncObjects[interactSyncID].o;
+    }
+
+    // find and set their used object
+    if (usedSyncID != 0 && gSyncObjects[usedSyncID].o != NULL) {
+        m->usedObj = gSyncObjects[usedSyncID].o;
     }
 
     // jump kicking: restore action state, otherwise it won't play
