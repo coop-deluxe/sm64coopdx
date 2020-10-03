@@ -32,6 +32,8 @@
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
+static u8 sSoftResettingCamera = FALSE;
+
 /**
  * @file camera.c
  * Implements the camera system, including C-button input, camera modes, camera triggers, and cutscenes.
@@ -3252,6 +3254,10 @@ void update_camera(struct Camera *c) {
     gLakituState.lastFrameAction = sMarioCamState->action;
 }
 
+void soft_reset_camera(struct Camera* c) {
+    reset_camera(c);
+    sSoftResettingCamera = TRUE;
+}
 /**
  * Reset all the camera variables to their arcane defaults
  */
@@ -3454,6 +3460,10 @@ void init_camera(struct Camera *c) {
         case AREA_TTM_OUTSIDE:
             gLakituState.mode = CAMERA_MODE_RADIAL;
             break;
+    }
+
+    if (sSoftResettingCamera) {
+        c->cutscene = 0;
     }
 
     // Set the camera pos to marioOffset (relative to Mario), added to Mario's position
