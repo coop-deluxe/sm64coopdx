@@ -22,6 +22,16 @@ u8 network_player_connected_count(void) {
     return count;
 }
 
+struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        if (!gNetworkPlayers[i].connected) { continue; }
+        if (gNetworkPlayers[i].globalIndex == globalIndex) {
+            return &gNetworkPlayers[i];
+        }
+    }
+    return NULL;
+}
+
 void network_player_update(void) {
     float elapsed = (clock() - gLastNetworkSend) / (float)CLOCKS_PER_SEC;
     if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {

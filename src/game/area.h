@@ -140,6 +140,8 @@ extern s16 gCurrLevelNum;
 
 extern u32 gSpawnedStarDefault[];
 extern u8 gSpawnedStarDefaultCount;
+extern u32 gSpawnedStarNLE[];
+extern u8 gSpawnedStarNLECount;
 extern u8 gSpawnedStarRedCoin;
 extern u8 gSpawnedStarHidden;
 

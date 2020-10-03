@@ -56,6 +56,8 @@ s16 gCurrLevelNum = LEVEL_MIN;
 
 u32 gSpawnedStarDefault[8] = { 0 };
 u8 gSpawnedStarDefaultCount = 0;
+u32 gSpawnedStarNLE[8] = { 0 };
+u8 gSpawnedStarNLECount = 0;
 u8 gSpawnedStarRedCoin = 0;
 u8 gSpawnedStarHidden = 0;
 

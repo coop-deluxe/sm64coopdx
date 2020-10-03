@@ -23,6 +23,7 @@ void packet_receive(struct Packet* p) {
         case PACKET_OBJECT:              network_receive_object(p);              break;
         case PACKET_SPAWN_OBJECTS:       network_receive_spawn_objects(p);       break;
         case PACKET_SPAWN_STAR:          network_receive_spawn_star(p);          break;
+        case PACKET_SPAWN_STAR_NLE:      network_receive_spawn_star_nle(p);      break;
         case PACKET_LEVEL_WARP:          network_receive_level_warp(p);          break;
         case PACKET_INSIDE_PAINTING:     network_receive_inside_painting(p);     break;
         case PACKET_COLLECT_STAR:        network_receive_collect_star(p);        break;

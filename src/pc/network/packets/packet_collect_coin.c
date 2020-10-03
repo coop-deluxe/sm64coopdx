@@ -10,7 +10,7 @@
 #include "src/game/object_helpers.h"
 
 // defined in sparkle_spawn_star.inc.c
-void bhv_spawn_star_no_level_exit(struct Object* object, u32 sp20);
+void bhv_spawn_star_no_level_exit(struct Object* object, u32 sp20, u8 networkSendEvent);
 
 static u8 localCoinId = 1;
 
@@ -111,7 +111,7 @@ void network_receive_collect_coin(struct Packet* p) {
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
         && gMarioStates[0].numCoins - coin->oDamageOrCoinValue < 100
         && gMarioStates[0].numCoins >= 100) {
-        bhv_spawn_star_no_level_exit(gMarioStates[1].marioObj, 6);
+        bhv_spawn_star_no_level_exit(gMarioStates[1].marioObj, 6, FALSE);
     }
 
     return;
@@ -125,6 +125,6 @@ SANITY_CHECK_COINS:;
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
         && oldCoinCount < 100
         && gMarioStates[0].numCoins >= 100) {
-        bhv_spawn_star_no_level_exit(gMarioStates[1].marioObj, 6);
+        bhv_spawn_star_no_level_exit(gMarioStates[1].marioObj, 6, FALSE);
     }
 }

@@ -803,7 +803,7 @@ u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *
 
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum) && m->numCoins - o->oDamageOrCoinValue < 100
         && m->numCoins >= 100) {
-        bhv_spawn_star_no_level_exit(m->marioObj, 6);
+        bhv_spawn_star_no_level_exit(m->marioObj, 6, FALSE);
     }
 
     if (o->oDamageOrCoinValue >= 2) {
