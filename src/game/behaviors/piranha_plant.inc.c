@@ -268,9 +268,6 @@ void piranha_plant_act_biting(void) {
 
     cur_obj_init_animation_with_sound(0);
 
-    cur_obj_set_hitbox_radius_and_height(150.0f, 100.0f);
-    cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
-
     // Play a bite sound effect on certain frames.
     if (is_item_in_array(frame, sPiranhaPlantBiteSoundFrames)) {
         cur_obj_play_sound_2(SOUND_OBJ2_PIRANHA_PLANT_BITE);
@@ -365,6 +362,9 @@ void bhv_piranha_plant_loop(void) {
         network_init_object_field(o, &o->oPiranhaPlantSleepMusicState);
         network_init_object_field(o, &o->oTimer);
     }
+
+    cur_obj_set_hitbox_radius_and_height(150.0f, 100.0f);
+    cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
 
     cur_obj_call_action_function(TablePiranhaPlantActions);
     #ifndef NODRAWINGDISTANCE
