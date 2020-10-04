@@ -14,6 +14,7 @@ void bhv_wf_rotating_wooden_platform_loop(void) {
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oAngleVelYaw);
         network_init_object_field(o, &o->oFaceAngleYaw);
+        network_init_object_field(o, &o->oMoveAngleYaw);
         network_init_object_field(o, &o->oTimer);
     }
 
@@ -21,6 +22,7 @@ void bhv_wf_rotating_wooden_platform_loop(void) {
         o->oAngleVelYaw = 0;
         if (o->oTimer > 60 && network_owns_object(o)) {
             o->oAction++;
+            o->oFaceAngleYaw = (o->oFaceAngleYaw & 0x8000);
             network_send_object(o);
         }
     } else {
