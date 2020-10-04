@@ -1467,6 +1467,17 @@ void update_mario_inputs(struct MarioState *m) {
     }
     /*End of moonjump cheat */
 
+    /* Developer stuff */
+#ifdef DEVELOPMENT
+    if (m->playerIndex == 0) {
+        if (m->action != ACT_DEBUG_FREE_MOVE && m->controller->buttonPressed & L_TRIG) {
+            set_mario_action(m, ACT_DEBUG_FREE_MOVE, 0);
+            m->marioObj->oTimer = 0;
+        }
+    }
+#endif
+    /* End of developer stuff */
+
     if (m->playerIndex == 0) {
         if (!localIsPaused && gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
             if (m->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
