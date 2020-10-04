@@ -3104,14 +3104,14 @@ void render_course_complete_lvl_info_and_hud_str(void) {
 #endif
 #if defined(VERSION_JP) || defined(VERSION_SH)
 #define TXT_SAVECONT_Y 2
-#define TXT_SAVEQUIT_Y 18
-#define TXT_SAVE_EXIT_GAME_Y 38
-#define TXT_CONTNOSAVE_Y 54
+//#define TXT_SAVEQUIT_Y 18
+//#define TXT_SAVE_EXIT_GAME_Y 38
+#define TXT_CONTNOSAVE_Y 18
 #else
 #define TXT_SAVECONT_Y 0
-#define TXT_SAVEQUIT_Y 20
-#define TXT_SAVE_EXIT_GAME_Y 40
-#define TXT_CONTNOSAVE_Y 60
+//#define TXT_SAVEQUIT_Y 20
+//#define TXT_SAVE_EXIT_GAME_Y 40
+#define TXT_CONTNOSAVE_Y 20
 #endif
 
 #ifdef VERSION_EU
@@ -3164,8 +3164,8 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
     print_generic_string(TXT_SAVEOPTIONS_X, y + TXT_SAVECONT_Y, textSaveAndContinue);
-    print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVEQUIT_Y, textSaveAndQuit);
-    print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVE_EXIT_GAME_Y, textSaveExitGame);
+    //print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVEQUIT_Y, textSaveAndQuit);
+    //print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVE_EXIT_GAME_Y, textSaveExitGame);
     print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_CONTNOSAVE_Y, textContinueWithoutSave);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);

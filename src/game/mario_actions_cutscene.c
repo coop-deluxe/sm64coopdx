@@ -34,7 +34,7 @@
 #include "pc/network/network.h"
 
 // TODO: put this elsewhere
-enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME, SAVE_OPT_CONTINUE_DONT_SAVE };
+enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
 
 static struct Object *sIntroWarpPipeObj;
 static struct Object *sEndPeachObj;
@@ -259,20 +259,20 @@ void handle_save_menu(struct MarioState *m) {
     // wait for the menu to show up
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
-        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE || gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
+        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT*/) {
             save_file_do_save(gCurrSaveFileNum - 1, FALSE);
 
-            if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
+            /*if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
                 fade_into_special_warp(-2, 0); // reset game
             } else if (gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME) {
                 //initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
                 fade_into_special_warp(0, 0);
                 game_exit();
-            }
+            }*/
         }
 
         // not quitting
-        if (gSaveOptSelectIndex != SAVE_OPT_SAVE_EXIT_GAME) {
+        //if (gSaveOptSelectIndex != SAVE_OPT_SAVE_EXIT_GAME) {
             disable_time_stop();
             m->faceAngle[1] += 0x8000;
             // figure out what dialog to show, if we should
@@ -284,7 +284,7 @@ void handle_save_menu(struct MarioState *m) {
             } else {
                 set_mario_action(m, ACT_IDLE, 0);
             }
-        }
+        //}
     }
 }
 
