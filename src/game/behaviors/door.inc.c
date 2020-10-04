@@ -149,6 +149,9 @@ void bhv_door_init(void) {
         gDoorAdjacentRooms[o->oDoorUnkF8][0] = o->oDoorUnkFC;
         gDoorAdjacentRooms[o->oDoorUnkF8][1] = o->oDoorUnk100;
     }
+
+    // give it an ID to make usedObj/interactObj sync
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
 }
 
 void bhv_star_door_loop_2(void) {
