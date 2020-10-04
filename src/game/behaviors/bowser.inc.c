@@ -122,8 +122,10 @@ void bhv_bowser_body_anchor_loop(void) {
         else
             cur_obj_become_tangible();
     }
-    if (o->parentObj->oHeldState != HELD_FREE)
+    if (o->parentObj->oHeldState != HELD_FREE) {
         cur_obj_become_intangible();
+        o->parentObj->oOpacity = 0xFF;
+    }
     o->oInteractStatus = 0;
 }
 
