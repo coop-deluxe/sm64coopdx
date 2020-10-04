@@ -371,6 +371,7 @@ void bhv_king_bobomb_loop(void) {
         network_init_object_field(o, &o->oKingBobombUnk88);
         network_init_object_field(o, &o->oFlags);
         network_init_object_field(o, &o->oHealth);
+        network_init_object_field(o, &o->oInteractStatus);
     }
 
     f32 sp34 = 20.0f;
