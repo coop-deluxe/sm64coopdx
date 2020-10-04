@@ -60,6 +60,20 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
+
+    u8 modCount = string_linked_list_count(&gRegisteredMods);
+    packet_write(&p, &modCount, sizeof(u8));
+
+    struct StringLinkedList* node = &gRegisteredMods;
+    char nullchar = '\0';
+    while (node != NULL && node->string != NULL) {
+        int length = strlen(node->string);
+        packet_write(&p, node->string, sizeof(char) * length);
+        packet_write(&p, &nullchar, sizeof(char));
+        LOG_INFO("sending registered mod: %s", node->string);
+        node = node->next;
+    }
+
     network_send_to(joinRequestPacket->localIndex , &p);
 
     LOG_INFO("sending join packet");
@@ -73,6 +87,7 @@ void network_receive_join(struct Packet* p) {
     char hash[HASH_LENGTH] = GIT_HASH;
     char remoteHash[HASH_LENGTH] = { 0 };
     u8 myGlobalIndex = UNKNOWN_GLOBAL_INDEX;
+    u8 modCount = 0;
 
     if (gNetworkPlayerLocal != NULL && gNetworkPlayerLocal->connected) {
         LOG_ERROR("Received join packet, but already in-game!");
@@ -82,7 +97,7 @@ void network_receive_join(struct Packet* p) {
     // verify version
     packet_read(p, &remoteHash, sizeof(u8) * HASH_LENGTH);
     if (memcmp(hash, remoteHash, HASH_LENGTH) != 0) {
-        custom_menu_version_mismatch();
+        custom_menu_connection_error("Your versions don't match, both should rebuild!");
         return;
     }
 
@@ -92,6 +107,23 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
+    packet_read(p, &modCount, sizeof(u8));
+
+    struct StringLinkedList head = { 0 };
+    for (int i = 0; i < modCount; i++) {
+        char* modName = (char*) &p->buffer[p->cursor];
+        int length = strlen(modName);
+        LOG_INFO("host has mod: %s", modName);
+        string_linked_list_append(&head, modName);
+        p->cursor += length + 1;
+    }
+
+    if (string_linked_list_mismatch(&gRegisteredMods, &head)) {
+        string_linked_list_free(&head);
+        custom_menu_connection_error("Your mods don't match!");
+        return;
+    }
+    string_linked_list_free(&head);
 
     network_player_connected(NPT_SERVER, 0);
     network_player_connected(NPT_LOCAL, myGlobalIndex);

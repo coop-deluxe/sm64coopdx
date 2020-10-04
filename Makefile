@@ -308,7 +308,7 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 
 # Hi, I'm a PC
 SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
-SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket
+SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils
 ASM_DIRS :=
 
 #ifeq ($(DISCORDRPC),1)

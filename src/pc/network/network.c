@@ -23,12 +23,12 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 u8 networkLoadingLevel = 0;
 bool gNetworkLevelLoaded = false;
 clock_t gLastNetworkSend = 0;
+struct StringLinkedList gRegisteredMods = { 0 };
 
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
     .playerKnockbackStrength = 25,
 };
-
 
 void network_set_system(enum NetworkSystemType nsType) {
     switch (nsType) {
@@ -174,6 +174,11 @@ void network_update(void) {
     if (gNetworkType != NT_NONE) {
         network_update_reliable();
     }
+}
+
+void network_register_mod(char* modName) {
+    if (string_linked_list_contains(&gRegisteredMods, modName)) { return; }
+    string_linked_list_append(&gRegisteredMods, modName);
 }
 
 void network_shutdown(void) {

@@ -3986,6 +3986,7 @@
     <ClCompile Include="..\src\pc\pc_main.c" />
     <ClCompile Include="..\src\pc\platform.c" />
     <ClCompile Include="..\src\pc\ultra_reimplementation.c" />
+    <ClCompile Include="..\src\pc\utils\string_linked_list.c" />
     <ClCompile Include="..\text\define_courses.inc.c" />
     <ClCompile Include="..\text\define_text.inc.c" />
     <ClCompile Include="..\tools\aifc_decode.c" />
@@ -4338,6 +4339,7 @@
     <ClInclude Include="..\src\pc\network\socket\socket.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_linux.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_windows.h" />
+    <ClInclude Include="..\src\pc\utils\string_linked_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

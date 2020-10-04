@@ -282,8 +282,8 @@ void custom_menu_goto_game(s16 saveFileNum) {
     sGotoGame = saveFileNum;
 }
 
-void custom_menu_version_mismatch(void) {
+void custom_menu_connection_error(char* message) {
     play_sound(SOUND_MARIO_MAMA_MIA, gDefaultSoundArgs);
-    strcpy(sConnectionJoinError, "Your versions don't match, both should rebuild!");
+    strcpy(sConnectionJoinError, message);
     network_shutdown();
 }

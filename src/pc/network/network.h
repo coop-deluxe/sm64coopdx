@@ -7,6 +7,7 @@
 #include <assert.h>
 #include "network_player.h"
 #include "packets/packet.h"
+#include "pc/utils/string_linked_list.h"
 #include "../cliopts.h"
 
 #define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
@@ -81,6 +82,7 @@ extern bool gNetworkLevelLoaded;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern clock_t gLastNetworkSend;
+extern struct StringLinkedList gRegisteredMods;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);
@@ -91,6 +93,7 @@ void network_send_to(u8 localIndex, struct Packet* p);
 void network_send(struct Packet* p);
 void network_receive(u8 localIndex, u8* data, u16 dataLength);
 void network_update(void);
+void network_register_mod(char* modName);
 void network_shutdown(void);
 
 #endif

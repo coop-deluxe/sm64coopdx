@@ -3433,6 +3433,9 @@
     <Filter Include="Header Files\src\pc\network\discord">
       <UniqueIdentifier>{7fd7fed2-3f22-4bbf-a118-8ff54107c341}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\src\pc\utils">
+      <UniqueIdentifier>{451cd85d-8a2c-4aa5-87c7-d1415974ba96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\amp\anims\anim_0800401C.inc.c">
@@ -15069,6 +15072,9 @@
     <ClCompile Include="..\src\pc\network\packets\packet_instant_warp.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\utils\string_linked_list.c">
+      <Filter>Source Files\src\pc\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16020,6 +16026,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\network\network_player.h">
       <Filter>Header Files\src\pc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\utils\string_linked_list.h">
+      <Filter>Source Files\src\pc\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
