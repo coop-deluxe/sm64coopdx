@@ -395,9 +395,7 @@ void network_receive_object(struct Packet* p) {
     if (!network_sync_object_initialized(o)) { return; }
 
     // make sure no one can update an object we're holding
-    if (gNetworkType == NT_SERVER) { // two-player hack: needs priority
-        if (gMarioStates[0].heldObj == o) { return; }
-    }
+    if (gMarioStates[0].heldObj == o) { return; }
 
     // save old pos for platform displacement
     Vec3f oldPos = { 0 };

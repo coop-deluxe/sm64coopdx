@@ -310,9 +310,11 @@ void mario_grab_used_object(struct MarioState *m) {
 }
 
 void mario_drop_held_object(struct MarioState *m) {
+    if (m->playerIndex != 0) { return; }
+
     if (m->heldObj != NULL) {
         if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {
-            if (m->playerIndex == 0) { stop_shell_music(); }
+            stop_shell_music();
         }
 
         obj_set_held_state(m->heldObj, bhvCarrySomething4);
@@ -326,11 +328,17 @@ void mario_drop_held_object(struct MarioState *m) {
 
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
 
+        if (m->heldObj->oSyncID != 0) {
+            network_send_object(m->heldObj);
+        }
+
         m->heldObj = NULL;
     }
 }
 
 void mario_throw_held_object(struct MarioState *m) {
+    if (m->playerIndex != 0) { return; }
+
     if (m->heldObj != NULL) {
         if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {
             if (m->playerIndex == 0) { stop_shell_music(); }
@@ -343,6 +351,10 @@ void mario_throw_held_object(struct MarioState *m) {
         m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2] + 32.0f * coss(m->faceAngle[1]);
 
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
+
+        if (m->heldObj->oSyncID != 0) {
+            network_send_object(m->heldObj);
+        }
 
         m->heldObj = NULL;
     }
@@ -1846,6 +1858,8 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
 u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o) {
     void *script = virtual_to_segmented(0x13, o->behavior);
 
+    if (m->playerIndex != 0) { return FALSE; }
+
     if (o->oInteractionSubtype & INT_SUBTYPE_KICKABLE) {
         u32 interaction = determine_interaction(m, o);
         if (interaction & (INT_KICK | INT_TRIP)) {
@@ -1857,6 +1871,7 @@ u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o)
 
     if ((o->oInteractionSubtype & INT_SUBTYPE_GRABS_MARIO)) {
         if (check_object_grab_mario(m, interactType, o)) {
+            if (o->oSyncID != 0) { network_send_object(o); }
             return TRUE;
         }
     }
@@ -1865,6 +1880,7 @@ u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o)
         if (!(o->oInteractionSubtype & INT_SUBTYPE_NOT_GRABBABLE)) {
             m->interactObj = o;
             m->input |= INPUT_INTERACT_OBJ_GRABBABLE;
+            if (o->oSyncID != 0) { network_send_object(o); }
             return TRUE;
         }
     }
