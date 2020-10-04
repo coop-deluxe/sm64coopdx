@@ -58,10 +58,16 @@ void bhv_wf_sliding_tower_platform_loop(void) {
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
         network_init_object_field(o, &o->oForwardVel);
+        network_init_object_field(o, &o->oPlatformUnk110);
+        network_init_object_field(o, &o->oPlatformUnk10C);
+        network_init_object_field(o, &o->oMoveAngleYaw);
         network_init_object_field(o, &o->oPosX);
         network_init_object_field(o, &o->oPosZ);
-        network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oVelX);
+        network_init_object_field(o, &o->oVelZ);
     }
 
     s32 sp24 = o->oPlatformUnk110 / o->oPlatformUnk10C;
