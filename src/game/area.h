@@ -142,8 +142,10 @@ extern u32 gSpawnedStarDefault[];
 extern u8 gSpawnedStarDefaultCount;
 extern u32 gSpawnedStarNLE[];
 extern u8 gSpawnedStarNLECount;
-extern u8 gSpawnedStarRedCoin;
-extern u8 gSpawnedStarHidden;
+extern u32 gSpawnedStarRed[];
+extern u8 gSpawnedStarRedCount;
+extern u32 gSpawnedStarHidden[];
+extern u8 gSpawnedStarHiddenCount;
 
 void override_viewport_and_clip(Vp *a, Vp *b, u8 c, u8 d, u8 e);
 void print_intro_text(void);

@@ -1315,11 +1315,14 @@ s32 init_level(void) {
     for (int i = 0; i < 8; i++) {
         gSpawnedStarDefault[i] = 0;
         gSpawnedStarNLE[i] = 0;
+        gSpawnedStarRed[i] = 0;
+        gSpawnedStarHidden[i] = 0;
     }
+
     gSpawnedStarDefaultCount = 0;
     gSpawnedStarNLECount = 0;
-    gSpawnedStarRedCoin = 0;
-    gSpawnedStarHidden = 0;
+    gSpawnedStarRedCount = 0;
+    gSpawnedStarHiddenCount = 0;
 
     if (gCurrCreditsEntry == NULL) {
         gHudDisplay.flags = HUD_DISPLAY_DEFAULT;

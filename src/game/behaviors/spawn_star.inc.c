@@ -125,16 +125,25 @@ struct Object *spawn_star(struct Object *sp30, f32 sp34, f32 sp38, f32 sp3C) {
     return sp30;
 }
 
+static u8 spawn_star_deduplication(u32* array, u8* count, u32 behParams) {
+    for (int i = 0; i < *count; i++) {
+        if (array[i] == behParams) { return TRUE; }
+    }
+    if (*count < 8) {
+        array[*count] = behParams;
+        *count = *count + 1;
+        return FALSE;
+    }
+    return TRUE;
+}
+
 struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
     if (sCurrPlayMode != PLAY_MODE_NORMAL && sCurrPlayMode != PLAY_MODE_PAUSED) { return NULL; }
     u32 behParams = o->oBehParams;
 
     // de-duplication checking
-    for (int i = 0; i < gSpawnedStarDefaultCount; i++) {
-        if (gSpawnedStarDefault[i] == behParams) { return NULL; }
-    }
-    if (gSpawnedStarDefaultCount < 8) {
-        gSpawnedStarDefault[gSpawnedStarDefaultCount++] = behParams;
+    if (spawn_star_deduplication(gSpawnedStarDefault, &gSpawnedStarDefaultCount, behParams)) {
+        return NULL;
     }
 
     struct Object *star;
@@ -145,24 +154,32 @@ struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
 }
 
 struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
-    if (gSpawnedStarRedCoin) { return NULL; }
-    struct Object * star;
     u32 behParams = o->oBehParams;
+
+    // de-duplication checking
+    if (spawn_star_deduplication(gSpawnedStarRed, &gSpawnedStarRedCount, behParams)) {
+        return NULL;
+    }
+
+    struct Object * star;
     star = spawn_star(star, x, y, z);
     star->oBehParams2ndByte = 1;
-    gSpawnedStarRedCoin = TRUE;
     network_send_spawn_star(star, 1, x, y, z, behParams);
     return star;
 }
 
 struct Object* spawn_no_exit_star(f32 x, f32 y, f32 z) {
-    if (gSpawnedStarHidden) { return NULL; }
-    struct Object * star;
     u32 behParams = o->oBehParams;
+
+    // de-duplication checking
+    if (spawn_star_deduplication(gSpawnedStarHidden, &gSpawnedStarHiddenCount, behParams)) {
+        return NULL;
+    }
+
+    struct Object * star;
     star = spawn_star(star, x, y, z);
     star->oBehParams2ndByte = 1;
     star->oInteractionSubtype |= INT_SUBTYPE_NO_EXIT;
-    gSpawnedStarHidden = TRUE;
     network_send_spawn_star(star, 2, x, y, z, behParams);
     return star;
 }

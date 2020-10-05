@@ -58,8 +58,10 @@ u32 gSpawnedStarDefault[8] = { 0 };
 u8 gSpawnedStarDefaultCount = 0;
 u32 gSpawnedStarNLE[8] = { 0 };
 u8 gSpawnedStarNLECount = 0;
-u8 gSpawnedStarRedCoin = 0;
-u8 gSpawnedStarHidden = 0;
+u32 gSpawnedStarRed[8] = { 0 };
+u8 gSpawnedStarRedCount = 0;
+u32 gSpawnedStarHidden[8] = { 0 };
+u8 gSpawnedStarHiddenCount = 0;
 
 /*
  * The following two tables are used in get_mario_spawn_type() to determine spawn type
