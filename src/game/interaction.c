@@ -998,11 +998,29 @@ u32 display_door_dialog(struct MarioState *m, u32 actionArg) {
     return set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, actionArg);
 }
 
+u8 prevent_interact_door(struct MarioState* m, struct Object* o) {
+    // prevent multiple star/key unlocks on the same door
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct MarioState* m2 = &gMarioStates[i];
+        if (m2 == m) { continue; }
+        if (!is_player_active(m2)) { continue; }
+        Vec3f diff = { 0 };
+        vec3f_dif(diff, m->pos, m2->pos);
+        if (vec3f_length(diff) > 200 && m2->usedObj != o) { continue; }
+        if (m2->action == ACT_UNLOCKING_STAR_DOOR || m2->action == ACT_UNLOCKING_KEY_DOOR) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
     u32 doorAction = 0;
     u32 saveFlags = save_file_get_flags();
     s16 warpDoorId = o->oBehParams >> 24;
     u32 actionArg;
+
+    if (prevent_interact_door(m, o)) { return FALSE; }
 
     if (m->action == ACT_WALKING || m->action == ACT_DECELERATING) {
         if (warpDoorId == 1 && !(saveFlags & SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR)) {
@@ -1094,6 +1112,9 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
     s16 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
 
     if (o->oAction != 0) { return FALSE; }
+
+    // prevent interacting with the same door as someone unlocking it
+    if (prevent_interact_door(m, o)) { return FALSE; }
 
     if (m->action == ACT_WALKING || m->action == ACT_DECELERATING) {
         if (numStars >= requiredNumStars) {
