@@ -644,7 +644,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                 geo_add_child(node, &gMirrorMario[i].node);
                 break;
             case GEO_CONTEXT_AREA_UNLOAD:
-                geo_remove_child(&gMirrorMario[i].node);
+                geo_remove_child_from_parent(node, &gMirrorMario[i].node);
                 break;
             case GEO_CONTEXT_RENDER:
                 if (mario->header.gfx.pos[0] > 1700.0f) {

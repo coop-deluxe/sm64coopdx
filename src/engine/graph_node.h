@@ -421,6 +421,7 @@ struct GraphNodeHeldObject *init_graph_node_held_object(struct AllocOnlyPool *po
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex);
 struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *childNode);
+struct GraphNode* geo_remove_child_from_parent(struct GraphNode* parent, struct GraphNode* graphNode);
 struct GraphNode *geo_remove_child(struct GraphNode *graphNode);
 struct GraphNode *geo_make_first_child(struct GraphNode *newFirstChild);
 
