@@ -920,10 +920,8 @@ s32 act_unlocking_star_door(struct MarioState *m) {
         case 1:
             if (is_anim_at_end(m)) {
                 if (m->playerIndex == 0 || allowRemoteStarSpawn) {
-                    if (m->playerIndex != 0) {
-                        allowRemoteStarSpawn = FALSE;
-                        spawn_object(m->marioObj, MODEL_STAR, bhvUnlockDoorStar);
-                    }
+                    if (m->playerIndex != 0) { allowRemoteStarSpawn = FALSE; }
+                    spawn_object(m->marioObj, MODEL_STAR, bhvUnlockDoorStar);
                 }
                 m->actionState++;
             }
