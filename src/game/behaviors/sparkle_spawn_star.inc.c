@@ -84,7 +84,7 @@ void bhv_spawned_star_loop(void) {
         if (o->oTimer == 0) {
             if (nearest_mario_state_to_object(o) == &gMarioStates[0]) {
                 cutscene_object(CUTSCENE_STAR_SPAWN, o);
-                gMarioStates[0].freeze = 200;
+                gMarioStates[0].freeze = 60;
             }
             //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
             //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;

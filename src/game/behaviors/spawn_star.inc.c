@@ -47,7 +47,7 @@ void bhv_star_spawn_init(void) {
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
         else
             cutscene_object(CUTSCENE_RED_COIN_STAR_SPAWN, o);
-        gMarioStates[0].freeze = 200;
+        gMarioStates[0].freeze = 60;
     }
 
     //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
