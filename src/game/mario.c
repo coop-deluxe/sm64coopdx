@@ -1380,6 +1380,9 @@ void update_mario_joystick_inputs(struct MarioState *m) {
  * Resolves wall collisions, and updates a variety of inputs.
  */
 void update_mario_geometry_inputs(struct MarioState *m) {
+    u8 copiedPlayer = FALSE;
+copyPlayerGoto:;
+
     f32 gasLevel;
     f32 ceilToFloorDist;
 
@@ -1431,6 +1434,19 @@ void update_mario_geometry_inputs(struct MarioState *m) {
         }
 
     } else {
+        if (!copiedPlayer) {
+            // try to prevent OOB by copying position of other player
+            struct Surface* floor2 = NULL;
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                struct MarioState* m2 = &gMarioStates[i];
+                if (m == m2) { continue; }
+                find_floor(m2->pos[0], m2->pos[1], m2->pos[2], &floor2);
+                if (floor2 == NULL) { continue; }
+                vec3f_copy(m->pos, m2->pos);
+                copiedPlayer = TRUE;
+                goto copyPlayerGoto;
+            }
+        }
         level_trigger_warp(m, WARP_OP_DEATH);
     }
 }
