@@ -5,6 +5,17 @@
 // so o->oHomeY is never updated.
 static s16 sYoshiHomeLocations[] = { 0, -5625, -1364, -5912, -1403, -4609, -1004, -5308 };
 
+static u8 bhv_yoshi_ignore_if_true(void) {
+    return (o->oAction != YOSHI_ACT_IDLE) && (o->oAction != YOSHI_ACT_WALK);
+}
+
+static void bhv_yoshi_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    if (o->oAction == YOSHI_ACT_TALK) {
+        *shouldOverride = TRUE;
+        *shouldOwn = FALSE;
+    }
+}
+
 void bhv_yoshi_init(void) {
     o->oGravity = 2.0f;
     o->oFriction = 0.9f;
@@ -14,6 +25,17 @@ void bhv_yoshi_init(void) {
     if (save_file_get_total_star_count(gCurrSaveFileNum - 1, 0, 24) < 120 || sYoshiDead == TRUE) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
+
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->ignore_if_true = bhv_yoshi_ignore_if_true;
+    so->override_ownership = bhv_yoshi_override_ownership;
+    so->keepRandomSeed = TRUE;
+    network_init_object_field(o, &o->oYoshiBlinkTimer);
+    network_init_object_field(o, &o->oYoshiChosenHome);
+    network_init_object_field(o, &o->oYoshiTargetYaw);
+    network_init_object_field(o, &o->oHomeX);
+    network_init_object_field(o, &o->oHomeY);
+    network_init_object_field(o, &o->oHomeZ);
 }
 
 void yoshi_walk_loop(void) {
@@ -72,19 +94,26 @@ void yoshi_idle_loop(void) {
     }
 }
 
+static u8 yoshi_talk_loop_continue_dialog(void) {
+    return FALSE;
+}
+
 void yoshi_talk_loop(void) {
     if ((s16) o->oMoveAngleYaw == (s16) o->oAngleToMario) {
         cur_obj_init_animation(0);
-        if (set_mario_npc_dialog(&gMarioStates[0], 1, NULL) == 2) {
+        struct MarioState* marioState = nearest_mario_state_to_object(o);
+        if (marioState->playerIndex == 0 && set_mario_npc_dialog(&gMarioStates[0], 1, yoshi_talk_loop_continue_dialog) == 2) {
             //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
-            if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161)) {
+            cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161);
+            //if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161)) {
                 o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
                 o->oInteractStatus = 0;
                 o->oHomeX = sYoshiHomeLocations[2];
                 o->oHomeZ = sYoshiHomeLocations[3];
                 o->oYoshiTargetYaw = atan2s(o->oHomeZ - o->oPosZ, o->oHomeX - o->oPosX);
                 o->oAction = YOSHI_ACT_GIVE_PRESENT;
-            }
+                network_send_object_reliability(o, TRUE);
+            //}
         }
     } else {
         cur_obj_init_animation(1);
@@ -99,8 +128,8 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
     o->oForwardVel = 10.0f;
     object_step();
     cur_obj_init_animation(1);
-    if (o->oTimer == 0)
-        cutscene_object(CUTSCENE_STAR_SPAWN, o);
+    /*if (o->oTimer == 0)
+        cutscene_object(CUTSCENE_STAR_SPAWN, o);*/
 
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oYoshiTargetYaw, 0x500);
     if (is_point_close_to_object(o, o->oHomeX, 3174.0f, o->oHomeZ, 200)) {
