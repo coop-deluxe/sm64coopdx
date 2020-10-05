@@ -303,6 +303,8 @@ void mario_stop_riding_object(struct MarioState *m) {
 void mario_grab_used_object(struct MarioState *m) {
     if (m->usedObj == NULL || m->usedObj->oHeldState == HELD_HELD) { return; }
     if (m->heldObj == NULL && m->usedObj != NULL) {
+        // prevent grabbing a non-grabbable object
+        if (!(m->usedObj->oInteractType & INTERACT_GRABBABLE)) { return; }
         m->heldObj = m->usedObj;
         m->heldObj->heldByPlayerIndex = m->playerIndex;
         obj_set_held_state(m->heldObj, bhvCarrySomething3);
