@@ -5,6 +5,23 @@
  * TODO: Processing order relative to bhvCloud
  */
 
+static u8 lakituTargetLocalIndex = UNKNOWN_LOCAL_INDEX;
+
+static u8 bhv_camera_lakitu_ignore_if_true(void) {
+    return (lakituTargetLocalIndex == 0);
+}
+
+static void bhv_camera_lakitu_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = TRUE;
+    *shouldOwn = (lakituTargetLocalIndex == 0);
+}
+
+static void bhv_camera_lakitu_on_received_post(u8 localIndex) {
+    if (lakituTargetLocalIndex == UNKNOWN_LOCAL_INDEX) {
+        lakituTargetLocalIndex = localIndex;
+    }
+}
+
 /**
  * Init function for camera lakitu.
  * If this is the intro lakitu, despawn unless this is the start of the game.
@@ -19,6 +36,20 @@ void bhv_camera_lakitu_init(void) {
     } else {
         spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
     }
+    lakituTargetLocalIndex = UNKNOWN_LOCAL_INDEX;
+
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->ignore_if_true = bhv_camera_lakitu_ignore_if_true;
+    so->override_ownership = bhv_camera_lakitu_override_ownership;
+    so->on_received_post = bhv_camera_lakitu_on_received_post;
+    network_init_object_field(o, &o->oAngleVelPitch);
+    network_init_object_field(o, &o->oFaceAnglePitch);
+    network_init_object_field(o, &o->oCameraLakituBlinkTimer);
+    network_init_object_field(o, &o->oCameraLakituSpeed);
+    network_init_object_field(o, &o->oCameraLakituCircleRadius);
+    network_init_object_field(o, &o->oCameraLakituFinishedDialog);
+    network_init_object_field(o, &o->oCameraLakituUnk104);
+    network_init_object_field(o, &o->oCameraLakituPitchVel);
 }
 
 static u8 camera_lakitu_intro_act_trigger_cutscene_continue_dialog(void) {
@@ -30,13 +61,16 @@ static u8 camera_lakitu_intro_act_trigger_cutscene_continue_dialog(void) {
  * the spawn cloud action.
  */
 static void camera_lakitu_intro_act_trigger_cutscene(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+
     //! These bounds are slightly smaller than the actual bridge bounds, allowing
     //  the RTA speedrunning method of lakitu skip
-    if (gMarioObject->oPosX > -544.0f && gMarioObject->oPosX < 545.0f && gMarioObject->oPosY > 800.0f
-        && gMarioObject->oPosZ > -2000.0f && gMarioObject->oPosZ < -177.0f
-        && gMarioObject->oPosZ < -177.0f) // always double check your conditions
+    if (player->oPosX > -544.0f && player->oPosX < 545.0f && player->oPosY > 800.0f
+        && player->oPosZ > -2000.0f && player->oPosZ < -177.0f
+        && player->oPosZ < -177.0f) // always double check your conditions
     {
-        if (set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_trigger_cutscene_continue_dialog) == 1) {
+        if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_trigger_cutscene_continue_dialog) == 1) {
             o->oAction = CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD;
         }
     }
@@ -49,7 +83,8 @@ static u8 camera_lakitu_intro_act_spawn_cloud_continue_dialog(void) {
  * Warp up into the air and spawn cloud, then enter the TODO action.
  */
 static void camera_lakitu_intro_act_spawn_cloud(void) {
-    if (set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_spawn_cloud_continue_dialog) == 2) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_spawn_cloud_continue_dialog) == 2) {
         o->oAction = CAMERA_LAKITU_INTRO_ACT_UNK2;
 
         o->oPosX = 1800.0f;
@@ -70,19 +105,27 @@ u8 camera_lakitu_intro_act_show_dialog_continue_dialog(void) { return o->oCamera
  * Circle down to mario, show the dialog, then fly away.
  */
 static void camera_lakitu_intro_act_show_dialog(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (lakituTargetLocalIndex != UNKNOWN_LOCAL_INDEX) {
+        marioState = &gMarioStates[lakituTargetLocalIndex];
+    }
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     s16 targetMovePitch;
     s16 targetMoveYaw;
 
     cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY);
 
     // Face toward mario
-    o->oFaceAnglePitch = obj_turn_pitch_toward_mario(&gMarioStates[0], 120.0f, 0);
-    o->oFaceAngleYaw = o->oAngleToMario;
+    o->oFaceAnglePitch = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+    o->oFaceAngleYaw = angleToPlayer;
 
     // After finishing dialog, fly away and despawn
     if (o->oCameraLakituFinishedDialog) {
         approach_f32_ptr(&o->oCameraLakituSpeed, 60.0f, 3.0f);
-        if (o->oDistanceToMario > 6000.0f) {
+        if (distanceToPlayer > 6000.0f) {
             obj_mark_for_deletion(o);
         }
 
@@ -90,23 +133,30 @@ static void camera_lakitu_intro_act_show_dialog(void) {
         targetMoveYaw = -0x6000;
     } else {
         if (o->oCameraLakituSpeed != 0.0f) {
-            if (o->oDistanceToMario > 5000.0f) {
+            if (distanceToPlayer > 5000.0f) {
                 targetMovePitch = o->oMoveAnglePitch;
-                targetMoveYaw = o->oAngleToMario;
+                targetMoveYaw = angleToPlayer;
             } else {
+                if (lakituTargetLocalIndex == UNKNOWN_LOCAL_INDEX) {
+                    if (marioState->playerIndex == 0) {
+                        lakituTargetLocalIndex = 0;
+                    } else {
+                        goto afterChase;
+                    }
+                }
                 // Stay moving in a circle around mario
                 s16 turnAmount = 0x4000
                                  - atan2s(o->oCameraLakituCircleRadius,
-                                          o->oDistanceToMario - o->oCameraLakituCircleRadius);
-                if ((s16)(o->oMoveAngleYaw - o->oAngleToMario) < 0) {
+                                          distanceToPlayer - o->oCameraLakituCircleRadius);
+                if ((s16)(o->oMoveAngleYaw - angleToPlayer) < 0) {
                     turnAmount = -turnAmount;
                 }
 
-                targetMoveYaw = o->oAngleToMario + turnAmount;
+                targetMoveYaw = angleToPlayer + turnAmount;
                 targetMovePitch = o->oFaceAnglePitch;
 
                 approach_f32_ptr(&o->oCameraLakituCircleRadius, 200.0f, 50.0f);
-                if (o->oDistanceToMario < 1000.0f) {
+                if (distanceToPlayer < 1000.0f) {
 #ifndef VERSION_JP
                     if (!o->oCameraLakituUnk104) {
                         play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(15, SEQ_EVENT_CUTSCENE_LAKITU), 0);
@@ -116,19 +166,20 @@ static void camera_lakitu_intro_act_show_dialog(void) {
 
                     // Once within 1000 units, slow down
                     approach_f32_ptr(&o->oCameraLakituSpeed, 20.0f, 1.0f);
-                    if (o->oDistanceToMario < 500.0f
-                        && abs_angle_diff(gMarioObject->oFaceAngleYaw, o->oFaceAngleYaw) > 0x7000) {
+                    if (distanceToPlayer < 500.0f
+                        && abs_angle_diff(player->oFaceAngleYaw, o->oFaceAngleYaw) > 0x7000) {
                         // Once within 500 units and facing toward mario, come
                         // to a stop
                         approach_f32_ptr(&o->oCameraLakituSpeed, 0.0f, 5.0f);
                     }
                 }
             }
-        } else if (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, DIALOG_034, camera_lakitu_intro_act_show_dialog_continue_dialog) != 0) {
+        } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, DIALOG_034, camera_lakitu_intro_act_show_dialog_continue_dialog) != 0) {
             o->oCameraLakituFinishedDialog = TRUE;
         }
     }
 
+afterChase:
     o->oCameraLakituPitchVel = approach_s16_symmetric(o->oCameraLakituPitchVel, 0x7D0, 0x190);
     obj_move_pitch_approach(targetMovePitch, o->oCameraLakituPitchVel);
 
