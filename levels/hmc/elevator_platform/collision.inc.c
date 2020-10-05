@@ -10,7 +10,7 @@ const Collision hmc_seg7_collision_elevator[] = {
     COL_VERTEX(256, 0, 256),
     COL_VERTEX(256, 0, -255),
     COL_VERTEX(-255, 0, -255),
-    COL_TRI_INIT(SURFACE_DEFAULT, 10),
+    COL_TRI_INIT(SURFACE_NO_CAM_COLLISION, 10),
     COL_TRI(0, 1, 2),
     COL_TRI(1, 3, 4),
     COL_TRI(1, 4, 2),

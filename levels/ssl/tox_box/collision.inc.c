@@ -18,7 +18,7 @@ const Collision ssl_seg7_collision_tox_box[] = {
     COL_VERTEX(-153, 154, -153),
     COL_VERTEX(154, 154, -153),
     COL_VERTEX(154, 154, 154),
-    COL_TRI_INIT(SURFACE_WALL_MISC, 28),
+    COL_TRI_INIT(SURFACE_NO_CAM_COLLISION, 28),
     COL_TRI(12, 13, 14),
     COL_TRI(0, 1, 2),
     COL_TRI(0, 3, 1),

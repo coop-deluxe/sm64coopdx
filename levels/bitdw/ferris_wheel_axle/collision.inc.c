@@ -12,7 +12,7 @@ const Collision bitdw_seg7_collision_0700F7F0[] = {
     COL_VERTEX(102, -101, -50),
     COL_VERTEX(0, -388, -50),
     COL_VERTEX(0, 0, -101),
-    COL_TRI_INIT(SURFACE_DEFAULT, 16),
+    COL_TRI_INIT(SURFACE_NO_CAM_COLLISION, 16),
     COL_TRI(0, 1, 2),
     COL_TRI(2, 3, 0),
     COL_TRI(2, 1, 4),

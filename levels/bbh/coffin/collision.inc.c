@@ -14,7 +14,7 @@ const Collision bbh_seg7_collision_coffin[] = {
     COL_VERTEX(58, 3, -457),
     COL_VERTEX(-57, 3, -457),
     COL_VERTEX(-114, 3, -306),
-    COL_TRI_INIT(SURFACE_DEFAULT, 20),
+    COL_TRI_INIT(SURFACE_NO_CAM_COLLISION, 20),
     COL_TRI(0, 1, 2),
     COL_TRI(3, 0, 2),
     COL_TRI(4, 5, 0),

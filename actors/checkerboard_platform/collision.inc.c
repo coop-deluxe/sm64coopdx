@@ -13,7 +13,7 @@ const Collision checkerboard_platform_seg8_collision_0800D710[] = {
     COL_VERTEX(-255, -25, 154),
     COL_VERTEX(256, -25, 154),
 
-    COL_TRI_INIT(SURFACE_WALL_MISC, 12),
+    COL_TRI_INIT(SURFACE_NO_CAM_COLLISION, 12),
     COL_TRI(0, 1, 2),
     COL_TRI(1, 3, 4),
     COL_TRI(1, 4, 2),

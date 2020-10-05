@@ -10,7 +10,7 @@ const Collision bbh_seg7_collision_mesh_elevator[] = {
     COL_VERTEX(307, -101, -255),
     COL_VERTEX(-306, -101, 256),
     COL_VERTEX(-306, -101, -255),
-    COL_TRI_INIT(SURFACE_DEFAULT, 10),
+    COL_TRI_INIT(SURFACE_NO_CAM_COLLISION, 10),
     COL_TRI(1, 4, 5),
     COL_TRI(4, 6, 7),
     COL_TRI(5, 4, 7),
