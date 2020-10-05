@@ -138,6 +138,7 @@ void bhv_intro_lakitu_loop(void) {
         case 3:
             cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY_HIGHPRIO);
             vec3f_set(sp58, -1128.f, 560.f, 4664.f);
+            sp58[0] -= gNetworkPlayers[0].globalIndex * 350.f;
             gCurrentObject->oMoveAngleYaw += 0x200;
             gCurrentObject->oIntroLakituUnk100 =
                 approach_f32_asymptotic(gCurrentObject->oIntroLakituUnk100, 100.f, 0.03f);

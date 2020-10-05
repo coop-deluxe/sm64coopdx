@@ -36,7 +36,7 @@
 // TODO: put this elsewhere
 enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
 
-static struct Object *sIntroWarpPipeObj;
+static struct Object* sIntroWarpPipeObj[MAX_PLAYERS] = { 0 };
 static struct Object *sEndPeachObj;
 static struct Object *sEndRightToadObj;
 static struct Object *sEndLeftToadObj;
@@ -1809,9 +1809,11 @@ static void intro_cutscene_hide_hud_and_mario(struct MarioState *m) {
 static void intro_cutscene_peach_lakitu_scene(struct MarioState *m) {
     if ((s16) m->statusForCamera->cameraEvent != CAM_EVENT_START_INTRO) {
         if (m->actionTimer++ == TIMER_SPAWN_PIPE) {
-            sIntroWarpPipeObj =
+            u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+            if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
+            sIntroWarpPipeObj[globalIndex] =
                 spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_CASTLE_GROUNDS_WARP_PIPE,
-                                          bhvStaticObject, -1328, 60, 4664, 0, 180, 0);
+                                          bhvStaticObject, -1328 - (350 * globalIndex), 60, 4664, 0, 180, 0);
             advance_cutscene_step(m);
         }
     }
@@ -1825,10 +1827,12 @@ static void intro_cutscene_peach_lakitu_scene(struct MarioState *m) {
 #endif
 
 static void intro_cutscene_raise_pipe(struct MarioState *m) {
-    sIntroWarpPipeObj->oPosY = camera_approach_f32_symmetric(sIntroWarpPipeObj->oPosY, 260.0f, 10.0f);
+    u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+    if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
+    sIntroWarpPipeObj[globalIndex]->oPosY = camera_approach_f32_symmetric(sIntroWarpPipeObj[globalIndex]->oPosY, 260.0f, 10.0f);
 
     if (m->actionTimer == 0) {
-        play_sound(SOUND_MENU_EXIT_PIPE, sIntroWarpPipeObj->header.gfx.cameraToObject);
+        play_sound(SOUND_MENU_EXIT_PIPE, sIntroWarpPipeObj[globalIndex]->header.gfx.cameraToObject);
     }
 
     if (m->actionTimer++ == TIMER_RAISE_PIPE) {
@@ -1839,6 +1843,14 @@ static void intro_cutscene_raise_pipe(struct MarioState *m) {
 #undef TIMER_RAISE_PIPE
 
 static void intro_cutscene_jump_out_of_pipe(struct MarioState *m) {
+    if (m->actionTimer <= 1) {
+        u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+        if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
+        m->pos[0] = sIntroWarpPipeObj[globalIndex]->oPosX;
+        m->pos[1] = sIntroWarpPipeObj[globalIndex]->oPosY;
+        m->pos[2] = sIntroWarpPipeObj[globalIndex]->oPosZ;
+    }
+
     if (m->actionTimer == 25) {
         gHudDisplay.flags = HUD_DISPLAY_DEFAULT;
     }
@@ -1881,14 +1893,16 @@ static void intro_cutscene_land_outside_pipe(struct MarioState *m) {
 }
 
 static void intro_cutscene_lower_pipe(struct MarioState *m) {
+    u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+    if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
     if (m->actionTimer++ == 0) {
-        play_sound(SOUND_MENU_ENTER_PIPE, sIntroWarpPipeObj->header.gfx.cameraToObject);
+        play_sound(SOUND_MENU_ENTER_PIPE, sIntroWarpPipeObj[globalIndex]->header.gfx.cameraToObject);
         set_mario_animation(m, MARIO_ANIM_FIRST_PERSON);
     }
 
-    sIntroWarpPipeObj->oPosY -= 5.0f;
-    if (sIntroWarpPipeObj->oPosY <= 50.0f) {
-        obj_mark_for_deletion(sIntroWarpPipeObj);
+    sIntroWarpPipeObj[globalIndex]->oPosY -= 5.0f;
+    if (sIntroWarpPipeObj[globalIndex]->oPosY <= 50.0f) {
+        obj_mark_for_deletion(sIntroWarpPipeObj[globalIndex]);
         advance_cutscene_step(m);
     }
 
