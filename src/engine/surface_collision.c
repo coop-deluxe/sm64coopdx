@@ -420,6 +420,12 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         surfaceNode = surfaceNode->next;
         interpolate = gInterpolatingSurfaces && surf->modifiedTimestamp == gGlobalTimer;
 
+        if (gCheckingSurfaceCollisionsForObject != NULL) {
+            if (surf->object != gCheckingSurfaceCollisionsForObject) {
+                continue;
+            }
+        }
+
         x1 = surf->vertex1[0];
         z1 = surf->vertex1[2];
         x2 = surf->vertex2[0];

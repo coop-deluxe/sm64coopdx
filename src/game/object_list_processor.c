@@ -144,7 +144,7 @@ s32 gNumStaticSurfaces;
  */
 struct MemoryPool *gObjectMemoryPool;
 
-
+struct Object* gCheckingSurfaceCollisionsForObject = NULL;
 s16 gCheckingSurfaceCollisionsForCamera;
 s16 gFindFloorIncludeSurfaceIntangible;
 s16 *gEnvironmentRegions;

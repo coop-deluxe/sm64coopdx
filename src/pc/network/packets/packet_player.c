@@ -7,6 +7,8 @@
 #include "game/mario.h"
 #include "game/area.h"
 #include "audio/external.h"
+#include "engine/surface_collision.h"
+#include "game/object_list_processor.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -44,20 +46,22 @@ struct PacketPlayerData {
     s16 currentRoom;
 
     u8  customFlags;
-    u32 heldSyncID;
-    u32 heldBySyncID;
-    u32 interactSyncID;
-    u32 usedSyncID;
+    u8 heldSyncID;
+    u8 heldBySyncID;
+    u8 interactSyncID;
+    u8 usedSyncID;
+    u8 platformSyncID;
 
     s16 currLevelNum;
     s16 currAreaIndex;
 };
 
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
-    u32 heldSyncID     = (m->heldObj != NULL)     ? m->heldObj->oSyncID     : 0;
-    u32 heldBySyncID   = (m->heldByObj != NULL)   ? m->heldByObj->oSyncID   : 0;
-    u32 interactSyncID = (m->interactObj != NULL) ? m->interactObj->oSyncID : 0;
-    u32 usedSyncID     = (m->usedObj != NULL)     ? m->usedObj->oSyncID     : 0;
+    u8 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;
+    u8 heldBySyncID   = (m->heldByObj != NULL)          ? m->heldByObj->oSyncID          : 0;
+    u8 interactSyncID = (m->interactObj != NULL)        ? m->interactObj->oSyncID        : 0;
+    u8 usedSyncID     = (m->usedObj != NULL)            ? m->usedObj->oSyncID            : 0;
+    u8 platformSyncID = (m->marioObj->platform != NULL) ? m->marioObj->platform->oSyncID : 0;
 
     u8 customFlags     = SET_BIT((m->freeze > 0), 0);
 
@@ -99,14 +103,15 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->heldBySyncID   = heldBySyncID;
     data->interactSyncID = interactSyncID;
     data->usedSyncID     = usedSyncID;
+    data->platformSyncID = platformSyncID;
 
     data->currLevelNum = gCurrLevelNum;
     data->currAreaIndex = gCurrAreaIndex;
 }
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
-                              u8* customFlags, u32* heldSyncID, u32* heldBySyncID,
-                              u32* interactSyncID, u32* usedSyncID) {
+                              u8* customFlags, u8* heldSyncID, u8* heldBySyncID,
+                              u8* interactSyncID, u8* usedSyncID, u8* platformSyncID) {
     memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
     *m->controller = data->controller;
@@ -145,6 +150,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     *heldBySyncID   = data->heldBySyncID;
     *interactSyncID = data->interactSyncID;
     *usedSyncID     = data->usedSyncID;
+    *platformSyncID = data->platformSyncID;
 }
 
 void network_send_player(void) {
@@ -190,14 +196,16 @@ void network_receive_player(struct Packet* p) {
     if (levelAreaMismatch) { return; }
 
     // apply data from packet to mario state
-    u32 heldSyncID     = 0;
-    u32 heldBySyncID   = 0;
-    u32 interactSyncID = 0;
-    u32 usedSyncID     = 0;
-    u8 customFlags     = 0;
+    u8 heldSyncID     = 0;
+    u8 heldBySyncID   = 0;
+    u8 interactSyncID = 0;
+    u8 usedSyncID     = 0;
+    u8 platformSyncID = 0;
+    u8 customFlags    = 0;
     write_packet_data(&data, m, &customFlags,
                       &heldSyncID, &heldBySyncID,
-                      &interactSyncID, &usedSyncID);
+                      &interactSyncID, &usedSyncID,
+                      &platformSyncID);
 
     // read custom flags
     m->freeze = GET_BIT(customFlags, 0);
@@ -242,6 +250,28 @@ void network_receive_player(struct Packet* p) {
     // find and set their used object
     if (usedSyncID != 0 && gSyncObjects[usedSyncID].o != NULL) {
         m->usedObj = gSyncObjects[usedSyncID].o;
+    }
+
+    // place on top of platform
+    if (platformSyncID != 0 && gSyncObjects[platformSyncID].o != NULL) {
+        struct Surface* floor = NULL;
+        // search up to 500 units for the platform
+        f32 maxDifference = 500;
+        m->pos[1] += maxDifference;
+
+        // find the platform
+        gCheckingSurfaceCollisionsForObject = gSyncObjects[platformSyncID].o;
+        f32 height = find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
+        gCheckingSurfaceCollisionsForObject = NULL;
+
+        f32 difference = ABS((m->pos[1] - maxDifference) - height);
+        if (floor != NULL && difference <= maxDifference) {
+            // place on top of platform
+            m->pos[1] = height;
+        } else {
+            // search failed, reset position
+            m->pos[1] -= maxDifference;
+        }
     }
 
     // jump kicking: restore action state, otherwise it won't play
