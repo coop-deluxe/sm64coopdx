@@ -5,6 +5,7 @@
 #include "game/level_update.h"
 #include "game/area.h"
 #include "game/ingame_menu.h"
+#include "game/mario.h"
 #define DISABLE_MODULE_LOG
 #include "pc/debuglog.h"
 
@@ -81,6 +82,7 @@ void network_receive_instant_warp(struct Packet* p) {
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         gMarioStates[i].marioObj->oIntangibleTimer = 30;
+        force_idle_state(&gMarioStates[i]);
     }
 
     //s16 cameraAngle = gMarioStates[0].area->camera->yaw;
