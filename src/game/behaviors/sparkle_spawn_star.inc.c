@@ -82,12 +82,10 @@ void slow_star_rotation(void) {
 void bhv_spawned_star_loop(void) {
     if (o->oAction == 0) {
         if (o->oTimer == 0) {
-            if (nearest_mario_state_to_object(o) == &gMarioStates[0]) {
-                cutscene_object(CUTSCENE_STAR_SPAWN, o);
-                gMarioStates[0].freeze = 60;
-            }
-            //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
-            //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
+            cutscene_object(CUTSCENE_STAR_SPAWN, o);
+            gMarioStates[0].freeze = 60;
+            set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
+            o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
             o->oAngleVelYaw = 0x800;
             if (o->oBehParams2ndByte == 0)
                 set_home_to_mario();
