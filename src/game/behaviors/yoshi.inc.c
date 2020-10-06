@@ -9,13 +9,6 @@ static u8 bhv_yoshi_ignore_if_true(void) {
     return (o->oAction != YOSHI_ACT_IDLE) && (o->oAction != YOSHI_ACT_WALK);
 }
 
-static void bhv_yoshi_override_ownership(u8* shouldOverride, u8* shouldOwn) {
-    if (o->oAction == YOSHI_ACT_TALK) {
-        *shouldOverride = TRUE;
-        *shouldOwn = FALSE;
-    }
-}
-
 void bhv_yoshi_init(void) {
     o->oGravity = 2.0f;
     o->oFriction = 0.9f;
@@ -28,7 +21,6 @@ void bhv_yoshi_init(void) {
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
     so->ignore_if_true = bhv_yoshi_ignore_if_true;
-    so->override_ownership = bhv_yoshi_override_ownership;
     network_init_object_field(o, &o->oYoshiBlinkTimer);
     network_init_object_field(o, &o->oYoshiChosenHome);
     network_init_object_field(o, &o->oYoshiTargetYaw);
@@ -98,9 +90,12 @@ static u8 yoshi_talk_loop_continue_dialog(void) {
 }
 
 void yoshi_talk_loop(void) {
-    if ((s16) o->oMoveAngleYaw == (s16) o->oAngleToMario) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int angleToPlayer = obj_angle_to_object(o, player);
+
+    if ((s16) o->oMoveAngleYaw == (s16)angleToPlayer) {
         cur_obj_init_animation(0);
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
         if (marioState->playerIndex == 0 && set_mario_npc_dialog(&gMarioStates[0], 1, yoshi_talk_loop_continue_dialog) == 2) {
             //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
             cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161);
@@ -117,7 +112,7 @@ void yoshi_talk_loop(void) {
     } else {
         cur_obj_init_animation(1);
         play_puzzle_jingle();
-        o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oAngleToMario, 0x500);
+        o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToPlayer, 0x500);
     }
 }
 
