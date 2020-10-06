@@ -33,7 +33,6 @@ void bhv_water_bomb_spawner_update(void) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         so->fullObjectSync = TRUE;
         so->maxUpdateRate = 5.0f;
-        so->keepRandomSeed = TRUE;
         network_init_object_field(o, &o->oWaterBombSpawnerBombActive);
         network_init_object_field(o, &o->oWaterBombSpawnerTimeToSpawn);
     }

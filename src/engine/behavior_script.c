@@ -14,6 +14,7 @@
 #include "graph_node.h"
 #include "surface_collision.h"
 #include "pc/network/network.h"
+#include "game/rng_position.h"
 
 // Macros for retrieving arguments from behavior scripts.
 #define BHV_CMD_GET_1ST_U8(index)  (u8)((gCurBhvCommand[index] >> 24) & 0xFF) // unused
@@ -30,7 +31,6 @@
 #define BHV_CMD_GET_ADDR_OF_CMD(index) (uintptr_t)(&gCurBhvCommand[index])
 
 static u16 gRandomSeed16;
-static u16 gSavedSeed16;
 
 // Unused function that directly jumps to a behavior command and resets the object's stack index.
 static void goto_behavior_unused(const BehaviorScript *bhvAddr) {
@@ -38,44 +38,21 @@ static void goto_behavior_unused(const BehaviorScript *bhvAddr) {
     gCurrentObject->bhvStackIndex = 0;
 }
 
-void force_replicable_seed(u8 always) {
-    // force the seed to consistent values
-    extern u32 gGlobalTimer;
-    static u32 lastTimer = 0;
-    static f32 lastPos[3] = { 0 };
-    if (gGlobalTimer == lastTimer
-        && lastPos[0] == gCurrentObject->oPosX / 10
-        && lastPos[1] == gCurrentObject->oPosY / 10
-        && lastPos[2] == gCurrentObject->oPosZ / 10
-        && !always) {
-        gSavedSeed16 = 0;
-        return;
-    }
-    gRandomSeed16 = (u16)(gCurrentObject->oPosX / 1000.0f)
-                  ^ (u16)(gCurrentObject->oPosY / 1000.0f)
-                  ^ (u16)(gCurrentObject->oPosZ / 1000.0f);
-    if (!always) {
-        lastPos[0] = gCurrentObject->oPosX / 10;
-        lastPos[1] = gCurrentObject->oPosY / 10;
-        lastPos[2] = gCurrentObject->oPosZ / 10;
-        lastTimer = gGlobalTimer;
-    }
-}
-
 // Generate a pseudorandom integer from 0 to 65535 from the random seed, and update the seed.
 u16 random_u16(void) {
-    // restore random seed when applicable
-    if (gSavedSeed16 != 0) {
-        gRandomSeed16 = gSavedSeed16;
-        gSavedSeed16 = 0;
-    }
+    u16 savedSeed = gRandomSeed16;
+    struct SyncObject* so = NULL;
 
-    // override this function for synchronized entities
-    if (gCurrentObject->oSyncID != 0) {
-        struct SyncObject* so = &gSyncObjects[gCurrentObject->oSyncID];
-        if (so->o != NULL && !so->keepRandomSeed) {
-            gSavedSeed16 = gRandomSeed16;
-            force_replicable_seed(FALSE);
+    if (gOverrideRngPosition != NULL) {
+        // override this function for rng positions
+        gRandomSeed16 = gOverrideRngPosition->seed;
+    } else if (gCurrentObject->oSyncID != 0) {
+        // override this function for synchronized entities
+        so = &gSyncObjects[gCurrentObject->oSyncID];
+        if (so->o == gCurrentObject) {
+            gRandomSeed16 = so->randomSeed;
+        } else {
+            so = NULL;
         }
     }
 
@@ -101,6 +78,17 @@ u16 random_u16(void) {
         }
     } else {
         gRandomSeed16 = temp2 ^ 0x8180;
+    }
+
+    // restore seed
+    if (gOverrideRngPosition != NULL) {
+        gOverrideRngPosition->seed = gRandomSeed16;
+        gRandomSeed16 = savedSeed;
+        return gOverrideRngPosition->seed;
+    } else if (so != NULL) {
+        so->randomSeed = gRandomSeed16;
+        gRandomSeed16 = savedSeed;
+        return so->randomSeed;
     }
 
     return gRandomSeed16;

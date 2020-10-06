@@ -49,9 +49,9 @@ struct SyncObject {
     void* behavior;
     u16 txEventId;
     u16 rxEventId;
+    u16 randomSeed;
     u8 extraFieldCount;
     bool fullObjectSync;
-    bool keepRandomSeed;
     bool syncDeathEvent;
     bool hasStandardFields;
     float minUpdateRate;

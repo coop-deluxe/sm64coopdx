@@ -15075,6 +15075,9 @@
     <ClCompile Include="..\src\pc\utils\string_linked_list.c">
       <Filter>Source Files\src\pc\utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\game\rng_position.c">
+      <Filter>Source Files\src\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16029,6 +16032,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\utils\string_linked_list.h">
       <Filter>Source Files\src\pc\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\rng_position.h">
+      <Filter>Source Files\src\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

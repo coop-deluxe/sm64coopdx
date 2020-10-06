@@ -63,7 +63,6 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->rxEventId = 0;
     so->txEventId = 0;
     so->fullObjectSync = false;
-    so->keepRandomSeed = false;
     so->hasStandardFields = (maxSyncDistance >= 0);
     so->minUpdateRate = 0.33f;
     so->maxUpdateRate = 0.00f;
@@ -71,6 +70,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->on_received_pre = NULL;
     so->on_received_post = NULL;
     so->syncDeathEvent = true;
+    so->randomSeed = (u16)(o->oSyncID * 7951);
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
     return so;
@@ -143,6 +143,7 @@ static void packet_write_object_header(struct Packet* p, struct Object* o) {
 
     packet_write(p, &o->oSyncID, sizeof(u32));
     packet_write(p, &so->txEventId, sizeof(u16));
+    packet_write(p, &so->randomSeed, sizeof(u16));
     packet_write(p, &behaviorId, sizeof(enum BehaviorId));
 }
 
@@ -196,6 +197,9 @@ static struct SyncObject* packet_read_object_header(struct Packet* p) {
         return NULL;
     }
     so->rxEventId = eventId;
+
+    // update the random seed
+    packet_read(p, &so->randomSeed, sizeof(u16));
 
     // make sure the behaviors match
     enum BehaviorId behaviorId;

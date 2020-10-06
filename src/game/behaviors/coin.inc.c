@@ -49,10 +49,11 @@ void bhv_temp_coin_loop(void) {
 }
 
 void bhv_coin_init(void) {
-    force_replicable_seed(FALSE);
+    rng_position_init(o->oPosX, o->oPosY, o->oPosZ);
     o->oVelY = random_float() * 10.0f + 30 + o->oCoinUnk110;
     o->oForwardVel = random_float() * 10.0f;
     o->oMoveAngleYaw = random_u16();
+    rng_position_finish();
     cur_obj_set_behavior(bhvYellowCoin);
     obj_set_hitbox(o, &sYellowCoinHitbox);
     cur_obj_become_intangible();

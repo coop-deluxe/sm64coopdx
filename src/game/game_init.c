@@ -20,6 +20,7 @@
 #include "segment2.h"
 #include "segment_symbols.h"
 #include "thread6.h"
+#include "rng_position.h"
 #include <prevent_bss_reordering.h>
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
@@ -605,4 +606,7 @@ void game_loop_one_iteration(void) {
         // amount of free space remaining.
         print_text_fmt_int(180, 20, "BUF %d", gGfxPoolEnd - (u8 *) gDisplayListHead);
     }
+
+    // custom coop hooks
+    rng_position_update();
 }

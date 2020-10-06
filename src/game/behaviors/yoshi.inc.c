@@ -29,7 +29,6 @@ void bhv_yoshi_init(void) {
     struct SyncObject* so = network_init_object(o, 4000.0f);
     so->ignore_if_true = bhv_yoshi_ignore_if_true;
     so->override_ownership = bhv_yoshi_override_ownership;
-    so->keepRandomSeed = TRUE;
     network_init_object_field(o, &o->oYoshiBlinkTimer);
     network_init_object_field(o, &o->oYoshiChosenHome);
     network_init_object_field(o, &o->oYoshiTargetYaw);

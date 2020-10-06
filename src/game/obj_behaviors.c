@@ -32,6 +32,7 @@
 #include "spawn_object.h"
 #include "spawn_sound.h"
 #include "pc/network/network.h"
+#include "game/rng_position.h"
 
 /**
  * @file obj_behaviors.c
@@ -668,14 +669,15 @@ s32 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
 void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
     struct Object *coin;
     s8 count;
-    force_replicable_seed(TRUE);
 
+    rng_position_init(o->oPosX, o->oPosY, o->oPosZ);
     for (count = 0; count < nCoins; count++) {
         coin = spawn_object(obj, MODEL_YELLOW_COIN, bhvMovingYellowCoin);
         coin->oForwardVel = random_float() * 20;
         coin->oVelY = random_float() * 40 + 20;
         coin->oMoveAngleYaw = random_u16();
     }
+    rng_position_finish();
 }
 
 /**

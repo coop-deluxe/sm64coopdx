@@ -24,7 +24,6 @@ void bhv_ship_part_3_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
         so->maxUpdateRate = 5.0f;
-        so->keepRandomSeed = TRUE;
         network_init_object_field(o, &o->oFaceAnglePitch);
         network_init_object_field(o, &o->oFaceAngleRoll);
         network_init_object_field(o, &o->oShipPart3UnkF4);
@@ -46,7 +45,6 @@ void bhv_jrb_sliding_box_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
         so->maxUpdateRate = 5.0f;
-        so->keepRandomSeed = TRUE;
         network_init_object_field(o, &o->oFaceAnglePitch);
         network_init_object_field(o, &o->oFaceAngleRoll);
         network_init_object_field(o, &o->oJrbSlidingBoxUnkF8);

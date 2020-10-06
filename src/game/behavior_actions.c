@@ -45,6 +45,7 @@
 #include "spawn_sound.h"
 #include "thread6.h"
 #include "area.h"
+#include "game/rng_position.h"
 
 #define o gCurrentObject
 

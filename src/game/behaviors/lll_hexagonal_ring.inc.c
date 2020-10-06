@@ -17,7 +17,6 @@ void hexagonal_ring_spawn_flames(void) {
 void bhv_lll_rotating_hexagonal_ring_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->keepRandomSeed = FALSE;
         network_init_object_field(o, &o->oAngleVelYaw);
     }
     UNUSED s32 unused;

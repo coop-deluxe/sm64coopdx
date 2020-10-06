@@ -57,7 +57,6 @@ void bhv_platform_on_track_init(void) {
         struct SyncObject* so = network_init_object(o, 1000.0f);
         so->fullObjectSync = TRUE;
         so->maxUpdateRate = 5.0f;
-        so->keepRandomSeed = TRUE;
     }
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {

@@ -8,7 +8,6 @@ void bhv_checkerboard_elevator_group_init(void) {
     struct SyncObject* so = network_init_object(o, 1000.0f);
     so->hasStandardFields = FALSE;
     so->maxUpdateRate = 5.0f;
-    so->keepRandomSeed = TRUE;
     s32 sp3C;
     s32 sp38;
     s32 sp34;
