@@ -3,6 +3,18 @@
 u8 bhv_sl_snowman_wind_loop_continue_dialog(void) { return o->oSubAction == SL_SNOWMAN_WIND_ACT_TALKING; }
 
 void bhv_sl_snowman_wind_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oSubAction);
+    }
+
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     UNUSED s32 unusedVar = 0;
     s16 marioAngleFromWindSource;
     Vec3f tempPos;
@@ -23,20 +35,22 @@ void bhv_sl_snowman_wind_loop(void) {
         
     // Mario has come close, begin dialog.
     } else if (o->oSubAction == SL_SNOWMAN_WIND_ACT_TALKING) {
-        if (cur_obj_update_dialog(&gMarioStates[0], 2, 2, DIALOG_153, 0, bhv_sl_snowman_wind_loop_continue_dialog))
+        if (cur_obj_update_dialog(&gMarioStates[0], 2, 2, DIALOG_153, 0, bhv_sl_snowman_wind_loop_continue_dialog)) {
             o->oSubAction++;
+            network_send_object(o);
+        }
         
     // Blowing, spawn wind particles (SL_SNOWMAN_WIND_ACT_BLOWING)
-    } else if (o->oDistanceToMario < 1500.0f && absf(gMarioObject->oPosY - o->oHomeY) < 500.0f) {
+    } else if (distanceToPlayer < 1500.0f && absf(player->oPosY - o->oHomeY) < 500.0f) {
         // Point towards Mario, but only within 0x1500 angle units of the original angle.
-        if ((marioAngleFromWindSource = o->oAngleToMario - o->oSLSnowmanWindOriginalYaw) > 0) {
+        if ((marioAngleFromWindSource = angleToPlayer - o->oSLSnowmanWindOriginalYaw) > 0) {
             if (marioAngleFromWindSource < 0x1500)
-                o->oMoveAngleYaw = o->oAngleToMario;
+                o->oMoveAngleYaw = angleToPlayer;
             else
                 o->oMoveAngleYaw = o->oSLSnowmanWindOriginalYaw + 0x1500;
         } else {
             if (marioAngleFromWindSource > -0x1500)
-                o->oMoveAngleYaw = o->oAngleToMario;
+                o->oMoveAngleYaw = angleToPlayer;
             else
                 o->oMoveAngleYaw = o->oSLSnowmanWindOriginalYaw - 0x1500;
         }
