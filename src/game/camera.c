@@ -3465,6 +3465,7 @@ void init_camera(struct Camera *c) {
 
     if (sSoftResettingCamera) {
         c->cutscene = 0;
+        sSoftResettingCamera = FALSE;
     }
 
     // Set the camera pos to marioOffset (relative to Mario), added to Mario's position
