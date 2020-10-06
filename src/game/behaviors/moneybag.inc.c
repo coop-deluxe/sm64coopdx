@@ -30,16 +30,26 @@ void bhv_moneybag_init(void) {
     o->oBuoyancy = 2.0f;
     cur_obj_init_animation(0);
     o->oOpacity = 0;
+
+    network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oHomeX);
+    network_init_object_field(o, &o->oHomeY);
+    network_init_object_field(o, &o->oHomeZ);
+    network_init_object_field(o, &o->oMoneybagJumpState);
+    network_init_object_field(o, &o->oOpacity);
 }
 
 void moneybag_check_mario_collision(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     obj_set_hitbox(o, &sMoneybagHitbox);
 
     if (o->oInteractStatus & INT_STATUS_INTERACTED) /* bit 15 */
     {
         if (o->oInteractStatus & INT_STATUS_ATTACKED_MARIO) /* bit 13 */
         {
-            o->oMoveAngleYaw = o->oAngleToMario + 0x8000;
+            o->oMoveAngleYaw = angleToPlayer + 0x8000;
             o->oVelY = 30.0f;
         }
 
@@ -214,14 +224,30 @@ void bhv_moneybag_loop(void) {
 void bhv_moneybag_hidden_loop(void) {
     obj_set_hitbox(o, &sMoneybagHiddenHitbox);
 
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+    }
+
     switch (o->oAction) {
         case FAKE_MONEYBAG_COIN_ACT_IDLE:
             if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 400)) {
-                spawn_object(o, MODEL_MONEYBAG, bhvMoneybag);
+                if (network_owns_object(o)) {
+                    struct Object* moneyBag = spawn_object(o, MODEL_MONEYBAG, bhvMoneybag);
 #ifndef VERSION_JP
-                cur_obj_play_sound_2(SOUND_GENERAL_VANISH_SFX);
+                    cur_obj_play_sound_2(SOUND_GENERAL_VANISH_SFX);
 #endif
-                o->oAction = FAKE_MONEYBAG_COIN_ACT_TRANSFORM;
+                    o->oAction = FAKE_MONEYBAG_COIN_ACT_TRANSFORM;
+
+                    network_send_object(o);
+
+                    network_set_sync_id(moneyBag);
+                    struct Object* spawn_objects[] = { moneyBag };
+                    u32 models[] = { MODEL_MONEYBAG };
+                    network_send_spawn_objects(spawn_objects, models, 1);
+                }
             }
             break;
 
