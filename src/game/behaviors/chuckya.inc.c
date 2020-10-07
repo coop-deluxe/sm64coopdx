@@ -37,6 +37,9 @@ void bhv_chuckya_anchor_mario_loop(void) {
 }
 
 s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
     s32 sp1C = 0;
     if (o->oChuckyaUnkF8 != 4) {
         if (sp24 < cur_obj_lateral_dist_from_mario_to_home()) {
@@ -44,15 +47,15 @@ s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
                 sp1C = 0;
             else {
                 sp1C = 1;
-                o->oAngleToMario = cur_obj_angle_to_home();
+                angleToPlayer = cur_obj_angle_to_home();
             }
-        } else if (o->oDistanceToMario > sp28) {
+        } else if (distanceToPlayer > sp28) {
             if (gGlobalTimer % (s16) sp2C == 0)
-                o->oAngleToMario = obj_angle_to_object(o, gMarioObject);
+                angleToPlayer = obj_angle_to_object(o, player);
             sp1C = 2;
         } else
             sp1C = 3;
-        if (sp20 && update_angle_from_move_flags(&o->oAngleToMario)) {
+        if (sp20 && update_angle_from_move_flags(&angleToPlayer)) {
             sp1C = 4;
             o->oChuckyaUnkF8 = 4;
         }
@@ -77,26 +80,29 @@ s32 approach_forward_vel(f32 *arr, f32 spC, f32 sp10) {
 }
 
 void chuckya_act_0(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
     s32 sp3C;
     UNUSED u8 pad[16];
     s32 sp28;
     if (o->oTimer == 0)
         o->oChuckyaUnkFC = 0;
-    o->oAngleToMario = obj_angle_to_object(o, gMarioObject);
+    angleToPlayer = obj_angle_to_object(o, player);
     switch (sp28 = o->oSubAction) {
         case 0:
             o->oForwardVel = 0;
             if (cur_obj_lateral_dist_from_mario_to_home() < 2000.0f) {
-                cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
+                cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
                 if (o->oChuckyaUnkFC > 40
-                    || abs_angle_diff(o->oMoveAngleYaw, o->oAngleToMario) < 0x1000)
+                    || abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) < 0x1000)
                     o->oSubAction = 1;
             } else
                 o->oSubAction = 3;
             break;
         case 1:
             approach_forward_vel(&o->oForwardVel, 30.0f, 4.0f);
-            if (abs_angle_diff(o->oMoveAngleYaw, o->oAngleToMario) > 0x4000)
+            if (abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) > 0x4000)
                 o->oSubAction = 2;
             if (cur_obj_lateral_dist_from_mario_to_home() > 2000.0f)
                 o->oSubAction = 3;
@@ -111,8 +117,8 @@ void chuckya_act_0(void) {
                 o->oForwardVel = 0;
             else {
                 approach_forward_vel(&o->oForwardVel, 10.0f, 4.0f);
-                o->oAngleToMario = cur_obj_angle_to_home();
-                cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x800);
+                angleToPlayer = cur_obj_angle_to_home();
+                cur_obj_rotate_yaw_toward(angleToPlayer, 0x800);
             }
             if (cur_obj_lateral_dist_from_mario_to_home() < 1900.0f)
                 o->oSubAction = 0;
@@ -195,6 +201,15 @@ void chuckya_move(void) {
 }
 
 void bhv_chuckya_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oChuckyaUnk88);
+        network_init_object_field(o, &o->oChuckyaUnkF8);
+        network_init_object_field(o, &o->oChuckyaUnkFC);
+        network_init_object_field(o, &o->oChuckyaUnk100);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+    }
+
     f32 sp2C = 20.0f;
     f32 sp28 = 50.0f;
     cur_obj_scale(2.0f);
