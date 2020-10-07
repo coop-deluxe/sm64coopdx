@@ -14,6 +14,21 @@ void bhv_init_changing_water_level_loop(void) {
 }
 
 void bhv_water_level_diamond_loop(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oWaterLevelTriggerTargetWaterLevel);
+        network_init_object_field(o, &o->oAngleVelYaw);
+        network_init_object_field(o, &o->oFaceAngleYaw);
+        network_init_object_field(o, &gWDWWaterLevelChanging);
+        
+    }
+
     if (gEnvironmentRegions != NULL) {
         switch (o->oAction) {
             case WATER_LEVEL_DIAMOND_ACT_INIT:
@@ -23,10 +38,11 @@ void bhv_water_level_diamond_loop(void) {
                     o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_IDLE
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE:
-                if (obj_check_if_collided_with_object(o, gMarioObject)) {
+                if (obj_check_if_collided_with_object(o, player)) {
                     if (gWDWWaterLevelChanging == 0) {
                         o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL
                         gWDWWaterLevelChanging = 1;
+                        network_send_object(o);
                     }
                 }
                 break;
@@ -53,7 +69,7 @@ void bhv_water_level_diamond_loop(void) {
                 }
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE_SPINNING:
-                if (!obj_check_if_collided_with_object(o, gMarioObject)) {
+                if (!obj_check_if_collided_with_object(o, player)) {
                     gWDWWaterLevelChanging = 0;
                     o->oAction = WATER_LEVEL_DIAMOND_ACT_IDLE;
                     o->oAngleVelYaw = 0;
