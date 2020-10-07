@@ -4,6 +4,8 @@ s16 D_8032F460[][2] = { { 30, 0 }, { 42, 1 }, { 52, 0 },  { 64, 1 },  { 74, 0 },
                         { 86, 1 }, { 96, 0 }, { 108, 1 }, { 118, 0 }, { -1, 0 }, };
 
 void bhv_heave_ho_throw_mario_loop(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
     o->oParentRelativePosX = 200.0f;
     o->oParentRelativePosY = -50.0f;
     o->oParentRelativePosZ = 0.0f;
@@ -15,9 +17,9 @@ void bhv_heave_ho_throw_mario_loop(void) {
             break;
         case 2:
             cur_obj_play_sound_2(SOUND_OBJ_HEAVEHO_TOSSED);
-            gMarioObject->oInteractStatus |= INT_STATUS_MARIO_UNK2;
-            gMarioStates->forwardVel = -45.0f;
-            gMarioStates->vel[1] = 95.0f;
+            player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
+            marioState->forwardVel = -45.0f;
+            marioState->vel[1] = 95.0f;
             o->parentObj->oHeaveHoUnk88 = 0;
             break;
     }
@@ -41,10 +43,13 @@ void heave_ho_act_1(void) {
 }
 
 void heave_ho_act_2(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     UNUSED s32 unused;
     s16 angleVel;
     if (1000.0f < cur_obj_lateral_dist_from_mario_to_home())
-        o->oAngleToMario = cur_obj_angle_to_home();
+        angleToPlayer = cur_obj_angle_to_home();
     if (o->oTimer > 150) {
         o->oHeaveHoUnkF4 = (302 - o->oTimer) / 152.0f;
         if (o->oHeaveHoUnkF4 < 0.1) {
@@ -56,7 +61,7 @@ void heave_ho_act_2(void) {
     cur_obj_init_animation_with_accel_and_sound(0, o->oHeaveHoUnkF4);
     o->oForwardVel = o->oHeaveHoUnkF4 * 10.0f;
     angleVel = o->oHeaveHoUnkF4 * 0x400;
-    o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oAngleToMario, angleVel);
+    o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToPlayer, angleVel);
 }
 
 void heave_ho_act_3(void) {
@@ -73,7 +78,9 @@ void heave_ho_act_3(void) {
 
 void heave_ho_act_0(void) {
 #ifndef NODRAWINGDISTANCE
-    if (find_water_level(o->oPosX, o->oPosZ) < o->oPosY && o->oDistanceToMario < 4000.0f) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    if (find_water_level(o->oPosX, o->oPosZ) < o->oPosY && distanceToPlayer < 4000.0f) {
 #else
     if (find_water_level(o->oPosX, o->oPosZ) < (o->oPosY - 50.0f)) {
 #endif
@@ -109,6 +116,15 @@ void heave_ho_move(void) {
 }
 
 void bhv_heave_ho_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oHeaveHoUnk88);
+        network_init_object_field(o, &o->oHeaveHoUnkF4);
+        network_init_object_field(o, &o->oInteractStatus);
+        network_init_object_field(o, &o->oGraphYOffset);
+        network_init_object_field(o, &o->oFaceAngleYaw);
+    }
+
     cur_obj_scale(2.0f);
     switch (o->oHeldState) {
         case HELD_FREE:
