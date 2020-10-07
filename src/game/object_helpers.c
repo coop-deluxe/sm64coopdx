@@ -1583,9 +1583,10 @@ f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj) {
 }
 
 f32 cur_obj_lateral_dist_from_mario_to_home(void) {
+    struct Object* player = nearest_player_to_object(o);
     f32 dist;
-    f32 dx = o->oHomeX - gMarioObject->oPosX;
-    f32 dz = o->oHomeZ - gMarioObject->oPosZ;
+    f32 dx = o->oHomeX - player->oPosX;
+    f32 dz = o->oHomeZ - player->oPosZ;
 
     dist = sqrtf(dx * dx + dz * dz);
     return dist;
@@ -2491,11 +2492,12 @@ s32 cur_obj_mario_far_away(void) {
 }
 
 s32 is_mario_moving_fast_or_in_air(s32 speedThreshold) {
-    if (gMarioStates[0].forwardVel > speedThreshold) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (marioState->forwardVel > speedThreshold) {
         return TRUE;
     }
 
-    if (gMarioStates[0].action & ACT_FLAG_AIR) {
+    if (marioState->action & ACT_FLAG_AIR) {
         return TRUE;
     } else {
         return FALSE;
