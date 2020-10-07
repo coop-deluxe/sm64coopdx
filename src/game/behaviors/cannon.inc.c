@@ -14,8 +14,6 @@ void opened_cannon_act_0(void) {
         o->oMoveAngleYaw = (s16)(o->oBehParams2ndByte << 8);
         o->oCannonUnkF4 = 0;
         o->oCannonUnk10C = 0;
-        cur_obj_enable_rendering();
-        cur_obj_become_tangible();
     }
     cur_obj_become_tangible();
     cur_obj_enable_rendering();
@@ -151,7 +149,7 @@ u8 cannon_ignore_remote_updates(void) {
     return ((gNetworkType == NT_SERVER) && o->oCannonIsLocal);
 }
 
-static void cannon_on_received_pos(u8 fromLocalIndex) {
+static void cannon_on_received_post(u8 fromLocalIndex) {
     // check if we're on in the cannon too
     struct MarioState* m = &gMarioStates[0];
     if (m->action != ACT_IN_CANNON) { return; }
@@ -175,11 +173,46 @@ static void cannon_on_received_pos(u8 fromLocalIndex) {
     cur_obj_enable_rendering();
 }
 
+static void bhv_cannon_base_sanity_check(void) {
+    // figure out if it's still in use
+    u8 inUse = FALSE;
+    if (o->oCannonIsLocal) {
+        inUse = (gMarioStates[0].action == ACT_IN_CANNON && gMarioStates[0].interactObj == o);
+    } else {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (gMarioStates[i].action == ACT_IN_CANNON && gMarioStates[i].interactObj == o) {
+                inUse = TRUE;
+                break;
+            }
+        }
+    }
+
+    // figure out if it is visible
+    u8 isVisible = (o->header.gfx.node.flags & GRAPH_RENDER_ACTIVE);
+
+    // ensure that it is visibile when it should be
+    static u8 visibilitySanity = 0;
+    if (isVisible == !inUse) {
+        visibilitySanity = 0;
+        return;
+    }
+
+    // enforce good state if out of whack
+    if (!isVisible && !inUse) {
+        if (visibilitySanity++ > 15) {
+            o->oAction = 0;
+            o->oTimer = 0;
+            visibilitySanity = 0;
+        }
+    }
+}
+
 void bhv_cannon_base_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         so->ignore_if_true = cannon_ignore_remote_updates;
-        so->on_received_post = cannon_on_received_pos;
+        so->on_received_post = cannon_on_received_post;
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oPrevAction);
         network_init_object_field(o, &o->oTimer);
@@ -191,6 +224,8 @@ void bhv_cannon_base_loop(void) {
         network_init_object_field(o, &o->oCannonUnkF8);
         network_init_object_field(o, &o->oCannonUnkF4);
     }
+
+    bhv_cannon_base_sanity_check();
 
     if (o->oAction != 0 && !o->oCannonIsLocal) {
         cur_obj_push_mario_away_from_cylinder(220, 300);
