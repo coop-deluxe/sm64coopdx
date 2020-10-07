@@ -293,7 +293,7 @@ u32 attack_object(struct Object *o, s32 interaction) {
 }
 
 void mario_stop_riding_object(struct MarioState *m) {
-    if (m->riddenObj != NULL) {
+    if (m->riddenObj != NULL && m->playerIndex == 0) {
         m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
         if (m->playerIndex == 0) { stop_shell_music(); }
         m->riddenObj = NULL;
@@ -1699,6 +1699,10 @@ u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Obj
 }
 
 u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
+    if (o->oInteractStatus & INT_STATUS_INTERACTED) {
+        return FALSE;
+    }
+
     if (!(m->action & ACT_FLAG_RIDING_SHELL)) {
         u32 interaction = determine_interaction(m, o);
 

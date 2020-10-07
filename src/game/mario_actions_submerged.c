@@ -750,7 +750,7 @@ static s32 act_water_shell_swimming(struct MarioState *m) {
     }
 
     if (m->actionTimer++ == 240) {
-        if (m->heldObj != NULL) {
+        if (m->heldObj != NULL && m->playerIndex == 0) {
             m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
             m->heldObj = NULL;
         }
@@ -1503,10 +1503,10 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
             // where your held object is the shell, but you are not in the
             // water shell swimming action. This allows you to hold the water
             // shell on land (used for cloning in DDD).
-            if (m->action == ACT_WATER_SHELL_SWIMMING && m->heldObj != NULL) {
+            if (m->action == ACT_WATER_SHELL_SWIMMING && m->heldObj != NULL && m->playerIndex == 0) {
                 m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
                 m->heldObj = NULL;
-                if (m->playerIndex == 0) { stop_shell_music(); }
+                stop_shell_music();
             }
 
             return transition_submerged_to_walking(m);
