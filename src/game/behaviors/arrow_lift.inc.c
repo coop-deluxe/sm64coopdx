@@ -59,12 +59,20 @@ static s8 arrow_lift_move_back(void) {
  * Arrow lift update function.
  */
 void bhv_arrow_lift_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oAction);
+    }
+
     switch (o->oAction) {
         case ARROW_LIFT_ACT_IDLE:
             // Wait 61 frames before moving.
             if (o->oTimer > 60) {
-                if (gMarioObject->platform == o) {
+                if (cur_obj_is_any_player_on_platform()) {
                     o->oAction = ARROW_LIFT_ACT_MOVING_AWAY;
+                    network_send_object(o);
                 }
             }
 
