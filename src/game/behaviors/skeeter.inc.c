@@ -61,6 +61,10 @@ static void skeeter_act_idle(void) {
 }
 
 static void skeeter_act_lunge(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     if (!(o->oMoveFlags & OBJ_MOVE_AT_WATER_SURFACE)) {
         o->oAction = SKEETER_ACT_IDLE;
     } else {
@@ -76,8 +80,8 @@ static void skeeter_act_lunge(void) {
         if (obj_forward_vel_approach(0.0f, 0.8f) && cur_obj_check_if_at_animation_end()) {
             o->oMoveAngleYaw = o->oFaceAngleYaw;
 
-            if (o->oDistanceToMario >= 25000.0f) {
-                o->oSkeeterTargetAngle = o->oAngleToMario;
+            if (distanceToPlayer >= 25000.0f) {
+                o->oSkeeterTargetAngle = angleToPlayer;
             } else {
                 o->oSkeeterTargetAngle = obj_random_fixed_turn(random_u16() % 0x2000);
             }
@@ -90,6 +94,9 @@ static void skeeter_act_lunge(void) {
 }
 
 static void skeeter_act_walk(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
     f32 sp24;
 
     if (!(o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND)) {
@@ -104,14 +111,14 @@ static void skeeter_act_walk(void) {
         if (o->oSkeeterUnkF8 != 0) {
             o->oSkeeterUnkF8 = obj_resolve_collisions_and_turn(o->oSkeeterTargetAngle, 0x400);
         } else {
-            if (o->oDistanceToMario >= 25000.0f) {
-                o->oSkeeterTargetAngle = o->oAngleToMario;
+            if (distanceToPlayer >= 25000.0f) {
+                o->oSkeeterTargetAngle = angleToPlayer;
                 o->oSkeeterWaitTime = random_linear_offset(20, 30);
             }
 
             if ((o->oSkeeterUnkF8 = obj_bounce_off_walls_edges_objects(&o->oSkeeterTargetAngle)) == 0) {
-                if (o->oDistanceToMario < 500.0f) {
-                    o->oSkeeterTargetAngle = o->oAngleToMario;
+                if (distanceToPlayer < 500.0f) {
+                    o->oSkeeterTargetAngle = angleToPlayer;
                     o->oSkeeterUnkFC = 20.0f;
                 } else {
                     o->oSkeeterUnkFC = 10.0f;
@@ -135,6 +142,18 @@ static void skeeter_act_walk(void) {
 }
 
 void bhv_skeeter_update(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oSkeeterTargetAngle);
+        network_init_object_field(o, &o->oSkeeterUnkF8);
+        network_init_object_field(o, &o->oSkeeterUnkFC);
+        network_init_object_field(o, &o->oSkeeterWaitTime);
+        network_init_object_field(o, &o->oSkeeterUnk1AC);
+        network_init_object_field(o, &o->oMoveAngleYaw);
+        network_init_object_field(o, &o->oFaceAngleYaw);
+        network_init_object_field(o, &o->oFlags);
+    }
+
     o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
     treat_far_home_as_mario(1000.0f);
 
