@@ -180,6 +180,7 @@ static void spiny_act_thrown_by_lakitu(void) {
 }
 
 void bhv_spiny_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    if (o->parentObj == NULL || o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVED) { return; }
     *shouldOverride = (o->parentObj->behavior == bhvEnemyLakitu);
     *shouldOwn = network_owns_object(o->parentObj);
 }
