@@ -307,7 +307,7 @@ void render_hud_unsupported_level(void) {
         case COURSE_DDD:      // (9) Dire Dire Docks
         case COURSE_SL:       // (10) Snowman's Land
         case COURSE_WDW:      // (11) Wet Dry World
-        //case COURSE_TTM:      // (12) Tall Tall Mountain
+        case COURSE_TTM:      // (12) Tall Tall Mountain
         //case COURSE_THI:      // (13) Tiny Huge Island
         //case COURSE_TTC:      // (14) Tick Tock Clock
         //case COURSE_RR:       // (15) Rainbow Ride
