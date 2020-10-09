@@ -37,8 +37,10 @@ static u8 sSpinyWalkAttackHandlers[] = {
  * If the spiny was spawned by lakitu and mario is far away, despawn.
  */
 static s32 spiny_check_active(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
     if (o->parentObj != o) {
-        if (o->oDistanceToMario > 2500.0f) {
+        if (distanceToPlayer > 2500.0f) {
             //! It's possible for the lakitu to despawn while the spiny still
             //  references it. This line allows us to decrement the 0x1B field
             //  in an object that loads into the lakitu's former slot.
@@ -177,11 +179,37 @@ static void spiny_act_thrown_by_lakitu(void) {
     }
 }
 
+void bhv_spiny_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = (o->parentObj->behavior == bhvEnemyLakitu);
+    *shouldOwn = network_owns_object(o->parentObj);
+}
+
 /**
  * Update function for bhvSpiny.
  */
 void bhv_spiny_update(void) {
     // PARTIAL_UPDATE
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        so->syncDeathEvent = FALSE;
+        so->override_ownership = bhv_spiny_override_ownership;
+        network_init_object_field(o, &o->oGraphYOffset);
+        network_init_object_field(o, &o->oFaceAngleYaw);
+        network_init_object_field(o, &o->oSpinyTimeUntilTurn);
+        network_init_object_field(o, &o->oSpinyTargetYaw);
+        network_init_object_field(o, &o->oSpinyTurningAwayFromWall);
+        network_init_object_field(o, &o->oMoveFlags);
+        network_init_object_field(o, &o->oInteractType);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+
+
+        struct Object* lakitu = cur_obj_nearest_object_with_behavior(bhvEnemyLakitu);
+        if (lakitu != NULL) {
+            lakitu->prevObj = o;
+            o->oAction = SPINY_ACT_HELD_BY_LAKITU;
+            obj_init_animation_with_sound(o, spiny_egg_seg5_anims_050157E4, 0);
+        }
+    }
 
     switch (o->oAction) {
         case SPINY_ACT_WALK:
