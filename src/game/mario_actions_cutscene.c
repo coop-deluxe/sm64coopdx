@@ -690,7 +690,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                 break;
         }
     } else if (m->playerIndex != 0) {
-        set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
+        // nothing
     } else if (m->actionState == 1 && gDialogResponse) {
         if (gDialogResponse == 1) {
             save_file_do_save(gCurrSaveFileNum - 1, FALSE);
