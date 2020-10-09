@@ -599,7 +599,10 @@ void check_instant_warp(void) {
                 warp_camera(warp->displacement[0], warp->displacement[1], warp->displacement[2]);
                 gMarioStates[0].area->camera->yaw = cameraAngle;
 
-                if (changeOfArea) {
+                // don't force synchronize the slide in TTM
+                u8 ignoreSyncingArea = (gCurrLevelNum == LEVEL_TTM && (gCurrAreaIndex == 3 || gCurrAreaIndex == 4));
+
+                if (changeOfArea && !ignoreSyncingArea) {
                     set_play_mode(PLAY_MODE_SYNC_LEVEL);
                     network_send_instant_warp();
                 }
