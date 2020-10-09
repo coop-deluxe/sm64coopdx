@@ -217,6 +217,11 @@ void wiggler_init_segments(void) {
  * If attacked by mario, enter either the jumped on or knockback action.
  */
 static void wiggler_act_walk(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     s16 yawTurnSpeed;
 
     o->oWigglerWalkAnimSpeed = 0.06f * o->oForwardVel;
@@ -230,8 +235,9 @@ static void wiggler_act_walk(void) {
 
         // If Mario is positioned below the wiggler, assume he entered through the
         // lower cave entrance, so don't display text.
-        if (gMarioObject->oPosY < o->oPosY || cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, DIALOG_150, wiggler_act_walk_continue_dialog) != 0) {
+        if (player->oPosY < o->oPosY || (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, DIALOG_150, wiggler_act_walk_continue_dialog) != 0)) {
             o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
+            network_send_object_reliability(o, TRUE);
         }
     } else {
         //! Every object's health is initially 2048, and wiggler's doesn't change
@@ -243,9 +249,9 @@ static void wiggler_act_walk(void) {
         if (o->oWigglerWalkAwayFromWallTimer != 0) {
             o->oWigglerWalkAwayFromWallTimer -= 1;
         } else {
-            if (o->oDistanceToMario >= 25000.0f) {
+            if (distanceToPlayer >= 25000.0f) {
                 // If >1200 away from home, turn to home
-                o->oWigglerTargetYaw = o->oAngleToMario;
+                o->oWigglerTargetYaw = angleToPlayer;
             }
 
             if (obj_bounce_off_walls_edges_objects(&o->oWigglerTargetYaw)) {
@@ -255,7 +261,7 @@ static void wiggler_act_walk(void) {
                 o->oWigglerWalkAwayFromWallTimer = random_linear_offset(30, 30);
             } else {
                 if (o->oHealth < 4) {
-                    o->oWigglerTargetYaw = o->oAngleToMario;
+                    o->oWigglerTargetYaw = angleToPlayer;
                 } else if (o->oWigglerTimeUntilRandomTurn != 0) {
                     o->oWigglerTimeUntilRandomTurn -= 1;
                 } else {
@@ -294,6 +300,8 @@ u8 wiggler_act_jumped_on_continue_dialog(void) { return o->oAction == WIGGLER_AC
  * action.
  */
 static void wiggler_act_jumped_on(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+
     // Text to show on first, second, and third attack.
     s32 attackText[3] = { DIALOG_152, DIALOG_168, DIALOG_151 };
 
@@ -309,7 +317,7 @@ static void wiggler_act_jumped_on(void) {
     // defeated) or go back to walking
     if (o->header.gfx.scale[1] >= 4.0f) {
         if (o->oTimer > 30) {
-            if (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, attackText[o->oHealth - 2], wiggler_act_jumped_on_continue_dialog) != 0) {
+            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, attackText[o->oHealth - 2], wiggler_act_jumped_on_continue_dialog) != 0) {
                 // Because we don't want the wiggler to disappear after being
                 // defeated, we leave its health at 1
                 if (--o->oHealth == 1) {
@@ -325,6 +333,7 @@ static void wiggler_act_jumped_on(void) {
                         o->oVelY = 70.0f;
                     }
                 }
+                network_send_object_reliability(o, TRUE);
             }
         }
     } else {
@@ -400,11 +409,53 @@ void wiggler_jumped_on_attack_handler(void) {
     o->oWigglerSquishSpeed = 0.4f;
 }
 
+u8 bhv_wiggler_ignore_if_true(void) {
+    return o->oAction == WIGGLER_ACT_UNINITIALIZED;
+}
+
+static Vec3f wigglerPrePos = { 0 };
+
+void bhv_wiggler_on_received_pre(u8 localIndex) {
+    wigglerPrePos[0] = o->oPosX;
+    wigglerPrePos[1] = o->oPosY;
+    wigglerPrePos[2] = o->oPosZ;
+}
+
+void bhv_wiggler_on_received_post(u8 localIndex) {
+    Vec3f posDiff = { 0 };
+    posDiff[0] = o->oPosX - wigglerPrePos[0];
+    posDiff[1] = o->oPosY - wigglerPrePos[1];
+    posDiff[2] = o->oPosZ - wigglerPrePos[2];
+    for (int i = 0; i < 3; i++) {
+        o->oWigglerSegments[i].posX += posDiff[0];
+        o->oWigglerSegments[i].posY += posDiff[1];
+        o->oWigglerSegments[i].posZ += posDiff[2];
+    }
+}
+
 /**
  * Update function for bhvWigglerHead.
  */
 void bhv_wiggler_update(void) {
     // PARTIAL_UPDATE
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        so->ignore_if_true = bhv_wiggler_ignore_if_true;
+        so->on_received_pre = bhv_wiggler_on_received_pre;
+        so->on_received_post = bhv_wiggler_on_received_post;
+        network_init_object_field(o, &o->oFaceAnglePitch);
+        network_init_object_field(o, &o->oWigglerFallThroughFloorsHeight);
+        network_init_object_field(o, &o->oWigglerWalkAnimSpeed);
+        network_init_object_field(o, &o->oWigglerSquishSpeed);
+        network_init_object_field(o, &o->oWigglerTimeUntilRandomTurn);
+        network_init_object_field(o, &o->oWigglerTargetYaw);
+        network_init_object_field(o, &o->oWigglerWalkAwayFromWallTimer);
+        network_init_object_field(o, &o->oHealth);
+        network_init_object_field(o, &o->header.gfx.scale[0]);
+        network_init_object_field(o, &o->header.gfx.scale[1]);
+        network_init_object_field(o, &o->header.gfx.scale[2]);
+        network_init_object_field(o, &o->oFaceAngleYaw);
+    }
 
     if (o->oAction == WIGGLER_ACT_UNINITIALIZED) {
         wiggler_init_segments();
