@@ -48,7 +48,9 @@ static void cloud_act_spawn_parts(void) {
  */
 static void cloud_act_fwoosh_hidden(void) {
 #ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario < 2000.0f) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    if (distanceToPlayer < 2000.0f) {
 #endif
         cur_obj_unhide();
         o->oAction = CLOUD_ACT_SPAWN_PARTS;
@@ -62,8 +64,21 @@ static void cloud_act_fwoosh_hidden(void) {
  * long enough, blow wind at him.
  */
 static void cloud_fwoosh_update(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->header.gfx.scale[0]);
+        network_init_object_field(o, &o->oCloudCenterX);
+        network_init_object_field(o, &o->oCloudCenterY);
+        network_init_object_field(o, &o->oCloudBlowing);
+        network_init_object_field(o, &o->oCloudGrowSpeed);
+        network_init_object_field(o, &o->oCloudFwooshMovementRadius);
+    }
+
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+
 #ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario > 2500.0f) {
+    if (distanceToPlayer > 2500.0f) {
         o->oAction = CLOUD_ACT_UNLOAD;
     } else {
 #endif
@@ -86,7 +101,7 @@ static void cloud_fwoosh_update(void) {
             o->oCloudFwooshMovementRadius += 0xC8;
 
             // If mario stays nearby for 100 frames, begin blowing
-            if (o->oDistanceToMario < 1000.0f) {
+            if (distanceToPlayer < 1000.0f) {
                 if (o->oTimer > 100) {
                     o->oCloudBlowing = TRUE;
                     o->oCloudGrowSpeed = 0.14f;
