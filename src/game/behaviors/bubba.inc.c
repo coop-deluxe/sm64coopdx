@@ -13,6 +13,10 @@ static struct ObjectHitbox sBubbaHitbox = {
 };
 
 void bubba_act_0(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     f32 sp24;
 
     sp24 = cur_obj_lateral_dist_to_home();
@@ -28,14 +32,14 @@ void bubba_act_0(void) {
             o->oBubbaUnkFC = 0;
         }
     } else {
-        if (o->oDistanceToMario >= 25000.0f) {
-            o->oBubbaUnk1AE = o->oAngleToMario;
+        if (distanceToPlayer >= 25000.0f) {
+            o->oBubbaUnk1AE = angleToPlayer;
             o->oBubbaUnkF8 = random_linear_offset(20, 30);
         }
 
         if ((o->oBubbaUnkFC = o->oMoveFlags & OBJ_MOVE_HIT_WALL) != 0) {
             o->oBubbaUnk1AE = cur_obj_reflect_move_angle_off_wall();
-        } else if (o->oTimer > 30 && o->oDistanceToMario < 2000.0f) {
+        } else if (o->oTimer > 30 && distanceToPlayer < 2000.0f) {
             o->oAction = 1;
         } else if (o->oBubbaUnkF8 != 0) {
             o->oBubbaUnkF8 -= 1;
@@ -47,11 +51,16 @@ void bubba_act_0(void) {
 }
 
 void bubba_act_1(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     s16 val06;
     s16 val04;
 
     treat_far_home_as_mario(2500.0f);
-    if (o->oDistanceToMario > 2500.0f) {
+    if (distanceToPlayer > 2500.0f) {
         o->oAction = 0;
     } else if (o->oBubbaUnk100 != 0) {
         if (--o->oBubbaUnk100 == 0) {
@@ -68,28 +77,28 @@ void bubba_act_1(void) {
             o->oAnimState = 0;
             ;
         } else {
-            o->oBubbaUnk1AE = o->oAngleToMario;
+            o->oBubbaUnk1AE = angleToPlayer;
             o->oBubbaUnk1AC = o->oBubbaUnk104;
 
             cur_obj_rotate_yaw_toward(o->oBubbaUnk1AE, 400);
             obj_move_pitch_approach(o->oBubbaUnk1AC, 400);
         }
     } else {
-        if (abs_angle_diff(gMarioObject->oFaceAngleYaw, o->oAngleToMario) < 0x3000) {
-            val04 = 0x4000 - atan2s(800.0f, o->oDistanceToMario - 800.0f);
-            if ((s16)(o->oMoveAngleYaw - o->oAngleToMario) < 0) {
+        if (abs_angle_diff(player->oFaceAngleYaw, angleToPlayer) < 0x3000) {
+            val04 = 0x4000 - atan2s(800.0f, distanceToPlayer - 800.0f);
+            if ((s16)(o->oMoveAngleYaw - angleToPlayer) < 0) {
                 val04 = -val04;
             }
 
-            o->oBubbaUnk1AE = o->oAngleToMario + val04;
+            o->oBubbaUnk1AE = angleToPlayer + val04;
             ;
         } else {
-            o->oBubbaUnk1AE = o->oAngleToMario;
+            o->oBubbaUnk1AE = angleToPlayer;
         }
 
         o->oBubbaUnk1AC = o->oBubbaUnk104;
 
-        if (obj_is_near_to_and_facing_mario(&gMarioStates[0], 500.0f, 3000)
+        if (obj_is_near_to_and_facing_mario(marioState, 500.0f, 3000)
             && abs_angle_diff(o->oBubbaUnk1AC, o->oMoveAnglePitch) < 3000) {
             o->oBubbaUnk100 = 30;
             o->oBubbaUnkF4 = 0;
@@ -101,16 +110,36 @@ void bubba_act_1(void) {
 }
 
 void bhv_bubba_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, 4000.0f);
+        network_init_object_field(o, &o->oBubbaUnkF4);
+        network_init_object_field(o, &o->oBubbaUnkF8);
+        network_init_object_field(o, &o->oBubbaUnkFC);
+        network_init_object_field(o, &o->oBubbaUnk100);
+        network_init_object_field(o, &o->oBubbaUnk104);
+        network_init_object_field(o, &o->oBubbaUnk108);
+        network_init_object_field(o, &o->oBubbaUnk10C);
+        network_init_object_field(o, &o->oBubbaUnk1AC);
+        network_init_object_field(o, &o->oBubbaUnk1B0);
+        network_init_object_field(o, &o->oAnimState);
+        network_init_object_field(o, &o->oMoveAnglePitch);
+    }
+
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     UNUSED s32 unused;
     struct Object *sp38;
     s16 sp36;
 
     o->oInteractionSubtype &= ~INT_SUBTYPE_EATS_MARIO;
-    o->oBubbaUnk104 = obj_turn_pitch_toward_mario(&gMarioStates[0], 120.0f, 0);
+    o->oBubbaUnk104 = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
 
-    if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x1000
+    if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x1000
         && abs_angle_diff(o->oBubbaUnk104 + 0x800, o->oMoveAnglePitch) < 0x2000) {
-        if (o->oAnimState != 0 && o->oDistanceToMario < 250.0f) {
+        if (o->oAnimState != 0 && distanceToPlayer < 250.0f) {
             o->oInteractionSubtype |= INT_SUBTYPE_EATS_MARIO;
         }
 

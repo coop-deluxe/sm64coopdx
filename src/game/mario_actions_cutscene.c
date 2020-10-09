@@ -829,18 +829,17 @@ s32 act_quicksand_death(struct MarioState *m) {
 s32 act_eaten_by_bubba(struct MarioState *m) {
     play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
     set_mario_animation(m, MARIO_ANIM_A_POSE);
-    m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+    //m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     if (m != &gMarioStates[0]) {
         // never kill remote marios
         m->health = 0x100;
     } else {
         m->health = 0xFF;
     }
-
-    if (m->actionTimer++ == 60) {
-        //level_trigger_warp(m, WARP_OP_DEATH);
+    if (m->playerIndex == 0) {
         mario_set_bubbled(m);
     }
+
     return FALSE;
 }
 
