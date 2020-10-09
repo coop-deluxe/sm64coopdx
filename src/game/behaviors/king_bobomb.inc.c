@@ -362,7 +362,9 @@ void king_bobomb_move(void) {
 #endif
 }
 
-u8 king_bobomb_ignore_if_true(void) { return o->oAction == 8; }
+u8 king_bobomb_ignore_if_true(void) {
+    return o->oAction == 8;
+}
 
 void bhv_king_bobomb_loop(void) {
     if (!network_sync_object_initialized(o)) {
@@ -377,7 +379,12 @@ void bhv_king_bobomb_loop(void) {
     f32 sp34 = 20.0f;
     f32 sp30 = 50.0f;
     UNUSED u8 pad[8];
-    o->oInteractionSubtype |= INT_SUBTYPE_GRABS_MARIO;
+
+    if (o->oAction == 4) {
+        o->oInteractionSubtype &= ~INT_SUBTYPE_GRABS_MARIO;
+    } else {
+        o->oInteractionSubtype |= INT_SUBTYPE_GRABS_MARIO;
+    }
     switch (o->oHeldState) {
         case HELD_FREE:
             king_bobomb_move();
