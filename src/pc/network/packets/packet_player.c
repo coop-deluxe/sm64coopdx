@@ -9,6 +9,7 @@
 #include "audio/external.h"
 #include "engine/surface_collision.h"
 #include "game/object_list_processor.h"
+#include "game/chat.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -289,6 +290,11 @@ void network_receive_player(struct Packet* p) {
         if (m->actionArg == 2 && oldData.actionArg == 1) {
             m->marioBodyState->punchState = (0 << 6) | 4;
         }
+    }
+
+    // inform of player death
+    if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
+        chat_add_message("player died", CMT_SYSTEM);
     }
 
     // action changed, reset timer
