@@ -28,9 +28,11 @@ void handle_hat_ukiki_reset(void) {
  */
 s32 is_hat_ukiki_and_mario_has_hat(void) {
     if (o->oBehParams2ndByte == UKIKI_HAT) {
-        if (does_mario_have_hat(gMarioState)) {
-            return TRUE;
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (!does_mario_have_hat(&gMarioStates[i])) { return FALSE; }
         }
+        return TRUE;
     }
 
     return FALSE;
@@ -122,17 +124,21 @@ void idle_ukiki_taunt(void) {
  * standing around.
  */
 void ukiki_act_idle(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     idle_ukiki_taunt();
 
     if (is_hat_ukiki_and_mario_has_hat()) {
-        if (o->oDistanceToMario > 700.0f && o->oDistanceToMario < 1000.0f) {
+        if (distanceToPlayer > 700.0f && distanceToPlayer < 1000.0f) {
             o->oAction = UKIKI_ACT_RUN;
-        } else if (o->oDistanceToMario <= 700.0f && 200.0f < o->oDistanceToMario) {
-            if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) > 0x1000)    {
+        } else if (distanceToPlayer <= 700.0f && 200.0f < distanceToPlayer) {
+            if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) > 0x1000)    {
                 o->oAction = UKIKI_ACT_TURN_TO_MARIO;
             }
         }
-    } else if (o->oDistanceToMario < 300.0f) {
+    } else if (distanceToPlayer < 300.0f) {
         o->oAction = UKIKI_ACT_RUN;
     }
 
@@ -142,17 +148,17 @@ void ukiki_act_idle(void) {
 
     // Jump away from Mario after stealing his hat.
     if (o->oUkikiTextState == UKIKI_TEXT_STOLE_HAT) {
-        o->oMoveAngleYaw = gMarioObject->oMoveAngleYaw + 0x8000;
+        o->oMoveAngleYaw = player->oMoveAngleYaw + 0x8000;
 
         if (check_if_moving_over_floor(50.0f, 150.0f)) {
             o->oAction = UKIKI_ACT_JUMP;
         } else {
-            o->oMoveAngleYaw = gMarioObject->oMoveAngleYaw + 0x4000;
+            o->oMoveAngleYaw = player->oMoveAngleYaw + 0x4000;
 
             if (check_if_moving_over_floor(50.0f, 150.0f)) {
                 o->oAction = UKIKI_ACT_JUMP;
             } else {
-                o->oMoveAngleYaw = gMarioObject->oMoveAngleYaw - 0x4000;
+                o->oMoveAngleYaw = player->oMoveAngleYaw - 0x4000;
                 if (check_if_moving_over_floor(50.0f, 150.0f)) {
                     o->oAction = UKIKI_ACT_JUMP;
                 }
@@ -206,10 +212,12 @@ void ukiki_act_wait_to_respawn(void) {
  * part of the ukiki_act_go_to_cage action.
  */
 void ukiki_act_unused_turn(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int angleToPlayer = obj_angle_to_object(o, player);
     idle_ukiki_taunt();
 
     if (o->oSubAction == UKIKI_SUB_ACT_TAUNT_JUMP_CLAP) {
-        cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
+        cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
     }
 }
 
@@ -217,6 +225,9 @@ void ukiki_act_unused_turn(void) {
  * Turns ukiki to face towards Mario while moving with slow forward velocity.
  */
 void ukiki_act_turn_to_mario(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
     s32 facingMario;
 
     // Initialize the action with a random fVel from 2-5.
@@ -226,17 +237,17 @@ void ukiki_act_turn_to_mario(void) {
 
     cur_obj_init_animation_with_sound(UKIKI_ANIM_TURN);
 
-    facingMario = cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x800);
+    facingMario = cur_obj_rotate_yaw_toward(angleToPlayer, 0x800);
 
     if (facingMario) {
         o->oAction = UKIKI_ACT_IDLE;
     }
 
     if (is_hat_ukiki_and_mario_has_hat()){
-        if (o->oDistanceToMario > 500.0f) {
+        if (distanceToPlayer > 500.0f) {
             o->oAction = UKIKI_ACT_RUN;
         }
-    } else if (o->oDistanceToMario < 300.0f) {
+    } else if (distanceToPlayer < 300.0f) {
         o->oAction = UKIKI_ACT_RUN;
     }
 }
@@ -245,12 +256,17 @@ void ukiki_act_turn_to_mario(void) {
  * Ukiki either runs away away from Mario or towards him if stealing Mario's cap.
  */
 void ukiki_act_run(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     s32 fleeMario = TRUE;
-    s16 goalYaw = o->oAngleToMario + 0x8000;
+    s16 goalYaw = angleToPlayer + 0x8000;
 
     if (is_hat_ukiki_and_mario_has_hat()) {
         fleeMario = FALSE;
-        goalYaw = o->oAngleToMario;
+        goalYaw = angleToPlayer;
     }
 
     if (o->oTimer == 0) {
@@ -262,18 +278,18 @@ void ukiki_act_run(void) {
 
     //! @bug (Ukikispeedia) This function sets forward speed to 0.9 * Mario's
     //! forward speed, which means ukiki can move at hyperspeed rates.
-    cur_obj_set_vel_from_mario_vel(&gMarioStates[0], 20.0f, 0.9f);
+    cur_obj_set_vel_from_mario_vel(marioState, 20.0f, 0.9f);
 
     if (fleeMario) {
-        if (o->oDistanceToMario > o->oUkikiChaseFleeRange) {
+        if (distanceToPlayer > o->oUkikiChaseFleeRange) {
             o->oAction = UKIKI_ACT_TURN_TO_MARIO;
         }
-    } else if (o->oDistanceToMario < o->oUkikiChaseFleeRange) {
+    } else if (distanceToPlayer < o->oUkikiChaseFleeRange) {
         o->oAction = UKIKI_ACT_TURN_TO_MARIO;
     }
 
     if (fleeMario) {
-        if (o->oDistanceToMario < 200.0f) {
+        if (distanceToPlayer < 200.0f) {
             if((o->oMoveFlags & OBJ_MOVE_HIT_WALL) &&
                 is_mario_moving_fast_or_in_air(10)) {
                 o->oAction = UKIKI_ACT_JUMP;
@@ -340,6 +356,10 @@ u8 ukiki_act_go_to_cage_continue_dialog(void) { return o->oAction == UKIKI_ACT_G
  * our death. Ukiki is a tad suicidal.
  */
 void ukiki_act_go_to_cage(void) {
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState->marioObj;
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     struct Object* obj;
     f32 latDistToCage = 0.0f;
     s16 yawToCage = 0;
@@ -374,7 +394,7 @@ void ukiki_act_go_to_cage(void) {
 
         case UKIKI_SUB_ACT_CAGE_WAIT_FOR_MARIO:
             cur_obj_init_animation_with_sound(UKIKI_ANIM_JUMP_CLAP);
-            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
+            cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
 
             if (cur_obj_can_mario_activate_textbox(&gMarioStates[0], 200.0f, 30.0f, 0x7FFF)) {
                 o->oSubAction++; // fallthrough
@@ -385,8 +405,9 @@ void ukiki_act_go_to_cage(void) {
         case UKIKI_SUB_ACT_CAGE_TALK_TO_MARIO:
             cur_obj_init_animation_with_sound(UKIKI_ANIM_HANDSTAND);
 
-            if (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 3, 1, CUTSCENE_DIALOG, DIALOG_080, ukiki_act_go_to_cage_continue_dialog)) {
+            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 3, 1, CUTSCENE_DIALOG, DIALOG_080, ukiki_act_go_to_cage_continue_dialog)) {
                 o->oSubAction++;
+                network_send_object_reliability(o, TRUE);
             }
             break;
 
@@ -519,10 +540,13 @@ static u8 cage_ukiki_held_default_continue_dialog(void) {
  * Called by the main behavior function for the cage ukiki whenever it is held.
  */
 void cage_ukiki_held_loop(void) {
+    struct MarioState* heldByMario = &gMarioStates[o->heldByPlayerIndex];
+    if (heldByMario->playerIndex != 0) { return; }
+
     if (o->oPosY - o->oHomeY > -100.0f) {
         switch(o->oUkikiTextState) {
             case UKIKI_TEXT_DEFAULT:
-                if (set_mario_npc_dialog(&gMarioStates[0], 2, cage_ukiki_held_default_continue_dialog) == 2) {
+                if (set_mario_npc_dialog(heldByMario, 2, cage_ukiki_held_default_continue_dialog) == 2) {
                     create_dialog_box_with_response(DIALOG_079);
                     o->oUkikiTextState = UKIKI_TEXT_CAGE_TEXTBOX;
                 }
@@ -530,7 +554,7 @@ void cage_ukiki_held_loop(void) {
 
             case UKIKI_TEXT_CAGE_TEXTBOX:
                 if (gDialogResponse != 0) {
-                    set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+                    set_mario_npc_dialog(heldByMario, 0, NULL);
                     if (gDialogResponse == 1) {
                         o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                         o->oUkikiTextState = UKIKI_TEXT_GO_TO_CAGE;
@@ -567,16 +591,25 @@ u8 hat_ukiki_held_loop_2(void) { return o->oHeldState == HELD_HELD && o->oUkikiT
  * Called by the main behavior function for the hat ukiki whenever it is held.
  */
 void hat_ukiki_held_loop(void) {
+    struct MarioState* heldByMario = &gMarioStates[o->heldByPlayerIndex];
+    if (heldByMario->playerIndex != 0) { return; }
+
+    // other player must catch ukiki
+    if ((o->oUkikiHasHat & UKIKI_HAT_ON) && does_mario_have_hat(heldByMario)) {
+        o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
+        return;
+    }
+
     switch(o->oUkikiTextState) {
         case UKIKI_TEXT_DEFAULT:
-            if (mario_lose_cap_to_enemy(&gMarioStates[0], 2)) {
+            if (mario_lose_cap_to_enemy(heldByMario, 2)) {
                 o->oUkikiTextState = UKIKI_TEXT_STEAL_HAT;
                 o->oUkikiHasHat |= UKIKI_HAT_ON;
             } else {}
             break;
 
         case UKIKI_TEXT_STEAL_HAT:
-            if (cur_obj_update_dialog(&gMarioStates[0], 2, 2, DIALOG_100, 0, hat_ukiki_held_loop_1)) {
+            if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 2, DIALOG_100, 0, hat_ukiki_held_loop_1)) {
                 o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                 o->oUkikiTextState = UKIKI_TEXT_STOLE_HAT;
             }
@@ -586,9 +619,9 @@ void hat_ukiki_held_loop(void) {
             break;
 
         case UKIKI_TEXT_HAS_HAT:
-            if (cur_obj_update_dialog(&gMarioStates[0], 2, 18, DIALOG_101, 0, hat_ukiki_held_loop_2)) {
-                mario_retrieve_cap();
-                set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+            if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 18, DIALOG_101, 0, hat_ukiki_held_loop_2)) {
+                mario_retrieve_cap(heldByMario);
+                set_mario_npc_dialog(heldByMario, 0, NULL);
                 o->oUkikiHasHat &= ~UKIKI_HAT_ON;
                 o->oUkikiTextState = UKIKI_TEXT_GAVE_HAT_BACK;
             }
@@ -611,6 +644,12 @@ void bhv_ukiki_init(void) {
             o->oUkikiHasHat |= UKIKI_HAT_ON;
         }
     }
+
+    network_init_object(o, 4000.0f);
+    network_init_object_field(o, &o->oUkikiTauntCounter);
+    network_init_object_field(o, &o->oUkikiChaseFleeRange);
+    network_init_object_field(o, &o->oUkikiCageSpinTimer);
+    network_init_object_field(o, &o->oIntangibleTimer);
 }
 
 /**
@@ -618,6 +657,8 @@ void bhv_ukiki_init(void) {
  * dependent on the held state and whick ukiki it is (cage or hat).
  */
 void bhv_ukiki_loop(void) {
+    struct Object* heldByPlayer = gMarioStates[o->heldByPlayerIndex].marioObj;
+
     switch(o->oHeldState) {
         case HELD_FREE:
             //! @bug (PARTIAL_UPDATE)
@@ -627,7 +668,7 @@ void bhv_ukiki_loop(void) {
 
         case HELD_HELD:
             cur_obj_unrender_and_reset_state(UKIKI_ANIM_HELD, 0);
-            obj_copy_pos(o, gMarioObject);
+            obj_copy_pos(o, heldByPlayer);
 
             if (o->oBehParams2ndByte == UKIKI_HAT) {
                 hat_ukiki_held_loop();

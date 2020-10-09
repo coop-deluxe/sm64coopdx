@@ -409,11 +409,11 @@ u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg) {
     return wasWearingCap;
 }
 
-void mario_retrieve_cap(void) {
-    mario_drop_held_object(gMarioState);
+void mario_retrieve_cap(struct MarioState* m) {
+    mario_drop_held_object(m);
     save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI);
-    gMarioState->flags &= ~MARIO_CAP_ON_HEAD;
-    gMarioState->flags |= MARIO_NORMAL_CAP | MARIO_CAP_IN_HAND;
+    m->flags &= ~MARIO_CAP_ON_HEAD;
+    m->flags |= MARIO_NORMAL_CAP | MARIO_CAP_IN_HAND;
 }
 
 u32 able_to_grab_object(struct MarioState *m, UNUSED struct Object *o) {
