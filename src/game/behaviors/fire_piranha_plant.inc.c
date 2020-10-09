@@ -45,9 +45,17 @@ void bhv_fire_piranha_plant_init(void) {
         }
     }
     sNumActiveFirePiranhaPlants = sNumKilledFirePiranhaPlants = 0;
+
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object_field(o, &sNumActiveFirePiranhaPlants);
+    network_init_object_field(o, &sNumKilledFirePiranhaPlants);
 }
 
 static void fire_piranha_plant_act_hide(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     if (o->oFirePiranhaPlantDeathSpinTimer != 0) {
         o->oMoveAngleYaw += (s32) o->oFirePiranhaPlantDeathSpinVel;
         approach_f32_ptr(&o->oFirePiranhaPlantDeathSpinVel, 0.0f, 200.0f);
@@ -67,13 +75,14 @@ static void fire_piranha_plant_act_hide(void) {
             if ((u16)(o->oBehParams >> 16) != 0 && o->oHealth == 0) {
                 if (++sNumKilledFirePiranhaPlants == 5) {
                     spawn_default_star(-6300.0f, -1850.0f, -6300.0f);
+                    network_send_object(o);
                 }
 
                 obj_die_if_health_non_positive();
                 set_object_respawn_info_bits(o, 1);
             }
-        } else if (sNumActiveFirePiranhaPlants < 2 && o->oTimer > 100 && o->oDistanceToMario > 100.0f
-                   && o->oDistanceToMario < 800.0f) {
+        } else if (sNumActiveFirePiranhaPlants < 2 && o->oTimer > 100 && distanceToPlayer > 100.0f
+                   && distanceToPlayer < 800.0f) {
             cur_obj_play_sound_2(SOUND_OBJ_PIRANHA_PLANT_APPEAR);
 
             o->oFirePiranhaPlantActive = TRUE;
@@ -81,7 +90,7 @@ static void fire_piranha_plant_act_hide(void) {
 
             cur_obj_unhide();
             o->oAction = FIRE_PIRANHA_PLANT_ACT_GROW;
-            o->oMoveAngleYaw = o->oAngleToMario;
+            o->oMoveAngleYaw = angleToPlayer;
         } else {
             cur_obj_hide();
         }
@@ -91,6 +100,9 @@ static void fire_piranha_plant_act_hide(void) {
 }
 
 static void fire_piranha_plant_act_grow(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     cur_obj_init_anim_extend(4);
 
     if (approach_f32_ptr(&o->oFirePiranhaPlantScale, o->oFirePiranhaPlantNeutralScale,
@@ -100,7 +112,7 @@ static void fire_piranha_plant_act_grow(void) {
             o->oAction = FIRE_PIRANHA_PLANT_ACT_HIDE;
             cur_obj_init_animation_with_sound(0);
         } else if (o->oTimer < 50) {
-            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
+            cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
         } else { // TODO: Check if we can put these conditionals on same line
             if (obj_is_rendering_enabled()) {
                 if (cur_obj_check_anim_frame(56)) {
