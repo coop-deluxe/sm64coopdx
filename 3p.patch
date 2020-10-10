@@ -1,0 +1,491 @@
+diff --git a/build-windows-visual-studio/sm64ex.vcxproj b/build-windows-visual-studio/sm64ex.vcxproj
+index c5052b8..db836c3 100644
+--- a/build-windows-visual-studio/sm64ex.vcxproj
++++ b/build-windows-visual-studio/sm64ex.vcxproj
+@@ -3973,6 +3973,7 @@
+     <ClCompile Include="..\src\pc\network\packets\packet_keep_alive.c" />
+     <ClCompile Include="..\src\pc\network\packets\packet_leaving.c" />
+     <ClCompile Include="..\src\pc\network\packets\packet_level_warp.c" />
++    <ClCompile Include="..\src\pc\network\packets\packet_network_players.c" />
+     <ClCompile Include="..\src\pc\network\packets\packet_object.c" />
+     <ClCompile Include="..\src\pc\network\packets\packet_player.c" />
+     <ClCompile Include="..\src\pc\network\packets\packet_read_write.c" />
+diff --git a/build-windows-visual-studio/sm64ex.vcxproj.filters b/build-windows-visual-studio/sm64ex.vcxproj.filters
+index b33547f..26133b0 100644
+--- a/build-windows-visual-studio/sm64ex.vcxproj.filters
++++ b/build-windows-visual-studio/sm64ex.vcxproj.filters
+@@ -15078,6 +15078,9 @@
+     <ClCompile Include="..\src\game\rng_position.c">
+       <Filter>Source Files\src\game</Filter>
+     </ClCompile>
++    <ClCompile Include="..\src\pc\network\packets\packet_network_players.c">
++      <Filter>Source Files\src\pc\network\packets</Filter>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\actors\common0.h">
+diff --git a/proto-3.sh b/proto-3.sh
+new file mode 100644
+index 0000000..8f7a1bb
+--- /dev/null
++++ b/proto-3.sh
+@@ -0,0 +1,41 @@
++set -e
++if [ $# -eq 0 ]; then
++    make BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 STRICT=1 -j
++else
++    make BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 -j
++fi
++
++# find file
++FILE=./build/us_pc/sm64.us.f3dex2e.exe
++if [ ! -f "$FILE" ]; then
++    FILE=./build/us_pc/sm64.us.f3dex2e
++fi
++
++# no debug, discord
++#$FILE --discord 2 --configfile sm64config_server.txt  &
++#$FILE --discord 1 --configfile sm64config_client.txt  &
++#exit
++
++# no debug, direct
++#$FILE --server 27015 --configfile sm64config_server.txt  &
++#$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
++#exit
++
++# debug on server
++#$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
++#winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_server.txt' -ex 'quit'
++#exit
++
++###################
++# debug on client #
++###################
++
++$FILE --server 27015 --configfile sm64config_p1.txt  &
++    $FILE --client 127.0.0.1 27015 --configfile sm64config_p2.txt  &
++
++# debug if cgdb exists
++if ! [ -x "$(command -v cgdb)" ]; then
++    $FILE --client 127.0.0.1 27015 --configfile sm64config_p3.txt  &
++else
++    winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --client 127.0.0.1 27015 --configfile sm64config_p3.txt' -ex 'quit'
++fi
+diff --git a/src/engine/level_script.c b/src/engine/level_script.c
+index 7e181da..a7471b7 100644
+--- a/src/engine/level_script.c
++++ b/src/engine/level_script.c
+@@ -664,15 +664,24 @@ static void level_cmd_unload_area(void) {
+ }
+ 
+ static void level_cmd_set_mario_start_pos(void) {
++    s8 areaIndex = CMD_GET(u8, 2);
++#if IS_64_BIT
++    s16 x = CMD_GET(s16, 6);
++    s16 y = CMD_GET(s16, 8);
++    s16 z = CMD_GET(s16, 10);
++#else
++    Vec3s pos = CMD_GET(Vec3s, 6);
++#endif
++    s16 angle = CMD_GET(s16, 4);
+     for (int i = 0; i < MAX_PLAYERS; i++) {
+-        gPlayerSpawnInfos[i].areaIndex = CMD_GET(u8, 2);
+-
+-    #if IS_64_BIT
+-        vec3s_set(gPlayerSpawnInfos[i].startPos, CMD_GET(s16, 6), CMD_GET(s16, 8), CMD_GET(s16, 10));
+-    #else
+-        vec3s_copy(gPlayerSpawnInfos[i].startPos, CMD_GET(Vec3s, 6));
+-    #endif
+-        vec3s_set(gPlayerSpawnInfos[i].startAngle, 0, CMD_GET(s16, 4) * 0x8000 / 180, 0);
++        gPlayerSpawnInfos[i].areaIndex = areaIndex;
++
++#if IS_64_BIT
++        vec3s_set(gPlayerSpawnInfos[i].startPos, x, y, z);
++#else
++        vec3s_copy(gPlayerSpawnInfos[i].startPos, pos);
++#endif
++        vec3s_set(gPlayerSpawnInfos[i].startAngle, 0, angle * 0x8000 / 180, 0);
+     }
+     sCurrentCmd = CMD_NEXT;
+ }
+diff --git a/src/game/behavior_actions.c b/src/game/behavior_actions.c
+index 61fc8b9..0e5d070 100644
+--- a/src/game/behavior_actions.c
++++ b/src/game/behavior_actions.c
+@@ -176,7 +176,7 @@ Gfx *geo_move_mario_part_from_parent(s32 run, UNUSED struct GraphNode *node, Mat
+ 
+     if (run == TRUE) {
+         sp1C = (struct Object *) gCurGraphNodeObject;
+-        if (sp1C == gMarioObject && sp1C->prevObj != NULL) {
++        if (sp1C->behavior == bhvMario && sp1C->prevObj != NULL) {
+             create_transformation_from_matrices(sp20, mtx, *gCurGraphNodeCamera->matrixPtr);
+             obj_update_pos_from_parent_transformation(sp20, sp1C->prevObj);
+             obj_set_gfx_pos_from_pos(sp1C->prevObj);
+diff --git a/src/game/mario.c b/src/game/mario.c
+index 09e2a09..9d6d3e7 100644
+--- a/src/game/mario.c
++++ b/src/game/mario.c
+@@ -2124,11 +2124,7 @@ static void init_single_mario(struct MarioState* m) {
+ 
+     // set mario/luigi model
+     // two-player hack
+-    if (isLocal) {
+-        m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_MARIO : MODEL_LUIGI];
+-    } else {
+-        m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_CLIENT) ? MODEL_MARIO : MODEL_LUIGI];
+-    }
++    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkPlayers[0].globalIndex == 1) ? MODEL_LUIGI : MODEL_MARIO];
+ }
+ 
+ void init_mario(void) {
+diff --git a/src/game/mario_actions_moving.c b/src/game/mario_actions_moving.c
+index 67d97a2..54b533d 100644
+--- a/src/game/mario_actions_moving.c
++++ b/src/game/mario_actions_moving.c
+@@ -61,7 +61,7 @@ struct LandingAction sBackflipLandAction = {
+     4, 0, ACT_FREEFALL, ACT_BACKFLIP_LAND_STOP, ACT_BACKFLIP, ACT_FREEFALL, ACT_BEGIN_SLIDING,
+ };
+ 
+-Mat4 sFloorAlignMatrix[2];
++Mat4 sFloorAlignMatrix[MAX_PLAYERS];
+ 
+ s16 tilt_body_running(struct MarioState *m) {
+     s16 pitch = find_floor_slope(m, 0);
+diff --git a/src/game/mario_misc.c b/src/game/mario_misc.c
+index 0c915c3..43f81eb 100644
+--- a/src/game/mario_misc.c
++++ b/src/game/mario_misc.c
+@@ -418,7 +418,6 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
+         rotNode->rotation[0] = bodyState->torsoAngle[1];
+         rotNode->rotation[1] = bodyState->torsoAngle[2];
+         rotNode->rotation[2] = bodyState->torsoAngle[0];
+-
+         // update torso position in bodyState
+         get_pos_from_transform_mtx(bodyState->torsoPos, *curTransform, *gCurGraphNodeCamera->matrixPtr);
+     }
+@@ -491,17 +490,18 @@ Gfx* geo_switch_mario_hand(s32 callContext, struct GraphNode* node, UNUSED Mat4*
+  */
+ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* mtx) {
+     Mat4 * curTransform = mtx;
+-    static s16 sMarioAttackAnimCounter = 0;
++    static s16 sMarioAttackAnimCounter[MAX_PLAYERS] = { 0 };
+     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
+     struct GraphNodeScale* scaleNode = (struct GraphNodeScale*) node->next;
++    u8 index = geo_get_processing_object_index();
+     struct MarioBodyState* bodyState = geo_get_body_state();
+ 
+     if (callContext == GEO_CONTEXT_RENDER) {
+         scaleNode->scale = 1.0f;
+         if (asGenerated->parameter == bodyState->punchState >> 6) {
+-            if (sMarioAttackAnimCounter != gAreaUpdateCounter && (bodyState->punchState & 0x3F) > 0) {
++            if (sMarioAttackAnimCounter[index] != gAreaUpdateCounter && (bodyState->punchState & 0x3F) > 0) {
+                 bodyState->punchState -= 1;
+-                sMarioAttackAnimCounter = gAreaUpdateCounter;
++                sMarioAttackAnimCounter[index] = gAreaUpdateCounter;
+             }
+             scaleNode->scale =
+                 gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)]
+@@ -510,7 +510,7 @@ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* m
+         // update hand/foot position in bodyState
+         get_pos_from_transform_mtx(bodyState->handFootPos[(asGenerated->parameter & 0x03)],
+                                    *curTransform,
+-                                    *gCurGraphNodeCamera->matrixPtr);
++                                   *gCurGraphNodeCamera->matrixPtr);
+ 
+     }
+     return NULL;
+diff --git a/src/game/object_list_processor.c b/src/game/object_list_processor.c
+index d0bb984..1b3c33f 100644
+--- a/src/game/object_list_processor.c
++++ b/src/game/object_list_processor.c
+@@ -516,7 +516,9 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
+                 u16 playerIndex = (spawnInfo->behaviorArg & ~(1 << 31));
+                 object->oBehParams = playerIndex + 1;
+                 gMarioObjects[playerIndex] = object;
+-                if (playerIndex == 0) { gMarioObject = object; }
++                if (playerIndex == 0) {
++                    gMarioObject = object;
++                }
+                 geo_make_first_child(&object->header.gfx.node);
+             }
+ 
+diff --git a/src/game/rendering_graph_node.c b/src/game/rendering_graph_node.c
+index a511ac5..ed7f13e 100644
+--- a/src/game/rendering_graph_node.c
++++ b/src/game/rendering_graph_node.c
+@@ -1068,6 +1068,7 @@ static void interpolate_matrix(Mat4 result, Mat4 a, Mat4 b) {
+  * Process an object node.
+  */
+ static void geo_process_object(struct Object *node) {
++    struct Object* lastProcessingObject = gCurGraphNodeProcessingObject;
+     gCurGraphNodeProcessingObject = node;
+     Mat4 mtxf;
+     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
+@@ -1192,7 +1193,7 @@ static void geo_process_object(struct Object *node) {
+         node->header.gfx.throwMatrix = NULL;
+         node->header.gfx.throwMatrixInterpolated = NULL;
+     }
+-    gCurGraphNodeProcessingObject = NULL;
++    gCurGraphNodeProcessingObject = lastProcessingObject;
+ }
+ 
+ /**
+diff --git a/src/pc/network/discord/discord.c b/src/pc/network/discord/discord.c
+index 7c30fc0..06a333f 100644
+--- a/src/pc/network/discord/discord.c
++++ b/src/pc/network/discord/discord.c
+@@ -121,10 +121,11 @@ static void ns_discord_shutdown(void) {
+ }
+ 
+ struct NetworkSystem gNetworkSystemDiscord = {
+-    .initialize = ns_discord_initialize,
+-    .save_id    = ns_discord_save_id,
+-    .clear_id   = ns_discord_clear_id,
+-    .update     = ns_discord_update,
+-    .send       = ns_discord_network_send,
+-    .shutdown   = ns_discord_shutdown,
++    .initialize   = ns_discord_initialize,
++    .save_id      = ns_discord_save_id,
++    .clear_id     = ns_discord_clear_id,
++    .update       = ns_discord_update,
++    .send         = ns_discord_network_send,
++    .shutdown     = ns_discord_shutdown,
++    .canBroadcast = true,
+ };
+diff --git a/src/pc/network/network.h b/src/pc/network/network.h
+index de287b2..5318630 100644
+--- a/src/pc/network/network.h
++++ b/src/pc/network/network.h
+@@ -38,6 +38,7 @@ struct NetworkSystem {
+     void (*update)(void);
+     int  (*send)(u8 localIndex, u8* data, u16 dataLength);
+     void (*shutdown)(void);
++    bool canBroadcast;
+ };
+ 
+ struct SyncObject {
+diff --git a/src/pc/network/network_player.c b/src/pc/network/network_player.c
+index 4dc4442..2734d50 100644
+--- a/src/pc/network/network_player.c
++++ b/src/pc/network/network_player.c
+@@ -103,7 +103,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
+         gNetworkSystem->save_id(i);
+         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
+         else { chat_add_message("player connected", CMT_SYSTEM); }
+-        LOG_INFO("player connected, local %d, global %d", i, globalIndex);
++        LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
+         extern s16 sCurrPlayMode;
+         if (gNetworkType == NT_SERVER && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
+             network_send_level_warp_repeat();
+diff --git a/src/pc/network/packets/packet.c b/src/pc/network/packets/packet.c
+index 1dc9b0b..1ad776c 100644
+--- a/src/pc/network/packets/packet.c
++++ b/src/pc/network/packets/packet.c
+@@ -39,6 +39,7 @@ void packet_receive(struct Packet* p) {
+         case PACKET_LEAVING:             network_receive_leaving(p);             break;
+         case PACKET_SAVE_FILE:           network_receive_save_file(p);           break;
+         case PACKET_INSTANT_WARP:        network_receive_instant_warp(p);        break;
++        case PACKET_NETWORK_PLAYERS:     network_receive_network_players(p);     break;
+         ///
+         case PACKET_CUSTOM:              network_receive_custom(p);              break;
+         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
+diff --git a/src/pc/network/packets/packet.h b/src/pc/network/packets/packet.h
+index 5d91805..126afd5 100644
+--- a/src/pc/network/packets/packet.h
++++ b/src/pc/network/packets/packet.h
+@@ -31,6 +31,7 @@ enum PacketType {
+     PACKET_LEAVING,
+     PACKET_SAVE_FILE,
+     PACKET_INSTANT_WARP,
++    PACKET_NETWORK_PLAYERS,
+     ///
+     PACKET_CUSTOM = 255,
+ };
+@@ -159,4 +160,8 @@ void network_receive_save_file(struct Packet* p);
+ void network_send_instant_warp(void);
+ void network_receive_instant_warp(struct Packet* p);
+ 
++// packet_network_players.c
++void network_send_network_players(void);
++void network_receive_network_players(struct Packet* p);
++
+ #endif
+diff --git a/src/pc/network/packets/packet_join.c b/src/pc/network/packets/packet_join.c
+index bc9da5b..a51ce6a 100644
+--- a/src/pc/network/packets/packet_join.c
++++ b/src/pc/network/packets/packet_join.c
+@@ -75,8 +75,9 @@ void network_send_join(struct Packet* joinRequestPacket) {
+     }
+ 
+     network_send_to(joinRequestPacket->localIndex , &p);
+-
+     LOG_INFO("sending join packet");
++
++    network_send_network_players();
+ }
+ 
+ void network_receive_join(struct Packet* p) {
+diff --git a/src/pc/network/packets/packet_network_players.c b/src/pc/network/packets/packet_network_players.c
+new file mode 100644
+index 0000000..eb599fb
+--- /dev/null
++++ b/src/pc/network/packets/packet_network_players.c
+@@ -0,0 +1,55 @@
++#include <stdio.h>
++#include "../network.h"
++#include "object_fields.h"
++#include "behavior_data.h"
++#include "src/game/behavior_actions.h"
++#include "pc/debuglog.h"
++
++static void network_send_to_network_players(u8 sendToLocalIndex) {
++    assert(gNetworkType == NT_SERVER);
++    assert(sendToLocalIndex != 0);
++
++    u8 connectedCount = network_player_connected_count();
++
++    struct Packet p;
++    packet_init(&p, PACKET_NETWORK_PLAYERS, true, false);
++    packet_write(&p, &connectedCount, sizeof(u8));
++    for (int i = 1; i < MAX_PLAYERS; i++) {
++        if (!gNetworkPlayers[i].connected) { continue; }
++        u8 npType = gNetworkPlayers[i].type;
++        if (npType == NPT_LOCAL) { npType = NPT_SERVER; }
++        else if (i == sendToLocalIndex) { npType = NPT_LOCAL; }
++        packet_write(&p, &npType, sizeof(u8));
++        packet_write(&p, &gNetworkPlayers[i].globalIndex, sizeof(u8));
++        LOG_INFO("send network player [%d == %d]", gNetworkPlayers[i].globalIndex, npType);
++    }
++
++    network_send_to(sendToLocalIndex, &p);
++    LOG_INFO("sent list of %d network players to %d", connectedCount, sendToLocalIndex);
++}
++
++void network_send_network_players(void) {
++    assert(gNetworkType == NT_SERVER);
++    LOG_INFO("sending list of network players to all");
++    for (int i = 1; i < MAX_PLAYERS; i++) {
++        if (!gNetworkPlayers[i].connected) { continue; }
++        network_send_to_network_players(i);
++    }
++}
++
++void network_receive_network_players(struct Packet* p) {
++    LOG_INFO("receiving list of network players");
++    if (gNetworkType != NT_CLIENT) {
++        LOG_ERROR("received list of clients as a non-client");
++        return;
++    }
++    u8 connectedCount = 0;
++    packet_read(p, &connectedCount, sizeof(u8));
++    for (int i = 0; i < connectedCount; i++) {
++        u8 npType, globalIndex;
++        packet_read(p, &npType, sizeof(u8));
++        packet_read(p, &globalIndex, sizeof(u8));
++        network_player_connected(npType, globalIndex);
++        LOG_INFO("received network player [%d == %d]", globalIndex, npType);
++    }
++}
+\ No newline at end of file
+diff --git a/src/pc/network/packets/packet_player.c b/src/pc/network/packets/packet_player.c
+index 8a117ea..90dfea9 100644
+--- a/src/pc/network/packets/packet_player.c
++++ b/src/pc/network/packets/packet_player.c
+@@ -154,26 +154,33 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState*
+     *platformSyncID = data->platformSyncID;
+ }
+ 
+-void network_send_player(void) {
+-    if (gMarioStates[0].marioObj == NULL) { return; }
++void network_send_player(u8 localIndex) {
++    if (gMarioStates[localIndex].marioObj == NULL) { return; }
+ 
+     struct PacketPlayerData data = { 0 };
+-    read_packet_data(&data, &gMarioStates[0]);
++    read_packet_data(&data, &gMarioStates[localIndex]);
+ 
+     struct Packet p;
+     packet_init(&p, PACKET_PLAYER, false, false);
++    packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
+     packet_write(&p, &data, sizeof(struct PacketPlayerData));
++    // two-player hack: should be network_send_to_all_except()
+     network_send(&p);
+ }
+ 
+ void network_receive_player(struct Packet* p) {
+-    struct MarioState* m = &gMarioStates[1];
++    u8 globalIndex = 0;
++    packet_read(p, &globalIndex, sizeof(u8));
++    struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
++    if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
++
++    struct MarioState* m = &gMarioStates[np->localIndex];
+     if (m == NULL || m->marioObj == NULL) { return; }
+ 
+     // save previous state
+     struct PacketPlayerData oldData = { 0 };
+     read_packet_data(&oldData, m);
+-    u16 playerIndex  = m->playerIndex;
++    u16 playerIndex  = np->localIndex;
+     u32 oldBehParams = m->marioObj->oBehParams;
+ 
+     // load mario information from packet
+@@ -187,14 +194,10 @@ void network_receive_player(struct Packet* p) {
+ 
+     // check player level/area
+     u8 levelAreaMismatch = TRUE;
+-    if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
+-        struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
+-        np->currLevelNum = data.currLevelNum;
+-        np->currAreaIndex = data.currAreaIndex;
+-        levelAreaMismatch = (data.currLevelNum != gCurrLevelNum || data.currAreaIndex != gCurrAreaIndex);
+-        if (levelAreaMismatch) { np->fadeOpacity = 0; }
+-    }
+-    if (levelAreaMismatch) { return; }
++    np->currLevelNum = data.currLevelNum;
++    np->currAreaIndex = data.currAreaIndex;
++    levelAreaMismatch = (data.currLevelNum != gCurrLevelNum || data.currAreaIndex != gCurrAreaIndex);
++    if (levelAreaMismatch) { np->fadeOpacity = 0; return; }
+ 
+     // apply data from packet to mario state
+     u8 heldSyncID     = 0;
+@@ -301,8 +304,16 @@ void network_receive_player(struct Packet* p) {
+     if (m->action != oldData.action) {
+         m->actionTimer = 0;
+     }
++
++    // set model
++    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(np->globalIndex == 1) ? MODEL_LUIGI : MODEL_MARIO];
++
++    // broadcast player packet
++    if (gNetworkType == NT_SERVER && !gNetworkSystem->canBroadcast) {
++        network_send_player(globalIndex);
++    }
+ }
+ 
+ void network_update_player(void) {
+-    network_send_player();
++    network_send_player(0);
+ }
+diff --git a/src/pc/network/socket/socket.c b/src/pc/network/socket/socket.c
+index 6ede2e9..6f81165 100644
+--- a/src/pc/network/socket/socket.c
++++ b/src/pc/network/socket/socket.c
+@@ -138,10 +138,11 @@ static void ns_socket_shutdown(void) {
+ }
+ 
+ struct NetworkSystem gNetworkSystemSocket = {
+-    .initialize = ns_socket_initialize,
+-    .save_id    = ns_socket_save_id,
+-    .clear_id   = ns_socket_clear_id,
+-    .update     = ns_socket_update,
+-    .send       = ns_socket_send,
+-    .shutdown   = ns_socket_shutdown,
++    .initialize   = ns_socket_initialize,
++    .save_id      = ns_socket_save_id,
++    .clear_id     = ns_socket_clear_id,
++    .update       = ns_socket_update,
++    .send         = ns_socket_send,
++    .shutdown     = ns_socket_shutdown,
++    .canBroadcast = false,
+ };
