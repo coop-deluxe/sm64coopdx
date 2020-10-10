@@ -6,7 +6,7 @@ void bhv_wf_breakable_wall_loop(void) {
         network_init_object_field(o, &o->oBreakableWallForce);
     }
 
-    if (o->oBreakableWallForce || gMarioStates->action == ACT_SHOT_FROM_CANNON) {
+    if (o->oBreakableWallForce || gMarioStates[0].action == ACT_SHOT_FROM_CANNON) {
         cur_obj_become_tangible();
         if (o->oBreakableWallForce || obj_check_if_collided_with_object(o, gMarioObject)) {
             if (!o->oBreakableWallForce) {

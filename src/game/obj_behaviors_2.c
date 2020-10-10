@@ -665,7 +665,9 @@ static void obj_set_knockback_action(s32 attackType) {
     }
 
     o->oFlags &= ~OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW;
-    o->oMoveAngleYaw = obj_angle_to_object(gMarioObject, o);
+
+    struct Object* player = nearest_player_to_object(o);
+    o->oMoveAngleYaw = obj_angle_to_object(player, o);
 }
 
 static void obj_set_squished_action(void) {
