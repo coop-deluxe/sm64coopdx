@@ -93,17 +93,17 @@ void dorrie_act_lower_head(void) {
     if (cur_obj_init_anim_check_frame(2, 35)) {
         cur_obj_reverse_animation();
 
-#ifdef VERSION_JP
+/*#ifdef VERSION_JP
         if (o->oTimer > 150) {
             dorrie_begin_head_raise(FALSE);
-        } else if (gMarioObject->platform == o) {
+        } else if (cur_obj_is_any_player_on_platform()) {
             if (o->oDorrieForwardDistToMario > 830.0f && set_mario_npc_dialog(&gMarioStates[0], 2, dorrie_act_lower_head_continue_dialog) == 1) {
                 dorrie_begin_head_raise(TRUE);
             } else if (o->oDorrieForwardDistToMario > 320.0f) {
                 o->oTimer = 0;
             }
         }
-#else
+#else*/
         if (cur_obj_is_any_player_on_platform()) {
             if (gMarioStates[0].marioObj->platform == o
                 && o->oDorrieOffsetY == -17.0f && distanceToLocalPlayer > 780.0f
@@ -116,7 +116,7 @@ void dorrie_act_lower_head(void) {
         } else if (o->oTimer > 150) {
             dorrie_begin_head_raise(FALSE);
         }
-#endif
+//#endif
 
     } else {
         o->oDorrieNeckAngle += 0x115;
