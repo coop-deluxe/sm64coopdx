@@ -75,8 +75,9 @@ void network_send_join(struct Packet* joinRequestPacket) {
     }
 
     network_send_to(joinRequestPacket->localIndex , &p);
-
     LOG_INFO("sending join packet");
+
+    network_send_network_players();
 }
 
 void network_receive_join(struct Packet* p) {

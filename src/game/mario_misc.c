@@ -418,7 +418,6 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
         rotNode->rotation[0] = bodyState->torsoAngle[1];
         rotNode->rotation[1] = bodyState->torsoAngle[2];
         rotNode->rotation[2] = bodyState->torsoAngle[0];
-
         // update torso position in bodyState
         get_pos_from_transform_mtx(bodyState->torsoPos, *curTransform, *gCurGraphNodeCamera->matrixPtr);
     }
@@ -491,17 +490,18 @@ Gfx* geo_switch_mario_hand(s32 callContext, struct GraphNode* node, UNUSED Mat4*
  */
 Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     Mat4 * curTransform = mtx;
-    static s16 sMarioAttackAnimCounter = 0;
+    static s16 sMarioAttackAnimCounter[MAX_PLAYERS] = { 0 };
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     struct GraphNodeScale* scaleNode = (struct GraphNodeScale*) node->next;
+    u8 index = geo_get_processing_object_index();
     struct MarioBodyState* bodyState = geo_get_body_state();
 
     if (callContext == GEO_CONTEXT_RENDER) {
         scaleNode->scale = 1.0f;
         if (asGenerated->parameter == bodyState->punchState >> 6) {
-            if (sMarioAttackAnimCounter != gAreaUpdateCounter && (bodyState->punchState & 0x3F) > 0) {
+            if (sMarioAttackAnimCounter[index] != gAreaUpdateCounter && (bodyState->punchState & 0x3F) > 0) {
                 bodyState->punchState -= 1;
-                sMarioAttackAnimCounter = gAreaUpdateCounter;
+                sMarioAttackAnimCounter[index] = gAreaUpdateCounter;
             }
             scaleNode->scale =
                 gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)]
@@ -510,7 +510,7 @@ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* m
         // update hand/foot position in bodyState
         get_pos_from_transform_mtx(bodyState->handFootPos[(asGenerated->parameter & 0x03)],
                                    *curTransform,
-                                    *gCurGraphNodeCamera->matrixPtr);
+                                   *gCurGraphNodeCamera->matrixPtr);
 
     }
     return NULL;

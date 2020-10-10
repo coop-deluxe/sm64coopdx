@@ -2124,11 +2124,7 @@ static void init_single_mario(struct MarioState* m) {
 
     // set mario/luigi model
     // two-player hack
-    if (isLocal) {
-        m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_SERVER) ? MODEL_MARIO : MODEL_LUIGI];
-    } else {
-        m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkType == NT_CLIENT) ? MODEL_MARIO : MODEL_LUIGI];
-    }
+    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkPlayers[0].globalIndex == 1) ? MODEL_LUIGI : MODEL_MARIO];
 }
 
 void init_mario(void) {

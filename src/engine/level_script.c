@@ -664,15 +664,25 @@ static void level_cmd_unload_area(void) {
 }
 
 static void level_cmd_set_mario_start_pos(void) {
+    s8 areaIndex = CMD_GET(u8, 2);
+#if IS_64_BIT
+    s16 x = CMD_GET(s16, 6);
+    s16 y = CMD_GET(s16, 8);
+    s16 z = CMD_GET(s16, 10);
+#else
+    Vec3s pos = { 0 };
+    vec3s_copy(pos, CMD_GET(Vec3s, 6));
+#endif
+    s16 angle = CMD_GET(s16, 4);
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        gPlayerSpawnInfos[i].areaIndex = CMD_GET(u8, 2);
+        gPlayerSpawnInfos[i].areaIndex = areaIndex;
 
-    #if IS_64_BIT
-        vec3s_set(gPlayerSpawnInfos[i].startPos, CMD_GET(s16, 6), CMD_GET(s16, 8), CMD_GET(s16, 10));
-    #else
-        vec3s_copy(gPlayerSpawnInfos[i].startPos, CMD_GET(Vec3s, 6));
-    #endif
-        vec3s_set(gPlayerSpawnInfos[i].startAngle, 0, CMD_GET(s16, 4) * 0x8000 / 180, 0);
+#if IS_64_BIT
+        vec3s_set(gPlayerSpawnInfos[i].startPos, x, y, z);
+#else
+        vec3s_copy(gPlayerSpawnInfos[i].startPos, pos);
+#endif
+        vec3s_set(gPlayerSpawnInfos[i].startAngle, 0, angle * 0x8000 / 180, 0);
     }
     sCurrentCmd = CMD_NEXT;
 }

@@ -103,7 +103,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         gNetworkSystem->save_id(i);
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
         else { chat_add_message("player connected", CMT_SYSTEM); }
-        LOG_INFO("player connected, local %d, global %d", i, globalIndex);
+        LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
         extern s16 sCurrPlayMode;
         if (gNetworkType == NT_SERVER && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
             network_send_level_warp_repeat();

@@ -154,26 +154,33 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     *platformSyncID = data->platformSyncID;
 }
 
-void network_send_player(void) {
-    if (gMarioStates[0].marioObj == NULL) { return; }
+void network_send_player(u8 localIndex) {
+    if (gMarioStates[localIndex].marioObj == NULL) { return; }
 
     struct PacketPlayerData data = { 0 };
-    read_packet_data(&data, &gMarioStates[0]);
+    read_packet_data(&data, &gMarioStates[localIndex]);
 
     struct Packet p;
     packet_init(&p, PACKET_PLAYER, false, false);
+    packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
     packet_write(&p, &data, sizeof(struct PacketPlayerData));
+    // two-player hack: should be network_send_to_all_except()
     network_send(&p);
 }
 
 void network_receive_player(struct Packet* p) {
-    struct MarioState* m = &gMarioStates[1];
+    u8 globalIndex = 0;
+    packet_read(p, &globalIndex, sizeof(u8));
+    struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+    if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
+
+    struct MarioState* m = &gMarioStates[np->localIndex];
     if (m == NULL || m->marioObj == NULL) { return; }
 
     // save previous state
     struct PacketPlayerData oldData = { 0 };
     read_packet_data(&oldData, m);
-    u16 playerIndex  = m->playerIndex;
+    u16 playerIndex  = np->localIndex;
     u32 oldBehParams = m->marioObj->oBehParams;
 
     // load mario information from packet
@@ -187,14 +194,10 @@ void network_receive_player(struct Packet* p) {
 
     // check player level/area
     u8 levelAreaMismatch = TRUE;
-    if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
-        struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
-        np->currLevelNum = data.currLevelNum;
-        np->currAreaIndex = data.currAreaIndex;
-        levelAreaMismatch = (data.currLevelNum != gCurrLevelNum || data.currAreaIndex != gCurrAreaIndex);
-        if (levelAreaMismatch) { np->fadeOpacity = 0; }
-    }
-    if (levelAreaMismatch) { return; }
+    np->currLevelNum = data.currLevelNum;
+    np->currAreaIndex = data.currAreaIndex;
+    levelAreaMismatch = (data.currLevelNum != gCurrLevelNum || data.currAreaIndex != gCurrAreaIndex);
+    if (levelAreaMismatch) { np->fadeOpacity = 0; return; }
 
     // apply data from packet to mario state
     u8 heldSyncID     = 0;
@@ -301,8 +304,16 @@ void network_receive_player(struct Packet* p) {
     if (m->action != oldData.action) {
         m->actionTimer = 0;
     }
+
+    // set model
+    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(np->globalIndex == 1) ? MODEL_LUIGI : MODEL_MARIO];
+
+    // broadcast player packet
+    if (gNetworkType == NT_SERVER && !gNetworkSystem->canBroadcast) {
+        network_send_player(globalIndex);
+    }
 }
 
 void network_update_player(void) {
-    network_send_player();
+    network_send_player(0);
 }

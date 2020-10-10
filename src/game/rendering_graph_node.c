@@ -1068,6 +1068,7 @@ static void interpolate_matrix(Mat4 result, Mat4 a, Mat4 b) {
  * Process an object node.
  */
 static void geo_process_object(struct Object *node) {
+    struct Object* lastProcessingObject = gCurGraphNodeProcessingObject;
     gCurGraphNodeProcessingObject = node;
     Mat4 mtxf;
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
@@ -1192,7 +1193,7 @@ static void geo_process_object(struct Object *node) {
         node->header.gfx.throwMatrix = NULL;
         node->header.gfx.throwMatrixInterpolated = NULL;
     }
-    gCurGraphNodeProcessingObject = NULL;
+    gCurGraphNodeProcessingObject = lastProcessingObject;
 }
 
 /**

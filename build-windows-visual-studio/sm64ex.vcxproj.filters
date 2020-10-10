@@ -15078,6 +15078,9 @@
     <ClCompile Include="..\src\game\rng_position.c">
       <Filter>Source Files\src\game</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_network_players.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">

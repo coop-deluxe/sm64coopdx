@@ -516,7 +516,9 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
                 u16 playerIndex = (spawnInfo->behaviorArg & ~(1 << 31));
                 object->oBehParams = playerIndex + 1;
                 gMarioObjects[playerIndex] = object;
-                if (playerIndex == 0) { gMarioObject = object; }
+                if (playerIndex == 0) {
+                    gMarioObject = object;
+                }
                 geo_make_first_child(&object->header.gfx.node);
             }
 

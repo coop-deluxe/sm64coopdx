@@ -121,10 +121,11 @@ static void ns_discord_shutdown(void) {
 }
 
 struct NetworkSystem gNetworkSystemDiscord = {
-    .initialize = ns_discord_initialize,
-    .save_id    = ns_discord_save_id,
-    .clear_id   = ns_discord_clear_id,
-    .update     = ns_discord_update,
-    .send       = ns_discord_network_send,
-    .shutdown   = ns_discord_shutdown,
+    .initialize   = ns_discord_initialize,
+    .save_id      = ns_discord_save_id,
+    .clear_id     = ns_discord_clear_id,
+    .update       = ns_discord_update,
+    .send         = ns_discord_network_send,
+    .shutdown     = ns_discord_shutdown,
+    .canBroadcast = true,
 };

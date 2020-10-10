@@ -3973,6 +3973,7 @@
     <ClCompile Include="..\src\pc\network\packets\packet_keep_alive.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_leaving.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level_warp.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_network_players.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_object.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_player.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_read_write.c" />
