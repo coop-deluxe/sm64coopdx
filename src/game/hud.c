@@ -309,7 +309,7 @@ void render_hud_unsupported_level(void) {
         case COURSE_WDW:      // (11) Wet Dry World
         case COURSE_TTM:      // (12) Tall Tall Mountain
         case COURSE_THI:      // (13) Tiny Huge Island
-        //case COURSE_TTC:      // (14) Tick Tock Clock
+        case COURSE_TTC:      // (14) Tick Tock Clock
         //case COURSE_RR:       // (15) Rainbow Ride
         case COURSE_BITDW:    // (16) Bowser in the Dark World
         case COURSE_BITFS:    // (17) Bowser in the Fire Sea
