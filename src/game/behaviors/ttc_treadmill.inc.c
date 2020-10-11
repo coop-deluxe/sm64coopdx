@@ -33,6 +33,12 @@ void bhv_ttc_treadmill_init(void) {
     *o->oTTCTreadmillBigSurface = *o->oTTCTreadmillSmallSurface = sTTCTreadmillSpeeds[gTTCSpeedSetting];
 
     sMasterTreadmill = NULL;
+
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->minUpdateRate = 5.0f;
+    network_init_object_field(o, &o->oTTCTreadmillSpeed);
+    network_init_object_field(o, &o->oTTCTreadmillTargetSpeed);
+    network_init_object_field(o, &o->oTTCTreadmillTimeUntilSwitch);
 }
 
 /**
