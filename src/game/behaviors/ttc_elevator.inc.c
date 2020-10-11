@@ -23,6 +23,11 @@ void bhv_ttc_elevator_init(void) {
         ((o->oBehParams >> 16) & 0xFFFF) != 0 ? 100.0f * ((o->oBehParams >> 16) & 0xFFFF) : 500.0f;
 
     o->oTTCElevatorPeakY = o->oPosY + peakOffset;
+
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->minUpdateRate = 5.0f;
+    network_init_object_field(o, &o->oTTCElevatorDir);
+    network_init_object_field(o, &o->oTTCElevatorMoveTime);
 }
 
 /**
