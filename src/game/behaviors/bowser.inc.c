@@ -1481,19 +1481,29 @@ void falling_bowser_plat_act_0(void) {
 }
 
 void falling_bowser_plat_act_1(void) {
+    u8 doSend = FALSE;
     UNUSED s32 unused;
     struct Object *sp0 = o->oPlatformUnkF8;
-    if (sp0->platform == o)
-        if (sp0->oAction == 13 && sp0->oBowserUnkF4 & 0x10000)
+    if (sp0->platform == o) {
+        if (sp0->oAction == 13 && sp0->oBowserUnkF4 & 0x10000) {
             o->oAction = 2;
+            doSend = TRUE;
+        }
+    }
     if (sp0->oHealth == 1 && (sp0->oAction == 3 || sp0->oHeldState != HELD_FREE))
         o->oSubAction = 1;
     if (o->oSubAction == 0)
         o->oPlatformUnkFC = 0;
     else {
-        if ((gDebugInfo[4][6] + 20) * (o->oBehParams2ndByte - 1) < o->oPlatformUnkFC)
+        if ((gDebugInfo[4][6] + 20) * (o->oBehParams2ndByte - 1) < o->oPlatformUnkFC) {
             o->oAction = 2;
+            doSend = TRUE;
+        }
         o->oPlatformUnkFC++;
+    }
+
+    if (doSend) {
+        network_send_object(o);
     }
 }
 
@@ -1558,7 +1568,19 @@ struct ObjectHitbox sBowserFlameHitbox = {
 
 f32 D_8032F748[] = { -8.0f, -6.0f, -3.0f };
 
+u8 bhv_falling_bowser_platform_ignore_if_true(void) {
+    return (o->oAction > 1);
+}
+
 void bhv_falling_bowser_platform_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->ignore_if_true = bhv_falling_bowser_platform_ignore_if_true;
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+    }
+
     cur_obj_call_action_function(sFallingBowserPlatformActions);
 }
 
