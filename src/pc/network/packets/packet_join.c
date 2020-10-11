@@ -10,9 +10,9 @@
 #include "src/menu/custom_menu.h"
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
+#include "pc/network/version.h"
 #include "pc/debuglog.h"
 
-#define HASH_LENGTH 8
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
@@ -49,11 +49,13 @@ void network_send_join(struct Packet* joinRequestPacket) {
         return;
     }
 
-    char hash[HASH_LENGTH] = GIT_HASH;
+    char version[MAX_VERSION_LENGTH] = { 0 };
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    LOG_INFO("sending version: %s", version);
 
     struct Packet p;
     packet_init(&p, PACKET_JOIN, true, false);
-    packet_write(&p, &hash, sizeof(u8) * HASH_LENGTH);
+    packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &joinRequestPacket->localIndex, sizeof(u8));
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
@@ -85,8 +87,12 @@ void network_receive_join(struct Packet* p) {
     LOG_INFO("received join packet");
 
     gOverrideEeprom = eeprom;
-    char hash[HASH_LENGTH] = GIT_HASH;
-    char remoteHash[HASH_LENGTH] = { 0 };
+
+    char version[MAX_VERSION_LENGTH] = { 0 };
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    LOG_INFO("client has version: %s", version);
+
+    char remoteVersion[MAX_VERSION_LENGTH] = { 0 };
     u8 myGlobalIndex = UNKNOWN_GLOBAL_INDEX;
     u8 modCount = 0;
 
@@ -96,8 +102,10 @@ void network_receive_join(struct Packet* p) {
     }
 
     // verify version
-    packet_read(p, &remoteHash, sizeof(u8) * HASH_LENGTH);
-    if (memcmp(hash, remoteHash, HASH_LENGTH) != 0) {
+    packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
+    LOG_INFO("server has version: %s", version);
+    if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
+        LOG_ERROR("version mismatch");
         custom_menu_connection_error("Your versions don't match, both should rebuild!");
         return;
     }

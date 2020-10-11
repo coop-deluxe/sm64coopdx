@@ -3985,6 +3985,7 @@
     <ClCompile Include="..\src\pc\network\socket\socket.c" />
     <ClCompile Include="..\src\pc\network\socket\socket_linux.c" />
     <ClCompile Include="..\src\pc\network\socket\socket_windows.c" />
+    <ClCompile Include="..\src\pc\network\version.c" />
     <ClCompile Include="..\src\pc\pc_main.c" />
     <ClCompile Include="..\src\pc\platform.c" />
     <ClCompile Include="..\src\pc\ultra_reimplementation.c" />
@@ -4342,6 +4343,7 @@
     <ClInclude Include="..\src\pc\network\socket\socket.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_linux.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_windows.h" />
+    <ClInclude Include="..\src\pc\network\version.h" />
     <ClInclude Include="..\src\pc\utils\string_linked_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

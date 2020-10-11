@@ -3,6 +3,7 @@
 #include "discord_network.h"
 #include "pc/debuglog.h"
 #include "menu/custom_menu.h"
+#include "pc/network/version.h"
 
 #define HASH_LENGTH 8
 struct DiscordActivity gCurActivity = { 0 };
@@ -63,9 +64,8 @@ void discord_activity_update(bool hosting) {
         gCurActivity.party.size.max_size = 1;
     }
 
-    char hash[HASH_LENGTH] = GIT_HASH;
-    strcpy(gCurActivity.details, "version ");
-    strncat(gCurActivity.details, GIT_HASH, 127);
+    char* version = get_version();
+    snprintf(gCurActivity.details, MAX_VERSION_LENGTH, "%s", get_version());
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
     LOG_INFO("set activity");

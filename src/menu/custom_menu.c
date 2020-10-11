@@ -17,6 +17,8 @@
 #include "behavior_data.h"
 #include "audio_defines.h"
 #include "audio/external.h"
+#include "config.h"
+#include "pc/network/version.h"
 
 #define MAIN_MENU_HEADER_TEXT "SM64 COOP"
 
@@ -27,11 +29,14 @@ u8 gOpenConnectMenu = FALSE;
 s8 sGotoGame = 0;
 
 static void menu_main_draw_strings(void) {
-    print_generic_ascii_string(98, 150, "Still in early development.");
-    u8 red = (gGlobalTimer % 20 > 10) ? 0 : 222;
-    if (gGlobalTimer > 200) { red = 222; }
-    gDPSetEnvColor(gDisplayListHead++, 222, red, red, gMenuStringAlpha);
-    print_generic_ascii_string(21, 55, "For now, levels after the 50 star door are unsupported.");
+    char* subtitle = "Still in development.";
+    s16 subtitleX = (SCREEN_WIDTH - get_generic_ascii_string_width(subtitle)) / 2;
+    print_generic_ascii_string(subtitleX, 150, subtitle);
+
+    char* versionString = get_version();
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 120);
+    print_generic_ascii_string(25, 25, versionString);
+
 }
 
 static void host_menu_draw_strings(void) {

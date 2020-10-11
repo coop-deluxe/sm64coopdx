@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #ifdef TARGET_WEB
 #include <emscripten.h>
@@ -40,6 +41,7 @@
 #ifdef DISCORDRPC
 #include "pc/discord/discordrpc.h"
 #endif
+#include "pc/network/version.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -242,12 +244,13 @@ void main_func(void) {
     #error No rendering API!
     #endif
 
-    char window_title[96] =
-    "Super Mario 64 EX coop (" RAPI_NAME ")"
-    #ifdef GIT_HASH
-    " [" GIT_HASH "]"
-    #endif
-    ;
+    char* version = get_version();
+    char window_title[96] = { 0 };
+#ifdef GIT_HASH
+    snprintf(window_title, 96, "sm64ex-coop: %s [%s]", version, GIT_HASH);
+#else
+    snprintf(window_title, 96, "sm64ex-coop: %s", version);
+#endif
 
     gfx_init(wm_api, rendering_api, window_title);
     wm_api->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
