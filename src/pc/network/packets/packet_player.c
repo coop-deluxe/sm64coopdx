@@ -14,7 +14,17 @@
 #pragma pack(1)
 struct PacketPlayerData {
     u32 rawData[80];
-    struct Controller controller;
+
+    s16 cRawStickX;
+    s16 cRawStickY;
+    f32 cStickX;
+    f32 cStickY;
+    f32 cStickMag;
+    u16 cButtonDown;
+    u16 cButtonPressed;
+    s16 cExtStickX;
+    s16 cExtStickY;
+
     s16 nodeFlags;
 
     u16 input;
@@ -68,7 +78,16 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
 
     memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * 80);
     data->nodeFlags    = m->marioObj->header.gfx.node.flags;
-    data->controller   = *m->controller;
+
+    data->cRawStickX     = m->controller->rawStickX;
+    data->cRawStickY     = m->controller->rawStickY;
+    data->cStickX        = m->controller->stickX;
+    data->cStickY        = m->controller->stickY;
+    data->cStickMag      = m->controller->stickMag;
+    data->cButtonDown    = m->controller->buttonDown;
+    data->cButtonPressed = m->controller->buttonPressed;
+    data->cExtStickX     = m->controller->extStickX;
+    data->cExtStickY     = m->controller->extStickY;
 
     data->input           = m->input;
     data->flags           = m->flags;
@@ -115,7 +134,16 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
                               u8* interactSyncID, u8* usedSyncID, u8* platformSyncID) {
     memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
-    *m->controller = data->controller;
+
+    m->controller->rawStickX     = data->cRawStickX;
+    m->controller->rawStickY     = data->cRawStickY;
+    m->controller->stickX        = data->cStickX;
+    m->controller->stickY        = data->cStickY;
+    m->controller->stickMag      = data->cStickMag;
+    m->controller->buttonDown    = data->cButtonDown;
+    m->controller->buttonPressed = data->cButtonPressed;
+    m->controller->extStickX     = data->cExtStickX;
+    m->controller->extStickY     = data->cExtStickY;
 
     m->input           = data->input;
     m->flags           = data->flags;
