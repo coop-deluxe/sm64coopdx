@@ -146,7 +146,9 @@ static void connect_menu_draw_strings(void) {
     if (*sConnectionJoinError) {
         f32 red = (f32)fabs(sin(gGlobalTimer / 20.0f));
         gDPSetEnvColor(gDisplayListHead++, 222, 222 * red, 222 * red, gMenuStringAlpha);
-        print_generic_ascii_string(30, 130, sConnectionJoinError);
+        f32 messageX = (SCREEN_WIDTH - get_generic_ascii_string_width(sConnectionJoinError)) / 2.0;
+        f32 messageY = (SCREEN_HEIGHT + get_generic_ascii_string_height(sConnectionJoinError)) / 2.0;
+        print_generic_ascii_string(messageX, messageY, sConnectionJoinError);
         return;
     }
 

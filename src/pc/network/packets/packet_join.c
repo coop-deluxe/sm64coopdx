@@ -106,7 +106,16 @@ void network_receive_join(struct Packet* p) {
     LOG_INFO("server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
         LOG_ERROR("version mismatch");
-        custom_menu_connection_error("Your versions don't match, both should rebuild!");
+
+        // todo: hack: remove me in the future
+        // needed because the old style only had 8 characters for the version
+        if (strcmp("beta", remoteVersion) != 0) {
+            remoteVersion[8] = '\0';
+        }
+
+        char mismatchMessage[128] = { 0 };
+        snprintf(mismatchMessage, 128, "Version mismatch.\n\nYour version - %s\nTheir version - %s\n\nSomeone is out of date!\n", version, remoteVersion);
+        custom_menu_connection_error(mismatchMessage);
         return;
     }
 
