@@ -69,6 +69,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->ignore_if_true = NULL;
     so->on_received_pre = NULL;
     so->on_received_post = NULL;
+    so->override_ownership = NULL;
     so->syncDeathEvent = true;
     so->randomSeed = (u16)(o->oSyncID * 7951);
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
