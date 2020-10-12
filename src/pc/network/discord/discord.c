@@ -8,6 +8,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
+#include <winuser.h>
 #else
 #include <unistd.h>
 #define MAX_PATH 1024
@@ -18,6 +19,62 @@
 static int64_t applicationId = 752700005210390568;
 struct DiscordApplication app = { 0 };
 bool gDiscordInitialized = false;
+
+void discord_fatal(int rc) {
+#if defined(_WIN32) || defined(_WIN64)
+    char errorMessage[132] = { 0 };
+    snprintf(errorMessage, 132, "Discord threw an error.\r\n\r\nTo fix: \r\n1. Close the game.\r\n2. Restart Discord.\r\n3. Start the game.\r\n\r\nRC: %d", rc);
+    int msgboxID = MessageBox(NULL,
+        errorMessage,
+        "Fatal Discord Error",
+        MB_ICONERROR | MB_OK | MB_DEFBUTTON1
+    );
+    exit(1);
+#else
+    assert(rc != DiscordResult_ServiceUnavailable);
+    assert(rc != DiscordResult_InvalidVersion);
+    assert(rc != DiscordResult_LockFailed);
+    assert(rc != DiscordResult_InternalError);
+    assert(rc != DiscordResult_InvalidPayload);
+    assert(rc != DiscordResult_InvalidCommand);
+    assert(rc != DiscordResult_InvalidPermissions);
+    assert(rc != DiscordResult_NotFetched);
+    assert(rc != DiscordResult_NotFound);
+    assert(rc != DiscordResult_Conflict);
+    assert(rc != DiscordResult_InvalidSecret);
+    assert(rc != DiscordResult_InvalidJoinSecret);
+    assert(rc != DiscordResult_NoEligibleActivity);
+    assert(rc != DiscordResult_InvalidInvite);
+    assert(rc != DiscordResult_NotAuthenticated);
+    assert(rc != DiscordResult_InvalidAccessToken);
+    assert(rc != DiscordResult_ApplicationMismatch);
+    assert(rc != DiscordResult_InvalidDataUrl);
+    assert(rc != DiscordResult_InvalidBase64);
+    assert(rc != DiscordResult_NotFiltered);
+    assert(rc != DiscordResult_LobbyFull);
+    assert(rc != DiscordResult_InvalidFilename);
+    assert(rc != DiscordResult_InvalidFileSize);
+    assert(rc != DiscordResult_InvalidEntitlement);
+    assert(rc != DiscordResult_NotInstalled);
+    assert(rc != DiscordResult_NotRunning);
+    assert(rc != DiscordResult_InsufficientBuffer);
+    assert(rc != DiscordResult_PurchaseCanceled);
+    assert(rc != DiscordResult_InvalidGuild);
+    assert(rc != DiscordResult_InvalidEvent);
+    assert(rc != DiscordResult_InvalidChannel);
+    assert(rc != DiscordResult_InvalidOrigin);
+    assert(rc != DiscordResult_RateLimited);
+    assert(rc != DiscordResult_OAuth2Error);
+    assert(rc != DiscordResult_SelectChannelTimeout);
+    assert(rc != DiscordResult_SelectVoiceForceRequired);
+    assert(rc != DiscordResult_CaptureShortcutAlreadyListening);
+    assert(rc != DiscordResult_UnauthorizedForAchievement);
+    assert(rc != DiscordResult_InvalidGiftCode);
+    assert(rc != DiscordResult_PurchaseError);
+    assert(rc != DiscordResult_TransactionAborted);
+    assert(rc == DiscordResult_Ok);
+#endif
+}
 
 static void set_instance_env_variable(void) {
     // set local instance id
