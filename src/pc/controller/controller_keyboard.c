@@ -93,7 +93,7 @@ bool keyboard_on_key_down(int scancode) {
 #endif
     if (sInTextInput) {
         // perform text-input-specific actions
-        switch (scancode) {
+        switch (scancode & 0xFF) {
             case SCANCODE_BACKSPACE:
                 gTextInput[max(strlen(gTextInput) - 1, 0)] = '\0';
                 break;
