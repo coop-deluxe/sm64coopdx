@@ -64,7 +64,6 @@ void discord_activity_update(bool hosting) {
         gCurActivity.party.size.max_size = 1;
     }
 
-    char* version = get_version();
     snprintf(gCurActivity.details, MAX_VERSION_LENGTH, "%s", get_version());
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
