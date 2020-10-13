@@ -91,9 +91,12 @@ void network_on_loaded_level(void) {
 
 void network_send_to(u8 localIndex, struct Packet* p) {
     // sanity checks
-    if (gNetworkType == NT_NONE) { return; }
+    if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
+
+    // set the flags again
+    packet_set_flags(p);
 
     p->localIndex = localIndex;
 
@@ -106,13 +109,27 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     // send
     int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
-    if (rc != NO_ERROR) { return; }
+    if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
     p->sent = true;
 
     gLastNetworkSend = clock();
 }
 
 void network_send(struct Packet* p) {
+    // set the flags again
+    packet_set_flags(p);
+
+    if (gNetworkType != NT_SERVER) {
+        p->requestBroadcast = TRUE;
+        if (gNetworkSystem != NULL && gNetworkSystem->requireServerBroadcast && gNetworkPlayerServer != NULL) {
+            int i = gNetworkPlayerServer->localIndex;
+            p->localIndex = i;
+            network_send_to(i, p);
+            gLastNetworkSend = clock();
+            return;
+        }
+    }
+
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         p->localIndex = i;

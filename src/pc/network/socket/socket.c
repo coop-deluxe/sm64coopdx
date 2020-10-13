@@ -138,11 +138,11 @@ static void ns_socket_shutdown(void) {
 }
 
 struct NetworkSystem gNetworkSystemSocket = {
-    .initialize   = ns_socket_initialize,
-    .save_id      = ns_socket_save_id,
-    .clear_id     = ns_socket_clear_id,
-    .update       = ns_socket_update,
-    .send         = ns_socket_send,
-    .shutdown     = ns_socket_shutdown,
-    .canBroadcast = false,
+    .initialize = ns_socket_initialize,
+    .save_id    = ns_socket_save_id,
+    .clear_id   = ns_socket_clear_id,
+    .update     = ns_socket_update,
+    .send       = ns_socket_send,
+    .shutdown   = ns_socket_shutdown,
+    .requireServerBroadcast = true,
 };

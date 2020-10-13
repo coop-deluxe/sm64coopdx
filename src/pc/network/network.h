@@ -38,7 +38,7 @@ struct NetworkSystem {
     void (*update)(void);
     int  (*send)(u8 localIndex, u8* data, u16 dataLength);
     void (*shutdown)(void);
-    bool canBroadcast;
+    bool requireServerBroadcast;
 };
 
 struct SyncObject {

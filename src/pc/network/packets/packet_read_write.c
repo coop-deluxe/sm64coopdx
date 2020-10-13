@@ -1,6 +1,8 @@
 #include "../network.h"
 #include "game/area.h"
 
+#define PACKET_FLAG_BUFFER_OFFSET 3
+
 static u16 nextSeqNum = 1;
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
@@ -16,17 +18,25 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet->error = false;
     packet->reliable = reliable;
     packet->levelAreaMustMatch = levelAreaMustMatch;
+    packet->requestBroadcast = false;
     packet->sent = false;
 
     // write packet flags
-    u8 flags;
-    flags |= SET_BIT(packet->levelAreaMustMatch, 0);
-    packet_write(packet, &flags, sizeof(u8));
+    u8 flags = 0;
+    packet_write(packet, &flags, sizeof(u8)); // fill in the byte
+    packet_set_flags(packet);
 
     if (levelAreaMustMatch) {
         packet_write(packet, &gCurrLevelNum, sizeof(s16));
         packet_write(packet, &gCurrAreaIndex, sizeof(s16));
     }
+}
+
+void packet_set_flags(struct Packet* packet) {
+    u8 flags = 0;
+    flags |= SET_BIT(packet->levelAreaMustMatch, 0);
+    flags |= SET_BIT(packet->requestBroadcast, 1);
+    packet->buffer[PACKET_FLAG_BUFFER_OFFSET] = flags;
 }
 
 void packet_write(struct Packet* packet, void* data, u16 length) {
@@ -41,6 +51,7 @@ u8 packet_initial_read(struct Packet* packet) {
     u8 flags = 0;
     packet_read(packet, &flags, sizeof(u8));
     packet->levelAreaMustMatch = GET_BIT(flags, 0);
+    packet->requestBroadcast = GET_BIT(flags, 1);
 
     if (packet->levelAreaMustMatch) {
         s16 currLevelNum;

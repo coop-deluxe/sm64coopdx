@@ -152,6 +152,6 @@ void network_receive_spawn_objects(struct Packet* p) {
 
     // update their block of reserved ids
     if (gNetworkType == NT_SERVER && receivedReservedSyncObject) {
-        network_send_reservation();
+        network_send_reservation(p->localIndex);
     }
 }

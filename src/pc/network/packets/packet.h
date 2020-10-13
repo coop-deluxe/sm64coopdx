@@ -43,6 +43,7 @@ struct Packet {
     bool error;
     bool reliable;
     bool levelAreaMustMatch;
+    bool requestBroadcast;
     u16 seqId;
     bool sent;
     u8 buffer[PACKET_LENGTH];
@@ -58,6 +59,7 @@ void packet_receive(struct Packet* packet);
 
 // packet_read_write.c
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch);
+void packet_set_flags(struct Packet* packet);
 void packet_write(struct Packet* packet, void* data, u16 length);
 u8 packet_initial_read(struct Packet* packet);
 void packet_read(struct Packet* packet, void* data, u16 length);
@@ -121,8 +123,8 @@ void network_receive_collect_item(struct Packet* p);
 
 // packet_reservation.c
 void network_send_reservation_request(void);
-void network_receive_reservation_request(UNUSED struct Packet* p);
-void network_send_reservation(void);
+void network_receive_reservation_request(struct Packet* p);
+void network_send_reservation(u8 toLocalIndex);
 void network_receive_reservation(struct Packet* p);
 
 // packet_join.c

@@ -14,23 +14,23 @@ void network_send_reservation_request(void) {
 
     struct Packet p;
     packet_init(&p, PACKET_RESERVATION_REQUEST, true, false);
-    network_send(&p);
+    network_send_to(gNetworkPlayerServer->localIndex , &p);
 }
 
-void network_receive_reservation_request(UNUSED struct Packet* p) {
+void network_receive_reservation_request(struct Packet* p) {
     assert(gNetworkType == NT_SERVER);
-    network_send_reservation();
+    network_send_reservation(p->localIndex);
 }
 
-void network_send_reservation(void) {
+void network_send_reservation(u8 toLocalIndex) {
     assert(gNetworkType == NT_SERVER);
-    u8 clientPlayerIndex = 1; // two-player hack
+    assert(toLocalIndex != 0);
 
     // find all reserved objects
     u8 reservedObjs[RESERVATION_COUNT] = { 0 };
     u16 reservedIndex = 0;
     for (u16 i = 1; i < MAX_SYNC_OBJECTS; i++) {
-        if (gSyncObjects[i].reserved == clientPlayerIndex) {
+        if (gSyncObjects[i].reserved == toLocalIndex) {
             reservedObjs[reservedIndex++] = i;
             if (reservedIndex >= RESERVATION_COUNT) { break; }
         }
@@ -41,7 +41,7 @@ void network_send_reservation(void) {
         for (u16 i = MAX_SYNC_OBJECTS - 1; i > 0; i--) {
             if (gSyncObjects[i].o != NULL) { continue; }
             if (gSyncObjects[i].reserved != 0) { continue; }
-            gSyncObjects[i].reserved = clientPlayerIndex;
+            gSyncObjects[i].reserved = toLocalIndex;
             reservedObjs[reservedIndex++] = i;
             if (reservedIndex >= RESERVATION_COUNT) { break; }
         }
@@ -50,12 +50,11 @@ void network_send_reservation(void) {
     struct Packet p;
     packet_init(&p, PACKET_RESERVATION, true, false);
     packet_write(&p, reservedObjs, sizeof(u8) * RESERVATION_COUNT);
-    network_send(&p);
+    network_send_to(toLocalIndex, &p);
 }
 
 void network_receive_reservation(struct Packet* p) {
     assert(gNetworkType == NT_CLIENT);
-    u8 clientPlayerIndex = 1; // two-player hack
 
     // find all reserved objects
     u8 reservedObjs[RESERVATION_COUNT] = { 0 };
@@ -65,6 +64,6 @@ void network_receive_reservation(struct Packet* p) {
         u16 index = reservedObjs[i];
         if (index == 0) { continue; }
         if (gSyncObjects[index].o != NULL) { continue; }
-        gSyncObjects[index].reserved = clientPlayerIndex;
+        gSyncObjects[index].reserved = gNetworkPlayerLocal->globalIndex;
     }
 }

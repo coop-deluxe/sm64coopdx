@@ -335,11 +335,6 @@ void network_receive_player(struct Packet* p) {
 
     // set model
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(np->globalIndex == 1) ? MODEL_LUIGI : MODEL_MARIO];
-
-    // broadcast player packet
-    if (gNetworkType == NT_SERVER && !gNetworkSystem->canBroadcast) {
-        network_send_player(globalIndex);
-    }
 }
 
 void network_update_player(void) {
