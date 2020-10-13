@@ -68,6 +68,7 @@ void network_player_update(void) {
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
     if (type == NPT_LOCAL) {
+        memset(&gNetworkPlayers[0], 0, sizeof(struct NetworkPlayer));
         gNetworkPlayers[0].connected = true;
         gNetworkPlayers[0].type = type;
         gNetworkPlayers[0].localIndex = 0;
@@ -92,6 +93,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
     for (int i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (np->connected) { continue; }
+        memset(np, 0, sizeof(struct NetworkPlayer));
         np->connected = true;
         np->currLevelNum = -1;
         np->currAreaIndex = -1;

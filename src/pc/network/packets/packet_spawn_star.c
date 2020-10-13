@@ -7,9 +7,6 @@
 
 extern struct Object* gCurrentObject;
 
-static u8 txSeqId = 0;
-static u8 rxLastSeqId = (u8)-1;
-
 void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams) {
     struct Packet p;
     packet_init(&p, PACKET_SPAWN_STAR, true, true);
@@ -62,31 +59,21 @@ void network_send_spawn_star_nle(struct Object* o, u32 params) {
 
     struct Packet p;
     packet_init(&p, PACKET_SPAWN_STAR_NLE, true, true);
-    packet_write(&p, &txSeqId, sizeof(u8));
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &o->oSyncID, sizeof(u32));
     packet_write(&p, &params, sizeof(u32));
 
     network_send(&p);
-    txSeqId++;
 }
 
 void network_receive_spawn_star_nle(struct Packet* p) {
-    u8 seqId = 0;
     u8 globalIndex = UNKNOWN_GLOBAL_INDEX;
     u32 syncId = 0;
     u32 params = 0;
 
-    packet_read(p, &seqId, sizeof(u8));
     packet_read(p, &globalIndex, sizeof(u8));
     packet_read(p, &syncId, sizeof(u32));
     packet_read(p, &params, sizeof(u32));
-
-    // de-dup
-    if (seqId == rxLastSeqId) {
-        LOG_INFO("Already seen seqId %d", seqId);
-        return;
-    }
 
     // grab network player first
     struct Object* object = NULL;

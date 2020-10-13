@@ -14,17 +14,12 @@ extern s8 sReceivedLoadedActNum;
 
 #pragma pack(1)
 struct PacketInsidePaintingData {
-    u8 seqId;
     u8 starIndex;
     u8 actIndex;
     u8 loadedActNum;
 };
 
-static u8 seqId = 0;
-static u8 remoteLastSeqId = (u8)-1;
-
 static void populate_packet_data(struct PacketInsidePaintingData* data) {
-    data->seqId = seqId;
     data->starIndex = sSelectableStarIndex;
     data->actIndex = sSelectedActIndex;
     data->loadedActNum = sLoadedActNum;
@@ -38,7 +33,6 @@ void network_send_inside_painting(void) {
     packet_init(&p, PACKET_INSIDE_PAINTING, true, false);
     packet_write(&p, &data, sizeof(struct PacketInsidePaintingData));
     network_send(&p);
-    seqId++;
 }
 
 void network_receive_inside_painting(struct Packet* p) {
@@ -47,13 +41,6 @@ void network_receive_inside_painting(struct Packet* p) {
 
     struct PacketInsidePaintingData remote = { 0 };
     packet_read(p, &remote, sizeof(struct PacketInsidePaintingData));
-
-    // de-dup
-    if (remote.seqId == remoteLastSeqId) {
-        LOG_INFO("we've seen this packet, escape!");
-        return;
-    }
-    remoteLastSeqId = remote.seqId;
 
     // two-player hack: gControlledWarp is a bool instead of an index
     if (gControlledWarp) {

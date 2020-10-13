@@ -11,19 +11,14 @@
 
 extern u8 gRejectInstantWarp;
 
-static u8 seqId = 0;
-static u8 remoteLastSeqId = (u8)-1;
-
 #pragma pack(1)
 struct PacketInstantWarpData {
-    u8 seqId;
     Vec3f pos;
     s16 areaIndex;
     s16 yaw;
 };
 
 static void populate_packet_data(struct PacketInstantWarpData* data) {
-    data->seqId = seqId;
     data->pos[0] = gMarioStates[0].pos[0];
     data->pos[1] = gMarioStates[0].pos[1];
     data->pos[2] = gMarioStates[0].pos[2];
@@ -43,20 +38,11 @@ void network_send_instant_warp(void) {
     LOG_INFO("tx %d", data.areaIndex);
 
     gRejectInstantWarp = 120;
-
-    seqId++;
 }
 
 void network_receive_instant_warp(struct Packet* p) {
     struct PacketInstantWarpData remote = { 0 };
     packet_read(p, &remote, sizeof(struct PacketInstantWarpData));
-
-    // de-dup
-    if (remote.seqId == remoteLastSeqId) {
-        LOG_INFO("we've seen this packet, escape!");
-        return;
-    }
-    remoteLastSeqId = remote.seqId;
 
     LOG_INFO("rx instant warp");
 

@@ -41,6 +41,7 @@ void network_send_ack(struct Packet* p) {
     // grab seq num
     u16 seqId = 0;
     memcpy(&seqId, &p->buffer[1], 2);
+    p->seqId = seqId;
     p->reliable = (seqId != 0);
     if (seqId == 0) { return; }
 
