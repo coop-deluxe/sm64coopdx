@@ -121,8 +121,7 @@ void network_clear_sync_objects(void) {
 void network_set_sync_id(struct Object* o) {
     if (o->oSyncID != 0) { return; }
 
-    // two-player hack
-    u8 reserveId = (gNetworkLevelLoaded && gNetworkType == NT_CLIENT) ? 1 : 0;
+    u8 reserveId = gNetworkLevelLoaded ? gNetworkPlayerLocal->globalIndex : 0;
 
     for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[nextSyncID].reserved == reserveId && gSyncObjects[nextSyncID].o == NULL) { break; }
