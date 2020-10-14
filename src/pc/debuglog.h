@@ -10,7 +10,7 @@
     }
 
     static void debuglog_print_network_type(void) {
-        printf(" [%s] ", NETWORKTYPESTR);
+        printf(" [%02d] ", (gNetworkPlayerLocal != NULL) ? gNetworkPlayerLocal->globalIndex : -1);
     }
 
     static void debuglog_print_log_type(char* logType) {

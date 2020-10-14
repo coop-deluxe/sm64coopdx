@@ -29,7 +29,7 @@ void opened_cannon_act_0(void) {
                 o->oAction = 4;
                 o->oCannonUnk10C = 1;
                 o->oCannonUnkF8 = 1;
-                o->oCannonIsLocal = TRUE;
+                o->oCannonPlayerIndex = 0;
                 network_send_object(o);
             } else {
                 o->oInteractStatus = 0;
@@ -53,10 +53,12 @@ void opened_cannon_act_4(void) {
         o->oPosZ += (f32)((o->oTimer / 2 & 1) - 0.5) * 4;
         o->oAction = 6;
     }
-    if (!o->oCannonIsLocal) {
-        // two-player hack
-        gMarioStates[1].marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
-        gMarioStates[1].marioObj->oMarioCannonInputYaw = 0;
+    if (o->oCannonPlayerIndex != 0) {
+        struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
+        if (controlledBy->marioObj != NULL) {
+            controlledBy->marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
+            controlledBy->marioObj->oMarioCannonInputYaw = 0;
+        }
     }
 }
 
@@ -74,16 +76,12 @@ void opened_cannon_act_6(void) {
                 o->oCannonUnkF4 += 0x400;
             } else if (o->oTimer < 26) {
             } else {
-                if (o->oCannonIsLocal) {
-                    gMarioStates[0].marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
-                    gMarioStates[0].marioObj->oMarioCannonInputYaw = 0;
-                    gMarioStates[0].faceAngle[0] = 8192;
-                } else {
-                    // two-player hack
-                    gMarioStates[1].marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
-                    gMarioStates[1].marioObj->oMarioCannonInputYaw = 0;
-                    gMarioStates[1].faceAngle[0] = 8192;
+                struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
+                if (controlledBy->marioObj != NULL) {
+                    controlledBy->marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
+                    controlledBy->marioObj->oMarioCannonInputYaw = 0;
                 }
+                controlledBy->faceAngle[0] = 8192;
 
                 o->oCannonUnkF4 = 0;
                 o->oAction = 5;
@@ -109,16 +107,18 @@ void opened_cannon_act_5(void) {
 
 void opened_cannon_act_1(void) {
     UNUSED s32 unused;
-    if (o->oCannonIsLocal) { // two-player hack
+    if (o->oCannonPlayerIndex == 0) {
         cur_obj_become_intangible();
         cur_obj_disable_rendering();
     } else {
-        struct MarioState* marioState = &gMarioStates[1]; // two-player hack
-        o->oMoveAnglePitch = 14563 + marioState->faceAngle[0] * -0.5f;
-        o->oMoveAngleYaw = marioState->marioObj->oMarioCannonObjectYaw + marioState->marioObj->oMarioCannonInputYaw;
+        struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
+        o->oMoveAnglePitch = 14563 + controlledBy->faceAngle[0] * -0.5f;
+        if (controlledBy->marioObj != NULL) {
+            o->oMoveAngleYaw = controlledBy->marioObj->oMarioCannonObjectYaw + controlledBy->marioObj->oMarioCannonInputYaw;
+        }
     }
     o->oCannonUnk10C = 0;
-    if (o->oCannonIsLocal) {
+    if (o->oCannonPlayerIndex == 0) {
         gMarioShotFromCannon = 1;
     }
 }
@@ -131,7 +131,6 @@ void opened_cannon_act_3(void) {
     UNUSED s32 unused;
     if (o->oTimer > 3) {
         o->oAction = 0;
-        o->oCannonIsLocal = FALSE;
         if (o->heldByPlayerIndex == 0) { network_send_object(o); }
     }
 }
@@ -144,39 +143,37 @@ u8 unused0EA1FC[] = { 2,  0,   0, 0, 0,  0,   0, 0, 63, 128, 0, 0, 2,  0,   0, 0
                       63, 128, 0, 0, 2,  0,   0, 0, 65, 160, 0, 0, 63, 128, 0, 0, 2,  0,   0, 0,
                       65, 160, 0, 0, 63, 128, 0, 0, 8,  0,   0, 0, 65, 32,  0, 0, 63, 128, 0, 0 };
 
-u8 cannon_ignore_remote_updates(void) {
-    // two-player hack
-    return ((gNetworkType == NT_SERVER) && o->oCannonIsLocal);
-}
-
 static void cannon_on_received_post(u8 fromLocalIndex) {
     // check if we're on in the cannon too
     struct MarioState* m = &gMarioStates[0];
-    if (m->action != ACT_IN_CANNON) { return; }
-    if (m->interactObj != o) { return; }
-    // two-player hack
-    if (gNetworkType == NT_SERVER) { return; }
+    u8 shouldEject =  (m->action == ACT_IN_CANNON)
+                   && (m->interactObj == o)
+                   && gNetworkPlayers[fromLocalIndex].globalIndex < gNetworkPlayerLocal->globalIndex;
 
-    // eject the player by shooting out of the cannon weakly
-    m->forwardVel = 10.0f * coss(m->faceAngle[0]);
-    m->vel[1] = 10.0f * sins(m->faceAngle[0]);
-    m->pos[0] += 120.0f * coss(m->faceAngle[0]) * sins(m->faceAngle[1]);
-    m->pos[1] += 120.0f * sins(m->faceAngle[0]);
-    m->pos[2] += 120.0f * coss(m->faceAngle[0]) * coss(m->faceAngle[1]);
-    set_mario_action(m, ACT_SHOT_FROM_CANNON, 0);
+    if (shouldEject) {
+        // eject the player by shooting out of the cannon weakly
+        m->forwardVel = 10.0f * coss(m->faceAngle[0]);
+        m->vel[1] = 10.0f * sins(m->faceAngle[0]);
+        m->pos[0] += 120.0f * coss(m->faceAngle[0]) * sins(m->faceAngle[1]);
+        m->pos[1] += 120.0f * sins(m->faceAngle[0]);
+        m->pos[2] += 120.0f * coss(m->faceAngle[0]) * coss(m->faceAngle[1]);
+        set_mario_action(m, ACT_SHOT_FROM_CANNON, 0);
 
-    // reset things that got messed up
-    m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
-    reset_camera(gCamera);
-    o->oCannonIsLocal = FALSE;
-    cur_obj_become_tangible();
-    cur_obj_enable_rendering();
+        // reset things that got messed up
+        m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
+        reset_camera(gCamera);
+        o->oCannonPlayerIndex = fromLocalIndex;
+        cur_obj_become_tangible();
+        cur_obj_enable_rendering();
+    } else {
+        o->oCannonPlayerIndex = fromLocalIndex;
+    }
 }
 
 static void bhv_cannon_base_sanity_check(void) {
     // figure out if it's still in use
     u8 inUse = FALSE;
-    if (o->oCannonIsLocal) {
+    if (o->oCannonPlayerIndex == 0) {
         inUse = (gMarioStates[0].action == ACT_IN_CANNON && gMarioStates[0].interactObj == o);
     } else {
         for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -208,11 +205,18 @@ static void bhv_cannon_base_sanity_check(void) {
     }
 }
 
+void bhv_cannon_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    if ((o->oAction != 0) && (o->oCannonPlayerIndex == 0)) {
+        *shouldOverride = TRUE;
+        *shouldOwn = TRUE;
+    }
+}
+
 void bhv_cannon_base_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->ignore_if_true = cannon_ignore_remote_updates;
         so->on_received_post = cannon_on_received_post;
+        so->override_ownership = bhv_cannon_override_ownership;
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oPrevAction);
         network_init_object_field(o, &o->oTimer);
@@ -227,7 +231,7 @@ void bhv_cannon_base_loop(void) {
 
     bhv_cannon_base_sanity_check();
 
-    if (o->oAction != 0 && !o->oCannonIsLocal) {
+    if ((o->oAction != 0) && (o->oCannonPlayerIndex != 0)) {
         cur_obj_push_mario_away_from_cylinder(220, 300);
     }
 

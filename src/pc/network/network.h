@@ -49,7 +49,7 @@ struct SyncObject {
     clock_t clockSinceUpdate;
     void* behavior;
     u16 txEventId;
-    u16 rxEventId;
+    u16 rxEventId[MAX_PLAYERS];
     u16 randomSeed;
     u8 extraFieldCount;
     bool fullObjectSync;

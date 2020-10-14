@@ -57,7 +57,7 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
         enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
         packet_write(&p, &parentId, sizeof(u8));
         packet_write(&p, &model, sizeof(u32));
-        packet_write(&p, &behaviorId, sizeof(enum BehaviorId));
+        packet_write(&p, &behaviorId, sizeof(u16));
         packet_write(&p, &o->activeFlags, sizeof(s16));
         packet_write(&p, o->rawData.asU32, sizeof(s32) * 80);
         packet_write(&p, &o->header.gfx.scale[0], sizeof(f32));
@@ -99,7 +99,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         Vec3f scale = { 0 };
         packet_read(p, &data.parentId, sizeof(u8));
         packet_read(p, &data.model, sizeof(u32));
-        packet_read(p, &data.behaviorId, sizeof(enum BehaviorId));
+        packet_read(p, &data.behaviorId, sizeof(u16));
         packet_read(p, &data.activeFlags, sizeof(s16));
         packet_read(p, &data.rawData, sizeof(s32) * 80);
         packet_read(p, &scale[0], sizeof(f32));

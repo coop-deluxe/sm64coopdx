@@ -1188,10 +1188,12 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
 
 u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
     if (o->oAction != 0) { return FALSE; }
+    if (m->playerIndex != 0) { return FALSE; }
 
     if (m->action != ACT_IN_CANNON) {
         mario_stop_riding_and_holding(m);
         o->oInteractStatus = INT_STATUS_INTERACTED;
+        o->oCannonPlayerIndex = 0;
         m->interactObj = o;
         m->usedObj = o;
         return set_mario_action(m, ACT_IN_CANNON, 0);

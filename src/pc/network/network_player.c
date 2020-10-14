@@ -103,6 +103,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->type = type;
         np->lastReceived = clock();
         gNetworkSystem->save_id(i);
+        for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
         else { chat_add_message("player connected", CMT_SYSTEM); }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
@@ -139,6 +140,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         if (gNetworkType == NT_SERVER) { network_send_leaving(np->globalIndex); }
         np->connected = false;
         gNetworkSystem->clear_id(i);
+        for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
         chat_add_message("player disconnected", CMT_SYSTEM);
         return i;

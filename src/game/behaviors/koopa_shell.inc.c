@@ -59,6 +59,7 @@ void bhv_koopa_shell_loop(void) {
     struct Surface *sp34;
     obj_set_hitbox(o, &sKoopaShellHitbox);
     cur_obj_scale(1.0f);
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = NULL;
     switch (o->oAction) {
         case 0:
@@ -66,8 +67,7 @@ void bhv_koopa_shell_loop(void) {
             cur_obj_if_hit_wall_bounce_away();
             if (o->oInteractStatus & INT_STATUS_INTERACTED) {
                 o->oAction++;
-                player = nearest_player_to_object(o);
-                o->heldByPlayerIndex = (player == gMarioObject) ? 0 : 1;
+                o->heldByPlayerIndex = marioState->playerIndex;
             }
             o->oFaceAngleYaw += 0x1000;
             cur_obj_move_standard(-20);

@@ -117,7 +117,7 @@ static void debug_suicide(void) {
 
 void debug_keyboard_on_key_down(int scancode) {
     scancode = scancode;
-    switch (scancode) {
+    switch (scancode & 0xFF) {
         case SCANCODE_3: debug_breakpoint_here(); break;
 #ifdef DEVELOPMENT
         case SCANCODE_6: debug_warp_level(warpToLevel); break;

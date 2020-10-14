@@ -48,7 +48,7 @@ void network_send_collect_coin(struct Object* o) {
 
     struct Packet p;
     packet_init(&p, PACKET_COLLECT_COIN, true, true);
-    packet_write(&p, &behaviorId, sizeof(enum BehaviorId));
+    packet_write(&p, &behaviorId, sizeof(u16));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
     packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
     packet_write(&p, &o->oDamageOrCoinValue, sizeof(s32));
@@ -62,7 +62,7 @@ void network_receive_collect_coin(struct Packet* p) {
     s16 numCoins = 0;
     s32 coinValue = 0;
 
-    packet_read(p, &behaviorId, sizeof(enum BehaviorId));
+    packet_read(p, &behaviorId, sizeof(u16));
     packet_read(p, &pos, sizeof(f32) * 3);
     packet_read(p, &numCoins, sizeof(s16));
     packet_read(p, &coinValue, sizeof(s32));
@@ -88,7 +88,7 @@ void network_receive_collect_coin(struct Packet* p) {
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
         && gMarioStates[0].numCoins - coin->oDamageOrCoinValue < 100
         && gMarioStates[0].numCoins >= 100) {
-        bhv_spawn_star_no_level_exit(gMarioStates[1].marioObj, 6, FALSE);
+        bhv_spawn_star_no_level_exit(gMarioStates[p->localIndex].marioObj, 6, FALSE);
     }
 
     return;
@@ -102,6 +102,6 @@ SANITY_CHECK_COINS:;
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
         && oldCoinCount < 100
         && gMarioStates[0].numCoins >= 100) {
-        bhv_spawn_star_no_level_exit(gMarioStates[1].marioObj, 6, FALSE);
+        bhv_spawn_star_no_level_exit(gMarioStates[p->localIndex].marioObj, 6, FALSE);
     }
 }

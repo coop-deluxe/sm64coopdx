@@ -8,6 +8,7 @@
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
 #include "src/game/obj_behaviors.h"
+#include "pc/debuglog.h"
 
 static u8 nextSyncID = 1;
 struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
@@ -42,7 +43,10 @@ static bool should_own_object(struct SyncObject* so) {
         if (gMarioStates[i].heldByObj == so->o) { return false; }
     }
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
-    if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[1], so->o)) { return false; }
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[i], so->o)) { return false; }
+    }
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex != 0) { return false; }
     return true;
 }
@@ -60,7 +64,9 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->clockSinceUpdate = clock();
     so->extraFieldCount = 0;
     so->behavior = (BehaviorScript*)o->behavior;
-    so->rxEventId = 0;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        so->rxEventId[i] = 0;
+    }
     so->txEventId = 0;
     so->fullObjectSync = false;
     so->hasStandardFields = (maxSyncDistance >= 0);
@@ -141,10 +147,11 @@ static void packet_write_object_header(struct Packet* p, struct Object* o) {
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
 
+    packet_write(p, &gNetworkPlayerLocal->globalIndex, sizeof(u8));
     packet_write(p, &o->oSyncID, sizeof(u32));
     packet_write(p, &so->txEventId, sizeof(u16));
     packet_write(p, &so->randomSeed, sizeof(u16));
-    packet_write(p, &behaviorId, sizeof(enum BehaviorId));
+    packet_write(p, &behaviorId, sizeof(u16));
 }
 
 static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* behavior) {
@@ -162,19 +169,25 @@ static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* beh
     return true;
 }
 
-static struct SyncObject* packet_read_object_header(struct Packet* p) {
+static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLocalIndex) {
+    // figure out where the packet came from
+    u8 fromGlobalIndex = 0;
+    packet_read(p, &fromGlobalIndex, sizeof(u8));
+    struct NetworkPlayer* np = network_player_from_global_index(fromGlobalIndex);
+    *fromLocalIndex = (np != NULL) ? np->localIndex : p->localIndex;
+
     // get sync ID, sanity check
     u32 syncId = 0;
     packet_read(p, &syncId, sizeof(u32));
     if (syncId == 0 || syncId >= MAX_SYNC_OBJECTS) {
-        printf("%s invalid SyncID %d!\n", NETWORKTYPESTR, syncId);
+        LOG_ERROR("invalid SyncID: %d", syncId);
         return NULL;
     }
 
     // extract object, sanity check
     struct Object* o = gSyncObjects[syncId].o;
     if (o == NULL) {
-        printf("%s invalid SyncObject!\n", NETWORKTYPESTR);
+        LOG_ERROR("invalid SyncObject for %d", syncId);
         return NULL;
     }
 
@@ -193,20 +206,23 @@ static struct SyncObject* packet_read_object_header(struct Packet* p) {
     // make sure this is the newest event possible
     u16 eventId = 0;
     packet_read(p, &eventId, sizeof(u16));
-    if (so->rxEventId > eventId && (u16)abs(eventId - so->rxEventId) < USHRT_MAX / 2) {
+    if (so->rxEventId[*fromLocalIndex] > eventId && (u16)abs(eventId - so->rxEventId[*fromLocalIndex]) < USHRT_MAX / 2) {
         return NULL;
     }
-    so->rxEventId = eventId;
+    so->rxEventId[*fromLocalIndex] = eventId;
 
     // update the random seed
     packet_read(p, &so->randomSeed, sizeof(u16));
 
     // make sure the behaviors match
     enum BehaviorId behaviorId;
-    packet_read(p, &behaviorId, sizeof(enum BehaviorId));
+    packet_read(p, &behaviorId, sizeof(u16));
     BehaviorScript* behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
-    if (o->behavior != behavior && !allowable_behavior_change(so, behavior)) {
-        printf("network_receive_object() behavior mismatch!\n");
+    if (behavior == NULL) {
+        LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
+        return NULL;
+    } if (o->behavior != behavior && !allowable_behavior_change(so, behavior)) {
+        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(behavior));
         network_forget_sync_object(so);
         return NULL;
     }
@@ -337,13 +353,13 @@ void network_send_object(struct Object* o) {
     if (!network_sync_object_initialized(o)) { return; }
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return; }
-    if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        printf("network_send_object() BEHAVIOR MISMATCH!\n");
+    if (o != so->o) {
+        LOG_ERROR("object mismatch for %d", o->oSyncID);
         network_forget_sync_object(so);
         return;
     }
-    if (o != so->o) {
-        printf("network_send_object() OBJECT MISMATCH!\n");
+    if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
+        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         network_forget_sync_object(so);
         return;
     }
@@ -357,14 +373,13 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     if (!network_sync_object_initialized(o)) { return; }
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return; }
-
-    if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        printf("network_send_object() BEHAVIOR MISMATCH!\n");
+    if (o != so->o) {
+        LOG_ERROR("object mismatch for %d", o->oSyncID);
         network_forget_sync_object(so);
         return;
     }
-    if (o != so->o) {
-        printf("network_send_object() OBJECT MISMATCH!\n");
+    if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
+        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         network_forget_sync_object(so);
         return;
     }
@@ -393,7 +408,8 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
 void network_receive_object(struct Packet* p) {
     // read the header and sanity check the packet
-    struct SyncObject* so = packet_read_object_header(p);
+    u8 fromLocalIndex = 0;
+    struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
     if (so == NULL) { return; }
     struct Object* o = so->o;
     if (!network_sync_object_initialized(o)) { return; }
@@ -412,7 +428,7 @@ void network_receive_object(struct Packet* p) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
-        (*so->on_received_pre)(p->localIndex);
+        (*so->on_received_pre)(fromLocalIndex);
         gCurrentObject = tmp;
     }
 
@@ -432,7 +448,7 @@ void network_receive_object(struct Packet* p) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
         gCurrentObject = so->o;
-        (*so->on_received_post)(p->localIndex);
+        (*so->on_received_post)(fromLocalIndex);
         gCurrentObject = tmp;
     }
 
@@ -464,7 +480,7 @@ void network_update_objects(void) {
 
         // check for stale sync object
         if (so->o->oSyncID != i) {
-            printf("ERROR! Sync ID mismatch!\n");
+            LOG_ERROR("sync id mismatch: %d vs %d", so->o->oSyncID, i);
             network_forget_sync_object(so);
             continue;
         }
