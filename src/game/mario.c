@@ -1930,7 +1930,6 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         // drop held object if someone else is holding it
         if (gMarioState->playerIndex == 0 && gMarioState->heldObj != NULL) {
             u8 inCutscene = ((gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE);
-            u8 higherPriorityPlayerHolding = FALSE;
             if (!inCutscene && gMarioState->heldObj->heldByPlayerIndex != 0) {
                 drop_and_set_mario_action(gMarioState, ACT_IDLE, 0);
             }
@@ -2134,7 +2133,6 @@ void init_mario(void) {
 }
 
 static void init_mario_single_from_save_file(struct MarioState* m, u16 index) {
-    // two-player hack
     m->playerIndex = index;
     m->flags = 0;
     m->action = 0;
