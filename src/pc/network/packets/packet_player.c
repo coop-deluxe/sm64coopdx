@@ -192,7 +192,6 @@ void network_send_player(u8 localIndex) {
     packet_init(&p, PACKET_PLAYER, false, false);
     packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
     packet_write(&p, &data, sizeof(struct PacketPlayerData));
-    // two-player hack: should be network_send_to_all_except()
     network_send(&p);
 }
 
@@ -252,18 +251,15 @@ void network_receive_player(struct Packet* p) {
     }
 
     // find and set their held object
-    if (heldSyncID != 0 && gSyncObjects[heldSyncID].o != NULL) {
-        // TODO: do we have to move graphics nodes around to make this visible?
-        struct Object* heldObj = gSyncObjects[heldSyncID].o;
-        if (gMarioStates[0].heldObj == heldObj && gNetworkType == NT_CLIENT) { // two-player hack: needs priority
+    m->heldObj = (heldSyncID != 0) ? gSyncObjects[heldSyncID].o : NULL;
+    if (m->heldObj != NULL) {
+        if (np->globalIndex < gNetworkPlayerLocal->globalIndex) {
+            // drop the object if a higher priority player is holding our object
             mario_drop_held_object(&gMarioStates[0]);
             force_idle_state(&gMarioStates[0]);
         }
-        m->heldObj = heldObj;
-        heldObj->oHeldState = HELD_HELD;
-        heldObj->heldByPlayerIndex = 1;
-    } else {
-        m->heldObj = NULL;
+        m->heldObj->oHeldState = HELD_HELD;
+        m->heldObj->heldByPlayerIndex = np->localIndex;
     }
 
     // find and set their held-by object
