@@ -44,7 +44,7 @@ static struct Object* find_nearest_star(const BehaviorScript* behavior, f32* pos
 }
 
 void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
-    enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
+    u16 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
     packet_init(&p, PACKET_COLLECT_STAR, true, false);
@@ -61,7 +61,7 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
 
 void network_receive_collect_star(struct Packet* p) {
     f32 pos[3] = { 0 };
-    enum BehaviorId behaviorId;
+    u16 behaviorId;
     s16 coinScore, starIndex;
     s16 lastSaveFileNum = gCurrSaveFileNum;
     s16 lastCourseNum = gCurrCourseNum;

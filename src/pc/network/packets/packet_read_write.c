@@ -6,20 +6,24 @@
 static u16 nextSeqNum = 1;
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
-    packet->buffer[0] = (char)packetType;
-    if (reliable) {
-        memcpy(&packet->buffer[1], &nextSeqNum, 2);
-        packet->seqId = nextSeqNum;
-        nextSeqNum++;
-        if (nextSeqNum == 0) { nextSeqNum++;  }
-    }
-    packet->dataLength = 3;
-    packet->cursor = 3;
+    packet->cursor = 0;
+    packet->dataLength = 0;
     packet->error = false;
     packet->reliable = reliable;
     packet->levelAreaMustMatch = levelAreaMustMatch;
     packet->requestBroadcast = false;
     packet->sent = false;
+
+    packet_write(packet, &packetType, sizeof(u8));
+    if (reliable) {
+        packet_write(packet, &nextSeqNum, sizeof(u16));
+        packet->seqId = nextSeqNum;
+        nextSeqNum++;
+        if (nextSeqNum == 0) { nextSeqNum++;  }
+    } else {
+        u16 nullSeqNum = 0;
+        packet_write(packet, &nullSeqNum, sizeof(u16));
+    }
 
     // write packet flags
     u8 flags = 0;

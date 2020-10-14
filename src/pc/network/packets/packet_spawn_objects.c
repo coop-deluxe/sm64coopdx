@@ -19,7 +19,7 @@ static u8 onRemoteSpawnId = 0;
 struct SpawnObjectData {
     u8 parentId;
     u32 model;
-    enum BehaviorId behaviorId;
+    u16 behaviorId;
     s16 activeFlags;
     s32 rawData[80];
 };
@@ -54,7 +54,7 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
         struct Object* o = objects[i];
         u32 model = models[i];
         u8 parentId = generate_parent_id(objects, i);
-        enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
+        u16 behaviorId = get_id_from_behavior(o->behavior);
         packet_write(&p, &parentId, sizeof(u8));
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u16));

@@ -145,7 +145,7 @@ void network_set_sync_id(struct Object* o) {
 
 static void packet_write_object_header(struct Packet* p, struct Object* o) {
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
-    enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
+    u16 behaviorId = get_id_from_behavior(o->behavior);
 
     packet_write(p, &gNetworkPlayerLocal->globalIndex, sizeof(u8));
     packet_write(p, &o->oSyncID, sizeof(u32));
@@ -215,8 +215,9 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     packet_read(p, &so->randomSeed, sizeof(u16));
 
     // make sure the behaviors match
-    enum BehaviorId behaviorId;
+    u16 behaviorId;
     packet_read(p, &behaviorId, sizeof(u16));
+
     BehaviorScript* behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
     if (behavior == NULL) {
         LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);

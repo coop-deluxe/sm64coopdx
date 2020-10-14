@@ -44,7 +44,7 @@ static struct Object* find_nearest_coin(const BehaviorScript *behavior, f32* pos
 }
 
 void network_send_collect_coin(struct Object* o) {
-    enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
+    u16 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
     packet_init(&p, PACKET_COLLECT_COIN, true, true);
@@ -57,7 +57,7 @@ void network_send_collect_coin(struct Object* o) {
 }
 
 void network_receive_collect_coin(struct Packet* p) {
-    enum BehaviorId behaviorId;
+    u16 behaviorId;
     f32 pos[3] = { 0 };
     s16 numCoins = 0;
     s32 coinValue = 0;

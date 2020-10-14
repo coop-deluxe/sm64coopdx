@@ -41,7 +41,7 @@ static struct Object* find_nearest_item(const BehaviorScript *behavior, f32* pos
 }
 
 void network_send_collect_item(struct Object* o) {
-    enum BehaviorId behaviorId = get_id_from_behavior(o->behavior);
+    u16 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
     packet_init(&p, PACKET_COLLECT_ITEM, true, true);
@@ -52,7 +52,7 @@ void network_send_collect_item(struct Object* o) {
 }
 
 void network_receive_collect_item(struct Packet* p) {
-    enum BehaviorId behaviorId;
+    u16 behaviorId;
     f32 pos[3] = { 0 };
 
     packet_read(p, &behaviorId, sizeof(u16));
