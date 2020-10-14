@@ -15084,6 +15084,9 @@
     <ClCompile Include="..\src\pc\network\version.c">
       <Filter>Source Files\src\pc\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\game\characters.c">
+      <Filter>Source Files\src\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16044,6 +16047,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\network\version.h">
       <Filter>Header Files\src\pc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\characters.h">
+      <Filter>Header Files\src\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

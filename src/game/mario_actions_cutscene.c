@@ -2494,16 +2494,16 @@ static void end_peach_cutscene_kiss_from_peach(struct MarioState *m) {
 }
 
 static void end_peach_cutscene_star_dance(struct MarioState *m) {
-    u8 sadLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
-    s32 animFrame = set_mario_animation(m, sadLuigi ? MARIO_ANIM_START_SLEEP_SITTING : MARIO_ANIM_CREDITS_PEACE_SIGN);
+    u8 nonMario = (m->character != &gCharacters[CT_MARIO]);
+    s32 animFrame = set_mario_animation(m, nonMario ? MARIO_ANIM_START_SLEEP_SITTING : MARIO_ANIM_CREDITS_PEACE_SIGN);
 
-    if (animFrame == (sadLuigi ? 0 : 77)) {
+    if (animFrame == (nonMario ? 0 : 77)) {
         cutscene_put_cap_on(m);
     }
     if (animFrame == 88 && m->playerIndex == 0) {
         play_sound(SOUND_MARIO_HERE_WE_GO, m->marioObj->header.gfx.cameraToObject);
     }
-    if (!sadLuigi && animFrame >= 98) {
+    if (!nonMario && animFrame >= 98) {
         m->marioBodyState->handState = MARIO_HAND_PEACE_SIGN;
     }
 
@@ -2548,8 +2548,8 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
 // "let's bake a delicious cake..."
 // "...for Mario..."
 static void end_peach_cutscene_dialog_3(struct MarioState *m) {
-    u8 sadLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
-    set_mario_animation(m, sadLuigi ? MARIO_ANIM_SLEEP_IDLE : MARIO_ANIM_FIRST_PERSON);
+    u8 nonMario = (m->character != &gCharacters[CT_MARIO]);
+    set_mario_animation(m, nonMario ? MARIO_ANIM_SLEEP_IDLE : MARIO_ANIM_FIRST_PERSON);
     if (m->playerIndex != 0) { return; }
     sEndPeachObj->oPosY = end_obj_set_visual_pos(sEndPeachObj);
     sEndRightToadObj->oPosY = end_obj_set_visual_pos(sEndRightToadObj);
@@ -2586,8 +2586,8 @@ static void end_peach_cutscene_dialog_3(struct MarioState *m) {
 
 // "Mario!"
 static void end_peach_cutscene_run_to_castle(struct MarioState *m) {
-    u8 sadLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
-    if (sadLuigi) {
+    u8 nonMario = (m->character != &gCharacters[CT_MARIO]);
+    if (nonMario) {
         set_mario_animation(m, m->actionState == 0 ? MARIO_ANIM_SLEEP_START_LYING
                                                    : MARIO_ANIM_SLEEP_LYING);
     } else {

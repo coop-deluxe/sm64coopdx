@@ -292,11 +292,10 @@ void render_hud_power_meter(void) {
  * Renders the amount of lives Mario has.
  */
 void render_hud_mario_lives(void) {
-    // two-player hack
 #ifdef VERSION_JP
     char* displayHead = ",";
 #else
-    char* displayHead = (gNetworkType == NT_SERVER) ? "," : ".";
+    char* displayHead = (gMarioStates[0].character) ? &gMarioStates[0].character->hudHead : ",";
 #endif
     print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22), HUD_TOP_Y, displayHead); // 'Mario Head' glyph
     if (gHudDisplay.lives == -1) {
@@ -436,7 +435,7 @@ void render_hud_camera_status(void) {
 
     switch (sCameraHUD.status & CAM_STATUS_MODE_GROUP) {
         case CAM_STATUS_MARIO:
-            render_hud_tex_lut(x + 16, y, (*cameraLUT)[(gNetworkType == NT_SERVER) ? GLYPH_CAM_MARIO_HEAD : GLYPH_CAM_LUIGI_HEAD]);
+            render_hud_tex_lut(x + 16, y, (*cameraLUT)[(gMarioStates[0].character) ? gMarioStates[0].character->cameraHudHead : GLYPH_CAM_MARIO_HEAD]);
             break;
         case CAM_STATUS_LAKITU:
             render_hud_tex_lut(x + 16, y, (*cameraLUT)[GLYPH_CAM_LAKITU_HEAD]);

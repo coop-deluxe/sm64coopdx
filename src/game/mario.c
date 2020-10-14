@@ -2123,8 +2123,9 @@ static void init_single_mario(struct MarioState* m) {
     }
 
     // set mario/luigi model
-    // two-player hack
-    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[(gNetworkPlayers[0].globalIndex == 1) ? MODEL_LUIGI : MODEL_MARIO];
+    enum CharacterType characterType = (gNetworkPlayers[0].globalIndex == 1) ? CT_LUIGI : CT_MARIO;
+    m->character = &gCharacters[characterType];
+    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
 }
 
 void init_mario(void) {
