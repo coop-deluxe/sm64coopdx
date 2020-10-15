@@ -1708,6 +1708,11 @@ u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct O
         return FALSE;
     }
 
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].riddenObj == o) { return FALSE; }
+    }
+
     if (!(m->action & ACT_FLAG_RIDING_SHELL)) {
         u32 interaction = determine_interaction(m, o);
 
