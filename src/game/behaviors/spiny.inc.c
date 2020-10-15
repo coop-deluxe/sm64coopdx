@@ -212,6 +212,8 @@ void bhv_spiny_update(void) {
         }
     }
 
+    obj_set_hitbox(o, &sSpinyHitbox);
+
     switch (o->oAction) {
         case SPINY_ACT_WALK:
             spiny_act_walk();

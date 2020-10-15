@@ -2,6 +2,10 @@
 
 static u8 localTalkToHoot = 0;
 
+static u8 bhv_hoot_ignore_if_true(void) {
+    return (gMarioStates[0].action == ACT_RIDING_HOOT) && (gMarioStates[0].usedObj == o);
+}
+
 void bhv_hoot_init(void) {
     cur_obj_init_animation(0);
 
@@ -13,9 +17,11 @@ void bhv_hoot_init(void) {
     cur_obj_become_intangible();
     localTalkToHoot = 0;
 
-    network_init_object(o, 4000.0f);
+    struct SyncObject* so = network_init_object(o, 4000.0f);
+    so->ignore_if_true = bhv_hoot_ignore_if_true;
     network_init_object_field(o, &o->oHootAvailability);
     network_init_object_field(o, &o->oMoveAnglePitch);
+    network_init_object_field(o, &o->header.gfx.unk38.animFrame);
 }
 
 // sp28 = arg0

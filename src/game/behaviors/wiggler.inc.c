@@ -320,7 +320,8 @@ static void wiggler_act_jumped_on(void) {
             if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, attackText[o->oHealth - 2], wiggler_act_jumped_on_continue_dialog) != 0) {
                 // Because we don't want the wiggler to disappear after being
                 // defeated, we leave its health at 1
-                if (--o->oHealth == 1) {
+                if (--o->oHealth <= 1) {
+                    o->oHealth = 1;
                     o->oAction = WIGGLER_ACT_SHRINK;
                     cur_obj_become_intangible();
                 } else {

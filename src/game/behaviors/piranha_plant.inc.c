@@ -312,6 +312,8 @@ s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
  * Plant start biting again. Otherwise, make it go back to sleep.
  */
 void piranha_plant_act_stopped_biting(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
     cur_obj_become_intangible();
     cur_obj_init_animation_with_sound(6);
 
@@ -326,7 +328,7 @@ void piranha_plant_act_stopped_biting(void) {
      * of the Piranha Plant during the short time the Piranha Plant's nod
      * animation plays.
      */
-    if (o->oDistanceToMario < 400.0f) {
+    if (distanceToPlayer < 400.0f) {
         if (mario_moving_fast_enough_to_make_piranha_plant_bite()) {
             o->oAction = PIRANHA_PLANT_ACT_BITING;
         }
