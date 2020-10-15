@@ -92,6 +92,7 @@ f32 approach_f32_symmetric(f32 value, f32 target, f32 increment);
 s16 approach_s16_symmetric(s16 value, s16 target, s16 increment);
 s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment);
 s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2);
+s16 obj_pitch_to_object(struct Object* obj, struct Object* target);
 s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ);
 s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount);
 void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ);

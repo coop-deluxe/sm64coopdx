@@ -865,10 +865,49 @@ s32 act_tornado_twirling(struct MarioState *m) {
     return FALSE;
 }
 
+
+static void bubbled_offset_visual(struct MarioState* m) {
+    // scary 3d trig ahead
+
+    f32 forwardOffset = 25;
+    f32 upOffset = -35;
+
+    // figure out forward vector
+    Vec3f forward = {
+        sins(m->faceAngle[1]) * coss(m->faceAngle[0]),
+        -sins(m->faceAngle[0]),
+        coss(m->faceAngle[1]) * coss(m->faceAngle[0]),
+    };
+    vec3f_normalize(forward);
+
+    // figure out right vector
+    Vec3f globalUp = { 0, 1, 0 };
+    Vec3f right = { 0 };
+    vec3f_cross(right, forward, globalUp);
+    vec3f_normalize(right);
+
+    // figure out up vector
+    Vec3f up = { 0 };
+    vec3f_cross(up, right, forward);
+    vec3f_normalize(up);
+
+    // offset forward direction
+    vec3f_mul(forward, forwardOffset);
+    vec3f_add(m->marioObj->header.gfx.pos, forward);
+
+    // offset up direction
+    vec3f_mul(up, upOffset);
+    vec3f_add(m->marioObj->header.gfx.pos, up);
+
+    // offset global up direction
+    m->marioObj->header.gfx.pos[1] -= upOffset;
+}
+
 s32 act_bubbled(struct MarioState* m) {
     struct MarioState* targetMarioState = nearest_mario_state_to_object(m->marioObj);
     struct Object* target = targetMarioState->marioObj;
     int angleToPlayer = obj_angle_to_object(m->marioObj, target);
+    int pitchToPlayer = obj_pitch_to_object(m->marioObj, target);
     int distanceToPlayer = dist_between_objects(m->marioObj, target);
 
     // trigger warp if all are bubbled
@@ -901,6 +940,8 @@ s32 act_bubbled(struct MarioState* m) {
     set_mario_animation(m, MARIO_ANIM_SLEEP_IDLE);
 
     // force inputs
+    f32 oldPitch = m->faceAngle[0];
+    f32 oldYaw   = m->faceAngle[1];
     m->faceAngle[0] = 0;
     m->faceAngle[1] = m->intendedYaw;
     m->forwardVel = m->intendedMag;
@@ -928,8 +969,13 @@ s32 act_bubbled(struct MarioState* m) {
     }
 
     // always look toward target
-    m->faceAngle[1] = angleToPlayer;
-    m->marioObj->header.gfx.angle[1] = angleToPlayer;
+    m->faceAngle[0] = pitchToPlayer - approach_s32((s16)(pitchToPlayer - oldPitch), 0, 0x600, 0x600);
+    m->faceAngle[1] = angleToPlayer - approach_s32((s16)(angleToPlayer - oldYaw  ), 0, 0x600, 0x600);
+    m->marioObj->header.gfx.angle[0] = m->faceAngle[0];
+    m->marioObj->header.gfx.angle[1] = m->faceAngle[1];
+
+    // offset the player model to be in the center of the bubble
+    bubbled_offset_visual(m);
 
     // make invisible on -1 lives
     if (m->playerIndex == 0) {

@@ -73,19 +73,10 @@ void bhv_small_water_wave_loop(void) {
 void bhv_bubble_player_loop(void) {
     struct MarioState* marioState = &gMarioStates[o->heldByPlayerIndex];
 
-    // grab positions to find the mid-point
-    f32* torsoPos = marioState->marioBodyState->torsoPos;
-    f32* pos = marioState->pos;
-
-    // sanity check torsoPos
-    if (marioState->marioObj->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE) {
-        torsoPos = marioState->pos;
-    }
-
-    // set the position + offset
-    o->oPosX = (torsoPos[0] + pos[0]) / 2;
-    o->oPosY = (torsoPos[1] + pos[1]) / 2 + 30.0f;
-    o->oPosZ = (torsoPos[2] + pos[2]) / 2;
+    // set position
+    o->oPosX = marioState->pos[0];
+    o->oPosY = marioState->pos[1] + 35;
+    o->oPosZ = marioState->pos[2];
 
     // slowly rotate the bubble
     o->oFaceAnglePitch += 300;

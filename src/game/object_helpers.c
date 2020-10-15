@@ -430,6 +430,18 @@ s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
     return angle;
 }
 
+s16 obj_pitch_to_object(struct Object* obj, struct Object* target) {
+    f32 a, b, c, d;
+    a = target->oPosX - obj->oPosX;
+    c = target->oPosZ - obj->oPosZ;
+    a = sqrtf(a * a + c * c);
+
+    b = -obj->oPosY;
+    d = -target->oPosY;
+
+    return atan2s(a, d - b);
+}
+
 s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
     f32 z1, x1, z2, x2;
     s16 angle;
