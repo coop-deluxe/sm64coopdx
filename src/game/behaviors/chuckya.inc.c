@@ -6,6 +6,7 @@ void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
         struct MarioState* marioState = &gMarioStates[i];
         struct Object* player = gMarioStates[i].marioObj;
         if (marioState->heldByObj != o->parentObj && marioState->heldByObj != o) { continue; }
+        if (marioState->action != ACT_GRABBED) { continue; }
         switch (o->parentObj->oChuckyaUnk88) {
             case 0:
                 break;

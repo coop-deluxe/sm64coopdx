@@ -259,7 +259,7 @@ void network_receive_player(struct Packet* p) {
     // find and set their held object
     m->heldObj = (heldSyncID != 0) ? gSyncObjects[heldSyncID].o : NULL;
     if (m->heldObj != NULL) {
-        if (np->globalIndex < gNetworkPlayerLocal->globalIndex) {
+        if (gMarioStates[0].heldObj == m->heldObj && np->globalIndex < gNetworkPlayerLocal->globalIndex) {
             // drop the object if a higher priority player is holding our object
             mario_drop_held_object(&gMarioStates[0]);
             force_idle_state(&gMarioStates[0]);

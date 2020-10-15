@@ -682,7 +682,18 @@ s32 act_grabbed(struct MarioState *m) {
 
     // check if they should still be grabbed
     if (m->playerIndex == 0) {
-        if (m->heldByObj == NULL || !(m->heldByObj->oInteractStatus | INT_STATUS_GRABBED_MARIO)) {
+        // check if the object holding me is being held
+        u8 heldObjIsHeld = FALSE;
+        if (m->heldByObj != NULL) {
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (!is_player_active(&gMarioStates[i])) { continue; }
+                if (gMarioStates[i].heldObj == m->heldByObj) { heldObjIsHeld = TRUE; }
+            }
+        }
+
+        // error state, get out of grab
+        if (heldObjIsHeld || m->heldByObj == NULL || !(m->heldByObj->oInteractStatus | INT_STATUS_GRABBED_MARIO)) {
+            m->heldByObj = NULL;
             return set_mario_action(m, (m->forwardVel >= 0.0f) ? ACT_THROWN_FORWARD : ACT_THROWN_BACKWARD, FALSE);
         }
     }
