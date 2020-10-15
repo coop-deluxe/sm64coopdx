@@ -19,6 +19,7 @@
 #include "audio/external.h"
 #include "config.h"
 #include "pc/network/version.h"
+#include "pc/network/discord/discord.h"
 
 #define MAIN_MENU_HEADER_TEXT "SM64 COOP"
 
@@ -82,7 +83,12 @@ static void host_menu_draw_strings(void) {
         char warning[128];
         snprintf(warning, 127, "You must forward port '%d' in your router or use Hamachi.", configHostPort);
         print_generic_ascii_string(0, 15, warning);
-
+    } else if ((configNetworkSystem == 0) && gDiscordFailed) {
+        f32 red = (f32)fabs(sin(gGlobalTimer / 20.0f));
+        gDPSetEnvColor(gDisplayListHead++, 222, 222 * red, 222 * red, gMenuStringAlpha);
+        char warning[128];
+        snprintf(warning, 127, "Discord failed to initialize.");
+        print_generic_ascii_string(0, 15, warning);
     }
 }
 
