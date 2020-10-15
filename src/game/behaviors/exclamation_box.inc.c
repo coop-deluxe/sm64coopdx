@@ -12,6 +12,7 @@ struct ObjectHitbox sExclamationBoxHitbox = {
     /* hurtboxHeight: */ 30,
 };
 
+// hack: if any other sync objects get added here we have to check for them (search for hack in this file)
 struct Struct802C0DF0 sExclamationBoxContents[] = { { 0, 0, 0, MODEL_MARIOS_WING_CAP, bhvWingCap },
                                                     { 1, 0, 0, MODEL_MARIOS_METAL_CAP, bhvMetalCap },
                                                     { 2, 0, 0, MODEL_MARIOS_CAP, bhvVanishCap },
@@ -132,6 +133,10 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
             // send non-star spawn events
             // stars cant be sent here to due jankiness in oBehParams
             if (a0->behavior != bhvSpawnedStar) {
+                // hack: if any other sync objects get spawned here we have to check for them
+                if (a0->behavior == bhvKoopaShell) {
+                    network_set_sync_id(sp1C);
+                }
                 struct Object* spawn_objects[] = { sp1C };
                 u32 models[] = { a0->model };
                 network_send_spawn_objects(spawn_objects, models, 1);

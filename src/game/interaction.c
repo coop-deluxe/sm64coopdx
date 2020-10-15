@@ -295,7 +295,10 @@ u32 attack_object(struct Object *o, s32 interaction) {
 void mario_stop_riding_object(struct MarioState *m) {
     if (m->riddenObj != NULL && m->playerIndex == 0) {
         m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
-        if (m->playerIndex == 0) { stop_shell_music(); }
+        if (m->riddenObj->oSyncID != 0) {
+            network_send_object_reliability(m->riddenObj, TRUE);
+        }
+        stop_shell_music();
         m->riddenObj = NULL;
     }
 }
