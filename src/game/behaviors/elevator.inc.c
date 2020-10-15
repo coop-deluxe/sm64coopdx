@@ -155,4 +155,11 @@ struct SpawnParticlesInfo D_8032F3FC = { 0,    5,   MODEL_WHITE_PARTICLE_DL, 0, 
 
 void bhv_elevator_loop(void) {
     cur_obj_call_action_function(sElevatorActions);
+
+    // allow bubbled players to pass through
+    if (gMarioStates[0].action == ACT_BUBBLED) {
+        cur_obj_become_intangible();
+    } else {
+        cur_obj_become_tangible();
+    }
 }
