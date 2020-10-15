@@ -1280,6 +1280,15 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     if (m2 == NULL) { return FALSE; }
     if (m2->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
+    // vanish cap players can't interact
+    u32 vanishFlags = (MARIO_VANISH_CAP | MARIO_CAP_ON_HEAD);
+    if ((m->flags & vanishFlags) == vanishFlags) {
+        return FALSE;
+    }
+    if ((m2->flags & vanishFlags) == vanishFlags) {
+        return FALSE;
+    }
+
     // don't do further interactions if we've hopped on top
     if (resolve_player_collision(m, m2)) {
         return FALSE;
