@@ -1704,6 +1704,8 @@ u32 interact_breakable(struct MarioState *m, UNUSED u32 interactType, struct Obj
 }
 
 u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
+    if (m->playerIndex != 0) { return FALSE; }
+
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         return FALSE;
     }

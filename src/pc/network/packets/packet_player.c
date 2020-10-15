@@ -59,6 +59,7 @@ struct PacketPlayerData {
     u8  customFlags;
     u8 heldSyncID;
     u8 heldBySyncID;
+    u8 riddenSyncID;
     u8 interactSyncID;
     u8 usedSyncID;
     u8 platformSyncID;
@@ -70,6 +71,7 @@ struct PacketPlayerData {
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
     u8 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;
     u8 heldBySyncID   = (m->heldByObj != NULL)          ? m->heldByObj->oSyncID          : 0;
+    u8 riddenSyncID   = (m->riddenObj != NULL)          ? m->riddenObj->oSyncID          : 0;
     u8 interactSyncID = (m->interactObj != NULL)        ? m->interactObj->oSyncID        : 0;
     u8 usedSyncID     = (m->usedObj != NULL)            ? m->usedObj->oSyncID            : 0;
     u8 platformSyncID = (m->marioObj->platform != NULL) ? m->marioObj->platform->oSyncID : 0;
@@ -121,6 +123,7 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->customFlags    = customFlags;
     data->heldSyncID     = heldSyncID;
     data->heldBySyncID   = heldBySyncID;
+    data->riddenSyncID   = riddenSyncID;
     data->interactSyncID = interactSyncID;
     data->usedSyncID     = usedSyncID;
     data->platformSyncID = platformSyncID;
@@ -131,7 +134,8 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
                               u8* customFlags, u8* heldSyncID, u8* heldBySyncID,
-                              u8* interactSyncID, u8* usedSyncID, u8* platformSyncID) {
+                              u8* riddenSyncID, u8* interactSyncID, u8* usedSyncID,
+                              u8* platformSyncID) {
     memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
 
@@ -177,6 +181,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     *customFlags    = data->customFlags;
     *heldSyncID     = data->heldSyncID;
     *heldBySyncID   = data->heldBySyncID;
+    *riddenSyncID   = data->riddenSyncID;
     *interactSyncID = data->interactSyncID;
     *usedSyncID     = data->usedSyncID;
     *platformSyncID = data->platformSyncID;
@@ -229,14 +234,15 @@ void network_receive_player(struct Packet* p) {
     // apply data from packet to mario state
     u8 heldSyncID     = 0;
     u8 heldBySyncID   = 0;
+    u8 riddenSyncID   = 0;
     u8 interactSyncID = 0;
     u8 usedSyncID     = 0;
     u8 platformSyncID = 0;
     u8 customFlags    = 0;
     write_packet_data(&data, m, &customFlags,
                       &heldSyncID, &heldBySyncID,
-                      &interactSyncID, &usedSyncID,
-                      &platformSyncID);
+                      &riddenSyncID, &interactSyncID,
+                      &usedSyncID, &platformSyncID);
 
     // read custom flags
     m->freeze = GET_BIT(customFlags, 0);
@@ -268,6 +274,14 @@ void network_receive_player(struct Packet* p) {
         m->heldByObj = gSyncObjects[heldBySyncID].o;
     } else {
         m->heldByObj = NULL;
+    }
+
+    // find and set their ridden object
+    if (riddenSyncID != 0 && gSyncObjects[riddenSyncID].o != NULL) {
+        gSyncObjects[riddenSyncID].o->heldByPlayerIndex = np->localIndex;
+        m->riddenObj = gSyncObjects[riddenSyncID].o;
+    } else {
+        m->riddenObj = NULL;
     }
 
     // find and set their interact object
