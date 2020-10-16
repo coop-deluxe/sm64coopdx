@@ -90,6 +90,7 @@ static const u8 optsAudioStr[][32] = {
     { TEXT_OPT_MUSVOLUME },
     { TEXT_OPT_SFXVOLUME },
     { TEXT_OPT_ENVVOLUME },
+    { TEXT_OPT_LUIGISND },
 };
 
 static const u8 optsCheatsStr[][64] = {
@@ -271,6 +272,7 @@ static struct Option optsAudio[] = {
     DEF_OPT_SCROLL( optsAudioStr[1], &configMusicVolume, 0, MAX_VOLUME, 1),
     DEF_OPT_SCROLL( optsAudioStr[2], &configSfxVolume, 0, MAX_VOLUME, 1),
     DEF_OPT_SCROLL( optsAudioStr[3], &configEnvVolume, 0, MAX_VOLUME, 1),
+    DEF_OPT_TOGGLE( optsAudioStr[4], &configLuigiSounds ),
 };
 
 static struct Option optsCheats[] = {

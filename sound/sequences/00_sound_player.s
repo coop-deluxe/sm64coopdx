@@ -7,7 +7,7 @@ seq_setmutebhv 0x60
 seq_setmutescale 0
 seq_setvol 127
 seq_settempo 120
-seq_initchannels 0x3ff
+seq_initchannels 0x7ff
 seq_startchannel 0, .channel0
 seq_startchannel 1, .channel1
 seq_startchannel 2, .channel2
@@ -18,9 +18,12 @@ seq_startchannel 6, .channel6
 seq_startchannel 7, .channel7
 seq_startchannel 8, .channel38
 seq_startchannel 9, .channel59
+seq_startchannel 10, .channel10
 .seq_loop:
 seq_delay 20000
 seq_jump .seq_loop
+
+.include "seq_luigi.inc"
 
 .channel0:
 chan_largenoteson

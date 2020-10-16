@@ -149,6 +149,8 @@
 #define TEXT_OPT_CHEAT8    _("Huge Mario")
 #define TEXT_OPT_CHEAT9    _("Tiny Mario")
 
+#define TEXT_OPT_LUIGISND  _("Luigi Sounds")
+
 #endif // VERSION
 
 #endif // TEXT_OPTIONS_STRINGS_H

@@ -264,13 +264,14 @@ void play_sound_if_no_flag(struct MarioState *m, u32 soundBits, u32 flags) {
  */
 void play_mario_jump_sound(struct MarioState *m) {
     if (!(m->flags & MARIO_MARIO_SOUND_PLAYED)) {
+        u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
 #ifndef VERSION_JP
         if (m->action == ACT_TRIPLE_JUMP) {
-            play_sound(SOUND_MARIO_YAHOO_WAHA_YIPPEE + ((gAudioRandom % 5) << 16),
+            play_sound(((configLuigiSounds && isLuigi) ? SOUND_LUIGI_YAHOO_WAHA_YIPPEE : SOUND_MARIO_YAHOO_WAHA_YIPPEE) + ((gAudioRandom % 5) << 16),
                        m->marioObj->header.gfx.cameraToObject);
         } else {
 #endif
-            play_sound(SOUND_MARIO_YAH_WAH_HOO + ((gAudioRandom % 3) << 16),
+            play_sound(((configLuigiSounds && isLuigi) ? SOUND_LUIGI_YAH_WAH_HOO : SOUND_MARIO_YAH_WAH_HOO) + ((gAudioRandom % 3) << 16),
                        m->marioObj->header.gfx.cameraToObject);
 #ifndef VERSION_JP
         }
@@ -307,7 +308,7 @@ void play_sound_and_spawn_particles(struct MarioState *m, u32 soundBits, u32 wav
     }
 
     if ((m->flags & MARIO_METAL_CAP) || soundBits == SOUND_ACTION_UNSTUCK_FROM_GROUND
-        || soundBits == SOUND_MARIO_PUNCH_HOO) {
+        || soundBits == SOUND_MARIO_PUNCH_HOO || soundBits == SOUND_LUIGI_PUNCH_HOO) {
         play_sound(soundBits, m->marioObj->header.gfx.cameraToObject);
     } else {
         play_sound(m->terrainSoundAddend + soundBits, m->marioObj->header.gfx.cameraToObject);
@@ -1909,10 +1910,11 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // HACK: mute snoring even when we skip the waking up action
         if (gMarioState->isSnoring && gMarioState->action != ACT_SLEEPING) {
-                func_803205E8(SOUND_MARIO_SNORING1, gMarioState->marioObj->header.gfx.cameraToObject);
-                func_803205E8(SOUND_MARIO_SNORING2, gMarioState->marioObj->header.gfx.cameraToObject);
+                u8 isLuigi = (gNetworkType == NT_SERVER) ? (gMarioState->playerIndex != 0) : (gMarioState->playerIndex == 0);
+                func_803205E8((configLuigiSounds && isLuigi) ? SOUND_LUIGI_SNORING1 : SOUND_MARIO_SNORING1, gMarioState->marioObj->header.gfx.cameraToObject);
+                func_803205E8((configLuigiSounds && isLuigi) ? SOUND_LUIGI_SNORING2 : SOUND_MARIO_SNORING2, gMarioState->marioObj->header.gfx.cameraToObject);
 #ifndef VERSION_JP
-                func_803205E8(SOUND_MARIO_SNORING3, gMarioState->marioObj->header.gfx.cameraToObject);
+                func_803205E8((configLuigiSounds && isLuigi) ? SOUND_LUIGI_SNORING3 : SOUND_MARIO_SNORING3, gMarioState->marioObj->header.gfx.cameraToObject);
 #endif
                 gMarioState->isSnoring = FALSE;
         }

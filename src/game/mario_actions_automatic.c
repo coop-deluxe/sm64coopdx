@@ -20,6 +20,8 @@
 #include "obj_behaviors.h"
 #include "level_update.h"
 #include "mario_step.h"
+#include "pc/configfile.h"
+#include "pc/network/network.h"
 
 #define POLE_NONE 0
 #define POLE_TOUCHED_FLOOR 1
@@ -234,7 +236,8 @@ s32 act_climbing_pole(struct MarioState *m) {
 
 s32 act_grab_pole_slow(struct MarioState *m) {
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
-    play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+    u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    play_sound_if_no_flag(m, (configLuigiSounds && isLuigi) ? SOUND_LUIGI_WHOA : SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
 
     if (set_pole_position(m, 0.0f) == POLE_NONE) {
         set_mario_animation(m, MARIO_ANIM_GRAB_POLE_SHORT);
@@ -251,7 +254,8 @@ s32 act_grab_pole_fast(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+    u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    play_sound_if_no_flag(m, (configLuigiSounds && isLuigi) ? SOUND_LUIGI_WHOA : SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
     m->faceAngle[1] += marioObj->oMarioPoleYawVel;
     marioObj->oMarioPoleYawVel = marioObj->oMarioPoleYawVel * 8 / 10;
 
@@ -597,7 +601,8 @@ s32 act_ledge_grab(struct MarioState *m) {
     }
 
     if (m->actionArg == 0) {
-        play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+        u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+        play_sound_if_no_flag(m, (configLuigiSounds && isLuigi) ? SOUND_LUIGI_WHOA : SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
     }
 
     stop_and_set_height_to_floor(m);
@@ -619,7 +624,8 @@ s32 act_ledge_climb_slow(struct MarioState *m) {
     }
 
     if (m->actionTimer == 10) {
-        play_sound_if_no_flag(m, SOUND_MARIO_EEUH, MARIO_MARIO_SOUND_PLAYED);
+        u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+        play_sound_if_no_flag(m, (configLuigiSounds && isLuigi) ? SOUND_LUIGI_EEUH : SOUND_MARIO_EEUH, MARIO_MARIO_SOUND_PLAYED);
     }
 
     update_ledge_climb(m, MARIO_ANIM_SLOW_LEDGE_GRAB, ACT_IDLE);
@@ -637,7 +643,8 @@ s32 act_ledge_climb_down(struct MarioState *m) {
         return let_go_of_ledge(m);
     }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+    u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    play_sound_if_no_flag(m, (configLuigiSounds && isLuigi) ? SOUND_LUIGI_WHOA : SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
 
     update_ledge_climb(m, MARIO_ANIM_CLIMB_DOWN_LEDGE, ACT_LEDGE_GRAB);
     m->actionArg = 1;
@@ -650,7 +657,8 @@ s32 act_ledge_climb_fast(struct MarioState *m) {
         return let_go_of_ledge(m);
     }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_UH2, MARIO_MARIO_SOUND_PLAYED);
+    u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+    play_sound_if_no_flag(m, (configLuigiSounds && isLuigi) ? SOUND_LUIGI_UH2 : SOUND_MARIO_UH2, MARIO_MARIO_SOUND_PLAYED);
 
     update_ledge_climb(m, MARIO_ANIM_FAST_LEDGE_GRAB, ACT_IDLE);
 

@@ -262,6 +262,11 @@ ifeq ($(DUMMY),FAIL)
 endif
 endif
 
+# Copy missing luigi sounds from mario sound banks
+$(shell mkdir -p sound/samples/sfx_custom_luigi sound/samples/sfx_custom_luigi_peach )
+$(shell cp -n sound/samples/sfx_mario/*.aiff sound/samples/sfx_custom_luigi/ )
+$(shell cp -n sound/samples/sfx_mario_peach/*.aiff sound/samples/sfx_custom_luigi_peach/ )
+
 # Make tools if out of date
 DUMMY != make -C tools >&2 || echo FAIL
 ifeq ($(DUMMY),FAIL)

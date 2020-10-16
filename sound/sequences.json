@@ -1,6 +1,6 @@
 {
     "comment": "This file lists all sequences together with the sound banks they use. If a sequence uses multiple banks, the first bank will be used by default, and it can switch between them using the chan_setbank command; e.g. chan_setbank 0 will switch to the first bank in the given list.",
-    "00_sound_player": ["00", "01_terrain", "02_water", "03", "04", "05", "06", "07", "08_mario", "09", "0A_mario_peach"],
+    "00_sound_player": ["00", "01_terrain", "02_water", "03", "04", "05", "06", "07", "08_mario", "09", "0A_mario_peach", "26_custom_luigi", "27_custom_luigi_peach"],
     "01_cutscene_collect_star": ["22"],
     "02_menu_title_screen": ["11"],
     "03_level_grass": ["22"],

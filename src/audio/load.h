@@ -5,7 +5,7 @@
 
 #include "internal.h"
 
-#define AUDIO_FRAME_DMA_QUEUE_SIZE 0x40
+#define AUDIO_FRAME_DMA_QUEUE_SIZE 0x80
 
 #define PRELOAD_BANKS 2
 #define PRELOAD_SEQUENCE 1
