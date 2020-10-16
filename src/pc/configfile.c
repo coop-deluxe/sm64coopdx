@@ -92,6 +92,7 @@ bool         configCameraAnalog  = true;
 bool         configCameraMouse   = false;
 #endif
 bool         configSkipIntro     = 0;
+bool         configShareLives     = 0;
 bool         configHUD           = true;
 #ifdef DISCORDRPC
 bool         configDiscordRPC    = true;
@@ -151,6 +152,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
+    {.name = "share_lives",          .type = CONFIG_TYPE_BOOL, .boolValue = &configShareLives},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif

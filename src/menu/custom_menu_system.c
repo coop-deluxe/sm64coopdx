@@ -20,6 +20,11 @@
 static struct CustomMenu* sHead = NULL;
 static struct CustomMenu* sCurrentMenu = NULL;
 static struct CustomMenu* sLastMenu = NULL;
+struct CustomMenuButtonScale gButtonScale = {
+    .small = 0.08111111f,
+    .medium = 0.09511111f,
+    .large = 0.11111111f,
+};
 
 u8 gMenuStringAlpha = 255;
 
@@ -29,7 +34,7 @@ struct ErrorDialog {
 };
 static struct ErrorDialog* sErrorDialog = NULL;
 
-struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, s32 clickSound, void (*on_click)(void)) {
+struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, f32 scale, s32 clickSound, void (*on_click)(void)) {
     struct CustomMenuButton* button = calloc(1, sizeof(struct CustomMenuButton));
     if (parent->buttons == NULL) {
         parent->buttons = button;
@@ -45,7 +50,8 @@ struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, ch
     button->clickSound = clickSound;
 
     struct Object* obj = spawn_object_rel_with_rot(parent->me->object, MODEL_MAIN_MENU_MARIO_NEW_BUTTON, bhvMenuButton, x * -1, y, -1, 0, 0x8000, 0);
-    obj->oMenuButtonScale = 0.11111111f;
+
+    obj->oMenuButtonScale = scale;
     obj->oFaceAngleRoll = 0;
     obj->oMenuButtonTimer = 0;
     obj->oMenuButtonOrigPosX = obj->oParentRelativePosX;
@@ -57,8 +63,8 @@ struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, ch
     return button;
 }
 
-struct CustomMenu* custom_menu_create(struct CustomMenu* parent, char* label, u16 x, u16 y) {
-    struct CustomMenuButton* button = custom_menu_create_button(parent, label, x, y, SOUND_MENU_CAMERA_ZOOM_IN, NULL);
+struct CustomMenu* custom_menu_create(struct CustomMenu* parent, char* label, u16 x, u16 y, f32 scale) {
+    struct CustomMenuButton* button = custom_menu_create_button(parent, label, x, y, scale, SOUND_MENU_CAMERA_ZOOM_IN, NULL);
     struct CustomMenu* menu = calloc(1, sizeof(struct CustomMenu));
     menu->parent = parent;
     menu->depth = parent->depth + 1;
@@ -183,13 +189,15 @@ void custom_menu_close_system(void) {
 static s32 cursor_inside_button(struct CustomMenuButton* button, f32 cursorX, f32 cursorY) {
     f32 x = button->object->oParentRelativePosX;
     f32 y = button->object->oParentRelativePosY;
+    f32 scale = button->object->oMenuButtonScale;
+
     x *= -0.137f;
     y *= 0.137f;
 
-    s16 maxX = x + 25.0f;
-    s16 minX = x - 25.0f;
-    s16 maxY = y + 21.0f;
-    s16 minY = y - 21.0f;
+    s16 maxX = x + scale * 185.0f;
+    s16 minX = x - scale * 185.0f;
+    s16 maxY = y + scale * 185.0f;
+    s16 minY = y - scale * 101.0f;
 
     return (cursorX < maxX && minX < cursorX && cursorY < maxY && minY < cursorY);
 }
@@ -236,7 +244,7 @@ void custom_menu_cursor_click(f32 cursorX, f32 cursorY) {
             }
 
             if (didSomething) { break; }
-        } 
+        }
         button = button->next;
     }
 }
@@ -254,7 +262,7 @@ void custom_menu_print_strings(void) {
     // figure out alpha
     struct Object* curObj = sCurrentMenu->me->object;
     struct Object* lastObj = (sLastMenu != NULL) ? sLastMenu->me->object : NULL;
-    
+
     if (curObj != NULL && lastObj != NULL) {
         if (curObj->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN && lastObj->oMenuButtonState != MENU_BUTTON_STATE_SHRINKING) {
             if (gMenuStringAlpha < 250) {

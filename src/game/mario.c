@@ -391,6 +391,9 @@ void mario_set_bubbled(struct MarioState* m) {
     set_mario_action(m, ACT_BUBBLED, 0);
     if (m->numLives != -1) {
         m->numLives--;
+        if (gServerSettings.shareLives) {
+            network_send_death();
+        }
     }
     m->healCounter = 0;
     m->hurtCounter = 31;

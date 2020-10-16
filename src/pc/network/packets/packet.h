@@ -32,6 +32,7 @@ enum PacketType {
     PACKET_SAVE_FILE,
     PACKET_INSTANT_WARP,
     PACKET_NETWORK_PLAYERS,
+    PACKET_DEATH,
     ///
     PACKET_CUSTOM = 255,
 };
