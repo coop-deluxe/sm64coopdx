@@ -387,7 +387,8 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
 
         m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 
-        capObject = spawn_object(m->marioObj, MODEL_MARIOS_CAP, bhvNormalCap);
+        u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
+        capObject = spawn_object(m->marioObj, isLuigi ? MODEL_LUIGIS_CAP : MODEL_MARIOS_CAP, bhvNormalCap);
 
         capObject->oPosY += (m->action & ACT_FLAG_SHORT_HITBOX) ? 120.0f : 180.0f;
         capObject->oForwardVel = capSpeed;

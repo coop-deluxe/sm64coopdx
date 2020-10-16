@@ -96,11 +96,12 @@ void bhv_klepto_init(void) {
         o->oKleptoStartPosY = o->oPosY;
         o->oKleptoStartPosZ = o->oPosZ;
 
-        if (save_file_get_flags() & SAVE_FLAG_CAP_ON_KLEPTO) {
-            o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
-        } else {
+        // skip hat save flags
+        //if (save_file_get_flags() & SAVE_FLAG_CAP_ON_KLEPTO) {
+        //    o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
+        //} else {
             o->oAction = KLEPTO_ACT_WAIT_FOR_MARIO;
-        }
+        //}
     }
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
@@ -290,7 +291,12 @@ static void klepto_act_dive_at_mario(void) {
                 && !(marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))
                 && distanceToPlayer < 200.0f && dy > 50.0f && dy < 90.0f) {
                 if (network_owns_object(o) && mario_lose_cap_to_enemy(marioState, 1)) {
-                    o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
+                    u8 isLuigi = (gNetworkType == NT_SERVER) ? (marioState->playerIndex != 0) : (marioState->playerIndex == 0);
+                    if (isLuigi) { 
+                        o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI;
+                    } else {
+                        o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
+                    }
                     network_send_object(o);
                 }
             }
@@ -413,12 +419,14 @@ void bhv_klepto_update(void) {
         if (obj_handle_attacks(&sKleptoHitbox, o->oAction, sKleptoAttackHandlers)) {
             cur_obj_play_sound_2(SOUND_OBJ_KLEPTO2);
 
-            if (network_owns_object(o) && o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP) {
+            if (network_owns_object(o) && (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP || o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI)) {
                 save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
-                struct Object* cap = spawn_object(o, MODEL_MARIOS_CAP, bhvNormalCap);
+                
+                u8 capModel = (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP) ? MODEL_MARIOS_CAP : MODEL_LUIGIS_CAP;
+                struct Object* cap = spawn_object(o, capModel, bhvNormalCap);
 
                 struct Object* spawn_objects[] = { cap };
-                u32 models[] = { MODEL_MARIOS_CAP };
+                u32 models[] = { capModel };
                 network_send_spawn_objects(spawn_objects, models, 1);
 
             } else if (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_STAR) {

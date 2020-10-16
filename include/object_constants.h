@@ -660,9 +660,11 @@
     #define UKIKI_ANIM_HELD         12
 
     /* oAnimState */
-    #define UKIKI_ANIM_STATE_DEFAULT    0
-    #define UKIKI_ANIM_STATE_EYE_CLOSED 1
-    #define UKIKI_ANIM_STATE_HAT_ON     2
+    #define UKIKI_ANIM_STATE_DEFAULT      0
+    #define UKIKI_ANIM_STATE_EYE_CLOSED   1 // unused
+    #define UKIKI_ANIM_STATE_HAT_ON       2
+    #define UKIKI_ANIM_STATE_UNUSED       3 // unused, HAT_ON+EYE_CLOSED
+    #define UKIKI_ANIM_STATE_HAT_ON_LUIGI 4
 
     /* oUkikiHasHat */
     #define UKIKI_HAT_ON 1
@@ -883,6 +885,7 @@
     #define KLEPTO_ANIM_STATE_HOLDING_NOTHING 0
     #define KLEPTO_ANIM_STATE_HOLDING_CAP 1
     #define KLEPTO_ANIM_STATE_HOLDING_STAR 2
+    #define KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI 4
 
 /* Bird */
     /* oAction */

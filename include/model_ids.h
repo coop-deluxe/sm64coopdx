@@ -25,7 +25,11 @@
 
 #define MODEL_MARIO                       0x01        // mario_geo
 #define MODEL_LUIGI                       0xE2        // luigi_geo
-#define MODEL_BUBBLE_PLAYER               0xE4        // water_bomb_geo
+#define MODEL_BUBBLE_PLAYER               0xE3        // water_bomb_geo
+
+/* Additional custom models */
+
+#define MODEL_LUIGIS_CAP                  0xE4        // luigis_cap_geo
 
 /* Various static level geometry, the geo layout differs but terrain object presets treat them the same.*/
 
