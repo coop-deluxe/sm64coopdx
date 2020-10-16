@@ -17,15 +17,17 @@
 #include "gfx_dimensions.h"
 #include "config.h"
 
-#define MAX_ERROR_MESSAGE_LENGTH 128
-
 static struct CustomMenu* sHead = NULL;
 static struct CustomMenu* sCurrentMenu = NULL;
 static struct CustomMenu* sLastMenu = NULL;
 
 u8 gMenuStringAlpha = 255;
-static u8 sErrorDialog[MAX_ERROR_MESSAGE_LENGTH] = { 0 };
-static u8 sErrorDialogShow = FALSE;
+
+struct ErrorDialog {
+    u8* dialog;
+    struct ErrorDialog* next;
+};
+static struct ErrorDialog* sErrorDialog = NULL;
 
 struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, s32 clickSound, void (*on_click)(void)) {
     struct CustomMenuButton* button = calloc(1, sizeof(struct CustomMenuButton));
@@ -67,7 +69,6 @@ struct CustomMenu* custom_menu_create(struct CustomMenu* parent, char* label, u1
 }
 
 void custom_menu_system_init(void) {
-
     // allocate the main menu and set it to current
     sHead = calloc(1, sizeof(struct CustomMenu));
     sHead->me = calloc(1, sizeof(struct CustomMenuButton));
@@ -203,9 +204,15 @@ void custom_menu_cursor_click(f32 cursorX, f32 cursorY) {
     if (!(gPlayer3Controller->buttonPressed & cursorClickButtons)) { return; }
     if (sCurrentMenu->me->object->oMenuButtonState != MENU_BUTTON_STATE_FULLSCREEN) { return; }
 
-    if (sErrorDialogShow) {
-        sErrorDialogShow = FALSE;
+    if (sErrorDialog != NULL) {
+        struct ErrorDialog* current = sErrorDialog;
+        sErrorDialog = sErrorDialog->next;
+        free(current->dialog);
+        free(current);
         play_sound(SOUND_ACTION_BONK, gDefaultSoundArgs);
+        if (sErrorDialog != NULL) {
+            play_sound(SOUND_MARIO_OOOF2, gDefaultSoundArgs);
+        }
         return;
     }
 
@@ -287,7 +294,7 @@ void custom_menu_print_strings(void) {
 
 void custom_menu_render_top(void) {
     // print error message
-    if (sErrorDialogShow) {
+    if (sErrorDialog != NULL) {
         // black screen
         create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.0f, 0);
         create_dl_scale_matrix(MENU_MTX_NOPUSH, GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 130.0f, 3.0f, 1.0f);
@@ -297,17 +304,17 @@ void custom_menu_render_top(void) {
 
         // print text
         gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
-        f32 textWidth = get_generic_dialog_width(sErrorDialog);
-        f32 textHeight = get_generic_dialog_height(sErrorDialog);
+        f32 textWidth = get_generic_dialog_width(sErrorDialog->dialog);
+        f32 textHeight = get_generic_dialog_height(sErrorDialog->dialog);
 
         f32 xPos = (SCREEN_WIDTH - textWidth) / 2.0f;
         f32 yPos = (SCREEN_HEIGHT + textHeight) / 2.0f;
 
         gDPSetEnvColor(gDisplayListHead++, 30, 30, 30, 255);
-        print_generic_string(xPos, yPos, sErrorDialog);
+        print_generic_string(xPos, yPos, sErrorDialog->dialog);
 
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-        print_generic_string((xPos - 1), (yPos + 1), sErrorDialog);
+        print_generic_string((xPos - 1), (yPos + 1), sErrorDialog->dialog);
 
         gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
     }
@@ -373,7 +380,22 @@ void bhv_menu_button_shrinking_to_custom(struct Object* button) {
 }
 
 void custom_menu_error(char* message) {
-    str_ascii_to_dialog(message, sErrorDialog, MIN(strlen(message), MAX_ERROR_MESSAGE_LENGTH - 1));
-    if (!sErrorDialogShow) { play_sound(SOUND_MARIO_OOOF2, gDefaultSoundArgs); }
-    sErrorDialogShow = TRUE;
+    struct ErrorDialog* errorDialog = malloc(sizeof(struct ErrorDialog));
+    memset(errorDialog, 0, sizeof(struct ErrorDialog));
+    errorDialog->dialog = malloc(sizeof(u8) * (strlen(message) + 1));
+    str_ascii_to_dialog(message, errorDialog->dialog, strlen(message));
+
+    if (sErrorDialog == NULL) {
+        sErrorDialog = errorDialog;
+        play_sound(SOUND_MARIO_OOOF2, gDefaultSoundArgs);
+    } else {
+        struct ErrorDialog* item = sErrorDialog;
+        while (item != NULL) {
+            if (item->next == NULL) {
+                item->next = errorDialog;
+                break;
+            }
+            item = item->next;
+        }
+    }
 }

@@ -42,6 +42,7 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
+#include "menu/custom_menu_system.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -276,6 +277,10 @@ void main_func(void) {
     } else {
         network_init(NT_NONE);
     }
+
+#ifdef UNSTABLE_BRANCH
+    custom_menu_error("This is an unstable branch build.\n\nPlease do not use this to play online with others.\n\nUse a regular build.");
+#endif
 
     audio_init();
     sound_init();

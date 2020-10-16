@@ -142,6 +142,10 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
         int rc = DiscordCreate(DISCORD_VERSION, &params, &app.core);
         gDiscordFailed = false;
         if (networkType != NT_NONE) {
+#ifdef UNSTABLE_BRANCH
+            // refuse to host on discord for unstable branch
+            exit(1);
+#endif
             DISCORD_REQUIRE(rc);
         } else if (rc) {
             LOG_ERROR("DiscordCreate failed: %d", rc);
