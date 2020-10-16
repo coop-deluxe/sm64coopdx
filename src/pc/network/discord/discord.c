@@ -5,6 +5,7 @@
 #include "discord_network.h"
 #include "pc/debuglog.h"
 #include "menu/custom_menu_system.h"
+#include "pc/network/version.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -128,6 +129,14 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
 #ifdef DEBUG
     set_instance_env_variable();
 #endif
+
+#ifdef UNSTABLE_BRANCH
+    if (networkType != NT_NONE) {
+        // refuse to host on discord for unstable branch
+        exit(1);
+    }
+#endif
+
     if (!gDiscordInitialized) {
         // set up discord params
         struct DiscordCreateParams params;
@@ -142,10 +151,6 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
         int rc = DiscordCreate(DISCORD_VERSION, &params, &app.core);
         gDiscordFailed = false;
         if (networkType != NT_NONE) {
-#ifdef UNSTABLE_BRANCH
-            // refuse to host on discord for unstable branch
-            exit(1);
-#endif
             DISCORD_REQUIRE(rc);
         } else if (rc) {
             LOG_ERROR("DiscordCreate failed: %d", rc);

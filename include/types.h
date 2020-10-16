@@ -7,6 +7,7 @@
 #include <ultra64.h>
 #include "macros.h"
 #include "src/game/characters.h"
+#include "pc/network/version.h"
 
 // Certain functions are marked as having return values, but do not
 // actually return a value. This causes undefined behavior, which we'd rather
