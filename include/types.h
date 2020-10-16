@@ -390,7 +390,7 @@ struct MarioState
 // NOTE: this defines the maximum number of players...
 //       HOWEVER, simply increasing this to 3 will not magically work
 //       many things will have to be overhauled!
-#ifdef DEVELOPMENT
+#ifdef UNSTABLE_BRANCH
 #define MAX_PLAYERS 4
 #else
 #define MAX_PLAYERS 2
