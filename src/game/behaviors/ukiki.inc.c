@@ -688,12 +688,7 @@ void bhv_ukiki_loop(void) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (!does_mario_have_hat(&gMarioStates[i])) {
-                u8 isLuigi = (gNetworkType == NT_SERVER) ? (gMarioStates[i].playerIndex != 0) : (gMarioStates[i].playerIndex == 0);
-                if(isLuigi) {
-                    o->oAnimState = UKIKI_ANIM_STATE_HAT_ON_LUIGI;
-                } else {
-                    o->oAnimState = UKIKI_ANIM_STATE_HAT_ON;
-                }
+                o->oAnimState = gMarioStates[i].character->capUkikiAnimState;
                 break;
             }
         }

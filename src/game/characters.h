@@ -15,6 +15,9 @@ struct Character {
     char hudHead;
     u32 cameraHudHead;
     u32 modelId;
+    u32 capModelId;
+    s32 capKleptoAnimState;
+    s32 capUkikiAnimState;
 };
 
 extern struct Character gCharacters[];

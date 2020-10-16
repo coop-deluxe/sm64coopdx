@@ -291,12 +291,7 @@ static void klepto_act_dive_at_mario(void) {
                 && !(marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))
                 && distanceToPlayer < 200.0f && dy > 50.0f && dy < 90.0f) {
                 if (network_owns_object(o) && mario_lose_cap_to_enemy(marioState, 1)) {
-                    u8 isLuigi = (gNetworkType == NT_SERVER) ? (marioState->playerIndex != 0) : (marioState->playerIndex == 0);
-                    if (isLuigi) { 
-                        o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI;
-                    } else {
-                        o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
-                    }
+                    o->oAnimState = marioState->character->capKleptoAnimState;
                     network_send_object(o);
                 }
             }
@@ -419,10 +414,18 @@ void bhv_klepto_update(void) {
         if (obj_handle_attacks(&sKleptoHitbox, o->oAction, sKleptoAttackHandlers)) {
             cur_obj_play_sound_2(SOUND_OBJ_KLEPTO2);
 
-            if (network_owns_object(o) && (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP || o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI)) {
+            u8 kleptoHoldingCap = FALSE;
+            u32 capModel = MODEL_MARIOS_CAP;
+            for (int i = 0; i < CT_MAX; i++) {
+                if (o->oAnimState == gCharacters[i].capKleptoAnimState) {
+                    kleptoHoldingCap = TRUE;
+                    capModel = gCharacters[i].capModelId;
+                }
+            }
+
+            if (network_owns_object(o) && kleptoHoldingCap) {
                 save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
-                
-                u8 capModel = (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP) ? MODEL_MARIOS_CAP : MODEL_LUIGIS_CAP;
+
                 struct Object* cap = spawn_object(o, capModel, bhvNormalCap);
 
                 struct Object* spawn_objects[] = { cap };

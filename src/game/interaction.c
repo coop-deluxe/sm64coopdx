@@ -380,6 +380,7 @@ u32 does_mario_have_hat(struct MarioState *m) {
 }
 
 void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
+    if (m->playerIndex != 0) { return; }
     struct Object *capObject;
 
     if (does_mario_have_hat(m)) {
@@ -387,8 +388,8 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
 
         m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 
-        u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
-        capObject = spawn_object(m->marioObj, isLuigi ? MODEL_LUIGIS_CAP : MODEL_MARIOS_CAP, bhvNormalCap);
+        u8 capModel = m->character->capModelId;
+        capObject = spawn_object(m->marioObj, capModel, bhvNormalCap);
 
         capObject->oPosY += (m->action & ACT_FLAG_SHORT_HITBOX) ? 120.0f : 180.0f;
         capObject->oForwardVel = capSpeed;
@@ -397,6 +398,13 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
         if (m->forwardVel < 0.0f) {
             capObject->oMoveAngleYaw = (s16)(capObject->oMoveAngleYaw + 0x8000);
         }
+
+        // set as it's own parent so we can spawn it over the network
+        capObject->parentObj = capObject;
+
+        struct Object* spawn_objects[] = { capObject };
+        u32 models[] = { capModel };
+        network_send_spawn_objects(spawn_objects, models, 1);
     }
 }
 

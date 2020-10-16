@@ -167,4 +167,8 @@ void network_receive_instant_warp(struct Packet* p);
 void network_send_network_players(void);
 void network_receive_network_players(struct Packet* p);
 
+// packet_death.c
+void network_send_death(void);
+void network_receive_death(struct Packet* p);
+
 #endif
