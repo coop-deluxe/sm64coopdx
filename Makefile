@@ -41,7 +41,7 @@ BETTERCAMERA ?= 1
 # Enable no drawing distance by default
 NODRAWINGDISTANCE ?= 1
 # Disable texture fixes by default (helps with them purists)
-TEXTURE_FIX ?= 0
+TEXTURE_FIX ?= 1
 # Enable extended options menu by default
 EXT_OPTIONS_MENU ?= 1
 # Disable text-based save-files by default
@@ -136,19 +136,22 @@ endif
 # Release (version) flag defs
 
 ifeq ($(VERSION),jp)
-  VERSION_DEF := VERSION_JP
+  //VERSION_DEF := VERSION_JP
+  $(error JP ROM is incompatible with sm64ex-coop at this time)
 else
 ifeq ($(VERSION),us)
   VERSION_DEF := VERSION_US
 else
 ifeq ($(VERSION),eu)
-  VERSION_DEF := VERSION_EU
+  //VERSION_DEF := VERSION_EU
+  $(error EU ROM is incompatible with sm64ex-coop at this time)
 else
 ifeq ($(VERSION),sh)
-  $(warning Building SH is experimental and is prone to breaking. Try at your own risk.)
-  VERSION_DEF := VERSION_SH
+  //$(warning Building SH is experimental and is prone to breaking. Try at your own risk.)
+  //VERSION_DEF := VERSION_SH
 # TODO: GET RID OF THIS!!! We should mandate assets for Shindou like EU but we dont have the addresses extracted yet so we'll just pretend you have everything extracted for now.
-  NOEXTRACT := 1
+  //NOEXTRACT := 1
+  $(error Shindou ROM is incompatible with sm64ex-coop at this time)
 else
   $(error unknown version "$(VERSION)")
 endif
