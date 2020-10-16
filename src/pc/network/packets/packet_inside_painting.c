@@ -5,7 +5,7 @@
 #define DISABLE_MODULE_LOG
 #include "pc/debuglog.h"
 
-extern u8 gControlledWarp;
+extern u8 gControlledWarpGlobalIndex;
 
 extern u8 sSelectableStarIndex;
 extern u8 sSelectedActIndex;
@@ -42,8 +42,7 @@ void network_receive_inside_painting(struct Packet* p) {
     struct PacketInsidePaintingData remote = { 0 };
     packet_read(p, &remote, sizeof(struct PacketInsidePaintingData));
 
-    // two-player hack: gControlledWarp is a bool instead of an index
-    if (gControlledWarp) {
+    if (gControlledWarpGlobalIndex == gNetworkPlayerLocal->globalIndex) {
         LOG_ERROR("this should never happen, received inside_painting when gControlledWarp");
         return;
     }

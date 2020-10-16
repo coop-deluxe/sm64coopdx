@@ -55,7 +55,7 @@ s8 sSelectableStarIndex = 0;
 // Act Selector menu timer that keeps counting until you choose an act.
 static s32 sActSelectorMenuTimer = 0;
 
-extern u8 gControlledWarp;
+extern u8 gControlledWarpGlobalIndex;
 
 /**
  * Act Selector Star Type Loop Action
@@ -177,7 +177,7 @@ void bhv_act_selector_loop(void) {
         // Sometimes, stars are not selectable even if they appear on the screen.
         // This code filters selectable and non-selectable stars.
         sSelectedActIndex = 0;
-        if (gControlledWarp) {
+        if (gControlledWarpGlobalIndex == gNetworkPlayerLocal->globalIndex) {
             s8 oldIndex = sSelectableStarIndex;
             handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, &sSelectableStarIndex, 0, sObtainedStars);
             if (oldIndex != sSelectableStarIndex) { network_send_inside_painting(); }
@@ -195,7 +195,7 @@ void bhv_act_selector_loop(void) {
         }
     } else {
         // If all stars are collected then they are all selectable.
-        if (gControlledWarp) {
+        if (gControlledWarpGlobalIndex == gNetworkPlayerLocal->globalIndex) {
             s8 oldIndex = sSelectableStarIndex;
             handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, &sSelectableStarIndex, 0, sVisibleStars - 1);
             if (oldIndex != sSelectableStarIndex) { network_send_inside_painting(); }
@@ -299,7 +299,7 @@ void print_act_selector_strings(void) {
     create_dl_ortho_matrix();
 
     // display disclaimer that the other player has to select
-    if (!gControlledWarp) {
+    if (gControlledWarpGlobalIndex != gNetworkPlayerLocal->globalIndex) {
         gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
         u8 a = ((gGlobalTimer % 24) >= 12) ? 160 : 130;
         gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, a);
@@ -436,7 +436,7 @@ s32 lvl_init_act_selector_values_and_stars(UNUSED s32 arg, UNUSED s32 unused) {
  * Also updates objects and returns act number selected after is chosen.
  */
 s32 lvl_update_obj_and_load_act_button_actions(UNUSED s32 arg, UNUSED s32 unused) {
-    if (gControlledWarp && sActSelectorMenuTimer >= 11) {
+    if ((gControlledWarpGlobalIndex == gNetworkPlayerLocal->globalIndex) && sActSelectorMenuTimer >= 11) {
         // If any of these buttons are pressed, play sound and go to course act
 #ifndef VERSION_EU
         if ((gPlayer3Controller->buttonPressed & A_BUTTON)
@@ -473,5 +473,5 @@ void star_select_finish_selection(void) {
     }
     gDialogCourseActNum = sSelectedActIndex + 1;
 
-    if (gControlledWarp) { network_send_inside_painting(); }
+    if (gControlledWarpGlobalIndex == gNetworkPlayerLocal->globalIndex) { network_send_inside_painting(); }
 }

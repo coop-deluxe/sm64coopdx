@@ -6,6 +6,7 @@
 #include "course_table.h"
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
+#include "pc/debuglog.h"
 
 #define RESERVATION_COUNT 10
 
@@ -51,6 +52,7 @@ void network_send_reservation(u8 toLocalIndex) {
     packet_init(&p, PACKET_RESERVATION, true, false);
     packet_write(&p, reservedObjs, sizeof(u8) * RESERVATION_COUNT);
     network_send_to(toLocalIndex, &p);
+    LOG_INFO("sent reservation list to %d", toLocalIndex);
 }
 
 void network_receive_reservation(struct Packet* p) {
@@ -66,4 +68,5 @@ void network_receive_reservation(struct Packet* p) {
         if (gSyncObjects[index].o != NULL) { continue; }
         gSyncObjects[index].reserved = gNetworkPlayerLocal->globalIndex;
     }
+    LOG_INFO("received reservation list");
 }

@@ -49,7 +49,7 @@
 #define WARP_NODE_CREDITS_MIN 0xF8
 
 struct SavedWarpValues gReceiveWarp = { 0 };
-u8 gControlledWarp = 0;
+u8 gControlledWarpGlobalIndex = 0;
 extern s8 sReceivedLoadedActNum;
 u8 gRejectInstantWarp = 0;
 
@@ -1028,7 +1028,7 @@ static void check_received_warp(void) {
     D_80339EE0 = gReceiveWarp.D_80339EE0;
     gPaintingMarioYEntry = gReceiveWarp.paintingMarioYEntry;
 
-    if (!gControlledWarp) {
+    if (gControlledWarpGlobalIndex != gNetworkPlayerLocal->globalIndex) {
         // force well behaved state
         extern s16 gMenuMode;
         gMenuMode = -1;

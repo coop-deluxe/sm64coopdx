@@ -64,8 +64,7 @@ void network_receive_spawn_objects(struct Packet* p) {
 
     packet_read(p, &objectCount, sizeof(u8));
 
-    // two-player hack
-    u8 reserveId = (gNetworkLevelLoaded && gNetworkType == NT_SERVER) ? 1 : 0;
+    u8 reserveId = gNetworkLevelLoaded ? gNetworkPlayers[p->localIndex].globalIndex : 0;
     bool receivedReservedSyncObject = false;
 
     struct Object* spawned[MAX_SPAWN_OBJECTS_PER_PACKET] = { 0 };

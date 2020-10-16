@@ -7,13 +7,16 @@
 #define DISABLE_MODULE_LOG
 #include "pc/debuglog.h"
 
+// two-player hack
+// this entire system needs to be ripped out and replaced
+
 static u8 eventId = 0;
 static u8 remoteFinishedEventId[2] = { (u8)-1, (u8)-1 };
 
 extern s16 gTTCSpeedSetting;
 extern s16 D_80339EE0;
 extern float gPaintingMarioYEntry;
-extern u8 gControlledWarp; // two-player hack
+extern u8 gControlledWarpGlobalIndex;
 
 extern struct SavedWarpValues gReceiveWarp;
 struct SavedWarpValues saved = { 0 };
@@ -36,7 +39,7 @@ struct PacketLevelWarpData {
 static void populate_packet_data(struct PacketLevelWarpData* data, bool done, u8 packetEventId) {
     data->eventId = packetEventId;
     data->done = done;
-    data->controlledWarp = gControlledWarp;
+    data->controlledWarp = gControlledWarpGlobalIndex;
     data->warpDest = saved.warpDest;
     data->inWarpCheckpoint = saved.inWarpCheckpoint;
     data->ttcSpeedSetting = saved.ttcSpeedSetting;
@@ -53,9 +56,9 @@ void network_send_level_warp_begin(void) {
     saved.paintingMarioYEntry = gPaintingMarioYEntry;
 
     float elapsedSinceDone = (clock() - lastDoneEvent) / CLOCKS_PER_SEC;
-    gControlledWarp = (elapsedSinceDone < 1.0f)
-                      ? (gNetworkType == NT_SERVER) // two-player hack
-                      : true;
+    gControlledWarpGlobalIndex = (elapsedSinceDone < 1.0f)
+                               ? 0
+                               : gNetworkPlayerLocal->globalIndex;
 
     eventId++;
     if (eventId == (u8)-1) { eventId++; }
@@ -136,7 +139,7 @@ void network_receive_level_warp(struct Packet* p) {
         } else if (!isInWarp) {
             // client initiated warp
             LOG_INFO("client initiated warp!");
-            gControlledWarp = !remote.controlledWarp; // two-player hack
+            gControlledWarpGlobalIndex = remote.controlledWarp;
 
             saved.warpDest = remote.warpDest;
             saved.inWarpCheckpoint = remote.inWarpCheckpoint;
@@ -165,7 +168,7 @@ void network_receive_level_warp(struct Packet* p) {
 
     // server initiated warp
     LOG_INFO("server initiated warp!");
-    gControlledWarp = !remote.controlledWarp; // two-player hack
+    gControlledWarpGlobalIndex = remote.controlledWarp;
 
     saved.warpDest = remote.warpDest;
     saved.inWarpCheckpoint = remote.inWarpCheckpoint;
