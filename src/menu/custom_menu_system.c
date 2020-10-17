@@ -96,7 +96,11 @@ void custom_menu_system_init(void) {
 }
 
 void custom_menu_destroy(void) {
-    /* TODO: we should probably clean up all of this stuff */
+    //  TODO: clean up all of the calloc()'d memory
+    sHead = NULL;
+    sCurrentMenu = NULL;
+    sLastMenu = NULL;
+    overlay = NULL;
 }
 
 void custom_menu_system_loop(void) {

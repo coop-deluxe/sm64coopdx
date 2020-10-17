@@ -292,7 +292,11 @@ void custom_menu_init(struct CustomMenu* head) {
 
 void custom_menu_loop(void) {
     // we've received an event that makes us exit the menus
-    if (sGotoGame) { sSelectedFileNum = sGotoGame; }
+    if (sGotoGame) {
+        sSelectedFileNum = sGotoGame;
+        custom_menu_close_system();
+        custom_menu_destroy();
+    }
 
     // force-start the load when command-line server hosting
     if (gNetworkType == NT_SERVER && sSelectedFileNum == 0) {
