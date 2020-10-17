@@ -16051,5 +16051,11 @@
     <ClInclude Include="..\src\game\characters.h">
       <Filter>Header Files\src\game</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\pc\network\branch.h">
+      <Filter>Header Files\src\pc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\luigi_audio_defines.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

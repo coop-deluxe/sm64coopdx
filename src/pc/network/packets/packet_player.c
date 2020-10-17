@@ -326,8 +326,7 @@ void network_receive_player(struct Packet* p) {
     if ((m->action == ACT_PUNCHING || m->action == ACT_MOVE_PUNCHING)) {
         // play first punching sound, otherwise it will be missed
         if (m->action != oldData.action) {
-            u8 isLuigi = (gNetworkType == NT_SERVER) ? (m->playerIndex != 0) : (m->playerIndex == 0);
-            play_sound((configLuigiSounds && isLuigi) ? SOUND_LUIGI_PUNCH_YAH : SOUND_MARIO_PUNCH_YAH, m->marioObj->header.gfx.cameraToObject);
+            play_sound(get_character_sound(m)->soundPunchYah, m->marioObj->header.gfx.cameraToObject);
         }
         // make the first punch large, otherwise it will be missed
         if (m->actionArg == 2 && oldData.actionArg == 1) {

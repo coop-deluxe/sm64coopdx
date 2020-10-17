@@ -3,7 +3,7 @@
 
 /* Mario Sound Effects */
 // A random number 0-2 is added to the sound ID before playing, producing Yah/Wah/Hoo
-#define SOUND_LUIGI_YAH_WAH_HOO                         SOUND_ARG_LOAD(0x0A, 4, 0x00, 0x80, 8)
+#define SOUND_LUIGI_YAH_WAH_HOO      SOUND_ARG_LOAD(0x0A, 4, 0x00, 0x80, 8)
 #define SOUND_LUIGI_HOOHOO           SOUND_ARG_LOAD(0x0A, 4, 0x03, 0x80, 8)
 #define SOUND_LUIGI_YAHOO            SOUND_ARG_LOAD(0x0A, 4, 0x04, 0x80, 8)
 #define SOUND_LUIGI_UH               SOUND_ARG_LOAD(0x0A, 4, 0x05, 0x80, 8)
@@ -14,10 +14,10 @@
 #define SOUND_LUIGI_ATTACKED         SOUND_ARG_LOAD(0x0A, 4, 0x0A, 0xFF, 8)
 #define SOUND_LUIGI_OOOF             SOUND_ARG_LOAD(0x0A, 4, 0x0B, 0x80, 8)
 #define SOUND_LUIGI_OOOF2            SOUND_ARG_LOAD(0x0A, 4, 0x0B, 0xD0, 8)
-#define SOUND_LUIGI_HERE_WE_GO                          SOUND_ARG_LOAD(0x0A, 4, 0x0C, 0x80, 8)
+#define SOUND_LUIGI_HERE_WE_GO       SOUND_ARG_LOAD(0x0A, 4, 0x0C, 0x80, 8)
 #define SOUND_LUIGI_YAWNING          SOUND_ARG_LOAD(0x0A, 4, 0x0D, 0x80, 8)
-#define SOUND_LUIGI_SNORING1                            SOUND_ARG_LOAD(0x0A, 4, 0x0E, 0x80, 8)
-#define SOUND_LUIGI_SNORING2                            SOUND_ARG_LOAD(0x0A, 4, 0x0F, 0x80, 8)
+#define SOUND_LUIGI_SNORING1         SOUND_ARG_LOAD(0x0A, 4, 0x0E, 0x80, 8)
+#define SOUND_LUIGI_SNORING2         SOUND_ARG_LOAD(0x0A, 4, 0x0F, 0x80, 8)
 #define SOUND_LUIGI_WAAAOOOW         SOUND_ARG_LOAD(0x0A, 4, 0x10, 0xC0, 8)
 #define SOUND_LUIGI_HAHA             SOUND_ARG_LOAD(0x0A, 4, 0x11, 0x80, 8)
 #define SOUND_LUIGI_HAHA_2           SOUND_ARG_LOAD(0x0A, 4, 0x11, 0xF0, 8)
@@ -25,7 +25,7 @@
 #define SOUND_LUIGI_UH2_2            SOUND_ARG_LOAD(0x0A, 4, 0x13, 0x80, 8)
 #define SOUND_LUIGI_ON_FIRE          SOUND_ARG_LOAD(0x0A, 4, 0x14, 0xA0, 8)
 #define SOUND_LUIGI_DYING            SOUND_ARG_LOAD(0x0A, 4, 0x15, 0xFF, 8)
-#define SOUND_LUIGI_PANTING_COLD                        SOUND_ARG_LOAD(0x0A, 4, 0x16, 0x80, 8)
+#define SOUND_LUIGI_PANTING_COLD     SOUND_ARG_LOAD(0x0A, 4, 0x16, 0x80, 8)
 
 // A random number 0-2 is added to the sound ID before playing
 #define SOUND_LUIGI_PANTING                     SOUND_ARG_LOAD(0x0A, 4, 0x18, 0x80, 8)
