@@ -371,6 +371,10 @@ static void koopa_shelled_update(void) {
  * action.
  */
 static void koopa_unshelled_act_run(void) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+
     f32 distToShell = 99999.0f;
     struct Object *shell;
 
@@ -380,9 +384,6 @@ static void koopa_unshelled_act_run(void) {
     if (o->oKoopaTurningAwayFromWall) {
         o->oKoopaTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oKoopaTargetYaw, 0x600);
     } else {
-        struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
-        int angleToPlayer = obj_angle_to_object(o, player);
 
         // If far from home, then turn toward home
         if (distanceToPlayer >= 25000.0f) {
@@ -413,7 +414,7 @@ static void koopa_unshelled_act_run(void) {
             cur_obj_rotate_yaw_toward(o->oKoopaTargetYaw, 0x600);
         } else {
             // otherwise continue running from mario
-            cur_obj_rotate_yaw_toward(o->oAngleToMario + 0x8000, 0x600);
+            cur_obj_rotate_yaw_toward(angleToPlayer + 0x8000, 0x600);
         }
     }
 

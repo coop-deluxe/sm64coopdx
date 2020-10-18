@@ -20,7 +20,7 @@ void bhv_bowser_shock_wave_loop(void) {
         sp20 = o->oBowserShockWaveUnkF4 * D_8032F420[3];
         if ((sp2C < o->oDistanceToMario && o->oDistanceToMario < sp28)
             || (sp24 < o->oDistanceToMario && o->oDistanceToMario < sp20))
-            gMarioObject->oInteractStatus |=
+            gMarioStates[0].marioObj->oInteractStatus |=
                 0x10; // This is interact_coin, but the name sounds wrong in this behiavor
     }
 }
