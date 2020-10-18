@@ -9,7 +9,9 @@ void bub_spawner_act_0(void) {
     s32 i;
     s32 sp18 = o->oBirdChirpChirpUnkF4;
 #ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario < 1500.0f) {
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    if (distanceToPlayer < 1500.0f) {
 #endif
         for (i = 0; i < sp18; i++)
             spawn_object(o, MODEL_BUB, bhvBub);
@@ -60,6 +62,7 @@ void bub_act_0(void) {
 void bub_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
     int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
     f32 dy;
     if (o->oTimer == 0) {
         o->oForwardVel = random_float() * 2 + 2;
@@ -79,9 +82,9 @@ void bub_act_1(void) {
             o->oPosY = o->oPosY - 1.0f;
     }
     if (800.0f < cur_obj_lateral_dist_from_mario_to_home())
-        o->oAngleToMario = cur_obj_angle_to_home();
-    cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x100);
-    if (o->oDistanceToMario < 200.0f)
+        angleToPlayer = cur_obj_angle_to_home();
+    cur_obj_rotate_yaw_toward(angleToPlayer, 0x100);
+    if (distanceToPlayer < 200.0f)
         if (distanceToPlayer < 0.5)
             o->oAction = 2;
     if (o->oInteractStatus & INT_STATUS_INTERACTED)
@@ -90,6 +93,7 @@ void bub_act_1(void) {
 
 void bub_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
     f32 dy;
     if (o->oTimer < 20) {
@@ -117,7 +121,7 @@ void bub_act_2(void) {
     if (cur_obj_lateral_dist_from_mario_to_home() > 800.0f)
         angleToPlayer = cur_obj_angle_to_home();
     cur_obj_rotate_yaw_toward(angleToPlayer + 0x8000, 0x400);
-    if (o->oTimer > 200 && o->oDistanceToMario > 600.0f)
+    if (o->oTimer > 200 && distanceToPlayer > 600.0f)
         o->oAction = 1;
 }
 
