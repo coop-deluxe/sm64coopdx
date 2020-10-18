@@ -108,6 +108,7 @@ void bhv_wiggler_body_part_update(void) {
     if (o->parentObj->oAction == WIGGLER_ACT_SHRINK) {
         cur_obj_become_intangible();
     } else {
+        cur_obj_become_tangible();
         obj_check_attacks(&sWigglerBodyPartHitbox, o->oAction);
     }
 }
@@ -235,7 +236,7 @@ static void wiggler_act_walk(void) {
 
         // If Mario is positioned below the wiggler, assume he entered through the
         // lower cave entrance, so don't display text.
-        if (player->oPosY < o->oPosY || (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, DIALOG_150, wiggler_act_walk_continue_dialog) != 0)) {
+        if (player->oPosY < o->oPosY || (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, DIALOG_150, wiggler_act_walk_continue_dialog) != 0)) {
             o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
             network_send_object_reliability(o, TRUE);
         }
@@ -280,6 +281,7 @@ static void wiggler_act_walk(void) {
         obj_face_pitch_approach(0, 0x320);
 
         // For the first two seconds of walking, stay invulnerable
+        cur_obj_become_tangible();
         if (o->oTimer < 60) {
             obj_check_attacks(&sWigglerHitbox, o->oAction);
         } else if (obj_handle_attacks(&sWigglerHitbox, o->oAction, sWigglerAttackHandlers)) {
@@ -415,11 +417,13 @@ u8 bhv_wiggler_ignore_if_true(void) {
 }
 
 static Vec3f wigglerPrePos = { 0 };
+static u8 wigglerCompletedDialog = FALSE;
 
 void bhv_wiggler_on_received_pre(u8 localIndex) {
     wigglerPrePos[0] = o->oPosX;
     wigglerPrePos[1] = o->oPosY;
     wigglerPrePos[2] = o->oPosZ;
+    wigglerCompletedDialog = (o->oWigglerTextStatus == WIGGLER_TEXT_STATUS_COMPLETED_DIALOG);
 }
 
 void bhv_wiggler_on_received_post(u8 localIndex) {
@@ -431,6 +435,9 @@ void bhv_wiggler_on_received_post(u8 localIndex) {
         o->oWigglerSegments[i].posX += posDiff[0];
         o->oWigglerSegments[i].posY += posDiff[1];
         o->oWigglerSegments[i].posZ += posDiff[2];
+    }
+    if (wigglerCompletedDialog) {
+        o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
     }
 }
 
