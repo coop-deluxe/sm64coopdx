@@ -30,11 +30,11 @@ fi
 # debug on client #
 ###################
 
-$FILE --server 27015 --configfile sm64config_server.txt  &
+$FILE --server 27015 --configfile sm64config_server.txt &
 
 # debug if cgdb exists
 if ! [ -x "$(command -v cgdb)" ]; then
-    $FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
+    $FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt &
 else
     winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --client 127.0.0.1 27015 --configfile sm64config_client.txt' -ex 'quit'
 fi

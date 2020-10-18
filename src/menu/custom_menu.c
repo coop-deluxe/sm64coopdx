@@ -295,7 +295,6 @@ void custom_menu_loop(void) {
     if (sGotoGame) {
         sSelectedFileNum = sGotoGame;
         custom_menu_close_system();
-        custom_menu_destroy();
     }
 
     // force-start the load when command-line server hosting
