@@ -562,6 +562,14 @@ static void newcam_set_pan(void) {
     newcam_pan_z = newcam_pan_z*(min(newcam_distance/newcam_distance_target,1));
 }
 
+static void newcam_level_bounds() {
+    u8 hasMinY = FALSE;
+    f32 minY = 0;
+    get_area_minimum_y(&hasMinY, &minY);
+    if (!hasMinY) { return; }
+    newcam_pos[1] = MAX(newcam_pos[1], minY);
+}
+
 static void newcam_position_cam(void) {
     f32 floorY = 0;
     f32 floorY2 = 0;
@@ -595,6 +603,7 @@ static void newcam_position_cam(void) {
     if (newcam_modeflags & NC_FLAG_FOCUSZ)
         newcam_lookat[2] = newcam_pos_target[2]-newcam_pan_z;
 
+    newcam_level_bounds();
     if (newcam_modeflags & NC_FLAG_COLLISION) {
         newcam_collision();
         newcam_bounding_box();

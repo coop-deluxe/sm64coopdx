@@ -969,6 +969,15 @@ s32 act_bubbled(struct MarioState* m) {
         m->vel[i] = (oldVel[i] * 0.9f + m->vel[i] * 0.1f);
     }
 
+    // enforce minimum y for the level
+    u8 hasMinY = FALSE;
+    f32 minY = 0;
+    get_area_minimum_y(&hasMinY, &minY);
+    if (hasMinY && m->pos[1] < minY) {
+        m->vel[1] = MAX(0, m->vel[1]);
+        m->pos[1] += 25;
+    }
+
     // move player
     switch (perform_air_step(m, 0)) {
         case AIR_STEP_LANDED:
