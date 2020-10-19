@@ -22,7 +22,11 @@ struct DemoInput
     u8 buttonMask;
 };
 
+#ifdef UNSTABLE_BRANCH
 extern struct Controller gControllers[MAX_PLAYERS];
+#else
+extern struct Controller gControllers[3];
+#endif
 extern OSContStatus gControllerStatuses[4];
 extern OSContPad gControllerPads[4];
 extern OSMesgQueue gGameVblankQueue;
