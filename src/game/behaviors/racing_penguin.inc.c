@@ -96,6 +96,19 @@ static void racing_penguin_act_race(void) {
     f32 targetSpeed;
     f32 minSpeed;
 
+    // prevent segfault / error state
+    if (o->oPathedStartWaypoint == NULL) {
+        struct Object* child;
+        child = cur_obj_nearest_object_with_behavior(bhvPenguinRaceFinishLine);
+        child->parentObj = o;
+
+        child = cur_obj_nearest_object_with_behavior(bhvPenguinRaceShortcutCheck);
+        child->parentObj = o;
+
+        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+        o->oPathedPrevWaypointFlags = 0;
+    }
+
     if (cur_obj_follow_path(0) == PATH_REACHED_END) {
         o->oRacingPenguinReachedBottom = TRUE;
         o->oAction = RACING_PENGUIN_ACT_FINISH_RACE;

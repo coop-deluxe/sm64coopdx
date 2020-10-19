@@ -61,11 +61,11 @@ void bhv_scuttlebug_loop(void) {
         case 1:
             o->oForwardVel = 5.0f;
             if (cur_obj_lateral_dist_from_obj_to_home(player) > 1000.0f)
-                o->oAngleToMario = angleToPlayer;
+                angleToPlayer = angleToPlayer;
             else {
                 if (o->oScuttlebugUnkF8 == 0) {
                     o->oScuttlebugUnkFC = 0;
-                    o->oAngleToMario = obj_angle_to_object(o, player);
+                    angleToPlayer = obj_angle_to_object(o, player);
                     if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x800) {
                         o->oScuttlebugUnkF8 = 1;
                         o->oVelY = 20.0f;
@@ -84,11 +84,11 @@ void bhv_scuttlebug_loop(void) {
             break;
         case 2:
             o->oForwardVel = 5.0f;
-            if ((s16) o->oMoveAngleYaw == (s16) o->oAngleToMario)
+            if ((s16) o->oMoveAngleYaw == (s16)angleToPlayer)
                 o->oSubAction = 1;
             if (o->oPosY - o->oHomeY < -200.0f)
                 obj_mark_for_deletion(o);
-            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
+            cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
             break;
         case 3:
             o->oFlags &= ~8;

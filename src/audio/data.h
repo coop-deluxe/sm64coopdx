@@ -41,12 +41,12 @@ extern s16 *gWaveSamples[4];
 
 #ifdef VERSION_EU
 extern u8 euUnknownData_8030194c[4];
-extern u16 gHeadsetPanQuantization[0x10];
+extern u16 gHeadsetPanQuantization[0x11];
 extern s32 euUnknownData_80301950[32];
 extern struct NoteSubEu gZeroNoteSub;
 extern struct NoteSubEu gDefaultNoteSub;
 #else
-extern u16 gHeadsetPanQuantization[10];
+extern u16 gHeadsetPanQuantization[11];
 #endif
 extern f32 gHeadsetPanVolume[128];
 extern f32 gStereoPanVolume[128];

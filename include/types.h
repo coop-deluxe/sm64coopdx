@@ -7,6 +7,7 @@
 #include <ultra64.h>
 #include "macros.h"
 #include "src/game/characters.h"
+#include "pc/network/version.h"
 
 // Certain functions are marked as having return values, but do not
 // actually return a value. This causes undefined behavior, which we'd rather
@@ -390,7 +391,7 @@ struct MarioState
 // NOTE: this defines the maximum number of players...
 //       HOWEVER, simply increasing this to 3 will not magically work
 //       many things will have to be overhauled!
-#ifdef DEVELOPMENT
+#ifdef UNSTABLE_BRANCH
 #define MAX_PLAYERS 4
 #else
 #define MAX_PLAYERS 2

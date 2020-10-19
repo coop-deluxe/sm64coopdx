@@ -456,3 +456,15 @@ void render_game(void) {
     D_8032CE74 = NULL;
     D_8032CE78 = 0;
 }
+
+void get_area_minimum_y(u8* hasMinY, f32* minY) {
+    switch (gCurrCourseNum) {
+        case COURSE_WF:    *hasMinY = TRUE; *minY = 8; break;
+        case COURSE_CCM:   *hasMinY = TRUE; *minY = (gCurrAreaIndex == 2) ? -5856 : -5068; break;
+        case COURSE_PSS:   *hasMinY = TRUE; *minY = -4600; break;
+        case COURSE_BITDW: *hasMinY = TRUE; *minY = -3416; break;
+        case COURSE_TTM:   *hasMinY = (gCurrAreaIndex == 1) ? TRUE : FALSE; *minY = -6000; break;
+        case COURSE_RR:    *hasMinY = TRUE; *minY = -4790; break;
+        case COURSE_BITS:  *hasMinY = TRUE; *minY = -5065; break;
+    }
+}

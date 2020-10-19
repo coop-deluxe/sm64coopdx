@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 if [ $# -eq 0 ]; then
     make BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 STRICT=1 -j

@@ -19,8 +19,8 @@
 #endif
 #endif
 
-#define LAYERS_MAX       4
-#define CHANNELS_MAX     16
+#define LAYERS_MAX       8
+#define CHANNELS_MAX     32
 
 #define NO_LAYER ((struct SequenceChannelLayer *)(-1))
 

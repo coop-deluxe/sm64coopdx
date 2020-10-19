@@ -55,6 +55,7 @@ void packet_receive(struct Packet* p) {
         case PACKET_SAVE_FILE:           network_receive_save_file(p);           break;
         case PACKET_INSTANT_WARP:        network_receive_instant_warp(p);        break;
         case PACKET_NETWORK_PLAYERS:     network_receive_network_players(p);     break;
+        case PACKET_DEATH:               network_receive_death(p);               break;
         ///
         case PACKET_CUSTOM:              network_receive_custom(p);              break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);

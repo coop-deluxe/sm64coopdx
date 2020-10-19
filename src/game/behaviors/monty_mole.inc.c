@@ -215,8 +215,11 @@ static void monty_mole_act_select_hole(void) {
         o->oPosY = o->oFloorHeight = o->oMontyMoleCurrentHole->oPosY;
         o->oPosZ = o->oMontyMoleCurrentHole->oPosZ;
 
+        struct Object* holePlayer = nearest_player_to_object(o->oMontyMoleCurrentHole);
+        int angleToHolePlayer = obj_angle_to_object(o->oMontyMoleCurrentHole, holePlayer);
+
         o->oFaceAnglePitch = 0;
-        o->oMoveAngleYaw = o->oMontyMoleCurrentHole->oAngleToMario;
+        o->oMoveAngleYaw = angleToHolePlayer;
 
         struct Object* player = nearest_player_to_object(o);
         int distanceToPlayer = dist_between_objects(o, player);

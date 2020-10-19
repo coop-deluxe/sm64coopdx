@@ -21,11 +21,18 @@ struct CustomMenu {
     void (*on_close)(void);
 };
 
+struct CustomMenuButtonScale {
+    f32 small;
+    f32 medium;
+    f32 large;
+};
+extern struct CustomMenuButtonScale gButtonScale;
+
 extern u8 gMenuStringAlpha;
 
 void custom_menu_system_init(void);
-struct CustomMenu* custom_menu_create(struct CustomMenu* parent, char* label, u16 x, u16 y);
-struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, s32 clickSound, void (*on_click)(void));
+struct CustomMenu* custom_menu_create(struct CustomMenu* parent, char* label, u16 x, u16 y, f32 scale);
+struct CustomMenuButton* custom_menu_create_button(struct CustomMenu* parent, char* label, u16 x, u16 y, f32 scale, s32 clickSound, void (*on_click)(void));
 
 void custom_menu_system_loop(void);
 void custom_menu_print_strings(void);

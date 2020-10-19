@@ -31,6 +31,7 @@
 #include "obj_behaviors.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/pc_main.h"
+#include "pc/configfile.h"
 #include "pc/network/network.h"
 
 // TODO: put this elsewhere
@@ -674,7 +675,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                 break;
 
             case 42:
-                play_sound(SOUND_MARIO_HERE_WE_GO, m->marioObj->header.gfx.cameraToObject);
+                play_sound(get_character_sound(m)->soundHereWeGo, m->marioObj->header.gfx.cameraToObject);
                 break;
 
             case 80:
@@ -769,7 +770,7 @@ s32 act_standing_death(struct MarioState *m) {
         return set_mario_action(m, ACT_SUFFOCATION, 0);
     }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundDying, MARIO_ACTION_SOUND_PLAYED);
     common_death_handler(m, MARIO_ANIM_DYING_FALL_OVER, 80);
     if (m->marioObj->header.gfx.unk38.animFrame == 77) {
         play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
@@ -778,19 +779,19 @@ s32 act_standing_death(struct MarioState *m) {
 }
 
 s32 act_electrocution(struct MarioState *m) {
-    play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundDying, MARIO_ACTION_SOUND_PLAYED);
     common_death_handler(m, MARIO_ANIM_ELECTROCUTION, 43);
     return FALSE;
 }
 
 s32 act_suffocation(struct MarioState *m) {
-    play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundDying, MARIO_ACTION_SOUND_PLAYED);
     common_death_handler(m, MARIO_ANIM_SUFFOCATING, 86);
     return FALSE;
 }
 
 s32 act_death_on_back(struct MarioState *m) {
-    play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundDying, MARIO_ACTION_SOUND_PLAYED);
     if (common_death_handler(m, MARIO_ANIM_DYING_ON_BACK, 54) == 40) {
         play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
     }
@@ -798,7 +799,7 @@ s32 act_death_on_back(struct MarioState *m) {
 }
 
 s32 act_death_on_stomach(struct MarioState *m) {
-    play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundDying, MARIO_ACTION_SOUND_PLAYED);
     if (common_death_handler(m, MARIO_ANIM_DYING_ON_STOMACH, 37) == 37) {
         play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
     }
@@ -813,7 +814,7 @@ s32 act_quicksand_death(struct MarioState *m) {
     }
     if (m->actionState == 1) {
         if (m->quicksandDepth >= 100.0f) {
-            play_sound_if_no_flag(m, SOUND_MARIO_WAAAOOOW, MARIO_ACTION_SOUND_PLAYED);
+            play_sound_if_no_flag(m, get_character_sound(m)->soundWaaaooow, MARIO_ACTION_SOUND_PLAYED);
         }
         if ((m->quicksandDepth += 5.0f) >= 180.0f) {
             //level_trigger_warp(m, WARP_OP_DEATH);
@@ -827,7 +828,7 @@ s32 act_quicksand_death(struct MarioState *m) {
 }
 
 s32 act_eaten_by_bubba(struct MarioState *m) {
-    play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundDying, MARIO_ACTION_SOUND_PLAYED);
     set_mario_animation(m, MARIO_ANIM_A_POSE);
     //m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     if (m != &gMarioStates[0]) {
@@ -1092,7 +1093,7 @@ s32 act_emerge_from_pipe(struct MarioState *m) {
 
     marioObj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
 
-    play_sound_if_no_flag(m, SOUND_MARIO_YAHOO, MARIO_MARIO_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundYahoo, MARIO_MARIO_SOUND_PLAYED);
 
     if (gCurrLevelNum == LEVEL_THI) {
         if (gCurrAreaIndex == 2) {
@@ -1275,9 +1276,9 @@ s32 act_death_exit(struct MarioState *m) {
     if (15 < m->actionTimer++
         && launch_mario_until_land(m, ACT_DEATH_EXIT_LAND, MARIO_ANIM_GENERAL_FALL, -32.0f)) {
 #ifdef VERSION_JP
-        play_sound(SOUND_MARIO_OOOF, m->marioObj->header.gfx.cameraToObject);
+        play_sound(get_character_sound(m)->soundOoof, m->marioObj->header.gfx.cameraToObject);
 #else
-        play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
+        play_sound(get_character_sound(m)->soundOoof2, m->marioObj->header.gfx.cameraToObject);
 #endif
         queue_rumble_data_mario(m, 5, 80);
         //m->numLives--;
@@ -1292,9 +1293,9 @@ s32 act_death_exit(struct MarioState *m) {
 s32 act_unused_death_exit(struct MarioState *m) {
     if (launch_mario_until_land(m, ACT_FREEFALL_LAND_STOP, MARIO_ANIM_GENERAL_FALL, 0.0f)) {
 #ifdef VERSION_JP
-        play_sound(SOUND_MARIO_OOOF, m->marioObj->header.gfx.cameraToObject);
+        play_sound(get_character_sound(m)->soundOoof, m->marioObj->header.gfx.cameraToObject);
 #else
-        play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
+        play_sound(get_character_sound(m)->soundOoof2, m->marioObj->header.gfx.cameraToObject);
 #endif
         //m->numLives--;
         // restore 7.75 units of health
@@ -1308,9 +1309,9 @@ s32 act_unused_death_exit(struct MarioState *m) {
 s32 act_falling_death_exit(struct MarioState *m) {
     if (launch_mario_until_land(m, ACT_DEATH_EXIT_LAND, MARIO_ANIM_GENERAL_FALL, 0.0f)) {
 #ifdef VERSION_JP
-        play_sound(SOUND_MARIO_OOOF, m->marioObj->header.gfx.cameraToObject);
+        play_sound(get_character_sound(m)->soundOoof, m->marioObj->header.gfx.cameraToObject);
 #else
-        play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
+        play_sound(get_character_sound(m)->soundOoof2, m->marioObj->header.gfx.cameraToObject);
 #endif
         queue_rumble_data_mario(m, 5, 80);
         //m->numLives--;
@@ -1326,7 +1327,7 @@ s32 act_falling_death_exit(struct MarioState *m) {
 s32 act_special_exit_airborne(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
 
-    play_sound_if_no_flag(m, SOUND_MARIO_YAHOO, MARIO_MARIO_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundYahoo, MARIO_MARIO_SOUND_PLAYED);
 
     if (m->actionTimer++ < 11) {
         marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
@@ -1574,7 +1575,7 @@ s32 act_teleport_fade_in(struct MarioState *m) {
 }
 
 s32 act_shocked(struct MarioState *m) {
-    play_sound_if_no_flag(m, SOUND_MARIO_WAAAOOOW, MARIO_ACTION_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundWaaaooow, MARIO_ACTION_SOUND_PLAYED);
     play_sound(SOUND_MOVING_SHOCKED, m->marioObj->header.gfx.cameraToObject);
     if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_SHOCK); }
 
@@ -1636,7 +1637,7 @@ s32 act_squished(struct MarioState *m) {
                 if (!(m->flags & MARIO_METAL_CAP) && m->invincTimer == 0) {
                     // cap on: 3 units; cap off: 4.5 units
                     m->hurtCounter += m->flags & MARIO_CAP_ON_HEAD ? 12 : 18;
-                    play_sound_if_no_flag(m, SOUND_MARIO_ATTACKED, MARIO_MARIO_SOUND_PLAYED);
+                    play_sound_if_no_flag(m, get_character_sound(m)->soundAttacked, MARIO_MARIO_SOUND_PLAYED);
                 }
 
                 // Both of the 1.8's are really floats, but one of them has to
@@ -1858,9 +1859,9 @@ static void intro_cutscene_jump_out_of_pipe(struct MarioState *m) {
 #ifdef VERSION_EU
         // For some reason these calls were swapped.
         play_sound_if_no_flag(m, SOUND_ACTION_HIT_3, MARIO_ACTION_SOUND_PLAYED);
-        play_sound_if_no_flag(m, SOUND_MARIO_YAHOO, MARIO_MARIO_SOUND_PLAYED);
+        play_sound_if_no_flag(m, get_character_sound(m)->soundYahoo, MARIO_MARIO_SOUND_PLAYED);
 #else
-        play_sound_if_no_flag(m, SOUND_MARIO_YAHOO, MARIO_MARIO_SOUND_PLAYED);
+        play_sound_if_no_flag(m, get_character_sound(m)->soundYahoo, MARIO_MARIO_SOUND_PLAYED);
     #ifndef VERSION_JP
         play_sound_if_no_flag(m, SOUND_ACTION_HIT_3, MARIO_ACTION_SOUND_PLAYED);
     #endif
@@ -1872,7 +1873,7 @@ static void intro_cutscene_jump_out_of_pipe(struct MarioState *m) {
             sound_banks_enable(2, 0x0330);
             play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
 #ifndef VERSION_JP
-            play_sound(SOUND_MARIO_HAHA, m->marioObj->header.gfx.cameraToObject);
+            play_sound(get_character_sound(m)->soundHaha, m->marioObj->header.gfx.cameraToObject);
 #endif
             advance_cutscene_step(m);
         }
@@ -2010,16 +2011,16 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
 
         switch (animFrame) {
             case 3:
-                play_sound(SOUND_MARIO_YAH_WAH_HOO + (gAudioRandom % 3 << 16),
+                play_sound((get_character_sound(m)->soundYahWahHoo) + (gAudioRandom % 3 << 16),
                            m->marioObj->header.gfx.cameraToObject);
                 break;
 
             case 28:
-                play_sound(SOUND_MARIO_HOOHOO, m->marioObj->header.gfx.cameraToObject);
+                play_sound(get_character_sound(m)->soundHoohoo, m->marioObj->header.gfx.cameraToObject);
                 break;
 
             case 60:
-                play_sound(SOUND_MARIO_YAHOO, m->marioObj->header.gfx.cameraToObject);
+                play_sound(get_character_sound(m)->soundYahoo, m->marioObj->header.gfx.cameraToObject);
                 break;
         }
         m->particleFlags |= PARTICLE_SPARKLES;

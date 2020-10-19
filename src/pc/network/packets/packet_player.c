@@ -10,6 +10,7 @@
 #include "engine/surface_collision.h"
 #include "game/object_list_processor.h"
 #include "game/chat.h"
+#include "pc/configfile.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -325,7 +326,7 @@ void network_receive_player(struct Packet* p) {
     if ((m->action == ACT_PUNCHING || m->action == ACT_MOVE_PUNCHING)) {
         // play first punching sound, otherwise it will be missed
         if (m->action != oldData.action) {
-            play_sound(SOUND_MARIO_PUNCH_YAH, m->marioObj->header.gfx.cameraToObject);
+            play_sound(get_character_sound(m)->soundPunchYah, m->marioObj->header.gfx.cameraToObject);
         }
         // make the first punch large, otherwise it will be missed
         if (m->actionArg == 2 && oldData.actionArg == 1) {

@@ -20,6 +20,8 @@
 #include "obj_behaviors.h"
 #include "level_update.h"
 #include "mario_step.h"
+#include "pc/configfile.h"
+#include "pc/network/network.h"
 
 #define POLE_NONE 0
 #define POLE_TOUCHED_FLOOR 1
@@ -234,7 +236,7 @@ s32 act_climbing_pole(struct MarioState *m) {
 
 s32 act_grab_pole_slow(struct MarioState *m) {
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
-    play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundWhoa, MARIO_MARIO_SOUND_PLAYED);
 
     if (set_pole_position(m, 0.0f) == POLE_NONE) {
         set_mario_animation(m, MARIO_ANIM_GRAB_POLE_SHORT);
@@ -251,7 +253,7 @@ s32 act_grab_pole_fast(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundWhoa, MARIO_MARIO_SOUND_PLAYED);
     m->faceAngle[1] += marioObj->oMarioPoleYawVel;
     marioObj->oMarioPoleYawVel = marioObj->oMarioPoleYawVel * 8 / 10;
 
@@ -597,7 +599,7 @@ s32 act_ledge_grab(struct MarioState *m) {
     }
 
     if (m->actionArg == 0) {
-        play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+        play_sound_if_no_flag(m, get_character_sound(m)->soundWhoa, MARIO_MARIO_SOUND_PLAYED);
     }
 
     stop_and_set_height_to_floor(m);
@@ -619,7 +621,7 @@ s32 act_ledge_climb_slow(struct MarioState *m) {
     }
 
     if (m->actionTimer == 10) {
-        play_sound_if_no_flag(m, SOUND_MARIO_EEUH, MARIO_MARIO_SOUND_PLAYED);
+        play_sound_if_no_flag(m, get_character_sound(m)->soundEeuh, MARIO_MARIO_SOUND_PLAYED);
     }
 
     update_ledge_climb(m, MARIO_ANIM_SLOW_LEDGE_GRAB, ACT_IDLE);
@@ -637,7 +639,7 @@ s32 act_ledge_climb_down(struct MarioState *m) {
         return let_go_of_ledge(m);
     }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_WHOA, MARIO_MARIO_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundWhoa, MARIO_MARIO_SOUND_PLAYED);
 
     update_ledge_climb(m, MARIO_ANIM_CLIMB_DOWN_LEDGE, ACT_LEDGE_GRAB);
     m->actionArg = 1;
@@ -650,7 +652,7 @@ s32 act_ledge_climb_fast(struct MarioState *m) {
         return let_go_of_ledge(m);
     }
 
-    play_sound_if_no_flag(m, SOUND_MARIO_UH2, MARIO_MARIO_SOUND_PLAYED);
+    play_sound_if_no_flag(m, get_character_sound(m)->soundUh2, MARIO_MARIO_SOUND_PLAYED);
 
     update_ledge_climb(m, MARIO_ANIM_FAST_LEDGE_GRAB, ACT_IDLE);
 
@@ -925,6 +927,7 @@ s32 act_bubbled(struct MarioState* m) {
     if (m->playerIndex == 0) {
         u8 allInBubble = TRUE;
         for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
                 allInBubble = FALSE;
                 break;
@@ -964,6 +967,15 @@ s32 act_bubbled(struct MarioState* m) {
     set_vel_from_pitch_and_yaw(m);
     for (int i = 0; i < 3; i++) {
         m->vel[i] = (oldVel[i] * 0.9f + m->vel[i] * 0.1f);
+    }
+
+    // enforce minimum y for the level
+    u8 hasMinY = FALSE;
+    f32 minY = 0;
+    get_area_minimum_y(&hasMinY, &minY);
+    if (hasMinY && m->pos[1] < minY) {
+        m->vel[1] = MAX(0, m->vel[1]);
+        m->pos[1] += 25;
     }
 
     // move player

@@ -145,9 +145,9 @@ static void cloud_act_main(void) {
     } else if (o->oBehParams2ndByte != CLOUD_BP_FWOOSH) {
         // This code should never run, since a lakitu cloud should always have
         // a parent
-        if (o->oDistanceToMario > 1500.0f) {
+        /*if (o->oDistanceToMario > 1500.0f) {
             o->oAction = CLOUD_ACT_UNLOAD;
-        }
+        }*/
     } else {
         cloud_fwoosh_update();
     }

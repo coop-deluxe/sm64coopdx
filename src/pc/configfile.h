@@ -60,6 +60,7 @@ extern bool         configCameraAnalog;
 #endif
 extern bool         configHUD;
 extern bool         configSkipIntro;
+extern bool         configShareLives;
 #ifdef DISCORDRPC
 extern bool         configDiscordRPC;
 #endif
@@ -71,6 +72,7 @@ extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
 extern unsigned int configNetworkSystem;
+extern bool         configLuigiSounds;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

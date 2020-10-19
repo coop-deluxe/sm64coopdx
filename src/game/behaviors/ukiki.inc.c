@@ -638,12 +638,13 @@ void hat_ukiki_held_loop(void) {
  * Initializatation for ukiki, determines if it has Mario's hat.
  */
 void bhv_ukiki_init(void) {
-    if (o->oBehParams2ndByte == UKIKI_HAT) {
-        if (save_file_get_flags() & SAVE_FLAG_CAP_ON_UKIKI) {
-            o->oUkikiTextState = UKIKI_TEXT_HAS_HAT;
-            o->oUkikiHasHat |= UKIKI_HAT_ON;
-        }
-    }
+    // skip hat save flags
+    //if (o->oBehParams2ndByte == UKIKI_HAT) {
+    //    if (save_file_get_flags() & SAVE_FLAG_CAP_ON_UKIKI) {
+    //        o->oUkikiTextState = UKIKI_TEXT_HAS_HAT;
+    //        o->oUkikiHasHat |= UKIKI_HAT_ON;
+    //    }
+    //}
 
     network_init_object(o, 4000.0f);
     network_init_object_field(o, &o->oUkikiTauntCounter);
@@ -684,7 +685,13 @@ void bhv_ukiki_loop(void) {
     }
 
     if (o->oUkikiHasHat & UKIKI_HAT_ON) {
-        o->oAnimState = UKIKI_ANIM_STATE_HAT_ON;
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (!does_mario_have_hat(&gMarioStates[i])) {
+                o->oAnimState = gMarioStates[i].character->capUkikiAnimState;
+                break;
+            }
+        }
     } else {
         o->oAnimState = UKIKI_ANIM_STATE_DEFAULT;
     }

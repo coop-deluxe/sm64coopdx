@@ -28,7 +28,12 @@
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
 // know of a good way to split them
+
+#ifdef UNSTABLE_BRANCH
+struct Controller gControllers[MAX_PLAYERS];
+#else
 struct Controller gControllers[3];
+#endif
 struct SPTask *gGfxSPTask;
 Gfx *gDisplayListHead;
 u8 *gGfxPoolEnd;

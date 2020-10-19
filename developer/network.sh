@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 if [ $# -eq 0 ]; then
     make BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 STRICT=1 -j
@@ -30,11 +31,11 @@ fi
 # debug on client #
 ###################
 
-$FILE --server 27015 --configfile sm64config_server.txt  &
+$FILE --server 27015 --configfile sm64config_server.txt &
 
 # debug if cgdb exists
 if ! [ -x "$(command -v cgdb)" ]; then
-    $FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
+    $FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt &
 else
     winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --client 127.0.0.1 27015 --configfile sm64config_client.txt' -ex 'quit'
 fi
