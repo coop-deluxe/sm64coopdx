@@ -3,7 +3,7 @@
 #include "types.h"
 
 static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
-#ifdef UNSTABLE_BRANCH
+//#ifdef UNSTABLE_BRANCH
 #define VERSION_TEXT "unst "
 #else
 #define VERSION_TEXT "beta "
