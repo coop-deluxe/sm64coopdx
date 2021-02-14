@@ -2,6 +2,8 @@
 Online cooperative multiplayer mod for SM64, aiming to synchronize all entities and every level for two players.
 Fork of [sm64pc/sm64ex](https://github.com/sm64pc/sm64ex). 
 
+Build instructions are available on the [sm64ex wiki](https://github.com/sm64pc/sm64ex/wiki).
+
 Feel free to report bugs and contribute, but remember, there must be **no upload of any copyrighted asset**. 
 Run `./extract_assets.py --clean && make clean` or `make distclean` to remove ROM-originated content.
 
