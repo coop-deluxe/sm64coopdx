@@ -18,7 +18,7 @@ static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult resu
     gCurActivity.type = DiscordActivityType_Playing;
     snprintf(gCurActivity.party.id, 128, "%lld", lobby->id);
     gCurActivity.party.size.current_size = 1;
-    gCurActivity.party.size.max_size = 2;
+    gCurActivity.party.size.max_size = MAX_PLAYERS;
 
     char secretJoin[128] = "";
     snprintf(secretJoin, 128, "%lld:%s", lobby->id, lobby->secret);
@@ -59,7 +59,7 @@ void discord_lobby_create(void) {
     struct IDiscordLobbyTransaction* txn = { 0 };
 
     DISCORD_REQUIRE(app.lobbies->get_lobby_create_transaction(app.lobbies, &txn));
-    txn->set_capacity(txn, 2);
+    txn->set_capacity(txn, MAX_PLAYERS);
     txn->set_type(txn, DiscordLobbyType_Public);
     //txn->set_metadata(txn, "a", "123");
 
