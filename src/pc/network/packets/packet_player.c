@@ -345,7 +345,7 @@ void network_receive_player(struct Packet* p) {
     }
 
     // set model
-    enum CharacterType characterType = (np->globalIndex == 1) ? CT_LUIGI : CT_MARIO;
+    enum CharacterType characterType = (np->globalIndex == 0) ? CT_MARIO : CT_LUIGI;
     m->character = &gCharacters[characterType];
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
 }
