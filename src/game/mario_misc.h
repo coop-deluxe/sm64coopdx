@@ -9,7 +9,9 @@
 extern struct GraphNodeObject gMirrorMario[MAX_PLAYERS];
 extern struct MarioBodyState gBodyStates[MAX_PLAYERS];
 
-void set_player_colors(u8 globalIndex, const u8 pants[4], const u8 shirt[4]);
+void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]);
+u8 *get_player_color(u8 globalIndex, const int which);
+
 Gfx *geo_draw_mario_head_goddard(s32 callContext, struct GraphNode *node, Mat4 *c);
 void bhv_toad_message_loop(void);
 void bhv_toad_message_init(void);

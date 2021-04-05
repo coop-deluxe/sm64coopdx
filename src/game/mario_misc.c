@@ -53,8 +53,8 @@ enum UnlockDoorStarStates {
 };
 
 struct PlayerColor {
-    Lights1 pants;
     Lights1 shirt;
+    Lights1 pants;
 };
 
 /**
@@ -80,13 +80,13 @@ struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node f
 struct PlayerColor gPlayerColors[MAX_PLAYERS] = {
     // default mario
     {
-        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xff, 0x28, 0x28, 0x28),
         gdSPDefLights1(0x7f, 0x00, 0x00, 0xff, 0x00, 0x00, 0x28, 0x28, 0x28),
+        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xff, 0x28, 0x28, 0x28),
     },
     // default luigi
     {
-        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xfe, 0x28, 0x28, 0x28),
         gdSPDefLights1(0x00, 0x4c, 0x00, 0x00, 0x98, 0x00, 0x28, 0x28, 0x28),
+        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xfe, 0x28, 0x28, 0x28),
     },
 };
 
@@ -101,13 +101,27 @@ struct PlayerColor gPlayerColors[MAX_PLAYERS] = {
  * The 4th component is the shade factor (difference between ambient and diffuse),
  * usually set to 1.
  */
-void set_player_colors(u8 globalIndex, const u8 pants[4], const u8 shirt[4]) {
+void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]) {
     const u8 pAmb[3] = { pants[0] >> pants[4], pants[1] >> pants[4], pants[2] >> pants[4] };
     const u8 sAmb[3] = { shirt[0] >> shirt[4], shirt[1] >> shirt[4], shirt[2] >> shirt[4] };
     gPlayerColors[globalIndex].pants =
       (Lights1) gdSPDefLights1(pAmb[0], pAmb[1], pAmb[2], pants[0], pants[1], pants[2], 0x28, 0x28, 0x28);
     gPlayerColors[globalIndex].shirt =
       (Lights1) gdSPDefLights1(sAmb[0], sAmb[1], sAmb[2], shirt[0], shirt[1], shirt[2], 0x28, 0x28, 0x28);
+}
+
+/**
+ * Return the specified color for player globalIndex.
+ * 0 = shirt, 1 = pants
+ * Returns RGB, not RGBA!
+ */
+u8 *get_player_color(u8 globalIndex, const int which) {
+    if (globalIndex >= MAX_PLAYERS)
+        globalIndex = 0;
+    if (which == 0)
+        return gPlayerColors[globalIndex].shirt.l[0].l.col;
+    else
+        return gPlayerColors[globalIndex].pants.l[0].l.col;
 }
 
 /**

@@ -17,10 +17,11 @@ static void print_sync_object_table(void) {
 }
 #endif
 
-void network_send_chat(char* message) {
+void network_send_chat(char* message, u8 rgb[3]) {
     u16 messageLength = strlen(message);
     struct Packet p;
     packet_init(&p, PACKET_CHAT, true, false);
+    packet_write(&p, rgb, 3 * sizeof(u8));
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));
     network_send(&p);
@@ -34,13 +35,15 @@ void network_send_chat(char* message) {
 void network_receive_chat(struct Packet* p) {
     u16 remoteMessageLength = 0;
     char remoteMessage[255] = { 0 };
+    u8 rgb[3] = { 255, 255, 255};
 
+    packet_read(p, rgb, 3 * sizeof(u8));
     packet_read(p, &remoteMessageLength, sizeof(u16));
     if (remoteMessageLength > 255) { remoteMessageLength = 254; }
     packet_read(p, &remoteMessage, remoteMessageLength * sizeof(u8));
 
     // add the message
-    chat_add_message(remoteMessage, CMT_REMOTE);
+    chat_add_message_ext(remoteMessage, CMT_REMOTE, rgb);
     LOG_INFO("rx chat: %s", remoteMessage);
 
 #ifdef DEVELOPMENT
