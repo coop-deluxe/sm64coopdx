@@ -47,7 +47,7 @@
 #define RATIO_Y (gfx_current_dimensions.height / (2.0f * HALF_SCREEN_HEIGHT))
 
 #define MAX_BUFFERED 256
-#define MAX_LIGHTS 2
+#define MAX_LIGHTS 8
 #define MAX_VERTICES 64
 
 #ifdef EXTERNAL_DATA
@@ -1123,12 +1123,28 @@ static void gfx_sp_movemem(uint8_t index, uint8_t offset, const void* data) {
         case G_MV_L0:
         case G_MV_L1:
         case G_MV_L2:
+        case G_MV_L3:
+        case G_MV_L4:
+        case G_MV_L5:
+        case G_MV_L6:
             // NOTE: reads out of bounds if it is an ambient light
             memcpy(rsp.current_lights + (index - G_MV_L0) / 2, data, sizeof(Light_t));
             break;
 #endif
     }
 }
+
+#ifdef F3DEX_GBI_2E
+static void gfx_sp_copymem(uint8_t idx, uint8_t dstofs, uint8_t srcofs, uint8_t words) {
+    if (idx == G_MV_LIGHT) {
+        const int srcidx = srcofs / 24 - 2;
+        const int dstidx = dstofs / 24 - 2;
+        if (srcidx <= MAX_LIGHTS && dstidx <= MAX_LIGHTS) {
+            memcpy(rsp.current_lights + dstidx, rsp.current_lights + srcidx, sizeof(Light_t));
+        }
+    }
+}
+#endif
 
 static void gfx_sp_moveword(uint8_t index, uint16_t offset, uint32_t data) {
     switch (index) {
@@ -1538,6 +1554,11 @@ static void gfx_run_dl(Gfx* cmd) {
                 gfx_sp_moveword(C0(0, 8), C0(8, 16), cmd->words.w1);
 #endif
                 break;
+#ifdef F3DEX_GBI_2E
+            case (uint8_t)G_COPYMEM:
+                gfx_sp_copymem(C0(0, 8), C0(8, 8) * 8, C0(16, 8) * 8, C1(0, 8));
+                break;
+#endif
             case (uint8_t)G_TEXTURE:
 #ifdef F3DEX_GBI_2
                 gfx_sp_texture(C1(16, 16), C1(0, 16), C0(11, 3), C0(8, 3), C0(1, 7));
