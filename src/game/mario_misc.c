@@ -23,6 +23,7 @@
 #include "save_file.h"
 #include "skybox.h"
 #include "sound_init.h"
+#include "pc/network/network.h"
 
 #define TOAD_STAR_1_REQUIREMENT 12
 #define TOAD_STAR_2_REQUIREMENT 25
@@ -51,6 +52,11 @@ enum UnlockDoorStarStates {
     UNLOCK_DOOR_STAR_DONE
 };
 
+struct PlayerColor {
+    Lights1 pants;
+    Lights1 shirt;
+};
+
 /**
  * The eye texture on succesive frames of Mario's blink animation.
  * He intentionally blinks twice each time.
@@ -71,12 +77,38 @@ static s8 gMarioAttackScaleAnimation[3 * 6] = {
 
 struct MarioBodyState gBodyStates[MAX_PLAYERS];
 struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node for drawing mirror Mario
+struct PlayerColor gPlayerColors[MAX_PLAYERS] = {
+    // default mario
+    {
+        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xff, 0x28, 0x28, 0x28),
+        gdSPDefLights1(0x7f, 0x00, 0x00, 0xff, 0x00, 0x00, 0x28, 0x28, 0x28),
+    },
+    // default luigi
+    {
+        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xfe, 0x28, 0x28, 0x28),
+        gdSPDefLights1(0x00, 0x4c, 0x00, 0x00, 0x98, 0x00, 0x28, 0x28, 0x28),
+    },
+};
 
 // This whole file is weirdly organized. It has to be the same file due
 // to rodata boundaries and function aligns, which means the programmer
 // treated this like a "misc" file for vaguely Mario related things
 // (message NPC related things, the Mario head geo, and Mario geo
 // functions)
+
+/**
+ * Set the Light1 struct from player colors.
+ * The 4th component is the shade factor (difference between ambient and diffuse),
+ * usually set to 1.
+ */
+void set_player_colors(u8 globalIndex, const u8 pants[4], const u8 shirt[4]) {
+    const u8 pAmb[3] = { pants[0] >> pants[4], pants[1] >> pants[4], pants[2] >> pants[4] };
+    const u8 sAmb[3] = { shirt[0] >> shirt[4], shirt[1] >> shirt[4], shirt[2] >> shirt[4] };
+    gPlayerColors[globalIndex].pants =
+      (Lights1) gdSPDefLights1(pAmb[0], pAmb[1], pAmb[2], pants[0], pants[1], pants[2], 0x28, 0x28, 0x28);
+    gPlayerColors[globalIndex].shirt =
+      (Lights1) gdSPDefLights1(sAmb[0], sAmb[1], sAmb[2], shirt[0], shirt[1], shirt[2], 0x28, 0x28, 0x28);
+}
 
 /**
  * Geo node script that draws Mario's head on the title screen.
@@ -718,6 +750,30 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
             gSPEndDisplayList(&gfx[2]);
         }
         asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (LAYER_OPAQUE << 8);
+    }
+    return gfx;
+}
+
+/**
+ * Generate DL that sets player color depending on player number.
+ */
+Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
+    struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
+    Gfx* gfx = NULL;
+    u8 index = geo_get_processing_object_index();
+    u8 colorIndex = gNetworkPlayers[index].globalIndex;
+    struct MarioBodyState* bodyState = &gBodyStates[index];
+
+    if (callContext == GEO_CONTEXT_RENDER) {
+        gfx = alloc_display_list(5 * sizeof(*gfx));
+        gSPLight(gfx + 0, &gPlayerColors[colorIndex].pants.l, 3);
+        gSPLight(gfx + 1, &gPlayerColors[colorIndex].pants.a, 4);
+        gSPLight(gfx + 2, &gPlayerColors[colorIndex].shirt.l, 5);
+        gSPLight(gfx + 3, &gPlayerColors[colorIndex].shirt.a, 6);
+        gSPEndDisplayList(gfx + 4);
+        // put on transparent if vanish effect, opaque otherwise
+        const u32 layer = ((bodyState->modelState >> 8) & 1) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
+        asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (layer << 8);
     }
     return gfx;
 }

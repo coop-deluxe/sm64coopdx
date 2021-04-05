@@ -381,8 +381,8 @@ const Gfx mario_butt_dl[] = {
 const Gfx mario_butt[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_butt_dl),
     gsSPEndDisplayList(),
 };
@@ -499,8 +499,8 @@ const Gfx mario_left_arm_shared_dl[] = {
 
 // 0x0400D1D8 - 0x0400D1F8
 const Gfx mario_left_arm[] = {
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_left_arm_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -760,8 +760,8 @@ const Gfx mario_right_arm_shared_dl[] = {
 
 // 0x0400DDE8 - 0x0400DE08
 const Gfx mario_right_arm[] = {
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_right_arm_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -979,8 +979,8 @@ const Gfx mario_left_thigh_dl[] = {
 const Gfx mario_left_thigh[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_left_thigh_dl),
     gsSPEndDisplayList(),
 };
@@ -1160,8 +1160,8 @@ const Gfx mario_right_thigh_shared_dl[] = {
 
 // 0x0400EFB8 - 0x0400EFD8
 const Gfx mario_right_thigh[] = {
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_right_thigh_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -1589,8 +1589,8 @@ const Gfx mario_tshirt_shared_dl[] = {
 // 0x04010348 - 0x04010370
 const Gfx mario_torso_dl[] = {
     gsSPDisplayList(mario_pants_overalls_shared_dl),
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_tshirt_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -2080,8 +2080,8 @@ const Gfx mario_face_back_hair_cap_on_dl[] = {
 // 0x04011960 - 0x040119A0
 const Gfx mario_face_cap_on_dl[] = {
     gsSPDisplayList(mario_face_part_cap_on_dl),
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_face_cap_dl),
     gsSPLight(&mario_brown2_lights_group.l, 1),
     gsSPLight(&mario_brown2_lights_group.a, 2),
@@ -3270,8 +3270,8 @@ const Gfx mario_medium_poly_butt_dl[] = {
 const Gfx mario_medium_poly_butt[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_medium_poly_butt_dl),
     gsSPEndDisplayList(),
 };
@@ -3322,8 +3322,8 @@ const Gfx mario_medium_poly_left_arm_shared_dl[] = {
 
 // 0x04014840 - 0x04014860
 const Gfx mario_medium_poly_left_arm[] = {
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_medium_poly_left_arm_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -3483,8 +3483,8 @@ const Gfx mario_medium_poly_right_arm_shared_dl[] = {
 
 // 0x04014F40 - 0x04014F60
 const Gfx mario_medium_poly_right_arm[] = {
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_medium_poly_right_arm_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -3659,8 +3659,8 @@ const Gfx mario_medium_poly_left_thigh_dl[] = {
 const Gfx mario_medium_poly_left_thigh[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_medium_poly_left_thigh_dl),
     gsSPEndDisplayList(),
 };
@@ -3808,8 +3808,8 @@ const Gfx mario_medium_poly_right_thigh_shared_dl[] = {
 
 // 0x04015D00 - 0x04015D20
 const Gfx mario_medium_poly_right_thigh[] = {
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_medium_poly_right_thigh_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -4081,8 +4081,8 @@ const Gfx mario_medium_poly_tshirt_shared_dl[] = {
 // 0x040168A0 - 0x040168C8
 const Gfx mario_medium_poly_torso_dl[] = {
     gsSPDisplayList(mario_medium_poly_pants_overalls_shared_dl),
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_medium_poly_tshirt_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -4149,8 +4149,8 @@ const Gfx mario_low_poly_butt_dl[] = {
 const Gfx mario_low_poly_butt[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_butt_dl),
     gsSPEndDisplayList(),
 };
@@ -4196,8 +4196,8 @@ const Gfx mario_low_poly_left_arm_shared_dl[] = {
 
 // 0x04016C70 - 0x04016C90
 const Gfx mario_low_poly_left_arm[] = {
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_left_arm_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -4287,8 +4287,8 @@ const Gfx mario_low_poly_right_arm_shared_dl[] = {
 
 // 0x04016FB0 - 0x04016FD0
 const Gfx mario_low_poly_right_arm[] = {
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_right_arm_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -4394,8 +4394,8 @@ const Gfx mario_low_poly_left_thigh_dl[] = {
 const Gfx mario_low_poly_left_thigh[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_left_thigh_dl),
     gsSPEndDisplayList(),
 };
@@ -4513,8 +4513,8 @@ const Gfx mario_low_poly_right_thigh_shared_dl[] = {
 
 // 0x04017818 - 0x04017838
 const Gfx mario_low_poly_right_thigh[] = {
-    gsSPLight(&mario_blue_lights_group.l, 1),
-    gsSPLight(&mario_blue_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 3), // gsSPLight(&mario_blue_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 4), // gsSPLight(&mario_blue_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_right_thigh_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -4684,8 +4684,8 @@ const Gfx mario_low_poly_tshirt_shared_dl[] = {
 // 0x04017E78 - 0x04017EA0
 const Gfx mario_low_poly_torso_dl[] = {
     gsSPDisplayList(mario_low_poly_pants_overalls_shared_dl),
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_tshirt_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -4854,8 +4854,8 @@ const Gfx mario_low_poly_face_back_hair_cap_on_dl[] = {
 // 0x04018420 - 0x04018460
 const Gfx mario_low_poly_face_cap_on_dl[] = {
     gsSPDisplayList(mario_low_poly_face_part_cap_on_dl),
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_low_poly_face_cap_dl),
     gsSPLight(&mario_brown2_lights_group.l, 1),
     gsSPLight(&mario_brown2_lights_group.a, 2),
@@ -6625,8 +6625,8 @@ const Gfx mario_cap_unused_dl[] = {
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mario_texture_m_logo),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPLight(&mario_red_lights_group.l, 1),
-    gsSPLight(&mario_red_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5), // gsSPLight(&mario_red_lights_group.l, 1),
+    gsSPCopyLightEXT(2, 6), // gsSPLight(&mario_red_lights_group.a, 2),
     gsSPDisplayList(mario_cap_unused_m_logo_dl),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),

@@ -3225,7 +3225,8 @@ Gfx mat_luigi_body[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPSetLights1(luigi_body_lights),
+    gsSPCopyLightEXT(1, 3), // gsSPSetLights1(luigi_body_lights)
+    gsSPCopyLightEXT(2, 4), //
     gsSPEndDisplayList(),
 };
 
@@ -3265,7 +3266,8 @@ Gfx mat_luigi_cap[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPSetLights1(luigi_cap_lights),
+    gsSPCopyLightEXT(1, 5), // gsSPSetLights1(luigi_cap_lights)
+    gsSPCopyLightEXT(2, 6), //
     gsSPEndDisplayList(),
 };
 
