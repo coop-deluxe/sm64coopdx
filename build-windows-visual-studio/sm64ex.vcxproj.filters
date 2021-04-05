@@ -15087,6 +15087,9 @@
     <ClCompile Include="..\src\game\characters.c">
       <Filter>Source Files\src\game</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_warp_2.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">

@@ -33,6 +33,7 @@ enum PacketType {
     PACKET_INSTANT_WARP,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
+    PACKET_LEVEL_WARP_2,
     ///
     PACKET_CUSTOM = 255,
 };
@@ -170,5 +171,10 @@ void network_receive_network_players(struct Packet* p);
 // packet_death.c
 void network_send_death(void);
 void network_receive_death(struct Packet* p);
+
+// packet_level_warp_2.c
+void network_send_level_warp_2(u8 eventBegins, u8 controlledGlobalIndex);
+void network_receive_level_warp_2(struct Packet* p);
+u8 network_is_warp_2_duplicate(void);
 
 #endif

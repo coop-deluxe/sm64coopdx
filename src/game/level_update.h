@@ -76,6 +76,10 @@ extern s16 sTransitionTimer;
 extern void (*sTransitionUpdate)(s16 *);
 extern u8 unused3[4];
 
+extern s16 gChangeLevel;
+extern s16 gChangeAreaIndex;
+extern s16 gChangeActNum;
+
 struct WarpDest {
     u8 type;
     u8 levelNum;

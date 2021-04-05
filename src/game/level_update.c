@@ -53,6 +53,10 @@ u8 gControlledWarpGlobalIndex = 0;
 extern s8 sReceivedLoadedActNum;
 u8 gRejectInstantWarp = 0;
 
+s16 gChangeLevel = -1;
+s16 gChangeAreaIndex = -1;
+s16 gChangeActNum = -1;
+
 #ifdef VERSION_JP
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
 const char *credits02[] = { "2ASSISTANT DIRECTORS", "YOSHIAKI KOIZUMI", "TAKASHI TEZUKA" };
@@ -1090,15 +1094,9 @@ s32 play_mode_normal(void) {
             }
         } else if (!gReceiveWarp.received) {
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
-                set_play_mode(PLAY_MODE_SYNC_LEVEL);
-                network_send_level_warp_begin();
+                set_play_mode(PLAY_MODE_CHANGE_LEVEL);
             } else if (sTransitionTimer != 0) {
-                if (sWarpDest.type == WARP_TYPE_CHANGE_AREA) {
-                    set_play_mode(PLAY_MODE_SYNC_LEVEL);
-                    network_send_level_warp_begin();
-                } else {
-                    set_play_mode(PLAY_MODE_CHANGE_AREA);
-                }
+                set_play_mode(PLAY_MODE_CHANGE_AREA);
             } else if (sCurrPlayMode == PLAY_MODE_NORMAL && pressed_pause()) {
                 lower_background_noise(1);
                 cancel_rumble();
@@ -1129,8 +1127,7 @@ s32 play_mode_paused(void) {
             fade_into_special_warp(0, 0);
             gSavedCourseNum = COURSE_NONE;
         }
-        set_play_mode(PLAY_MODE_SYNC_LEVEL);
-        network_send_level_warp_begin();
+        set_play_mode(PLAY_MODE_CHANGE_LEVEL);
     } else if (gPauseScreenMode == 3) {
         // We should only be getting "int 3" to here
         initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
@@ -1150,7 +1147,7 @@ s32 play_mode_sync_level(void) {
     set_menu_mode(-1);
     gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
 
-    check_received_warp();
+    //check_received_warp();
     return 0;
 }
 
@@ -1261,6 +1258,15 @@ static s32 play_mode_unused(void) {
 
 s32 update_level(void) {
     s32 changeLevel = 0;
+
+    if (gChangeLevel != -1) {
+        gHudDisplay.flags = HUD_DISPLAY_NONE;
+        sTransitionTimer = 0;
+        sTransitionUpdate = NULL;
+        changeLevel = gChangeLevel;
+        gChangeLevel = -1;
+        return changeLevel;
+    }
 
     switch (sCurrPlayMode) {
         case PLAY_MODE_NORMAL:
