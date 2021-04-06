@@ -77,18 +77,40 @@ static s8 gMarioAttackScaleAnimation[3 * 6] = {
 
 struct MarioBodyState gBodyStates[MAX_PLAYERS];
 struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node for drawing mirror Mario
-struct PlayerColor gPlayerColors[MAX_PLAYERS] = {
+
+// ambient color is always half the diffuse color, so we can pull a macro
+#define DEFINE_PLAYER_COLOR(sr, sg, sb, pr, pg, pb) \
+    { \
+        gdSPDefLights1((sr >> 1), (sg >> 1), (sb >> 1), sr, sg, sb, 0x28, 0x28, 0x28), \
+        gdSPDefLights1((pr >> 1), (pg >> 1), (pb >> 1), pr, pg, pb, 0x28, 0x28, 0x28), \
+    }
+
+struct PlayerColor gPlayerColors[] = {
     // default mario
-    {
-        gdSPDefLights1(0x7f, 0x00, 0x00, 0xff, 0x00, 0x00, 0x28, 0x28, 0x28),
-        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xff, 0x28, 0x28, 0x28),
-    },
+    DEFINE_PLAYER_COLOR(0xff, 0x00, 0x00, /**/ 0x00, 0x00, 0xff),
     // default luigi
-    {
-        gdSPDefLights1(0x00, 0x4c, 0x00, 0x00, 0x98, 0x00, 0x28, 0x28, 0x28),
-        gdSPDefLights1(0x00, 0x00, 0x7f, 0x00, 0x00, 0xfe, 0x28, 0x28, 0x28),
-    },
+    DEFINE_PLAYER_COLOR(0x00, 0x98, 0x00, /**/ 0x00, 0x00, 0xfe),
+#if MAX_PLAYERS > 2
+    // fake waluigi
+    DEFINE_PLAYER_COLOR(0x6d, 0x3c, 0x9a, /**/ 0x2c, 0x26, 0x3f),
+    // fake wario
+    DEFINE_PLAYER_COLOR(0xf9, 0xeb, 0x30, /**/ 0x7f, 0x20, 0x7a),
+    // light blue
+    DEFINE_PLAYER_COLOR(0x00, 0xdf, 0xff, /**/ 0x00, 0x00, 0xf0),
+    // sponge
+    DEFINE_PLAYER_COLOR(0xff, 0x7f, 0x00, /**/ 0x00, 0x7f, 0xa0),
+    // blue man group
+    DEFINE_PLAYER_COLOR(0x00, 0x00, 0xf0, /**/ 0x00, 0x00, 0x4f),
+    // thanks doc
+    DEFINE_PLAYER_COLOR(0xff, 0x00, 0xff, /**/ 0x00, 0xff, 0x00),
+    // white
+    DEFINE_PLAYER_COLOR(0xff, 0xff, 0xff, /**/ 0x10, 0x10, 0x10),
+    // grey
+    DEFINE_PLAYER_COLOR(0x6f, 0x6f, 0x6f, /**/ 0xe0, 0xe0, 0xe0),
+#endif
 };
+
+static const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerColors);
 
 // This whole file is weirdly organized. It has to be the same file due
 // to rodata boundaries and function aligns, which means the programmer
@@ -102,6 +124,8 @@ struct PlayerColor gPlayerColors[MAX_PLAYERS] = {
  * usually set to 1.
  */
 void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]) {
+    // choose the last color in the table for extra players
+    if (globalIndex >= gNumPlayerColors) globalIndex = gNumPlayerColors - 1;
     const u8 pAmb[3] = { pants[0] >> pants[4], pants[1] >> pants[4], pants[2] >> pants[4] };
     const u8 sAmb[3] = { shirt[0] >> shirt[4], shirt[1] >> shirt[4], shirt[2] >> shirt[4] };
     gPlayerColors[globalIndex].pants =
@@ -116,8 +140,8 @@ void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]) {
  * Returns RGB, not RGBA!
  */
 u8 *get_player_color(u8 globalIndex, const int which) {
-    if (globalIndex >= MAX_PLAYERS)
-        globalIndex = 0;
+    // choose the last color in the table for extra players
+    if (globalIndex >= gNumPlayerColors) globalIndex = gNumPlayerColors - 1;
     if (which == 0)
         return gPlayerColors[globalIndex].shirt.l[0].l.col;
     else
@@ -779,13 +803,17 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     struct MarioBodyState* bodyState = &gBodyStates[index];
 
     if (callContext == GEO_CONTEXT_RENDER) {
+        // extra players get last color
+        if (colorIndex >= gNumPlayerColors) colorIndex = gNumPlayerColors - 1;
         gfx = alloc_display_list(5 * sizeof(*gfx));
+        // put the player colors into lights 3, 4, 5, 6
+        // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
         gSPLight(gfx + 0, &gPlayerColors[colorIndex].pants.l, 3);
         gSPLight(gfx + 1, &gPlayerColors[colorIndex].pants.a, 4);
         gSPLight(gfx + 2, &gPlayerColors[colorIndex].shirt.l, 5);
         gSPLight(gfx + 3, &gPlayerColors[colorIndex].shirt.a, 6);
         gSPEndDisplayList(gfx + 4);
-        // put on transparent if vanish effect, opaque otherwise
+        // put on transparent layer if vanish effect, opaque otherwise
         const u32 layer = ((bodyState->modelState >> 8) & 1) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
         asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (layer << 8);
     }
