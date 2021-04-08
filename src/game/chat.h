@@ -10,6 +10,7 @@ enum ChatMessageType {
 
 void render_chat(void);
 void chat_add_message(char* ascii, enum ChatMessageType chatMessageType);
+void chat_add_message_ext(char* ascii, enum ChatMessageType chatMessageType, const u8 color[3]);
 void chat_start_input(void);
 
 #endif

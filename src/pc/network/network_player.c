@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "network_player.h"
 #include "game/chat.h"
+#include "game/mario_misc.h"
 #include "pc/debuglog.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
@@ -105,7 +106,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         gNetworkSystem->save_id(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
-        else { chat_add_message("player connected", CMT_SYSTEM); }
+        else { chat_add_message_ext("player connected", CMT_SYSTEM, get_player_color(np->globalIndex, 0)); }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
         extern s16 sCurrPlayMode;
         if (gNetworkType == NT_SERVER && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
@@ -142,7 +143,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         gNetworkSystem->clear_id(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
-        chat_add_message("player disconnected", CMT_SYSTEM);
+        chat_add_message_ext("player disconnected", CMT_SYSTEM, get_player_color(globalIndex, 0));
         return i;
     }
     return UNKNOWN_GLOBAL_INDEX;

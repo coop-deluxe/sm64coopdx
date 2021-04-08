@@ -23,6 +23,7 @@
 #include "save_file.h"
 #include "skybox.h"
 #include "sound_init.h"
+#include "pc/network/network.h"
 
 #define TOAD_STAR_1_REQUIREMENT 12
 #define TOAD_STAR_2_REQUIREMENT 25
@@ -51,6 +52,11 @@ enum UnlockDoorStarStates {
     UNLOCK_DOOR_STAR_DONE
 };
 
+struct PlayerColor {
+    Lights1 shirt;
+    Lights1 pants;
+};
+
 /**
  * The eye texture on succesive frames of Mario's blink animation.
  * He intentionally blinks twice each time.
@@ -72,11 +78,75 @@ static s8 gMarioAttackScaleAnimation[3 * 6] = {
 struct MarioBodyState gBodyStates[MAX_PLAYERS];
 struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node for drawing mirror Mario
 
+// ambient color is always half the diffuse color, so we can pull a macro
+#define DEFINE_PLAYER_COLOR(sr, sg, sb, pr, pg, pb) \
+    { \
+        gdSPDefLights1((sr >> 1), (sg >> 1), (sb >> 1), sr, sg, sb, 0x28, 0x28, 0x28), \
+        gdSPDefLights1((pr >> 1), (pg >> 1), (pb >> 1), pr, pg, pb, 0x28, 0x28, 0x28), \
+    }
+
+struct PlayerColor gPlayerColors[] = {
+    // default mario
+    DEFINE_PLAYER_COLOR(0xff, 0x00, 0x00, /**/ 0x00, 0x00, 0xff),
+    // default luigi
+    DEFINE_PLAYER_COLOR(0x00, 0x98, 0x00, /**/ 0x00, 0x00, 0xfe),
+#if MAX_PLAYERS > 2
+    // fake waluigi
+    DEFINE_PLAYER_COLOR(0x6d, 0x3c, 0x9a, /**/ 0x2c, 0x26, 0x3f),
+    // fake wario
+    DEFINE_PLAYER_COLOR(0xf9, 0xeb, 0x30, /**/ 0x7f, 0x20, 0x7a),
+    // light blue
+    DEFINE_PLAYER_COLOR(0x00, 0xdf, 0xff, /**/ 0x00, 0x00, 0xf0),
+    // sponge
+    DEFINE_PLAYER_COLOR(0xff, 0x7f, 0x00, /**/ 0x00, 0x7f, 0xa0),
+    // blue man group
+    DEFINE_PLAYER_COLOR(0x00, 0x00, 0xf0, /**/ 0x00, 0x00, 0x4f),
+    // thanks doc
+    DEFINE_PLAYER_COLOR(0xff, 0x00, 0xff, /**/ 0x00, 0xff, 0x00),
+    // white
+    DEFINE_PLAYER_COLOR(0xff, 0xff, 0xff, /**/ 0x10, 0x10, 0x10),
+    // grey
+    DEFINE_PLAYER_COLOR(0x6f, 0x6f, 0x6f, /**/ 0xe0, 0xe0, 0xe0),
+#endif
+};
+
+static const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerColors);
+
 // This whole file is weirdly organized. It has to be the same file due
 // to rodata boundaries and function aligns, which means the programmer
 // treated this like a "misc" file for vaguely Mario related things
 // (message NPC related things, the Mario head geo, and Mario geo
 // functions)
+
+/**
+ * Set the Light1 struct from player colors.
+ * The 4th component is the shade factor (difference between ambient and diffuse),
+ * usually set to 1.
+ */
+void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]) {
+    // choose the last color in the table for extra players
+    if (globalIndex >= gNumPlayerColors) globalIndex = gNumPlayerColors - 1;
+    const u8 pAmb[3] = { pants[0] >> pants[4], pants[1] >> pants[4], pants[2] >> pants[4] };
+    const u8 sAmb[3] = { shirt[0] >> shirt[4], shirt[1] >> shirt[4], shirt[2] >> shirt[4] };
+    gPlayerColors[globalIndex].pants =
+      (Lights1) gdSPDefLights1(pAmb[0], pAmb[1], pAmb[2], pants[0], pants[1], pants[2], 0x28, 0x28, 0x28);
+    gPlayerColors[globalIndex].shirt =
+      (Lights1) gdSPDefLights1(sAmb[0], sAmb[1], sAmb[2], shirt[0], shirt[1], shirt[2], 0x28, 0x28, 0x28);
+}
+
+/**
+ * Return the specified color for player globalIndex.
+ * 0 = shirt, 1 = pants
+ * Returns RGB, not RGBA!
+ */
+u8 *get_player_color(u8 globalIndex, const int which) {
+    // choose the last color in the table for extra players
+    if (globalIndex >= gNumPlayerColors) globalIndex = gNumPlayerColors - 1;
+    if (which == 0)
+        return gPlayerColors[globalIndex].shirt.l[0].l.col;
+    else
+        return gPlayerColors[globalIndex].pants.l[0].l.col;
+}
 
 /**
  * Geo node script that draws Mario's head on the title screen.
@@ -405,7 +475,8 @@ Gfx* geo_switch_mario_eyes(s32 callContext, struct GraphNode* node, UNUSED Mat4*
 Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     Mat4 * curTransform = mtx;
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
-    struct MarioBodyState* bodyState = geo_get_body_state();
+    u8 plrIdx = geo_get_processing_object_index();
+    struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
 
     if (callContext == GEO_CONTEXT_RENDER) {
@@ -418,6 +489,11 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
         rotNode->rotation[0] = bodyState->torsoAngle[1];
         rotNode->rotation[1] = bodyState->torsoAngle[2];
         rotNode->rotation[2] = bodyState->torsoAngle[0];
+        if (plrIdx != 0) {
+            // only interpolate angles for the local player
+            vec3s_copy(rotNode->prevRotation, rotNode->rotation);
+            rotNode->prevTimestamp = gGlobalTimer;
+        }
         // update torso position in bodyState
         get_pos_from_transform_mtx(bodyState->torsoPos, *curTransform, *gCurGraphNodeCamera->matrixPtr);
     }
@@ -429,7 +505,8 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
  */
 Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
-    struct MarioBodyState* bodyState = geo_get_body_state();
+    u8 plrIdx = geo_get_processing_object_index();
+    struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
 
     if (callContext == GEO_CONTEXT_RENDER) {
@@ -448,6 +525,12 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, UNUSED Mat
         else {
             vec3s_set(bodyState->headAngle, 0, 0, 0);
             vec3s_set(rotNode->rotation, 0, 0, 0);
+        }
+
+        if (plrIdx != 0) {
+            // only interpolate angles for the local player
+            vec3s_copy(rotNode->prevRotation, rotNode->rotation);
+            rotNode->prevTimestamp = gGlobalTimer;
         }
     }
     return NULL;
@@ -705,6 +788,34 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
             gSPEndDisplayList(&gfx[2]);
         }
         asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (LAYER_OPAQUE << 8);
+    }
+    return gfx;
+}
+
+/**
+ * Generate DL that sets player color depending on player number.
+ */
+Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
+    struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
+    Gfx* gfx = NULL;
+    u8 index = geo_get_processing_object_index();
+    u8 colorIndex = gNetworkPlayers[index].globalIndex;
+    struct MarioBodyState* bodyState = &gBodyStates[index];
+
+    if (callContext == GEO_CONTEXT_RENDER) {
+        // extra players get last color
+        if (colorIndex >= gNumPlayerColors) colorIndex = gNumPlayerColors - 1;
+        gfx = alloc_display_list(5 * sizeof(*gfx));
+        // put the player colors into lights 3, 4, 5, 6
+        // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
+        gSPLight(gfx + 0, &gPlayerColors[colorIndex].pants.l, 3);
+        gSPLight(gfx + 1, &gPlayerColors[colorIndex].pants.a, 4);
+        gSPLight(gfx + 2, &gPlayerColors[colorIndex].shirt.l, 5);
+        gSPLight(gfx + 3, &gPlayerColors[colorIndex].shirt.a, 6);
+        gSPEndDisplayList(gfx + 4);
+        // put on transparent layer if vanish effect, opaque otherwise
+        const u32 layer = ((bodyState->modelState >> 8) & 1) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
+        asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (layer << 8);
     }
     return gfx;
 }

@@ -5,6 +5,7 @@
 #include "chat.h"
 #include "game_init.h"
 #include "ingame_menu.h"
+#include "mario_misc.h"
 #include "segment2.h"
 #include "gfx_dimensions.h"
 #include "config.h"
@@ -23,6 +24,7 @@ struct ChatMessage {
     u8 dialog[CHAT_DIALOG_MAX];
     enum ChatMessageType type;
     u16 life;
+    u8 color[3];
 };
 
 static char inputMessage[CHAT_DIALOG_MAX] = { 0 };
@@ -70,21 +72,34 @@ static void render_chat_message(struct ChatMessage* chatMessage, u8 index) {
 
     u8 textR, textG, textB;
     switch (chatMessage->type) {
-        case CMT_LOCAL:  textR = 200; textG = 200; textB = 255; break;
-        case CMT_INPUT:  textR =   0; textG =   0; textB =   0; break;
-        case CMT_SYSTEM: textR = 255; textG = 255; textB = 190; break;
-        default:         textR = 255; textG = 255; textB = 255;
+        case CMT_LOCAL:  textR =  200; textG =  200; textB =  255; break;
+        case CMT_INPUT:  textR =    0; textG =    0; textB =    0; break;
+        case CMT_SYSTEM: textR =  255; textG =  255; textB =  190; break;
+        default:         textR =  255; textG =  255; textB =  255; break;
     }
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+
     gDPSetEnvColor(gDisplayListHead++, textR, textG, textB, 255 * alphaScale);
     print_generic_string(CHAT_X, CHAT_Y, chatMessage->dialog);
+
+    if (chatMessage->type == CMT_REMOTE || chatMessage->type == CMT_SYSTEM) {
+        // if it's someone else's message, highlight the icon with their color
+        u8 starR = chatMessage->color[0];
+        u8 starG = chatMessage->color[1];
+        u8 starB = chatMessage->color[2];
+        gDPSetEnvColor(gDisplayListHead++, starR, starG, starB, 255 * alphaScale);
+        create_dl_translation_matrix(MENU_MTX_PUSH, CHAT_X, CHAT_Y, 0.0f);
+        render_generic_char(chatMessage->dialog[0]);
+        gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    }
+
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
+void chat_add_message_ext(char* ascii, enum ChatMessageType chatMessageType, const u8 color[3]) {
     u8 character = '?';
     switch (chatMessageType) {
         case CMT_INPUT:
@@ -98,8 +113,16 @@ void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
     str_ascii_to_dialog(ascii, &msg->dialog[2], MIN(strlen(ascii), CHAT_DIALOG_MAX - 3));
     msg->life = (sSelectedFileNum != 0) ? CHAT_LIFE_MAX : CHAT_LIFE_MAX / 3;
     msg->type = chatMessageType;
+    msg->color[0] = color[0];
+    msg->color[1] = color[1];
+    msg->color[2] = color[2];
     onMessageIndex = (onMessageIndex + 1) % CHAT_MESSAGES_MAX;
     play_sound((msg->type == CMT_LOCAL) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
+}
+
+void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
+    const u8 defaultColor[3] = { 255, 255, 255 };
+    chat_add_message_ext(ascii, chatMessageType, defaultColor);
 }
 
 static void chat_stop_input(void) {
@@ -112,7 +135,8 @@ static void chat_send_input(void) {
     keyboard_stop_text_input();
     if (strlen(gTextInput) == 0) { return; }
     chat_add_message(gTextInput, CMT_LOCAL);
-    network_send_chat(gTextInput);
+    // our message has the same color as our shirt
+    network_send_chat(gTextInput, get_player_color(gNetworkPlayerLocal->globalIndex, 0));
 }
 
 void chat_start_input(void) {

@@ -392,7 +392,7 @@ struct MarioState
 //       HOWEVER, simply increasing this to 3 will not magically work
 //       many things will have to be overhauled!
 #ifdef UNSTABLE_BRANCH
-#define MAX_PLAYERS 4
+#define MAX_PLAYERS 16
 #else
 #define MAX_PLAYERS 2
 #endif

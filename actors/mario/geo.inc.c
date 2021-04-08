@@ -1811,6 +1811,7 @@ const GeoLayout mario_geo[] = {
    GEO_OPEN_NODE(),
       GEO_SCALE(0x00, 16384),
       GEO_OPEN_NODE(),
+         GEO_ASM(0, geo_mario_set_player_colors),
          GEO_ASM(0, geo_mirror_mario_backface_culling),
          GEO_ASM(0, geo_mirror_mario_set_alpha),
          GEO_SWITCH_CASE(0, geo_switch_mario_stand_run),

@@ -27,6 +27,17 @@ SOCKET socket_initialize(void) {
         return INVALID_SOCKET;
     }
 
+#if MAX_PLAYERS > 4
+    // on windows, the send buffer for the socket needs to be increased
+    // for the many players case to avoid WSAEWOULDBLOCK on send
+    // not actually sure this is the "proper" way to fix it
+    int bufsiz = 128 * 1024; // 128kb, default is apparently 8kb or 16kb
+    rc = setsockopt(sock, SOL_SOCKET, SO_SNDBUF, (const char *)&bufsiz, sizeof(bufsiz));
+    if (rc != NO_ERROR) {
+        LOG_ERROR("setsockopt(SO_SNDBUF) failed with error: %d", rc);
+    }
+#endif
+
     return sock;
 }
 
