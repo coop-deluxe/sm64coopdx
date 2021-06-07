@@ -13,7 +13,7 @@ if [ ! -f "$FILE" ]; then
 fi
 
 $FILE --server 27015 --configfile sm64config_p1.txt  &
-sleep 2
+sleep 4
 $FILE --client 127.0.0.1 27015 --configfile sm64config_p2.txt  &
 sleep 2
 $FILE --client 127.0.0.1 27015 --configfile sm64config_p3.txt  &

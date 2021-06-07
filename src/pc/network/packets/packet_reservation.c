@@ -6,6 +6,7 @@
 #include "course_table.h"
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 #define RESERVATION_COUNT 10

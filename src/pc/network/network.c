@@ -11,6 +11,7 @@
 
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
+extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
 
 enum NetworkType gNetworkType = NT_NONE;
 #ifdef DISCORD_SDK
@@ -87,6 +88,18 @@ void network_on_init_level(void) {
 }
 
 void network_on_loaded_level(void) {
+    // set all sync objects as staticLevelSpawn
+    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        gSyncObjects[i].staticLevelSpawn = true;
+    }
+
+    // check for level change
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    if (np != NULL) {
+        network_send_level_area();
+        network_send_entities_request();
+    }
+
     // request my chunk of reserved sync ids
     if (gNetworkType == NT_CLIENT) {
         network_send_reservation_request();

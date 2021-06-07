@@ -2823,50 +2823,6 @@ s16 render_pause_courses_and_castle(void) {
     return 0;
 }
 
-s16 render_sync_level_screen(void) {
-    char* message;
-
-    if (gNetworkType == NT_SERVER) {
-        message = network_player_any_connected() ? "Waiting for player..." : "Waiting for player to connect...";
-    } else {
-        message = network_player_any_connected() ? "Waiting for player..." : "Not connected to anyone.\nPlease restart the game.";
-    }
-
-    static f32 alphaScalar = 0.0f;
-    static clock_t lastDisplay = 0;
-    f32 elapsed = (clock() - lastDisplay) / (f32)CLOCKS_PER_SEC;
-    if (elapsed > 1.0f) {
-        alphaScalar = 0;
-    } else if (alphaScalar < 1.0f) {
-        alphaScalar += 0.3f;
-        if (alphaScalar > 1) { alphaScalar = 1; }
-    }
-    u8 alpha = (((f32)fabs(sin(gGlobalTimer / 20.0f)) * alphaScalar) * 255);
-    lastDisplay = clock();
-
-    // black screen
-    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.0f, 0);
-    create_dl_scale_matrix(MENU_MTX_NOPUSH, GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT / 130.0f, 3.0f, 1.0f);
-    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
-    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
-    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
-
-    // print text
-    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
-    f32 textWidth = get_generic_ascii_string_width(message);
-    f32 textHeight = get_generic_ascii_string_height(message);
-
-    f32 xPos = (SCREEN_WIDTH - textWidth) / 2.0f;
-    f32 yPos = (SCREEN_HEIGHT + textHeight) / 2.0f;
-
-    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha);
-    print_generic_ascii_string(xPos, yPos, message);
-
-    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
-
-    return 0;
-}
-
 #if defined(VERSION_JP) || defined(VERSION_SH)
 #define TXT_HISCORE_X 112
 #define TXT_HISCORE_Y 48

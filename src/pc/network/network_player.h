@@ -23,8 +23,12 @@ struct NetworkPlayer {
     u8 localIndex;
     u8 globalIndex;
     clock_t lastReceived;
+    u16 currLevelAreaSeqId;
+    s16 currCourseNum;
+    s16 currActNum;
     s16 currLevelNum;
     s16 currAreaIndex;
+    bool currAreaSyncValid;
     u8 fadeOpacity;
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u8 onRxSeqId;

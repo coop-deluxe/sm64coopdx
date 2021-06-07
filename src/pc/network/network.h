@@ -46,6 +46,7 @@ struct SyncObject {
     u16 reserved;
     float maxSyncDistance;
     bool owned;
+    bool staticLevelSpawn;
     clock_t clockSinceUpdate;
     void* behavior;
     u16 txEventId;

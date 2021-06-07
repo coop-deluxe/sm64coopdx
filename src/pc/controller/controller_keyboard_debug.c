@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_WF;
+static u8 warpToLevel = LEVEL_BOB;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
@@ -26,7 +26,6 @@ static void debug_breakpoint_here(void) {
 
 static void debug_warp_level(u8 level) {
     if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
-    if (sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) { return; }
 
     // find level from painting
     for (int i = 0; i < 45; i++) {
@@ -39,8 +38,7 @@ static void debug_warp_level(u8 level) {
             sWarpDest.nodeId = node->destNode;
             sWarpDest.arg = 0;
 
-            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
-            network_send_level_warp_begin();
+            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
             return;
         }
     }
@@ -55,8 +53,7 @@ static void debug_warp_level(u8 level) {
             sWarpDest.nodeId = node->destNode;
             sWarpDest.arg = 0;
 
-            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
-            network_send_level_warp_begin();
+            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
             return;
         }
         objectNode = objectNode->next;
@@ -68,19 +65,15 @@ static void debug_warp_level(u8 level) {
     sWarpDest.areaIdx = 1;
     sWarpDest.nodeId = 0x1F;
     sWarpDest.arg = 0;
-    sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
+    sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
     D_80339ECA = 0;
     D_80339EE0 = 0;
     extern s16 gSavedCourseNum;
     gSavedCourseNum = 0;
-    network_send_level_warp_begin();
 }
 
 static void debug_warp_area() {
-    /*level_trigger_warp(&gMarioStates[0], WARP_OP_CREDITS_START);
-    return;*/
     if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
-    if (sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) { return; }
 
     struct ObjectWarpNode* objectNode = gCurrentArea->warpNodes;
     while (objectNode != NULL) {
@@ -92,8 +85,7 @@ static void debug_warp_area() {
             sWarpDest.nodeId = node->destNode;
             sWarpDest.arg = 0;
 
-            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
-            network_send_level_warp_begin();
+            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
             return;
         }
         objectNode = objectNode->next;

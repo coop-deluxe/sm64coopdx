@@ -31,6 +31,8 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet_set_flags(packet);
 
     if (levelAreaMustMatch) {
+        packet_write(packet, &gCurrCourseNum, sizeof(s16));
+        packet_write(packet, &gCurrActNum, sizeof(s16));
         packet_write(packet, &gCurrLevelNum, sizeof(s16));
         packet_write(packet, &gCurrAreaIndex, sizeof(s16));
     }
@@ -58,14 +60,18 @@ u8 packet_initial_read(struct Packet* packet) {
     packet->requestBroadcast = GET_BIT(flags, 1);
 
     if (packet->levelAreaMustMatch) {
-        s16 currLevelNum;
-        s16 currAreaIndex;
+        s16 currCourseNum, currActNum, currLevelNum, currAreaIndex;
+        packet_read(packet, &currCourseNum, sizeof(s16));
+        packet_read(packet, &currActNum, sizeof(s16));
         packet_read(packet, &currLevelNum, sizeof(s16));
         packet_read(packet, &currAreaIndex, sizeof(s16));
-        if (currLevelNum != gCurrLevelNum || currAreaIndex != gCurrAreaIndex) {
-            // drop packet
-            return FALSE;
-        }
+        bool levelAreaMismatch =
+            (currCourseNum   != gCurrCourseNum
+            || currActNum    != gCurrActNum
+            || currLevelNum  != gCurrLevelNum
+            || currAreaIndex != gCurrAreaIndex);
+        // drop packet
+        if (levelAreaMismatch) { return FALSE; }
     }
 
     // don't drop packet

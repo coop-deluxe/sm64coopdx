@@ -1277,12 +1277,14 @@ u8 player_is_sliding(struct MarioState* m) {
 }
 
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
+    if (!is_player_active(m)) { return FALSE; }
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
     if (m->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
     struct MarioState* m2 = NULL;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (o == gMarioStates[i].marioObj) {
+            if (!is_player_active(&gMarioStates[i])) { return FALSE; }
             m2 = &gMarioStates[i];
             break;
         }

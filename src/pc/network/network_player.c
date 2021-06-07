@@ -17,14 +17,14 @@ bool network_player_any_connected(void) {
 
 u8 network_player_connected_count(void) {
     u8 count = 0;
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         if (gNetworkPlayers[i].connected) { count++; }
     }
     return count;
 }
 
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         if (gNetworkPlayers[i].globalIndex == globalIndex) {
             return &gNetworkPlayers[i];
@@ -69,12 +69,23 @@ void network_player_update(void) {
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
     if (type == NPT_LOCAL) {
-        memset(&gNetworkPlayers[0], 0, sizeof(struct NetworkPlayer));
-        gNetworkPlayers[0].connected = true;
-        gNetworkPlayers[0].type = type;
-        gNetworkPlayers[0].localIndex = 0;
-        gNetworkPlayers[0].globalIndex = globalIndex;
-        gNetworkPlayerLocal = &gNetworkPlayers[0];
+        struct NetworkPlayer* np = &gNetworkPlayers[0];
+        if (np->connected) {
+            np->globalIndex = globalIndex;
+            return 0;
+        }
+        memset(np, 0, sizeof(struct NetworkPlayer));
+        np->connected = true;
+        np->type = type;
+        np->localIndex = 0;
+        np->globalIndex = globalIndex;
+        np->currLevelAreaSeqId = 0;
+        np->currCourseNum = -1;
+        np->currActNum = -1;
+        np->currLevelNum = -1;
+        np->currAreaIndex = -1;
+        np->currAreaSyncValid = false;
+        gNetworkPlayerLocal = np;
         return 0;
     }
 
@@ -96,8 +107,12 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         if (np->connected) { continue; }
         memset(np, 0, sizeof(struct NetworkPlayer));
         np->connected = true;
+        np->currLevelAreaSeqId = 0;
+        np->currCourseNum = -1;
+        np->currActNum = -1;
         np->currLevelNum = -1;
         np->currAreaIndex = -1;
+        np->currAreaSyncValid = false;
         np->fadeOpacity = 0;
         np->localIndex = i;
         np->globalIndex = (gNetworkType == NT_SERVER) ? i : globalIndex;
@@ -108,10 +123,6 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
         else { chat_add_message_ext("player connected", CMT_SYSTEM, get_player_color(np->globalIndex, 0)); }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
-        extern s16 sCurrPlayMode;
-        if (gNetworkType == NT_SERVER && sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
-            network_send_level_warp_repeat();
-        }
         return i;
     }
 

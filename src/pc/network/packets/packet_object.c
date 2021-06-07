@@ -472,6 +472,7 @@ void network_forget_sync_object(struct SyncObject* so) {
     so->behavior = NULL;
     so->reserved = 0;
     so->owned = false;
+    so->staticLevelSpawn = false;
 }
 
 void network_update_objects(void) {

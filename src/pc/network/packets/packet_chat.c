@@ -15,6 +15,17 @@ static void print_sync_object_table(void) {
     }
     LOG_INFO(" ");
 }
+
+static void print_network_player_table(void) {
+    LOG_INFO("Network Player Table");
+    LOG_INFO("%5s %8s %8s %8s %8s %8s", "id", "course", "act", "level", "area", "valid");
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+        LOG_INFO("%5d %8d %8d %8d %8d %8d", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex, np->currAreaSyncValid);
+    }
+    LOG_INFO(" ");
+}
 #endif
 
 void network_send_chat(char* message, u8 rgb[3]) {
@@ -28,7 +39,7 @@ void network_send_chat(char* message, u8 rgb[3]) {
     LOG_INFO("tx chat: %s", message);
 
 #ifdef DEVELOPMENT
-    print_sync_object_table();
+    print_network_player_table();
 #endif
 }
 
@@ -47,6 +58,6 @@ void network_receive_chat(struct Packet* p) {
     LOG_INFO("rx chat: %s", remoteMessage);
 
 #ifdef DEVELOPMENT
-    print_sync_object_table();
+    print_network_player_table();
 #endif
 }

@@ -11,7 +11,9 @@
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
+
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };

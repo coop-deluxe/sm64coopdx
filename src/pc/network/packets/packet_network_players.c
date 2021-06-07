@@ -14,13 +14,18 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
     struct Packet p;
     packet_init(&p, PACKET_NETWORK_PLAYERS, true, false);
     packet_write(&p, &connectedCount, sizeof(u8));
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         u8 npType = gNetworkPlayers[i].type;
         if (npType == NPT_LOCAL) { npType = NPT_SERVER; }
         else if (i == sendToLocalIndex) { npType = NPT_LOCAL; }
         packet_write(&p, &npType, sizeof(u8));
-        packet_write(&p, &gNetworkPlayers[i].globalIndex, sizeof(u8));
+        packet_write(&p, &gNetworkPlayers[i].globalIndex,        sizeof(u8));
+        packet_write(&p, &gNetworkPlayers[i].currLevelAreaSeqId, sizeof(u16));
+        packet_write(&p, &gNetworkPlayers[i].currCourseNum,      sizeof(s16));
+        packet_write(&p, &gNetworkPlayers[i].currActNum,         sizeof(s16));
+        packet_write(&p, &gNetworkPlayers[i].currLevelNum,       sizeof(s16));
+        packet_write(&p, &gNetworkPlayers[i].currAreaIndex,      sizeof(s16));
         LOG_INFO("send network player [%d == %d]", gNetworkPlayers[i].globalIndex, npType);
     }
 
@@ -47,9 +52,26 @@ void network_receive_network_players(struct Packet* p) {
     packet_read(p, &connectedCount, sizeof(u8));
     for (int i = 0; i < connectedCount; i++) {
         u8 npType, globalIndex;
-        packet_read(p, &npType, sizeof(u8));
-        packet_read(p, &globalIndex, sizeof(u8));
-        network_player_connected(npType, globalIndex);
-        LOG_INFO("received network player [%d == %d]", globalIndex, npType);
+        u16 levelAreaSeqId;
+        s16 courseNum, actNum, levelNum, areaIndex;
+        packet_read(p, &npType,         sizeof(u8));
+        packet_read(p, &globalIndex,    sizeof(u8));
+        packet_read(p, &levelAreaSeqId, sizeof(u16));
+        packet_read(p, &courseNum,      sizeof(s16));
+        packet_read(p, &actNum,         sizeof(s16));
+        packet_read(p, &levelNum,       sizeof(s16));
+        packet_read(p, &areaIndex,      sizeof(s16));
+
+        u8 localIndex = network_player_connected(npType, globalIndex);
+        LOG_INFO("received network player [%d == %d] (%d)", globalIndex, npType, localIndex);
+        if (localIndex != UNKNOWN_GLOBAL_INDEX && localIndex != 0) {
+            struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+            np->currLevelAreaSeqId = levelAreaSeqId;
+            np->currCourseNum      = courseNum;
+            np->currActNum         = actNum;
+            np->currLevelNum       = levelNum;
+            np->currAreaIndex      = areaIndex;
+            LOG_INFO("received network player location (%d, %d, %d, %d)", courseNum, actNum, levelNum, areaIndex);
+        }
     }
 }

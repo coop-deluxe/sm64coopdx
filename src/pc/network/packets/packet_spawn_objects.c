@@ -8,6 +8,7 @@
 
 #define MAX_SPAWN_OBJECTS_PER_PACKET 8
 
+#pragma pack(1)
 struct SpawnObjectData {
     u8 parentId;
     u32 model;

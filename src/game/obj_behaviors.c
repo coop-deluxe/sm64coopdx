@@ -517,7 +517,12 @@ u8 is_player_active(struct MarioState* m) {
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     if (np->type != NPT_LOCAL) {
         if (!np->connected) { return FALSE; }
-        if (np->currLevelNum != gCurrLevelNum || np->currAreaIndex != gCurrAreaIndex) { return FALSE; }
+        bool levelAreaMismatch =
+            (np->currCourseNum    != gCurrCourseNum
+             || np->currActNum    != gCurrActNum
+             || np->currLevelNum  != gCurrLevelNum
+             || np->currAreaIndex != gCurrAreaIndex);
+        if (levelAreaMismatch) { return FALSE; }
     }
     return TRUE;
 }

@@ -1868,7 +1868,13 @@ s32 execute_mario_action(UNUSED struct Object *o) {
     // hide inactive players
     struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
     if (np->type != NPT_LOCAL) {
-        if (!np->connected || np->currLevelNum != gCurrLevelNum || np->currAreaIndex != gCurrAreaIndex) {
+        bool levelAreaMismatch =
+            (np->currCourseNum   != gCurrCourseNum
+            || np->currActNum    != gCurrActNum
+            || np->currLevelNum  != gCurrLevelNum
+            || np->currAreaIndex != gCurrAreaIndex);
+
+        if (!np->connected || levelAreaMismatch) {
             gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
             gMarioState->marioObj->oIntangibleTimer = -1;
             return 0;

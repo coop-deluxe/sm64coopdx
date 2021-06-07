@@ -257,15 +257,6 @@ void load_area(s32 index) {
         load_obj_warp_nodes();
         geo_call_global_function_nodes(&gCurrentArea->unk04->node, GEO_CONTEXT_AREA_LOAD);
     }
-
-    if (!network_is_warp_2_duplicate()) {
-        if (gNetworkType != NT_NONE) {
-            network_send_level_warp_2(TRUE, gNetworkPlayerLocal->globalIndex);
-        }
-        if (gNetworkType == NT_CLIENT) {
-            sCurrPlayMode = PLAY_MODE_SYNC_LEVEL;
-        }
-    }
 }
 
 void unload_area(void) {
@@ -448,11 +439,6 @@ void render_game(void) {
         } else {
             clear_frame_buffer(gWarpTransFBSetColor);
         }
-    }
-
-    // only render 'synchronizing' text if we've been waiting for a while
-    if (sCurrPlayMode == PLAY_MODE_SYNC_LEVEL) {
-        render_sync_level_screen();
     }
 
     D_8032CE74 = NULL;

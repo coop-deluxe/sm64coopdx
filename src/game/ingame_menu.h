@@ -153,7 +153,6 @@ void do_cutscene_handler(void);
 void render_hud_cannon_reticle(void);
 void reset_red_coins_collected(void);
 s16 render_menus_and_dialogs(void);
-s16 render_sync_level_screen(void);
 void create_dl_scale_matrix(s8 pushOp, f32 x, f32 y, f32 z);
 
 #endif // INGAME_MENU_H

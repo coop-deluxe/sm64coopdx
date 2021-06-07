@@ -14967,13 +14967,7 @@
     <ClCompile Include="..\src\pc\network\packets\packet_read_write.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_level_warp.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_reliable.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_inside_painting.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_collect_star.c">
@@ -15069,9 +15063,6 @@
     <ClCompile Include="..\src\pc\network\packets\packet_leaving.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_instant_warp.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\utils\string_linked_list.c">
       <Filter>Source Files\src\pc\utils</Filter>
     </ClCompile>
@@ -15087,7 +15078,7 @@
     <ClCompile Include="..\src\game\characters.c">
       <Filter>Source Files\src\game</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_level_warp_2.c">
+    <ClCompile Include="..\src\pc\network\packets\packet_death.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
   </ItemGroup>

@@ -16,8 +16,6 @@ enum PacketType {
     PACKET_SPAWN_OBJECTS,
     PACKET_SPAWN_STAR,
     PACKET_SPAWN_STAR_NLE,
-    PACKET_LEVEL_WARP,
-    PACKET_INSIDE_PAINTING,
     PACKET_COLLECT_STAR,
     PACKET_COLLECT_COIN,
     PACKET_COLLECT_ITEM,
@@ -30,10 +28,13 @@ enum PacketType {
     PACKET_KEEP_ALIVE,
     PACKET_LEAVING,
     PACKET_SAVE_FILE,
-    PACKET_INSTANT_WARP,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
-    PACKET_LEVEL_WARP_2,
+    PACKET_LEVEL_AREA,
+    PACKET_LEVEL_AREA_VALID,
+    PACKET_ENTITIES_REQUEST,
+    PACKET_CLIENT_ENTITIES_REQUEST,
+    PACKET_ENTITIES_RESPONSE,
     ///
     PACKET_CUSTOM = 255,
 };
@@ -102,15 +103,6 @@ void network_receive_spawn_star(struct Packet* p);
 void network_send_spawn_star_nle(struct Object* o, u32 params);
 void network_receive_spawn_star_nle(struct Packet* p);
 
-// packet_level_warp.c
-void network_send_level_warp_begin(void);
-void network_send_level_warp_repeat(void);
-void network_receive_level_warp(struct Packet* p);
-
-// packet_inside_painting.c
-void network_send_inside_painting(void);
-void network_receive_inside_painting(struct Packet* p);
-
 // packet_collect_star.c
 void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex);
 void network_receive_collect_star(struct Packet* p);
@@ -160,10 +152,6 @@ void network_receive_leaving(struct Packet* p);
 void network_send_save_file(s32 fileIndex);
 void network_receive_save_file(struct Packet* p);
 
-// packet_instant_warp.c
-void network_send_instant_warp(void);
-void network_receive_instant_warp(struct Packet* p);
-
 // packet_network_players.c
 void network_send_network_players(void);
 void network_receive_network_players(struct Packet* p);
@@ -172,9 +160,18 @@ void network_receive_network_players(struct Packet* p);
 void network_send_death(void);
 void network_receive_death(struct Packet* p);
 
-// packet_level_warp_2.c
-void network_send_level_warp_2(u8 eventBegins, u8 controlledGlobalIndex);
-void network_receive_level_warp_2(struct Packet* p);
-u8 network_is_warp_2_duplicate(void);
+// packet_level_area.c
+void network_send_level_area(void);
+void network_receive_level_area(struct Packet* p);
+void network_send_level_area_valid(u8 toGlobalIndex);
+void network_receive_level_area_valid(struct Packet* p);
+
+// packet_entities_request.c
+void network_send_entities_request(void);
+void network_receive_entities_request(struct Packet* p);
+void network_send_client_entities_request(u8 destGlobalIndex, u8 srcGlobalIndex);
+void network_receive_client_entities_request(struct Packet* p);
+void network_send_entities_response(u8 destGlobalIndex);
+void network_receive_entities_response(struct Packet* p);
 
 #endif
