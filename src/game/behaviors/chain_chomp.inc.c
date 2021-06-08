@@ -528,8 +528,15 @@ void bhv_wooden_post_update(void) {
         // chomp
         o->oWoodenPostOffsetY = -190.0f;
         if (o->parentObj != o) {
-            play_puzzle_jingle();
-            o->parentObj->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE;
+            if (gNetworkLevelSyncing) {
+                // force chain chomp cutscene ending
+                o->parentObj->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
+                o->parentObj->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_END_CUTSCENE;
+                o->parentObj->oChainChompHitGate = TRUE;
+            } else {
+                play_puzzle_jingle();
+                o->parentObj->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE;
+            }
             o->parentObj = o;
         }
     }

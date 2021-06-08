@@ -18,6 +18,13 @@ struct Packet* get_last_sync_ent_reliable_packet(u8 syncId) {
     return &sLastSyncEntReliablePacket[syncId];
 }
 
+void forget_ent_reliable_packet(struct Object* o) {
+    u8 syncId = o->oSyncID;
+    if (gSyncObjects[syncId].o == o) {
+        sLastSyncEntReliablePacket[syncId].error = true;
+    }
+}
+
 // todo: move this to somewhere more general
 static float player_distance(struct MarioState* marioState, struct Object* o) {
     if (marioState->marioObj == NULL) { return 0; }

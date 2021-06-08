@@ -86,6 +86,7 @@ void network_receive_player(struct Packet* p);
 
 // packet_object.c
 struct Packet* get_last_sync_ent_reliable_packet(u8 syncId);
+void forget_ent_reliable_packet(struct Object* o);
 struct SyncObject* network_init_object(struct Object* object, float maxSyncDistance);
 void network_init_object_field(struct Object* o, void* field);
 bool network_owns_object(struct Object* o);

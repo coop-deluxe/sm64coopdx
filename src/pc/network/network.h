@@ -83,6 +83,7 @@ struct ServerSettings {
 extern struct NetworkSystem* gNetworkSystem;
 extern enum NetworkType gNetworkType;
 extern bool gNetworkLevelLoaded;
+extern bool gNetworkLevelSyncing;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern clock_t gLastNetworkSend;

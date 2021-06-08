@@ -164,8 +164,10 @@ void exclamation_box_act_4(void) {
 
 void exclamation_box_act_5(void) {
     o->oExclamationBoxForce = FALSE;
-    if (o->oTimer > 300)
+    if (o->oTimer > 300) {
         o->oAction = 2;
+        forget_ent_reliable_packet(o);
+    }
 }
 void exclamation_box_act_6(void) {
     o->oExclamationBoxForce = FALSE;

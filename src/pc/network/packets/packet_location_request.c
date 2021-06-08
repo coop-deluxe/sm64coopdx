@@ -182,7 +182,17 @@ void network_send_location_response(u8 destGlobalIndex) {
 
     //LOG_INFO("network_send_location_response() { %d, %d, %d, %d, %d } to: %d", destGlobalIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex, (gNetworkType == NT_SERVER) ? destNp->localIndex : 0);
 
-    network_send_to(destGlobalIndex, &p);
+    network_send_to(destNp->localIndex, &p);
+
+    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        struct SyncObject* so = &gSyncObjects[i];
+        if (so == NULL || so->o == NULL) { continue; }
+        struct Packet* entPacket = get_last_sync_ent_reliable_packet(i);
+        if (entPacket->error) { continue; }
+        struct Packet p2 = { 0 };
+        packet_duplicate(entPacket, &p2);
+        network_send_to(destNp->localIndex, &p2);
+    }
 }
 
 void network_receive_location_response(struct Packet* p) {
