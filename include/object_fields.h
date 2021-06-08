@@ -406,6 +406,7 @@
 #ifndef VERSION_JP
 #define /*0x1B0*/ oCoinUnk1B0 OBJECT_FIELD_S32(0x4A)
 #endif
+#define /*0x110*/ oCoinID OBJECT_FIELD_S16(0x49, 0)
 
 /* Collision Particle */
 #define /*0x0F4*/ oCollisionParticleUnkF4  OBJECT_FIELD_F32(0x1B)

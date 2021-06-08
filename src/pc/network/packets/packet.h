@@ -173,6 +173,8 @@ void network_send_level_area_valid(u8 toGlobalIndex);
 void network_receive_level_area_valid(struct Packet* p);
 
 // packet_location_request.c
+void coin_collection_remember(u8 coinId);
+void coin_collection_clear(void);
 void static_spawn_removal_remember(u8 syncId);
 void static_spawn_removal_clear(void);
 void network_send_location_request(void);

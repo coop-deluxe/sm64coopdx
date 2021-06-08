@@ -529,3 +529,20 @@ const BehaviorScript* get_behavior_from_id(enum BehaviorId id) {
     }
     return gBehaviorTable[id];
 }
+
+u8 is_behavior_a_coin(const BehaviorScript* behavior) {
+    return behavior == bhvCoinFormationSpawn
+        || behavior == bhvCoinFormation
+        || behavior == bhvOneCoin
+        || behavior == bhvYellowCoin
+        || behavior == bhvTemporaryYellowCoin
+        || behavior == bhvThreeCoinsSpawn
+        || behavior == bhvTenCoinsSpawn
+        || behavior == bhvHiddenBlueCoin
+        || behavior == bhvMovingYellowCoin
+        || behavior == bhvMovingBlueCoin
+        || behavior == bhvBlueCoinSliding
+        || behavior == bhvBlueCoinJumping
+        || behavior == bhvRedCoin
+        || behavior == bhvBowserCourseRedCoinStar;
+}

@@ -2,6 +2,8 @@
 #include "network.h"
 #include "object_fields.h"
 #include "object_constants.h"
+#include "game/object_list_processor.h"
+#include "behavior_table.h"
 #include "socket/socket.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
@@ -96,6 +98,15 @@ void network_on_loaded_level(void) {
     // set all sync objects as staticLevelSpawn
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
         gSyncObjects[i].staticLevelSpawn = true;
+    }
+
+    // give all coins an ID
+    u8 coinId = 0;
+    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+        struct Object* o = &gObjectPool[i];
+        if (o->activeFlags & ACTIVE_FLAG_DEACTIVATED) { continue; }
+        if (!is_behavior_a_coin(o->behavior)) { continue; }
+        o->oCoinID = ++coinId;
     }
 
     // check for level change

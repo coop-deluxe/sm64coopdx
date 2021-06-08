@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "../network.h"
 #include "menu/custom_menu_system.h"
+#include "game/interaction.h"
+#include "game/object_list_processor.h"
+#include "object_constants.h"
+#include "object_fields.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -9,6 +13,19 @@ extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
 #define MAX_STATIC_SPAWN_REMOVAL 256
 u8 sStaticSpawnRemoval[MAX_STATIC_SPAWN_REMOVAL] = { 0 };
 u8 sStaticSpawnRemovalIndex = 0;
+
+#define MAX_COIN_COLLECTION 128
+u8 sCoinCollection[MAX_STATIC_SPAWN_REMOVAL] = { 0 };
+u8 sCoinCollectionIndex = 0;
+
+void coin_collection_remember(u8 coinId) {
+    sCoinCollection[sCoinCollectionIndex++] = coinId;
+    if (sStaticSpawnRemovalIndex >= MAX_COIN_COLLECTION) { sStaticSpawnRemovalIndex = MAX_COIN_COLLECTION - 1; }
+}
+
+void coin_collection_clear(void) {
+    sCoinCollectionIndex = 0;
+}
 
 void static_spawn_removal_remember(u8 syncId) {
     sStaticSpawnRemoval[sStaticSpawnRemovalIndex++] = syncId;
@@ -40,7 +57,7 @@ void network_send_location_request(void) {
         struct NetworkPlayer* np = get_network_player_from_valid_location(gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
         if (np == NULL) {
             gNetworkPlayerLocal->currAreaSyncValid = true;
-            LOG_INFO("set currAreaSyncValid to true (1)");
+            //LOG_INFO("set currAreaSyncValid to true (1)");
             return;
         }
         //LOG_INFO("network_send_location_request()");
@@ -81,7 +98,7 @@ void network_receive_location_request(struct Packet* p) {
     np->currLevelNum      = levelNum;
     np->currAreaIndex     = areaIndex;
     np->currAreaSyncValid = false;
-    LOG_INFO("set global %d's currAreaSyncValid to false", np->globalIndex);
+    //LOG_INFO("set global %d's currAreaSyncValid to false", np->globalIndex);
 
     //LOG_INFO("network_receive_location_request() { %d, %d, %d, %d }", courseNum, actNum, levelNum, areaIndex);
 
@@ -180,6 +197,11 @@ void network_send_location_response(u8 destGlobalIndex) {
         packet_write(&p, &sStaticSpawnRemoval[i], sizeof(u8));
     }
 
+    packet_write(&p, &sCoinCollectionIndex, sizeof(u8));
+    for (int i = 0; i < sCoinCollectionIndex; i++) {
+        packet_write(&p, &sCoinCollection[i], sizeof(u8));
+    }
+
     //LOG_INFO("network_send_location_response() { %d, %d, %d, %d, %d } to: %d", destGlobalIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex, (gNetworkType == NT_SERVER) ? destNp->localIndex : 0);
 
     network_send_to(destNp->localIndex, &p);
@@ -202,20 +224,17 @@ void network_receive_location_response(struct Packet* p) {
     packet_read(p, &levelNum,        sizeof(s16));
     packet_read(p, &areaIndex,       sizeof(s16));
 
-    // TODO: read entities here!
-
     //LOG_INFO("network_receive_location_response() { %d, %d, %d, %d, %d }", destGlobalIndex, courseNum, actNum, levelNum, areaIndex);
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");
         return;
     }
-    // TODO: apply entities!
 
-    if (gNetworkType == NT_SERVER) {
+    /*if (gNetworkType == NT_SERVER) {
         struct NetworkPlayer* srcNp = &gNetworkPlayers[p->localIndex];
         LOG_INFO("sending location response from global %d to global %d", srcNp->globalIndex, gNetworkPlayerLocal->globalIndex);
-    }
+    }*/
 
     if (gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR("Receiving 'location response' when our location is already valid!");
@@ -228,6 +247,7 @@ void network_receive_location_response(struct Packet* p) {
     u8 staticSpawnRemovals;
     static_spawn_removal_clear();
 
+    // read static spawn removals
     packet_read(p, &staticSpawnRemovals, sizeof(u8));
     for (int i = 0; i < staticSpawnRemovals; i++) {
         u8 syncId;
@@ -236,15 +256,33 @@ void network_receive_location_response(struct Packet* p) {
         if (so != NULL) {
             if (so->o != NULL) {
                 obj_mark_for_deletion(so->o);
-                LOG_INFO("marking for deletion: %d", syncId);
             }
             network_forget_sync_object(so);
         }
     }
 
+    // read coin collections
+    packet_read(p, &sCoinCollectionIndex, sizeof(u8));
+    for (int i = 0; i < sCoinCollectionIndex; i++) {
+        packet_read(p, &sCoinCollection[i], sizeof(u8));
+    }
+
+    // collect the coins
+    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+        struct Object* o = &gObjectPool[i];
+        if (o->activeFlags & ACTIVE_FLAG_DEACTIVATED) { continue; }
+        if (!is_behavior_a_coin(o->behavior))         { continue; }
+        for (int j = 0; j < sCoinCollectionIndex; j++) {
+            if (o->oCoinID == sCoinCollection[j]) {
+                o->oInteractStatus = INT_STATUS_INTERACTED;
+            }
+        }
+    }
+
+
     gMarioStates[0].numCoins = numCoins;
     gNetworkPlayerLocal->currAreaSyncValid = true;
-    LOG_INFO("set currAreaSyncValid to true (2)");
+    //LOG_INFO("set currAreaSyncValid to true (2)");
     if (gNetworkType != NT_SERVER) {
         network_send_level_area_valid(0);
     }

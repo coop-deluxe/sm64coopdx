@@ -34,7 +34,7 @@ void network_send_level_area(void) {
         np->currAreaIndex      = gCurrAreaIndex;
         np->currAreaSyncValid  = false;
 
-        LOG_INFO("set currAreaSyncValid to false");
+        //LOG_INFO("set currAreaSyncValid to false");
     }
 
     //LOG_INFO("tx location: [%d, %d, %d, %d]", gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
@@ -118,7 +118,7 @@ static void network_receive_level_area_valid_server(struct Packet* p) {
         return;
     }
     np->currAreaSyncValid = true;
-    LOG_INFO("set global %d's currAreaSyncValid to true", np->globalIndex);
+    //LOG_INFO("set global %d's currAreaSyncValid to true", np->globalIndex);
 }
 
 static void network_receive_level_area_valid_client(struct Packet* p) {
@@ -135,7 +135,7 @@ static void network_receive_level_area_valid_client(struct Packet* p) {
 
     gNetworkPlayerLocal->currAreaSyncValid = true;
     network_send_level_area_valid_client();
-    LOG_INFO("set currAreaSyncValid to true (3)");
+    //LOG_INFO("set currAreaSyncValid to true (3)");
 }
 
 void network_receive_level_area_valid(struct Packet* p) {

@@ -138,6 +138,7 @@ void network_clear_sync_objects(void) {
     }
     nextSyncID = 1;
     static_spawn_removal_clear();
+    coin_collection_clear();
 }
 
 void network_set_sync_id(struct Object* o) {
