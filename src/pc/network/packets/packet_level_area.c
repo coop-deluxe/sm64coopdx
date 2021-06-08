@@ -98,7 +98,7 @@ static void network_send_level_area_valid_server(u8 toGlobalIndex) {
 static void network_send_level_area_valid_client() {
     struct Packet p;
     packet_init(&p, PACKET_LEVEL_AREA_VALID, true, false);
-    network_send_to(0, &p);
+    network_send_to(gNetworkPlayerServer->localIndex, &p);
 }
 
 void network_send_level_area_valid(u8 toGlobalIndex) {

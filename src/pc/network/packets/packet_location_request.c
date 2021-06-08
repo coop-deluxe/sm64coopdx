@@ -168,7 +168,6 @@ void network_send_location_response(u8 destGlobalIndex) {
 
     struct Packet p;
     packet_init(&p, PACKET_LOCATION_RESPONSE, true, false);
-    packet_write(&p, &destGlobalIndex, sizeof(u8));
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActNum,     sizeof(s16));
     packet_write(&p, &gCurrLevelNum,   sizeof(s16));
@@ -183,18 +182,11 @@ void network_send_location_response(u8 destGlobalIndex) {
 
     //LOG_INFO("network_send_location_response() { %d, %d, %d, %d, %d } to: %d", destGlobalIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex, (gNetworkType == NT_SERVER) ? destNp->localIndex : 0);
 
-    network_send_to((gNetworkType == NT_SERVER) ? destNp->localIndex : 0, &p);
-
-    if (gNetworkType == NT_SERVER) {
-        LOG_INFO("sending response from global %d to global %d", gNetworkPlayerLocal->globalIndex, destNp->globalIndex);
-    }
-
+    network_send_to(destGlobalIndex, &p);
 }
 
 void network_receive_location_response(struct Packet* p) {
-    u8 destGlobalIndex;
     s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &destGlobalIndex, sizeof(u8));
     packet_read(p, &courseNum,       sizeof(s16));
     packet_read(p, &actNum,          sizeof(s16));
     packet_read(p, &levelNum,        sizeof(s16));
@@ -203,25 +195,6 @@ void network_receive_location_response(struct Packet* p) {
     // TODO: read entities here!
 
     //LOG_INFO("network_receive_location_response() { %d, %d, %d, %d, %d }", destGlobalIndex, courseNum, actNum, levelNum, areaIndex);
-
-    if (gNetworkType == NT_SERVER && gNetworkPlayerLocal->globalIndex != destGlobalIndex) {
-        // recreate packet and send to destination
-        struct Packet p2;
-        packet_duplicate(p, &p2);
-
-        struct NetworkPlayer* destNp = network_player_from_global_index(destGlobalIndex);
-        if (destNp == NULL || !destNp->connected) {
-            LOG_ERROR("network_receive_location_response: dest np is invalid");
-            return;
-        }
-        struct NetworkPlayer* srcNp = &gNetworkPlayers[p->localIndex];
-        LOG_INFO("sending location response from global %d to global %d", srcNp->globalIndex, destNp->globalIndex);
-        network_send_to(destNp->localIndex, &p2);
-        return;
-    } else if (gNetworkPlayerLocal->globalIndex != destGlobalIndex) {
-        LOG_ERROR("Receiving 'location response' meant for someone else!");
-        return;
-    }
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");

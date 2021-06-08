@@ -36,7 +36,6 @@ void network_send_chat(char* message, u8 rgb[3]) {
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));
     network_send(&p);
-    LOG_INFO("tx chat: %s", message);
 
 #ifdef DEVELOPMENT
     print_network_player_table();

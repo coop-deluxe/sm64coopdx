@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #define PACKET_LENGTH 1024
+#define PACKET_DESTINATION_BROADCAST ((u8)-1)
 
 enum PacketType {
     PACKET_ACK,
@@ -47,6 +48,7 @@ struct Packet {
     bool reliable;
     bool levelAreaMustMatch;
     bool requestBroadcast;
+    u8 destGlobalId;
     u16 seqId;
     bool sent;
     u8 buffer[PACKET_LENGTH];
@@ -64,6 +66,7 @@ void packet_receive(struct Packet* packet);
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch);
 void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket);
 void packet_set_flags(struct Packet* packet);
+void packet_set_destination(struct Packet* packet, u8 destGlobalId);
 void packet_write(struct Packet* packet, void* data, u16 length);
 u8 packet_initial_read(struct Packet* packet);
 void packet_read(struct Packet* packet, void* data, u16 length);
@@ -82,6 +85,7 @@ void network_update_player(void);
 void network_receive_player(struct Packet* p);
 
 // packet_object.c
+struct Packet* get_last_sync_ent_reliable_packet(u8 syncId);
 struct SyncObject* network_init_object(struct Object* object, float maxSyncDistance);
 void network_init_object_field(struct Object* o, void* field);
 bool network_owns_object(struct Object* o);

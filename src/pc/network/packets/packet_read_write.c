@@ -1,7 +1,8 @@
 #include "../network.h"
 #include "game/area.h"
 
-#define PACKET_FLAG_BUFFER_OFFSET 3
+#define PACKET_FLAG_BUFFER_OFFSET        3
+#define PACKET_DESTINATION_BUFFER_OFFSET 4
 
 static u16 nextSeqNum = 1;
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
@@ -15,6 +16,8 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet->sent = false;
 
     packet_write(packet, &packetType, sizeof(u8));
+
+    // write seq number
     if (reliable) {
         packet_write(packet, &nextSeqNum, sizeof(u16));
         packet->seqId = nextSeqNum;
@@ -30,6 +33,11 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet_write(packet, &flags, sizeof(u8)); // fill in the byte
     packet_set_flags(packet);
 
+    // write destination
+    u8 destination = PACKET_DESTINATION_BROADCAST;
+    packet_write(packet, &destination, sizeof(u8));
+
+    // write location
     if (levelAreaMustMatch) {
         packet_write(packet, &gCurrCourseNum, sizeof(s16));
         packet_write(packet, &gCurrActNum,    sizeof(s16));
@@ -46,6 +54,7 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->reliable = srcPacket->reliable;
     dstPacket->levelAreaMustMatch = srcPacket->levelAreaMustMatch;
     dstPacket->requestBroadcast = srcPacket->requestBroadcast;
+    dstPacket->destGlobalId = srcPacket->destGlobalId;
     dstPacket->sent = false;
 
     memcpy(&dstPacket->buffer[0], &srcPacket->buffer[0], srcPacket->dataLength);
@@ -64,15 +73,19 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
 void packet_set_flags(struct Packet* packet) {
     u8 flags = 0;
     flags |= SET_BIT(packet->levelAreaMustMatch, 0);
-    flags |= SET_BIT(packet->requestBroadcast, 1);
+    flags |= SET_BIT(packet->requestBroadcast,   1);
     packet->buffer[PACKET_FLAG_BUFFER_OFFSET] = flags;
+}
+
+void packet_set_destination(struct Packet* packet, u8 destGlobalId) {
+    packet->buffer[PACKET_DESTINATION_BUFFER_OFFSET] = destGlobalId;
 }
 
 void packet_write(struct Packet* packet, void* data, u16 length) {
     if (data == NULL) { packet->error = true; return; }
     memcpy(&packet->buffer[packet->cursor], data, length);
     packet->dataLength += length;
-    packet->cursor += length;
+    packet->cursor     += length;
 }
 
 u8 packet_initial_read(struct Packet* packet) {
@@ -80,7 +93,10 @@ u8 packet_initial_read(struct Packet* packet) {
     u8 flags = 0;
     packet_read(packet, &flags, sizeof(u8));
     packet->levelAreaMustMatch = GET_BIT(flags, 0);
-    packet->requestBroadcast = GET_BIT(flags, 1);
+    packet->requestBroadcast   = GET_BIT(flags, 1);
+
+    // read destination
+    packet_read(packet, &packet->destGlobalId, sizeof(u8));
 
     if (packet->levelAreaMustMatch) {
         s16 currCourseNum, currActNum, currLevelNum, currAreaIndex;

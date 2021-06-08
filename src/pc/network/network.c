@@ -115,6 +115,11 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     // set the flags again
     packet_set_flags(p);
 
+    // set destination
+    packet_set_destination(p, p->requestBroadcast
+                              ? PACKET_DESTINATION_BROADCAST
+                              : gNetworkPlayers[(localIndex == 0) ? p->localIndex : localIndex].globalIndex);
+
     p->localIndex = localIndex;
 
     // remember reliable packets
@@ -123,6 +128,11 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     // save inside packet buffer
     u32 hash = packet_hash(p);
     memcpy(&p->buffer[p->dataLength], &hash, sizeof(u32));
+
+    // redirect to server if required
+    if (localIndex != 0 && gNetworkType != NT_SERVER && gNetworkSystem->requireServerBroadcast) {
+        localIndex = gNetworkPlayerServer->localIndex;
+    }
 
     // send
     int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));

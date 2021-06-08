@@ -12,6 +12,11 @@
 
 static u8 nextSyncID = 1;
 struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
+struct Packet sLastSyncEntReliablePacket[MAX_SYNC_OBJECTS] = { 0 };
+
+struct Packet* get_last_sync_ent_reliable_packet(u8 syncId) {
+    return &sLastSyncEntReliablePacket[syncId];
+}
 
 // todo: move this to somewhere more general
 static float player_distance(struct MarioState* marioState, struct Object* o) {
@@ -80,6 +85,8 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->randomSeed = (u16)(o->oSyncID * 7951);
     so->staticLevelSpawn = false;
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
+
+    sLastSyncEntReliablePacket[o->oSyncID].error = true;
 
     return so;
 }
@@ -403,6 +410,9 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     // check for object death
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         network_forget_sync_object(so);
+    } else {
+        // remember packet
+        packet_duplicate(&p, &sLastSyncEntReliablePacket[o->oSyncID]);
     }
 
     // send the packet out
@@ -444,6 +454,9 @@ void network_receive_object(struct Packet* p) {
     // deactivated
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         network_forget_sync_object(so);
+    } else if (p->reliable) {
+        // remember packet
+        packet_duplicate(p, &sLastSyncEntReliablePacket[o->oSyncID]);
     }
 
     // trigger on-received callback
@@ -467,6 +480,7 @@ void network_receive_object(struct Packet* p) {
             for (int j = 0; j < 3; j++) { gMarioStates[i].pos[j] += deltaPos[j]; }
         }
     }
+
 }
 
 void network_forget_sync_object(struct SyncObject* so) {
@@ -475,6 +489,7 @@ void network_forget_sync_object(struct SyncObject* so) {
         struct SyncObject* so2 = &gSyncObjects[syncId];
         if (so == so2) {
             static_spawn_removal_remember(syncId);
+            sLastSyncEntReliablePacket[syncId].error = true;
         }
     }
     so->o = NULL;
@@ -482,6 +497,7 @@ void network_forget_sync_object(struct SyncObject* so) {
     so->reserved = 0;
     so->owned = false;
     so->staticLevelSpawn = false;
+
 }
 
 void network_update_objects(void) {
