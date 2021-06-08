@@ -32,9 +32,9 @@ enum PacketType {
     PACKET_DEATH,
     PACKET_LEVEL_AREA,
     PACKET_LEVEL_AREA_VALID,
-    PACKET_ENTITIES_REQUEST,
-    PACKET_CLIENT_ENTITIES_REQUEST,
-    PACKET_ENTITIES_RESPONSE,
+    PACKET_LOCATION_REQUEST,
+    PACKET_CLIENT_LOCATION_REQUEST,
+    PACKET_LOCATION_RESPONSE,
     ///
     PACKET_CUSTOM = 255,
 };
@@ -62,6 +62,7 @@ void packet_receive(struct Packet* packet);
 
 // packet_read_write.c
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch);
+void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket);
 void packet_set_flags(struct Packet* packet);
 void packet_write(struct Packet* packet, void* data, u16 length);
 u8 packet_initial_read(struct Packet* packet);
@@ -166,12 +167,14 @@ void network_receive_level_area(struct Packet* p);
 void network_send_level_area_valid(u8 toGlobalIndex);
 void network_receive_level_area_valid(struct Packet* p);
 
-// packet_entities_request.c
-void network_send_entities_request(void);
-void network_receive_entities_request(struct Packet* p);
-void network_send_client_entities_request(u8 destGlobalIndex, u8 srcGlobalIndex);
-void network_receive_client_entities_request(struct Packet* p);
-void network_send_entities_response(u8 destGlobalIndex);
-void network_receive_entities_response(struct Packet* p);
+// packet_location_request.c
+void static_spawn_removal_remember(u8 syncId);
+void static_spawn_removal_clear(void);
+void network_send_location_request(void);
+void network_receive_location_request(struct Packet* p);
+void network_send_client_location_request(u8 destGlobalIndex, u8 srcGlobalIndex);
+void network_receive_client_location_request(struct Packet* p);
+void network_send_location_response(u8 destGlobalIndex);
+void network_receive_location_response(struct Packet* p);
 
 #endif

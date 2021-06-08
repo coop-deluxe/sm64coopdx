@@ -32,10 +32,33 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
 
     if (levelAreaMustMatch) {
         packet_write(packet, &gCurrCourseNum, sizeof(s16));
-        packet_write(packet, &gCurrActNum, sizeof(s16));
-        packet_write(packet, &gCurrLevelNum, sizeof(s16));
+        packet_write(packet, &gCurrActNum,    sizeof(s16));
+        packet_write(packet, &gCurrLevelNum,  sizeof(s16));
         packet_write(packet, &gCurrAreaIndex, sizeof(s16));
     }
+}
+
+void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
+    memset(dstPacket->buffer, 0, PACKET_LENGTH);
+    dstPacket->cursor = 0;
+    dstPacket->dataLength = 0;
+    dstPacket->error = srcPacket->error;
+    dstPacket->reliable = srcPacket->reliable;
+    dstPacket->levelAreaMustMatch = srcPacket->levelAreaMustMatch;
+    dstPacket->requestBroadcast = srcPacket->requestBroadcast;
+    dstPacket->sent = false;
+
+    memcpy(&dstPacket->buffer[0], &srcPacket->buffer[0], srcPacket->dataLength);
+
+    if (dstPacket->reliable) {
+        dstPacket->seqId = nextSeqNum;
+        nextSeqNum++;
+        if (nextSeqNum == 0) { nextSeqNum++; }
+    }
+    memcpy(&dstPacket->buffer[1], &dstPacket->seqId, 2);
+
+    dstPacket->dataLength = srcPacket->dataLength;
+    dstPacket->cursor = dstPacket->dataLength;
 }
 
 void packet_set_flags(struct Packet* packet) {

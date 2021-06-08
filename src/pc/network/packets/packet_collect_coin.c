@@ -8,6 +8,7 @@
 #include "src/engine/math_util.h"
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
+#include "pc/debuglog.h"
 
 // defined in sparkle_spawn_star.inc.c
 void bhv_spawn_star_no_level_exit(struct Object* object, u32 sp20, u8 networkSendEvent);

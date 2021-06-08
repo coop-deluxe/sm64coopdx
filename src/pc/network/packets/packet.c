@@ -54,11 +54,11 @@ void packet_receive(struct Packet* p) {
             case PACKET_DEATH:                   network_receive_death(p);                   break;
             case PACKET_LEVEL_AREA:              network_receive_level_area(p);              break;
             case PACKET_LEVEL_AREA_VALID:        network_receive_level_area_valid(p);        break;
-            case PACKET_ENTITIES_REQUEST:        network_receive_entities_request(p);        break;
-            case PACKET_CLIENT_ENTITIES_REQUEST: network_receive_client_entities_request(p); break;
-            case PACKET_ENTITIES_RESPONSE:       network_receive_entities_response(p);       break;
+            case PACKET_LOCATION_REQUEST:        network_receive_location_request(p);        break;
+            case PACKET_CLIENT_LOCATION_REQUEST: network_receive_client_location_request(p); break;
+            case PACKET_LOCATION_RESPONSE:       network_receive_location_response(p);       break;
             ///
-            case PACKET_CUSTOM:              network_receive_custom(p);              break;
+            case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
             default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
         }
     } else {
@@ -72,8 +72,7 @@ void packet_receive(struct Packet* p) {
                 if (!gNetworkPlayers[i].connected) { continue; }
                 if (i == p->localIndex) { continue; }
                 struct Packet p2 = { 0 };
-                packet_init(&p2, packetType, p->reliable, p->levelAreaMustMatch);
-                packet_write(&p2, &p->buffer[p2.cursor], p->cursor - p2.cursor);
+                packet_duplicate(p, &p2);
                 network_send_to(i, &p2);
             }
         }

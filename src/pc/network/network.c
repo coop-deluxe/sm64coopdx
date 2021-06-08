@@ -97,7 +97,7 @@ void network_on_loaded_level(void) {
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
         network_send_level_area();
-        network_send_entities_request();
+        network_send_location_request();
     }
 
     // request my chunk of reserved sync ids

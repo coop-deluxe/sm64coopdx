@@ -78,6 +78,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->override_ownership = NULL;
     so->syncDeathEvent = true;
     so->randomSeed = (u16)(o->oSyncID * 7951);
+    so->staticLevelSpawn = false;
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
     return so;
@@ -122,6 +123,7 @@ void network_clear_sync_objects(void) {
         network_forget_sync_object(&gSyncObjects[i]);
     }
     nextSyncID = 1;
+    static_spawn_removal_clear();
 }
 
 void network_set_sync_id(struct Object* o) {
@@ -468,6 +470,13 @@ void network_receive_object(struct Packet* p) {
 }
 
 void network_forget_sync_object(struct SyncObject* so) {
+    if (so->staticLevelSpawn && so->o != NULL) {
+        u8 syncId = so->o->oSyncID;
+        struct SyncObject* so2 = &gSyncObjects[syncId];
+        if (so == so2) {
+            static_spawn_removal_remember(syncId);
+        }
+    }
     so->o = NULL;
     so->behavior = NULL;
     so->reserved = 0;

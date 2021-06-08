@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "level_table.h"
 #include "../network.h"
 #include "menu/custom_menu_system.h"
 //#define DISABLE_MODULE_LOG 1
@@ -8,6 +9,11 @@ extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
 static u16 currLevelAreaSeqId = 0;
 
 void network_send_level_area(void) {
+    // override castle act to 0 to prevent instancing of the hub
+    if (gCurrCourseNum == 0 && (gCurrLevelNum == LEVEL_CASTLE || gCurrLevelNum == LEVEL_CASTLE_GROUNDS || gCurrLevelNum == LEVEL_CASTLE_COURTYARD)) {
+        gCurrActNum = 0;
+    }
+
     struct Packet p;
     currLevelAreaSeqId++;
     packet_init(&p, PACKET_LEVEL_AREA, true, false);

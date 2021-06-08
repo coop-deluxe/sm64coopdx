@@ -176,7 +176,6 @@ void bhv_act_selector_loop(void) {
         // This code filters selectable and non-selectable stars.
         sSelectedActIndex = 0;
 
-        s8 oldIndex = sSelectableStarIndex;
         handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, &sSelectableStarIndex, 0, sObtainedStars);
 
         starIndexCounter = sSelectableStarIndex;
@@ -192,7 +191,6 @@ void bhv_act_selector_loop(void) {
         }
     } else {
         // If all stars are collected then they are all selectable.
-        s8 oldIndex = sSelectableStarIndex;
         handle_menu_scrolling(MENU_SCROLL_HORIZONTAL, &sSelectableStarIndex, 0, sVisibleStars - 1);
         sSelectedActIndex = sSelectableStarIndex;
     }
