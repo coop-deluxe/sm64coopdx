@@ -778,10 +778,11 @@ static s32 bhv_cmd_load_collision_data(void) {
 // Command 0x2D: Sets the home position of the object to its current position.
 // Usage: SET_HOME()
 static s32 bhv_cmd_set_home(void) {
-    gCurrentObject->oHomeX = gCurrentObject->oPosX;
-    gCurrentObject->oHomeY = gCurrentObject->oPosY;
-    gCurrentObject->oHomeZ = gCurrentObject->oPosZ;
-
+    if (!gCurrentObject->createdThroughNetwork) {
+        gCurrentObject->oHomeX = gCurrentObject->oPosX;
+        gCurrentObject->oHomeY = gCurrentObject->oPosY;
+        gCurrentObject->oHomeZ = gCurrentObject->oPosZ;
+    }
     gCurBhvCommand++;
     return BHV_PROC_CONTINUE;
 }

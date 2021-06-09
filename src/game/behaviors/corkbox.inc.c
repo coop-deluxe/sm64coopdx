@@ -57,4 +57,8 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
     respawner->oRespawnerMinSpawnDist = minSpawnDist;
     respawner->oRespawnerBehaviorToRespawn = behToSpawn;
     respawner->oSyncID = syncID;
+
+    network_forget_sync_object(&gSyncObjects[syncID]);
+    network_init_object(respawner, SYNC_DISTANCE_ONLY_EVENTS);
+    o->oSyncID = 0;
 }

@@ -354,6 +354,8 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
             break;
     }
 
+    obj->createdThroughNetwork = false;
+
     return obj;
 }
 

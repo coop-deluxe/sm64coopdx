@@ -5,6 +5,9 @@
 #include "game/object_list_processor.h"
 #include "object_constants.h"
 #include "object_fields.h"
+#include "game/object_helpers.h"
+#include "behavior_table.h"
+#include "model_ids.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -57,10 +60,8 @@ void network_send_location_request(void) {
         struct NetworkPlayer* np = get_network_player_from_valid_location(gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
         if (np == NULL) {
             gNetworkPlayerLocal->currAreaSyncValid = true;
-            //LOG_INFO("set currAreaSyncValid to true (1)");
             return;
         }
-        //LOG_INFO("network_send_location_request()");
         network_send_client_location_request(gNetworkPlayerLocal->globalIndex, np->globalIndex);
         return;
     }
@@ -72,7 +73,6 @@ void network_send_location_request(void) {
     packet_write(&p, &gCurrLevelNum,      sizeof(s16));
     packet_write(&p, &gCurrAreaIndex,     sizeof(s16));
     network_send_to(0, &p);
-    //LOG_INFO("network_send_location_request() { %d, %d, %d, %d }", gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
 }
 
 void network_receive_location_request(struct Packet* p) {
@@ -98,9 +98,6 @@ void network_receive_location_request(struct Packet* p) {
     np->currLevelNum      = levelNum;
     np->currAreaIndex     = areaIndex;
     np->currAreaSyncValid = false;
-    //LOG_INFO("set global %d's currAreaSyncValid to false", np->globalIndex);
-
-    //LOG_INFO("network_receive_location_request() { %d, %d, %d, %d }", courseNum, actNum, levelNum, areaIndex);
 
     struct NetworkPlayer* np2 = get_network_player_from_valid_location(courseNum, actNum, levelNum, areaIndex);
     if (np2 == NULL) {
@@ -134,8 +131,6 @@ void network_send_client_location_request(u8 destGlobalIndex, u8 srcGlobalIndex)
     packet_write(&p, &destNp->currLevelNum,  sizeof(s16));
     packet_write(&p, &destNp->currAreaIndex, sizeof(s16));
 
-    //LOG_INFO("network_send_client_location_request() { %d, %d, %d, %d, %d }", destGlobalIndex, destNp->currCourseNum, destNp->currActNum, destNp->currLevelNum, destNp->currAreaIndex);
-
     struct NetworkPlayer* srcNp = network_player_from_global_index(srcGlobalIndex);
     if (srcNp == NULL || !srcNp->connected || !srcNp->currAreaSyncValid) {
         LOG_ERROR("network_send_client_location_request: source np is invalid (global %d)", srcGlobalIndex);
@@ -158,8 +153,6 @@ void network_receive_client_location_request(struct Packet* p) {
     packet_read(p, &actNum,          sizeof(s16));
     packet_read(p, &levelNum,        sizeof(s16));
     packet_read(p, &areaIndex,       sizeof(s16));
-
-    //LOG_INFO("network_receive_client_location_request() { %d, %d, %d, %d, %d }", destGlobalIndex, courseNum, actNum, levelNum, areaIndex);
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("Receiving 'client location request' with the wrong location!");
@@ -192,20 +185,66 @@ void network_send_location_response(u8 destGlobalIndex) {
 
     packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
 
+    // static spawn removal
     packet_write(&p, &sStaticSpawnRemovalIndex, sizeof(u8));
     for (int i = 0; i < sStaticSpawnRemovalIndex; i++) {
         packet_write(&p, &sStaticSpawnRemoval[i], sizeof(u8));
     }
 
+    // coin collection
     packet_write(&p, &sCoinCollectionIndex, sizeof(u8));
     for (int i = 0; i < sCoinCollectionIndex; i++) {
         packet_write(&p, &sCoinCollection[i], sizeof(u8));
     }
 
-    //LOG_INFO("network_send_location_response() { %d, %d, %d, %d, %d } to: %d", destGlobalIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex, (gNetworkType == NT_SERVER) ? destNp->localIndex : 0);
+    // respawners
+    u8 respawnerCount = 0;
+    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        struct SyncObject* so = &gSyncObjects[i];
+        if (so == NULL || so->o == NULL || so->behavior != bhvRespawner) { continue; }
+        respawnerCount++;
+    }
+
+    packet_write(&p, &respawnerCount, sizeof(u8));
+    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        struct SyncObject* so = &gSyncObjects[i];
+        if (so == NULL || so->o == NULL || so->behavior != bhvRespawner) { continue; }
+        u32 behaviorToRespawn = get_id_from_behavior(so->o->oRespawnerBehaviorToRespawn);
+        packet_write(&p, &so->o->oPosX, sizeof(f32));
+        packet_write(&p, &so->o->oPosY, sizeof(f32));
+        packet_write(&p, &so->o->oPosZ, sizeof(f32));
+        packet_write(&p, &so->o->oBehParams, sizeof(s32));
+        packet_write(&p, &so->o->oRespawnerModelToRespawn, sizeof(s32));
+        packet_write(&p, &so->o->oRespawnerMinSpawnDist, sizeof(f32));
+        packet_write(&p, &behaviorToRespawn, sizeof(s32));
+        packet_write(&p, &so->o->oSyncID, sizeof(u32));
+    }
 
     network_send_to(destNp->localIndex, &p);
 
+    // send non-static objects
+    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        struct SyncObject* so = &gSyncObjects[i];
+        if (so == NULL || so->o == NULL || so->o->oSyncID != i) { continue; }
+        if (so->staticLevelSpawn) { continue; }
+        if (so->o->behavior == bhvRespawner) { continue; }
+        struct Object* spawn_objects[] = { so->o };
+
+        // TODO: move find model to a utility file/function
+        // find model
+        u32 model = 0;
+        for (int j = 0; j < 256; j++) {
+            if (so->o->header.gfx.sharedChild == gLoadedGraphNodes[j]) {
+                model = j;
+                break;
+            }
+        }
+
+        u32 models[] = { model };
+        network_send_spawn_objects_to(destNp->localIndex, spawn_objects, models, 1);
+    }
+
+    // send last reliable ent packet
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
         struct SyncObject* so = &gSyncObjects[i];
         if (so == NULL || so->o == NULL) { continue; }
@@ -224,17 +263,10 @@ void network_receive_location_response(struct Packet* p) {
     packet_read(p, &levelNum,        sizeof(s16));
     packet_read(p, &areaIndex,       sizeof(s16));
 
-    //LOG_INFO("network_receive_location_response() { %d, %d, %d, %d, %d }", destGlobalIndex, courseNum, actNum, levelNum, areaIndex);
-
     if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");
         return;
     }
-
-    /*if (gNetworkType == NT_SERVER) {
-        struct NetworkPlayer* srcNp = &gNetworkPlayers[p->localIndex];
-        LOG_INFO("sending location response from global %d to global %d", srcNp->globalIndex, gNetworkPlayerLocal->globalIndex);
-    }*/
 
     if (gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR("Receiving 'location response' when our location is already valid!");
@@ -279,12 +311,43 @@ void network_receive_location_response(struct Packet* p) {
         }
     }
 
+    // read respawners
+    u8 respawnerCount = 0;
+    packet_read(p, &respawnerCount, sizeof(u8));
+
+    for (int i = 0; i < respawnerCount; i++) {
+        f32 posX, posY, posZ;
+        packet_read(p, &posX, sizeof(f32));
+        packet_read(p, &posY, sizeof(f32));
+        packet_read(p, &posZ, sizeof(f32));
+
+        s32 behParams, respawnerModelToRespawn;
+        packet_read(p, &behParams, sizeof(s32));
+        packet_read(p, &respawnerModelToRespawn, sizeof(s32));
+
+        f32 respawnerMinSpawnDist;
+        packet_read(p, &respawnerMinSpawnDist, sizeof(f32));
+
+        u32 behaviorToRespawn, syncId;
+        packet_read(p, &behaviorToRespawn, sizeof(u32));
+        packet_read(p, &syncId, sizeof(u32));
+
+        struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
+        respawner->parentObj = respawner;
+        respawner->oBehParams = behParams;
+        respawner->oRespawnerModelToRespawn = respawnerModelToRespawn;
+        respawner->oRespawnerMinSpawnDist = respawnerMinSpawnDist;
+        respawner->oRespawnerBehaviorToRespawn = get_behavior_from_id(behaviorToRespawn);
+        respawner->oSyncID = syncId;
+
+        network_forget_sync_object(&gSyncObjects[syncId]);
+        network_init_object(respawner, SYNC_DISTANCE_ONLY_EVENTS);
+    }
 
     gMarioStates[0].numCoins = numCoins;
     gNetworkPlayerLocal->currAreaSyncValid = true;
-    //LOG_INFO("set currAreaSyncValid to true (2)");
+
     if (gNetworkType != NT_SERVER) {
         network_send_level_area_valid(0);
     }
-    //LOG_INFO("network_receive_location_response() ==> valid");
 }

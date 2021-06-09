@@ -5,6 +5,8 @@
 #include "src/game/object_helpers.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
+//#define DISABLE_MODULE_LOG 1
+#include "pc/debuglog.h"
 
 #define MAX_SPAWN_OBJECTS_PER_PACKET 8
 
@@ -17,13 +19,16 @@ struct SpawnObjectData {
     s32 rawData[80];
 };
 
-static u8 generate_parent_id(struct Object* objects[], u8 onIndex) {
+static u8 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize) {
     struct Object* o = objects[onIndex];
 
     // special case if the parent is itself
     if (o->parentObj == o) { return (u8)-1; }
 
     if (onIndex == 0) {
+        if (sanitize && o->parentObj->oSyncID == 0) {
+            return (u8)-1;
+        }
         assert(o->parentObj->oSyncID != 0);
         return (u8)o->parentObj->oSyncID;
     }
@@ -36,6 +41,10 @@ static u8 generate_parent_id(struct Object* objects[], u8 onIndex) {
 }
 
 void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objectCount) {
+    network_send_spawn_objects_to(PACKET_DESTINATION_BROADCAST, objects, models, objectCount);
+}
+
+void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
     assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
 
     struct Packet p;
@@ -45,7 +54,7 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
     for (u8 i = 0; i < objectCount; i++) {
         struct Object* o = objects[i];
         u32 model = models[i];
-        u8 parentId = generate_parent_id(objects, i);
+        u8 parentId = generate_parent_id(objects, i, true);
         u16 behaviorId = get_id_from_behavior(o->behavior);
         packet_write(&p, &parentId, sizeof(u8));
         packet_write(&p, &model, sizeof(u32));
@@ -57,7 +66,11 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
     }
 
-    network_send(&p);
+    if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
+        network_send(&p);
+    } else {
+        network_send_to(sendToLocalIndex, &p);
+    }
 }
 
 void network_receive_spawn_objects(struct Packet* p) {
@@ -106,6 +119,7 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
         struct Object* o = spawn_object(parentObj, data.model, behavior);
+        o->createdThroughNetwork = true;
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);
 
         o->header.gfx.scale[0] = scale[0];
@@ -115,11 +129,13 @@ void network_receive_spawn_objects(struct Packet* p) {
         // correct the temporary parent with the object itself
         if (data.parentId == (u8)-1) { o->parentObj = o; }
 
-        // they've allocated one of their reserved sync objects
-        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].reserved == reserveId) {
-            gSyncObjects[o->oSyncID].o = o;
-            gSyncObjects[o->oSyncID].reserved = 0;
-            receivedReservedSyncObject = true;
+        if (o->oSyncID != 0) {
+            // check if they've allocated one of their reserved sync objects
+            receivedReservedSyncObject = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].reserved == reserveId);
+            if (receivedReservedSyncObject || gNetworkLevelSyncing) {
+                gSyncObjects[o->oSyncID].o = o;
+                gSyncObjects[o->oSyncID].reserved = 0;
+            }
         }
 
         spawned[i] = o;

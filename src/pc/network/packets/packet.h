@@ -101,6 +101,7 @@ void network_update_objects(void);
 
 // packet_spawn_object.c
 void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objectCount);
+void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount);
 void network_receive_spawn_objects(struct Packet* p);
 
 // packet_spawn_star.c

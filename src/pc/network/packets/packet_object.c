@@ -155,6 +155,10 @@ void network_set_sync_id(struct Object* o) {
     o->oSyncID = nextSyncID;
     nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
 
+    if (gNetworkLevelLoaded) {
+        LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
+    }
+
     assert(o->oSyncID < MAX_SYNC_OBJECTS);
 }
 
@@ -241,7 +245,6 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
         return NULL;
     } if (o->behavior != behavior && !allowable_behavior_change(so, behavior)) {
         LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(behavior));
-        network_forget_sync_object(so);
         return NULL;
     }
 
@@ -373,7 +376,6 @@ void network_send_object(struct Object* o) {
     if (so == NULL) { return; }
     if (o != so->o) {
         LOG_ERROR("object mismatch for %d", o->oSyncID);
-        network_forget_sync_object(so);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
@@ -393,7 +395,6 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     if (so == NULL) { return; }
     if (o != so->o) {
         LOG_ERROR("object mismatch for %d", o->oSyncID);
-        network_forget_sync_object(so);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
@@ -515,7 +516,7 @@ void network_update_objects(void) {
 
         // check for stale sync object
         if (so->o->oSyncID != i) {
-            LOG_ERROR("sync id mismatch: %d vs %d", so->o->oSyncID, i);
+            LOG_ERROR("sync id mismatch: %d vs %d (behavior %d)", so->o->oSyncID, i, get_id_from_behavior(so->o->behavior));
             network_forget_sync_object(so);
             continue;
         }
