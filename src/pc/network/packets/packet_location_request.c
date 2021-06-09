@@ -3,9 +3,11 @@
 #include "menu/custom_menu_system.h"
 #include "game/interaction.h"
 #include "game/object_list_processor.h"
+#include "game/object_helpers.h"
+#include "game/interaction.h"
+#include "game/level_update.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#include "game/object_helpers.h"
 #include "behavior_table.h"
 #include "model_ids.h"
 //#define DISABLE_MODULE_LOG 1
@@ -183,7 +185,10 @@ void network_send_location_response(u8 destGlobalIndex) {
     packet_write(&p, &gCurrLevelNum,   sizeof(s16));
     packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
 
+    // level variables
     packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
+    packet_write(&p, &gPssSlideStarted, sizeof(u8));
+    packet_write(&p, &gHudDisplay.timer, sizeof(u16));
 
     // static spawn removal
     packet_write(&p, &sStaticSpawnRemovalIndex, sizeof(u8));
@@ -275,6 +280,17 @@ void network_receive_location_response(struct Packet* p) {
 
     s16 numCoins;
     packet_read(p, &numCoins, sizeof(s16));
+
+    u8 pssSlideStarted;
+    u16 hudDisplayTimer;
+    packet_read(p, &pssSlideStarted, sizeof(u8));
+    packet_read(p, &hudDisplayTimer, sizeof(u16));
+    if (pssSlideStarted) {
+        level_control_timer(TIMER_CONTROL_SHOW);
+        level_control_timer(TIMER_CONTROL_START);
+        gPssSlideStarted = TRUE;
+        gHudDisplay.timer = hudDisplayTimer;
+    }
 
     u8 staticSpawnRemovals;
     static_spawn_removal_clear();

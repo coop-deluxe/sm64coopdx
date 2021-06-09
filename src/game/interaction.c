@@ -138,7 +138,7 @@ static u32 sBackwardKnockbackActions[][3] = {
 
 static u8 sDisplayingDoorText = FALSE;
 static u8 sJustTeleported = FALSE;
-static u8 sPssSlideStarted = FALSE;
+u8 gPssSlideStarted = FALSE;
 
 /**
  * Returns the type of hat Mario is wearing.
@@ -2143,13 +2143,13 @@ void pss_begin_slide(UNUSED struct MarioState *m) {
     if (!(gHudDisplay.flags & HUD_DISPLAY_FLAG_TIMER)) {
         level_control_timer(TIMER_CONTROL_SHOW);
         level_control_timer(TIMER_CONTROL_START);
-        sPssSlideStarted = TRUE;
+        gPssSlideStarted = TRUE;
     }
 }
 
 void pss_end_slide(struct MarioState *m) {
     //! This flag isn't set on death or level entry, allowing double star spawn
-    if (sPssSlideStarted) {
+    if (gPssSlideStarted) {
         u16 slideTime = level_control_timer(TIMER_CONTROL_STOP);
         if (slideTime < 630) {
             // PSS secret star uses oBehParams to spawn
@@ -2158,7 +2158,7 @@ void pss_end_slide(struct MarioState *m) {
             spawn_default_star(-6358.0f, -4300.0f, 4700.0f);
             m->marioObj->oBehParams = tmp;
         }
-        sPssSlideStarted = FALSE;
+        gPssSlideStarted = FALSE;
     }
 }
 

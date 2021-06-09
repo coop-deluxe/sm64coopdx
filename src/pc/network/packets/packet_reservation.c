@@ -9,7 +9,7 @@
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-#define RESERVATION_COUNT 10
+#define RESERVATION_COUNT 5
 
 void network_send_reservation_request(void) {
     assert(gNetworkType == NT_CLIENT);
