@@ -47,7 +47,7 @@ void yoshi_walk_loop(void) {
         o->oAction = YOSHI_ACT_TALK;
 
     if (o->oPosY < 2100.0f) {
-        create_respawner(MODEL_YOSHI, bhvYoshi, 3000, o->oSyncID);
+        create_respawner(MODEL_YOSHI, bhvYoshi, 3000);
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }

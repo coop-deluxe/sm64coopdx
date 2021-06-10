@@ -62,8 +62,10 @@ void packet_receive(struct Packet* p) {
                 case PACKET_LEVEL_AREA:              network_receive_level_area(p);              break;
                 case PACKET_LEVEL_AREA_VALID:        network_receive_level_area_valid(p);        break;
                 case PACKET_LOCATION_REQUEST:        network_receive_location_request(p);        break;
-                case PACKET_CLIENT_LOCATION_REQUEST: network_receive_client_location_request(p); break;
+                case PACKET_LOCATION_REQUEST_CLIENT: network_receive_location_request_client(p); break;
                 case PACKET_LOCATION_RESPONSE:       network_receive_location_response(p);       break;
+                case PACKET_MACRO_DELETIONS:         network_receive_macro_deletions(p);         break;
+                case PACKET_SPAWN_INFO_DELETIONS:    network_receive_spawn_info_deletions(p);    break;
                     ///
                 case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
                 default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);

@@ -3968,10 +3968,15 @@
     <ClCompile Include="..\src\pc\network\packets\packet_collect_star.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_custom.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_death.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_location_request.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_kick.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_join.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_keep_alive.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_leaving.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_level_area.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_location_request_client.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_location_response.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_macro_deletions.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_network_players.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_object.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_player.c" />
@@ -3979,6 +3984,7 @@
     <ClCompile Include="..\src\pc\network\packets\packet_reliable.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_reservation.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_save_file.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_spawn_info_deletions.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_spawn_objects.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_spawn_star.c" />
     <ClCompile Include="..\src\pc\network\socket\socket.c" />

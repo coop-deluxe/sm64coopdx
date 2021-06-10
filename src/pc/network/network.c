@@ -100,15 +100,6 @@ void network_on_loaded_level(void) {
         gSyncObjects[i].staticLevelSpawn = true;
     }
 
-    // give all coins an ID
-    u8 coinId = 0;
-    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        struct Object* o = &gObjectPool[i];
-        if (o->activeFlags & ACTIVE_FLAG_DEACTIVATED) { continue; }
-        if (!is_behavior_a_coin(o->behavior)) { continue; }
-        o->oCoinID = ++coinId;
-    }
-
     // check for level change
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {

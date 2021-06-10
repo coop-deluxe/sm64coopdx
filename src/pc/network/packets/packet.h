@@ -34,8 +34,10 @@ enum PacketType {
     PACKET_LEVEL_AREA,
     PACKET_LEVEL_AREA_VALID,
     PACKET_LOCATION_REQUEST,
-    PACKET_CLIENT_LOCATION_REQUEST,
+    PACKET_LOCATION_REQUEST_CLIENT,
     PACKET_LOCATION_RESPONSE,
+    PACKET_MACRO_DELETIONS,
+    PACKET_SPAWN_INFO_DELETIONS,
     ///
     PACKET_CUSTOM = 255,
 };
@@ -87,6 +89,7 @@ void network_receive_player(struct Packet* p);
 // packet_object.c
 struct Packet* get_last_sync_ent_reliable_packet(u8 syncId);
 void forget_ent_reliable_packet(struct Object* o);
+void network_override_object(u8 syncId, struct Object* o);
 struct SyncObject* network_init_object(struct Object* object, float maxSyncDistance);
 void network_init_object_field(struct Object* o, void* field);
 bool network_owns_object(struct Object* o);
@@ -174,15 +177,23 @@ void network_send_level_area_valid(u8 toGlobalIndex);
 void network_receive_level_area_valid(struct Packet* p);
 
 // packet_location_request.c
-void coin_collection_remember(u8 coinId);
-void coin_collection_clear(void);
-void static_spawn_removal_remember(u8 syncId);
-void static_spawn_removal_clear(void);
 void network_send_location_request(void);
 void network_receive_location_request(struct Packet* p);
-void network_send_client_location_request(u8 destGlobalIndex, u8 srcGlobalIndex);
-void network_receive_client_location_request(struct Packet* p);
+
+// packet_location_request_client.c
+void network_send_location_request_client(u8 destGlobalIndex, u8 srcGlobalIndex);
+void network_receive_location_request_client(struct Packet* p);
+
+// packet_location_response.c
 void network_send_location_response(u8 destGlobalIndex);
 void network_receive_location_response(struct Packet* p);
+
+// packet_macro_deletions.c
+void network_send_macro_deletions(u8 destGlobalIndex);
+void network_receive_macro_deletions(struct Packet* p);
+
+// packet_spawn_info_deletions.c
+void network_send_spawn_info_deletions(u8 destGlobalIndex);
+void network_receive_spawn_info_deletions(struct Packet* p);
 
 #endif

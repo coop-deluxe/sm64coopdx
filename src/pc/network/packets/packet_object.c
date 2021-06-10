@@ -63,7 +63,14 @@ static bool should_own_object(struct SyncObject* so) {
     return true;
 }
 
+void network_override_object(u8 syncId, struct Object* o) {
+    gSyncObjects[syncId].o = o;
+}
+
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
+    // HACK: an odd way to detect if this entity was spawned from a staticLevel respawner
+    bool wasStaticRespawner = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o && gSyncObjects[o->oSyncID].staticLevelSpawn);
+
     // generate new sync ID
     network_set_sync_id(o);
 
@@ -90,7 +97,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->override_ownership = NULL;
     so->syncDeathEvent = true;
     so->randomSeed = (u16)(o->oSyncID * 7951);
-    so->staticLevelSpawn = false;
+    so->staticLevelSpawn = wasStaticRespawner;
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
     sLastSyncEntReliablePacket[o->oSyncID].error = true;
@@ -137,8 +144,6 @@ void network_clear_sync_objects(void) {
         network_forget_sync_object(&gSyncObjects[i]);
     }
     nextSyncID = 1;
-    static_spawn_removal_clear();
-    coin_collection_clear();
 }
 
 void network_set_sync_id(struct Object* o) {
@@ -372,6 +377,8 @@ static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
 void network_send_object(struct Object* o) {
     // sanity check SyncObject
     if (!network_sync_object_initialized(o)) { return; }
+    if (o->behavior == bhvRespawner) { return; }
+
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { return; }
     if (o != so->o) {
@@ -493,20 +500,19 @@ void network_receive_object(struct Packet* p) {
 }
 
 void network_forget_sync_object(struct SyncObject* so) {
+    // invalidate last packet sent
     if (so->staticLevelSpawn && so->o != NULL) {
         u8 syncId = so->o->oSyncID;
         struct SyncObject* so2 = &gSyncObjects[syncId];
         if (so == so2) {
-            static_spawn_removal_remember(syncId);
             sLastSyncEntReliablePacket[syncId].error = true;
         }
     }
+
     so->o = NULL;
     so->behavior = NULL;
     so->reserved = 0;
     so->owned = false;
-    so->staticLevelSpawn = false;
-
 }
 
 void network_update_objects(void) {

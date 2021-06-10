@@ -838,9 +838,6 @@ u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *
     }
 
     network_send_collect_coin(o);
-    if (o->oCoinID > 0) {
-        coin_collection_remember(o->oCoinID);
-    }
 
     return FALSE;
 }

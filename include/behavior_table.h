@@ -526,6 +526,5 @@ enum BehaviorId {
 
 enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);
 const BehaviorScript* get_behavior_from_id(enum BehaviorId id);
-u8 is_behavior_a_coin(const BehaviorScript* behavior);
 
 #endif

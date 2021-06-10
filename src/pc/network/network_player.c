@@ -33,6 +33,20 @@ struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
     return NULL;
 }
 
+struct NetworkPlayer* get_network_player_from_valid_location(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+        if (!np->currAreaSyncValid) { continue; }
+        if (np->currCourseNum != courseNum) { continue; }
+        if (np->currActNum != actNum) { continue; }
+        if (np->currLevelNum != levelNum) { continue; }
+        if (np->currAreaIndex != areaIndex) { continue; }
+        return np;
+    }
+    return NULL;
+}
+
 void network_player_update(void) {
     float elapsed = (clock() - gLastNetworkSend) / (float)CLOCKS_PER_SEC;
     if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {

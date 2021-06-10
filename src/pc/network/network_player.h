@@ -41,6 +41,7 @@ extern struct NetworkPlayer* gNetworkPlayerServer;
 bool network_player_any_connected(void);
 u8 network_player_connected_count(void);
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
+struct NetworkPlayer* get_network_player_from_valid_location(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 void network_player_update(void);
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex);
 u8 network_player_disconnected(u8 globalIndex);
