@@ -72,6 +72,7 @@ void packet_receive(struct Packet* p) {
                 case PACKET_LEVEL_SPAWN_INFO:        network_receive_level_spawn_info(p);        break;
                 case PACKET_LEVEL_MACRO:             network_receive_level_macro(p);             break;
                 case PACKET_LEVEL_AREA_INFORM:       network_receive_level_area_inform(p);       break;
+                case PACKET_LEVEL_RESPAWN_INFO:      network_receive_level_respawn_info(p);      break;
 
                 // custom
                 case PACKET_CUSTOM:                  network_receive_custom(p);                  break;

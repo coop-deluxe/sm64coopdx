@@ -13,12 +13,12 @@
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
+// TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
     for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         struct Object* o = &gObjectPool[i];
         if (o->respawnInfo == respawnInfo) { return o; }
     }
-
     return NULL;
 }
 
