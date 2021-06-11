@@ -10,6 +10,8 @@
 #define PACKET_LENGTH 1024
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 
+struct NetworkPlayer;
+
 enum PacketType {
     PACKET_ACK,
     PACKET_PLAYER,
@@ -31,13 +33,19 @@ enum PacketType {
     PACKET_SAVE_FILE,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
-    PACKET_LEVEL_AREA,
-    PACKET_LEVEL_AREA_VALID,
-    PACKET_LOCATION_REQUEST,
-    PACKET_LOCATION_REQUEST_CLIENT,
-    PACKET_LOCATION_RESPONSE,
-    PACKET_MACRO_DELETIONS,
-    PACKET_SPAWN_INFO_DELETIONS,
+
+    PACKET_CHANGE_LEVEL,
+    PACKET_CHANGE_AREA,
+    PACKET_LEVEL_AREA_REQUEST,
+    PACKET_LEVEL_REQUEST,
+    PACKET_LEVEL,
+    PACKET_AREA_REQUEST,
+    PACKET_AREA,
+    PACKET_SYNC_VALID,
+    PACKET_LEVEL_SPAWN_INFO,
+    PACKET_LEVEL_MACRO,
+    PACKET_LEVEL_AREA_INFORM,
+
     ///
     PACKET_CUSTOM = 255,
 };
@@ -74,6 +82,8 @@ u8 packet_initial_read(struct Packet* packet);
 void packet_read(struct Packet* packet, void* data, u16 length);
 u32 packet_hash(struct Packet* packet);
 bool packet_check_hash(struct Packet* packet);
+void packet_ordered_begin(void);
+void packet_ordered_end(void);
 
 // packet_reliable.c
 void network_forget_all_reliable(void);
@@ -170,30 +180,48 @@ void network_receive_network_players(struct Packet* p);
 void network_send_death(void);
 void network_receive_death(struct Packet* p);
 
-// packet_level_area.c
-void network_send_level_area(void);
-void network_receive_level_area(struct Packet* p);
-void network_send_level_area_valid(u8 toGlobalIndex);
-void network_receive_level_area_valid(struct Packet* p);
+// packet_change_level.c
+void network_send_change_level(void);
+void network_receive_change_level(struct Packet* p);
 
-// packet_location_request.c
-void network_send_location_request(void);
-void network_receive_location_request(struct Packet* p);
+// packet_change_area.c
+void network_send_change_area(void);
+void network_receive_change_area(struct Packet* p);
 
-// packet_location_request_client.c
-void network_send_location_request_client(u8 destGlobalIndex, u8 srcGlobalIndex);
-void network_receive_location_request_client(struct Packet* p);
+// packet_level_area_request.c
+void network_send_level_area_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp);
+void network_receive_level_area_request(struct Packet* p);
 
-// packet_location_response.c
-void network_send_location_response(u8 destGlobalIndex);
-void network_receive_location_response(struct Packet* p);
+// packet_level_request.c
+void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp);
+void network_receive_level_request(struct Packet* p);
 
-// packet_macro_deletions.c
-void network_send_macro_deletions(u8 destGlobalIndex);
-void network_receive_macro_deletions(struct Packet* p);
+// packet_level.c
+void network_send_level(struct NetworkPlayer* toNp, bool sendArea);
+void network_receive_level(struct Packet* p);
 
-// packet_spawn_info_deletions.c
-void network_send_spawn_info_deletions(u8 destGlobalIndex);
-void network_receive_spawn_info_deletions(struct Packet* p);
+// packet_area_request.c
+void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp);
+void network_receive_area_request(struct Packet* p);
+
+// packet_area.c
+void network_send_area(struct NetworkPlayer* toNp);
+void network_receive_area(struct Packet* p);
+
+// packet_sync_valid.c
+void network_send_sync_valid(struct NetworkPlayer* toNp);
+void network_receive_sync_valid(struct Packet* p);
+
+// packet_level_spawn_info.c
+void network_send_level_spawn_info(struct NetworkPlayer* destNp);
+void network_receive_level_spawn_info(struct Packet* p);
+
+// packet_level_macro.c
+void network_send_level_macro(struct NetworkPlayer* destNp);
+void network_receive_level_macro(struct Packet* p);
+
+// packet_level_area_inform.c
+void network_send_level_area_inform(struct NetworkPlayer* np);
+void network_receive_level_area_inform(struct Packet* p);
 
 #endif

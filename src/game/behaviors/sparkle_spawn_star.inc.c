@@ -51,7 +51,6 @@ void set_home_to_mario(void) {
             break;
         }
     }
-    struct Object* player = nearest_player_to_object(o);
     if (parentIsMario) {
         o->oHomeX = o->parentObj->oPosX;
         o->oHomeZ = o->parentObj->oPosZ;

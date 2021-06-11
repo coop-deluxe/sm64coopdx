@@ -59,14 +59,21 @@ void packet_receive(struct Packet* p) {
                 case PACKET_SAVE_FILE:               network_receive_save_file(p);               break;
                 case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
                 case PACKET_DEATH:                   network_receive_death(p);                   break;
-                case PACKET_LEVEL_AREA:              network_receive_level_area(p);              break;
-                case PACKET_LEVEL_AREA_VALID:        network_receive_level_area_valid(p);        break;
-                case PACKET_LOCATION_REQUEST:        network_receive_location_request(p);        break;
-                case PACKET_LOCATION_REQUEST_CLIENT: network_receive_location_request_client(p); break;
-                case PACKET_LOCATION_RESPONSE:       network_receive_location_response(p);       break;
-                case PACKET_MACRO_DELETIONS:         network_receive_macro_deletions(p);         break;
-                case PACKET_SPAWN_INFO_DELETIONS:    network_receive_spawn_info_deletions(p);    break;
-                    ///
+
+                // location
+                case PACKET_CHANGE_LEVEL:            network_receive_change_level(p);            break;
+                case PACKET_CHANGE_AREA:             network_receive_change_area(p);             break;
+                case PACKET_LEVEL_AREA_REQUEST:      network_receive_level_area_request(p);      break;
+                case PACKET_LEVEL_REQUEST:           network_receive_level_request(p);           break;
+                case PACKET_LEVEL:                   network_receive_level(p);                   break;
+                case PACKET_AREA_REQUEST:            network_receive_area_request(p);            break;
+                case PACKET_AREA:                    network_receive_area(p);                    break;
+                case PACKET_SYNC_VALID:              network_receive_sync_valid(p);              break;
+                case PACKET_LEVEL_SPAWN_INFO:        network_receive_level_spawn_info(p);        break;
+                case PACKET_LEVEL_MACRO:             network_receive_level_macro(p);             break;
+                case PACKET_LEVEL_AREA_INFORM:       network_receive_level_area_inform(p);       break;
+
+                // custom
                 case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
                 default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
             }

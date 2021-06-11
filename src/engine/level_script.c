@@ -426,6 +426,7 @@ static void level_cmd_23(void) {
 
 static void level_cmd_init_mario(void) {
     u32 behaviorArg = CMD_GET(u32, 4);
+    behaviorArg = behaviorArg;
     void* behaviorScript = CMD_GET(void*, 8);
     struct GraphNode* unk18 = gLoadedGraphNodes[CMD_GET(u8, 3)];
 

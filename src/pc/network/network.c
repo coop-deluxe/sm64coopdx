@@ -103,8 +103,14 @@ void network_on_loaded_level(void) {
     // check for level change
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
-        network_send_level_area();
-        network_send_location_request();
+        bool levelMatch = (np->currCourseNum == gCurrCourseNum
+                           && np->currActNum == gCurrActNum
+                           && np->currLevelNum == gCurrLevelNum);
+        if (np->currLevelSyncValid && levelMatch && np->currAreaIndex != gCurrAreaIndex) {
+            network_send_change_area();
+        } else {
+            network_send_change_level();
+        }
     }
 
     // request my chunk of reserved sync ids
@@ -118,6 +124,9 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
+    if (p->buffer[0] != PACKET_JOIN_REQUEST && p->buffer[0] != PACKET_KICK && p->buffer[0] != PACKET_ACK && gNetworkPlayerLocal != NULL && gNetworkPlayerServer->localIndex != gNetworkPlayerLocal->localIndex) {
+        assert(localIndex != gNetworkPlayerLocal->localIndex);
+    }
 
     // set the flags again
     packet_set_flags(p);

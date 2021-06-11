@@ -33,10 +33,24 @@ struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
     return NULL;
 }
 
-struct NetworkPlayer* get_network_player_from_valid_location(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
+        if (!np->currLevelSyncValid) { continue; }
+        if (np->currCourseNum != courseNum) { continue; }
+        if (np->currActNum != actNum) { continue; }
+        if (np->currLevelNum != levelNum) { continue; }
+        return np;
+    }
+    return NULL;
+}
+
+struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+        if (!np->currLevelSyncValid) { continue; }
         if (!np->currAreaSyncValid) { continue; }
         if (np->currCourseNum != courseNum) { continue; }
         if (np->currActNum != actNum) { continue; }
@@ -100,6 +114,10 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->currAreaIndex = -1;
         np->currAreaSyncValid = false;
         gNetworkPlayerLocal = np;
+
+        if (gNetworkType == NT_SERVER) {
+            gNetworkPlayerServer = gNetworkPlayerLocal;
+        }
         return 0;
     }
 

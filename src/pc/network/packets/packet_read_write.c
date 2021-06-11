@@ -140,3 +140,11 @@ bool packet_check_hash(struct Packet* packet) {
     memcpy(&packetHash, &packet->buffer[packet->dataLength], sizeof(u32));
     return localHash == packetHash;
 }
+
+void packet_ordered_begin(void) {
+    // TODO: implement ordered packet streams
+}
+
+void packet_ordered_end(void) {
+    // TODO: implement ordered packet streams
+}

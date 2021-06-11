@@ -13,7 +13,7 @@
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-static struct Object* get_object_matching_respawn_info(s32* respawnInfo) {
+static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
     for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         struct Object* o = &gObjectPool[i];
         if (o->respawnInfo == respawnInfo) { return o; }
@@ -24,20 +24,19 @@ static struct Object* get_object_matching_respawn_info(s32* respawnInfo) {
 
 ////
 
-void network_send_spawn_info_deletions_area(u8 destGlobalIndex, u8 areaIndex) {
+static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 areaIndex) {
     // check that the area is active
     struct Area* area = &gAreaData[areaIndex];
     if (area->unk04 == NULL) { return; }
 
-    struct NetworkPlayer* destNp = network_player_from_global_index(destGlobalIndex);
     if (destNp == NULL || !destNp->connected) {
-        LOG_ERROR("network_send_spawn_info_deletions_area: dest np is invalid");
+        LOG_ERROR("network_send_level_spawn_info_area: dest np is invalid");
         return;
     }
 
     // write header
     struct Packet p;
-    packet_init(&p, PACKET_SPAWN_INFO_DELETIONS, true, false);
+    packet_init(&p, PACKET_LEVEL_SPAWN_INFO, true, false);
     packet_write(&p, &gCurrCourseNum, sizeof(s16));
     packet_write(&p, &gCurrActNum, sizeof(s16));
     packet_write(&p, &gCurrLevelNum, sizeof(s16));
@@ -70,28 +69,27 @@ void network_send_spawn_info_deletions_area(u8 destGlobalIndex, u8 areaIndex) {
     // send the packet if there are deletions
     if (*spawnInfoDeletionCount > 0) {
         network_send_to(destNp->localIndex, &p);
-        LOG_INFO("tx spawn info deletion for area %d (count %d)", areaIndex, *spawnInfoDeletionCount);
+        LOG_INFO("tx spawn info for area %d (count %d)", areaIndex, *spawnInfoDeletionCount);
     }
 }
 
-void network_send_spawn_info_deletions(u8 destGlobalIndex) {
+void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR("my area is invalid");
         return;
     }
 
-    struct NetworkPlayer* destNp = network_player_from_global_index(destGlobalIndex);
     if (destNp == NULL || !destNp->connected) {
-        LOG_ERROR("network_send_spawn_info_deletions: dest np is invalid");
+        LOG_ERROR("network_send_level_spawn_info: dest np is invalid");
         return;
     }
 
     for (int i = 0; i < 8; i++) {
-        network_send_spawn_info_deletions_area(destGlobalIndex, i);
+        network_send_level_spawn_info_area(destNp, i);
     }
 }
 
-void network_receive_spawn_info_deletions(struct Packet* p) {
+void network_receive_level_spawn_info(struct Packet* p) {
     s16 courseNum, actNum, levelNum, areaIndex;
     packet_read(p, &courseNum,       sizeof(s16));
     packet_read(p, &actNum,          sizeof(s16));
@@ -106,7 +104,7 @@ void network_receive_spawn_info_deletions(struct Packet* p) {
     u8 thisAreaIndex, spawnInfoDeletionCount;
     packet_read(p, &thisAreaIndex, sizeof(u8));
     packet_read(p, &spawnInfoDeletionCount, sizeof(u8));
-    LOG_INFO("rx spawn info deletions (count %d)", spawnInfoDeletionCount);
+    LOG_INFO("rx spawn info (count %d)", spawnInfoDeletionCount);
     if (spawnInfoDeletionCount <= 0) { return; }
 
     struct SpawnInfo* spawnInfo = gAreaData[thisAreaIndex].objectSpawnInfos;
