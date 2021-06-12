@@ -1,10 +1,17 @@
 #include "../network.h"
 #include "game/area.h"
+#include "pc/debuglog.h"
 
 #define PACKET_FLAG_BUFFER_OFFSET        3
 #define PACKET_DESTINATION_BUFFER_OFFSET 4
+#define PACKET_ORDERED_SEQ_ID_OFFSET     7
 
-static u16 nextSeqNum = 1;
+static u16 sNextSeqNum = 1;
+
+static bool sOrderedPackets = false;
+static u8 sCurrentOrderedGroupId = 0;
+static u8 sCurrentOrderedSeqId = 0;
+
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
     packet->cursor = 0;
@@ -14,15 +21,18 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet->levelAreaMustMatch = levelAreaMustMatch;
     packet->requestBroadcast = false;
     packet->sent = false;
+    packet->orderedFromGlobalId = sOrderedPackets ? gNetworkPlayerLocal->globalIndex : 0;
+    packet->orderedGroupId      = sOrderedPackets ? sCurrentOrderedGroupId : 0;
+    packet->orderedSeqId        = 0;
 
     packet_write(packet, &packetType, sizeof(u8));
 
     // write seq number
     if (reliable) {
-        packet_write(packet, &nextSeqNum, sizeof(u16));
-        packet->seqId = nextSeqNum;
-        nextSeqNum++;
-        if (nextSeqNum == 0) { nextSeqNum++;  }
+        packet_write(packet, &sNextSeqNum, sizeof(u16));
+        packet->seqId = sNextSeqNum;
+        sNextSeqNum++;
+        if (sNextSeqNum == 0) { sNextSeqNum++;  }
     } else {
         u16 nullSeqNum = 0;
         packet_write(packet, &nullSeqNum, sizeof(u16));
@@ -36,6 +46,13 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     // write destination
     u8 destination = PACKET_DESTINATION_BROADCAST;
     packet_write(packet, &destination, sizeof(u8));
+
+    // write ordered packet information
+    if (sOrderedPackets) {
+        packet_write(packet, &packet->orderedFromGlobalId, sizeof(u8));
+        packet_write(packet, &packet->orderedGroupId,      sizeof(u8));
+        packet_write(packet, &packet->orderedSeqId,        sizeof(u8));
+    }
 
     // write location
     if (levelAreaMustMatch) {
@@ -56,13 +73,15 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->requestBroadcast = srcPacket->requestBroadcast;
     dstPacket->destGlobalId = srcPacket->destGlobalId;
     dstPacket->sent = false;
+    dstPacket->orderedGroupId = srcPacket->orderedGroupId;
+    dstPacket->orderedSeqId = srcPacket->orderedSeqId;
 
     memcpy(&dstPacket->buffer[0], &srcPacket->buffer[0], srcPacket->dataLength);
 
     if (dstPacket->reliable) {
-        dstPacket->seqId = nextSeqNum;
-        nextSeqNum++;
-        if (nextSeqNum == 0) { nextSeqNum++; }
+        dstPacket->seqId = sNextSeqNum;
+        sNextSeqNum++;
+        if (sNextSeqNum == 0) { sNextSeqNum++; }
     }
     memcpy(&dstPacket->buffer[1], &dstPacket->seqId, 2);
 
@@ -72,8 +91,9 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
 
 void packet_set_flags(struct Packet* packet) {
     u8 flags = 0;
-    flags |= SET_BIT(packet->levelAreaMustMatch, 0);
-    flags |= SET_BIT(packet->requestBroadcast,   1);
+    flags |= SET_BIT(packet->levelAreaMustMatch,  0);
+    flags |= SET_BIT(packet->requestBroadcast,    1);
+    flags |= SET_BIT(packet->orderedGroupId != 0, 2);
     packet->buffer[PACKET_FLAG_BUFFER_OFFSET] = flags;
 }
 
@@ -89,11 +109,15 @@ void packet_write(struct Packet* packet, void* data, u16 length) {
 }
 
 u8 packet_initial_read(struct Packet* packet) {
+    // read packet type
+    packet->packetType = packet->buffer[0];
+
     // read packet flags
     u8 flags = 0;
     packet_read(packet, &flags, sizeof(u8));
     packet->levelAreaMustMatch = GET_BIT(flags, 0);
     packet->requestBroadcast   = GET_BIT(flags, 1);
+    bool packetIsOrdered       = GET_BIT(flags, 2);
 
     // read destination
     packet_read(packet, &packet->destGlobalId, sizeof(u8));
@@ -101,8 +125,8 @@ u8 packet_initial_read(struct Packet* packet) {
     if (packet->levelAreaMustMatch) {
         s16 currCourseNum, currActNum, currLevelNum, currAreaIndex;
         packet_read(packet, &currCourseNum, sizeof(s16));
-        packet_read(packet, &currActNum, sizeof(s16));
-        packet_read(packet, &currLevelNum, sizeof(s16));
+        packet_read(packet, &currActNum,    sizeof(s16));
+        packet_read(packet, &currLevelNum,  sizeof(s16));
         packet_read(packet, &currAreaIndex, sizeof(s16));
         bool levelAreaMismatch =
             (currCourseNum   != gCurrCourseNum
@@ -111,6 +135,13 @@ u8 packet_initial_read(struct Packet* packet) {
             || currAreaIndex != gCurrAreaIndex);
         // drop packet
         if (levelAreaMismatch) { return FALSE; }
+    }
+
+    // read ordered packet information
+    if (packetIsOrdered) {
+        packet_read(packet, &packet->orderedFromGlobalId, sizeof(u8));
+        packet_read(packet, &packet->orderedGroupId,      sizeof(u8));
+        packet_read(packet, &packet->orderedSeqId,        sizeof(u8));
     }
 
     // don't drop packet
@@ -142,9 +173,22 @@ bool packet_check_hash(struct Packet* packet) {
 }
 
 void packet_ordered_begin(void) {
-    // TODO: implement ordered packet streams
+    if (sOrderedPackets) { return; }
+    sOrderedPackets = true;
+
+    sCurrentOrderedGroupId++;
+    if (sCurrentOrderedGroupId == 0) { sCurrentOrderedGroupId++; }
+    sCurrentOrderedSeqId = 1;
 }
 
 void packet_ordered_end(void) {
-    // TODO: implement ordered packet streams
+    sOrderedPackets = false;
+    sCurrentOrderedSeqId = 0;
+}
+
+void packet_set_ordered_data(struct Packet* packet) {
+    if (packet->orderedGroupId == 0) { return; }
+    if (packet->orderedSeqId != 0) { return; }
+    packet->orderedSeqId = sCurrentOrderedSeqId++;
+    packet->buffer[PACKET_ORDERED_SEQ_ID_OFFSET] = packet->orderedSeqId;
 }

@@ -141,6 +141,11 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     // remember reliable packets
     network_remember_reliable(p);
 
+    // set ordered data (MUST BE IMMEDITAELY BEFORE HASING+SENDING)
+    if (p->orderedGroupId != 0) {
+        packet_set_ordered_data(p);
+    }
+
     // save inside packet buffer
     u32 hash = packet_hash(p);
     memcpy(&p->buffer[p->dataLength], &hash, sizeof(u32));
@@ -234,9 +239,10 @@ void network_update(void) {
         gNetworkSystem->update();
     }
 
-    // update reliable packets
+    // update reliable and ordered packets
     if (gNetworkType != NT_NONE) {
         network_update_reliable();
+        packet_ordered_update();
     }
 }
 

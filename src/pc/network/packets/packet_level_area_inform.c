@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "level_table.h"
-//#define DISABLE_MODULE_LOG 1
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_level_area_inform(struct NetworkPlayer* np) {

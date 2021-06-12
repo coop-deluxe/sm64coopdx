@@ -52,6 +52,7 @@ enum PacketType {
 };
 
 struct Packet {
+    enum PacketType packetType;
     u8 localIndex;
     u16 dataLength;
     u16 cursor;
@@ -62,6 +63,9 @@ struct Packet {
     u8 destGlobalId;
     u16 seqId;
     bool sent;
+    u8 orderedFromGlobalId;
+    u8 orderedGroupId;
+    u8 orderedSeqId;
     u8 buffer[PACKET_LENGTH];
 };
 
@@ -71,6 +75,7 @@ enum KickReasonType {
 };
 
 // packet.c
+void packet_process(struct Packet* p);
 void packet_receive(struct Packet* packet);
 
 // packet_read_write.c
@@ -85,6 +90,7 @@ u32 packet_hash(struct Packet* packet);
 bool packet_check_hash(struct Packet* packet);
 void packet_ordered_begin(void);
 void packet_ordered_end(void);
+void packet_set_ordered_data(struct Packet* packet);
 
 // packet_reliable.c
 void network_forget_all_reliable(void);
@@ -92,6 +98,12 @@ void network_send_ack(struct Packet* p);
 void network_receive_ack(struct Packet* p);
 void network_remember_reliable(struct Packet* p);
 void network_update_reliable(void);
+
+// packet_ordered.c
+void packet_ordered_add(struct Packet* p);
+void packet_ordered_clear_table(u8 globalIndex, u8 groupdId);
+void packet_ordered_clear(u8 globalIndex);
+void packet_ordered_update(void);
 
 // packet_player.c
 void network_update_player(void);

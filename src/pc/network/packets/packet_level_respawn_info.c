@@ -10,7 +10,7 @@
 #include "object_fields.h"
 #include "behavior_table.h"
 #include "model_ids.h"
-//#define DISABLE_MODULE_LOG 1
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 #define ERR_COULD_NOT_FIND_OBJECT ((u16)-1)
