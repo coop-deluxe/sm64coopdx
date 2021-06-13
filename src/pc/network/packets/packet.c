@@ -13,8 +13,8 @@ void packet_process(struct Packet* p) {
         case PACKET_COLLECT_STAR:            network_receive_collect_star(p);            break;
         case PACKET_COLLECT_COIN:            network_receive_collect_coin(p);            break;
         case PACKET_COLLECT_ITEM:            network_receive_collect_item(p);            break;
-        case PACKET_RESERVATION_REQUEST:     network_receive_reservation_request(p);     break;
-        case PACKET_RESERVATION:             network_receive_reservation(p);             break;
+        case PACKET_UNUSED1:                                                             break;
+        case PACKET_UNUSED2:                                                             break;
         case PACKET_JOIN_REQUEST:            network_receive_join_request(p);            break;
         case PACKET_JOIN:                    network_receive_join(p);                    break;
         case PACKET_CHAT:                    network_receive_chat(p);                    break;
@@ -25,7 +25,12 @@ void packet_process(struct Packet* p) {
         case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
         case PACKET_DEATH:                   network_receive_death(p);                   break;
 
-            // location
+        // reservation area
+        case PACKET_RESERVATION_LIST:        network_receive_reservation_list(p);        break;
+        case PACKET_RESERVATION_USE:         network_receive_reservation_use(p);         break;
+        case PACKET_RESERVATION_RELEASE:     network_receive_reservation_release(p);     break;
+
+        // location
         case PACKET_CHANGE_LEVEL:            network_receive_change_level(p);            break;
         case PACKET_CHANGE_AREA:             network_receive_change_area(p);             break;
         case PACKET_LEVEL_AREA_REQUEST:      network_receive_level_area_request(p);      break;
@@ -39,7 +44,7 @@ void packet_process(struct Packet* p) {
         case PACKET_LEVEL_AREA_INFORM:       network_receive_level_area_inform(p);       break;
         case PACKET_LEVEL_RESPAWN_INFO:      network_receive_level_respawn_info(p);      break;
 
-            // custom
+        // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
     }

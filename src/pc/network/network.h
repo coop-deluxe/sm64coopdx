@@ -43,7 +43,6 @@ struct NetworkSystem {
 
 struct SyncObject {
     struct Object* o;
-    u16 reserved;
     float maxSyncDistance;
     bool owned;
     bool staticLevelSpawn;

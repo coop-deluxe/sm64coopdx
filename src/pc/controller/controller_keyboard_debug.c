@@ -5,6 +5,12 @@
 #include "game/mario.h"
 #include "sm64.h"
 
+#include "object_fields.h"
+#include "object_constants.h"
+#include "src/game/object_helpers.h"
+#include "behavior_data.h"
+#include "behavior_table.h"
+
 #ifdef DEBUG
 
 static u8 warpToLevel = LEVEL_CCM;
@@ -107,6 +113,15 @@ static void debug_suicide(void) {
     gMarioStates[0].hurtCounter = 31;
 }
 
+static void debug_spawn_object(void) {
+    struct Object* box = spawn_object(gMarioStates[0].marioObj, MODEL_BREAKABLE_BOX_SMALL, bhvBreakableBoxSmall);
+    network_set_sync_id(box);
+
+    struct Object* spawn_objects[] = { box };
+    u32 models[] = { MODEL_BREAKABLE_BOX_SMALL };
+    network_send_spawn_objects(spawn_objects, models, 1);
+}
+
 void debug_keyboard_on_key_down(int scancode) {
     scancode = scancode;
     switch (scancode & 0xFF) {
@@ -114,6 +129,7 @@ void debug_keyboard_on_key_down(int scancode) {
 #ifdef DEVELOPMENT
         case SCANCODE_6: debug_warp_level(warpToLevel); break;
         case SCANCODE_7: debug_warp_area(); break;
+        case SCANCODE_8: debug_spawn_object(); break;
         case SCANCODE_9: debug_warp_to(); break;
         case SCANCODE_0: debug_suicide(); break;
 #endif

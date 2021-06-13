@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "../reservation_area.h"
 #include "object_fields.h"
 #include "object_constants.h"
 #include "src/game/object_helpers.h"
@@ -48,7 +49,16 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
 
     struct Packet p;
-    packet_init(&p, PACKET_SPAWN_OBJECTS, true, true);
+    packet_init(&p, PACKET_SPAWN_OBJECTS, true, false);
+
+    // level location
+    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+    packet_write(&p, &gCurrCourseNum, sizeof(s16));
+    packet_write(&p, &gCurrActNum,    sizeof(s16));
+    packet_write(&p, &gCurrLevelNum,  sizeof(s16));
+    packet_write(&p, &gCurrAreaIndex, sizeof(s16));
+
+    // objects
     packet_write(&p, &objectCount, sizeof(u8));
 
     for (u8 i = 0; i < objectCount; i++) {
@@ -74,12 +84,21 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 }
 
 void network_receive_spawn_objects(struct Packet* p) {
+    // read level location
+    s16 courseNum, actNum, levelNum, areaIndex;
+    packet_read(p, &courseNum,   sizeof(s16));
+    packet_read(p, &actNum,      sizeof(s16));
+    packet_read(p, &levelNum,    sizeof(s16));
+    packet_read(p, &areaIndex,   sizeof(s16));
+
+    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
+        LOG_ERROR("received an improper location");
+        return;
+    }
+
     u8 objectCount = 0;
-
     packet_read(p, &objectCount, sizeof(u8));
-
-    u8 reserveId = gNetworkLevelLoaded ? gNetworkPlayers[p->localIndex].globalIndex : 0;
-    bool receivedReservedSyncObject = false;
 
     struct Object* spawned[MAX_SPAWN_OBJECTS_PER_PACKET] = { 0 };
     for (u8 i = 0; i < objectCount; i++) {
@@ -129,20 +148,11 @@ void network_receive_spawn_objects(struct Packet* p) {
         // correct the temporary parent with the object itself
         if (data.parentId == (u8)-1) { o->parentObj = o; }
 
-        if (o->oSyncID != 0) {
+        if (o->oSyncID != 0 && o->oSyncID >= RESERVED_IDS_SYNC_OBJECT_OFFSET) {
             // check if they've allocated one of their reserved sync objects
-            receivedReservedSyncObject = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].reserved == reserveId);
-            if (receivedReservedSyncObject || gNetworkLevelSyncing) {
-                gSyncObjects[o->oSyncID].o = o;
-                gSyncObjects[o->oSyncID].reserved = 0;
-            }
+            gSyncObjects[o->oSyncID].o = o;
         }
 
         spawned[i] = o;
-    }
-
-    // update their block of reserved ids
-    if (gNetworkType == NT_SERVER && receivedReservedSyncObject) {
-        network_send_reservation(p->localIndex);
     }
 }

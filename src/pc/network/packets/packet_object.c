@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "../network.h"
+#include "../reservation_area.h"
 #include "object_fields.h"
 #include "object_constants.h"
 #include "behavior_data.h"
@@ -10,7 +11,6 @@
 #include "src/game/obj_behaviors.h"
 #include "pc/debuglog.h"
 
-static u8 nextSyncID = 1;
 struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
 struct Packet sLastSyncEntReliablePacket[MAX_SYNC_OBJECTS] = { 0 };
 
@@ -77,7 +77,6 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     // set default values for sync object
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     so->o = o;
-    so->reserved = 0;
     so->maxSyncDistance = maxSyncDistance;
     so->owned = false;
     so->clockSinceUpdate = clock();
@@ -143,22 +142,28 @@ void network_clear_sync_objects(void) {
     for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         network_forget_sync_object(&gSyncObjects[i]);
     }
-    nextSyncID = 1;
 }
 
 void network_set_sync_id(struct Object* o) {
     if (o->oSyncID != 0) { return; }
 
-    u8 reserveId = gNetworkLevelLoaded ? gNetworkPlayerLocal->globalIndex : 0;
-
-    for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        if (gSyncObjects[nextSyncID].reserved == reserveId && gSyncObjects[nextSyncID].o == NULL) { break; }
-        nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
+    u8 syncId = 0;
+    if (!gNetworkLevelLoaded) {
+        // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
+        for (int i = 1; i < MAX_SYNC_OBJECTS; i++) {
+            if (gSyncObjects[i].o != NULL) { continue; }
+            syncId = i;
+            break;
+        }
+    } else {
+        // no longer loading, require reserved id
+        syncId = reservation_area_local_grab_id();
     }
-    assert(gSyncObjects[nextSyncID].o == NULL);
-    assert(gSyncObjects[nextSyncID].reserved == reserveId);
-    o->oSyncID = nextSyncID;
-    nextSyncID = (nextSyncID + 1) % MAX_SYNC_OBJECTS;
+
+    assert(syncId != 0);
+    assert(gSyncObjects[syncId].o == NULL);
+
+    o->oSyncID = syncId;
 
     if (gNetworkLevelLoaded) {
         LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
@@ -398,14 +403,15 @@ void network_send_object(struct Object* o) {
 void network_send_object_reliability(struct Object* o, bool reliable) {
     // sanity check SyncObject
     if (!network_sync_object_initialized(o)) { return; }
-    struct SyncObject* so = &gSyncObjects[o->oSyncID];
+    u8 syncId = o->oSyncID;
+    struct SyncObject* so = &gSyncObjects[syncId];
     if (so == NULL) { return; }
     if (o != so->o) {
-        LOG_ERROR("object mismatch for %d", o->oSyncID);
+        LOG_ERROR("object mismatch for %d", syncId);
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
+        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
         network_forget_sync_object(so);
         return;
     }
@@ -426,9 +432,14 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     // check for object death
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         network_forget_sync_object(so);
+        if (gNetworkType == NT_SERVER) {
+            reservation_area_release(gNetworkPlayerLocal, syncId);
+        } else {
+            network_send_reservation_release(syncId);
+        }
     } else {
         // remember packet
-        packet_duplicate(&p, &sLastSyncEntReliablePacket[o->oSyncID]);
+        packet_duplicate(&p, &sLastSyncEntReliablePacket[syncId]);
     }
 
     // send the packet out
@@ -511,12 +522,11 @@ void network_forget_sync_object(struct SyncObject* so) {
 
     so->o = NULL;
     so->behavior = NULL;
-    so->reserved = 0;
     so->owned = false;
 }
 
 void network_update_objects(void) {
-    for (u32 i = 1; i < nextSyncID; i++) {
+    for (u32 i = 1; i < MAX_SYNC_OBJECTS; i++) {
         struct SyncObject* so = &gSyncObjects[i];
         if (so->o == NULL) { continue; }
 

@@ -22,8 +22,8 @@ enum PacketType {
     PACKET_COLLECT_STAR,
     PACKET_COLLECT_COIN,
     PACKET_COLLECT_ITEM,
-    PACKET_RESERVATION_REQUEST,
-    PACKET_RESERVATION,
+    PACKET_UNUSED1,
+    PACKET_UNUSED2,
     PACKET_JOIN_REQUEST,
     PACKET_JOIN,
     PACKET_CHAT,
@@ -33,6 +33,10 @@ enum PacketType {
     PACKET_SAVE_FILE,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
+
+    PACKET_RESERVATION_LIST,
+    PACKET_RESERVATION_USE,
+    PACKET_RESERVATION_RELEASE,
 
     PACKET_CHANGE_LEVEL,
     PACKET_CHANGE_AREA,
@@ -148,12 +152,6 @@ void network_receive_collect_coin(struct Packet* p);
 void network_send_collect_item(struct Object* o);
 void network_receive_collect_item(struct Packet* p);
 
-// packet_reservation.c
-void network_send_reservation_request(void);
-void network_receive_reservation_request(struct Packet* p);
-void network_send_reservation(u8 toLocalIndex);
-void network_receive_reservation(struct Packet* p);
-
 // packet_join.c
 void network_send_join_request(void);
 void network_receive_join_request(struct Packet* p);
@@ -240,5 +238,17 @@ void network_receive_level_area_inform(struct Packet* p);
 // packet_level_respawn_info.c
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits);
 void network_receive_level_respawn_info(struct Packet* p);
+
+// packet_reservation_list.c
+void network_send_reservation_list(struct NetworkPlayer* np, u8 syncIds[]);
+void network_receive_reservation_list(struct Packet* p);
+
+// packet_reservation_use.c
+void network_send_reservation_use(u8 syncId);
+void network_receive_reservation_use(struct Packet* p);
+
+// packet_reservation_release.c
+void network_send_reservation_release(u8 syncId);
+void network_receive_reservation_release(struct Packet* p);
 
 #endif

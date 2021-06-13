@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "../reservation_area.h"
 #include "level_table.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
@@ -12,6 +13,7 @@ static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 act
     np->currAreaIndex      = areaIndex;
     np->currAreaSyncValid  = false;
     network_send_level_area_inform(np);
+    reservation_area_change(np);
 
     // find a NetworkPlayer at that area
     struct NetworkPlayer* npLevelAreaMatch = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex);

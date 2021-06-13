@@ -3436,6 +3436,15 @@
     <Filter Include="Source Files\src\pc\utils">
       <UniqueIdentifier>{451cd85d-8a2c-4aa5-87c7-d1415974ba96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\src\pc\network\packets\location">
+      <UniqueIdentifier>{8503d4ed-8d6c-4888-a861-c50644924389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\pc\network\packets\fundamental">
+      <UniqueIdentifier>{2ffc6d25-bc31-400f-b587-58a915c565e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\pc\network\packets\reservation-area">
+      <UniqueIdentifier>{9ddfaa87-399e-4f61-aae3-f91af79e14cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\amp\anims\anim_0800401C.inc.c">
@@ -14964,12 +14973,6 @@
     <ClCompile Include="..\src\pc\network\packets\packet_player.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_read_write.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_reliable.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_collect_star.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
@@ -15005,9 +15008,6 @@
     </ClCompile>
     <ClCompile Include="..\actors\luigi\model.inc.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet_reservation.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_custom.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
@@ -15051,9 +15051,6 @@
     <ClCompile Include="..\src\pc\network\packets\packet_join.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\network\packets\packet.c">
-      <Filter>Source Files\src\pc\network\packets</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_keep_alive.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
@@ -15080,6 +15077,69 @@
     </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_death.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game\macro_presets.c">
+      <Filter>Source Files\src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_request.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_sync_valid.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_change_level.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_area_request.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_area.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_area_inform.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_change_area.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_area_request.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_macro.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_spawn_info.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_level_respawn_info.c">
+      <Filter>Source Files\src\pc\network\packets\location</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet.c">
+      <Filter>Source Files\src\pc\network\packets\fundamental</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_ordered.c">
+      <Filter>Source Files\src\pc\network\packets\fundamental</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_reliable.c">
+      <Filter>Source Files\src\pc\network\packets\fundamental</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_read_write.c">
+      <Filter>Source Files\src\pc\network\packets\fundamental</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_reservation_use.c">
+      <Filter>Source Files\src\pc\network\packets\reservation-area</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_reservation_release.c">
+      <Filter>Source Files\src\pc\network\packets\reservation-area</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_reservation_list.c">
+      <Filter>Source Files\src\pc\network\packets\reservation-area</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\reservation_area.c">
+      <Filter>Source Files\src\pc\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -16050,6 +16110,9 @@
     </ClInclude>
     <ClInclude Include="..\include\luigi_audio_defines.h">
       <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\reservation_area.h">
+      <Filter>Header Files\src\pc\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

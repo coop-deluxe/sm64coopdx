@@ -2,6 +2,7 @@
 #include "network_player.h"
 #include "game/chat.h"
 #include "game/mario_misc.h"
+#include "reservation_area.h"
 #include "pc/debuglog.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
@@ -190,6 +191,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
         chat_add_message_ext("player disconnected", CMT_SYSTEM, get_player_color(globalIndex, 0));
         packet_ordered_clear(globalIndex);
+        reservation_area_change(np);
         return i;
     }
     return UNKNOWN_GLOBAL_INDEX;

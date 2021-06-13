@@ -112,11 +112,6 @@ void network_on_loaded_level(void) {
             network_send_change_level();
         }
     }
-
-    // request my chunk of reserved sync ids
-    if (gNetworkType == NT_CLIENT) {
-        network_send_reservation_request();
-    }
 }
 
 void network_send_to(u8 localIndex, struct Packet* p) {

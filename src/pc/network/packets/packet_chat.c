@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "../reservation_area.h"
 #include "game/chat.h"
 #include "pc/debuglog.h"
 
@@ -39,6 +40,7 @@ void network_send_chat(char* message, u8 rgb[3]) {
 
 #ifdef DEVELOPMENT
     print_network_player_table();
+    reservation_area_debug();
 #endif
 }
 
@@ -55,8 +57,9 @@ void network_receive_chat(struct Packet* p) {
     // add the message
     chat_add_message_ext(remoteMessage, CMT_REMOTE, rgb);
     LOG_INFO("rx chat: %s", remoteMessage);
-
+    /*
 #ifdef DEVELOPMENT
     print_network_player_table();
 #endif
+    */
 }
