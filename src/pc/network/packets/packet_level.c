@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include "../network.h"
+#include "game/object_list_processor.h"
 #include "game/interaction.h"
 #include "game/level_update.h"
+#include "game/ingame_menu.h"
+#include "behavior_table.h"
+#include "object_constants.h"
+#include "object_fields.h"
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -20,6 +25,7 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
 
         // level variables
         packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
+        packet_write(&p, &gRedCoinsCollected,       sizeof(u8));
         packet_write(&p, &gPssSlideStarted,         sizeof(u8));
         packet_write(&p, &gHudDisplay.timer,        sizeof(u16));
 
@@ -61,7 +67,18 @@ void network_receive_level(struct Packet* p) {
     }
 
     // read level variables
-    packet_write(p, &gMarioStates[0].numCoins, sizeof(s16));
-    packet_write(p, &gPssSlideStarted,         sizeof(u8));
-    packet_write(p, &gHudDisplay.timer,        sizeof(u16));
+    u8 redCoinsCollected;
+    packet_read(p, &gMarioStates[0].numCoins, sizeof(s16));
+    packet_read(p, &redCoinsCollected,       sizeof(u8));
+    packet_read(p, &gPssSlideStarted,         sizeof(u8));
+    packet_read(p, &gHudDisplay.timer,        sizeof(u16));
+
+    // hacky way to override red coins collected
+    gRedCoinsCollected = redCoinsCollected;
+    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+        struct Object* o = &gObjectPool[i];
+        if (o->behavior == bhvBowserCourseRedCoinStar || o->behavior == bhvHiddenRedCoinStar) {
+            o->oHiddenStarTriggerCounter = redCoinsCollected;
+        }
+    }
 }

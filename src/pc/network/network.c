@@ -23,7 +23,6 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 #endif
 
 #define LOADING_LEVEL_THRESHOLD 10
-#define SYNCING_LEVEL_THRESHOLD 30 * 6
 
 u16 networkLoadingLevel = 0;
 bool gNetworkLevelLoaded = false;
@@ -225,14 +224,11 @@ void network_receive(u8 localIndex, u8* data, u16 dataLength) {
 void network_update(void) {
 
     // check for level loaded event
-    if (networkLoadingLevel < SYNCING_LEVEL_THRESHOLD) {
+    if (networkLoadingLevel < LOADING_LEVEL_THRESHOLD) {
         networkLoadingLevel++;
         if (!gNetworkLevelLoaded && networkLoadingLevel >= LOADING_LEVEL_THRESHOLD) {
             gNetworkLevelLoaded = true;
             network_on_loaded_level();
-        }
-        if (networkLoadingLevel >= SYNCING_LEVEL_THRESHOLD) {
-            gNetworkLevelSyncing = false;
         }
     }
 
