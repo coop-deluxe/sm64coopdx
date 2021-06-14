@@ -88,7 +88,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
 
         // check for special cases
         const BehaviorScript* behavior = MacroObjectPresets[presetID].behavior;
-        if ((behavior == bhvCoinFormation || behavior == bhvGoombaTripletSpawner) && *respawnInfo != 0) {
+        if ((behavior == bhvCoinFormation) && *respawnInfo != 0) {
             *macroSpecialCount = *macroSpecialCount + 1;
             u16 offset = respawnInfo - area->macroObjects;
             packet_write(&p, &offset,     sizeof(u16));
@@ -196,21 +196,6 @@ void network_receive_level_macro(struct Packet* p) {
                     }
                 }
                 LOG_INFO("rx macro special: coin formation");
-            }
-            else if (behavior == bhvGoombaTripletSpawner) {
-                o->oBehParams = *respawnInfo;
-                u8 goombaParams = (o->oBehParams >> 8) & 0xFF;
-
-                u8 childIndex = 0;
-                for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-                    struct Object* o2 = &gObjectPool[i];
-                    if (o2->parentObj != o) { continue; }
-                    if (o2 == o) { continue; }
-                    if (goombaParams & (1 << childIndex++)) {
-                        obj_mark_for_deletion(o2);
-                    }
-                }
-                LOG_INFO("rx macro special: goomba triplet %d", *respawnInfo);
             }
         }
     }

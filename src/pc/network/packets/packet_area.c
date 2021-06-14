@@ -12,6 +12,23 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
+u8 sRemoveSyncIds[RESERVED_IDS_SYNC_OBJECT_OFFSET] = { 0 };
+u8 sRemoveSyncIdsIndex = 0;
+
+void area_remove_sync_ids_add(u8 syncId) {
+    if (syncId >= RESERVED_IDS_SYNC_OBJECT_OFFSET) { return; }
+    for (int i = 0; i < sRemoveSyncIdsIndex; i++) {
+        if (sRemoveSyncIds[i] == syncId) { return; }
+    }
+    sRemoveSyncIds[sRemoveSyncIdsIndex++] = syncId;
+}
+
+void area_remove_sync_ids_clear(void) {
+    sRemoveSyncIdsIndex = 0;
+}
+
+/////////////////////////////////////////////////
+
 void network_send_area(struct NetworkPlayer* toNp) {
     extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
 
@@ -25,6 +42,13 @@ void network_send_area(struct NetworkPlayer* toNp) {
         packet_write(&p, &gCurrActNum,    sizeof(s16));
         packet_write(&p, &gCurrLevelNum,  sizeof(s16));
         packet_write(&p, &gCurrAreaIndex, sizeof(s16));
+
+        // write sync id removals
+        packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
+        for (int i = 0; i < sRemoveSyncIdsIndex; i++) {
+            packet_write(&p, &sRemoveSyncIds[i], sizeof(u8));
+            LOG_INFO("tx remove sync id %d", sRemoveSyncIds[i]);
+        }
 
         // count respawners and write
         u8 respawnerCount = 0;
@@ -109,6 +133,19 @@ void network_receive_area(struct Packet* p) {
     if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("rx area: received an improper location");
         return;
+    }
+
+    // read removed sync ids
+    area_remove_sync_ids_clear();
+    packet_read(p, &sRemoveSyncIdsIndex, sizeof(u8));
+    for (int i = 0; i < sRemoveSyncIdsIndex; i++) {
+        packet_read(p, &sRemoveSyncIds[i], sizeof(u8));
+        struct SyncObject* so = &gSyncObjects[sRemoveSyncIds[i]];
+        if (so->o != NULL) {
+            so->o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        }
+        network_forget_sync_object(so);
+        LOG_INFO("rx remove sync id %d", sRemoveSyncIds[i]);
     }
 
     // read respawner count

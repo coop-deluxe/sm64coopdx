@@ -13,6 +13,7 @@
 
 struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
 struct Packet sLastSyncEntReliablePacket[MAX_SYNC_OBJECTS] = { 0 };
+u8 sNextSyncId = 0;
 
 struct Packet* get_last_sync_ent_reliable_packet(u8 syncId) {
     return &sLastSyncEntReliablePacket[syncId];
@@ -137,6 +138,7 @@ bool network_sync_object_initialized(struct Object* o) {
 }
 
 void network_clear_sync_objects(void) {
+    sNextSyncId = 0;
     network_on_init_level();
     for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         network_forget_sync_object(&gSyncObjects[i]);
@@ -150,8 +152,10 @@ void network_set_sync_id(struct Object* o) {
     if (!gNetworkLevelLoaded) {
         // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
         for (int i = 1; i < MAX_SYNC_OBJECTS; i++) {
-            if (gSyncObjects[i].o != NULL) { continue; }
-            syncId = i;
+            sNextSyncId++;
+            sNextSyncId = sNextSyncId % RESERVED_IDS_SYNC_OBJECT_OFFSET;
+            if (gSyncObjects[sNextSyncId].o != NULL) { continue; }
+            syncId = sNextSyncId;
             break;
         }
     } else {
@@ -517,6 +521,7 @@ void network_forget_sync_object(struct SyncObject* so) {
         if (so == so2) {
             sLastSyncEntReliablePacket[syncId].error = true;
         }
+        area_remove_sync_ids_add(syncId);
     }
 
     so->o = NULL;

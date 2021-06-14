@@ -94,7 +94,7 @@ void network_on_init_level(void) {
 }
 
 void network_on_loaded_level(void) {
-    // check for level change
+    area_remove_sync_ids_clear();
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
         bool levelMatch = (np->currCourseNum == gCurrCourseNum

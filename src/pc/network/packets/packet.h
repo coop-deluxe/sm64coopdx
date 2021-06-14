@@ -220,6 +220,9 @@ void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlaye
 void network_receive_area_request(struct Packet* p);
 
 // packet_area.c
+
+void area_remove_sync_ids_add(u8 syncId);
+void area_remove_sync_ids_clear(void);
 void network_send_area(struct NetworkPlayer* toNp);
 void network_receive_area(struct Packet* p);
 
