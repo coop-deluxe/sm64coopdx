@@ -10,7 +10,7 @@
 #include "object_fields.h"
 #include "behavior_table.h"
 #include "model_ids.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 #define ERR_COULD_NOT_FIND_OBJECT ((u16)-1)
@@ -133,15 +133,16 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
             if (np->currCourseNum != gCurrCourseNum) { continue; }
             if (np->currActNum != gCurrActNum) { continue; }
             if (np->currLevelNum != gCurrLevelNum) { continue; }
+            if (np == gNetworkPlayerLocal) { continue; }
             struct Packet p2;
             packet_duplicate(&p, &p2);
             network_send_to(np->localIndex, &p2);
+            LOG_INFO("tx level respawn info to %d", np->globalIndex);
         }
     } else {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
+        LOG_INFO("tx level respawn info to %d", gNetworkPlayerServer->globalIndex);
     }
-
-    LOG_INFO("tx level respawn info");
 }
 
 void network_receive_level_respawn_info(struct Packet* p) {

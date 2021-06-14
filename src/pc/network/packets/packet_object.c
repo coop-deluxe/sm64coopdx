@@ -69,7 +69,7 @@ void network_override_object(u8 syncId, struct Object* o) {
 
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
     // HACK: an odd way to detect if this entity was spawned from a staticLevel respawner
-    bool wasStaticRespawner = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o && gSyncObjects[o->oSyncID].staticLevelSpawn);
+    bool wasStaticRespawner = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o && o->oSyncID < RESERVED_IDS_SYNC_OBJECT_OFFSET);
 
     // generate new sync ID
     network_set_sync_id(o);
@@ -96,7 +96,6 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->override_ownership = NULL;
     so->syncDeathEvent = true;
     so->randomSeed = (u16)(o->oSyncID * 7951);
-    so->staticLevelSpawn = wasStaticRespawner;
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
     sLastSyncEntReliablePacket[o->oSyncID].error = true;
@@ -512,7 +511,7 @@ void network_receive_object(struct Packet* p) {
 
 void network_forget_sync_object(struct SyncObject* so) {
     // invalidate last packet sent
-    if (so->staticLevelSpawn && so->o != NULL) {
+    if (so != NULL && so->o != NULL && so->o->oSyncID < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
         u8 syncId = so->o->oSyncID;
         struct SyncObject* so2 = &gSyncObjects[syncId];
         if (so == so2) {

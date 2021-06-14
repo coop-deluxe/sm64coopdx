@@ -63,7 +63,7 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
     respawner->oRespawnerBehaviorToRespawn = behToSpawn;
     respawner->oSyncID = syncID;
 
-    if (gSyncObjects[syncID].staticLevelSpawn) {
+    if (syncID < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
         network_override_object(syncID, respawner);
         o->oSyncID = 0;
         o->oFlags |= OBJ_FLAG_PERSISTENT_RESPAWN; // pretty sure this is required

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "../reservation_area.h"
 #include "game/interaction.h"
 #include "game/level_update.h"
 #include "game/area.h"
@@ -54,10 +55,9 @@ void network_send_area(struct NetworkPlayer* toNp) {
         network_send_to(toNp->localIndex, &p);
 
         // send non-static objects
-        for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        for (int i = RESERVED_IDS_SYNC_OBJECT_OFFSET; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL || so->o->oSyncID != (u32)i) { continue; }
-            if (so->staticLevelSpawn) { continue; }
             if (so->o->behavior == bhvRespawner) { continue; }
             struct Object* spawn_objects[] = { so->o };
 
@@ -136,7 +136,7 @@ void network_receive_area(struct Packet* p) {
         struct SyncObject* so = &gSyncObjects[syncId];
 
         LOG_INFO("rx respawner");
-        if (so->staticLevelSpawn) {
+        if (syncId < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
             struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
             respawner->parentObj = respawner;
             respawner->oBehParams = behParams;

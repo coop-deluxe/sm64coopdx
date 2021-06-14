@@ -56,10 +56,14 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
 
     // write location
     if (levelAreaMustMatch) {
-        packet_write(packet, &gCurrCourseNum, sizeof(s16));
-        packet_write(packet, &gCurrActNum,    sizeof(s16));
-        packet_write(packet, &gCurrLevelNum,  sizeof(s16));
-        packet_write(packet, &gCurrAreaIndex, sizeof(s16));
+        packet_write(packet, &gCurrCourseNum, sizeof(u8));
+        packet_write(packet, &gCurrActNum,    sizeof(u8));
+        packet_write(packet, &gCurrLevelNum,  sizeof(u8));
+        packet_write(packet, &gCurrAreaIndex, sizeof(u8));
+        packet->courseNum = gCurrCourseNum;
+        packet->actNum    = gCurrActNum;
+        packet->levelNum  = gCurrLevelNum;
+        packet->areaIndex = gCurrAreaIndex;
     }
 }
 
@@ -75,6 +79,10 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->sent = false;
     dstPacket->orderedGroupId = srcPacket->orderedGroupId;
     dstPacket->orderedSeqId = srcPacket->orderedSeqId;
+    dstPacket->courseNum = srcPacket->courseNum;
+    dstPacket->actNum    = srcPacket->actNum;
+    dstPacket->levelNum  = srcPacket->levelNum;
+    dstPacket->areaIndex = srcPacket->areaIndex;
 
     memcpy(&dstPacket->buffer[0], &srcPacket->buffer[0], srcPacket->dataLength);
 
@@ -122,26 +130,19 @@ u8 packet_initial_read(struct Packet* packet) {
     // read destination
     packet_read(packet, &packet->destGlobalId, sizeof(u8));
 
-    if (packet->levelAreaMustMatch) {
-        s16 currCourseNum, currActNum, currLevelNum, currAreaIndex;
-        packet_read(packet, &currCourseNum, sizeof(s16));
-        packet_read(packet, &currActNum,    sizeof(s16));
-        packet_read(packet, &currLevelNum,  sizeof(s16));
-        packet_read(packet, &currAreaIndex, sizeof(s16));
-        bool levelAreaMismatch =
-            (currCourseNum   != gCurrCourseNum
-            || currActNum    != gCurrActNum
-            || currLevelNum  != gCurrLevelNum
-            || currAreaIndex != gCurrAreaIndex);
-        // drop packet
-        if (levelAreaMismatch) { return FALSE; }
-    }
-
     // read ordered packet information
     if (packetIsOrdered) {
         packet_read(packet, &packet->orderedFromGlobalId, sizeof(u8));
         packet_read(packet, &packet->orderedGroupId,      sizeof(u8));
         packet_read(packet, &packet->orderedSeqId,        sizeof(u8));
+    }
+    
+    // read location
+    if (packet->levelAreaMustMatch) {
+        packet_read(packet, &packet->courseNum, sizeof(u8));
+        packet_read(packet, &packet->actNum,    sizeof(u8));
+        packet_read(packet, &packet->levelNum,  sizeof(u8));
+        packet_read(packet, &packet->areaIndex, sizeof(u8));
     }
 
     // don't drop packet

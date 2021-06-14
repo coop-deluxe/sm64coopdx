@@ -3,6 +3,21 @@
 #include "pc/debuglog.h"
 
 void packet_process(struct Packet* p) {
+    if (p->levelAreaMustMatch) {
+        extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+        bool levelAreaMismatch =
+            (p->courseNum != gCurrCourseNum
+                || p->actNum != gCurrActNum
+                || p->levelNum != gCurrLevelNum
+                || p->areaIndex != gCurrAreaIndex);
+        // drop packet
+        if (levelAreaMismatch) {
+            LOG_INFO("dropping level mismatch packet %d", p->packetType);
+            LOG_INFO("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
+            return;
+        }
+    }
+
     switch (p->packetType) {
         case PACKET_ACK:                     network_receive_ack(p);                     break;
         case PACKET_PLAYER:                  network_receive_player(p);                  break;

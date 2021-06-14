@@ -47,16 +47,10 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
     assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
+    if (sendToLocalIndex == gNetworkPlayerLocal->localIndex) { return; }
 
     struct Packet p;
-    packet_init(&p, PACKET_SPAWN_OBJECTS, true, false);
-
-    // level location
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
-    packet_write(&p, &gCurrCourseNum, sizeof(s16));
-    packet_write(&p, &gCurrActNum,    sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,  sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex, sizeof(s16));
+    packet_init(&p, PACKET_SPAWN_OBJECTS, true, true);
 
     // objects
     packet_write(&p, &objectCount, sizeof(u8));
@@ -78,24 +72,15 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
         network_send(&p);
+        LOG_INFO("tx spawn objects (BROADCAST)");
     } else {
         network_send_to(sendToLocalIndex, &p);
+        LOG_INFO("tx spawn objects to %d", gNetworkPlayers[sendToLocalIndex].globalIndex);
     }
 }
 
 void network_receive_spawn_objects(struct Packet* p) {
-    // read level location
-    s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &courseNum,   sizeof(s16));
-    packet_read(p, &actNum,      sizeof(s16));
-    packet_read(p, &levelNum,    sizeof(s16));
-    packet_read(p, &areaIndex,   sizeof(s16));
-
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
-    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
-        LOG_ERROR("received an improper location");
-        return;
-    }
+    LOG_INFO("rx spawn objects");
 
     u8 objectCount = 0;
     packet_read(p, &objectCount, sizeof(u8));

@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "../reservation_area.h"
 #include "level_table.h"
-//#define DISABLE_MODULE_LOG 1
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {

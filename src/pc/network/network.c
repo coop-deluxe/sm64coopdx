@@ -95,11 +95,6 @@ void network_on_init_level(void) {
 }
 
 void network_on_loaded_level(void) {
-    // set all sync objects as staticLevelSpawn
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        gSyncObjects[i].staticLevelSpawn = true;
-    }
-
     // check for level change
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
@@ -174,7 +169,17 @@ void network_send(struct Packet* p) {
     }
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
-        if (!gNetworkPlayers[i].connected) { continue; }
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+
+        // don't send a packet to a player that can't receive it
+        if (p->levelAreaMustMatch) {
+            if (p->courseNum != np->currCourseNum) { continue; }
+            if (p->actNum    != np->currActNum)    { continue; }
+            if (p->levelNum  != np->currLevelNum)  { continue; }
+            if (p->areaIndex != np->currAreaIndex) { continue; }
+        }
+
         p->localIndex = i;
         network_send_to(i, p);
     }

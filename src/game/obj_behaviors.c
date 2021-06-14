@@ -32,6 +32,7 @@
 #include "spawn_object.h"
 #include "spawn_sound.h"
 #include "pc/network/network.h"
+#include "pc/network/reservation_area.h"
 #include "game/rng_position.h"
 
 /**

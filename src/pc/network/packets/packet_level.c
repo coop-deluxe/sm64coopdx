@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "game/interaction.h"
 #include "game/level_update.h"
-//#define DISABLE_MODULE_LOG 1
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {

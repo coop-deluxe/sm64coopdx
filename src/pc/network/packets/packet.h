@@ -70,6 +70,10 @@ struct Packet {
     u8 orderedFromGlobalId;
     u8 orderedGroupId;
     u8 orderedSeqId;
+    u8 courseNum;
+    u8 actNum;
+    u8 levelNum;
+    u8 areaIndex;
     u8 buffer[PACKET_LENGTH];
 };
 
