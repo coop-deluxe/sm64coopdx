@@ -118,6 +118,17 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         assert(localIndex != gNetworkPlayerLocal->localIndex);
     }
 
+    if (gNetworkType == NT_SERVER) {
+        struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+        // don't send a packet to a player that can't receive it
+        if (p->levelAreaMustMatch) {
+            if (p->courseNum != np->currCourseNum) { return; }
+            if (p->actNum    != np->currActNum)    { return; }
+            if (p->levelNum  != np->currLevelNum)  { return; }
+            if (p->areaIndex != np->currAreaIndex) { return; }
+        }
+    }
+
     // set the flags again
     packet_set_flags(p);
 
