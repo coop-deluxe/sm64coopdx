@@ -279,7 +279,7 @@ void main_func(void) {
     }
 
 #ifdef UNSTABLE_BRANCH
-    custom_menu_error("This is an unstable branch build.\n\nPlease do not use this to play online with others.\n\nUse a regular build.");
+    custom_menu_error("This is an unstable branch build.\n\nExpect many strange bugs.\n\nFor a more stable experience use the normal coop branch.");
 #endif
 
     audio_init();
