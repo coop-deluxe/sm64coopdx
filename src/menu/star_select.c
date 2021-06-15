@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <PR/ultratypes.h>
+#include <PR/gbi.h>
 
 #include "audio/external.h"
 #include "behavior_data.h"
@@ -21,6 +23,7 @@
 #include "prevent_bss_reordering.h"
 #include "pc/network/network.h"
 #include "engine/math_util.h"
+#include "game/print.h"
 
 /**
  * @file star_select.c
@@ -363,11 +366,58 @@ void print_act_selector_strings(void) {
     // Print the numbers above each star.
     for (i = 1; i <= sVisibleStars; i++) {
         starNumbers[0] = i;
+        s16 x = 0;
 #ifdef VERSION_EU
-        print_menu_generic_string(143 - sVisibleStars * 15 + i * 30 , 38, starNumbers);
+        x = 143 - sVisibleStars * 15 + i * 30;
+        print_menu_generic_string(x, 38, starNumbers);
 #else
-        print_menu_generic_string(i * 34 - sVisibleStars * 17 + 139, 38, starNumbers);
+        x = i * 34 - sVisibleStars * 17 + 139;
+        print_menu_generic_string(x, 38, starNumbers);
 #endif
+        // display player HUD head if they're in that act
+        for (int j = 0; j < MAX_PLAYERS; j++) {
+            struct NetworkPlayer* np = &gNetworkPlayers[j];
+            if (np == NULL || !np->connected) { continue; }
+            if (np->currCourseNum != gCurrCourseNum) { continue; }
+            if (np->currActNum != i) { continue; }
+
+            char* displayHead = (gMarioStates[j].character) ? &gMarioStates[j].character->hudHead : ",";
+            print_text(x - 4, 207, displayHead); // 'Mario Head' glyph
+            break;
+        }
+    }
+
+    // print the number of players in the selected act
+    {
+        u8 playersInAct = 0;
+        for (int j = 0; j < MAX_PLAYERS; j++) {
+            struct NetworkPlayer* np = &gNetworkPlayers[j];
+            if (np == NULL || !np->connected) { continue; }
+            if (np->currCourseNum != gCurrCourseNum) { continue; }
+            if (np->currActNum != sSelectedActIndex + 1) { continue; }
+            playersInAct++;
+        }
+
+        if (playersInAct > 0) {
+            char message[16] = { 0 };
+            if (playersInAct == 1) {
+                snprintf(message, 16, "join");
+            } else {
+                snprintf(message, 16, "%d players", playersInAct);
+            }
+
+            gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+            f32 textWidth = get_generic_ascii_string_width(message);
+            f32 textHeight = get_generic_ascii_string_height(message);
+
+            f32 xPos = (sSelectedActIndex + 1) * 34 - sVisibleStars * 17 + 139 - (textWidth / 2.0f) + 4;
+            f32 yPos = 224;
+
+            gDPSetEnvColor(gDisplayListHead++, 100, 100, 100, 255);
+            print_generic_ascii_string(xPos, yPos, message);
+
+            gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+        }
     }
 
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
