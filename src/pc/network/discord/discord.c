@@ -104,8 +104,10 @@ static void register_launch_command(void) {
     }
     GetModuleFileName(hModule, cmd, sizeof(cmd));
 #else
-    rc = readlink("/proc/self/exe", cmd, sizeof(MAX_LAUNCH_CMD) - 1);
-    if (rc) {
+    char path[MAX_LAUNCH_CMD] = { 0 };
+    snprintf(path, MAX_LAUNCH_CMD - 1, "/proc/%d/exe", getpid());
+    rc = readlink(path, cmd, MAX_LAUNCH_CMD - 1);
+    if (rc <= 0) {
         LOG_ERROR("unable to retrieve absolute path! rc = %d", rc);
         return;
     }
