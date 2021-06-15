@@ -82,6 +82,7 @@ extern struct NetworkSystem* gNetworkSystem;
 extern enum NetworkType gNetworkType;
 extern bool gNetworkLevelLoaded;
 extern bool gNetworkLevelSyncing;
+extern u32 gNetworkLevelTimer;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern clock_t gLastNetworkSend;

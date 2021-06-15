@@ -27,6 +27,7 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 u16 networkLoadingLevel = 0;
 bool gNetworkLevelLoaded = false;
 bool gNetworkLevelSyncing = true;
+u32  gNetworkLevelTimer = 0;
 
 clock_t gLastNetworkSend = 0;
 struct StringLinkedList gRegisteredMods = { 0 };
@@ -91,6 +92,7 @@ void network_on_init_level(void) {
     networkLoadingLevel = 0;
     gNetworkLevelLoaded = false;
     gNetworkLevelSyncing = true;
+    gNetworkLevelTimer = 0;
 }
 
 void network_on_loaded_level(void) {
@@ -228,8 +230,11 @@ void network_update(void) {
         networkLoadingLevel++;
         if (!gNetworkLevelLoaded && networkLoadingLevel >= LOADING_LEVEL_THRESHOLD) {
             gNetworkLevelLoaded = true;
+            gNetworkLevelTimer = 0;
             network_on_loaded_level();
         }
+    } else if (gNetworkLevelLoaded) {
+        gNetworkLevelTimer++;
     }
 
     // send out update packets

@@ -310,6 +310,7 @@
 #define /*0x108*/ oBowserPuzzlePieceContinuePerformingAction OBJECT_FIELD_S32(0x20)
 #define /*0x10C*/ oBowserPuzzlePieceActionList               OBJECT_FIELD_VPTR(0x21)
 #define /*0x110*/ oBowserPuzzlePieceNextAction               OBJECT_FIELD_VPTR(0x22)
+#define /*0x0F4*/ oBowserPuzzlePieceTimer                    OBJECT_FIELD_U32(0x1B)
 
 /* Bubba */
 #define /*0x0F4*/ oBubbaUnkF4  OBJECT_FIELD_F32(0x1B)
