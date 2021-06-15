@@ -181,6 +181,7 @@ void bhv_checkerboard_platform_loop(void);
 void bhv_bowser_key_unlock_door_loop(void);
 void bhv_bowser_key_course_exit_loop(void);
 void bhv_invisible_objects_under_bridge_init(void);
+void bhv_invisible_objects_under_bridge_loop(void);
 void bhv_water_level_pillar_init(void);
 void bhv_water_level_pillar_loop(void);
 void bhv_ddd_warp_loop(void);

@@ -2371,7 +2371,9 @@ const BehaviorScript bhvInvisibleObjectsUnderBridge[] = {
     BEGIN(OBJ_LIST_DEFAULT),
     ID(id_bhvInvisibleObjectsUnderBridge),
     CALL_NATIVE(bhv_invisible_objects_under_bridge_init),
-    BREAK(),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_invisible_objects_under_bridge_loop),
+    END_LOOP(),
 };
 
 const BehaviorScript bhvWaterLevelPillar[] = {

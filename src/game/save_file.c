@@ -605,6 +605,7 @@ s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse) 
 void save_file_set_flags(u32 flags) {
     gSaveBuffer.files[gCurrSaveFileNum - 1][0].flags |= (flags | SAVE_FLAG_FILE_EXISTS);
     gSaveFileModified = TRUE;
+    network_send_save_set_flag(flags);
 }
 
 void save_file_clear_flags(u32 flags) {

@@ -31,6 +31,7 @@ enum PacketType {
     PACKET_KEEP_ALIVE,
     PACKET_LEAVING,
     PACKET_SAVE_FILE,
+    PACKET_SAVE_SET_FLAG,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
 
@@ -186,6 +187,10 @@ void network_receive_leaving(struct Packet* p);
 // packet_save_file.c
 void network_send_save_file(s32 fileIndex);
 void network_receive_save_file(struct Packet* p);
+
+// packet_save_set_flag.c
+void network_send_save_set_flag(u32 flags);
+void network_receive_save_set_flag(struct Packet* p);
 
 // packet_network_players.c
 void network_send_network_players(void);
