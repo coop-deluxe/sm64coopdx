@@ -7,7 +7,7 @@
 #include "course_table.h"
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_reservation_list(struct NetworkPlayer* np, u8 syncIds[]) {
@@ -26,10 +26,12 @@ void network_send_reservation_list(struct NetworkPlayer* np, u8 syncIds[]) {
     }
 
     network_send_to(np->localIndex, &p);
+    LOG_INFO("tx reservation list");
 }
 
 void network_receive_reservation_list(struct Packet* p) {
     assert(gNetworkType == NT_CLIENT);
+    LOG_INFO("rx reservation list");
 
     u8 courseNum, actNum, levelNum, areaIndex;
     packet_read(p, &courseNum, sizeof(u8));

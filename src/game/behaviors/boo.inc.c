@@ -859,7 +859,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
     switch (o->oAction) {
         case 0:
             if (distanceToPlayer < 1000.0f) {
-                if (gNetworkType == NT_SERVER && o->oMerryGoRoundBooManagerNumBoosKilled < 5) {
+                if (player == gMarioObjects[0] && o->oMerryGoRoundBooManagerNumBoosKilled < 5) {
                     if (o->oMerryGoRoundBooManagerNumBoosSpawned < 5) {
                         if (o->oMerryGoRoundBooManagerNumBoosSpawned - o->oMerryGoRoundBooManagerNumBoosKilled < 2) {
                             struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBoo);
@@ -878,7 +878,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
                 }
 
                 if (o->oMerryGoRoundBooManagerNumBoosKilled > 4) {
-                    if (gNetworkType == NT_SERVER) {
+                    if (player == gMarioObjects[0]) {
                         struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBigBoo);
                         obj_copy_behavior_params(boo, o);
 
