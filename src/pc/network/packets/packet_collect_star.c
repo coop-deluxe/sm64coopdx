@@ -8,6 +8,7 @@
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
 #include "src/game/save_file.h"
+#include "pc/debuglog.h"
 
 extern s16 gCurrSaveFileNum;
 extern s16 gCurrCourseNum;
@@ -50,11 +51,12 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
     packet_init(&p, PACKET_COLLECT_STAR, true, false);
 
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
-    packet_write(&p, &gCurrCourseNum, sizeof(s16));
+    packet_write(&p, &gCurrCourseNum,   sizeof(s16));
+    packet_write(&p, &gCurrLevelNum,    sizeof(s16));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
     packet_write(&p, &behaviorId, sizeof(u16));
-    packet_write(&p, &coinScore, sizeof(s16));
-    packet_write(&p, &starIndex, sizeof(s16));
+    packet_write(&p, &coinScore,  sizeof(s16));
+    packet_write(&p, &starIndex,  sizeof(s16));
 
     network_send(&p);
 }
@@ -65,13 +67,15 @@ void network_receive_collect_star(struct Packet* p) {
     s16 coinScore, starIndex;
     s16 lastSaveFileNum = gCurrSaveFileNum;
     s16 lastCourseNum = gCurrCourseNum;
+    s16 lastLevelNum = gCurrLevelNum;
 
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
-    packet_read(p, &gCurrCourseNum, sizeof(s16));
+    packet_read(p, &gCurrCourseNum,   sizeof(s16));
+    packet_read(p, &gCurrLevelNum,    sizeof(s16));
     packet_read(p, &pos, sizeof(f32) * 3);
     packet_read(p, &behaviorId, sizeof(u16));
-    packet_read(p, &coinScore, sizeof(s16));
-    packet_read(p, &starIndex, sizeof(s16));
+    packet_read(p, &coinScore,  sizeof(s16));
+    packet_read(p, &starIndex,  sizeof(s16));
 
     const void* behavior = get_behavior_from_id(behaviorId);
 
@@ -83,7 +87,8 @@ void network_receive_collect_star(struct Packet* p) {
     }
 
     gCurrSaveFileNum = lastSaveFileNum;
-    gCurrCourseNum = lastCourseNum;
+    gCurrCourseNum   = lastCourseNum;
+    gCurrLevelNum    = lastLevelNum;
 
     struct Object* star = find_nearest_star(behavior, pos, 500);
     if (star != NULL) {
