@@ -28,6 +28,8 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
         packet_write(&p, &gRedCoinsCollected,       sizeof(u8));
         packet_write(&p, &gPssSlideStarted,         sizeof(u8));
         packet_write(&p, &gHudDisplay.timer,        sizeof(u16));
+        packet_write(&p, &gTTCSpeedSetting,         sizeof(s16));
+        packet_write(&p, gEnvironmentLevels,        sizeof(s32));
 
         // send level packet
         network_send_to(toNp->localIndex, &p);
@@ -69,9 +71,11 @@ void network_receive_level(struct Packet* p) {
     // read level variables
     u8 redCoinsCollected;
     packet_read(p, &gMarioStates[0].numCoins, sizeof(s16));
-    packet_read(p, &redCoinsCollected,       sizeof(u8));
+    packet_read(p, &redCoinsCollected,        sizeof(u8));
     packet_read(p, &gPssSlideStarted,         sizeof(u8));
     packet_read(p, &gHudDisplay.timer,        sizeof(u16));
+    packet_read(p, &gTTCSpeedSetting,         sizeof(s16)); // likely doesn't work after level load.. but it could
+    packet_read(p, gEnvironmentLevels,        sizeof(s32));
 
     // hacky way to override red coins collected
     gRedCoinsCollected = redCoinsCollected;

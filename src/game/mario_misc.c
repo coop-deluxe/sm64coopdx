@@ -509,11 +509,15 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, UNUSED Mat
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
 
+    bool marioActive = gMarioObjects[plrIdx] != NULL && gMarioObjects[plrIdx]->activeFlags != ACTIVE_FLAG_DEACTIVATED;
+
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
         struct Camera* camera = gCurGraphNodeCamera->config.camera;
 
-        if (camera->mode == CAMERA_MODE_C_UP) {
+        if (!marioActive) {
+            node->flags &= ~GRAPH_RENDER_ACTIVE;
+        } else if (camera->mode == CAMERA_MODE_C_UP) {
             rotNode->rotation[0] = gPlayerCameraState->headRotation[1];
             rotNode->rotation[2] = gPlayerCameraState->headRotation[0];
         }
@@ -521,8 +525,7 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, UNUSED Mat
             rotNode->rotation[0] = bodyState->headAngle[1];
             rotNode->rotation[1] = bodyState->headAngle[2];
             rotNode->rotation[2] = bodyState->headAngle[0];
-        }
-        else {
+        } else {
             vec3s_set(bodyState->headAngle, 0, 0, 0);
             vec3s_set(rotNode->rotation, 0, 0, 0);
         }

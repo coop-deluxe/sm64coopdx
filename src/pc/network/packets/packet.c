@@ -12,8 +12,10 @@ void packet_process(struct Packet* p) {
                 || p->areaIndex != gCurrAreaIndex);
         // drop packet
         if (levelAreaMismatch) {
-            LOG_INFO("dropping level mismatch packet %d", p->packetType);
-            LOG_INFO("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
+            if (gNetworkType != NT_SERVER) {
+                LOG_INFO("dropping level mismatch packet %d", p->packetType);
+                LOG_INFO("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
+            }
             return;
         }
     }
