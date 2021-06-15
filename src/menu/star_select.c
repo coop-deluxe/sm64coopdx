@@ -455,4 +455,5 @@ void star_select_finish_selection(void) {
         sLoadedActNum = sInitSelectedActNum;
     }
     gDialogCourseActNum = sSelectedActIndex + 1;
+    gCurrActStarNum = gDialogCourseActNum;
 }

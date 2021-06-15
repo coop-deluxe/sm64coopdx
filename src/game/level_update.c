@@ -1177,7 +1177,7 @@ s32 play_mode_change_level(void) {
         gHudDisplay.flags = HUD_DISPLAY_NONE;
         sTransitionTimer = 0;
         sTransitionUpdate = NULL;
-
+        gCurrActStarNum = 0;
         if (sWarpDest.type != WARP_TYPE_NOT_WARPING) {
             return sWarpDest.levelNum;
         } else {

@@ -33,6 +33,7 @@ struct WarpTransition gWarpTransition;
 
 s16 gCurrCourseNum;
 s16 gCurrActNum;
+s16 gCurrActStarNum;
 s16 gCurrAreaIndex;
 s16 gSavedCourseNum;
 s16 gPauseScreenMode;

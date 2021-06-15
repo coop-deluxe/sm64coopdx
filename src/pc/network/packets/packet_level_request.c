@@ -36,8 +36,8 @@ void network_receive_level_request(struct Packet* p) {
         return;
     }
 
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum;
-    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum) {
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
+    if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
         LOG_ERROR("rx level request: received an improper location");
         return;
     }

@@ -4,17 +4,17 @@
 
 void packet_process(struct Packet* p) {
     if (p->levelAreaMustMatch) {
-        extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+        extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
         bool levelAreaMismatch =
             (p->courseNum != gCurrCourseNum
-                || p->actNum != gCurrActNum
+                || p->actNum != gCurrActStarNum
                 || p->levelNum != gCurrLevelNum
                 || p->areaIndex != gCurrAreaIndex);
         // drop packet
         if (levelAreaMismatch) {
             if (gNetworkType != NT_SERVER) {
                 LOG_INFO("dropping level mismatch packet %d", p->packetType);
-                LOG_INFO("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
+                LOG_INFO("    (%d, %d, %d, %d) != (%d, %d, %d, %d)", p->courseNum, p->actNum, p->levelNum, p->areaIndex, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
             }
             return;
         }

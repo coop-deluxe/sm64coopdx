@@ -29,29 +29,30 @@ static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 act
 }
 
 void network_send_change_area(void) {
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+    extern s16 gCurrCourseNum, gCurrActNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
     // override castle act to 0 to prevent instancing of the hub
     if (gCurrCourseNum == 0 && (gCurrLevelNum == LEVEL_CASTLE || gCurrLevelNum == LEVEL_CASTLE_GROUNDS || gCurrLevelNum == LEVEL_CASTLE_COURTYARD)) {
+        gCurrActStarNum = 0;
         gCurrActNum = 0;
     }
 
     if (gNetworkType == NT_SERVER) {
-        player_changed_area(gNetworkPlayerLocal, gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex);
+        player_changed_area(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
         return;
     }
 
     struct Packet p;
     packet_init(&p, PACKET_CHANGE_AREA, true, false);
-    packet_write(&p, &gCurrCourseNum, sizeof(s16));
-    packet_write(&p, &gCurrActNum,    sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,  sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex, sizeof(s16));
+    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
+    packet_write(&p, &gCurrActStarNum, sizeof(s16));
+    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
+    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
 
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     np->currCourseNum = gCurrCourseNum;
-    np->currActNum    = gCurrActNum;
+    np->currActNum    = gCurrActStarNum;
     np->currLevelNum  = gCurrLevelNum;
     np->currAreaIndex = gCurrAreaIndex;
     np->currAreaSyncValid  = false;

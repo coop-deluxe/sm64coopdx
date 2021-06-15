@@ -11,7 +11,7 @@
 #include "pc/debuglog.h"
 
 void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum;
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
 
     packet_ordered_begin();
     {
@@ -19,9 +19,9 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
         packet_init(&p, PACKET_LEVEL, true, false);
 
         // level location
-        packet_write(&p, &gCurrCourseNum, sizeof(s16));
-        packet_write(&p, &gCurrActNum,    sizeof(s16));
-        packet_write(&p, &gCurrLevelNum,  sizeof(s16));
+        packet_write(&p, &gCurrCourseNum,  sizeof(s16));
+        packet_write(&p, &gCurrActStarNum, sizeof(s16));
+        packet_write(&p, &gCurrLevelNum,   sizeof(s16));
 
         // level variables
         packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
@@ -62,8 +62,8 @@ void network_receive_level(struct Packet* p) {
     packet_read(p, &actNum,      sizeof(s16));
     packet_read(p, &levelNum,    sizeof(s16));
 
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum;
-    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum) {
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
+    if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
         LOG_ERROR("rx level: received an improper location");
         return;
     }

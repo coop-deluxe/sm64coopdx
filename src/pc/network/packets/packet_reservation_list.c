@@ -37,8 +37,8 @@ void network_receive_reservation_list(struct Packet* p) {
     packet_read(p, &levelNum,  sizeof(u8));
     packet_read(p, &areaIndex, sizeof(u8));
 
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
-    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
+    if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("received an improper location");
         return;
     }

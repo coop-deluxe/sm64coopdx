@@ -13,7 +13,7 @@
 
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
-extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
 enum NetworkType gNetworkType = NT_NONE;
 #ifdef DISCORD_SDK
@@ -98,7 +98,7 @@ void network_on_loaded_level(void) {
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
         bool levelMatch = (np->currCourseNum == gCurrCourseNum
-                           && np->currActNum == gCurrActNum
+                           && np->currActNum == gCurrActStarNum
                            && np->currLevelNum == gCurrLevelNum);
         if (np->currLevelSyncValid && levelMatch && np->currAreaIndex != gCurrAreaIndex) {
             network_send_change_area();

@@ -56,12 +56,12 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
 
     // write location
     if (levelAreaMustMatch) {
-        packet_write(packet, &gCurrCourseNum, sizeof(u8));
-        packet_write(packet, &gCurrActNum,    sizeof(u8));
-        packet_write(packet, &gCurrLevelNum,  sizeof(u8));
-        packet_write(packet, &gCurrAreaIndex, sizeof(u8));
+        packet_write(packet, &gCurrCourseNum,  sizeof(u8));
+        packet_write(packet, &gCurrActStarNum, sizeof(u8));
+        packet_write(packet, &gCurrLevelNum,   sizeof(u8));
+        packet_write(packet, &gCurrAreaIndex,  sizeof(u8));
         packet->courseNum = gCurrCourseNum;
-        packet->actNum    = gCurrActNum;
+        packet->actNum    = gCurrActStarNum;
         packet->levelNum  = gCurrLevelNum;
         packet->areaIndex = gCurrAreaIndex;
     }

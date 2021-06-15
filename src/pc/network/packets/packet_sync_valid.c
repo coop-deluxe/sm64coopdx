@@ -39,8 +39,8 @@ void network_receive_sync_valid(struct Packet* p) {
     packet_read(p, &fromGlobalIndex, sizeof(u8));
 
     if (gNetworkType != NT_SERVER) {
-        extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
-        if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
+        extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
+        if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
             LOG_ERROR("rx sync valid: received an improper location");
             return;
         }

@@ -111,10 +111,10 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     // write header
     struct Packet p;
     packet_init(&p, PACKET_LEVEL_RESPAWN_INFO, true, false);
-    packet_write(&p, &gCurrCourseNum,   sizeof(s16));
-    packet_write(&p, &gCurrActNum,      sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,    sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex,   sizeof(s16));
+    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
+    packet_write(&p, &gCurrActStarNum, sizeof(s16));
+    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
+    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
 
     // write object info
     packet_write(&p, &isMacroObject,    sizeof(u8));
@@ -131,7 +131,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
             if (!np->connected) { continue; }
             if (!np->currLevelSyncValid) { continue; }
             if (np->currCourseNum != gCurrCourseNum) { continue; }
-            if (np->currActNum != gCurrActNum) { continue; }
+            if (np->currActNum != gCurrActStarNum) { continue; }
             if (np->currLevelNum != gCurrLevelNum) { continue; }
             if (np == gNetworkPlayerLocal) { continue; }
             struct Packet p2;
@@ -164,7 +164,7 @@ void network_receive_level_respawn_info(struct Packet* p) {
     packet_read(p, &respawnInfoBits, sizeof(u8));
 
 
-    bool levelMismatch = (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum);
+    bool levelMismatch = (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum);
     if (gNetworkType == NT_SERVER) {
         // ensure we got the info from a valid player
         struct NetworkPlayer* npFrom = &gNetworkPlayers[p->localIndex];

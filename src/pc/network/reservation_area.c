@@ -269,8 +269,8 @@ void reservation_area_local_update(u8 courseNum, u8 actNum, u8 levelNum, u8 area
 u8 reservation_area_local_grab_id(void) {
     struct LocalReservationArea* la = &sLocalReservationArea;
 
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
-    if (la->courseNum != gCurrCourseNum || la->actNum != gCurrActNum || la->levelNum != gCurrLevelNum || la->areaIndex != gCurrAreaIndex) {
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
+    if (la->courseNum != gCurrCourseNum || la->actNum != gCurrActStarNum || la->levelNum != gCurrLevelNum || la->areaIndex != gCurrAreaIndex) {
         // invalid location
         return 0;
     }

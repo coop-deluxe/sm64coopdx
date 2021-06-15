@@ -37,10 +37,10 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     // write header
     struct Packet p;
     packet_init(&p, PACKET_LEVEL_SPAWN_INFO, true, false);
-    packet_write(&p, &gCurrCourseNum, sizeof(s16));
-    packet_write(&p, &gCurrActNum, sizeof(s16));
-    packet_write(&p, &gCurrLevelNum, sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex, sizeof(s16));
+    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
+    packet_write(&p, &gCurrActStarNum, sizeof(s16));
+    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
+    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
 
     // write this area's index
     packet_write(&p, &areaIndex, sizeof(u8));
@@ -96,7 +96,7 @@ void network_receive_level_spawn_info(struct Packet* p) {
     packet_read(p, &levelNum,        sizeof(s16));
     packet_read(p, &areaIndex,       sizeof(s16));
 
-    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum) {
+    if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");
         return;
     }

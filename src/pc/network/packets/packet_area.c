@@ -30,7 +30,7 @@ void area_remove_sync_ids_clear(void) {
 /////////////////////////////////////////////////
 
 void network_send_area(struct NetworkPlayer* toNp) {
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum, gCurrAreaIndex;
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
     packet_ordered_begin();
     {
@@ -38,10 +38,10 @@ void network_send_area(struct NetworkPlayer* toNp) {
         packet_init(&p, PACKET_AREA, true, false);
 
         // level location
-        packet_write(&p, &gCurrCourseNum, sizeof(s16));
-        packet_write(&p, &gCurrActNum,    sizeof(s16));
-        packet_write(&p, &gCurrLevelNum,  sizeof(s16));
-        packet_write(&p, &gCurrAreaIndex, sizeof(s16));
+        packet_write(&p, &gCurrCourseNum,  sizeof(s16));
+        packet_write(&p, &gCurrActStarNum, sizeof(s16));
+        packet_write(&p, &gCurrLevelNum,   sizeof(s16));
+        packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
 
         // write sync id removals
         packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
@@ -129,8 +129,8 @@ void network_receive_area(struct Packet* p) {
     packet_read(p, &levelNum,    sizeof(s16));
     packet_read(p, &areaIndex,   sizeof(s16));
 
-    extern s16 gCurrCourseNum, gCurrActNum, gCurrLevelNum;
-    if (courseNum != gCurrCourseNum || actNum != gCurrActNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
+    if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("rx area: received an improper location");
         return;
     }
