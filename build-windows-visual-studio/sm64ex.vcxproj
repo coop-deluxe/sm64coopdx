@@ -3994,6 +3994,7 @@
     <ClCompile Include="..\src\pc\network\packets\packet_reservation_use.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_save_file.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level_spawn_info.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_save_set_flag.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_spawn_objects.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_spawn_star.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_sync_valid.c" />

@@ -25,9 +25,9 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 #define LOADING_LEVEL_THRESHOLD 10
 
 u16 networkLoadingLevel = 0;
-bool gNetworkLevelLoaded = false;
-bool gNetworkLevelSyncing = true;
-u32  gNetworkLevelTimer = 0;
+bool gNetworkAreaLoaded = false;
+bool gNetworkAreaSyncing = true;
+u32  gNetworkAreaTimer = 0;
 
 clock_t gLastNetworkSend = 0;
 struct StringLinkedList gRegisteredMods = { 0 };
@@ -87,15 +87,15 @@ bool network_init(enum NetworkType inNetworkType) {
     return true;
 }
 
-void network_on_init_level(void) {
+void network_on_init_area(void) {
     // reset loading timer
     networkLoadingLevel = 0;
-    gNetworkLevelLoaded = false;
-    gNetworkLevelSyncing = true;
-    gNetworkLevelTimer = 0;
+    gNetworkAreaLoaded = false;
+    gNetworkAreaSyncing = true;
+    gNetworkAreaTimer = 0;
 }
 
-void network_on_loaded_level(void) {
+void network_on_loaded_area(void) {
     area_remove_sync_ids_clear();
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
@@ -228,13 +228,13 @@ void network_update(void) {
     // check for level loaded event
     if (networkLoadingLevel < LOADING_LEVEL_THRESHOLD) {
         networkLoadingLevel++;
-        if (!gNetworkLevelLoaded && networkLoadingLevel >= LOADING_LEVEL_THRESHOLD) {
-            gNetworkLevelLoaded = true;
-            gNetworkLevelTimer = 0;
-            network_on_loaded_level();
+        if (!gNetworkAreaLoaded && networkLoadingLevel >= LOADING_LEVEL_THRESHOLD) {
+            gNetworkAreaLoaded = true;
+            gNetworkAreaTimer = 0;
+            network_on_loaded_area();
         }
-    } else if (gNetworkLevelLoaded) {
-        gNetworkLevelTimer++;
+    } else if (gNetworkAreaLoaded) {
+        gNetworkAreaTimer++;
     }
 
     // send out update packets

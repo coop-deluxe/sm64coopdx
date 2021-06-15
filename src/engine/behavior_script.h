@@ -26,5 +26,6 @@ s32 random_sign(void);
 void stub_behavior_script_2(void);
 
 void cur_obj_update(void);
+void cur_obj_fake_update(void);
 
 #endif // BEHAVIOR_SCRIPT_H

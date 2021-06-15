@@ -44,7 +44,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
 
         // area variables
-        packet_write(&p, &gNetworkLevelTimer, sizeof(u32));
+        packet_write(&p, &gNetworkAreaTimer, sizeof(u32));
 
         // write sync id removals
         packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
@@ -132,15 +132,14 @@ void network_receive_area(struct Packet* p) {
     packet_read(p, &levelNum,    sizeof(s16));
     packet_read(p, &areaIndex,   sizeof(s16));
 
-    // read area variables
-    packet_read(p, &gNetworkLevelTimer, sizeof(u32));
-
-
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("rx area: received an improper location");
         return;
     }
+
+    // read area variables
+    packet_read(p, &gNetworkAreaTimer, sizeof(u32));
 
     // read removed sync ids
     area_remove_sync_ids_clear();

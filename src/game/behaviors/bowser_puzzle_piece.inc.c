@@ -260,15 +260,15 @@ void (*sBowserPuzzlePieceActions[])(void) = {
 
 void bhv_lll_bowser_puzzle_piece_loop(void) {
     // make sure we're loaded and synchronized
-    if (!gNetworkLevelLoaded) {
+    if (!gNetworkAreaLoaded) {
         o->oTimer = 0;
         return;
-    } else if (o->oBowserPuzzlePieceTimer == 0 && (gNetworkLevelTimer - o->oBowserPuzzlePieceTimer) >= 650) {
-        o->oBowserPuzzlePieceTimer = ((gNetworkLevelTimer - o->oBowserPuzzlePieceTimer) / 650) * 650;
+    } else if (o->oBowserPuzzlePieceTimer == 0 && (gNetworkAreaTimer - o->oBowserPuzzlePieceTimer) >= 650) {
+        o->oBowserPuzzlePieceTimer = ((gNetworkAreaTimer - o->oBowserPuzzlePieceTimer) / 650) * 650;
         o->oTimer = 0;
     }
 
-    while (o->oBowserPuzzlePieceTimer < gNetworkLevelTimer) {
+    while (o->oBowserPuzzlePieceTimer < gNetworkAreaTimer) {
         bhv_lll_bowser_puzzle_piece_update();
 
         cur_obj_call_action_function(sBowserPuzzlePieceActions);
@@ -278,8 +278,8 @@ void bhv_lll_bowser_puzzle_piece_loop(void) {
         o->oPosZ = o->oBowserPuzzlePieceOffsetZ + o->oHomeZ;
 
         o->oBowserPuzzlePieceTimer++;
-        if (o->oBowserPuzzlePieceTimer < gNetworkLevelTimer) {
-            o->oTimer++;
+        if (o->oBowserPuzzlePieceTimer < gNetworkAreaTimer) {
+            cur_obj_fake_update();
         }
     }
 }

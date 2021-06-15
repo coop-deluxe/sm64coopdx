@@ -80,9 +80,9 @@ struct ServerSettings {
 // Networking-specific externs
 extern struct NetworkSystem* gNetworkSystem;
 extern enum NetworkType gNetworkType;
-extern bool gNetworkLevelLoaded;
-extern bool gNetworkLevelSyncing;
-extern u32 gNetworkLevelTimer;
+extern bool gNetworkAreaLoaded;
+extern bool gNetworkAreaSyncing;
+extern u32 gNetworkAreaTimer;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern clock_t gLastNetworkSend;
@@ -91,8 +91,8 @@ extern struct StringLinkedList gRegisteredMods;
 // network.c
 void network_set_system(enum NetworkSystemType nsType);
 bool network_init(enum NetworkType inNetworkType);
-void network_on_init_level(void);
-void network_on_loaded_level(void);
+void network_on_init_area(void);
+void network_on_loaded_area(void);
 void network_send_to(u8 localIndex, struct Packet* p);
 void network_send(struct Packet* p);
 void network_receive(u8 localIndex, u8* data, u16 dataLength);

@@ -376,6 +376,7 @@
 #define /*0x0F8*/ oCheckerBoardPlatformUnkF8  OBJECT_FIELD_S32(0x1C) // oAction like
 #define /*0x0FC*/ oCheckerBoardPlatformUnkFC  OBJECT_FIELD_S32(0x1D)
 #define /*0x1AC*/ oCheckerBoardPlatformUnk1AC OBJECT_FIELD_F32(0x49)
+#define /*0x1B0*/ oCheckerBoardPlatformTimer  OBJECT_FIELD_U32(0x4A)
 
 /* Cheep Cheep */
 #define /*0x0F4*/ oCheepCheepUnkF4  OBJECT_FIELD_F32(0x1B)

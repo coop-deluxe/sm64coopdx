@@ -139,7 +139,7 @@ bool network_sync_object_initialized(struct Object* o) {
 
 void network_clear_sync_objects(void) {
     sNextSyncId = 0;
-    network_on_init_level();
+    network_on_init_area();
     for (u16 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         network_forget_sync_object(&gSyncObjects[i]);
     }
@@ -149,7 +149,7 @@ void network_set_sync_id(struct Object* o) {
     if (o->oSyncID != 0) { return; }
 
     u8 syncId = 0;
-    if (!gNetworkLevelLoaded) {
+    if (!gNetworkAreaLoaded) {
         // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
         for (int i = 1; i < MAX_SYNC_OBJECTS; i++) {
             sNextSyncId++;
@@ -168,7 +168,7 @@ void network_set_sync_id(struct Object* o) {
 
     o->oSyncID = syncId;
 
-    if (gNetworkLevelLoaded) {
+    if (gNetworkAreaLoaded) {
         LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
     }
 

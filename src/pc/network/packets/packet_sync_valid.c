@@ -10,7 +10,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp) {
 
     if (toNp == gNetworkPlayerLocal) {
         // the player is the server, no need to send it
-        gNetworkLevelSyncing = false;
+        gNetworkAreaSyncing = false;
         return;
     }
 
@@ -62,5 +62,5 @@ void network_receive_sync_valid(struct Packet* p) {
     }
 
     // we're no longer syncing
-    gNetworkLevelSyncing = false;
+    gNetworkAreaSyncing = false;
 }

@@ -13,7 +13,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_LLL;
+static u8 warpToLevel = LEVEL_BOB;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02

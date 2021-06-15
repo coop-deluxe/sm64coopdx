@@ -15141,6 +15141,9 @@
     <ClCompile Include="..\src\pc\network\reservation_area.c">
       <Filter>Source Files\src\pc\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_save_set_flag.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">

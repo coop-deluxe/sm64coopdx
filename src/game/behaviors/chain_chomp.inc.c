@@ -528,7 +528,7 @@ void bhv_wooden_post_update(void) {
         // chomp
         o->oWoodenPostOffsetY = -190.0f;
         if (o->parentObj != o) {
-            if (gNetworkLevelSyncing) {
+            if (gNetworkAreaSyncing) {
                 // force chain chomp cutscene ending
                 o->parentObj->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
                 o->parentObj->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_END_CUTSCENE;
