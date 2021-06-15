@@ -96,7 +96,11 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
     return true;
 }
 
-static void ns_socket_save_id(u8 localId) {
+static s64 ns_socket_get_id(u8 localId) {
+    return 0;
+}
+
+static void ns_socket_save_id(u8 localId, s64 networkId) {
     assert(localId > 0);
     assert(localId < MAX_PLAYERS);
     addr[localId] = addr[0];
@@ -139,6 +143,7 @@ static void ns_socket_shutdown(void) {
 
 struct NetworkSystem gNetworkSystemSocket = {
     .initialize = ns_socket_initialize,
+    .get_id     = ns_socket_get_id,
     .save_id    = ns_socket_save_id,
     .clear_id   = ns_socket_clear_id,
     .update     = ns_socket_update,

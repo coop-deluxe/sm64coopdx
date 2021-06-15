@@ -130,7 +130,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
             if (np->globalIndex != globalIndex) { continue; }
             np->localIndex = i;
             np->lastReceived = clock();
-            gNetworkSystem->save_id(i);
+            if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
             LOG_ERROR("player connected, reusing local %d, global %d, duplicate event?", i, globalIndex);
             return i;
         }
@@ -152,7 +152,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->globalIndex = (gNetworkType == NT_SERVER) ? i : globalIndex;
         np->type = type;
         np->lastReceived = clock();
-        gNetworkSystem->save_id(i);
+        if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
         else { chat_add_message_ext("player connected", CMT_SYSTEM, get_player_color(np->globalIndex, 0)); }

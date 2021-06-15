@@ -132,13 +132,6 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
     set_instance_env_variable();
 #endif
 
-#ifdef UNSTABLE_BRANCH
-    if (networkType != NT_NONE) {
-        // refuse to host on discord for unstable branch
-        exit(1);
-    }
-#endif
-
     if (!gDiscordInitialized) {
         // set up discord params
         struct DiscordCreateParams params;
@@ -195,6 +188,7 @@ static void ns_discord_shutdown(void) {
 
 struct NetworkSystem gNetworkSystemDiscord = {
     .initialize = ns_discord_initialize,
+    .get_id     = ns_discord_get_id,
     .save_id    = ns_discord_save_id,
     .clear_id   = ns_discord_clear_id,
     .update     = ns_discord_update,

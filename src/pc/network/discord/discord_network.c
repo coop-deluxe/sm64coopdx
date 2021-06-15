@@ -38,10 +38,14 @@ void discord_network_flush(void) {
     app.lobbies->flush_network(app.lobbies);
 }
 
-void ns_discord_save_id(u8 localId) {
+s64 ns_discord_get_id(u8 localId) {
+    return gNetworkUserIds[localId];
+}
+
+void ns_discord_save_id(u8 localId, s64 networkId) {
     assert(localId > 0);
     assert(localId < MAX_PLAYERS);
-    gNetworkUserIds[localId] = gNetworkUserIds[0];
+    gNetworkUserIds[localId] = (networkId == 0) ? gNetworkUserIds[0] : networkId;
     LOG_INFO("saved user id %d == %lld", localId, gNetworkUserIds[localId]);
 }
 

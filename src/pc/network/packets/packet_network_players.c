@@ -19,6 +19,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
         u8 npType = gNetworkPlayers[i].type;
         if (npType == NPT_LOCAL) { npType = NPT_SERVER; }
         else if (i == sendToLocalIndex) { npType = NPT_LOCAL; }
+        s64 networkId = gNetworkSystem->get_id(i);
         packet_write(&p, &npType, sizeof(u8));
         packet_write(&p, &gNetworkPlayers[i].globalIndex,        sizeof(u8));
         packet_write(&p, &gNetworkPlayers[i].currLevelAreaSeqId, sizeof(u16));
@@ -26,6 +27,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
         packet_write(&p, &gNetworkPlayers[i].currActNum,         sizeof(s16));
         packet_write(&p, &gNetworkPlayers[i].currLevelNum,       sizeof(s16));
         packet_write(&p, &gNetworkPlayers[i].currAreaIndex,      sizeof(s16));
+        packet_write(&p, &networkId,                             sizeof(s64));
         LOG_INFO("send network player [%d == %d]", gNetworkPlayers[i].globalIndex, npType);
     }
 
@@ -54,6 +56,7 @@ void network_receive_network_players(struct Packet* p) {
         u8 npType, globalIndex;
         u16 levelAreaSeqId;
         s16 courseNum, actNum, levelNum, areaIndex;
+        s64 networkId;
         packet_read(p, &npType,         sizeof(u8));
         packet_read(p, &globalIndex,    sizeof(u8));
         packet_read(p, &levelAreaSeqId, sizeof(u16));
@@ -61,6 +64,7 @@ void network_receive_network_players(struct Packet* p) {
         packet_read(p, &actNum,         sizeof(s16));
         packet_read(p, &levelNum,       sizeof(s16));
         packet_read(p, &areaIndex,      sizeof(s16));
+        packet_read(p, &networkId,      sizeof(s64));
 
         u8 localIndex = network_player_connected(npType, globalIndex);
         LOG_INFO("received network player [%d == %d] (%d)", globalIndex, npType, localIndex);
@@ -72,6 +76,9 @@ void network_receive_network_players(struct Packet* p) {
             np->currLevelNum       = levelNum;
             np->currAreaIndex      = areaIndex;
             LOG_INFO("received network player location (%d, %d, %d, %d)", courseNum, actNum, levelNum, areaIndex);
+            if (gNetworkType == NT_CLIENT && globalIndex != 0 && localIndex != 0) {
+                gNetworkSystem->save_id(localIndex, networkId);
+            }
         }
     }
 }
