@@ -35,7 +35,7 @@ static struct Object* eyerok_spawn_hand(s16 side, s32 model, const BehaviorScrip
 
 void bhv_eyerok_boss_override_ownership(u8* shouldOverride, u8* shouldOwn) {
     *shouldOverride = TRUE;
-    *shouldOwn = (gNetworkType == NT_SERVER);
+    *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
 }
 
 u8 bhv_eyerok_boss_ignore_if_true(void) {

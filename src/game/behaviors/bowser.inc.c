@@ -1305,7 +1305,7 @@ void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
     if (tiltingTimer > 0) {
         tiltingTimer--;
         *shouldOverride = TRUE;
-        *shouldOwn = (gNetworkType == NT_SERVER);
+        *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
     }
 }
 

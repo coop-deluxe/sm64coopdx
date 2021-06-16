@@ -4,7 +4,7 @@ void bhv_cannon_closed_init(void) {
     struct Object *cannon;
 
     if (save_file_is_cannon_unlocked() == 1) {
-        if (!gNetworkAreaLoaded || gNetworkType == NT_SERVER) {
+        if (!gNetworkAreaLoaded || get_network_player_smallest_global() == gNetworkPlayerLocal) {
             // If the cannon is open, spawn a cannon and despawn the object.
             cannon = spawn_object(o, MODEL_CANNON_BASE, bhvCannon);
             cannon->parentObj = cannon;
