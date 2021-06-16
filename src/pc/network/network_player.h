@@ -44,6 +44,7 @@ u8 network_player_connected_count(void);
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
 struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
+struct NetworkPlayer* get_network_player_smallest_global(void);
 void network_player_update(void);
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex);
 u8 network_player_disconnected(u8 globalIndex);

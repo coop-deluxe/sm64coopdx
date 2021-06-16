@@ -37,11 +37,11 @@ struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
 struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
-        if (!np->connected) { continue; }
-        if (!np->currLevelSyncValid) { continue; }
+        if (!np->connected)                 { continue; }
+        if (!np->currLevelSyncValid)        { continue; }
         if (np->currCourseNum != courseNum) { continue; }
-        if (np->currActNum != actNum) { continue; }
-        if (np->currLevelNum != levelNum) { continue; }
+        if (np->currActNum != actNum)       { continue; }
+        if (np->currLevelNum != levelNum)   { continue; }
         return np;
     }
     return NULL;
@@ -50,16 +50,33 @@ struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
-        if (!np->connected) { continue; }
-        if (!np->currLevelSyncValid) { continue; }
-        if (!np->currAreaSyncValid) { continue; }
+        if (!np->connected)                 { continue; }
+        if (!np->currLevelSyncValid)        { continue; }
+        if (!np->currAreaSyncValid)         { continue; }
         if (np->currCourseNum != courseNum) { continue; }
-        if (np->currActNum != actNum) { continue; }
-        if (np->currLevelNum != levelNum) { continue; }
+        if (np->currActNum    != actNum)    { continue; }
+        if (np->currLevelNum  != levelNum)  { continue; }
         if (np->currAreaIndex != areaIndex) { continue; }
         return np;
     }
     return NULL;
+}
+
+struct NetworkPlayer* get_network_player_smallest_global(void) {
+    struct NetworkPlayer* lNp = gNetworkPlayerLocal;
+    struct NetworkPlayer* smallest = gNetworkPlayerLocal;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected)                          { continue; }
+        if (!np->currLevelSyncValid)                 { continue; }
+        if (!np->currAreaSyncValid)                  { continue; }
+        if (np->currCourseNum != lNp->currCourseNum) { continue; }
+        if (np->currActNum    != lNp->currActNum)    { continue; }
+        if (np->currLevelNum  != lNp->currLevelNum)  { continue; }
+        if (np->currAreaIndex != lNp->currAreaIndex) { continue; }
+        if (np->globalIndex < smallest->globalIndex) { smallest = np; }
+    }
+    return smallest;
 }
 
 void network_player_update(void) {
@@ -109,11 +126,15 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->localIndex = 0;
         np->globalIndex = globalIndex;
         np->currLevelAreaSeqId = 0;
-        np->currCourseNum = -1;
-        np->currActNum = -1;
-        np->currLevelNum = -1;
-        np->currAreaIndex = -1;
-        np->currAreaSyncValid = false;
+
+        extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
+        np->currCourseNum      = gCurrCourseNum;
+        np->currActNum         = gCurrActStarNum;
+        np->currLevelNum       = gCurrLevelNum;
+        np->currAreaIndex      = gCurrAreaIndex;
+        np->currLevelSyncValid = false;
+        np->currAreaSyncValid  = false;
+
         gNetworkPlayerLocal = np;
 
         if (gNetworkType == NT_SERVER) {
@@ -142,11 +163,14 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         memset(np, 0, sizeof(struct NetworkPlayer));
         np->connected = true;
         np->currLevelAreaSeqId = 0;
-        np->currCourseNum = -1;
-        np->currActNum = -1;
-        np->currLevelNum = -1;
-        np->currAreaIndex = -1;
-        np->currAreaSyncValid = false;
+        if (!np->currAreaSyncValid) {
+            np->currCourseNum      = -1;
+            np->currActNum         = -1;
+            np->currLevelNum       = -1;
+            np->currAreaIndex      = -1;
+            np->currLevelSyncValid = false;
+            np->currAreaSyncValid  = false;
+        }
         np->fadeOpacity = 0;
         np->localIndex = i;
         np->globalIndex = (gNetworkType == NT_SERVER) ? i : globalIndex;
@@ -186,6 +210,12 @@ u8 network_player_disconnected(u8 globalIndex) {
         if (np->globalIndex != globalIndex) { continue; }
         if (gNetworkType == NT_SERVER) { network_send_leaving(np->globalIndex); }
         np->connected = false;
+        np->currCourseNum      = -1;
+        np->currActNum         = -1;
+        np->currLevelNum       = -1;
+        np->currAreaIndex      = -1;
+        np->currLevelSyncValid = false;
+        np->currAreaSyncValid  = false;
         gNetworkSystem->clear_id(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);

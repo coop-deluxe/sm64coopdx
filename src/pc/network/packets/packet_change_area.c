@@ -12,7 +12,6 @@ static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 act
     np->currLevelNum       = levelNum;
     np->currAreaIndex      = areaIndex;
     np->currAreaSyncValid  = false;
-    network_send_level_area_inform(np);
     reservation_area_change(np);
 
     // find a NetworkPlayer at that area
@@ -21,11 +20,14 @@ static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 act
     if (npLevelAreaMatch == NULL) {
         // no NetworkPlayer in the level
         network_send_sync_valid(np);
+        network_send_level_area_inform(np);
         return;
     }
 
     // matching NetworkPlayer is client
     network_send_area_request(np, npLevelAreaMatch);
+
+    network_send_level_area_inform(np);
 }
 
 void network_send_change_area(void) {

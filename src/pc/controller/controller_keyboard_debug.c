@@ -13,7 +13,12 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_BOB;
+static u8 warpToLevel = LEVEL_BBH;
+static u8 warpToArea = 29;
+// warpToArea: 26 = basement
+// warpToArea: 27 = upstairs
+// warpToArea: 29 = courtyard
+
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
@@ -82,17 +87,20 @@ static void debug_warp_area() {
     if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
 
     struct ObjectWarpNode* objectNode = gCurrentArea->warpNodes;
+    u8 onArea = 0;
     while (objectNode != NULL) {
         struct WarpNode* node = &objectNode->node;
-        if (node->destLevel == gCurrLevelNum && node->destArea != gCurrAreaIndex) {
-            sWarpDest.type = WARP_TYPE_CHANGE_AREA;
-            sWarpDest.levelNum = node->destLevel;
-            sWarpDest.areaIdx = node->destArea;
-            sWarpDest.nodeId = node->destNode;
-            sWarpDest.arg = 0;
+        if (gCurrCourseNum == 0 || (node->destLevel == gCurrLevelNum && node->destArea != gCurrAreaIndex)) {
+            if (gCurrCourseNum != 0 || ++onArea == warpToArea) {
+                sWarpDest.type = WARP_TYPE_CHANGE_AREA;
+                sWarpDest.levelNum = node->destLevel;
+                sWarpDest.areaIdx = node->destArea;
+                sWarpDest.nodeId = node->destNode;
+                sWarpDest.arg = 0;
 
-            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
-            return;
+                sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
+                return;
+            }
         }
         objectNode = objectNode->next;
     }

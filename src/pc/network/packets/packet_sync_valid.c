@@ -8,9 +8,12 @@ void network_send_sync_valid(struct NetworkPlayer* toNp) {
     toNp->currLevelSyncValid = true;
     toNp->currAreaSyncValid  = true;
 
-    if (toNp == gNetworkPlayerLocal) {
-        // the player is the server, no need to send it
+    if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
+        // the player is the server, no need to send sync valid
         gNetworkAreaSyncing = false;
+
+        // but we do need to send level area inform
+        network_send_level_area_inform(toNp);
         return;
     }
 
@@ -59,6 +62,11 @@ void network_receive_sync_valid(struct Packet* p) {
     if (fromGlobalIndex != gNetworkPlayerServer->globalIndex) {
         LOG_INFO("informing server of sync valid");
         network_send_sync_valid(gNetworkPlayerServer);
+    }
+
+    // inform everyone that this player is valid
+    if (gNetworkType == NT_SERVER) {
+        network_send_level_area_inform(np);
     }
 
     // we're no longer syncing

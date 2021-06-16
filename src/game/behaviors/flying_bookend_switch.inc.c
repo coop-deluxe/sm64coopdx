@@ -146,7 +146,6 @@ void bhv_bookend_spawn_loop(void) {
             if (book != NULL) {
                 book->oAction = 3;
 
-                network_set_sync_id(book);
                 struct Object* spawn_objects[] = { book };
                 u32 models[] = { MODEL_BOOKEND };
                 network_send_spawn_objects(spawn_objects, models, 1);
@@ -159,6 +158,8 @@ void bhv_bookend_spawn_loop(void) {
 }
 
 void bookshelf_manager_act_0(void) {
+    // spawn book switches
+
     s32 val04;
 
     //if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
@@ -171,13 +172,15 @@ void bookshelf_manager_act_0(void) {
 }
 
 void bookshelf_manager_act_1(void) {
+    // wait until mario is near
+
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (o->oBookSwitchManagerUnkF8 == 0) {
-        if (gNetworkType == NT_SERVER && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
+        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
             o->oBookSwitchManagerUnkF8 = 1;
             network_send_object(o);
         }
-    } else if (o->oTimer > 60 && gNetworkType == NT_SERVER) {
+    } else if (o->oTimer > 60 && o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
         o->oAction = 2;
         o->oBookSwitchManagerUnkF8 = 0;
         network_send_object(o);
@@ -185,15 +188,17 @@ void bookshelf_manager_act_1(void) {
 }
 
 void bookshelf_manager_act_2(void) {
+    // detect if we can open, and open bookshelf if we should
+
     //if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         if (o->oBookSwitchManagerUnkF4 < 0) {
             if (o->oTimer > 30) {
-                if (gNetworkType == NT_SERVER) {
+                if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                     o->oBookSwitchManagerUnkF4 = o->oBookSwitchManagerUnkF8 = 0;
                     network_send_object(o);
                 }
             } else if (o->oTimer > 10) {
-                if (gNetworkType == NT_SERVER) {
+                if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                     o->oBookSwitchManagerUnkF8 = 1;
                     network_send_object(o);
                 }
@@ -201,7 +206,7 @@ void bookshelf_manager_act_2(void) {
         } else {
             if (o->oBookSwitchManagerUnkF4 >= 3) {
                 if (o->oTimer > 100) {
-                    if (gNetworkType == NT_SERVER) {
+                    if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
                         o->parentObj->oAction = 1;
                         o->oPosX = o->parentObj->oPosX;
@@ -216,18 +221,17 @@ void bookshelf_manager_act_2(void) {
                 o->oTimer = 0;
             }
         }
-    /*} else if (gNetworkType == NT_SERVER) {
-        o->oAction = 4;
-        network_send_object(o);
-    }*/
+    //}
 }
 
 void bookshelf_manager_act_3(void) {
+    // opening bookshelf
+
     if (o->parentObj == NULL || o->parentObj->behavior != bhvHauntedBookshelf) {
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
     }
     if (o->oTimer > 85) {
-        if (gNetworkType == NT_SERVER) {
+        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
             o->oAction = 4;
             network_send_object(o);
         }
@@ -238,18 +242,32 @@ void bookshelf_manager_act_3(void) {
 }
 
 void bookshelf_manager_act_4(void) {
+    // bookshelf is done opening
+
     if (o->oBookSwitchManagerUnkF4 >= 3) {
         obj_mark_for_deletion(o);
-    } else if (gNetworkType == NT_SERVER) {
+    } else if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
         o->oAction = 0;
         network_send_object(o);
     }
+}
+
+void bhv_haunted_bookshelf_manager_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = TRUE;
+    *shouldOwn = get_network_player_smallest_global() == gNetworkPlayerLocal;
+}
+
+static u8 bhv_haunted_bookshelf_manager_ignore_if_true(void) {
+    if (o->oSyncID == 0) { return true; }
+    return gSyncObjects[o->oSyncID].owned;
 }
 
 void bhv_haunted_bookshelf_manager_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         so->syncDeathEvent = FALSE;
+        so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
+        so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->activeFlags);
         network_init_object_field(o, &o->oBookSwitchManagerUnkF8);
@@ -280,7 +298,10 @@ void bhv_haunted_bookshelf_manager_loop(void) {
 
 void bhv_book_switch_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
+        so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
+
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oBookSwitchUnkF4);
         network_init_object_field(o, &o->oIntangibleTimer);
@@ -312,7 +333,7 @@ void bhv_book_switch_loop(void) {
                 cur_obj_become_intangible();
             }
 
-            if (gNetworkType == NT_SERVER && o->oAction != 1) {
+            if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned && o->oAction != 1) {
                 o->oAction = 1;
                 network_send_object(o);
             }
@@ -324,7 +345,7 @@ void bhv_book_switch_loop(void) {
             if (approach_f32_ptr(&o->oBookSwitchUnkF4, 50.0f, 20.0f)) {
                 if (o->parentObj->oBookSwitchManagerUnkF4 >= 0 && o->oTimer > 60) {
                     if (sp3C == 1 || sp3C == 2 || sp3C == 6) {
-                        if (gNetworkType == NT_SERVER && o->oAction != 2) {
+                        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned && o->oAction != 2) {
                             o->oAction = 2;
                             network_send_object(o);
                         }
@@ -339,7 +360,7 @@ void bhv_book_switch_loop(void) {
                 if (o->oAction != 0) {
                     if (o->parentObj->oBookSwitchManagerUnkF4 == o->oBehParams2ndByte) {
                         play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gDefaultSoundArgs);
-                        if (gNetworkType == NT_SERVER) {
+                        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                             o->parentObj->oBookSwitchManagerUnkF4 += 1;
                             network_send_object(o->parentObj);
                         }
@@ -352,26 +373,25 @@ void bhv_book_switch_loop(void) {
                             sp34 = 0;
                         }
 
-                        if (gNetworkType == NT_SERVER) {
+                        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                             book = spawn_object_abs_with_rot(o, 0, MODEL_BOOKEND, bhvFlyingBookend,
                                                              0x1FC * sp36 - 0x8CA, 890, sp34, 0,
                                                              0x8000 * sp36 + 0x4000, 0);
                             if (book != NULL) {
                                 book->oAction = 3;
-                                network_set_sync_id(book);
                                 struct Object* spawn_objects[] = { book };
                                 u32 models[] = { MODEL_BOOKEND };
                                 network_send_spawn_objects(spawn_objects, models, 1);
                             }
                         }
 
-                        if (gNetworkType == NT_SERVER) {
+                        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                             o->parentObj->oBookSwitchManagerUnkF4 = -1;
                             network_send_object(o->parentObj);
                         }
                     }
 
-                    if (gNetworkType == NT_SERVER && o->oAction != 0) {
+                    if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned && o->oAction != 0) {
                         o->oAction = 0;
                         network_send_object(o);
                     }

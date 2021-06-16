@@ -128,12 +128,12 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
         // broadcast
         for (int i = 0; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
-            if (!np->connected) { continue; }
-            if (!np->currLevelSyncValid) { continue; }
+            if (!np->connected)                      { continue; }
+            if (!np->currLevelSyncValid)             { continue; }
             if (np->currCourseNum != gCurrCourseNum) { continue; }
-            if (np->currActNum != gCurrActStarNum) { continue; }
-            if (np->currLevelNum != gCurrLevelNum) { continue; }
-            if (np == gNetworkPlayerLocal) { continue; }
+            if (np->currActNum != gCurrActStarNum)   { continue; }
+            if (np->currLevelNum != gCurrLevelNum)   { continue; }
+            if (np == gNetworkPlayerLocal)           { continue; }
             struct Packet p2;
             packet_duplicate(&p, &p2);
             network_send_to(np->localIndex, &p2);
