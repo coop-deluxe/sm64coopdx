@@ -829,6 +829,7 @@
 #define /*0x0F4*/ oDDDPoleVel       OBJECT_FIELD_F32(0x1B)
 #define /*0x0F8*/ oDDDPoleMaxOffset OBJECT_FIELD_F32(0x1C)
 #define /*0x0FC*/ oDDDPoleOffset    OBJECT_FIELD_F32(0x1D)
+#define /*0x100*/ oDDDPoleTimer     OBJECT_FIELD_U32(0x1E)
 
 /* Pyramid Top */
 #define /*0x0F4*/ oPyramidTopPillarsTouched OBJECT_FIELD_S32(0x1B)
