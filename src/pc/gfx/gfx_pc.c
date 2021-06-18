@@ -186,6 +186,12 @@ static const uint8_t missing_texture[MISSING_W * MISSING_H * 4] = {
     0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,
 };
 
+//////////////////////////////////
+// forward declaration for djui //
+//////////////////////////////////
+void djui_gfx_run_dl(Gfx* cmd);
+//////////////////////////////////
+
 #ifdef EXTERNAL_DATA
 static inline size_t string_hash(const uint8_t *str) {
     size_t h = 0;
@@ -1725,6 +1731,9 @@ static void gfx_run_dl(Gfx* cmd) {
             case G_SETCIMG:
                 gfx_dp_set_color_image(C0(21, 3), C0(19, 2), C0(0, 11), seg_addr(cmd->words.w1));
                 break;
+            default:
+                djui_gfx_run_dl(cmd);
+                break;
         }
         ++cmd;
     }
@@ -1837,5 +1846,146 @@ void gfx_shutdown(void) {
     if (gfx_wapi) {
         if (gfx_wapi->shutdown) gfx_wapi->shutdown();
         gfx_wapi = NULL;
+    }
+}
+
+  /////////////////////////
+ // v custom for djui v //
+/////////////////////////
+
+static bool    sDjuiClip          = 0;
+static bool    sDjuiClipRotatedUV = 0;
+static uint8_t sDjuiClipX1        = 0;
+static uint8_t sDjuiClipY1        = 0;
+static uint8_t sDjuiClipX2        = 0;
+static uint8_t sDjuiClipY2        = 0;
+
+static bool    sDjuiOverride        = false;
+static void*   sDjuiOverrideTexture = NULL;
+static uint8_t sDjuiOverrideW       = 0;
+static uint8_t sDjuiOverrideH       = 0;
+
+static void djui_gfx_dp_set_clipping(bool rotatedUV, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
+    sDjuiClipRotatedUV = rotatedUV;
+    sDjuiClipX1 = x1;
+    sDjuiClipY1 = y1;
+    sDjuiClipX2 = x2;
+    sDjuiClipY2 = y2;
+    sDjuiClip = true;
+}
+
+static void djui_gfx_dp_execute_clipping(void) {
+    if (!sDjuiClip) { return; }
+    sDjuiClip = 0;
+
+    size_t start_index = 0;
+    size_t dest_index = 4;
+
+    float minX = rsp.loaded_vertices[start_index].x;
+    float maxX = rsp.loaded_vertices[start_index].x;
+    float minY = rsp.loaded_vertices[start_index].y;
+    float maxY = rsp.loaded_vertices[start_index].y;
+
+    float minU = rsp.loaded_vertices[start_index].u;
+    float maxU = rsp.loaded_vertices[start_index].u;
+    float minV = rsp.loaded_vertices[start_index].v;
+    float maxV = rsp.loaded_vertices[start_index].v;
+
+    for (size_t i = start_index; i < dest_index; i++) {
+        struct LoadedVertex* d = &rsp.loaded_vertices[i];
+        minX = fmin(minX, d->x);
+        maxX = fmax(maxX, d->x);
+        minY = fmin(minY, d->y);
+        maxY = fmax(maxY, d->y);
+
+        minU = fmin(minU, d->u);
+        maxU = fmax(maxU, d->u);
+        minV = fmin(minV, d->v);
+        maxV = fmax(maxV, d->v);
+    }
+
+    float midY = (minY + maxY) / 2.0f;
+    float midX = (minX + maxX) / 2.0f;
+    float midU = (minU + maxU) / 2.0f;
+    float midV = (minV + maxV) / 2.0f;
+    for (size_t i = start_index; i < dest_index; i++) {
+        struct LoadedVertex* d = &rsp.loaded_vertices[i];
+        if (d->x <= midX) {
+            d->x += (maxX - minX) * (sDjuiClipX1 / 255.0f);
+        } else {
+            d->x -= (maxX - minX) * (sDjuiClipX2 / 255.0f);
+        }
+        if (d->y <= midY) {
+            d->y += (maxY - minY) * (sDjuiClipY2 / 255.0f);
+        } else {
+            d->y -= (maxY - minY) * (sDjuiClipY1 / 255.0f);
+        }
+
+        if (sDjuiClipRotatedUV) {
+            if (d->u <= midU) {
+                d->u += (maxU - minU) * (sDjuiClipY2 / 255.0f);
+            }
+            else {
+                d->u -= (maxU - minU) * (sDjuiClipY1 / 255.0f);
+            }
+            if (d->v <= midV) {
+                d->v += (maxV - minV) * (sDjuiClipX2 / 255.0f);
+            }
+            else {
+                d->v -= (maxV - minV) * (sDjuiClipX1 / 255.0f);
+            }
+        } else {
+            if (d->u <= midU) {
+                d->u += (maxU - minU) * (sDjuiClipX1 / 255.0f);
+            } else {
+                d->u -= (maxU - minU) * (sDjuiClipX2 / 255.0f);
+            }
+            if (d->v <= midV) {
+                d->v += (maxV - minV) * (sDjuiClipY1 / 255.0f);
+            } else {
+                d->v -= (maxV - minV) * (sDjuiClipY2 / 255.0f);
+            }
+        }
+    }
+}
+
+static void djui_gfx_dp_set_override(void* texture, uint8_t w, uint8_t h) {
+    sDjuiOverrideTexture = texture;
+    sDjuiOverrideW = w;
+    sDjuiOverrideH = h;
+    sDjuiOverride = (texture != NULL);
+}
+
+static void djui_gfx_dp_execute_override(void) {
+    if (!sDjuiOverride) { return; }
+    sDjuiOverride = false;
+
+    rdp.texture_to_load.addr = sDjuiOverrideTexture;
+    rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
+    uint32_t line = (((sDjuiOverrideW * 2) + 7) >> 3);
+    rdp.texture_tile.line_size_bytes = line * 8;
+    uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
+    rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = (lrs + 1) << 1;
+}
+
+static void djui_gfx_dp_execute_djui(uint32_t opcode) {
+    switch (opcode) {
+        case G_TEXOVERRIDE_DJUI: djui_gfx_dp_execute_override(); break;
+        case G_TEXCLIP_DJUI:     djui_gfx_dp_execute_clipping(); break;
+    }
+}
+
+void djui_gfx_run_dl(Gfx* cmd) {
+    uint32_t opcode = cmd->words.w0 >> 24;
+    switch (opcode) {
+        case G_TEXCLIP_DJUI:
+            djui_gfx_dp_set_clipping(C0(0, 8), C0(16, 8), C0(8, 8), C1(16, 8), C1(8, 8));
+            break;
+        case G_TEXOVERRIDE_DJUI:
+            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), C0(16, 8), C0(8, 8));
+            break;
+        case G_EXECUTE_DJUI:
+            djui_gfx_dp_execute_djui(cmd->words.w1);
+            break;
     }
 }

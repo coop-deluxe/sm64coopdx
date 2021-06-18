@@ -26,6 +26,7 @@
 #include "macros.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
+#include "pc/djui/djui.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
@@ -414,26 +415,31 @@ void render_multi_text_string(s16 *xPos, s16 *yPos, s8 multiTextID)
 }
 #endif
 
+u8 str_ascii_char_to_dialog(char c) {
+    switch (c) {
+        case '\'': return 0x3E;
+        case '.':  return 0x3F;
+        case ',':  return DIALOG_CHAR_COMMA;
+        case '-':  return 0x9F;
+        case '(':  return 0xE1;
+        case ')':  return 0xE3;
+        case '&':  return 0xE5;
+        case '!':  return 0xF2;
+        case '%':  return 0xF3;
+        case '?':  return 0xF4;
+        case '"':  return 0xF6; // 0xF5 is opening quote
+        case '~':  return 0xF7;
+        case '*':  return 0xFB;
+        case ' ':  return DIALOG_CHAR_SPACE;
+        case '\n': return DIALOG_CHAR_NEWLINE;
+        case '\0': return DIALOG_CHAR_TERMINATOR;
+        default:   return ((u8)c < 0xF0) ? ASCII_TO_DIALOG(c) : c;
+    }
+}
+
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
     for (int i = 0; i < length; i++) {
-        switch (string[i]) {
-            case '\'': dialog[i] = 0x3E; break;
-            case '.': dialog[i] = 0x3F; break;
-            case ',': dialog[i] = DIALOG_CHAR_COMMA; break;
-            case '-': dialog[i] = 0x9F; break;
-            case '(': dialog[i] = 0xE1; break;
-            case ')': dialog[i] = 0xE3; break;
-            case '&': dialog[i] = 0xE5; break;
-            case '!': dialog[i] = 0xF2; break;
-            case '%': dialog[i] = 0xF3; break;
-            case '?': dialog[i] = 0xF4; break;
-            case '"': dialog[i] = 0xF6; break; // 0xF5 is opening quote
-            case '~': dialog[i] = 0xF7; break;
-            case '*': dialog[i] = 0xFB; break;
-            case ' ': dialog[i] = DIALOG_CHAR_SPACE; break;
-            case '\n': dialog[i] = DIALOG_CHAR_NEWLINE; break;
-            default: dialog[i] = ((u8)string[i] < 0xF0) ? ASCII_TO_DIALOG(string[i]) : string[i];
-        }
+        dialog[i] = str_ascii_char_to_dialog(string[i]);
     }
     dialog[length] = DIALOG_CHAR_TERMINATOR;
 }
@@ -3196,6 +3202,7 @@ s16 render_menus_and_dialogs() {
     create_dl_ortho_matrix();
 
     render_chat();
+    djui_render();
 
     if (gMenuMode != -1) {
         switch (gMenuMode) {
