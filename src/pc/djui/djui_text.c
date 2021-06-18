@@ -46,7 +46,6 @@ static void djui_text_translate(f32 x, f32 y) {
 
 static void djui_text_render_char(struct DjuiText* text, u8 d) {
     struct DjuiBaseRect* comp = &text->base.comp;
-    struct DjuiBaseRect* clip = &text->base.clip;
 
     f32 dX = comp->x + sTextRenderX * text->fontSize;
     f32 dY = comp->y + sTextRenderY * text->fontSize;

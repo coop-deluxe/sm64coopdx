@@ -20,53 +20,37 @@ void djui_render(void) {
         gDjuiRoot = djui_root_create();
 
         struct DjuiRect* imageContainer = djui_rect_create(&gDjuiRoot->base);
-        imageContainer->base.x      = 32;
-        imageContainer->base.y      = 32;
-        imageContainer->base.width  = 64;
-        imageContainer->base.height = 64;
+        djui_base_set_location(&imageContainer->base, 32, 32);
+        djui_base_set_size(&imageContainer->base, 64, 64);
 
         sDjuiImage = djui_image_create(&imageContainer->base, texture16x16, 16, 16);
-        sDjuiImage->base.x = 16;
-        sDjuiImage->base.y = 16;
-        sDjuiImage->base.width  = 32;
-        sDjuiImage->base.height = 32;
-        sDjuiImage->base.color.r = 255;
+        djui_base_set_location(&sDjuiImage->base, 16, 16);
+        djui_base_set_size(&sDjuiImage->base, 32, 32);
+        djui_base_set_color(&sDjuiImage->base, 255, 255, 255, 255);
 
         //////////////
 
         sDjuiRect = djui_rect_create(&gDjuiRoot->base);
-        sDjuiRect->base.x = 64;
-        sDjuiRect->base.y = 64;
-        sDjuiRect->base.width = 188;
-        sDjuiRect->base.height = 64;
-        sDjuiRect->base.color.a = 200;
-        sDjuiRect->base.hAlign = DJUI_HALIGN_LEFT;
-        sDjuiRect->base.vAlign = DJUI_VALIGN_BOTTOM;
+        djui_base_set_location(&sDjuiRect->base, 64, 64);
+        djui_base_set_size(&sDjuiRect->base, 188, 64);
+        djui_base_set_color(&sDjuiRect->base, 255, 255, 255, 200);
+        djui_base_set_alignment(&sDjuiRect->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
 
         sDjuiRect2 = djui_rect_create(&sDjuiRect->base);
-        sDjuiRect2->base.x = 0;
-        sDjuiRect2->base.y = 0;
-        //sDjuiRect2->base.color.r = 0;
-        sDjuiRect2->base.hAlign = DJUI_HALIGN_CENTER;
-        sDjuiRect2->base.vAlign = DJUI_VALIGN_CENTER;
-        sDjuiRect2->base.color.a = 255;
-        sDjuiRect2->base.width = 188 - 8;
-        sDjuiRect2->base.height = 64 - 8;
+        djui_base_set_location(&sDjuiRect2->base, 0, 0);
+        djui_base_set_size(&sDjuiRect2->base, 188 - 8, 64 - 8);
+        djui_base_set_alignment(&sDjuiRect2->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
         sDjuiText = djui_text_create(&sDjuiRect2->base, "Host");
-        sDjuiText->base.color.r = 111;
-        sDjuiText->base.color.g = 111;
-        sDjuiText->base.color.b = 111;
-        sDjuiText->fontSize = 2;
-        sDjuiText->base.color.a = 255;
-        sDjuiText->base.width = 188 - 8;
-        sDjuiText->base.height = 64 - 8;
-        sDjuiText->base.x = 0;
-        sDjuiText->base.y = 0;
-        sDjuiText->textHAlign = DJUI_HALIGN_CENTER;
-        sDjuiText->textVAlign = DJUI_VALIGN_CENTER;
+        djui_base_set_location(&sDjuiText->base, 0, 0);
+        djui_base_set_size(&sDjuiText->base, 188 - 8, 64 - 8);
+        djui_base_set_color(&sDjuiText->base, 111, 111, 111, 255);
+        djui_text_set_font_size(sDjuiText, 2);
+        djui_text_set_alignment(sDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
         sDjuiButton = djui_button_create(&gDjuiRoot->base, "button");
+        djui_base_set_alignment(&sDjuiButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+        djui_base_set_location(&sDjuiButton->base, 64, 64);
     }
 
     djui_base_render(&gDjuiRoot->base);
@@ -74,16 +58,22 @@ void djui_render(void) {
     if (sDjuiRect2 != NULL) {
         static u32 sTimer = 0;
         sTimer++;
-        sDjuiImage->base.x = 16.0f + cos((sTimer) / 10.0f) * 24.0f;
-        sDjuiImage->base.y = 16.0f + sin((sTimer) / 31.0f) * 24.0f;
-        sDjuiImage->base.color.r = 127.0 + sin((sTimer) / 13.0f) * 127.0f;
-        sDjuiImage->base.color.g = 127.0 + sin((sTimer) / 17.0f) * 127.0f;
-        sDjuiImage->base.color.b = 127.0 + sin((sTimer) / 23.0f) * 127.0f;
+        djui_base_set_location(&sDjuiImage->base,
+            16.0f + cos((sTimer) / 10.0f) * 24.0f,
+            16.0f + sin((sTimer) / 31.0f) * 24.0f);
 
-        sDjuiRect2->base.x = 32.0f + cos((sTimer) / 10.0f) * 64.0f;
-        sDjuiRect2->base.y = 32.0f + sin((sTimer) / 31.0f) * 64.0f;
+        djui_base_set_color(&sDjuiImage->base, 
+            127.0f + sin((sTimer) / 13.0f) * 127.0f,
+            127.0f + sin((sTimer) / 17.0f) * 127.0f,
+            127.0f + sin((sTimer) / 23.0f) * 127.0f,
+            255);
 
-        sDjuiButton->base.width = 200 + cos((sTimer) / 10.0f) * 64.0f;
-        sDjuiButton->base.height = 64 + sin((sTimer) / 10.0f) * 16.0f;
+        djui_base_set_location(&sDjuiRect2->base,
+            32.0f + cos((sTimer) / 10.0f) * 64.0f,
+            32.0f + sin((sTimer) / 31.0f) * 64.0f);
+
+        djui_base_set_size(&sDjuiButton->base,
+            200.0f + cos((sTimer) / 10.0f) * 64.0f,
+            64.0f + sin((sTimer) / 10.0f) * 16.0f);
     }
 }

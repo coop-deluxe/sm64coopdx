@@ -8,10 +8,8 @@ static void djui_root_render(struct DjuiBase* base) {
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
     // fill the screen
-    base->x      = 0;
-    base->y      = 0;
-    base->width  = windowWidth;
-    base->height = windowHeight;
+    djui_base_set_location(base, 0, 0);
+    djui_base_set_size(base, windowWidth, windowHeight);
 
     // compute base
     djui_base_compute(base);
@@ -32,11 +30,9 @@ struct DjuiRoot* djui_root_create(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
-    base->x = 0;
-    base->y = 0;
-    base->width = windowWidth;
-    base->height = windowHeight;
-    base->color.a = 0;
+    djui_base_set_location(base, 0, 0);
+    djui_base_set_size(base, windowWidth, windowHeight);
+    djui_base_set_color(base, 0, 0, 0, 0);
 
     return root;
 }

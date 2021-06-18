@@ -1,26 +1,28 @@
+#include <string.h>
 #include "djui.h"
 
-  ////////////////
+////////////////
  // properties //
 ////////////////
 
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y) {
-    base->x = x;
-    base->y = y;
+    base->x.value = x;
+    base->y.value = y;
+}
+
+void djui_base_set_location_type(struct DjuiBase* base, enum DjuiScreenValueType xType, enum DjuiScreenValueType yType) {
+    base->x.type = xType;
+    base->y.type = yType;
 }
 
 void djui_base_set_size(struct DjuiBase* base, f32 width, f32 height) {
-    base->width = width;
-    base->height = height;
-    base->widthFill = false;
-    base->heightFill = false;
+    base->width.value  = width;
+    base->height.value = height;
 }
 
-void djui_base_set_size_fill(struct DjuiBase* base, f32 widthScale, f32 heightScale) {
-    base->width = widthScale;
-    base->height = heightScale;
-    base->widthFill = true;
-    base->heightFill = true;
+void djui_base_set_size_type(struct DjuiBase* base, f32 widthType, f32 heightType) {
+    base->width.type  = widthType;
+    base->height.type = heightType;
 }
 
 void djui_base_set_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a) {
@@ -65,10 +67,11 @@ void djui_base_compute(struct DjuiBase* base) {
     struct DjuiBase* parent   = base->parent;
     struct DjuiBaseRect* comp = &base->comp;
 
-    f32 x      = base->x;
-    f32 y      = base->y;
-    f32 width  = base->widthFill  ? (parent->comp.width  - x) : base->width;
-    f32 height = base->heightFill ? (parent->comp.height - y) : base->height;
+    f32 x = (base->x.type == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->x.value : base->x.value;
+    f32 y = (base->y.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->y.value : base->y.value;
+
+    f32 width  = (base->width.type  == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->width.value  : base->width.value;
+    f32 height = (base->height.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->height.value : base->height.value;
 
     // horizontal alignment
     if (base->hAlign == DJUI_HALIGN_CENTER) {
@@ -188,21 +191,11 @@ void djui_base_destroy(struct DjuiBase* base) {
 }
 
 void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, void(*render)(struct DjuiBase*), void (*destroy)(struct DjuiBase*)) {
+    memset(base, 0, sizeof(struct DjuiBase));
     base->parent = parent;
-    base->child = NULL;
     base->visible = true;
-    base->x = 0;
-    base->y = 0;
-    base->width = 64;
-    base->height = 64;
-    base->widthFill = false;
-    base->heightFill = false;
-    base->color.r = 255;
-    base->color.g = 255;
-    base->color.b = 255;
-    base->color.a = 255;
-    base->hAlign = DJUI_HALIGN_LEFT;
-    base->vAlign = DJUI_VALIGN_TOP;
+    djui_base_set_size(base, 64, 64);
+    djui_base_set_color(base, 255, 255, 255, 255);
     base->render = render;
     base->destroy = destroy;
     djui_base_add_child(parent, base);

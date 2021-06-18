@@ -20,12 +20,10 @@ struct DjuiBase {
     struct DjuiBase* parent;
     struct DjuiBaseChild* child;
     bool visible;
-    f32 x;
-    f32 y;
-    f32 width;
-    f32 height;
-    bool widthFill;
-    bool heightFill;
+    struct DjuiScreenValue x;
+    struct DjuiScreenValue y;
+    struct DjuiScreenValue width;
+    struct DjuiScreenValue height;
     struct DjuiColor color;
     enum DjuiHAlign hAlign;
     enum DjuiVAlign vAlign;
@@ -36,8 +34,9 @@ struct DjuiBase {
 };
 
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y);
+void djui_base_set_location_type(struct DjuiBase* base, enum DjuiScreenValueType xType, enum DjuiScreenValueType yType);
 void djui_base_set_size(struct DjuiBase* base, f32 width, f32 height);
-void djui_base_set_size_fill(struct DjuiBase* base, f32 widthScale, f32 heightScale);
+void djui_base_set_size_type(struct DjuiBase* base, f32 widthType, f32 heightType);
 void djui_base_set_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a);
 void djui_base_set_alignment(struct DjuiBase* base, enum DjuiHAlign hAlign, enum DjuiVAlign vAlign);
 
