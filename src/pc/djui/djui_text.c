@@ -190,9 +190,6 @@ static void djui_text_render(struct DjuiBase* base) {
     sTextRenderLastX = 0;
     sTextRenderLastY = 0;
 
-    // compute base
-    djui_base_compute(base);
-
     // translate position
     f32 translatedX = comp->x;
     f32 translatedY = comp->y;

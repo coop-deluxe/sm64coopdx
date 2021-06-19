@@ -11,6 +11,8 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
 
     djui_base_init(parent, base, NULL, djui_button_destroy);
     djui_base_set_size(base, 200, 64);
+    djui_base_set_border_width(base, 2);
+    djui_base_set_border_color(base, 173, 173, 173, 255);
 
     struct DjuiRect* rect = djui_rect_create(&button->base);
     djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);

@@ -72,8 +72,8 @@ void djui_render(void) {
             32.0f + cos((sTimer) / 10.0f) * 64.0f,
             32.0f + sin((sTimer) / 31.0f) * 64.0f);
 
-        djui_base_set_size(&sDjuiButton->base,
+        /*djui_base_set_size(&sDjuiButton->base,
             200.0f + cos((sTimer) / 10.0f) * 64.0f,
-            64.0f + sin((sTimer) / 10.0f) * 16.0f);
+            64.0f + sin((sTimer) / 10.0f) * 77.0f);*/
     }
 }
