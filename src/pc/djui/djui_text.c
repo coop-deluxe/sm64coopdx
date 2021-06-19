@@ -22,6 +22,13 @@ void djui_text_set_font_size(struct DjuiText* text, f32 fontSize) {
     text->fontSize = fontSize;
 }
 
+void djui_text_set_drop_shadow(struct DjuiText* text, f32 r, f32 g, f32 b, f32 a) {
+    text->dropShadow.r = r;
+    text->dropShadow.g = g;
+    text->dropShadow.b = b;
+    text->dropShadow.a = a;
+}
+
 void djui_text_set_alignment(struct DjuiText* text, enum DjuiHAlign hAlign, enum DjuiVAlign vAlign) {
     text->textHAlign = hAlign;
     text->textVAlign = vAlign;

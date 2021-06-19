@@ -21,12 +21,14 @@ void djui_render(void) {
 
         struct DjuiRect* imageContainer = djui_rect_create(&gDjuiRoot->base);
         djui_base_set_location(&imageContainer->base, 32, 32);
-        djui_base_set_size(&imageContainer->base, 64, 64);
+        djui_base_set_size(&imageContainer->base, 128, 128);
+        djui_base_set_padding(&imageContainer->base, 32, 32, 32, 32);
 
         sDjuiImage = djui_image_create(&imageContainer->base, texture16x16, 16, 16);
-        djui_base_set_location(&sDjuiImage->base, 16, 16);
+        djui_base_set_location(&sDjuiImage->base, 0, 0);
         djui_base_set_size(&sDjuiImage->base, 32, 32);
-        djui_base_set_color(&sDjuiImage->base, 255, 255, 255, 255);
+        djui_base_set_size_type(&sDjuiImage->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+        djui_base_set_size(&sDjuiImage->base, 1.0f, 1.0f);
 
         //////////////
 
@@ -58,9 +60,9 @@ void djui_render(void) {
     if (sDjuiRect2 != NULL) {
         static u32 sTimer = 0;
         sTimer++;
-        djui_base_set_location(&sDjuiImage->base,
-            16.0f + cos((sTimer) / 10.0f) * 24.0f,
-            16.0f + sin((sTimer) / 31.0f) * 24.0f);
+        /*djui_base_set_location(&sDjuiImage->base,
+            0.0f + cos((sTimer) / 30.0f) * 128.0f,
+            0.0f + fabs(sin((sTimer) / 30.0f)) * 128.0f);*/
 
         djui_base_set_color(&sDjuiImage->base, 
             127.0f + sin((sTimer) / 13.0f) * 127.0f,

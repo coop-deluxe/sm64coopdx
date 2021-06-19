@@ -16,6 +16,14 @@ struct DjuiBaseChild {
 };
 
 #pragma pack(1)
+struct DjuiBasePadding {
+    struct DjuiScreenValue top;
+    struct DjuiScreenValue right;
+    struct DjuiScreenValue bottom;
+    struct DjuiScreenValue left;
+};
+
+#pragma pack(1)
 struct DjuiBase {
     struct DjuiBase* parent;
     struct DjuiBaseChild* child;
@@ -27,6 +35,7 @@ struct DjuiBase {
     struct DjuiColor color;
     struct DjuiScreenValue borderWidth;
     struct DjuiColor borderColor;
+    struct DjuiBasePadding padding;
     enum DjuiHAlign hAlign;
     enum DjuiVAlign vAlign;
     struct DjuiBaseRect comp;
@@ -38,11 +47,13 @@ struct DjuiBase {
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y);
 void djui_base_set_location_type(struct DjuiBase* base, enum DjuiScreenValueType xType, enum DjuiScreenValueType yType);
 void djui_base_set_size(struct DjuiBase* base, f32 width, f32 height);
-void djui_base_set_size_type(struct DjuiBase* base, f32 widthType, f32 heightType);
+void djui_base_set_size_type(struct DjuiBase* base, enum DjuiScreenValueType widthType, enum DjuiScreenValueType heightType);
 void djui_base_set_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a);
 void djui_base_set_border_width(struct DjuiBase* base, f32 width);
 void djui_base_set_border_width_type(struct DjuiBase* base, enum DjuiScreenValueType widthType);
 void djui_base_set_border_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a);
+void djui_base_set_padding(struct DjuiBase* base, f32 top, f32 right, f32 bottom, f32 left);
+void djui_base_set_padding_type(struct DjuiBase* base, enum DjuiScreenValueType topType, enum DjuiScreenValueType rightType, enum DjuiScreenValueType bottomType, enum DjuiScreenValueType leftType);
 void djui_base_set_alignment(struct DjuiBase* base, enum DjuiHAlign hAlign, enum DjuiVAlign vAlign);
 
 void djui_base_compute(struct DjuiBase* base);
