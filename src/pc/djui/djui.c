@@ -16,10 +16,13 @@ ALIGNED8 u8 texture_hand_open[] = {
 #include "textures/intro_raw/hand_open.rgba16.inc.c"
 };
 
+ALIGNED8 u8 texture_hand_closed[] = {
+#include "textures/intro_raw/hand_closed.rgba16.inc.c"
+};
+
 static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
-struct DjuiBase* gDjuiBaseHovered = NULL;
 static struct DjuiImage* sMouseCursor = NULL;
 
 // v REMOVE ME v
@@ -27,7 +30,6 @@ static struct DjuiRect*   sDjuiRect   = NULL;
 static struct DjuiRect*   sDjuiRect2  = NULL;
 static struct DjuiText*   sDjuiText   = NULL;
 static struct DjuiImage*  sDjuiImage  = NULL;
-static struct DjuiButton* sDjuiButton = NULL;
 // ^ REMOVE ME ^
 
 static void djui_init(void) {
@@ -70,9 +72,22 @@ static void djui_init(void) {
     djui_text_set_font_size(sDjuiText, 2);
     djui_text_set_alignment(sDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
-    sDjuiButton = djui_button_create(&gDjuiRoot->base, "button");
-    djui_base_set_alignment(&sDjuiButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
-    djui_base_set_location(&sDjuiButton->base, 64, 64);
+    struct DjuiRect* buttonContainer = djui_rect_create(&gDjuiRoot->base);
+    djui_base_set_alignment(&buttonContainer->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_location(&buttonContainer->base, 64, 64);
+    djui_base_set_size(&buttonContainer->base, 200 + 16, (64 + 16) * 2.0f + 16);
+    djui_base_set_color(&buttonContainer->base, 0, 0, 0, 64);
+    djui_base_set_padding(&buttonContainer->base, 16, 16, 16, 16);
+
+    struct DjuiButton* button1 = djui_button_create(&buttonContainer->base, "one");
+    djui_base_set_location(&button1->base, 0, 0);
+    djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&button1->base, 1.0f, 64);
+
+    struct DjuiButton* button2 = djui_button_create(&buttonContainer->base, "two");
+    djui_base_set_location(&button2->base, 0, 64 + 16);
+    djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&button2->base, 1.0f, 64);
 }
 
 static void djui_debug_update(void) {
@@ -91,49 +106,21 @@ static void djui_debug_update(void) {
     djui_base_set_location(&sDjuiRect2->base,
         32.0f + cos((sTimer) / 10.0f) * 64.0f,
         32.0f + sin((sTimer) / 31.0f) * 64.0f);
-
-    /*djui_base_set_size(&sDjuiButton->base,
-        200.0f + cos((sTimer) / 10.0f) * 64.0f,
-        64.0f + sin((sTimer) / 10.0f) * 77.0f);*/
-    //sDjuiButton->base.visible = (sTimer % 10) < 5;
-}
-
-static void djui_mouse_update_active(struct DjuiBase* base) {
-    if (!base->visible)      { return; }
-
-    struct DjuiBaseRect* clip = &base->clip;
-    if (mouse_window_x < clip->x)                { return; }
-    if (mouse_window_x > clip->x + clip->width)  { return; }
-    if (mouse_window_y < clip->y)                { return; }
-    if (mouse_window_y > clip->y + clip->height) { return; }
-
-    if (base->interactable != NULL) { gDjuiBaseHovered = base; }
-
-    // check all children
-    struct DjuiBaseChild* child = base->child;
-    while (child != NULL) {
-        djui_mouse_update_active(child->base);
-        child = child->next;
-    }
 }
 
 static void djui_mouse_update(void) {
 #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     controller_sdl_read_mouse_window();
 
-    struct DjuiBase* lastHovered = gDjuiBaseHovered;
-    gDjuiBaseHovered = NULL;
-    djui_mouse_update_active(&gDjuiRoot->base);
-    if (lastHovered != gDjuiBaseHovered) {
-        djui_interactable_on_hover_end(lastHovered);
-    }
-    djui_interactable_on_hover_begin(gDjuiBaseHovered);
+    djui_interactable_update();
 
+    // adjust mouse cursor
     djui_base_set_location(&sMouseCursor->base, mouse_window_x - 13, mouse_window_y - 13);
-    if (gDjuiBaseHovered) {
-        djui_base_set_color(&sMouseCursor->base, 255, 255, 255, 255);
+
+    if (mouse_window_buttons & 0b0001) {
+        djui_image_set_image(sMouseCursor, texture_hand_closed, 32, 32);
     } else {
-        djui_base_set_color(&sMouseCursor->base, 233, 233, 255, 255);
+        djui_image_set_image(sMouseCursor, texture_hand_open, 32, 32);
     }
 #endif
 }

@@ -21,7 +21,6 @@
 #include "game/ingame_menu.h"
 
 extern struct DjuiRoot* gDjuiRoot;
-extern struct DjuiBase* gDjuiBaseHovered;
 
 void djui_render_patch(void);
 void djui_render(void);
