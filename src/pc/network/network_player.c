@@ -97,14 +97,12 @@ void network_player_update(void) {
         }
     } else if (gNetworkType == NT_CLIENT) {
         bool connectionAlive = false;
-        for (int i = 1; i < MAX_PLAYERS; i++) {
-            struct NetworkPlayer* np = &gNetworkPlayers[i];
-            if (!np->connected) { continue; }
-            float elapsed = (clock() - np->lastReceived) / (float)CLOCKS_PER_SEC;
-            if (elapsed <= NETWORK_PLAYER_TIMEOUT * 1.5f) {
-                connectionAlive = true;
-                break;
-            }
+        struct NetworkPlayer* np = gNetworkPlayerServer;
+        if (!np->connected) { return; }
+        float elapsed = (clock() - np->lastReceived) / (float)CLOCKS_PER_SEC;
+        if (elapsed <= NETWORK_PLAYER_TIMEOUT * 1.5f) {
+            connectionAlive = true;
+            return;
         }
         if (!connectionAlive) {
             network_shutdown();

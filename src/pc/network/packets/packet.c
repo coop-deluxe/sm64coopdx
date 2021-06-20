@@ -71,14 +71,14 @@ void packet_process(struct Packet* p) {
 void packet_receive(struct Packet* p) {
     u8 packetType = (u8)p->buffer[0];
 
+    // send an ACK if requested
+    network_send_ack(p);
+
     // refuse packets from unknown players other than join request
     if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && packetType != PACKET_JOIN_REQUEST) {
         network_send_kick(EKT_CLOSE_CONNECTION);
         return;
     }
-
-    // send an ACK if requested
-    network_send_ack(p);
 
     // check if we've already seen this packet
     if (p->localIndex != 0 && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
