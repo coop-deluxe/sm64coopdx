@@ -38,17 +38,17 @@ void network_receive_join_request(struct Packet* p) {
 void network_send_join(struct Packet* joinRequestPacket) {
     assert(gNetworkType == NT_SERVER);
 
-    fs_file_t* fp = fs_open(SAVE_FILENAME);
-    if (fp != NULL) {
-        fs_read(fp, eeprom, 512);
-        fs_close(fp);
-    }
-
     // do connection event
     joinRequestPacket->localIndex = network_player_connected(NPT_CLIENT, joinRequestPacket->localIndex);
     if (joinRequestPacket->localIndex == UNKNOWN_LOCAL_INDEX) {
         network_send_kick(EKT_FULL_PARTY);
         return;
+    }
+
+    fs_file_t* fp = fs_open(SAVE_FILENAME);
+    if (fp != NULL) {
+        fs_read(fp, eeprom, 512);
+        fs_close(fp);
     }
 
     char version[MAX_VERSION_LENGTH] = { 0 };

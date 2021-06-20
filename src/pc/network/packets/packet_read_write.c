@@ -14,6 +14,7 @@ static u8 sCurrentOrderedSeqId = 0;
 
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
+    packet->packetType = packetType;
     packet->cursor = 0;
     packet->dataLength = 0;
     packet->error = false;
@@ -69,6 +70,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
 
 void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     memset(dstPacket->buffer, 0, PACKET_LENGTH);
+    dstPacket->packetType = srcPacket->packetType;
     dstPacket->cursor = 0;
     dstPacket->dataLength = 0;
     dstPacket->error = srcPacket->error;
@@ -90,6 +92,8 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
         dstPacket->seqId = sNextSeqNum;
         sNextSeqNum++;
         if (sNextSeqNum == 0) { sNextSeqNum++; }
+    } else {
+        dstPacket->seqId = 0;
     }
     memcpy(&dstPacket->buffer[1], &dstPacket->seqId, 2);
 

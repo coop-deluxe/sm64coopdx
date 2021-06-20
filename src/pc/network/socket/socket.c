@@ -24,10 +24,12 @@ static int socket_bind(SOCKET socket, unsigned int port) {
 static int socket_send(SOCKET socket, struct sockaddr_in* addr, u8* buffer, u16 bufferLength) {
     int addrSize = sizeof(struct sockaddr_in);
     int rc = sendto(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)addr, addrSize);
-    if (rc == SOCKET_ERROR) {
-        LOG_ERROR("sendto failed with error: %d", SOCKET_LAST_ERROR);
-    }
+    if (rc != SOCKET_ERROR) { return NO_ERROR; }
 
+    int error = SOCKET_LAST_ERROR;
+    if (error == SOCKET_EWOULDBLOCK) { return NO_ERROR; }
+
+    LOG_ERROR("sendto failed with error: %d", error);
     return rc;
 }
 
@@ -49,7 +51,7 @@ static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer,
         if (error != SOCKET_EWOULDBLOCK && error != SOCKET_ECONNRESET) {
             LOG_ERROR("recvfrom failed with error %d", SOCKET_LAST_ERROR);
         }
-        return rc;
+        return SOCKET_ERROR;
     }
 
     *receiveLength = rc;
@@ -118,10 +120,11 @@ static void ns_socket_update(void) {
     if (gNetworkType == NT_NONE) { return; }
     do {
         // receive packet
-        u8 data[PACKET_LENGTH];
+        u8 data[PACKET_LENGTH + 1];
         u16 dataLength = 0;
         u8 localIndex = UNKNOWN_LOCAL_INDEX;
-        int rc = socket_receive(curSocket, &addr[0], data, PACKET_LENGTH, &dataLength, &localIndex);
+        int rc = socket_receive(curSocket, &addr[0], data, PACKET_LENGTH + 1, &dataLength, &localIndex);
+        assert(dataLength < PACKET_LENGTH);
         if (rc != NO_ERROR) { break; }
         network_receive(localIndex, data, dataLength);
     } while (true);
@@ -132,7 +135,11 @@ static int ns_socket_send(u8 localIndex, u8* data, u16 dataLength) {
         if (gNetworkType == NT_SERVER && gNetworkPlayers[localIndex].type != NPT_CLIENT) { return SOCKET_ERROR; }
         if (gNetworkType == NT_CLIENT && gNetworkPlayers[localIndex].type != NPT_SERVER) { return SOCKET_ERROR; }
     }
-    return socket_send(curSocket, &addr[localIndex], data, dataLength);
+    int rc = socket_send(curSocket, &addr[localIndex], data, dataLength);
+    if (rc) {
+        LOG_ERROR("    localIndex: %d, packetType: %d, dataLength: %d", localIndex, data[0], dataLength);
+    }
+    return rc;
 }
 
 static void ns_socket_shutdown(void) {

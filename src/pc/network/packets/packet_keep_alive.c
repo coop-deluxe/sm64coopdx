@@ -2,15 +2,10 @@
 #include "../network.h"
 #include "pc/debuglog.h"
 
-void network_send_keep_alive(void) {
+void network_send_keep_alive(u8 localIndex) {
     struct Packet p;
     packet_init(&p, PACKET_KEEP_ALIVE, false, false);
-    if (gNetworkType == NT_SERVER) {
-        network_send(&p);
-    } else {
-        network_send_to(gNetworkPlayerServer->localIndex, &p);
-    }
-    gLastNetworkSend = clock();
+    network_send_to(localIndex, &p);
     LOG_INFO("sending keep alive");
 }
 

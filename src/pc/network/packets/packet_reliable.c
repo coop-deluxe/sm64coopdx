@@ -101,8 +101,13 @@ void network_update_reliable(void) {
         float elapsed = (clock() - node->lastSend) / CLOCKS_PER_SEC;
         float maxElapsed = (node->sendAttempts * node->sendAttempts * RELIABLE_RESEND_RATE) / ((float)MAX_RESEND_ATTEMPTS);
         if (elapsed > maxElapsed) {
+            if (node->p.packetType == PACKET_JOIN_REQUEST && gNetworkPlayerServer != NULL) {
+                node->p.localIndex = gNetworkPlayerServer->localIndex;
+            }
             // resend
+            node->p.sent = true;
             network_send_to(node->p.localIndex, &node->p);
+
             node->lastSend = clock();
             node->sendAttempts++;
             if (node->sendAttempts >= MAX_RESEND_ATTEMPTS) {

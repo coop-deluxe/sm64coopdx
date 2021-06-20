@@ -29,7 +29,6 @@ bool gNetworkAreaLoaded = false;
 bool gNetworkAreaSyncing = true;
 u32  gNetworkAreaTimer = 0;
 
-clock_t gLastNetworkSend = 0;
 struct StringLinkedList gRegisteredMods = { 0 };
 
 struct ServerSettings gServerSettings = {
@@ -114,8 +113,12 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
-    if (p->buffer[0] != PACKET_JOIN_REQUEST && p->buffer[0] != PACKET_KICK && p->buffer[0] != PACKET_ACK && gNetworkPlayerLocal != NULL && gNetworkPlayerServer->localIndex != gNetworkPlayerLocal->localIndex) {
-        assert(localIndex != gNetworkPlayerLocal->localIndex);
+    if (localIndex == 0) {
+        if (p->buffer[0] != PACKET_JOIN_REQUEST && p->buffer[0] != PACKET_KICK && p->buffer[0] != PACKET_ACK) {
+            LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
+            assert(false);
+            return;
+        }
     }
 
     if (gNetworkType == NT_SERVER) {
@@ -143,7 +146,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     network_remember_reliable(p);
 
     // set ordered data (MUST BE IMMEDITAELY BEFORE HASING+SENDING)
-    if (p->orderedGroupId != 0) {
+    if (p->orderedGroupId != 0 && !p->sent) {
         packet_set_ordered_data(p);
     }
 
@@ -156,12 +159,14 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         localIndex = gNetworkPlayerServer->localIndex;
     }
 
+    assert(p->dataLength < PACKET_LENGTH);
+
     // send
     int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
     if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
     p->sent = true;
 
-    gLastNetworkSend = clock();
+    gNetworkPlayers[localIndex].lastSent = clock();
 }
 
 void network_send(struct Packet* p) {
@@ -174,7 +179,6 @@ void network_send(struct Packet* p) {
             int i = gNetworkPlayerServer->localIndex;
             p->localIndex = i;
             network_send_to(i, p);
-            gLastNetworkSend = clock();
             return;
         }
     }
@@ -194,7 +198,6 @@ void network_send(struct Packet* p) {
         p->localIndex = i;
         network_send_to(i, p);
     }
-    gLastNetworkSend = clock();
 }
 
 void network_receive(u8 localIndex, u8* data, u16 dataLength) {

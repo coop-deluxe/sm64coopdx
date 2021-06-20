@@ -72,6 +72,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>../;../include/;../src/;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\..\build\us_pc\</OutDir>
+    <TargetName>sm64.us.f3dex2e</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

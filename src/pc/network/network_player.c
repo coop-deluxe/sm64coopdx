@@ -80,19 +80,21 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
 }
 
 void network_player_update(void) {
-    float elapsed = (clock() - gLastNetworkSend) / (float)CLOCKS_PER_SEC;
-    if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
-        network_send_keep_alive();
-    }
 
-#ifndef DEVELOPMENT
+//#ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER) {
         for (int i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
             float elapsed = (clock() - np->lastReceived) / (float)CLOCKS_PER_SEC;
             if (elapsed > NETWORK_PLAYER_TIMEOUT) {
+                LOG_INFO("dropping player %d", i);
                 network_player_disconnected(i);
+                continue;
+            }
+            elapsed = (clock() - np->lastSent) / (float)CLOCKS_PER_SEC;
+            if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
+                network_send_keep_alive(np->localIndex);
             }
         }
     } else if (gNetworkType == NT_CLIENT) {
@@ -100,15 +102,23 @@ void network_player_update(void) {
         struct NetworkPlayer* np = gNetworkPlayerServer;
         if (!np->connected) { return; }
         float elapsed = (clock() - np->lastReceived) / (float)CLOCKS_PER_SEC;
+
         if (elapsed <= NETWORK_PLAYER_TIMEOUT * 1.5f) {
             connectionAlive = true;
             return;
         }
+
         if (!connectionAlive) {
+            LOG_INFO("dropping due to no server connectivity");
             network_shutdown();
         }
+
+        elapsed = (clock() - np->lastSent) / (float)CLOCKS_PER_SEC;
+        if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
+            network_send_keep_alive(np->localIndex);
+        }
     }
-#endif
+//#endif
 }
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
@@ -149,6 +159,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
             if (np->globalIndex != globalIndex) { continue; }
             np->localIndex = i;
             np->lastReceived = clock();
+            np->lastSent = clock();
             if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
             LOG_ERROR("player connected, reusing local %d, global %d, duplicate event?", i, globalIndex);
             return i;
@@ -174,6 +185,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->globalIndex = (gNetworkType == NT_SERVER) ? i : globalIndex;
         np->type = type;
         np->lastReceived = clock();
+        np->lastSent = clock();
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }

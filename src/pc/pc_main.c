@@ -311,7 +311,9 @@ void main_func(void) {
 #ifdef DISCORDRPC
         discord_update_rich_presence();
 #endif
+#ifdef DEBUG
         fflush(stdout);
+#endif
     }
 #endif
 }

@@ -177,7 +177,7 @@ void network_send_kick(enum KickReasonType kickReason);
 void network_receive_kick(struct Packet* p);
 
 // packet_keep_alive.c
-void network_send_keep_alive(void);
+void network_send_keep_alive(u8 localIndex);
 void network_receive_keep_alive(struct Packet* p);
 
 // packet_leaving.c

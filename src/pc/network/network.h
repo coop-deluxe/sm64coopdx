@@ -86,7 +86,6 @@ extern bool gNetworkAreaSyncing;
 extern u32 gNetworkAreaTimer;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
-extern clock_t gLastNetworkSend;
 extern struct StringLinkedList gRegisteredMods;
 
 // network.c
