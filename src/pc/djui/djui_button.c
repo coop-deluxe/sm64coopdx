@@ -1,5 +1,17 @@
 #include "djui.h"
 
+static void djui_button_on_hover_begin(struct DjuiBase* base) {
+    struct DjuiButton* button = (struct DjuiButton*)base;
+    djui_base_set_border_color(base, 0, 120, 215, 255);
+    djui_base_set_color(&button->rect->base, 229, 241, 251, 255);
+}
+
+static void djui_button_on_hover_end(struct DjuiBase* base) {
+    struct DjuiButton* button = (struct DjuiButton*)base;
+    djui_base_set_border_color(base, 173, 173, 173, 255);
+    djui_base_set_color(&button->rect->base, 200, 200, 200, 255);
+}
+
 static void djui_button_destroy(struct DjuiBase* base) {
     struct DjuiButton* button = (struct DjuiButton*)base;
     free(button);
@@ -13,6 +25,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     djui_base_set_size(base, 200, 64);
     djui_base_set_border_width(base, 2);
     djui_base_set_border_color(base, 173, 173, 173, 255);
+    djui_interactable_create(base, djui_button_on_hover_begin, djui_button_on_hover_end);
 
     struct DjuiRect* rect = djui_rect_create(&button->base);
     djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);

@@ -97,6 +97,7 @@ static inline void patch_interpolations(void) {
     extern void patch_interpolated_paintings(void);
     extern void patch_interpolated_bubble_particles(void);
     extern void patch_interpolated_snow_particles(void);
+    extern void djui_render_patch(void);
     mtx_patch_interpolated();
     patch_screen_transition_interpolated();
     patch_title_screen_scales();
@@ -105,6 +106,7 @@ static inline void patch_interpolations(void) {
     patch_interpolated_paintings();
     patch_interpolated_bubble_particles();
     patch_interpolated_snow_particles();
+    djui_render_patch();
 }
 
 void produce_one_frame(void) {
@@ -311,7 +313,9 @@ void main_func(void) {
 #ifdef DISCORDRPC
         discord_update_rich_presence();
 #endif
+#ifdef DEBUG
         fflush(stdout);
+#endif
     }
 #endif
 }

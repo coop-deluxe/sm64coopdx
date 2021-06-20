@@ -40,10 +40,12 @@ struct DjuiBase {
     enum DjuiVAlign vAlign;
     struct DjuiBaseRect comp;
     struct DjuiBaseRect clip;
+    struct DjuiInteractable* interactable;
     void (*render)(struct DjuiBase*);
     void (*destroy)(struct DjuiBase*);
 };
 
+void djui_base_set_visible(struct DjuiBase* base, bool visible);
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y);
 void djui_base_set_location_type(struct DjuiBase* base, enum DjuiScreenValueType xType, enum DjuiScreenValueType yType);
 void djui_base_set_size(struct DjuiBase* base, f32 width, f32 height);

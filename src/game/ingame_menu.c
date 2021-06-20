@@ -26,7 +26,6 @@
 #include "macros.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
-#include "pc/djui/djui.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
@@ -3202,7 +3201,6 @@ s16 render_menus_and_dialogs() {
     create_dl_ortho_matrix();
 
     render_chat();
-    djui_render();
 
     if (gMenuMode != -1) {
         switch (gMenuMode) {

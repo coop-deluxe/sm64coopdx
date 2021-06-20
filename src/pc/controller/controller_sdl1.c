@@ -41,6 +41,10 @@ enum {
 int mouse_x;
 int mouse_y;
 
+int mouse_window_buttons;
+int mouse_window_x;
+int mouse_window_y;
+
 #ifdef BETTERCAMERA
 extern u8 newcam_mouse;
 #endif
@@ -236,6 +240,11 @@ static void controller_sdl_read(OSContPad *pad) {
         int stick_y = -righty / 0x100;
         pad->ext_stick_y = stick_y == 128 ? 127 : stick_y;
     }
+}
+
+void controller_sdl_read_mouse_window(void) {
+    if (!init_ok) { return; }
+    mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
 }
 
 static void controller_sdl_rumble_play(f32 strength, f32 length) { }

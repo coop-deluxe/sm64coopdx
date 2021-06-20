@@ -5,6 +5,10 @@
  // properties //
 ////////////////
 
+void djui_base_set_visible(struct DjuiBase* base, bool visible) {
+    base->visible = visible;
+}
+
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y) {
     base->x.value = x;
     base->y.value = y;
@@ -310,6 +314,12 @@ void djui_base_destroy(struct DjuiBase* base) {
         djui_base_destroy(child->base);
         free(child);
         child = nextChild->next;
+    }
+
+    // deallocate interactable
+    if (base->interactable != NULL) {
+        free(base->interactable);
+        base->interactable = NULL;
     }
 
     // destroy this

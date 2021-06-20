@@ -8,6 +8,7 @@
 #include "djui_types.h"
 #include "djui_gfx.h"
 #include "djui_base.h"
+#include "djui_interactable.h"
 
 #include "djui_root.h"
 #include "djui_rect.h"
@@ -20,5 +21,7 @@
 #include "game/ingame_menu.h"
 
 extern struct DjuiRoot* gDjuiRoot;
+extern struct DjuiBase* gDjuiBaseHovered;
 
+void djui_render_patch(void);
 void djui_render(void);

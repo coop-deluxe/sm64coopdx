@@ -14811,9 +14811,6 @@
     <ClCompile Include="..\src\pc\controller\controller_recorded_tas.c">
       <Filter>Source Files\src\pc\controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\controller\controller_sdl.c">
-      <Filter>Source Files\src\pc\controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\discord\discordrpc.c">
       <Filter>Source Files\src\pc\discord</Filter>
     </ClCompile>
@@ -15172,6 +15169,15 @@
       <Filter>Source Files\src\pc\djui\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\pc\djui\djui_button.c">
+      <Filter>Source Files\src\pc\djui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\controller\controller_sdl1.c">
+      <Filter>Source Files\src\pc\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\controller\controller_sdl2.c">
+      <Filter>Source Files\src\pc\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_interactable.c">
       <Filter>Source Files\src\pc\djui\components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -16175,6 +16181,9 @@
       <Filter>Source Files\src\pc\djui\components</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\djui\djui_button.h">
+      <Filter>Source Files\src\pc\djui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_interactable.h">
       <Filter>Source Files\src\pc\djui\components</Filter>
     </ClInclude>
   </ItemGroup>
