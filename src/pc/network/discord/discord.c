@@ -131,6 +131,12 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
 #ifdef DEBUG
     set_instance_env_variable();
 #endif
+#ifdef UNSTABLE_BRANCH
+    if (networkType != NT_NONE) {
+        // refuse to host on discord for unstable branch
+        exit(1);
+    }
+#endif
 
     if (!gDiscordInitialized) {
         // set up discord params
