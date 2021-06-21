@@ -4,7 +4,7 @@
  // events //
 ////////////
 
-static void djui_rect_render(struct DjuiBase* base) {
+void djui_rect_render(struct DjuiBase* base) {
     struct DjuiBaseRect* clip = &base->clip;
 
     // translate position

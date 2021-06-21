@@ -41,6 +41,8 @@ struct DjuiBase {
     struct DjuiBaseRect comp;
     struct DjuiBaseRect clip;
     struct DjuiInteractable* interactable;
+    void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
+    void (*on_render_pre)(struct DjuiBase*);
     void (*render)(struct DjuiBase*);
     void (*destroy)(struct DjuiBase*);
 };

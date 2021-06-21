@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "game/game_init.h"
+#include "game/ingame_menu.h"
 
 #include "djui_types.h"
 #include "djui_gfx.h"
@@ -16,9 +18,9 @@
 #include "djui_image.h"
 
 #include "djui_button.h"
+#include "djui_flow_layout.h"
 
-#include "game/game_init.h"
-#include "game/ingame_menu.h"
+#include "djui_panel_main.h"
 
 extern struct DjuiRoot* gDjuiRoot;
 

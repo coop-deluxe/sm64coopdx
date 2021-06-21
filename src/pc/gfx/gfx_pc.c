@@ -1862,17 +1862,9 @@ static uint8_t sDjuiClipY2        = 0;
 
 static bool    sDjuiOverride        = false;
 static void*   sDjuiOverrideTexture = NULL;
-static uint8_t sDjuiOverrideW       = 0;
-static uint8_t sDjuiOverrideH       = 0;
-
-static void djui_gfx_dp_set_clipping(bool rotatedUV, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
-    sDjuiClipRotatedUV = rotatedUV;
-    sDjuiClipX1 = x1;
-    sDjuiClipY1 = y1;
-    sDjuiClipX2 = x2;
-    sDjuiClipY2 = y2;
-    sDjuiClip = true;
-}
+static uint32_t sDjuiOverrideW       = 0;
+static uint32_t sDjuiOverrideH       = 0;
+static uint32_t sDjuiOverrideB       = 0;
 
 static void djui_gfx_dp_execute_clipping(void) {
     if (!sDjuiClip) { return; }
@@ -1949,23 +1941,37 @@ static void djui_gfx_dp_execute_clipping(void) {
     }
 }
 
-static void djui_gfx_dp_set_override(void* texture, uint8_t w, uint8_t h) {
-    sDjuiOverrideTexture = texture;
-    sDjuiOverrideW = w;
-    sDjuiOverrideH = h;
-    sDjuiOverride = (texture != NULL);
-}
-
 static void djui_gfx_dp_execute_override(void) {
     if (!sDjuiOverride) { return; }
     sDjuiOverride = false;
 
+    // gsDPSetTextureImage
+    uint8_t sizeLoadBlock = (sDjuiOverrideB == 32) ? 3 : 2;
     rdp.texture_to_load.addr = sDjuiOverrideTexture;
+    rdp.texture_to_load.siz = sizeLoadBlock;
+
+    // gsDPSetTile
+    rdp.texture_tile.siz = sizeLoadBlock;
+
+    // gsDPLoadBlock
+    uint32_t wordSizeShift = (sDjuiOverrideB == 32) ? 2 : 1;
+    uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
+    uint32_t sizeBytes = (lrs + 1) << wordSizeShift;
+    rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = sizeBytes;
     rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
+    rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
+
+    // gsDPSetTile
     uint32_t line = (((sDjuiOverrideW * 2) + 7) >> 3);
     rdp.texture_tile.line_size_bytes = line * 8;
-    uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = (lrs + 1) << 1;
+
+    // gsDPSetTileSize
+    /*rdp.texture_tile.uls = 0;
+    rdp.texture_tile.ult = 0;
+    rdp.texture_tile.lrs = (sDjuiOverrideW - 1) << G_TEXTURE_IMAGE_FRAC;
+    rdp.texture_tile.lrt = (sDjuiOverrideH - 1) << G_TEXTURE_IMAGE_FRAC;*/
+    rdp.textures_changed[0] = true;
+    rdp.textures_changed[1] = true;
 }
 
 static void djui_gfx_dp_execute_djui(uint32_t opcode) {
@@ -1975,6 +1981,23 @@ static void djui_gfx_dp_execute_djui(uint32_t opcode) {
     }
 }
 
+static void djui_gfx_dp_set_clipping(bool rotatedUV, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
+    sDjuiClipRotatedUV = rotatedUV;
+    sDjuiClipX1 = x1;
+    sDjuiClipY1 = y1;
+    sDjuiClipX2 = x2;
+    sDjuiClipY2 = y2;
+    sDjuiClip   = true;
+}
+
+static void djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint32_t b) {
+    sDjuiOverrideTexture = texture;
+    sDjuiOverrideW = w;
+    sDjuiOverrideH = h;
+    sDjuiOverrideB = b;
+    sDjuiOverride  = (texture != NULL);
+}
+
 void djui_gfx_run_dl(Gfx* cmd) {
     uint32_t opcode = cmd->words.w0 >> 24;
     switch (opcode) {
@@ -1982,7 +2005,7 @@ void djui_gfx_run_dl(Gfx* cmd) {
             djui_gfx_dp_set_clipping(C0(0, 8), C0(16, 8), C0(8, 8), C1(16, 8), C1(8, 8));
             break;
         case G_TEXOVERRIDE_DJUI:
-            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), C0(16, 8), C0(8, 8));
+            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(0, 8));
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);

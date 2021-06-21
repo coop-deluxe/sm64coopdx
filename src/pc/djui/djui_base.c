@@ -1,7 +1,7 @@
 #include <string.h>
 #include "djui.h"
 
-////////////////
+  ////////////////
  // properties //
 ////////////////
 
@@ -120,6 +120,9 @@ void djui_base_compute(struct DjuiBase* base) {
 
     f32 width  = (base->width.type  == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->width.value  : base->width.value;
     f32 height = (base->height.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->height.value : base->height.value;
+
+    width  = (base->width.type  == DJUI_SVT_ASPECT_RATIO) ? height * base->width.value  : width;
+    height = (base->height.type == DJUI_SVT_ASPECT_RATIO) ? width  * base->height.value : height;
 
     // horizontal alignment
     if (base->hAlign == DJUI_HALIGN_CENTER) {
@@ -252,6 +255,10 @@ static void djui_base_render_border(struct DjuiBase* base) {
 void djui_base_render(struct DjuiBase* base) {
     if (!base->visible) { return; }
 
+    if (base->on_render_pre != NULL) {
+        base->on_render_pre(base);
+    }
+
     struct DjuiBaseRect* comp = &base->comp;
     struct DjuiBaseRect* clip = &base->clip;
 
@@ -277,6 +284,11 @@ void djui_base_render(struct DjuiBase* base) {
     struct DjuiBaseChild* child = base->child;
     while (child != NULL) {
         djui_base_render(child->base);
+
+        if (base->on_child_render != NULL) {
+            base->on_child_render(base, child->base);
+        }
+
         child = child->next;
     }
 }

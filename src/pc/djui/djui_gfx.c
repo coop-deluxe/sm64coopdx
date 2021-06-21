@@ -94,8 +94,24 @@ const Gfx dl_djui_image[] = {
     gsSPEndDisplayList(),
 };
 
-void djui_gfx_render_texture(const u8* texture, u16 w, u16 h) {
-    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, w, h);
+static u8 djui_gfx_power_of_two(u32 value) {
+    switch (value) {
+        case 2:    return 1;
+        case 4:    return 2;
+        case 8:    return 3;
+        case 16:   return 4;
+        case 32:   return 5;
+        case 64:   return 6;
+        case 128:  return 7;
+        case 256:  return 8;
+        case 512:  return 9;
+        case 1024: return 10;
+        default:   return 11;
+    }
+}
+
+void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize) {
+    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
 }
 

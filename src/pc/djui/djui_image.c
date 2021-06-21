@@ -6,10 +6,11 @@
  // properties //
 ////////////////
 
-void djui_image_set_image(struct DjuiImage* image, const u8* texture, u16 textureWidth, u16 textureHeight) {
+void djui_image_set_image(struct DjuiImage* image, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
     image->texture = texture;
     image->textureWidth = textureWidth;
     image->textureHeight = textureHeight;
+    image->textureBitSize = textureBitSize;
 }
 
   ////////////
@@ -36,7 +37,7 @@ static void djui_image_render(struct DjuiBase* base) {
     // render
     if (!djui_gfx_add_clipping(base)) {
         gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
-        djui_gfx_render_texture(image->texture, image->textureWidth, image->textureHeight);
+        djui_gfx_render_texture(image->texture, image->textureWidth, image->textureHeight, image->textureBitSize);
     }
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
@@ -47,13 +48,13 @@ static void djui_image_destroy(struct DjuiBase* base) {
     free(image);
 }
 
-struct DjuiImage* djui_image_create(struct DjuiBase* parent, const u8* texture, u16 textureWidth, u16 textureHeight) {
+struct DjuiImage* djui_image_create(struct DjuiBase* parent, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
     struct DjuiImage* image = malloc(sizeof(struct DjuiImage));
     struct DjuiBase* base   = &image->base;
 
     djui_base_init(parent, base, djui_image_render, djui_image_destroy);
 
-    djui_image_set_image(image, texture, textureWidth, textureHeight);
+    djui_image_set_image(image, texture, textureWidth, textureHeight, textureBitSize);
 
     return image;
 }
