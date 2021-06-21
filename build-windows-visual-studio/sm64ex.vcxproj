@@ -3948,6 +3948,8 @@
     <ClCompile Include="..\src\pc\djui\djui_gfx.c" />
     <ClCompile Include="..\src\pc\djui\djui_image.c" />
     <ClCompile Include="..\src\pc\djui\djui_interactable.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_main.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_quit.c" />
     <ClCompile Include="..\src\pc\djui\djui_rect.c" />
     <ClCompile Include="..\src\pc\djui\djui_root.c" />
     <ClCompile Include="..\src\pc\djui\djui_text.c" />
@@ -4017,6 +4019,7 @@
     <ClCompile Include="..\src\pc\pc_main.c" />
     <ClCompile Include="..\src\pc\platform.c" />
     <ClCompile Include="..\src\pc\ultra_reimplementation.c" />
+    <ClCompile Include="..\src\pc\utils\misc.c" />
     <ClCompile Include="..\src\pc\utils\string_linked_list.c" />
     <ClCompile Include="..\text\define_courses.inc.c" />
     <ClCompile Include="..\text\define_text.inc.c" />
@@ -4370,6 +4373,8 @@
     <ClInclude Include="..\src\pc\djui\djui_gfx.h" />
     <ClInclude Include="..\src\pc\djui\djui_image.h" />
     <ClInclude Include="..\src\pc\djui\djui_interactable.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_main.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_quit.h" />
     <ClInclude Include="..\src\pc\djui\djui_rect.h" />
     <ClInclude Include="..\src\pc\djui\djui_root.h" />
     <ClInclude Include="..\src\pc\djui\djui_text.h" />
@@ -4388,6 +4393,7 @@
     <ClInclude Include="..\src\pc\network\socket\socket_linux.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_windows.h" />
     <ClInclude Include="..\src\pc\network\version.h" />
+    <ClInclude Include="..\src\pc\utils\misc.h" />
     <ClInclude Include="..\src\pc\utils\string_linked_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

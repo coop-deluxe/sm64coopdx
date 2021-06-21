@@ -9,6 +9,10 @@ void djui_base_set_visible(struct DjuiBase* base, bool visible) {
     base->visible = visible;
 }
 
+void djui_base_set_enabled(struct DjuiBase* base, bool enabled) {
+    base->enabled = enabled;
+}
+
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y) {
     base->x.value = x;
     base->y.value = y;
@@ -150,7 +154,8 @@ void djui_base_compute(struct DjuiBase* base) {
     comp->width  = width;
     comp->height = height;
 
-    //djui_base_add_padding(base);
+    base->elem = base->comp;
+
     djui_base_clip(base);
 }
 
@@ -256,7 +261,9 @@ void djui_base_render(struct DjuiBase* base) {
     if (!base->visible) { return; }
 
     if (base->on_render_pre != NULL) {
-        base->on_render_pre(base);
+        bool skipRender = false;
+        base->on_render_pre(base, &skipRender);
+        if (skipRender) { return; }
     }
 
     struct DjuiBaseRect* comp = &base->comp;
@@ -283,13 +290,14 @@ void djui_base_render(struct DjuiBase* base) {
     // render all children
     struct DjuiBaseChild* child = base->child;
     while (child != NULL) {
+        struct DjuiBaseChild* nextChild = child->next;
         djui_base_render(child->base);
 
         if (base->on_child_render != NULL) {
             base->on_child_render(base, child->base);
         }
 
-        child = child->next;
+        child = nextChild;
     }
 }
 
@@ -298,13 +306,16 @@ void djui_base_destroy(struct DjuiBase* base) {
     if (base->parent != NULL) {
         struct DjuiBaseChild* child     = base->parent->child;
         struct DjuiBaseChild* lastChild = NULL;
+        struct DjuiBaseChild* nextChild = NULL;
         while (child != NULL) {
+            nextChild = child->next;
+
             if (child->base == base) {
                 // adjust linked list
                 if (lastChild == NULL) {
-                    base->parent->child = child->next;
+                    base->parent->child = nextChild;
                 } else {
-                    lastChild->next = child->next;
+                    lastChild->next = nextChild;
                 }
                 // deallocate child node
                 free(child);
@@ -314,18 +325,18 @@ void djui_base_destroy(struct DjuiBase* base) {
 
             // iterate
             lastChild = child;
-            child = child->next;
+            child = nextChild;
         }
     }
 
     // destroy all children and our linked list
     struct DjuiBaseChild* child = base->child;
     while (child != NULL) {
-        struct DjuiBaseChild* nextChild = child;
+        struct DjuiBaseChild* nextChild = child->next;
         child->base->parent = NULL;
         djui_base_destroy(child->base);
         free(child);
-        child = nextChild->next;
+        child = nextChild;
     }
 
     // deallocate interactable
@@ -341,7 +352,8 @@ void djui_base_destroy(struct DjuiBase* base) {
 void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, void(*render)(struct DjuiBase*), void (*destroy)(struct DjuiBase*)) {
     memset(base, 0, sizeof(struct DjuiBase));
     base->parent = parent;
-    base->visible = true;
+    djui_base_set_visible(base, true);
+    djui_base_set_enabled(base, true);
     djui_base_set_size(base, 64, 64);
     djui_base_set_color(base, 255, 255, 255, 255);
     base->render = render;

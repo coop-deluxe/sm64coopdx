@@ -15189,6 +15189,15 @@
     <ClCompile Include="..\src\pc\djui\djui_button.c">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_main.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_quit.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\utils\misc.c">
+      <Filter>Source Files\src\pc\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16197,6 +16206,15 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\djui\djui_button.h">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_main.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_quit.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\utils\misc.h">
+      <Filter>Source Files\src\pc\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

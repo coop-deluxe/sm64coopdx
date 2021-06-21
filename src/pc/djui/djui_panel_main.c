@@ -4,28 +4,29 @@ ALIGNED8 static u8 texture_title[] = {
 #include "textures/segment2/custom_title.rgba32.inc.c"
 };
 
+struct DjuiRect* gPanelMainMenu = NULL;
 struct DjuiRect* sTitleContainer = NULL;
 struct DjuiFlowLayout* sButtonContainer = NULL;
 struct DjuiText* sVersionText = NULL;
 
-static void djui_panel_main_render_pre(struct DjuiBase* base) {
-    sTitleContainer->base.height.value = sButtonContainer->base.clip.y - sTitleContainer->base.clip.y;
+static void djui_panel_main_render_pre(struct DjuiBase* base, bool* skipRender) {
+    sTitleContainer->base.height.value = sButtonContainer->base.clip.y - gPanelMainMenu->base.comp.y;
     sVersionText->base.height.value = sTitleContainer->base.height.value;
 }
 
 void djui_panel_main_create(void) {
-    struct DjuiRect* menuContainer = djui_rect_create(&gDjuiRoot->base);
-    djui_base_set_size_type(&menuContainer->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&menuContainer->base, 512.0f + (16 * 2.0f), 1.0f);
-    djui_base_set_color(&menuContainer->base, 0, 0, 0, 230);
-    djui_base_set_border_color(&menuContainer->base, 0, 0, 0, 200);
-    djui_base_set_border_width(&menuContainer->base, 8);
-    djui_base_set_padding(&menuContainer->base, 16, 16, 16, 16);
+    gPanelMainMenu = djui_rect_create(&gDjuiRoot->base);
+    djui_base_set_size_type(&gPanelMainMenu->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
+    djui_base_set_size(&gPanelMainMenu->base, 512.0f + (16 * 2.0f), 1.0f);
+    djui_base_set_color(&gPanelMainMenu->base, 0, 0, 0, 230);
+    djui_base_set_border_color(&gPanelMainMenu->base, 0, 0, 0, 200);
+    djui_base_set_border_width(&gPanelMainMenu->base, 8);
+    djui_base_set_padding(&gPanelMainMenu->base, 16, 16, 16, 16);
     {
-        sButtonContainer = djui_flow_layout_create(&menuContainer->base);
+        sButtonContainer = djui_flow_layout_create(&gPanelMainMenu->base);
         djui_base_set_alignment(&sButtonContainer->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_size_type(&sButtonContainer->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&sButtonContainer->base, 1.0f, 292);
+        djui_base_set_size(&sButtonContainer->base, 1.0f, 64 * 4 + 16 * 3);
         djui_base_set_color(&sButtonContainer->base, 0, 0, 0, 0);
         djui_flow_layout_set_margin(sButtonContainer, 16);
         djui_flow_layout_set_flow_direction(sButtonContainer, DJUI_FLOW_DIR_DOWN);
@@ -45,9 +46,11 @@ void djui_panel_main_create(void) {
             struct DjuiButton* button4 = djui_button_create(&sButtonContainer->base, "Quit");
             djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button4->base, 1.0f, 64);
+            button4->base.interactable->on_click = djui_panel_quit_open;
         }
 
-        sTitleContainer = djui_rect_create(&menuContainer->base);
+        sTitleContainer = djui_rect_create(&gPanelMainMenu->base);
+        djui_base_set_alignment(&sTitleContainer->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_base_set_size_type(&sTitleContainer->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&sTitleContainer->base, 1.0f, 1.0f);
         djui_base_set_color(&sTitleContainer->base, 0, 0, 0, 0);
@@ -59,12 +62,11 @@ void djui_panel_main_create(void) {
             djui_base_set_alignment(&title->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         }
 
-        sVersionText = djui_text_create(&menuContainer->base, "version - unst 5");
-        djui_base_set_alignment(&sVersionText->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
+        sVersionText = djui_text_create(&gPanelMainMenu->base, "version - unst 5");
+        djui_base_set_alignment(&sVersionText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         djui_base_set_size_type(&sVersionText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&sVersionText->base, 1.0f, 1.0f);
         djui_base_set_color(&sVersionText->base, 50, 50, 50, 255);
         djui_text_set_alignment(sVersionText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     }
-
 }

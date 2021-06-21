@@ -25,18 +25,18 @@ static void djui_flow_layout_on_child_render(struct DjuiBase* base, struct DjuiB
     struct DjuiFlowLayout* layout = (struct DjuiFlowLayout*)base;
     switch (layout->flowDirection) {
         case DJUI_FLOW_DIR_DOWN:
-            base->comp.y      += (child->comp.height + layout->margin.value);
-            base->comp.height -= (child->comp.height + layout->margin.value);
+            base->comp.y      += (child->elem.height + layout->margin.value);
+            base->comp.height -= (child->elem.height + layout->margin.value);
             break;
         case DJUI_FLOW_DIR_UP:
-            base->comp.height -= (child->comp.height + layout->margin.value);
+            base->comp.height -= (child->elem.height + layout->margin.value);
             break;
         case DJUI_FLOW_DIR_RIGHT:
-            base->comp.x     += (child->comp.width + layout->margin.value);
-            base->comp.width -= (child->comp.width + layout->margin.value);
+            base->comp.x     += (child->elem.width + layout->margin.value);
+            base->comp.width -= (child->elem.width + layout->margin.value);
             break;
         case DJUI_FLOW_DIR_LEFT:
-            base->comp.width -= (child->comp.width + layout->margin.value);
+            base->comp.width -= (child->elem.width + layout->margin.value);
             break;
     }
 }

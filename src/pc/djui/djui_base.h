@@ -28,6 +28,7 @@ struct DjuiBase {
     struct DjuiBase* parent;
     struct DjuiBaseChild* child;
     bool visible;
+    bool enabled;
     struct DjuiScreenValue x;
     struct DjuiScreenValue y;
     struct DjuiScreenValue width;
@@ -38,16 +39,18 @@ struct DjuiBase {
     struct DjuiBasePadding padding;
     enum DjuiHAlign hAlign;
     enum DjuiVAlign vAlign;
+    struct DjuiBaseRect elem;
     struct DjuiBaseRect comp;
     struct DjuiBaseRect clip;
     struct DjuiInteractable* interactable;
     void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
-    void (*on_render_pre)(struct DjuiBase*);
+    void (*on_render_pre)(struct DjuiBase*, bool*);
     void (*render)(struct DjuiBase*);
     void (*destroy)(struct DjuiBase*);
 };
 
 void djui_base_set_visible(struct DjuiBase* base, bool visible);
+void djui_base_set_enabled(struct DjuiBase* base, bool enabled);
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y);
 void djui_base_set_location_type(struct DjuiBase* base, enum DjuiScreenValueType xType, enum DjuiScreenValueType yType);
 void djui_base_set_size(struct DjuiBase* base, f32 width, f32 height);
