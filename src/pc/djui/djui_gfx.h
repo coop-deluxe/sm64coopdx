@@ -6,11 +6,9 @@
 #define DJUI_MTX_NOPUSH 2
 
 extern const Gfx dl_djui_simple_rect[];
-extern const Gfx dl_djui_ia_text_begin[];
 extern const Gfx dl_djui_img_begin[];
 extern const Gfx dl_djui_img_end[];
 
-void djui_gfx_render_char(u8 c);
 void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize);
 
 void djui_gfx_position_translate(f32* x, f32* y);

@@ -15198,6 +15198,12 @@
     <ClCompile Include="..\src\pc\utils\misc.c">
       <Filter>Source Files\src\pc\utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_font.c">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_debug.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16215,6 +16221,12 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\utils\misc.h">
       <Filter>Source Files\src\pc\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_font.h">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_debug.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

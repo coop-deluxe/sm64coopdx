@@ -26,55 +26,11 @@ const Gfx dl_djui_simple_rect[] = {
 
 /////////////////////////////////////////////
 
-static Vtx vertex_djui_ia_char[] = {
-    {{{ 0, -16, 0}, 0, {   0, 256}, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 8, -16, 0}, 0, {   0,   0}, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 8,   0, 0}, 0, { 512,   0}, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,   0, 0}, 0, { 512, 256}, { 0xff, 0xff, 0xff, 0xff }}},
-};
-
-const Gfx dl_djui_ia_text_begin[] = {
-    gsDPPipeSync(),
-    gsSPClearGeometryMode(G_LIGHTING),
-    gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
-    gsDPSetEnvColor(255, 255, 255, 255),
-    gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
-    gsDPSetTextureFilter(G_TF_POINT),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsSPEndDisplayList(),
-};
-
-const Gfx dl_djui_ia_text_settings[] = {
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 3, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 4, G_TX_NOLOD),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, ((16 * 8 + G_IM_SIZ_4b_INCR) >> G_IM_SIZ_4b_SHIFT) - 1, CALC_DXT(16, G_IM_SIZ_4b_BYTES)),
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_4b, 1, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 3, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 4, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (16 - 1) << G_TEXTURE_IMAGE_FRAC, (8 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsSPVertex(vertex_djui_ia_char, 4, 0),
-    gsSPExecuteDjui(G_TEXCLIP_DJUI),
-    gsSP2Triangles(0,  1,  2, 0x0, 0,  2,  3, 0x0),
-    gsSPEndDisplayList(),
-};
-
-void djui_gfx_render_char(u8 c) {
-    void** fontLUT;
-    void* packedTexture;
-
-    fontLUT = segmented_to_virtual(main_font_lut);
-    packedTexture = segmented_to_virtual(fontLUT[c]);
-
-    gDPPipeSync(gDisplayListHead++);
-    gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, VIRTUAL_TO_PHYSICAL(packedTexture));
-    gSPDisplayList(gDisplayListHead++, dl_djui_ia_text_settings);
-
-}
-/////////////////////////////////////////////
-
 static const Vtx vertex_djui_image[] = {
     {{{ 0, -1, 0 }, 0, {   0, 512 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 512,   512 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, -1, 0 }, 0, { 512, 512 }, { 0xff, 0xff, 0xff, 0xff }}},
     {{{ 1,  0, 0 }, 0, { 512,   0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0,  0, 0 }, 0, { 0,     0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_image[] = {

@@ -5,19 +5,19 @@ ALIGNED8 static u8 texture_title[] = {
 };
 
 struct DjuiRect* gPanelMainMenu = NULL;
-struct DjuiRect* sTitleContainer = NULL;
 struct DjuiFlowLayout* sButtonContainer = NULL;
+struct DjuiText* sTitleText = NULL;
 struct DjuiText* sVersionText = NULL;
 
 static void djui_panel_main_render_pre(struct DjuiBase* base, bool* skipRender) {
-    sTitleContainer->base.height.value = sButtonContainer->base.clip.y - gPanelMainMenu->base.comp.y;
-    sVersionText->base.height.value = sTitleContainer->base.height.value;
+    sTitleText->base.height.value = sButtonContainer->base.clip.y - gPanelMainMenu->base.comp.y;
+    sVersionText->base.height.value = sTitleText->base.height.value;
 }
 
 void djui_panel_main_create(void) {
     gPanelMainMenu = djui_rect_create(&gDjuiRoot->base);
     djui_base_set_size_type(&gPanelMainMenu->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&gPanelMainMenu->base, 512.0f + (16 * 2.0f), 1.0f);
+    djui_base_set_size(&gPanelMainMenu->base, 350.0f + (16 * 2.0f), 1.0f);
     djui_base_set_color(&gPanelMainMenu->base, 0, 0, 0, 230);
     djui_base_set_border_color(&gPanelMainMenu->base, 0, 0, 0, 200);
     djui_base_set_border_width(&gPanelMainMenu->base, 8);
@@ -49,18 +49,16 @@ void djui_panel_main_create(void) {
             button4->base.interactable->on_click = djui_panel_quit_open;
         }
 
-        sTitleContainer = djui_rect_create(&gPanelMainMenu->base);
-        djui_base_set_alignment(&sTitleContainer->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_base_set_size_type(&sTitleContainer->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&sTitleContainer->base, 1.0f, 1.0f);
-        djui_base_set_color(&sTitleContainer->base, 0, 0, 0, 0);
-        sTitleContainer->base.on_render_pre = djui_panel_main_render_pre;
-        {
-            struct DjuiImage* title = djui_image_create(&sTitleContainer->base, texture_title, 512, 128, 32);
-            djui_base_set_size(&title->base, 1.0f, 128.0f / 512.0f);
-            djui_base_set_size_type(&title->base, DJUI_SVT_RELATIVE, DJUI_SVT_ASPECT_RATIO);
-            djui_base_set_alignment(&title->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        }
+        //sTitleText = djui_text_create(&gPanelMainMenu->base, "SM64EX\nCOOP");
+        sTitleText = djui_text_create(&gPanelMainMenu->base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP");
+        djui_base_set_alignment(&sTitleText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djui_base_set_size_type(&sTitleText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&sTitleText->base, 1.0f, 1.0f);
+        djui_base_set_color(&sTitleText->base, 255, 8, 0, 255);
+        djui_text_set_alignment(sTitleText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_text_set_font(sTitleText, &gDjuiFonts[1]);
+        djui_text_set_font_scale(sTitleText, gDjuiFonts[1].defaultFontScale);
+        sTitleText->base.on_render_pre = djui_panel_main_render_pre;
 
         sVersionText = djui_text_create(&gPanelMainMenu->base, "version - unst 5");
         djui_base_set_alignment(&sVersionText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
