@@ -1,13 +1,9 @@
 #include "djui.h"
 
-ALIGNED8 static u8 texture_title[] = {
-#include "textures/segment2/custom_title.rgba32.inc.c"
-};
-
 struct DjuiRect* gPanelMainMenu = NULL;
-struct DjuiFlowLayout* sButtonContainer = NULL;
-struct DjuiText* sTitleText = NULL;
-struct DjuiText* sVersionText = NULL;
+static struct DjuiFlowLayout* sButtonContainer = NULL;
+static struct DjuiText* sTitleText = NULL;
+static struct DjuiText* sVersionText = NULL;
 
 static void djui_panel_main_render_pre(struct DjuiBase* base, bool* skipRender) {
     sTitleText->base.height.value = sButtonContainer->base.clip.y - gPanelMainMenu->base.comp.y;
@@ -17,8 +13,8 @@ static void djui_panel_main_render_pre(struct DjuiBase* base, bool* skipRender) 
 void djui_panel_main_create(void) {
     gPanelMainMenu = djui_rect_create(&gDjuiRoot->base);
     djui_base_set_size_type(&gPanelMainMenu->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&gPanelMainMenu->base, 350.0f + (16 * 2.0f), 1.0f);
-    djui_base_set_color(&gPanelMainMenu->base, 0, 0, 0, 230);
+    djui_base_set_size(&gPanelMainMenu->base, 340.0f + (16 * 2.0f), 1.0f);
+    djui_base_set_color(&gPanelMainMenu->base, 0, 0, 0, 240);
     djui_base_set_border_color(&gPanelMainMenu->base, 0, 0, 0, 200);
     djui_base_set_border_width(&gPanelMainMenu->base, 8);
     djui_base_set_padding(&gPanelMainMenu->base, 16, 16, 16, 16);
@@ -42,6 +38,7 @@ void djui_panel_main_create(void) {
             struct DjuiButton* button3 = djui_button_create(&sButtonContainer->base, "Options");
             djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button3->base, 1.0f, 64);
+            button3->base.interactable->on_click = djui_panel_options_open;
 
             struct DjuiButton* button4 = djui_button_create(&sButtonContainer->base, "Quit");
             djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -49,7 +46,6 @@ void djui_panel_main_create(void) {
             button4->base.interactable->on_click = djui_panel_quit_open;
         }
 
-        //sTitleText = djui_text_create(&gPanelMainMenu->base, "SM64EX\nCOOP");
         sTitleText = djui_text_create(&gPanelMainMenu->base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP");
         djui_base_set_alignment(&sTitleText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_base_set_size_type(&sTitleText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

@@ -1,9 +1,9 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 
-struct DjuiRect* sPanelQuit = NULL;
-bool sOpening = false;
-bool sClosing = false;
+static struct DjuiRect* sPanelQuit = NULL;
+static bool sOpening = false;
+static bool sClosing = false;
 
 static void djui_panel_quit_render_pre(struct DjuiBase* base, bool* skipRender) {
     float yMove = gPanelMainMenu->base.elem.height;
@@ -48,7 +48,7 @@ static void djui_panel_quit_create(void) {
     sClosing = false;
     sPanelQuit = djui_rect_create(&gDjuiRoot->base);
     djui_base_set_size_type(&sPanelQuit->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&sPanelQuit->base, 350.0f + (16 * 2.0f), 1.0f);
+    djui_base_set_size(&sPanelQuit->base, 340.0f + (16 * 2.0f), 1.0f);
     djui_base_set_color(&sPanelQuit->base, 0, 0, 0, 230);
     djui_base_set_border_color(&sPanelQuit->base, 0, 0, 0, 200);
     djui_base_set_border_width(&sPanelQuit->base, 8);

@@ -2,7 +2,10 @@
 #include "djui.h"
 #include "game/segment2.h"
 
-static u8 sSavedAlpha = 0;
+static u8 sSavedR = 0;
+static u8 sSavedG = 0;
+static u8 sSavedB = 0;
+static u8 sSavedA = 0;
 
   ////////////////
  // properties //
@@ -81,7 +84,7 @@ static void djui_text_render_char(struct DjuiText* text, char c) {
         sTextRenderY += 1.0f / text->fontScale;
         gDPSetEnvColor(gDisplayListHead++, text->dropShadow.r, text->dropShadow.g, text->dropShadow.b, text->dropShadow.a);
         djui_text_render_single_char(text, c);
-        gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
+        gDPSetEnvColor(gDisplayListHead++, sSavedR, sSavedG, sSavedB, sSavedA);
         sTextRenderX -= 1.0f / text->fontScale;
         sTextRenderY -= 1.0f / text->fontScale;
     }
@@ -187,11 +190,16 @@ static int djui_text_render_line_parse_escape(struct DjuiText* text, u16 startIn
 
     if (parsingColor) {
         if (colorPieces == 6) {
-            gDPSetEnvColor(gDisplayListHead++, ((color >> 16) & 0xFF), ((color >>  8) & 0xFF), ((color >> 0) & 0xFF), sSavedAlpha);
+            sSavedR = ((color >> 16) & 0xFF);
+            sSavedG = ((color >>  8) & 0xFF);
+            sSavedB = ((color >>  0) & 0xFF);
         } else if (colorPieces == 8) {
-            gDPSetEnvColor(gDisplayListHead++, ((color >> 24) & 0xFF), ((color >> 16) & 0xFF), ((color >> 8) & 0xFF), ((color >> 0) & 0xFF));
-            sSavedAlpha = ((color << 0) & 0xFF);
+            sSavedR = ((color >> 24) & 0xFF);
+            sSavedG = ((color >> 16) & 0xFF);
+            sSavedB = ((color >>  8) & 0xFF);
+            sSavedA = ((color >>  0) & 0xFF);
         }
+        gDPSetEnvColor(gDisplayListHead++, sSavedR, sSavedG, sSavedB, sSavedA);
     }
 
     return i;
@@ -284,7 +292,10 @@ static void djui_text_render(struct DjuiBase* base) {
 
     // set color
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
-    sSavedAlpha = base->color.a;
+    sSavedR = base->color.r;
+    sSavedG = base->color.g;
+    sSavedB = base->color.b;
+    sSavedA = base->color.a;
 
     // count lines
     u16 startIndex = 0;
@@ -349,6 +360,7 @@ struct DjuiText* djui_text_create(struct DjuiBase* parent, const char* message) 
     djui_text_set_font_scale(text, text->font->defaultFontScale);
     djui_text_set_text(text, message);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+    djui_text_set_drop_shadow(text, 0, 0, 0, 0);
 
     return text;
 }

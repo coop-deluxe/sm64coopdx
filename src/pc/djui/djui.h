@@ -23,6 +23,7 @@
 
 #include "djui_panel_debug.h"
 #include "djui_panel_main.h"
+#include "djui_panel_options.h"
 #include "djui_panel_quit.h"
 
 extern struct DjuiRoot* gDjuiRoot;
