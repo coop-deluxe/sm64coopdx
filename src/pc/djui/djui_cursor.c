@@ -14,6 +14,8 @@ ALIGNED8 static u8 texture_hand_closed[] = {
 static struct DjuiImage* sMouseCursor = NULL;
 
 static bool sCursorMouseControlled = false;
+static struct DjuiBase* sInputControlledBase = NULL;
+
 static f32 sSavedMouseX = 0;
 static f32 sSavedMouseY = 0;
 static f32 sCursorX = 0;
@@ -31,6 +33,17 @@ bool djui_cursor_inside_base(struct DjuiBase* base) {
 static void djui_cursor_base_hover_location(struct DjuiBase* base, f32* x, f32* y) {
     *x = (base->elem.x + base->elem.width  * 3.0f / 4.0f);
     *y = (base->elem.y + base->elem.height * 3.0f / 4.0f);
+}
+
+void djui_cursor_input_controlled_center(struct DjuiBase* base) {
+    if (!sCursorMouseControlled) {
+        sInputControlledBase = base;
+        if (sMouseCursor != NULL) {
+            djui_base_set_visible(&sMouseCursor->base, (base != NULL));
+        }
+        sSavedMouseX = mouse_window_x;
+        sSavedMouseY = mouse_window_y;
+    }
 }
 
 static f32 djui_cursor_base_distance(struct DjuiBase* base) {
@@ -80,12 +93,8 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
     struct DjuiBase* pick = NULL;
     djui_cursor_move_check(xDir, yDir, &pick, &gDjuiRoot->base);
     if (pick != NULL) {
-        if (sCursorMouseControlled) {
-            sCursorMouseControlled = false;
-            sSavedMouseX = sCursorX;
-            sSavedMouseY = sCursorY;
-        }
-        djui_cursor_base_hover_location(pick, &sCursorX, &sCursorY);
+        sCursorMouseControlled = false;
+        djui_cursor_input_controlled_center(pick);
     }
 }
 
@@ -94,16 +103,18 @@ void djui_cursor_update(void) {
     controller_sdl_read_mouse_window();
 
     // adjust mouse cursor
-    if (!sCursorMouseControlled) {
-        f32 dist = sqrtf(powf(mouse_window_x - sSavedMouseX, 2) + powf(mouse_window_y - sSavedMouseY, 2));
-        if (dist > 2) {
-            sCursorMouseControlled = true;
-        }
-    }
     if (sCursorMouseControlled) {
         sCursorX = mouse_window_x;
         sCursorY = mouse_window_y;
+    } else if (sInputControlledBase != NULL) {
+        djui_cursor_base_hover_location(sInputControlledBase, &sCursorX, &sCursorY);
+        f32 dist = sqrtf(powf(mouse_window_x - sSavedMouseX, 2) + powf(mouse_window_y - sSavedMouseY, 2));
+        if (dist > 5) {
+            sCursorMouseControlled = true;
+            djui_base_set_visible(&sMouseCursor->base, true);
+        }
     }
+
     djui_base_set_location(&sMouseCursor->base, sCursorX - 13, sCursorY - 13);
 
     if (mouse_window_buttons & 0b0001) {

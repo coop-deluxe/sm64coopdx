@@ -4,6 +4,8 @@
 static struct DjuiRect* sPanelOptions = NULL;
 static struct DjuiFlowLayout* sButtonContainer = NULL;
 static struct DjuiText* sTitleText = NULL;
+static struct DjuiButton* sButtonBack = NULL;
+static struct DjuiBase* sCaller = NULL;
 static bool sOpening = false;
 static bool sClosing = false;
 
@@ -18,6 +20,7 @@ static void djui_panel_options_render_pre(struct DjuiBase* base, bool* skipRende
             movement = yMove;
             sOpening = false;
             djui_base_set_enabled(&sPanelOptions->base, true);
+            djui_cursor_input_controlled_center(&sButtonBack->base);
         }
     } else if (sClosing) {
         movement -= yMove / 10.0f;
@@ -29,11 +32,13 @@ static void djui_panel_options_render_pre(struct DjuiBase* base, bool* skipRende
             *skipRender = true;
             djui_base_set_enabled(&gPanelMainMenu->base, true);
             gPanelMainMenu->base.y.value = 0;
+            djui_cursor_input_controlled_center(sCaller);
             return;
         }
     } else {
         movement = yMove;
     }
+
     gPanelMainMenu->base.y.value = yMove * smoothstep(0, yMove, movement);
     sPanelOptions->base.y.value = gPanelMainMenu->base.elem.y - sPanelOptions->base.elem.height;
 }
@@ -41,6 +46,7 @@ static void djui_panel_options_render_pre(struct DjuiBase* base, bool* skipRende
 static void djui_panel_options_back(struct DjuiBase* base) {
     sClosing = true;
     djui_base_set_enabled(&sPanelOptions->base, false);
+    djui_cursor_input_controlled_center(NULL);
 }
 
 void djui_panel_options_create(void) {
@@ -83,10 +89,10 @@ void djui_panel_options_create(void) {
             djui_base_set_size_type(&button5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button5->base, 1.0f, 64);
 
-            struct DjuiButton* button6 = djui_button_create(&sButtonContainer->base, "Back");
-            djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button6->base, 1.0f, 64);
-            button6->base.interactable->on_click = djui_panel_options_back;
+            sButtonBack = djui_button_create(&sButtonContainer->base, "Back");
+            djui_base_set_size_type(&sButtonBack->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&sButtonBack->base, 1.0f, 64);
+            sButtonBack->base.interactable->on_click = djui_panel_options_back;
         }
 
         sTitleText = djui_text_create(&sPanelOptions->base, "\\#ff0800\\O\\#1be700\\P\\#00b3ff\\T\\#ffef00\\I\\#ff0800\\O\\#1be700\\N\\#00b3ff\\S");
@@ -101,6 +107,8 @@ void djui_panel_options_create(void) {
 }
 
 void djui_panel_options_open(struct DjuiBase* caller) {
+    sCaller = caller;
+    djui_cursor_input_controlled_center(NULL);
     djui_base_set_enabled(&gPanelMainMenu->base, false);
     djui_panel_options_create();
 }

@@ -30,6 +30,7 @@ void djui_panel_main_create(void) {
             struct DjuiButton* button1 = djui_button_create(&sButtonContainer->base, "Host");
             djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button1->base, 1.0f, 64);
+            djui_cursor_input_controlled_center(&button1->base);
 
             struct DjuiButton* button2 = djui_button_create(&sButtonContainer->base, "Join");
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
