@@ -14,6 +14,7 @@
 #include "djui_interactable.h"
 
 #include "djui_root.h"
+#include "djui_cursor.h"
 #include "djui_rect.h"
 #include "djui_text.h"
 #include "djui_image.h"

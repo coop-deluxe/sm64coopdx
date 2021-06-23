@@ -3944,6 +3944,7 @@
     <ClCompile Include="..\src\pc\djui\djui.c" />
     <ClCompile Include="..\src\pc\djui\djui_base.c" />
     <ClCompile Include="..\src\pc\djui\djui_button.c" />
+    <ClCompile Include="..\src\pc\djui\djui_cursor.c" />
     <ClCompile Include="..\src\pc\djui\djui_flow_layout.c" />
     <ClCompile Include="..\src\pc\djui\djui_font.c" />
     <ClCompile Include="..\src\pc\djui\djui_gfx.c" />
@@ -4371,6 +4372,7 @@
     <ClInclude Include="..\src\pc\djui\djui.h" />
     <ClInclude Include="..\src\pc\djui\djui_base.h" />
     <ClInclude Include="..\src\pc\djui\djui_button.h" />
+    <ClInclude Include="..\src\pc\djui\djui_cursor.h" />
     <ClInclude Include="..\src\pc\djui\djui_flow_layout.h" />
     <ClInclude Include="..\src\pc\djui\djui_font.h" />
     <ClInclude Include="..\src\pc\djui\djui_gbi.h" />
