@@ -3957,6 +3957,7 @@
     <ClCompile Include="..\src\pc\djui\djui_rect.c" />
     <ClCompile Include="..\src\pc\djui\djui_root.c" />
     <ClCompile Include="..\src\pc\djui\djui_text.c" />
+    <ClCompile Include="..\src\pc\djui\djui_three_panel.c" />
     <ClCompile Include="..\src\pc\fs\dirtree.c" />
     <ClCompile Include="..\src\pc\fs\fs.c" />
     <ClCompile Include="..\src\pc\fs\fs_packtype_dir.c" />
@@ -4386,6 +4387,7 @@
     <ClInclude Include="..\src\pc\djui\djui_rect.h" />
     <ClInclude Include="..\src\pc\djui\djui_root.h" />
     <ClInclude Include="..\src\pc\djui\djui_text.h" />
+    <ClInclude Include="..\src\pc\djui\djui_three_panel.h" />
     <ClInclude Include="..\src\pc\djui\djui_types.h" />
     <ClInclude Include="..\src\pc\network\branch.h" />
     <ClInclude Include="..\src\pc\network\discord\activity.h" />

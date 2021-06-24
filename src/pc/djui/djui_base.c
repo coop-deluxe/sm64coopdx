@@ -154,7 +154,11 @@ void djui_base_compute(struct DjuiBase* base) {
     comp->width  = width;
     comp->height = height;
 
-    base->elem = base->comp;
+    struct DjuiBaseRect* elem = &base->elem;
+    elem->x      = x;
+    elem->y      = y;
+    elem->width  = width;
+    elem->height = height;
 
     djui_base_clip(base);
 }

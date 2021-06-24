@@ -97,7 +97,7 @@ static f32 djui_font_title_char_width(char c) {
 
 static const struct DjuiFont sDjuiFontTitle = {
     .charWidth            = 1.0f,
-    .charHeight           = 1.0f,
+    .charHeight           = 0.9f,
     .lineHeight           = 0.7f,
     .defaultFontScale     = 64.0f,
     .rotatedUV            = false,

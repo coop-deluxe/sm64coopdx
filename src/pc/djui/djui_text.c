@@ -113,9 +113,9 @@ static void djui_text_read_line(struct DjuiText* text, u16* index, f32* lineWidt
     *lineWidth = 0;
     char lastC = '\0';
 
-    f32 ellipsesWidth = gDialogCharWidths[0x3F] * 3.0f;
+    /*f32 ellipsesWidth = gDialogCharWidths[0x3F] * 3.0f;
     u16 lastSafeEllipsesIndex = *index;
-    u16 lastSafeEllipsesLineWidth = *lineWidth + ellipsesWidth;
+    u16 lastSafeEllipsesLineWidth = *lineWidth + ellipsesWidth;*/
 
     bool skipping = false;
     while (message[*index] != '\0') {
@@ -152,21 +152,21 @@ static void djui_text_read_line(struct DjuiText* text, u16* index, f32* lineWidt
         *lineWidth += charWidth;
 
         // check for safe ellipses index
-        if (onLastLine && ((*lineWidth + ellipsesWidth) < maxLineWidth)) {
+        /*if (onLastLine && ((*lineWidth + ellipsesWidth) < maxLineWidth)) {
             lastSafeEllipsesIndex = *index;
             lastSafeEllipsesLineWidth = *lineWidth + ellipsesWidth;
-        }
+        }*/
 
         *index = *index + 1;
         lastC = c;
     }
 
     // check to see if we should replace the end of the last line with ellipses
-    if (onLastLine && message[*index] != '\0') {
+    /*if (onLastLine && message[*index] != '\0') {
         *index = lastSafeEllipsesIndex;
         *lineWidth = lastSafeEllipsesLineWidth;
         *ellipses = true;
-    }
+    }*/
 }
 
 static int djui_text_render_line_parse_escape(struct DjuiText* text, u16 startIndex, u16 endIndex) {

@@ -18,6 +18,7 @@
 #include "djui_rect.h"
 #include "djui_text.h"
 #include "djui_image.h"
+#include "djui_three_panel.h"
 
 #include "djui_button.h"
 #include "djui_flow_layout.h"
