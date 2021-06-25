@@ -22,6 +22,7 @@
 
 #include "djui_button.h"
 #include "djui_flow_layout.h"
+#include "djui_slider.h"
 
 #include "djui_panel.h"
 #include "djui_panel_debug.h"

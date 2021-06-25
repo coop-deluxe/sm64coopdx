@@ -15219,6 +15219,9 @@
     <ClCompile Include="..\src\pc\djui\djui_panel.c">
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_slider.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16257,6 +16260,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\djui\djui_panel.h">
       <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_slider.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

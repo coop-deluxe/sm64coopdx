@@ -1,4 +1,5 @@
 #include "djui.h"
+#include "src/pc/controller/controller_sdl.h"
 
 void djui_panel_main_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 4 + 16 * 3;
@@ -46,7 +47,8 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             button4->base.interactable->on_click = djui_panel_quit_create;
         }
 
-        struct DjuiText* footer = djui_text_create(&panel->base, "version - unst 5");
+        char* version = get_version();
+        struct DjuiText* footer = djui_text_create(&panel->base, version);
         djui_base_set_size_type(&footer->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&footer->base, 1.0f, 1.0f);
         djui_base_set_color(&footer->base, 50, 50, 50, 255);
@@ -54,4 +56,5 @@ void djui_panel_main_create(struct DjuiBase* caller) {
     }
 
     djui_panel_add(caller, &panel->base, &buttonHost->base);
+    gInteractableOverridePad = true;
 }

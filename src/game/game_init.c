@@ -21,6 +21,7 @@
 #include "segment_symbols.h"
 #include "thread6.h"
 #include "rng_position.h"
+#include "src/pc/djui/djui.h"
 #include <prevent_bss_reordering.h>
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
@@ -463,7 +464,7 @@ void read_controller_inputs(void) {
     // controller information.
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
-        osContGetReadData(&gControllerPads[0]);
+        osContGetReadData(gInteractableOverridePad ? &gInteractablePad : &gControllerPads[0]);
     }
     run_demo_inputs();
 
