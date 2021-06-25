@@ -23,9 +23,11 @@
 #include "djui_button.h"
 #include "djui_flow_layout.h"
 
+#include "djui_panel.h"
 #include "djui_panel_debug.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
+#include "djui_panel_sound.h"
 #include "djui_panel_quit.h"
 
 extern struct DjuiRoot* gDjuiRoot;

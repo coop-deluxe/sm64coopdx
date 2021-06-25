@@ -1,6 +1,4 @@
 #pragma once
 #include "djui.h"
 
-extern struct DjuiThreePanel* gPanelMainMenu;
-
-void djui_panel_main_create(void);
+void djui_panel_main_create(struct DjuiBase* caller);

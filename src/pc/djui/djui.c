@@ -9,7 +9,7 @@ struct DjuiFlowLayout* buttonContainer;
 static void djui_init(void) {
     gDjuiRoot = djui_root_create();
 
-    djui_panel_main_create();
+    djui_panel_main_create(NULL);
     //djui_panel_debug_create();
     djui_cursor_create();
 }
@@ -27,6 +27,8 @@ void djui_render(void) {
     if (gDjuiRoot == NULL) { djui_init(); }
     sSavedDisplayListHead = gDisplayListHead;
     create_dl_ortho_matrix();
+
+    djui_panel_update();
 
     djui_base_render(&gDjuiRoot->base);
 

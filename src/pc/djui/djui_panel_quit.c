@@ -1,70 +1,29 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 
-static struct DjuiThreePanel* sPanelQuit = NULL;
-static struct DjuiButton* sButtonNo = NULL;
-static struct DjuiBase* sCaller = NULL;
-static bool sOpening = false;
-static bool sClosing = false;
-
-static void djui_panel_quit_render_pre(struct DjuiBase* base, bool* skipRender) {
-    float yMove = gPanelMainMenu->base.elem.height;
-    static float movement = 0;
-    if (sOpening) {
-        movement += yMove / 10.0f;
-        if (movement >= yMove) {
-            movement = yMove;
-            sOpening = false;
-            djui_base_set_enabled(&sPanelQuit->base, true);
-            djui_cursor_input_controlled_center(&sButtonNo->base);
-        }
-    } else if (sClosing) {
-        movement -= yMove / 10.0f;
-        if (movement <= 0) {
-            movement = 0;
-            sClosing = false;
-            djui_base_destroy(&sPanelQuit->base);
-            sPanelQuit = NULL;
-            *skipRender = true;
-            djui_base_set_enabled(&gPanelMainMenu->base, true);
-            gPanelMainMenu->base.y.value = 0;
-            djui_cursor_input_controlled_center(sCaller);
-            return;
-        }
-    } else {
-        movement = yMove;
-    }
-    gPanelMainMenu->base.y.value = -yMove * smoothstep(0, yMove, movement);
-    sPanelQuit->base.y.value = gPanelMainMenu->base.elem.y + gPanelMainMenu->base.elem.height;
-}
-
 static void djui_panel_quit_yes(struct DjuiBase* base) {
     exit(0);
 }
 
 static void djui_panel_quit_no(struct DjuiBase* base) {
-    sClosing = true;
-    djui_base_set_enabled(&sPanelQuit->base, false);
-    djui_cursor_input_controlled_center(NULL);
+    djui_panel_back();
 }
 
-static void djui_panel_quit_create(void) {
+void djui_panel_quit_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 3 + 16 * 2;
-    sOpening = true;
-    sClosing = false;
 
-    sPanelQuit = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
-    djui_base_set_size_type(&sPanelQuit->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&sPanelQuit->base, 340.0f + (16 * 2.0f), 1.0f);
-    djui_base_set_color(&sPanelQuit->base, 0, 0, 0, 230);
-    djui_base_set_border_color(&sPanelQuit->base, 0, 0, 0, 200);
-    djui_base_set_border_width(&sPanelQuit->base, 8);
-    djui_base_set_padding(&sPanelQuit->base, 16, 16, 16, 16);
-    djui_base_set_enabled(&sPanelQuit->base, false);
-    sPanelQuit->base.on_render_pre = djui_panel_quit_render_pre;
+    struct DjuiButton* buttonNo = NULL;
+
+    struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
+    djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
+    djui_base_set_size(&panel->base, 340.0f + (16 * 2.0f), 1.0f);
+    djui_base_set_color(&panel->base, 0, 0, 0, 230);
+    djui_base_set_border_color(&panel->base, 0, 0, 0, 200);
+    djui_base_set_border_width(&panel->base, 8);
+    djui_base_set_padding(&panel->base, 16, 16, 16, 16);
+    djui_base_set_enabled(&panel->base, false);
     {
-        struct DjuiText* header = djui_text_create(&sPanelQuit->base, "\\#ff0800\\Q\\#1be700\\U\\#00b3ff\\I\\#ffef00\\T");
-        djui_base_set_alignment(&header->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        struct DjuiText* header = djui_text_create(&panel->base, "\\#ff0800\\Q\\#1be700\\U\\#00b3ff\\I\\#ffef00\\T");
         djui_base_set_size_type(&header->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&header->base, 1.0f, 1.0f);
         djui_base_set_color(&header->base, 255, 8, 0, 255);
@@ -72,7 +31,7 @@ static void djui_panel_quit_create(void) {
         djui_text_set_font(header, &gDjuiFonts[1]);
         djui_text_set_font_scale(header, gDjuiFonts[1].defaultFontScale);
 
-        struct DjuiFlowLayout* body = djui_flow_layout_create(&sPanelQuit->base);
+        struct DjuiFlowLayout* body = djui_flow_layout_create(&panel->base);
         djui_base_set_alignment(&body->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_size_type(&body->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&body->base, 1.0f, bodyHeight);
@@ -91,17 +50,12 @@ static void djui_panel_quit_create(void) {
             djui_base_set_size(&button1->base, 1.0f, 64);
             button1->base.interactable->on_click = djui_panel_quit_yes;
 
-            sButtonNo = djui_button_create(&body->base, "No");
-            djui_base_set_size_type(&sButtonNo->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&sButtonNo->base, 1.0f, 64);
-            sButtonNo->base.interactable->on_click = djui_panel_quit_no;
+            buttonNo = djui_button_create(&body->base, "No");
+            djui_base_set_size_type(&buttonNo->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&buttonNo->base, 1.0f, 64);
+            buttonNo->base.interactable->on_click = djui_panel_quit_no;
         }
     }
-}
 
-void djui_panel_quit_open(struct DjuiBase* caller) {
-    sCaller = caller;
-    djui_cursor_input_controlled_center(NULL);
-    djui_base_set_enabled(&gPanelMainMenu->base, false);
-    djui_panel_quit_create();
+    djui_panel_add(caller, &panel->base, &buttonNo->base);
 }

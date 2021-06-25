@@ -106,8 +106,10 @@ void djui_cursor_update(void) {
     if (sCursorMouseControlled) {
         sCursorX = mouse_window_x;
         sCursorY = mouse_window_y;
-    } else if (sInputControlledBase != NULL) {
-        djui_cursor_base_hover_location(sInputControlledBase, &sCursorX, &sCursorY);
+    } else {
+        if (sInputControlledBase != NULL) {
+            djui_cursor_base_hover_location(sInputControlledBase, &sCursorX, &sCursorY);
+        }
         f32 dist = sqrtf(powf(mouse_window_x - sSavedMouseX, 2) + powf(mouse_window_y - sSavedMouseY, 2));
         if (dist > 5) {
             sCursorMouseControlled = true;
