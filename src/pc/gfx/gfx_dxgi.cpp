@@ -161,8 +161,6 @@ static void toggle_borderless_window_full_screen(bool enable) {
             ShowWindow(dxgi.h_wnd, SW_RESTORE);
         }
 
-        ShowCursor(TRUE);
-
         dxgi.is_full_screen = false;
     } else {
         // Save if window is maximized or not
@@ -190,8 +188,6 @@ static void toggle_borderless_window_full_screen(bool enable) {
         // Set borderless full screen to that monitor
         SetWindowLongPtr(dxgi.h_wnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
         SetWindowPos(dxgi.h_wnd, HWND_TOP, r.left, r.top, r.right - r.left, r.bottom - r.top, SWP_FRAMECHANGED);
-
-        ShowCursor(FALSE);
 
         dxgi.is_full_screen = true;
     }
@@ -357,6 +353,7 @@ static void gfx_dxgi_init(const char *window_title) {
 
     ShowWindow(dxgi.h_wnd, SW_SHOW);
     UpdateWindow(dxgi.h_wnd);
+    ShowCursor(FALSE);
 
     update_screen_settings();
 }
