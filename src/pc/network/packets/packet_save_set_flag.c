@@ -17,5 +17,7 @@ void network_send_save_set_flag(u32 flags) {
 void network_receive_save_set_flag(struct Packet* p) {
     u32 flags;
     packet_read(p, &flags, sizeof(u32));
+    sIgnoreSendSaveSetFlag = true;
     save_file_set_flags(flags);
+    sIgnoreSendSaveSetFlag = false;
 }
