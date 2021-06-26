@@ -109,3 +109,18 @@ void djui_panel_update(void) {
         parentBase->y.value = activeBase->y.value + moveMax;
     }
 }
+
+void djui_panel_shutdown(void) {
+    struct DjuiPanel* panel = sPanelList;
+    while (panel != NULL) {
+        struct DjuiPanel* next = panel->parent;
+        djui_base_destroy(panel->base);
+        free(panel);
+        panel = next;
+    }
+
+    sPanelList = NULL;
+    sPanelRemoving = NULL;
+    sMoveAmount = 0;
+
+}

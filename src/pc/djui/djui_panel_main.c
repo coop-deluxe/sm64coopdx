@@ -1,6 +1,12 @@
 #include "djui.h"
 #include "src/pc/controller/controller_sdl.h"
 
+static void djui_panel_main_close(struct DjuiBase* caller) {
+    gInteractableOverridePad = false;
+    djui_panel_shutdown();
+    djui_cursor_set_visible(false);
+}
+
 void djui_panel_main_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 4 + 16 * 3;
 
@@ -31,6 +37,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&buttonHost->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&buttonHost->base, 1.0f, 64);
             djui_cursor_input_controlled_center(&buttonHost->base);
+            buttonHost->base.interactable->on_click = djui_panel_main_close;
 
             struct DjuiButton* button2 = djui_button_create(&body->base, "Join");
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

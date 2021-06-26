@@ -6,11 +6,6 @@
 #include "src/pc/controller/controller_mouse.h"
 #include "src/pc/controller/controller_keyboard.h"
 
-#define PAD_BUTTON_A ((u16)(1 << 15))
-#define PAD_BUTTON_B ((u16)(1 << 14))
-
-#define MOUSE_BUTTON_1  ((u16)(1 << 0))
-
 #define SCANCODE_UP    328
 #define SCANCODE_DOWN  336
 #define SCANCODE_LEFT  331

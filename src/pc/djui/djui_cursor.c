@@ -128,7 +128,7 @@ void djui_cursor_update(void) {
     djui_base_set_location(&sMouseCursor->base, gCursorX - 13, gCursorY - 13);
 
     // set cursor sprite
-    if (mouse_window_buttons & 0b0001) {
+    if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & MOUSE_BUTTON_1)) {
         djui_image_set_image(sMouseCursor, texture_hand_closed, 32, 32, 16);
     } else {
         djui_image_set_image(sMouseCursor, texture_hand_open, 32, 32, 16);

@@ -41,6 +41,7 @@ void djui_panel_options_create(struct DjuiBase* caller) {
             struct DjuiButton* button2 = djui_button_create(&body->base, "Camera");
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button2->base, 1.0f, 64);
+            button2->base.interactable->on_click = djui_panel_camera_create;
 
             struct DjuiButton* button3 = djui_button_create(&body->base, "Controls");
             djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

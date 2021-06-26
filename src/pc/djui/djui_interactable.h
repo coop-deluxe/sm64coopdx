@@ -2,6 +2,11 @@
 #include "djui.h"
 #include "djui_base.h"
 
+#define PAD_BUTTON_A ((u16)(1 << 15))
+#define PAD_BUTTON_B ((u16)(1 << 14))
+
+#define MOUSE_BUTTON_1  ((u16)(1 << 0))
+
 #pragma pack(1)
 struct DjuiInteractable {
     bool enabled;
