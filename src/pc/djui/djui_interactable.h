@@ -19,6 +19,7 @@ struct DjuiInteractable {
     void (*on_focus)(struct DjuiBase*, OSContPad*);
     void (*on_focus_end)(struct DjuiBase*);
     void (*on_click)(struct DjuiBase*);
+    void (*on_value_change)(struct DjuiBase*);
 };
 
 extern bool gInteractableOverridePad;
@@ -46,5 +47,8 @@ void djui_interactable_hook_focus(struct DjuiBase* base,
 
 void djui_interactable_hook_click(struct DjuiBase* base,
                                   void (*on_click)(struct DjuiBase*));
+
+void djui_interactable_hook_value_change(struct DjuiBase* base,
+                                         void (*on_value_change)(struct DjuiBase*));
 
 void djui_interactable_create(struct DjuiBase* base);

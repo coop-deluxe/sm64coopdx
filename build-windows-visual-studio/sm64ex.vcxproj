@@ -3944,6 +3944,8 @@
     <ClCompile Include="..\src\pc\djui\djui.c" />
     <ClCompile Include="..\src\pc\djui\djui_base.c" />
     <ClCompile Include="..\src\pc\djui\djui_button.c" />
+    <ClCompile Include="..\src\pc\djui\djui_checkbox.c" />
+    <ClCompile Include="..\src\pc\djui\djui_selectionbox.c" />
     <ClCompile Include="..\src\pc\djui\djui_cursor.c" />
     <ClCompile Include="..\src\pc\djui\djui_flow_layout.c" />
     <ClCompile Include="..\src\pc\djui\djui_font.c" />
@@ -3951,7 +3953,9 @@
     <ClCompile Include="..\src\pc\djui\djui_image.c" />
     <ClCompile Include="..\src\pc\djui\djui_interactable.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_camera.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_debug.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_display.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_main.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_options.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_quit.c" />
@@ -4376,6 +4380,8 @@
     <ClInclude Include="..\src\pc\djui\djui.h" />
     <ClInclude Include="..\src\pc\djui\djui_base.h" />
     <ClInclude Include="..\src\pc\djui\djui_button.h" />
+    <ClInclude Include="..\src\pc\djui\djui_checkbox.h" />
+    <ClInclude Include="..\src\pc\djui\djui_selectionbox.h" />
     <ClInclude Include="..\src\pc\djui\djui_cursor.h" />
     <ClInclude Include="..\src\pc\djui\djui_flow_layout.h" />
     <ClInclude Include="..\src\pc\djui\djui_font.h" />
@@ -4384,7 +4390,9 @@
     <ClInclude Include="..\src\pc\djui\djui_image.h" />
     <ClInclude Include="..\src\pc\djui\djui_interactable.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_camera.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_debug.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_display.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_main.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_options.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_quit.h" />

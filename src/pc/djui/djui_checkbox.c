@@ -27,6 +27,9 @@ static void djui_checkbox_on_cursor_down_begin(struct DjuiBase* base, bool input
     djui_base_set_color(&checkbox->rectValue->base, 255, 255, 255, 255);
     *checkbox->value = !(*checkbox->value);
     djui_base_set_visible(&checkbox->rectValue->base, *checkbox->value);
+    if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
+        base->interactable->on_value_change(base);
+    }
 }
 
 static void djui_checkbox_on_cursor_down_end(struct DjuiBase* base) {
@@ -75,8 +78,8 @@ struct DjuiCheckbox* djui_checkbox_create(struct DjuiBase* parent, const char* m
     checkbox->rect = rect;
 
     struct DjuiRect* rectValue = djui_rect_create(&rect->base);
-    djui_base_set_size_type(&rectValue->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&rectValue->base, 0.8f, 0.8f);
+    djui_base_set_size_type(&rectValue->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&rectValue->base, 16, 16);
     djui_base_set_alignment(&rectValue->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_visible(&rectValue->base, *value);
     checkbox->rectValue = rectValue;

@@ -2,7 +2,7 @@
 
 static void djui_button_set_default_style(struct DjuiBase* base) {
     struct DjuiButton* button = (struct DjuiButton*)base;
-    djui_base_set_border_color(base, 173, 173, 173, 255);
+    djui_base_set_border_color(base, 150, 150, 150, 255);
     djui_base_set_color(&button->rect->base, 200, 200, 200, 255);
     djui_base_set_location(&button->text->base, 0.0f, 0.0f);
 }
@@ -11,7 +11,7 @@ static void djui_button_on_hover(struct DjuiBase* base) {
     struct DjuiButton* button = (struct DjuiButton*)base;
     djui_base_set_border_color(base, 0, 120, 215, 255);
     djui_base_set_color(&button->rect->base, 229, 241, 251, 255);
-    djui_base_set_location(&button->text->base, -0.5f, -0.5f);
+    djui_base_set_location(&button->text->base, -0.5f, -1.0f);
 }
 
 static void djui_button_on_hover_end(struct DjuiBase* base) {

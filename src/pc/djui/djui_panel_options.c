@@ -50,6 +50,7 @@ void djui_panel_options_create(struct DjuiBase* caller) {
             struct DjuiButton* button4 = djui_button_create(&body->base, "Display");
             djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button4->base, 1.0f, 64);
+            button4->base.interactable->on_click = djui_panel_display_create;
 
             struct DjuiButton* button5 = djui_button_create(&body->base, "Sound");
             djui_base_set_size_type(&button5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

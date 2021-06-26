@@ -24,12 +24,14 @@
 #include "djui_flow_layout.h"
 #include "djui_slider.h"
 #include "djui_checkbox.h"
+#include "djui_selectionbox.h"
 
 #include "djui_panel.h"
 #include "djui_panel_debug.h"
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
 #include "djui_panel_camera.h"
+#include "djui_panel_display.h"
 #include "djui_panel_sound.h"
 #include "djui_panel_quit.h"
 

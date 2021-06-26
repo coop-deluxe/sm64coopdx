@@ -15222,6 +15222,18 @@
     <ClCompile Include="..\src\pc\djui\djui_slider.c">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_camera.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_checkbox.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_display.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_selectionbox.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16262,6 +16274,18 @@
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\djui\djui_slider.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_camera.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_checkbox.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_display.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_selectionbox.h">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClInclude>
   </ItemGroup>

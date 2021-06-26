@@ -27,8 +27,8 @@ OSContPad gInteractablePad          = { 0 };
 OSContPad sLastInteractablePad      = { 0 };
 
 static void djui_interactable_on_click(struct DjuiBase* base) {
-    if (base                         == NULL) { return; }
-    if (base->interactable           == NULL) { return; }
+    if (base == NULL) { return; }
+    if (base->interactable == NULL) { return; }
     if (base->interactable->on_click == NULL) { return; }
     base->interactable->on_click(base);
 }
@@ -98,6 +98,13 @@ static void djui_interactable_on_focus_end(struct DjuiBase* base) {
     if (base->interactable               == NULL) { return; }
     if (base->interactable->on_focus_end == NULL) { return; }
     base->interactable->on_focus_end(base);
+}
+
+static void djui_interactable_on_value_change(struct DjuiBase* base) {
+    if (base                                == NULL) { return; }
+    if (base->interactable                  == NULL) { return; }
+    if (base->interactable->on_value_change == NULL) { return; }
+    base->interactable->on_value_change(base);
 }
 
 static void djui_interactable_cursor_update_active(struct DjuiBase* base) {
@@ -275,6 +282,12 @@ void djui_interactable_hook_click(struct DjuiBase* base,
                                   void (*on_click)(struct DjuiBase*)) {
     struct DjuiInteractable* interactable = base->interactable;
     interactable->on_click = on_click;
+}
+
+void djui_interactable_hook_value_change(struct DjuiBase* base,
+                                         void (*on_value_change)(struct DjuiBase*)) {
+    struct DjuiInteractable* interactable = base->interactable;
+    interactable->on_value_change = on_value_change;
 }
 
 void djui_interactable_create(struct DjuiBase* base) {

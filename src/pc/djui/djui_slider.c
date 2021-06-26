@@ -43,6 +43,9 @@ static void djui_slider_on_cursor_down(struct DjuiBase* base) {
     cursorX = fmax(cursorX, x);
     cursorX = fmin(cursorX, x + w);
     *value = ((cursorX - x) / w) * (max - min) + min;
+    if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
+        base->interactable->on_value_change(base);
+    }
     djui_slider_update_value(base);
 }
 
@@ -88,6 +91,9 @@ static void djui_slider_on_focus(struct DjuiBase* base, OSContPad* pad) {
     value = fmin(value, (int)slider->max);
     value = fmax(value, (int)slider->min);
     *slider->value = value;
+    if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
+        base->interactable->on_value_change(base);
+    }
     djui_slider_update_value(base);
 }
 
