@@ -172,11 +172,11 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         memset(np, 0, sizeof(struct NetworkPlayer));
         np->connected = true;
         np->currLevelAreaSeqId = 0;
-        if (!np->currAreaSyncValid) {
-            np->currCourseNum      = -1;
-            np->currActNum         = -1;
-            np->currLevelNum       = -1;
-            np->currAreaIndex      = -1;
+        if (gNetworkType == NT_SERVER && !np->currAreaSyncValid) {
+            np->currCourseNum      = 0;
+            np->currActNum         = 0;
+            np->currLevelNum       = 16;
+            np->currAreaIndex      = 1;
             np->currLevelSyncValid = false;
             np->currAreaSyncValid  = false;
         }

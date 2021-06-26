@@ -34,7 +34,6 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     discord_activity_update(false);
 
     gNetworkUserIds[0] = lobby->owner_id;
-    network_send_join_request();
 }
 
 static void on_activity_join(UNUSED void* data, const char* secret) {

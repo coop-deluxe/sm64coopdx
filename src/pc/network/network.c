@@ -78,6 +78,7 @@ bool network_init(enum NetworkType inNetworkType) {
         gOverrideEeprom = NULL;
     } else if (gNetworkType == NT_CLIENT) {
         network_player_connected(NPT_SERVER, 0);
+        network_send_join_request();
     }
 
     LOG_INFO("initialized");

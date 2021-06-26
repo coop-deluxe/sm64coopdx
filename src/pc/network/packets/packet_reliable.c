@@ -4,8 +4,8 @@
 
 // two-player hack: the localIndex for resending packets can be 0... this means reply to last person received from. THIS WILL NOT WORK with more than two players
 
-#define RELIABLE_RESEND_RATE 0.10f
-#define MAX_RESEND_ATTEMPTS 20
+#define RELIABLE_RESEND_RATE 0.20f
+#define MAX_RESEND_ATTEMPTS 10
 
 struct PacketLinkedList {
     struct Packet p;

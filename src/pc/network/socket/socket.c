@@ -89,7 +89,6 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
         gOpenConnectMenu = TRUE;
 
         gNetworkType = NT_CLIENT;
-        network_send_join_request();
     }
 
     LOG_INFO("initialized");

@@ -25,7 +25,7 @@ void network_send_join_request(void) {
 
     struct Packet p;
     packet_init(&p, PACKET_JOIN_REQUEST, true, false);
-    network_send_to(0, &p);
+    network_send_to(gNetworkPlayerServer->localIndex, &p);
     LOG_INFO("sending join request");
 }
 
