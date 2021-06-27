@@ -22,6 +22,7 @@ void door_animation_and_reset(s32 sp18) {
 u8 door_allow_walk_through(void) {
     if (gCurrCourseNum != COURSE_NONE && gMarioStates[0].action == ACT_BUBBLED) { return TRUE; }
     if (o->oAction == 0 || o->oAction > 2) { return FALSE; }
+    if (o->oInteractType == INTERACT_WARP_DOOR) { return FALSE; }
 
     // special override for BBH's back door, camera gets stuck otherwise
     if (gCurrCourseNum == COURSE_BBH && o->oDoorUnkF8 == 28) {
