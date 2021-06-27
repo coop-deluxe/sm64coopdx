@@ -6,6 +6,9 @@
 #include "src/pc/controller/controller_mouse.h"
 #include "src/pc/controller/controller_keyboard.h"
 
+#include "audio_defines.h"
+#include "audio/external.h"
+
 #define SCANCODE_UP    328
 #define SCANCODE_DOWN  336
 #define SCANCODE_LEFT  331
@@ -19,7 +22,10 @@ enum PadHoldDirection { PAD_HOLD_DIR_NONE, PAD_HOLD_DIR_UP, PAD_HOLD_DIR_DOWN, P
 static enum PadHoldDirection sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
 static u16 sKeyboardButtons = 0;
 
-static struct DjuiBase* sInteractableFocus = NULL;
+static bool sIgnoreInteractableUntilCursorReleased = false;
+
+static struct DjuiBase* sInteractableFocus   = NULL;
+static struct DjuiBase* sInteractableBinding = NULL;
 static struct DjuiBase* sHovered    = NULL;
 static struct DjuiBase* sMouseDown  = NULL;
 bool gInteractableOverridePad       = false;
@@ -107,6 +113,13 @@ static void djui_interactable_on_value_change(struct DjuiBase* base) {
     base->interactable->on_value_change(base);
 }
 
+static void djui_interactable_on_bind(struct DjuiBase* base) {
+    if (base                        == NULL) { return; }
+    if (base->interactable          == NULL) { return; }
+    if (base->interactable->on_bind == NULL) { return; }
+    base->interactable->on_bind(base);
+}
+
 static void djui_interactable_cursor_update_active(struct DjuiBase* base) {
     if (!base->visible) { return; }
     if (!base->enabled) { return; }
@@ -131,6 +144,18 @@ static void djui_interactable_cursor_update_active(struct DjuiBase* base) {
 
     if (insideParent == base) {
         insideParent = NULL;
+    }
+}
+
+bool djui_interactable_is_binding(void) {
+    return sInteractableBinding != NULL;
+}
+
+void djui_interactable_set_binding(struct DjuiBase* base) {
+    sInteractableBinding = base;
+    djui_cursor_set_visible(base == NULL);
+    if (base == NULL) {
+        sIgnoreInteractableUntilCursorReleased = true;
     }
 }
 
@@ -215,20 +240,34 @@ void djui_interactable_update(void) {
     // update pad
     djui_interactable_update_pad();
 
-    if (sInteractableFocus != NULL) {
+    // prevent pressing buttons when they should be ignored
+    int mouseButtons = mouse_window_buttons;
+    u16 padButtons = gInteractablePad.button;
+    if (sIgnoreInteractableUntilCursorReleased) {
+        if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
+            padButtons   &= ~PAD_BUTTON_A;
+            mouseButtons &= ~MOUSE_BUTTON_1;
+        } else {
+            sIgnoreInteractableUntilCursorReleased = false;
+        }
+    }
+
+    if (sInteractableBinding != NULL) {
+        djui_interactable_on_bind(sInteractableBinding);
+    } else if (sInteractableFocus != NULL) {
         // escape focus
         u16 buttons = PAD_BUTTON_A | PAD_BUTTON_B;
-        if ((gInteractablePad.button & buttons) && !(sLastInteractablePad.button & buttons)) {
+        if ((padButtons & buttons) && !(sLastInteractablePad.button & buttons)) {
             djui_interactable_set_input_focus(NULL);
         } else {
             djui_interactable_on_focus(sInteractableFocus);
         }
-    } else if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & MOUSE_BUTTON_1)) {
+    } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
         // cursor down events
         if (sHovered != NULL) {
             sMouseDown = sHovered;
             sHovered = NULL;
-            djui_interactable_on_cursor_down_begin(sMouseDown, !mouse_window_buttons);
+            djui_interactable_on_cursor_down_begin(sMouseDown, !mouseButtons);
         } else {
             djui_interactable_on_cursor_down(sMouseDown);
         }
@@ -243,6 +282,7 @@ void djui_interactable_update(void) {
         djui_interactable_cursor_update_active(&gDjuiRoot->base);
         if (lastHovered != sHovered) {
             djui_interactable_on_hover_end(lastHovered);
+            play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, gDefaultSoundArgs);
         }
         djui_interactable_on_hover(sHovered);
     }
@@ -288,6 +328,12 @@ void djui_interactable_hook_value_change(struct DjuiBase* base,
                                          void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiInteractable* interactable = base->interactable;
     interactable->on_value_change = on_value_change;
+}
+
+void djui_interactable_hook_bind(struct DjuiBase* base,
+                                 void (*on_bind)(struct DjuiBase*)) {
+    struct DjuiInteractable* interactable = base->interactable;
+    interactable->on_bind = on_bind;
 }
 
 void djui_interactable_create(struct DjuiBase* base) {

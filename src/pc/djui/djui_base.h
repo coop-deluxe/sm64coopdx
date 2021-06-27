@@ -43,6 +43,7 @@ struct DjuiBase {
     struct DjuiBaseRect comp;
     struct DjuiBaseRect clip;
     struct DjuiInteractable* interactable;
+    s32 tag;
     void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
     void (*on_render_pre)(struct DjuiBase*, bool*);
     void (*render)(struct DjuiBase*);

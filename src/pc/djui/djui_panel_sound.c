@@ -54,7 +54,7 @@ void djui_panel_sound_create(struct DjuiBase* caller) {
             struct DjuiButton* button6 = djui_button_create(&body->base, "Back");
             djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button6->base, 1.0f, 64);
-            button6->base.interactable->on_click = djui_panel_sound_back;
+            djui_interactable_hook_click(&button6->base, djui_panel_sound_back);
         }
     }
 

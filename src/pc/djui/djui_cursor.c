@@ -104,6 +104,8 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
 
 void djui_cursor_update(void) {
 #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+    if (djui_interactable_is_binding()) { return; }
+
     controller_sdl_read_mouse_window();
 
     // check if mouse is in control again

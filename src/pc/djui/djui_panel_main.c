@@ -37,7 +37,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&buttonHost->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&buttonHost->base, 1.0f, 64);
             djui_cursor_input_controlled_center(&buttonHost->base);
-            buttonHost->base.interactable->on_click = djui_panel_main_close;
+            djui_interactable_hook_click(&buttonHost->base, djui_panel_main_close);
 
             struct DjuiButton* button2 = djui_button_create(&body->base, "Join");
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -46,12 +46,12 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             struct DjuiButton* button3 = djui_button_create(&body->base, "Options");
             djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button3->base, 1.0f, 64);
-            button3->base.interactable->on_click = djui_panel_options_create;
+            djui_interactable_hook_click(&button3->base, djui_panel_options_create);
 
             struct DjuiButton* button4 = djui_button_create(&body->base, "Quit");
             djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button4->base, 1.0f, 64);
-            button4->base.interactable->on_click = djui_panel_quit_create;
+            djui_interactable_hook_click(&button4->base, djui_panel_quit_create);
         }
 
         char* version = get_version();

@@ -1,5 +1,4 @@
 #include "djui.h"
-#include <stdio.h>
 
   ////////////////
  // properties //

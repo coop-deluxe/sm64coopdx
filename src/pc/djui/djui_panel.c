@@ -1,5 +1,7 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
+#include "audio_defines.h"
+#include "audio/external.h"
 
 struct DjuiPanel {
     struct DjuiBase* base;
@@ -45,6 +47,8 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
         djui_base_set_location(panelBase, 0, 0);
         djui_cursor_input_controlled_center(panel->defaultElementBase);
         djui_base_set_enabled(panel->base, true);
+    } else {
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gDefaultSoundArgs);
     }
 }
 
@@ -69,6 +73,9 @@ void djui_panel_back(void) {
 
     // set new active as visible
     djui_base_set_visible(sPanelList->base, true);
+
+    // play a sound
+    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gDefaultSoundArgs);
 }
 
 void djui_panel_update(void) {

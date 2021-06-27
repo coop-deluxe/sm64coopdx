@@ -48,12 +48,12 @@ void djui_panel_quit_create(struct DjuiBase* caller) {
             struct DjuiButton* button1 = djui_button_create(&body->base, "Yes");
             djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button1->base, 1.0f, 64);
-            button1->base.interactable->on_click = djui_panel_quit_yes;
+            djui_interactable_hook_click(&button1->base, djui_panel_quit_yes);
 
             buttonNo = djui_button_create(&body->base, "No");
             djui_base_set_size_type(&buttonNo->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&buttonNo->base, 1.0f, 64);
-            buttonNo->base.interactable->on_click = djui_panel_quit_no;
+            djui_interactable_hook_click(&buttonNo->base, djui_panel_quit_no);
         }
     }
 
