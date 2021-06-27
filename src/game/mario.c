@@ -1869,10 +1869,10 @@ s32 execute_mario_action(UNUSED struct Object *o) {
     struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
     if (np->type != NPT_LOCAL) {
         bool levelAreaMismatch =
-            (np->currCourseNum   != gCurrCourseNum
-            || np->currActNum    != gCurrActNum
-            || np->currLevelNum  != gCurrLevelNum
-            || np->currAreaIndex != gCurrAreaIndex);
+            (np->currCourseNum   != gNetworkPlayerLocal->currCourseNum
+            || np->currActNum    != gNetworkPlayerLocal->currActNum
+            || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
+            || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
 
         if (!np->connected || levelAreaMismatch) {
             gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;

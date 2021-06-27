@@ -519,10 +519,10 @@ u8 is_player_active(struct MarioState* m) {
     if (np->type != NPT_LOCAL) {
         if (!np->connected) { return FALSE; }
         bool levelAreaMismatch =
-            (np->currCourseNum    != gCurrCourseNum
-             || np->currActNum    != gCurrActNum
-             || np->currLevelNum  != gCurrLevelNum
-             || np->currAreaIndex != gCurrAreaIndex);
+            (np->currCourseNum   != gNetworkPlayerLocal->currCourseNum
+            || np->currActNum    != gNetworkPlayerLocal->currActNum
+            || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
+            || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
         if (levelAreaMismatch) { return FALSE; }
     }
     return TRUE;
