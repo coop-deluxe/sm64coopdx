@@ -1113,7 +1113,9 @@ s32 act_emerge_from_pipe(struct MarioState *m) {
 s32 act_spawn_spin_airborne(struct MarioState *m) {
     // entered water, exit action
     if (m->pos[1] < m->waterLevel - 100) {
-        load_level_init_text(0);
+        if (m == &gMarioStates[0]) {
+            load_level_init_text(0);
+        }
         return set_water_plunge_action(m);
     }
 
@@ -1146,7 +1148,9 @@ s32 act_spawn_spin_landing(struct MarioState *m) {
     stop_and_set_height_to_floor(m);
     set_mario_animation(m, MARIO_ANIM_GENERAL_LAND);
     if (is_anim_at_end(m)) {
-        load_level_init_text(0);
+        if (m == &gMarioStates[0]) {
+            load_level_init_text(0);
+        }
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1383,7 +1387,9 @@ s32 act_spawn_no_spin_landing(struct MarioState *m) {
     set_mario_animation(m, MARIO_ANIM_GENERAL_LAND);
     stop_and_set_height_to_floor(m);
     if (is_anim_at_end(m)) {
-        load_level_init_text(0);
+        if (m == &gMarioStates[0]) {
+            load_level_init_text(0);
+        }
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;

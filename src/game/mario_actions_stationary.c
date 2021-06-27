@@ -1114,7 +1114,9 @@ s32 check_common_stationary_cancels(struct MarioState *m) {
 
     if (m->pos[1] < m->waterLevel - 100) {
         if (m->action == ACT_SPAWN_SPIN_LANDING) {
-            load_level_init_text(0);
+            if (m == &gMarioStates[0]) {
+                load_level_init_text(0);
+            }
         }
         update_mario_sound_and_camera(m);
         return set_water_plunge_action(m);

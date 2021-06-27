@@ -1820,7 +1820,9 @@ s32 act_flying(struct MarioState *m) {
 
         if (is_anim_at_end(m)) {
             if (m->actionArg == 2) {
-                load_level_init_text(0);
+                if (m == &gMarioStates[0]) {
+                    load_level_init_text(0);
+                }
                 m->actionArg = 1;
             }
 
