@@ -1354,6 +1354,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         m2->invincTimer = max(m2->invincTimer, 3);
         take_damage_and_knock_back(m2, m->marioObj);
         bounce_back_from_attack(m, interaction);
+        m2->interactObj = NULL;
         return FALSE;
     }
 
