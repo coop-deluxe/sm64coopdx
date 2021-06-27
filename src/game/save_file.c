@@ -605,7 +605,7 @@ s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse) 
 void save_file_set_flags(u32 flags) {
     gSaveBuffer.files[gCurrSaveFileNum - 1][0].flags |= (flags | SAVE_FLAG_FILE_EXISTS);
     gSaveFileModified = TRUE;
-    network_send_save_set_flag(flags);
+    network_send_save_set_flag(gCurrSaveFileNum - 1, 0, 0, (flags | SAVE_FLAG_FILE_EXISTS));
 }
 
 void save_file_clear_flags(u32 flags) {
@@ -644,8 +644,10 @@ u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex) {
 void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags) {
     if (courseIndex == -1) {
         gSaveBuffer.files[fileIndex][0].flags |= starFlags << 24;
+        network_send_save_set_flag(fileIndex, courseIndex, 0, ((starFlags << 24) | SAVE_FLAG_FILE_EXISTS));
     } else {
         gSaveBuffer.files[fileIndex][0].courseStars[courseIndex] |= starFlags;
+        network_send_save_set_flag(fileIndex, courseIndex, starFlags, SAVE_FLAG_FILE_EXISTS);
     }
 
     gSaveBuffer.files[fileIndex][0].flags |= SAVE_FLAG_FILE_EXISTS;
@@ -670,6 +672,7 @@ void save_file_set_cannon_unlocked(void) {
     gSaveBuffer.files[gCurrSaveFileNum - 1][0].courseStars[gCurrCourseNum] |= 0x80;
     gSaveBuffer.files[gCurrSaveFileNum - 1][0].flags |= SAVE_FLAG_FILE_EXISTS;
     gSaveFileModified = TRUE;
+    network_send_save_set_flag(gCurrSaveFileNum - 1, gCurrCourseNum, 0x80, SAVE_FLAG_FILE_EXISTS);
 }
 
 void save_file_set_cap_pos(s16 x, s16 y, s16 z) {

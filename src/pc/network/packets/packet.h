@@ -189,7 +189,7 @@ void network_send_save_file(s32 fileIndex);
 void network_receive_save_file(struct Packet* p);
 
 // packet_save_set_flag.c
-void network_send_save_set_flag(u32 flags);
+void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, u32 flags);
 void network_receive_save_set_flag(struct Packet* p);
 
 // packet_network_players.c

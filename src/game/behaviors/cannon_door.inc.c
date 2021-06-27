@@ -1,27 +1,19 @@
 // cannon.c.inc
-
-void bhv_cannon_closed_init(void) {
-    struct Object *cannon;
-
+static void bhv_cannon_closed_init_non_spawn(void) {
     if (save_file_is_cannon_unlocked() == 1) {
-        if (!gNetworkAreaLoaded || get_network_player_smallest_global() == gNetworkPlayerLocal) {
-            // If the cannon is open, spawn a cannon and despawn the object.
-            cannon = spawn_object(o, MODEL_CANNON_BASE, bhvCannon);
-            cannon->parentObj = cannon;
-            cannon->oBehParams2ndByte = o->oBehParams2ndByte;
-            cannon->oPosX = o->oHomeX;
-            cannon->oPosY = o->oHomeY;
-            cannon->oPosZ = o->oHomeZ;
-            if (gNetworkAreaLoaded) {
-                network_set_sync_id(cannon);
-                struct Object* spawn_objects[] = { cannon };
-                u32 models[] = { MODEL_CANNON_BASE };
-                network_send_spawn_objects(spawn_objects, models, 1);
-            }
-        }
         o->oAction = CANNON_TRAP_DOOR_ACT_OPEN;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
+}
+
+void bhv_cannon_closed_init(void) {
+    struct Object* cannon = spawn_object(o, MODEL_CANNON_BASE, bhvCannon);
+    cannon->parentObj = cannon;
+    cannon->oBehParams2ndByte = o->oBehParams2ndByte;
+    cannon->oPosX = o->oHomeX;
+    cannon->oPosY = o->oHomeY;
+    cannon->oPosZ = o->oHomeZ;
+    bhv_cannon_closed_init_non_spawn();
 }
 
 void cannon_door_act_opening(void) {
@@ -34,7 +26,7 @@ void cannon_door_act_opening(void) {
         o->oVelX = 0;
     } else {
         if (o->oTimer == 80) {
-            bhv_cannon_closed_init();
+            bhv_cannon_closed_init_non_spawn();
             return;
         }
 

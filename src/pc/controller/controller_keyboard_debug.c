@@ -13,7 +13,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_BBH;
+static u8 warpToLevel = LEVEL_BOB;
 static u8 warpToArea = 29;
 // warpToArea: 26 = basement
 // warpToArea: 27 = upstairs
