@@ -98,17 +98,11 @@ void network_player_update(void) {
             }
         }
     } else if (gNetworkType == NT_CLIENT) {
-        bool connectionAlive = false;
         struct NetworkPlayer* np = gNetworkPlayerServer;
         if (!np->connected) { return; }
         float elapsed = (clock() - np->lastReceived) / (float)CLOCKS_PER_SEC;
 
-        if (elapsed <= NETWORK_PLAYER_TIMEOUT * 1.5f) {
-            connectionAlive = true;
-            return;
-        }
-
-        if (!connectionAlive) {
+        if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
             LOG_INFO("dropping due to no server connectivity");
             network_shutdown();
         }
