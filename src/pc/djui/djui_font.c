@@ -56,7 +56,7 @@ static f32 djui_font_normal_char_width(char c) {
 static const struct DjuiFont sDjuiFontNormal = {
     .charWidth            = 0.5f,
     .charHeight           = 1.0f,
-    .lineHeight           = 0.8f,
+    .lineHeight           = 0.8125f,
     .defaultFontScale     = 32.0f,
     .rotatedUV            = true,
     .textBeginDisplayList = djui_font_normal_text_begin,

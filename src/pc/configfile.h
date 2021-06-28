@@ -70,7 +70,7 @@ extern unsigned int configHostPort;
 extern unsigned int configHostSaveSlot;
 extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
-extern unsigned int configStayInLevelAfterStar;
+extern bool         configStayInLevelAfterStar;
 extern unsigned int configNetworkSystem;
 extern bool         configLuigiSounds;
 

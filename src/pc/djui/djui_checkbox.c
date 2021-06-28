@@ -64,7 +64,7 @@ struct DjuiCheckbox* djui_checkbox_create(struct DjuiBase* parent, const char* m
     struct DjuiText* text = djui_text_create(&checkbox->base, message);
     djui_base_set_alignment(&text->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&text->base, 0.5f, 1.0f);
+    djui_base_set_size(&text->base, 1.0f, 1.0f);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_text_set_drop_shadow(text, 120, 120, 120, 64);
     checkbox->text = text;

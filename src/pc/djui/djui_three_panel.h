@@ -9,6 +9,10 @@ struct DjuiThreePanel {
     struct DjuiScreenValue minFooterSize;
 };
 
+struct DjuiBase* djui_three_panel_get_header(struct DjuiThreePanel* threePanel);
+struct DjuiBase* djui_three_panel_get_body(struct DjuiThreePanel* threePanel);
+struct DjuiBase* djui_three_panel_get_footer(struct DjuiThreePanel* threePanel);
+
 void djui_three_panel_set_min_header_size_type(struct DjuiThreePanel* threePanel, enum DjuiScreenValueType minHeaderSizeType);
 void djui_three_panel_set_min_header_size(struct DjuiThreePanel* threePanel, f32 minHeaderSize);
 void djui_three_panel_set_body_size_type(struct DjuiThreePanel* threePanel, enum DjuiScreenValueType bodySizeType);

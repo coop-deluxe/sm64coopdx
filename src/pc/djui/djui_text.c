@@ -300,9 +300,9 @@ static void djui_text_render(struct DjuiBase* base) {
     // count lines
     u16 startIndex = 0;
     u16 endIndex = 0;
-    f32 maxLineWidth = comp->width / text->fontScale;
+    f32 maxLineWidth = comp->width / ((f32)text->fontScale);
     u16 lineCount = 0;
-    u16 maxLines = comp->height / ((f32)text->font->charHeight * text->fontScale);
+    u16 maxLines = comp->height / ((f32)text->font->lineHeight * text->fontScale);
     while (text->message[startIndex] != '\0') {
         bool onLastLine = lineCount + 1 >= maxLines;
         f32 lineWidth;
