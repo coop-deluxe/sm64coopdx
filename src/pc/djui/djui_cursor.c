@@ -50,12 +50,12 @@ void djui_cursor_input_controlled_center(struct DjuiBase* base) {
     }
 }
 
-static f32 djui_cursor_base_distance(struct DjuiBase* base) {
+static f32 djui_cursor_base_distance(struct DjuiBase* base, f32 xScale, f32 yScale) {
     f32 x, y;
     djui_cursor_base_hover_location(base, &x, &y);
     x -= gCursorX;
     y -= gCursorY;
-    return sqrtf((x * x) + (y * y));
+    return sqrtf((x * x) * xScale + (y * y) * yScale);
 }
 
 static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, struct DjuiBase* base) {
@@ -74,8 +74,8 @@ static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, str
             if (*pick == NULL) {
                 *pick = base;
             } else {
-                f32 pickDist = djui_cursor_base_distance(*pick);
-                f32 baseDist = djui_cursor_base_distance(base);
+                f32 pickDist = djui_cursor_base_distance(*pick, xDir ? 1.0f : 10.0f, yDir ? 1.0f : 10.0f);
+                f32 baseDist = djui_cursor_base_distance(base,  xDir ? 1.0f : 10.0f, yDir ? 1.0f : 10.0f);
                 if (baseDist < pickDist) {
                     *pick = base;
                 }
