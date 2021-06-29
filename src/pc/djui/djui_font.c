@@ -36,21 +36,19 @@ static const Gfx djui_font_normal_text_settings[] = {
 };
 
 static void djui_font_normal_render_char(char c) {
-    void** fontLUT;
-    void* packedTexture;
-
-    u8 d = str_ascii_char_to_dialog(c);
-    fontLUT = segmented_to_virtual(main_font_lut);
-    packedTexture = segmented_to_virtual(fontLUT[d]);
+    extern const u8* const font_normal_chars[];
+    void* fontChar = (void*)font_normal_chars[c - '!'];
+    if (fontChar == NULL) { fontChar = (void*)font_normal_chars[94]; }
 
     gDPPipeSync(gDisplayListHead++);
-    gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, VIRTUAL_TO_PHYSICAL(packedTexture));
+    gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, (void*)fontChar);
     gSPDisplayList(gDisplayListHead++, djui_font_normal_text_settings);
 }
 
 static f32 djui_font_normal_char_width(char c) {
-    u8 d = str_ascii_char_to_dialog(c);
-    return gDialogCharWidths[d] / 16.0f;
+    if (c == ' ') { return 0.30f; }
+    extern const f32 font_normal_widths[];
+    return font_normal_widths[c - '!'];
 }
 
 static const struct DjuiFont sDjuiFontNormal = {
@@ -68,23 +66,6 @@ static const struct DjuiFont sDjuiFontNormal = {
  // font 1 (custom title font) //
 ////////////////////////////////
 
-static f32 sDjuiFontTitleCharWidths[] = {
-/*      !      "      #      $      %      &      '      (      )      *      +      ,      -      .      /      */
-    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
-/*      0      1      2      3      4      5      6      7      8      9      */
-    0.45f, 0.35f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f,
-/*      :      ;      <      =      >      ?      @      */
-    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
-/*      A      B      C      D      E      F      G      H      I      J      K      L      M      N      O      P      Q      R      S      T      U      V      W      X      Y      Z      */
-    0.55f, 0.50f, 0.50f, 0.50f, 0.45f, 0.45f, 0.50f, 0.55f, 0.28f, 0.60f, 0.50f, 0.45f, 0.55f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.55f, 0.50f, 0.50f, 0.50f, 0.60f, 0.52f, 0.60f, 0.45f,
-/*      [      \      ]      ^      _      `      */
-    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
-/*      a      b      c      d      e      f      g      h      i      j      k      l      m      n      o      p      q      r      s      t      u      v      w      x      y      z      */
-    0.45f, 0.45f, 0.40f, 0.40f, 0.45f, 0.37f, 0.40f, 0.40f, 0.20f, 0.45f, 0.40f, 0.30f, 0.50f, 0.40f, 0.40f, 0.40f, 0.45f, 0.40f, 0.50f, 0.45f, 0.50f, 0.40f, 0.50f, 0.50f, 0.45f, 0.45f,
-/*      {      |      }      ~      !      */
-    0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
-};
-
 static void djui_font_title_render_char(char c) {
     extern const u8* const font_title_chars[];
     djui_gfx_render_texture(font_title_chars[c - '!'], 64, 64, 32);
@@ -92,7 +73,8 @@ static void djui_font_title_render_char(char c) {
 
 static f32 djui_font_title_char_width(char c) {
     if (c == ' ') { return 0.30f; }
-    return sDjuiFontTitleCharWidths[c - '!'];
+    extern const f32 font_title_widths[];
+    return font_title_widths[c - '!'];
 }
 
 static const struct DjuiFont sDjuiFontTitle = {

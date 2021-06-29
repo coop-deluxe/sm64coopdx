@@ -383,100 +383,117 @@ ALIGNED8 static const u8 texture_font_title_char_95[] = {
 #include "textures/custom_font_title/custom_font_title_95.rgba32.inc.c"
 };
 
-const u8 *const font_title_chars[] = {
-    texture_font_title_char_01,
-    texture_font_title_char_02,
-    texture_font_title_char_03,
-    texture_font_title_char_04,
-    texture_font_title_char_05,
-    texture_font_title_char_06,
-    texture_font_title_char_07,
-    texture_font_title_char_08,
-    texture_font_title_char_09,
-    texture_font_title_char_10,
-    texture_font_title_char_11,
-    texture_font_title_char_12,
-    texture_font_title_char_13,
-    texture_font_title_char_14,
-    texture_font_title_char_15,
-    texture_font_title_char_16,
-    texture_font_title_char_17,
-    texture_font_title_char_18,
-    texture_font_title_char_19,
-    texture_font_title_char_20,
-    texture_font_title_char_21,
-    texture_font_title_char_22,
-    texture_font_title_char_23,
-    texture_font_title_char_24,
-    texture_font_title_char_25,
-    texture_font_title_char_26,
-    texture_font_title_char_27,
-    texture_font_title_char_28,
-    texture_font_title_char_29,
-    texture_font_title_char_30,
-    texture_font_title_char_31,
-    texture_font_title_char_32,
-    texture_font_title_char_33,
-    texture_font_title_char_34,
-    texture_font_title_char_35,
-    texture_font_title_char_36,
-    texture_font_title_char_37,
-    texture_font_title_char_38,
-    texture_font_title_char_39,
-    texture_font_title_char_40,
-    texture_font_title_char_41,
-    texture_font_title_char_42,
-    texture_font_title_char_43,
-    texture_font_title_char_44,
-    texture_font_title_char_45,
-    texture_font_title_char_46,
-    texture_font_title_char_47,
-    texture_font_title_char_48,
-    texture_font_title_char_49,
-    texture_font_title_char_50,
-    texture_font_title_char_51,
-    texture_font_title_char_52,
-    texture_font_title_char_53,
-    texture_font_title_char_54,
-    texture_font_title_char_55,
-    texture_font_title_char_56,
-    texture_font_title_char_57,
-    texture_font_title_char_58,
-    texture_font_title_char_59,
-    texture_font_title_char_60,
-    texture_font_title_char_61,
-    texture_font_title_char_62,
-    texture_font_title_char_63,
-    texture_font_title_char_64,
-    texture_font_title_char_65,
-    texture_font_title_char_66,
-    texture_font_title_char_67,
-    texture_font_title_char_68,
-    texture_font_title_char_69,
-    texture_font_title_char_70,
-    texture_font_title_char_71,
-    texture_font_title_char_72,
-    texture_font_title_char_73,
-    texture_font_title_char_74,
-    texture_font_title_char_75,
-    texture_font_title_char_76,
-    texture_font_title_char_77,
-    texture_font_title_char_78,
-    texture_font_title_char_79,
-    texture_font_title_char_80,
-    texture_font_title_char_81,
-    texture_font_title_char_82,
-    texture_font_title_char_83,
-    texture_font_title_char_84,
-    texture_font_title_char_85,
-    texture_font_title_char_86,
-    texture_font_title_char_87,
-    texture_font_title_char_88,
-    texture_font_title_char_89,
-    texture_font_title_char_90,
-    texture_font_title_char_91,
-    texture_font_title_char_92,
-    texture_font_title_char_93,
-    texture_font_title_char_94,
-    texture_font_title_char_95,
+const u8* const font_title_chars[] = {
+    texture_font_title_char_01, // !
+    texture_font_title_char_02, // "
+    texture_font_title_char_03, // #
+    texture_font_title_char_04, // $
+    texture_font_title_char_05, // %
+    texture_font_title_char_06, // &
+    texture_font_title_char_07, // '
+    texture_font_title_char_08, // (
+    texture_font_title_char_09, // )
+    texture_font_title_char_10, // *
+    texture_font_title_char_11, // +
+    texture_font_title_char_12, // ,
+    texture_font_title_char_13, // -
+    texture_font_title_char_14, // .
+    texture_font_title_char_15, // /
+    texture_font_title_char_16, // 0
+    texture_font_title_char_17, // 1
+    texture_font_title_char_18, // 2
+    texture_font_title_char_19, // 3
+    texture_font_title_char_20, // 4
+    texture_font_title_char_21, // 5
+    texture_font_title_char_22, // 6
+    texture_font_title_char_23, // 7
+    texture_font_title_char_24, // 8
+    texture_font_title_char_25, // 9
+    texture_font_title_char_26, // :
+    texture_font_title_char_27, // ;
+    texture_font_title_char_28, // <
+    texture_font_title_char_29, // =
+    texture_font_title_char_30, // >
+    texture_font_title_char_31, // ?
+    texture_font_title_char_32, // @
+    texture_font_title_char_33, // A
+    texture_font_title_char_34, // B
+    texture_font_title_char_35, // C
+    texture_font_title_char_36, // D
+    texture_font_title_char_37, // E
+    texture_font_title_char_38, // F
+    texture_font_title_char_39, // G
+    texture_font_title_char_40, // H
+    texture_font_title_char_41, // I
+    texture_font_title_char_42, // J
+    texture_font_title_char_43, // K
+    texture_font_title_char_44, // L
+    texture_font_title_char_45, // M
+    texture_font_title_char_46, // N
+    texture_font_title_char_47, // O
+    texture_font_title_char_48, // P
+    texture_font_title_char_49, // Q
+    texture_font_title_char_50, // R
+    texture_font_title_char_51, // S
+    texture_font_title_char_52, // T
+    texture_font_title_char_53, // U
+    texture_font_title_char_54, // V
+    texture_font_title_char_55, // W
+    texture_font_title_char_56, // X
+    texture_font_title_char_57, // Y
+    texture_font_title_char_58, // Z
+    texture_font_title_char_59, // [
+    texture_font_title_char_60, // \ //
+    texture_font_title_char_61, // ]
+    texture_font_title_char_62, // ^
+    texture_font_title_char_63, // _
+    texture_font_title_char_64, // `
+    texture_font_title_char_65, // a
+    texture_font_title_char_66, // b
+    texture_font_title_char_67, // c
+    texture_font_title_char_68, // d
+    texture_font_title_char_69, // e
+    texture_font_title_char_70, // f
+    texture_font_title_char_71, // g
+    texture_font_title_char_72, // h
+    texture_font_title_char_73, // i
+    texture_font_title_char_74, // j
+    texture_font_title_char_75, // k
+    texture_font_title_char_76, // l
+    texture_font_title_char_77, // m
+    texture_font_title_char_78, // n
+    texture_font_title_char_79, // o
+    texture_font_title_char_80, // p
+    texture_font_title_char_81, // q
+    texture_font_title_char_82, // r
+    texture_font_title_char_83, // s
+    texture_font_title_char_84, // t
+    texture_font_title_char_85, // u
+    texture_font_title_char_86, // v
+    texture_font_title_char_87, // w
+    texture_font_title_char_88, // x
+    texture_font_title_char_89, // y
+    texture_font_title_char_90, // z
+    texture_font_title_char_91, // {
+    texture_font_title_char_92, // |
+    texture_font_title_char_93, // }
+    texture_font_title_char_94, // ~
+    texture_font_title_char_95, // DEL
+};
+
+const f32 font_title_widths[] = {
+/*      !      "      #      $      %      &      '      (      )      *      +      ,      -      .      /      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+/*      0      1      2      3      4      5      6      7      8      9      */
+    0.45f, 0.35f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f,
+/*      :      ;      <      =      >      ?      @      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+/*      A      B      C      D      E      F      G      H      I      J      K      L      M      N      O      P      Q      R      S      T      U      V      W      X      Y      Z      */
+    0.55f, 0.50f, 0.50f, 0.50f, 0.45f, 0.45f, 0.50f, 0.55f, 0.28f, 0.60f, 0.50f, 0.45f, 0.55f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.55f, 0.50f, 0.50f, 0.50f, 0.60f, 0.52f, 0.60f, 0.45f,
+/*      [      \      ]      ^      _      `      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+/*      a      b      c      d      e      f      g      h      i      j      k      l      m      n      o      p      q      r      s      t      u      v      w      x      y      z      */
+    0.45f, 0.45f, 0.40f, 0.40f, 0.45f, 0.37f, 0.40f, 0.40f, 0.20f, 0.45f, 0.40f, 0.30f, 0.50f, 0.40f, 0.40f, 0.40f, 0.45f, 0.40f, 0.50f, 0.45f, 0.50f, 0.40f, 0.50f, 0.50f, 0.45f, 0.45f,
+/*      {      |      }      ~    DEL      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
 };
