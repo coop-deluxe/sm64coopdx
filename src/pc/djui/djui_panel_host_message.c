@@ -55,6 +55,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_button_set_style(button1, 1);
             djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
 
             struct DjuiButton* button2 = djui_button_create(&rect1->base, "Host");

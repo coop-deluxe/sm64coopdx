@@ -2,9 +2,16 @@
 
 static void djui_button_set_default_style(struct DjuiBase* base) {
     struct DjuiButton* button = (struct DjuiButton*)base;
-    djui_base_set_border_color(base, 150, 150, 150, 255);
-    djui_base_set_color(&button->rect->base, 200, 200, 200, 255);
+    u8 borderBrightness = button->style ? 100 : 150;
+    u8 rectBrightness   = button->style ? 150 : 222;
+    djui_base_set_border_color(base, borderBrightness, borderBrightness, borderBrightness, 255);
+    djui_base_set_color(&button->rect->base, rectBrightness, rectBrightness, rectBrightness, 255);
     djui_base_set_location(&button->text->base, 0.0f, 0.0f);
+}
+
+void djui_button_set_style(struct DjuiButton* button, u8 style) {
+    button->style = style;
+    djui_button_set_default_style(&button->base);
 }
 
 static void djui_button_on_hover(struct DjuiBase* base) {
@@ -44,6 +51,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     djui_interactable_create(base);
     djui_interactable_hook_hover(base, djui_button_on_hover, djui_button_on_hover_end);
     djui_interactable_hook_cursor_down(base, djui_button_on_cursor_down_begin, NULL, djui_button_on_cursor_down_end);
+    button->style = 0;
 
     struct DjuiRect* rect = djui_rect_create(&button->base);
     djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
