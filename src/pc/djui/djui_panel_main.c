@@ -46,6 +46,9 @@ void djui_panel_main_create(struct DjuiBase* caller) {
         djui_text_set_alignment(footer, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
     }
 
+    struct DjuiInputbox* inputbox = djui_inputbox_create(&gDjuiRoot->base, 256);
+    djui_base_set_location(&inputbox->base, 400, 400);
+
     djui_panel_add(caller, &panel->base, defaultBase);
     gInteractableOverridePad = true;
 }

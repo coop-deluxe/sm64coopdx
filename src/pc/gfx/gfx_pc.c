@@ -1868,7 +1868,7 @@ static uint32_t sDjuiOverrideB       = 0;
 
 static void djui_gfx_dp_execute_clipping(void) {
     if (!sDjuiClip) { return; }
-    sDjuiClip = 0;
+    sDjuiClip = false;
 
     size_t start_index = 0;
     size_t dest_index = 4;

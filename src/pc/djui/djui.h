@@ -21,9 +21,10 @@
 #include "djui_three_panel.h"
 
 #include "djui_button.h"
-#include "djui_flow_layout.h"
+#include "djui_inputbox.h"
 #include "djui_slider.h"
 #include "djui_checkbox.h"
+#include "djui_flow_layout.h"
 #include "djui_selectionbox.h"
 #include "djui_bind.h"
 
