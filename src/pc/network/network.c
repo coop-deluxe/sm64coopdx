@@ -274,7 +274,17 @@ void network_shutdown(void) {
     gNetworkType = NT_NONE;
 }
 
-// TODO: REPLACE WITH A REAL CHAT
+// TODO: replace
 void chat_add_message(char* message) {
     LOG_INFO("chat: %s", message);
+}
+
+// TODO: replace
+void djui_show_popup(char* message) {
+    LOG_INFO("popup: %s", message);
+}
+
+// TODO: replace
+void djui_connect_menu_open(void) {
+    LOG_INFO("djui: connecting");
 }

@@ -42,7 +42,6 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
-#include "menu/custom_menu_system.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -281,7 +280,7 @@ void main_func(void) {
     }
 
 #ifdef UNSTABLE_BRANCH
-    custom_menu_error("This is an unstable branch build.\n\nExpect many strange bugs.\n\nFor a more stable experience use the normal coop branch.");
+    djui_show_popup("This is an unstable branch build.\n\nExpect many strange bugs.\n\nFor a more stable experience use the normal coop branch.");
 #endif
 
     audio_init();

@@ -101,6 +101,8 @@ void network_update(void);
 void network_register_mod(char* modName);
 void network_shutdown(void);
 
-// TODO: replace with a real chat
+// TODO: replace
 void chat_add_message(char* message);
+void djui_show_popup(char* message);
+void djui_connect_menu_open(void);
 #endif

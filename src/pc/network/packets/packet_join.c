@@ -7,7 +7,6 @@
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
 #include "src/game/save_file.h"
-#include "src/menu/custom_menu.h"
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
@@ -119,7 +118,7 @@ void network_receive_join(struct Packet* p) {
 
         char mismatchMessage[128] = { 0 };
         snprintf(mismatchMessage, 128, "Version mismatch.\n\nYour version - %s\nTheir version - %s\n\nSomeone is out of date!\n", version, remoteVersion);
-        custom_menu_connection_error(mismatchMessage);
+        djui_show_popup(mismatchMessage);
         return;
     }
 
@@ -144,7 +143,7 @@ void network_receive_join(struct Packet* p) {
 
     if (string_linked_list_mismatch(&gRegisteredMods, &head)) {
         string_linked_list_free(&head);
-        custom_menu_connection_error("Your mods don't match!");
+        djui_show_popup("Your mods don't match!");
         return;
     }
     string_linked_list_free(&head);
@@ -153,5 +152,5 @@ void network_receive_join(struct Packet* p) {
     network_player_connected(NPT_LOCAL, myGlobalIndex);
 
     save_file_load_all(TRUE);
-    custom_menu_goto_game(gCurrSaveFileNum);
+    //custom_menu_goto_game(gCurrSaveFileNum);
 }

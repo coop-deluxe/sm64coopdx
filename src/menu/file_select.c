@@ -23,9 +23,6 @@
 
 #include "eu_translation.h"
 
-#include "custom_menu_system.h"
-#include "custom_menu.h"
-
 #ifdef VERSION_EU
 #undef LANGUAGE_FUNCTION
 #define LANGUAGE_FUNCTION sLanguageMode
@@ -37,9 +34,6 @@
  * That includes button IDs rendered as object models, strings, hand cursor,
  * special menu messages and phases, button states and button clicked checks.
  */
-
-u8 gInCustomMenu = 1;
-u8 sIgnoreMenuTimer = 5;
 
 #ifdef VERSION_US
 // The current sound mode is automatically centered on US due to
@@ -530,9 +524,7 @@ void bhv_menu_button_loop(void) {
             gCurrentObject->oMenuButtonOrigPosZ = gCurrentObject->oPosZ;
             break;
         case MENU_BUTTON_STATE_GROWING: // Switching from button to menu state
-            if (gInCustomMenu) {
-                bhv_menu_button_growing_from_custom(gCurrentObject);
-            } else if (sCurrentMenuLevel == MENU_LAYER_MAIN) {
+            if (sCurrentMenuLevel == MENU_LAYER_MAIN) {
                 bhv_menu_button_growing_from_main_menu(gCurrentObject);
             } else if (sCurrentMenuLevel == MENU_LAYER_SUBMENU) {
                 bhv_menu_button_growing_from_submenu(gCurrentObject); // Only used for score files
@@ -543,9 +535,7 @@ void bhv_menu_button_loop(void) {
         case MENU_BUTTON_STATE_FULLSCREEN: // Menu state
             break;
         case MENU_BUTTON_STATE_SHRINKING: // Switching from menu to button state
-            if (gInCustomMenu) {
-                bhv_menu_button_shrinking_to_custom(gCurrentObject);
-            } else if (sCurrentMenuLevel == MENU_LAYER_MAIN) {
+            if (sCurrentMenuLevel == MENU_LAYER_MAIN) {
                 bhv_menu_button_shrinking_to_main_menu(gCurrentObject);
             } else if (sCurrentMenuLevel == MENU_LAYER_SUBMENU) {
                 bhv_menu_button_shrinking_to_submenu(gCurrentObject); // Only used for score files
@@ -1127,7 +1117,6 @@ void check_sound_mode_menu_clicked_buttons(struct Object *soundModeButton) {
 void load_main_menu_save_file(struct Object *fileButton, s32 fileNum) {
     if (fileButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
         sSelectedFileNum = fileNum;
-        custom_menu_on_load_save_file(sSelectedFileNum);
     }
 }
 
@@ -1362,9 +1351,6 @@ void bhv_menu_button_manager_init(void) {
     sMainMenuButtons[MENU_BUTTON_SOUND_MODE]->oMenuButtonScale = 1.0f;
 
     sTextBaseAlpha = 0;
-
-    // custom menus
-    custom_menu_system_init();
 }
 
 #if defined(VERSION_JP) || defined(VERSION_SH)
@@ -1378,10 +1364,6 @@ void bhv_menu_button_manager_init(void) {
  * Also play a sound and/or render buttons depending of the button ID selected.
  */
 void check_main_menu_clicked_buttons(void) {
-    if (sIgnoreMenuTimer > 0) {
-        sIgnoreMenuTimer--;
-        return;
-    }
 #ifdef VERSION_EU
     if (sMainMenuTimer >= 5) {
 #endif
@@ -1461,10 +1443,6 @@ void check_main_menu_clicked_buttons(void) {
  * is loaded, and that checks what buttonID is clicked in the main menu.
  */
 void bhv_menu_button_manager_loop(void) {
-    if (gInCustomMenu) {
-        custom_menu_system_loop();
-        return;
-    }
     switch (sSelectedButtonID) {
         case MENU_BUTTON_NONE:
             check_main_menu_clicked_buttons();
@@ -1650,13 +1628,6 @@ void handle_controller_cursor_input(void) {
     }
     if (sCursorPos[1] < -90.0f) {
         sCursorPos[1] = -90.0f;
-    }
-
-    if (sCursorClickingTimer == 0) {
-        handle_cursor_button_input();
-        if (gInCustomMenu) {
-            custom_menu_cursor_click(sCursorPos[0], sCursorPos[1]);
-        }
     }
 }
 
@@ -2741,11 +2712,6 @@ static void print_file_select_strings(void) {
 
     create_dl_ortho_matrix();
 
-    if (gInCustomMenu) {
-        custom_menu_print_strings();
-        return;
-    }
-
     switch (sSelectedButtonID) {
         case MENU_BUTTON_NONE:
 #ifdef VERSION_EU
@@ -2804,7 +2770,6 @@ Gfx *geo_file_select_strings_and_menu_cursor(s32 callContext, UNUSED struct Grap
     if (callContext == GEO_CONTEXT_RENDER) {
         print_file_select_strings();
         print_menu_cursor();
-        custom_menu_render_top();
     }
     return NULL;
 }
