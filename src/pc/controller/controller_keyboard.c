@@ -17,7 +17,6 @@
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
 #include "menu/file_select.h"
-#include "game/chat.h"
 #include "src/pc/djui/djui.h"
 
 static int keyboard_buttons_down;

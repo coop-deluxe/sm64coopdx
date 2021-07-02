@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
 #include "../reservation_area.h"
-#include "game/chat.h"
 #include "pc/debuglog.h"
 
 #ifdef DEVELOPMENT
@@ -55,7 +54,7 @@ void network_receive_chat(struct Packet* p) {
     packet_read(p, &remoteMessage, remoteMessageLength * sizeof(u8));
 
     // add the message
-    chat_add_message_ext(remoteMessage, CMT_REMOTE, rgb);
+    chat_add_message(remoteMessage);
     LOG_INFO("rx chat: %s", remoteMessage);
     /*
 #ifdef DEVELOPMENT

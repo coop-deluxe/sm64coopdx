@@ -3847,7 +3847,6 @@
     <ClCompile Include="..\src\game\behaviors\yoshi.inc.c" />
     <ClCompile Include="..\src\game\camera.c" />
     <ClCompile Include="..\src\game\characters.c" />
-    <ClCompile Include="..\src\game\chat.c" />
     <ClCompile Include="..\src\game\debug.c" />
     <ClCompile Include="..\src\game\debug_course.c" />
     <ClCompile Include="..\src\game\envfx_bubbles.c" />
@@ -4378,7 +4377,6 @@
     <ClInclude Include="..\include\behavior_table.h" />
     <ClInclude Include="..\include\luigi_audio_defines.h" />
     <ClInclude Include="..\src\game\characters.h" />
-    <ClInclude Include="..\src\game\chat.h" />
     <ClInclude Include="..\src\game\rng_position.h" />
     <ClInclude Include="..\src\menu\custom_menu.h" />
     <ClInclude Include="..\src\menu\custom_menu_system.h" />

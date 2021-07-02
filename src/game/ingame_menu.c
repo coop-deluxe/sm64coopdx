@@ -32,7 +32,6 @@
 #ifdef EXT_OPTIONS_MENU
 #include "options_menu.h"
 #endif
-#include "chat.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -3114,8 +3113,8 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
     u8 textSaveAndContinue[] = { TEXT_SAVE_AND_CONTINUE };
-    u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
-    u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
+    //u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
+    //u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
     u8 textContinueWithoutSave[] = { TEXT_CONTINUE_WITHOUT_SAVING };
 #endif
 
@@ -3199,8 +3198,6 @@ s16 render_menus_and_dialogs() {
     s16 mode = 0;
 
     create_dl_ortho_matrix();
-
-    render_chat();
 
     if (gMenuMode != -1) {
         switch (gMenuMode) {

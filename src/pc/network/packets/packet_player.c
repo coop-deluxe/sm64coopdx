@@ -9,7 +9,6 @@
 #include "audio/external.h"
 #include "engine/surface_collision.h"
 #include "game/object_list_processor.h"
-#include "game/chat.h"
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
 
@@ -324,7 +323,7 @@ void network_receive_player(struct Packet* p) {
 
     // inform of player death
     if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
-        chat_add_message_ext("player died", CMT_SYSTEM, get_player_color(globalIndex, 0));
+        chat_add_message("player died");
     }
 
     // action changed, reset timer

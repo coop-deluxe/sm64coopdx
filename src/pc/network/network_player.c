@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "network_player.h"
-#include "game/chat.h"
 #include "game/mario_misc.h"
 #include "reservation_area.h"
 #include "pc/debuglog.h"
@@ -179,7 +178,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
-        else { chat_add_message_ext("player connected", CMT_SYSTEM, get_player_color(np->globalIndex, 0)); }
+        else { chat_add_message("player connected"); }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
         packet_ordered_clear(np->globalIndex);
         return i;
@@ -219,7 +218,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         gNetworkSystem->clear_id(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
-        chat_add_message_ext("player disconnected", CMT_SYSTEM, get_player_color(globalIndex, 0));
+        chat_add_message("player disconnected");
         packet_ordered_clear(globalIndex);
         reservation_area_change(np);
         return i;
@@ -236,6 +235,6 @@ void network_player_shutdown(void) {
         gNetworkSystem->clear_id(i);
     }
 
-    chat_add_message("network shutdown", CMT_SYSTEM);
+    chat_add_message("network shutdown");
     LOG_INFO("cleared all network players");
 }

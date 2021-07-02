@@ -101,4 +101,6 @@ void network_update(void);
 void network_register_mod(char* modName);
 void network_shutdown(void);
 
+// TODO: replace with a real chat
+void chat_add_message(char* message);
 #endif

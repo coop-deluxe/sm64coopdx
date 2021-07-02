@@ -273,3 +273,8 @@ void network_shutdown(void) {
 
     gNetworkType = NT_NONE;
 }
+
+// TODO: REPLACE WITH A REAL CHAT
+void chat_add_message(char* message) {
+    LOG_INFO("chat: %s", message);
+}
