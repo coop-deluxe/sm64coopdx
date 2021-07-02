@@ -15,6 +15,15 @@ static u8 sHeldShift = 0;
 static u8 sHeldControl = 0;
 static u8 sCursorBlink = 0;
 
+void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
+    snprintf(inputbox->buffer, inputbox->bufferSize, "%s", text);
+}
+
+void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
+    inputbox->selection[1] = 0;
+    inputbox->selection[0] = strlen(inputbox->buffer);
+}
+
 void djui_inputbox_hook_enter_press(struct DjuiInputbox* inputbox, void (*on_enter_press)(void)) {
     inputbox->on_enter_press = on_enter_press;
 }
@@ -54,15 +63,6 @@ static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
     return index;
 }
 
-static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
-    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
-    u16 index = djui_inputbox_get_cursor_index(inputbox);
-    inputbox->selection[0] = index;
-    inputbox->selection[1] = index;
-    sCursorBlink = 0;
-    djui_interactable_set_input_focus(base);
-}
-
 static void djui_inputbox_on_cursor_down(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     u16 index = djui_inputbox_get_cursor_index(inputbox);
@@ -71,6 +71,21 @@ static void djui_inputbox_on_cursor_down(struct DjuiBase* base) {
 
 static void djui_inputbox_on_cursor_down_end(struct DjuiBase* base) {
     djui_inputbox_set_default_style(base);
+}
+
+static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
+    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
+    u16 index = djui_inputbox_get_cursor_index(inputbox);
+    u16 selLength = abs(inputbox->selection[0] - inputbox->selection[1]);
+    if (selLength != strlen(inputbox->buffer) || djui_interactable_is_input_focus(base)) {
+        inputbox->selection[0] = index;
+        inputbox->selection[1] = index;
+        djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, djui_inputbox_on_cursor_down_end);
+    } else {
+        djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, NULL, djui_inputbox_on_cursor_down_end);
+    }
+    sCursorBlink = 0;
+    djui_interactable_set_input_focus(base);
 }
 
 static u16 djui_inputbox_jump_word_left(char* msg, u16 len, u16 i) {

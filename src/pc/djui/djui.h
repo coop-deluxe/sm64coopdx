@@ -34,6 +34,7 @@
 #include "djui_panel_main.h"
 #include "djui_panel_host.h"
 #include "djui_panel_host_message.h"
+#include "djui_panel_join.h"
 #include "djui_panel_options.h"
 #include "djui_panel_camera.h"
 #include "djui_panel_controls.h"

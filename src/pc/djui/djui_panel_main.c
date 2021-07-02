@@ -25,6 +25,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             struct DjuiButton* button2 = djui_button_create(&body->base, "Join");
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button2->base, 1.0f, 64);
+            djui_interactable_hook_click(&button2->base, djui_panel_join_create);
 
             struct DjuiButton* button3 = djui_button_create(&body->base, "Options");
             djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -45,9 +46,6 @@ void djui_panel_main_create(struct DjuiBase* caller) {
         djui_base_set_color(&footer->base, 50, 50, 50, 255);
         djui_text_set_alignment(footer, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
     }
-
-    struct DjuiInputbox* inputbox = djui_inputbox_create(&gDjuiRoot->base, 256);
-    djui_base_set_location(&inputbox->base, 400, 100);
 
     djui_panel_add(caller, &panel->base, defaultBase);
     gInteractableOverridePad = true;

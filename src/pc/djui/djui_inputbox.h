@@ -11,6 +11,8 @@ struct DjuiInputbox {
     void (*on_enter_press)(void);
 };
 
+void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text);
+void djui_inputbox_select_all(struct DjuiInputbox* inputbox);
 void djui_inputbox_hook_enter_press(struct DjuiInputbox* inputbox, void (*on_enter_press)(void));
 
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize);
