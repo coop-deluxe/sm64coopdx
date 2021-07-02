@@ -26,11 +26,12 @@ static bool sIgnoreInteractableUntilCursorReleased = false;
 
 static struct DjuiBase* sInteractableFocus   = NULL;
 static struct DjuiBase* sInteractableBinding = NULL;
-static struct DjuiBase* sHovered    = NULL;
-static struct DjuiBase* sMouseDown  = NULL;
-bool gInteractableOverridePad       = false;
-OSContPad gInteractablePad          = { 0 };
-OSContPad sLastInteractablePad      = { 0 };
+static struct DjuiBase* sHovered      = NULL;
+static struct DjuiBase* sMouseDown    = NULL;
+bool gInteractableOverridePad         = false;
+OSContPad gInteractablePad            = { 0 };
+static OSContPad sLastInteractablePad = { 0 };
+static int sLastMouseButtons          = 0;
 
 static void djui_interactable_on_click(struct DjuiBase* base) {
     if (base == NULL) { return; }
@@ -166,17 +167,46 @@ void djui_interactable_set_input_focus(struct DjuiBase* base) {
     djui_cursor_set_visible(base == NULL);
 }
 
-void djui_interactable_on_key_down(int scancode) {
-    switch (scancode) {
-        case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    break;
-        case SCANCODE_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  break;
-        case SCANCODE_LEFT:  sKeyboardHoldDirection = PAD_HOLD_DIR_LEFT;  break;
-        case SCANCODE_RIGHT: sKeyboardHoldDirection = PAD_HOLD_DIR_RIGHT; break;
-        case SCANCODE_ENTER: sKeyboardButtons |= PAD_BUTTON_A;            break;
+bool djui_interactable_is_input_focus(struct DjuiBase* base) {
+    return sInteractableFocus == base;
+}
+
+bool djui_interactable_on_key_down(int scancode) {
+
+    bool keyFocused = (sInteractableFocus != NULL)
+                   && (sInteractableFocus->interactable != NULL)
+                   && (sInteractableFocus->interactable->on_key_down != NULL);
+
+    if (keyFocused) {
+        bool consume = sInteractableFocus->interactable->on_key_down(sInteractableFocus, scancode);
+        sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
+        sKeyboardButtons = 0;
+        return consume;
     }
+
+    switch (scancode) {
+        case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    return true;
+        case SCANCODE_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  return true;
+        case SCANCODE_LEFT:  sKeyboardHoldDirection = PAD_HOLD_DIR_LEFT;  return true;
+        case SCANCODE_RIGHT: sKeyboardHoldDirection = PAD_HOLD_DIR_RIGHT; return true;
+        case SCANCODE_ENTER: sKeyboardButtons |= PAD_BUTTON_A;            return true;
+    }
+    return false;
 }
 
 void djui_interactable_on_key_up(int scancode) {
+
+    bool keyFocused = (sInteractableFocus != NULL)
+                   && (sInteractableFocus->interactable != NULL)
+                   && (sInteractableFocus->interactable->on_key_up != NULL);
+
+    if (keyFocused) {
+        sInteractableFocus->interactable->on_key_up(sInteractableFocus, scancode);
+        sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
+        sKeyboardButtons = 0;
+        return;
+    }
+
     OSContPad* pad = &gInteractablePad;
     switch (scancode) {
         case SCANCODE_UP:    if (sKeyboardHoldDirection == PAD_HOLD_DIR_UP)    { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_y = 0; } break;
@@ -185,6 +215,13 @@ void djui_interactable_on_key_up(int scancode) {
         case SCANCODE_RIGHT: if (sKeyboardHoldDirection == PAD_HOLD_DIR_RIGHT) { sKeyboardHoldDirection = PAD_HOLD_DIR_NONE; pad->stick_x = 0; } break;
         case SCANCODE_ENTER: sKeyboardButtons &= ~PAD_BUTTON_A; break;
     }
+}
+
+void djui_interactable_on_text_input(char* text) {
+    if (sInteractableFocus == NULL) { return; }
+    if (sInteractableFocus->interactable == NULL) { return; }
+    if (sInteractableFocus->interactable->on_text_input == NULL) { return; }
+    sInteractableFocus->interactable->on_text_input(sInteractableFocus, text);
 }
 
 void djui_interactable_update_pad(void) {
@@ -252,16 +289,22 @@ void djui_interactable_update(void) {
         }
     }
 
-    if (sInteractableBinding != NULL) {
-        djui_interactable_on_bind(sInteractableBinding);
-    } else if (sInteractableFocus != NULL) {
-        // escape focus
-        u16 buttons = PAD_BUTTON_A | PAD_BUTTON_B;
-        if ((padButtons & buttons) && !(sLastInteractablePad.button & buttons)) {
+    // update focused
+    if (sInteractableFocus) {
+        u16 mainButtons = PAD_BUTTON_A | PAD_BUTTON_B;
+        if ((mouseButtons & MOUSE_BUTTON_1) && !(sLastMouseButtons && MOUSE_BUTTON_1) && !djui_cursor_inside_base(sInteractableFocus)) {
+            // clicked outside of focused
+            djui_interactable_set_input_focus(NULL);
+        } else if ((padButtons & mainButtons) && !(sLastInteractablePad.button & mainButtons)) {
+            // pressed main face button
             djui_interactable_set_input_focus(NULL);
         } else {
             djui_interactable_on_focus(sInteractableFocus);
         }
+    }
+
+    if (sInteractableBinding != NULL) {
+        djui_interactable_on_bind(sInteractableBinding);
     } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
         // cursor down events
         if (sHovered != NULL) {
@@ -288,6 +331,7 @@ void djui_interactable_update(void) {
     }
 
     sLastInteractablePad = gInteractablePad;
+    sLastMouseButtons = mouseButtons;
 }
 
 void djui_interactable_hook_hover(struct DjuiBase* base,
@@ -334,6 +378,21 @@ void djui_interactable_hook_bind(struct DjuiBase* base,
                                  void (*on_bind)(struct DjuiBase*)) {
     struct DjuiInteractable* interactable = base->interactable;
     interactable->on_bind = on_bind;
+}
+
+void djui_interactable_hook_key(struct DjuiBase* base,
+                                 bool (*on_key_down)(struct DjuiBase*, int),
+                                 void (*on_key_up)(struct DjuiBase*, int)) {
+    struct DjuiInteractable *interactable = base->interactable;
+    interactable->on_key_down = on_key_down;
+    interactable->on_key_up   = on_key_up;
+
+}
+
+void djui_interactable_hook_text_input(struct DjuiBase *base,
+                                       void (*on_text_input)(struct DjuiBase*, char*)) {
+    struct DjuiInteractable *interactable = base->interactable;
+    interactable->on_text_input = on_text_input;
 }
 
 void djui_interactable_create(struct DjuiBase* base) {

@@ -6,26 +6,32 @@
 
 # define VK_BASE_KEYBOARD 0x0000
 
+#define SCANCODE_ESCAPE          1
+#define SCANCODE_BACKSPACE      14
+#define SCANCODE_ENTER          28
+#define SCANCODE_CONTROL_LEFT   29
+#define SCANCODE_SHIFT_LEFT     42
+#define SCANCODE_A              30
+#define SCANCODE_X              45
+#define SCANCODE_C              46
+#define SCANCODE_V              47
+#define SCANCODE_SHIFT_RIGHT    54
+#define SCANCODE_CONTROL_RIGHT 285
+#define SCANCODE_HOME          327
+#define SCANCODE_LEFT          331
+#define SCANCODE_RIGHT         333
+#define SCANCODE_END           335
+#define SCANCODE_INSERT        338
+#define SCANCODE_DELETE        339
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define MAX_TEXT_INPUT 255
-extern char gTextInput[];
-
-enum TextInputMode {
-    TIM_IP,
-    TIM_MULTI_LINE,
-    TIM_SINGLE_LINE,
-};
 
 bool keyboard_on_key_down(int scancode);
 bool keyboard_on_key_up(int scancode);
 void keyboard_on_all_keys_up(void);
 void keyboard_on_text_input(char* text);
-char* keyboard_start_text_input(enum TextInputMode, u8 inMaxTextInput, void (*onEscape)(void), void (*onEnter)(void));
-void keyboard_stop_text_input(void);
-bool keyboard_in_text_input(void);
 
 #ifdef __cplusplus
 }

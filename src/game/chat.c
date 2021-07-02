@@ -127,33 +127,17 @@ void chat_add_message(char* ascii, enum ChatMessageType chatMessageType) {
 
 static void chat_stop_input(void) {
     sInChatInput = FALSE;
-    keyboard_stop_text_input();
 }
 
 static void chat_send_input(void) {
-    sInChatInput = FALSE;
-    keyboard_stop_text_input();
-    if (strlen(gTextInput) == 0) { return; }
-    chat_add_message(gTextInput, CMT_LOCAL);
-    // our message has the same color as our shirt
-    network_send_chat(gTextInput, get_player_color(gNetworkPlayerLocal->globalIndex, 0));
 }
 
 void chat_start_input(void) {
-    sInChatInput = TRUE;
-    keyboard_start_text_input(TIM_SINGLE_LINE, CHAT_DIALOG_MAX - 3, chat_stop_input, chat_send_input);
 }
 
 void render_chat(void) {
     u8 count = 0;
     if (sInChatInput) {
-        struct ChatMessage inputMessage = { 0 };
-        inputMessage.type = CMT_INPUT;
-        inputMessage.dialog[0] = 0xFD;
-        inputMessage.dialog[1] = 0x9E;
-        str_ascii_to_dialog(gTextInput, &inputMessage.dialog[2], MIN(strlen(gTextInput), CHAT_DIALOG_MAX - 3));
-        inputMessage.life = CHAT_LIFE_MAX;
-        render_chat_message(&inputMessage, count++);
     }
 
     u8 index = onMessageIndex;

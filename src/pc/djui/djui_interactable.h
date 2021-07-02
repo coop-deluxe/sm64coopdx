@@ -21,6 +21,9 @@ struct DjuiInteractable {
     void (*on_click)(struct DjuiBase*);
     void (*on_value_change)(struct DjuiBase*);
     void (*on_bind)(struct DjuiBase*);
+    bool (*on_key_down)(struct DjuiBase*, int scancode);
+    void (*on_key_up)(struct DjuiBase*, int scancode);
+    void (*on_text_input)(struct DjuiBase*, char* text);
 };
 
 extern bool gInteractableOverridePad;
@@ -29,8 +32,11 @@ extern OSContPad gInteractablePad;
 bool djui_interactable_is_binding(void);
 void djui_interactable_set_binding(struct DjuiBase* base);
 void djui_interactable_set_input_focus(struct DjuiBase* base);
-void djui_interactable_on_key_down(int scancode);
+bool djui_interactable_is_input_focus(struct DjuiBase* base);
+bool djui_interactable_on_key_down(int scancode);
 void djui_interactable_on_key_up(int scancode);
+void djui_interactable_on_text_input(char *text);
+
 void djui_interactable_update(void);
 
 void djui_interactable_hook_hover(struct DjuiBase* base,
@@ -55,4 +61,12 @@ void djui_interactable_hook_value_change(struct DjuiBase* base,
 
 void djui_interactable_hook_bind(struct DjuiBase* base,
                                  void (*on_bind)(struct DjuiBase*));
+
+void djui_interactable_hook_key(struct DjuiBase* base,
+                                 bool (*on_key_down)(struct DjuiBase*, int),
+                                 void (*on_key_up)(struct DjuiBase*, int));
+
+void djui_interactable_hook_text_input(struct DjuiBase* base,
+                                       void (*on_text_input)(struct DjuiBase*, char*));
+
 void djui_interactable_create(struct DjuiBase* base);

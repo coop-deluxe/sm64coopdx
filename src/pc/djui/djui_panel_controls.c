@@ -16,17 +16,17 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         djui_base_set_color(&bindBody->base, 0, 0, 0, 0);
         djui_flow_layout_set_margin(bindBody, 1);
         {
-            struct DjuiBind* bind1  = djui_bind_create(&bindBody->base, "A",       configKeyA);
-            struct DjuiBind* bind2  = djui_bind_create(&bindBody->base, "B",       configKeyB);
-            struct DjuiBind* bind3  = djui_bind_create(&bindBody->base, "Start",   configKeyStart);
-            struct DjuiBind* bind4  = djui_bind_create(&bindBody->base, "L",       configKeyL);
-            struct DjuiBind* bind5  = djui_bind_create(&bindBody->base, "R",       configKeyR);
-            struct DjuiBind* bind6  = djui_bind_create(&bindBody->base, "Z",       configKeyZ);
-            struct DjuiBind* bind7  = djui_bind_create(&bindBody->base, "C Up",    configKeyCUp);
-            struct DjuiBind* bind8  = djui_bind_create(&bindBody->base, "C Down",  configKeyCDown);
-            struct DjuiBind* bind9  = djui_bind_create(&bindBody->base, "C Left",  configKeyCLeft);
-            struct DjuiBind* bind10 = djui_bind_create(&bindBody->base, "C Right", configKeyCRight);
-            struct DjuiBind* bind11 = djui_bind_create(&bindBody->base, "Chat",    configKeyChat);
+            struct DjuiBind* bind1  = djui_bind_create(&bindBody->base, "A", configKeyA);
+            djui_bind_create(&bindBody->base, "B",       configKeyB);
+            djui_bind_create(&bindBody->base, "Start",   configKeyStart);
+            djui_bind_create(&bindBody->base, "L",       configKeyL);
+            djui_bind_create(&bindBody->base, "R",       configKeyR);
+            djui_bind_create(&bindBody->base, "Z",       configKeyZ);
+            djui_bind_create(&bindBody->base, "C Up",    configKeyCUp);
+            djui_bind_create(&bindBody->base, "C Down",  configKeyCDown);
+            djui_bind_create(&bindBody->base, "C Left",  configKeyCLeft);
+            djui_bind_create(&bindBody->base, "C Right", configKeyCRight);
+            djui_bind_create(&bindBody->base, "Chat",    configKeyChat);
             defaultBase = &bind1->buttons[0]->base;
         }
 

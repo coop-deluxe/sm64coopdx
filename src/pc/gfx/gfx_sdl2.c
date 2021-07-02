@@ -369,6 +369,7 @@ static void gfx_sdl_shutdown(void) {
 static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
 static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
 static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
+static void gfx_sdl_set_clipboard_text(char* text) { SDL_SetClipboardText(text); }
 
 struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_init,
@@ -384,6 +385,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_start_text_input,
     gfx_sdl_stop_text_input,
     gfx_sdl_get_clipboard_text,
+    gfx_sdl_set_clipboard_text,
 };
 
 #endif // BACKEND_WM

@@ -37,14 +37,6 @@ static void djui_checkbox_on_cursor_down_end(struct DjuiBase* base) {
     djui_checkbox_set_default_style(base);
 }
 
-static void djui_checkbox_on_focus_begin(struct DjuiBase* base) {
-    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-    djui_base_set_border_color(&checkbox->rect->base, 20, 170, 255, 255);
-    djui_base_set_color(&checkbox->rect->base, 255, 255, 255, 32);
-    djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
-    djui_base_set_color(&checkbox->rectValue->base, 255, 255, 255, 255);
-}
-
 static void djui_checkbox_destroy(struct DjuiBase* base) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
     free(checkbox);

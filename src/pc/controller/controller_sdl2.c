@@ -20,6 +20,8 @@
 
 #include "game/level_update.h"
 
+#include "pc/djui/djui.h"
+
 // mouse buttons are also in the controller namespace (why), just offset 0x100
 #define VK_OFS_SDL_MOUSE 0x0100
 #define VK_BASE_SDL_MOUSE (VK_BASE_SDL_GAMEPAD + VK_OFS_SDL_MOUSE)
@@ -163,10 +165,11 @@ static void controller_sdl_read(OSContPad *pad) {
 
     u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 
-    for (u32 i = 0; i < num_mouse_binds; ++i)
-        if (mouse & SDL_BUTTON(mouse_binds[i][0]))
-            pad->button |= mouse_binds[i][1];
-
+    if (!gInteractableOverridePad) {
+        for (u32 i = 0; i < num_mouse_binds; ++i)
+            if (mouse & SDL_BUTTON(mouse_binds[i][0]))
+                pad->button |= mouse_binds[i][1];
+    }
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;

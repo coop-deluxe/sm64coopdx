@@ -1,15 +1,9 @@
 #include "djui.h"
+#include "pc/controller/controller_mouse.h"
+#include "pc/controller/controller_sdl.h"
 
-#include "src/pc/controller/controller_sdl.h"
-#include "src/pc/controller/controller_mouse.h"
-
-ALIGNED8 static u8 texture_hand_open[] = {
-#include "textures/intro_raw/hand_open.rgba16.inc.c"
-};
-
-ALIGNED8 static u8 texture_hand_closed[] = {
-#include "textures/intro_raw/hand_closed.rgba16.inc.c"
-};
+extern ALIGNED8 u8 gd_texture_hand_open[];
+extern ALIGNED8 u8 gd_texture_hand_closed[];
 
 static struct DjuiImage* sMouseCursor = NULL;
 
@@ -22,7 +16,11 @@ f32 gCursorX = 0;
 f32 gCursorY = 0;
 
 void djui_cursor_set_visible(bool visible) {
-    djui_base_set_visible(&sMouseCursor->base, visible);
+    if (sMouseCursor) {
+        djui_base_set_visible(&sMouseCursor->base, visible);
+    }
+    sSavedMouseX = mouse_window_x;
+    sSavedMouseY = mouse_window_y;
 }
 
 bool djui_cursor_inside_base(struct DjuiBase* base) {
@@ -42,11 +40,7 @@ static void djui_cursor_base_hover_location(struct DjuiBase* base, f32* x, f32* 
 void djui_cursor_input_controlled_center(struct DjuiBase* base) {
     if (!sCursorMouseControlled) {
         sInputControlledBase = base;
-        if (sMouseCursor != NULL) {
-            djui_base_set_visible(&sMouseCursor->base, (base != NULL));
-        }
-        sSavedMouseX = mouse_window_x;
-        sSavedMouseY = mouse_window_y;
+        djui_cursor_set_visible(base != NULL);
     }
 }
 
@@ -109,12 +103,11 @@ void djui_cursor_update(void) {
     controller_sdl_read_mouse_window();
 
     // check if mouse is in control again
-    if (!sCursorMouseControlled) {
+    if (!sCursorMouseControlled || (sMouseCursor && !sMouseCursor->base.visible)) {
         f32 dist = sqrtf(powf(mouse_window_x - sSavedMouseX, 2) + powf(mouse_window_y - sSavedMouseY, 2));
         if (dist > 5) {
             sCursorMouseControlled = true;
-            djui_interactable_set_input_focus(NULL);
-            djui_base_set_visible(&sMouseCursor->base, true);
+            djui_cursor_set_visible(true);
         }
     }
 
@@ -131,16 +124,16 @@ void djui_cursor_update(void) {
 
     // set cursor sprite
     if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & MOUSE_BUTTON_1)) {
-        djui_image_set_image(sMouseCursor, texture_hand_closed, 32, 32, 16);
+        djui_image_set_image(sMouseCursor, gd_texture_hand_closed, 32, 32, 16);
     } else {
-        djui_image_set_image(sMouseCursor, texture_hand_open, 32, 32, 16);
+        djui_image_set_image(sMouseCursor, gd_texture_hand_open, 32, 32, 16);
     }
 #endif
     djui_base_render(&sMouseCursor->base);
 }
 
 void djui_cursor_create(void) {
-    sMouseCursor = djui_image_create(NULL, texture_hand_open, 32, 32, 16);
+    sMouseCursor = djui_image_create(NULL, gd_texture_hand_open, 32, 32, 16);
     djui_base_set_location(&sMouseCursor->base, 0, 0);
     djui_base_set_size(&sMouseCursor->base, 64, 64);
 }

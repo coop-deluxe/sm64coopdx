@@ -178,75 +178,15 @@ static void connect_menu_draw_strings(void) {
 
     print_generic_ascii_string(30, 175, "Type in or paste the host's IP.");
     print_generic_ascii_string(30, 160, "Note - the host must forward a port on their router.");
-
-    if (keyboard_in_text_input()) {
-        if (strlen(gTextInput) >= 7) {
-            print_generic_ascii_string(30, 100, "Press (ENTER) to connect.");
-        } else {
-            print_generic_ascii_string(30, 100, "Press (ESC) to cancel.");
-        }
-    }
-
-    gDPSetEnvColor(gDisplayListHead++, 130, 222, 140, gMenuStringAlpha);
-    print_generic_ascii_string(30, 130, gTextInput);
 }
 
 static void connect_menu_on_connection_attempt(void) {
-    play_sound(SOUND_GENERAL_COIN, gDefaultSoundArgs);
-
-    keyboard_stop_text_input();
-    if (gNetworkType != NT_NONE) { return; }
-
-    char delims[2] = " ";
-
-    // copy input
-    char buffer[MAX_TEXT_INPUT] = { 0 };
-    strncpy(buffer, gTextInput, MAX_TEXT_INPUT);
-    char* text = buffer;
-
-    // trim whitespace
-    while (*text == ' ') { text++; }
-
-    // grab IP
-    char* ip = strtok(text, delims);
-    if (ip == NULL) { custom_menu_close(); return; }
-    strncpy(configJoinIp, ip, MAX_CONFIG_STRING);
-
-    // grab port
-    char* port = strtok(NULL, delims);
-    if (port != NULL) {
-        unsigned int intPort = atoi(port);
-        if (intPort == 0 || intPort > 65535) { configJoinPort = DEFAULT_PORT; custom_menu_close(); return; }
-        configJoinPort = intPort;
-    }
-    else {
-        configJoinPort = DEFAULT_PORT;
-    }
-
-    network_set_system(NS_SOCKET);
-    network_init(NT_CLIENT);
-
 }
 
 static void connect_menu_on_click(void) {
-    sConnectionJoinError[0] = '\0';
-
-    keyboard_start_text_input(TIM_IP, MAX_TEXT_INPUT, custom_menu_close, connect_menu_on_connection_attempt);
-
-    // fill in our last attempt
-    if (configJoinPort == 0 || configJoinPort > 65535) { configJoinPort = DEFAULT_PORT; }
-
-    // only print custom port
-    if (configJoinPort == DEFAULT_PORT) {
-        sprintf(gTextInput, "%s", configJoinIp);
-    }
-    else {
-        sprintf(gTextInput, "%s %d", configJoinIp, configJoinPort);
-    }
 }
 
 static void connect_menu_on_close(void) {
-    keyboard_stop_text_input();
     network_shutdown();
 }
 
