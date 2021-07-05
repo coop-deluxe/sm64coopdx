@@ -152,5 +152,7 @@ void network_receive_join(struct Packet* p) {
     network_player_connected(NPT_LOCAL, myGlobalIndex);
 
     save_file_load_all(TRUE);
-    //custom_menu_goto_game(gCurrSaveFileNum);
+
+    extern s16 gChangeLevel;
+    gChangeLevel = 16;
 }

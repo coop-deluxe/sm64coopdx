@@ -1867,7 +1867,7 @@ s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
     // hide inactive players
     struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
-    if (np->type != NPT_LOCAL) {
+    if (gMarioState->playerIndex != 0) {
         bool levelAreaMismatch =
             (np->currCourseNum   != gCurrCourseNum
             || np->currActNum    != gCurrActNum

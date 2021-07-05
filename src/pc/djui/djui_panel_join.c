@@ -1,4 +1,5 @@
 #include "djui.h"
+#include "src/pc/network/network.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 
@@ -13,6 +14,12 @@ If the invite says that the game has ended, click the name of the person that se
 static char* sJoiningDirect = "\
 Enter \\#d0d0ff\\direct connection\\#c8c8c8\\ IP and port:\
 ";
+
+void djui_panel_join_do_join(struct DjuiBase* caller) {
+    djui_panel_shutdown();
+    network_set_system(NS_SOCKET);
+    network_init(NT_CLIENT);
+}
 
 void djui_panel_join_create(struct DjuiBase* caller) {
     f32 bodyHeight = 2 + 32 + 16 * 2 + 64;
@@ -69,7 +76,7 @@ void djui_panel_join_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            djui_interactable_hook_click(&button2->base, djui_panel_menu_back);
+            djui_interactable_hook_click(&button2->base, djui_panel_join_do_join);
             defaultBase = &button2->base;
         }
     }

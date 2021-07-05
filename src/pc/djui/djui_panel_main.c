@@ -1,12 +1,6 @@
 #include "djui.h"
 #include "src/pc/controller/controller_sdl.h"
 
-static void djui_panel_main_close(struct DjuiBase* caller) {
-    gInteractableOverridePad = false;
-    djui_panel_shutdown();
-    djui_cursor_set_visible(false);
-}
-
 void djui_panel_main_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 4 + 16 * 3;
     

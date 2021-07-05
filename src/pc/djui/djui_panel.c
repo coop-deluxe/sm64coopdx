@@ -129,5 +129,6 @@ void djui_panel_shutdown(void) {
     sPanelList = NULL;
     sPanelRemoving = NULL;
     sMoveAmount = 0;
-
+    gInteractableOverridePad = false;
+    djui_cursor_set_visible(false);
 }

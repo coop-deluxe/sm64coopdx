@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "djui.h"
+#include "src/pc/network/network.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 
@@ -17,6 +18,23 @@ static char* sWarningSocket = "\
 Direct connections \\#ffa0a0\\require you\\#c8c8c8\\ to configure port forwarding in your router.\n\n\
 Forward port '\\#d0d0ff\\%d\\#c8c8c8\\' for UDP.\
 ";
+
+void djui_panel_host_message_do_host(struct DjuiBase* caller) {
+    djui_panel_shutdown();
+#ifndef DISCORD_SDK
+    configNetworkSystem = 1;
+    network_set_system(NS_SOCKET);
+#else
+    if (configNetworkSystem == 0) {
+        network_set_system(NS_DISCORD);
+    } else {
+        network_set_system(NS_SOCKET);
+    }
+#endif
+    network_init(NT_SERVER);
+    extern s16 gChangeLevel;
+    gChangeLevel = 16;
+}
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {
     f32 warningLines = 0;
@@ -62,7 +80,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            djui_interactable_hook_click(&button2->base, djui_panel_menu_back);
+            djui_interactable_hook_click(&button2->base, djui_panel_host_message_do_host);
             defaultBase = &button2->base;
         }
     }
