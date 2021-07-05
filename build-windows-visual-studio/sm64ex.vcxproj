@@ -3948,6 +3948,7 @@
     <ClCompile Include="..\src\pc\djui\djui_panel_host.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_host_message.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_join.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_join_message.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_menu.c" />
     <ClCompile Include="..\src\pc\djui\djui_selectionbox.c" />
     <ClCompile Include="..\src\pc\djui\djui_cursor.c" />
@@ -4036,6 +4037,7 @@
     <ClCompile Include="..\src\pc\platform.c" />
     <ClCompile Include="..\src\pc\ultra_reimplementation.c" />
     <ClCompile Include="..\src\pc\utils\misc.c" />
+    <ClCompile Include="..\src\pc\utils\string_builder.c" />
     <ClCompile Include="..\src\pc\utils\string_linked_list.c" />
     <ClCompile Include="..\text\define_courses.inc.c" />
     <ClCompile Include="..\text\define_text.inc.c" />
@@ -4388,6 +4390,7 @@
     <ClInclude Include="..\src\pc\djui\djui_panel_host.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_host_message.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_join.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_join_message.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_menu.h" />
     <ClInclude Include="..\src\pc\djui\djui_selectionbox.h" />
     <ClInclude Include="..\src\pc\djui\djui_cursor.h" />
@@ -4426,6 +4429,7 @@
     <ClInclude Include="..\src\pc\network\socket\socket_windows.h" />
     <ClInclude Include="..\src\pc\network\version.h" />
     <ClInclude Include="..\src\pc\utils\misc.h" />
+    <ClInclude Include="..\src\pc\utils\string_builder.h" />
     <ClInclude Include="..\src\pc\utils\string_linked_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

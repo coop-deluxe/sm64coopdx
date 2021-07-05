@@ -106,7 +106,7 @@ void network_player_update(void) {
             }
         }
         if (!connectionAlive) {
-            network_shutdown();
+            network_shutdown(true);
         }
     }
 #endif
@@ -194,7 +194,7 @@ u8 network_player_disconnected(u8 globalIndex) {
             LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
-            network_shutdown();
+            network_shutdown(true);
         }
     }
 

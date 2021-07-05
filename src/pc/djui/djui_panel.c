@@ -15,6 +15,7 @@ static f32 sMoveAmount = 0;
 
 void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct DjuiBase* defaultElementBase) {
     bool firstPanel = (sPanelList == NULL);
+    gDjuiPanelJoinMessageVisible = false;
 
     // remember element that triggered this panel add
     if (sPanelList != NULL) {
@@ -76,6 +77,8 @@ void djui_panel_back(void) {
 
     // play a sound
     play_sound(SOUND_MENU_CLICK_FILE_SELECT, gDefaultSoundArgs);
+
+    gDjuiPanelJoinMessageVisible = false;
 }
 
 void djui_panel_update(void) {
@@ -130,5 +133,7 @@ void djui_panel_shutdown(void) {
     sPanelRemoving = NULL;
     sMoveAmount = 0;
     gInteractableOverridePad = false;
+    gDjuiPanelJoinMessageVisible = false;
+    gDjuiPanelMainCreated = false;
     djui_cursor_set_visible(false);
 }

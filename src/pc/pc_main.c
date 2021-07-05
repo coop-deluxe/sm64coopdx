@@ -158,7 +158,7 @@ void game_deinit(void) {
     controller_shutdown();
     audio_shutdown();
     gfx_shutdown();
-    network_shutdown();
+    network_shutdown(true);
     inited = false;
 }
 

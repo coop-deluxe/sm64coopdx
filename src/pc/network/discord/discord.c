@@ -148,7 +148,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
             DISCORD_REQUIRE(rc);
         } else if (rc) {
             LOG_ERROR("DiscordCreate failed: %d", rc);
-            djui_show_popup("Could not detect Discord.\n\nTry closing the game,\nrestarting Discord,\nand opening the game again.");
+            djui_show_popup("\\#ffa0a0\\Error:\\#c8c8c8\\ Could not detect Discord.\n\nTry closing the game, restarting Discord, and opening the game again.");
             gDiscordFailed = true;
             return false;
         }

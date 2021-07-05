@@ -262,12 +262,12 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(void) {
+void network_shutdown(bool sendLeaving) {
     network_forget_all_reliable();
     if (gNetworkType == NT_NONE) { return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
 
-    if (gNetworkPlayerLocal != NULL) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
+    if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
     network_player_shutdown();
     gNetworkSystem->shutdown();
 

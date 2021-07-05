@@ -16,9 +16,9 @@ Enter \\#d0d0ff\\direct connection\\#c8c8c8\\ IP and port:\
 ";
 
 void djui_panel_join_do_join(struct DjuiBase* caller) {
-    djui_panel_shutdown();
     network_set_system(NS_SOCKET);
     network_init(NT_CLIENT);
+    djui_panel_join_message_create(caller);
 }
 
 void djui_panel_join_create(struct DjuiBase* caller) {

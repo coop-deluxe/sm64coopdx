@@ -1,6 +1,8 @@
 #include "djui.h"
 #include "src/pc/controller/controller_sdl.h"
 
+bool gDjuiPanelMainCreated = false;
+
 void djui_panel_main_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 4 + 16 * 3;
     
@@ -43,4 +45,5 @@ void djui_panel_main_create(struct DjuiBase* caller) {
 
     djui_panel_add(caller, &panel->base, defaultBase);
     gInteractableOverridePad = true;
+    gDjuiPanelMainCreated = true;
 }

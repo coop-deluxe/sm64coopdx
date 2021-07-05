@@ -99,7 +99,7 @@ void network_send(struct Packet* p);
 void network_receive(u8 localIndex, u8* data, u16 dataLength);
 void network_update(void);
 void network_register_mod(char* modName);
-void network_shutdown(void);
+void network_shutdown(bool sendLeaving);
 
 // TODO: replace
 void chat_add_message(char* message);
