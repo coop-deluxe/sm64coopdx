@@ -15,6 +15,20 @@ static u8 sHeldShift = 0;
 static u8 sHeldControl = 0;
 static u8 sCursorBlink = 0;
 
+static void djui_inputbox_on_change(struct DjuiInputbox* inputbox) {
+    struct DjuiBase* base = &inputbox->base;
+    if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
+        base->interactable->on_value_change(base);
+    }
+}
+
+void djui_inputbox_set_text_color(struct DjuiInputbox* inputbox, u8 r, u8 g, u8 b, u8 a) {
+    inputbox->textColor.r = r;
+    inputbox->textColor.g = g;
+    inputbox->textColor.b = b;
+    inputbox->textColor.a = a;
+}
+
 void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%s", text);
 }
@@ -130,6 +144,7 @@ static void djui_inputbox_delete_selection(struct DjuiInputbox *inputbox) {
         sel[0] = s1;
         sel[1] = s1;
     }
+    djui_inputbox_on_change(inputbox);
 }
 
 static bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
@@ -316,6 +331,7 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     inputbox->selection[0] += strlen(text);
     inputbox->selection[1] = inputbox->selection[0];
     sCursorBlink = 0;
+    djui_inputbox_on_change(inputbox);
 }
 
 static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char c, f32* drawX, f32* additionalShift) {
@@ -447,7 +463,7 @@ static void djui_inputbox_render(struct DjuiBase* base) {
     gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
 
     // set color
-    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+    gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
 
     // make selection well formed
     u16 selection[2] = { 0 };
@@ -468,7 +484,7 @@ static void djui_inputbox_render(struct DjuiBase* base) {
             if (insideSelection && !wasInsideSelection) {
                 gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
             } else if (!insideSelection && wasInsideSelection) {
-                gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+                gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
             }
             wasInsideSelection = insideSelection;
         }
@@ -498,6 +514,7 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_base_init(parent, base, djui_inputbox_render, djui_inputbox_destroy);
     djui_base_set_size(base, 200, 32);
     djui_base_set_border_width(base, 2);
+    djui_inputbox_set_text_color(inputbox, 0, 0, 0, 255);
     djui_interactable_create(base);
     djui_interactable_hook_hover(base, djui_inputbox_on_hover, djui_inputbox_on_hover_end);
     djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, djui_inputbox_on_cursor_down_end);
