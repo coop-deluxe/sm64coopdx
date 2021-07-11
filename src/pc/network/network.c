@@ -283,8 +283,3 @@ void chat_add_message(char* message) {
 void djui_show_popup(char* message) {
     LOG_INFO("popup: %s", message);
 }
-
-// TODO: replace
-void djui_connect_menu_open(void) {
-    LOG_INFO("djui: connecting");
-}

@@ -42,6 +42,7 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
+#include "pc/djui/djui.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -265,6 +266,8 @@ void main_func(void) {
     if (audio_api == NULL) {
         audio_api = &audio_null;
     }
+
+    djui_init();
 
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);

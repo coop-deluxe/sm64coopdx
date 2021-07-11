@@ -3,6 +3,7 @@
 #include "discord_network.h"
 #include "pc/debuglog.h"
 #include "pc/network/version.h"
+#include "pc/djui/djui.h"
 
 #define HASH_LENGTH 8
 struct DiscordActivity gCurActivity = { 0 };

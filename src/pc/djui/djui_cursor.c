@@ -99,6 +99,8 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
 void djui_cursor_update(void) {
 #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     if (djui_interactable_is_binding()) { return; }
+    if (sMouseCursor == NULL) { return; }
+    if (!djui_panel_is_active()) { return; }
 
     controller_sdl_read_mouse_window();
 

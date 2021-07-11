@@ -1,17 +1,28 @@
 #include "djui.h"
 #include "../debuglog.h"
+#include "pc/cliopts.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
 struct DjuiFlowLayout* buttonContainer;
 
-static void djui_init(void) {
+void djui_init(void) {
     gDjuiRoot = djui_root_create();
 
-    djui_panel_main_create(NULL);
-    //djui_panel_debug_create();
+    if (gCLIOpts.Network != NT_SERVER) {
+        djui_panel_main_create(NULL);
+        //djui_panel_debug_create();
+    }
+
     djui_cursor_create();
+}
+
+void djui_connect_menu_open(void) {
+    djui_panel_shutdown();
+    djui_panel_main_create(NULL);
+    djui_panel_join_create(NULL);
+    djui_panel_join_message_create(NULL);
 }
 
 void djui_render_patch(void) {
@@ -24,7 +35,6 @@ void djui_render_patch(void) {
 }
 
 void djui_render(void) {
-    if (gDjuiRoot == NULL) { djui_init(); }
     sSavedDisplayListHead = gDisplayListHead;
     create_dl_ortho_matrix();
 

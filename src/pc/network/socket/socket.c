@@ -2,6 +2,7 @@
 #include "socket.h"
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
+#include "pc/djui/djui.h"
 
 static SOCKET curSocket = INVALID_SOCKET;
 static struct sockaddr_in addr[MAX_PLAYERS] = { 0 };

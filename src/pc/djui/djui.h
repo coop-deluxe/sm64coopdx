@@ -45,5 +45,7 @@
 
 extern struct DjuiRoot* gDjuiRoot;
 
+void djui_init(void);
+void djui_connect_menu_open(void);
 void djui_render_patch(void);
 void djui_render(void);

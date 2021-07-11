@@ -13,6 +13,10 @@ static struct DjuiPanel* sPanelList = NULL;
 static struct DjuiPanel* sPanelRemoving = NULL;
 static f32 sMoveAmount = 0;
 
+bool djui_panel_is_active(void) {
+    return (sPanelList != NULL);
+}
+
 void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct DjuiBase* defaultElementBase) {
     bool firstPanel = (sPanelList == NULL);
     gDjuiPanelJoinMessageVisible = false;
@@ -20,6 +24,11 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
     // remember element that triggered this panel add
     if (sPanelList != NULL) {
         sPanelList->defaultElementBase = caller;
+    }
+
+    // hide second from the top immediately
+    if (sPanelList != NULL && sPanelList->parent != NULL) {
+        djui_base_set_visible(sPanelList->parent->base, false);
     }
 
     // allocate panel
