@@ -2,6 +2,7 @@
 #include "network_player.h"
 #include "game/mario_misc.h"
 #include "reservation_area.h"
+#include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
@@ -177,8 +178,15 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->lastReceived = clock();
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
-        if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
-        else { chat_add_message("player connected"); }
+        if (type == NPT_SERVER) {
+            gNetworkPlayerServer = np;
+        } else {
+            // display popup
+            u8* rgb = get_player_color(np->globalIndex, 0);
+            char popupMsg[128] = { 0 };
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\Player\\#dcdcdc\\ connected.", rgb[0], rgb[1], rgb[2]);
+            djui_popup_create(popupMsg, 1);
+        }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
         packet_ordered_clear(np->globalIndex);
         return i;
@@ -218,7 +226,13 @@ u8 network_player_disconnected(u8 globalIndex) {
         gNetworkSystem->clear_id(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
-        chat_add_message("player disconnected");
+        
+        // display popup
+        u8* rgb = get_player_color(np->globalIndex, 0);
+        char popupMsg[128] = { 0 };
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\Player\\#dcdcdc\\ disconnected.", rgb[0], rgb[1], rgb[2]);
+        djui_popup_create(popupMsg, 1);
+
         packet_ordered_clear(globalIndex);
         reservation_area_change(np);
         return i;
@@ -235,6 +249,6 @@ void network_player_shutdown(void) {
         gNetworkSystem->clear_id(i);
     }
 
-    chat_add_message("network shutdown");
+    djui_popup_create("\\#ffa0a0\\Error:\\#dcdcdc\\ network shutdown.", 1);
     LOG_INFO("cleared all network players");
 }

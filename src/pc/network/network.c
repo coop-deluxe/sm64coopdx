@@ -278,8 +278,3 @@ void network_shutdown(bool sendLeaving) {
 void chat_add_message(char* message) {
     LOG_INFO("chat: %s", message);
 }
-
-// TODO: replace
-void djui_show_popup(char* message) {
-    LOG_INFO("popup: %s", message);
-}

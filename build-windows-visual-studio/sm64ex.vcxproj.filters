@@ -15252,6 +15252,9 @@
     <ClCompile Include="..\src\pc\utils\string_builder.c">
       <Filter>Source Files\src\pc\utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_popup.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16323,6 +16326,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\utils\string_builder.h">
       <Filter>Source Files\src\pc\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_popup.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

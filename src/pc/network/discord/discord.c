@@ -5,6 +5,7 @@
 #include "discord_network.h"
 #include "pc/debuglog.h"
 #include "pc/network/version.h"
+#include "pc/djui/djui.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -148,7 +149,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
             DISCORD_REQUIRE(rc);
         } else if (rc) {
             LOG_ERROR("DiscordCreate failed: %d", rc);
-            djui_show_popup("\\#ffa0a0\\Error:\\#c8c8c8\\ Could not detect Discord.\n\nTry closing the game, restarting Discord, and opening the game again.");
+            djui_popup_create("\\#ffa0a0\\Error:\\#c8c8c8\\ Could not detect Discord.\n\\#a0a0a0\\Try closing the game, restarting Discord, and opening the game again.", 3);
             gDiscordFailed = true;
             return false;
         }

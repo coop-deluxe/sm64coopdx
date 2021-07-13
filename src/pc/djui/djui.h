@@ -27,6 +27,7 @@
 #include "djui_flow_layout.h"
 #include "djui_selectionbox.h"
 #include "djui_bind.h"
+#include "djui_popup.h"
 
 #include "djui_panel.h"
 #include "djui_panel_menu.h"

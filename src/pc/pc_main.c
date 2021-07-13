@@ -269,6 +269,10 @@ void main_func(void) {
 
     djui_init();
 
+#ifdef UNSTABLE_BRANCH
+    djui_popup_create("This is an \\#ffa0a0\\unstable\\#dcdcdc\\ branch build.\nExpect many strange bugs.", 2);
+#endif
+
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         strncpy(configJoinIp, gCLIOpts.JoinIp, IP_MAX_LEN);
@@ -281,10 +285,6 @@ void main_func(void) {
     } else {
         network_init(NT_NONE);
     }
-
-#ifdef UNSTABLE_BRANCH
-    djui_show_popup("This is an unstable branch build.\n\nExpect many strange bugs.\n\nFor a more stable experience use the normal coop branch.");
-#endif
 
     audio_init();
     sound_init();

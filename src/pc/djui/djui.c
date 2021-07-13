@@ -39,6 +39,7 @@ void djui_render(void) {
     create_dl_ortho_matrix();
 
     djui_panel_update();
+    djui_popup_update();
 
     djui_base_render(&gDjuiRoot->base);
 
