@@ -395,6 +395,12 @@ void djui_interactable_hook_text_input(struct DjuiBase *base,
     interactable->on_text_input = on_text_input;
 }
 
+void djui_interactable_hook_enabled_change(struct DjuiBase *base,
+                                           void (*on_enabled_change)(struct DjuiBase*)) {
+    struct DjuiInteractable *interactable = base->interactable;
+    interactable->on_enabled_change = on_enabled_change;
+}
+
 void djui_interactable_create(struct DjuiBase* base) {
 
     if (base->interactable != NULL) {

@@ -11,6 +11,9 @@ void djui_base_set_visible(struct DjuiBase* base, bool visible) {
 
 void djui_base_set_enabled(struct DjuiBase* base, bool enabled) {
     base->enabled = enabled;
+    if (base->interactable != NULL && base->interactable->on_enabled_change != NULL) {
+        base->interactable->on_enabled_change(base);
+    }
 }
 
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y) {

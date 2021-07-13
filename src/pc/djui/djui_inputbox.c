@@ -44,8 +44,13 @@ void djui_inputbox_hook_enter_press(struct DjuiInputbox* inputbox, void (*on_ent
 
 static void djui_inputbox_set_default_style(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
-    djui_base_set_border_color(base, 150, 150, 150, 255);
-    djui_base_set_color(&inputbox->base, 240, 240, 240, 255);
+    if (inputbox->base.enabled) {
+        djui_base_set_border_color(base, 150, 150, 150, 255);
+        djui_base_set_color(&inputbox->base, 240, 240, 240, 255);
+    } else {
+        djui_base_set_border_color(base, 90, 90, 90, 255);
+        djui_base_set_color(&inputbox->base, 140, 140, 140, 255);
+    }
 }
 
 static void djui_inputbox_on_hover(struct DjuiBase* base) {
@@ -521,7 +526,7 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_interactable_hook_key(base, djui_inputbox_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_focus(base, djui_inputbox_on_focus_begin, NULL, djui_inputbox_on_focus_end);
     djui_interactable_hook_text_input(base, djui_inputbox_on_text_input);
-
+    djui_interactable_hook_enabled_change(base, djui_inputbox_set_default_style);
     djui_inputbox_set_default_style(base);
 
     return inputbox;

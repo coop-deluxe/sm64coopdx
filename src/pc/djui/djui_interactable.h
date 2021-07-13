@@ -24,6 +24,7 @@ struct DjuiInteractable {
     bool (*on_key_down)(struct DjuiBase*, int scancode);
     void (*on_key_up)(struct DjuiBase*, int scancode);
     void (*on_text_input)(struct DjuiBase*, char* text);
+    void (*on_enabled_change)(struct DjuiBase*);
 };
 
 extern bool gInteractableOverridePad;
@@ -68,5 +69,8 @@ void djui_interactable_hook_key(struct DjuiBase* base,
 
 void djui_interactable_hook_text_input(struct DjuiBase* base,
                                        void (*on_text_input)(struct DjuiBase*, char*));
+
+void djui_interactable_hook_enabled_change(struct DjuiBase *base,
+                                           void (*on_enabled_change)(struct DjuiBase*));
 
 void djui_interactable_create(struct DjuiBase* base);

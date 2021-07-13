@@ -67,7 +67,7 @@ static bool djui_panel_join_ip_parse_port(char** msg) {
         }
     }
 
-    return num >= 1 && num <= 65535;
+    return num >= 1024 && num <= 65535;
 }
 
 static bool djui_panel_join_ip_valid(char* buffer) {
