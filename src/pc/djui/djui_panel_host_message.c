@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "djui.h"
 #include "src/pc/network/network.h"
+#include "src/pc/network/discord/discord.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 
@@ -12,6 +13,7 @@ You can invite channels of servers as well by clicking the \\#d0d0ff\\plus\\#c8c
 Game Activity \\#ffa0a0\\must be\\#c8c8c8\\ enabled in your\nDiscord user settings.\n\n\
 Appearing offline \\#ffa0a0\\will prevent\\#c8c8c8\\ invites from being sent.\
 ";
+static char* sWarningDiscord2 = "\\#ffa0a0\\Error:\\#c8c8c8\\ Could not detect Discord.\n\n\\#a0a0a0\\Try closing the game,\nrestarting Discord,\nand opening the game again.";
 #endif
 
 static char* sWarningSocket = "\
@@ -39,11 +41,13 @@ void djui_panel_host_message_do_host(struct DjuiBase* caller) {
 void djui_panel_host_message_create(struct DjuiBase* caller) {
     f32 warningLines = 0;
     char* warningMessage = NULL;
+    bool hideHostButton = false;
 
 #ifdef DISCORD_SDK
     if (!configNetworkSystem) {
-        warningLines = 13;
-        warningMessage = sWarningDiscord;
+        warningLines = gDiscordFailed ? 5 : 13;
+        warningMessage = gDiscordFailed ? sWarningDiscord2 : sWarningDiscord;
+        hideHostButton = gDiscordFailed;
     } else
 #endif
     {
@@ -82,6 +86,14 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             djui_interactable_hook_click(&button2->base, djui_panel_host_message_do_host);
             defaultBase = &button2->base;
+
+            if (hideHostButton) {
+                djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+                djui_base_set_size(&button1->base, 1.0f, 64);
+                defaultBase = &button1->base;
+                djui_base_set_visible(&button2->base, false);
+                djui_base_set_enabled(&button2->base, false);
+            }
         }
     }
 
