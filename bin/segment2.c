@@ -3550,7 +3550,7 @@ const u8* const font_normal_chars[] = {
     texture_font_normal_char_92,             // |
     texture_font_normal_char_93,             // }
     texture_font_char_us_tilde,              // ~
-    texture_font_char_us_interpunct,         // DEL
+    texture_font_char_us_star_filled,        // DEL
 };
 
 const f32 font_normal_widths[] = {
@@ -3567,5 +3567,5 @@ const f32 font_normal_widths[] = {
 /*        a        b        c        d        e        f        g        h        i        j        k        l        m        n        o        p        q        r        s        t        u        v        w        x        y        z        */
     0.3750f, 0.3125f, 0.3125f, 0.3750f, 0.3125f, 0.3125f, 0.3750f, 0.3125f, 0.2500f, 0.3125f, 0.3125f, 0.1875f, 0.4375f, 0.3125f, 0.3125f, 0.3125f, 0.3750f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.4375f, 0.4375f, 0.3125f, 0.3125f,
 /*        {        |        }        ~      DEL        */
-    0.3125f, 0.2500f, 0.3125f, 0.5000f, 0.4375f
+    0.3125f, 0.2500f, 0.3125f, 0.5000f, 0.5000f
 };

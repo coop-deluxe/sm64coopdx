@@ -23,6 +23,8 @@ Forward port '\\#d0d0ff\\%d\\#c8c8c8\\' for UDP.\
 
 void djui_panel_host_message_do_host(struct DjuiBase* caller) {
     djui_panel_shutdown();
+    extern s16 gCurrSaveFileNum;
+    gCurrSaveFileNum = configHostSaveSlot;
 #ifndef DISCORD_SDK
     configNetworkSystem = 1;
     network_set_system(NS_SOCKET);

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "djui.h"
+#include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
@@ -91,6 +92,26 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 #endif
             sInputboxPort = inputbox1;
         }
+        
+        struct DjuiRect* rect2 = djui_rect_create(&body->base);
+        djui_base_set_size_type(&rect2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&rect2->base, 1.0f, 32);
+        djui_base_set_color(&rect2->base, 0, 0, 0, 0);
+        {
+            struct DjuiText* text1 = djui_text_create(&rect2->base, "Save Slot");
+            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&text1->base, 200, 200, 200, 255);
+            djui_base_set_size(&text1->base, 0.485f, 64);
+            djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+
+            char starString[32] = { 0 };
+            snprintf(starString, 32, "%c x%d", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24));
+            struct DjuiButton* button1 = djui_button_create(&rect2->base, starString);
+            djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&button1->base, 0.5f, 32);
+            djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_interactable_hook_click(&button1->base, djui_panel_host_save_create);
+        }
 
         char* iChoices[3] = { "Non-solid", "Solid", "Friendly Fire" };
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Player interaction", iChoices, 3, &configFiltering);
@@ -109,19 +130,19 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox3->base, 1.0f, 32);
 
-        struct DjuiRect* rect2 = djui_rect_create(&body->base);
-        djui_base_set_size_type(&rect2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&rect2->base, 1.0f, 64);
-        djui_base_set_color(&rect2->base, 0, 0, 0, 0);
+        struct DjuiRect* rect3 = djui_rect_create(&body->base);
+        djui_base_set_size_type(&rect3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&rect3->base, 1.0f, 64);
+        djui_base_set_color(&rect3->base, 0, 0, 0, 0);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect2->base, "Back");
+            struct DjuiButton* button1 = djui_button_create(&rect3->base, "Back");
             djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_button_set_style(button1, 1);
             djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
 
-            struct DjuiButton* button2 = djui_button_create(&rect2->base, "Host");
+            struct DjuiButton* button2 = djui_button_create(&rect3->base, "Host");
             djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

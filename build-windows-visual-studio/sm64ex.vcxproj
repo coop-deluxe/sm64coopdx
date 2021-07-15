@@ -3947,6 +3947,7 @@
     <ClCompile Include="..\src\pc\djui\djui_panel_controls.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_host.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_host_message.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_save.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_join.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_join_message.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_menu.c" />
@@ -4390,6 +4391,7 @@
     <ClInclude Include="..\src\pc\djui\djui_panel_controls.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_host.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_host_message.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_save.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_join.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_join_message.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_menu.h" />
