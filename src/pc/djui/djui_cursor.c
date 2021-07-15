@@ -57,22 +57,29 @@ static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, str
     if (!base->enabled) { return; }
 
     if (base->interactable != NULL) {
+        f32 x1, y1, x2, y2;
+        x1 = base->elem.x;
+        y1 = base->elem.y;
+        x2 = base->elem.x + base->elem.width;
+        y2 = base->elem.y + base->elem.height;
+        bool xWithin = (gCursorX >= x1 && gCursorX <= x2) || sCursorMouseControlled;
+        bool yWithin = (gCursorY >= y1 && gCursorY <= y2) || sCursorMouseControlled;
+
+        bool valid = false;
+        if (yDir > 0 && gCursorY < y1 && xWithin) { valid = true; }
+        if (yDir < 0 && gCursorY > y2 && xWithin) { valid = true; }
+        if (xDir > 0 && gCursorX < x1 && yWithin) { valid = true; }
+        if (xDir < 0 && gCursorX > x2 && yWithin) { valid = true; }
+
         f32 xH, yH;
         djui_cursor_base_hover_location(base, &xH, &yH);
-        bool valid = true;
-        if (xDir > 0 && gCursorX >= xH) { valid = false; }
-        if (xDir < 0 && gCursorX <= xH) { valid = false; }
-        if (yDir > 0 && gCursorY >= yH) { valid = false; }
-        if (yDir < 0 && gCursorY <= yH) { valid = false; }
         if (valid) {
             if (*pick == NULL) {
                 *pick = base;
             } else {
-                f32 pickDist = djui_cursor_base_distance(*pick, xDir ? 1.0f : 10.0f, yDir ? 1.0f : 10.0f);
-                f32 baseDist = djui_cursor_base_distance(base,  xDir ? 1.0f : 10.0f, yDir ? 1.0f : 10.0f);
-                if (baseDist < pickDist) {
-                    *pick = base;
-                }
+                f32 pickDist = djui_cursor_base_distance(*pick, xDir ? 1.0f : 2.0f, yDir ? 1.0f : 2.0f);
+                f32 baseDist = djui_cursor_base_distance(base,  xDir ? 1.0f : 2.0f, yDir ? 1.0f : 2.0f);
+                if (baseDist < pickDist) { *pick = base; }
             }
         }
     }
