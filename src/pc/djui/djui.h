@@ -43,7 +43,7 @@
 #include "djui_panel_controls.h"
 #include "djui_panel_display.h"
 #include "djui_panel_sound.h"
-#include "djui_panel_quit.h"
+#include "djui_panel_confirm.h"
 
 extern struct DjuiRoot* gDjuiRoot;
 

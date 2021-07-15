@@ -3,6 +3,17 @@
 
 bool gDjuiPanelMainCreated = false;
 
+static void djui_panel_main_quit_yes(struct DjuiBase* caller) {
+    exit(0);
+}
+
+static void djui_panel_main_quit(struct DjuiBase* caller) {
+    djui_panel_confirm_create(caller,
+                              "\\#ff0800\\Q\\#1be700\\U\\#00b3ff\\I\\#ffef00\\T",
+                              "Are you sure you want to quit?",
+                              djui_panel_main_quit_yes);
+}
+
 void djui_panel_main_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 4 + 16 * 3;
     
@@ -32,7 +43,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button4->base, 1.0f, 64);
             djui_button_set_style(button4, 1);
-            djui_interactable_hook_click(&button4->base, djui_panel_quit_create);
+            djui_interactable_hook_click(&button4->base, djui_panel_main_quit);
         }
 
         char* version = get_version();

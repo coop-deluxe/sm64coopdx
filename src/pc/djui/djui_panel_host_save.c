@@ -18,9 +18,17 @@ static void djui_panel_host_save_button_click(struct DjuiBase* caller) {
     djui_panel_menu_back(caller);
 }
 
-static void djui_panel_host_save_erase_button_click(struct DjuiBase* caller) {
+static void djui_panel_host_save_erase_yes(struct DjuiBase* caller) {
     save_file_erase(caller->tag);
     djui_panel_host_save_update_button(sSaveButtons[caller->tag], caller->tag);
+    djui_panel_menu_back(caller);
+}
+
+static void djui_panel_host_save_erase(struct DjuiBase* caller) {
+    djui_panel_confirm_create(caller,
+                              "\\#ff0800\\E\\#1be700\\R\\#00b3ff\\A\\#ffef00\\S\\#ff0800\\E",
+                              "Are you sure you want to erase this save slot?",
+                              djui_panel_host_save_erase_yes);
 }
 
 void djui_panel_host_save_create(struct DjuiBase* caller) {
@@ -50,7 +58,7 @@ void djui_panel_host_save_create(struct DjuiBase* caller) {
                 djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_size(&button2->base, 0.24f, 32);
                 djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-                djui_interactable_hook_click(&button2->base, djui_panel_host_save_erase_button_click);
+                djui_interactable_hook_click(&button2->base, djui_panel_host_save_erase);
             }
         }
     }
