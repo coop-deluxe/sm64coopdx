@@ -12,6 +12,7 @@
 #endif
 
 struct DjuiInputbox* sInputboxPort = NULL;
+static unsigned int sKnockbackIndex = 0;
 
 static void djui_panel_host_network_system_change(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
@@ -39,6 +40,14 @@ static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
     }
 }
 
+static void djui_panel_host_knockback_change(struct DjuiBase* caller) {
+    switch (sKnockbackIndex) {
+        case 0:  configPlayerKnockbackStrength = 10; break;
+        case 1:  configPlayerKnockbackStrength = 25; break;
+        default: configPlayerKnockbackStrength = 75; break;
+    }
+}
+
 static void djui_panel_host_do_host(struct DjuiBase* caller) {
     if (!djui_panel_host_port_valid()) {
         djui_interactable_set_input_focus(&sInputboxPort->base);
@@ -51,9 +60,9 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
 void djui_panel_host_create(struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
-    f32 bodyHeight = 32 * 5 + 64 * 2 + 16 * 7;
+    f32 bodyHeight = 32 * 6 + 64 * 2 + 16 * 8;
 #else
-    f32 bodyHeight = 32 * 4 + 64 * 2 + 16 * 6;
+    f32 bodyHeight = 32 * 5 + 64 * 2 + 16 * 7;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -114,9 +123,18 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         }
 
         char* iChoices[3] = { "Non-solid", "Solid", "Friendly Fire" };
-        struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Player interaction", iChoices, 3, &configFiltering);
+        struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Player interaction", iChoices, 3, &configPlayerInteraction);
         djui_base_set_size_type(&selectionbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox2->base, 1.0f, 32);
+
+        char* kChoices[3] = { "Weak", "Normal", "Too much" };
+        sKnockbackIndex = (configPlayerKnockbackStrength <= 20)
+                        ? 0
+                        : ((configPlayerKnockbackStrength <= 40) ? 1 : 2);
+        struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(&body->base, "Knockback strength", kChoices, 3, &sKnockbackIndex);
+        djui_base_set_size_type(&selectionbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&selectionbox3->base, 1.0f, 32);
+        djui_interactable_hook_value_change(&selectionbox3->base, djui_panel_host_knockback_change);
 
         struct DjuiCheckbox* checkbox1 = djui_checkbox_create(&body->base, "Stay in level after star", &configStayInLevelAfterStar);
         djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
