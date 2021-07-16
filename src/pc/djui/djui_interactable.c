@@ -184,6 +184,11 @@ bool djui_interactable_on_key_down(int scancode) {
         return consume;
     }
 
+    if (scancode == SCANCODE_ESCAPE) {
+        // pressed escape button on keyboard
+        djui_panel_back();
+    }
+
     switch (scancode) {
         case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    return true;
         case SCANCODE_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  return true;
@@ -301,6 +306,9 @@ void djui_interactable_update(void) {
         } else {
             djui_interactable_on_focus(sInteractableFocus);
         }
+    } else if ((padButtons & PAD_BUTTON_B) && !(sLastInteractablePad.button & PAD_BUTTON_B)) {
+        // pressed back button on controller
+        djui_panel_back();
     }
 
     if (sInteractableBinding != NULL) {
