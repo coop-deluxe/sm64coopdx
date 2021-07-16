@@ -35,6 +35,7 @@
 #include "pc/cliopts.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
+#include "pc/djui/djui.h"
 
 #include "game/screen_transition.h"
 
@@ -218,6 +219,13 @@ u32 pressed_pause(void) {
 }
 
 void set_play_mode(s16 playMode) {
+    if (sCurrPlayMode == PLAY_MODE_PAUSED && playMode != PLAY_MODE_PAUSED) {
+        djui_base_set_visible(&gDjuiPauseOptions->base, false);
+    }
+    if (playMode == PLAY_MODE_PAUSED && sCurrPlayMode != PLAY_MODE_PAUSED) {
+        djui_base_set_visible(&gDjuiPauseOptions->base, true);
+    }
+
     sCurrPlayMode = playMode;
     D_80339ECA = 0;
 }

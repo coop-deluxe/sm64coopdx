@@ -5,10 +5,18 @@
 static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
-struct DjuiFlowLayout* buttonContainer;
+struct DjuiText* gDjuiPauseOptions = NULL;
 
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
+
+    gDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, "R Button - Options");
+    djui_base_set_size_type(&gDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&gDjuiPauseOptions->base, 1.0f, 32);
+    djui_base_set_location(&gDjuiPauseOptions->base, 0, 16);
+    djui_text_set_drop_shadow(gDjuiPauseOptions, 0, 0, 0, 255);
+    djui_text_set_alignment(gDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_visible(&gDjuiPauseOptions->base, false);
 
     if (gCLIOpts.Network != NT_SERVER) {
         djui_panel_main_create(NULL);

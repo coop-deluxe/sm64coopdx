@@ -15258,6 +15258,9 @@
     <ClCompile Include="..\src\pc\djui\djui_panel_confirm.c">
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_pause.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16334,6 +16337,9 @@
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\djui\djui_panel_confirm.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_pause.h">
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
   </ItemGroup>

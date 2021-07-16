@@ -3,10 +3,6 @@
 
 #include "text_menu_strings.h"
 
-#ifdef EXT_OPTIONS_MENU
-#include "text_options_strings.h"
-#endif
-
 /**
  * Global Symbols
  */

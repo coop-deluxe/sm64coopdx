@@ -64,7 +64,10 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
 
 void djui_panel_back(void) {
     if (sPanelList == NULL) { return; }
-    if (sPanelList->parent == NULL) { return; }
+    if (sPanelList->parent == NULL) {
+        if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
+        return;
+    }
 
     // deselect cursor input
     djui_cursor_input_controlled_center(NULL);
@@ -144,5 +147,6 @@ void djui_panel_shutdown(void) {
     gInteractableOverridePad = false;
     gDjuiPanelJoinMessageVisible = false;
     gDjuiPanelMainCreated = false;
+    gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
 }

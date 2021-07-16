@@ -38,6 +38,7 @@
 #include "djui_panel_host_message.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_pause.h"
 #include "djui_panel_options.h"
 #include "djui_panel_camera.h"
 #include "djui_panel_controls.h"
@@ -46,6 +47,7 @@
 #include "djui_panel_confirm.h"
 
 extern struct DjuiRoot* gDjuiRoot;
+extern struct DjuiText* gDjuiPauseOptions;
 
 void djui_init(void);
 void djui_connect_menu_open(void);

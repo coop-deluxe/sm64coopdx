@@ -26,11 +26,9 @@
 #include "macros.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
+#include "pc/djui/djui.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
-#endif
-#ifdef EXT_OPTIONS_MENU
-#include "options_menu.h"
 #endif
 
 u16 gDialogColorFadeTimer;
@@ -2736,9 +2734,6 @@ s16 render_pause_courses_and_castle(void) {
 #ifdef VERSION_EU
     gInGameLanguage = eu_get_language();
 #endif
-#ifdef EXT_OPTIONS_MENU
-    if (optmenu_open == 0) {
-#endif
     switch (gDialogBoxState) {
         case DIALOG_STATE_OPENING:
             gDialogLineNum = 1;
@@ -2815,14 +2810,10 @@ s16 render_pause_courses_and_castle(void) {
     if (gDialogTextAlpha < 250) {
         gDialogTextAlpha += 25;
     }
-#ifdef EXT_OPTIONS_MENU
-    } else {
-        shade_screen();
-        optmenu_draw();
-    }
-    optmenu_check_buttons();
-    optmenu_draw_prompt();
-#endif
+
+    if (gDjuiPanelPauseCreated) { shade_screen(); }
+    if (gPlayer1Controller->buttonPressed & R_TRIG)
+        djui_panel_pause_create(NULL);
 
     return 0;
 }
