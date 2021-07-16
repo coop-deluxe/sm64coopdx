@@ -16,6 +16,13 @@ static void djui_selectionbox_set_default_style(struct DjuiBase* base) {
     djui_base_set_color(&selectionbox->text->base, 200, 200, 200, 255);
 }
 
+static void djui_selectionbox_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
+    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
+    struct DjuiBase* rectBase = &selectionbox->rect->base;
+    *x = (rectBase->elem.x + rectBase->elem.width  * 3.0f / 4.0f);
+    *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
+}
+
 static void djui_selectionbox_on_hover(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
     f32 x = selectionbox->rect->base.elem.x;
@@ -118,6 +125,8 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     selectionbox->rectImage = rectImage;
 
     djui_selectionbox_set_default_style(base);
+
+    base->get_cursor_hover_location = djui_selectionbox_get_cursor_hover_location;
 
     return selectionbox;
 }

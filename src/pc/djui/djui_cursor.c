@@ -33,8 +33,7 @@ bool djui_cursor_inside_base(struct DjuiBase* base) {
 }
 
 static void djui_cursor_base_hover_location(struct DjuiBase* base, f32* x, f32* y) {
-    *x = (base->elem.x + base->elem.width  * 3.0f / 4.0f);
-    *y = (base->elem.y + base->elem.height * 3.0f / 4.0f);
+    base->get_cursor_hover_location(base, x, y);
 }
 
 void djui_cursor_input_controlled_center(struct DjuiBase* base) {

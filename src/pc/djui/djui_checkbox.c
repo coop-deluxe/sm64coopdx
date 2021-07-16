@@ -15,6 +15,13 @@ static void djui_checkbox_on_hover(struct DjuiBase* base) {
     djui_base_set_color(&checkbox->rectValue->base, 229, 241, 251, 255);
 }
 
+static void djui_checkbox_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
+    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
+    struct DjuiBase* rectBase = &checkbox->rect->base;
+    *x = (rectBase->elem.x + rectBase->elem.width  * 3.0f / 4.0f);
+    *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
+}
+
 static void djui_checkbox_on_hover_end(struct DjuiBase* base) {
     djui_checkbox_set_default_style(base);
 }
@@ -77,6 +84,8 @@ struct DjuiCheckbox* djui_checkbox_create(struct DjuiBase* parent, const char* m
     checkbox->rectValue = rectValue;
 
     djui_checkbox_set_default_style(base);
+
+    base->get_cursor_hover_location = djui_checkbox_get_cursor_hover_location;
 
     return checkbox;
 }

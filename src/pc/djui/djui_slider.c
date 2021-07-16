@@ -16,6 +16,13 @@ static void djui_slider_set_default_style(struct DjuiBase* base) {
     djui_base_set_color(&slider->rectValue->base, 200, 200, 200, 255);
 }
 
+static void djui_slider_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
+    struct DjuiSlider* slider = (struct DjuiSlider*)base;
+    struct DjuiBase* rectBase = &slider->rect->base;
+    *x = (rectBase->elem.x + rectBase->elem.width  * 3.0f / 4.0f);
+    *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
+}
+
 static void djui_slider_on_hover(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     f32 x = slider->rect->base.elem.x;
@@ -142,6 +149,8 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
 
     djui_slider_update_value(base);
     djui_slider_set_default_style(base);
+
+    base->get_cursor_hover_location = djui_slider_get_cursor_hover_location;
 
     return slider;
 }

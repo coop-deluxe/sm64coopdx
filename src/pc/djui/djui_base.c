@@ -81,6 +81,11 @@ void djui_base_set_alignment(struct DjuiBase* base, enum DjuiHAlign hAlign, enum
  // utility //
 /////////////
 
+static void djui_base_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
+    *x = (base->elem.x + base->elem.width  * 3.0f / 4.0f);
+    *y = (base->elem.y + base->elem.height * 3.0f / 4.0f);
+}
+
 static void djui_base_clip(struct DjuiBase* base) {
     struct DjuiBase* parent = base->parent;
     struct DjuiBaseRect* comp = &base->comp;
@@ -363,6 +368,7 @@ void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, void(*render
     djui_base_set_enabled(base, true);
     djui_base_set_size(base, 64, 64);
     djui_base_set_color(base, 255, 255, 255, 255);
+    base->get_cursor_hover_location = djui_base_get_cursor_hover_location;
     base->render = render;
     base->destroy = destroy;
     djui_base_add_child(parent, base);

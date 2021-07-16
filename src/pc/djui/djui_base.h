@@ -44,6 +44,7 @@ struct DjuiBase {
     struct DjuiBaseRect clip;
     struct DjuiInteractable* interactable;
     s32 tag;
+    void (*get_cursor_hover_location)(struct DjuiBase*, f32* x, f32* y);
     void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
     void (*on_render_pre)(struct DjuiBase*, bool*);
     void (*render)(struct DjuiBase*);
