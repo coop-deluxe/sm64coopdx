@@ -72,7 +72,6 @@ extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern bool         configStayInLevelAfterStar;
 extern unsigned int configNetworkSystem;
-extern bool         configLuigiSounds;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

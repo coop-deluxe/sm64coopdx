@@ -106,7 +106,6 @@ unsigned int configPlayerInteraction         = 1;
 unsigned int configPlayerKnockbackStrength   = 25;
 bool         configStayInLevelAfterStar      = 0;
 unsigned int configNetworkSystem             = 0;
-bool         configLuigiSounds               = true;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -166,7 +165,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .boolValue   = &configStayInLevelAfterStar},
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
-    {.name = "coop_luigi_sounds",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuigiSounds},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
