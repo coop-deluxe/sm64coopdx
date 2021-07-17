@@ -1,4 +1,5 @@
 #include "djui.h"
+#include "pc/cheats.h"
 
 bool gDjuiPanelPauseCreated = false;
 
@@ -19,6 +20,7 @@ static void djui_panel_pause_quit(struct DjuiBase* caller) {
 
 void djui_panel_pause_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 3 + 16 * 2;
+    if (Cheats.EnableCheats) { bodyHeight += 64 + 16; }
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\A\\#00b3ff\\U\\#ffef00\\S\\#ff0800\\E");
@@ -29,6 +31,13 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         djui_base_set_size(&button1->base, 1.0f, 64);
         djui_interactable_hook_click(&button1->base, djui_panel_options_create);
         defaultBase = &button1->base;
+
+        if (Cheats.EnableCheats) {
+            struct DjuiButton* button1 = djui_button_create(&body->base, "Cheats");
+            djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&button1->base, 1.0f, 64);
+            djui_interactable_hook_click(&button1->base, djui_panel_cheats_create);
+        }
 
         struct DjuiButton* button2 = djui_button_create(&body->base, "Resume");
         djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

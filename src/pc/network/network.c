@@ -9,6 +9,7 @@
 #include "discord/discord.h"
 #endif
 #include "pc/configfile.h"
+#include "pc/cheats.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -37,6 +38,7 @@ struct ServerSettings gServerSettings = {
     .playerKnockbackStrength = 25,
     .skipIntro = 0,
     .shareLives = 0,
+    .enableCheats = 0,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -62,6 +64,8 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = configSkipIntro;
     gServerSettings.shareLives = configShareLives;
+    gServerSettings.enableCheats = configEnableCheats;
+    Cheats.EnableCheats = gServerSettings.enableCheats;
 
     // initialize the network system
     int rc = gNetworkSystem->initialize(inNetworkType);

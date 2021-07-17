@@ -11,6 +11,7 @@
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
 #include "pc/djui/djui.h"
+#include "pc/cheats.h"
 #include "pc/utils/string_builder.h"
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
@@ -65,6 +66,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
     packet_write(&p, &gServerSettings.shareLives, sizeof(u8));
+    packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     u8 modCount = string_linked_list_count(&gRegisteredMods);
@@ -124,8 +126,11 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
     packet_read(p, &gServerSettings.shareLives, sizeof(u8));
+    packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
+
+    Cheats.EnableCheats = gServerSettings.enableCheats;
 
     struct StringLinkedList head = { 0 };
     for (int i = 0; i < modCount; i++) {

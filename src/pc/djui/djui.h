@@ -45,6 +45,7 @@
 #include "djui_panel_display.h"
 #include "djui_panel_sound.h"
 #include "djui_panel_confirm.h"
+#include "djui_panel_cheats.h"
 
 extern struct DjuiRoot* gDjuiRoot;
 extern struct DjuiText* gDjuiPauseOptions;

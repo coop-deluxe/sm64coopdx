@@ -76,6 +76,7 @@ struct ServerSettings {
     u8 stayInLevelAfterStar;
     u8 skipIntro;
     u8 shareLives;
+    u8 enableCheats;
 };
 
 // Networking-specific externs

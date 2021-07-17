@@ -61,6 +61,7 @@ extern bool         configCameraAnalog;
 extern bool         configHUD;
 extern bool         configSkipIntro;
 extern bool         configShareLives;
+extern bool         configEnableCheats;
 #ifdef DISCORDRPC
 extern bool         configDiscordRPC;
 #endif

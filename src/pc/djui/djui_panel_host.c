@@ -4,6 +4,7 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/cheats.h"
 
 #ifdef DISCORD_SDK
 #define DJUI_HOST_NS_IS_SOCKET (configNetworkSystem == 1)
@@ -60,9 +61,9 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
 void djui_panel_host_create(struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
-    f32 bodyHeight = 32 * 6 + 64 * 2 + 16 * 8;
+    f32 bodyHeight = 32 * 7 + 64 * 2 + 16 * 9;
 #else
-    f32 bodyHeight = 32 * 5 + 64 * 2 + 16 * 7;
+    f32 bodyHeight = 32 * 6 + 64 * 2 + 16 * 8;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -147,6 +148,10 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "Share lives", &configShareLives);
         djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox3->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "Enable cheats", &configEnableCheats);
+        djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox4->base, 1.0f, 32);
 
         struct DjuiRect* rect3 = djui_rect_create(&body->base);
         djui_base_set_size_type(&rect3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
