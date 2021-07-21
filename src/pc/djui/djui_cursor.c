@@ -14,7 +14,6 @@ static f32 sSavedMouseX = 0;
 static f32 sSavedMouseY = 0;
 f32 gCursorX = 0;
 f32 gCursorY = 0;
-
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
         djui_base_set_visible(&sMouseCursor->base, visible);
@@ -111,7 +110,13 @@ void djui_cursor_update(void) {
     controller_sdl_read_mouse_window();
 
     // check if mouse is in control again
-    if (!sCursorMouseControlled || (sMouseCursor && !sMouseCursor->base.visible)) {
+    static bool sFirstUpdate = true;
+    if (sFirstUpdate) {
+        sFirstUpdate = false;
+        sCursorMouseControlled = false;
+        sSavedMouseX = mouse_window_x;
+        sSavedMouseY = mouse_window_y;
+    } else if (!sCursorMouseControlled || (sMouseCursor && !sMouseCursor->base.visible)) {
         f32 dist = sqrtf(powf(mouse_window_x - sSavedMouseX, 2) + powf(mouse_window_y - sSavedMouseY, 2));
         if (dist > 5) {
             sCursorMouseControlled = true;
