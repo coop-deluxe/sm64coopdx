@@ -75,8 +75,11 @@ void packet_receive(struct Packet* p) {
     network_send_ack(p);
 
     // refuse packets from unknown players other than join request
-    if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && packetType != PACKET_JOIN_REQUEST) {
-        network_send_kick(EKT_CLOSE_CONNECTION);
+    if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && packetType != PACKET_JOIN_REQUEST && packetType != PACKET_ACK) {
+        if (packetType != PACKET_PLAYER) {
+            LOG_INFO("closing connection for packetType: %d", packetType);
+            network_send_kick(EKT_CLOSE_CONNECTION);
+        }
         return;
     }
 

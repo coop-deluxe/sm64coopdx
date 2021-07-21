@@ -169,10 +169,8 @@ static void gfx_sdl_set_fullscreen(void) {
         return;
     if (configWindow.fullscreen) {
         SDL_SetWindowFullscreen(wnd, SDL_WINDOW_FULLSCREEN_DESKTOP);
-        SDL_ShowCursor(SDL_DISABLE);
     } else {
         SDL_SetWindowFullscreen(wnd, 0);
-        SDL_ShowCursor(SDL_ENABLE);
         configWindow.exiting_fullscreen = true;
     }
 }
@@ -228,6 +226,7 @@ static void gfx_sdl_init(const char *window_title) {
     gfx_sdl_set_vsync(configWindow.vsync);
 
     gfx_sdl_set_fullscreen();
+    SDL_ShowCursor(SDL_DISABLE);
 
     for (size_t i = 0; i < sizeof(windows_scancode_table) / sizeof(SDL_Scancode); i++) {
         inverted_scancode_table[windows_scancode_table[i]] = i;
@@ -370,6 +369,7 @@ static void gfx_sdl_shutdown(void) {
 static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
 static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
 static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
+static void gfx_sdl_set_clipboard_text(char* text) { SDL_SetClipboardText(text); }
 
 struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_init,
@@ -385,6 +385,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_start_text_input,
     gfx_sdl_stop_text_input,
     gfx_sdl_get_clipboard_text,
+    gfx_sdl_set_clipboard_text,
 };
 
 #endif // BACKEND_WM

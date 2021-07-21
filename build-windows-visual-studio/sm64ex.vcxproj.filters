@@ -3445,6 +3445,18 @@
     <Filter Include="Source Files\src\pc\network\packets\reservation-area">
       <UniqueIdentifier>{9ddfaa87-399e-4f61-aae3-f91af79e14cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\src\pc\djui">
+      <UniqueIdentifier>{0e1e4798-796e-4801-be6e-69d0c3b05ad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\pc\djui\panel">
+      <UniqueIdentifier>{2401a619-ee3f-4637-9926-a619a5e65bcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\pc\djui\component">
+      <UniqueIdentifier>{471ac819-ed6b-4a33-8952-50a8e0d2d839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\pc\djui\component\compound">
+      <UniqueIdentifier>{a7515004-4574-4bc0-9288-f716100c8a43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\amp\anims\anim_0800401C.inc.c">
@@ -14805,9 +14817,6 @@
     <ClCompile Include="..\src\pc\controller\controller_recorded_tas.c">
       <Filter>Source Files\src\pc\controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\controller\controller_sdl.c">
-      <Filter>Source Files\src\pc\controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\discord\discordrpc.c">
       <Filter>Source Files\src\pc\discord</Filter>
     </ClCompile>
@@ -15033,15 +15042,6 @@
     <ClCompile Include="..\src\pc\network\discord\discord_network.c">
       <Filter>Source Files\src\pc\network\discord</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\menu\custom_menu_system.c">
-      <Filter>Source Files\src\menu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\menu\custom_menu.c">
-      <Filter>Source Files\src\menu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\game\chat.c">
-      <Filter>Source Files\src\game</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_chat.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
@@ -15143,6 +15143,132 @@
     </ClCompile>
     <ClCompile Include="..\src\pc\network\packets\packet_save_set_flag.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui.c">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_gfx.c">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_image.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_rect.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_text.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_base.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_root.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\controller\controller_sdl1.c">
+      <Filter>Source Files\src\pc\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\controller\controller_sdl2.c">
+      <Filter>Source Files\src\pc\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_interactable.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_flow_layout.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_button.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_main.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\utils\misc.c">
+      <Filter>Source Files\src\pc\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_font.c">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_debug.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_options.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_cursor.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_three_panel.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_sound.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_slider.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_camera.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_checkbox.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_display.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_selectionbox.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_controls.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_bind.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_host.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_menu.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_message.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_inputbox.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_join.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_join_message.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\utils\string_builder.c">
+      <Filter>Source Files\src\pc\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_popup.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_save.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_confirm.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_pause.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_cheats.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_chat_box.c">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_chat_message.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -16084,15 +16210,6 @@
     <ClInclude Include="..\src\pc\network\discord\discord_network.h">
       <Filter>Header Files\src\pc\network\discord</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\menu\custom_menu_system.h">
-      <Filter>Header Files\src\menu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\menu\custom_menu.h">
-      <Filter>Header Files\src\menu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\game\chat.h">
-      <Filter>Header Files\src\game</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\pc\network\network_player.h">
       <Filter>Header Files\src\pc\network</Filter>
     </ClInclude>
@@ -16116,6 +16233,132 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\network\reservation_area.h">
       <Filter>Header Files\src\pc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui.h">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_gfx.h">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_types.h">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_gbi.h">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_image.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_rect.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_text.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_base.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_root.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_interactable.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_flow_layout.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_button.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_main.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\utils\misc.h">
+      <Filter>Source Files\src\pc\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_font.h">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_debug.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_options.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_cursor.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_three_panel.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_sound.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_slider.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_camera.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_checkbox.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_display.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_selectionbox.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_controls.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_bind.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_host.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_menu.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_message.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_inputbox.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_join.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_join_message.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\utils\string_builder.h">
+      <Filter>Source Files\src\pc\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_popup.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_save.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_confirm.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_pause.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_cheats.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_chat_box.h">
+      <Filter>Source Files\src\pc\djui\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_chat_message.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -20,6 +20,8 @@
 
 #include "game/level_update.h"
 
+#include "pc/djui/djui.h"
+
 // mouse buttons are also in the controller namespace (why), just offset 0x100
 #define VK_OFS_SDL_MOUSE 0x0100
 #define VK_BASE_SDL_MOUSE (VK_BASE_SDL_GAMEPAD + VK_OFS_SDL_MOUSE)
@@ -30,6 +32,10 @@
 
 int mouse_x;
 int mouse_y;
+
+int mouse_window_buttons;
+int mouse_window_x;
+int mouse_window_y;
 
 #ifdef BETTERCAMERA
 extern u8 newcam_mouse;
@@ -156,13 +162,14 @@ static void controller_sdl_read(OSContPad *pad) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
     else
         SDL_SetRelativeMouseMode(SDL_FALSE);
-    
+
     u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 
-    for (u32 i = 0; i < num_mouse_binds; ++i)
-        if (mouse & SDL_BUTTON(mouse_binds[i][0]))
-            pad->button |= mouse_binds[i][1];
-
+    if (!gInteractableOverridePad) {
+        for (u32 i = 0; i < num_mouse_binds; ++i)
+            if (mouse & SDL_BUTTON(mouse_binds[i][0]))
+                pad->button |= mouse_binds[i][1];
+    }
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
@@ -260,6 +267,11 @@ static void controller_sdl_read(OSContPad *pad) {
         int stick_y = -righty / 0x100;
         pad->ext_stick_y = stick_y == 128 ? 127 : stick_y;
     }
+}
+
+void controller_sdl_read_mouse_window(void) {
+    if (!init_ok) { return; }
+    mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
 }
 
 static void controller_sdl_rumble_play(f32 strength, f32 length) {

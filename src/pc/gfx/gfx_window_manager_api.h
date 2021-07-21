@@ -23,6 +23,7 @@ struct GfxWindowManagerAPI {
     void (*start_text_input)(void);
     void (*stop_text_input)(void);
     char* (*get_clipboard_text)(void);
+    void (*set_clipboard_text)(char*);
 };
 
 #endif

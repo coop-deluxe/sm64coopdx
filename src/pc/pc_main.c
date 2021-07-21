@@ -42,7 +42,7 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
-#include "menu/custom_menu_system.h"
+#include "pc/djui/djui.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -97,6 +97,7 @@ static inline void patch_interpolations(void) {
     extern void patch_interpolated_paintings(void);
     extern void patch_interpolated_bubble_particles(void);
     extern void patch_interpolated_snow_particles(void);
+    extern void djui_render_patch(void);
     mtx_patch_interpolated();
     patch_screen_transition_interpolated();
     patch_title_screen_scales();
@@ -105,6 +106,7 @@ static inline void patch_interpolations(void) {
     patch_interpolated_paintings();
     patch_interpolated_bubble_particles();
     patch_interpolated_snow_particles();
+    djui_render_patch();
 }
 
 void produce_one_frame(void) {
@@ -157,7 +159,7 @@ void game_deinit(void) {
     controller_shutdown();
     audio_shutdown();
     gfx_shutdown();
-    network_shutdown();
+    network_shutdown(true);
     inited = false;
 }
 
@@ -265,6 +267,12 @@ void main_func(void) {
         audio_api = &audio_null;
     }
 
+    djui_init();
+
+#ifdef UNSTABLE_BRANCH
+    djui_popup_create("This is an \\#ffa0a0\\unstable\\#dcdcdc\\ branch build.\nExpect many strange bugs.", 2);
+#endif
+
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         strncpy(configJoinIp, gCLIOpts.JoinIp, IP_MAX_LEN);
@@ -277,10 +285,6 @@ void main_func(void) {
     } else {
         network_init(NT_NONE);
     }
-
-#ifdef UNSTABLE_BRANCH
-    custom_menu_error("This is an unstable branch build.\n\nExpect many strange bugs.\n\nFor a more stable experience use the normal coop branch.");
-#endif
 
     audio_init();
     sound_init();

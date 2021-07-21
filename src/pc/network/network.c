@@ -9,6 +9,8 @@
 #include "discord/discord.h"
 #endif
 #include "pc/configfile.h"
+#include "pc/cheats.h"
+#include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -36,6 +38,7 @@ struct ServerSettings gServerSettings = {
     .playerKnockbackStrength = 25,
     .skipIntro = 0,
     .shareLives = 0,
+    .enableCheats = 0,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -61,6 +64,8 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = configSkipIntro;
     gServerSettings.shareLives = configShareLives;
+    gServerSettings.enableCheats = configEnableCheats;
+    Cheats.EnableCheats = gServerSettings.enableCheats;
 
     // initialize the network system
     int rc = gNetworkSystem->initialize(inNetworkType);
@@ -76,6 +81,8 @@ bool network_init(enum NetworkType inNetworkType) {
         network_player_connected(NPT_LOCAL, 0);
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
+
+        djui_chat_box_create();
     } else if (gNetworkType == NT_CLIENT) {
         network_player_connected(NPT_SERVER, 0);
         network_send_join_request();
@@ -266,12 +273,17 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(void) {
+void network_shutdown(bool sendLeaving) {
+    if (gDjuiChatBox != NULL) {
+        djui_base_destroy(&gDjuiChatBox->base);
+        gDjuiChatBox = NULL;
+    }
+
     network_forget_all_reliable();
     if (gNetworkType == NT_NONE) { return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
 
-    if (gNetworkPlayerLocal != NULL) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
+    if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
     network_player_shutdown();
     gNetworkSystem->shutdown();
 

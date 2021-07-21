@@ -26,13 +26,10 @@
 #include "macros.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
+#include "pc/djui/djui.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
-#ifdef EXT_OPTIONS_MENU
-#include "options_menu.h"
-#endif
-#include "chat.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -414,26 +411,31 @@ void render_multi_text_string(s16 *xPos, s16 *yPos, s8 multiTextID)
 }
 #endif
 
+u8 str_ascii_char_to_dialog(char c) {
+    switch (c) {
+        case '\'': return 0x3E;
+        case '.':  return 0x3F;
+        case ',':  return DIALOG_CHAR_COMMA;
+        case '-':  return 0x9F;
+        case '(':  return 0xE1;
+        case ')':  return 0xE3;
+        case '&':  return 0xE5;
+        case '!':  return 0xF2;
+        case '%':  return 0xF3;
+        case '?':  return 0xF4;
+        case '"':  return 0xF6; // 0xF5 is opening quote
+        case '~':  return 0xF7;
+        case '*':  return 0xFB;
+        case ' ':  return DIALOG_CHAR_SPACE;
+        case '\n': return DIALOG_CHAR_NEWLINE;
+        case '\0': return DIALOG_CHAR_TERMINATOR;
+        default:   return ((u8)c < 0xF0) ? ASCII_TO_DIALOG(c) : c;
+    }
+}
+
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
     for (int i = 0; i < length; i++) {
-        switch (string[i]) {
-            case '\'': dialog[i] = 0x3E; break;
-            case '.': dialog[i] = 0x3F; break;
-            case ',': dialog[i] = DIALOG_CHAR_COMMA; break;
-            case '-': dialog[i] = 0x9F; break;
-            case '(': dialog[i] = 0xE1; break;
-            case ')': dialog[i] = 0xE3; break;
-            case '&': dialog[i] = 0xE5; break;
-            case '!': dialog[i] = 0xF2; break;
-            case '%': dialog[i] = 0xF3; break;
-            case '?': dialog[i] = 0xF4; break;
-            case '"': dialog[i] = 0xF6; break; // 0xF5 is opening quote
-            case '~': dialog[i] = 0xF7; break;
-            case '*': dialog[i] = 0xFB; break;
-            case ' ': dialog[i] = DIALOG_CHAR_SPACE; break;
-            case '\n': dialog[i] = DIALOG_CHAR_NEWLINE; break;
-            default: dialog[i] = ((u8)string[i] < 0xF0) ? ASCII_TO_DIALOG(string[i]) : string[i];
-        }
+        dialog[i] = str_ascii_char_to_dialog(string[i]);
     }
     dialog[length] = DIALOG_CHAR_TERMINATOR;
 }
@@ -2732,9 +2734,6 @@ s16 render_pause_courses_and_castle(void) {
 #ifdef VERSION_EU
     gInGameLanguage = eu_get_language();
 #endif
-#ifdef EXT_OPTIONS_MENU
-    if (optmenu_open == 0) {
-#endif
     switch (gDialogBoxState) {
         case DIALOG_STATE_OPENING:
             gDialogLineNum = 1;
@@ -2811,14 +2810,10 @@ s16 render_pause_courses_and_castle(void) {
     if (gDialogTextAlpha < 250) {
         gDialogTextAlpha += 25;
     }
-#ifdef EXT_OPTIONS_MENU
-    } else {
-        shade_screen();
-        optmenu_draw();
-    }
-    optmenu_check_buttons();
-    optmenu_draw_prompt();
-#endif
+
+    if (gDjuiPanelPauseCreated) { shade_screen(); }
+    if (gPlayer1Controller->buttonPressed & R_TRIG)
+        djui_panel_pause_create(NULL);
 
     return 0;
 }
@@ -3109,8 +3104,8 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
     u8 textSaveAndContinue[] = { TEXT_SAVE_AND_CONTINUE };
-    u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
-    u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
+    //u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
+    //u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
     u8 textContinueWithoutSave[] = { TEXT_CONTINUE_WITHOUT_SAVING };
 #endif
 
@@ -3194,8 +3189,6 @@ s16 render_menus_and_dialogs() {
     s16 mode = 0;
 
     create_dl_ortho_matrix();
-
-    render_chat();
 
     if (gMenuMode != -1) {
         switch (gMenuMode) {

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "network_player.h"
-#include "game/chat.h"
 #include "game/mario_misc.h"
 #include "reservation_area.h"
+#include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
@@ -104,7 +104,7 @@ void network_player_update(void) {
 
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
             LOG_INFO("dropping due to no server connectivity");
-            network_shutdown();
+            network_shutdown(false);
         }
 
         elapsed = (clock() - np->lastSent) / (float)CLOCKS_PER_SEC;
@@ -182,8 +182,17 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->lastSent = clock();
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
-        if (type == NPT_SERVER) { gNetworkPlayerServer = np; }
-        else { chat_add_message_ext("player connected", CMT_SYSTEM, get_player_color(np->globalIndex, 0)); }
+        if (type == NPT_SERVER) {
+            gNetworkPlayerServer = np;
+        } else {
+            // display popup
+            u8* rgb = get_player_color(np->globalIndex, 0);
+            u8 rgb2[3] = { 0 };
+            for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+            char popupMsg[128] = { 0 };
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected.", rgb2[0], rgb2[1], rgb2[2], "Player");
+            djui_popup_create(popupMsg, 1);
+        }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
         packet_ordered_clear(np->globalIndex);
         return i;
@@ -199,7 +208,7 @@ u8 network_player_disconnected(u8 globalIndex) {
             LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
-            network_shutdown();
+            network_shutdown(true);
         }
     }
 
@@ -223,7 +232,15 @@ u8 network_player_disconnected(u8 globalIndex) {
         gNetworkSystem->clear_id(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
-        chat_add_message_ext("player disconnected", CMT_SYSTEM, get_player_color(globalIndex, 0));
+        
+        // display popup
+        u8* rgb = get_player_color(np->globalIndex, 0);
+        u8 rgb2[3] = { 0 };
+        for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+        char popupMsg[128] = { 0 };
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected.", rgb2[0], rgb2[1], rgb2[2], "Player");
+        djui_popup_create(popupMsg, 1);
+
         packet_ordered_clear(globalIndex);
         reservation_area_change(np);
         return i;
@@ -240,6 +257,6 @@ void network_player_shutdown(void) {
         gNetworkSystem->clear_id(i);
     }
 
-    chat_add_message("network shutdown", CMT_SYSTEM);
+    djui_popup_create("\\#ffa0a0\\Error:\\#dcdcdc\\ network shutdown.", 1);
     LOG_INFO("cleared all network players");
 }

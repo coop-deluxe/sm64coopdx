@@ -7,13 +7,14 @@
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
 #include "src/game/save_file.h"
-#include "src/menu/custom_menu.h"
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
+#include "pc/djui/djui.h"
+#include "pc/cheats.h"
+#include "pc/utils/string_builder.h"
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
-
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -65,6 +66,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
     packet_write(&p, &gServerSettings.shareLives, sizeof(u8));
+    packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     u8 modCount = string_linked_list_count(&gRegisteredMods);
@@ -109,17 +111,11 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
     LOG_INFO("server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
+        network_shutdown(true);
         LOG_ERROR("version mismatch");
-
-        // todo: hack: remove me in the future
-        // needed because the old style only had 8 characters for the version
-        if (strcmp("beta", remoteVersion) != 0) {
-            remoteVersion[8] = '\0';
-        }
-
-        char mismatchMessage[128] = { 0 };
-        snprintf(mismatchMessage, 128, "Version mismatch.\n\nYour version - %s\nTheir version - %s\n\nSomeone is out of date!\n", version, remoteVersion);
-        custom_menu_connection_error(mismatchMessage);
+        char mismatchMessage[256] = { 0 };
+        snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#c8c8c8\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#c8c8c8\\\nTheir version: \\#a0a0ff\\%s\\#c8c8c8\\\n\nSomeone is out of date!\n", version, remoteVersion);
+        djui_panel_join_message_error(mismatchMessage);
         return;
     }
 
@@ -130,8 +126,11 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
     packet_read(p, &gServerSettings.shareLives, sizeof(u8));
+    packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
+
+    Cheats.EnableCheats = gServerSettings.enableCheats;
 
     struct StringLinkedList head = { 0 };
     for (int i = 0; i < modCount; i++) {
@@ -143,15 +142,47 @@ void network_receive_join(struct Packet* p) {
     }
 
     if (string_linked_list_mismatch(&gRegisteredMods, &head)) {
+        network_shutdown(true);
+
+        struct StringBuilder* builder = string_builder_create(512);
+        string_builder_append(builder, "\\#ffa0a0\\Error:\\#c8c8c8\\ mods don't match.\n\n");
+
+        string_builder_append(builder, "\\#c8c8c8\\Yours: ");
+        struct StringLinkedList* node = &gRegisteredMods;
+        bool first = true;
+        while (node != NULL) {
+            string_builder_append(builder, first ? "\\#%s\\%s" : ", \\#%s\\%s",
+                string_linked_list_contains(&head, node->string) ? "a0ffa0" : "ffa0a0"
+                , node->string);
+            first = false;
+            node = node->next;
+        }
+
+        string_builder_append(builder, "\n\n\\#c8c8c8\\Theirs: ");
+        node = &head;
+        first = true;
+        while (node != NULL) {
+            string_builder_append(builder, first ? "\\#%s\\%s" : ", \\#%s\\%s",
+                string_linked_list_contains(&gRegisteredMods, node->string) ? "a0ffa0" : "ffa0a0"
+                , node->string);
+            first = false;
+            node = node->next;
+        }
+
+        djui_panel_join_message_error(builder->string);
+        string_builder_destroy(builder);
         string_linked_list_free(&head);
-        custom_menu_connection_error("Your mods don't match!");
         return;
     }
     string_linked_list_free(&head);
 
     network_player_connected(NPT_SERVER, 0);
     network_player_connected(NPT_LOCAL, myGlobalIndex);
+    djui_chat_box_create();
 
     save_file_load_all(TRUE);
-    custom_menu_goto_game(gCurrSaveFileNum);
+
+    djui_panel_shutdown();
+    extern s16 gChangeLevel;
+    gChangeLevel = 16;
 }

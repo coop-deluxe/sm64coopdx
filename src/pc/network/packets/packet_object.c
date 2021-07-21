@@ -383,6 +383,8 @@ static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
 // ----- main send/receive ----- //
 
 void network_send_object(struct Object* o) {
+    if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
+
     // sanity check SyncObject
     if (!network_sync_object_initialized(o)) { return; }
     if (o->behavior == bhvRespawner) { return; }

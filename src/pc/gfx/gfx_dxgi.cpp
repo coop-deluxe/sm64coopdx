@@ -161,8 +161,6 @@ static void toggle_borderless_window_full_screen(bool enable) {
             ShowWindow(dxgi.h_wnd, SW_RESTORE);
         }
 
-        ShowCursor(TRUE);
-
         dxgi.is_full_screen = false;
     } else {
         // Save if window is maximized or not
@@ -190,8 +188,6 @@ static void toggle_borderless_window_full_screen(bool enable) {
         // Set borderless full screen to that monitor
         SetWindowLongPtr(dxgi.h_wnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
         SetWindowPos(dxgi.h_wnd, HWND_TOP, r.left, r.top, r.right - r.left, r.bottom - r.top, SWP_FRAMECHANGED);
-
-        ShowCursor(FALSE);
 
         dxgi.is_full_screen = true;
     }
@@ -357,6 +353,7 @@ static void gfx_dxgi_init(const char *window_title) {
 
     ShowWindow(dxgi.h_wnd, SW_SHOW);
     UpdateWindow(dxgi.h_wnd);
+    ShowCursor(FALSE);
 
     update_screen_settings();
 }
@@ -637,6 +634,20 @@ static char* gfx_dxgi_get_clipboard_text(void) {
     return NULL;
 }
 
+void gfx_dxgi_set_clipboard_text(char* text) {
+    if (OpenClipboard(NULL)) {
+        HGLOBAL clipbuffer;
+        char *buffer;
+        EmptyClipboard();
+        clipbuffer = GlobalAlloc(GMEM_DDESHARE, strlen(text) + 1);
+        buffer = (char *) GlobalLock(clipbuffer);
+        strcpy(buffer, LPCSTR(source));
+        GlobalUnlock(clipbuffer);
+        SetClipboardData(CF_TEXT, clipbuffer);
+        CloseClipboard();
+    }
+}
+
 void ThrowIfFailed(HRESULT res) {
     if (FAILED(res)) {
         fprintf(stderr, "Error: 0x%08X\n", res);
@@ -668,6 +679,7 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_start_text_input,
     gfx_dxgi_stop_text_input,
     gfx_dxgi_get_clipboard_text,
+    gfx_dxgi_set_clipboard_text,
 };
 
 #endif

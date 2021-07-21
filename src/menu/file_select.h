@@ -129,7 +129,6 @@ enum SoundModeMenuActionPhase {
 
 extern f32 sCursorPos[2];
 extern s8 sSelectedFileNum;
-extern u8 gInCustomMenu;
 
 void beh_yellow_background_menu_init(void);
 void beh_yellow_background_menu_loop(void);

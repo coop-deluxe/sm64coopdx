@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include "pc/network/network.h"
+#include "audio_defines.h"
+#include "audio/external.h"
+#include "game/mario_misc.h"
+#include "djui.h"
+
+#define DJUI_CHAT_LIFE_TIME 10.0f
+
+static void djui_chat_message_render(struct DjuiBase* base) {
+    struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
+    struct DjuiBase* ctBase = &chatMessage->message->base;
+
+    f32 seconds = (clock() - chatMessage->createTime) / (f32)CLOCKS_PER_SEC;
+    f32 f = 1.0f;
+    if (seconds >= (DJUI_CHAT_LIFE_TIME - 1)) {
+        f = fmax(1.0f - (seconds - (DJUI_CHAT_LIFE_TIME - 1)), 0.0f);
+        f *= f;
+        f *= f;
+    }
+
+    if (gDjuiChatBoxFocus) {
+        djui_base_set_color(base, 0, 0, 0, 64);
+        djui_base_set_color(ctBase, 255, 255, 255, 255);
+        djui_text_set_drop_shadow(chatMessage->message, 0, 0, 0, 200);
+        djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
+    } else {
+        djui_base_set_color(base, 0, 0, 0, 150 * f);
+        djui_base_set_color(ctBase, 255, 255, 255, 255 * f);
+        djui_text_set_drop_shadow(chatMessage->message, 0, 0, 0, 200 * f);
+        djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(base, chatMessage->messageWidth, chatMessage->base.height.value);
+    }
+
+    djui_rect_render(base);
+}
+
+static void djui_chat_message_destroy(struct DjuiBase* base) {
+    struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
+    free(chatMessage);
+}
+
+struct DjuiChatMessage* djui_chat_message_create_from(u8 globalIndex, char* message) {
+    u8* rgb = get_player_color(globalIndex, 0);
+    u8 rgb2[3] = { 0 };
+    for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+    char chatMsg[256] = { 0 };
+    snprintf(chatMsg, 256, "\\#%02x%02x%02x\\%s:\\#dcdcdc\\ %s", rgb2[0], rgb2[1], rgb2[2], "Player", message);
+    play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
+    return djui_chat_message_create(chatMsg);
+}
+
+struct DjuiChatMessage* djui_chat_message_create(char* message) {
+    struct DjuiChatMessage* chatMessage = malloc(sizeof(struct DjuiChatMessage));
+    struct DjuiBase* base = &chatMessage->base;
+    djui_base_init(&gDjuiChatBox->chatFlow->base, base, djui_chat_message_render, djui_chat_message_destroy);
+    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(base, 1.0f, 0);
+    djui_base_set_color(base, 0, 0, 0, 64);
+    djui_base_set_padding(base, 2, 4, 2, 4);
+    djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
+
+    f32 maxTextWidth = gDjuiChatBox->base.width.value - gDjuiChatBox->base.padding.left.value - gDjuiChatBox->base.padding.right.value - base->padding.left.value - base->padding.right.value;
+
+    struct DjuiText* chatText = djui_text_create(base, message);
+    struct DjuiBase* ctBase = &chatText->base;
+    djui_base_set_size_type(ctBase, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
+    djui_base_set_size(ctBase, maxTextWidth, 1.0f);
+    djui_base_set_color(ctBase, 255, 255, 255, 255);
+    djui_base_set_location(ctBase, 0, 0);
+    djui_text_set_alignment(chatText, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+    djui_text_set_drop_shadow(chatText, 0, 0, 0, 200);
+    chatMessage->message = chatText;
+    chatMessage->createTime = clock();
+
+    // figure out chat message height
+    chatText->base.comp.width = maxTextWidth;
+    f32 messageHeight = djui_text_count_lines(chatText, 10) * (chatText->font->lineHeight * chatText->font->defaultFontScale) + 8;
+    djui_base_set_size(base, 1.0f, messageHeight);
+    gDjuiChatBox->chatFlow->base.height.value += messageHeight + gDjuiChatBox->chatFlow->margin.value;
+    if (!gDjuiChatBox->scrolling) {
+        gDjuiChatBox->chatFlow->base.y.value = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
+    }
+
+    // figure out chat message width
+    f32 messageWidth = djui_text_find_width(chatText, 10);
+    chatMessage->messageWidth = messageWidth + 8;
+
+    return chatMessage;
+}

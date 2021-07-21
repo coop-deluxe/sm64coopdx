@@ -115,5 +115,5 @@ struct Character gCharacters[CT_MAX] = {
 
 struct Character* get_character_sound(struct MarioState* m) {
     if (m == NULL || m->character == NULL) { return &gCharacters[CT_MARIO]; }
-    return configLuigiSounds ? m->character : &gCharacters[CT_MARIO];
+    return m->character;
 }

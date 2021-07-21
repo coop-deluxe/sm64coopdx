@@ -93,6 +93,8 @@ static u16 get_spawn_info_index_of_object(struct Object* o) {
 ////
 
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
+    if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
+
     // make sure our area is valid
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
         LOG_ERROR("my area is invalid");

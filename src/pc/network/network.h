@@ -76,6 +76,7 @@ struct ServerSettings {
     u8 stayInLevelAfterStar;
     u8 skipIntro;
     u8 shareLives;
+    u8 enableCheats;
 };
 
 // Networking-specific externs
@@ -98,6 +99,6 @@ void network_send(struct Packet* p);
 void network_receive(u8 localIndex, u8* data, u16 dataLength);
 void network_update(void);
 void network_register_mod(char* modName);
-void network_shutdown(void);
+void network_shutdown(bool sendLeaving);
 
 #endif

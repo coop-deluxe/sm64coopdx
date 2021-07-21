@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../;../include/;../src/;$(IncludePath)</IncludePath>
+    <IncludePath>../;../include/;../src/;C:/msys64/mingw64/include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\..\build\us_pc\</OutDir>
     <TargetName>sm64.us.f3dex2e</TargetName>
   </PropertyGroup>
@@ -89,7 +89,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINSOCK;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINSOCK;DEBUG;CAPI_SDL2;WAPI_SDL2;RAPI_GL;F3DEX_GBI_2;_LANGUAGE_C;BETTERCAMERA;VERSION_US;EXT_OPTIONS_MENU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -3849,7 +3849,6 @@
     <ClCompile Include="..\src\game\behaviors\yoshi.inc.c" />
     <ClCompile Include="..\src\game\camera.c" />
     <ClCompile Include="..\src\game\characters.c" />
-    <ClCompile Include="..\src\game\chat.c" />
     <ClCompile Include="..\src\game\debug.c" />
     <ClCompile Include="..\src\game\debug_course.c" />
     <ClCompile Include="..\src\game\envfx_bubbles.c" />
@@ -3924,9 +3923,7 @@
     <ClCompile Include="..\src\goddard\shape_helper.c" />
     <ClCompile Include="..\src\goddard\skin.c" />
     <ClCompile Include="..\src\goddard\skin_movement.c" />
-    <ClCompile Include="..\src\menu\custom_menu.c" />
     <ClCompile Include="..\src\menu\file_select.c" />
-    <ClCompile Include="..\src\menu\custom_menu_system.c" />
     <ClCompile Include="..\src\menu\intro_geo.c" />
     <ClCompile Include="..\src\menu\level_select_menu.c" />
     <ClCompile Include="..\src\menu\star_select.c" />
@@ -3940,8 +3937,47 @@
     <ClCompile Include="..\src\pc\controller\controller_keyboard.c" />
     <ClCompile Include="..\src\pc\controller\controller_keyboard_debug.c" />
     <ClCompile Include="..\src\pc\controller\controller_recorded_tas.c" />
-    <ClCompile Include="..\src\pc\controller\controller_sdl.c" />
+    <ClCompile Include="..\src\pc\controller\controller_sdl1.c" />
+    <ClCompile Include="..\src\pc\controller\controller_sdl2.c" />
     <ClCompile Include="..\src\pc\discord\discordrpc.c" />
+    <ClCompile Include="..\src\pc\djui\djui.c" />
+    <ClCompile Include="..\src\pc\djui\djui_base.c" />
+    <ClCompile Include="..\src\pc\djui\djui_bind.c" />
+    <ClCompile Include="..\src\pc\djui\djui_button.c" />
+    <ClCompile Include="..\src\pc\djui\djui_chat_box.c" />
+    <ClCompile Include="..\src\pc\djui\djui_chat_message.c" />
+    <ClCompile Include="..\src\pc\djui\djui_checkbox.c" />
+    <ClCompile Include="..\src\pc\djui\djui_inputbox.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_cheats.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_controls.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_host.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_message.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_save.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_join.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_join_message.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_menu.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_pause.c" />
+    <ClCompile Include="..\src\pc\djui\djui_popup.c" />
+    <ClCompile Include="..\src\pc\djui\djui_selectionbox.c" />
+    <ClCompile Include="..\src\pc\djui\djui_cursor.c" />
+    <ClCompile Include="..\src\pc\djui\djui_flow_layout.c" />
+    <ClCompile Include="..\src\pc\djui\djui_font.c" />
+    <ClCompile Include="..\src\pc\djui\djui_gfx.c" />
+    <ClCompile Include="..\src\pc\djui\djui_image.c" />
+    <ClCompile Include="..\src\pc\djui\djui_interactable.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_camera.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_debug.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_display.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_main.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_options.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_confirm.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_sound.c" />
+    <ClCompile Include="..\src\pc\djui\djui_rect.c" />
+    <ClCompile Include="..\src\pc\djui\djui_root.c" />
+    <ClCompile Include="..\src\pc\djui\djui_slider.c" />
+    <ClCompile Include="..\src\pc\djui\djui_text.c" />
+    <ClCompile Include="..\src\pc\djui\djui_three_panel.c" />
     <ClCompile Include="..\src\pc\fs\dirtree.c" />
     <ClCompile Include="..\src\pc\fs\fs.c" />
     <ClCompile Include="..\src\pc\fs\fs_packtype_dir.c" />
@@ -4008,6 +4044,8 @@
     <ClCompile Include="..\src\pc\pc_main.c" />
     <ClCompile Include="..\src\pc\platform.c" />
     <ClCompile Include="..\src\pc\ultra_reimplementation.c" />
+    <ClCompile Include="..\src\pc\utils\misc.c" />
+    <ClCompile Include="..\src\pc\utils\string_builder.c" />
     <ClCompile Include="..\src\pc\utils\string_linked_list.c" />
     <ClCompile Include="..\text\define_courses.inc.c" />
     <ClCompile Include="..\text\define_text.inc.c" />
@@ -4347,12 +4385,49 @@
     <ClInclude Include="..\include\behavior_table.h" />
     <ClInclude Include="..\include\luigi_audio_defines.h" />
     <ClInclude Include="..\src\game\characters.h" />
-    <ClInclude Include="..\src\game\chat.h" />
     <ClInclude Include="..\src\game\rng_position.h" />
-    <ClInclude Include="..\src\menu\custom_menu.h" />
-    <ClInclude Include="..\src\menu\custom_menu_system.h" />
     <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h" />
     <ClInclude Include="..\src\pc\debuglog.h" />
+    <ClInclude Include="..\src\pc\djui\djui.h" />
+    <ClInclude Include="..\src\pc\djui\djui_base.h" />
+    <ClInclude Include="..\src\pc\djui\djui_bind.h" />
+    <ClInclude Include="..\src\pc\djui\djui_button.h" />
+    <ClInclude Include="..\src\pc\djui\djui_chat_box.h" />
+    <ClInclude Include="..\src\pc\djui\djui_chat_message.h" />
+    <ClInclude Include="..\src\pc\djui\djui_checkbox.h" />
+    <ClInclude Include="..\src\pc\djui\djui_inputbox.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_cheats.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_controls.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_host.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_message.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_save.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_join.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_join_message.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_menu.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_pause.h" />
+    <ClInclude Include="..\src\pc\djui\djui_popup.h" />
+    <ClInclude Include="..\src\pc\djui\djui_selectionbox.h" />
+    <ClInclude Include="..\src\pc\djui\djui_cursor.h" />
+    <ClInclude Include="..\src\pc\djui\djui_flow_layout.h" />
+    <ClInclude Include="..\src\pc\djui\djui_font.h" />
+    <ClInclude Include="..\src\pc\djui\djui_gbi.h" />
+    <ClInclude Include="..\src\pc\djui\djui_gfx.h" />
+    <ClInclude Include="..\src\pc\djui\djui_image.h" />
+    <ClInclude Include="..\src\pc\djui\djui_interactable.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_camera.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_debug.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_display.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_main.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_options.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_confirm.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_sound.h" />
+    <ClInclude Include="..\src\pc\djui\djui_rect.h" />
+    <ClInclude Include="..\src\pc\djui\djui_root.h" />
+    <ClInclude Include="..\src\pc\djui\djui_slider.h" />
+    <ClInclude Include="..\src\pc\djui\djui_text.h" />
+    <ClInclude Include="..\src\pc\djui\djui_three_panel.h" />
+    <ClInclude Include="..\src\pc\djui\djui_types.h" />
     <ClInclude Include="..\src\pc\network\branch.h" />
     <ClInclude Include="..\src\pc\network\discord\activity.h" />
     <ClInclude Include="..\src\pc\network\discord\discord.h" />
@@ -4367,6 +4442,8 @@
     <ClInclude Include="..\src\pc\network\socket\socket_linux.h" />
     <ClInclude Include="..\src\pc\network\socket\socket_windows.h" />
     <ClInclude Include="..\src\pc\network\version.h" />
+    <ClInclude Include="..\src\pc\utils\misc.h" />
+    <ClInclude Include="..\src\pc\utils\string_builder.h" />
     <ClInclude Include="..\src\pc\utils\string_linked_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

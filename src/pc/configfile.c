@@ -92,7 +92,8 @@ bool         configCameraAnalog  = true;
 bool         configCameraMouse   = false;
 #endif
 bool         configSkipIntro     = 0;
-bool         configShareLives     = 0;
+bool         configShareLives    = 0;
+bool         configEnableCheats  = 0;
 bool         configHUD           = true;
 #ifdef DISCORDRPC
 bool         configDiscordRPC    = true;
@@ -104,9 +105,8 @@ unsigned int configHostPort                  = DEFAULT_PORT;
 unsigned int configHostSaveSlot              = 1;
 unsigned int configPlayerInteraction         = 1;
 unsigned int configPlayerKnockbackStrength   = 25;
-unsigned int configStayInLevelAfterStar      = 0;
+bool         configStayInLevelAfterStar      = 0;
 unsigned int configNetworkSystem             = 0;
-bool         configLuigiSounds               = true;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -154,6 +154,7 @@ static const struct ConfigOption options[] = {
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
     {.name = "share_lives",          .type = CONFIG_TYPE_BOOL, .boolValue = &configShareLives},
+    {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif
@@ -164,9 +165,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
-    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
+    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .boolValue   = &configStayInLevelAfterStar},
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
-    {.name = "coop_luigi_sounds",              .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuigiSounds},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

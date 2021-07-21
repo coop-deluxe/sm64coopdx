@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "../network.h"
-#include "menu/custom_menu_system.h"
 #include "pc/debuglog.h"
 
 void network_send_leaving(u8 globalIndex) {
