@@ -10,6 +10,7 @@
 #endif
 #include "pc/configfile.h"
 #include "pc/cheats.h"
+#include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -81,6 +82,8 @@ bool network_init(enum NetworkType inNetworkType) {
         network_player_connected(NPT_LOCAL, 0);
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
+
+        djui_chat_box_create();
     } else if (gNetworkType == NT_CLIENT) {
         network_player_connected(NPT_SERVER, 0);
     }
@@ -267,6 +270,11 @@ void network_register_mod(char* modName) {
 }
 
 void network_shutdown(bool sendLeaving) {
+    if (gDjuiChatBox != NULL) {
+        djui_base_destroy(&gDjuiChatBox->base);
+        gDjuiChatBox = NULL;
+    }
+
     network_forget_all_reliable();
     if (gNetworkType == NT_NONE) { return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
@@ -276,9 +284,4 @@ void network_shutdown(bool sendLeaving) {
     gNetworkSystem->shutdown();
 
     gNetworkType = NT_NONE;
-}
-
-// TODO: replace
-void chat_add_message(char* message) {
-    LOG_INFO("chat: %s", message);
 }

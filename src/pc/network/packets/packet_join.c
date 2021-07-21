@@ -178,6 +178,7 @@ void network_receive_join(struct Packet* p) {
 
     network_player_connected(NPT_SERVER, 0);
     network_player_connected(NPT_LOCAL, myGlobalIndex);
+    djui_chat_box_create();
 
     save_file_load_all(TRUE);
 

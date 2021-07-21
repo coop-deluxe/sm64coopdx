@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "../reservation_area.h"
+#include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 
 #ifdef DEVELOPMENT
@@ -28,11 +29,11 @@ static void print_network_player_table(void) {
 }
 #endif
 
-void network_send_chat(char* message, u8 rgb[3]) {
+void network_send_chat(char* message, u8 globalIndex) {
     u16 messageLength = strlen(message);
     struct Packet p;
     packet_init(&p, PACKET_CHAT, true, false);
-    packet_write(&p, rgb, 3 * sizeof(u8));
+    packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));
     network_send(&p);
@@ -45,16 +46,16 @@ void network_send_chat(char* message, u8 rgb[3]) {
 
 void network_receive_chat(struct Packet* p) {
     u16 remoteMessageLength = 0;
-    char remoteMessage[255] = { 0 };
-    u8 rgb[3] = { 255, 255, 255};
+    char remoteMessage[256] = { 0 };
+    u8 globalIndex;
 
-    packet_read(p, rgb, 3 * sizeof(u8));
+    packet_read(p, &globalIndex, sizeof(u8));
     packet_read(p, &remoteMessageLength, sizeof(u16));
-    if (remoteMessageLength > 255) { remoteMessageLength = 254; }
+    if (remoteMessageLength > 256) { remoteMessageLength = 255; }
     packet_read(p, &remoteMessage, remoteMessageLength * sizeof(u8));
 
     // add the message
-    chat_add_message(remoteMessage);
+    djui_chat_message_create_from(globalIndex, remoteMessage);
     LOG_INFO("rx chat: %s", remoteMessage);
     /*
 #ifdef DEVELOPMENT

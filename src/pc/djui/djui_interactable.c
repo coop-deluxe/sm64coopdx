@@ -9,15 +9,6 @@
 #include "audio_defines.h"
 #include "audio/external.h"
 
-#define SCANCODE_UP    328
-#define SCANCODE_DOWN  336
-#define SCANCODE_LEFT  331
-#define SCANCODE_RIGHT 333
-
-#define SCANCODE_ENTER  28
-#define SCANCODE_SPACE  57
-#define SCANCODE_ESCAPE 1
-
 enum PadHoldDirection { PAD_HOLD_DIR_NONE, PAD_HOLD_DIR_UP, PAD_HOLD_DIR_DOWN, PAD_HOLD_DIR_LEFT, PAD_HOLD_DIR_RIGHT };
 static enum PadHoldDirection sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
 static u16 sKeyboardButtons = 0;
@@ -179,14 +170,28 @@ bool djui_interactable_on_key_down(int scancode) {
 
     if (keyFocused) {
         bool consume = sInteractableFocus->interactable->on_key_down(sInteractableFocus, scancode);
-        sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
-        sKeyboardButtons = 0;
-        return consume;
+        if (consume) {
+            sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
+            sKeyboardButtons = 0;
+            return true;
+        }
     }
 
     if (scancode == SCANCODE_ESCAPE) {
         // pressed escape button on keyboard
         djui_panel_back();
+    }
+
+    if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
+        bool pressChat = false;
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyChat[i]) { pressChat = true; }
+        }
+
+        if (pressChat) {
+            djui_chat_box_toggle();
+            return true;
+        }
     }
 
     switch (scancode) {
@@ -196,6 +201,7 @@ bool djui_interactable_on_key_down(int scancode) {
         case SCANCODE_RIGHT: sKeyboardHoldDirection = PAD_HOLD_DIR_RIGHT; return true;
         case SCANCODE_ENTER: sKeyboardButtons |= PAD_BUTTON_A;            return true;
     }
+
     return false;
 }
 

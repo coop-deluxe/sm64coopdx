@@ -22,7 +22,6 @@ void djui_init(void) {
         djui_panel_main_create(NULL);
         //djui_panel_debug_create();
     }
-
     djui_cursor_create();
 }
 

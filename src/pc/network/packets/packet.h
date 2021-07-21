@@ -169,7 +169,7 @@ void network_send_custom(u8 customId, bool reliable, bool levelAreaMustMatch, vo
 void network_receive_custom(struct Packet* p);
 
 // packet_chat.c
-void network_send_chat(char* message, u8 rgb[3]);
+void network_send_chat(char* message, u8 globalIndex);
 void network_receive_chat(struct Packet* p);
 
 // packet_kick.c

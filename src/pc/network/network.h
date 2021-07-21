@@ -102,6 +102,4 @@ void network_update(void);
 void network_register_mod(char* modName);
 void network_shutdown(bool sendLeaving);
 
-// TODO: replace
-void chat_add_message(char* message);
 #endif

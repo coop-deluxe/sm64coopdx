@@ -180,7 +180,8 @@ static void djui_base_add_child(struct DjuiBase* parent, struct DjuiBase* base) 
     baseChild->next = NULL;
 
     // add it to the head
-    if (parent->child == NULL) {
+    if (parent->child == NULL || parent->addChildrenToHead) {
+        baseChild->next = parent->child;
         parent->child = baseChild;
         return;
     }
@@ -269,29 +270,29 @@ static void djui_base_render_border(struct DjuiBase* base) {
  // events //
 ////////////
 
-void djui_base_render(struct DjuiBase* base) {
-    if (!base->visible) { return; }
+bool djui_base_render(struct DjuiBase* base) {
+    if (!base->visible) { return false; }
 
     if (base->on_render_pre != NULL) {
         bool skipRender = false;
         base->on_render_pre(base, &skipRender);
-        if (skipRender) { return; }
+        if (skipRender) { return false; }
     }
 
     struct DjuiBaseRect* comp = &base->comp;
     struct DjuiBaseRect* clip = &base->clip;
 
     djui_base_compute(base);
-    if (comp->width  <= 0) { return; }
-    if (comp->height <= 0) { return; }
-    if (clip->width  <= 0) { return; }
-    if (clip->height <= 0) { return; }
+    if (comp->width  <= 0) { return false; }
+    if (comp->height <= 0) { return false; }
+    if (clip->width  <= 0) { return false; }
+    if (clip->height <= 0) { return false; }
 
     if (base->borderWidth.value > 0 && base->borderColor.a > 0) {
         djui_base_render_border(base);
     }
 
-    if (clip->width < 0 || clip->height <= 0) { return; }
+    if (clip->width < 0 || clip->height <= 0) { return false; }
 
     if (base->render != NULL) {
         base->render(base);
@@ -301,16 +302,20 @@ void djui_base_render(struct DjuiBase* base) {
 
     // render all children
     struct DjuiBaseChild* child = base->child;
+    bool hasChildRendered = false;
     while (child != NULL) {
         struct DjuiBaseChild* nextChild = child->next;
-        djui_base_render(child->base);
-
+        bool childRendered = djui_base_render(child->base);
+        if (base->abandonAfterChildRenderFail && !childRendered && hasChildRendered) { break; }
+        hasChildRendered = hasChildRendered || childRendered;
         if (base->on_child_render != NULL) {
             base->on_child_render(base, child->base);
         }
 
         child = nextChild;
     }
+
+    return true;
 }
 
 void djui_base_destroy(struct DjuiBase* base) {

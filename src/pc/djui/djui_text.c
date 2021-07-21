@@ -169,6 +169,46 @@ static void djui_text_read_line(struct DjuiText* text, u16* index, f32* lineWidt
     }*/
 }
 
+int djui_text_count_lines(struct DjuiText* text, u16 maxLines) {
+    struct DjuiBaseRect* comp = &text->base.comp;
+    u16 startIndex = 0;
+    u16 endIndex = 0;
+    f32 maxLineWidth = comp->width / ((f32)text->fontScale);
+    u16 lineCount = 0;
+    while (text->message[startIndex] != '\0') {
+        bool onLastLine = lineCount + 1 >= maxLines;
+        f32 lineWidth;
+        bool ellipses;
+        djui_text_read_line(text, &endIndex, &lineWidth, maxLineWidth, onLastLine, &ellipses);
+        startIndex = endIndex;
+        lineCount++;
+        if (onLastLine) { break; }
+    }
+    return lineCount;
+}
+
+f32 djui_text_find_width(struct DjuiText* text, u16 maxLines) {
+    struct DjuiBaseRect* comp = &text->base.comp;
+    u16 startIndex = 0;
+    u16 endIndex = 0;
+    f32 maxLineWidth = comp->width / ((f32)text->fontScale);
+    u16 lineCount = 0;
+
+    f32 largestWidth = 0;
+
+    while (text->message[startIndex] != '\0') {
+        bool onLastLine = lineCount + 1 >= maxLines;
+        f32 lineWidth;
+        bool ellipses;
+        djui_text_read_line(text, &endIndex, &lineWidth, maxLineWidth, onLastLine, &ellipses);
+        largestWidth = fmax(largestWidth, lineWidth);
+        startIndex = endIndex;
+        lineCount++;
+        if (onLastLine) { break; }
+    }
+    return largestWidth * text->fontScale;
+}
+
 static int djui_text_render_line_parse_escape(struct DjuiText* text, u16 startIndex, u16 endIndex) {
     bool parsingColor = text->message[startIndex + 1] == '#';
     u16 i = parsingColor ? (startIndex + 1) : startIndex;
@@ -298,20 +338,9 @@ static void djui_text_render(struct DjuiBase* base) {
     sSavedA = base->color.a;
 
     // count lines
-    u16 startIndex = 0;
-    u16 endIndex = 0;
-    f32 maxLineWidth = comp->width / ((f32)text->fontScale);
-    u16 lineCount = 0;
     u16 maxLines = comp->height / ((f32)text->font->lineHeight * text->fontScale);
-    while (text->message[startIndex] != '\0') {
-        bool onLastLine = lineCount + 1 >= maxLines;
-        f32 lineWidth;
-        bool ellipses;
-        djui_text_read_line(text, &endIndex, &lineWidth, maxLineWidth, onLastLine, &ellipses);
-        startIndex = endIndex;
-        lineCount++;
-        if (onLastLine) { break; }
-    }
+    f32 maxLineWidth = comp->width / ((f32)text->fontScale);
+    u16 lineCount = djui_text_count_lines(text, maxLines);
 
     // do vertical alignment
     f32 vOffset = 0;
@@ -325,8 +354,8 @@ static void djui_text_render(struct DjuiBase* base) {
     djui_text_translate(0, vOffset);
 
     // render lines
-    startIndex = 0;
-    endIndex = 0;
+    u16 startIndex = 0;
+    u16 endIndex = 0;
     f32 lineWidth;
     u16 lineIndex = 0;
     bool ellipses = false;

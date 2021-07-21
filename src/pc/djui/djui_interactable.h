@@ -8,6 +8,18 @@
 
 #define MOUSE_BUTTON_1  ((u16)(1 << 0))
 
+#define SCANCODE_UP        328
+#define SCANCODE_DOWN      336
+#define SCANCODE_LEFT      331
+#define SCANCODE_RIGHT     333
+#define SCANCODE_PAGE_DOWN 337
+#define SCANCODE_PAGE_UP   329
+
+
+#define SCANCODE_ENTER  28
+#define SCANCODE_SPACE  57
+#define SCANCODE_ESCAPE 1
+
 #pragma pack(1)
 struct DjuiInteractable {
     bool enabled;

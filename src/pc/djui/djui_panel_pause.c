@@ -19,6 +19,8 @@ static void djui_panel_pause_quit(struct DjuiBase* caller) {
 }
 
 void djui_panel_pause_create(struct DjuiBase* caller) {
+    if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
+
     f32 bodyHeight = 64 * 3 + 16 * 2;
     if (Cheats.EnableCheats) { bodyHeight += 64 + 16; }
 

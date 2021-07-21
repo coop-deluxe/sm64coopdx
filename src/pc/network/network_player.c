@@ -183,8 +183,10 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         } else {
             // display popup
             u8* rgb = get_player_color(np->globalIndex, 0);
+            u8 rgb2[3] = { 0 };
+            for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
             char popupMsg[128] = { 0 };
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\Player\\#dcdcdc\\ connected.", rgb[0], rgb[1], rgb[2]);
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected.", rgb2[0], rgb2[1], rgb2[2], "Player");
             djui_popup_create(popupMsg, 1);
         }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
@@ -229,8 +231,10 @@ u8 network_player_disconnected(u8 globalIndex) {
         
         // display popup
         u8* rgb = get_player_color(np->globalIndex, 0);
+        u8 rgb2[3] = { 0 };
+        for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\Player\\#dcdcdc\\ disconnected.", rgb[0], rgb[1], rgb[2]);
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected.", rgb2[0], rgb2[1], rgb2[2], "Player");
         djui_popup_create(popupMsg, 1);
 
         packet_ordered_clear(globalIndex);

@@ -323,7 +323,7 @@ void network_receive_player(struct Packet* p) {
 
     // inform of player death
     if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
-        chat_add_message("player died");
+        //chat_add_message("player died");
     }
 
     // action changed, reset timer

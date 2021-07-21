@@ -38,8 +38,12 @@ void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
     inputbox->selection[0] = strlen(inputbox->buffer);
 }
 
-void djui_inputbox_hook_enter_press(struct DjuiInputbox* inputbox, void (*on_enter_press)(void)) {
+void djui_inputbox_hook_enter_press(struct DjuiInputbox* inputbox, void (*on_enter_press)(struct DjuiInputbox*)) {
     inputbox->on_enter_press = on_enter_press;
+}
+
+void djui_inputbox_hook_escape_press(struct DjuiInputbox* inputbox, void (*on_escape_press)(struct DjuiInputbox*)) {
+    inputbox->on_escape_press = on_escape_press;
 }
 
 static void djui_inputbox_set_default_style(struct DjuiBase* base) {
@@ -152,7 +156,7 @@ static void djui_inputbox_delete_selection(struct DjuiInputbox *inputbox) {
     djui_inputbox_on_change(inputbox);
 }
 
-static bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
+bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     u16 *sel = inputbox->selection;
     char *msg = inputbox->buffer;
@@ -261,13 +265,16 @@ static bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
 
     if (scancode == SCANCODE_ESCAPE) {
         djui_interactable_set_input_focus(NULL);
+        if (inputbox->on_escape_press) {
+            inputbox->on_escape_press(inputbox);
+        }
         return true;
     }
 
     if (scancode == SCANCODE_ENTER) {
         djui_interactable_set_input_focus(NULL);
         if (inputbox->on_enter_press) {
-            inputbox->on_enter_press();
+            inputbox->on_enter_press(inputbox);
         }
         return true;
     }
@@ -275,7 +282,7 @@ static bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     return true;
 }
 
-static void djui_inputbox_on_key_up(struct DjuiBase *base, int scancode) {
+void djui_inputbox_on_key_up(struct DjuiBase *base, int scancode) {
     switch (scancode) {
         case SCANCODE_CONTROL_LEFT:  sHeldControl &= ~(1 << 0); break;
         case SCANCODE_CONTROL_RIGHT: sHeldControl &= ~(1 << 1); break;
