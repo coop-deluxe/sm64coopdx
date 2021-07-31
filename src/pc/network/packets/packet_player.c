@@ -11,6 +11,7 @@
 #include "game/object_list_processor.h"
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
+#include "pc/djui/djui.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -323,7 +324,13 @@ void network_receive_player(struct Packet* p) {
 
     // inform of player death
     if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
-        //chat_add_message("player died");
+        // display popup
+        u8* rgb = get_player_color(np->globalIndex, 0);
+        u8 rgb2[3] = { 0 };
+        for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+        char popupMsg[128] = { 0 };
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ died.", rgb2[0], rgb2[1], rgb2[2], "Player");
+        djui_popup_create(popupMsg, 1);
     }
 
     // action changed, reset timer
