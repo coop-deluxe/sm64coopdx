@@ -25,6 +25,7 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 #endif
 
 #define LOADING_LEVEL_THRESHOLD 10
+#define MAX_PACKETS_PER_SECOND_PER_PLAYER ((u16)70)
 
 u16 networkLoadingLevel = 0;
 bool gNetworkAreaLoaded = false;
@@ -169,9 +170,30 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     assert(p->dataLength < PACKET_LENGTH);
 
+    // rate limit packets
+    bool tooManyPackets = false;
+    int maxPacketsPerSecond = (gNetworkType == NT_SERVER) ? (MAX_PACKETS_PER_SECOND_PER_PLAYER * (u16)network_player_connected_count()) : MAX_PACKETS_PER_SECOND_PER_PLAYER;
+    static int sPacketsPerSecond[MAX_PLAYERS] = { 0 };
+    static clock_t sPacketsPerSecondClock[MAX_PLAYERS] = { 0 };
+    clock_t currentClock = clock();
+    if ((currentClock - sPacketsPerSecondClock[localIndex]) > CLOCKS_PER_SEC) {
+        if (sPacketsPerSecond[localIndex] > maxPacketsPerSecond) {
+            LOG_ERROR("Too many packets sent to localIndex %d! Attempted %d. Connected count %d.", localIndex, sPacketsPerSecond[localIndex], network_player_connected_count());
+        }
+        sPacketsPerSecondClock[localIndex] = currentClock;
+        sPacketsPerSecond[localIndex] = 1;
+    } else {
+        sPacketsPerSecond[localIndex]++;
+        if (sPacketsPerSecond[localIndex] > maxPacketsPerSecond) {
+            tooManyPackets = true;
+        }
+    }
+
     // send
-    int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
-    if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+    if (!tooManyPackets) {
+        int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
+        if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+    }
     p->sent = true;
 
     gNetworkPlayers[localIndex].lastSent = clock();
