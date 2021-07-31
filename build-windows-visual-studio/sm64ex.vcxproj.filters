@@ -14793,9 +14793,6 @@
     <ClCompile Include="..\src\pc\audio\audio_null.c">
       <Filter>Source Files\src\pc\audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\pc\audio\audio_sdl.c">
-      <Filter>Source Files\src\pc\audio</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pc\cheats.c">
       <Filter>Source Files\src\pc</Filter>
     </ClCompile>
@@ -15269,6 +15266,9 @@
     </ClCompile>
     <ClCompile Include="..\src\pc\djui\djui_chat_message.c">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\audio\audio_sdl.c">
+      <Filter>Source Files\src\pc\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

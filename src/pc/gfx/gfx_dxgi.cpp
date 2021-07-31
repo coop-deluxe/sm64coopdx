@@ -641,7 +641,7 @@ void gfx_dxgi_set_clipboard_text(char* text) {
         EmptyClipboard();
         clipbuffer = GlobalAlloc(GMEM_DDESHARE, strlen(text) + 1);
         buffer = (char *) GlobalLock(clipbuffer);
-        strcpy(buffer, LPCSTR(source));
+        strcpy(buffer, LPCSTR(text));
         GlobalUnlock(clipbuffer);
         SetClipboardData(CF_TEXT, clipbuffer);
         CloseClipboard();
