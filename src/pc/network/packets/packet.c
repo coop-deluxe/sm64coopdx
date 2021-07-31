@@ -6,10 +6,10 @@ void packet_process(struct Packet* p) {
     if (p->levelAreaMustMatch) {
         extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
         bool levelAreaMismatch =
-            (p->courseNum != gCurrCourseNum
-                || p->actNum != gCurrActStarNum
-                || p->levelNum != gCurrLevelNum
-                || p->areaIndex != gCurrAreaIndex);
+            (p->courseNum    != gCurrCourseNum
+             || p->actNum    != gCurrActStarNum
+             || p->levelNum  != gCurrLevelNum
+             || p->areaIndex != gCurrAreaIndex);
         // drop packet
         if (levelAreaMismatch) {
             if (gNetworkType != NT_SERVER) {
