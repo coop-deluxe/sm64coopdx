@@ -1,5 +1,7 @@
 #include <time.h>
 #include "djui.h"
+#include "audio_defines.h"
+#include "audio/external.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 
@@ -54,6 +56,7 @@ struct DjuiPopup* djui_popup_create(const char* message, int lines) {
 
     sPopupListY -= height + 4;
     djui_popup_add_to_list(popup);
+    play_sound(SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
     return popup;
 }
 
@@ -85,6 +88,7 @@ void djui_popup_update(void) {
                 djui_base_destroy(&node->popup->base);
                 free(node);
                 node = next;
+                play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gDefaultSoundArgs);
                 continue;
             }
         } else {
