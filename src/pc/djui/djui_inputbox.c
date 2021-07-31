@@ -307,6 +307,20 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     int msgLen = strlen(msg);
     int textLen = strlen(text);
 
+    // make sure we're not just printing garbage characters
+    bool containsValidAscii = false;
+    char* tinput = text;
+    while (*tinput != NULL) {
+        if (*tinput >= '!' && *tinput <= '~') {
+            containsValidAscii = true;
+            break;
+        }
+        tinput++;
+    }
+    if (!containsValidAscii) {
+        return;
+    }
+
     // truncate
     if (textLen + msgLen >= inputbox->bufferSize) {
         int space = (inputbox->bufferSize - msgLen);

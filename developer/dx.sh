@@ -1,7 +1,1 @@
-function compiler() {
-    make RENDER_API=$1 WINDOW_API=$2 AUDIO_API=$3 CONTROLLER_API=$4
-}
-
-compiler D3D12 DXGI SDL2 SDL2 d3d12_2
-
-./build/us_pc/sm64.us.f3dex2e.exe
+make RENDER_API=D3D12 WINDOW_API=DXGI BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 && ./build/us_pc/sm64.us.f3dex2e.exe
