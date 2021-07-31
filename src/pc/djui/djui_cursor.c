@@ -14,6 +14,7 @@ static f32 sSavedMouseX = 0;
 static f32 sSavedMouseY = 0;
 f32 gCursorX = 0;
 f32 gCursorY = 0;
+
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
         djui_base_set_visible(&sMouseCursor->base, visible);
@@ -126,8 +127,8 @@ void djui_cursor_update(void) {
 
     // update mouse cursor
     if (sCursorMouseControlled) {
-        gCursorX = mouse_window_x;
-        gCursorY = mouse_window_y;
+        gCursorX = mouse_window_x / djui_gfx_get_scale();
+        gCursorY = mouse_window_y / djui_gfx_get_scale();
     } else if (sInputControlledBase != NULL) {
         djui_cursor_base_hover_location(sInputControlledBase, &gCursorX, &gCursorY);
     }

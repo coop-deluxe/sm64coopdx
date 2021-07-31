@@ -9,7 +9,7 @@ static void djui_root_render(struct DjuiBase* base) {
 
     // fill the screen
     djui_base_set_location(base, 0, 0);
-    djui_base_set_size(base, windowWidth, windowHeight);
+    djui_base_set_size(base, windowWidth / djui_gfx_get_scale(), windowHeight / djui_gfx_get_scale());
 
     // compute base
     djui_base_compute(base);

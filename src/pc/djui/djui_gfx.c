@@ -24,6 +24,17 @@ const Gfx dl_djui_simple_rect[] = {
     gsSPEndDisplayList(),
 };
 
+f32 djui_gfx_get_scale(void) {
+    u32 windowWidth, windowHeight;
+    wm_api->get_dimensions(&windowWidth, &windowHeight);
+    if (windowHeight < 720 - 64) {
+        return 0.5f;
+    } else if (windowHeight < 1440 - 64) {
+        return 1.0f;
+    } else {
+        return 2.0f;
+    }
+}
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {
@@ -76,23 +87,23 @@ void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize) {
 void djui_gfx_position_translate(f32* x, f32* y) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
-    *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x * ((f32)SCREEN_HEIGHT / (f32)windowHeight);
-    *y = SCREEN_HEIGHT - *y * ((f32)SCREEN_HEIGHT / (f32)windowHeight);
+    *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *y = SCREEN_HEIGHT - *y * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_scale_translate(f32* width, f32* height) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
     
-    *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight);
-    *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight);
+    *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_size_translate(f32* size) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
-    *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight);
+    *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 bool djui_gfx_add_clipping_specific(struct DjuiBase* base, bool rotatedUV, f32 dX, f32 dY, f32 dW, f32 dH) {
