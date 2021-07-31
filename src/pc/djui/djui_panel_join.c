@@ -34,7 +34,7 @@ static bool djui_panel_join_ip_parse_numbers(char** msg) {
         }
     }
 
-    return num >= 0 && num <= 127;
+    return num >= 0 && num <= 255;
 }
 
 static bool djui_panel_join_ip_parse_period(char** msg) {
