@@ -13,7 +13,7 @@
 #include "pc/djui/djui.h"
 #include "pc/cheats.h"
 #include "pc/utils/string_builder.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 extern u8* gOverrideEeprom;
@@ -26,7 +26,7 @@ void network_send_join_request(void) {
 
     struct Packet p;
     packet_init(&p, PACKET_JOIN_REQUEST, true, false);
-    network_send_to(gNetworkPlayerServer->localIndex, &p);
+    network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     LOG_INFO("sending join request");
 }
 

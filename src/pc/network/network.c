@@ -86,7 +86,6 @@ bool network_init(enum NetworkType inNetworkType) {
         djui_chat_box_create();
     } else if (gNetworkType == NT_CLIENT) {
         network_player_connected(NPT_SERVER, 0);
-        network_send_join_request();
     }
 
     LOG_INFO("initialized");

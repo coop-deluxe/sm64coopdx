@@ -93,6 +93,10 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
 
     LOG_INFO("initialized");
 
+    if (networkType == NT_CLIENT) {
+        network_send_join_request();
+    }
+
     // success
     return true;
 }

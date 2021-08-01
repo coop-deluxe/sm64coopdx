@@ -80,6 +80,7 @@ void packet_receive(struct Packet* p) {
             LOG_INFO("closing connection for packetType: %d", packetType);
             network_send_kick(EKT_CLOSE_CONNECTION);
         }
+        LOG_INFO("refusing packet from unknown player, packetType: %d", packetType);
         return;
     }
 
@@ -112,6 +113,8 @@ void packet_receive(struct Packet* p) {
             // process the packet
             packet_process(p);
         }
+    } else {
+        LOG_INFO("packet initial read failed, packetType: %d", packetType);
     }
 
     // broadcast packet

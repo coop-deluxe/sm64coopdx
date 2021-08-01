@@ -310,7 +310,7 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     // make sure we're not just printing garbage characters
     bool containsValidAscii = false;
     char* tinput = text;
-    while (*tinput != NULL) {
+    while (*tinput != '\0') {
         if (*tinput >= '!' && *tinput <= '~') {
             containsValidAscii = true;
             break;

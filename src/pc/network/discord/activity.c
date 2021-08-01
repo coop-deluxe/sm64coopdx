@@ -33,6 +33,11 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     discord_network_init(lobby->id);
     discord_activity_update(false);
 
+    if (gNetworkType == NT_CLIENT) {
+        ns_discord_save_id(gNetworkPlayerServer->localIndex, lobby->owner_id);
+        network_send_join_request();
+    }
+
     gNetworkUserIds[0] = lobby->owner_id;
 }
 

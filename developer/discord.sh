@@ -16,3 +16,8 @@ fi
 $FILE --discord 2 --configfile sm64config_server.txt  &
 $FILE --discord 1 --configfile sm64config_client.txt  &
 exit
+
+
+#debug discord client
+$FILE --discord 2 --configfile sm64config_server.txt  &
+winpty cgdb ./build/us_pc/sm64.us.f3dex2e.exe -ex 'break debug_breakpoint_here' -ex 'r --discord 1 --configfile sm64config_client.txt'
