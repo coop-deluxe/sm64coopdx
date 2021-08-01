@@ -1,22 +1,23 @@
 #include "djui.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
+#include "game/level_update.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
-struct DjuiText* gDjuiPauseOptions = NULL;
+static struct DjuiText* sDjuiPauseOptions = NULL;
 
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
 
-    gDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, "R Button - Options");
-    djui_base_set_size_type(&gDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&gDjuiPauseOptions->base, 1.0f, 32);
-    djui_base_set_location(&gDjuiPauseOptions->base, 0, 16);
-    djui_text_set_drop_shadow(gDjuiPauseOptions, 0, 0, 0, 255);
-    djui_text_set_alignment(gDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-    djui_base_set_visible(&gDjuiPauseOptions->base, false);
+    sDjuiPauseOptions = djui_text_create(&gDjuiRoot->base, "R Button - Options");
+    djui_base_set_size_type(&sDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&sDjuiPauseOptions->base, 1.0f, 32);
+    djui_base_set_location(&sDjuiPauseOptions->base, 0, 16);
+    djui_text_set_drop_shadow(sDjuiPauseOptions, 0, 0, 0, 255);
+    djui_text_set_alignment(sDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_visible(&sDjuiPauseOptions->base, false);
 
     if (gCLIOpts.Network != NT_SERVER) {
         djui_panel_main_create(NULL);
@@ -48,6 +49,7 @@ void djui_render(void) {
     djui_panel_update();
     djui_popup_update();
 
+    djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
     djui_base_render(&gDjuiRoot->base);
 
     djui_cursor_update();

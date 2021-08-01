@@ -57,5 +57,4 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
     djui_panel_add(caller, &panel->base, defaultBase);
     gInteractableOverridePad = true;
     gDjuiPanelPauseCreated = true;
-    djui_base_set_visible(&gDjuiPauseOptions->base, false);
 }

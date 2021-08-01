@@ -50,7 +50,6 @@
 #include "djui_panel_cheats.h"
 
 extern struct DjuiRoot* gDjuiRoot;
-extern struct DjuiText* gDjuiPauseOptions;
 
 void djui_init(void);
 void djui_connect_menu_open(void);
