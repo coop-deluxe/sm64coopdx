@@ -40,6 +40,7 @@ static void djui_bind_button_on_bind(struct DjuiBase* caller) {
     djui_text_set_text(button->text, keyStr);
     djui_interactable_set_binding(NULL);
     play_sound(SOUND_MENU_CHANGE_SELECT, gDefaultSoundArgs);
+    controller_reconfigure();
 }
 
 static void djui_bind_destroy(struct DjuiBase* base) {
