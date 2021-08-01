@@ -5,6 +5,7 @@
 
 static struct DjuiBase* sSaveButtonCaller = NULL;
 static struct DjuiButton* sSaveButtons[4] = { NULL };
+static s32 sEraseButtonTag = 0;
 
 static void djui_panel_host_save_update_button(struct DjuiButton* button, int slot) {
     char starString[32] = { 0 };
@@ -19,12 +20,13 @@ static void djui_panel_host_save_button_click(struct DjuiBase* caller) {
 }
 
 static void djui_panel_host_save_erase_yes(struct DjuiBase* caller) {
-    save_file_erase(caller->tag);
-    djui_panel_host_save_update_button(sSaveButtons[caller->tag], caller->tag);
+    save_file_erase(sEraseButtonTag);
+    djui_panel_host_save_update_button(sSaveButtons[sEraseButtonTag], sEraseButtonTag);
     djui_panel_menu_back(caller);
 }
 
 static void djui_panel_host_save_erase(struct DjuiBase* caller) {
+    sEraseButtonTag = caller->tag;
     djui_panel_confirm_create(caller,
                               "\\#ff0800\\E\\#1be700\\R\\#00b3ff\\A\\#ffef00\\S\\#ff0800\\E",
                               "Are you sure you want to erase this save slot?",
@@ -55,6 +57,7 @@ void djui_panel_host_save_create(struct DjuiBase* caller) {
                 sSaveButtons[i] = button1;
 
                 struct DjuiButton* button2 = djui_button_create(&rect1->base, "erase");
+                button2->base.tag = i;
                 djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_size(&button2->base, 0.24f, 32);
                 djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
