@@ -23,7 +23,6 @@ static void djui_bind_button_on_bind(struct DjuiBase* caller) {
     if (key == VK_INVALID) { return; }
 
     // invalidate key
-    if (key == VK_ESCAPE) { key = VK_INVALID; }
     for (int i = 0; i < MAX_BINDS; i++) {
         if (i == button->base.tag) { continue; }
         if (bind->configKey[i] == key) {

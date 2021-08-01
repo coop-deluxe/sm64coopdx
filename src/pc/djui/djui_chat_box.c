@@ -40,6 +40,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
 }
 
 static void djui_chat_box_input_escape(struct DjuiInputbox* chatInput) {
+    djui_interactable_set_input_focus(NULL);
     djui_inputbox_set_text(chatInput, "");
     djui_inputbox_select_all(chatInput);
     if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }

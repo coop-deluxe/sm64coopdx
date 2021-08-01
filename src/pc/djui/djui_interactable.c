@@ -152,7 +152,7 @@ void djui_interactable_set_binding(struct DjuiBase* base) {
 }
 
 void djui_interactable_set_input_focus(struct DjuiBase* base) {
-    djui_interactable_on_focus_end(base);
+    djui_interactable_on_focus_end(sInteractableFocus);
     sInteractableFocus = base;
     djui_interactable_on_focus_begin(base);
     djui_cursor_set_visible(base == NULL);
@@ -163,6 +163,9 @@ bool djui_interactable_is_input_focus(struct DjuiBase* base) {
 }
 
 bool djui_interactable_on_key_down(int scancode) {
+    if (sInteractableBinding != NULL) {
+        return true;
+    }
 
     bool keyFocused = (sInteractableFocus != NULL)
                    && (sInteractableFocus->interactable != NULL)
@@ -177,9 +180,10 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if (scancode == SCANCODE_ESCAPE) {
+    if (scancode == SCANCODE_ESCAPE && djui_panel_is_active()) {
         // pressed escape button on keyboard
         djui_panel_back();
+        return true;
     }
 
     if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
@@ -194,12 +198,14 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    switch (scancode) {
-        case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    return true;
-        case SCANCODE_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  return true;
-        case SCANCODE_LEFT:  sKeyboardHoldDirection = PAD_HOLD_DIR_LEFT;  return true;
-        case SCANCODE_RIGHT: sKeyboardHoldDirection = PAD_HOLD_DIR_RIGHT; return true;
-        case SCANCODE_ENTER: sKeyboardButtons |= PAD_BUTTON_A;            return true;
+    if (gDjuiChatBoxFocus || djui_panel_is_active()) {
+        switch (scancode) {
+            case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    return true;
+            case SCANCODE_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  return true;
+            case SCANCODE_LEFT:  sKeyboardHoldDirection = PAD_HOLD_DIR_LEFT;  return true;
+            case SCANCODE_RIGHT: sKeyboardHoldDirection = PAD_HOLD_DIR_RIGHT; return true;
+            case SCANCODE_ENTER: sKeyboardButtons |= PAD_BUTTON_A;            return true;
+        }
     }
 
     return false;
