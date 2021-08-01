@@ -1,6 +1,11 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
+#include "src/pc/controller/controller_api.h"
+
+void djui_panel_controls_value_change(struct DjuiBase* caller) {
+    controller_reconfigure();
+}
 
 void djui_panel_controls_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 32 * 11 + 1 * 10;
@@ -33,10 +38,12 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         struct DjuiSlider* slider1 = djui_slider_create(&body->base, "Deadzone", &configStickDeadzone, 0, 100);
         djui_base_set_size_type(&slider1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&slider1->base, 1.0f, 32);
+        djui_interactable_hook_value_change(&slider1->base, djui_panel_controls_value_change);
 
         struct DjuiSlider* slider2 = djui_slider_create(&body->base, "Rumble Strength", &configRumbleStrength, 0, 100);
         djui_base_set_size_type(&slider2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&slider2->base, 1.0f, 32);
+        djui_interactable_hook_value_change(&slider2->base, djui_panel_controls_value_change);
 
         struct DjuiButton* button6 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
