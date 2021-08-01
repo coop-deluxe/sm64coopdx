@@ -56,7 +56,7 @@ struct DjuiPopup* djui_popup_create(const char* message, int lines) {
 
     sPopupListY -= height + 4;
     djui_popup_add_to_list(popup);
-    play_sound(SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
+    play_sound(SOUND_MENU_PINCH_MARIO_FACE, gDefaultSoundArgs);
     return popup;
 }
 
@@ -88,7 +88,6 @@ void djui_popup_update(void) {
                 djui_base_destroy(&node->popup->base);
                 free(node);
                 node = next;
-                play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gDefaultSoundArgs);
                 continue;
             }
         } else {
