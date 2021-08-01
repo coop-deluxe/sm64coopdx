@@ -2,9 +2,7 @@
 #include <string.h>
 #include "djui.h"
 
-ALIGNED8 static u8 texture_selectionbox_icon[] = {
-#include "textures/segment2/custom_selectionbox_icon.rgba16.inc.c"
-};
+extern ALIGNED8 u8 texture_selectionbox_icon[];
 
 static void djui_selectionbox_set_default_style(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;

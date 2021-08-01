@@ -3569,3 +3569,8 @@ const f32 font_normal_widths[] = {
 /*        {        |        }        ~      DEL        */
     0.3125f, 0.2500f, 0.3125f, 0.5000f, 0.5000f
 };
+
+
+ALIGNED8 u8 texture_selectionbox_icon[] = {
+#include "textures/segment2/custom_selectionbox_icon.rgba16.inc.c"
+};
