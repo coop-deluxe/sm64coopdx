@@ -15,6 +15,7 @@
 #include "pc/utils/string_builder.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
+#include "pc/utils/misc.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -183,6 +184,7 @@ void network_receive_join(struct Packet* p) {
     save_file_load_all(TRUE);
 
     djui_panel_shutdown();
+    update_all_mario_stars();
     extern s16 gChangeLevel;
     gChangeLevel = 16;
 }

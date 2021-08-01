@@ -4,6 +4,7 @@
 #include "src/pc/network/discord/discord.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
+#include "pc/utils/misc.h"
 
 #ifdef DISCORD_SDK
 static char* sWarningDiscord = "\
@@ -25,6 +26,7 @@ void djui_panel_host_message_do_host(struct DjuiBase* caller) {
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
     gCurrSaveFileNum = configHostSaveSlot;
+    update_all_mario_stars();
 #ifndef DISCORD_SDK
     configNetworkSystem = 1;
     network_set_system(NS_SOCKET);
