@@ -141,7 +141,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox1->base, 1.0f, 32);
 
-        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Play intro cutscene", &configSkipIntro);
+        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Skip intro cutscene", &configSkipIntro);
         djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox2->base, 1.0f, 32);
 
