@@ -63,6 +63,7 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
 }
 
 void djui_panel_back(void) {
+    if (sPanelRemoving != NULL) { return; }
     if (sPanelList == NULL) { return; }
     if (sPanelList->parent == NULL) {
         if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
