@@ -314,6 +314,9 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
         if (*tinput >= '!' && *tinput <= '~') {
             containsValidAscii = true;
             break;
+        } else if (*tinput == ' ') {
+            containsValidAscii = true;
+            break;
         }
         tinput++;
     }
