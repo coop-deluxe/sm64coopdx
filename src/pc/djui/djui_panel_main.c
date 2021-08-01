@@ -1,10 +1,11 @@
 #include "djui.h"
 #include "src/pc/controller/controller_sdl.h"
+#include "src/pc/pc_main.h"
 
 bool gDjuiPanelMainCreated = false;
 
 static void djui_panel_main_quit_yes(struct DjuiBase* caller) {
-    exit(0);
+    game_exit();
 }
 
 static void djui_panel_main_quit(struct DjuiBase* caller) {

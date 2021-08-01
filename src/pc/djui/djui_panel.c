@@ -149,4 +149,5 @@ void djui_panel_shutdown(void) {
     gDjuiPanelMainCreated = false;
     gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
+    configfile_save(configfile_name());
 }

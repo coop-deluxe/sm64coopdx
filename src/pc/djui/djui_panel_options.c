@@ -1,6 +1,11 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 
+void djui_panel_options_back(struct DjuiBase* caller) {
+    configfile_save(configfile_name());
+    djui_panel_menu_back(caller);
+}
+
 void djui_panel_options_create(struct DjuiBase* caller) {
     f32 bodyHeight = 64 * 5 + 16 * 4;
 
@@ -38,7 +43,7 @@ void djui_panel_options_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button6->base, 1.0f, 64);
         djui_button_set_style(button6, 1);
-        djui_interactable_hook_click(&button6->base, djui_panel_menu_back);
+        djui_interactable_hook_click(&button6->base, djui_panel_options_back);
     }
 
     djui_panel_add(caller, &panel->base, defaultBase);

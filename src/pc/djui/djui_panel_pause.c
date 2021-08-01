@@ -1,5 +1,6 @@
 #include "djui.h"
 #include "pc/cheats.h"
+#include "src/pc/pc_main.h"
 
 bool gDjuiPanelPauseCreated = false;
 
@@ -8,7 +9,7 @@ static void djui_panel_pause_resume(struct DjuiBase* caller) {
 }
 
 static void djui_panel_pause_quit_yes(struct DjuiBase* caller) {
-    exit(0);
+    game_exit();
 }
 
 static void djui_panel_pause_quit(struct DjuiBase* caller) {
