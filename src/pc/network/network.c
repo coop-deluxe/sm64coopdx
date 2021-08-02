@@ -173,13 +173,13 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     bool tooManyPackets = false;
     int maxPacketsPerSecond = (gNetworkType == NT_SERVER) ? (MAX_PACKETS_PER_SECOND_PER_PLAYER * (u16)network_player_connected_count()) : MAX_PACKETS_PER_SECOND_PER_PLAYER;
     static int sPacketsPerSecond[MAX_PLAYERS] = { 0 };
-    static clock_t sPacketsPerSecondClock[MAX_PLAYERS] = { 0 };
-    clock_t currentClock = clock();
-    if ((currentClock - sPacketsPerSecondClock[localIndex]) > CLOCKS_PER_SEC) {
+    static clock_t sPacketsPerSecondTime[MAX_PLAYERS] = { 0 };
+    clock_t currentTime = time(NULL);
+    if ((currentTime - sPacketsPerSecondTime[localIndex]) > 0) {
         if (sPacketsPerSecond[localIndex] > maxPacketsPerSecond) {
             LOG_ERROR("Too many packets sent to localIndex %d! Attempted %d. Connected count %d.", localIndex, sPacketsPerSecond[localIndex], network_player_connected_count());
         }
-        sPacketsPerSecondClock[localIndex] = currentClock;
+        sPacketsPerSecondTime[localIndex] = currentTime;
         sPacketsPerSecond[localIndex] = 1;
     } else {
         sPacketsPerSecond[localIndex]++;
