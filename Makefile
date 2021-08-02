@@ -465,7 +465,10 @@ ifeq ($(DISCORD_SDK), 1)
     endif
   else ifeq ($(OSX_BUILD),1)
     # needs testing
-    DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib
+    # HACKY! Instead of figuring out all of the dynamic library linking madness...
+    # I copied the library and gave it two names.
+    # This really shouldn't be required, but I got tired of trying to do it the "right way"
+    DISCORD_SDK_LIBS := lib/discordsdk/discord_game_sdk.dylib lib/discordsdk/libdiscord_game_sdk.dylib
   else
     DISCORD_SDK_LIBS := lib/discordsdk/libdiscord_game_sdk.so
   endif
@@ -726,7 +729,7 @@ else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
 
 else ifeq ($(OSX_BUILD),1)
-  LDFLAGS := -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
+  LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 
 else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread

@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #define SOCKET unsigned int
 #define INVALID_SOCKET (unsigned int)(-1)
