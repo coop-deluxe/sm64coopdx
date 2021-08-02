@@ -21,6 +21,9 @@ void string_linked_list_append(struct StringLinkedList* node, char* string) {
 }
 
 bool string_linked_list_contains(struct StringLinkedList* node, char* string) {
+    if (string == NULL) {
+        return false;
+    }
     int length1 = strlen(string);
     while (node != NULL && node->string != NULL) {
         int length2 = strlen(node->string);

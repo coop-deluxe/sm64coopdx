@@ -151,7 +151,7 @@ void network_receive_join(struct Packet* p) {
         string_builder_append(builder, "\\#c8c8c8\\Yours: ");
         struct StringLinkedList* node = &gRegisteredMods;
         bool first = true;
-        while (node != NULL) {
+        while (node != NULL && node->string != NULL) {
             string_builder_append(builder, first ? "\\#%s\\%s" : ", \\#%s\\%s",
                 string_linked_list_contains(&head, node->string) ? "a0ffa0" : "ffa0a0"
                 , node->string);
@@ -162,7 +162,7 @@ void network_receive_join(struct Packet* p) {
         string_builder_append(builder, "\n\n\\#c8c8c8\\Theirs: ");
         node = &head;
         first = true;
-        while (node != NULL) {
+        while (node != NULL && node->string != NULL) {
             string_builder_append(builder, first ? "\\#%s\\%s" : ", \\#%s\\%s",
                 string_linked_list_contains(&gRegisteredMods, node->string) ? "a0ffa0" : "ffa0a0"
                 , node->string);
