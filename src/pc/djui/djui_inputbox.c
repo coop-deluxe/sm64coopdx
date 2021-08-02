@@ -68,8 +68,8 @@ static void djui_inputbox_on_hover_end(struct DjuiBase* base) {
 }
 
 static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
-    struct DjuiBaseRect* comp = &inputbox->base.comp;
-    struct DjuiFont* font     = &gDjuiFonts[0];
+    struct DjuiBaseRect*   comp = &inputbox->base.comp;
+    const struct DjuiFont* font = gDjuiFonts[0];
 
     f32 cX = (gCursorX - (comp->x + inputbox->viewX)) / font->defaultFontScale;
     f32 x = 0;
@@ -364,8 +364,8 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
 }
 
 static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char c, f32* drawX, f32* additionalShift) {
-    struct DjuiBaseRect* comp = &inputbox->base.comp;
-    struct DjuiFont*     font = &gDjuiFonts[0];
+    struct DjuiBaseRect*   comp = &inputbox->base.comp;
+    const struct DjuiFont* font = gDjuiFonts[0];
     f32 dX = comp->x + *drawX;
     f32 dY = comp->y + DJUI_INPUTBOX_YOFF;
     f32 dW = font->charWidth  * font->defaultFontScale;
@@ -385,7 +385,7 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char c, f32
 }
 
 static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
-    struct DjuiFont* font = &gDjuiFonts[0];
+    const struct DjuiFont* font = gDjuiFonts[0];
 
     // make selection well formed
     u16 selection[2] = { 0 };
@@ -448,7 +448,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
 }
 
 static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) {
-    struct DjuiFont* font = &gDjuiFonts[0];
+    const struct DjuiFont* font = gDjuiFonts[0];
 
     // calculate where our cursor is
     f32 cursorX = inputbox->viewX;
@@ -468,7 +468,7 @@ static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) 
 static void djui_inputbox_render(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     struct DjuiBaseRect* comp     = &base->comp;
-    struct DjuiFont*     font     = &gDjuiFonts[0];
+    const struct DjuiFont* font   = gDjuiFonts[0];
     djui_rect_render(base);
 
     // shift the viewing window to keep the selection in view

@@ -23,7 +23,7 @@ void djui_text_set_text(struct DjuiText* text, const char* message) {
     memcpy(text->message, message, sizeof(char) * (messageLen + 1));
 }
 
-void djui_text_set_font(struct DjuiText* text, struct DjuiFont* font) {
+void djui_text_set_font(struct DjuiText* text, const struct DjuiFont* font) {
     text->font = font;
 }
 
@@ -385,7 +385,7 @@ struct DjuiText* djui_text_create(struct DjuiBase* parent, const char* message) 
     djui_base_init(parent, base, djui_text_render, djui_text_destroy);
 
     text->message = NULL;
-    djui_text_set_font(text, &gDjuiFonts[0]);
+    djui_text_set_font(text, gDjuiFonts[0]);
     djui_text_set_font_scale(text, text->font->defaultFontScale);
     djui_text_set_text(text, message);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);

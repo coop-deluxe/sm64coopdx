@@ -51,7 +51,7 @@ void djui_panel_debug_create(void) {
     djui_base_set_color(&sDjuiText2->base, 255, 255, 255, 255);
     djui_text_set_drop_shadow(sDjuiText2, 255, 0, 0, 255);
     djui_text_set_alignment(sDjuiText2, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-    djui_text_set_font(sDjuiText2, &gDjuiFonts[1]);
+    djui_text_set_font(sDjuiText2, gDjuiFonts[1]);
 
     struct DjuiText* alphabet = djui_text_create(&gDjuiRoot->base, "abcdefghijklmnopqrstuvwxyz\nABCDEFGHIJKLMNOPQRSTUVWXYZ\n01234567890\nthe quick brown fox jumps over the lazy dog\ngeqkbnfjsortelydg\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\nGEQKBNFJSORTELYDG");
     djui_base_set_location(&alphabet->base, 0, 0);
@@ -61,6 +61,6 @@ void djui_panel_debug_create(void) {
     djui_base_set_color(&alphabet->base, 255, 255, 255, 255);
     djui_text_set_drop_shadow(alphabet, 255, 0, 0, 255);
     djui_text_set_alignment(alphabet, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-    djui_text_set_font(alphabet, &gDjuiFonts[1]);
+    djui_text_set_font(alphabet, gDjuiFonts[1]);
     djui_text_set_font_scale(alphabet, 64);
 }

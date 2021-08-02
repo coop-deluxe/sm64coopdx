@@ -14,4 +14,4 @@ struct DjuiFont {
     f32 (*char_width)(char);
 };
 
-extern struct DjuiFont gDjuiFonts[];
+extern const struct DjuiFont* gDjuiFonts[];

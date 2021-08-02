@@ -92,7 +92,7 @@ static const struct DjuiFont sDjuiFontTitle = {
  // font list //
 ///////////////
 
-struct DjuiFont gDjuiFonts[] = {
-    sDjuiFontNormal,
-    sDjuiFontTitle,
+const struct DjuiFont* gDjuiFonts[] = {
+    &sDjuiFontNormal,
+    &sDjuiFontTitle,
 };

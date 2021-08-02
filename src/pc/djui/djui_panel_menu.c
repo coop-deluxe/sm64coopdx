@@ -21,8 +21,8 @@ struct DjuiThreePanel* djui_panel_menu_create(f32 bodyHeight, char* headerText) 
         djui_base_set_color(&header->base, 255, 8, 0, 255);
         djui_base_set_location(&header->base, 0, DJUI_PANEL_HEADER_OFFSET);
         djui_text_set_alignment(header, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
-        djui_text_set_font(header, &gDjuiFonts[1]);
-        djui_text_set_font_scale(header, gDjuiFonts[1].defaultFontScale);
+        djui_text_set_font(header, gDjuiFonts[1]);
+        djui_text_set_font_scale(header, gDjuiFonts[1]->defaultFontScale);
 
         struct DjuiFlowLayout* body = djui_flow_layout_create(&panel->base);
         djui_base_set_alignment(&body->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
