@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "pc/network/network.h"
+#include "pc/utils/misc.h"
 #include "audio_defines.h"
 #include "audio/external.h"
 #include "game/mario_misc.h"
@@ -11,7 +12,7 @@ static void djui_chat_message_render(struct DjuiBase* base) {
     struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
     struct DjuiBase* ctBase = &chatMessage->message->base;
 
-    f32 seconds = (clock() - chatMessage->createTime) / (f32)CLOCKS_PER_SEC;
+    f32 seconds = clock_elapsed() - chatMessage->createTime;
     f32 f = 1.0f;
     if (seconds >= (DJUI_CHAT_LIFE_TIME - 1)) {
         f = fmax(1.0f - (seconds - (DJUI_CHAT_LIFE_TIME - 1)), 0.0f);
@@ -72,7 +73,7 @@ struct DjuiChatMessage* djui_chat_message_create(char* message) {
     djui_text_set_alignment(chatText, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
     djui_text_set_drop_shadow(chatText, 0, 0, 0, 200);
     chatMessage->message = chatText;
-    chatMessage->createTime = clock();
+    chatMessage->createTime = clock_elapsed();
 
     // figure out chat message height
     chatText->base.comp.width = maxTextWidth;

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
 // two-player hack: the localIndex for resending packets can be 0... this means reply to last person received from. THIS WILL NOT WORK with more than two players
@@ -9,7 +10,7 @@
 
 struct PacketLinkedList {
     struct Packet p;
-    clock_t lastSend;
+    f32 lastSend;
     int sendAttempts;
     struct PacketLinkedList* prev;
     struct PacketLinkedList* next;
@@ -75,7 +76,7 @@ void network_remember_reliable(struct Packet* p) {
     struct PacketLinkedList* node = malloc(sizeof(struct PacketLinkedList));
     node->p = *p;
     node->p.sent = true;
-    node->lastSend = clock();
+    node->lastSend = clock_elapsed();
     node->sendAttempts = 1;
     node->prev = NULL;
     node->next = NULL;
@@ -98,7 +99,7 @@ void network_remember_reliable(struct Packet* p) {
 void network_update_reliable(void) {
     struct PacketLinkedList* node = head;
     while (node != NULL) {
-        float elapsed = (clock() - node->lastSend) / CLOCKS_PER_SEC;
+        float elapsed = (clock_elapsed() - node->lastSend);
         float maxElapsed = (node->sendAttempts * node->sendAttempts * RELIABLE_RESEND_RATE) / ((float)MAX_RESEND_ATTEMPTS);
         if (elapsed > maxElapsed) {
             if (node->p.packetType == PACKET_JOIN_REQUEST && gNetworkPlayerServer != NULL) {
@@ -108,7 +109,7 @@ void network_update_reliable(void) {
             node->p.sent = true;
             network_send_to(node->p.localIndex, &node->p);
 
-            node->lastSend = clock();
+            node->lastSend = clock_elapsed();
             node->sendAttempts++;
             if (node->sendAttempts >= MAX_RESEND_ATTEMPTS) {
                 struct PacketLinkedList* next = node->next;

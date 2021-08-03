@@ -10,6 +10,7 @@
 #include "src/game/object_helpers.h"
 #include "src/game/obj_behaviors.h"
 #include "pc/debuglog.h"
+#include "pc/utils/misc.h"
 
 struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
 struct Packet sLastSyncEntReliablePacket[MAX_SYNC_OBJECTS] = { 0 };
@@ -80,7 +81,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->o = o;
     so->maxSyncDistance = maxSyncDistance;
     so->owned = false;
-    so->clockSinceUpdate = clock();
+    so->clockSinceUpdate = clock_elapsed();
     so->extraFieldCount = 0;
     so->behavior = (BehaviorScript*)o->behavior;
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -235,7 +236,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
         return NULL;
     }
     gCurrentObject = tmp;
-    so->clockSinceUpdate = clock();
+    so->clockSinceUpdate = clock_elapsed();
 
     // make sure this is the newest event possible
     u16 eventId = 0;
@@ -423,7 +424,7 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
     // always send a new event ID
     so->txEventId++;
-    so->clockSinceUpdate = clock();
+    so->clockSinceUpdate = clock_elapsed();
 
     // write the packet data
     struct Packet p;
@@ -565,7 +566,7 @@ void network_update_objects(void) {
         if (updateRate < so->minUpdateRate) { updateRate = so->minUpdateRate; }
 
         // see if we should update
-        float timeSinceUpdate = ((float)clock() - (float)so->clockSinceUpdate) / (float)CLOCKS_PER_SEC;
+        float timeSinceUpdate = (clock_elapsed() - so->clockSinceUpdate);
         if (timeSinceUpdate < updateRate) { continue; }
 
         // update!

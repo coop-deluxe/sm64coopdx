@@ -22,8 +22,8 @@ struct NetworkPlayer {
     enum NetworkPlayerType type;
     u8 localIndex;
     u8 globalIndex;
-    clock_t lastReceived;
-    clock_t lastSent;
+    f32 lastReceived;
+    f32 lastSent;
     u16 currLevelAreaSeqId;
     s16 currCourseNum;
     s16 currActNum;

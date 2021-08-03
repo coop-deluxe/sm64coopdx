@@ -1,10 +1,10 @@
 #include <string.h>
-#include <time.h>
 #include "djui.h"
 
 #include "src/pc/controller/controller_sdl.h"
 #include "src/pc/controller/controller_mouse.h"
 #include "src/pc/controller/controller_keyboard.h"
+#include "src/pc/utils/misc.h"
 
 #include "audio_defines.h"
 #include "audio/external.h"
@@ -247,7 +247,7 @@ void djui_interactable_update_pad(void) {
     pad->button |= sKeyboardButtons;
 
     static enum PadHoldDirection lastPadHoldDirection = PAD_HOLD_DIR_NONE;
-    static clock_t padHoldTimer = 0;
+    static f32 padHoldTimer = 0;
 
     enum PadHoldDirection padHoldDirection = sKeyboardHoldDirection;
     if (padHoldDirection != PAD_HOLD_DIR_NONE) {
@@ -270,10 +270,10 @@ void djui_interactable_update_pad(void) {
     if (padHoldDirection == PAD_HOLD_DIR_NONE) {
         // nothing to do
     } else if (padHoldDirection != lastPadHoldDirection) {
-        padHoldTimer = clock() + CLOCKS_PER_SEC * 0.25f;
+        padHoldTimer = clock_elapsed() + 0.25f;
         validPadHold = true;
-    } else if (clock() > padHoldTimer) {
-        padHoldTimer = clock() + CLOCKS_PER_SEC * 0.10f;
+    } else if (clock_elapsed() > padHoldTimer) {
+        padHoldTimer = clock_elapsed() + 0.10f;
         validPadHold = true;
     }
 
@@ -347,6 +347,7 @@ void djui_interactable_update(void) {
         sHovered = NULL;
         djui_interactable_cursor_update_active(&gDjuiRoot->base);
         if (lastHovered != sHovered) {
+            // FIXME: THIS CAN CAUSE A SEGFAULT!
             djui_interactable_on_hover_end(lastHovered);
             play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, gDefaultSoundArgs);
         }

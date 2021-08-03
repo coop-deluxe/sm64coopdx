@@ -46,7 +46,7 @@ struct SyncObject {
     struct Object* o;
     float maxSyncDistance;
     bool owned;
-    clock_t clockSinceUpdate;
+    f32 clockSinceUpdate;
     void* behavior;
     u16 txEventId;
     u16 rxEventId[MAX_PLAYERS];

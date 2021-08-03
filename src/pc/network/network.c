@@ -11,6 +11,7 @@
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/djui/djui.h"
+#include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -173,8 +174,8 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     bool tooManyPackets = false;
     int maxPacketsPerSecond = (gNetworkType == NT_SERVER) ? (MAX_PACKETS_PER_SECOND_PER_PLAYER * (u16)network_player_connected_count()) : MAX_PACKETS_PER_SECOND_PER_PLAYER;
     static int sPacketsPerSecond[MAX_PLAYERS] = { 0 };
-    static clock_t sPacketsPerSecondTime[MAX_PLAYERS] = { 0 };
-    clock_t currentTime = time(NULL);
+    static f32 sPacketsPerSecondTime[MAX_PLAYERS] = { 0 };
+    f32 currentTime = clock_elapsed();
     if ((currentTime - sPacketsPerSecondTime[localIndex]) > 0) {
         if (sPacketsPerSecond[localIndex] > maxPacketsPerSecond) {
             LOG_ERROR("Too many packets sent to localIndex %d! Attempted %d. Connected count %d.", localIndex, sPacketsPerSecond[localIndex], network_player_connected_count());
@@ -195,7 +196,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     }
     p->sent = true;
 
-    gNetworkPlayers[localIndex].lastSent = clock();
+    gNetworkPlayers[localIndex].lastSent = clock_elapsed();
 }
 
 void network_send(struct Packet* p) {
@@ -240,7 +241,7 @@ void network_receive(u8 localIndex, u8* data, u16 dataLength) {
     memcpy(p.buffer, data, dataLength);
 
     if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
-        gNetworkPlayers[localIndex].lastReceived = clock();
+        gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
     }
 
     // subtract and check hash
@@ -255,7 +256,6 @@ void network_receive(u8 localIndex, u8* data, u16 dataLength) {
 }
 
 void network_update(void) {
-
     // check for level loaded event
     if (networkLoadingLevel < LOADING_LEVEL_THRESHOLD) {
         networkLoadingLevel++;

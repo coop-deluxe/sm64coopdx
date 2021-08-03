@@ -1,4 +1,3 @@
-#include <time.h>
 #include "djui.h"
 #include "audio_defines.h"
 #include "audio/external.h"
@@ -9,7 +8,7 @@
 
 struct DjuiPopupList {
     struct DjuiPopup* popup;
-    clock_t createTime;
+    f32 createTime;
     struct DjuiPopupList* next;
 };
 
@@ -19,7 +18,7 @@ static f32 sPopupListY = 0;
 static void djui_popup_add_to_list(struct DjuiPopup* popup) {
     struct DjuiPopupList* node = malloc(sizeof(struct DjuiPopupList));
     node->popup = popup;
-    node->createTime = clock();
+    node->createTime = clock_elapsed();
     node->next = sPopupListHead;
     sPopupListHead = node;
 }
@@ -70,7 +69,7 @@ void djui_popup_update(void) {
         djui_base_set_location(&node->popup->base, 4, y);
         y += node->popup->base.height.value + 4;
         if (gNetworkType != NT_NONE && gNetworkPlayerLocal != NULL) {
-            f32 elapsed = (clock() - node->createTime) / (f32)CLOCKS_PER_SEC;
+            f32 elapsed = (clock_elapsed() - node->createTime);
 
             // fade out
             f32 alpha = fmin(DJUI_POPUP_LIFETIME - elapsed, 1.0f);
@@ -92,7 +91,7 @@ void djui_popup_update(void) {
             }
         } else {
             // prevent popups from fading out when we're not connected
-            node->createTime = clock();
+            node->createTime = clock_elapsed();
         }
 
         // iterate

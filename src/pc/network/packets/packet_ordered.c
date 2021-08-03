@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "pc/utils/misc.h"
 #define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -14,7 +15,7 @@ struct OrderedPacketTable {
     u8 fromGlobalId;
     u8 groupId;
     u8 processSeqId;
-    clock_t lastReceived;
+    f32 lastReceived;
     struct OrderedPacketList* packets;
     struct OrderedPacketTable* next;
 };
@@ -113,7 +114,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
     opl->next = NULL;
 
     LOG_INFO("added to list for (%d, %d, %d)", opt->fromGlobalId, opt->groupId, p->orderedSeqId);
-    opt->lastReceived = clock();
+    opt->lastReceived = clock_elapsed();
 
     packet_ordered_check_for_processing(opt);
 }
@@ -151,7 +152,7 @@ void packet_ordered_add(struct Packet* p) {
     opt->processSeqId = 1;
     opt->packets      = NULL;
     opt->next         = NULL;
-    opt->lastReceived = clock();
+    opt->lastReceived = clock_elapsed();
     LOG_INFO("created table for (%d, %d)", opt->fromGlobalId, opt->groupId);
 
     // add the packet to the table
@@ -219,13 +220,13 @@ void packet_ordered_clear(u8 globalIndex) {
 }
 
 void packet_ordered_update(void) {
-    clock_t currentClock = clock();
+    f32 currentClock = clock_elapsed();
     // check all ordered tables for a time out
     for (int i = 0; i < MAX_PLAYERS; i++) {
         struct OrderedPacketTable* opt = orderedPacketTable[i];
         while (opt != NULL) {
             struct OrderedPacketTable* optNext = opt->next;
-            float elapsed = (currentClock - opt->lastReceived) / (float)CLOCKS_PER_SEC;
+            float elapsed = (currentClock - opt->lastReceived);
 
             if (elapsed > PACKET_ORDERED_TIMEOUT) {
                 // too much time has elapsed since we last received a packet for this group, forget the table!
