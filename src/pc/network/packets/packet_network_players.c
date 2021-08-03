@@ -97,6 +97,10 @@ void network_receive_network_players(struct Packet* p) {
                 if (gNetworkType == NT_CLIENT && globalIndex != 0 && localIndex != 0) {
                     gNetworkSystem->save_id(localIndex, networkId);
                 }
+            } else {
+                np->modelIndex = modelIndex;
+                np->paletteIndex = paletteIndex;
+                network_player_update_model(localIndex);
             }
         }
     }
