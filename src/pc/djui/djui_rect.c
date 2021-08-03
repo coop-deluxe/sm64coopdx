@@ -4,7 +4,7 @@
  // events //
 ////////////
 
-void djui_rect_render(struct DjuiBase* base) {
+bool djui_rect_render(struct DjuiBase* base) {
     struct DjuiBaseRect* clip = &base->clip;
 
     // translate position
@@ -24,6 +24,7 @@ void djui_rect_render(struct DjuiBase* base) {
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    return true;
 }
 
 static void djui_rect_destroy(struct DjuiBase* base) {

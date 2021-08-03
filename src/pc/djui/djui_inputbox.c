@@ -465,7 +465,7 @@ static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) 
     }
 }
 
-static void djui_inputbox_render(struct DjuiBase* base) {
+static bool djui_inputbox_render(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     struct DjuiBaseRect* comp     = &base->comp;
     const struct DjuiFont* font   = gDjuiFonts[0];
@@ -524,6 +524,7 @@ static void djui_inputbox_render(struct DjuiBase* base) {
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+    return true;
 }
 
 static void djui_inputbox_destroy(struct DjuiBase* base) {

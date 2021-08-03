@@ -300,7 +300,7 @@ static void djui_text_render_line(struct DjuiText* text, u16 startIndex, u16 end
  // events //
 ////////////
 
-static void djui_text_render(struct DjuiBase* base) {
+static bool djui_text_render(struct DjuiBase* base) {
     struct DjuiText* text     = (struct DjuiText*)base;
     struct DjuiBaseRect* comp = &base->comp;
 
@@ -370,6 +370,7 @@ static void djui_text_render(struct DjuiBase* base) {
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+    return true;
 }
 
 static void djui_text_destroy(struct DjuiBase* base) {

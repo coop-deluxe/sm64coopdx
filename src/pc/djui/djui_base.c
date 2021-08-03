@@ -295,7 +295,9 @@ bool djui_base_render(struct DjuiBase* base) {
     if (clip->width < 0 || clip->height <= 0) { return false; }
 
     if (base->render != NULL) {
-        base->render(base);
+        if (!base->render(base)) {
+            return false;
+        }
     }
 
     djui_base_add_padding(base);
@@ -371,7 +373,7 @@ void djui_base_destroy(struct DjuiBase* base) {
     base->destroy(base);
 }
 
-void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, void(*render)(struct DjuiBase*), void (*destroy)(struct DjuiBase*)) {
+void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, bool (*render)(struct DjuiBase*), void (*destroy)(struct DjuiBase*)) {
     memset(base, 0, sizeof(struct DjuiBase));
     base->parent = parent;
     djui_base_set_visible(base, true);

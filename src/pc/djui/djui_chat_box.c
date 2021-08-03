@@ -6,10 +6,11 @@
 struct DjuiChatBox* gDjuiChatBox = NULL;
 bool gDjuiChatBoxFocus = false;
 
-void djui_chat_box_render(struct DjuiBase* base) {
+bool djui_chat_box_render(struct DjuiBase* base) {
     struct DjuiChatBox* chatBox = (struct DjuiChatBox*)base;
     struct DjuiBase* ccBase = &chatBox->chatContainer->base;
     djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
+    return true;
 }
 
 static void djui_chat_box_destroy(struct DjuiBase* base) {
@@ -58,19 +59,19 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
     switch (scancode) {
         case SCANCODE_UP:
             gDjuiChatBox->scrolling = true;
-            if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+            if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
             return true;
         case SCANCODE_DOWN:
             gDjuiChatBox->scrolling = true;
-            if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+            if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
             return true;
         case SCANCODE_PAGE_UP:
             gDjuiChatBox->scrolling = true;
-            if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
+            if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
             return true;
         case SCANCODE_PAGE_DOWN:
             gDjuiChatBox->scrolling = true;
-            if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
+            if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
             return true;
         case SCANCODE_ENTER:  djui_chat_box_input_enter(gDjuiChatBox->chatInput);  return true;
         case SCANCODE_ESCAPE: djui_chat_box_input_escape(gDjuiChatBox->chatInput); return true;
@@ -96,9 +97,9 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     struct DjuiBase* base = &chatBox->base;
 
     djui_base_init(&gDjuiRoot->base, base, djui_chat_box_render, djui_chat_box_destroy);
-    djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(base, 600, 1.0f);
-    djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+    djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(base, 600, 400);
+    djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_color(base, 0, 0, 0, 0);
     djui_base_set_padding(base, 0, 8, 8, 8);
 

@@ -8,7 +8,7 @@
 
 #define DJUI_CHAT_LIFE_TIME 10.0f
 
-static void djui_chat_message_render(struct DjuiBase* base) {
+static bool djui_chat_message_render(struct DjuiBase* base) {
     struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
     struct DjuiBase* ctBase = &chatMessage->message->base;
 
@@ -21,20 +21,21 @@ static void djui_chat_message_render(struct DjuiBase* base) {
     }
 
     if (gDjuiChatBoxFocus) {
-        djui_base_set_color(base, 0, 0, 0, 64);
+        djui_base_set_color(base, 0, 0, 0, 120);
         djui_base_set_color(ctBase, 255, 255, 255, 255);
-        djui_text_set_drop_shadow(chatMessage->message, 0, 0, 0, 200);
         djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
+    } else if (f <= 0.1f) {
+        return false;
     } else {
-        djui_base_set_color(base, 0, 0, 0, 150 * f);
+        djui_base_set_color(base, 0, 0, 0, 180 * f);
         djui_base_set_color(ctBase, 255, 255, 255, 255 * f);
-        djui_text_set_drop_shadow(chatMessage->message, 0, 0, 0, 200 * f);
         djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, chatMessage->messageWidth, chatMessage->base.height.value);
     }
 
     djui_rect_render(base);
+    return true;
 }
 
 static void djui_chat_message_destroy(struct DjuiBase* base) {
@@ -71,7 +72,6 @@ struct DjuiChatMessage* djui_chat_message_create(char* message) {
     djui_base_set_color(ctBase, 255, 255, 255, 255);
     djui_base_set_location(ctBase, 0, 0);
     djui_text_set_alignment(chatText, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-    djui_text_set_drop_shadow(chatText, 0, 0, 0, 200);
     chatMessage->message = chatText;
     chatMessage->createTime = clock_elapsed();
 

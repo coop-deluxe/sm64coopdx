@@ -17,7 +17,7 @@ void djui_image_set_image(struct DjuiImage* image, const u8* texture, u16 textur
  // events //
 ////////////
 
-static void djui_image_render(struct DjuiBase* base) {
+static bool djui_image_render(struct DjuiBase* base) {
     struct DjuiImage* image   = (struct DjuiImage*)base;
     struct DjuiBaseRect* comp = &base->comp;
     struct DjuiBaseRect* clip = &base->clip;
@@ -41,6 +41,7 @@ static void djui_image_render(struct DjuiBase* base) {
     }
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    return true;
 }
 
 static void djui_image_destroy(struct DjuiBase* base) {

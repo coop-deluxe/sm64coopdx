@@ -61,7 +61,7 @@ void djui_three_panel_set_min_footer_size(struct DjuiThreePanel* threePanel, f32
  // events //
 ////////////
 
-void djui_three_panel_render(struct DjuiBase* base) {
+bool djui_three_panel_render(struct DjuiBase* base) {
     struct DjuiThreePanel* threePanel = (struct DjuiThreePanel*)base;
 
     struct DjuiBase* children[3] = { NULL };
@@ -76,7 +76,7 @@ void djui_three_panel_render(struct DjuiBase* base) {
     struct DjuiBase* body = children[1];
     struct DjuiBase* foot = children[2];
 
-    if (body == NULL) { return; }
+    if (body == NULL) { return false; }
 
     struct DjuiBaseRect* parentComp = &base->comp;
     f32 tPad = (base->padding.top.type == DJUI_SVT_RELATIVE)    ? parentComp->height * base->padding.top.value    : base->padding.top.value;
@@ -133,6 +133,7 @@ void djui_three_panel_render(struct DjuiBase* base) {
     }
 
     djui_rect_render(base);
+    return true;
 }
 
 static void djui_three_panel_destroy(struct DjuiBase* base) {

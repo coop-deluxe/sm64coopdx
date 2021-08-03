@@ -23,8 +23,9 @@ static void djui_popup_add_to_list(struct DjuiPopup* popup) {
     sPopupListHead = node;
 }
 
-static void djui_popup_render(struct DjuiBase* base) {
+static bool djui_popup_render(struct DjuiBase* base) {
     djui_rect_render(base);
+    return true;
 }
 
 static void djui_popup_destroy(struct DjuiBase* base) {
