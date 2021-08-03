@@ -353,7 +353,9 @@ static void gfx_dxgi_init(const char *window_title) {
 
     ShowWindow(dxgi.h_wnd, SW_SHOW);
     UpdateWindow(dxgi.h_wnd);
-    ShowCursor(FALSE);
+    if (configWindow.fullscreen) {
+        ShowCursor(FALSE);
+    }
 
     update_screen_settings();
 }
@@ -648,6 +650,8 @@ void gfx_dxgi_set_clipboard_text(char* text) {
     }
 }
 
+void gfx_dxgi_set_cursor_visible(bool visible) { ShowCursor(visible); }
+
 void ThrowIfFailed(HRESULT res) {
     if (FAILED(res)) {
         fprintf(stderr, "Error: 0x%08X\n", res);
@@ -680,6 +684,7 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_stop_text_input,
     gfx_dxgi_get_clipboard_text,
     gfx_dxgi_set_clipboard_text,
+    gfx_dxgi_set_cursor_visible,
 };
 
 #endif

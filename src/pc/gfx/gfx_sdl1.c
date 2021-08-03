@@ -156,7 +156,9 @@ static void gfx_sdl_init(const char *window_title) {
 
     gfx_sdl_set_mode();
 
-    SDL_ShowCursor(0);
+    if (configWindow.fullscreen) {
+        SDL_ShowCursor(0);
+    }
 
     for (size_t i = 0; i < sizeof(windows_scancode_table) / sizeof(SDLKey); i++) {
         inverted_scancode_table[windows_scancode_table[i]] = i;
@@ -264,6 +266,12 @@ static void gfx_sdl_shutdown(void) {
         SDL_Quit();
 }
 
+static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
+static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
+static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
+static void gfx_sdl_set_clipboard_text(char* text) { SDL_SetClipboardText(text); }
+static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
+
 struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_init,
     gfx_sdl_set_keyboard_callbacks,
@@ -274,7 +282,12 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_swap_buffers_begin,
     gfx_sdl_swap_buffers_end,
     gfx_sdl_get_time,
-    gfx_sdl_shutdown
+    gfx_sdl_shutdown,
+    gfx_sdl_start_text_input,
+    gfx_sdl_stop_text_input,
+    gfx_sdl_get_clipboard_text,
+    gfx_sdl_set_clipboard_text,
+    gfx_sdl_set_cursor_visible,
 };
 
 #endif // BACKEND_WM

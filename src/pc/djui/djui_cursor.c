@@ -1,6 +1,8 @@
 #include "djui.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/controller/controller_sdl.h"
+#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/pc_main.h"
 
 extern ALIGNED8 u8 gd_texture_hand_open[];
 extern ALIGNED8 u8 gd_texture_hand_closed[];
@@ -18,6 +20,12 @@ f32 gCursorY = 0;
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
         djui_base_set_visible(&sMouseCursor->base, visible);
+    }
+
+    if (configWindow.fullscreen) {
+        wm_api->set_cursor_visible(false);
+    } else {
+        wm_api->set_cursor_visible(!visible);
     }
     sSavedMouseX = mouse_window_x;
     sSavedMouseY = mouse_window_y;
