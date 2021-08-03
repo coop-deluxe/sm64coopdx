@@ -42,6 +42,7 @@ struct DjuiInteractable {
 
 extern bool gInteractableOverridePad;
 extern OSContPad gInteractablePad;
+extern struct DjuiBase* gDjuiHovered;
 
 bool djui_interactable_is_binding(void);
 void djui_interactable_set_binding(struct DjuiBase* base);

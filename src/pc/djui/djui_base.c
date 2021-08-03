@@ -319,6 +319,11 @@ bool djui_base_render(struct DjuiBase* base) {
 }
 
 void djui_base_destroy(struct DjuiBase* base) {
+    // remove hovered status
+    if (gDjuiHovered == base) {
+        gDjuiHovered = NULL;
+    }
+
     // remove myself from parent's linked list
     if (base->parent != NULL) {
         struct DjuiBaseChild* child     = base->parent->child;

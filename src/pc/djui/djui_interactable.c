@@ -15,9 +15,9 @@ static u16 sKeyboardButtons = 0;
 
 static bool sIgnoreInteractableUntilCursorReleased = false;
 
+struct DjuiBase* gDjuiHovered = NULL;
 static struct DjuiBase* sInteractableFocus   = NULL;
 static struct DjuiBase* sInteractableBinding = NULL;
-static struct DjuiBase* sHovered      = NULL;
 static struct DjuiBase* sMouseDown    = NULL;
 bool gInteractableOverridePad         = false;
 OSContPad gInteractablePad            = { 0 };
@@ -50,9 +50,9 @@ static void djui_interactable_on_cursor_down_begin(struct DjuiBase* base, bool i
     if (base->interactable                       == NULL) { return; }
     if (base->interactable->on_cursor_down_begin == NULL) { return; }
 
-    if (sHovered != NULL) {
-        djui_interactable_on_hover_end(sHovered);
-        sHovered = NULL;
+    if (gDjuiHovered != NULL) {
+        djui_interactable_on_hover_end(gDjuiHovered);
+        gDjuiHovered = NULL;
     }
 
     base->interactable->on_cursor_down_begin(base, inputCursor);
@@ -121,10 +121,10 @@ static void djui_interactable_cursor_update_active(struct DjuiBase* base) {
     if (!djui_cursor_inside_base(base)) { return; }
 
     if (base->interactable != NULL) {
-        sHovered = base;
+        gDjuiHovered = base;
         insideParent = base;
     } else if (insideParent == NULL) {
-        sHovered = NULL;
+        gDjuiHovered = NULL;
     }
 
     // check all children
@@ -330,9 +330,9 @@ void djui_interactable_update(void) {
         djui_interactable_on_bind(sInteractableBinding);
     } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
         // cursor down events
-        if (sHovered != NULL) {
-            sMouseDown = sHovered;
-            sHovered = NULL;
+        if (gDjuiHovered != NULL) {
+            sMouseDown = gDjuiHovered;
+            gDjuiHovered = NULL;
             djui_interactable_on_cursor_down_begin(sMouseDown, !mouseButtons);
         } else {
             djui_interactable_on_cursor_down(sMouseDown);
@@ -343,15 +343,14 @@ void djui_interactable_update(void) {
             djui_interactable_on_cursor_down_end(sMouseDown);
             sMouseDown = NULL;
         }
-        struct DjuiBase* lastHovered = sHovered;
-        sHovered = NULL;
+        struct DjuiBase* lastHovered = gDjuiHovered;
+        gDjuiHovered = NULL;
         djui_interactable_cursor_update_active(&gDjuiRoot->base);
-        if (lastHovered != sHovered) {
-            // FIXME: THIS CAN CAUSE A SEGFAULT!
+        if (lastHovered != gDjuiHovered) {
             djui_interactable_on_hover_end(lastHovered);
             play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, gDefaultSoundArgs);
         }
-        djui_interactable_on_hover(sHovered);
+        djui_interactable_on_hover(gDjuiHovered);
     }
 
     sLastInteractablePad = gInteractablePad;
