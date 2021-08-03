@@ -11,7 +11,7 @@ void network_send_level_area_inform(struct NetworkPlayer* np) {
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np2 = &gNetworkPlayers[i];
-        if (!np2->connected) { return; }
+        if (!np2->connected) { continue; }
         if (np2->localIndex == np->localIndex) { continue; }
 
         u16 seq = ++sLevelAreaInformSeq[np->globalIndex][i];
@@ -29,11 +29,10 @@ void network_send_level_area_inform(struct NetworkPlayer* np) {
         network_send_to(np2->localIndex, &p);
     }
 
-    LOG_INFO("tx level area inform");
+    LOG_INFO("tx level area inform for global %d", np->globalIndex);
 }
 
 void network_receive_level_area_inform(struct Packet* p) {
-    LOG_INFO("rx level area inform");
 
     assert(gNetworkType != NT_SERVER);
 
@@ -49,6 +48,8 @@ void network_receive_level_area_inform(struct Packet* p) {
     packet_read(p, &areaIndex,      sizeof(s16));
     packet_read(p, &levelSyncValid, sizeof(u8));
     packet_read(p, &areaSyncValid,  sizeof(u8));
+
+    LOG_INFO("rx level area inform for global %d", globalIndex);
 
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
