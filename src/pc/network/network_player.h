@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include "network.h"
+#include "pc/configfile.h"
 
 #define UNKNOWN_LOCAL_INDEX ((u8)-1)
 #define UNKNOWN_GLOBAL_INDEX ((u8)-1)
@@ -19,7 +20,7 @@ enum NetworkPlayerType {
 
 struct NetworkPlayer {
     bool connected;
-    enum NetworkPlayerType type;
+    u8 type;
     u8 localIndex;
     u8 globalIndex;
     f32 lastReceived;
@@ -32,14 +33,20 @@ struct NetworkPlayer {
     bool currLevelSyncValid;
     bool currAreaSyncValid;
     u8 fadeOpacity;
-    u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u8 onRxSeqId;
+    u8 modelIndex;
+    u8 paletteIndex;
+    char name[MAX_PLAYER_STRING];
+    u16 rxSeqIds[MAX_RX_SEQ_IDS];
 };
 
 extern struct NetworkPlayer gNetworkPlayers[];
 extern struct NetworkPlayer* gNetworkPlayerLocal;
 extern struct NetworkPlayer* gNetworkPlayerServer;
 
+void network_player_init(void);
+void network_player_update_model(u8 localIndex);
+u8 network_player_unique_palette(u8 palette);
 bool network_player_any_connected(void);
 u8 network_player_connected_count(void);
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
@@ -47,7 +54,7 @@ struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 struct NetworkPlayer* get_network_player_smallest_global(void);
 void network_player_update(void);
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex);
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name);
 u8 network_player_disconnected(u8 globalIndex);
 void network_player_shutdown(void);
 

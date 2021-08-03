@@ -20,6 +20,10 @@
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
+static u8   sJoinRequestPlayerModel;
+static u8   sJoinRequestPlayerPalette;
+static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
+
 void network_send_join_request(void) {
     assert(gNetworkType == NT_CLIENT);
 
@@ -27,6 +31,11 @@ void network_send_join_request(void) {
 
     struct Packet p;
     packet_init(&p, PACKET_JOIN_REQUEST, true, false);
+
+    packet_write(&p, &configPlayerModel,   sizeof(u8));
+    packet_write(&p, &configPlayerPalette, sizeof(u8));
+    packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
+
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     LOG_INFO("sending join request");
 }
@@ -34,14 +43,28 @@ void network_send_join_request(void) {
 void network_receive_join_request(struct Packet* p) {
     assert(gNetworkType == NT_SERVER);
     LOG_INFO("received join request");
+
+    if (p->dataLength > 5) {
+        packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
+        packet_read(p, &sJoinRequestPlayerPalette, sizeof(u8));
+        packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
+    } else {
+        sJoinRequestPlayerModel = 0;
+        sJoinRequestPlayerPalette = 0;
+        snprintf(sJoinRequestPlayerName, MAX_PLAYER_STRING, "%s", "Player");
+    }
+
     network_send_join(p);
 }
 
 void network_send_join(struct Packet* joinRequestPacket) {
     assert(gNetworkType == NT_SERVER);
 
+    // make palette unique
+    sJoinRequestPlayerPalette = network_player_unique_palette(sJoinRequestPlayerPalette);
+
     // do connection event
-    joinRequestPacket->localIndex = network_player_connected(NPT_CLIENT, joinRequestPacket->localIndex);
+    joinRequestPacket->localIndex = network_player_connected(NPT_CLIENT, joinRequestPacket->localIndex, sJoinRequestPlayerModel, sJoinRequestPlayerPalette, sJoinRequestPlayerName);
     if (joinRequestPacket->localIndex == UNKNOWN_LOCAL_INDEX) {
         network_send_kick(EKT_FULL_PARTY);
         return;
@@ -177,8 +200,8 @@ void network_receive_join(struct Packet* p) {
     }
     string_linked_list_free(&head);
 
-    network_player_connected(NPT_SERVER, 0);
-    network_player_connected(NPT_LOCAL, myGlobalIndex);
+    network_player_connected(NPT_SERVER, 0, 0, 0, "Player");
+    network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, configPlayerPalette, configPlayerName);
     djui_chat_box_create();
 
     save_file_load_all(TRUE);

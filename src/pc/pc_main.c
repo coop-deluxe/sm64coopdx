@@ -42,6 +42,7 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
+#include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
 
 OSMesg D_80339BEC;
@@ -288,6 +289,7 @@ void main_func(void) {
 
     audio_init();
     sound_init();
+    network_player_init();
 
     thread5_game_loop(NULL);
 

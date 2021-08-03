@@ -44,11 +44,10 @@ static void djui_chat_message_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiChatMessage* djui_chat_message_create_from(u8 globalIndex, char* message) {
-    u8* rgb = get_player_color(globalIndex, 0);
-    u8 rgb2[3] = { 0 };
-    for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+    struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+    u8* rgb = get_player_color(np->paletteIndex, 0);
     char chatMsg[256] = { 0 };
-    snprintf(chatMsg, 256, "\\#%02x%02x%02x\\%s:\\#dcdcdc\\ %s", rgb2[0], rgb2[1], rgb2[2], "Player", message);
+    snprintf(chatMsg, 256, "\\#%02x%02x%02x\\%s:\\#dcdcdc\\ %s", rgb[0], rgb[1], rgb[2], (np != NULL) ? np->name : "Player", message);
     play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
     return djui_chat_message_create(chatMsg);
 }

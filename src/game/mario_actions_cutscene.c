@@ -2501,7 +2501,7 @@ static void end_peach_cutscene_kiss_from_peach(struct MarioState *m) {
 }
 
 static void end_peach_cutscene_star_dance(struct MarioState *m) {
-    u8 nonMario = (m->character != &gCharacters[CT_MARIO]);
+    u8 nonMario = (gNetworkPlayers[m->playerIndex].globalIndex != 0);
     s32 animFrame = set_mario_animation(m, nonMario ? MARIO_ANIM_START_SLEEP_SITTING : MARIO_ANIM_CREDITS_PEACE_SIGN);
 
     if (animFrame == (nonMario ? 0 : 77)) {
@@ -2555,7 +2555,7 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
 // "let's bake a delicious cake..."
 // "...for Mario..."
 static void end_peach_cutscene_dialog_3(struct MarioState *m) {
-    u8 nonMario = (m->character != &gCharacters[CT_MARIO]);
+    u8 nonMario = (gNetworkPlayers[m->playerIndex].globalIndex != 0);
     set_mario_animation(m, nonMario ? MARIO_ANIM_SLEEP_IDLE : MARIO_ANIM_FIRST_PERSON);
     if (m->playerIndex != 0) { return; }
     sEndPeachObj->oPosY = end_obj_set_visual_pos(sEndPeachObj);
@@ -2593,7 +2593,7 @@ static void end_peach_cutscene_dialog_3(struct MarioState *m) {
 
 // "Mario!"
 static void end_peach_cutscene_run_to_castle(struct MarioState *m) {
-    u8 nonMario = (m->character != &gCharacters[CT_MARIO]);
+    u8 nonMario = (gNetworkPlayers[m->playerIndex].globalIndex != 0);
     if (nonMario) {
         set_mario_animation(m, m->actionState == 0 ? MARIO_ANIM_SLEEP_START_LYING
                                                    : MARIO_ANIM_SLEEP_LYING);

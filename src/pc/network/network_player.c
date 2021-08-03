@@ -5,10 +5,41 @@
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "game/area.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer* gNetworkPlayerLocal = NULL;
 struct NetworkPlayer* gNetworkPlayerServer = NULL;
+static char sDefaultPlayerName[] = "Player";
+
+void network_player_init(void) {
+    gNetworkPlayers[0].modelIndex = configPlayerModel;
+    gNetworkPlayers[0].paletteIndex = configPlayerPalette;
+}
+
+void network_player_update_model(u8 localIndex) {
+    struct MarioState* m = &gMarioStates[localIndex];
+    if (m == NULL) { return; }
+    m->character = &gCharacters[gNetworkPlayers[localIndex].modelIndex];
+    if (m->marioObj == NULL) { return; }
+    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
+}
+
+u8 network_player_unique_palette(u8 palette) {
+    u16 iterations = 0;
+    retry_palette:
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (!gNetworkPlayers[i].connected) { continue; }
+        if (gNetworkPlayers[i].paletteIndex == palette) {
+            palette = (palette + 1) % gNumPlayerColors;
+            if (iterations++ >= gNumPlayerColors) {
+                return palette;
+            }
+            goto retry_palette;
+        }
+    }
+    return palette;
+}
 
 bool network_player_any_connected(void) {
     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -116,7 +147,12 @@ void network_player_update(void) {
 //#endif
 }
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name) {
+    // ensure that a name is given
+    if (name[0] == '\0') {
+        name = sDefaultPlayerName;
+    }
+
     if (type == NPT_LOCAL) {
         struct NetworkPlayer* np = &gNetworkPlayers[0];
         if (np->connected) {
@@ -137,6 +173,10 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->currAreaIndex      = gCurrAreaIndex;
         np->currLevelSyncValid = false;
         np->currAreaSyncValid  = false;
+        np->modelIndex         = modelIndex;
+        np->paletteIndex       = paletteIndex;
+        snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+        network_player_update_model(0);
 
         gNetworkPlayerLocal = np;
 
@@ -155,6 +195,10 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
             np->localIndex = i;
             np->lastReceived = clock_elapsed();
             np->lastSent = clock_elapsed();
+            np->modelIndex = modelIndex;
+            np->paletteIndex = paletteIndex;
+            snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+            network_player_update_model(i);
             if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
             LOG_ERROR("player connected, reusing local %d, global %d, duplicate event?", i, globalIndex);
             return i;
@@ -181,17 +225,19 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex) {
         np->type = type;
         np->lastReceived = clock_elapsed();
         np->lastSent = clock_elapsed();
+        np->modelIndex = modelIndex;
+        np->paletteIndex = paletteIndex;
+        snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
+        network_player_update_model(i);
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         if (type == NPT_SERVER) {
             gNetworkPlayerServer = np;
         } else {
             // display popup
-            u8* rgb = get_player_color(np->globalIndex, 0);
-            u8 rgb2[3] = { 0 };
-            for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+            u8* rgb = get_player_color(np->paletteIndex, 0);
             char popupMsg[128] = { 0 };
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected.", rgb2[0], rgb2[1], rgb2[2], "Player");
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected.", rgb[0], rgb[1], rgb[2], np->name);
             djui_popup_create(popupMsg, 1);
         }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
@@ -235,11 +281,9 @@ u8 network_player_disconnected(u8 globalIndex) {
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
         
         // display popup
-        u8* rgb = get_player_color(np->globalIndex, 0);
-        u8 rgb2[3] = { 0 };
-        for (int i = 0; i < 3; i++) { rgb2[i] = fmin((f32)rgb[i] * 1.3f + 32.0f, 255); }
+        u8* rgb = get_player_color(np->paletteIndex, 0);
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected.", rgb2[0], rgb2[1], rgb2[2], "Player");
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected.", rgb[0], rgb[1], rgb[2], np->name);
         djui_popup_create(popupMsg, 1);
 
         packet_ordered_clear(globalIndex);

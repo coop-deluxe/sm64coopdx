@@ -2130,8 +2130,9 @@ static void init_single_mario(struct MarioState* m) {
     }
 
     // set mario/luigi model
-    enum CharacterType characterType = (globalIndex == 0) ? CT_MARIO : CT_LUIGI;
-    m->character = &gCharacters[characterType];
+    u8 modelIndex = gNetworkPlayers[playerIndex].modelIndex;
+    if (modelIndex >= CT_MAX) { modelIndex = 0; }
+    m->character = &gCharacters[modelIndex];
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
 }
 

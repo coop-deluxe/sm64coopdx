@@ -3957,6 +3957,7 @@
     <ClCompile Include="..\src\pc\djui\djui_panel_join_message.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_menu.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_pause.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_player.c" />
     <ClCompile Include="..\src\pc\djui\djui_popup.c" />
     <ClCompile Include="..\src\pc\djui\djui_selectionbox.c" />
     <ClCompile Include="..\src\pc\djui\djui_cursor.c" />
@@ -4405,6 +4406,7 @@
     <ClInclude Include="..\src\pc\djui\djui_panel_join_message.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_menu.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_pause.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_player.h" />
     <ClInclude Include="..\src\pc\djui\djui_popup.h" />
     <ClInclude Include="..\src\pc\djui\djui_selectionbox.h" />
     <ClInclude Include="..\src\pc\djui\djui_cursor.h" />

@@ -100,13 +100,16 @@ bool         configDiscordRPC    = true;
 #endif
 // coop-specific
 char         configJoinIp[MAX_CONFIG_STRING] = "";
-unsigned int configJoinPort                  = DEFAULT_PORT;
-unsigned int configHostPort                  = DEFAULT_PORT;
-unsigned int configHostSaveSlot              = 1;
-unsigned int configPlayerInteraction         = 1;
-unsigned int configPlayerKnockbackStrength   = 25;
-bool         configStayInLevelAfterStar      = 0;
-unsigned int configNetworkSystem             = 0;
+unsigned int configJoinPort                      = DEFAULT_PORT;
+unsigned int configHostPort                      = DEFAULT_PORT;
+unsigned int configHostSaveSlot                  = 1;
+unsigned int configPlayerInteraction             = 1;
+unsigned int configPlayerKnockbackStrength       = 25;
+bool         configStayInLevelAfterStar          = 0;
+unsigned int configNetworkSystem                 = 0;
+char         configPlayerName[MAX_PLAYER_STRING] = "";
+unsigned int configPlayerModel                   = 0;
+unsigned int configPlayerPalette                 = 0;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -167,6 +170,9 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .boolValue   = &configStayInLevelAfterStar},
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
+    {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName},
+    {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
+    {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

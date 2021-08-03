@@ -4,6 +4,7 @@
 #include "behavior_data.h"
 #include "src/game/behavior_actions.h"
 #include "pc/debuglog.h"
+#include "pc/configfile.h"
 
 static void network_send_to_network_players(u8 sendToLocalIndex) {
     assert(gNetworkType == NT_SERVER);
@@ -30,6 +31,9 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
         packet_write(&p, &gNetworkPlayers[i].currLevelSyncValid, sizeof(u8));
         packet_write(&p, &gNetworkPlayers[i].currAreaSyncValid,  sizeof(u8));
         packet_write(&p, &networkId,                             sizeof(s64));
+        packet_write(&p, &gNetworkPlayers[i].modelIndex,         sizeof(u8));
+        packet_write(&p, &gNetworkPlayers[i].paletteIndex,       sizeof(u8));
+        packet_write(&p, &gNetworkPlayers[i].name,               sizeof(u8) * MAX_PLAYER_STRING);
         LOG_INFO("send network player [%d == %d]", gNetworkPlayers[i].globalIndex, npType);
     }
 
@@ -60,6 +64,9 @@ void network_receive_network_players(struct Packet* p) {
         s16 courseNum, actNum, levelNum, areaIndex;
         u8 levelSyncValid, areaSyncValid;
         s64 networkId;
+        u8 modelIndex, paletteIndex;
+        char playerName[MAX_PLAYER_STRING] = { 0 };
+
         packet_read(p, &npType,         sizeof(u8));
         packet_read(p, &globalIndex,    sizeof(u8));
         packet_read(p, &levelAreaSeqId, sizeof(u16));
@@ -70,21 +77,26 @@ void network_receive_network_players(struct Packet* p) {
         packet_read(p, &levelSyncValid, sizeof(u8));
         packet_read(p, &areaSyncValid,  sizeof(u8));
         packet_read(p, &networkId,      sizeof(s64));
+        packet_read(p, &modelIndex,     sizeof(u8));
+        packet_read(p, &paletteIndex,   sizeof(u8));
+        packet_read(p, &playerName,     sizeof(u8) * MAX_PLAYER_STRING);
 
-        u8 localIndex = network_player_connected(npType, globalIndex);
+        u8 localIndex = network_player_connected(npType, globalIndex, modelIndex, paletteIndex, playerName);
         LOG_INFO("received network player [%d == %d] (%d)", globalIndex, npType, localIndex);
-        if (localIndex != UNKNOWN_GLOBAL_INDEX && localIndex != 0) {
+        if (localIndex != UNKNOWN_GLOBAL_INDEX) {
             struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
-            np->currLevelAreaSeqId = levelAreaSeqId;
-            np->currCourseNum      = courseNum;
-            np->currActNum         = actNum;
-            np->currLevelNum       = levelNum;
-            np->currAreaIndex      = areaIndex;
-            np->currLevelSyncValid = levelSyncValid;
-            np->currAreaSyncValid  = areaSyncValid;
-            LOG_INFO("received network player location (%d, %d, %d, %d)", courseNum, actNum, levelNum, areaIndex);
-            if (gNetworkType == NT_CLIENT && globalIndex != 0 && localIndex != 0) {
-                gNetworkSystem->save_id(localIndex, networkId);
+            if (localIndex != 0) {
+                np->currLevelAreaSeqId = levelAreaSeqId;
+                np->currCourseNum = courseNum;
+                np->currActNum = actNum;
+                np->currLevelNum = levelNum;
+                np->currAreaIndex = areaIndex;
+                np->currLevelSyncValid = levelSyncValid;
+                np->currAreaSyncValid = areaSyncValid;
+                LOG_INFO("received network player location (%d, %d, %d, %d)", courseNum, actNum, levelNum, areaIndex);
+                if (gNetworkType == NT_CLIENT && globalIndex != 0 && localIndex != 0) {
+                    gNetworkSystem->save_id(localIndex, networkId);
+                }
             }
         }
     }

@@ -90,27 +90,28 @@ struct PlayerColor gPlayerColors[] = {
     DEFINE_PLAYER_COLOR(0xff, 0x00, 0x00, /**/ 0x00, 0x00, 0xff),
     // default luigi
     DEFINE_PLAYER_COLOR(0x00, 0x98, 0x00, /**/ 0x00, 0x00, 0xfe),
-#if MAX_PLAYERS > 2
     // fake waluigi
     DEFINE_PLAYER_COLOR(0x6d, 0x3c, 0x9a, /**/ 0x2c, 0x26, 0x3f),
     // fake wario
     DEFINE_PLAYER_COLOR(0xf9, 0xeb, 0x30, /**/ 0x7f, 0x20, 0x7a),
-    // light blue
-    DEFINE_PLAYER_COLOR(0x00, 0xdf, 0xff, /**/ 0x00, 0x00, 0xf0),
-    // sponge
-    DEFINE_PLAYER_COLOR(0xff, 0x7f, 0x00, /**/ 0x00, 0x7f, 0xa0),
-    // blue man group
-    DEFINE_PLAYER_COLOR(0x00, 0x00, 0xf0, /**/ 0x00, 0x00, 0x4f),
-    // thanks doc
-    DEFINE_PLAYER_COLOR(0xff, 0x00, 0xff, /**/ 0x00, 0xff, 0x00),
-    // white
-    DEFINE_PLAYER_COLOR(0xff, 0xff, 0xff, /**/ 0x10, 0x10, 0x10),
-    // grey
-    DEFINE_PLAYER_COLOR(0x6f, 0x6f, 0x6f, /**/ 0xe0, 0xe0, 0xe0),
-#endif
+
+    DEFINE_PLAYER_COLOR(0x00, 0x2f, 0xc8, /**/ 0xbf, 0xde, 0xff),
+    DEFINE_PLAYER_COLOR(0xc1, 0x2c, 0x72, /**/ 0x34, 0x16, 0x0d),
+    DEFINE_PLAYER_COLOR(0x4c, 0xff, 0x4c, /**/ 0x81, 0x00, 0x00),
+    DEFINE_PLAYER_COLOR(0xa9, 0x78, 0xfc, /**/ 0x61, 0x3d, 0x2e),
+
+    DEFINE_PLAYER_COLOR(0x84, 0x60, 0x00, /**/ 0x00, 0x46, 0x5c),
+    DEFINE_PLAYER_COLOR(0x5a, 0x94, 0xff, /**/ 0x4f, 0x31, 0x8b),
+    DEFINE_PLAYER_COLOR(0x68, 0x0a, 0x17, /**/ 0x23, 0x11, 0x03),
+    DEFINE_PLAYER_COLOR(0x95, 0xd0, 0x8f, /**/ 0x53, 0x39, 0x3d),
+
+    DEFINE_PLAYER_COLOR(0x37, 0x32, 0x42, /**/ 0xe6, 0xe3, 0xff),
+    DEFINE_PLAYER_COLOR(0xff, 0x8a, 0x00, /**/ 0x00, 0x51, 0x10),
+    DEFINE_PLAYER_COLOR(0x65, 0xfa, 0xff, /**/ 0x4c, 0x1e, 0x3f),
+    DEFINE_PLAYER_COLOR(0xe6, 0xe6, 0xe6, /**/ 0xb2, 0x28, 0x18),
 };
 
-static const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerColors);
+const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerColors);
 
 // This whole file is weirdly organized. It has to be the same file due
 // to rodata boundaries and function aligns, which means the programmer
@@ -123,14 +124,14 @@ static const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerCo
  * The 4th component is the shade factor (difference between ambient and diffuse),
  * usually set to 1.
  */
-void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]) {
+void set_player_colors(u8 paletteIndex, const u8 shirt[4], const u8 pants[4]) {
     // choose the last color in the table for extra players
-    if (globalIndex >= gNumPlayerColors) globalIndex = gNumPlayerColors - 1;
+    if (paletteIndex >= gNumPlayerColors) paletteIndex = gNumPlayerColors - 1;
     const u8 pAmb[3] = { pants[0] >> pants[4], pants[1] >> pants[4], pants[2] >> pants[4] };
     const u8 sAmb[3] = { shirt[0] >> shirt[4], shirt[1] >> shirt[4], shirt[2] >> shirt[4] };
-    gPlayerColors[globalIndex].pants =
+    gPlayerColors[paletteIndex].pants =
       (Lights1) gdSPDefLights1(pAmb[0], pAmb[1], pAmb[2], pants[0], pants[1], pants[2], 0x28, 0x28, 0x28);
-    gPlayerColors[globalIndex].shirt =
+    gPlayerColors[paletteIndex].shirt =
       (Lights1) gdSPDefLights1(sAmb[0], sAmb[1], sAmb[2], shirt[0], shirt[1], shirt[2], 0x28, 0x28, 0x28);
 }
 
@@ -139,13 +140,13 @@ void set_player_colors(u8 globalIndex, const u8 shirt[4], const u8 pants[4]) {
  * 0 = shirt, 1 = pants
  * Returns RGB, not RGBA!
  */
-u8 *get_player_color(u8 globalIndex, const int which) {
+u8 *get_player_color(u8 paletteIndex, const int which) {
     // choose the last color in the table for extra players
-    if (globalIndex >= gNumPlayerColors) globalIndex = gNumPlayerColors - 1;
+    if (paletteIndex >= gNumPlayerColors) paletteIndex = gNumPlayerColors - 1;
     if (which == 0)
-        return gPlayerColors[globalIndex].shirt.l[0].l.col;
+        return gPlayerColors[paletteIndex].shirt.l[0].l.col;
     else
-        return gPlayerColors[globalIndex].pants.l[0].l.col;
+        return gPlayerColors[paletteIndex].pants.l[0].l.col;
 }
 
 /**
@@ -802,7 +803,7 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     Gfx* gfx = NULL;
     u8 index = geo_get_processing_object_index();
-    u8 colorIndex = gNetworkPlayers[index].globalIndex;
+    u8 colorIndex = gNetworkPlayers[index].paletteIndex;
     struct MarioBodyState* bodyState = &gBodyStates[index];
 
     if (callContext == GEO_CONTEXT_RENDER) {

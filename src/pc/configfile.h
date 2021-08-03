@@ -8,6 +8,7 @@
 #define MAX_BINDS  3
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
+#define MAX_PLAYER_STRING 20
 
 #define DEFAULT_PORT 7777
 
@@ -73,6 +74,9 @@ extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern bool         configStayInLevelAfterStar;
 extern unsigned int configNetworkSystem;
+extern char         configPlayerName[];
+extern unsigned int configPlayerModel;
+extern unsigned int configPlayerPalette;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);
