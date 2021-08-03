@@ -82,22 +82,22 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         djui_interactable_hook_value_change(&selectionbox1->base, djui_panel_player_value_changed);
 
         char* paletteChoices[16] = {
-            "mario",
-            "luigi",
-            "waluigi",
-            "wario",
-            "cobalt",
-            "hot pink",
-            "seafoam",
-            "lilac",
-            "copper",
-            "azure",
-            "burgundy",
-            "mint",
-            "eggplant",
-            "orange",
-            "arctic",
-            "fire",
+            "Mario",
+            "Luigi",
+            "Waluigi",
+            "Wario",
+            "Cobalt",
+            "Hot Pink",
+            "Seafoam",
+            "Lilac",
+            "Copper",
+            "Azure",
+            "Burgundy",
+            "Mint",
+            "Eggplant",
+            "Orange",
+            "Arctic",
+            "Fire",
         };
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Palette", paletteChoices, 16, &configPlayerPalette);
         djui_base_set_size_type(&selectionbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
