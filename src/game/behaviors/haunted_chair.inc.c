@@ -27,7 +27,6 @@ void bhv_haunted_chair_init(void) {
     network_init_object_field(o, &o->oFaceAnglePitch);
     network_init_object_field(o, &o->oFaceAngleRoll);
     network_init_object_field(o, &o->oFaceAngleYaw);
-    network_init_object_field(o, &o->oHauntedChairUnk100);
     network_init_object_field(o, &o->oHauntedChairUnk104);
     network_init_object_field(o, &o->oHauntedChairUnkF4);
     network_init_object_field(o, &o->oHauntedChairUnkF8);
