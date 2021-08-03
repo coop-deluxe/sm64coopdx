@@ -2,6 +2,7 @@
 #include "lobby.h"
 #include "discord_network.h"
 #include "pc/debuglog.h"
+#include "pc/network/network.h"
 #include "pc/network/version.h"
 #include "pc/djui/djui.h"
 
@@ -68,7 +69,20 @@ void discord_activity_update(bool hosting) {
         gCurActivity.party.size.max_size = 1;
     }
 
-    snprintf(gCurActivity.details, MAX_VERSION_LENGTH, "%s", get_version());
+    if (gCurActivity.details[0] == '\0') {
+        snprintf(gCurActivity.details, 128, "%s", get_version());
+        if (gRegisteredMods.string != NULL) {
+            strncat(gCurActivity.details, " - ", 127);
+            struct StringLinkedList* node = &gRegisteredMods;
+            while (node != NULL && node->string != NULL) {
+                strncat(gCurActivity.details, node->string, 127);
+                node = node->next;
+                if (node != NULL && node->string != NULL) {
+                    strncat(gCurActivity.details, ", ", 127);
+                }
+            }
+        }
+    }
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
     LOG_INFO("set activity");
