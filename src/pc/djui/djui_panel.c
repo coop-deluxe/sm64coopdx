@@ -2,6 +2,7 @@
 #include "src/pc/utils/misc.h"
 #include "audio_defines.h"
 #include "audio/external.h"
+#include "src/game/bettercamera.h"
 
 struct DjuiPanel {
     struct DjuiBase* base;
@@ -145,11 +146,14 @@ void djui_panel_shutdown(void) {
     sPanelList = NULL;
     sPanelRemoving = NULL;
     sMoveAmount = 0;
-    gDjuiInMainMenu = false;
     gInteractableOverridePad = false;
     gDjuiPanelJoinMessageVisible = false;
     gDjuiPanelMainCreated = false;
     gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
     configfile_save(configfile_name());
+    if (gDjuiInMainMenu) {
+        gDjuiInMainMenu = false;
+        newcam_init_settings();
+    }
 }

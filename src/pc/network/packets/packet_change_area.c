@@ -35,8 +35,10 @@ void network_send_change_area(void) {
 
     // override castle act to 0 to prevent instancing of the hub
     if (gCurrCourseNum == 0 && (gCurrLevelNum == LEVEL_CASTLE || gCurrLevelNum == LEVEL_CASTLE_GROUNDS || gCurrLevelNum == LEVEL_CASTLE_COURTYARD)) {
-        gCurrActStarNum = 0;
-        gCurrActNum = 0;
+        if (gCurrActStarNum != 99) {
+            gCurrActStarNum = 0;
+            gCurrActNum = 0;
+        }
     }
 
     if (gNetworkType == NT_SERVER) {

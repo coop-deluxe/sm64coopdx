@@ -906,6 +906,9 @@ void initiate_delayed_warp(void) {
 
                 case WARP_OP_CREDITS_START:
                     gCurrCreditsEntry = &sCreditsSequence[0];
+                    // instance players in the credits
+                    gCurrActStarNum = 99;
+                    gCurrActNum = 99;
                     initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
                                   WARP_NODE_CREDITS_START, 0);
                     break;
@@ -1178,7 +1181,9 @@ s32 play_mode_change_level(void) {
         gHudDisplay.flags = HUD_DISPLAY_NONE;
         sTransitionTimer = 0;
         sTransitionUpdate = NULL;
-        gCurrActStarNum = 0;
+        if (gCurrActStarNum != 99) {
+            gCurrActStarNum = 0;
+        }
         if (sWarpDest.type != WARP_TYPE_NOT_WARPING) {
             return sWarpDest.levelNum;
         } else {
@@ -1299,12 +1304,12 @@ s32 init_level(void) {
                 set_mario_action(gMarioState, ACT_IDLE, 0);
             } else if (gDebugLevelSelect == 0) {
                 if (gMarioState->action != ACT_UNINITIALIZED) {
-                    bool skipIntro = (gNetworkType == NT_NONE);
-                    if (gDjuiInMainMenu) {
+                    bool skipIntro = (gNetworkType == NT_NONE || gServerSettings.skipIntro != 0);
+                    if (gDjuiInMainMenu && (gNetworkType == NT_NONE)) {
                         set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
-                    } else if (save_file_exists(gCurrSaveFileNum - 1) || skipIntro) {
+                    } else if (skipIntro || save_file_exists(gCurrSaveFileNum - 1)) {
                         set_mario_action(gMarioState, ACT_IDLE, 0);
-                    } else if (gCLIOpts.SkipIntro == 0 && configSkipIntro == 0 && gServerSettings.skipIntro == 0) {
+                    } else {
                         set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 0);
                         val4 = 1;
                     }

@@ -283,6 +283,7 @@ void main_func(void) {
         network_set_system(NS_SOCKET);
         configHostPort = gCLIOpts.NetworkPort;
         network_init(NT_SERVER);
+        djui_panel_shutdown();
     } else {
         network_init(NT_NONE);
     }
