@@ -364,6 +364,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     }
 
     obj->createdThroughNetwork = false;
+    obj->areaTimer = 0;
 
     return obj;
 }

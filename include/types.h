@@ -221,6 +221,7 @@ struct Object
     /*0x21C*/ Mat4 transform;
     /*0x25C*/ void *respawnInfo;
     /*?????*/ u8 createdThroughNetwork;
+    /*?????*/ u32 areaTimer;
 };
 
 struct ObjectHitbox

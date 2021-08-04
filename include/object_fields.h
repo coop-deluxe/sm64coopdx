@@ -232,7 +232,6 @@
 
 /* Bomp (Small) */
 #define /*0x100*/ oSmallBompInitX OBJECT_FIELD_F32(0x1E)
-#define /*?????*/ oBompTimer      OBJECT_FIELD_U32(0x1F)
 
 /* Boo */
 #define /*0x088*/ oBooDeathStatus           OBJECT_FIELD_S32(0x00)
@@ -311,7 +310,6 @@
 #define /*0x108*/ oBowserPuzzlePieceContinuePerformingAction OBJECT_FIELD_S32(0x20)
 #define /*0x10C*/ oBowserPuzzlePieceActionList               OBJECT_FIELD_VPTR(0x21)
 #define /*0x110*/ oBowserPuzzlePieceNextAction               OBJECT_FIELD_VPTR(0x22)
-#define /*0x0F4*/ oBowserPuzzlePieceTimer                    OBJECT_FIELD_U32(0x1B)
 
 /* Bubba */
 #define /*0x0F4*/ oBubbaUnkF4  OBJECT_FIELD_F32(0x1B)
@@ -377,7 +375,6 @@
 #define /*0x0F8*/ oCheckerBoardPlatformUnkF8  OBJECT_FIELD_S32(0x1C) // oAction like
 #define /*0x0FC*/ oCheckerBoardPlatformUnkFC  OBJECT_FIELD_S32(0x1D)
 #define /*0x1AC*/ oCheckerBoardPlatformUnk1AC OBJECT_FIELD_F32(0x49)
-#define /*0x1B0*/ oCheckerBoardPlatformTimer  OBJECT_FIELD_U32(0x4A)
 
 /* Cheep Cheep */
 #define /*0x0F4*/ oCheepCheepUnkF4  OBJECT_FIELD_F32(0x1B)
@@ -830,7 +827,6 @@
 #define /*0x0F4*/ oDDDPoleVel       OBJECT_FIELD_F32(0x1B)
 #define /*0x0F8*/ oDDDPoleMaxOffset OBJECT_FIELD_F32(0x1C)
 #define /*0x0FC*/ oDDDPoleOffset    OBJECT_FIELD_F32(0x1D)
-#define /*0x100*/ oDDDPoleTimer     OBJECT_FIELD_U32(0x1E)
 
 /* Pyramid Top */
 #define /*0x0F4*/ oPyramidTopPillarsTouched OBJECT_FIELD_S32(0x1B)

@@ -8,30 +8,20 @@ void bhv_ddd_pole_init(void) {
     }
 }
 
+static void bhv_ddd_pole_update_inner(void) {
+    if (o->oTimer > 20) {
+        o->oDDDPoleOffset += o->oDDDPoleVel;
+
+        if (clamp_f32(&o->oDDDPoleOffset, 0.0f, o->oDDDPoleMaxOffset)) {
+            o->oDDDPoleVel = -o->oDDDPoleVel;
+            o->oTimer = 0;
+        }
+    }
+
+    obj_set_dist_from_home(o->oDDDPoleOffset);
+}
 
 void bhv_ddd_pole_update(void) {
     u32 loopLength = (((u16)o->oDDDPoleMaxOffset / 10) + 20) * 2;
-    if ((gNetworkAreaTimer - o->oDDDPoleTimer) >= loopLength) {
-        u32 catchup = (gNetworkAreaTimer - o->oDDDPoleTimer) / loopLength;
-        catchup *= loopLength;
-        o->oDDDPoleTimer += catchup;
-    }
-
-    while (o->oDDDPoleTimer < gNetworkAreaTimer) {
-        if (o->oTimer > 20) {
-            o->oDDDPoleOffset += o->oDDDPoleVel;
-
-            if (clamp_f32(&o->oDDDPoleOffset, 0.0f, o->oDDDPoleMaxOffset)) {
-                o->oDDDPoleVel = -o->oDDDPoleVel;
-                o->oTimer = 0;
-            }
-        }
-
-        obj_set_dist_from_home(o->oDDDPoleOffset);
-
-        o->oDDDPoleTimer++;
-        if (o->oDDDPoleTimer < gNetworkAreaTimer) {
-            cur_obj_fake_update();
-        }
-    }
+    cur_obj_area_timer_loop(loopLength, bhv_ddd_pole_update_inner);
 }

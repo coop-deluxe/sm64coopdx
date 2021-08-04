@@ -109,18 +109,6 @@ s32 random_sign(void) {
     }
 }
 
-u16 position_based_random_u16(void) {
-    u16 value = (u16)(gCurrentObject->oPosX * 2659);
-    value    ^= (u16)(gCurrentObject->oPosY * 1901);
-    value    ^= (u16)(gCurrentObject->oPosZ * 3331);
-    return value;
-}
-
-f32 position_based_random_float_position(void) {
-    f32 rnd = position_based_random_u16();
-    return rnd / (double)0x10000;
-}
-
 // Update an object's graphical position and rotation to match its real position and rotation.
 void obj_update_gfx_pos_and_angle(struct Object *obj) {
     obj->header.gfx.pos[0] = obj->oPosX;
@@ -1127,5 +1115,33 @@ void cur_obj_fake_update(void) {
     if (gCurrentObject->oAction != gCurrentObject->oPrevAction) {
         (void)(gCurrentObject->oTimer = 0, gCurrentObject->oSubAction = 0,
             gCurrentObject->oPrevAction = gCurrentObject->oAction);
+    }
+}
+
+u16 position_based_random_u16(void) {
+    u16 value = (u16)(gCurrentObject->oPosX * 2659);
+    value ^= (u16)(gCurrentObject->oPosY * 1901);
+    value ^= (u16)(gCurrentObject->oPosZ * 3331);
+    return value;
+}
+
+f32 position_based_random_float_position(void) {
+    f32 rnd = position_based_random_u16();
+    return rnd / (double)0x10000;
+}
+
+void cur_obj_area_timer_loop(u32 loopLength, void (*func)(void)) {
+    if ((gNetworkAreaTimer - gCurrentObject->areaTimer) >= loopLength) {
+        u32 catchup = (gNetworkAreaTimer - gCurrentObject->areaTimer) / loopLength;
+        catchup *= loopLength;
+        gCurrentObject->areaTimer += catchup;
+    }
+
+    while (gCurrentObject->areaTimer < gNetworkAreaTimer) {
+        (*func)();
+        gCurrentObject->areaTimer++;
+        if (gCurrentObject->areaTimer < gNetworkAreaTimer) {
+            cur_obj_fake_update();
+        }
     }
 }
