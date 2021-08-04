@@ -112,7 +112,7 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
 }
 
 void network_player_update(void) {
-
+    if (!network_player_any_connected()) { return; }
 //#ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER) {
         for (int i = 1; i < MAX_PLAYERS; i++) {

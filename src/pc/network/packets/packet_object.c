@@ -58,7 +58,7 @@ static bool should_own_object(struct SyncObject* so) {
     }
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (i != 0 && !is_player_active(&gMarioStates[i])) { continue; }
         if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[i], so->o)) { return false; }
     }
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex != 0) { return false; }
@@ -570,7 +570,9 @@ void network_update_objects(void) {
         if (timeSinceUpdate < updateRate) { continue; }
 
         // update!
-        network_send_object(gSyncObjects[i].o);
+        if (network_player_any_connected()) {
+            network_send_object(gSyncObjects[i].o);
+        }
     }
 
 }

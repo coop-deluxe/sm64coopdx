@@ -269,7 +269,7 @@ void network_update(void) {
     gNetworkAreaTimer = (clock_elapsed_ticks() - gNetworkAreaTimerClock);
 
     // send out update packets
-    if (gNetworkType != NT_NONE && network_player_any_connected()) {
+    if (gNetworkType != NT_NONE) {
         network_player_update();
         if (sCurrPlayMode == PLAY_MODE_NORMAL || sCurrPlayMode == PLAY_MODE_PAUSED) {
             network_update_player();
