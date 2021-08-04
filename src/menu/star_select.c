@@ -388,7 +388,7 @@ void print_act_selector_strings(void) {
     }
 
     // print the number of players in the selected act
-    {
+    if (sVisibleStars > 0) {
         u8 playersInAct = 0;
         for (int j = 0; j < MAX_PLAYERS; j++) {
             struct NetworkPlayer* np = &gNetworkPlayers[j];
