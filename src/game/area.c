@@ -193,6 +193,12 @@ void load_obj_warp_nodes(void) {
 }
 
 void clear_areas(void) {
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    if (np != NULL) {
+        np->currAreaSyncValid = false;
+        np->currLevelSyncValid = false;
+    }
+
     s32 i;
 
     gCurrentArea = NULL;
@@ -261,6 +267,11 @@ void load_area(s32 index) {
 }
 
 void unload_area(void) {
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    if (np != NULL) {
+        np->currAreaSyncValid = false;
+    }
+
     network_clear_sync_objects();
     if (gCurrentArea != NULL) {
         unload_objects_from_area(0, gCurrentArea->index);
