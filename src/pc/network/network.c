@@ -31,7 +31,8 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 u16 networkLoadingLevel = 0;
 bool gNetworkAreaLoaded = false;
 bool gNetworkAreaSyncing = true;
-u32  gNetworkAreaTimer = 0;
+u32 gNetworkAreaTimerClock = 0;
+u32 gNetworkAreaTimer = 0;
 
 struct StringLinkedList gRegisteredMods = { 0 };
 
@@ -100,6 +101,7 @@ void network_on_init_area(void) {
     gNetworkAreaLoaded = false;
     gNetworkAreaSyncing = true;
     gNetworkAreaTimer = 0;
+    gNetworkAreaTimerClock = clock_elapsed_ticks();
 }
 
 void network_on_loaded_area(void) {
@@ -261,12 +263,10 @@ void network_update(void) {
         networkLoadingLevel++;
         if (!gNetworkAreaLoaded && networkLoadingLevel >= LOADING_LEVEL_THRESHOLD) {
             gNetworkAreaLoaded = true;
-            gNetworkAreaTimer = 0;
             network_on_loaded_area();
         }
-    } else if (gNetworkAreaLoaded) {
-        gNetworkAreaTimer++;
     }
+    gNetworkAreaTimer = (clock_elapsed_ticks() - gNetworkAreaTimerClock);
 
     // send out update packets
     if (gNetworkType != NT_NONE && network_player_any_connected()) {

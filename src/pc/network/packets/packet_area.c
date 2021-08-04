@@ -9,6 +9,7 @@
 #include "object_constants.h"
 #include "object_fields.h"
 #include "model_ids.h"
+#include "pc/utils/misc.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -140,6 +141,7 @@ void network_receive_area(struct Packet* p) {
 
     // read area variables
     packet_read(p, &gNetworkAreaTimer, sizeof(u32));
+    gNetworkAreaTimerClock = clock_elapsed_ticks() - gNetworkAreaTimer;
 
     // read removed sync ids
     area_remove_sync_ids_clear();

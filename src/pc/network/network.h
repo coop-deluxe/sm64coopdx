@@ -85,6 +85,7 @@ extern enum NetworkType gNetworkType;
 extern bool gNetworkAreaLoaded;
 extern bool gNetworkAreaSyncing;
 extern u32 gNetworkAreaTimer;
+extern u32 gNetworkAreaTimerClock;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern struct StringLinkedList gRegisteredMods;

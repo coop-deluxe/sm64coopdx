@@ -54,17 +54,11 @@ void bhv_checkerboard_platform_init(void) {
 }
 
 void bhv_checkerboard_platform_loop(void) {
-    // make sure we're loaded and synchronized
-    if (!gNetworkAreaLoaded) {
-        o->oTimer = 0;
-        o->oCheckerBoardPlatformTimer = 0;
-        return;
-    } else {
-        u32 loopLength = 132 + o->oCheckerBoardPlatformUnkFC * 2;
-        if (o->oCheckerBoardPlatformTimer == 0 && (gNetworkAreaTimer - o->oCheckerBoardPlatformTimer) >= loopLength) {
-            o->oTimer = 0;
-            o->oCheckerBoardPlatformTimer = ((gNetworkAreaTimer - o->oCheckerBoardPlatformTimer) / loopLength) * loopLength;
-        }
+    u32 loopLength = 132 + o->oCheckerBoardPlatformUnkFC * 2;
+    if ((gNetworkAreaTimer - o->oCheckerBoardPlatformTimer) >= loopLength) {
+        u32 catchup = (gNetworkAreaTimer - o->oCheckerBoardPlatformTimer) / loopLength;
+        catchup *= loopLength;
+        o->oCheckerBoardPlatformTimer += catchup;
     }
 
     if (o->oDistanceToMario < 1000.0f)

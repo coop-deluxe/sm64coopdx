@@ -10,18 +10,11 @@ void bhv_ddd_pole_init(void) {
 
 
 void bhv_ddd_pole_update(void) {
-    // make sure we're loaded and synchronized
-    if (!gNetworkAreaLoaded) {
-        o->oTimer = 0;
-        o->oDDDPoleTimer = 0;
-        return;
-    } else {
-        // catch up, jumping full loop cycles at a time
-        u16 loopTime = (((u16)o->oDDDPoleMaxOffset / 10) + 20) * 2;
-        if (o->oDDDPoleTimer == 0 && (gNetworkAreaTimer - o->oDDDPoleTimer) >= loopTime) {
-            o->oDDDPoleTimer = ((gNetworkAreaTimer - o->oDDDPoleTimer) / loopTime) * loopTime;
-            o->oTimer = 0;
-        }
+    u32 loopLength = (((u16)o->oDDDPoleMaxOffset / 10) + 20) * 2;
+    if ((gNetworkAreaTimer - o->oDDDPoleTimer) >= loopLength) {
+        u32 catchup = (gNetworkAreaTimer - o->oDDDPoleTimer) / loopLength;
+        catchup *= loopLength;
+        o->oDDDPoleTimer += catchup;
     }
 
     while (o->oDDDPoleTimer < gNetworkAreaTimer) {

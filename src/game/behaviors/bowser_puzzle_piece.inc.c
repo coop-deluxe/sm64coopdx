@@ -259,13 +259,11 @@ void (*sBowserPuzzlePieceActions[])(void) = {
 };
 
 void bhv_lll_bowser_puzzle_piece_loop(void) {
-    // make sure we're loaded and synchronized
-    if (!gNetworkAreaLoaded) {
-        o->oTimer = 0;
-        return;
-    } else if (o->oBowserPuzzlePieceTimer == 0 && (gNetworkAreaTimer - o->oBowserPuzzlePieceTimer) >= 650) {
-        o->oBowserPuzzlePieceTimer = ((gNetworkAreaTimer - o->oBowserPuzzlePieceTimer) / 650) * 650;
-        o->oTimer = 0;
+    u32 loopLength = 650;
+    if ((gNetworkAreaTimer - o->oBowserPuzzlePieceTimer) >= loopLength) {
+        u32 catchup = (gNetworkAreaTimer - o->oBowserPuzzlePieceTimer) / loopLength;
+        catchup *= loopLength;
+        o->oBowserPuzzlePieceTimer += catchup;
     }
 
     while (o->oBowserPuzzlePieceTimer < gNetworkAreaTimer) {

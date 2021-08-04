@@ -23,16 +23,27 @@ void update_all_mario_stars(void) {
     }
 }
 
-f32 clock_elapsed(void) {
+static u64 clock_elapsed_ns(void) {
     static bool sClockInitialized = false;
-    static struct timespec clock_start;
+    static u64 clock_start_ns;
     if (!sClockInitialized) {
+        struct timespec clock_start;
         clock_gettime(CLOCK_MONOTONIC, &clock_start);
+        clock_start_ns = ((u64)clock_start.tv_sec) * 1000000000 + clock_start.tv_nsec;
         sClockInitialized = true;
     }
 
     struct timespec clock_current;
     clock_gettime(CLOCK_MONOTONIC, &clock_current);
-    return (clock_current.tv_sec - clock_start.tv_sec)
-        + ((clock_current.tv_nsec - clock_start.tv_nsec) / 1000000000.0f);
+
+    u64 clock_current_ns = ((u64)clock_current.tv_sec) * 1000000000 + clock_current.tv_nsec;
+    return (clock_current_ns - clock_start_ns);
+}
+
+f32 clock_elapsed(void) {
+    return (clock_elapsed_ns() / 1000000000.0f);
+}
+
+u32 clock_elapsed_ticks(void) {
+    return (clock_elapsed_ns() * 3 / 100000000);
 }
