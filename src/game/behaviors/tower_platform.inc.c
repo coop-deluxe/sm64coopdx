@@ -54,31 +54,14 @@ void bhv_wf_elevator_tower_platform_loop(void) {
     }
 }
 
-void bhv_wf_sliding_tower_platform_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oPlatformUnk110);
-        network_init_object_field(o, &o->oPlatformUnk10C);
-        network_init_object_field(o, &o->oMoveAngleYaw);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oPosZ);
-        network_init_object_field(o, &o->oVelX);
-        network_init_object_field(o, &o->oVelZ);
-    }
-
+static void bhv_wf_sliding_tower_platform_loop_inner(void) {
     s32 sp24 = o->oPlatformUnk110 / o->oPlatformUnk10C;
     switch (o->oAction) {
         case 0:
-            o->oForwardVel = -o->oPlatformUnk10C;
-            if (network_owns_object(o) && o->oTimer > sp24) {
+            if (o->oTimer > sp24) {
                 o->oAction++;
-                network_send_object(o);
             }
-            if (!network_owns_object(o) && o->oTimer > sp24) { o->oForwardVel = 0; }
+            o->oForwardVel = -o->oPlatformUnk10C;
             break;
         case 1:
             if (o->oTimer > sp24)
@@ -97,6 +80,13 @@ void bhv_wf_sliding_tower_platform_loop(void) {
         cur_obj_become_intangible();
         o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
     }
+}
+
+void bhv_wf_sliding_tower_platform_loop(void) {
+    u32 loopTime = 1 + (o->oPlatformUnk110 / o->oPlatformUnk10C);
+    loopTime *= 2;
+    loopTime += 1;
+    cur_obj_area_timer_loop(loopTime, bhv_wf_sliding_tower_platform_loop_inner);
 }
 
 void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
