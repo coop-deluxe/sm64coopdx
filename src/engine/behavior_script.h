@@ -22,6 +22,8 @@
 u16 random_u16(void);
 float random_float(void);
 s32 random_sign(void);
+u16 position_based_random_u16(void);
+f32 position_based_random_float_position(void);
 
 void stub_behavior_script_2(void);
 

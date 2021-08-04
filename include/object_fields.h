@@ -232,6 +232,7 @@
 
 /* Bomp (Small) */
 #define /*0x100*/ oSmallBompInitX OBJECT_FIELD_F32(0x1E)
+#define /*?????*/ oBompTimer      OBJECT_FIELD_U32(0x1F)
 
 /* Boo */
 #define /*0x088*/ oBooDeathStatus           OBJECT_FIELD_S32(0x00)
