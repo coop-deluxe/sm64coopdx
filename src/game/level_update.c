@@ -1250,14 +1250,6 @@ s32 update_level(void) {
 }
 
 s32 init_level(void) {
-    // reset cap flags
-    if (save_file_exists(gCurrSaveFileNum - 1)) {
-        save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
-        save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
-        save_file_clear_flags(SAVE_FLAG_CAP_ON_UKIKI);
-        save_file_clear_flags(SAVE_FLAG_CAP_ON_MR_BLIZZARD);
-    }
-
     reset_dialog_render_state();
 
     s32 val4 = 0;

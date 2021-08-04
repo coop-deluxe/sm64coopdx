@@ -2051,11 +2051,12 @@ static void init_single_mario(struct MarioState* m) {
 
     m->invincTimer = 0;
 
-    if (save_file_get_flags() & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI | SAVE_FLAG_CAP_ON_MR_BLIZZARD)) {
+    // always put the cap on head
+    /*if (save_file_get_flags() & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI | SAVE_FLAG_CAP_ON_MR_BLIZZARD)) {
         m->flags = 0;
-    } else {
+    } else {*/
         m->flags = (MARIO_CAP_ON_HEAD | MARIO_NORMAL_CAP);
-    }
+    //}
 
     m->forwardVel = 0.0f;
     m->squishTimer = 0;
