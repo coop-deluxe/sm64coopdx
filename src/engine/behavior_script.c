@@ -1119,8 +1119,8 @@ void cur_obj_fake_update(void) {
 }
 
 u16 position_based_random_u16(void) {
-    u16 value = (u16)(gCurrentObject->oPosX * 2659);
-    value ^= (u16)(gCurrentObject->oPosY * 1901);
+    u16 value = (u16)(gCurrentObject->oPosX * 17);
+    value ^= (u16)(gCurrentObject->oPosY * 613);
     value ^= (u16)(gCurrentObject->oPosZ * 3331);
     return value;
 }
