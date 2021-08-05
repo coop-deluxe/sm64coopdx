@@ -776,4 +776,6 @@ void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 y
 
 Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context);
 
+s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);
+
 #endif // CAMERA_H

@@ -193,7 +193,11 @@ void newcam_init_settings(void) {
     newcam_analogue     = (s16)configCameraAnalog;
     newcam_degrade      = (f32)configCameraDegrade;
 
-    newcam_toggle(configEnableCamera);
+    // setup main menu camera
+    extern bool gDjuiInMainMenu;
+    if (gDjuiInMainMenu) { newcam_tilt = 5; }
+
+    newcam_toggle(configEnableCamera || gDjuiInMainMenu);
 }
 
 /** Mathematic calculations. This stuffs so basic even *I* understand it lol

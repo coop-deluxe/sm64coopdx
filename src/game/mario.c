@@ -1782,7 +1782,7 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
     }
 
     struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
-    u8 teleportFade = (m->flags & MARIO_TELEPORTING) || (np->type != NPT_LOCAL && np->fadeOpacity < 32);
+    u8 teleportFade = (m->flags & MARIO_TELEPORTING) || (gMarioState->playerIndex != 0 && np->fadeOpacity < 32);
     if (teleportFade && (m->fadeWarpOpacity != 0xFF)) {
         bodyState->modelState &= ~0xFF;
         bodyState->modelState |= (0x100 | m->fadeWarpOpacity);

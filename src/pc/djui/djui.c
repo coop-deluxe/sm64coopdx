@@ -7,6 +7,7 @@ static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
 static struct DjuiText* sDjuiPauseOptions = NULL;
+bool gDjuiInMainMenu = true;
 
 void djui_init(void) {
     gDjuiRoot = djui_root_create();

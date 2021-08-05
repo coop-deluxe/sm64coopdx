@@ -1830,7 +1830,7 @@ static void intro_cutscene_peach_lakitu_scene(struct MarioState *m) {
     #define TIMER_RAISE_PIPE 38
 #endif
 
-static void intro_cutscene_raise_pipe(struct MarioState *m) {
+static void intro_cutscene_raise_pipe(struct MarioState* m) {
     u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
     if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
     sIntroWarpPipeObj[globalIndex]->oPosY = camera_approach_f32_symmetric(sIntroWarpPipeObj[globalIndex]->oPosY, 260.0f, 10.0f);
@@ -1842,6 +1842,24 @@ static void intro_cutscene_raise_pipe(struct MarioState *m) {
     if (m->actionTimer++ == TIMER_RAISE_PIPE) {
         m->vel[1] = 60.0f;
         advance_cutscene_step(m);
+    }
+}
+
+static void intro_cutscene_raise_pipe_main_menu(struct MarioState* m) {
+    u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+    if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
+    if (sIntroWarpPipeObj[globalIndex] == NULL) {
+        sIntroWarpPipeObj[globalIndex] =
+            spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_CASTLE_GROUNDS_WARP_PIPE,
+                bhvStaticObject, m->pos[0], 260, m->pos[2], 0, 180, 0);
+    }
+
+    if (m->actionTimer++ > 1) {
+        m->vel[1] = 60.0f;
+        m->faceAngle[1] = m->area->camera->yaw;
+        advance_cutscene_step(m);
+        m->actionArg = 3;
+        m->actionTimer = 110;
     }
 }
 #undef TIMER_RAISE_PIPE
@@ -1931,7 +1949,8 @@ enum {
     INTRO_CUTSCENE_JUMP_OUT_OF_PIPE,
     INTRO_CUTSCENE_LAND_OUTSIDE_PIPE,
     INTRO_CUTSCENE_LOWER_PIPE,
-    INTRO_CUTSCENE_SET_MARIO_TO_IDLE
+    INTRO_CUTSCENE_SET_MARIO_TO_IDLE,
+    INTRO_CUTSCENE_RAISE_PIPE_MAIN_MENU
 };
 
 static s32 act_intro_cutscene(struct MarioState *m) {
@@ -1956,6 +1975,9 @@ static s32 act_intro_cutscene(struct MarioState *m) {
             break;
         case INTRO_CUTSCENE_SET_MARIO_TO_IDLE:
             intro_cutscene_set_mario_to_idle(m);
+            break;
+        case INTRO_CUTSCENE_RAISE_PIPE_MAIN_MENU:
+            intro_cutscene_raise_pipe_main_menu(m);
             break;
     }
     return FALSE;

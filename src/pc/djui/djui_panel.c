@@ -145,6 +145,7 @@ void djui_panel_shutdown(void) {
     sPanelList = NULL;
     sPanelRemoving = NULL;
     sMoveAmount = 0;
+    gDjuiInMainMenu = false;
     gInteractableOverridePad = false;
     gDjuiPanelJoinMessageVisible = false;
     gDjuiPanelMainCreated = false;

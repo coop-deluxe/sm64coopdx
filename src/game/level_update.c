@@ -1300,7 +1300,9 @@ s32 init_level(void) {
             } else if (gDebugLevelSelect == 0) {
                 if (gMarioState->action != ACT_UNINITIALIZED) {
                     bool skipIntro = (gNetworkType == NT_NONE);
-                    if (save_file_exists(gCurrSaveFileNum - 1) || skipIntro) {
+                    if (gDjuiInMainMenu) {
+                        set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
+                    } else if (save_file_exists(gCurrSaveFileNum - 1) || skipIntro) {
                         set_mario_action(gMarioState, ACT_IDLE, 0);
                     } else if (gCLIOpts.SkipIntro == 0 && configSkipIntro == 0 && gServerSettings.skipIntro == 0) {
                         set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 0);
