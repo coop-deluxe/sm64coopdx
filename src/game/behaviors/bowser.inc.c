@@ -848,6 +848,10 @@ void bowser_spawn_grand_star_key(void) {
         gSecondCameraFocus = reward;
 
         if (prevReward == NULL) {
+            // set the home position
+            reward->oHomeX = reward->oPosX;
+            reward->oHomeY = reward->oPosY;
+            reward->oHomeZ = reward->oPosZ;
             struct Object* spawn_objects[] = { reward };
             u32 models[] = { MODEL_STAR };
             network_send_spawn_objects(spawn_objects, models, 1);
@@ -859,6 +863,10 @@ void bowser_spawn_grand_star_key(void) {
         cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_KEY);
 
         if (prevReward == NULL) {
+            // set the home position
+            reward->oHomeX = reward->oPosX;
+            reward->oHomeY = reward->oPosY;
+            reward->oHomeZ = reward->oPosZ;
             struct Object* spawn_objects[] = { reward };
             u32 models[] = { MODEL_BOWSER_KEY };
             network_send_spawn_objects(spawn_objects, models, 1);
