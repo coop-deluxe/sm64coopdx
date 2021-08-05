@@ -5,6 +5,7 @@
 #include "game/level_update.h"
 #include "game/area.h"
 #include "game/object_helpers.h"
+#include "game/object_list_processor.h"
 #include "behavior_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
@@ -46,6 +47,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // area variables
         packet_write(&p, &gNetworkAreaTimer, sizeof(u32));
+        packet_write(&p, gEnvironmentLevels, sizeof(s32));
 
         // write sync id removals
         packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
@@ -142,6 +144,7 @@ void network_receive_area(struct Packet* p) {
     // read area variables
     packet_read(p, &gNetworkAreaTimer, sizeof(u32));
     gNetworkAreaTimerClock = clock_elapsed_ticks() - gNetworkAreaTimer;
+    packet_read(p, gEnvironmentLevels, sizeof(s32));
 
     // read removed sync ids
     area_remove_sync_ids_clear();
