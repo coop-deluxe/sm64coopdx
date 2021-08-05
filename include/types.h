@@ -381,6 +381,7 @@ struct MarioState
 
     /*????*/ Vec3f nonInstantWarpPos;
     /*????*/ struct Character* character;
+    /*????*/ u8 wasNetworkVisible;
 };
 
 #define PLAY_MODE_NORMAL 0

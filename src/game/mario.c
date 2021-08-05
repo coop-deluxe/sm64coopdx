@@ -1782,7 +1782,7 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
     }
 
     struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
-    u8 teleportFade = (m->flags & MARIO_TELEPORTING) || (np->type != NPT_LOCAL && np->connected && np->fadeOpacity < 32);
+    u8 teleportFade = (m->flags & MARIO_TELEPORTING) || (np->type != NPT_LOCAL && np->fadeOpacity < 32);
     if (teleportFade && (m->fadeWarpOpacity != 0xFF)) {
         bodyState->modelState &= ~0xFF;
         bodyState->modelState |= (0x100 | m->fadeWarpOpacity);
@@ -1874,17 +1874,25 @@ s32 execute_mario_action(UNUSED struct Object *o) {
             || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
             || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
 
-        if (!np->connected || levelAreaMismatch || !gNetworkAreaLoaded) {
+        bool fadedOut = gNetworkAreaLoaded && (levelAreaMismatch && gMarioState->wasNetworkVisible && np->fadeOpacity == 0);
+        bool wasNeverVisible = gNetworkAreaLoaded && !gMarioState->wasNetworkVisible;
+
+        if (!gNetworkAreaLoaded || fadedOut || wasNeverVisible) {
             gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
             gMarioState->marioObj->oIntangibleTimer = -1;
             return 0;
         }
 
-        if (np->fadeOpacity < 32) {
-            if (!(gMarioState->flags & MARIO_TELEPORTING)) {
-                np->fadeOpacity += 2;
-                gMarioState->fadeWarpOpacity = np->fadeOpacity << 3;
+        if (levelAreaMismatch && gMarioState->wasNetworkVisible) {
+            if (np->fadeOpacity <= 2) {
+                np->fadeOpacity = 0;
+            } else {
+                np->fadeOpacity -= 2;
             }
+            gMarioState->fadeWarpOpacity = np->fadeOpacity << 3;
+        } else if (np->fadeOpacity < 32) {
+            np->fadeOpacity += 2;
+            gMarioState->fadeWarpOpacity = np->fadeOpacity << 3;
         }
     }
 
@@ -2134,6 +2142,8 @@ static void init_single_mario(struct MarioState* m) {
     // force all other players to be invisible by default
     if (playerIndex != 0) {
         m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+        m->wasNetworkVisible = false;
+        gNetworkPlayers[playerIndex].fadeOpacity = 0;
     }
 
     // set mario/luigi model

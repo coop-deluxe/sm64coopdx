@@ -343,6 +343,11 @@ void network_receive_player(struct Packet* p) {
     if (m->action != oldData.action) {
         m->actionTimer = 0;
     }
+
+    // mark this player as visible
+    if (gNetworkAreaLoaded) {
+        m->wasNetworkVisible = true;
+    }
 }
 
 void network_update_player(void) {
