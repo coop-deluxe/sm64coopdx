@@ -2757,28 +2757,30 @@ static s32 act_credits_cutscene(struct MarioState *m) {
             m->actionState += 2;
         }
 
-        width = m->actionState * 640 / 100;
-        height = m->actionState * 480 / 100;
+        if (m->playerIndex == 0) {
+            width = m->actionState * 640 / 100;
+            height = m->actionState * 480 / 100;
 
-        sEndCutsceneVp.vp.vscale[0] = 640 - width;
-        sEndCutsceneVp.vp.vscale[1] = 480 - height;
-        sEndCutsceneVp.vp.vtrans[0] =
-            (gCurrCreditsEntry->unk02 & 0x10 ? width : -width) * 56 / 100 + 640;
-        sEndCutsceneVp.vp.vtrans[1] =
-            (gCurrCreditsEntry->unk02 & 0x20 ? height : -height) * 66 / 100 + 480;
+            sEndCutsceneVp.vp.vscale[0] = 640 - width;
+            sEndCutsceneVp.vp.vscale[1] = 480 - height;
+            sEndCutsceneVp.vp.vtrans[0] =
+                (gCurrCreditsEntry->unk02 & 0x10 ? width : -width) * 56 / 100 + 640;
+            sEndCutsceneVp.vp.vtrans[1] =
+                (gCurrCreditsEntry->unk02 & 0x20 ? height : -height) * 66 / 100 + 480;
 
-        override_viewport_and_clip(&sEndCutsceneVp, 0, 0, 0, 0);
+            override_viewport_and_clip(&sEndCutsceneVp, 0, 0, 0, 0);
+        }
     }
 
-    if (m->actionTimer == TIMER_CREDITS_PROGRESS) {
+    if (m->actionTimer == TIMER_CREDITS_PROGRESS && m->playerIndex == 0) {
         reset_cutscene_msg_fade();
     }
 
-    if (m->actionTimer >= TIMER_CREDITS_PROGRESS) {
+    if (m->actionTimer >= TIMER_CREDITS_PROGRESS && m->playerIndex == 0) {
         sDispCreditsEntry = gCurrCreditsEntry;
     }
 
-    if (m->actionTimer++ == TIMER_CREDITS_WARP) {
+    if (m->actionTimer++ == TIMER_CREDITS_WARP && m->playerIndex == 0) {
         level_trigger_warp(m, 24);
     }
 
