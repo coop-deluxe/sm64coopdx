@@ -1868,18 +1868,18 @@ s32 execute_mario_action(UNUSED struct Object *o) {
     // hide inactive players
     struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
     if (gMarioState->playerIndex != 0) {
-        bool levelAreaMismatch =
-            ((gNetworkPlayerLocal == NULL)
+        bool levelAreaMismatch = ((gNetworkPlayerLocal == NULL)
             || np->currCourseNum != gNetworkPlayerLocal->currCourseNum
             || np->currActNum    != gNetworkPlayerLocal->currActNum
             || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
             || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
 
-        if (!np->connected || levelAreaMismatch) {
+        if (!np->connected || levelAreaMismatch || !gNetworkAreaLoaded) {
             gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
             gMarioState->marioObj->oIntangibleTimer = -1;
             return 0;
         }
+
         if (np->fadeOpacity < 32) {
             if (!(gMarioState->flags & MARIO_TELEPORTING)) {
                 np->fadeOpacity += 2;
@@ -2118,7 +2118,8 @@ static void init_single_mario(struct MarioState* m) {
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
     vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
 
-    if (save_file_get_cap_pos(capPos)) {
+    // cap will never be lying on the ground in coop
+    /*if (save_file_get_cap_pos(capPos)) {
         capObject = spawn_object(m->marioObj, MODEL_MARIOS_CAP, bhvNormalCap);
 
         capObject->oPosX = capPos[0];
@@ -2128,6 +2129,11 @@ static void init_single_mario(struct MarioState* m) {
         capObject->oForwardVelS32 = 0;
 
         capObject->oMoveAngleYaw = 0;
+    }*/
+
+    // force all other players to be invisible by default
+    if (playerIndex != 0) {
+        m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
     }
 
     // set mario/luigi model

@@ -205,6 +205,14 @@ void network_receive_player(struct Packet* p) {
     struct MarioState* m = &gMarioStates[np->localIndex];
     if (m == NULL || m->marioObj == NULL) { return; }
 
+    // prevent receiving player from other area
+    bool levelAreaMismatch = ((gNetworkPlayerLocal == NULL)
+        || np->currCourseNum != gNetworkPlayerLocal->currCourseNum
+        || np->currActNum    != gNetworkPlayerLocal->currActNum
+        || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
+        || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
+    if (levelAreaMismatch) { return; }
+
     // save previous state
     struct PacketPlayerData oldData = { 0 };
     read_packet_data(&oldData, m);
