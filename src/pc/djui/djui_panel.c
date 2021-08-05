@@ -19,6 +19,7 @@ bool djui_panel_is_active(void) {
 }
 
 void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct DjuiBase* defaultElementBase) {
+    if (sPanelRemoving != NULL) { return; }
     bool firstPanel = (sPanelList == NULL);
     gDjuiPanelJoinMessageVisible = false;
 
