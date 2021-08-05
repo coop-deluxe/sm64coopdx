@@ -4,6 +4,7 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "src/game/object_helpers.h"
+#include "src/game/area.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
 //#define DISABLE_MODULE_LOG 1
@@ -47,7 +48,8 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
     assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
-    if (sendToLocalIndex == gNetworkPlayerLocal->localIndex) { return; }
+    // prevent sending spawn objects during credits
+    if (gCurrActStarNum == 99) { return; }
 
     struct Packet p;
     packet_init(&p, PACKET_SPAWN_OBJECTS, true, true);
@@ -81,6 +83,8 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 
 void network_receive_spawn_objects(struct Packet* p) {
     LOG_INFO("rx spawn objects");
+    // prevent receiving spawn objects during credits
+    if (gCurrActStarNum == 99) { return; }
 
     u8 objectCount = 0;
     packet_read(p, &objectCount, sizeof(u8));

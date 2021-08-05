@@ -20,7 +20,8 @@ static void player_changed_level(struct NetworkPlayer* np, s16 courseNum, s16 ac
     struct NetworkPlayer* npLevelMatch     = get_network_player_from_level(courseNum, actNum, levelNum);
     struct NetworkPlayer* npAny = (npLevelAreaMatch == NULL) ? npLevelMatch : npLevelAreaMatch;
 
-    if (npAny == NULL) {
+    bool inCredits = (np->currActNum == 99);
+    if (npAny == NULL || inCredits) {
         // no NetworkPlayer in the level
         network_send_sync_valid(np);
         network_send_level_area_inform(np);

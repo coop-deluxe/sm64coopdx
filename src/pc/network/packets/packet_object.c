@@ -9,6 +9,7 @@
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
 #include "src/game/obj_behaviors.h"
+#include "src/game/area.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
@@ -40,6 +41,9 @@ static float player_distance(struct MarioState* marioState, struct Object* o) {
 }
 
 static bool should_own_object(struct SyncObject* so) {
+    // always own objects in credit sequence
+    if (gCurrActStarNum == 99) { return true; }
+
     // check for override
     u8 shouldOverride = FALSE;
     u8 shouldOwn = FALSE;
@@ -407,6 +411,8 @@ void network_send_object(struct Object* o) {
 }
 
 void network_send_object_reliability(struct Object* o, bool reliable) {
+    // prevent sending objects during credits sequence
+    if (gCurrActStarNum == 99) { return; }
     // sanity check SyncObject
     if (!network_sync_object_initialized(o)) { return; }
     u8 syncId = o->oSyncID;
@@ -453,6 +459,9 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 }
 
 void network_receive_object(struct Packet* p) {
+    // prevent receiving objects during credits sequence
+    if (gCurrActStarNum == 99) { return; }
+
     // read the header and sanity check the packet
     u8 fromLocalIndex = 0;
     struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
@@ -570,7 +579,8 @@ void network_update_objects(void) {
         if (timeSinceUpdate < updateRate) { continue; }
 
         // update!
-        if (network_player_any_connected()) {
+        bool inCredits = (gCurrActStarNum == 99);
+        if (network_player_any_connected() && !inCredits) {
             network_send_object(gSyncObjects[i].o);
         }
     }

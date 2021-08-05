@@ -17,7 +17,8 @@ static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 act
     // find a NetworkPlayer at that area
     struct NetworkPlayer* npLevelAreaMatch = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex);
 
-    if (npLevelAreaMatch == NULL) {
+    bool inCredits = (np->currActNum == 99);
+    if (npLevelAreaMatch == NULL || inCredits) {
         // no NetworkPlayer in the level
         network_send_sync_valid(np);
         network_send_level_area_inform(np);
