@@ -185,6 +185,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
 
 void network_send_player(u8 localIndex) {
     if (gMarioStates[localIndex].marioObj == NULL) { return; }
+    if (gDjuiInMainMenu) { return; }
 
     struct PacketPlayerData data = { 0 };
     read_packet_data(&data, &gMarioStates[localIndex]);
@@ -201,6 +202,9 @@ void network_receive_player(struct Packet* p) {
     packet_read(p, &globalIndex, sizeof(u8));
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
+
+    // prevent receiving a packet about our player
+    if (gNetworkPlayerLocal && globalIndex == gNetworkPlayerLocal->globalIndex) { return; }
 
     struct MarioState* m = &gMarioStates[np->localIndex];
     if (m == NULL || m->marioObj == NULL) { return; }
