@@ -48,7 +48,7 @@ ALIGNED8 static const u8 mario_texture_yellow_button[] = {
 
 // 0x04001890
 ALIGNED8 static const u8 mario_texture_m_logo[] = {
-#include "actors/mario/mario_logo.rgba16.inc.c"
+#include "actors/mario/custom_mario_logo.rgba16.inc.c"
 };
 
 // 0x04002090

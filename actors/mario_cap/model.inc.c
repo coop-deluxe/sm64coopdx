@@ -25,7 +25,7 @@ ALIGNED8 static const u8 mario_cap_seg3_texture_0301CF50[] = {
 
 // 0x0301DF50
 ALIGNED8 static const u8 mario_cap_seg3_texture_0301DF50[] = {
-#include "actors/mario_cap/mario_cap_logo.rgba16.inc.c"
+#include "actors/mario_cap/custom_mario_cap_logo.rgba16.inc.c"
 };
 
 // 0x0301E750
