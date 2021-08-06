@@ -111,8 +111,42 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
     return smallest;
 }
 
+static void network_player_update_level_popup(void) {
+    static s16 sCachedCourseNum = 0;
+    static s16 sCachedActStarNum = 0;
+    static s16 sCachedLevelNum = 0;
+
+    bool allowPopup = (sCachedCourseNum == gCurrCourseNum)
+                   && (sCachedActStarNum == gCurrActStarNum)
+                   && (sCachedLevelNum == gCurrLevelNum)
+                   && (gCurrActStarNum != 99)                          // suppress popup for credits sequence
+                   && (gCurrCourseNum == 0 || gCurrActStarNum != 0);   // suppress popup for star selection
+
+    sCachedCourseNum  = gCurrCourseNum;
+    sCachedActStarNum = gCurrActStarNum;
+    sCachedLevelNum   =  gCurrLevelNum;
+
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+        bool localLevelMatch = (np->currCourseNum == gCurrCourseNum && np->currActNum == gCurrActStarNum && np->currLevelNum == gCurrLevelNum);
+        if (np->localLevelMatch != localLevelMatch) {
+            np->localLevelMatch = localLevelMatch;
+
+            if (!allowPopup) { continue; }
+            u8* rgb = get_player_color(np->paletteIndex, 0);
+            char popupMsg[128] = { 0 };
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ %s this level.", rgb[0], rgb[1], rgb[2], np->name, localLevelMatch ? "entered" : "left");
+            djui_popup_create(popupMsg, 1);
+        }
+    }
+}
+
 void network_player_update(void) {
     if (!network_player_any_connected()) { return; }
+
+    network_player_update_level_popup();
+
 //#ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER) {
         for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -197,6 +231,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
             np->lastSent = clock_elapsed();
             np->modelIndex = modelIndex;
             np->paletteIndex = paletteIndex;
+            np->localLevelMatch = (np->currCourseNum == gCurrCourseNum && np->currActNum == gCurrActStarNum && np->currLevelNum == gCurrLevelNum);
             snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
             network_player_update_model(i);
             if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
@@ -227,6 +262,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->lastSent = clock_elapsed();
         np->modelIndex = modelIndex;
         np->paletteIndex = paletteIndex;
+        np->localLevelMatch = (np->currCourseNum == gCurrCourseNum && np->currActNum == gCurrActStarNum && np->currLevelNum == gCurrLevelNum);
         snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
         network_player_update_model(i);
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
