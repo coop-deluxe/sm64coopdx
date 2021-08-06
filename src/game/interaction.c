@@ -391,6 +391,8 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
 
         u8 capModel = m->character->capModelId;
         capObject = spawn_object(m->marioObj, capModel, bhvNormalCap);
+        capObject->globalPlayerIndex = gNetworkPlayers[m->playerIndex].globalIndex;
+        capObject->oBehParams = m->playerIndex + 1;
 
         capObject->oPosY += (m->action & ACT_FLAG_SHORT_HITBOX) ? 120.0f : 180.0f;
         capObject->oForwardVel = capSpeed;

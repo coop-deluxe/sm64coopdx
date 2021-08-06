@@ -19,6 +19,7 @@ struct SpawnObjectData {
     u16 behaviorId;
     s16 activeFlags;
     s32 rawData[80];
+    u8 globalPlayerIndex;
 };
 
 static u8 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize) {
@@ -70,6 +71,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &o->header.gfx.scale[0], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
+        packet_write(&p, &o->globalPlayerIndex, sizeof(u8));
     }
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
@@ -101,6 +103,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &scale[0], sizeof(f32));
         packet_read(p, &scale[1], sizeof(f32));
         packet_read(p, &scale[2], sizeof(f32));
+        packet_read(p, &data.globalPlayerIndex, sizeof(u8));
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u8)-1) {
@@ -127,6 +130,7 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
         struct Object* o = spawn_object(parentObj, data.model, behavior);
+        o->globalPlayerIndex = data.globalPlayerIndex;
         o->createdThroughNetwork = true;
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);
 

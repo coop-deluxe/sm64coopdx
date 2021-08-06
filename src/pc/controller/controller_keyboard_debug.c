@@ -19,7 +19,6 @@ static u8 warpToArea = 29;
 // warpToArea: 27 = upstairs
 // warpToArea: 29 = courtyard
 
-
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
 #define SCANCODE_2 0x03

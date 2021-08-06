@@ -605,6 +605,8 @@ void hat_ukiki_held_loop(void) {
             if (mario_lose_cap_to_enemy(heldByMario, 2)) {
                 o->oUkikiTextState = UKIKI_TEXT_STEAL_HAT;
                 o->oUkikiHasHat |= UKIKI_HAT_ON;
+                o->globalPlayerIndex = gNetworkPlayers[heldByMario->playerIndex].globalIndex;
+                network_send_object(o);
             } else {}
             break;
 
@@ -612,6 +614,7 @@ void hat_ukiki_held_loop(void) {
             if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 2, DIALOG_100, 0, hat_ukiki_held_loop_1)) {
                 o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                 o->oUkikiTextState = UKIKI_TEXT_STOLE_HAT;
+                network_send_object(o);
             }
             break;
 
@@ -624,6 +627,7 @@ void hat_ukiki_held_loop(void) {
                 set_mario_npc_dialog(heldByMario, 0, NULL);
                 o->oUkikiHasHat &= ~UKIKI_HAT_ON;
                 o->oUkikiTextState = UKIKI_TEXT_GAVE_HAT_BACK;
+                network_send_object(o);
             }
             break;
 
@@ -651,6 +655,7 @@ void bhv_ukiki_init(void) {
     network_init_object_field(o, &o->oUkikiChaseFleeRange);
     network_init_object_field(o, &o->oUkikiCageSpinTimer);
     network_init_object_field(o, &o->oIntangibleTimer);
+    network_init_object_field(o, &o->globalPlayerIndex);
 }
 
 /**

@@ -222,6 +222,7 @@ struct Object
     /*0x25C*/ void *respawnInfo;
     /*?????*/ u8 createdThroughNetwork;
     /*?????*/ u32 areaTimer;
+    /*?????*/ u8 globalPlayerIndex;
 };
 
 struct ObjectHitbox

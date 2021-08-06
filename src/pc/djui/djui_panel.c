@@ -115,6 +115,7 @@ void djui_panel_update(void) {
             djui_base_set_visible(parentBase, false);
         }
         djui_base_set_enabled(activeBase, true);
+        activeBase->y.value = 0;
         djui_cursor_input_controlled_center(sPanelList->defaultElementBase);
 
         if (removingBase != NULL) {

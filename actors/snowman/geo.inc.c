@@ -28,6 +28,7 @@ const GeoLayout mr_blizzard_hidden_geo[] = {
                GEO_OPEN_NODE(),
                   GEO_SCALE(0x00, 65536),
                   GEO_OPEN_NODE(),
+                     GEO_ASM(0, geo_mario_set_player_colors),
                      GEO_TRANSLATE_ROTATE_WITH_DL(LAYER_OPAQUE, 490, 14, 43, 305, 0, 248, mario_cap_seg3_dl_03022F48),
                   GEO_CLOSE_NODE(),
                GEO_CLOSE_NODE(),

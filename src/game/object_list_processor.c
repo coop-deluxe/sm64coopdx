@@ -266,6 +266,7 @@ void bhv_mario_update(void) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].marioObj == NULL) { continue; }
         gMarioStates[i].marioObj->oBehParams = i + 1;
+        gMarioStates[i].marioObj->globalPlayerIndex = gNetworkPlayers[i].globalIndex;
     }
 
     // set mario state to the current player

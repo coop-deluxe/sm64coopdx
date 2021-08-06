@@ -122,6 +122,7 @@ void bhv_klepto_init(void) {
     network_init_object_field(o, &o->oHomeZ);
     network_init_object_field(o, &o->oMoveAnglePitch);
     network_init_object_field(o, &o->oGravity);
+    network_init_object_field(o, &o->globalPlayerIndex);
 }
 
 static void klepto_change_target(void) {
@@ -290,8 +291,9 @@ static void klepto_act_dive_at_mario(void) {
             if (marioState->action != ACT_SLEEPING
                 && !(marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))
                 && distanceToPlayer < 200.0f && dy > 50.0f && dy < 90.0f) {
-                if (network_owns_object(o) && mario_lose_cap_to_enemy(marioState, 1)) {
+                if (network_owns_object(o) && mario_lose_cap_to_enemy(marioState, 1) && marioState->playerIndex == 0) {
                     o->oAnimState = marioState->character->capKleptoAnimState;
+                    o->globalPlayerIndex = gNetworkPlayers[marioState->playerIndex].globalIndex;
                     network_send_object(o);
                 }
             }
@@ -427,6 +429,7 @@ void bhv_klepto_update(void) {
                 save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
 
                 struct Object* cap = spawn_object(o, capModel, bhvNormalCap);
+                cap->globalPlayerIndex = o->globalPlayerIndex;
 
                 struct Object* spawn_objects[] = { cap };
                 u32 models[] = { capModel };

@@ -397,7 +397,9 @@ static u8 geo_get_processing_object_index(void) {
         }
     }
     if (gCurGraphNodeProcessingObject == NULL) { return 0; }
-    u8 index = gCurGraphNodeProcessingObject->oBehParams - 1;
+
+    struct NetworkPlayer* np = network_player_from_global_index(gCurGraphNodeProcessingObject->globalPlayerIndex);
+    u8 index = (np == NULL) ? 0 : np->localIndex;
     return (index >= MAX_PLAYERS) ? 0 : index;
 }
 
