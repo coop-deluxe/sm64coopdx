@@ -266,10 +266,10 @@ static void gfx_sdl_shutdown(void) {
         SDL_Quit();
 }
 
-static void gfx_sdl_start_text_input(void) { SDL_StartTextInput(); }
-static void gfx_sdl_stop_text_input(void) { SDL_StopTextInput(); }
-static char* gfx_sdl_get_clipboard_text(void) { return SDL_GetClipboardText(); }
-static void gfx_sdl_set_clipboard_text(char* text) { SDL_SetClipboardText(text); }
+static void gfx_sdl_start_text_input(void) { return; }
+static void gfx_sdl_stop_text_input(void) { return; }
+static char* gfx_sdl_get_clipboard_text(void) { return NULL; }
+static void gfx_sdl_set_clipboard_text(char* text) { return; }
 static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
 
 struct GfxWindowManagerAPI gfx_sdl = {
