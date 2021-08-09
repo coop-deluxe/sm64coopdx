@@ -1,9 +1,9 @@
 #include "user.h"
-#include "pc/debuglog.h"
 #include "pc/configfile.h"
+#include "pc/logfile.h"
 
 static void on_current_user_update(UNUSED void* data) {
-    LOG_INFO("> on_current_user_update");
+    LOGFILE_INFO(LFT_DISCORD, "> on_current_user_update");
     struct DiscordUser user;
     app.users->get_current_user(app.users, &user);
     app.userId = user.id;
@@ -23,7 +23,7 @@ static void on_current_user_update(UNUSED void* data) {
 }
 
 struct IDiscordUserEvents* discord_user_initialize(void) {
-    LOG_INFO("> discord_user_intitialize");
+    LOGFILE_INFO(LFT_DISCORD, "> discord_user_intitialize");
     static struct IDiscordUserEvents events = { 0 };
     events.on_current_user_update = on_current_user_update;
     return &events;

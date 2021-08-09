@@ -1834,8 +1834,8 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
     dumped = TRUE;
 
     // open the log
-    FILE* f = NULL;
-    if (!logfile_open(&f)) { return TRUE; }
+    FILE* f = logfile_open(LFT_HANG);
+    if (f == NULL) { return TRUE; }
 
     // complain to console
     printf("#######################################\n");
@@ -1850,7 +1850,7 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
     }
     fprintf(f, "(gMarioState->action: hang prevention end)\n");
 
-    logfile_close();
+    logfile_close(LFT_HANG);
 
     // force the crash in debug mode
 #ifdef DEBUG

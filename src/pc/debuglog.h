@@ -1,3 +1,6 @@
+#ifndef DEBUGLOG_H
+#define DEBUGLOG_H
+
 #include <stdio.h>
 #include <time.h>
 #include "pc/network/network.h"
@@ -42,4 +45,6 @@ static void _debuglog_print_log(char* logType, char* filename) {
 #else
     #define LOG_INFO(...)
     #define LOG_ERROR(...)
+#endif
+
 #endif
