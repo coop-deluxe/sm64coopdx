@@ -5,6 +5,7 @@
 #include "make_const_nonconst.h"
 
 #include "common1.h"
+#include "custom0.h"
 #include "group6.h"
 
 #include "monty_mole/geo.inc.c"

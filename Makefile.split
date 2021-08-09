@@ -29,7 +29,9 @@ ACTOR_GROUPS := \
     group16 \
     group17 \
     common0 \
-    common1
+    common1 \
+    custom0 \
+    zcustom0
 
 LEVEL_FILES := $(addsuffix leveldata,$(LEVEL_DIRS))
 MIO0_FILES := $(addprefix $(MIO0_DIR)/,$(addsuffix .mio0,$(SEGMENTS))) $(addprefix $(BUILD_DIR)/actors/,$(addsuffix .mio0,$(ACTOR_GROUPS))) $(addprefix $(BUILD_DIR)/levels/,$(addsuffix .mio0,$(LEVEL_FILES)))
@@ -66,10 +68,11 @@ BOWSER_DIRS      := bowser_flame impact_ring yellow_sphere bowser bomb impact_sm
 MARIO_DIRS       := mario bubble walk_smoke burn_smoke stomp_smoke water_wave sparkle water_splash white_particle_small sparkle_animation
 
 # Add Luigi
-COINS_DIRS += luigi_cap
-MARIO_DIRS += luigi
+CUSTOM_DIRS := luigi_cap
+ZCUSTOM_DIRS := luigi
 
 # Actor Files
+CUSTOM_FILES                := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 AMP_CHUCKYA_FILES            := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(AMP_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 BOBOMBS_BUBBLE_FILES         := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(KING_BOBOMB_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 BOO_BOOKEND_FILES            := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(BOO_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
@@ -90,6 +93,7 @@ PEACH_TOADSTOOL_FILES        := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(PEACH_
 SEA_CREATURES_FILES          := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(SEA_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 SKEETER_FISH_FILES           := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(SKEETER_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 SPINDRIFT_PENGUIN_FILES      := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(SPINDRIFT_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
+ZCUSTOM_FILES                := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(ZCUSTOM_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 
 # Actor dependencies
 $(BUILD_DIR)/actors/group0.o: $(addprefix $(BUILD_DIR)/,$(MARIO_WATER_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(MARIO_DIRS)),$(wildcard $(dir)/*.c))
@@ -112,6 +116,8 @@ $(BUILD_DIR)/actors/group16.o: $(addprefix $(BUILD_DIR)/,$(CHILLYCHIEF_FILES)) $
 $(BUILD_DIR)/actors/group17.o: $(addprefix $(BUILD_DIR)/,$(MR_I_SWOOP_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(MR_I_DIRS)),$(wildcard $(dir)/*.c))
 $(BUILD_DIR)/actors/common0.o: $(addprefix $(BUILD_DIR)/,$(AMP_CHUCKYA_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(AMP_DIRS)),$(wildcard $(dir)/*.c))
 $(BUILD_DIR)/actors/common1.o: $(addprefix $(BUILD_DIR)/,$(COINS_PIPE_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(COINS_DIRS)),$(wildcard $(dir)/*.c))
+$(BUILD_DIR)/actors/custom0.o: $(addprefix $(BUILD_DIR)/,$(CUSTOM_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(wildcard $(dir)/*.c))
+$(BUILD_DIR)/actors/zcustom0.o: $(addprefix $(BUILD_DIR)/,$(ZCUSTOM_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(ZCUSTOM_DIRS)),$(wildcard $(dir)/*.c))
 
 # Actor Elf Files
 $(BUILD_DIR)/actors/group0.elf: SEGMENT_ADDRESS := 0x04000000
@@ -134,6 +140,8 @@ $(BUILD_DIR)/actors/group16.elf: SEGMENT_ADDRESS := 0x06000000
 $(BUILD_DIR)/actors/group17.elf: SEGMENT_ADDRESS := 0x06000000
 $(BUILD_DIR)/actors/common0.elf: SEGMENT_ADDRESS := 0x08000000
 $(BUILD_DIR)/actors/common1.elf: SEGMENT_ADDRESS := 0x03000000
+$(BUILD_DIR)/actors/custom0.elf: SEGMENT_ADDRESS := 0x04000000
+$(BUILD_DIR)/actors/zcustom0.elf: SEGMENT_ADDRESS := 0x04000000
 
 # --------------------------------------
 # Level Rules

@@ -10,6 +10,7 @@
 
 #include "actors/common0.h"
 #include "actors/common1.h"
+#include "actors/custom0.h"
 #include "actors/group0.h"
 #include "actors/group1.h"
 #include "actors/group2.h"
@@ -28,6 +29,7 @@
 #include "actors/group15.h"
 #include "actors/group16.h"
 #include "actors/group17.h"
+#include "actors/zcustom0.h"
 
 #include "levels/menu/header.h"
 #include "levels/intro/header.h"

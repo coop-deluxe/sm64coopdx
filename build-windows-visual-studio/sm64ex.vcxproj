@@ -314,6 +314,8 @@
     <ClCompile Include="..\actors\common0_geo.c" />
     <ClCompile Include="..\actors\common1.c" />
     <ClCompile Include="..\actors\common1_geo.c" />
+    <ClCompile Include="..\actors\custom0.c" />
+    <ClCompile Include="..\actors\custom0_geo.c" />
     <ClCompile Include="..\actors\cyan_fish\anims\anim_0600E24C.inc.c" />
     <ClCompile Include="..\actors\cyan_fish\anims\data.inc.c" />
     <ClCompile Include="..\actors\cyan_fish\anims\table.inc.c" />
@@ -785,6 +787,8 @@
     <ClCompile Include="..\actors\yoshi\model.inc.c" />
     <ClCompile Include="..\actors\yoshi_egg\geo.inc.c" />
     <ClCompile Include="..\actors\yoshi_egg\model.inc.c" />
+    <ClCompile Include="..\actors\zcustom0.c" />
+    <ClCompile Include="..\actors\zcustom0_geo.c" />
     <ClCompile Include="..\assets\anims\anim_00.inc.c" />
     <ClCompile Include="..\assets\anims\anim_01_02.inc.c" />
     <ClCompile Include="..\assets\anims\anim_03.inc.c" />
@@ -4383,6 +4387,8 @@
     <ClCompile Include="..\tools\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\actors\custom0.h" />
+    <ClInclude Include="..\actors\zcustom0.h" />
     <ClInclude Include="..\include\behavior_table.h" />
     <ClInclude Include="..\include\luigi_audio_defines.h" />
     <ClInclude Include="..\src\game\characters.h" />

@@ -263,9 +263,6 @@ extern const Gfx mario_cap_wings_transparent[];
 extern const Gfx mario_metal_cap_wings[];
 extern const Gfx mario_metal_cap_wings_transparent[];
 
-// luigi
-#include "actors/luigi/geo_header.h"
-
 // sparkle
 extern const GeoLayout sparkles_geo[];
 extern const Gfx sparkles_seg4_dl_0402A490[];

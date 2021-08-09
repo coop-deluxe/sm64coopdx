@@ -17,7 +17,6 @@
 #include "blue_fish/geo.inc.c"
 #include "leaves/geo.inc.c"
 #include "mario_cap/geo.inc.c"
-#include "luigi_cap/geo.inc.c" // custom luigi_cap
 #include "number/geo.inc.c"
 #include "mushroom_1up/geo.inc.c"
 #include "star/geo.inc.c"

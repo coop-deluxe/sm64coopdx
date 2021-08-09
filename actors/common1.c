@@ -54,9 +54,6 @@ UNUSED static const u64 binid_11 = 11;
 #include "mario_cap/model.inc.c"
 UNUSED static const u64 binid_12 = 12;
 
-// luigi_cap
-#include "luigi_cap/model.inc.c"
-
 #include "power_meter/model.inc.c"
 UNUSED static const u64 binid_13 = 13;
 
