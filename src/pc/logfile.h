@@ -52,7 +52,15 @@ static void _logfile_print_log(enum LogFileType logFileType, char* logType, char
     _logfile_print_short_filename(logFileType, filename, fileLine);
 }
 
-#define LOGFILE_INFO(_LFT,  ...) ( _logfile_print_log(_LFT, "INFO ", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
-#define LOGFILE_ERROR(_LFT, ...) ( _logfile_print_log(_LFT, "ERROR", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
+#if defined(DEBUG) && defined(DISABLE_MODULE_LOG)
+    #define LOGFILE_INFO(_LFT,  ...) ( _logfile_print_log(_LFT, "INFO ", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
+    #define LOGFILE_ERROR(_LFT, ...) ( _logfile_print_log(_LFT, "ERROR", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"), LOG_ERROR(__VA_ARGS__))
+#elif defined(DEBUG) && !defined(DISABLE_MODULE_LOG)
+    #define LOGFILE_INFO(_LFT,  ...) ( _logfile_print_log(_LFT, "INFO ", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"), LOG_INFO (__VA_ARGS__))
+    #define LOGFILE_ERROR(_LFT, ...) ( _logfile_print_log(_LFT, "ERROR", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"), LOG_ERROR(__VA_ARGS__))
+#else
+    #define LOGFILE_INFO(_LFT,  ...) ( _logfile_print_log(_LFT, "INFO ", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
+    #define LOGFILE_ERROR(_LFT, ...) ( _logfile_print_log(_LFT, "ERROR", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
+#endif
 
 #endif
