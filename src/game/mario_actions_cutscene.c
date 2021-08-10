@@ -1833,10 +1833,13 @@ static void intro_cutscene_peach_lakitu_scene(struct MarioState *m) {
 static void intro_cutscene_raise_pipe(struct MarioState* m) {
     u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
     if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
-    sIntroWarpPipeObj[globalIndex]->oPosY = camera_approach_f32_symmetric(sIntroWarpPipeObj[globalIndex]->oPosY, 260.0f, 10.0f);
 
-    if (m->actionTimer == 0) {
-        play_sound(SOUND_MENU_EXIT_PIPE, sIntroWarpPipeObj[globalIndex]->header.gfx.cameraToObject);
+    if (sIntroWarpPipeObj[globalIndex] != NULL) {
+        sIntroWarpPipeObj[globalIndex]->oPosY = camera_approach_f32_symmetric(sIntroWarpPipeObj[globalIndex]->oPosY, 260.0f, 10.0f);
+
+        if (m->actionTimer == 0) {
+            play_sound(SOUND_MENU_EXIT_PIPE, sIntroWarpPipeObj[globalIndex]->header.gfx.cameraToObject);
+        }
     }
 
     if (m->actionTimer++ == TIMER_RAISE_PIPE) {
@@ -1868,9 +1871,11 @@ static void intro_cutscene_jump_out_of_pipe(struct MarioState *m) {
     if (m->actionTimer <= 1) {
         u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
         if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
-        m->pos[0] = sIntroWarpPipeObj[globalIndex]->oPosX;
-        m->pos[1] = sIntroWarpPipeObj[globalIndex]->oPosY;
-        m->pos[2] = sIntroWarpPipeObj[globalIndex]->oPosZ;
+        if (sIntroWarpPipeObj[globalIndex] != NULL) {
+            m->pos[0] = sIntroWarpPipeObj[globalIndex]->oPosX;
+            m->pos[1] = sIntroWarpPipeObj[globalIndex]->oPosY;
+            m->pos[2] = sIntroWarpPipeObj[globalIndex]->oPosZ;
+        }
     }
 
     if (m->actionTimer == 25) {
@@ -1918,13 +1923,19 @@ static void intro_cutscene_lower_pipe(struct MarioState *m) {
     u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
     if (globalIndex == UNKNOWN_GLOBAL_INDEX) { globalIndex = 0; }
     if (m->actionTimer++ == 0) {
-        play_sound(SOUND_MENU_ENTER_PIPE, sIntroWarpPipeObj[globalIndex]->header.gfx.cameraToObject);
+        if (sIntroWarpPipeObj[globalIndex] != NULL) {
+            play_sound(SOUND_MENU_ENTER_PIPE, sIntroWarpPipeObj[globalIndex]->header.gfx.cameraToObject);
+        }
         set_mario_animation(m, MARIO_ANIM_FIRST_PERSON);
     }
 
-    sIntroWarpPipeObj[globalIndex]->oPosY -= 5.0f;
-    if (sIntroWarpPipeObj[globalIndex]->oPosY <= 50.0f) {
-        obj_mark_for_deletion(sIntroWarpPipeObj[globalIndex]);
+    if (sIntroWarpPipeObj[globalIndex] != NULL) {
+        sIntroWarpPipeObj[globalIndex]->oPosY -= 5.0f;
+        if (sIntroWarpPipeObj[globalIndex]->oPosY <= 50.0f) {
+            obj_mark_for_deletion(sIntroWarpPipeObj[globalIndex]);
+            advance_cutscene_step(m);
+        }
+    } else {
         advance_cutscene_step(m);
     }
 
