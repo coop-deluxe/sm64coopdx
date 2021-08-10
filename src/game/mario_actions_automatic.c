@@ -415,8 +415,7 @@ s32 act_start_hanging(struct MarioState *m) {
         return set_mario_action(m, ACT_GROUND_POUND, 0);
     }
 
-    //! Crash if Mario's referenced ceiling is NULL (same for other hanging actions)
-    if (m->ceil->type != SURFACE_HANGABLE) {
+    if (m->ceil == NULL || m->ceil->type != SURFACE_HANGABLE) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
@@ -444,7 +443,7 @@ s32 act_hanging(struct MarioState *m) {
         return set_mario_action(m, ACT_GROUND_POUND, 0);
     }
 
-    if (m->ceil->type != SURFACE_HANGABLE) {
+    if (m->ceil == NULL || m->ceil->type != SURFACE_HANGABLE) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
@@ -468,7 +467,7 @@ s32 act_hang_moving(struct MarioState *m) {
         return set_mario_action(m, ACT_GROUND_POUND, 0);
     }
 
-    if (m->ceil->type != SURFACE_HANGABLE) {
+    if (m->ceil == NULL || m->ceil->type != SURFACE_HANGABLE) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
