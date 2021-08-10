@@ -819,8 +819,15 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
         gSPLight(gfx + 2, &gPlayerColors[colorIndex].shirt.l, 5);
         gSPLight(gfx + 3, &gPlayerColors[colorIndex].shirt.a, 6);
         gSPEndDisplayList(gfx + 4);
-        // put on transparent layer if vanish effect, opaque otherwise
-        const u32 layer = ((bodyState->modelState >> 8) & 1) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
+        u32 layer = LAYER_OPAQUE;
+        if (asGenerated->parameter == 1) {
+            layer = LAYER_OPAQUE;
+        } else if (asGenerated->parameter == 2) {
+            layer = LAYER_TRANSPARENT;
+        } else {
+            // put on transparent layer if vanish effect, opaque otherwise
+            layer = ((bodyState->modelState >> 8) & 1) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
+        }
         asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (layer << 8);
     }
     return gfx;
