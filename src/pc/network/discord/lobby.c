@@ -2,12 +2,38 @@
 #include "activity.h"
 #include "discord_network.h"
 #include "pc/logfile.h"
+#include "pc/utils/misc.h"
+
+#define MAX_LOBBY_RETRY 5
+#define MAX_LOBBY_RETRY_WAIT_TIME 6
 
 static bool isHosting = false;
 DiscordLobbyId gCurLobbyId = 0;
 
+bool gLobbyCreateRetry = false;
+u8 gLobbyCreateAttempts = 0;
+f32 gLobbyCreateAttemptElapsed = 0;
+
+void discord_lobby_update(void) {
+    if (gCurLobbyId != 0) { return; }
+    if (!gLobbyCreateRetry) { return; }
+    f32 timeUntilRetry = (clock_elapsed() - gLobbyCreateAttemptElapsed);
+    if (timeUntilRetry < MAX_LOBBY_RETRY_WAIT_TIME) { return; }
+    gLobbyCreateRetry = false;
+    discord_lobby_create();
+}
+
 static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordLobby* lobby) {
     LOGFILE_INFO(LFT_DISCORD, "> on_lobby_create returned %d", (int)result);
+
+    if (result != DiscordResult_Ok && gLobbyCreateAttempts < MAX_LOBBY_RETRY) {
+        LOGFILE_INFO(LFT_DISCORD, "rescheduling lobby creation");
+        gLobbyCreateRetry = true;
+        gLobbyCreateAttempts++;
+        gLobbyCreateAttemptElapsed = clock_elapsed();
+        return;
+    }
+
     DISCORD_REQUIRE(result);
     LOGFILE_INFO(LFT_DISCORD, "Lobby id: %lld", lobby->id);
     LOGFILE_INFO(LFT_DISCORD, "Lobby type: %u", lobby->type);

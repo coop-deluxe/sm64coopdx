@@ -131,6 +131,7 @@ static void register_launch_command(void) {
 
 static void ns_discord_update(void) {
     if (!gDiscordInitialized) { return; }
+    discord_lobby_update();
     DISCORD_REQUIRE(app.core->run_callbacks(app.core));
     discord_network_flush();
 }
@@ -154,6 +155,11 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
         params.user_events = discord_user_initialize();
         params.activity_events = discord_activity_initialize();
         params.lobby_events = discord_lobby_initialize();
+
+        gCurLobbyId = 0;
+        gLobbyCreateRetry = false;
+        gLobbyCreateAttempts = 0;
+        gLobbyCreateAttemptElapsed = 0;
 
         int rc = DiscordCreate(DISCORD_VERSION, &params, &app.core);
         if (app.core != NULL) {
