@@ -266,7 +266,15 @@ void network_update(void) {
             network_on_loaded_area();
         }
     }
+
+    // update network area timer
+    u32 desiredNAT = gNetworkAreaTimer + 1;
     gNetworkAreaTimer = (clock_elapsed_ticks() - gNetworkAreaTimerClock);
+    if (gNetworkAreaTimer < desiredNAT) {
+        gNetworkAreaTimer++;
+    } else if (gNetworkAreaTimer > desiredNAT) {
+        gNetworkAreaTimer--;
+    }
 
     // send out update packets
     if (gNetworkType != NT_NONE) {

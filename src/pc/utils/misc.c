@@ -56,14 +56,14 @@ static u64 clock_elapsed_ns(void) {
     if (!sClockInitialized) {
         struct timespec clock_start;
         _clock_gettime(&clock_start);
-        clock_start_ns = ((u64)clock_start.tv_sec) * 1000000000 + clock_start.tv_nsec;
+        clock_start_ns = ((u64)clock_start.tv_sec) * 1000000000 + ((u64)clock_start.tv_nsec);
         sClockInitialized = true;
     }
 
     struct timespec clock_current;
     _clock_gettime(&clock_current);
 
-    u64 clock_current_ns = ((u64)clock_current.tv_sec) * 1000000000 + clock_current.tv_nsec;
+    u64 clock_current_ns = ((u64)clock_current.tv_sec) * 1000000000 + ((u64)clock_current.tv_nsec);
     return (clock_current_ns - clock_start_ns);
 }
 
