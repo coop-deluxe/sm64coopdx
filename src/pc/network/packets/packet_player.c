@@ -186,6 +186,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
 void network_send_player(u8 localIndex) {
     if (gMarioStates[localIndex].marioObj == NULL) { return; }
     if (gDjuiInMainMenu) { return; }
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
 
     struct PacketPlayerData data = { 0 };
     read_packet_data(&data, &gMarioStates[localIndex]);

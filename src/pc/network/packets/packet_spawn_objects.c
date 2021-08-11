@@ -48,6 +48,7 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 }
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
     assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
     // prevent sending spawn objects during credits
     if (gCurrActStarNum == 99) { return; }

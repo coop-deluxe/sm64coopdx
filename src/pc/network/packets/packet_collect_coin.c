@@ -45,6 +45,7 @@ static struct Object* find_nearest_coin(const BehaviorScript *behavior, f32* pos
 }
 
 void network_send_collect_coin(struct Object* o) {
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
     u16 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;

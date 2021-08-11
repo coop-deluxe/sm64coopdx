@@ -411,6 +411,7 @@ void network_send_object(struct Object* o) {
 }
 
 void network_send_object_reliability(struct Object* o, bool reliable) {
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
     // prevent sending objects during credits sequence
     if (gCurrActStarNum == 99) { return; }
     // sanity check SyncObject
