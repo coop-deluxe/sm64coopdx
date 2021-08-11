@@ -103,6 +103,7 @@ void packet_set_ordered_data(struct Packet* packet);
 
 // packet_reliable.c
 void network_forget_all_reliable(void);
+void network_forget_all_reliable_from(u8 localIndex);
 void network_send_ack(struct Packet* p);
 void network_receive_ack(struct Packet* p);
 void network_remember_reliable(struct Packet* p);

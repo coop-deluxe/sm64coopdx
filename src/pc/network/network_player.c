@@ -313,6 +313,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         np->currLevelSyncValid = false;
         np->currAreaSyncValid  = false;
         gNetworkSystem->clear_id(i);
+        network_forget_all_reliable_from(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
         

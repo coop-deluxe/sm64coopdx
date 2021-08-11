@@ -38,6 +38,18 @@ void network_forget_all_reliable(void) {
     while (head != NULL) { remove_node_from_list(head); }
 }
 
+void network_forget_all_reliable_from(u8 localIndex) {
+    if (localIndex == 0) { return; }
+    struct PacketLinkedList* node = head;
+    while (node != NULL) {
+        struct PacketLinkedList* next = node->next;
+        if (node->p.localIndex == localIndex) {
+            remove_node_from_list(node);
+        }
+        node = next;
+    }
+}
+
 void network_send_ack(struct Packet* p) {
     // grab seq num
     u16 seqId = 0;
