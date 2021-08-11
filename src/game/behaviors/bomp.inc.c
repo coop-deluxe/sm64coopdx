@@ -4,9 +4,11 @@ void bhv_small_bomp_init(void) {
     o->oFaceAngleYaw -= 0x4000;
     o->oSmallBompInitX = o->oPosX;
     o->oTimer = position_based_random_float_position() * 100.0f;
+    o->areaTimer = 0;
+    o->areaTimerLoopLength = 168;
 }
 
-static void bhv_small_bomp_loop_inner(void) {
+void bhv_small_bomp_loop(void) {
     switch (o->oAction) {
         case BOMP_ACT_WAIT:
             if (o->oTimer >= 101) {
@@ -57,16 +59,14 @@ static void bhv_small_bomp_loop_inner(void) {
     }
 }
 
-void bhv_small_bomp_loop(void) {
-    cur_obj_area_timer_loop(168, bhv_small_bomp_loop_inner);
-}
-
 void bhv_large_bomp_init(void) {
     o->oMoveAngleYaw += 0x4000;
     o->oTimer = position_based_random_float_position() * 100.0f;
+    o->areaTimer = 0;
+    o->areaTimerLoopLength = 168;
 }
 
-void bhv_large_bomp_loop_inner(void) {
+void bhv_large_bomp_loop(void) {
     switch (o->oAction) {
         case BOMP_ACT_WAIT:
             if (o->oTimer >= 101) {
@@ -115,8 +115,4 @@ void bhv_large_bomp_loop_inner(void) {
             }
             break;
     }
-}
-
-void bhv_large_bomp_loop(void) {
-    cur_obj_area_timer_loop(168, bhv_large_bomp_loop_inner);
 }

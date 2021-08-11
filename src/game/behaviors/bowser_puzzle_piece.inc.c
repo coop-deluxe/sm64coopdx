@@ -95,6 +95,8 @@ void bhv_lll_bowser_puzzle_spawn_piece(s16 model, const BehaviorScript *behavior
     puzzlePiece->oBowserPuzzlePieceActionList = actionList;
     puzzlePiece->oBowserPuzzlePieceNextAction = actionList;
     puzzlePiece->oTimer = 0;
+    puzzlePiece->areaTimer = 0;
+    puzzlePiece->areaTimerLoopLength = 650;
 }
 
 /**
@@ -257,7 +259,7 @@ void (*sBowserPuzzlePieceActions[])(void) = {
     bhv_lll_bowser_puzzle_piece_move_down
 };
 
-void bhv_lll_bowser_puzzle_piece_loop_inner(void) {
+void bhv_lll_bowser_puzzle_piece_loop(void) {
     bhv_lll_bowser_puzzle_piece_update();
 
     cur_obj_call_action_function(sBowserPuzzlePieceActions);
@@ -265,8 +267,4 @@ void bhv_lll_bowser_puzzle_piece_loop_inner(void) {
     o->oPosX = o->oBowserPuzzlePieceOffsetX + o->oHomeX;
     o->oPosY = o->oBowserPuzzlePieceOffsetY + o->oHomeY;
     o->oPosZ = o->oBowserPuzzlePieceOffsetZ + o->oHomeZ;
-}
-
-void bhv_lll_bowser_puzzle_piece_loop(void) {
-    cur_obj_area_timer_loop(650, bhv_lll_bowser_puzzle_piece_loop_inner);
 }

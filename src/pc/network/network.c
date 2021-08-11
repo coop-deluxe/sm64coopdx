@@ -257,6 +257,38 @@ void network_receive(u8 localIndex, u8* data, u16 dataLength) {
     packet_receive(&p);
 }
 
+static void network_update_area_timer(void) {
+    bool brokenClock = false;
+#ifdef DEVELOPMENT
+    static u16 skipClockCount = 0;
+    static u16 updateClockCount = 1;
+    if (updateClockCount > 0) {
+        updateClockCount--;
+        if (updateClockCount <= 0 || updateClockCount > 120) {
+            skipClockCount = rand() % 30;
+        }
+    }
+    else {
+        skipClockCount--;
+        if (skipClockCount <= 0 || skipClockCount > 60) {
+            updateClockCount = rand() % 120;
+        }
+    }
+    //brokenClock = (skipClockCount > 0);
+#endif
+    if (!brokenClock) {
+        // update network area timer
+        u32 desiredNAT = gNetworkAreaTimer + 1;
+        gNetworkAreaTimer = (clock_elapsed_ticks() - gNetworkAreaTimerClock);
+        if (gNetworkAreaTimer < desiredNAT) {
+            gNetworkAreaTimer++;
+        }
+        else if (gNetworkAreaTimer > desiredNAT) {
+            gNetworkAreaTimer--;
+        }
+    }
+}
+
 void network_update(void) {
     // check for level loaded event
     if (networkLoadingLevel < LOADING_LEVEL_THRESHOLD) {
@@ -268,13 +300,7 @@ void network_update(void) {
     }
 
     // update network area timer
-    u32 desiredNAT = gNetworkAreaTimer + 1;
-    gNetworkAreaTimer = (clock_elapsed_ticks() - gNetworkAreaTimerClock);
-    if (gNetworkAreaTimer < desiredNAT) {
-        gNetworkAreaTimer++;
-    } else if (gNetworkAreaTimer > desiredNAT) {
-        gNetworkAreaTimer--;
-    }
+    network_update_area_timer();
 
     // send out update packets
     if (gNetworkType != NT_NONE) {

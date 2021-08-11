@@ -735,7 +735,9 @@ static u16 atan2_lookup(f32 y, f32 x) {
     if (x == 0) {
         ret = gArctanTable[0];
     } else {
-        ret = gArctanTable[(s32)(y / x * 1024 + 0.5f)];
+        s32 index = (s32)(y / x * 1024 + 0.5f);
+        if (index >= 0x401) { index = 0; }
+        ret = gArctanTable[index];
     }
     return ret;
 }

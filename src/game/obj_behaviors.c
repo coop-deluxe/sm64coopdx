@@ -137,9 +137,11 @@ void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 n
                             f32 *objYawZ) {
     *objYawX = (nZ * nZ - nX * nX) * velX / (nX * nX + nZ * nZ)
                - 2 * velZ * (nX * nZ) / (nX * nX + nZ * nZ);
+    if (isnan(*objYawX)) { *objYawX = 0; }
 
     *objYawZ = (nX * nX - nZ * nZ) * velZ / (nX * nX + nZ * nZ)
                - 2 * velX * (nX * nZ) / (nX * nX + nZ * nZ);
+    if (isnan(*objYawZ)) { *objYawZ = 0; }
 }
 
 /**

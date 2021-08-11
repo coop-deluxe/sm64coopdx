@@ -59,6 +59,7 @@ void bhv_rotating_platform_loop(void);
 void bhv_wf_breakable_wall_loop(void);
 void bhv_kickable_board_loop(void);
 void bhv_tower_door_loop(void);
+void bhv_wf_rotating_wooden_platform_init(void);
 void bhv_wf_rotating_wooden_platform_loop(void);
 void bhv_koopa_shell_underwater_loop(void);
 void bhv_fading_warp_loop(void);

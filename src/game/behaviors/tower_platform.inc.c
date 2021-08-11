@@ -54,7 +54,7 @@ void bhv_wf_elevator_tower_platform_loop(void) {
     }
 }
 
-static void bhv_wf_sliding_tower_platform_loop_inner(void) {
+void bhv_wf_sliding_tower_platform_loop(void) {
     s32 sp24 = o->oPlatformUnk110 / o->oPlatformUnk10C;
     switch (o->oAction) {
         case 0:
@@ -82,13 +82,6 @@ static void bhv_wf_sliding_tower_platform_loop_inner(void) {
     }
 }
 
-void bhv_wf_sliding_tower_platform_loop(void) {
-    u32 loopTime = 1 + (o->oPlatformUnk110 / o->oPlatformUnk10C);
-    loopTime *= 2;
-    loopTime += 1;
-    cur_obj_area_timer_loop(loopTime, bhv_wf_sliding_tower_platform_loop_inner);
-}
-
 void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
     s16 yaw;
     struct Object *platform = spawn_object(o, a, bhv);
@@ -100,6 +93,12 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
     platform->oPlatformUnk110 = o->oPlatformSpawnerUnk104;
     platform->oPlatformUnk10C = o->oPlatformSpawnerUnk108;
     o->oPlatformSpawnerUnkF4++;
+
+    u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
+    loopTime *= 2;
+    loopTime += 1;
+    platform->areaTimer = 0;
+    platform->areaTimerLoopLength = loopTime;
 }
 
 void spawn_wf_platform_group(void) {

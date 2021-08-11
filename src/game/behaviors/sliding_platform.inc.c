@@ -20,9 +20,11 @@ void bhv_wf_sliding_platform_init(void) {
     }
 
     o->oTimer = position_based_random_float_position() * 100.0f;
+    o->areaTimer = 0;
+    o->areaTimerLoopLength = 152;
 }
 
-static void bhv_wf_sliding_platform_loop_inner(void) {
+void bhv_wf_sliding_platform_loop(void) {
     switch (o->oAction) {
         case WF_SLID_BRICK_PTFM_ACT_WAIT:
             if (o->oTimer >= 101) {
@@ -57,8 +59,4 @@ static void bhv_wf_sliding_platform_loop_inner(void) {
             }
             break;
     }
-}
-
-void bhv_wf_sliding_platform_loop(void) {
-    cur_obj_area_timer_loop(152, bhv_wf_sliding_platform_loop_inner);
 }

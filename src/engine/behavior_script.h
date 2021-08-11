@@ -30,6 +30,6 @@ void cur_obj_fake_update(void);
 
 u16 position_based_random_u16(void);
 f32 position_based_random_float_position(void);
-void cur_obj_area_timer_loop(u32 loopLength, void (*func)(void));
+u8 cur_obj_is_last_nat_update_per_frame(void);
 
 #endif // BEHAVIOR_SCRIPT_H

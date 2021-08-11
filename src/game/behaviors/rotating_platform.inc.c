@@ -8,7 +8,13 @@ struct WFRotatingPlatformData sWFRotatingPlatformData[] = {
     { 0, 150, wdw_seg7_collision_070186B4, 1000 }
 };
 
-static void bhv_wf_rotating_wooden_platform_loop_inner(void) {
+void bhv_wf_rotating_wooden_platform_init(void) {
+    o->areaTimer = 0;
+    o->areaTimerLoopLength = 380;
+}
+
+void bhv_wf_rotating_wooden_platform_loop(void) {
+    bool lastNATUpdate = cur_obj_is_last_nat_update_per_frame();
     if (o->oAction == 0) {
         o->oAngleVelYaw = 0;
         if (o->oTimer > 60) {
@@ -16,15 +22,14 @@ static void bhv_wf_rotating_wooden_platform_loop_inner(void) {
         }
     } else {
         o->oAngleVelYaw = 0x100;
-        if (o->oTimer > 126)
+        if (o->oTimer > 126) {
             o->oAction = 0;
-        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR2);
+        }
+        if (lastNATUpdate) {
+            cur_obj_play_sound_1(SOUND_ENV_ELEVATOR2);
+        }
     }
     cur_obj_rotate_face_angle_using_vel();
-}
-
-void bhv_wf_rotating_wooden_platform_loop(void) {
-    cur_obj_area_timer_loop(380, bhv_wf_rotating_wooden_platform_loop_inner);
 }
 
 void bhv_rotating_platform_loop(void) {
