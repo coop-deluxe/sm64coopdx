@@ -213,6 +213,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
         network_player_update_model(0);
 
+        for (int j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; }
+        np->onRxSeqId = 0;
+
         gNetworkPlayerLocal = np;
 
         if (gNetworkType == NT_SERVER) {
@@ -231,7 +234,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
             np->lastReceived = clock_elapsed();
             np->lastSent = clock_elapsed();
             np->modelIndex = modelIndex;
-            np->paletteIndex = paletteIndex;
+            //np->paletteIndex = paletteIndex; // do not set here, we already know their palette!
             np->localLevelMatch = (np->currCourseNum == gCurrCourseNum && np->currActNum == gCurrActStarNum && np->currLevelNum == gCurrLevelNum);
             snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
             network_player_update_model(i);
@@ -268,6 +271,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         network_player_update_model(i);
         if (gNetworkType == NT_SERVER || type == NPT_SERVER) { gNetworkSystem->save_id(i, 0); }
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
+        for (int j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; }
+        np->onRxSeqId = 0;
         if (type == NPT_SERVER) {
             gNetworkPlayerServer = np;
         } else {

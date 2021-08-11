@@ -115,6 +115,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
 void network_receive_join(struct Packet* p) {
     assert(gNetworkType == NT_CLIENT);
+    if (gNetworkPlayerLocal != NULL) { return; }
     LOG_INFO("received join packet");
 
     gOverrideEeprom = eeprom;
