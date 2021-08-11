@@ -116,11 +116,12 @@ static void network_player_update_level_popup(void) {
     static s16 sCachedActStarNum = 0;
     static s16 sCachedLevelNum = 0;
 
+    bool inBonusCourse = (gCurrCourseNum >= 16);
     bool allowPopup = (sCachedCourseNum == gCurrCourseNum)
                    && (sCachedActStarNum == gCurrActStarNum)
                    && (sCachedLevelNum == gCurrLevelNum)
                    && (gCurrActStarNum != 99)                          // suppress popup for credits sequence
-                   && (gCurrCourseNum == 0 || gCurrActStarNum != 0);   // suppress popup for star selection
+                   && (inBonusCourse || gCurrActStarNum != 0);   // suppress popup for star selection
 
     sCachedCourseNum  = gCurrCourseNum;
     sCachedActStarNum = gCurrActStarNum;
