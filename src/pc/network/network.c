@@ -153,13 +153,13 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     p->localIndex = localIndex;
 
-    // remember reliable packets
-    network_remember_reliable(p);
-
-    // set ordered data (MUST BE IMMEDITAELY BEFORE HASING+SENDING)
+    // set ordered data (MUST BE IMMEDITAELY BEFORE network_remember_reliable())
     if (p->orderedGroupId != 0 && !p->sent) {
         packet_set_ordered_data(p);
     }
+
+    // remember reliable packets
+    network_remember_reliable(p);
 
     // save inside packet buffer
     u32 hash = packet_hash(p);
