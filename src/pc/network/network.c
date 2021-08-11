@@ -86,8 +86,6 @@ bool network_init(enum NetworkType inNetworkType) {
         gOverrideEeprom = NULL;
 
         djui_chat_box_create();
-    } else if (gNetworkType == NT_CLIENT) {
-        network_player_connected(NPT_SERVER, 0, 0, 0, "Player");
     }
 
     LOG_INFO("initialized");

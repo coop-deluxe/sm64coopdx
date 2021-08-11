@@ -29,6 +29,7 @@ void djui_init(void) {
 
 void djui_connect_menu_open(void) {
     djui_panel_shutdown();
+    gDjuiInMainMenu = true;
     djui_panel_main_create(NULL);
     djui_panel_join_create(NULL);
     djui_panel_join_message_create(NULL);

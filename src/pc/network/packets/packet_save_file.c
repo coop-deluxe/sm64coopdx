@@ -3,6 +3,7 @@
 #include "game/save_file.h"
 
 void network_send_save_file(s32 fileIndex) {
+    if (gNetworkPlayerServer == NULL) { return; }
     assert(gNetworkType == NT_CLIENT);
     struct Packet p;
     packet_init(&p, PACKET_SAVE_FILE, true, false);
