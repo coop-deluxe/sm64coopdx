@@ -5,6 +5,7 @@
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 #include "pc/utils/misc.h"
+#include "src/game/level_update.h"
 
 #ifdef DISCORD_SDK
 static char* sWarningDiscord = "\
@@ -38,6 +39,7 @@ void djui_panel_host_message_do_host(struct DjuiBase* caller) {
     }
 #endif
     network_init(NT_SERVER);
+    fake_lvl_init_from_save_file();
     extern s16 gChangeLevel;
     gChangeLevel = 16;
 }

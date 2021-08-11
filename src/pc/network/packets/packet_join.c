@@ -7,6 +7,7 @@
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
 #include "src/game/save_file.h"
+#include "src/game/level_update.h"
 #include "src/pc/fs/fs.h"
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
@@ -208,6 +209,8 @@ void network_receive_join(struct Packet* p) {
 
     djui_panel_shutdown();
     update_all_mario_stars();
+
+    fake_lvl_init_from_save_file();
     extern s16 gChangeLevel;
     gChangeLevel = 16;
 }

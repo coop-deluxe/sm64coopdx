@@ -1443,3 +1443,19 @@ s32 lvl_exiting_credits(UNUSED s16 arg0, UNUSED s32 arg1) {
     gCurrActNum = 0;
     return 1;
 }
+
+void fake_lvl_init_from_save_file(void) {
+    sWarpDest.type = WARP_TYPE_NOT_WARPING;
+    sDelayedWarpOp = WARP_OP_NONE;
+    gShouldNotPlayCastleMusic = !save_file_exists(gCurrSaveFileNum - 1) && gServerSettings.skipIntro;
+    if (gNetworkType == NT_NONE) { gShouldNotPlayCastleMusic = true; }
+
+    gCurrCreditsEntry = NULL;
+    gSpecialTripleJump = 0;
+
+    init_mario_from_save_file();
+    disable_warp_checkpoint();
+    save_file_move_cap_to_default_location();
+    select_mario_cam_mode();
+    set_yoshi_as_not_dead();
+}
