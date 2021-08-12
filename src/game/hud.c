@@ -17,6 +17,8 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 
+extern bool gDjuiInMainMenu;
+
 /* @file hud.c
  * This file implements HUD rendering and power meter animations.
  * That includes stars, lives, coins, camera status, power meter, timer
@@ -494,28 +496,28 @@ void render_hud(void) {
             render_hud_cannon_reticle();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && configHUD) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && configHUD && !gDjuiInMainMenu) {
             render_hud_mario_lives();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT && configHUD) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT && configHUD && !gDjuiInMainMenu) {
             render_hud_coins();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_STAR_COUNT && configHUD) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_STAR_COUNT && configHUD && !gDjuiInMainMenu) {
             render_hud_stars();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_KEYS && configHUD) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_KEYS && configHUD && !gDjuiInMainMenu) {
             render_hud_keys();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && configHUD) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && configHUD && !gDjuiInMainMenu) {
             render_hud_power_meter();
             render_hud_camera_status();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && configHUD) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && configHUD && !gDjuiInMainMenu) {
             render_hud_timer();
         }
     }
