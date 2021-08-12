@@ -44,7 +44,8 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
     djui_cursor_input_controlled_center(NULL);
 
     // hide new panel off screen initially
-    djui_base_set_location(panelBase, 0, -gDjuiRoot->base.height.value);
+    djui_base_set_location_type(panelBase, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
+    djui_base_set_location(panelBase, 0, -1.0f);
 
     // disable panels
     djui_base_set_enabled(panel->base, false);
@@ -105,8 +106,13 @@ void djui_panel_update(void) {
     struct DjuiBase* parentBase   = (sPanelList->parent == NULL) ? NULL : sPanelList->parent->base;
     struct DjuiBase* removingBase = (sPanelRemoving     == NULL) ? NULL : sPanelRemoving->base;
 
-    float moveMax = activeBase->elem.height;
-    if (sMoveAmount >= moveMax) { return; }
+    float moveMax = 1.0f;
+    if (sMoveAmount >= moveMax) {
+        sMoveAmount = moveMax;
+        djui_base_set_enabled(activeBase, true);
+        activeBase->y.value = 0;
+        return;
+    }
 
     sMoveAmount += moveMax / 10.0f;
     if (sMoveAmount >= moveMax) {
@@ -128,7 +134,7 @@ void djui_panel_update(void) {
     if (removingBase != NULL) {
         activeBase->y.value = moveMax - moveMax * smoothstep(0, moveMax, sMoveAmount);
         if (sPanelRemoving != NULL) {
-            removingBase->y.value = activeBase->y.value - removingBase->elem.height;
+            removingBase->y.value = activeBase->y.value - 1.0f;
         }
     } else if (parentBase != NULL) {
         activeBase->y.value = moveMax * smoothstep(0, moveMax, sMoveAmount) - moveMax;
