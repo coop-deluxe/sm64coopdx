@@ -1883,6 +1883,32 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         if (!gNetworkAreaLoaded || fadedOut || wasNeverVisible) {
             gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
             gMarioState->marioObj->oIntangibleTimer = -1;
+            mario_stop_riding_and_holding(gMarioState);
+
+            // drop their held object
+            if (gMarioState->heldObj != NULL) {
+                LOG_INFO("dropping held object");
+                u8 tmpPlayerIndex = gMarioState->playerIndex;
+                gMarioState->playerIndex = 0;
+                mario_drop_held_object(gMarioState);
+                gMarioState->playerIndex = tmpPlayerIndex;
+            }
+
+            // no longer held by an object
+            if (gMarioState->heldByObj != NULL) {
+                LOG_INFO("dropping heldby object");
+                gMarioState->heldByObj = NULL;
+            }
+
+            // no longer riding object
+            if (gMarioState->riddenObj != NULL) {
+                LOG_INFO("dropping ridden object");
+                u8 tmpPlayerIndex = gMarioState->playerIndex;
+                gMarioState->playerIndex = 0;
+                mario_stop_riding_object(gMarioState);
+                gMarioState->playerIndex = tmpPlayerIndex;
+            }
+
             return 0;
         }
 
