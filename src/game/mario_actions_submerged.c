@@ -890,7 +890,7 @@ static s32 act_forward_water_kb(struct MarioState *m) {
 }
 
 static s32 act_water_shocked(struct MarioState *m) {
-    play_sound_if_no_flag(m, get_character_sound(m)->soundWaaaooow, MARIO_ACTION_SOUND_PLAYED);
+    play_character_sound_if_no_flag(m, CHAR_SOUND_WAAAOOOW, MARIO_MARIO_SOUND_PLAYED);
     play_sound(SOUND_MOVING_SHOCKED, m->marioObj->header.gfx.cameraToObject);
     if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_SHOCK); }
 
@@ -930,7 +930,7 @@ static s32 act_drowning(struct MarioState *m) {
             break;
     }
 
-    play_sound_if_no_flag(m, get_character_sound(m)->soundDrowning, MARIO_ACTION_SOUND_PLAYED);
+    play_character_sound_if_no_flag(m, CHAR_SOUND_DROWNING, MARIO_ACTION_SOUND_PLAYED);
     stationary_slow_down(m);
     perform_water_step(m);
 
@@ -978,7 +978,7 @@ static s32 act_water_plunge(struct MarioState *m) {
     if (m->actionState == 0) {
         play_sound(SOUND_ACTION_UNKNOWN430, m->marioObj->header.gfx.cameraToObject);
         if (m->peakHeight - m->pos[1] > 1150.0f) {
-            play_sound(get_character_sound(m)->soundHaha_2, m->marioObj->header.gfx.cameraToObject);
+            play_character_sound(m, CHAR_SOUND_HAHA_2);
         }
 
         m->particleFlags |= PARTICLE_WATER_SPLASH;

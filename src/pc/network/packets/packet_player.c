@@ -327,7 +327,7 @@ void network_receive_player(struct Packet* p) {
     if ((m->action == ACT_PUNCHING || m->action == ACT_MOVE_PUNCHING)) {
         // play first punching sound, otherwise it will be missed
         if (m->action != oldData.action) {
-            play_sound(get_character_sound(m)->soundPunchYah, m->marioObj->header.gfx.cameraToObject);
+            play_character_sound(m, CHAR_SOUND_PUNCH_YAH);
         }
         // make the first punch large, otherwise it will be missed
         if (m->actionArg == 2 && oldData.actionArg == 1) {

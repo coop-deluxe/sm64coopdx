@@ -6,6 +6,7 @@
 #include "audio_defines.h"
 #include "luigi_audio_defines.h"
 #include "pc/configfile.h"
+#include "audio/external.h"
 
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
@@ -15,6 +16,7 @@ struct Character gCharacters[CT_MAX] = {
         .capModelId = MODEL_MARIOS_CAP,
         .capKleptoAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP,
         .capUkikiAnimState = UKIKI_ANIM_STATE_HAT_ON,
+        .soundFreqScale = 1.0f,
         // sounds
         .soundYahWahHoo        = SOUND_MARIO_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_MARIO_HOOHOO,
@@ -67,6 +69,7 @@ struct Character gCharacters[CT_MAX] = {
         .capModelId = MODEL_LUIGIS_CAP,
         .capKleptoAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI,
         .capUkikiAnimState = UKIKI_ANIM_STATE_HAT_ON_LUIGI,
+        .soundFreqScale = 1.0f,
         // sounds
         .soundYahWahHoo        = SOUND_LUIGI_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_LUIGI_HOOHOO,
@@ -113,7 +116,79 @@ struct Character gCharacters[CT_MAX] = {
     },
 };
 
-struct Character* get_character_sound(struct MarioState* m) {
-    if (m == NULL || m->character == NULL) { return &gCharacters[CT_MARIO]; }
-    return m->character;
+struct Character* get_character(struct MarioState* m) {
+    return (m == NULL || m->character == NULL)
+        ? &gCharacters[CT_MARIO]
+        : m->character;
+}
+
+static s32 get_character_sound(struct MarioState* m, enum CharacterSound characterSound) {
+    if (m == NULL || m->marioObj == NULL) { return 0; }
+    struct Character* character = ((m == NULL || m->character == NULL) ? &gCharacters[CT_MARIO] : m->character);
+    switch (characterSound) {
+        case CHAR_SOUND_YAH_WAH_HOO:         return character->soundYahWahHoo;
+        case CHAR_SOUND_HOOHOO:              return character->soundHoohoo;
+        case CHAR_SOUND_YAHOO:               return character->soundYahoo;
+        case CHAR_SOUND_UH:                  return character->soundUh;
+        case CHAR_SOUND_HRMM:                return character->soundHrmm;
+        case CHAR_SOUND_WAH2:                return character->soundWah2;
+        case CHAR_SOUND_WHOA:                return character->soundWhoa;
+        case CHAR_SOUND_EEUH:                return character->soundEeuh;
+        case CHAR_SOUND_ATTACKED:            return character->soundAttacked;
+        case CHAR_SOUND_OOOF:                return character->soundOoof;
+        case CHAR_SOUND_OOOF2:               return character->soundOoof2;
+        case CHAR_SOUND_HERE_WE_GO:          return character->soundHereWeGo;
+        case CHAR_SOUND_YAWNING:             return character->soundYawning;
+        case CHAR_SOUND_SNORING1:            return character->soundSnoring1;
+        case CHAR_SOUND_SNORING2:            return character->soundSnoring2;
+        case CHAR_SOUND_WAAAOOOW:            return character->soundWaaaooow;
+        case CHAR_SOUND_HAHA:                return character->soundHaha;
+        case CHAR_SOUND_HAHA_2:              return character->soundHaha_2;
+        case CHAR_SOUND_UH2:                 return character->soundUh2;
+        case CHAR_SOUND_UH2_2:               return character->soundUh2_2;
+        case CHAR_SOUND_ON_FIRE:             return character->soundOnFire;
+        case CHAR_SOUND_DYING:               return character->soundDying;
+        case CHAR_SOUND_PANTING_COLD:        return character->soundPantingCold;
+        case CHAR_SOUND_PANTING:             return character->soundPanting;
+        case CHAR_SOUND_COUGHING1:           return character->soundCoughing1;
+        case CHAR_SOUND_COUGHING2:           return character->soundCoughing2;
+        case CHAR_SOUND_COUGHING3:           return character->soundCoughing3;
+        case CHAR_SOUND_PUNCH_YAH:           return character->soundPunchYah;
+        case CHAR_SOUND_PUNCH_HOO:           return character->soundPunchHoo;
+        case CHAR_SOUND_MAMA_MIA:            return character->soundMamaMia;
+        case CHAR_SOUND_GROUND_POUND_WAH:    return character->soundGroundPoundWah;
+        case CHAR_SOUND_DROWNING:            return character->soundDrowning;
+        case CHAR_SOUND_PUNCH_WAH:           return character->soundPunchWah;
+        case CHAR_SOUND_YAHOO_WAHA_YIPPEE:   return character->soundYahooWahaYippee;
+        case CHAR_SOUND_DOH:                 return character->soundDoh;
+        case CHAR_SOUND_GAME_OVER:           return character->soundGameOver;
+        case CHAR_SOUND_HELLO:               return character->soundHello;
+        case CHAR_SOUND_PRESS_START_TO_PLAY: return character->soundPressStartToPlay;
+        case CHAR_SOUND_TWIRL_BOUNCE:        return character->soundTwirlBounce;
+        case CHAR_SOUND_SNORING3:            return character->soundSnoring3;
+        case CHAR_SOUND_SO_LONGA_BOWSER:     return character->soundSoLongaBowser;
+        case CHAR_SOUND_IMA_TIRED:           return character->soundImaTired;
+        default:                             return 0;
+    }
+}
+
+void play_character_sound(struct MarioState* m, enum CharacterSound characterSound) {
+    s32 sound = get_character_sound(m, characterSound);
+    if (sound == 0) { return; }
+    struct Character* character = get_character(m);
+    play_sound_with_freq_scale(sound, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
+}
+
+void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u8 offset) {
+    s32 sound = get_character_sound(m, characterSound);
+    if (sound == 0) { return; }
+    struct Character* character = get_character(m);
+    play_sound_with_freq_scale(sound, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
+}
+
+void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags) {
+    if ((m->flags & flags) == 0) {
+        play_character_sound(m, characterSound);
+        m->flags |= flags;
+    }
 }

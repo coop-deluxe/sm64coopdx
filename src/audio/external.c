@@ -173,6 +173,7 @@ u8 audioString118__[] = "";
 struct Sound {
     s32 soundBits;
     f32 *position;
+    f32 customFreqScale;
 }; // size = 0x8
 
 struct ChannelVolumeScaleFade {
@@ -193,6 +194,7 @@ struct SoundCharacteristics {
     u8 unk19; // ttl? sometimes set to 10
     u8 prev;
     u8 next;
+    f32 customFreqScale;
 }; // size = 0x1C
 
 struct SequenceQueueItem {
@@ -496,7 +498,7 @@ struct ChannelVolumeScaleFade D_80360928[3][CHANNELS_MAX];
 u8 sUsedChannelsForSoundBank[SOUND_BANK_COUNT];
 u8 sCurrentSound[SOUND_BANK_COUNT][MAX_CHANNELS_PER_SOUND]; // index into gSoundBanks
 // list item memory for D_803320A4 and D_803320B0
-struct SoundCharacteristics gSoundBanks[SOUND_BANK_COUNT][40];
+struct SoundCharacteristics gSoundBanks[SOUND_BANK_COUNT][40] = { 0 };
 u8 D_80363808[SOUND_BANK_COUNT];
 u8 D_80363812;
 static u8 sCapVolumeTo40;
@@ -784,10 +786,18 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
 void play_sound(s32 soundBits, f32 *pos) {
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
+    sSoundRequests[sSoundRequestCount].customFreqScale = 0;
     sSoundRequestCount++;
 }
 
-void process_sound_request(u32 bits, f32 *pos) {
+void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
+    sSoundRequests[sSoundRequestCount].soundBits = soundBits;
+    sSoundRequests[sSoundRequestCount].position = pos;
+    sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
+    sSoundRequestCount++;
+}
+
+void process_sound_request(u32 bits, f32 *pos, f32 freqScale) {
     u8 bankIndex;
     u8 index;
     u8 counter = 0;
@@ -814,6 +824,7 @@ void process_sound_request(u32 bits, f32 *pos) {
                     gSoundBanks[bankIndex][index].soundStatus = bits & SOUNDARGS_MASK_STATUS;
                 }
                 gSoundBanks[bankIndex][index].unk19 = 10;
+                gSoundBanks[bankIndex][index].customFreqScale = freqScale;
             }
             index = 0;
         } else {
@@ -836,6 +847,7 @@ void process_sound_request(u32 bits, f32 *pos) {
         gSoundBanks[bankIndex][index].soundBits = bits;
         gSoundBanks[bankIndex][index].soundStatus = bits & SOUNDARGS_MASK_STATUS;
         gSoundBanks[bankIndex][index].unk19 = 10;
+        gSoundBanks[bankIndex][index].customFreqScale = freqScale;
         gSoundBanks[bankIndex][index].prev = D_803320A4[bankIndex];
         gSoundBanks[bankIndex][D_803320A4[bankIndex]].next = D_803320B0[bankIndex];
         D_803320A4[bankIndex] = D_803320B0[bankIndex];
@@ -853,7 +865,7 @@ void process_all_sound_requests(void) {
 
     while (sSoundRequestCount != sNumProcessedSoundRequests) {
         sound = &sSoundRequests[sNumProcessedSoundRequests];
-        process_sound_request(sound->soundBits, sound->position);
+        process_sound_request(sound->soundBits, sound->position, sound->customFreqScale);
         sNumProcessedSoundRequests++;
     }
 }
@@ -1504,6 +1516,11 @@ void update_game_sound(void) {
                             break;
                     }
                 }
+            }
+
+            // add custom pitch bend
+            if (gSoundBanks[bankIndex][index].customFreqScale != 0) {
+                gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->freqScale *= gSoundBanks[bankIndex][index].customFreqScale;
             }
             channelIndex++;
         }
