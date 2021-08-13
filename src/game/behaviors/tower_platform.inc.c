@@ -97,8 +97,9 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
     u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
     loopTime *= 2;
     loopTime += 1;
+    platform->areaTimerType = AREA_TIMER_TYPE_LOOP;
     platform->areaTimer = 0;
-    platform->areaTimerLoopLength = loopTime;
+    platform->areaTimerDuration = loopTime;
 }
 
 void spawn_wf_platform_group(void) {

@@ -762,7 +762,7 @@ void load_object_surfaces(s16** data, s16* vertexData) {
  * Transform an object's vertices, reload them, and render the object.
  */
 void load_object_collision_model(void) {
-    if (gCurrentObject->areaTimerLoopLength > 0) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
         // only load collision model on last frame
         if (!cur_obj_is_last_nat_update_per_frame()) { return; }
     }

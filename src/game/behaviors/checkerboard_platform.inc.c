@@ -50,8 +50,9 @@ void checkerboard_plat_act_rotate(s32 a0, s16 a1) {
 
 void bhv_checkerboard_platform_init(void) {
     o->oCheckerBoardPlatformUnkFC = o->parentObj->oBehParams2ndByte;
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
-    o->areaTimerLoopLength = 132 + o->oCheckerBoardPlatformUnkFC * 2;
+    o->areaTimerDuration = 132 + o->oCheckerBoardPlatformUnkFC * 2;
 }
 
 void bhv_checkerboard_platform_loop(void) {

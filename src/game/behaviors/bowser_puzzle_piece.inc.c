@@ -95,8 +95,9 @@ void bhv_lll_bowser_puzzle_spawn_piece(s16 model, const BehaviorScript *behavior
     puzzlePiece->oBowserPuzzlePieceActionList = actionList;
     puzzlePiece->oBowserPuzzlePieceNextAction = actionList;
     puzzlePiece->oTimer = 0;
+    puzzlePiece->areaTimerType = AREA_TIMER_TYPE_LOOP;
     puzzlePiece->areaTimer = 0;
-    puzzlePiece->areaTimerLoopLength = 650;
+    puzzlePiece->areaTimerDuration = 650;
 }
 
 /**

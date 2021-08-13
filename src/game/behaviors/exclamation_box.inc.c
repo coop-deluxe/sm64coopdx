@@ -181,12 +181,18 @@ void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_bo
                                            exclamation_box_act_4, exclamation_box_act_5,
                                            exclamation_box_act_6 };
 
+void bhv_exclamation_box_init(void) {
+    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    so->syncDeathEvent = FALSE;
+    network_init_object_field(o, &o->oExclamationBoxForce);
+    network_init_object_field(o, &o->areaTimer);
+
+    o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;
+    o->areaTimer = 0;
+    o->areaTimerDuration = 300;
+}
+
 void bhv_exclamation_box_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->syncDeathEvent = FALSE;
-        network_init_object_field(o, &o->oExclamationBoxForce);
-    }
     cur_obj_scale(2.0f);
     cur_obj_call_action_function(sExclamationBoxActions);
 }

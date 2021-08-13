@@ -9,8 +9,9 @@ struct WFRotatingPlatformData sWFRotatingPlatformData[] = {
 };
 
 void bhv_wf_rotating_wooden_platform_init(void) {
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
-    o->areaTimerLoopLength = 380;
+    o->areaTimerDuration = 380;
 }
 
 void bhv_wf_rotating_wooden_platform_loop(void) {

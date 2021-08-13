@@ -6,8 +6,10 @@ void bhv_ddd_pole_init(void) {
         o->hitboxDownOffset = 100.0f;
         o->oDDDPoleMaxOffset = 100.0f * o->oBehParams2ndByte;
     }
+
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
-    o->areaTimerLoopLength = (((u16)o->oDDDPoleMaxOffset / 10) + 20) * 2;
+    o->areaTimerDuration = (((u16)o->oDDDPoleMaxOffset / 10) + 20) * 2;
 }
 
 void bhv_ddd_pole_update(void) {

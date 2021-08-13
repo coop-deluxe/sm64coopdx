@@ -62,6 +62,12 @@ enum SpTaskState {
     SPTASK_STATE_FINISHED_DP
 };
 
+enum AreaTimerType {
+    AREA_TIMER_TYPE_NONE,
+    AREA_TIMER_TYPE_LOOP,
+    AREA_TIMER_TYPE_MAXIMUM,
+};
+
 struct SPTask
 {
     /*0x00*/ OSTask task;
@@ -221,8 +227,9 @@ struct Object
     /*0x21C*/ Mat4 transform;
     /*0x25C*/ void *respawnInfo;
     /*?????*/ u8 createdThroughNetwork;
+    /*?????*/ enum AreaTimerType areaTimerType;
     /*?????*/ u32 areaTimer;
-    /*?????*/ u32 areaTimerLoopLength;
+    /*?????*/ u32 areaTimerDuration;
     /*?????*/ u8 globalPlayerIndex;
 };
 

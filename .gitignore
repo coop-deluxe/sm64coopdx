@@ -86,6 +86,7 @@ build-windows-visual-studio/.vs
 
 # misc
 todo.txt
+todo-old.txt
 
 # luigi sounds
 sound/samples/sfx_custom_luigi*/*.aiff

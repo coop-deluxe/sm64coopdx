@@ -4,8 +4,9 @@ void bhv_small_bomp_init(void) {
     o->oFaceAngleYaw -= 0x4000;
     o->oSmallBompInitX = o->oPosX;
     o->oTimer = position_based_random_float_position() * 100.0f;
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
-    o->areaTimerLoopLength = 168;
+    o->areaTimerDuration = 168;
 }
 
 void bhv_small_bomp_loop(void) {
@@ -62,8 +63,9 @@ void bhv_small_bomp_loop(void) {
 void bhv_large_bomp_init(void) {
     o->oMoveAngleYaw += 0x4000;
     o->oTimer = position_based_random_float_position() * 100.0f;
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
-    o->areaTimerLoopLength = 168;
+    o->areaTimerDuration = 168;
 }
 
 void bhv_large_bomp_loop(void) {

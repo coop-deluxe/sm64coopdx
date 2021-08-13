@@ -952,22 +952,38 @@ static BhvCommandProc BehaviorCmdTable[] = {
 // Execute the behavior script of the current object, process the object flags, and other miscellaneous code for updating objects.
 void cur_obj_update(void) {
     // handle network area timer
-    if (gCurrentObject->areaTimerLoopLength > 0) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
         // make sure the area is valid
         if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
             return;
         }
 
         // catch up the timer in total loop increments
-        u32 difference = (gNetworkAreaTimer - gCurrentObject->areaTimer);
-        if (difference >= gCurrentObject->areaTimerLoopLength) {
-            u32 catchup = difference / gCurrentObject->areaTimerLoopLength;
-            catchup *= gCurrentObject->areaTimerLoopLength;
-            gCurrentObject->areaTimer += catchup;
+        if (gCurrentObject->areaTimerType == AREA_TIMER_TYPE_LOOP) {
+            assert(gCurrentObject->areaTimerDuration > 0);
+            u32 difference = (gNetworkAreaTimer - gCurrentObject->areaTimer);
+            if (difference >= gCurrentObject->areaTimerDuration) {
+                u32 catchup = difference / gCurrentObject->areaTimerDuration;
+                catchup *= gCurrentObject->areaTimerDuration;
+                gCurrentObject->areaTimer += catchup;
+            }
+        }
+
+        // catch up the timer for maximum
+        if (gCurrentObject->areaTimerType == AREA_TIMER_TYPE_MAXIMUM) {
+            assert(gCurrentObject->areaTimerDuration > 0);
+            u32 difference = (gNetworkAreaTimer - gCurrentObject->areaTimer);
+            if (difference >= gCurrentObject->areaTimerDuration) {
+                if (gCurrentObject->areaTimer < 10) {
+                    gCurrentObject->areaTimer = gNetworkAreaTimer;
+                } else {
+                    gCurrentObject->areaTimer = (gNetworkAreaTimer - gCurrentObject->areaTimerDuration);
+                }
+            }
         }
 
         // cancel object update if it's running faster than the timer
-        if (gCurrentObject->areaTimer >= gNetworkAreaTimer) {
+        if (gCurrentObject->areaTimer > gNetworkAreaTimer) {
             return;
         }
     }
@@ -1076,7 +1092,7 @@ cur_obj_update_begin:;
     }
 
     // update network area timer
-    if (gCurrentObject->areaTimerLoopLength > 0) {
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
         gCurrentObject->areaTimer++;
         if (gCurrentObject->areaTimer < gNetworkAreaTimer) {
             goto cur_obj_update_begin;
