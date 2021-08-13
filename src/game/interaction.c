@@ -939,7 +939,9 @@ u32 interact_bbh_entrance(struct MarioState *m, UNUSED u32 interactType, struct 
     if (m->action != ACT_BBH_ENTER_SPIN && m->action != ACT_BBH_ENTER_JUMP) {
         mario_stop_riding_and_holding(m);
 
-        o->oInteractStatus = INT_STATUS_INTERACTED;
+        if (m->playerIndex == 0) {
+            o->oInteractStatus = INT_STATUS_INTERACTED;
+        }
         m->interactObj = o;
         m->usedObj = o;
 
