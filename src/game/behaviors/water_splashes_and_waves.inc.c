@@ -74,7 +74,14 @@ void bhv_water_droplet_loop(void) {
     if (o->oVelY < 0.0f) {
         if (waterLevel > o->oPosY) {
             // Create the smaller splash
-            try_to_spawn_object(0, 1.0f, o, MODEL_SMALL_WATER_SPLASH, bhvWaterDropletSplash);
+            struct Object* small = try_to_spawn_object(0, 1.0f, o, MODEL_SMALL_WATER_SPLASH, bhvWaterDropletSplash);
+
+            // immediately update render position
+            small->parentObj = NULL;
+            small->header.gfx.pos[0] = o->oPosX;
+            small->header.gfx.pos[1] = o->oPosY;
+            small->header.gfx.pos[2] = o->oPosZ;
+
             obj_mark_for_deletion(o);
         } else if (o->oTimer > 20)
             obj_mark_for_deletion(o);
