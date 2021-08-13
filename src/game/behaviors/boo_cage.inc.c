@@ -21,6 +21,25 @@ static struct ObjectHitbox sBooCageHitbox = {
     /* hurtboxHeight: */ 0,
 };
 
+static void bhv_boo_cage_on_received_post(u8 localIndex) {
+    if (o->oAction > BOO_CAGE_ACT_ON_GROUND) {
+        o->oAction = BOO_CAGE_ACT_ON_GROUND;
+    }
+    o->parentObj = NULL;
+}
+
+void bhv_boo_cage_init(void) {
+    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    so->on_received_post = bhv_boo_cage_on_received_post;
+    network_init_object_field(o, &o->oAction);
+    network_init_object_field(o, &o->oPosX);
+    network_init_object_field(o, &o->oPosY);
+    network_init_object_field(o, &o->oPosZ);
+    network_init_object_field(o, &o->oVelX);
+    network_init_object_field(o, &o->oVelY);
+    network_init_object_field(o, &o->oVelZ);
+}
+
 /**
  * Update function for bhvBooCage.
  */
@@ -41,10 +60,17 @@ void bhv_boo_cage_loop(void) {
             // If the cage's parent boo is killed, set the action to BOO_CAGE_ACT_FALLING,
             // give the cage an initial Y velocity of 60 units/frame, and play the puzzle jingle.
             // Otherwise, stay inside the boo.
-            if (o->parentObj->oBooDeathStatus != BOO_DEATH_STATUS_ALIVE) {
+            if (o->parentObj == NULL || o->parentObj->behavior != bhvBooWithCage || o->parentObj->oBooDeathStatus != BOO_DEATH_STATUS_ALIVE) {
                 o->oAction++;
                 o->oVelY = 60.0f;
-                play_puzzle_jingle();
+                if (o->parentObj != NULL && o->parentObj->behavior == bhvBooWithCage) {
+                    play_puzzle_jingle();
+                }
+                struct MarioState* marioState = nearest_mario_state_to_object(o);
+                if (marioState->playerIndex == 0) {
+                    network_send_object(o);
+                }
+                o->parentObj = NULL;
             } else {
                 obj_copy_pos_and_angle(o, o->parentObj);
             }
@@ -75,6 +101,11 @@ void bhv_boo_cage_loop(void) {
             if (o->oMoveFlags
                 & (OBJ_MOVE_UNDERWATER_ON_GROUND | OBJ_MOVE_AT_WATER_SURFACE | OBJ_MOVE_ON_GROUND)) {
                 o->oAction++;
+
+                struct MarioState* marioState = nearest_mario_state_to_object(o);
+                if (marioState->playerIndex == 0) {
+                    network_send_object(o);
+                }
             }
 
             break;

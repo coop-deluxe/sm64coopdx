@@ -240,6 +240,11 @@ void coin_inside_boo_act_0(void) {
         cur_obj_set_model(MODEL_BLUE_COIN);
         cur_obj_scale(0.7);
     }
+    if (parent == NULL || parent->behavior != bhvGhostHuntBoo) {
+        o->parentObj = NULL;
+        obj_mark_for_deletion(o);
+        return;
+    }
     obj_copy_pos(o, parent);
     if (parent->oBooDeathStatus == BOO_DEATH_STATUS_DYING) {
         o->oAction = 1;
@@ -248,6 +253,7 @@ void coin_inside_boo_act_0(void) {
         o->oVelX = sins(sp26) * sp20;
         o->oVelZ = coss(sp26) * sp20;
         o->oVelY = 35.0f;
+        o->parentObj = NULL;
     }
 }
 

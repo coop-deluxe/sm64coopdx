@@ -936,12 +936,11 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
 }
 
 u32 interact_bbh_entrance(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
+    if (m->playerIndex != 0) { return FALSE; }
     if (m->action != ACT_BBH_ENTER_SPIN && m->action != ACT_BBH_ENTER_JUMP) {
         mario_stop_riding_and_holding(m);
 
-        if (m->playerIndex == 0) {
-            o->oInteractStatus = INT_STATUS_INTERACTED;
-        }
+        o->oInteractStatus = INT_STATUS_INTERACTED;
         m->interactObj = o;
         m->usedObj = o;
 
