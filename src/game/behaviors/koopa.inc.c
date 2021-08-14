@@ -68,11 +68,7 @@ static struct KoopaTheQuickProperties sKoopaTheQuickProperties[] = {
 static u32 koopaPathedStartWaypoint = 0;
 static u32 koopaPathedPrevWaypoint = 0;
 static u32 koopaShotFromCannon = 0;
-static u8 koopaWasInRace = false;
 
-static void bhv_koopa_the_quick_on_received_pre(u8 fromLocalIndex) {
-    koopaWasInRace = (o->oAction >= KOOPA_THE_QUICK_ACT_RACE);
-}
 static void bhv_koopa_the_quick_on_received_post(u8 fromLocalIndex) {
     void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
     o->oPathedStartWaypoint = (struct Waypoint*)path + koopaPathedStartWaypoint;
@@ -116,7 +112,6 @@ void bhv_koopa_init(void) {
         // koopa the quick
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
         struct SyncObject* so  = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->on_received_pre    = bhv_koopa_the_quick_on_received_pre;
         so->on_received_post   = bhv_koopa_the_quick_on_received_post;
         so->on_sent_pre        = bhv_koopa_the_quick_on_sent_pre;
         so->override_ownership = bhv_koopa_the_quick_override_ownership;
