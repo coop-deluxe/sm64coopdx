@@ -42,7 +42,7 @@ static void djui_button_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message) {
-    struct DjuiButton* button = malloc(sizeof(struct DjuiButton));
+    struct DjuiButton* button = calloc(1, sizeof(struct DjuiButton));
     struct DjuiBase* base     = &button->base;
 
     djui_base_init(parent, base, NULL, djui_button_destroy);

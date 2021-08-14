@@ -53,7 +53,7 @@ struct DjuiChatMessage* djui_chat_message_create_from(u8 globalIndex, char* mess
 }
 
 struct DjuiChatMessage* djui_chat_message_create(char* message) {
-    struct DjuiChatMessage* chatMessage = malloc(sizeof(struct DjuiChatMessage));
+    struct DjuiChatMessage* chatMessage = calloc(1, sizeof(struct DjuiChatMessage));
     struct DjuiBase* base = &chatMessage->base;
     djui_base_init(&gDjuiChatBox->chatFlow->base, base, djui_chat_message_render, djui_chat_message_destroy);
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

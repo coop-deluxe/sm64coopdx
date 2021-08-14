@@ -34,7 +34,7 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
     }
 
     // allocate panel
-    struct DjuiPanel* panel = malloc(sizeof(struct DjuiPanel));
+    struct DjuiPanel* panel = calloc(1, sizeof(struct DjuiPanel));
     panel->parent = sPanelList;
     panel->base = panelBase;
     panel->defaultElementBase = defaultElementBase;

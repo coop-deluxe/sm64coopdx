@@ -142,7 +142,7 @@ static void djui_three_panel_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiThreePanel* djui_three_panel_create(struct DjuiBase* parent, f32 minHeaderSize, f32 bodySize, f32 minFooterSize) {
-    struct DjuiThreePanel* threePanel = malloc(sizeof(struct DjuiThreePanel));
+    struct DjuiThreePanel* threePanel = calloc(1, sizeof(struct DjuiThreePanel));
     struct DjuiBase* base = &threePanel->base;
 
     djui_base_init(parent, base, djui_three_panel_render, djui_three_panel_destroy);

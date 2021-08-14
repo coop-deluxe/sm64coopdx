@@ -46,7 +46,7 @@ static void djui_flow_layout_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiFlowLayout* djui_flow_layout_create(struct DjuiBase* parent) {
-    struct DjuiFlowLayout* layout = malloc(sizeof(struct DjuiFlowLayout));
+    struct DjuiFlowLayout* layout = calloc(1, sizeof(struct DjuiFlowLayout));
     struct DjuiBase* base         = &layout->base;
 
     djui_base_init(parent, base, djui_rect_render, djui_flow_layout_destroy);

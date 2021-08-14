@@ -16,7 +16,7 @@ static struct DjuiPopupList* sPopupListHead = NULL;
 static f32 sPopupListY = 0;
 
 static void djui_popup_add_to_list(struct DjuiPopup* popup) {
-    struct DjuiPopupList* node = malloc(sizeof(struct DjuiPopupList));
+    struct DjuiPopupList* node = calloc(1, sizeof(struct DjuiPopupList));
     node->popup = popup;
     node->createTime = clock_elapsed();
     node->next = sPopupListHead;
@@ -34,7 +34,7 @@ static void djui_popup_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiPopup* djui_popup_create(const char* message, int lines) {
-    struct DjuiPopup* popup = malloc(sizeof(struct DjuiPopup));
+    struct DjuiPopup* popup = calloc(1, sizeof(struct DjuiPopup));
     struct DjuiBase* base = &popup->base;
 
     f32 height = lines * 32 + 32;

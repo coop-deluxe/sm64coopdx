@@ -114,7 +114,7 @@ static void djui_slider_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max) {
-    struct DjuiSlider* slider = malloc(sizeof(struct DjuiSlider));
+    struct DjuiSlider* slider = calloc(1, sizeof(struct DjuiSlider));
     struct DjuiBase* base     = &slider->base;
 
     slider->value = value;

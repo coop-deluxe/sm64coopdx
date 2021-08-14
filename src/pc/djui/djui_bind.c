@@ -48,7 +48,7 @@ static void djui_bind_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, unsigned int configKey[]) {
-    struct DjuiBind* bind = malloc(sizeof(struct DjuiBind));
+    struct DjuiBind* bind = calloc(1, sizeof(struct DjuiBind));
     struct DjuiBase* base     = &bind->base;
 
     bind->configKey = configKey;

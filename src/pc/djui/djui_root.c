@@ -23,7 +23,7 @@ static void djui_root_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiRoot* djui_root_create(void) {
-    struct DjuiRoot* root = malloc(sizeof(struct DjuiRoot));
+    struct DjuiRoot* root = calloc(1, sizeof(struct DjuiRoot));
     struct DjuiBase* base = &root->base;
 
     djui_base_init(NULL, base, djui_root_render, djui_root_destroy);

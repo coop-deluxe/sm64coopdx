@@ -73,15 +73,14 @@ static void djui_selectionbox_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const char* message, char* choices[], u8 choiceCount, unsigned int* value) {
-    struct DjuiSelectionbox* selectionbox = malloc(sizeof(struct DjuiSelectionbox));
-    struct DjuiBase* base     = &selectionbox->base;
+    struct DjuiSelectionbox* selectionbox = calloc(1, sizeof(struct DjuiSelectionbox));
+    struct DjuiBase* base = &selectionbox->base;
 
     selectionbox->value = value;
-    selectionbox->choices = malloc(sizeof(char*) * choiceCount);
+    selectionbox->choices = calloc(choiceCount, sizeof(char*));
     for (int i = 0; i < choiceCount; i++) {
         u32 length = strlen(choices[i]);
-        selectionbox->choices[i] = malloc(sizeof(char) * (length + 1));
-        memset(selectionbox->choices[i], 0, sizeof(char) * (length + 1));
+        selectionbox->choices[i] = calloc((length + 1), sizeof(char));
         sprintf(selectionbox->choices[i], "%s", choices[i]);
     }
     selectionbox->choiceCount = choiceCount;

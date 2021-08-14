@@ -50,8 +50,8 @@ static void djui_checkbox_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiCheckbox* djui_checkbox_create(struct DjuiBase* parent, const char* message, bool* value) {
-    struct DjuiCheckbox* checkbox = malloc(sizeof(struct DjuiCheckbox));
-    struct DjuiBase* base     = &checkbox->base;
+    struct DjuiCheckbox* checkbox = calloc(1, sizeof(struct DjuiCheckbox));
+    struct DjuiBase* base = &checkbox->base;
 
     checkbox->value = value;
 

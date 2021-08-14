@@ -430,7 +430,7 @@ void djui_interactable_create(struct DjuiBase* base) {
         free(base->interactable);
     }
 
-    struct DjuiInteractable* interactable = malloc(sizeof(struct DjuiInteractable));
+    struct DjuiInteractable* interactable = calloc(1, sizeof(struct DjuiInteractable));
     memset(interactable, 0, sizeof(struct DjuiInteractable));
     base->interactable = interactable;
 }

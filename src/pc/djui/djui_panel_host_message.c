@@ -58,7 +58,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 #endif
     {
         warningLines = 5;
-        warningMessage = malloc(sizeof(char) * 256);
+        warningMessage = calloc(256, sizeof(char));
         sprintf(warningMessage, sWarningSocket, configHostPort);
     }
 

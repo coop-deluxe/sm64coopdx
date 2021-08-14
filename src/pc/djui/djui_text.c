@@ -19,7 +19,7 @@ void djui_text_set_text(struct DjuiText* text, const char* message) {
 
     // allocate and set new message
     u16 messageLen = strlen(message);
-    text->message = malloc(sizeof(char) * (messageLen + 1));
+    text->message = calloc((messageLen + 1), sizeof(char));
     memcpy(text->message, message, sizeof(char) * (messageLen + 1));
 }
 
@@ -380,7 +380,7 @@ static void djui_text_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiText* djui_text_create(struct DjuiBase* parent, const char* message) {
-    struct DjuiText* text = malloc(sizeof(struct DjuiText));
+    struct DjuiText* text = calloc(1, sizeof(struct DjuiText));
     struct DjuiBase* base = &text->base;
 
     djui_base_init(parent, base, djui_text_render, djui_text_destroy);

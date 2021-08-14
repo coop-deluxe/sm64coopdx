@@ -50,7 +50,7 @@ static void djui_image_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiImage* djui_image_create(struct DjuiBase* parent, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
-    struct DjuiImage* image = malloc(sizeof(struct DjuiImage));
+    struct DjuiImage* image = calloc(1, sizeof(struct DjuiImage));
     struct DjuiBase* base   = &image->base;
 
     djui_base_init(parent, base, djui_image_render, djui_image_destroy);

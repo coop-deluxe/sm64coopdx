@@ -348,7 +348,7 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     }
 
     // back up current message
-    char* sMsg = malloc(sizeof(char) * (inputbox->bufferSize));
+    char* sMsg = calloc(inputbox->bufferSize, sizeof(char));
     memcpy(sMsg, msg, inputbox->bufferSize);
 
     // insert text
@@ -534,12 +534,10 @@ static void djui_inputbox_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
-    struct DjuiInputbox* inputbox = malloc(sizeof(struct DjuiInputbox));
+    struct DjuiInputbox* inputbox = calloc(1, sizeof(struct DjuiInputbox));
     struct DjuiBase* base         = &inputbox->base;
-    memset(inputbox, 0, sizeof(struct DjuiInputbox));
     inputbox->bufferSize = bufferSize;
-    inputbox->buffer = malloc(sizeof(char) * bufferSize);
-    memset(inputbox->buffer, 0, sizeof(char) * bufferSize);
+    inputbox->buffer = calloc(bufferSize, sizeof(char));
 
     djui_base_init(parent, base, djui_inputbox_render, djui_inputbox_destroy);
     djui_base_set_size(base, 200, 32);

@@ -93,7 +93,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
         gDjuiChatBox = NULL;
     }
 
-    struct DjuiChatBox* chatBox = malloc(sizeof(struct DjuiChatBox));
+    struct DjuiChatBox* chatBox = calloc(1, sizeof(struct DjuiChatBox));
     struct DjuiBase* base = &chatBox->base;
 
     djui_base_init(&gDjuiRoot->base, base, djui_chat_box_render, djui_chat_box_destroy);

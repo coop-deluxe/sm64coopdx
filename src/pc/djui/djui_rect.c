@@ -33,7 +33,7 @@ static void djui_rect_destroy(struct DjuiBase* base) {
 }
 
 struct DjuiRect* djui_rect_create(struct DjuiBase* parent) {
-    struct DjuiRect* rect = malloc(sizeof(struct DjuiRect));
+    struct DjuiRect* rect = calloc(1, sizeof(struct DjuiRect));
     struct DjuiBase* base = &rect->base;
 
     djui_base_init(parent, base, djui_rect_render, djui_rect_destroy);

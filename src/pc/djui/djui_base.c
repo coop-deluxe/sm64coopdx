@@ -175,7 +175,7 @@ static void djui_base_add_child(struct DjuiBase* parent, struct DjuiBase* base) 
     if (parent == NULL) { return; }
 
     // allocate linked list node
-    struct DjuiBaseChild* baseChild = malloc(sizeof(struct DjuiBaseChild));
+    struct DjuiBaseChild* baseChild = calloc(1, sizeof(struct DjuiBaseChild));
     baseChild->base = base;
     baseChild->next = NULL;
 
