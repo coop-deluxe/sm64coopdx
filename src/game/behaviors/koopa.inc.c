@@ -65,8 +65,32 @@ static struct KoopaTheQuickProperties sKoopaTheQuickProperties[] = {
     { DIALOG_009, DIALOG_031, thi_seg7_trajectory_koopa, { 7100, -1300, -6000 } }
 };
 
-static u32 koopaForceStartRace = FALSE;
-static u32 koopaForceEndRace = FALSE;
+static u32 koopaPathedStartWaypoint = 0;
+static u32 koopaPathedPrevWaypoint = 0;
+static u32 koopaShotFromCannon = 0;
+static u8 koopaWasInRace = false;
+
+static void bhv_koopa_the_quick_on_received_pre(u8 fromLocalIndex) {
+    koopaWasInRace = (o->oAction >= KOOPA_THE_QUICK_ACT_RACE);
+}
+static void bhv_koopa_the_quick_on_received_post(u8 fromLocalIndex) {
+    void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+    o->oPathedStartWaypoint = (struct Waypoint*)path + koopaPathedStartWaypoint;
+    o->oPathedPrevWaypoint  = (struct Waypoint*)path + koopaPathedPrevWaypoint;
+    gMarioShotFromCannon = koopaShotFromCannon;
+}
+
+static void bhv_koopa_the_quick_on_sent_pre(void) {
+    void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+    koopaPathedStartWaypoint = ((void*)o->oPathedStartWaypoint - path) / sizeof(struct Waypoint*);
+    koopaPathedPrevWaypoint  = ((void*)o->oPathedPrevWaypoint  - path) / sizeof(struct Waypoint*);
+    koopaShotFromCannon = gMarioShotFromCannon;
+}
+
+void bhv_koopa_the_quick_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = TRUE;
+    *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
+}
 
 /**
  * Initialization function.
@@ -84,18 +108,43 @@ void bhv_koopa_init(void) {
         o->oKoopaTheQuickRaceIndex = o->oKoopaMovementType - KOOPA_BP_KOOPA_THE_QUICK_BASE;
         o->oKoopaAgility = 4.0f;
         cur_obj_scale(3.0f);
-
-        koopaForceStartRace = FALSE;
-        koopaForceEndRace = FALSE;
     } else {
         o->oKoopaAgility = 1.0f;
     }
 
     if (o->oKoopaMovementType >= KOOPA_BP_KOOPA_THE_QUICK_BASE) {
         // koopa the quick
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &koopaForceStartRace);
-
+        o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
+        struct SyncObject* so  = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->on_received_pre    = bhv_koopa_the_quick_on_received_pre;
+        so->on_received_post   = bhv_koopa_the_quick_on_received_post;
+        so->on_sent_pre        = bhv_koopa_the_quick_on_sent_pre;
+        so->override_ownership = bhv_koopa_the_quick_override_ownership;
+        network_init_object_field(o, &koopaPathedStartWaypoint);
+        network_init_object_field(o, &koopaPathedPrevWaypoint);
+        network_init_object_field(o, &koopaShotFromCannon);
+        network_init_object_field(o, &o->oPathedPrevWaypointFlags);
+        network_init_object_field(o, &o->oPathedTargetPitch);
+        network_init_object_field(o, &o->oPathedTargetYaw);
+        network_init_object_field(o, &o->oPosX);
+        network_init_object_field(o, &o->oPosY);
+        network_init_object_field(o, &o->oPosZ);
+        network_init_object_field(o, &o->oVelX);
+        network_init_object_field(o, &o->oVelY);
+        network_init_object_field(o, &o->oVelZ);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oSubAction);
+        network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oKoopaAgility);
+        network_init_object_field(o, &o->parentObj->oKoopaRaceEndpointRaceBegun);
+        network_init_object_field(o, &o->parentObj->oKoopaRaceEndpointRaceStatus);
+        network_init_object_field(o, &o->oForwardVel);
+        network_init_object_field(o, &o->oMoveAngleYaw);
+        network_init_object_field(o, &o->areaTimer);
+        o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;
+        o->areaTimer = 0;
+        o->areaTimerDuration = 60;
     } else {
         // normal koopa
         network_init_object(o, 4000.0f);
@@ -567,19 +616,6 @@ static void koopa_the_quick_act_wait_before_race(void) {
     }
 }
 
-static void koopa_the_quick_force_start_race(void) {
-    koopaForceStartRace = FALSE;
-    gMarioShotFromCannon = FALSE;
-    o->oAction = KOOPA_THE_QUICK_ACT_RACE;
-    o->oForwardVel = 0.0f;
-
-    o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
-    o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
-
-    o->oKoopaTurningAwayFromWall = FALSE;
-    o->oFlags |= OBJ_FLAG_ACTIVE_FROM_AFAR;
-}
-
 u8 koopa_the_quick_act_show_init_text_continue_dialog(void) { return o->oAction == KOOPA_THE_QUICK_ACT_SHOW_INIT_TEXT; }
 
 /**
@@ -605,10 +641,7 @@ static void koopa_the_quick_act_show_init_text(void) {
         o->oKoopaTurningAwayFromWall = FALSE;
         o->oFlags |= OBJ_FLAG_ACTIVE_FROM_AFAR;
 
-        koopaForceStartRace = TRUE;
         network_send_object(o);
-        koopaForceStartRace = FALSE;
-        ;
     } else if (response == 2) {
         o->oAction = KOOPA_THE_QUICK_ACT_WAIT_BEFORE_RACE;
         o->oKoopaTheQuickInitTextboxCooldown = 60;
@@ -678,8 +711,10 @@ static void koopa_the_quick_act_race(void) {
         // Hitbox is slightly larger while racing
         cur_obj_push_mario_away_from_cylinder(180.0f, 300.0f);
 
+        struct Waypoint* lastPrevWaypoint = o->oPathedPrevWaypoint;
         if (cur_obj_follow_path(0) == PATH_REACHED_END) {
             o->oAction = KOOPA_THE_QUICK_ACT_DECELERATE;
+            if (network_owns_object(o)) { network_send_object(o); }
         } else {
             downhillSteepness = 1.0f + sins((s16)(f32) o->oPathedTargetPitch);
             cur_obj_rotate_yaw_toward(o->oPathedTargetYaw, (s32)(o->oKoopaAgility * 150.0f));
@@ -751,6 +786,10 @@ static void koopa_the_quick_act_race(void) {
                     }
             }
         }
+
+        if (lastPrevWaypoint != o->oPathedPrevWaypoint) {
+            if (network_owns_object(o)) { network_send_object(o); }
+        }
     }
 }
 
@@ -764,6 +803,7 @@ static void koopa_the_quick_act_decelerate(void) {
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = KOOPA_THE_QUICK_ACT_STOP;
         o->oForwardVel = 3.0f;
+        if (network_owns_object(o)) { network_send_object(o); }
     }
 }
 
@@ -777,6 +817,7 @@ static void koopa_the_quick_act_stop(void) {
     // KOOPA_SHELLED_ACT_STOPPED at the end
     if (o->oAction == KOOPA_SHELLED_ACT_STOPPED) {
         o->oAction = KOOPA_THE_QUICK_ACT_AFTER_RACE;
+        if (network_owns_object(o)) { network_send_object(o); }
     }
 }
 
@@ -838,8 +879,6 @@ static void koopa_the_quick_update(void) {
     cur_obj_update_floor_and_walls();
     obj_update_blinking(&o->oKoopaBlinkTimer, 10, 15, 3);
 
-    if (koopaForceStartRace) { koopa_the_quick_force_start_race(); }
-
     switch (o->oAction) {
         case KOOPA_THE_QUICK_ACT_WAIT_BEFORE_RACE:
         case KOOPA_THE_QUICK_ACT_UNUSED1:
@@ -868,7 +907,9 @@ static void koopa_the_quick_update(void) {
         }
     }
 
-    cur_obj_push_mario_away_from_cylinder(140.0f, 300.0f);
+    if (cur_obj_is_last_nat_update_per_frame()) {
+        cur_obj_push_mario_away_from_cylinder(140.0f, 300.0f);
+    }
     cur_obj_move_standard(-78);
 }
 
@@ -909,28 +950,10 @@ void bhv_koopa_update(void) {
     obj_face_yaw_approach(o->oMoveAngleYaw, 0x600);
 }
 
-void koopa_the_quick_force_end_race(void) {
-    o->oKoopaRaceEndpointRaceEnded = TRUE;
-    level_control_timer(TIMER_CONTROL_STOP);
-
-    if (!o->oKoopaRaceEndpointKoopaFinished) {
-        play_race_fanfare();
-    }
-    koopaForceEndRace = FALSE;
-}
-
 /**
  * Update function for bhvKoopaRaceEndpoint.
  */
 void bhv_koopa_race_endpoint_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oKoopaRaceEndpointRaceStatus);
-        network_init_object_field(o, &koopaForceEndRace);
-    }
-
-    if (koopaForceEndRace) { koopa_the_quick_force_end_race(); }
-
     if (o->oKoopaRaceEndpointRaceBegun && !o->oKoopaRaceEndpointRaceEnded) {
         struct Object* player = nearest_player_to_object(o);
         int distanceToPlayer = dist_between_objects(o, player);
@@ -945,9 +968,6 @@ void bhv_koopa_race_endpoint_update(void) {
                 } else {
                     o->oKoopaRaceEndpointRaceStatus = 1;
                 }
-                koopaForceEndRace = TRUE;
-                network_send_object(o);
-                koopaForceEndRace = FALSE;
             }
         }
     }

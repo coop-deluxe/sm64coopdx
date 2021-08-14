@@ -99,6 +99,8 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->ignore_if_true = NULL;
     so->on_received_pre = NULL;
     so->on_received_post = NULL;
+    so->on_sent_pre = NULL;
+    so->on_sent_post = NULL;
     so->override_ownership = NULL;
     so->syncDeathEvent = true;
     so->randomSeed = (u16)(o->oSyncID * 7951);
@@ -429,6 +431,15 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
         return;
     }
 
+    // trigger on_sent_pre callback
+    if (so->on_sent_pre != NULL) {
+        extern struct Object* gCurrentObject;
+        struct Object* tmp = gCurrentObject;
+        gCurrentObject = so->o;
+        so->on_sent_pre();
+        gCurrentObject = tmp;
+    }
+
     // always send a new event ID
     so->txEventId++;
     so->clockSinceUpdate = clock_elapsed();
@@ -457,6 +468,15 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
     // send the packet out
     network_send(&p);
+
+    // trigger on_sent_post callback
+    if (so->on_sent_post != NULL) {
+        extern struct Object* gCurrentObject;
+        struct Object* tmp = gCurrentObject;
+        gCurrentObject = so->o;
+        so->on_sent_post();
+        gCurrentObject = tmp;
+    }
 }
 
 void network_receive_object(struct Packet* p) {

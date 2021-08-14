@@ -180,26 +180,43 @@ s8 gInWarpCheckpoint = 0;
 u8 unused3[4];
 u8 unused4[2];
 
+u32 gControlTimerStartNat = 0;
+u32 gControlTimerStopNat = 0;
+
+u8 level_control_timer_running(void) {
+    return sTimerRunning;
+}
+
 u16 level_control_timer(s32 timerOp) {
     switch (timerOp) {
         case TIMER_CONTROL_SHOW:
             gHudDisplay.flags |= HUD_DISPLAY_FLAG_TIMER;
             sTimerRunning = FALSE;
             gHudDisplay.timer = 0;
+            gControlTimerStartNat = 0;
+            gControlTimerStopNat = 0;
             break;
 
         case TIMER_CONTROL_START:
-            sTimerRunning = TRUE;
+            if (!sTimerRunning) {
+                sTimerRunning = TRUE;
+                gControlTimerStartNat = gNetworkAreaTimer;
+            }
             break;
 
         case TIMER_CONTROL_STOP:
-            sTimerRunning = FALSE;
+            if (sTimerRunning) {
+                sTimerRunning = FALSE;
+                gControlTimerStopNat = gNetworkAreaTimer;
+            }
             break;
 
         case TIMER_CONTROL_HIDE:
             gHudDisplay.flags &= ~HUD_DISPLAY_FLAG_TIMER;
             sTimerRunning = FALSE;
             gHudDisplay.timer = 0;
+            gControlTimerStartNat = 0;
+            gControlTimerStopNat = 0;
             break;
     }
 
@@ -1034,8 +1051,16 @@ s32 play_mode_normal(void) {
     warp_area();
     check_instant_warp();
 
-    if (sTimerRunning && gHudDisplay.timer < 17999) {
-        gHudDisplay.timer += 1;
+    if (sTimerRunning) {
+        gHudDisplay.timer = gNetworkAreaTimer - gControlTimerStartNat;
+        if (gHudDisplay.timer >= 17999) {
+            gHudDisplay.timer = 17999;
+        }
+    } else if (gControlTimerStopNat > 0) {
+        gHudDisplay.timer = gControlTimerStopNat - gControlTimerStartNat;
+        if (gHudDisplay.timer >= 17999) {
+            gHudDisplay.timer = 17999;
+        }
     }
 
     area_update_objects();
