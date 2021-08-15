@@ -234,7 +234,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
             np->lastReceived = clock_elapsed();
             np->lastSent = clock_elapsed();
             np->modelIndex = modelIndex;
-            //np->paletteIndex = paletteIndex; // do not set here, we already know their palette!
+            np->paletteIndex = paletteIndex;
             np->localLevelMatch = (np->currCourseNum == gCurrCourseNum && np->currActNum == gCurrActStarNum && np->currLevelNum == gCurrLevelNum);
             snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
             network_player_update_model(i);
