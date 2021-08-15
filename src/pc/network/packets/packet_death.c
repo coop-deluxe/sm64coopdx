@@ -5,7 +5,7 @@
 void network_send_death(void) {
     if (gMarioStates[0].numLives < -1) { gMarioStates[0].numLives = -1; }
     struct Packet p = { 0 };
-    packet_init(&p, PACKET_DEATH, true, false);
+    packet_init(&p, PACKET_DEATH, true, PLMT_NONE);
     packet_write(&p, &gMarioStates[0].numLives, sizeof(u8));
     network_send(&p);
 }

@@ -19,7 +19,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp) {
 
     u8 myGlobalIndex = gNetworkPlayerLocal->globalIndex;
     struct Packet p;
-    packet_init(&p, PACKET_SYNC_VALID, true, false);
+    packet_init(&p, PACKET_SYNC_VALID, true, PLMT_NONE);
     packet_write(&p, &toNp->currCourseNum, sizeof(s16));
     packet_write(&p, &toNp->currActNum,    sizeof(s16));
     packet_write(&p, &toNp->currLevelNum,  sizeof(s16));

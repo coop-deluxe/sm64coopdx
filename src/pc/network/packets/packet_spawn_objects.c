@@ -54,7 +54,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     if (gCurrActStarNum == 99) { return; }
 
     struct Packet p;
-    packet_init(&p, PACKET_SPAWN_OBJECTS, true, true);
+    packet_init(&p, PACKET_SPAWN_OBJECTS, true, PLMT_AREA);
 
     // objects
     packet_write(&p, &objectCount, sizeof(u8));

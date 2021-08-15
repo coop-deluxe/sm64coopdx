@@ -18,7 +18,7 @@ void network_send_leaving(u8 globalIndex) {
     }
 
     struct Packet p;
-    packet_init(&p, PACKET_LEAVING, true, false);
+    packet_init(&p, PACKET_LEAVING, true, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(u8));
     if (gNetworkType == NT_SERVER) {
         network_send(&p);

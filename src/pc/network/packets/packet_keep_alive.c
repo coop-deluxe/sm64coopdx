@@ -4,7 +4,7 @@
 
 void network_send_keep_alive(u8 localIndex) {
     struct Packet p;
-    packet_init(&p, PACKET_KEEP_ALIVE, false, false);
+    packet_init(&p, PACKET_KEEP_ALIVE, false, PLMT_NONE);
     network_send_to(localIndex, &p);
     LOG_INFO("sending keep alive");
 }

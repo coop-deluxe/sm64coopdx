@@ -60,7 +60,7 @@ void network_send_ack(struct Packet* p) {
 
     // send back the ACK
     struct Packet ack = { 0 };
-    packet_init(&ack, PACKET_ACK, false, false);
+    packet_init(&ack, PACKET_ACK, false, PLMT_NONE);
     packet_write(&ack, &seqId, sizeof(u16));
     network_send_to(0, &ack);
 }

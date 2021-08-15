@@ -14,7 +14,7 @@ void network_send_reservation_list(struct NetworkPlayer* np, u8 syncIds[]) {
     assert(gNetworkType == NT_SERVER);
 
     struct Packet p;
-    packet_init(&p, PACKET_RESERVATION_LIST, true, false);
+    packet_init(&p, PACKET_RESERVATION_LIST, true, PLMT_NONE);
 
     packet_write(&p, &np->currCourseNum, sizeof(u8));
     packet_write(&p, &np->currActNum,    sizeof(u8));

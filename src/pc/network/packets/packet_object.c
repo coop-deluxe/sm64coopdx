@@ -446,7 +446,7 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
     // write the packet data
     struct Packet p;
-    packet_init(&p, PACKET_OBJECT, reliable, true);
+    packet_init(&p, PACKET_OBJECT, reliable, PLMT_AREA);
     packet_write_object_header(&p, o);
     packet_write_object_full_sync(&p, o);
     packet_write_object_standard_fields(&p, o);

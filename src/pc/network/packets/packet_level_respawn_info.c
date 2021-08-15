@@ -112,7 +112,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
 
     // write header
     struct Packet p;
-    packet_init(&p, PACKET_LEVEL_RESPAWN_INFO, true, false);
+    packet_init(&p, PACKET_LEVEL_RESPAWN_INFO, true, PLMT_NONE);
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActStarNum, sizeof(s16));
     packet_write(&p, &gCurrLevelNum,   sizeof(s16));

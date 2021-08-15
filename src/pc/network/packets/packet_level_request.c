@@ -11,7 +11,7 @@ void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlay
     }
 
     struct Packet p;
-    packet_init(&p, PACKET_LEVEL_REQUEST, true, false);
+    packet_init(&p, PACKET_LEVEL_REQUEST, true, PLMT_NONE);
     packet_write(&p, &fromNp->globalIndex,       sizeof(u8));
     packet_write(&p, &fromNp->currCourseNum,     sizeof(s16));
     packet_write(&p, &fromNp->currActNum,        sizeof(s16));

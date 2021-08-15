@@ -56,6 +56,12 @@ enum PacketType {
     PACKET_CUSTOM = 255,
 };
 
+enum PacketLevelMatchType {
+    PLMT_NONE,
+    PLMT_AREA,
+    PLMT_LEVEL
+};
+
 struct Packet {
     enum PacketType packetType;
     u8 localIndex;
@@ -64,6 +70,7 @@ struct Packet {
     bool error;
     bool reliable;
     bool levelAreaMustMatch;
+    bool levelMustMatch;
     bool requestBroadcast;
     u8 destGlobalId;
     u16 seqId;
@@ -88,7 +95,7 @@ void packet_process(struct Packet* p);
 void packet_receive(struct Packet* packet);
 
 // packet_read_write.c
-void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch);
+void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch);
 void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket);
 void packet_set_flags(struct Packet* packet);
 void packet_set_destination(struct Packet* packet, u8 destGlobalId);
@@ -166,7 +173,7 @@ void network_receive_join(struct Packet* p);
 
 // packet_custom.c
 u8 network_register_custom_packet(void (*send_callback)(struct Packet* p, void* params), void (*receive_callback)(struct Packet* p));
-void network_send_custom(u8 customId, bool reliable, bool levelAreaMustMatch, void* params);
+void network_send_custom(u8 customId, bool reliable, enum PacketLevelMatchType levelAreaMustMatch, void* params);
 void network_receive_custom(struct Packet* p);
 
 // packet_chat.c

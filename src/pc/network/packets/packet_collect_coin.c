@@ -10,6 +10,8 @@
 #include "src/game/object_helpers.h"
 #include "pc/debuglog.h"
 
+extern s16 gCurrCourseNum, gCurrAreaIndex;
+
 // defined in sparkle_spawn_star.inc.c
 void bhv_spawn_star_no_level_exit(struct Object* object, u32 sp20, u8 networkSendEvent);
 
@@ -49,61 +51,54 @@ void network_send_collect_coin(struct Object* o) {
     u16 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
-    packet_init(&p, PACKET_COLLECT_COIN, true, true);
+    packet_init(&p, PACKET_COLLECT_COIN, true, PLMT_LEVEL);
     packet_write(&p, &behaviorId, sizeof(u16));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
     packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
     packet_write(&p, &o->oDamageOrCoinValue, sizeof(s32));
+    packet_write(&p, &gCurrAreaIndex, sizeof(s16));
 
     network_send(&p);
 }
 
 void network_receive_collect_coin(struct Packet* p) {
+    s16 oldNumCoins = gMarioStates[0].numCoins;
+
     u16 behaviorId;
     f32 pos[3] = { 0 };
     s16 numCoins = 0;
     s32 coinValue = 0;
+    s16 areaIndex = 0;
 
     packet_read(p, &behaviorId, sizeof(u16));
     packet_read(p, &pos, sizeof(f32) * 3);
     packet_read(p, &numCoins, sizeof(s16));
     packet_read(p, &coinValue, sizeof(s32));
+    packet_read(p, &areaIndex, sizeof(s16));
 
-    const void* behavior = get_behavior_from_id(behaviorId);
+    if (areaIndex == gCurrAreaIndex) {
+        const void* behavior = get_behavior_from_id(behaviorId);
 
-    // make sure it's valid
-    if (behavior == NULL) { goto SANITY_CHECK_COINS; }
+        // make sure it's valid
+        if (behavior == NULL) { goto SANITY_CHECK_COINS; }
 
-    // find the coin
-    float minDist = (behavior == bhvRedCoin) ? 200 : 1000;
-    struct Object* coin = find_nearest_coin(behavior, pos, coinValue, minDist);
-    if (coin == NULL) { goto SANITY_CHECK_COINS; }
+        // find the coin
+        float minDist = (behavior == bhvRedCoin) ? 200 : 1000;
+        struct Object* coin = find_nearest_coin(behavior, pos, coinValue, minDist);
+        if (coin == NULL) { goto SANITY_CHECK_COINS; }
 
-    // destroy coin
-    coin->oInteractStatus = INT_STATUS_INTERACTED;
-
-    // add to local mario's coin count
-    gMarioStates[0].numCoins += coinValue;
-
-    // check for 100-coin star
-    extern s16 gCurrCourseNum;
-    if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
-        && gMarioStates[0].numCoins - coin->oDamageOrCoinValue < 100
-        && gMarioStates[0].numCoins >= 100) {
-        bhv_spawn_star_no_level_exit(gMarioStates[p->localIndex].marioObj, 6, FALSE);
+        // destroy coin
+        coin->oInteractStatus = INT_STATUS_INTERACTED;
     }
 
-    return;
-
 SANITY_CHECK_COINS:;
-    // make sure we're at least at the same coin count
-    s16 oldCoinCount = gMarioStates[0].numCoins;
-    gMarioStates[0].numCoins = max(numCoins, gMarioStates[0].numCoins);
+    gMarioStates[0].numCoins = max(numCoins, gMarioStates[0].numCoins + coinValue);
 
     // check for 100-coin star
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
-        && oldCoinCount < 100
-        && gMarioStates[0].numCoins >= 100) {
+        && oldNumCoins < 100
+        && gMarioStates[0].numCoins >= 100
+        && gCurrAreaIndex == areaIndex) {
         bhv_spawn_star_no_level_exit(gMarioStates[p->localIndex].marioObj, 6, FALSE);
     }
 }

@@ -31,7 +31,7 @@ void network_send_join_request(void) {
     gOverrideEeprom = eeprom;
 
     struct Packet p;
-    packet_init(&p, PACKET_JOIN_REQUEST, true, false);
+    packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
     packet_write(&p, &configPlayerPalette, sizeof(u8));
@@ -82,7 +82,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     LOG_INFO("sending version: %s", version);
 
     struct Packet p;
-    packet_init(&p, PACKET_JOIN, true, false);
+    packet_init(&p, PACKET_JOIN, true, PLMT_NONE);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &joinRequestPacket->localIndex, sizeof(u8));
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));

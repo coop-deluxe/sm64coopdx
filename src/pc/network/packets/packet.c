@@ -18,6 +18,20 @@ void packet_process(struct Packet* p) {
             }
             return;
         }
+    } else if (p->levelMustMatch) {
+        extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
+        bool levelMismatch =
+            (p->courseNum != gCurrCourseNum
+                || p->actNum != gCurrActStarNum
+                || p->levelNum != gCurrLevelNum);
+        // drop packet
+        if (levelMismatch) {
+            if (gNetworkType != NT_SERVER) {
+                LOG_INFO("dropping level mismatch packet %d", p->packetType);
+                LOG_INFO("    (%d, %d, %d) != (%d, %d, %d)", p->courseNum, p->actNum, p->levelNum, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum);
+            }
+            return;
+        }
     }
 
     switch (p->packetType) {

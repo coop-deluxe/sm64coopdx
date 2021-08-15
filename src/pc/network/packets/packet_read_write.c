@@ -12,14 +12,15 @@ static bool sOrderedPackets = false;
 static u8 sCurrentOrderedGroupId = 0;
 static u8 sCurrentOrderedSeqId = 0;
 
-void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, bool levelAreaMustMatch) {
+void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
     packet->packetType = packetType;
     packet->cursor = 0;
     packet->dataLength = 0;
     packet->error = false;
     packet->reliable = reliable;
-    packet->levelAreaMustMatch = levelAreaMustMatch;
+    packet->levelAreaMustMatch = (levelAreaMustMatch == PLMT_AREA);
+    packet->levelMustMatch     = (levelAreaMustMatch == PLMT_LEVEL);
     packet->requestBroadcast = false;
     packet->sent = false;
     packet->orderedFromGlobalId = sOrderedPackets ? gNetworkPlayerLocal->globalIndex : 0;
@@ -56,7 +57,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     }
 
     // write location
-    if (levelAreaMustMatch) {
+    if (packet->levelAreaMustMatch) {
         packet_write(packet, &gCurrCourseNum,  sizeof(u8));
         packet_write(packet, &gCurrActStarNum, sizeof(u8));
         packet_write(packet, &gCurrLevelNum,   sizeof(u8));
@@ -65,6 +66,13 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
         packet->actNum    = gCurrActStarNum;
         packet->levelNum  = gCurrLevelNum;
         packet->areaIndex = gCurrAreaIndex;
+    } else if (packet->levelMustMatch) {
+        packet_write(packet, &gCurrCourseNum,  sizeof(u8));
+        packet_write(packet, &gCurrActStarNum, sizeof(u8));
+        packet_write(packet, &gCurrLevelNum,   sizeof(u8));
+        packet->courseNum = gCurrCourseNum;
+        packet->actNum    = gCurrActStarNum;
+        packet->levelNum  = gCurrLevelNum;
     }
 }
 
@@ -76,6 +84,7 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->error = srcPacket->error;
     dstPacket->reliable = srcPacket->reliable;
     dstPacket->levelAreaMustMatch = srcPacket->levelAreaMustMatch;
+    dstPacket->levelMustMatch = srcPacket->levelMustMatch;
     dstPacket->requestBroadcast = srcPacket->requestBroadcast;
     dstPacket->destGlobalId = srcPacket->destGlobalId;
     dstPacket->sent = false;
@@ -106,6 +115,7 @@ void packet_set_flags(struct Packet* packet) {
     flags |= SET_BIT(packet->levelAreaMustMatch,  0);
     flags |= SET_BIT(packet->requestBroadcast,    1);
     flags |= SET_BIT(packet->orderedGroupId != 0, 2);
+    flags |= SET_BIT(packet->levelMustMatch,      3);
     packet->buffer[PACKET_FLAG_BUFFER_OFFSET] = flags;
 }
 
@@ -130,6 +140,7 @@ u8 packet_initial_read(struct Packet* packet) {
     packet->levelAreaMustMatch = GET_BIT(flags, 0);
     packet->requestBroadcast   = GET_BIT(flags, 1);
     bool packetIsOrdered       = GET_BIT(flags, 2);
+    packet->levelMustMatch     = GET_BIT(flags, 3);
 
     // read destination
     packet_read(packet, &packet->destGlobalId, sizeof(u8));
@@ -147,6 +158,10 @@ u8 packet_initial_read(struct Packet* packet) {
         packet_read(packet, &packet->actNum,    sizeof(u8));
         packet_read(packet, &packet->levelNum,  sizeof(u8));
         packet_read(packet, &packet->areaIndex, sizeof(u8));
+    } else if (packet->levelMustMatch) {
+        packet_read(packet, &packet->courseNum, sizeof(u8));
+        packet_read(packet, &packet->actNum,    sizeof(u8));
+        packet_read(packet, &packet->levelNum,  sizeof(u8));
     }
 
     // don't drop packet

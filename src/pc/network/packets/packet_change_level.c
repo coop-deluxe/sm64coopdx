@@ -54,7 +54,7 @@ void network_send_change_level(void) {
     }
 
     struct Packet p;
-    packet_init(&p, PACKET_CHANGE_LEVEL, true, false);
+    packet_init(&p, PACKET_CHANGE_LEVEL, true, PLMT_NONE);
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActStarNum, sizeof(s16));
     packet_write(&p, &gCurrLevelNum,   sizeof(s16));

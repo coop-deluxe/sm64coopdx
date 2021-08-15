@@ -22,7 +22,7 @@ u8 network_register_custom_packet(void (*send_callback)(struct Packet* p, void* 
     return i;
 }
 
-void network_send_custom(u8 customId, bool reliable, bool levelAreaMustMatch, void* params) {
+void network_send_custom(u8 customId, bool reliable, enum PacketLevelMatchType levelAreaMustMatch, void* params) {
     if (customPackets[customId].send_callback == NULL) { return; }
 
     struct Packet p;

@@ -138,6 +138,10 @@ void network_send_to(u8 localIndex, struct Packet* p) {
             if (p->actNum    != np->currActNum)    { return; }
             if (p->levelNum  != np->currLevelNum)  { return; }
             if (p->areaIndex != np->currAreaIndex) { return; }
+        } else if (p->levelMustMatch) {
+            if (p->courseNum != np->currCourseNum) { return; }
+            if (p->actNum    != np->currActNum)    { return; }
+            if (p->levelNum  != np->currLevelNum)  { return; }
         }
     }
 
@@ -223,6 +227,10 @@ void network_send(struct Packet* p) {
             if (p->actNum    != np->currActNum)    { continue; }
             if (p->levelNum  != np->currLevelNum)  { continue; }
             if (p->areaIndex != np->currAreaIndex) { continue; }
+        } else if (p->levelMustMatch) {
+            if (p->courseNum != np->currCourseNum) { continue; }
+            if (p->actNum    != np->currActNum)    { continue; }
+            if (p->levelNum  != np->currLevelNum)  { continue; }
         }
 
         p->localIndex = i;

@@ -45,7 +45,7 @@ void network_send_collect_item(struct Object* o) {
     u16 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p;
-    packet_init(&p, PACKET_COLLECT_ITEM, true, true);
+    packet_init(&p, PACKET_COLLECT_ITEM, true, PLMT_AREA);
     packet_write(&p, &behaviorId, sizeof(u16));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
 
