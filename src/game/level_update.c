@@ -1373,6 +1373,13 @@ s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused) {
     switch (initOrUpdate) {
         case 0:
             result = init_level();
+
+            // HACK: play main menu music
+            // this is in a terrible spot but I couldn't find a better one.
+            if (gDjuiInMainMenu) {
+                set_background_music(0, 0x0021, 0);
+            }
+
             break;
         case 1:
             result = update_level();
