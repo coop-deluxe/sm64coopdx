@@ -6,6 +6,8 @@
 #include "src/pc/configfile.h"
 #include "pc/utils/misc.h"
 #include "src/game/level_update.h"
+#include "audio/external.h"
+#include "audio_defines.h"
 
 #ifdef DISCORD_SDK
 static char* sWarningDiscord = "\
@@ -40,8 +42,11 @@ void djui_panel_host_message_do_host(struct DjuiBase* caller) {
 #endif
     network_init(NT_SERVER);
     fake_lvl_init_from_save_file();
-    extern s16 gChangeLevel;
-    gChangeLevel = 16;
+    extern s16 gChangeLevelTransition;
+    gChangeLevelTransition = 16;
+    play_sound(SOUND_MENU_STAR_SOUND_OKEY_DOKEY, gDefaultSoundArgs);
+    extern void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
+    play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {

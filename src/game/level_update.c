@@ -54,6 +54,7 @@ extern s8 sReceivedLoadedActNum;
 u8 gRejectInstantWarp = 0;
 
 s16 gChangeLevel = -1;
+s16 gChangeLevelTransition = -1;
 s16 gChangeAreaIndex = -1;
 s16 gChangeActNum = -1;
 
@@ -1245,6 +1246,15 @@ s32 update_level(void) {
         sTransitionUpdate = NULL;
         changeLevel = gChangeLevel;
         gChangeLevel = -1;
+        gChangeLevelTransition = -1;
+        return changeLevel;
+    } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE && gChangeLevelTransition != -1) {
+        gHudDisplay.flags = HUD_DISPLAY_NONE;
+        sTransitionTimer = 0;
+        sTransitionUpdate = NULL;
+        changeLevel = gChangeLevelTransition;
+        gChangeLevel = -1;
+        gChangeLevelTransition = -1;
         return changeLevel;
     }
 
