@@ -172,6 +172,12 @@ void bhv_skeeter_update(void) {
     }
 
     obj_check_attacks(&sSkeeterHitbox, o->oAction);
+    // HACK: when water level suddenly changes, the skeeter can disappear into the floor
+    f32 waterLevel = find_water_level(o->oPosX, o->oPosZ);
+    if (fabs(o->oSkeeterLastWaterY - waterLevel) > 100) {
+        o->oMoveFlags = OBJ_MOVE_IN_AIR;
+    }
+    o->oSkeeterLastWaterY = waterLevel;
     cur_obj_move_standard(-78);
 }
 

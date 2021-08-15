@@ -2,7 +2,6 @@
 static void fire_spitter_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
     int distanceToPlayer = dist_between_objects(o, player);
-
     approach_f32_ptr(&o->header.gfx.scale[0], 0.2f, 0.002f);
     if (o->oTimer > 150 && distanceToPlayer < 800.0f && !(o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER)) {
         o->oAction = FIRE_SPITTER_ACT_SPIT_FIRE;
@@ -70,5 +69,11 @@ void bhv_fire_spitter_update(void) {
             break;
     }
 
+    // HACK: when water level suddenly changes, the fire spitter can disappear into the floor
+    f32 waterLevel = find_water_level(o->oPosX, o->oPosZ);
+    if (fabs(o->oFireSpitterLastWaterY - waterLevel) > 100) {
+        o->oMoveFlags = OBJ_MOVE_IN_AIR;
+    }
+    o->oFireSpitterLastWaterY = waterLevel;
     cur_obj_move_standard(78);
 }
