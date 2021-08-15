@@ -10,13 +10,16 @@
 
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
-        .hudHead = ',',
-        .cameraHudHead = GLYPH_CAM_MARIO_HEAD,
-        .modelId = MODEL_MARIO,
-        .capModelId = MODEL_MARIOS_CAP,
-        .capKleptoAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP,
-        .capUkikiAnimState = UKIKI_ANIM_STATE_HAT_ON,
-        .soundFreqScale = 1.0f,
+        .hudHead               = ',',
+        .cameraHudHead         = GLYPH_CAM_MARIO_HEAD,
+        .modelId               = MODEL_MARIO,
+        .capModelId            = MODEL_MARIOS_CAP,
+        .capMetalModelId       = MODEL_MARIOS_METAL_CAP,
+        .capWingModelId        = MODEL_MARIOS_WING_CAP,
+        .capMetalWingModelId   = MODEL_MARIOS_WINGED_METAL_CAP,
+        .capKleptoAnimState    = KLEPTO_ANIM_STATE_HOLDING_CAP,
+        .capUkikiAnimState     = UKIKI_ANIM_STATE_HAT_ON,
+        .soundFreqScale        = 1.0f,
         // sounds
         .soundYahWahHoo        = SOUND_MARIO_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_MARIO_HOOHOO,
@@ -63,13 +66,16 @@ struct Character gCharacters[CT_MAX] = {
     },
 
     [CT_LUIGI] = {
-        .hudHead = '.',
-        .cameraHudHead = GLYPH_CAM_LUIGI_HEAD,
-        .modelId = MODEL_LUIGI,
-        .capModelId = MODEL_LUIGIS_CAP,
-        .capKleptoAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI,
-        .capUkikiAnimState = UKIKI_ANIM_STATE_HAT_ON_LUIGI,
-        .soundFreqScale = 1.0f,
+        .hudHead               = '.',
+        .cameraHudHead         = GLYPH_CAM_LUIGI_HEAD,
+        .modelId               = MODEL_LUIGI,
+        .capModelId            = MODEL_LUIGIS_CAP,
+        .capMetalModelId       = MODEL_LUIGIS_METAL_CAP,
+        .capWingModelId        = MODEL_LUIGIS_WING_CAP,
+        .capMetalWingModelId   = MODEL_LUIGIS_WINGED_METAL_CAP,
+        .capKleptoAnimState    = KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI,
+        .capUkikiAnimState     = UKIKI_ANIM_STATE_HAT_ON_LUIGI,
+        .soundFreqScale        = 1.0f,
         // sounds
         .soundYahWahHoo        = SOUND_LUIGI_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_LUIGI_HOOHOO,

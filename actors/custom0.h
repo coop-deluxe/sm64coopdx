@@ -5,6 +5,9 @@
 
 // luigi_cap
 extern const GeoLayout luigis_cap_geo[];
+extern const GeoLayout luigis_metal_cap_geo[];
+extern const GeoLayout luigis_wing_cap_geo[];
+extern const GeoLayout luigis_winged_metal_cap_geo[];
 extern const Gfx luigi_cap_seg3_dl_03022B30[];
 extern const Gfx luigi_cap_seg3_dl_03022B68[];
 extern const Gfx luigi_cap_seg3_dl_03022CC8[];

@@ -68,8 +68,6 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_RAW( /*seg*/ 0x13, _behaviorSegmentRomStart, _behaviorSegmentRomEnd),
     ALLOC_LEVEL_POOL(),
     LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
-    LOAD_MODEL_FROM_GEO(MODEL_LUIGI,                   luigi_geo), // custom luigi
-    LOAD_MODEL_FROM_GEO(MODEL_BUBBLE_PLAYER,           water_bomb_geo),
     LOAD_MODEL_FROM_GEO(MODEL_SMOKE,                   smoke_geo),
     LOAD_MODEL_FROM_GEO(MODEL_SPARKLES,                sparkles_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BUBBLE,                  bubble_geo),
@@ -106,7 +104,6 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_MARIOS_WING_CAP,         marios_wing_cap_geo),
     LOAD_MODEL_FROM_GEO(MODEL_MARIOS_CAP,              marios_cap_geo),
     LOAD_MODEL_FROM_GEO(MODEL_MARIOS_CAP,              marios_cap_geo), // repeated
-    LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_CAP,              luigis_cap_geo), // custom luigi_cap
     LOAD_MODEL_FROM_GEO(MODEL_BOWSER_KEY_CUTSCENE,     bowser_key_cutscene_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BOWSER_KEY,              bowser_key_geo),
     LOAD_MODEL_FROM_GEO(MODEL_RED_FLAME_SHADOW,        red_flame_shadow_geo),
@@ -117,6 +114,19 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_EXPLOSION,               explosion_geo),
     LOAD_MODEL_FROM_GEO(MODEL_DIRT_ANIMATION,          dirt_animation_geo),
     LOAD_MODEL_FROM_GEO(MODEL_CARTOON_STAR,            cartoon_star_geo),
+
+    // CUSTOM MODELS BEGIN
+
+    LOAD_MODEL_FROM_GEO(MODEL_BUBBLE_PLAYER,           water_bomb_geo),
+
+    LOAD_MODEL_FROM_GEO(MODEL_LUIGI,                   luigi_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_CAP,              luigis_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_METAL_CAP,        luigis_metal_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_WING_CAP,         luigis_wing_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_WINGED_METAL_CAP, luigis_winged_metal_cap_geo),
+
+    // CUSTOM MODELS END
+
     FREE_LEVEL_POOL(),
     CALL(/*arg*/ 0, /*func*/ lvl_init_from_save_file),
     LOOP_BEGIN(),

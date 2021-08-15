@@ -17,8 +17,7 @@ struct Struct802C0DF0 sExclamationBoxContents[] = { { 0, 0, 0, MODEL_MARIOS_WING
                                                     { 1, 0, 0, MODEL_MARIOS_METAL_CAP, bhvMetalCap },
                                                     { 2, 0, 0, MODEL_MARIOS_CAP, bhvVanishCap },
                                                     { 3, 0, 0, MODEL_KOOPA_SHELL, bhvKoopaShell },
-                                                    { 4, 0, 0, MODEL_YELLOW_COIN,
-                                                      bhvSingleCoinGetsSpawned },
+                                                    { 4, 0, 0, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned },
                                                     { 5, 0, 0, MODEL_NONE, bhvThreeCoinsSpawn },
                                                     { 6, 0, 0, MODEL_NONE, bhvTenCoinsSpawn },
                                                     { 7, 0, 0, MODEL_1UP, bhv1upWalking },
@@ -112,8 +111,19 @@ void exclamation_box_act_3(void) {
         o->oAction = 4;
 }
 
+static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
+    switch (model) {
+        case MODEL_MARIOS_CAP:              return m->character->capModelId;
+        case MODEL_MARIOS_METAL_CAP:        return m->character->capMetalModelId;
+        case MODEL_MARIOS_WING_CAP:         return m->character->capWingModelId;
+        case MODEL_MARIOS_WINGED_METAL_CAP: return m->character->capMetalWingModelId;
+        default:                            return model;
+    }
+}
+
 void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
-    struct Object* player = nearest_player_to_object(o);
+    struct MarioState* m = nearest_mario_state_to_object(o);
+    struct Object* player = m->marioObj;
     struct Object *sp1C = NULL;
 
     if (o->oExclamationBoxForce) {
@@ -122,7 +132,9 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
 
     while (a0->unk0 != 99) {
         if (a1 == a0->unk0) {
-            sp1C = spawn_object(o, a0->model, a0->behavior);
+            s32 model = exclamation_replace_model(m, a0->model);
+
+            sp1C = spawn_object(o, model, a0->behavior);
             sp1C->oVelY = 20.0f;
             sp1C->oForwardVel = 3.0f;
             sp1C->oMoveAngleYaw = player->oMoveAngleYaw;
@@ -139,7 +151,7 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
                     network_set_sync_id(sp1C);
                 }
                 struct Object* spawn_objects[] = { sp1C };
-                u32 models[] = { a0->model };
+                u32 models[] = { model };
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
             break;

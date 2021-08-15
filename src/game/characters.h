@@ -16,6 +16,9 @@ struct Character {
     u32 cameraHudHead;
     u32 modelId;
     u32 capModelId;
+    u32 capMetalModelId;
+    u32 capWingModelId;
+    u32 capMetalWingModelId;
     s32 capKleptoAnimState;
     s32 capUkikiAnimState;
     f32 soundFreqScale;

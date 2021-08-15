@@ -18,6 +18,12 @@ static const Lights1 luigi_cap_seg3_lights_0301CF38 = gdSPDefLights1(
     0x00, 0x8C, 0x00, 0x28, 0x28, 0x28
 );
 
+static const Lights1 luigi_cap_seg3_lights_white = gdSPDefLights1(
+    0x7f, 0x7f, 0x7f,
+    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
+);
+
+
 // 0x0301CF50
 ALIGNED8 static const u8 luigi_cap_seg3_texture_0301CF50[] = {
 #include "actors/mario_cap/mario_cap_metal.rgba16.inc.c"
@@ -285,8 +291,8 @@ const Gfx luigi_cap_seg3_dl_03022FF8[] = {
     gsDPSetCombineMode(G_CC_MODULATERGBFADE, G_CC_MODULATERGBFADE),
     gsDPLoadTextureBlock(luigi_cap_seg3_texture_0301CF50, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPLight(&luigi_cap_seg3_lights_0301CF20.l, 1),
-    gsSPLight(&luigi_cap_seg3_lights_0301CF20.a, 2),
+    gsSPLight(&luigi_cap_seg3_lights_white.l, 1),
+    gsSPLight(&luigi_cap_seg3_lights_white.a, 2),
     gsSPDisplayList(luigi_cap_seg3_dl_03022B30),
     gsSPDisplayList(luigi_cap_seg3_dl_03022B68),
     gsSPDisplayList(luigi_cap_seg3_dl_03022CC8),
@@ -385,8 +391,8 @@ const Gfx luigi_cap_seg3_dl_03023298[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (64 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightEXT(1, 5), //gsSPLight(&luigi_cap_seg3_lights_0301CF20.l, 1),
-    gsSPCopyLightEXT(2, 6), //gsSPLight(&luigi_cap_seg3_lights_0301CF20.a, 2),
+    gsSPLight(&luigi_cap_seg3_lights_white.l, 1),
+    gsSPLight(&luigi_cap_seg3_lights_white.a, 2),
     gsSPDisplayList(luigi_cap_seg3_dl_03022B30),
     gsSPDisplayList(luigi_cap_seg3_dl_03022B68),
     gsSPDisplayList(luigi_cap_seg3_dl_03022CC8),

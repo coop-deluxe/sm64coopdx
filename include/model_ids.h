@@ -24,12 +24,6 @@
 /* Global models that are loaded for every level */
 
 #define MODEL_MARIO                       0x01        // mario_geo
-#define MODEL_LUIGI                       0xE2        // luigi_geo
-#define MODEL_BUBBLE_PLAYER               0xE3        // water_bomb_geo
-
-/* Additional custom models */
-
-#define MODEL_LUIGIS_CAP                  0xE4        // luigis_cap_geo
 
 /* Various static level geometry, the geo layout differs but terrain object presets treat them the same.*/
 
@@ -590,5 +584,15 @@
 #define MODEL_THI_WARP_PIPE                       MODEL_LEVEL_GEOMETRY_16   // warp_pipe_geo
 #define MODEL_VCUTM_WARP_PIPE                     MODEL_LEVEL_GEOMETRY_16   // warp_pipe_geo
 #define MODEL_CASTLE_GROUNDS_WARP_PIPE            MODEL_LEVEL_GEOMETRY_16   // warp_pipe_geo
+
+/* Custom coop models */
+
+#define MODEL_BUBBLE_PLAYER               0xE2 // water_bomb_geo
+
+#define MODEL_LUIGI                       0xE3 // luigi_geo
+#define MODEL_LUIGIS_CAP                  0xE4 // luigis_cap_geo
+#define MODEL_LUIGIS_METAL_CAP            0xE5 // luigis_metal_cap_geo
+#define MODEL_LUIGIS_WING_CAP             0xE6 // luigis_wing_cap_geo
+#define MODEL_LUIGIS_WINGED_METAL_CAP     0xE7 // luigis_winged_metal_cap_geo
 
 #endif // MODEL_IDS_H
