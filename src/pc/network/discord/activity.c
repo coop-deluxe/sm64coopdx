@@ -35,6 +35,9 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     discord_activity_update(false);
 
     if (gNetworkType == NT_CLIENT) {
+        if (gNetworkPlayerServer == NULL) {
+            network_player_connected(NPT_SERVER, 0, 0, 0, "Player");
+        }
         ns_discord_save_id(gNetworkPlayerServer->localIndex, lobby->owner_id);
         network_send_join_request();
     }
