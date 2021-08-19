@@ -595,4 +595,9 @@
 #define MODEL_LUIGIS_WING_CAP             0xE6 // luigis_wing_cap_geo
 #define MODEL_LUIGIS_WINGED_METAL_CAP     0xE7 // luigis_winged_metal_cap_geo
 
+#define MODEL_TOAD_PLAYER                 0xE8 // toad_player_geo
+#define MODEL_TOADS_CAP                   0xE9 // toads_cap_geo
+#define MODEL_TOADS_METAL_CAP             0xEA // toads_metal_cap_geo
+#define MODEL_TOADS_WING_CAP              0xEB // toads_wing_cap_geo
+
 #endif // MODEL_IDS_H

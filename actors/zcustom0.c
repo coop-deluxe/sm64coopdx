@@ -6,3 +6,6 @@
 
 // luigi model
 #include "luigi/model.inc.c"
+
+// toad model
+#include "toad_player/model.inc.c"

@@ -11,6 +11,8 @@
 
 extern Gfx mario_cap_seg3_dl_03022F48[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
+extern Gfx toad_player_dl_cap[];
+extern Gfx toad_player_dl_cap_decal[];
 
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
@@ -127,6 +129,64 @@ struct Character gCharacters[CT_MAX] = {
         .soundSnoring3         = SOUND_LUIGI_SNORING3,
         .soundSoLongaBowser    = SOUND_LUIGI_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_LUIGI_IMA_TIRED,
+    },
+
+    [CT_TOAD] = {
+        .name                  = "Toad",
+        .hudHead               = '/',
+        .cameraHudHead         = GLYPH_CAM_TOAD_HEAD,
+        .modelId               = MODEL_TOAD_PLAYER,
+        .capModelId            = MODEL_TOADS_CAP,
+        .capMetalModelId       = MODEL_TOADS_METAL_CAP,
+        .capWingModelId        = MODEL_TOADS_WING_CAP,
+        .capMetalWingModelId   = MODEL_TOADS_CAP,
+        .capEnemyLayer         = LAYER_TRANSPARENT,
+        .capEnemyGfx           = toad_player_dl_cap,
+        .capEnemyDecalGfx      = toad_player_dl_cap_decal,
+        .soundFreqScale        = 1.25f,
+        // sounds
+        .soundYahWahHoo        = SOUND_MARIO_YAH_WAH_HOO,
+        .soundHoohoo           = SOUND_MARIO_HOOHOO,
+        .soundYahoo            = SOUND_MARIO_YAHOO,
+        .soundUh               = SOUND_MARIO_UH,
+        .soundHrmm             = SOUND_MARIO_HRMM,
+        .soundWah2             = SOUND_MARIO_WAH2,
+        .soundWhoa             = SOUND_MARIO_WHOA,
+        .soundEeuh             = SOUND_MARIO_EEUH,
+        .soundAttacked         = SOUND_MARIO_ATTACKED,
+        .soundOoof             = SOUND_MARIO_OOOF,
+        .soundOoof2            = SOUND_MARIO_OOOF2,
+        .soundHereWeGo         = SOUND_MARIO_HERE_WE_GO,
+        .soundYawning          = SOUND_MARIO_YAWNING,
+        .soundSnoring1         = SOUND_MARIO_SNORING1,
+        .soundSnoring2         = SOUND_MARIO_SNORING2,
+        .soundWaaaooow         = SOUND_MARIO_WAAAOOOW,
+        .soundHaha             = SOUND_MARIO_HAHA,
+        .soundHaha_2           = SOUND_MARIO_HAHA_2,
+        .soundUh2              = SOUND_MARIO_UH2,
+        .soundUh2_2            = SOUND_MARIO_UH2_2,
+        .soundOnFire           = SOUND_MARIO_ON_FIRE,
+        .soundDying            = SOUND_MARIO_DYING,
+        .soundPantingCold      = SOUND_MARIO_PANTING_COLD,
+        .soundPanting          = SOUND_MARIO_PANTING,
+        .soundCoughing1        = SOUND_MARIO_COUGHING1,
+        .soundCoughing2        = SOUND_MARIO_COUGHING2,
+        .soundCoughing3        = SOUND_MARIO_COUGHING3,
+        .soundPunchYah         = SOUND_MARIO_PUNCH_YAH,
+        .soundPunchHoo         = SOUND_MARIO_PUNCH_HOO,
+        .soundMamaMia          = SOUND_MARIO_MAMA_MIA,
+        .soundGroundPoundWah   = SOUND_MARIO_GROUND_POUND_WAH,
+        .soundDrowning         = SOUND_MARIO_DROWNING,
+        .soundPunchWah         = SOUND_MARIO_PUNCH_WAH,
+        .soundYahooWahaYippee  = SOUND_MARIO_YAHOO_WAHA_YIPPEE,
+        .soundDoh              = SOUND_MARIO_DOH,
+        .soundGameOver         = SOUND_MARIO_GAME_OVER,
+        .soundHello            = SOUND_MARIO_HELLO,
+        .soundPressStartToPlay = SOUND_MARIO_PRESS_START_TO_PLAY,
+        .soundTwirlBounce      = SOUND_MARIO_TWIRL_BOUNCE,
+        .soundSnoring3         = SOUND_MARIO_SNORING3,
+        .soundSoLongaBowser    = SOUND_MARIO_SO_LONGA_BOWSER,
+        .soundImaTired         = SOUND_MARIO_IMA_TIRED,
     },
 };
 

@@ -5,3 +5,5 @@
 #include "zcustom0.h"
 
 #include "luigi/geo.inc.c"
+
+#include "toad_player/geo.inc.c"

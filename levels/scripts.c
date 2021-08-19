@@ -125,6 +125,11 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_WING_CAP,         luigis_wing_cap_geo),
     LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_WINGED_METAL_CAP, luigis_winged_metal_cap_geo),
 
+    LOAD_MODEL_FROM_GEO(MODEL_TOAD_PLAYER,             toad_player_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_TOADS_CAP,               toads_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_TOADS_METAL_CAP,         toads_metal_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_TOADS_WING_CAP,          toads_wing_cap_geo),
+
     // CUSTOM MODELS END
 
     FREE_LEVEL_POOL(),

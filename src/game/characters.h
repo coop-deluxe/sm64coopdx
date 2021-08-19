@@ -6,6 +6,7 @@
 enum CharacterType {
     CT_MARIO,
     CT_LUIGI,
+    CT_TOAD,
 
     // must be last
     CT_MAX

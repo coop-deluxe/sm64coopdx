@@ -23,4 +23,9 @@ extern const Gfx luigi_cap_seg3_dl_03023108[];
 extern const Gfx luigi_cap_seg3_dl_03023160[];
 extern const Gfx luigi_cap_seg3_dl_03023298[];
 
+// toad_cap
+extern const GeoLayout toads_cap_geo[];
+extern const GeoLayout toads_metal_cap_geo[];
+extern const GeoLayout toads_wing_cap_geo[];
+
 #endif

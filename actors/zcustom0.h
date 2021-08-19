@@ -6,4 +6,7 @@
 // luigi
 #include "actors/luigi/geo_header.h"
 
+// toad_player
+#include "actors/toad_player/geo_header.h"
+
 #endif

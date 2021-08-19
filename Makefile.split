@@ -71,6 +71,10 @@ MARIO_DIRS       := mario bubble walk_smoke burn_smoke stomp_smoke water_wave sp
 CUSTOM_DIRS := luigi_cap
 ZCUSTOM_DIRS := luigi
 
+# Add Toad
+CUSTOM_DIRS += toad_cap
+ZCUSTOM_DIRS += toad_player
+
 # Actor Files
 CUSTOM_FILES                := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 AMP_CHUCKYA_FILES            := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(AMP_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
