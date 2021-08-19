@@ -42,6 +42,17 @@
 #define FRAME_INTERVAL_US_DENOMINATOR 6
 #endif
 
+// TODO: figure out if this shit even works
+#ifdef VERSION_EU
+# define FRAMERATE 25
+#else
+# define FRAMERATE 30
+#endif
+// time between consequtive game frames
+static const f64 sFrameTime = 1.0 / (2.0 * FRAMERATE);
+static f64 sFrameTargetTime = 0;
+extern "C" f64 clock_elapsed_f64(void);
+
 using namespace Microsoft::WRL; // For ComPtr
 
 static bool inTextInput = false;
@@ -395,7 +406,8 @@ static uint64_t qpc_to_us(uint64_t qpc) {
 }
 
 static bool gfx_dxgi_start_frame(void) {
-    DXGI_FRAME_STATISTICS stats;
+    // HACK: all of this is too confusing to bother with right now
+    /*DXGI_FRAME_STATISTICS stats;
     if (dxgi.swap_chain->GetFrameStatistics(&stats) == S_OK && (stats.SyncRefreshCount != 0 || stats.SyncQPCTime.QuadPart != 0ULL)) {
         {
             LARGE_INTEGER t0;
@@ -507,13 +519,36 @@ static bool gfx_dxgi_start_frame(void) {
         dxgi.length_in_vsync_frames = vsyncs_to_wait;
     } else {
         dxgi.length_in_vsync_frames = 2;
+    }*/
+
+    dxgi.length_in_vsync_frames = configWindow.vsync;
+    f64 curTime = clock_elapsed_f64();
+    if (curTime > sFrameTargetTime) {
+        sFrameTargetTime += sFrameTime;
+        if (curTime > sFrameTargetTime + sFrameTime * 3) {
+            sFrameTargetTime = curTime;
+        }
+        dxgi.dropped_frame = true;
+        return false;
     }
+    dxgi.dropped_frame = false;
 
     return true;
 }
 
+static inline void sync_framerate_with_timer(void) {
+    f64 curTime = clock_elapsed_f64();
+    if (curTime < sFrameTargetTime) {
+        u32 delayMs = (sFrameTargetTime - curTime) * 1000.0;
+        if (delayMs > 0) {
+            Sleep(delayMs);
+        }
+    }
+    sFrameTargetTime += sFrameTime;
+}
+
 static void gfx_dxgi_swap_buffers_begin(void) {
-    //dxgi.length_in_vsync_frames = 1;
+    sync_framerate_with_timer();
     ThrowIfFailed(dxgi.swap_chain->Present(dxgi.length_in_vsync_frames, 0));
     UINT this_present_id;
     if (dxgi.swap_chain->GetLastPresentCount(&this_present_id) == S_OK) {
@@ -527,12 +562,12 @@ static void gfx_dxgi_swap_buffers_end(void) {
     QueryPerformanceCounter(&t0);
     QueryPerformanceCounter(&t1);
 
-    if (!dxgi.dropped_frame) {
+    /*if (!dxgi.dropped_frame) {
         if (dxgi.waitable_object != nullptr) {
             WaitForSingleObject(dxgi.waitable_object, INFINITE);
         }
         // else TODO: maybe sleep until some estimated time the frame will be shown to reduce lag
-    }
+    }*/
 
     DXGI_FRAME_STATISTICS stats;
     dxgi.swap_chain->GetFrameStatistics(&stats);

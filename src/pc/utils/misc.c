@@ -71,6 +71,10 @@ f32 clock_elapsed(void) {
     return (clock_elapsed_ns() / 1000000000.0f);
 }
 
+f64 clock_elapsed_f64(void) {
+    return (clock_elapsed_ns() / 1000000000.0);
+}
+
 u32 clock_elapsed_ticks(void) {
     return (clock_elapsed_ns() * 3 / 100000000);
 }
