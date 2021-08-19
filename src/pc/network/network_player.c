@@ -13,7 +13,7 @@ struct NetworkPlayer* gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 
 void network_player_init(void) {
-    gNetworkPlayers[0].modelIndex = configPlayerModel;
+    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : 0;
     gNetworkPlayers[0].paletteIndex = configPlayerPalette;
 }
 
@@ -187,6 +187,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     if (name[0] == '\0') {
         name = sDefaultPlayerName;
     }
+    if (modelIndex >= CT_MAX) { modelIndex = 0; }
 
     if (type == NPT_LOCAL) {
         struct NetworkPlayer* np = &gNetworkPlayers[0];
