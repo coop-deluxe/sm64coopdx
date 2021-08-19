@@ -7,6 +7,7 @@ void bhv_small_bomp_init(void) {
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 168;
+    o->areaTimerRunOnceCallback = load_object_collision_model;
 }
 
 void bhv_small_bomp_loop(void) {
@@ -66,6 +67,7 @@ void bhv_large_bomp_init(void) {
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 168;
+    o->areaTimerRunOnceCallback = load_object_collision_model;
 }
 
 void bhv_large_bomp_loop(void) {

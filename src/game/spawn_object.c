@@ -309,6 +309,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->areaTimerType = AREA_TIMER_TYPE_NONE;
     obj->areaTimer = 0;
     obj->areaTimerDuration = 0;
+    obj->areaTimerRunOnceCallback = NULL;
 
     return obj;
 }

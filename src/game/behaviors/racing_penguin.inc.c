@@ -29,6 +29,13 @@ void bhv_racing_penguin_the_quick_override_ownership(u8* shouldOverride, u8* sho
     *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
 }
 
+void bhv_racing_penguin_run_once(void) {
+    cur_obj_align_gfx_with_floor();
+    cur_obj_push_mario_away_from_cylinder(
+        sRacingPenguinData[o->oBehParams2ndByte].radius,
+        sRacingPenguinData[o->oBehParams2ndByte].height);
+}
+
 void bhv_racing_penguin_init(void) {
     if (gMarioStates[0].numStars == 120) {
         cur_obj_scale(8.0f);
@@ -70,6 +77,7 @@ void bhv_racing_penguin_init(void) {
     o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;
     o->areaTimer = 0;
     o->areaTimerDuration = 60;
+    o->areaTimerRunOnceCallback = bhv_racing_penguin_run_once;
 }
 
 static void racing_penguin_act_wait_for_mario(void) {
@@ -277,12 +285,6 @@ void bhv_racing_penguin_update(void) {
     }
 
     cur_obj_move_standard(78);
-
-    if (cur_obj_is_last_nat_update_per_frame()) {
-        cur_obj_align_gfx_with_floor();
-        cur_obj_push_mario_away_from_cylinder(sRacingPenguinData[o->oBehParams2ndByte].radius,
-                                              sRacingPenguinData[o->oBehParams2ndByte].height);
-    }
 }
 
 void bhv_penguin_race_finish_line_update(void) {

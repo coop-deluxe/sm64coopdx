@@ -48,19 +48,22 @@ void checkerboard_plat_act_rotate(s32 a0, s16 a1) {
     o->oCheckerBoardPlatformUnkF8 = a0;
 }
 
+static void bhv_checkerboard_platform_run_once(void) {
+    if (o->oDistanceToMario < 1000.0f) {
+        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR4);
+    }
+    load_object_collision_model();
+}
+
 void bhv_checkerboard_platform_init(void) {
     o->oCheckerBoardPlatformUnkFC = o->parentObj->oBehParams2ndByte;
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 132 + o->oCheckerBoardPlatformUnkFC * 2;
+    o->areaTimerRunOnceCallback = bhv_checkerboard_platform_run_once;
 }
 
 void bhv_checkerboard_platform_loop(void) {
-    bool lastNATUpdate = cur_obj_is_last_nat_update_per_frame();
-    if (o->oDistanceToMario < 1000.0f && lastNATUpdate) {
-        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR4);
-    }
-
     f32 sp24 = o->oCheckerBoardPlatformUnk1AC;
     o->oCheckerBoardPlatformUnkF8 = 0;
     switch (o->oAction) {
@@ -96,9 +99,5 @@ void bhv_checkerboard_platform_loop(void) {
         cur_obj_move_using_fvel_and_gravity();
     } else {
         cur_obj_move_using_fvel_and_gravity();
-    }
-
-    if (lastNATUpdate) {
-        load_object_collision_model();
     }
 }

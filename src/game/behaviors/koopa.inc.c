@@ -88,6 +88,10 @@ void bhv_koopa_the_quick_override_ownership(u8* shouldOverride, u8* shouldOwn) {
     *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
 }
 
+static void bhv_koopa_the_quick_run_once(void) {
+    cur_obj_push_mario_away_from_cylinder(140.0f, 300.0f);
+}
+
 /**
  * Initialization function.
  */
@@ -140,6 +144,7 @@ void bhv_koopa_init(void) {
         o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;
         o->areaTimer = 0;
         o->areaTimerDuration = 60;
+        o->areaTimerRunOnceCallback = bhv_koopa_the_quick_run_once;
     } else {
         // normal koopa
         network_init_object(o, 4000.0f);
@@ -902,9 +907,6 @@ static void koopa_the_quick_update(void) {
         }
     }
 
-    if (cur_obj_is_last_nat_update_per_frame()) {
-        cur_obj_push_mario_away_from_cylinder(140.0f, 300.0f);
-    }
     cur_obj_move_standard(-78);
 }
 

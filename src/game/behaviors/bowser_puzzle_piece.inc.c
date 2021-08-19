@@ -98,6 +98,7 @@ void bhv_lll_bowser_puzzle_spawn_piece(s16 model, const BehaviorScript *behavior
     puzzlePiece->areaTimerType = AREA_TIMER_TYPE_LOOP;
     puzzlePiece->areaTimer = 0;
     puzzlePiece->areaTimerDuration = 650;
+    puzzlePiece->areaTimerRunOnceCallback = load_object_collision_model;
 }
 
 /**

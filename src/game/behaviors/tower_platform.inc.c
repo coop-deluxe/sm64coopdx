@@ -94,12 +94,15 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
     platform->oPlatformUnk10C = o->oPlatformSpawnerUnk108;
     o->oPlatformSpawnerUnkF4++;
 
-    u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
-    loopTime *= 2;
-    loopTime += 1;
-    platform->areaTimerType = AREA_TIMER_TYPE_LOOP;
-    platform->areaTimer = 0;
-    platform->areaTimerDuration = loopTime;
+    if (bhv == bhvWfSolidTowerPlatform || bhv == bhvWfSlidingTowerPlatform) {
+        u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
+        loopTime *= 2;
+        loopTime += 1;
+        platform->areaTimerType = AREA_TIMER_TYPE_LOOP;
+        platform->areaTimer = 0;
+        platform->areaTimerDuration = loopTime;
+        platform->areaTimerRunOnceCallback = load_object_collision_model;
+    }
 }
 
 void spawn_wf_platform_group(void) {

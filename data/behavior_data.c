@@ -839,7 +839,6 @@ const BehaviorScript bhvWfRotatingWoodenPlatform[] = {
     LOAD_COLLISION_DATA(wf_seg7_collision_clocklike_rotation),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_wf_rotating_wooden_platform_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -1749,7 +1748,6 @@ const BehaviorScript bhvWfSlidingTowerPlatform[] = {
     LOAD_COLLISION_DATA(wf_seg7_collision_platform),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_wf_sliding_tower_platform_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -1771,7 +1769,6 @@ const BehaviorScript bhvWfSolidTowerPlatform[] = {
     LOAD_COLLISION_DATA(wf_seg7_collision_platform),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_wf_solid_tower_platform_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -2699,7 +2696,6 @@ const BehaviorScript bhvLllBowserPuzzlePiece[] = {
     SET_FLOAT(oCollisionDistance, 3000),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_lll_bowser_puzzle_piece_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -4639,7 +4635,6 @@ const BehaviorScript bhvSmallBomp[] = {
     CALL_NATIVE(bhv_small_bomp_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_small_bomp_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -4651,7 +4646,6 @@ const BehaviorScript bhvLargeBomp[] = {
     CALL_NATIVE(bhv_large_bomp_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_large_bomp_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -4663,7 +4657,6 @@ const BehaviorScript bhvWfSlidingPlatform[] = {
     CALL_NATIVE(bhv_wf_sliding_platform_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_wf_sliding_platform_loop),
-        CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
 
@@ -6567,7 +6560,6 @@ const BehaviorScript bhvDDDPole[] = {
     SET_FLOAT(oDDDPoleVel, 10),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_ddd_pole_update),
-        CALL_NATIVE(bhv_pole_base_loop),
     END_LOOP(),
 };
 

@@ -955,7 +955,7 @@ void cur_obj_update(void) {
     if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
         // make sure the area is valid
         if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
-            return;
+            goto cur_obj_update_end;
         }
 
         // catch up the timer in total loop increments
@@ -984,7 +984,7 @@ void cur_obj_update(void) {
 
         // cancel object update if it's running faster than the timer
         if (gCurrentObject->areaTimer > gNetworkAreaTimer) {
-            return;
+            goto cur_obj_update_end;
         }
     }
 
@@ -1096,6 +1096,14 @@ cur_obj_update_begin:;
         gCurrentObject->areaTimer++;
         if (gCurrentObject->areaTimer < gNetworkAreaTimer) {
             goto cur_obj_update_begin;
+        }
+    }
+
+    // call the network area timer's run-once callback
+cur_obj_update_end:;
+    if (gCurrentObject->areaTimerType != AREA_TIMER_TYPE_NONE) {
+        if (gCurrentObject->areaTimerRunOnceCallback != NULL) {
+            gCurrentObject->areaTimerRunOnceCallback();
         }
     }
 }

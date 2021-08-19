@@ -24,6 +24,7 @@ void bhv_wf_sliding_platform_init(void) {
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 152;
+    o->areaTimerRunOnceCallback = load_object_collision_model;
 }
 
 void bhv_wf_sliding_platform_loop(void) {
