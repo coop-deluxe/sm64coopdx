@@ -693,7 +693,7 @@ void bhv_ukiki_loop(void) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (!does_mario_have_hat(&gMarioStates[i])) {
-                o->oAnimState = gMarioStates[i].character->capUkikiAnimState;
+                o->oAnimState = UKIKI_ANIM_STATE_HAT_ON;
                 break;
             }
         }

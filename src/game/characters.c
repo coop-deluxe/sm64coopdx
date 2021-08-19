@@ -1,3 +1,4 @@
+#include "sm64.h"
 #include "types.h"
 #include "characters.h"
 #include "hud.h"
@@ -8,6 +9,9 @@
 #include "pc/configfile.h"
 #include "audio/external.h"
 
+extern Gfx mario_cap_seg3_dl_03022F48[];
+extern Gfx luigi_cap_seg3_dl_03022F48[];
+
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
         .hudHead               = ',',
@@ -17,8 +21,9 @@ struct Character gCharacters[CT_MAX] = {
         .capMetalModelId       = MODEL_MARIOS_METAL_CAP,
         .capWingModelId        = MODEL_MARIOS_WING_CAP,
         .capMetalWingModelId   = MODEL_MARIOS_WINGED_METAL_CAP,
-        .capKleptoAnimState    = KLEPTO_ANIM_STATE_HOLDING_CAP,
-        .capUkikiAnimState     = UKIKI_ANIM_STATE_HAT_ON,
+        .capEnemyLayer         = LAYER_OPAQUE,
+        .capEnemyGfx           = mario_cap_seg3_dl_03022F48,
+        .capEnemyDecalGfx      = NULL,
         .soundFreqScale        = 1.0f,
         // sounds
         .soundYahWahHoo        = SOUND_MARIO_YAH_WAH_HOO,
@@ -73,8 +78,9 @@ struct Character gCharacters[CT_MAX] = {
         .capMetalModelId       = MODEL_LUIGIS_METAL_CAP,
         .capWingModelId        = MODEL_LUIGIS_WING_CAP,
         .capMetalWingModelId   = MODEL_LUIGIS_WINGED_METAL_CAP,
-        .capKleptoAnimState    = KLEPTO_ANIM_STATE_HOLDING_CAP_LUIGI,
-        .capUkikiAnimState     = UKIKI_ANIM_STATE_HAT_ON_LUIGI,
+        .capEnemyLayer         = LAYER_OPAQUE,
+        .capEnemyGfx           = luigi_cap_seg3_dl_03022F48,
+        .capEnemyDecalGfx      = NULL,
         .soundFreqScale        = 1.0f,
         // sounds
         .soundYahWahHoo        = SOUND_LUIGI_YAH_WAH_HOO,

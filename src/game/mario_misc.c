@@ -832,3 +832,32 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     }
     return gfx;
 }
+
+Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
+    if (callContext != GEO_CONTEXT_RENDER) { return NULL; }
+    u8 globalIndex = geo_get_processing_object_index();
+    u8 colorIndex = gNetworkPlayers[globalIndex].paletteIndex;
+    u8 charIndex = gNetworkPlayers[globalIndex].modelIndex;
+    if (charIndex >= CT_MAX) { charIndex = 0; }
+    struct Character* character = &gCharacters[charIndex];
+
+    u8 dpLength = 5;
+    if (character->capEnemyGfx      != NULL) { dpLength++; }
+    if (character->capEnemyDecalGfx != NULL) { dpLength++; }
+    Gfx* gfx = alloc_display_list(dpLength * sizeof(*gfx));
+    Gfx* onGfx = gfx;
+
+    // put the player colors into lights 3, 4, 5, 6
+    // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
+    gSPLight(onGfx++, &gPlayerColors[colorIndex].pants.l, 3);
+    gSPLight(onGfx++, &gPlayerColors[colorIndex].pants.a, 4);
+    gSPLight(onGfx++, &gPlayerColors[colorIndex].shirt.l, 5);
+    gSPLight(onGfx++, &gPlayerColors[colorIndex].shirt.a, 6);
+    if (character->capEnemyGfx      != NULL) { gSPDisplayList(onGfx++, character->capEnemyGfx);      }
+    if (character->capEnemyDecalGfx != NULL) { gSPDisplayList(onGfx++, character->capEnemyDecalGfx); }
+    gSPEndDisplayList(onGfx++);
+
+    struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*)node;
+    asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (character->capEnemyLayer << 8);
+    return gfx;
+}

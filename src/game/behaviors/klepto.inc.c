@@ -292,7 +292,7 @@ static void klepto_act_dive_at_mario(void) {
                 && !(marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))
                 && distanceToPlayer < 200.0f && dy > 50.0f && dy < 90.0f) {
                 if (network_owns_object(o) && mario_lose_cap_to_enemy(marioState, 1) && marioState->playerIndex == 0) {
-                    o->oAnimState = marioState->character->capKleptoAnimState;
+                    o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
                     o->globalPlayerIndex = gNetworkPlayers[marioState->playerIndex].globalIndex;
                     network_send_object(o);
                 }
@@ -416,16 +416,14 @@ void bhv_klepto_update(void) {
         if (obj_handle_attacks(&sKleptoHitbox, o->oAction, sKleptoAttackHandlers)) {
             cur_obj_play_sound_2(SOUND_OBJ_KLEPTO2);
 
-            u8 kleptoHoldingCap = FALSE;
-            u32 capModel = MODEL_MARIOS_CAP;
-            for (int i = 0; i < CT_MAX; i++) {
-                if (o->oAnimState == gCharacters[i].capKleptoAnimState) {
-                    kleptoHoldingCap = TRUE;
-                    capModel = gCharacters[i].capModelId;
-                }
-            }
+            u8 kleptoHoldingCap = (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP);
 
             if (network_owns_object(o) && kleptoHoldingCap) {
+                struct NetworkPlayer* np = network_player_from_global_index(o->globalPlayerIndex);
+                if (np == NULL) { np = gNetworkPlayerLocal; }
+                u8 modelIndex = (np->modelIndex < CT_MAX) ? np->modelIndex : 0;
+                u32 capModel = gCharacters[modelIndex].capModelId;
+
                 save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
 
                 struct Object* cap = spawn_object(o, capModel, bhvNormalCap);

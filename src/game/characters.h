@@ -19,8 +19,9 @@ struct Character {
     u32 capMetalModelId;
     u32 capWingModelId;
     u32 capMetalWingModelId;
-    s32 capKleptoAnimState;
-    s32 capUkikiAnimState;
+    u8 capEnemyLayer;
+    Gfx* capEnemyGfx;
+    Gfx* capEnemyDecalGfx;
     f32 soundFreqScale;
     // sounds
     s32 soundYahWahHoo;
