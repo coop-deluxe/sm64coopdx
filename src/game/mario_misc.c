@@ -783,17 +783,17 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
     if (callContext == GEO_CONTEXT_RENDER && isMirrorMario) {
         gfx = alloc_display_list(3 * sizeof(*gfx));
 
-        if (asGenerated->parameter == 0) {
+        if ((asGenerated->parameter & 0x01) == 0) {
             gSPClearGeometryMode(&gfx[0], G_CULL_BACK);
             gSPSetGeometryMode(&gfx[1], G_CULL_FRONT);
             gSPEndDisplayList(&gfx[2]);
-        }
-        else {
+        } else {
             gSPClearGeometryMode(&gfx[0], G_CULL_FRONT);
             gSPSetGeometryMode(&gfx[1], G_CULL_BACK);
             gSPEndDisplayList(&gfx[2]);
         }
-        asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (LAYER_OPAQUE << 8);
+        u32 layer = ((asGenerated->parameter & 0x02) == 2) ? LAYER_TRANSPARENT : LAYER_OPAQUE;
+        asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (layer << 8);
     }
     return gfx;
 }
