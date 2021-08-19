@@ -75,8 +75,11 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_interactable_hook_focus(&inputbox1->base, NULL, NULL, djui_panel_player_name_on_focus_end);
         }
 
-        char* modelChoices[2] = { "Mario", "Luigi" };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Model", modelChoices, 2, &configPlayerModel);
+        char* modelChoices[CT_MAX] = { 0 };
+        for (int i = 0; i < CT_MAX; i++) {
+            modelChoices[i] = gCharacters[i].name;
+        }
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Model", modelChoices, CT_MAX, &configPlayerModel);
         djui_base_set_size_type(&selectionbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox1->base, 1.0f, 32);
         djui_interactable_hook_value_change(&selectionbox1->base, djui_panel_player_value_changed);

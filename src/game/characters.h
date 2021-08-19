@@ -12,6 +12,7 @@ enum CharacterType {
 };
 
 struct Character {
+    char* name;
     char hudHead;
     u32 cameraHudHead;
     u32 modelId;

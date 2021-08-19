@@ -14,6 +14,7 @@ extern Gfx luigi_cap_seg3_dl_03022F48[];
 
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
+        .name                  = "Mario",
         .hudHead               = ',',
         .cameraHudHead         = GLYPH_CAM_MARIO_HEAD,
         .modelId               = MODEL_MARIO,
@@ -71,6 +72,7 @@ struct Character gCharacters[CT_MAX] = {
     },
 
     [CT_LUIGI] = {
+        .name                  = "Luigi",
         .hudHead               = '.',
         .cameraHudHead         = GLYPH_CAM_LUIGI_HEAD,
         .modelId               = MODEL_LUIGI,
