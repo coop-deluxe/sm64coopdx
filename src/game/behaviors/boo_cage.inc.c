@@ -21,7 +21,7 @@ static struct ObjectHitbox sBooCageHitbox = {
     /* hurtboxHeight: */ 0,
 };
 
-static void bhv_boo_cage_on_received_post(u8 localIndex) {
+static void bhv_boo_cage_on_received_post(UNUSED u8 localIndex) {
     if (o->oAction > BOO_CAGE_ACT_ON_GROUND) {
         o->oAction = BOO_CAGE_ACT_ON_GROUND;
     }

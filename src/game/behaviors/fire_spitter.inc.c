@@ -39,7 +39,7 @@ static void fire_spitter_act_spit_fire(void) {
     }
 }
 
-static void bhv_fire_spitter_on_received_post(u8 localIndex) {
+static void bhv_fire_spitter_on_received_post(UNUSED u8 localIndex) {
     cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
 }
 

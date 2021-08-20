@@ -3,7 +3,7 @@
 #include "src/pc/configfile.h"
 #include "src/pc/controller/controller_api.h"
 
-void djui_panel_controls_value_change(struct DjuiBase* caller) {
+void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
     controller_reconfigure();
 }
 

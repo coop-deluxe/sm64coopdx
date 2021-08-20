@@ -38,7 +38,7 @@ static void djui_selectionbox_on_hover_end(struct DjuiBase* base) {
     djui_selectionbox_set_default_style(base);
 }
 
-static void djui_selectionbox_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
+static void djui_selectionbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
     f32 x = selectionbox->rect->base.elem.x;
     if (gCursorX >= x) {
@@ -59,7 +59,6 @@ static void djui_selectionbox_on_cursor_down_begin(struct DjuiBase* base, bool i
 }
 
 static void djui_selectionbox_on_cursor_down_end(struct DjuiBase* base) {
-    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
     djui_selectionbox_set_default_style(base);
 }
 

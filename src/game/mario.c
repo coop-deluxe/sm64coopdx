@@ -2073,8 +2073,6 @@ s32 force_idle_state(struct MarioState* m) {
  **************************************************/
 
 static void init_single_mario(struct MarioState* m) {
-    Vec3s capPos;
-    struct Object* capObject;
 
     u16 playerIndex = m->playerIndex;
     struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[playerIndex];
@@ -2156,7 +2154,9 @@ static void init_single_mario(struct MarioState* m) {
     vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
 
     // cap will never be lying on the ground in coop
-    /*if (save_file_get_cap_pos(capPos)) {
+    /* struct Object* capObject;
+    Vec3s capPos;
+    if (save_file_get_cap_pos(capPos)) {
         capObject = spawn_object(m->marioObj, MODEL_MARIOS_CAP, bhvNormalCap);
 
         capObject->oPosX = capPos[0];

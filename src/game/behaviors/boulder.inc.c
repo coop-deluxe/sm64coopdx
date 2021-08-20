@@ -47,7 +47,7 @@ void bhv_big_boulder_loop(void) {
 
 void bhv_big_boulder_generator_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         network_init_object_field(o, &o->oTimer);
     }
 

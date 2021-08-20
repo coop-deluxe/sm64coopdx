@@ -78,11 +78,11 @@ static void klepto_anim_dive(void) {
 
 static s32 kleptoCachedAnimState = 0;
 
-static void bhv_klepto_on_received_pre(u8 localIndex) {
+static void bhv_klepto_on_received_pre(UNUSED u8 localIndex) {
     kleptoCachedAnimState = o->oAnimState;
 }
 
-static void bhv_klepto_on_received_post(u8 localIndex) {
+static void bhv_klepto_on_received_post(UNUSED u8 localIndex) {
     if (kleptoCachedAnimState == KLEPTO_ANIM_STATE_HOLDING_NOTHING && o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_STAR) {
         o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_NOTHING;
     }
@@ -373,7 +373,6 @@ void obj_set_speed_to_zero(void) {
 void bhv_klepto_update(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
     UNUSED s32 unused;

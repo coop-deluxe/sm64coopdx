@@ -2,7 +2,7 @@
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 
-void djui_panel_menu_back(struct DjuiBase* base) {
+void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
     djui_panel_back();
 }
 

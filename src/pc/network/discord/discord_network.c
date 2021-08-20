@@ -20,7 +20,7 @@ int ns_discord_network_send(u8 localIndex, u8* data, u16 dataLength) {
     return 0;
 }
 
-void discord_network_on_message(UNUSED void* eventData, int64_t lobbyId, int64_t userId, uint8_t channelId, uint8_t* data, uint32_t dataLength) {
+void discord_network_on_message(UNUSED void* eventData, UNUSED int64_t lobbyId, int64_t userId, UNUSED uint8_t channelId, uint8_t* data, uint32_t dataLength) {
     gNetworkUserIds[0] = userId;
 
     u8 localIndex = UNKNOWN_LOCAL_INDEX;

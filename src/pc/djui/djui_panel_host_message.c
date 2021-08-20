@@ -25,7 +25,7 @@ Direct connections \\#ffa0a0\\require you\\#c8c8c8\\ to configure port forwardin
 Forward port '\\#d0d0ff\\%d\\#c8c8c8\\' for UDP.\
 ";
 
-void djui_panel_host_message_do_host(struct DjuiBase* caller) {
+void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
     gCurrSaveFileNum = configHostSaveSlot;

@@ -12,7 +12,7 @@ static struct RacingPenguinData sRacingPenguinData[] = {
 static u32 penguinPathedStartWaypoint = 0;
 static u32 penguinPathedPrevWaypoint = 0;
 
-static void bhv_racing_penguin_the_quick_on_received_post(u8 fromLocalIndex) {
+static void bhv_racing_penguin_the_quick_on_received_post(UNUSED u8 fromLocalIndex) {
     void* path = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
     o->oPathedStartWaypoint = (struct Waypoint*)path + penguinPathedStartWaypoint;
     o->oPathedPrevWaypoint  = (struct Waypoint*)path + penguinPathedPrevWaypoint;

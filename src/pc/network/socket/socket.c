@@ -101,11 +101,11 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
     return true;
 }
 
-static s64 ns_socket_get_id(u8 localId) {
+static s64 ns_socket_get_id(UNUSED u8 localId) {
     return 0;
 }
 
-static void ns_socket_save_id(u8 localId, s64 networkId) {
+static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
     assert(localId > 0);
     assert(localId < MAX_PLAYERS);
     addr[localId] = addr[0];

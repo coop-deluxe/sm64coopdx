@@ -26,7 +26,7 @@ static void djui_checkbox_on_hover_end(struct DjuiBase* base) {
     djui_checkbox_set_default_style(base);
 }
 
-static void djui_checkbox_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
+static void djui_checkbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
     djui_base_set_border_color(&checkbox->rect->base, 20, 170, 255, 255);
     djui_base_set_color(&checkbox->rect->base, 255, 255, 255, 32);
@@ -40,7 +40,6 @@ static void djui_checkbox_on_cursor_down_begin(struct DjuiBase* base, bool input
 }
 
 static void djui_checkbox_on_cursor_down_end(struct DjuiBase* base) {
-    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
     djui_checkbox_set_default_style(base);
 }
 

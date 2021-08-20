@@ -253,11 +253,11 @@ void play_character_sound(struct MarioState* m, enum CharacterSound characterSou
     play_sound_with_freq_scale(sound, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
 }
 
-void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u8 offset) {
+void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u32 offset) {
     s32 sound = get_character_sound(m, characterSound);
     if (sound == 0) { return; }
     struct Character* character = get_character(m);
-    play_sound_with_freq_scale(sound, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
+    play_sound_with_freq_scale(sound + offset, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
 }
 
 void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags) {

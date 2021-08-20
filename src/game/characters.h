@@ -120,7 +120,7 @@ struct MarioState;
 extern struct Character gCharacters[];
 struct Character* get_character(struct MarioState* m);
 void play_character_sound(struct MarioState* m, enum CharacterSound characterSound);
-void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u8 offset);
+void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u32 offset);
 void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags);
 
 #endif // CHARACTERS_H

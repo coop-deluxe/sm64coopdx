@@ -25,7 +25,7 @@ static void djui_button_on_hover_end(struct DjuiBase* base) {
     djui_button_set_default_style(base);
 }
 
-static void djui_button_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
+static void djui_button_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiButton* button = (struct DjuiButton*)base;
     djui_base_set_border_color(base, 0, 84, 153, 255);
     djui_base_set_color(&button->rect->base, 204, 228, 247, 255);

@@ -4,7 +4,7 @@
 
 bool gDjuiPanelMainCreated = false;
 
-static void djui_panel_main_quit_yes(struct DjuiBase* caller) {
+static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
     game_exit();
 }
 

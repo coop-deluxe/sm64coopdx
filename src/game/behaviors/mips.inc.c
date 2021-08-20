@@ -4,11 +4,11 @@
 
 static u32 mipsPrevHeldState = 0;
 
-static void bhv_mips_on_received_pre(u8 fromLocalIndex) {
+static void bhv_mips_on_received_pre(UNUSED u8 fromLocalIndex) {
     mipsPrevHeldState = o->oHeldState;
 }
 
-static void bhv_mips_on_received_post(u8 fromLocalIndex) {
+static void bhv_mips_on_received_post(UNUSED u8 fromLocalIndex) {
     if (mipsPrevHeldState == HELD_HELD && o->oHeldState == HELD_FREE) {
         cur_obj_init_animation(0);
     }

@@ -2,7 +2,7 @@
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 
-static void djui_panel_display_apply(struct DjuiBase* caller) {
+static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
 }
 

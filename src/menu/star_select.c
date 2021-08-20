@@ -408,7 +408,6 @@ void print_act_selector_strings(void) {
 
             gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
             f32 textWidth = get_generic_ascii_string_width(message);
-            f32 textHeight = get_generic_ascii_string_height(message);
 
             f32 xPos = (sSelectedActIndex + 1) * 34 - sVisibleStars * 17 + 139 - (textWidth / 2.0f) + 4;
             f32 yPos = 224;

@@ -1036,7 +1036,7 @@ void bowser_act_dead(void) {
 }
 
 void bhv_tilting_bowser_lava_platform_init(void) {
-    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
     network_init_object_field(o, &o->oAngleVelPitch);
     network_init_object_field(o, &o->oAngleVelRoll);
     network_init_object_field(o, &o->oFaceAnglePitch);

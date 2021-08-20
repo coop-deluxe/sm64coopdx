@@ -416,20 +416,13 @@ static void save_file_load_textsaves(void) {
 }
 #endif
 
-void save_file_load_all(u8 reload) {
+void save_file_load_all(UNUSED u8 reload) {
     s32 file;
 
     gMainMenuDataModified = FALSE;
     gSaveFileModified = FALSE;
 
     bzero(&gSaveBuffer, sizeof(gSaveBuffer));
-
-#ifdef TEXTSAVES
-    if (!reload) {
-        save_file_load_textsaves();
-        return;
-    }
-#endif
 
     read_eeprom_data(&gSaveBuffer, sizeof(gSaveBuffer));
 

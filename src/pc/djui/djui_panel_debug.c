@@ -6,7 +6,7 @@ static struct DjuiText* sDjuiText = NULL;
 static struct DjuiRect* sDjuiRect2 = NULL;
 static struct DjuiText* sDjuiText2 = NULL;
 
-static void djui_panel_debug_render_pre(struct DjuiBase* base, bool* skipRender) {
+static void djui_panel_debug_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
     static u32 sTimer = 0;
     sTimer++;
     if (sDjuiText != NULL) {

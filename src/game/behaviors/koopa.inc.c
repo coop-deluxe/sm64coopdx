@@ -69,7 +69,7 @@ static u32 koopaPathedStartWaypoint = 0;
 static u32 koopaPathedPrevWaypoint = 0;
 static u32 koopaShotFromCannon = 0;
 
-static void bhv_koopa_the_quick_on_received_post(u8 fromLocalIndex) {
+static void bhv_koopa_the_quick_on_received_post(UNUSED u8 fromLocalIndex) {
     void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
     o->oPathedStartWaypoint = (struct Waypoint*)path + koopaPathedStartWaypoint;
     o->oPathedPrevWaypoint  = (struct Waypoint*)path + koopaPathedPrevWaypoint;

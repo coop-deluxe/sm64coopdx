@@ -612,8 +612,8 @@ CFLAGS += -DCOOP
 
 # Enforce -Werror in strict mode
 ifeq ($(STRICT),1)
-  CC_CHECK += -Werror -Wno-error=unused-variable -Wno-error=unused-parameter
-  CFLAGS += -Werror -Wno-error=unused-variable -Wno-error=unused-parameter
+  CC_CHECK += -Werror
+  CFLAGS += -Werror
 endif
 
 # Check for debug option

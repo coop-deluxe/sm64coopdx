@@ -139,7 +139,7 @@ void monty_mole_spawn_dirt_particles(s8 offsetY, s8 velYBase) {
     cur_obj_spawn_particles(&sMontyMoleRiseFromGroundParticles);
 }
 
-static void bhv_monty_mole_on_received_post(u8 fromLocalIndex) {
+static void bhv_monty_mole_on_received_post(UNUSED u8 fromLocalIndex) {
     if (o->oMontyMoleHoleX == 0 && o->oMontyMoleHoleY == 0 && o->oMontyMoleHoleZ == 0) { return; }
 
     o->oMontyMoleCurrentHole = NULL;

@@ -20,7 +20,6 @@ void djui_image_set_image(struct DjuiImage* image, const u8* texture, u16 textur
 static bool djui_image_render(struct DjuiBase* base) {
     struct DjuiImage* image   = (struct DjuiImage*)base;
     struct DjuiBaseRect* comp = &base->comp;
-    struct DjuiBaseRect* clip = &base->clip;
 
     // translate position
     f32 translatedX = comp->x;

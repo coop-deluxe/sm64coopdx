@@ -17,7 +17,7 @@ void sinking_rectangular_plat_actions(f32 a0, s32 a1) {
 
 void bhv_lll_sinking_rectangular_platform_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 1000.0f);
+        network_init_object(o, 1000.0f);
         network_init_object_field(o, &o->oLllWoodPieceOscillationTimer);
         network_init_object_field(o, &o->oFaceAnglePitch);
     }

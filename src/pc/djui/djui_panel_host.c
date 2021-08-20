@@ -15,8 +15,7 @@
 struct DjuiInputbox* sInputboxPort = NULL;
 static unsigned int sKnockbackIndex = 0;
 
-static void djui_panel_host_network_system_change(struct DjuiBase* base) {
-    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
+static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
     djui_base_set_enabled(&sInputboxPort->base, DJUI_HOST_NS_IS_SOCKET);
 }
 
@@ -41,7 +40,7 @@ static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
     }
 }
 
-static void djui_panel_host_knockback_change(struct DjuiBase* caller) {
+static void djui_panel_host_knockback_change(UNUSED struct DjuiBase* caller) {
     switch (sKnockbackIndex) {
         case 0:  configPlayerKnockbackStrength = 10; break;
         case 1:  configPlayerKnockbackStrength = 25; break;

@@ -3,7 +3,7 @@
 #include "src/pc/configfile.h"
 #include "src/game/bettercamera.h"
 
-void djui_panel_camera_value_changed(struct DjuiBase* caller) {
+void djui_panel_camera_value_changed(UNUSED struct DjuiBase* caller) {
     newcam_init_settings();
 }
 

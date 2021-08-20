@@ -47,7 +47,6 @@ static void swoop_act_idle(void) {
  */
 static void swoop_act_move(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
     cur_obj_init_animation_with_accel_and_sound(0, 2.0f);

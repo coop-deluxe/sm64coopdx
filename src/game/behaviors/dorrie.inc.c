@@ -128,8 +128,6 @@ static u8 dorrie_act_raise_head_continue_dialog(void) {
 }
 
 void dorrie_act_raise_head(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-
     o->collisionData = segmented_to_virtual(dorrie_seg6_collision_0600F644);
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = DORRIE_ACT_MOVE;

@@ -22,7 +22,7 @@ struct DiscordApplication app = { 0 };
 bool gDiscordInitialized = false;
 bool gDiscordFailed = false;
 
-static void discord_sdk_log_callback(void* hook_data, enum EDiscordLogLevel level, const char* message) {
+static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
     LOGFILE_INFO(LFT_DISCORD, "callback (%d): %s", level, message);
 }
 
@@ -34,7 +34,7 @@ void discord_fatal(int rc) {
     fflush(stderr);
     LOGFILE_ERROR(LFT_DISCORD, "discord fatal %d", rc);
     logfile_close(LFT_DISCORD);
-    int msgboxID = MessageBox(NULL,
+    MessageBox(NULL,
         errorMessage,
         "Fatal Discord Error",
         MB_ICONERROR | MB_OK | MB_DEFBUTTON1

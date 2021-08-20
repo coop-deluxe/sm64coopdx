@@ -4,11 +4,11 @@
 
 bool gDjuiPanelPauseCreated = false;
 
-static void djui_panel_pause_resume(struct DjuiBase* caller) {
+static void djui_panel_pause_resume(UNUSED struct DjuiBase* caller) {
     djui_panel_shutdown();
 }
 
-static void djui_panel_pause_quit_yes(struct DjuiBase* caller) {
+static void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
     game_exit();
 }
 

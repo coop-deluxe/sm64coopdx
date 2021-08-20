@@ -79,7 +79,6 @@ static void djui_text_render_single_char(struct DjuiText* text, char c) {
 static void djui_text_render_char(struct DjuiText* text, char c) {
     if (text->dropShadow.a > 0) {
         // render drop shadow
-        struct DjuiBase* base = &text->base;
         sTextRenderX += 1.0f / text->fontScale;
         sTextRenderY += 1.0f / text->fontScale;
         gDPSetEnvColor(gDisplayListHead++, text->dropShadow.r, text->dropShadow.g, text->dropShadow.b, text->dropShadow.a);
@@ -108,7 +107,7 @@ static f32 djui_text_measure_word_width(struct DjuiText* text, char* message) {
     return width;
 }
 
-static void djui_text_read_line(struct DjuiText* text, u16* index, f32* lineWidth, f32 maxLineWidth, bool onLastLine, bool* ellipses) {
+static void djui_text_read_line(struct DjuiText* text, u16* index, f32* lineWidth, f32 maxLineWidth, bool onLastLine, UNUSED bool* ellipses) {
     char* message = text->message;
     *lineWidth = 0;
     char lastC = '\0';
@@ -264,7 +263,6 @@ static void djui_text_render_line(struct DjuiText* text, u16 startIndex, u16 end
     }
 
     // render the line
-    bool escapeCode = false;
     for (int i = startIndex; i < endIndex; i++) {
         char c = text->message[i];
         if (c == '\\') {

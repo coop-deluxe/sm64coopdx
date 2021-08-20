@@ -74,9 +74,6 @@ void network_override_object(u8 syncId, struct Object* o) {
 }
 
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
-    // HACK: an odd way to detect if this entity was spawned from a staticLevel respawner
-    bool wasStaticRespawner = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o && o->oSyncID < RESERVED_IDS_SYNC_OBJECT_OFFSET);
-
     // generate new sync ID
     network_set_sync_id(o);
 

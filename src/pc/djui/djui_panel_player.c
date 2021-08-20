@@ -35,8 +35,7 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
 }
 
-void djui_panel_player_value_changed(struct DjuiBase* caller) {
-    struct MarioState* m = &gMarioStates[0];
+void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
     gNetworkPlayers[0].modelIndex = configPlayerModel;
     gNetworkPlayers[0].paletteIndex = configPlayerPalette;

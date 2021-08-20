@@ -96,7 +96,7 @@ static void djui_inputbox_on_cursor_down_end(struct DjuiBase* base) {
     djui_inputbox_set_default_style(base);
 }
 
-static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
+static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     u16 index = djui_inputbox_get_cursor_index(inputbox);
     u16 selLength = abs(inputbox->selection[0] - inputbox->selection[1]);
@@ -111,7 +111,7 @@ static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, bool input
     djui_interactable_set_input_focus(base);
 }
 
-static u16 djui_inputbox_jump_word_left(char* msg, u16 len, u16 i) {
+static u16 djui_inputbox_jump_word_left(char* msg, UNUSED u16 len, u16 i) {
     if (i == 0) { return i; }
 
     s32 lastI = i;
@@ -282,7 +282,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     return true;
 }
 
-void djui_inputbox_on_key_up(struct DjuiBase *base, int scancode) {
+void djui_inputbox_on_key_up(UNUSED struct DjuiBase *base, int scancode) {
     switch (scancode) {
         case SCANCODE_CONTROL_LEFT:  sHeldControl &= ~(1 << 0); break;
         case SCANCODE_CONTROL_RIGHT: sHeldControl &= ~(1 << 1); break;
@@ -291,13 +291,13 @@ void djui_inputbox_on_key_up(struct DjuiBase *base, int scancode) {
     }
 }
 
-static void djui_inputbox_on_focus_begin(struct DjuiBase* base) {
+static void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     sHeldControl = 0;
     sHeldShift   = 0;
     wm_api->start_text_input();
 }
 
-static void djui_inputbox_on_focus_end(struct DjuiBase* base) {
+static void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
     wm_api->stop_text_input();
 }
 

@@ -30,8 +30,7 @@ static inline int arg_string(const char *name, const char *value, char *target, 
         fprintf(stderr, "Supplied value for `%s` is too long.\n", name);
         return 0;
     }
-    strncpy(target, value, arglen);
-    target[arglen] = '\0';
+    snprintf(target, maxLength, "%s", value);
     return 1;
 }
 

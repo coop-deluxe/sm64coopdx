@@ -419,14 +419,14 @@ u8 bhv_wiggler_ignore_if_true(void) {
 static Vec3f wigglerPrePos = { 0 };
 static u8 wigglerCompletedDialog = FALSE;
 
-void bhv_wiggler_on_received_pre(u8 localIndex) {
+void bhv_wiggler_on_received_pre(UNUSED u8 localIndex) {
     wigglerPrePos[0] = o->oPosX;
     wigglerPrePos[1] = o->oPosY;
     wigglerPrePos[2] = o->oPosZ;
     wigglerCompletedDialog = (o->oWigglerTextStatus == WIGGLER_TEXT_STATUS_COMPLETED_DIALOG);
 }
 
-void bhv_wiggler_on_received_post(u8 localIndex) {
+void bhv_wiggler_on_received_post(UNUSED u8 localIndex) {
     Vec3f posDiff = { 0 };
     posDiff[0] = o->oPosX - wigglerPrePos[0];
     posDiff[1] = o->oPosY - wigglerPrePos[1];

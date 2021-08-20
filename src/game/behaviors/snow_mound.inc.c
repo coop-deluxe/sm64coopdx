@@ -25,8 +25,6 @@ void bhv_sliding_snow_mound_loop(void) {
 
 void bhv_snow_mound_spawn_loop(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
 
     struct Object *sp1C = NULL;
 

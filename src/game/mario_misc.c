@@ -477,7 +477,6 @@ Gfx* geo_switch_mario_eyes(s32 callContext, struct GraphNode* node, UNUSED Mat4*
  */
 Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     Mat4 * curTransform = mtx;
-    struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     u8 plrIdx = geo_get_processing_object_index();
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
@@ -507,7 +506,6 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
  * Makes Mario's head rotate with the camera angle when in C-up mode
  */
 Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
-    struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     u8 plrIdx = geo_get_processing_object_index();
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;

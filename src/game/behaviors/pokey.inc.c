@@ -150,12 +150,12 @@ void bhv_pokey_body_part_update(void) {
 static u32 pokeyCacheAliveBodyPartFlags = 0;
 static s32 pokeyCacheNumAliveBodyParts = 0;
 
-static void pokey_on_received_pre(u8 localIndex) {
+static void pokey_on_received_pre(UNUSED u8 localIndex) {
     pokeyCacheAliveBodyPartFlags = o->oPokeyAliveBodyPartFlags;
     pokeyCacheNumAliveBodyParts = o->oPokeyNumAliveBodyParts;
 }
 
-static void pokey_on_received_post(u8 localIndex) {
+static void pokey_on_received_post(UNUSED u8 localIndex) {
     if (o->oPokeyNumAliveBodyParts > pokeyCacheNumAliveBodyParts) {
         o->oPokeyAliveBodyPartFlags = pokeyCacheAliveBodyPartFlags;
         o->oPokeyNumAliveBodyParts = pokeyCacheNumAliveBodyParts;
