@@ -28,6 +28,42 @@ void forget_ent_reliable_packet(struct Object* o) {
     }
 }
 
+struct DelayedPacketObject {
+    struct Packet p;
+    struct DelayedPacketObject* next;
+};
+
+struct DelayedPacketObject* delayedPacketObjectHead = NULL;
+struct DelayedPacketObject* delayedPacketObjectTail = NULL;
+
+void network_delayed_packet_object_remember(struct Packet* p) {
+    struct DelayedPacketObject* node = malloc(sizeof(struct DelayedPacketObject));
+    packet_duplicate(p, &node->p);
+    node->next = NULL;
+    LOG_INFO("saving delayed object");
+
+    if (delayedPacketObjectHead == NULL) {
+        delayedPacketObjectHead = node;
+        delayedPacketObjectTail = node;
+    } else {
+        delayedPacketObjectTail->next = node;
+        delayedPacketObjectTail = node;
+    }
+}
+
+void network_delayed_packet_object_execute(void) {
+    struct DelayedPacketObject* node = delayedPacketObjectHead;
+    while (node != NULL) {
+        struct DelayedPacketObject* next = node->next;
+        LOG_INFO("executing delayed object");
+        network_receive_object(&node->p);
+        free(node);
+        node = next;
+    }
+    delayedPacketObjectHead = NULL;
+    delayedPacketObjectTail = NULL;
+}
+
 // todo: move this to somewhere more general
 static float player_distance(struct MarioState* marioState, struct Object* o) {
     if (marioState->marioObj == NULL) { return 0; }
@@ -149,18 +185,42 @@ void network_clear_sync_objects(void) {
     }
 }
 
+u8 network_find_cached_sync_id(struct Object* o) {
+    u8 behaviorId = get_id_from_behavior(o->behavior);
+    for (int i = 1; i < 256; i++) {
+        if (gSyncObjects[i].o != NULL) { continue; }
+        u8 cachedBehaviorId = gCurrentArea->cachedBehaviors[i];
+        if (cachedBehaviorId != behaviorId) { continue; }
+
+        f32 dist = dist_between_object_and_point(o, gCurrentArea->cachedPositions[i][0], gCurrentArea->cachedPositions[i][1], gCurrentArea->cachedPositions[i][2]);
+        if (dist > 1) { continue; }
+        //LOG_INFO("get cached sync id for %02X: %d", behaviorId, i);
+        return i;
+    }
+    return 0;
+}
+
 void network_set_sync_id(struct Object* o) {
     if (o->oSyncID != 0) { return; }
 
     u8 syncId = 0;
     if (!gNetworkAreaLoaded) {
-        // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
-        for (int i = 1; i < MAX_SYNC_OBJECTS; i++) {
-            sNextSyncId++;
-            sNextSyncId = sNextSyncId % RESERVED_IDS_SYNC_OBJECT_OFFSET;
-            if (gSyncObjects[sNextSyncId].o != NULL) { continue; }
-            syncId = sNextSyncId;
-            break;
+        syncId = network_find_cached_sync_id(o);
+        if (syncId == 0) {
+            // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
+            for (int i = 1; i < MAX_SYNC_OBJECTS; i++) {
+                sNextSyncId++;
+                sNextSyncId = sNextSyncId % RESERVED_IDS_SYNC_OBJECT_OFFSET;
+                if (gSyncObjects[sNextSyncId].o != NULL) { continue; }
+                syncId = sNextSyncId;
+                break;
+            }
+            // cache this object's id
+            gCurrentArea->cachedBehaviors[syncId] = get_id_from_behavior(o->behavior);
+            gCurrentArea->cachedPositions[syncId][0] = o->oPosX;
+            gCurrentArea->cachedPositions[syncId][1] = o->oPosY;
+            gCurrentArea->cachedPositions[syncId][2] = o->oPosZ;
+            //LOG_INFO("set cached sync id for %02X: %d", gCurrentArea->cachedBehaviors[syncId], syncId);
         }
     } else {
         // no longer loading, require reserved id
@@ -480,6 +540,12 @@ void network_receive_object(struct Packet* p) {
     // prevent receiving objects during credits sequence
     if (gCurrActStarNum == 99) { return; }
 
+    // delay any objects received while we're loading the area
+    if (!gNetworkAreaLoaded) {
+        network_delayed_packet_object_remember(p);
+        return;
+    }
+
     // read the header and sanity check the packet
     u8 fromLocalIndex = 0;
     struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
@@ -560,6 +626,10 @@ void network_forget_sync_object(struct SyncObject* so) {
 }
 
 void network_update_objects(void) {
+    if (gNetworkAreaLoaded && delayedPacketObjectHead != NULL) {
+        network_delayed_packet_object_execute();
+    }
+
     for (u32 i = 1; i < MAX_SYNC_OBJECTS; i++) {
         struct SyncObject* so = &gSyncObjects[i];
         if (so->o == NULL) { continue; }

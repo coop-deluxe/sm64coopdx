@@ -79,6 +79,8 @@ struct Area
     /*0x34*/ u8 dialog[2]; // Level start dialog number (set by level script cmd 0x30)
     /*0x36*/ u16 musicParam;
     /*0x38*/ u16 musicParam2;
+    /*????*/ u8 cachedBehaviors[256];
+    /*????*/ Vec3f cachedPositions[256];
 };
 
 // All the transition data to be used in screen_transition.c
