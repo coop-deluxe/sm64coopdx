@@ -94,6 +94,12 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
             packet_write(&p, &offset,     sizeof(u16));
             packet_write(&p, respawnInfo, sizeof(s16));
             LOG_INFO("tx macro special: offset %d, respawnInfo %d", offset, *respawnInfo);
+        } else if ((behavior == bhvGoombaTripletSpawner) && *respawnInfo != 0) {
+            *macroSpecialCount = *macroSpecialCount + 1;
+            u16 offset = respawnInfo - area->macroObjects;
+            packet_write(&p, &offset, sizeof(u16));
+            packet_write(&p, respawnInfo, sizeof(s16));
+            LOG_INFO("tx macro special: offset %d, respawnInfo %d", offset, *respawnInfo);
         }
     }
 
@@ -196,6 +202,22 @@ void network_receive_level_macro(struct Packet* p) {
                     }
                 }
                 LOG_INFO("rx macro special: coin formation");
+            } else if (behavior == bhvGoombaTripletSpawner) {
+                for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+                    struct Object* o2 = &gObjectPool[i];
+                    if (o2->parentObj != o) { continue; }
+                    if (o2 == o) { continue; }
+                    if (o2->behavior != bhvGoomba) { continue; }
+                    u16 info = (*respawnInfo >> 8);
+                    u8 mask = ((o2->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) >> 2);
+                    if (info & mask) {
+                        extern void mark_goomba_as_dead(void);
+                        gCurrentObject = o2;
+                        mark_goomba_as_dead();
+                        obj_mark_for_deletion(o2);
+                    }
+                }
+                LOG_INFO("rx macro special: goomba triplet");
             }
         }
     }
