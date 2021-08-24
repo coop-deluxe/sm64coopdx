@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
-
+#include "pc/debuglog.h"
 #define MAX_CUSTOM_PACKETS 128
 
 struct NetworkCustomPacket {
@@ -12,7 +12,7 @@ static u8 onCustomPacketId = 0;
 static struct NetworkCustomPacket customPackets[MAX_CUSTOM_PACKETS];
 
 u8 network_register_custom_packet(void (*send_callback)(struct Packet* p, void* params), void (*receive_callback)(struct Packet* p)) {
-    assert(onCustomPacketId < MAX_CUSTOM_PACKETS);
+    SOFT_ASSERT_RETURN(onCustomPacketId < MAX_CUSTOM_PACKETS, 0);
 
     u8 i = onCustomPacketId;
     customPackets[i].send_callback = send_callback;

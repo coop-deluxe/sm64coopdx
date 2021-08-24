@@ -26,7 +26,7 @@ static u8   sJoinRequestPlayerPalette;
 static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
 
 void network_send_join_request(void) {
-    assert(gNetworkType == NT_CLIENT);
+    SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
     gOverrideEeprom = eeprom;
 
@@ -42,7 +42,7 @@ void network_send_join_request(void) {
 }
 
 void network_receive_join_request(struct Packet* p) {
-    assert(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
     LOG_INFO("received join request");
 
     if (p->dataLength > 5) {
@@ -59,7 +59,7 @@ void network_receive_join_request(struct Packet* p) {
 }
 
 void network_send_join(struct Packet* joinRequestPacket) {
-    assert(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
 
     // make palette unique
     sJoinRequestPlayerPalette = network_player_unique_palette(sJoinRequestPlayerPalette);
@@ -114,7 +114,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
 }
 
 void network_receive_join(struct Packet* p) {
-    assert(gNetworkType == NT_CLIENT);
+    SOFT_ASSERT(gNetworkType == NT_CLIENT);
     if (gNetworkPlayerLocal != NULL) { return; }
     LOG_INFO("received join packet");
 

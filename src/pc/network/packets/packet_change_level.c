@@ -75,7 +75,7 @@ void network_send_change_level(void) {
 void network_receive_change_level(struct Packet* p) {
     LOG_INFO("rx change level");
 
-    assert(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
     struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
         LOG_ERROR("Receiving change level from inactive player!");

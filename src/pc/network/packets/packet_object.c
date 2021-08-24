@@ -145,7 +145,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
 }
 
 void network_init_object_field(struct Object *o, void* field) {
-    assert(o->oSyncID != 0);
+    SOFT_ASSERT(o->oSyncID != 0);
     // remember to synchronize this extra field
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     u8 index = so->extraFieldCount++;
@@ -227,8 +227,8 @@ void network_set_sync_id(struct Object* o) {
         syncId = reservation_area_local_grab_id();
     }
 
-    assert(syncId != 0);
-    assert(gSyncObjects[syncId].o == NULL);
+    SOFT_ASSERT(syncId != 0);
+    SOFT_ASSERT(gSyncObjects[syncId].o == NULL);
 
     o->oSyncID = syncId;
 
@@ -236,7 +236,7 @@ void network_set_sync_id(struct Object* o) {
         LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
     }
 
-    assert(o->oSyncID < MAX_SYNC_OBJECTS);
+    SOFT_ASSERT(o->oSyncID < MAX_SYNC_OBJECTS);
 }
 
 // ----- header ----- //
@@ -401,7 +401,7 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
 
     // write the extra field
     for (u8 i = 0; i < so->extraFieldCount; i++) {
-        assert(so->extraFields[i] != NULL);
+        SOFT_ASSERT(so->extraFields[i] != NULL);
         packet_write(p, so->extraFields[i], sizeof(u32));
     }
 }
@@ -419,7 +419,7 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
 
     // read the extra fields
     for (u8 i = 0; i < extraFieldsCount; i++) {
-        assert(so->extraFields[i] != NULL);
+        SOFT_ASSERT(so->extraFields[i] != NULL);
         packet_read(p, so->extraFields[i], sizeof(u32));
     }
 }

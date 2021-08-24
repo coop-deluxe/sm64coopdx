@@ -125,7 +125,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     if (localIndex == 0) {
         if (p->buffer[0] != PACKET_JOIN_REQUEST && p->buffer[0] != PACKET_KICK && p->buffer[0] != PACKET_ACK) {
             LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
-            assert(false);
+            SOFT_ASSERT(false);
             return;
         }
     }
@@ -172,7 +172,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         localIndex = gNetworkPlayerServer->localIndex;
     }
 
-    assert(p->dataLength < PACKET_LENGTH);
+    SOFT_ASSERT(p->dataLength < PACKET_LENGTH);
 
     // rate limit packets
     bool tooManyPackets = false;
@@ -304,6 +304,7 @@ void network_update(void) {
             network_on_loaded_area();
         }
     }
+    SOFT_ASSERT(false);
 
     // update network area timer
     network_update_area_timer();

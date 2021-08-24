@@ -7,8 +7,8 @@
 #include "pc/configfile.h"
 
 static void network_send_to_network_players(u8 sendToLocalIndex) {
-    assert(gNetworkType == NT_SERVER);
-    assert(sendToLocalIndex != 0);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(sendToLocalIndex != 0);
 
     u8 connectedCount = network_player_connected_count();
 
@@ -42,7 +42,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
 }
 
 void network_send_network_players(void) {
-    assert(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
     LOG_INFO("sending list of network players to all");
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }

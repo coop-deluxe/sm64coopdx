@@ -68,7 +68,7 @@ void network_send_change_area(void) {
 void network_receive_change_area(struct Packet* p) {
     LOG_INFO("rx change area");
 
-    assert(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
     struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
         LOG_ERROR("Receiving change area from inactive player!");

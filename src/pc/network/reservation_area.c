@@ -145,7 +145,7 @@ static void reservation_area_unload(struct ReservationArea* unloadRa) {
         lastRa = ra;
         ra = ra->next;
     }
-    assert(false);
+    SOFT_ASSERT(false);
 }
 
 static void reservation_area_player_left(struct NetworkPlayer* np) {

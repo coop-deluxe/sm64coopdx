@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include "../network.h"
 #include "game/save_file.h"
+#include "pc/debuglog.h"
 
 void network_send_save_file(s32 fileIndex) {
     if (gNetworkPlayerServer == NULL) { return; }
-    assert(gNetworkType == NT_CLIENT);
+    SOFT_ASSERT(gNetworkType == NT_CLIENT);
     struct Packet p;
     packet_init(&p, PACKET_SAVE_FILE, true, PLMT_NONE);
     packet_write(&p, &fileIndex, sizeof(s32));

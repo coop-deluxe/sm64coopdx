@@ -24,7 +24,7 @@ static struct OrderedPacketTable* orderedPacketTable[MAX_PLAYERS] = { 0 };
 
 static void packet_ordered_check_for_processing(struct OrderedPacketTable* opt) {
     // sanity check
-    assert(opt != NULL);
+    SOFT_ASSERT(opt != NULL);
 
     struct OrderedPacketList* opl = opt->packets;
     struct OrderedPacketList* oplLast = opl;
@@ -66,9 +66,9 @@ static void packet_ordered_check_for_processing(struct OrderedPacketTable* opt) 
 
 static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct Packet* p) {
     // sanity check
-    assert(opt != NULL);
-    assert(opt->fromGlobalId == p->orderedFromGlobalId);
-    assert(opt->groupId == p->orderedGroupId);
+    SOFT_ASSERT(opt != NULL);
+    SOFT_ASSERT(opt->fromGlobalId == p->orderedFromGlobalId);
+    SOFT_ASSERT(opt->groupId == p->orderedGroupId);
 
     if (p->orderedSeqId < opt->processSeqId) {
         // this packet has already been processed!

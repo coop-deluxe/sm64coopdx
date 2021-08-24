@@ -26,6 +26,14 @@ extern struct MarioState gMarioStates[];
                         ? "Client"                                           \
                         : (gNetworkType == NT_SERVER ? "Server" : " None ")) \
 
+#ifdef DEVELOPMENT
+#define SOFT_ASSERT(_condition) { if (!(_condition)) { LOG_ERROR("failed assert at line %d", __LINE__); assert(_condition); } }
+#define SOFT_ASSERT_RETURN(_condition, _retval) { if (!(_condition)) { LOG_ERROR("failed assert at line %d", __LINE__); assert(_condition); } }
+#else
+#define SOFT_ASSERT(_condition) { if (!(_condition)) { LOG_ERROR("failed soft assert at line %d", __LINE__); return; } }
+#define SOFT_ASSERT_RETURN(_condition, _retval) { if (!(_condition)) { LOG_ERROR("failed soft assert at line %d", __LINE__); return _retval; } }
+#endif
+
 enum NetworkSystemType {
     NS_SOCKET,
     NS_DISCORD,

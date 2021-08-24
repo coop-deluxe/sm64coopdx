@@ -32,7 +32,7 @@ static u8 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize
         if (sanitize && o->parentObj->oSyncID == 0) {
             return (u8)-1;
         }
-        assert(o->parentObj->oSyncID != 0);
+        SOFT_ASSERT_RETURN(o->parentObj->oSyncID != 0, (u8)-1);
         return (u8)o->parentObj->oSyncID;
     }
 
@@ -40,7 +40,7 @@ static u8 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize
         if (o->parentObj == objects[i]) { return i; }
     }
 
-    assert(false);
+    SOFT_ASSERT_RETURN(false, (u8)-1);
 }
 
 void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objectCount) {
@@ -49,7 +49,7 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
-    assert(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
+    SOFT_ASSERT(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
     // prevent sending spawn objects during credits
     if (gCurrActStarNum == 99) { return; }
 

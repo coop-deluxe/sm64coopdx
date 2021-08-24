@@ -7,7 +7,7 @@
 static u16 sLevelAreaInformSeq[MAX_PLAYERS][MAX_PLAYERS] = { 0 };
 
 void network_send_level_area_inform(struct NetworkPlayer* np) {
-    assert(gNetworkType == NT_SERVER);
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np2 = &gNetworkPlayers[i];
@@ -34,7 +34,7 @@ void network_send_level_area_inform(struct NetworkPlayer* np) {
 
 void network_receive_level_area_inform(struct Packet* p) {
 
-    assert(gNetworkType != NT_SERVER);
+    SOFT_ASSERT(gNetworkType != NT_SERVER);
 
     u16 seq;
     u8 globalIndex;
