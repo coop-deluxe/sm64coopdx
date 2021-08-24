@@ -2150,6 +2150,8 @@ static void init_single_mario(struct MarioState* m) {
     m->marioObj->oMoveAngleYaw = m->faceAngle[1];
     m->marioObj->oMoveAngleRoll = m->faceAngle[2];
 
+    m->marioObj->oIntangibleTimer = 0;
+
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
     vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
 
