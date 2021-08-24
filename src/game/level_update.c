@@ -428,6 +428,18 @@ void init_mario_after_warp(void) {
         init_mario();
         set_mario_initial_action(gMarioState, marioSpawnType, sWarpDest.arg);
 
+        // remove offset from local mario during warps
+        if (sWarpDest.type == WARP_TYPE_SAME_AREA) {
+            gMarioState[0].pos[0] = (s16)spawnNode->object->oPosX;
+            gMarioState[0].pos[1] = (s16)spawnNode->object->oPosY;
+            gMarioState[0].pos[2] = (s16)spawnNode->object->oPosZ;
+            if (gMarioState[0].marioObj != NULL) {
+                gMarioState[0].marioObj->oPosX = spawnNode->object->oPosX;
+                gMarioState[0].marioObj->oPosY = spawnNode->object->oPosY;
+                gMarioState[0].marioObj->oPosZ = spawnNode->object->oPosZ;
+            }
+        }
+
         gMarioState->interactObj = spawnNode->object;
         gMarioState->usedObj = spawnNode->object;
     }
