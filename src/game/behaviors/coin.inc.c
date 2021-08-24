@@ -240,7 +240,7 @@ void coin_inside_boo_act_0(void) {
         cur_obj_set_model(MODEL_BLUE_COIN);
         cur_obj_scale(0.7);
     }
-    if (parent == NULL || parent->behavior != bhvGhostHuntBoo) {
+    if (parent == NULL || (parent->behavior != bhvGhostHuntBoo && parent->behavior != bhvBoo)) {
         o->parentObj = NULL;
         obj_mark_for_deletion(o);
         return;
