@@ -7,7 +7,7 @@
 #include "behavior_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
@@ -43,7 +43,7 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
             network_send_area(toNp);
         } else {
             // send sync valid
-            network_send_sync_valid(toNp);
+            network_send_sync_valid(toNp, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, -1);
         }
     }
     packet_ordered_end();

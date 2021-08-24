@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_keep_alive(u8 localIndex) {

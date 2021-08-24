@@ -2,7 +2,7 @@
 #include "../network.h"
 #include "../reservation_area.h"
 #include "level_table.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
@@ -20,7 +20,7 @@ static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 act
     bool inCredits = (np->currActNum == 99);
     if (npLevelAreaMatch == NULL || inCredits) {
         // no NetworkPlayer in the level
-        network_send_sync_valid(np);
+        network_send_sync_valid(np, courseNum, actNum, levelNum, areaIndex);
         network_send_level_area_inform(np);
         return;
     }

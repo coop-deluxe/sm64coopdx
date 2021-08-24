@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "../network.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-void network_send_sync_valid(struct NetworkPlayer* toNp) {
+void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // set the NetworkPlayers sync valid
     toNp->currLevelSyncValid = true;
     toNp->currAreaSyncValid  = true;
@@ -20,11 +20,11 @@ void network_send_sync_valid(struct NetworkPlayer* toNp) {
     u8 myGlobalIndex = gNetworkPlayerLocal->globalIndex;
     struct Packet p;
     packet_init(&p, PACKET_SYNC_VALID, true, PLMT_NONE);
-    packet_write(&p, &toNp->currCourseNum, sizeof(s16));
-    packet_write(&p, &toNp->currActNum,    sizeof(s16));
-    packet_write(&p, &toNp->currLevelNum,  sizeof(s16));
-    packet_write(&p, &toNp->currAreaIndex, sizeof(s16));
-    packet_write(&p, &myGlobalIndex,       sizeof(u8));
+    packet_write(&p, &courseNum,     sizeof(s16));
+    packet_write(&p, &actNum,        sizeof(s16));
+    packet_write(&p, &levelNum,      sizeof(s16));
+    packet_write(&p, &areaIndex,     sizeof(s16));
+    packet_write(&p, &myGlobalIndex, sizeof(u8));
     network_send_to(toNp->localIndex, &p);
 
     LOG_INFO("tx sync valid");
@@ -43,7 +43,7 @@ void network_receive_sync_valid(struct Packet* p) {
 
     if (gNetworkType != NT_SERVER) {
         extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
-        if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
+        if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || (areaIndex != gCurrAreaIndex && areaIndex != -1)) {
             LOG_ERROR("rx sync valid: received an improper location");
             return;
         }
@@ -61,7 +61,7 @@ void network_receive_sync_valid(struct Packet* p) {
     // inform server
     if (fromGlobalIndex != gNetworkPlayerServer->globalIndex) {
         LOG_INFO("informing server of sync valid");
-        network_send_sync_valid(gNetworkPlayerServer);
+        network_send_sync_valid(gNetworkPlayerServer, courseNum, actNum, levelNum, areaIndex);
     }
 
     // inform everyone that this player is valid

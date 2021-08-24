@@ -148,7 +148,7 @@ void network_player_update(void) {
 
     network_player_update_level_popup();
 
-//#ifndef DEVELOPMENT
+#ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER) {
         for (int i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
@@ -179,7 +179,7 @@ void network_player_update(void) {
             network_send_keep_alive(np->localIndex);
         }
     }
-//#endif
+#endif
 }
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name) {

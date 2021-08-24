@@ -240,7 +240,7 @@ void network_send_area(struct NetworkPlayer* toNp);
 void network_receive_area(struct Packet* p);
 
 // packet_sync_valid.c
-void network_send_sync_valid(struct NetworkPlayer* toNp);
+void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 void network_receive_sync_valid(struct Packet* p);
 
 // packet_level_spawn_info.c

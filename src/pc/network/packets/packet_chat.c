@@ -39,9 +39,9 @@ void network_send_chat(char* message, u8 globalIndex) {
     network_send(&p);
 
 #ifdef DEVELOPMENT
-    //print_network_player_table();
+    print_network_player_table();
     //reservation_area_debug();
-    print_sync_object_table();
+    //print_sync_object_table();
 #endif
 }
 
