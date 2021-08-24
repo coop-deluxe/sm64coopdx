@@ -23,13 +23,19 @@ void bhv_sliding_snow_mound_loop(void) {
     }
 }
 
+void bhv_snow_mound_spawn_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = TRUE;
+    *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
+}
+
 void bhv_snow_mound_spawn_loop(void) {
     struct Object* player = nearest_player_to_object(o);
 
     struct Object *sp1C = NULL;
 
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        so->override_ownership = bhv_snow_mound_spawn_override_ownership;
         network_init_object_field(o, &o->oTimer);
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oPrevAction);
@@ -42,6 +48,9 @@ void bhv_snow_mound_spawn_loop(void) {
     if (o->oTimer == 64 || o->oTimer == 128 || o->oTimer == 192 || o->oTimer == 224 || o->oTimer == 256) {
         if (network_owns_object(o)) {
             sp1C = spawn_object(o, MODEL_SL_SNOW_TRIANGLE, bhvSlidingSnowMound);
+            sp1C->oHomeX = o->oPosX;
+            sp1C->oHomeY = o->oPosY;
+            sp1C->oHomeZ = o->oPosZ;
             network_send_object(o);
         }
     }
