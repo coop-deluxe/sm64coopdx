@@ -11290,6 +11290,13 @@ void play_cutscene(struct Camera *c) {
     sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
     gCameraMovementFlags &= ~CAM_MOVING_INTO_MODE;
 
+    if (gCutsceneFocus != NULL) {
+        if (gCutsceneFocus->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
+            gObjCutsceneDone = true;
+            gTimeStopState = 0;
+        }
+    }
+
 #define CUTSCENE(id, cutscene)                                                                            \
     case id:                                                                                              \
         cutsceneDuration = cutscene[sCutsceneShot].duration;                                              \

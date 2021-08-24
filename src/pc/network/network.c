@@ -304,7 +304,6 @@ void network_update(void) {
             network_on_loaded_area();
         }
     }
-    SOFT_ASSERT(false);
 
     // update network area timer
     network_update_area_timer();
