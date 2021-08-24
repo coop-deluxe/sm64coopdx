@@ -668,11 +668,21 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
 
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
-        f32 scaler = m->interactObj->oDamageOrCoinValue;
-        if (scaler > 2) {
-            // hack: set knockback to lower values for anything above the kick (which is a damage of 2)
-            scaler = 1;
+        f32 scaler = 1;
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            struct MarioState* m2 = &gMarioStates[i];
+            if (!is_player_active(m2)) { continue; }
+            if (m2->marioObj == NULL) { continue; }
+            if (m2->marioObj != m->interactObj) { continue; }
+            if (m2->action == ACT_JUMP_KICK) { scaler = 2; }
+            if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
+            break;
         }
+        if (m->flags & MARIO_METAL_CAP) {
+            scaler *= 0.5f;
+            if (scaler < 1) { scaler = 1; }
+        }
+
         f32 mag = scaler * (f32)gServerSettings.playerKnockbackStrength * sign;
         m->forwardVel = mag;
         if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
@@ -1352,7 +1362,12 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
                 }
                 set_mario_action(m2, ACT_FREEFALL, 0);
             }
-            m->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
+            if (!(m2->flags & MARIO_METAL_CAP)) {
+                m->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
+                if (m->flags & MARIO_METAL_CAP) {
+                    m->marioObj->oDamageOrCoinValue *= 2;
+                }
+            }
         }
         m2->invincTimer = max(m2->invincTimer, 3);
         take_damage_and_knock_back(m2, m->marioObj);
