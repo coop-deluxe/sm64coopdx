@@ -15285,6 +15285,9 @@
     <ClCompile Include="..\actors\custom0_geo.c">
       <Filter>Source Files\actors</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_debug_sync.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">

@@ -4009,6 +4009,7 @@
     <ClCompile Include="..\src\pc\network\packets\packet_area.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_area_request.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_change_area.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_debug_sync.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level_area_inform.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level_request.c" />

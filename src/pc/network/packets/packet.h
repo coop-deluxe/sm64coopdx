@@ -23,7 +23,7 @@ enum PacketType {
     PACKET_COLLECT_COIN,
     PACKET_COLLECT_ITEM,
     PACKET_UNUSED1,
-    PACKET_UNUSED2,
+    PACKET_DEBUG_SYNC,
     PACKET_JOIN_REQUEST,
     PACKET_JOIN,
     PACKET_CHAT,
@@ -270,5 +270,9 @@ void network_receive_reservation_use(struct Packet* p);
 // packet_reservation_release.c
 void network_send_reservation_release(u8 syncId);
 void network_receive_reservation_release(struct Packet* p);
+
+// packet_debug_sync.c
+void network_send_debug_sync(void);
+void network_receive_debug_sync(struct Packet* p);
 
 #endif

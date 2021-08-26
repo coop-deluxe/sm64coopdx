@@ -630,6 +630,14 @@ void network_update_objects(void) {
         network_delayed_packet_object_execute();
     }
 
+#ifdef DEVELOPMENT
+    static f32 lastDebugSync = 0;
+    if (clock_elapsed() - lastDebugSync >= 1) {
+        network_send_debug_sync();
+        lastDebugSync = clock_elapsed();
+    }
+#endif
+
     for (u32 i = 1; i < MAX_SYNC_OBJECTS; i++) {
         struct SyncObject* so = &gSyncObjects[i];
         if (so->o == NULL) { continue; }
