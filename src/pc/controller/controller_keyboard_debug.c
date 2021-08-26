@@ -36,9 +36,16 @@ static void debug_breakpoint_here(void) {
 
 static void debug_warp_level(u8 level) {
     if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
+    gCurrCourseNum = 0;
+    gCurrLevelNum = 0;
+    gCurrAreaIndex = 0;
+    gCurrActStarNum = 0;
+    gCurrAreaIndex = 0;
+    gChangeLevel = level;
+    return;
 
     // find level from painting
-    for (int i = 0; i < 45; i++) {
+    /*for (int i = 0; i < 45; i++) {
         struct WarpNode* node = &gCurrentArea->paintingWarpNodes[i];
         if (node == NULL) { break; }
         if (node->destLevel == level) {
@@ -79,7 +86,7 @@ static void debug_warp_level(u8 level) {
     D_80339ECA = 0;
     D_80339EE0 = 0;
     extern s16 gSavedCourseNum;
-    gSavedCourseNum = 0;
+    gSavedCourseNum = 0;*/
 }
 
 static void debug_warp_area() {
