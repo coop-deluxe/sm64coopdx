@@ -39,6 +39,7 @@ struct NetworkPlayer {
     bool localLevelMatch;
     char name[MAX_PLAYER_STRING];
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
+    u16 rxPacketHash[MAX_RX_SEQ_IDS];
 };
 
 extern struct NetworkPlayer gNetworkPlayers[];

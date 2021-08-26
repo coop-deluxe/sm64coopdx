@@ -162,8 +162,8 @@ void network_receive_level_macro(struct Packet* p) {
             if (o->oSyncID != 0) {
                 struct SyncObject* so = &gSyncObjects[o->oSyncID];
                 if (so->o == o) {
+                    LOG_INFO("rx macro deletion: sync object (id %d)", o->oSyncID);
                     network_forget_sync_object(so);
-                    LOG_INFO("rx macro deletion: sync object");
                 }
             }
         }

@@ -100,15 +100,17 @@ void packet_receive(struct Packet* p) {
 
     // check if we've already seen this packet
     if (p->localIndex != 0 && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
+        u32 packetHash = packet_hash(p);
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
         for (int i = 0; i < MAX_RX_SEQ_IDS; i++) {
-            if (np->rxSeqIds[i] == p->seqId) {
+            if (np->rxSeqIds[i] == p->seqId && np->rxPacketHash[i] == packetHash) {
                 LOG_INFO("received duplicate packet");
                 return;
             }
         }
         // remember seq id
         np->rxSeqIds[np->onRxSeqId] = p->seqId;
+        np->rxPacketHash[np->onRxSeqId] = packetHash;
         np->onRxSeqId++;
         if (np->onRxSeqId >= MAX_RX_SEQ_IDS) { np->onRxSeqId = 0; }
     }
