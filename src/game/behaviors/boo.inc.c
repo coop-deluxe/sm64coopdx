@@ -719,9 +719,12 @@ static void big_boo_act_4(void) {
         if (o->oTimer > 60 && distanceToPlayer < 600.0f) {
             obj_set_pos(o,  973, 0, 717);
 
-            spawn_object_relative(0, 0, 0,    0, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
-            spawn_object_relative(1, 0, 0, -200, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
-            spawn_object_relative(2, 0, 0,  200, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+            struct Object* spawnedBridge = cur_obj_nearest_object_with_behavior(bhvBooBossSpawnedBridge);
+            if (spawnedBridge == NULL) {
+                spawn_object_relative(0, 0, 0, 0, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+                spawn_object_relative(1, 0, 0, -200, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+                spawn_object_relative(2, 0, 0, 200, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+            }
 
             obj_mark_for_deletion(o);
         }
@@ -742,6 +745,20 @@ u8 big_boo_ignore_update(void) {
     return o->oHealth == 0 || (cur_obj_has_behavior(bhvGhostHuntBigBoo) && !bigBooActivated);
 }
 
+void big_boo_on_forget(void) {
+    if (o == NULL) { return; }
+    if (o->behavior != bhvGhostHuntBigBoo) { return; }
+    struct Object* spawnedBridge = cur_obj_nearest_object_with_behavior(bhvBooBossSpawnedBridge);
+    if (spawnedBridge == NULL && o->oBehParams2ndByte == 0) {
+        obj_set_pos(o, 973, 0, 717);
+        obj_set_angle(o, 0, 0, 0);
+
+        spawn_object_relative(0, 0, 0, 0, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+        spawn_object_relative(1, 0, 0, -200, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+        spawn_object_relative(2, 0, 0, 200, o, MODEL_BBH_STAIRCASE_STEP, bhvBooBossSpawnedBridge);
+    }
+}
+
 void bhv_big_boo_loop(void) {
     if (o->oAction == 0) {
         if (!network_sync_object_initialized(o)) {
@@ -749,6 +766,7 @@ void bhv_big_boo_loop(void) {
             struct SyncObject* so = boo_network_init_object();
             so->syncDeathEvent = FALSE;
             so->ignore_if_true = big_boo_ignore_update;
+            so->on_forget = big_boo_on_forget;
         }
     } else if (o->oHealth <= 0) {
         if (network_sync_object_initialized(o)) {

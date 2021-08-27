@@ -9,6 +9,7 @@
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
 #include "src/game/obj_behaviors.h"
+#include "src/game/object_list_processor.h"
 #include "src/game/area.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
@@ -135,6 +136,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->on_sent_pre = NULL;
     so->on_sent_post = NULL;
     so->override_ownership = NULL;
+    so->on_forget = NULL;
     so->syncDeathEvent = true;
     so->randomSeed = (u16)(o->oSyncID * 7951);
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
@@ -618,6 +620,13 @@ void network_forget_sync_object(struct SyncObject* so) {
             sLastSyncEntReliablePacket[syncId].error = true;
         }
         area_remove_sync_ids_add(syncId);
+    }
+
+    if (so->on_forget != NULL) {
+        struct Object* lastObject = gCurrentObject;
+        gCurrentObject = so->o;
+        so->on_forget();
+        gCurrentObject = lastObject;
     }
 
     so->o = NULL;

@@ -71,6 +71,7 @@ struct SyncObject {
     void (*on_sent_pre)(void);
     void (*on_sent_post)(void);
     void (*override_ownership)(u8* shouldOverride, u8* shouldOwn);
+    void (*on_forget)(void);
     void* extraFields[MAX_SYNC_OBJECT_FIELDS];
 };
 
