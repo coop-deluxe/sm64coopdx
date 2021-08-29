@@ -2,7 +2,7 @@
 #define VERSION_H
 
 #define UNSTABLE_BRANCH
-#define VERSION_NUMBER 10
+#define VERSION_NUMBER 11
 
 #define MAX_VERSION_LENGTH 10
 char* get_version(void);
