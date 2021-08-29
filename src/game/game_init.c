@@ -483,7 +483,7 @@ void read_controller_inputs(void) {
             // 0.5x A presses are a good meme
             controller->buttonDown = controller->controllerData->button;
             adjust_analog_stick(controller);
-        } else {
+        } else if (i != 0) {
             // otherwise, if the controllerData is NULL, 0 out all of the inputs.
             controller->rawStickX = 0;
             controller->rawStickY = 0;
@@ -500,13 +500,13 @@ void read_controller_inputs(void) {
     // For some reason, player 1's inputs are copied to player 3's port. This
     // potentially may have been a way the developers "recorded" the inputs
     // for demos, despite record_demo existing.
-    gPlayer3Controller->rawStickX = gPlayer1Controller->rawStickX;
+    /*gPlayer3Controller->rawStickX = gPlayer1Controller->rawStickX;
     gPlayer3Controller->rawStickY = gPlayer1Controller->rawStickY;
     gPlayer3Controller->stickX = gPlayer1Controller->stickX;
     gPlayer3Controller->stickY = gPlayer1Controller->stickY;
     gPlayer3Controller->stickMag = gPlayer1Controller->stickMag;
     gPlayer3Controller->buttonPressed = gPlayer1Controller->buttonPressed;
-    gPlayer3Controller->buttonDown = gPlayer1Controller->buttonDown;
+    gPlayer3Controller->buttonDown = gPlayer1Controller->buttonDown;*/
 }
 
 // initialize the controller structs to point at the OSCont information.

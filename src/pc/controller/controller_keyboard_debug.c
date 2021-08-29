@@ -35,6 +35,10 @@ static void debug_breakpoint_here(void) {
 }
 
 static void debug_warp_level(u8 level) {
+    // warp to credits
+    //set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
+    //return;
+
     if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
     gCurrCourseNum = 0;
     gCurrLevelNum = 0;

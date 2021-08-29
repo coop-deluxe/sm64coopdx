@@ -851,11 +851,11 @@ s32 UNUSED debug_sequence_tracker(s16 debugInputSequence[]) {
     }
 
     // If the third controller button pressed is next in sequence, reset timer and progress to next value.
-    if ((debugInputSequence[sDebugSequenceTracker] & gPlayer3Controller->buttonPressed) != 0) {
+    if ((debugInputSequence[sDebugSequenceTracker] & gPlayer1Controller->buttonPressed) != 0) {
         sDebugSequenceTracker++;
         sDebugTimer = 0;
     // If wrong input or timer reaches 10, reset sequence progress.
-    } else if (sDebugTimer == 10 || gPlayer3Controller->buttonPressed != 0) {
+    } else if (sDebugTimer == 10 || gPlayer1Controller->buttonPressed != 0) {
         sDebugSequenceTracker = 0;
         sDebugTimer = 0;
         return FALSE;
