@@ -49,7 +49,7 @@
 # define FRAMERATE 30
 #endif
 // time between consequtive game frames
-static const f64 sFrameTime = 1.0 / (2.0 * FRAMERATE);
+static const f64 sFrameTime = 1.0 / ((double)FRAMERATE);
 static f64 sFrameTargetTime = 0;
 extern "C" f64 clock_elapsed_f64(void);
 
@@ -523,9 +523,10 @@ static bool gfx_dxgi_start_frame(void) {
 
     dxgi.length_in_vsync_frames = configWindow.vsync;
     f64 curTime = clock_elapsed_f64();
+    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
     if (curTime > sFrameTargetTime) {
-        sFrameTargetTime += sFrameTime;
-        if (curTime > sFrameTargetTime + sFrameTime * 3) {
+        sFrameTargetTime += frameTime;
+        if (curTime > sFrameTargetTime + frameTime * 3) {
             sFrameTargetTime = curTime;
         }
         dxgi.dropped_frame = true;
@@ -544,7 +545,8 @@ static inline void sync_framerate_with_timer(void) {
             Sleep(delayMs);
         }
     }
-    sFrameTargetTime += sFrameTime;
+    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
+    sFrameTargetTime += frameTime;
 }
 
 static void gfx_dxgi_swap_buffers_begin(void) {

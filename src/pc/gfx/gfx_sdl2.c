@@ -44,7 +44,7 @@
 # define FRAMERATE 30
 #endif
 // time between consequtive game frames
-static const f64 sFrameTime = 1.0 / (2.0 * FRAMERATE);
+static const f64 sFrameTime = 1.0 / ((double)FRAMERATE);
 static f64 sFrameTargetTime = 0;
 
 static SDL_Window *wnd;
@@ -316,9 +316,10 @@ static void gfx_sdl_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callbac
 
 static bool gfx_sdl_start_frame(void) {
     f64 curTime = clock_elapsed_f64();
+    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
     if (curTime > sFrameTargetTime) {
-        sFrameTargetTime += sFrameTime;
-        if (curTime > sFrameTargetTime + sFrameTime * 3) {
+        sFrameTargetTime += frameTime;
+        if (curTime > sFrameTargetTime + frameTime * 3) {
             sFrameTargetTime = curTime;
         }
         return false;
@@ -334,7 +335,8 @@ static inline void sync_framerate_with_timer(void) {
             SDL_Delay(delayMs);
         }
     }
-    sFrameTargetTime += sFrameTime;
+    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
+    sFrameTargetTime += frameTime;
 }
 
 static void gfx_sdl_swap_buffers_begin(void) {

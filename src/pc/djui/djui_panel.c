@@ -114,7 +114,7 @@ void djui_panel_update(void) {
         return;
     }
 
-    sMoveAmount += moveMax / 10.0f;
+    sMoveAmount += (config60Fps ? 1.0f : 2.0f) * (moveMax / 10.0f);
     if (sMoveAmount >= moveMax) {
         sMoveAmount = moveMax;
         if (parentBase != NULL) {

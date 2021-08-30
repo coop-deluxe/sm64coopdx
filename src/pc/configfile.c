@@ -45,7 +45,7 @@ ConfigWindow configWindow       = {
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
     .h = DESIRED_SCREEN_HEIGHT,
-    .vsync = 1,
+    .vsync = 0,
     .reset = false,
     .fullscreen = false,
     .exiting_fullscreen = false,
@@ -110,6 +110,7 @@ unsigned int configNetworkSystem                 = 0;
 char         configPlayerName[MAX_PLAYER_STRING] = "";
 unsigned int configPlayerModel                   = 0;
 unsigned int configPlayerPalette                 = 0;
+unsigned int config60Fps                         = 1;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -173,6 +174,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
     {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
+    {.name = "coop_60fps",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &config60Fps},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

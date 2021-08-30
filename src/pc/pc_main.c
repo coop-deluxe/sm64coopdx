@@ -139,10 +139,12 @@ void produce_one_frame(void) {
 
     gfx_end_frame();
 
-    gfx_start_frame();
-    patch_interpolations();
-    send_display_list(gGfxSPTask);
-    gfx_end_frame();
+    if (config60Fps) {
+        gfx_start_frame();
+        patch_interpolations();
+        send_display_list(gGfxSPTask);
+        gfx_end_frame();
+    }
 }
 
 void audio_shutdown(void) {
