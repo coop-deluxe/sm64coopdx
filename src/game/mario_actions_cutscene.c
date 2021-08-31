@@ -460,6 +460,12 @@ s32 act_reading_npc_dialog(struct MarioState *m) {
         m->actionState++;
     }
 
+    if (m->playerIndex != 0 && gCurrentObject->header.gfx.unk38.animID == -1) {
+        // set animation
+        set_mario_animation(m, m->heldObj == NULL ? MARIO_ANIM_FIRST_PERSON
+            : MARIO_ANIM_IDLE_WITH_LIGHT_OBJ);
+    }
+
     return FALSE;
 }
 
@@ -869,7 +875,7 @@ s32 act_unlocking_key_door(struct MarioState *m) {
         m->faceAngle[1] += 0x8000;
     }
 
-    if (m->actionTimer == 0) {
+    if ((m->actionTimer == 0) || (m->playerIndex != 0 && gCurrentObject->header.gfx.unk38.animID == -1)) {
         spawn_obj_at_mario_rel_yaw(m, MODEL_BOWSER_KEY_CUTSCENE, bhvBowserKeyUnlockDoor, 0);
         set_mario_animation(m, MARIO_ANIM_UNLOCK_DOOR);
     }

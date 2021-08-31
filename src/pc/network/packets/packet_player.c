@@ -8,6 +8,7 @@
 #include "game/area.h"
 #include "audio/external.h"
 #include "engine/surface_collision.h"
+#include "engine/math_util.h"
 #include "game/object_list_processor.h"
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
@@ -350,8 +351,10 @@ void network_receive_player(struct Packet* p) {
     }
 
     // mark this player as visible
-    if (gNetworkAreaLoaded) {
+    if (gNetworkAreaLoaded && !m->wasNetworkVisible) {
         m->wasNetworkVisible = true;
+        vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
+        vec3s_copy(m->marioObj->header.gfx.angle, m->faceAngle);
     }
 }
 
