@@ -343,20 +343,11 @@ void bhv_1up_hidden_in_pole_trigger_loop(void) {
 }
 
 void bhv_1up_hidden_in_pole_spawner_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->o1UpForceSpawn);
+    // immediately break this into bhvHidden1upInPole and bhvHidden1upInPoleTrigger
+    // this makes syncing easier
+    spawn_object_relative(2, 0, 50, 0, o, MODEL_1UP, bhvHidden1upInPole);
+    for (s8 sp2F = 0; sp2F < 2; sp2F++) {
+        spawn_object_relative(0, 0, sp2F * -200, 0, o, MODEL_NONE, bhvHidden1upInPoleTrigger);
     }
-
-    s8 sp2F;
-
-    if (o->o1UpForceSpawn || is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 700)) {
-        spawn_object_relative(2, 0, 50, 0, o, MODEL_1UP, bhvHidden1upInPole);
-        for (sp2F = 0; sp2F < 2; sp2F++) {
-            spawn_object_relative(0, 0, sp2F * -200, 0, o, MODEL_NONE, bhvHidden1upInPoleTrigger);
-        }
-        o->o1UpForceSpawn = TRUE;
-        network_send_object(o);
-        o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-    }
+    o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }
