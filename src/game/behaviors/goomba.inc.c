@@ -78,35 +78,25 @@ void bhv_goomba_triplet_spawner_update(void) {
     // If mario is close enough and the goombas aren't currently loaded, then
     // spawn them
     if (o->oAction == GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED) {
-#ifndef NODRAWINGDISTANCE
-        if (dist_between_objects(o, player) < 3000.0f) {
-#endif
-            // The spawner is capable of spawning more than 3 goombas, but this
-            // is not used in the game
-            dAngle =
-                0x10000
-                / (((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK) >> 2) + 3);
+        // The spawner is capable of spawning more than 3 goombas, but this
+        // is not used in the game
+        dAngle =
+            0x10000
+            / (((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK) >> 2) + 3);
 
-            for (angle = 0, goombaFlag = 1 << 8; angle < 0xFFFF; angle += dAngle, goombaFlag <<= 1) {
-                // Only spawn goombas which haven't been killed yet
-                if (!(o->oBehParams & goombaFlag)) {
-                    dx = 500.0f * coss(angle);
-                    dz = 500.0f * sins(angle);
+        for (angle = 0, goombaFlag = 1 << 8; angle < 0xFFFF; angle += dAngle, goombaFlag <<= 1) {
+            // Only spawn goombas which haven't been killed yet
+            if (!(o->oBehParams & goombaFlag)) {
+                dx = 500.0f * coss(angle);
+                dz = 500.0f * sins(angle);
 
-                    spawn_object_relative((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK)
-                                              | (goombaFlag >> 6),
-                                          dx, 0, dz, o, MODEL_GOOMBA, bhvGoomba);
-                }
+                spawn_object_relative((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK)
+                                            | (goombaFlag >> 6),
+                                        dx, 0, dz, o, MODEL_GOOMBA, bhvGoomba);
             }
-
-            o->oAction += 1;
-#ifndef NODRAWINGDISTANCE
         }
-    } else if (dist_between_objects(o, player) > 4000.0f) {
-        // If mario is too far away, enter the unloaded action. The goombas
-        // will detect this and unload themselves
-        o->oAction = GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED;
-#endif
+
+        o->oAction += 1;
     }
 }
 

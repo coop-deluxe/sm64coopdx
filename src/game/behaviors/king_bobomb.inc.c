@@ -350,16 +350,11 @@ void king_bobomb_move(void) {
         cur_obj_move_using_fvel_and_gravity();
     cur_obj_call_action_function(sKingBobombActions);
     exec_anim_sound_state(sKingBobombSoundStates);
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    if (distanceToPlayer < 5000.0f)
-#endif
+    int distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
+    if (distanceToPlayer < 5000.0f * draw_distance_scalar())
         cur_obj_enable_rendering();
-#ifndef NODRAWINGDISTANCE
     else
         cur_obj_disable_rendering();
-#endif
 }
 
 u8 king_bobomb_ignore_if_true(void) {

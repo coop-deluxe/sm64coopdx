@@ -8,25 +8,12 @@
 void bub_spawner_act_0(void) {
     s32 i;
     s32 sp18 = o->oBirdChirpChirpUnkF4;
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    if (distanceToPlayer < 1500.0f) {
-#endif
-        for (i = 0; i < sp18; i++)
-            spawn_object(o, MODEL_BUB, bhvBub);
-        o->oAction = 1;
-#ifndef NODRAWINGDISTANCE
-    }
-#endif
+    for (i = 0; i < sp18; i++)
+        spawn_object(o, MODEL_BUB, bhvBub);
+    o->oAction = 1;
 }
 
 void bub_spawner_act_1(void) {
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    if (player->oPosY - o->oPosY > 2000.0f)
-        o->oAction = 2;
-#endif
 }
 
 void bub_spawner_act_2(void) {

@@ -53,41 +53,33 @@ static void chain_chomp_act_uninitialized(void) {
     struct ChainSegment *segments;
     s32 i;
 
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    if (distanceToPlayer < 3000.0f) {
-#endif
-        segments = mem_pool_alloc(gObjectMemoryPool, 5 * sizeof(struct ChainSegment));
-        if (segments != NULL) {
-            // Each segment represents the offset of a chain part to the pivot.
-            // Segment 0 connects the pivot to the chain chomp itself. Segment
-            // 1 connects the pivot to the chain part next to the chain chomp
-            // (chain part 1), etc.
-            o->oChainChompSegments = segments;
-            for (i = 0; i <= 4; i++) {
-                chain_segment_init(&segments[i]);
-            }
-
-            cur_obj_set_pos_to_home();
-
-            // Spawn the pivot and set to parent
-            if ((o->parentObj =
-                     spawn_object(o, CHAIN_CHOMP_CHAIN_PART_BP_PIVOT, bhvChainChompChainPart))
-                != NULL) {
-                // Spawn the non-pivot chain parts, starting from the chain
-                // chomp and moving toward the pivot
-                for (i = 1; i <= 4; i++) {
-                    spawn_object_relative(i, 0, 0, 0, o, MODEL_METALLIC_BALL, bhvChainChompChainPart);
-                }
-
-                o->oAction = CHAIN_CHOMP_ACT_MOVE;
-                cur_obj_unhide();
-            }
+    segments = mem_pool_alloc(gObjectMemoryPool, 5 * sizeof(struct ChainSegment));
+    if (segments != NULL) {
+        // Each segment represents the offset of a chain part to the pivot.
+        // Segment 0 connects the pivot to the chain chomp itself. Segment
+        // 1 connects the pivot to the chain part next to the chain chomp
+        // (chain part 1), etc.
+        o->oChainChompSegments = segments;
+        for (i = 0; i <= 4; i++) {
+            chain_segment_init(&segments[i]);
         }
-#ifndef NODRAWINGDISTANCE
+
+        cur_obj_set_pos_to_home();
+
+        // Spawn the pivot and set to parent
+        if ((o->parentObj =
+                    spawn_object(o, CHAIN_CHOMP_CHAIN_PART_BP_PIVOT, bhvChainChompChainPart))
+            != NULL) {
+            // Spawn the non-pivot chain parts, starting from the chain
+            // chomp and moving toward the pivot
+            for (i = 1; i <= 4; i++) {
+                spawn_object_relative(i, 0, 0, 0, o, MODEL_METALLIC_BALL, bhvChainChompChainPart);
+            }
+
+            o->oAction = CHAIN_CHOMP_ACT_MOVE;
+            cur_obj_unhide();
+        }
     }
-#endif
 }
 
 /**
@@ -358,100 +350,90 @@ static void chain_chomp_act_move(void) {
     f32 maxDistToPivot;
 
     // Unload chain if mario is far enough
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    if (o->oChainChompReleaseStatus == CHAIN_CHOMP_NOT_RELEASED && distanceToPlayer > 4000.0f) {
-        o->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
-        o->oForwardVel = o->oVelY = 0.0f;
-    } else {
-#endif
-        cur_obj_update_floor_and_walls();
+    cur_obj_update_floor_and_walls();
 
-        switch (o->oChainChompReleaseStatus) {
-            case CHAIN_CHOMP_NOT_RELEASED:
-                switch (o->oSubAction) {
-                    case CHAIN_CHOMP_SUB_ACT_TURN:
-                        chain_chomp_sub_act_turn();
-                        break;
-                    case CHAIN_CHOMP_SUB_ACT_LUNGE:
-                        chain_chomp_sub_act_lunge();
-                        break;
-                }
-                break;
-            case CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE:
-                chain_chomp_released_trigger_cutscene();
-                break;
-            case CHAIN_CHOMP_RELEASED_LUNGE_AROUND:
-                chain_chomp_released_lunge_around();
-                break;
-            case CHAIN_CHOMP_RELEASED_BREAK_GATE:
-                chain_chomp_released_break_gate();
-                break;
-            case CHAIN_CHOMP_RELEASED_JUMP_AWAY:
-                chain_chomp_released_jump_away();
-                break;
-            case CHAIN_CHOMP_RELEASED_END_CUTSCENE:
-                chain_chomp_released_end_cutscene();
-                break;
-        }
-
-        cur_obj_move_standard(78);
-
-        // Segment 0 connects the pivot to the chain chomp itself
-        o->oChainChompSegments[0].posX = o->oPosX - o->parentObj->oPosX;
-        o->oChainChompSegments[0].posY = o->oPosY - o->parentObj->oPosY;
-        o->oChainChompSegments[0].posZ = o->oPosZ - o->parentObj->oPosZ;
-
-        o->oChainChompDistToPivot =
-            sqrtf(o->oChainChompSegments[0].posX * o->oChainChompSegments[0].posX
-                  + o->oChainChompSegments[0].posY * o->oChainChompSegments[0].posY
-                  + o->oChainChompSegments[0].posZ * o->oChainChompSegments[0].posZ);
-
-        // If the chain is fully stretched
-        maxDistToPivot = o->oChainChompMaxDistFromPivotPerChainPart * 5;
-        if (o->oChainChompDistToPivot > maxDistToPivot) {
-            f32 ratio = maxDistToPivot / o->oChainChompDistToPivot;
-            o->oChainChompDistToPivot = maxDistToPivot;
-
-            o->oChainChompSegments[0].posX *= ratio;
-            o->oChainChompSegments[0].posY *= ratio;
-            o->oChainChompSegments[0].posZ *= ratio;
-
-            if (o->oChainChompReleaseStatus == CHAIN_CHOMP_NOT_RELEASED) {
-                // Restrict chain chomp position
-                o->oPosX = o->parentObj->oPosX + o->oChainChompSegments[0].posX;
-                o->oPosY = o->parentObj->oPosY + o->oChainChompSegments[0].posY;
-                o->oPosZ = o->parentObj->oPosZ + o->oChainChompSegments[0].posZ;
-
-                o->oChainChompRestrictedByChain = TRUE;
-            } else {
-                // Move pivot like the chain chomp is pulling it along
-                f32 oldPivotY = o->parentObj->oPosY;
-
-                o->parentObj->oPosX = o->oPosX - o->oChainChompSegments[0].posX;
-                o->parentObj->oPosY = o->oPosY - o->oChainChompSegments[0].posY;
-                o->parentObj->oVelY = o->parentObj->oPosY - oldPivotY;
-                o->parentObj->oPosZ = o->oPosZ - o->oChainChompSegments[0].posZ;
+    switch (o->oChainChompReleaseStatus) {
+        case CHAIN_CHOMP_NOT_RELEASED:
+            switch (o->oSubAction) {
+                case CHAIN_CHOMP_SUB_ACT_TURN:
+                    chain_chomp_sub_act_turn();
+                    break;
+                case CHAIN_CHOMP_SUB_ACT_LUNGE:
+                    chain_chomp_sub_act_lunge();
+                    break;
             }
-        } else {
-            o->oChainChompRestrictedByChain = FALSE;
-        }
-
-        chain_chomp_update_chain_segments();
-
-        // Begin a lunge if mario tries to attack
-        if (obj_check_attacks(&sChainChompHitbox, o->oAction)) {
-            o->oSubAction = CHAIN_CHOMP_SUB_ACT_LUNGE;
-            o->oChainChompMaxDistFromPivotPerChainPart = 900.0f / 5;
-            o->oForwardVel = 0.0f;
-            o->oVelY = 300.0f;
-            o->oGravity = -4.0f;
-            o->oChainChompTargetPitch = -0x3000;
-        }
-#ifndef NODRAWINGDISTANCE
+            break;
+        case CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE:
+            chain_chomp_released_trigger_cutscene();
+            break;
+        case CHAIN_CHOMP_RELEASED_LUNGE_AROUND:
+            chain_chomp_released_lunge_around();
+            break;
+        case CHAIN_CHOMP_RELEASED_BREAK_GATE:
+            chain_chomp_released_break_gate();
+            break;
+        case CHAIN_CHOMP_RELEASED_JUMP_AWAY:
+            chain_chomp_released_jump_away();
+            break;
+        case CHAIN_CHOMP_RELEASED_END_CUTSCENE:
+            chain_chomp_released_end_cutscene();
+            break;
     }
-#endif
+
+    cur_obj_move_standard(78);
+
+    // Segment 0 connects the pivot to the chain chomp itself
+    o->oChainChompSegments[0].posX = o->oPosX - o->parentObj->oPosX;
+    o->oChainChompSegments[0].posY = o->oPosY - o->parentObj->oPosY;
+    o->oChainChompSegments[0].posZ = o->oPosZ - o->parentObj->oPosZ;
+
+    o->oChainChompDistToPivot =
+        sqrtf(o->oChainChompSegments[0].posX * o->oChainChompSegments[0].posX
+                + o->oChainChompSegments[0].posY * o->oChainChompSegments[0].posY
+                + o->oChainChompSegments[0].posZ * o->oChainChompSegments[0].posZ);
+
+    // If the chain is fully stretched
+    maxDistToPivot = o->oChainChompMaxDistFromPivotPerChainPart * 5;
+    if (o->oChainChompDistToPivot > maxDistToPivot) {
+        f32 ratio = maxDistToPivot / o->oChainChompDistToPivot;
+        o->oChainChompDistToPivot = maxDistToPivot;
+
+        o->oChainChompSegments[0].posX *= ratio;
+        o->oChainChompSegments[0].posY *= ratio;
+        o->oChainChompSegments[0].posZ *= ratio;
+
+        if (o->oChainChompReleaseStatus == CHAIN_CHOMP_NOT_RELEASED) {
+            // Restrict chain chomp position
+            o->oPosX = o->parentObj->oPosX + o->oChainChompSegments[0].posX;
+            o->oPosY = o->parentObj->oPosY + o->oChainChompSegments[0].posY;
+            o->oPosZ = o->parentObj->oPosZ + o->oChainChompSegments[0].posZ;
+
+            o->oChainChompRestrictedByChain = TRUE;
+        } else {
+            // Move pivot like the chain chomp is pulling it along
+            f32 oldPivotY = o->parentObj->oPosY;
+
+            o->parentObj->oPosX = o->oPosX - o->oChainChompSegments[0].posX;
+            o->parentObj->oPosY = o->oPosY - o->oChainChompSegments[0].posY;
+            o->parentObj->oVelY = o->parentObj->oPosY - oldPivotY;
+            o->parentObj->oPosZ = o->oPosZ - o->oChainChompSegments[0].posZ;
+        }
+    } else {
+        o->oChainChompRestrictedByChain = FALSE;
+    }
+
+    chain_chomp_update_chain_segments();
+
+    // Begin a lunge if mario tries to attack
+    if (obj_check_attacks(&sChainChompHitbox, o->oAction)) {
+        o->oSubAction = CHAIN_CHOMP_SUB_ACT_LUNGE;
+        o->oChainChompMaxDistFromPivotPerChainPart = 900.0f / 5;
+        o->oForwardVel = 0.0f;
+        o->oVelY = 300.0f;
+        o->oGravity = -4.0f;
+        o->oChainChompTargetPitch = -0x3000;
+    }
+
     if (o->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
         cur_obj_become_intangible();
     }

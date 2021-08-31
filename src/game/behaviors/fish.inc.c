@@ -12,29 +12,28 @@ void fish_act_spawn(void) {
     s32 i;
     s32 schoolQuantity;
     s16 model;
-    f32 minDistToMario;
     const struct Animation * const*fishAnimation;
     struct Object *fishObject;
     switch (o->oBehParams2ndByte) {
         
         // Blue fish with a quanitiy of twenty.
         case 0:
-            model = MODEL_FISH;    schoolQuantity = 20;    minDistToMario = 1500.0f;    fishAnimation = blue_fish_seg3_anims_0301C2B0;
+            model = MODEL_FISH; schoolQuantity = 20; fishAnimation = blue_fish_seg3_anims_0301C2B0;
             break;
             
         // Blue fish with a quanitiy of five.
         case 1:
-            model = MODEL_FISH;    schoolQuantity = 5;    minDistToMario = 1500.0f;    fishAnimation = blue_fish_seg3_anims_0301C2B0;
+            model = MODEL_FISH; schoolQuantity = 5; fishAnimation = blue_fish_seg3_anims_0301C2B0;
             break;
             
         // Cyan fish with a quanitiy of twenty.
         case 2:
-            model = MODEL_CYAN_FISH;    schoolQuantity = 20;    minDistToMario = 1500.0f;    fishAnimation = cyan_fish_seg6_anims_0600E264;
+            model = MODEL_CYAN_FISH; schoolQuantity = 20; fishAnimation = cyan_fish_seg6_anims_0600E264;
             break;
             
         // Cyan fish with a quanitiy of five.
         case 3:
-            model = MODEL_CYAN_FISH;    schoolQuantity = 5;    minDistToMario = 1500.0f;    fishAnimation = cyan_fish_seg6_anims_0600E264;
+            model = MODEL_CYAN_FISH; schoolQuantity = 5; fishAnimation = cyan_fish_seg6_anims_0600E264;
             break;
     }
     /**
@@ -42,24 +41,13 @@ void fish_act_spawn(void) {
      * If the current level is Secret Aquarium, ignore this requirement.
      * Fish moves at random with a max-range of 700.0f.
      */
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    if (distanceToPlayer < minDistToMario || gCurrLevelNum == LEVEL_SA) {
-#else
-    // get rid of warning
-    minDistToMario = minDistToMario;
-#endif
-        for (i = 0; i < schoolQuantity; i++) {
-            fishObject = spawn_object(o, model, bhvFish);
-            fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
-            obj_init_animation_with_sound(fishObject, fishAnimation, 0);
-            obj_translate_xyz_random(fishObject, 700.0f);
-        }
-        o->oAction = FISH_ACT_ACTIVE;
-#ifndef NODRAWINGDISTANCE
+    for (i = 0; i < schoolQuantity; i++) {
+        fishObject = spawn_object(o, model, bhvFish);
+        fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
+        obj_init_animation_with_sound(fishObject, fishAnimation, 0);
+        obj_translate_xyz_random(fishObject, 700.0f);
     }
-#endif
+    o->oAction = FISH_ACT_ACTIVE;
 }
 
 /**
@@ -67,14 +55,15 @@ void fish_act_spawn(void) {
  * Y coordinate is greater than 2000.0f then spawn another fish.
  */
 void fish_act_respawn(void) {
-#ifndef NODRAWINGDISTANCE
+    // TODO: should this be re-enabled?
+/*#ifndef NODRAWINGDISTANCE
     if (gCurrLevelNum != LEVEL_SA) {
         struct Object* player = nearest_player_to_object(o);
         if (player->oPosY - o->oPosY > 2000.0f) {
             o->oAction = FISH_ACT_RESPAWN;
         }
     }
-#endif
+#endif*/
 }
 
 /**

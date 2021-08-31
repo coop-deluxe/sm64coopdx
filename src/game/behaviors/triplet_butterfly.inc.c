@@ -54,39 +54,31 @@ static void triplet_butterfly_act_init(void) {
 }
 
 static void triplet_butterfly_act_wander(void) {
-#ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario > 1500.0f) {
-        obj_mark_for_deletion(o);
+    approach_f32_ptr(&o->oTripletButterflySpeed, 8.0f, 0.5f);
+    if (o->oTimer < 60) {
+        o->oTripletButterflyTargetYaw = cur_obj_angle_to_home();
     } else {
-#endif
-        approach_f32_ptr(&o->oTripletButterflySpeed, 8.0f, 0.5f);
-        if (o->oTimer < 60) {
-            o->oTripletButterflyTargetYaw = cur_obj_angle_to_home();
-        } else {
-            o->oTripletButterflyTargetYaw = (s32) o->oTripletButterflyBaseYaw;
+        o->oTripletButterflyTargetYaw = (s32) o->oTripletButterflyBaseYaw;
 
-            if (o->oTimer > 110 && o->oDistanceToMario < 200.0f
-                && o->oTripletButterflyType > TRIPLET_BUTTERFLY_TYPE_NORMAL) {
-                o->oAction = TRIPLET_BUTTERFLY_ACT_ACTIVATE;
-                o->oTripletButterflySpeed = 0.0f;
-            }
+        if (o->oTimer > 110 && o->oDistanceToMario < 200.0f
+            && o->oTripletButterflyType > TRIPLET_BUTTERFLY_TYPE_NORMAL) {
+            o->oAction = TRIPLET_BUTTERFLY_ACT_ACTIVATE;
+            o->oTripletButterflySpeed = 0.0f;
         }
-
-        if (o->oHomeY < o->oFloorHeight) {
-            o->oHomeY = o->oFloorHeight;
-        }
-
-        if (o->oPosY < o->oHomeY + random_linear_offset(50, 50)) {
-            o->oTripletButterflyTargetPitch = -0x2000;
-        } else {
-            o->oTripletButterflyTargetPitch = 0x2000;
-        }
-
-        obj_move_pitch_approach(o->oTripletButterflyTargetPitch, 400);
-        cur_obj_rotate_yaw_toward(o->oTripletButterflyTargetYaw, random_linear_offset(400, 800));
-#ifndef NODRAWINGDISTANCE
     }
-#endif
+
+    if (o->oHomeY < o->oFloorHeight) {
+        o->oHomeY = o->oFloorHeight;
+    }
+
+    if (o->oPosY < o->oHomeY + random_linear_offset(50, 50)) {
+        o->oTripletButterflyTargetPitch = -0x2000;
+    } else {
+        o->oTripletButterflyTargetPitch = 0x2000;
+    }
+
+    obj_move_pitch_approach(o->oTripletButterflyTargetPitch, 400);
+    cur_obj_rotate_yaw_toward(o->oTripletButterflyTargetYaw, random_linear_offset(400, 800));
 }
 
 static void triplet_butterfly_act_activate(void) {

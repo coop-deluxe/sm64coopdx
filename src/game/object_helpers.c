@@ -2638,12 +2638,9 @@ void cur_obj_if_hit_wall_bounce_away(void) {
 }
 
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (absf(o->oPosY - gMarioStates[i].marioObj->oPosY) < distY) {
-            cur_obj_unhide();
-            return FALSE;
-        }
+    if (absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()) {
+        cur_obj_unhide();
+        return FALSE;
     }
     cur_obj_hide();
     return TRUE;

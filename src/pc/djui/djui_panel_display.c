@@ -7,7 +7,7 @@ static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 6 + 64 * 1 + 16 * 5;
+    f32 bodyHeight = 32 * 7 + 64 * 1 + 16 * 6;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\D\\#1be700\\I\\#00b3ff\\S\\#ffef00\\P\\#ff0800\\L\\#1be700\\A\\#00b3ff\\Y");
@@ -38,6 +38,11 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "FPS", fpsChoices, 2, &config60Fps);
         djui_base_set_size_type(&selectionbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox2->base, 1.0f, 32);
+
+        char* drawDistanceChoices[6] = { "0.5x", "1x", "1.5x", "3x", "10x", "100x" };
+        struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(&body->base, "Draw Distance", drawDistanceChoices, 6, &configDrawDistance);
+        djui_base_set_size_type(&selectionbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&selectionbox3->base, 1.0f, 32);
 
         struct DjuiButton* button6 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

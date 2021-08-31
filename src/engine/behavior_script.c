@@ -1075,15 +1075,11 @@ cur_obj_update_begin:;
     } else if ((objFlags & OBJ_FLAG_COMPUTE_DIST_TO_MARIO) && gCurrentObject->collisionData == NULL) {
         if (!(objFlags & OBJ_FLAG_ACTIVE_FROM_AFAR)) {
             // If the object has a render distance, check if it should be shown.
-#ifndef NODRAWINGDISTANCE
-            if (distanceFromMario > gCurrentObject->oDrawingDistance) {
+            if (distanceFromMario > gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
                 // Out of render distance, hide the object.
                 gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
                 gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
             } else if (gCurrentObject->oHeldState == HELD_FREE) {
-#else
-            if (distanceFromMario <= gCurrentObject->oDrawingDistance && gCurrentObject->oHeldState == HELD_FREE) {
-#endif
                 // In render distance (and not being held), show the object.
                 gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
                 gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
@@ -1122,4 +1118,15 @@ f32 position_based_random_float_position(void) {
 
 u8 cur_obj_is_last_nat_update_per_frame(void) {
     return (gCurrentObject->areaTimer == (gNetworkAreaTimer - 1));
+}
+
+f32 draw_distance_scalar(void) {
+    switch (configDrawDistance) {
+        case 0: return 0.5f;
+        case 1: return 1.0f;
+        case 2: return 1.5f;
+        case 3: return 3.0f;
+        case 4: return 10.0f;
+        default: return 999.0f;
+    }
 }

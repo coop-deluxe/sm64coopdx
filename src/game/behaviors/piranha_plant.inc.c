@@ -369,15 +369,14 @@ void bhv_piranha_plant_loop(void) {
     cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
 
     cur_obj_call_action_function(TablePiranhaPlantActions);
-    #ifndef NODRAWINGDISTANCE
     // In WF, hide all Piranha Plants once high enough up.
     if (gCurrLevelNum == LEVEL_WF) {
-        struct Object* player = nearest_player_to_object(o);
-        if (player->oPosY > 3400.0f)
+        struct Object* player = gMarioStates[0].marioObj;
+        f32 scalar = max(draw_distance_scalar(), 1.0f);
+        if (player->oPosY > 3400.0f * scalar)
             cur_obj_hide();
         else
             cur_obj_unhide();
     }
-    #endif
     o->oInteractStatus = 0;
 }

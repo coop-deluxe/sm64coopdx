@@ -47,16 +47,8 @@ static void cloud_act_spawn_parts(void) {
  * Wait for mario to approach, then unhide and enter the spawn parts action.
  */
 static void cloud_act_fwoosh_hidden(void) {
-#ifndef NODRAWINGDISTANCE
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    if (distanceToPlayer < 2000.0f) {
-#endif
-        cur_obj_unhide();
-        o->oAction = CLOUD_ACT_SPAWN_PARTS;
-#ifndef NODRAWINGDISTANCE
-    }
-#endif
+    cur_obj_unhide();
+    o->oAction = CLOUD_ACT_SPAWN_PARTS;
 }
 
 /**
@@ -77,48 +69,40 @@ static void cloud_fwoosh_update(void) {
     struct Object* player = nearest_player_to_object(o);
     int distanceToPlayer = dist_between_objects(o, player);
 
-#ifndef NODRAWINGDISTANCE
-    if (distanceToPlayer > 2500.0f) {
-        o->oAction = CLOUD_ACT_UNLOAD;
-    } else {
-#endif
-        if (o->oCloudBlowing) {
-            o->header.gfx.scale[0] += o->oCloudGrowSpeed;
+    if (o->oCloudBlowing) {
+        o->header.gfx.scale[0] += o->oCloudGrowSpeed;
 
-            if ((o->oCloudGrowSpeed -= 0.005f) < -0.16f) {
-                // Stop blowing once we are shrinking faster than -0.16
-                o->oCloudBlowing = o->oTimer = 0;
-            } else if (o->oCloudGrowSpeed < -0.1f) {
-                // Start blowing once we start shrinking faster than -0.1
-                cur_obj_play_sound_1(SOUND_AIR_BLOW_WIND);
-                cur_obj_spawn_strong_wind_particles(12, 3.0f, 0.0f, -50.0f, 120.0f);
-            } else {
-                cur_obj_play_sound_1(SOUND_ENV_WIND1);
+        if ((o->oCloudGrowSpeed -= 0.005f) < -0.16f) {
+            // Stop blowing once we are shrinking faster than -0.16
+            o->oCloudBlowing = o->oTimer = 0;
+        } else if (o->oCloudGrowSpeed < -0.1f) {
+            // Start blowing once we start shrinking faster than -0.1
+            cur_obj_play_sound_1(SOUND_AIR_BLOW_WIND);
+            cur_obj_spawn_strong_wind_particles(12, 3.0f, 0.0f, -50.0f, 120.0f);
+        } else {
+            cur_obj_play_sound_1(SOUND_ENV_WIND1);
+        }
+    } else {
+        // Return to normal size
+        approach_f32_ptr(&o->header.gfx.scale[0], 3.0f, 0.012f);
+        o->oCloudFwooshMovementRadius += 0xC8;
+
+        // If mario stays nearby for 100 frames, begin blowing
+        if (distanceToPlayer < 1000.0f) {
+            if (o->oTimer > 100) {
+                o->oCloudBlowing = TRUE;
+                o->oCloudGrowSpeed = 0.14f;
             }
         } else {
-            // Return to normal size
-            approach_f32_ptr(&o->header.gfx.scale[0], 3.0f, 0.012f);
-            o->oCloudFwooshMovementRadius += 0xC8;
-
-            // If mario stays nearby for 100 frames, begin blowing
-            if (distanceToPlayer < 1000.0f) {
-                if (o->oTimer > 100) {
-                    o->oCloudBlowing = TRUE;
-                    o->oCloudGrowSpeed = 0.14f;
-                }
-            } else {
-                o->oTimer = 0;
-            }
-
-            o->oCloudCenterX = o->oHomeX + 100.0f * coss(o->oCloudFwooshMovementRadius);
-            o->oPosZ = o->oHomeZ + 100.0f * sins(o->oCloudFwooshMovementRadius);
-            o->oCloudCenterY = o->oHomeY;
+            o->oTimer = 0;
         }
 
-        cur_obj_scale(o->header.gfx.scale[0]);
-#ifndef NODRAWINGDISTANCE
+        o->oCloudCenterX = o->oHomeX + 100.0f * coss(o->oCloudFwooshMovementRadius);
+        o->oPosZ = o->oHomeZ + 100.0f * sins(o->oCloudFwooshMovementRadius);
+        o->oCloudCenterY = o->oHomeY;
     }
-#endif
+
+    cur_obj_scale(o->header.gfx.scale[0]);
 }
 
 /**

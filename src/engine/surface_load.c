@@ -795,18 +795,10 @@ void load_object_collision_model(void) {
         }
     }
 
-#ifndef NODRAWINGDISTANCE
-    u8 anyPlayerInDrawRange = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
-        if (dist < gCurrentObject->oDrawingDistance) { anyPlayerInDrawRange = TRUE; }
-    }
-    if (anyPlayerInDrawRange) {
-#endif
+    f32 marioDist = dist_between_objects(gCurrentObject, gMarioStates[0].marioObj);
+    if (marioDist < gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
         gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
-#ifndef NODRAWINGDISTANCE
     } else {
         gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     }
-#endif
 }
