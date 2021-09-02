@@ -1249,11 +1249,17 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 
     // bounce
     u32 interaction = determine_interaction(m, m2->marioObj);
-    if (interaction & INT_HIT_FROM_ABOVE) {
+    f32 aboveFloor = m2->pos[1] - m2->floorHeight;
+    if ((interaction & INT_HIT_FROM_ABOVE) && (aboveFloor < 1)) {
         if (m2->playerIndex == 0) {
             m2->squishTimer = max(m2->squishTimer, 4);
         }
-        bounce_off_object(m, m2->marioObj, 30.0f);
+        f32 velY = fmax(fmin(50.0f, 10.0f + fabs(m->vel[1])), 30.0f);
+        if (m2->action == ACT_CROUCHING) {
+            set_mario_action(m, ACT_TWIRLING, 0);
+            velY = fmax(fmin(100.0f, 30.0f + fabs(m->vel[1])), 80.0f);
+        }
+        bounce_off_object(m, m2->marioObj, velY);
         queue_rumble_data_mario(m, 5, 80);
         // don't do further interactions if we've hopped on top
         return TRUE;
