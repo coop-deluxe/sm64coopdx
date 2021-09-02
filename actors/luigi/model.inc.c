@@ -3766,10 +3766,12 @@ Gfx luigi_000_displaylist_004_mesh[] = {
 Gfx luigi_000_displaylist_004_mesh_mat_override_metal_0[] = {
     gsSPDisplayList(mat_luigi_metal),
     gsSPDisplayList(luigi_000_displaylist_004_mesh_tri_0),
+    gsDPPipeSync(),
+    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsSPEndDisplayList(),
 };
-
-
 
 Gfx luigi_002_switch_option_left_hand_open_mesh[] = {
     gsSPDisplayList(mat_luigi_gloves),
