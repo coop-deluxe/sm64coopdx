@@ -431,7 +431,7 @@ void init_mario_after_warp(void) {
         set_mario_initial_action(gMarioState, marioSpawnType, sWarpDest.arg);
 
         // remove offset from local mario during warps
-        if ((sWarpDest.type == WARP_TYPE_SAME_AREA) || (sWarpDest.type == WARP_TYPE_CHANGE_AREA)) {
+        if (sWarpDest.type == WARP_TYPE_SAME_AREA) {
             gMarioState[0].pos[0] = (s16)spawnNode->object->oPosX;
             gMarioState[0].pos[1] = (s16)spawnNode->object->oPosY;
             gMarioState[0].pos[2] = (s16)spawnNode->object->oPosZ;
