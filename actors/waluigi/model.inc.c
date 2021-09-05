@@ -71,7 +71,7 @@ u8 waluigi_custom_waluigi_cap_rgba16[] = {
 
 Gfx waluigi_waluigi_eyes0_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_waluigi_eyes0_rgba16[] = {
-    #include "actors/waluigi/waluigi_eyes0.rgba16.inc.c"
+    #include "actors/waluigi/custom_waluigi_eyes0.rgba16.inc.c"
 };
 
 Gfx waluigi_mario_sideburn_rgba16_aligner[] = {gsSPEndDisplayList()};
@@ -81,22 +81,22 @@ u8 waluigi_mario_sideburn_rgba16[] = {
 
 Gfx waluigi_waluigi_mouth_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_waluigi_mouth_rgba16[] = {
-    #include "actors/waluigi/waluigi_mouth.rgba16.inc.c"
+    #include "actors/waluigi/custom_waluigi_mouth.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes1_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_waluigi_eyes1_rgba16[] = {
-    #include "actors/waluigi/waluigi_eyes1.rgba16.inc.c"
+    #include "actors/waluigi/custom_waluigi_eyes1.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes2_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_waluigi_eyes2_rgba16[] = {
-    #include "actors/waluigi/waluigi_eyes2.rgba16.inc.c"
+    #include "actors/waluigi/custom_waluigi_eyes2.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes3_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_waluigi_eyes3_rgba16[] = {
-    #include "actors/waluigi/waluigi_eyes3.rgba16.inc.c"
+    #include "actors/waluigi/custom_waluigi_eyes3.rgba16.inc.c"
 };
 
 Gfx waluigi_wing_2_rgba16_aligner[] = {gsSPEndDisplayList()};
@@ -111,7 +111,7 @@ u8 waluigi_wing1_rgba16[] = {
 
 Gfx waluigi_waluigi_glove_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 waluigi_waluigi_glove_rgba16[] = {
-    #include "actors/waluigi/waluigi_glove.rgba16.inc.c"
+    #include "actors/waluigi/custom_waluigi_glove.rgba16.inc.c"
 };
 
 Vtx waluigi_000_offset_mesh_layer_1_vtx_0[76] = {
