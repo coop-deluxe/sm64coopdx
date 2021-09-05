@@ -385,6 +385,8 @@ void set_mario_initial_action(struct MarioState *m, u32 spawnType, u32 actionArg
     set_mario_initial_cap_powerup(m);
 }
 
+#include "pc/debuglog.h"
+
 void init_mario_after_warp(void) {
     struct ObjectWarpNode *spawnNode = area_get_warp_node(sWarpDest.nodeId);
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
@@ -429,7 +431,7 @@ void init_mario_after_warp(void) {
         set_mario_initial_action(gMarioState, marioSpawnType, sWarpDest.arg);
 
         // remove offset from local mario during warps
-        if (sWarpDest.type == WARP_TYPE_SAME_AREA) {
+        if ((sWarpDest.type == WARP_TYPE_SAME_AREA) || (sWarpDest.type == WARP_TYPE_CHANGE_AREA)) {
             gMarioState[0].pos[0] = (s16)spawnNode->object->oPosX;
             gMarioState[0].pos[1] = (s16)spawnNode->object->oPosY;
             gMarioState[0].pos[2] = (s16)spawnNode->object->oPosZ;
@@ -438,6 +440,7 @@ void init_mario_after_warp(void) {
                 gMarioState[0].marioObj->oPosY = spawnNode->object->oPosY;
                 gMarioState[0].marioObj->oPosZ = spawnNode->object->oPosZ;
             }
+            LOG_INFO(">>> override offset spawn <<<");
         }
 
         gMarioState->interactObj = spawnNode->object;
