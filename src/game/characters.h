@@ -7,6 +7,7 @@ enum CharacterType {
     CT_MARIO,
     CT_LUIGI,
     CT_TOAD,
+    CT_WALUIGI,
 
     // must be last
     CT_MAX
@@ -24,8 +25,13 @@ struct Character {
     u8 capEnemyLayer;
     Gfx* capEnemyGfx;
     Gfx* capEnemyDecalGfx;
-    f32 soundFreqScale;
+    // anim
+    u8 animOffsetEnabled;
+    f32 animOffsetLowYPoint;
+    f32 animOffsetFeet;
+    f32 animOffsetHand;
     // sounds
+    f32 soundFreqScale;
     s32 soundYahWahHoo;
     s32 soundHoohoo;
     s32 soundYahoo;
@@ -119,8 +125,12 @@ enum CharacterSound {
 struct MarioState;
 extern struct Character gCharacters[];
 struct Character* get_character(struct MarioState* m);
+
 void play_character_sound(struct MarioState* m, enum CharacterSound characterSound);
 void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u32 offset);
 void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags);
+
+f32 get_character_anim_offset(struct MarioState* m);
+void update_character_anim_offset(struct MarioState* m);
 
 #endif // CHARACTERS_H

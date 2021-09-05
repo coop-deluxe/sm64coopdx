@@ -6,3 +6,4 @@
 
 #include "luigi_cap/geo.inc.c" // custom luigi_cap
 #include "toad_cap/geo.inc.c" // custom toad_cap
+#include "waluigi_cap/geo.inc.c" // custom waluigi_cap

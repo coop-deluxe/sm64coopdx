@@ -9,3 +9,6 @@
 
 // toad model
 #include "toad_player/model.inc.c"
+
+// waluigi model
+#include "waluigi/model.inc.c"

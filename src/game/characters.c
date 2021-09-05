@@ -8,11 +8,13 @@
 #include "luigi_audio_defines.h"
 #include "pc/configfile.h"
 #include "audio/external.h"
+#include "engine/graph_node.h"
 
 extern Gfx mario_cap_seg3_dl_03022F48[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
 extern Gfx toad_player_dl_cap[];
 extern Gfx toad_player_dl_cap_decal[];
+extern Gfx waluigi_cap_seg3_dl_03022F48[];
 
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
@@ -27,8 +29,10 @@ struct Character gCharacters[CT_MAX] = {
         .capEnemyLayer         = LAYER_OPAQUE,
         .capEnemyGfx           = mario_cap_seg3_dl_03022F48,
         .capEnemyDecalGfx      = NULL,
-        .soundFreqScale        = 1.0f,
+        // anim
+        .animOffsetEnabled     = false,
         // sounds
+        .soundFreqScale        = 1.0f,
         .soundYahWahHoo        = SOUND_MARIO_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_MARIO_HOOHOO,
         .soundYahoo            = SOUND_MARIO_YAHOO,
@@ -85,8 +89,10 @@ struct Character gCharacters[CT_MAX] = {
         .capEnemyLayer         = LAYER_OPAQUE,
         .capEnemyGfx           = luigi_cap_seg3_dl_03022F48,
         .capEnemyDecalGfx      = NULL,
-        .soundFreqScale        = 1.0f,
+        // anim
+        .animOffsetEnabled     = false,
         // sounds
+        .soundFreqScale        = 1.0f,
         .soundYahWahHoo        = SOUND_LUIGI_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_LUIGI_HOOHOO,
         .soundYahoo            = SOUND_LUIGI_YAHOO,
@@ -139,12 +145,14 @@ struct Character gCharacters[CT_MAX] = {
         .capModelId            = MODEL_TOADS_CAP,
         .capMetalModelId       = MODEL_TOADS_METAL_CAP,
         .capWingModelId        = MODEL_TOADS_WING_CAP,
-        .capMetalWingModelId   = MODEL_TOADS_CAP,
+        .capMetalWingModelId   = MODEL_TOADS_WING_CAP,
         .capEnemyLayer         = LAYER_TRANSPARENT,
         .capEnemyGfx           = toad_player_dl_cap,
         .capEnemyDecalGfx      = toad_player_dl_cap_decal,
-        .soundFreqScale        = 1.25f,
+        // anim
+        .animOffsetEnabled     = false,
         // sounds
+        .soundFreqScale        = 1.25f,
         .soundYahWahHoo        = SOUND_MARIO_YAH_WAH_HOO,
         .soundHoohoo           = SOUND_MARIO_HOOHOO,
         .soundYahoo            = SOUND_MARIO_YAHOO,
@@ -188,6 +196,122 @@ struct Character gCharacters[CT_MAX] = {
         .soundSoLongaBowser    = SOUND_MARIO_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_MARIO_IMA_TIRED,
     },
+
+    [CT_WALUIGI] = {
+        .name                  = "Waluigi",
+        .hudHead               = 'z',
+        .cameraHudHead         = GLYPH_CAM_WALUIGI_HEAD,
+        .modelId               = MODEL_WALUIGI,
+        .capModelId            = MODEL_WALUIGIS_CAP,
+        .capMetalModelId       = MODEL_WALUIGIS_METAL_CAP,
+        .capWingModelId        = MODEL_WALUIGIS_WING_CAP,
+        .capMetalWingModelId   = MODEL_WALUIGIS_WINGED_METAL_CAP,
+        .capEnemyLayer         = LAYER_OPAQUE,
+        .capEnemyGfx           = waluigi_cap_seg3_dl_03022F48,
+        .capEnemyDecalGfx      = NULL,
+        // anim
+        .animOffsetEnabled     = true,
+        .animOffsetLowYPoint   = 11,
+        .animOffsetFeet        = 25,
+        .animOffsetHand        = -10,
+        // sounds
+        .soundFreqScale        = 0.99f,
+        .soundYahWahHoo        = SOUND_LUIGI_YAH_WAH_HOO,
+        .soundHoohoo           = SOUND_LUIGI_HOOHOO,
+        .soundYahoo            = SOUND_LUIGI_YAHOO,
+        .soundUh               = SOUND_LUIGI_UH,
+        .soundHrmm             = SOUND_LUIGI_HRMM,
+        .soundWah2             = SOUND_LUIGI_WAH2,
+        .soundWhoa             = SOUND_LUIGI_WHOA,
+        .soundEeuh             = SOUND_LUIGI_EEUH,
+        .soundAttacked         = SOUND_LUIGI_ATTACKED,
+        .soundOoof             = SOUND_LUIGI_OOOF,
+        .soundOoof2            = SOUND_LUIGI_OOOF2,
+        .soundHereWeGo         = SOUND_LUIGI_HERE_WE_GO,
+        .soundYawning          = SOUND_LUIGI_YAWNING,
+        .soundSnoring1         = SOUND_LUIGI_SNORING1,
+        .soundSnoring2         = SOUND_LUIGI_SNORING2,
+        .soundWaaaooow         = SOUND_LUIGI_WAAAOOOW,
+        .soundHaha             = SOUND_LUIGI_HAHA,
+        .soundHaha_2           = SOUND_LUIGI_HAHA_2,
+        .soundUh2              = SOUND_LUIGI_UH2,
+        .soundUh2_2            = SOUND_LUIGI_UH2_2,
+        .soundOnFire           = SOUND_LUIGI_ON_FIRE,
+        .soundDying            = SOUND_LUIGI_DYING,
+        .soundPantingCold      = SOUND_LUIGI_PANTING_COLD,
+        .soundPanting          = SOUND_LUIGI_PANTING,
+        .soundCoughing1        = SOUND_LUIGI_COUGHING1,
+        .soundCoughing2        = SOUND_LUIGI_COUGHING2,
+        .soundCoughing3        = SOUND_LUIGI_COUGHING3,
+        .soundPunchYah         = SOUND_LUIGI_PUNCH_YAH,
+        .soundPunchHoo         = SOUND_LUIGI_PUNCH_HOO,
+        .soundMamaMia          = SOUND_LUIGI_MAMA_MIA,
+        .soundGroundPoundWah   = SOUND_LUIGI_GROUND_POUND_WAH,
+        .soundDrowning         = SOUND_LUIGI_DROWNING,
+        .soundPunchWah         = SOUND_LUIGI_PUNCH_WAH,
+        .soundYahooWahaYippee  = SOUND_LUIGI_YAHOO_WAHA_YIPPEE,
+        .soundDoh              = SOUND_LUIGI_DOH,
+        .soundGameOver         = SOUND_LUIGI_GAME_OVER,
+        .soundHello            = SOUND_LUIGI_HELLO,
+        .soundPressStartToPlay = SOUND_LUIGI_PRESS_START_TO_PLAY,
+        .soundTwirlBounce      = SOUND_LUIGI_TWIRL_BOUNCE,
+        .soundSnoring3         = SOUND_LUIGI_SNORING3,
+        .soundSoLongaBowser    = SOUND_LUIGI_SO_LONGA_BOWSER,
+        .soundImaTired         = SOUND_LUIGI_IMA_TIRED,
+    },
+};
+
+enum AnimType {
+    ANIM_TYPE_NONE,
+    ANIM_TYPE_LOWY,
+    ANIM_TYPE_FEET,
+    ANIM_TYPE_HAND,
+};
+
+#define ANIM_TYPE_MAX 209
+u8 sAnimTypes[ANIM_TYPE_MAX] = {
+    ANIM_TYPE_HAND, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_FEET,
+    ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_FEET, ANIM_TYPE_FEET, ANIM_TYPE_FEET,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_FEET, ANIM_TYPE_FEET, ANIM_TYPE_FEET, ANIM_TYPE_NONE, ANIM_TYPE_LOWY,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_HAND, ANIM_TYPE_LOWY,
+    ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_HAND, ANIM_TYPE_FEET, ANIM_TYPE_HAND, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_FEET, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_FEET, ANIM_TYPE_NONE, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_FEET,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_FEET, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_HAND, ANIM_TYPE_HAND, ANIM_TYPE_LOWY,
+    ANIM_TYPE_FEET, ANIM_TYPE_FEET, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_FEET,
+    ANIM_TYPE_FEET, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_FEET, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_FEET, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
+    ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_HAND, ANIM_TYPE_HAND,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_FEET, ANIM_TYPE_LOWY, ANIM_TYPE_LOWY,
+    ANIM_TYPE_LOWY, ANIM_TYPE_LOWY, ANIM_TYPE_NONE, ANIM_TYPE_NONE,
 };
 
 struct Character* get_character(struct MarioState* m) {
@@ -265,4 +389,51 @@ void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound c
         play_character_sound(m, characterSound);
         m->flags |= flags;
     }
+}
+
+f32 get_character_anim_offset(struct MarioState* m) {
+    if (m == NULL || m->marioObj == NULL) { return 0; }
+    struct Object* marioObj = m->marioObj;
+    struct Character* c = get_character(m);
+    if (!c->animOffsetEnabled) { return 0; }
+    s32 animID = marioObj->header.gfx.unk38.animID;
+    if (animID < 0 || animID >= ANIM_TYPE_MAX) { return 0; }
+
+    switch (sAnimTypes[animID]) {
+        case ANIM_TYPE_LOWY:
+            if (m->minimumBoneY < c->animOffsetLowYPoint) {
+                return -(m->minimumBoneY - c->animOffsetLowYPoint);
+            }
+            break;
+        case ANIM_TYPE_FEET:
+            return c->animOffsetFeet;
+            break;
+        case ANIM_TYPE_HAND:
+            return c->animOffsetHand;
+            break;
+    }
+    return 0;
+}
+
+void update_character_anim_offset(struct MarioState* m) {
+    if (m == NULL || m->marioObj == NULL) { return; }
+    struct Object* marioObj = m->marioObj;
+    struct Character* c = get_character(m);
+    if (!c->animOffsetEnabled) { return; }
+
+    f32 targetOffset = get_character_anim_offset(m);
+
+    // smooth
+    f32 alpha = (fabs(targetOffset - m->curAnimOffset) / 80.0f) + 0.5f;
+    alpha = (alpha + 0.5f) / 2.0f;
+    alpha *= alpha;
+    m->curAnimOffset = (m->curAnimOffset * alpha) + (targetOffset * (1.0f - alpha));
+    if (m->curAnimOffset > 40)  { m->curAnimOffset = 40; }
+    if (m->curAnimOffset < -40) { m->curAnimOffset = -40; }
+
+    //s32 animID = marioObj->header.gfx.unk38.animID;
+    //LOG_INFO(">>> [%d] : %d :: %f, %f", animID, sAnimTypes[animID], m->curAnimOffset, m->minimumBoneY);
+
+    marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;
+    marioObj->header.gfx.node.flags |= GRAPH_RENDER_PLAYER;
 }

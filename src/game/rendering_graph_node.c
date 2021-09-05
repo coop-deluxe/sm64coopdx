@@ -10,6 +10,7 @@
 #include "rendering_graph_node.h"
 #include "shadow.h"
 #include "sm64.h"
+#include "game/level_update.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -147,6 +148,7 @@ static Gfx *sViewportPos;
 static Vp sPrevViewport;
 
 struct Object* gCurGraphNodeProcessingObject;
+struct MarioState* gCurGraphNodeMarioState;
 
 void mtx_patch_interpolated(void) {
     s32 i;
@@ -797,6 +799,12 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     gMatStackFixed[gMatStackIndex] = matrixPtr;
     mtxf_to_mtx(mtxInterpolated, gMatStackInterpolated[gMatStackIndex]);
     gMatStackInterpolatedFixed[gMatStackIndex] = mtxInterpolated;
+
+    if (gCurGraphNodeMarioState != NULL) {
+        Vec3f translated = { 0 };
+        get_pos_from_transform_mtx(translated, gMatStack[gMatStackIndex], *gCurGraphNodeCamera->matrixPtr);
+        gCurGraphNodeMarioState->minimumBoneY = fmin(gCurGraphNodeMarioState->minimumBoneY, translated[1] - gCurGraphNodeMarioState->marioObj->header.gfx.pos[1]);
+    }
     if (node->displayList != NULL) {
         geo_append_display_list(node->displayList, node->node.flags >> 8);
     }
@@ -1069,10 +1077,23 @@ static void interpolate_matrix(Mat4 result, Mat4 a, Mat4 b) {
  */
 static void geo_process_object(struct Object *node) {
     struct Object* lastProcessingObject = gCurGraphNodeProcessingObject;
+    struct MarioState* lastMarioState = gCurGraphNodeMarioState;
     gCurGraphNodeProcessingObject = node;
     Mat4 mtxf;
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
     Vec3f scaleInterpolated;
+    if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
+        gCurGraphNodeMarioState = NULL;
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (gMarioStates[i].marioObj == node) {
+                gCurGraphNodeMarioState = &gMarioStates[i];
+                break;
+            }
+        }
+        if (gCurGraphNodeMarioState != NULL) {
+            gCurGraphNodeMarioState->minimumBoneY = 999;
+        }
+    }
     if (node->header.gfx.unk18 == gCurGraphNodeRoot->areaIndex) {
         if (node->header.gfx.throwMatrix != NULL) {
             mtxf_mul(gMatStack[gMatStackIndex + 1], *node->header.gfx.throwMatrix,
@@ -1194,6 +1215,7 @@ static void geo_process_object(struct Object *node) {
         node->header.gfx.throwMatrixInterpolated = NULL;
     }
     gCurGraphNodeProcessingObject = lastProcessingObject;
+    gCurGraphNodeMarioState = lastMarioState;
 }
 
 /**

@@ -213,6 +213,8 @@ void main_func(void) {
     fs_init(sys_ropaths, gamedir, userpath);
 
     configfile_load(configfile_name());
+    if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
+    if (configPlayerPalette >= 16) { configPlayerPalette = 0; }
 
     if (gCLIOpts.FullScreen == 1)
         configWindow.fullscreen = true;

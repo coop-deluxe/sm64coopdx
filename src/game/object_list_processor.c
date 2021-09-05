@@ -299,6 +299,8 @@ void bhv_mario_update(void) {
         i++;
     }
 
+    update_character_anim_offset(gMarioState);
+
     // reset mario state to the local player
     gMarioState = &gMarioStates[0];
 }

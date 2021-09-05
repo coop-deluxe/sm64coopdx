@@ -7,3 +7,5 @@
 #include "luigi/geo.inc.c"
 
 #include "toad_player/geo.inc.c"
+
+#include "waluigi/geo.inc.c"

@@ -221,6 +221,10 @@ ALIGNED8 static const u8 texture_hud_char_toad_head[] = {
 #include "textures/segment2/custom_toad_head.rgba16.inc.c"
 };
 
+ALIGNED8 static const u8 texture_hud_char_waluigi_head[] = {
+#include "textures/segment2/custom_waluigi_head.rgba16.inc.c"
+};
+
 ALIGNED8 static const u8 texture_hud_char_star[] = {
 #include "textures/segment2/segment2.05C00.rgba16.inc.c"
 };
@@ -1840,7 +1844,7 @@ const u8 *const main_hud_lut[] = {
     texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
     texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U,               0x0,
-    texture_hud_char_W,               0x0, texture_hud_char_Y,               0x0,
+    texture_hud_char_W,               0x0, texture_hud_char_Y, texture_hud_char_waluigi_head,
                   0x0,               0x0,               0x0,               0x0,
                   0x0,               0x0,               0x0,               0x0,
                   0x0,               0x0,               0x0,               0x0,
@@ -2085,7 +2089,8 @@ const u8 *const main_credits_font_lut[] = {
 // HUD camera table 0x020087CC-0x020087E3
 const u8 *const main_hud_camera_lut[] = {
     texture_hud_char_camera, texture_hud_char_mario_head, texture_hud_char_lakitu, texture_hud_char_no_camera,
-    texture_hud_char_arrow_up, texture_hud_char_arrow_down, texture_hud_char_luigi_head, texture_hud_char_toad_head
+    texture_hud_char_arrow_up, texture_hud_char_arrow_down, texture_hud_char_luigi_head, texture_hud_char_toad_head,
+    texture_hud_char_waluigi_head,
 };
 
 // If you change the language here, the following Makefile rule also needs to

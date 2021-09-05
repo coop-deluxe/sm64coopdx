@@ -14,6 +14,7 @@
 #define GRAPH_RENDER_INVISIBLE      (1 << 4)
 #define GRAPH_RENDER_HAS_ANIMATION  (1 << 5)
 #define GRAPH_RENDER_CYLBOARD       (1 << 6)
+#define GRAPH_RENDER_PLAYER         (1 << 7)
 
 // Whether the node type has a function pointer of type GraphNodeFunc
 #define GRAPH_NODE_TYPE_FUNCTIONAL            0x100

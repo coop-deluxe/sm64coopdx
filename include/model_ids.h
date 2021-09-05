@@ -600,4 +600,10 @@
 #define MODEL_TOADS_METAL_CAP             0xEA // toads_metal_cap_geo
 #define MODEL_TOADS_WING_CAP              0xEB // toads_wing_cap_geo
 
+#define MODEL_WALUIGI                     0xEC // waluigi_geo
+#define MODEL_WALUIGIS_CAP                0xED // waluigis_cap_geo
+#define MODEL_WALUIGIS_METAL_CAP          0xEE // waluigis_metal_cap_geo
+#define MODEL_WALUIGIS_WING_CAP           0xEF // waluigis_wing_cap_geo
+#define MODEL_WALUIGIS_WINGED_METAL_CAP   0xF0 // waluigis_winged_metal_cap_geo
+
 #endif // MODEL_IDS_H

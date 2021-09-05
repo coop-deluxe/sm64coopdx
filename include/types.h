@@ -392,6 +392,8 @@ struct MarioState
     /*????*/ Vec3f nonInstantWarpPos;
     /*????*/ struct Character* character;
     /*????*/ u8 wasNetworkVisible;
+    /*????*/ f32 minimumBoneY;
+    /*????*/ f32 curAnimOffset;
 };
 
 #define PLAY_MODE_NORMAL 0

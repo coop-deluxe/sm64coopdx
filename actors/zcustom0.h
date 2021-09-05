@@ -9,4 +9,7 @@
 // toad_player
 #include "actors/toad_player/geo_header.h"
 
+// waluigi
+#include "actors/waluigi/geo_header.h"
+
 #endif
