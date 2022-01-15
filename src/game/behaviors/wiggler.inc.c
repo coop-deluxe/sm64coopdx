@@ -220,8 +220,8 @@ void wiggler_init_segments(void) {
 static void wiggler_act_walk(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    int distanceToPlayer = o->oDistanceToMario;
+    int angleToPlayer = o->oAngleToMario;
 
     s16 yawTurnSpeed;
 
@@ -465,13 +465,19 @@ void bhv_wiggler_update(void) {
         network_init_object_field(o, &o->oFaceAngleYaw);
     }
 
+    struct Object* player = nearest_player_to_object(o);
+    int distanceToPlayer = dist_between_objects(o, player);
+    int angleToPlayer = obj_angle_to_object(o, player);
+    o->oDistanceToMario = distanceToPlayer;
+    o->oAngleToMario = angleToPlayer;
+
     if (o->oAction == WIGGLER_ACT_UNINITIALIZED) {
         wiggler_init_segments();
     } else {
         if (o->oAction == WIGGLER_ACT_FALL_THROUGH_FLOOR) {
             wiggler_act_fall_through_floor();
         } else {
-            treat_far_home_as_mario(1200.0f);
+            treat_far_home_as_mario(1200.0f, &distanceToPlayer, &angleToPlayer);
 
             // Walking animation and sound
             cur_obj_init_animation_with_accel_and_sound(0, o->oWigglerWalkAnimSpeed);

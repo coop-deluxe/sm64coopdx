@@ -220,7 +220,7 @@ static void pokey_act_wander(void) {
     if (o->oPokeyNumAliveBodyParts == 0) {
         obj_mark_for_deletion(o);
     } else {
-        treat_far_home_as_mario(1000.0f);
+        treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
         cur_obj_update_floor_and_walls();
 
         if (o->oPokeyHeadWasKilled) {

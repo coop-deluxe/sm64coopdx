@@ -174,9 +174,8 @@ static void koopa_play_footstep_sound(s8 animFrame1, s8 animFrame2) {
  * running away.
  */
 static s32 koopa_check_run_from_mario(void) {
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    int distanceToPlayer = o->oDistanceToMario;
+    int angleToPlayer = o->oAngleToMario;
     if (distanceToPlayer < 300.0f && abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x3000) {
         o->oAction = KOOPA_SHELLED_ACT_RUN_FROM_MARIO;
         return TRUE;
@@ -241,9 +240,8 @@ static void koopa_shelled_act_walk(void) {
     if (o->oKoopaTurningAwayFromWall) {
         o->oKoopaTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oKoopaTargetYaw, 0x200);
     } else {
-        struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
-        int angleToPlayer = obj_angle_to_object(o, player);
+        int distanceToPlayer = o->oDistanceToMario;
+        int angleToPlayer = o->oAngleToMario;
         // If far from home, then begin turning toward home
         if (distanceToPlayer >= 25000.0f) {
             o->oKoopaTargetYaw = angleToPlayer;
@@ -276,9 +274,8 @@ static void koopa_shelled_act_run_from_mario(void) {
     cur_obj_init_animation_with_sound(1);
     koopa_play_footstep_sound(0, 11);
 
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    int distanceToPlayer = o->oDistanceToMario;
+    int angleToPlayer = o->oAngleToMario;
 
     // If far from home, run toward it
     if (distanceToPlayer >= 25000.0f) {
@@ -420,9 +417,8 @@ static void koopa_shelled_update(void) {
  * action.
  */
 static void koopa_unshelled_act_run(void) {
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    int distanceToPlayer = o->oDistanceToMario;
+    int angleToPlayer = o->oAngleToMario;
 
     f32 distToShell = 99999.0f;
     struct Object *shell;
@@ -493,8 +489,7 @@ static void koopa_unshelled_act_dive(void) {
     if (o->oTimer > 10) {
         shell = cur_obj_find_nearest_object_with_behavior(bhvKoopaShell, &distToShell);
 
-        struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
+        int distanceToPlayer = o->oDistanceToMario;
 
         // If we got the shell and mario didn't, put on the shell
         //! The shell comes after koopa in processing order, and the shell is
@@ -926,7 +921,10 @@ void bhv_koopa_update(void) {
 
         o->oKoopaDistanceToMario = distanceToPlayer;
         o->oKoopaAngleToMario = angleToPlayer;
-        treat_far_home_as_mario(1000.0f);
+
+        treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
+        o->oDistanceToMario = distanceToPlayer;
+        o->oAngleToMario = angleToPlayer;
 
         switch (o->oKoopaMovementType) {
             case KOOPA_BP_UNSHELLED:

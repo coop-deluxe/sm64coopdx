@@ -80,7 +80,7 @@ CUSTOM_DIRS += waluigi_cap
 ZCUSTOM_DIRS += waluigi
 
 # Actor Files
-CUSTOM_FILES                := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
+CUSTOM_FILES                 := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 AMP_CHUCKYA_FILES            := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(AMP_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 BOBOMBS_BUBBLE_FILES         := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(KING_BOBOMB_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 BOO_BOOKEND_FILES            := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(BOO_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))

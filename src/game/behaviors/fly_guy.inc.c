@@ -32,6 +32,8 @@ static void fly_guy_act_idle(void) {
     int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
+    treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
+
     o->oForwardVel = 0.0f;
     if (approach_f32_ptr(&o->header.gfx.scale[0], 1.5f, 0.02f)) {
         // If we are >2000 units from home or Mario is <2000 units from us
@@ -64,6 +66,8 @@ static void fly_guy_act_approach_mario(void) {
     struct Object* player = marioState->marioObj;
     int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
+
+    treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
 
     // If we are >2000 units from home or Mario is <2000 units from us
     if (distanceToPlayer >= 25000.0f || distanceToPlayer < 2000.0f) {
@@ -146,6 +150,8 @@ static void fly_guy_act_shoot_fire(void) {
     struct Object* player = marioState->marioObj;
     int angleToPlayer = obj_angle_to_object(o, player);
 
+    treat_far_home_as_mario(2000.0f, NULL, &angleToPlayer);
+
     s32 scaleStatus;
 
     o->oForwardVel = 0.0f;
@@ -210,7 +216,7 @@ void bhv_fly_guy_update(void) {
         o->oDeathSound = SOUND_OBJ_KOOPA_FLYGUY_DEATH;
 
         cur_obj_scale(o->header.gfx.scale[0]);
-        treat_far_home_as_mario(2000.0f);
+        treat_far_home_as_mario(2000.0f, NULL, NULL);
         cur_obj_update_floor_and_walls();
 
         if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {

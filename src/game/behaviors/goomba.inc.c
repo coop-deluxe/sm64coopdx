@@ -152,7 +152,7 @@ void mark_goomba_as_dead(void) {
  * chase him.
  */
 static void goomba_act_walk(void) {
-    treat_far_home_as_mario(1000.0f);
+    treat_far_home_as_mario(1000.0f, NULL, NULL);
 
     obj_forward_vel_approach(o->oGoombaRelativeSpeed * o->oGoombaScale, 0.4f);
 
@@ -174,6 +174,8 @@ static void goomba_act_walk(void) {
         struct Object* player = nearest_player_to_object(o);
         int distanceToPlayer = dist_between_objects(o, player);
         int angleToPlayer = obj_angle_to_object(o, player);
+        treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
+
         // If far from home, walk toward home.
         if (distanceToPlayer >= 25000.0f) {
             o->oGoombaTargetYaw = angleToPlayer;

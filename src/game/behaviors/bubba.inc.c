@@ -20,7 +20,9 @@ void bubba_act_0(void) {
     f32 sp24;
 
     sp24 = cur_obj_lateral_dist_to_home();
-    treat_far_home_as_mario(2000.0f);
+
+    treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
+
     o->oAnimState = 0;
 
     o->oBubbaUnk1AC = obj_get_pitch_to_home(sp24);
@@ -59,7 +61,8 @@ void bubba_act_1(void) {
     s16 val06;
     s16 val04;
 
-    treat_far_home_as_mario(2500.0f);
+    treat_far_home_as_mario(2500.0f, &distanceToPlayer, &angleToPlayer);
+
     if (distanceToPlayer > 2500.0f) {
         o->oAction = 0;
     } else if (o->oBubbaUnk100 != 0) {

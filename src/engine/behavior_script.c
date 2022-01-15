@@ -1078,7 +1078,11 @@ cur_obj_update_begin:;
             if (distanceFromMario > gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
                 // Out of render distance, hide the object.
                 gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
-                gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
+
+                // the following flag would deactivate behavior code
+                //gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
+                gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
+
             } else if (gCurrentObject->oHeldState == HELD_FREE) {
                 // In render distance (and not being held), show the object.
                 gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;

@@ -880,7 +880,7 @@ static s32 obj_move_for_one_second(s32 endAction) {
  * attack Mario (e.g. fly guy shooting fire or lunging), especially when combined
  * with partial updates.
  */
-static void treat_far_home_as_mario(f32 threshold) {
+static void treat_far_home_as_mario(f32 threshold, int* distanceToPlayer, int* angleToPlayer) {
     f32 dx = o->oHomeX - o->oPosX;
     f32 dy = o->oHomeY - o->oPosY;
     f32 dz = o->oHomeZ - o->oPosZ;
@@ -889,6 +889,12 @@ static void treat_far_home_as_mario(f32 threshold) {
     if (distance > threshold) {
         o->oAngleToMario = atan2s(dz, dx);
         o->oDistanceToMario = 25000.0f;
+        if (distanceToPlayer != NULL) {
+            *distanceToPlayer = o->oDistanceToMario;
+        }
+        if (angleToPlayer != NULL) {
+            *angleToPlayer = o->oAngleToMario;
+        }
     } else {
         struct Object* player = nearest_player_to_object(o);
         dx = o->oHomeX - player->oPosX;
@@ -898,6 +904,9 @@ static void treat_far_home_as_mario(f32 threshold) {
 
         if (distance > threshold) {
             o->oDistanceToMario = 20000.0f;
+            if (distanceToPlayer != NULL) {
+                *distanceToPlayer = o->oDistanceToMario;
+            }
         }
     }
 }

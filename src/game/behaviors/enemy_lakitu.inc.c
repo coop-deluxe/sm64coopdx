@@ -44,10 +44,13 @@ static void enemy_lakitu_update_vel_y(f32 offsetY) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    if (o->oPosY < player->oPosY + offsetY + margin) {
-        obj_y_vel_approach(4.0f, 0.4f);
-    } else {
-        obj_y_vel_approach(-4.0f, 0.4f);
+    if (player != NULL) {
+        if (o->oPosY < player->oPosY + offsetY + margin) {
+            obj_y_vel_approach(4.0f, 0.4f);
+        }
+        else {
+            obj_y_vel_approach(-4.0f, 0.4f);
+        }
     }
 }
 
@@ -102,6 +105,8 @@ static void enemy_lakitu_sub_act_no_spiny(void) {
     int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
+    treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
+
     cur_obj_init_animation_with_sound(1);
 
     if (o->oEnemyLakituSpinyCooldown != 0) {
@@ -139,6 +144,8 @@ static void enemy_lakitu_sub_act_hold_spiny(void) {
     int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
+    treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
+
     cur_obj_init_anim_extend(3);
 
     if (o->oEnemyLakituSpinyCooldown != 0) {
@@ -172,6 +179,7 @@ static void enemy_lakitu_sub_act_throw_spiny(void) {
  * Main update function.
  */
 static void enemy_lakitu_act_main(void) {
+    cur_obj_unhide();
     cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY);
 
     cur_obj_update_floor_and_walls();
@@ -214,9 +222,10 @@ void bhv_enemy_lakitu_update(void) {
         network_init_object_field(o, &o->oEnemyLakituBlinkTimer);
         network_init_object_field(o, &o->oEnemyLakituSpinyCooldown);
         network_init_object_field(o, &o->oEnemyLakituFaceForwardCountdown);
+        network_init_object_field(o, &o->oEnemyLakituNumSpinies);
     }
 
-    treat_far_home_as_mario(2000.0f);
+    treat_far_home_as_mario(2000.0f, NULL, NULL);
 
     switch (o->oAction) {
         case ENEMY_LAKITU_ACT_UNINITIALIZED:
