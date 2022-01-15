@@ -24,7 +24,7 @@ void network_send_debug_sync(void) {
     packet_write(&p, &objectCount, sizeof(u8));
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o == NULL) { continue; }
-        u16 behaviorId = get_id_from_behavior(gSyncObjects[i].behavior);
+        u16 behaviorId = get_id_from_behavior((gSyncObjects[i].behavior == NULL) ? gSyncObjects[i].behavior : gSyncObjects[i].o->behavior);
         packet_write(&p, &i, sizeof(u8));
         packet_write(&p, &behaviorId, sizeof(u16));
     }

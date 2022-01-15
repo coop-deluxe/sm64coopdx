@@ -33,7 +33,6 @@ void bhv_donut_platform_update(void) {
         network_init_object(o, 4000.0f);
         network_init_object_field(o, &o->oGravity);
         network_init_object_field(o, &o->oIntangibleTimer);
-        network_init_object_field(o, &o->header.gfx.node.flags);
     }
 
     struct Object* player = nearest_player_to_object(o);

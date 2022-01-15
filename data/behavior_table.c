@@ -520,6 +520,7 @@ const BehaviorScript* gBehaviorTable[id_bhv_max_count] = {
 
 
 enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior) {
+    if (behavior == NULL) { return 0; }
     return (enum BehaviorId)(behavior[1] & 0xFFFF);
 }
 

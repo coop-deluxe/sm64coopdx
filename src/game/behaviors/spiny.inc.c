@@ -33,12 +33,56 @@ static u8 sSpinyWalkAttackHandlers[] = {
     /* ATTACK_FROM_BELOW:            */ ATTACK_HANDLER_KNOCKBACK,
 };
 
+static u32 spinyAnimCache = 0;
+
+static void spiny_to_anim_cache(void) {
+    if (o->oAnimations == (struct Animation**)spiny_egg_seg5_anims_050157E4) {
+        spinyAnimCache = 0;
+    } else if (o->oAnimations == (struct Animation**)spiny_seg5_anims_05016EAC) {
+        spinyAnimCache = 1;
+    } else {
+        assert(false);
+    }
+}
+
+static void spiny_from_anim_cache(void) {
+    struct Animation** anim = NULL;
+    switch (spinyAnimCache) {
+        case 0:
+            anim = (struct Animation**)spiny_egg_seg5_anims_050157E4;
+            break;
+        case 1:
+            anim = (struct Animation**)spiny_seg5_anims_05016EAC;
+            break;
+        default:
+            assert(false);
+    }
+
+    if (anim != o->oAnimations) {
+        obj_init_animation_with_sound(o, (const struct Animation* const*)anim, 0);
+    }
+}
+
+static void bhv_spiny_on_received_post(UNUSED u8 localIndex) {
+    spiny_from_anim_cache();
+}
+
+static void bhv_spiny_on_sent_pre(void) {
+    spiny_to_anim_cache();
+}
+
 /**
  * If the spiny was spawned by lakitu and mario is far away, despawn.
  */
 static s32 spiny_check_active(void) {
     struct Object* player = nearest_player_to_object(o);
     int distanceToPlayer = dist_between_objects(o, player);
+
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvEnemyLakitu) {
+        obj_mark_for_deletion(o);
+        return FALSE;
+    }
+
     if (o->parentObj != o) {
         if (distanceToPlayer > 2500.0f) {
             //! It's possible for the lakitu to despawn while the spiny still
@@ -48,7 +92,7 @@ static s32 spiny_check_active(void) {
             //  behave similar to a regular goomba.
             //  It can also be used on a bob-omb respawner to change its model
             //  to a butterfly or fish.
-            o->parentObj->oEnemyLakituNumSpinies -= 1;
+            //o->parentObj->oEnemyLakituNumSpinies -= 1;
             obj_mark_for_deletion(o);
             return FALSE;
         }
@@ -65,6 +109,7 @@ static void spiny_act_walk(void) {
         cur_obj_update_floor_and_walls();
 
         o->oGraphYOffset = -17.0f;
+        o->oFaceAnglePitch = 0;
         cur_obj_init_animation_with_sound(0);
 
         if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
@@ -132,7 +177,7 @@ static void spiny_act_held_by_lakitu(void) {
     o->oParentRelativePosY = 35.0f;
     o->oParentRelativePosZ = -100.0f;
 
-    if (o->parentObj->prevObj == NULL) {
+    if (o->parentObj != NULL && o->parentObj->prevObj == NULL) {
         o->oAction = SPINY_ACT_THROWN_BY_LAKITU;
         o->oMoveAngleYaw = o->parentObj->oFaceAngleYaw;
 
@@ -173,7 +218,7 @@ static void spiny_act_thrown_by_lakitu(void) {
 
         if (obj_check_attacks(&sSpinyHitbox, o->oAction)) {
             if (o->parentObj != o) {
-                o->parentObj->oEnemyLakituNumSpinies -= 1;
+                //o->parentObj->oEnemyLakituNumSpinies -= 1;
             }
         }
     }
@@ -193,7 +238,10 @@ void bhv_spiny_update(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
         so->syncDeathEvent = FALSE;
+        so->on_received_post = bhv_spiny_on_received_post;
+        so->on_sent_pre = bhv_spiny_on_sent_pre;
         so->override_ownership = bhv_spiny_override_ownership;
+
         network_init_object_field(o, &o->oGraphYOffset);
         network_init_object_field(o, &o->oFaceAngleYaw);
         network_init_object_field(o, &o->oSpinyTimeUntilTurn);
@@ -202,13 +250,17 @@ void bhv_spiny_update(void) {
         network_init_object_field(o, &o->oMoveFlags);
         network_init_object_field(o, &o->oInteractType);
         network_init_object_field(o, &o->oFaceAnglePitch);
+        network_init_object_field(o, &spinyAnimCache);
 
 
         struct Object* lakitu = cur_obj_nearest_object_with_behavior(bhvEnemyLakitu);
         if (lakitu != NULL) {
-            lakitu->prevObj = o;
-            o->oAction = SPINY_ACT_HELD_BY_LAKITU;
-            obj_init_animation_with_sound(o, spiny_egg_seg5_anims_050157E4, 0);
+            o->parentObj = lakitu;
+            if ((lakitu->oSubAction == ENEMY_LAKITU_SUB_ACT_HOLD_SPINY) && (o->oAction == SPINY_ACT_HELD_BY_LAKITU)) {
+                lakitu->prevObj = o;
+                o->oAction = SPINY_ACT_HELD_BY_LAKITU;
+                obj_init_animation_with_sound(o, spiny_egg_seg5_anims_050157E4, 0);
+            }
         }
     }
 
