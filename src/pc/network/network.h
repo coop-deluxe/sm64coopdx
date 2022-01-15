@@ -88,6 +88,7 @@ struct ServerSettings {
     u8 skipIntro;
     u8 shareLives;
     u8 enableCheats;
+    u8 bubbleDeath;
 };
 
 // Networking-specific externs

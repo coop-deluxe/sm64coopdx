@@ -763,8 +763,11 @@ s32 act_fall_after_star_grab(struct MarioState *m) {
 s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp) {
     s32 animFrame = set_mario_animation(m, animation);
     if (animFrame == frameToDeathWarp) {
-        //level_trigger_warp(m, WARP_OP_DEATH);
-        mario_set_bubbled(m);
+        if (gServerSettings.bubbleDeath) {
+            mario_set_bubbled(m);
+        } else {
+            level_trigger_warp(m, WARP_OP_DEATH);
+        }
     }
     m->marioBodyState->eyeState = MARIO_EYES_DEAD;
     stop_and_set_height_to_floor(m);
@@ -823,8 +826,11 @@ s32 act_quicksand_death(struct MarioState *m) {
             play_character_sound_if_no_flag(m, CHAR_SOUND_WAAAOOOW, MARIO_MARIO_SOUND_PLAYED);
         }
         if ((m->quicksandDepth += 5.0f) >= 180.0f) {
-            //level_trigger_warp(m, WARP_OP_DEATH);
-            mario_set_bubbled(m);
+            if (gServerSettings.bubbleDeath) {
+                mario_set_bubbled(m);
+            } else {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
             m->actionState = 2;
         }
     }
@@ -836,15 +842,20 @@ s32 act_quicksand_death(struct MarioState *m) {
 s32 act_eaten_by_bubba(struct MarioState *m) {
     play_character_sound_if_no_flag(m, CHAR_SOUND_DYING, MARIO_ACTION_SOUND_PLAYED);
     set_mario_animation(m, MARIO_ANIM_A_POSE);
-    //m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     if (m != &gMarioStates[0]) {
         // never kill remote marios
         m->health = 0x100;
-    } else {
-        m->health = 0xFF;
     }
-    if (m->playerIndex == 0) {
-        mario_set_bubbled(m);
+    if (gServerSettings.bubbleDeath) {
+        if (m->playerIndex == 0) {
+            m->health = 0xFF;
+            mario_set_bubbled(m);
+        }
+    } else {
+        m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+        if (m->actionTimer++ == 60) {
+            level_trigger_warp(m, WARP_OP_DEATH);
+        }
     }
 
     return FALSE;
@@ -1714,15 +1725,19 @@ s32 act_squished(struct MarioState *m) {
         if (m != &gMarioStates[0]) {
             // never kill remote marios
             m->health = 0x100;
-        } else {
+        } else if (gServerSettings.bubbleDeath) {
             m->health = 0xFF;
         }
 
         m->hurtCounter = 0;
-        //level_trigger_warp(m, WARP_OP_DEATH);
-        // woosh, he's gone!
-        //set_mario_action(m, ACT_DISAPPEARED, 0);
-        mario_set_bubbled(m);
+
+        if (gServerSettings.bubbleDeath) {
+            mario_set_bubbled(m);
+        } else {
+            level_trigger_warp(m, WARP_OP_DEATH);
+            // woosh, he's gone!
+            set_mario_action(m, ACT_DISAPPEARED, 0);
+        }
     }
     stop_and_set_height_to_floor(m);
     set_mario_animation(m, MARIO_ANIM_A_POSE);

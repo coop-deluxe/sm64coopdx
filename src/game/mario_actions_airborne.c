@@ -1568,8 +1568,12 @@ s32 act_lava_boost(struct MarioState *m) {
             // never kill remote marios
             m->health = 0x100;
         } else {
-            m->health = 0xFF;
-            mario_set_bubbled(m);
+            if (gServerSettings.bubbleDeath) {
+                m->health = 0xFF;
+                mario_set_bubbled(m);
+            } else {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
         }
     }
 

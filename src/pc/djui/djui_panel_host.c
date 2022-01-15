@@ -60,9 +60,9 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
 void djui_panel_host_create(struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
-    f32 bodyHeight = 32 * 7 + 64 * 2 + 16 * 9;
+    f32 bodyHeight = 32 * 8 + 64 * 2 + 16 * 10;
 #else
-    f32 bodyHeight = 32 * 6 + 64 * 2 + 16 * 8;
+    f32 bodyHeight = 32 * 7 + 64 * 2 + 16 * 9;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -151,6 +151,10 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "Enable cheats", &configEnableCheats);
         djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox4->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Bubble on death", &configBubbleDeath);
+        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox5->base, 1.0f, 32);
 
         struct DjuiRect* rect3 = djui_rect_create(&body->base);
         djui_base_set_size_type(&rect3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

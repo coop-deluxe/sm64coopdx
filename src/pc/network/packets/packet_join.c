@@ -92,6 +92,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
     packet_write(&p, &gServerSettings.shareLives, sizeof(u8));
     packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
+    packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     u8 modCount = string_linked_list_count(&gRegisteredMods);
@@ -153,6 +154,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
     packet_read(p, &gServerSettings.shareLives, sizeof(u8));
     packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
+    packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
 

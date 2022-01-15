@@ -924,8 +924,11 @@ static s32 act_drowning(struct MarioState *m) {
             set_mario_animation(m, MARIO_ANIM_DROWNING_PART2);
             m->marioBodyState->eyeState = MARIO_EYES_DEAD;
             if (m->marioObj->header.gfx.unk38.animFrame == 30) {
-                //level_trigger_warp(m, WARP_OP_DEATH);
-                mario_set_bubbled(m);
+                if (gServerSettings.bubbleDeath) {
+                    mario_set_bubbled(m);
+                } else {
+                    level_trigger_warp(m, WARP_OP_DEATH);
+                }
             }
             break;
     }
@@ -945,8 +948,11 @@ static s32 act_water_death(struct MarioState *m) {
 
     set_mario_animation(m, MARIO_ANIM_WATER_DYING);
     if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 35) {
-        //level_trigger_warp(m, WARP_OP_DEATH);
-        mario_set_bubbled(m);
+        if (gServerSettings.bubbleDeath) {
+            mario_set_bubbled(m);
+        } else {
+            level_trigger_warp(m, WARP_OP_DEATH);
+        }
     }
 
     return FALSE;
@@ -1053,8 +1059,11 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
     if ((marioObj->oMarioWhirlpoolPosY += m->vel[1]) < 0.0f) {
         marioObj->oMarioWhirlpoolPosY = 0.0f;
         if (distance < 16.1f && m->actionTimer++ == 16) {
-            //level_trigger_warp(m, WARP_OP_DEATH);
-            mario_set_bubbled(m);
+            if (gServerSettings.bubbleDeath) {
+                mario_set_bubbled(m);
+            } else {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
         }
     }
 
