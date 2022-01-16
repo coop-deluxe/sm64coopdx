@@ -49,6 +49,8 @@
 
 u32 unused80339F10;
 s8 filler80339F1C[20];
+u16 gLocalBubbleCounter = 0;
+
 
 /**************************************************
  *                    ANIMATIONS                  *
@@ -391,6 +393,9 @@ void play_mario_sound(struct MarioState *m, s32 actionSound, s32 marioSound) {
 void mario_set_bubbled(struct MarioState* m) {
     if (m->playerIndex != 0) { return; }
     if (m->action == ACT_BUBBLED) { return; }
+
+    gLocalBubbleCounter = 20;
+
     set_mario_action(m, ACT_BUBBLED, 0);
     if (m->numLives != -1) {
         m->numLives--;

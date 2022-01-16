@@ -6,6 +6,8 @@
 #include "macros.h"
 #include "types.h"
 
+extern u16 gLocalBubbleCounter;
+
 s32 is_anim_at_end(struct MarioState *m);
 s32 is_anim_past_end(struct MarioState *m);
 s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);
