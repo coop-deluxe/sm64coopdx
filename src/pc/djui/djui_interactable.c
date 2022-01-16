@@ -198,6 +198,15 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
+    if (gDjuiPlayerList != NULL) {
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyPlayerList[i]) {
+                djui_base_set_visible(&gDjuiPlayerList->base, true);
+                break;
+            }
+        }
+    }
+
     if (gDjuiChatBoxFocus || djui_panel_is_active()) {
         switch (scancode) {
             case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    return true;
@@ -216,6 +225,15 @@ void djui_interactable_on_key_up(int scancode) {
     bool keyFocused = (sInteractableFocus != NULL)
                    && (sInteractableFocus->interactable != NULL)
                    && (sInteractableFocus->interactable->on_key_up != NULL);
+
+    if (gDjuiPlayerList != NULL) {
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyPlayerList[i]) {
+                djui_base_set_visible(&gDjuiPlayerList->base, false);
+                break;
+            }
+        }
+    }
 
     if (keyFocused) {
         sInteractableFocus->interactable->on_key_up(sInteractableFocus, scancode);

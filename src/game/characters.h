@@ -16,6 +16,7 @@ enum CharacterType {
 struct Character {
     char* name;
     char hudHead;
+    const u8* hudHeadTexture;
     u32 cameraHudHead;
     u32 modelId;
     u32 capModelId;

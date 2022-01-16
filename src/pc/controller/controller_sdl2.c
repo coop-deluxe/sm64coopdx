@@ -152,8 +152,15 @@ static SDL_Haptic *controller_sdl_init_haptics(const int joy) {
 
 static inline void update_button(const int i, const bool new) {
     const bool pressed = !joy_buttons[i] && new;
+    const bool unpressed = joy_buttons[i] && !new;
     joy_buttons[i] = new;
-    if (pressed) last_joybutton = i;
+    if (pressed) {
+        last_joybutton = i;
+        djui_interactable_on_key_down(VK_BASE_SDL_GAMEPAD + i);
+    }
+    if (unpressed) {
+        djui_interactable_on_key_up(VK_BASE_SDL_GAMEPAD + i);
+    }
 }
 
 static void controller_sdl_read(OSContPad *pad) {

@@ -12,6 +12,11 @@ static u8 sSavedA = 0;
 ////////////////
 
 void djui_text_set_text(struct DjuiText* text, const char* message) {
+    // validate that the text needs to change
+    if (text->message != NULL && strcmp(text->message, message) == 0) {
+        return;
+    }
+
     // deallocate old message
     if (text->message != NULL) {
         free(text->message);

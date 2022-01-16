@@ -16,10 +16,16 @@ extern Gfx toad_player_dl_cap[];
 extern Gfx toad_player_dl_cap_decal[];
 extern Gfx waluigi_cap_seg3_dl_03022F48[];
 
+extern ALIGNED8 const u8 texture_hud_char_mario_head[];
+extern ALIGNED8 const u8 texture_hud_char_luigi_head[];
+extern ALIGNED8 const u8 texture_hud_char_toad_head[];
+extern ALIGNED8 const u8 texture_hud_char_waluigi_head[];
+
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
         .name                  = "Mario",
         .hudHead               = ',',
+        .hudHeadTexture        = texture_hud_char_mario_head,
         .cameraHudHead         = GLYPH_CAM_MARIO_HEAD,
         .modelId               = MODEL_MARIO,
         .capModelId            = MODEL_MARIOS_CAP,
@@ -80,6 +86,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_LUIGI] = {
         .name                  = "Luigi",
         .hudHead               = '.',
+        .hudHeadTexture        = texture_hud_char_luigi_head,
         .cameraHudHead         = GLYPH_CAM_LUIGI_HEAD,
         .modelId               = MODEL_LUIGI,
         .capModelId            = MODEL_LUIGIS_CAP,
@@ -140,6 +147,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_TOAD] = {
         .name                  = "Toad",
         .hudHead               = '/',
+        .hudHeadTexture        = texture_hud_char_toad_head,
         .cameraHudHead         = GLYPH_CAM_TOAD_HEAD,
         .modelId               = MODEL_TOAD_PLAYER,
         .capModelId            = MODEL_TOADS_CAP,
@@ -200,6 +208,7 @@ struct Character gCharacters[CT_MAX] = {
     [CT_WALUIGI] = {
         .name                  = "Waluigi",
         .hudHead               = 'z',
+        .hudHeadTexture        = texture_hud_char_waluigi_head,
         .cameraHudHead         = GLYPH_CAM_WALUIGI_HEAD,
         .modelId               = MODEL_WALUIGI,
         .capModelId            = MODEL_WALUIGIS_CAP,

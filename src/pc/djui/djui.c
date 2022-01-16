@@ -2,6 +2,7 @@
 #include "../debuglog.h"
 #include "pc/cliopts.h"
 #include "game/level_update.h"
+#include "djui_panel_playerlist.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 
@@ -19,6 +20,8 @@ void djui_init(void) {
     djui_text_set_drop_shadow(sDjuiPauseOptions, 0, 0, 0, 255);
     djui_text_set_alignment(sDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_visible(&sDjuiPauseOptions->base, false);
+
+    djui_panel_playerlist_create(NULL);
 
     if (gCLIOpts.Network != NT_SERVER) {
         djui_panel_main_create(NULL);

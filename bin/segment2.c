@@ -209,19 +209,19 @@ ALIGNED8 static const u8 texture_hud_char_coin[] = {
 #include "textures/segment2/segment2.05800.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_mario_head[] = {
+ALIGNED8 const u8 texture_hud_char_mario_head[] = {
 #include "textures/segment2/segment2.05A00.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_luigi_head[] = {
+ALIGNED8 const u8 texture_hud_char_luigi_head[] = {
 #include "textures/segment2/custom_luigi_head.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_toad_head[] = {
+ALIGNED8 const u8 texture_hud_char_toad_head[] = {
 #include "textures/segment2/custom_toad_head.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_waluigi_head[] = {
+ALIGNED8 const u8 texture_hud_char_waluigi_head[] = {
 #include "textures/segment2/custom_waluigi_head.rgba16.inc.c"
 };
 
