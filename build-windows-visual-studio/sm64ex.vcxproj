@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../;../include/;../src/;C:/msys64/mingw64/include;$(IncludePath)</IncludePath>
+    <IncludePath>../;../include/;../src/;C:/msys64/mingw64/include;../lib/lua/include/;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\..\build\us_pc\</OutDir>
     <TargetName>sm64.us.f3dex2e</TargetName>
   </PropertyGroup>
@@ -3962,6 +3962,7 @@
     <ClCompile Include="..\src\pc\djui\djui_panel_menu.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_pause.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_player.c" />
+    <ClCompile Include="..\src\pc\djui\djui_panel_playerlist.c" />
     <ClCompile Include="..\src\pc\djui\djui_popup.c" />
     <ClCompile Include="..\src\pc\djui\djui_selectionbox.c" />
     <ClCompile Include="..\src\pc\djui\djui_cursor.c" />
@@ -3997,6 +3998,7 @@
     <ClCompile Include="..\src\pc\gfx\gfx_pc.c" />
     <ClCompile Include="..\src\pc\gfx\gfx_sdl2.c" />
     <ClCompile Include="..\src\pc\ini.c" />
+    <ClCompile Include="..\src\pc\lua\smlua.c" />
     <ClCompile Include="..\src\pc\mixer.c" />
     <ClCompile Include="..\src\pc\network\discord\activity.c" />
     <ClCompile Include="..\src\pc\network\discord\discord.c" />
@@ -4414,6 +4416,7 @@
     <ClInclude Include="..\src\pc\djui\djui_panel_menu.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_pause.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_player.h" />
+    <ClInclude Include="..\src\pc\djui\djui_panel_playerlist.h" />
     <ClInclude Include="..\src\pc\djui\djui_popup.h" />
     <ClInclude Include="..\src\pc\djui\djui_selectionbox.h" />
     <ClInclude Include="..\src\pc\djui\djui_cursor.h" />
@@ -4437,6 +4440,7 @@
     <ClInclude Include="..\src\pc\djui\djui_text.h" />
     <ClInclude Include="..\src\pc\djui\djui_three_panel.h" />
     <ClInclude Include="..\src\pc\djui\djui_types.h" />
+    <ClInclude Include="..\src\pc\lua\smlua.h" />
     <ClInclude Include="..\src\pc\network\branch.h" />
     <ClInclude Include="..\src\pc\network\discord\activity.h" />
     <ClInclude Include="..\src\pc\network\discord\discord.h" />

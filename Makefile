@@ -316,7 +316,7 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 
 # Hi, I'm a PC
 SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
-SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/djui
+SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/djui src/pc/lua
 ASM_DIRS :=
 
 #ifeq ($(DISCORDRPC),1)
@@ -483,6 +483,10 @@ SEG_FILES := $(SEGMENT_ELF_FILES) $(ACTOR_ELF_FILES) $(LEVEL_ELF_FILES)
 ##################### Compiler Options #######################
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
 ENDIAN_BITWIDTH := $(BUILD_DIR)/endian-and-bitwidth
+
+
+# coop-specific includes
+INCLUDE_CFLAGS += -I lib/lua/include
 
 # Huge deleted N64 section was here
 
@@ -741,6 +745,9 @@ endif
 
 # coop specific libraries
 
+# lua
+LDFLAGS += -Llib/lua -l:liblua54.a
+
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
@@ -751,7 +758,6 @@ else
     LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
   endif
 endif
-
 
 # End of LDFLAGS
 

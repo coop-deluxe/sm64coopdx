@@ -9,6 +9,8 @@
 
 #include "sm64.h"
 
+#include "pc/lua/smlua.h"
+
 #include "game/memory.h"
 #include "audio/external.h"
 
@@ -163,6 +165,7 @@ void game_deinit(void) {
     audio_shutdown();
     gfx_shutdown();
     network_shutdown(true);
+    smlua_shutdown();
     inited = false;
 }
 
@@ -291,6 +294,8 @@ void main_func(void) {
     } else {
         network_init(NT_NONE);
     }
+    smlua_init();
+    smlua_run();
 
     audio_init();
     sound_init();
