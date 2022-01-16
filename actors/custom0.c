@@ -6,6 +6,3 @@
 
 // luigi_cap
 #include "luigi_cap/model.inc.c"
-
-// waluigi_cap
-#include "waluigi_cap/model.inc.c"

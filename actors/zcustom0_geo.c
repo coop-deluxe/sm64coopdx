@@ -8,4 +8,5 @@
 
 #include "toad_player/geo.inc.c"
 
+#include "waluigi_cap/geo.inc.c" // custom waluigi_cap
 #include "waluigi/geo.inc.c"
