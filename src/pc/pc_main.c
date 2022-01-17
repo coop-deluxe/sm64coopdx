@@ -15,6 +15,7 @@
 #include "audio/external.h"
 
 #include "network/network.h"
+#include "lua/smlua.h"
 
 #include "gfx/gfx_pc.h"
 
@@ -122,6 +123,7 @@ void produce_one_frame(void) {
     set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
 
     game_loop_one_iteration();
+    smlua_update();
     thread6_rumble_loop(NULL);
 
     int samples_left = audio_api->buffered();
@@ -295,7 +297,6 @@ void main_func(void) {
         network_init(NT_NONE);
     }
     smlua_init();
-    smlua_run();
 
     audio_init();
     sound_init();

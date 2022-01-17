@@ -21,6 +21,7 @@
 #include "spawn_object.h"
 #include "engine/math_util.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -270,7 +271,8 @@ void bhv_mario_update(void) {
     }
 
     // set mario state to the current player
-    gMarioState = &gMarioStates[gCurrentObject->oBehParams - 1];
+    int stateIndex = (gCurrentObject->oBehParams - 1);
+    gMarioState = &gMarioStates[stateIndex];
 
     // sanity check torsoPos, it isn't updated off-screen otherwise
     Vec3f torsoDiff = { 0 };
@@ -284,6 +286,7 @@ void bhv_mario_update(void) {
 
     particleFlags = execute_mario_action(gCurrentObject);
     gCurrentObject->oMarioParticleFlags = particleFlags;
+    smlua_call_hooks_param(HOOK_MARIO_UPDATE, stateIndex);
 
     // Mario code updates MarioState's versions of position etc, so we need
     // to sync it with the Mario object

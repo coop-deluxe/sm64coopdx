@@ -202,8 +202,6 @@ bool djui_interactable_on_key_down(int scancode) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i]) {
                 djui_base_set_visible(&gDjuiPlayerList->base, true);
-                extern void smlua_run(void);
-                smlua_run();
                 break;
             }
         }
