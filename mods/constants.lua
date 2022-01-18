@@ -1,44 +1,10 @@
------------
--- co-op --
------------
+---------
+-- lua --
+---------
 
-MAX_PLAYERS = 16
-
-_gMarioStatesIndices = {}
-do
-  _MarioStateMeta = {
-    __index = function (t,k)
-        return get_mario_state_field(_gMarioStatesIndices[t], k)
-    end,
-    __newindex = function (t,k,v)
-        set_mario_state_field(_gMarioStatesIndices[t], k, v)
-    end
-  }
-end
-
-gMarioStates = {}
-for i=0,(MAX_PLAYERS-1) do
-    gMarioStates[i] = setmetatable({}, _MarioStateMeta)
-    _gMarioStatesIndices[gMarioStates[i]] = i
-end
-
-_Vec3sMeta = {
-    __index = function (t,k)
-        return get_vec3s_field(t['_pointer'], k);
-    end,
-    __newindex = function (t,k,v)
-        set_vec3s_field(t['_pointer'], k, v);
-    end
-}
-
-_Vec3fMeta = {
-    __index = function (t,k)
-        return get_vec3f_field(t['_pointer'], k);
-    end,
-    __newindex = function (t,k,v)
-        set_vec3f_field(t['_pointer'], k, v);
-    end
-}
+HOOK_UPDATE = 0
+HOOK_MARIO_UPDATE = 1
+HOOK_MAX = 2
 
 _CObject = {
     __index = function (t,k)
@@ -49,13 +15,11 @@ _CObject = {
     end
 }
 
----------
--- lua --
----------
+-----------
+-- co-op --
+-----------
 
-HOOK_UPDATE = 0
-HOOK_MARIO_UPDATE = 1
-HOOK_MAX = 2
+MAX_PLAYERS = 16
 
 ------------
 -- layers --

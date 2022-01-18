@@ -4,6 +4,7 @@
 void smlua_dump_stack(void);
 void smlua_dump_globals(void);
 
+void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p);
 void smlua_push_integer_field(lua_Integer val, char* name);
 void smlua_push_number_field(float val, char* name);
 

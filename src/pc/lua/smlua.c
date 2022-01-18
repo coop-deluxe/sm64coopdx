@@ -136,6 +136,18 @@ static void smlua_execfile(char* path) {
     lua_pop(L, lua_gettop(L));
 }
 
+static void smlua_init_mario_states(void) {
+    lua_State* L = gLuaState;
+    lua_newtable(L);
+    int t = lua_gettop(gLuaState);
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        lua_pushinteger(L, i);
+        smlua_push_object(L, LOT_MARIO_STATE, &gMarioStates[i]);
+        lua_settable(L, t);
+    }
+    lua_setglobal(L, "gMarioStates");
+}
+
 void smlua_init(void) {
     gLuaState = luaL_newstate();
     lua_State* L = gLuaState;
@@ -147,9 +159,11 @@ void smlua_init(void) {
     lua_pushcfunction(L, smlua_hook_mario_action);
     lua_setglobal(L, "hook_mario_action");
 
-    smlua_bind_get_set();
+    smlua_bind_cobject();
+    smlua_bind_functions();
 
     smlua_execfile("mods/constants.lua");
+    smlua_init_mario_states();
     smlua_execfile("mods/test.lua");
 }
 

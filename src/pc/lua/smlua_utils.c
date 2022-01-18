@@ -52,6 +52,18 @@ void smlua_dump_globals(void) {
     printf("--------------\n");
 }
 
+// --- //
+
+void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p) {
+    lua_newtable(L);
+    smlua_push_integer_field(lot, "_lot");
+    smlua_push_integer_field((u64)p, "_pointer");
+    lua_pushglobaltable(L);
+    lua_getfield(gLuaState, -1, "_CObject");
+    lua_setmetatable(L, -3);
+    lua_pop(L, 1); // pop global table
+}
+
 void smlua_push_integer_field(lua_Integer val, char* name) {
     int t = lua_gettop(gLuaState);
     lua_pushinteger(gLuaState, val);
@@ -63,6 +75,8 @@ void smlua_push_number_field(float val, char* name) {
     lua_pushnumber(gLuaState, val);
     lua_setfield(gLuaState, t, name);
 }
+
+// --- //
 
 void smlua_get_u8_field(u8* val, char* name) {
     lua_getfield(gLuaState, -1, name);

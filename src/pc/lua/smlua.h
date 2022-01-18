@@ -7,8 +7,9 @@
 
 #include "types.h"
 
+#include "smlua_cobject.h"
 #include "smlua_utils.h"
-#include "smlua_get_set.h"
+#include "smlua_functions.h"
 
 #include "pc/debuglog.h"
 
@@ -24,7 +25,6 @@ extern lua_State* gLuaState;
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_param(enum LuaHookedEventType hookType, int param);
-
 
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
 
