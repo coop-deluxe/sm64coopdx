@@ -181,16 +181,16 @@ static int smlua__get_field(lua_State* L) {
 
     u8* p = ((u8*)pointer) + data->valueOffset;
     switch (data->valueType) {
-        case LVT_U8:         lua_pushinteger(L, *(u8* )p);            break;
-        case LVT_U16:        lua_pushinteger(L, *(u16*)p);            break;
-        case LVT_U32:        lua_pushinteger(L, *(u32*)p);            break;
-        case LVT_S8:         lua_pushinteger(L, *(s8* )p);            break;
-        case LVT_S16:        lua_pushinteger(L, *(s16*)p);            break;
-        case LVT_S32:        lua_pushinteger(L, *(s32*)p);            break;
-        case LVT_F32:        lua_pushnumber( L, *(f32*)p);            break;
-        case LVT_VEC3S:      smlua_push_object(L, LOT_VEC3S, p);      break;
-        case LVT_VEC3F:      smlua_push_object(L, LOT_VEC3F, p);      break;
-        case LVT_CONTROLLER: smlua_push_object(L, LOT_CONTROLLER, p); break;
+        case LVT_U8:         lua_pushinteger(L, *(u8* )p);       break;
+        case LVT_U16:        lua_pushinteger(L, *(u16*)p);       break;
+        case LVT_U32:        lua_pushinteger(L, *(u32*)p);       break;
+        case LVT_S8:         lua_pushinteger(L, *(s8* )p);       break;
+        case LVT_S16:        lua_pushinteger(L, *(s16*)p);       break;
+        case LVT_S32:        lua_pushinteger(L, *(s32*)p);       break;
+        case LVT_F32:        lua_pushnumber( L, *(f32*)p);       break;
+        case LVT_VEC3S:      smlua_push_object(L, LOT_VEC3S, p); break;
+        case LVT_VEC3F:      smlua_push_object(L, LOT_VEC3F, p); break;
+        case LVT_CONTROLLER: smlua_push_object(L, LOT_CONTROLLER, *(struct Controller**)p); break;
         default:
             LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;

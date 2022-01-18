@@ -286,7 +286,7 @@ void bhv_mario_update(void) {
 
     particleFlags = execute_mario_action(gCurrentObject);
     gCurrentObject->oMarioParticleFlags = particleFlags;
-    smlua_call_event_hooks_param(HOOK_MARIO_UPDATE, stateIndex);
+    smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
 
     // Mario code updates MarioState's versions of position etc, so we need
     // to sync it with the Mario object

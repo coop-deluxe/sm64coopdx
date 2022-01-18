@@ -15297,6 +15297,15 @@
     <ClCompile Include="..\src\pc\lua\smlua.c">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_utils.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_functions.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_cobject.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16400,6 +16409,15 @@
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\lua\smlua.h">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\lua\smlua_utils.h">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\lua\smlua_functions.h">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\lua\smlua_cobject.h">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClInclude>
   </ItemGroup>
