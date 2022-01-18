@@ -386,8 +386,8 @@ struct MarioState
 
     // Variables for a spline curve animation (used for the flight path in the grand star cutscene)
     /*????*/ Vec4s* splineKeyframe;
-    /*????*/ float splineKeyframeFraction;
-    /*????*/ int splineState;
+    /*????*/ f32 splineKeyframeFraction;
+    /*????*/ s32 splineState;
 
     /*????*/ Vec3f nonInstantWarpPos;
     /*????*/ struct Character* character;

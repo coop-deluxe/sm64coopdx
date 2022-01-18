@@ -22,11 +22,14 @@ enum LuaHookedEventType {
 
 extern lua_State* gLuaState;
 
+void smlua_call_event_hooks(enum LuaHookedEventType hookType);
+void smlua_call_event_hooks_param(enum LuaHookedEventType hookType, int param);
+
+
+bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
+
 void smlua_init(void);
 void smlua_update(void);
 void smlua_shutdown(void);
-
-void smlua_call_hooks(enum LuaHookedEventType hookType);
-void smlua_call_hooks_param(enum LuaHookedEventType hookType, int param);
 
 #endif

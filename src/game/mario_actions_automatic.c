@@ -22,6 +22,7 @@
 #include "mario_step.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua.h"
 
 #define POLE_NONE 0
 #define POLE_TOUCHED_FLOOR 1
@@ -1048,28 +1049,30 @@ s32 mario_execute_automatic_action(struct MarioState *m) {
 
     m->quicksandDepth = 0.0f;
 
-    /* clang-format off */
-    switch (m->action) {
-        case ACT_HOLDING_POLE:           cancel = act_holding_pole(m);           break;
-        case ACT_GRAB_POLE_SLOW:         cancel = act_grab_pole_slow(m);         break;
-        case ACT_GRAB_POLE_FAST:         cancel = act_grab_pole_fast(m);         break;
-        case ACT_CLIMBING_POLE:          cancel = act_climbing_pole(m);          break;
-        case ACT_TOP_OF_POLE_TRANSITION: cancel = act_top_of_pole_transition(m); break;
-        case ACT_TOP_OF_POLE:            cancel = act_top_of_pole(m);            break;
-        case ACT_START_HANGING:          cancel = act_start_hanging(m);          break;
-        case ACT_HANGING:                cancel = act_hanging(m);                break;
-        case ACT_HANG_MOVING:            cancel = act_hang_moving(m);            break;
-        case ACT_LEDGE_GRAB:             cancel = act_ledge_grab(m);             break;
-        case ACT_LEDGE_CLIMB_SLOW_1:     cancel = act_ledge_climb_slow(m);       break;
-        case ACT_LEDGE_CLIMB_SLOW_2:     cancel = act_ledge_climb_slow(m);       break;
-        case ACT_LEDGE_CLIMB_DOWN:       cancel = act_ledge_climb_down(m);       break;
-        case ACT_LEDGE_CLIMB_FAST:       cancel = act_ledge_climb_fast(m);       break;
-        case ACT_GRABBED:                cancel = act_grabbed(m);                break;
-        case ACT_IN_CANNON:              cancel = act_in_cannon(m);              break;
-        case ACT_TORNADO_TWIRLING:       cancel = act_tornado_twirling(m);       break;
-        case ACT_BUBBLED:                cancel = act_bubbled(m);                break;
+    if (!smlua_call_action_hook(m, &cancel)) {
+        /* clang-format off */
+        switch (m->action) {
+            case ACT_HOLDING_POLE:           cancel = act_holding_pole(m);           break;
+            case ACT_GRAB_POLE_SLOW:         cancel = act_grab_pole_slow(m);         break;
+            case ACT_GRAB_POLE_FAST:         cancel = act_grab_pole_fast(m);         break;
+            case ACT_CLIMBING_POLE:          cancel = act_climbing_pole(m);          break;
+            case ACT_TOP_OF_POLE_TRANSITION: cancel = act_top_of_pole_transition(m); break;
+            case ACT_TOP_OF_POLE:            cancel = act_top_of_pole(m);            break;
+            case ACT_START_HANGING:          cancel = act_start_hanging(m);          break;
+            case ACT_HANGING:                cancel = act_hanging(m);                break;
+            case ACT_HANG_MOVING:            cancel = act_hang_moving(m);            break;
+            case ACT_LEDGE_GRAB:             cancel = act_ledge_grab(m);             break;
+            case ACT_LEDGE_CLIMB_SLOW_1:     cancel = act_ledge_climb_slow(m);       break;
+            case ACT_LEDGE_CLIMB_SLOW_2:     cancel = act_ledge_climb_slow(m);       break;
+            case ACT_LEDGE_CLIMB_DOWN:       cancel = act_ledge_climb_down(m);       break;
+            case ACT_LEDGE_CLIMB_FAST:       cancel = act_ledge_climb_fast(m);       break;
+            case ACT_GRABBED:                cancel = act_grabbed(m);                break;
+            case ACT_IN_CANNON:              cancel = act_in_cannon(m);              break;
+            case ACT_TORNADO_TWIRLING:       cancel = act_tornado_twirling(m);       break;
+            case ACT_BUBBLED:                cancel = act_bubbled(m);                break;
+        }
+        /* clang-format on */
     }
-    /* clang-format on */
 
     return cancel;
 }

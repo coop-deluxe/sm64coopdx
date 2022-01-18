@@ -3,6 +3,7 @@
 void smlua_dump_stack(void) {
     lua_State* L = gLuaState;
     int top = lua_gettop(L);
+    printf("--------------\n");
     for (int i = 1; i <= top; i++) {
         printf("%d\t%s\t", i, luaL_typename(L, i));
         switch (lua_type(L, i)) {
@@ -23,9 +24,35 @@ void smlua_dump_stack(void) {
             break;
         }
     }
+    printf("--------------\n");
 }
 
-void smlua_push_integer_field(int val, char* name) {
+void smlua_dump_globals(void) {
+    lua_State* L = gLuaState;
+    printf("--------------\n");
+    lua_pushglobaltable(L);
+
+    // table is in the stack at index 't'
+    lua_pushnil(L);  // first key
+    while (lua_next(L, -2) != 0) {
+        // uses 'key' (at index -2) and 'value' (at index -1)
+        if (lua_type(L, -2) == LUA_TSTRING) {
+            printf("%s - %s\n",
+                lua_tostring(L, -2),
+                lua_typename(L, lua_type(L, -1)));
+        } else {
+            printf("%s - %s\n",
+                lua_typename(L, lua_type(L, -2)),
+                lua_typename(L, lua_type(L, -1)));
+        }
+        // removes 'value'; keeps 'key' for next iteration
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);                 // remove global table(-1)
+    printf("--------------\n");
+}
+
+void smlua_push_integer_field(lua_Integer val, char* name) {
     int t = lua_gettop(gLuaState);
     lua_pushinteger(gLuaState, val);
     lua_setfield(gLuaState, t, name);
