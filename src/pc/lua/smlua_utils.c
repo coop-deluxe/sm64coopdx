@@ -7,11 +7,25 @@ void smlua_bind_function(lua_State* L, const char* name, void* func) {
     lua_setglobal(L, name);
 }
 
+static void smlua_logline(void) {
+    lua_State* L = gLuaState;
+    lua_Debug info;
+    int level = 0;
+    while (lua_getstack(L, level, &info)) {
+        lua_getinfo(L, "nSl", &info);
+        LOG_INFO("  [%d] %s:%d -- %s [%s]\n",
+            level, info.short_src, info.currentline,
+            (info.name ? info.name : "<unknown>"), info.what);
+        ++level;
+    }
+}
+
 //////////////////////////////////////////////
 
 lua_Integer smlua_to_integer(lua_State* L, int index) {
     if (lua_type(L, index) != LUA_TNUMBER) {
         LOG_LUA("LUA: smlua_to_integer received improper type '%d'", lua_type(L, index));
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -23,6 +37,7 @@ lua_Integer smlua_to_integer(lua_State* L, int index) {
 lua_Number smlua_to_number(lua_State* L, int index) {
     if (lua_type(L, index) != LUA_TNUMBER) {
         LOG_LUA("LUA: smlua_to_number received improper type '%d'", lua_type(L, index));
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -33,6 +48,7 @@ lua_Number smlua_to_number(lua_State* L, int index) {
 void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
     if (lua_type(L, index) != LUA_TTABLE) {
         LOG_LUA("LUA: smlua_to_cobject received improper type '%d'", lua_type(L, index));
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -44,6 +60,7 @@ void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
 
     if (lot != objLot) {
         LOG_LUA("LUA: smlua_to_cobject received improper LOT. Expected '%d', received '%d'", lot, objLot);
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return NULL;
     }
@@ -56,6 +73,7 @@ void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
 
     if (pointer == NULL) {
         LOG_LUA("LUA: smlua_to_cobject received null pointer.");
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return NULL;
     }

@@ -6,53 +6,49 @@ number_types = ["f32", "float"]
 cobject_types = ["struct MarioState*", "Vec3s", "Vec3f"]
 cobject_lot_types = ["LOT_MARIO_STATE", "LOT_VEC3S", "LOT_VEC3F"]
 
+do_extern = False
 header_h = """
-s32 is_anim_at_end(struct MarioState *m);
-s32 is_anim_past_end(struct MarioState *m);
-s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);
-s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);
-void set_anim_to_frame(struct MarioState *m, s16 animFrame);
-s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);
-s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, Vec3s translation);
-void update_mario_pos_for_anim(struct MarioState *m);
-s16 return_mario_anim_y_translation(struct MarioState *m);
-void play_sound_if_no_flag(struct MarioState *m, u32 soundBits, u32 flags);
-void play_mario_jump_sound(struct MarioState *m);
-void adjust_sound_for_speed(struct MarioState *m);
-void play_sound_and_spawn_particles(struct MarioState *m, u32 soundBits, u32 waveParticleType);
-void play_mario_action_sound(struct MarioState *m, u32 soundBits, u32 waveParticleType);
-void play_mario_landing_sound(struct MarioState *m, u32 soundBits);
-void play_mario_landing_sound_once(struct MarioState *m, u32 soundBits);
-void play_mario_heavy_landing_sound(struct MarioState *m, u32 soundBits);
-void play_mario_heavy_landing_sound_once(struct MarioState *m, u32 soundBits);
-void play_mario_sound(struct MarioState *m, s32 primarySoundBits, s32 scondarySoundBits);
-void mario_set_bubbled(struct MarioState* m);
-void mario_set_forward_vel(struct MarioState *m, f32 speed);
-s32 mario_get_floor_class(struct MarioState *m);
-u32 mario_get_terrain_sound_addend(struct MarioState *m);
-struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);
-f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil);
-s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw);
-u32 mario_floor_is_slippery(struct MarioState *m);
-s32 mario_floor_is_slope(struct MarioState *m);
-s32 mario_floor_is_steep(struct MarioState *m);
-f32 find_floor_height_relative_polar(struct MarioState *m, s16 angleFromMario, f32 distFromMario);
-s16 find_floor_slope(struct MarioState *m, s16 yawOffset);
-void update_mario_sound_and_camera(struct MarioState *m);
-void set_steep_jump_action(struct MarioState *m);
-u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg);
-s32 set_jump_from_landing(struct MarioState *m);
-s32 set_jumping_action(struct MarioState *m, u32 action, u32 actionArg);
-s32 drop_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg);
-s32 hurt_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg, s16 hurtCounter);
-s32 check_common_action_exits(struct MarioState *m);
-s32 check_common_hold_action_exits(struct MarioState *m);
-s32 transition_submerged_to_walking(struct MarioState *m);
-s32 set_water_plunge_action(struct MarioState *m);
-s32 execute_mario_action(UNUSED struct Object *o);
-s32 force_idle_state(struct MarioState* m);
-void init_mario(void);
-void init_mario_from_save_file(void);
+s32 check_common_idle_cancels(struct MarioState *m);
+s32 check_common_hold_idle_cancels(struct MarioState *m);
+s32 act_idle(struct MarioState *m);
+void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 sound);
+s32 act_start_sleeping(struct MarioState *m);
+s32 act_sleeping(struct MarioState *m);
+s32 act_waking_up(struct MarioState *m);
+s32 act_shivering(struct MarioState *m);
+s32 act_coughing(struct MarioState *m);
+s32 act_standing_against_wall(struct MarioState *m);
+s32 act_in_quicksand(struct MarioState *m);
+s32 act_crouching(struct MarioState *m);
+s32 act_panting(struct MarioState *m);
+void stopping_step(struct MarioState *m, s32 animID, u32 action);
+s32 act_braking_stop(struct MarioState *m);
+s32 act_butt_slide_stop(struct MarioState *m);
+s32 act_hold_butt_slide_stop(struct MarioState *m);
+s32 act_slide_kick_slide_stop(struct MarioState *m);
+s32 act_start_crouching(struct MarioState *m);
+s32 act_stop_crouching(struct MarioState *m);
+s32 act_start_crawling(struct MarioState *m);
+s32 act_stop_crawling(struct MarioState *m);
+s32 act_shockwave_bounce(struct MarioState *m);
+s32 landing_step(struct MarioState *m, s32 arg1, u32 action);
+s32 check_common_landing_cancels(struct MarioState *m, u32 action);
+s32 act_jump_land_stop(struct MarioState *m);
+s32 act_double_jump_land_stop(struct MarioState *m);
+s32 act_side_flip_land_stop(struct MarioState *m);
+s32 act_freefall_land_stop(struct MarioState *m);
+s32 act_triple_jump_land_stop(struct MarioState *m);
+s32 act_backflip_land_stop(struct MarioState *m);
+s32 act_lava_boost_land(struct MarioState *m);
+s32 act_long_jump_land_stop(struct MarioState *m);
+s32 act_hold_jump_land_stop(struct MarioState *m);
+s32 act_hold_freefall_land_stop(struct MarioState *m);
+s32 act_air_throw_land(struct MarioState *m);
+s32 act_twirl_land(struct MarioState *m);
+s32 act_ground_pound_land(struct MarioState *m);
+s32 act_first_person(struct MarioState *m);
+s32 check_common_stationary_cancels(struct MarioState *m);
+s32 mario_execute_stationary_action(struct MarioState *m);
 """
 
 functions = []
@@ -91,13 +87,19 @@ def process_line(line):
     if len(params_str) == 0 or params_str == 'void':
         pass
     else:
+        param_index = 0
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
-            match = re.search('[a-zA-Z0-9_]+$', param_str)
-            param['type'] = normalize_type(param_str[0:match.span()[0]])
-            param['identifier'] = match.group()
+            if param_str.endswith('*') or ' ' not in param_str:
+                param['type'] = normalize_type(param_str)
+                param['identifier'] = 'arg%d' % param_index
+            else:
+                match = re.search('[a-zA-Z0-9_]+$', param_str)
+                param['type'] = normalize_type(param_str[0:match.span()[0]])
+                param['identifier'] = match.group()
             function['params'].append(param)
+            param_index += 1
 
     functions.append(function)
 
@@ -149,6 +151,9 @@ def build_function(function):
         s += '    if (!gSmLuaConvertSuccess) { return 0; }\n'
         i += 1
     s += '\n'
+
+    if do_extern:
+        s += '    extern %s\n' % function['line']
 
     s += build_return(function)
     s += '    return 1;\n}\n'
