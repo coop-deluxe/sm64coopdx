@@ -41,7 +41,7 @@ f32 find_floor_height_relative_polar(struct MarioState *m, s16 angleFromMario, f
 s16 find_floor_slope(struct MarioState *m, s16 yawOffset);
 void update_mario_sound_and_camera(struct MarioState *m);
 void set_steep_jump_action(struct MarioState *m);
-u32 set_mario_action(struct MarioState *, u32 action, u32 actionArg);
+u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg);
 s32 set_jump_from_landing(struct MarioState *m);
 s32 set_jumping_action(struct MarioState *m, u32 action, u32 actionArg);
 s32 drop_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg);

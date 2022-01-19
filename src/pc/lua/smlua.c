@@ -120,8 +120,6 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             *returnValue = lua_tointeger(L, -1);
             lua_pop(L, 1);
 
-            printf(">> action hook return: %d\n", *returnValue);
-            fflush(stdout);
             return true;
         }
     }
@@ -157,7 +155,18 @@ static void smlua_init_mario_states(void) {
 void smlua_init(void) {
     gLuaState = luaL_newstate();
     lua_State* L = gLuaState;
-    luaL_openlibs(L);
+
+    // load libraries
+    luaopen_base(L);
+    //luaopen_coroutine(L);
+    //luaopen_debug(L);
+    //luaopen_io(L);
+    luaL_requiref(L, "math", luaopen_math, 1);
+    //luaopen_os(L);
+    //luaopen_package(L);
+    luaL_requiref(L, "string", luaopen_string, 1);
+    luaL_requiref(L, "table", luaopen_table, 1);
+    //luaopen_utf8(L);
 
     lua_pushcfunction(L, smlua_hook_event);
     lua_setglobal(L, "hook_event");

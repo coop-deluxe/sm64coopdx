@@ -1,16 +1,34 @@
--- initialize actions
-ACT_ROLL = (0x05B | ACT_FLAG_MOVING | ACT_FLAG_BUTT_OR_STOMACH_SLIDE)
-ACT_ROLL_AIR = (0x0BA | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+------------------------
+-- initialize actions --
+------------------------
 
--- initialize extra fields
+ACT_SPIN_POUND_LAND =           (0x037 | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
+ACT_ROLL =                      (0x05B | ACT_FLAG_MOVING | ACT_FLAG_BUTT_OR_STOMACH_SLIDE)
+ACT_GROUND_POUND_JUMP =         (0x084 | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_SPIN_JUMP =                 (0x08B | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_SPIN_POUND =                (0x08F | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_LEDGE_PARKOUR =             (0x09D | ACT_FLAG_AIR)
+ACT_ROLL_AIR =                  (0x0BA | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WALL_SLIDE =                (0x0BF | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WATER_GROUND_POUND =        (0x0C9 | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT | ACT_FLAG_ATTACKING)
+ACT_WATER_GROUND_POUND_LAND =   (0x0CA | ACT_FLAG_STATIONARY | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+ACT_WATER_GROUND_POUND_STROKE = (0x0CB | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+ACT_WATER_GROUND_POUND_JUMP =   (0x0CC | ACT_FLAG_MOVING | ACT_FLAG_SWIMMING | ACT_FLAG_SWIMMING_OR_FLYING | ACT_FLAG_WATER_OR_TEXT)
+
+-----------------------------
+-- initialize extra fields --
+-----------------------------
+
 gMarioStateExtras = {}
 for i=0,(MAX_PLAYERS-1) do
     gMarioStateExtras[i] = {}
-    gMarioStateExtras[i].spareFloat = 0
-    gMarioStateExtras[i].spareInt = 0
+    gMarioStateExtras[i].rotAngle = 0
+    gMarioStateExtras[i].boostTimer = 0
 end
 
----------------------------------------------------------
+---------------
+-- utilities --
+---------------
 
 function sins(theta)
     return math.sin(theta * math.pi / (2 * 16384))
@@ -20,7 +38,9 @@ function coss(theta)
     return math.cos(theta * math.pi / (2 * 16384))
 end
 
----------------------------------------------------------
+----------
+-- roll --
+----------
 
 function increase_roll_yaw(m)
     local newFacingDYaw = m.faceAngle.y - m.slideYaw
@@ -97,8 +117,6 @@ function update_roll_sliding(m, stopSpeed)
     return stopped
 end
 
----------------------------------------------------------
-
 function act_roll(m)
     local e = gMarioStateExtras[m.playerIndex]
 
@@ -107,14 +125,14 @@ function act_roll(m)
     local ROLL_CANCEL_LOCKOUT_TIME = 10
     local BOOST_LOCKOUT_TIME = 20
 
-    -- e.spareFloat  is used for Mario's rotation angle during the roll (persists when going into ACT_ROLL_AIR and back)
-    -- e.spareInt    is used for the boost lockout timer (persists when going into ACT_ROLL_AIR and back)
+    -- e.rotAngle is used for Mario's rotation angle during the roll (persists when going into ACT_ROLL_AIR and back)
+    -- e.boostTimer is used for the boost lockout timer (persists when going into ACT_ROLL_AIR and back)
     -- m.actionTimer is used to lockout walk canceling out of rollout (reset each action switch)
 
     if m.actionTimer == 0 then
         if m.prevAction ~= ACT_ROLL_AIR then
-            e.spareFloat = 0
-            e.spareInt   = 0
+            e.rotAngle = 0
+            e.boostTimer   = 0
         end
     elseif m.actionTimer >= ROLL_CANCEL_LOCKOUT_TIME or m.actionArg == 1 then
         if (m.input & INPUT_Z_DOWN) == 0 then
@@ -134,8 +152,8 @@ function act_roll(m)
         m.vel.y = 19.0;
         play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
 
-        if e.spareInt >= BOOST_LOCKOUT_TIME then
-            e.spareInt = 0;
+        if e.boostTimer >= BOOST_LOCKOUT_TIME then
+            e.boostTimer = 0;
 
             if m.forwardVel < MAX_NORMAL_ROLL_SPEED then
                 mario_set_forward_vel(m, math.min(m.forwardVel + ROLL_BOOST_GAIN, MAX_NORMAL_ROLL_SPEED));
@@ -159,13 +177,13 @@ function act_roll(m)
 
     common_slide_action(m, ACT_CROUCH_SLIDE, ACT_ROLL_AIR, MARIO_ANIM_FORWARD_SPINNING);
 
-    e.spareFloat = e.spareFloat + (0x80 * m.forwardVel);
-    if e.spareFloat > 0x10000 then
-        e.spareFloat = e.spareFloat - 0x10000;
+    e.rotAngle = e.rotAngle + (0x80 * m.forwardVel);
+    if e.rotAngle > 0x10000 then
+        e.rotAngle = e.rotAngle - 0x10000;
     end
-    set_anim_to_frame(m, 10 * e.spareFloat / 0x10000);
+    set_anim_to_frame(m, 10 * e.rotAngle / 0x10000);
 
-    e.spareInt = e.spareInt + 1;
+    e.boostTimer = e.boostTimer + 1;
 
     m.actionTimer = m.actionTimer + 1;
 
@@ -179,8 +197,8 @@ function act_roll_air(m)
 
     if m.actionTimer == 0 then
         if m.prevAction ~= ACT_ROLL then
-            e.spareFloat = 0
-            e.spareInt   = 0
+            e.rotAngle = 0
+            e.boostTimer   = 0
         end
     end
 
@@ -208,30 +226,20 @@ function act_roll_air(m)
         return set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
     end
 
-    e.spareFloat = e.spareFloat + 0x80 * m.forwardVel
-    if e.spareFloat > 0x10000 then
-        e.spareFloat = e.spareFloat - 0x10000
+    e.rotAngle = e.rotAngle + 0x80 * m.forwardVel
+    if e.rotAngle > 0x10000 then
+        e.rotAngle = e.rotAngle - 0x10000
     end
 
-    set_anim_to_frame(m, 10 * e.spareFloat / 0x10000)
+    set_anim_to_frame(m, 10 * e.rotAngle / 0x10000)
 
-    e.spareInt = e.spareInt + 1
+    e.boostTimer = e.boostTimer + 1
     m.actionTimer = m.actionTimer + 1
 
     return false
 end
 
-
----------------------------------------------------------
-
-function update()
-end
-
-function mario_update(m)
-    -- if m.vel.y > 0 then
-        -- m.vel.y = m.vel.y + 2
-    -- end
-
+function update_roll(m)
     if m.action == ACT_DIVE_SLIDE then
         if (m.input & INPUT_ABOVE_SLIDE) == 0 then
             if (m.input & INPUT_Z_DOWN) ~= 0 and m.actionTimer < 2 then
@@ -288,6 +296,25 @@ function mario_update(m)
             return set_mario_action(m, ACT_ROLL, 0)
         end
     end
+end
+
+---------------------------------------------------------
+
+function update()
+end
+
+function mario_update(m)
+    update_roll(m)
+
+    -- dive hop
+    if (m.input & INPUT_B_PRESSED) ~= 0 and (m.input & INPUT_ABOVE_SLIDE) == 0 then
+        if m.action == ACT_FORWARD_ROLLOUT and m.prevAction == ACT_DIVE_SLIDE then
+            m.vel.y = 21.0
+            return set_mario_action(m, ACT_DIVE, 1)
+
+        end
+    end
+
 end
 
 hook_event(HOOK_UPDATE, update)
