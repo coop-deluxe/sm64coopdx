@@ -1,0 +1,1 @@
+s32 mario_execute_submerged_action(struct MarioState *m);

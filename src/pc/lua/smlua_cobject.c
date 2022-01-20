@@ -14,9 +14,8 @@ enum LuaValueType {
     LVT_S16,
     LVT_S32,
     LVT_F32,
-    LVT_VEC3S,
-    LVT_VEC3F,
-    LVT_CONTROLLER,
+    LVT_COBJECT,
+    LVT_COBJECT_P,
 };
 
 struct LuaObjectField {
@@ -24,93 +23,94 @@ struct LuaObjectField {
     enum LuaValueType valueType;
     size_t valueOffset;
     bool immutable;
+    enum LuaObjectType lot;
 };
 
 #define LUA_VEC3S_FIELD_COUNT 3
 static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
-    { "x", LVT_S16, sizeof(s16) * 0, false },
-    { "y", LVT_S16, sizeof(s16) * 1, false },
-    { "z", LVT_S16, sizeof(s16) * 2, false },
+    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE },
+    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE },
+    { "z", LVT_S16, sizeof(s16) * 2, false, LOT_NONE },
 };
 
 #define LUA_VEC3F_FIELD_COUNT 3
 static struct LuaObjectField sVec3fFields[LUA_VEC3F_FIELD_COUNT] = {
-    { "x", LVT_F32, sizeof(f32) * 0, false },
-    { "y", LVT_F32, sizeof(f32) * 1, false },
-    { "z", LVT_F32, sizeof(f32) * 2, false },
+    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 56
+#define LUA_MARIO_STATE_FIELD_COUNT 62
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
-    { "playerIndex",              LVT_U16,        offsetof(struct MarioState, playerIndex)             , true  },
-    { "input",                    LVT_U16,        offsetof(struct MarioState, input)                   , false },
-    { "flags",                    LVT_U32,        offsetof(struct MarioState, flags)                   , false },
-    { "particleFlags",            LVT_U32,        offsetof(struct MarioState, particleFlags)           , false },
-    { "action",                   LVT_U32,        offsetof(struct MarioState, action)                  , false },
-    { "prevAction",               LVT_U32,        offsetof(struct MarioState, prevAction)              , false },
-    { "terrainSoundAddend",       LVT_U32,        offsetof(struct MarioState, terrainSoundAddend)      , false },
-    { "actionState",              LVT_U16,        offsetof(struct MarioState, actionState)             , false },
-    { "actionTimer",              LVT_U16,        offsetof(struct MarioState, actionTimer)             , false },
-    { "actionArg",                LVT_U32,        offsetof(struct MarioState, actionArg)               , false },
-    { "intendedMag",              LVT_F32,        offsetof(struct MarioState, intendedMag)             , false },
-    { "intendedYaw",              LVT_S16,        offsetof(struct MarioState, intendedYaw)             , false },
-    { "invincTimer",              LVT_S16,        offsetof(struct MarioState, invincTimer)             , false },
-    { "framesSinceA",             LVT_U8,         offsetof(struct MarioState, framesSinceA)            , false },
-    { "framesSinceB",             LVT_U8,         offsetof(struct MarioState, framesSinceB)            , false },
-    { "wallKickTimer",            LVT_U8,         offsetof(struct MarioState, wallKickTimer)           , false },
-    { "doubleJumpTimer",          LVT_U8,         offsetof(struct MarioState, doubleJumpTimer)         , false },
-    { "faceAngle",                LVT_VEC3S,      offsetof(struct MarioState, faceAngle)               , true  },
-    { "angleVel",                 LVT_VEC3S,      offsetof(struct MarioState, angleVel)                , true  },
-    { "slideYaw",                 LVT_S16,        offsetof(struct MarioState, slideYaw)                , false },
-    { "twirlYaw",                 LVT_S16,        offsetof(struct MarioState, twirlYaw)                , false },
-    { "pos",                      LVT_VEC3F,      offsetof(struct MarioState, pos)                     , true  },
-    { "vel",                      LVT_VEC3F,      offsetof(struct MarioState, vel)                     , true  },
-    { "forwardVel",               LVT_F32,        offsetof(struct MarioState, forwardVel)              , false },
-    { "slideVelX",                LVT_F32,        offsetof(struct MarioState, slideVelX)               , false },
-    { "slideVelZ",                LVT_F32,        offsetof(struct MarioState, slideVelZ)               , false },
-    { "ceilHeight",               LVT_F32,        offsetof(struct MarioState, ceilHeight)              , false },
-    { "floorHeight",              LVT_F32,        offsetof(struct MarioState, floorHeight)             , false },
-    { "floorAngle",               LVT_S16,        offsetof(struct MarioState, floorAngle)              , false },
-    { "waterLevel",               LVT_S16,        offsetof(struct MarioState, waterLevel)              , false },
-    { "controller",               LVT_CONTROLLER, offsetof(struct MarioState, controller)              , true  },
-    { "collidedObjInteractTypes", LVT_U32,        offsetof(struct MarioState, collidedObjInteractTypes), false },
-    { "numCoins",                 LVT_S16,        offsetof(struct MarioState, numCoins)                , false },
-    { "numStars",                 LVT_S16,        offsetof(struct MarioState, numStars)                , false },
-    { "mechani",                  LVT_S8,         offsetof(struct MarioState, numKeys)                 , false },
-    { "numLives",                 LVT_S8,         offsetof(struct MarioState, numLives)                , false },
-    { "health",                   LVT_S16,        offsetof(struct MarioState, health)                  , false },
-    { "unkB0",                    LVT_S16,        offsetof(struct MarioState, unkB0)                   , false },
-    { "hurtCounter",              LVT_U8,         offsetof(struct MarioState, hurtCounter)             , false },
-    { "healCounter",              LVT_U8,         offsetof(struct MarioState, healCounter)             , false },
-    { "squishTimer",              LVT_U8,         offsetof(struct MarioState, squishTimer)             , false },
-    { "fadeWarpOpacity",          LVT_U8,         offsetof(struct MarioState, fadeWarpOpacity)         , false },
-    { "capTimer",                 LVT_U16,        offsetof(struct MarioState, capTimer)                , false },
-    { "prevNumStarsForDialog",    LVT_S16,        offsetof(struct MarioState, prevNumStarsForDialog)   , false },
-    { "peakHeight",               LVT_F32,        offsetof(struct MarioState, peakHeight)              , false },
-    { "quicksandDepth",           LVT_F32,        offsetof(struct MarioState, quicksandDepth)          , false },
-    { "unkC4",                    LVT_F32,        offsetof(struct MarioState, unkC4)                   , false },
-    { "currentRoom",              LVT_S16,        offsetof(struct MarioState, currentRoom)             , false },
-    { "isSnoring",                LVT_U8,         offsetof(struct MarioState, isSnoring)               , false },
-    { "freeze",                   LVT_U8,         offsetof(struct MarioState, freeze)                  , false },
-    { "splineKeyframeFraction",   LVT_F32,        offsetof(struct MarioState, splineKeyframeFraction)  , false },
-    { "splineState",              LVT_S32,        offsetof(struct MarioState, splineState)             , false },
-    { "nonInstantWarpPos",        LVT_VEC3F,      offsetof(struct MarioState, nonInstantWarpPos)       , true  },
-    { "wasNetworkVisible",        LVT_U8,         offsetof(struct MarioState, wasNetworkVisible)       , false },
-    { "minimumBoneY",             LVT_F32,        offsetof(struct MarioState, minimumBoneY)            , false },
-    { "curAnimOffset",            LVT_F32,        offsetof(struct MarioState, curAnimOffset)           , false },
+    { "playerIndex",              LVT_U16,          offsetof(struct MarioState, playerIndex),              true,  LOT_NONE       },
+    { "input",                    LVT_U16,          offsetof(struct MarioState, input),                    false, LOT_NONE       },
+    { "flags",                    LVT_U32,          offsetof(struct MarioState, flags),                    false, LOT_NONE       },
+    { "particleFlags",            LVT_U32,          offsetof(struct MarioState, particleFlags),            false, LOT_NONE       },
+    { "action",                   LVT_U32,          offsetof(struct MarioState, action),                   false, LOT_NONE       },
+    { "prevAction",               LVT_U32,          offsetof(struct MarioState, prevAction),               false, LOT_NONE       },
+    { "terrainSoundAddend",       LVT_U32,          offsetof(struct MarioState, terrainSoundAddend),       false, LOT_NONE       },
+    { "actionState",              LVT_U16,          offsetof(struct MarioState, actionState),              false, LOT_NONE       },
+    { "actionTimer",              LVT_U16,          offsetof(struct MarioState, actionTimer),              false, LOT_NONE       },
+    { "actionArg",                LVT_U32,          offsetof(struct MarioState, actionArg),                false, LOT_NONE       },
+    { "intendedMag",              LVT_F32,          offsetof(struct MarioState, intendedMag),              false, LOT_NONE       },
+    { "intendedYaw",              LVT_S16,          offsetof(struct MarioState, intendedYaw),              false, LOT_NONE       },
+    { "invincTimer",              LVT_S16,          offsetof(struct MarioState, invincTimer),              false, LOT_NONE       },
+    { "framesSinceA",             LVT_U8,           offsetof(struct MarioState, framesSinceA),             false, LOT_NONE       },
+    { "framesSinceB",             LVT_U8,           offsetof(struct MarioState, framesSinceB),             false, LOT_NONE       },
+    { "wallKickTimer",            LVT_U8,           offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE       },
+    { "doubleJumpTimer",          LVT_U8,           offsetof(struct MarioState, doubleJumpTimer),          false, LOT_NONE       },
+    { "faceAngle",                LVT_COBJECT,      offsetof(struct MarioState, faceAngle),                true,  LOT_VEC3S      },
+    { "angleVel",                 LVT_COBJECT,      offsetof(struct MarioState, angleVel),                 true,  LOT_VEC3S      },
+    { "slideYaw",                 LVT_S16,          offsetof(struct MarioState, slideYaw),                 false, LOT_NONE       },
+    { "twirlYaw",                 LVT_S16,          offsetof(struct MarioState, twirlYaw),                 false, LOT_NONE       },
+    { "pos",                      LVT_COBJECT,      offsetof(struct MarioState, pos),                      true,  LOT_VEC3F      },
+    { "vel",                      LVT_COBJECT,      offsetof(struct MarioState, vel),                      true,  LOT_VEC3F      },
+    { "forwardVel",               LVT_F32,          offsetof(struct MarioState, forwardVel),               false, LOT_NONE       },
+    { "slideVelX",                LVT_F32,          offsetof(struct MarioState, slideVelX),                false, LOT_NONE       },
+    { "slideVelZ",                LVT_F32,          offsetof(struct MarioState, slideVelZ),                false, LOT_NONE       },
+    { "ceilHeight",               LVT_F32,          offsetof(struct MarioState, ceilHeight),               false, LOT_NONE       },
+    { "floorHeight",              LVT_F32,          offsetof(struct MarioState, floorHeight),              false, LOT_NONE       },
+    { "floorAngle",               LVT_S16,          offsetof(struct MarioState, floorAngle),               false, LOT_NONE       },
+    { "waterLevel",               LVT_S16,          offsetof(struct MarioState, waterLevel),               false, LOT_NONE       },
+    { "interactObj",              LVT_COBJECT_P,    offsetof(struct MarioState, interactObj),              false, LOT_OBJECT     },
+    { "heldObj",                  LVT_COBJECT_P,    offsetof(struct MarioState, heldObj),                  false, LOT_OBJECT     },
+    { "usedObj",                  LVT_COBJECT_P,    offsetof(struct MarioState, usedObj),                  false, LOT_OBJECT     },
+    { "interactObj",              LVT_COBJECT_P,    offsetof(struct MarioState, interactObj),              false, LOT_OBJECT     },
+    { "marioObj",                 LVT_COBJECT_P,    offsetof(struct MarioState, marioObj),                 true,  LOT_OBJECT     },
+    { "marioBodyState",           LVT_COBJECT_P,    offsetof(struct MarioState, marioBodyState),           true,  LOT_BODY_STATE },
+    { "controller",               LVT_COBJECT_P,    offsetof(struct MarioState, controller),               true,  LOT_CONTROLLER },
+    { "collidedObjInteractTypes", LVT_U32,          offsetof(struct MarioState, collidedObjInteractTypes), false, LOT_NONE       },
+    { "numCoins",                 LVT_S16,          offsetof(struct MarioState, numCoins),                 false, LOT_NONE       },
+    { "numStars",                 LVT_S16,          offsetof(struct MarioState, numStars),                 false, LOT_NONE       },
+    { "mechani",                  LVT_S8,           offsetof(struct MarioState, numKeys),                  false, LOT_NONE       },
+    { "numLives",                 LVT_S8,           offsetof(struct MarioState, numLives),                 false, LOT_NONE       },
+    { "health",                   LVT_S16,          offsetof(struct MarioState, health),                   false, LOT_NONE       },
+    { "unkB0",                    LVT_S16,          offsetof(struct MarioState, unkB0),                    false, LOT_NONE       },
+    { "hurtCounter",              LVT_U8,           offsetof(struct MarioState, hurtCounter),              false, LOT_NONE       },
+    { "healCounter",              LVT_U8,           offsetof(struct MarioState, healCounter),              false, LOT_NONE       },
+    { "squishTimer",              LVT_U8,           offsetof(struct MarioState, squishTimer),              false, LOT_NONE       },
+    { "fadeWarpOpacity",          LVT_U8,           offsetof(struct MarioState, fadeWarpOpacity),          false, LOT_NONE       },
+    { "capTimer",                 LVT_U16,          offsetof(struct MarioState, capTimer),                 false, LOT_NONE       },
+    { "prevNumStarsForDialog",    LVT_S16,          offsetof(struct MarioState, prevNumStarsForDialog),    false, LOT_NONE       },
+    { "peakHeight",               LVT_F32,          offsetof(struct MarioState, peakHeight),               false, LOT_NONE       },
+    { "quicksandDepth",           LVT_F32,          offsetof(struct MarioState, quicksandDepth),           false, LOT_NONE       },
+    { "unkC4",                    LVT_F32,          offsetof(struct MarioState, unkC4),                    false, LOT_NONE       },
+    { "currentRoom",              LVT_S16,          offsetof(struct MarioState, currentRoom),              false, LOT_NONE       },
+    { "isSnoring",                LVT_U8,           offsetof(struct MarioState, isSnoring),                false, LOT_NONE       },
+    { "freeze",                   LVT_U8,           offsetof(struct MarioState, freeze),                   false, LOT_NONE       },
+    { "splineKeyframeFraction",   LVT_F32,          offsetof(struct MarioState, splineKeyframeFraction),   false, LOT_NONE       },
+    { "splineState",              LVT_S32,          offsetof(struct MarioState, splineState),              false, LOT_NONE       },
+    { "nonInstantWarpPos",        LVT_COBJECT,      offsetof(struct MarioState, nonInstantWarpPos),        true,  LOT_VEC3F      },
+    { "wasNetworkVisible",        LVT_U8,           offsetof(struct MarioState, wasNetworkVisible),        false, LOT_NONE       },
+    { "minimumBoneY",             LVT_F32,          offsetof(struct MarioState, minimumBoneY),             false, LOT_NONE       },
+    { "curAnimOffset",            LVT_F32,          offsetof(struct MarioState, curAnimOffset),            false, LOT_NONE       },
     /* TODO: implement
         struct Surface *wall;
         struct Surface *ceil;
         struct Surface *floor;
-        struct Object *interactObj;
-        struct Object *heldObj;
-        struct Object *usedObj;
-        struct Object *riddenObj;
-        struct Object *marioObj;
         struct SpawnInfo *spawnInfo;
         struct Area *area;
         struct PlayerCameraState *statusForCamera;
-        struct MarioBodyState *marioBodyState;
         struct MarioAnimation *animation;
         struct Object* heldByObj;
         struct Object* bubbleObj;
@@ -121,18 +121,98 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
 
 #define LUA_CONTROLLER_FIELD_COUNT 10
 static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
-    { "rawStickX",      LVT_S16,          offsetof(struct Controller, rawStickX),      false },
-    { "rawStickY",      LVT_S16,          offsetof(struct Controller, rawStickY),      false },
-    { "stickX",         LVT_F32,          offsetof(struct Controller, stickX),         false },
-    { "stickY",         LVT_F32,          offsetof(struct Controller, stickY),         false },
-    { "stickMag",       LVT_F32,          offsetof(struct Controller, stickMag),       false },
-    { "buttonDown",     LVT_U16,          offsetof(struct Controller, buttonDown),     false },
-    { "buttonPressed",  LVT_U16,          offsetof(struct Controller, buttonPressed),  false },
-  //{ "statusData",     LVT_OSCONTSTATUS, offsetof(struct Controller, statusData),     false },
-  //{ "controllerData", LVT_OSCONTPAD,    offsetof(struct Controller, controllerData), false },
-    { "port",           LVT_S32,          offsetof(struct Controller, port),           false },
-    { "extStickX",      LVT_S16,          offsetof(struct Controller, extStickX),      false },
-    { "extStickY",      LVT_S16,          offsetof(struct Controller, extStickY),      false },
+    { "rawStickX",      LVT_S16,          offsetof(struct Controller, rawStickX),      false, LOT_NONE },
+    { "rawStickY",      LVT_S16,          offsetof(struct Controller, rawStickY),      false, LOT_NONE },
+    { "stickX",         LVT_F32,          offsetof(struct Controller, stickX),         false, LOT_NONE },
+    { "stickY",         LVT_F32,          offsetof(struct Controller, stickY),         false, LOT_NONE },
+    { "stickMag",       LVT_F32,          offsetof(struct Controller, stickMag),       false, LOT_NONE },
+    { "buttonDown",     LVT_U16,          offsetof(struct Controller, buttonDown),     false, LOT_NONE },
+    { "buttonPressed",  LVT_U16,          offsetof(struct Controller, buttonPressed),  false, LOT_NONE },
+  //{ "statusData",     LVT_OSCONTSTATUS, offsetof(struct Controller, statusData),     false, LOT_NONE },
+  //{ "controllerData", LVT_OSCONTPAD,    offsetof(struct Controller, controllerData), false, LOT_NONE },
+    { "port",           LVT_S32,          offsetof(struct Controller, port),           false, LOT_NONE },
+    { "extStickX",      LVT_S16,          offsetof(struct Controller, extStickX),      false, LOT_NONE },
+    { "extStickY",      LVT_S16,          offsetof(struct Controller, extStickY),      false, LOT_NONE },
+};
+
+#define LUA_BODY_STATE_FIELD_COUNT 11
+static struct LuaObjectField sMarioBodyStateFields[LUA_BODY_STATE_FIELD_COUNT] = {
+    { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE  },
+    { "capState",            LVT_S8,      offsetof(struct MarioBodyState, capState),            false, LOT_NONE  },
+    { "eyeState",            LVT_S8,      offsetof(struct MarioBodyState, eyeState),            false, LOT_NONE  },
+    { "handState",           LVT_S8,      offsetof(struct MarioBodyState, handState),           false, LOT_NONE  },
+    { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
+    { "modelState",          LVT_S16,     offsetof(struct MarioBodyState, modelState),          false, LOT_NONE  },
+    { "grabPos",             LVT_S8,      offsetof(struct MarioBodyState, grabPos),             false, LOT_NONE  },
+    { "punchState",          LVT_U8,      offsetof(struct MarioBodyState, punchState),          false, LOT_NONE  },
+    { "torsoAngle",          LVT_COBJECT, offsetof(struct MarioBodyState, torsoAngle),          true,  LOT_VEC3S },
+    { "headAngle",           LVT_COBJECT, offsetof(struct MarioBodyState, headAngle),           true,  LOT_VEC3S },
+    { "heldObjLastPosition", LVT_COBJECT, offsetof(struct MarioBodyState, heldObjLastPosition), true,  LOT_VEC3S },
+};
+
+#define LUA_OBJECT_FIELD_COUNT 16
+static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
+    { "header",                   LVT_COBJECT,   offsetof(struct Object, header),                   true,  LOT_OBJECTNODE },
+    { "parentObj",                LVT_COBJECT_P, offsetof(struct Object, parentObj),                false, LOT_OBJECT     },
+    { "prevObj",                  LVT_COBJECT_P, offsetof(struct Object, prevObj),                  false, LOT_OBJECT     },
+    { "collidedObjInteractTypes", LVT_U32,       offsetof(struct Object, collidedObjInteractTypes), false, LOT_NONE       },
+    { "activeFlags",              LVT_S16,       offsetof(struct Object, activeFlags),              false, LOT_NONE       },
+    { "numCollidedObjs",          LVT_S16,       offsetof(struct Object, numCollidedObjs),          false, LOT_NONE       },
+    { "bhvStackIndex",            LVT_U32,       offsetof(struct Object, bhvStackIndex),            false, LOT_NONE       },
+    { "bhvDelayTimer",            LVT_S16,       offsetof(struct Object, bhvDelayTimer),            false, LOT_NONE       },
+    { "respawnInfoType",          LVT_S16,       offsetof(struct Object, respawnInfoType),          false, LOT_NONE       },
+    { "hitboxRadius",             LVT_F32,       offsetof(struct Object, hitboxRadius),             false, LOT_NONE       },
+    { "hitboxHeight",             LVT_F32,       offsetof(struct Object, hitboxHeight),             false, LOT_NONE       },
+    { "hurtboxRadius",            LVT_F32,       offsetof(struct Object, hurtboxRadius),            false, LOT_NONE       },
+    { "hurtboxHeight",            LVT_F32,       offsetof(struct Object, hurtboxHeight),            false, LOT_NONE       },
+    { "hitboxDownOffset",         LVT_F32,       offsetof(struct Object, hitboxDownOffset),         false, LOT_NONE       },
+    { "heldByPlayerIndex",        LVT_U32,       offsetof(struct Object, heldByPlayerIndex),        false, LOT_NONE       },
+    { "platform",                 LVT_COBJECT_P, offsetof(struct Object, platform),                 false, LOT_OBJECT     },
+    /* TODO: implement
+        struct Object *collidedObjs[4]
+        union rawData
+        const BehaviorScript *curBhvCommand
+        uintptr_t bhvStack[8]
+        const BehaviorScript *behavior
+        void *collisionData
+        Mat4 transform
+        void *respawnInfo
+    */
+};
+
+#define LUA_OBJECTNODE_FIELD_COUNT 3
+static struct LuaObjectField sObjectNodeFields[LUA_OBJECTNODE_FIELD_COUNT] = {
+    { "gfx",  LVT_COBJECT,   offsetof(struct ObjectNode, gfx),  true, LOT_GRAPHNODEOBJECT },
+    { "next", LVT_COBJECT_P, offsetof(struct ObjectNode, next), true, LOT_OBJECTNODE },
+    { "prev", LVT_COBJECT_P, offsetof(struct ObjectNode, prev), true, LOT_OBJECTNODE },
+};
+
+#define LUA_GRAPHNODEOBJECT_FIELD_COUNT 13
+static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPHNODEOBJECT_FIELD_COUNT] = {
+    { "unk18",                  LVT_S8,      offsetof(struct GraphNodeObject, unk18),                  false, LOT_NONE  },
+    { "unk19",                  LVT_S8,      offsetof(struct GraphNodeObject, unk19),                  false, LOT_NONE  },
+    { "angle",                  LVT_COBJECT, offsetof(struct GraphNodeObject, angle),                  false, LOT_VEC3S },
+    { "pos",                    LVT_COBJECT, offsetof(struct GraphNodeObject, pos),                    false, LOT_VEC3F },
+    { "prevAngle",              LVT_COBJECT, offsetof(struct GraphNodeObject, prevAngle),              false, LOT_VEC3S },
+    { "prevPos",                LVT_COBJECT, offsetof(struct GraphNodeObject, prevPos),                false, LOT_VEC3F },
+    { "prevTimestamp",          LVT_U32,     offsetof(struct GraphNodeObject, prevTimestamp),          false, LOT_NONE  },
+    { "prevShadowPos",          LVT_COBJECT, offsetof(struct GraphNodeObject, prevShadowPos),          false, LOT_VEC3F },
+    { "prevShadowPosTimestamp", LVT_U32,     offsetof(struct GraphNodeObject, prevShadowPosTimestamp), false, LOT_NONE  },
+    { "scale",                  LVT_COBJECT, offsetof(struct GraphNodeObject, scale),                  false, LOT_VEC3F },
+    { "prevScale",              LVT_COBJECT, offsetof(struct GraphNodeObject, prevScale),              false, LOT_VEC3F },
+    { "prevScaleTimestamp",     LVT_U32,     offsetof(struct GraphNodeObject, prevScaleTimestamp),     false, LOT_NONE  },
+    { "cameraToObject",         LVT_COBJECT, offsetof(struct GraphNodeObject, cameraToObject),         false, LOT_VEC3F },
+    /* unimplemented
+    struct GraphNode node;
+    struct GraphNode *sharedChild;
+    struct GraphNodeObject_sub unk38;
+    struct SpawnInfo *unk4C;
+    Mat4 *throwMatrix;
+    Mat4 prevThrowMatrix;
+    u32 prevThrowMatrixTimestamp;
+    Mat4 *throwMatrixInterpolated;
+    u32 skipInterpolationTimestamp;
+    */
 };
 
 struct LuaObjectTable {
@@ -142,10 +222,15 @@ struct LuaObjectTable {
 };
 
 struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
-    { LOT_VEC3S,       sVec3sFields,      LUA_VEC3S_FIELD_COUNT       },
-    { LOT_VEC3F,       sVec3fFields,      LUA_VEC3F_FIELD_COUNT       },
-    { LOT_MARIO_STATE, sMarioStateFields, LUA_MARIO_STATE_FIELD_COUNT },
-    { LOT_CONTROLLER,  sControllerFields, LUA_CONTROLLER_FIELD_COUNT  },
+    { LOT_NONE,            NULL,                   0                               },
+    { LOT_VEC3S,           sVec3sFields,           LUA_VEC3S_FIELD_COUNT           },
+    { LOT_VEC3F,           sVec3fFields,           LUA_VEC3F_FIELD_COUNT           },
+    { LOT_MARIO_STATE,     sMarioStateFields,      LUA_MARIO_STATE_FIELD_COUNT     },
+    { LOT_CONTROLLER,      sControllerFields,      LUA_CONTROLLER_FIELD_COUNT      },
+    { LOT_BODY_STATE,      sMarioBodyStateFields,  LUA_BODY_STATE_FIELD_COUNT      },
+    { LOT_OBJECT,          sObjectFields,          LUA_OBJECT_FIELD_COUNT          },
+    { LOT_OBJECTNODE,      sObjectNodeFields,      LUA_OBJECTNODE_FIELD_COUNT      },
+    { LOT_GRAPHNODEOBJECT, sGraphNodeObjectFields, LUA_GRAPHNODEOBJECT_FIELD_COUNT },
 };
 
 static struct LuaObjectField* smlua_get_object_field(struct LuaObjectTable* ot, const char* key) {
@@ -175,22 +260,21 @@ static int smlua__get_field(lua_State* L) {
 
     struct LuaObjectField* data = smlua_get_object_field(&sLuaObjectTable[lot], key);
     if (data == NULL) {
-        LOG_LUA("_get_field on invalid key '%s'", key);
+        LOG_LUA("_get_field on invalid key '%s', lot '%d'", key, lot);
         return 0;
     }
 
     u8* p = ((u8*)pointer) + data->valueOffset;
     switch (data->valueType) {
-        case LVT_U8:         lua_pushinteger(L, *(u8* )p);       break;
-        case LVT_U16:        lua_pushinteger(L, *(u16*)p);       break;
-        case LVT_U32:        lua_pushinteger(L, *(u32*)p);       break;
-        case LVT_S8:         lua_pushinteger(L, *(s8* )p);       break;
-        case LVT_S16:        lua_pushinteger(L, *(s16*)p);       break;
-        case LVT_S32:        lua_pushinteger(L, *(s32*)p);       break;
-        case LVT_F32:        lua_pushnumber( L, *(f32*)p);       break;
-        case LVT_VEC3S:      smlua_push_object(L, LOT_VEC3S, p); break;
-        case LVT_VEC3F:      smlua_push_object(L, LOT_VEC3F, p); break;
-        case LVT_CONTROLLER: smlua_push_object(L, LOT_CONTROLLER, *(struct Controller**)p); break;
+        case LVT_U8:         lua_pushinteger(L, *(u8* )p);              break;
+        case LVT_U16:        lua_pushinteger(L, *(u16*)p);              break;
+        case LVT_U32:        lua_pushinteger(L, *(u32*)p);              break;
+        case LVT_S8:         lua_pushinteger(L, *(s8* )p);              break;
+        case LVT_S16:        lua_pushinteger(L, *(s16*)p);              break;
+        case LVT_S32:        lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_F32:        lua_pushnumber( L, *(f32*)p);              break;
+        case LVT_COBJECT:    smlua_push_object(L, data->lot, p);        break;
+        case LVT_COBJECT_P:  smlua_push_object(L, data->lot, *(u8**)p); break;
         default:
             LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;
@@ -205,38 +289,42 @@ static int smlua__set_field(lua_State* L) {
     const char* key = lua_tostring(L, -2);
 
     if (pointer == 0) {
-        LOG_LUA("_get_field on null pointer");
+        LOG_LUA("_set_field on null pointer");
         return 0;
     }
 
     if (lot >= LOT_MAX) {
-        LOG_LUA("_get_field on invalid LOT '%u'", lot);
+        LOG_LUA("_set_field on invalid LOT '%u'", lot);
         return 0;
     }
 
     struct LuaObjectField* data = smlua_get_object_field(&sLuaObjectTable[lot], key);
     if (data == NULL) {
-        LOG_LUA("_get_field on invalid key '%s'", key);
+        LOG_LUA("_set_field on invalid key '%s'", key);
         return 0;
     }
 
     if (data->immutable) {
-        LOG_LUA("_get_field on immutable key '%s'", key);
+        LOG_LUA("_set_field on immutable key '%s'", key);
         return 0;
     }
 
     u8* p = ((u8*)pointer) + data->valueOffset;
     switch (data->valueType) {
-        case LVT_U8:  *(u8*) p = lua_tointeger(L, -1); break;
-        case LVT_U16: *(u16*)p = lua_tointeger(L, -1); break;
-        case LVT_U32: *(u32*)p = lua_tointeger(L, -1); break;
-        case LVT_S8:  *(s8*) p = lua_tointeger(L, -1); break;
-        case LVT_S16: *(s16*)p = lua_tointeger(L, -1); break;
-        case LVT_S32: *(s32*)p = lua_tointeger(L, -1); break;
-        case LVT_F32: *(f32*)p = lua_tonumber(L, -1);  break;
+        case LVT_U8:  *(u8*) p = smlua_to_integer(L, -1); break;
+        case LVT_U16: *(u16*)p = smlua_to_integer(L, -1); break;
+        case LVT_U32: *(u32*)p = smlua_to_integer(L, -1); break;
+        case LVT_S8:  *(s8*) p = smlua_to_integer(L, -1); break;
+        case LVT_S16: *(s16*)p = smlua_to_integer(L, -1); break;
+        case LVT_S32: *(s32*)p = smlua_to_integer(L, -1); break;
+        case LVT_F32: *(f32*)p = smlua_to_number(L, -1);  break;
         default:
-            LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
+            LOG_LUA("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;
+    }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
+        return 0;
     }
 
     return 1;

@@ -10,6 +10,7 @@
 #include "smlua_cobject.h"
 #include "smlua_utils.h"
 #include "smlua_functions.h"
+#include "smlua_functions_autogen.h"
 
 #include "pc/debuglog.h"
 

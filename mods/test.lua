@@ -254,12 +254,12 @@ end
 function act_ground_pound_jump(m)
     local e = gMarioStateExtras[m.playerIndex]
     if check_kick_or_dive_in_air(m) ~= 0 then
-        -- TODO: m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
         return 1
     end
 
     if (m.input & INPUT_Z_PRESSED) ~= 0 then
-        -- TODO: m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
         return set_mario_action(m, ACT_GROUND_POUND, 0)
     end
 
@@ -280,7 +280,7 @@ function act_ground_pound_jump(m)
                            AIR_STEP_CHECK_LEDGE_GRAB | AIR_STEP_CHECK_HANG)
 
     e.rotAngle = e.rotAngle + (0x10000*1.0 - e.rotAngle) / 5.0
-    -- TODO: m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
+    m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
 
     m.actionTimer = m.actionTimer + 1
 
@@ -478,12 +478,12 @@ function act_spin_jump(m)
     e.rotAngle = e.rotAngle + 0x2867
     if (e.rotAngle >  0x10000) then e.rotAngle = e.rotAngle - 0x10000 end
     if (e.rotAngle < -0x10000) then e.rotAngle = e.rotAngle + 0x10000 end
-    -- TODO: m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + (s16) (e.rotAngle * spinDirFactor)
+    m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + (e.rotAngle * spinDirFactor)
 
     -- gravity
     m.vel.y = m.vel.y + 2
     if (m.flags & MARIO_WING_CAP) ~= 0 and m.vel.y < 0.0 and (m.input & INPUT_A_DOWN) ~= 0 then
-        -- TODO: m.marioBodyState.wingFlutter = 1
+        m.marioBodyState.wingFlutter = 1
         m.vel.y = m.vel.y - 0.7
         if m.vel.y < -37.5 then
             m.vel.y = m.vel.y + 1.4
@@ -553,7 +553,7 @@ function act_spin_pound(m)
     e.rotAngle = e.rotAngle + 0x3053
     if e.rotAngle >  0x10000 then e.rotAngle = e.rotAngle - 0x10000 end
     if e.rotAngle < -0x10000 then e.rotAngle = e.rotAngle + 0x10000 end
-    -- TODO: m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle * spinDirFactor
+    m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle * spinDirFactor
 
     m.actionTimer = m.actionTimer + 1
 

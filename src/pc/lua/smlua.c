@@ -176,6 +176,7 @@ void smlua_init(void) {
 
     smlua_bind_cobject();
     smlua_bind_functions();
+    smlua_bind_functions_autogen();
 
     smlua_execfile("mods/constants.lua");
     smlua_init_mario_states();
