@@ -31,7 +31,7 @@ static s16 D_80339FD0;
 static s16 D_80339FD2;
 static f32 D_80339FD4;
 
-static void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
+void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
     s16 atSurface = m->pos[1] >= m->waterLevel - 130;
 
     if (atSurface) {
@@ -70,7 +70,7 @@ static f32 get_buoyancy(struct MarioState *m) {
     return buoyancy;
 }
 
-static u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
+u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
     struct Surface *wall;
     struct Surface *ceil;
     struct Surface *floor;
@@ -119,7 +119,7 @@ static u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
     }
 }
 
-static void apply_water_current(struct MarioState *m, Vec3f step) {
+void apply_water_current(struct MarioState *m, Vec3f step) {
     s32 i;
     f32 whirlpoolRadius = 2000.0f;
 
@@ -167,7 +167,7 @@ static void apply_water_current(struct MarioState *m, Vec3f step) {
     }
 }
 
-static u32 perform_water_step(struct MarioState *m) {
+u32 perform_water_step(struct MarioState *m) {
     UNUSED u32 unused;
     u32 stepResult;
     Vec3f nextPos;
@@ -425,7 +425,7 @@ static void reset_float_globals(struct MarioState *m) {
     D_80339FD4 = m->faceAngle[0] / 256.0f + 20.0f;
 }
 
-static void float_surface_gfx(struct MarioState *m) {
+void float_surface_gfx(struct MarioState *m) {
     if (D_80339FD2 != 0 && m->pos[1] > m->waterLevel - 85 && m->faceAngle[0] >= 0) {
         if ((D_80339FD0 += D_80339FD2) >= 0) {
             m->marioObj->header.gfx.pos[1] += D_80339FD4 * sins(D_80339FD0);

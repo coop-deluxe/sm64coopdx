@@ -13,45 +13,62 @@
  // misc //
 //////////
 
-int smlua_get_camera_position(lua_State* L) {
-    if (gMarioStates[0].marioObj == NULL) {
-        if (gCamera == NULL) {
-            lua_pushnumber(L, 0);
-            lua_pushnumber(L, 0);
-            lua_pushnumber(L, 0);
-            return 0;
-        }
-        lua_pushnumber(L, gCamera->pos[0]);
-        lua_pushnumber(L, gCamera->pos[1]);
-        lua_pushnumber(L, gCamera->pos[2]);
-        return 0;
-    }
-
-    f32* pos = &gMarioStates[0].marioObj->header.gfx.cameraToObject[0];
-    lua_pushnumber(L, pos[0]);
-    lua_pushnumber(L, pos[1]);
-    lua_pushnumber(L, pos[2]);
-    return 1;
-}
-
-int smlua_check_fall_damage_or_get_stuck(lua_State* L) {
-    u32 hardFallAction = lua_tointeger(L, -1);
-
-    lua_getfield(L, -2, "playerIndex");
-    int index = lua_tointeger(L, -1);
-
-    extern s32 check_fall_damage_or_get_stuck(struct MarioState* m, u32 hardFallAction);
-    lua_pushinteger(L, check_fall_damage_or_get_stuck(&gMarioStates[index], hardFallAction));
-    return 1;
-}
-
 int smlua_play_sound(lua_State* L) {
-    s32 soundsBits = lua_tointeger(L, -4);
-    f32 pos[3] = { lua_tonumber(L, -3), lua_tonumber(L, -2), lua_tonumber(L, -1) };
+    s32 soundsBits = lua_tointeger(L, 1);
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
     extern void play_sound(s32 soundBits, f32 * pos);
     play_sound(soundsBits, pos);
+
     return 1;
 }
+
+int smlua_func_perform_water_full_step(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* nextPos = smlua_get_vec3f_from_buffer();
+    nextPos[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    nextPos[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    nextPos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);
+    lua_pushinteger(L, perform_water_full_step(m, nextPos));
+    return 1;
+}
+
+int smlua_func_apply_water_current(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    Vec3f step;
+    step[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    step[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    step[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void apply_water_current(struct MarioState *m, Vec3f step);
+    apply_water_current(m, step);
+
+    smlua_push_number_field(step[0], "x");
+    smlua_push_number_field(step[1], "y");
+    smlua_push_number_field(step[2], "z");
+
+    return 1;
+}
+
 
 int smlua_func_atan2s(lua_State* L) {
     f32 y = smlua_to_number(L, 1);
@@ -67,8 +84,8 @@ void smlua_bind_functions(void) {
     lua_State* L = gLuaState;
 
     // misc
-    smlua_bind_function(L, "get_camera_position", smlua_get_camera_position);
-    smlua_bind_function(L, "check_fall_damage_or_get_stuck", smlua_check_fall_damage_or_get_stuck);
     smlua_bind_function(L, "play_sound", smlua_play_sound);
+    smlua_bind_function(L, "perform_water_full_step", smlua_func_perform_water_full_step);
+    smlua_bind_function(L, "apply_water_current", smlua_func_apply_water_current);
     smlua_bind_function(L, "atan2s", smlua_func_atan2s);
 }

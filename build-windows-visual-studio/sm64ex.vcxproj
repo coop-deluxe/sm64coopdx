@@ -4001,6 +4001,7 @@
     <ClCompile Include="..\src\pc\lua\smlua.c" />
     <ClCompile Include="..\src\pc\lua\smlua_cobject.c" />
     <ClCompile Include="..\src\pc\lua\smlua_functions.c" />
+    <ClCompile Include="..\src\pc\lua\smlua_functions_autogen.c" />
     <ClCompile Include="..\src\pc\lua\smlua_utils.c" />
     <ClCompile Include="..\src\pc\mixer.c" />
     <ClCompile Include="..\src\pc\network\discord\activity.c" />
@@ -4446,6 +4447,7 @@
     <ClInclude Include="..\src\pc\lua\smlua.h" />
     <ClInclude Include="..\src\pc\lua\smlua_cobject.h" />
     <ClInclude Include="..\src\pc\lua\smlua_functions.h" />
+    <ClInclude Include="..\src\pc\lua\smlua_functions_autogen.h" />
     <ClInclude Include="..\src\pc\lua\smlua_utils.h" />
     <ClInclude Include="..\src\pc\network\branch.h" />
     <ClInclude Include="..\src\pc\network\discord\activity.h" />

@@ -25,6 +25,7 @@ SPIN_TIMER_SUCCESSFUL_INPUT = 4
 gMarioStateExtras = {}
 for i=0,(MAX_PLAYERS-1) do
     gMarioStateExtras[i] = {}
+    local m = gMarioStates[i]
     local e = gMarioStateExtras[i]
     e.angleDeltaQueue = {}
     for j=0,(ANGLE_QUEUE_SIZE-1) do e.angleDeltaQueue[j] = 0 end
@@ -34,8 +35,12 @@ for i=0,(MAX_PLAYERS-1) do
     e.spinDirection = 0
     e.spinBufferTimer = 0
     e.spinInput = 0
-    e.actionLastFrame = gMarioStates[i].action
+    e.actionLastFrame = m.action
     e.lastIntendedMag = 0
+    e.lastPos = {}
+    e.lastPos.x = m.pos.x
+    e.lastPos.y = m.pos.y
+    e.lastPos.z = m.pos.z
 end
 
 ---------------
@@ -144,7 +149,7 @@ function act_roll(m)
     if m.actionTimer == 0 then
         if m.prevAction ~= ACT_ROLL_AIR then
             e.rotAngle = 0
-            e.boostTimer   = 0
+            e.boostTimer = 0
         end
     elseif m.actionTimer >= ROLL_CANCEL_LOCKOUT_TIME or m.actionArg == 1 then
         if (m.input & INPUT_Z_DOWN) == 0 then
@@ -174,8 +179,7 @@ function act_roll(m)
             m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR;
 
             -- ! playing this after the call to play_mario_sound seems to matter in making this sound play
-            local cx, cy, cz = get_camera_position()
-            play_sound(SOUND_ACTION_SPIN, cx, cy, cz)
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
         end
 
         return set_mario_action(m, ACT_ROLL_AIR, m.actionArg);
@@ -270,8 +274,7 @@ function act_ground_pound_jump(m)
     if m.actionTimer == 0 then
         e.rotAngle = 0
     elseif m.actionTimer == 1 then
-        local cx, cy, cz = get_camera_position()
-        play_sound(SOUND_ACTION_SPIN, cx, cy, cz)
+        play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
     end
 
     play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, SOUND_MARIO_YAHOO)
@@ -314,8 +317,7 @@ function update_roll(m)
             mario_set_forward_vel(m, 32.0)
             play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
 
-            local cx, cy, cz = get_camera_position()
-            play_sound(SOUND_ACTION_SPIN, cx, cy, cz)
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
 
             return set_mario_action(m, ACT_ROLL_AIR, 0)
         end
@@ -327,8 +329,7 @@ function update_roll(m)
             mario_set_forward_vel(m, math.max(32, m.forwardVel))
             play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
 
-            local cx, cy, cz = get_camera_position()
-            play_sound(SOUND_ACTION_SPIN, cx, cy, cz)
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
 
             return set_mario_action(m, ACT_ROLL_AIR, 0)
         end
@@ -338,8 +339,7 @@ function update_roll(m)
         if (m.controller.buttonPressed & R_TRIG) ~= 0 then
             mario_set_forward_vel(m, 60)
 
-            local cx, cy, cz = get_camera_position()
-            play_sound(SOUND_ACTION_SPIN, cx, cy, cz)
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
 
             return set_mario_action(m, ACT_ROLL, 0)
         end
@@ -440,8 +440,7 @@ function act_spin_jump(m)
             m.actionState = 1
         end
     elseif m.actionTimer == 1 or m.actionTimer == 4 then
-        local cx, cy, cz = get_camera_position()
-        play_sound(SOUND_ACTION_TWIRL, cx, cy, cz)
+        play_sound(SOUND_ACTION_TWIRL, m.marioObj.header.gfx.cameraToObject)
     end
 
     local spinDirFactor = 1  -- negative for clockwise, positive for counter-clockwise
@@ -454,8 +453,7 @@ function act_spin_jump(m)
     end
 
     if (m.input & INPUT_Z_PRESSED) ~= 0 then
-        local cx, cy, cz = get_camera_position()
-        play_sound(SOUND_ACTION_TWIRL, cx, cy, cz)
+        play_sound(SOUND_ACTION_TWIRL, m.marioObj.header.gfx.cameraToObject)
 
         m.vel.y = -50.0
         mario_set_forward_vel(m, 0.0)
@@ -528,8 +526,7 @@ function act_spin_pound(m)
     local stepResult = perform_air_step(m, 0)
     if stepResult == AIR_STEP_LANDED then
         if should_get_stuck_in_ground(m) ~= 0 then
-            local cx, cy, cz = get_camera_position()
-            play_sound(SOUND_MARIO_OOOF2, cx, cy, cz)
+            play_sound(SOUND_MARIO_OOOF2, m.marioObj.header.gfx.cameraToObject)
             m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
             set_mario_action(m, ACT_BUTT_STUCK_IN_GROUND, 0)
         else
@@ -584,8 +581,7 @@ function act_spin_pound_land(m)
         if (m.controller.buttonPressed & R_TRIG) ~= 0 then
             mario_set_forward_vel(m, 60)
 
-            local cx, cy, cz = get_camera_position()
-            play_sound(SOUND_ACTION_SPIN, cx, cy, cz)
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
             return set_mario_action(m, ACT_ROLL, 0)
         end
 
@@ -608,6 +604,266 @@ function act_spin_pound_land(m)
     return 0
 end
 
+----------------
+-- wall slide --
+----------------
+
+function act_wall_slide(m)
+    if (m.input & INPUT_A_PRESSED) ~= 0 then
+        m.vel.y = 52.0
+        -- m.faceAngle.y = m.faceAngle.y + 0x8000
+        return set_mario_action(m, ACT_WALL_KICK_AIR, 0)
+    end
+
+    -- attempt to stick to the wall a bit. if it's 0, sometimes you'll get kicked off of slightly sloped walls
+    mario_set_forward_vel(m, -1.0)
+
+    m.particleFlags = m.particleFlags | PARTICLE_DUST
+
+    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m.terrainSoundAddend, m.marioObj.header.gfx.cameraToObject)
+    set_mario_animation(m, MARIO_ANIM_START_WALLKICK)
+
+    if perform_air_step(m, 0) == AIR_STEP_LANDED then
+        mario_set_forward_vel(m, 0.0)
+        if check_fall_damage_or_get_stuck(m, ACT_HARD_BACKWARD_GROUND_KB) == 0 then
+            return set_mario_action(m, ACT_FREEFALL_LAND, 0)
+        end
+    end
+
+    m.actionTimer = m.actionTimer + 1
+    if m.wall == nil and m.actionTimer > 2 then
+        mario_set_forward_vel(m, 0.0)
+        return set_mario_action(m, ACT_FREEFALL, 0)
+    end
+
+    -- gravity
+    m.vel.y = m.vel.y + 2
+
+    return 0
+end
+
+------------------------
+-- water ground pound --
+------------------------
+
+function act_water_ground_pound(m)
+    local GROUND_POUND_STROKE_SPEED = 27
+    local GROUND_POUND_TIMER = 30
+
+    local stepResult = 0
+
+    if m.actionTimer == 0 then
+        -- coming into action from normal ground pound
+        if m.actionArg == 1 then
+            -- copied from water plunge code
+            play_sound(SOUND_ACTION_UNKNOWN430, m.marioObj.header.gfx.cameraToObject)
+            if m.peakHeight - m.pos.y > 1150.0 then
+                play_sound(SOUND_MARIO_HAHA_2, m.marioObj.header.gfx.cameraToObject)
+            end
+
+            m.particleFlags = m.particleFlags | PARTICLE_WATER_SPLASH
+        end
+
+        m.actionState = m.actionArg
+    elseif m.actionTimer == 1 then
+        play_sound(SOUND_ACTION_SWIM, m.marioObj.header.gfx.cameraToObject)
+    end
+
+    if m.actionState == 0 then
+        if m.actionTimer == 0 then
+            m.vel.y = 0.0
+            mario_set_forward_vel(m, 0.0)
+        end
+
+        m.faceAngle.x = 0
+        m.faceAngle.z = 0
+
+        set_mario_animation(m, MARIO_ANIM_START_GROUND_POUND)
+        if m.actionTimer == 0 then
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
+        end
+
+        m.actionTimer = m.actionTimer + 1
+        if (m.actionTimer >= m.marioObj.header.gfx.unk38.curAnim.unk08 + 4) then
+            -- play_sound(SOUND_MARIO_GROUND_POUND_WAH, m.marioObj.header.gfx.cameraToObject)
+            play_sound(SOUND_ACTION_SWIM_FAST, m.marioObj.header.gfx.cameraToObject)
+            m.vel.y = -45.0
+            m.actionState = 1
+        end
+
+        if (m.input & INPUT_A_PRESSED) ~= 0 then
+            mario_set_forward_vel(m, GROUND_POUND_STROKE_SPEED)
+            m.vel.y = 0
+            return set_mario_action(m, ACT_WATER_GROUND_POUND_STROKE, 0)
+        end
+
+        -- make current apply
+        stepResult = perform_water_step(m)
+    else
+
+        set_mario_animation(m, MARIO_ANIM_GROUND_POUND)
+
+        m.particleFlags = m.particleFlags | PARTICLE_PLUNGE_BUBBLE
+
+        local nextPos = {}
+        nextPos.x = m.pos.x + m.vel.x
+        nextPos.y = m.pos.y + m.vel.y
+        nextPos.z = m.pos.z + m.vel.z
+
+        -- call this one to make current NOT apply
+        stepResult = perform_water_full_step(m, nextPos)
+
+        vec3f_copy(m.marioObj.header.gfx.pos, m.pos)
+        vec3s_set(m.marioObj.header.gfx.angle, -m.faceAngle.x, m.faceAngle.y, m.faceAngle.z)
+
+        if stepResult == WATER_STEP_HIT_FLOOR then
+            play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_HEAVY_LANDING)
+            m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE | PARTICLE_HORIZONTAL_STAR
+            set_mario_action(m, ACT_WATER_GROUND_POUND_LAND, 0)
+            set_camera_shake_from_hit(SHAKE_GROUND_POUND)
+        else
+            if (m.input & INPUT_A_PRESSED) ~= 0 then
+                mario_set_forward_vel(m, GROUND_POUND_STROKE_SPEED)
+                m.vel.y = 0
+                return set_mario_action(m, ACT_WATER_GROUND_POUND_STROKE, 0)
+            end
+
+            m.vel.y = approach_f32(m.vel.y, 0, 2.0, 2.0)
+
+            mario_set_forward_vel(m, 0.0)
+
+            if m.actionTimer >= GROUND_POUND_TIMER or m.vel.y >= 0.0 then
+                set_mario_action(m, ACT_WATER_ACTION_END, 0)
+            end
+        end
+
+        m.actionTimer = m.actionTimer + 1
+    end
+
+    return 0
+end
+
+function act_water_ground_pound_land(m)
+    local GROUND_POUND_JUMP_VEL = 40.0
+
+    m.actionState = 1
+
+    if (m.input & INPUT_OFF_FLOOR) ~= 0 then
+        return set_mario_action(m, ACT_WATER_IDLE, 0)
+    end
+
+    if (m.input & INPUT_A_PRESSED) ~= 0 then
+        m.vel.y = GROUND_POUND_JUMP_VEL
+        play_sound(SOUND_ACTION_SWIM_FAST, m.marioObj.header.gfx.cameraToObject)
+        return set_mario_action(m, ACT_WATER_GROUND_POUND_JUMP, 0)
+    end
+
+    m.vel.y = 0.0
+    m.pos.y = m.floorHeight
+    mario_set_forward_vel(m, 0.0)
+
+    vec3f_copy(m.marioObj.header.gfx.pos, m.pos)
+    vec3s_set(m.marioObj.header.gfx.angle, 0, m.faceAngle.y, 0)
+
+    set_mario_animation(m, MARIO_ANIM_GROUND_POUND_LANDING)
+    if is_anim_at_end(m) ~= 0 then
+        return set_mario_action(m, ACT_SWIMMING_END, 0)
+    end
+
+    perform_water_step(m)
+
+    return 0
+end
+
+function act_water_ground_pound_stroke(m)
+    local GROUND_POUND_STROKE_TIMER = 20
+    local GROUND_POUND_STROKE_DECAY = 0.3
+    local stepResult = 0
+
+    set_mario_animation(m, MARIO_ANIM_SWIM_PART1)
+
+    if m.actionTimer == 0 then
+        play_sound(SOUND_ACTION_SWIM_FAST, m.marioObj.header.gfx.cameraToObject)
+    end
+
+    stepResult = perform_water_step(m)
+    if stepResult == WATER_STEP_HIT_WALL then
+        return set_mario_action(m, ACT_BACKWARD_WATER_KB, 0)
+    end
+
+    if m.actionTimer >= GROUND_POUND_STROKE_TIMER then
+        if (m.input & INPUT_A_DOWN) ~= 0 then
+            return set_mario_action(m, ACT_FLUTTER_KICK, 0)
+        else
+            return set_mario_action(m, ACT_SWIMMING_END, 0)
+        end
+    end
+    m.actionTimer = m.actionTimer + 1
+
+    mario_set_forward_vel(m, approach_f32(m.forwardVel, 0.0, GROUND_POUND_STROKE_DECAY, GROUND_POUND_STROKE_DECAY))
+
+    float_surface_gfx(m)
+    set_swimming_at_surface_particles(m, PARTICLE_WAVE_TRAIL)
+
+    return 0
+end
+
+function act_water_ground_pound_jump(m)
+    local e = gMarioStateExtras[m.playerIndex]
+    local GROUND_POUND_JUMP_TIMER = 20
+    local GROUND_POUND_JUMP_DECAY = 1.4
+
+    -- set_mario_animation(m, MARIO_ANIM_SWIM_PART1)
+    set_mario_animation(m, MARIO_ANIM_SINGLE_JUMP)
+    m.particleFlags = m.particleFlags | PARTICLE_PLUNGE_BUBBLE
+
+    if m.actionTimer == 0 then
+        e.rotAngle = 0
+    end
+
+    local step = {}
+    vec3f_copy(step, m.vel)
+    apply_water_current(m, step)
+
+    local nextPos = {}
+    nextPos.x = m.pos.x + step.x
+    nextPos.y = m.pos.y + step.y
+    nextPos.z = m.pos.z + step.z
+
+    local stepResult = perform_water_full_step(m, nextPos)
+
+    vec3f_copy(m.marioObj.header.gfx.pos, m.pos)
+    vec3s_set(m.marioObj.header.gfx.angle, -m.faceAngle.x, m.faceAngle.y, m.faceAngle.z)
+
+    if m.pos.y > m.waterLevel - 80 then
+        return set_mario_action(m, ACT_WATER_JUMP, 0)
+    end
+
+    if m.actionTimer >= GROUND_POUND_JUMP_TIMER then
+        mario_set_forward_vel(m, m.vel.y) -- normal swim routines will use forwardVel to calculate y speed
+        m.faceAngle.x = 0x3EFF
+        if (m.input & INPUT_A_DOWN) ~= 0 then
+            return set_mario_action(m, ACT_FLUTTER_KICK, 0)
+        else
+            return set_mario_action(m, ACT_SWIMMING_END, 0)
+        end
+    end
+    m.actionTimer = m.actionTimer + 1
+
+    mario_set_forward_vel(m, 0.0)
+
+    m.vel.y = approach_f32(m.vel.y, 0.0, GROUND_POUND_JUMP_DECAY, GROUND_POUND_JUMP_DECAY)
+    -- m.faceAngle.x = 0x3EFF
+
+    float_surface_gfx(m)
+    set_swimming_at_surface_particles(m, PARTICLE_WAVE_TRAIL)
+
+    e.rotAngle = e.rotAngle + (0x10000*1.0 - e.rotAngle) / 5.0
+    m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
+
+    return 0
+end
+
 ---------------------------------------------------------
 
 function mario_action_on_change(m)
@@ -622,8 +878,17 @@ function mario_action_on_change(m)
 
     if m.action == ACT_GROUND_POUND_JUMP then
         m.vel.y = 65.0
-    elseif m.action == ACT_WALL_SLIDE then
-        m.vel.y = 0.0
+    elseif m.action == ACT_SOFT_BONK then
+        m.faceAngle.y = m.faceAngle.y + 0x8000
+        m.pos.x = e.lastPos.x
+        m.pos.y = e.lastPos.y
+        m.pos.z = e.lastPos.z
+        set_mario_action(m, ACT_WALL_SLIDE, 0)
+        m.vel.x = 0
+        m.vel.y = 0
+        m.vel.z = 0
+    elseif m.action == ACT_WATER_PLUNGE and e.actionLastFrame == ACT_GROUND_POUND then
+        return set_mario_action(m, ACT_WATER_GROUND_POUND, 1)
     end
 end
 
@@ -665,11 +930,29 @@ function mario_update(m)
         set_mario_action(m, ACT_GROUND_POUND_JUMP, 0)
     end
 
+    -- water ground pound
+    if (m.input & INPUT_Z_PRESSED) ~= 0 then
+        if m.action == ACT_WATER_IDLE or m.action == ACT_WATER_ACTION_END or m.action == ACT_BREASTSTROKE or m.action == ACT_SWIMMING_END or m.action == ACT_FLUTTER_KICK then
+            set_mario_action(m, ACT_WATER_GROUND_POUND, 0)
+        end
+    end
+
+    -- maintain spinning from water ground pound jump anim
+    if m.action == ACT_WATER_JUMP and m.prevAction == ACT_WATER_GROUND_POUND_JUMP then
+        e.rotAngle = e.rotAngle + (0x10000*1.0 - e.rotAngle) / 5.0
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
+    end
+
     -- action change event
     if e.actionLastFrame ~= m.action then
         mario_action_on_change(m)
     end
     e.actionLastFrame = m.action
+
+    -- save last pos
+    e.lastPos.x = m.pos.x
+    e.lastPos.y = m.pos.y
+    e.lastPos.z = m.pos.z
 
 end
 
@@ -684,3 +967,8 @@ hook_mario_action(ACT_SPIN_JUMP, act_spin_jump)
 hook_mario_action(ACT_SPIN_POUND, act_spin_pound)
 hook_mario_action(ACT_SPIN_POUND_LAND, act_spin_pound_land)
 hook_mario_action(ACT_GROUND_POUND_JUMP, act_ground_pound_jump)
+hook_mario_action(ACT_WALL_SLIDE, act_wall_slide)
+hook_mario_action(ACT_WATER_GROUND_POUND, act_water_ground_pound)
+hook_mario_action(ACT_WATER_GROUND_POUND_LAND, act_water_ground_pound_land)
+hook_mario_action(ACT_WATER_GROUND_POUND_STROKE, act_water_ground_pound_stroke)
+hook_mario_action(ACT_WATER_GROUND_POUND_JUMP, act_water_ground_pound_jump)

@@ -15,6 +15,91 @@ _CObject = {
     end
 }
 
+function vec3f_copy(dest, src)
+    dest.x = src.x
+    dest.y = src.y
+    dest.z = src.z
+    return dest
+end
+
+function vec3f_set(dest, x, y, z)
+    dest.x = x
+    dest.y = y
+    dest.z = z
+    return dest
+end
+
+function vec3f_add(dest, a)
+    dest.x = dest.x + a.x
+    dest.y = dest.y + a.y
+    dest.z = dest.z + a.z
+    return dest
+end
+
+function vec3f_sum(dest, a, b)
+    dest.x = a.x + b.x
+    dest.y = a.y + b.y
+    dest.z = a.z + b.z
+    return dest
+end
+
+function vec3f_mul(dest, a)
+    dest.x = dest.x * a
+    dest.y = dest.y * a
+    dest.z = dest.z * a
+    return dest
+end
+
+function vec3s_copy(dest, src)
+    dest.x = src.x
+    dest.y = src.y
+    dest.z = src.z
+    return dest
+end
+
+function vec3s_set(dest, x, y, z)
+    dest.x = x
+    dest.y = y
+    dest.z = z
+    return dest
+end
+
+function vec3s_add(dest, a)
+    dest.x = dest.x + a.x
+    dest.y = dest.y + a.y
+    dest.z = dest.z + a.z
+    return dest
+end
+
+function vec3s_sum(dest, a, b)
+    dest.x = a.x + b.x
+    dest.y = a.y + b.y
+    dest.z = a.z + b.z
+    return dest
+end
+
+function vec3s_mul(dest, a)
+    dest.x = dest.x * a
+    dest.y = dest.y * a
+    dest.z = dest.z * a
+    return dest
+end
+
+function approach_f32(current, target, inc, dec)
+    if current < target then
+        current = current + inc
+        if current > target then
+            current = target
+        end
+    else
+        current = current - dec
+        if current < target then
+            current = target
+        end
+    end
+    return current;
+end
+
 -----------
 -- co-op --
 -----------

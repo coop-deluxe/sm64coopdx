@@ -2,6 +2,15 @@
 
 u8 gSmLuaConvertSuccess = false;
 
+#define VEC3F_BUFFER_COUNT 64
+static Vec3f sVec3fBuffer[VEC3F_BUFFER_COUNT] = { 0 };
+static u8 sVec3fBufferIndex = 0;
+
+f32* smlua_get_vec3f_from_buffer(void) {
+    if (sVec3fBufferIndex > VEC3F_BUFFER_COUNT) { sVec3fBufferIndex = 0; }
+    return sVec3fBuffer[sVec3fBufferIndex++];
+}
+
 void smlua_bind_function(lua_State* L, const char* name, void* func) {
     lua_pushcfunction(L, func);
     lua_setglobal(L, name);
@@ -85,6 +94,10 @@ void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
 //////////////////////////////////////////////
 
 void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p) {
+    if (p == NULL) {
+        lua_pushnil(L);
+        return;
+    }
     lua_newtable(L);
     smlua_push_integer_field(lot, "_lot");
     smlua_push_integer_field((u64)p, "_pointer");
@@ -100,85 +113,35 @@ void smlua_push_integer_field(lua_Integer val, char* name) {
     lua_setfield(gLuaState, t, name);
 }
 
-void smlua_push_number_field(float val, char* name) {
+void smlua_push_number_field(lua_Number val, char* name) {
     int t = lua_gettop(gLuaState);
     lua_pushnumber(gLuaState, val);
     lua_setfield(gLuaState, t, name);
 }
 
-//////////////////////////////////////////////
-
-void smlua_get_u8_field(u8* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isinteger(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
+lua_Integer smlua_get_integer_field(int index, char* name) {
+    if (lua_type(gLuaState, index) != LUA_TTABLE) {
+        LOG_LUA("LUA: smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
+        gSmLuaConvertSuccess = false;
+        return 0;
     }
-    *val = lua_tointeger(gLuaState, -1);
+    lua_getfield(gLuaState, index, name);
+    lua_Integer val = smlua_to_integer(gLuaState, -1);
     lua_pop(gLuaState, 1);
+    return val;
 }
 
-void smlua_get_u16_field(u16* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isinteger(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
+lua_Number smlua_get_number_field(int index, char* name) {
+    if (lua_type(gLuaState, index) != LUA_TTABLE) {
+        LOG_LUA("LUA: smlua_get_number_field received improper type '%d'", lua_type(gLuaState, index));
+        gSmLuaConvertSuccess = false;
+        return 0;
     }
-    *val = lua_tointeger(gLuaState, -1);
+    lua_getfield(gLuaState, index, name);
+    lua_Number val = smlua_to_number(gLuaState, -1);
     lua_pop(gLuaState, 1);
+    return val;
 }
-
-void smlua_get_u32_field(u32* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isinteger(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
-    }
-    *val = lua_tointeger(gLuaState, -1);
-    lua_pop(gLuaState, 1);
-}
-
-void smlua_get_s8_field(s8* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isinteger(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
-    }
-    *val = lua_tointeger(gLuaState, -1);
-    lua_pop(gLuaState, 1);
-}
-
-void smlua_get_s16_field(s16* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isinteger(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
-    }
-    *val = lua_tointeger(gLuaState, -1);
-    lua_pop(gLuaState, 1);
-}
-
-void smlua_get_s32_field(s32* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isinteger(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
-    }
-    *val = lua_tointeger(gLuaState, -1);
-    lua_pop(gLuaState, 1);
-}
-
-void smlua_get_number_field(float* val, char* name) {
-    lua_getfield(gLuaState, -1, name);
-    if (!lua_isnumber(gLuaState, -1)) {
-        LOG_LUA("LUA: field '%s' isn't an integer.", name);
-        return;
-    }
-    *val = lua_tonumber(gLuaState, -1);
-    lua_pop(gLuaState, 1);
-}
-
-//////////////////////////////////////////////
 
 void smlua_dump_stack(void) {
     lua_State* L = gLuaState;
@@ -230,5 +193,29 @@ void smlua_dump_globals(void) {
         lua_pop(L, 1);
     }
     lua_pop(L, 1);                 // remove global table(-1)
+    printf("--------------\n");
+}
+
+void smlua_dump_table(int index) {
+    lua_State* L = gLuaState;
+    printf("--------------\n");
+
+    // table is in the stack at index 't'
+    lua_pushnil(L);  // first key
+    while (lua_next(L, index) != 0) {
+        // uses 'key' (at index -2) and 'value' (at index -1)
+        if (lua_type(L, index) == LUA_TSTRING) {
+            printf("%s - %s\n",
+                lua_tostring(L, -2),
+                lua_typename(L, lua_type(L, -1)));
+        }
+        else {
+            printf("%s - %s\n",
+                lua_typename(L, lua_type(L, -2)),
+                lua_typename(L, lua_type(L, -1)));
+        }
+        // removes 'value'; keeps 'key' for next iteration
+        lua_pop(L, 1);
+    }
     printf("--------------\n");
 }

@@ -15306,6 +15306,9 @@
     <ClCompile Include="..\src\pc\lua\smlua_cobject.c">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_functions_autogen.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -16418,6 +16421,9 @@
       <Filter>Source Files\src\pc\lua</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\lua\smlua_cobject.h">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\lua\smlua_functions_autogen.h">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClInclude>
   </ItemGroup>

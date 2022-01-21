@@ -2014,12 +2014,41 @@ int smlua_func_mario_execute_stationary_action(lua_State* L) {
  // mario_actions_submerged.c //
 ///////////////////////////////
 
+int smlua_func_set_swimming_at_surface_particles(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 particleFlag = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag);
+    set_swimming_at_surface_particles(m, particleFlag);
+    return 1;
+}
+
+int smlua_func_perform_water_step(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u32 perform_water_step(struct MarioState *m);
+    lua_pushinteger(L, perform_water_step(m));
+    return 1;
+}
+
 int smlua_func_mario_execute_submerged_action(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_submerged_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_submerged_action(m));
+    return 1;
+}
+
+int smlua_func_float_surface_gfx(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void float_surface_gfx(struct MarioState *m);
+    float_surface_gfx(m);
     return 1;
 }
 
@@ -2342,7 +2371,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_execute_stationary_action", smlua_func_mario_execute_stationary_action);
 
     // mario_actions_submerged.c
+    smlua_bind_function(L, "set_swimming_at_surface_particles", smlua_func_set_swimming_at_surface_particles);
+    smlua_bind_function(L, "perform_water_step", smlua_func_perform_water_step);
     smlua_bind_function(L, "mario_execute_submerged_action", smlua_func_mario_execute_submerged_action);
+    smlua_bind_function(L, "float_surface_gfx", smlua_func_float_surface_gfx);
 
     // mario_step.h
     smlua_bind_function(L, "get_additive_y_vel_for_jumps", smlua_func_get_additive_y_vel_for_jumps);
