@@ -48,7 +48,6 @@ extern struct NetworkPlayer* gNetworkPlayerServer;
 
 void network_player_init(void);
 void network_player_update_model(u8 localIndex);
-u8 network_player_unique_palette(u8 palette);
 bool network_player_any_connected(void);
 u8 network_player_connected_count(void);
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);

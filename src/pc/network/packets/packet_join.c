@@ -61,9 +61,6 @@ void network_receive_join_request(struct Packet* p) {
 void network_send_join(struct Packet* joinRequestPacket) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
-    // make palette unique
-    sJoinRequestPlayerPalette = network_player_unique_palette(sJoinRequestPlayerPalette);
-
     // do connection event
     joinRequestPacket->localIndex = network_player_connected(NPT_CLIENT, joinRequestPacket->localIndex, sJoinRequestPlayerModel, sJoinRequestPlayerPalette, sJoinRequestPlayerName);
     if (joinRequestPacket->localIndex == UNKNOWN_LOCAL_INDEX) {

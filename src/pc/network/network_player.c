@@ -25,22 +25,6 @@ void network_player_update_model(u8 localIndex) {
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
 }
 
-u8 network_player_unique_palette(u8 palette) {
-    u16 iterations = 0;
-    retry_palette:
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!gNetworkPlayers[i].connected) { continue; }
-        if (gNetworkPlayers[i].paletteIndex == palette) {
-            palette = (palette + 1) % gNumPlayerColors;
-            if (iterations++ >= gNumPlayerColors) {
-                return palette;
-            }
-            goto retry_palette;
-        }
-    }
-    return palette;
-}
-
 bool network_player_any_connected(void) {
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (gNetworkPlayers[i].connected) { return true; }
