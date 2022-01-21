@@ -27,6 +27,7 @@
 #define WARP_OP_CREDITS_NEXT  0x18
 #define WARP_OP_DEMO_END      0x19
 #define WARP_OP_FORCE_SYNC    0x20
+#define WARP_OP_EXIT          0x21
 
 #define WARP_OP_TRIGGERS_LEVEL_SELECT 0x10
 
