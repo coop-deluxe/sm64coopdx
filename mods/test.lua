@@ -41,52 +41,75 @@ for i=0,(MAX_PLAYERS-1) do
     e.lastPos.x = m.pos.x
     e.lastPos.y = m.pos.y
     e.lastPos.z = m.pos.z
-end
 
----------------
--- utilities --
----------------
-
-function sins(theta)
-    return math.sin(theta * math.pi / (2 * 16384))
-end
-
-function coss(theta)
-    return math.cos(theta * math.pi / (2 * 16384))
+    e.fakeSavedAction = 0
+    e.fakeSavedPrevAction = 0
+    e.fakeSavedActionTimer = 0
+    e.fakeWroteAction = 0
+    e.fakeSaved = false
 end
 
 ----------
 -- roll --
 ----------
 
-function increase_roll_yaw(m)
-    local newFacingDYaw = m.faceAngle.y - m.slideYaw
+function update_roll_sliding_angle(m, accel, lossFactor)
+    local floor = m.floor
+    local slopeAngle = atan2s(floor.normal.z, floor.normal.x)
+    local steepness = math.sqrt(floor.normal.x * floor.normal.x + floor.normal.z * floor.normal.z)
+
+    m.slideVelX = m.slideVelX + accel * steepness * sins(slopeAngle)
+    m.slideVelZ = m.slideVelZ + accel * steepness * coss(slopeAngle)
+
+    m.slideVelX = m.slideVelX * lossFactor
+    m.slideVelZ = m.slideVelZ * lossFactor
+
+    m.slideYaw = atan2s(m.slideVelZ, m.slideVelX)
+
+    local facingDYaw = m.faceAngle.y - m.slideYaw
+    local newFacingDYaw = facingDYaw
 
     if newFacingDYaw > 0 and newFacingDYaw <= 0x4000 then
         newFacingDYaw = newFacingDYaw - 0x200
-        if newFacingDYaw < 0 then
-            newFacingDYaw = 0
-        end
-    elseif newFacingDYaw > -0x4000 and newFacingDYaw < 0 then
+        if newFacingDYaw < 0 then newFacingDYaw = 0 end
+
+    elseif newFacingDYaw >= -0x4000 and newFacingDYaw < 0 then
         newFacingDYaw = newFacingDYaw + 0x200
-        if newFacingDYaw > 0 then
-            newFacingDYaw = 0
-        end
+        if newFacingDYaw > 0 then newFacingDYaw = 0 end
+
     elseif newFacingDYaw > 0x4000 and newFacingDYaw < 0x8000 then
         newFacingDYaw = newFacingDYaw + 0x200
-        if newFacingDYaw > 0x8000 then
-            newFacingDYaw = 0x8000
-        end
+        if newFacingDYaw > 0x8000 then newFacingDYaw = 0x8000 end
+
     elseif newFacingDYaw > -0x8000 and newFacingDYaw < -0x4000 then
         newFacingDYaw = newFacingDYaw - 0x200
-        if newFacingDYaw < -0x8000 then
-            newFacingDYaw = -0x8000
-        end
+        if newFacingDYaw < -0x8000 then newFacingDYaw = -0x8000 end
+    end
+
+    m.faceAngle.y = m.slideYaw + newFacingDYaw
+
+    m.vel.x = m.slideVelX
+    m.vel.y = 0.0
+    m.vel.z = m.slideVelZ
+
+    mario_update_moving_sand(m)
+    mario_update_windy_ground(m)
+
+    --! Speed is capped a frame late (butt slide HSG)
+    m.forwardVel = math.sqrt(m.slideVelX * m.slideVelX + m.slideVelZ * m.slideVelZ)
+    if m.forwardVel > 100.0 then
+        m.slideVelX = m.slideVelX * 100.0 / m.forwardVel
+        m.slideVelZ = m.slideVelZ * 100.0 / m.forwardVel
     end
 
     if newFacingDYaw < -0x4000 or newFacingDYaw > 0x4000 then
+        m.forwardVel = m.forwardVel * -1.0
         m.faceAngle.y = m.faceAngle.y + 0x4000
     end
+
+    -- HACK: instead of approaching slideYaw, just set faceAngle to it
+    -- this is different than the original Extended Movement... just couldn't figure out the bug
+    m.faceAngle.y = m.slideYaw
 end
 
 function update_roll_sliding(m, stopSpeed)
@@ -109,7 +132,7 @@ function update_roll_sliding(m, stopSpeed)
     --! This is uses trig derivatives to rotate Mario's speed.
     -- In vanilla, it was slightly off/asymmetric since it uses the new X speed, but the old
     -- Z speed. I've gone and fixed it here.
-    local angleChange  = (m.intendedMag / 32.0) --* 0.6
+    local angleChange  = (m.intendedMag / 32.0) * 0.6
     local modSlideVelX = m.slideVelZ * angleChange * sideward * 0.05
     local modSlideVelZ = m.slideVelX * angleChange * sideward * 0.05
 
@@ -123,8 +146,7 @@ function update_roll_sliding(m, stopSpeed)
         m.slideVelZ = m.slideVelZ * oldSpeed / newSpeed
     end
 
-    update_sliding_angle(m, accel, lossFactor)
-    increase_roll_yaw(m)
+    update_roll_sliding_angle(m, accel, lossFactor)
 
     if m.playerIndex == 0 and mario_floor_is_slope(m) == 0 and m.forwardVel * m.forwardVel < stopSpeed * stopSpeed then
         mario_set_forward_vel(m, 0.0)
@@ -153,57 +175,58 @@ function act_roll(m)
         end
     elseif m.actionTimer >= ROLL_CANCEL_LOCKOUT_TIME or m.actionArg == 1 then
         if (m.input & INPUT_Z_DOWN) == 0 then
-            return set_mario_action(m, ACT_WALKING, 0);
+            return set_mario_action(m, ACT_WALKING, 0)
         end
     end
 
     if (m.input & INPUT_B_PRESSED) ~= 0 then
-        return set_jumping_action(m, ACT_FORWARD_ROLLOUT, 0);
+        queue_rumble_data_mario(m, 5, 80)
+        return set_jumping_action(m, ACT_FORWARD_ROLLOUT, 0)
     end
 
     if (m.input & INPUT_A_PRESSED) ~= 0 then
-        return set_jumping_action(m, ACT_LONG_JUMP, 0);
+        return set_jumping_action(m, ACT_LONG_JUMP, 0)
     end
 
     if (m.controller.buttonPressed & R_TRIG) ~= 0 and m.actionTimer > 0 then
-        m.vel.y = 19.0;
-        play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
+        m.vel.y = 19.0
+        play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
 
         if e.boostTimer >= BOOST_LOCKOUT_TIME then
-            e.boostTimer = 0;
+            e.boostTimer = 0
 
             if m.forwardVel < MAX_NORMAL_ROLL_SPEED then
-                mario_set_forward_vel(m, math.min(m.forwardVel + ROLL_BOOST_GAIN, MAX_NORMAL_ROLL_SPEED));
+                mario_set_forward_vel(m, math.min(m.forwardVel + ROLL_BOOST_GAIN, MAX_NORMAL_ROLL_SPEED))
             end
 
-            m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR;
+            m.particleFlags = m.particleFlags | PARTICLE_HORIZONTAL_STAR
 
             -- ! playing this after the call to play_mario_sound seems to matter in making this sound play
             play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
         end
 
-        return set_mario_action(m, ACT_ROLL_AIR, m.actionArg);
+        return set_mario_action(m, ACT_ROLL_AIR, m.actionArg)
     end
 
-    set_mario_animation(m, MARIO_ANIM_FORWARD_SPINNING);
+    set_mario_animation(m, MARIO_ANIM_FORWARD_SPINNING)
 
     if update_roll_sliding(m, 10.0) ~= 0 then
-        return set_mario_action(m, ACT_CROUCH_SLIDE, 0);
+        return set_mario_action(m, ACT_CROUCH_SLIDE, 0)
     end
 
-    common_slide_action(m, ACT_CROUCH_SLIDE, ACT_ROLL_AIR, MARIO_ANIM_FORWARD_SPINNING);
+    common_slide_action(m, ACT_CROUCH_SLIDE, ACT_ROLL_AIR, MARIO_ANIM_FORWARD_SPINNING)
 
-    e.rotAngle = e.rotAngle + (0x80 * m.forwardVel);
+    e.rotAngle = e.rotAngle + (0x80 * m.forwardVel)
     if e.rotAngle > 0x10000 then
-        e.rotAngle = e.rotAngle - 0x10000;
+        e.rotAngle = e.rotAngle - 0x10000
     end
-    set_anim_to_frame(m, 10 * e.rotAngle / 0x10000);
+    set_anim_to_frame(m, 10 * e.rotAngle / 0x10000)
 
-    e.boostTimer = e.boostTimer + 1;
+    e.boostTimer = e.boostTimer + 1
 
-    m.actionTimer = m.actionTimer + 1;
+    m.actionTimer = m.actionTimer + 1
 
-    return 0;
+    return 0
 end
 
 function act_roll_air(m)
@@ -231,6 +254,7 @@ function act_roll_air(m)
             return set_mario_action(m, ACT_ROLL, m.actionArg)
         end
     elseif air_step == AIR_STEP_HIT_WALL then
+        queue_rumble_data_mario(m, 5, 40)
         mario_bonk_reflection(m, false)
         m.faceAngle.y = m.faceAngle.y + 0x8000
 
@@ -295,10 +319,6 @@ function update_roll(m)
         if (m.input & INPUT_ABOVE_SLIDE) == 0 then
             if (m.input & INPUT_Z_DOWN) ~= 0 and m.actionTimer < 2 then
                 return set_mario_action(m, ACT_ROLL, 1)
-            elseif (m.input & INPUT_B_PRESSED) ~= 0 then
-                -- dive hop
-                -- m.vel.y = 21.0
-                -- return set_mario_action(m, ACT_DIVE, 1)
             end
         end
         m.actionTimer = m.actionTimer + 1
@@ -306,8 +326,8 @@ function update_roll(m)
 
     if m.action == ACT_LONG_JUMP_LAND then
         if (m.input & INPUT_Z_DOWN) ~= 0 and m.forwardVel > 15.0 and m.actionTimer < 1 then
-            play_mario_landing_sound_once(m, SOUND_ACTION_TERRAIN_LANDING);
-            return set_mario_action(m, ACT_ROLL, 1);
+            play_mario_landing_sound_once(m, SOUND_ACTION_TERRAIN_LANDING)
+            return set_mario_action(m, ACT_ROLL, 1)
         end
     end
 
@@ -473,6 +493,12 @@ function act_spin_jump(m)
     common_air_action_step(m, ACT_DOUBLE_JUMP_LAND, MARIO_ANIM_TWIRL,
                            AIR_STEP_CHECK_HANG)
 
+    -- set facing direction
+    -- not part of original Extended Moveset
+    local yawDiff = m.faceAngle.y - m.intendedYaw
+    e.rotAngle = e.rotAngle + yawDiff
+    m.faceAngle.y = m.intendedYaw
+
     e.rotAngle = e.rotAngle + 0x2867
     if (e.rotAngle >  0x10000) then e.rotAngle = e.rotAngle - 0x10000 end
     if (e.rotAngle < -0x10000) then e.rotAngle = e.rotAngle + 0x10000 end
@@ -526,6 +552,7 @@ function act_spin_pound(m)
     local stepResult = perform_air_step(m, 0)
     if stepResult == AIR_STEP_LANDED then
         if should_get_stuck_in_ground(m) ~= 0 then
+            queue_rumble_data_mario(m, 5, 80)
             play_sound(SOUND_MARIO_OOOF2, m.marioObj.header.gfx.cameraToObject)
             m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
             set_mario_action(m, ACT_BUTT_STUCK_IN_GROUND, 0)
@@ -546,6 +573,12 @@ function act_spin_pound(m)
         m.particleFlags = m.particleFlags | PARTICLE_VERTICAL_STAR
         set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
     end
+
+    -- set facing direction
+    -- not part of original Extended Moveset
+    local yawDiff = m.faceAngle.y - m.intendedYaw
+    e.rotAngle = e.rotAngle + yawDiff
+    m.faceAngle.y = m.intendedYaw
 
     e.rotAngle = e.rotAngle + 0x3053
     if e.rotAngle >  0x10000 then e.rotAngle = e.rotAngle - 0x10000 end
@@ -662,6 +695,10 @@ function act_water_ground_pound(m)
             end
 
             m.particleFlags = m.particleFlags | PARTICLE_WATER_SPLASH
+
+            if (m.prevAction & ACT_FLAG_AIR) ~= 0 then
+                queue_rumble_data_mario(m, 5, 80)
+            end
         end
 
         m.actionState = m.actionArg
@@ -684,7 +721,7 @@ function act_water_ground_pound(m)
         end
 
         m.actionTimer = m.actionTimer + 1
-        if (m.actionTimer >= m.marioObj.header.gfx.unk38.curAnim.unk08 + 4) then
+        if (m.actionTimer >= m.marioObj.header.gfx.animInfo.curAnim.loopEnd + 4) then
             -- play_sound(SOUND_MARIO_GROUND_POUND_WAH, m.marioObj.header.gfx.cameraToObject)
             play_sound(SOUND_ACTION_SWIM_FAST, m.marioObj.header.gfx.cameraToObject)
             m.vel.y = -45.0
@@ -864,6 +901,56 @@ function act_water_ground_pound_jump(m)
     return 0
 end
 
+-------------------
+-- ledge parkour --
+-------------------
+
+function act_ledge_parkour(m)
+    set_mario_animation(m, MARIO_ANIM_SLIDEFLIP)
+
+    local animFrame = m.marioObj.header.gfx.animInfo.animFrame
+
+    if m.actionTimer == 0 then
+        play_sound(SOUND_MARIO_HAHA_2, m.marioObj.header.gfx.cameraToObject)
+    elseif m.actionTimer == 1 then
+        play_sound(SOUND_ACTION_SIDE_FLIP_UNK, m.marioObj.header.gfx.cameraToObject)
+    end
+
+    update_air_without_turn(m)
+
+    local step = perform_air_step(m, AIR_STEP_CHECK_LEDGE_GRAB)
+    if step == AIR_STEP_NONE then
+        -- play the side flip animation at double speed for a portion of it
+        if animFrame < 15 then
+            animFrame = animFrame + 2
+        elseif animFrame > 23 then
+            animFrame = 23
+        else
+            animFrame = animFrame + 1
+        end
+
+        set_anim_to_frame(m, animFrame)
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + 0x8000
+
+    elseif step == AIR_STEP_LANDED then
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + 0x8000
+        set_mario_action(m, ACT_FREEFALL_LAND_STOP, 0)
+        play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING)
+
+    elseif step == AIR_STEP_HIT_WALL then
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + 0x8000
+        mario_set_forward_vel(m, 0.0)
+
+    elseif step == AIR_STEP_HIT_LAVA_WALL then
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + 0x8000
+        lava_boost_on_wall(m)
+    end
+
+    m.actionTimer = m.actionTimer + 1
+
+    return 0
+end
+
 ---------------------------------------------------------
 
 function mario_action_on_change(m)
@@ -889,6 +976,36 @@ function mario_action_on_change(m)
         m.vel.z = 0
     elseif m.action == ACT_WATER_PLUNGE and e.actionLastFrame == ACT_GROUND_POUND then
         return set_mario_action(m, ACT_WATER_GROUND_POUND, 1)
+    elseif m.action == ACT_GROUND_POUND and e.actionLastFrame == ACT_SIDE_FLIP then
+        -- correct animation
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - 0x8000
+    elseif m.action == ACT_LEDGE_GRAB then
+        e.rotAngle = m.forwardVel
+    end
+end
+
+function before_mario_update(m)
+    local e = gMarioStateExtras[m.playerIndex]
+    -- revert fake saved action
+    if e.fakeSaved == true then
+        if m.action == e.fakeWroteAction and m.prevAction == e.fakeSavedPrevAction and m.actionTimer == e.fakeSavedActionTimer then
+            m.action = e.fakeSavedAction
+        end
+        e.fakeSaved = false
+    end
+end
+
+function after_mario_update(m)
+    local e = gMarioStateExtras[m.playerIndex]
+    -- pretend *_POUND_LAND is ACT_GROUND_POUND_LAND so switches work correctly
+    if m.action == ACT_SPIN_POUND_LAND or m.action == ACT_WATER_GROUND_POUND_LAND then
+        e.fakeSavedAction = m.action
+        e.fakeSavedPrevAction = m.prevAction
+        e.fakeSavedActionTimer = m.actionTimer
+
+        m.action = ACT_GROUND_POUND_LAND
+        e.fakeWroteAction = m.action
+        e.fakeSaved = true
     end
 end
 
@@ -943,6 +1060,17 @@ function mario_update(m)
         m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
     end
 
+    -- edge parkour
+    if m.action == ACT_LEDGE_GRAB and m.actionTimer < 4 and (m.input & INPUT_B_PRESSED) ~= 0 then
+        local hasSpaceForMario = (m.ceilHeight - m.floorHeight >= 160.0)
+        if hasSpaceForMario and (e.rotAngle >= 31.0 or m.forwardVel >= 31.0) then
+            mario_set_forward_vel(m, e.rotAngle + 5.0)
+            m.vel.y = 25.0
+            queue_rumble_data_mario(m, 5, 80)
+            set_mario_action(m, ACT_LEDGE_PARKOUR, 0)
+        end
+    end
+
     -- action change event
     if e.actionLastFrame ~= m.action then
         mario_action_on_change(m)
@@ -954,13 +1082,16 @@ function mario_update(m)
     e.lastPos.y = m.pos.y
     e.lastPos.z = m.pos.z
 
+    after_mario_update(m)
 end
 
 function update()
 end
 
 hook_event(HOOK_UPDATE, update)
+hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+
 hook_mario_action(ACT_ROLL, act_roll)
 hook_mario_action(ACT_ROLL_AIR, act_roll_air)
 hook_mario_action(ACT_SPIN_JUMP, act_spin_jump)
@@ -972,3 +1103,4 @@ hook_mario_action(ACT_WATER_GROUND_POUND, act_water_ground_pound)
 hook_mario_action(ACT_WATER_GROUND_POUND_LAND, act_water_ground_pound_land)
 hook_mario_action(ACT_WATER_GROUND_POUND_STROKE, act_water_ground_pound_stroke)
 hook_mario_action(ACT_WATER_GROUND_POUND_JUMP, act_water_ground_pound_jump)
+hook_mario_action(ACT_LEDGE_PARKOUR, act_ledge_parkour)

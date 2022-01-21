@@ -21,6 +21,7 @@ int smlua_func_set_camera_shake_from_hit(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_camera_shake_from_hit(shake);
+
     return 1;
 }
 
@@ -29,6 +30,7 @@ int smlua_func_set_environmental_camera_shake(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_environmental_camera_shake(shake);
+
     return 1;
 }
 
@@ -43,6 +45,32 @@ int smlua_func_set_camera_shake_from_point(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_camera_shake_from_point(shake, posX, posY, posZ);
+
+    return 1;
+}
+
+  ////////////////
+ // external.h //
+////////////////
+
+int smlua_func_play_sound(lua_State* L) {
+    s32 soundBits = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    play_sound(soundBits, pos);
+
+    smlua_push_number_field(2, "x", pos[0]);
+    smlua_push_number_field(2, "y", pos[1]);
+    smlua_push_number_field(2, "z", pos[2]);
+
     return 1;
 }
 
@@ -55,6 +83,7 @@ int smlua_func_is_anim_at_end(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, is_anim_at_end(m));
+
     return 1;
 }
 
@@ -63,6 +92,7 @@ int smlua_func_is_anim_past_end(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, is_anim_past_end(m));
+
     return 1;
 }
 
@@ -73,6 +103,7 @@ int smlua_func_set_mario_animation(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_mario_animation(m, targetAnimID));
+
     return 1;
 }
 
@@ -85,6 +116,7 @@ int smlua_func_set_mario_anim_with_accel(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_mario_anim_with_accel(m, targetAnimID, accel));
+
     return 1;
 }
 
@@ -95,6 +127,7 @@ int smlua_func_set_anim_to_frame(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_anim_to_frame(m, animFrame);
+
     return 1;
 }
 
@@ -105,28 +138,39 @@ int smlua_func_is_anim_past_frame(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, is_anim_past_frame(m, animFrame));
+
     return 1;
 }
 
-/*
 int smlua_func_find_mario_anim_flags_and_translation(lua_State* L) {
     struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 yaw = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
-    Vec3s translation <--- UNIMPLEMENTED
+
+    s16* translation = smlua_get_vec3s_from_buffer();
+    translation[0] = smlua_get_integer_field(3, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    translation[1] = smlua_get_integer_field(3, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    translation[2] = smlua_get_integer_field(3, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, find_mario_anim_flags_and_translation(o, yaw, translation));
+
+    smlua_push_integer_field(3, "x", translation[0]);
+    smlua_push_integer_field(3, "y", translation[1]);
+    smlua_push_integer_field(3, "z", translation[2]);
+
     return 1;
 }
-*/
 
 int smlua_func_update_mario_pos_for_anim(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     update_mario_pos_for_anim(m);
+
     return 1;
 }
 
@@ -135,6 +179,7 @@ int smlua_func_return_mario_anim_y_translation(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, return_mario_anim_y_translation(m));
+
     return 1;
 }
 
@@ -147,6 +192,7 @@ int smlua_func_play_sound_if_no_flag(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_sound_if_no_flag(m, soundBits, flags);
+
     return 1;
 }
 
@@ -155,6 +201,7 @@ int smlua_func_play_mario_jump_sound(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_jump_sound(m);
+
     return 1;
 }
 
@@ -163,6 +210,7 @@ int smlua_func_adjust_sound_for_speed(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     adjust_sound_for_speed(m);
+
     return 1;
 }
 
@@ -175,6 +223,7 @@ int smlua_func_play_sound_and_spawn_particles(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_sound_and_spawn_particles(m, soundBits, waveParticleType);
+
     return 1;
 }
 
@@ -187,6 +236,7 @@ int smlua_func_play_mario_action_sound(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_action_sound(m, soundBits, waveParticleType);
+
     return 1;
 }
 
@@ -197,6 +247,7 @@ int smlua_func_play_mario_landing_sound(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_landing_sound(m, soundBits);
+
     return 1;
 }
 
@@ -207,6 +258,7 @@ int smlua_func_play_mario_landing_sound_once(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_landing_sound_once(m, soundBits);
+
     return 1;
 }
 
@@ -217,6 +269,7 @@ int smlua_func_play_mario_heavy_landing_sound(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_heavy_landing_sound(m, soundBits);
+
     return 1;
 }
 
@@ -227,6 +280,7 @@ int smlua_func_play_mario_heavy_landing_sound_once(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_heavy_landing_sound_once(m, soundBits);
+
     return 1;
 }
 
@@ -239,6 +293,7 @@ int smlua_func_play_mario_sound(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_sound(m, primarySoundBits, scondarySoundBits);
+
     return 1;
 }
 
@@ -247,6 +302,7 @@ int smlua_func_mario_set_bubbled(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     mario_set_bubbled(m);
+
     return 1;
 }
 
@@ -257,6 +313,7 @@ int smlua_func_mario_set_forward_vel(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     mario_set_forward_vel(m, speed);
+
     return 1;
 }
 
@@ -265,6 +322,7 @@ int smlua_func_mario_get_floor_class(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_get_floor_class(m));
+
     return 1;
 }
 
@@ -273,12 +331,19 @@ int smlua_func_mario_get_terrain_sound_addend(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_get_terrain_sound_addend(m));
+
     return 1;
 }
 
 /*
 int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
-    Vec3f pos <--- UNIMPLEMENTED
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(1, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[1] = smlua_get_number_field(1, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[2] = smlua_get_number_field(1, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 offset = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -286,13 +351,24 @@ int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     UNIMPLEMENTED -->(L, resolve_and_return_wall_collisions(pos, offset, radius));
+
+    smlua_push_number_field(1, "x", pos[0]);
+    smlua_push_number_field(1, "y", pos[1]);
+    smlua_push_number_field(1, "z", pos[2]);
+
     return 1;
 }
 */
 
 /*
 int smlua_func_vec3f_find_ceil(lua_State* L) {
-    Vec3f pos <--- UNIMPLEMENTED
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(1, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[1] = smlua_get_number_field(1, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    pos[2] = smlua_get_number_field(1, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 height = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -300,6 +376,11 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, vec3f_find_ceil(pos, height, ceil));
+
+    smlua_push_number_field(1, "x", pos[0]);
+    smlua_push_number_field(1, "y", pos[1]);
+    smlua_push_number_field(1, "z", pos[2]);
+
     return 1;
 }
 */
@@ -311,6 +392,7 @@ int smlua_func_mario_facing_downhill(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_facing_downhill(m, turnYaw));
+
     return 1;
 }
 
@@ -319,6 +401,7 @@ int smlua_func_mario_floor_is_slippery(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_floor_is_slippery(m));
+
     return 1;
 }
 
@@ -327,6 +410,7 @@ int smlua_func_mario_floor_is_slope(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_floor_is_slope(m));
+
     return 1;
 }
 
@@ -335,6 +419,7 @@ int smlua_func_mario_floor_is_steep(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_floor_is_steep(m));
+
     return 1;
 }
 
@@ -347,6 +432,7 @@ int smlua_func_find_floor_height_relative_polar(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_floor_height_relative_polar(m, angleFromMario, distFromMario));
+
     return 1;
 }
 
@@ -357,6 +443,7 @@ int smlua_func_find_floor_slope(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, find_floor_slope(m, yawOffset));
+
     return 1;
 }
 
@@ -365,6 +452,7 @@ int smlua_func_update_mario_sound_and_camera(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     update_mario_sound_and_camera(m);
+
     return 1;
 }
 
@@ -373,6 +461,7 @@ int smlua_func_set_steep_jump_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_steep_jump_action(m);
+
     return 1;
 }
 
@@ -385,6 +474,7 @@ int smlua_func_set_mario_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_mario_action(m, action, actionArg));
+
     return 1;
 }
 
@@ -393,6 +483,7 @@ int smlua_func_set_jump_from_landing(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_jump_from_landing(m));
+
     return 1;
 }
 
@@ -405,6 +496,7 @@ int smlua_func_set_jumping_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_jumping_action(m, action, actionArg));
+
     return 1;
 }
 
@@ -417,6 +509,7 @@ int smlua_func_drop_and_set_mario_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, drop_and_set_mario_action(m, action, actionArg));
+
     return 1;
 }
 
@@ -431,6 +524,7 @@ int smlua_func_hurt_and_set_mario_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, hurt_and_set_mario_action(m, action, actionArg, hurtCounter));
+
     return 1;
 }
 
@@ -439,6 +533,7 @@ int smlua_func_check_common_action_exits(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, check_common_action_exits(m));
+
     return 1;
 }
 
@@ -447,6 +542,7 @@ int smlua_func_check_common_hold_action_exits(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, check_common_hold_action_exits(m));
+
     return 1;
 }
 
@@ -455,6 +551,7 @@ int smlua_func_transition_submerged_to_walking(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, transition_submerged_to_walking(m));
+
     return 1;
 }
 
@@ -463,6 +560,7 @@ int smlua_func_set_water_plunge_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_water_plunge_action(m));
+
     return 1;
 }
 
@@ -471,6 +569,7 @@ int smlua_func_execute_mario_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, execute_mario_action(o));
+
     return 1;
 }
 
@@ -479,6 +578,7 @@ int smlua_func_force_idle_state(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, force_idle_state(m));
+
     return 1;
 }
 
@@ -498,6 +598,7 @@ int smlua_func_play_flip_sounds(lua_State* L) {
 
     extern void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3);
     play_flip_sounds(m, frame1, frame2, frame3);
+
     return 1;
 }
 
@@ -507,6 +608,7 @@ int smlua_func_play_far_fall_sound(lua_State* L) {
 
     extern void play_far_fall_sound(struct MarioState *m);
     play_far_fall_sound(m);
+
     return 1;
 }
 
@@ -516,6 +618,7 @@ int smlua_func_play_knockback_sound(lua_State* L) {
 
     extern void play_knockback_sound(struct MarioState *m);
     play_knockback_sound(m);
+
     return 1;
 }
 
@@ -525,6 +628,7 @@ int smlua_func_lava_boost_on_wall(lua_State* L) {
 
     extern s32 lava_boost_on_wall(struct MarioState *m);
     lua_pushinteger(L, lava_boost_on_wall(m));
+
     return 1;
 }
 
@@ -536,6 +640,7 @@ int smlua_func_check_fall_damage(lua_State* L) {
 
     extern s32 check_fall_damage(struct MarioState *m, u32 hardFallAction);
     lua_pushinteger(L, check_fall_damage(m, hardFallAction));
+
     return 1;
 }
 
@@ -545,6 +650,7 @@ int smlua_func_check_kick_or_dive_in_air(lua_State* L) {
 
     extern s32 check_kick_or_dive_in_air(struct MarioState *m);
     lua_pushinteger(L, check_kick_or_dive_in_air(m));
+
     return 1;
 }
 
@@ -554,6 +660,7 @@ int smlua_func_should_get_stuck_in_ground(lua_State* L) {
 
     extern s32 should_get_stuck_in_ground(struct MarioState *m);
     lua_pushinteger(L, should_get_stuck_in_ground(m));
+
     return 1;
 }
 
@@ -565,6 +672,7 @@ int smlua_func_check_fall_damage_or_get_stuck(lua_State* L) {
 
     extern s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction);
     lua_pushinteger(L, check_fall_damage_or_get_stuck(m, hardFallAction));
+
     return 1;
 }
 
@@ -574,6 +682,7 @@ int smlua_func_check_horizontal_wind(lua_State* L) {
 
     extern s32 check_horizontal_wind(struct MarioState *m);
     lua_pushinteger(L, check_horizontal_wind(m));
+
     return 1;
 }
 
@@ -583,6 +692,7 @@ int smlua_func_update_air_with_turn(lua_State* L) {
 
     extern void update_air_with_turn(struct MarioState *m);
     update_air_with_turn(m);
+
     return 1;
 }
 
@@ -592,6 +702,7 @@ int smlua_func_update_air_without_turn(lua_State* L) {
 
     extern void update_air_without_turn(struct MarioState *m);
     update_air_without_turn(m);
+
     return 1;
 }
 
@@ -601,6 +712,7 @@ int smlua_func_update_lava_boost_or_twirling(lua_State* L) {
 
     extern void update_lava_boost_or_twirling(struct MarioState *m);
     update_lava_boost_or_twirling(m);
+
     return 1;
 }
 
@@ -610,6 +722,7 @@ int smlua_func_update_flying_yaw(lua_State* L) {
 
     extern void update_flying_yaw(struct MarioState *m);
     update_flying_yaw(m);
+
     return 1;
 }
 
@@ -619,6 +732,7 @@ int smlua_func_update_flying_pitch(lua_State* L) {
 
     extern void update_flying_pitch(struct MarioState *m);
     update_flying_pitch(m);
+
     return 1;
 }
 
@@ -628,6 +742,7 @@ int smlua_func_update_flying(lua_State* L) {
 
     extern void update_flying(struct MarioState *m);
     update_flying(m);
+
     return 1;
 }
 
@@ -643,6 +758,7 @@ int smlua_func_common_air_action_step(lua_State* L) {
 
     extern u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg);
     lua_pushinteger(L, common_air_action_step(m, landAction, animation, stepArg));
+
     return 1;
 }
 
@@ -652,6 +768,7 @@ int smlua_func_act_jump(lua_State* L) {
 
     extern s32 act_jump(struct MarioState *m);
     lua_pushinteger(L, act_jump(m));
+
     return 1;
 }
 
@@ -661,6 +778,7 @@ int smlua_func_act_double_jump(lua_State* L) {
 
     extern s32 act_double_jump(struct MarioState *m);
     lua_pushinteger(L, act_double_jump(m));
+
     return 1;
 }
 
@@ -670,6 +788,7 @@ int smlua_func_act_triple_jump(lua_State* L) {
 
     extern s32 act_triple_jump(struct MarioState *m);
     lua_pushinteger(L, act_triple_jump(m));
+
     return 1;
 }
 
@@ -679,6 +798,7 @@ int smlua_func_act_backflip(lua_State* L) {
 
     extern s32 act_backflip(struct MarioState *m);
     lua_pushinteger(L, act_backflip(m));
+
     return 1;
 }
 
@@ -688,6 +808,7 @@ int smlua_func_act_freefall(lua_State* L) {
 
     extern s32 act_freefall(struct MarioState *m);
     lua_pushinteger(L, act_freefall(m));
+
     return 1;
 }
 
@@ -697,6 +818,7 @@ int smlua_func_act_hold_jump(lua_State* L) {
 
     extern s32 act_hold_jump(struct MarioState *m);
     lua_pushinteger(L, act_hold_jump(m));
+
     return 1;
 }
 
@@ -706,6 +828,7 @@ int smlua_func_act_hold_freefall(lua_State* L) {
 
     extern s32 act_hold_freefall(struct MarioState *m);
     lua_pushinteger(L, act_hold_freefall(m));
+
     return 1;
 }
 
@@ -715,6 +838,7 @@ int smlua_func_act_side_flip(lua_State* L) {
 
     extern s32 act_side_flip(struct MarioState *m);
     lua_pushinteger(L, act_side_flip(m));
+
     return 1;
 }
 
@@ -724,6 +848,7 @@ int smlua_func_act_wall_kick_air(lua_State* L) {
 
     extern s32 act_wall_kick_air(struct MarioState *m);
     lua_pushinteger(L, act_wall_kick_air(m));
+
     return 1;
 }
 
@@ -733,6 +858,7 @@ int smlua_func_act_long_jump(lua_State* L) {
 
     extern s32 act_long_jump(struct MarioState *m);
     lua_pushinteger(L, act_long_jump(m));
+
     return 1;
 }
 
@@ -742,6 +868,7 @@ int smlua_func_act_riding_shell_air(lua_State* L) {
 
     extern s32 act_riding_shell_air(struct MarioState *m);
     lua_pushinteger(L, act_riding_shell_air(m));
+
     return 1;
 }
 
@@ -751,6 +878,7 @@ int smlua_func_act_twirling(lua_State* L) {
 
     extern s32 act_twirling(struct MarioState *m);
     lua_pushinteger(L, act_twirling(m));
+
     return 1;
 }
 
@@ -760,6 +888,7 @@ int smlua_func_act_dive(lua_State* L) {
 
     extern s32 act_dive(struct MarioState *m);
     lua_pushinteger(L, act_dive(m));
+
     return 1;
 }
 
@@ -769,6 +898,7 @@ int smlua_func_act_air_throw(lua_State* L) {
 
     extern s32 act_air_throw(struct MarioState *m);
     lua_pushinteger(L, act_air_throw(m));
+
     return 1;
 }
 
@@ -778,6 +908,7 @@ int smlua_func_act_water_jump(lua_State* L) {
 
     extern s32 act_water_jump(struct MarioState *m);
     lua_pushinteger(L, act_water_jump(m));
+
     return 1;
 }
 
@@ -787,6 +918,7 @@ int smlua_func_act_hold_water_jump(lua_State* L) {
 
     extern s32 act_hold_water_jump(struct MarioState *m);
     lua_pushinteger(L, act_hold_water_jump(m));
+
     return 1;
 }
 
@@ -796,6 +928,7 @@ int smlua_func_act_steep_jump(lua_State* L) {
 
     extern s32 act_steep_jump(struct MarioState *m);
     lua_pushinteger(L, act_steep_jump(m));
+
     return 1;
 }
 
@@ -805,6 +938,7 @@ int smlua_func_act_ground_pound(lua_State* L) {
 
     extern s32 act_ground_pound(struct MarioState *m);
     lua_pushinteger(L, act_ground_pound(m));
+
     return 1;
 }
 
@@ -814,6 +948,7 @@ int smlua_func_act_burning_jump(lua_State* L) {
 
     extern s32 act_burning_jump(struct MarioState *m);
     lua_pushinteger(L, act_burning_jump(m));
+
     return 1;
 }
 
@@ -823,6 +958,7 @@ int smlua_func_act_burning_fall(lua_State* L) {
 
     extern s32 act_burning_fall(struct MarioState *m);
     lua_pushinteger(L, act_burning_fall(m));
+
     return 1;
 }
 
@@ -832,6 +968,7 @@ int smlua_func_act_crazy_box_bounce(lua_State* L) {
 
     extern s32 act_crazy_box_bounce(struct MarioState *m);
     lua_pushinteger(L, act_crazy_box_bounce(m));
+
     return 1;
 }
 
@@ -849,6 +986,7 @@ int smlua_func_common_air_knockback_step(lua_State* L) {
 
     extern u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed);
     lua_pushinteger(L, common_air_knockback_step(m, landAction, hardFallAction, animation, speed));
+
     return 1;
 }
 
@@ -858,6 +996,7 @@ int smlua_func_check_wall_kick(lua_State* L) {
 
     extern s32 check_wall_kick(struct MarioState *m);
     lua_pushinteger(L, check_wall_kick(m));
+
     return 1;
 }
 
@@ -867,6 +1006,7 @@ int smlua_func_act_backward_air_kb(lua_State* L) {
 
     extern s32 act_backward_air_kb(struct MarioState *m);
     lua_pushinteger(L, act_backward_air_kb(m));
+
     return 1;
 }
 
@@ -876,6 +1016,7 @@ int smlua_func_act_forward_air_kb(lua_State* L) {
 
     extern s32 act_forward_air_kb(struct MarioState *m);
     lua_pushinteger(L, act_forward_air_kb(m));
+
     return 1;
 }
 
@@ -885,6 +1026,7 @@ int smlua_func_act_hard_backward_air_kb(lua_State* L) {
 
     extern s32 act_hard_backward_air_kb(struct MarioState *m);
     lua_pushinteger(L, act_hard_backward_air_kb(m));
+
     return 1;
 }
 
@@ -894,6 +1036,7 @@ int smlua_func_act_hard_forward_air_kb(lua_State* L) {
 
     extern s32 act_hard_forward_air_kb(struct MarioState *m);
     lua_pushinteger(L, act_hard_forward_air_kb(m));
+
     return 1;
 }
 
@@ -903,6 +1046,7 @@ int smlua_func_act_thrown_backward(lua_State* L) {
 
     extern s32 act_thrown_backward(struct MarioState *m);
     lua_pushinteger(L, act_thrown_backward(m));
+
     return 1;
 }
 
@@ -912,6 +1056,7 @@ int smlua_func_act_thrown_forward(lua_State* L) {
 
     extern s32 act_thrown_forward(struct MarioState *m);
     lua_pushinteger(L, act_thrown_forward(m));
+
     return 1;
 }
 
@@ -921,6 +1066,7 @@ int smlua_func_act_soft_bonk(lua_State* L) {
 
     extern s32 act_soft_bonk(struct MarioState *m);
     lua_pushinteger(L, act_soft_bonk(m));
+
     return 1;
 }
 
@@ -930,6 +1076,7 @@ int smlua_func_act_getting_blown(lua_State* L) {
 
     extern s32 act_getting_blown(struct MarioState *m);
     lua_pushinteger(L, act_getting_blown(m));
+
     return 1;
 }
 
@@ -939,6 +1086,7 @@ int smlua_func_act_air_hit_wall(lua_State* L) {
 
     extern s32 act_air_hit_wall(struct MarioState *m);
     lua_pushinteger(L, act_air_hit_wall(m));
+
     return 1;
 }
 
@@ -948,6 +1096,7 @@ int smlua_func_act_forward_rollout(lua_State* L) {
 
     extern s32 act_forward_rollout(struct MarioState *m);
     lua_pushinteger(L, act_forward_rollout(m));
+
     return 1;
 }
 
@@ -957,6 +1106,7 @@ int smlua_func_act_backward_rollout(lua_State* L) {
 
     extern s32 act_backward_rollout(struct MarioState *m);
     lua_pushinteger(L, act_backward_rollout(m));
+
     return 1;
 }
 
@@ -966,6 +1116,7 @@ int smlua_func_act_butt_slide_air(lua_State* L) {
 
     extern s32 act_butt_slide_air(struct MarioState *m);
     lua_pushinteger(L, act_butt_slide_air(m));
+
     return 1;
 }
 
@@ -975,6 +1126,7 @@ int smlua_func_act_hold_butt_slide_air(lua_State* L) {
 
     extern s32 act_hold_butt_slide_air(struct MarioState *m);
     lua_pushinteger(L, act_hold_butt_slide_air(m));
+
     return 1;
 }
 
@@ -984,6 +1136,7 @@ int smlua_func_act_lava_boost(lua_State* L) {
 
     extern s32 act_lava_boost(struct MarioState *m);
     lua_pushinteger(L, act_lava_boost(m));
+
     return 1;
 }
 
@@ -993,6 +1146,7 @@ int smlua_func_act_slide_kick(lua_State* L) {
 
     extern s32 act_slide_kick(struct MarioState *m);
     lua_pushinteger(L, act_slide_kick(m));
+
     return 1;
 }
 
@@ -1002,6 +1156,7 @@ int smlua_func_act_jump_kick(lua_State* L) {
 
     extern s32 act_jump_kick(struct MarioState *m);
     lua_pushinteger(L, act_jump_kick(m));
+
     return 1;
 }
 
@@ -1011,6 +1166,7 @@ int smlua_func_act_shot_from_cannon(lua_State* L) {
 
     extern s32 act_shot_from_cannon(struct MarioState *m);
     lua_pushinteger(L, act_shot_from_cannon(m));
+
     return 1;
 }
 
@@ -1020,6 +1176,7 @@ int smlua_func_act_flying(lua_State* L) {
 
     extern s32 act_flying(struct MarioState *m);
     lua_pushinteger(L, act_flying(m));
+
     return 1;
 }
 
@@ -1029,6 +1186,7 @@ int smlua_func_act_riding_hoot(lua_State* L) {
 
     extern s32 act_riding_hoot(struct MarioState *m);
     lua_pushinteger(L, act_riding_hoot(m));
+
     return 1;
 }
 
@@ -1038,6 +1196,7 @@ int smlua_func_act_flying_triple_jump(lua_State* L) {
 
     extern s32 act_flying_triple_jump(struct MarioState *m);
     lua_pushinteger(L, act_flying_triple_jump(m));
+
     return 1;
 }
 
@@ -1047,6 +1206,7 @@ int smlua_func_act_top_of_pole_jump(lua_State* L) {
 
     extern s32 act_top_of_pole_jump(struct MarioState *m);
     lua_pushinteger(L, act_top_of_pole_jump(m));
+
     return 1;
 }
 
@@ -1056,6 +1216,7 @@ int smlua_func_act_vertical_wind(lua_State* L) {
 
     extern s32 act_vertical_wind(struct MarioState *m);
     lua_pushinteger(L, act_vertical_wind(m));
+
     return 1;
 }
 
@@ -1065,6 +1226,7 @@ int smlua_func_act_special_triple_jump(lua_State* L) {
 
     extern s32 act_special_triple_jump(struct MarioState *m);
     lua_pushinteger(L, act_special_triple_jump(m));
+
     return 1;
 }
 
@@ -1074,6 +1236,7 @@ int smlua_func_check_common_airborne_cancels(lua_State* L) {
 
     extern s32 check_common_airborne_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_airborne_cancels(m));
+
     return 1;
 }
 
@@ -1083,6 +1246,7 @@ int smlua_func_mario_execute_airborne_action(lua_State* L) {
 
     extern s32 mario_execute_airborne_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_airborne_action(m));
+
     return 1;
 }
 
@@ -1096,6 +1260,7 @@ int smlua_func_add_tree_leaf_particles(lua_State* L) {
 
     extern void add_tree_leaf_particles(struct MarioState *m);
     add_tree_leaf_particles(m);
+
     return 1;
 }
 
@@ -1107,6 +1272,7 @@ int smlua_func_play_climbing_sounds(lua_State* L) {
 
     extern void play_climbing_sounds(struct MarioState *m, s32 b);
     play_climbing_sounds(m, b);
+
     return 1;
 }
 
@@ -1118,6 +1284,7 @@ int smlua_func_set_pole_position(lua_State* L) {
 
     extern s32 set_pole_position(struct MarioState *m, f32 offsetY);
     lua_pushinteger(L, set_pole_position(m, offsetY));
+
     return 1;
 }
 
@@ -1127,6 +1294,7 @@ int smlua_func_act_holding_pole(lua_State* L) {
 
     extern s32 act_holding_pole(struct MarioState *m);
     lua_pushinteger(L, act_holding_pole(m));
+
     return 1;
 }
 
@@ -1136,6 +1304,7 @@ int smlua_func_act_climbing_pole(lua_State* L) {
 
     extern s32 act_climbing_pole(struct MarioState *m);
     lua_pushinteger(L, act_climbing_pole(m));
+
     return 1;
 }
 
@@ -1145,6 +1314,7 @@ int smlua_func_act_grab_pole_slow(lua_State* L) {
 
     extern s32 act_grab_pole_slow(struct MarioState *m);
     lua_pushinteger(L, act_grab_pole_slow(m));
+
     return 1;
 }
 
@@ -1154,6 +1324,7 @@ int smlua_func_act_grab_pole_fast(lua_State* L) {
 
     extern s32 act_grab_pole_fast(struct MarioState *m);
     lua_pushinteger(L, act_grab_pole_fast(m));
+
     return 1;
 }
 
@@ -1163,6 +1334,7 @@ int smlua_func_act_top_of_pole_transition(lua_State* L) {
 
     extern s32 act_top_of_pole_transition(struct MarioState *m);
     lua_pushinteger(L, act_top_of_pole_transition(m));
+
     return 1;
 }
 
@@ -1172,21 +1344,31 @@ int smlua_func_act_top_of_pole(lua_State* L) {
 
     extern s32 act_top_of_pole(struct MarioState *m);
     lua_pushinteger(L, act_top_of_pole(m));
+
     return 1;
 }
 
-/*
 int smlua_func_perform_hanging_step(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
     if (!gSmLuaConvertSuccess) { return 0; }
-    Vec3f nextPos <--- UNIMPLEMENTED
+
+    f32* nextPos = smlua_get_vec3f_from_buffer();
+    nextPos[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    nextPos[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    nextPos[2] = smlua_get_number_field(2, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);
     lua_pushinteger(L, perform_hanging_step(m, nextPos));
+
+    smlua_push_number_field(2, "x", nextPos[0]);
+    smlua_push_number_field(2, "y", nextPos[1]);
+    smlua_push_number_field(2, "z", nextPos[2]);
+
     return 1;
 }
-*/
 
 int smlua_func_update_hang_moving(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
@@ -1194,6 +1376,7 @@ int smlua_func_update_hang_moving(lua_State* L) {
 
     extern s32 update_hang_moving(struct MarioState *m);
     lua_pushinteger(L, update_hang_moving(m));
+
     return 1;
 }
 
@@ -1203,6 +1386,7 @@ int smlua_func_update_hang_stationary(lua_State* L) {
 
     extern void update_hang_stationary(struct MarioState *m);
     update_hang_stationary(m);
+
     return 1;
 }
 
@@ -1212,6 +1396,7 @@ int smlua_func_act_start_hanging(lua_State* L) {
 
     extern s32 act_start_hanging(struct MarioState *m);
     lua_pushinteger(L, act_start_hanging(m));
+
     return 1;
 }
 
@@ -1221,6 +1406,7 @@ int smlua_func_act_hanging(lua_State* L) {
 
     extern s32 act_hanging(struct MarioState *m);
     lua_pushinteger(L, act_hanging(m));
+
     return 1;
 }
 
@@ -1230,6 +1416,7 @@ int smlua_func_act_hang_moving(lua_State* L) {
 
     extern s32 act_hang_moving(struct MarioState *m);
     lua_pushinteger(L, act_hang_moving(m));
+
     return 1;
 }
 
@@ -1239,6 +1426,7 @@ int smlua_func_let_go_of_ledge(lua_State* L) {
 
     extern s32 let_go_of_ledge(struct MarioState *m);
     lua_pushinteger(L, let_go_of_ledge(m));
+
     return 1;
 }
 
@@ -1248,6 +1436,7 @@ int smlua_func_climb_up_ledge(lua_State* L) {
 
     extern void climb_up_ledge(struct MarioState *m);
     climb_up_ledge(m);
+
     return 1;
 }
 
@@ -1257,6 +1446,7 @@ int smlua_func_update_ledge_climb_camera(lua_State* L) {
 
     extern void update_ledge_climb_camera(struct MarioState *m);
     update_ledge_climb_camera(m);
+
     return 1;
 }
 
@@ -1270,6 +1460,7 @@ int smlua_func_update_ledge_climb(lua_State* L) {
 
     extern void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction);
     update_ledge_climb(m, animation, endAction);
+
     return 1;
 }
 
@@ -1279,6 +1470,7 @@ int smlua_func_act_ledge_grab(lua_State* L) {
 
     extern s32 act_ledge_grab(struct MarioState *m);
     lua_pushinteger(L, act_ledge_grab(m));
+
     return 1;
 }
 
@@ -1288,6 +1480,7 @@ int smlua_func_act_ledge_climb_slow(lua_State* L) {
 
     extern s32 act_ledge_climb_slow(struct MarioState *m);
     lua_pushinteger(L, act_ledge_climb_slow(m));
+
     return 1;
 }
 
@@ -1297,6 +1490,7 @@ int smlua_func_act_ledge_climb_down(lua_State* L) {
 
     extern s32 act_ledge_climb_down(struct MarioState *m);
     lua_pushinteger(L, act_ledge_climb_down(m));
+
     return 1;
 }
 
@@ -1306,6 +1500,7 @@ int smlua_func_act_ledge_climb_fast(lua_State* L) {
 
     extern s32 act_ledge_climb_fast(struct MarioState *m);
     lua_pushinteger(L, act_ledge_climb_fast(m));
+
     return 1;
 }
 
@@ -1315,6 +1510,7 @@ int smlua_func_act_grabbed(lua_State* L) {
 
     extern s32 act_grabbed(struct MarioState *m);
     lua_pushinteger(L, act_grabbed(m));
+
     return 1;
 }
 
@@ -1324,6 +1520,7 @@ int smlua_func_act_in_cannon(lua_State* L) {
 
     extern s32 act_in_cannon(struct MarioState *m);
     lua_pushinteger(L, act_in_cannon(m));
+
     return 1;
 }
 
@@ -1333,6 +1530,7 @@ int smlua_func_act_tornado_twirling(lua_State* L) {
 
     extern s32 act_tornado_twirling(struct MarioState *m);
     lua_pushinteger(L, act_tornado_twirling(m));
+
     return 1;
 }
 
@@ -1342,6 +1540,7 @@ int smlua_func_act_bubbled(lua_State* L) {
 
     extern s32 act_bubbled(struct MarioState* m);
     lua_pushinteger(L, act_bubbled(m));
+
     return 1;
 }
 
@@ -1351,6 +1550,7 @@ int smlua_func_check_common_automatic_cancels(lua_State* L) {
 
     extern s32 check_common_automatic_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_automatic_cancels(m));
+
     return 1;
 }
 
@@ -1360,6 +1560,7 @@ int smlua_func_mario_execute_automatic_action(lua_State* L) {
 
     extern s32 mario_execute_automatic_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_automatic_action(m));
+
     return 1;
 }
 
@@ -1371,6 +1572,7 @@ int smlua_func_print_displaying_credits_entry(UNUSED lua_State* L) {
 
     extern void print_displaying_credits_entry(void);
     print_displaying_credits_entry();
+
     return 1;
 }
 
@@ -1378,6 +1580,7 @@ int smlua_func_bhv_end_peach_loop(UNUSED lua_State* L) {
 
     extern void bhv_end_peach_loop(void);
     bhv_end_peach_loop();
+
     return 1;
 }
 
@@ -1385,6 +1588,7 @@ int smlua_func_bhv_end_toad_loop(UNUSED lua_State* L) {
 
     extern void bhv_end_toad_loop(void);
     bhv_end_toad_loop();
+
     return 1;
 }
 
@@ -1394,6 +1598,7 @@ int smlua_func_handle_save_menu(lua_State* L) {
 
     extern void handle_save_menu(struct MarioState *m);
     handle_save_menu(m);
+
     return 1;
 }
 
@@ -1410,6 +1615,7 @@ int smlua_func_spawn_obj_at_mario_rel_yaw(lua_State* L) {
 
     extern struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, BehaviorScript *behavior, s16 relYaw);
     UNIMPLEMENTED -->(L, spawn_obj_at_mario_rel_yaw(m, model, behavior, relYaw));
+
     return 1;
 }
 */
@@ -1420,6 +1626,7 @@ int smlua_func_cutscene_take_cap_off(lua_State* L) {
 
     extern void cutscene_take_cap_off(struct MarioState *m);
     cutscene_take_cap_off(m);
+
     return 1;
 }
 
@@ -1429,6 +1636,7 @@ int smlua_func_cutscene_put_cap_on(lua_State* L) {
 
     extern void cutscene_put_cap_on(struct MarioState *m);
     cutscene_put_cap_on(m);
+
     return 1;
 }
 
@@ -1440,6 +1648,7 @@ int smlua_func_should_start_or_continue_dialog(lua_State* L) {
 
     extern u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);
     lua_pushinteger(L, should_start_or_continue_dialog(m, object));
+
     return 1;
 }
 
@@ -1451,6 +1660,7 @@ int smlua_func_general_star_dance_handler(lua_State* L) {
 
     extern void general_star_dance_handler(struct MarioState *m, s32 isInWater);
     general_star_dance_handler(m, isInWater);
+
     return 1;
 }
 
@@ -1470,6 +1680,7 @@ int smlua_func_stuck_in_ground_handler(lua_State* L) {
 
     extern void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction);
     stuck_in_ground_handler(m, animation, unstuckFrame, target2, target3, endAction);
+
     return 1;
 }
 
@@ -1485,6 +1696,7 @@ int smlua_func_generate_yellow_sparkles(lua_State* L) {
 
     extern void generate_yellow_sparkles(s16 x, s16 y, s16 z, f32 radius);
     generate_yellow_sparkles(x, y, z, radius);
+
     return 1;
 }
 
@@ -1498,6 +1710,7 @@ int smlua_func_tilt_body_running(lua_State* L) {
 
     extern s16 tilt_body_running(struct MarioState *m);
     lua_pushinteger(L, tilt_body_running(m));
+
     return 1;
 }
 
@@ -1511,6 +1724,7 @@ int smlua_func_play_step_sound(lua_State* L) {
 
     extern void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2);
     play_step_sound(m, frame1, frame2);
+
     return 1;
 }
 
@@ -1520,6 +1734,7 @@ int smlua_func_align_with_floor(lua_State* L) {
 
     extern void align_with_floor(struct MarioState *m);
     align_with_floor(m);
+
     return 1;
 }
 
@@ -1535,6 +1750,7 @@ int smlua_func_begin_walking_action(lua_State* L) {
 
     extern s32 begin_walking_action(struct MarioState *m, f32 forwardVel, u32 action, u32 actionArg);
     lua_pushinteger(L, begin_walking_action(m, forwardVel, action, actionArg));
+
     return 1;
 }
 
@@ -1544,6 +1760,7 @@ int smlua_func_check_ledge_climb_down(lua_State* L) {
 
     extern void check_ledge_climb_down(struct MarioState *m);
     check_ledge_climb_down(m);
+
     return 1;
 }
 
@@ -1557,6 +1774,7 @@ int smlua_func_slide_bonk(lua_State* L) {
 
     extern void slide_bonk(struct MarioState *m, u32 fastAction, u32 slowAction);
     slide_bonk(m, fastAction, slowAction);
+
     return 1;
 }
 
@@ -1570,6 +1788,7 @@ int smlua_func_set_triple_jump_action(lua_State* L) {
 
     extern s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 actionArg);
     lua_pushinteger(L, set_triple_jump_action(m, action, actionArg));
+
     return 1;
 }
 
@@ -1583,6 +1802,7 @@ int smlua_func_update_sliding_angle(lua_State* L) {
 
     extern void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor);
     update_sliding_angle(m, accel, lossFactor);
+
     return 1;
 }
 
@@ -1594,6 +1814,7 @@ int smlua_func_update_sliding(lua_State* L) {
 
     extern s32 update_sliding(struct MarioState *m, f32 stopSpeed);
     lua_pushinteger(L, update_sliding(m, stopSpeed));
+
     return 1;
 }
 
@@ -1603,6 +1824,7 @@ int smlua_func_apply_slope_accel(lua_State* L) {
 
     extern void apply_slope_accel(struct MarioState *m);
     apply_slope_accel(m);
+
     return 1;
 }
 
@@ -1614,6 +1836,7 @@ int smlua_func_apply_landing_accel(lua_State* L) {
 
     extern s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor);
     lua_pushinteger(L, apply_landing_accel(m, frictionFactor));
+
     return 1;
 }
 
@@ -1623,6 +1846,7 @@ int smlua_func_update_shell_speed(lua_State* L) {
 
     extern void update_shell_speed(struct MarioState *m);
     update_shell_speed(m);
+
     return 1;
 }
 
@@ -1634,6 +1858,7 @@ int smlua_func_apply_slope_decel(lua_State* L) {
 
     extern s32 apply_slope_decel(struct MarioState *m, f32 decelCoef);
     lua_pushinteger(L, apply_slope_decel(m, decelCoef));
+
     return 1;
 }
 
@@ -1643,6 +1868,7 @@ int smlua_func_update_decelerating_speed(lua_State* L) {
 
     extern s32 update_decelerating_speed(struct MarioState *m);
     lua_pushinteger(L, update_decelerating_speed(m));
+
     return 1;
 }
 
@@ -1652,6 +1878,7 @@ int smlua_func_update_walking_speed(lua_State* L) {
 
     extern void update_walking_speed(struct MarioState *m);
     update_walking_speed(m);
+
     return 1;
 }
 
@@ -1661,6 +1888,7 @@ int smlua_func_should_begin_sliding(lua_State* L) {
 
     extern s32 should_begin_sliding(struct MarioState *m);
     lua_pushinteger(L, should_begin_sliding(m));
+
     return 1;
 }
 
@@ -1670,6 +1898,7 @@ int smlua_func_analog_stick_held_back(lua_State* L) {
 
     extern s32 analog_stick_held_back(struct MarioState *m);
     lua_pushinteger(L, analog_stick_held_back(m));
+
     return 1;
 }
 
@@ -1679,6 +1908,7 @@ int smlua_func_check_ground_dive_or_punch(lua_State* L) {
 
     extern s32 check_ground_dive_or_punch(struct MarioState *m);
     lua_pushinteger(L, check_ground_dive_or_punch(m));
+
     return 1;
 }
 
@@ -1688,6 +1918,7 @@ int smlua_func_begin_braking_action(lua_State* L) {
 
     extern s32 begin_braking_action(struct MarioState *m);
     lua_pushinteger(L, begin_braking_action(m));
+
     return 1;
 }
 
@@ -1697,6 +1928,7 @@ int smlua_func_anim_and_audio_for_walk(lua_State* L) {
 
     extern void anim_and_audio_for_walk(struct MarioState *m);
     anim_and_audio_for_walk(m);
+
     return 1;
 }
 
@@ -1706,6 +1938,7 @@ int smlua_func_anim_and_audio_for_hold_walk(lua_State* L) {
 
     extern void anim_and_audio_for_hold_walk(struct MarioState *m);
     anim_and_audio_for_hold_walk(m);
+
     return 1;
 }
 
@@ -1715,21 +1948,31 @@ int smlua_func_anim_and_audio_for_heavy_walk(lua_State* L) {
 
     extern void anim_and_audio_for_heavy_walk(struct MarioState *m);
     anim_and_audio_for_heavy_walk(m);
+
     return 1;
 }
 
-/*
 int smlua_func_push_or_sidle_wall(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
     if (!gSmLuaConvertSuccess) { return 0; }
-    Vec3f startPos <--- UNIMPLEMENTED
+
+    f32* startPos = smlua_get_vec3f_from_buffer();
+    startPos[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    startPos[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    startPos[2] = smlua_get_number_field(2, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void push_or_sidle_wall(struct MarioState *m, Vec3f startPos);
     push_or_sidle_wall(m, startPos);
+
+    smlua_push_number_field(2, "x", startPos[0]);
+    smlua_push_number_field(2, "y", startPos[1]);
+    smlua_push_number_field(2, "z", startPos[2]);
+
     return 1;
 }
-*/
 
 int smlua_func_tilt_body_walking(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
@@ -1739,6 +1982,7 @@ int smlua_func_tilt_body_walking(lua_State* L) {
 
     extern void tilt_body_walking(struct MarioState *m, s16 startYaw);
     tilt_body_walking(m, startYaw);
+
     return 1;
 }
 
@@ -1750,6 +1994,7 @@ int smlua_func_tilt_body_ground_shell(lua_State* L) {
 
     extern void tilt_body_ground_shell(struct MarioState *m, s16 startYaw);
     tilt_body_ground_shell(m, startYaw);
+
     return 1;
 }
 
@@ -1759,6 +2004,7 @@ int smlua_func_tilt_body_butt_slide(lua_State* L) {
 
     extern void tilt_body_butt_slide(struct MarioState *m);
     tilt_body_butt_slide(m);
+
     return 1;
 }
 
@@ -1774,6 +2020,7 @@ int smlua_func_common_slide_action(lua_State* L) {
 
     extern void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32 animation);
     common_slide_action(m, endAction, airAction, animation);
+
     return 1;
 }
 
@@ -1791,6 +2038,7 @@ int smlua_func_common_slide_action_with_jump(lua_State* L) {
 
     extern s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction, s32 animation);
     lua_pushinteger(L, common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation));
+
     return 1;
 }
 
@@ -1806,6 +2054,7 @@ int smlua_func_stomach_slide_action(lua_State* L) {
 
     extern s32 stomach_slide_action(struct MarioState *m, u32 stopAction, u32 airAction, s32 animation);
     lua_pushinteger(L, stomach_slide_action(m, stopAction, airAction, animation));
+
     return 1;
 }
 
@@ -1823,6 +2072,7 @@ int smlua_func_common_ground_knockback_action(lua_State* L) {
 
     extern s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2, s32 arg3, s32 arg4);
     lua_pushinteger(L, common_ground_knockback_action(m, animation, arg2, arg3, arg4));
+
     return 1;
 }
 
@@ -1836,6 +2086,7 @@ int smlua_func_common_landing_action(lua_State* L) {
 
     extern u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction);
     lua_pushinteger(L, common_landing_action(m, animation, airAction));
+
     return 1;
 }
 
@@ -1853,6 +2104,7 @@ int smlua_func_quicksand_jump_land_action(lua_State* L) {
 
     extern s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction, u32 airAction);
     lua_pushinteger(L, quicksand_jump_land_action(m, animation1, animation2, endAction, airAction));
+
     return 1;
 }
 
@@ -1862,6 +2114,7 @@ int smlua_func_check_common_moving_cancels(lua_State* L) {
 
     extern s32 check_common_moving_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_moving_cancels(m));
+
     return 1;
 }
 
@@ -1871,6 +2124,7 @@ int smlua_func_mario_execute_moving_action(lua_State* L) {
 
     extern s32 mario_execute_moving_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_moving_action(m));
+
     return 1;
 }
 
@@ -1888,6 +2142,7 @@ int smlua_func_animated_stationary_ground_step(lua_State* L) {
 
     extern void animated_stationary_ground_step(struct MarioState *m, s32 animation, u32 endAction);
     animated_stationary_ground_step(m, animation, endAction);
+
     return 1;
 }
 
@@ -1897,6 +2152,7 @@ int smlua_func_mario_update_punch_sequence(lua_State* L) {
 
     extern s32 mario_update_punch_sequence(struct MarioState *m);
     lua_pushinteger(L, mario_update_punch_sequence(m));
+
     return 1;
 }
 
@@ -1906,6 +2162,7 @@ int smlua_func_check_common_object_cancels(lua_State* L) {
 
     extern s32 check_common_object_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_object_cancels(m));
+
     return 1;
 }
 
@@ -1915,6 +2172,7 @@ int smlua_func_mario_execute_object_action(lua_State* L) {
 
     extern s32 mario_execute_object_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_object_action(m));
+
     return 1;
 }
 
@@ -1928,6 +2186,7 @@ int smlua_func_check_common_idle_cancels(lua_State* L) {
 
     extern s32 check_common_idle_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_idle_cancels(m));
+
     return 1;
 }
 
@@ -1937,6 +2196,7 @@ int smlua_func_check_common_hold_idle_cancels(lua_State* L) {
 
     extern s32 check_common_hold_idle_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_hold_idle_cancels(m));
+
     return 1;
 }
 
@@ -1952,6 +2212,7 @@ int smlua_func_play_anim_sound(lua_State* L) {
 
     extern void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 sound);
     play_anim_sound(m, actionState, animFrame, sound);
+
     return 1;
 }
 
@@ -1965,6 +2226,7 @@ int smlua_func_stopping_step(lua_State* L) {
 
     extern void stopping_step(struct MarioState *m, s32 animID, u32 action);
     stopping_step(m, animID, action);
+
     return 1;
 }
 
@@ -1978,6 +2240,7 @@ int smlua_func_landing_step(lua_State* L) {
 
     extern s32 landing_step(struct MarioState *m, s32 arg1, u32 action);
     lua_pushinteger(L, landing_step(m, arg1, action));
+
     return 1;
 }
 
@@ -1989,6 +2252,7 @@ int smlua_func_check_common_landing_cancels(lua_State* L) {
 
     extern s32 check_common_landing_cancels(struct MarioState *m, u32 action);
     lua_pushinteger(L, check_common_landing_cancels(m, action));
+
     return 1;
 }
 
@@ -1998,6 +2262,7 @@ int smlua_func_check_common_stationary_cancels(lua_State* L) {
 
     extern s32 check_common_stationary_cancels(struct MarioState *m);
     lua_pushinteger(L, check_common_stationary_cancels(m));
+
     return 1;
 }
 
@@ -2007,6 +2272,7 @@ int smlua_func_mario_execute_stationary_action(lua_State* L) {
 
     extern s32 mario_execute_stationary_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_stationary_action(m));
+
     return 1;
 }
 
@@ -2022,6 +2288,7 @@ int smlua_func_set_swimming_at_surface_particles(lua_State* L) {
 
     extern void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag);
     set_swimming_at_surface_particles(m, particleFlag);
+
     return 1;
 }
 
@@ -2031,6 +2298,29 @@ int smlua_func_perform_water_step(lua_State* L) {
 
     extern u32 perform_water_step(struct MarioState *m);
     lua_pushinteger(L, perform_water_step(m));
+
+    return 1;
+}
+
+int smlua_func_perform_water_full_step(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* nextPos = smlua_get_vec3f_from_buffer();
+    nextPos[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    nextPos[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    nextPos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);
+    lua_pushinteger(L, perform_water_full_step(m, nextPos));
+
+    smlua_push_number_field(2, "x", nextPos[0]);
+    smlua_push_number_field(2, "y", nextPos[1]);
+    smlua_push_number_field(2, "z", nextPos[2]);
+
     return 1;
 }
 
@@ -2040,6 +2330,7 @@ int smlua_func_mario_execute_submerged_action(lua_State* L) {
 
     extern s32 mario_execute_submerged_action(struct MarioState *m);
     lua_pushinteger(L, mario_execute_submerged_action(m));
+
     return 1;
 }
 
@@ -2049,6 +2340,29 @@ int smlua_func_float_surface_gfx(lua_State* L) {
 
     extern void float_surface_gfx(struct MarioState *m);
     float_surface_gfx(m);
+
+    return 1;
+}
+
+int smlua_func_apply_water_current(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* step = smlua_get_vec3f_from_buffer();
+    step[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    step[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    step[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void apply_water_current(struct MarioState *m, Vec3f step);
+    apply_water_current(m, step);
+
+    smlua_push_number_field(2, "x", step[0]);
+    smlua_push_number_field(2, "y", step[1]);
+    smlua_push_number_field(2, "z", step[2]);
+
     return 1;
 }
 
@@ -2059,6 +2373,7 @@ int smlua_func_float_surface_gfx(lua_State* L) {
 int smlua_func_get_additive_y_vel_for_jumps(UNUSED lua_State* L) {
 
     lua_pushnumber(L, get_additive_y_vel_for_jumps());
+
     return 1;
 }
 
@@ -2069,6 +2384,7 @@ int smlua_func_mario_bonk_reflection(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     mario_bonk_reflection(arg0, arg1);
+
     return 1;
 }
 
@@ -2079,6 +2395,7 @@ int smlua_func_mario_update_quicksand(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_update_quicksand(arg0, arg1));
+
     return 1;
 }
 
@@ -2091,6 +2408,7 @@ int smlua_func_mario_push_off_steep_floor(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_push_off_steep_floor(arg0, arg1, arg2));
+
     return 1;
 }
 
@@ -2099,6 +2417,7 @@ int smlua_func_mario_update_moving_sand(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_update_moving_sand(arg0));
+
     return 1;
 }
 
@@ -2107,6 +2426,7 @@ int smlua_func_mario_update_windy_ground(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_update_windy_ground(arg0));
+
     return 1;
 }
 
@@ -2115,6 +2435,7 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     stop_and_set_height_to_floor(arg0);
+
     return 1;
 }
 
@@ -2123,6 +2444,7 @@ int smlua_func_stationary_ground_step(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, stationary_ground_step(arg0));
+
     return 1;
 }
 
@@ -2131,6 +2453,7 @@ int smlua_func_perform_ground_step(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, perform_ground_step(arg0));
+
     return 1;
 }
 
@@ -2141,6 +2464,7 @@ int smlua_func_perform_air_step(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, perform_air_step(arg0, arg1));
+
     return 1;
 }
 
@@ -2149,6 +2473,51 @@ int smlua_func_set_vel_from_pitch_and_yaw(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_vel_from_pitch_and_yaw(m);
+
+    return 1;
+}
+
+  ///////////////
+ // thread6.c //
+///////////////
+
+int smlua_func_queue_rumble_data(lua_State* L) {
+    s16 a0 = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 a1 = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void queue_rumble_data(s16 a0, s16 a1);
+    queue_rumble_data(a0, a1);
+
+    return 1;
+}
+
+int smlua_func_queue_rumble_data_object(lua_State* L) {
+    struct Object* object = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 a0 = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 a1 = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);
+    queue_rumble_data_object(object, a0, a1);
+
+    return 1;
+}
+
+int smlua_func_queue_rumble_data_mario(lua_State* L) {
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 a0 = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 a1 = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);
+    queue_rumble_data_mario(m, a0, a1);
+
     return 1;
 }
 
@@ -2162,6 +2531,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_environmental_camera_shake", smlua_func_set_environmental_camera_shake);
     smlua_bind_function(L, "set_camera_shake_from_point", smlua_func_set_camera_shake_from_point);
 
+    // external.h
+    smlua_bind_function(L, "play_sound", smlua_func_play_sound);
+
     // mario.h
     smlua_bind_function(L, "is_anim_at_end", smlua_func_is_anim_at_end);
     smlua_bind_function(L, "is_anim_past_end", smlua_func_is_anim_past_end);
@@ -2169,7 +2541,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_mario_anim_with_accel", smlua_func_set_mario_anim_with_accel);
     smlua_bind_function(L, "set_anim_to_frame", smlua_func_set_anim_to_frame);
     smlua_bind_function(L, "is_anim_past_frame", smlua_func_is_anim_past_frame);
-    //smlua_bind_function(L, "find_mario_anim_flags_and_translation", smlua_func_find_mario_anim_flags_and_translation); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "find_mario_anim_flags_and_translation", smlua_func_find_mario_anim_flags_and_translation);
     smlua_bind_function(L, "update_mario_pos_for_anim", smlua_func_update_mario_pos_for_anim);
     smlua_bind_function(L, "return_mario_anim_y_translation", smlua_func_return_mario_anim_y_translation);
     smlua_bind_function(L, "play_sound_if_no_flag", smlua_func_play_sound_if_no_flag);
@@ -2284,7 +2656,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "act_grab_pole_fast", smlua_func_act_grab_pole_fast);
     smlua_bind_function(L, "act_top_of_pole_transition", smlua_func_act_top_of_pole_transition);
     smlua_bind_function(L, "act_top_of_pole", smlua_func_act_top_of_pole);
-    //smlua_bind_function(L, "perform_hanging_step", smlua_func_perform_hanging_step); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "perform_hanging_step", smlua_func_perform_hanging_step);
     smlua_bind_function(L, "update_hang_moving", smlua_func_update_hang_moving);
     smlua_bind_function(L, "update_hang_stationary", smlua_func_update_hang_stationary);
     smlua_bind_function(L, "act_start_hanging", smlua_func_act_start_hanging);
@@ -2341,7 +2713,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "anim_and_audio_for_walk", smlua_func_anim_and_audio_for_walk);
     smlua_bind_function(L, "anim_and_audio_for_hold_walk", smlua_func_anim_and_audio_for_hold_walk);
     smlua_bind_function(L, "anim_and_audio_for_heavy_walk", smlua_func_anim_and_audio_for_heavy_walk);
-    //smlua_bind_function(L, "push_or_sidle_wall", smlua_func_push_or_sidle_wall); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "push_or_sidle_wall", smlua_func_push_or_sidle_wall);
     smlua_bind_function(L, "tilt_body_walking", smlua_func_tilt_body_walking);
     smlua_bind_function(L, "tilt_body_ground_shell", smlua_func_tilt_body_ground_shell);
     smlua_bind_function(L, "tilt_body_butt_slide", smlua_func_tilt_body_butt_slide);
@@ -2373,8 +2745,10 @@ void smlua_bind_functions_autogen(void) {
     // mario_actions_submerged.c
     smlua_bind_function(L, "set_swimming_at_surface_particles", smlua_func_set_swimming_at_surface_particles);
     smlua_bind_function(L, "perform_water_step", smlua_func_perform_water_step);
+    smlua_bind_function(L, "perform_water_full_step", smlua_func_perform_water_full_step);
     smlua_bind_function(L, "mario_execute_submerged_action", smlua_func_mario_execute_submerged_action);
     smlua_bind_function(L, "float_surface_gfx", smlua_func_float_surface_gfx);
+    smlua_bind_function(L, "apply_water_current", smlua_func_apply_water_current);
 
     // mario_step.h
     smlua_bind_function(L, "get_additive_y_vel_for_jumps", smlua_func_get_additive_y_vel_for_jumps);
@@ -2388,5 +2762,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "perform_ground_step", smlua_func_perform_ground_step);
     smlua_bind_function(L, "perform_air_step", smlua_func_perform_air_step);
     smlua_bind_function(L, "set_vel_from_pitch_and_yaw", smlua_func_set_vel_from_pitch_and_yaw);
+
+    // thread6.c
+    smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);
+    smlua_bind_function(L, "queue_rumble_data_object", smlua_func_queue_rumble_data_object);
+    smlua_bind_function(L, "queue_rumble_data_mario", smlua_func_queue_rumble_data_mario);
 
 }

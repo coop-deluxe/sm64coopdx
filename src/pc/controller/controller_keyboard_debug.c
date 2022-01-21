@@ -13,7 +13,7 @@
 
 #ifdef DEBUG
 
-static u8 warpToLevel = LEVEL_SSL;
+static u8 warpToLevel = LEVEL_BOB;
 static u8 warpToArea = 27;
 // warpToArea: 26 = basement
 // warpToArea: 27 = upstairs
@@ -44,7 +44,6 @@ static void debug_warp_level(u8 level) {
     gCurrLevelNum = 0;
     gCurrAreaIndex = 0;
     gCurrActStarNum = 0;
-    gCurrAreaIndex = 0;
     gChangeLevel = level;
     return;
 

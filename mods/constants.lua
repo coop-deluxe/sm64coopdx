@@ -4,7 +4,8 @@
 
 HOOK_UPDATE = 0
 HOOK_MARIO_UPDATE = 1
-HOOK_MAX = 2
+HOOK_BEFORE_MARIO_UPDATE = 2
+HOOK_MAX = 3
 
 _CObject = {
     __index = function (t,k)

@@ -6,9 +6,18 @@ u8 gSmLuaConvertSuccess = false;
 static Vec3f sVec3fBuffer[VEC3F_BUFFER_COUNT] = { 0 };
 static u8 sVec3fBufferIndex = 0;
 
+#define VEC3S_BUFFER_COUNT 64
+static Vec3s sVec3sBuffer[VEC3S_BUFFER_COUNT] = { 0 };
+static u8 sVec3sBufferIndex = 0;
+
 f32* smlua_get_vec3f_from_buffer(void) {
     if (sVec3fBufferIndex > VEC3F_BUFFER_COUNT) { sVec3fBufferIndex = 0; }
     return sVec3fBuffer[sVec3fBufferIndex++];
+}
+
+s16* smlua_get_vec3s_from_buffer(void) {
+    if (sVec3sBufferIndex > VEC3S_BUFFER_COUNT) { sVec3sBufferIndex = 0; }
+    return sVec3sBuffer[sVec3sBufferIndex++];
 }
 
 void smlua_bind_function(lua_State* L, const char* name, void* func) {
@@ -99,24 +108,23 @@ void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p) {
         return;
     }
     lua_newtable(L);
-    smlua_push_integer_field(lot, "_lot");
-    smlua_push_integer_field((u64)p, "_pointer");
+    int t = lua_gettop(L);
+    smlua_push_integer_field(t, "_lot", lot);
+    smlua_push_integer_field(t, "_pointer", (u64)p);
     lua_pushglobaltable(L);
     lua_getfield(gLuaState, -1, "_CObject");
     lua_setmetatable(L, -3);
     lua_pop(L, 1); // pop global table
 }
 
-void smlua_push_integer_field(lua_Integer val, char* name) {
-    int t = lua_gettop(gLuaState);
+void smlua_push_integer_field(int index, char* name, lua_Integer val) {
     lua_pushinteger(gLuaState, val);
-    lua_setfield(gLuaState, t, name);
+    lua_setfield(gLuaState, index, name);
 }
 
-void smlua_push_number_field(lua_Number val, char* name) {
-    int t = lua_gettop(gLuaState);
+void smlua_push_number_field(int index, char* name, lua_Number val) {
     lua_pushnumber(gLuaState, val);
-    lua_setfield(gLuaState, t, name);
+    lua_setfield(gLuaState, index, name);
 }
 
 lua_Integer smlua_get_integer_field(int index, char* name) {

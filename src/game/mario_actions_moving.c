@@ -187,7 +187,7 @@ void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor) {
         if ((newFacingDYaw -= 0x200) < 0) {
             newFacingDYaw = 0;
         }
-    } else if (newFacingDYaw >= -0x4000 && newFacingDYaw < 0) {
+    } else if (newFacingDYaw > -0x4000 && newFacingDYaw < 0) {
         if ((newFacingDYaw += 0x200) > 0) {
             newFacingDYaw = 0;
         }

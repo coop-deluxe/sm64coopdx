@@ -19,6 +19,7 @@
 enum LuaHookedEventType {
     HOOK_UPDATE,
     HOOK_MARIO_UPDATE,
+    HOOK_BEFORE_MARIO_UPDATE,
     HOOK_MAX,
 };
 
