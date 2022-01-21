@@ -37,7 +37,7 @@ struct NetworkPlayer {
     u8 modelIndex;
     u8 paletteIndex;
     bool localLevelMatch;
-    char name[MAX_PLAYER_STRING];
+    char name[MAX_PLAYER_STRING+1];
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
 };

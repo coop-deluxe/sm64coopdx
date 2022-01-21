@@ -8,22 +8,17 @@ void djui_panel_options_back(struct DjuiBase* caller) {
 }
 
 void djui_panel_options_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 64 * 5 + 16 * 4;
-    if (gNetworkType == NT_NONE) {
-        bodyHeight += 64 + 16;
-    }
+    f32 bodyHeight = 64 * 6 + 16 * 5;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\O\\#1be700\\P\\#00b3ff\\T\\#ffef00\\I\\#ff0800\\O\\#1be700\\N\\#00b3ff\\S");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
-        if (gNetworkType == NT_NONE) {
-            struct DjuiButton* button1 = djui_button_create(&body->base, "Player");
-            djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button1->base, 1.0f, 64);
-            djui_interactable_hook_click(&button1->base, djui_panel_player_create);
-            defaultBase = &button1->base;
-        }
+        struct DjuiButton* button1 = djui_button_create(&body->base, "Player");
+        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button1->base, 1.0f, 64);
+        djui_interactable_hook_click(&button1->base, djui_panel_player_create);
+        defaultBase = &button1->base;
 
         struct DjuiButton* button2 = djui_button_create(&body->base, "Camera");
         djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

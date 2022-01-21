@@ -33,6 +33,10 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     }
     snprintf(configPlayerName, 20, "%s", inputbox1->buffer);
     djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+
+    if (gNetworkType != NT_NONE) {
+        network_send_player_settings();
+    }
 }
 
 void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
@@ -40,6 +44,10 @@ void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     gNetworkPlayers[0].modelIndex = configPlayerModel;
     gNetworkPlayers[0].paletteIndex = configPlayerPalette;
     network_player_update_model(0);
+
+    if (gNetworkType != NT_NONE) {
+        network_send_player_settings();
+    }
 }
 
 void djui_panel_player_create(struct DjuiBase* caller) {
