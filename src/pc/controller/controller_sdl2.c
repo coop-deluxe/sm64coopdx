@@ -26,9 +26,6 @@
 
 #include "pc/djui/djui.h"
 
-// mouse buttons are also in the controller namespace (why), just offset 0x100
-#define VK_OFS_SDL_MOUSE 0x0100
-#define VK_BASE_SDL_MOUSE (VK_BASE_SDL_GAMEPAD + VK_OFS_SDL_MOUSE)
 #define MAX_JOYBINDS 32
 #define MAX_MOUSEBUTTONS 8 // arbitrary
 #define MAX_JOYBUTTONS 32  // arbitrary; includes virtual keys for triggers

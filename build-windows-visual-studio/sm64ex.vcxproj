@@ -89,7 +89,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINSOCK;DEBUG;CAPI_SDL2;WAPI_SDL2;RAPI_GL;F3DEX_GBI_2;_LANGUAGE_C;BETTERCAMERA;VERSION_US;EXT_OPTIONS_MENU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINSOCK;DEBUG;CAPI_SDL2;WAPI_SDL2;RAPI_GL;F3DEX_GBI_2;_LANGUAGE_C;BETTERCAMERA;VERSION_US;EXT_OPTIONS_MENU;HAVE_SDL2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -3936,6 +3936,7 @@
     <ClCompile Include="..\src\pc\cheats.c" />
     <ClCompile Include="..\src\pc\cliopts.c" />
     <ClCompile Include="..\src\pc\configfile.c" />
+    <ClCompile Include="..\src\pc\controller\controller_bind_mapping.c" />
     <ClCompile Include="..\src\pc\controller\controller_emscripten_keyboard.c" />
     <ClCompile Include="..\src\pc\controller\controller_entry_point.c" />
     <ClCompile Include="..\src\pc\controller\controller_keyboard.c" />
@@ -4394,6 +4395,7 @@
     <ClInclude Include="..\include\luigi_audio_defines.h" />
     <ClInclude Include="..\src\game\characters.h" />
     <ClInclude Include="..\src\game\rng_position.h" />
+    <ClInclude Include="..\src\pc\controller\controller_bind_mapping.h" />
     <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h" />
     <ClInclude Include="..\src\pc\debuglog.h" />
     <ClInclude Include="..\src\pc\djui\djui.h" />

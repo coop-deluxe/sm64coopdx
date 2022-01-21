@@ -19,6 +19,7 @@
 #include "../platform.h"
 
 #include "src/pc/controller/controller_keyboard.h"
+#include "src/pc/controller/controller_bind_mapping.h"
 
 // TODO: figure out if this shit even works
 #ifdef VERSION_EU
@@ -26,8 +27,6 @@
 #else
 # define FRAMERATE 30
 #endif
-
-static int inverted_scancode_table[512];
 
 static kb_callback_t kb_key_down = NULL;
 static kb_callback_t kb_key_up = NULL;
@@ -42,56 +41,6 @@ static int desktop_bpp = 24;
 
 static int window_w = 0;
 static int window_h = 0;
-
-const SDLKey windows_scancode_table[] = {
-    /*  0            1               2                 3                  4             5                  6                    7                     */
-    /*  8            9               A                 B                  C             D                  E                    F                     */
-    SDLK_UNKNOWN,    SDLK_ESCAPE,    SDLK_1,           SDLK_2,            SDLK_3,       SDLK_4,            SDLK_5,              SDLK_6,          /* 0 */
-    SDLK_7,          SDLK_8,         SDLK_9,           SDLK_0,            SDLK_MINUS,   SDLK_EQUALS,       SDLK_BACKSPACE,      SDLK_TAB,        /* 0 */
-
-    SDLK_q,          SDLK_w,         SDLK_e,           SDLK_r,            SDLK_t,       SDLK_y,            SDLK_u,              SDLK_i,          /* 1 */
-    SDLK_o,          SDLK_p,         SDLK_LEFTBRACKET, SDLK_RIGHTBRACKET, SDLK_RETURN,  SDLK_LCTRL,        SDLK_a,              SDLK_s,          /* 1 */
-
-    SDLK_d,          SDLK_f,         SDLK_g,           SDLK_h,            SDLK_j,       SDLK_k,            SDLK_l,              SDLK_SEMICOLON,  /* 2 */
-    SDLK_UNKNOWN,    SDLK_BACKQUOTE, SDLK_LSHIFT,      SDLK_BACKSLASH,    SDLK_z,       SDLK_x,            SDLK_c,              SDLK_v,          /* 2 */
-
-    SDLK_b,          SDLK_n,         SDLK_m,           SDLK_COMMA,        SDLK_PERIOD,  SDLK_SLASH,        SDLK_RSHIFT,         SDLK_PRINT,      /* 3 */
-    SDLK_LALT,       SDLK_SPACE,     SDLK_CAPSLOCK,    SDLK_F1,           SDLK_F2,      SDLK_F3,           SDLK_F4,             SDLK_F5,         /* 3 */
-
-    SDLK_F6,         SDLK_F7,        SDLK_F8,          SDLK_F9,           SDLK_F10,     SDLK_NUMLOCK,      SDLK_SCROLLOCK,      SDLK_HOME,       /* 4 */
-    SDLK_UP,         SDLK_PAGEUP,    SDLK_KP_MINUS,    SDLK_LEFT,         SDLK_KP5,     SDLK_RIGHT,        SDLK_KP_PLUS,        SDLK_END,        /* 4 */
-
-    SDLK_DOWN,       SDLK_PAGEDOWN,  SDLK_INSERT,      SDLK_DELETE,       SDLK_UNKNOWN, SDLK_UNKNOWN,      SDLK_UNKNOWN,        SDLK_F11,        /* 5 */
-    SDLK_F12,        SDLK_PAUSE,     SDLK_UNKNOWN,     SDLK_LSUPER,       SDLK_RSUPER,  SDLK_MODE,         SDLK_UNKNOWN,        SDLK_UNKNOWN,    /* 5 */
-
-    SDLK_UNKNOWN,    SDLK_UNKNOWN,   SDLK_UNKNOWN,     SDLK_UNKNOWN,      SDLK_F13,     SDLK_F14,          SDLK_F15,            SDLK_UNKNOWN,    /* 6 */
-    SDLK_UNKNOWN,    SDLK_UNKNOWN,   SDLK_UNKNOWN,     SDLK_UNKNOWN,      SDLK_UNKNOWN, SDLK_UNKNOWN,      SDLK_UNKNOWN,        SDLK_UNKNOWN,    /* 6 */
-
-    SDLK_WORLD_2,    SDLK_UNKNOWN,   SDLK_UNKNOWN,     SDLK_WORLD_1,      SDLK_UNKNOWN, SDLK_UNKNOWN,      SDLK_UNKNOWN,        SDLK_UNKNOWN,    /* 7 */
-    SDLK_UNKNOWN,    SDLK_WORLD_4,   SDLK_UNKNOWN,     SDLK_WORLD_5,      SDLK_UNKNOWN, SDLK_WORLD_3,      SDLK_UNKNOWN,        SDLK_UNKNOWN     /* 7 */
-};
-
-const SDLKey scancode_rmapping_extended[][2] = {
-    { SDLK_KP_ENTER,  SDLK_RETURN },
-    { SDLK_RALT,      SDLK_LALT },
-    { SDLK_RCTRL,     SDLK_LCTRL },
-    { SDLK_KP_DIVIDE, SDLK_SLASH },
-    //{ SDLK_KPPLUS,    SDLK_CAPSLOCK }
-};
-
-const SDLKey scancode_rmapping_nonextended[][2] = {
-    { SDLK_KP7,         SDLK_HOME },
-    { SDLK_KP8,         SDLK_UP },
-    { SDLK_KP9,         SDLK_PAGEUP },
-    { SDLK_KP4,         SDLK_LEFT },
-    { SDLK_KP6,         SDLK_RIGHT },
-    { SDLK_KP1,         SDLK_END },
-    { SDLK_KP2,         SDLK_DOWN },
-    { SDLK_KP3,         SDLK_PAGEDOWN },
-    { SDLK_KP0,         SDLK_INSERT },
-    { SDLK_KP_PERIOD,   SDLK_DELETE },
-    { SDLK_KP_MULTIPLY, SDLK_PRINT }
-};
 
 static void gfx_sdl_set_mode(void) {
     if (configWindow.exiting_fullscreen)
@@ -160,18 +109,7 @@ static void gfx_sdl_init(const char *window_title) {
         SDL_ShowCursor(0);
     }
 
-    for (size_t i = 0; i < sizeof(windows_scancode_table) / sizeof(SDLKey); i++) {
-        inverted_scancode_table[windows_scancode_table[i]] = i;
-    }
-
-    for (size_t i = 0; i < sizeof(scancode_rmapping_extended) / sizeof(scancode_rmapping_extended[0]); i++) {
-        inverted_scancode_table[scancode_rmapping_extended[i][0]] = inverted_scancode_table[scancode_rmapping_extended[i][1]] + 0x100;
-    }
-
-    for (size_t i = 0; i < sizeof(scancode_rmapping_nonextended) / sizeof(scancode_rmapping_nonextended[0]); i++) {
-        inverted_scancode_table[scancode_rmapping_nonextended[i][0]] = inverted_scancode_table[scancode_rmapping_nonextended[i][1]];
-        inverted_scancode_table[scancode_rmapping_nonextended[i][1]] += 0x100;
-    }
+    controller_bind_init();
 }
 
 static void gfx_sdl_main_loop(void (*run_one_game_iter)(void)) {
@@ -183,22 +121,14 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
     if (height) *height = window_h;
 }
 
-static int translate_scancode(int scancode) {
-    if (scancode < 512) {
-        return inverted_scancode_table[scancode];
-    } else {
-        return 0;
-    }
-}
-
 static void gfx_sdl_onkeydown(int scancode) {
     if (kb_key_down)
-        kb_key_down(translate_scancode(scancode));
+        kb_key_down(translate_bind_to_name(scancode));
 }
 
 static void gfx_sdl_onkeyup(int scancode) {
     if (kb_key_up)
-        kb_key_up(translate_scancode(scancode));
+        kb_key_up(translate_bind_to_name(scancode));
 }
 
 static void gfx_sdl_handle_events(void) {

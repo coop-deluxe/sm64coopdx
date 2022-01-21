@@ -37,6 +37,10 @@
 #include "gfx_rendering_api.h"
 #include "gfx_direct3d_common.h"
 
+extern "C" {
+    #include "src/pc/controller/controller_bind_mapping.h"
+}
+
 #include "gfx_screen_config.h"
 
 #define DEBUG_D3D 0
@@ -866,6 +870,8 @@ static void gfx_direct3d12_init(void ) {
         CD3DX12_RANGE read_range(0, 0); // Read not possible from CPU
         ThrowIfFailed(d3d.vertex_buffer->Map(0, &read_range, &d3d.mapped_vbuf_address));
     }
+
+    controller_bind_init();
 }
 
 static void gfx_direct3d12_end_frame(void) {

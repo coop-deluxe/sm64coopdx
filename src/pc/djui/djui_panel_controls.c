@@ -8,7 +8,7 @@ void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_controls_create(struct DjuiBase* caller) {
-    f32 bindBodyHeight = 32 * 12 + 1 * 11;
+    f32 bindBodyHeight = 32 * 11 + 1 * 10;
     f32 bodyHeight = bindBodyHeight + 16 * 3 + 32 * 2 + 64;
 
     struct DjuiBase* defaultBase = NULL;
@@ -32,7 +32,7 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, "C Left",      configKeyCLeft);
             djui_bind_create(&bindBody->base, "C Right",     configKeyCRight);
             djui_bind_create(&bindBody->base, "Chat",        configKeyChat);
-            djui_bind_create(&bindBody->base, "Player List", configKeyPlayerList);
+            djui_bind_create(&bindBody->base, "Players", configKeyPlayerList);
             defaultBase = &bind1->buttons[0]->base;
         }
 
