@@ -33,7 +33,11 @@ static void djui_bind_button_on_bind(struct DjuiBase* caller) {
 
     // set key
     bind->configKey[button->base.tag] = key;
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
     djui_text_set_text(button->text, translate_bind_to_name(key));
+#else
+    djui_text_set_text(button->text, "???");
+#endif
     djui_interactable_set_binding(NULL);
     play_sound(SOUND_MENU_CHANGE_SELECT, gDefaultSoundArgs);
     controller_reconfigure();
@@ -72,8 +76,12 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
     bind->rect = rect;
 
     for (int i = 0; i < MAX_BINDS; i++) {
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
         unsigned int key = configKey[i];
         struct DjuiButton* button = djui_button_create(&rect->base, translate_bind_to_name(key));
+#else
+        struct DjuiButton* button = djui_button_create(&rect->base, "???");
+#endif
         djui_base_set_size_type(&button->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&button->base, 0.33f, 1.0f);
         button->base.tag = i;

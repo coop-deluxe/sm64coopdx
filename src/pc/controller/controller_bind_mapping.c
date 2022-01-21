@@ -8,6 +8,8 @@
 #include "controller_api.h"
 #include "controller_sdl.h"
 
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+
 static int inverted_scancode_table[512];
 static SDL_Scancode bind_to_sdl_scancode[512] = { 0 };
 
@@ -149,3 +151,4 @@ const char* translate_bind_to_name(int bind) {
 #endif
     return name;
 }
+#endif
