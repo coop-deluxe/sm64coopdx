@@ -11,6 +11,15 @@
 // Analog camera movement by Pathétique (github.com/vrmiguel), y0shin and Mors
 // Contribute or communicate bugs at github.com/vrmiguel/sm64-analog-camera
 
+// moved these from sdl controller implementations
+
+int mouse_x;
+int mouse_y;
+
+int mouse_window_buttons;
+int mouse_window_x;
+int mouse_window_y;
+
 static struct ControllerAPI *controller_implementations[] = {
     &controller_recorded_tas,
     #if defined(CAPI_SDL2) || defined(CAPI_SDL1)

@@ -162,7 +162,9 @@ static void sys_fatal_impl(const char *msg) {
 
 #else
 
+#ifndef WAPI_DUMMY
 #warning "You might want to implement these functions for your platform"
+#endif
 
 const char *sys_user_path(void) {
     return ".";

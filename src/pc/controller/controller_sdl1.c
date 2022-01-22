@@ -18,6 +18,7 @@
 
 #include "controller_api.h"
 #include "controller_sdl.h"
+#include "controller_mouse.h"
 #include "../configfile.h"
 #include "../platform.h"
 #include "../fs/fs.h"
@@ -40,13 +41,6 @@ enum {
     JOY_AXIS_RTRIG,
     MAX_AXES,
 };
-
-int mouse_x;
-int mouse_y;
-
-int mouse_window_buttons;
-int mouse_window_x;
-int mouse_window_y;
 
 #ifdef BETTERCAMERA
 extern u8 newcam_mouse;

@@ -18,6 +18,7 @@
 
 #include "controller_api.h"
 #include "controller_sdl.h"
+#include "controller_mouse.h"
 #include "../configfile.h"
 #include "../platform.h"
 #include "../fs/fs.h"
@@ -30,13 +31,6 @@
 #define MAX_MOUSEBUTTONS 8 // arbitrary
 #define MAX_JOYBUTTONS 32  // arbitrary; includes virtual keys for triggers
 #define AXIS_THRESHOLD (30 * 256)
-
-int mouse_x;
-int mouse_y;
-
-int mouse_window_buttons;
-int mouse_window_x;
-int mouse_window_y;
 
 #ifdef BETTERCAMERA
 extern u8 newcam_mouse;

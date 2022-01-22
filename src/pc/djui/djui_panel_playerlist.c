@@ -20,7 +20,12 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
     if (charIndex >= CT_MAX) { charIndex = 0; }
     djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture;
 
-    djui_base_set_visible(&djuiRow[i]->base, np->connected);
+    u8 visible = np->connected;
+    if (np == gNetworkPlayerServer && gServerSettings.headlessServer) {
+        visible = false;
+    }
+
+    djui_base_set_visible(&djuiRow[i]->base, visible);
 
     u8* rgb = get_player_color(np->paletteIndex, 0);
     djui_base_set_color(&djuiTextNames[i]->base, rgb[0], rgb[1], rgb[2], 255);

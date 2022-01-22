@@ -360,5 +360,9 @@ void network_receive_player(struct Packet* p) {
 
 void network_update_player(void) {
     if (!network_player_any_connected()) { return; }
-    network_send_player(0);
+
+    u8 localIsHeadless = (&gNetworkPlayers[0] == gNetworkPlayerServer && gServerSettings.headlessServer);
+    if (!localIsHeadless) {
+        network_send_player(0);
+    }
 }

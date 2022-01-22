@@ -64,11 +64,11 @@ NO_LDIV ?= 0
 
 # Backend selection
 
-# Renderers: GL, GL_LEGACY, D3D11, D3D12
+# Renderers: GL, GL_LEGACY, D3D11, D3D12, DUMMY
 RENDER_API ?= GL
-# Window managers: SDL1, SDL2, DXGI (forced if D3D11 or D3D12 in RENDER_API)
+# Window managers: SDL1, SDL2, DXGI (forced if D3D11 or D3D12 in RENDER_API), DUMMY (forced if RENDER_API is DUMMY)
 WINDOW_API ?= SDL2
-# Audio backends: SDL1, SDL2
+# Audio backends: SDL1, SDL2, DUMMY
 AUDIO_API ?= SDL2
 # Controller backends (can have multiple, space separated): SDL2, SDL1
 CONTROLLER_API ?= SDL2
@@ -241,6 +241,17 @@ ifneq (,$(filter $(RENDER_API),D3D11 D3D12))
 else
   ifeq ($(WINDOW_API),DXGI)
     $(error DXGI can only be used with DirectX renderers)
+  endif
+  ifneq ($(WINDOW_API),DUMMY)
+    ifeq ($(RENDER_API),DUMMY)
+      $(warning Dummy renderer requires dummy window API, forcing WINDOW_API value)
+      WINDOW_API := DUMMY
+    endif
+  else
+    ifneq ($(RENDER_API),DUMMY)
+      $(warning Dummy window API requires dummy renderer, forcing RENDER_API value)
+      RENDER_API := DUMMY
+    endif
   endif
 endif
 
