@@ -1,5 +1,6 @@
 #include <string.h>
 
+#include "game/level_info.h"
 #include "pc/network/network.h"
 #include "djui.h"
 #include "djui_panel_playerlist.h"
@@ -14,148 +15,23 @@ static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextNames[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
 
-extern u8 seg2_course_name_table[];
-extern u8 seg2_act_name_table[];
-
-static char stage[188];
-static char act[188];
-
-static const char charset[0xFF + 1] = {
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 7
-    ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', // 15
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 23
-    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 31
-    'w', 'x', 'y', 'z', ' ', ' ', ' ', ' ', // 39
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 49
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 55
-    ' ', ' ', ' ', ' ', ' ', ' ', '\'', ' ', // 63
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 71
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 79
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 87
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 95
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 103
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ',', // 111
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 119
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 127
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 135
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 143
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 151
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', // 159
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 167
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 175
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 183
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 192
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 199
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 207
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 215
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 223
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 231
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 239
-    ' ', ' ', '!', ' ', ' ', ' ', ' ', ' ', // 247
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '  // 255
-};
-
-static void convert_string(const u8* str, char* output) {
-    s32 strPos = 0;
-    bool capitalizeChar = true;
-
-    while (str[strPos] != 0xFF) {
-        if (str[strPos] < 0xFF) {
-            output[strPos] = charset[str[strPos]];
-
-            // if the char is a letter we can capatalize it
-            if (capitalizeChar && 0x0A <= str[strPos] && str[strPos] <= 0x23) {
-                output[strPos] -= ('a' - 'A');
-                capitalizeChar = false;
-            }
-
-        }
-        else {
-            output[strPos] = ' ';
-        }
-
-        // decide if the next character should be capitalized
-        switch (output[strPos]) {
-        case ' ':
-            //if (str[strPos] != 158)
-                //fprintf(stdout, "Unknown Character (%i)\n", str[strPos]); // inform that an unknown char was found
-        case '-':
-            capitalizeChar = true;
-            break;
-        default:
-            capitalizeChar = false;
-            break;
-        }
-
-        strPos++;
-    }
-
-    output[strPos] = '\0';
-}
-
-static void set_details(s16 courseNum, s16 levelNum, s16 areaIndex) {
-    // overrides for castle locations
-    if (courseNum == 0 && levelNum == 16) {
-        strcpy(stage, "Castle Grounds");
-        return;
-    }
-    if (courseNum == 0 && levelNum == 6) {
-        if (areaIndex == 1) {
-            strcpy(stage, "Castle Main Floor");
-            return;
-        } else if (areaIndex == 2) {
-            strcpy(stage, "Castle Upper Floor");
-            return;
-        } else if (areaIndex == 3) {
-            strcpy(stage, "Castle Basement");
-            return;
-        }
-    }
-    if (courseNum == 0 && levelNum == 26) {
-        strcpy(stage, "Castle Courtyard");
-        return;
-    }
-
-    // If we are in in Course 0 we are in the castle which doesn't have a string
-    if (courseNum) {
-        void** courseNameTbl;
-
-#ifndef VERSION_EU
-        courseNameTbl = segmented_to_virtual(seg2_course_name_table);
-#else
-        switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
-            break;
-        }
-#endif
-        u8* courseName = segmented_to_virtual(courseNameTbl[courseNum - 1]);
-
-        convert_string(&courseName[3], stage);
-    } else {
-        strcpy(stage, "Peach's Castle");
-    }
-}
-
 static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
     u8 charIndex = np->modelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
     djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture;
 
-    set_details(np->currCourseNum, np->currLevelNum, np->currAreaIndex);
-    djui_base_set_visible(&djuiRow[i]->base, np->connected);
+    u8 visible = np->connected;
+    if (np == gNetworkPlayerServer && gServerSettings.headlessServer) {
+        visible = false;
+    }
+
+    djui_base_set_visible(&djuiRow[i]->base, visible);
 
     u8* rgb = get_player_color(np->paletteIndex, 0);
     djui_base_set_color(&djuiTextNames[i]->base, rgb[0], rgb[1], rgb[2], 255);
     djui_text_set_text(djuiTextNames[i], np->name);
 
-    djui_text_set_text(djuiTextLocations[i], stage);
+    djui_text_set_text(djuiTextLocations[i], get_level_name(np->currCourseNum, np->currLevelNum, np->currAreaIndex));
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {

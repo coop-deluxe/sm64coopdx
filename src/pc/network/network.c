@@ -43,6 +43,7 @@ struct ServerSettings gServerSettings = {
     .shareLives = 0,
     .enableCheats = 0,
     .bubbleDeath = 1,
+    .headlessServer = 0,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -70,6 +71,11 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.shareLives = configShareLives;
     gServerSettings.enableCheats = configEnableCheats;
     gServerSettings.bubbleDeath = configBubbleDeath;
+#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
+    gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
+#else
+    gServerSettings.headlessServer = 0;
+#endif
     Cheats.EnableCheats = gServerSettings.enableCheats;
 
     // initialize the network system

@@ -52,6 +52,8 @@ enum PacketType {
     PACKET_LEVEL_AREA_INFORM,
     PACKET_LEVEL_RESPAWN_INFO,
 
+    PACKET_PLAYER_SETTINGS,
+
     ///
     PACKET_CUSTOM = 255,
 };
@@ -274,5 +276,9 @@ void network_receive_reservation_release(struct Packet* p);
 // packet_debug_sync.c
 void network_send_debug_sync(void);
 void network_receive_debug_sync(struct Packet* p);
+
+// packet_player_settings.c
+void network_send_player_settings(void);
+void network_receive_player_settings(struct Packet* p);
 
 #endif

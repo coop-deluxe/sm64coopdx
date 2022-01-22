@@ -2,6 +2,7 @@
 #include <string.h>
 #include "djui.h"
 #include "src/pc/controller/controller_api.h"
+#include "src/pc/controller/controller_bind_mapping.h"
 #include "audio_defines.h"
 #include "audio/external.h"
 
@@ -32,11 +33,11 @@ static void djui_bind_button_on_bind(struct DjuiBase* caller) {
 
     // set key
     bind->configKey[button->base.tag] = key;
-    char keyStr[5] = { 0 };
-    if (key != VK_INVALID) {
-        sprintf(keyStr, "%04x", key);
-    }
-    djui_text_set_text(button->text, keyStr);
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+    djui_text_set_text(button->text, translate_bind_to_name(key));
+#else
+    djui_text_set_text(button->text, "???");
+#endif
     djui_interactable_set_binding(NULL);
     play_sound(SOUND_MENU_CHANGE_SELECT, gDefaultSoundArgs);
     controller_reconfigure();
@@ -55,7 +56,7 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
 
     djui_base_init(parent, base, NULL, djui_bind_destroy);
     djui_base_set_size_type(&bind->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&bind->base, 1.0f, 32);
+    djui_base_set_size(&bind->base, 1.0f, 28);
     djui_base_set_color(&bind->base, 0, 0, 0, 0);
 
     struct DjuiText* text = djui_text_create(&bind->base, message);
@@ -70,17 +71,17 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
     struct DjuiRect* rect = djui_rect_create(&bind->base);
     djui_base_set_alignment(&rect->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&rect->base, 0.7f, 1.0f);
+    djui_base_set_size(&rect->base, 0.8f, 1.0f);
     djui_base_set_color(&rect->base, 0, 0, 0, 0);
     bind->rect = rect;
 
     for (int i = 0; i < MAX_BINDS; i++) {
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
         unsigned int key = configKey[i];
-        char keyStr[5] = { 0 };
-        if (key != VK_INVALID) {
-            sprintf(keyStr, "%04x", key);
-        }
-        struct DjuiButton* button = djui_button_create(&rect->base, keyStr);
+        struct DjuiButton* button = djui_button_create(&rect->base, translate_bind_to_name(key));
+#else
+        struct DjuiButton* button = djui_button_create(&rect->base, "???");
+#endif
         djui_base_set_size_type(&button->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&button->base, 0.33f, 1.0f);
         button->base.tag = i;

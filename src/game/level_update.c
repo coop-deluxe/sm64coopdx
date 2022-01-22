@@ -826,6 +826,15 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 play_sound(SOUND_MENU_BOWSER_LAUGH, gDefaultSoundArgs);
                 break;
 
+            case WARP_OP_EXIT:
+                sSourceWarpNodeId = WARP_NODE_WARP_FLOOR;
+                if (area_get_warp_node(sSourceWarpNodeId) == NULL) {
+                    sSourceWarpNodeId = WARP_NODE_DEATH;
+                }
+                sDelayedWarpTimer = 20;
+                play_transition(WARP_TRANSITION_FADE_INTO_CIRCLE, 0x14, 0x00, 0x00, 0x00);
+                break;
+
             case WARP_OP_WARP_FLOOR:
                 sSourceWarpNodeId = WARP_NODE_WARP_FLOOR;
                 if (area_get_warp_node(sSourceWarpNodeId) == NULL) {
@@ -1127,6 +1136,9 @@ s32 play_mode_paused(void) {
         gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
         set_play_mode(PLAY_MODE_NORMAL);
     } else if (gPauseScreenMode == 2) {
+        level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
+        set_play_mode(PLAY_MODE_NORMAL);
+    } else if (gPauseScreenMode == 3) {
         // Exit level
         if (gDebugLevelSelect) {
             fade_into_special_warp(-9, 1);
@@ -1136,12 +1148,12 @@ s32 play_mode_paused(void) {
             gSavedCourseNum = COURSE_NONE;
         }
         set_play_mode(PLAY_MODE_CHANGE_LEVEL);
-    } else if (gPauseScreenMode == 3) {
-        // We should only be getting "int 3" to here
+    } /* else if (gPauseScreenMode == 4) {
+        // We should only be getting "int 4" to here
         initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
         fade_into_special_warp(0, 0);
         game_exit();
-    }
+    }*/
 
     gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
     return 0;

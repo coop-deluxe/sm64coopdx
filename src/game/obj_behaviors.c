@@ -518,9 +518,9 @@ s32 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
 
 u8 is_player_active(struct MarioState* m) {
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
-
     if (m->action == ACT_BUBBLED) { return FALSE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
+    if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
     if (np->type != NPT_LOCAL) {
         if (!np->connected) { return FALSE; }
         if (gNetworkPlayerLocal == NULL) { return FALSE; }

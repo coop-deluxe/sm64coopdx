@@ -25,6 +25,7 @@
 
 #include "gfx/gfx_dxgi.h"
 #include "gfx/gfx_sdl.h"
+#include "gfx/gfx_dummy.h"
 
 #include "audio/audio_api.h"
 #include "audio/audio_sdl.h"
@@ -236,6 +237,8 @@ void main_func(void) {
     wm_api = &gfx_sdl;
     #elif defined(WAPI_DXGI)
     wm_api = &gfx_dxgi;
+    #elif defined(WAPI_DUMMY)
+    wm_api = &gfx_dummy_wm_api;
     #else
     #error No window API!
     #endif
@@ -253,6 +256,8 @@ void main_func(void) {
     # else
     #  define RAPI_NAME "OpenGL"
     # endif
+    #elif defined(RAPI_DUMMY)
+    rendering_api = &gfx_dummy_renderer_api;
     #else
     #error No rendering API!
     #endif

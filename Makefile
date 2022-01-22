@@ -64,11 +64,11 @@ NO_LDIV ?= 0
 
 # Backend selection
 
-# Renderers: GL, GL_LEGACY, D3D11, D3D12
+# Renderers: GL, GL_LEGACY, D3D11, D3D12, DUMMY
 RENDER_API ?= GL
-# Window managers: SDL1, SDL2, DXGI (forced if D3D11 or D3D12 in RENDER_API)
+# Window managers: SDL1, SDL2, DXGI (forced if D3D11 or D3D12 in RENDER_API), DUMMY (forced if RENDER_API is DUMMY)
 WINDOW_API ?= SDL2
-# Audio backends: SDL1, SDL2
+# Audio backends: SDL1, SDL2, DUMMY
 AUDIO_API ?= SDL2
 # Controller backends (can have multiple, space separated): SDL2, SDL1
 CONTROLLER_API ?= SDL2
@@ -241,6 +241,17 @@ ifneq (,$(filter $(RENDER_API),D3D11 D3D12))
 else
   ifeq ($(WINDOW_API),DXGI)
     $(error DXGI can only be used with DirectX renderers)
+  endif
+  ifneq ($(WINDOW_API),DUMMY)
+    ifeq ($(RENDER_API),DUMMY)
+      $(warning Dummy renderer requires dummy window API, forcing WINDOW_API value)
+      WINDOW_API := DUMMY
+    endif
+  else
+    ifneq ($(RENDER_API),DUMMY)
+      $(warning Dummy window API requires dummy renderer, forcing RENDER_API value)
+      RENDER_API := DUMMY
+    endif
   endif
 endif
 
@@ -749,6 +760,7 @@ endif
 
 # lua
 LDFLAGS += -Llib/lua -l:liblua54.a
+LUA_LIBS := lib/lua/lua54.dll
 
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
@@ -852,6 +864,9 @@ $(BUILD_DIR)/$(RPC_LIBS):
 
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
+
+$(BUILD_DIR)/$(LUA_LIBS):
+	@$(CP) -f $(LUA_LIBS) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
 	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
@@ -1106,7 +1121,7 @@ $(BUILD_DIR)/%.o: %.s
 
 
 
-$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(MOD_DIR)
+$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(LUA_LIBS) $(BUILD_DIR)/$(MOD_DIR)
 	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 
 .PHONY: all clean distclean default diff test load libultra res

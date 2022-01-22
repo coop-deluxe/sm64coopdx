@@ -22,6 +22,10 @@
 #include "gfx_rendering_api.h"
 #include "gfx_direct3d_common.h"
 
+extern "C" {
+    #include "src/pc/controller/controller_bind_mapping.h"
+}
+
 #define DECLARE_GFX_DXGI_FUNCTIONS
 #include "gfx_dxgi.h"
 
@@ -303,6 +307,8 @@ static void gfx_d3d11_init(void) {
                   gfx_dxgi_get_h_wnd(), "Failed to create per-draw constant buffer.");
 
     d3d.context->PSSetConstantBuffers(1, 1, d3d.per_draw_cb.GetAddressOf());
+
+    controller_bind_init();
 }
 
 

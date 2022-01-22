@@ -341,7 +341,7 @@ void network_receive_player(struct Packet* p) {
         // display popup
         u8* rgb = get_player_color(np->paletteIndex, 0);
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ died.", rgb[0], rgb[1], rgb[2], np->name);
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ died", rgb[0], rgb[1], rgb[2], np->name);
         djui_popup_create(popupMsg, 1);
     }
 
@@ -360,5 +360,9 @@ void network_receive_player(struct Packet* p) {
 
 void network_update_player(void) {
     if (!network_player_any_connected()) { return; }
-    network_send_player(0);
+
+    u8 localIsHeadless = (&gNetworkPlayers[0] == gNetworkPlayerServer && gServerSettings.headlessServer);
+    if (!localIsHeadless) {
+        network_send_player(0);
+    }
 }

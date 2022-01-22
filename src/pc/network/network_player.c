@@ -6,6 +6,7 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "game/area.h"
+#include "game/level_info.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer* gNetworkPlayerLocal = NULL;
@@ -23,22 +24,6 @@ void network_player_update_model(u8 localIndex) {
     m->character = &gCharacters[gNetworkPlayers[localIndex].modelIndex];
     if (m->marioObj == NULL) { return; }
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
-}
-
-u8 network_player_unique_palette(u8 palette) {
-    u16 iterations = 0;
-    retry_palette:
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (!gNetworkPlayers[i].connected) { continue; }
-        if (gNetworkPlayers[i].paletteIndex == palette) {
-            palette = (palette + 1) % gNumPlayerColors;
-            if (iterations++ >= gNumPlayerColors) {
-                return palette;
-            }
-            goto retry_palette;
-        }
-    }
-    return palette;
 }
 
 bool network_player_any_connected(void) {
@@ -111,42 +96,8 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
     return smallest;
 }
 
-static void network_player_update_level_popup(void) {
-    static s16 sCachedCourseNum = 0;
-    static s16 sCachedActStarNum = 0;
-    static s16 sCachedLevelNum = 0;
-
-    bool inBonusCourse = (gCurrCourseNum >= 16);
-    bool allowPopup = (sCachedCourseNum == gCurrCourseNum)
-                   && (sCachedActStarNum == gCurrActStarNum)
-                   && (sCachedLevelNum == gCurrLevelNum)
-                   && (gCurrActStarNum != 99)                          // suppress popup for credits sequence
-                   && (inBonusCourse || gCurrActStarNum != 0);   // suppress popup for star selection
-
-    sCachedCourseNum  = gCurrCourseNum;
-    sCachedActStarNum = gCurrActStarNum;
-    sCachedLevelNum   =  gCurrLevelNum;
-
-    for (int i = 1; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
-        if (!np->connected) { continue; }
-        bool localLevelMatch = (np->currCourseNum == gCurrCourseNum && np->currActNum == gCurrActStarNum && np->currLevelNum == gCurrLevelNum);
-        if (np->localLevelMatch != localLevelMatch) {
-            np->localLevelMatch = localLevelMatch;
-
-            if (!allowPopup) { continue; }
-            u8* rgb = get_player_color(np->paletteIndex, 0);
-            char popupMsg[128] = { 0 };
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ %s this level.", rgb[0], rgb[1], rgb[2], np->name, localLevelMatch ? "entered" : "left");
-            djui_popup_create(popupMsg, 1);
-        }
-    }
-}
-
 void network_player_update(void) {
     if (!network_player_any_connected()) { return; }
-
-    network_player_update_level_popup();
 
 #ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER) {
@@ -203,10 +154,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->currLevelAreaSeqId = 0;
 
         extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
-        np->currCourseNum      = gCurrCourseNum;
-        np->currActNum         = gCurrActStarNum;
-        np->currLevelNum       = gCurrLevelNum;
-        np->currAreaIndex      = gCurrAreaIndex;
+        network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
         np->currLevelSyncValid = false;
         np->currAreaSyncValid  = false;
         np->modelIndex         = modelIndex;
@@ -252,10 +200,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->connected = true;
         np->currLevelAreaSeqId = 0;
         if (gNetworkType == NT_SERVER && !np->currAreaSyncValid) {
-            np->currCourseNum      = 0;
-            np->currActNum         = 0;
-            np->currLevelNum       = 16;
-            np->currAreaIndex      = 1;
+            network_player_update_course_level(np, 0, 0, 16, 1);
             np->currLevelSyncValid = false;
             np->currAreaSyncValid  = false;
         }
@@ -280,7 +225,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
             // display popup
             u8* rgb = get_player_color(np->paletteIndex, 0);
             char popupMsg[128] = { 0 };
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected.", rgb[0], rgb[1], rgb[2], np->name);
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected", rgb[0], rgb[1], rgb[2], np->name);
             djui_popup_create(popupMsg, 1);
         }
         LOG_INFO("player connected, local %d, global %d", i, np->globalIndex);
@@ -327,7 +272,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         // display popup
         u8* rgb = get_player_color(np->paletteIndex, 0);
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected.", rgb[0], rgb[1], rgb[2], np->name);
+        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected", rgb[0], rgb[1], rgb[2], np->name);
         djui_popup_create(popupMsg, 1);
 
         packet_ordered_clear(globalIndex);
@@ -335,6 +280,27 @@ u8 network_player_disconnected(u8 globalIndex) {
         return i;
     }
     return UNKNOWN_GLOBAL_INDEX;
+}
+
+void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    // display popup
+    if (np->currCourseNum != courseNum && np->localIndex != 0) {
+        u8* rgb = get_player_color(np->paletteIndex, 0);
+        char popupMsg[128] = { 0 };
+        if (np->currCourseNum == gNetworkPlayerLocal->currCourseNum && gNetworkPlayerLocal->currCourseNum != 0) {
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ left this level", rgb[0], rgb[1], rgb[2], np->name);
+        } else if (courseNum == gNetworkPlayerLocal->currCourseNum && gNetworkPlayerLocal->currCourseNum != 0) {
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ entered this level", rgb[0], rgb[1], rgb[2], np->name);
+        } else {
+            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ entered\n%s", rgb[0], rgb[1], rgb[2], np->name, get_level_name(courseNum, levelNum, areaIndex));
+        }
+        djui_popup_create(popupMsg, 1);
+    }
+
+    np->currCourseNum = courseNum;
+    np->currActNum    = actNum;
+    np->currLevelNum  = levelNum;
+    np->currAreaIndex = areaIndex;
 }
 
 void network_player_shutdown(void) {
@@ -346,6 +312,6 @@ void network_player_shutdown(void) {
         gNetworkSystem->clear_id(i);
     }
 
-    djui_popup_create("\\#ffa0a0\\Error:\\#dcdcdc\\ network shutdown.", 1);
+    djui_popup_create("\\#ffa0a0\\Error:\\#dcdcdc\\ network shutdown", 1);
     LOG_INFO("cleared all network players");
 }
