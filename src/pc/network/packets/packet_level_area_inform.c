@@ -4,6 +4,10 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
+#include "pc/djui/djui.h"
+#include "game/level_info.h"
+#include "game/mario_misc.h"
+
 static u16 sLevelAreaInformSeq[MAX_PLAYERS][MAX_PLAYERS] = { 0 };
 
 void network_send_level_area_inform(struct NetworkPlayer* np) {
@@ -64,10 +68,7 @@ void network_receive_level_area_inform(struct Packet* p) {
     }
     sLevelAreaInformSeq[0][globalIndex] = seq;
 
-    np->currCourseNum      = courseNum;
-    np->currActNum         = actNum;
-    np->currLevelNum       = levelNum;
-    np->currAreaIndex      = areaIndex;
+    network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
     np->currLevelSyncValid = levelSyncValid;
     np->currAreaSyncValid  = areaSyncValid;
 }

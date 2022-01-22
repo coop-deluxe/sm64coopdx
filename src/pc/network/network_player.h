@@ -57,6 +57,7 @@ struct NetworkPlayer* get_network_player_smallest_global(void);
 void network_player_update(void);
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name);
 u8 network_player_disconnected(u8 globalIndex);
+void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 void network_player_shutdown(void);
 
 #endif

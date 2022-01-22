@@ -87,10 +87,7 @@ void network_receive_network_players(struct Packet* p) {
             struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
             if (localIndex != 0) {
                 np->currLevelAreaSeqId = levelAreaSeqId;
-                np->currCourseNum = courseNum;
-                np->currActNum = actNum;
-                np->currLevelNum = levelNum;
-                np->currAreaIndex = areaIndex;
+                network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
                 np->currLevelSyncValid = levelSyncValid;
                 np->currAreaSyncValid = areaSyncValid;
                 LOG_INFO("received network player location (%d, %d, %d, %d)", courseNum, actNum, levelNum, areaIndex);
