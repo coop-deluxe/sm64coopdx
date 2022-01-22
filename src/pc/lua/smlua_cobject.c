@@ -388,10 +388,7 @@ static int smlua__set_field(lua_State* L) {
 void smlua_bind_cobject(void) {
     lua_State* L = gLuaState;
 
-    lua_pushcfunction(L, smlua__get_field);
-    lua_setglobal(L, "_get_field");
-
-    lua_pushcfunction(L, smlua__set_field);
-    lua_setglobal(L, "_set_field");
+    smlua_bind_function(L, "_get_field", smlua__get_field);
+    smlua_bind_function(L, "_set_field", smlua__set_field);
 
 }

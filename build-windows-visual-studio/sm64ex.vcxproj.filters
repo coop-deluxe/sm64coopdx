@@ -4833,6 +4833,9 @@
     <ClCompile Include="..\src\game\level_info.c">
       <Filter>Source Files\src\game</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_hooks.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -5955,6 +5958,9 @@
     </ClInclude>
     <ClInclude Include="..\src\game\level_info.h">
       <Filter>Source Files\src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\lua\smlua_hooks.h">
+      <Filter>Source Files\src\pc\lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
