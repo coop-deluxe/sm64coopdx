@@ -147,7 +147,7 @@ const char* translate_bind_to_name(int bind) {
     char* space = strchr(sname, ' ');
     if (space == NULL) { return sname; }
 
-    sprintf_s(name, 10, "%c%s", sname[0], (space + 1));
+    snprintf(name, 10, "%c%s", sname[0], (space + 1));
 #endif
     return name;
 }
