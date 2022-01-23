@@ -129,6 +129,16 @@ static void register_launch_command(void) {
     LOGFILE_INFO(LFT_DISCORD, "cmd: %s", cmd);
 }
 
+static void* ns_discord_dup_addr(u8 localIndex) {
+    void* address = malloc(sizeof(DiscordUserId));
+    memcpy(address, &gNetworkUserIds[localIndex], sizeof(DiscordUserId));
+    return address;
+}
+
+static bool ns_discord_match_addr(void* addr1, void* addr2) {
+    return !memcmp(addr1, addr2, sizeof(u64));
+}
+
 static void ns_discord_update(void) {
     if (!gDiscordInitialized) { return; }
     discord_lobby_update();
@@ -212,6 +222,8 @@ struct NetworkSystem gNetworkSystemDiscord = {
     .get_id     = ns_discord_get_id,
     .save_id    = ns_discord_save_id,
     .clear_id   = ns_discord_clear_id,
+    .dup_addr   = ns_discord_dup_addr,
+    .match_addr = ns_discord_match_addr,
     .update     = ns_discord_update,
     .send       = ns_discord_network_send,
     .shutdown   = ns_discord_shutdown,

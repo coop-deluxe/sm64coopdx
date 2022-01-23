@@ -31,7 +31,7 @@ static void print_network_player_table(void) {
 
 void network_send_chat(char* message, u8 globalIndex) {
     u16 messageLength = strlen(message);
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_CHAT, true, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &messageLength, sizeof(u16));

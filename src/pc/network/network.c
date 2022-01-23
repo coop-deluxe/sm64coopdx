@@ -35,6 +35,7 @@ bool gNetworkAreaLoaded = false;
 bool gNetworkAreaSyncing = true;
 u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
+void* gNetworkServerAddr = NULL;
 
 struct StringLinkedList gRegisteredMods = { 0 };
 
@@ -49,6 +50,7 @@ struct ServerSettings gServerSettings = {
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
+    network_forget_all_reliable();
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
 #ifdef DISCORD_SDK
@@ -85,6 +87,10 @@ bool network_init(enum NetworkType inNetworkType) {
     if (!rc) {
         LOG_ERROR("failed to initialize network system");
         return false;
+    }
+    if (gNetworkServerAddr != NULL) {
+        free(gNetworkServerAddr);
+        gNetworkServerAddr = NULL;
     }
 
     // set network type
@@ -216,7 +222,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     // send
     if (!tooManyPackets) {
-        int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
+        int rc = gNetworkSystem->send(localIndex, p->addr, p->buffer, p->cursor + sizeof(u32));
         if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
     }
     p->sent = true;
@@ -259,11 +265,12 @@ void network_send(struct Packet* p) {
     }
 }
 
-void network_receive(u8 localIndex, u8* data, u16 dataLength) {
+void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     // receive packet
     struct Packet p = {
         .localIndex = localIndex,
         .cursor = 3,
+        .addr = addr,
         .buffer = { 0 },
         .dataLength = dataLength,
     };
@@ -282,6 +289,11 @@ void network_receive(u8 localIndex, u8* data, u16 dataLength) {
 
     // execute packet
     packet_receive(&p);
+}
+
+void* network_duplicate_address(u8 localIndex) {
+    assert(localIndex < MAX_PLAYERS);
+    return gNetworkSystem->dup_addr(localIndex);
 }
 
 static void network_update_area_timer(void) {
@@ -368,6 +380,11 @@ void network_shutdown(bool sendLeaving) {
     if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
     network_player_shutdown();
     gNetworkSystem->shutdown();
+
+    if (gNetworkServerAddr != NULL) {
+        free(gNetworkServerAddr);
+        gNetworkServerAddr = NULL;
+    }
 
     gNetworkType = NT_NONE;
 }

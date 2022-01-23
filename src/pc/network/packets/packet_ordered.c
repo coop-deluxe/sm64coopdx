@@ -102,7 +102,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
     }
 
     // allocate the packet list
-    opl = malloc(sizeof(struct OrderedPacketList));
+    opl = calloc(1, sizeof(struct OrderedPacketList));
     if (oplLast == NULL) {
         opt->packets = opl;
     } else {

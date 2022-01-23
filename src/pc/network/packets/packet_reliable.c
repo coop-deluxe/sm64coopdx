@@ -31,6 +31,8 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
 
     if (node->prev != NULL) { node->prev->next = node->next; }
     if (node->next != NULL) { node->next->prev = node->prev; }
+    assert(node->p.addr != NULL);
+    free(node->p.addr);
     free(node);
 }
 
@@ -85,8 +87,9 @@ void network_remember_reliable(struct Packet* p) {
     if (!p->reliable) { return; }
     if (p->sent) { return; }
 
-    struct PacketLinkedList* node = malloc(sizeof(struct PacketLinkedList));
+    struct PacketLinkedList* node = calloc(1, sizeof(struct PacketLinkedList));
     node->p = *p;
+    node->p.addr = network_duplicate_address(p->localIndex);
     node->p.sent = true;
     node->lastSend = clock_elapsed();
     node->sendAttempts = 1;

@@ -6,7 +6,7 @@
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_MOD_LIST_REQUEST, true, PLMT_NONE);
 
     char version[MAX_VERSION_LENGTH] = { 0 };
@@ -40,7 +40,7 @@ void network_receive_mod_list_request(struct Packet* p) {
 void network_send_mod_list(void) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_MOD_LIST, true, PLMT_NONE);
 
     packet_write(&p, &sModEntryCount, sizeof(u16));
@@ -58,6 +58,11 @@ void network_send_mod_list(void) {
 
 void network_receive_mod_list(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    SOFT_ASSERT(p->localIndex == UNKNOWN_LOCAL_INDEX);
+
+    if (gNetworkServerAddr == NULL) {
+        gNetworkServerAddr = network_duplicate_address(0);
+    }
 
     u16 modEntryCount = 0;
     packet_read(p, &modEntryCount, sizeof(u16));

@@ -38,7 +38,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
     packet_ordered_begin();
     {
-        struct Packet p;
+        struct Packet p = { 0 };
         packet_init(&p, PACKET_AREA, true, PLMT_NONE);
 
         // level location

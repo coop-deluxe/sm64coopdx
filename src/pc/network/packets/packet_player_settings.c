@@ -6,7 +6,7 @@ void network_send_player_settings(void) {
     char playerName[MAX_PLAYER_STRING+1] = { 0 };
     snprintf(playerName, MAX_PLAYER_STRING, "%s", configPlayerName);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_PLAYER_SETTINGS, true, PLMT_NONE);
     packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
     packet_write(&p, playerName, MAX_PLAYER_STRING * sizeof(u8));

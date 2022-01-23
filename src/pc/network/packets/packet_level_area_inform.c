@@ -20,7 +20,7 @@ void network_send_level_area_inform(struct NetworkPlayer* np) {
 
         u16 seq = ++sLevelAreaInformSeq[np->globalIndex][i];
 
-        struct Packet p;
+        struct Packet p = { 0 };
         packet_init(&p, PACKET_LEVEL_AREA_INFORM, true, PLMT_NONE);
         packet_write(&p, &seq,                    sizeof(u16));
         packet_write(&p, &np->globalIndex,        sizeof(u8));

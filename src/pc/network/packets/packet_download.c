@@ -17,7 +17,7 @@ static void network_send_next_download_request(void) {
 void network_send_download_request(u16 index, u64 offset) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_DOWNLOAD_REQUEST, true, PLMT_NONE);
 
     packet_write(&p, &index, sizeof(u16));
@@ -68,7 +68,7 @@ void network_send_download(u16 index, u64 offset) {
     fseek(entry->fp, offset, SEEK_SET);
     fread(chunk, chunkSize, 1, entry->fp);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_DOWNLOAD, true, PLMT_NONE);
 
     packet_write(&p, &index, sizeof(u16));
@@ -82,6 +82,10 @@ void network_send_download(u16 index, u64 offset) {
 
 void network_receive_download(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
+        LOG_ERROR("Received download from known local index");
+        return;
+    }
 
     u16 index;
     u64 offset;

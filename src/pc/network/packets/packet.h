@@ -74,6 +74,7 @@ struct Packet {
     u8 localIndex;
     u16 dataLength;
     u16 cursor;
+    void* addr;
     bool error;
     bool reliable;
     bool levelAreaMustMatch;

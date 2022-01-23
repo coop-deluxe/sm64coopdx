@@ -53,7 +53,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     // prevent sending spawn objects during credits
     if (gCurrActStarNum == 99) { return; }
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_OBJECTS, true, PLMT_AREA);
 
     // objects

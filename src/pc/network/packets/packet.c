@@ -95,6 +95,17 @@ void packet_receive(struct Packet* p) {
     // send an ACK if requested
     network_send_ack(p);
 
+    // refuse packets from unknown servers
+    if (gNetworkServerAddr != NULL && gNetworkType == NT_CLIENT) {
+        bool fromServer = (p->localIndex == UNKNOWN_LOCAL_INDEX);
+        if (gNetworkPlayerServer != NULL) { fromServer = fromServer || p->localIndex == gNetworkPlayerServer->localIndex; }
+        LOG_INFO("matching? %d, %d", fromServer, gNetworkSystem->match_addr(gNetworkServerAddr, p->addr));
+        if (fromServer && !gNetworkSystem->match_addr(gNetworkServerAddr, p->addr)) {
+            LOG_INFO("refusing packet from unknown server");
+            return;
+        }
+    }
+
     // refuse packets from unknown players other than join request
     if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && !network_allow_unknown_local_index(packetType)) {
         if (packetType != PACKET_PLAYER) {

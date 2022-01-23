@@ -10,7 +10,7 @@ void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlaye
         return;
     }
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_AREA_REQUEST, true, PLMT_NONE);
     packet_write(&p, &fromNp->globalIndex,       sizeof(u8));
     packet_write(&p, &fromNp->currCourseNum,     sizeof(s16));

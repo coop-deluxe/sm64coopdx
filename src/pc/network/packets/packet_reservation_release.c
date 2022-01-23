@@ -16,7 +16,7 @@ void network_send_reservation_release(u8 syncId) {
     // make sure this is a reserved id
     if (syncId < RESERVED_IDS_SYNC_OBJECT_OFFSET) { return; }
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_RESERVATION_RELEASE, true, PLMT_NONE);
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;

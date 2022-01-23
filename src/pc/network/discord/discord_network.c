@@ -13,10 +13,12 @@ u8 discord_user_id_to_local_index(int64_t userId) {
     return UNKNOWN_LOCAL_INDEX;
 }
 
-int ns_discord_network_send(u8 localIndex, u8* data, u16 dataLength) {
+int ns_discord_network_send(u8 localIndex, void* address, u8* data, u16 dataLength) {
     if (!gDiscordInitialized) { return 1; }
     if (gCurLobbyId == 0) { return 2; }
-    DISCORD_REQUIRE(app.lobbies->send_network_message(app.lobbies, gCurLobbyId, gNetworkUserIds[localIndex], 0, data, dataLength));
+    DiscordUserId userId = gNetworkUserIds[localIndex];
+    if (localIndex == 0 && address != NULL) { userId = *(DiscordUserId*)address; }
+    DISCORD_REQUIRE(app.lobbies->send_network_message(app.lobbies, gCurLobbyId, userId, 0, data, dataLength));
     return 0;
 }
 
@@ -31,7 +33,7 @@ void discord_network_on_message(UNUSED void* eventData, UNUSED int64_t lobbyId, 
         }
     }
 
-    network_receive(localIndex, (u8*)data, (u16)dataLength);
+    network_receive(localIndex, &userId, (u8*)data, (u16)dataLength);
 }
 
 void discord_network_flush(void) {

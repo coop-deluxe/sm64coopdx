@@ -38,7 +38,7 @@ struct DelayedPacketObject* delayedPacketObjectHead = NULL;
 struct DelayedPacketObject* delayedPacketObjectTail = NULL;
 
 void network_delayed_packet_object_remember(struct Packet* p) {
-    struct DelayedPacketObject* node = malloc(sizeof(struct DelayedPacketObject));
+    struct DelayedPacketObject* node = calloc(1, sizeof(struct DelayedPacketObject));
     packet_duplicate(p, &node->p);
     node->next = NULL;
     LOG_INFO("saving delayed object");
@@ -504,7 +504,7 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     so->clockSinceUpdate = clock_elapsed();
 
     // write the packet data
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_OBJECT, reliable, PLMT_AREA);
     packet_write_object_header(&p, o);
     packet_write_object_full_sync(&p, o);

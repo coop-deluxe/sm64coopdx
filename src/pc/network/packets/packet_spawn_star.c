@@ -8,7 +8,7 @@
 extern struct Object* gCurrentObject;
 
 void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams) {
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_STAR, true, PLMT_AREA);
     packet_write(&p, &starType, sizeof(u8));
     packet_write(&p, &x, sizeof(f32));
@@ -57,7 +57,7 @@ void network_send_spawn_star_nle(struct Object* o, u32 params) {
         globalIndex = gNetworkPlayers[localIndex].globalIndex;
     }
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_STAR_NLE, true, PLMT_AREA);
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &o->oSyncID, sizeof(u32));
