@@ -7,7 +7,9 @@
 #define MAX_SESSION_CHARS 7
 
 struct ModListEntry* gModEntries = NULL;
-u16 sModEntryCount = 0;
+u16 gModEntryCount = 0;
+u64 gModTotalSize = 0;
+
 static char sTmpSession[MAX_SESSION_CHARS] = { 0 };
 static char sTmpPath[PATH_MAX] = { 0 };
 
@@ -18,8 +20,8 @@ static bool acceptable_file(char* string) {
 
 void mod_list_alloc(u16 count) {
     mod_list_clear();
-    sModEntryCount = count;
-    gModEntries = (struct ModListEntry*)calloc(sModEntryCount, sizeof(struct ModListEntry));
+    gModEntryCount = count;
+    gModEntries = (struct ModListEntry*)calloc(gModEntryCount, sizeof(struct ModListEntry));
 }
 
 void mod_list_add(u16 index, char* name, size_t size, bool tmpFile) {
@@ -27,6 +29,7 @@ void mod_list_add(u16 index, char* name, size_t size, bool tmpFile) {
     struct ModListEntry* entry = &gModEntries[index];
     entry->name = name;
     entry->size = size;
+    gModTotalSize += size;
 
     if (tmpFile) {
         snprintf(entry->path, PATH_MAX - 1, "%s/%s-%s", sTmpPath, sTmpSession, name);
@@ -62,6 +65,7 @@ void mod_list_load(void) {
     u16 index = 0;
  
     LOG_INFO("Loading mods:");
+    gModTotalSize = 0;
     while ((dir = readdir(d)) != NULL) {
         if (!acceptable_file(dir->d_name)) { continue; }
         LOG_INFO("    %s", dir->d_name);
@@ -72,7 +76,7 @@ void mod_list_load(void) {
 }
 
 void mod_list_clear(void) {
-    for (int i = 0; i < sModEntryCount; i++) {
+    for (int i = 0; i < gModEntryCount; i++) {
         struct ModListEntry* entry = &gModEntries[i];
         if (entry->name != NULL) {
             free(entry->name);
@@ -88,7 +92,7 @@ void mod_list_clear(void) {
         free(gModEntries);
         gModEntries = NULL;
     }
-    sModEntryCount = 0;
+    gModEntryCount = 0;
 }
 
 static void mod_list_delete_tmp(void) {

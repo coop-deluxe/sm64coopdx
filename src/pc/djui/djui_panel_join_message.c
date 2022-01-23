@@ -7,6 +7,7 @@
 bool gDjuiPanelJoinMessageVisible = false;
 static struct DjuiText* sPanelText = NULL;
 static bool sDisplayingError = false;
+float gDownloadProgress = 0;
 
 void djui_panel_join_message_error(char* message) {
     djui_panel_join_message_create(NULL);
@@ -41,7 +42,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     // don't recreate panel if it's already visible
     if (gDjuiPanelJoinMessageVisible) { return; }
 
-    f32 bodyHeight = 64 + 16;
+    f32 bodyHeight = 64 + 16 + 16;
 
     u16 directLines = 8;
     f32 directTextHeight = 32 * 0.8125f * directLines + 8;
@@ -59,6 +60,9 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
         text1->base.tag = 0;
         text1->base.on_render_pre = djui_panel_join_message_render_pre;
         sPanelText = text1;
+
+        gDownloadProgress = 0;
+        djui_progress_bar_create(&body->base, &gDownloadProgress, 0.0f, 1.0f);
 
         struct DjuiButton* button1 = djui_button_create(&body->base, "Cancel");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

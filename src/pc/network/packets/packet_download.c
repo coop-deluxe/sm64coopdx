@@ -8,10 +8,12 @@
 
 static u64 sOffset[OFFSET_COUNT] = { 0 };
 static bool sWaitingForOffset[OFFSET_COUNT] = { 0 };
+u64 sTotalDownloadBytes = 0;
+extern float gDownloadProgress;
 
 static void network_send_next_download_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    for (int i = 0; i < sModEntryCount; i++) {
+    for (int i = 0; i < gModEntryCount; i++) {
         struct ModListEntry* entry = &gModEntries[i];
         if (entry->complete) { continue; }
         network_send_download_request(i, entry->curOffset);
@@ -28,6 +30,11 @@ void network_send_download_request(u16 index, u64 offset) {
 
     packet_write(&p, &index, sizeof(u16));
     packet_write(&p, &offset, sizeof(u64));
+
+    if (index == 0 && offset == 0) {
+        sTotalDownloadBytes = 0;
+        gDownloadProgress = 0;
+    }
 
     struct ModListEntry* entry = &gModEntries[index];
     for (int i = 0; i < OFFSET_COUNT; i++) {
@@ -47,7 +54,7 @@ void network_receive_download_request(struct Packet* p) {
     packet_read(p, &offset, sizeof(u64));
 
     struct ModListEntry* entry = &gModEntries[index];
-    if (index >= sModEntryCount) {
+    if (index >= gModEntryCount) {
         LOG_ERROR("Requested download of invalid index %u:%llu", index, offset);
         return;
     }
@@ -62,7 +69,7 @@ void network_receive_download_request(struct Packet* p) {
 void network_send_download(u16 index, u64 offset) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
-    if (index >= sModEntryCount) {
+    if (index >= gModEntryCount) {
         LOG_ERROR("Requested download of invalid index %u:%llu", index, offset);
         return;
     }
@@ -115,7 +122,7 @@ void network_receive_download(struct Packet* p) {
     packet_read(p, &chunkSize, sizeof(u16));
     packet_read(p, chunk, chunkSize * sizeof(u8));
 
-    if (index >= sModEntryCount) {
+    if (index >= gModEntryCount) {
         LOG_ERROR("Received download of invalid index %u:%llu", index, offset);
         return;
     }
@@ -148,13 +155,17 @@ void network_receive_download(struct Packet* p) {
     }
 
     if (!found) {
-        LOG_ERROR("Received download of unexpected offset %llu != %llu", entry->curOffset, offset);
+        LOG_ERROR("Received download of unexpected offset [ %llu <-> %llu ] != %llu", entry->curOffset, entry->curOffset + CHUNK_SIZE * OFFSET_COUNT, offset);
         return;
     }
 
     // write to the file
     fseek(entry->fp, offset, SEEK_SET);
     fwrite(chunk, sizeof(u8) * chunkSize, 1, entry->fp);
+
+    // update progress
+    sTotalDownloadBytes += chunkSize;
+    gDownloadProgress = (float)sTotalDownloadBytes / (float)gModTotalSize;
 
     if (!waiting) {
         // check if we're finished with this file

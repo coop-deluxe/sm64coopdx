@@ -23,6 +23,7 @@
 #include "djui_button.h"
 #include "djui_inputbox.h"
 #include "djui_slider.h"
+#include "djui_progress_bar.h"
 #include "djui_checkbox.h"
 #include "djui_flow_layout.h"
 #include "djui_selectionbox.h"

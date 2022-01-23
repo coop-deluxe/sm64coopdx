@@ -4851,6 +4851,9 @@
     <ClCompile Include="..\src\pc\network\packets\packet_download.c">
       <Filter>Source Files\src\pc\network\packets</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_progress_bar.c">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -5982,6 +5985,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\network\packets\packet.h">
       <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_progress_bar.h">
+      <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -18,7 +18,8 @@ struct ModListEntry {
     bool complete;
 };
 extern struct ModListEntry* gModEntries;
-extern u16 sModEntryCount;
+extern u16 gModEntryCount;
+extern u64 gModTotalSize;
 
 void mod_list_alloc(u16 count);
 void mod_list_add(u16 index, char* name, size_t size, bool tmpFile);

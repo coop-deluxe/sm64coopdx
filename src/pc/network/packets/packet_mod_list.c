@@ -44,9 +44,9 @@ void network_send_mod_list(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_MOD_LIST, true, PLMT_NONE);
 
-    packet_write(&p, &sModEntryCount, sizeof(u16));
-    LOG_INFO("sent mod list (%u):", sModEntryCount);
-    for (int i = 0; i < sModEntryCount; i++) {
+    packet_write(&p, &gModEntryCount, sizeof(u16));
+    LOG_INFO("sent mod list (%u):", gModEntryCount);
+    for (int i = 0; i < gModEntryCount; i++) {
         struct ModListEntry* entry = &gModEntries[i];
         u16 nameLength = strlen(entry->name);
         packet_write(&p, &nameLength, sizeof(u16));
@@ -74,6 +74,7 @@ void network_receive_mod_list(struct Packet* p) {
     mod_list_alloc(modEntryCount);
 
     LOG_INFO("received mod list (%u):", modEntryCount);
+    gModTotalSize = 0;
     for (int i = 0; i < modEntryCount; i++) {
         u16 nameLength = 0;
         packet_read(p, &nameLength, sizeof(u16));

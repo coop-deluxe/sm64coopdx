@@ -92,7 +92,7 @@ void smlua_init(void) {
 
     // load scripts
     LOG_INFO("Loading scripts:");
-    for (int i = 0; i < sModEntryCount; i++) {
+    for (int i = 0; i < gModEntryCount; i++) {
         struct ModListEntry* entry = &gModEntries[i];
         LOG_INFO("    %s", entry->path);
         smlua_load_script(entry->path);
