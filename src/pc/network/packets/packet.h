@@ -289,14 +289,15 @@ void network_receive_player_settings(struct Packet* p);
 
 // packet_mod_list.c
 void network_send_mod_list_request(void);
-void network_receive_mod_list_request(struct Packet* p);
+void network_receive_mod_list_request(UNUSED struct Packet* p);
 void network_send_mod_list(void);
 void network_receive_mod_list(struct Packet* p);
 
 // packet_download.c
-void network_send_download_request(u16 index, u64 offset);
+void network_send_next_download_request(void);
+void network_send_download_request(u16 clientIndex, u16 serverIndex, u64 offset);
 void network_receive_download_request(struct Packet* p);
-void network_send_download(u16 index, u64 offset);
+void network_send_download(u16 clientIndex, u16 serverIndex, u64 offset);
 void network_receive_download(struct Packet* p);
 
 

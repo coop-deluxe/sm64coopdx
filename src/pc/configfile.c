@@ -13,6 +13,7 @@
 #include "gfx/gfx_window_manager_api.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
+#include "pc/mod_list.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -295,12 +296,25 @@ void configfile_load(const char *filename) {
             if (numTokens >= 2) {
                 const struct ConfigOption *option = NULL;
 
+                // enable mods
+                if (!strcmp(tokens[0], "enable-mod:")) {
+                    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
+                        struct ModListEntry* entry = &gModTableLocal.entries[i];
+                        if (!strcmp(tokens[1], entry->name)) {
+                            entry->enabled = true;
+                            break;
+                        }
+                    }
+                    continue;
+                }
+
                 for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
                     if (strcmp(tokens[0], options[i].name) == 0) {
                         option = &options[i];
                         break;
                     }
                 }
+
                 if (option == NULL)
                     printf("unknown option '%s'\n", tokens[0]);
                 else {
@@ -382,6 +396,13 @@ void configfile_save(const char *filename) {
             default:
                 assert(0); // unknown type
         }
+    }
+
+    // save enabled mods
+    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
+        struct ModListEntry* entry = &gModTableLocal.entries[i];
+        if (!entry->enabled) { continue; }
+        fprintf(file, "%s %s\n", "enable-mod:", entry->name);
     }
 
     fclose(file);

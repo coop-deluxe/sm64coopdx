@@ -37,6 +37,8 @@
 #include "djui_panel_debug.h"
 #include "djui_panel_main.h"
 #include "djui_panel_host.h"
+#include "djui_panel_host_settings.h"
+#include "djui_panel_host_mods.h"
 #include "djui_panel_host_save.h"
 #include "djui_panel_host_message.h"
 #include "djui_panel_join.h"

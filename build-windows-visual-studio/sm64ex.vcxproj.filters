@@ -4854,6 +4854,12 @@
     <ClCompile Include="..\src\pc\djui\djui_progress_bar.c">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_settings.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_panel_host_mods.c">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -5988,6 +5994,12 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\djui\djui_progress_bar.h">
       <Filter>Source Files\src\pc\djui\component\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_settings.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_panel_host_mods.h">
+      <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

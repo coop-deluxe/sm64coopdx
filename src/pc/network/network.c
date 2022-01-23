@@ -97,7 +97,6 @@ bool network_init(enum NetworkType inNetworkType) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
-        mod_list_load();
         smlua_init();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);
