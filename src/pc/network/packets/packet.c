@@ -99,7 +99,6 @@ void packet_receive(struct Packet* p) {
     if (gNetworkServerAddr != NULL && gNetworkType == NT_CLIENT) {
         bool fromServer = (p->localIndex == UNKNOWN_LOCAL_INDEX);
         if (gNetworkPlayerServer != NULL) { fromServer = fromServer || p->localIndex == gNetworkPlayerServer->localIndex; }
-        LOG_INFO("matching? %d, %d", fromServer, gNetworkSystem->match_addr(gNetworkServerAddr, p->addr));
         if (fromServer && !gNetworkSystem->match_addr(gNetworkServerAddr, p->addr)) {
             LOG_INFO("refusing packet from unknown server");
             return;

@@ -5,6 +5,7 @@
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    mod_list_shutdown();
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_MOD_LIST_REQUEST, true, PLMT_NONE);
@@ -59,6 +60,10 @@ void network_send_mod_list(void) {
 void network_receive_mod_list(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     SOFT_ASSERT(p->localIndex == UNKNOWN_LOCAL_INDEX);
+    if (gModEntries != NULL) {
+        LOG_INFO("received mod list after allocating");
+        return;
+    }
 
     if (gNetworkServerAddr == NULL) {
         gNetworkServerAddr = network_duplicate_address(0);
