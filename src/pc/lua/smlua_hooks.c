@@ -10,6 +10,7 @@ struct LuaHookedEvent {
 static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
 int smlua_hook_event(lua_State* L) {
+    if (L == NULL) { return 0; }
     u16 hookType = lua_tointeger(L, -2);
     if (hookType >= HOOK_MAX) {
         LOG_LUA("LUA: Hook Type: %d exceeds max!", hookType);
@@ -29,6 +30,7 @@ int smlua_hook_event(lua_State* L) {
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
     lua_State* L = gLuaState;
+    if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
     for (int i = 0; i < hook->count; i++) {
         // push the callback onto the stack
@@ -44,6 +46,7 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
 
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m) {
     lua_State* L = gLuaState;
+    if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
     for (int i = 0; i < hook->count; i++) {
         // push the callback onto the stack
@@ -78,6 +81,7 @@ static struct LuaHookedMarioAction sHookedMarioActions[MAX_HOOKED_ACTIONS] = { 0
 static int sHookedMarioActionsCount = 0;
 
 int smlua_hook_mario_action(lua_State* L) {
+    if (L == NULL) { return 0; }
     if (sHookedMarioActionsCount >= MAX_HOOKED_ACTIONS) {
         LOG_LUA("LUA: Hooked mario actions exceeded maximum references!");
         return 0;
@@ -93,6 +97,7 @@ int smlua_hook_mario_action(lua_State* L) {
 
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
     lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
     for (int i = 0; i < sHookedMarioActionsCount; i++) {
         if (sHookedMarioActions[i].action == m->action) {
             // push the callback onto the stack

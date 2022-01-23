@@ -49,6 +49,8 @@
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
 
+#include "pc/mod_list.h"
+
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
 
@@ -169,6 +171,7 @@ void game_deinit(void) {
     gfx_shutdown();
     network_shutdown(true);
     smlua_shutdown();
+    mod_list_shutdown();
     inited = false;
 }
 
@@ -301,10 +304,10 @@ void main_func(void) {
     } else {
         network_init(NT_NONE);
     }
-    smlua_init();
 
     audio_init();
     sound_init();
+    mod_list_init();
     network_player_init();
 
     thread5_game_loop(NULL);

@@ -54,6 +54,11 @@ enum PacketType {
 
     PACKET_PLAYER_SETTINGS,
 
+    PACKET_MOD_LIST_REQUEST,
+    PACKET_MOD_LIST,
+    PACKET_DOWNLOAD_REQUEST,
+    PACKET_DOWNLOAD,
+
     ///
     PACKET_CUSTOM = 255,
 };
@@ -280,5 +285,18 @@ void network_receive_debug_sync(struct Packet* p);
 // packet_player_settings.c
 void network_send_player_settings(void);
 void network_receive_player_settings(struct Packet* p);
+
+// packet_mod_list.c
+void network_send_mod_list_request(void);
+void network_receive_mod_list_request(struct Packet* p);
+void network_send_mod_list(void);
+void network_receive_mod_list(struct Packet* p);
+
+// packet_download.c
+void network_send_download_request(u16 index, u64 offset);
+void network_receive_download_request(struct Packet* p);
+void network_send_download(u16 index, u64 offset);
+void network_receive_download(struct Packet* p);
+
 
 #endif

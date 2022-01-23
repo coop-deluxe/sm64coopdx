@@ -4836,6 +4836,21 @@
     <ClCompile Include="..\src\pc\lua\smlua_hooks.c">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\mod_list.c">
+      <Filter>Source Files\src\pc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_constants_autogen.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_mod_list.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_player_settings.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_download.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -5961,6 +5976,12 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\lua\smlua_hooks.h">
       <Filter>Source Files\src\pc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\mod_list.h">
+      <Filter>Source Files\src\pc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\packets\packet.h">
+      <Filter>Source Files\src\pc\network\packets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

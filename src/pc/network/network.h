@@ -108,6 +108,7 @@ void network_set_system(enum NetworkSystemType nsType);
 bool network_init(enum NetworkType inNetworkType);
 void network_on_init_area(void);
 void network_on_loaded_area(void);
+bool network_allow_unknown_local_index(enum PacketType packetType);
 void network_send_to(u8 localIndex, struct Packet* p);
 void network_send(struct Packet* p);
 void network_receive(u8 localIndex, u8* data, u16 dataLength);

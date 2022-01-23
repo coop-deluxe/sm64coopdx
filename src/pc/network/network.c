@@ -12,6 +12,8 @@
 #include "pc/cheats.h"
 #include "pc/djui/djui.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/smlua.h"
+#include "pc/mod_list.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -89,6 +91,9 @@ bool network_init(enum NetworkType inNetworkType) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
+        mod_list_load();
+        smlua_init();
+
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
@@ -125,17 +130,25 @@ void network_on_loaded_area(void) {
     }
 }
 
+bool network_allow_unknown_local_index(enum PacketType packetType) {
+    return (packetType == PACKET_JOIN_REQUEST)
+        || (packetType == PACKET_KICK)
+        || (packetType == PACKET_ACK)
+        || (packetType == PACKET_MOD_LIST_REQUEST)
+        || (packetType == PACKET_MOD_LIST)
+        || (packetType == PACKET_DOWNLOAD_REQUEST)
+        || (packetType == PACKET_DOWNLOAD);
+}
+
 void network_send_to(u8 localIndex, struct Packet* p) {
     // sanity checks
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
-    if (localIndex == 0) {
-        if (p->buffer[0] != PACKET_JOIN_REQUEST && p->buffer[0] != PACKET_KICK && p->buffer[0] != PACKET_ACK) {
-            LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
-            SOFT_ASSERT(false);
-            return;
-        }
+    if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
+        LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
+        SOFT_ASSERT(false);
+        return;
     }
 
     if (gNetworkType == NT_SERVER) {

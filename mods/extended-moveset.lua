@@ -1085,10 +1085,10 @@ function mario_update(m)
     after_mario_update(m)
 end
 
-function update()
-end
+-----------
+-- hooks --
+-----------
 
-hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 

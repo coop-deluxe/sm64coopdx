@@ -1,11 +1,21 @@
 #include "smlua.h"
+#include "pc/mod_list.h"
 
 lua_State* gLuaState = NULL;
 
-static void smlua_execfile(char* path) {
+static void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
     if (luaL_dofile(L, path) != LUA_OK) {
         LOG_LUA("LUA: Failed to load lua file '%s'.", path);
+        puts(lua_tostring(L, lua_gettop(L)));
+    }
+    lua_pop(L, lua_gettop(L));
+}
+
+static void smlua_exec_str(char* str) {
+    lua_State* L = gLuaState;
+    if (luaL_dostring(L, str) != LUA_OK) {
+        LOG_LUA("LUA: Failed to load lua string.");
         puts(lua_tostring(L, lua_gettop(L)));
     }
     lua_pop(L, lua_gettop(L));
@@ -54,6 +64,7 @@ static void smlua_init_mario_states(void) {
 }
 
 void smlua_init(void) {
+    smlua_shutdown();
     gLuaState = luaL_newstate();
     lua_State* L = gLuaState;
 
@@ -74,17 +85,30 @@ void smlua_init(void) {
     smlua_bind_functions();
     smlua_bind_functions_autogen();
 
-    smlua_execfile("mods/constants.lua");
+    extern char gSmluaConstants[];
+    smlua_exec_str(gSmluaConstants);
+
     smlua_init_mario_states();
-    smlua_load_script("mods/extended-moveset.lua");
-    smlua_load_script("mods/test.lua");
+
+    // load scripts
+    LOG_INFO("Loading scripts:");
+    for (int i = 0; i < sModEntryCount; i++) {
+        struct ModListEntry* entry = &gModEntries[i];
+        LOG_INFO("    %s", entry->path);
+        smlua_load_script(entry->path);
+    }
 }
 
 void smlua_update(void) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
     smlua_call_event_hooks(HOOK_UPDATE);
 }
 
 void smlua_shutdown(void) {
     lua_State* L = gLuaState;
-    lua_close(L);
+    if (L != NULL) {
+        lua_close(L);
+        gLuaState = NULL;
+    }
 }

@@ -17,6 +17,7 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/smlua.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -215,4 +216,6 @@ void network_receive_join(struct Packet* p) {
     fake_lvl_init_from_save_file();
     extern s16 gChangeLevel;
     gChangeLevel = 16;
+
+    smlua_init();
 }
