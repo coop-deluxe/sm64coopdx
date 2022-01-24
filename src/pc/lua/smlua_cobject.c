@@ -313,6 +313,11 @@ static int smlua__get_field(lua_State* L) {
         return 0;
     }
 
+    if (!smlua_cobject_allowlist_contains(lot, pointer)) {
+        LOG_LUA("_get_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        return 0;
+    }
+
     struct LuaObjectField* data = smlua_get_object_field(&sLuaObjectTable[lot], key);
     if (data == NULL) {
         LOG_LUA("_get_field on invalid key '%s', lot '%d'", key, lot);
@@ -350,6 +355,11 @@ static int smlua__set_field(lua_State* L) {
 
     if (lot >= LOT_MAX) {
         LOG_LUA("_set_field on invalid LOT '%u'", lot);
+        return 0;
+    }
+
+    if (!smlua_cobject_allowlist_contains(lot, pointer)) {
+        LOG_LUA("_set_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
         return 0;
     }
 

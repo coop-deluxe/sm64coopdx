@@ -5,9 +5,11 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+#include <stdbool.h>
 #include "types.h"
 
 #include "smlua_cobject.h"
+#include "smlua_cobject_allowlist.h"
 #include "smlua_utils.h"
 #include "smlua_functions.h"
 #include "smlua_functions_autogen.h"

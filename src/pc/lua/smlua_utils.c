@@ -71,6 +71,7 @@ void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
         return 0;
     }
 
+    // get LOT
     lua_getfield(L, index, "_lot");
     enum LuaObjectType objLot = smlua_to_integer(L, -1);
     lua_pop(L, 1);
@@ -83,11 +84,18 @@ void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
         return NULL;
     }
 
+    // get pointer
     lua_getfield(L, index, "_pointer");
     void* pointer = (void*)smlua_to_integer(L, -1);
     lua_pop(L, 1);
     if (!gSmLuaConvertSuccess) { return NULL; }
-    // TODO: check address whitelists
+
+    // check allowlist
+    if (!smlua_cobject_allowlist_contains(lot, (u64)pointer)) {
+        LOG_LUA("LUA: smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        gSmLuaConvertSuccess = false;
+        return NULL;
+    }
 
     if (pointer == NULL) {
         LOG_LUA("LUA: smlua_to_cobject received null pointer.");
@@ -107,6 +115,9 @@ void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p) {
         lua_pushnil(L);
         return;
     }
+    // add to allowlist
+    smlua_cobject_allowlist_add(lot, (u64)p);
+
     lua_newtable(L);
     int t = lua_gettop(L);
     smlua_push_integer_field(t, "_lot", lot);

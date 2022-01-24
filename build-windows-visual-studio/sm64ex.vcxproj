@@ -513,6 +513,7 @@
     <ClCompile Include="..\src\pc\ini.c" />
     <ClCompile Include="..\src\pc\lua\smlua.c" />
     <ClCompile Include="..\src\pc\lua\smlua_cobject.c" />
+    <ClCompile Include="..\src\pc\lua\smlua_cobject_allowlist.c" />
     <ClCompile Include="..\src\pc\lua\smlua_constants_autogen.c" />
     <ClCompile Include="..\src\pc\lua\smlua_functions.c" />
     <ClCompile Include="..\src\pc\lua\smlua_functions_autogen.c" />
@@ -968,6 +969,7 @@
     <ClInclude Include="..\src\pc\djui\djui_types.h" />
     <ClInclude Include="..\src\pc\lua\smlua.h" />
     <ClInclude Include="..\src\pc\lua\smlua_cobject.h" />
+    <ClInclude Include="..\src\pc\lua\smlua_cobject_allowlist.h" />
     <ClInclude Include="..\src\pc\lua\smlua_functions.h" />
     <ClInclude Include="..\src\pc\lua\smlua_functions_autogen.h" />
     <ClInclude Include="..\src\pc\lua\smlua_hooks.h" />

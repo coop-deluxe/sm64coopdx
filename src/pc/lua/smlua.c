@@ -65,6 +65,8 @@ static void smlua_init_mario_states(void) {
 
 void smlua_init(void) {
     smlua_shutdown();
+    smlua_cobject_allowlist_init();
+
     gLuaState = luaL_newstate();
     lua_State* L = gLuaState;
 
@@ -108,6 +110,7 @@ void smlua_update(void) {
 }
 
 void smlua_shutdown(void) {
+    smlua_cobject_allowlist_shutdown();
     lua_State* L = gLuaState;
     if (L != NULL) {
         lua_close(L);
