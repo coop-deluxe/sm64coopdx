@@ -112,8 +112,10 @@ void network_send_download(u16 clientIndex, u16 serverIndex, u64 offset) {
 void network_receive_download(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
-        LOG_ERROR("Received download from known local index");
-        return;
+        if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
+            LOG_ERROR("Received download from known local index '%d'", p->localIndex);
+            return;
+        }
     }
 
     u16 clientIndex;

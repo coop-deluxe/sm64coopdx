@@ -56,7 +56,14 @@ void network_send_mod_list(void) {
 
 void network_receive_mod_list(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    SOFT_ASSERT(p->localIndex == UNKNOWN_LOCAL_INDEX);
+
+    if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
+        if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
+            LOG_ERROR("Received download from known local index '%d'", p->localIndex);
+            return;
+        }
+    }
+
     if (gModTableRemote.entries != NULL) {
         LOG_INFO("received mod list after allocating");
         return;

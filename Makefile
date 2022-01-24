@@ -766,7 +766,7 @@ ifeq ($(WINDOWS_BUILD),1)
     LDFLAGS += -Llib/lua/win64 -l:liblua53.a
   endif
 else ifeq ($(OSX_BUILD),1)
-  LDFLAGS += -Llib/lua/mac -l:liblua53.a
+  LDFLAGS += -L./lib/lua/mac/ -l lua53
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a
 endif
