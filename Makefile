@@ -759,9 +759,19 @@ endif
 # coop specific libraries
 
 # lua
-LDFLAGS += -Llib/lua -l:liblua54.a
-LUA_LIBS := lib/lua/lua54.dll
+ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(TARGET_BITS), 32)
+    LDFLAGS += -Llib/lua/win32 -l:liblua53.a
+  else
+    LDFLAGS += -Llib/lua/win64 -l:liblua53.a
+  endif
+else ifeq ($(OSX_BUILD),1)
+  LDFLAGS += -Llib/lua/mac -l:liblua53.a
+else
+  LDFLAGS += -Llib/lua/linux -l:liblua53.a
+endif
 
+# network
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
@@ -864,9 +874,6 @@ $(BUILD_DIR)/$(RPC_LIBS):
 
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
-
-$(BUILD_DIR)/$(LUA_LIBS):
-	@$(CP) -f $(LUA_LIBS) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
 	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
@@ -1121,7 +1128,7 @@ $(BUILD_DIR)/%.o: %.s
 
 
 
-$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(LUA_LIBS) $(BUILD_DIR)/$(MOD_DIR)
+$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(MOD_DIR)
 	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 
 .PHONY: all clean distclean default diff test load libultra res

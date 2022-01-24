@@ -1,5 +1,6 @@
 #include <dirent.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "mod_list.h"
 #include "pc/fs/fs.h"
 #include "pc/debuglog.h"
@@ -130,7 +131,7 @@ static void mod_list_load_local(const char* path) {
 
     struct dirent* dir;
     DIR* d = opendir(path);
-    if (!d) { closedir(d); return; }
+    if (!d) { return; }
 
     u16 count = 0;
     while ((dir = readdir(d)) != NULL) {

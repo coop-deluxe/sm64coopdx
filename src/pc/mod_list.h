@@ -5,6 +5,7 @@
 #include "PR/ultratypes.h"
 #include <types.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #define MOD_PATH "./mods"
 
