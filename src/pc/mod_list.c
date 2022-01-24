@@ -47,31 +47,53 @@ static void mod_list_delete_tmp(void) {
 
 ////////////////////////////////////////////////
 
-void mod_list_add(u16 index, char* name, size_t size, bool tmpFile) {
+static bool mod_list_contains(struct ModTable* table, char* name) {
+    for (int i = 0; i < table->entryCount; i++) {
+        struct ModListEntry* entry = &table->entries[i];
+        if (entry->name == NULL) { continue; }
+        if (!strcmp(entry->name, name)) { return true; }
+    }
+    return false;
+}
+
+void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size) {
     if (!acceptable_file(name)) { return; }
-    struct ModTable* table = tmpFile ? &gModTableRemote : &gModTableLocal;
+
+    struct ModTable* table = &gModTableRemote;
+    if (mod_list_contains(table, name)) { return; }
 
     struct ModListEntry* entry = &table->entries[index];
     entry->name = name;
     entry->size = size;
     table->totalSize += size;
 
-    if (tmpFile) {
-        snprintf(entry->path, PATH_MAX - 1, "%s/%s-%s", sTmpPath, sTmpSession, name);
-    }
-    else {
-        snprintf(entry->path, PATH_MAX - 1, "%s/%s", MOD_PATH, name);
-    }
+    snprintf(entry->path, PATH_MAX - 1, "%s/%s-%s", sTmpPath, sTmpSession, name);
+    entry->fp = fopen(entry->path, "wb");
 
-    entry->fp = fopen(entry->path, tmpFile ? "wb" : "rb");
+    entry->remoteIndex = remoteIndex;
+    entry->complete = false;
+    entry->enabled = true;
 
-    if (!tmpFile) {
-        fseek(entry->fp, 0, SEEK_END);
-        entry->size = ftell(entry->fp);
-        fseek(entry->fp, 0, SEEK_SET);
-    }
+}
 
-    entry->complete = !tmpFile;
+static void mod_list_add_local(u16 index, const char* path, char* name) {
+    if (!acceptable_file(name)) { return; }
+
+    struct ModTable* table = &gModTableLocal;
+    if (mod_list_contains(table, name)) { return; }
+
+    struct ModListEntry* entry = &table->entries[index];
+    entry->name = strdup(name);
+
+    snprintf(entry->path, PATH_MAX - 1, "%s/%s", path, name);
+    entry->fp = fopen(entry->path, "rb");
+
+    fseek(entry->fp, 0, SEEK_END);
+    entry->size = ftell(entry->fp);
+    table->totalSize += entry->size;
+    fseek(entry->fp, 0, SEEK_SET);
+
+    entry->complete = true;
     entry->enabled = false;
 }
 
@@ -102,27 +124,39 @@ void mod_list_alloc(struct ModTable* table, u16 count) {
     table->entries = (struct ModListEntry*)calloc(count, sizeof(struct ModListEntry));
 }
 
-static void mod_list_load_local(void) {
+static void mod_list_load_local(const char* path) {
+    if (!fs_sys_dir_exists(path)) { return; }
+    struct ModTable* table = &gModTableLocal;
+
     struct dirent* dir;
-    DIR* d = opendir(MOD_PATH);
+    DIR* d = opendir(path);
     if (!d) { closedir(d); return; }
 
     u16 count = 0;
     while ((dir = readdir(d)) != NULL) {
         if (!acceptable_file(dir->d_name)) { continue; }
+        if (mod_list_contains(table, dir->d_name)) { continue; }
         count++;
     }
 
-    mod_list_alloc(&gModTableLocal, count);
+    u16 index = 0;
+    if (table->entries == NULL) {
+        if (count == 0) { closedir(d); return; }
+        mod_list_alloc(table, count);
+    } else {
+        index = table->entryCount;
+        table->entryCount += count;
+        table->entries = (struct ModListEntry*)realloc(table->entries, table->entryCount * sizeof(struct ModListEntry));
+    }
 
     rewinddir(d);
-    u16 index = 0;
 
     LOG_INFO("Loading mods:");
     while ((dir = readdir(d)) != NULL) {
         if (!acceptable_file(dir->d_name)) { continue; }
+        if (mod_list_contains(table, dir->d_name)) { continue; }
         LOG_INFO("    %s", dir->d_name);
-        mod_list_add(index++, strdup(dir->d_name), 0, false);
+        mod_list_add_local(index++, path, dir->d_name);
     }
 
     closedir(d);
@@ -132,7 +166,14 @@ void mod_list_init(void) {
     snprintf(sTmpSession, MAX_SESSION_CHARS, "%06X", (u32)(rand() % 0xFFFFFF));
     snprintf(sTmpPath, PATH_MAX - 1, "%s", fs_get_write_path("tmp"));
     if (!fs_sys_dir_exists(sTmpPath)) { fs_sys_mkdir(sTmpPath); }
-    mod_list_load_local();
+
+    char userModPath[PATH_MAX] = { 0 };
+    snprintf(userModPath, PATH_MAX - 1, "%s", fs_get_write_path("mods"));
+    if (!fs_sys_dir_exists(userModPath)) { fs_sys_mkdir(userModPath); }
+
+    mod_table_clear(&gModTableLocal);
+    mod_list_load_local(userModPath);
+    mod_list_load_local(MOD_PATH);
 }
 
 void mod_list_shutdown(void) {

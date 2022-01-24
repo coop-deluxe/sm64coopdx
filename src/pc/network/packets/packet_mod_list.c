@@ -101,9 +101,7 @@ void network_receive_mod_list(struct Packet* p) {
         u16 size = 0;
         packet_read(p, &size, sizeof(u16));
 
-        mod_list_add(i, name, size, true);
-        gModTableRemote.entries[i].enabled = true;
-        gModTableRemote.entries[i].remoteIndex = remoteIndex;
+        mod_list_add_tmp(i, remoteIndex, name, size);
 
         LOG_INFO("    '%s': %u", name, size);
     }

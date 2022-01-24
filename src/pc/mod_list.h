@@ -32,7 +32,7 @@ struct ModTable {
 extern struct ModTable gModTableLocal;
 extern struct ModTable gModTableRemote;
 
-void mod_list_add(u16 index, char* name, size_t size, bool tmpFile);
+void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size);
 void mod_table_clear(struct ModTable* table);
 void mod_list_alloc(struct ModTable* table, u16 count);
 
