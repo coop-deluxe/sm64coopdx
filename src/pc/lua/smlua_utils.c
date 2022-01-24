@@ -25,13 +25,13 @@ void smlua_bind_function(lua_State* L, const char* name, void* func) {
     lua_setglobal(L, name);
 }
 
-static void smlua_logline(void) {
+void smlua_logline(void) {
     lua_State* L = gLuaState;
     lua_Debug info;
     int level = 0;
     while (lua_getstack(L, level, &info)) {
         lua_getinfo(L, "nSl", &info);
-        LOG_INFO("  [%d] %s:%d -- %s [%s]\n",
+        LOG_INFO("  [%d] %s:%d -- %s [%s]",
             level, info.short_src, info.currentline,
             (info.name ? info.name : "<unknown>"), info.what);
         ++level;

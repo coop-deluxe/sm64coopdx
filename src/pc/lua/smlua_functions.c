@@ -9,11 +9,23 @@
 #include "object_fields.h"
 #include "engine/math_util.h"
 
+bool smlua_functions_valid_param_count(lua_State* L, int expected) {
+    int top = lua_gettop(L);
+    if (top != expected) {
+        LOG_LUA("improper param count: expected %u, received %u", expected, top);
+        smlua_logline();
+        return false;
+    }
+    return true;
+}
+
   //////////
  // misc //
 //////////
 
 int smlua_func_sins(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
     f32 x = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
@@ -22,6 +34,8 @@ int smlua_func_sins(lua_State* L) {
 }
 
 int smlua_func_coss(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
     f32 x = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
@@ -30,6 +44,8 @@ int smlua_func_coss(lua_State* L) {
 }
 
 int smlua_func_atan2s(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
     f32 y = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 x = smlua_to_number(L, 2);

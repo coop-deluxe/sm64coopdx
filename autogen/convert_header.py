@@ -202,6 +202,8 @@ def build_function(function):
     else:
         s = 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
 
+    s += '    if(!smlua_functions_valid_param_count(L, %d)) { return 0; }\n\n' % len(function['params'])
+
     i = 1
     for param in function['params']:
         s += build_param(param, i)

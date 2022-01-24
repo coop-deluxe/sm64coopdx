@@ -7,6 +7,7 @@ f32* smlua_get_vec3f_from_buffer(void);
 s16* smlua_get_vec3s_from_buffer(void);
 
 void smlua_bind_function(lua_State* L, const char* name, void* func);
+void smlua_logline(void);
 
 lua_Integer smlua_to_integer(lua_State* L, int index);
 lua_Number smlua_to_number(lua_State* L, int index);
