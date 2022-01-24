@@ -80,6 +80,7 @@ sm64config.txt
 !/assets/**/*custom*/**/*.bin
 !/lib/discordsdk/*.*
 !/lib/discordsdk/x86/*.*
+!/lib/lua/**/*.*
 
 # visual studio
 build-windows-visual-studio/.vs
