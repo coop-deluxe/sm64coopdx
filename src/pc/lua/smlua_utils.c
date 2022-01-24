@@ -41,7 +41,9 @@ void smlua_logline(void) {
 //////////////////////////////////////////////
 
 lua_Integer smlua_to_integer(lua_State* L, int index) {
-    if (lua_type(L, index) != LUA_TNUMBER) {
+    if (lua_type(L, index) == LUA_TBOOLEAN) {
+        return lua_toboolean(L, index) ? 1 : 0;
+    } else if (lua_type(L, index) != LUA_TNUMBER) {
         LOG_LUA("LUA: smlua_to_integer received improper type '%d'", lua_type(L, index));
         smlua_logline();
         gSmLuaConvertSuccess = false;
@@ -61,6 +63,17 @@ lua_Number smlua_to_number(lua_State* L, int index) {
     }
     gSmLuaConvertSuccess = true;
     return lua_tonumber(L, index);
+}
+
+const char* smlua_to_string(lua_State* L, int index) {
+    if (lua_type(L, index) != LUA_TSTRING) {
+        LOG_LUA("LUA: smlua_to_string received improper type '%d'", lua_type(L, index));
+        smlua_logline();
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+    gSmLuaConvertSuccess = true;
+    return lua_tostring(L, index);
 }
 
 void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {

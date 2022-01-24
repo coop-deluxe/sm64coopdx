@@ -7,7 +7,7 @@ static void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
     if (luaL_dofile(L, path) != LUA_OK) {
         LOG_LUA("LUA: Failed to load lua file '%s'.", path);
-        puts(lua_tostring(L, lua_gettop(L)));
+        puts(smlua_to_string(L, lua_gettop(L)));
     }
     lua_pop(L, lua_gettop(L));
 }
@@ -16,7 +16,7 @@ static void smlua_exec_str(char* str) {
     lua_State* L = gLuaState;
     if (luaL_dostring(L, str) != LUA_OK) {
         LOG_LUA("LUA: Failed to load lua string.");
-        puts(lua_tostring(L, lua_gettop(L)));
+        puts(smlua_to_string(L, lua_gettop(L)));
     }
     lua_pop(L, lua_gettop(L));
 }
@@ -25,7 +25,7 @@ static void smlua_load_script(char* path) {
     lua_State* L = gLuaState;
     if (luaL_loadfile(L, path) != LUA_OK) {
         LOG_LUA("LUA: Failed to load lua script '%s'.", path);
-        puts(lua_tostring(L, lua_gettop(L)));
+        puts(smlua_to_string(L, lua_gettop(L)));
         return;
     }
 
@@ -45,7 +45,7 @@ static void smlua_load_script(char* path) {
     // run chunks
     if (lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
         LOG_LUA("LUA: Failed to execute lua script '%s'.", path);
-        puts(lua_tostring(L, lua_gettop(L)));
+        puts(smlua_to_string(L, lua_gettop(L)));
         smlua_dump_stack();
         return;
     }

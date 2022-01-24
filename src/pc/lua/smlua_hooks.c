@@ -11,7 +11,9 @@ static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
 int smlua_hook_event(lua_State* L) {
     if (L == NULL) { return 0; }
-    u16 hookType = lua_tointeger(L, -2);
+    u16 hookType = smlua_to_integer(L, -2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
     if (hookType >= HOOK_MAX) {
         LOG_LUA("LUA: Hook Type: %d exceeds max!", hookType);
         return 0;
@@ -88,8 +90,9 @@ int smlua_hook_mario_action(lua_State* L) {
     }
 
     struct LuaHookedMarioAction* hooked = &sHookedMarioActions[sHookedMarioActionsCount];
-    hooked->action = lua_tointeger(L, -2);
+    hooked->action = smlua_to_integer(L, -2);
     hooked->reference = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (!gSmLuaConvertSuccess) { return 0; }
 
     sHookedMarioActionsCount++;
     return 1;
@@ -116,8 +119,10 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             }
 
             // output the return value
-            *returnValue = lua_tointeger(L, -1);
+            *returnValue = smlua_to_integer(L, -1);
             lua_pop(L, 1);
+
+            if (!gSmLuaConvertSuccess) { return false; }
 
             return true;
         }

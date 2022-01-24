@@ -11,6 +11,7 @@ void smlua_logline(void);
 
 lua_Integer smlua_to_integer(lua_State* L, int index);
 lua_Number smlua_to_number(lua_State* L, int index);
+const char* smlua_to_string(lua_State* L, int index);
 void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot);
 
 void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p);

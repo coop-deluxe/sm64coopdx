@@ -299,9 +299,14 @@ static struct LuaObjectField* smlua_get_object_field(struct LuaObjectTable* ot, 
 }
 
 static int smlua__get_field(lua_State* L) {
-    enum LuaObjectType lot = lua_tointeger(L, -3);
-    u64 pointer = lua_tointeger(L, -2);
-    const char* key = lua_tostring(L, -1);
+    enum LuaObjectType lot = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    u64 pointer = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    const char* key = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
 
     if (pointer == 0) {
         LOG_LUA("_get_field on null pointer");
@@ -344,9 +349,14 @@ static int smlua__get_field(lua_State* L) {
 }
 
 static int smlua__set_field(lua_State* L) {
-    enum LuaObjectType lot = lua_tointeger(L, -4);
-    u64 pointer = lua_tointeger(L, -3);
-    const char* key = lua_tostring(L, -2);
+    enum LuaObjectType lot = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    u64 pointer = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    const char* key = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
 
     if (pointer == 0) {
         LOG_LUA("_set_field on null pointer");
