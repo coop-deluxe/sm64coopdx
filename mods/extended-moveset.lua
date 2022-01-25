@@ -35,7 +35,6 @@ for i=0,(MAX_PLAYERS-1) do
     e.spinDirection = 0
     e.spinBufferTimer = 0
     e.spinInput = 0
-    e.actionLastFrame = m.action
     e.lastIntendedMag = 0
     e.lastPos = {}
     e.lastPos.x = m.pos.x
@@ -953,7 +952,7 @@ end
 
 ---------------------------------------------------------
 
-function mario_action_on_change(m)
+function mario_on_set_action(m)
     local e = gMarioStateExtras[m.playerIndex]
     if e.spinInput ~= 0 then
         if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_TRIPLE_JUMP or m.action == ACT_SIDE_FLIP or m.action == ACT_BACKFLIP or m.action == ACT_WALL_KICK_AIR then
@@ -974,9 +973,9 @@ function mario_action_on_change(m)
         m.vel.x = 0
         m.vel.y = 0
         m.vel.z = 0
-    elseif m.action == ACT_WATER_PLUNGE and e.actionLastFrame == ACT_GROUND_POUND then
+    elseif m.action == ACT_WATER_PLUNGE and m.prevAction == ACT_GROUND_POUND then
         return set_mario_action(m, ACT_WATER_GROUND_POUND, 1)
-    elseif m.action == ACT_GROUND_POUND and e.actionLastFrame == ACT_SIDE_FLIP then
+    elseif m.action == ACT_GROUND_POUND and m.prevAction == ACT_SIDE_FLIP then
         -- correct animation
         m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - 0x8000
     elseif m.action == ACT_LEDGE_GRAB then
@@ -1032,7 +1031,7 @@ function mario_update(m)
     end
 
     -- spin
-    if e.actionLastFrame == m.action and (m.action == ACT_JUMP or m.action == ACT_WALL_KICK_AIR) and e.spinInput ~= 0 then
+    if (m.action == ACT_JUMP or m.action == ACT_WALL_KICK_AIR) and e.spinInput ~= 0 then
         set_mario_action(m, ACT_SPIN_JUMP, 1)
         e.spinInput = 0
     end
@@ -1071,12 +1070,6 @@ function mario_update(m)
         end
     end
 
-    -- action change event
-    if e.actionLastFrame ~= m.action then
-        mario_action_on_change(m)
-    end
-    e.actionLastFrame = m.action
-
     -- save last pos
     e.lastPos.x = m.pos.x
     e.lastPos.y = m.pos.y
@@ -1091,6 +1084,7 @@ end
 
 hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
 
 hook_mario_action(ACT_ROLL, act_roll)
 hook_mario_action(ACT_ROLL_AIR, act_roll_air)

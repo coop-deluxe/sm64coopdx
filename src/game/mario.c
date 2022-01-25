@@ -40,6 +40,7 @@
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua.h"
 #include "pc/logfile.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
@@ -1069,6 +1070,8 @@ u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     m->actionArg = actionArg;
     m->actionState = 0;
     m->actionTimer = 0;
+
+    smlua_call_event_hooks_mario_param(HOOK_ON_SET_MARIO_ACTION, m);
 
     return TRUE;
 }

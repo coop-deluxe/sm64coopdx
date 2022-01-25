@@ -174,6 +174,8 @@ u32 perform_water_step(struct MarioState *m) {
     Vec3f step;
     struct Object *marioObj = m->marioObj;
 
+    smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+
     vec3f_copy(step, m->vel);
 
     if (m->action & ACT_FLAG_SWIMMING) {

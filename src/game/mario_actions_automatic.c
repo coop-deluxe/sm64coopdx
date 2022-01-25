@@ -321,6 +321,8 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     f32 floorHeight;
     f32 ceilOffset;
 
+    smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+
     m->wall = resolve_and_return_wall_collisions(nextPos, 50.0f, 50.0f);
     floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     ceilHeight = vec3f_find_ceil(nextPos, floorHeight, &ceil);
