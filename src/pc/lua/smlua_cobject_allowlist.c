@@ -7,15 +7,24 @@ struct CObjectAllowListNode {
     struct CObjectAllowListNode* next;
 };
 
-static struct CObjectAllowListNode* sAllowList[LOT_MAX] = { 0 };
-static u16 sCachedAllowed[LOT_MAX] = { 0 };
+#define LOT_COUNT (LOT_MAX + (LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN))
+static struct CObjectAllowListNode* sAllowList[LOT_COUNT] = { 0 };
+static u16 sCachedAllowed[LOT_COUNT] = { 0 };
+
+static u16 smlua_lot_mapping(u16 lot) {
+    if (lot >= LOT_MAX) {
+        return LOT_MAX + (lot - LOT_AUTOGEN_MIN);
+    } else {
+        return lot;
+    }
+}
 
 void smlua_cobject_allowlist_init(void) {
     smlua_cobject_allowlist_shutdown();
 }
 
 void smlua_cobject_allowlist_shutdown(void) {
-    for (int i = 0; i < LOT_MAX; i++) {
+    for (int i = 0; i < LOT_COUNT; i++) {
         sCachedAllowed[i] = 0;
         struct CObjectAllowListNode* node = sAllowList[i];
         while (node != NULL) {
@@ -27,14 +36,15 @@ void smlua_cobject_allowlist_shutdown(void) {
     }
 }
 
-void smlua_cobject_allowlist_add(enum LuaObjectType objectType, u64 pointer) {
+void smlua_cobject_allowlist_add(u16 lot, u64 pointer) {
     if (pointer == 0) { return; }
-    if (objectType == LOT_NONE || objectType >= LOT_MAX) { return; }
+    if (!smlua_valid_lot(lot)) { return; }
 
-    if (sCachedAllowed[objectType] == pointer) { return; }
-    sCachedAllowed[objectType] = pointer;
+    u16 m = smlua_lot_mapping(lot);
+    if (sCachedAllowed[m] == pointer) { return; }
+    sCachedAllowed[m] = pointer;
     
-    struct CObjectAllowListNode* curNode = sAllowList[objectType];
+    struct CObjectAllowListNode* curNode = sAllowList[m];
     struct CObjectAllowListNode* prevNode = NULL;
     while (curNode != NULL) {
         if (pointer == curNode->pointer) { return; }
@@ -47,18 +57,20 @@ void smlua_cobject_allowlist_add(enum LuaObjectType objectType, u64 pointer) {
     node->pointer = pointer;
     node->next = curNode;
     if (prevNode == NULL) {
-        sAllowList[objectType] = node;
+        sAllowList[m] = node;
     } else {
         prevNode->next = node;
     }
 }
 
-bool smlua_cobject_allowlist_contains(enum LuaObjectType objectType, u64 pointer) {
+bool smlua_cobject_allowlist_contains(u16 lot, u64 pointer) {
     if (pointer == 0) { return false; }
-    if (objectType == LOT_NONE || objectType >= LOT_MAX) { return false; }
-    if (sCachedAllowed[objectType] == pointer) { return true; }
+    if (!smlua_valid_lot(lot)) { return false; }
 
-    struct CObjectAllowListNode* node = sAllowList[objectType];
+    u16 m = smlua_lot_mapping(lot);
+    if (sCachedAllowed[m] == pointer) { return true; }
+
+    struct CObjectAllowListNode* node = sAllowList[m];
     while (node != NULL) {
         if (pointer == node->pointer) { return true; }
         if (pointer < node->pointer) { return false; }

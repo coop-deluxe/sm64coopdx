@@ -76,7 +76,7 @@ const char* smlua_to_string(lua_State* L, int index) {
     return lua_tostring(L, index);
 }
 
-void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
+void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     if (lua_type(L, index) != LUA_TTABLE) {
         LOG_LUA("LUA: smlua_to_cobject received improper type '%d'", lua_type(L, index));
         smlua_logline();
@@ -123,7 +123,7 @@ void* smlua_to_cobject(lua_State* L, int index, enum LuaObjectType lot) {
 
 //////////////////////////////////////////////
 
-void smlua_push_object(lua_State* L, enum LuaObjectType lot, void* p) {
+void smlua_push_object(lua_State* L, u16 lot, void* p) {
     if (p == NULL) {
         lua_pushnil(L);
         return;

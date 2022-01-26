@@ -57,7 +57,7 @@ static void smlua_init_mario_states(void) {
     int t = lua_gettop(gLuaState);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         lua_pushinteger(L, i);
-        smlua_push_object(L, LOT_MARIO_STATE, &gMarioStates[i]);
+        smlua_push_object(L, LOT_MARIOSTATE, &gMarioStates[i]);
         lua_settable(L, t);
     }
     lua_setglobal(L, "gMarioStates");

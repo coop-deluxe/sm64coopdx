@@ -90,7 +90,7 @@ int smlua_func_play_sound(lua_State* L) {
 int smlua_func_is_anim_at_end(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, is_anim_at_end(m));
@@ -101,7 +101,7 @@ int smlua_func_is_anim_at_end(lua_State* L) {
 int smlua_func_is_anim_past_end(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, is_anim_past_end(m));
@@ -112,7 +112,7 @@ int smlua_func_is_anim_past_end(lua_State* L) {
 int smlua_func_set_mario_animation(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 targetAnimID = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -125,7 +125,7 @@ int smlua_func_set_mario_animation(lua_State* L) {
 int smlua_func_set_mario_anim_with_accel(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 targetAnimID = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -140,7 +140,7 @@ int smlua_func_set_mario_anim_with_accel(lua_State* L) {
 int smlua_func_set_anim_to_frame(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 animFrame = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -153,7 +153,7 @@ int smlua_func_set_anim_to_frame(lua_State* L) {
 int smlua_func_is_anim_past_frame(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 animFrame = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -191,7 +191,7 @@ int smlua_func_find_mario_anim_flags_and_translation(lua_State* L) {
 int smlua_func_update_mario_pos_for_anim(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     update_mario_pos_for_anim(m);
@@ -202,7 +202,7 @@ int smlua_func_update_mario_pos_for_anim(lua_State* L) {
 int smlua_func_return_mario_anim_y_translation(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, return_mario_anim_y_translation(m));
@@ -213,7 +213,7 @@ int smlua_func_return_mario_anim_y_translation(lua_State* L) {
 int smlua_func_play_sound_if_no_flag(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -228,7 +228,7 @@ int smlua_func_play_sound_if_no_flag(lua_State* L) {
 int smlua_func_play_mario_jump_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_mario_jump_sound(m);
@@ -239,7 +239,7 @@ int smlua_func_play_mario_jump_sound(lua_State* L) {
 int smlua_func_adjust_sound_for_speed(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     adjust_sound_for_speed(m);
@@ -250,7 +250,7 @@ int smlua_func_adjust_sound_for_speed(lua_State* L) {
 int smlua_func_play_sound_and_spawn_particles(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -265,7 +265,7 @@ int smlua_func_play_sound_and_spawn_particles(lua_State* L) {
 int smlua_func_play_mario_action_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -280,7 +280,7 @@ int smlua_func_play_mario_action_sound(lua_State* L) {
 int smlua_func_play_mario_landing_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -293,7 +293,7 @@ int smlua_func_play_mario_landing_sound(lua_State* L) {
 int smlua_func_play_mario_landing_sound_once(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -306,7 +306,7 @@ int smlua_func_play_mario_landing_sound_once(lua_State* L) {
 int smlua_func_play_mario_heavy_landing_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -319,7 +319,7 @@ int smlua_func_play_mario_heavy_landing_sound(lua_State* L) {
 int smlua_func_play_mario_heavy_landing_sound_once(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 soundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -332,7 +332,7 @@ int smlua_func_play_mario_heavy_landing_sound_once(lua_State* L) {
 int smlua_func_play_mario_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 primarySoundBits = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -347,7 +347,7 @@ int smlua_func_play_mario_sound(lua_State* L) {
 int smlua_func_mario_set_bubbled(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     mario_set_bubbled(m);
@@ -358,7 +358,7 @@ int smlua_func_mario_set_bubbled(lua_State* L) {
 int smlua_func_mario_set_forward_vel(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 speed = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -371,7 +371,7 @@ int smlua_func_mario_set_forward_vel(lua_State* L) {
 int smlua_func_mario_get_floor_class(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_get_floor_class(m));
@@ -382,7 +382,7 @@ int smlua_func_mario_get_floor_class(lua_State* L) {
 int smlua_func_mario_get_terrain_sound_addend(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_get_terrain_sound_addend(m));
@@ -447,7 +447,7 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
 int smlua_func_mario_facing_downhill(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 turnYaw = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -460,7 +460,7 @@ int smlua_func_mario_facing_downhill(lua_State* L) {
 int smlua_func_mario_floor_is_slippery(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_floor_is_slippery(m));
@@ -471,7 +471,7 @@ int smlua_func_mario_floor_is_slippery(lua_State* L) {
 int smlua_func_mario_floor_is_slope(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_floor_is_slope(m));
@@ -482,7 +482,7 @@ int smlua_func_mario_floor_is_slope(lua_State* L) {
 int smlua_func_mario_floor_is_steep(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_floor_is_steep(m));
@@ -493,7 +493,7 @@ int smlua_func_mario_floor_is_steep(lua_State* L) {
 int smlua_func_find_floor_height_relative_polar(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 angleFromMario = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -508,7 +508,7 @@ int smlua_func_find_floor_height_relative_polar(lua_State* L) {
 int smlua_func_find_floor_slope(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 yawOffset = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -521,7 +521,7 @@ int smlua_func_find_floor_slope(lua_State* L) {
 int smlua_func_update_mario_sound_and_camera(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     update_mario_sound_and_camera(m);
@@ -532,7 +532,7 @@ int smlua_func_update_mario_sound_and_camera(lua_State* L) {
 int smlua_func_set_steep_jump_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_steep_jump_action(m);
@@ -543,7 +543,7 @@ int smlua_func_set_steep_jump_action(lua_State* L) {
 int smlua_func_set_mario_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -558,7 +558,7 @@ int smlua_func_set_mario_action(lua_State* L) {
 int smlua_func_set_jump_from_landing(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_jump_from_landing(m));
@@ -569,7 +569,7 @@ int smlua_func_set_jump_from_landing(lua_State* L) {
 int smlua_func_set_jumping_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -584,7 +584,7 @@ int smlua_func_set_jumping_action(lua_State* L) {
 int smlua_func_drop_and_set_mario_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -599,7 +599,7 @@ int smlua_func_drop_and_set_mario_action(lua_State* L) {
 int smlua_func_hurt_and_set_mario_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -616,7 +616,7 @@ int smlua_func_hurt_and_set_mario_action(lua_State* L) {
 int smlua_func_check_common_action_exits(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, check_common_action_exits(m));
@@ -627,7 +627,7 @@ int smlua_func_check_common_action_exits(lua_State* L) {
 int smlua_func_check_common_hold_action_exits(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, check_common_hold_action_exits(m));
@@ -638,7 +638,7 @@ int smlua_func_check_common_hold_action_exits(lua_State* L) {
 int smlua_func_transition_submerged_to_walking(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, transition_submerged_to_walking(m));
@@ -649,7 +649,7 @@ int smlua_func_transition_submerged_to_walking(lua_State* L) {
 int smlua_func_set_water_plunge_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, set_water_plunge_action(m));
@@ -671,7 +671,7 @@ int smlua_func_execute_mario_action(lua_State* L) {
 int smlua_func_force_idle_state(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, force_idle_state(m));
@@ -686,7 +686,7 @@ int smlua_func_force_idle_state(lua_State* L) {
 int smlua_func_play_flip_sounds(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 frame1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -704,7 +704,7 @@ int smlua_func_play_flip_sounds(lua_State* L) {
 int smlua_func_play_far_fall_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void play_far_fall_sound(struct MarioState *m);
@@ -716,7 +716,7 @@ int smlua_func_play_far_fall_sound(lua_State* L) {
 int smlua_func_play_knockback_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void play_knockback_sound(struct MarioState *m);
@@ -728,7 +728,7 @@ int smlua_func_play_knockback_sound(lua_State* L) {
 int smlua_func_lava_boost_on_wall(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 lava_boost_on_wall(struct MarioState *m);
@@ -740,7 +740,7 @@ int smlua_func_lava_boost_on_wall(lua_State* L) {
 int smlua_func_check_fall_damage(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 hardFallAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -754,7 +754,7 @@ int smlua_func_check_fall_damage(lua_State* L) {
 int smlua_func_check_kick_or_dive_in_air(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_kick_or_dive_in_air(struct MarioState *m);
@@ -766,7 +766,7 @@ int smlua_func_check_kick_or_dive_in_air(lua_State* L) {
 int smlua_func_should_get_stuck_in_ground(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 should_get_stuck_in_ground(struct MarioState *m);
@@ -778,7 +778,7 @@ int smlua_func_should_get_stuck_in_ground(lua_State* L) {
 int smlua_func_check_fall_damage_or_get_stuck(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 hardFallAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -792,7 +792,7 @@ int smlua_func_check_fall_damage_or_get_stuck(lua_State* L) {
 int smlua_func_check_horizontal_wind(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_horizontal_wind(struct MarioState *m);
@@ -804,7 +804,7 @@ int smlua_func_check_horizontal_wind(lua_State* L) {
 int smlua_func_update_air_with_turn(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_air_with_turn(struct MarioState *m);
@@ -816,7 +816,7 @@ int smlua_func_update_air_with_turn(lua_State* L) {
 int smlua_func_update_air_without_turn(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_air_without_turn(struct MarioState *m);
@@ -828,7 +828,7 @@ int smlua_func_update_air_without_turn(lua_State* L) {
 int smlua_func_update_lava_boost_or_twirling(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_lava_boost_or_twirling(struct MarioState *m);
@@ -840,7 +840,7 @@ int smlua_func_update_lava_boost_or_twirling(lua_State* L) {
 int smlua_func_update_flying_yaw(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_flying_yaw(struct MarioState *m);
@@ -852,7 +852,7 @@ int smlua_func_update_flying_yaw(lua_State* L) {
 int smlua_func_update_flying_pitch(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_flying_pitch(struct MarioState *m);
@@ -864,7 +864,7 @@ int smlua_func_update_flying_pitch(lua_State* L) {
 int smlua_func_update_flying(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_flying(struct MarioState *m);
@@ -876,7 +876,7 @@ int smlua_func_update_flying(lua_State* L) {
 int smlua_func_common_air_action_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 landAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -894,7 +894,7 @@ int smlua_func_common_air_action_step(lua_State* L) {
 int smlua_func_act_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_jump(struct MarioState *m);
@@ -906,7 +906,7 @@ int smlua_func_act_jump(lua_State* L) {
 int smlua_func_act_double_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_double_jump(struct MarioState *m);
@@ -918,7 +918,7 @@ int smlua_func_act_double_jump(lua_State* L) {
 int smlua_func_act_triple_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_triple_jump(struct MarioState *m);
@@ -930,7 +930,7 @@ int smlua_func_act_triple_jump(lua_State* L) {
 int smlua_func_act_backflip(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_backflip(struct MarioState *m);
@@ -942,7 +942,7 @@ int smlua_func_act_backflip(lua_State* L) {
 int smlua_func_act_freefall(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_freefall(struct MarioState *m);
@@ -954,7 +954,7 @@ int smlua_func_act_freefall(lua_State* L) {
 int smlua_func_act_hold_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hold_jump(struct MarioState *m);
@@ -966,7 +966,7 @@ int smlua_func_act_hold_jump(lua_State* L) {
 int smlua_func_act_hold_freefall(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hold_freefall(struct MarioState *m);
@@ -978,7 +978,7 @@ int smlua_func_act_hold_freefall(lua_State* L) {
 int smlua_func_act_side_flip(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_side_flip(struct MarioState *m);
@@ -990,7 +990,7 @@ int smlua_func_act_side_flip(lua_State* L) {
 int smlua_func_act_wall_kick_air(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_wall_kick_air(struct MarioState *m);
@@ -1002,7 +1002,7 @@ int smlua_func_act_wall_kick_air(lua_State* L) {
 int smlua_func_act_long_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_long_jump(struct MarioState *m);
@@ -1014,7 +1014,7 @@ int smlua_func_act_long_jump(lua_State* L) {
 int smlua_func_act_riding_shell_air(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_riding_shell_air(struct MarioState *m);
@@ -1026,7 +1026,7 @@ int smlua_func_act_riding_shell_air(lua_State* L) {
 int smlua_func_act_twirling(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_twirling(struct MarioState *m);
@@ -1038,7 +1038,7 @@ int smlua_func_act_twirling(lua_State* L) {
 int smlua_func_act_dive(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_dive(struct MarioState *m);
@@ -1050,7 +1050,7 @@ int smlua_func_act_dive(lua_State* L) {
 int smlua_func_act_air_throw(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_air_throw(struct MarioState *m);
@@ -1062,7 +1062,7 @@ int smlua_func_act_air_throw(lua_State* L) {
 int smlua_func_act_water_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_water_jump(struct MarioState *m);
@@ -1074,7 +1074,7 @@ int smlua_func_act_water_jump(lua_State* L) {
 int smlua_func_act_hold_water_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hold_water_jump(struct MarioState *m);
@@ -1086,7 +1086,7 @@ int smlua_func_act_hold_water_jump(lua_State* L) {
 int smlua_func_act_steep_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_steep_jump(struct MarioState *m);
@@ -1098,7 +1098,7 @@ int smlua_func_act_steep_jump(lua_State* L) {
 int smlua_func_act_ground_pound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_ground_pound(struct MarioState *m);
@@ -1110,7 +1110,7 @@ int smlua_func_act_ground_pound(lua_State* L) {
 int smlua_func_act_burning_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_burning_jump(struct MarioState *m);
@@ -1122,7 +1122,7 @@ int smlua_func_act_burning_jump(lua_State* L) {
 int smlua_func_act_burning_fall(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_burning_fall(struct MarioState *m);
@@ -1134,7 +1134,7 @@ int smlua_func_act_burning_fall(lua_State* L) {
 int smlua_func_act_crazy_box_bounce(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_crazy_box_bounce(struct MarioState *m);
@@ -1146,7 +1146,7 @@ int smlua_func_act_crazy_box_bounce(lua_State* L) {
 int smlua_func_common_air_knockback_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 landAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1166,7 +1166,7 @@ int smlua_func_common_air_knockback_step(lua_State* L) {
 int smlua_func_check_wall_kick(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_wall_kick(struct MarioState *m);
@@ -1178,7 +1178,7 @@ int smlua_func_check_wall_kick(lua_State* L) {
 int smlua_func_act_backward_air_kb(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_backward_air_kb(struct MarioState *m);
@@ -1190,7 +1190,7 @@ int smlua_func_act_backward_air_kb(lua_State* L) {
 int smlua_func_act_forward_air_kb(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_forward_air_kb(struct MarioState *m);
@@ -1202,7 +1202,7 @@ int smlua_func_act_forward_air_kb(lua_State* L) {
 int smlua_func_act_hard_backward_air_kb(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hard_backward_air_kb(struct MarioState *m);
@@ -1214,7 +1214,7 @@ int smlua_func_act_hard_backward_air_kb(lua_State* L) {
 int smlua_func_act_hard_forward_air_kb(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hard_forward_air_kb(struct MarioState *m);
@@ -1226,7 +1226,7 @@ int smlua_func_act_hard_forward_air_kb(lua_State* L) {
 int smlua_func_act_thrown_backward(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_thrown_backward(struct MarioState *m);
@@ -1238,7 +1238,7 @@ int smlua_func_act_thrown_backward(lua_State* L) {
 int smlua_func_act_thrown_forward(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_thrown_forward(struct MarioState *m);
@@ -1250,7 +1250,7 @@ int smlua_func_act_thrown_forward(lua_State* L) {
 int smlua_func_act_soft_bonk(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_soft_bonk(struct MarioState *m);
@@ -1262,7 +1262,7 @@ int smlua_func_act_soft_bonk(lua_State* L) {
 int smlua_func_act_getting_blown(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_getting_blown(struct MarioState *m);
@@ -1274,7 +1274,7 @@ int smlua_func_act_getting_blown(lua_State* L) {
 int smlua_func_act_air_hit_wall(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_air_hit_wall(struct MarioState *m);
@@ -1286,7 +1286,7 @@ int smlua_func_act_air_hit_wall(lua_State* L) {
 int smlua_func_act_forward_rollout(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_forward_rollout(struct MarioState *m);
@@ -1298,7 +1298,7 @@ int smlua_func_act_forward_rollout(lua_State* L) {
 int smlua_func_act_backward_rollout(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_backward_rollout(struct MarioState *m);
@@ -1310,7 +1310,7 @@ int smlua_func_act_backward_rollout(lua_State* L) {
 int smlua_func_act_butt_slide_air(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_butt_slide_air(struct MarioState *m);
@@ -1322,7 +1322,7 @@ int smlua_func_act_butt_slide_air(lua_State* L) {
 int smlua_func_act_hold_butt_slide_air(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hold_butt_slide_air(struct MarioState *m);
@@ -1334,7 +1334,7 @@ int smlua_func_act_hold_butt_slide_air(lua_State* L) {
 int smlua_func_act_lava_boost(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_lava_boost(struct MarioState *m);
@@ -1346,7 +1346,7 @@ int smlua_func_act_lava_boost(lua_State* L) {
 int smlua_func_act_slide_kick(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_slide_kick(struct MarioState *m);
@@ -1358,7 +1358,7 @@ int smlua_func_act_slide_kick(lua_State* L) {
 int smlua_func_act_jump_kick(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_jump_kick(struct MarioState *m);
@@ -1370,7 +1370,7 @@ int smlua_func_act_jump_kick(lua_State* L) {
 int smlua_func_act_shot_from_cannon(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_shot_from_cannon(struct MarioState *m);
@@ -1382,7 +1382,7 @@ int smlua_func_act_shot_from_cannon(lua_State* L) {
 int smlua_func_act_flying(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_flying(struct MarioState *m);
@@ -1394,7 +1394,7 @@ int smlua_func_act_flying(lua_State* L) {
 int smlua_func_act_riding_hoot(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_riding_hoot(struct MarioState *m);
@@ -1406,7 +1406,7 @@ int smlua_func_act_riding_hoot(lua_State* L) {
 int smlua_func_act_flying_triple_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_flying_triple_jump(struct MarioState *m);
@@ -1418,7 +1418,7 @@ int smlua_func_act_flying_triple_jump(lua_State* L) {
 int smlua_func_act_top_of_pole_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_top_of_pole_jump(struct MarioState *m);
@@ -1430,7 +1430,7 @@ int smlua_func_act_top_of_pole_jump(lua_State* L) {
 int smlua_func_act_vertical_wind(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_vertical_wind(struct MarioState *m);
@@ -1442,7 +1442,7 @@ int smlua_func_act_vertical_wind(lua_State* L) {
 int smlua_func_act_special_triple_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_special_triple_jump(struct MarioState *m);
@@ -1454,7 +1454,7 @@ int smlua_func_act_special_triple_jump(lua_State* L) {
 int smlua_func_check_common_airborne_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_airborne_cancels(struct MarioState *m);
@@ -1466,7 +1466,7 @@ int smlua_func_check_common_airborne_cancels(lua_State* L) {
 int smlua_func_mario_execute_airborne_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_airborne_action(struct MarioState *m);
@@ -1482,7 +1482,7 @@ int smlua_func_mario_execute_airborne_action(lua_State* L) {
 int smlua_func_add_tree_leaf_particles(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void add_tree_leaf_particles(struct MarioState *m);
@@ -1494,7 +1494,7 @@ int smlua_func_add_tree_leaf_particles(lua_State* L) {
 int smlua_func_play_climbing_sounds(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 b = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1508,7 +1508,7 @@ int smlua_func_play_climbing_sounds(lua_State* L) {
 int smlua_func_set_pole_position(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 offsetY = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1522,7 +1522,7 @@ int smlua_func_set_pole_position(lua_State* L) {
 int smlua_func_act_holding_pole(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_holding_pole(struct MarioState *m);
@@ -1534,7 +1534,7 @@ int smlua_func_act_holding_pole(lua_State* L) {
 int smlua_func_act_climbing_pole(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_climbing_pole(struct MarioState *m);
@@ -1546,7 +1546,7 @@ int smlua_func_act_climbing_pole(lua_State* L) {
 int smlua_func_act_grab_pole_slow(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_grab_pole_slow(struct MarioState *m);
@@ -1558,7 +1558,7 @@ int smlua_func_act_grab_pole_slow(lua_State* L) {
 int smlua_func_act_grab_pole_fast(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_grab_pole_fast(struct MarioState *m);
@@ -1570,7 +1570,7 @@ int smlua_func_act_grab_pole_fast(lua_State* L) {
 int smlua_func_act_top_of_pole_transition(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_top_of_pole_transition(struct MarioState *m);
@@ -1582,7 +1582,7 @@ int smlua_func_act_top_of_pole_transition(lua_State* L) {
 int smlua_func_act_top_of_pole(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_top_of_pole(struct MarioState *m);
@@ -1594,7 +1594,7 @@ int smlua_func_act_top_of_pole(lua_State* L) {
 int smlua_func_perform_hanging_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     f32* nextPos = smlua_get_vec3f_from_buffer();
@@ -1618,7 +1618,7 @@ int smlua_func_perform_hanging_step(lua_State* L) {
 int smlua_func_update_hang_moving(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 update_hang_moving(struct MarioState *m);
@@ -1630,7 +1630,7 @@ int smlua_func_update_hang_moving(lua_State* L) {
 int smlua_func_update_hang_stationary(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_hang_stationary(struct MarioState *m);
@@ -1642,7 +1642,7 @@ int smlua_func_update_hang_stationary(lua_State* L) {
 int smlua_func_act_start_hanging(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_start_hanging(struct MarioState *m);
@@ -1654,7 +1654,7 @@ int smlua_func_act_start_hanging(lua_State* L) {
 int smlua_func_act_hanging(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hanging(struct MarioState *m);
@@ -1666,7 +1666,7 @@ int smlua_func_act_hanging(lua_State* L) {
 int smlua_func_act_hang_moving(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_hang_moving(struct MarioState *m);
@@ -1678,7 +1678,7 @@ int smlua_func_act_hang_moving(lua_State* L) {
 int smlua_func_let_go_of_ledge(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 let_go_of_ledge(struct MarioState *m);
@@ -1690,7 +1690,7 @@ int smlua_func_let_go_of_ledge(lua_State* L) {
 int smlua_func_climb_up_ledge(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void climb_up_ledge(struct MarioState *m);
@@ -1702,7 +1702,7 @@ int smlua_func_climb_up_ledge(lua_State* L) {
 int smlua_func_update_ledge_climb_camera(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_ledge_climb_camera(struct MarioState *m);
@@ -1714,7 +1714,7 @@ int smlua_func_update_ledge_climb_camera(lua_State* L) {
 int smlua_func_update_ledge_climb(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 animation = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1730,7 +1730,7 @@ int smlua_func_update_ledge_climb(lua_State* L) {
 int smlua_func_act_ledge_grab(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_ledge_grab(struct MarioState *m);
@@ -1742,7 +1742,7 @@ int smlua_func_act_ledge_grab(lua_State* L) {
 int smlua_func_act_ledge_climb_slow(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_ledge_climb_slow(struct MarioState *m);
@@ -1754,7 +1754,7 @@ int smlua_func_act_ledge_climb_slow(lua_State* L) {
 int smlua_func_act_ledge_climb_down(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_ledge_climb_down(struct MarioState *m);
@@ -1766,7 +1766,7 @@ int smlua_func_act_ledge_climb_down(lua_State* L) {
 int smlua_func_act_ledge_climb_fast(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_ledge_climb_fast(struct MarioState *m);
@@ -1778,7 +1778,7 @@ int smlua_func_act_ledge_climb_fast(lua_State* L) {
 int smlua_func_act_grabbed(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_grabbed(struct MarioState *m);
@@ -1790,7 +1790,7 @@ int smlua_func_act_grabbed(lua_State* L) {
 int smlua_func_act_in_cannon(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_in_cannon(struct MarioState *m);
@@ -1802,7 +1802,7 @@ int smlua_func_act_in_cannon(lua_State* L) {
 int smlua_func_act_tornado_twirling(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_tornado_twirling(struct MarioState *m);
@@ -1814,7 +1814,7 @@ int smlua_func_act_tornado_twirling(lua_State* L) {
 int smlua_func_act_bubbled(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 act_bubbled(struct MarioState* m);
@@ -1826,7 +1826,7 @@ int smlua_func_act_bubbled(lua_State* L) {
 int smlua_func_check_common_automatic_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_automatic_cancels(struct MarioState *m);
@@ -1838,7 +1838,7 @@ int smlua_func_check_common_automatic_cancels(lua_State* L) {
 int smlua_func_mario_execute_automatic_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_automatic_action(struct MarioState *m);
@@ -1884,7 +1884,7 @@ int smlua_func_bhv_end_toad_loop(UNUSED lua_State* L) {
 int smlua_func_handle_save_menu(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void handle_save_menu(struct MarioState *m);
@@ -1897,7 +1897,7 @@ int smlua_func_handle_save_menu(lua_State* L) {
 int smlua_func_spawn_obj_at_mario_rel_yaw(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 model = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1916,7 +1916,7 @@ int smlua_func_spawn_obj_at_mario_rel_yaw(lua_State* L) {
 int smlua_func_cutscene_take_cap_off(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void cutscene_take_cap_off(struct MarioState *m);
@@ -1928,7 +1928,7 @@ int smlua_func_cutscene_take_cap_off(lua_State* L) {
 int smlua_func_cutscene_put_cap_on(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void cutscene_put_cap_on(struct MarioState *m);
@@ -1940,7 +1940,7 @@ int smlua_func_cutscene_put_cap_on(lua_State* L) {
 int smlua_func_should_start_or_continue_dialog(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     struct Object* object = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1954,7 +1954,7 @@ int smlua_func_should_start_or_continue_dialog(lua_State* L) {
 int smlua_func_general_star_dance_handler(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 isInWater = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -1968,7 +1968,7 @@ int smlua_func_general_star_dance_handler(lua_State* L) {
 int smlua_func_stuck_in_ground_handler(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 animation = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2012,7 +2012,7 @@ int smlua_func_generate_yellow_sparkles(lua_State* L) {
 int smlua_func_tilt_body_running(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s16 tilt_body_running(struct MarioState *m);
@@ -2024,7 +2024,7 @@ int smlua_func_tilt_body_running(lua_State* L) {
 int smlua_func_play_step_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 frame1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2040,7 +2040,7 @@ int smlua_func_play_step_sound(lua_State* L) {
 int smlua_func_align_with_floor(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void align_with_floor(struct MarioState *m);
@@ -2052,7 +2052,7 @@ int smlua_func_align_with_floor(lua_State* L) {
 int smlua_func_begin_walking_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 forwardVel = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2070,7 +2070,7 @@ int smlua_func_begin_walking_action(lua_State* L) {
 int smlua_func_check_ledge_climb_down(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void check_ledge_climb_down(struct MarioState *m);
@@ -2082,7 +2082,7 @@ int smlua_func_check_ledge_climb_down(lua_State* L) {
 int smlua_func_slide_bonk(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 fastAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2098,7 +2098,7 @@ int smlua_func_slide_bonk(lua_State* L) {
 int smlua_func_set_triple_jump_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2114,7 +2114,7 @@ int smlua_func_set_triple_jump_action(lua_State* L) {
 int smlua_func_update_sliding_angle(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 accel = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2130,7 +2130,7 @@ int smlua_func_update_sliding_angle(lua_State* L) {
 int smlua_func_update_sliding(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 stopSpeed = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2144,7 +2144,7 @@ int smlua_func_update_sliding(lua_State* L) {
 int smlua_func_apply_slope_accel(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void apply_slope_accel(struct MarioState *m);
@@ -2156,7 +2156,7 @@ int smlua_func_apply_slope_accel(lua_State* L) {
 int smlua_func_apply_landing_accel(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 frictionFactor = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2170,7 +2170,7 @@ int smlua_func_apply_landing_accel(lua_State* L) {
 int smlua_func_update_shell_speed(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_shell_speed(struct MarioState *m);
@@ -2182,7 +2182,7 @@ int smlua_func_update_shell_speed(lua_State* L) {
 int smlua_func_apply_slope_decel(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 decelCoef = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2196,7 +2196,7 @@ int smlua_func_apply_slope_decel(lua_State* L) {
 int smlua_func_update_decelerating_speed(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 update_decelerating_speed(struct MarioState *m);
@@ -2208,7 +2208,7 @@ int smlua_func_update_decelerating_speed(lua_State* L) {
 int smlua_func_update_walking_speed(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void update_walking_speed(struct MarioState *m);
@@ -2220,7 +2220,7 @@ int smlua_func_update_walking_speed(lua_State* L) {
 int smlua_func_should_begin_sliding(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 should_begin_sliding(struct MarioState *m);
@@ -2232,7 +2232,7 @@ int smlua_func_should_begin_sliding(lua_State* L) {
 int smlua_func_analog_stick_held_back(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 analog_stick_held_back(struct MarioState *m);
@@ -2244,7 +2244,7 @@ int smlua_func_analog_stick_held_back(lua_State* L) {
 int smlua_func_check_ground_dive_or_punch(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_ground_dive_or_punch(struct MarioState *m);
@@ -2256,7 +2256,7 @@ int smlua_func_check_ground_dive_or_punch(lua_State* L) {
 int smlua_func_begin_braking_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 begin_braking_action(struct MarioState *m);
@@ -2268,7 +2268,7 @@ int smlua_func_begin_braking_action(lua_State* L) {
 int smlua_func_anim_and_audio_for_walk(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void anim_and_audio_for_walk(struct MarioState *m);
@@ -2280,7 +2280,7 @@ int smlua_func_anim_and_audio_for_walk(lua_State* L) {
 int smlua_func_anim_and_audio_for_hold_walk(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void anim_and_audio_for_hold_walk(struct MarioState *m);
@@ -2292,7 +2292,7 @@ int smlua_func_anim_and_audio_for_hold_walk(lua_State* L) {
 int smlua_func_anim_and_audio_for_heavy_walk(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void anim_and_audio_for_heavy_walk(struct MarioState *m);
@@ -2304,7 +2304,7 @@ int smlua_func_anim_and_audio_for_heavy_walk(lua_State* L) {
 int smlua_func_push_or_sidle_wall(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     f32* startPos = smlua_get_vec3f_from_buffer();
@@ -2328,7 +2328,7 @@ int smlua_func_push_or_sidle_wall(lua_State* L) {
 int smlua_func_tilt_body_walking(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 startYaw = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2342,7 +2342,7 @@ int smlua_func_tilt_body_walking(lua_State* L) {
 int smlua_func_tilt_body_ground_shell(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 startYaw = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2356,7 +2356,7 @@ int smlua_func_tilt_body_ground_shell(lua_State* L) {
 int smlua_func_tilt_body_butt_slide(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void tilt_body_butt_slide(struct MarioState *m);
@@ -2368,7 +2368,7 @@ int smlua_func_tilt_body_butt_slide(lua_State* L) {
 int smlua_func_common_slide_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 endAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2386,7 +2386,7 @@ int smlua_func_common_slide_action(lua_State* L) {
 int smlua_func_common_slide_action_with_jump(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 stopAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2406,7 +2406,7 @@ int smlua_func_common_slide_action_with_jump(lua_State* L) {
 int smlua_func_stomach_slide_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 stopAction = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2424,7 +2424,7 @@ int smlua_func_stomach_slide_action(lua_State* L) {
 int smlua_func_common_ground_knockback_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 animation = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2444,7 +2444,7 @@ int smlua_func_common_ground_knockback_action(lua_State* L) {
 int smlua_func_common_landing_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 animation = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2460,7 +2460,7 @@ int smlua_func_common_landing_action(lua_State* L) {
 int smlua_func_quicksand_jump_land_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 animation1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2480,7 +2480,7 @@ int smlua_func_quicksand_jump_land_action(lua_State* L) {
 int smlua_func_check_common_moving_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_moving_cancels(struct MarioState *m);
@@ -2492,7 +2492,7 @@ int smlua_func_check_common_moving_cancels(lua_State* L) {
 int smlua_func_mario_execute_moving_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_moving_action(struct MarioState *m);
@@ -2508,7 +2508,7 @@ int smlua_func_mario_execute_moving_action(lua_State* L) {
 int smlua_func_animated_stationary_ground_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 animation = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2524,7 +2524,7 @@ int smlua_func_animated_stationary_ground_step(lua_State* L) {
 int smlua_func_mario_update_punch_sequence(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_update_punch_sequence(struct MarioState *m);
@@ -2536,7 +2536,7 @@ int smlua_func_mario_update_punch_sequence(lua_State* L) {
 int smlua_func_check_common_object_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_object_cancels(struct MarioState *m);
@@ -2548,7 +2548,7 @@ int smlua_func_check_common_object_cancels(lua_State* L) {
 int smlua_func_mario_execute_object_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_object_action(struct MarioState *m);
@@ -2564,7 +2564,7 @@ int smlua_func_mario_execute_object_action(lua_State* L) {
 int smlua_func_check_common_idle_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_idle_cancels(struct MarioState *m);
@@ -2576,7 +2576,7 @@ int smlua_func_check_common_idle_cancels(lua_State* L) {
 int smlua_func_check_common_hold_idle_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_hold_idle_cancels(struct MarioState *m);
@@ -2588,7 +2588,7 @@ int smlua_func_check_common_hold_idle_cancels(lua_State* L) {
 int smlua_func_play_anim_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 actionState = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2606,7 +2606,7 @@ int smlua_func_play_anim_sound(lua_State* L) {
 int smlua_func_stopping_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 animID = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2622,7 +2622,7 @@ int smlua_func_stopping_step(lua_State* L) {
 int smlua_func_landing_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 arg1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2638,7 +2638,7 @@ int smlua_func_landing_step(lua_State* L) {
 int smlua_func_check_common_landing_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 action = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2652,7 +2652,7 @@ int smlua_func_check_common_landing_cancels(lua_State* L) {
 int smlua_func_check_common_stationary_cancels(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 check_common_stationary_cancels(struct MarioState *m);
@@ -2664,7 +2664,7 @@ int smlua_func_check_common_stationary_cancels(lua_State* L) {
 int smlua_func_mario_execute_stationary_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_stationary_action(struct MarioState *m);
@@ -2680,7 +2680,7 @@ int smlua_func_mario_execute_stationary_action(lua_State* L) {
 int smlua_func_set_swimming_at_surface_particles(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 particleFlag = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2694,7 +2694,7 @@ int smlua_func_set_swimming_at_surface_particles(lua_State* L) {
 int smlua_func_perform_water_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern u32 perform_water_step(struct MarioState *m);
@@ -2706,7 +2706,7 @@ int smlua_func_perform_water_step(lua_State* L) {
 int smlua_func_perform_water_full_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     f32* nextPos = smlua_get_vec3f_from_buffer();
@@ -2730,7 +2730,7 @@ int smlua_func_perform_water_full_step(lua_State* L) {
 int smlua_func_mario_execute_submerged_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern s32 mario_execute_submerged_action(struct MarioState *m);
@@ -2742,7 +2742,7 @@ int smlua_func_mario_execute_submerged_action(lua_State* L) {
 int smlua_func_float_surface_gfx(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern void float_surface_gfx(struct MarioState *m);
@@ -2754,7 +2754,7 @@ int smlua_func_float_surface_gfx(lua_State* L) {
 int smlua_func_apply_water_current(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     f32* step = smlua_get_vec3f_from_buffer();
@@ -2791,7 +2791,7 @@ int smlua_func_get_additive_y_vel_for_jumps(UNUSED lua_State* L) {
 int smlua_func_mario_bonk_reflection(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 arg1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2804,7 +2804,7 @@ int smlua_func_mario_bonk_reflection(lua_State* L) {
 int smlua_func_mario_update_quicksand(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 arg1 = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2817,7 +2817,7 @@ int smlua_func_mario_update_quicksand(lua_State* L) {
 int smlua_func_mario_push_off_steep_floor(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 arg1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2832,7 +2832,7 @@ int smlua_func_mario_push_off_steep_floor(lua_State* L) {
 int smlua_func_mario_update_moving_sand(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_update_moving_sand(arg0));
@@ -2843,7 +2843,7 @@ int smlua_func_mario_update_moving_sand(lua_State* L) {
 int smlua_func_mario_update_windy_ground(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, mario_update_windy_ground(arg0));
@@ -2854,7 +2854,7 @@ int smlua_func_mario_update_windy_ground(lua_State* L) {
 int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     stop_and_set_height_to_floor(arg0);
@@ -2865,7 +2865,7 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
 int smlua_func_stationary_ground_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, stationary_ground_step(arg0));
@@ -2876,7 +2876,7 @@ int smlua_func_stationary_ground_step(lua_State* L) {
 int smlua_func_perform_ground_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, perform_ground_step(arg0));
@@ -2887,7 +2887,7 @@ int smlua_func_perform_ground_step(lua_State* L) {
 int smlua_func_perform_air_step(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* arg0 = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 arg1 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2900,7 +2900,7 @@ int smlua_func_perform_air_step(lua_State* L) {
 int smlua_func_set_vel_from_pitch_and_yaw(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_vel_from_pitch_and_yaw(m);
@@ -3130,7 +3130,7 @@ int smlua_func_queue_rumble_data_object(lua_State* L) {
 int smlua_func_queue_rumble_data_mario(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIO_STATE);
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 a0 = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }

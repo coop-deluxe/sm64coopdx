@@ -4863,6 +4863,9 @@
     <ClCompile Include="..\src\pc\lua\smlua_cobject_allowlist.c">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\lua\smlua_cobject_autogen.c">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -6005,6 +6008,9 @@
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\lua\smlua_cobject_allowlist.h">
+      <Filter>Source Files\src\pc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\lua\smlua_cobject_autogen.h">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClInclude>
   </ItemGroup>
