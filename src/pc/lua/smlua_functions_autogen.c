@@ -417,7 +417,6 @@ int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
 }
 */
 
-/*
 int smlua_func_vec3f_find_ceil(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -431,7 +430,7 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 height = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
-    struct Surface** ceil <--- UNIMPLEMENTED
+    struct Surface** ceil = (struct Surface**)smlua_to_cobject(L, 3, LOT_SURFACE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, vec3f_find_ceil(pos, height, ceil));
@@ -442,7 +441,6 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
 
     return 1;
 }
-*/
 
 int smlua_func_mario_facing_downhill(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
@@ -1901,7 +1899,7 @@ int smlua_func_spawn_obj_at_mario_rel_yaw(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     s32 model = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
-    BehaviorScript * behavior <--- UNIMPLEMENTED
+//  BehaviorScript * behavior = (BehaviorScript *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
     s16 relYaw = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2916,11 +2914,11 @@ int smlua_func_set_vel_from_pitch_and_yaw(lua_State* L) {
 int smlua_func_f32_find_wall_collision(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
-    f32 * xPtr <--- UNIMPLEMENTED
+//  f32 * xPtr = (f32 *)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
-    f32 * yPtr <--- UNIMPLEMENTED
+//  f32 * yPtr = (f32 *)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
-    f32 * zPtr <--- UNIMPLEMENTED
+//  f32 * zPtr = (f32 *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 offsetY = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -2933,20 +2931,17 @@ int smlua_func_f32_find_wall_collision(lua_State* L) {
 }
 */
 
-/*
 int smlua_func_find_wall_collisions(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    struct WallCollisionData* colData <--- UNIMPLEMENTED
+    struct WallCollisionData* colData = (struct WallCollisionData*)smlua_to_cobject(L, 1, LOT_WALLCOLLISIONDATA);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, find_wall_collisions(colData));
 
     return 1;
 }
-*/
 
-/*
 int smlua_func_find_ceil(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -2956,16 +2951,14 @@ int smlua_func_find_ceil(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 posZ = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-    struct Surface** pceil <--- UNIMPLEMENTED
+    struct Surface** pceil = (struct Surface**)smlua_to_cobject(L, 4, LOT_SURFACE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_ceil(posX, posY, posZ, pceil));
 
     return 1;
 }
-*/
 
-/*
 int smlua_func_find_floor_height_and_data(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -2975,14 +2968,13 @@ int smlua_func_find_floor_height_and_data(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 zPos = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-    struct FloorGeometry** floorGeo <--- UNIMPLEMENTED
+    struct FloorGeometry** floorGeo = (struct FloorGeometry**)smlua_to_cobject(L, 4, LOT_FLOORGEOMETRY);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_floor_height_and_data(xPos, yPos, zPos, floorGeo));
 
     return 1;
 }
-*/
 
 int smlua_func_find_floor_height(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
@@ -2999,7 +2991,6 @@ int smlua_func_find_floor_height(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_find_floor(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -3009,14 +3000,13 @@ int smlua_func_find_floor(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 zPos = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-    struct Surface** pfloor <--- UNIMPLEMENTED
+    struct Surface** pfloor = (struct Surface**)smlua_to_cobject(L, 4, LOT_SURFACE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_floor(xPos, yPos, zPos, pfloor));
 
     return 1;
 }
-*/
 
 int smlua_func_find_water_level(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
@@ -3044,7 +3034,6 @@ int smlua_func_find_poison_gas_level(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_find_surface_on_ray(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -3064,7 +3053,7 @@ int smlua_func_find_surface_on_ray(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     dir[2] = smlua_get_number_field(2, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
-    struct Surface** hit_surface <--- UNIMPLEMENTED
+    struct Surface** hit_surface = (struct Surface**)smlua_to_cobject(L, 3, LOT_SURFACE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     f32* hit_pos = smlua_get_vec3f_from_buffer();
@@ -3091,7 +3080,6 @@ int smlua_func_find_surface_on_ray(lua_State* L) {
 
     return 1;
 }
-*/
 
   ///////////////
  // thread6.c //
@@ -3181,7 +3169,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_get_floor_class", smlua_func_mario_get_floor_class);
     smlua_bind_function(L, "mario_get_terrain_sound_addend", smlua_func_mario_get_terrain_sound_addend);
     //smlua_bind_function(L, "resolve_and_return_wall_collisions", smlua_func_resolve_and_return_wall_collisions); <--- UNIMPLEMENTED
-    //smlua_bind_function(L, "vec3f_find_ceil", smlua_func_vec3f_find_ceil); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "vec3f_find_ceil", smlua_func_vec3f_find_ceil);
     smlua_bind_function(L, "mario_facing_downhill", smlua_func_mario_facing_downhill);
     smlua_bind_function(L, "mario_floor_is_slippery", smlua_func_mario_floor_is_slippery);
     smlua_bind_function(L, "mario_floor_is_slope", smlua_func_mario_floor_is_slope);
@@ -3387,14 +3375,14 @@ void smlua_bind_functions_autogen(void) {
 
     // surface_collision.h
     //smlua_bind_function(L, "f32_find_wall_collision", smlua_func_f32_find_wall_collision); <--- UNIMPLEMENTED
-    //smlua_bind_function(L, "find_wall_collisions", smlua_func_find_wall_collisions); <--- UNIMPLEMENTED
-    //smlua_bind_function(L, "find_ceil", smlua_func_find_ceil); <--- UNIMPLEMENTED
-    //smlua_bind_function(L, "find_floor_height_and_data", smlua_func_find_floor_height_and_data); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "find_wall_collisions", smlua_func_find_wall_collisions);
+    smlua_bind_function(L, "find_ceil", smlua_func_find_ceil);
+    smlua_bind_function(L, "find_floor_height_and_data", smlua_func_find_floor_height_and_data);
     smlua_bind_function(L, "find_floor_height", smlua_func_find_floor_height);
-    //smlua_bind_function(L, "find_floor", smlua_func_find_floor); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "find_floor", smlua_func_find_floor);
     smlua_bind_function(L, "find_water_level", smlua_func_find_water_level);
     smlua_bind_function(L, "find_poison_gas_level", smlua_func_find_poison_gas_level);
-    //smlua_bind_function(L, "find_surface_on_ray", smlua_func_find_surface_on_ray); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "find_surface_on_ray", smlua_func_find_surface_on_ray);
 
     // thread6.c
     smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);

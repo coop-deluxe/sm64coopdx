@@ -14,6 +14,8 @@ static char sTmpSession[MAX_SESSION_CHARS] = { 0 };
 static char sTmpPath[PATH_MAX] = { 0 };
 
 static bool acceptable_file(char* string) {
+    if (strchr(string, '/') != NULL)  { return false; }
+    if (strchr(string, '\\') != NULL) { return false; }
     string = strrchr(string, '.');
     return (string != NULL && !strcmp(string, ".lua"));
 }
@@ -26,7 +28,6 @@ static void mod_list_delete_tmp(void) {
 
     static char path[PATH_MAX] = { 0 };
     while ((dir = readdir(d)) != NULL) {
-        if (!acceptable_file(dir->d_name)) { continue; }
         snprintf(path, PATH_MAX - 1, "%s/%s", sTmpPath, dir->d_name);
         if (!fs_sys_file_exists(path)) { continue; }
 
@@ -68,7 +69,18 @@ void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size) {
     entry->size = size;
     table->totalSize += size;
 
-    snprintf(entry->path, PATH_MAX - 1, "%s/%s-%s", sTmpPath, sTmpSession, name);
+    char sanitizedName[PATH_MAX] = { 0 };
+    char* n = name;
+    char* s = sanitizedName;
+    while (*n != '\0') {
+        if (*n >= 'a' && *n <= 'z') { *s = *n; s++; }
+        if (*n >= 'A' && *n <= 'Z') { *s = *n; s++; }
+        if (*n >= '0' && *n <= '9') { *s = *n; s++; }
+        if (*n == '_' || *n == '-' || *n == '.') { *s = *n; s++; }
+        n++;
+    }
+
+    snprintf(entry->path, PATH_MAX - 1, "%s/%s-%u-%s", sTmpPath, sTmpSession, index, sanitizedName);
     entry->fp = fopen(entry->path, "wb");
 
     entry->remoteIndex = remoteIndex;
@@ -164,6 +176,7 @@ static void mod_list_load_local(const char* path) {
 }
 
 void mod_list_init(void) {
+    srand(time(0));
     snprintf(sTmpSession, MAX_SESSION_CHARS, "%06X", (u32)(rand() % 0xFFFFFF));
     snprintf(sTmpPath, PATH_MAX - 1, "%s", fs_get_write_path("tmp"));
     if (!fs_sys_dir_exists(sTmpPath)) { fs_sys_mkdir(sTmpPath); }

@@ -9,11 +9,11 @@
 -- Mario: wall kick slide all the way down wall
 
 
-gMarioStateExtras = {}
+gStateExtras = {}
 for i=0,(MAX_PLAYERS-1) do
-    gMarioStateExtras[i] = {}
+    gStateExtras[i] = {}
     local m = gMarioStates[i]
-    local e = gMarioStateExtras[i]
+    local e = gStateExtras[i]
     e.lastAction = m.action
     e.animFrame = 0
     e.scuttle = 0
@@ -24,7 +24,7 @@ end
 -----------
 
 function luigi_before_phys_step(m)
-    local e = gMarioStateExtras[m.playerIndex]
+    local e = gStateExtras[m.playerIndex]
 
     local hScale = 1.0
     local vScale = 1.0
@@ -50,7 +50,7 @@ function luigi_before_phys_step(m)
 end
 
 function luigi_on_set_action(m)
-    local e = gMarioStateExtras[m.playerIndex]
+    local e = gStateExtras[m.playerIndex]
 
     -- extra height to the backflip
     if m.action == ACT_BACKFLIP then
@@ -75,7 +75,7 @@ function luigi_on_set_action(m)
 end
 
 function luigi_update(m)
-    local e = gMarioStateExtras[m.playerIndex]
+    local e = gStateExtras[m.playerIndex]
 
     -- air scuttle
     e.scuttle = 0
@@ -103,29 +103,27 @@ end
 -- main --
 ----------
 function mario_before_phys_step(m)
-    -- if luigi then
-    luigi_before_phys_step(m)
-    -- end
+    if (m.character == gCharacters[CT_LUIGI]) then
+        luigi_before_phys_step(m)
+    end
 end
 
 function mario_on_set_action(m)
-    -- if luigi then
-    luigi_on_set_action(m)
-    -- end
+    if (m.character == gCharacters[CT_LUIGI]) then
+        luigi_on_set_action(m)
+    end
 end
 
 function mario_action_on_change(m)
-    -- if luigi then
-    luigi_update(m)
-    -- end
+    if (m.character == gCharacters[CT_LUIGI]) then
+        luigi_update(m)
+    end
 end
 
 function mario_update(m)
-    local e = gMarioStateExtras[m.playerIndex]
-
-    -- if luigi then
-    luigi_update(m)
-    -- end
+    if (m.character == gCharacters[CT_LUIGI]) then
+        luigi_update(m)
+    end
 end
 
 -----------

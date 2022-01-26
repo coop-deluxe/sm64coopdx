@@ -154,6 +154,33 @@ static int smlua__set_field(lua_State* L) {
     return 1;
 }
 
+void smlua_cobject_init_globals(void) {
+    lua_State* L = gLuaState;
+
+    {
+        lua_newtable(L);
+        int t = lua_gettop(gLuaState);
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            lua_pushinteger(L, i);
+            smlua_push_object(L, LOT_MARIOSTATE, &gMarioStates[i]);
+            lua_settable(L, t);
+        }
+        lua_setglobal(L, "gMarioStates");
+    }
+
+    {
+        lua_newtable(L);
+        int t = lua_gettop(gLuaState);
+        for (int i = 0; i < CT_MAX; i++) {
+            lua_pushinteger(L, i);
+            smlua_push_object(L, LOT_CHARACTER, &gCharacters[i]);
+            lua_settable(L, t);
+        }
+        lua_setglobal(L, "gCharacters");
+    }
+
+}
+
 void smlua_bind_cobject(void) {
     lua_State* L = gLuaState;
 

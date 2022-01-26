@@ -51,18 +51,6 @@ static void smlua_load_script(char* path) {
     }
 }
 
-static void smlua_init_mario_states(void) {
-    lua_State* L = gLuaState;
-    lua_newtable(L);
-    int t = lua_gettop(gLuaState);
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        lua_pushinteger(L, i);
-        smlua_push_object(L, LOT_MARIOSTATE, &gMarioStates[i]);
-        lua_settable(L, t);
-    }
-    lua_setglobal(L, "gMarioStates");
-}
-
 void smlua_init(void) {
     smlua_shutdown();
     smlua_cobject_allowlist_init();
@@ -90,7 +78,7 @@ void smlua_init(void) {
     extern char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
 
-    smlua_init_mario_states();
+    smlua_cobject_init_globals();
 
     // load scripts
     LOG_INFO("Loading scripts:");

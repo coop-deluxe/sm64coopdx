@@ -15,6 +15,9 @@ _CObject = {
     end,
     __newindex = function (t,k,v)
         _set_field(t['_lot'], t['_pointer'], k, v);
+    end,
+    __eq = function (a, b)
+        return a['_pointer'] == b['_pointer'] and a['_lot'] == b['_lot'] and a['_pointer'] ~= nil and a['_lot'] ~= nil
     end
 }
 
@@ -108,6 +111,12 @@ end
 -----------
 
 MAX_PLAYERS = 16
+
+CT_MARIO = 0
+CT_LUIGI = 1
+CT_TOAD = 2
+CT_WALUIGI = 3
+CT_MAX = 4
 
 ------------
 -- layers --

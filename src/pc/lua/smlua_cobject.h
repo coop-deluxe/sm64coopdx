@@ -35,6 +35,7 @@ struct LuaObjectTable {
 };
 
 bool smlua_valid_lot(u16 lot);
+void smlua_cobject_init_globals(void);
 void smlua_bind_cobject(void);
 
 #endif

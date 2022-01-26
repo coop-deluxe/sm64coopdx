@@ -1,12 +1,12 @@
 import os
 import re
+from common import *
 
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
 number_types = ["f32", "float"]
-cobject_types = ["struct MarioState*", "struct Object*", "struct Surface*"]
-cobject_lot_types = ["LOT_MARIO_STATE", "LOT_OBJECT", "LOT_SURFACE"]
 param_override_build = {}
+out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 
 ###########################################################
 
@@ -104,16 +104,6 @@ def normalize_type(t):
         t = parts[0] + ' ' + parts[1].replace(' ', '')
     return t
 
-def gen_comment_header(f):
-    comment_h = "// " + f + " //"
-    comment_l = "/" * len(comment_h)
-    s = ""
-    s += "  " + comment_l + "\n"
-    s += " "  + comment_h + "\n"
-    s += ""   + comment_l + "\n"
-    s += "\n"
-    return s
-
 def process_line(line):
     function = {}
 
@@ -165,11 +155,16 @@ def build_param(param, i):
         return '    %s %s = smlua_to_integer(L, %d);\n' % (ptype, pid, i)
     elif ptype in number_types:
         return '    %s %s = smlua_to_number(L, %d);\n' % (ptype, pid, i)
-    elif ptype in cobject_types:
-        index = cobject_types.index(ptype)
-        return '    %s %s = (%s)smlua_to_cobject(L, %d, %s);\n' % (ptype, pid, ptype, i, cobject_lot_types[index])
     else:
-        return '    ' + ptype + ' ' + pid + ' <--- UNIMPLEMENTED' + '\n'
+        lot = translate_type_to_lot(ptype)
+        s = '  %s %s = (%s)smlua_to_cobject(L, %d, %s);' % (ptype, pid, ptype, i, lot)
+
+        if '???' in lot:
+            s = '//' + s + ' <--- UNIMPLEMENTED'
+        else:
+            s = '  ' + s
+
+        return s + '\n'
 
 def build_param_after(param, i):
     ptype = param['type']
@@ -273,12 +268,15 @@ def process_files():
 
         process_file(dir_path + f)
 
+############################################################################
+
 def main():
     process_files()
-    filename = os.path.dirname(os.path.realpath(__file__)) + '/../src/pc/lua/smlua_functions_autogen.c'
+    filename = get_path(out_filename)
     with open(filename, 'w') as out:
         out.write(template.replace("$[FUNCTIONS]", built_functions).replace("$[BINDS]", built_binds))
     print('REJECTS:')
     print(rejects)
 
-main()
+if __name__ == '__main__':
+   main()
