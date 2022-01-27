@@ -11,6 +11,7 @@
 #include "engine/math_util.h"
 #include "thread6.h"
 #include "behavior_data.h"
+#include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "object_helpers.h"
@@ -506,6 +507,7 @@ s32 mario_execute_object_action(struct MarioState *m) {
             case ACT_PICKING_UP_BOWSER:  cancel = act_picking_up_bowser(m);  break;
             case ACT_HOLDING_BOWSER:     cancel = act_holding_bowser(m);     break;
             case ACT_RELEASING_BOWSER:   cancel = act_releasing_bowser(m);   break;
+            default: LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action); return true;
         }
         /* clang-format on */
     }

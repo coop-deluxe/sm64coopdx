@@ -278,41 +278,6 @@ function act_roll_air(m)
     return false
 end
 
-function act_ground_pound_jump(m)
-    local e = gMarioStateExtras[m.playerIndex]
-    if check_kick_or_dive_in_air(m) ~= 0 then
-        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
-        return 1
-    end
-
-    if (m.input & INPUT_Z_PRESSED) ~= 0 then
-        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
-        return set_mario_action(m, ACT_GROUND_POUND, 0)
-    end
-
-    if e.spinInput ~= 0 then
-        return set_mario_action(m, ACT_SPIN_JUMP, 1)
-    end
-
-    if m.actionTimer == 0 then
-        e.rotAngle = 0
-    elseif m.actionTimer == 1 then
-        play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
-    end
-
-    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, SOUND_MARIO_YAHOO)
-
-    common_air_action_step(m, ACT_JUMP_LAND, MARIO_ANIM_SINGLE_JUMP,
-                           AIR_STEP_CHECK_LEDGE_GRAB | AIR_STEP_CHECK_HANG)
-
-    e.rotAngle = e.rotAngle + (0x10000*1.0 - e.rotAngle) / 5.0
-    m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
-
-    m.actionTimer = m.actionTimer + 1
-
-    return 0
-end
-
 function update_roll(m)
     if m.action == ACT_DIVE_SLIDE then
         if (m.input & INPUT_ABOVE_SLIDE) == 0 then
@@ -944,6 +909,41 @@ function act_ledge_parkour(m)
         m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + 0x8000
         lava_boost_on_wall(m)
     end
+
+    m.actionTimer = m.actionTimer + 1
+
+    return 0
+end
+
+function act_ground_pound_jump(m)
+    local e = gMarioStateExtras[m.playerIndex]
+    if check_kick_or_dive_in_air(m) ~= 0 then
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
+        return 1
+    end
+
+    if (m.input & INPUT_Z_PRESSED) ~= 0 then
+        m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle
+        return set_mario_action(m, ACT_GROUND_POUND, 0)
+    end
+
+    if e.spinInput ~= 0 then
+        return set_mario_action(m, ACT_SPIN_JUMP, 1)
+    end
+
+    if m.actionTimer == 0 then
+        e.rotAngle = 0
+    elseif m.actionTimer == 1 then
+        play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
+    end
+
+    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, SOUND_MARIO_YAHOO)
+
+    common_air_action_step(m, ACT_JUMP_LAND, MARIO_ANIM_SINGLE_JUMP,
+                           AIR_STEP_CHECK_LEDGE_GRAB | AIR_STEP_CHECK_HANG)
+
+    e.rotAngle = e.rotAngle + (0x10000*1.0 - e.rotAngle) / 5.0
+    m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y - e.rotAngle
 
     m.actionTimer = m.actionTimer + 1
 

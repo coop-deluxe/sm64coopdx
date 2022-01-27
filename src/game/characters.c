@@ -23,6 +23,7 @@ extern ALIGNED8 const u8 texture_hud_char_waluigi_head[];
 
 struct Character gCharacters[CT_MAX] = {
     [CT_MARIO] = {
+        .type                  = CT_MARIO,
         .name                  = "Mario",
         .hudHead               = ',',
         .hudHeadTexture        = texture_hud_char_mario_head,
@@ -84,6 +85,7 @@ struct Character gCharacters[CT_MAX] = {
     },
 
     [CT_LUIGI] = {
+        .type                  = CT_LUIGI,
         .name                  = "Luigi",
         .hudHead               = '.',
         .hudHeadTexture        = texture_hud_char_luigi_head,
@@ -145,6 +147,7 @@ struct Character gCharacters[CT_MAX] = {
     },
 
     [CT_TOAD] = {
+        .type                  = CT_TOAD,
         .name                  = "Toad",
         .hudHead               = '/',
         .hudHeadTexture        = texture_hud_char_toad_head,
@@ -206,6 +209,7 @@ struct Character gCharacters[CT_MAX] = {
     },
 
     [CT_WALUIGI] = {
+        .type                  = CT_WALUIGI,
         .name                  = "Waluigi",
         .hudHead               = 'z',
         .hudHeadTexture        = texture_hud_char_waluigi_head,

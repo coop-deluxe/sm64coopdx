@@ -14,6 +14,7 @@ enum CharacterType {
 };
 
 struct Character {
+    enum CharacterType type;
     char* name;
     char hudHead;
     const u8* hudHeadTexture;

@@ -17,6 +17,7 @@
 #include "sound_init.h"
 #include "surface_terrains.h"
 #include "thread6.h"
+#include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
@@ -1186,6 +1187,7 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
             case ACT_BRAKING_STOP:            sp24 = act_braking_stop(m);                     break;
             case ACT_BUTT_SLIDE_STOP:         sp24 = act_butt_slide_stop(m);                  break;
             case ACT_HOLD_BUTT_SLIDE_STOP:    sp24 = act_hold_butt_slide_stop(m);             break;
+            default: LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action); return true;
         }
         /* clang-format on */
     }

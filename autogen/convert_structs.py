@@ -179,7 +179,7 @@ def build_struct(struct):
 
         lvt = translate_type_to_lvt(ftype)
         lot = translate_type_to_lot(ftype)
-        fimmutable = str(lvt == 'LVT_COBJECT').lower()
+        fimmutable = str(lvt == 'LVT_COBJECT' or lvt == 'LVT_COBJECT_P').lower()
 
         if sid in override_field_immutable:
             if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
