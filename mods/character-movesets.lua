@@ -1,3 +1,6 @@
+-- name: Character Movesets
+-- incompatible: moveset
+-- description: Gives each character unique abilities and stats.
 
 gStateExtras = {}
 for i=0,(MAX_PLAYERS-1) do

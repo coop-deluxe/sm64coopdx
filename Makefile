@@ -557,6 +557,9 @@ BACKEND_LDFLAG0S :=
 SDL1_USED := 0
 SDL2_USED := 0
 
+# suppress warnings
+BACKEND_CFLAGS += -Wno-format-truncation
+
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
 ifeq ($(WINDOW_API),DXGI)
   DXBITS := `cat $(ENDIAN_BITWIDTH) | tr ' ' '\n' | tail -1`

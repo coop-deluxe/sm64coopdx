@@ -13,7 +13,7 @@ SOCKET socket_initialize(void) {
 
     // set non-blocking mode
     int rc = fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
-    if (rc == INVALID_SOCKET) {
+    if (rc == (int)INVALID_SOCKET) {
         LOG_ERROR("fcntl failed with error: %d", rc);
         return INVALID_SOCKET;
     }
@@ -24,7 +24,7 @@ SOCKET socket_initialize(void) {
 void socket_shutdown(SOCKET socket) {
     if (socket == INVALID_SOCKET) { return; }
     int rc = closesocket(socket);
-    if (rc == SOCKET_ERROR) {
+    if (rc == (int)SOCKET_ERROR) {
         LOG_ERROR("closesocket failed with error %d\n", SOCKET_LAST_ERROR);
     }
 }

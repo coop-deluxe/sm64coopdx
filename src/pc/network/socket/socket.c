@@ -36,7 +36,7 @@ static int socket_send(SOCKET socket, struct sockaddr_in* addr, u8* buffer, u16 
 static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer, u16 bufferLength, u16* receiveLength, u8* localIndex) {
     *receiveLength = 0;
 
-    int rxAddrSize = sizeof(struct sockaddr_in);
+    unsigned int rxAddrSize = sizeof(struct sockaddr_in);
     int rc = recvfrom(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)rxAddr, &rxAddrSize);
 
     for (int i = 1; i < MAX_PLAYERS; i++) {

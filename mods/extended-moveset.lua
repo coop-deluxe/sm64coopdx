@@ -1,3 +1,7 @@
+-- name: Extended Moveset
+-- incompatible: moveset
+-- description: Adds various new moves from games like Sunshine and Odyssey without replacing any existing ones.\n\nOriginal author: TheGag96
+
 ------------------------
 -- initialize actions --
 ------------------------

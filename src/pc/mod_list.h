@@ -17,9 +17,13 @@ struct ModListEntry {
     size_t size;
     u64 curOffset;
     u16 remoteIndex;
+    char* displayName;
+    char* incompatible;
+    char* description;
     bool tmp;
     bool complete;
     bool enabled;
+    bool selectable;
 };
 
 #pragma pack(1)
@@ -36,6 +40,8 @@ extern struct ModTable gModTableRemote;
 void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size);
 void mod_table_clear(struct ModTable* table);
 void mod_list_alloc(struct ModTable* table, u16 count);
+
+void mod_list_update_selectable(void);
 
 void mod_list_init(void);
 void mod_list_shutdown(void);

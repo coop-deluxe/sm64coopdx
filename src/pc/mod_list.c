@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "mod_list.h"
 #include "pc/fs/fs.h"
+#include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
 #define MAX_SESSION_CHARS 7
@@ -19,7 +20,6 @@ static bool acceptable_file(char* string) {
     string = strrchr(string, '.');
     return (string != NULL && !strcmp(string, ".lua"));
 }
-
 
 static void mod_list_delete_tmp(void) {
     struct dirent* dir;
@@ -86,7 +86,48 @@ void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size) {
     entry->remoteIndex = remoteIndex;
     entry->complete = false;
     entry->enabled = true;
+    entry->selectable = false;
+}
 
+static char* extract_lua_field(char* fieldName, char* buffer) {
+    size_t length = strlen(fieldName);
+    if (strncmp(fieldName, buffer, length) == 0) {
+        char* s = &buffer[length];
+        while (*s == ' ' || *s == '\t') { s++; }
+        return s;
+    }
+    return NULL;
+}
+
+static void extract_lua_fields(struct ModListEntry* entry) {
+    FILE* f = entry->fp;
+    char buffer[512] = { 0 };
+
+    entry->displayName = NULL;
+    entry->incompatible = NULL;
+    entry->description = NULL;
+
+    while (!feof(f)) {
+        file_get_line(buffer, 512, f);
+
+        // no longer in header
+        if (buffer[0] != '-' || buffer[1] != '-') {
+            return;
+        }
+
+        // extract the field
+        char* extracted = NULL;
+        if (entry->displayName == NULL && (extracted = extract_lua_field("-- name:", buffer))) {
+            entry->displayName = calloc(33, sizeof(char));
+            snprintf(entry->displayName, 32, "%s", extracted);
+        } else if (entry->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
+            entry->incompatible = calloc(257, sizeof(char));
+            snprintf(entry->incompatible, 256, "%s", extracted);
+        } else if (entry->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
+            entry->description = calloc(513, sizeof(char));
+            snprintf(entry->description, 512, "%s", extracted);
+        }
+    }
 }
 
 static void mod_list_add_local(u16 index, const char* path, char* name) {
@@ -101,6 +142,8 @@ static void mod_list_add_local(u16 index, const char* path, char* name) {
     snprintf(entry->path, PATH_MAX - 1, "%s/%s", path, name);
     entry->fp = fopen(entry->path, "rb");
 
+    extract_lua_fields(entry);
+
     fseek(entry->fp, 0, SEEK_END);
     entry->size = ftell(entry->fp);
     table->totalSize += entry->size;
@@ -108,6 +151,7 @@ static void mod_list_add_local(u16 index, const char* path, char* name) {
 
     entry->complete = true;
     entry->enabled = false;
+    entry->selectable = true;
 }
 
 void mod_table_clear(struct ModTable* table) {
@@ -117,16 +161,34 @@ void mod_table_clear(struct ModTable* table) {
             free(entry->name);
             entry->name = NULL;
         }
+
+        if (entry->displayName != NULL) {
+            free(entry->displayName);
+            entry->displayName = NULL;
+        }
+
+        if (entry->incompatible != NULL) {
+            free(entry->incompatible);
+            entry->incompatible = NULL;
+        }
+
+        if (entry->description != NULL) {
+            free(entry->description);
+            entry->description = NULL;
+        }
+
         if (entry->fp != NULL) {
             fclose(entry->fp);
             entry->fp = NULL;
         }
         entry->size = 0;
     }
+
     if (table->entries != NULL) {
         free(table->entries);
         table->entries = NULL;
     }
+
     table->entryCount = 0;
     table->totalSize = 0;
 }
@@ -135,6 +197,52 @@ void mod_list_alloc(struct ModTable* table, u16 count) {
     mod_table_clear(table);
     table->entryCount = count;
     table->entries = (struct ModListEntry*)calloc(count, sizeof(struct ModListEntry));
+}
+
+static bool mod_list_incompatible_match(struct ModListEntry* a, struct ModListEntry* b) {
+    if (a->incompatible == NULL || b->incompatible == NULL) {
+        return false;
+    }
+
+    char* ai = a->incompatible;
+    char* bi = b->incompatible;
+    char* atoken = NULL;
+    char* btoken = NULL;
+
+    while ((atoken = strtok(ai, " "))) {
+        while((btoken = strtok(bi, " "))) {
+            if (!strcmp(atoken, btoken)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void mod_list_update_selectable(void) {
+    // reset selectable value
+    for (int i = 0; i < gModTableLocal.entryCount; i++) {
+        struct ModListEntry* entry = &gModTableLocal.entries[i];
+        entry->selectable = true;
+    }
+
+    // figure out which ones to deselect
+    for (int i = 0; i < gModTableLocal.entryCount; i++) {
+        struct ModListEntry* entry = &gModTableLocal.entries[i];
+        if (entry->enabled) { continue; }
+
+        for (int j = 0; j < gModTableLocal.entryCount; j++) {
+            if (j == i) { continue; }
+            struct ModListEntry* entry2 = &gModTableLocal.entries[j];
+            if (!entry2->enabled) { continue; }
+
+            if (mod_list_incompatible_match(entry, entry2)) {
+                entry->selectable = false;
+                break;
+            }
+        }
+    }
 }
 
 static void mod_list_load_local(const char* path) {
@@ -188,6 +296,8 @@ void mod_list_init(void) {
     mod_table_clear(&gModTableLocal);
     mod_list_load_local(userModPath);
     mod_list_load_local(MOD_PATH);
+
+    mod_list_update_selectable();
 }
 
 void mod_list_shutdown(void) {
