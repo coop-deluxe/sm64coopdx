@@ -84,7 +84,7 @@ void network_receive_collect_star(struct Packet* p) {
 
     const void* behavior = get_behavior_from_id(behaviorId);
 
-    save_file_collect_star_or_key(coinScore, starIndex);
+    save_file_collect_star_or_key(coinScore, starIndex, 1);
 
     s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
     for (int i = 0; i < MAX_PLAYERS; i++) {

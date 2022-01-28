@@ -917,7 +917,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
             // sync the star collection
             network_send_collect_star(o, m->numCoins, starIndex);
         }
-        save_file_collect_star_or_key(m->numCoins, starIndex);
+        save_file_collect_star_or_key(m->numCoins, starIndex, 0);
 
         s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
         for (int i = 0; i < MAX_PLAYERS; i++) {
