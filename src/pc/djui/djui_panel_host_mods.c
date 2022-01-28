@@ -41,21 +41,7 @@ static void djui_panel_host_mods_description_create() {
     sDescriptionPanel = panel;
 }
 
-static void djui_mod_checkbox_set_style(struct DjuiBase* base) {
-        struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-        int val = base->enabled ? 200 : 100;
-        djui_base_set_border_color(&checkbox->rect->base, 173, 173, 173, 255);
-        djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&checkbox->text->base, val, val, val, 255);
-        djui_base_set_color(&checkbox->rectValue->base, val, val, val, 255);
-}
-
 static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
-    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-    djui_base_set_border_color(&checkbox->rect->base, 0, 120, 215, 255);
-    djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
-    djui_base_set_color(&checkbox->rectValue->base, 229, 241, 251, 255);
-    
     char* description = "";
     if (base->tag >= 0 && base->tag < gModTableLocal.entryCount) {
         char* d = gModTableLocal.entries[base->tag].description;
@@ -66,7 +52,11 @@ static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
     djui_text_set_text(sTooltip, description);
 }
 
-static void djui_mod_checkbox_on_click(UNUSED struct DjuiBase* base) {
+static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
+    djui_text_set_text(sTooltip, "");
+}
+
+static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     mod_list_update_selectable();
 
     u16 index = 0;
@@ -76,21 +66,11 @@ static void djui_mod_checkbox_on_click(UNUSED struct DjuiBase* base) {
         struct ModListEntry* entry = &gModTableLocal.entries[index];
 
         djui_base_set_enabled(node->base, entry->selectable);
-        djui_mod_checkbox_set_style(node->base);
-
+ 
         // iterate
         index++;
         node = node->next;
     }
-}
-
-static void djui_mod_checkbox_on_hover_end(struct DjuiBase* base) {
-    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-    djui_base_set_border_color(&checkbox->rect->base, 173, 173, 173, 255);
-    djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
-    djui_base_set_color(&checkbox->text->base, 200, 200, 200, 255);
-    djui_base_set_color(&checkbox->rectValue->base, 200, 200, 200, 255);
-    djui_text_set_text(sTooltip, "");
 }
 
 static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
@@ -120,9 +100,8 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
             djui_base_set_enabled(&checkbox->base, entry->selectable);
-            djui_mod_checkbox_set_style(&checkbox->base);
             djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
-            djui_interactable_hook_click(&checkbox->base, djui_mod_checkbox_on_click);
+            djui_interactable_hook_value_change(&checkbox->base, djui_mod_checkbox_on_value_change);
         }
 
         struct DjuiButton* button1 = djui_button_create(&body->base, "Back");

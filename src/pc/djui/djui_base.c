@@ -14,6 +14,9 @@ void djui_base_set_enabled(struct DjuiBase* base, bool enabled) {
     if (base->interactable != NULL && base->interactable->on_enabled_change != NULL) {
         base->interactable->on_enabled_change(base);
     }
+    if (base->interactable != NULL && base->interactable->update_style != NULL) {
+        base->interactable->update_style(base);
+    }
 }
 
 void djui_base_set_location(struct DjuiBase* base, f32 x, f32 y) {

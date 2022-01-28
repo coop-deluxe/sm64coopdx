@@ -1,18 +1,27 @@
 #include "djui.h"
 
-static void djui_checkbox_set_default_style(struct DjuiBase* base) {
+static void djui_checkbox_update_style(struct DjuiBase* base) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-    djui_base_set_border_color(&checkbox->rect->base, 173, 173, 173, 255);
-    djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
-    djui_base_set_color(&checkbox->text->base, 200, 200, 200, 255);
-    djui_base_set_color(&checkbox->rectValue->base, 200, 200, 200, 255);
-}
-
-static void djui_checkbox_on_hover(struct DjuiBase* base) {
-    struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-    djui_base_set_border_color(&checkbox->rect->base, 0, 120, 215, 255);
-    djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
-    djui_base_set_color(&checkbox->rectValue->base, 229, 241, 251, 255);
+    if (!checkbox->base.enabled) {
+        djui_base_set_border_color(&checkbox->rect->base, 93, 93, 93, 255);
+        djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
+        djui_base_set_color(&checkbox->text->base, 100, 100, 100, 255);
+        djui_base_set_color(&checkbox->rectValue->base, 100, 100, 100, 255);
+    } else if (gDjuiCursorDownOn == base) {
+        djui_base_set_border_color(&checkbox->rect->base, 20, 170, 255, 255);
+        djui_base_set_color(&checkbox->rect->base, 255, 255, 255, 32);
+        djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
+        djui_base_set_color(&checkbox->rectValue->base, 255, 255, 255, 255);
+    } else if (gDjuiHovered == base) {
+        djui_base_set_border_color(&checkbox->rect->base, 0, 120, 215, 255);
+        djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
+        djui_base_set_color(&checkbox->rectValue->base, 229, 241, 251, 255);
+    } else {
+        djui_base_set_border_color(&checkbox->rect->base, 173, 173, 173, 255);
+        djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
+        djui_base_set_color(&checkbox->text->base, 200, 200, 200, 255);
+        djui_base_set_color(&checkbox->rectValue->base, 200, 200, 200, 255);
+    }
 }
 
 static void djui_checkbox_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
@@ -22,25 +31,13 @@ static void djui_checkbox_get_cursor_hover_location(struct DjuiBase* base, f32* 
     *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
 }
 
-static void djui_checkbox_on_hover_end(struct DjuiBase* base) {
-    djui_checkbox_set_default_style(base);
-}
-
 static void djui_checkbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
-    djui_base_set_border_color(&checkbox->rect->base, 20, 170, 255, 255);
-    djui_base_set_color(&checkbox->rect->base, 255, 255, 255, 32);
-    djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
-    djui_base_set_color(&checkbox->rectValue->base, 255, 255, 255, 255);
     *checkbox->value = !(*checkbox->value);
     djui_base_set_visible(&checkbox->rectValue->base, *checkbox->value);
     if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
         base->interactable->on_value_change(base);
     }
-}
-
-static void djui_checkbox_on_cursor_down_end(struct DjuiBase* base) {
-    djui_checkbox_set_default_style(base);
 }
 
 static void djui_checkbox_destroy(struct DjuiBase* base) {
@@ -55,9 +52,8 @@ struct DjuiCheckbox* djui_checkbox_create(struct DjuiBase* parent, const char* m
     checkbox->value = value;
 
     djui_base_init(parent, base, NULL, djui_checkbox_destroy);
-    djui_interactable_create(base);
-    djui_interactable_hook_hover(base, djui_checkbox_on_hover, djui_checkbox_on_hover_end);
-    djui_interactable_hook_cursor_down(base, djui_checkbox_on_cursor_down_begin, NULL, djui_checkbox_on_cursor_down_end);
+    djui_interactable_create(base, djui_checkbox_update_style);
+    djui_interactable_hook_cursor_down(base, djui_checkbox_on_cursor_down_begin, NULL, NULL);
 
     struct DjuiText* text = djui_text_create(&checkbox->base, message);
     djui_base_set_alignment(&text->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
@@ -82,9 +78,9 @@ struct DjuiCheckbox* djui_checkbox_create(struct DjuiBase* parent, const char* m
     djui_base_set_visible(&rectValue->base, *value);
     checkbox->rectValue = rectValue;
 
-    djui_checkbox_set_default_style(base);
-
     base->get_cursor_hover_location = djui_checkbox_get_cursor_hover_location;
+
+    djui_checkbox_update_style(base);
 
     return checkbox;
 }

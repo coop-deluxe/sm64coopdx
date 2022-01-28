@@ -23,6 +23,7 @@
 #pragma pack(1)
 struct DjuiInteractable {
     bool enabled;
+    void (*update_style)(struct DjuiBase*);
     void (*on_hover)(struct DjuiBase*);
     void (*on_hover_end)(struct DjuiBase*);
     void (*on_cursor_down_begin)(struct DjuiBase*, bool);
@@ -43,6 +44,8 @@ struct DjuiInteractable {
 extern bool gInteractableOverridePad;
 extern OSContPad gInteractablePad;
 extern struct DjuiBase* gDjuiHovered;
+extern struct DjuiBase* gDjuiCursorDownOn;
+extern struct DjuiBase* gInteractableFocus;
 
 bool djui_interactable_is_binding(void);
 void djui_interactable_set_binding(struct DjuiBase* base);
@@ -87,4 +90,5 @@ void djui_interactable_hook_text_input(struct DjuiBase* base,
 void djui_interactable_hook_enabled_change(struct DjuiBase *base,
                                            void (*on_enabled_change)(struct DjuiBase*));
 
-void djui_interactable_create(struct DjuiBase* base);
+void djui_interactable_create(struct DjuiBase* base,
+                              void (*update_style)(struct DjuiBase*));
