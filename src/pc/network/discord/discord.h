@@ -7,8 +7,10 @@
 #include "discord_game_sdk.h"
 #pragma pack(pop)
 #ifdef _WIN32
+#define DISCORD_ID_FORMAT "%lld"
 #include <Windows.h>
 #else
+#define DISCORD_ID_FORMAT "%ld"
 #include <unistd.h>
 #include <string.h>
 #endif

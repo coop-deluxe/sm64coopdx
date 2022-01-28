@@ -35,20 +35,20 @@ static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult resu
     }
 
     DISCORD_REQUIRE(result);
-    LOGFILE_INFO(LFT_DISCORD, "Lobby id: %ld", lobby->id);
+    LOGFILE_INFO(LFT_DISCORD, "Lobby id: " DISCORD_ID_FORMAT, lobby->id);
     LOGFILE_INFO(LFT_DISCORD, "Lobby type: %u", lobby->type);
-    LOGFILE_INFO(LFT_DISCORD, "Lobby owner id: %ld", lobby->owner_id);
+    LOGFILE_INFO(LFT_DISCORD, "Lobby owner id: " DISCORD_ID_FORMAT, lobby->owner_id);
     LOGFILE_INFO(LFT_DISCORD, "Lobby secret: %s", lobby->secret);
     LOGFILE_INFO(LFT_DISCORD, "Lobby capacity: %u", lobby->capacity);
     LOGFILE_INFO(LFT_DISCORD, "Lobby locked: %d", lobby->locked);
 
     gCurActivity.type = DiscordActivityType_Playing;
-    snprintf(gCurActivity.party.id, 128, "%ld", lobby->id);
+    snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id);
     gCurActivity.party.size.current_size = 1;
     gCurActivity.party.size.max_size = MAX_PLAYERS;
 
     char secretJoin[128] = "";
-    snprintf(secretJoin, 128, "%ld:%s", lobby->id, lobby->secret);
+    snprintf(secretJoin, 128, DISCORD_ID_FORMAT ":%s", lobby->id, lobby->secret);
     strcpy(gCurActivity.secrets.join, secretJoin);
 
     isHosting = true;
@@ -59,21 +59,21 @@ static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult resu
 }
 
 static void on_lobby_update(UNUSED void* data, int64_t lobbyId) {
-    LOGFILE_INFO(LFT_DISCORD, "> on_lobby_update id: %ld", lobbyId);
+    LOGFILE_INFO(LFT_DISCORD, "> on_lobby_update id: " DISCORD_ID_FORMAT, lobbyId);
 }
 
 static void on_member_connect(UNUSED void* data, int64_t lobbyId, int64_t userId) {
-    LOGFILE_INFO(LFT_DISCORD, "> on_member_connect lobby: %ld, user: %ld", lobbyId, userId);
+    LOGFILE_INFO(LFT_DISCORD, "> on_member_connect lobby: " DISCORD_ID_FORMAT ", user: " DISCORD_ID_FORMAT, lobbyId, userId);
     gCurActivity.party.size.current_size++;
     discord_activity_update(true);
 }
 
 static void on_member_update(UNUSED void* data, int64_t lobbyId, int64_t userId) {
-    LOGFILE_INFO(LFT_DISCORD, "> on_member_update lobby: %ld, user: %ld", lobbyId, userId);
+    LOGFILE_INFO(LFT_DISCORD, "> on_member_update lobby: " DISCORD_ID_FORMAT ", user: " DISCORD_ID_FORMAT, lobbyId, userId);
 }
 
 static void on_member_disconnect(UNUSED void* data, int64_t lobbyId, int64_t userId) {
-    LOGFILE_INFO(LFT_DISCORD, "> on_member_disconnect lobby: %ld, user: %ld", lobbyId, userId);
+    LOGFILE_INFO(LFT_DISCORD, "> on_member_disconnect lobby: " DISCORD_ID_FORMAT ", user: " DISCORD_ID_FORMAT, lobbyId, userId);
     u8 localIndex = discord_user_id_to_local_index(userId);
     if (localIndex != UNKNOWN_LOCAL_INDEX && gNetworkPlayers[localIndex].connected) {
         network_player_disconnected(gNetworkPlayers[localIndex].globalIndex);
@@ -108,7 +108,7 @@ void discord_lobby_leave(void) {
         app.lobbies->disconnect_lobby(app.lobbies, gCurLobbyId, NULL, on_lobby_leave_callback);
     }
 
-    LOGFILE_INFO(LFT_DISCORD, "left lobby %ld", gCurLobbyId);
+    LOGFILE_INFO(LFT_DISCORD, "left lobby " DISCORD_ID_FORMAT, gCurLobbyId);
 
     isHosting = false;
     gCurLobbyId = 0;
