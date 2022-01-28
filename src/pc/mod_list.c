@@ -203,6 +203,9 @@ static bool mod_list_incompatible_match(struct ModListEntry* a, struct ModListEn
     if (a->incompatible == NULL || b->incompatible == NULL) {
         return false;
     }
+    if (strlen(a->incompatible) == 0 || strlen(b->incompatible) == 0) {
+        return false;
+    }
 
     char* ai = a->incompatible;
     char* bi = b->incompatible;

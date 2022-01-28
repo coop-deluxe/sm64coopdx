@@ -30,7 +30,7 @@ function luigi_before_phys_step(m)
 
     -- faster swimming
     if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
-        hScale = hScale * 1.25
+        hScale = hScale * 1.5
     end
 
     -- slower holding item
