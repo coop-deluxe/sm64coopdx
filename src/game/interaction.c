@@ -1258,6 +1258,14 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
         if (m2->action == ACT_CROUCHING) {
             set_mario_action(m, ACT_TWIRLING, 0);
             velY = fmax(fmin(100.0f, 30.0f + fabs(m->vel[1])), 80.0f);
+        } else if (m->action == ACT_JUMP) {
+            set_mario_action(m, ACT_DOUBLE_JUMP, 0);
+            velY = fmax(fmin(55.0f, 15.0f + fabs(m->vel[1])), 30.0f);
+        } else if (m->action == ACT_DOUBLE_JUMP) {
+            set_mario_action(m, ACT_TRIPLE_JUMP, 0);
+            velY = fmax(fmin(60.0f, 20.0f + fabs(m->vel[1])), 30.0f);
+        } else {
+            set_mario_action(m, ACT_JUMP, 0);
         }
         bounce_off_object(m, m2->marioObj, velY);
         queue_rumble_data_mario(m, 5, 80);
