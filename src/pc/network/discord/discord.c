@@ -41,48 +41,48 @@ void discord_fatal(int rc) {
     );
     exit(1);
 #else
-    SOFT_ASSERT(rc != DiscordResult_ServiceUnavailable);
-    SOFT_ASSERT(rc != DiscordResult_InvalidVersion);
-    SOFT_ASSERT(rc != DiscordResult_LockFailed);
-    SOFT_ASSERT(rc != DiscordResult_InternalError);
-    SOFT_ASSERT(rc != DiscordResult_InvalidPayload);
-    SOFT_ASSERT(rc != DiscordResult_InvalidCommand);
-    SOFT_ASSERT(rc != DiscordResult_InvalidPermissions);
-    SOFT_ASSERT(rc != DiscordResult_NotFetched);
-    SOFT_ASSERT(rc != DiscordResult_NotFound);
-    SOFT_ASSERT(rc != DiscordResult_Conflict);
-    SOFT_ASSERT(rc != DiscordResult_InvalidSecret);
-    SOFT_ASSERT(rc != DiscordResult_InvalidJoinSecret);
-    SOFT_ASSERT(rc != DiscordResult_NoEligibleActivity);
-    SOFT_ASSERT(rc != DiscordResult_InvalidInvite);
-    SOFT_ASSERT(rc != DiscordResult_NotAuthenticated);
-    SOFT_ASSERT(rc != DiscordResult_InvalidAccessToken);
-    SOFT_ASSERT(rc != DiscordResult_ApplicationMismatch);
-    SOFT_ASSERT(rc != DiscordResult_InvalidDataUrl);
-    SOFT_ASSERT(rc != DiscordResult_InvalidBase64);
-    SOFT_ASSERT(rc != DiscordResult_NotFiltered);
-    SOFT_ASSERT(rc != DiscordResult_LobbyFull);
-    SOFT_ASSERT(rc != DiscordResult_InvalidFilename);
-    SOFT_ASSERT(rc != DiscordResult_InvalidFileSize);
-    SOFT_ASSERT(rc != DiscordResult_InvalidEntitlement);
-    SOFT_ASSERT(rc != DiscordResult_NotInstalled);
-    SOFT_ASSERT(rc != DiscordResult_NotRunning);
-    SOFT_ASSERT(rc != DiscordResult_InsufficientBuffer);
-    SOFT_ASSERT(rc != DiscordResult_PurchaseCanceled);
-    SOFT_ASSERT(rc != DiscordResult_InvalidGuild);
-    SOFT_ASSERT(rc != DiscordResult_InvalidEvent);
-    SOFT_ASSERT(rc != DiscordResult_InvalidChannel);
-    SOFT_ASSERT(rc != DiscordResult_InvalidOrigin);
-    SOFT_ASSERT(rc != DiscordResult_RateLimited);
-    SOFT_ASSERT(rc != DiscordResult_OAuth2Error);
-    SOFT_ASSERT(rc != DiscordResult_SelectChannelTimeout);
-    SOFT_ASSERT(rc != DiscordResult_SelectVoiceForceRequired);
-    SOFT_ASSERT(rc != DiscordResult_CaptureShortcutAlreadyListening);
-    SOFT_ASSERT(rc != DiscordResult_UnauthorizedForAchievement);
-    SOFT_ASSERT(rc != DiscordResult_InvalidGiftCode);
-    SOFT_ASSERT(rc != DiscordResult_PurchaseError);
-    SOFT_ASSERT(rc != DiscordResult_TransactionAborted);
-    SOFT_ASSERT(rc == DiscordResult_Ok);
+    assert(rc != DiscordResult_ServiceUnavailable);
+    assert(rc != DiscordResult_InvalidVersion);
+    assert(rc != DiscordResult_LockFailed);
+    assert(rc != DiscordResult_InternalError);
+    assert(rc != DiscordResult_InvalidPayload);
+    assert(rc != DiscordResult_InvalidCommand);
+    assert(rc != DiscordResult_InvalidPermissions);
+    assert(rc != DiscordResult_NotFetched);
+    assert(rc != DiscordResult_NotFound);
+    assert(rc != DiscordResult_Conflict);
+    assert(rc != DiscordResult_InvalidSecret);
+    assert(rc != DiscordResult_InvalidJoinSecret);
+    assert(rc != DiscordResult_NoEligibleActivity);
+    assert(rc != DiscordResult_InvalidInvite);
+    assert(rc != DiscordResult_NotAuthenticated);
+    assert(rc != DiscordResult_InvalidAccessToken);
+    assert(rc != DiscordResult_ApplicationMismatch);
+    assert(rc != DiscordResult_InvalidDataUrl);
+    assert(rc != DiscordResult_InvalidBase64);
+    assert(rc != DiscordResult_NotFiltered);
+    assert(rc != DiscordResult_LobbyFull);
+    assert(rc != DiscordResult_InvalidFilename);
+    assert(rc != DiscordResult_InvalidFileSize);
+    assert(rc != DiscordResult_InvalidEntitlement);
+    assert(rc != DiscordResult_NotInstalled);
+    assert(rc != DiscordResult_NotRunning);
+    assert(rc != DiscordResult_InsufficientBuffer);
+    assert(rc != DiscordResult_PurchaseCanceled);
+    assert(rc != DiscordResult_InvalidGuild);
+    assert(rc != DiscordResult_InvalidEvent);
+    assert(rc != DiscordResult_InvalidChannel);
+    assert(rc != DiscordResult_InvalidOrigin);
+    assert(rc != DiscordResult_RateLimited);
+    assert(rc != DiscordResult_OAuth2Error);
+    assert(rc != DiscordResult_SelectChannelTimeout);
+    assert(rc != DiscordResult_SelectVoiceForceRequired);
+    assert(rc != DiscordResult_CaptureShortcutAlreadyListening);
+    assert(rc != DiscordResult_UnauthorizedForAchievement);
+    assert(rc != DiscordResult_InvalidGiftCode);
+    assert(rc != DiscordResult_PurchaseError);
+    assert(rc != DiscordResult_TransactionAborted);
+    assert(rc == DiscordResult_Ok);
 #endif
 }
 
@@ -142,9 +142,7 @@ static bool ns_discord_match_addr(void* addr1, void* addr2) {
 static void ns_discord_update(void) {
     if (!gDiscordInitialized) { return; }
     discord_lobby_update();
-    if (gNetworkType != NT_NONE) {
-        DISCORD_REQUIRE(app.core->run_callbacks(app.core));
-    }
+    DISCORD_REQUIRE(app.core->run_callbacks(app.core));
     discord_network_flush();
 }
 
@@ -174,10 +172,6 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
         gLobbyCreateAttemptElapsed = 0;
 
         int rc = DiscordCreate(DISCORD_VERSION, &params, &app.core);
-        if (rc == DiscordResult_Ok) {
-            gDiscordInitialized = true;
-        }
-
         if (app.core != NULL) {
             app.core->set_log_hook(app.core, DiscordLogLevel_Debug, NULL, discord_sdk_log_callback);
         }
@@ -211,6 +205,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
     // create lobby
     if (networkType == NT_SERVER) { discord_lobby_create(); }
 
+    gDiscordInitialized = true;
     LOGFILE_INFO(LFT_DISCORD, "initialized");
 
     return true;
