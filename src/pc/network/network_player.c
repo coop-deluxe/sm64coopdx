@@ -99,17 +99,18 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
 void network_player_update(void) {
     if (!network_player_any_connected()) { return; }
 
-#ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER) {
         for (int i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
             float elapsed = (clock_elapsed() - np->lastReceived);
+#ifndef DEVELOPMENT
             if (elapsed > NETWORK_PLAYER_TIMEOUT) {
                 LOG_INFO("dropping player %d", i);
                 network_player_disconnected(i);
                 continue;
             }
+#endif
             elapsed = (clock_elapsed() - np->lastSent);
             if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
                 network_send_keep_alive(np->localIndex);
@@ -120,17 +121,18 @@ void network_player_update(void) {
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);
 
+#ifndef DEVELOPMENT
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
             LOG_INFO("dropping due to no server connectivity");
             network_shutdown(false);
         }
+#endif
 
         elapsed = (clock_elapsed() - np->lastSent);
         if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
             network_send_keep_alive(np->localIndex);
         }
     }
-#endif
 }
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name) {
