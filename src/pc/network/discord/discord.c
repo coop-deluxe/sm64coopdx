@@ -205,6 +205,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
     // create lobby
     if (networkType == NT_SERVER) { discord_lobby_create(); }
 
+    gActivityLock = false;
     gDiscordInitialized = true;
     LOGFILE_INFO(LFT_DISCORD, "initialized");
 
@@ -214,6 +215,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
 static void ns_discord_shutdown(void) {
     if (!gDiscordInitialized) { return; }
     discord_lobby_leave();
+    gActivityLock = false;
     LOGFILE_INFO(LFT_DISCORD, "shutdown");
 }
 

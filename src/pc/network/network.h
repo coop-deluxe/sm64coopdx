@@ -105,6 +105,7 @@ extern void* gNetworkServerAddr;
 extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern struct StringLinkedList gRegisteredMods;
+extern bool gNetworkSentJoin;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);

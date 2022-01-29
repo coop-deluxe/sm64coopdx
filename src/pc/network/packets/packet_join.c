@@ -29,6 +29,7 @@ static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
 void network_send_join_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
+    gNetworkSentJoin = true;
     gOverrideEeprom = eeprom;
 
     struct Packet p = { 0 };

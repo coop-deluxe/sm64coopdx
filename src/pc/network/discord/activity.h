@@ -6,5 +6,6 @@ extern struct DiscordActivity gCurActivity;
 
 void discord_activity_update(bool hosting);
 struct IDiscordActivityEvents* discord_activity_initialize(void);
+extern bool gActivityLock;
 
 #endif

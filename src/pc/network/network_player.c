@@ -115,7 +115,7 @@ void network_player_update(void) {
                 network_send_keep_alive(np->localIndex);
             }
         }
-    } else if (gNetworkType == NT_CLIENT) {
+    } else if (gNetworkType == NT_CLIENT && gNetworkSentJoin) {
         struct NetworkPlayer* np = gNetworkPlayerServer;
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);

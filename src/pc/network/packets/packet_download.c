@@ -16,9 +16,11 @@ void network_send_next_download_request(void) {
     for (int i = 0; i < gModTableRemote.entryCount; i++) {
         struct ModListEntry* entry = &gModTableRemote.entries[i];
         if (entry->complete) { continue; }
+        //LOG_INFO("sending download request: %d, %d, %lld", i, entry->remoteIndex, entry->curOffset);
         network_send_download_request(i, entry->remoteIndex, entry->curOffset);
         return;
     }
+    //LOG_INFO("sending join request");
     network_send_join_request();
 }
 
@@ -130,6 +132,8 @@ void network_receive_download(struct Packet* p) {
     packet_read(p, &chunkSize, sizeof(u16));
     packet_read(p, chunk, chunkSize * sizeof(u8));
 
+    //LOG_ERROR("Received download %u:%llu", clientIndex, offset);
+
     if (clientIndex >= gModTableRemote.entryCount) {
         LOG_ERROR("Received download of invalid index %u:%llu", clientIndex, offset);
         return;
@@ -177,7 +181,8 @@ void network_receive_download(struct Packet* p) {
 
     if (!waiting) {
         // check if we're finished with this file
-        if (sOffset[OFFSET_COUNT - 1] >= entry->size) {
+        //LOG_INFO("Checking download of '%s': %lld, %lld", entry->name, sOffset[OFFSET_COUNT - 1] + CHUNK_SIZE, entry->size);
+        if (sOffset[OFFSET_COUNT - 1] + CHUNK_SIZE >= entry->size) {
             LOG_INFO("Finished download of '%s'", entry->name);
             fclose(entry->fp);
             entry->fp = NULL;

@@ -8,6 +8,7 @@
 
 #define HASH_LENGTH 8
 struct DiscordActivity gCurActivity = { 0 };
+bool gActivityLock = false;
 
 static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult result) {
     LOGFILE_INFO(LFT_DISCORD, "> on_activity_update_callback returned %d", result);
@@ -15,6 +16,7 @@ static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult r
 }
 
 static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordLobby* lobby) {
+    gActivityLock = false;
     LOGFILE_INFO(LFT_DISCORD, "> on_activity_join_callback returned %d, lobby " DISCORD_ID_FORMAT ", owner " DISCORD_ID_FORMAT, result, lobby->id, lobby->owner_id);
     DISCORD_REQUIRE(result);
     if (gNetworkType != NT_NONE) {
@@ -47,6 +49,8 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
 
 static void on_activity_join(UNUSED void* data, const char* secret) {
     LOGFILE_INFO(LFT_DISCORD, "> on_activity_join, secret: %s", secret);
+    if (gActivityLock) { return; }
+    gActivityLock = true;
     djui_connect_menu_open();
     app.lobbies->connect_lobby_with_activity_secret(app.lobbies, (char*)secret, NULL, on_activity_join_callback);
 }

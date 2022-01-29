@@ -36,6 +36,7 @@ bool gNetworkAreaSyncing = true;
 u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
+bool gNetworkSentJoin = false;
 
 struct StringLinkedList gRegisteredMods = { 0 };
 
@@ -83,6 +84,7 @@ bool network_init(enum NetworkType inNetworkType) {
     Cheats.EnableCheats = gServerSettings.enableCheats;
 
     // initialize the network system
+    gNetworkSentJoin = false;
     int rc = gNetworkSystem->initialize(inNetworkType);
     if (!rc) {
         LOG_ERROR("failed to initialize network system");
@@ -142,7 +144,8 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
         || (packetType == PACKET_MOD_LIST_REQUEST)
         || (packetType == PACKET_MOD_LIST)
         || (packetType == PACKET_DOWNLOAD_REQUEST)
-        || (packetType == PACKET_DOWNLOAD);
+        || (packetType == PACKET_DOWNLOAD)
+        || (packetType == PACKET_KEEP_ALIVE);
 }
 
 void network_send_to(u8 localIndex, struct Packet* p) {
@@ -374,6 +377,8 @@ void network_shutdown(bool sendLeaving) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;
     }
+
+    gNetworkSentJoin = false;
 
     network_forget_all_reliable();
     if (gNetworkType == NT_NONE) { return; }
