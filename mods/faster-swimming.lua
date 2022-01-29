@@ -7,7 +7,10 @@ function mario_before_phys_step(m)
 
     -- faster swimming
     if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
-        hScale = hScale * 2
+        hScale = hScale * 2.0
+        if m.action ~= ACT_WATER_PLUNGE then
+            vScale = vScale * 2.0
+        end
     end
 
     m.vel.x = m.vel.x * hScale
