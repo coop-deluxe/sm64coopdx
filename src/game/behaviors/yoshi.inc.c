@@ -4,12 +4,14 @@
 // Note that this doesn't contain the Y coordinate since the castle roof is flat,
 // so o->oHomeY is never updated.
 static s16 sYoshiHomeLocations[] = { 0, -5625, -1364, -5912, -1403, -4609, -1004, -5308 };
+static u8 sYoshiTalkingState = 0;
 
-static u8 bhv_yoshi_ignore_if_true(void) {
-    return (o->oAction != YOSHI_ACT_IDLE) && (o->oAction != YOSHI_ACT_WALK);
+static u8 yoshi_talk_loop_continue_dialog(void) {
+    return sYoshiTalkingState == 0;
 }
 
 void bhv_yoshi_init(void) {
+    sYoshiTalkingState = 0;
     o->oGravity = 2.0f;
     o->oFriction = 0.9f;
     o->oBuoyancy = 1.3f;
@@ -19,8 +21,7 @@ void bhv_yoshi_init(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 
-    struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->ignore_if_true = bhv_yoshi_ignore_if_true;
+    network_init_object(o, 4000.0f);
     network_init_object_field(o, &o->oYoshiBlinkTimer);
     network_init_object_field(o, &o->oYoshiChosenHome);
     network_init_object_field(o, &o->oYoshiTargetYaw);
@@ -43,8 +44,9 @@ void yoshi_walk_loop(void) {
     if (sp24 == 0 || sp24 == 15)
         cur_obj_play_sound_2(SOUND_GENERAL_YOSHI_WALK);
 
-    if (o->oInteractStatus == INT_STATUS_INTERACTED)
+    if (o->oInteractStatus == INT_STATUS_INTERACTED && sYoshiTalkingState == 0) {
         o->oAction = YOSHI_ACT_TALK;
+    }
 
     if (o->oPosY < 2100.0f) {
         create_respawner(MODEL_YOSHI, bhvYoshi, 3000);
@@ -72,8 +74,9 @@ void yoshi_idle_loop(void) {
     }
 
     cur_obj_init_animation(0);
-    if (o->oInteractStatus == INT_STATUS_INTERACTED)
+    if (o->oInteractStatus == INT_STATUS_INTERACTED && sYoshiTalkingState == 0) {
         o->oAction = YOSHI_ACT_TALK;
+    }
 
     // Credits; Yoshi appears at this position overlooking the castle near the end of the credits
     if (gPlayerCameraState->cameraEvent == CAM_EVENT_START_ENDING ||
@@ -85,29 +88,18 @@ void yoshi_idle_loop(void) {
     }
 }
 
-static u8 yoshi_talk_loop_continue_dialog(void) {
-    return FALSE;
-}
-
 void yoshi_talk_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
     int angleToPlayer = obj_angle_to_object(o, player);
 
-    if ((s16) o->oMoveAngleYaw == (s16)angleToPlayer) {
-        cur_obj_init_animation(0);
-        if (marioState->playerIndex == 0 && set_mario_npc_dialog(&gMarioStates[0], 1, yoshi_talk_loop_continue_dialog) == 2) {
-            //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
-            cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161);
-            //if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161)) {
-                o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
-                o->oInteractStatus = 0;
-                o->oHomeX = sYoshiHomeLocations[2];
-                o->oHomeZ = sYoshiHomeLocations[3];
-                o->oYoshiTargetYaw = atan2s(o->oHomeZ - o->oPosZ, o->oHomeX - o->oPosX);
-                o->oAction = YOSHI_ACT_GIVE_PRESENT;
-                network_send_object_reliability(o, TRUE);
-            //}
+    if (marioState != &gMarioStates[0]) {
+        return;
+    }
+
+    if ((s16) o->oMoveAngleYaw == angleToPlayer) {
+        if (sYoshiTalkingState == 0) {
+            sYoshiTalkingState = 1;
         }
     } else {
         cur_obj_init_animation(1);
@@ -122,8 +114,8 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
     o->oForwardVel = 10.0f;
     object_step();
     cur_obj_init_animation(1);
-    /*if (o->oTimer == 0)
-        cutscene_object(CUTSCENE_STAR_SPAWN, o);*/
+    if (o->oTimer == 0)
+        cutscene_object(CUTSCENE_STAR_SPAWN, o);
 
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oYoshiTargetYaw, 0x500);
     if (is_point_close_to_object(o, o->oHomeX, 3174.0f, o->oHomeZ, 200)) {
@@ -145,7 +137,7 @@ void yoshi_finish_jumping_and_despawn_loop(void) {
     obj_move_xyz_using_fvel_and_yaw(o);
     o->oVelY -= 2.0;
     if (o->oPosY < 2100.0f) {
-        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+        set_mario_npc_dialog(&gMarioStates[0], 0, yoshi_talk_loop_continue_dialog);
         gObjCutsceneDone = TRUE;
         sYoshiDead = 1;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
@@ -199,5 +191,53 @@ void bhv_yoshi_loop(void) {
             break;
     }
 
+    switch (sYoshiTalkingState) {
+        case 1:
+            cur_obj_init_animation(0);
+            if (set_mario_npc_dialog(&gMarioStates[0], 1, yoshi_talk_loop_continue_dialog) == 2) {
+                sYoshiTalkingState = 2;
+            }
+            break;
+
+        case 2:
+            if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161)) {
+                sYoshiTalkingState = 3;
+                o->oInteractStatus = 0;
+                o->oHomeX = sYoshiHomeLocations[2];
+                o->oHomeZ = sYoshiHomeLocations[3];
+                o->oYoshiTargetYaw = atan2s(o->oHomeZ - o->oPosZ, o->oHomeX - o->oPosX);
+                o->oAction = YOSHI_ACT_WALK;
+            }
+            break;
+
+        case 3:
+            o->oInteractStatus = 0;
+            break;
+
+        default:
+            break;
+    }
+
+    if (sYoshiTalkingState > 0) {
+        extern void push_mario_out_of_object(struct MarioState *m, struct Object *o, f32 padding);
+        push_mario_out_of_object(&gMarioStates[0], o, -10.0f);
+    }
+
+    if (sYoshiTalkingState > 2) {
+        if (gHudDisplay.lives >= 100) {
+            play_sound(SOUND_GENERAL_COLLECT_1UP, gDefaultSoundArgs);
+            gSpecialTripleJump = 1;
+        } else if ((gGlobalTimer & 0x03) == 0) {
+            play_sound(SOUND_MENU_YOSHI_GAIN_LIVES, gDefaultSoundArgs);
+            gMarioStates[0].numLives++;
+        }
+    }
+
+    if (gMarioStates[0].action == ACT_WAITING_FOR_DIALOG) {
+        if (gMarioStates[0].interactObj == o) {
+            set_mario_action(&gMarioStates[0], ACT_IDLE, 0);
+            o->oInteractStatus = 0;
+        }
+    }
     curr_obj_random_blink(&o->oYoshiBlinkTimer);
 }

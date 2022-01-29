@@ -959,7 +959,7 @@ end
 function mario_on_set_action(m)
     local e = gMarioStateExtras[m.playerIndex]
     if e.spinInput ~= 0 then
-        if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_TRIPLE_JUMP or m.action == ACT_SIDE_FLIP or m.action == ACT_BACKFLIP or m.action == ACT_WALL_KICK_AIR then
+        if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_TRIPLE_JUMP or m.action == ACT_SPECIAL_TRIPLE_JUMP or m.action == ACT_SIDE_FLIP or m.action == ACT_BACKFLIP or m.action == ACT_WALL_KICK_AIR then
             set_mario_action(m, ACT_SPIN_JUMP, 1)
             m.vel.y = 65.0
             m.faceAngle.y = m.intendedYaw
