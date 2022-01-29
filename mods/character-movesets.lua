@@ -31,6 +31,9 @@ function luigi_before_phys_step(m)
     -- faster swimming
     if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
         hScale = hScale * 1.5
+        if m.action ~= ACT_WATER_PLUNGE then
+            vScale = vScale * 1.5
+        end
     end
 
     -- slower holding item
@@ -313,6 +316,10 @@ gEventTable[CT_WALUIGI] = {
 ----------
 
 function mario_before_phys_step(m)
+    if m.action == ACT_BUBBLED then
+        return
+    end
+
     if gEventTable[m.character.type] == nil then
         return
     end
@@ -320,6 +327,10 @@ function mario_before_phys_step(m)
 end
 
 function mario_on_set_action(m)
+    if m.action == ACT_BUBBLED then
+        return
+    end
+
     if gEventTable[m.character.type] == nil then
         return
     end
@@ -327,6 +338,10 @@ function mario_on_set_action(m)
 end
 
 function mario_update(m)
+    if m.action == ACT_BUBBLED then
+        return
+    end
+
     if gEventTable[m.character.type] == nil then
         return
     end
