@@ -4,6 +4,7 @@
 
 function mario_before_phys_step(m)
     local hScale = 1.0
+    local vScale = 1.0
 
     -- faster swimming
     if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
@@ -14,6 +15,7 @@ function mario_before_phys_step(m)
     end
 
     m.vel.x = m.vel.x * hScale
+    m.vel.y = m.vel.y * vScale
     m.vel.z = m.vel.z * hScale
 end
 

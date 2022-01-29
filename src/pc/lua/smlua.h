@@ -18,7 +18,7 @@
 
 #include "pc/debuglog.h"
 
-#define LOG_LUA LOG_INFO
+#define LOG_LUA(...)  ( _debuglog_print_log("LUA ", __FILE__), printf(__VA_ARGS__), printf("\n") )
 
 extern lua_State* gLuaState;
 

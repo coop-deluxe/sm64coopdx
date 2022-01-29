@@ -15,18 +15,25 @@ int smlua_hook_event(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     if (hookType >= HOOK_MAX) {
-        LOG_LUA("LUA: Hook Type: %d exceeds max!", hookType);
+        LOG_LUA("Hook Type: %d exceeds max!", hookType);
         return 0;
     }
 
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
     if (hook->count >= MAX_HOOKED_REFERENCES) {
-        LOG_LUA("LUA: Hook Type: %d exceeded maximum references!", hookType);
+        LOG_LUA("Hook Type: %s exceeded maximum references!", LuaHookedEventTypeName[hookType]);
         return 0;
     }
 
-    hook->reference[hook->count] = luaL_ref(L, LUA_REGISTRYINDEX);
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (ref == -1) {
+        LOG_LUA("tried to hook undefined function to '%s'", LuaHookedEventTypeName[hookType]);
+        return 0;
+    }
+
+    hook->reference[hook->count] = ref;
     hook->count++;
+
     return 1;
 }
 
@@ -40,7 +47,7 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
 
         // call the callback
         if (0 != lua_pcall(L, 0, 0, 0)) {
-            LOG_LUA("LUA: Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
             continue;
         }
     }
@@ -62,7 +69,7 @@ void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct
 
         // call the callback
         if (0 != lua_pcall(L, 1, 0, 0)) {
-            LOG_LUA("LUA: Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
             continue;
         }
     }
@@ -85,13 +92,21 @@ static int sHookedMarioActionsCount = 0;
 int smlua_hook_mario_action(lua_State* L) {
     if (L == NULL) { return 0; }
     if (sHookedMarioActionsCount >= MAX_HOOKED_ACTIONS) {
-        LOG_LUA("LUA: Hooked mario actions exceeded maximum references!");
+        LOG_LUA("Hooked mario actions exceeded maximum references!");
+        return 0;
+    }
+
+    lua_Integer action = smlua_to_integer(L, -2);
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+    if (ref == -1) {
+        LOG_LUA("Hook Action: %lld tried to hook undefined function", action);
         return 0;
     }
 
     struct LuaHookedMarioAction* hooked = &sHookedMarioActions[sHookedMarioActionsCount];
-    hooked->action = smlua_to_integer(L, -2);
-    hooked->reference = luaL_ref(L, LUA_REGISTRYINDEX);
+    hooked->action = action;
+    hooked->reference = ref;
     if (!gSmLuaConvertSuccess) { return 0; }
 
     sHookedMarioActionsCount++;
@@ -114,7 +129,7 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             
             // call the callback
             if (0 != lua_pcall(L, 1, 1, 0)) {
-                LOG_LUA("LUA: Failed to call the callback: %s", lua_tostring(L, -1));
+                LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
                 continue;
             }
 

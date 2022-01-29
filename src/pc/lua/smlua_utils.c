@@ -44,7 +44,7 @@ lua_Integer smlua_to_integer(lua_State* L, int index) {
     if (lua_type(L, index) == LUA_TBOOLEAN) {
         return lua_toboolean(L, index) ? 1 : 0;
     } else if (lua_type(L, index) != LUA_TNUMBER) {
-        LOG_LUA("LUA: smlua_to_integer received improper type '%d'", lua_type(L, index));
+        LOG_LUA("smlua_to_integer received improper type '%d'", lua_type(L, index));
         smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
@@ -56,7 +56,7 @@ lua_Integer smlua_to_integer(lua_State* L, int index) {
 
 lua_Number smlua_to_number(lua_State* L, int index) {
     if (lua_type(L, index) != LUA_TNUMBER) {
-        LOG_LUA("LUA: smlua_to_number received improper type '%d'", lua_type(L, index));
+        LOG_LUA("smlua_to_number received improper type '%d'", lua_type(L, index));
         smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
@@ -67,7 +67,7 @@ lua_Number smlua_to_number(lua_State* L, int index) {
 
 const char* smlua_to_string(lua_State* L, int index) {
     if (lua_type(L, index) != LUA_TSTRING) {
-        LOG_LUA("LUA: smlua_to_string received improper type '%d'", lua_type(L, index));
+        LOG_LUA("smlua_to_string received improper type '%d'", lua_type(L, index));
         smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
@@ -78,7 +78,7 @@ const char* smlua_to_string(lua_State* L, int index) {
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     if (lua_type(L, index) != LUA_TTABLE) {
-        LOG_LUA("LUA: smlua_to_cobject received improper type '%d'", lua_type(L, index));
+        LOG_LUA("smlua_to_cobject received improper type '%d'", lua_type(L, index));
         smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
@@ -91,7 +91,7 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     if (!gSmLuaConvertSuccess) { return NULL; }
 
     if (lot != objLot) {
-        LOG_LUA("LUA: smlua_to_cobject received improper LOT. Expected '%d', received '%d'", lot, objLot);
+        LOG_LUA("smlua_to_cobject received improper LOT. Expected '%d', received '%d'", lot, objLot);
         smlua_logline();
         gSmLuaConvertSuccess = false;
         return NULL;
@@ -105,13 +105,13 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
     // check allowlist
     if (!smlua_cobject_allowlist_contains(lot, (u64)pointer)) {
-        LOG_LUA("LUA: smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        LOG_LUA("smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
         gSmLuaConvertSuccess = false;
         return NULL;
     }
 
     if (pointer == NULL) {
-        LOG_LUA("LUA: smlua_to_cobject received null pointer.");
+        LOG_LUA("smlua_to_cobject received null pointer.");
         smlua_logline();
         gSmLuaConvertSuccess = false;
         return NULL;
@@ -153,7 +153,7 @@ void smlua_push_number_field(int index, char* name, lua_Number val) {
 
 lua_Integer smlua_get_integer_field(int index, char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
-        LOG_LUA("LUA: smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
+        LOG_LUA("smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -165,7 +165,7 @@ lua_Integer smlua_get_integer_field(int index, char* name) {
 
 lua_Number smlua_get_number_field(int index, char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
-        LOG_LUA("LUA: smlua_get_number_field received improper type '%d'", lua_type(gLuaState, index));
+        LOG_LUA("smlua_get_number_field received improper type '%d'", lua_type(gLuaState, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
