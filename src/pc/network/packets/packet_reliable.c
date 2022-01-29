@@ -86,6 +86,7 @@ void network_receive_ack(struct Packet* p) {
 void network_remember_reliable(struct Packet* p) {
     if (!p->reliable) { return; }
     if (p->sent) { return; }
+    if (p->writeError) { return; }
 
     struct PacketLinkedList* node = calloc(1, sizeof(struct PacketLinkedList));
     node->p = *p;

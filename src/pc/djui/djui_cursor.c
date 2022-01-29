@@ -7,7 +7,7 @@
 extern ALIGNED8 u8 gd_texture_hand_open[];
 extern ALIGNED8 u8 gd_texture_hand_closed[];
 
-static struct DjuiImage* sMouseCursor = NULL;
+struct DjuiImage* sMouseCursor = NULL;
 
 static bool sCursorMouseControlled = false;
 static struct DjuiBase* sInputControlledBase = NULL;

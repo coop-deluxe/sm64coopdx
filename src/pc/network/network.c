@@ -230,6 +230,9 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 }
 
 void network_send(struct Packet* p) {
+    // prevent errors during writing from propagating
+    if (p->writeError) { return; }
+
     // set the flags again
     packet_set_flags(p);
 

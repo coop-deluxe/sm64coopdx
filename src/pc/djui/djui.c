@@ -55,7 +55,9 @@ void djui_render(void) {
     djui_popup_update();
 
     djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
-    djui_base_render(&gDjuiRoot->base);
+    if (gDjuiRoot != NULL) {
+        djui_base_render(&gDjuiRoot->base);
+    }
 
     djui_cursor_update();
     djui_interactable_update();

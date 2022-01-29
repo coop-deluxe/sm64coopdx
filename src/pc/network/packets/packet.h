@@ -76,6 +76,7 @@ struct Packet {
     u16 cursor;
     void* addr;
     bool error;
+    bool writeError;
     bool reliable;
     bool levelAreaMustMatch;
     bool levelMustMatch;
