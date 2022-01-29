@@ -89,7 +89,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINSOCK;DEBUG;CAPI_SDL2;WAPI_SDL2;RAPI_GL;F3DEX_GBI_2;_LANGUAGE_C;BETTERCAMERA;VERSION_US;EXT_OPTIONS_MENU;HAVE_SDL2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINSOCK;DEBUG;CAPI_SDL2;WAPI_SDL2;RAPI_GL;F3DEX_GBI_2;_LANGUAGE_C;BETTERCAMERA;VERSION_US;EXT_OPTIONS_MENU;HAVE_SDL2;IS_64_BIT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
