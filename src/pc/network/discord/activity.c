@@ -15,7 +15,7 @@ static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult r
 }
 
 static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordLobby* lobby) {
-    LOGFILE_INFO(LFT_DISCORD, "> on_activity_join_callback returned %d, lobby %lld, owner %lld", result, lobby->id, lobby->owner_id);
+    LOGFILE_INFO(LFT_DISCORD, "> on_activity_join_callback returned %d, lobby " DISCORD_ID_FORMAT ", owner " DISCORD_ID_FORMAT, result, lobby->id, lobby->owner_id);
     DISCORD_REQUIRE(result);
     if (gNetworkType != NT_NONE) {
         LOGFILE_ERROR(LFT_DISCORD, "Joined lobby when already connected somewhere!");
@@ -25,7 +25,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     network_init(NT_CLIENT);
 
     gCurActivity.type = DiscordActivityType_Playing;
-    snprintf(gCurActivity.party.id, 128, "%lld", lobby->id);
+    snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id);
     gCurActivity.party.size.current_size = 2;
     gCurActivity.party.size.max_size = lobby->capacity;
 
@@ -39,7 +39,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
             network_player_connected(NPT_SERVER, 0, 0, 0, "Player");
         }
         ns_discord_save_id(gNetworkPlayerServer->localIndex, lobby->owner_id);
-        network_send_join_request();
+        network_send_mod_list_request();
     }
 
     gNetworkUserIds[0] = lobby->owner_id;
@@ -57,7 +57,7 @@ static void on_activity_join_request_callback(UNUSED void* data, enum EDiscordRe
 }
 
 static void on_activity_join_request(UNUSED void* data, struct DiscordUser* user) {
-    LOGFILE_INFO(LFT_DISCORD, "> on_activity_join_request from %lld", user->id);
+    LOGFILE_INFO(LFT_DISCORD, "> on_activity_join_request from " DISCORD_ID_FORMAT, user->id);
     //app.activities->send_request_reply(app.activities, user->id, DiscordActivityJoinRequestReply_Yes, NULL, on_activity_join_request_callback);
 }
 

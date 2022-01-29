@@ -16,8 +16,10 @@
 #include "behavior_data.h"
 #include "level_table.h"
 #include "thread6.h"
+#include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua.h"
 
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f
@@ -30,7 +32,7 @@ static s16 D_80339FD0;
 static s16 D_80339FD2;
 static f32 D_80339FD4;
 
-static void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
+void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
     s16 atSurface = m->pos[1] >= m->waterLevel - 130;
 
     if (atSurface) {
@@ -69,7 +71,7 @@ static f32 get_buoyancy(struct MarioState *m) {
     return buoyancy;
 }
 
-static u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
+u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
     struct Surface *wall;
     struct Surface *ceil;
     struct Surface *floor;
@@ -118,7 +120,7 @@ static u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
     }
 }
 
-static void apply_water_current(struct MarioState *m, Vec3f step) {
+void apply_water_current(struct MarioState *m, Vec3f step) {
     s32 i;
     f32 whirlpoolRadius = 2000.0f;
 
@@ -166,12 +168,14 @@ static void apply_water_current(struct MarioState *m, Vec3f step) {
     }
 }
 
-static u32 perform_water_step(struct MarioState *m) {
+u32 perform_water_step(struct MarioState *m) {
     UNUSED u32 unused;
     u32 stepResult;
     Vec3f nextPos;
     Vec3f step;
     struct Object *marioObj = m->marioObj;
+
+    smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
 
     vec3f_copy(step, m->vel);
 
@@ -424,7 +428,7 @@ static void reset_float_globals(struct MarioState *m) {
     D_80339FD4 = m->faceAngle[0] / 256.0f + 20.0f;
 }
 
-static void float_surface_gfx(struct MarioState *m) {
+void float_surface_gfx(struct MarioState *m) {
     if (D_80339FD2 != 0 && m->pos[1] > m->waterLevel - 85 && m->faceAngle[0] >= 0) {
         if ((D_80339FD0 += D_80339FD2) >= 0) {
             m->marioObj->header.gfx.pos[1] += D_80339FD4 * sins(D_80339FD0);
@@ -1543,42 +1547,45 @@ s32 mario_execute_submerged_action(struct MarioState *m) {
     m->marioBodyState->headAngle[1] = 0;
     m->marioBodyState->headAngle[2] = 0;
 
-    /* clang-format off */
-    switch (m->action) {
-        case ACT_WATER_IDLE:                 cancel = act_water_idle(m);                 break;
-        case ACT_HOLD_WATER_IDLE:            cancel = act_hold_water_idle(m);            break;
-        case ACT_WATER_ACTION_END:           cancel = act_water_action_end(m);           break;
-        case ACT_HOLD_WATER_ACTION_END:      cancel = act_hold_water_action_end(m);      break;
-        case ACT_DROWNING:                   cancel = act_drowning(m);                   break;
-        case ACT_BACKWARD_WATER_KB:          cancel = act_backward_water_kb(m);          break;
-        case ACT_FORWARD_WATER_KB:           cancel = act_forward_water_kb(m);           break;
-        case ACT_WATER_DEATH:                cancel = act_water_death(m);                break;
-        case ACT_WATER_SHOCKED:              cancel = act_water_shocked(m);              break;
-        case ACT_BREASTSTROKE:               cancel = act_breaststroke(m);               break;
-        case ACT_SWIMMING_END:               cancel = act_swimming_end(m);               break;
-        case ACT_FLUTTER_KICK:               cancel = act_flutter_kick(m);               break;
-        case ACT_HOLD_BREASTSTROKE:          cancel = act_hold_breaststroke(m);          break;
-        case ACT_HOLD_SWIMMING_END:          cancel = act_hold_swimming_end(m);          break;
-        case ACT_HOLD_FLUTTER_KICK:          cancel = act_hold_flutter_kick(m);          break;
-        case ACT_WATER_SHELL_SWIMMING:       cancel = act_water_shell_swimming(m);       break;
-        case ACT_WATER_THROW:                cancel = act_water_throw(m);                break;
-        case ACT_WATER_PUNCH:                cancel = act_water_punch(m);                break;
-        case ACT_WATER_PLUNGE:               cancel = act_water_plunge(m);               break;
-        case ACT_CAUGHT_IN_WHIRLPOOL:        cancel = act_caught_in_whirlpool(m);        break;
-        case ACT_METAL_WATER_STANDING:       cancel = act_metal_water_standing(m);       break;
-        case ACT_METAL_WATER_WALKING:        cancel = act_metal_water_walking(m);        break;
-        case ACT_METAL_WATER_FALLING:        cancel = act_metal_water_falling(m);        break;
-        case ACT_METAL_WATER_FALL_LAND:      cancel = act_metal_water_fall_land(m);      break;
-        case ACT_METAL_WATER_JUMP:           cancel = act_metal_water_jump(m);           break;
-        case ACT_METAL_WATER_JUMP_LAND:      cancel = act_metal_water_jump_land(m);      break;
-        case ACT_HOLD_METAL_WATER_STANDING:  cancel = act_hold_metal_water_standing(m);  break;
-        case ACT_HOLD_METAL_WATER_WALKING:   cancel = act_hold_metal_water_walking(m);   break;
-        case ACT_HOLD_METAL_WATER_FALLING:   cancel = act_hold_metal_water_falling(m);   break;
-        case ACT_HOLD_METAL_WATER_FALL_LAND: cancel = act_hold_metal_water_fall_land(m); break;
-        case ACT_HOLD_METAL_WATER_JUMP:      cancel = act_hold_metal_water_jump(m);      break;
-        case ACT_HOLD_METAL_WATER_JUMP_LAND: cancel = act_hold_metal_water_jump_land(m); break;
+    if (!smlua_call_action_hook(m, &cancel)) {
+        /* clang-format off */
+        switch (m->action) {
+            case ACT_WATER_IDLE:                 cancel = act_water_idle(m);                 break;
+            case ACT_HOLD_WATER_IDLE:            cancel = act_hold_water_idle(m);            break;
+            case ACT_WATER_ACTION_END:           cancel = act_water_action_end(m);           break;
+            case ACT_HOLD_WATER_ACTION_END:      cancel = act_hold_water_action_end(m);      break;
+            case ACT_DROWNING:                   cancel = act_drowning(m);                   break;
+            case ACT_BACKWARD_WATER_KB:          cancel = act_backward_water_kb(m);          break;
+            case ACT_FORWARD_WATER_KB:           cancel = act_forward_water_kb(m);           break;
+            case ACT_WATER_DEATH:                cancel = act_water_death(m);                break;
+            case ACT_WATER_SHOCKED:              cancel = act_water_shocked(m);              break;
+            case ACT_BREASTSTROKE:               cancel = act_breaststroke(m);               break;
+            case ACT_SWIMMING_END:               cancel = act_swimming_end(m);               break;
+            case ACT_FLUTTER_KICK:               cancel = act_flutter_kick(m);               break;
+            case ACT_HOLD_BREASTSTROKE:          cancel = act_hold_breaststroke(m);          break;
+            case ACT_HOLD_SWIMMING_END:          cancel = act_hold_swimming_end(m);          break;
+            case ACT_HOLD_FLUTTER_KICK:          cancel = act_hold_flutter_kick(m);          break;
+            case ACT_WATER_SHELL_SWIMMING:       cancel = act_water_shell_swimming(m);       break;
+            case ACT_WATER_THROW:                cancel = act_water_throw(m);                break;
+            case ACT_WATER_PUNCH:                cancel = act_water_punch(m);                break;
+            case ACT_WATER_PLUNGE:               cancel = act_water_plunge(m);               break;
+            case ACT_CAUGHT_IN_WHIRLPOOL:        cancel = act_caught_in_whirlpool(m);        break;
+            case ACT_METAL_WATER_STANDING:       cancel = act_metal_water_standing(m);       break;
+            case ACT_METAL_WATER_WALKING:        cancel = act_metal_water_walking(m);        break;
+            case ACT_METAL_WATER_FALLING:        cancel = act_metal_water_falling(m);        break;
+            case ACT_METAL_WATER_FALL_LAND:      cancel = act_metal_water_fall_land(m);      break;
+            case ACT_METAL_WATER_JUMP:           cancel = act_metal_water_jump(m);           break;
+            case ACT_METAL_WATER_JUMP_LAND:      cancel = act_metal_water_jump_land(m);      break;
+            case ACT_HOLD_METAL_WATER_STANDING:  cancel = act_hold_metal_water_standing(m);  break;
+            case ACT_HOLD_METAL_WATER_WALKING:   cancel = act_hold_metal_water_walking(m);   break;
+            case ACT_HOLD_METAL_WATER_FALLING:   cancel = act_hold_metal_water_falling(m);   break;
+            case ACT_HOLD_METAL_WATER_FALL_LAND: cancel = act_hold_metal_water_fall_land(m); break;
+            case ACT_HOLD_METAL_WATER_JUMP:      cancel = act_hold_metal_water_jump(m);      break;
+            case ACT_HOLD_METAL_WATER_JUMP_LAND: cancel = act_hold_metal_water_jump_land(m); break;
+            default: LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action); return true;
+        }
+        /* clang-format on */
     }
-    /* clang-format on */
 
     return cancel;
 }

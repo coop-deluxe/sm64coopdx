@@ -111,7 +111,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     bool isMacroObject = (macroOffset != ERR_COULD_NOT_FIND_OBJECT);
 
     // write header
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_RESPAWN_INFO, true, PLMT_NONE);
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActStarNum, sizeof(s16));
@@ -136,7 +136,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
             if (np->currActNum != gCurrActStarNum)   { continue; }
             if (np->currLevelNum != gCurrLevelNum)   { continue; }
             if (np == gNetworkPlayerLocal)           { continue; }
-            struct Packet p2;
+            struct Packet p2 = { 0 };
             packet_duplicate(&p, &p2);
             network_send_to(np->localIndex, &p2);
             LOG_INFO("tx level respawn info to %d", np->globalIndex);
@@ -184,7 +184,7 @@ void network_receive_level_respawn_info(struct Packet* p) {
             if (np->currActNum != actNum) { continue; }
             if (np->currLevelNum != levelNum) { continue; }
             if (np == npFrom) { continue; }
-            struct Packet p2;
+            struct Packet p2 = { 0 };
             packet_duplicate(p, &p2);
             network_send_to(np->localIndex, &p2);
         }

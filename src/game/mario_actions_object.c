@@ -11,9 +11,11 @@
 #include "engine/math_util.h"
 #include "thread6.h"
 #include "behavior_data.h"
+#include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "object_helpers.h"
+#include "pc/lua/smlua.h"
 
 /**
  * Used by act_punching() to determine Mario's forward velocity during each
@@ -492,20 +494,23 @@ s32 mario_execute_object_action(struct MarioState *m) {
         return TRUE;
     }
 
-    /* clang-format off */
-    switch (m->action) {
-        case ACT_PUNCHING:           cancel = act_punching(m);           break;
-        case ACT_PICKING_UP:         cancel = act_picking_up(m);         break;
-        case ACT_DIVE_PICKING_UP:    cancel = act_dive_picking_up(m);    break;
-        case ACT_STOMACH_SLIDE_STOP: cancel = act_stomach_slide_stop(m); break;
-        case ACT_PLACING_DOWN:       cancel = act_placing_down(m);       break;
-        case ACT_THROWING:           cancel = act_throwing(m);           break;
-        case ACT_HEAVY_THROW:        cancel = act_heavy_throw(m);        break;
-        case ACT_PICKING_UP_BOWSER:  cancel = act_picking_up_bowser(m);  break;
-        case ACT_HOLDING_BOWSER:     cancel = act_holding_bowser(m);     break;
-        case ACT_RELEASING_BOWSER:   cancel = act_releasing_bowser(m);   break;
+    if (!smlua_call_action_hook(m, &cancel)) {
+        /* clang-format off */
+        switch (m->action) {
+            case ACT_PUNCHING:           cancel = act_punching(m);           break;
+            case ACT_PICKING_UP:         cancel = act_picking_up(m);         break;
+            case ACT_DIVE_PICKING_UP:    cancel = act_dive_picking_up(m);    break;
+            case ACT_STOMACH_SLIDE_STOP: cancel = act_stomach_slide_stop(m); break;
+            case ACT_PLACING_DOWN:       cancel = act_placing_down(m);       break;
+            case ACT_THROWING:           cancel = act_throwing(m);           break;
+            case ACT_HEAVY_THROW:        cancel = act_heavy_throw(m);        break;
+            case ACT_PICKING_UP_BOWSER:  cancel = act_picking_up_bowser(m);  break;
+            case ACT_HOLDING_BOWSER:     cancel = act_holding_bowser(m);     break;
+            case ACT_RELEASING_BOWSER:   cancel = act_releasing_bowser(m);   break;
+            default: LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action); return true;
+        }
+        /* clang-format on */
     }
-    /* clang-format on */
 
     if (!cancel && (m->input & INPUT_IN_WATER)) {
         m->particleFlags |= PARTICLE_IDLE_WATER_WAVE;

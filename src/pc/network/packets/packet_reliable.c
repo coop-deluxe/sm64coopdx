@@ -31,6 +31,8 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
 
     if (node->prev != NULL) { node->prev->next = node->next; }
     if (node->next != NULL) { node->next->prev = node->prev; }
+    assert(node->p.addr != NULL);
+    free(node->p.addr);
     free(node);
 }
 
@@ -84,9 +86,11 @@ void network_receive_ack(struct Packet* p) {
 void network_remember_reliable(struct Packet* p) {
     if (!p->reliable) { return; }
     if (p->sent) { return; }
+    if (p->writeError) { return; }
 
-    struct PacketLinkedList* node = malloc(sizeof(struct PacketLinkedList));
+    struct PacketLinkedList* node = calloc(1, sizeof(struct PacketLinkedList));
     node->p = *p;
+    node->p.addr = network_duplicate_address(p->localIndex);
     node->p.sent = true;
     node->lastSend = clock_elapsed();
     node->sendAttempts = 1;
@@ -108,11 +112,24 @@ void network_remember_reliable(struct Packet* p) {
     tail = node;
 }
 
+static float network_adjust_max_elapsed(enum PacketType packetType, float maxElapsed) {
+    switch (packetType) {
+        case PACKET_DOWNLOAD_REQUEST:
+        case PACKET_DOWNLOAD:
+        case PACKET_MOD_LIST_REQUEST:
+        case PACKET_MOD_LIST:
+            return 0.2f + maxElapsed * 2.0f;
+        default:
+            return maxElapsed;
+    }
+}
+
 void network_update_reliable(void) {
     struct PacketLinkedList* node = head;
     while (node != NULL) {
         float elapsed = (clock_elapsed() - node->lastSend);
         float maxElapsed = (node->sendAttempts * node->sendAttempts * RELIABLE_RESEND_RATE) / ((float)MAX_RESEND_ATTEMPTS);
+        maxElapsed = network_adjust_max_elapsed(node->p.packetType, maxElapsed);
         if (elapsed > maxElapsed) {
             if (node->p.packetType == PACKET_JOIN_REQUEST && gNetworkPlayerServer != NULL) {
                 node->p.localIndex = gNetworkPlayerServer->localIndex;

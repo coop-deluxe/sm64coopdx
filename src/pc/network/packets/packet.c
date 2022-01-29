@@ -76,7 +76,12 @@ void packet_process(struct Packet* p) {
         case PACKET_LEVEL_AREA_INFORM:       network_receive_level_area_inform(p);       break;
         case PACKET_LEVEL_RESPAWN_INFO:      network_receive_level_respawn_info(p);      break;
 
-        case PACKET_PLAYER_SETTINGS:         network_receive_player_settings(p);      break;
+        case PACKET_PLAYER_SETTINGS:         network_receive_player_settings(p);         break;
+
+        case PACKET_MOD_LIST_REQUEST:        network_receive_mod_list_request(p);        break;
+        case PACKET_MOD_LIST:                network_receive_mod_list(p);                break;
+        case PACKET_DOWNLOAD_REQUEST:        network_receive_download_request(p);        break;
+        case PACKET_DOWNLOAD:                network_receive_download(p);                break;
 
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
@@ -90,8 +95,18 @@ void packet_receive(struct Packet* p) {
     // send an ACK if requested
     network_send_ack(p);
 
+    // refuse packets from unknown servers
+    if (gNetworkServerAddr != NULL && gNetworkType == NT_CLIENT) {
+        bool fromServer = (p->localIndex == UNKNOWN_LOCAL_INDEX);
+        if (gNetworkPlayerServer != NULL) { fromServer = fromServer || p->localIndex == gNetworkPlayerServer->localIndex; }
+        if (fromServer && !gNetworkSystem->match_addr(gNetworkServerAddr, p->addr)) {
+            LOG_INFO("refusing packet from unknown server");
+            return;
+        }
+    }
+
     // refuse packets from unknown players other than join request
-    if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && packetType != PACKET_JOIN_REQUEST && packetType != PACKET_ACK) {
+    if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && !network_allow_unknown_local_index(packetType)) {
         if (packetType != PACKET_PLAYER) {
             LOG_INFO("closing connection for packetType: %d", packetType);
             network_send_kick(EKT_CLOSE_CONNECTION);

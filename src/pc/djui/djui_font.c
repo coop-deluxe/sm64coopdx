@@ -37,6 +37,8 @@ static const Gfx djui_font_normal_text_settings[] = {
 
 static void djui_font_normal_render_char(char c) {
     extern const u8* const font_normal_chars[];
+    // replace undisplayable characters
+    if (c < ' ' || (u8)c > ('~' + 1)) { c = '?'; }
     void* fontChar = (void*)font_normal_chars[c - '!'];
     if (fontChar == NULL) { fontChar = (void*)font_normal_chars[94]; }
 
@@ -68,6 +70,8 @@ static const struct DjuiFont sDjuiFontNormal = {
 
 static void djui_font_title_render_char(char c) {
     extern const u8* const font_title_chars[];
+    // replace undisplayable characters
+    if (c < ' ' || (u8)c > ('~' + 1)) { c = '?'; }
     djui_gfx_render_texture(font_title_chars[c - '!'], 64, 64, 32);
 }
 

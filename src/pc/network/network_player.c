@@ -268,7 +268,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         network_forget_all_reliable_from(i);
         for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
-        
+
         // display popup
         u8* rgb = get_player_color(np->paletteIndex, 0);
         char popupMsg[128] = { 0 };
@@ -287,9 +287,10 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     if (np->currCourseNum != courseNum && np->localIndex != 0) {
         u8* rgb = get_player_color(np->paletteIndex, 0);
         char popupMsg[128] = { 0 };
-        if (np->currCourseNum == gNetworkPlayerLocal->currCourseNum && gNetworkPlayerLocal->currCourseNum != 0) {
+        bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
+        if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
             snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ left this level", rgb[0], rgb[1], rgb[2], np->name);
-        } else if (courseNum == gNetworkPlayerLocal->currCourseNum && gNetworkPlayerLocal->currCourseNum != 0) {
+        } else if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
             snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ entered this level", rgb[0], rgb[1], rgb[2], np->name);
         } else {
             snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ entered\n%s", rgb[0], rgb[1], rgb[2], np->name, get_level_name(courseNum, levelNum, areaIndex));

@@ -1,5 +1,33 @@
 #include "djui.h"
 
+static void djui_slider_update_style(struct DjuiBase* base) {
+    struct DjuiSlider* slider = (struct DjuiSlider*)base;
+    f32 x = slider->rect->base.elem.x;
+    bool activeRegion = (gCursorX >= x);
+
+    if (!slider->base.enabled) {
+    } else if (gInteractableFocus == base) {
+        djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
+        djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
+        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
+        djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255);
+    } else if (gDjuiCursorDownOn == base && activeRegion) {
+        djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
+        djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
+        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
+        djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255);
+    } else if (gDjuiHovered == base && activeRegion) {
+        djui_base_set_border_color(&slider->rect->base, 0, 120, 215, 255);
+        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
+        djui_base_set_color(&slider->rectValue->base, 229, 241, 251, 255);
+    } else {
+        djui_base_set_border_color(&slider->rect->base, 173, 173, 173, 255);
+        djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
+        djui_base_set_color(&slider->text->base, 200, 200, 200, 255);
+        djui_base_set_color(&slider->rectValue->base, 200, 200, 200, 255);
+    }
+}
+
 static void djui_slider_update_value(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     u32  min   = slider->min;
@@ -8,35 +36,11 @@ static void djui_slider_update_value(struct DjuiBase* base) {
     djui_base_set_size(&slider->rectValue->base, ((f32)*value - min) / ((f32)max - min), 1.0f);
 }
 
-static void djui_slider_set_default_style(struct DjuiBase* base) {
-    struct DjuiSlider* slider = (struct DjuiSlider*)base;
-    djui_base_set_border_color(&slider->rect->base, 173, 173, 173, 255);
-    djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
-    djui_base_set_color(&slider->text->base, 200, 200, 200, 255);
-    djui_base_set_color(&slider->rectValue->base, 200, 200, 200, 255);
-}
-
 static void djui_slider_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     struct DjuiBase* rectBase = &slider->rect->base;
     *x = (rectBase->elem.x + rectBase->elem.width  * 3.0f / 4.0f);
     *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
-}
-
-static void djui_slider_on_hover(struct DjuiBase* base) {
-    struct DjuiSlider* slider = (struct DjuiSlider*)base;
-    f32 x = slider->rect->base.elem.x;
-    if (gCursorX >= x) {
-        djui_base_set_border_color(&slider->rect->base, 0, 120, 215, 255);
-        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&slider->rectValue->base, 229, 241, 251, 255);
-    } else {
-        djui_slider_set_default_style(base);
-    }
-}
-
-static void djui_slider_on_hover_end(struct DjuiBase* base) {
-    djui_slider_set_default_style(base);
 }
 
 static void djui_slider_on_cursor_down(struct DjuiBase* base) {
@@ -60,18 +64,12 @@ static void djui_slider_on_cursor_down_begin(struct DjuiBase* base, bool inputCu
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     f32 x = slider->rect->base.elem.x;
     if (gCursorX >= x) {
-        djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
-        djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
-        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255);
         if (inputCursor) {
             djui_interactable_set_input_focus(base);
         } else {
             slider->base.interactable->on_cursor_down = djui_slider_on_cursor_down;
         }
-    }
-    else {
-        djui_slider_set_default_style(base);
+    } else {
         slider->base.interactable->on_cursor_down = NULL;
     }
 }
@@ -79,15 +77,6 @@ static void djui_slider_on_cursor_down_begin(struct DjuiBase* base, bool inputCu
 static void djui_slider_on_cursor_down_end(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     slider->base.interactable->on_cursor_down = NULL;
-    djui_slider_set_default_style(base);
-}
-
-static void djui_slider_on_focus_begin(struct DjuiBase* base) {
-    struct DjuiSlider* slider = (struct DjuiSlider*)base;
-    djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
-    djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
-    djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-    djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255);
 }
 
 static void djui_slider_on_focus(struct DjuiBase* base, OSContPad* pad) {
@@ -104,10 +93,6 @@ static void djui_slider_on_focus(struct DjuiBase* base, OSContPad* pad) {
     djui_slider_update_value(base);
 }
 
-static void djui_slider_on_focus_end(struct DjuiBase* base) {
-    djui_slider_set_default_style(base);
-}
-
 static void djui_slider_destroy(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     free(slider);
@@ -122,10 +107,9 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     slider->max = max;
 
     djui_base_init(parent, base, NULL, djui_slider_destroy);
-    djui_interactable_create(base);
-    djui_interactable_hook_hover(base, djui_slider_on_hover, djui_slider_on_hover_end);
+    djui_interactable_create(base, djui_slider_update_style);
     djui_interactable_hook_cursor_down(base, djui_slider_on_cursor_down_begin, NULL, djui_slider_on_cursor_down_end);
-    djui_interactable_hook_focus(base, djui_slider_on_focus_begin, djui_slider_on_focus, djui_slider_on_focus_end);
+    djui_interactable_hook_focus(base, NULL, djui_slider_on_focus, NULL);
 
     struct DjuiText* text = djui_text_create(&slider->base, message);
     djui_base_set_alignment(&text->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
@@ -148,7 +132,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     slider->rectValue = rectValue;
 
     djui_slider_update_value(base);
-    djui_slider_set_default_style(base);
+    djui_slider_update_style(base);
 
     base->get_cursor_hover_location = djui_slider_get_cursor_hover_location;
 

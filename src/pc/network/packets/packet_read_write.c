@@ -18,6 +18,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet->cursor = 0;
     packet->dataLength = 0;
     packet->error = false;
+    packet->writeError = false;
     packet->reliable = reliable;
     packet->levelAreaMustMatch = (levelAreaMustMatch == PLMT_AREA);
     packet->levelMustMatch     = (levelAreaMustMatch == PLMT_LEVEL);
@@ -82,6 +83,7 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->cursor = 0;
     dstPacket->dataLength = 0;
     dstPacket->error = srcPacket->error;
+    dstPacket->writeError = srcPacket->writeError;
     dstPacket->reliable = srcPacket->reliable;
     dstPacket->levelAreaMustMatch = srcPacket->levelAreaMustMatch;
     dstPacket->levelMustMatch = srcPacket->levelMustMatch;
@@ -125,6 +127,10 @@ void packet_set_destination(struct Packet* packet, u8 destGlobalId) {
 
 void packet_write(struct Packet* packet, void* data, u16 length) {
     if (data == NULL) { packet->error = true; return; }
+    if (packet->cursor + length >= PACKET_LENGTH) {
+        SOFT_ASSERT(packet->cursor + length < PACKET_LENGTH);
+        packet->writeError = true;
+    }
     memcpy(&packet->buffer[packet->cursor], data, length);
     packet->dataLength += length;
     packet->cursor     += length;

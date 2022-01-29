@@ -78,3 +78,38 @@ f64 clock_elapsed_f64(void) {
 u32 clock_elapsed_ticks(void) {
     return (clock_elapsed_ns() * 3 / 100000000);
 }
+
+void file_get_line(char* buffer, size_t maxLength, FILE* fp) {
+    char* initial = buffer;
+
+    char c = fgetc(fp);
+    while (!feof(fp) && c != '\n') {
+        // make sure it's printable
+        if (c < ' ' || c > '~') { goto next_get; }
+
+        // parse new line escape code
+        if (c == '\\') {
+            c = fgetc(fp);
+            if (feof(fp)) { break; }
+            if (c == 'n') {
+                if ((size_t)(buffer - initial) < (maxLength - 1)) {
+                    *buffer++ = '\n';
+                }
+                goto next_get;
+            }
+        }
+
+        // found new line
+        if (c == '\n') { break; }
+
+        // append to buffer
+        if ((size_t)(buffer - initial) < (maxLength - 1)) {
+            *buffer++ = c;
+        }
+
+next_get:
+        c = fgetc(fp);
+    }
+
+    *buffer = '\0';
+}

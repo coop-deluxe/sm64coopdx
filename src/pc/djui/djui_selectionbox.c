@@ -4,14 +4,38 @@
 
 extern ALIGNED8 u8 texture_selectionbox_icon[];
 
-static void djui_selectionbox_set_default_style(struct DjuiBase* base) {
+static void djui_selectionbox_update_style(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-    djui_base_set_border_color(&selectionbox->rect->base, 150, 150, 150, 255);
-    djui_base_set_color(&selectionbox->rect->base, 200, 200, 200, 255);
-    djui_base_set_color(&selectionbox->rectText->base, 11, 11, 11, 255);
-    djui_base_set_location(&selectionbox->rectText->base, 0.0f, 3.0f);
-    djui_base_set_color(&selectionbox->rectImage->base, 0, 0, 0, 255);
-    djui_base_set_color(&selectionbox->text->base, 200, 200, 200, 255);
+    f32 x = selectionbox->rect->base.elem.x;
+    bool activeRegion = (gCursorX >= x);
+
+    if (!selectionbox->base.enabled) {
+        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
+        djui_base_set_border_color(&selectionbox->rect->base, 75, 75, 75, 255);
+        djui_base_set_color(&selectionbox->rect->base, 100, 100, 100, 255);
+        djui_base_set_color(&selectionbox->rectText->base, 5, 5, 5, 255);
+        djui_base_set_location(&selectionbox->rectText->base, 0.0f, 3.0f);
+        djui_base_set_color(&selectionbox->rectImage->base, 0, 0, 0, 255);
+        djui_base_set_color(&selectionbox->text->base, 100, 100, 100, 255);
+    } else if (gDjuiCursorDownOn == base && activeRegion) {
+        djui_base_set_border_color(&selectionbox->rect->base, 0, 84, 153, 255);
+        djui_base_set_color(&selectionbox->rect->base, 204, 228, 247, 255);
+        djui_base_set_location(&selectionbox->rectText->base, 0.5f, 3.5f);
+        djui_base_set_color(&selectionbox->text->base, 229, 241, 251, 255);
+    } else if (gDjuiHovered == base && activeRegion) {
+        djui_base_set_border_color(&selectionbox->rect->base, 0, 120, 215, 255);
+        djui_base_set_color(&selectionbox->rect->base, 229, 241, 251, 255);
+        djui_base_set_location(&selectionbox->rectText->base, -1.0f, 2.0f);
+        djui_base_set_color(&selectionbox->text->base, 229, 241, 251, 255);
+    } else {
+        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
+        djui_base_set_border_color(&selectionbox->rect->base, 150, 150, 150, 255);
+        djui_base_set_color(&selectionbox->rect->base, 200, 200, 200, 255);
+        djui_base_set_color(&selectionbox->rectText->base, 11, 11, 11, 255);
+        djui_base_set_location(&selectionbox->rectText->base, 0.0f, 3.0f);
+        djui_base_set_color(&selectionbox->rectImage->base, 0, 0, 0, 255);
+        djui_base_set_color(&selectionbox->text->base, 200, 200, 200, 255);
+    }
 }
 
 static void djui_selectionbox_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
@@ -21,45 +45,16 @@ static void djui_selectionbox_get_cursor_hover_location(struct DjuiBase* base, f
     *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
 }
 
-static void djui_selectionbox_on_hover(struct DjuiBase* base) {
-    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-    f32 x = selectionbox->rect->base.elem.x;
-    if (gCursorX >= x) {
-        djui_base_set_border_color(&selectionbox->rect->base, 0, 120, 215, 255);
-        djui_base_set_color(&selectionbox->rect->base, 229, 241, 251, 255);
-        djui_base_set_location(&selectionbox->rectText->base, -1.0f, 2.0f);
-        djui_base_set_color(&selectionbox->text->base, 229, 241, 251, 255);
-    } else {
-        djui_selectionbox_set_default_style(base);
-    }
-}
-
-static void djui_selectionbox_on_hover_end(struct DjuiBase* base) {
-    djui_selectionbox_set_default_style(base);
-}
-
 static void djui_selectionbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
     f32 x = selectionbox->rect->base.elem.x;
     if (gCursorX >= x) {
-        djui_base_set_border_color(&selectionbox->rect->base, 0, 84, 153, 255);
-        djui_base_set_color(&selectionbox->rect->base, 204, 228, 247, 255);
-        djui_base_set_location(&selectionbox->rectText->base, 0.5f, 3.5f);
-        djui_base_set_color(&selectionbox->text->base, 229, 241, 251, 255);
-
         *selectionbox->value = (*selectionbox->value + 1) % selectionbox->choiceCount;
         djui_text_set_text(selectionbox->rectText, selectionbox->choices[*selectionbox->value]);
         if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
             base->interactable->on_value_change(base);
         }
     }
-    else {
-        djui_selectionbox_set_default_style(base);
-    }
-}
-
-static void djui_selectionbox_on_cursor_down_end(struct DjuiBase* base) {
-    djui_selectionbox_set_default_style(base);
 }
 
 static void djui_selectionbox_destroy(struct DjuiBase* base) {
@@ -85,9 +80,8 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     selectionbox->choiceCount = choiceCount;
 
     djui_base_init(parent, base, NULL, djui_selectionbox_destroy);
-    djui_interactable_create(base);
-    djui_interactable_hook_hover(base, djui_selectionbox_on_hover, djui_selectionbox_on_hover_end);
-    djui_interactable_hook_cursor_down(base, djui_selectionbox_on_cursor_down_begin, NULL, djui_selectionbox_on_cursor_down_end);
+    djui_interactable_create(base, djui_selectionbox_update_style);
+    djui_interactable_hook_cursor_down(base, djui_selectionbox_on_cursor_down_begin, NULL, NULL);
 
     struct DjuiText* text = djui_text_create(&selectionbox->base, message);
     djui_base_set_alignment(&text->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
@@ -120,7 +114,7 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     djui_base_set_alignment(&rectImage->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     selectionbox->rectImage = rectImage;
 
-    djui_selectionbox_set_default_style(base);
+    djui_selectionbox_update_style(base);
 
     base->get_cursor_hover_location = djui_selectionbox_get_cursor_hover_location;
 

@@ -12,7 +12,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
 
     u8 connectedCount = network_player_connected_count();
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_NETWORK_PLAYERS, true, PLMT_NONE);
     packet_write(&p, &connectedCount, sizeof(u8));
     for (int i = 0; i < MAX_PLAYERS; i++) {

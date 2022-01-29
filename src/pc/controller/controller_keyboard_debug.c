@@ -12,8 +12,9 @@
 #include "behavior_table.h"
 
 #ifdef DEBUG
+#include "pc/lua/smlua.h"
 
-static u8 warpToLevel = LEVEL_SSL;
+static u8 warpToLevel = LEVEL_BOB;
 static u8 warpToArea = 27;
 // warpToArea: 26 = basement
 // warpToArea: 27 = upstairs
@@ -29,6 +30,7 @@ static u8 warpToArea = 27;
 #define SCANCODE_7 0x08
 #define SCANCODE_8 0x09
 #define SCANCODE_9 0x0A
+#define SCANCODE_F5 0x3f
 
 static void debug_breakpoint_here(void) {
     // create easy breakpoint position for debugging
@@ -44,7 +46,6 @@ static void debug_warp_level(u8 level) {
     gCurrLevelNum = 0;
     gCurrAreaIndex = 0;
     gCurrActStarNum = 0;
-    gCurrAreaIndex = 0;
     gChangeLevel = level;
     return;
 
@@ -131,6 +132,11 @@ static void debug_suicide(void) {
     gMarioStates[0].hurtCounter = 31;
 }
 
+static void debug_reload_lua(void) {
+    smlua_shutdown();
+    smlua_init();
+}
+
 static void debug_spawn_object(void) {
     struct Object* box = spawn_object(gMarioStates[0].marioObj, MODEL_BREAKABLE_BOX_SMALL, bhvBreakableBoxSmall);
     network_set_sync_id(box);
@@ -150,6 +156,7 @@ void debug_keyboard_on_key_down(int scancode) {
         case SCANCODE_8: debug_spawn_object(); break;
         case SCANCODE_9: debug_warp_to(); break;
         case SCANCODE_0: debug_suicide(); break;
+        case SCANCODE_F5: debug_reload_lua(); break;
 #endif
     }
 }

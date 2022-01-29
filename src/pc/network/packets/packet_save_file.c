@@ -6,7 +6,7 @@
 void network_send_save_file(s32 fileIndex) {
     if (gNetworkPlayerServer == NULL) { return; }
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_SAVE_FILE, true, PLMT_NONE);
     packet_write(&p, &fileIndex, sizeof(s32));
     network_send_to(gNetworkPlayerServer->localIndex, &p);

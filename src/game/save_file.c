@@ -485,7 +485,7 @@ void save_file_reload(void) {
  * Update the current save file after collecting a star or a key.
  * If coin score is greater than the current high score, update it.
  */
-void save_file_collect_star_or_key(s16 coinScore, s16 starIndex) {
+void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork) {
 
     s32 fileIndex = gCurrSaveFileNum - 1;
     s32 courseIndex = gCurrCourseNum - 1;
@@ -493,12 +493,14 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex) {
     s32 starFlag = 1 << starIndex;
     UNUSED s32 flags = save_file_get_flags();
 
-    gLastCompletedCourseNum = courseIndex + 1;
-    gLastCompletedStarNum = starIndex + 1;
-    sUnusedGotGlobalCoinHiScore = 0;
-    gGotFileCoinHiScore = 0;
+    if (!fromNetwork) {
+        gLastCompletedCourseNum = courseIndex + 1;
+        gLastCompletedStarNum = starIndex + 1;
+        sUnusedGotGlobalCoinHiScore = 0;
+        gGotFileCoinHiScore = 0;
+    }
 
-    if (courseIndex >= 0 && courseIndex < COURSE_STAGES_COUNT) {
+    if (courseIndex >= 0 && courseIndex < COURSE_STAGES_COUNT && !fromNetwork) {
         //! Compares the coin score as a 16 bit value, but only writes the 8 bit
         // truncation. This can allow a high score to decrease.
 

@@ -36,7 +36,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     }
 
     // write header
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_MACRO, true, PLMT_NONE);
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActStarNum, sizeof(s16));

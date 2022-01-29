@@ -47,7 +47,7 @@ static struct Object* find_nearest_star(const BehaviorScript* behavior, f32* pos
 void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
     u16 behaviorId = get_id_from_behavior(o->behavior);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_COLLECT_STAR, true, PLMT_NONE);
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gCurrCourseNum,   sizeof(s16));
@@ -84,7 +84,7 @@ void network_receive_collect_star(struct Packet* p) {
 
     const void* behavior = get_behavior_from_id(behaviorId);
 
-    save_file_collect_star_or_key(coinScore, starIndex);
+    save_file_collect_star_or_key(coinScore, starIndex, 1);
 
     s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
     for (int i = 0; i < MAX_PLAYERS; i++) {

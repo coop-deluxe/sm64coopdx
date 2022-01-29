@@ -17,6 +17,7 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/smlua.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -30,7 +31,7 @@ void network_send_join_request(void) {
 
     gOverrideEeprom = eeprom;
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
@@ -78,7 +79,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     LOG_INFO("sending version: %s", version);
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN, true, PLMT_NONE);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &joinRequestPacket->localIndex, sizeof(u8));
@@ -215,4 +216,6 @@ void network_receive_join(struct Packet* p) {
     fake_lvl_init_from_save_file();
     extern s16 gChangeLevel;
     gChangeLevel = 16;
+
+    smlua_init();
 }

@@ -12,9 +12,11 @@
 #include "memory.h"
 #include "behavior_data.h"
 #include "thread6.h"
+#include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua.h"
 
 struct LandingAction {
     s16 numFrames;
@@ -1997,48 +1999,51 @@ s32 mario_execute_moving_action(struct MarioState *m) {
         return TRUE;
     }
 
-    /* clang-format off */
-    switch (m->action) {
-        case ACT_WALKING:                  cancel = act_walking(m);                  break;
-        case ACT_HOLD_WALKING:             cancel = act_hold_walking(m);             break;
-        case ACT_HOLD_HEAVY_WALKING:       cancel = act_hold_heavy_walking(m);       break;
-        case ACT_TURNING_AROUND:           cancel = act_turning_around(m);           break;
-        case ACT_FINISH_TURNING_AROUND:    cancel = act_finish_turning_around(m);    break;
-        case ACT_BRAKING:                  cancel = act_braking(m);                  break;
-        case ACT_RIDING_SHELL_GROUND:      cancel = act_riding_shell_ground(m);      break;
-        case ACT_CRAWLING:                 cancel = act_crawling(m);                 break;
-        case ACT_BURNING_GROUND:           cancel = act_burning_ground(m);           break;
-        case ACT_DECELERATING:             cancel = act_decelerating(m);             break;
-        case ACT_HOLD_DECELERATING:        cancel = act_hold_decelerating(m);        break;
-        case ACT_BUTT_SLIDE:               cancel = act_butt_slide(m);               break;
-        case ACT_STOMACH_SLIDE:            cancel = act_stomach_slide(m);            break;
-        case ACT_HOLD_BUTT_SLIDE:          cancel = act_hold_butt_slide(m);          break;
-        case ACT_HOLD_STOMACH_SLIDE:       cancel = act_hold_stomach_slide(m);       break;
-        case ACT_DIVE_SLIDE:               cancel = act_dive_slide(m);               break;
-        case ACT_MOVE_PUNCHING:            cancel = act_move_punching(m);            break;
-        case ACT_CROUCH_SLIDE:             cancel = act_crouch_slide(m);             break;
-        case ACT_SLIDE_KICK_SLIDE:         cancel = act_slide_kick_slide(m);         break;
-        case ACT_HARD_BACKWARD_GROUND_KB:  cancel = act_hard_backward_ground_kb(m);  break;
-        case ACT_HARD_FORWARD_GROUND_KB:   cancel = act_hard_forward_ground_kb(m);   break;
-        case ACT_BACKWARD_GROUND_KB:       cancel = act_backward_ground_kb(m);       break;
-        case ACT_FORWARD_GROUND_KB:        cancel = act_forward_ground_kb(m);        break;
-        case ACT_SOFT_BACKWARD_GROUND_KB:  cancel = act_soft_backward_ground_kb(m);  break;
-        case ACT_SOFT_FORWARD_GROUND_KB:   cancel = act_soft_forward_ground_kb(m);   break;
-        case ACT_GROUND_BONK:              cancel = act_ground_bonk(m);              break;
-        case ACT_DEATH_EXIT_LAND:          cancel = act_death_exit_land(m);          break;
-        case ACT_JUMP_LAND:                cancel = act_jump_land(m);                break;
-        case ACT_FREEFALL_LAND:            cancel = act_freefall_land(m);            break;
-        case ACT_DOUBLE_JUMP_LAND:         cancel = act_double_jump_land(m);         break;
-        case ACT_SIDE_FLIP_LAND:           cancel = act_side_flip_land(m);           break;
-        case ACT_HOLD_JUMP_LAND:           cancel = act_hold_jump_land(m);           break;
-        case ACT_HOLD_FREEFALL_LAND:       cancel = act_hold_freefall_land(m);       break;
-        case ACT_TRIPLE_JUMP_LAND:         cancel = act_triple_jump_land(m);         break;
-        case ACT_BACKFLIP_LAND:            cancel = act_backflip_land(m);            break;
-        case ACT_QUICKSAND_JUMP_LAND:      cancel = act_quicksand_jump_land(m);      break;
-        case ACT_HOLD_QUICKSAND_JUMP_LAND: cancel = act_hold_quicksand_jump_land(m); break;
-        case ACT_LONG_JUMP_LAND:           cancel = act_long_jump_land(m);           break;
+    if (!smlua_call_action_hook(m, &cancel)) {
+        /* clang-format off */
+        switch (m->action) {
+            case ACT_WALKING:                  cancel = act_walking(m);                  break;
+            case ACT_HOLD_WALKING:             cancel = act_hold_walking(m);             break;
+            case ACT_HOLD_HEAVY_WALKING:       cancel = act_hold_heavy_walking(m);       break;
+            case ACT_TURNING_AROUND:           cancel = act_turning_around(m);           break;
+            case ACT_FINISH_TURNING_AROUND:    cancel = act_finish_turning_around(m);    break;
+            case ACT_BRAKING:                  cancel = act_braking(m);                  break;
+            case ACT_RIDING_SHELL_GROUND:      cancel = act_riding_shell_ground(m);      break;
+            case ACT_CRAWLING:                 cancel = act_crawling(m);                 break;
+            case ACT_BURNING_GROUND:           cancel = act_burning_ground(m);           break;
+            case ACT_DECELERATING:             cancel = act_decelerating(m);             break;
+            case ACT_HOLD_DECELERATING:        cancel = act_hold_decelerating(m);        break;
+            case ACT_BUTT_SLIDE:               cancel = act_butt_slide(m);               break;
+            case ACT_STOMACH_SLIDE:            cancel = act_stomach_slide(m);            break;
+            case ACT_HOLD_BUTT_SLIDE:          cancel = act_hold_butt_slide(m);          break;
+            case ACT_HOLD_STOMACH_SLIDE:       cancel = act_hold_stomach_slide(m);       break;
+            case ACT_DIVE_SLIDE:               cancel = act_dive_slide(m);               break;
+            case ACT_MOVE_PUNCHING:            cancel = act_move_punching(m);            break;
+            case ACT_CROUCH_SLIDE:             cancel = act_crouch_slide(m);             break;
+            case ACT_SLIDE_KICK_SLIDE:         cancel = act_slide_kick_slide(m);         break;
+            case ACT_HARD_BACKWARD_GROUND_KB:  cancel = act_hard_backward_ground_kb(m);  break;
+            case ACT_HARD_FORWARD_GROUND_KB:   cancel = act_hard_forward_ground_kb(m);   break;
+            case ACT_BACKWARD_GROUND_KB:       cancel = act_backward_ground_kb(m);       break;
+            case ACT_FORWARD_GROUND_KB:        cancel = act_forward_ground_kb(m);        break;
+            case ACT_SOFT_BACKWARD_GROUND_KB:  cancel = act_soft_backward_ground_kb(m);  break;
+            case ACT_SOFT_FORWARD_GROUND_KB:   cancel = act_soft_forward_ground_kb(m);   break;
+            case ACT_GROUND_BONK:              cancel = act_ground_bonk(m);              break;
+            case ACT_DEATH_EXIT_LAND:          cancel = act_death_exit_land(m);          break;
+            case ACT_JUMP_LAND:                cancel = act_jump_land(m);                break;
+            case ACT_FREEFALL_LAND:            cancel = act_freefall_land(m);            break;
+            case ACT_DOUBLE_JUMP_LAND:         cancel = act_double_jump_land(m);         break;
+            case ACT_SIDE_FLIP_LAND:           cancel = act_side_flip_land(m);           break;
+            case ACT_HOLD_JUMP_LAND:           cancel = act_hold_jump_land(m);           break;
+            case ACT_HOLD_FREEFALL_LAND:       cancel = act_hold_freefall_land(m);       break;
+            case ACT_TRIPLE_JUMP_LAND:         cancel = act_triple_jump_land(m);         break;
+            case ACT_BACKFLIP_LAND:            cancel = act_backflip_land(m);            break;
+            case ACT_QUICKSAND_JUMP_LAND:      cancel = act_quicksand_jump_land(m);      break;
+            case ACT_HOLD_QUICKSAND_JUMP_LAND: cancel = act_hold_quicksand_jump_land(m); break;
+            case ACT_LONG_JUMP_LAND:           cancel = act_long_jump_land(m);           break;
+            default: LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action); return true;
+        }
+        /* clang-format on */
     }
-    /* clang-format on */
 
     if (!cancel && (m->input & INPUT_IN_WATER)) {
         m->particleFlags |= PARTICLE_WAVE_TRAIL;

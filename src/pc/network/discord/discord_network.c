@@ -13,10 +13,12 @@ u8 discord_user_id_to_local_index(int64_t userId) {
     return UNKNOWN_LOCAL_INDEX;
 }
 
-int ns_discord_network_send(u8 localIndex, u8* data, u16 dataLength) {
+int ns_discord_network_send(u8 localIndex, void* address, u8* data, u16 dataLength) {
     if (!gDiscordInitialized) { return 1; }
     if (gCurLobbyId == 0) { return 2; }
-    DISCORD_REQUIRE(app.lobbies->send_network_message(app.lobbies, gCurLobbyId, gNetworkUserIds[localIndex], 0, data, dataLength));
+    DiscordUserId userId = gNetworkUserIds[localIndex];
+    if (localIndex == 0 && address != NULL) { userId = *(DiscordUserId*)address; }
+    DISCORD_REQUIRE(app.lobbies->send_network_message(app.lobbies, gCurLobbyId, userId, 0, data, dataLength));
     return 0;
 }
 
@@ -31,7 +33,7 @@ void discord_network_on_message(UNUSED void* eventData, UNUSED int64_t lobbyId, 
         }
     }
 
-    network_receive(localIndex, (u8*)data, (u16)dataLength);
+    network_receive(localIndex, &userId, (u8*)data, (u16)dataLength);
 }
 
 void discord_network_flush(void) {
@@ -46,14 +48,14 @@ void ns_discord_save_id(u8 localId, s64 networkId) {
     assert(localId > 0);
     assert(localId < MAX_PLAYERS);
     gNetworkUserIds[localId] = (networkId == 0) ? gNetworkUserIds[0] : networkId;
-    LOGFILE_INFO(LFT_DISCORD, "saved user id %d == %lld", localId, gNetworkUserIds[localId]);
+    LOGFILE_INFO(LFT_DISCORD, "saved user id %d == " DISCORD_ID_FORMAT, localId, gNetworkUserIds[localId]);
 }
 
 void ns_discord_clear_id(u8 localId) {
     if (localId == 0) { return; }
     assert(localId < MAX_PLAYERS);
     gNetworkUserIds[localId] = 0;
-    LOGFILE_INFO(LFT_DISCORD, "cleared user id %d == %lld", localId, gNetworkUserIds[localId]);
+    LOGFILE_INFO(LFT_DISCORD, "cleared user id %d == " DISCORD_ID_FORMAT, localId, gNetworkUserIds[localId]);
 }
 
 void discord_network_init(int64_t lobbyId) {
@@ -66,5 +68,5 @@ void discord_network_shutdown(void) {
     app.lobbies->flush_network(app.lobbies);
     if (gCurLobbyId == 0) { return; }
     app.lobbies->disconnect_network(app.lobbies, gCurLobbyId);
-    LOGFILE_INFO(LFT_DISCORD, "shutdown network, lobby = %lld", gCurLobbyId);
+    LOGFILE_INFO(LFT_DISCORD, "shutdown network, lobby = " DISCORD_ID_FORMAT, gCurLobbyId);
 }

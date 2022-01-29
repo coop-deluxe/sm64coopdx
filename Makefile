@@ -327,7 +327,7 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 
 # Hi, I'm a PC
 SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
-SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/djui
+SRC_DIRS += src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/djui src/pc/lua
 ASM_DIRS :=
 
 #ifeq ($(DISCORDRPC),1)
@@ -485,6 +485,8 @@ ifeq ($(DISCORD_SDK), 1)
   endif
 endif
 
+MOD_DIR := mods
+
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
 
@@ -494,6 +496,10 @@ SEG_FILES := $(SEGMENT_ELF_FILES) $(ACTOR_ELF_FILES) $(LEVEL_ELF_FILES)
 ##################### Compiler Options #######################
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
 ENDIAN_BITWIDTH := $(BUILD_DIR)/endian-and-bitwidth
+
+
+# coop-specific includes
+INCLUDE_CFLAGS += -I lib/lua/include
 
 # Huge deleted N64 section was here
 
@@ -550,6 +556,9 @@ BACKEND_LDFLAG0S :=
 
 SDL1_USED := 0
 SDL2_USED := 0
+
+# suppress warnings
+BACKEND_CFLAGS += -Wno-format-truncation
 
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
 ifeq ($(WINDOW_API),DXGI)
@@ -752,6 +761,20 @@ endif
 
 # coop specific libraries
 
+# lua
+ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(TARGET_BITS), 32)
+    LDFLAGS += -Llib/lua/win32 -l:liblua53.a
+  else
+    LDFLAGS += -Llib/lua/win64 -l:liblua53.a
+  endif
+else ifeq ($(OSX_BUILD),1)
+  LDFLAGS += -L./lib/lua/mac/ -l lua53
+else
+  LDFLAGS += -Llib/lua/linux -l:liblua53.a
+endif
+
+# network
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
@@ -762,7 +785,6 @@ else
     LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
   endif
 endif
-
 
 # End of LDFLAGS
 
@@ -855,6 +877,9 @@ $(BUILD_DIR)/$(RPC_LIBS):
 
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
+
+$(BUILD_DIR)/$(MOD_DIR):
+	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
 libultra: $(BUILD_DIR)/libultra.a
 
@@ -1106,7 +1131,7 @@ $(BUILD_DIR)/%.o: %.s
 
 
 
-$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS)
+$(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(MOD_DIR)
 	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 
 .PHONY: all clean distclean default diff test load libultra res

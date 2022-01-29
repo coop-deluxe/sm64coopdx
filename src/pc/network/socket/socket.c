@@ -36,7 +36,7 @@ static int socket_send(SOCKET socket, struct sockaddr_in* addr, u8* buffer, u16 
 static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer, u16 bufferLength, u16* receiveLength, u8* localIndex) {
     *receiveLength = 0;
 
-    int rxAddrSize = sizeof(struct sockaddr_in);
+    RX_ADDR_SIZE_TYPE rxAddrSize = sizeof(struct sockaddr_in);
     int rc = recvfrom(socket, (char*)buffer, bufferLength, 0, (struct sockaddr*)rxAddr, &rxAddrSize);
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -94,7 +94,7 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
     LOG_INFO("initialized");
 
     if (networkType == NT_CLIENT) {
-        network_send_join_request();
+        network_send_mod_list_request();
     }
 
     // success
@@ -119,6 +119,16 @@ static void ns_socket_clear_id(u8 localId) {
     LOG_INFO("cleared addr for id %d", localId);
 }
 
+static void* ns_socket_dup_addr(u8 localIndex) {
+    void* address = malloc(sizeof(struct sockaddr_in));
+    memcpy(address, &addr[localIndex], sizeof(struct sockaddr_in));
+    return address;
+}
+
+static bool ns_socket_match_addr(void* addr1, void* addr2) {
+    return !memcmp(addr1, addr2, sizeof(struct sockaddr_in));
+}
+
 static void ns_socket_update(void) {
     if (gNetworkType == NT_NONE) { return; }
     do {
@@ -129,16 +139,20 @@ static void ns_socket_update(void) {
         int rc = socket_receive(curSocket, &addr[0], data, PACKET_LENGTH + 1, &dataLength, &localIndex);
         assert(dataLength < PACKET_LENGTH);
         if (rc != NO_ERROR) { break; }
-        network_receive(localIndex, data, dataLength);
+        network_receive(localIndex, &addr[0], data, dataLength);
     } while (true);
 }
 
-static int ns_socket_send(u8 localIndex, u8* data, u16 dataLength) {
+static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength) {
     if (localIndex != 0) {
         if (gNetworkType == NT_SERVER && gNetworkPlayers[localIndex].type != NPT_CLIENT) { return SOCKET_ERROR; }
         if (gNetworkType == NT_CLIENT && gNetworkPlayers[localIndex].type != NPT_SERVER) { return SOCKET_ERROR; }
     }
-    int rc = socket_send(curSocket, &addr[localIndex], data, dataLength);
+
+    struct sockaddr_in* userAddr = &addr[localIndex];
+    if (localIndex == 0 && address != NULL) { userAddr = (struct sockaddr_in*)address; }
+
+    int rc = socket_send(curSocket, userAddr, data, dataLength);
     if (rc) {
         LOG_ERROR("    localIndex: %d, packetType: %d, dataLength: %d", localIndex, data[0], dataLength);
     }
@@ -156,6 +170,8 @@ struct NetworkSystem gNetworkSystemSocket = {
     .get_id     = ns_socket_get_id,
     .save_id    = ns_socket_save_id,
     .clear_id   = ns_socket_clear_id,
+    .dup_addr   = ns_socket_dup_addr,
+    .match_addr = ns_socket_match_addr,
     .update     = ns_socket_update,
     .send       = ns_socket_send,
     .shutdown   = ns_socket_shutdown,

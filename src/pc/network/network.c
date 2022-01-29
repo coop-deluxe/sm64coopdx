@@ -12,6 +12,8 @@
 #include "pc/cheats.h"
 #include "pc/djui/djui.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/smlua.h"
+#include "pc/mod_list.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -33,6 +35,7 @@ bool gNetworkAreaLoaded = false;
 bool gNetworkAreaSyncing = true;
 u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
+void* gNetworkServerAddr = NULL;
 
 struct StringLinkedList gRegisteredMods = { 0 };
 
@@ -47,6 +50,7 @@ struct ServerSettings gServerSettings = {
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
+    network_forget_all_reliable();
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
 #ifdef DISCORD_SDK
@@ -84,11 +88,17 @@ bool network_init(enum NetworkType inNetworkType) {
         LOG_ERROR("failed to initialize network system");
         return false;
     }
+    if (gNetworkServerAddr != NULL) {
+        free(gNetworkServerAddr);
+        gNetworkServerAddr = NULL;
+    }
 
     // set network type
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
+        smlua_init();
+
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
@@ -125,17 +135,25 @@ void network_on_loaded_area(void) {
     }
 }
 
+bool network_allow_unknown_local_index(enum PacketType packetType) {
+    return (packetType == PACKET_JOIN_REQUEST)
+        || (packetType == PACKET_KICK)
+        || (packetType == PACKET_ACK)
+        || (packetType == PACKET_MOD_LIST_REQUEST)
+        || (packetType == PACKET_MOD_LIST)
+        || (packetType == PACKET_DOWNLOAD_REQUEST)
+        || (packetType == PACKET_DOWNLOAD);
+}
+
 void network_send_to(u8 localIndex, struct Packet* p) {
     // sanity checks
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
-    if (localIndex == 0) {
-        if (p->buffer[0] != PACKET_JOIN_REQUEST && p->buffer[0] != PACKET_KICK && p->buffer[0] != PACKET_ACK) {
-            LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
-            SOFT_ASSERT(false);
-            return;
-        }
+    if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
+        LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
+        SOFT_ASSERT(false);
+        return;
     }
 
     if (gNetworkType == NT_SERVER) {
@@ -203,7 +221,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     // send
     if (!tooManyPackets) {
-        int rc = gNetworkSystem->send(localIndex, p->buffer, p->cursor + sizeof(u32));
+        int rc = gNetworkSystem->send(localIndex, p->addr, p->buffer, p->cursor + sizeof(u32));
         if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
     }
     p->sent = true;
@@ -212,6 +230,9 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 }
 
 void network_send(struct Packet* p) {
+    // prevent errors during writing from propagating
+    if (p->writeError) { return; }
+
     // set the flags again
     packet_set_flags(p);
 
@@ -246,11 +267,12 @@ void network_send(struct Packet* p) {
     }
 }
 
-void network_receive(u8 localIndex, u8* data, u16 dataLength) {
+void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     // receive packet
     struct Packet p = {
         .localIndex = localIndex,
         .cursor = 3,
+        .addr = addr,
         .buffer = { 0 },
         .dataLength = dataLength,
     };
@@ -269,6 +291,11 @@ void network_receive(u8 localIndex, u8* data, u16 dataLength) {
 
     // execute packet
     packet_receive(&p);
+}
+
+void* network_duplicate_address(u8 localIndex) {
+    assert(localIndex < MAX_PLAYERS);
+    return gNetworkSystem->dup_addr(localIndex);
 }
 
 static void network_update_area_timer(void) {
@@ -355,6 +382,11 @@ void network_shutdown(bool sendLeaving) {
     if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
     network_player_shutdown();
     gNetworkSystem->shutdown();
+
+    if (gNetworkServerAddr != NULL) {
+        free(gNetworkServerAddr);
+        gNetworkServerAddr = NULL;
+    }
 
     gNetworkType = NT_NONE;
 }

@@ -35,7 +35,7 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     }
 
     // write header
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_SPAWN_INFO, true, PLMT_NONE);
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActStarNum, sizeof(s16));

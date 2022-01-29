@@ -19,7 +19,7 @@ void network_send_debug_sync(void) {
         objectCount++;
     }
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_DEBUG_SYNC, true, PLMT_AREA);
     packet_write(&p, &objectCount, sizeof(u8));
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {

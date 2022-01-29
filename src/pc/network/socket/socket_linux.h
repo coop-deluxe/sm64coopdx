@@ -17,5 +17,6 @@
 #define closesocket(fd) close(fd)
 #define SOCKET_EWOULDBLOCK EWOULDBLOCK
 #define SOCKET_ECONNRESET ECONNRESET
+#define RX_ADDR_SIZE_TYPE unsigned int
 
 #endif

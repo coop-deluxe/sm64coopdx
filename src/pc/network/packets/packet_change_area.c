@@ -44,7 +44,7 @@ void network_send_change_area(void) {
         return;
     }
 
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_CHANGE_AREA, true, PLMT_NONE);
     packet_write(&p, &gCurrCourseNum,  sizeof(s16));
     packet_write(&p, &gCurrActStarNum, sizeof(s16));

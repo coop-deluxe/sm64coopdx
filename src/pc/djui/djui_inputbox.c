@@ -15,6 +15,21 @@ static u8 sHeldShift = 0;
 static u8 sHeldControl = 0;
 static u8 sCursorBlink = 0;
 
+static void djui_inputbox_update_style(struct DjuiBase* base) {
+    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
+    if (!inputbox->base.enabled) {
+        djui_base_set_border_color(base, 90, 90, 90, 255);
+        djui_base_set_color(&inputbox->base, 140, 140, 140, 255);
+    } else if (gDjuiCursorDownOn == base) {
+    } else if (gDjuiHovered == base) {
+        djui_base_set_border_color(base, 0, 120, 215, 255);
+        djui_base_set_color(&inputbox->base, 255, 255, 255, 255);
+    } else {
+        djui_base_set_border_color(base, 150, 150, 150, 255);
+        djui_base_set_color(&inputbox->base, 240, 240, 240, 255);
+    }
+}
+
 static void djui_inputbox_on_change(struct DjuiInputbox* inputbox) {
     struct DjuiBase* base = &inputbox->base;
     if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
@@ -46,27 +61,6 @@ void djui_inputbox_hook_escape_press(struct DjuiInputbox* inputbox, void (*on_es
     inputbox->on_escape_press = on_escape_press;
 }
 
-static void djui_inputbox_set_default_style(struct DjuiBase* base) {
-    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
-    if (inputbox->base.enabled) {
-        djui_base_set_border_color(base, 150, 150, 150, 255);
-        djui_base_set_color(&inputbox->base, 240, 240, 240, 255);
-    } else {
-        djui_base_set_border_color(base, 90, 90, 90, 255);
-        djui_base_set_color(&inputbox->base, 140, 140, 140, 255);
-    }
-}
-
-static void djui_inputbox_on_hover(struct DjuiBase* base) {
-    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
-    djui_base_set_border_color(base, 0, 120, 215, 255);
-    djui_base_set_color(&inputbox->base, 255, 255, 255, 255);
-}
-
-static void djui_inputbox_on_hover_end(struct DjuiBase* base) {
-    djui_inputbox_set_default_style(base);
-}
-
 static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
     const struct DjuiFont* font = gDjuiFonts[0];
@@ -92,10 +86,6 @@ static void djui_inputbox_on_cursor_down(struct DjuiBase* base) {
     inputbox->selection[0] = index;
 }
 
-static void djui_inputbox_on_cursor_down_end(struct DjuiBase* base) {
-    djui_inputbox_set_default_style(base);
-}
-
 static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     u16 index = djui_inputbox_get_cursor_index(inputbox);
@@ -103,9 +93,9 @@ static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED boo
     if (selLength != strlen(inputbox->buffer) || djui_interactable_is_input_focus(base)) {
         inputbox->selection[0] = index;
         inputbox->selection[1] = index;
-        djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, djui_inputbox_on_cursor_down_end);
+        djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);
     } else {
-        djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, NULL, djui_inputbox_on_cursor_down_end);
+        djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, NULL, NULL);
     }
     sCursorBlink = 0;
     djui_interactable_set_input_focus(base);
@@ -543,14 +533,13 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_base_set_size(base, 200, 32);
     djui_base_set_border_width(base, 2);
     djui_inputbox_set_text_color(inputbox, 0, 0, 0, 255);
-    djui_interactable_create(base);
-    djui_interactable_hook_hover(base, djui_inputbox_on_hover, djui_inputbox_on_hover_end);
-    djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, djui_inputbox_on_cursor_down_end);
+    djui_interactable_create(base, djui_inputbox_update_style);
+    djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);
     djui_interactable_hook_key(base, djui_inputbox_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_focus(base, djui_inputbox_on_focus_begin, NULL, djui_inputbox_on_focus_end);
     djui_interactable_hook_text_input(base, djui_inputbox_on_text_input);
-    djui_interactable_hook_enabled_change(base, djui_inputbox_set_default_style);
-    djui_inputbox_set_default_style(base);
+
+    djui_inputbox_update_style(base);
 
     return inputbox;
 }

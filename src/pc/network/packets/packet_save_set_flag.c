@@ -4,7 +4,7 @@
 #include "buffers/buffers.h"
 
 void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, u32 flags) {
-    struct Packet p;
+    struct Packet p = { 0 };
     packet_init(&p, PACKET_SAVE_SET_FLAG, true, PLMT_NONE);
     packet_write(&p, &fileIndex,   sizeof(s32));
     packet_write(&p, &courseIndex, sizeof(s32));

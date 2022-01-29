@@ -9,10 +9,13 @@
 
 #include "sm64.h"
 
+#include "pc/lua/smlua.h"
+
 #include "game/memory.h"
 #include "audio/external.h"
 
 #include "network/network.h"
+#include "lua/smlua.h"
 
 #include "gfx/gfx_pc.h"
 
@@ -45,6 +48,8 @@
 #include "pc/network/version.h"
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
+
+#include "pc/mod_list.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -121,6 +126,7 @@ void produce_one_frame(void) {
     set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
 
     game_loop_one_iteration();
+    smlua_update();
     thread6_rumble_loop(NULL);
 
     int samples_left = audio_api->buffered();
@@ -164,6 +170,8 @@ void game_deinit(void) {
     audio_shutdown();
     gfx_shutdown();
     network_shutdown(true);
+    smlua_shutdown();
+    mod_list_shutdown();
     inited = false;
 }
 
@@ -213,6 +221,7 @@ void main_func(void) {
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
+    mod_list_init();
     configfile_load(configfile_name());
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
     if (configPlayerPalette >= 16) { configPlayerPalette = 0; }
