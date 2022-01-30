@@ -366,26 +366,6 @@
 <br />
 
 
-## [get_character](#get_character)
-
-### Lua Example
-`local CharacterValue = get_character(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-[Character](structs.md#Character)
-
-### C Prototype
-`struct Character* get_character(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_character_anim_offset](#get_character_anim_offset)
 
 ### Lua Example
@@ -1149,28 +1129,6 @@
 
 <br />
 
-## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
-
-### Lua Example
-`local SurfaceValue = resolve_and_return_wall_collisions(pos, offset, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| offset | number |
-| radius | number |
-
-### Returns
-[Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [return_mario_anim_y_translation](#return_mario_anim_y_translation)
 
 ### Lua Example
@@ -1414,28 +1372,6 @@
 
 ### C Prototype
 `void update_mario_sound_and_camera(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_find_ceil](#vec3f_find_ceil)
-
-### Lua Example
-`local numberValue = vec3f_find_ceil(pos, height, ceil)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| height | number |
-| ceil | [Surface](structs.md#Surface) |
-
-### Returns
-- number
-
-### C Prototype
-`f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil);`
 
 [:arrow_up_small:](#)
 
@@ -3515,29 +3451,6 @@
 
 <br />
 
-## [spawn_obj_at_mario_rel_yaw](#spawn_obj_at_mario_rel_yaw)
-
-### Lua Example
-`local ObjectValue = spawn_obj_at_mario_rel_yaw(m, model, behavior, relYaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| model | integer |
-| behavior | BehaviorScript * |
-| relYaw | integer |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, BehaviorScript *behavior, s16 relYaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [stuck_in_ground_handler](#stuck_in_ground_handler)
 
 ### Lua Example
@@ -4912,76 +4825,6 @@
 <br />
 
 
-## [f32_find_wall_collision](#f32_find_wall_collision)
-
-### Lua Example
-`local integerValue = f32_find_wall_collision(xPtr, yPtr, zPtr, offsetY, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| xPtr | f32 * |
-| yPtr | f32 * |
-| zPtr | f32 * |
-| offsetY | number |
-| radius | number |
-
-### Returns
-- integer
-
-### C Prototype
-`s32 f32_find_wall_collision(f32 *xPtr, f32 *yPtr, f32 *zPtr, f32 offsetY, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_ceil](#find_ceil)
-
-### Lua Example
-`local numberValue = find_ceil(posX, posY, posZ, pceil)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| posX | number |
-| posY | number |
-| posZ | number |
-| pceil | [Surface](structs.md#Surface) |
-
-### Returns
-- number
-
-### C Prototype
-`f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_floor](#find_floor)
-
-### Lua Example
-`local numberValue = find_floor(xPos, yPos, zPos, pfloor)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| xPos | number |
-| yPos | number |
-| zPos | number |
-| pfloor | [Surface](structs.md#Surface) |
-
-### Returns
-- number
-
-### C Prototype
-`f32 find_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfloor);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [find_floor_height](#find_floor_height)
 
 ### Lua Example
@@ -5004,29 +4847,6 @@
 
 <br />
 
-## [find_floor_height_and_data](#find_floor_height_and_data)
-
-### Lua Example
-`local numberValue = find_floor_height_and_data(xPos, yPos, zPos, floorGeo)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| xPos | number |
-| yPos | number |
-| zPos | number |
-| floorGeo | [FloorGeometry](structs.md#FloorGeometry) |
-
-### Returns
-- number
-
-### C Prototype
-`f32 find_floor_height_and_data(f32 xPos, f32 yPos, f32 zPos, struct FloorGeometry **floorGeo);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [find_poison_gas_level](#find_poison_gas_level)
 
 ### Lua Example
@@ -5043,29 +4863,6 @@
 
 ### C Prototype
 `f32 find_poison_gas_level(f32 x, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_surface_on_ray](#find_surface_on_ray)
-
-### Lua Example
-`find_surface_on_ray(orig, dir, hit_surface, hit_pos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| orig | [Vec3f](structs.md#Vec3f) |
-| dir | [Vec3f](structs.md#Vec3f) |
-| hit_surface | [Surface](structs.md#Surface) |
-| hit_pos | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos);`
 
 [:arrow_up_small:](#)
 

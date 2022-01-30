@@ -285,6 +285,9 @@ def doc_function_index(processed_files):
     return s
 
 def doc_function(function):
+    if not function['implemented']:
+        return ''
+
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
