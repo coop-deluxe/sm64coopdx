@@ -20,6 +20,7 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 <br />
 
 ## Exposed from SM64
+- [Hooks](hooks.md)
 - [Constants](constants.md)
 - [Functions](functions.md)
 - [Structs](structs.md)
