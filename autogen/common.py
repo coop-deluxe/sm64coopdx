@@ -63,3 +63,24 @@ def gen_comment_header(f):
     s += ""   + comment_l + "\n"
     s += "\n"
     return s
+
+def translate_type_to_lua(ptype):
+    if ptype.startswith('struct '):
+        return ptype.split(' ')[1].replace('*', ''), True
+
+    if 'Vec3' in ptype:
+        return ptype, True
+
+    if ptype.startswith('enum '):
+        return 'integer', False
+
+    if ptype in usf_types:
+        if ptype.startswith('f'):
+            return 'number', False
+        else:
+            return 'integer', False
+
+    if 'void' == ptype:
+        return None, False
+
+    return ptype, False

@@ -7,6 +7,7 @@ integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
 number_types = ["f32", "float"]
 param_override_build = {}
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
+docs_lua_functions = 'docs/lua/functions.md'
 
 ###########################################################
 
@@ -75,17 +76,9 @@ param_override_build['Vec3s'] = {
     'after': param_vec3s_after_call
 }
 
-###########################################################
+############################################################################
 
-built_functions = ""
-built_binds = ""
-
-#######
-
-do_extern = False
 header_h = ""
-
-functions = []
 
 def reject_line(line):
     if len(line) == 0:
@@ -104,46 +97,7 @@ def normalize_type(t):
         t = parts[0] + ' ' + parts[1].replace(' ', '')
     return t
 
-def process_line(line):
-    function = {}
-
-    line = line.strip()
-    function['line'] = line
-
-    line = line.replace('UNUSED', '')
-
-    match = re.search('[a-zA-Z0-9_]+\(', line)
-    function['type'] = normalize_type(line[0:match.span()[0]])
-    function['identifier'] = match.group()[0:-1]
-
-    function['params'] = []
-    params_str = line.split('(', 1)[1].rsplit(')', 1)[0].strip()
-    if len(params_str) == 0 or params_str == 'void':
-        pass
-    else:
-        param_index = 0
-        for param_str in params_str.split(','):
-            param = {}
-            param_str = param_str.strip()
-            if param_str.endswith('*') or ' ' not in param_str:
-                param['type'] = normalize_type(param_str)
-                param['identifier'] = 'arg%d' % param_index
-            else:
-                match = re.search('[a-zA-Z0-9_]+$', param_str)
-                param['type'] = normalize_type(param_str[0:match.span()[0]])
-                param['identifier'] = match.group()
-            function['params'].append(param)
-            param_index += 1
-
-    functions.append(function)
-
-def process_lines(file_str):
-    for line in file_str.splitlines():
-        if reject_line(line):
-            global rejects
-            rejects += line + '\n'
-            continue
-        process_line(line)
+############################################################################
 
 def build_param(param, i):
     ptype = param['type']
@@ -192,7 +146,9 @@ def build_call(function):
 
     return '    %s(L, %s);\n' % (lfunc, ccall)
 
-def build_function(function):
+def build_function(function, do_extern):
+    s = ''
+
     if len(function['params']) <= 0:
         s = 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
     else:
@@ -207,7 +163,6 @@ def build_function(function):
         i += 1
     s += '\n'
 
-    global do_extern
     if do_extern:
         s += '    extern %s\n' % function['line']
 
@@ -225,12 +180,16 @@ def build_function(function):
     if 'UNIMPLEMENTED' in s:
         s = "/*\n" + s + "*/\n"
 
-    global built_functions
-    built_functions += s + "\n"
+    return s + "\n"
 
-def build_functions():
-    for function in functions:
-        build_function(function)
+def build_functions(processed_files):
+    s = ''
+    for processed_file in processed_files:
+        s += gen_comment_header(processed_file['filename'])
+
+        for function in processed_file['functions']:
+            s += build_function(function, processed_file['extern'])
+    return s
 
 def build_bind(function):
     s = 'smlua_bind_function(L, "%s", smlua_func_%s);' % (function['identifier'], function['identifier'])
@@ -238,45 +197,172 @@ def build_bind(function):
         s = '    ' + s
     else:
         s = '    //' + s + ' <--- UNIMPLEMENTED'
-    global built_binds
-    built_binds += s + "\n"
+    return s + "\n"
 
-def build_binds(fname):
-    global built_binds
-    built_binds += "\n    // " + fname.split('/')[-1] + "\n"
-    for function in functions:
-        build_bind(function)
+def build_binds(processed_files):
+    s = ''
+    for processed_file in processed_files:
+        s += "\n    // " + processed_file['filename'] + "\n"
+
+        for function in processed_file['functions']:
+            s += build_bind(function)
+    return s
+
+############################################################################
+
+def process_function(line):
+    function = {}
+
+    line = line.strip()
+    function['line'] = line
+
+    line = line.replace('UNUSED', '')
+
+    match = re.search('[a-zA-Z0-9_]+\(', line)
+    function['type'] = normalize_type(line[0:match.span()[0]])
+    function['identifier'] = match.group()[0:-1]
+
+    function['params'] = []
+    params_str = line.split('(', 1)[1].rsplit(')', 1)[0].strip()
+    if len(params_str) == 0 or params_str == 'void':
+        pass
+    else:
+        param_index = 0
+        for param_str in params_str.split(','):
+            param = {}
+            param_str = param_str.strip()
+            if param_str.endswith('*') or ' ' not in param_str:
+                param['type'] = normalize_type(param_str)
+                param['identifier'] = 'arg%d' % param_index
+            else:
+                match = re.search('[a-zA-Z0-9_]+$', param_str)
+                param['type'] = normalize_type(param_str[0:match.span()[0]])
+                param['identifier'] = match.group()
+            function['params'].append(param)
+            param_index += 1
+
+    return function
+
+def process_functions(file_str):
+    functions = []
+    for line in file_str.splitlines():
+        if reject_line(line):
+            global rejects
+            rejects += line + '\n'
+            continue
+        functions.append(process_function(line))
+
+    functions = sorted(functions, key=lambda d: d['identifier']) 
+    return functions
 
 def process_file(fname):
-    functions.clear()
-    global do_extern
-    do_extern = fname.endswith(".c")
+    processed_file = {}
+    processed_file['filename'] = fname.replace('\\', '/').split('/')[-1]
+    processed_file['extern'] = fname.endswith('.c')
+
     with open(fname) as file:
-        process_lines(file.read())
-    build_functions()
-    build_binds(fname)
+        processed_file['functions'] = process_functions(file.read())
+
+    return processed_file
 
 def process_files():
+    processed_files = []
     dir_path = os.path.dirname(os.path.realpath(__file__)) + '/lua_functions/'
-    files = os.listdir(dir_path)
+    files = sorted(os.listdir(dir_path))
     for f in files:
-        comment_header = "// " + f + " //"
-        comment_line = "/" * len(comment_header)
+        processed_files.append(process_file(dir_path + f))
+    return processed_files
 
-        global built_functions
-        built_functions += gen_comment_header(f)
+############################################################################
 
-        process_file(dir_path + f)
+def doc_function_index(processed_files):
+    s = '# Supported Functions\n'
+    for processed_file in processed_files:
+        s += '- %s\n' % processed_file['filename']
+        for function in processed_file['functions']:
+            s += '   - [%s](#%s)\n' % (function['identifier'], function['identifier'])
+        s += '\n<br />\n\n'
+    return s
+
+def doc_function(function):
+    fid = function['identifier']
+    s = '\n## [%s](#%s)\n' % (fid, fid)
+
+    rtype, rlink = translate_type_to_lua(function['type'])
+    param_str = ', '.join([x['identifier'] for x in function['params']])
+
+    s += "\n### Lua Example\n"
+    if rtype != None:
+        s += "`local %sValue = %s(%s)`\n" % (rtype, fid, param_str)
+    else:
+        s += "`%s(%s)`\n" % (fid, param_str)
+
+    s += '\n### Parameters\n'
+    if len(function['params']) > 0:
+        s += '| Field | Type |\n'
+        s += '| ----- | ---- |\n'
+        for param in function['params']:
+            pid = param['identifier']
+            ptype = param['type']
+            ptype, plink = translate_type_to_lua(ptype)
+
+            if plink:
+                s += '| %s | [%s](structs.md#%s) |\n'  % (pid, ptype, ptype)
+                continue
+
+            s += '| %s | %s |\n'  % (pid, ptype)
+
+    else:
+        s += '- None\n'
+
+    s += '\n### Returns\n'
+    if rtype != None:
+        if rlink:
+            s += '[%s](structs.md#%s)\n' % (rtype, rtype)
+        else:
+            s += '- %s\n' % rtype
+    else:
+        s += '- None\n'
+
+
+    s += '\n### C Prototype\n'
+    s += '`%s`\n' % function['line'].strip()
+
+    s += '\n[:arrow_up_small:](#)\n\n<br />\n'
+
+    return s
+
+def doc_functions(functions):
+    s = ''
+    for function in functions:
+        s += doc_function(function)
+    return s
+
+def doc_files(processed_files):
+    s = '## [:rewind: Lua Reference](lua.md)\n\n'
+    s += doc_function_index(processed_files)
+    for processed_file in processed_files:
+        s += '\n---'
+        s += '\n# functions from %s\n\n<br />\n\n' % processed_file['filename']
+        s += doc_functions(processed_file['functions'])
+
+    with open(get_path(docs_lua_functions), 'w') as out:
+        out.write(s)
 
 ############################################################################
 
 def main():
-    process_files()
+    processed_files = process_files()
+
+    built_functions = build_functions(processed_files)
+    built_binds = build_binds(processed_files)
+
     filename = get_path(out_filename)
     with open(filename, 'w') as out:
         out.write(template.replace("$[FUNCTIONS]", built_functions).replace("$[BINDS]", built_binds))
     print('REJECTS:')
     print(rejects)
+    doc_files(processed_files)
 
 if __name__ == '__main__':
    main()
