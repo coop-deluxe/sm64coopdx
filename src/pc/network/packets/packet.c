@@ -83,6 +83,8 @@ void packet_process(struct Packet* p) {
         case PACKET_DOWNLOAD_REQUEST:        network_receive_download_request(p);        break;
         case PACKET_DOWNLOAD:                network_receive_download(p);                break;
 
+        case PACKET_LUA_SYNC_TABLE:          network_receive_lua_sync_table(p);          break;
+
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);

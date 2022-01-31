@@ -48,6 +48,8 @@ bool smlua_valid_lot(u16 lot) {
 }
 
 static int smlua__get_field(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
     enum LuaObjectType lot = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
@@ -98,6 +100,8 @@ static int smlua__get_field(lua_State* L) {
 }
 
 static int smlua__set_field(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
     enum LuaObjectType lot = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 

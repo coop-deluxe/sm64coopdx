@@ -619,6 +619,12 @@
 - HOOK_BEFORE_PHYS_STEP
 - HOOK_MAX
 
+<br />
+
+- LST_GLOBAL
+- LST_PLAYER
+- LST_MAX
+
 [:arrow_up_small:](#)
 
 <br />

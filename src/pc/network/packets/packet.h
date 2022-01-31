@@ -59,6 +59,8 @@ enum PacketType {
     PACKET_DOWNLOAD_REQUEST,
     PACKET_DOWNLOAD,
 
+    PACKET_LUA_SYNC_TABLE,
+
     ///
     PACKET_CUSTOM = 255,
 };
@@ -97,6 +99,17 @@ struct Packet {
 enum KickReasonType {
     EKT_CLOSE_CONNECTION,
     EKT_FULL_PARTY,
+};
+
+union LSTNetworkUnion {
+    long long integer;
+    double number;
+};
+
+enum LSTNetworkType {
+    LST_NETWORK_TYPE_INTEGER,
+    LST_NETWORK_TYPE_NUMBER,
+    LST_NETWORK_TYPE_MAX
 };
 
 // packet.c
@@ -301,5 +314,8 @@ void network_receive_download_request(struct Packet* p);
 void network_send_download(u16 clientIndex, u16 serverIndex, u64 offset);
 void network_receive_download(struct Packet* p);
 
+// packet_lua_sync_table.c
+void network_send_lua_sync_table(u64 seq, u16 remoteIndex, u16 lst, u16 index, const char* key, enum LSTNetworkType lUnionType, union LSTNetworkUnion lUnion);
+void network_receive_lua_sync_table(struct Packet* p);
 
 #endif

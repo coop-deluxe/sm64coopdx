@@ -149,6 +149,7 @@ static void mod_list_add_local(u16 index, const char* path, char* name) {
     table->totalSize += entry->size;
     fseek(entry->fp, 0, SEEK_SET);
 
+    entry->remoteIndex = index;
     entry->complete = true;
     entry->enabled = false;
     entry->selectable = true;
@@ -263,14 +264,15 @@ static void mod_list_load_local(const char* path) {
         count++;
     }
 
+    u16 totalCount = table->entryCount;
     u16 index = 0;
     if (table->entries == NULL) {
         if (count == 0) { closedir(d); return; }
         mod_list_alloc(table, count);
     } else {
         index = table->entryCount;
-        table->entryCount += count;
-        table->entries = (struct ModListEntry*)realloc(table->entries, table->entryCount * sizeof(struct ModListEntry));
+        totalCount += count;
+        table->entries = (struct ModListEntry*)realloc(table->entries, totalCount * sizeof(struct ModListEntry));
     }
 
     rewinddir(d);
@@ -281,6 +283,7 @@ static void mod_list_load_local(const char* path) {
         if (mod_list_contains(table, dir->d_name)) { continue; }
         LOG_INFO("    %s", dir->d_name);
         mod_list_add_local(index++, path, dir->d_name);
+        if (index > table->entryCount) { table->entryCount = index; }
     }
 
     closedir(d);

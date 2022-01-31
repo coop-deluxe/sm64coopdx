@@ -236,7 +236,7 @@ void smlua_dump_table(int index) {
     lua_pushnil(L);  // first key
     while (lua_next(L, index) != 0) {
         // uses 'key' (at index -2) and 'value' (at index -1)
-        if (lua_type(L, index) == LUA_TSTRING) {
+        if (lua_type(L, -2) == LUA_TSTRING) {
             printf("%s - %s\n",
                 lua_tostring(L, -2),
                 lua_typename(L, lua_type(L, -1)));
