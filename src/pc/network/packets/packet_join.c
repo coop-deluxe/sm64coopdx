@@ -63,12 +63,24 @@ void network_receive_join_request(struct Packet* p) {
 void network_send_join(struct Packet* joinRequestPacket) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
-    // do connection event
-    joinRequestPacket->localIndex = network_player_connected(NPT_CLIENT, joinRequestPacket->localIndex, sJoinRequestPlayerModel, sJoinRequestPlayerPalette, sJoinRequestPlayerName);
-    if (joinRequestPacket->localIndex == UNKNOWN_LOCAL_INDEX) {
-        network_send_kick(EKT_FULL_PARTY);
-        return;
+    // figure out id
+    u8 globalIndex = joinRequestPacket->localIndex;
+    if (globalIndex == UNKNOWN_LOCAL_INDEX) {
+        for (int i = 1; i < MAX_PLAYERS; i++) {
+            if (!gNetworkPlayers[i].connected) {
+                globalIndex = i;
+                break;
+            }
+        }
+        if (globalIndex == UNKNOWN_LOCAL_INDEX) {
+            network_send_kick(EKT_FULL_PARTY);
+            return;
+        }
     }
+    LOG_INFO("chose globalIndex: %d", globalIndex);
+
+    // do connection event
+    network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, sJoinRequestPlayerPalette, sJoinRequestPlayerName);
 
     fs_file_t* fp = fs_open(SAVE_FILENAME);
     if (fp != NULL) {
@@ -83,7 +95,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN, true, PLMT_NONE);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
-    packet_write(&p, &joinRequestPacket->localIndex, sizeof(u8));
+    packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
     packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
     packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
@@ -108,10 +120,10 @@ void network_send_join(struct Packet* joinRequestPacket) {
         node = node->next;
     }
 
-    network_send_to(joinRequestPacket->localIndex , &p);
+    network_send_to(globalIndex, &p);
     LOG_INFO("sending join packet");
 
-    network_send_network_players();
+    network_send_network_players(globalIndex);
 }
 
 void network_receive_join(struct Packet* p) {
@@ -219,4 +231,6 @@ void network_receive_join(struct Packet* p) {
     gChangeLevel = 16;
 
     smlua_init();
+
+    network_send_network_players_request();
 }

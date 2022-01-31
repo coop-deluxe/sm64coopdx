@@ -41,11 +41,30 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
     LOG_INFO("sent list of %d network players to %d", connectedCount, sendToLocalIndex);
 }
 
-void network_send_network_players(void) {
+void network_send_network_players_request(void) {
+    SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    struct Packet p = { 0 };
+    packet_init(&p, PACKET_NETWORK_PLAYERS_REQUEST, true, PLMT_NONE);
+    network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
+    LOG_INFO("sending network players request");
+}
+
+void network_receive_network_players_request(struct Packet* p) {
+    SOFT_ASSERT(gNetworkType == NT_SERVER);
+    u8 localIndex = p->localIndex;
+    if (localIndex == UNKNOWN_LOCAL_INDEX) {
+        LOG_ERROR("Received network players request from unknown index");
+        return;
+    }
+    network_send_to_network_players(localIndex);
+}
+
+void network_send_network_players(u8 exceptLocalIndex) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     LOG_INFO("sending list of network players to all");
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
+        if (i == exceptLocalIndex) { continue; }
         network_send_to_network_players(i);
     }
 }

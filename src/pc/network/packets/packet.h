@@ -61,6 +61,8 @@ enum PacketType {
 
     PACKET_LUA_SYNC_TABLE,
 
+    PACKET_NETWORK_PLAYERS_REQUEST,
+
     ///
     PACKET_CUSTOM = 255,
 };
@@ -223,7 +225,9 @@ void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, 
 void network_receive_save_set_flag(struct Packet* p);
 
 // packet_network_players.c
-void network_send_network_players(void);
+void network_send_network_players_request(void);
+void network_receive_network_players_request(struct Packet* p);
+void network_send_network_players(u8 exceptLocalIndex);
 void network_receive_network_players(struct Packet* p);
 
 // packet_death.c
