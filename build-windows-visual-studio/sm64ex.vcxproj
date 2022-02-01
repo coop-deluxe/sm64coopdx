@@ -553,6 +553,7 @@
     <ClCompile Include="..\src\pc\network\packets\packet_leaving.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level_macro.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_level_respawn_info.c" />
+    <ClCompile Include="..\src\pc\network\packets\packet_lua_sync_table.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_mod_list.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_network_players.c" />
     <ClCompile Include="..\src\pc\network\packets\packet_object.c" />

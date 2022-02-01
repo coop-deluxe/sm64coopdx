@@ -59,6 +59,7 @@ enum PacketType {
     PACKET_DOWNLOAD_REQUEST,
     PACKET_DOWNLOAD,
 
+    PACKET_LUA_SYNC_TABLE_REQUEST,
     PACKET_LUA_SYNC_TABLE,
 
     PACKET_NETWORK_PLAYERS_REQUEST,
@@ -106,11 +107,16 @@ enum KickReasonType {
 union LSTNetworkUnion {
     long long integer;
     double number;
+    u8 boolean;
+    const char* string;
 };
 
 enum LSTNetworkType {
     LST_NETWORK_TYPE_INTEGER,
     LST_NETWORK_TYPE_NUMBER,
+    LST_NETWORK_TYPE_BOOLEAN,
+    LST_NETWORK_TYPE_STRING,
+    LST_NETWORK_TYPE_NIL,
     LST_NETWORK_TYPE_MAX
 };
 
@@ -319,7 +325,9 @@ void network_send_download(u16 clientIndex, u16 serverIndex, u64 offset);
 void network_receive_download(struct Packet* p);
 
 // packet_lua_sync_table.c
-void network_send_lua_sync_table(u64 seq, u16 remoteIndex, u16 lst, u16 index, const char* key, enum LSTNetworkType lUnionType, union LSTNetworkUnion lUnion);
+void network_send_lua_sync_table_request(void);
+void network_receive_lua_sync_table_request(struct Packet* p);
+void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 remoteIndex, u16 lst, u16 index, const char* key, enum LSTNetworkType lUnionType, union LSTNetworkUnion lUnion);
 void network_receive_lua_sync_table(struct Packet* p);
 
 #endif

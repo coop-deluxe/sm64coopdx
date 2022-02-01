@@ -49,6 +49,10 @@ void network_player_init(void);
 void network_player_update_model(u8 localIndex);
 bool network_player_any_connected(void);
 u8 network_player_connected_count(void);
+
+u8 network_player_global_index_from_local(u8 localIndex);
+u8 network_player_local_index_from_global(u8 globalIndex);
+
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
 struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);

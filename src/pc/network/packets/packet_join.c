@@ -233,4 +233,5 @@ void network_receive_join(struct Packet* p) {
     smlua_init();
 
     network_send_network_players_request();
+    network_send_lua_sync_table_request();
 }

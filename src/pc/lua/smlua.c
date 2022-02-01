@@ -2,6 +2,7 @@
 #include "pc/mod_list.h"
 
 lua_State* gLuaState = NULL;
+u8 gLuaInitializingScript = 0;
 
 static void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
@@ -23,6 +24,7 @@ static void smlua_exec_str(char* str) {
 
 static void smlua_load_script(char* path, u16 remoteIndex) {
     lua_State* L = gLuaState;
+    gLuaInitializingScript = 1;
     if (luaL_loadfile(L, path) != LUA_OK) {
         LOG_LUA("Failed to load lua script '%s'.", path);
         puts(smlua_to_string(L, lua_gettop(L)));
@@ -50,8 +52,10 @@ static void smlua_load_script(char* path, u16 remoteIndex) {
         LOG_LUA("Failed to execute lua script '%s'.", path);
         puts(smlua_to_string(L, lua_gettop(L)));
         smlua_dump_stack();
+        gLuaInitializingScript = 0;
         return;
     }
+    gLuaInitializingScript = 0;
 }
 
 void smlua_init(void) {

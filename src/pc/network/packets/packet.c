@@ -83,6 +83,7 @@ void packet_process(struct Packet* p) {
         case PACKET_DOWNLOAD_REQUEST:        network_receive_download_request(p);        break;
         case PACKET_DOWNLOAD:                network_receive_download(p);                break;
 
+        case PACKET_LUA_SYNC_TABLE_REQUEST:  network_receive_lua_sync_table_request(p);  break;
         case PACKET_LUA_SYNC_TABLE:          network_receive_lua_sync_table(p);          break;
 
         case PACKET_NETWORK_PLAYERS_REQUEST: network_receive_network_players_request(p); break;

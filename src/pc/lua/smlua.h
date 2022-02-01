@@ -30,6 +30,7 @@
 #endif
 
 extern lua_State* gLuaState;
+extern u8 gLuaInitializingScript;
 
 void smlua_init(void);
 void smlua_update(void);

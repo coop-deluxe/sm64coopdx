@@ -4869,6 +4869,9 @@
     <ClCompile Include="..\src\pc\lua\smlua_sync_table.c">
       <Filter>Source Files\src\pc\lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\network\packets\packet_lua_sync_table.c">
+      <Filter>Source Files\src\pc\network\packets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
