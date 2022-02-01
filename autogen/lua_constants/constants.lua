@@ -33,9 +33,7 @@ _SyncTable = {
     __newindex = function (t,k,v)
         local _table = rawget(t, '_table')
         if _table[k] == v then return end
-        if _set_sync_table_field(t, k, v) ~= 0 then
-            _table[k] = v
-        end
+        _set_sync_table_field(t, k, v)
     end
 }
 

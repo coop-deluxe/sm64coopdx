@@ -104,20 +104,22 @@ enum KickReasonType {
     EKT_FULL_PARTY,
 };
 
-union LSTNetworkUnion {
-    long long integer;
-    double number;
-    u8 boolean;
-    const char* string;
-};
+struct LSTNetworkType {
+    enum {
+        LST_NETWORK_TYPE_INTEGER,
+        LST_NETWORK_TYPE_NUMBER,
+        LST_NETWORK_TYPE_BOOLEAN,
+        LST_NETWORK_TYPE_STRING,
+        LST_NETWORK_TYPE_NIL,
+        LST_NETWORK_TYPE_MAX
+    } type;
 
-enum LSTNetworkType {
-    LST_NETWORK_TYPE_INTEGER,
-    LST_NETWORK_TYPE_NUMBER,
-    LST_NETWORK_TYPE_BOOLEAN,
-    LST_NETWORK_TYPE_STRING,
-    LST_NETWORK_TYPE_NIL,
-    LST_NETWORK_TYPE_MAX
+    union {
+        long long integer;
+        double number;
+        u8 boolean;
+        const char* string;
+    } value;
 };
 
 // packet.c
@@ -327,7 +329,7 @@ void network_receive_download(struct Packet* p);
 // packet_lua_sync_table.c
 void network_send_lua_sync_table_request(void);
 void network_receive_lua_sync_table_request(struct Packet* p);
-void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 remoteIndex, u16 lst, u16 index, const char* key, enum LSTNetworkType lUnionType, union LSTNetworkUnion lUnion);
+void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 remoteIndex, u16 lst, u16 index, const char* key, struct LSTNetworkType* lntValue);
 void network_receive_lua_sync_table(struct Packet* p);
 
 #endif

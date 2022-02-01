@@ -151,6 +151,21 @@ void smlua_push_number_field(int index, char* name, lua_Number val) {
     lua_setfield(gLuaState, index, name);
 }
 
+void smlua_push_string_field(int index, char* name, const char* val) {
+    lua_pushstring(gLuaState, val);
+    lua_setfield(gLuaState, index, name);
+}
+
+void smlua_push_nil_field(int index, char* name) {
+    lua_pushnil(gLuaState);
+    lua_setfield(gLuaState, index, name);
+}
+
+void smlua_push_table_field(int index, char* name) {
+    lua_newtable(gLuaState);
+    lua_setfield(gLuaState, index, name);
+}
+
 lua_Integer smlua_get_integer_field(int index, char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA("smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
@@ -173,6 +188,15 @@ lua_Number smlua_get_number_field(int index, char* name) {
     lua_Number val = smlua_to_number(gLuaState, -1);
     lua_pop(gLuaState, 1);
     return val;
+}
+
+bool smlua_is_table_empty(int index) {
+    lua_pushnil(gLuaState); // key
+    if (lua_next(gLuaState, index)) {
+        lua_pop(gLuaState, 2);
+        return false;
+    }
+    return true;
 }
 
 void smlua_dump_stack(void) {

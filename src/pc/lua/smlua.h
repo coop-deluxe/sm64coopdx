@@ -23,7 +23,7 @@
 
 #ifdef DEVELOPMENT
 #define LUA_STACK_CHECK_BEGIN() int __LUA_STACK_TOP = lua_gettop(gLuaState)
-#define LUA_STACK_CHECK_END() if (__LUA_STACK_TOP != lua_gettop(gLuaState)) { smlua_dump_stack(); fflush(stdout); } assert(__LUA_STACK_TOP == lua_gettop(gLuaState))
+#define LUA_STACK_CHECK_END() if ((__LUA_STACK_TOP) != lua_gettop(gLuaState)) { smlua_dump_stack(); fflush(stdout); } assert((__LUA_STACK_TOP) == lua_gettop(gLuaState))
 #else
 #define LUA_STACK_CHECK_BEGIN()
 #define LUA_STACK_CHECK_END()

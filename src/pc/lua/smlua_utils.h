@@ -17,9 +17,14 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot);
 void smlua_push_object(lua_State* L, u16 lot, void* p);
 void smlua_push_integer_field(int index, char* name, lua_Integer val);
 void smlua_push_number_field(int index, char* name, lua_Number val);
+void smlua_push_string_field(int index, char* name, const char* val);
+void smlua_push_nil_field(int index, char* name);
+void smlua_push_table_field(int index, char* name);
 
 lua_Integer smlua_get_integer_field(int index, char* name);
 lua_Number smlua_get_number_field(int index, char* name);
+
+bool smlua_is_table_empty(int index);
 
 void smlua_dump_stack(void);
 void smlua_dump_globals(void);
