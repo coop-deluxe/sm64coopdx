@@ -42,6 +42,28 @@ static bool smlua_value_to_lnt(int index, struct LSTNetworkType* lnt) {
     return false;
 }
 
+static void smlua_push_lnt(struct LSTNetworkType* lnt) {
+    lua_State* L = gLuaState;
+    switch (lnt->type) {
+        case LST_NETWORK_TYPE_INTEGER:
+            lua_pushinteger(L, lnt->value.integer);
+            break;
+        case LST_NETWORK_TYPE_NUMBER:
+            lua_pushnumber(L, lnt->value.number);
+            break;
+        case LST_NETWORK_TYPE_BOOLEAN:
+            lua_pushboolean(L, lnt->value.boolean);
+            break;
+        case LST_NETWORK_TYPE_STRING:
+            lua_pushstring(L, lnt->value.string);
+            break;
+        case LST_NETWORK_TYPE_NIL:
+            lua_pushnil(L);
+            break;
+        default: SOFT_ASSERT(false);
+    }
+}
+
 static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool alterSeq) {
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
@@ -65,11 +87,8 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     }
 
     // get key
-    const char* key = smlua_to_string(L, keyIndex);
-    if (!gSmLuaConvertSuccess || key == NULL || strlen(key) == 0 || strlen(key) > 64) {
-        LOG_LUA("smlua_sync_table_send_field on invalid key: '%s'", (key == NULL) ? "<null>" : key);
-        return;
-    }
+    struct LSTNetworkType lntKey = { 0 };
+    if (!smlua_value_to_lnt(keyIndex, &lntKey)) { return; }
 
 
       ///////////
@@ -78,10 +97,7 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
     // get value
     struct LSTNetworkType lntValue = { 0 };
-    bool validValue = smlua_value_to_lnt(valueIndex, &lntValue);
-    if (!validValue) {
-        return;
-    }
+    if (!smlua_value_to_lnt(valueIndex, &lntValue)) { return; }
 
     // set value
     lua_getfield(L, syncTableIndex, "_table");
@@ -97,19 +113,19 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
     // get seq table
     lua_getfield(L, syncTableIndex, "_seq");
-    int seqT = lua_gettop(L);
-
-    // get seq number
-    lua_getfield(L, -1, key);
+    lua_pushvalue(L, keyIndex);
+    lua_gettable(L, -2);
     u64 seq = lua_tointeger(L, -1);
-    lua_pop(L, 1);
+    lua_pop(L, 1); // pop seq value
 
     // set seq number
     if (!gLuaInitializingScript && alterSeq) {
         seq += MAX_PLAYERS + (MAX_PLAYERS - gNetworkPlayers[0].globalIndex);
-        smlua_push_number_field(seqT, (char*)key, seq);
+        lua_pushvalue(L, keyIndex);
+        lua_pushinteger(L, seq);
+        lua_settable(L, -3);
     }
-    lua_pop(L, 1);
+    lua_pop(L, 1); // pop seq table
 
 
       ///////////
@@ -127,7 +143,7 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
     // send over the network
     if (!gLuaInitializingScript && seq > 0) {
-        network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, lst, index, key, &lntValue);
+        network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, lst, index, &lntKey, &lntValue);
     }
 
     LUA_STACK_CHECK_END();
@@ -139,7 +155,7 @@ static int smlua__set_sync_table_field(UNUSED lua_State* L) {
     return 1;
 }
 
-void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 lst, u16 index, const char* key, struct LSTNetworkType* lntValue) {
+void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 lst, u16 index, struct LSTNetworkType* lntKey, struct LSTNetworkType* lntValue) {
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 
@@ -200,12 +216,12 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
 
     // get seq table
     lua_getfield(L, -1, "_seq");
-    int seqT = lua_gettop(L);
 
     // get seq number
-    lua_getfield(L, -1, key);
+    smlua_push_lnt(lntKey);
+    lua_gettable(L, -2);
     u64 readSeq = lua_tointeger(L, -1);
-    lua_pop(L, 1);
+    lua_pop(L, 1); // pop seq value
 
     // validate seq
     if (seq <= readSeq) {
@@ -218,7 +234,9 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
     }
 
     // set seq number
-    smlua_push_number_field(seqT, (char*)key, seq);
+    smlua_push_lnt(lntKey);
+    lua_pushinteger(L, seq);
+    lua_settable(L, -3);
     lua_pop(L, 1); // pop seq table
 
     // get internal table
@@ -227,34 +245,9 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
     int t = lua_gettop(L);
 
     // set key/value
-    switch (lntValue->type) {
-        case LST_NETWORK_TYPE_INTEGER:
-            lua_pushstring(L, key);
-            lua_pushinteger(L, lntValue->value.integer);
-            lua_rawset(L, t);
-            break;
-        case LST_NETWORK_TYPE_NUMBER:
-            lua_pushstring(L, key);
-            lua_pushnumber(L, lntValue->value.number);
-            lua_rawset(L, t);
-            break;
-        case LST_NETWORK_TYPE_BOOLEAN:
-            lua_pushstring(L, key);
-            lua_pushboolean(L, lntValue->value.boolean);
-            lua_rawset(L, t);
-            break;
-        case LST_NETWORK_TYPE_STRING:
-            lua_pushstring(L, key);
-            lua_pushstring(L, lntValue->value.string);
-            lua_rawset(L, t);
-            break;
-        case LST_NETWORK_TYPE_NIL:
-            lua_pushstring(L, key);
-            lua_pushnil(L);
-            lua_rawset(L, t);
-            break;
-        default: SOFT_ASSERT(false);
-    }
+    smlua_push_lnt(lntKey);
+    smlua_push_lnt(lntValue);
+    lua_rawset(L, t);
 
     lua_pop(L, 1); // pop internal table
     lua_pop(L, syncTableSize); // pop sync table

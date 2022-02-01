@@ -111,8 +111,7 @@ static bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 
 /////////////////////////////////////////////////////////////
 
-void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u16 lst, u16 index, const char* key, struct LSTNetworkType* lntValue) {
-    u16 keyLength = strlen(key);
+void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u16 lst, u16 index, struct LSTNetworkType* lntKey, struct LSTNetworkType* lntValue) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_SYNC_TABLE, true, PLMT_NONE);
@@ -121,12 +120,8 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
     packet_write(&p, &lst, sizeof(u16));
     packet_write(&p, &index, sizeof(u16));
 
-    packet_write(&p, &keyLength, sizeof(u16));
-    packet_write(&p, (char*)key, keyLength * sizeof(u8));
-
-    if (!packet_write_lnt(&p, lntValue)) {
-        return;
-    }
+    if (!packet_write_lnt(&p, lntKey)) { return; }
+    if (!packet_write_lnt(&p, lntValue)) { return; }
 
     if (toLocalIndex == 0 || toLocalIndex >= MAX_PLAYERS) {
         network_send(&p);
@@ -140,8 +135,7 @@ void network_receive_lua_sync_table(struct Packet* p) {
     u16 modRemoteIndex = 0;
     u16 lst = 0;
     u16 index = 0;
-    u16 keyLength = 0;
-    char key[65] = { 0 };
+    struct LSTNetworkType lntKey = { 0 };
     struct LSTNetworkType lntValue = { 0 };
 
     packet_read(p, &seq, sizeof(u64));
@@ -149,16 +143,8 @@ void network_receive_lua_sync_table(struct Packet* p) {
     packet_read(p, &lst, sizeof(u16));
     packet_read(p, &index, sizeof(u16));
 
-    packet_read(p, &keyLength, sizeof(u16));
-    if (keyLength > 64) {
-        LOG_ERROR("received lua sync table with invalid key length: %d", keyLength);
-        return;
-    }
-    packet_read(p, &key, keyLength * sizeof(u8));
+    if (!packet_read_lnt(p, &lntKey)) { return; }
+    if (!packet_read_lnt(p, &lntValue)) { return; }
 
-    if (!packet_read_lnt(p, &lntValue)) {
-        return;
-    }
-
-    smlua_set_sync_table_field_from_network(seq, modRemoteIndex, lst, index, key, &lntValue);
+    smlua_set_sync_table_field_from_network(seq, modRemoteIndex, lst, index, &lntKey, &lntValue);
 }
