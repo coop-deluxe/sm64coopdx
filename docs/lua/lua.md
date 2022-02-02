@@ -11,15 +11,8 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 
 <br />
 
-## Globals
-| Identifier | Type | Description |
-| :--------  | :--: | :---------: |
-| gMarioStates[MAX_PLAYERS] | [MarioState](structs.md#MarioState) | An array of length MAX_PLAYERS containing mario states |
-| gCharacter[CT_MAX] | [Character](structs.md#Character) | An array of length CT_MAX containing character information |
-
-<br />
-
-## Exposed from SM64
+## Sections
+- [Globals](globals.md)
 - [Hooks](hooks.md)
 - [Constants](constants.md)
 - [Functions](functions.md)
