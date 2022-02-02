@@ -191,7 +191,7 @@ function act_roll(m)
         return set_jumping_action(m, ACT_LONG_JUMP, 0)
     end
 
-    if (m.controller.buttonPressed & R_TRIG) ~= 0 and m.actionTimer > 0 then
+    if (m.controller.buttonPressed & U_JPAD) ~= 0 and m.actionTimer > 0 then
         m.vel.y = 19.0
         play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
 
@@ -300,7 +300,7 @@ function update_roll(m)
     end
 
     if m.action == ACT_CROUCHING then
-        if (m.controller.buttonPressed & R_TRIG) ~= 0 then
+        if (m.controller.buttonPressed & U_JPAD) ~= 0 then
             m.vel.y = 19.0
             mario_set_forward_vel(m, 32.0)
             play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
@@ -312,7 +312,7 @@ function update_roll(m)
     end
 
     if m.action == ACT_CROUCH_SLIDE then
-        if (m.controller.buttonPressed & R_TRIG) ~= 0 then
+        if (m.controller.buttonPressed & U_JPAD) ~= 0 then
             m.vel.y = 19.0
             mario_set_forward_vel(m, math.max(32, m.forwardVel))
             play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
@@ -324,7 +324,7 @@ function update_roll(m)
     end
 
     if m.action == ACT_GROUND_POUND_LAND then
-        if (m.controller.buttonPressed & R_TRIG) ~= 0 then
+        if (m.controller.buttonPressed & U_JPAD) ~= 0 then
             mario_set_forward_vel(m, 60)
 
             play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
@@ -579,7 +579,7 @@ function act_spin_pound_land(m)
             return set_jumping_action(m, ACT_GROUND_POUND_JUMP, 0)
         end
 
-        if (m.controller.buttonPressed & R_TRIG) ~= 0 then
+        if (m.controller.buttonPressed & U_JPAD) ~= 0 then
             mario_set_forward_vel(m, 60)
 
             play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
