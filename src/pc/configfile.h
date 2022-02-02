@@ -43,6 +43,10 @@ extern unsigned int configKeyStickLeft[];
 extern unsigned int configKeyStickRight[];
 extern unsigned int configKeyChat[];
 extern unsigned int configKeyPlayerList[];
+extern unsigned int configKeyDUp[];
+extern unsigned int configKeyDDown[];
+extern unsigned int configKeyDLeft[];
+extern unsigned int configKeyDRight[];
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 #ifdef EXTERNAL_DATA

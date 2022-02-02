@@ -100,6 +100,10 @@ static void controller_sdl_bind(void) {
     controller_add_binds(L_TRIG,       configKeyL);
     controller_add_binds(R_TRIG,       configKeyR);
     controller_add_binds(START_BUTTON, configKeyStart);
+    controller_add_binds(U_JPAD,       configKeyDUp);
+    controller_add_binds(D_JPAD,       configKeyDDown);
+    controller_add_binds(L_JPAD,       configKeyDLeft);
+    controller_add_binds(R_JPAD,       configKeyDRight);
 }
 
 static void controller_sdl_init(void) {

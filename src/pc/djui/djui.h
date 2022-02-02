@@ -49,6 +49,8 @@
 #include "djui_panel_playerlist.h"
 #include "djui_panel_camera.h"
 #include "djui_panel_controls.h"
+#include "djui_panel_controls_n64.h"
+#include "djui_panel_controls_extra.h"
 #include "djui_panel_display.h"
 #include "djui_panel_sound.h"
 #include "djui_panel_confirm.h"

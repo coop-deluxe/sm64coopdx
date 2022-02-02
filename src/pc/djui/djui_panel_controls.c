@@ -8,33 +8,22 @@ void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_controls_create(struct DjuiBase* caller) {
-    f32 bindBodyHeight = 32 * 11 + 1 * 10;
-    f32 bodyHeight = bindBodyHeight + 16 * 3 + 32 * 2 + 64;
+    f32 bodyHeight = 16 * 5 + 32 * 2 + 64 * 3;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\C\\#1be700\\O\\#00b3ff\\N\\#ffef00\\T\\#ff0800\\R\\#1be700\\O\\#00b3ff\\L\\#ffef00\\S");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
-        struct DjuiFlowLayout* bindBody = djui_flow_layout_create(&body->base);
-        djui_base_set_size_type(&bindBody->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&bindBody->base, 1.0f, bindBodyHeight);
-        djui_base_set_color(&bindBody->base, 0, 0, 0, 0);
-        djui_flow_layout_set_margin(bindBody, 1);
-        {
-            struct DjuiBind* bind1  = djui_bind_create(&bindBody->base, "A", configKeyA);
-            djui_bind_create(&bindBody->base, "B",           configKeyB);
-            djui_bind_create(&bindBody->base, "Start",       configKeyStart);
-            djui_bind_create(&bindBody->base, "L",           configKeyL);
-            djui_bind_create(&bindBody->base, "R",           configKeyR);
-            djui_bind_create(&bindBody->base, "Z",           configKeyZ);
-            djui_bind_create(&bindBody->base, "C Up",        configKeyCUp);
-            djui_bind_create(&bindBody->base, "C Down",      configKeyCDown);
-            djui_bind_create(&bindBody->base, "C Left",      configKeyCLeft);
-            djui_bind_create(&bindBody->base, "C Right",     configKeyCRight);
-            djui_bind_create(&bindBody->base, "Chat",        configKeyChat);
-            djui_bind_create(&bindBody->base, "Players", configKeyPlayerList);
-            defaultBase = &bind1->buttons[0]->base;
-        }
+        struct DjuiButton* button1 = djui_button_create(&body->base, "N64 Binds");
+        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button1->base, 1.0f, 64);
+        djui_interactable_hook_click(&button1->base, djui_panel_controls_n64_create);
+        defaultBase = &button1->base;
+
+        struct DjuiButton* button2 = djui_button_create(&body->base, "Extra Binds");
+        djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button2->base, 1.0f, 64);
+        djui_interactable_hook_click(&button2->base, djui_panel_controls_extra_create);
 
         struct DjuiSlider* slider1 = djui_slider_create(&body->base, "Deadzone", &configStickDeadzone, 0, 100);
         djui_base_set_size_type(&slider1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
