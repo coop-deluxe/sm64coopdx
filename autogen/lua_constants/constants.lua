@@ -9,10 +9,6 @@ HOOK_ON_SET_MARIO_ACTION = 3
 HOOK_BEFORE_PHYS_STEP = 4
 HOOK_MAX = 5
 
-LST_GLOBAL = 0
-LST_PLAYER = 1
-LST_MAX = 2
-
 _CObject = {
     __index = function (t,k)
         return _get_field(t['_lot'], t['_pointer'], k)
@@ -34,6 +30,15 @@ _SyncTable = {
         local _table = rawget(t, '_table')
         if _table[k] == v then return end
         _set_sync_table_field(t, k, v)
+    end
+}
+
+_ReadOnlyTable = {
+    __index = function (t,k)
+        local _table = rawget(t, '_table')
+        return _table[k]
+    end,
+    __newindex = function (t,k,v)
     end
 }
 

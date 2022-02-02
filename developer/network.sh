@@ -24,9 +24,9 @@ $FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
 exit
 
 # debug on server
-#$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  & > /dev/null
-#winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_server.txt' -ex 'quit'
-#exit
+$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  & > /dev/null
+winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_server.txt' -ex 'quit'
+exit
 
 ###################
 # debug on client #

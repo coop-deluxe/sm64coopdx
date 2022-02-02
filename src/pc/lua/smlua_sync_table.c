@@ -3,65 +3,114 @@
 #include "pc/network/network.h"
 #include "pc/network/network_player.h"
 
-static bool smlua_value_to_lnt(int index, struct LSTNetworkType* lnt) {
+#define MAX_UNWOUND_SIZE 256
+static struct LSTNetworkType sUnwoundLnts[MAX_UNWOUND_LNT] = { 0 };
+u16 sUnwoundLntsCount = 0;
+
+static void smlua_sync_table_create(u16 modRemoteIndex, enum LuaSyncTableType lst, int* parentIndex, int* keyIndex) {
     lua_State* L = gLuaState;
-    int valueType = lua_type(L, index);
+    lua_newtable(L);
+    int t = lua_gettop(L);
 
-    if (valueType == LUA_TNUMBER) {
-        lnt->type = LST_NETWORK_TYPE_INTEGER;
-        lnt->value.integer = lua_tointeger(L, index);
+    // push fields
+    smlua_push_integer_field(t, "_remoteIndex", modRemoteIndex);
+    smlua_push_integer_field(t, "_type", lst);
+    smlua_push_table_field(t, "_seq");
+    smlua_push_table_field(t, "_table");
 
-        if (lnt->value.integer == 0) {
-            lnt->type = LST_NETWORK_TYPE_NUMBER;
-            lnt->value.number = lua_tonumber(L, index);
-        }
-        return true;
-    }
+    // set parent
+    lua_pushstring(L, "_parent");
+    if (parentIndex == NULL) { lua_pushnil(L); } else { lua_pushvalue(L, *parentIndex); }
+    lua_settable(L, -3);
 
-    if (valueType == LUA_TBOOLEAN) {
-        lnt->type = LST_NETWORK_TYPE_BOOLEAN;
-        lnt->value.boolean = lua_toboolean(L, index);
-        return true;
-    }
+    // set key name
+    lua_pushstring(L, "_name");
+    if (keyIndex == NULL) { lua_pushnil(L); } else { lua_pushvalue(L, *keyIndex); }
+    lua_settable(L, -3);
 
-    if (valueType == LUA_TSTRING) {
-        lnt->type = LST_NETWORK_TYPE_STRING;
-        lnt->value.string = lua_tostring(L, index);
-        if (lnt->value.string == NULL || strlen(lnt->value.string) > 256) {
-            LOG_LUA("smlua_value_to_lnt on invalid string value: '%s'", (lnt->value.string == NULL) ? "<null>" : lnt->value.string);
-            return false;
-        }
-        return true;
-    }
-
-    if (valueType == LUA_TNIL) {
-        lnt->type = LST_NETWORK_TYPE_NIL;
-        return true;
-    }
-
-    return false;
+    // attach metatable
+    lua_pushglobaltable(L);
+    lua_getfield(L, -1, "_SyncTable");
+    lua_setmetatable(L, -3);
+    lua_pop(L, 1); // pop global table
 }
 
-static void smlua_push_lnt(struct LSTNetworkType* lnt) {
+static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
+    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
-    switch (lnt->type) {
-        case LST_NETWORK_TYPE_INTEGER:
-            lua_pushinteger(L, lnt->value.integer);
-            break;
-        case LST_NETWORK_TYPE_NUMBER:
-            lua_pushnumber(L, lnt->value.number);
-            break;
-        case LST_NETWORK_TYPE_BOOLEAN:
-            lua_pushboolean(L, lnt->value.boolean);
-            break;
-        case LST_NETWORK_TYPE_STRING:
-            lua_pushstring(L, lnt->value.string);
-            break;
-        case LST_NETWORK_TYPE_NIL:
-            lua_pushnil(L);
-            break;
-        default: SOFT_ASSERT(false);
+    sUnwoundLntsCount = 0;
+
+    // get key
+    sUnwoundLnts[sUnwoundLntsCount++] = smlua_to_lnt(L, keyIndex);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("attempted to unwind sync table with invalid key type");
+        return false;
     }
+
+    // duplicate sync table for iteration
+    lua_pushvalue(L, syncTableIndex);
+    syncTableIndex = lua_gettop(L);
+
+    while (true) {
+        // make sure we remain within limits
+        if (sUnwoundLntsCount >= MAX_UNWOUND_LNT) {
+            LOG_LUA("attempted to unwind sync table past its limit");
+            return false;
+        }
+
+        // get name of table
+        lua_pushstring(L, "_name");
+        lua_gettable(L, syncTableIndex);
+        sUnwoundLnts[sUnwoundLntsCount++] = smlua_to_lnt(L, -1);
+
+        // translate player index
+        lua_getfield(L, syncTableIndex, "_type");
+        lua_Integer lst = lua_tointeger(L, -1);
+        lua_pop(L, 1);
+        if (lst == LST_PLAYER) {
+            struct LSTNetworkType* n = &sUnwoundLnts[sUnwoundLntsCount - 1];
+            assert(n->type == LST_NETWORK_TYPE_INTEGER);
+            n->value.integer = network_player_global_index_from_local(n->value.integer);
+        }
+
+        lua_pop(L, 1); // pop _name value
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("attempted to unwind sync table with invalid parent");
+            lua_pop(L, 1); // pop iterative _parent
+            return false;
+        }
+
+        // get parent of table
+        lua_pushstring(L, "_parent");
+        lua_gettable(L, syncTableIndex);
+        int parentType = lua_type(L, -1);
+        lua_replace(L, syncTableIndex);
+
+        // validate parent type
+        if (parentType != LUA_TTABLE) {
+            if (parentType != LUA_TNIL) {
+                LOG_LUA("attempted to unwind sync table into an invalid parent");
+                return false;
+            }
+            break;
+        }
+    }
+
+    lua_pop(L, 1); // pop iterative _parent
+
+    // check size
+    size_t unwoundSize = 0;
+    for (int i = 0; i < sUnwoundLntsCount; i++) {
+        unwoundSize += sUnwoundLnts[i].size;
+    }
+
+    if (unwoundSize >= MAX_UNWOUND_SIZE) {
+        LOG_LUA("attempted to unwind sync table with too long of a key/parent length");
+        return false;
+    }
+
+    LUA_STACK_CHECK_END();
+    return true;
 }
 
 static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool alterSeq) {
@@ -75,29 +124,70 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     // get modRemoteIndex
     u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("smlua_sync_table_send_field on invalid modRemoteIndex: %u", modRemoteIndex);
-        return;
-    }
-
-    // get lst
-    enum LuaSyncTableType lst = smlua_get_integer_field(syncTableIndex, "_type");
-    if (!gSmLuaConvertSuccess || lst >= LST_MAX) {
-        LOG_LUA("smlua_sync_table_send_field on invalid LST: %u", lst);
+        LOG_LUA("Error: tried to alter sync table with an invalid modRemoteIndex: %u", modRemoteIndex);
         return;
     }
 
     // get key
-    struct LSTNetworkType lntKey = { 0 };
-    if (!smlua_value_to_lnt(keyIndex, &lntKey)) { return; }
+    struct LSTNetworkType lntKey = smlua_to_lnt(L, keyIndex);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Error: tried to alter sync table with an invalid key");
+        return;
+    }
+    lntKey = lntKey;
+    
 
+      ////////////////
+     // prev value //
+    ////////////////
+
+    lua_getfield(L, syncTableIndex, "_table");
+    lua_pushvalue(L, keyIndex);
+    lua_rawget(L, -2);
+    int prevValueType = lua_type(L, -1);
+    lua_pop(L, 1); // pop prev value
+    lua_pop(L, 1); // pop _table
+
+    if (prevValueType == LUA_TTABLE) {
+        LOG_LUA("Error: tried to assign on top of sync table");
+        return;
+    }
 
       ///////////
      // value //
     ///////////
 
     // get value
-    struct LSTNetworkType lntValue = { 0 };
-    if (!smlua_value_to_lnt(valueIndex, &lntValue)) { return; }
+    int valueType = lua_type(L, valueIndex);
+    if (valueType == LUA_TTABLE) {
+        if (prevValueType != LUA_TNIL) {
+            LOG_LUA("Error: tried to set a sync table field to a different sync table");
+            return;
+        }
+
+        if (!smlua_is_table_empty(valueIndex)) {
+            LOG_LUA("Error: tried to generate a sync table with a non-empty table");
+            return;
+        }
+
+        // create sync table
+        int modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
+
+        // set table
+        lua_getfield(L, syncTableIndex, "_table");
+        lua_pushvalue(L, keyIndex);
+        smlua_sync_table_create(modRemoteIndex, LST_NORMAL, &syncTableIndex, &keyIndex);
+        lua_settable(L, -3);
+        lua_pop(L, 1); // pop _table
+
+        LUA_STACK_CHECK_END();
+        return;
+    }
+    struct LSTNetworkType lntValue = smlua_to_lnt(L, valueIndex);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Error: tried to alter sync table with an invalid value");
+        return;
+    }
 
     // set value
     lua_getfield(L, syncTableIndex, "_table");
@@ -128,22 +218,19 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     lua_pop(L, 1); // pop seq table
 
 
-      ///////////
-     // index //
-    ///////////
-
-    // get index
-    u16 index = smlua_get_integer_field(syncTableIndex, "_index");
-    index = network_player_global_index_from_local(index);
-
-
       /////////////
      // network //
     /////////////
 
+    // unwind key + parent tables
+    if (!smlua_sync_table_unwind(syncTableIndex, keyIndex)) {
+        LOG_LUA("Error: failed to unwind sync table for sending over the network");
+        return;
+    }
+
     // send over the network
     if (!gLuaInitializingScript && seq > 0) {
-        network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, lst, index, &lntKey, &lntValue);
+        network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, sUnwoundLntsCount, sUnwoundLnts, &lntValue);
     }
 
     LUA_STACK_CHECK_END();
@@ -155,11 +242,11 @@ static int smlua__set_sync_table_field(UNUSED lua_State* L) {
     return 1;
 }
 
-void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 lst, u16 index, struct LSTNetworkType* lntKey, struct LSTNetworkType* lntValue) {
+void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 lntKeyCount, struct LSTNetworkType* lntKeys, struct LSTNetworkType* lntValue) {
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 
-    // figure out table
+    // figure out mod table
     struct ModTable* table = NULL;
     if (gNetworkType == NT_SERVER) {
         table = &gModTableLocal;
@@ -183,12 +270,6 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
         return;
     }
 
-    // sanity check lst
-    if (lst >= LST_MAX) {
-        LOG_ERROR("Received sync table field packet with an invalid LST: %u", lst);
-        return;
-    }
-
     // sanity check lntValue
     if (lntValue->type >= LST_NETWORK_TYPE_MAX) {
         LOG_ERROR("Received sync table field packet with an invalid lnt type: %u", lntValue->type);
@@ -197,28 +278,61 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
 
     lua_getglobal(L, "_G"); // get global table
     lua_getfield(L, LUA_REGISTRYINDEX, entry->path); // get the file's "global" table
+    int fileGlobalIndex = lua_gettop(L);
 
-    // get sync table
-    u16 syncTableSize = 0;
-    switch (lst) {
-        case LST_GLOBAL:
-            syncTableSize = 1;
-            lua_getfield(L, -1, "gGlobalSyncTable");
-            break;
-        case LST_PLAYER:
-            syncTableSize = 2;
-            lua_getfield(L, -1, "gPlayerSyncTable");
-            lua_pushinteger(L, network_player_local_index_from_global(index));
+    // push global sync table
+    u16 syncTableSize = 1;
+    smlua_push_lnt(&lntKeys[lntKeyCount - 1]);
+    lua_gettable(L, fileGlobalIndex);
+    int syncTableIndex = lua_gettop(L);
+    if (lua_type(L, -1) != LUA_TTABLE) {
+        LOG_ERROR("Received sync table field packet with an invalid table");
+        return;
+    }
+
+    for (int i = lntKeyCount - 2; i >= 1; i--) {
+        // get child sync table
+        smlua_push_lnt(&lntKeys[i]);
+        lua_gettable(L, -2);
+
+        // create missing tables
+        if (lua_type(L, -1) != LUA_TTABLE) {
+            lua_pop(L, 1); // pop non-table
+
+            // push internal table of parent
+            lua_pushstring(L, "_table");
+            lua_gettable(L, syncTableIndex);
+
+            // set internal[key] = new sync table
+            smlua_push_lnt(&lntKeys[i]);
+            int keyIndex = lua_gettop(L);
+            smlua_sync_table_create(modRemoteIndex, LST_NORMAL, &syncTableIndex, &keyIndex);
+            lua_rawset(L, -3);
+
+            // get new sync table
+            smlua_push_lnt(&lntKeys[i]);
             lua_gettable(L, -2);
-            break;
-        default: assert(false);
+
+            lua_remove(L, -2); // remove paren'ts internal table
+        } else {
+
+            // translate player index
+            if (smlua_get_integer_field(-1, "_type") == LST_PLAYER) {
+                lua_pop(L, 1); // pop wrong table
+                assert(lntKeys[i].type == LST_NETWORK_TYPE_INTEGER);
+                lua_pushinteger(L, network_player_local_index_from_global(lntKeys[i].value.integer));
+                lua_gettable(L, -2);
+            }
+        }
+
+        lua_remove(L, -2); // remove parent table
     }
 
     // get seq table
     lua_getfield(L, -1, "_seq");
 
     // get seq number
-    smlua_push_lnt(lntKey);
+    smlua_push_lnt(&lntKeys[0]);
     lua_gettable(L, -2);
     u64 readSeq = lua_tointeger(L, -1);
     lua_pop(L, 1); // pop seq value
@@ -234,7 +348,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
     }
 
     // set seq number
-    smlua_push_lnt(lntKey);
+    smlua_push_lnt(&lntKeys[0]);
     lua_pushinteger(L, seq);
     lua_settable(L, -3);
     lua_pop(L, 1); // pop seq table
@@ -245,7 +359,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ls
     int t = lua_gettop(L);
 
     // set key/value
-    smlua_push_lnt(lntKey);
+    smlua_push_lnt(&lntKeys[0]);
     smlua_push_lnt(lntValue);
     lua_rawset(L, t);
 
@@ -271,56 +385,45 @@ void smlua_sync_table_init_globals(char* path, u16 modRemoteIndex) {
     lua_State* L = gLuaState;
 
     lua_getfield(L, LUA_REGISTRYINDEX, path);
-    int base = lua_gettop(L);
+    int fileGlobalIndex = lua_gettop(L);
     {
+        // create and attach global sync table
+        lua_pushstring(L, "gGlobalSyncTable");
+        int keyIndex = lua_gettop(L);
+        smlua_sync_table_create(modRemoteIndex, LST_NORMAL, NULL, &keyIndex);
+        lua_settable(L, fileGlobalIndex);
+    }
+    {
+        // create player sync table
+        lua_pushstring(L, "gPlayerSyncTable");
         lua_newtable(L);
-        int t = lua_gettop(L);
+        int tableIndex = lua_gettop(L);
+        smlua_push_string_field(tableIndex, "_name", "gPlayerSyncTable");
 
-        // push fields
-        smlua_push_integer_field(t, "_remoteIndex", modRemoteIndex);
-        smlua_push_integer_field(t, "_type", LST_GLOBAL);
-        smlua_push_integer_field(t, "_index", 0);
-        smlua_push_table_field(t, "_seq");
-        smlua_push_table_field(t, "_table");
-        smlua_push_string_field(t, "_name", "gGlobalSyncTable");
-        smlua_push_nil_field(t, "_parent");
+        // create internal table
+        lua_pushstring(L, "_table");
+        lua_newtable(L);
+        int internalTableIndex = lua_gettop(L);
+
+        // create player sync tables
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            lua_pushinteger(L, i);
+            int keyIndex = lua_gettop(L);
+            smlua_sync_table_create(modRemoteIndex, LST_PLAYER, &tableIndex, &keyIndex);
+            lua_settable(L, internalTableIndex);
+        }
+
+        // attach internal table
+        lua_settable(L, tableIndex);
 
         // attach metatable
         lua_pushglobaltable(L);
-        lua_getfield(L, -1, "_SyncTable");
-        lua_setmetatable(L, -3);
+        lua_getfield(L, -1, "_ReadOnlyTable");
+        lua_setmetatable(L, tableIndex);
         lua_pop(L, 1); // pop global table
 
-        // attach sync table to file's "globals"
-        lua_setfield(L, base, "gGlobalSyncTable");
-    }
-    {
-        lua_newtable(L);
-        int playerTop = lua_gettop(L);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            lua_pushinteger(L, i);
-
-            lua_newtable(L);
-            int t = lua_gettop(L);
-
-            smlua_push_integer_field(t, "_remoteIndex", modRemoteIndex);
-            smlua_push_integer_field(t, "_type", LST_PLAYER);
-            smlua_push_integer_field(t, "_index", i);
-            smlua_push_table_field(t, "_seq");
-            smlua_push_table_field(t, "_table");
-            smlua_push_string_field(t, "_name", "gPlayerSyncTable"); // <--- incorrect
-            smlua_push_nil_field(t, "_parent"); // <--- incorrect
-
-            // attach metatable
-            lua_pushglobaltable(L);
-            lua_getfield(L, -1, "_SyncTable");
-            lua_setmetatable(L, -3);
-            lua_pop(L, 1); // pop global table
-
-            // attach table to gPlayerSyncTable
-            lua_settable(L, playerTop);
-        }
-        lua_setfield(L, base, "gPlayerSyncTable");
+        // attach player sync table
+        lua_settable(L, fileGlobalIndex);
     }
     lua_pop(L, 1); // pop file's "global" table
 
