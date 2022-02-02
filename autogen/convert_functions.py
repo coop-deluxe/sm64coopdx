@@ -97,10 +97,16 @@ def normalize_type(t):
         t = parts[0] + ' ' + parts[1].replace(' ', '')
     return t
 
+def alter_type(t):
+    if t.startswith('enum '):
+        return 'int'
+    return t
+
+
 ############################################################################
 
 def build_param(param, i):
-    ptype = param['type']
+    ptype = alter_type(param['type'])
     pid = param['identifier']
 
     if ptype in param_override_build:
@@ -130,7 +136,7 @@ def build_param_after(param, i):
         return ''
 
 def build_call(function):
-    ftype = function['type']
+    ftype = alter_type(function['type'])
     fid = function['identifier']
 
     ccall = '%s(%s)' % (fid, ', '.join([x['identifier'] for x in function['params']]))

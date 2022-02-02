@@ -89,7 +89,7 @@ int smlua_func_play_character_sound(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
-    enum CharacterSound characterSound = (enum CharacterSound)smlua_to_cobject(L, 2, LOT_NONE);
+    int characterSound = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     play_character_sound(m, characterSound);
@@ -102,7 +102,7 @@ int smlua_func_play_character_sound_if_no_flag(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
-    enum CharacterSound characterSound = (enum CharacterSound)smlua_to_cobject(L, 2, LOT_NONE);
+    int characterSound = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 flags = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -117,7 +117,7 @@ int smlua_func_play_character_sound_offset(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
-    enum CharacterSound characterSound = (enum CharacterSound)smlua_to_cobject(L, 2, LOT_NONE);
+    int characterSound = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 offset = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
