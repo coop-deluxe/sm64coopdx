@@ -2,14 +2,16 @@
 
 # Supported Functions
 - camera.h
+   - [set_camera_pitch_shake](#set_camera_pitch_shake)
+   - [set_camera_roll_shake](#set_camera_roll_shake)
    - [set_camera_shake_from_hit](#set_camera_shake_from_hit)
    - [set_camera_shake_from_point](#set_camera_shake_from_point)
+   - [set_camera_yaw_shake](#set_camera_yaw_shake)
    - [set_environmental_camera_shake](#set_environmental_camera_shake)
 
 <br />
 
 - characters.h
-   - [get_character](#get_character)
    - [get_character_anim_offset](#get_character_anim_offset)
    - [play_character_sound](#play_character_sound)
    - [play_character_sound_if_no_flag](#play_character_sound_if_no_flag)
@@ -18,8 +20,27 @@
 
 <br />
 
+- djui_popup.h
+
+<br />
+
 - external.h
+   - [fade_volume_scale](#fade_volume_scale)
+   - [fadeout_background_music](#fadeout_background_music)
+   - [play_course_clear](#play_course_clear)
+   - [play_dialog_sound](#play_dialog_sound)
+   - [play_music](#play_music)
+   - [play_peachs_jingle](#play_peachs_jingle)
+   - [play_power_star_jingle](#play_power_star_jingle)
+   - [play_puzzle_jingle](#play_puzzle_jingle)
+   - [play_race_fanfare](#play_race_fanfare)
+   - [play_secondary_music](#play_secondary_music)
    - [play_sound](#play_sound)
+   - [play_sound_with_freq_scale](#play_sound_with_freq_scale)
+   - [play_star_fanfare](#play_star_fanfare)
+   - [play_toads_jingle](#play_toads_jingle)
+   - [sequence_player_fade_out](#sequence_player_fade_out)
+   - [sequence_player_unlower](#sequence_player_unlower)
 
 <br />
 
@@ -54,7 +75,6 @@
    - [play_mario_sound](#play_mario_sound)
    - [play_sound_and_spawn_particles](#play_sound_and_spawn_particles)
    - [play_sound_if_no_flag](#play_sound_if_no_flag)
-   - [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
    - [return_mario_anim_y_translation](#return_mario_anim_y_translation)
    - [set_anim_to_frame](#set_anim_to_frame)
    - [set_jump_from_landing](#set_jump_from_landing)
@@ -67,7 +87,6 @@
    - [transition_submerged_to_walking](#transition_submerged_to_walking)
    - [update_mario_pos_for_anim](#update_mario_pos_for_anim)
    - [update_mario_sound_and_camera](#update_mario_sound_and_camera)
-   - [vec3f_find_ceil](#vec3f_find_ceil)
 
 <br />
 
@@ -114,14 +133,18 @@
 - mario_actions_cutscene.c
    - [bhv_end_peach_loop](#bhv_end_peach_loop)
    - [bhv_end_toad_loop](#bhv_end_toad_loop)
+   - [common_death_handler](#common_death_handler)
    - [cutscene_put_cap_on](#cutscene_put_cap_on)
    - [cutscene_take_cap_off](#cutscene_take_cap_off)
    - [general_star_dance_handler](#general_star_dance_handler)
    - [generate_yellow_sparkles](#generate_yellow_sparkles)
+   - [get_star_collection_dialog](#get_star_collection_dialog)
    - [handle_save_menu](#handle_save_menu)
+   - [launch_mario_until_land](#launch_mario_until_land)
+   - [mario_execute_cutscene_action](#mario_execute_cutscene_action)
+   - [mario_ready_to_speak](#mario_ready_to_speak)
    - [print_displaying_credits_entry](#print_displaying_credits_entry)
    - [should_start_or_continue_dialog](#should_start_or_continue_dialog)
-   - [spawn_obj_at_mario_rel_yaw](#spawn_obj_at_mario_rel_yaw)
    - [stuck_in_ground_handler](#stuck_in_ground_handler)
 
 <br />
@@ -217,13 +240,8 @@
 <br />
 
 - surface_collision.h
-   - [f32_find_wall_collision](#f32_find_wall_collision)
-   - [find_ceil](#find_ceil)
-   - [find_floor](#find_floor)
    - [find_floor_height](#find_floor_height)
-   - [find_floor_height_and_data](#find_floor_height_and_data)
    - [find_poison_gas_level](#find_poison_gas_level)
-   - [find_surface_on_ray](#find_surface_on_ray)
    - [find_wall_collisions](#find_wall_collisions)
    - [find_water_level](#find_water_level)
 
@@ -242,6 +260,50 @@
 
 <br />
 
+
+## [set_camera_pitch_shake](#set_camera_pitch_shake)
+
+### Lua Example
+`set_camera_pitch_shake(mag, decay, inc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mag | integer |
+| decay | integer |
+| inc | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void set_camera_pitch_shake(s16 mag, s16 decay, s16 inc);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_camera_roll_shake](#set_camera_roll_shake)
+
+### Lua Example
+`set_camera_roll_shake(mag, decay, inc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mag | integer |
+| decay | integer |
+| inc | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void set_camera_roll_shake(s16 mag, s16 decay, s16 inc);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [set_camera_shake_from_hit](#set_camera_shake_from_hit)
 
@@ -281,6 +343,28 @@
 
 ### C Prototype
 `void set_camera_shake_from_point(s16 shake, f32 posX, f32 posY, f32 posZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_camera_yaw_shake](#set_camera_yaw_shake)
+
+### Lua Example
+`set_camera_yaw_shake(mag, decay, inc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mag | integer |
+| decay | integer |
+| inc | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void set_camera_yaw_shake(s16 mag, s16 decay, s16 inc);`
 
 [:arrow_up_small:](#)
 
@@ -418,10 +502,216 @@
 <br />
 
 ---
+# functions from djui_popup.h
+
+<br />
+
+
+---
 # functions from external.h
 
 <br />
 
+
+## [fade_volume_scale](#fade_volume_scale)
+
+### Lua Example
+`fade_volume_scale(player, targetScale, fadeTimer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | integer |
+| targetScale | integer |
+| fadeTimer | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void fade_volume_scale(u8 player, u8 targetScale, u16 fadeTimer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [fadeout_background_music](#fadeout_background_music)
+
+### Lua Example
+`fadeout_background_music(arg0, fadeOut)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+| fadeOut | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void fadeout_background_music(u16 arg0, u16 fadeOut);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_course_clear](#play_course_clear)
+
+### Lua Example
+`play_course_clear()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_course_clear(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_dialog_sound](#play_dialog_sound)
+
+### Lua Example
+`play_dialog_sound(dialogID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogID | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void play_dialog_sound(u8 dialogID);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_music](#play_music)
+
+### Lua Example
+`play_music(player, seqArgs, fadeTimer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | integer |
+| seqArgs | integer |
+| fadeTimer | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void play_music(u8 player, u16 seqArgs, u16 fadeTimer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_peachs_jingle](#play_peachs_jingle)
+
+### Lua Example
+`play_peachs_jingle()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_peachs_jingle(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_power_star_jingle](#play_power_star_jingle)
+
+### Lua Example
+`play_power_star_jingle(arg0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void play_power_star_jingle(u8 arg0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_puzzle_jingle](#play_puzzle_jingle)
+
+### Lua Example
+`play_puzzle_jingle()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_puzzle_jingle(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_race_fanfare](#play_race_fanfare)
+
+### Lua Example
+`play_race_fanfare()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_race_fanfare(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_secondary_music](#play_secondary_music)
+
+### Lua Example
+`play_secondary_music(seqId, bgMusicVolume, volume, fadeTimer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| seqId | integer |
+| bgMusicVolume | integer |
+| volume | integer |
+| fadeTimer | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void play_secondary_music(u8 seqId, u8 bgMusicVolume, u8 volume, u16 fadeTimer);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [play_sound](#play_sound)
 
@@ -438,7 +728,107 @@
 - None
 
 ### C Prototype
-`void play_sound(s32 soundBits, Vec3f pos);`
+`void play_sound(s32 soundBits, f32 *pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_with_freq_scale](#play_sound_with_freq_scale)
+
+### Lua Example
+`play_sound_with_freq_scale(soundBits, pos, freqScale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| soundBits | integer |
+| pos | [Vec3f](structs.md#Vec3f) |
+| freqScale | number |
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_star_fanfare](#play_star_fanfare)
+
+### Lua Example
+`play_star_fanfare()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_star_fanfare(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_toads_jingle](#play_toads_jingle)
+
+### Lua Example
+`play_toads_jingle()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_toads_jingle(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_fade_out](#sequence_player_fade_out)
+
+### Lua Example
+`sequence_player_fade_out(player, fadeTimer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | integer |
+| fadeTimer | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_fade_out(u8 player, u16 fadeTimer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_unlower](#sequence_player_unlower)
+
+### Lua Example
+`sequence_player_unlower(player, fadeTimer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | integer |
+| fadeTimer | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_unlower(u8 player, u16 fadeTimer);`
 
 [:arrow_up_small:](#)
 
@@ -2034,6 +2424,28 @@
 
 <br />
 
+## [common_death_handler](#common_death_handler)
+
+### Lua Example
+`local integerValue = common_death_handler(m, animation, frameToDeathWarp)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animation | integer |
+| frameToDeathWarp | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [cutscene_put_cap_on](#cutscene_put_cap_on)
 
 ### Lua Example
@@ -2118,6 +2530,26 @@
 
 <br />
 
+## [get_star_collection_dialog](#get_star_collection_dialog)
+
+### Lua Example
+`local integerValue = get_star_collection_dialog(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 get_star_collection_dialog(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [handle_save_menu](#handle_save_menu)
 
 ### Lua Example
@@ -2133,6 +2565,69 @@
 
 ### C Prototype
 `void handle_save_menu(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [launch_mario_until_land](#launch_mario_until_land)
+
+### Lua Example
+`local integerValue = launch_mario_until_land(m, endAction, animation, forwardVel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| endAction | integer |
+| animation | integer |
+| forwardVel | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
+
+### Lua Example
+`local integerValue = mario_execute_cutscene_action(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 mario_execute_cutscene_action(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_ready_to_speak](#mario_ready_to_speak)
+
+### Lua Example
+`local integerValue = mario_ready_to_speak(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 mario_ready_to_speak(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 

@@ -1,3 +1,0 @@
-bool network_is_server(void);
-u8 network_global_index_from_local(u8 localIndex);
-u8 network_local_index_from_global(u8 globalIndex);

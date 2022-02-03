@@ -1,5 +1,6 @@
 import os
 import re
+from extract_functions import *
 from common import *
 
 rejects = ""
@@ -8,6 +9,46 @@ number_types = ["f32", "float"]
 param_override_build = {}
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 docs_lua_functions = 'docs/lua/functions.md'
+
+in_files = [
+    "src/audio/external.h",
+    "src/engine/surface_collision.h",
+    "src/game/camera.h",
+    "src/game/characters.h",
+    "src/game/mario_actions_airborne.c",
+    "src/game/mario_actions_automatic.c",
+    "src/game/mario_actions_cutscene.c",
+    "src/game/mario_actions_moving.c",
+    "src/game/mario_actions_object.c",
+    "src/game/mario_actions_stationary.c",
+    "src/game/mario_actions_submerged.c",
+    "src/game/mario_step.h",
+    "src/game/mario.h",
+    "src/game/thread6.c",
+    "src/pc/djui/djui_popup.h",
+    "src/pc/network/network_utils.h",
+]
+
+override_allowed_functions = {
+    "src/audio/external.h": [ " play_", "fade" ],
+    "src/game/camera.h":    [ "set_.*camera_.*shake" ],
+    "src/game/thread6.c":   [ "queue_rumble_"],
+    "src/pc/djui/djui_popup.h" : [ "create" ],
+}
+
+override_disallowed_functions = {
+    "src/audio/external.h":                [ " func_" ],
+    "src/engine/surface_collision.h":      [ " debug_" ],
+    "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_cutscene.c":   [ "^[us]32 act_.*", " geo_" ],
+    "src/game/mario_actions_moving.c":     [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_object.c":     [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_stationary.c": [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_submerged.c":  [ "^[us]32 act_.*" ],
+    "src/game/mario_step.h":               [ " stub_mario_step", "transfer_bully_speed"],
+    "src/game/mario.h":                    [ " init_mario" ],
+}
 
 ###########################################################
 
@@ -221,7 +262,21 @@ def build_binds(processed_files):
 
 ############################################################################
 
-def process_function(line):
+def process_function(fname, line):
+    if fname in override_allowed_functions:
+        found_match = False
+        for pattern in override_allowed_functions[fname]:
+            if re.search(pattern, line) != None:
+                found_match = True
+                break
+        if not found_match:
+            return None
+
+    if fname in override_disallowed_functions:
+        for pattern in override_disallowed_functions[fname]:
+            if re.search(pattern, line) != None:
+                return None
+
     function = {}
 
     line = line.strip()
@@ -246,24 +301,37 @@ def process_function(line):
                 param['type'] = normalize_type(param_str)
                 param['identifier'] = 'arg%d' % param_index
             else:
-                match = re.search('[a-zA-Z0-9_]+$', param_str)
+                match = re.search('[a-zA-Z0-9_\[\]]+$', param_str)
+                if match == None:
+                    return None
                 param['type'] = normalize_type(param_str[0:match.span()[0]])
                 param['identifier'] = match.group()
+
+            # override Vec3s/f
+            if param['identifier'] == 'pos':
+                if param['type'].replace(' ', '') == 'f32*':
+                    param['type'] = 'Vec3f'
+                if param['type'].replace(' ', '') == 's16*':
+                    param['type'] = 'Vec3s'
+
             function['params'].append(param)
             param_index += 1
 
     return function
 
-def process_functions(file_str):
+def process_functions(fname, file_str):
     functions = []
     for line in file_str.splitlines():
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
-        functions.append(process_function(line))
+        fn = process_function(fname, line)
+        if fn == None:
+            continue
+        functions.append(fn)
 
-    functions = sorted(functions, key=lambda d: d['identifier']) 
+    functions = sorted(functions, key=lambda d: d['identifier'])
     return functions
 
 def process_file(fname):
@@ -271,17 +339,16 @@ def process_file(fname):
     processed_file['filename'] = fname.replace('\\', '/').split('/')[-1]
     processed_file['extern'] = fname.endswith('.c')
 
-    with open(fname) as file:
-        processed_file['functions'] = process_functions(file.read())
+    extracted_str = extract_functions(fname)
+    processed_file['functions'] = process_functions(fname, extracted_str)
 
     return processed_file
 
 def process_files():
     processed_files = []
-    dir_path = os.path.dirname(os.path.realpath(__file__)) + '/lua_functions/'
-    files = sorted(os.listdir(dir_path))
+    files = sorted(in_files, key=lambda d: d.split('/')[-1])
     for f in files:
-        processed_files.append(process_file(dir_path + f))
+        processed_files.append(process_file(f))
     return processed_files
 
 ############################################################################
@@ -291,8 +358,11 @@ def doc_function_index(processed_files):
     for processed_file in processed_files:
         s += '- %s\n' % processed_file['filename']
         for function in processed_file['functions']:
+            if not function['implemented']:
+                continue
             s += '   - [%s](#%s)\n' % (function['identifier'], function['identifier'])
         s += '\n<br />\n\n'
+
     return s
 
 def doc_function(function):
