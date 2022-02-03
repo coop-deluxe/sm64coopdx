@@ -21,6 +21,7 @@
 <br />
 
 - djui_popup.h
+   - [djui_popup_create](#djui_popup_create)
 
 <br />
 
@@ -506,6 +507,27 @@
 
 <br />
 
+
+## [djui_popup_create](#djui_popup_create)
+
+### Lua Example
+`djui_popup_create(message, lines)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | string |
+| lines | int |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_popup_create(const char* message, int lines);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ---
 # functions from external.h

@@ -13,6 +13,7 @@
 #include "engine/math_util.h"
 #include "engine/surface_collision.h"
 #include "pc/network/network_utils.h"
+#include "src/pc/djui/djui_popup.h"
 
   //////////////
  // camera.h //
@@ -188,20 +189,18 @@ int smlua_func_update_character_anim_offset(lua_State* L) {
  // djui_popup.h //
 //////////////////
 
-/*
 int smlua_func_djui_popup_create(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-//  const char* message = (const char*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
     int lines = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    UNIMPLEMENTED -->(L, djui_popup_create(message, lines));
+    djui_popup_create(message, lines);
 
     return 1;
 }
-*/
 
   ////////////////
  // external.h //
@@ -2906,7 +2905,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "update_character_anim_offset", smlua_func_update_character_anim_offset);
 
     // djui_popup.h
-    //smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);
 
     // external.h
     smlua_bind_function(L, "fade_volume_scale", smlua_func_fade_volume_scale);

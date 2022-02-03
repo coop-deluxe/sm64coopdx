@@ -33,7 +33,7 @@ static void djui_popup_destroy(struct DjuiBase* base) {
     free(popup);
 }
 
-struct DjuiPopup* djui_popup_create(const char* message, int lines) {
+void djui_popup_create(const char* message, int lines) {
     struct DjuiPopup* popup = calloc(1, sizeof(struct DjuiPopup));
     struct DjuiBase* base = &popup->base;
 
@@ -57,7 +57,6 @@ struct DjuiPopup* djui_popup_create(const char* message, int lines) {
     sPopupListY -= height + 4;
     djui_popup_add_to_list(popup);
     play_sound(SOUND_MENU_PINCH_MARIO_FACE, gDefaultSoundArgs);
-    return popup;
 }
 
 void djui_popup_update(void) {

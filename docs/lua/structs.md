@@ -169,6 +169,7 @@
 | capModelId | integer |
 | capWingModelId | integer |
 | modelId | integer |
+| name | string |
 | soundAttacked | integer |
 | soundCoughing1 | integer |
 | soundCoughing2 | integer |
@@ -576,6 +577,7 @@
 | lastSent | number |
 | localIndex | integer |
 | modelIndex | integer |
+| name | string |
 | onRxSeqId | integer |
 | paletteIndex | integer |
 | type | integer |

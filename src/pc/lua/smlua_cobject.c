@@ -92,6 +92,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_F32:        lua_pushnumber( L, *(f32*)p);              break;
         case LVT_COBJECT:    smlua_push_object(L, data->lot, p);        break;
         case LVT_COBJECT_P:  smlua_push_object(L, data->lot, *(u8**)p); break;
+        case LVT_STRING:     lua_pushstring(L, (char*)p);              break;
         default:
             LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;

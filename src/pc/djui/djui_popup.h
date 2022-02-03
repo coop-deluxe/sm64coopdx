@@ -7,5 +7,5 @@ struct DjuiPopup {
     struct DjuiText* text;
 };
 
-struct DjuiPopup* djui_popup_create(const char* message, int lines);
+void djui_popup_create(const char* message, int lines);
 void djui_popup_update(void);

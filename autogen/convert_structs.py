@@ -185,7 +185,7 @@ def get_struct_field_info(struct, field):
 
     lvt = translate_type_to_lvt(ftype)
     lot = translate_type_to_lot(ftype)
-    fimmutable = str(lvt == 'LVT_COBJECT' or lvt == 'LVT_COBJECT_P').lower()
+    fimmutable = str(lvt == 'LVT_COBJECT' or lvt == 'LVT_COBJECT_P' or lvt == 'LVT_STRING').lower()
 
     if sid in override_field_immutable:
         if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
