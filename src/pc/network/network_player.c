@@ -42,26 +42,6 @@ u8 network_player_connected_count(void) {
     return count;
 }
 
-u8 network_player_global_index_from_local(u8 localIndex) {
-    if (gNetworkType == NT_SERVER) { return localIndex; }
-
-    if (gNetworkPlayerLocal == NULL) { return UNKNOWN_GLOBAL_INDEX; }
-    if (localIndex == 0) { return gNetworkPlayerLocal->globalIndex; } // me
-    if (localIndex == 1) { return 0; } // server
-
-    return localIndex - ((localIndex <= gNetworkPlayerLocal->globalIndex) ? 1 : 0);
-}
-
-u8 network_player_local_index_from_global(u8 globalIndex) {
-    if (gNetworkType == NT_SERVER) { return globalIndex; }
-
-    if (gNetworkPlayerLocal == NULL) { return UNKNOWN_LOCAL_INDEX; }
-    if (gNetworkPlayerLocal->globalIndex == globalIndex) { return 0; } // me
-    if (globalIndex == 0) { return 1; } // server
-
-    return globalIndex + ((globalIndex < gNetworkPlayerLocal->globalIndex) ? 1 : 0);
-}
-
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }

@@ -6,6 +6,7 @@
 #include <types.h>
 #include <assert.h>
 #include "network_player.h"
+#include "network_utils.h"
 #include "packets/packet.h"
 #include "pc/utils/string_linked_list.h"
 #include "../cliopts.h"

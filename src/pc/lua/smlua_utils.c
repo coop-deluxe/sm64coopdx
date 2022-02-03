@@ -39,6 +39,16 @@ bool smlua_is_table_empty(int index) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+bool smlua_to_boolean(lua_State* L, int index) {
+    if (lua_type(L, index) != LUA_TBOOLEAN) {
+        LOG_LUA("smlua_to_boolean received improper type '%d'", lua_type(L, index));
+        smlua_logline();
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+    return lua_toboolean(L, index) ? true : false;
+}
+
 lua_Integer smlua_to_integer(lua_State* L, int index) {
     if (lua_type(L, index) == LUA_TBOOLEAN) {
         return lua_toboolean(L, index) ? 1 : 0;

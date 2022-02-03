@@ -82,6 +82,7 @@ static int smlua__get_field(lua_State* L) {
 
     u8* p = ((u8*)pointer) + data->valueOffset;
     switch (data->valueType) {
+        case LVT_BOOL:       lua_pushboolean(L, *(u8* )p);              break;
         case LVT_U8:         lua_pushinteger(L, *(u8* )p);              break;
         case LVT_U16:        lua_pushinteger(L, *(u16*)p);              break;
         case LVT_U32:        lua_pushinteger(L, *(u32*)p);              break;
@@ -139,6 +140,7 @@ static int smlua__set_field(lua_State* L) {
 
     u8* p = ((u8*)pointer) + data->valueOffset;
     switch (data->valueType) {
+        case LVT_BOOL:*(u8*) p = smlua_to_boolean(L, -1); break;
         case LVT_U8:  *(u8*) p = smlua_to_integer(L, -1); break;
         case LVT_U16: *(u16*)p = smlua_to_integer(L, -1); break;
         case LVT_U32: *(u32*)p = smlua_to_integer(L, -1); break;

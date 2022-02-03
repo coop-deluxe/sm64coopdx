@@ -9,7 +9,7 @@ s16* smlua_get_vec3s_from_buffer(void);
 void smlua_bind_function(lua_State* L, const char* name, void* func);
 bool smlua_is_table_empty(int index);
 
-
+bool smlua_to_boolean(lua_State* L, int index);
 lua_Integer smlua_to_integer(lua_State* L, int index);
 lua_Number smlua_to_number(lua_State* L, int index);
 const char* smlua_to_string(lua_State* L, int index);

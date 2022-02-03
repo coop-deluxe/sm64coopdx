@@ -12,6 +12,7 @@
 #include "object_fields.h"
 #include "engine/math_util.h"
 #include "engine/surface_collision.h"
+#include "pc/network/network_utils.h"
 
   //////////////
  // camera.h //
@@ -2258,6 +2259,41 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
     return 1;
 }
 
+  /////////////////////
+ // network_utils.h //
+/////////////////////
+
+int smlua_func_network_global_index_from_local(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, network_global_index_from_local(localIndex));
+
+    return 1;
+}
+
+int smlua_func_network_is_server(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, network_is_server());
+
+    return 1;
+}
+
+int smlua_func_network_local_index_from_global(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 globalIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, network_local_index_from_global(globalIndex));
+
+    return 1;
+}
+
   /////////////////////////
  // surface_collision.h //
 /////////////////////////
@@ -2679,6 +2715,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_vel_from_pitch_and_yaw", smlua_func_set_vel_from_pitch_and_yaw);
     smlua_bind_function(L, "stationary_ground_step", smlua_func_stationary_ground_step);
     smlua_bind_function(L, "stop_and_set_height_to_floor", smlua_func_stop_and_set_height_to_floor);
+
+    // network_utils.h
+    smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
+    smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
+    smlua_bind_function(L, "network_local_index_from_global", smlua_func_network_local_index_from_global);
 
     // surface_collision.h
     //smlua_bind_function(L, "f32_find_wall_collision", smlua_func_f32_find_wall_collision); <--- UNIMPLEMENTED

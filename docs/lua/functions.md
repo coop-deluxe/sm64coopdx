@@ -209,6 +209,13 @@
 
 <br />
 
+- network_utils.h
+   - [network_global_index_from_local](#network_global_index_from_local)
+   - [network_is_server](#network_is_server)
+   - [network_local_index_from_global](#network_local_index_from_global)
+
+<br />
+
 - surface_collision.h
    - [f32_find_wall_collision](#f32_find_wall_collision)
    - [find_ceil](#find_ceil)
@@ -3533,6 +3540,70 @@
 
 ### C Prototype
 `void stop_and_set_height_to_floor(struct MarioState *);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from network_utils.h
+
+<br />
+
+
+## [network_global_index_from_local](#network_global_index_from_local)
+
+### Lua Example
+`local integerValue = network_global_index_from_local(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`u8 network_global_index_from_local(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_server](#network_is_server)
+
+### Lua Example
+`local boolValue = network_is_server()`
+
+### Parameters
+- None
+
+### Returns
+- bool
+
+### C Prototype
+`bool network_is_server(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_local_index_from_global](#network_local_index_from_global)
+
+### Lua Example
+`local integerValue = network_local_index_from_global(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`u8 network_local_index_from_global(u8 globalIndex);`
 
 [:arrow_up_small:](#)
 

@@ -1,7 +1,6 @@
 #include "smlua.h"
 #include "pc/mod_list.h"
 #include "pc/network/network.h"
-#include "pc/network/network_player.h"
 
 #define MAX_UNWOUND_SIZE 256
 static struct LSTNetworkType sUnwoundLnts[MAX_UNWOUND_LNT] = { 0 };
@@ -70,7 +69,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         if (lst == LST_PLAYER) {
             struct LSTNetworkType* n = &sUnwoundLnts[sUnwoundLntsCount - 1];
             assert(n->type == LST_NETWORK_TYPE_INTEGER);
-            n->value.integer = network_player_global_index_from_local(n->value.integer);
+            n->value.integer = network_global_index_from_local(n->value.integer);
         }
 
         lua_pop(L, 1); // pop _name value
@@ -320,7 +319,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
             if (smlua_get_integer_field(-1, "_type") == LST_PLAYER) {
                 lua_pop(L, 1); // pop wrong table
                 assert(lntKeys[i].type == LST_NETWORK_TYPE_INTEGER);
-                lua_pushinteger(L, network_player_local_index_from_global(lntKeys[i].value.integer));
+                lua_pushinteger(L, network_local_index_from_global(lntKeys[i].value.integer));
                 lua_gettable(L, -2);
             }
         }
