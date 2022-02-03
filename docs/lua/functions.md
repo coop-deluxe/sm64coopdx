@@ -20,6 +20,11 @@
 
 <br />
 
+- djui_chat_message.h
+   - [djui_chat_message_create](#djui_chat_message_create)
+
+<br />
+
 - djui_popup.h
    - [djui_popup_create](#djui_popup_create)
 
@@ -497,6 +502,32 @@
 
 ### C Prototype
 `void update_character_anim_offset(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from djui_chat_message.h
+
+<br />
+
+
+## [djui_chat_message_create](#djui_chat_message_create)
+
+### Lua Example
+`djui_chat_message_create(message)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | string |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_chat_message_create(const char* message);`
 
 [:arrow_up_small:](#)
 

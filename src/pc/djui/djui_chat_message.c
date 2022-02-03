@@ -43,16 +43,16 @@ static void djui_chat_message_destroy(struct DjuiBase* base) {
     free(chatMessage);
 }
 
-struct DjuiChatMessage* djui_chat_message_create_from(u8 globalIndex, char* message) {
+void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     u8* rgb = get_player_color(np->paletteIndex, 0);
     char chatMsg[256] = { 0 };
     snprintf(chatMsg, 256, "\\#%02x%02x%02x\\%s:\\#dcdcdc\\ %s", rgb[0], rgb[1], rgb[2], (np != NULL) ? np->name : "Player", message);
     play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
-    return djui_chat_message_create(chatMsg);
+    djui_chat_message_create(chatMsg);
 }
 
-struct DjuiChatMessage* djui_chat_message_create(char* message) {
+void djui_chat_message_create(const char* message) {
     struct DjuiChatMessage* chatMessage = calloc(1, sizeof(struct DjuiChatMessage));
     struct DjuiBase* base = &chatMessage->base;
     djui_base_init(&gDjuiChatBox->chatFlow->base, base, djui_chat_message_render, djui_chat_message_destroy);
@@ -86,6 +86,4 @@ struct DjuiChatMessage* djui_chat_message_create(char* message) {
     // figure out chat message width
     f32 messageWidth = djui_text_find_width(chatText, 10);
     chatMessage->messageWidth = messageWidth + 8;
-
-    return chatMessage;
 }

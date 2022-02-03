@@ -185,6 +185,21 @@ int smlua_func_update_character_anim_offset(lua_State* L) {
     return 1;
 }
 
+  /////////////////////////
+ // djui_chat_message.h //
+/////////////////////////
+
+int smlua_func_djui_chat_message_create(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    djui_chat_message_create(message);
+
+    return 1;
+}
+
   //////////////////
  // djui_popup.h //
 //////////////////
@@ -2903,6 +2918,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "play_character_sound_if_no_flag", smlua_func_play_character_sound_if_no_flag);
     smlua_bind_function(L, "play_character_sound_offset", smlua_func_play_character_sound_offset);
     smlua_bind_function(L, "update_character_anim_offset", smlua_func_update_character_anim_offset);
+
+    // djui_chat_message.h
+    smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

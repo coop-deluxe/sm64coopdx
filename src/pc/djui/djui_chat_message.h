@@ -9,5 +9,5 @@ struct DjuiChatMessage {
     f32 createTime;
 };
 
-struct DjuiChatMessage* djui_chat_message_create_from(u8 globalIndex, char* message);
-struct DjuiChatMessage* djui_chat_message_create(char* message);
+void djui_chat_message_create_from(u8 globalIndex, const char* message);
+void djui_chat_message_create(const char* message);

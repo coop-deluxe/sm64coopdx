@@ -27,6 +27,7 @@ in_files = [
     "src/game/thread6.c",
     "src/pc/djui/djui_popup.h",
     "src/pc/network/network_utils.h",
+    "src/pc/djui/djui_chat_message.h",
 ]
 
 override_allowed_functions = {
@@ -48,6 +49,7 @@ override_disallowed_functions = {
     "src/game/mario_actions_submerged.c":  [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":               [ " stub_mario_step", "transfer_bully_speed"],
     "src/game/mario.h":                    [ " init_mario" ],
+    "src/pc/djui/djui_chat_message.h":     [ "create_from" ],
 }
 
 ###########################################################
