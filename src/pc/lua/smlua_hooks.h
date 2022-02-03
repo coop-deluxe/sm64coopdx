@@ -12,6 +12,7 @@ enum LuaHookedEventType {
     HOOK_ON_PVP_ATTACK,
     HOOK_ON_PLAYER_CONNECTED,
     HOOK_ON_PLAYER_DISCONNECTED,
+    HOOK_ON_CHAT_COMMAND,
     HOOK_MAX,
 };
 
@@ -24,12 +25,14 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PVP_ATTACK",
     "HOOK_ON_PLAYER_CONNECTED",
     "HOOK_ON_PLAYER_DISCONNECTED",
+    "HOOK_ON_CHAT_COMMAND",
     "HOOK_MAX"
 };
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
+bool smlua_call_event_hook_on_chat_command(char* message);
 
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
 

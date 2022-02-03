@@ -125,6 +125,31 @@ void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookTyp
     }
 }
 
+bool smlua_call_event_hook_on_chat_command(char* message) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
+    bool ret = false;
+
+    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_CHAT_COMMAND];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push message
+        lua_pushstring(L, message);
+
+        // call the callback
+        if (0 != lua_pcall(L, 1, 1, 0)) {
+            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            continue;
+        }
+
+        ret = ret || smlua_to_boolean(L, -1);
+    }
+
+    return ret;
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////
