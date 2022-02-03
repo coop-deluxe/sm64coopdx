@@ -111,6 +111,7 @@ static bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 /////////////////////////////////////////////////////////////
 
 void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u16 lntKeyCount, struct LSTNetworkType* lntKeys, struct LSTNetworkType* lntValue) {
+    if (gLuaState == NULL) { return; }
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_SYNC_TABLE, true, PLMT_NONE);
@@ -132,6 +133,8 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
 }
 
 void network_receive_lua_sync_table(struct Packet* p) {
+    if (gLuaState == NULL) { return; }
+
     u64 seq = 0;
     u16 modRemoteIndex = 0;
     u16 lntKeyCount = 0;

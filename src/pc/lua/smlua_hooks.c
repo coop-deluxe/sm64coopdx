@@ -103,6 +103,28 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
     }
 }
 
+void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookType, struct NetworkPlayer* np) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push mario state
+        lua_getglobal(L, "gNetworkPlayers");
+        lua_pushinteger(L, np->localIndex);
+        lua_gettable(L, -2);
+        lua_remove(L, -2);
+
+        // call the callback
+        if (0 != lua_pcall(L, 1, 0, 0)) {
+            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            continue;
+        }
+    }
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////

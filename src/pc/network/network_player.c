@@ -7,6 +7,7 @@
 #include "pc/utils/misc.h"
 #include "game/area.h"
 #include "game/level_info.h"
+#include "pc/lua/smlua_hooks.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer* gNetworkPlayerLocal = NULL;
@@ -245,6 +246,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
     LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
 
+    smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
+
     return localIndex;
 }
 
@@ -288,6 +291,9 @@ u8 network_player_disconnected(u8 globalIndex) {
 
         packet_ordered_clear(globalIndex);
         reservation_area_change(np);
+
+        smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_DISCONNECTED, &gMarioStates[i]);
+
         return i;
     }
     return UNKNOWN_GLOBAL_INDEX;
