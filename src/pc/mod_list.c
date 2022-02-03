@@ -212,9 +212,11 @@ static bool mod_list_incompatible_match(struct ModListEntry* a, struct ModListEn
     char* bi = b->incompatible;
     char* atoken = NULL;
     char* btoken = NULL;
+    char* arest = NULL;
+    char* brest = NULL;
 
-    while ((atoken = strtok(ai, " "))) {
-        while((btoken = strtok(bi, " "))) {
+    for (atoken = strtok_r(ai, " ", &arest); atoken != NULL; atoken = strtok_r(NULL, " ", &arest)) {
+        for (btoken = strtok_r(bi, " ", &brest); btoken != NULL; btoken = strtok_r(NULL, " ", &brest)) {
             if (!strcmp(atoken, btoken)) {
                 return true;
             }
