@@ -1,118 +1,280 @@
 import os
 from common import *
+from extract_constants import *
 
-in_filename = os.path.dirname(os.path.realpath(__file__)) + "/lua_constants/constants.lua"
-out_filename = os.path.dirname(os.path.realpath(__file__)) + '/../src/pc/lua/smlua_constants_autogen.c'
-docs_lua_constants = 'docs/lua/constants.md'
+in_filename = 'autogen/lua_constants/built-in.lua'
+out_filename = 'src/pc/lua/smlua_constants_autogen.c'
+out_filename_docs = 'docs/lua/constants.md'
+
+in_files = [
+    "include/types.h",
+    "include/sm64.h",
+    "src/pc/lua/smlua_hooks.h",
+    "src/game/camera.h",
+    "include/mario_animation_ids.h",
+    "include/audio_defines.h",
+    "src/game/characters.h",
+    "src/pc/network/network_player.h",
+    "include/PR/os_cont.h",
+]
+
+exclude_constants = [
+    '^MAXCONTROLLERS$',
+    '^LEVEL_.*',
+    '^AREA_.*',
+    '^CONT_ERR.*',
+]
+
+pretend_find = [
+    'SOUND_ARG_LOAD'
+]
+############################################################################
+
+seen_constants = []
 
 ############################################################################
 
-def build_constants():
-    built = "char gSmluaConstants[] = "
-    with open(in_filename) as fp:
-        lines = fp.readlines()
-        for line in lines:
-            if line.startswith('--'):
-                continue
-            if line.strip() == '':
-                continue
-            built += '"' + line.replace('\n', '').replace('\r', '') + '\\n"' + "\n"
-    built += ';'
+def validate_identifiers(built_files):
+    all_identifiers = [x.group()[1:] for x in re.finditer(r'[(, ][A-Z_][A-Z0-9_]*', built_files)]
+    all_identifiers = set(all_identifiers)
+    for ident in all_identifiers:
+        if ident in pretend_find:
+            continue
+        if ident + ' = ' not in built_files:
+            print('COULD NOT FIND ' + ident)
 
-    with open(out_filename, 'w') as out:
-        out.write(built)
 
 ############################################################################
 
-def doc_process(lines):
-    processed = []
-    cur = None
+def saw_constant(identifier):
+    if identifier in seen_constants:
+        print("SAW DUPLICATE CONSTANT: " + identifier)
+        return True
+    else:
+        seen_constants.append(identifier)
+        return False
 
+def process_enum(line):
+    _, ident, val = line.split(' ', 2)
+
+    if '{' not in val or '}' not in val:
+        print('UNRECOGNIZED ENUM: ' + line)
+        return None
+
+    # grab inside body
+    val = val.split('{', 1)[-1].rsplit('}', 1)[0]
+
+    ret = {}
+    ret['identifier'] = ident
+
+    constants = []
+    set_to = None
+    index = 0
+    fields = val.split(',')
+    for field in fields:
+        field = field.strip()
+        if len(field) == 0:
+            continue
+
+        if '=' in field:
+            ident, val = field.split('=', 2)
+            constants.append([ident.strip(), val.strip()])
+            set_to = ident
+            index = 1
+            continue
+
+        if set_to is not None:
+            constants.append([field, '((%s) + %d)' % (set_to, index)])
+            index += 1
+            continue
+
+        excluded = False
+        for exclude in exclude_constants:
+            if re.search(exclude, field) != None:
+                excluded = True
+
+        if not excluded:
+            constants.append([field, str(index)])
+
+            if saw_constant(field):
+                print('>>> ' + line)
+        index += 1
+
+    ret['constants'] = constants
+
+    return ret
+
+
+def process_define(line):
+    _, ident, val = line.split(' ', 2)
+
+    val = val.replace('(u8)', '')
+    val = val.replace('(u64)', '')
+
+    for p in val.split(' '):
+        if p.startswith('0x'):
+            continue
+        p = re.sub(r'0x[a-fA-F0-9]+', '', p)
+        if re.search('[a-z]', p) != None:
+            print('UNRECOGNIZED DEFINE: ' + line)
+            return None
+
+    for exclude in exclude_constants:
+        if re.search(exclude, ident) != None:
+            return None
+
+    if saw_constant(ident):
+        print('>>> ' + line)
+
+    return [ident, val]
+
+
+def process_line(line):
+    if line.startswith('enum '):
+        return process_enum(line)
+    elif line.startswith('#define '):
+        return process_define(line)
+    else:
+        print("UNRECOGNIZED LINE: " + line)
+        return None
+
+def process_file(filename):
+    processed_file = {}
+    processed_file['filename'] = filename.replace('\\', '/').split('/')[-1]
+
+    constants = []
+    lines = extract_constants(get_path(filename)).splitlines()
     for line in lines:
+        c = process_line(line)
+        if c != None:
+            constants.append(c)
 
-        if line.startswith('--'):
-            spl = line.split()
-            if len(spl) == 3 and spl[0] == spl[2]:
-                if cur != None:
-                    processed.append(cur)
-                cur = {}
-                cur['category'] = spl[1].strip()
-                cur['constants'] = []
-            continue
+    processed_file['constants'] = constants
 
-        if len(line.strip()) == 0:
-            if len(cur['constants']) == 0:
-                continue
+    return processed_file
 
-            if len(cur['constants'][-1]) == 0:
-                continue
+def process_files():
+    seen_constants = []
+    processed_files = []
+    files = sorted(in_files, key=lambda d: d.split('/')[-1])
+    for f in files:
+        processed_files.append(process_file(f))
+    return processed_files
 
-            cur['constants'].append('')
-            continue
+############################################################################
 
-        if '=' not in line:
-            continue
+def build_constant(processed_constant):
+    constants = processed_constant
+    s = ''
 
-        if line[0] < 'A' or line[0] > 'Z':
-            continue
-
-        cur['constants'].append(line.strip().split(' ')[0])
-
-    if cur != None:
-        processed.append(cur)
-
-    processed = sorted(processed, key=lambda d: d['category'])
-    return processed
-
-def doc_build_category(p):
-    category = p['category']
-    constants = p['constants']
-    if len(constants[-1]) == 0:
-        constants = constants[:-1]
-
-    if len(constants) == 0:
-        return
-
-    s = '\n## [%s](%s)\n' % (category, category)
+    is_enum = 'identifier' in processed_constant
+    if is_enum:
+        constants = processed_constant['constants']
+    else:
+        constants = [processed_constant]
 
     for c in constants:
-        if len(c) == 0:
-            s += '\n<br />\n\n'
-            continue
-
-        s += '- %s\n' % c
-
-    s += '\n[:arrow_up_small:](#)\n\n<br />\n'
+        s += '%s = %s\n' % (c[0], c[1])
 
     return s
 
-def doc_build_index(processed):
-    s = '# Supported Constants\n'
-    for p in processed:
-        s += '- [%s](#%s)\n' % (p['category'], p['category'])
-
-    s += '\n<br />\n'
+def build_file(processed_file):
+    s = ''
+    for c in processed_file['constants']:
+        s += build_constant(c)
 
     return s
 
-def doc_build(processed):
-    s = '## [:rewind: Lua Reference](lua.md)\n\n'
-    s += doc_build_index(processed)
-    for p in processed:
-        s += doc_build_category(p)
+def build_files(processed_files):
+    s = ''
+    for file in processed_files:
+        s += build_file(file)
 
-    with open(get_path(docs_lua_constants), 'w') as out:
-        out.write(s)
+    return s
 
-def doc_constants():
-    with open(in_filename) as fp:
-        lines = fp.readlines()
+def build_to_c(built_files):
+    txt = ''
+    with open(get_path(in_filename), 'r') as f:
+        txt = f.read()
+    txt += '\n' + built_files
 
-    processed = doc_process(lines)
-    doc_build(processed)
+    while ('\n\n' in txt):
+        txt = txt.replace('\n\n', '\n')
 
+    lines = txt.splitlines()
+    txt = 'char gSmluaConstants[] = ""\n'
+    for line in lines:
+        txt += '"%s\\n"\n' % line
+    txt += ';'
+    return txt
 
 ############################################################################
 
-build_constants()
-doc_constants()
+def doc_constant_index(processed_files):
+    s = '# Supported Constants\n'
+    for processed_file in processed_files:
+        s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
+        constants = [x for x in processed_file['constants'] if 'identifier' in x]
+        constants = sorted(constants, key=lambda d: d['identifier'])
+        for c in constants:
+            s += '    - [%s](#%s)\n' % (c['identifier'], c['identifier'])
+    s += '\n<br />\n\n'
+    return s
+
+def doc_constant(processed_constant):
+    constants = processed_constant
+    s = ''
+
+    is_enum = 'identifier' in processed_constant
+    if is_enum:
+        constants = processed_constant['constants']
+        if len(constants) == 0:
+            return ''
+
+        enum = 'enum ' + processed_constant['identifier']
+        s += '\n### [%s](#%s)\n' % (enum, processed_constant['identifier'])
+        s += '| Identifier | Value |\n'
+        s += '| :--------- | :---- |\n'
+        for c in constants:
+            s += '| %s | %s |\n' % (c[0], c[1])
+        return s
+
+    for c in [processed_constant]:
+        s += '- %s\n' % (c[0])
+
+    return s
+
+def doc_file(processed_file):
+    s = '## [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
+    constants = sorted(processed_file['constants'], key=lambda d: 'zzz' + d['identifier'] if 'identifier' in d else d[0])
+    for c in constants:
+        s += doc_constant(c)
+
+    s += '\n<br />\n\n'
+    return s
+
+def doc_files(processed_files):
+    s = '## [:rewind: Lua Reference](lua.md)\n\n'
+    s += doc_constant_index(processed_files)
+    for file in processed_files:
+        s += doc_file(file)
+
+    return s
+
+############################################################################
+
+def main():
+    processed_files = process_files()
+    built_files = build_files(processed_files)
+    validate_identifiers(built_files)
+
+    built_c = build_to_c(built_files)
+
+    with open(get_path(out_filename), 'w') as out:
+        out.write(built_c)
+
+    doc = doc_files(processed_files)
+    with open(get_path(out_filename_docs), 'w') as out:
+        out.write(doc)
+
+main()

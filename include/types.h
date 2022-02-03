@@ -402,21 +402,6 @@ struct MarioState
 #define PLAY_MODE_CHANGE_LEVEL 4
 #define PLAY_MODE_FRAME_ADVANCE 5
 
-// NOTE: this defines the maximum number of players...
-//       HOWEVER, simply increasing this to 3 will not magically work
-//       many things will have to be overhauled!
-#ifdef UNSTABLE_BRANCH
 #define MAX_PLAYERS 16
-#else
-#define MAX_PLAYERS 2
-#endif
-// are you still deciding to increase it?
-// networking will have to be rewritten to have more than one destination. 'reliable' messages would need to be sent per-player
-// things that base priority on whether they are the host or not would need priority based on player index instead
-// read all of the code surrounding a search through the entire codebase of the following:
-// gMarioObject
-// gMarioStates[0]
-// gMarioStates[1]
-// two-player hack
 
 #endif // _SM64_TYPES_H_
