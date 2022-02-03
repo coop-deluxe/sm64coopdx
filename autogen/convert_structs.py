@@ -9,7 +9,8 @@ in_files = [
     'src/game/area.h',
     'src/game/camera.h',
     'src/game/characters.h',
-    'src/engine/surface_collision.h'
+    'src/engine/surface_collision.h',
+    'src/pc/network/network_player.h'
 ]
 
 smlua_cobject_autogen = 'src/pc/lua/smlua_cobject_autogen'
@@ -55,6 +56,7 @@ override_field_types = {
 override_field_immutable = {
     "MarioState": [ "playerIndex" ],
     "Character": [ "*" ],
+    "NetworkPlayer": [ "*" ],
 }
 
 sLuaManuallyDefinedStructs = [

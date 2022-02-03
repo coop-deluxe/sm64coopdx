@@ -25,6 +25,7 @@
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [ModeTransitionInfo](#ModeTransitionInfo)
+- [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
 - [ObjectHitbox](#ObjectHitbox)
 - [ObjectNode](#ObjectNode)
@@ -552,6 +553,32 @@
 | newMode | integer |
 | transitionEnd | [LinearTransitionPoint](#LinearTransitionPoint) |
 | transitionStart | [LinearTransitionPoint](#LinearTransitionPoint) |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [NetworkPlayer](#NetworkPlayer)
+
+| Field | Type |
+| ----- | ---- |
+| connected | bool |
+| currActNum | integer |
+| currAreaIndex | integer |
+| currAreaSyncValid | bool |
+| currCourseNum | integer |
+| currLevelAreaSeqId | integer |
+| currLevelNum | integer |
+| currLevelSyncValid | bool |
+| fadeOpacity | integer |
+| globalIndex | integer |
+| lastReceived | number |
+| lastSent | number |
+| localIndex | integer |
+| modelIndex | integer |
+| onRxSeqId | integer |
+| paletteIndex | integer |
+| type | integer |
 
 [:arrow_up_small:](#)
 

@@ -175,6 +175,17 @@ void smlua_cobject_init_globals(void) {
     {
         lua_newtable(L);
         int t = lua_gettop(gLuaState);
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            lua_pushinteger(L, i);
+            smlua_push_object(L, LOT_NETWORKPLAYER, &gNetworkPlayers[i]);
+            lua_settable(L, t);
+        }
+        lua_setglobal(L, "gNetworkPlayers");
+    }
+
+    {
+        lua_newtable(L);
+        int t = lua_gettop(gLuaState);
         for (int i = 0; i < CT_MAX; i++) {
             lua_pushinteger(L, i);
             smlua_push_object(L, LOT_CHARACTER, &gCharacters[i]);

@@ -6,6 +6,7 @@
 #include "src/game/camera.h"
 #include "src/game/characters.h"
 #include "src/engine/surface_collision.h"
+#include "src/pc/network/network_player.h"
 
 #define LUA_ANIMATION_FIELD_COUNT 7
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
@@ -433,6 +434,30 @@ static struct LuaObjectField sModeTransitionInfoFields[LUA_MODE_TRANSITION_INFO_
     { "transitionStart", LVT_COBJECT, offsetof(struct ModeTransitionInfo, transitionStart), true,  LOT_LINEARTRANSITIONPOINT },
 };
 
+#define LUA_NETWORK_PLAYER_FIELD_COUNT 17
+static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT] = {
+    { "connected",          LVT_U8,  offsetof(struct NetworkPlayer, connected),          true, LOT_NONE },
+    { "currActNum",         LVT_S16, offsetof(struct NetworkPlayer, currActNum),         true, LOT_NONE },
+    { "currAreaIndex",      LVT_S16, offsetof(struct NetworkPlayer, currAreaIndex),      true, LOT_NONE },
+    { "currAreaSyncValid",  LVT_U8,  offsetof(struct NetworkPlayer, currAreaSyncValid),  true, LOT_NONE },
+    { "currCourseNum",      LVT_S16, offsetof(struct NetworkPlayer, currCourseNum),      true, LOT_NONE },
+    { "currLevelAreaSeqId", LVT_U16, offsetof(struct NetworkPlayer, currLevelAreaSeqId), true, LOT_NONE },
+    { "currLevelNum",       LVT_S16, offsetof(struct NetworkPlayer, currLevelNum),       true, LOT_NONE },
+    { "currLevelSyncValid", LVT_U8,  offsetof(struct NetworkPlayer, currLevelSyncValid), true, LOT_NONE },
+    { "fadeOpacity",        LVT_U8,  offsetof(struct NetworkPlayer, fadeOpacity),        true, LOT_NONE },
+    { "globalIndex",        LVT_U8,  offsetof(struct NetworkPlayer, globalIndex),        true, LOT_NONE },
+    { "lastReceived",       LVT_F32, offsetof(struct NetworkPlayer, lastReceived),       true, LOT_NONE },
+    { "lastSent",           LVT_F32, offsetof(struct NetworkPlayer, lastSent),           true, LOT_NONE },
+    { "localIndex",         LVT_U8,  offsetof(struct NetworkPlayer, localIndex),         true, LOT_NONE },
+    { "modelIndex",         LVT_U8,  offsetof(struct NetworkPlayer, modelIndex),         true, LOT_NONE },
+//  { "name",               LOT_???, offsetof(struct NetworkPlayer, name),               true, LOT_???  }, <--- UNIMPLEMENTED
+    { "onRxSeqId",          LVT_U8,  offsetof(struct NetworkPlayer, onRxSeqId),          true, LOT_NONE },
+    { "paletteIndex",       LVT_U8,  offsetof(struct NetworkPlayer, paletteIndex),       true, LOT_NONE },
+//  { "rxPacketHash",       LOT_???, offsetof(struct NetworkPlayer, rxPacketHash),       true, LOT_???  }, <--- UNIMPLEMENTED
+//  { "rxSeqIds",           LOT_???, offsetof(struct NetworkPlayer, rxSeqIds),           true, LOT_???  }, <--- UNIMPLEMENTED
+    { "type",               LVT_U8,  offsetof(struct NetworkPlayer, type),               true, LOT_NONE },
+};
+
 #define LUA_OBJECT_FIELD_COUNT 22
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                     LVT_S16,       offsetof(struct Object, activeFlags),                     false, LOT_NONE       },
@@ -660,6 +685,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MARIOBODYSTATE,        sMarioBodyStateFields,        LUA_MARIO_BODY_STATE_FIELD_COUNT        },
     { LOT_MARIOSTATE,            sMarioStateFields,            LUA_MARIO_STATE_FIELD_COUNT             },
     { LOT_MODETRANSITIONINFO,    sModeTransitionInfoFields,    LUA_MODE_TRANSITION_INFO_FIELD_COUNT    },
+    { LOT_NETWORKPLAYER,         sNetworkPlayerFields,         LUA_NETWORK_PLAYER_FIELD_COUNT          },
     { LOT_OBJECT,                sObjectFields,                LUA_OBJECT_FIELD_COUNT                  },
     { LOT_OBJECTHITBOX,          sObjectHitboxFields,          LUA_OBJECT_HITBOX_FIELD_COUNT           },
     { LOT_OBJECTNODE,            sObjectNodeFields,            LUA_OBJECT_NODE_FIELD_COUNT             },

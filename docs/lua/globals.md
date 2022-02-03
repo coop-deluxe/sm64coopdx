@@ -14,6 +14,15 @@ It is indexed by the local `playerIndex`, so `gMarioStates[0]` is always the loc
 
 <br />
 
+## [gNetworkPlayers](#gNetworkPlayers)
+The `gNetworkPlayers[]` table is an array from `0` to `(MAX_PLAYERS - 1)` that contains a [NetworkPlayer](structs.md#NetworkPlayer) struct for each possible player.
+
+It is indexed by the local `playerIndex`, so `gNetworkPlayers[0]` is always the local player.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gCharacter](#gCharacter)
 The `gCharacter[]` table is an array from `0` to `(CT_MAX - 1)` that contains a [Character](structs.md#Character) struct for each possible character.
 

@@ -100,6 +100,8 @@ def normalize_type(t):
 def alter_type(t):
     if t.startswith('enum '):
         return 'int'
+    if t == 'bool':
+        return 'u8'
     return t
 
 

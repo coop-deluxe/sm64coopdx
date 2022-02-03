@@ -537,6 +537,19 @@
 - CT_WALUIGI
 - CT_MAX
 
+<br />
+
+- NPT_UNKNOWN
+- NPT_LOCAL
+- NPT_SERVER
+- NPT_CLIENT
+
+<br />
+
+- UNKNOWN_LOCAL_INDEX
+- UNKNOWN_GLOBAL_INDEX
+- UNKNOWN_NETWORK_INDEX
+
 [:arrow_up_small:](#)
 
 <br />

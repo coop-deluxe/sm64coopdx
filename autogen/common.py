@@ -17,8 +17,10 @@ def get_path(p):
 def translate_type_to_lvt(ptype):
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'
-    if 'enum' in ptype:
+    if 'enum ' in ptype:
         return 'LVT_S32'
+    if ptype == 'bool':
+        return 'LVT_U8'
     if ptype in usf_types:
         return 'LVT_' + ptype.upper()
     if ptype in vec3_types:
@@ -36,7 +38,9 @@ def translate_type_to_lvt(ptype):
 def translate_type_to_lot(ptype):
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'
-    if 'enum' in ptype:
+    if 'enum ' in ptype:
+        return 'LOT_NONE'
+    if ptype == 'bool':
         return 'LOT_NONE'
     if ptype in usf_types:
         return 'LOT_NONE'
