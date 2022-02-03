@@ -107,18 +107,16 @@ int smlua_func_set_environmental_camera_shake(lua_State* L) {
  // characters.h //
 //////////////////
 
-/*
 int smlua_func_get_character(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    UNIMPLEMENTED -->(L, get_character(m));
+    smlua_push_object(L, LOT_CHARACTER, get_character(m));
 
     return 1;
 }
-*/
 
 int smlua_func_get_character_anim_offset(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
@@ -825,7 +823,6 @@ int smlua_func_play_sound_if_no_flag(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -842,7 +839,7 @@ int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
     f32 radius = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    UNIMPLEMENTED -->(L, resolve_and_return_wall_collisions(pos, offset, radius));
+    smlua_push_object(L, LOT_SURFACE, resolve_and_return_wall_collisions(pos, offset, radius));
 
     smlua_push_number_field(1, "x", pos[0]);
     smlua_push_number_field(1, "y", pos[1]);
@@ -850,7 +847,6 @@ int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
 
     return 1;
 }
-*/
 
 int smlua_func_return_mario_anim_y_translation(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
@@ -1677,7 +1673,7 @@ int smlua_func_spawn_obj_at_mario_rel_yaw(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     extern struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, const BehaviorScript *behavior, s16 relYaw);
-    UNIMPLEMENTED -->(L, spawn_obj_at_mario_rel_yaw(m, model, behavior, relYaw));
+    smlua_push_object(L, LOT_OBJECT, spawn_obj_at_mario_rel_yaw(m, model, behavior, relYaw));
 
     return 1;
 }
@@ -2912,7 +2908,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_environmental_camera_shake", smlua_func_set_environmental_camera_shake);
 
     // characters.h
-    //smlua_bind_function(L, "get_character", smlua_func_get_character); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "get_character", smlua_func_get_character);
     smlua_bind_function(L, "get_character_anim_offset", smlua_func_get_character_anim_offset);
     smlua_bind_function(L, "play_character_sound", smlua_func_play_character_sound);
     smlua_bind_function(L, "play_character_sound_if_no_flag", smlua_func_play_character_sound_if_no_flag);
@@ -2974,7 +2970,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "play_mario_sound", smlua_func_play_mario_sound);
     smlua_bind_function(L, "play_sound_and_spawn_particles", smlua_func_play_sound_and_spawn_particles);
     smlua_bind_function(L, "play_sound_if_no_flag", smlua_func_play_sound_if_no_flag);
-    //smlua_bind_function(L, "resolve_and_return_wall_collisions", smlua_func_resolve_and_return_wall_collisions); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "resolve_and_return_wall_collisions", smlua_func_resolve_and_return_wall_collisions);
     smlua_bind_function(L, "return_mario_anim_y_translation", smlua_func_return_mario_anim_y_translation);
     smlua_bind_function(L, "set_anim_to_frame", smlua_func_set_anim_to_frame);
     smlua_bind_function(L, "set_jump_from_landing", smlua_func_set_jump_from_landing);

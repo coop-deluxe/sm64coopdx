@@ -12,6 +12,7 @@
 <br />
 
 - characters.h
+   - [get_character](#get_character)
    - [get_character_anim_offset](#get_character_anim_offset)
    - [play_character_sound](#play_character_sound)
    - [play_character_sound_if_no_flag](#play_character_sound_if_no_flag)
@@ -81,6 +82,7 @@
    - [play_mario_sound](#play_mario_sound)
    - [play_sound_and_spawn_particles](#play_sound_and_spawn_particles)
    - [play_sound_if_no_flag](#play_sound_if_no_flag)
+   - [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
    - [return_mario_anim_y_translation](#return_mario_anim_y_translation)
    - [set_anim_to_frame](#set_anim_to_frame)
    - [set_jump_from_landing](#set_jump_from_landing)
@@ -401,6 +403,26 @@
 
 <br />
 
+
+## [get_character](#get_character)
+
+### Lua Example
+`local CharacterValue = get_character(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+[Character](structs.md#Character)
+
+### C Prototype
+`struct Character* get_character(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [get_character_anim_offset](#get_character_anim_offset)
 
@@ -1513,6 +1535,28 @@
 
 ### C Prototype
 `void play_sound_if_no_flag(struct MarioState *m, u32 soundBits, u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
+
+### Lua Example
+`local SurfaceValue = resolve_and_return_wall_collisions(pos, offset, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| offset | number |
+| radius | number |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);`
 
 [:arrow_up_small:](#)
 

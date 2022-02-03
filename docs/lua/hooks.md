@@ -9,10 +9,14 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 | Type | Description | Parameters |
 | :--- | :---------- | :--------- |
 | HOOK_UPDATE | Called once per frame | None |
-| HOOK_MARIO_UPDATE | Called once per player per frame at the end of a mario update | [MarioState](structs.md#MarioState) |
-| HOOK_BEFORE_MARIO_UPDATE | Called once per player per frame at the beginning of a mario update | [MarioState](structs.md#MarioState) |
-| HOOK_ON_SET_MARIO_ACTION | Called every time a player's current action is changed | [MarioState](structs.md#MarioState) |
-| HOOK_BEFORE_PHYS_STEP | Called once per player per frame before physics code is run | [MarioState](structs.md#MarioState) |
+| HOOK_MARIO_UPDATE | Called once per player per frame at the end of a mario update | [MarioState](structs.md#MarioState) mario |
+| HOOK_BEFORE_MARIO_UPDATE | Called once per player per frame at the beginning of a mario update | [MarioState](structs.md#MarioState) mario |
+| HOOK_ON_SET_MARIO_ACTION | Called every time a player's current action is changed | [MarioState](structs.md#MarioState) mario |
+| HOOK_BEFORE_PHYS_STEP | Called once per player per frame before physics code is run | [MarioState](structs.md#MarioState) mario |
+| HOOK_ON_PVP_ATTACK | Called when one player attacks another | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
+| HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |
+| HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
+| HOOK_ON_CHAT_COMMAND | Called when a player types a chat message starting with '/' | `string` message -> `return` `true` on valid command |
 
 <br />
 

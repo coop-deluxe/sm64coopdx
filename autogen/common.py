@@ -15,8 +15,10 @@ def get_path(p):
     return os.path.dirname(os.path.realpath(__file__)) + '/../' + p
 
 def translate_type_to_lvt(ptype):
-    if ptype == 'char*' or ('char' in ptype and '[' in ptype):
+    if ('char' in ptype and '[' in ptype):
         return 'LVT_STRING'
+    if ptype == 'char*':
+        return 'LVT_STRING_P'
 
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'

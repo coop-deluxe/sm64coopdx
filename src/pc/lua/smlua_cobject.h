@@ -13,6 +13,7 @@ enum LuaValueType {
     LVT_COBJECT,
     LVT_COBJECT_P,
     LVT_STRING,
+    LVT_STRING_P,
 };
 
 enum LuaObjectType {

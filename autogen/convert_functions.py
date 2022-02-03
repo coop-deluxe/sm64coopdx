@@ -193,6 +193,8 @@ def build_call(function):
     if ftype == 'void':
         return '    %s;\n' % ccall
 
+    flot = translate_type_to_lot(ftype)
+
     lfunc = 'UNIMPLEMENTED -->'
     if ftype in integer_types:
         lfunc = 'lua_pushinteger'
@@ -200,6 +202,8 @@ def build_call(function):
         lfunc = 'lua_pushnumber'
     elif ftype == 'bool':
         lfunc = 'lua_pushboolean'
+    elif '???' not in flot:
+        return '    smlua_push_object(L, %s, %s);\n' % (flot, ccall)
 
     return '    %s(L, %s);\n' % (lfunc, ccall)
 
