@@ -12,12 +12,12 @@ end
 -- globally sync enabled state
 gGlobalSyncTable.hideAndSeek = true
 
--- keep track of round numbers for popup
+-- keep track of round info for popup
 sCachedRoundNumber = 0
+sCachedRoundEnded = true
 gGlobalSyncTable.roundNumber = 0
-
--- timer for server to start a new round
-sStaleTimer = 0
+gGlobalSyncTable.roundEnded = true
+sRoundEndedTimer = 0
 
 -- server keeps track of last player turned seeker
 sLastSeekerIndex = 0
@@ -50,19 +50,23 @@ function server_update(m)
 
     -- only change state if there are 2+ players
     if connectedCount < 2 then
-        sStaleTimer = 0
+        sRoundEndedTimer = 0
         return
     end
 
-    -- increment stale timer
-    if not hasHider or not hasSeeker then
-        sStaleTimer = sStaleTimer + 1
-    else
-        sStaleTimer = 0
+    -- the following is round-ended code
+    if not gGlobalSyncTable.roundEnded then
+        if not hasHider or not hasSeeker then
+            gGlobalSyncTable.roundEnded = true
+            sRoundEndedTimer = 0
+        else
+            return
+        end
     end
 
-    -- if there have been no hiders, or no seekers, for 5 seconds
-    if sStaleTimer >= 30 * 5 then
+    -- if round was over for 5 seconds
+    sRoundEndedTimer = sRoundEndedTimer + 1
+    if sRoundEndedTimer >= 30 * 5 then
         -- reset seekers
         if not hasHider then
             for i=0,(MAX_PLAYERS-1) do
@@ -87,6 +91,7 @@ function server_update(m)
 
         -- increment round number
         gGlobalSyncTable.roundNumber = gGlobalSyncTable.roundNumber + 1
+        gGlobalSyncTable.roundEnded = false
     end
 end
 
@@ -109,6 +114,13 @@ function update()
         sDistanceTimer = 0
         play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
     end
+
+    -- inform players when a round has ended
+    if gGlobalSyncTable.roundEnded and not sCachedRoundEnded then
+        sCachedRoundNumber = gGlobalSyncTable.roundNumber
+        djui_popup_create('\\#a0a0ff\\the round has ended', 2)
+    end
+    sCachedRoundEnded = gGlobalSyncTable.roundEnded
 
     camping_detection(gMarioStates[0])
 end
@@ -243,6 +255,10 @@ function on_player_connected(m)
 end
 
 function on_hide_and_seek_command(msg)
+    if not network_is_server() then
+        djui_chat_message_create('Only the server can change this setting!')
+        return true
+    end
     if msg == 'on' then
         djui_chat_message_create('Hide-and-seek mod: enabled')
         gGlobalSyncTable.hideAndSeek = true
@@ -265,4 +281,4 @@ hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 
-hook_chat_command('hide', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
+hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
