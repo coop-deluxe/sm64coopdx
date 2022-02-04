@@ -44,6 +44,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     sUnwoundLnts[sUnwoundLntsCount++] = smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("attempted to unwind sync table with invalid key type");
+        smlua_logline();
         return false;
     }
 
@@ -55,6 +56,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         // make sure we remain within limits
         if (sUnwoundLntsCount >= MAX_UNWOUND_LNT) {
             LOG_LUA("attempted to unwind sync table past its limit");
+            smlua_logline();
             return false;
         }
 
@@ -77,6 +79,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         if (!gSmLuaConvertSuccess) {
             LOG_LUA("attempted to unwind sync table with invalid parent");
             lua_pop(L, 1); // pop iterative _parent
+            smlua_logline();
             return false;
         }
 
@@ -90,6 +93,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         if (parentType != LUA_TTABLE) {
             if (parentType != LUA_TNIL) {
                 LOG_LUA("attempted to unwind sync table into an invalid parent");
+                smlua_logline();
                 return false;
             }
             break;
@@ -106,6 +110,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
 
     if (unwoundSize >= MAX_UNWOUND_SIZE) {
         LOG_LUA("attempted to unwind sync table with too long of a key/parent length");
+        smlua_logline();
         return false;
     }
 
@@ -135,6 +140,7 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         // call hook
         if (0 != lua_pcall(L, 3, 0, 0)) {
             LOG_LUA("Failed to call the hook_on_changed callback: %s", lua_tostring(L, -1));
+            smlua_logline();
         }
     }
 
@@ -156,6 +162,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Error: tried to alter sync table with an invalid modRemoteIndex: %u", modRemoteIndex);
+        smlua_logline();
         return false;
     }
 
@@ -163,6 +170,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     struct LSTNetworkType lntKey = smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Error: tried to alter sync table with an invalid key");
+        smlua_logline();
         return false;
     }
     lntKey = lntKey;
@@ -181,6 +189,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
     if (prevValueType == LUA_TTABLE) {
         LOG_LUA("Error: tried to assign on top of sync table");
+        smlua_logline();
         goto CLEANUP_STACK;
     }
 
@@ -193,11 +202,13 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     if (valueType == LUA_TTABLE) {
         if (prevValueType != LUA_TNIL) {
             LOG_LUA("Error: tried to set a sync table field to a different sync table");
+            smlua_logline();
             goto CLEANUP_STACK;
         }
 
         if (!smlua_is_table_empty(valueIndex)) {
             LOG_LUA("Error: tried to generate a sync table with a non-empty table");
+            smlua_logline();
             goto CLEANUP_STACK;
         }
 
@@ -217,6 +228,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     struct LSTNetworkType lntValue = smlua_to_lnt(L, valueIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Error: tried to alter sync table with an invalid value");
+        smlua_logline();
         goto CLEANUP_STACK;
     }
 
@@ -256,6 +268,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     // unwind key + parent tables
     if (!smlua_sync_table_unwind(syncTableIndex, keyIndex)) {
         LOG_LUA("Error: failed to unwind sync table for sending over the network");
+        smlua_logline();
         goto CLEANUP_STACK;
     }
 
@@ -432,6 +445,7 @@ static void smlua_exec_str(char* str) {
     if (luaL_dostring(L, str) != LUA_OK) {
         LOG_LUA("Failed to load lua string.");
         puts(smlua_to_string(L, lua_gettop(L)));
+        smlua_logline();
     }
     LUA_STACK_CHECK_END();
 }

@@ -61,22 +61,26 @@ static int smlua__get_field(lua_State* L) {
 
     if (pointer == 0) {
         LOG_LUA("_get_field on null pointer");
+        smlua_logline();
         return 0;
     }
 
     if (!smlua_valid_lot(lot)) {
         LOG_LUA("_get_field on invalid LOT '%u'", lot);
+        smlua_logline();
         return 0;
     }
 
     if (!smlua_cobject_allowlist_contains(lot, pointer)) {
         LOG_LUA("_get_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        smlua_logline();
         return 0;
     }
 
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {
         LOG_LUA("_get_field on invalid key '%s', lot '%d'", key, lot);
+        smlua_logline();
         return 0;
     }
 
@@ -96,6 +100,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_STRING_P:   lua_pushstring(L, *(char**)p);             break;
         default:
             LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
+            smlua_logline();
             return 0;
     }
 
@@ -116,27 +121,32 @@ static int smlua__set_field(lua_State* L) {
 
     if (pointer == 0) {
         LOG_LUA("_set_field on null pointer");
+        smlua_logline();
         return 0;
     }
 
     if (!smlua_valid_lot(lot)) {
         LOG_LUA("_set_field on invalid LOT '%u'", lot);
+        smlua_logline();
         return 0;
     }
 
     if (!smlua_cobject_allowlist_contains(lot, pointer)) {
         LOG_LUA("_set_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+        smlua_logline();
         return 0;
     }
 
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {
         LOG_LUA("_set_field on invalid key '%s'", key);
+        smlua_logline();
         return 0;
     }
 
     if (data->immutable) {
         LOG_LUA("_set_field on immutable key '%s'", key);
+        smlua_logline();
         return 0;
     }
 
@@ -152,10 +162,12 @@ static int smlua__set_field(lua_State* L) {
         case LVT_F32: *(f32*)p = smlua_to_number(L, -1);  break;
         default:
             LOG_LUA("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
+            smlua_logline();
             return 0;
     }
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
+        smlua_logline();
         return 0;
     }
 

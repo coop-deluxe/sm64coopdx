@@ -166,6 +166,7 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
         lnt.value.string = (char*)lua_tostring(L, index);
         if (lnt.value.string == NULL || strlen(lnt.value.string) > 256) {
             LOG_LUA("smlua_to_lnt on invalid string value: '%s'", (lnt.value.string == NULL) ? "<null>" : lnt.value.string);
+            smlua_logline();
             gSmLuaConvertSuccess = false;
             return lnt;
         }
@@ -182,6 +183,7 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     }
 
     LOG_LUA("smlua_to_lnt on invalid type: '%d'", valueType);
+    smlua_logline();
     gSmLuaConvertSuccess = false;
     return lnt;
 }
@@ -260,6 +262,7 @@ void smlua_push_lnt(struct LSTNetworkType* lnt) {
 lua_Integer smlua_get_integer_field(int index, char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA("smlua_get_integer_field received improper type '%d'", lua_type(gLuaState, index));
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
     }
@@ -272,6 +275,7 @@ lua_Integer smlua_get_integer_field(int index, char* name) {
 lua_Number smlua_get_number_field(int index, char* name) {
     if (lua_type(gLuaState, index) != LUA_TTABLE) {
         LOG_LUA("smlua_get_number_field received improper type '%d'", lua_type(gLuaState, index));
+        smlua_logline();
         gSmLuaConvertSuccess = false;
         return 0;
     }
