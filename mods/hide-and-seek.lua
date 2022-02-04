@@ -9,6 +9,9 @@ for i=0,(MAX_PLAYERS-1) do
     sCachedState[i].seeking = false
 end
 
+-- globally sync enabled state
+gGlobalSyncTable.hideAndSeek = true
+
 -- keep track of round numbers for popup
 sCachedRoundNumber = 0
 gGlobalSyncTable.roundNumber = 0
@@ -32,8 +35,10 @@ function server_update(m)
     local hasSeeker = false
     local hasHider = false
     local activePlayers = {}
+    local connectedCount = 0
     for i=0,(MAX_PLAYERS-1) do
         if gNetworkPlayers[i].connected then
+            connectedCount = connectedCount + 1
             table.insert(activePlayers, gPlayerSyncTable[i])
             if gPlayerSyncTable[i].seeking then
                 hasSeeker = true
@@ -41,6 +46,12 @@ function server_update(m)
                 hasHider = true
             end
         end
+    end
+
+    -- only change state if there are 2+ players
+    if connectedCount < 2 then
+        sStaleTimer = 0
+        return
     end
 
     -- increment stale timer
@@ -80,6 +91,11 @@ function server_update(m)
 end
 
 function update()
+    -- check gamemode enabled state
+    if not gGlobalSyncTable.hideAndSeek then
+        return
+    end
+
     -- only allow the server to figure out the seeker
     if network_is_server() then
         server_update(gMarioStates[0])
@@ -133,6 +149,11 @@ function mario_local_update(m)
 end
 
 function mario_update(m)
+    -- check gamemode enabled state
+    if not gGlobalSyncTable.hideAndSeek then
+        return
+    end
+
     -- this code runs for all players
     local s = gPlayerSyncTable[m.playerIndex]
 
@@ -161,6 +182,11 @@ function mario_update(m)
 end
 
 function mario_before_phys_step(m)
+    -- check gamemode enabled state
+    if not gGlobalSyncTable.hideAndSeek then
+        return
+    end
+
     local s = gPlayerSyncTable[m.playerIndex]
 
     -- only make seekers faster
@@ -190,6 +216,11 @@ function mario_before_phys_step(m)
 end
 
 function on_pvp_attack(attacker, victim)
+    -- check gamemode enabled state
+    if not gGlobalSyncTable.hideAndSeek then
+        return
+    end
+
     -- this code runs when a player attacks another player
     local sAttacker = gPlayerSyncTable[attacker.playerIndex]
     local sVictim = gPlayerSyncTable[victim.playerIndex]
@@ -211,6 +242,19 @@ function on_player_connected(m)
     s.seeking = false
 end
 
+function on_hide_and_seek_command(msg)
+    if msg == 'on' then
+        djui_chat_message_create('Hide-and-seek mod: enabled')
+        gGlobalSyncTable.hideAndSeek = true
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Hide-and-seek mod: disabled')
+        gGlobalSyncTable.hideAndSeek = false
+        return true
+    end
+    return false
+end
+
 -----------
 -- hooks --
 -----------
@@ -220,3 +264,5 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
+
+hook_chat_command('hide', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)

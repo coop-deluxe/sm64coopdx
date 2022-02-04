@@ -16,7 +16,6 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 | HOOK_ON_PVP_ATTACK | Called when one player attacks another | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
 | HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |
 | HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
-| HOOK_ON_CHAT_COMMAND | Called when a player types a chat message starting with '/' | `string` message -> `return` `true` on valid command |
 
 <br />
 
@@ -111,6 +110,36 @@ end
 
 hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
 hook_mario_action(ACT_WALL_SLIDE, act_wall_slide)
+```
+
+[:arrow_up_small:](#)
+
+## [hook_chat_command](#hook_chat_command)
+`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| command | string |
+| description | string |
+| func | Lua Function |
+
+### Lua Example
+
+```lua
+function on_test_command(msg)
+    if msg == 'on' then
+        djui_chat_message_create('Test: enabled')
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Test: disabled')
+        return true
+    end
+    return false
+end
+
+hook_chat_command('test', "[on|off] turn test on or off", on_hide_and_seek_command)
 ```
 
 [:arrow_up_small:](#)

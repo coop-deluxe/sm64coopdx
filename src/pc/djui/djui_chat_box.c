@@ -33,8 +33,9 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
 
     if (strlen(chatInput->buffer) != 0) {
         if (chatInput->buffer[0] == '/') {
-            if (!smlua_call_event_hook_on_chat_command(chatInput->buffer)) {
+            if (!smlua_call_chat_command_hook(chatInput->buffer)) {
                 djui_chat_message_create("Unrecognized chat command.");
+                smlua_display_chat_commands();
             }
         } else {
             djui_chat_message_create_from(gNetworkPlayerLocal->globalIndex, chatInput->buffer);

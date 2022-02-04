@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "pc/djui/djui_chat_message.h"
 
 #define MAX_HOOKED_REFERENCES 64
 
@@ -125,31 +126,6 @@ void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookTyp
     }
 }
 
-bool smlua_call_event_hook_on_chat_command(char* message) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return false; }
-    bool ret = false;
-
-    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_CHAT_COMMAND];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push message
-        lua_pushstring(L, message);
-
-        // call the callback
-        if (0 != lua_pcall(L, 1, 1, 0)) {
-            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
-            continue;
-        }
-
-        ret = ret || smlua_to_boolean(L, -1);
-    }
-
-    return ret;
-}
-
   ////////////////////
  // hooked actions //
 ////////////////////
@@ -172,6 +148,11 @@ int smlua_hook_mario_action(lua_State* L) {
     }
 
     lua_Integer action = smlua_to_integer(L, -2);
+    if (action == 0 || gSmLuaConvertSuccess) {
+        LOG_LUA("Hook Action: tried to hook invalid action");
+        return 0;
+    }
+
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
     if (ref == -1) {
@@ -221,6 +202,111 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
     return false;
 }
 
+  /////////////////////////
+ // hooked chat command //
+/////////////////////////
+
+struct LuaHookedChatCommand {
+    char* command;
+    char* description;
+    int reference;
+};
+
+#define MAX_HOOKED_CHAT_COMMANDS 64
+
+static struct LuaHookedChatCommand sHookedChatCommands[MAX_HOOKED_CHAT_COMMANDS] = { 0 };
+static int sHookedChatCommandsCount = 0;
+
+int smlua_hook_chat_command(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (sHookedChatCommandsCount >= MAX_HOOKED_CHAT_COMMANDS) {
+        LOG_LUA("Hooked chat command exceeded maximum references!");
+        return 0;
+    }
+
+    const char* command = smlua_to_string(L, 1);
+    if (command == NULL || strlen(command) == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA("Hook chat command: tried to hook invalid command");
+        return 0;
+    }
+
+    const char* description = smlua_to_string(L, 2);
+    if (description == NULL || strlen(description) == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA("Hook chat command: tried to hook invalid description");
+        return 0;
+    }
+
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (ref == -1) {
+        LOG_LUA("Hook chat command: tried to hook undefined function '%s'", command);
+        return 0;
+    }
+
+    struct LuaHookedChatCommand* hooked = &sHookedChatCommands[sHookedChatCommandsCount];
+    hooked->command = strdup(command);
+    hooked->description = strdup(description);
+    hooked->reference = ref;
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    sHookedChatCommandsCount++;
+    return 1;
+}
+
+bool smlua_call_chat_command_hook(char* command) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
+    for (int i = 0; i < sHookedChatCommandsCount; i++) {
+        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        size_t commandLength = strlen(hook->command);
+        for (size_t j = 0; j < commandLength; j++) {
+            if (hook->command[j] != command[j + 1]) {
+                goto NEXT_HOOK;
+            }
+        }
+
+        char* params = &command[commandLength + 1];
+        if (*params != '\0' && *params != ' ') {
+            goto NEXT_HOOK;
+        }
+        if (*params == ' ') {
+            params++;
+        }
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference);
+
+        // push parameter
+        lua_pushstring(L, params);
+
+        // call the callback
+        if (0 != lua_pcall(L, 1, 1, 0)) {
+            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            continue;
+        }
+
+        // output the return value
+        bool returnValue = smlua_to_boolean(L, -1);
+        lua_pop(L, 1);
+
+        if (!gSmLuaConvertSuccess) { return false; }
+
+        return returnValue;
+
+NEXT_HOOK:;
+    }
+
+    return false;
+}
+
+void smlua_display_chat_commands(void) {
+    for (int i = 0; i < sHookedChatCommandsCount; i++) {
+        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        char msg[256] = { 0 };
+        snprintf(msg, 256, "/%s %s", hook->command, hook->description);
+        djui_chat_message_create(msg);
+    }
+}
+
   //////////
  // misc //
 //////////
@@ -238,6 +324,17 @@ static void smlua_clear_hooks(void) {
         sHookedMarioActions[i].reference = 0;
     }
     sHookedMarioActionsCount = 0;
+
+    for (int i = 0; i < sHookedChatCommandsCount; i++) {
+        if (sHookedChatCommands[i].command != NULL) { free(sHookedChatCommands[i].command); }
+        sHookedChatCommands[i].command = NULL;
+
+        if (sHookedChatCommands[i].description != NULL) { free(sHookedChatCommands[i].description); }
+        sHookedChatCommands[i].description = NULL;
+
+        sHookedChatCommands[i].reference = 0;
+    }
+    sHookedChatCommandsCount = 0;
 }
 
 void smlua_bind_hooks(void) {
@@ -246,5 +343,5 @@ void smlua_bind_hooks(void) {
 
     smlua_bind_function(L, "hook_event", smlua_hook_event);
     smlua_bind_function(L, "hook_mario_action", smlua_hook_mario_action);
-
+    smlua_bind_function(L, "hook_chat_command", smlua_hook_chat_command);
 }
