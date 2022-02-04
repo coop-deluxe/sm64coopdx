@@ -5,7 +5,43 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 
 <br />
 
-## [Hook Event Types](#Hook-Event-Types)
+## [hook_chat_command](#hook_chat_command)
+`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| command | string |
+| description | string |
+| func | Lua Function |
+
+### Lua Example
+
+```lua
+function on_test_command(msg)
+    if msg == 'on' then
+        djui_chat_message_create('Test: enabled')
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Test: disabled')
+        return true
+    end
+    return false
+end
+
+hook_chat_command('test', "[on|off] turn test on or off", on_hide_and_seek_command)
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_event](#hook_event)
+
+The lua functions sent to `hook_event()` will be automatically called by SM64 when certain events occur.
+
+### [Hook Event Types](#Hook-Event-Types)
 | Type | Description | Parameters |
 | :--- | :---------- | :--------- |
 | HOOK_UPDATE | Called once per frame | None |
@@ -16,12 +52,6 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 | HOOK_ON_PVP_ATTACK | Called when one player attacks another | [MarioState](structs.md#MarioState) attacker, [MarioState](structs.md#MarioState) victim |
 | HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |
 | HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
-
-<br />
-
-## [hook_event](#hook_event)
-
-The lua functions sent to `hook_event()` will be automatically called by SM64 when certain events occur.
 
 ### Parameters
 
@@ -114,32 +144,39 @@ hook_mario_action(ACT_WALL_SLIDE, act_wall_slide)
 
 [:arrow_up_small:](#)
 
-## [hook_chat_command](#hook_chat_command)
-`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise.
+<br />
+
+## [hook_on_sync_table_change](#hook_on_sync_table_change)
+`hook_on_sync_table_change()` allows Lua mods to react to sync table changes.
+ - `syncTable` parameter must be a sync table, e.g. [gGlobalSyncTable](globals.md#gGlobalSyncTable), [gPlayerSyncTable[]](globals.md#gPlayerSyncTable), or one of their child tables.
+ - `field` parameter must be one of the fields in the `SyncTable`.
+ - `tag` parameter can be any type, and is automatically passed to the callback.
+ - `func` parameter must be a function with three parameters: `tag`, `oldVal`, and `newVal`.
+   - `tag` will be the same `tag` passed into `hook_on_sync_table_change()`.
+   - `oldVal` will be the value before it was set.
+   - `newVal` will be the value that it was set to.
 
 ### Parameters
 
 | Field | Type |
 | ----- | ---- |
-| command | string |
-| description | string |
+| syncTable | SyncTable |
+| field | value |
+| tag | value |
 | func | Lua Function |
 
 ### Lua Example
 
 ```lua
-function on_test_command(msg)
-    if msg == 'on' then
-        djui_chat_message_create('Test: enabled')
-        return true
-    elseif msg == 'off' then
-        djui_chat_message_create('Test: disabled')
-        return true
-    end
-    return false
+function on_testing_field_changed(tag, oldVal, newVal)
+    print('testingField changed:', tag, ',', oldVal, '->', newVal)
 end
 
-hook_chat_command('test', "[on|off] turn test on or off", on_hide_and_seek_command)
+hook_on_sync_table_change(gGlobalSyncTable, 'testingField', 'tag', on_testing_field_changed)
+
+-- now when testingField is set, either locally or over the network, on_testing_field_changed() will be called
+gGlobalSyncTable.testingField = 'hello'
+
 ```
 
 [:arrow_up_small:](#)

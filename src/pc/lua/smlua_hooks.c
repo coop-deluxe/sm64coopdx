@@ -48,7 +48,7 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
 
         // call the callback
         if (0 != lua_pcall(L, 0, 0, 0)) {
-            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the event_hook callback: %u, %s", hookType, lua_tostring(L, -1));
             continue;
         }
     }
@@ -70,7 +70,7 @@ void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct
 
         // call the callback
         if (0 != lua_pcall(L, 1, 0, 0)) {
-            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             continue;
         }
     }
@@ -98,7 +98,7 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
 
         // call the callback
         if (0 != lua_pcall(L, 2, 0, 0)) {
-            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             continue;
         }
     }
@@ -120,7 +120,7 @@ void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookTyp
 
         // call the callback
         if (0 != lua_pcall(L, 1, 0, 0)) {
-            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             continue;
         }
     }
@@ -182,10 +182,10 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             lua_pushinteger(L, m->playerIndex);
             lua_gettable(L, -2);
             lua_remove(L, -2);
-            
+
             // call the callback
             if (0 != lua_pcall(L, 1, 1, 0)) {
-                LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+                LOG_LUA("Failed to call the action callback: %u, %s", m->action, lua_tostring(L, -1));
                 continue;
             }
 
@@ -280,7 +280,7 @@ bool smlua_call_chat_command_hook(char* command) {
 
         // call the callback
         if (0 != lua_pcall(L, 1, 1, 0)) {
-            LOG_LUA("Failed to call the callback: %s", lua_tostring(L, -1));
+            LOG_LUA("Failed to call the chat command callback: %s, %s", command, lua_tostring(L, -1));
             continue;
         }
 
@@ -306,6 +306,62 @@ void smlua_display_chat_commands(void) {
         djui_chat_message_create(msg);
     }
 }
+
+  //////////////////////////////
+ // hooked sync table change //
+//////////////////////////////
+
+
+int smlua_hook_on_sync_table_change(lua_State* L) {
+    LUA_STACK_CHECK_BEGIN();
+    if (L == NULL) { return 0; }
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    int syncTableIndex = 1;
+    int keyIndex = 2;
+    int tagIndex = 3;
+    int funcIndex = 4;
+
+    if (lua_type(L, syncTableIndex) != LUA_TTABLE) {
+        LOG_LUA("Tried to attach a non-table to hook_on_sync_table_change: %d", lua_type(L, syncTableIndex));
+        return 0;
+    }
+
+    if (lua_type(L, funcIndex) != LUA_TFUNCTION) {
+        LOG_LUA("Tried to attach a non-function to hook_on_sync_table_change: %d", lua_type(L, funcIndex));
+        return 0;
+    }
+
+    // set hook's table
+    lua_newtable(L);
+    int valTableIndex = lua_gettop(L);
+
+    lua_pushstring(L, "_func");
+    lua_pushvalue(L, funcIndex);
+    lua_settable(L, valTableIndex);
+
+    lua_pushstring(L, "_tag");
+    lua_pushvalue(L, tagIndex);
+    lua_settable(L, valTableIndex);
+
+    // get _hook_on_changed
+    lua_pushstring(L, "_hook_on_changed");
+    lua_rawget(L, syncTableIndex);
+    int hookOnChangedIndex = lua_gettop(L);
+
+    // attach
+    lua_pushvalue(L, keyIndex);
+    lua_pushvalue(L, valTableIndex);
+    lua_settable(L, hookOnChangedIndex);
+
+    // clean up
+    lua_remove(L, hookOnChangedIndex);
+    lua_remove(L, valTableIndex);
+
+    LUA_STACK_CHECK_END();
+    return 1;
+}
+
 
   //////////
  // misc //
@@ -344,4 +400,5 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_event", smlua_hook_event);
     smlua_bind_function(L, "hook_mario_action", smlua_hook_mario_action);
     smlua_bind_function(L, "hook_chat_command", smlua_hook_chat_command);
+    smlua_bind_function(L, "hook_on_sync_table_change", smlua_hook_on_sync_table_change);
 }

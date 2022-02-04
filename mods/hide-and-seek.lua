@@ -2,27 +2,19 @@
 -- incompatible: gamemode
 -- description: A simple manhunt gamemode for Co-op.\n\nThe game is split into two teams:\n\nHiders and Seekers. The goal is for all\n\Hiders to be converted into a Seeker within a certain timeframe.\n\nAll Seekers appear as a metal character, and are given boosted speed\n\and jump height.\n\nHiders are given no enhancements, and\n\become a Seeker upon dying.\n\nEnjoy! :D\n\nConcept by: Super Keeberghrh
 
--- cache old seeking state for sounds and popups
-sCachedState = {}
-for i=0,(MAX_PLAYERS-1) do
-    sCachedState[i] = {}
-    sCachedState[i].seeking = false
-end
-
 -- globally sync enabled state
 gGlobalSyncTable.hideAndSeek = true
 
 -- keep track of round info for popup
-sCachedRoundNumber = 0
-sCachedRoundEnded = true
 gGlobalSyncTable.roundNumber = 0
 gGlobalSyncTable.roundEnded = true
 sRoundEndedTimer = 0
+sRoundIntermissionTime = 5 * 30 -- five seconds
 
 -- server keeps track of last player turned seeker
 sLastSeekerIndex = 0
 
--- keep track of distance moved recently
+-- keep track of distance moved recently (camping detection)
 sLastPos = {}
 sLastPos.x = 0
 sLastPos.y = 0
@@ -54,7 +46,7 @@ function server_update(m)
         return
     end
 
-    -- the following is round-ended code
+    -- check to see if the round should end
     if not gGlobalSyncTable.roundEnded then
         if not hasHider or not hasSeeker then
             gGlobalSyncTable.roundEnded = true
@@ -66,7 +58,7 @@ function server_update(m)
 
     -- if round was over for 5 seconds
     sRoundEndedTimer = sRoundEndedTimer + 1
-    if sRoundEndedTimer >= 30 * 5 then
+    if sRoundEndedTimer >= sRoundIntermissionTime then
         -- reset seekers
         if not hasHider then
             for i=0,(MAX_PLAYERS-1) do
@@ -95,6 +87,36 @@ function server_update(m)
     end
 end
 
+function camping_detection(m)
+    -- this code only runs for the local player
+    local s = gPlayerSyncTable[m.playerIndex]
+
+    -- track how far the local player has moved recently
+    sDistanceMoved = sDistanceMoved - 0.25 + vec3f_dist(sLastPos, m.pos) * 0.02
+    vec3f_copy(sLastPos, m.pos)
+
+    -- clamp between 0 to 100
+    if sDistanceMoved < 0   then sDistanceMoved = 0   end
+    if sDistanceMoved > 100 then sDistanceMoved = 100 end
+
+    -- if player hasn't moved enough, start a timer
+    if sDistanceMoved < 10 and not s.seeking then
+        sDistanceTimer = sDistanceTimer + 1
+    end
+
+    -- if the player has moved enough, reset the timer
+    if sDistanceMoved > 20 then
+        sDistanceTimer = 0
+    end
+
+    -- inform the player that they need to move, or make them a seeker
+    if sDistanceTimer == 30 * 1 then
+        djui_popup_create('\\#ff4040\\Keep moving!', 3)
+    elseif sDistanceTimer > 30 * 6 then
+        s.seeking = true
+    end
+end
+
 function update()
     -- check gamemode enabled state
     if not gGlobalSyncTable.hideAndSeek then
@@ -106,58 +128,8 @@ function update()
         server_update(gMarioStates[0])
     end
 
-    -- inform players when a new round has begun
-    if sCachedRoundNumber < gGlobalSyncTable.roundNumber then
-        sCachedRoundNumber = gGlobalSyncTable.roundNumber
-        djui_popup_create('\\#a0ffa0\\a new round has begun', 2)
-        sDistanceMoved = 100
-        sDistanceTimer = 0
-        play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
-    end
-
-    -- inform players when a round has ended
-    if gGlobalSyncTable.roundEnded and not sCachedRoundEnded then
-        sCachedRoundNumber = gGlobalSyncTable.roundNumber
-        djui_popup_create('\\#a0a0ff\\the round has ended', 2)
-    end
-    sCachedRoundEnded = gGlobalSyncTable.roundEnded
-
+    -- check if local player is camping
     camping_detection(gMarioStates[0])
-end
-
-function camping_detection(m)
-    -- this code only runs for the local player
-    local s = gPlayerSyncTable[m.playerIndex]
-
-    -- become a seeker if you stop moving
-    sDistanceMoved = sDistanceMoved - 0.25 + vec3f_dist(sLastPos, m.pos) * 0.02
-    vec3f_copy(sLastPos, m.pos)
-    if sDistanceMoved > 100 then
-        sDistanceMoved = 100
-    end
-    if sDistanceMoved < 0 then
-        sDistanceMoved = 0
-    end
-    if sDistanceMoved < 10 and not s.seeking then
-        sDistanceTimer = sDistanceTimer + 1
-        if sDistanceTimer == 30 * 1 then
-            djui_popup_create('\\#ff4040\\Keep moving!', 3)
-        elseif sDistanceTimer > 30 * 6 then
-            s.seeking = true
-        end
-    end
-    if sDistanceMoved > 20 then
-        sDistanceTimer = 0
-    end
-end
-
-function mario_local_update(m)
-    -- this code only runs for the local player
-    local s = gPlayerSyncTable[m.playerIndex]
-
-    if m.health <= 0x110 then
-        s.seeking = true
-    end
 end
 
 function mario_update(m)
@@ -169,9 +141,9 @@ function mario_update(m)
     -- this code runs for all players
     local s = gPlayerSyncTable[m.playerIndex]
 
-    -- only run certain code for the local player
-    if m.playerIndex == 0 then
-        mario_local_update(m)
+    -- if the local player died, make them a seeker
+    if m.playerIndex == 0 and m.health <= 0x110 then
+        s.seeking = true
     end
 
     -- display all seekers as metal
@@ -179,18 +151,6 @@ function mario_update(m)
         m.marioBodyState.modelState = MODEL_STATE_METAL
         m.health = 0x880
     end
-
-    -- play sound and create popup if seeker state changed
-    local c = sCachedState[m.playerIndex]
-    local np = gNetworkPlayers[m.playerIndex]
-
-    if s.seeking and not c.seeking then
-        play_sound(SOUND_OBJ_BOWSER_LAUGH, m.marioObj.header.gfx.cameraToObject)
-        playerColor = network_get_player_text_color_string(m.playerIndex)
-        djui_popup_create(playerColor .. np.name .. '\\#ffa0a0\\ is now a seeker', 2)
-        sLastSeekerIndex = m.playerIndex
-    end
-    c.seeking = s.seeking
 end
 
 function mario_before_phys_step(m)
@@ -271,6 +231,40 @@ function on_hide_and_seek_command(msg)
     return false
 end
 
+-----------------------
+-- network callbacks --
+-----------------------
+
+function on_round_number_changed(tag, oldVal, newVal)
+    -- inform players when a new round has begun
+    if oldVal < newVal then
+        djui_popup_create('\\#a0ffa0\\a new round has begun', 2)
+        sDistanceMoved = 100
+        sDistanceTimer = 0
+        play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
+    end
+end
+
+function on_round_ended_changed(tag, oldVal, newVal)
+    -- inform players when a round has ended
+    if newVal and not oldVal then
+        djui_popup_create('\\#a0a0ff\\the round has ended', 2)
+    end
+end
+
+function on_seeking_changed(tag, oldVal, newVal)
+    local m = gMarioStates[tag]
+    local np = gNetworkPlayers[tag]
+
+    -- play sound and create popup if became a seeker
+    if newVal and not oldVal then
+        play_sound(SOUND_OBJ_BOWSER_LAUGH, m.marioObj.header.gfx.cameraToObject)
+        playerColor = network_get_player_text_color_string(m.playerIndex)
+        djui_popup_create(playerColor .. np.name .. '\\#ffa0a0\\ is now a seeker', 2)
+        sLastSeekerIndex = m.playerIndex
+    end
+end
+
 -----------
 -- hooks --
 -----------
@@ -282,3 +276,10 @@ hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
+
+-- call functions when certain sync table values change
+hook_on_sync_table_change(gGlobalSyncTable, 'roundNumber', 0, on_round_number_changed)
+hook_on_sync_table_change(gGlobalSyncTable, 'roundEnded', 0, on_round_ended_changed)
+for i=0,(MAX_PLAYERS-1) do
+    hook_on_sync_table_change(gPlayerSyncTable[i], 'seeking', i, on_seeking_changed)
+end

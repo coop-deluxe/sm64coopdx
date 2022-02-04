@@ -16,6 +16,7 @@ static void smlua_sync_table_create(u16 modRemoteIndex, enum LuaSyncTableType ls
     smlua_push_integer_field(t, "_type", lst);
     smlua_push_table_field(t, "_seq");
     smlua_push_table_field(t, "_table");
+    smlua_push_table_field(t, "_hook_on_changed");
 
     // set parent
     lua_pushstring(L, "_parent");
@@ -112,7 +113,36 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     return true;
 }
 
-static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool alterSeq) {
+static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int prevValueIndex, int valueIndex) {
+    LUA_STACK_CHECK_BEGIN();
+    lua_State* L = gLuaState;
+
+    // get hook table
+    lua_pushstring(L, "_hook_on_changed"); lua_rawget(L, syncTableIndex);
+    lua_pushvalue(L, keyIndex); lua_gettable(L, -2);
+    lua_remove(L, -2); // pop _hook_on_changed
+    int hookTableIndex = lua_gettop(L);
+
+    if (lua_type(L, hookTableIndex) == LUA_TTABLE) {
+        // push hook func
+        lua_pushstring(L, "_func"); lua_gettable(L, hookTableIndex);
+
+        // push hook params
+        lua_pushstring(L, "_tag"); lua_gettable(L, hookTableIndex);
+        lua_pushvalue(L, prevValueIndex);
+        lua_pushvalue(L, valueIndex);
+
+        // call hook
+        if (0 != lua_pcall(L, 3, 0, 0)) {
+            LOG_LUA("Failed to call the hook_on_changed callback: %s", lua_tostring(L, -1));
+        }
+    }
+
+    lua_pop(L, 1); // pop _hook_on_changed's value
+    LUA_STACK_CHECK_END();
+}
+
+static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool alterSeq) {
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 
@@ -120,21 +150,23 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     int keyIndex       = stackIndex + 2;
     int valueIndex     = stackIndex + 3;
 
+    bool ret = false;
+
     // get modRemoteIndex
     u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Error: tried to alter sync table with an invalid modRemoteIndex: %u", modRemoteIndex);
-        return;
+        return false;
     }
 
     // get key
     struct LSTNetworkType lntKey = smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Error: tried to alter sync table with an invalid key");
-        return;
+        return false;
     }
     lntKey = lntKey;
-    
+
 
       ////////////////
      // prev value //
@@ -144,12 +176,12 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     lua_pushvalue(L, keyIndex);
     lua_rawget(L, -2);
     int prevValueType = lua_type(L, -1);
-    lua_pop(L, 1); // pop prev value
-    lua_pop(L, 1); // pop _table
+    lua_remove(L, -2); // pop _table
+    int prevValueIndex = lua_gettop(L);
 
     if (prevValueType == LUA_TTABLE) {
         LOG_LUA("Error: tried to assign on top of sync table");
-        return;
+        goto CLEANUP_STACK;
     }
 
       ///////////
@@ -161,12 +193,12 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     if (valueType == LUA_TTABLE) {
         if (prevValueType != LUA_TNIL) {
             LOG_LUA("Error: tried to set a sync table field to a different sync table");
-            return;
+            goto CLEANUP_STACK;
         }
 
         if (!smlua_is_table_empty(valueIndex)) {
             LOG_LUA("Error: tried to generate a sync table with a non-empty table");
-            return;
+            goto CLEANUP_STACK;
         }
 
         // create sync table
@@ -179,19 +211,19 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
         lua_settable(L, -3);
         lua_pop(L, 1); // pop _table
 
-        LUA_STACK_CHECK_END();
-        return;
+        ret = true;
+        goto CLEANUP_STACK;
     }
     struct LSTNetworkType lntValue = smlua_to_lnt(L, valueIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Error: tried to alter sync table with an invalid value");
-        return;
+        goto CLEANUP_STACK;
     }
 
     // set value
     lua_getfield(L, syncTableIndex, "_table");
-    lua_pushvalue(L, -3);
-    lua_pushvalue(L, -3);
+    lua_pushvalue(L, keyIndex);
+    lua_pushvalue(L, valueIndex);
     lua_settable(L, -3);
     lua_pop(L, 1); // pop _table
 
@@ -224,7 +256,7 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     // unwind key + parent tables
     if (!smlua_sync_table_unwind(syncTableIndex, keyIndex)) {
         LOG_LUA("Error: failed to unwind sync table for sending over the network");
-        return;
+        goto CLEANUP_STACK;
     }
 
     // send over the network
@@ -232,12 +264,23 @@ static void smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
         network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, sUnwoundLntsCount, sUnwoundLnts, &lntValue);
     }
 
+
+      ///////////////
+     // call hook //
+    ///////////////
+
+    smlua_sync_table_call_hook(syncTableIndex, keyIndex, prevValueIndex, valueIndex);
+
+
+CLEANUP_STACK:
+    lua_remove(L, prevValueIndex); // pop prevValue
     LUA_STACK_CHECK_END();
+    return ret;
 }
 
-static int smlua__set_sync_table_field(UNUSED lua_State* L) {
+static int smlua__set_sync_table_field(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
-    smlua_sync_table_send_field(0, 0, true);
+    lua_pushboolean(L, smlua_sync_table_send_field(0, 0, true));
     return 1;
 }
 
@@ -277,17 +320,19 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
 
     lua_getglobal(L, "_G"); // get global table
     lua_getfield(L, LUA_REGISTRYINDEX, entry->path); // get the file's "global" table
+    lua_remove(L, -2); // remove global table
     int fileGlobalIndex = lua_gettop(L);
 
     // push global sync table
     u16 syncTableSize = 1;
     smlua_push_lnt(&lntKeys[lntKeyCount - 1]);
     lua_gettable(L, fileGlobalIndex);
-    int syncTableIndex = lua_gettop(L);
     if (lua_type(L, -1) != LUA_TTABLE) {
         LOG_ERROR("Received sync table field packet with an invalid table");
         return;
     }
+    lua_remove(L, fileGlobalIndex); // pop file's "global" table
+    int syncTableIndex = lua_gettop(L);
 
     for (int i = lntKeyCount - 2; i >= 1; i--) {
         // get child sync table
@@ -341,8 +386,6 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
         LOG_INFO("Received outdated sync table field packet: %llu <= %llu", seq, readSeq);
         lua_pop(L, 1); // pop seq table
         lua_pop(L, syncTableSize); // pop sync table
-        lua_pop(L, 1); // pop file's "global" table
-        lua_pop(L, 1); // pop global table
         return;
     }
 
@@ -355,17 +398,31 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     // get internal table
     lua_pushstring(L, "_table");
     lua_rawget(L, -2);
-    int t = lua_gettop(L);
+    int internalTableIndex = lua_gettop(L);
+
+    // get prevValue
+    smlua_push_lnt(&lntKeys[0]);
+    lua_rawget(L, internalTableIndex);
+    int prevValueIndex = lua_gettop(L);
 
     // set key/value
     smlua_push_lnt(&lntKeys[0]);
     smlua_push_lnt(lntValue);
-    lua_rawset(L, t);
+    lua_rawset(L, internalTableIndex);
 
+    // call hook
+    smlua_push_lnt(&lntKeys[0]);
+    int keyIndex = lua_gettop(L);
+    smlua_push_lnt(lntValue);
+    int valueIndex = lua_gettop(L);
+    smlua_sync_table_call_hook(syncTableIndex, keyIndex, prevValueIndex, valueIndex);
+    lua_pop(L, 1); // pop value
+    lua_pop(L, 1); // pop key
+
+    // cleanup
+    lua_pop(L, 1); // pop prevValue
     lua_pop(L, 1); // pop internal table
     lua_pop(L, syncTableSize); // pop sync table
-    lua_pop(L, 1); // pop file's "global" table
-    lua_pop(L, 1); // pop global table
     LUA_STACK_CHECK_END();
 }
 
