@@ -6,13 +6,21 @@
 gGlobalSyncTable.hideAndSeek = true
 
 -- keep track of round info for popup
+ROUND_END_UNKNOWN = 1
+ROUND_END_SEEKER_WIN = 2
+ROUND_END_HIDER_WIN = 3
 gGlobalSyncTable.roundNumber = 0
-gGlobalSyncTable.roundEnded = true
+gGlobalSyncTable.roundEnded = ROUND_END_UNKNOWN
+
 sRoundEndedTimer = 0
 sRoundIntermissionTime = 5 * 30 -- five seconds
 
 -- server keeps track of last player turned seeker
 sLastSeekerIndex = 0
+
+-- keep track of the amount of time since someone was turned into seeker
+sLastSeekerTimer = 0
+sLastSeekerTimeout = 3 * 60 * 30 -- three minutes
 
 -- keep track of distance moved recently (camping detection)
 sLastPos = {}
@@ -43,13 +51,20 @@ function server_update(m)
     -- only change state if there are 2+ players
     if connectedCount < 2 then
         sRoundEndedTimer = 0
+        sLastSeekerTimer = 0
         return
     end
 
     -- check to see if the round should end
-    if not gGlobalSyncTable.roundEnded then
-        if not hasHider or not hasSeeker then
-            gGlobalSyncTable.roundEnded = true
+    if gGlobalSyncTable.roundEnded == 0 then
+        if not hasHider or not hasSeeker or sLastSeekerTimer > sLastSeekerTimeout then
+            if not hasHider then
+                gGlobalSyncTable.roundEnded = ROUND_END_SEEKER_WIN
+            elseif sLastSeekerTimer > sLastSeekerTimeout then
+                gGlobalSyncTable.roundEnded = ROUND_END_HIDER_WIN
+            else
+                gGlobalSyncTable.roundEnded = ROUND_END_UNKNOWN
+            end
             sRoundEndedTimer = 0
         else
             return
@@ -83,7 +98,7 @@ function server_update(m)
 
         -- increment round number
         gGlobalSyncTable.roundNumber = gGlobalSyncTable.roundNumber + 1
-        gGlobalSyncTable.roundEnded = false
+        gGlobalSyncTable.roundEnded = 0
     end
 end
 
@@ -130,6 +145,19 @@ function update()
 
     -- check if local player is camping
     camping_detection(gMarioStates[0])
+
+    -- update sLastSeekerTimer
+    if gGlobalSyncTable.roundEnded == 0 then
+        sLastSeekerTimer = sLastSeekerTimer + 1
+        local timeLeft = sLastSeekerTimeout - sLastSeekerTimer
+        if timeLeft == 60 * 30 then
+            djui_popup_create('\\#ff4040\\Seekers have one minute to get someone!', 3)
+        elseif timeLeft == 30 * 30 then
+            djui_popup_create('\\#ff4040\\Seekers have 30 seconds to get someone!', 3)
+        elseif timeLeft == 10 * 30 then
+            djui_popup_create('\\#ff4040\\Seekers have 10 seconds to get someone!', 3)
+        end
+    end
 end
 
 function mario_update(m)
@@ -247,8 +275,21 @@ end
 
 function on_round_ended_changed(tag, oldVal, newVal)
     -- inform players when a round has ended
-    if newVal and not oldVal then
-        djui_popup_create('\\#a0a0ff\\the round has ended', 2)
+    local tColor = '\\#ffa0a0\\'
+    if newVal == ROUND_END_UNKNOWN then
+        djui_popup_create(tColor .. 'the round has ended', 2)
+    elseif newVal == ROUND_END_HIDER_WIN then
+        if not gPlayerSyncTable[0].seeking then tColor = '\\#a0ffa0\\' end
+        djui_popup_create(tColor .. 'Hiders win!', 2)
+    elseif newVal == ROUND_END_SEEKER_WIN then
+        if gPlayerSyncTable[0].seeking then tColor = '\\#a0ffa0\\' end
+        djui_popup_create(tColor .. 'Seekers win!', 2)
+    end
+
+    if oldVal == 0 and newVal ~= 0 then
+        sLastSeekerTimer = 0
+    elseif newVal == 0 and oldVal ~= 0 then
+        sLastSeekerTimer = 0
     end
 end
 
@@ -262,6 +303,7 @@ function on_seeking_changed(tag, oldVal, newVal)
         playerColor = network_get_player_text_color_string(m.playerIndex)
         djui_popup_create(playerColor .. np.name .. '\\#ffa0a0\\ is now a seeker', 2)
         sLastSeekerIndex = m.playerIndex
+        sLastSeekerTimer = 0
     end
 end
 
