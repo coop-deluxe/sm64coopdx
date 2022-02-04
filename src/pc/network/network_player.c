@@ -219,9 +219,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     // display connected popup
     if (type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
-        u8* rgb = get_player_color(np->paletteIndex, 0);
+        char* playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ connected", rgb[0], rgb[1], rgb[2], np->name);
+        snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ connected", playerColorString, np->name);
         djui_popup_create(popupMsg, 1);
     }
     LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
@@ -264,9 +264,9 @@ u8 network_player_disconnected(u8 globalIndex) {
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
-        u8* rgb = get_player_color(np->paletteIndex, 0);
+        char* playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ disconnected", rgb[0], rgb[1], rgb[2], np->name);
+        snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ disconnected", playerColorString, np->name);
         djui_popup_create(popupMsg, 1);
 
         packet_ordered_clear(globalIndex);
@@ -282,15 +282,15 @@ u8 network_player_disconnected(u8 globalIndex) {
 void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // display popup
     if (np->currCourseNum != courseNum && np->localIndex != 0) {
-        u8* rgb = get_player_color(np->paletteIndex, 0);
+        char* playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
         if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ left this level", rgb[0], rgb[1], rgb[2], np->name);
+            snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ left this level", playerColorString, np->name);
         } else if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ entered this level", rgb[0], rgb[1], rgb[2], np->name);
+            snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ entered this level", playerColorString, np->name);
         } else {
-            snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ entered\n%s", rgb[0], rgb[1], rgb[2], np->name, get_level_name(courseNum, levelNum, areaIndex));
+            snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ entered\n%s", playerColorString, np->name, get_level_name(courseNum, levelNum, areaIndex));
         }
         djui_popup_create(popupMsg, 1);
     }

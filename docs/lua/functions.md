@@ -241,6 +241,7 @@
 <br />
 
 - network_utils.h
+   - [network_get_player_text_color_string](#network_get_player_text_color_string)
    - [network_global_index_from_local](#network_global_index_from_local)
    - [network_is_server](#network_is_server)
    - [network_local_index_from_global](#network_local_index_from_global)
@@ -4142,6 +4143,26 @@
 
 <br />
 
+
+## [network_get_player_text_color_string](#network_get_player_text_color_string)
+
+### Lua Example
+`local stringValue = network_get_player_text_color_string(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | integer |
+
+### Returns
+- string
+
+### C Prototype
+`char* network_get_player_text_color_string(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [network_global_index_from_local](#network_global_index_from_local)
 

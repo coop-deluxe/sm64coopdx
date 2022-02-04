@@ -45,9 +45,11 @@ static void djui_chat_message_destroy(struct DjuiBase* base) {
 
 void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
-    u8* rgb = get_player_color(np->paletteIndex, 0);
+
+    char* playerColorString = network_get_player_text_color_string(np->localIndex);
     char chatMsg[256] = { 0 };
-    snprintf(chatMsg, 256, "\\#%02x%02x%02x\\%s:\\#dcdcdc\\ %s", rgb[0], rgb[1], rgb[2], (np != NULL) ? np->name : "Player", message);
+    snprintf(chatMsg, 256, "%s%s:\\#dcdcdc\\ %s", playerColorString, (np != NULL) ? np->name : "Player", message);
+
     play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
     djui_chat_message_create(chatMsg);
 }

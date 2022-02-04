@@ -2630,6 +2630,30 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
  // network_utils.h //
 /////////////////////
 
+/*
+int smlua_func_network_get_player_text_color(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    UNIMPLEMENTED -->(L, network_get_player_text_color(localIndex));
+
+    return 1;
+}
+*/
+
+int smlua_func_network_get_player_text_color_string(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushstring(L, network_get_player_text_color_string(localIndex));
+
+    return 1;
+}
+
 int smlua_func_network_global_index_from_local(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -3115,6 +3139,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_and_set_height_to_floor", smlua_func_stop_and_set_height_to_floor);
 
     // network_utils.h
+    //smlua_bind_function(L, "network_get_player_text_color", smlua_func_network_get_player_text_color); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
     smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
     smlua_bind_function(L, "network_local_index_from_global", smlua_func_network_local_index_from_global);

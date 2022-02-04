@@ -27,7 +27,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
 
     djui_base_set_visible(&djuiRow[i]->base, visible);
 
-    u8* rgb = get_player_color(np->paletteIndex, 0);
+    u8* rgb = network_get_player_text_color(np->localIndex);
     djui_base_set_color(&djuiTextNames[i]->base, rgb[0], rgb[1], rgb[2], 255);
     djui_text_set_text(djuiTextNames[i], np->name);
 

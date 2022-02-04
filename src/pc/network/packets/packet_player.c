@@ -339,9 +339,9 @@ void network_receive_player(struct Packet* p) {
     // inform of player death
     if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
         // display popup
-        u8* rgb = get_player_color(np->paletteIndex, 0);
+        char* playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "\\#%02x%02x%02x\\%s\\#dcdcdc\\ died", rgb[0], rgb[1], rgb[2], np->name);
+        snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ died", playerColorString, np->name);
         djui_popup_create(popupMsg, 1);
     }
 

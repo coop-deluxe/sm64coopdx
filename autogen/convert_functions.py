@@ -202,7 +202,9 @@ def build_call(function):
         lfunc = 'lua_pushnumber'
     elif ftype == 'bool':
         lfunc = 'lua_pushboolean'
-    elif '???' not in flot:
+    elif ftype == 'char*':
+        lfunc = 'lua_pushstring'
+    elif '???' not in flot and flot != 'LOT_NONE':
         return '    smlua_push_object(L, %s, %s);\n' % (flot, ccall)
 
     return '    %s(L, %s);\n' % (lfunc, ccall)

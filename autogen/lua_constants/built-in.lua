@@ -66,6 +66,13 @@ function vec3f_mul(dest, a)
     return dest
 end
 
+function vec3f_dist(v1, v2)
+    dx = v1.x - v2.x
+    dy = v1.y - v2.y
+    dz = v1.z - v2.z
+    return math.sqrt(dx * dx + dy * dy + dz * dz)
+end
+
 function vec3s_copy(dest, src)
     dest.x = src.x
     dest.y = src.y
@@ -99,6 +106,13 @@ function vec3s_mul(dest, a)
     dest.y = dest.y * a
     dest.z = dest.z * a
     return dest
+end
+
+function vec3s_dist(v1, v2)
+    dx = v1.x - v2.x
+    dy = v1.y - v2.y
+    dz = v1.z - v2.z
+    return math.sqrt(dx * dx + dy * dy + dz * dz)
 end
 
 function approach_f32(current, target, inc, dec)
