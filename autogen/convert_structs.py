@@ -292,8 +292,8 @@ def doc_struct_index(structs):
 def doc_struct(struct):
     sid = struct['identifier']
     s = '## [%s](#%s)\n\n' % (sid, sid)
-    s += "| Field | Type |\n"
-    s += "| ----- | ---- |\n"
+    s += "| Field | Type | Access |\n"
+    s += "| ----- | ---- | ------ |\n"
 
 
     # build doc table
@@ -305,11 +305,12 @@ def doc_struct(struct):
 
         ftype, do_link = translate_type_to_lua(ftype)
 
+        restrictions = ('', 'read-only')[fimmutable == 'true']
         if do_link:
-            s += '| %s | [%s](#%s) |\n'  % (fid, ftype, ftype)
+            s += '| %s | [%s](#%s) | %s |\n'  % (fid, ftype, ftype, restrictions)
             continue
 
-        s += '| %s | %s |\n'  % (fid, ftype)
+        s += '| %s | %s | %s |\n'  % (fid, ftype, restrictions)
 
     s += '\n[:arrow_up_small:](#)\n\n<br />\n'
 
