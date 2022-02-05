@@ -118,6 +118,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL) { continue; }
+            if (so->lastReliablePacketIsStale) { continue; }
             struct Packet* entPacket = get_last_sync_ent_reliable_packet(i);
             if (entPacket->error) { continue; }
             struct Packet p2 = { 0 };

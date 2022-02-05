@@ -26,7 +26,6 @@ void bhv_water_level_diamond_loop(void) {
         network_init_object_field(o, &o->oAngleVelYaw);
         network_init_object_field(o, &o->oFaceAngleYaw);
         network_init_object_field(o, &gWDWWaterLevelChanging);
-        
     }
 
     if (gEnvironmentRegions != NULL) {
@@ -43,6 +42,9 @@ void bhv_water_level_diamond_loop(void) {
                         o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL
                         gWDWWaterLevelChanging = 1;
                         network_send_object(o);
+                        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].behavior == o->behavior) {
+                            gSyncObjects[o->oSyncID].lastReliablePacketIsStale = false;
+                        }
                     }
                 }
                 break;
@@ -73,6 +75,10 @@ void bhv_water_level_diamond_loop(void) {
                     gWDWWaterLevelChanging = 0;
                     o->oAction = WATER_LEVEL_DIAMOND_ACT_IDLE;
                     o->oAngleVelYaw = 0;
+                    if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].behavior == o->behavior) {
+                        gSyncObjects[o->oSyncID].lastReliablePacketIsStale = true;
+                    }
+
                 }
                 break;
         }

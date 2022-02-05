@@ -14,7 +14,7 @@
 #ifdef DEBUG
 #include "pc/lua/smlua.h"
 
-static u8 warpToLevel = LEVEL_BOB;
+static u8 warpToLevel = LEVEL_WDW;
 static u8 warpToArea = 27;
 // warpToArea: 26 = basement
 // warpToArea: 27 = upstairs

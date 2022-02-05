@@ -121,6 +121,8 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->owned = false;
     so->clockSinceUpdate = clock_elapsed();
     so->extraFieldCount = 0;
+    so->lastReliablePacketIsStale = false;
+    so->rememberLastReliablePacket = true;
     so->behavior = (BehaviorScript*)o->behavior;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         so->rxEventId[i] = 0;
@@ -520,7 +522,7 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
         } else {
             network_send_reservation_release(syncId);
         }
-    } else {
+    } else if (so->rememberLastReliablePacket) {
         // remember packet
         packet_duplicate(&p, &sLastSyncEntReliablePacket[syncId]);
     }
