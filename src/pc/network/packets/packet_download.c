@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "pc/djui/djui.h"
 #include "pc/mod_list.h"
 #include "pc/debuglog.h"
 
@@ -22,6 +23,7 @@ void network_send_next_download_request(void) {
     }
     //LOG_INFO("sending join request");
     network_send_join_request();
+    djui_panel_modlist_create(NULL);
 }
 
 void network_send_download_request(u16 clientIndex, u16 serverIndex, u64 offset) {

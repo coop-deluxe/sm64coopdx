@@ -41,6 +41,7 @@ void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
     }
 #endif
     network_init(NT_SERVER);
+    djui_panel_modlist_create(NULL);
     fake_lvl_init_from_save_file();
     extern s16 gChangeLevelTransition;
     gChangeLevelTransition = 16;

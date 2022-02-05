@@ -221,10 +221,15 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if (gDjuiPlayerList != NULL) {
+    if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i]) {
-                djui_base_set_visible(&gDjuiPlayerList->base, true);
+                if (gDjuiPlayerList != NULL) {
+                    djui_base_set_visible(&gDjuiPlayerList->base, true);
+                }
+                if (gDjuiModList != NULL) {
+                    djui_base_set_visible(&gDjuiModList->base, true);
+                }
                 break;
             }
         }
@@ -249,10 +254,15 @@ void djui_interactable_on_key_up(int scancode) {
                    && (gInteractableFocus->interactable != NULL)
                    && (gInteractableFocus->interactable->on_key_up != NULL);
 
-    if (gDjuiPlayerList != NULL) {
+    if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i]) {
-                djui_base_set_visible(&gDjuiPlayerList->base, false);
+                if (gDjuiPlayerList != NULL) {
+                    djui_base_set_visible(&gDjuiPlayerList->base, false);
+                }
+                if (gDjuiModList != NULL) {
+                    djui_base_set_visible(&gDjuiModList->base, false);
+                }
                 break;
             }
         }

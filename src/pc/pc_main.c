@@ -302,6 +302,7 @@ void main_func(void) {
         configHostPort = gCLIOpts.NetworkPort;
         network_init(NT_SERVER);
         djui_panel_shutdown();
+        djui_panel_modlist_create(NULL);
     } else {
         network_init(NT_NONE);
     }

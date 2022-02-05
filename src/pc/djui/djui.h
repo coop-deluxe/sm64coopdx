@@ -47,6 +47,7 @@
 #include "djui_panel_options.h"
 #include "djui_panel_player.h"
 #include "djui_panel_playerlist.h"
+#include "djui_panel_modlist.h"
 #include "djui_panel_camera.h"
 #include "djui_panel_controls.h"
 #include "djui_panel_controls_n64.h"

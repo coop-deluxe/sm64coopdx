@@ -1,12 +1,12 @@
 #include <string.h>
 
-#include "game/level_info.h"
-#include "pc/network/network.h"
 #include "djui.h"
 #include "djui_panel_playerlist.h"
-#include "src/pc/utils/misc.h"
-#include "src/pc/configfile.h"
+#include "game/level_info.h"
 #include "game/mario_misc.h"
+#include "pc/configfile.h"
+#include "pc/network/network.h"
+#include "pc/utils/misc.h"
 
 struct DjuiThreePanel* gDjuiPlayerList = NULL;
 
