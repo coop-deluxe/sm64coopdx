@@ -6,6 +6,9 @@
 struct DjuiThreePanel* gDjuiModList = NULL;
 
 void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
+    int playerListWidth = 580;
+    int modListWidth = 280;
+
     // delete old mod list
     if (gDjuiModList != NULL) {
         djui_base_destroy(&gDjuiModList->base);
@@ -27,10 +30,10 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
     gDjuiModList = panel;
 
-    djui_base_set_alignment(&panel->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
+    djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
-    djui_base_set_location_type(&panel->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_location(&panel->base, 0.1f, 0);
+    djui_base_set_location_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_location(&panel->base, (playerListWidth + modListWidth) / 2 + 8, 0);
 
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(&panel->base, 280, bodyHeight + (32 + 16) + 32 + 32);
