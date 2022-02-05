@@ -64,6 +64,9 @@ sLuaManuallyDefinedStructs = [
     'struct Vec3s { s16 x; s16 y; s16 z; }'
 ]
 
+total_structs = 0
+total_fields = 0
+
 ############################################################################
 
 def strip_internal_blocks(body):
@@ -286,6 +289,8 @@ def doc_struct_index(structs):
     for struct in structs:
         sid = struct['identifier']
         s += '- [%s](#%s)\n' % (sid, sid)
+        global total_structs
+        total_structs += 1
     s += '\n<br />\n\n'
     return s
 
@@ -311,6 +316,9 @@ def doc_struct(struct):
             continue
 
         s += '| %s | %s | %s |\n'  % (fid, ftype, restrictions)
+
+        global total_fields
+        total_fields += 1
 
     s += '\n[:arrow_up_small:](#)\n\n<br />\n'
 
@@ -354,6 +362,12 @@ def build_files():
         out.write(h_template.replace("$[BODY]", built_enum))
 
     doc_structs(parsed)
+
+    global total_structs
+    global total_fields
+
+    print("Total structs: " + str(total_structs))
+    print("Total fields: " + str(total_fields))
 
 ############################################################################
 

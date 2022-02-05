@@ -31,6 +31,7 @@ pretend_find = [
 ############################################################################
 
 seen_constants = []
+totalConstants = 0
 
 ############################################################################
 
@@ -51,6 +52,8 @@ def saw_constant(identifier):
         print("SAW DUPLICATE CONSTANT: " + identifier)
         return True
     else:
+        global totalConstants
+        totalConstants += 1
         seen_constants.append(identifier)
         return False
 
@@ -276,5 +279,8 @@ def main():
     doc = doc_files(processed_files)
     with open(get_path(out_filename_docs), 'w') as out:
         out.write(doc)
+
+    global totalConstants
+    print("Total constants: " + str(totalConstants))
 
 main()

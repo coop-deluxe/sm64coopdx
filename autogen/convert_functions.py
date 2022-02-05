@@ -137,6 +137,7 @@ param_override_build['Vec3s'] = {
 
 ############################################################################
 
+total_functions = 0
 header_h = ""
 
 def reject_line(line):
@@ -258,6 +259,9 @@ def build_function(function, do_extern):
     function['implemented'] = 'UNIMPLEMENTED' not in s
     if 'UNIMPLEMENTED' in s:
         s = "/*\n" + s + "*/\n"
+    else:
+        global total_functions
+        total_functions += 1
 
     return s + "\n"
 
@@ -474,6 +478,9 @@ def main():
     print('REJECTS:')
     print(rejects)
     doc_files(processed_files)
+
+    global total_functions
+    print('Total functions: ' + str(total_functions))
 
 if __name__ == '__main__':
    main()
