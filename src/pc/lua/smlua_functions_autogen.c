@@ -14,6 +14,11 @@
 #include "engine/surface_collision.h"
 #include "pc/network/network_utils.h"
 #include "src/pc/djui/djui_popup.h"
+#include "src/game/print.h"
+#include "src/game/interaction.h"
+#include "src/game/level_info.h"
+#include "src/game/save_file.h"
+#include "src/game/sound_init.h"
 
   //////////////
  // camera.h //
@@ -425,6 +430,180 @@ int smlua_func_sequence_player_unlower(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     sequence_player_unlower(player, fadeTimer);
+
+    return 1;
+}
+
+  ///////////////////
+ // interaction.h //
+///////////////////
+
+int smlua_func_does_mario_have_hat(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, does_mario_have_hat(m));
+
+    return 1;
+}
+
+int smlua_func_get_door_save_file_flag(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* door = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, get_door_save_file_flag(door));
+
+    return 1;
+}
+
+int smlua_func_mario_blow_off_cap(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 capSpeed = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_blow_off_cap(m, capSpeed);
+
+    return 1;
+}
+
+int smlua_func_mario_check_object_grab(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, mario_check_object_grab(m));
+
+    return 1;
+}
+
+int smlua_func_mario_drop_held_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_drop_held_object(m);
+
+    return 1;
+}
+
+int smlua_func_mario_get_collided_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 interactType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, mario_get_collided_object(m, interactType));
+
+    return 1;
+}
+
+int smlua_func_mario_grab_used_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_grab_used_object(m);
+
+    return 1;
+}
+
+int smlua_func_mario_lose_cap_to_enemy(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 arg = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, mario_lose_cap_to_enemy(m, arg));
+
+    return 1;
+}
+
+int smlua_func_mario_obj_angle_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, mario_obj_angle_to_object(m, o));
+
+    return 1;
+}
+
+int smlua_func_mario_retrieve_cap(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_retrieve_cap(m);
+
+    return 1;
+}
+
+int smlua_func_mario_stop_riding_and_holding(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_stop_riding_and_holding(m);
+
+    return 1;
+}
+
+int smlua_func_mario_stop_riding_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_stop_riding_object(m);
+
+    return 1;
+}
+
+int smlua_func_mario_throw_held_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    mario_throw_held_object(m);
+
+    return 1;
+}
+
+  //////////////////
+ // level_info.h //
+//////////////////
+
+int smlua_func_get_level_name(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 levelNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 areaIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushstring(L, get_level_name(courseNum, levelNum, areaIndex));
 
     return 1;
 }
@@ -2685,6 +2864,291 @@ int smlua_func_network_local_index_from_global(lua_State* L) {
     return 1;
 }
 
+  /////////////////
+ // save_file.h //
+/////////////////
+
+int smlua_func_save_file_get_cap_pos(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+
+    s16* capPos = smlua_get_vec3s_from_buffer();
+    capPos[0] = smlua_get_integer_field(1, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    capPos[1] = smlua_get_integer_field(1, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    capPos[2] = smlua_get_integer_field(1, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, save_file_get_cap_pos(capPos));
+
+    smlua_push_integer_field(1, "x", capPos[0]);
+    smlua_push_integer_field(1, "y", capPos[1]);
+    smlua_push_integer_field(1, "z", capPos[2]);
+
+    return 1;
+}
+
+int smlua_func_save_file_get_course_coin_score(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, save_file_get_course_coin_score(fileIndex, courseIndex));
+
+    return 1;
+}
+
+int smlua_func_save_file_get_course_star_count(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, save_file_get_course_star_count(fileIndex, courseIndex));
+
+    return 1;
+}
+
+int smlua_func_save_file_get_flags(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, save_file_get_flags());
+
+    return 1;
+}
+
+int smlua_func_save_file_get_max_coin_score(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 courseIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, save_file_get_max_coin_score(courseIndex));
+
+    return 1;
+}
+
+int smlua_func_save_file_get_sound_mode(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, save_file_get_sound_mode());
+
+    return 1;
+}
+
+int smlua_func_save_file_get_star_flags(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, save_file_get_star_flags(fileIndex, courseIndex));
+
+    return 1;
+}
+
+int smlua_func_save_file_get_total_star_count(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 minCourse = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 maxCourse = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, save_file_get_total_star_count(fileIndex, minCourse, maxCourse));
+
+    return 1;
+}
+
+  //////////////////
+ // sound_init.h //
+//////////////////
+
+int smlua_func_disable_background_sound(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    disable_background_sound();
+
+    return 1;
+}
+
+int smlua_func_enable_background_sound(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    enable_background_sound();
+
+    return 1;
+}
+
+int smlua_func_fadeout_cap_music(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    fadeout_cap_music();
+
+    return 1;
+}
+
+int smlua_func_fadeout_level_music(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s16 fadeTimer = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    fadeout_level_music(fadeTimer);
+
+    return 1;
+}
+
+int smlua_func_fadeout_music(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s16 fadeOutTime = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    fadeout_music(fadeOutTime);
+
+    return 1;
+}
+
+int smlua_func_lower_background_noise(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 a = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lower_background_noise(a);
+
+    return 1;
+}
+
+int smlua_func_play_cap_music(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u16 seqArgs = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    play_cap_music(seqArgs);
+
+    return 1;
+}
+
+int smlua_func_play_cutscene_music(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u16 seqArgs = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    play_cutscene_music(seqArgs);
+
+    return 1;
+}
+
+int smlua_func_play_infinite_stairs_music(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    play_infinite_stairs_music();
+
+    return 1;
+}
+
+int smlua_func_play_menu_sounds(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s16 soundMenuFlags = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    play_menu_sounds(soundMenuFlags);
+
+    return 1;
+}
+
+int smlua_func_play_painting_eject_sound(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    play_painting_eject_sound();
+
+    return 1;
+}
+
+int smlua_func_play_shell_music(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    play_shell_music();
+
+    return 1;
+}
+
+int smlua_func_raise_background_noise(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 a = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    raise_background_noise(a);
+
+    return 1;
+}
+
+int smlua_func_reset_volume(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    reset_volume();
+
+    return 1;
+}
+
+int smlua_func_set_background_music(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    u16 a = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u16 seqArgs = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 fadeTimer = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    set_background_music(a, seqArgs, fadeTimer);
+
+    return 1;
+}
+
+int smlua_func_stop_cap_music(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    stop_cap_music();
+
+    return 1;
+}
+
+int smlua_func_stop_shell_music(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    stop_shell_music();
+
+    return 1;
+}
+
   /////////////////////////
  // surface_collision.h //
 /////////////////////////
@@ -2963,6 +3427,24 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "sequence_player_fade_out", smlua_func_sequence_player_fade_out);
     smlua_bind_function(L, "sequence_player_unlower", smlua_func_sequence_player_unlower);
 
+    // interaction.h
+    smlua_bind_function(L, "does_mario_have_hat", smlua_func_does_mario_have_hat);
+    smlua_bind_function(L, "get_door_save_file_flag", smlua_func_get_door_save_file_flag);
+    smlua_bind_function(L, "mario_blow_off_cap", smlua_func_mario_blow_off_cap);
+    smlua_bind_function(L, "mario_check_object_grab", smlua_func_mario_check_object_grab);
+    smlua_bind_function(L, "mario_drop_held_object", smlua_func_mario_drop_held_object);
+    smlua_bind_function(L, "mario_get_collided_object", smlua_func_mario_get_collided_object);
+    smlua_bind_function(L, "mario_grab_used_object", smlua_func_mario_grab_used_object);
+    smlua_bind_function(L, "mario_lose_cap_to_enemy", smlua_func_mario_lose_cap_to_enemy);
+    smlua_bind_function(L, "mario_obj_angle_to_object", smlua_func_mario_obj_angle_to_object);
+    smlua_bind_function(L, "mario_retrieve_cap", smlua_func_mario_retrieve_cap);
+    smlua_bind_function(L, "mario_stop_riding_and_holding", smlua_func_mario_stop_riding_and_holding);
+    smlua_bind_function(L, "mario_stop_riding_object", smlua_func_mario_stop_riding_object);
+    smlua_bind_function(L, "mario_throw_held_object", smlua_func_mario_throw_held_object);
+
+    // level_info.h
+    smlua_bind_function(L, "get_level_name", smlua_func_get_level_name);
+
     // mario.h
     smlua_bind_function(L, "adjust_sound_for_speed", smlua_func_adjust_sound_for_speed);
     smlua_bind_function(L, "check_common_action_exits", smlua_func_check_common_action_exits);
@@ -3144,6 +3626,35 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
     smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
     smlua_bind_function(L, "network_local_index_from_global", smlua_func_network_local_index_from_global);
+
+    // save_file.h
+    smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);
+    smlua_bind_function(L, "save_file_get_course_coin_score", smlua_func_save_file_get_course_coin_score);
+    smlua_bind_function(L, "save_file_get_course_star_count", smlua_func_save_file_get_course_star_count);
+    smlua_bind_function(L, "save_file_get_flags", smlua_func_save_file_get_flags);
+    smlua_bind_function(L, "save_file_get_max_coin_score", smlua_func_save_file_get_max_coin_score);
+    smlua_bind_function(L, "save_file_get_sound_mode", smlua_func_save_file_get_sound_mode);
+    smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
+    smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
+
+    // sound_init.h
+    smlua_bind_function(L, "disable_background_sound", smlua_func_disable_background_sound);
+    smlua_bind_function(L, "enable_background_sound", smlua_func_enable_background_sound);
+    smlua_bind_function(L, "fadeout_cap_music", smlua_func_fadeout_cap_music);
+    smlua_bind_function(L, "fadeout_level_music", smlua_func_fadeout_level_music);
+    smlua_bind_function(L, "fadeout_music", smlua_func_fadeout_music);
+    smlua_bind_function(L, "lower_background_noise", smlua_func_lower_background_noise);
+    smlua_bind_function(L, "play_cap_music", smlua_func_play_cap_music);
+    smlua_bind_function(L, "play_cutscene_music", smlua_func_play_cutscene_music);
+    smlua_bind_function(L, "play_infinite_stairs_music", smlua_func_play_infinite_stairs_music);
+    smlua_bind_function(L, "play_menu_sounds", smlua_func_play_menu_sounds);
+    smlua_bind_function(L, "play_painting_eject_sound", smlua_func_play_painting_eject_sound);
+    smlua_bind_function(L, "play_shell_music", smlua_func_play_shell_music);
+    smlua_bind_function(L, "raise_background_noise", smlua_func_raise_background_noise);
+    smlua_bind_function(L, "reset_volume", smlua_func_reset_volume);
+    smlua_bind_function(L, "set_background_music", smlua_func_set_background_music);
+    smlua_bind_function(L, "stop_cap_music", smlua_func_stop_cap_music);
+    smlua_bind_function(L, "stop_shell_music", smlua_func_stop_shell_music);
 
     // surface_collision.h
     //smlua_bind_function(L, "f32_find_wall_collision", smlua_func_f32_find_wall_collision); <--- UNIMPLEMENTED
