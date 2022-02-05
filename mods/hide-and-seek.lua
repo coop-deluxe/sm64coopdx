@@ -75,12 +75,10 @@ function server_update(m)
     sRoundEndedTimer = sRoundEndedTimer + 1
     if sRoundEndedTimer >= sRoundIntermissionTime then
         -- reset seekers
-        if not hasHider then
-            for i=0,(MAX_PLAYERS-1) do
-                gPlayerSyncTable[i].seeking = false
-            end
-            hasSeeker = false
+        for i=0,(MAX_PLAYERS-1) do
+            gPlayerSyncTable[i].seeking = false
         end
+        hasSeeker = false
 
         -- set seeker to last one turned into seeker
         local np = gNetworkPlayers[sLastSeekerIndex]
@@ -186,6 +184,11 @@ function mario_update(m)
 end
 
 function mario_before_phys_step(m)
+    -- prevent physics from being altered when bubbled
+    if m.action == ACT_BUBBLED then
+        return
+    end
+
     -- check gamemode enabled state
     if not gGlobalSyncTable.hideAndSeek then
         return
@@ -327,5 +330,6 @@ hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_h
 hook_on_sync_table_change(gGlobalSyncTable, 'roundNumber', 0, on_round_number_changed)
 hook_on_sync_table_change(gGlobalSyncTable, 'roundEnded', 0, on_round_ended_changed)
 for i=0,(MAX_PLAYERS-1) do
+    gPlayerSyncTable[i].seeking = false
     hook_on_sync_table_change(gPlayerSyncTable[i], 'seeking', i, on_seeking_changed)
 end
