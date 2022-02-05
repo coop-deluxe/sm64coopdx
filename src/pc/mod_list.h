@@ -36,8 +36,10 @@ struct ModTable {
 
 extern struct ModTable gModTableLocal;
 extern struct ModTable gModTableRemote;
+extern struct ModTable* gModTableCurrent;
 
 void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size);
+void mod_list_extract_lua_fields(struct ModListEntry* entry);
 void mod_table_clear(struct ModTable* table);
 void mod_list_alloc(struct ModTable* table, u16 count);
 

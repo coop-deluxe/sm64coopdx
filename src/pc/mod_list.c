@@ -10,6 +10,7 @@
 
 struct ModTable gModTableLocal  = { .entries = NULL, .entryCount = 0, .totalSize = 0, .isRemote = false };
 struct ModTable gModTableRemote = { .entries = NULL, .entryCount = 0, .totalSize = 0, .isRemote = true  };
+struct ModTable* gModTableCurrent = &gModTableLocal;
 
 static char sTmpSession[MAX_SESSION_CHARS] = { 0 };
 static char sTmpPath[PATH_MAX] = { 0 };
@@ -99,13 +100,15 @@ static char* extract_lua_field(char* fieldName, char* buffer) {
     return NULL;
 }
 
-static void extract_lua_fields(struct ModListEntry* entry) {
+void mod_list_extract_lua_fields(struct ModListEntry* entry) {
     FILE* f = entry->fp;
     char buffer[512] = { 0 };
 
     entry->displayName = NULL;
     entry->incompatible = NULL;
     entry->description = NULL;
+
+    fseek(entry->fp, 0, SEEK_SET);
 
     while (!feof(f)) {
         file_get_line(buffer, 512, f);
@@ -128,6 +131,7 @@ static void extract_lua_fields(struct ModListEntry* entry) {
             snprintf(entry->description, 512, "%s", extracted);
         }
     }
+
 }
 
 static void mod_list_add_local(u16 index, const char* path, char* name) {
@@ -142,7 +146,7 @@ static void mod_list_add_local(u16 index, const char* path, char* name) {
     snprintf(entry->path, PATH_MAX - 1, "%s/%s", path, name);
     entry->fp = fopen(entry->path, "rb");
 
-    extract_lua_fields(entry);
+    mod_list_extract_lua_fields(entry);
 
     fseek(entry->fp, 0, SEEK_END);
     entry->size = ftell(entry->fp);
@@ -292,6 +296,7 @@ static void mod_list_load_local(const char* path) {
 }
 
 void mod_list_init(void) {
+    gModTableCurrent = &gModTableLocal;
     srand(time(0));
     snprintf(sTmpSession, MAX_SESSION_CHARS, "%06X", (u32)(rand() % 0xFFFFFF));
     snprintf(sTmpPath, PATH_MAX - 1, "%s", fs_get_write_path("tmp"));

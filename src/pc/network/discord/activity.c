@@ -4,6 +4,7 @@
 #include "pc/network/network.h"
 #include "pc/network/version.h"
 #include "pc/djui/djui.h"
+#include "pc/mod_list.h"
 #include "pc/logfile.h"
 
 #define HASH_LENGTH 8
@@ -79,17 +80,40 @@ void discord_activity_update(bool hosting) {
 
     if (gCurActivity.details[0] == '\0') {
         snprintf(gCurActivity.details, 128, "%s", get_version());
+
+        bool displayDash = true;
+        bool displayComma = false;
+
         if (gRegisteredMods.string != NULL) {
             strncat(gCurActivity.details, " - ", 127);
+            displayDash = false;
+
+            // add patches to activity
             struct StringLinkedList* node = &gRegisteredMods;
             while (node != NULL && node->string != NULL) {
+                if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
                 strncat(gCurActivity.details, node->string, 127);
+                displayComma = true;
                 node = node->next;
-                if (node != NULL && node->string != NULL) {
-                    strncat(gCurActivity.details, ", ", 127);
-                }
             }
         }
+
+        struct ModTable* table = gModTableCurrent;
+        if (table != NULL && table->entryCount > 0) {
+            // add mods to activity
+            for (int i = 0; i < table->entryCount; i++) {
+                struct ModListEntry* entry = &table->entries[i];
+                if (!entry->enabled) { continue; }
+                if (displayDash) { strncat(gCurActivity.details, " - ", 127); }
+                if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
+
+                strncat(gCurActivity.details, entry->displayName ? entry->displayName : entry->name, 127);
+
+                displayDash = false;
+                displayComma = true;
+            }
+        }
+
     }
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);

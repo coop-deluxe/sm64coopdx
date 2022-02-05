@@ -185,6 +185,12 @@ void network_receive_download(struct Packet* p) {
         if (sOffset[OFFSET_COUNT - 1] + CHUNK_SIZE >= entry->size) {
             LOG_INFO("Finished download of '%s'", entry->name);
             fclose(entry->fp);
+
+            // parse mod header
+            entry->fp = fopen(entry->path, "rb");
+            mod_list_extract_lua_fields(entry);
+            fclose(entry->fp);
+
             entry->fp = NULL;
             entry->complete = true;
         }

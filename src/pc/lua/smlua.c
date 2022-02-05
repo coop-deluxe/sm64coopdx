@@ -90,7 +90,7 @@ void smlua_init(void) {
 
     // load scripts
     LOG_INFO("Loading scripts:");
-    struct ModTable* table = (gNetworkType == NT_SERVER) ? &gModTableLocal : &gModTableRemote;
+    struct ModTable* table = gModTableCurrent;
     for (int i = 0; i < table->entryCount; i++) {
         struct ModListEntry* entry = &table->entries[i];
         if (!entry->enabled) { continue; }

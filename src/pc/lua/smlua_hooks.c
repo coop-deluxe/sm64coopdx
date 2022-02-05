@@ -155,9 +155,9 @@ int smlua_hook_mario_action(lua_State* L) {
         return 0;
     }
 
-    lua_Integer action = smlua_to_integer(L, -2);
-    if (action == 0 || gSmLuaConvertSuccess) {
-        LOG_LUA("Hook Action: tried to hook invalid action");
+    lua_Integer action = smlua_to_integer(L, 1);
+    if (action == 0 || !gSmLuaConvertSuccess) {
+        LOG_LUA("Hook Action: tried to hook invalid action: %lld, %u", action, gSmLuaConvertSuccess);
         smlua_logline();
         return 0;
     }

@@ -91,6 +91,8 @@ void network_receive_mod_list(struct Packet* p) {
     }
 
     u16 modEntryCount = 0;
+    gModTableCurrent = &gModTableRemote;
+
     packet_read(p, &modEntryCount, sizeof(u16));
     mod_list_alloc(&gModTableRemote, modEntryCount);
 
