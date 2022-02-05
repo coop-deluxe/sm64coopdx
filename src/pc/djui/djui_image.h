@@ -1,7 +1,6 @@
 #pragma once
 #include "djui.h"
 
-#pragma pack(1)
 struct DjuiImage {
     struct DjuiBase base;
     const u8* texture;

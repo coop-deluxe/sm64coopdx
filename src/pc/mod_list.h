@@ -9,7 +9,6 @@
 
 #define MOD_PATH "./mods"
 
-#pragma pack(1)
 struct ModListEntry {
     char* name;
     FILE* fp;
@@ -26,7 +25,6 @@ struct ModListEntry {
     bool selectable;
 };
 
-#pragma pack(1)
 struct ModTable {
     struct ModListEntry* entries;
     u16 entryCount;

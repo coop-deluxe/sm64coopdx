@@ -144,7 +144,11 @@ function update()
     end
 
     -- check if local player is camping
-    camping_detection(gMarioStates[0])
+    if gGlobalSyncTable.roundEnded == 0 then
+        camping_detection(gMarioStates[0])
+    else
+        sDistanceTimer = 0
+    end
 
     -- update sLastSeekerTimer
     if gGlobalSyncTable.roundEnded == 0 then

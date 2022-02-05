@@ -2,7 +2,6 @@
 #include "djui.h"
 #include "src/pc/configfile.h"
 
-#pragma pack(1)
 struct DjuiBind {
     struct DjuiBase base;
     struct DjuiText* text;

@@ -21,6 +21,7 @@ struct SpawnObjectData {
     s32 rawData[80];
     u8 globalPlayerIndex;
 };
+#pragma pack()
 
 static u8 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize) {
     struct Object* o = objects[onIndex];

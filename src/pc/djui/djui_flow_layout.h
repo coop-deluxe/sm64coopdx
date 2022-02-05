@@ -1,7 +1,6 @@
 #pragma once
 #include "djui.h"
 
-#pragma pack(1)
 struct DjuiFlowLayout {
     struct DjuiBase base;
     enum DjuiFlowDirection flowDirection;

@@ -1,7 +1,6 @@
 #pragma once
 #include "djui.h"
 
-#pragma pack(1)
 struct DjuiFont {
     f32 charWidth;
     f32 charHeight;

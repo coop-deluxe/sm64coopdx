@@ -1,7 +1,6 @@
 #pragma once
 #include "djui.h"
 
-#pragma pack(1)
 struct DjuiChatBox {
     struct DjuiBase base;
     struct DjuiRect* chatContainer;

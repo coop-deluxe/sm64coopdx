@@ -67,6 +67,7 @@ struct PacketPlayerData {
     u8 usedSyncID;
     u8 platformSyncID;
 };
+#pragma pack()
 
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
     u8 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;

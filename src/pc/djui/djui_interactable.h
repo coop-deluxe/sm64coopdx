@@ -20,7 +20,6 @@
 #define SCANCODE_SPACE  57
 #define SCANCODE_ESCAPE 1
 
-#pragma pack(1)
 struct DjuiInteractable {
     bool enabled;
     void (*update_style)(struct DjuiBase*);

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "smlua.h"
 
-#pragma pack(1)
 struct CObjectAllowListNode {
     u64 pointer;
     struct CObjectAllowListNode* next;

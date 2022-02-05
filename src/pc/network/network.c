@@ -145,7 +145,8 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
         || (packetType == PACKET_MOD_LIST)
         || (packetType == PACKET_DOWNLOAD_REQUEST)
         || (packetType == PACKET_DOWNLOAD)
-        || (packetType == PACKET_KEEP_ALIVE);
+        || (packetType == PACKET_KEEP_ALIVE)
+        || (packetType == PACKET_DEBUG_SYNC);
 }
 
 void network_send_to(u8 localIndex, struct Packet* p) {

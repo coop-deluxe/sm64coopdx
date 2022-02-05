@@ -1,7 +1,6 @@
 #pragma once
 #include "djui.h"
 
-#pragma pack(1)
 struct DjuiBaseRect {
     f32 x;
     f32 y;
@@ -9,13 +8,11 @@ struct DjuiBaseRect {
     f32 height;
 };
 
-#pragma pack(1)
 struct DjuiBaseChild {
     struct DjuiBase* base;
     struct DjuiBaseChild* next;
 };
 
-#pragma pack(1)
 struct DjuiBasePadding {
     struct DjuiScreenValue top;
     struct DjuiScreenValue right;
@@ -23,7 +20,6 @@ struct DjuiBasePadding {
     struct DjuiScreenValue left;
 };
 
-#pragma pack(1)
 struct DjuiBase {
     struct DjuiBase* parent;
     struct DjuiBaseChild* child;
