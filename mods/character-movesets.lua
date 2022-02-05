@@ -142,9 +142,29 @@ function luigi_before_phys_step(m)
         end
     end
 
-    -- slower ground movement
-    if (m.action & ACT_FLAG_MOVING) ~= 0 then
-        hScale = hScale * 0.99
+    -- acceleration
+    if (m.action == ACT_WALKING) then
+        if (floorClass == 19 or floorClass == 20) then
+            hScale = -(m.forwardVel / 64) + 1.5
+        else
+            hScale = (m.forwardVel / 64) + 0.5
+        end
+    end
+
+    -- friction
+    if (m.action == ACT_BRAKING or m.action == ACT_TURNING_AROUND) then
+        if (floorClass == 19 or floorClass == 20) then
+            m.forwardVel = m.forwardVel - 3
+        elseif (floorClass == 21) then
+            hScale = hScale * 1.5
+            m.forwardVel = m.forwardVel + (hScale * 2)
+        else
+            hScale = hScale * 1.4
+            m.forwardVel = m.forwardVel + hScale
+        end
+        if (m.forwardVel < 0) then
+            m.forwardVel = 0
+        end
     end
 
     m.vel.x = m.vel.x * hScale
@@ -161,7 +181,7 @@ function luigi_on_set_action(m)
 
     -- nerf wall kicks
     elseif m.action == ACT_WALL_KICK_AIR and m.prevAction ~= ACT_HOLDING_POLE and m.prevAction ~= ACT_CLIMBING_POLE then
-        if m.vel.y > 30 then m.vel.y = 30 end
+        if m.vel.y > 40 then m.vel.y = 40 end
         return
 
     -- turn dive into kick when holding jump

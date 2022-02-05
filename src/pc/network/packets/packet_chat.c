@@ -13,6 +13,7 @@ static void print_sync_object_table(void) {
         if (gSyncObjects[i].o == NULL) { continue; }
         u16 behaviorId = get_id_from_behavior(gSyncObjects[i].behavior);
         LOG_INFO("%03d: %04X", i, behaviorId);
+        behaviorId = behaviorId; // suppress warning
     }
     LOG_INFO(" ");
 }

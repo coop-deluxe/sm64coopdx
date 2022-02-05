@@ -306,7 +306,7 @@ char* smlua_lnt_to_str(struct LSTNetworkType* lnt) {
         case LST_NETWORK_TYPE_NIL:
             snprintf(sLntStr, 32, "<NIL>");
             break;
-        default: SOFT_ASSERT(false);
+        default: SOFT_ASSERT_RETURN(false, "UNKNOWN");
     }
     return sLntStr;
 }
