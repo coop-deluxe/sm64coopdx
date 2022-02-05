@@ -281,7 +281,8 @@ u8 network_player_disconnected(u8 globalIndex) {
 
 void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // display popup
-    if (np->currCourseNum != courseNum && np->localIndex != 0) {
+    bool inCredits = (np->currActNum == 99);
+    if (np->currCourseNum != courseNum && np->localIndex != 0 && !inCredits) {
         char* playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
