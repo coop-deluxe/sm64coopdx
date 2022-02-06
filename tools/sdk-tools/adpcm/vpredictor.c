@@ -11,6 +11,10 @@ s32 readcodebook(FILE *fhandle, s32 ****table, s32 *order, s32 *npredictors)
 
     fscanf(fhandle, "%d", order);
     fscanf(fhandle, "%d", npredictors);
+    if (*npredictors > 500) {
+        fprintf(stderr, "Way too many predictors: %d\n", *npredictors);
+        return 1;
+    }
     *table = malloc(*npredictors * sizeof(s32 **));
     for (i = 0; i < *npredictors; i++)
     {

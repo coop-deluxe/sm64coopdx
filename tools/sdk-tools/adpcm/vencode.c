@@ -100,6 +100,7 @@ void vencodeframe(FILE *ofile, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 
 
     for (i = 0; i < 8; i++)
     {
+        if (coefTable == NULL || coefTable[optimalp] == NULL) { continue; }
         prediction[i] = inner_product(order + i, coefTable[optimalp][i], inVector);
         inVector[i + order] = inBuffer[i] - prediction[i];
         e[i] = (f32) inVector[i + order];
@@ -126,7 +127,7 @@ void vencodeframe(FILE *ofile, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 
     max = 0;
     for (i = 0; i < 16; i++)
     {
-        if (fabs(ie[i]) > fabs(max))
+        if (fabs((f64)ie[i]) > fabs((f64)max))
         {
             max = ie[i];
         }

@@ -10,12 +10,12 @@ static u32 getshort(FILE *ifile)
     u32 c1;
     u32 c2;
 
-    if ((c1 = getc(ifile)) == -1)
+    if ((c1 = (u32)getc(ifile)) == (u32)-1)
     {
         return 0;
     }
 
-    if ((c2 = getc(ifile)) == -1)
+    if ((c2 = (u32)getc(ifile)) == (u32)-1)
     {
         return 0;
     }
@@ -30,7 +30,7 @@ u32 readbits(u32 nbits, FILE *ifile)
     u32 left;
     u32 mask;
 
-    if (nbits <= in_bit_pos + 1)
+    if (nbits <= (u32)(in_bit_pos + 1))
     {
         mask = (1U << nbits) - 1;
         b = ((u32) input_word >> (in_bit_pos - nbits + 1)) & mask;

@@ -11,30 +11,30 @@ int main(int argc, char **argv)
 {
     s32 c;
     char *progname = argv[0];
-    s16 nloops = 0;
+    u16 nloops = 0;
     s16 numMarkers;
     s16 *inBuffer;
     s16 ts;
-    s32 minLoopLength = 800;
+    u32 minLoopLength = 800;
     s32 ***coefTable = NULL;
-    s32 *state;
+    s32 *state; // has to be signed
     s32 order;
     s32 npredictors;
     s32 done = 0;
     s32 truncate = 0;
     s32 num;
     s32 tableSize;
-    s32 nsam;
+    u32 nsam;
     s32 left;
     u32 newEnd;
     s32 nRepeats;
     s32 i;
     s32 j;
     s32 k;
-    s32 nFrames;
+    u32 nFrames;
     s32 offset;
     s32 cChunkPos;
-    s32 currentPos;
+    u32 currentPos = 0;
     s32 soundPointer = 0;
     s32 startPointer = 0;
     s32 startSoundPointer = 0;
@@ -53,8 +53,8 @@ int main(int argc, char **argv)
     SoundDataChunk SndDChunk;
     InstrumentChunk InstChunk;
     Loop *loops = NULL;
-    ALADPCMloop *aloops;
-    Marker *markers;
+    ALADPCMloop *aloops = NULL;
+    Marker *markers = NULL;
     CodeChunk cChunk;
     char filename[1024];
     FILE *fhandle;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
             break;
 
         case 'l':
-            sscanf(optarg, "%d", &minLoopLength);
+            sscanf(optarg, "%u", &minLoopLength);
             break;
 
         default:
@@ -353,11 +353,11 @@ int main(int argc, char **argv)
     startSoundPointer = ftell(ifile);
     for (i = 0; i < nloops; i++)
     {
-        if (lookupMarker(&aloops[i].start, loops[i].beginLoop, markers, numMarkers) != 0)
+        if (aloops == NULL || markers == NULL || lookupMarker(&aloops[i].start, loops[i].beginLoop, markers, numMarkers) != 0)
         {
             fprintf(stderr, "%s: Start loop marker not found\n", progname);
         }
-        else if (lookupMarker(&aloops[i].end, loops[i].endLoop, markers, numMarkers) != 0)
+        else if (aloops == NULL || markers == NULL || lookupMarker(&aloops[i].end, loops[i].endLoop, markers, numMarkers) != 0)
         {
             fprintf(stderr, "%s: End loop marker not found\n", progname);
         }
@@ -487,6 +487,7 @@ int main(int argc, char **argv)
         BSWAP16(nloops)
         for (i = 0; i < nloops; i++)
         {
+            if (aloops == NULL) { continue; }
             BSWAP32(aloops[i].start)
             BSWAP32(aloops[i].end)
             BSWAP32(aloops[i].count)

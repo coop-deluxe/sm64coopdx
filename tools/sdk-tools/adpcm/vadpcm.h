@@ -21,7 +21,7 @@ typedef double f64;
 #else
 #  define BSWAP16(x) x = __builtin_bswap16(x);
 #  define BSWAP32(x) x = __builtin_bswap32(x);
-#  define BSWAP16_MANY(x, n) { s32 _i; for (_i = 0; _i < n; _i++) BSWAP16((x)[_i]) }
+#  define BSWAP16_MANY(x, n) { s32 _i; for (_i = 0; _i < (s32)n; _i++) BSWAP16((x)[_i]) }
 #endif
 
 #ifdef __sgi
