@@ -339,6 +339,7 @@ void main_func(void) {
 #endif
 #ifdef DEBUG
         fflush(stdout);
+        fflush(stderr);
 #endif
     }
 #endif
