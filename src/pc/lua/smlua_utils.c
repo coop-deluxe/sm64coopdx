@@ -109,13 +109,13 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
     // get pointer
     lua_getfield(L, index, "_pointer");
-    void* pointer = (void*)smlua_to_integer(L, -1);
+    void* pointer = (void*)(intptr_t)smlua_to_integer(L, -1);
     lua_pop(L, 1);
     if (!gSmLuaConvertSuccess) { return NULL; }
 
     // check allowlist
-    if (!smlua_cobject_allowlist_contains(lot, (u64)pointer)) {
-        LOG_LUA("smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
+    if (!smlua_cobject_allowlist_contains(lot, (u64)(intptr_t)pointer)) {
+        LOG_LUA("smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)(intptr_t)pointer);
         gSmLuaConvertSuccess = false;
         return NULL;
     }
@@ -197,12 +197,12 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
         return;
     }
     // add to allowlist
-    smlua_cobject_allowlist_add(lot, (u64)p);
+    smlua_cobject_allowlist_add(lot, (u64)(intptr_t)p);
 
     lua_newtable(L);
     int t = lua_gettop(L);
     smlua_push_integer_field(t, "_lot", lot);
-    smlua_push_integer_field(t, "_pointer", (u64)p);
+    smlua_push_integer_field(t, "_pointer", (u64)(intptr_t)p);
     lua_pushglobaltable(L);
     lua_getfield(gLuaState, -1, "_CObject");
     lua_setmetatable(L, -3);
