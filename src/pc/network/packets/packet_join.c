@@ -114,8 +114,8 @@ void network_send_join(struct Packet* joinRequestPacket) {
     char nullchar = '\0';
     while (node != NULL && node->string != NULL) {
         int length = strlen(node->string);
-        packet_write(&p, node->string, sizeof(char) * length);
-        packet_write(&p, &nullchar, sizeof(char));
+        packet_write(&p, node->string, sizeof(u8) * length);
+        packet_write(&p, &nullchar, sizeof(u8));
         LOG_INFO("sending registered mod: %s", node->string);
         node = node->next;
     }

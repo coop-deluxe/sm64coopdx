@@ -23,18 +23,18 @@
 
 static s16* get_respawn_info_from_macro_offset(u16 areaIndex, u16 macroOffset) {
     // loop through macro objects for santiziation
-    u16 maxOffset = 0;
+    u16 index = 0;
     s16* macroObjList = gAreaData[areaIndex].macroObjects;
     while (macroObjList != NULL && *macroObjList != -1) {
         macroObjList += 4;
         s16* respawnInfo = macroObjList++;
-        maxOffset = respawnInfo - gAreaData[areaIndex].macroObjects;
+        if (macroOffset == index) {
+            return respawnInfo;
+        }
+        index++;
     }
 
-    // sanitize array
-    if (macroOffset > maxOffset) { return NULL; }
-
-    return gAreaData[areaIndex].macroObjects + macroOffset;
+    return NULL;
 }
 
 static u32* get_respawn_info_from_spawn_info_index(u16 areaIndex, u16 fromSpawnInfoIndex) {
@@ -56,6 +56,7 @@ static u32* get_respawn_info_from_spawn_info_index(u16 areaIndex, u16 fromSpawnI
 static u16 get_macro_offset_of_object(struct Object* o) {
     // loop through macro objects to find object
     s16* macroObjList = gCurrentArea->macroObjects;
+    u16 index = 0;
     while (macroObjList != NULL && *macroObjList != -1) {
         // grab preset ID
         s32 presetID = (*macroObjList & 0x1FF) - 31; // Preset identifier for MacroObjectPresets array
@@ -66,8 +67,9 @@ static u16 get_macro_offset_of_object(struct Object* o) {
         s16* respawnInfo = macroObjList++;
 
         if (o->respawnInfo == respawnInfo) {
-            return (respawnInfo - gCurrentArea->macroObjects);
+            return index;
         }
+        index++;
     }
 
     return ERR_COULD_NOT_FIND_OBJECT;
