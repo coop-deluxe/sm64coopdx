@@ -82,6 +82,37 @@ BASEPACK ?= base.zip
 
 WINDOWS_BUILD ?= 0
 
+WINDOWS_AUTO_BUILDER ?= 0
+
+
+################### coop-compiler settings ###################
+
+PYTHON := python3
+TOOLS_DIR := tools
+ifeq ($(WINDOWS_AUTO_BUILDER),1)
+  export SHELL=sh.exe
+  RM ?= rm.exe
+  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4 -fno-use-linker-plugin
+  EXTRA_CFLAGS := -Wno-expansion-to-defined
+  EXTRACT_ASSETS := ./extract_assets.exe
+  OUTPUT_LEVEL_HEADERS := $(TOOLS_DIR)/output_level_headers.exe
+  ZEROTERM := $(TOOLS_DIR)/zeroterm.exe
+  MKZIP := $(TOOLS_DIR)/mkzip.exe
+  ASSEMBLE_SOUND := $(TOOLS_DIR)/assemble_sound.exe
+  MARIO_ANIMS_CONVERTER := $(TOOLS_DIR)/mario_anims_converter.exe
+  DEMO_DATA_CONVERTER := $(TOOLS_DIR)/demo_data_converter.exe
+else
+  EXTRA_INCLUDES :=
+  EXTRA_CFLAGS :=
+  EXTRACT_ASSETS := ./extract_assets.py
+  OUTPUT_LEVEL_HEADERS := $(PYTHON) $(TOOLS_DIR)/output_level_headers.py
+  ZEROTERM := $(PYTHON) $(TOOLS_DIR)/zeroterm.py
+  MKZIP := $(PYTHON) $(TOOLS_DIR)/mkzip.py
+  ASSEMBLE_SOUND := $(PYTHON) $(TOOLS_DIR)/assemble_sound.py
+  MARIO_ANIMS_CONVERTER := $(PYTHON) $(TOOLS_DIR)/mario_anims_converter.py
+  DEMO_DATA_CONVERTER := $(PYTHON) $(TOOLS_DIR)/demo_data_converter.py
+endif
+
 # Attempt to detect OS
 
 ifeq ($(OS),Windows_NT)
@@ -267,10 +298,10 @@ ifneq ($(MAKECMDGOALS),distclean)
 # Make sure assets exist
 NOEXTRACT ?= 0
 ifeq ($(NOEXTRACT),0)
-DUMMY != ./extract_assets.py $(VERSION) >&2 || echo FAIL
-ifeq ($(DUMMY),FAIL)
-  $(error Failed to extract assets)
-endif
+  DUMMY != $(EXTRACT_ASSETS) $(VERSION) >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to extract assets)
+  endif
 endif
 
 # Copy missing luigi sounds from mario sound banks
@@ -279,9 +310,11 @@ $(shell cp -n sound/samples/sfx_mario/*.aiff sound/samples/sfx_custom_luigi/ )
 $(shell cp -n sound/samples/sfx_mario_peach/*.aiff sound/samples/sfx_custom_luigi_peach/ )
 
 # Make tools if out of date
-DUMMY != make -C tools >&2 || echo FAIL
-ifeq ($(DUMMY),FAIL)
-  $(error Failed to build tools)
+ifneq ($(WINDOWS_AUTO_BUILDER),1)
+  DUMMY != make -C tools >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to build tools)
+  endif
 endif
 
 endif
@@ -494,9 +527,8 @@ DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(
 SEG_FILES := $(SEGMENT_ELF_FILES) $(ACTOR_ELF_FILES) $(LEVEL_ELF_FILES)
 
 ##################### Compiler Options #######################
-INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
+INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I . $(EXTRA_INCLUDES)
 ENDIAN_BITWIDTH := $(BUILD_DIR)/endian-and-bitwidth
-
 
 # coop-specific includes
 INCLUDE_CFLAGS += -I lib/lua/include
@@ -544,7 +576,6 @@ else # Linux & other builds
   OBJDUMP := $(CROSS)objdump
 endif
 
-PYTHON := python3
 SDLCONFIG := $(CROSS)sdl2-config
 
 # configure backend flags
@@ -559,6 +590,7 @@ SDL2_USED := 0
 
 # suppress warnings
 BACKEND_CFLAGS += -Wno-format-truncation
+BACKEND_CFLAGS += $(EXTRA_CFLAGS)
 
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
 ifeq ($(WINDOW_API),DXGI)
@@ -778,7 +810,7 @@ endif
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -Wl,-Bdynamic -ldiscord_game_sdk -Wl,-Bstatic
+    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
   endif
 else
   ifeq ($(DISCORD_SDK),1)
@@ -794,7 +826,6 @@ export LANG := C
 ####################### Other Tools #########################
 
 # N64 conversion tools
-TOOLS_DIR = tools
 MIO0TOOL = $(TOOLS_DIR)/mio0
 N64CKSUM = $(TOOLS_DIR)/n64cksum
 N64GRAPHICS = $(TOOLS_DIR)/n64graphics
@@ -809,7 +840,6 @@ EMU_FLAGS = --noosd
 LOADER = loader64
 LOADER_FLAGS = -vwf
 SHA1SUM = sha1sum
-ZEROTERM = $(PYTHON) $(TOOLS_DIR)/zeroterm.py
 
 ###################### Dependency Check #####################
 
@@ -852,7 +882,7 @@ $(BASEPACK_LST): $(EXE)
 
 # prepares the resource ZIP with base data
 $(BASEPACK_PATH): $(BASEPACK_LST)
-	@$(PYTHON) $(TOOLS_DIR)/mkzip.py $(BASEPACK_LST) $(BASEPACK_PATH)
+	@$(MKZIP) $(BASEPACK_LST) $(BASEPACK_PATH)
 
 endif
 
@@ -864,7 +894,7 @@ cleantools:
 
 distclean:
 	$(RM) -r $(BUILD_DIR_BASE)
-	./extract_assets.py --clean
+	$(EXTRACT_ASSETS) --clean
 
 test: $(ROM)
 	$(EMULATOR) $(EMU_FLAGS) $<
@@ -1011,17 +1041,17 @@ $(ENDIAN_BITWIDTH): tools/determine-endian-bitwidth.c
 	@rm $@.dummy2
 
 $(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(ENDIAN_BITWIDTH)
-	$(PYTHON) tools/assemble_sound.py $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/sound_data.tbl $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
+	$(ASSEMBLE_SOUND) $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/sound_data.tbl $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
 
 $(SOUND_BIN_DIR)/sound_data.tbl: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
 ifeq ($(VERSION),sh)
 $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json sound/sequences/ sound/sequences/jp/ $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
-	$(PYTHON) tools/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
+	$(ASSEMBLE_SOUND) --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
 else
 $(SOUND_BIN_DIR)/sequences.bin: $(SOUND_BANK_FILES) sound/sequences.json sound/sequences/ sound/sequences/$(VERSION)/ $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
-	$(PYTHON) tools/assemble_sound.py --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
+	$(ASSEMBLE_SOUND) --sequences $@ $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(VERSION_CFLAGS) $$(cat $(ENDIAN_BITWIDTH))
 endif
 
 $(SOUND_BIN_DIR)/bank_sets: $(SOUND_BIN_DIR)/sequences.bin
@@ -1051,13 +1081,13 @@ $(SOUND_BIN_DIR)/sound_data.o: $(SOUND_BIN_DIR)/sound_data.ctl.inc.c $(SOUND_BIN
 $(BUILD_DIR)/levels/scripts.o: $(BUILD_DIR)/include/level_headers.h
 
 $(BUILD_DIR)/include/level_headers.h: levels/level_headers.h.in
-	$(CPP) -I . levels/level_headers.h.in | $(PYTHON) tools/output_level_headers.py > $(BUILD_DIR)/include/level_headers.h
+	$(CPP) -I . levels/level_headers.h.in | $(OUTPUT_LEVEL_HEADERS) > $(BUILD_DIR)/include/level_headers.h
 
 $(BUILD_DIR)/assets/mario_anim_data.c: $(wildcard assets/anims/*.inc.c)
-	$(PYTHON) tools/mario_anims_converter.py > $@
+	$(MARIO_ANIMS_CONVERTER) > $@
 
 $(BUILD_DIR)/assets/demo_data.c: assets/demo_data.json $(wildcard assets/demos/*.bin)
-	$(PYTHON) tools/demo_data_converter.py assets/demo_data.json $(VERSION_CFLAGS) > $@
+	$(DEMO_DATA_CONVERTER) assets/demo_data.json $(VERSION_CFLAGS) > $@
 
 # Source code
 $(BUILD_DIR)/levels/%/leveldata.o: OPT_FLAGS := -g
@@ -1132,7 +1162,7 @@ $(BUILD_DIR)/%.o: %.s
 
 
 $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(MOD_DIR)
-	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
+	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
 
 .PHONY: all clean distclean default diff test load libultra res
 .PRECIOUS: $(BUILD_DIR)/bin/%.elf $(SOUND_BIN_DIR)/%.ctl $(SOUND_BIN_DIR)/%.tbl $(SOUND_SAMPLE_TABLES) $(SOUND_BIN_DIR)/%.s $(BUILD_DIR)/%
