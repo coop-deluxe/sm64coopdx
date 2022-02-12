@@ -3,12 +3,12 @@
 #include "pc/debuglog.h"
 #include "pc/djui/djui.h"
 
-void network_send_kick(enum KickReasonType kickReason) {
+void network_send_kick(u8 localIndex, enum KickReasonType kickReason) {
     u8 kickReasonType = kickReason;
     struct Packet p = { 0 };
     packet_init(&p, PACKET_KICK, false, PLMT_NONE);
     packet_write(&p, &kickReasonType, sizeof(u8));
-    network_send_to(0, &p);
+    network_send_to(localIndex, &p);
 }
 
 void network_receive_kick(struct Packet* p) {
@@ -28,6 +28,8 @@ void network_receive_kick(struct Packet* p) {
 
     switch (kickReason) {
         case EKT_FULL_PARTY: djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The party is full.");              break;
+        case EKT_KICKED:     djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The server kicked you.");          break;
+        case EKT_BANNED:     djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The server banned you.");          break;
         default:             djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ Host has closed the connection."); break;
     }
     network_shutdown(false);

@@ -222,6 +222,7 @@ static void ns_discord_shutdown(void) {
 struct NetworkSystem gNetworkSystemDiscord = {
     .initialize = ns_discord_initialize,
     .get_id     = ns_discord_get_id,
+    .get_id_str = ns_discord_get_id_str,
     .save_id    = ns_discord_save_id,
     .clear_id   = ns_discord_clear_id,
     .dup_addr   = ns_discord_dup_addr,

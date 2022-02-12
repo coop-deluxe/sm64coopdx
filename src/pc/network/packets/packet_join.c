@@ -73,7 +73,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
             }
         }
         if (globalIndex == UNKNOWN_LOCAL_INDEX) {
-            network_send_kick(EKT_FULL_PARTY);
+            network_send_kick(0, EKT_FULL_PARTY);
             return;
         }
     }

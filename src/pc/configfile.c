@@ -14,6 +14,7 @@
 #include "controller/controller_api.h"
 #include "fs/fs.h"
 #include "pc/mod_list.h"
+#include "pc/network/ban_list.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -317,6 +318,12 @@ void configfile_load(const char *filename) {
                     continue;
                 }
 
+                // ban list
+                if (!strcmp(tokens[0], "ban:")) {
+                    ban_list_add(tokens[1], true);
+                    continue;
+                }
+
                 for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
                     if (strcmp(tokens[0], options[i].name) == 0) {
                         option = &options[i];
@@ -412,6 +419,14 @@ void configfile_save(const char *filename) {
         struct ModListEntry* entry = &gModTableLocal.entries[i];
         if (!entry->enabled) { continue; }
         fprintf(file, "%s %s\n", "enable-mod:", entry->name);
+    }
+
+    // save ban list
+    for (unsigned int i = 0; i < gBanCount; i++) {
+        if (gBanAddresses == NULL) { break; }
+        if (gBanAddresses[i] == NULL) { continue; }
+        if (!gBanPerm[i]) { continue; }
+        fprintf(file, "%s %s\n", "ban:", gBanAddresses[i]);
     }
 
     fclose(file);

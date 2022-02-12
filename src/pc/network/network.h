@@ -43,6 +43,7 @@ enum NetworkSystemType {
 struct NetworkSystem {
     bool (*initialize)(enum NetworkType);
     s64 (*get_id)(u8 localIndex);
+    char* (*get_id_str)(u8 localIndex);
     void (*save_id)(u8 localIndex, s64 networkId);
     void (*clear_id)(u8 localIndex);
     void* (*dup_addr)(u8 localIndex);

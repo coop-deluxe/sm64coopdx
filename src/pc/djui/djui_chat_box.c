@@ -2,6 +2,7 @@
 #include <string.h>
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/chat_commands.h"
 #include "djui.h"
 
 struct DjuiChatBox* gDjuiChatBox = NULL;
@@ -33,9 +34,9 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
 
     if (strlen(chatInput->buffer) != 0) {
         if (chatInput->buffer[0] == '/') {
-            if (!smlua_call_chat_command_hook(chatInput->buffer)) {
+            if (!exec_chat_command(chatInput->buffer)) {
                 djui_chat_message_create("Unrecognized chat command.");
-                smlua_display_chat_commands();
+                display_chat_commands();
             }
         } else {
             djui_chat_message_create_from(gNetworkPlayerLocal->globalIndex, chatInput->buffer);

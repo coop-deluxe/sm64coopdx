@@ -442,6 +442,7 @@
     <ClCompile Include="..\src\menu\star_select.c" />
     <ClCompile Include="..\src\pc\audio\audio_null.c" />
     <ClCompile Include="..\src\pc\audio\audio_sdl.c" />
+    <ClCompile Include="..\src\pc\chat_commands.c" />
     <ClCompile Include="..\src\pc\cheats.c" />
     <ClCompile Include="..\src\pc\cliopts.c" />
     <ClCompile Include="..\src\pc\configfile.c" />
@@ -526,6 +527,7 @@
     <ClCompile Include="..\src\pc\lua\smlua_utils.c" />
     <ClCompile Include="..\src\pc\mixer.c" />
     <ClCompile Include="..\src\pc\mod_list.c" />
+    <ClCompile Include="..\src\pc\network\ban_list.c" />
     <ClCompile Include="..\src\pc\network\discord\activity.c" />
     <ClCompile Include="..\src\pc\network\discord\discord.c" />
     <ClCompile Include="..\src\pc\network\discord\lobby.c" />
@@ -926,6 +928,7 @@
     <ClInclude Include="..\src\game\characters.h" />
     <ClInclude Include="..\src\game\level_info.h" />
     <ClInclude Include="..\src\game\rng_position.h" />
+    <ClInclude Include="..\src\pc\chat_commands.h" />
     <ClInclude Include="..\src\pc\controller\controller_bind_mapping.h" />
     <ClInclude Include="..\src\pc\controller\controller_keyboard_debug.h" />
     <ClInclude Include="..\src\pc\debuglog.h" />
@@ -986,6 +989,7 @@
     <ClInclude Include="..\src\pc\lua\smlua_sync_table.h" />
     <ClInclude Include="..\src\pc\lua\smlua_utils.h" />
     <ClInclude Include="..\src\pc\mod_list.h" />
+    <ClInclude Include="..\src\pc\network\ban_list.h" />
     <ClInclude Include="..\src\pc\network\branch.h" />
     <ClInclude Include="..\src\pc\network\discord\activity.h" />
     <ClInclude Include="..\src\pc\network\discord\discord.h" />

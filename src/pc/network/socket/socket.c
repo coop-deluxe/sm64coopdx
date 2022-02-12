@@ -105,6 +105,13 @@ static s64 ns_socket_get_id(UNUSED u8 localId) {
     return 0;
 }
 
+static char* ns_socket_get_id_str(u8 localId) {
+    if (localId == UNKNOWN_LOCAL_INDEX) { localId = 0; }
+    static char id_str[INET_ADDRSTRLEN] = { 0 };
+    snprintf(id_str, INET_ADDRSTRLEN, "%s", inet_ntoa(addr[localId].sin_addr));
+    return id_str;
+}
+
 static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
     assert(localId > 0);
     assert(localId < MAX_PLAYERS);
@@ -168,6 +175,7 @@ static void ns_socket_shutdown(void) {
 struct NetworkSystem gNetworkSystemSocket = {
     .initialize = ns_socket_initialize,
     .get_id     = ns_socket_get_id,
+    .get_id_str = ns_socket_get_id_str,
     .save_id    = ns_socket_save_id,
     .clear_id   = ns_socket_clear_id,
     .dup_addr   = ns_socket_dup_addr,

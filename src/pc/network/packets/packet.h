@@ -102,6 +102,8 @@ struct Packet {
 enum KickReasonType {
     EKT_CLOSE_CONNECTION,
     EKT_FULL_PARTY,
+    EKT_KICKED,
+    EKT_BANNED,
 };
 
 struct LSTNetworkType {
@@ -215,7 +217,7 @@ void network_send_chat(char* message, u8 globalIndex);
 void network_receive_chat(struct Packet* p);
 
 // packet_kick.c
-void network_send_kick(enum KickReasonType kickReason);
+void network_send_kick(u8 localIndex, enum KickReasonType kickReason);
 void network_receive_kick(struct Packet* p);
 
 // packet_keep_alive.c

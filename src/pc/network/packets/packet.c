@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "pc/network/ban_list.h"
 #include "pc/debuglog.h"
 
 void packet_process(struct Packet* p) {
@@ -100,6 +101,15 @@ void packet_receive(struct Packet* p) {
     // send an ACK if requested
     network_send_ack(p);
 
+    // refuse packets from banned players
+    if (gNetworkType == NT_SERVER) {
+        if (ban_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
+            LOG_INFO("kicking banned player");
+            network_send_kick(0, EKT_BANNED);
+            return;
+        }
+    }
+
     // refuse packets from unknown servers
     if (gNetworkServerAddr != NULL && gNetworkType == NT_CLIENT) {
         bool fromServer = (p->localIndex == UNKNOWN_LOCAL_INDEX);
@@ -114,7 +124,7 @@ void packet_receive(struct Packet* p) {
     if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && !network_allow_unknown_local_index(packetType)) {
         if (packetType != PACKET_PLAYER) {
             LOG_INFO("closing connection for packetType: %d", packetType);
-            network_send_kick(EKT_CLOSE_CONNECTION);
+            network_send_kick(0, EKT_CLOSE_CONNECTION);
         }
         LOG_INFO("refusing packet from unknown player, packetType: %d", packetType);
         return;

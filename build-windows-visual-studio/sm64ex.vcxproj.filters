@@ -4884,6 +4884,12 @@
     <ClCompile Include="..\src\pc\crash_handler.c">
       <Filter>Source Files\src\pc</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\chat_commands.c">
+      <Filter>Source Files\src\pc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pc\network\ban_list.c">
+      <Filter>Source Files\src\pc\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -6041,6 +6047,12 @@
       <Filter>Source Files\src\pc\djui\panel</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pc\network\network_utils.h">
+      <Filter>Source Files\src\pc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\chat_commands.h">
+      <Filter>Source Files\src\pc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\network\ban_list.h">
       <Filter>Source Files\src\pc\network</Filter>
     </ClInclude>
   </ItemGroup>
