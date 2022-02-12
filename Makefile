@@ -89,29 +89,24 @@ WINDOWS_AUTO_BUILDER ?= 0
 
 PYTHON := python3
 TOOLS_DIR := tools
+
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
   RM ?= rm.exe
   EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4 -fno-use-linker-plugin
   EXTRA_CFLAGS := -Wno-expansion-to-defined
-  EXTRACT_ASSETS := ./extract_assets.exe
-  OUTPUT_LEVEL_HEADERS := $(TOOLS_DIR)/output_level_headers.exe
-  ZEROTERM := $(TOOLS_DIR)/zeroterm.exe
-  MKZIP := $(TOOLS_DIR)/mkzip.exe
-  ASSEMBLE_SOUND := $(TOOLS_DIR)/assemble_sound.exe
-  MARIO_ANIMS_CONVERTER := $(TOOLS_DIR)/mario_anims_converter.exe
-  DEMO_DATA_CONVERTER := $(TOOLS_DIR)/demo_data_converter.exe
 else
   EXTRA_INCLUDES :=
   EXTRA_CFLAGS :=
-  EXTRACT_ASSETS := ./extract_assets.py
-  OUTPUT_LEVEL_HEADERS := $(PYTHON) $(TOOLS_DIR)/output_level_headers.py
-  ZEROTERM := $(PYTHON) $(TOOLS_DIR)/zeroterm.py
-  MKZIP := $(PYTHON) $(TOOLS_DIR)/mkzip.py
-  ASSEMBLE_SOUND := $(PYTHON) $(TOOLS_DIR)/assemble_sound.py
-  MARIO_ANIMS_CONVERTER := $(PYTHON) $(TOOLS_DIR)/mario_anims_converter.py
-  DEMO_DATA_CONVERTER := $(PYTHON) $(TOOLS_DIR)/demo_data_converter.py
 endif
+
+EXTRACT_ASSETS := $(PYTHON) ./extract_assets.py
+OUTPUT_LEVEL_HEADERS := $(PYTHON) $(TOOLS_DIR)/output_level_headers.py
+ZEROTERM := $(PYTHON) $(TOOLS_DIR)/zeroterm.py
+MKZIP := $(PYTHON) $(TOOLS_DIR)/mkzip.py
+ASSEMBLE_SOUND := $(PYTHON) $(TOOLS_DIR)/assemble_sound.py
+MARIO_ANIMS_CONVERTER := $(PYTHON) $(TOOLS_DIR)/mario_anims_converter.py
+DEMO_DATA_CONVERTER := $(PYTHON) $(TOOLS_DIR)/demo_data_converter.py
 
 # Attempt to detect OS
 
