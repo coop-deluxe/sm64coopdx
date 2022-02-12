@@ -230,4 +230,5 @@ struct NetworkSystem gNetworkSystemDiscord = {
     .send       = ns_discord_network_send,
     .shutdown   = ns_discord_shutdown,
     .requireServerBroadcast = false,
+    .name       = "Discord",
 };

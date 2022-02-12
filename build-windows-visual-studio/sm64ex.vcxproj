@@ -453,6 +453,7 @@
     <ClCompile Include="..\src\pc\controller\controller_recorded_tas.c" />
     <ClCompile Include="..\src\pc\controller\controller_sdl1.c" />
     <ClCompile Include="..\src\pc\controller\controller_sdl2.c" />
+    <ClCompile Include="..\src\pc\crash_handler.c" />
     <ClCompile Include="..\src\pc\discord\discordrpc.c" />
     <ClCompile Include="..\src\pc\djui\djui.c" />
     <ClCompile Include="..\src\pc\djui\djui_base.c" />

@@ -38,6 +38,10 @@ u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
 
+u8 gDebugPacketIdBuffer[256] = { 0xFF };
+u8 gDebugPacketSentBuffer[256] = { 0 };
+u8 gDebugPacketOnBuffer = 0;
+
 struct StringLinkedList gRegisteredMods = { 0 };
 
 struct ServerSettings gServerSettings = {
@@ -137,6 +141,17 @@ void network_on_loaded_area(void) {
     }
 }
 
+static void network_remember_debug_packet(u8 id, bool sent) {
+    if (id == PACKET_ACK) { return; }
+    if (id == PACKET_KEEP_ALIVE) { return; }
+    if (id == PACKET_DEBUG_SYNC) { return; }
+    if (id == PACKET_PLAYER && id == gDebugPacketIdBuffer[gDebugPacketOnBuffer]) { return; }
+    if (id == PACKET_OBJECT && id == gDebugPacketIdBuffer[gDebugPacketOnBuffer]) { return; }
+    gDebugPacketOnBuffer++;
+    gDebugPacketIdBuffer[gDebugPacketOnBuffer] = id;
+    gDebugPacketSentBuffer[gDebugPacketOnBuffer] = sent;
+}
+
 bool network_allow_unknown_local_index(enum PacketType packetType) {
     return (packetType == PACKET_JOIN_REQUEST)
         || (packetType == PACKET_KICK)
@@ -230,6 +245,8 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     }
     p->sent = true;
 
+    network_remember_debug_packet(p->packetType, true);
+
     gNetworkPlayers[localIndex].lastSent = clock_elapsed();
 }
 
@@ -292,6 +309,8 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         LOG_ERROR("invalid packet hash!");
         return;
     }
+
+    network_remember_debug_packet(p.buffer[0], false);
 
     // execute packet
     packet_receive(&p);

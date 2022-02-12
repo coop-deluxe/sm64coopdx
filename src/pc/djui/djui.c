@@ -9,6 +9,7 @@ static Gfx* sSavedDisplayListHead = NULL;
 struct DjuiRoot* gDjuiRoot = NULL;
 static struct DjuiText* sDjuiPauseOptions = NULL;
 bool gDjuiInMainMenu = true;
+bool gDjuiDisabled = false;
 
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
@@ -48,6 +49,7 @@ void djui_render_patch(void) {
 }
 
 void djui_render(void) {
+    if (gDjuiDisabled) { return; }
     sSavedDisplayListHead = gDisplayListHead;
     create_dl_ortho_matrix();
 

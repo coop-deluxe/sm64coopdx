@@ -59,6 +59,7 @@
 
 extern struct DjuiRoot* gDjuiRoot;
 extern bool gDjuiInMainMenu;
+extern bool gDjuiDisabled;
 
 void djui_init(void);
 void djui_connect_menu_open(void);

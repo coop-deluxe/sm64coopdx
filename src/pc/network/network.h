@@ -51,6 +51,7 @@ struct NetworkSystem {
     int  (*send)(u8 localIndex, void* addr, u8* data, u16 dataLength);
     void (*shutdown)(void);
     bool requireServerBroadcast;
+    char* name;
 };
 
 struct SyncObject {
@@ -109,6 +110,10 @@ extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern struct StringLinkedList gRegisteredMods;
 extern bool gNetworkSentJoin;
+
+extern u8 gDebugPacketIdBuffer[];
+extern u8 gDebugPacketSentBuffer[];
+extern u8 gDebugPacketOnBuffer;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);

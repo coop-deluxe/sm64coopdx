@@ -4881,6 +4881,9 @@
     <ClCompile Include="..\src\pc\network\network_utils.c">
       <Filter>Source Files\src\pc\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\crash_handler.c">
+      <Filter>Source Files\src\pc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">

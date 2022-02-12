@@ -176,4 +176,5 @@ struct NetworkSystem gNetworkSystemSocket = {
     .send       = ns_socket_send,
     .shutdown   = ns_socket_shutdown,
     .requireServerBroadcast = true,
+    .name       = "Socket",
 };
