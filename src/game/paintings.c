@@ -1311,7 +1311,9 @@ Gfx *geo_painting_update(s32 callContext, UNUSED struct GraphNode *node, UNUSED 
 
         // Store Mario's floor and position
         find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &surface);
-        gPaintingMarioFloorType = surface->type;
+        if (surface != NULL) {
+            gPaintingMarioFloorType = surface->type;
+        }
         gPaintingMarioXPos = gMarioObject->oPosX;
         gPaintingMarioYPos = gMarioObject->oPosY;
         gPaintingMarioZPos = gMarioObject->oPosZ;
