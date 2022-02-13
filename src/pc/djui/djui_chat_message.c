@@ -5,6 +5,7 @@
 #include "audio/external.h"
 #include "game/mario_misc.h"
 #include "djui.h"
+#include "pc/debuglog.h"
 
 #define DJUI_CHAT_LIFE_TIME 10.0f
 
@@ -45,6 +46,10 @@ static void djui_chat_message_destroy(struct DjuiBase* base) {
 
 void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+    if (np == NULL) {
+        LOG_ERROR("Could not find network player, global index: %u", globalIndex);
+        return;
+    }
 
     char* playerColorString = network_get_player_text_color_string(np->localIndex);
     char chatMsg[256] = { 0 };
