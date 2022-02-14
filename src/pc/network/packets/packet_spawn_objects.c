@@ -113,7 +113,8 @@ void network_receive_spawn_objects(struct Packet* p) {
             parentObj = gMarioStates[0].marioObj;
         } else {
             // sanity check parent id
-            if (i == 0 && data.parentId >= MAX_SYNC_OBJECTS) {
+            u32 maxSyncObjects = MAX_SYNC_OBJECTS;
+            if (i == 0 && data.parentId >= maxSyncObjects) {
                 LOG_ERROR("Invalid spawn object parentId: %u", data.parentId);
                 return;
             }
