@@ -85,7 +85,7 @@ void network_receive_spawn_star_nle(struct Packet* p) {
     }
 
     // check for sync id
-    if (object == NULL) {
+    if (object == NULL && syncId < MAX_SYNC_OBJECTS) {
         object = gSyncObjects[syncId].o;
     }
 
