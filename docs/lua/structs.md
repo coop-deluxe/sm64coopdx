@@ -213,6 +213,7 @@
 | soundYahoo | integer | read-only |
 | soundYahooWahaYippee | integer | read-only |
 | soundYawning | integer | read-only |
+| torsoRotMult | number | read-only |
 | type | integer | read-only |
 
 [:arrow_up_small:](#)

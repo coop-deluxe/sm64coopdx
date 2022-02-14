@@ -95,7 +95,7 @@ static struct LuaObjectField sCameraTriggerFields[LUA_CAMERA_TRIGGER_FIELD_COUNT
 //  { "event",     LVT_???, offsetof(struct CameraTrigger, event),     false, LOT_???  }, <--- UNIMPLEMENTED
 };
 
-#define LUA_CHARACTER_FIELD_COUNT 56
+#define LUA_CHARACTER_FIELD_COUNT 57
 static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "animOffsetEnabled",     LVT_U8,       offsetof(struct Character, animOffsetEnabled),     true, LOT_NONE },
     { "animOffsetFeet",        LVT_F32,      offsetof(struct Character, animOffsetFeet),        true, LOT_NONE },
@@ -156,6 +156,7 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "soundYahoo",            LVT_S32,      offsetof(struct Character, soundYahoo),            true, LOT_NONE },
     { "soundYahooWahaYippee",  LVT_S32,      offsetof(struct Character, soundYahooWahaYippee),  true, LOT_NONE },
     { "soundYawning",          LVT_S32,      offsetof(struct Character, soundYawning),          true, LOT_NONE },
+    { "torsoRotMult",          LVT_F32,      offsetof(struct Character, torsoRotMult),          true, LOT_NONE },
     { "type",                  LVT_S32,      offsetof(struct Character, type),                  true, LOT_NONE },
 };
 

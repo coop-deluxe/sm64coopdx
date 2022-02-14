@@ -735,7 +735,8 @@
 | CT_LUIGI | 1 |
 | CT_TOAD | 2 |
 | CT_WALUIGI | 3 |
-| CT_MAX | 4 |
+| CT_WARIO | 4 |
+| CT_MAX | 5 |
 
 <br />
 
