@@ -8,6 +8,7 @@ enum CharacterType {
     CT_LUIGI,
     CT_TOAD,
     CT_WALUIGI,
+    CT_WARIO,
 
     // must be last
     CT_MAX
@@ -27,6 +28,7 @@ struct Character {
     u8 capEnemyLayer;
     Gfx* capEnemyGfx;
     Gfx* capEnemyDecalGfx;
+    f32 torsoRotMult;
     // anim
     u8 animOffsetEnabled;
     f32 animOffsetLowYPoint;

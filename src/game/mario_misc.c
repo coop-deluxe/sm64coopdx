@@ -481,6 +481,10 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
 
+    u8 charIndex = gNetworkPlayers[plrIdx].modelIndex;
+    if (charIndex >= CT_MAX) { charIndex = 0; }
+    struct Character* character = &gCharacters[charIndex];
+
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
 
@@ -488,9 +492,9 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
             && action != ACT_RIDING_SHELL_GROUND) {
             vec3s_copy(bodyState->torsoAngle, gVec3sZero);
         }
-        rotNode->rotation[0] = bodyState->torsoAngle[1];
-        rotNode->rotation[1] = bodyState->torsoAngle[2];
-        rotNode->rotation[2] = bodyState->torsoAngle[0];
+        rotNode->rotation[0] = bodyState->torsoAngle[1] * character->torsoRotMult;
+        rotNode->rotation[1] = bodyState->torsoAngle[2] * character->torsoRotMult;
+        rotNode->rotation[2] = bodyState->torsoAngle[0] * character->torsoRotMult;
         if (plrIdx != 0) {
             // only interpolate angles for the local player
             vec3s_copy(rotNode->prevRotation, rotNode->rotation);

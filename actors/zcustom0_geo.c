@@ -10,3 +10,7 @@
 
 #include "waluigi_cap/geo.inc.c" // custom waluigi_cap
 #include "waluigi/geo.inc.c"
+
+#include "wario_cap/geo.inc.c"
+#include "wario/geo.inc.c"
+

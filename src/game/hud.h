@@ -22,6 +22,7 @@ enum CameraHUDLut {
     GLYPH_CAM_LUIGI_HEAD,
     GLYPH_CAM_TOAD_HEAD,
     GLYPH_CAM_WALUIGI_HEAD,
+    GLYPH_CAM_WARIO_HEAD,
 };
 
 // Functions

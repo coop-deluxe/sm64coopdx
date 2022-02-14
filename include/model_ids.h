@@ -606,4 +606,10 @@
 #define MODEL_WALUIGIS_WING_CAP           0xEF // waluigis_wing_cap_geo
 #define MODEL_WALUIGIS_WINGED_METAL_CAP   0xF0 // waluigis_winged_metal_cap_geo
 
+#define MODEL_WARIO                       0xF1 // wario_geo
+#define MODEL_WARIOS_CAP                  0xF2 // warios_cap_geo
+#define MODEL_WARIOS_METAL_CAP            0xF3 // warios_metal_cap_geo
+#define MODEL_WARIOS_WING_CAP             0xF4 // warios_wing_cap_geo
+#define MODEL_WARIOS_WINGED_METAL_CAP     0xF5 // warios_winged_metal_cap_geo
+
 #endif // MODEL_IDS_H

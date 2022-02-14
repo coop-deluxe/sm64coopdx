@@ -117,7 +117,7 @@ const LevelScript level_main_scripts_entry[] = {
 
     // CUSTOM MODELS BEGIN
 
-    LOAD_MODEL_FROM_GEO(MODEL_BUBBLE_PLAYER,           water_bomb_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_BUBBLE_PLAYER,             water_bomb_geo),
 
     LOAD_MODEL_FROM_GEO(MODEL_LUIGI,                     luigi_geo),
     LOAD_MODEL_FROM_GEO(MODEL_LUIGIS_CAP,                luigis_cap_geo),
@@ -135,6 +135,12 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_WALUIGIS_METAL_CAP,        waluigis_metal_cap_geo),
     LOAD_MODEL_FROM_GEO(MODEL_WALUIGIS_WING_CAP,         waluigis_wing_cap_geo),
     LOAD_MODEL_FROM_GEO(MODEL_WALUIGIS_WINGED_METAL_CAP, waluigis_winged_metal_cap_geo),
+
+    LOAD_MODEL_FROM_GEO(MODEL_WARIO,                     wario_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_WARIOS_CAP,                warios_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_WARIOS_METAL_CAP,          warios_metal_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
 
     // CUSTOM MODELS END
 

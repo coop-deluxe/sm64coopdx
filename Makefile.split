@@ -79,6 +79,10 @@ ZCUSTOM_DIRS += toad_player
 CUSTOM_DIRS += waluigi_cap
 ZCUSTOM_DIRS += waluigi
 
+# Add Wario
+CUSTOM_DIRS += wario_cap
+ZCUSTOM_DIRS += wario
+
 # Actor Files
 CUSTOM_FILES                 := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))
 AMP_CHUCKYA_FILES            := $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(AMP_DIRS)),$(patsubst %.png,%.inc.c,$(wildcard $(dir)/*.png)))

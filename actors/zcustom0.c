@@ -15,3 +15,10 @@
 
 // waluigi model
 #include "waluigi/model.inc.c"
+
+// wario_cap
+#include "wario_cap/model.inc.c"
+
+// wario model
+#include "wario/model.inc.c"
+
