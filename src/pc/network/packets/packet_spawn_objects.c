@@ -112,6 +112,12 @@ void network_receive_spawn_objects(struct Packet* p) {
             // this object is it's own parent, set it to a known object temporarily
             parentObj = gMarioStates[0].marioObj;
         } else {
+            // sanity check parent id
+            if (i == 0 && data.parentId >= MAX_SYNC_OBJECTS) {
+                LOG_ERROR("Invalid spawn object parentId: %u", data.parentId);
+                return;
+            }
+
             // this object has a known parent
             parentObj = (i == 0)
                       ? gSyncObjects[data.parentId].o
@@ -119,14 +125,14 @@ void network_receive_spawn_objects(struct Packet* p) {
             if (parentObj == NULL) {
                 // failed to find parent, make it it's own parent
                 // may cause issues, but we want it to spawn!
-                printf("ERROR: failed to find spawn object's parent (%d)!\n", data.parentId);
+                LOG_ERROR("ERROR: failed to find spawn object's parent (%d)!", data.parentId);
                 parentObj = gMarioStates[0].marioObj;
                 data.parentId = (u8)-1;
             }
         }
 
         if (parentObj == NULL) {
-            printf("ERROR: failed to attach to mario!\n");
+            LOG_ERROR("ERROR: failed to attach to mario!");
             return;
         }
 
@@ -144,6 +150,10 @@ void network_receive_spawn_objects(struct Packet* p) {
         if (data.parentId == (u8)-1) { o->parentObj = o; }
 
         if (o->oSyncID != 0 && o->oSyncID >= RESERVED_IDS_SYNC_OBJECT_OFFSET) {
+            if (o->oSyncID >= MAX_SYNC_OBJECTS) {
+                LOG_ERROR("Invalid spawn object sync id: %u", o->oSyncID);
+                return;
+            }
             // check if they've allocated one of their reserved sync objects
             gSyncObjects[o->oSyncID].o = o;
         }
