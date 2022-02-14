@@ -223,7 +223,7 @@ s8 init_shadow(struct Shadow *s, f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, 
         s->floorNormalY = 1.0;
         s->floorNormalZ = 0;
         s->floorOriginOffset = -waterLevel;
-    } else {
+    } else if (floorGeometry != NULL) {
         // Don't draw a shadow if the floor is lower than expected possible,
         // or if the y-normal is negative (an unexpected result).
         if (s->floorHeight < -10000.0 || floorGeometry->normalY <= 0.0) {
