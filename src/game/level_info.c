@@ -106,7 +106,7 @@ const char* get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex) {
     }
 
     // If we are in in Course 0 we are in the castle which doesn't have a string
-    if (courseNum) {
+    if (courseNum && courseNum > 0 && courseNum < 27) {
         void** courseNameTbl;
 
 #ifndef VERSION_EU
@@ -127,8 +127,7 @@ const char* get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex) {
         u8* courseName = segmented_to_virtual(courseNameTbl[courseNum - 1]);
 
         convert_string(&courseName[3], stage);
-    }
-    else {
+    } else {
         strcpy(stage, "Peach's Castle");
     }
 
