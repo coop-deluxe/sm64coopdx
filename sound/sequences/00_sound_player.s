@@ -7,7 +7,8 @@ seq_setmutebhv 0x60
 seq_setmutescale 0
 seq_setvol 127
 seq_settempo 120
-seq_initchannels 0xfff
+#seq_initchannels 0xfff
+seq_initchannels_extended 0xfff
 seq_startchannel 0, .channel0
 seq_startchannel 1, .channel1
 seq_startchannel 2, .channel2

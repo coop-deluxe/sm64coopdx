@@ -78,6 +78,16 @@
     .byte \a >> 8, \a & 0xff
 .endm
 
+.macro seq_disablechannels_extended a
+    .byte 0xc0
+    .byte \a >> 24, \a >> 16, \a >> 8, \a & 0xff
+.endm
+
+.macro seq_initchannels_extended a
+    .byte 0xc1
+    .byte \a >> 24, \a >> 16, \a >> 8, \a & 0xff
+.endm
+
 .macro seq_changevol a
     .byte 0xda
     .byte \a

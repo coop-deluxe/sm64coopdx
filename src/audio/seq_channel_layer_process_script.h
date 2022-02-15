@@ -65,6 +65,25 @@
 #endif
 
 #if COPT
+#define M64_READ_S32(state, dst) \
+    dst = m64_read_s32(state);
+#else
+#define M64_READ_S32(state, dst)              \
+{                                             \
+    s32 _ret;                                 \
+    _ret = *(*state).pc << 24;                \
+    ((*state).pc)++;                          \
+    _ret = (*(*state).pc << 16) | _ret;       \
+    ((*state).pc)++;                          \
+    _ret = (*(*state).pc << 8) | _ret;        \
+    ((*state).pc)++;                          \
+    _ret = *(*state).pc | _ret;               \
+    ((*state).pc)++;                          \
+    dst = _ret;                               \
+}
+#endif
+
+#if COPT
 #define GET_INSTRUMENT(seqChannel, instId, _instOut, _adsr, dst, l) \
     dst = get_instrument(seqChannel, instId, _instOut, _adsr);
 #else

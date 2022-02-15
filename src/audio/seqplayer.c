@@ -1,5 +1,10 @@
 #include <PR/ultratypes.h>
 
+#ifdef DEVELOPMENT
+#include <stdio.h>
+#include <assert.h>
+#endif
+
 #include "data.h"
 #include "effects.h"
 #include "external.h"
@@ -243,6 +248,79 @@ void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 chan
     }
 }
 
+void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u32 channelBits) {
+    struct SequenceChannel* seqChannel;
+    s32 i;
+
+#ifdef DEVELOPMENT
+    printf("debug: Enabling channels (extended) with corresponding bits %X\n", channelBits);
+#endif
+
+    for (i = 0; i < CHANNELS_MAX; i++) {
+        if (channelBits & 1) {
+            seqChannel = seqPlayer->channels[i];
+            if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == TRUE && seqChannel->seqPlayer == seqPlayer) {
+                sequence_channel_disable(seqChannel);
+                seqChannel->seqPlayer = NULL;
+}
+            seqChannel = allocate_sequence_channel();
+            if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == FALSE) {
+                gAudioErrorFlags = i + 0x10000;
+                seqPlayer->channels[i] = seqChannel;
+            }
+            else {
+                sequence_channel_init(seqChannel);
+                seqPlayer->channels[i] = seqChannel;
+                seqChannel->seqPlayer = seqPlayer;
+                seqChannel->bankId = seqPlayer->defaultBank[0];
+                seqChannel->muteBehavior = seqPlayer->muteBehavior;
+                seqChannel->noteAllocPolicy = seqPlayer->noteAllocPolicy;
+            }
+
+#ifdef DEVELOPMENT
+            printf("debug: Tried to enable channel (extended) %i with result of validity %u.\n", i, IS_SEQUENCE_CHANNEL_VALID(seqChannel));
+#endif
+        }
+
+#ifdef DEVELOPMENT
+        printf("debug: Checked channel (extended) %i for enable with bit %u.\n", i, channelBits & 1);
+#endif
+
+#ifdef VERSION_EU
+        channelBits = channelBits >> 1;
+#else
+        channelBits >>= 1;
+#endif
+    }
+}
+
+void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer, u32 channelBits) {
+    struct SequenceChannel* seqChannel;
+    s32 i;
+
+#ifdef DEVELOPMENT
+    printf("debug: Disabling channels (extended) with corresponding bits %X\n", channelBits);
+#endif
+
+    for (i = 0; i < CHANNELS_MAX; i++) {
+        if (channelBits & 1) {
+            seqChannel = seqPlayer->channels[i];
+            if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == TRUE) {
+                if (seqChannel->seqPlayer == seqPlayer) {
+                    sequence_channel_disable(seqChannel);
+                    seqChannel->seqPlayer = NULL;
+                }
+                seqPlayer->channels[i] = &gSequenceChannelNone;
+            }
+        }
+#ifdef VERSION_EU
+        channelBits = channelBits >> 1;
+#else
+        channelBits >>= 1;
+#endif
+    }
+}
+
 void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, void *arg2) {
     struct SequenceChannel *seqChannel = seqPlayer->channels[channelIndex];
     s32 i;
@@ -363,17 +441,37 @@ u8 m64_read_u8(struct M64ScriptState *state) {
 }
 
 s16 m64_read_s16(struct M64ScriptState *state) {
+#ifdef DEVELOPMENT
+    assert(state != NULL);
+    assert(state->pc != NULL);
+#endif
     s16 ret = *(state->pc++) << 8;
     ret = *(state->pc++) | ret;
     return ret;
 }
 
 u16 m64_read_compressed_u16(struct M64ScriptState *state) {
+#ifdef DEVELOPMENT
+    assert(state != NULL);
+    assert(state->pc != NULL);
+#endif
     u16 ret = *(state->pc++);
     if (ret & 0x80) {
         ret = (ret << 8) & 0x7f00;
         ret = *(state->pc++) | ret;
     }
+    return ret;
+}
+
+s32 m64_read_s32(struct M64ScriptState* state) {
+#ifdef DEVELOPMENT
+    assert(state != NULL);
+    assert(state->pc != NULL);
+#endif
+    s32 ret = *(state->pc++) << 24;
+    ret = (*(state->pc++) << 16) | ret;
+    ret = (*(state->pc++) << 8) | ret;
+    ret = *(state->pc++) | ret;
     return ret;
 }
 
@@ -1547,6 +1645,7 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
     s32 value;
     s32 i;
     u16 u16v;
+    u32 u32v;
     u8 *tempPtr;
     struct M64ScriptState *state;
 #ifdef VERSION_EU
@@ -1868,6 +1967,16 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
                     case 0xd6: // seq_disablechannels
                         u16v = m64_read_s16(state);
                         sequence_player_disable_channels(seqPlayer, u16v);
+                        break;
+
+                    case 0xc1: // seq_initchannels_extended
+                        u32v = m64_read_s32(state);
+                        sequence_player_init_channels_extended(seqPlayer, u32v);
+                        break;
+
+                    case 0xc0: // seq_disablechannels_extended
+                        u32v = m64_read_s32(state);
+                        sequence_player_disable_channels_extended(seqPlayer, u32v);
                         break;
 
                     case 0xd5: // seq_setmutescale
