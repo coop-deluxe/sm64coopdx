@@ -12,6 +12,8 @@ static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
 int smlua_hook_event(lua_State* L) {
     if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
     u16 hookType = smlua_to_integer(L, -2);
     if (!gSmLuaConvertSuccess) { return 0; }
 
@@ -139,6 +141,7 @@ void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookTyp
 
 struct LuaHookedMarioAction {
     u32 action;
+    u32 interactionType;
     int reference;
 };
 
@@ -149,6 +152,9 @@ static int sHookedMarioActionsCount = 0;
 
 int smlua_hook_mario_action(lua_State* L) {
     if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_range(L, 2, 3)) { return 0; }
+    int paramCount = lua_gettop(L);
+
     if (sHookedMarioActionsCount >= MAX_HOOKED_ACTIONS) {
         LOG_LUA("Hooked mario actions exceeded maximum references!");
         smlua_logline();
@@ -162,6 +168,7 @@ int smlua_hook_mario_action(lua_State* L) {
         return 0;
     }
 
+    lua_pushvalue(L, 2);
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
     if (ref == -1) {
@@ -170,8 +177,19 @@ int smlua_hook_mario_action(lua_State* L) {
         return 0;
     }
 
+    lua_Integer interactionType = 0;
+    if (paramCount >= 3) {
+        interactionType = smlua_to_integer(L, 3);
+        if (interactionType == 0 || !gSmLuaConvertSuccess) {
+            LOG_LUA("Hook Action: tried to hook invalid interactionType: %lld, %u", interactionType, gSmLuaConvertSuccess);
+            smlua_logline();
+            return 0;
+        }
+    }
+
     struct LuaHookedMarioAction* hooked = &sHookedMarioActions[sHookedMarioActionsCount];
     hooked->action = action;
+    hooked->interactionType = interactionType;
     hooked->reference = ref;
     if (!gSmLuaConvertSuccess) { return 0; }
 
@@ -213,6 +231,18 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
     return false;
 }
 
+u32 smlua_get_action_interaction_type(struct MarioState* m) {
+    u32 interactionType = 0;
+    lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
+    for (int i = 0; i < sHookedMarioActionsCount; i++) {
+        if (sHookedMarioActions[i].action == m->action) {
+            interactionType |= sHookedMarioActions[i].interactionType;
+        }
+    }
+    return interactionType;
+}
+
   /////////////////////////
  // hooked chat command //
 /////////////////////////
@@ -230,6 +260,8 @@ static int sHookedChatCommandsCount = 0;
 
 int smlua_hook_chat_command(lua_State* L) {
     if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
     if (sHookedChatCommandsCount >= MAX_HOOKED_CHAT_COMMANDS) {
         LOG_LUA("Hooked chat command exceeded maximum references!");
         smlua_logline();

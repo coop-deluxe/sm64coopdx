@@ -130,6 +130,21 @@ function approach_f32(current, target, inc, dec)
     return current;
 end
 
+function approach_s32(current, target, inc, dec)
+    if current < target then
+        current = current + inc
+        if current > target then
+            current = target
+        end
+    else
+        current = current - dec
+        if current < target then
+            current = target
+        end
+    end
+    return current;
+end
+
 function SOUND_ARG_LOAD(bank, playFlags, soundID, priority, flags2)
     return ((bank << 28) | (playFlags << 24) | (soundID << 16) | (priority << 8) | (flags2 << 4) | 1)
 end

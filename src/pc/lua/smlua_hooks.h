@@ -32,6 +32,7 @@ void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
 
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
+u32 smlua_get_action_interaction_type(struct MarioState* m);
 
 bool smlua_call_chat_command_hook(char* command);
 void smlua_display_chat_commands(void);

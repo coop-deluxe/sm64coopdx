@@ -16,6 +16,7 @@ in_files = [
     "src/game/characters.h",
     "src/pc/network/network_player.h",
     "include/PR/os_cont.h",
+    "src/game/interaction.c",
 ]
 
 exclude_constants = [
@@ -23,6 +24,8 @@ exclude_constants = [
     '^LEVEL_.*',
     '^AREA_.*',
     '^CONT_ERR.*',
+    '^READ_MASK$',
+    '^SIGN_RANGE$',
 ]
 
 pretend_find = [

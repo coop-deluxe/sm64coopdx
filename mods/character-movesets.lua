@@ -2,11 +2,22 @@
 -- incompatible: moveset
 -- description: Gives each character unique abilities and stats.
 
+ANGLE_QUEUE_SIZE = 9
+SPIN_TIMER_SUCCESSFUL_INPUT = 4
+
+gEventTable = {}
+
 gStateExtras = {}
 for i=0,(MAX_PLAYERS-1) do
     gStateExtras[i] = {}
     local m = gMarioStates[i]
     local e = gStateExtras[i]
+    e.prevPos = {}
+    e.prevPos.x = 0
+    e.prevPos.y = 0
+    e.prevPos.z = 0
+    e.angleDeltaQueue = {}
+    for j=0,(ANGLE_QUEUE_SIZE-1) do e.angleDeltaQueue[j] = 0 end
     e.lastAction = m.action
     e.animFrame = 0
     e.scuttle = 0
@@ -14,17 +25,19 @@ for i=0,(MAX_PLAYERS-1) do
     e.boostTimer = 0
     e.rotAngle = 0
     e.lastHurtCounter = 0
+    e.stickLastAngle = 0
+    e.spinDirection = 0
+    e.spinBufferTimer = 0
+    e.spinInput = 0
+    e.lastIntendedMag = 0
 end
-
-gEventTable = {}
-
-
-ACT_SPIN_POUND_LAND = (0x037 | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
-ACT_SPIN_POUND      = (0x08F | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
 
 -----------
 -- luigi --
 -----------
+
+ACT_SPIN_POUND_LAND = (0x037 | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
+ACT_SPIN_POUND      = (0x08F | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
 
 function act_spin_pound(m)
     local e = gStateExtras[m.playerIndex]
@@ -303,6 +316,8 @@ end
 
 function toad_update(m)
     local e = gStateExtras[m.playerIndex]
+
+    -- track average forward velocity
     if e.averageForwardVel > m.forwardVel then
         e.averageForwardVel = e.averageForwardVel * 0.93 + m.forwardVel * 0.07
     else
@@ -331,9 +346,9 @@ gEventTable[CT_TOAD] = {
     update           = toad_update,
 }
 
------------
+-------------
 -- waluigi --
------------
+-------------
 
 ACT_WALL_SLIDE = (0x0BF | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
 
@@ -453,6 +468,439 @@ gEventTable[CT_WALUIGI] = {
     update           = waluigi_update,
 }
 
+-----------
+-- wario --
+-----------
+
+ACT_WARIO_DASH         = (0x05B | ACT_FLAG_MOVING | ACT_FLAG_ATTACKING)
+ACT_WARIO_AIR_DASH     = (0x05B | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_CORKSCREW_CONK     = (0x05D | ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WARIO_SPINNING_OBJ = (0x05B | ACT_FLAG_STATIONARY)
+
+function act_corkscrew_conk(m)
+    local e = gStateExtras[m.playerIndex]
+    m.particleFlags = m.particleFlags | PARTICLE_DUST
+
+    common_air_action_step(m, ACT_JUMP_LAND, MARIO_ANIM_FORWARD_SPINNING, AIR_STEP_NONE)
+    set_anim_to_frame(m, e.animFrame)
+
+    if e.animFrame >= m.marioObj.header.gfx.animInfo.curAnim.loopEnd then
+        e.animFrame = e.animFrame - m.marioObj.header.gfx.animInfo.curAnim.loopEnd
+    end
+
+    if (m.input & INPUT_Z_PRESSED) ~= 0 then
+        local rc = set_mario_action(m, ACT_GROUND_POUND, 0)
+        m.actionTimer = 5
+        return rc
+    end
+
+    m.actionTimer = m.actionTimer + 1
+    e.animFrame = e.animFrame + 1
+
+    return 0
+end
+
+function act_wario_dash(m)
+    local e = gStateExtras[m.playerIndex]
+
+    -- when hitting wall, stay dashing for an extra frame
+    if m.actionArg == 99 then
+        m.actionTimer = m.actionTimer + 1
+        if m.actionTimer > 2 then
+            return set_mario_action(m, ACT_WALKING, 0)
+        end
+        return 0
+    end
+
+    -- make sound
+    if m.actionTimer == 0 then
+        m.actionState = m.actionArg
+        play_character_sound(m, CHAR_SOUND_YAHOO)
+    end
+
+    -- walk once dash is up
+    if m.actionTimer > 15 then
+        return set_mario_action(m, ACT_WALKING, 0)
+    end
+
+    -- slide and set animation
+    common_slide_action(m, ACT_DIVE, ACT_MOVE_PUNCHING, MARIO_ANIM_FIRST_PUNCH)
+    set_anim_to_frame(m, 25)
+
+    -- set dash speed
+    local speed = 100
+    if m.actionTimer > 8 then
+        speed = speed - (m.actionTimer - 8) * 11
+    end
+    mario_set_forward_vel(m, speed)
+
+    -- corkscrew conk
+    if (m.input & INPUT_A_PRESSED) ~= 0 then
+        set_jumping_action(m, ACT_CORKSCREW_CONK, 0)
+        play_character_sound(m, CHAR_SOUND_YAHOO)
+    end
+
+    -- slide kick
+    if (m.input & INPUT_Z_PRESSED) ~= 0 then
+        return set_mario_action(m, ACT_SLIDE_KICK, 0)
+    end
+
+    m.actionTimer = m.actionTimer + 1
+    return 0
+end
+
+function act_wario_air_dash(m)
+    local e = gStateExtras[m.playerIndex]
+
+    -- walk once dash is up
+    if m.actionTimer > 15 then
+        return set_mario_action(m, ACT_JUMP_LAND, 0)
+    end
+
+    -- slide and set animation
+    common_air_action_step(m, ACT_JUMP_LAND, MARIO_ANIM_FIRST_PUNCH, AIR_STEP_NONE)
+    set_anim_to_frame(m, 25)
+
+    -- set dash speed
+    local speed = 100
+    if m.actionTimer > 8 then
+        speed = speed - (m.actionTimer - 8) * 11
+    end
+    mario_set_forward_vel(m, speed)
+
+    -- corkscrew conk
+    if (m.input & INPUT_A_PRESSED) ~= 0 then
+        set_jumping_action(m, ACT_CORKSCREW_CONK, 0)
+        play_character_sound(m, CHAR_SOUND_YAHOO)
+    end
+
+    -- slide kick
+    if (m.input & INPUT_Z_PRESSED) ~= 0 then
+        return set_mario_action(m, ACT_SLIDE_KICK, 0)
+    end
+
+    m.actionTimer = m.actionTimer + 1
+    return 0
+end
+
+function act_wario_spinning_obj(m)
+    local spin = 0
+
+    -- throw object
+    if m.playerIndex == 0 and (m.input & INPUT_B_PRESSED) ~= 0 then
+        play_character_sound_if_no_flag(m, CHAR_SOUND_WAH2, MARIO_MARIO_SOUND_PLAYED)
+        play_sound_if_no_flag(m, SOUND_ACTION_THROW, MARIO_ACTION_SOUND_PLAYED)
+        return set_mario_action(m, ACT_RELEASING_BOWSER, 0)
+    end
+
+    -- set animation    
+    if m.playerIndex == 0 and m.angleVel.y == 0 then
+        m.actionTimer = m.actionTimer + 1
+        if m.actionTimer > 120 then
+            return set_mario_action(m, ACT_RELEASING_BOWSER, 1)
+        end
+
+        set_mario_animation(m, MARIO_ANIM_HOLDING_BOWSER)
+    else
+        m.actionTimer = 0
+        set_mario_animation(m, MARIO_ANIM_SWINGING_BOWSER)
+    end
+
+    -- spin
+    if m.intendedMag > 20.0 then
+        -- spin = acceleration
+        spin = (m.intendedYaw - m.twirlYaw) / 0x20
+
+        if spin < -0x80 then
+            spin = -0x80
+        end
+        if spin > 0x80 then
+            spin = 0x80
+        end
+
+        m.twirlYaw = m.intendedYaw
+        m.angleVel.y = m.angleVel.y + spin
+
+        if m.angleVel.y > 0x1000 then
+            m.angleVel.y = 0x1000
+        end
+        if m.angleVel.y < -0x1000 then
+            m.angleVel.y = -0x1000
+        end
+    elseif m.angleVel.y > -0x750 and m.angleVel.y < 0x750 then
+        -- go back to walking
+        return set_mario_action(m, ACT_HOLD_IDLE, 0)
+    else
+        -- slow down spin
+        m.angleVel.y = approach_s32(m.angleVel.y, 0, 128, 128);
+    end
+
+    -- apply spin
+    spin = m.faceAngle.y
+    m.faceAngle.y = m.faceAngle.y + m.angleVel.y
+
+    -- play sound on overflow
+    if m.angleVel.y <= -0x100 and spin < m.faceAngle.y then
+        queue_rumble_data_mario(m, 4, 20)
+        play_sound(SOUND_OBJ_BOWSER_SPINNING, m.marioObj.header.gfx.cameraToObject)
+    end
+    if m.angleVel.y >= 0x100 and spin > m.faceAngle.y then
+        queue_rumble_data_mario(m, 4, 20)
+        play_sound(SOUND_OBJ_BOWSER_SPINNING, m.marioObj.header.gfx.cameraToObject)
+    end
+
+    stationary_ground_step(m)
+
+    if m.angleVel.y >= 0 then
+        m.marioObj.header.gfx.angle.x = -m.angleVel.y
+    else
+        m.marioObj.header.gfx.angle.x = m.angleVel.y
+    end
+
+    return false
+end
+
+function wario_update_spin_input(m)
+    local e = gStateExtras[m.playerIndex]
+    local rawAngle = atan2s(-m.controller.stickY, m.controller.stickX)
+    e.spinInput = 0
+
+    -- prevent issues due to the frame going out of the dead zone registering the last angle as 0
+    if e.lastIntendedMag > 0.5 and m.intendedMag > 0.5 then
+        local angleOverFrames = 0
+        local thisFrameDelta = 0
+        local i = 0
+
+        local newDirection = e.spinDirection
+        local signedOverflow = 0
+
+        if rawAngle < e.stickLastAngle then
+            if (e.stickLastAngle - rawAngle) > 0x8000 then
+                signedOverflow = 1
+            end
+            if signedOverflow ~= 0 then
+                newDirection = 1
+            else
+                newDirection = -1
+            end
+        elseif rawAngle > e.stickLastAngle then
+            if (rawAngle - e.stickLastAngle) > 0x8000 then
+                signedOverflow = 1
+            end
+            if signedOverflow ~= 0 then
+                newDirection = -1
+            else
+                newDirection = 1
+            end
+        end
+
+        if e.spinDirection ~= newDirection then
+            for i=0,(ANGLE_QUEUE_SIZE-1) do
+                e.angleDeltaQueue[i] = 0
+            end
+            e.spinDirection = newDirection
+        else
+            for i=(ANGLE_QUEUE_SIZE-1),1,-1 do
+                e.angleDeltaQueue[i] = e.angleDeltaQueue[i-1]
+                angleOverFrames = angleOverFrames + e.angleDeltaQueue[i]
+            end
+        end
+
+        if e.spinDirection < 0 then
+            if signedOverflow ~= 0 then
+                thisFrameDelta = math.floor((1.0*e.stickLastAngle + 0x10000) - rawAngle)
+            else
+                thisFrameDelta = e.stickLastAngle - rawAngle
+            end
+        elseif e.spinDirection > 0 then
+            if signedOverflow ~= 0 then
+                thisFrameDelta = math.floor(1.0*rawAngle + 0x10000 - e.stickLastAngle)
+            else
+                thisFrameDelta = rawAngle - e.stickLastAngle
+            end
+        end
+
+        e.angleDeltaQueue[0] = thisFrameDelta
+        angleOverFrames = angleOverFrames + thisFrameDelta
+
+        if angleOverFrames >= 0xA000 then
+            e.spinBufferTimer = SPIN_TIMER_SUCCESSFUL_INPUT
+        end
+
+
+        -- allow a buffer after a successful input so that you can switch directions
+        if e.spinBufferTimer > 0 then
+            e.spinInput = 1
+            e.spinBufferTimer = e.spinBufferTimer - 1
+        end
+    else
+        e.spinDirection = 0
+        e.spinBufferTimer = 0
+    end
+
+    e.stickLastAngle = rawAngle
+    e.lastIntendedMag = m.intendedMag
+end
+
+function wario_before_phys_step(m)
+    local hScale = 1.0
+
+    -- slower on ground
+    if (m.action & ACT_FLAG_MOVING) ~= 0 then
+        hScale = hScale * 0.9
+    end
+
+    -- make wario sink
+    if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
+        if m.action ~= ACT_WATER_PLUNGE then
+            m.vel.y = m.vel.y - 3
+        end
+    end
+
+    -- faster holding item
+    if m.heldObj ~= nil then
+        m.vel.y = m.vel.y - 1
+        hScale = hScale * 1.3
+        if (m.action & ACT_FLAG_AIR) ~= 0 then
+            hScale = hScale * 1.3
+        end
+    end
+
+    m.vel.x = m.vel.x * hScale
+    m.vel.z = m.vel.z * hScale
+end
+
+function wario_on_set_action(m)
+    local e = gStateExtras[m.playerIndex]
+
+    -- air dash
+    if m.action == ACT_MOVE_PUNCHING and m.prevAction == ACT_WARIO_DASH then
+        local actionTimer = m.actionTimer
+        set_mario_action(m, ACT_WARIO_AIR_DASH, 0)
+        m.actionTimer = actionTimer
+        m.vel.x = 0
+        m.vel.y = 0
+        m.vel.z = 0
+        return
+    end
+
+    -- slow down when dash/conk ends
+    if (m.prevAction == ACT_WARIO_DASH) or (m.prevAction == ACT_WARIO_AIR_DASH) or (m.prevAction == ACT_CORKSCREW_CONK) then
+        if m.action == ACT_CORKSCREW_CONK then
+            mario_set_forward_vel(m, 60)
+            m.vel.x = 0
+            m.vel.y = 70.0
+            m.vel.z = 0
+        elseif (m.action == ACT_SLIDE_KICK) then
+            mario_set_forward_vel(m, 70)
+            m.vel.x = 0
+            m.vel.y = 30.0
+            m.vel.z = 0
+        elseif m.forwardVel > 20 then
+            mario_set_forward_vel(m, 20)
+        end
+    end
+
+    -- when hitting a wall which dashing, have one more single frame of dash
+    if m.action == ACT_GROUND_BONK and m.prevAction == ACT_WARIO_DASH then
+        set_mario_action(m, ACT_WARIO_DASH, 99)
+        mario_set_forward_vel(m, 1)
+        m.vel.x = 0
+        m.vel.y = 0
+        m.vel.z = 0
+    end
+
+    -- more height on triple jump
+    if m.action == ACT_TRIPLE_JUMP or m.action == ACT_SPECIAL_TRIPLE_JUMP then
+        m.vel.y = m.vel.y * 1.15
+    end
+
+    -- less height on other jumps
+    if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_STEEP_JUMP or m.action == ACT_RIDING_SHELL_JUMP or m.action == ACT_BACKFLIP or m.action == ACT_LONG_JUMP then
+        m.vel.y = m.vel.y * 0.8
+
+        -- prevent from getting stuck on platform
+        if m.marioObj.platform ~= nil then
+            m.pos.y = m.pos.y + 10
+        end
+    elseif m.action == ACT_SIDE_FLIP then
+        m.vel.y = m.vel.y * 0.86
+
+        -- prevent from getting stuck on platform
+        if m.marioObj.platform ~= nil then
+            m.pos.y = m.pos.y + 10
+        end
+    end
+    e.lastAction = action
+end
+
+function wario_update(m)
+    local hScale = 1.0
+    local e = gStateExtras[m.playerIndex]
+
+    wario_update_spin_input(m)
+
+    -- spin around objects
+    if m.action == ACT_HOLD_IDLE or m.action == ACT_HOLD_WALKING then
+        if e.spinInput ~= 0 then
+            m.twirlYaw = m.intendedYaw
+            if e.spinDirection == 1 then
+                m.angleVel.y = 1500
+            else
+                m.angleVel.y = -1500
+            end
+            m.intendedMag = 21
+            return set_mario_action(m, ACT_WARIO_SPINNING_OBJ, 1)
+        end
+    end
+
+    -- turn heavy objects into light
+    if m.action == ACT_HOLD_HEAVY_IDLE then
+        return set_mario_action(m, ACT_HOLD_IDLE, 0)
+    end
+
+    -- turn dive into dash
+    if m.action == ACT_DIVE and m.prevAction == ACT_WALKING then
+        if (m.controller.buttonPressed & B_BUTTON) ~= 0 then
+            m.actionTimer = 0
+            return set_mario_action(m, ACT_WARIO_DASH, 0)
+        end
+    end
+
+    -- shake cmaera
+    if m.action == ACT_GROUND_POUND_LAND then
+        set_camera_shake_from_hit(SHAKE_MED_DAMAGE)
+    end
+
+    -- faster ground pound
+    if m.action == ACT_GROUND_POUND then
+        m.vel.y = m.vel.y * 1.3
+    end
+
+    -- more gravity
+    if (m.action & ACT_FLAG_AIR) ~= 0 then
+        m.vel.y = m.vel.y - 1.15
+    end
+
+    -- takes less damage
+    if m.action ~= ACT_LAVA_BOOST then
+        m.hurtCounter = m.hurtCounter * 0.5
+    end
+
+    m.vel.x = m.vel.x * hScale
+    m.vel.z = m.vel.z * hScale
+
+    e.prevPos.x = m.pos.x
+    e.prevPos.y = m.pos.y
+    e.prevPos.z = m.pos.z
+end
+
+gEventTable[CT_WARIO] = {
+    before_phys_step = wario_before_phys_step,
+    on_set_action    = wario_on_set_action,
+    update           = wario_update,
+}
+
 ----------
 -- main --
 ----------
@@ -462,9 +910,10 @@ function mario_before_phys_step(m)
         return
     end
 
-    if gEventTable[m.character.type] == nil then
+    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].before_phys_step == nil then
         return
     end
+
     gEventTable[m.character.type].before_phys_step(m)
 end
 
@@ -473,10 +922,23 @@ function mario_on_set_action(m)
         return
     end
 
-    if gEventTable[m.character.type] == nil then
+    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].on_set_action == nil then
         return
     end
+
     gEventTable[m.character.type].on_set_action(m)
+end
+
+function mario_before_update(m)
+    if m.action == ACT_BUBBLED then
+        return
+    end
+
+    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].before_update == nil then
+        return
+    end
+
+    gEventTable[m.character.type].before_update(m)
 end
 
 function mario_update(m)
@@ -484,9 +946,10 @@ function mario_update(m)
         return
     end
 
-    if gEventTable[m.character.type] == nil then
+    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].update == nil then
         return
     end
+
     gEventTable[m.character.type].update(m)
 end
 
@@ -494,10 +957,15 @@ end
 -- hooks --
 -----------
 
+hook_event(HOOK_BEFORE_MARIO_UPDATE, mario_before_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
 hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 
 hook_mario_action(ACT_WALL_SLIDE, act_wall_slide)
-hook_mario_action(ACT_SPIN_POUND, act_spin_pound)
-hook_mario_action(ACT_SPIN_POUND_LAND, act_spin_pound_land)
+hook_mario_action(ACT_SPIN_POUND, act_spin_pound, INT_GROUND_POUND_OR_TWIRL)
+hook_mario_action(ACT_SPIN_POUND_LAND, act_spin_pound_land, INT_GROUND_POUND_OR_TWIRL)
+hook_mario_action(ACT_WARIO_DASH, act_wario_dash, INT_PUNCH)
+hook_mario_action(ACT_WARIO_AIR_DASH, act_wario_air_dash, INT_PUNCH)
+hook_mario_action(ACT_CORKSCREW_CONK, act_corkscrew_conk, INT_FAST_ATTACK_OR_SHELL)
+hook_mario_action(ACT_WARIO_SPINNING_OBJ, act_wario_spinning_obj)

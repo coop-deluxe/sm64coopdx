@@ -84,6 +84,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 | ----- | ---- |
 | action_id | integer |
 | func | Lua Function |
+| interaction_type | [enum InteractionFlag](constants.md#InteractionFlag) <optional> |
 
 ### Lua Example
 

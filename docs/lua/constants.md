@@ -6,6 +6,8 @@
 - [characters.h](#characters.h)
     - [CharacterSound](#CharacterSound)
     - [CharacterType](#CharacterType)
+- [interaction.c](#interaction.c)
+    - [InteractionFlag](#InteractionFlag)
 - [mario_animation_ids.h](#mario_animation_ids.h)
     - [MarioAnimID](#MarioAnimID)
 - [network_player.h](#network_player.h)
@@ -737,6 +739,26 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
+
+<br />
+
+## [interaction.c](#interaction.c)
+- INT_ANY_ATTACK
+- INT_ATTACK_NOT_FROM_BELOW
+- INT_ATTACK_NOT_WEAK_FROM_ABOVE
+- INT_ATTACK_SLIDE
+
+### [enum InteractionFlag](#InteractionFlag)
+| Identifier | Value |
+| :--------- | :---- |
+| INT_GROUND_POUND_OR_TWIRL | (1 << 0) |
+| INT_PUNCH | (1 << 1) |
+| INT_KICK | (1 << 2) |
+| INT_TRIP | (1 << 3) |
+| INT_SLIDE_KICK | (1 << 4) |
+| INT_FAST_ATTACK_OR_SHELL | (1 << 5) |
+| INT_HIT_FROM_ABOVE | (1 << 6) |
+| INT_HIT_FROM_BELOW | (1 << 7) |
 
 <br />
 

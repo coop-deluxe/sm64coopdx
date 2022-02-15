@@ -29,14 +29,16 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 
-#define INT_GROUND_POUND_OR_TWIRL (1 << 0) // 0x01
-#define INT_PUNCH                 (1 << 1) // 0x02
-#define INT_KICK                  (1 << 2) // 0x04
-#define INT_TRIP                  (1 << 3) // 0x08
-#define INT_SLIDE_KICK            (1 << 4) // 0x10
-#define INT_FAST_ATTACK_OR_SHELL  (1 << 5) // 0x20
-#define INT_HIT_FROM_ABOVE        (1 << 6) // 0x40
-#define INT_HIT_FROM_BELOW        (1 << 7) // 0x80
+enum InteractionFlag {
+    INT_GROUND_POUND_OR_TWIRL      = (1 << 0), // 0x01
+    INT_PUNCH                      = (1 << 1), // 0x02
+    INT_KICK                       = (1 << 2), // 0x04
+    INT_TRIP                       = (1 << 3), // 0x08
+    INT_SLIDE_KICK                 = (1 << 4), // 0x10
+    INT_FAST_ATTACK_OR_SHELL       = (1 << 5), // 0x20
+    INT_HIT_FROM_ABOVE             = (1 << 6), // 0x40
+    INT_HIT_FROM_BELOW             = (1 << 7), // 0x80
+};
 
 #define INT_ATTACK_NOT_FROM_BELOW                                                 \
     (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK \
@@ -192,15 +194,17 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     u32 interaction = 0;
     u32 action = m->action;
 
+    interaction = smlua_get_action_interaction_type(m);
+
     // hack: make water punch actually do something
-    if (m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
+    if (interaction == 0 && m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
         s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
         if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-            return INT_PUNCH;
+            interaction = INT_PUNCH;
         }
     }
 
-    if (action & ACT_FLAG_ATTACKING) {
+    if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
         if (action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
@@ -1347,6 +1351,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     u8 isAttackerInvulnerable = (m->action & ACT_FLAG_INVULNERABLE) || m->invincTimer != 0 || m->hurtCounter != 0;
     u8 isInvulnerable = (m2->action & ACT_FLAG_INVULNERABLE) || m2->invincTimer != 0 || m2->hurtCounter != 0 || isInCutscene;
     u8 isIgnoredAttack = (m->action == ACT_JUMP || m->action == ACT_DOUBLE_JUMP);
+
     if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable) {
 
         // determine if slide attack should be ignored
