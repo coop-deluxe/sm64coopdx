@@ -1345,6 +1345,11 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
     }
 
+    // sanity check
+    if (firstNode == NULL) {
+        return;
+    }
+
     do {
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
