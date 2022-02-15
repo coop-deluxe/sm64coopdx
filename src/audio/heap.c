@@ -198,38 +198,30 @@ void discard_sequence(s32 seqId) {
 }
 
 void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
-#ifdef VERSION_EU
+#if defined(VERSION_EU) || defined(VERSION_SH)
     u8 *start;
     u8 *pos;
     u32 alignedSize = ALIGN16(size);
 
     start = pool->cur;
     if (start + alignedSize <= pool->start + pool->size) {
+        bzero(start, alignedSize);
         pool->cur += alignedSize;
-        for (pos = start; pos < pool->cur; pos++) {
-            *pos = 0;
-        }
     } else {
-        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes (%i free)\n",
-        ALIGN16(size), pool->start + pool->size - pool->cur);
+        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes (%i free)\n", ALIGN16(size), pool->start + pool->size - pool->cur);
         return NULL;
     }
+    pool->numAllocatedEntries++;
     return start;
 #else
-    u8 *start;
-    s32 last;
-    s32 i;
+    u32 alignedSize = ALIGN16(size);
 
-    if ((pool->cur + ALIGN16(size) <= pool->size + pool->start)) {
-        start = pool->cur;
-        pool->cur += ALIGN16(size);
-        last = pool->cur - start - 1;
-        for (i = 0; i <= last; i++) {
-            start[i] = 0;
-        }
+    u8* start = pool->cur;
+    if ((start + alignedSize <= pool->size + pool->start)) {
+        bzero(start, alignedSize);
+        pool->cur += alignedSize;
     } else {
-        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes (%i free)\n",
-        (unsigned int)ALIGN16(size), (int)(pool->start + pool->size - pool->cur));
+        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes (%i free)\n", (unsigned int)ALIGN16(size), (int)(pool->start + pool->size - pool->cur));
         return NULL;
     }
     return start;
@@ -237,19 +229,23 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
 }
 
 void sound_alloc_pool_init(struct SoundAllocPool *pool, void *memAddr, u32 size) {
-    pool->cur = pool->start = (u8 *) ALIGN16((uintptr_t) memAddr);
+    pool->cur = pool->start = (u8*)ALIGN16((uintptr_t)memAddr);
+#ifdef VERSION_SH
+    pool->size = size - ((uintptr_t)memAddr & 0xf);
+#else
     pool->size = size;
-    pool->unused = 0;
+#endif
+    pool->numAllocatedEntries = 0;
 }
 
 void persistent_pool_clear(struct PersistentPool *persistent) {
-    persistent->pool.unused = 0;
+    persistent->pool.numAllocatedEntries = 0;
     persistent->pool.cur = persistent->pool.start;
     persistent->numEntries = 0;
 }
 
 void temporary_pool_clear(struct TemporaryPool *temporary) {
-    temporary->pool.unused = 0;
+    temporary->pool.numAllocatedEntries = 0;
     temporary->pool.cur = temporary->pool.start;
     temporary->nextSide = 0;
     temporary->entries[0].ptr = temporary->pool.start;
@@ -263,7 +259,7 @@ void temporary_pool_clear(struct TemporaryPool *temporary) {
 }
 
 void unused_803160F8(struct SoundAllocPool *pool) {
-    pool->unused = 0;
+    pool->numAllocatedEntries = 0;
     pool->cur = pool->start;
 }
 

@@ -4,7 +4,11 @@
 #include "audio/data.h"
 
 ALIGNED8 u8 gDecompressionHeap[0xD000];
-ALIGNED16 u8 gAudioHeap[AUDIO_HEAP_SIZE];
+#if defined(VERSION_EU) || defined(VERSION_SH)
+ALIGNED16 u8 gAudioHeap[DOUBLE_SIZE_ON_64_BIT(AUDIO_HEAP_SIZE) - 0x3800];
+#else
+ALIGNED16 u8 gAudioHeap[DOUBLE_SIZE_ON_64_BIT(AUDIO_HEAP_SIZE)];
+#endif
 
 ALIGNED8 u8 gIdleThreadStack[0x800];
 ALIGNED8 u8 gThread3Stack[0x2000];

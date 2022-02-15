@@ -38,7 +38,7 @@ extern struct CtlEntry *gCtlEntries;
 extern struct AudioBufferParametersEU gAudioBufferParameters;
 #endif
 extern s32 gAiFrequency;
-extern u32 D_80226D68;
+extern u32 sDmaBufSize;
 extern s32 gMaxAudioCmds;
 
 extern s32 gMaxSimultaneousNotes;

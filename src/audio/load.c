@@ -76,7 +76,7 @@ struct AudioBufferParametersEU gAudioBufferParameters;
 s32 gAiFrequency;
 #endif
 
-u32 D_80226D68;
+u32 sDmaBufSize;
 s32 gMaxAudioCmds;
 s32 gMaxSimultaneousNotes;
 
@@ -299,13 +299,13 @@ void init_sample_dma_buffers(UNUSED s32 arg0) {
 #endif
 
 #ifdef VERSION_EU
-    D_80226D68 = 0x400;
+    sDmaBufSize = 0x400 * 4;
     for (i = 0; i < gMaxSimultaneousNotes * 3 * gAudioBufferParameters.presetUnk4; i++) {
 #else
-    D_80226D68 = 144 * 9;
+    sDmaBufSize = (144 * 9) * 4;
     for (i = 0; i < gMaxSimultaneousNotes * 3; i++) {
 #endif
-        sSampleDmas[gSampleDmaNumListItems].buffer = soundAlloc(&gNotesAndBuffersPool, D_80226D68);
+        sSampleDmas[gSampleDmaNumListItems].buffer = soundAlloc(&gNotesAndBuffersPool, sDmaBufSize);
         if (sSampleDmas[gSampleDmaNumListItems].buffer == NULL) {
 #ifdef VERSION_EU
             break;
@@ -317,7 +317,7 @@ void init_sample_dma_buffers(UNUSED s32 arg0) {
         sSampleDmas[gSampleDmaNumListItems].sizeUnused = 0;
         sSampleDmas[gSampleDmaNumListItems].unused2 = 0;
         sSampleDmas[gSampleDmaNumListItems].ttl = 0;
-        sSampleDmas[gSampleDmaNumListItems].bufSize = D_80226D68;
+        sSampleDmas[gSampleDmaNumListItems].bufSize = sDmaBufSize;
         gSampleDmaNumListItems++;
     }
 #ifndef VERSION_EU
@@ -338,12 +338,12 @@ out1:
     sSampleDmaListSize1 = gSampleDmaNumListItems;
 
 #ifdef VERSION_EU
-    D_80226D68 = 0x200;
+    sDmaBufSize = 0x200 * 4;
 #else
-    D_80226D68 = 160 * 9;
+    sDmaBufSize = (160 * 9) * 4;
 #endif
     for (i = 0; i < gMaxSimultaneousNotes; i++) {
-        sSampleDmas[gSampleDmaNumListItems].buffer = soundAlloc(&gNotesAndBuffersPool, D_80226D68);
+        sSampleDmas[gSampleDmaNumListItems].buffer = soundAlloc(&gNotesAndBuffersPool, sDmaBufSize);
         if (sSampleDmas[gSampleDmaNumListItems].buffer == NULL) {
 #ifdef VERSION_EU
             break;
@@ -355,7 +355,7 @@ out1:
         sSampleDmas[gSampleDmaNumListItems].sizeUnused = 0;
         sSampleDmas[gSampleDmaNumListItems].unused2 = 0;
         sSampleDmas[gSampleDmaNumListItems].ttl = 0;
-        sSampleDmas[gSampleDmaNumListItems].bufSize = D_80226D68;
+        sSampleDmas[gSampleDmaNumListItems].bufSize = sDmaBufSize;
         gSampleDmaNumListItems++;
     }
 #ifndef VERSION_EU
@@ -894,7 +894,7 @@ void audio_init() {
     UNUSED s8 pad[32];
     u8 buf[0x10];
 #endif
-    s32 i, j, UNUSED k;
+    s32 i, UNUSED j, UNUSED k;
     UNUSED s32 lim1; // lim1 unused in EU
 #ifdef VERSION_EU
     u8 buf[0x10];
@@ -949,14 +949,11 @@ void audio_init() {
     gCurrAudioFrameDmaCount = 0;
     gSampleDmaNumListItems = 0;
 
-    sound_init_main_pools(D_80333EF0);
+    sound_init_main_pools(gAudioInitPoolSize);
 
+    bzero(&gAiBuffers, sizeof(gAiBuffers));
     for (i = 0; i < NUMAIBUFFERS; i++) {
         gAiBuffers[i] = soundAlloc(&gAudioInitPool, AIBUFFER_LEN);
-
-        for (j = 0; j < (s32) (AIBUFFER_LEN / sizeof(s16)); j++) {
-            gAiBuffers[i][j] = 0;
-        }
     }
 
 #ifdef VERSION_EU
@@ -1006,8 +1003,8 @@ void audio_init() {
 
     // Load bank sets for each sequence (assets/bank_sets.s)
     data = LOAD_DATA(gBankSetsData);
-    gAlBankSets = soundAlloc(&gAudioInitPool, 0x100);
-    audio_dma_copy_immediate((uintptr_t) data, gAlBankSets, 0x100);
+    gAlBankSets = soundAlloc(&gAudioInitPool, 0x800);
+    audio_dma_copy_immediate((uintptr_t)data, gAlBankSets, 0x800);
 
     init_sequence_players();
     gAudioLoadLock = AUDIO_LOCK_NOT_LOADING;

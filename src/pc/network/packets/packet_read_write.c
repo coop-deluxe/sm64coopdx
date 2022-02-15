@@ -97,6 +97,9 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->levelNum  = srcPacket->levelNum;
     dstPacket->areaIndex = srcPacket->areaIndex;
 
+#ifdef DEBUG
+    assert(srcPacket->dataLength <= PACKET_LENGTH);
+#endif
     memcpy(&dstPacket->buffer[0], &srcPacket->buffer[0], srcPacket->dataLength);
 
     if (dstPacket->reliable) {
@@ -127,6 +130,10 @@ void packet_set_destination(struct Packet* packet, u8 destGlobalId) {
 
 void packet_write(struct Packet* packet, void* data, u16 length) {
     if (data == NULL) { packet->error = true; return; }
+#ifdef DEBUG
+    assert(packet->dataLength + length <= PACKET_LENGTH);
+#endif
+
     if (packet->cursor + length >= PACKET_LENGTH) {
         SOFT_ASSERT(packet->cursor + length < PACKET_LENGTH);
         packet->writeError = true;
@@ -177,6 +184,13 @@ u8 packet_initial_read(struct Packet* packet) {
 void packet_read(struct Packet* packet, void* data, u16 length) {
     if (data == NULL) { packet->error = true; return; }
     u16 cursor = packet->cursor;
+
+#ifdef DEBUG
+    // Make sure our read doesn't read past the buffer
+    // and that it doesn't read past our datas end.
+    assert(PACKET_LENGTH >= cursor + length);
+#endif
+
     memcpy(data, &packet->buffer[cursor], length);
     packet->cursor = cursor + length;
 }

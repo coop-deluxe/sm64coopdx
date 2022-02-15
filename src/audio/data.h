@@ -63,7 +63,7 @@ extern f32 gVolRampingRhs128[128];
 extern s16 gTatumsPerBeat;
 extern s8 gUnusedCount80333EE8;
 extern s32 gAudioHeapSize;
-extern s32 D_80333EF0; // amount of heap designated to gAudioInitPool, 0x2500
+extern s32 gAudioInitPoolSize; // amount of heap designated to gAudioInitPool, 0x2500
 extern volatile s32 gAudioLoadLock;
 
 // .bss
@@ -92,7 +92,9 @@ extern s32 gRefreshRate;
 
 extern s16 *gAiBuffers[NUMAIBUFFERS];
 extern s16 gAiBufferLengths[NUMAIBUFFERS];
-#ifdef VERSION_EU
+#if defined(VERSION_SH)
+#define AIBUFFER_LEN 0xb00
+#elif defined(VERSION_EU)
 #define AIBUFFER_LEN (0xa0 * 17)
 #else
 #define AIBUFFER_LEN (0xa0 * 16)
@@ -103,16 +105,20 @@ extern u16 gUnused80226E98[0x10];
 
 extern u32 gAudioRandom;
 
-//make my life easier
-#ifdef VERSION_EU
+#define EXT_AUDIO_HEAP_SIZE      0x27400
+#define EXT_AUDIO_INIT_POOL_SIZE 0x02000
+
+#if defined(VERSION_EU) || defined(VERSION_SH)
 #define UNUSED_COUNT_80333EE8 24
-#define AUDIO_HEAP_SIZE DOUBLE_SIZE_ON_64_BIT(0x2c500)
-#define D_80333EF0_VAL DOUBLE_SIZE_ON_64_BIT(0x2c00)
+#define AUDIO_HEAP_BASE 0x36B00
+#define AUDIO_INIT_POOL_SIZE (0x2c00 + EXT_AUDIO_INIT_POOL_SIZE)
 #else
 #define UNUSED_COUNT_80333EE8 16
-#define AUDIO_HEAP_SIZE DOUBLE_SIZE_ON_64_BIT(0x48000)
-#define D_80333EF0_VAL DOUBLE_SIZE_ON_64_BIT(0x2500)
+#define AUDIO_HEAP_BASE 0x31150
+#define AUDIO_INIT_POOL_SIZE (0x2500 + EXT_AUDIO_INIT_POOL_SIZE)
 #endif
 
+// Normal Heap Size, Extended Heap Size, Extended Audio Init Pool Size
+#define AUDIO_HEAP_SIZE (AUDIO_HEAP_BASE + EXT_AUDIO_HEAP_SIZE + EXT_AUDIO_INIT_POOL_SIZE)
 
 #endif // AUDIO_DATA_H

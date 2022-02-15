@@ -3,6 +3,7 @@
 
 #include <PR/ultratypes.h>
 
+#include "audio/data.h"
 #include "game/save_file.h"
 #include "game/game_init.h"
 

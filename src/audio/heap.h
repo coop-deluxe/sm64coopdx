@@ -18,7 +18,7 @@ struct SoundAllocPool
     u8 *start;
     u8 *cur;
     u32 size;
-    s32 unused; // set to 0, never read
+    s32 numAllocatedEntries;
 }; // size = 0x10
 
 struct SeqOrBankEntry {
