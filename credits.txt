@@ -1,6 +1,7 @@
 Developers:
     djoslin0
     fgsfds
+    FluffaLuigi
     kebabstorm
     MegaMech
 
@@ -16,7 +17,6 @@ Contributors:
     enigma9o7
     eros71
     Filipianosol
-    FluffaLuigi
     GammaTendonNine
     kebabstorm
     Llennpie
