@@ -123,11 +123,7 @@ chan_setlayer 0, .layer_wario_C3C
 chan_end
 
 .layer_wario_C3C:
-.ifdef VERSION_EU
-  layer_transpose 2
-.endif
-layer_portamento 0x82, 41, 127
-layer_note1 37, 0x14, 127
+layer_note1 38, 0x61, 127
 layer_end
 
 .sound_wario_jump_wah:
@@ -137,7 +133,6 @@ chan_setlayer 0, .layer_wario_C4C
 chan_end
 
 .layer_wario_C4C:
-layer_transpose 0
 .layer_wario_C4E:
 layer_note1 38, 0x34, 127
 layer_end
@@ -149,9 +144,10 @@ chan_setlayer 0, .layer_wario_C5A
 chan_end
 
 .layer_wario_C5A:
-layer_transpose 254
+layer_note1 38, 0x4d, 120
+layer_end
+
 .layer_wario_C5C:
-layer_portamento 0x82, 39, 200
 layer_note1 38, 0x24, 120
 layer_end
 
@@ -162,11 +158,7 @@ chan_setlayer 0, .layer_wario_C6C
 chan_end
 
 .layer_wario_C6C:
-.ifdef VERSION_EU
-  layer_transpose 1
-.endif
-layer_portamento 0x82, 44, 200
-layer_note1 39, 0x30, 127
+layer_note1 38, 0x6e, 127
 layer_end
 
 .sound_wario_yahoo:
@@ -176,11 +168,7 @@ chan_setlayer 0, .layer_wario_C7C
 chan_end
 
 .layer_wario_C7C:
-layer_transpose 254
-layer_somethingon
-layer_portamento 0x85, 39, 255
-layer_note1 42, 0x1e, 110
-layer_note1 39, 0x41, 110
+layer_note1 38, 0xb8, 110
 layer_end
 
 .sound_wario_uh:
@@ -190,9 +178,7 @@ chan_setlayer 0, .layer_wario_C92
 chan_end
 
 .layer_wario_C92:
-layer_transpose 254
-layer_portamento 0x81, 41, 255
-layer_note1 38, 0x2b, 115
+layer_note1 38, 0x27, 115
 layer_end
 
 .sound_wario_hrmm:
@@ -202,8 +188,7 @@ chan_setlayer 0, .layer_wario_CA4
 chan_end
 
 .layer_wario_CA4:
-layer_transpose 254
-layer_note1 44, 0x1e, 110
+layer_note1 38, 0x3f, 110
 layer_end
 
 .sound_wario_wah2:
@@ -213,8 +198,7 @@ chan_setlayer 0, .layer_wario_CB2
 chan_end
 
 .layer_wario_CB2:
-layer_transpose 253
-layer_note1 39, 0x1c, 127
+layer_note1 38, 0x74, 127
 layer_end
 
 .sound_wario_whoa:
@@ -224,8 +208,7 @@ chan_setlayer 0, .layer_wario_CC0
 chan_end
 
 .layer_wario_CC0:
-layer_transpose 254
-layer_note1 40, 0x30, 110
+layer_note1 38, 0x4c, 110
 layer_end
 
 .sound_wario_eeuh:
@@ -235,8 +218,7 @@ chan_setlayer 0, .layer_wario_CCE
 chan_end
 
 .layer_wario_CCE:
-layer_transpose 254
-layer_note1 40, 0x44, 105
+layer_note1 38, 0x43, 105
 layer_end
 
 .sound_wario_attacked:
@@ -246,8 +228,7 @@ chan_setlayer 0, .layer_wario_CDC
 chan_end
 
 .layer_wario_CDC:
-layer_transpose 254
-layer_note1 41, 0x30, 120
+layer_note1 38, 0x33, 120
 layer_end
 
 .sound_wario_ooof:
@@ -257,8 +238,7 @@ chan_setlayer 0, .layer_wario_CEA
 chan_end
 
 .layer_wario_CEA:
-layer_transpose 254
-layer_note1 38, 0x30, 127
+layer_note1 38, 0x3c, 127
 layer_end
 
 .sound_wario_here_we_go:
@@ -268,8 +248,7 @@ chan_setlayer 0, .layer_wario_CF8
 chan_end
 
 .layer_wario_CF8:
-layer_portamento 0x81, 38, 200
-layer_note1 41, 0x85, 127
+layer_note1 38, 0xbf, 127
 layer_end
 
 .sound_wario_yawning:
@@ -279,8 +258,7 @@ chan_setlayer 0, .layer_wario_D09
 chan_end
 
 .layer_wario_D09:
-layer_transpose 254
-layer_note1 39, 0x7f, 105
+layer_note1 38, 0x14c, 105
 layer_end
 
 .sound_wario_snoring1:
@@ -290,8 +268,7 @@ chan_setlayer 0, .layer_wario_D17
 chan_end
 
 .layer_wario_D17:
-layer_transpose 254
-layer_note1 39, 0x60, 64
+layer_note1 38, 0xce, 64
 layer_end
 
 .sound_wario_snoring2:
@@ -301,8 +278,7 @@ chan_setlayer 0, .layer_wario_D25
 chan_end
 
 .layer_wario_D25:
-layer_transpose 254
-layer_note1 39, 0x5c, 52
+layer_note1 38, 0xa1, 52
 layer_end
 
 .sound_wario_waaaooow:
@@ -312,8 +288,7 @@ chan_setlayer 0, .layer_wario_D33
 chan_end
 
 .layer_wario_D33:
-layer_transpose 254
-layer_note1 39, 0xaa, 127
+layer_note1 38, 0x121, 127
 layer_end
 
 .sound_wario_haha:
@@ -323,8 +298,7 @@ chan_setlayer 0, .layer_wario_D42
 chan_end
 
 .layer_wario_D42:
-layer_transpose 255
-layer_note1 39, 0x4d, 120
+layer_note1 38, 0x159, 120
 layer_end
 
 .sound_wario_uh2:
@@ -334,8 +308,7 @@ chan_setlayer 0, .layer_wario_D50
 chan_end
 
 .layer_wario_D50:
-layer_transpose 254
-layer_note1 43, 0x1e, 105
+layer_note1 38, 0x9b, 105
 layer_end
 
 .sound_wario_on_fire:
@@ -345,8 +318,7 @@ chan_setlayer 0, .layer_wario_D5E
 chan_end
 
 .layer_wario_D5E:
-layer_transpose 254
-layer_note1 39, 0xc8, 127
+layer_note1 38, 0x34, 127
 layer_end
 
 .sound_wario_dying:
@@ -356,8 +328,7 @@ chan_setlayer 0, .layer_wario_D6D
 chan_end
 
 .layer_wario_D6D:
-layer_transpose 254
-layer_note1 39, 0x8c, 110
+layer_note1 38, 0xe5, 110
 layer_end
 
 .sound_wario_panting_cold:
@@ -367,9 +338,7 @@ chan_setlayer 0, .layer_wario_D7C
 chan_end
 
 .layer_wario_D7C:
-layer_transpose 254
-layer_portamento 0x82, 35, 255
-layer_note1 38, 0x30, 127
+layer_note1 38, 0xc2, 127
 layer_end
 
 .sound_wario_panting1:
@@ -379,8 +348,7 @@ chan_setlayer 0, .layer_wario_D8E
 chan_end
 
 .layer_wario_D8E:
-layer_transpose 254
-layer_note1 39, 0x3c, 100
+layer_note1 38, 0x3c, 100
 layer_end
 
 .sound_wario_panting2:
@@ -390,7 +358,6 @@ chan_setlayer 0, .layer_wario_D9C
 chan_end
 
 .layer_wario_D9C:
-layer_transpose 254
 layer_delay 0x4
 layer_note1 38, 0x3c, 100
 layer_end
@@ -402,9 +369,8 @@ chan_setlayer 0, .layer_wario_DAC
 chan_end
 
 .layer_wario_DAC:
-layer_transpose 254
 layer_delay 0x8
-layer_note1 40, 0x3c, 100
+layer_note1 38, 0x3c, 100
 layer_end
 
 .sound_wario_coughing1:
@@ -414,8 +380,7 @@ chan_setlayer 0, .layer_wario_DBC
 chan_end
 
 .layer_wario_DBC:
-layer_transpose 254
-layer_note1 39, 0x10, 115
+layer_note1 38, 0xa1, 115
 layer_end
 
 .sound_wario_coughing2:
@@ -425,9 +390,7 @@ chan_setlayer 0, .layer_wario_DCA
 chan_end
 
 .layer_wario_DCA:
-layer_transpose 254
-layer_portamento 0x81, 38, 255
-layer_note1 41, 0x18, 115
+layer_note1 38, 0x18, 115
 layer_end
 
 .sound_wario_coughing3:
@@ -437,11 +400,9 @@ chan_setlayer 0, .layer_wario_DDC
 chan_end
 
 .layer_wario_DDC:
-layer_transpose 254
 layer_somethingon
-layer_portamento 0x85, 38, 255
-layer_note1 41, 0xc, 115
-layer_note1 35, 0x12, 115
+layer_note1 38, 0xc, 115
+layer_note1 38, 0x12, 115
 layer_end
 
 .sound_wario_punch_yah:
@@ -456,12 +417,10 @@ chan_setlayer 1, .layer_wario_538
 chan_end
 
 .layer_wario_538:
-layer_portamento 0x81, 46, 255
-layer_note1 31, 0xf, 100
+layer_note1 38, 0xf, 100
 layer_end
 
 .layer_wario_DFE:
-layer_transpose 254
 layer_jump .layer_wario_C5C
 
 .sound_wario_punch_hoo:
@@ -476,13 +435,11 @@ chan_setlayer 1, .layer_wario_548
 chan_end
 
 .layer_wario_548:
-layer_note1 39, 0x12, 100
+layer_note1 38, 0x12, 100
 layer_end
 
 .layer_wario_E17:
-layer_transpose 254
-layer_portamento 0x81, 42, 255
-layer_note1 38, 0x30, 115
+layer_note1 38, 0xa3, 115
 layer_end
 
 .sound_wario_mama_mia:
@@ -492,8 +449,7 @@ chan_setlayer 0, .layer_wario_E29
 chan_end
 
 .layer_wario_E29:
-layer_portamento 0x81, 38, 255
-layer_note1 36, 0x8c, 115
+layer_note1 38, 0xd9, 115
 layer_end
 
 .sound_wario_okey_dokey:
@@ -503,7 +459,7 @@ chan_setlayer 0, .layer_wario_E3A
 chan_end
 
 .layer_wario_E3A:
-layer_note1 39, 0x60, 115
+layer_note1 38, 0x133, 115
 layer_end
 
 .sound_wario_ground_pound_wah:
@@ -516,7 +472,7 @@ chan_setlayer 0, .layer_wario_E49
 chan_end
 
 .layer_wario_E49:
-layer_note1 38, 0x91, 127
+layer_note1 38, 0xf4, 127
 layer_end
 
 .sound_wario_punch_wah:
@@ -531,10 +487,8 @@ chan_setlayer 1, .layer_wario_536
 chan_end
 
 .layer_wario_536:
-layer_transpose 1
 
 .layer_wario_E62:
-layer_transpose 255
 layer_jump .layer_wario_C4E
 
 .ifndef VERSION_JP
@@ -545,7 +499,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_E6F:
-  layer_note1 39, 0x2bc, 127
+  layer_note1 38, 0x3b, 127
   layer_end
 
   .sound_wario_waha:
@@ -555,7 +509,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_E7C:
-  layer_note1 39, 0x5a, 127
+  layer_note1 38, 0x95, 127
   layer_end
 
   .sound_wario_yippee:
@@ -565,7 +519,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_E88:
-  layer_note1 39, 0x5a, 97
+  layer_note1 38, 0xa2, 97
   layer_end
 
   .sound_wario_doh:
@@ -575,7 +529,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_E94:
-  layer_note1 41, 0x46, 127
+  layer_note1 38, 0x2e, 127
   layer_end
 
   .sound_wario_game_over:
@@ -585,7 +539,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_EA0:
-  layer_note1 39, 0x55, 110
+  layer_note1 38, 0xab, 110
   layer_end
 
   .sound_wario_hello:
@@ -595,7 +549,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_EAC:
-  layer_note1 39, 0x46, 127
+  layer_note1 38, 0x50, 127
   layer_end
 
   .sound_wario_press_start_to_play:
@@ -605,7 +559,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_EB8:
-  layer_note1 39, 0x12c, 127
+  layer_note1 38, 0x9c, 127
   layer_end
 
   .sound_wario_twirl_bounce:
@@ -615,7 +569,7 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_EC5:
-  layer_note1 39, 0x30, 127
+  layer_note1 38, 0x6d, 127
   layer_end
 
   .sound_wario_snoring3:
@@ -630,27 +584,25 @@ layer_jump .layer_wario_C4E
   layer_call .layer_wario_fn_EE1
   layer_loopend
   layer_setinstr 21
-  layer_note1 39, 0x44c, 127
+  layer_note1 38, 0x44c, 127
   layer_jump .layer_wario_ED1
   layer_end
 
   .layer_wario_fn_EE1:
   layer_setinstr 21
-  layer_note1 37, 0x53, 127
+  layer_note1 38, 0x53, 127
   layer_setinstr 15
-  layer_note1 37, 0x4e, 64
+  layer_note1 38, 0x4e, 64
   layer_end
 
   .sound_wario_so_longa_bowser:
   chan_setbank 13
   chan_setinstr 22
   chan_setlayer 0, .layer_wario_EF7
-  chan_setlayer 1, .layer_wario_EF7
   chan_end
 
   .layer_wario_EF7:
-  layer_portamento 0x82, 42, 200
-  layer_note1 39, 0xc8, 110
+  layer_note1 38, 0xc0, 110
   layer_end
 
   .sound_wario_ima_tired:
@@ -660,6 +612,6 @@ layer_jump .layer_wario_C4E
   chan_end
 
   .layer_wario_F08:
-  layer_note1 39, 0x96, 110
+  layer_note1 38, 0xe1, 110
   layer_end
 .endif

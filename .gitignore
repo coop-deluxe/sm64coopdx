@@ -90,6 +90,7 @@ build-windows-visual-studio/.vs
 todo.txt
 todo-old.txt
 
-# luigi sounds
+# custom sounds
 sound/samples/sfx_custom_luigi*/*.aiff
+sound/samples/sfx_custom_wario*/*.aiff
 
