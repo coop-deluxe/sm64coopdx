@@ -1,6 +1,6 @@
 -- name: Character Movesets
 -- incompatible: moveset
--- description: Gives each character unique abilities and stats.
+-- description: Gives each character unique abilities and stats.\n\nContributors: djoslin0, TheGag96, Draco, steven
 
 ANGLE_QUEUE_SIZE = 9
 SPIN_TIMER_SUCCESSFUL_INPUT = 4
@@ -140,9 +140,11 @@ function luigi_before_phys_step(m)
 
     -- faster swimming
     if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
-        hScale = hScale * 1.5
-        if m.action ~= ACT_WATER_PLUNGE then
-            vScale = vScale * 1.5
+        if m.action ~= ACT_BACKWARD_WATER_KB and m.action ~= ACT_FORWARD_WATER_KB then
+            hScale = hScale * 1.5
+            if m.action ~= ACT_WATER_PLUNGE then
+                vScale = vScale * 1.5
+            end
         end
     end
 
@@ -156,6 +158,7 @@ function luigi_before_phys_step(m)
     end
 
     -- acceleration
+    local floorClass = mario_get_floor_class(m)
     if (m.action == ACT_WALKING) then
         if (floorClass == 19 or floorClass == 20) then
             hScale = -(m.forwardVel / 64) + 1.5
