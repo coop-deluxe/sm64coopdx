@@ -7382,6 +7382,10 @@ BAD_RETURN(s32) cutscene_ending_mario_land(struct Camera *c) {
  * Move the camera closer to peach appearing.
  */
 BAD_RETURN(s32) cutscene_ending_peach_appear_closeup(struct Camera *c) {
+    // hacky fix to make sure cutscene focus is valid
+    if (gCutsceneFocus == NULL) {
+        gCutsceneFocus = gMarioStates[0].marioObj;
+    }
     vec3f_set(c->pos, 179.f, 2463.f, -1216.f);
     c->pos[1] = gCutsceneFocus->oPosY + 35.f;
     vec3f_set(c->focus, gCutsceneFocus->oPosX, gCutsceneFocus->oPosY + 125.f, gCutsceneFocus->oPosZ);
