@@ -1,6 +1,6 @@
 -- name: Character Movesets
 -- incompatible: moveset
--- description: Gives each character unique abilities and stats.\n\nContributors: djoslin0, TheGag96, Draco, steven
+-- description: Gives each character unique abilities and stats.\n\nContributors: djoslin0, TheGag96, Draco, steven.
 
 ANGLE_QUEUE_SIZE = 9
 SPIN_TIMER_SUCCESSFUL_INPUT = 4

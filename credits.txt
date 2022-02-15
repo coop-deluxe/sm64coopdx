@@ -1,0 +1,39 @@
+Developers:
+    djoslin0
+    fgsfds
+    kebabstorm
+    MegaMech
+
+Contributors:
+    AloXado320
+    anzz1
+    Avery
+    Cameron Hall
+    charity
+    Cjes
+    DorfDork
+    Draco
+    enigma9o7
+    eros71
+    Filipianosol
+    FluffaLuigi
+    GammaTendonNine
+    kebabstorm
+    Llennpie
+    LuigiNoodle
+    PeachyPeach
+    s4ys
+    sm64rise
+    snuffysasa
+    steven.
+    SunlitSpace542
+    Super Keeberghrh
+    theclashingfritz
+    TheGag96
+    Victor Diego Alejandro Diaz Urbaneja
+
+Sounds:
+    Andrat         :  Luigi voice lines
+    Dark the Eagle :  Wario voice lines
+
+sm64ex-coop was built on top of sm64ex, which was built on top of the sm64 decomp project
