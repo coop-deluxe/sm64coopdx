@@ -304,6 +304,11 @@ $(shell mkdir -p sound/samples/sfx_custom_luigi sound/samples/sfx_custom_luigi_p
 $(shell cp -n sound/samples/sfx_mario/*.aiff sound/samples/sfx_custom_luigi/ )
 $(shell cp -n sound/samples/sfx_mario_peach/*.aiff sound/samples/sfx_custom_luigi_peach/ )
 
+# Copy missing wario sounds from mario sound banks
+$(shell mkdir -p sound/samples/sfx_custom_wario sound/samples/sfx_custom_wario_peach )
+$(shell cp -n sound/samples/sfx_mario/*.aiff sound/samples/sfx_custom_wario/ )
+$(shell cp -n sound/samples/sfx_mario_peach/*.aiff sound/samples/sfx_custom_wario_peach/ )
+
 # Make tools if out of date
 ifneq ($(WINDOWS_AUTO_BUILDER),1)
   DUMMY != make -C tools >&2 || echo FAIL

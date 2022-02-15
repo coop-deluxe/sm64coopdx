@@ -377,15 +377,15 @@ s16 *gWaveSamples[4] = { sSawtoothWave, sTriangleWave, sSineWave, sSquareWave };
 
 #ifdef VERSION_EU
 u8 euUnknownData_8030194c[4] = { 0x40, 0x20, 0x10, 0x08 };
-u16 gHeadsetPanQuantization[0x11] = {
-    0x40, 0x40, 0x30, 0x30, 0x20, 0x20, 0x10, 0, 0, 0, 0x30,
+u16 gHeadsetPanQuantization[0x12] = {
+    0x40, 0x40, 0x30, 0x30, 0x20, 0x20, 0x10, 0, 0, 0, 0x30, 0x30,
 };
 s32 euUnknownData_80301950[32] = { //maybe envelope of some kind?
     0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0,
     0, 500, 0, 0, 0, 500, 0, 0, 0, 500, 0, 0, 0, 500, 0, 0,
 };
 #else
-u16 gHeadsetPanQuantization[11] = { 0x40, 0x30, 0x20, 0x10, 0, 0, 0, 0, 0, 0, 0x20 };
+u16 gHeadsetPanQuantization[12] = { 0x40, 0x30, 0x20, 0x10, 0, 0, 0, 0, 0, 0, 0x20, 0x20 };
 #endif
 
 // Linearly interpolated between

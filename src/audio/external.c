@@ -153,7 +153,7 @@ u8 audioString118__[] = "";
 // N.B. sound banks are different from the audio banks referred to in other
 // files. We should really fix our naming to be less ambiguous...
 #define MAX_BG_MUSIC_QUEUE_SIZE 6
-#define SOUND_BANK_COUNT 11
+#define SOUND_BANK_COUNT 12
 #define MAX_CHANNELS_PER_SOUND 1
 
 #define SEQUENCE_NONE 0xFF
@@ -450,10 +450,10 @@ STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == SEQ_COUNT,
 
 u8 sPlayer0CurSeqId = SEQUENCE_NONE;
 u8 sMusicDynamicDelay = 0;
-u8 D_803320A4[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // pointers to head of list
-u8 D_803320B0[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }; // pointers to head of list
-u8 D_803320BC[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // only used for debugging
-u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+u8 D_803320A4[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // pointers to head of list
+u8 D_803320B0[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }; // pointers to head of list
+u8 D_803320BC[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // only used for debugging
+u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 // Banks 2 and 7 both grew from 0x30 sounds to 0x40 in size in US.
 #ifdef VERSION_JP
@@ -462,7 +462,7 @@ u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 #define BANK27_SIZE 0x40
 #endif
 u8 sNumSoundsPerBank[SOUND_BANK_COUNT] = {
-    0x70, 0x30, BANK27_SIZE, 0x80, 0x20, 0x80, 0x20, BANK27_SIZE, 0x80, 0x80, BANK27_SIZE
+    0x70, 0x30, BANK27_SIZE, 0x80, 0x20, 0x80, 0x20, BANK27_SIZE, 0x80, 0x80, BANK27_SIZE, BANK27_SIZE
 };
 #undef BANK27_SIZE
 
@@ -814,11 +814,8 @@ void process_sound_request(u32 bits, f32 *pos, f32 freqScale) {
     index = gSoundBanks[bankIndex][0].next;
     while (index != 0xff && index != 0) {
         if (gSoundBanks[bankIndex][index].x == pos) {
-            if ((gSoundBanks[bankIndex][index].soundBits & SOUNDARGS_MASK_PRIORITY)
-                <= (bits & SOUNDARGS_MASK_PRIORITY)) {
-                if ((gSoundBanks[bankIndex][index].soundBits & SOUND_LO_BITFLAG_UNK8) != 0
-                    || (bits & SOUNDARGS_MASK_SOUNDID)
-                           != (gSoundBanks[bankIndex][index].soundBits & SOUNDARGS_MASK_SOUNDID)) {
+            if ((gSoundBanks[bankIndex][index].soundBits & SOUNDARGS_MASK_PRIORITY) <= (bits & SOUNDARGS_MASK_PRIORITY)) {
+                if ((gSoundBanks[bankIndex][index].soundBits & SOUND_LO_BITFLAG_UNK8) != 0 || (bits & SOUNDARGS_MASK_SOUNDID) != (gSoundBanks[bankIndex][index].soundBits & SOUNDARGS_MASK_SOUNDID)) {
                     func_8031E0E4(bankIndex, index);
                     gSoundBanks[bankIndex][index].soundBits = bits;
                     gSoundBanks[bankIndex][index].soundStatus = bits & SOUNDARGS_MASK_STATUS;
@@ -1309,6 +1306,7 @@ void update_game_sound(void) {
                         case 0:
                         case 2:
                         case 10: // custom luigi audio bank 10
+                        case 11: // custom wario audio bank 11
 #ifdef VERSION_EU
                             func_802ad770(0x05020000 | ((channelIndex & 0xff) << 8),
                                           get_sound_reverb(bankIndex, index, channelIndex));

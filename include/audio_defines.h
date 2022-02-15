@@ -13,6 +13,7 @@
                  ((u32) (flags2)  << 4)  |  SOUND_STATUS_STARTING)
                  
 #include "luigi_audio_defines.h"
+#include "wario_audio_defines.h"
 
 #define SOUNDARGS_MASK_BANK         0xF0000000
 #define SOUNDARGS_MASK_SOUNDID      0x00FF0000
