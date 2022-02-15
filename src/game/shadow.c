@@ -234,6 +234,9 @@ s8 init_shadow(struct Shadow *s, f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, 
         s->floorNormalY = floorGeometry->normalY;
         s->floorNormalZ = floorGeometry->normalZ;
         s->floorOriginOffset = floorGeometry->originOffset;
+    } else {
+        // You can't draw a shadow with no floor under you.
+        return 1;
     }
 
     if (overwriteSolidity) {
