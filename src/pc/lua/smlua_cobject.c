@@ -107,7 +107,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_S16_P:
         case LVT_S32_P:
         case LVT_F32_P:
-            smlua_push_pointer(L, data->valueType, p);
+            smlua_push_pointer(L, data->valueType, *(u8**)p);
             break;
 
         default:

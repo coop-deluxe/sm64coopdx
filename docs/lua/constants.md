@@ -6,9 +6,9 @@
 - [characters.h](#characters.h)
     - [CharacterSound](#CharacterSound)
     - [CharacterType](#CharacterType)
-- [djui_gfx_utils.h](#djui_gfx_utils.h)
+- [djui_hud_utils.h](#djui_hud_utils.h)
     - [DjuiFontType](#DjuiFontType)
-    - [GfxUtilsResolution](#GfxUtilsResolution)
+    - [HudUtilsResolution](#HudUtilsResolution)
 - [interaction.c](#interaction.c)
     - [InteractionFlag](#InteractionFlag)
 - [mario_animation_ids.h](#mario_animation_ids.h)
@@ -745,7 +745,7 @@
 
 <br />
 
-## [djui_gfx_utils.h](#djui_gfx_utils.h)
+## [djui_hud_utils.h](#djui_hud_utils.h)
 
 ### [enum DjuiFontType](#DjuiFontType)
 | Identifier | Value |
@@ -755,7 +755,7 @@
 | FONT_HUD | 2 |
 | FONT_COUNT | 3 |
 
-### [enum GfxUtilsResolution](#GfxUtilsResolution)
+### [enum HudUtilsResolution](#HudUtilsResolution)
 | Identifier | Value |
 | :--------- | :---- |
 | RESOLUTION_DJUI | 0 |

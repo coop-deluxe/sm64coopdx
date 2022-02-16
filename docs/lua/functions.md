@@ -26,14 +26,15 @@
 
 <br />
 
-- djui_gfx_utils.h
-   - [djui_gfx_get_screen_height](#djui_gfx_get_screen_height)
-   - [djui_gfx_get_screen_width](#djui_gfx_get_screen_width)
-   - [djui_gfx_measure_text](#djui_gfx_measure_text)
-   - [djui_gfx_print_text](#djui_gfx_print_text)
-   - [djui_gfx_set_color](#djui_gfx_set_color)
-   - [djui_gfx_set_font](#djui_gfx_set_font)
-   - [djui_gfx_set_resolution](#djui_gfx_set_resolution)
+- djui_hud_utils.h
+   - [djui_hud_get_screen_height](#djui_hud_get_screen_height)
+   - [djui_hud_get_screen_width](#djui_hud_get_screen_width)
+   - [djui_hud_measure_text](#djui_hud_measure_text)
+   - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_render_texture](#djui_hud_render_texture)
+   - [djui_hud_set_color](#djui_hud_set_color)
+   - [djui_hud_set_font](#djui_hud_set_font)
+   - [djui_hud_set_resolution](#djui_hud_set_resolution)
 
 <br />
 
@@ -623,15 +624,15 @@
 <br />
 
 ---
-# functions from djui_gfx_utils.h
+# functions from djui_hud_utils.h
 
 <br />
 
 
-## [djui_gfx_get_screen_height](#djui_gfx_get_screen_height)
+## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
 
 ### Lua Example
-`local integerValue = djui_gfx_get_screen_height()`
+`local integerValue = djui_hud_get_screen_height()`
 
 ### Parameters
 - None
@@ -640,16 +641,16 @@
 - integer
 
 ### C Prototype
-`u32 djui_gfx_get_screen_height(void);`
+`u32 djui_hud_get_screen_height(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_gfx_get_screen_width](#djui_gfx_get_screen_width)
+## [djui_hud_get_screen_width](#djui_hud_get_screen_width)
 
 ### Lua Example
-`local integerValue = djui_gfx_get_screen_width()`
+`local integerValue = djui_hud_get_screen_width()`
 
 ### Parameters
 - None
@@ -658,16 +659,16 @@
 - integer
 
 ### C Prototype
-`u32 djui_gfx_get_screen_width(void);`
+`u32 djui_hud_get_screen_width(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_gfx_measure_text](#djui_gfx_measure_text)
+## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Lua Example
-`local numberValue = djui_gfx_measure_text(message)`
+`local numberValue = djui_hud_measure_text(message)`
 
 ### Parameters
 | Field | Type |
@@ -678,16 +679,16 @@
 - number
 
 ### C Prototype
-`f32 djui_gfx_measure_text(const char* message);`
+`f32 djui_hud_measure_text(const char* message);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_gfx_print_text](#djui_gfx_print_text)
+## [djui_hud_print_text](#djui_hud_print_text)
 
 ### Lua Example
-`djui_gfx_print_text(message, x, y, scale)`
+`djui_hud_print_text(message, x, y, scale)`
 
 ### Parameters
 | Field | Type |
@@ -701,16 +702,43 @@
 - None
 
 ### C Prototype
-`void djui_gfx_print_text(const char* message, float x, float y, float scale);`
+`void djui_hud_print_text(const char* message, float x, float y, float scale);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_gfx_set_color](#djui_gfx_set_color)
+## [djui_hud_render_texture](#djui_hud_render_texture)
 
 ### Lua Example
-`djui_gfx_set_color(r, g, b, a)`
+`djui_hud_render_texture(texture, bitSize, x, y, width, height, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texture | Pointer <integer> |
+| bitSize | integer |
+| x | number |
+| y | number |
+| width | integer |
+| height | integer |
+| scaleW | number |
+| scaleH | number |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(const u8* texture, u32 bitSize, f32 x, f32 y, u32 width, u32 height, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_color](#djui_hud_set_color)
+
+### Lua Example
+`djui_hud_set_color(r, g, b, a)`
 
 ### Parameters
 | Field | Type |
@@ -724,16 +752,16 @@
 - None
 
 ### C Prototype
-`void djui_gfx_set_color(u8 r, u8 g, u8 b, u8 a);`
+`void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_gfx_set_font](#djui_gfx_set_font)
+## [djui_hud_set_font](#djui_hud_set_font)
 
 ### Lua Example
-`djui_gfx_set_font(fontType)`
+`djui_hud_set_font(fontType)`
 
 ### Parameters
 | Field | Type |
@@ -744,16 +772,16 @@
 - None
 
 ### C Prototype
-`void djui_gfx_set_font(enum DjuiFontType fontType);`
+`void djui_hud_set_font(enum DjuiFontType fontType);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_gfx_set_resolution](#djui_gfx_set_resolution)
+## [djui_hud_set_resolution](#djui_hud_set_resolution)
 
 ### Lua Example
-`djui_gfx_set_resolution(resolutionType)`
+`djui_hud_set_resolution(resolutionType)`
 
 ### Parameters
 | Field | Type |
@@ -764,7 +792,7 @@
 - None
 
 ### C Prototype
-`void djui_gfx_set_resolution(enum GfxUtilsResolution resolutionType);`
+`void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);`
 
 [:arrow_up_small:](#)
 

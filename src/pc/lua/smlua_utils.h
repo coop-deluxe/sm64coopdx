@@ -14,6 +14,7 @@ lua_Integer smlua_to_integer(lua_State* L, int index);
 lua_Number smlua_to_number(lua_State* L, int index);
 const char* smlua_to_string(lua_State* L, int index);
 void* smlua_to_cobject(lua_State* L, int index, u16 lot);
+void* smlua_to_cpointer(lua_State* L, int index, u16 lvt);
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index);
 
 void smlua_push_object(lua_State* L, u16 lot, void* p);

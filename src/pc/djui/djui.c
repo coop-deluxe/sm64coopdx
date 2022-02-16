@@ -4,7 +4,6 @@
 #include "game/level_update.h"
 #include "pc/lua/smlua_hooks.h"
 #include "djui_panel_playerlist.h"
-#include "djui_gfx_utils.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 

@@ -16,7 +16,7 @@
 #include "src/game/level_info.h"
 #include "src/game/save_file.h"
 #include "src/game/sound_init.h"
-#include "src/pc/djui/djui_gfx_utils.h"
+#include "src/pc/djui/djui_hud_utils.h"
 
 
   //////////////
@@ -203,39 +203,39 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
 }
 
   //////////////////////
- // djui_gfx_utils.h //
+ // djui_hud_utils.h //
 //////////////////////
 
-int smlua_func_djui_gfx_get_screen_height(UNUSED lua_State* L) {
+int smlua_func_djui_hud_get_screen_height(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
 
-    lua_pushinteger(L, djui_gfx_get_screen_height());
+    lua_pushinteger(L, djui_hud_get_screen_height());
 
     return 1;
 }
 
-int smlua_func_djui_gfx_get_screen_width(UNUSED lua_State* L) {
+int smlua_func_djui_hud_get_screen_width(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
 
-    lua_pushinteger(L, djui_gfx_get_screen_width());
+    lua_pushinteger(L, djui_hud_get_screen_width());
 
     return 1;
 }
 
-int smlua_func_djui_gfx_measure_text(lua_State* L) {
+int smlua_func_djui_hud_measure_text(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    lua_pushnumber(L, djui_gfx_measure_text(message));
+    lua_pushnumber(L, djui_hud_measure_text(message));
 
     return 1;
 }
 
-int smlua_func_djui_gfx_print_text(lua_State* L) {
+int smlua_func_djui_hud_print_text(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
     const char* message = smlua_to_string(L, 1);
@@ -247,12 +247,37 @@ int smlua_func_djui_gfx_print_text(lua_State* L) {
     float scale = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    djui_gfx_print_text(message, x, y, scale);
+    djui_hud_print_text(message, x, y, scale);
 
     return 1;
 }
 
-int smlua_func_djui_gfx_set_color(lua_State* L) {
+int smlua_func_djui_hud_render_texture(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 8)) { return 0; }
+
+    const u8* texture = (const u8*)smlua_to_cpointer(L, 1, LVT_U8_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 bitSize = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 x = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 y = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 width = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 height = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 scaleW = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 scaleH = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    djui_hud_render_texture(texture, bitSize, x, y, width, height, scaleW, scaleH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_set_color(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
     u8 r = smlua_to_integer(L, 1);
@@ -264,29 +289,29 @@ int smlua_func_djui_gfx_set_color(lua_State* L) {
     u8 a = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    djui_gfx_set_color(r, g, b, a);
+    djui_hud_set_color(r, g, b, a);
 
     return 1;
 }
 
-int smlua_func_djui_gfx_set_font(lua_State* L) {
+int smlua_func_djui_hud_set_font(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     int fontType = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    djui_gfx_set_font(fontType);
+    djui_hud_set_font(fontType);
 
     return 1;
 }
 
-int smlua_func_djui_gfx_set_resolution(lua_State* L) {
+int smlua_func_djui_hud_set_resolution(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     int resolutionType = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    djui_gfx_set_resolution(resolutionType);
+    djui_hud_set_resolution(resolutionType);
 
     return 1;
 }
@@ -3460,14 +3485,15 @@ void smlua_bind_functions_autogen(void) {
     // djui_chat_message.h
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
-    // djui_gfx_utils.h
-    smlua_bind_function(L, "djui_gfx_get_screen_height", smlua_func_djui_gfx_get_screen_height);
-    smlua_bind_function(L, "djui_gfx_get_screen_width", smlua_func_djui_gfx_get_screen_width);
-    smlua_bind_function(L, "djui_gfx_measure_text", smlua_func_djui_gfx_measure_text);
-    smlua_bind_function(L, "djui_gfx_print_text", smlua_func_djui_gfx_print_text);
-    smlua_bind_function(L, "djui_gfx_set_color", smlua_func_djui_gfx_set_color);
-    smlua_bind_function(L, "djui_gfx_set_font", smlua_func_djui_gfx_set_font);
-    smlua_bind_function(L, "djui_gfx_set_resolution", smlua_func_djui_gfx_set_resolution);
+    // djui_hud_utils.h
+    smlua_bind_function(L, "djui_hud_get_screen_height", smlua_func_djui_hud_get_screen_height);
+    smlua_bind_function(L, "djui_hud_get_screen_width", smlua_func_djui_hud_get_screen_width);
+    smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
+    smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
+    smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
+    smlua_bind_function(L, "djui_hud_set_color", smlua_func_djui_hud_set_color);
+    smlua_bind_function(L, "djui_hud_set_font", smlua_func_djui_hud_set_font);
+    smlua_bind_function(L, "djui_hud_set_resolution", smlua_func_djui_hud_set_resolution);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

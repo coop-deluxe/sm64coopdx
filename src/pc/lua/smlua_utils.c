@@ -131,6 +131,50 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     return pointer;
 }
 
+void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
+    if (lua_type(L, index) != LUA_TTABLE) {
+        LOG_LUA("smlua_to_cpointer received improper type '%d'", lua_type(L, index));
+        smlua_logline();
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+
+    // get LVT
+    lua_getfield(L, index, "_lvt");
+    enum LuaObjectType objLvt = smlua_to_integer(L, -1);
+    lua_pop(L, 1);
+    if (!gSmLuaConvertSuccess) { return NULL; }
+
+    if (lvt != objLvt) {
+        LOG_LUA("smlua_to_cpointer received improper LVT. Expected '%d', received '%d'", lvt, objLvt);
+        smlua_logline();
+        gSmLuaConvertSuccess = false;
+        return NULL;
+    }
+
+    // get pointer
+    lua_getfield(L, index, "_pointer");
+    void* pointer = (void*)(intptr_t)smlua_to_integer(L, -1);
+    lua_pop(L, 1);
+    if (!gSmLuaConvertSuccess) { return NULL; }
+
+    // TODO: check allowlist
+    /*if (!smlua_cobject_allowlist_contains(lot, (u64)(intptr_t)pointer)) {
+        LOG_LUA("smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)(intptr_t)pointer);
+        gSmLuaConvertSuccess = false;
+        return NULL;
+    }*/
+
+    if (pointer == NULL) {
+        LOG_LUA("smlua_to_cpointer received null pointer.");
+        smlua_logline();
+        gSmLuaConvertSuccess = false;
+        return NULL;
+    }
+
+    gSmLuaConvertSuccess = true;
+    return pointer;
+}
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     struct LSTNetworkType lnt = { 0 };
     int valueType = lua_type(L, index);

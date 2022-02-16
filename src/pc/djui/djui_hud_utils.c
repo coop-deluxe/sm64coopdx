@@ -6,29 +6,45 @@
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 
+#include "djui_gfx.h"
 #include "gfx_dimensions.h"
 #include "config.h"
 #include "djui.h"
-#include "djui_gfx_utils.h"
+#include "djui_hud_utils.h"
 
-static enum GfxUtilsResolution sResolution = RESOLUTION_DJUI;
+static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum DjuiFontType sFont = FONT_NORMAL;
 
-void djui_gfx_set_resolution(enum GfxUtilsResolution resolutionType) {
+static void djui_hud_position_translate(f32* x, f32* y) {
+    if (sResolution == RESOLUTION_DJUI) {
+        djui_gfx_position_translate(x, y);
+    } else {
+        *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x;
+        *y = SCREEN_HEIGHT - *y;
+    }
+}
+
+static void djui_hud_size_translate(f32* size) {
+    if (sResolution == RESOLUTION_DJUI) {
+        djui_gfx_size_translate(size);
+    }
+}
+
+void djui_hud_set_resolution(enum HudUtilsResolution resolutionType) {
     if (resolutionType >= RESOLUTION_COUNT) { return; }
     sResolution = resolutionType;
 }
 
-void djui_gfx_set_font(enum DjuiFontType fontType) {
+void djui_hud_set_font(enum DjuiFontType fontType) {
     if (fontType >= FONT_COUNT) { return; }
     sFont = fontType;
 }
 
-void djui_gfx_set_color(u8 r, u8 g, u8 b, u8 a) {
+void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
 }
 
-u32 djui_gfx_get_screen_width(void) {
+u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
@@ -37,7 +53,7 @@ u32 djui_gfx_get_screen_width(void) {
         : (windowWidth / djui_gfx_get_scale());
 }
 
-u32 djui_gfx_get_screen_height(void) {
+u32 djui_hud_get_screen_height(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
@@ -46,7 +62,7 @@ u32 djui_gfx_get_screen_height(void) {
         : (windowHeight / djui_gfx_get_scale());
 }
 
-f32 djui_gfx_measure_text(const char* message) {
+f32 djui_hud_measure_text(const char* message) {
     if (message == NULL) { return 0; }
     const struct DjuiFont* font = gDjuiFonts[sFont];
     f32 width = 0;
@@ -58,7 +74,7 @@ f32 djui_gfx_measure_text(const char* message) {
     return width * font->defaultFontScale;
 }
 
-void djui_gfx_print_text(const char* message, float x, float y, float scale) {
+void djui_hud_print_text(const char* message, float x, float y, float scale) {
     if (message == NULL) { return; }
     const struct DjuiFont* font = gDjuiFonts[sFont];
     f32 fontScale = font->defaultFontScale * scale;
@@ -71,19 +87,12 @@ void djui_gfx_print_text(const char* message, float x, float y, float scale) {
     // translate position
     f32 translatedX = x;
     f32 translatedY = y;
-    if (sResolution == RESOLUTION_DJUI) {
-        djui_gfx_position_translate(&translatedX, &translatedY);
-    } else if (sResolution == RESOLUTION_N64) {
-        translatedX = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + x;
-        translatedY = SCREEN_HEIGHT - y;
-    }
+    djui_hud_position_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // compute font size
     f32 translatedFontSize = fontScale;
-    if (sResolution == RESOLUTION_DJUI) {
-        djui_gfx_size_translate(&translatedFontSize);
-    }
+    djui_hud_size_translate(&translatedFontSize);
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
 
     // render the line
@@ -108,33 +117,23 @@ void djui_gfx_print_text(const char* message, float x, float y, float scale) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void djui_gfx_utils_render(void) {
-    //struct DjuiColor fore = { .r = 255, .g = 255, .b = 255, .a = 255 };
-    //struct DjuiColor back = { .r = 0, .g = 0, .b = 0, .a = 255 };
-    //const struct DjuiFont* font = gDjuiFonts[2];
-    //djui_gfx_print_text(font, "abcdefghijklmnopqrstuvwxyz:1234567890", 2, 2, 2, back);
-    //djui_gfx_print_text(font, "1234567890:abcdefghijklmnopqrstuvwxyz", 0, 0, 2, fore);
-    //float scale = 240.0f / gfx_current_dimensions.height;
+void djui_hud_render_texture(const u8* texture, u32 bitSize, f32 x, f32 y, u32 width, u32 height, f32 scaleW, f32 scaleH) {
+    // translate position
+    f32 translatedX = x;
+    f32 translatedY = y;
+    djui_hud_position_translate(&translatedX, &translatedY);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
-    /*{
-        f32 screenWidth = djui_gfx_get_screen_width(RESOLUTION_N64);
-        f32 width = djui_gfx_measure_text(font, "PAUSE", RESOLUTION_N64);
+    // translate scale
+    f32 translatedW = scaleW;
+    f32 translatedH = scaleH;
+    djui_hud_size_translate(&translatedW);
+    djui_hud_size_translate(&translatedH);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
-        f32 screenHeight = djui_gfx_get_screen_height(RESOLUTION_N64);
-        f32 height = 16;
+    // render
+    djui_gfx_render_texture(texture, width, height, bitSize);
 
-        djui_gfx_print_text(font, "PAUSE", screenWidth - width, screenHeight - height - 32, 1.0f, fore, RESOLUTION_N64);
-        djui_gfx_print_text(font, "PAUSE", screenWidth - width * 2, screenHeight - height, 1.0f, fore, RESOLUTION_N64);
-    }*/
-
-    /*{
-        f32 screenWidth = djui_gfx_get_screen_width(RESOLUTION_DJUI);
-        f32 width = djui_gfx_measure_text(font, "PAUSE", RESOLUTION_DJUI);
-
-        f32 screenHeight = djui_gfx_get_screen_height(RESOLUTION_DJUI);
-        f32 height = 16;
-
-        djui_gfx_print_text(FONT_NORMAL, "PAUSE", screenWidth - width, screenHeight - height - 32, 1.0f, fore, RESOLUTION_DJUI);
-        djui_gfx_print_text(FONT_NORMAL, "PAUSE", screenWidth - width * 2, screenHeight - height, 1.0f, fore, RESOLUTION_DJUI);
-    }*/
+    // pop
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }

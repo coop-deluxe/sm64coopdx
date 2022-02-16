@@ -32,7 +32,7 @@ in_files = [
     "src/game/level_info.h",
     "src/game/save_file.h",
     "src/game/sound_init.h",
-    "src/pc/djui/djui_gfx_utils.h",
+    "src/pc/djui/djui_hud_utils.h",
 ]
 
 override_allowed_functions = {
@@ -164,6 +164,9 @@ def build_param(param, i):
         return '    %s %s = smlua_to_number(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'const char*':
         return '    %s %s = smlua_to_string(L, %d);\n' % (ptype, pid, i)
+    elif translate_type_to_lot(ptype) == 'LOT_POINTER':
+        lvt = translate_type_to_lvt(ptype)
+        return '    %s %s = (%s)smlua_to_cpointer(L, %d, %s);\n' % (ptype, pid, ptype, i, lvt)
     else:
         lot = translate_type_to_lot(ptype)
         s = '  %s %s = (%s)smlua_to_cobject(L, %d, %s);' % (ptype, pid, ptype, i, lot)
