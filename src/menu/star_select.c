@@ -111,6 +111,8 @@ void render_100_coin_star(u8 stars) {
  * checks of what star should be next in sInitSelectedActNum.
  */
 void bhv_act_selector_init(void) {
+    if (gCurrCourseNum == 0) { return; }
+
     s16 i = 0;
     s32 selectorModelIDs[10];
     u8 stars = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
@@ -328,15 +330,17 @@ void print_act_selector_strings(void) {
 #endif
     }
 
+    if (currLevelName != NULL) {
 #ifdef VERSION_EU
-    print_generic_string(get_str_x_pos_from_center(160, currLevelName + 3, 10.0f), 33, currLevelName + 3);
+        print_generic_string(get_str_x_pos_from_center(160, currLevelName + 3, 10.0f), 33, currLevelName + 3);
 #elif defined(VERSION_SH)
-    lvlNameX = get_str_x_pos_from_center_scale(160, currLevelName + 3, 10.0f);
-    print_generic_string(lvlNameX, 33, currLevelName + 3);
+        lvlNameX = get_str_x_pos_from_center_scale(160, currLevelName + 3, 10.0f);
+        print_generic_string(lvlNameX, 33, currLevelName + 3);
 #else
-    lvlNameX = get_str_x_pos_from_center(160, currLevelName + 3, 10.0f);
-    print_generic_string(lvlNameX, 33, currLevelName + 3);
+        lvlNameX = get_str_x_pos_from_center(160, currLevelName + 3, 10.0f);
+        print_generic_string(lvlNameX, 33, currLevelName + 3);
 #endif
+    }
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 

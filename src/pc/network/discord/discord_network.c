@@ -47,7 +47,7 @@ s64 ns_discord_get_id(u8 localId) {
 char* ns_discord_get_id_str(u8 localId) {
     if (localId == UNKNOWN_LOCAL_INDEX) { localId = 0; }
     static char id_str[22] = { 0 };
-    snprintf(id_str, 22, "%lld", gNetworkUserIds[localId]);
+    snprintf(id_str, 22, "%lld", (long long int)gNetworkUserIds[localId]);
     return id_str;
 }
 
