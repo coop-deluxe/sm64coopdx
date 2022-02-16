@@ -1,7 +1,10 @@
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
-#else
+#else 
+#ifdef HAVE_SDL
+
 #include <SDL/SDL.h>
+#endif
 #endif
 
 #include "controller_bind_mapping.h"
