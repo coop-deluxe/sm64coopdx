@@ -120,10 +120,4 @@ function on_hud_render()
     test_rainbow_text()
 end
 
-function on_mario_update(m)
-    if m.action == ACT_JUMP then
-        displaying = true
-    end
-end
-
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)

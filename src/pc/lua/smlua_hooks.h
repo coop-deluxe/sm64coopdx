@@ -13,6 +13,7 @@ enum LuaHookedEventType {
     HOOK_ON_PLAYER_CONNECTED,
     HOOK_ON_PLAYER_DISCONNECTED,
     HOOK_ON_HUD_RENDER,
+    HOOK_ON_INTERACT,
     HOOK_MAX,
 };
 
@@ -26,12 +27,14 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PLAYER_CONNECTED",
     "HOOK_ON_PLAYER_DISCONNECTED",
     "HOOK_ON_HUD_RENDER",
+    "HOOK_ON_INTERACT",
     "HOOK_MAX"
 };
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
+void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
