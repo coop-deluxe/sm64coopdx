@@ -3,23 +3,21 @@
 
 #include "smlua.h"
 
-#include "game/level_update.h"
-#include "game/area.h"
-#include "game/mario.h"
-#include "game/mario_step.h"
-#include "game/mario_actions_stationary.h"
-#include "audio/external.h"
-#include "object_fields.h"
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "pc/network/network_utils.h"
+#include "src/audio/external.h"
+#include "src/engine/surface_collision.h"
+#include "src/game/camera.h"
+#include "src/game/characters.h"
+#include "src/game/mario_step.h"
+#include "src/game/mario.h"
 #include "src/pc/djui/djui_popup.h"
-#include "src/game/print.h"
+#include "src/pc/network/network_utils.h"
+#include "src/pc/djui/djui_chat_message.h"
 #include "src/game/interaction.h"
 #include "src/game/level_info.h"
 #include "src/game/save_file.h"
 #include "src/game/sound_init.h"
 #include "src/pc/djui/djui_gfx_utils.h"
+
 
   //////////////
  // camera.h //
