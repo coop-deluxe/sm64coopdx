@@ -35,11 +35,13 @@ for i=0,(MAX_PLAYERS-1) do
     for j=0,(ANGLE_QUEUE_SIZE-1) do e.angleDeltaQueue[j] = 0 end
     e.rotAngle = 0
     e.boostTimer = 0
+
     e.stickLastAngle = 0
     e.spinDirection = 0
     e.spinBufferTimer = 0
     e.spinInput = 0
     e.lastIntendedMag = 0
+
     e.lastPos = {}
     e.lastPos.x = m.pos.x
     e.lastPos.y = m.pos.y
@@ -50,6 +52,9 @@ for i=0,(MAX_PLAYERS-1) do
     e.fakeSavedActionTimer = 0
     e.fakeWroteAction = 0
     e.fakeSaved = false
+
+    e.savedWallSlideHeight = 0
+    e.savedWallSlide = false
 end
 
 ----------
@@ -456,16 +461,18 @@ function act_spin_jump(m)
         return set_mario_action(m, ACT_SPIN_POUND, m.actionState)
     end
 
-    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, SOUND_MARIO_YAHOO)
+    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, CHAR_SOUND_YAHOO)
 
     common_air_action_step(m, ACT_DOUBLE_JUMP_LAND, MARIO_ANIM_TWIRL,
                            AIR_STEP_CHECK_HANG)
 
-    -- set facing direction
-    -- not part of original Extended Moveset
-    local yawDiff = m.faceAngle.y - m.intendedYaw
-    e.rotAngle = e.rotAngle + yawDiff
-    m.faceAngle.y = m.intendedYaw
+    if (e.savedWallSlide == false) or (m.pos.y <= e.savedWallSlideHeight) then
+        -- set facing direction
+        -- not part of original Extended Moveset
+        local yawDiff = m.faceAngle.y - m.intendedYaw
+        e.rotAngle = e.rotAngle + yawDiff
+        m.faceAngle.y = m.intendedYaw
+    end
 
     e.rotAngle = e.rotAngle + 0x2867
     if (e.rotAngle >  0x10000) then e.rotAngle = e.rotAngle - 0x10000 end
@@ -521,7 +528,7 @@ function act_spin_pound(m)
     if stepResult == AIR_STEP_LANDED then
         if should_get_stuck_in_ground(m) ~= 0 then
             queue_rumble_data_mario(m, 5, 80)
-            play_sound(SOUND_MARIO_OOOF2, m.marioObj.header.gfx.cameraToObject)
+            play_sound(CHAR_SOUND_OOOF2, m.marioObj.header.gfx.cameraToObject)
             m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
             set_mario_action(m, ACT_BUTT_STUCK_IN_GROUND, 0)
         else
@@ -610,6 +617,10 @@ end
 ----------------
 
 function act_wall_slide(m)
+    local e = gMarioStateExtras[m.playerIndex]
+    e.savedWallSlideHeight = m.pos.y
+    e.savedWallSlide = true
+
     if (m.input & INPUT_A_PRESSED) ~= 0 then
         m.vel.y = 52.0
         -- m.faceAngle.y = m.faceAngle.y + 0x8000
@@ -659,7 +670,7 @@ function act_water_ground_pound(m)
             -- copied from water plunge code
             play_sound(SOUND_ACTION_UNKNOWN430, m.marioObj.header.gfx.cameraToObject)
             if m.peakHeight - m.pos.y > 1150.0 then
-                play_sound(SOUND_MARIO_HAHA_2, m.marioObj.header.gfx.cameraToObject)
+                play_sound(CHAR_SOUND_HAHA_2, m.marioObj.header.gfx.cameraToObject)
             end
 
             m.particleFlags = m.particleFlags | PARTICLE_WATER_SPLASH
@@ -690,7 +701,7 @@ function act_water_ground_pound(m)
 
         m.actionTimer = m.actionTimer + 1
         if (m.actionTimer >= m.marioObj.header.gfx.animInfo.curAnim.loopEnd + 4) then
-            -- play_sound(SOUND_MARIO_GROUND_POUND_WAH, m.marioObj.header.gfx.cameraToObject)
+            -- play_sound(CHAR_SOUND_GROUND_POUND_WAH, m.marioObj.header.gfx.cameraToObject)
             play_sound(SOUND_ACTION_SWIM_FAST, m.marioObj.header.gfx.cameraToObject)
             m.vel.y = -45.0
             m.actionState = 1
@@ -879,7 +890,7 @@ function act_ledge_parkour(m)
     local animFrame = m.marioObj.header.gfx.animInfo.animFrame
 
     if m.actionTimer == 0 then
-        play_sound(SOUND_MARIO_HAHA_2, m.marioObj.header.gfx.cameraToObject)
+        play_sound(CHAR_SOUND_HAHA_2, m.marioObj.header.gfx.cameraToObject)
     elseif m.actionTimer == 1 then
         play_sound(SOUND_ACTION_SIDE_FLIP_UNK, m.marioObj.header.gfx.cameraToObject)
     end
@@ -941,7 +952,7 @@ function act_ground_pound_jump(m)
         play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
     end
 
-    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, SOUND_MARIO_YAHOO)
+    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, CHAR_SOUND_YAHOO)
 
     common_air_action_step(m, ACT_JUMP_LAND, MARIO_ANIM_SINGLE_JUMP,
                            AIR_STEP_CHECK_LEDGE_GRAB | AIR_STEP_CHECK_HANG)
@@ -958,6 +969,11 @@ end
 
 function mario_on_set_action(m)
     local e = gMarioStateExtras[m.playerIndex]
+
+    if (m.action & ACT_FLAG_MOVING) ~= 0 then
+        e.savedWallSlide = false
+    end
+
     if e.spinInput ~= 0 then
         if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_TRIPLE_JUMP or m.action == ACT_SPECIAL_TRIPLE_JUMP or m.action == ACT_SIDE_FLIP or m.action == ACT_BACKFLIP or m.action == ACT_WALL_KICK_AIR then
             set_mario_action(m, ACT_SPIN_JUMP, 1)
