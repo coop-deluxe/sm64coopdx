@@ -10,6 +10,7 @@
 #include "pc/configfile.h"
 #include "audio/external.h"
 #include "engine/graph_node.h"
+#include "types.h"
 
 extern Gfx mario_cap_seg3_dl_03022F48[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
@@ -29,7 +30,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_MARIO,
         .name                  = "Mario",
         .hudHead               = ',',
-        .hudHeadTexture        = texture_hud_char_mario_head,
+        .hudHeadTexture        = { .texture = texture_hud_char_mario_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_MARIO_HEAD,
         .modelId               = MODEL_MARIO,
         .capModelId            = MODEL_MARIOS_CAP,
@@ -92,7 +93,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_LUIGI,
         .name                  = "Luigi",
         .hudHead               = '.',
-        .hudHeadTexture        = texture_hud_char_luigi_head,
+        .hudHeadTexture        = { .texture = texture_hud_char_luigi_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_LUIGI_HEAD,
         .modelId               = MODEL_LUIGI,
         .capModelId            = MODEL_LUIGIS_CAP,
@@ -155,7 +156,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_TOAD,
         .name                  = "Toad",
         .hudHead               = '/',
-        .hudHeadTexture        = texture_hud_char_toad_head,
+        .hudHeadTexture        = { .texture = texture_hud_char_toad_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_TOAD_HEAD,
         .modelId               = MODEL_TOAD_PLAYER,
         .capModelId            = MODEL_TOADS_CAP,
@@ -218,7 +219,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_WALUIGI,
         .name                  = "Waluigi",
         .hudHead               = 'z',
-        .hudHeadTexture        = texture_hud_char_waluigi_head,
+        .hudHeadTexture        = { .texture = texture_hud_char_waluigi_head, .bitSize = 8, .width = 16, .height = 16 },
         .cameraHudHead         = GLYPH_CAM_WALUIGI_HEAD,
         .modelId               = MODEL_WALUIGI,
         .capModelId            = MODEL_WALUIGIS_CAP,

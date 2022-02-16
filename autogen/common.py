@@ -18,6 +18,9 @@ def translate_type_to_lvt(ptype):
     if ptype == 'char':
         ptype = 'u8'
 
+    if 'const ' in ptype:
+        ptype = ptype.replace('const ', '').strip()
+
     if ('char' in ptype and '[' in ptype):
         return 'LVT_STRING'
 
@@ -57,14 +60,17 @@ def translate_type_to_lvt(ptype):
     return 'LVT_???'
 
 def translate_type_to_lot(ptype):
-    if ptype == 'char':
-        ptype = 'u8'
-
     if ptype == 'const char*':
         return 'LOT_NONE'
 
     if ptype == 'char*' or ('char' in ptype and '[' in ptype):
         return 'LOT_NONE'
+
+    if 'const ' in ptype:
+        ptype = ptype.replace('const ', '')
+
+    if ptype == 'char':
+        ptype = 'u8'
 
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'

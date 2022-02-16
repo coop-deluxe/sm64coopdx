@@ -37,6 +37,7 @@
 - [SPTask](#SPTask)
 - [SpawnInfo](#SpawnInfo)
 - [Surface](#Surface)
+- [TextureInfo](#TextureInfo)
 - [TransitionInfo](#TransitionInfo)
 - [UnusedArea28](#UnusedArea28)
 - [VblankHandler](#VblankHandler)
@@ -174,7 +175,7 @@
 | capModelId | integer | read-only |
 | capWingModelId | integer | read-only |
 | hudHead | char | read-only |
-| hudHeadTexture | Pointer <integer> | read-only |
+| hudHeadTexture | [TextureInfo](#TextureInfo) | read-only |
 | modelId | integer | read-only |
 | name | string | read-only |
 | soundAttacked | integer | read-only |
@@ -766,6 +767,19 @@
 | vertex1 | [Vec3s](#Vec3s) | read-only |
 | vertex2 | [Vec3s](#Vec3s) | read-only |
 | vertex3 | [Vec3s](#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [TextureInfo](#TextureInfo)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| bitSize | const u8 | read-only |
+| height | const u32 | read-only |
+| texture | Pointer <integer> | read-only |
+| width | const u32 | read-only |
 
 [:arrow_up_small:](#)
 

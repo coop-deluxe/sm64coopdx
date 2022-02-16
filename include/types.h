@@ -6,7 +6,6 @@
 
 #include <ultra64.h>
 #include "macros.h"
-#include "src/game/characters.h"
 #include "pc/network/version.h"
 
 // Certain functions are marked as having return values, but do not
@@ -396,6 +395,14 @@ struct MarioState
     /*????*/ f32 curAnimOffset;
 };
 
+struct TextureInfo
+{
+    const u8* texture;
+    const u8 bitSize;
+    const u32 width;
+    const u32 height;
+};
+
 #define PLAY_MODE_NORMAL 0
 #define PLAY_MODE_PAUSED 2
 #define PLAY_MODE_CHANGE_AREA 3
@@ -403,5 +410,7 @@ struct MarioState
 #define PLAY_MODE_FRAME_ADVANCE 5
 
 #define MAX_PLAYERS 16
+
+#include "src/game/characters.h"
 
 #endif // _SM64_TYPES_H_

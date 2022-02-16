@@ -711,17 +711,14 @@
 ## [djui_hud_render_texture](#djui_hud_render_texture)
 
 ### Lua Example
-`djui_hud_render_texture(texture, bitSize, x, y, width, height, scaleW, scaleH)`
+`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| texture | Pointer <integer> |
-| bitSize | integer |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
 | x | number |
 | y | number |
-| width | integer |
-| height | integer |
 | scaleW | number |
 | scaleH | number |
 
@@ -729,7 +726,7 @@
 - None
 
 ### C Prototype
-`void djui_hud_render_texture(const u8* texture, u32 bitSize, f32 x, f32 y, u32 width, u32 height, f32 scaleW, f32 scaleH);`
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
 
 [:arrow_up_small:](#)
 

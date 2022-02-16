@@ -253,26 +253,20 @@ int smlua_func_djui_hud_print_text(lua_State* L) {
 }
 
 int smlua_func_djui_hud_render_texture(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 8)) { return 0; }
+    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
-    const u8* texture = (const u8*)smlua_to_cpointer(L, 1, LVT_U8_P);
+    struct TextureInfo* texInfo = (struct TextureInfo*)smlua_to_cobject(L, 1, LOT_TEXTUREINFO);
     if (!gSmLuaConvertSuccess) { return 0; }
-    u32 bitSize = smlua_to_integer(L, 2);
+    f32 x = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
-    f32 x = smlua_to_number(L, 3);
+    f32 y = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-    f32 y = smlua_to_number(L, 4);
+    f32 scaleW = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
-    u32 width = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    u32 height = smlua_to_integer(L, 6);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    f32 scaleW = smlua_to_number(L, 7);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    f32 scaleH = smlua_to_number(L, 8);
+    f32 scaleH = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    djui_hud_render_texture(texture, bitSize, x, y, width, height, scaleW, scaleH);
+    djui_hud_render_texture(texInfo, x, y, scaleW, scaleH);
 
     return 1;
 }

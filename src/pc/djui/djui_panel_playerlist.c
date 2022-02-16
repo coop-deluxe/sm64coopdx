@@ -18,7 +18,7 @@ static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
 static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
     u8 charIndex = np->modelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
-    djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture;
+    djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture.texture;
 
     u8 visible = np->connected;
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) {

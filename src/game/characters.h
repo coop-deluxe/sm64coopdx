@@ -1,6 +1,7 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 #include "PR/ultratypes.h"
+#include "types.h"
 // NOTE: do not include any additional headers
 
 enum CharacterType {
@@ -18,7 +19,7 @@ struct Character {
     enum CharacterType type;
     char* name;
     char hudHead;
-    const u8* hudHeadTexture;
+    struct TextureInfo hudHeadTexture;
     u32 cameraHudHead;
     u32 modelId;
     u32 capModelId;

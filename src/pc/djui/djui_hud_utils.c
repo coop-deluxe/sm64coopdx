@@ -117,7 +117,7 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void djui_hud_render_texture(const u8* texture, u32 bitSize, f32 x, f32 y, u32 width, u32 height, f32 scaleW, f32 scaleH) {
+static void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     // translate position
     f32 translatedX = x;
     f32 translatedY = y;
@@ -136,4 +136,8 @@ void djui_hud_render_texture(const u8* texture, u32 bitSize, f32 x, f32 y, u32 w
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+}
+
+void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+    djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->width, x, y, scaleW, scaleH);
 }

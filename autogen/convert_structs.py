@@ -57,6 +57,7 @@ override_field_immutable = {
     "MarioState": [ "playerIndex" ],
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
+    "TextureInfo": [ "*" ],
 }
 
 sLuaManuallyDefinedStructs = [
@@ -188,7 +189,7 @@ def get_struct_field_info(struct, field):
 
     lvt = translate_type_to_lvt(ftype)
     lot = translate_type_to_lot(ftype)
-    fimmutable = str(lvt == 'LVT_COBJECT' or lvt.endswith('_P')).lower()
+    fimmutable = str(lvt == 'LVT_COBJECT' or lvt.endswith('_P') or 'const ' in ftype).lower()
 
     if sid in override_field_immutable:
         if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
