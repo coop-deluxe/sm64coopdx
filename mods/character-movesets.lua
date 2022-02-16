@@ -60,7 +60,7 @@ function act_spin_pound(m)
     if stepResult == AIR_STEP_LANDED then
         if should_get_stuck_in_ground(m) ~= 0 then
             queue_rumble_data_mario(m, 5, 80)
-            play_sound(SOUND_MARIO_OOOF2, m.marioObj.header.gfx.cameraToObject)
+            play_character_sound(m, CHAR_SOUND_OOOF2)
             m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
             set_mario_action(m, ACT_BUTT_STUCK_IN_GROUND, 0)
         else
@@ -482,21 +482,27 @@ ACT_WARIO_SPINNING_OBJ = (0x05B | ACT_FLAG_STATIONARY)
 
 function act_corkscrew_conk(m)
     local e = gStateExtras[m.playerIndex]
+
+    -- visuals
     m.particleFlags = m.particleFlags | PARTICLE_DUST
 
+    -- physics
     common_air_action_step(m, ACT_JUMP_LAND, MARIO_ANIM_FORWARD_SPINNING, AIR_STEP_NONE)
-    set_anim_to_frame(m, e.animFrame)
 
+    -- animation
+    set_anim_to_frame(m, e.animFrame)
     if e.animFrame >= m.marioObj.header.gfx.animInfo.curAnim.loopEnd then
         e.animFrame = e.animFrame - m.marioObj.header.gfx.animInfo.curAnim.loopEnd
     end
 
+    -- fast ground pound out of it
     if (m.input & INPUT_Z_PRESSED) ~= 0 then
         local rc = set_mario_action(m, ACT_GROUND_POUND, 0)
         m.actionTimer = 5
         return rc
     end
 
+    -- timers
     m.actionTimer = m.actionTimer + 1
     e.animFrame = e.animFrame + 1
 
@@ -531,9 +537,9 @@ function act_wario_dash(m)
     set_anim_to_frame(m, 25)
 
     -- set dash speed
-    local speed = 100
+    local speed = 80
     if m.actionTimer > 8 then
-        speed = speed - (m.actionTimer - 8) * 11
+        speed = speed - (m.actionTimer - 8) * 7
     end
     mario_set_forward_vel(m, speed)
 
@@ -820,14 +826,14 @@ function wario_on_set_action(m)
 
     -- less height on other jumps
     if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_STEEP_JUMP or m.action == ACT_RIDING_SHELL_JUMP or m.action == ACT_BACKFLIP or m.action == ACT_LONG_JUMP then
-        m.vel.y = m.vel.y * 0.8
+        m.vel.y = m.vel.y * 0.9
 
         -- prevent from getting stuck on platform
         if m.marioObj.platform ~= nil then
             m.pos.y = m.pos.y + 10
         end
     elseif m.action == ACT_SIDE_FLIP then
-        m.vel.y = m.vel.y * 0.86
+        m.vel.y = m.vel.y * 1.1
 
         -- prevent from getting stuck on platform
         if m.marioObj.platform ~= nil then
@@ -870,7 +876,7 @@ function wario_update(m)
         end
     end
 
-    -- shake cmaera
+    -- shake camera
     if m.action == ACT_GROUND_POUND_LAND then
         set_camera_shake_from_hit(SHAKE_MED_DAMAGE)
     end
