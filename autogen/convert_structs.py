@@ -10,7 +10,8 @@ in_files = [
     'src/game/camera.h',
     'src/game/characters.h',
     'src/engine/surface_collision.h',
-    'src/pc/network/network_player.h'
+    'src/pc/network/network_player.h',
+    'src/pc/djui/djui_hud_utils.h'
 ]
 
 smlua_cobject_autogen = 'src/pc/lua/smlua_cobject_autogen'

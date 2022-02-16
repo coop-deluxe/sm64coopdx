@@ -13,6 +13,7 @@
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
 - [FloorGeometry](#FloorGeometry)
+- [GlobalTextures](#GlobalTextures)
 - [GraphNode](#GraphNode)
 - [GraphNodeObject](#GraphNodeObject)
 - [GraphNodeObject_sub](#GraphNodeObject_sub)
@@ -291,6 +292,22 @@
 | normalY | number |  |
 | normalZ | number |  |
 | originOffset | number |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GlobalTextures](#GlobalTextures)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| arrow_down | [TextureInfo](#TextureInfo) | read-only |
+| arrow_up | [TextureInfo](#TextureInfo) | read-only |
+| camera | [TextureInfo](#TextureInfo) | read-only |
+| coin | [TextureInfo](#TextureInfo) | read-only |
+| lakitu | [TextureInfo](#TextureInfo) | read-only |
+| no_camera | [TextureInfo](#TextureInfo) | read-only |
+| star | [TextureInfo](#TextureInfo) | read-only |
 
 [:arrow_up_small:](#)
 

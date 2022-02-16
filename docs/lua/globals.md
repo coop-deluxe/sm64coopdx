@@ -30,6 +30,13 @@ The `gCharacter[]` table is an array from `0` to `(CT_MAX - 1)` that contains a 
 
 <br />
 
+## [gTextures](#gTextures)
+The `gTextures` table contains references to textures. Listed in [GlobalTextures](structs.md#GlobalTextures).
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gGlobalSyncTable](#gGlobalSyncTable)
 The `gGlobalSyncTable` is a table used for networking. Any field set inside of this table is automatically synchronized with all other clients. Do not use this table for player-specific variables, keep those in [gPlayerSyncTable](#gPlayerSyncTable). Player-specific variable will desynchronize within this table since it doesn't automatically translate `playerIndex`.
 

@@ -7,6 +7,7 @@
 #include "src/game/characters.h"
 #include "src/engine/surface_collision.h"
 #include "src/pc/network/network_player.h"
+#include "src/pc/djui/djui_hud_utils.h"
 
 #define LUA_ANIMATION_FIELD_COUNT 9
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
@@ -205,6 +206,17 @@ static struct LuaObjectField sFloorGeometryFields[LUA_FLOOR_GEOMETRY_FIELD_COUNT
     { "normalZ",      LVT_F32, offsetof(struct FloorGeometry, normalZ),      false, LOT_NONE },
     { "originOffset", LVT_F32, offsetof(struct FloorGeometry, originOffset), false, LOT_NONE },
 //  { "unused",       LOT_???, offsetof(struct FloorGeometry, unused),       false, LOT_???  }, <--- UNIMPLEMENTED
+};
+
+#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 7
+static struct LuaObjectField sGlobalTexturesFields[LUA_GLOBAL_TEXTURES_FIELD_COUNT] = {
+    { "arrow_down", LVT_COBJECT, offsetof(struct GlobalTextures, arrow_down), true, LOT_TEXTUREINFO },
+    { "arrow_up",   LVT_COBJECT, offsetof(struct GlobalTextures, arrow_up),   true, LOT_TEXTUREINFO },
+    { "camera",     LVT_COBJECT, offsetof(struct GlobalTextures, camera),     true, LOT_TEXTUREINFO },
+    { "coin",       LVT_COBJECT, offsetof(struct GlobalTextures, coin),       true, LOT_TEXTUREINFO },
+    { "lakitu",     LVT_COBJECT, offsetof(struct GlobalTextures, lakitu),     true, LOT_TEXTUREINFO },
+    { "no_camera",  LVT_COBJECT, offsetof(struct GlobalTextures, no_camera),  true, LOT_TEXTUREINFO },
+    { "star",       LVT_COBJECT, offsetof(struct GlobalTextures, star),       true, LOT_TEXTUREINFO },
 };
 
 #define LUA_GRAPH_NODE_FIELD_COUNT 6
@@ -683,6 +695,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENESPLINEPOINT,   sCutsceneSplinePointFields,   LUA_CUTSCENE_SPLINE_POINT_FIELD_COUNT   },
     { LOT_CUTSCENEVARIABLE,      sCutsceneVariableFields,      LUA_CUTSCENE_VARIABLE_FIELD_COUNT       },
     { LOT_FLOORGEOMETRY,         sFloorGeometryFields,         LUA_FLOOR_GEOMETRY_FIELD_COUNT          },
+    { LOT_GLOBALTEXTURES,        sGlobalTexturesFields,        LUA_GLOBAL_TEXTURES_FIELD_COUNT         },
     { LOT_GRAPHNODE,             sGraphNodeFields,             LUA_GRAPH_NODE_FIELD_COUNT              },
     { LOT_GRAPHNODEOBJECT,       sGraphNodeObjectFields,       LUA_GRAPH_NODE_OBJECT_FIELD_COUNT       },
     { LOT_GRAPHNODEOBJECT_SUB,   sGraphNodeObject_subFields,   LUA_GRAPH_NODE_OBJECT_SUB_FIELD_COUNT   },

@@ -14,6 +14,18 @@ enum DjuiFontType {
     FONT_COUNT,
 };
 
+struct GlobalTextures {
+    struct TextureInfo camera;
+    struct TextureInfo lakitu;
+    struct TextureInfo no_camera;
+    struct TextureInfo arrow_up;
+    struct TextureInfo arrow_down;
+    struct TextureInfo coin;
+    struct TextureInfo star;
+};
+
+extern struct GlobalTextures gGlobalTextures;
+
 void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);
 void djui_hud_set_font(enum DjuiFontType fontType);
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);

@@ -205,7 +205,7 @@ ALIGNED8 static const u8 texture_hud_char_multiply[] = {
 #include "textures/segment2/segment2.05600.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_coin[] = {
+ALIGNED8 const u8 texture_hud_char_coin[] = {
 #include "textures/segment2/segment2.05800.rgba16.inc.c"
 };
 
@@ -229,7 +229,7 @@ ALIGNED8 const u8 texture_hud_char_wario_head[] = {
 #include "textures/segment2/custom_wario_head.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_star[] = {
+ALIGNED8 const u8 texture_hud_char_star[] = {
 #include "textures/segment2/segment2.05C00.rgba16.inc.c"
 };
 
@@ -1801,23 +1801,23 @@ ALIGNED8 static const u8 texture_font_char_us_button_C_right[] = {
 };
 #endif
 
-ALIGNED8 static const u8 texture_hud_char_camera[] = {
+ALIGNED8 const u8 texture_hud_char_camera[] = {
 #include "textures/segment2/segment2.07B50.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_lakitu[] = {
+ALIGNED8 const u8 texture_hud_char_lakitu[] = {
 #include "textures/segment2/segment2.07D50.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_no_camera[] = {
+ALIGNED8 const u8 texture_hud_char_no_camera[] = {
 #include "textures/segment2/segment2.07F50.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_arrow_up[] = {
+ALIGNED8 const u8 texture_hud_char_arrow_up[] = {
 #include "textures/segment2/segment2.08150.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_arrow_down[] = {
+ALIGNED8 const u8 texture_hud_char_arrow_down[] = {
 #include "textures/segment2/segment2.081D0.rgba16.inc.c"
 };
 

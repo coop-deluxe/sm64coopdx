@@ -15,6 +15,24 @@
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum DjuiFontType sFont = FONT_NORMAL;
 
+extern ALIGNED8 const u8 texture_hud_char_camera[];
+extern ALIGNED8 const u8 texture_hud_char_lakitu[];
+extern ALIGNED8 const u8 texture_hud_char_no_camera[];
+extern ALIGNED8 const u8 texture_hud_char_arrow_up[];
+extern ALIGNED8 const u8 texture_hud_char_arrow_down[];
+extern ALIGNED8 const u8 texture_hud_char_coin[];
+extern ALIGNED8 const u8 texture_hud_char_star[];
+
+struct GlobalTextures gGlobalTextures = {
+    .camera     = { .texture = texture_hud_char_camera,     .bitSize = 8, .width = 16, .height = 16 },
+    .lakitu     = { .texture = texture_hud_char_lakitu,     .bitSize = 8, .width = 16, .height = 16 },
+    .no_camera  = { .texture = texture_hud_char_no_camera,  .bitSize = 8, .width = 16, .height = 16 },
+    .arrow_up   = { .texture = texture_hud_char_arrow_up,   .bitSize = 8, .width =  8, .height =  8 },
+    .arrow_down = { .texture = texture_hud_char_arrow_down, .bitSize = 8, .width =  8, .height =  8 },
+    .coin       = { .texture = texture_hud_char_coin,       .bitSize = 8, .width = 16, .height = 16 },
+    .star       = { .texture = texture_hud_char_star,       .bitSize = 8, .width = 16, .height = 16 },
+};
+
 static void djui_hud_position_translate(f32* x, f32* y) {
     if (sResolution == RESOLUTION_DJUI) {
         djui_gfx_position_translate(x, y);
@@ -141,3 +159,4 @@ static void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 widt
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->width, x, y, scaleW, scaleH);
 }
+

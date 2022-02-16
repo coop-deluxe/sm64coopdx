@@ -5,6 +5,7 @@
 #include "game/mario.h"
 #include "audio/external.h"
 #include "object_fields.h"
+#include "pc/djui/djui_hud_utils.h"
 
 #define LUA_VEC3S_FIELD_COUNT 3
 static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
@@ -220,6 +221,11 @@ void smlua_cobject_init_globals(void) {
             lua_settable(L, t);
         }
         lua_setglobal(L, "gCharacters");
+    }
+
+    {
+        smlua_push_object(L, LOT_GLOBALTEXTURES, &gGlobalTextures);
+        lua_setglobal(L, "gTextures");
     }
 
 }
