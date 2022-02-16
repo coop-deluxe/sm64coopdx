@@ -4890,6 +4890,9 @@
     <ClCompile Include="..\src\pc\network\ban_list.c">
       <Filter>Source Files\src\pc\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pc\djui\djui_hud_utils.c">
+      <Filter>Source Files\src\pc\djui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\actors\common0.h">
@@ -6054,6 +6057,9 @@
     </ClInclude>
     <ClInclude Include="..\src\pc\network\ban_list.h">
       <Filter>Source Files\src\pc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pc\djui\djui_hud_utils.h">
+      <Filter>Source Files\src\pc\djui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
+#include <string.h>
 
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_window_manager_api.h"

@@ -463,6 +463,7 @@
     <ClCompile Include="..\src\pc\djui\djui_chat_box.c" />
     <ClCompile Include="..\src\pc\djui\djui_chat_message.c" />
     <ClCompile Include="..\src\pc\djui\djui_checkbox.c" />
+    <ClCompile Include="..\src\pc\djui\djui_hud_utils.c" />
     <ClCompile Include="..\src\pc\djui\djui_inputbox.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_cheats.c" />
     <ClCompile Include="..\src\pc\djui\djui_panel_controls.c" />
@@ -939,6 +940,7 @@
     <ClInclude Include="..\src\pc\djui\djui_chat_box.h" />
     <ClInclude Include="..\src\pc\djui\djui_chat_message.h" />
     <ClInclude Include="..\src\pc\djui\djui_checkbox.h" />
+    <ClInclude Include="..\src\pc\djui\djui_hud_utils.h" />
     <ClInclude Include="..\src\pc\djui\djui_inputbox.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_cheats.h" />
     <ClInclude Include="..\src\pc\djui\djui_panel_controls.h" />
