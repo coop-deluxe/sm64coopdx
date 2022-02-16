@@ -40,8 +40,6 @@ static void spiny_to_anim_cache(void) {
         spinyAnimCache = 0;
     } else if (o->oAnimations == (struct Animation**)spiny_seg5_anims_05016EAC) {
         spinyAnimCache = 1;
-    } else {
-        assert(false);
     }
 }
 
@@ -55,7 +53,7 @@ static void spiny_from_anim_cache(void) {
             anim = (struct Animation**)spiny_seg5_anims_05016EAC;
             break;
         default:
-            assert(false);
+            break;
     }
 
     if (anim != o->oAnimations) {

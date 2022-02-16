@@ -71,7 +71,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         lua_pop(L, 1);
         if (lst == LST_PLAYER) {
             struct LSTNetworkType* n = &sUnwoundLnts[sUnwoundLntsCount - 1];
-            assert(n->type == LST_NETWORK_TYPE_INTEGER);
+            SOFT_ASSERT_RETURN(n->type == LST_NETWORK_TYPE_INTEGER, false);
             n->value.integer = network_global_index_from_local(n->value.integer);
         }
 
@@ -376,7 +376,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
             // translate player index
             if (smlua_get_integer_field(-1, "_type") == LST_PLAYER) {
                 lua_pop(L, 1); // pop wrong table
-                assert(lntKeys[i].type == LST_NETWORK_TYPE_INTEGER);
+                SOFT_ASSERT(lntKeys[i].type == LST_NETWORK_TYPE_INTEGER);
                 lua_pushinteger(L, network_local_index_from_global(lntKeys[i].value.integer));
                 lua_gettable(L, -2);
             }

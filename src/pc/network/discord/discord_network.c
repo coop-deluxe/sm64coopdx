@@ -52,15 +52,15 @@ char* ns_discord_get_id_str(u8 localId) {
 }
 
 void ns_discord_save_id(u8 localId, s64 networkId) {
-    assert(localId > 0);
-    assert(localId < MAX_PLAYERS);
+    SOFT_ASSERT(localId > 0);
+    SOFT_ASSERT(localId < MAX_PLAYERS);
     gNetworkUserIds[localId] = (networkId == 0) ? gNetworkUserIds[0] : networkId;
     LOGFILE_INFO(LFT_DISCORD, "saved user id %d == " DISCORD_ID_FORMAT, localId, gNetworkUserIds[localId]);
 }
 
 void ns_discord_clear_id(u8 localId) {
     if (localId == 0) { return; }
-    assert(localId < MAX_PLAYERS);
+    SOFT_ASSERT(localId < MAX_PLAYERS);
     gNetworkUserIds[localId] = 0;
     LOGFILE_INFO(LFT_DISCORD, "cleared user id %d == " DISCORD_ID_FORMAT, localId, gNetworkUserIds[localId]);
 }

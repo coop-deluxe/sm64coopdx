@@ -113,15 +113,15 @@ static char* ns_socket_get_id_str(u8 localId) {
 }
 
 static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
-    assert(localId > 0);
-    assert(localId < MAX_PLAYERS);
+    SOFT_ASSERT(localId > 0);
+    SOFT_ASSERT(localId < MAX_PLAYERS);
     addr[localId] = addr[0];
     LOG_INFO("saved addr for id %d", localId);
 }
 
 static void ns_socket_clear_id(u8 localId) {
     if (localId == 0) { return; }
-    assert(localId < MAX_PLAYERS);
+    SOFT_ASSERT(localId < MAX_PLAYERS);
     memset(&addr[localId], 0, sizeof(struct sockaddr_in));
     LOG_INFO("cleared addr for id %d", localId);
 }
@@ -144,7 +144,7 @@ static void ns_socket_update(void) {
         u16 dataLength = 0;
         u8 localIndex = UNKNOWN_LOCAL_INDEX;
         int rc = socket_receive(curSocket, &addr[0], data, PACKET_LENGTH + 1, &dataLength, &localIndex);
-        assert(dataLength < PACKET_LENGTH);
+        SOFT_ASSERT(dataLength < PACKET_LENGTH);
         if (rc != NO_ERROR) { break; }
         network_receive(localIndex, &addr[0], data, dataLength);
     } while (true);

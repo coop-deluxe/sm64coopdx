@@ -31,9 +31,9 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
 
     if (node->prev != NULL) { node->prev->next = node->next; }
     if (node->next != NULL) { node->next->prev = node->prev; }
-    assert(node->p.addr != NULL);
-    free(node->p.addr);
-    free(node);
+
+    if (node->p.addr != NULL) { free(node->p.addr); }
+    if (node != NULL) { free(node); }
 }
 
 void network_forget_all_reliable(void) {

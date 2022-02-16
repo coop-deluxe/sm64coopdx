@@ -960,7 +960,6 @@ void cur_obj_update(void) {
 
         // catch up the timer in total loop increments
         if (gCurrentObject->areaTimerType == AREA_TIMER_TYPE_LOOP) {
-            assert(gCurrentObject->areaTimerDuration > 0);
             u32 difference = (gNetworkAreaTimer - gCurrentObject->areaTimer);
             if (difference >= gCurrentObject->areaTimerDuration) {
                 u32 catchup = difference / gCurrentObject->areaTimerDuration;
@@ -971,7 +970,6 @@ void cur_obj_update(void) {
 
         // catch up the timer for maximum
         if (gCurrentObject->areaTimerType == AREA_TIMER_TYPE_MAXIMUM) {
-            assert(gCurrentObject->areaTimerDuration > 0);
             u32 difference = (gNetworkAreaTimer - gCurrentObject->areaTimer);
             if (difference >= gCurrentObject->areaTimerDuration) {
                 if (gCurrentObject->areaTimer < 10) {
