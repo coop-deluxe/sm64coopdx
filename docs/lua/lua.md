@@ -32,3 +32,4 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 - [Low Gravity](../../mods/low-gravity.lua)
 - [Faster Swimming](../../mods/faster-swimming.lua)
 - [Hide and Seek](../../mods/hide-and-seek.lua)
+- [HUD Rendering](examples/hud.lua)

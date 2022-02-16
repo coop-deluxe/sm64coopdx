@@ -160,3 +160,23 @@ void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scal
     djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->width, x, y, scaleW, scaleH);
 }
 
+void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
+    // translate position
+    f32 translatedX = x;
+    f32 translatedY = y;
+    djui_hud_position_translate(&translatedX, &translatedY);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
+
+    // translate scale
+    f32 translatedW = width;
+    f32 translatedH = height;
+    djui_hud_size_translate(&translatedW);
+    djui_hud_size_translate(&translatedH);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedW, translatedH, 1.0f);
+
+    // render
+    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+
+    // pop
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+}

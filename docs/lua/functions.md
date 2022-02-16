@@ -31,6 +31,7 @@
    - [djui_hud_get_screen_width](#djui_hud_get_screen_width)
    - [djui_hud_measure_text](#djui_hud_measure_text)
    - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_render_rect](#djui_hud_render_rect)
    - [djui_hud_render_texture](#djui_hud_render_texture)
    - [djui_hud_set_color](#djui_hud_set_color)
    - [djui_hud_set_font](#djui_hud_set_font)
@@ -703,6 +704,29 @@
 
 ### C Prototype
 `void djui_hud_print_text(const char* message, float x, float y, float scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_rect](#djui_hud_render_rect)
+
+### Lua Example
+`djui_hud_render_rect(x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | number |
+| y | number |
+| width | number |
+| height | number |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);`
 
 [:arrow_up_small:](#)
 

@@ -16,7 +16,7 @@ static const Gfx djui_font_normal_text_begin[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
-    gsDPSetEnvColor(255, 255, 255, 255),
+    //gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsDPSetTextureFilter(G_TF_POINT),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -39,6 +39,7 @@ static void djui_font_normal_render_char(char c) {
     extern const u8* const font_normal_chars[];
     // replace undisplayable characters
     if (c < ' ' || (u8)c > ('~' + 1)) { c = '?'; }
+    if (c == ' ') { return; }
     void* fontChar = (void*)font_normal_chars[c - '!'];
     if (fontChar == NULL) { fontChar = (void*)font_normal_chars[94]; }
 
@@ -72,6 +73,7 @@ static void djui_font_title_render_char(char c) {
     extern const u8* const font_title_chars[];
     // replace undisplayable characters
     if (c < ' ' || (u8)c > ('~' + 1)) { c = '?'; }
+    if (c == ' ') { return; }
     djui_gfx_render_texture(font_title_chars[c - '!'], 64, 64, 32);
 }
 
@@ -95,24 +97,6 @@ static const struct DjuiFont sDjuiFontTitle = {
   ///////////////////////
  // font 3 (hud font) //
 ///////////////////////
-
-/*
-    texture_hud_char_0, texture_hud_char_1, texture_hud_char_2, texture_hud_char_3,
-    texture_hud_char_4, texture_hud_char_5, texture_hud_char_6, texture_hud_char_7,
-    texture_hud_char_8, texture_hud_char_9, texture_hud_char_A, texture_hud_char_B,
-    texture_hud_char_C, texture_hud_char_D, texture_hud_char_E, texture_hud_char_F,
-    texture_hud_char_G, texture_hud_char_H, texture_hud_char_I, texture_hud_char_J,
-    texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
-    texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
-    texture_hud_char_S, texture_hud_char_T, texture_hud_char_U,               0x0,
-    texture_hud_char_W,               0x0, texture_hud_char_Y, texture_hud_char_waluigi_head,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0, texture_hud_char_multiply, texture_hud_char_coin,
-    texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_luigi_head, texture_hud_char_toad_head,
-    texture_hud_char_apostrophe, texture_hud_char_double_quote,
-*/
 
 static u8 djui_font_hud_index(char c) {
     if (c == 'q' || c == 'Q') { return 50; }
@@ -138,6 +122,7 @@ static u8 djui_font_hud_index(char c) {
 }
 
 static void djui_font_hud_render_char(char c) {
+    if (c == ' ') { return; }
     u8 index = djui_font_hud_index(c);
     djui_gfx_render_texture(main_hud_lut[index], 16, 16, 16);
 }
