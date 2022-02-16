@@ -158,7 +158,7 @@ void network_receive_level_macro(struct Packet* p) {
         struct Object* o = get_object_matching_respawn_info(respawnInfo);
         if (o != NULL) {
             obj_mark_for_deletion(o);
-            LOG_INFO("rx macro deletion: object");
+            LOG_INFO("rx macro deletion: object, behavior: %d", get_id_from_behavior(o->behavior));
             if (o->oSyncID != 0) {
                 struct SyncObject* so = &gSyncObjects[o->oSyncID];
                 if (so->o == o) {

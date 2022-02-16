@@ -56,9 +56,6 @@ void network_receive_debug_sync(struct Packet* p) {
     }
     if (!hasMismatch) { return; }
 
-    extern s16 gCurrCourseNum;
-    if (gCurrCourseNum == 0) { return; }
-
     LOG_INFO(" ");
     LOG_INFO("Sync Object Table Mismatch");
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
