@@ -6,6 +6,9 @@
 - [characters.h](#characters.h)
     - [CharacterSound](#CharacterSound)
     - [CharacterType](#CharacterType)
+- [djui_gfx_utils.h](#djui_gfx_utils.h)
+    - [DjuiFontType](#DjuiFontType)
+    - [GfxUtilsResolution](#GfxUtilsResolution)
 - [interaction.c](#interaction.c)
     - [InteractionFlag](#InteractionFlag)
 - [mario_animation_ids.h](#mario_animation_ids.h)
@@ -742,6 +745,25 @@
 
 <br />
 
+## [djui_gfx_utils.h](#djui_gfx_utils.h)
+
+### [enum DjuiFontType](#DjuiFontType)
+| Identifier | Value |
+| :--------- | :---- |
+| FONT_NORMAL | 0 |
+| FONT_MENU | 1 |
+| FONT_HUD | 2 |
+| FONT_COUNT | 3 |
+
+### [enum GfxUtilsResolution](#GfxUtilsResolution)
+| Identifier | Value |
+| :--------- | :---- |
+| RESOLUTION_DJUI | 0 |
+| RESOLUTION_N64 | 1 |
+| RESOLUTION_COUNT | 2 |
+
+<br />
+
 ## [interaction.c](#interaction.c)
 - INT_ANY_ATTACK
 - INT_ATTACK_NOT_FROM_BELOW
@@ -1413,7 +1435,8 @@
 | HOOK_ON_PVP_ATTACK | 5 |
 | HOOK_ON_PLAYER_CONNECTED | 6 |
 | HOOK_ON_PLAYER_DISCONNECTED | 7 |
-| HOOK_MAX | 8 |
+| HOOK_ON_HUD_RENDER | 8 |
+| HOOK_MAX | 9 |
 
 <br />
 

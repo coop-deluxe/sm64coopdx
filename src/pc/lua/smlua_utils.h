@@ -17,6 +17,7 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot);
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index);
 
 void smlua_push_object(lua_State* L, u16 lot, void* p);
+void smlua_push_pointer(lua_State* L, u16 lvt, void* p);
 void smlua_push_integer_field(int index, char* name, lua_Integer val);
 void smlua_push_number_field(int index, char* name, lua_Number val);
 void smlua_push_string_field(int index, char* name, const char* val);

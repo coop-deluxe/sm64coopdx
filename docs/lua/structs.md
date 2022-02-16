@@ -56,12 +56,14 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | flags | integer |  |
+| index | Pointer <integer> | read-only |
 | length | integer |  |
 | animYTransDivisor | integer |  |
 | startFrame | integer |  |
 | loopStart | integer |  |
 | loopEnd | integer |  |
 | unusedBoneCount | integer |  |
+| values | Pointer <integer> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -75,10 +77,13 @@
 | flags | integer |  |
 | index | integer |  |
 | instantWarps | [InstantWarp](#InstantWarp) | read-only |
+| macroObjects | Pointer <integer> | read-only |
 | musicParam | integer |  |
 | musicParam2 | integer |  |
 | objectSpawnInfos | [SpawnInfo](#SpawnInfo) | read-only |
 | paintingWarpNodes | [WarpNode](#WarpNode) | read-only |
+| surfaceRooms | Pointer <integer> | read-only |
+| terrainData | Pointer <integer> | read-only |
 | terrainType | integer |  |
 | warpNodes | [ObjectWarpNode](#ObjectWarpNode) | read-only |
 
@@ -168,6 +173,8 @@
 | capMetalWingModelId | integer | read-only |
 | capModelId | integer | read-only |
 | capWingModelId | integer | read-only |
+| hudHead | char | read-only |
+| hudHeadTexture | Pointer <integer> | read-only |
 | modelId | integer | read-only |
 | name | string | read-only |
 | soundAttacked | integer | read-only |
@@ -437,6 +444,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| currentAnimAddr | Pointer <integer> | read-only |
 | targetAnim | [Animation](#Animation) | read-only |
 
 [:arrow_up_small:](#)

@@ -21,9 +21,9 @@ static struct LuaObjectField sVec3fFields[LUA_VEC3F_FIELD_COUNT] = {
 };
 
 struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
-    { LOT_NONE,               NULL,                      0                                  },
-    { LOT_VEC3S,              sVec3sFields,              LUA_VEC3S_FIELD_COUNT              },
-    { LOT_VEC3F,              sVec3fFields,              LUA_VEC3F_FIELD_COUNT              },
+    { LOT_NONE,  NULL,         0                     },
+    { LOT_VEC3S, sVec3sFields, LUA_VEC3S_FIELD_COUNT },
+    { LOT_VEC3F, sVec3fFields, LUA_VEC3F_FIELD_COUNT },
 };
 
 static struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
@@ -98,6 +98,18 @@ static int smlua__get_field(lua_State* L) {
         case LVT_COBJECT_P:  smlua_push_object(L, data->lot, *(u8**)p); break;
         case LVT_STRING:     lua_pushstring(L, (char*)p);               break;
         case LVT_STRING_P:   lua_pushstring(L, *(char**)p);             break;
+
+        // pointers
+        case LVT_U8_P:
+        case LVT_U16_P:
+        case LVT_U32_P:
+        case LVT_S8_P:
+        case LVT_S16_P:
+        case LVT_S32_P:
+        case LVT_F32_P:
+            smlua_push_pointer(L, data->valueType, p);
+            break;
+
         default:
             LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
             smlua_logline();

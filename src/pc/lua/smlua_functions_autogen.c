@@ -2897,19 +2897,6 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
  // network_utils.h //
 /////////////////////
 
-/*
-int smlua_func_network_get_player_text_color(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u8 localIndex = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    UNIMPLEMENTED -->(L, network_get_player_text_color(localIndex));
-
-    return 1;
-}
-*/
-
 int smlua_func_network_get_player_text_color_string(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -3240,27 +3227,6 @@ int smlua_func_stop_shell_music(UNUSED lua_State* L) {
   /////////////////////////
  // surface_collision.h //
 /////////////////////////
-
-/*
-int smlua_func_f32_find_wall_collision(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
-
-//  f32 * xPtr = (f32 *)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
-    if (!gSmLuaConvertSuccess) { return 0; }
-//  f32 * yPtr = (f32 *)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
-    if (!gSmLuaConvertSuccess) { return 0; }
-//  f32 * zPtr = (f32 *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
-    if (!gSmLuaConvertSuccess) { return 0; }
-    f32 offsetY = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    f32 radius = smlua_to_number(L, 5);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    lua_pushinteger(L, f32_find_wall_collision(xPtr, yPtr, zPtr, offsetY, radius));
-
-    return 1;
-}
-*/
 
 /*
 int smlua_func_find_ceil(lua_State* L) {
@@ -3718,7 +3684,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_and_set_height_to_floor", smlua_func_stop_and_set_height_to_floor);
 
     // network_utils.h
-    //smlua_bind_function(L, "network_get_player_text_color", smlua_func_network_get_player_text_color); <--- UNIMPLEMENTED
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
     smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
@@ -3754,7 +3719,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_shell_music", smlua_func_stop_shell_music);
 
     // surface_collision.h
-    //smlua_bind_function(L, "f32_find_wall_collision", smlua_func_f32_find_wall_collision); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "find_ceil", smlua_func_find_ceil); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "find_floor", smlua_func_find_floor); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_floor_height", smlua_func_find_floor_height);

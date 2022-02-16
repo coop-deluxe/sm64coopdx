@@ -15,23 +15,33 @@ def get_path(p):
     return os.path.dirname(os.path.realpath(__file__)) + '/../' + p
 
 def translate_type_to_lvt(ptype):
+    if ptype == 'char':
+        ptype = 'u8'
+
     if ('char' in ptype and '[' in ptype):
         return 'LVT_STRING'
+
     if ptype == 'char*':
         return 'LVT_STRING_P'
 
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'
+
     if 'enum ' in ptype:
         return 'LVT_S32'
+
     if ptype == 'bool':
         return 'LVT_BOOL'
+
     if ptype in usf_types:
         return 'LVT_' + ptype.upper()
+
     if ptype in vec3_types:
         return 'LVT_COBJECT'
+
     if ptype == 'float':
         return 'LVT_F32'
+
     if 'struct' in ptype:
         if ptype.count('*') > 1:
             return 'LVT_???'
@@ -39,26 +49,41 @@ def translate_type_to_lvt(ptype):
             return 'LVT_COBJECT_P'
         return 'LVT_COBJECT'
 
+    if ptype.count('*') == 1 and '(' not in ptype and '[' not in ptype:
+        ptype = ptype.replace('const', '').replace('*', '').strip()
+        if ptype in usf_types:
+            return 'LVT_%s_P' % ptype.upper()
+
     return 'LVT_???'
 
 def translate_type_to_lot(ptype):
+    if ptype == 'char':
+        ptype = 'u8'
+
     if ptype == 'const char*':
         return 'LOT_NONE'
+
     if ptype == 'char*' or ('char' in ptype and '[' in ptype):
         return 'LOT_NONE'
 
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'
+
     if 'enum ' in ptype:
         return 'LOT_NONE'
+
     if ptype == 'bool':
         return 'LOT_NONE'
+
     if ptype in usf_types:
         return 'LOT_NONE'
+
     if ptype in vec3_types:
         return 'LOT_' + ptype.upper()
+
     if ptype == 'float':
         return 'LOT_NONE'
+
     if 'struct' in ptype:
         if ptype.count('*') > 1:
             return 'LVT_???'
@@ -67,17 +92,10 @@ def translate_type_to_lot(ptype):
             return 'LOT_???'
         return 'LOT_' + struct_id.upper()
 
-    return 'LOT_???'
+    if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
+        return 'LOT_POINTER'
 
-def gen_comment_header(f):
-    comment_h = "// " + f + " //"
-    comment_l = "/" * len(comment_h)
-    s = ""
-    s += "  " + comment_l + "\n"
-    s += " "  + comment_h + "\n"
-    s += ""   + comment_l + "\n"
-    s += "\n"
-    return s
+    return 'LOT_???'
 
 def translate_type_to_lua(ptype):
     if ptype.startswith('struct '):
@@ -104,4 +122,19 @@ def translate_type_to_lua(ptype):
     if 'void' == ptype:
         return None, False
 
+    if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
+        ptype = ptype.replace('const', '').replace('*', '').strip()
+        s = 'Pointer <%s>' % translate_type_to_lua(ptype)[0]
+        return s, False
+
     return ptype, False
+
+def gen_comment_header(f):
+    comment_h = "// " + f + " //"
+    comment_l = "/" * len(comment_h)
+    s = ""
+    s += "  " + comment_l + "\n"
+    s += " "  + comment_h + "\n"
+    s += ""   + comment_l + "\n"
+    s += "\n"
+    return s

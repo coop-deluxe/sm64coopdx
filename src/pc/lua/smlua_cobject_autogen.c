@@ -8,20 +8,20 @@
 #include "src/engine/surface_collision.h"
 #include "src/pc/network/network_player.h"
 
-#define LUA_ANIMATION_FIELD_COUNT 7
+#define LUA_ANIMATION_FIELD_COUNT 9
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
-    { "flags",             LVT_S16, offsetof(struct Animation, flags),  false, LOT_NONE },
-//  { "index",             LVT_???, offsetof(struct Animation, index),  false, LOT_???  }, <--- UNIMPLEMENTED
-    { "length",            LVT_U32, offsetof(struct Animation, length), false, LOT_NONE },
-    { "animYTransDivisor", LVT_S16, offsetof(struct Animation, unk02),  false, LOT_NONE },
-    { "startFrame",        LVT_S16, offsetof(struct Animation, unk04),  false, LOT_NONE },
-    { "loopStart",         LVT_S16, offsetof(struct Animation, unk06),  false, LOT_NONE },
-    { "loopEnd",           LVT_S16, offsetof(struct Animation, unk08),  false, LOT_NONE },
-    { "unusedBoneCount",   LVT_S16, offsetof(struct Animation, unk0A),  false, LOT_NONE },
-//  { "values",            LVT_???, offsetof(struct Animation, values), false, LOT_???  }, <--- UNIMPLEMENTED
+    { "flags",             LVT_S16,   offsetof(struct Animation, flags),  false, LOT_NONE    },
+    { "index",             LVT_U16_P, offsetof(struct Animation, index),  true,  LOT_POINTER },
+    { "length",            LVT_U32,   offsetof(struct Animation, length), false, LOT_NONE    },
+    { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, unk02),  false, LOT_NONE    },
+    { "startFrame",        LVT_S16,   offsetof(struct Animation, unk04),  false, LOT_NONE    },
+    { "loopStart",         LVT_S16,   offsetof(struct Animation, unk06),  false, LOT_NONE    },
+    { "loopEnd",           LVT_S16,   offsetof(struct Animation, unk08),  false, LOT_NONE    },
+    { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unk0A),  false, LOT_NONE    },
+    { "values",            LVT_S16_P, offsetof(struct Animation, values), true,  LOT_POINTER },
 };
 
-#define LUA_AREA_FIELD_COUNT 10
+#define LUA_AREA_FIELD_COUNT 13
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "cachedBehaviors",   LOT_???,       offsetof(struct Area, cachedBehaviors),   false, LOT_???            }, <--- UNIMPLEMENTED
 //  { "cachedPositions",   LOT_???,       offsetof(struct Area, cachedPositions),   false, LOT_???            }, <--- UNIMPLEMENTED
@@ -30,13 +30,13 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "flags",             LVT_S8,        offsetof(struct Area, flags),             false, LOT_NONE           },
     { "index",             LVT_S8,        offsetof(struct Area, index),             false, LOT_NONE           },
     { "instantWarps",      LVT_COBJECT_P, offsetof(struct Area, instantWarps),      true,  LOT_INSTANTWARP    },
-//  { "macroObjects",      LVT_???,       offsetof(struct Area, macroObjects),      false, LOT_???            }, <--- UNIMPLEMENTED
+    { "macroObjects",      LVT_S16_P,     offsetof(struct Area, macroObjects),      true,  LOT_POINTER        },
     { "musicParam",        LVT_U16,       offsetof(struct Area, musicParam),        false, LOT_NONE           },
     { "musicParam2",       LVT_U16,       offsetof(struct Area, musicParam2),       false, LOT_NONE           },
     { "objectSpawnInfos",  LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),  true,  LOT_SPAWNINFO      },
     { "paintingWarpNodes", LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes), true,  LOT_WARPNODE       },
-//  { "surfaceRooms",      LVT_???,       offsetof(struct Area, surfaceRooms),      false, LOT_???            }, <--- UNIMPLEMENTED
-//  { "terrainData",       LVT_???,       offsetof(struct Area, terrainData),       false, LOT_???            }, <--- UNIMPLEMENTED
+    { "surfaceRooms",      LVT_S8_P,      offsetof(struct Area, surfaceRooms),      true,  LOT_POINTER        },
+    { "terrainData",       LVT_S16_P,     offsetof(struct Area, terrainData),       true,  LOT_POINTER        },
     { "terrainType",       LVT_U16,       offsetof(struct Area, terrainType),       false, LOT_NONE           },
 //  { "unk04",             LVT_COBJECT_P, offsetof(struct Area, unk04),             true,  LOT_???            }, <--- UNIMPLEMENTED
 //  { "unused28",          LVT_COBJECT_P, offsetof(struct Area, unused28),          true,  LOT_???            }, <--- UNIMPLEMENTED
@@ -95,69 +95,69 @@ static struct LuaObjectField sCameraTriggerFields[LUA_CAMERA_TRIGGER_FIELD_COUNT
 //  { "event",     LVT_???, offsetof(struct CameraTrigger, event),     false, LOT_???  }, <--- UNIMPLEMENTED
 };
 
-#define LUA_CHARACTER_FIELD_COUNT 57
+#define LUA_CHARACTER_FIELD_COUNT 59
 static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
-    { "animOffsetEnabled",     LVT_U8,       offsetof(struct Character, animOffsetEnabled),     true, LOT_NONE },
-    { "animOffsetFeet",        LVT_F32,      offsetof(struct Character, animOffsetFeet),        true, LOT_NONE },
-    { "animOffsetHand",        LVT_F32,      offsetof(struct Character, animOffsetHand),        true, LOT_NONE },
-    { "animOffsetLowYPoint",   LVT_F32,      offsetof(struct Character, animOffsetLowYPoint),   true, LOT_NONE },
-    { "cameraHudHead",         LVT_U32,      offsetof(struct Character, cameraHudHead),         true, LOT_NONE },
-//  { "capEnemyDecalGfx",      LVT_???,      offsetof(struct Character, capEnemyDecalGfx),      true, LOT_???  }, <--- UNIMPLEMENTED
-//  { "capEnemyGfx",           LVT_???,      offsetof(struct Character, capEnemyGfx),           true, LOT_???  }, <--- UNIMPLEMENTED
-    { "capEnemyLayer",         LVT_U8,       offsetof(struct Character, capEnemyLayer),         true, LOT_NONE },
-    { "capMetalModelId",       LVT_U32,      offsetof(struct Character, capMetalModelId),       true, LOT_NONE },
-    { "capMetalWingModelId",   LVT_U32,      offsetof(struct Character, capMetalWingModelId),   true, LOT_NONE },
-    { "capModelId",            LVT_U32,      offsetof(struct Character, capModelId),            true, LOT_NONE },
-    { "capWingModelId",        LVT_U32,      offsetof(struct Character, capWingModelId),        true, LOT_NONE },
-//  { "hudHead",               LVT_???,      offsetof(struct Character, hudHead),               true, LOT_???  }, <--- UNIMPLEMENTED
-//  { "hudHeadTexture",        LVT_???,      offsetof(struct Character, hudHeadTexture),        true, LOT_???  }, <--- UNIMPLEMENTED
-    { "modelId",               LVT_U32,      offsetof(struct Character, modelId),               true, LOT_NONE },
-    { "name",                  LVT_STRING_P, offsetof(struct Character, name),                  true, LOT_NONE },
-    { "soundAttacked",         LVT_S32,      offsetof(struct Character, soundAttacked),         true, LOT_NONE },
-    { "soundCoughing1",        LVT_S32,      offsetof(struct Character, soundCoughing1),        true, LOT_NONE },
-    { "soundCoughing2",        LVT_S32,      offsetof(struct Character, soundCoughing2),        true, LOT_NONE },
-    { "soundCoughing3",        LVT_S32,      offsetof(struct Character, soundCoughing3),        true, LOT_NONE },
-    { "soundDoh",              LVT_S32,      offsetof(struct Character, soundDoh),              true, LOT_NONE },
-    { "soundDrowning",         LVT_S32,      offsetof(struct Character, soundDrowning),         true, LOT_NONE },
-    { "soundDying",            LVT_S32,      offsetof(struct Character, soundDying),            true, LOT_NONE },
-    { "soundEeuh",             LVT_S32,      offsetof(struct Character, soundEeuh),             true, LOT_NONE },
-    { "soundFreqScale",        LVT_F32,      offsetof(struct Character, soundFreqScale),        true, LOT_NONE },
-    { "soundGameOver",         LVT_S32,      offsetof(struct Character, soundGameOver),         true, LOT_NONE },
-    { "soundGroundPoundWah",   LVT_S32,      offsetof(struct Character, soundGroundPoundWah),   true, LOT_NONE },
-    { "soundHaha",             LVT_S32,      offsetof(struct Character, soundHaha),             true, LOT_NONE },
-    { "soundHaha_2",           LVT_S32,      offsetof(struct Character, soundHaha_2),           true, LOT_NONE },
-    { "soundHello",            LVT_S32,      offsetof(struct Character, soundHello),            true, LOT_NONE },
-    { "soundHereWeGo",         LVT_S32,      offsetof(struct Character, soundHereWeGo),         true, LOT_NONE },
-    { "soundHoohoo",           LVT_S32,      offsetof(struct Character, soundHoohoo),           true, LOT_NONE },
-    { "soundHrmm",             LVT_S32,      offsetof(struct Character, soundHrmm),             true, LOT_NONE },
-    { "soundImaTired",         LVT_S32,      offsetof(struct Character, soundImaTired),         true, LOT_NONE },
-    { "soundMamaMia",          LVT_S32,      offsetof(struct Character, soundMamaMia),          true, LOT_NONE },
-    { "soundOnFire",           LVT_S32,      offsetof(struct Character, soundOnFire),           true, LOT_NONE },
-    { "soundOoof",             LVT_S32,      offsetof(struct Character, soundOoof),             true, LOT_NONE },
-    { "soundOoof2",            LVT_S32,      offsetof(struct Character, soundOoof2),            true, LOT_NONE },
-    { "soundPanting",          LVT_S32,      offsetof(struct Character, soundPanting),          true, LOT_NONE },
-    { "soundPantingCold",      LVT_S32,      offsetof(struct Character, soundPantingCold),      true, LOT_NONE },
-    { "soundPressStartToPlay", LVT_S32,      offsetof(struct Character, soundPressStartToPlay), true, LOT_NONE },
-    { "soundPunchHoo",         LVT_S32,      offsetof(struct Character, soundPunchHoo),         true, LOT_NONE },
-    { "soundPunchWah",         LVT_S32,      offsetof(struct Character, soundPunchWah),         true, LOT_NONE },
-    { "soundPunchYah",         LVT_S32,      offsetof(struct Character, soundPunchYah),         true, LOT_NONE },
-    { "soundSnoring1",         LVT_S32,      offsetof(struct Character, soundSnoring1),         true, LOT_NONE },
-    { "soundSnoring2",         LVT_S32,      offsetof(struct Character, soundSnoring2),         true, LOT_NONE },
-    { "soundSnoring3",         LVT_S32,      offsetof(struct Character, soundSnoring3),         true, LOT_NONE },
-    { "soundSoLongaBowser",    LVT_S32,      offsetof(struct Character, soundSoLongaBowser),    true, LOT_NONE },
-    { "soundTwirlBounce",      LVT_S32,      offsetof(struct Character, soundTwirlBounce),      true, LOT_NONE },
-    { "soundUh",               LVT_S32,      offsetof(struct Character, soundUh),               true, LOT_NONE },
-    { "soundUh2",              LVT_S32,      offsetof(struct Character, soundUh2),              true, LOT_NONE },
-    { "soundUh2_2",            LVT_S32,      offsetof(struct Character, soundUh2_2),            true, LOT_NONE },
-    { "soundWaaaooow",         LVT_S32,      offsetof(struct Character, soundWaaaooow),         true, LOT_NONE },
-    { "soundWah2",             LVT_S32,      offsetof(struct Character, soundWah2),             true, LOT_NONE },
-    { "soundWhoa",             LVT_S32,      offsetof(struct Character, soundWhoa),             true, LOT_NONE },
-    { "soundYahWahHoo",        LVT_S32,      offsetof(struct Character, soundYahWahHoo),        true, LOT_NONE },
-    { "soundYahoo",            LVT_S32,      offsetof(struct Character, soundYahoo),            true, LOT_NONE },
-    { "soundYahooWahaYippee",  LVT_S32,      offsetof(struct Character, soundYahooWahaYippee),  true, LOT_NONE },
-    { "soundYawning",          LVT_S32,      offsetof(struct Character, soundYawning),          true, LOT_NONE },
-    { "torsoRotMult",          LVT_F32,      offsetof(struct Character, torsoRotMult),          true, LOT_NONE },
-    { "type",                  LVT_S32,      offsetof(struct Character, type),                  true, LOT_NONE },
+    { "animOffsetEnabled",     LVT_U8,       offsetof(struct Character, animOffsetEnabled),     true, LOT_NONE    },
+    { "animOffsetFeet",        LVT_F32,      offsetof(struct Character, animOffsetFeet),        true, LOT_NONE    },
+    { "animOffsetHand",        LVT_F32,      offsetof(struct Character, animOffsetHand),        true, LOT_NONE    },
+    { "animOffsetLowYPoint",   LVT_F32,      offsetof(struct Character, animOffsetLowYPoint),   true, LOT_NONE    },
+    { "cameraHudHead",         LVT_U32,      offsetof(struct Character, cameraHudHead),         true, LOT_NONE    },
+//  { "capEnemyDecalGfx",      LVT_???,      offsetof(struct Character, capEnemyDecalGfx),      true, LOT_???     }, <--- UNIMPLEMENTED
+//  { "capEnemyGfx",           LVT_???,      offsetof(struct Character, capEnemyGfx),           true, LOT_???     }, <--- UNIMPLEMENTED
+    { "capEnemyLayer",         LVT_U8,       offsetof(struct Character, capEnemyLayer),         true, LOT_NONE    },
+    { "capMetalModelId",       LVT_U32,      offsetof(struct Character, capMetalModelId),       true, LOT_NONE    },
+    { "capMetalWingModelId",   LVT_U32,      offsetof(struct Character, capMetalWingModelId),   true, LOT_NONE    },
+    { "capModelId",            LVT_U32,      offsetof(struct Character, capModelId),            true, LOT_NONE    },
+    { "capWingModelId",        LVT_U32,      offsetof(struct Character, capWingModelId),        true, LOT_NONE    },
+    { "hudHead",               LVT_U8,       offsetof(struct Character, hudHead),               true, LOT_NONE    },
+    { "hudHeadTexture",        LVT_U8_P,     offsetof(struct Character, hudHeadTexture),        true, LOT_POINTER },
+    { "modelId",               LVT_U32,      offsetof(struct Character, modelId),               true, LOT_NONE    },
+    { "name",                  LVT_STRING_P, offsetof(struct Character, name),                  true, LOT_NONE    },
+    { "soundAttacked",         LVT_S32,      offsetof(struct Character, soundAttacked),         true, LOT_NONE    },
+    { "soundCoughing1",        LVT_S32,      offsetof(struct Character, soundCoughing1),        true, LOT_NONE    },
+    { "soundCoughing2",        LVT_S32,      offsetof(struct Character, soundCoughing2),        true, LOT_NONE    },
+    { "soundCoughing3",        LVT_S32,      offsetof(struct Character, soundCoughing3),        true, LOT_NONE    },
+    { "soundDoh",              LVT_S32,      offsetof(struct Character, soundDoh),              true, LOT_NONE    },
+    { "soundDrowning",         LVT_S32,      offsetof(struct Character, soundDrowning),         true, LOT_NONE    },
+    { "soundDying",            LVT_S32,      offsetof(struct Character, soundDying),            true, LOT_NONE    },
+    { "soundEeuh",             LVT_S32,      offsetof(struct Character, soundEeuh),             true, LOT_NONE    },
+    { "soundFreqScale",        LVT_F32,      offsetof(struct Character, soundFreqScale),        true, LOT_NONE    },
+    { "soundGameOver",         LVT_S32,      offsetof(struct Character, soundGameOver),         true, LOT_NONE    },
+    { "soundGroundPoundWah",   LVT_S32,      offsetof(struct Character, soundGroundPoundWah),   true, LOT_NONE    },
+    { "soundHaha",             LVT_S32,      offsetof(struct Character, soundHaha),             true, LOT_NONE    },
+    { "soundHaha_2",           LVT_S32,      offsetof(struct Character, soundHaha_2),           true, LOT_NONE    },
+    { "soundHello",            LVT_S32,      offsetof(struct Character, soundHello),            true, LOT_NONE    },
+    { "soundHereWeGo",         LVT_S32,      offsetof(struct Character, soundHereWeGo),         true, LOT_NONE    },
+    { "soundHoohoo",           LVT_S32,      offsetof(struct Character, soundHoohoo),           true, LOT_NONE    },
+    { "soundHrmm",             LVT_S32,      offsetof(struct Character, soundHrmm),             true, LOT_NONE    },
+    { "soundImaTired",         LVT_S32,      offsetof(struct Character, soundImaTired),         true, LOT_NONE    },
+    { "soundMamaMia",          LVT_S32,      offsetof(struct Character, soundMamaMia),          true, LOT_NONE    },
+    { "soundOnFire",           LVT_S32,      offsetof(struct Character, soundOnFire),           true, LOT_NONE    },
+    { "soundOoof",             LVT_S32,      offsetof(struct Character, soundOoof),             true, LOT_NONE    },
+    { "soundOoof2",            LVT_S32,      offsetof(struct Character, soundOoof2),            true, LOT_NONE    },
+    { "soundPanting",          LVT_S32,      offsetof(struct Character, soundPanting),          true, LOT_NONE    },
+    { "soundPantingCold",      LVT_S32,      offsetof(struct Character, soundPantingCold),      true, LOT_NONE    },
+    { "soundPressStartToPlay", LVT_S32,      offsetof(struct Character, soundPressStartToPlay), true, LOT_NONE    },
+    { "soundPunchHoo",         LVT_S32,      offsetof(struct Character, soundPunchHoo),         true, LOT_NONE    },
+    { "soundPunchWah",         LVT_S32,      offsetof(struct Character, soundPunchWah),         true, LOT_NONE    },
+    { "soundPunchYah",         LVT_S32,      offsetof(struct Character, soundPunchYah),         true, LOT_NONE    },
+    { "soundSnoring1",         LVT_S32,      offsetof(struct Character, soundSnoring1),         true, LOT_NONE    },
+    { "soundSnoring2",         LVT_S32,      offsetof(struct Character, soundSnoring2),         true, LOT_NONE    },
+    { "soundSnoring3",         LVT_S32,      offsetof(struct Character, soundSnoring3),         true, LOT_NONE    },
+    { "soundSoLongaBowser",    LVT_S32,      offsetof(struct Character, soundSoLongaBowser),    true, LOT_NONE    },
+    { "soundTwirlBounce",      LVT_S32,      offsetof(struct Character, soundTwirlBounce),      true, LOT_NONE    },
+    { "soundUh",               LVT_S32,      offsetof(struct Character, soundUh),               true, LOT_NONE    },
+    { "soundUh2",              LVT_S32,      offsetof(struct Character, soundUh2),              true, LOT_NONE    },
+    { "soundUh2_2",            LVT_S32,      offsetof(struct Character, soundUh2_2),            true, LOT_NONE    },
+    { "soundWaaaooow",         LVT_S32,      offsetof(struct Character, soundWaaaooow),         true, LOT_NONE    },
+    { "soundWah2",             LVT_S32,      offsetof(struct Character, soundWah2),             true, LOT_NONE    },
+    { "soundWhoa",             LVT_S32,      offsetof(struct Character, soundWhoa),             true, LOT_NONE    },
+    { "soundYahWahHoo",        LVT_S32,      offsetof(struct Character, soundYahWahHoo),        true, LOT_NONE    },
+    { "soundYahoo",            LVT_S32,      offsetof(struct Character, soundYahoo),            true, LOT_NONE    },
+    { "soundYahooWahaYippee",  LVT_S32,      offsetof(struct Character, soundYahooWahaYippee),  true, LOT_NONE    },
+    { "soundYawning",          LVT_S32,      offsetof(struct Character, soundYawning),          true, LOT_NONE    },
+    { "torsoRotMult",          LVT_F32,      offsetof(struct Character, torsoRotMult),          true, LOT_NONE    },
+    { "type",                  LVT_S32,      offsetof(struct Character, type),                  true, LOT_NONE    },
 };
 
 #define LUA_CONTROLLER_FIELD_COUNT 10
@@ -323,10 +323,10 @@ static struct LuaObjectField sLinearTransitionPointFields[LUA_LINEAR_TRANSITION_
     { "yaw",   LVT_S16,     offsetof(struct LinearTransitionPoint, yaw),   false, LOT_NONE  },
 };
 
-#define LUA_MARIO_ANIMATION_FIELD_COUNT 1
+#define LUA_MARIO_ANIMATION_FIELD_COUNT 2
 static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COUNT] = {
 //  { "animDmaTable",    LVT_COBJECT_P, offsetof(struct MarioAnimation, animDmaTable),    true,  LOT_???       }, <--- UNIMPLEMENTED
-//  { "currentAnimAddr", LVT_???,       offsetof(struct MarioAnimation, currentAnimAddr), false, LOT_???       }, <--- UNIMPLEMENTED
+    { "currentAnimAddr", LVT_U8_P,      offsetof(struct MarioAnimation, currentAnimAddr), true,  LOT_POINTER   },
 //  { "padding",         LOT_???,       offsetof(struct MarioAnimation, padding),         false, LOT_???       }, <--- UNIMPLEMENTED
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      true,  LOT_ANIMATION },
 };

@@ -209,6 +209,24 @@ void smlua_push_object(lua_State* L, u16 lot, void* p) {
     lua_pop(L, 1); // pop global table
 }
 
+void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
+    if (p == NULL) {
+        lua_pushnil(L);
+        return;
+    }
+    // TODO: add to allowlist
+    //smlua_cobject_allowlist_add(lot, (u64)(intptr_t)p);
+
+    lua_newtable(L);
+    int t = lua_gettop(L);
+    smlua_push_integer_field(t, "_lvt", lvt);
+    smlua_push_integer_field(t, "_pointer", (u64)(intptr_t)p);
+    lua_pushglobaltable(L);
+    lua_getfield(gLuaState, -1, "_CPointer");
+    lua_setmetatable(L, -3);
+    lua_pop(L, 1); // pop global table
+}
+
 void smlua_push_integer_field(int index, char* name, lua_Integer val) {
     lua_pushinteger(gLuaState, val);
     lua_setfield(gLuaState, index, name);

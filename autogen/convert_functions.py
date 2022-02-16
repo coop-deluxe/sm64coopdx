@@ -36,16 +36,16 @@ in_files = [
 ]
 
 override_allowed_functions = {
-    "src/audio/external.h": [ " play_", "fade" ],
-    "src/game/camera.h":    [ "set_.*camera_.*shake" ],
-    "src/game/thread6.c":   [ "queue_rumble_"],
-    "src/pc/djui/djui_popup.h" : [ "create" ],
-    "src/game/save_file.h": [ "save_file_get_" ],
+    "src/audio/external.h":           [ " play_", "fade" ],
+    "src/game/camera.h":              [ "set_.*camera_.*shake" ],
+    "src/game/thread6.c":             [ "queue_rumble_"],
+    "src/pc/djui/djui_popup.h" :      [ "create" ],
+    "src/game/save_file.h":           [ "save_file_get_" ],
 }
 
 override_disallowed_functions = {
     "src/audio/external.h":                [ " func_" ],
-    "src/engine/surface_collision.h":      [ " debug_" ],
+    "src/engine/surface_collision.h":      [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
     "src/game/mario_actions_cutscene.c":   [ "^[us]32 act_.*", " geo_" ],
@@ -56,9 +56,9 @@ override_disallowed_functions = {
     "src/game/mario_step.h":               [ " stub_mario_step", "transfer_bully_speed"],
     "src/game/mario.h":                    [ " init_mario" ],
     "src/pc/djui/djui_chat_message.h":     [ "create_from" ],
-    #"src/game/print.h":                    [ "_fmt_", "render_" ],
     "src/game/interaction.h":              [ "process_interactions", "_handle_" ],
     "src/game/sound_init.h":               [ "_loop_", "thread4_", "set_sound_mode" ],
+    "src/pc/network/network_utils.h":      [ "network_get_player_text_color[^_]" ],
 }
 
 ###########################################################

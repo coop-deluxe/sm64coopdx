@@ -10,6 +10,20 @@ _CObject = {
     end
 }
 
+_CPointer = {
+    __index = function (t,k)
+        return nil
+    end,
+    __newindex = function (t,k,v)
+    end,
+    __tostring = function(t)
+        return 'CPointer: ' .. t['_lvt'] .. ', [' .. string.format('0x%08X', t['_pointer']) .. ']'
+    end,
+    __eq = function (a, b)
+        return a['_pointer'] == b['_pointer'] and a['_pointer'] ~= nil and a['_lvt'] ~= nil
+    end
+}
+
 _SyncTable = {
     __index = function (t,k)
         local _table = rawget(t, '_table')
