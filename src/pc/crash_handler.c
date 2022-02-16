@@ -1,8 +1,8 @@
 // Adapted from PeachyPeach's sm64pc-omm
 
 #if defined(_WIN32)
+#ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
-
 #include <stdio.h>
 #include <windows.h>
 #include <dbghelp.h>
@@ -491,4 +491,5 @@ __attribute__((constructor)) static void init_crash_handler() {
     SetUnhandledExceptionFilter(crash_handler);
 }
 
+#endif
 #endif
