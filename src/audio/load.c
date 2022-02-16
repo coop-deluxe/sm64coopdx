@@ -46,7 +46,9 @@ OSMesgQueue gAudioDmaMesgQueue;
 OSMesg gAudioDmaMesg;
 OSIoMesg gAudioDmaIoMesg;
 
-struct SharedDma sSampleDmas[0x60];
+#define SAMPLE_DMA_COUNT 0x90
+
+struct SharedDma sSampleDmas[SAMPLE_DMA_COUNT];
 u32 gSampleDmaNumListItems;
 u32 sSampleDmaListSize1;
 u32 sUnused80226B40; // set to 0, never read
@@ -291,19 +293,12 @@ void *dma_sample_data(uintptr_t devAddr, u32 size, s32 arg2, u8 *arg3) {
 }
 
 void init_sample_dma_buffers(UNUSED s32 arg0) {
-    s32 i;
-#ifdef VERSION_EU
-#define j i
-#else
-    s32 j;
-#endif
-
 #ifdef VERSION_EU
     sDmaBufSize = 0x400 * 4;
-    for (i = 0; i < gMaxSimultaneousNotes * 3 * gAudioBufferParameters.presetUnk4; i++) {
+    for (s32 i = 0; i < gMaxSimultaneousNotes * 3 * gAudioBufferParameters.presetUnk4; i++) {
 #else
     sDmaBufSize = (144 * 9) * 4;
-    for (i = 0; i < gMaxSimultaneousNotes * 3; i++) {
+    for (s32 i = 0; i < gMaxSimultaneousNotes * 3; i++) {
 #endif
         sSampleDmas[gSampleDmaNumListItems].buffer = soundAlloc(&gNotesAndBuffersPool, sDmaBufSize);
         if (sSampleDmas[gSampleDmaNumListItems].buffer == NULL) {
@@ -324,12 +319,12 @@ void init_sample_dma_buffers(UNUSED s32 arg0) {
 out1:
 #endif
 
-    for (i = 0; (u32) i < gSampleDmaNumListItems; i++) {
+    for (s32 i = 0; (u32) i < gSampleDmaNumListItems; i++) {
         sSampleDmaReuseQueue1[i] = (u8) i;
         sSampleDmas[i].reuseIndex = (u8) i;
     }
 
-    for (j = gSampleDmaNumListItems; j < 0x100; j++) {
+    for (s32 j = gSampleDmaNumListItems; j < 0x100; j++) {
         sSampleDmaReuseQueue1[j] = 0;
     }
 
@@ -342,7 +337,7 @@ out1:
 #else
     sDmaBufSize = (160 * 9) * 4;
 #endif
-    for (i = 0; i < gMaxSimultaneousNotes; i++) {
+    for (s32 i = 0; i < gMaxSimultaneousNotes; i++) {
         sSampleDmas[gSampleDmaNumListItems].buffer = soundAlloc(&gNotesAndBuffersPool, sDmaBufSize);
         if (sSampleDmas[gSampleDmaNumListItems].buffer == NULL) {
 #ifdef VERSION_EU
@@ -362,14 +357,14 @@ out1:
 out2:
 #endif
 
-    for (i = sSampleDmaListSize1; (u32) i < gSampleDmaNumListItems; i++) {
+    for (s32 i = sSampleDmaListSize1; (u32) i < gSampleDmaNumListItems; i++) {
         sSampleDmaReuseQueue2[i - sSampleDmaListSize1] = (u8) i;
         sSampleDmas[i].reuseIndex = (u8)(i - sSampleDmaListSize1);
     }
 
     // This probably meant to touch the range size1..size2 as well... but it
     // doesn't matter, since these values are never read anyway.
-    for (j = gSampleDmaNumListItems; j < 0x100; j++) {
+    for (s32 j = gSampleDmaNumListItems; j < 0x100; j++) {
         sSampleDmaReuseQueue2[j] = sSampleDmaListSize1;
     }
 

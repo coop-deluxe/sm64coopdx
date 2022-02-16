@@ -4,12 +4,14 @@ Developers:
     FluffaLuigi
     kebabstorm
     MegaMech
+    theclashingfritz
 
 Contributors:
     AloXado320
     anzz1
     Avery
     Cameron Hall
+    camthesaxman
     charity
     Cjes
     DorfDork
@@ -18,7 +20,7 @@ Contributors:
     eros71
     Filipianosol
     GammaTendonNine
-    kebabstorm
+    gunvalk
     Llennpie
     LuigiNoodle
     PeachyPeach
@@ -28,7 +30,6 @@ Contributors:
     steven.
     SunlitSpace542
     Super Keeberghrh
-    theclashingfritz
     TheGag96
     Victor Diego Alejandro Diaz Urbaneja
 

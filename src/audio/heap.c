@@ -208,7 +208,7 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
         bzero(start, alignedSize);
         pool->cur += alignedSize;
     } else {
-        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes (%i free)\n", ALIGN16(size), pool->start + pool->size - pool->cur);
+        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes at %p (%i free)\n", ALIGN16(size), (void*)pool, pool->start + pool->size - pool->cur);
         return NULL;
     }
     pool->numAllocatedEntries++;
@@ -221,7 +221,7 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
         bzero(start, alignedSize);
         pool->cur += alignedSize;
     } else {
-        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes (%i free)\n", (unsigned int)ALIGN16(size), (int)(pool->start + pool->size - pool->cur));
+        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes at %p (%i free)\n", (unsigned int)ALIGN16(size), (void*)pool, (int)(pool->start + pool->size - pool->cur));
         return NULL;
     }
     return start;
