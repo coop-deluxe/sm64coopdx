@@ -92,6 +92,71 @@ static const struct DjuiFont sDjuiFontTitle = {
     .char_width           = djui_font_title_char_width,
 };
 
+  ///////////////////////
+ // font 3 (hud font) //
+///////////////////////
+
+/*
+    texture_hud_char_0, texture_hud_char_1, texture_hud_char_2, texture_hud_char_3,
+    texture_hud_char_4, texture_hud_char_5, texture_hud_char_6, texture_hud_char_7,
+    texture_hud_char_8, texture_hud_char_9, texture_hud_char_A, texture_hud_char_B,
+    texture_hud_char_C, texture_hud_char_D, texture_hud_char_E, texture_hud_char_F,
+    texture_hud_char_G, texture_hud_char_H, texture_hud_char_I, texture_hud_char_J,
+    texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
+    texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
+    texture_hud_char_S, texture_hud_char_T, texture_hud_char_U,               0x0,
+    texture_hud_char_W,               0x0, texture_hud_char_Y, texture_hud_char_waluigi_head,
+                  0x0,               0x0,               0x0,               0x0,
+                  0x0,               0x0,               0x0,               0x0,
+                  0x0,               0x0,               0x0,               0x0,
+                  0x0,               0x0, texture_hud_char_multiply, texture_hud_char_coin,
+    texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_luigi_head, texture_hud_char_toad_head,
+    texture_hud_char_apostrophe, texture_hud_char_double_quote,
+*/
+
+static u8 djui_font_hud_index(char c) {
+    if (c == 'q' || c == 'Q') { return 50; }
+    if (c == 'v' || c == 'V') { return 50; }
+    if (c == 'x' || c == 'X') { return 50; }
+    if (c == 'z' || c == 'Z') { return 50; }
+
+    switch (c) {
+        case '$':  return 51;
+        case '*':  return 53;
+        case '\'': return 56;
+        case '"':  return 57;
+    }
+
+    if (c >= '0' && c <= '9') { return 0  + c - '0'; }
+    if (c >= 'a' && c <= 'z') { return 10 + c - 'a'; }
+    if (c >= 'A' && c <= 'Z') { return 10 + c - 'A'; }
+
+    if (c >= 58) { return 50; }
+    if (main_hud_lut[(int)c] == NULL) { return 50; }
+
+    return c;
+}
+
+static void djui_font_hud_render_char(char c) {
+    u8 index = djui_font_hud_index(c);
+    djui_gfx_render_texture(main_hud_lut[index], 16, 16, 16);
+}
+
+static f32 djui_font_hud_char_width(UNUSED char c) {
+    return 0.75f;
+}
+
+static const struct DjuiFont sDjuiFontHud = {
+    .charWidth            = 1.0f,
+    .charHeight           = 0.9f,
+    .lineHeight           = 0.7f,
+    .defaultFontScale     = 16.0f,
+    .rotatedUV            = false,
+    .textBeginDisplayList = NULL,
+    .render_char          = djui_font_hud_render_char,
+    .char_width           = djui_font_hud_char_width,
+};
+
   ///////////////
  // font list //
 ///////////////
@@ -99,4 +164,5 @@ static const struct DjuiFont sDjuiFontTitle = {
 const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontNormal,
     &sDjuiFontTitle,
+    &sDjuiFontHud,
 };

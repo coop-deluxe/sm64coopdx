@@ -12,6 +12,7 @@ enum LuaHookedEventType {
     HOOK_ON_PVP_ATTACK,
     HOOK_ON_PLAYER_CONNECTED,
     HOOK_ON_PLAYER_DISCONNECTED,
+    HOOK_ON_HUD_RENDER,
     HOOK_MAX,
 };
 
@@ -24,6 +25,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PVP_ATTACK",
     "HOOK_ON_PLAYER_CONNECTED",
     "HOOK_ON_PLAYER_DISCONNECTED",
+    "HOOK_ON_HUD_RENDER",
     "HOOK_MAX"
 };
 

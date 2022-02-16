@@ -17,6 +17,7 @@ in_files = [
     "src/pc/network/network_player.h",
     "include/PR/os_cont.h",
     "src/game/interaction.c",
+    "src/pc/djui/djui_gfx_utils.h",
 ]
 
 exclude_constants = [

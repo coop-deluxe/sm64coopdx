@@ -19,6 +19,7 @@
 #include "src/game/level_info.h"
 #include "src/game/save_file.h"
 #include "src/game/sound_init.h"
+#include "src/pc/djui/djui_gfx_utils.h"
 
   //////////////
  // camera.h //
@@ -199,6 +200,95 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     djui_chat_message_create(message);
+
+    return 1;
+}
+
+  //////////////////////
+ // djui_gfx_utils.h //
+//////////////////////
+
+int smlua_func_djui_gfx_get_screen_height(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, djui_gfx_get_screen_height());
+
+    return 1;
+}
+
+int smlua_func_djui_gfx_get_screen_width(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, djui_gfx_get_screen_width());
+
+    return 1;
+}
+
+int smlua_func_djui_gfx_measure_text(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, djui_gfx_measure_text(message));
+
+    return 1;
+}
+
+int smlua_func_djui_gfx_print_text(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    float x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    float y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    float scale = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    djui_gfx_print_text(message, x, y, scale);
+
+    return 1;
+}
+
+int smlua_func_djui_gfx_set_color(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    u8 r = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 g = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 b = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 a = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    djui_gfx_set_color(r, g, b, a);
+
+    return 1;
+}
+
+int smlua_func_djui_gfx_set_font(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int fontType = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    djui_gfx_set_font(fontType);
+
+    return 1;
+}
+
+int smlua_func_djui_gfx_set_resolution(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int resolutionType = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    djui_gfx_set_resolution(resolutionType);
 
     return 1;
 }
@@ -3405,6 +3495,15 @@ void smlua_bind_functions_autogen(void) {
 
     // djui_chat_message.h
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
+
+    // djui_gfx_utils.h
+    smlua_bind_function(L, "djui_gfx_get_screen_height", smlua_func_djui_gfx_get_screen_height);
+    smlua_bind_function(L, "djui_gfx_get_screen_width", smlua_func_djui_gfx_get_screen_width);
+    smlua_bind_function(L, "djui_gfx_measure_text", smlua_func_djui_gfx_measure_text);
+    smlua_bind_function(L, "djui_gfx_print_text", smlua_func_djui_gfx_print_text);
+    smlua_bind_function(L, "djui_gfx_set_color", smlua_func_djui_gfx_set_color);
+    smlua_bind_function(L, "djui_gfx_set_font", smlua_func_djui_gfx_set_font);
+    smlua_bind_function(L, "djui_gfx_set_resolution", smlua_func_djui_gfx_set_resolution);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

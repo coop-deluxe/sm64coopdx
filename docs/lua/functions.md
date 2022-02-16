@@ -26,6 +26,17 @@
 
 <br />
 
+- djui_gfx_utils.h
+   - [djui_gfx_get_screen_height](#djui_gfx_get_screen_height)
+   - [djui_gfx_get_screen_width](#djui_gfx_get_screen_width)
+   - [djui_gfx_measure_text](#djui_gfx_measure_text)
+   - [djui_gfx_print_text](#djui_gfx_print_text)
+   - [djui_gfx_set_color](#djui_gfx_set_color)
+   - [djui_gfx_set_font](#djui_gfx_set_font)
+   - [djui_gfx_set_resolution](#djui_gfx_set_resolution)
+
+<br />
+
 - djui_popup.h
    - [djui_popup_create](#djui_popup_create)
 
@@ -606,6 +617,154 @@
 
 ### C Prototype
 `void djui_chat_message_create(const char* message);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from djui_gfx_utils.h
+
+<br />
+
+
+## [djui_gfx_get_screen_height](#djui_gfx_get_screen_height)
+
+### Lua Example
+`local integerValue = djui_gfx_get_screen_height()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`u32 djui_gfx_get_screen_height(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx_get_screen_width](#djui_gfx_get_screen_width)
+
+### Lua Example
+`local integerValue = djui_gfx_get_screen_width()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`u32 djui_gfx_get_screen_width(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx_measure_text](#djui_gfx_measure_text)
+
+### Lua Example
+`local numberValue = djui_gfx_measure_text(message)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | string |
+
+### Returns
+- number
+
+### C Prototype
+`f32 djui_gfx_measure_text(const char* message);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx_print_text](#djui_gfx_print_text)
+
+### Lua Example
+`djui_gfx_print_text(message, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | string |
+| x | float |
+| y | float |
+| scale | float |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_gfx_print_text(const char* message, float x, float y, float scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx_set_color](#djui_gfx_set_color)
+
+### Lua Example
+`djui_gfx_set_color(r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | integer |
+| g | integer |
+| b | integer |
+| a | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_gfx_set_color(u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx_set_font](#djui_gfx_set_font)
+
+### Lua Example
+`djui_gfx_set_font(fontType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fontType | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_gfx_set_font(enum DjuiFontType fontType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx_set_resolution](#djui_gfx_set_resolution)
+
+### Lua Example
+`djui_gfx_set_resolution(resolutionType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| resolutionType | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_gfx_set_resolution(enum GfxUtilsResolution resolutionType);`
 
 [:arrow_up_small:](#)
 
