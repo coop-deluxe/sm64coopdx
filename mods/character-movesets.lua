@@ -429,7 +429,7 @@ function waluigi_on_set_action(m)
     -- turn wall kick into flip
     elseif m.action == ACT_WALL_KICK_AIR and m.prevAction ~= ACT_HOLDING_POLE and m.prevAction ~= ACT_CLIMBING_POLE then
         local rc = set_mario_action(m, ACT_TRIPLE_JUMP, 0)
-        m.vel.y = 72.0
+        m.vel.y = 60.0
 
         if m.forwardVel < 20.0 then
             m.forwardVel = 20.0
@@ -439,7 +439,7 @@ function waluigi_on_set_action(m)
 
     -- less height on jumps
     elseif m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_TRIPLE_JUMP or m.action == ACT_SPECIAL_TRIPLE_JUMP or m.action == ACT_STEEP_JUMP or m.action == ACT_SIDE_FLIP or m.action == ACT_RIDING_SHELL_JUMP or m.action == ACT_BACKFLIP or m.action == ACT_WALL_KICK_AIR  or m.action == ACT_LONG_JUMP then
-        m.vel.y = m.vel.y * 0.93
+        m.vel.y = m.vel.y * 0.91
     end
 
     e.lastAction = action
@@ -457,7 +457,7 @@ function waluigi_update(m)
     -- double jump
     if m.action == ACT_DOUBLE_JUMP and m.actionTimer > 0 and (m.controller.buttonPressed & A_BUTTON) ~= 0 then
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)
-        m.vel.y = m.vel.y * 0.94
+        m.vel.y = m.vel.y * 0.8
     end
     if m.action == ACT_DOUBLE_JUMP then
         m.actionTimer = m.actionTimer + 1
@@ -878,7 +878,7 @@ function wario_update(m)
 
     -- shake camera
     if m.action == ACT_GROUND_POUND_LAND then
-        set_camera_shake_from_hit(SHAKE_MED_DAMAGE)
+        set_camera_shake_from_point(SHAKE_POS_MEDIUM, m.pos.x, m.pos.y, m.pos.z)
     end
 
     -- faster ground pound
