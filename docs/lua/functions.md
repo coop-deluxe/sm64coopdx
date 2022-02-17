@@ -275,6 +275,15 @@
 
 <br />
 
+- network_player.h
+   - [get_network_player_from_area](#get_network_player_from_area)
+   - [get_network_player_from_level](#get_network_player_from_level)
+   - [get_network_player_smallest_global](#get_network_player_smallest_global)
+   - [network_player_connected_count](#network_player_connected_count)
+   - [network_player_from_global_index](#network_player_from_global_index)
+
+<br />
+
 - network_utils.h
    - [network_get_player_text_color_string](#network_get_player_text_color_string)
    - [network_global_index_from_local](#network_global_index_from_local)
@@ -4694,6 +4703,113 @@
 
 ### C Prototype
 `void stop_and_set_height_to_floor(struct MarioState *);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from network_player.h
+
+<br />
+
+
+## [get_network_player_from_area](#get_network_player_from_area)
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | integer |
+| actNum | integer |
+| levelNum | integer |
+| areaIndex | integer |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_from_level](#get_network_player_from_level)
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_from_level(courseNum, actNum, levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | integer |
+| actNum | integer |
+| levelNum | integer |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_smallest_global](#get_network_player_smallest_global)
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_smallest_global()`
+
+### Parameters
+- None
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_smallest_global(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_connected_count](#network_player_connected_count)
+
+### Lua Example
+`local integerValue = network_player_connected_count()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`u8 network_player_connected_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_from_global_index](#network_player_from_global_index)
+
+### Lua Example
+`local NetworkPlayerValue = network_player_from_global_index(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | integer |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
 
 [:arrow_up_small:](#)
 

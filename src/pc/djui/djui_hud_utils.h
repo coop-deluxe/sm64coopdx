@@ -25,6 +25,7 @@ struct GlobalTextures {
 };
 
 extern struct GlobalTextures gGlobalTextures;
+extern f32 gDjuiHudUtilsZ;
 
 void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);
 void djui_hud_set_font(enum DjuiFontType fontType);

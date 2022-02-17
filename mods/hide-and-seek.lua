@@ -13,7 +13,9 @@ gGlobalSyncTable.roundNumber = 0
 gGlobalSyncTable.roundEnded = ROUND_END_UNKNOWN
 
 sRoundEndedTimer = 0
-sRoundIntermissionTime = 5 * 30 -- five seconds
+sRoundEndedTimeout = 15 * 30 -- fifteen seconds
+sFlashingIndex = 0
+sDisplayCenterTimer = 0
 
 -- server keeps track of last player turned seeker
 sLastSeekerIndex = 0
@@ -29,6 +31,7 @@ sLastPos.y = 0
 sLastPos.z = 0
 sDistanceMoved = 0
 sDistanceTimer = 0
+sDistanceTimeout = 10 * 30
 
 function server_update(m)
     -- figure out state of the game
@@ -72,8 +75,7 @@ function server_update(m)
     end
 
     -- if round was over for 5 seconds
-    sRoundEndedTimer = sRoundEndedTimer + 1
-    if sRoundEndedTimer >= sRoundIntermissionTime then
+    if sRoundEndedTimer >= sRoundEndedTimeout then
         -- reset seekers
         for i=0,(MAX_PLAYERS-1) do
             gPlayerSyncTable[i].seeking = false
@@ -118,15 +120,18 @@ function camping_detection(m)
     end
 
     -- if the player has moved enough, reset the timer
-    if sDistanceMoved > 20 then
+    if sDistanceMoved > 25 then
         sDistanceTimer = 0
     end
 
     -- inform the player that they need to move, or make them a seeker
-    if sDistanceTimer == 30 * 1 then
-        djui_popup_create('\\#ff4040\\Keep moving!', 3)
-    elseif sDistanceTimer > 30 * 6 then
+    if sDistanceTimer > sDistanceTimeout then
         s.seeking = true
+    end
+
+    -- make sound
+    if sDistanceTimer > 0 and sDistanceTimer % 30 == 1 then
+        play_sound(SOUND_MENU_CAMERA_BUZZ, m.marioObj.header.gfx.cameraToObject)
     end
 end
 
@@ -148,18 +153,13 @@ function update()
         sDistanceTimer = 0
     end
 
-    -- update sLastSeekerTimer
+    -- update sLastSeekerTimer and sRoundEndedTimer
     if gGlobalSyncTable.roundEnded == 0 then
         sLastSeekerTimer = sLastSeekerTimer + 1
-        local timeLeft = sLastSeekerTimeout - sLastSeekerTimer
-        if timeLeft == 60 * 30 then
-            djui_popup_create('\\#ff4040\\Seekers have one minute to get someone!', 3)
-        elseif timeLeft == 30 * 30 then
-            djui_popup_create('\\#ff4040\\Seekers have 30 seconds to get someone!', 3)
-        elseif timeLeft == 10 * 30 then
-            djui_popup_create('\\#ff4040\\Seekers have 10 seconds to get someone!', 3)
-        end
+    else
+        sRoundEndedTimer = sRoundEndedTimer + 1
     end
+    sDisplayCenterTimer = sDisplayCenterTimer + 1
 end
 
 function mario_update(m)
@@ -249,6 +249,131 @@ function on_player_connected(m)
     s.seeking = false
 end
 
+function hud_top_render()
+    -- check gamemode enabled state
+    if not gGlobalSyncTable.hideAndSeek then
+        return
+    end
+
+    local seconds = 0
+    local text = ''
+
+    if network_player_connected_count() < 2 then
+        seconds = 60
+        text = 'waiting for players'
+    elseif gGlobalSyncTable.roundEnded == 0 then
+        seconds = math.floor((sLastSeekerTimeout - sLastSeekerTimer) / 30)
+        text = 'seekers have ' .. seconds .. ' seconds'
+    else
+        seconds = math.floor((sRoundEndedTimeout - sRoundEndedTimer) / 30)
+        text = 'next round in ' .. seconds .. ' seconds'
+    end
+
+    if seconds < 0 then seconds = 0 end
+    local scale = 0.50
+
+    -- get width of screen and text
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text) * scale
+
+    local x = (screenWidth - width) / 2.0
+    local y = 0
+
+    local background = 0.0
+    if seconds < 60 and gGlobalSyncTable.roundEnded == 0 then
+        background = (math.sin(sFlashingIndex / 10.0) * 0.5 + 0.5) * 1.0
+        background = background * background
+        background = background * background
+    end
+
+    -- render top
+    djui_hud_set_color(255 * background, 0, 0, 128);
+    djui_hud_render_rect(x - 6, y, width + 12, 16);
+
+    djui_hud_set_color(255, 255, 255, 255);
+    djui_hud_print_text(text, x, y, scale);
+end
+
+function hud_bottom_render()
+    local seconds = math.floor((sDistanceTimeout - sDistanceTimer) / 30)
+    if seconds < 0 then seconds = 0 end
+    if sDistanceTimer < 1 then return end
+
+    local text = 'Keep moving! (' .. seconds .. ')'
+    local scale = 0.50
+
+    -- get width of screen and text
+    local screenWidth = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
+    local width = djui_hud_measure_text(text) * scale
+
+    local x = (screenWidth - width) / 2.0
+    local y = screenHeight - 16
+
+    local background = (math.sin(sFlashingIndex / 10.0) * 0.5 + 0.5) * 1.0
+    background = background * background
+    background = background * background
+
+    -- render top
+    djui_hud_set_color(255 * background, 0, 0, 128);
+    djui_hud_render_rect(x - 6, y, width + 12, 16);
+
+    djui_hud_set_color(255, 255, 255, 255);
+    djui_hud_print_text(text, x, y, scale);
+end
+
+function hud_center_render()
+    if sDisplayCenterTimer > 30 * 5 then return end
+
+    -- set text
+    local text = ''
+    if gGlobalSyncTable.roundEnded == ROUND_END_SEEKER_WIN then
+        text = 'Seekers Win!'
+    elseif gGlobalSyncTable.roundEnded == ROUND_END_HIDER_WIN then
+        text = 'Hiders Win!'
+    elseif gGlobalSyncTable.roundEnded == 0 then
+        text = 'Go!'
+    else
+        return
+    end
+
+    -- set scale
+    local scale = 1 - (sRoundEndedTimer / 30) + 4
+    if scale < 0 then scale = 0 end
+    if scale > 1 then scale = 1 end
+    scale = scale * scale
+    scale = scale * scale
+    scale = scale * scale
+
+    -- get width of screen and text
+    local screenWidth = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
+    local width = djui_hud_measure_text(text) * scale
+    local height = 32 * scale
+
+    local x = (screenWidth - width) / 2.0
+    local y = (screenHeight - height) / 2.0
+
+    -- render
+    djui_hud_set_color(0, 0, 0, 128);
+    djui_hud_render_rect(x - 6 * scale, y, width + 12 * scale, height);
+
+    djui_hud_set_color(255, 255, 255, 255);
+    djui_hud_print_text(text, x, y, scale);
+end
+
+function on_hud_render()
+    -- render to N64 screen space, with the HUD font
+    djui_hud_set_resolution(RESOLUTION_N64)
+    djui_hud_set_font(FONT_NORMAL)
+
+    hud_top_render()
+    hud_bottom_render()
+    hud_center_render()
+
+    sFlashingIndex = sFlashingIndex + 1
+end
+
 function on_hide_and_seek_command(msg)
     if not network_is_server() then
         djui_chat_message_create('Only the server can change this setting!')
@@ -271,33 +396,20 @@ end
 -----------------------
 
 function on_round_number_changed(tag, oldVal, newVal)
-    -- inform players when a new round has begun
-    if oldVal < newVal then
-        djui_popup_create('\\#a0ffa0\\a new round has begun', 2)
-        sDistanceMoved = 100
-        sDistanceTimer = 0
-        play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
-    end
+    play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
+    sDisplayCenterTimer = 0
 end
 
 function on_round_ended_changed(tag, oldVal, newVal)
-    -- inform players when a round has ended
-    local tColor = '\\#ffa0a0\\'
-    if newVal == ROUND_END_UNKNOWN then
-        djui_popup_create(tColor .. 'the round has ended', 2)
-    elseif newVal == ROUND_END_HIDER_WIN then
-        if not gPlayerSyncTable[0].seeking then tColor = '\\#a0ffa0\\' end
-        djui_popup_create(tColor .. 'Hiders win!', 2)
-    elseif newVal == ROUND_END_SEEKER_WIN then
-        if gPlayerSyncTable[0].seeking then tColor = '\\#a0ffa0\\' end
-        djui_popup_create(tColor .. 'Seekers win!', 2)
-    end
-
     if oldVal == 0 and newVal ~= 0 then
         sLastSeekerTimer = 0
+        play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gMarioStates[0].marioObj.header.gfx.cameraToObject)
+        sDisplayCenterTimer = 0
     elseif newVal == 0 and oldVal ~= 0 then
         sLastSeekerTimer = 0
     end
+
+    sRoundEndedTimer = 0
 end
 
 function on_seeking_changed(tag, oldVal, newVal)
@@ -323,6 +435,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
+hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
 
@@ -330,6 +443,6 @@ hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_h
 hook_on_sync_table_change(gGlobalSyncTable, 'roundNumber', 0, on_round_number_changed)
 hook_on_sync_table_change(gGlobalSyncTable, 'roundEnded', 0, on_round_ended_changed)
 for i=0,(MAX_PLAYERS-1) do
-    gPlayerSyncTable[i].seeking = false
+    gPlayerSyncTable[i].seeking = true
     hook_on_sync_table_change(gPlayerSyncTable[i], 'seeking', i, on_seeking_changed)
 end

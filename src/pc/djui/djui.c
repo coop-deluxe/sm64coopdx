@@ -4,6 +4,7 @@
 #include "game/level_update.h"
 #include "pc/lua/smlua_hooks.h"
 #include "djui_panel_playerlist.h"
+#include "djui_hud_utils.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 
@@ -52,6 +53,8 @@ void djui_render_patch(void) {
 void djui_render(void) {
     if (gDjuiDisabled) { return; }
     sSavedDisplayListHead = gDisplayListHead;
+    gDjuiHudUtilsZ = 0;
+
     create_dl_ortho_matrix();
 
     smlua_call_event_hooks(HOOK_ON_HUD_RENDER);

@@ -33,6 +33,7 @@ in_files = [
     "src/game/save_file.h",
     "src/game/sound_init.h",
     "src/pc/djui/djui_hud_utils.h",
+    "src/pc/network/network_player.h",
 ]
 
 override_allowed_functions = {
@@ -59,6 +60,7 @@ override_disallowed_functions = {
     "src/game/interaction.h":              [ "process_interactions", "_handle_" ],
     "src/game/sound_init.h":               [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":      [ "network_get_player_text_color[^_]" ],
+    "src/pc/network/network_player.h":     [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update" ],
 }
 
 ###########################################################

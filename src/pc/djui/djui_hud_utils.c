@@ -16,6 +16,8 @@
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum DjuiFontType sFont = FONT_NORMAL;
 
+f32 gDjuiHudUtilsZ = 0;
+
 extern ALIGNED8 const u8 texture_hud_char_camera[];
 extern ALIGNED8 const u8 texture_hud_char_lakitu[];
 extern ALIGNED8 const u8 texture_hud_char_no_camera[];
@@ -95,6 +97,8 @@ f32 djui_hud_measure_text(const char* message) {
 
 void djui_hud_print_text(const char* message, float x, float y, float scale) {
     if (message == NULL) { return; }
+    gDjuiHudUtilsZ += 0.01f;
+
     const struct DjuiFont* font = gDjuiFonts[sFont];
     f32 fontScale = font->defaultFontScale * scale;
 
@@ -107,7 +111,7 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
     f32 translatedX = x;
     f32 translatedY = y;
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
     // compute font size
     f32 translatedFontSize = fontScale;
@@ -137,11 +141,13 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
 }
 
 static void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+    gDjuiHudUtilsZ += 0.01f;
+
     // translate position
     f32 translatedX = x;
     f32 translatedY = y;
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
     // translate scale
     f32 translatedW = scaleW;
@@ -162,11 +168,13 @@ void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scal
 }
 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
+    gDjuiHudUtilsZ += 0.01f;
+
     // translate position
     f32 translatedX = x;
     f32 translatedY = y;
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
 
     // translate scale
     f32 translatedW = width;

@@ -17,6 +17,7 @@
 #include "src/game/save_file.h"
 #include "src/game/sound_init.h"
 #include "src/pc/djui/djui_hud_utils.h"
+#include "src/pc/network/network_player.h"
 
 
   //////////////
@@ -2929,6 +2930,71 @@ int smlua_func_stop_and_set_height_to_floor(lua_State* L) {
     return 1;
 }
 
+  //////////////////////
+ // network_player.h //
+//////////////////////
+
+int smlua_func_get_network_player_from_area(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 actNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 levelNum = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 areaIndex = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_from_area(courseNum, actNum, levelNum, areaIndex));
+
+    return 1;
+}
+
+int smlua_func_get_network_player_from_level(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 actNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 levelNum = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_from_level(courseNum, actNum, levelNum));
+
+    return 1;
+}
+
+int smlua_func_get_network_player_smallest_global(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_smallest_global());
+
+    return 1;
+}
+
+int smlua_func_network_player_connected_count(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, network_player_connected_count());
+
+    return 1;
+}
+
+int smlua_func_network_player_from_global_index(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 globalIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_NETWORKPLAYER, network_player_from_global_index(globalIndex));
+
+    return 1;
+}
+
   /////////////////////
  // network_utils.h //
 /////////////////////
@@ -3720,6 +3786,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_vel_from_pitch_and_yaw", smlua_func_set_vel_from_pitch_and_yaw);
     smlua_bind_function(L, "stationary_ground_step", smlua_func_stationary_ground_step);
     smlua_bind_function(L, "stop_and_set_height_to_floor", smlua_func_stop_and_set_height_to_floor);
+
+    // network_player.h
+    smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);
+    smlua_bind_function(L, "get_network_player_from_level", smlua_func_get_network_player_from_level);
+    smlua_bind_function(L, "get_network_player_smallest_global", smlua_func_get_network_player_smallest_global);
+    smlua_bind_function(L, "network_player_connected_count", smlua_func_network_player_connected_count);
+    smlua_bind_function(L, "network_player_from_global_index", smlua_func_network_player_from_global_index);
 
     // network_utils.h
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
