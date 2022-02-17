@@ -598,6 +598,11 @@
 | currLevelAreaSeqId | integer | read-only |
 | currLevelNum | integer | read-only |
 | currLevelSyncValid | bool | read-only |
+| description | string | read-only |
+| descriptionA | integer | read-only |
+| descriptionB | integer | read-only |
+| descriptionG | integer | read-only |
+| descriptionR | integer | read-only |
 | fadeOpacity | integer | read-only |
 | globalIndex | integer | read-only |
 | lastReceived | number | read-only |

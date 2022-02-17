@@ -6,7 +6,7 @@
 struct DjuiThreePanel* gDjuiModList = NULL;
 
 void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
-    int playerListWidth = 580;
+    int playerListWidth = 585;
     int modListWidth = 280;
 
     // delete old mod list

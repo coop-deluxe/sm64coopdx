@@ -2995,6 +2995,27 @@ int smlua_func_network_player_from_global_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_player_set_description(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* description = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 r = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 g = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 b = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 a = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    network_player_set_description(np, description, r, g, b, a);
+
+    return 1;
+}
+
   /////////////////////
  // network_utils.h //
 /////////////////////
@@ -3793,6 +3814,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_network_player_smallest_global", smlua_func_get_network_player_smallest_global);
     smlua_bind_function(L, "network_player_connected_count", smlua_func_network_player_connected_count);
     smlua_bind_function(L, "network_player_from_global_index", smlua_func_network_player_from_global_index);
+    smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
 
     // network_utils.h
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);

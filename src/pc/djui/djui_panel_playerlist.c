@@ -13,6 +13,7 @@ struct DjuiThreePanel* gDjuiPlayerList = NULL;
 static struct DjuiFlowLayout* djuiRow[MAX_PLAYERS] = { 0 };
 static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextNames[MAX_PLAYERS] = { 0 };
+static struct DjuiText* djuiTextDescriptions[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
 
 static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
@@ -30,6 +31,9 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
     u8* rgb = network_get_player_text_color(np->localIndex);
     djui_base_set_color(&djuiTextNames[i]->base, rgb[0], rgb[1], rgb[2], 255);
     djui_text_set_text(djuiTextNames[i], np->name);
+
+    djui_base_set_color(&djuiTextDescriptions[i]->base, np->descriptionR, np->descriptionG, np->descriptionB, np->descriptionA);
+    djui_text_set_text(djuiTextDescriptions[i], np->description);
 
     djui_text_set_text(djuiTextLocations[i], get_level_name(np->currCourseNum, np->currLevelNum, np->currAreaIndex));
 }
@@ -56,7 +60,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     panel->base.on_render_pre = djui_panel_playerlist_on_render_pre;
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&panel->base, 580, bodyHeight + (32 + 16) + 32 + 32);
+    djui_base_set_size(&panel->base, 585, bodyHeight + (32 + 16) + 32 + 32);
     djui_base_set_visible(&panel->base, false);
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     djui_flow_layout_set_margin(body, 4);
@@ -84,11 +88,18 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_base_set_color(&t2->base, t, t, t, 255);
         djuiTextNames[i] = t2;
 
-        struct DjuiText* t3 = djui_text_create(&row->base, "location");
+        struct DjuiText* t3 = djui_text_create(&row->base, "");
         djui_base_set_size_type(&t3->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&t3->base, 300, 32.0f);
-        djui_base_set_color(&t3->base, t, t, t, 255);
-        djui_text_set_alignment(t3, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-        djuiTextLocations[i] = t3;
+        djui_base_set_size(&t3->base, 100, 32.0f);
+        djui_base_set_color(&t3->base, 220, 220, 220, 255);
+        djui_text_set_alignment(t3, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djuiTextDescriptions[i] = t3;
+
+        struct DjuiText* t4 = djui_text_create(&row->base, "location");
+        djui_base_set_size_type(&t4->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&t4->base, 300 - 100, 32.0f);
+        djui_base_set_color(&t4->base, t, t, t, 255);
+        djui_text_set_alignment(t4, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+        djuiTextLocations[i] = t4;
     }
 }

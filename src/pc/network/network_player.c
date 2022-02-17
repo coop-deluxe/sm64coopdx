@@ -42,6 +42,21 @@ u8 network_player_connected_count(void) {
     return count;
 }
 
+void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a) {
+    if (np == NULL) { return; }
+
+    if (description != NULL) {
+        snprintf(np->description, MAX_DESCRIPTION_STRING, "%s", description);
+    } else {
+        np->description[0] = '\0';
+    }
+
+    np->descriptionR = r;
+    np->descriptionG = g;
+    np->descriptionB = b;
+    np->descriptionA = a;
+}
+
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
@@ -181,6 +196,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->localIndex = localIndex;
     np->globalIndex = globalIndex;
     if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }
+    network_player_set_description(np, NULL, 0, 0, 0, 0);
 
     // update course/level
     np->currLevelAreaSeqId = 0;

@@ -247,6 +247,7 @@ function on_player_connected(m)
     -- start out as a non-seeker
     local s = gPlayerSyncTable[m.playerIndex]
     s.seeking = true
+    network_player_set_description(gNetworkPlayers[m.playerIndex], "seeker", 255, 64, 64, 255)
 end
 
 function hud_top_render()
@@ -420,6 +421,12 @@ function on_seeking_changed(tag, oldVal, newVal)
         sLastSeekerIndex = m.playerIndex
         sRoundTimer = 0
     end
+
+    if newVal then
+        network_player_set_description(np, "seeker", 255, 64, 64, 255)
+    else
+        network_player_set_description(np, "hider", 128, 128, 128, 255)
+    end
 end
 
 -----------
@@ -440,4 +447,5 @@ hook_on_sync_table_change(gGlobalSyncTable, 'roundState', 0, on_round_state_chan
 for i=0,(MAX_PLAYERS-1) do
     gPlayerSyncTable[i].seeking = true
     hook_on_sync_table_change(gPlayerSyncTable[i], 'seeking', i, on_seeking_changed)
+    network_player_set_description(gNetworkPlayers[i], "seeker", 255, 64, 64, 255)
 end

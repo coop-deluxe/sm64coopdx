@@ -37,6 +37,13 @@ struct NetworkPlayer {
     u8 modelIndex;
     u8 paletteIndex;
     char name[MAX_PLAYER_STRING+1];
+
+    char description[MAX_DESCRIPTION_STRING+1];
+    u8 descriptionR;
+    u8 descriptionG;
+    u8 descriptionB;
+    u8 descriptionA;
+
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
 };
@@ -49,14 +56,18 @@ void network_player_init(void);
 void network_player_update_model(u8 localIndex);
 bool network_player_any_connected(void);
 u8 network_player_connected_count(void);
+void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);
 
 struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);
 struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 struct NetworkPlayer* get_network_player_smallest_global(void);
+
 void network_player_update(void);
+
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name);
 u8 network_player_disconnected(u8 globalIndex);
+
 void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 void network_player_shutdown(void);
 
