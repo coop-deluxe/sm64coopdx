@@ -200,8 +200,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     // update course/level
     np->currLevelAreaSeqId = 0;
-    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
-    network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+    network_player_update_course_level(np, 0, 0, 16, 1);
     np->currLevelSyncValid = false;
     np->currAreaSyncValid = false;
 
