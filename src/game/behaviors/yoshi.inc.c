@@ -99,11 +99,11 @@ void yoshi_talk_loop(void) {
 
     if ((s16) o->oMoveAngleYaw == angleToPlayer) {
         if (sYoshiTalkingState == 0) {
+            play_puzzle_jingle();
             sYoshiTalkingState = 1;
         }
     } else {
         cur_obj_init_animation(1);
-        play_puzzle_jingle();
         o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToPlayer, 0x500);
     }
 }
@@ -225,8 +225,8 @@ void bhv_yoshi_loop(void) {
 
     if (sYoshiTalkingState > 2) {
         if (gHudDisplay.lives >= 100) {
-            play_sound(SOUND_GENERAL_COLLECT_1UP, gDefaultSoundArgs);
             gSpecialTripleJump = 1;
+            sYoshiTalkingState = 3;
         } else if ((gGlobalTimer & 0x03) == 0) {
             play_sound(SOUND_MENU_YOSHI_GAIN_LIVES, gDefaultSoundArgs);
             gMarioStates[0].numLives++;
