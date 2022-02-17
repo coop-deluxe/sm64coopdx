@@ -5,24 +5,20 @@
 -- globally sync enabled state
 gGlobalSyncTable.hideAndSeek = true
 
--- keep track of round info for popup
-ROUND_END_UNKNOWN = 1
-ROUND_END_SEEKER_WIN = 2
-ROUND_END_HIDER_WIN = 3
-gGlobalSyncTable.roundNumber = 0
-gGlobalSyncTable.roundEnded = ROUND_END_UNKNOWN
-
-sRoundEndedTimer = 0
-sRoundEndedTimeout = 15 * 30 -- fifteen seconds
-sFlashingIndex = 0
-sDisplayCenterTimer = 0
+-- keep track of round info
+ROUND_STATE_WAIT        = 0
+ROUND_STATE_ACTIVE      = 1
+ROUND_STATE_SEEKERS_WIN = 2
+ROUND_STATE_HIDERS_WIN  = 3
+ROUND_STATE_UNKNOWN_END = 4
+gGlobalSyncTable.roundState   = ROUND_STATE_WAIT -- current round state
+gGlobalSyncTable.displayTimer = 0 -- the displayed timer
+sRoundTimer        = 0            -- the server's round timer
+sRoundStartTimeout = 15 * 30      -- fifteen seconds
+sRoundEndTimeout   = 3 * 60 * 30  -- three minutes
 
 -- server keeps track of last player turned seeker
 sLastSeekerIndex = 0
-
--- keep track of the amount of time since someone was turned into seeker
-sLastSeekerTimer = 0
-sLastSeekerTimeout = 3 * 60 * 30 -- three minutes
 
 -- keep track of distance moved recently (camping detection)
 sLastPos = {}
@@ -31,9 +27,16 @@ sLastPos.y = 0
 sLastPos.z = 0
 sDistanceMoved = 0
 sDistanceTimer = 0
-sDistanceTimeout = 10 * 30
+sDistanceTimeout = 10 * 30 -- ten seconds
+
+-- flashing 'keep moving' index
+sFlashingIndex = 0
 
 function server_update(m)
+    -- increment timer
+    sRoundTimer = sRoundTimer + 1
+    gGlobalSyncTable.displayTimer = math.floor(sRoundTimer / 30)
+
     -- figure out state of the game
     local hasSeeker = false
     local hasHider = false
@@ -53,29 +56,33 @@ function server_update(m)
 
     -- only change state if there are 2+ players
     if connectedCount < 2 then
-        sRoundEndedTimer = 0
-        sLastSeekerTimer = 0
+        gGlobalSyncTable.roundState = ROUND_STATE_WAIT
         return
+    elseif gGlobalSyncTable.roundState == ROUND_STATE_WAIT then
+        gGlobalSyncTable.roundState = ROUND_STATE_UNKNOWN_END
+        sRoundTimer = 0
+        gGlobalSyncTable.displayTimer = 0
     end
 
     -- check to see if the round should end
-    if gGlobalSyncTable.roundEnded == 0 then
-        if not hasHider or not hasSeeker or sLastSeekerTimer > sLastSeekerTimeout then
+    if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+        if not hasHider or not hasSeeker or sRoundTimer > sRoundEndTimeout then
             if not hasHider then
-                gGlobalSyncTable.roundEnded = ROUND_END_SEEKER_WIN
-            elseif sLastSeekerTimer > sLastSeekerTimeout then
-                gGlobalSyncTable.roundEnded = ROUND_END_HIDER_WIN
+                gGlobalSyncTable.roundState = ROUND_STATE_SEEKERS_WIN
+            elseif sRoundTimer > sRoundEndTimeout then
+                gGlobalSyncTable.roundState = ROUND_STATE_HIDERS_WIN
             else
-                gGlobalSyncTable.roundEnded = ROUND_END_UNKNOWN
+                gGlobalSyncTable.roundState = ROUND_STATE_UNKNOWN_END
             end
-            sRoundEndedTimer = 0
+            sRoundTimer = 0
+            gGlobalSyncTable.displayTimer = 0
         else
             return
         end
     end
 
-    -- if round was over for 5 seconds
-    if sRoundEndedTimer >= sRoundEndedTimeout then
+    -- start round
+    if sRoundTimer >= sRoundStartTimeout then
         -- reset seekers
         for i=0,(MAX_PLAYERS-1) do
             gPlayerSyncTable[i].seeking = false
@@ -96,9 +103,10 @@ function server_update(m)
             s.seeking = true
         end
 
-        -- increment round number
-        gGlobalSyncTable.roundNumber = gGlobalSyncTable.roundNumber + 1
-        gGlobalSyncTable.roundEnded = 0
+        -- set round state
+        gGlobalSyncTable.roundState = ROUND_STATE_ACTIVE
+        sRoundTimer = 0
+        gGlobalSyncTable.displayTimer = 0
     end
 end
 
@@ -147,19 +155,11 @@ function update()
     end
 
     -- check if local player is camping
-    if gGlobalSyncTable.roundEnded == 0 then
+    if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
         camping_detection(gMarioStates[0])
     else
         sDistanceTimer = 0
     end
-
-    -- update sLastSeekerTimer and sRoundEndedTimer
-    if gGlobalSyncTable.roundEnded == 0 then
-        sLastSeekerTimer = sLastSeekerTimer + 1
-    else
-        sRoundEndedTimer = sRoundEndedTimer + 1
-    end
-    sDisplayCenterTimer = sDisplayCenterTimer + 1
 end
 
 function mario_update(m)
@@ -246,7 +246,7 @@ end
 function on_player_connected(m)
     -- start out as a non-seeker
     local s = gPlayerSyncTable[m.playerIndex]
-    s.seeking = false
+    s.seeking = true
 end
 
 function hud_top_render()
@@ -258,18 +258,19 @@ function hud_top_render()
     local seconds = 0
     local text = ''
 
-    if network_player_connected_count() < 2 then
+    if gGlobalSyncTable.roundState == ROUND_STATE_WAIT then
         seconds = 60
         text = 'waiting for players'
-    elseif gGlobalSyncTable.roundEnded == 0 then
-        seconds = math.floor((sLastSeekerTimeout - sLastSeekerTimer) / 30)
+    elseif gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+        seconds = math.floor(sRoundEndTimeout / 30 - gGlobalSyncTable.displayTimer)
+        if seconds < 0 then seconds = 0 end
         text = 'seekers have ' .. seconds .. ' seconds'
     else
-        seconds = math.floor((sRoundEndedTimeout - sRoundEndedTimer) / 30)
+        seconds = math.floor(sRoundStartTimeout / 30 - gGlobalSyncTable.displayTimer)
+        if seconds < 0 then seconds = 0 end
         text = 'next round in ' .. seconds .. ' seconds'
     end
 
-    if seconds < 0 then seconds = 0 end
     local scale = 0.50
 
     -- get width of screen and text
@@ -280,7 +281,7 @@ function hud_top_render()
     local y = 0
 
     local background = 0.0
-    if seconds < 60 and gGlobalSyncTable.roundEnded == 0 then
+    if seconds < 60 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
         background = (math.sin(sFlashingIndex / 10.0) * 0.5 + 0.5) * 1.0
         background = background * background
         background = background * background
@@ -323,27 +324,22 @@ function hud_bottom_render()
 end
 
 function hud_center_render()
-    if sDisplayCenterTimer > 30 * 5 then return end
+    if gGlobalSyncTable.displayTimer > 3 then return end
 
     -- set text
     local text = ''
-    if gGlobalSyncTable.roundEnded == ROUND_END_SEEKER_WIN then
+    if gGlobalSyncTable.roundState == ROUND_STATE_SEEKERS_WIN then
         text = 'Seekers Win!'
-    elseif gGlobalSyncTable.roundEnded == ROUND_END_HIDER_WIN then
+    elseif gGlobalSyncTable.roundState == ROUND_STATE_HIDERS_WIN then
         text = 'Hiders Win!'
-    elseif gGlobalSyncTable.roundEnded == 0 then
+    elseif gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
         text = 'Go!'
     else
         return
     end
 
     -- set scale
-    local scale = 1 - (sRoundEndedTimer / 30) + 4
-    if scale < 0 then scale = 0 end
-    if scale > 1 then scale = 1 end
-    scale = scale * scale
-    scale = scale * scale
-    scale = scale * scale
+    local scale = 1
 
     -- get width of screen and text
     local screenWidth = djui_hud_get_screen_width()
@@ -395,22 +391,22 @@ end
 -- network callbacks --
 -----------------------
 
-function on_round_number_changed(tag, oldVal, newVal)
-    play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
-    sDisplayCenterTimer = 0
-end
+function on_round_state_changed(tag, oldVal, newVal)
+    local rs = gGlobalSyncTable.roundState
 
-function on_round_ended_changed(tag, oldVal, newVal)
-    if oldVal == 0 and newVal ~= 0 then
-        sLastSeekerTimer = 0
+    if     rs == ROUND_STATE_WAIT        then
+        -- nothing
+    elseif rs == ROUND_STATE_ACTIVE      then
+        play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
+    elseif rs == ROUND_STATE_SEEKERS_WIN then
         play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gMarioStates[0].marioObj.header.gfx.cameraToObject)
-        sDisplayCenterTimer = 0
-    elseif newVal == 0 and oldVal ~= 0 then
-        sLastSeekerTimer = 0
+    elseif rs == ROUND_STATE_HIDERS_WIN  then
+        play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gMarioStates[0].marioObj.header.gfx.cameraToObject)
+    elseif rs == ROUND_STATE_UNKNOWN_END then
+        -- nothing
     end
-
-    sRoundEndedTimer = 0
 end
+
 
 function on_seeking_changed(tag, oldVal, newVal)
     local m = gMarioStates[tag]
@@ -422,7 +418,7 @@ function on_seeking_changed(tag, oldVal, newVal)
         playerColor = network_get_player_text_color_string(m.playerIndex)
         djui_popup_create(playerColor .. np.name .. '\\#ffa0a0\\ is now a seeker', 2)
         sLastSeekerIndex = m.playerIndex
-        sLastSeekerTimer = 0
+        sRoundTimer = 0
     end
 end
 
@@ -440,8 +436,7 @@ hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
 
 -- call functions when certain sync table values change
-hook_on_sync_table_change(gGlobalSyncTable, 'roundNumber', 0, on_round_number_changed)
-hook_on_sync_table_change(gGlobalSyncTable, 'roundEnded', 0, on_round_ended_changed)
+hook_on_sync_table_change(gGlobalSyncTable, 'roundState', 0, on_round_state_changed)
 for i=0,(MAX_PLAYERS-1) do
     gPlayerSyncTable[i].seeking = true
     hook_on_sync_table_change(gPlayerSyncTable[i], 'seeking', i, on_seeking_changed)
