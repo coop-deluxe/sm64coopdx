@@ -64,6 +64,8 @@ enum PacketType {
 
     PACKET_NETWORK_PLAYERS_REQUEST,
 
+    PACKET_REQUEST_FAILED,
+
     ///
     PACKET_CUSTOM = 255,
 };
@@ -336,5 +338,9 @@ void network_receive_lua_sync_table_request(struct Packet* p);
 
 void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 remoteIndex, u16 lntKeyCount, struct LSTNetworkType* lntKey, struct LSTNetworkType* lntValue);
 void network_receive_lua_sync_table(struct Packet* p);
+
+// packet_request_failed.c
+void network_send_request_failed(struct NetworkPlayer* toNp, u8 requestType);
+void network_receive_request_failed(struct Packet* p);
 
 #endif

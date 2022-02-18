@@ -89,6 +89,8 @@ void packet_process(struct Packet* p) {
 
         case PACKET_NETWORK_PLAYERS_REQUEST: network_receive_network_players_request(p); break;
 
+        case PACKET_REQUEST_FAILED:          network_receive_request_failed(p); break;
+
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);

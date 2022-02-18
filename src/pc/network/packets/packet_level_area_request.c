@@ -35,12 +35,21 @@ void network_receive_level_area_request(struct Packet* p) {
     struct NetworkPlayer* toNp = network_player_from_global_index(globalIndex);
     if (toNp == NULL || toNp->localIndex == UNKNOWN_LOCAL_INDEX || !toNp->connected) {
         LOG_ERROR("Receiving level area request from inactive player!");
+        if (toNp != NULL) { network_send_request_failed(toNp, 1); }
         return;
     }
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("rx level area request: received an improper location");
+        if (toNp != NULL) { network_send_request_failed(toNp, 1); }
+        return;
+    }
+
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    if (np == NULL || !np->currAreaSyncValid || !np->currLevelSyncValid) {
+        LOG_ERROR("rx level area request: received when we're not synchronized");
+        if (toNp != NULL) { network_send_request_failed(toNp, 1); }
         return;
     }
 
