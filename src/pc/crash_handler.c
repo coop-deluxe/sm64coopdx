@@ -1,8 +1,11 @@
 // Adapted from PeachyPeach's sm64pc-omm
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(WAPI_DUMMY)
+
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
+#endif
+
 #include <stdio.h>
 #include <windows.h>
 #include <dbghelp.h>
@@ -462,6 +465,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     }
 
     // sounds
+#ifdef HAVE_SDL2
     if (SDL_WasInit(SDL_INIT_AUDIO) || SDL_InitSubSystem(SDL_INIT_AUDIO) == 0) {
         SDL_AudioSpec want, have;
         want.freq = 32000;
@@ -475,6 +479,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
             SDL_PauseAudioDevice(device, 0);
         }
     }
+#endif
 
     // Main loop
     while (true) {
@@ -491,5 +496,4 @@ __attribute__((constructor)) static void init_crash_handler() {
     SetUnhandledExceptionFilter(crash_handler);
 }
 
-#endif
 #endif
