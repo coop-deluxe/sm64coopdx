@@ -1,5 +1,4 @@
 extern const Gfx toad_player_metal_start[];
-extern const Gfx toad_player_metal_stop[];
 
 extern const Gfx toad_player_dl_face[];
 extern const Gfx toad_player_dl_eyes_closed[];

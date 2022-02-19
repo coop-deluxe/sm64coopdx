@@ -84,9 +84,7 @@ const GeoLayout toad_player_geo_face_and_wings[] = {
 const GeoLayout toad_player_geo_right_hand[] = {
    GEO_TRANSLATE(LAYER_OPAQUE, 100, 0, 0),
    GEO_OPEN_NODE(),
-      GEO_DISPLAY_LIST(LAYER_OPAQUE, toad_player_metal_stop),
       GEO_HELD_OBJECT(0x00, 0, 0, 0, geo_switch_mario_hand_grab_pos),
-      GEO_DISPLAY_LIST(LAYER_OPAQUE, toad_player_metal_start),
    GEO_CLOSE_NODE(),
 
    GEO_SWITCH_CASE(0, geo_switch_mario_hand),
@@ -305,9 +303,7 @@ const GeoLayout toad_player_geo_vanish_face_and_wings[] = {
 const GeoLayout toad_player_geo_vanish_right_hand[] = {
    GEO_TRANSLATE(LAYER_TRANSPARENT, 100, 0, 0),
    GEO_OPEN_NODE(),
-      GEO_DISPLAY_LIST(LAYER_TRANSPARENT, toad_player_metal_stop),
       GEO_HELD_OBJECT(0x00, 0, 0, 0, geo_switch_mario_hand_grab_pos),
-      GEO_DISPLAY_LIST(LAYER_TRANSPARENT, toad_player_metal_start),
    GEO_CLOSE_NODE(),
 
    GEO_SWITCH_CASE(0, geo_switch_mario_hand),
@@ -511,9 +507,7 @@ const GeoLayout toad_player_geo_metal_face_and_wings[] = {
 const GeoLayout toad_player_geo_metal_right_hand[] = {
    GEO_TRANSLATE(LAYER_OPAQUE, 100, 0, 0),
    GEO_OPEN_NODE(),
-      GEO_DISPLAY_LIST(LAYER_OPAQUE, toad_player_metal_stop),
       GEO_HELD_OBJECT(0x00, 0, 0, 0, geo_switch_mario_hand_grab_pos),
-      GEO_DISPLAY_LIST(LAYER_OPAQUE, toad_player_metal_start),
    GEO_CLOSE_NODE(),
 
    GEO_SWITCH_CASE(0, geo_switch_mario_hand),
@@ -639,7 +633,6 @@ const GeoLayout toad_player_geo_metal_body[] = {
             GEO_CLOSE_NODE(),
          GEO_CLOSE_NODE(),
       GEO_CLOSE_NODE(),
-      GEO_DISPLAY_LIST(LAYER_OPAQUE, toad_player_metal_stop),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
 };
@@ -718,9 +711,7 @@ const GeoLayout toad_player_geo_metal_vanish_face_and_wings[] = {
 const GeoLayout toad_player_geo_metal_vanish_right_hand[] = {
    GEO_TRANSLATE(LAYER_TRANSPARENT, 100, 0, 0),
    GEO_OPEN_NODE(),
-      GEO_DISPLAY_LIST(LAYER_TRANSPARENT, toad_player_metal_stop),
       GEO_HELD_OBJECT(0x00, 0, 0, 0, geo_switch_mario_hand_grab_pos),
-      GEO_DISPLAY_LIST(LAYER_TRANSPARENT, toad_player_metal_start),
    GEO_CLOSE_NODE(),
 
    GEO_SWITCH_CASE(0, geo_switch_mario_hand),
@@ -846,7 +837,6 @@ const GeoLayout toad_player_geo_metal_vanish_body[] = {
             GEO_CLOSE_NODE(),
          GEO_CLOSE_NODE(),
       GEO_CLOSE_NODE(),
-      GEO_DISPLAY_LIST(LAYER_TRANSPARENT, toad_player_metal_stop),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
 };
