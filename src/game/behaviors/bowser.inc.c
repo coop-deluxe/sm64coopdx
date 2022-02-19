@@ -1246,8 +1246,9 @@ void bhv_bowser_loop(void) {
     int angleToPlayer = obj_angle_to_object(o, player);
 
     // look for animation difference and override
+    struct Animation* anim = NULL;
     if (o->oAnimations != NULL && networkBowserAnimationIndex <= 26) {
-        struct Animation* anim = o->oAnimations[networkBowserAnimationIndex];
+        anim = o->oAnimations[networkBowserAnimationIndex];
         if (anim != NULL && o->header.gfx.unk38.curAnim != anim) {
             geo_obj_init_animation(&o->header.gfx, &anim);
         }
