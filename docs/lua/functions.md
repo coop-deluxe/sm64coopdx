@@ -65,7 +65,7 @@
 <br />
 
 - interaction.h
-   - [does_mario_have_hat](#does_mario_have_hat)
+   - [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
    - [get_door_save_file_flag](#get_door_save_file_flag)
    - [mario_blow_off_cap](#mario_blow_off_cap)
    - [mario_check_object_grab](#mario_check_object_grab)
@@ -1189,10 +1189,10 @@
 <br />
 
 
-## [does_mario_have_hat](#does_mario_have_hat)
+## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
 ### Lua Example
-`local integerValue = does_mario_have_hat(m)`
+`local integerValue = does_mario_have_normal_cap_on_head(m)`
 
 ### Parameters
 | Field | Type |
@@ -1203,7 +1203,7 @@
 - integer
 
 ### C Prototype
-`u32 does_mario_have_hat(struct MarioState *m);`
+`u32 does_mario_have_normal_cap_on_head(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 

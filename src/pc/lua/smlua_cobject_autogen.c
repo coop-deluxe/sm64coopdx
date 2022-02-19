@@ -9,17 +9,32 @@
 #include "src/pc/network/network_player.h"
 #include "src/pc/djui/djui_hud_utils.h"
 
+#define LUA_ANIM_INFO_FIELD_COUNT 11
+static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
+    { "animAccel",              LVT_S32,       offsetof(struct AnimInfo, animAccel),              false, LOT_NONE      },
+    { "animFrame",              LVT_S16,       offsetof(struct AnimInfo, animFrame),              false, LOT_NONE      },
+    { "animFrameAccelAssist",   LVT_S32,       offsetof(struct AnimInfo, animFrameAccelAssist),   false, LOT_NONE      },
+    { "animID",                 LVT_S16,       offsetof(struct AnimInfo, animID),                 false, LOT_NONE      },
+    { "animTimer",              LVT_U16,       offsetof(struct AnimInfo, animTimer),              false, LOT_NONE      },
+    { "animYTrans",             LVT_S16,       offsetof(struct AnimInfo, animYTrans),             false, LOT_NONE      },
+    { "curAnim",                LVT_COBJECT_P, offsetof(struct AnimInfo, curAnim),                true,  LOT_ANIMATION },
+    { "prevAnimFrame",          LVT_S16,       offsetof(struct AnimInfo, prevAnimFrame),          false, LOT_NONE      },
+    { "prevAnimFrameTimestamp", LVT_U32,       offsetof(struct AnimInfo, prevAnimFrameTimestamp), false, LOT_NONE      },
+    { "prevAnimID",             LVT_S16,       offsetof(struct AnimInfo, prevAnimID),             false, LOT_NONE      },
+    { "prevAnimPtr",            LVT_COBJECT_P, offsetof(struct AnimInfo, prevAnimPtr),            true,  LOT_ANIMATION },
+};
+
 #define LUA_ANIMATION_FIELD_COUNT 9
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
-    { "flags",             LVT_S16,   offsetof(struct Animation, flags),              false, LOT_NONE    },
-    { "index",             LVT_U16_P, offsetof(struct Animation, index),              true,  LOT_POINTER },
-    { "length",            LVT_U32,   offsetof(struct Animation, length),             false, LOT_NONE    },
-    { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor),  false, LOT_NONE    },
-    { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),         false, LOT_NONE    },
-    { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),          false, LOT_NONE    },
-    { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),            false, LOT_NONE    },
-    { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),    false, LOT_NONE    },
-    { "values",            LVT_S16_P, offsetof(struct Animation, values), true,  LOT_POINTER },
+    { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), false, LOT_NONE    },
+    { "flags",             LVT_S16,   offsetof(struct Animation, flags),             false, LOT_NONE    },
+    { "index",             LVT_U16_P, offsetof(struct Animation, index),             true,  LOT_POINTER },
+    { "length",            LVT_U32,   offsetof(struct Animation, length),            false, LOT_NONE    },
+    { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           false, LOT_NONE    },
+    { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE    },
+    { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE    },
+    { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),   false, LOT_NONE    },
+    { "values",            LVT_S16_P, offsetof(struct Animation, values),            true,  LOT_POINTER },
 };
 
 #define LUA_AREA_FIELD_COUNT 13
@@ -231,43 +246,28 @@ static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
 
 #define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 19
 static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_COUNT] = {
-    { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S               },
-    { "cameraToObject",             LVT_COBJECT,   offsetof(struct GraphNodeObject, cameraToObject),             true,  LOT_VEC3F               },
-    { "node",                       LVT_COBJECT,   offsetof(struct GraphNodeObject, node),                       true,  LOT_GRAPHNODE           },
-    { "pos",                        LVT_COBJECT,   offsetof(struct GraphNodeObject, pos),                        true,  LOT_VEC3F               },
-    { "prevAngle",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevAngle),                  true,  LOT_VEC3S               },
-    { "prevPos",                    LVT_COBJECT,   offsetof(struct GraphNodeObject, prevPos),                    true,  LOT_VEC3F               },
-    { "prevScale",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevScale),                  true,  LOT_VEC3F               },
-    { "prevScaleTimestamp",         LVT_U32,       offsetof(struct GraphNodeObject, prevScaleTimestamp),         false, LOT_NONE                },
-    { "prevShadowPos",              LVT_COBJECT,   offsetof(struct GraphNodeObject, prevShadowPos),              true,  LOT_VEC3F               },
-    { "prevShadowPosTimestamp",     LVT_U32,       offsetof(struct GraphNodeObject, prevShadowPosTimestamp),     false, LOT_NONE                },
-//  { "prevThrowMatrix",            LVT_???,       offsetof(struct GraphNodeObject, prevThrowMatrix),            false, LOT_???                 }, <--- UNIMPLEMENTED
-    { "prevThrowMatrixTimestamp",   LVT_U32,       offsetof(struct GraphNodeObject, prevThrowMatrixTimestamp),   false, LOT_NONE                },
-    { "prevTimestamp",              LVT_U32,       offsetof(struct GraphNodeObject, prevTimestamp),              false, LOT_NONE                },
-    { "scale",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, scale),                      true,  LOT_VEC3F               },
-    { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                true,  LOT_GRAPHNODE           },
-    { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), false, LOT_NONE                },
-//  { "throwMatrix",                LVT_???,       offsetof(struct GraphNodeObject, throwMatrix),                false, LOT_???                 }, <--- UNIMPLEMENTED
-//  { "throwMatrixInterpolated",    LVT_???,       offsetof(struct GraphNodeObject, throwMatrixInterpolated),    false, LOT_???                 }, <--- UNIMPLEMENTED
-    { "animInfo",                   LVT_S8,        offsetof(struct GraphNodeObject, animInfo),                   false, LOT_NONE                },
-    { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE                },
-    { "animInfo",                   LVT_COBJECT,   offsetof(struct GraphNodeObject, animInfo),                   true,  LOT_GRAPHNODEOBJECT_SUB },
-    { "unk4C",                      LVT_COBJECT_P, offsetof(struct GraphNodeObject, unk4C),                      true,  LOT_SPAWNINFO           },
-};
-
-#define LUA_GRAPH_NODE_OBJECT_SUB_FIELD_COUNT 11
-static struct LuaObjectField sAnimInfoFields[LUA_GRAPH_NODE_OBJECT_SUB_FIELD_COUNT] = {
-    { "animAccel",              LVT_S32,       offsetof(struct AnimInfo, animAccel),              false, LOT_NONE      },
-    { "animFrame",              LVT_S16,       offsetof(struct AnimInfo, animFrame),              false, LOT_NONE      },
-    { "animFrameAccelAssist",   LVT_S32,       offsetof(struct AnimInfo, animFrameAccelAssist),   false, LOT_NONE      },
-    { "animID",                 LVT_S16,       offsetof(struct AnimInfo, animID),                 false, LOT_NONE      },
-    { "animTimer",              LVT_U16,       offsetof(struct AnimInfo, animTimer),              false, LOT_NONE      },
-    { "animYTrans",             LVT_S16,       offsetof(struct AnimInfo, animYTrans),             false, LOT_NONE      },
-    { "curAnim",                LVT_COBJECT_P, offsetof(struct AnimInfo, curAnim),                true,  LOT_ANIMATION },
-    { "prevAnimFrame",          LVT_S16,       offsetof(struct AnimInfo, prevAnimFrame),          false, LOT_NONE      },
-    { "prevAnimFrameTimestamp", LVT_U32,       offsetof(struct AnimInfo, prevAnimFrameTimestamp), false, LOT_NONE      },
-    { "prevAnimID",             LVT_S16,       offsetof(struct AnimInfo, prevAnimID),             false, LOT_NONE      },
-    { "prevAnimPtr",            LVT_COBJECT_P, offsetof(struct AnimInfo, prevAnimPtr),            true,  LOT_ANIMATION },
+    { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE      },
+    { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S     },
+    { "animInfo",                   LVT_COBJECT,   offsetof(struct GraphNodeObject, animInfo),                   true,  LOT_ANIMINFO  },
+    { "areaIndex",                  LVT_S8,        offsetof(struct GraphNodeObject, areaIndex),                  false, LOT_NONE      },
+    { "cameraToObject",             LVT_COBJECT,   offsetof(struct GraphNodeObject, cameraToObject),             true,  LOT_VEC3F     },
+    { "node",                       LVT_COBJECT,   offsetof(struct GraphNodeObject, node),                       true,  LOT_GRAPHNODE },
+    { "pos",                        LVT_COBJECT,   offsetof(struct GraphNodeObject, pos),                        true,  LOT_VEC3F     },
+    { "prevAngle",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevAngle),                  true,  LOT_VEC3S     },
+    { "prevPos",                    LVT_COBJECT,   offsetof(struct GraphNodeObject, prevPos),                    true,  LOT_VEC3F     },
+    { "prevScale",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevScale),                  true,  LOT_VEC3F     },
+    { "prevScaleTimestamp",         LVT_U32,       offsetof(struct GraphNodeObject, prevScaleTimestamp),         false, LOT_NONE      },
+    { "prevShadowPos",              LVT_COBJECT,   offsetof(struct GraphNodeObject, prevShadowPos),              true,  LOT_VEC3F     },
+    { "prevShadowPosTimestamp",     LVT_U32,       offsetof(struct GraphNodeObject, prevShadowPosTimestamp),     false, LOT_NONE      },
+//  { "prevThrowMatrix",            LVT_???,       offsetof(struct GraphNodeObject, prevThrowMatrix),            false, LOT_???       }, <--- UNIMPLEMENTED
+    { "prevThrowMatrixTimestamp",   LVT_U32,       offsetof(struct GraphNodeObject, prevThrowMatrixTimestamp),   false, LOT_NONE      },
+    { "prevTimestamp",              LVT_U32,       offsetof(struct GraphNodeObject, prevTimestamp),              false, LOT_NONE      },
+    { "scale",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, scale),                      true,  LOT_VEC3F     },
+    { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                true,  LOT_GRAPHNODE },
+    { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), false, LOT_NONE      },
+//  { "throwMatrix",                LVT_???,       offsetof(struct GraphNodeObject, throwMatrix),                false, LOT_???       }, <--- UNIMPLEMENTED
+//  { "throwMatrixInterpolated",    LVT_???,       offsetof(struct GraphNodeObject, throwMatrixInterpolated),    false, LOT_???       }, <--- UNIMPLEMENTED
+    { "unk4C",                      LVT_COBJECT_P, offsetof(struct GraphNodeObject, unk4C),                      true,  LOT_SPAWNINFO },
 };
 
 #define LUA_HANDHELD_SHAKE_POINT_FIELD_COUNT 3
@@ -688,6 +688,7 @@ static struct LuaObjectField sWhirlpoolFields[LUA_WHIRLPOOL_FIELD_COUNT] = {
 };
 
 struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] = {
+    { LOT_ANIMINFO,              sAnimInfoFields,              LUA_ANIM_INFO_FIELD_COUNT               },
     { LOT_ANIMATION,             sAnimationFields,             LUA_ANIMATION_FIELD_COUNT               },
     { LOT_AREA,                  sAreaFields,                  LUA_AREA_FIELD_COUNT                    },
     { LOT_CAMERA,                sCameraFields,                LUA_CAMERA_FIELD_COUNT                  },
@@ -703,7 +704,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GLOBALTEXTURES,        sGlobalTexturesFields,        LUA_GLOBAL_TEXTURES_FIELD_COUNT         },
     { LOT_GRAPHNODE,             sGraphNodeFields,             LUA_GRAPH_NODE_FIELD_COUNT              },
     { LOT_GRAPHNODEOBJECT,       sGraphNodeObjectFields,       LUA_GRAPH_NODE_OBJECT_FIELD_COUNT       },
-    { LOT_GRAPHNODEOBJECT_SUB,   sAnimInfoFields,   LUA_GRAPH_NODE_OBJECT_SUB_FIELD_COUNT   },
     { LOT_HANDHELDSHAKEPOINT,    sHandheldShakePointFields,    LUA_HANDHELD_SHAKE_POINT_FIELD_COUNT    },
     { LOT_INSTANTWARP,           sInstantWarpFields,           LUA_INSTANT_WARP_FIELD_COUNT            },
     { LOT_LAKITUSTATE,           sLakituStateFields,           LUA_LAKITU_STATE_FIELD_COUNT            },

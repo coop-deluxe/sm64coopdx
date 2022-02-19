@@ -1,6 +1,7 @@
 ## [:rewind: Lua Reference](lua.md)
 
 # Supported Structs
+- [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
 - [Area](#Area)
 - [Camera](#Camera)
@@ -16,7 +17,6 @@
 - [GlobalTextures](#GlobalTextures)
 - [GraphNode](#GraphNode)
 - [GraphNodeObject](#GraphNodeObject)
-- [GraphNodeObject_sub](#GraphNodeObject_sub)
 - [HandheldShakePoint](#HandheldShakePoint)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
@@ -53,17 +53,37 @@
 
 <br />
 
+## [AnimInfo](#AnimInfo)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| animAccel | integer |  |
+| animFrame | integer |  |
+| animFrameAccelAssist | integer |  |
+| animID | integer |  |
+| animTimer | integer |  |
+| animYTrans | integer |  |
+| curAnim | [Animation](#Animation) | read-only |
+| prevAnimFrame | integer |  |
+| prevAnimFrameTimestamp | integer |  |
+| prevAnimID | integer |  |
+| prevAnimPtr | [Animation](#Animation) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Animation](#Animation)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| animYTransDivisor | integer |  |
 | flags | integer |  |
 | index | Pointer <integer> | read-only |
 | length | integer |  |
-| animYTransDivisor | integer |  |
-| startFrame | integer |  |
-| loopStart | integer |  |
 | loopEnd | integer |  |
+| loopStart | integer |  |
+| startFrame | integer |  |
 | unusedBoneCount | integer |  |
 | values | Pointer <integer> | read-only |
 
@@ -332,7 +352,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| activeAreaIndex | integer |  |
 | angle | [Vec3s](#Vec3s) | read-only |
+| animInfo | [AnimInfo](#AnimInfo) | read-only |
+| areaIndex | integer |  |
 | cameraToObject | [Vec3f](#Vec3f) | read-only |
 | node | [GraphNode](#GraphNode) | read-only |
 | pos | [Vec3f](#Vec3f) | read-only |
@@ -347,30 +370,7 @@
 | scale | [Vec3f](#Vec3f) | read-only |
 | sharedChild | [GraphNode](#GraphNode) | read-only |
 | skipInterpolationTimestamp | integer |  |
-| unk18 | integer |  |
-| unk19 | integer |  |
-| animInfo | [GraphNodeObject_sub](#GraphNodeObject_sub) | read-only |
 | unk4C | [SpawnInfo](#SpawnInfo) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [GraphNodeObject_sub](#GraphNodeObject_sub)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| animAccel | integer |  |
-| animFrame | integer |  |
-| animFrameAccelAssist | integer |  |
-| animID | integer |  |
-| animTimer | integer |  |
-| animYTrans | integer |  |
-| curAnim | [Animation](#Animation) | read-only |
-| prevAnimFrame | integer |  |
-| prevAnimFrameTimestamp | integer |  |
-| prevAnimID | integer |  |
-| prevAnimPtr | [Animation](#Animation) | read-only |
 
 [:arrow_up_small:](#)
 
