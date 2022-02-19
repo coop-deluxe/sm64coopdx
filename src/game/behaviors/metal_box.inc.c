@@ -37,7 +37,7 @@ void bhv_pushable_loop(void) {
     s16 sp1C;
     obj_set_hitbox(o, &sMetalBoxHitbox);
     o->oForwardVel = 0.0f;
-    if (obj_check_if_collided_with_object(o, player) && marioState->flags & 0x80000000) {
+    if (obj_check_if_collided_with_object(o, player) && marioState->flags & MARIO_UNKNOWN_31) {
         sp1C = obj_angle_to_object(o, player);
         if (abs_angle_diff(sp1C, player->oMoveAngleYaw) > 0x4000) {
             o->oMoveAngleYaw = (s16)((player->oMoveAngleYaw + 0x2000) & 0xc000);

@@ -480,7 +480,7 @@ f32 get_character_anim_offset(struct MarioState* m) {
     struct Object* marioObj = m->marioObj;
     struct Character* c = get_character(m);
     if (!c->animOffsetEnabled) { return 0; }
-    s32 animID = marioObj->header.gfx.unk38.animID;
+    s32 animID = marioObj->header.gfx.animInfo.animID;
     if (animID < 0 || animID >= ANIM_TYPE_MAX) { return 0; }
 
     switch (sAnimTypes[animID]) {
@@ -515,7 +515,7 @@ void update_character_anim_offset(struct MarioState* m) {
     if (m->curAnimOffset > 40)  { m->curAnimOffset = 40; }
     if (m->curAnimOffset < -40) { m->curAnimOffset = -40; }
 
-    //s32 animID = marioObj->header.gfx.unk38.animID;
+    //s32 animID = marioObj->header.gfx.animInfo.animID;
     //LOG_INFO(">>> [%d] : %d :: %f, %f", animID, sAnimTypes[animID], m->curAnimOffset, m->minimumBoneY);
 
     marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;

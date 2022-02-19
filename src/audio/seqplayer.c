@@ -203,6 +203,7 @@ void sequence_player_init_channels(struct SequencePlayer *seqPlayer, u16 channel
             }
             seqChannel = allocate_sequence_channel();
             if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == FALSE) {
+                eu_stubbed_printf_0("Audio:Track:Warning: No Free Notetrack\n");
                 gAudioErrorFlags = i + 0x10000;
                 seqPlayer->channels[i] = seqChannel;
             } else {
@@ -226,6 +227,7 @@ void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 chan
     struct SequenceChannel *seqChannel;
     s32 i;
 
+    eu_stubbed_printf_0("SUBTRACK DIM\n");
     for (i = 0; i < CHANNELS_MAX; i++) {
         if (channelBits & 1) {
             seqChannel = seqPlayer->channels[i];
@@ -235,7 +237,9 @@ void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 chan
                     seqChannel->seqPlayer = NULL;
                 }
 #ifdef VERSION_EU
-                if (0) {}
+                else {
+                    stubbed_printf("Audio:Track: Warning SUBTRACK PARENT CHANGED\n");
+                }
 #endif
                 seqPlayer->channels[i] = &gSequenceChannelNone;
             }
@@ -321,27 +325,30 @@ void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer,
     }
 }
 
-void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, void *arg2) {
+void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, void *script) {
     struct SequenceChannel *seqChannel = seqPlayer->channels[channelIndex];
     s32 i;
 
-#ifdef VERSION_EU
     if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == FALSE) {
+#ifdef VERSION_EU
         struct SequencePlayer *bgMusic = &gSequencePlayers[0];
         struct SequencePlayer *miscMusic = &gSequencePlayers[1];
 
         if (seqPlayer == bgMusic) {
+            stubbed_printf("GROUP 0:");
         } else if (seqPlayer == miscMusic) {
+            stubbed_printf("GROUP 1:");
         } else {
+            stubbed_printf("SEQID %d,BANKID %d\n",
+                    seqPlayer->seqId, seqPlayer->defaultBank[0]);
         }
-    } else {
-#else
-    if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) != FALSE) {
+        stubbed_printf("ERR:SUBTRACK %d NOT ALLOCATED\n", channelIndex);
 #endif
+    } else {
         seqChannel->enabled = TRUE;
         seqChannel->finished = FALSE;
         seqChannel->scriptState.depth = 0;
-        seqChannel->scriptState.pc = arg2;
+        seqChannel->scriptState.pc = script;
         seqChannel->delay = 0;
         for (i = 0; i < LAYERS_MAX; i++) {
             if (seqChannel->layers[i] != NULL) {
@@ -387,7 +394,9 @@ void sequence_player_disable(struct SequencePlayer *seqPlayer) {
  * Add an item to the end of a list, if it's not already in any list.
  */
 void audio_list_push_back(struct AudioListItem *list, struct AudioListItem *item) {
-    if (item->prev == NULL) {
+    if (item->prev != NULL) {
+        eu_stubbed_printf_0("Error:Same List Add\n");
+    } else {
         list->prev->next = item;
         item->prev = list->prev;
         item->next = list;
@@ -577,12 +586,18 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
                 break;
 
             case 0xfc: // layer_call
+                if (0 && state->depth >= 4) {
+                    eu_stubbed_printf_0("Macro Level Over Error!\n");
+                }
                 sp3A = m64_read_s16(state);
                 state->stack[state->depth++] = state->pc;
                 state->pc = seqPlayer->seqData + sp3A;
                 break;
 
             case 0xf8: // layer_loop; loop start, N iterations (or 256 if N = 0)
+                if (0 && state->depth >= 4) {
+                    eu_stubbed_printf_0("Macro Level Over Error!\n");
+                }
                 state->remLoopIters[state->depth] = m64_read_u8(state);
                 state->stack[state->depth++] = state->pc;
                 break;
@@ -669,9 +684,8 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
                     break;
                 }
 
-                cmd = get_instrument(seqChannel, cmd, &layer->instrument, &layer->adsr);
-                layer->instOrWave = cmd;
-                if (cmd == 0) {
+                if ((layer->instOrWave = get_instrument(seqChannel, cmd, &layer->instrument, &layer->adsr)) == 0) {
+                    eu_stubbed_printf_1("WARNING: NPRG: cannot change %d\n", cmd);
                     layer->instOrWave = 0xff;
                 }
 #endif
@@ -724,6 +738,9 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
                         break;
                     case 0xe0: // layer_setshortnotedurationfromtable
                         layer->noteDuration = seqPlayer->shortNoteDurationTable[cmd & 0xf];
+                        break;
+                    default:
+                        eu_stubbed_printf_1("Audio:Track:NOTE:UNDEFINED NOTE COM. %x\n", cmd);
                         break;
                 }
         }
@@ -989,6 +1006,10 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
     }
 #endif
 }
+
+u8 audioString106[] = "Audio: Note:Velocity Error %d\n";
+u8 audioString107[] = "Error: Your assignchannel is stolen.\n";
+
 #elif defined(NON_MATCHING)
 // US/JP version with macros to simulate inlining by copt. Edit if you dare.
 #include "seq_channel_layer_process_script.h"
@@ -1084,7 +1105,6 @@ void sequence_channel_set_volume(struct SequenceChannel *seqChannel, u8 volume) 
 }
 
 #ifdef NON_MATCHING
-//rodata: 0xf3e30
 void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
     struct M64ScriptState *state;
     struct SequencePlayer *seqPlayer;
@@ -1184,6 +1204,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         goto out;
 #endif
                     case 0xfc: // chan_call
+                        if (0 && state->depth >= 4) {
+                            eu_stubbed_printf_0("Audio:Track :Call Macro Level Over Error!\n");
+                        }
                         sp5A = m64_read_s16(state);
 #ifdef VERSION_EU
                         state->stack[state->depth++] = state->pc;
@@ -1194,6 +1217,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         break;
 
                     case 0xf8: // chan_loop; loop start, N iterations (or 256 if N = 0)
+                        if (0 && state->depth >= 4) {
+                            eu_stubbed_printf_0("Audio:Track :Loops Macro Level Over Error!\n");
+                        }
                         state->remLoopIters[state->depth] = m64_read_u8(state);
 #ifdef VERSION_EU
                         state->stack[state->depth++] = state->pc;
@@ -1230,9 +1256,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         break;
 
 #ifdef VERSION_EU
-                    case 0xf4:
-                    case 0xf3:
-                    case 0xf2:
+                    case 0xf4: // chan_jump_rel
+                    case 0xf3: // chan_beqz_rel
+                    case 0xf2: // chan_bltz_rel
                         tempSigned = m64_read_u8(state);
                         if (cmd == 0xf3 && value != 0)
                             break;
@@ -1275,7 +1301,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         break;
 
 #ifdef VERSION_EU
-                    case 0xeb:
+                    case 0xeb: // chan_setbankandinstr
                         temp = m64_read_u8(state);
                         // Switch to the temp's (0-indexed) bank in this sequence's
                         // bank set. Note that in the binary format (not in the JSON!)
@@ -1286,6 +1312,8 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         // temp should be in a saved register across this call
                         if (get_bank_or_seq(&gBankLoadedPool, 2, temp) != NULL) {
                             seqChannel->bankId = temp;
+                        } else {
+                            eu_stubbed_printf_1("SUB:ERR:BANK %d NOT CACHED.\n", temp);
                         }
                         // fallthrough
 #endif
@@ -1420,6 +1448,8 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         // temp should be in a saved register across this call
                         if (get_bank_or_seq(&gBankLoadedPool, 2, temp) != NULL) {
                             seqChannel->bankId = temp;
+                        } else {
+                            eu_stubbed_printf_1("SUB:ERR:BANK %d NOT CACHED.\n", temp);
                         }
                         }
                         break;
@@ -1479,6 +1509,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
 #endif
                     case 0xe4: // chan_dyncall
                         if (value != -1) {
+                            if (0 && state->depth >= 4) {
+                                eu_stubbed_printf_0("Audio:Track: CTBLCALL Macro Level Over Error!\n");
+                            }
                             u8(*thingy)[2] = *seqChannel->dynTable;
 #ifdef VERSION_EU
                             state->stack[state->depth++] = state->pc;
@@ -1487,6 +1520,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
 #endif
                             sp5A = thingy[value][1] + (thingy[value][0] << 8);
                             state->pc = seqPlayer->seqData + sp5A;
+                            if (0 && sp5A >= gSeqFileHeader->seqArray[seqPlayer->seqId].len) {
+                                eu_stubbed_printf_3("Err :Sub %x ,address %x:Undefined SubTrack Function %x", seqChannel, state->pc, sp5A);
+                            }
                         }
                         break;
 
@@ -1531,7 +1567,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         seqChannel->freqScale = 1.0f;
                         break;
 
-                    case 0xe9:
+                    case 0xe9: // chan_setnotepriority
                         seqChannel->notePriority = m64_read_u8(state);
                         break;
 #endif
@@ -1568,7 +1604,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         break;
 
 #ifdef VERSION_EU
-                    case 0x60:
+                    case 0x60: // chan_delayshort
                         seqChannel->delay = loBits;
                         goto out;
 #endif
@@ -1720,6 +1756,7 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
     // If discarded, bail out.
     if (IS_SEQ_LOAD_COMPLETE(seqPlayer->seqId) == FALSE
         || IS_BANK_LOAD_COMPLETE(seqPlayer->defaultBank[0]) == FALSE) {
+        eu_stubbed_printf_1("Disappear Sequence or Bank %d\n", seqPlayer->seqId);
         sequence_player_disable(seqPlayer);
         return;
     }
@@ -1784,6 +1821,9 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
 
                     case 0xfc: // seq_call
                         u16v = m64_read_s16(state);
+                        if (0 && state->depth >= 4) {
+                            eu_stubbed_printf_0("Macro Level Over Error!\n");
+                        }
 #ifdef VERSION_EU
                         state->stack[state->depth++] = state->pc;
 #else
@@ -1793,6 +1833,9 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
                         break;
 
                     case 0xf8: // seq_loop; loop start, N iterations (or 256 if N = 0)
+                        if (0 && state->depth >= 4) {
+                            eu_stubbed_printf_0("Macro Level Over Error!\n");
+                        }
                         state->remLoopIters[state->depth] = m64_read_u8(state);
 #ifdef VERSION_EU
                         state->stack[state->depth++] = state->pc;
@@ -2022,6 +2065,10 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
                     case 0xc8: // seq_subtract
                         value = value - m64_read_u8(state);
                         break;
+
+                    default:
+                        eu_stubbed_printf_1("Group:Undefine upper C0h command (%x)\n", cmd);
+                        break;
                 }
             } else {
                 loBits = cmd & 0xf;
@@ -2076,6 +2123,10 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
                     case 0xd9:
                         break;
 #endif
+
+                    default:
+                        eu_stubbed_printf_0("Group:Undefined Command\n");
+                        break;
                 }
             }
         }

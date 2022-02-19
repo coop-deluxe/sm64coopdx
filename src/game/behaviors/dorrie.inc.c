@@ -132,7 +132,7 @@ void dorrie_act_raise_head(void) {
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = DORRIE_ACT_MOVE;
         for (int i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
-    } else if (o->oDorrieLiftingMario && o->header.gfx.unk38.animFrame < 74) {
+    } else if (o->oDorrieLiftingMario && o->header.gfx.animInfo.animFrame < 74) {
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }

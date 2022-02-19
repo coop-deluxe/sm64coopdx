@@ -25,7 +25,6 @@ enum CameraHUDLut {
     GLYPH_CAM_WARIO_HEAD,
 };
 
-// Functions
 void set_hud_camera_status(s16 status);
 void render_hud(void);
 

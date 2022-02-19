@@ -340,11 +340,11 @@ s16 gEuUnknownWave7[256] = {
     0x0000, 0x8d2e, 0x4e20, 0xe14e, 0x0000, 0x1eb2, 0xb1e0, 0x72d2, 0x0000, 0x8d2e, 0x4e20, 0xe14e,
     0x0000, 0x1eb2, 0xb1e0, 0x72d2,
 };
-// u8 buffer_remove2[764] = { 0 };
 s16 *gWaveSamples[6] = { sSawtoothWaves, sTriangleWaves, sSineWaves, sSquareWaves, sEuUnknownWave6, gEuUnknownWave7 };
-#endif
 
-#ifndef VERSION_EU
+#else
+// !VERSION_EU
+
 s16 sSineWave[0x40] = {
     0,      3211,   6392,   9511,   12539,   15446,  18204,  20787,  23169,  25329,  27244,
     28897,  30272,  31356,  32137,  32609,   0x7FFF, 32609,  32137,  31356,  30272,  28897,

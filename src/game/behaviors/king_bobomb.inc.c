@@ -47,8 +47,8 @@ u8 king_bobomb_act_0_continue_dialog(void) { return o->oAction == 0 && o->oSubAc
 
 void king_bobomb_act_0(void) {
 #ifndef VERSION_JP
-    o->oForwardVel = 0;
-    o->oVelY = 0;
+    o->oForwardVel = 0.0f;
+    o->oVelY = 0.0f;
 #endif
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (o->oSubAction == 0) {
@@ -67,7 +67,7 @@ void king_bobomb_act_0(void) {
     }
 }
 
-int mario_is_far_below_object(f32 arg0) {
+s32 mario_is_far_below_object(f32 arg0) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (arg0 >= o->oPosY - gMarioStates[i].marioObj->oPosY) { return FALSE; }

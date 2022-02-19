@@ -71,8 +71,8 @@ void bhv_bowser_flame_spawn_loop(void) {
     f32 sp20 = sins(bowser->oMoveAngleYaw);
     s16 *sp1C = segmented_to_virtual(bowser_seg6_unkmoveshorts_060576FC);
     if (bowser->oSoundStateID == 6) {
-        sp30 = bowser->header.gfx.unk38.animFrame + 1.0f;
-        if (bowser->header.gfx.unk38.curAnim->unk08 == sp30)
+        sp30 = bowser->header.gfx.animInfo.animFrame + 1.0f;
+        if (bowser->header.gfx.animInfo.curAnim->loopEnd == sp30)
             sp30 = 0;
         if (sp30 > 45 && sp30 < 85) {
             cur_obj_play_sound_1(SOUND_AIR_BOWSER_SPIT_FIRE);
@@ -467,7 +467,7 @@ void bowser_act_spit_fire_into_sky(void) // only in sky
 {
     s32 frame;
     cur_obj_init_animation_with_sound(11);
-    frame = o->header.gfx.unk38.animFrame;
+    frame = o->header.gfx.animInfo.animFrame;
     if (frame > 24 && frame < 36) {
         cur_obj_play_sound_1(SOUND_AIR_BOWSER_SPIT_FIRE);
         struct MarioState* marioState = nearest_mario_state_to_object(o);
@@ -540,7 +540,7 @@ s32 bowser_land(void) {
         o->oVelY = 0;
         spawn_mist_particles_variable(0, 0, 60.0f);
         cur_obj_init_animation_with_sound(8);
-        o->header.gfx.unk38.animFrame = 0;
+        o->header.gfx.animInfo.animFrame = 0;
         cur_obj_start_cam_event(o, CAM_EVENT_BOWSER_JUMP);
         if (BITDW) {
             if (distanceToPlayer < 850.0f)
@@ -1167,7 +1167,7 @@ void bowser_free_update(void) {
     struct Object *platform;
     UNUSED f32 floorHeight;
     if ((platform = o->platform) != NULL)
-        apply_platform_displacement((u32)-1, platform);
+        apply_platform_displacement(FALSE, platform);
     o->oBowserUnk10E = 0;
 
     cur_obj_update_floor_and_walls();
@@ -1249,7 +1249,7 @@ void bhv_bowser_loop(void) {
     struct Animation* anim = NULL;
     if (o->oAnimations != NULL && networkBowserAnimationIndex <= 26) {
         anim = o->oAnimations[networkBowserAnimationIndex];
-        if (anim != NULL && o->header.gfx.unk38.curAnim != anim) {
+        if (anim != NULL && o->header.gfx.animInfo.curAnim != anim) {
             geo_obj_init_animation(&o->header.gfx, &anim);
         }
     }
@@ -1300,9 +1300,9 @@ void bhv_bowser_loop(void) {
 
     // update animation index
     anim = o->oAnimations[networkBowserAnimationIndex];
-    if (o->header.gfx.unk38.curAnim != anim) {
+    if (o->header.gfx.animInfo.curAnim != anim) {
         for (int i = 0; i < 32; i++) {
-            if (o->header.gfx.unk38.curAnim == o->oAnimations[i]) {
+            if (o->header.gfx.animInfo.curAnim == o->oAnimations[i]) {
                 networkBowserAnimationIndex = i;
             }
         }
@@ -1352,7 +1352,7 @@ void bhv_bowser_init(void) {
     so->fullObjectSync = TRUE;
     network_init_object_field(o, &o->header.gfx.node.flags);
     network_init_object_field(o, &networkBowserAnimationIndex);
-    network_init_object_field(o, &o->header.gfx.unk38.animFrame);
+    network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
 }
 
 #undef BITDW

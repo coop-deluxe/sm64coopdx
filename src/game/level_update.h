@@ -99,7 +99,7 @@ struct SavedWarpValues {
 };
 
 extern struct WarpDest sWarpDest;
-extern s8 gInWarpCheckpoint;
+extern s8 sWarpCheckpointActive;
 extern u8 gRejectInstantWarp;
 
 extern s16 D_80339EE0;
@@ -121,7 +121,7 @@ struct HudDisplay {
 };
 
 extern struct HudDisplay gHudDisplay;
-extern s8 gShouldNotPlayCastleMusic;
+extern s8 gNeverEnteredCastle;
 
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;

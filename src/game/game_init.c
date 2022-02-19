@@ -56,7 +56,7 @@ struct MarioAnimation D_80339D10[MAX_PLAYERS];
 struct MarioAnimation gDemo;
 UNUSED u8 filler80339D30[0x90];
 
-int unused8032C690 = 0;
+s32 unused8032C690 = 0;
 u32 gGlobalTimer = 0;
 
 static u16 sCurrFBNum = 0;

@@ -563,13 +563,13 @@ int smlua_func_sequence_player_unlower(lua_State* L) {
  // interaction.h //
 ///////////////////
 
-int smlua_func_does_mario_have_hat(lua_State* L) {
+int smlua_func_does_mario_have_normal_cap_on_head(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    lua_pushinteger(L, does_mario_have_hat(m));
+    lua_pushinteger(L, does_mario_have_normal_cap_on_head(m));
 
     return 1;
 }
@@ -3616,7 +3616,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "sequence_player_unlower", smlua_func_sequence_player_unlower);
 
     // interaction.h
-    smlua_bind_function(L, "does_mario_have_hat", smlua_func_does_mario_have_hat);
+    smlua_bind_function(L, "does_mario_have_normal_cap_on_head", smlua_func_does_mario_have_normal_cap_on_head);
     smlua_bind_function(L, "get_door_save_file_flag", smlua_func_get_door_save_file_flag);
     smlua_bind_function(L, "mario_blow_off_cap", smlua_func_mario_blow_off_cap);
     smlua_bind_function(L, "mario_check_object_grab", smlua_func_mario_check_object_grab);

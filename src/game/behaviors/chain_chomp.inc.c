@@ -466,7 +466,7 @@ void bhv_chain_chomp_update(void) {
         struct SyncObject* so = network_init_object(o, 1000.0f);
         so->syncDeathEvent = FALSE;
         network_init_object_field(o, &o->oChainChompUnk104);
-        network_init_object_field(o, &o->header.gfx.unk38.animFrame);
+        network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
     }
 
     switch (o->oAction) {
