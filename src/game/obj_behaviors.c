@@ -555,6 +555,10 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
         checkActive = FALSE;
     } while (nearest == NULL);
 
+    if (nearest == NULL) {
+        nearest = &gMarioStates[0];
+    }
+
     return nearest;
 }
 
