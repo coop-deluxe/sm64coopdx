@@ -49,12 +49,12 @@
 
 #define SEG_BUFFERS      0x8005C000 // 0x0085000 in size
 #ifdef BETTERCAMERA
-#define SEG_MAIN         0x800F1000 // 0x1328000 in size
+#define SEG_MAIN         0x800F1000 // 0x0132800 in size
 #define SEG_ENGINE       0x80223800 // 0x0017000 in size
 #define SEG_FRAMEBUFFERS 0x8023A800 // 0x0070800 in size
 #define SEG_POOL_START   0x802AB000 // 0x0165000 in size
 #else
-#define SEG_MAIN         0x800E1000 // 0x1328000 in size
+#define SEG_MAIN         0x800E1000 // 0x0132800 in size
 #define SEG_ENGINE       0x80213800 // 0x0017000 in size
 #define SEG_FRAMEBUFFERS 0x8022A800 // 0x0070800 in size
 #define SEG_POOL_START   0x8029B000 // 0x0165000 in size

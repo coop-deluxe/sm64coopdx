@@ -29,8 +29,8 @@ u8 door_allow_walk_through(void) {
         if (gCamera->mode != CAMERA_MODE_NEWCAM) { return FALSE; }
     }
 
-    s32 cur = o->header.gfx.unk38.animFrame;
-    s32 max = o->header.gfx.unk38.curAnim->unk08 - 2;
+    s32 cur = o->header.gfx.animInfo.animFrame;
+    s32 max = o->header.gfx.animInfo.curAnim->loopEnd - 2;
     s32 min = max / 4;
 
     // make non-solid immediately for local actions so the camera doesn't glitch out

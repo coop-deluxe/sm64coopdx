@@ -32,10 +32,10 @@ s8 gSaveFileModified;
 u8 gLastCompletedCourseNum = COURSE_NONE;
 u8 gLastCompletedStarNum = 0;
 s8 sUnusedGotGlobalCoinHiScore = 0;
-u8 gGotFileCoinHiScore = 0;
+u8 gGotFileCoinHiScore = FALSE;
 u8 gCurrCourseStarFlags = 0;
 
-u8 gSpecialTripleJump = 0;
+u8 gSpecialTripleJump = FALSE;
 
 #define STUB_LEVEL(_0, _1, courseenum, _3, _4, _5, _6, _7, _8) courseenum,
 #define DEFINE_LEVEL(_0, _1, courseenum, _3, _4, _5, _6, _7, _8, _9, _10) courseenum,
@@ -497,7 +497,7 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
         gLastCompletedCourseNum = courseIndex + 1;
         gLastCompletedStarNum = starIndex + 1;
         sUnusedGotGlobalCoinHiScore = 0;
-        gGotFileCoinHiScore = 0;
+        gGotFileCoinHiScore = FALSE;
     }
 
     if (courseIndex >= 0 && courseIndex < COURSE_STAGES_COUNT && !fromNetwork) {
@@ -512,7 +512,7 @@ void save_file_collect_star_or_key(s16 coinScore, s16 starIndex, u8 fromNetwork)
             gSaveBuffer.files[fileIndex][0].courseCoinScores[courseIndex] = coinScore;
             touch_coin_score_age(fileIndex, courseIndex);
 
-            gGotFileCoinHiScore = 1;
+            gGotFileCoinHiScore = TRUE;
             gSaveFileModified = TRUE;
         }
     }
@@ -614,7 +614,7 @@ void save_file_clear_flags(u32 flags) {
 }
 
 u32 save_file_get_flags(void) {
-    if (gCurrCreditsEntry != 0 || gCurrDemoInput != NULL) {
+    if (gCurrCreditsEntry != NULL || gCurrDemoInput != NULL) {
         return 0;
     }
     return gSaveBuffer.files[gCurrSaveFileNum - 1][0].flags;
@@ -628,7 +628,7 @@ u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex) {
     u32 starFlags;
 
     if (courseIndex == -1) {
-        starFlags = (gSaveBuffer.files[fileIndex][0].flags >> 24) & 0x7F;
+        starFlags = SAVE_FLAG_TO_STAR_FLAG(gSaveBuffer.files[fileIndex][0].flags);
     } else {
         starFlags = gSaveBuffer.files[fileIndex][0].courseStars[courseIndex] & 0x7F;
     }
@@ -642,8 +642,8 @@ u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex) {
  */
 void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags) {
     if (courseIndex == -1) {
-        gSaveBuffer.files[fileIndex][0].flags |= starFlags << 24;
-        network_send_save_set_flag(fileIndex, courseIndex, 0, ((starFlags << 24) | SAVE_FLAG_FILE_EXISTS));
+        gSaveBuffer.files[fileIndex][0].flags |= STAR_FLAG_TO_SAVE_FLAG(starFlags);
+        network_send_save_set_flag(fileIndex, courseIndex, 0, (STAR_FLAG_TO_SAVE_FLAG(starFlags) | SAVE_FLAG_FILE_EXISTS));
     } else {
         gSaveBuffer.files[fileIndex][0].courseStars[courseIndex] |= starFlags;
         network_send_save_set_flag(fileIndex, courseIndex, starFlags, SAVE_FLAG_FILE_EXISTS);
@@ -765,7 +765,7 @@ void check_if_should_set_warp_checkpoint(struct WarpNode *warpNode) {
  * returns TRUE if input WarpNode was updated, and FALSE if not.
  */
 s32 check_warp_checkpoint(struct WarpNode *warpNode) {
-    s16 isWarpCheckpointActive = FALSE;
+    s16 warpCheckpointActive = FALSE;
     s16 currCourseNum = gLevelToCourseNumTable[(warpNode->destLevel & 0x7F) - 1];
 
     // gSavedCourseNum is only used in this function.
@@ -774,11 +774,11 @@ s32 check_warp_checkpoint(struct WarpNode *warpNode) {
         warpNode->destLevel = gWarpCheckpoint.levelID;
         warpNode->destArea = gWarpCheckpoint.areaNum;
         warpNode->destNode = gWarpCheckpoint.warpNode;
-        isWarpCheckpointActive = TRUE;
+        warpCheckpointActive = TRUE;
     } else {
         // Disable the warp checkpoint just in case the other 2 conditions failed?
         gWarpCheckpoint.courseNum = COURSE_NONE;
     }
 
-    return isWarpCheckpointActive;
+    return warpCheckpointActive;
 }

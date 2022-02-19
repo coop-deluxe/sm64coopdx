@@ -71,7 +71,6 @@ u8 gSpawnedStarHiddenCount = 0;
  * the spawn behavior executed, the index of that behavior is used with sSpawnTypeFromWarpBhv
 */
 
-// D_8032CE9C
 const BehaviorScript *sWarpBhvSpawnTable[] = {
     bhvDoorWarp,                bhvStar,                   bhvExitPodiumWarp,          bhvWarp,
     bhvWarpPipe,                bhvFadingWarp,             bhvInstantActiveWarp,       bhvAirborneWarp,
@@ -80,7 +79,6 @@ const BehaviorScript *sWarpBhvSpawnTable[] = {
     bhvAirborneStarCollectWarp, bhvAirborneDeathWarp,      bhvLaunchStarCollectWarp,   bhvLaunchDeathWarp,
 };
 
-// D_8032CEEC
 u8 sSpawnTypeFromWarpBhv[] = {
     MARIO_SPAWN_DOOR_WARP,             MARIO_SPAWN_UNKNOWN_02,           MARIO_SPAWN_UNKNOWN_03,            MARIO_SPAWN_UNKNOWN_03,
     MARIO_SPAWN_UNKNOWN_03,            MARIO_SPAWN_TELEPORT,             MARIO_SPAWN_INSTANT_ACTIVE,        MARIO_SPAWN_AIRBORNE,
@@ -126,7 +124,7 @@ static int scale_x_to_correct_aspect_center(int x) {
 
 void print_intro_text(void) {
 #ifdef VERSION_EU
-    int language = eu_get_language();
+    s32 language = eu_get_language();
 #endif
     if ((gGlobalTimer & 0x1F) < 20) {
         if (gControllerBits == 0) {
@@ -325,7 +323,7 @@ void change_area(s32 index) {
 
     if (areaFlags & 0x01) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            gMarioStates[i].marioObj->header.gfx.unk18 = index;
+            gMarioStates[i].marioObj->header.gfx.areaIndex = index;
             gMarioStates[i].spawnInfo->areaIndex = index;
         }
     }
@@ -434,7 +432,7 @@ void render_game(void) {
         if (gWarpTransition.isActive) {
             if (gWarpTransDelay == 0) {
                 gWarpTransition.isActive = !render_screen_transition(0, gWarpTransition.type, gWarpTransition.time,
-                                                          &gWarpTransition.data);
+                                                                     &gWarpTransition.data);
                 if (!gWarpTransition.isActive) {
                     if (gWarpTransition.type & 1) {
                         gWarpTransition.pauseRendering = TRUE;
@@ -448,7 +446,7 @@ void render_game(void) {
         }
     } else {
         render_text_labels();
-        if (D_8032CE78 != 0) {
+        if (D_8032CE78 != NULL) {
             clear_viewport(D_8032CE78, gWarpTransFBSetColor);
         } else {
             clear_frame_buffer(gWarpTransFBSetColor);
@@ -456,7 +454,7 @@ void render_game(void) {
     }
 
     D_8032CE74 = NULL;
-    D_8032CE78 = 0;
+    D_8032CE78 = NULL;
 }
 
 void get_area_minimum_y(u8* hasMinY, f32* minY) {

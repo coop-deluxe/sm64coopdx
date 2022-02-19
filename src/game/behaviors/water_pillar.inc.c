@@ -59,23 +59,23 @@ void water_level_pillar_drained(void) {
 }
 
 static u8 bhv_water_level_pillar_ignore_if_true(void) {
-    return (o->oWaterLevelPillarUnkF8) || (o->oAction != 0);
+    return (o->oWaterLevelPillarDrained) || (o->oAction != 0);
 }
 
 void bhv_water_level_pillar_init(void) {
     if (save_file_get_flags() & SAVE_FLAG_MOAT_DRAINED)
-        o->oWaterLevelPillarUnkF8 = 1;
+        o->oWaterLevelPillarDrained = 1;
 
     struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
     so->ignore_if_true = bhv_water_level_pillar_ignore_if_true;
     network_init_object_field(o, &o->oAction);
     network_init_object_field(o, &o->oPrevAction);
     network_init_object_field(o, &o->oTimer);
-    network_init_object_field(o, &o->oWaterLevelPillarUnkF8);
+    network_init_object_field(o, &o->oWaterLevelPillarDrained);
 }
 
 void bhv_water_level_pillar_loop(void) {
-    if (o->oWaterLevelPillarUnkF8)
+    if (o->oWaterLevelPillarDrained)
         water_level_pillar_drained();
     else
         water_level_pillar_undrained();

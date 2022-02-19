@@ -21,7 +21,7 @@ void bhv_hoot_init(void) {
     so->ignore_if_true = bhv_hoot_ignore_if_true;
     network_init_object_field(o, &o->oHootAvailability);
     network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->header.gfx.unk38.animFrame);
+    network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
 }
 
 // sp28 = arg0
@@ -62,7 +62,7 @@ void hoot_free_step(s16 fastOscY, s32 speed) {
     struct FloorGeometry *sp2c;
     s16 yaw = o->oMoveAngleYaw;
     s16 pitch = o->oMoveAnglePitch;
-    s16 sp26 = o->header.gfx.unk38.animFrame;
+    s16 sp26 = o->header.gfx.animInfo.animFrame;
     f32 xPrev = o->oPosX;
     f32 zPrev = o->oPosZ;
     f32 hSpeed;
@@ -109,7 +109,7 @@ void hoot_player_set_yaw(void) {
 void hoot_carry_step(s32 speed, UNUSED f32 xPrev, UNUSED f32 zPrev) {
     s16 yaw = o->oMoveAngleYaw;
     s16 pitch = o->oMoveAnglePitch;
-    s16 sp22 = o->header.gfx.unk38.animFrame;
+    s16 sp22 = o->header.gfx.animInfo.animFrame;
     f32 hSpeed;
 
     o->oVelY = sins(pitch) * speed;
@@ -176,7 +176,7 @@ void hoot_act_ascent(f32 xPrev, f32 zPrev) {
 
     if (o->oTimer >= 29) {
         cur_obj_play_sound_1(SOUND_ENV_WIND2);
-        o->header.gfx.unk38.animFrame = 1;
+        o->header.gfx.animInfo.animFrame = 1;
     }
 
     if (o->oPosY > 6500.0f)

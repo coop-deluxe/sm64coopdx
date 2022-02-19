@@ -25,13 +25,13 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 
-#define POLE_NONE 0
+#define POLE_NONE          0
 #define POLE_TOUCHED_FLOOR 1
-#define POLE_FELL_OFF 2
+#define POLE_FELL_OFF      2
 
-#define HANG_NONE 0
+#define HANG_NONE            0
 #define HANG_HIT_CEIL_OR_OOB 1
-#define HANG_LEFT_CEIL 2
+#define HANG_LEFT_CEIL       2
 
 void add_tree_leaf_particles(struct MarioState *m) {
     f32 leafHeight;
@@ -156,7 +156,7 @@ s32 act_holding_pole(struct MarioState *m) {
 
     if (m->controller->stickY > 16.0f) {
         f32 poleTop = m->usedObj->hitboxHeight - 100.0f;
-        void *poleBehavior = virtual_to_segmented(0x13, m->usedObj->behavior);
+        const BehaviorScript *poleBehavior = virtual_to_segmented(0x13, m->usedObj->behavior);
 
         if (marioObj->oMarioPolePos < poleTop - 0.4f) {
             return set_mario_action(m, ACT_CLIMBING_POLE, 0);
@@ -264,7 +264,7 @@ s32 act_grab_pole_fast(struct MarioState *m) {
             set_mario_animation(m, MARIO_ANIM_GRAB_POLE_SWING_PART1);
         } else {
             set_mario_animation(m, MARIO_ANIM_GRAB_POLE_SWING_PART2);
-            if (is_anim_at_end(m) != 0) {
+            if (is_anim_at_end(m)) {
                 marioObj->oMarioPoleYawVel = 0;
                 set_mario_action(m, ACT_HOLDING_POLE, 0);
             }
@@ -287,7 +287,7 @@ s32 act_top_of_pole_transition(struct MarioState *m) {
         }
     } else {
         set_mario_animation(m, MARIO_ANIM_RETURN_FROM_HANDSTAND);
-        if (m->marioObj->header.gfx.unk38.animFrame == 0) {
+        if (m->marioObj->header.gfx.animInfo.animFrame == 0) {
             return set_mario_action(m, ACT_HOLDING_POLE, 0);
         }
     }
@@ -481,7 +481,7 @@ s32 act_hang_moving(struct MarioState *m) {
         set_mario_animation(m, MARIO_ANIM_MOVE_ON_WIRE_NET_LEFT);
     }
 
-    if (m->marioObj->header.gfx.unk38.animFrame == 12) {
+    if (m->marioObj->header.gfx.animInfo.animFrame == 12) {
         play_sound(SOUND_ACTION_HANGING_STEP, m->marioObj->header.gfx.cameraToObject);
         queue_rumble_data_mario(m, 5, 30);
     }
@@ -581,7 +581,7 @@ s32 act_ledge_grab(struct MarioState *m) {
         return let_go_of_ledge(m);
     }
 #ifdef VERSION_EU
-    // On PAL, you can't slow climb up ledges while holding A.
+    // On EU, you can't slow climb up ledges while holding A.
     if (m->actionTimer == 10 && (m->input & INPUT_NONZERO_ANALOG) && !(m->input & INPUT_A_DOWN))
 #else
     if (m->actionTimer == 10 && (m->input & INPUT_NONZERO_ANALOG))
@@ -630,7 +630,7 @@ s32 act_ledge_climb_slow(struct MarioState *m) {
     update_ledge_climb(m, MARIO_ANIM_SLOW_LEDGE_GRAB, ACT_IDLE);
 
     update_ledge_climb_camera(m);
-    if (m->marioObj->header.gfx.unk38.animFrame == 17) {
+    if (m->marioObj->header.gfx.animInfo.animFrame == 17) {
         m->action = ACT_LEDGE_CLIMB_SLOW_2;
     }
 
@@ -659,7 +659,7 @@ s32 act_ledge_climb_fast(struct MarioState *m) {
 
     update_ledge_climb(m, MARIO_ANIM_FAST_LEDGE_GRAB, ACT_IDLE);
 
-    if (m->marioObj->header.gfx.unk38.animFrame == 8) {
+    if (m->marioObj->header.gfx.animInfo.animFrame == 8) {
         play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
     }
     update_ledge_climb_camera(m);

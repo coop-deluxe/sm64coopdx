@@ -29,7 +29,7 @@ void heave_ho_act_1(void) {
     s32 sp1C = 0;
     o->oForwardVel = 0.0f;
     cur_obj_reverse_animation();
-    while (1) {
+    while (TRUE) {
         if (D_8032F460[sp1C][0] == -1) {
             o->oAction = 2;
             break;

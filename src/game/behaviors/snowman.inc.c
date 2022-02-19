@@ -73,7 +73,8 @@ void snowmans_bottom_act_1(void) {
 
     if (sp20 == -1) {
         sp1E = (u16)angleToPlayer - (u16) o->oMoveAngleYaw;
-        if (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, angleToPlayer, 0x2000) == 1 && o->oSnowmansBottomUnk1AC == 1) {
+        if (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, angleToPlayer, 0x2000) == TRUE
+            && o->oSnowmansBottomUnk1AC == 1) {
             o->oSnowmansBottomUnkF8 = angleToPlayer;
         } else {
             o->oSnowmansBottomUnkF8 = o->oMoveAngleYaw;

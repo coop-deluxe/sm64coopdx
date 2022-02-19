@@ -260,7 +260,7 @@ void piranha_plant_act_biting(void) {
     int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
-    s32 frame = o->header.gfx.unk38.animFrame;
+    s32 frame = o->header.gfx.animInfo.animFrame;
 
     cur_obj_become_tangible();
 
