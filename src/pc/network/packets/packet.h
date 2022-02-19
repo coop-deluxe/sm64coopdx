@@ -173,7 +173,7 @@ void network_init_object_field(struct Object* o, void* field);
 bool network_owns_object(struct Object* o);
 bool network_sync_object_initialized(struct Object* o);
 void network_clear_sync_objects(void);
-void network_set_sync_id(struct Object* o);
+bool network_set_sync_id(struct Object* o);
 void network_send_object(struct Object* o);
 void network_send_object_reliability(struct Object* o, bool reliable);
 void network_receive_object(struct Packet* p);

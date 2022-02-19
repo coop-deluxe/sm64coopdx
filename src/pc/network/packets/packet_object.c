@@ -112,7 +112,11 @@ void network_override_object(u8 syncId, struct Object* o) {
 
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
     // generate new sync ID
-    network_set_sync_id(o);
+    if (!network_set_sync_id(o)) {
+        LOG_ERROR("failed to sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
+        o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        return NULL;
+    }
 
     // set default values for sync object
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
@@ -149,7 +153,8 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
 }
 
 void network_init_object_field(struct Object *o, void* field) {
-    SOFT_ASSERT(o->oSyncID != 0);
+    if (o->oSyncID == 0) { return; }
+
     // remember to synchronize this extra field
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     u8 index = so->extraFieldCount++;
@@ -204,8 +209,8 @@ u8 network_find_cached_sync_id(struct Object* o) {
     return 0;
 }
 
-void network_set_sync_id(struct Object* o) {
-    if (o->oSyncID != 0) { return; }
+bool network_set_sync_id(struct Object* o) {
+    if (o->oSyncID != 0) { return true; }
 
     u8 syncId = 0;
     if (!gNetworkAreaLoaded) {
@@ -231,8 +236,11 @@ void network_set_sync_id(struct Object* o) {
         syncId = reservation_area_local_grab_id();
     }
 
-    SOFT_ASSERT(syncId != 0);
-    SOFT_ASSERT(gSyncObjects[syncId].o == NULL);
+    if (syncId == 0) {
+        LOG_ERROR("failed to sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
+        return false;
+    }
+    SOFT_ASSERT_RETURN(gSyncObjects[syncId].o == NULL, false);
 
     o->oSyncID = syncId;
 
@@ -240,7 +248,8 @@ void network_set_sync_id(struct Object* o) {
         LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
     }
 
-    SOFT_ASSERT(o->oSyncID < MAX_SYNC_OBJECTS);
+    SOFT_ASSERT_RETURN(o->oSyncID < MAX_SYNC_OBJECTS, false);
+    return true;
 }
 
 // ----- header ----- //

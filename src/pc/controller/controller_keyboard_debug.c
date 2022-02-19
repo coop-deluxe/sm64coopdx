@@ -139,7 +139,10 @@ static void debug_reload_lua(void) {
 
 static void debug_spawn_object(void) {
     struct Object* box = spawn_object(gMarioStates[0].marioObj, MODEL_BREAKABLE_BOX_SMALL, bhvBreakableBoxSmall);
-    network_set_sync_id(box);
+    if (!network_set_sync_id(box)) {
+        box->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        return;
+    }
 
     struct Object* spawn_objects[] = { box };
     u32 models[] = { MODEL_BREAKABLE_BOX_SMALL };
