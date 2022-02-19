@@ -46,8 +46,6 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 """
 
 override_field_names = {
-    "Animation": { "unk02": "animYTransDivisor", "unk04": "startFrame", "unk06": "loopStart", "unk08": "loopEnd", "unk0A": "unusedBoneCount" },
-    "GraphNodeObject": { "unk38": "animInfo" },
 }
 
 override_field_types = {

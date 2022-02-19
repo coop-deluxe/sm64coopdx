@@ -33,12 +33,28 @@ static struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
     }
 
     struct LuaObjectTable* ot = &sLuaObjectTable[lot];
-    // TODO: change this to binary search or hash table or something
-    for (int i = 0; i < ot->fieldCount; i++) {
-        if (!strcmp(ot->fields[i].key, key)) {
+
+    // binary search
+    int min = 0;
+    int max = ot->fieldCount - 1;
+    int i = (min + max) / 2;
+    while (true) {
+        int rc = strcmp(key, ot->fields[i].key);
+        if (rc == 0) {
             return &ot->fields[i];
+        } else if (rc < 0) {
+            max = i - 1;
+            i = (min + max) / 2;
+        } else if (rc > 0) {
+            min = i + 1;
+            i = (min + max) / 2;
+        }
+
+        if (min > max || max < min) {
+            return NULL;
         }
     }
+
     return NULL;
 }
 
