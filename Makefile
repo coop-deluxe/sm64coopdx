@@ -92,8 +92,7 @@ TOOLS_DIR := tools
 
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
-  RM ?= rm.exe
-  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4 -fno-use-linker-plugin
+  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
   EXTRA_CFLAGS := -Wno-expansion-to-defined
 else
   EXTRA_INCLUDES :=

@@ -479,7 +479,9 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     djui_inputbox_render_selection(inputbox);
 
     // begin font
-    gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
+    if (font->textBeginDisplayList != NULL) {
+        gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
+    }
 
     // set color
     gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
