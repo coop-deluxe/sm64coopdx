@@ -1083,7 +1083,7 @@ s32 act_first_person(struct MarioState *m) {
         s16 sp1A = m->statusForCamera->headRotation[0];
         s16 sp18 = ((m->statusForCamera->headRotation[1] * 4) / 3) + m->faceAngle[1];
         if (sp1A == -0x1800 && (sp18 < -0x6FFF || sp18 >= 0x7000)) {
-            level_trigger_warp(m, WARP_OP_UNKNOWN_01);
+            level_trigger_warp(m, WARP_OP_LOOK_UP);
         }
     }
 
