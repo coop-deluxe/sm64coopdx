@@ -12,18 +12,13 @@ static Vtx djui_font_normal_vertices[] = {
     {{{ 0,   0, 0}, 0, { 512, 256}, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
-static const Gfx djui_font_normal_text_begin[] = {
+const Gfx dl_font_normal_display_list[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
-    //gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsDPSetTextureFilter(G_TF_POINT),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsSPEndDisplayList(),
-};
-
-static const Gfx djui_font_normal_text_settings[] = {
     gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 3, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 4, G_TX_NOLOD),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, ((16 * 8 + G_IM_SIZ_4b_INCR) >> G_IM_SIZ_4b_SHIFT) - 1, CALC_DXT(16, G_IM_SIZ_4b_BYTES)),
@@ -43,9 +38,8 @@ static void djui_font_normal_render_char(char c) {
     void* fontChar = (void*)font_normal_chars[c - '!'];
     if (fontChar == NULL) { fontChar = (void*)font_normal_chars[94]; }
 
-    gDPPipeSync(gDisplayListHead++);
     gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, (void*)fontChar);
-    gSPDisplayList(gDisplayListHead++, djui_font_normal_text_settings);
+    gSPDisplayList(gDisplayListHead++, dl_font_normal_display_list);
 }
 
 static f32 djui_font_normal_char_width(char c) {
@@ -60,7 +54,7 @@ static const struct DjuiFont sDjuiFontNormal = {
     .lineHeight           = 0.8125f,
     .defaultFontScale     = 32.0f,
     .rotatedUV            = true,
-    .textBeginDisplayList = djui_font_normal_text_begin,
+    .textBeginDisplayList = NULL,
     .render_char          = djui_font_normal_render_char,
     .char_width           = djui_font_normal_char_width,
 };

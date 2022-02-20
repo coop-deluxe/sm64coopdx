@@ -8,6 +8,7 @@
 - [CameraFOVStatus](#CameraFOVStatus)
 - [CameraStoredInfo](#CameraStoredInfo)
 - [CameraTrigger](#CameraTrigger)
+- [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Controller](#Controller)
 - [Cutscene](#Cutscene)
@@ -17,6 +18,7 @@
 - [GlobalTextures](#GlobalTextures)
 - [GraphNode](#GraphNode)
 - [GraphNodeObject](#GraphNodeObject)
+- [GraphNode_802A45E4](#GraphNode_802A45E4)
 - [HandheldShakePoint](#HandheldShakePoint)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
@@ -37,6 +39,8 @@
 - [PlayerGeometry](#PlayerGeometry)
 - [SPTask](#SPTask)
 - [SpawnInfo](#SpawnInfo)
+- [SpawnParticlesInfo](#SpawnParticlesInfo)
+- [Struct802A272C](#Struct802A272C)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
 - [TransitionInfo](#TransitionInfo)
@@ -48,8 +52,10 @@
 - [WarpNode](#WarpNode)
 - [WarpTransition](#WarpTransition)
 - [WarpTransitionData](#WarpTransitionData)
+- [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
 - [Whirlpool](#Whirlpool)
+- [struct802A1230](#struct802A1230)
 
 <br />
 
@@ -176,6 +182,21 @@
 | centerX | integer |  |
 | centerY | integer |  |
 | centerZ | integer |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ChainSegment](#ChainSegment)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| pitch | integer |  |
+| posX | number |  |
+| posY | number |  |
+| posZ | number |  |
+| roll | integer |  |
+| yaw | integer |  |
 
 [:arrow_up_small:](#)
 
@@ -371,6 +392,21 @@
 | sharedChild | [GraphNode](#GraphNode) | read-only |
 | skipInterpolationTimestamp | integer |  |
 | unk4C | [SpawnInfo](#SpawnInfo) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNode_802A45E4](#GraphNode_802A45E4)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| unk18 | integer |  |
+| unk1A | integer |  |
+| unk1C | integer |  |
+| unk1E | integer |  |
+| unk20 | integer |  |
+| unk22 | integer |  |
 
 [:arrow_up_small:](#)
 
@@ -645,6 +681,738 @@
 | respawnInfoType | integer |  |
 | unused1 | integer |  |
 
+### Object-Independent Data Fields
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| oFlags | integer |  |
+| oDialogResponse | integer |  |
+| oDialogState | integer |  |
+| oUnk94 | integer |  |
+| oSyncID | integer | read-only |
+| oIntangibleTimer | integer |  |
+| oPosX | number |  |
+| oPosY | number |  |
+| oPosZ | number |  |
+| oVelX | number |  |
+| oVelY | number |  |
+| oVelZ | number |  |
+| oForwardVel | number |  |
+| oForwardVelS32 | integer |  |
+| oUnkBC | number |  |
+| oUnkC0 | number |  |
+| oMoveAnglePitch | integer |  |
+| oMoveAngleYaw | integer |  |
+| oMoveAngleRoll | integer |  |
+| oFaceAnglePitch | integer |  |
+| oFaceAngleYaw | integer |  |
+| oFaceAngleRoll | integer |  |
+| oGraphYOffset | number |  |
+| oActiveParticleFlags | integer |  |
+| oGravity | number |  |
+| oFloorHeight | number |  |
+| oMoveFlags | integer |  |
+| oAnimState | integer |  |
+| oAngleVelPitch | integer |  |
+| oAngleVelYaw | integer |  |
+| oAngleVelRoll | integer |  |
+| oHeldState | integer |  |
+| oWallHitboxRadius | number |  |
+| oDragStrength | number |  |
+| oInteractType | integer |  |
+| oInteractStatus | integer |  |
+| oParentRelativePosX | number |  |
+| oParentRelativePosY | number |  |
+| oParentRelativePosZ | number |  |
+| oBehParams2ndByte | integer |  |
+| oAction | integer |  |
+| oSubAction | integer |  |
+| oTimer | integer |  |
+| oBounciness | number |  |
+| oDistanceToMario | number |  |
+| oAngleToMario | integer |  |
+| oHomeX | number |  |
+| oHomeY | number |  |
+| oHomeZ | number |  |
+| oFriction | number |  |
+| oBuoyancy | number |  |
+| oSoundStateID | integer |  |
+| oOpacity | integer |  |
+| oDamageOrCoinValue | integer |  |
+| oHealth | integer |  |
+| oBehParams | integer |  |
+| oPrevAction | integer |  |
+| oInteractionSubtype | integer |  |
+| oCollisionDistance | number |  |
+| oNumLootCoins | integer |  |
+| oDrawingDistance | number |  |
+| oRoom | integer |  |
+| oSyncDeath | integer |  |
+| oUnk1A8 | integer |  |
+| oWallAngle | integer |  |
+| oFloorType | integer |  |
+| oFloorRoom | integer |  |
+| oAngleToHome | integer |  |
+| oFloor | [Surface](#Surface) | read-only |
+| oDeathSound | integer |  |
+
+### Object-Dependent Data Fields
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| oPathedStartWaypoint | [Waypoint](#Waypoint) | read-only |
+| oPathedPrevWaypoint | [Waypoint](#Waypoint) | read-only |
+| oPathedPrevWaypointFlags | integer |  |
+| oPathedTargetPitch | integer |  |
+| oPathedTargetYaw | integer |  |
+| oMacroUnk108 | number |  |
+| oMacroUnk10C | number |  |
+| oMacroUnk110 | number |  |
+| oMarioParticleFlags | integer |  |
+| oMarioPoleUnk108 | integer |  |
+| oMarioReadingSignDYaw | integer |  |
+| oMarioPoleYawVel | integer |  |
+| oMarioCannonObjectYaw | integer |  |
+| oMarioTornadoYawVel | integer |  |
+| oMarioReadingSignDPosX | number |  |
+| oMarioPolePos | number |  |
+| oMarioCannonInputYaw | integer |  |
+| oMarioTornadoPosY | number |  |
+| oMarioReadingSignDPosZ | number |  |
+| oMarioWhirlpoolPosY | number |  |
+| oMarioBurnTimer | integer |  |
+| oMarioLongJumpIsSlow | integer |  |
+| oMarioSteepJumpYaw | integer |  |
+| oMarioWalkingPitch | integer |  |
+| o1UpHiddenUnkF4 | integer |  |
+| o1UpForceSpawn | integer |  |
+| oActivatedBackAndForthPlatformMaxOffset | number |  |
+| oActivatedBackAndForthPlatformOffset | number |  |
+| oActivatedBackAndForthPlatformVel | number |  |
+| oActivatedBackAndForthPlatformCountdown | integer |  |
+| oActivatedBackAndForthPlatformStartYaw | integer |  |
+| oActivatedBackAndForthPlatformVertical | integer |  |
+| oActivatedBackAndForthPlatformFlipRotation | integer |  |
+| oAmpRadiusOfRotation | number |  |
+| oAmpYPhase | integer |  |
+| oHomingAmpLockedOn | integer |  |
+| oHomingAmpAvgY | number |  |
+| oArrowLiftDisplacement | number |  |
+| oArrowLiftUnk100 | integer |  |
+| oBackAndForthPlatformUnkF4 | number |  |
+| oBackAndForthPlatformUnkF8 | number |  |
+| oBackAndForthPlatformUnkFC | number |  |
+| oBackAndForthPlatformUnk100 | number |  |
+| oBirdSpeed | number |  |
+| oBirdTargetPitch | integer |  |
+| oBirdTargetYaw | integer |  |
+| oBirdChirpChirpUnkF4 | integer |  |
+| oEndBirdUnk104 | number |  |
+| oHiddenBlueCoinSwitch | [Object](#Object) | read-only |
+| oBobombBlinkTimer | integer |  |
+| oBobombFuseLit | integer |  |
+| oBobombFuseTimer | integer |  |
+| oBobombBuddyBlinkTimer | integer |  |
+| oBobombBuddyHasTalkedToMario | integer |  |
+| oBobombBuddyRole | integer |  |
+| oBobombBuddyCannonStatus | integer |  |
+| oBobombBuddyPosXCopy | number |  |
+| oBobombBuddyPosYCopy | number |  |
+| oBobombBuddyPosZCopy | number |  |
+| oBobombExpBubGfxScaleFacX | integer |  |
+| oBobombExpBubGfxScaleFacY | integer |  |
+| oBobombExpBubGfxExpRateX | integer |  |
+| oBobombExpBubGfxExpRateY | integer |  |
+| oSmallBompInitX | number |  |
+| oBooDeathStatus | integer |  |
+| oBooTargetOpacity | integer |  |
+| oBooBaseScale | number |  |
+| oBooOscillationTimer | integer |  |
+| oBooMoveYawDuringHit | integer |  |
+| oBooMoveYawBeforeHit | number |  |
+| oBooParentBigBoo | [Object](#Object) | read-only |
+| oBooNegatedAggressiveness | number |  |
+| oBooInitialMoveYaw | integer |  |
+| oBooTurningSpeed | integer |  |
+| oBigBooNumMinionBoosKilled | integer |  |
+| oBookendUnkF4 | integer |  |
+| oBookendUnkF8 | integer |  |
+| oBookSwitchUnkF4 | number |  |
+| oBookSwitchManagerUnkF4 | integer |  |
+| oBookSwitchManagerUnkF8 | integer |  |
+| oHauntedBookshelfShouldOpen | integer |  |
+| oBouncingFireBallUnkF4 | integer |  |
+| oBowlingBallTargetYaw | integer |  |
+| oBBallSpawnerMaxSpawnDist | number |  |
+| oBBallSpawnerSpawnOdds | number |  |
+| oBBallSpawnerPeriodMinus1 | integer |  |
+| oBowserUnk88 | integer |  |
+| oBowserUnkF4 | integer |  |
+| oBowserUnkF8 | integer |  |
+| oBowserDistToCentre | number |  |
+| oBowserUnk106 | integer |  |
+| oBowserUnk108 | integer |  |
+| oBowserHeldAnglePitch | integer |  |
+| oBowserHeldAngleVelYaw | integer |  |
+| oBowserUnk10E | integer |  |
+| oBowserUnk110 | integer |  |
+| oBowserAngleToCentre | integer |  |
+| oBowserUnk1AC | integer |  |
+| oBowserUnk1AE | integer |  |
+| oBowserEyesShut | integer |  |
+| oBowserUnk1B2 | integer |  |
+| oBowserShockWaveUnkF4 | number |  |
+| oBlackSmokeBowserUnkF4 | number |  |
+| oBowserKeyScale | number |  |
+| oBowserPuzzleCompletionFlags | integer |  |
+| oBowserPuzzlePieceOffsetX | number |  |
+| oBowserPuzzlePieceOffsetY | number |  |
+| oBowserPuzzlePieceOffsetZ | number |  |
+| oBowserPuzzlePieceContinuePerformingAction | integer |  |
+| oBubbaUnkF4 | number |  |
+| oBubbaUnkF8 | integer |  |
+| oBubbaUnkFC | integer |  |
+| oBubbaUnk100 | integer |  |
+| oBubbaUnk104 | integer |  |
+| oBubbaUnk108 | number |  |
+| oBubbaUnk10C | number |  |
+| oBubbaUnk1AC | integer |  |
+| oBubbaUnk1AE | integer |  |
+| oBubbaUnk1B0 | integer |  |
+| oBubbaUnk1B2 | integer |  |
+| oBulletBillInitialMoveYaw | integer |  |
+| oBullySubtype | integer |  |
+| oBullyPrevX | number |  |
+| oBullyPrevY | number |  |
+| oBullyPrevZ | number |  |
+| oBullyKBTimerAndMinionKOCounter | integer |  |
+| oBullyMarioCollisionAngle | integer |  |
+| oButterflyYPhase | integer |  |
+| oTripletButterflyScale | number |  |
+| oTripletButterflySpeed | number |  |
+| oTripletButterflyBaseYaw | number |  |
+| oTripletButterflyTargetPitch | integer |  |
+| oTripletButterflyTargetYaw | integer |  |
+| oTripletButterflyType | integer |  |
+| oTripletButterflyModel | integer |  |
+| oTripletButterflySelectedButterfly | integer |  |
+| oTripletButterflyScalePhase | integer |  |
+| oCannonUnkF4 | integer |  |
+| oCannonUnkF8 | integer |  |
+| oCannonUnk10C | integer |  |
+| oCannonPlayerIndex | integer |  |
+| oCapUnkF4 | integer |  |
+| oCapUnkF8 | integer |  |
+| oChainChompSegments | [ChainSegment](#ChainSegment) | read-only |
+| oChainChompMaxDistFromPivotPerChainPart | number |  |
+| oChainChompMaxDistBetweenChainParts | number |  |
+| oChainChompDistToPivot | number |  |
+| oChainChompUnk104 | number |  |
+| oChainChompRestrictedByChain | integer |  |
+| oChainChompTargetPitch | integer |  |
+| oChainChompNumLunges | integer |  |
+| oChainChompReleaseStatus | integer |  |
+| oChainChompHitGate | integer |  |
+| oCheckerBoardPlatformUnkF8 | integer |  |
+| oCheckerBoardPlatformUnkFC | integer |  |
+| oCheckerBoardPlatformUnk1AC | number |  |
+| oCheepCheepUnkF4 | number |  |
+| oCheepCheepUnkF8 | number |  |
+| oCheepCheepUnkFC | number |  |
+| oCheepCheepUnk104 | number |  |
+| oCheepCheepUnk108 | number |  |
+| oChuckyaUnk88 | integer |  |
+| oChuckyaUnkF8 | integer |  |
+| oChuckyaUnkFC | integer |  |
+| oChuckyaUnk100 | integer |  |
+| oClamUnkF4 | integer |  |
+| oCloudCenterX | number |  |
+| oCloudCenterY | number |  |
+| oCloudBlowing | integer |  |
+| oCloudGrowSpeed | number |  |
+| oCloudFwooshMovementRadius | integer |  |
+| oCoinUnkF4 | integer |  |
+| oCoinUnkF8 | integer |  |
+| oCoinUnk110 | number |  |
+| oCoinUnk1B0 | integer |  |
+| oCollisionParticleUnkF4 | number |  |
+| oControllablePlatformUnkF8 | integer |  |
+| oControllablePlatformUnkFC | number |  |
+| oControllablePlatformUnk100 | integer |  |
+| oBreakableBoxSmallReleased | integer |  |
+| oBreakableBoxSmallFramesSinceReleased | integer |  |
+| oJumpingBoxUnkF4 | integer |  |
+| oJumpingBoxUnkF8 | integer |  |
+| oRRCruiserWingUnkF4 | integer |  |
+| oRRCruiserWingUnkF8 | integer |  |
+| oDonutPlatformSpawnerSpawnedPlatforms | integer |  |
+| oDoorUnk88 | integer |  |
+| oDoorUnkF8 | integer |  |
+| oDoorUnkFC | integer |  |
+| oDoorUnk100 | integer |  |
+| oDorrieDistToHome | number |  |
+| oDorrieOffsetY | number |  |
+| oDorrieVelY | number |  |
+| oDorrieForwardDistToMario | number |  |
+| oDorrieYawVel | integer |  |
+| oDorrieLiftingMario | integer |  |
+| oDorrieGroundPounded | integer |  |
+| oDorrieAngleToHome | integer |  |
+| oDorrieNeckAngle | integer |  |
+| oDorrieHeadRaiseSpeed | integer |  |
+| oElevatorUnkF4 | number |  |
+| oElevatorUnkF8 | number |  |
+| oElevatorUnkFC | number |  |
+| oElevatorUnk100 | integer |  |
+| oExclamationBoxUnkF4 | number |  |
+| oExclamationBoxUnkF8 | number |  |
+| oExclamationBoxUnkFC | integer |  |
+| oExclamationBoxForce | integer |  |
+| oEyerokBossNumHands | integer |  |
+| oEyerokBossUnkFC | integer |  |
+| oEyerokBossActiveHand | integer |  |
+| oEyerokBossUnk104 | integer |  |
+| oEyerokBossUnk108 | number |  |
+| oEyerokBossUnk10C | number |  |
+| oEyerokBossUnk110 | number |  |
+| oEyerokBossUnk1AC | integer |  |
+| oEyerokHandWakeUpTimer | integer |  |
+| oEyerokReceivedAttack | integer |  |
+| oEyerokHandUnkFC | integer |  |
+| oEyerokHandUnk100 | integer |  |
+| oEyerokHandDead | integer |  |
+| oFallingPillarPitchAcceleration | number |  |
+| oFireSpitterScaleVel | number |  |
+| oFireSpitterLastWaterY | number |  |
+| oBlueFishRandomVel | number |  |
+| oBlueFishRandomTime | integer |  |
+| oBlueFishRandomAngle | number |  |
+| oFishWaterLevel | number |  |
+| oFishPosY | number |  |
+| oFishRandomOffset | number |  |
+| oFishRandomSpeed | integer |  |
+| oFishRespawnDistance | number |  |
+| oFishRandomVel | number |  |
+| oFishDepthDistance | number |  |
+| oFishActiveDistance | number |  |
+| oFlameUnkF4 | number |  |
+| oFlameUnkF8 | integer |  |
+| oFlameUnkFC | number |  |
+| oFlameUnk100 | [Object](#Object) | read-only |
+| oBlueFlameUnkF8 | number |  |
+| oSmallPiranhaFlameStartSpeed | number |  |
+| oSmallPiranhaFlameEndSpeed | number |  |
+| oSmallPiranhaFlameModel | integer |  |
+| oSmallPiranhaFlameUnk100 | integer |  |
+| oSmallPiranhaFlameUnk104 | number |  |
+| oMovingFlameTimer | integer |  |
+| oFlameThowerFlameUnk110 | integer |  |
+| oFlameThowerUnk110 | integer |  |
+| oFloatingPlatformUnkF4 | integer |  |
+| oFloatingPlatformUnkF8 | number |  |
+| oFloatingPlatformUnkFC | number |  |
+| oFloatingPlatformUnk100 | integer |  |
+| oFloorSwitchPressAnimationUnkF4 | integer |  |
+| oFloorSwitchPressAnimationUnkF8 | integer |  |
+| oFloorSwitchPressAnimationUnkFC | integer |  |
+| oFloorSwitchPressAnimationUnk100 | integer |  |
+| oFlyGuyIdleTimer | integer |  |
+| oFlyGuyOscTimer | integer |  |
+| oFlyGuyUnusedJitter | integer |  |
+| oFlyGuyLungeYDecel | number |  |
+| oFlyGuyLungeTargetPitch | integer |  |
+| oFlyGuyTargetRoll | integer |  |
+| oFlyGuyScaleVel | number |  |
+| oGrandStarUnk108 | integer |  |
+| oHorizontalGrindelTargetYaw | integer |  |
+| oHorizontalGrindelDistToHome | number |  |
+| oHorizontalGrindelOnGround | integer |  |
+| oGoombaSize | integer |  |
+| oGoombaScale | number |  |
+| oGoombaWalkTimer | integer |  |
+| oGoombaTargetYaw | integer |  |
+| oGoombaBlinkTimer | integer |  |
+| oGoombaTurningAwayFromWall | integer |  |
+| oGoombaRelativeSpeed | number |  |
+| oGoombaJumpCooldown | integer |  |
+| oHauntedChairUnkF4 | integer |  |
+| oHauntedChairUnkF8 | number |  |
+| oHauntedChairUnkFC | number |  |
+| oHauntedChairUnk100 | Pointer <integer> | read-only |
+| oHauntedChairUnk104 | integer |  |
+| oHeaveHoUnk88 | integer |  |
+| oHeaveHoUnkF4 | number |  |
+| oHiddenObjectUnkF4 | [Object](#Object) | read-only |
+| oHootAvailability | integer |  |
+| oHootMarioReleaseTime | integer |  |
+| oHorizontalMovementUnkF4 | integer |  |
+| oHorizontalMovementUnkF8 | integer |  |
+| oHorizontalMovementUnk100 | number |  |
+| oHorizontalMovementUnk104 | integer |  |
+| oHorizontalMovementUnk108 | number |  |
+| oKickableBoardF4 | integer |  |
+| oKickableBoardF8 | integer |  |
+| oKingBobombUnk88 | integer |  |
+| oKingBobombUnkF8 | integer |  |
+| oKingBobombUnkFC | integer |  |
+| oKingBobombUnk100 | integer |  |
+| oKingBobombUnk104 | integer |  |
+| oKingBobombUnk108 | integer |  |
+| oKleptoDistanceToTarget | number |  |
+| oKleptoUnkF8 | number |  |
+| oKleptoUnkFC | number |  |
+| oKleptoSpeed | number |  |
+| oKleptoStartPosX | number |  |
+| oKleptoStartPosY | number |  |
+| oKleptoStartPosZ | number |  |
+| oKleptoTimeUntilTargetChange | integer |  |
+| oKleptoTargetNumber | integer |  |
+| oKleptoUnk1AE | integer |  |
+| oKleptoUnk1B0 | integer |  |
+| oKleptoYawToTarget | integer |  |
+| oKoopaAgility | number |  |
+| oKoopaMovementType | integer |  |
+| oKoopaTargetYaw | integer |  |
+| oKoopaUnshelledTimeUntilTurn | integer |  |
+| oKoopaTurningAwayFromWall | integer |  |
+| oKoopaDistanceToMario | number |  |
+| oKoopaAngleToMario | integer |  |
+| oKoopaBlinkTimer | integer |  |
+| oKoopaCountdown | integer |  |
+| oKoopaTheQuickRaceIndex | integer |  |
+| oKoopaTheQuickInitTextboxCooldown | integer |  |
+| oKoopaRaceEndpointRaceBegun | integer |  |
+| oKoopaRaceEndpointKoopaFinished | integer |  |
+| oKoopaRaceEndpointRaceStatus | integer |  |
+| oKoopaRaceEndpointUnk100 | integer |  |
+| oKoopaRaceEndpointRaceEnded | integer |  |
+| oKoopaShellFlameUnkF4 | number |  |
+| oKoopaShellFlameUnkF8 | number |  |
+| oCameraLakituBlinkTimer | integer |  |
+| oCameraLakituSpeed | number |  |
+| oCameraLakituCircleRadius | number |  |
+| oCameraLakituFinishedDialog | integer |  |
+| oCameraLakituUnk104 | integer |  |
+| oCameraLakituPitchVel | integer |  |
+| oCameraLakituYawVel | integer |  |
+| oEnemyLakituNumSpinies | integer |  |
+| oEnemyLakituBlinkTimer | integer |  |
+| oEnemyLakituSpinyCooldown | integer |  |
+| oEnemyLakituFaceForwardCountdown | integer |  |
+| oIntroLakituSplineSegmentProgress | number |  |
+| oIntroLakituSplineSegment | number |  |
+| oIntroLakituUnk100 | number |  |
+| oIntroLakituUnk104 | number |  |
+| oIntroLakituUnk108 | number |  |
+| oIntroLakituUnk10C | number |  |
+| oIntroLakituUnk110 | number |  |
+| oIntroLakituCloud | [Object](#Object) | read-only |
+| oMenuButtonState | integer |  |
+| oMenuButtonTimer | integer |  |
+| oMenuButtonOrigPosX | number |  |
+| oMenuButtonOrigPosY | number |  |
+| oMenuButtonOrigPosZ | number |  |
+| oMenuButtonScale | number |  |
+| oMenuButtonActionPhase | integer |  |
+| oMenuButtonIsCustom | integer |  |
+| oMantaUnkF4 | integer |  |
+| oMantaUnkF8 | integer |  |
+| oMantaUnk1AC | integer |  |
+| oMerryGoRoundStopped | integer |  |
+| oMerryGoRoundMusicShouldPlay | integer |  |
+| oMerryGoRoundMarioIsOutside | integer |  |
+| oMerryGoRoundBooManagerNumBoosKilled | integer |  |
+| oMerryGoRoundBooManagerNumBoosSpawned | integer |  |
+| oMipsStarStatus | integer |  |
+| oMipsStartWaypointIndex | integer |  |
+| oMipsForwardVelocity | number |  |
+| oMoneybagJumpState | integer |  |
+| oMontyMoleCurrentHole | [Object](#Object) | read-only |
+| oMontyMoleHeightRelativeToFloor | number |  |
+| oMontyMoleHoleX | number |  |
+| oMontyMoleHoleY | number |  |
+| oMontyMoleHoleZ | number |  |
+| oMontyMoleHoleCooldown | integer |  |
+| oMrBlizzardScale | number |  |
+| oMrBlizzardHeldObj | [Object](#Object) | read-only |
+| oMrBlizzardGraphYVel | number |  |
+| oMrBlizzardTimer | integer |  |
+| oMrBlizzardDizziness | number |  |
+| oMrBlizzardChangeInDizziness | number |  |
+| oMrBlizzardGraphYOffset | number |  |
+| oMrBlizzardDistFromHome | integer |  |
+| oMrBlizzardTargetMoveYaw | integer |  |
+| oMrIUnkF4 | integer |  |
+| oMrIUnkFC | integer |  |
+| oMrIUnk100 | integer |  |
+| oMrIUnk104 | integer |  |
+| oMrIUnk108 | integer |  |
+| oMrISize | number |  |
+| oMrIUnk110 | integer |  |
+| oRespawnerModelToRespawn | integer |  |
+| oRespawnerMinSpawnDist | number |  |
+| oOpenableGrillUnk88 | integer |  |
+| oOpenableGrillUnkF4 | [Object](#Object) | read-only |
+| oIntroPeachYawFromFocus | number |  |
+| oIntroPeachPitchFromFocus | number |  |
+| oIntroPeachDistToCamera | number |  |
+| oRacingPenguinInitTextCooldown | integer |  |
+| oRacingPenguinWeightedNewTargetSpeed | number |  |
+| oRacingPenguinFinalTextbox | integer |  |
+| oRacingPenguinMarioWon | integer |  |
+| oRacingPenguinReachedBottom | integer |  |
+| oRacingPenguinMarioCheated | integer |  |
+| oSmallPenguinUnk88 | integer |  |
+| oSmallPenguinUnk100 | integer |  |
+| oSmallPenguinUnk104 | number |  |
+| oSmallPenguinUnk108 | number |  |
+| oSmallPenguinUnk110 | integer |  |
+| oSLWalkingPenguinWindCollisionXPos | number |  |
+| oSLWalkingPenguinWindCollisionZPos | number |  |
+| oSLWalkingPenguinCurStep | integer |  |
+| oSLWalkingPenguinCurStepTimer | integer |  |
+| oPiranhaPlantSleepMusicState | integer |  |
+| oPiranhaPlantScale | number |  |
+| oFirePiranhaPlantNeutralScale | number |  |
+| oFirePiranhaPlantScale | number |  |
+| oFirePiranhaPlantActive | integer |  |
+| oFirePiranhaPlantDeathSpinTimer | integer |  |
+| oFirePiranhaPlantDeathSpinVel | number |  |
+| oPitouneUnkF4 | number |  |
+| oPitouneUnkF8 | number |  |
+| oPitouneUnkFC | number |  |
+| oPlatformTimer | integer |  |
+| oPlatformUnkF8 | [Object](#Object) | read-only |
+| oPlatformUnkFC | integer |  |
+| oPlatformUnk10C | number |  |
+| oPlatformUnk110 | number |  |
+| oPlatformOnTrackBaseBallIndex | integer |  |
+| oPlatformOnTrackDistMovedSinceLastBall | number |  |
+| oPlatformOnTrackSkiLiftRollVel | number |  |
+| oPlatformOnTrackStartWaypoint | [Waypoint](#Waypoint) | read-only |
+| oPlatformOnTrackPrevWaypoint | [Waypoint](#Waypoint) | read-only |
+| oPlatformOnTrackPrevWaypointFlags | integer |  |
+| oPlatformOnTrackPitch | integer |  |
+| oPlatformOnTrackYaw | integer |  |
+| oPlatformOnTrackOffsetY | number |  |
+| oPlatformOnTrackIsNotSkiLift | integer |  |
+| oPlatformOnTrackIsNotHMC | integer |  |
+| oPlatformOnTrackType | integer |  |
+| oPlatformOnTrackWasStoodOn | integer |  |
+| oPlatformSpawnerUnkF4 | integer |  |
+| oPlatformSpawnerUnkF8 | integer |  |
+| oPlatformSpawnerUnkFC | integer |  |
+| oPlatformSpawnerUnk100 | number |  |
+| oPlatformSpawnerUnk104 | number |  |
+| oPlatformSpawnerUnk108 | number |  |
+| oPokeyAliveBodyPartFlags | integer |  |
+| oPokeyNumAliveBodyParts | integer |  |
+| oPokeyBottomBodyPartSize | number |  |
+| oPokeyHeadWasKilled | integer |  |
+| oPokeyTargetYaw | integer |  |
+| oPokeyChangeTargetTimer | integer |  |
+| oPokeyTurningAwayFromWall | integer |  |
+| oPokeyBodyPartDeathDelayAfterHeadKilled | integer |  |
+| oPokeyBodyPartBlinkTimer | integer |  |
+| oDDDPoleVel | number |  |
+| oDDDPoleMaxOffset | number |  |
+| oDDDPoleOffset | number |  |
+| oPyramidTopPillarsTouched | integer |  |
+| oPyramidTopFragmentsScale | number |  |
+| oRollingLogUnkF4 | number |  |
+| oLllRotatingHexFlameUnkF4 | number |  |
+| oLllRotatingHexFlameUnkF8 | number |  |
+| oLllRotatingHexFlameUnkFC | number |  |
+| oScuttlebugUnkF4 | integer |  |
+| oScuttlebugUnkF8 | integer |  |
+| oScuttlebugUnkFC | integer |  |
+| oScuttlebugSpawnerUnk88 | integer |  |
+| oScuttlebugSpawnerUnkF4 | integer |  |
+| oSeesawPlatformPitchVel | number |  |
+| oShipPart3UnkF4 | integer |  |
+| oShipPart3UnkF8 | integer |  |
+| oSinkWhenSteppedOnUnk104 | integer |  |
+| oSinkWhenSteppedOnUnk108 | number |  |
+| oSkeeterTargetAngle | integer |  |
+| oSkeeterUnkF8 | integer |  |
+| oSkeeterUnkFC | number |  |
+| oSkeeterWaitTime | integer |  |
+| oSkeeterLastWaterY | number |  |
+| oSkeeterUnk1AC | integer |  |
+| oJrbSlidingBoxUnkF4 | [Object](#Object) | read-only |
+| oJrbSlidingBoxUnkF8 | integer |  |
+| oJrbSlidingBoxUnkFC | number |  |
+| oWFSlidBrickPtfmMovVel | number |  |
+| oSmokeTimer | integer |  |
+| oSnowmansBottomUnkF4 | number |  |
+| oSnowmansBottomUnkF8 | integer |  |
+| oSnowmansBottomUnk1AC | integer |  |
+| oSnowmansHeadUnkF4 | integer |  |
+| oSLSnowmanWindOriginalYaw | integer |  |
+| oSnufitRecoil | integer |  |
+| oSnufitScale | number |  |
+| oSnufitCircularPeriod | integer |  |
+| oSnufitBodyScalePeriod | integer |  |
+| oSnufitBodyBaseScale | integer |  |
+| oSnufitBullets | integer |  |
+| oSnufitXOffset | integer |  |
+| oSnufitYOffset | integer |  |
+| oSnufitZOffset | integer |  |
+| oSnufitBodyScale | integer |  |
+| oSpindelUnkF4 | integer |  |
+| oSpindelUnkF8 | integer |  |
+| oSpinningHeartTotalSpin | integer |  |
+| oSpinningHeartPlayedSound | integer |  |
+| oSpinyTimeUntilTurn | integer |  |
+| oSpinyTargetYaw | integer |  |
+| oSpinyTurningAwayFromWall | integer |  |
+| oSoundEffectUnkF4 | integer |  |
+| oStarSpawnDisFromHome | number |  |
+| oStarSpawnUnkFC | number |  |
+| oHiddenStarTriggerCounter | integer |  |
+| oSparkleSpawnUnk1B0 | integer |  |
+| oUnlockDoorStarState | integer |  |
+| oUnlockDoorStarTimer | integer |  |
+| oUnlockDoorStarYawVel | integer |  |
+| oCelebStarUnkF4 | integer |  |
+| oCelebStarDiameterOfRotation | integer |  |
+| oStarSelectorType | integer |  |
+| oStarSelectorTimer | integer |  |
+| oStarSelectorSize | number |  |
+| oSushiSharkUnkF4 | integer |  |
+| oSwingPlatformAngle | number |  |
+| oSwingPlatformSpeed | number |  |
+| oSwoopBonkCountdown | integer |  |
+| oSwoopTargetPitch | integer |  |
+| oSwoopTargetYaw | integer |  |
+| oThwompRandomTimer | integer |  |
+| oTiltingPyramidNormalX | number |  |
+| oTiltingPyramidNormalY | number |  |
+| oTiltingPyramidNormalZ | number |  |
+| oTiltingPyramidMarioOnPlatform | integer |  |
+| oToadMessageDialogId | integer |  |
+| oToadMessageRecentlyTalked | integer |  |
+| oToadMessageState | integer |  |
+| oToxBoxMovementStep | integer |  |
+| oTTCRotatingSolidNumTurns | integer |  |
+| oTTCRotatingSolidNumSides | integer |  |
+| oTTCRotatingSolidRotationDelay | integer |  |
+| oTTCRotatingSolidVelY | number |  |
+| oTTCRotatingSolidSoundTimer | integer |  |
+| oTTCPendulumAccelDir | number |  |
+| oTTCPendulumAngle | number |  |
+| oTTCPendulumAngleVel | number |  |
+| oTTCPendulumAngleAccel | number |  |
+| oTTCPendulumDelay | integer |  |
+| oTTCPendulumSoundTimer | integer |  |
+| oTTCTreadmillBigSurface | Pointer <integer> | read-only |
+| oTTCTreadmillSmallSurface | Pointer <integer> | read-only |
+| oTTCTreadmillSpeed | number |  |
+| oTTCTreadmillTargetSpeed | number |  |
+| oTTCTreadmillTimeUntilSwitch | integer |  |
+| oTTCMovingBarDelay | integer |  |
+| oTTCMovingBarStoppedTimer | integer |  |
+| oTTCMovingBarOffset | number |  |
+| oTTCMovingBarSpeed | number |  |
+| oTTCMovingBarStartOffset | number |  |
+| oTTCCogDir | number |  |
+| oTTCCogSpeed | number |  |
+| oTTCCogTargetVel | number |  |
+| oTTCPitBlockPeakY | number |  |
+| oTTCPitBlockDir | integer |  |
+| oTTCPitBlockWaitTime | integer |  |
+| oTTCElevatorDir | number |  |
+| oTTCElevatorPeakY | number |  |
+| oTTCElevatorMoveTime | integer |  |
+| oTTC2DRotatorMinTimeUntilNextTurn | integer |  |
+| oTTC2DRotatorTargetYaw | integer |  |
+| oTTC2DRotatorIncrement | integer |  |
+| oTTC2DRotatorRandomDirTimer | integer |  |
+| oTTC2DRotatorSpeed | integer |  |
+| oTTCSpinnerDir | integer |  |
+| oTTCChangeDirTimer | integer |  |
+| oBetaTrampolineMarioOnTrampoline | integer |  |
+| oTreasureChestUnkF4 | integer |  |
+| oTreasureChestUnkF8 | integer |  |
+| oTreasureChestUnkFC | integer |  |
+| oTreasureChestSound | integer |  |
+| oTreeSnowOrLeafUnkF4 | integer |  |
+| oTreeSnowOrLeafUnkF8 | integer |  |
+| oTreeSnowOrLeafUnkFC | integer |  |
+| oTumblingBridgeUnkF4 | integer |  |
+| oTweesterScaleTimer | integer |  |
+| oTweesterUnused | integer |  |
+| oUkikiTauntCounter | integer |  |
+| oUkikiTauntsToBeDone | integer |  |
+| oUkikiChaseFleeRange | number |  |
+| oUkikiTextState | integer |  |
+| oUkikiTextboxTimer | integer |  |
+| oUkikiCageSpinTimer | integer |  |
+| oUkikiHasCap | integer |  |
+| oUkikiCageNextAction | integer |  |
+| oUnagiUnkF4 | number |  |
+| oUnagiUnkF8 | number |  |
+| oUnagiUnk110 | number |  |
+| oUnagiUnk1AC | number |  |
+| oUnagiUnk1B0 | integer |  |
+| oUnagiUnk1B2 | integer |  |
+| oWaterBombVerticalStretch | number |  |
+| oWaterBombStretchSpeed | number |  |
+| oWaterBombOnGround | integer |  |
+| oWaterBombNumBounces | number |  |
+| oWaterBombSpawnerBombActive | integer |  |
+| oWaterBombSpawnerTimeToSpawn | integer |  |
+| oWaterCannonUnkF4 | integer |  |
+| oWaterCannonUnkF8 | integer |  |
+| oWaterCannonUnkFC | integer |  |
+| oWaterCannonUnk100 | integer |  |
+| oCannonBarrelBubblesUnkF4 | number |  |
+| oWaterLevelPillarDrained | integer |  |
+| oWaterLevelTriggerUnkF4 | integer |  |
+| oWaterLevelTriggerTargetWaterLevel | integer |  |
+| oWaterObjUnkF4 | integer |  |
+| oWaterObjUnkF8 | integer |  |
+| oWaterObjUnkFC | integer |  |
+| oWaterObjUnk100 | integer |  |
+| oWaterRingScalePhaseX | integer |  |
+| oWaterRingScalePhaseY | integer |  |
+| oWaterRingScalePhaseZ | integer |  |
+| oWaterRingNormalX | number |  |
+| oWaterRingNormalY | number |  |
+| oWaterRingNormalZ | number |  |
+| oWaterRingMarioDistInFront | number |  |
+| oWaterRingIndex | integer |  |
+| oWaterRingAvgScale | number |  |
+| oWaterRingSpawnerRingsCollected | integer |  |
+| oWaterRingMgrNextRingIndex | integer |  |
+| oWaterRingMgrLastRingCollected | integer |  |
+| oWaveTrailSize | number |  |
+| oWhirlpoolInitFacePitch | integer |  |
+| oWhirlpoolInitFaceRoll | integer |  |
+| oWhirlpoolTimeout | integer |  |
+| oWhitePuffUnkF4 | number |  |
+| oWhitePuffUnkF8 | integer |  |
+| oWhitePuffUnkFC | integer |  |
+| oStrongWindParticlePenguinObj | [Object](#Object) | read-only |
+| oWhompShakeVal | integer |  |
+| oWigglerFallThroughFloorsHeight | number |  |
+| oWigglerSegments | [ChainSegment](#ChainSegment) | read-only |
+| oWigglerWalkAnimSpeed | number |  |
+| oWigglerSquishSpeed | number |  |
+| oWigglerTimeUntilRandomTurn | integer |  |
+| oWigglerTargetYaw | integer |  |
+| oWigglerWalkAwayFromWallTimer | integer |  |
+| oWigglerUnused | integer |  |
+| oWigglerTextStatus | integer |  |
+| oLllWoodPieceOscillationTimer | integer |  |
+| oWoodenPostTotalMarioAngle | integer |  |
+| oWoodenPostPrevAngleToMario | integer |  |
+| oWoodenPostSpeedY | number |  |
+| oWoodenPostMarioPounding | integer |  |
+| oWoodenPostOffsetY | number |  |
+| oYoshiBlinkTimer | integer |  |
+| oYoshiChosenHome | integer |  |
+| oYoshiTargetYaw | integer |  |
+| oBreakableWallForce | integer |  |
+
 [:arrow_up_small:](#)
 
 <br />
@@ -764,6 +1532,38 @@
 | startAngle | [Vec3s](#Vec3s) | read-only |
 | startPos | [Vec3s](#Vec3s) | read-only |
 | unk18 | [GraphNode](#GraphNode) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [SpawnParticlesInfo](#SpawnParticlesInfo)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| behParam | integer |  |
+| count | integer |  |
+| dragStrength | integer |  |
+| forwardVelBase | integer |  |
+| forwardVelRange | integer |  |
+| gravity | integer |  |
+| model | integer |  |
+| offsetY | integer |  |
+| sizeBase | number |  |
+| sizeRange | number |  |
+| velYBase | integer |  |
+| velYRange | integer |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Struct802A272C](#Struct802A272C)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| vecF | [Vec3f](#Vec3f) | read-only |
+| vecS | [Vec3s](#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -908,6 +1708,25 @@
 
 <br />
 
+## [WaterDropletParams](#WaterDropletParams)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| flags | integer |  |
+| model | integer |  |
+| moveAngleRange | integer |  |
+| moveRange | integer |  |
+| randForwardVelOffset | number |  |
+| randForwardVelScale | number |  |
+| randSizeOffset | number |  |
+| randSizeScale | number |  |
+| randYVelOffset | number |  |
+| randYVelScale | number |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Waypoint](#Waypoint)
 
 | Field | Type | Access |
@@ -925,6 +1744,17 @@
 | ----- | ---- | ------ |
 | pos | [Vec3s](#Vec3s) | read-only |
 | strength | integer |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [struct802A1230](#struct802A1230)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| unk00 | integer |  |
+| unk02 | integer |  |
 
 [:arrow_up_small:](#)
 

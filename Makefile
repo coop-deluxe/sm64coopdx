@@ -92,8 +92,7 @@ TOOLS_DIR := tools
 
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
-  RM ?= rm.exe
-  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4 -fno-use-linker-plugin
+  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
   EXTRA_CFLAGS := -Wno-expansion-to-defined
 else
   EXTRA_INCLUDES :=
@@ -385,7 +384,10 @@ MIPSBIT := -32
 ifeq ($(DEBUG),1)
   OPT_FLAGS := -g
 else
-  OPT_FLAGS := -O2
+  # can't use O2 right now, coop-compiler produces strange graphical errors
+  # likely due to undefined behavior somewhere
+  #OPT_FLAGS := -O2
+  OPT_FLAGS := -O1
 endif
 
 # Set BITS (32/64) to compile for
