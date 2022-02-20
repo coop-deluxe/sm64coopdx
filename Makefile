@@ -384,7 +384,10 @@ MIPSBIT := -32
 ifeq ($(DEBUG),1)
   OPT_FLAGS := -g
 else
-  OPT_FLAGS := -O2
+  # can't use O2 right now, coop-compiler produces strange graphical errors
+  # likely due to undefined behavior somewhere
+  #OPT_FLAGS := -O2
+  OPT_FLAGS := -O1
 endif
 
 # Set BITS (32/64) to compile for
