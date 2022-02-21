@@ -104,7 +104,7 @@ void network_receive_mod_list(struct Packet* p) {
         u16 nameLength = 0;
         packet_read(p, &nameLength, sizeof(u16));
 
-        char* name = (char*)calloc(nameLength + 1, sizeof(u8));
+        char* name = (char*)calloc(nameLength + 1, sizeof(char));
         packet_read(p, name, nameLength * sizeof(u8));
 
         u16 size = 0;

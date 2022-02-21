@@ -745,8 +745,8 @@ void get_OBJ_shape(struct ObjShape *shape) {
     s32 faceVtxIndex;
     struct GdVec3f tempVec;
     struct ObjFace *newFace;
-    struct ObjVertex *vtxArr[4000];
-    struct ObjFace *faceArr[4000];
+    struct ObjVertex *vtxArr[4000] = { 0 };
+    struct ObjFace *faceArr[4000] = { 0 };
     s32 faceCount = 0;
     s32 vtxCount = 0;
 
@@ -1065,7 +1065,7 @@ struct GdFile *get_shape_from_file(struct ObjShape *shape, char *fileName) {
 /* @ 247F78 for 0x69c; orig name: Unknown801997A8 */
 struct ObjShape *make_grid_shape(enum ObjTypeFlag gridType, s32 a1, s32 a2, s32 a3, s32 a4) {
     UNUSED u32 pad1074;
-    void *objBuf[32][32]; // vertex or particle depending on gridType
+    void *objBuf[32][32] = { 0 }; // vertex or particle depending on gridType
     f32 sp70;
     f32 sp6C;
     f32 sp68;
@@ -1156,13 +1156,17 @@ struct ObjShape *make_grid_shape(enum ObjTypeFlag gridType, s32 a1, s32 a2, s32 
 
     if (gridType == OBJ_TYPE_PARTICLES) {
         for (parI = 0; parI <= a3; parI++) {
-            ((struct ObjParticle *) objBuf[parI][0])->unk54 |= 2;
-            ((struct ObjParticle *) objBuf[parI][a4])->unk54 |= 2;
+            struct ObjParticle* p1 = ((struct ObjParticle *) objBuf[parI][0]);
+            if (p1 != NULL) { p1->unk54 |= 2; }
+            struct ObjParticle* p2 =  ((struct ObjParticle *) objBuf[parI][a4]);
+            if (p2 != NULL) { p2->unk54 |= 2; }
         }
 
         for (parI = 0; parI <= a4; parI++) {
-            ((struct ObjParticle *) objBuf[0][parI])->unk54 |= 2;
-            ((struct ObjParticle *) objBuf[a3][parI])->unk54 |= 2;
+            struct ObjParticle* p1 = ((struct ObjParticle *) objBuf[0][parI]);
+            if (p1 != NULL) { p1->unk54 |= 2; }
+            struct ObjParticle* p2 = ((struct ObjParticle *) objBuf[a3][parI]);
+            if (p2 != NULL) { p2->unk54 |= 2; }
         }
     }
 

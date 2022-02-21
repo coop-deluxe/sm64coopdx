@@ -303,6 +303,8 @@ static void stub_surface_load_1(void) {
  * @param vertexIndices Helper which tells positions in vertexData to start reading vertices
  */
 static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
+    if (vertexData == NULL || vertexIndices == NULL || *vertexIndices == NULL) { return NULL; }
+
     struct Surface *surface;
     register s32 x1, y1, z1;
     register s32 x2, y2, z2;
@@ -594,9 +596,8 @@ u32 get_area_terrain_size(s16 *data) {
  * boxes (water, gas, JRB fog).
  */
 void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects) {
-    s16 terrainLoadType;
-    s16 *vertexData;
-    UNUSED s32 unused;
+    s16 terrainLoadType = 0;
+    s16 *vertexData = NULL;
 
     // Initialize the data for this.
     gEnvironmentRegions = NULL;

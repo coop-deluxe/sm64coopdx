@@ -201,7 +201,7 @@ f32 get_water_level_below_shadow(struct Shadow *s) {
  *                          be dimmed based on its distance to the floor
  */
 s8 init_shadow(struct Shadow *s, f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, u8 overwriteSolidity) {
-    f32 waterLevel;
+    f32 waterLevel = 0;
     f32 floorSteepness;
     struct FloorGeometry *floorGeometry;
 
@@ -312,7 +312,7 @@ void make_shadow_vertex_at_xyz(Vtx *vertices, s8 index, f32 relX, f32 relY, f32 
         vtxY += 5;
         vtxZ += 5;
     }
-    make_vertex(vertices, index, vtxX, vtxY, vtxZ, textureX << 5, textureY << 5, 255, 255, 255,
+    make_vertex(vertices, index, vtxX, vtxY, vtxZ, (u16)textureX << 5, (u16)textureY << 5, 255, 255, 255,
                 alpha // shadows are black
     );
 }

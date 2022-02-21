@@ -222,6 +222,10 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
 #else
     u32 alignedSize = ALIGN16(size);
 
+    if (pool == NULL || pool->cur == NULL) {
+        return NULL;
+    }
+
     u8* start = pool->cur;
     if ((start + alignedSize <= pool->size + pool->start)) {
         bzero(start, alignedSize);
@@ -328,7 +332,7 @@ void *alloc_bank_or_seq(struct SoundMultiPool *arg0, s32 arg1, s32 size, s32 arg
     u16 secondVal;
 #endif
     u32 nullID = -1;
-    u8 *table;
+    u8 *table = NULL;
     u8 isSound;
 #ifndef VERSION_EU
     u16 firstVal;
@@ -347,6 +351,10 @@ void *alloc_bank_or_seq(struct SoundMultiPool *arg0, s32 arg1, s32 size, s32 arg
         } else if (arg0 == &gBankLoadedPool) {
             table = gBankLoadStatus;
             isSound = TRUE;
+        }
+
+        if (table == NULL) {
+            return NULL;
         }
 
         firstVal  = (tp->entries[0].id == (s8)nullID ? SOUND_LOAD_STATUS_NOT_LOADED : table[tp->entries[0].id]);

@@ -275,7 +275,7 @@ static u32 controller_sdl_rawkey(void) {
         return ret;
     }
 
-    for (int i = 0; i < MAX_MOUSEBUTTONS; ++i) {
+    for (u32 i = 1; i < MAX_MOUSEBUTTONS; ++i) {
         if (last_mouse & SDL_BUTTON(i)) {
             const u32 ret = VK_OFS_SDL_MOUSE + i;
             last_mouse = 0;

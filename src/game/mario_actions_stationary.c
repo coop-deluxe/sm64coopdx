@@ -184,7 +184,7 @@ void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 s
 
 s32 act_start_sleeping(struct MarioState *m) {
 #ifndef VERSION_JP
-    s32 animFrame;
+    s32 animFrame = 0;
 #endif
 
     if (check_common_idle_cancels(m)) {

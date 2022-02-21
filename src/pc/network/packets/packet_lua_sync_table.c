@@ -91,7 +91,7 @@ static bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
                 LOG_ERROR("received lua sync table with invalid value length: %d", valueLength);
                 return false;
             }
-            lnt->value.string = calloc(valueLength + 1, sizeof(u8));
+            lnt->value.string = calloc(valueLength + 1, sizeof(char));
             packet_read(p, lnt->value.string, valueLength * sizeof(u8));
             return true;
         }

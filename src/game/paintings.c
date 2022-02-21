@@ -703,7 +703,9 @@ void painting_generate_mesh(struct Painting *painting, s16 *mesh, s16 numTris) {
 
     gPaintingMesh = mem_pool_alloc(gEffectsMemoryPool, numTris * sizeof(struct PaintingMeshVertex));
     if (gPaintingMesh == NULL) {
+        return;
     }
+
     // accesses are off by 1 since the first entry is the number of vertices
     for (i = 0; i < numTris; i++) {
         gPaintingMesh[i].pos[0] = mesh[i * 3 + 1];
@@ -735,7 +737,9 @@ void painting_calculate_triangle_normals(s16 *mesh, s16 numVtx, s16 numTris) {
 
     gPaintingTriNorms = mem_pool_alloc(gEffectsMemoryPool, numTris * sizeof(Vec3f));
     if (gPaintingTriNorms == NULL) {
+        return;
     }
+
     for (i = 0; i < numTris; i++) {
         s16 tri = numVtx * 3 + i * 3 + 2; // Add 2 because of the 2 length entries preceding the list
         s16 v0 = mesh[tri];
@@ -864,6 +868,11 @@ Gfx *render_painting(u8 *img, s16 tWidth, s16 tHeight, s16 *textureMap, s16 mapV
     Gfx *gfx = dlist;
 
     if (verts == NULL || dlist == NULL) {
+        return NULL;
+    }
+
+    if (img == NULL) {
+        return NULL;
     }
 
     gLoadBlockTexture(gfx++, tWidth, tHeight, G_IM_FMT_RGBA, img);
@@ -950,6 +959,7 @@ Gfx *painting_model_view_transform(struct Painting *painting) {
     Gfx *gfx = dlist;
 
     if (rotX == NULL || rotY == NULL || translate == NULL || dlist == NULL) {
+        return NULL;
     }
 
     guTranslate(translate, painting->posX, painting->posY, painting->posZ);
@@ -1055,7 +1065,7 @@ Gfx *display_painting_rippling(struct Painting *painting) {
     s16 *neighborTris = segmented_to_virtual(seg2_painting_mesh_neighbor_tris);
     s16 numVtx = mesh[0];
     s16 numTris = mesh[numVtx * 3 + 1];
-    Gfx *dlist;
+    Gfx *dlist = NULL;
 
     // Generate the mesh and its lighting data
     painting_generate_mesh(painting, mesh, numVtx);

@@ -207,7 +207,7 @@ s32 intro_play_its_a_me_mario(void) {
 }
 
 s32 lvl_intro_update(s16 arg1, UNUSED s32 arg2) {
-    s32 retVar;
+    s32 retVar = 0;
 
     switch (arg1) {
         case 0:

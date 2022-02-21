@@ -166,6 +166,8 @@ void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor) {
     s16 facingDYaw;
 
     struct Surface *floor = m->floor;
+    if (floor == NULL) { return; }
+
     s16 slopeAngle = atan2s(floor->normal.z, floor->normal.x);
     f32 steepness = sqrtf(floor->normal.x * floor->normal.x + floor->normal.z * floor->normal.z);
     UNUSED f32 normalY = floor->normal.y;
@@ -289,6 +291,7 @@ void apply_slope_accel(struct MarioState *m) {
     f32 slopeAccel;
 
     struct Surface *floor = m->floor;
+    if (floor == NULL) { return; }
     f32 steepness = sqrtf(floor->normal.x * floor->normal.x + floor->normal.z * floor->normal.z);
 
     UNUSED f32 normalY = floor->normal.y;
@@ -380,7 +383,7 @@ void update_shell_speed(struct MarioState *m) {
         m->forwardVel += 1.1f;
     } else if (m->forwardVel <= targetSpeed) {
         m->forwardVel += 1.1f - m->forwardVel / 58.0f;
-    } else if (m->floor->normal.y >= 0.95f) {
+    } else if (m->floor != NULL && m->floor->normal.y >= 0.95f) {
         m->forwardVel -= 1.0f;
     }
 
@@ -456,7 +459,7 @@ void update_walking_speed(struct MarioState *m) {
         m->forwardVel += 1.1f;
     } else if (m->forwardVel <= targetSpeed) {
         m->forwardVel += 1.1f - m->forwardVel / 43.0f;
-    } else if (m->floor->normal.y >= 0.95f) {
+    } else if (m->floor != NULL && m->floor->normal.y >= 0.95f) {
         m->forwardVel -= 1.0f;
     }
 

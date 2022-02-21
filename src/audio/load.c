@@ -758,8 +758,8 @@ u8 get_missing_bank(u32 seqId, s32 *nonNullCount, s32 *nullCount) {
 }
 
 struct AudioBank *load_banks_immediate(s32 seqId, u8 *arg1) {
-    void *ret;
-    u32 bankId;
+    void *ret = NULL;
+    u32 bankId = 0;
     u16 offset;
     u8 i;
 

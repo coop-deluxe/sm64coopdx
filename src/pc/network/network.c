@@ -1,10 +1,9 @@
+#include "socket/socket.h"
 #include <stdio.h>
 #include "network.h"
 #include "object_fields.h"
 #include "object_constants.h"
-#include "game/object_list_processor.h"
 #include "behavior_table.h"
-#include "socket/socket.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
 #endif

@@ -454,7 +454,8 @@ s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
 s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount) {
     f32 a, b, c, d;
     UNUSED s32 unused;
-    s16 targetAngle, startAngle;
+    s16 targetAngle = 0;
+    s16 startAngle = 0;
 
     switch (angleIndex) {
         case O_MOVE_ANGLE_PITCH_INDEX:
@@ -1316,7 +1317,7 @@ void cur_obj_apply_drag_xz(f32 dragStrength) {
 }
 
 static s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
-    struct Surface *intendedFloor;
+    struct Surface *intendedFloor = NULL;
 
     f32 intendedX = o->oPosX + o->oVelX;
     f32 intendedZ = o->oPosZ + o->oVelZ;
@@ -1350,7 +1351,7 @@ static s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlop
             // Don't walk off an edge
             o->oMoveFlags |= OBJ_MOVE_HIT_EDGE;
             return FALSE;
-        } else if (intendedFloor->normal.y > steepSlopeNormalY) {
+        } else if (intendedFloor != NULL && intendedFloor->normal.y > steepSlopeNormalY) {
             // Allow movement onto a slope, provided it's not too steep
             o->oPosX = intendedX;
             o->oPosZ = intendedZ;
@@ -1360,7 +1361,7 @@ static s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlop
             o->oMoveFlags |= OBJ_MOVE_HIT_EDGE;
             return FALSE;
         }
-    } else if ((ny = intendedFloor->normal.y) > steepSlopeNormalY || o->oPosY > intendedFloorHeight) {
+    } else if (intendedFloor != NULL && ((ny = intendedFloor->normal.y) > steepSlopeNormalY || o->oPosY > intendedFloorHeight)) {
         // Allow movement upward, provided either:
         // - The target floor is flat enough (e.g. walking up stairs)
         // - We are above the target floor (most likely in the air)

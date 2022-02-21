@@ -888,7 +888,7 @@ void gd_printf(const char *format, ...) {
     UNUSED u32 pad150;
     char buf[0x100]; // 50
     char *csr = buf; // 4c
-    char spec[8];    // 44; goddard specifier string
+    char spec[8] = { 0 };    // 44; goddard specifier string
     UNUSED u32 pad40;
     union PrintVal val; // 38;
     va_list args;       // 34

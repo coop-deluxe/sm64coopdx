@@ -1451,7 +1451,7 @@ s32 update_fixed_camera(struct Camera *c, Vec3f focus, UNUSED Vec3f pos) {
     f32 focusFloorOff;
     f32 goalHeight;
     f32 ceilHeight;
-    f32 heightOffset;
+    f32 heightOffset = 0;
     f32 distCamToFocus;
     UNUSED u8 filler2[8];
     f32 scaleToMario = 0.5f;
@@ -4917,7 +4917,7 @@ void play_sound_if_cam_switched_to_lakitu_or_mario(void) {
  * Handles input for radial, outwards radial, parallel tracking, and 8 direction mode.
  */
 s32 radial_camera_input(struct Camera *c, UNUSED f32 unused) {
-    s16 dummy;
+    s16 dummy = 0;
 
     if ((gCameraMovementFlags & CAM_MOVE_ENTERED_ROTATE_SURFACE) || !(gCameraMovementFlags & CAM_MOVE_ROTATE)) {
 
@@ -5160,7 +5160,7 @@ s32 determine_dance_cutscene(UNUSED struct Camera *c) {
  * @return `pullResult` or `pushResult` depending on Mario's door action
  */
 u8 open_door_cutscene(u8 pullResult, u8 pushResult) {
-    s16 result;
+    s16 result = 0;
 
     if (sMarioCamState->action == ACT_PULLING_DOOR) {
         result = pullResult;
@@ -11286,7 +11286,7 @@ struct CutsceneSplinePoint sCcmOutsideCreditsSplineFocus[] = {
 void play_cutscene(struct Camera *c) {
     UNUSED u32 pad[3];
     UNUSED s16 unusedYawFocToMario;
-    s16 cutsceneDuration;
+    s16 cutsceneDuration = 0;
     u8 oldCutscene;
 
     unusedYawFocToMario = sAreaYaw;

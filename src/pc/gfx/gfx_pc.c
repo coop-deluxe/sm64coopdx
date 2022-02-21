@@ -1239,7 +1239,7 @@ static void gfx_dp_load_block(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t
     SUPPORT_CHECK(ult == 0);
     
     // The lrs field rather seems to be number of pixels to load
-    uint32_t word_size_shift;
+    uint32_t word_size_shift = 0;
     switch (rdp.texture_to_load.siz) {
         case G_IM_SIZ_4b:
             word_size_shift = 0; // Or -1? It's unused in SM64 anyway.
@@ -1267,7 +1267,7 @@ static void gfx_dp_load_tile(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t 
     SUPPORT_CHECK(uls == 0);
     SUPPORT_CHECK(ult == 0);
 
-    uint32_t word_size_shift;
+    uint32_t word_size_shift = 0;
     switch (rdp.texture_to_load.siz) {
         case G_IM_SIZ_4b:
             word_size_shift = 0; // Or -1? It's unused in SM64 anyway.
@@ -1680,6 +1680,7 @@ static void gfx_run_dl(Gfx* cmd) {
             {
                 int32_t lrx, lry, tile, ulx, uly;
                 uint32_t uls, ult, dsdx, dtdy;
+                tile = 0;
 #ifdef F3DEX_GBI_2E
                 lrx = (int32_t)(C0(0, 24) << 8) >> 8;
                 lry = (int32_t)(C1(0, 24) << 8) >> 8;

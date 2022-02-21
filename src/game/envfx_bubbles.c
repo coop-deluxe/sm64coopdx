@@ -520,10 +520,10 @@ Gfx *envfx_update_bubble_particles(s32 mode, UNUSED Vec3s marioPos, Vec3s camFro
     s32 i;
     s16 radius, pitch, yaw;
 
-    Vec3s vertex1;
-    Vec3s vertex2;
-    Vec3s vertex3;
-    Vec3s interpolatedVertices[3];
+    Vec3s vertex1 = { 0 };
+    Vec3s vertex2 = { 0 };
+    Vec3s vertex3 = { 0 };
+    Vec3s interpolatedVertices[3] = { 0 };
 
     static Vec3s prevVertex1;
     static Vec3s prevVertex2;
