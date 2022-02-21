@@ -7,9 +7,13 @@
 
 static void _debuglog_print_timestamp(void) {
     time_t ltime = time(NULL);
+#if defined(_WIN32)
+    char* str = asctime(localtime(&ltime));
+#else
     struct tm ltime2 = { 0 };
     localtime_r(&ltime, &ltime2);
     char* str = asctime(&ltime2);
+#endif
     printf("%.*s", (int)strlen(str) - 1, str);
 }
 
