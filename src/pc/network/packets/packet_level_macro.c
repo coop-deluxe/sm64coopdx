@@ -140,6 +140,14 @@ void network_receive_level_macro(struct Packet* p) {
 
     u8 thisAreaIndex;
     packet_read(p, &thisAreaIndex, sizeof(u8));
+    if (thisAreaIndex >= 8) {
+        LOG_ERROR("Receiving 'location response' with invalid areaIndex!");
+        return;
+    }
+    if (gAreaData[thisAreaIndex].macroObjects == NULL) {
+        LOG_ERROR("Receiving 'location response' with invalid macroObjects!");
+        return;
+    }
 
     // read and execute macro deletions
     u8 macroDeletionCount;
