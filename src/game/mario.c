@@ -1857,7 +1857,7 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
 
     // force the crash in debug mode
 #ifdef DEBUG
-    SOFT_ASSERT(hangPreventionIndex == 0);
+    SOFT_ASSERT_RETURN(hangPreventionIndex == 0, TRUE);
 #endif
 
     return TRUE;

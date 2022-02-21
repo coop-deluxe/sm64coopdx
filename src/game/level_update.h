@@ -12,7 +12,7 @@
 #define TIMER_CONTROL_HIDE  3
 
 #define WARP_OP_NONE          0x00
-#define WARP_OP_UNKNOWN_01    0x01
+#define WARP_OP_LOOK_UP       0x01
 #define WARP_OP_UNKNOWN_02    0x02
 #define WARP_OP_WARP_DOOR     0x03
 #define WARP_OP_WARP_OBJECT   0x04
