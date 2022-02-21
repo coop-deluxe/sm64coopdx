@@ -26,7 +26,9 @@ void logfile_close(enum LogFileType logFileType);
 static void _logfile_print_timestamp(enum LogFileType logFileType) {
     FILE* f = gLogFiles[logFileType].file;
     time_t ltime = time(NULL);
-    char* str = asctime(localtime(&ltime));
+    struct tm ltime2 = { 0 };
+    localtime_r(&ltime, &ltime2);
+    char* str = asctime(&ltime2);
     fprintf(f, "%.*s", (int)strlen(str) - 1, str);
 }
 

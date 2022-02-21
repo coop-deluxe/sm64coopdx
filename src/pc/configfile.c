@@ -298,8 +298,10 @@ void configfile_load(const char *filename) {
         while (isspace(*p))
             p++;
 
-        if (!*p || *p == '#') // comment or empty line
+        if (!*p || *p == '#') { // comment or empty line
+            free(line);
             continue;
+        }
 
         numTokens = tokenize_string(p, sizeof(tokens) / sizeof(tokens[0]), tokens);
         if (numTokens != 0) {
@@ -315,12 +317,14 @@ void configfile_load(const char *filename) {
                             break;
                         }
                     }
+                    free(line);
                     continue;
                 }
 
                 // ban list
                 if (!strcmp(tokens[0], "ban:")) {
                     ban_list_add(tokens[1], true);
+                    free(line);
                     continue;
                 }
 

@@ -7,9 +7,11 @@
 
 static void _debuglog_print_timestamp(void) {
     time_t ltime = time(NULL);
-    char* str = asctime(localtime(&ltime));
+    struct tm ltime2 = { 0 };
+    localtime_r(&ltime, &ltime2);
+    char* str = asctime(&ltime2);
     printf("%.*s", (int)strlen(str) - 1, str);
-    }
+}
 
 static void _debuglog_print_network_type(void) {
     printf(" [%02d] ", (gNetworkPlayerLocal != NULL) ? gNetworkPlayerLocal->globalIndex : -1);

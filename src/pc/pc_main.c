@@ -232,7 +232,7 @@ void main_func(void) {
         configWindow.fullscreen = false;
 
     const size_t poolsize = gCLIOpts.PoolSize ? gCLIOpts.PoolSize : DEFAULT_POOL_SIZE;
-    u64 *pool = malloc(poolsize);
+    u64 *pool = calloc(poolsize, 1);
     if (!pool) sys_fatal("Could not alloc %u bytes for main pool.\n", poolsize);
     main_pool_init(pool, pool + poolsize / sizeof(pool[0]));
     gEffectsMemoryPool = mem_pool_init(0x4000, MEMORY_POOL_LEFT);

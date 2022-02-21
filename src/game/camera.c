@@ -176,10 +176,10 @@ extern struct Camera *gCamera;
  * Lakitu's position and focus.
  * @see LakituState
  */
-struct LakituState gLakituState;
-struct CameraFOVStatus sFOVState;
-struct TransitionInfo sModeTransition;
-struct PlayerGeometry sMarioGeometry;
+struct LakituState gLakituState = { 0 };
+struct CameraFOVStatus sFOVState = { 0 };
+struct TransitionInfo sModeTransition = { 0 };
+struct PlayerGeometry sMarioGeometry = { 0 };
 struct Camera *gCamera;
 s16 unusedFreeRoamWallYaw;
 s16 sAvoidYawVel;
