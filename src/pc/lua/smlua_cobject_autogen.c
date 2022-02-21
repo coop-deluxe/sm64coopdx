@@ -10,7 +10,7 @@
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/game/object_helpers.h"
 
-#include "include\object_fields.h"
+#include "include/object_fields.h"
 #define LUA_ANIM_INFO_FIELD_COUNT 11
 static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
     { "animAccel",              LVT_S32,       offsetof(struct AnimInfo, animAccel),              false, LOT_NONE      },
