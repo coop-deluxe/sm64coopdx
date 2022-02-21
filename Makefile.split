@@ -128,8 +128,8 @@ $(BUILD_DIR)/actors/group16.o: $(addprefix $(BUILD_DIR)/,$(CHILLYCHIEF_FILES)) $
 $(BUILD_DIR)/actors/group17.o: $(addprefix $(BUILD_DIR)/,$(MR_I_SWOOP_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(MR_I_DIRS)),$(wildcard $(dir)/*.c))
 $(BUILD_DIR)/actors/common0.o: $(addprefix $(BUILD_DIR)/,$(AMP_CHUCKYA_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(AMP_DIRS)),$(wildcard $(dir)/*.c))
 $(BUILD_DIR)/actors/common1.o: $(addprefix $(BUILD_DIR)/,$(COINS_PIPE_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(COINS_DIRS)),$(wildcard $(dir)/*.c))
-$(BUILD_DIR)/actors/custom0.o: $(addprefix $(BUILD_DIR)/,$(CUSTOM_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(wildcard $(dir)/*.c))
-$(BUILD_DIR)/actors/zcustom0.o: $(addprefix $(BUILD_DIR)/,$(ZCUSTOM_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(ZCUSTOM_DIRS)),$(wildcard $(dir)/*.c))
+$(BUILD_DIR)/actors/custom0.o: | $(BUILD_DIR)/actors/common1.o $(addprefix $(BUILD_DIR)/,$(CUSTOM_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(CUSTOM_DIRS)),$(wildcard $(dir)/*.c))
+$(BUILD_DIR)/actors/zcustom0.o:| $(BUILD_DIR)/actors/group0.o $(addprefix $(BUILD_DIR)/,$(ZCUSTOM_FILES)) $(foreach dir,$(addprefix $(ACTOR_DIR)/,$(ZCUSTOM_DIRS)),$(wildcard $(dir)/*.c))
 
 # Actor Elf Files
 $(BUILD_DIR)/actors/group0.elf: SEGMENT_ADDRESS := 0x04000000
