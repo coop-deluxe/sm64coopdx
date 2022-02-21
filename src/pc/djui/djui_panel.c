@@ -151,6 +151,11 @@ void djui_panel_shutdown(void) {
         panel = next;
     }
 
+    if (sPanelRemoving != NULL) {
+        djui_base_destroy(sPanelRemoving->base);
+        free(sPanelRemoving);
+    }
+
     sPanelList = NULL;
     sPanelRemoving = NULL;
     sMoveAmount = 0;
