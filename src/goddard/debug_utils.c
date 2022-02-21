@@ -837,7 +837,7 @@ s32 is_newline(char c) {
 
 /* 23CBA8 -> 23CCF0; orig name: func_8018E3D8 */
 s32 gd_fread_line(char *buf, u32 size, struct GdFile *f) {
-    signed char c;
+    signed char c = 0;
     u32 pos = 0;
     UNUSED u32 pad1c;
 

@@ -186,11 +186,13 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
         }
 
         // set up manager pointers
-        app.users = app.core->get_user_manager(app.core);
-        app.achievements = app.core->get_achievement_manager(app.core);
-        app.activities = app.core->get_activity_manager(app.core);
-        app.application = app.core->get_application_manager(app.core);
-        app.lobbies = app.core->get_lobby_manager(app.core);
+        if (app.core != NULL) {
+            app.users = app.core->get_user_manager(app.core);
+            app.achievements = app.core->get_achievement_manager(app.core);
+            app.activities = app.core->get_activity_manager(app.core);
+            app.application = app.core->get_application_manager(app.core);
+            app.lobbies = app.core->get_lobby_manager(app.core);
+        }
 
         // register launch params
         register_launch_command();

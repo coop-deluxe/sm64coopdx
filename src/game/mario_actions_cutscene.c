@@ -966,9 +966,9 @@ s32 act_unlocking_star_door(struct MarioState *m) {
 }
 
 s32 act_entering_star_door(struct MarioState *m) {
-    f32 targetDX;
-    f32 targetDZ;
-    s16 targetAngle;
+    f32 targetDX = 0;
+    f32 targetDZ = 0;
+    s16 targetAngle = 0;
 
     if (m->actionTimer++ == 0) {
         if (m->interactObj != NULL) {

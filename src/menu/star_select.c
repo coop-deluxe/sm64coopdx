@@ -114,7 +114,7 @@ void bhv_act_selector_init(void) {
     if (gCurrCourseNum == 0) { return; }
 
     s16 i = 0;
-    s32 selectorModelIDs[10];
+    s32 selectorModelIDs[10] = { 0 };
     u8 stars = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
 
     sVisibleStars = 0;

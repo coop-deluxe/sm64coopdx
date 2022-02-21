@@ -107,8 +107,8 @@ static inline bool copy_userdata(const char *userdir) {
 
     // also try to copy the config
     path[len] = oldpath[len] = 0;
-    strncat(path, "/" CONFIGFILE_DEFAULT, sizeof(path) - 1);
-    strncat(oldpath, "/" CONFIGFILE_DEFAULT, sizeof(oldpath) - 1);
+    strncat(path, "/" CONFIGFILE_DEFAULT, SYS_MAX_PATH - 1);
+    strncat(oldpath, "/" CONFIGFILE_DEFAULT, SYS_MAX_PATH - 1);
     fs_sys_copy_file(oldpath, path);
 
     return ret;

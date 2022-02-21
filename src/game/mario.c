@@ -242,7 +242,7 @@ void update_mario_pos_for_anim(struct MarioState *m) {
  * Finds the vertical translation from Mario's animation.
  */
 s16 return_mario_anim_y_translation(struct MarioState *m) {
-    Vec3s translation;
+    Vec3s translation = { 0 };
     find_mario_anim_flags_and_translation(m->marioObj, 0, translation);
 
     return translation[1];

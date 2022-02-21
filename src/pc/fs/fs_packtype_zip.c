@@ -436,8 +436,12 @@ static bool pack_zip_seek(UNUSED void *pack, fs_file_t *file, const int64_t ofs)
             if (inflateInit2(&zstream, -MAX_WBITS) != Z_OK)
                 return false;
             // reset the underlying file handle back to the start
-            if (fseek(zipfile->fstream, ent->ofs, SEEK_SET) != 0)
+            if (fseek(zipfile->fstream, ent->ofs, SEEK_SET) != 0) {
+                if (zstream.zfree) {
+                    zstream.zfree(zstream.opaque, zstream.state);
+                }
                 return false;
+            }
             // free and replace the old one
             inflateEnd(&zipfile->zstream);
             memcpy(&zipfile->zstream, &zstream, sizeof(zstream));

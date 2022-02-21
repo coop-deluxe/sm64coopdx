@@ -309,13 +309,15 @@ void unload_mario_area(void) {
 }
 
 void change_area(s32 index) {
-    s32 areaFlags = gCurrentArea->flags;
+    s32 areaFlags = (gCurrentArea != NULL) ? gCurrentArea->flags : 0;
 
     if (gCurrAreaIndex != index) {
         unload_area();
         load_area(index);
 
-        gCurrentArea->flags = areaFlags;
+        if (gCurrentArea != NULL) {
+            gCurrentArea->flags = areaFlags;
+        }
         for (int i = 0; i < MAX_PLAYERS; i++) {
             gMarioStates[i].marioObj->oActiveParticleFlags = 0;
         }

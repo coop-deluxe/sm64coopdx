@@ -1818,12 +1818,12 @@ s8 gDialogCourseActNum = 1;
 
 void render_dialog_entries(void) {
 #ifdef VERSION_EU
-    s8 lowerBound;
+    s8 lowerBound = 0;
 #endif
     void **dialogTable;
     struct DialogEntry *dialog;
 #ifdef VERSION_US
-    s8 lowerBound;
+    s8 lowerBound = 0;
 #endif
 #ifdef VERSION_EU
     gInGameLanguage = eu_get_language();

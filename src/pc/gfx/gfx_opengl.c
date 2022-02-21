@@ -627,7 +627,8 @@ static void gfx_opengl_init(void) {
     if (!tex_cache) sys_fatal("out of memory allocating texture cache");
 
     // check GL version
-    int vmajor, vminor;
+    int vmajor = 0;
+    int vminor = 0;
     bool is_es = false;
     gl_get_version(&vmajor, &vminor, &is_es);
     if (vmajor < 2 && vminor < 1 && !is_es)

@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "socket.h"
+#include <stdio.h>
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 #include "pc/djui/djui.h"

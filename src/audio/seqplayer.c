@@ -1020,7 +1020,7 @@ GLOBAL_ASM("asm/non_matchings/seq_channel_layer_process_script_us.s")
 #endif
 
 u8 get_instrument(struct SequenceChannel *seqChannel, u8 instId, struct Instrument **instOut, struct AdsrSettings *adsr) {
-    struct Instrument *inst;
+    struct Instrument *inst = NULL;
 #ifdef VERSION_EU
     inst = get_instrument_inner(seqChannel->bankId, instId);
     if (inst == NULL)
@@ -1063,8 +1063,10 @@ u8 get_instrument(struct SequenceChannel *seqChannel, u8 instId, struct Instrume
         || ((uintptr_t) gBankLoadedPool.temporary.pool.start <= (uintptr_t) inst
             && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.temporary.pool.start
                                    + gBankLoadedPool.temporary.pool.size))) {
-        adsr->envelope = inst->envelope;
-        adsr->releaseRate = inst->releaseRate;
+        if (inst != NULL) {
+            adsr->envelope = inst->envelope;
+            adsr->releaseRate = inst->releaseRate;
+        }
         *instOut = inst;
         instId++;
         return instId;
@@ -1114,7 +1116,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
     u8 cmd;    // v1, s1
     u8 loBits; // t0, a0
     s32 offset;
-    s8 value; // sp53, 4b
+    s8 value = 0; // sp53, 4b
     u8 temp;
     s8 tempSigned;
     UNUSED u8 temp2;
@@ -1678,7 +1680,7 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
     u8 cmd;
     u8 loBits;
     u8 temp;
-    s32 value;
+    s32 value = 0;
     s32 i;
     u16 u16v;
     u32 u32v;

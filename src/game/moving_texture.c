@@ -860,7 +860,7 @@ Gfx *geo_movtex_draw_nocolor(s32 callContext, struct GraphNode *node, UNUSED Mat
  */
 Gfx *geo_movtex_draw_colored(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
     s32 i;
-    s16 *movtexVerts;
+    s16 *movtexVerts = NULL;
     struct GraphNodeGenerated *asGenerated;
     Gfx *gfx = NULL;
 
@@ -872,6 +872,7 @@ Gfx *geo_movtex_draw_colored(s32 callContext, struct GraphNode *node, UNUSED Mat
                 asGenerated->fnNode.node.flags =
                     (asGenerated->fnNode.node.flags & 0xFF) | (gMovtexColored[i].layer << 8);
                 movtexVerts = segmented_to_virtual(gMovtexColored[i].movtexVerts);
+                if (movtexVerts == NULL) { continue; }
                 update_moving_texture_offset(movtexVerts, MOVTEX_ATTR_COLORED_S);
                 gfx = movtex_gen_list(movtexVerts, &gMovtexColored[i], MOVTEX_LAYOUT_COLORED);
                 break;
@@ -952,7 +953,7 @@ Gfx *geo_movtex_draw_colored_2_no_update(s32 callContext, struct GraphNode *node
  * Note that the final TTC only has one big treadmill though.
  */
 Gfx *geo_movtex_update_horizontal(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
-    void *movtexVerts;
+    void *movtexVerts = NULL;
 
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeGenerated *asGenerated = (struct GraphNodeGenerated *) node;
@@ -971,7 +972,9 @@ Gfx *geo_movtex_update_horizontal(s32 callContext, struct GraphNode *node, UNUSE
                 movtexVerts = segmented_to_virtual(ttc_movtex_tris_small_surface_treadmill);
                 break;
         }
-        update_moving_texture_offset(movtexVerts, MOVTEX_ATTR_COLORED_S);
+        if (movtexVerts != NULL) {
+            update_moving_texture_offset(movtexVerts, MOVTEX_ATTR_COLORED_S);
+        }
     }
     return NULL;
 }
