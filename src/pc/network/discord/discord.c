@@ -88,9 +88,9 @@ void discord_fatal(int rc) {
 
 static void set_instance_env_variable(void) {
     // set local instance id
-    char environmentVariables[64] = { 0 };
+    char environmentVariables[128] = { 0 };
     int instance = (gCLIOpts.Discord == 0) ? 0 : (gCLIOpts.Discord - 1);
-    sprintf(environmentVariables, "DISCORD_INSTANCE_ID=%d", instance);
+    snprintf(environmentVariables, 128, "DISCORD_INSTANCE_ID=%d", instance);
     putenv(environmentVariables);
     LOGFILE_INFO(LFT_DISCORD, "set environment variables: %s", environmentVariables);
 }
@@ -102,7 +102,7 @@ static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult res
 }
 
 static void register_launch_command(void) {
-    char cmd[MAX_LAUNCH_CMD];
+    char cmd[MAX_LAUNCH_CMD] = { 0 };
     int rc;
 #if defined(_WIN32) || defined(_WIN64)
     HMODULE hModule = GetModuleHandle(NULL);
