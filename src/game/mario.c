@@ -70,8 +70,10 @@ s32 is_anim_at_end(struct MarioState *m) {
  * Checks if Mario's animation has surpassed 2 frames before its end point.
  */
 s32 is_anim_past_end(struct MarioState *m) {
+    if (m == NULL || m->marioObj == NULL) { return 0; }
     struct Object *o = m->marioObj;
 
+    if (o->header.gfx.animInfo.curAnim == NULL) { return 0; }
     return o->header.gfx.animInfo.animFrame >= (o->header.gfx.animInfo.curAnim->loopEnd - 2);
 }
 
