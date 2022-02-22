@@ -80,6 +80,7 @@ struct SyncObject {
     void* extraFields[MAX_SYNC_OBJECT_FIELDS];
     bool rememberLastReliablePacket;
     bool lastReliablePacketIsStale;
+    u8 extendedModelId;
 };
 
 enum PlayerInteractions {

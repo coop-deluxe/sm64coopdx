@@ -23,6 +23,7 @@
 #include "surface_collision.h"
 #include "surface_load.h"
 #include "level_table.h"
+#include "src/pc/lua/smlua_model_utils.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
 
@@ -304,6 +305,8 @@ static void level_cmd_init_level(void) {
     clear_objects();
     clear_areas();
     main_pool_push_state();
+    smlua_model_util_clear();
+
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -382,6 +385,7 @@ static void level_cmd_load_model_from_dl(void) {
     if (val1 < 256) {
         gLoadedGraphNodes[val1] =
             (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
+        smlua_model_util_remember(val1, val2, val3);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -393,6 +397,7 @@ static void level_cmd_load_model_from_geo(void) {
 
     if (arg0 < 256) {
         gLoadedGraphNodes[arg0] = process_geo_layout(sLevelPool, arg1);
+        smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -419,6 +424,7 @@ static void level_cmd_23(void) {
         // is being stored to the array, so cast the pointer.
         gLoadedGraphNodes[model] =
             (struct GraphNode *) init_graph_node_scale(sLevelPool, 0, arg0H, arg1, arg2.f);
+        smlua_model_util_remember(model, arg0H, arg1);
     }
 
     sCurrentCmd = CMD_NEXT;

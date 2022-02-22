@@ -111,6 +111,7 @@ void network_override_object(u8 syncId, struct Object* o) {
 }
 
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
+    bool hadSyncId = (o->oSyncID != 0);
     // generate new sync ID
     if (!network_set_sync_id(o)) {
         LOG_ERROR("failed to sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
@@ -144,6 +145,9 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->override_ownership = NULL;
     so->on_forget = NULL;
     so->syncDeathEvent = true;
+    if (!hadSyncId) {
+        so->extendedModelId = 0xFF;
+    }
     so->randomSeed = (u16)(o->oSyncID * 7951);
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
 
@@ -240,7 +244,10 @@ bool network_set_sync_id(struct Object* o) {
         LOG_ERROR("failed to sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
         return false;
     }
-    SOFT_ASSERT_RETURN(gSyncObjects[syncId].o == NULL, false);
+    if (gSyncObjects[syncId].o != NULL) {
+        LOG_ERROR("failed to sync id (o) for object w/behavior %d", get_id_from_behavior(o->behavior));
+        return false;
+    }
 
     o->oSyncID = syncId;
 

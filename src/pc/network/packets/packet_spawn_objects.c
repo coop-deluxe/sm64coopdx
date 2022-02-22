@@ -7,6 +7,7 @@
 #include "src/game/area.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
+#include "src/pc/lua/smlua_model_utils.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -20,6 +21,7 @@ struct SpawnObjectData {
     s16 activeFlags;
     s32 rawData[80];
     u8 globalPlayerIndex;
+    u8 extendedModelId;
 };
 #pragma pack()
 
@@ -49,10 +51,17 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 }
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
-    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
+        LOG_ERROR("failed: area sync invalid");
+        return;
+    }
+
     SOFT_ASSERT(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
     // prevent sending spawn objects during credits
-    if (gCurrActStarNum == 99) { return; }
+    if (gCurrActStarNum == 99) {
+        LOG_ERROR("failed: in credits");
+        return;
+    }
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_OBJECTS, true, PLMT_AREA);
@@ -65,6 +74,9 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         u32 model = models[i];
         u8 parentId = generate_parent_id(objects, i, true);
         u16 behaviorId = get_id_from_behavior(o->behavior);
+        u8 extendedModelId = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o)
+                           ? gSyncObjects[o->oSyncID].extendedModelId
+                           : 0xFF;
         packet_write(&p, &parentId, sizeof(u8));
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u16));
@@ -74,6 +86,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
         packet_write(&p, &o->globalPlayerIndex, sizeof(u8));
+        packet_write(&p, &extendedModelId, sizeof(u8));
     }
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
@@ -88,7 +101,10 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 void network_receive_spawn_objects(struct Packet* p) {
     LOG_INFO("rx spawn objects");
     // prevent receiving spawn objects during credits
-    if (gCurrActStarNum == 99) { return; }
+    if (gCurrActStarNum == 99) {
+        LOG_ERROR("rx failed: in credits");
+        return;
+    }
 
     u8 objectCount = 0;
     packet_read(p, &objectCount, sizeof(u8));
@@ -106,6 +122,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &scale[1], sizeof(f32));
         packet_read(p, &scale[2], sizeof(f32));
         packet_read(p, &data.globalPlayerIndex, sizeof(u8));
+        packet_read(p, &data.extendedModelId, sizeof(u8));
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u8)-1) {
@@ -137,6 +154,14 @@ void network_receive_spawn_objects(struct Packet* p) {
             return;
         }
 
+        // load extended model
+        if (data.extendedModelId != 0xFF) {
+            u8 loadedModelId = smlua_model_util_load(data.extendedModelId);
+            if (loadedModelId != 0xFF) {
+                data.model = loadedModelId;
+            }
+        }
+
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
         struct Object* o = spawn_object(parentObj, data.model, behavior);
         o->globalPlayerIndex = data.globalPlayerIndex;
@@ -157,6 +182,7 @@ void network_receive_spawn_objects(struct Packet* p) {
             }
             // check if they've allocated one of their reserved sync objects
             gSyncObjects[o->oSyncID].o = o;
+            gSyncObjects[o->oSyncID].extendedModelId = data.extendedModelId;
         }
 
         spawned[i] = o;

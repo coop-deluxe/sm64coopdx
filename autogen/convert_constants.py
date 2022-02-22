@@ -19,6 +19,8 @@ in_files = [
     "src/game/interaction.c",
     "src/game/interaction.h",
     "src/pc/djui/djui_hud_utils.h",
+    "include/behavior_table.h",
+    "src/pc/lua/smlua_model_utils.h",
 ]
 
 exclude_constants = [
@@ -66,7 +68,7 @@ def process_enum(line):
     _, ident, val = line.split(' ', 2)
 
     if '{' not in val or '}' not in val:
-        print('UNRECOGNIZED ENUM: ' + line)
+        #print('UNRECOGNIZED ENUM: ' + line)
         return None
 
     # grab inside body

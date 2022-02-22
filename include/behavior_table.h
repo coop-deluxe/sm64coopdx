@@ -523,7 +523,6 @@ enum BehaviorId {
     id_bhv_max_count // must be the last in the list
 };
 
-
 enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);
 const BehaviorScript* get_behavior_from_id(enum BehaviorId id);
 

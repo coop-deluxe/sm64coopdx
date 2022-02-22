@@ -34,6 +34,8 @@ in_files = [
     "src/game/sound_init.h",
     "src/pc/djui/djui_hud_utils.h",
     "src/pc/network/network_player.h",
+    "include/behavior_table.h",
+    "src/pc/lua/smlua_obj_utils.h",
 ]
 
 override_allowed_functions = {

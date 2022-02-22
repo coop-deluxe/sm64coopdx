@@ -1,6 +1,10 @@
 ## [:rewind: Lua Reference](lua.md)
 
 # Supported Functions
+- behavior_table.h
+
+<br />
+
 - camera.h
    - [set_camera_pitch_shake](#set_camera_pitch_shake)
    - [set_camera_roll_shake](#set_camera_roll_shake)
@@ -305,6 +309,11 @@
 
 <br />
 
+- smlua_obj_utils.h
+   - [spawn_object_sync](#spawn_object_sync)
+
+<br />
+
 - sound_init.h
    - [disable_background_sound](#disable_background_sound)
    - [enable_background_sound](#enable_background_sound)
@@ -338,6 +347,12 @@
    - [queue_rumble_data](#queue_rumble_data)
    - [queue_rumble_data_mario](#queue_rumble_data_mario)
    - [queue_rumble_data_object](#queue_rumble_data_object)
+
+<br />
+
+
+---
+# functions from behavior_table.h
 
 <br />
 
@@ -5087,6 +5102,36 @@
 
 ### C Prototype
 `s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_obj_utils.h
+
+<br />
+
+
+## [spawn_object_sync](#spawn_object_sync)
+
+### Lua Example
+`local ObjectValue = spawn_object_sync(behaviorId, modelId, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behaviorId | integer |
+| modelId | integer |
+| x | number |
+| y | number |
+| z | number |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z);`
 
 [:arrow_up_small:](#)
 

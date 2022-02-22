@@ -18,7 +18,39 @@
 #include "src/game/sound_init.h"
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/pc/network/network_player.h"
+#include "include/behavior_table.h"
+#include "src/pc/lua/smlua_obj_utils.h"
 
+
+  //////////////////////
+ // behavior_table.h //
+//////////////////////
+
+/*
+int smlua_func_get_behavior_from_id(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    UNIMPLEMENTED -->(L, get_behavior_from_id(id));
+
+    return 1;
+}
+*/
+
+/*
+int smlua_func_get_id_from_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+//  const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, get_id_from_behavior(behavior));
+
+    return 1;
+}
+*/
 
   //////////////
  // camera.h //
@@ -3170,6 +3202,29 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
     return 1;
 }
 
+  ///////////////////////
+ // smlua_obj_utils.h //
+///////////////////////
+
+int smlua_func_spawn_object_sync(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int modelId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 x = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 y = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 z = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, spawn_object_sync(behaviorId, modelId, x, y, z));
+
+    return 1;
+}
+
   //////////////////
  // sound_init.h //
 //////////////////
@@ -3564,6 +3619,10 @@ int smlua_func_queue_rumble_data_object(lua_State* L) {
 void smlua_bind_functions_autogen(void) {
     lua_State* L = gLuaState;
 
+    // behavior_table.h
+    //smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior); <--- UNIMPLEMENTED
+
     // camera.h
     smlua_bind_function(L, "set_camera_pitch_shake", smlua_func_set_camera_pitch_shake);
     smlua_bind_function(L, "set_camera_roll_shake", smlua_func_set_camera_roll_shake);
@@ -3831,6 +3890,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_sound_mode", smlua_func_save_file_get_sound_mode);
     smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
+
+    // smlua_obj_utils.h
+    smlua_bind_function(L, "spawn_object_sync", smlua_func_spawn_object_sync);
 
     // sound_init.h
     smlua_bind_function(L, "disable_background_sound", smlua_func_disable_background_sound);
