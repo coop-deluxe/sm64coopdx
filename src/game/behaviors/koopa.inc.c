@@ -350,11 +350,13 @@ void shelled_koopa_attack_handler(s32 attackType) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
         if (marioState->playerIndex == 0) {
             struct Object* shell = spawn_object(o, MODEL_KOOPA_SHELL, bhvKoopaShell);
-            network_set_sync_id(shell);
+            if (shell != NULL) {
+                network_set_sync_id(shell);
 
-            struct Object* spawn_objects[] = { shell };
-            u32 models[] = { MODEL_KOOPA_SHELL };
-            network_send_spawn_objects(spawn_objects, models, 1);
+                struct Object* spawn_objects[] = { shell };
+                u32 models[] = { MODEL_KOOPA_SHELL };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
         }
 
         //! Because bob-ombs/corkboxes come after koopa in processing order,

@@ -222,6 +222,7 @@ void bully_spawn_coin(void) {
 #else
     cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT_2);
 #endif
+    if (coin == NULL) { return; }
     coin->oForwardVel = 10.0f;
     coin->oVelY = 100.0f;
     coin->oPosY = o->oPosY + 310.0f;
@@ -306,8 +307,10 @@ void bhv_bully_loop(void) {
 void big_bully_spawn_minion(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     struct Object *bully =
         spawn_object_abs_with_rot(o, 0, MODEL_BULLY, bhvSmallBully, arg0, arg1, arg2, 0, arg3, 00);
-    bully->oBullySubtype = BULLY_STYPE_MINION;
-    bully->oBehParams2ndByte = BULLY_BP_SIZE_SMALL;
+    if (bully != NULL) {
+        bully->oBullySubtype = BULLY_STYPE_MINION;
+        bully->oBehParams2ndByte = BULLY_BP_SIZE_SMALL;
+    }
 }
 
 void bhv_big_bully_with_minions_init(void) {

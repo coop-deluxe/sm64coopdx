@@ -43,6 +43,7 @@ void fish_act_spawn(void) {
      */
     for (i = 0; i < schoolQuantity; i++) {
         fishObject = spawn_object(o, model, bhvFish);
+        if (fishObject == NULL) { continue; }
         fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
         obj_init_animation_with_sound(fishObject, fishAnimation, 0);
         obj_translate_xyz_random(fishObject, 700.0f);

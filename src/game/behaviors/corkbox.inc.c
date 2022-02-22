@@ -44,9 +44,11 @@ void bhv_respawner_loop(void) {
     if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, o->oRespawnerMinSpawnDist)) {
         u32 syncID = o->oSyncID;
         spawnedObject = spawn_object(o, o->oRespawnerModelToRespawn, o->oRespawnerBehaviorToRespawn);
-        spawnedObject->oBehParams = o->oBehParams;
-        spawnedObject->oSyncID = syncID;
-        network_override_object(syncID, spawnedObject);
+        if (spawnedObject != NULL) {
+            spawnedObject->oBehParams = o->oBehParams;
+            spawnedObject->oSyncID = syncID;
+            network_override_object(syncID, spawnedObject);
+        }
         o->oSyncID = 0;
 
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
@@ -57,14 +59,18 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
     struct Object *respawner = spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvRespawner, o->oHomeX,
                                                          o->oHomeY, o->oHomeZ, 0, 0, 0);
     u8 syncID = o->oSyncID;
-    respawner->oBehParams = o->oBehParams;
-    respawner->oRespawnerModelToRespawn = model;
-    respawner->oRespawnerMinSpawnDist = minSpawnDist;
-    respawner->oRespawnerBehaviorToRespawn = behToSpawn;
-    respawner->oSyncID = syncID;
+    if (respawner != NULL) {
+        respawner->oBehParams = o->oBehParams;
+        respawner->oRespawnerModelToRespawn = model;
+        respawner->oRespawnerMinSpawnDist = minSpawnDist;
+        respawner->oRespawnerBehaviorToRespawn = behToSpawn;
+        respawner->oSyncID = syncID;
+    }
 
     if (syncID < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
-        network_override_object(syncID, respawner);
+        if (respawner != NULL) {
+            network_override_object(syncID, respawner);
+        }
         o->oSyncID = 0;
         o->oFlags |= OBJ_FLAG_PERSISTENT_RESPAWN; // pretty sure this is required
     }

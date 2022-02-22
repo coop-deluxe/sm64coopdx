@@ -426,11 +426,13 @@ void bhv_klepto_update(void) {
                 save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
 
                 struct Object* cap = spawn_object(o, capModel, bhvNormalCap);
-                cap->globalPlayerIndex = o->globalPlayerIndex;
+                if (cap != NULL) {
+                    cap->globalPlayerIndex = o->globalPlayerIndex;
 
-                struct Object* spawn_objects[] = { cap };
-                u32 models[] = { capModel };
-                network_send_spawn_objects(spawn_objects, models, 1);
+                    struct Object* spawn_objects[] = { cap };
+                    u32 models[] = { capModel };
+                    network_send_spawn_objects(spawn_objects, models, 1);
+                }
 
             } else if (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_STAR) {
                 spawn_default_star(-5550.0f, 300.0f, -930.0f);

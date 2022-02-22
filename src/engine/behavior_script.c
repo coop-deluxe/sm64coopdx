@@ -195,7 +195,9 @@ static s32 bhv_cmd_spawn_child(void) {
     const BehaviorScript *behavior = BHV_CMD_GET_VPTR(2);
 
     struct Object *child = spawn_object_at_origin(gCurrentObject, 0, model, behavior);
-    obj_copy_pos_and_angle(child, gCurrentObject);
+    if (child != NULL) {
+        obj_copy_pos_and_angle(child, gCurrentObject);
+    }
 
     gCurBhvCommand += 3;
     return BHV_PROC_CONTINUE;
@@ -208,9 +210,11 @@ static s32 bhv_cmd_spawn_obj(void) {
     const BehaviorScript *behavior = BHV_CMD_GET_VPTR(2);
 
     struct Object *object = spawn_object_at_origin(gCurrentObject, 0, model, behavior);
-    obj_copy_pos_and_angle(object, gCurrentObject);
-    // TODO: Does this cmd need renaming? This line is the only difference between this and the above func.
-    gCurrentObject->prevObj = object;
+    if (object != NULL) {
+        obj_copy_pos_and_angle(object, gCurrentObject);
+        // TODO: Does this cmd need renaming? This line is the only difference between this and the above func.
+        gCurrentObject->prevObj = object;
+    }
 
     gCurBhvCommand += 3;
     return BHV_PROC_CONTINUE;
@@ -224,8 +228,10 @@ static s32 bhv_cmd_spawn_child_with_param(void) {
     const BehaviorScript *behavior = BHV_CMD_GET_VPTR(2);
 
     struct Object *child = spawn_object_at_origin(gCurrentObject, 0, modelID, behavior);
-    obj_copy_pos_and_angle(child, gCurrentObject);
-    child->oBehParams2ndByte = bhvParam;
+    if (child != NULL) {
+        obj_copy_pos_and_angle(child, gCurrentObject);
+        child->oBehParams2ndByte = bhvParam;
+    }
 
     gCurBhvCommand += 3;
     return BHV_PROC_CONTINUE;

@@ -449,10 +449,11 @@ void bhv_monty_mole_update(void) {
                 if (sMontyMoleKillStreak == 7 && network_owns_object(o)) {
                     play_puzzle_jingle();
                     struct Object* oneUp = spawn_object(o, MODEL_1UP, bhv1upWalking);
-
-                    struct Object* spawn_objects[] = { oneUp };
-                    u32 models[] = { MODEL_1UP };
-                    network_send_spawn_objects(spawn_objects, models, 1);
+                    if (oneUp != NULL) {
+                        struct Object* spawn_objects[] = { oneUp };
+                        u32 models[] = { MODEL_1UP };
+                        network_send_spawn_objects(spawn_objects, models, 1);
+                    }
                 }
             } else {
                 sMontyMoleKillStreak = 0;

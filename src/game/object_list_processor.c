@@ -254,6 +254,7 @@ void spawn_particle(u32 activeParticleFlag, s16 model, const BehaviorScript *beh
         struct Object *particle;
         gCurrentObject->oActiveParticleFlags |= activeParticleFlag;
         particle = spawn_object_at_origin(gCurrentObject, 0, model, behavior);
+        if (particle == NULL) { return; }
         obj_copy_pos_and_angle(particle, gCurrentObject);
     }
 }
@@ -514,45 +515,46 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
         if ((spawnInfo->behaviorArg & (RESPAWN_INFO_DONT_RESPAWN << 8))
             != (RESPAWN_INFO_DONT_RESPAWN << 8)) {
             object = create_object(script);
+            if (object != NULL) {
+                // Behavior parameters are often treated as four separate bytes, but
+                // are stored as an s32.
+                object->oBehParams = spawnInfo->behaviorArg;
+                // The second byte of the behavior parameters is copied over to a special field
+                // as it is the most frequently used by objects.
+                object->oBehParams2ndByte = ((spawnInfo->behaviorArg) >> 16) & 0xFF;
 
-            // Behavior parameters are often treated as four separate bytes, but
-            // are stored as an s32.
-            object->oBehParams = spawnInfo->behaviorArg;
-            // The second byte of the behavior parameters is copied over to a special field
-            // as it is the most frequently used by objects.
-            object->oBehParams2ndByte = ((spawnInfo->behaviorArg) >> 16) & 0xFF;
+                object->behavior = script;
+                object->unused1 = 0;
 
-            object->behavior = script;
-            object->unused1 = 0;
+                // Record death/collection in the SpawnInfo
+                object->respawnInfoType = RESPAWN_INFO_TYPE_32;
+                object->respawnInfo = &spawnInfo->behaviorArg;
 
-            // Record death/collection in the SpawnInfo
-            object->respawnInfoType = RESPAWN_INFO_TYPE_32;
-            object->respawnInfo = &spawnInfo->behaviorArg;
-
-            // found a player
-            if (spawnInfo->behaviorArg & (1 << 31) && object->behavior == bhvMario) {
-                u16 playerIndex = (spawnInfo->behaviorArg & ~(1 << 31));
-                object->oBehParams = playerIndex + 1;
-                gMarioObjects[playerIndex] = object;
-                if (playerIndex == 0) {
-                    gMarioObject = object;
+                // found a player
+                if (spawnInfo->behaviorArg & (1 << 31) && object->behavior == bhvMario) {
+                    u16 playerIndex = (spawnInfo->behaviorArg & ~(1 << 31));
+                    object->oBehParams = playerIndex + 1;
+                    gMarioObjects[playerIndex] = object;
+                    if (playerIndex == 0) {
+                        gMarioObject = object;
+                    }
+                    geo_make_first_child(&object->header.gfx.node);
                 }
-                geo_make_first_child(&object->header.gfx.node);
+
+                geo_obj_init_spawninfo(&object->header.gfx, spawnInfo);
+
+                object->oPosX = spawnInfo->startPos[0];
+                object->oPosY = spawnInfo->startPos[1];
+                object->oPosZ = spawnInfo->startPos[2];
+
+                object->oFaceAnglePitch = spawnInfo->startAngle[0];
+                object->oFaceAngleYaw = spawnInfo->startAngle[1];
+                object->oFaceAngleRoll = spawnInfo->startAngle[2];
+
+                object->oMoveAnglePitch = spawnInfo->startAngle[0];
+                object->oMoveAngleYaw = spawnInfo->startAngle[1];
+                object->oMoveAngleRoll = spawnInfo->startAngle[2];
             }
-
-            geo_obj_init_spawninfo(&object->header.gfx, spawnInfo);
-
-            object->oPosX = spawnInfo->startPos[0];
-            object->oPosY = spawnInfo->startPos[1];
-            object->oPosZ = spawnInfo->startPos[2];
-
-            object->oFaceAnglePitch = spawnInfo->startAngle[0];
-            object->oFaceAngleYaw = spawnInfo->startAngle[1];
-            object->oFaceAngleRoll = spawnInfo->startAngle[2];
-
-            object->oMoveAnglePitch = spawnInfo->startAngle[0];
-            object->oMoveAngleYaw = spawnInfo->startAngle[1];
-            object->oMoveAngleRoll = spawnInfo->startAngle[2];
         }
 
         spawnInfo = spawnInfo->next;

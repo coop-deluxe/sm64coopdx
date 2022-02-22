@@ -172,7 +172,7 @@ void spawn_coin_in_formation(s32 sp50, s32 sp54) {
     if (sp3C) {
         sp4C = spawn_object_relative(sp50, sp40[0], sp40[1], sp40[2], o, MODEL_YELLOW_COIN,
                                      bhvCoinFormationSpawn);
-        sp4C->oCoinUnkF8 = sp38;
+        if (sp4C != NULL) { sp4C->oCoinUnkF8 = sp38; }
     }
 }
 
@@ -260,6 +260,7 @@ void bhv_golden_coin_sparkles_loop(void) {
     UNUSED s32 unused;
     f32 sp24 = 30.0f;
     sp2C = spawn_object(o, MODEL_SPARKLES, bhvCoinSparkles);
+    if (sp2C == NULL) { return; }
     sp2C->oPosX += random_float() * sp24 - sp24 / 2;
     sp2C->oPosZ += random_float() * sp24 - sp24 / 2;
 }

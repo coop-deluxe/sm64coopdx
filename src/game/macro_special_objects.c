@@ -47,7 +47,9 @@ void spawn_macro_abs_yrot_2params(u32 model, const BehaviorScript *behavior, s16
     if (behavior != NULL) {
         struct Object *newObj = spawn_object_abs_with_rot(
             &gMacroObjectDefaultParent, 0, model, behavior, x, y, z, 0, convert_rotation(ry), 0);
-        newObj->oBehParams = ((u32) params) << 16;
+        if (newObj != NULL) {
+            newObj->oBehParams = ((u32) params) << 16;
+        }
     }
 }
 
@@ -60,7 +62,9 @@ void spawn_macro_abs_yrot_param1(u32 model, const BehaviorScript *behavior, s16 
     if (behavior != NULL) {
         struct Object *newObj = spawn_object_abs_with_rot(
             &gMacroObjectDefaultParent, 0, model, behavior, x, y, z, 0, convert_rotation(ry), 0);
-        newObj->oBehParams = ((u32) param) << 24;
+        if (newObj != NULL) {
+            newObj->oBehParams = ((u32) param) << 24;
+        }
     }
 }
 
@@ -72,6 +76,7 @@ void spawn_macro_abs_special(u32 model, const BehaviorScript *behavior, s16 x, s
                              s16 unkC) {
     struct Object *newObj =
         spawn_object_abs_with_rot(&gMacroObjectDefaultParent, 0, model, behavior, x, y, z, 0, 0, 0);
+    if (newObj == NULL) { return; }
 
     // Are all three of these values unused?
     newObj->oMacroUnk108 = (f32) unkA;
@@ -87,6 +92,7 @@ static void spawn_macro_coin_unknown(const BehaviorScript *behavior, s16 a1[]) {
 
     sp3C = spawn_object_abs_with_rot(&gMacroObjectDefaultParent, 0, model, behavior,
                                      a1[1], a1[2], a1[3], 0, convert_rotation(a1[0]), 0);
+    if (sp3C == NULL) { return; }
 
     sp3C->oUnk1A8 = a1[4];
     sp3C->oBehParams = (a1[4] & 0xFF) >> 16;
@@ -160,13 +166,15 @@ void spawn_macro_objects(s16 areaIndex, s16 *macroObjList) {
                                           0                                               // Z-rotation
                 );
 
-            newObj->oUnk1A8 = macroObject[MACRO_OBJ_PARAMS];
-            newObj->oBehParams = ((macroObject[MACRO_OBJ_PARAMS] & 0x00FF) << 16)
-                                 + (macroObject[MACRO_OBJ_PARAMS] & 0xFF00);
-            newObj->oBehParams2ndByte = macroObject[MACRO_OBJ_PARAMS] & 0x00FF;
-            newObj->respawnInfoType = RESPAWN_INFO_TYPE_16;
-            newObj->respawnInfo = macroObjList - 1;
-            newObj->parentObj = newObj;
+            if (newObj != NULL) {
+                newObj->oUnk1A8 = macroObject[MACRO_OBJ_PARAMS];
+                newObj->oBehParams = ((macroObject[MACRO_OBJ_PARAMS] & 0x00FF) << 16)
+                                    + (macroObject[MACRO_OBJ_PARAMS] & 0xFF00);
+                newObj->oBehParams2ndByte = macroObject[MACRO_OBJ_PARAMS] & 0x00FF;
+                newObj->respawnInfoType = RESPAWN_INFO_TYPE_16;
+                newObj->respawnInfo = macroObjList - 1;
+                newObj->parentObj = newObj;
+            }
         }
     }
 }

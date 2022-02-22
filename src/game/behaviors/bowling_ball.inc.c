@@ -204,12 +204,14 @@ void bhv_generic_bowling_ball_spawner_loop(void) {
                 }
                 // this branch only runs for one player at a time
                 bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
-                bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
+                if (bowlingBall != NULL) {
+                    bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
 
-                // send out the bowlingBall object
-                struct Object* spawn_objects[] = { bowlingBall };
-                u32 models[] = { MODEL_BOWLING_BALL };
-                network_send_spawn_objects(spawn_objects, models, 1);
+                    // send out the bowlingBall object
+                    struct Object* spawn_objects[] = { bowlingBall };
+                    u32 models[] = { MODEL_BOWLING_BALL };
+                    network_send_spawn_objects(spawn_objects, models, 1);
+                }
             }
         }
     }
@@ -235,12 +237,14 @@ void bhv_thi_bowling_ball_spawner_loop(void) {
             if (network_owns_object(o) && (s32)(random_float() * 1.5) == 0) {
                 // this branch only runs for one player at a time
                 bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
-                bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
+                if (bowlingBall != NULL) {
+                    bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
 
-                // send out the bowlingBall object
-                struct Object* spawn_objects[] = { bowlingBall };
-                u32 models[] = { MODEL_BOWLING_BALL };
-                network_send_spawn_objects(spawn_objects, models, 1);
+                    // send out the bowlingBall object
+                    struct Object* spawn_objects[] = { bowlingBall };
+                    u32 models[] = { MODEL_BOWLING_BALL };
+                    network_send_spawn_objects(spawn_objects, models, 1);
+                }
             }
         }
     }

@@ -88,6 +88,7 @@ void bhv_lll_bowser_puzzle_spawn_piece(s16 model, const BehaviorScript *behavior
                                        f32 xOffset, f32 zOffset,
                                        s8 initialAction, s8 *actionList) {
     struct Object *puzzlePiece = spawn_object(o, model, behavior);
+    if (puzzlePiece == NULL) { return; }
     puzzlePiece->oPosX += xOffset;
     puzzlePiece->oPosY += 50.0f;
     puzzlePiece->oPosZ += zOffset;

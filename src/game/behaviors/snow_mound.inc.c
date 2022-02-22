@@ -48,9 +48,11 @@ void bhv_snow_mound_spawn_loop(void) {
     if (o->oTimer == 64 || o->oTimer == 128 || o->oTimer == 192 || o->oTimer == 224 || o->oTimer == 256) {
         if (network_owns_object(o)) {
             sp1C = spawn_object(o, MODEL_SL_SNOW_TRIANGLE, bhvSlidingSnowMound);
-            sp1C->oHomeX = o->oPosX;
-            sp1C->oHomeY = o->oPosY;
-            sp1C->oHomeZ = o->oPosZ;
+            if (sp1C != NULL) {
+                sp1C->oHomeX = o->oPosX;
+                sp1C->oHomeY = o->oPosY;
+                sp1C->oHomeZ = o->oPosZ;
+            }
             network_send_object(o);
         }
     }

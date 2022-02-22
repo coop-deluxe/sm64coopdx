@@ -60,10 +60,14 @@ void bhv_beta_trampoline_top_loop(void) {
         struct Object *trampolinePart;
 
         trampolinePart = spawn_object(o, MODEL_TRAMPOLINE_CENTER, bhvBetaTrampolineSpring);
-        trampolinePart->oPosY -= 75.0f;
+        if (trampolinePart != NULL) {
+            trampolinePart->oPosY -= 75.0f;
+        }
 
         trampolinePart = spawn_object(o, MODEL_TRAMPOLINE_BASE, bhvStaticObject);
-        trampolinePart->oPosY -= 150.0f;
+        if (trampolinePart != NULL) {
+            trampolinePart->oPosY -= 150.0f;
+        }
     }
 
     // Update o->oBetaTrampolineMarioOnTrampoline, and reset

@@ -55,13 +55,15 @@ void bhv_bouncing_fireball_loop(void) {
             if (network_owns_object(o)) {
                 sp2C = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
                 sp28 = (10 - o->oTimer) * 0.5;
-                obj_scale_xyz(sp2C, sp28, sp28, sp28);
-                if (o->oTimer == 0)
-                    obj_become_tangible(sp2C);
+                if (sp2C != NULL) {
+                    obj_scale_xyz(sp2C, sp28, sp28, sp28);
+                    if (o->oTimer == 0)
+                        obj_become_tangible(sp2C);
 
-                struct Object* spawn_objects[] = { sp2C };
-                u32 models[] = { MODEL_RED_FLAME };
-                network_send_spawn_objects(spawn_objects, models, 1);
+                    struct Object* spawn_objects[] = { sp2C };
+                    u32 models[] = { MODEL_RED_FLAME };
+                    network_send_spawn_objects(spawn_objects, models, 1);
+                }
 
                 network_send_object(o);
             }

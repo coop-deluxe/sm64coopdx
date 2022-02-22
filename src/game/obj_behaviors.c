@@ -682,9 +682,11 @@ void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
     rng_position_init(o->oPosX, o->oPosY, o->oPosZ);
     for (count = 0; count < nCoins; count++) {
         coin = spawn_object(obj, MODEL_YELLOW_COIN, bhvMovingYellowCoin);
-        coin->oForwardVel = random_float() * 20;
-        coin->oVelY = random_float() * 40 + 20;
-        coin->oMoveAngleYaw = random_u16();
+        if (coin != NULL) {
+            coin->oForwardVel = random_float() * 20;
+            coin->oVelY = random_float() * 40 + 20;
+            coin->oMoveAngleYaw = random_u16();
+        }
     }
     rng_position_finish();
 }
@@ -807,10 +809,12 @@ s32 obj_lava_death(void) {
     if ((o->oTimer % 8) == 0) {
         cur_obj_play_sound_2(SOUND_OBJ_BULLY_EXPLODE_2);
         deathSmoke = spawn_object(o, MODEL_SMOKE, bhvBobombBullyDeathSmoke);
-        deathSmoke->oPosX += random_float() * 20.0f;
-        deathSmoke->oPosY += random_float() * 20.0f;
-        deathSmoke->oPosZ += random_float() * 20.0f;
-        deathSmoke->oForwardVel = random_float() * 10.0f;
+        if (deathSmoke != NULL) {
+            deathSmoke->oPosX += random_float() * 20.0f;
+            deathSmoke->oPosY += random_float() * 20.0f;
+            deathSmoke->oPosZ += random_float() * 20.0f;
+            deathSmoke->oForwardVel = random_float() * 10.0f;
+        }
     }
 
     return FALSE;
@@ -827,6 +831,7 @@ void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ) {
     }
 
     orangeNumber = spawn_object_relative(behParam, relX, relY, relZ, o, MODEL_NUMBER, bhvOrangeNumber);
+    if (orangeNumber == NULL) { return; }
     orangeNumber->oPosY += 25.0f;
 }
 

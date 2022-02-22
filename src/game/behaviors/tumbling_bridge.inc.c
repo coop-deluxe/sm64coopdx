@@ -93,7 +93,7 @@ void tumbling_bridge_act_1(void) {
         platformObj = spawn_object_relative(
             0, relativePlatformX, relativePlatformY + relativeInitialPlatformY, relativePlatformZ, o,
             sTumblingBridgeParams[bridgeID].model, bhvTumblingBridgePlatform);
-
+        if (platformObj == NULL) { continue; }
         obj_set_collision_data(platformObj, sTumblingBridgeParams[bridgeID].segAddr);
     }
 

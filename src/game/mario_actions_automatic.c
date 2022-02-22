@@ -946,7 +946,9 @@ s32 act_bubbled(struct MarioState* m) {
     if (m->bubbleObj == NULL) {
         //m->bubbleObj = spawn_object(m->marioObj, MODEL_BUBBLE, bhvBubblePlayer);
         m->bubbleObj = spawn_object(m->marioObj, MODEL_BUBBLE_PLAYER, bhvBubblePlayer);
-        m->bubbleObj->heldByPlayerIndex = m->playerIndex;
+        if (m->bubbleObj != NULL) {
+            m->bubbleObj->heldByPlayerIndex = m->playerIndex;
+        }
     }
 
     // force inactive state

@@ -81,16 +81,18 @@ void bhv_water_bomb_spawner_update(void) {
                 // update the spawner
                 network_send_object(o);
 
-                // send out the waterBomb objects
-                struct Object* spawn_objects[] = {
-                    waterBomb,
-                    waterBombShadow
-                };
-                u32 models[] = {
-                    MODEL_WATER_BOMB,
-                    MODEL_WATER_BOMB_SHADOW
-                };
-                network_send_spawn_objects(spawn_objects, models, 2);
+                if (waterBombShadow != NULL) {
+                    // send out the waterBomb objects
+                    struct Object* spawn_objects[] = {
+                        waterBomb,
+                        waterBombShadow
+                    };
+                    u32 models[] = {
+                        MODEL_WATER_BOMB,
+                        MODEL_WATER_BOMB_SHADOW
+                    };
+                    network_send_spawn_objects(spawn_objects, models, 2);
+                }
             }
         }
     }

@@ -86,22 +86,26 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
     s16 yaw;
     struct Object *platform = spawn_object(o, a, bhv);
     yaw = o->oPlatformSpawnerUnkF4 * o->oPlatformSpawnerUnkFC + o->oPlatformSpawnerUnkF8;
-    platform->oMoveAngleYaw = yaw;
-    platform->oPosX += o->oPlatformSpawnerUnk100 * sins(yaw);
-    platform->oPosY += 100 * o->oPlatformSpawnerUnkF4;
-    platform->oPosZ += o->oPlatformSpawnerUnk100 * coss(yaw);
-    platform->oPlatformUnk110 = o->oPlatformSpawnerUnk104;
-    platform->oPlatformUnk10C = o->oPlatformSpawnerUnk108;
+    if (platform != NULL) {
+        platform->oMoveAngleYaw = yaw;
+        platform->oPosX += o->oPlatformSpawnerUnk100 * sins(yaw);
+        platform->oPosY += 100 * o->oPlatformSpawnerUnkF4;
+        platform->oPosZ += o->oPlatformSpawnerUnk100 * coss(yaw);
+        platform->oPlatformUnk110 = o->oPlatformSpawnerUnk104;
+        platform->oPlatformUnk10C = o->oPlatformSpawnerUnk108;
+    }
     o->oPlatformSpawnerUnkF4++;
 
-    if (bhv == bhvWfSolidTowerPlatform || bhv == bhvWfSlidingTowerPlatform) {
-        u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
-        loopTime *= 2;
-        loopTime += 1;
-        platform->areaTimerType = AREA_TIMER_TYPE_LOOP;
-        platform->areaTimer = 0;
-        platform->areaTimerDuration = loopTime;
-        platform->areaTimerRunOnceCallback = load_object_collision_model;
+    if (platform != NULL) {
+        if (bhv == bhvWfSolidTowerPlatform || bhv == bhvWfSlidingTowerPlatform) {
+            u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
+            loopTime *= 2;
+            loopTime += 1;
+            platform->areaTimerType = AREA_TIMER_TYPE_LOOP;
+            platform->areaTimer = 0;
+            platform->areaTimerDuration = loopTime;
+            platform->areaTimerRunOnceCallback = load_object_collision_model;
+        }
     }
 }
 

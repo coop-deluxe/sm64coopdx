@@ -16,6 +16,7 @@ void bhv_squarish_path_parent_init(void) {
         s16 action = (i == 0) ? 1 : 3;
         s16 offset = (i == 0) ? (-radius) : (radius);
         struct Object* square = spawn_object(o, MODEL_BITDW_SQUARE_PLATFORM, bhvSquarishPathMoving);
+        if (square == NULL) { continue; }
         square->oPosX = o->oPosX + offset;
         square->oPosY = o->oPosY;
         square->oPosZ = o->oPosZ + offset;

@@ -117,6 +117,7 @@ void bhv_star_spawn_loop(void) {
 struct Object *spawn_star(struct Object *sp30, f32 sp34, f32 sp38, f32 sp3C) {
     sp30 = spawn_object_abs_with_rot(o, 0, MODEL_STAR, bhvStarSpawnCoordinates, o->oPosX, o->oPosY,
                                      o->oPosZ, 0, 0, 0);
+    if (sp30 == NULL) { return NULL; }
     sp30->oBehParams = o->oBehParams;
     sp30->oHomeX = sp34;
     sp30->oHomeY = sp38;
@@ -196,7 +197,7 @@ void bhv_hidden_red_coin_star_init(void) {
     if (sp36 == 0) {
         sp30 =
             spawn_object_abs_with_rot(o, 0, MODEL_STAR, bhvStar, o->oPosX, o->oPosY, o->oPosZ, 0, 0, 0);
-        sp30->oBehParams = o->oBehParams;
+        if (sp30 != NULL) { sp30->oBehParams = o->oBehParams; }
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 

@@ -20,10 +20,12 @@ void fire_bar_spawn_flames(s16 a0) {
     sp20 = (o->oBehParams2ndByte == 0) ? 4 : 3;
     for (i = 0; i < sp20; i++) {
         sp2C = spawn_object(o, MODEL_RED_FLAME, bhvLllRotatingHexFlame);
-        sp2C->oLllRotatingHexFlameUnkF4 += sp1C;
-        sp2C->oLllRotatingHexFlameUnkF8 = o->oPosY - 200.0f;
-        sp2C->oLllRotatingHexFlameUnkFC += sp18;
-        obj_scale_xyz(sp2C, 6.0f, 6.0f, 6.0f);
+        if (sp2C != NULL) {
+            sp2C->oLllRotatingHexFlameUnkF4 += sp1C;
+            sp2C->oLllRotatingHexFlameUnkF8 = o->oPosY - 200.0f;
+            sp2C->oLllRotatingHexFlameUnkFC += sp18;
+            obj_scale_xyz(sp2C, 6.0f, 6.0f, 6.0f);
+        }
         sp1C += sins(a0) * 150.0f;
         sp18 += coss(a0) * 150.0f;
     }

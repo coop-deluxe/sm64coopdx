@@ -27,7 +27,9 @@ static struct ObjectHitbox sMantaRayHitbox = {
 void bhv_manta_ray_init(void) {
     struct Object *sp1C;
     sp1C = spawn_object(o, MODEL_NONE, bhvMantaRayRingManager);
-    o->parentObj = sp1C;
+    if (sp1C != NULL) {
+        o->parentObj = sp1C;
+    }
     obj_set_hitbox(o, &sMantaRayHitbox);
     cur_obj_scale(2.5f);
 
@@ -37,7 +39,9 @@ void bhv_manta_ray_init(void) {
     network_init_object_field(o, &o->oMantaUnk1AC);
     network_init_object_field(o, &o->oMoveAnglePitch);
     network_init_object_field(o, &o->oMoveAngleRoll);
-    network_init_object_field(o, &sp1C->oWaterRingMgrNextRingIndex);
+    if (sp1C != NULL) {
+        network_init_object_field(o, &sp1C->oWaterRingMgrNextRingIndex);
+    }
 }
 
 void manta_ray_move(void) {
@@ -78,20 +82,24 @@ void manta_ray_act_spawn_ring(void) {
 
     if (o->oTimer == 0 || o->oTimer == 50 || o->oTimer == 150 || o->oTimer == 200 || o->oTimer == 250) {
         sp18 = spawn_object(o, MODEL_WATER_RING, bhvMantaRayWaterRing);
-        sp18->oFaceAngleYaw = o->oMoveAngleYaw;
-        sp18->oFaceAnglePitch = o->oMoveAnglePitch + 0x4000;
-        sp18->oPosX = o->oPosX + 200.0f * sins(o->oMoveAngleYaw + 0x8000);
-        sp18->oPosY = o->oPosY + 10.0f + 200.0f * sins(o->oMoveAnglePitch);
-        sp18->oPosZ = o->oPosZ + 200.0f * coss(o->oMoveAngleYaw + 0x8000);
-        sp18->oWaterRingIndex = sp1C->oWaterRingMgrNextRingIndex;
+        if (sp18 != NULL) {
+            sp18->oFaceAngleYaw = o->oMoveAngleYaw;
+            sp18->oFaceAnglePitch = o->oMoveAnglePitch + 0x4000;
+            sp18->oPosX = o->oPosX + 200.0f * sins(o->oMoveAngleYaw + 0x8000);
+            sp18->oPosY = o->oPosY + 10.0f + 200.0f * sins(o->oMoveAnglePitch);
+            sp18->oPosZ = o->oPosZ + 200.0f * coss(o->oMoveAngleYaw + 0x8000);
+            sp18->oWaterRingIndex = sp1C->oWaterRingMgrNextRingIndex;
+        }
 
         sp1C->oWaterRingMgrNextRingIndex++;
         if (sp1C->oWaterRingMgrNextRingIndex > 0x2710)
             sp1C->oWaterRingMgrNextRingIndex = 0;
 
-        struct Object* spawn_objects[] = { sp18 };
-        u32 models[] = { MODEL_WATER_RING };
-        network_send_spawn_objects(spawn_objects, models, 1);
+        if (sp18 != NULL) {
+            struct Object* spawn_objects[] = { sp18 };
+            u32 models[] = { MODEL_WATER_RING };
+            network_send_spawn_objects(spawn_objects, models, 1);
+        }
 
         network_send_object(o);
     }

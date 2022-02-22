@@ -22,6 +22,11 @@ struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedI
     }
 
     struct Object* obj = spawn_object(gMarioStates[0].marioObj, loadedModelId, behavior);
+    if (obj == NULL) {
+        LOG_ERROR("failed to allocate object");
+        return NULL;
+    }
+
     if (!network_set_sync_id(obj)) {
         obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         LOG_ERROR("failed to set sync id");

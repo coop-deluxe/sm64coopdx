@@ -149,9 +149,11 @@ void bhv_spawn_star_no_level_exit(struct Object* object, u32 sp20, u8 networkSen
     }
 
     struct Object *sp1C = spawn_object(object, MODEL_STAR, bhvSpawnedStarNoLevelExit);
-    sp1C->oBehParams = sp20 << 24;
-    sp1C->oInteractionSubtype = INT_SUBTYPE_NO_EXIT;
-    obj_set_angle(sp1C, 0, 0, 0);
+    if (sp1C != NULL) {
+        sp1C->oBehParams = sp20 << 24;
+        sp1C->oInteractionSubtype = INT_SUBTYPE_NO_EXIT;
+        obj_set_angle(sp1C, 0, 0, 0);
+    }
     if (networkSendEvent) {
         network_send_spawn_star_nle(object, sp20);
     }

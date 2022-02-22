@@ -114,9 +114,11 @@ void snufit_act_shoot(void) {
             o->oSnufitRecoil = -30;
             o->oTimer = 0;
 
-            struct Object* spawn_objects[] = { bullet };
-            u32 models[] = { MODEL_BOWLING_BALL };
-            network_send_spawn_objects(spawn_objects, models, 1);
+            if (bullet != NULL) {
+                struct Object* spawn_objects[] = { bullet };
+                u32 models[] = { MODEL_BOWLING_BALL };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
         } else {
             cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
             o->oSnufitRecoil = -30;

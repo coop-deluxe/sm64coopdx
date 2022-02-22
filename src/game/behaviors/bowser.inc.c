@@ -87,10 +87,11 @@ void bhv_bowser_flame_spawn_loop(void) {
                 struct MarioState* marioState = nearest_mario_state_to_object(o);
                 if (marioState->playerIndex == 0) {
                     struct Object* flame = spawn_object(o, MODEL_RED_FLAME, bhvFlameMovingForwardGrowing);
-
-                    struct Object* spawn_objects[] = { flame };
-                    u32 models[] = { MODEL_RED_FLAME };
-                    network_send_spawn_objects(spawn_objects, models, 1);
+                    if (flame != NULL) {
+                        struct Object* spawn_objects[] = { flame };
+                        u32 models[] = { MODEL_RED_FLAME };
+                        network_send_spawn_objects(spawn_objects, models, 1);
+                    }
                 }
             }
         }
@@ -135,11 +136,13 @@ s32 bowser_spawn_shockwave(void) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
         if (marioState->playerIndex == 0) {
             wave = spawn_object(o, MODEL_BOWSER_WAVE, bhvBowserShockWave);
-            wave->oPosY = o->oFloorHeight;
+            if (wave != NULL) {
+                wave->oPosY = o->oFloorHeight;
 
-            struct Object* spawn_objects[] = { wave };
-            u32 models[] = { MODEL_BOWSER_WAVE };
-            network_send_spawn_objects(spawn_objects, models, 1);
+                struct Object* spawn_objects[] = { wave };
+                u32 models[] = { MODEL_BOWSER_WAVE };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
         }
         return 1;
     }
@@ -847,7 +850,7 @@ void bowser_spawn_grand_star_key(void) {
         reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_STAR, bhvGrandStar);
         gSecondCameraFocus = reward;
 
-        if (prevReward == NULL) {
+        if (prevReward == NULL && reward != NULL) {
             // set the home position
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
@@ -862,7 +865,7 @@ void bowser_spawn_grand_star_key(void) {
         gSecondCameraFocus = reward;
         cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_KEY);
 
-        if (prevReward == NULL) {
+        if (prevReward == NULL && reward != NULL) {
             // set the home position
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
@@ -1801,8 +1804,10 @@ void bhv_blue_flames_group_loop(void) {
         if ((o->oTimer & 1) == 0) {
             for (i = 0; i < 3; i++) {
                 flame = spawn_object(o, MODEL_BLUE_FLAME, bhvFlameBouncing);
-                flame->oMoveAngleYaw += i * 0x5555;
-                flame->header.gfx.scale[0] = o->oBlueFlameUnkF8;
+                if (flame != NULL) {
+                    flame->oMoveAngleYaw += i * 0x5555;
+                    flame->header.gfx.scale[0] = o->oBlueFlameUnkF8;
+                }
             }
             o->oBlueFlameUnkF8 -= 0.5;
         }

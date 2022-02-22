@@ -8,7 +8,7 @@ void bhv_hidden_star_init(void) {
     if (sp36 == 0) {
         sp30 =
             spawn_object_abs_with_rot(o, 0, MODEL_STAR, bhvStar, o->oPosX, o->oPosY, o->oPosZ, 0, 0, 0);
-        sp30->oBehParams = o->oBehParams;
+        if (sp30 != NULL) { sp30->oBehParams = o->oBehParams; }
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 

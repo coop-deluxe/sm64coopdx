@@ -297,6 +297,7 @@ void handle_save_menu(struct MarioState *m) {
  */
 struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, const BehaviorScript *behavior, s16 relYaw) {
     struct Object *o = spawn_object(m->marioObj, model, behavior);
+    if (o == NULL) { return NULL; }
 
     o->oFaceAngleYaw = m->faceAngle[1] + relYaw;
     o->oPosX = m->pos[0];
@@ -2239,7 +2240,9 @@ static void end_peach_cutscene_mario_landing(struct MarioState *m) {
         if (m->playerIndex == 0) {
             sEndJumboStarObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR, bhvStaticObject, 0,
                                                          2528, -1800, 0, 0, 0);
-            obj_scale(sEndJumboStarObj, 3.0);
+            if (sEndJumboStarObj != NULL) {
+                obj_scale(sEndJumboStarObj, 3.0);
+            }
         }
         advance_cutscene_step(m);
     }
@@ -2298,9 +2301,9 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
         sEndLeftToadObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_TOAD, bhvEndToad, -200,
                                                     906, -1290, 0, 0, 0);
 
-        sEndPeachObj->oOpacity = 127;
-        sEndRightToadObj->oOpacity = 255;
-        sEndLeftToadObj->oOpacity = 255;
+        if (sEndPeachObj != NULL) { sEndPeachObj->oOpacity = 127; }
+        if (sEndRightToadObj != NULL) { sEndRightToadObj->oOpacity = 255; }
+        if (sEndLeftToadObj != NULL) { sEndLeftToadObj->oOpacity = 255; }
 
         D_8032CBE4 = 4;
         sEndPeachAnimation = 4;
@@ -2309,7 +2312,7 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
         sEndToadAnims[1] = 5;
     }
 
-    if (m->actionTimer >= TIMER_FADE_IN_PEACH) {
+    if (m->actionTimer >= TIMER_FADE_IN_PEACH && sEndPeachObj != NULL) {
         sEndPeachObj->oOpacity = camera_approach_f32_symmetric(sEndPeachObj->oOpacity, 255.0f, 2.0f);
     }
     if (m->actionTimer >= 40) {
@@ -2320,7 +2323,7 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
         advance_cutscene_step(m);
     }
     // probably added sounds later and missed the previous >= 40 check
-    if (m->actionTimer >= 40) {
+    if (m->actionTimer >= 40 && sEndPeachObj != NULL) {
         play_sound(SOUND_AIR_PEACH_TWINKLE, sEndPeachObj->header.gfx.cameraToObject);
     }
 }
@@ -2828,9 +2831,9 @@ static s32 act_end_waving_cutscene(struct MarioState *m) {
         sEndLeftToadObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_TOAD, bhvEndToad, -180,
                                                     906, -1170, 0, 0, 0);
 
-        sEndPeachObj->oOpacity = 255;
-        sEndRightToadObj->oOpacity = 255;
-        sEndLeftToadObj->oOpacity = 255;
+        if (sEndPeachObj != NULL) { sEndPeachObj->oOpacity = 255; }
+        if (sEndRightToadObj != NULL) { sEndRightToadObj->oOpacity = 255; }
+        if (sEndLeftToadObj != NULL) { sEndLeftToadObj->oOpacity = 255; }
 
         sEndPeachAnimation = 11;
         sEndToadAnims[0] = 6;

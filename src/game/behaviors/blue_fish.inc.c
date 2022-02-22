@@ -104,6 +104,7 @@ void bhv_tank_fish_group_loop(void) {
                 // spawns fifteen fish and moves them within 200.0f
                 for (i = 0; i < 15; i++) {
                     fish = spawn_object_relative(0, 300, 0, -200, o, MODEL_FISH, bhvBlueFish);
+                    if (fish == NULL) { continue; }
                     obj_translate_xyz_random(fish, 200.0f);
                 }
                 

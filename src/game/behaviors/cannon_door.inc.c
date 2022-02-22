@@ -8,11 +8,13 @@ static void bhv_cannon_closed_init_non_spawn(void) {
 
 void bhv_cannon_closed_init(void) {
     struct Object* cannon = spawn_object(o, MODEL_CANNON_BASE, bhvCannon);
-    cannon->parentObj = cannon;
-    cannon->oBehParams2ndByte = o->oBehParams2ndByte;
-    cannon->oPosX = o->oHomeX;
-    cannon->oPosY = o->oHomeY;
-    cannon->oPosZ = o->oHomeZ;
+    if (cannon != NULL) {
+        cannon->parentObj = cannon;
+        cannon->oBehParams2ndByte = o->oBehParams2ndByte;
+        cannon->oPosX = o->oHomeX;
+        cannon->oPosY = o->oHomeY;
+        cannon->oPosZ = o->oHomeZ;
+    }
     bhv_cannon_closed_init_non_spawn();
 }
 

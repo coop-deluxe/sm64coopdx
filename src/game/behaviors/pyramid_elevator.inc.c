@@ -19,6 +19,7 @@ void bhv_pyramid_elevator_init(void) {
 
     for (i = 0; i < 10; i++) {
         ball = spawn_object(o, MODEL_TRAJECTORY_MARKER_BALL, bhvPyramidElevatorTrajectoryMarkerBall);
+        if (ball == NULL) { continue; }
         ball->oPosY = 4600 - i * 460;
     }
 

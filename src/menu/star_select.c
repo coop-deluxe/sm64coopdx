@@ -99,6 +99,7 @@ void render_100_coin_star(u8 stars) {
         // If the 100 coin star has been collected, create a new star selector next to the coin score.
         sStarSelectorModels[6] = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR,
                                                         bhvActSelectorStarType, 370, 24, -300, 0, 0, 0);
+        if (sStarSelectorModels[6] == NULL) { return; }
         sStarSelectorModels[6]->oStarSelectorSize = 0.8;
         sStarSelectorModels[6]->oStarSelectorType = STAR_SELECTOR_100_COINS;
     }
@@ -158,6 +159,7 @@ void bhv_act_selector_init(void) {
         sStarSelectorModels[i] =
             spawn_object_abs_with_rot(gCurrentObject, 0, selectorModelIDs[i], bhvActSelectorStarType,
                                       75 + sVisibleStars * -75 + i * 152, 248, -300, 0, 0, 0);
+        if (sStarSelectorModels[i] == NULL) { continue; }
         sStarSelectorModels[i]->oStarSelectorSize = 1.0f;
     }
 

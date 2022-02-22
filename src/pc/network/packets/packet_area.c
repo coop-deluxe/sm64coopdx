@@ -209,18 +209,20 @@ void network_receive_area(struct Packet* p) {
         LOG_INFO("rx respawner");
         if (syncId < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
             struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
-            respawner->parentObj = respawner;
-            respawner->oBehParams = behParams;
-            respawner->oRespawnerModelToRespawn = respawnerModelToRespawn;
-            respawner->oRespawnerMinSpawnDist = respawnerMinSpawnDist;
-            respawner->oRespawnerBehaviorToRespawn = get_behavior_from_id(behaviorToRespawn);
-            respawner->oSyncID = syncId;
+            if (respawner != NULL) {
+                respawner->parentObj = respawner;
+                respawner->oBehParams = behParams;
+                respawner->oRespawnerModelToRespawn = respawnerModelToRespawn;
+                respawner->oRespawnerMinSpawnDist = respawnerMinSpawnDist;
+                respawner->oRespawnerBehaviorToRespawn = get_behavior_from_id(behaviorToRespawn);
+                respawner->oSyncID = syncId;
+            }
 
             struct Object* o = so->o;
             o->oSyncID = 0;
             o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 
-            so->o = respawner;
+            if (respawner != NULL) { so->o = respawner; }
             LOG_INFO("rx respawner replaced!");
         }
     }

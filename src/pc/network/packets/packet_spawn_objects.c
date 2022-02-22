@@ -164,6 +164,11 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
         struct Object* o = spawn_object(parentObj, data.model, behavior);
+        if (o == NULL) {
+            LOG_ERROR("ERROR: failed to allocate object!");
+            return;
+        }
+
         o->globalPlayerIndex = data.globalPlayerIndex;
         o->createdThroughNetwork = true;
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);

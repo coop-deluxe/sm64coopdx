@@ -134,7 +134,7 @@ void bhv_courtyard_boo_triplet_init(void) {
                 MODEL_BOO,
                 bhvGhostHuntBoo
             );
-
+            if (boo == NULL) { continue; }
             boo->oMoveAngleYaw = random_u16();
         }
     }
@@ -841,7 +841,9 @@ void bhv_boo_with_cage_init(void) {
         obj_mark_for_deletion(o);
     } else {
         cage = spawn_object(o, MODEL_HAUNTED_CAGE, bhvBooCage);
-        cage->oBehParams = o->oBehParams;
+        if (cage != NULL) {
+            cage->oBehParams = o->oBehParams;
+        }
     }
 }
 
@@ -881,11 +883,12 @@ void bhv_merry_go_round_boo_manager_loop(void) {
                     if (o->oMerryGoRoundBooManagerNumBoosSpawned < 5) {
                         if (o->oMerryGoRoundBooManagerNumBoosSpawned - o->oMerryGoRoundBooManagerNumBoosKilled < 2) {
                             struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBoo);
-
-                            network_set_sync_id(boo);
-                            struct Object* spawn_objects[] = { boo };
-                            u32 models[] = { MODEL_BOO };
-                            network_send_spawn_objects(spawn_objects, models, 1);
+                            if (boo != NULL) {
+                                network_set_sync_id(boo);
+                                struct Object* spawn_objects[] = { boo };
+                                u32 models[] = { MODEL_BOO };
+                                network_send_spawn_objects(spawn_objects, models, 1);
+                            }
 
                             o->oMerryGoRoundBooManagerNumBoosSpawned++;
                             network_send_object(o);
@@ -898,12 +901,14 @@ void bhv_merry_go_round_boo_manager_loop(void) {
                 if (o->oMerryGoRoundBooManagerNumBoosKilled > 4) {
                     if (player == gMarioObjects[0]) {
                         struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBigBoo);
-                        obj_copy_behavior_params(boo, o);
+                        if (boo != NULL) {
+                            obj_copy_behavior_params(boo, o);
 
-                        network_set_sync_id(boo);
-                        struct Object* spawn_objects[] = { boo };
-                        u32 models[] = { MODEL_BOO };
-                        network_send_spawn_objects(spawn_objects, models, 1);
+                            network_set_sync_id(boo);
+                            struct Object* spawn_objects[] = { boo };
+                            u32 models[] = { MODEL_BOO };
+                            network_send_spawn_objects(spawn_objects, models, 1);
+                        }
 
                         o->oAction = 2;
                         network_send_object(o);

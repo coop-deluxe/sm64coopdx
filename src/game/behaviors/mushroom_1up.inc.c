@@ -389,6 +389,7 @@ void bhv_1up_hidden_in_pole_spawner_loop(void) {
         }
 
         for (int i = 0; i < 3; i++) {
+            if (spawn_objects[i] == NULL) { continue; }
             spawn_objects[i]->parentObj = spawn_objects[i];
             network_set_sync_id(spawn_objects[i]);
         }

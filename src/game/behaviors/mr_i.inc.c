@@ -40,13 +40,15 @@ void spawn_mr_i_particle(void) {
     struct Object *particle;
     f32 sp18 = o->header.gfx.scale[1];
     particle = spawn_object(o, MODEL_PURPLE_MARBLE, bhvMrIParticle);
-    particle->oPosY += 50.0f * sp18;
-    particle->oPosX += sins(o->oMoveAngleYaw) * 90.0f * sp18;
-    particle->oPosZ += coss(o->oMoveAngleYaw) * 90.0f * sp18;
+    if (particle != NULL) {
+        particle->oPosY += 50.0f * sp18;
+        particle->oPosX += sins(o->oMoveAngleYaw) * 90.0f * sp18;
+        particle->oPosZ += coss(o->oMoveAngleYaw) * 90.0f * sp18;
 
-    struct Object* spawn_objects[] = { particle };
-    u32 models[] = { MODEL_PURPLE_MARBLE };
-    network_send_spawn_objects(spawn_objects, models, 1);
+        struct Object* spawn_objects[] = { particle };
+        u32 models[] = { MODEL_PURPLE_MARBLE };
+        network_send_spawn_objects(spawn_objects, models, 1);
+    }
 
     cur_obj_play_sound_2(SOUND_OBJ_MRI_SHOOT);
 }

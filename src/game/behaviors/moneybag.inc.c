@@ -243,10 +243,12 @@ void bhv_moneybag_hidden_loop(void) {
 
                     network_send_object(o);
 
-                    network_set_sync_id(moneyBag);
-                    struct Object* spawn_objects[] = { moneyBag };
-                    u32 models[] = { MODEL_MONEYBAG };
-                    network_send_spawn_objects(spawn_objects, models, 1);
+                    if (moneyBag != NULL) {
+                        network_set_sync_id(moneyBag);
+                        struct Object* spawn_objects[] = { moneyBag };
+                        u32 models[] = { MODEL_MONEYBAG };
+                        network_send_spawn_objects(spawn_objects, models, 1);
+                    }
                 }
             }
             break;

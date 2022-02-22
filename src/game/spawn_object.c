@@ -233,8 +233,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
         // If no unimportant object exists, then the object pool is exhausted.
         if (unimportantObj == NULL) {
             // We've met with a terrible fate.
-            while (TRUE) {
-            }
+            return NULL;
         } else {
             // If an unimportant object does exist, unload it and take its slot.
             unload_object(unimportantObj);
@@ -347,6 +346,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
 
     objList = &gObjectLists[objListIndex];
     obj = allocate_object(objList);
+    if (obj == NULL) { return NULL; }
 
     obj->curBhvCommand = bhvScript;
     obj->behavior = behavior;

@@ -123,7 +123,7 @@ struct Object* spawn_treasure_chest(s8 sp3B, s32 sp3C, s32 sp40, s32 sp44, s16 s
     struct Object* sp34;
     sp34 = spawn_object_abs_with_rot(o, 0, MODEL_TREASURE_CHEST_BASE, bhvTreasureChestBottom, sp3C,
         sp40, sp44, 0, sp4A, 0);
-    sp34->oBehParams2ndByte = sp3B;
+    if (sp34 != NULL) { sp34->oBehParams2ndByte = sp3B; }
     return sp34;
 }
 

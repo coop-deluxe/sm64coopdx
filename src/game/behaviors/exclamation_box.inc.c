@@ -135,17 +135,19 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
             s32 model = exclamation_replace_model(m, a0->model);
 
             sp1C = spawn_object(o, model, a0->behavior);
-            sp1C->oVelY = 20.0f;
-            sp1C->oForwardVel = 3.0f;
-            sp1C->oMoveAngleYaw = player->oMoveAngleYaw;
-            sp1C->globalPlayerIndex = player->globalPlayerIndex;
+            if (sp1C != NULL) {
+                sp1C->oVelY = 20.0f;
+                sp1C->oForwardVel = 3.0f;
+                sp1C->oMoveAngleYaw = player->oMoveAngleYaw;
+                sp1C->globalPlayerIndex = player->globalPlayerIndex;
+            }
             o->oBehParams |= a0->unk2 << 24;
             if (a0->model == 122)
                 o->oFlags |= 0x4000;
 
             // send non-star spawn events
             // stars cant be sent here to due jankiness in oBehParams
-            if (a0->behavior != bhvSpawnedStar) {
+            if (a0->behavior != bhvSpawnedStar && sp1C != NULL) {
                 // hack: if any other sync objects get spawned here we have to check for them
                 if (a0->behavior == bhvKoopaShell) {
                     network_set_sync_id(sp1C);

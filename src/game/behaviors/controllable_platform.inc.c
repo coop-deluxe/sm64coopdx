@@ -55,19 +55,19 @@ void bhv_controllable_platform_sub_loop(void) {
 void bhv_controllable_platform_init(void) {
     controllablePlatformSubs[0] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
                                                             51, 204, 0, 0, 0);
-    controllablePlatformSubs[0]->oBehParams2ndByte = 1;
+    if (controllablePlatformSubs[0] != NULL) { controllablePlatformSubs[0]->oBehParams2ndByte = 1; }
 
     controllablePlatformSubs[1] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
                                                             51, -204, 0, -0x8000, 0);
-    controllablePlatformSubs[1]->oBehParams2ndByte = 2;
+    if (controllablePlatformSubs[1] != NULL) { controllablePlatformSubs[1]->oBehParams2ndByte = 2; }
 
     controllablePlatformSubs[2] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 204,
                                                             51, 0, 0, 0x4000, 0);
-    controllablePlatformSubs[2]->oBehParams2ndByte = 3;
+    if (controllablePlatformSubs[2] != NULL) { controllablePlatformSubs[2]->oBehParams2ndByte = 3; }
 
     controllablePlatformSubs[3] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub,
                                                             -204, 51, 0, 0, -0x4000, 0);
-    controllablePlatformSubs[3]->oBehParams2ndByte = 4;
+    if (controllablePlatformSubs[3] != NULL) { controllablePlatformSubs[3]->oBehParams2ndByte = 4; }
 
     D_80331694 = 0;
 
@@ -94,6 +94,7 @@ void bhv_controllable_platform_init(void) {
     network_init_object_field(o, &o->oFaceAngleRoll);
     network_init_object_field(o, &o->header.gfx.node.flags);
     for (int i = 0; i < 4; i++) {
+        if (controllablePlatformSubs[i] == NULL) { continue; }
         network_init_object_field(o, &controllablePlatformSubs[i]->oAction);
         network_init_object_field(o, &controllablePlatformSubs[i]->oPrevAction);
         network_init_object_field(o, &controllablePlatformSubs[i]->oTimer);

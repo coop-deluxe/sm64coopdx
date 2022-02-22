@@ -53,10 +53,12 @@ void bhv_pyramid_top_spinning(void) {
     // with a random velocity and angle.
     if (o->oTimer < 90) {
         pyramidFragment = spawn_object(o, MODEL_DIRT_ANIMATION, bhvPyramidTopFragment);
-        pyramidFragment->oForwardVel = random_float() * 10.0f + 20.0f;
-        pyramidFragment->oMoveAngleYaw = random_u16();
-        pyramidFragment->oPyramidTopFragmentsScale = 0.8f;
-        pyramidFragment->oGravity = random_float() + 2.0f;
+        if (pyramidFragment != NULL) {
+            pyramidFragment->oForwardVel = random_float() * 10.0f + 20.0f;
+            pyramidFragment->oMoveAngleYaw = random_u16();
+            pyramidFragment->oPyramidTopFragmentsScale = 0.8f;
+            pyramidFragment->oGravity = random_float() + 2.0f;
+        }
     }
 
     // After enough time, transition to the exploding state.
@@ -79,11 +81,13 @@ void bhv_pyramid_top_explode(void) {
         pyramidFragment = spawn_object(
             o, MODEL_DIRT_ANIMATION, bhvPyramidTopFragment
         );
-        pyramidFragment->oForwardVel = random_float() * 50 + 80;
-        pyramidFragment->oVelY = random_float() * 80 + 20;
-        pyramidFragment->oMoveAngleYaw = random_u16();
-        pyramidFragment->oPyramidTopFragmentsScale = 3;
-        pyramidFragment->oGravity = random_float() * 2 + 5;
+        if (pyramidFragment != NULL) {
+            pyramidFragment->oForwardVel = random_float() * 50 + 80;
+            pyramidFragment->oVelY = random_float() * 80 + 20;
+            pyramidFragment->oMoveAngleYaw = random_u16();
+            pyramidFragment->oPyramidTopFragmentsScale = 3;
+            pyramidFragment->oGravity = random_float() * 2 + 5;
+        }
     }
 
     // Deactivate the pyramid top.

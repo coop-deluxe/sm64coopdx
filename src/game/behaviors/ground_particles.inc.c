@@ -16,6 +16,7 @@ void bhv_ground_sand_init(void) {
 
 void spawn_smoke_with_velocity(void) {
     struct Object *smoke = spawn_object_with_scale(o, MODEL_SMOKE, bhvWhitePuffSmoke2, 1.0f);
+    if (smoke == NULL) { return; }
     smoke->oForwardVel = D_8032F3F4[0];
     smoke->oVelY = D_8032F3F4[1];
     smoke->oGravity = D_8032F3F4[2];

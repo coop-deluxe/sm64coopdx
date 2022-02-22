@@ -152,14 +152,16 @@ void bhv_scuttlebug_spawn_loop(void) {
         if (o->oTimer > 30 && 500.0f < distanceToPlayer && distanceToPlayer < 1500.0f) {
             cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
             scuttlebug = spawn_object(o, MODEL_SCUTTLEBUG, bhvScuttlebug);
-            scuttlebug->oScuttlebugUnkF4 = o->oScuttlebugSpawnerUnkF4;
-            scuttlebug->oForwardVel = 30.0f;
-            scuttlebug->oVelY = 80.0f;
+            if (scuttlebug != NULL) {
+                scuttlebug->oScuttlebugUnkF4 = o->oScuttlebugSpawnerUnkF4;
+                scuttlebug->oForwardVel = 30.0f;
+                scuttlebug->oVelY = 80.0f;
 
-            network_set_sync_id(scuttlebug);
-            struct Object* spawn_objects[] = { scuttlebug };
-            u32 models[] = { MODEL_SCUTTLEBUG };
-            network_send_spawn_objects(spawn_objects, models, 1);
+                network_set_sync_id(scuttlebug);
+                struct Object* spawn_objects[] = { scuttlebug };
+                u32 models[] = { MODEL_SCUTTLEBUG };
+                network_send_spawn_objects(spawn_objects, models, 1);
+            }
 
             o->oAction++;
             o->oScuttlebugUnkF4 = 1;

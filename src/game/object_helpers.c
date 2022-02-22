@@ -516,6 +516,7 @@ struct Object *spawn_object_abs_with_rot(struct Object *parent, s16 uselessArg, 
                                          s16 x, s16 y, s16 z, s16 rx, s16 ry, s16 rz) {
     // 'uselessArg' is unused in the function spawn_object_at_origin()
     struct Object *newObj = spawn_object_at_origin(parent, uselessArg, model, behavior);
+    if (newObj == NULL) { return NULL; }
     obj_set_pos(newObj, x, y, z);
     obj_set_angle(newObj, rx, ry, rz);
 
@@ -530,6 +531,7 @@ struct Object *spawn_object_abs_with_rot(struct Object *parent, s16 uselessArg, 
 struct Object *spawn_object_rel_with_rot(struct Object *parent, u32 model, const BehaviorScript *behavior,
                                          s16 xOff, s16 yOff, s16 zOff, s16 rx, s16 ry, UNUSED s16 rz) {
     struct Object *newObj = spawn_object_at_origin(parent, 0, model, behavior);
+    if (newObj == NULL) { return NULL; }
     newObj->oFlags |= OBJ_FLAG_TRANSFORM_RELATIVE_TO_PARENT;
     obj_set_parent_relative_pos(newObj, xOff, yOff, zOff);
     obj_set_angle(newObj, rx, ry, zOff); // Nice typo you got there Nintendo.
@@ -539,6 +541,7 @@ struct Object *spawn_object_rel_with_rot(struct Object *parent, u32 model, const
 
 struct Object *spawn_obj_with_transform_flags(struct Object *sp20, s32 model, const BehaviorScript *sp28) {
     struct Object *sp1C = spawn_object(sp20, model, sp28);
+    if (sp1C == NULL) { return NULL; }
     sp1C->oFlags |= OBJ_FLAG_0020 | OBJ_FLAG_SET_THROW_MATRIX_FROM_TRANSFORM;
     return sp1C;
 }
@@ -546,6 +549,7 @@ struct Object *spawn_obj_with_transform_flags(struct Object *sp20, s32 model, co
 struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params) {
     f32 randomScale;
     struct Object *newObj = spawn_object(parent, params->model, params->behavior);
+    if (newObj == NULL) { return NULL; }
 
     if (params->flags & WATER_DROPLET_FLAG_RAND_ANGLE) {
         newObj->oMoveAngleYaw = random_u16();
@@ -589,6 +593,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
 
     behaviorAddr = segmented_to_virtual(behavior);
     obj = create_object(behaviorAddr);
+    if (obj == NULL) { return NULL; }
 
     obj->parentObj = parent;
     obj->header.gfx.areaIndex = parent->header.gfx.areaIndex;
@@ -603,6 +608,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
 
 struct Object *spawn_object(struct Object *parent, s32 model, const BehaviorScript *behavior) {
     struct Object *obj = spawn_object_at_origin(parent, 0, model, behavior);
+    if (obj == NULL) { return NULL; }
 
     obj_copy_pos_and_angle(obj, parent);
 
@@ -615,6 +621,7 @@ struct Object *try_to_spawn_object(s16 offsetY, f32 scale, struct Object *parent
 
     if (gFreeObjectList.next != NULL) {
         obj = spawn_object(parent, model, behavior);
+        if (obj == NULL) { return NULL; }
         obj->oPosY += offsetY;
         obj_scale(obj, scale);
         return obj;
@@ -625,6 +632,7 @@ struct Object *try_to_spawn_object(s16 offsetY, f32 scale, struct Object *parent
 
 struct Object *spawn_object_with_scale(struct Object *parent, s32 model, const BehaviorScript *behavior, f32 scale) {
     struct Object *obj = spawn_object_at_origin(parent, 0, model, behavior);
+    if (obj == NULL) { return NULL; }
 
     obj_copy_pos_and_angle(obj, parent);
     obj_scale(obj, scale);
@@ -640,6 +648,7 @@ static void obj_build_relative_transform(struct Object *obj) {
 struct Object *spawn_object_relative(s16 behaviorParam, s16 relativePosX, s16 relativePosY, s16 relativePosZ,
                                      struct Object *parent, s32 model, const BehaviorScript *behavior) {
     struct Object *obj = spawn_object_at_origin(parent, 0, model, behavior);
+    if (obj == NULL) { return NULL; }
 
     obj_copy_pos_and_angle(obj, parent);
     obj_set_parent_relative_pos(obj, relativePosX, relativePosY, relativePosZ);
@@ -656,6 +665,7 @@ struct Object *spawn_object_relative_with_scale(s16 behaviorParam, s16 relativeP
                                                 s32 model, const BehaviorScript *behavior) {
     struct Object *obj = spawn_object_relative(behaviorParam, relativePosX, relativePosY, relativePosZ,
                                                parent, model, behavior);
+    if (obj == NULL) { return NULL; }
     obj_scale(obj, scale);
 
     return obj;
@@ -1741,6 +1751,7 @@ static void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30,
         obj->oNumLootCoins--;
 
         coin = spawn_object(obj, model, coinBehavior);
+        if (coin == NULL) { return; }
         obj_translate_xz_random(coin, posJitter);
         coin->oPosY = spawnHeight;
         coin->oCoinUnk110 = sp30;
@@ -1764,6 +1775,7 @@ void cur_obj_spawn_loot_coin_at_mario_pos(struct MarioState* m) {
     o->oNumLootCoins--;
 
     coin = spawn_object(o, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned);
+    if (coin == NULL) { return; }
     coin->oVelY = 30.0f;
 
     obj_copy_pos(coin, m->marioObj);
@@ -2235,6 +2247,7 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
         scale = random_float() * (info->sizeRange * 0.1f) + info->sizeBase * 0.1f;
 
         particle = spawn_object(o, info->model, bhvWhitePuffExplosion);
+        if (particle == NULL) { return; }
 
         particle->oBehParams2ndByte = info->behParam;
         particle->oMoveAngleYaw = random_u16();
@@ -2488,6 +2501,7 @@ void cur_obj_call_action_function(void (*actionFunctions[])(void)) {
 
 static struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
     struct Object *sp1C = spawn_object(o, MODEL_STAR, bhvSpawnedStarNoLevelExit);
+    if (sp1C == NULL) { return NULL; }
     sp1C->oSparkleSpawnUnk1B0 = sp24;
     sp1C->oBehParams = o->oBehParams;
     sp1C->oBehParams2ndByte = sp20;
