@@ -36,11 +36,12 @@ struct ModelUtilsInfo {
     enum ModelExtendedId id;
     const void* asset;
     u8 layer;
+    bool isDisplayList;
     u8 cacheId;
 };
 
-#define MODEL_UTIL_GEO(x, y) [x] = { .id = x, .asset = y, .layer = LAYER_OPAQUE, .cacheId = 0xFF }
-#define MODEL_UTIL_DL(x, y, z) [x] = { .id = x, .asset = y, .layer = z, .cacheId = 0xFF }
+#define MODEL_UTIL_GEO(x, y) [x] = { .id = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .cacheId = 0xFF }
+#define MODEL_UTIL_DL(x, y, z) [x] = { .id = x, .asset = y, .layer = z, .isDisplayList = true, .cacheId = 0xFF }
 
 struct ModelUtilsInfo sModels[] = {
     MODEL_UTIL_GEO(E_MODEL_MARIO,                   mario_geo),
@@ -226,11 +227,12 @@ struct ModelUtilsInfo sModels[] = {
 
 struct ModelUtilsInfo sCachedAssets[256] = { 0 };
 
-void smlua_model_util_remember(u8 modelId, u8 layer, const void* asset) {
+void smlua_model_util_remember(u8 modelId, u8 layer, const void* asset, u8 isDisplayList) {
     struct ModelUtilsInfo* c = &sCachedAssets[modelId];
     c->id = modelId;
     c->layer = layer;
     c->asset = asset;
+    c->isDisplayList = isDisplayList;
 }
 
 void smlua_model_util_clear(void) {
@@ -277,12 +279,16 @@ u8 smlua_model_util_load(enum ModelExtendedId id) {
 
     // load
     struct AllocOnlyPool* pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
-    gLoadedGraphNodes[emptyCacheId] = process_geo_layout(pool, (void*)info->asset);
+    if (info->isDisplayList) {
+        gLoadedGraphNodes[emptyCacheId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
+    } else {
+        gLoadedGraphNodes[emptyCacheId] = process_geo_layout(pool, (void*)info->asset);
+    }
     alloc_only_pool_resize(pool, pool->usedSpace);
     //LOG_INFO("Loaded at runtime");
 
     // remember
-    smlua_model_util_remember(emptyCacheId, info->layer, info->asset);
+    smlua_model_util_remember(emptyCacheId, info->layer, info->asset, info->isDisplayList);
     info->cacheId = emptyCacheId;
 
     return emptyCacheId;
