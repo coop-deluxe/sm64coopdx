@@ -5286,7 +5286,7 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
  // smlua_obj_utils.h //
 ///////////////////////
 
-int smlua_func_spawn_object_sync(lua_State* L) {
+int smlua_func_spawn_sync_object(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
     int behaviorId = smlua_to_integer(L, 1);
@@ -5302,7 +5302,7 @@ int smlua_func_spawn_object_sync(lua_State* L) {
     LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_object_sync(behaviorId, modelId, x, y, z, objSetupFunction));
+    smlua_push_object(L, LOT_OBJECT, spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction));
 
     return 1;
 }
@@ -6121,7 +6121,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
 
     // smlua_obj_utils.h
-    smlua_bind_function(L, "spawn_object_sync", smlua_func_spawn_object_sync);
+    smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
 
     // sound_init.h
     smlua_bind_function(L, "disable_background_sound", smlua_func_disable_background_sound);

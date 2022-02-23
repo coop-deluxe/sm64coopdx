@@ -454,7 +454,7 @@
 <br />
 
 - smlua_obj_utils.h
-   - [spawn_object_sync](#spawn_object_sync)
+   - [spawn_sync_object](#spawn_sync_object)
 
 <br />
 
@@ -8030,10 +8030,10 @@
 <br />
 
 
-## [spawn_object_sync](#spawn_object_sync)
+## [spawn_sync_object](#spawn_sync_object)
 
 ### Lua Example
-`local ObjectValue = spawn_object_sync(behaviorId, modelId, x, y, z, objSetupFunction)`
+`local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
 
 ### Parameters
 | Field | Type |
@@ -8043,13 +8043,13 @@
 | x | number |
 | y | number |
 | z | number |
-| objSetupFunction | LuaFunction([Object](structs.md#Object)) |
+| objSetupFunction | LuaFunction() |
 
 ### Returns
 [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 

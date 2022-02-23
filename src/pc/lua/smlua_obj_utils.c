@@ -8,8 +8,7 @@
 #include "smlua_model_utils.h"
 #include "pc/debuglog.h"
 
-
-struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction) {
+static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction, bool doSync) {
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
     if (behavior == NULL) {
         LOG_ERROR("failed to find behavior %u", behaviorId);
@@ -28,7 +27,7 @@ struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedI
         return NULL;
     }
 
-    if (!network_set_sync_id(obj)) {
+    if (doSync && !network_set_sync_id(obj)) {
         obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         LOG_ERROR("failed to set sync id");
         return NULL;
@@ -54,13 +53,24 @@ struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedI
         }
     }
 
-    struct SyncObject* so = &gSyncObjects[obj->oSyncID];
-    so->extendedModelId = modelId;
-    so->o = obj;
+    if (doSync) {
+        struct SyncObject* so = &gSyncObjects[obj->oSyncID];
+        so->extendedModelId = modelId;
+        so->o = obj;
 
-    struct Object* spawn_objects[] = { obj };
-    u32 models[] = { loadedModelId };
-    network_send_spawn_objects(spawn_objects, models, 1);
+        struct Object* spawn_objects[] = { obj };
+        u32 models[] = { loadedModelId };
+        network_send_spawn_objects(spawn_objects, models, 1);
+    }
 
     return obj;
+}
+
+struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction) {
+    spawn_object_internal(behaviorId, modelId, x, y, z, objSetupFunction, true);
+}
+
+// this is too dangerous for now
+struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z) {
+    spawn_object_internal(behaviorId, modelId, x, y, z, 0, false);
 }
