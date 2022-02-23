@@ -86,6 +86,23 @@ const char* smlua_to_string(lua_State* L, int index) {
     return lua_tostring(L, index);
 }
 
+LuaFunction smlua_to_lua_function(lua_State* L, int index) {
+    if (lua_type(L, index) == LUA_TNIL) {
+        return 0;
+    }
+
+    if (lua_type(L, index) != LUA_TFUNCTION) {
+        LOG_LUA("smlua_to_lua_function received improper type '%d'", lua_type(L, index));
+        smlua_logline();
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+
+    gSmLuaConvertSuccess = true;
+    lua_pushvalue(L, index);
+    return luaL_ref(L, LUA_REGISTRYINDEX);
+}
+
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     if (lua_type(L, index) != LUA_TTABLE) {
         LOG_LUA("smlua_to_cobject received improper type '%d'", lua_type(L, index));

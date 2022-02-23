@@ -5287,7 +5287,7 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
 ///////////////////////
 
 int smlua_func_spawn_object_sync(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
+    if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
     int behaviorId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -5299,8 +5299,10 @@ int smlua_func_spawn_object_sync(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 z = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { return 0; }
+    LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_object_sync(behaviorId, modelId, x, y, z));
+    smlua_push_object(L, LOT_OBJECT, spawn_object_sync(behaviorId, modelId, x, y, z, objSetupFunction));
 
     return 1;
 }

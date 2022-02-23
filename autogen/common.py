@@ -46,6 +46,9 @@ def translate_type_to_lvt(ptype):
     if ptype == 'float':
         return 'LVT_F32'
 
+    if ptype == 'LuaFunction':
+        return 'LVT_LUAFUNCTION'
+
     if 'struct' in ptype:
         if ptype.count('*') > 1:
             return 'LVT_???'
@@ -91,6 +94,9 @@ def translate_type_to_lot(ptype):
     if ptype == 'float':
         return 'LOT_NONE'
 
+    if ptype == 'LuaFunction':
+        return 'LOT_NONE'
+
     if 'struct' in ptype:
         if ptype.count('*') > 1:
             return 'LOT_???'
@@ -131,6 +137,9 @@ def translate_type_to_lua(ptype):
 
     if 'void' == ptype:
         return None, False
+
+    if ptype == 'LuaFunction':
+        return 'LuaFunction()', False
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()
