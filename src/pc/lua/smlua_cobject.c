@@ -115,6 +115,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_COBJECT_P:  smlua_push_object(L, data->lot, *(u8**)p); break;
         case LVT_STRING:     lua_pushstring(L, (char*)p);               break;
         case LVT_STRING_P:   lua_pushstring(L, *(char**)p);             break;
+        case LVT_BEHAVIORSCRIPT: lua_pushinteger(L, *(s32*)p);          break;
 
         // pointers
         case LVT_U8_P:
@@ -124,6 +125,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_S16_P:
         case LVT_S32_P:
         case LVT_F32_P:
+        case LVT_BEHAVIORSCRIPT_P:
             smlua_push_pointer(L, data->valueType, *(u8**)p);
             break;
 

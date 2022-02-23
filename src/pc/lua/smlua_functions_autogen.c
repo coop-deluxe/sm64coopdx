@@ -26,31 +26,27 @@
  // behavior_table.h //
 //////////////////////
 
-/*
 int smlua_func_get_behavior_from_id(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     int id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    UNIMPLEMENTED -->(L, get_behavior_from_id(id));
+    smlua_push_pointer(L, LVT_BEHAVIORSCRIPT_P, (void*)get_behavior_from_id(id));
 
     return 1;
 }
-*/
 
-/*
 int smlua_func_get_id_from_behavior(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-//  const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, get_id_from_behavior(behavior));
 
     return 1;
 }
-*/
 
   //////////////
  // camera.h //
@@ -1346,7 +1342,7 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 height = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  struct Surface** ceil = (struct Surface**)smlua_to_cobject(L, 3, LVT_???); <--- UNIMPLEMENTED
+//  struct Surface** ceil = (struct Surface**)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, vec3f_find_ceil(pos, height, ceil));
@@ -1995,26 +1991,6 @@ int smlua_func_should_start_or_continue_dialog(lua_State* L) {
     return 1;
 }
 
-/*
-int smlua_func_spawn_obj_at_mario_rel_yaw(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
-
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s32 model = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-//  const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s16 relYaw = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    extern struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, const BehaviorScript *behavior, s16 relYaw);
-    smlua_push_object(L, LOT_OBJECT, spawn_obj_at_mario_rel_yaw(m, model, behavior, relYaw));
-
-    return 1;
-}
-*/
-
 int smlua_func_stuck_in_ground_handler(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
@@ -2251,7 +2227,7 @@ int smlua_func_common_landing_cancels(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     struct LandingAction* landingAction = (struct LandingAction*)smlua_to_cobject(L, 2, LOT_LANDINGACTION);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  s32 (*setAPressAction)(structMarioState* arg2 = (s32 (*setAPressAction)(structMarioState*)smlua_to_cobject(L, 3, LVT_???); <--- UNIMPLEMENTED
+//  s32 (*setAPressAction)(structMarioState* arg2 = (s32 (*setAPressAction)(structMarioState*)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
     u32 arg3 = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
@@ -3416,7 +3392,7 @@ int smlua_func_find_ceil(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 posZ = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  struct Surface** pceil = (struct Surface**)smlua_to_cobject(L, 4, LVT_???); <--- UNIMPLEMENTED
+//  struct Surface** pceil = (struct Surface**)smlua_to_cobject(L, 4, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_ceil(posX, posY, posZ, pceil));
@@ -3435,7 +3411,7 @@ int smlua_func_find_floor(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 zPos = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  struct Surface** pfloor = (struct Surface**)smlua_to_cobject(L, 4, LVT_???); <--- UNIMPLEMENTED
+//  struct Surface** pfloor = (struct Surface**)smlua_to_cobject(L, 4, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_floor(xPos, yPos, zPos, pfloor));
@@ -3469,7 +3445,7 @@ int smlua_func_find_floor_height_and_data(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     f32 zPos = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  struct FloorGeometry** floorGeo = (struct FloorGeometry**)smlua_to_cobject(L, 4, LVT_???); <--- UNIMPLEMENTED
+//  struct FloorGeometry** floorGeo = (struct FloorGeometry**)smlua_to_cobject(L, 4, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_floor_height_and_data(xPos, yPos, zPos, floorGeo));
@@ -3511,7 +3487,7 @@ int smlua_func_find_surface_on_ray(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
     dir[2] = smlua_get_number_field(2, "z");
     if (!gSmLuaConvertSuccess) { return 0; }
-//  struct Surface** hit_surface = (struct Surface**)smlua_to_cobject(L, 3, LVT_???); <--- UNIMPLEMENTED
+//  struct Surface** hit_surface = (struct Surface**)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { return 0; }
 
     f32* hit_pos = smlua_get_vec3f_from_buffer();
@@ -3620,8 +3596,8 @@ void smlua_bind_functions_autogen(void) {
     lua_State* L = gLuaState;
 
     // behavior_table.h
-    //smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id); <--- UNIMPLEMENTED
-    //smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id);
+    smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior);
 
     // camera.h
     smlua_bind_function(L, "set_camera_pitch_shake", smlua_func_set_camera_pitch_shake);
@@ -3790,7 +3766,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_ready_to_speak", smlua_func_mario_ready_to_speak);
     smlua_bind_function(L, "print_displaying_credits_entry", smlua_func_print_displaying_credits_entry);
     smlua_bind_function(L, "should_start_or_continue_dialog", smlua_func_should_start_or_continue_dialog);
-    //smlua_bind_function(L, "spawn_obj_at_mario_rel_yaw", smlua_func_spawn_obj_at_mario_rel_yaw); <--- UNIMPLEMENTED
     smlua_bind_function(L, "stuck_in_ground_handler", smlua_func_stuck_in_ground_handler);
 
     // mario_actions_moving.c

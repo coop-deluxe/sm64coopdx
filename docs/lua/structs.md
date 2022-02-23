@@ -662,10 +662,12 @@
 | areaTimer | integer |  |
 | areaTimerDuration | integer |  |
 | areaTimerType | integer |  |
+| behavior | Pointer <BehaviorScript> | read-only |
 | bhvDelayTimer | integer |  |
 | bhvStackIndex | integer |  |
 | collidedObjInteractTypes | integer |  |
 | createdThroughNetwork | integer |  |
+| curBhvCommand | Pointer <BehaviorScript> | read-only |
 | globalPlayerIndex | integer |  |
 | header | [ObjectNode](#ObjectNode) | read-only |
 | heldByPlayerIndex | integer |  |
@@ -1712,6 +1714,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| behavior | Pointer <BehaviorScript> | read-only |
 | flags | integer |  |
 | model | integer |  |
 | moveAngleRange | integer |  |

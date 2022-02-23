@@ -21,6 +21,8 @@ enum LuaValueType {
     LVT_COBJECT_P,
     LVT_STRING,
     LVT_STRING_P,
+    LVT_BEHAVIORSCRIPT,
+    LVT_BEHAVIORSCRIPT_P,
     LVT_POINTER,
 };
 

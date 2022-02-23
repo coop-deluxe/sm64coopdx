@@ -2,6 +2,7 @@ import os
 
 usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32']
 vec3_types = ['Vec3s', 'Vec3f']
+typedef_pointers = ['BehaviorScript']
 
 exclude_structs = [
     'SPTask',
@@ -54,7 +55,7 @@ def translate_type_to_lvt(ptype):
 
     if ptype.count('*') == 1 and '(' not in ptype and '[' not in ptype:
         ptype = ptype.replace('const', '').replace('*', '').strip()
-        if ptype in usf_types:
+        if ptype in usf_types or ptype in typedef_pointers:
             return 'LVT_%s_P' % ptype.upper()
 
     return 'LVT_???'
@@ -92,10 +93,13 @@ def translate_type_to_lot(ptype):
 
     if 'struct' in ptype:
         if ptype.count('*') > 1:
-            return 'LVT_???'
+            return 'LOT_???'
+
         struct_id = ptype.split(' ')[1].replace('*', '')
+
         if struct_id in exclude_structs:
             return 'LOT_???'
+
         return 'LOT_' + struct_id.upper()
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):

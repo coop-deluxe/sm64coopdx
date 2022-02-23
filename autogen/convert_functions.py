@@ -51,7 +51,7 @@ override_disallowed_functions = {
     "src/engine/surface_collision.h":      [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_cutscene.c":   [ "^[us]32 act_.*", " geo_" ],
+    "src/game/mario_actions_cutscene.c":   [ "^[us]32 act_.*", " geo_", "spawn_obj" ],
     "src/game/mario_actions_moving.c":     [ "^[us]32 act_.*" ],
     "src/game/mario_actions_object.c":     [ "^[us]32 act_.*" ],
     "src/game/mario_actions_stationary.c": [ "^[us]32 act_.*" ],
@@ -213,6 +213,9 @@ def build_call(function):
         lfunc = 'lua_pushstring'
     elif ftype == 'const char*':
         lfunc = 'lua_pushstring'
+    elif translate_type_to_lot(ftype) == 'LOT_POINTER':
+        lvt = translate_type_to_lvt(ftype)
+        return '    smlua_push_pointer(L, %s, (void*)%s);\n' % (lvt, ccall)
     elif '???' not in flot and flot != 'LOT_NONE':
         return '    smlua_push_object(L, %s, %s);\n' % (flot, ccall)
 

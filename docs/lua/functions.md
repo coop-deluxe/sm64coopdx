@@ -2,6 +2,8 @@
 
 # Supported Functions
 - behavior_table.h
+   - [get_behavior_from_id](#get_behavior_from_id)
+   - [get_id_from_behavior](#get_id_from_behavior)
 
 <br />
 
@@ -356,6 +358,46 @@
 
 <br />
 
+
+## [get_behavior_from_id](#get_behavior_from_id)
+
+### Lua Example
+`local Pointer <BehaviorScript>Value = get_behavior_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | integer |
+
+### Returns
+- Pointer <BehaviorScript>
+
+### C Prototype
+`const BehaviorScript* get_behavior_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior](#get_id_from_behavior)
+
+### Lua Example
+`local integerValue = get_id_from_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+
+### Returns
+- integer
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ---
 # functions from camera.h
