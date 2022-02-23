@@ -28,6 +28,28 @@
 #include "actors/group16.h"
 #include "actors/group17.h"
 #include "actors/zcustom0.h"
+#include "levels/wf/header.h"
+#include "levels/bbh/header.h"
+#include "levels/ccm/header.h"
+#include "levels/castle_inside/header.h"
+#include "levels/castle_grounds/header.h"
+#include "levels/hmc/header.h"
+#include "levels/ssl/header.h"
+#include "levels/bob/header.h"
+#include "levels/sl/header.h"
+#include "levels/wdw/header.h"
+#include "levels/jrb/header.h"
+#include "levels/thi/header.h"
+#include "levels/ttc/header.h"
+#include "levels/rr/header.h"
+#include "levels/bitdw/header.h"
+#include "levels/bitfs/header.h"
+#include "levels/bits/header.h"
+#include "levels/lll/header.h"
+#include "levels/ddd/header.h"
+#include "levels/bowser_2/header.h"
+#include "levels/bowser_3/header.h"
+#include "levels/ttm/header.h"
 
 #include "smlua_model_utils.h"
 #include "pc/debuglog.h"
@@ -44,6 +66,9 @@ struct ModelUtilsInfo {
 #define MODEL_UTIL_DL(x, y, z) [x] = { .id = x, .asset = y, .layer = z, .isDisplayList = true, .cacheId = 0xFF }
 
 struct ModelUtilsInfo sModels[] = {
+    MODEL_UTIL_GEO(E_MODEL_NONE,                    NULL),
+
+    // actors
     MODEL_UTIL_GEO(E_MODEL_MARIO,                   mario_geo),
     MODEL_UTIL_GEO(E_MODEL_SMOKE,                   smoke_geo),
     MODEL_UTIL_GEO(E_MODEL_SPARKLES,                sparkles_geo),
@@ -80,7 +105,6 @@ struct ModelUtilsInfo sModels[] = {
     MODEL_UTIL_GEO(E_MODEL_MARIOS_METAL_CAP,        marios_metal_cap_geo),
     MODEL_UTIL_GEO(E_MODEL_MARIOS_WING_CAP,         marios_wing_cap_geo),
     MODEL_UTIL_GEO(E_MODEL_MARIOS_CAP,              marios_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_MARIOS_CAP2,              marios_cap_geo), // repeated
     MODEL_UTIL_GEO(E_MODEL_BOWSER_KEY_CUTSCENE,     bowser_key_cutscene_geo),
     MODEL_UTIL_GEO(E_MODEL_BOWSER_KEY,              bowser_key_geo),
     MODEL_UTIL_GEO(E_MODEL_RED_FLAME_SHADOW,        red_flame_shadow_geo),
@@ -201,7 +225,205 @@ struct ModelUtilsInfo sModels[] = {
     MODEL_UTIL_GEO(E_MODEL_DORRIE,                  dorrie_geo),
     MODEL_UTIL_GEO(E_MODEL_SNUFIT,                  snufit_geo),
 
-    // CUSTOM MODELS BEGIN
+    // level
+    MODEL_UTIL_GEO(E_MODEL_BUBBLY_TREE,                        bubbly_tree_geo),
+    MODEL_UTIL_GEO(E_MODEL_COURTYARD_SPIKY_TREE,               spiky_tree_geo),
+    MODEL_UTIL_GEO(E_MODEL_SNOW_TREE,                          snow_tree_geo),
+    MODEL_UTIL_GEO(E_MODEL_PALM_TREE,                          palm_tree_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_CASTLE_DOOR,                 castle_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_BBH_HAUNTED_DOOR,                   haunted_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_HMC_WOODEN_DOOR,                    wooden_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_HMC_METAL_DOOR,                     metal_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_HMC_HAZY_MAZE_DOOR,                 hazy_maze_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_DOOR_0_STARS,                castle_door_0_star_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_DOOR_1_STAR,                 castle_door_1_star_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_DOOR_3_STARS,                castle_door_3_stars_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_KEY_DOOR,                    key_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_CCM_CABIN_DOOR,                     cabin_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_METAL_DOOR,                  metal_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_GROUNDS_METAL_DOOR,          metal_door_geo),
+    MODEL_UTIL_GEO(E_MODEL_WF_TOWER_TRAPEZOID_PLATORM,         wf_geo_000AF8),
+    MODEL_UTIL_GEO(E_MODEL_WF_TOWER_SQUARE_PLATORM,            wf_geo_000B10),
+    MODEL_UTIL_GEO(E_MODEL_WF_TOWER_SQUARE_PLATORM_UNUSED,     wf_geo_000B38),
+    MODEL_UTIL_GEO(E_MODEL_WF_TOWER_SQUARE_PLATORM_ELEVATOR,   wf_geo_000B60),
+    MODEL_UTIL_GEO(E_MODEL_BBH_STAIRCASE_STEP,                 geo_bbh_0005B0),
+    MODEL_UTIL_GEO(E_MODEL_BBH_TILTING_FLOOR_PLATFORM,         geo_bbh_0005C8),
+    MODEL_UTIL_GEO(E_MODEL_BBH_TUMBLING_PLATFORM,              geo_bbh_0005E0),
+    MODEL_UTIL_GEO(E_MODEL_BBH_TUMBLING_PLATFORM_PART,         geo_bbh_0005F8),
+    MODEL_UTIL_GEO(E_MODEL_BBH_MOVING_BOOKSHELF,               geo_bbh_000610),
+    MODEL_UTIL_GEO(E_MODEL_BBH_MESH_ELEVATOR,                  geo_bbh_000628),
+    MODEL_UTIL_GEO(E_MODEL_BBH_MERRY_GO_ROUND,                 geo_bbh_000640),
+    MODEL_UTIL_GEO(E_MODEL_BBH_WOODEN_TOMB,                    geo_bbh_000658),
+    MODEL_UTIL_GEO(E_MODEL_CCM_ROPEWAY_LIFT,                   ccm_geo_0003D0),
+    MODEL_UTIL_GEO(E_MODEL_CCM_SNOWMAN_HEAD,                   ccm_geo_00040C),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_BOWSER_TRAP,                 castle_geo_000F18),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_WATER_LEVEL_PILLAR,          castle_geo_001940),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_CLOCK_MINUTE_HAND,           castle_geo_001530),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_CLOCK_HOUR_HAND,             castle_geo_001548),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_CLOCK_PENDULUM,              castle_geo_001518),
+    MODEL_UTIL_GEO(E_MODEL_HMC_METAL_PLATFORM,                 hmc_geo_0005A0),
+    MODEL_UTIL_GEO(E_MODEL_HMC_METAL_ARROW_PLATFORM,           hmc_geo_0005B8),
+    MODEL_UTIL_GEO(E_MODEL_HMC_ELEVATOR_PLATFORM,              hmc_geo_0005D0),
+    MODEL_UTIL_GEO(E_MODEL_HMC_ROLLING_ROCK,                   hmc_geo_000548),
+    MODEL_UTIL_GEO(E_MODEL_HMC_ROCK_PIECE,                     hmc_geo_000570),
+    MODEL_UTIL_GEO(E_MODEL_HMC_ROCK_SMALL_PIECE,               hmc_geo_000588),
+    MODEL_UTIL_GEO(E_MODEL_HMC_RED_GRILLS,                     hmc_geo_000530),
+    MODEL_UTIL_GEO(E_MODEL_SSL_PYRAMID_TOP,                    ssl_geo_000618),
+    MODEL_UTIL_GEO(E_MODEL_SSL_GRINDEL,                        ssl_geo_000734),
+    MODEL_UTIL_GEO(E_MODEL_SSL_SPINDEL,                        ssl_geo_000764),
+    MODEL_UTIL_GEO(E_MODEL_SSL_MOVING_PYRAMID_WALL,            ssl_geo_000794),
+    MODEL_UTIL_GEO(E_MODEL_SSL_PYRAMID_ELEVATOR,               ssl_geo_0007AC),
+    MODEL_UTIL_GEO(E_MODEL_BOB_CHAIN_CHOMP_GATE,               bob_geo_000440),
+    MODEL_UTIL_GEO(E_MODEL_BOB_SEESAW_PLATFORM,                bob_geo_000458),
+    MODEL_UTIL_GEO(E_MODEL_BOB_BARS_GRILLS,                    bob_geo_000470),
+    MODEL_UTIL_GEO(E_MODEL_SL_SNOW_TRIANGLE,                   sl_geo_000390),
+    MODEL_UTIL_GEO(E_MODEL_SL_CRACKED_ICE,                     sl_geo_000360),
+    MODEL_UTIL_GEO(E_MODEL_SL_CRACKED_ICE_CHUNK,               sl_geo_000378),
+    MODEL_UTIL_GEO(E_MODEL_WDW_SQUARE_FLOATING_PLATFORM,       wdw_geo_000580),
+    MODEL_UTIL_GEO(E_MODEL_WDW_ARROW_LIFT,                     wdw_geo_000598),
+    MODEL_UTIL_GEO(E_MODEL_WDW_WATER_LEVEL_DIAMOND,            wdw_geo_0005C0),
+    MODEL_UTIL_GEO(E_MODEL_WDW_HIDDEN_PLATFORM,                wdw_geo_0005E8),
+    MODEL_UTIL_GEO(E_MODEL_WDW_EXPRESS_ELEVATOR,               wdw_geo_000610),
+    MODEL_UTIL_GEO(E_MODEL_WDW_RECTANGULAR_FLOATING_PLATFORM,  wdw_geo_000628),
+    MODEL_UTIL_GEO(E_MODEL_WDW_ROTATING_PLATFORM,              wdw_geo_000640),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SHIP_LEFT_HALF_PART,            jrb_geo_000978),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SHIP_BACK_LEFT_PART,            jrb_geo_0009B0),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SHIP_RIGHT_HALF_PART,           jrb_geo_0009E8),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SHIP_BACK_RIGHT_PART,           jrb_geo_000A00),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SUNKEN_SHIP,                    jrb_geo_000990),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SUNKEN_SHIP_BACK,               jrb_geo_0009C8),
+    MODEL_UTIL_GEO(E_MODEL_JRB_ROCK,                           jrb_geo_000930),
+    MODEL_UTIL_GEO(E_MODEL_JRB_SLIDING_BOX,                    jrb_geo_000960),
+    MODEL_UTIL_GEO(E_MODEL_JRB_FALLING_PILLAR,                 jrb_geo_000900),
+    MODEL_UTIL_GEO(E_MODEL_JRB_FALLING_PILLAR_BASE,            jrb_geo_000918),
+    MODEL_UTIL_GEO(E_MODEL_JRB_FLOATING_PLATFORM,              jrb_geo_000948),
+    MODEL_UTIL_GEO(E_MODEL_THI_HUGE_ISLAND_TOP,                thi_geo_0005B0),
+    MODEL_UTIL_GEO(E_MODEL_THI_TINY_ISLAND_TOP,                thi_geo_0005C8),
+    MODEL_UTIL_GEO(E_MODEL_TTC_ROTATING_CUBE,                  ttc_geo_000240),
+    MODEL_UTIL_GEO(E_MODEL_TTC_ROTATING_PRISM,                 ttc_geo_000258),
+    MODEL_UTIL_GEO(E_MODEL_TTC_PENDULUM,                       ttc_geo_000270),
+    MODEL_UTIL_GEO(E_MODEL_TTC_LARGE_TREADMILL,                ttc_geo_000288),
+    MODEL_UTIL_GEO(E_MODEL_TTC_SMALL_TREADMILL,                ttc_geo_0002A8),
+    MODEL_UTIL_GEO(E_MODEL_TTC_PUSH_BLOCK,                     ttc_geo_0002C8),
+    MODEL_UTIL_GEO(E_MODEL_TTC_ROTATING_HEXAGON,               ttc_geo_0002E0),
+    MODEL_UTIL_GEO(E_MODEL_TTC_ROTATING_TRIANGLE,              ttc_geo_0002F8),
+    MODEL_UTIL_GEO(E_MODEL_TTC_PIT_BLOCK,                      ttc_geo_000310),
+    MODEL_UTIL_GEO(E_MODEL_TTC_PIT_BLOCK_UNUSED,               ttc_geo_000328),
+    MODEL_UTIL_GEO(E_MODEL_TTC_ELEVATOR_PLATFORM,              ttc_geo_000340),
+    MODEL_UTIL_GEO(E_MODEL_TTC_CLOCK_HAND,                     ttc_geo_000358),
+    MODEL_UTIL_GEO(E_MODEL_TTC_SPINNER,                        ttc_geo_000370),
+    MODEL_UTIL_GEO(E_MODEL_TTC_SMALL_GEAR,                     ttc_geo_000388),
+    MODEL_UTIL_GEO(E_MODEL_TTC_LARGE_GEAR,                     ttc_geo_0003A0),
+    MODEL_UTIL_GEO(E_MODEL_RR_SLIDING_PLATFORM,                rr_geo_0008C0),
+    MODEL_UTIL_GEO(E_MODEL_RR_FLYING_CARPET,                   rr_geo_000848),
+    MODEL_UTIL_GEO(E_MODEL_RR_OCTAGONAL_PLATFORM,              rr_geo_0008A8),
+    MODEL_UTIL_GEO(E_MODEL_RR_ROTATING_BRIDGE_PLATFORM,        rr_geo_000878),
+    MODEL_UTIL_GEO(E_MODEL_RR_TRIANGLE_PLATFORM,               rr_geo_0008D8),
+    MODEL_UTIL_GEO(E_MODEL_RR_CRUISER_WING,                    rr_geo_000890),
+    MODEL_UTIL_GEO(E_MODEL_RR_SEESAW_PLATFORM,                 rr_geo_000908),
+    MODEL_UTIL_GEO(E_MODEL_RR_L_SHAPED_PLATFORM,               rr_geo_000940),
+    MODEL_UTIL_GEO(E_MODEL_RR_SWINGING_PLATFORM,               rr_geo_000860),
+    MODEL_UTIL_GEO(E_MODEL_RR_DONUT_PLATFORM,                  rr_geo_000920),
+    MODEL_UTIL_GEO(E_MODEL_RR_ELEVATOR_PLATFORM,               rr_geo_0008F0),
+    MODEL_UTIL_GEO(E_MODEL_RR_TRICKY_TRIANGLES,                rr_geo_000958),
+    MODEL_UTIL_GEO(E_MODEL_RR_TRICKY_TRIANGLES_FRAME1,         rr_geo_000970),
+    MODEL_UTIL_GEO(E_MODEL_RR_TRICKY_TRIANGLES_FRAME2,         rr_geo_000988),
+    MODEL_UTIL_GEO(E_MODEL_RR_TRICKY_TRIANGLES_FRAME3,         rr_geo_0009A0),
+    MODEL_UTIL_GEO(E_MODEL_RR_TRICKY_TRIANGLES_FRAME4,         rr_geo_0009B8),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_SQUARE_PLATFORM,              geo_bitdw_000558),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_SEESAW_PLATFORM,              geo_bitdw_000540),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_SLIDING_PLATFORM,             geo_bitdw_000528),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_FERRIS_WHEEL_AXLE,            geo_bitdw_000570),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_BLUE_PLATFORM,                geo_bitdw_000588),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_STAIRCASE_FRAME4,             geo_bitdw_0005A0),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_STAIRCASE_FRAME3,             geo_bitdw_0005B8),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_STAIRCASE_FRAME2,             geo_bitdw_0005D0),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_STAIRCASE_FRAME1,             geo_bitdw_0005E8),
+    MODEL_UTIL_GEO(E_MODEL_BITDW_STAIRCASE,                    geo_bitdw_000600),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_PLATFORM_ON_TRACK,            bitfs_geo_000758),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_TILTING_SQUARE_PLATFORM,      bitfs_geo_0006C0),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_SINKING_PLATFORMS,            bitfs_geo_000770),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_BLUE_POLE,                    bitfs_geo_0006A8),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_SINKING_CAGE_PLATFORM,        bitfs_geo_000690),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_ELEVATOR,                     bitfs_geo_000678),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_STRETCHING_PLATFORMS,         bitfs_geo_000708),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_SEESAW_PLATFORM,              bitfs_geo_000788),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_MOVING_SQUARE_PLATFORM,       bitfs_geo_000728),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_SLIDING_PLATFORM,             bitfs_geo_000740),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_TUMBLING_PLATFORM_PART,       bitfs_geo_0006D8),
+    MODEL_UTIL_GEO(E_MODEL_BITFS_TUMBLING_PLATFORM,            bitfs_geo_0006F0),
+    MODEL_UTIL_GEO(E_MODEL_BITS_SLIDING_PLATFORM,              bits_geo_0005E0),
+    MODEL_UTIL_GEO(E_MODEL_BITS_TWIN_SLIDING_PLATFORMS,        bits_geo_0005F8),
+    MODEL_UTIL_GEO(E_MODEL_BITS_OCTAGONAL_PLATFORM,            bits_geo_000610),
+    MODEL_UTIL_GEO(E_MODEL_BITS_BLUE_PLATFORM,                 bits_geo_000628),
+    MODEL_UTIL_GEO(E_MODEL_BITS_FERRIS_WHEEL_AXLE,             bits_geo_000640),
+    MODEL_UTIL_GEO(E_MODEL_BITS_ARROW_PLATFORM,                bits_geo_000658),
+    MODEL_UTIL_GEO(E_MODEL_BITS_SEESAW_PLATFORM,               bits_geo_000670),
+    MODEL_UTIL_GEO(E_MODEL_BITS_TILTING_W_PLATFORM,            bits_geo_000688),
+    MODEL_UTIL_GEO(E_MODEL_BITS_STAIRCASE,                     bits_geo_0006A0),
+    MODEL_UTIL_GEO(E_MODEL_BITS_STAIRCASE_FRAME1,              bits_geo_0006B8),
+    MODEL_UTIL_GEO(E_MODEL_BITS_STAIRCASE_FRAME2,              bits_geo_0006D0),
+    MODEL_UTIL_GEO(E_MODEL_BITS_STAIRCASE_FRAME3,              bits_geo_0006E8),
+    MODEL_UTIL_GEO(E_MODEL_BITS_STAIRCASE_FRAME4,              bits_geo_000700),
+    MODEL_UTIL_GEO(E_MODEL_BITS_WARP_PIPE,                     warp_pipe_geo),
+    MODEL_UTIL_GEO(E_MODEL_LLL_DRAWBRIDGE_PART,                lll_geo_000B20),
+    MODEL_UTIL_GEO(E_MODEL_LLL_ROTATING_BLOCK_FIRE_BARS,       lll_geo_000B38),
+    MODEL_UTIL_GEO(E_MODEL_LLL_ROTATING_HEXAGONAL_RING,        lll_geo_000BB0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_SINKING_RECTANGULAR_PLATFORM,   lll_geo_000BC8),
+    MODEL_UTIL_GEO(E_MODEL_LLL_SINKING_SQUARE_PLATFORMS,       lll_geo_000BE0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_TILTING_SQUARE_PLATFORM,        lll_geo_000BF8),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_1,                 lll_geo_000C10),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_2,                 lll_geo_000C30),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_3,                 lll_geo_000C50),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_4,                 lll_geo_000C70),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_5,                 lll_geo_000C90),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_6,                 lll_geo_000CB0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_7,                 lll_geo_000CD0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_8,                 lll_geo_000CF0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_9,                 lll_geo_000D10),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_10,                lll_geo_000D30),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_11,                lll_geo_000D50),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_12,                lll_geo_000D70),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_13,                lll_geo_000D90),
+    MODEL_UTIL_GEO(E_MODEL_LLL_BOWSER_PIECE_14,                lll_geo_000DB0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_MOVING_OCTAGONAL_MESH_PLATFORM, lll_geo_000B08),
+    MODEL_UTIL_GEO(E_MODEL_LLL_SINKING_ROCK_BLOCK,             lll_geo_000DD0),
+    MODEL_UTIL_GEO(E_MODEL_LLL_ROLLING_LOG,                    lll_geo_000DE8),
+    MODEL_UTIL_GEO(E_MODEL_LLL_WOOD_BRIDGE,                    lll_geo_000B50),
+    MODEL_UTIL_GEO(E_MODEL_LLL_LARGE_WOOD_BRIDGE,              lll_geo_000B68),
+    MODEL_UTIL_GEO(E_MODEL_LLL_FALLING_PLATFORM,               lll_geo_000B80),
+    MODEL_UTIL_GEO(E_MODEL_LLL_LARGE_FALLING_PLATFORM,         lll_geo_000B98),
+    MODEL_UTIL_GEO(E_MODEL_LLL_VOLCANO_FALLING_TRAP,           lll_geo_000EA8),
+    MODEL_UTIL_GEO(E_MODEL_DDD_BOWSER_SUB_DOOR,                ddd_geo_000478),
+    MODEL_UTIL_GEO(E_MODEL_DDD_BOWSER_SUB,                     ddd_geo_0004A0),
+    MODEL_UTIL_GEO(E_MODEL_DDD_POLE,                           ddd_geo_000450),
+    MODEL_UTIL_GEO(E_MODEL_WF_BREAKABLE_WALL_RIGHT,            wf_geo_000B78),
+    MODEL_UTIL_GEO(E_MODEL_WF_BREAKABLE_WALL_LEFT,             wf_geo_000B90),
+    MODEL_UTIL_GEO(E_MODEL_WF_KICKABLE_BOARD,                  wf_geo_000BA8),
+    MODEL_UTIL_GEO(E_MODEL_WF_TOWER_DOOR,                      wf_geo_000BE0),
+    MODEL_UTIL_GEO(E_MODEL_WF_KICKABLE_BOARD_FELLED,           wf_geo_000BC8),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_GROUNDS_VCUTM_GRILL,         castle_grounds_geo_00070C),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_GROUNDS_FLAG,                castle_grounds_geo_000660),
+    MODEL_UTIL_GEO(E_MODEL_CASTLE_GROUNDS_CANNON_GRILL,        castle_grounds_geo_000724),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_2_TILTING_ARENA,             bowser_2_geo_000170),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_1,        bowser_3_geo_000290),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_2,        bowser_3_geo_0002A8),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_3,        bowser_3_geo_0002C0),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_4,        bowser_3_geo_0002D8),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_5,        bowser_3_geo_0002F0),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_6,        bowser_3_geo_000308),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_7,        bowser_3_geo_000320),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_8,        bowser_3_geo_000338),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_9,        bowser_3_geo_000350),
+    MODEL_UTIL_GEO(E_MODEL_BOWSER_3_FALLING_PLATFORM_10,       bowser_3_geo_000368),
+    MODEL_UTIL_GEO(E_MODEL_TTM_ROLLING_LOG,                    ttm_geo_000730),
+    MODEL_UTIL_GEO(E_MODEL_TTM_STAR_CAGE,                      ttm_geo_000710),
+    MODEL_UTIL_GEO(E_MODEL_TTM_BLUE_SMILEY,                    ttm_geo_000D14),
+    MODEL_UTIL_GEO(E_MODEL_TTM_YELLOW_SMILEY,                  ttm_geo_000D4C),
+    MODEL_UTIL_GEO(E_MODEL_TTM_STAR_SMILEY,                    ttm_geo_000D84),
+    MODEL_UTIL_GEO(E_MODEL_TTM_MOON_SMILEY,                    ttm_geo_000DBC),
+
+    // custom models
     MODEL_UTIL_GEO(E_MODEL_BUBBLE_PLAYER,             water_bomb_geo),
     MODEL_UTIL_GEO(E_MODEL_LUIGI,                     luigi_geo),
     MODEL_UTIL_GEO(E_MODEL_LUIGIS_CAP,                luigis_cap_geo),
@@ -222,7 +444,6 @@ struct ModelUtilsInfo sModels[] = {
     MODEL_UTIL_GEO(E_MODEL_WARIOS_METAL_CAP,          warios_metal_cap_geo),
     MODEL_UTIL_GEO(E_MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo),
     MODEL_UTIL_GEO(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
-    // CUSTOM MODELS END
 };
 
 struct ModelUtilsInfo sCachedAssets[256] = { 0 };
@@ -246,6 +467,7 @@ void smlua_model_util_clear(void) {
 }
 
 u8 smlua_model_util_load(enum ModelExtendedId id) {
+    if (id == E_MODEL_NONE) { return MODEL_NONE; }
     if (id >= E_MODEL_MAX) {
         LOG_ERROR("id invalid");
         return 0xFF;
