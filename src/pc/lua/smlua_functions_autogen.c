@@ -3070,6 +3070,968 @@ int smlua_func_network_local_index_from_global(lua_State* L) {
     return 1;
 }
 
+  //////////////////////
+ // object_helpers.c //
+//////////////////////
+
+int smlua_func_approach_f32_signed(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    f32 * value = (f32 *)smlua_to_cpointer(L, 1, LVT_F32_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 target = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 increment = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s32 approach_f32_signed(f32 *value, f32 target, f32 increment);
+    lua_pushinteger(L, approach_f32_signed(value, target, increment));
+
+    return 1;
+}
+
+int smlua_func_approach_f32_symmetric(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    f32 value = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 target = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 increment = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern f32 approach_f32_symmetric(f32 value, f32 target, f32 increment);
+    lua_pushnumber(L, approach_f32_symmetric(value, target, increment));
+
+    return 1;
+}
+
+int smlua_func_approach_s16_symmetric(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s16 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 target = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 increment = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s16 approach_s16_symmetric(s16 value, s16 target, s16 increment);
+    lua_pushinteger(L, approach_s16_symmetric(value, target, increment));
+
+    return 1;
+}
+
+int smlua_func_count_objects_with_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s32 count_objects_with_behavior(const BehaviorScript *behavior);
+    lua_pushinteger(L, count_objects_with_behavior(behavior));
+
+    return 1;
+}
+
+int smlua_func_count_unimportant_objects(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern s32 count_unimportant_objects(void);
+    lua_pushinteger(L, count_unimportant_objects());
+
+    return 1;
+}
+
+/*
+int smlua_func_create_transformation_from_matrices(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+//  Mat4 a0 = (Mat4)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  Mat4 a1 = (Mat4)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  Mat4 a2 = (Mat4)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2);
+    create_transformation_from_matrices(a0, a1, a2);
+
+    return 1;
+}
+*/
+
+int smlua_func_cur_obj_change_action(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 action = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_change_action(s32 action);
+    cur_obj_change_action(action);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_count_objects_with_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 dist = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist);
+    lua_pushinteger(L, cur_obj_count_objects_with_behavior(behavior, dist));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_disable_rendering(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_disable_rendering(void);
+    cur_obj_disable_rendering();
+
+    return 1;
+}
+
+int smlua_func_cur_obj_disable_rendering_and_become_intangible(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_disable_rendering_and_become_intangible(struct Object *obj);
+    cur_obj_disable_rendering_and_become_intangible(obj);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_dist_to_nearest_object_with_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior);
+    lua_pushnumber(L, cur_obj_dist_to_nearest_object_with_behavior(behavior));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_enable_rendering(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_enable_rendering(void);
+    cur_obj_enable_rendering();
+
+    return 1;
+}
+
+int smlua_func_cur_obj_enable_rendering_2(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_enable_rendering_2(void);
+    cur_obj_enable_rendering_2();
+
+    return 1;
+}
+
+int smlua_func_cur_obj_enable_rendering_and_become_tangible(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_enable_rendering_and_become_tangible(struct Object *obj);
+    cur_obj_enable_rendering_and_become_tangible(obj);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_find_nearby_held_actor(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 maxDist = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearby_held_actor(behavior, maxDist));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_find_nearest_object_with_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 * dist = (f32 *)smlua_to_cpointer(L, 2, LVT_F32_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearest_object_with_behavior(behavior, dist));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_find_nearest_pole(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern struct Object* cur_obj_find_nearest_pole(void);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearest_pole());
+
+    return 1;
+}
+
+int smlua_func_cur_obj_forward_vel_approach_upward(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    f32 target = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 increment = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_forward_vel_approach_upward(f32 target, f32 increment);
+    cur_obj_forward_vel_approach_upward(target, increment);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_hide(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_hide(void);
+    cur_obj_hide();
+
+    return 1;
+}
+
+int smlua_func_cur_obj_init_animation(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 animIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_init_animation(s32 animIndex);
+    cur_obj_init_animation(animIndex);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_init_animation_with_accel_and_sound(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s32 animIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 accel = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel);
+    cur_obj_init_animation_with_accel_and_sound(animIndex, accel);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_init_animation_with_sound(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 animIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_init_animation_with_sound(s32 animIndex);
+    cur_obj_init_animation_with_sound(animIndex);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_move_using_vel(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_move_using_vel(void);
+    cur_obj_move_using_vel();
+
+    return 1;
+}
+
+int smlua_func_cur_obj_nearest_object_with_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_nearest_object_with_behavior(behavior));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_rotate_yaw_toward(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s16 target = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 increment = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment);
+    lua_pushinteger(L, cur_obj_rotate_yaw_toward(target, increment));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_scale(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    f32 scale = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_scale(f32 scale);
+    cur_obj_scale(scale);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_set_pos_relative(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* other = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 dleft = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 dy = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 dforward = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforward);
+    cur_obj_set_pos_relative(other, dleft, dy, dforward);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_set_pos_relative_to_parent(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    f32 dleft = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 dy = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 dforward = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_set_pos_relative_to_parent(f32 dleft, f32 dy, f32 dforward);
+    cur_obj_set_pos_relative_to_parent(dleft, dy, dforward);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_set_vel_from_mario_vel(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 f12 = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 f14 = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12, f32 f14);
+    cur_obj_set_vel_from_mario_vel(m, f12, f14);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_unhide(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_unhide(void);
+    cur_obj_unhide();
+
+    return 1;
+}
+
+int smlua_func_cur_obj_unused_init_on_floor(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_unused_init_on_floor(void);
+    cur_obj_unused_init_on_floor();
+
+    return 1;
+}
+
+int smlua_func_dist_between_object_and_point(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 pointX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 pointY = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 pointZ = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f32 pointZ);
+    lua_pushnumber(L, dist_between_object_and_point(obj, pointX, pointY, pointZ));
+
+    return 1;
+}
+
+int smlua_func_dist_between_objects(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj1 = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* obj2 = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern f32 dist_between_objects(struct Object *obj1, struct Object *obj2);
+    lua_pushnumber(L, dist_between_objects(obj1, obj2));
+
+    return 1;
+}
+
+int smlua_func_find_unimportant_object(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern struct Object *find_unimportant_object(void);
+    smlua_push_object(L, LOT_OBJECT, find_unimportant_object());
+
+    return 1;
+}
+
+/*
+int smlua_func_geo_switch_anim_state(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s32 callContext = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node);
+    UNIMPLEMENTED -->(L, geo_switch_anim_state(callContext, node));
+
+    return 1;
+}
+*/
+
+/*
+int smlua_func_geo_switch_area(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s32 callContext = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern Gfx *geo_switch_area(s32 callContext, struct GraphNode *node);
+    UNIMPLEMENTED -->(L, geo_switch_area(callContext, node));
+
+    return 1;
+}
+*/
+
+/*
+int smlua_func_geo_update_layer_transparency(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 callContext = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  void * context = (void *)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUSED void *context);
+    UNIMPLEMENTED -->(L, geo_update_layer_transparency(callContext, node, context));
+
+    return 1;
+}
+*/
+
+/*
+int smlua_func_geo_update_projectile_pos_from_parent(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 callContext = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  Mat4 mtx = (Mat4)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern Gfx *geo_update_projectile_pos_from_parent(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
+    UNIMPLEMENTED -->(L, geo_update_projectile_pos_from_parent(callContext, node, mtx));
+
+    return 1;
+}
+*/
+
+int smlua_func_get_object_list_from_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u32 get_object_list_from_behavior(const BehaviorScript *behavior);
+    lua_pushinteger(L, get_object_list_from_behavior(behavior));
+
+    return 1;
+}
+
+int smlua_func_lateral_dist_between_objects(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj1 = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* obj2 = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2);
+    lua_pushnumber(L, lateral_dist_between_objects(obj1, obj2));
+
+    return 1;
+}
+
+/*
+int smlua_func_linear_mtxf_mul_vec3f(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+//  Mat4 m = (Mat4)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* dst = smlua_get_vec3f_from_buffer();
+    dst[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    dst[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    dst[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* v = smlua_get_vec3f_from_buffer();
+    v[0] = smlua_get_number_field(3, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    v[1] = smlua_get_number_field(3, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    v[2] = smlua_get_number_field(3, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);
+    linear_mtxf_mul_vec3f(m, dst, v);
+
+    smlua_push_number_field(2, "x", dst[0]);
+    smlua_push_number_field(2, "y", dst[1]);
+    smlua_push_number_field(2, "z", dst[2]);
+
+    smlua_push_number_field(3, "x", v[0]);
+    smlua_push_number_field(3, "y", v[1]);
+    smlua_push_number_field(3, "z", v[2]);
+
+    return 1;
+}
+*/
+
+/*
+int smlua_func_linear_mtxf_transpose_mul_vec3f(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+//  Mat4 m = (Mat4)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* dst = smlua_get_vec3f_from_buffer();
+    dst[0] = smlua_get_number_field(2, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    dst[1] = smlua_get_number_field(2, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    dst[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    f32* v = smlua_get_vec3f_from_buffer();
+    v[0] = smlua_get_number_field(3, "x");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    v[1] = smlua_get_number_field(3, "y");
+    if (!gSmLuaConvertSuccess) { return 0; }
+    v[2] = smlua_get_number_field(3, "z");
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);
+    linear_mtxf_transpose_mul_vec3f(m, dst, v);
+
+    smlua_push_number_field(2, "x", dst[0]);
+    smlua_push_number_field(2, "y", dst[1]);
+    smlua_push_number_field(2, "z", dst[2]);
+
+    smlua_push_number_field(3, "x", v[0]);
+    smlua_push_number_field(3, "y", v[1]);
+    smlua_push_number_field(3, "z", v[2]);
+
+    return 1;
+}
+*/
+
+int smlua_func_obj_angle_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj1 = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* obj2 = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2);
+    lua_pushinteger(L, obj_angle_to_object(obj1, obj2));
+
+    return 1;
+}
+
+int smlua_func_obj_angle_to_point(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 pointX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 pointZ = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ);
+    lua_pushinteger(L, obj_angle_to_point(obj, pointX, pointZ));
+
+    return 1;
+}
+
+/*
+int smlua_func_obj_apply_scale_to_matrix(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  Mat4 dst = (Mat4)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  Mat4 src = (Mat4)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src);
+    obj_apply_scale_to_matrix(obj, dst, src);
+
+    return 1;
+}
+*/
+
+int smlua_func_obj_apply_scale_to_transform(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_apply_scale_to_transform(struct Object *obj);
+    obj_apply_scale_to_transform(obj);
+
+    return 1;
+}
+
+int smlua_func_obj_copy_angle(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* dst = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* src = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_copy_angle(struct Object *dst, struct Object *src);
+    obj_copy_angle(dst, src);
+
+    return 1;
+}
+
+int smlua_func_obj_copy_graph_y_offset(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* dst = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* src = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_copy_graph_y_offset(struct Object *dst, struct Object *src);
+    obj_copy_graph_y_offset(dst, src);
+
+    return 1;
+}
+
+int smlua_func_obj_copy_pos(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* dst = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* src = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_copy_pos(struct Object *dst, struct Object *src);
+    obj_copy_pos(dst, src);
+
+    return 1;
+}
+
+int smlua_func_obj_copy_pos_and_angle(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* dst = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* src = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_copy_pos_and_angle(struct Object *dst, struct Object *src);
+    obj_copy_pos_and_angle(dst, src);
+
+    return 1;
+}
+
+int smlua_func_obj_copy_scale(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* dst = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* src = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_copy_scale(struct Object *dst, struct Object *src);
+    obj_copy_scale(dst, src);
+
+    return 1;
+}
+
+int smlua_func_obj_init_animation(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 animIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_init_animation(struct Object *obj, s32 animIndex);
+    obj_init_animation(obj, animIndex);
+
+    return 1;
+}
+
+/*
+int smlua_func_obj_init_animation_with_sound(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  const structAnimation*const* animations = (const structAnimation*const*)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 animIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_init_animation_with_sound(struct Object *obj, const struct Animation * const* animations, s32 animIndex);
+    obj_init_animation_with_sound(obj, animations, animIndex);
+
+    return 1;
+}
+*/
+
+int smlua_func_obj_pitch_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* target = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s16 obj_pitch_to_object(struct Object* obj, struct Object* target);
+    lua_pushinteger(L, obj_pitch_to_object(obj, target));
+
+    return 1;
+}
+
+int smlua_func_obj_scale(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 scale = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_scale(struct Object *obj, f32 scale);
+    obj_scale(obj, scale);
+
+    return 1;
+}
+
+int smlua_func_obj_scale_xyz(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 xScale = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 yScale = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 zScale = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_scale_xyz(struct Object *obj, f32 xScale, f32 yScale, f32 zScale);
+    obj_scale_xyz(obj, xScale, yScale, zScale);
+
+    return 1;
+}
+
+int smlua_func_obj_set_angle(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 pitch = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 yaw = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 roll = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);
+    obj_set_angle(obj, pitch, yaw, roll);
+
+    return 1;
+}
+
+int smlua_func_obj_set_face_angle_to_move_angle(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_set_face_angle_to_move_angle(struct Object *obj);
+    obj_set_face_angle_to_move_angle(obj);
+
+    return 1;
+}
+
+int smlua_func_obj_set_gfx_pos_from_pos(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_set_gfx_pos_from_pos(struct Object *obj);
+    obj_set_gfx_pos_from_pos(obj);
+
+    return 1;
+}
+
+int smlua_func_obj_set_held_state(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const BehaviorScript* heldBehavior = (const BehaviorScript*)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior);
+    obj_set_held_state(obj, heldBehavior);
+
+    return 1;
+}
+
+int smlua_func_obj_set_parent_relative_pos(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 relX = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 relY = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 relZ = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ);
+    obj_set_parent_relative_pos(obj, relX, relY, relZ);
+
+    return 1;
+}
+
+int smlua_func_obj_set_pos(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 x = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 y = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 z = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z);
+    obj_set_pos(obj, x, y, z);
+
+    return 1;
+}
+
+int smlua_func_obj_turn_toward_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* target = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 angleIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 turnAmount = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount);
+    lua_pushinteger(L, obj_turn_toward_object(obj, target, angleIndex, turnAmount));
+
+    return 1;
+}
+
+/*
+int smlua_func_obj_update_pos_from_parent_transformation(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+//  Mat4 a0 = (Mat4)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* a1 = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);
+    obj_update_pos_from_parent_transformation(a0, a1);
+
+    return 1;
+}
+*/
+
+int smlua_func_spawn_water_droplet(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* parent = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct WaterDropletParams* params = (struct WaterDropletParams*)smlua_to_cobject(L, 2, LOT_WATERDROPLETPARAMS);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params);
+    smlua_push_object(L, LOT_OBJECT, spawn_water_droplet(parent, params));
+
+    return 1;
+}
+
   /////////////////
  // save_file.h //
 /////////////////
@@ -3855,6 +4817,73 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
     smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
     smlua_bind_function(L, "network_local_index_from_global", smlua_func_network_local_index_from_global);
+
+    // object_helpers.c
+    smlua_bind_function(L, "approach_f32_signed", smlua_func_approach_f32_signed);
+    smlua_bind_function(L, "approach_f32_symmetric", smlua_func_approach_f32_symmetric);
+    smlua_bind_function(L, "approach_s16_symmetric", smlua_func_approach_s16_symmetric);
+    smlua_bind_function(L, "count_objects_with_behavior", smlua_func_count_objects_with_behavior);
+    smlua_bind_function(L, "count_unimportant_objects", smlua_func_count_unimportant_objects);
+    //smlua_bind_function(L, "create_transformation_from_matrices", smlua_func_create_transformation_from_matrices); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "cur_obj_change_action", smlua_func_cur_obj_change_action);
+    smlua_bind_function(L, "cur_obj_count_objects_with_behavior", smlua_func_cur_obj_count_objects_with_behavior);
+    smlua_bind_function(L, "cur_obj_disable_rendering", smlua_func_cur_obj_disable_rendering);
+    smlua_bind_function(L, "cur_obj_disable_rendering_and_become_intangible", smlua_func_cur_obj_disable_rendering_and_become_intangible);
+    smlua_bind_function(L, "cur_obj_dist_to_nearest_object_with_behavior", smlua_func_cur_obj_dist_to_nearest_object_with_behavior);
+    smlua_bind_function(L, "cur_obj_enable_rendering", smlua_func_cur_obj_enable_rendering);
+    smlua_bind_function(L, "cur_obj_enable_rendering_2", smlua_func_cur_obj_enable_rendering_2);
+    smlua_bind_function(L, "cur_obj_enable_rendering_and_become_tangible", smlua_func_cur_obj_enable_rendering_and_become_tangible);
+    smlua_bind_function(L, "cur_obj_find_nearby_held_actor", smlua_func_cur_obj_find_nearby_held_actor);
+    smlua_bind_function(L, "cur_obj_find_nearest_object_with_behavior", smlua_func_cur_obj_find_nearest_object_with_behavior);
+    smlua_bind_function(L, "cur_obj_find_nearest_pole", smlua_func_cur_obj_find_nearest_pole);
+    smlua_bind_function(L, "cur_obj_forward_vel_approach_upward", smlua_func_cur_obj_forward_vel_approach_upward);
+    smlua_bind_function(L, "cur_obj_hide", smlua_func_cur_obj_hide);
+    smlua_bind_function(L, "cur_obj_init_animation", smlua_func_cur_obj_init_animation);
+    smlua_bind_function(L, "cur_obj_init_animation_with_accel_and_sound", smlua_func_cur_obj_init_animation_with_accel_and_sound);
+    smlua_bind_function(L, "cur_obj_init_animation_with_sound", smlua_func_cur_obj_init_animation_with_sound);
+    smlua_bind_function(L, "cur_obj_move_using_vel", smlua_func_cur_obj_move_using_vel);
+    smlua_bind_function(L, "cur_obj_nearest_object_with_behavior", smlua_func_cur_obj_nearest_object_with_behavior);
+    smlua_bind_function(L, "cur_obj_rotate_yaw_toward", smlua_func_cur_obj_rotate_yaw_toward);
+    smlua_bind_function(L, "cur_obj_scale", smlua_func_cur_obj_scale);
+    smlua_bind_function(L, "cur_obj_set_pos_relative", smlua_func_cur_obj_set_pos_relative);
+    smlua_bind_function(L, "cur_obj_set_pos_relative_to_parent", smlua_func_cur_obj_set_pos_relative_to_parent);
+    smlua_bind_function(L, "cur_obj_set_vel_from_mario_vel", smlua_func_cur_obj_set_vel_from_mario_vel);
+    smlua_bind_function(L, "cur_obj_unhide", smlua_func_cur_obj_unhide);
+    smlua_bind_function(L, "cur_obj_unused_init_on_floor", smlua_func_cur_obj_unused_init_on_floor);
+    smlua_bind_function(L, "dist_between_object_and_point", smlua_func_dist_between_object_and_point);
+    smlua_bind_function(L, "dist_between_objects", smlua_func_dist_between_objects);
+    smlua_bind_function(L, "find_unimportant_object", smlua_func_find_unimportant_object);
+    //smlua_bind_function(L, "geo_switch_anim_state", smlua_func_geo_switch_anim_state); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "geo_switch_area", smlua_func_geo_switch_area); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "geo_update_layer_transparency", smlua_func_geo_update_layer_transparency); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "geo_update_projectile_pos_from_parent", smlua_func_geo_update_projectile_pos_from_parent); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "get_object_list_from_behavior", smlua_func_get_object_list_from_behavior);
+    smlua_bind_function(L, "lateral_dist_between_objects", smlua_func_lateral_dist_between_objects);
+    //smlua_bind_function(L, "linear_mtxf_mul_vec3f", smlua_func_linear_mtxf_mul_vec3f); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "linear_mtxf_transpose_mul_vec3f", smlua_func_linear_mtxf_transpose_mul_vec3f); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "obj_angle_to_object", smlua_func_obj_angle_to_object);
+    smlua_bind_function(L, "obj_angle_to_point", smlua_func_obj_angle_to_point);
+    //smlua_bind_function(L, "obj_apply_scale_to_matrix", smlua_func_obj_apply_scale_to_matrix); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "obj_apply_scale_to_transform", smlua_func_obj_apply_scale_to_transform);
+    smlua_bind_function(L, "obj_copy_angle", smlua_func_obj_copy_angle);
+    smlua_bind_function(L, "obj_copy_graph_y_offset", smlua_func_obj_copy_graph_y_offset);
+    smlua_bind_function(L, "obj_copy_pos", smlua_func_obj_copy_pos);
+    smlua_bind_function(L, "obj_copy_pos_and_angle", smlua_func_obj_copy_pos_and_angle);
+    smlua_bind_function(L, "obj_copy_scale", smlua_func_obj_copy_scale);
+    smlua_bind_function(L, "obj_init_animation", smlua_func_obj_init_animation);
+    //smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "obj_pitch_to_object", smlua_func_obj_pitch_to_object);
+    smlua_bind_function(L, "obj_scale", smlua_func_obj_scale);
+    smlua_bind_function(L, "obj_scale_xyz", smlua_func_obj_scale_xyz);
+    smlua_bind_function(L, "obj_set_angle", smlua_func_obj_set_angle);
+    smlua_bind_function(L, "obj_set_face_angle_to_move_angle", smlua_func_obj_set_face_angle_to_move_angle);
+    smlua_bind_function(L, "obj_set_gfx_pos_from_pos", smlua_func_obj_set_gfx_pos_from_pos);
+    smlua_bind_function(L, "obj_set_held_state", smlua_func_obj_set_held_state);
+    smlua_bind_function(L, "obj_set_parent_relative_pos", smlua_func_obj_set_parent_relative_pos);
+    smlua_bind_function(L, "obj_set_pos", smlua_func_obj_set_pos);
+    smlua_bind_function(L, "obj_turn_toward_object", smlua_func_obj_turn_toward_object);
+    //smlua_bind_function(L, "obj_update_pos_from_parent_transformation", smlua_func_obj_update_pos_from_parent_transformation); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "spawn_water_droplet", smlua_func_spawn_water_droplet);
 
     // save_file.h
     smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);

@@ -36,6 +36,7 @@ in_files = [
     "src/pc/network/network_player.h",
     "include/behavior_table.h",
     "src/pc/lua/smlua_obj_utils.h",
+    "src/game/object_helpers.c",
 ]
 
 override_allowed_functions = {
@@ -63,6 +64,7 @@ override_disallowed_functions = {
     "src/game/sound_init.h":               [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":      [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":     [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update" ],
+    "src/game/object_helpers.c":           [ "spawn_obj" ],
 }
 
 ###########################################################

@@ -6,10 +6,24 @@ def extract_functions(filename):
     with open(filename) as file:
         lines = file.readlines()
 
+    # deal with certain ifdefs
+    txt = ''
+    gobbling = False
+    for line in lines:
+        if line.strip() == '#ifdef AVOID_UB':
+            gobbling = True
+        if line.strip() == '#else':
+            gobbling = False
+        if line.strip() == '#endif':
+            gobbling = False
+        if not gobbling:
+            txt += line + '\n'
+
     # strip directives and comments
     in_directive = False
+    tmp = txt
     txt = ''
-    for line in lines:
+    for line in tmp.splitlines():
         if line.strip().startswith('#') or in_directive:
             in_directive = line.strip().endswith('\\')
             continue
@@ -69,3 +83,6 @@ def extract_functions(filename):
     # normalize function ending
     txt = txt.replace(' {', ';')
     return txt
+
+if __name__ == "__main__":
+    print(extract_functions(sys.argv[1]))

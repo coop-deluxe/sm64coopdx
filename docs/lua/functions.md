@@ -299,6 +299,65 @@
 
 <br />
 
+- object_helpers.c
+   - [approach_f32_signed](#approach_f32_signed)
+   - [approach_f32_symmetric](#approach_f32_symmetric)
+   - [approach_s16_symmetric](#approach_s16_symmetric)
+   - [count_objects_with_behavior](#count_objects_with_behavior)
+   - [count_unimportant_objects](#count_unimportant_objects)
+   - [cur_obj_change_action](#cur_obj_change_action)
+   - [cur_obj_count_objects_with_behavior](#cur_obj_count_objects_with_behavior)
+   - [cur_obj_disable_rendering](#cur_obj_disable_rendering)
+   - [cur_obj_disable_rendering_and_become_intangible](#cur_obj_disable_rendering_and_become_intangible)
+   - [cur_obj_dist_to_nearest_object_with_behavior](#cur_obj_dist_to_nearest_object_with_behavior)
+   - [cur_obj_enable_rendering](#cur_obj_enable_rendering)
+   - [cur_obj_enable_rendering_2](#cur_obj_enable_rendering_2)
+   - [cur_obj_enable_rendering_and_become_tangible](#cur_obj_enable_rendering_and_become_tangible)
+   - [cur_obj_find_nearby_held_actor](#cur_obj_find_nearby_held_actor)
+   - [cur_obj_find_nearest_object_with_behavior](#cur_obj_find_nearest_object_with_behavior)
+   - [cur_obj_find_nearest_pole](#cur_obj_find_nearest_pole)
+   - [cur_obj_forward_vel_approach_upward](#cur_obj_forward_vel_approach_upward)
+   - [cur_obj_hide](#cur_obj_hide)
+   - [cur_obj_init_animation](#cur_obj_init_animation)
+   - [cur_obj_init_animation_with_accel_and_sound](#cur_obj_init_animation_with_accel_and_sound)
+   - [cur_obj_init_animation_with_sound](#cur_obj_init_animation_with_sound)
+   - [cur_obj_move_using_vel](#cur_obj_move_using_vel)
+   - [cur_obj_nearest_object_with_behavior](#cur_obj_nearest_object_with_behavior)
+   - [cur_obj_rotate_yaw_toward](#cur_obj_rotate_yaw_toward)
+   - [cur_obj_scale](#cur_obj_scale)
+   - [cur_obj_set_pos_relative](#cur_obj_set_pos_relative)
+   - [cur_obj_set_pos_relative_to_parent](#cur_obj_set_pos_relative_to_parent)
+   - [cur_obj_set_vel_from_mario_vel](#cur_obj_set_vel_from_mario_vel)
+   - [cur_obj_unhide](#cur_obj_unhide)
+   - [cur_obj_unused_init_on_floor](#cur_obj_unused_init_on_floor)
+   - [dist_between_object_and_point](#dist_between_object_and_point)
+   - [dist_between_objects](#dist_between_objects)
+   - [find_unimportant_object](#find_unimportant_object)
+   - [get_object_list_from_behavior](#get_object_list_from_behavior)
+   - [lateral_dist_between_objects](#lateral_dist_between_objects)
+   - [obj_angle_to_object](#obj_angle_to_object)
+   - [obj_angle_to_point](#obj_angle_to_point)
+   - [obj_apply_scale_to_transform](#obj_apply_scale_to_transform)
+   - [obj_copy_angle](#obj_copy_angle)
+   - [obj_copy_graph_y_offset](#obj_copy_graph_y_offset)
+   - [obj_copy_pos](#obj_copy_pos)
+   - [obj_copy_pos_and_angle](#obj_copy_pos_and_angle)
+   - [obj_copy_scale](#obj_copy_scale)
+   - [obj_init_animation](#obj_init_animation)
+   - [obj_pitch_to_object](#obj_pitch_to_object)
+   - [obj_scale](#obj_scale)
+   - [obj_scale_xyz](#obj_scale_xyz)
+   - [obj_set_angle](#obj_set_angle)
+   - [obj_set_face_angle_to_move_angle](#obj_set_face_angle_to_move_angle)
+   - [obj_set_gfx_pos_from_pos](#obj_set_gfx_pos_from_pos)
+   - [obj_set_held_state](#obj_set_held_state)
+   - [obj_set_parent_relative_pos](#obj_set_parent_relative_pos)
+   - [obj_set_pos](#obj_set_pos)
+   - [obj_turn_toward_object](#obj_turn_toward_object)
+   - [spawn_water_droplet](#spawn_water_droplet)
+
+<br />
+
 - save_file.h
    - [save_file_get_cap_pos](#save_file_get_cap_pos)
    - [save_file_get_course_coin_score](#save_file_get_course_coin_score)
@@ -4977,6 +5036,1144 @@
 
 ### C Prototype
 `u8 network_local_index_from_global(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from object_helpers.c
+
+<br />
+
+
+## [approach_f32_signed](#approach_f32_signed)
+
+### Lua Example
+`local integerValue = approach_f32_signed(value, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | Pointer <number> |
+| target | number |
+| increment | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 approach_f32_signed(f32 *value, f32 target, f32 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_f32_symmetric](#approach_f32_symmetric)
+
+### Lua Example
+`local numberValue = approach_f32_symmetric(value, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | number |
+| target | number |
+| increment | number |
+
+### Returns
+- number
+
+### C Prototype
+`f32 approach_f32_symmetric(f32 value, f32 target, f32 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_s16_symmetric](#approach_s16_symmetric)
+
+### Lua Example
+`local integerValue = approach_s16_symmetric(value, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | integer |
+| target | integer |
+| increment | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 approach_s16_symmetric(s16 value, s16 target, s16 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [count_objects_with_behavior](#count_objects_with_behavior)
+
+### Lua Example
+`local integerValue = count_objects_with_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 count_objects_with_behavior(const BehaviorScript *behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [count_unimportant_objects](#count_unimportant_objects)
+
+### Lua Example
+`local integerValue = count_unimportant_objects()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s32 count_unimportant_objects(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_change_action](#cur_obj_change_action)
+
+### Lua Example
+`cur_obj_change_action(action)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| action | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_change_action(s32 action);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_count_objects_with_behavior](#cur_obj_count_objects_with_behavior)
+
+### Lua Example
+`local integerValue = cur_obj_count_objects_with_behavior(behavior, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+| dist | number |
+
+### Returns
+- integer
+
+### C Prototype
+`u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_disable_rendering](#cur_obj_disable_rendering)
+
+### Lua Example
+`cur_obj_disable_rendering()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_disable_rendering(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_disable_rendering_and_become_intangible](#cur_obj_disable_rendering_and_become_intangible)
+
+### Lua Example
+`cur_obj_disable_rendering_and_become_intangible(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_disable_rendering_and_become_intangible(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_dist_to_nearest_object_with_behavior](#cur_obj_dist_to_nearest_object_with_behavior)
+
+### Lua Example
+`local numberValue = cur_obj_dist_to_nearest_object_with_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+
+### Returns
+- number
+
+### C Prototype
+`f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_enable_rendering](#cur_obj_enable_rendering)
+
+### Lua Example
+`cur_obj_enable_rendering()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_enable_rendering(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_enable_rendering_2](#cur_obj_enable_rendering_2)
+
+### Lua Example
+`cur_obj_enable_rendering_2()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_enable_rendering_2(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_enable_rendering_and_become_tangible](#cur_obj_enable_rendering_and_become_tangible)
+
+### Lua Example
+`cur_obj_enable_rendering_and_become_tangible(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_enable_rendering_and_become_tangible(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_find_nearby_held_actor](#cur_obj_find_nearby_held_actor)
+
+### Lua Example
+`local ObjectValue = cur_obj_find_nearby_held_actor(behavior, maxDist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+| maxDist | number |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_find_nearest_object_with_behavior](#cur_obj_find_nearest_object_with_behavior)
+
+### Lua Example
+`local ObjectValue = cur_obj_find_nearest_object_with_behavior(behavior, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+| dist | Pointer <number> |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_find_nearest_pole](#cur_obj_find_nearest_pole)
+
+### Lua Example
+`local ObjectValue = cur_obj_find_nearest_pole()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* cur_obj_find_nearest_pole(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_forward_vel_approach_upward](#cur_obj_forward_vel_approach_upward)
+
+### Lua Example
+`cur_obj_forward_vel_approach_upward(target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| target | number |
+| increment | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_forward_vel_approach_upward(f32 target, f32 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_hide](#cur_obj_hide)
+
+### Lua Example
+`cur_obj_hide()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_hide(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_init_animation](#cur_obj_init_animation)
+
+### Lua Example
+`cur_obj_init_animation(animIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| animIndex | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_init_animation(s32 animIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_init_animation_with_accel_and_sound](#cur_obj_init_animation_with_accel_and_sound)
+
+### Lua Example
+`cur_obj_init_animation_with_accel_and_sound(animIndex, accel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| animIndex | integer |
+| accel | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_init_animation_with_sound](#cur_obj_init_animation_with_sound)
+
+### Lua Example
+`cur_obj_init_animation_with_sound(animIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| animIndex | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_init_animation_with_sound(s32 animIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_move_using_vel](#cur_obj_move_using_vel)
+
+### Lua Example
+`cur_obj_move_using_vel()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_move_using_vel(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_nearest_object_with_behavior](#cur_obj_nearest_object_with_behavior)
+
+### Lua Example
+`local ObjectValue = cur_obj_nearest_object_with_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_rotate_yaw_toward](#cur_obj_rotate_yaw_toward)
+
+### Lua Example
+`local integerValue = cur_obj_rotate_yaw_toward(target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| target | integer |
+| increment | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_scale](#cur_obj_scale)
+
+### Lua Example
+`cur_obj_scale(scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| scale | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_scale(f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_set_pos_relative](#cur_obj_set_pos_relative)
+
+### Lua Example
+`cur_obj_set_pos_relative(other, dleft, dy, dforward)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| other | [Object](structs.md#Object) |
+| dleft | number |
+| dy | number |
+| dforward | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforward);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_set_pos_relative_to_parent](#cur_obj_set_pos_relative_to_parent)
+
+### Lua Example
+`cur_obj_set_pos_relative_to_parent(dleft, dy, dforward)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dleft | number |
+| dy | number |
+| dforward | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_set_pos_relative_to_parent(f32 dleft, f32 dy, f32 dforward);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_set_vel_from_mario_vel](#cur_obj_set_vel_from_mario_vel)
+
+### Lua Example
+`cur_obj_set_vel_from_mario_vel(m, f12, f14)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| f12 | number |
+| f14 | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12, f32 f14);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_unhide](#cur_obj_unhide)
+
+### Lua Example
+`cur_obj_unhide()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_unhide(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_unused_init_on_floor](#cur_obj_unused_init_on_floor)
+
+### Lua Example
+`cur_obj_unused_init_on_floor()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_unused_init_on_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [dist_between_object_and_point](#dist_between_object_and_point)
+
+### Lua Example
+`local numberValue = dist_between_object_and_point(obj, pointX, pointY, pointZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| pointX | number |
+| pointY | number |
+| pointZ | number |
+
+### Returns
+- number
+
+### C Prototype
+`f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f32 pointZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [dist_between_objects](#dist_between_objects)
+
+### Lua Example
+`local numberValue = dist_between_objects(obj1, obj2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj1 | [Object](structs.md#Object) |
+| obj2 | [Object](structs.md#Object) |
+
+### Returns
+- number
+
+### C Prototype
+`f32 dist_between_objects(struct Object *obj1, struct Object *obj2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_unimportant_object](#find_unimportant_object)
+
+### Lua Example
+`local ObjectValue = find_unimportant_object()`
+
+### Parameters
+- None
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *find_unimportant_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_object_list_from_behavior](#get_object_list_from_behavior)
+
+### Lua Example
+`local integerValue = get_object_list_from_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | Pointer <BehaviorScript> |
+
+### Returns
+- integer
+
+### C Prototype
+`u32 get_object_list_from_behavior(const BehaviorScript *behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lateral_dist_between_objects](#lateral_dist_between_objects)
+
+### Lua Example
+`local numberValue = lateral_dist_between_objects(obj1, obj2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj1 | [Object](structs.md#Object) |
+| obj2 | [Object](structs.md#Object) |
+
+### Returns
+- number
+
+### C Prototype
+`f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_angle_to_object](#obj_angle_to_object)
+
+### Lua Example
+`local integerValue = obj_angle_to_object(obj1, obj2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj1 | [Object](structs.md#Object) |
+| obj2 | [Object](structs.md#Object) |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_angle_to_point](#obj_angle_to_point)
+
+### Lua Example
+`local integerValue = obj_angle_to_point(obj, pointX, pointZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| pointX | number |
+| pointZ | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_apply_scale_to_transform](#obj_apply_scale_to_transform)
+
+### Lua Example
+`obj_apply_scale_to_transform(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_apply_scale_to_transform(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_copy_angle](#obj_copy_angle)
+
+### Lua Example
+`obj_copy_angle(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Object](structs.md#Object) |
+| src | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_copy_angle(struct Object *dst, struct Object *src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_copy_graph_y_offset](#obj_copy_graph_y_offset)
+
+### Lua Example
+`obj_copy_graph_y_offset(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Object](structs.md#Object) |
+| src | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_copy_graph_y_offset(struct Object *dst, struct Object *src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_copy_pos](#obj_copy_pos)
+
+### Lua Example
+`obj_copy_pos(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Object](structs.md#Object) |
+| src | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_copy_pos(struct Object *dst, struct Object *src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_copy_pos_and_angle](#obj_copy_pos_and_angle)
+
+### Lua Example
+`obj_copy_pos_and_angle(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Object](structs.md#Object) |
+| src | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_copy_pos_and_angle(struct Object *dst, struct Object *src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_copy_scale](#obj_copy_scale)
+
+### Lua Example
+`obj_copy_scale(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Object](structs.md#Object) |
+| src | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_copy_scale(struct Object *dst, struct Object *src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_init_animation](#obj_init_animation)
+
+### Lua Example
+`obj_init_animation(obj, animIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| animIndex | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_init_animation(struct Object *obj, s32 animIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_pitch_to_object](#obj_pitch_to_object)
+
+### Lua Example
+`local integerValue = obj_pitch_to_object(obj, target)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| target | [Object](structs.md#Object) |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_pitch_to_object(struct Object* obj, struct Object* target);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_scale](#obj_scale)
+
+### Lua Example
+`obj_scale(obj, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| scale | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_scale(struct Object *obj, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_scale_xyz](#obj_scale_xyz)
+
+### Lua Example
+`obj_scale_xyz(obj, xScale, yScale, zScale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| xScale | number |
+| yScale | number |
+| zScale | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_scale_xyz(struct Object *obj, f32 xScale, f32 yScale, f32 zScale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_angle](#obj_set_angle)
+
+### Lua Example
+`obj_set_angle(obj, pitch, yaw, roll)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| pitch | integer |
+| yaw | integer |
+| roll | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_face_angle_to_move_angle](#obj_set_face_angle_to_move_angle)
+
+### Lua Example
+`obj_set_face_angle_to_move_angle(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_face_angle_to_move_angle(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_gfx_pos_from_pos](#obj_set_gfx_pos_from_pos)
+
+### Lua Example
+`obj_set_gfx_pos_from_pos(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_gfx_pos_from_pos(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_held_state](#obj_set_held_state)
+
+### Lua Example
+`obj_set_held_state(obj, heldBehavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| heldBehavior | Pointer <BehaviorScript> |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_parent_relative_pos](#obj_set_parent_relative_pos)
+
+### Lua Example
+`obj_set_parent_relative_pos(obj, relX, relY, relZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| relX | integer |
+| relY | integer |
+| relZ | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_pos](#obj_set_pos)
+
+### Lua Example
+`obj_set_pos(obj, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| x | integer |
+| y | integer |
+| z | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_turn_toward_object](#obj_turn_toward_object)
+
+### Lua Example
+`local integerValue = obj_turn_toward_object(obj, target, angleIndex, turnAmount)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| target | [Object](structs.md#Object) |
+| angleIndex | integer |
+| turnAmount | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [spawn_water_droplet](#spawn_water_droplet)
+
+### Lua Example
+`local ObjectValue = spawn_water_droplet(parent, params)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| parent | [Object](structs.md#Object) |
+| params | [WaterDropletParams](structs.md#WaterDropletParams) |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params);`
 
 [:arrow_up_small:](#)
 
