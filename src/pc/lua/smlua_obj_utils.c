@@ -34,9 +34,14 @@ struct Object* spawn_object_sync(enum BehaviorId behaviorId, enum ModelExtendedI
     }
 
     obj->parentObj = obj;
+
     obj->oPosX = x;
     obj->oPosY = y;
     obj->oPosZ = z;
+
+    obj->oHomeX = x;
+    obj->oHomeY = y;
+    obj->oHomeZ = z;
 
     struct SyncObject* so = &gSyncObjects[obj->oSyncID];
     so->extendedModelId = modelId;

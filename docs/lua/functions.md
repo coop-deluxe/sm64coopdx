@@ -299,6 +299,89 @@
 
 <br />
 
+- obj_behaviors.c
+   - [absf_2](#absf_2)
+   - [calc_new_obj_vel_and_pos_y](#calc_new_obj_vel_and_pos_y)
+   - [calc_new_obj_vel_and_pos_y_underwater](#calc_new_obj_vel_and_pos_y_underwater)
+   - [calc_obj_friction](#calc_obj_friction)
+   - [current_mario_room_check](#current_mario_room_check)
+   - [is_player_active](#is_player_active)
+   - [is_point_close_to_object](#is_point_close_to_object)
+   - [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
+   - [nearest_mario_state_to_object](#nearest_mario_state_to_object)
+   - [nearest_player_to_object](#nearest_player_to_object)
+   - [obj_check_floor_death](#obj_check_floor_death)
+   - [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
+   - [obj_find_wall](#obj_find_wall)
+   - [obj_find_wall_displacement](#obj_find_wall_displacement)
+   - [obj_flicker_and_disappear](#obj_flicker_and_disappear)
+   - [obj_lava_death](#obj_lava_death)
+   - [obj_move_xyz_using_fvel_and_yaw](#obj_move_xyz_using_fvel_and_yaw)
+   - [obj_orient_graph](#obj_orient_graph)
+   - [obj_return_and_displace_home](#obj_return_and_displace_home)
+   - [obj_return_home_if_safe](#obj_return_home_if_safe)
+   - [obj_spawn_yellow_coins](#obj_spawn_yellow_coins)
+   - [obj_splash](#obj_splash)
+   - [obj_update_pos_vel_xz](#obj_update_pos_vel_xz)
+   - [object_step](#object_step)
+   - [object_step_without_floor_orient](#object_step_without_floor_orient)
+   - [set_object_visibility](#set_object_visibility)
+   - [set_yoshi_as_not_dead](#set_yoshi_as_not_dead)
+   - [spawn_orange_number](#spawn_orange_number)
+   - [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
+   - [turn_obj_away_from_surface](#turn_obj_away_from_surface)
+
+<br />
+
+- obj_behaviors_2.c
+   - [approach_f32_ptr](#approach_f32_ptr)
+   - [cur_obj_init_anim_and_check_if_end](#cur_obj_init_anim_and_check_if_end)
+   - [cur_obj_init_anim_check_frame](#cur_obj_init_anim_check_frame)
+   - [cur_obj_init_anim_extend](#cur_obj_init_anim_extend)
+   - [cur_obj_play_sound_at_anim_range](#cur_obj_play_sound_at_anim_range)
+   - [cur_obj_set_anim_if_at_end](#cur_obj_set_anim_if_at_end)
+   - [cur_obj_spin_all_dimensions](#cur_obj_spin_all_dimensions)
+   - [obj_act_knockback](#obj_act_knockback)
+   - [obj_act_squished](#obj_act_squished)
+   - [obj_bounce_off_walls_edges_objects](#obj_bounce_off_walls_edges_objects)
+   - [obj_check_attacks](#obj_check_attacks)
+   - [obj_compute_vel_from_move_pitch](#obj_compute_vel_from_move_pitch)
+   - [obj_die_if_above_lava_and_health_non_positive](#obj_die_if_above_lava_and_health_non_positive)
+   - [obj_die_if_health_non_positive](#obj_die_if_health_non_positive)
+   - [obj_face_pitch_approach](#obj_face_pitch_approach)
+   - [obj_face_roll_approach](#obj_face_roll_approach)
+   - [obj_face_yaw_approach](#obj_face_yaw_approach)
+   - [obj_forward_vel_approach](#obj_forward_vel_approach)
+   - [obj_get_pitch_from_vel](#obj_get_pitch_from_vel)
+   - [obj_get_pitch_to_home](#obj_get_pitch_to_home)
+   - [obj_grow_then_shrink](#obj_grow_then_shrink)
+   - [obj_handle_attacks](#obj_handle_attacks)
+   - [obj_is_near_to_and_facing_mario](#obj_is_near_to_and_facing_mario)
+   - [obj_is_rendering_enabled](#obj_is_rendering_enabled)
+   - [obj_move_for_one_second](#obj_move_for_one_second)
+   - [obj_move_pitch_approach](#obj_move_pitch_approach)
+   - [obj_random_fixed_turn](#obj_random_fixed_turn)
+   - [obj_resolve_collisions_and_turn](#obj_resolve_collisions_and_turn)
+   - [obj_resolve_object_collisions](#obj_resolve_object_collisions)
+   - [obj_roll_to_match_yaw_turn](#obj_roll_to_match_yaw_turn)
+   - [obj_rotate_yaw_and_bounce_off_walls](#obj_rotate_yaw_and_bounce_off_walls)
+   - [obj_set_dist_from_home](#obj_set_dist_from_home)
+   - [obj_set_knockback_action](#obj_set_knockback_action)
+   - [obj_set_squished_action](#obj_set_squished_action)
+   - [obj_smooth_turn](#obj_smooth_turn)
+   - [obj_spit_fire](#obj_spit_fire)
+   - [obj_turn_pitch_toward_mario](#obj_turn_pitch_toward_mario)
+   - [obj_unused_die](#obj_unused_die)
+   - [obj_update_blinking](#obj_update_blinking)
+   - [obj_update_standard_actions](#obj_update_standard_actions)
+   - [obj_y_vel_approach](#obj_y_vel_approach)
+   - [oscillate_toward](#oscillate_toward)
+   - [platform_on_track_update_pos_or_spawn_ball](#platform_on_track_update_pos_or_spawn_ball)
+   - [random_linear_offset](#random_linear_offset)
+   - [random_mod_offset](#random_mod_offset)
+
+<br />
+
 - object_helpers.c
    - [approach_f32_signed](#approach_f32_signed)
    - [approach_f32_symmetric](#approach_f32_symmetric)
@@ -5036,6 +5119,1601 @@
 
 ### C Prototype
 `u8 network_local_index_from_global(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from obj_behaviors.c
+
+<br />
+
+
+## [absf_2](#absf_2)
+
+### Lua Example
+`local numberValue = absf_2(f)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| f | number |
+
+### Returns
+- number
+
+### C Prototype
+`f32 absf_2(f32 f);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calc_new_obj_vel_and_pos_y](#calc_new_obj_vel_and_pos_y)
+
+### Lua Example
+`calc_new_obj_vel_and_pos_y(objFloor, objFloorY, objVelX, objVelZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| objFloor | [Surface](structs.md#Surface) |
+| objFloorY | number |
+| objVelX | number |
+| objVelZ | number |
+
+### Returns
+- None
+
+### C Prototype
+`void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 objVelX, f32 objVelZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calc_new_obj_vel_and_pos_y_underwater](#calc_new_obj_vel_and_pos_y_underwater)
+
+### Lua Example
+`calc_new_obj_vel_and_pos_y_underwater(objFloor, floorY, objVelX, objVelZ, waterY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| objFloor | [Surface](structs.md#Surface) |
+| floorY | number |
+| objVelX | number |
+| objVelZ | number |
+| waterY | number |
+
+### Returns
+- None
+
+### C Prototype
+`void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ, f32 waterY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calc_obj_friction](#calc_obj_friction)
+
+### Lua Example
+`calc_obj_friction(objFriction, floor_nY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| objFriction | Pointer <number> |
+| floor_nY | number |
+
+### Returns
+- None
+
+### C Prototype
+`void calc_obj_friction(f32 *objFriction, f32 floor_nY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [current_mario_room_check](#current_mario_room_check)
+
+### Lua Example
+`local integerValue = current_mario_room_check(room)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| room | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s8 current_mario_room_check(s16 room);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_player_active](#is_player_active)
+
+### Lua Example
+`local integerValue = is_player_active(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- integer
+
+### C Prototype
+`u8 is_player_active(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_point_close_to_object](#is_point_close_to_object)
+
+### Lua Example
+`local integerValue = is_point_close_to_object(obj, x, y, z, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| x | number |
+| y | number |
+| z | number |
+| dist | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
+
+### Lua Example
+`local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | number |
+| y | number |
+| z | number |
+| dist | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [nearest_mario_state_to_object](#nearest_mario_state_to_object)
+
+### Lua Example
+`local MarioStateValue = nearest_mario_state_to_object(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+[MarioState](structs.md#MarioState)
+
+### C Prototype
+`struct MarioState* nearest_mario_state_to_object(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [nearest_player_to_object](#nearest_player_to_object)
+
+### Lua Example
+`local ObjectValue = nearest_player_to_object(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* nearest_player_to_object(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_check_floor_death](#obj_check_floor_death)
+
+### Lua Example
+`obj_check_floor_death(collisionFlags, floor)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| collisionFlags | integer |
+| floor | [Surface](structs.md#Surface) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_check_floor_death(s16 collisionFlags, struct Surface *floor);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
+
+### Lua Example
+`local integerValue = obj_check_if_facing_toward_angle(base, goal, range)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| base | integer |
+| goal | integer |
+| range | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_find_wall](#obj_find_wall)
+
+### Lua Example
+`local integerValue = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| objNewX | number |
+| objY | number |
+| objNewZ | number |
+| objVelX | number |
+| objVelZ | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_find_wall_displacement](#obj_find_wall_displacement)
+
+### Lua Example
+`local integerValue = obj_find_wall_displacement(dist, x, y, z, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dist | [Vec3f](structs.md#Vec3f) |
+| x | number |
+| y | number |
+| z | number |
+| radius | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_flicker_and_disappear](#obj_flicker_and_disappear)
+
+### Lua Example
+`local integerValue = obj_flicker_and_disappear(obj, lifeSpan)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| lifeSpan | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_lava_death](#obj_lava_death)
+
+### Lua Example
+`local integerValue = obj_lava_death()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_lava_death(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_move_xyz_using_fvel_and_yaw](#obj_move_xyz_using_fvel_and_yaw)
+
+### Lua Example
+`obj_move_xyz_using_fvel_and_yaw(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_move_xyz_using_fvel_and_yaw(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_orient_graph](#obj_orient_graph)
+
+### Lua Example
+`obj_orient_graph(obj, normalX, normalY, normalZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| normalX | number |
+| normalY | number |
+| normalZ | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_return_and_displace_home](#obj_return_and_displace_home)
+
+### Lua Example
+`obj_return_and_displace_home(obj, homeX, homeY, homeZ, baseDisp)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| homeX | number |
+| homeY | number |
+| homeZ | number |
+| baseDisp | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_return_and_displace_home(struct Object *obj, f32 homeX, UNUSED f32 homeY, f32 homeZ, s32 baseDisp);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_return_home_if_safe](#obj_return_home_if_safe)
+
+### Lua Example
+`local integerValue = obj_return_home_if_safe(obj, homeX, y, homeZ, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| homeX | number |
+| y | number |
+| homeZ | number |
+| dist | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_spawn_yellow_coins](#obj_spawn_yellow_coins)
+
+### Lua Example
+`obj_spawn_yellow_coins(obj, nCoins)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| nCoins | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_splash](#obj_splash)
+
+### Lua Example
+`obj_splash(waterY, objY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| waterY | integer |
+| objY | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_splash(s32 waterY, s32 objY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_pos_vel_xz](#obj_update_pos_vel_xz)
+
+### Lua Example
+`obj_update_pos_vel_xz()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void obj_update_pos_vel_xz(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_step](#object_step)
+
+### Lua Example
+`local integerValue = object_step()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s16 object_step(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_step_without_floor_orient](#object_step_without_floor_orient)
+
+### Lua Example
+`local integerValue = object_step_without_floor_orient()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s16 object_step_without_floor_orient(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_object_visibility](#set_object_visibility)
+
+### Lua Example
+`set_object_visibility(obj, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| dist | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void set_object_visibility(struct Object *obj, s32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_yoshi_as_not_dead](#set_yoshi_as_not_dead)
+
+### Lua Example
+`set_yoshi_as_not_dead()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void set_yoshi_as_not_dead(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [spawn_orange_number](#spawn_orange_number)
+
+### Lua Example
+`spawn_orange_number(behParam, relX, relY, relZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behParam | integer |
+| relX | integer |
+| relY | integer |
+| relZ | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
+
+### Lua Example
+`local integerValue = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| objFloor | [Surface](structs.md#Surface) |
+| floorY | number |
+| objVelX | number |
+| objVelZ | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [turn_obj_away_from_surface](#turn_obj_away_from_surface)
+
+### Lua Example
+`turn_obj_away_from_surface(velX, velZ, nX, nY, nZ, objYawX, objYawZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| velX | number |
+| velZ | number |
+| nX | number |
+| nY | number |
+| nZ | number |
+| objYawX | Pointer <number> |
+| objYawZ | Pointer <number> |
+
+### Returns
+- None
+
+### C Prototype
+`void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 nZ, f32 *objYawX, f32 *objYawZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from obj_behaviors_2.c
+
+<br />
+
+
+## [approach_f32_ptr](#approach_f32_ptr)
+
+### Lua Example
+`local integerValue = approach_f32_ptr(px, target, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| px | Pointer <number> |
+| target | number |
+| delta | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 approach_f32_ptr(f32 *px, f32 target, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_init_anim_and_check_if_end](#cur_obj_init_anim_and_check_if_end)
+
+### Lua Example
+`local integerValue = cur_obj_init_anim_and_check_if_end(arg0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 cur_obj_init_anim_and_check_if_end(s32 arg0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_init_anim_check_frame](#cur_obj_init_anim_check_frame)
+
+### Lua Example
+`local integerValue = cur_obj_init_anim_check_frame(arg0, arg1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+| arg1 | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 cur_obj_init_anim_check_frame(s32 arg0, s32 arg1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_init_anim_extend](#cur_obj_init_anim_extend)
+
+### Lua Example
+`cur_obj_init_anim_extend(arg0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_init_anim_extend(s32 arg0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_play_sound_at_anim_range](#cur_obj_play_sound_at_anim_range)
+
+### Lua Example
+`local integerValue = cur_obj_play_sound_at_anim_range(arg0, arg1, sound)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+| arg1 | integer |
+| sound | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_set_anim_if_at_end](#cur_obj_set_anim_if_at_end)
+
+### Lua Example
+`local integerValue = cur_obj_set_anim_if_at_end(arg0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 cur_obj_set_anim_if_at_end(s32 arg0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_spin_all_dimensions](#cur_obj_spin_all_dimensions)
+
+### Lua Example
+`cur_obj_spin_all_dimensions(arg0, arg1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg0 | number |
+| arg1 | number |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_spin_all_dimensions(f32 arg0, f32 arg1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_act_knockback](#obj_act_knockback)
+
+### Lua Example
+`obj_act_knockback(baseScale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| baseScale | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_act_knockback(UNUSED f32 baseScale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_act_squished](#obj_act_squished)
+
+### Lua Example
+`obj_act_squished(baseScale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| baseScale | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_act_squished(f32 baseScale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_bounce_off_walls_edges_objects](#obj_bounce_off_walls_edges_objects)
+
+### Lua Example
+`local integerValue = obj_bounce_off_walls_edges_objects(targetYaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetYaw | Pointer <integer> |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_check_attacks](#obj_check_attacks)
+
+### Lua Example
+`local integerValue = obj_check_attacks(hitbox, attackedMarioAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| hitbox | [ObjectHitbox](structs.md#ObjectHitbox) |
+| attackedMarioAction | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_check_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_compute_vel_from_move_pitch](#obj_compute_vel_from_move_pitch)
+
+### Lua Example
+`obj_compute_vel_from_move_pitch(speed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| speed | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_compute_vel_from_move_pitch(f32 speed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_die_if_above_lava_and_health_non_positive](#obj_die_if_above_lava_and_health_non_positive)
+
+### Lua Example
+`local integerValue = obj_die_if_above_lava_and_health_non_positive()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_die_if_above_lava_and_health_non_positive(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_die_if_health_non_positive](#obj_die_if_health_non_positive)
+
+### Lua Example
+`obj_die_if_health_non_positive()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void obj_die_if_health_non_positive(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_face_pitch_approach](#obj_face_pitch_approach)
+
+### Lua Example
+`local integerValue = obj_face_pitch_approach(targetPitch, deltaPitch)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetPitch | integer |
+| deltaPitch | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_face_pitch_approach(s16 targetPitch, s16 deltaPitch);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_face_roll_approach](#obj_face_roll_approach)
+
+### Lua Example
+`local integerValue = obj_face_roll_approach(targetRoll, deltaRoll)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetRoll | integer |
+| deltaRoll | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_face_yaw_approach](#obj_face_yaw_approach)
+
+### Lua Example
+`local integerValue = obj_face_yaw_approach(targetYaw, deltaYaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetYaw | integer |
+| deltaYaw | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_face_yaw_approach(s16 targetYaw, s16 deltaYaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_forward_vel_approach](#obj_forward_vel_approach)
+
+### Lua Example
+`local integerValue = obj_forward_vel_approach(target, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| target | number |
+| delta | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_forward_vel_approach(f32 target, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_pitch_from_vel](#obj_get_pitch_from_vel)
+
+### Lua Example
+`local integerValue = obj_get_pitch_from_vel()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_get_pitch_from_vel(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_pitch_to_home](#obj_get_pitch_to_home)
+
+### Lua Example
+`local integerValue = obj_get_pitch_to_home(latDistToHome)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| latDistToHome | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_get_pitch_to_home(f32 latDistToHome);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_grow_then_shrink](#obj_grow_then_shrink)
+
+### Lua Example
+`local integerValue = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| scaleVel | Pointer <number> |
+| shootFireScale | number |
+| endScale | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_handle_attacks](#obj_handle_attacks)
+
+### Lua Example
+`local integerValue = obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| hitbox | [ObjectHitbox](structs.md#ObjectHitbox) |
+| attackedMarioAction | integer |
+| attackHandlers | Pointer <integer> |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction, u8 *attackHandlers);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_near_to_and_facing_mario](#obj_is_near_to_and_facing_mario)
+
+### Lua Example
+`local integerValue = obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| maxDist | number |
+| maxAngleDiff | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAngleDiff);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_rendering_enabled](#obj_is_rendering_enabled)
+
+### Lua Example
+`local integerValue = obj_is_rendering_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_is_rendering_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_move_for_one_second](#obj_move_for_one_second)
+
+### Lua Example
+`local integerValue = obj_move_for_one_second(endAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| endAction | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_move_for_one_second(s32 endAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_move_pitch_approach](#obj_move_pitch_approach)
+
+### Lua Example
+`local integerValue = obj_move_pitch_approach(target, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| target | integer |
+| delta | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_move_pitch_approach(s16 target, s16 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_random_fixed_turn](#obj_random_fixed_turn)
+
+### Lua Example
+`local integerValue = obj_random_fixed_turn(delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| delta | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_random_fixed_turn(s16 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_resolve_collisions_and_turn](#obj_resolve_collisions_and_turn)
+
+### Lua Example
+`local integerValue = obj_resolve_collisions_and_turn(targetYaw, turnSpeed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetYaw | integer |
+| turnSpeed | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_resolve_collisions_and_turn(s16 targetYaw, s16 turnSpeed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_resolve_object_collisions](#obj_resolve_object_collisions)
+
+### Lua Example
+`local integerValue = obj_resolve_object_collisions(targetYaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetYaw | Pointer <integer> |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_resolve_object_collisions(s32 *targetYaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_roll_to_match_yaw_turn](#obj_roll_to_match_yaw_turn)
+
+### Lua Example
+`obj_roll_to_match_yaw_turn(targetYaw, maxRoll, rollSpeed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetYaw | integer |
+| maxRoll | integer |
+| rollSpeed | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_roll_to_match_yaw_turn(s16 targetYaw, s16 maxRoll, s16 rollSpeed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_rotate_yaw_and_bounce_off_walls](#obj_rotate_yaw_and_bounce_off_walls)
+
+### Lua Example
+`obj_rotate_yaw_and_bounce_off_walls(targetYaw, turnAmount)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| targetYaw | integer |
+| turnAmount | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_rotate_yaw_and_bounce_off_walls(s16 targetYaw, s16 turnAmount);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_dist_from_home](#obj_set_dist_from_home)
+
+### Lua Example
+`obj_set_dist_from_home(distFromHome)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| distFromHome | number |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_dist_from_home(f32 distFromHome);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_knockback_action](#obj_set_knockback_action)
+
+### Lua Example
+`obj_set_knockback_action(attackType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| attackType | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_knockback_action(s32 attackType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_squished_action](#obj_set_squished_action)
+
+### Lua Example
+`obj_set_squished_action()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_squished_action(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_smooth_turn](#obj_smooth_turn)
+
+### Lua Example
+`local integerValue = obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| angleVel | Pointer <integer> |
+| angle | Pointer <integer> |
+| targetAngle | integer |
+| targetSpeedProportion | number |
+| accel | integer |
+| minSpeed | integer |
+| maxSpeed | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedProportion, s16 accel, s16 minSpeed, s16 maxSpeed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_spit_fire](#obj_spit_fire)
+
+### Lua Example
+`local ObjectValue = obj_spit_fire(relativePosX, relativePosY, relativePosZ, scale, model, startSpeed, endSpeed, movePitch)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| relativePosX | integer |
+| relativePosY | integer |
+| relativePosZ | integer |
+| scale | number |
+| model | integer |
+| startSpeed | number |
+| endSpeed | number |
+| movePitch | integer |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model, f32 startSpeed, f32 endSpeed, s16 movePitch);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_turn_pitch_toward_mario](#obj_turn_pitch_toward_mario)
+
+### Lua Example
+`local integerValue = obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| targetOffsetY | number |
+| turnAmount | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 turnAmount);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_unused_die](#obj_unused_die)
+
+### Lua Example
+`obj_unused_die()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void obj_unused_die(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_blinking](#obj_update_blinking)
+
+### Lua Example
+`obj_update_blinking(blinkTimer, baseCycleLength, cycleLengthRange, blinkLength)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| blinkTimer | Pointer <integer> |
+| baseCycleLength | integer |
+| cycleLengthRange | integer |
+| blinkLength | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange, s16 blinkLength);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_update_standard_actions](#obj_update_standard_actions)
+
+### Lua Example
+`local integerValue = obj_update_standard_actions(scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| scale | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_update_standard_actions(f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_y_vel_approach](#obj_y_vel_approach)
+
+### Lua Example
+`local integerValue = obj_y_vel_approach(target, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| target | number |
+| delta | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 obj_y_vel_approach(f32 target, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [oscillate_toward](#oscillate_toward)
+
+### Lua Example
+`local integerValue = oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | Pointer <integer> |
+| vel | Pointer <number> |
+| target | integer |
+| velCloseToZero | number |
+| accel | number |
+| slowdown | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 accel, f32 slowdown);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [platform_on_track_update_pos_or_spawn_ball](#platform_on_track_update_pos_or_spawn_ball)
+
+### Lua Example
+`platform_on_track_update_pos_or_spawn_ball(ballIndex, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| ballIndex | integer |
+| x | number |
+| y | number |
+| z | number |
+
+### Returns
+- None
+
+### C Prototype
+`void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_linear_offset](#random_linear_offset)
+
+### Lua Example
+`local integerValue = random_linear_offset(base, range)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| base | integer |
+| range | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 random_linear_offset(s16 base, s16 range);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_mod_offset](#random_mod_offset)
+
+### Lua Example
+`local integerValue = random_mod_offset(base, step, mod)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| base | integer |
+| step | integer |
+| mod | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s16 random_mod_offset(s16 base, s16 step, s16 mod);`
 
 [:arrow_up_small:](#)
 

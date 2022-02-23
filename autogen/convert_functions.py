@@ -37,6 +37,8 @@ in_files = [
     "include/behavior_table.h",
     "src/pc/lua/smlua_obj_utils.h",
     "src/game/object_helpers.c",
+    "src/game/obj_behaviors.c",
+    "src/game/obj_behaviors_2.c",
 ]
 
 override_allowed_functions = {
@@ -65,6 +67,8 @@ override_disallowed_functions = {
     "src/pc/network/network_utils.h":      [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":     [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update" ],
     "src/game/object_helpers.c":           [ "spawn_obj" ],
+    "src/game/obj_behaviors.c":            [ "debug_" ],
+    "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
 }
 
 ###########################################################
