@@ -518,11 +518,13 @@ end
 function act_wario_dash(m)
     local e = gStateExtras[m.playerIndex]
 
-    -- when hitting wall, stay dashing for an extra frame
+    -- when hitting wall, knock Wario backwards and thrust him upwards
     if m.actionArg == 99 then
         m.actionTimer = m.actionTimer + 1
         if m.actionTimer > 2 then
-            return set_mario_action(m, ACT_WALKING, 0)
+            mario_set_forward_vel(m, -30)
+            m.vel.y = 40
+            return set_mario_action(m, ACT_FREEFALL, 0)
         end
         return 0
     end
@@ -543,9 +545,9 @@ function act_wario_dash(m)
     set_anim_to_frame(m, 25)
 
     -- set dash speed
-    local speed = 80
+    local speed = 60
     if m.actionTimer > 8 then
-        speed = speed - (m.actionTimer - 8) * 7
+        speed = speed - (m.actionTimer - 8)
     end
     mario_set_forward_vel(m, speed)
 
@@ -567,6 +569,18 @@ end
 function act_wario_air_dash(m)
     local e = gStateExtras[m.playerIndex]
 
+    -- when hitting wall, knock Wario backwards and thrust him upwards
+    if m.actionArg == 99 then
+        m.actionTimer = m.actionTimer + 1
+        if m.actionTimer > 2 then
+            m.particleFlags = m.particleFlags | PARTICLE_VERTICAL_STAR
+            mario_set_forward_vel(m, -30)
+            m.vel.y = 40
+            return set_mario_action(m, ACT_FREEFALL, 0)
+        end
+        return 0
+    end
+
     -- walk once dash is up
     if m.actionTimer > 15 then
         return set_mario_action(m, ACT_JUMP_LAND, 0)
@@ -577,9 +591,9 @@ function act_wario_air_dash(m)
     set_anim_to_frame(m, 25)
 
     -- set dash speed
-    local speed = 100
+    local speed = 60
     if m.actionTimer > 8 then
-        speed = speed - (m.actionTimer - 8) * 11
+        speed = speed - (m.actionTimer - 8)
     end
     mario_set_forward_vel(m, speed)
 
@@ -608,7 +622,7 @@ function act_wario_spinning_obj(m)
         return set_mario_action(m, ACT_RELEASING_BOWSER, 0)
     end
 
-    -- set animation    
+    -- set animation
     if m.playerIndex == 0 and m.angleVel.y == 0 then
         m.actionTimer = m.actionTimer + 1
         if m.actionTimer > 120 then
@@ -821,6 +835,15 @@ function wario_on_set_action(m)
     -- when hitting a wall which dashing, have one more single frame of dash
     if m.action == ACT_GROUND_BONK and m.prevAction == ACT_WARIO_DASH then
         set_mario_action(m, ACT_WARIO_DASH, 99)
+        mario_set_forward_vel(m, 1)
+        m.vel.x = 0
+        m.vel.y = 0
+        m.vel.z = 0
+    end
+
+    -- when hitting a wall which dashing, have one more single frame of dash
+    if m.action == ACT_AIR_HIT_WALL and m.prevAction == ACT_WARIO_AIR_DASH then
+        set_mario_action(m, ACT_WARIO_AIR_DASH, 99)
         mario_set_forward_vel(m, 1)
         m.vel.x = 0
         m.vel.y = 0
