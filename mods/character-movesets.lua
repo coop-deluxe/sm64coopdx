@@ -8,7 +8,7 @@ SPIN_TIMER_SUCCESSFUL_INPUT = 4
 gEventTable = {}
 
 gStateExtras = {}
-for i=0,(MAX_PLAYERS-1) do
+for i = 0, (MAX_PLAYERS - 1) do
     gStateExtras[i] = {}
     local m = gMarioStates[i]
     local e = gStateExtras[i]
@@ -17,7 +17,7 @@ for i=0,(MAX_PLAYERS-1) do
     e.prevPos.y = 0
     e.prevPos.z = 0
     e.angleDeltaQueue = {}
-    for j=0,(ANGLE_QUEUE_SIZE-1) do e.angleDeltaQueue[j] = 0 end
+    for j = 0, (ANGLE_QUEUE_SIZE - 1) do e.angleDeltaQueue[j] = 0 end
     e.lastAction = m.action
     e.animFrame = 0
     e.scuttle = 0
@@ -135,6 +135,7 @@ end
 function luigi_before_phys_step(m)
     local e = gStateExtras[m.playerIndex]
 
+    local floorClass = mario_get_floor_class(m)
     local hScale = 1.0
     local vScale = 1.0
 
@@ -150,7 +151,7 @@ function luigi_before_phys_step(m)
 
     -- slower holding item
     if m.heldObj ~= nil then
-        m.vel.y = m.vel.y - 2.0
+        m.vel.y = m.vel.y - 1.0
         hScale = hScale * 0.9
         if (m.action & ACT_FLAG_AIR) ~= 0 then
             hScale = hScale * 0.9
@@ -158,7 +159,6 @@ function luigi_before_phys_step(m)
     end
 
     -- acceleration
-    local floorClass = mario_get_floor_class(m)
     if (m.action == ACT_WALKING) then
         if (floorClass == 19 or floorClass == 20) then
             hScale = -(m.forwardVel / 64) + 1.5
@@ -197,7 +197,7 @@ function luigi_on_set_action(m)
 
     -- nerf wall kicks
     elseif m.action == ACT_WALL_KICK_AIR and m.prevAction ~= ACT_HOLDING_POLE and m.prevAction ~= ACT_CLIMBING_POLE then
-        if m.vel.y > 40 then m.vel.y = 40 end
+        if m.vel.y > 56 then m.vel.y = 56 end
         return
 
     -- turn dive into kick when holding jump
@@ -216,12 +216,18 @@ end
 function luigi_update(m)
     local e = gStateExtras[m.playerIndex]
 
+    -- increase player damage
+    if (m.hurtCounter > e.lastHurtCounter) then
+        m.hurtCounter = m.hurtCounter + 4
+    end
+    e.lastHurtCounter = m.hurtCounter
+
     -- air scuttle
     e.scuttle = 0
     local shouldScuttle = (m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP) and ((m.controller.buttonDown & A_BUTTON) ~= 0 and m.vel.y < -5)
     if shouldScuttle then
         -- prevent wing flutter from glitching out while scuttling
-        if (m.flags & MARIO_WING_CAP) ~= 0 then
+        if m.marioBodyState.wingFlutter == 1 then
             m.vel.y = m.vel.y + 1
         else
             m.vel.y = m.vel.y + 3
@@ -704,12 +710,12 @@ function wario_update_spin_input(m)
         end
 
         if e.spinDirection ~= newDirection then
-            for i=0,(ANGLE_QUEUE_SIZE-1) do
+            for i = 0, (ANGLE_QUEUE_SIZE - 1) do
                 e.angleDeltaQueue[i] = 0
             end
             e.spinDirection = newDirection
         else
-            for i=(ANGLE_QUEUE_SIZE-1),1,-1 do
+            for i = (ANGLE_QUEUE_SIZE - 1), 1, -1 do
                 e.angleDeltaQueue[i] = e.angleDeltaQueue[i-1]
                 angleOverFrames = angleOverFrames + e.angleDeltaQueue[i]
             end
@@ -723,7 +729,7 @@ function wario_update_spin_input(m)
             end
         elseif e.spinDirection > 0 then
             if signedOverflow ~= 0 then
-                thisFrameDelta = math.floor(1.0*rawAngle + 0x10000 - e.stickLastAngle)
+                thisFrameDelta = math.floor(1.0 * rawAngle + 0x10000 - e.stickLastAngle)
             else
                 thisFrameDelta = rawAngle - e.stickLastAngle
             end
@@ -755,13 +761,15 @@ function wario_before_phys_step(m)
     local hScale = 1.0
 
     -- slower on ground
-    if (m.action & ACT_FLAG_MOVING) ~= 0 then
+    if m.action == ACT_WALKING then
         hScale = hScale * 0.9
     end
 
     -- make wario sink
     if (m.action & ACT_FLAG_SWIMMING) ~= 0 then
-        if m.action ~= ACT_WATER_PLUNGE then
+        if m.action ~= ACT_BACKWARD_WATER_KB and
+           m.action ~= ACT_FORWARD_WATER_KB and
+           m.action ~= ACT_WATER_PLUNGE then
             m.vel.y = m.vel.y - 3
         end
     end
@@ -800,7 +808,7 @@ function wario_on_set_action(m)
             m.vel.x = 0
             m.vel.y = 70.0
             m.vel.z = 0
-        elseif (m.action == ACT_SLIDE_KICK) then
+        elseif m.action == ACT_SLIDE_KICK then
             mario_set_forward_vel(m, 70)
             m.vel.x = 0
             m.vel.y = 30.0
@@ -825,15 +833,15 @@ function wario_on_set_action(m)
     end
 
     -- less height on other jumps
-    if m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_STEEP_JUMP or m.action == ACT_RIDING_SHELL_JUMP or m.action == ACT_BACKFLIP or m.action == ACT_LONG_JUMP then
-        m.vel.y = m.vel.y * 0.9
+    if m.action == ACT_JUMP or
+       m.action == ACT_DOUBLE_JUMP or
+       m.action == ACT_STEEP_JUMP or
+       m.action == ACT_RIDING_SHELL_JUMP or
+       m.action == ACT_BACKFLIP or
+       m.action == ACT_LONG_JUMP or
+       m.action == ACT_SIDE_FLIP then
 
-        -- prevent from getting stuck on platform
-        if m.marioObj.platform ~= nil then
-            m.pos.y = m.pos.y + 10
-        end
-    elseif m.action == ACT_SIDE_FLIP then
-        m.vel.y = m.vel.y * 1.1
+        m.vel.y = m.vel.y * 0.9
 
         -- prevent from getting stuck on platform
         if m.marioObj.platform ~= nil then
@@ -886,15 +894,11 @@ function wario_update(m)
         m.vel.y = m.vel.y * 1.3
     end
 
-    -- more gravity
-    if (m.action & ACT_FLAG_AIR) ~= 0 then
-        m.vel.y = m.vel.y - 1.15
+    -- decrease player damage
+    if m.hurtCounter > e.lastHurtCounter and m.action ~= ACT_LAVA_BOOST then
+        m.hurtCounter = math.max(3, m.hurtCounter - 4)
     end
-
-    -- takes less damage
-    if m.action ~= ACT_LAVA_BOOST then
-        m.hurtCounter = m.hurtCounter * 0.5
-    end
+    e.lastHurtCounter = m.hurtCounter
 
     m.vel.x = m.vel.x * hScale
     m.vel.z = m.vel.z * hScale
@@ -919,7 +923,11 @@ function mario_before_phys_step(m)
         return
     end
 
-    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].before_phys_step == nil then
+    if gEventTable[m.character.type] == nil then
+        return
+    end
+
+    if gEventTable[m.character.type].before_phys_step == nil then
         return
     end
 
@@ -931,23 +939,15 @@ function mario_on_set_action(m)
         return
     end
 
-    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].on_set_action == nil then
+    if gEventTable[m.character.type] == nil then
+        return
+    end
+
+    if gEventTable[m.character.type].on_set_action == nil then
         return
     end
 
     gEventTable[m.character.type].on_set_action(m)
-end
-
-function mario_before_update(m)
-    if m.action == ACT_BUBBLED then
-        return
-    end
-
-    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].before_update == nil then
-        return
-    end
-
-    gEventTable[m.character.type].before_update(m)
 end
 
 function mario_update(m)
@@ -955,7 +955,11 @@ function mario_update(m)
         return
     end
 
-    if gEventTable[m.character.type] == nil or gEventTable[m.character.type].update == nil then
+    if gEventTable[m.character.type] == nil then
+        return
+    end
+
+    if gEventTable[m.character.type].update == nil then
         return
     end
 
@@ -966,7 +970,6 @@ end
 -- hooks --
 -----------
 
-hook_event(HOOK_BEFORE_MARIO_UPDATE, mario_before_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
 hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
