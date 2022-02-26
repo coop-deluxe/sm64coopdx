@@ -52,13 +52,13 @@ static bool djui_panel_join_ip_parse_spacer(char** msg) {
 }
 
 static bool djui_panel_join_ip_parse_port(char** msg) {
-    int num = 0;
+    int port = 0;
     for (int i = 0; i < 5; i++) {
         char c = **msg;
         if (c >= '0' && c <= '9') {
             // is number
-            num *= 10;
-            num += (c - '0');
+            port *= 10;
+            port += (c - '0');
             *msg = *msg + 1;
         } else if (i == 0) {
             return false;
@@ -67,7 +67,7 @@ static bool djui_panel_join_ip_parse_port(char** msg) {
         }
     }
 
-    return num >= 1024 && num <= 65535;
+    return port <= 65535;
 }
 
 static bool djui_panel_join_ip_valid(char* buffer) {
