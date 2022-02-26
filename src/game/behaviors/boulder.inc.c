@@ -24,6 +24,11 @@ void boulder_act_1(void) {
 
     if (o->oPosY < -1000.0f)
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+
+    if (o->oBehParams2ndByte == 2 && (sp1E & OBJ_COL_FLAG_HIT_WALL)) {
+        o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        obj_explode_and_spawn_coins(46.0f, 1);
+    }
 }
 
 void bhv_big_boulder_loop(void) {
