@@ -42,7 +42,7 @@ void flying_bookend_act_0(void) {
         o->oAction = 1;
         o->oBookendUnkF4 = o->oFaceAnglePitch + 0x7FFF;
         o->oBookendUnkF8 = o->oFaceAngleRoll - 0x7FFF;
-        cur_obj_set_model(MODEL_BOOKEND_PART);
+        cur_obj_set_model(smlua_model_util_load(E_MODEL_BOOKEND_PART));
     }
 }
 

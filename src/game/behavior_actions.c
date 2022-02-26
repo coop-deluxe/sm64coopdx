@@ -46,6 +46,7 @@
 #include "thread6.h"
 #include "area.h"
 #include "game/rng_position.h"
+#include "pc/lua/smlua_model_utils.h"
 
 #define o gCurrentObject
 

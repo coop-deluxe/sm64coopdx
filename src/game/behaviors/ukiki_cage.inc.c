@@ -21,7 +21,7 @@ void bhv_ukiki_cage_star_loop(void) {
             if (o->oTimer == 0) {
                 if (bit_shift_left(1)
                     & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1)) {
-                        cur_obj_set_model(MODEL_TRANSPARENT_STAR);
+                        cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
                     }
             }
 

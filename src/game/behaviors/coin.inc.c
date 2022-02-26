@@ -31,7 +31,7 @@ void bhv_yellow_coin_init(void) {
     bhv_init_room();
     cur_obj_update_floor_height();
     if (500.0f < absf(o->oPosY - o->oFloorHeight))
-        cur_obj_set_model(MODEL_YELLOW_COIN_NO_SHADOW);
+        cur_obj_set_model(smlua_model_util_load(E_MODEL_YELLOW_COIN_NO_SHADOW));
     if (o->oFloorHeight < -10000.0f)
         obj_mark_for_deletion(o);
 }
@@ -124,7 +124,7 @@ void bhv_coin_formation_spawn_loop(void) {
         } else {
             cur_obj_update_floor_height();
             if (absf(o->oPosY - o->oFloorHeight) > 250.0f)
-                cur_obj_set_model(MODEL_YELLOW_COIN_NO_SHADOW);
+                cur_obj_set_model(smlua_model_util_load(E_MODEL_YELLOW_COIN_NO_SHADOW));
         }
     } else {
         if (bhv_coin_sparkles_init())
@@ -225,7 +225,7 @@ void coin_inside_boo_act_0(void) {
     struct Object *parent = o->parentObj;
     cur_obj_become_intangible();
     if (o->oTimer == 0 && gCurrLevelNum == LEVEL_BBH) {
-        cur_obj_set_model(MODEL_BLUE_COIN);
+        cur_obj_set_model(smlua_model_util_load(E_MODEL_BLUE_COIN));
         cur_obj_scale(0.7);
     }
     if (parent == NULL || (parent->behavior != bhvGhostHuntBoo && parent->behavior != bhvBoo)) {

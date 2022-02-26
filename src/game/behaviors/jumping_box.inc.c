@@ -36,7 +36,7 @@ void jumping_box_act_1(void) {
 void (*sJumpingBoxActions[])(void) = { jumping_box_act_0, jumping_box_act_1 };
 
 void jumping_box_free_update(void) {
-    cur_obj_set_model(MODEL_BREAKABLE_BOX);
+    cur_obj_set_model(smlua_model_util_load(E_MODEL_BREAKABLE_BOX));
     cur_obj_scale(0.5f);
     obj_set_hitbox(o, &sJumpingBoxHitbox);
     cur_obj_update_floor_and_walls();
@@ -56,7 +56,7 @@ void bhv_jumping_box_loop(void) {
             break;
         case HELD_HELD:
             obj_copy_pos(o, gMarioStates[o->heldByPlayerIndex].marioObj);
-            cur_obj_set_model(MODEL_BREAKABLE_BOX_SMALL);
+            cur_obj_set_model(smlua_model_util_load(E_MODEL_BREAKABLE_BOX_SMALL));
             cur_obj_unrender_and_reset_state(-1, 0);
             break;
         case HELD_THROWN:

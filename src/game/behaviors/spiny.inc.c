@@ -202,7 +202,7 @@ static void spiny_act_thrown_by_lakitu(void) {
 
         if (o->oMoveFlags & OBJ_MOVE_LANDED) {
             cur_obj_play_sound_2(SOUND_OBJ_SPINY_UNK59);
-            cur_obj_set_model(MODEL_SPINY);
+            cur_obj_set_model(smlua_model_util_load(E_MODEL_SPINY));
             obj_init_animation_with_sound(o, spiny_seg5_anims_05016EAC, 0);
             o->oGraphYOffset = -17.0f;
 

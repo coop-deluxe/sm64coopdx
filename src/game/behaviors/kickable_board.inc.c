@@ -75,7 +75,7 @@ void bhv_kickable_board_loop(void) {
             break;
         case 2:
             cur_obj_become_intangible();
-            cur_obj_set_model(MODEL_WF_KICKABLE_BOARD_FELLED);
+            cur_obj_set_model(smlua_model_util_load(E_MODEL_WF_KICKABLE_BOARD_FELLED));
             o->oAngleVelPitch -= 0x80;
             o->oFaceAnglePitch += o->oAngleVelPitch;
             if (o->oFaceAnglePitch < -0x4000) {

@@ -345,7 +345,7 @@ void shelled_koopa_attack_handler(s32 attackType) {
             o->oMoveAngleYaw = angleToPlayer;
         }
 
-        cur_obj_set_model(MODEL_KOOPA_WITHOUT_SHELL);
+        cur_obj_set_model(smlua_model_util_load(E_MODEL_KOOPA_WITHOUT_SHELL));
 
         struct MarioState* marioState = nearest_mario_state_to_object(o);
         if (marioState->playerIndex == 0) {
@@ -373,8 +373,9 @@ void shelled_koopa_attack_handler(s32 attackType) {
  * Update function for both regular and tiny shelled koopa.
  */
 static void koopa_shelled_update(void) {
-    if (!cur_obj_has_model(MODEL_KOOPA_WITH_SHELL)) {
-        cur_obj_set_model(MODEL_KOOPA_WITH_SHELL);
+    u8 modelId = smlua_model_util_load(E_MODEL_KOOPA_WITH_SHELL);
+    if (!cur_obj_has_model(modelId)) {
+        cur_obj_set_model(modelId);
     }
 
     cur_obj_update_floor_and_walls();
@@ -506,7 +507,7 @@ static void koopa_unshelled_act_dive(void) {
             o->oAction = KOOPA_SHELLED_ACT_LYING;
             o->oForwardVel *= 0.5f;
 
-            cur_obj_set_model(MODEL_KOOPA_WITH_SHELL);
+            cur_obj_set_model(smlua_model_util_load(E_MODEL_KOOPA_WITH_SHELL));
             obj_mark_for_deletion(shell);
             goto end;
         }
@@ -541,8 +542,9 @@ static void koopa_unshelled_act_unused3(void) {
  * Update function for koopa after losing his shell.
  */
 static void koopa_unshelled_update(void) {
-    if (!cur_obj_has_model(MODEL_KOOPA_WITHOUT_SHELL)) {
-        cur_obj_set_model(MODEL_KOOPA_WITHOUT_SHELL);
+    u8 modelId = smlua_model_util_load(E_MODEL_KOOPA_WITHOUT_SHELL);
+    if (!cur_obj_has_model(modelId)) {
+        cur_obj_set_model(modelId);
     }
 
     cur_obj_update_floor_and_walls();

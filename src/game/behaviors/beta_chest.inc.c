@@ -12,7 +12,7 @@
  */
 void bhv_beta_chest_bottom_init(void) {
     // Set the object's model
-    cur_obj_set_model(MODEL_TREASURE_CHEST_BASE);
+    cur_obj_set_model(smlua_model_util_load(E_MODEL_TREASURE_CHEST_BASE));
 
     // ??? Pointless code?
     // Maybe chests were originally intended to have random yaws.

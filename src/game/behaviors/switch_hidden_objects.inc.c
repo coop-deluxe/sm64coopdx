@@ -35,7 +35,7 @@ void breakable_box_init(void) {
 void hidden_breakable_box_actions(void) {
     struct Object *sp1C;
     obj_set_hitbox(o, &sBreakableBoxHitbox);
-    cur_obj_set_model(MODEL_BREAKABLE_BOX_SMALL);
+    cur_obj_set_model(smlua_model_util_load(E_MODEL_BREAKABLE_BOX_SMALL));
     if (o->oAction == 0) {
         cur_obj_disable_rendering();
         cur_obj_become_intangible();

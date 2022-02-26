@@ -29,7 +29,7 @@ void bhv_purple_switch_loop(void) {
          * switch's middle section, transition to the pressed state.
          */
         case PURPLE_SWITCH_IDLE:
-            cur_obj_set_model(MODEL_PURPLE_SWITCH);
+            cur_obj_set_model(smlua_model_util_load(E_MODEL_PURPLE_SWITCH));
             cur_obj_scale(1.5f);
             if (gMarioObject->platform == o && !(gMarioStates[0].action & MARIO_UNKNOWN_13)) {
                 if (lateral_dist_between_objects(o, gMarioObject) < 127.5) {

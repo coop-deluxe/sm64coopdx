@@ -1337,6 +1337,8 @@ void geo_try_process_children(struct GraphNode *node) {
 void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     s16 iterateChildren = TRUE;
     struct GraphNode *curGraphNode = firstNode;
+    if (curGraphNode == NULL) { return; }
+
     struct GraphNode *parent = curGraphNode->parent;
 
     // In the case of a switch node, exactly one of the children of the node is
@@ -1345,12 +1347,10 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
     }
 
-    // sanity check
-    if (firstNode == NULL) {
-        return;
-    }
-
     do {
+        if (curGraphNode == NULL) {
+            break;
+        }
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
