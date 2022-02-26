@@ -78,6 +78,7 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
         // save the port to send to
         addr[0].sin_family = AF_INET;
         addr[0].sin_port = htons(port);
+        domain_resolution();
         addr[0].sin_addr.s_addr = inet_addr(configJoinIp);
         LOG_INFO("connecting to %s %u", configJoinIp, port);
     }

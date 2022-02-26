@@ -13,5 +13,6 @@ extern struct NetworkSystem gNetworkSystemSocket;
 
 SOCKET socket_initialize(void);
 void socket_shutdown(SOCKET socket);
+void domain_resolution(void);
 
 #endif
