@@ -13,7 +13,7 @@ struct ModTable gModTableRemote = { .entries = NULL, .entryCount = 0, .totalSize
 struct ModTable* gModTableCurrent = &gModTableLocal;
 
 static char sTmpSession[MAX_SESSION_CHARS] = { 0 };
-static char sTmpPath[PATH_MAX] = { 0 };
+static char sTmpPath[SYS_MAX_PATH] = { 0 };
 
 static bool acceptable_file(char* string) {
     if (strchr(string, '/') != NULL)  { return false; }
@@ -27,9 +27,9 @@ static void mod_list_delete_tmp(void) {
     DIR* d = opendir(sTmpPath);
     if (!d) { closedir(d); return; }
 
-    static char path[PATH_MAX] = { 0 };
+    static char path[SYS_MAX_PATH] = { 0 };
     while ((dir = readdir(d)) != NULL) {
-        snprintf(path, PATH_MAX - 1, "%s/%s", sTmpPath, dir->d_name);
+        snprintf(path, SYS_MAX_PATH - 1, "%s/%s", sTmpPath, dir->d_name);
         if (!fs_sys_file_exists(path)) { continue; }
 
 #if defined(_WIN32)
@@ -70,7 +70,7 @@ void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size) {
     entry->size = size;
     table->totalSize += size;
 
-    char sanitizedName[PATH_MAX] = { 0 };
+    char sanitizedName[SYS_MAX_PATH] = { 0 };
     char* n = name;
     char* s = sanitizedName;
     while (*n != '\0') {
@@ -81,7 +81,7 @@ void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size) {
         n++;
     }
 
-    snprintf(entry->path, PATH_MAX - 1, "%s/%s-%u-%s", sTmpPath, sTmpSession, index, sanitizedName);
+    snprintf(entry->path, SYS_MAX_PATH - 1, "%s/%s-%u-%s", sTmpPath, sTmpSession, index, sanitizedName);
     entry->fp = fopen(entry->path, "wb");
 
     entry->remoteIndex = remoteIndex;
@@ -143,7 +143,7 @@ static void mod_list_add_local(u16 index, const char* path, char* name) {
     struct ModListEntry* entry = &table->entries[index];
     entry->name = strdup(name);
 
-    snprintf(entry->path, PATH_MAX - 1, "%s/%s", path, name);
+    snprintf(entry->path, SYS_MAX_PATH - 1, "%s/%s", path, name);
     entry->fp = fopen(entry->path, "rb");
 
     mod_list_extract_lua_fields(entry);
@@ -299,11 +299,11 @@ void mod_list_init(void) {
     gModTableCurrent = &gModTableLocal;
     srand(time(0));
     snprintf(sTmpSession, MAX_SESSION_CHARS, "%06X", (u32)(rand() % 0xFFFFFF));
-    snprintf(sTmpPath, PATH_MAX - 1, "%s", fs_get_write_path("tmp"));
+    snprintf(sTmpPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path("tmp"));
     if (!fs_sys_dir_exists(sTmpPath)) { fs_sys_mkdir(sTmpPath); }
 
-    char userModPath[PATH_MAX] = { 0 };
-    snprintf(userModPath, PATH_MAX - 1, "%s", fs_get_write_path("mods"));
+    char userModPath[SYS_MAX_PATH] = { 0 };
+    snprintf(userModPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path("mods"));
     if (!fs_sys_dir_exists(userModPath)) { fs_sys_mkdir(userModPath); }
 
     mod_table_clear(&gModTableLocal);

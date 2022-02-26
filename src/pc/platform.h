@@ -7,7 +7,7 @@
 
 /* Platform-specific functions and whatnot */
 
-#define SYS_MAX_PATH 1024 // FIXME: define this on different platforms
+#define SYS_MAX_PATH 4096 // FIXME: define this on different platforms
 
 // NULL terminated list of platform specific read-only data paths
 extern const char *sys_ropaths[];

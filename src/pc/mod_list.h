@@ -6,13 +6,14 @@
 #include <types.h>
 #include <stdbool.h>
 #include <limits.h>
+#include "src/pc/platform.h"
 
 #define MOD_PATH "./mods"
 
 struct ModListEntry {
     char* name;
     FILE* fp;
-    char path[PATH_MAX];
+    char path[SYS_MAX_PATH];
     size_t size;
     u64 curOffset;
     u16 remoteIndex;
