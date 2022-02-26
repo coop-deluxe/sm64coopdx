@@ -17,6 +17,11 @@
     - [InteractionType](#InteractionType)
 - [mario_animation_ids.h](#mario_animation_ids.h)
     - [MarioAnimID](#MarioAnimID)
+- [mario_geo_switch_case_ids.h](#mario_geo_switch_case_ids.h)
+    - [MarioCapGSCId](#MarioCapGSCId)
+    - [MarioEyesGSCId](#MarioEyesGSCId)
+    - [MarioGrabPosGSCId](#MarioGrabPosGSCId)
+    - [MarioHandGSCId](#MarioHandGSCId)
 - [network_player.h](#network_player.h)
     - [NetworkPlayerType](#NetworkPlayerType)
 - [object_constants.h](#object_constants.h)
@@ -1606,6 +1611,49 @@
 | MARIO_ANIM_RETURN_FROM_STAR_DANCE | 206 |
 | MARIO_ANIM_FORWARD_SPINNING_FLIP | 207 |
 | MARIO_ANIM_TRIPLE_JUMP_FLY | 208 |
+
+<br />
+
+## [mario_geo_switch_case_ids.h](#mario_geo_switch_case_ids.h)
+
+### [enum MarioCapGSCId](#MarioCapGSCId)
+| Identifier | Value |
+| :--------- | :---- |
+| MARIO_HAS_DEFAULT_CAP_ON | 0 |
+| MARIO_HAS_DEFAULT_CAP_OFF | 1 |
+| MARIO_HAS_WING_CAP_ON | 2 |
+| MARIO_HAS_WING_CAP_OFF | 3 |
+
+### [enum MarioEyesGSCId](#MarioEyesGSCId)
+| Identifier | Value |
+| :--------- | :---- |
+| MARIO_EYES_BLINK | 0 |
+| MARIO_EYES_OPEN | 1 |
+| MARIO_EYES_HALF_CLOSED | 2 |
+| MARIO_EYES_CLOSED | 3 |
+| MARIO_EYES_LOOK_LEFT | 4 |
+| MARIO_EYES_LOOK_RIGHT | 5 |
+| MARIO_EYES_LOOK_UP | 6 |
+| MARIO_EYES_LOOK_DOWN | 7 |
+| MARIO_EYES_DEAD | 8 |
+
+### [enum MarioGrabPosGSCId](#MarioGrabPosGSCId)
+| Identifier | Value |
+| :--------- | :---- |
+| GRAB_POS_NULL | 0 |
+| GRAB_POS_LIGHT_OBJ | 1 |
+| GRAB_POS_HEAVY_OBJ | 2 |
+| GRAB_POS_BOWSER | 3 |
+
+### [enum MarioHandGSCId](#MarioHandGSCId)
+| Identifier | Value |
+| :--------- | :---- |
+| MARIO_HAND_FISTS | 0 |
+| MARIO_HAND_OPEN | 1 |
+| MARIO_HAND_PEACE_SIGN | 2 |
+| MARIO_HAND_HOLDING_CAP | 3 |
+| MARIO_HAND_HOLDING_WING_CAP | 4 |
+| MARIO_HAND_RIGHT_OPEN | 5 |
 
 <br />
 

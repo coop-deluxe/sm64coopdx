@@ -23,6 +23,7 @@ in_files = [
     "include/behavior_table.h",
     "src/pc/lua/smlua_model_utils.h",
     "include/object_constants.h",
+    "include/mario_geo_switch_case_ids.h",
 ]
 
 exclude_constants = {
