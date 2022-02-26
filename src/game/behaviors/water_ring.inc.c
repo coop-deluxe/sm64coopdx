@@ -170,10 +170,11 @@ void water_ring_spawner_act_inactive(void) {
         waterRing = spawn_object(o, MODEL_WATER_RING, bhvJetStreamWaterRing);
         if (waterRing != NULL) {
             waterRing->oWaterRingIndex = currentObj->oWaterRingMgrNextRingIndex;
+            currentObj->oWaterRingMgrNextRingIndex++;
+            if (currentObj->oWaterRingMgrNextRingIndex >= 10001) {
+                currentObj->oWaterRingMgrNextRingIndex = 0;
+            }
         }
-        currentObj->oWaterRingMgrNextRingIndex++;
-        if (currentObj->oWaterRingMgrNextRingIndex >= 10001)
-            currentObj->oWaterRingMgrNextRingIndex = 0;
     }
 }
 
