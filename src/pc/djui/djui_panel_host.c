@@ -27,7 +27,11 @@ static bool djui_panel_host_port_valid(void) {
         port += (*buffer - '0');
         buffer++;
     }
+#if __linux__
     return port >= 1024 && port <= 65535;
+#else
+    return port <= 65535;
+#endif
 }
 
 static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
