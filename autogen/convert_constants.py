@@ -1,4 +1,5 @@
 import os
+from xml.etree.ElementInclude import include
 from common import *
 from extract_constants import *
 
@@ -21,16 +22,16 @@ in_files = [
     "src/pc/djui/djui_hud_utils.h",
     "include/behavior_table.h",
     "src/pc/lua/smlua_model_utils.h",
+    "include/object_constants.h",
 ]
 
-exclude_constants = [
-    '^MAXCONTROLLERS$',
-    '^LEVEL_.*',
-    '^AREA_.*',
-    '^CONT_ERR.*',
-    '^READ_MASK$',
-    '^SIGN_RANGE$',
-]
+exclude_constants = {
+    '*': [ '^MAXCONTROLLERS$', '^LEVEL_.*', '^AREA_.*', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ]
+}
+
+include_constants = {
+    "include/object_constants.h" : [ "^ACTIVE_FLAG_", "^ACTIVE_PARTICLE_", "^HELD_", "^OBJ_FLAG_", "^RESPAWN_INFO_", ],
+}
 
 pretend_find = [
     'SOUND_ARG_LOAD'
@@ -64,7 +65,25 @@ def saw_constant(identifier):
         seen_constants.append(identifier)
         return False
 
-def process_enum(line):
+def allowed_identifier(filename, ident):
+    exclude_list = exclude_constants['*']
+
+    if filename in exclude_constants:
+        exclude_list.extend(exclude_constants[filename])
+
+    for exclude in exclude_list:
+        if re.search(exclude, ident) != None:
+            return False
+
+    if filename in include_constants:
+        for include in include_constants[filename]:
+            if re.search(include, ident) != None:
+                return True
+        return False
+
+    return True
+
+def process_enum(filename, line):
     _, ident, val = line.split(' ', 2)
 
     if '{' not in val or '}' not in val:
@@ -98,12 +117,7 @@ def process_enum(line):
             index += 1
             continue
 
-        excluded = False
-        for exclude in exclude_constants:
-            if re.search(exclude, field) != None:
-                excluded = True
-
-        if not excluded:
+        if allowed_identifier(filename, field):
             constants.append([field, str(index)])
 
             if saw_constant(field):
@@ -115,7 +129,7 @@ def process_enum(line):
     return ret
 
 
-def process_define(line):
+def process_define(filename, line):
     _, ident, val = line.split(' ', 2)
 
     val = val.replace('(u8)', '')
@@ -129,9 +143,8 @@ def process_define(line):
             print('UNRECOGNIZED DEFINE: ' + line)
             return None
 
-    for exclude in exclude_constants:
-        if re.search(exclude, ident) != None:
-            return None
+    if not allowed_identifier(filename, ident):
+        return None
 
     if saw_constant(ident):
         print('>>> ' + line)
@@ -139,11 +152,11 @@ def process_define(line):
     return [ident, val]
 
 
-def process_line(line):
+def process_line(filename, line):
     if line.startswith('enum '):
-        return process_enum(line)
+        return process_enum(filename, line)
     elif line.startswith('#define '):
-        return process_define(line)
+        return process_define(filename, line)
     else:
         print("UNRECOGNIZED LINE: " + line)
         return None
@@ -155,7 +168,7 @@ def process_file(filename):
     constants = []
     lines = extract_constants(get_path(filename)).splitlines()
     for line in lines:
-        c = process_line(line)
+        c = process_line(filename, line)
         if c != None:
             constants.append(c)
 

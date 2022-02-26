@@ -61,7 +61,7 @@ override_field_immutable = {
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
-    "Object": ["oSyncID"],
+    "Object": ["oSyncID", "createdThroughNetwork"],
 }
 
 sLuaManuallyDefinedStructs = [
@@ -196,7 +196,9 @@ def get_struct_field_info(struct, field):
 
     lvt = translate_type_to_lvt(ftype)
     lot = translate_type_to_lot(ftype)
-    fimmutable = str(lvt == 'LVT_COBJECT' or lvt.endswith('_P') or 'const ' in ftype).lower()
+    fimmutable = str(lvt == 'LVT_COBJECT' or 'const ' in ftype).lower()
+    if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt:
+        fimmutable = 'true'
 
     if sid in override_field_immutable:
         if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:

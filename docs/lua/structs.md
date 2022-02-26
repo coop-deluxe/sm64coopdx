@@ -69,11 +69,11 @@
 | animID | integer |  |
 | animTimer | integer |  |
 | animYTrans | integer |  |
-| curAnim | [Animation](#Animation) | read-only |
+| curAnim | [Animation](#Animation) |  |
 | prevAnimFrame | integer |  |
 | prevAnimFrameTimestamp | integer |  |
 | prevAnimID | integer |  |
-| prevAnimPtr | [Animation](#Animation) | read-only |
+| prevAnimPtr | [Animation](#Animation) |  |
 
 [:arrow_up_small:](#)
 
@@ -101,19 +101,19 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| camera | [Camera](#Camera) | read-only |
+| camera | [Camera](#Camera) |  |
 | flags | integer |  |
 | index | integer |  |
-| instantWarps | [InstantWarp](#InstantWarp) | read-only |
+| instantWarps | [InstantWarp](#InstantWarp) |  |
 | macroObjects | Pointer <integer> | read-only |
 | musicParam | integer |  |
 | musicParam2 | integer |  |
-| objectSpawnInfos | [SpawnInfo](#SpawnInfo) | read-only |
-| paintingWarpNodes | [WarpNode](#WarpNode) | read-only |
+| objectSpawnInfos | [SpawnInfo](#SpawnInfo) |  |
+| paintingWarpNodes | [WarpNode](#WarpNode) |  |
 | surfaceRooms | Pointer <integer> | read-only |
 | terrainData | Pointer <integer> | read-only |
 | terrainType | integer |  |
-| warpNodes | [ObjectWarpNode](#ObjectWarpNode) | read-only |
+| warpNodes | [ObjectWarpNode](#ObjectWarpNode) |  |
 
 [:arrow_up_small:](#)
 
@@ -358,11 +358,11 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| children | [GraphNode](#GraphNode) | read-only |
+| children | [GraphNode](#GraphNode) |  |
 | flags | integer |  |
-| next | [GraphNode](#GraphNode) | read-only |
-| parent | [GraphNode](#GraphNode) | read-only |
-| prev | [GraphNode](#GraphNode) | read-only |
+| next | [GraphNode](#GraphNode) |  |
+| parent | [GraphNode](#GraphNode) |  |
+| prev | [GraphNode](#GraphNode) |  |
 | type | integer |  |
 
 [:arrow_up_small:](#)
@@ -389,9 +389,9 @@
 | prevThrowMatrixTimestamp | integer |  |
 | prevTimestamp | integer |  |
 | scale | [Vec3f](#Vec3f) | read-only |
-| sharedChild | [GraphNode](#GraphNode) | read-only |
+| sharedChild | [GraphNode](#GraphNode) |  |
 | skipInterpolationTimestamp | integer |  |
-| unk4C | [SpawnInfo](#SpawnInfo) | read-only |
+| unk4C | [SpawnInfo](#SpawnInfo) |  |
 
 [:arrow_up_small:](#)
 
@@ -499,7 +499,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | currentAnimAddr | Pointer <integer> | read-only |
-| targetAnim | [Animation](#Animation) | read-only |
+| targetAnim | [Animation](#Animation) |  |
 
 [:arrow_up_small:](#)
 
@@ -535,22 +535,22 @@
 | actionState | integer |  |
 | actionTimer | integer |  |
 | angleVel | [Vec3s](#Vec3s) | read-only |
-| animation | [MarioAnimation](#MarioAnimation) | read-only |
-| area | [Area](#Area) | read-only |
-| bubbleObj | [Object](#Object) | read-only |
+| animation | [MarioAnimation](#MarioAnimation) |  |
+| area | [Area](#Area) |  |
+| bubbleObj | [Object](#Object) |  |
 | capTimer | integer |  |
-| ceil | [Surface](#Surface) | read-only |
+| ceil | [Surface](#Surface) |  |
 | ceilHeight | number |  |
-| character | [Character](#Character) | read-only |
+| character | [Character](#Character) |  |
 | collidedObjInteractTypes | integer |  |
-| controller | [Controller](#Controller) | read-only |
+| controller | [Controller](#Controller) |  |
 | curAnimOffset | number |  |
 | currentRoom | integer |  |
 | doubleJumpTimer | integer |  |
 | faceAngle | [Vec3s](#Vec3s) | read-only |
 | fadeWarpOpacity | integer |  |
 | flags | integer |  |
-| floor | [Surface](#Surface) | read-only |
+| floor | [Surface](#Surface) |  |
 | floorAngle | integer |  |
 | floorHeight | number |  |
 | forwardVel | number |  |
@@ -559,17 +559,17 @@
 | freeze | integer |  |
 | healCounter | integer |  |
 | health | integer |  |
-| heldByObj | [Object](#Object) | read-only |
-| heldObj | [Object](#Object) | read-only |
+| heldByObj | [Object](#Object) |  |
+| heldObj | [Object](#Object) |  |
 | hurtCounter | integer |  |
 | input | integer |  |
 | intendedMag | number |  |
 | intendedYaw | integer |  |
-| interactObj | [Object](#Object) | read-only |
+| interactObj | [Object](#Object) |  |
 | invincTimer | integer |  |
 | isSnoring | integer |  |
-| marioBodyState | [MarioBodyState](#MarioBodyState) | read-only |
-| marioObj | [Object](#Object) | read-only |
+| marioBodyState | [MarioBodyState](#MarioBodyState) |  |
+| marioObj | [Object](#Object) |  |
 | minimumBoneY | number |  |
 | nonInstantWarpPos | [Vec3f](#Vec3f) | read-only |
 | numCoins | integer |  |
@@ -583,22 +583,22 @@
 | prevAction | integer |  |
 | prevNumStarsForDialog | integer |  |
 | quicksandDepth | number |  |
-| riddenObj | [Object](#Object) | read-only |
+| riddenObj | [Object](#Object) |  |
 | slideVelX | number |  |
 | slideVelZ | number |  |
 | slideYaw | integer |  |
-| spawnInfo | [SpawnInfo](#SpawnInfo) | read-only |
+| spawnInfo | [SpawnInfo](#SpawnInfo) |  |
 | splineKeyframeFraction | number |  |
 | splineState | integer |  |
 | squishTimer | integer |  |
-| statusForCamera | [PlayerCameraState](#PlayerCameraState) | read-only |
+| statusForCamera | [PlayerCameraState](#PlayerCameraState) |  |
 | terrainSoundAddend | integer |  |
 | twirlYaw | integer |  |
 | unkB0 | integer |  |
 | unkC4 | number |  |
-| usedObj | [Object](#Object) | read-only |
+| usedObj | [Object](#Object) |  |
 | vel | [Vec3f](#Vec3f) | read-only |
-| wall | [Surface](#Surface) | read-only |
+| wall | [Surface](#Surface) |  |
 | wallKickTimer | integer |  |
 | wasNetworkVisible | integer |  |
 | waterLevel | integer |  |
@@ -666,7 +666,7 @@
 | bhvDelayTimer | integer |  |
 | bhvStackIndex | integer |  |
 | collidedObjInteractTypes | integer |  |
-| createdThroughNetwork | integer |  |
+| createdThroughNetwork | integer | read-only |
 | curBhvCommand | Pointer <BehaviorScript> | read-only |
 | globalPlayerIndex | integer |  |
 | header | [ObjectNode](#ObjectNode) | read-only |
@@ -677,9 +677,9 @@
 | hurtboxHeight | number |  |
 | hurtboxRadius | number |  |
 | numCollidedObjs | integer |  |
-| parentObj | [Object](#Object) | read-only |
-| platform | [Object](#Object) | read-only |
-| prevObj | [Object](#Object) | read-only |
+| parentObj | [Object](#Object) |  |
+| platform | [Object](#Object) |  |
+| prevObj | [Object](#Object) |  |
 | respawnInfoType | integer |  |
 | unused1 | integer |  |
 
@@ -754,14 +754,14 @@
 | oFloorType | integer |  |
 | oFloorRoom | integer |  |
 | oAngleToHome | integer |  |
-| oFloor | [Surface](#Surface) | read-only |
+| oFloor | [Surface](#Surface) |  |
 | oDeathSound | integer |  |
 
 ### Object-Dependent Data Fields
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| oPathedStartWaypoint | [Waypoint](#Waypoint) | read-only |
-| oPathedPrevWaypoint | [Waypoint](#Waypoint) | read-only |
+| oPathedStartWaypoint | [Waypoint](#Waypoint) |  |
+| oPathedPrevWaypoint | [Waypoint](#Waypoint) |  |
 | oPathedPrevWaypointFlags | integer |  |
 | oPathedTargetPitch | integer |  |
 | oPathedTargetYaw | integer |  |
@@ -808,7 +808,7 @@
 | oBirdTargetYaw | integer |  |
 | oBirdChirpChirpUnkF4 | integer |  |
 | oEndBirdUnk104 | number |  |
-| oHiddenBlueCoinSwitch | [Object](#Object) | read-only |
+| oHiddenBlueCoinSwitch | [Object](#Object) |  |
 | oBobombBlinkTimer | integer |  |
 | oBobombFuseLit | integer |  |
 | oBobombFuseTimer | integer |  |
@@ -830,7 +830,7 @@
 | oBooOscillationTimer | integer |  |
 | oBooMoveYawDuringHit | integer |  |
 | oBooMoveYawBeforeHit | number |  |
-| oBooParentBigBoo | [Object](#Object) | read-only |
+| oBooParentBigBoo | [Object](#Object) |  |
 | oBooNegatedAggressiveness | number |  |
 | oBooInitialMoveYaw | integer |  |
 | oBooTurningSpeed | integer |  |
@@ -903,7 +903,7 @@
 | oCannonPlayerIndex | integer |  |
 | oCapUnkF4 | integer |  |
 | oCapUnkF8 | integer |  |
-| oChainChompSegments | [ChainSegment](#ChainSegment) | read-only |
+| oChainChompSegments | [ChainSegment](#ChainSegment) |  |
 | oChainChompMaxDistFromPivotPerChainPart | number |  |
 | oChainChompMaxDistBetweenChainParts | number |  |
 | oChainChompDistToPivot | number |  |
@@ -998,7 +998,7 @@
 | oFlameUnkF4 | number |  |
 | oFlameUnkF8 | integer |  |
 | oFlameUnkFC | number |  |
-| oFlameUnk100 | [Object](#Object) | read-only |
+| oFlameUnk100 | [Object](#Object) |  |
 | oBlueFlameUnkF8 | number |  |
 | oSmallPiranhaFlameStartSpeed | number |  |
 | oSmallPiranhaFlameEndSpeed | number |  |
@@ -1042,7 +1042,7 @@
 | oHauntedChairUnk104 | integer |  |
 | oHeaveHoUnk88 | integer |  |
 | oHeaveHoUnkF4 | number |  |
-| oHiddenObjectUnkF4 | [Object](#Object) | read-only |
+| oHiddenObjectUnkF4 | [Object](#Object) |  |
 | oHootAvailability | integer |  |
 | oHootMarioReleaseTime | integer |  |
 | oHorizontalMovementUnkF4 | integer |  |
@@ -1106,7 +1106,7 @@
 | oIntroLakituUnk108 | number |  |
 | oIntroLakituUnk10C | number |  |
 | oIntroLakituUnk110 | number |  |
-| oIntroLakituCloud | [Object](#Object) | read-only |
+| oIntroLakituCloud | [Object](#Object) |  |
 | oMenuButtonState | integer |  |
 | oMenuButtonTimer | integer |  |
 | oMenuButtonOrigPosX | number |  |
@@ -1127,14 +1127,14 @@
 | oMipsStartWaypointIndex | integer |  |
 | oMipsForwardVelocity | number |  |
 | oMoneybagJumpState | integer |  |
-| oMontyMoleCurrentHole | [Object](#Object) | read-only |
+| oMontyMoleCurrentHole | [Object](#Object) |  |
 | oMontyMoleHeightRelativeToFloor | number |  |
 | oMontyMoleHoleX | number |  |
 | oMontyMoleHoleY | number |  |
 | oMontyMoleHoleZ | number |  |
 | oMontyMoleHoleCooldown | integer |  |
 | oMrBlizzardScale | number |  |
-| oMrBlizzardHeldObj | [Object](#Object) | read-only |
+| oMrBlizzardHeldObj | [Object](#Object) |  |
 | oMrBlizzardGraphYVel | number |  |
 | oMrBlizzardTimer | integer |  |
 | oMrBlizzardDizziness | number |  |
@@ -1152,7 +1152,7 @@
 | oRespawnerModelToRespawn | integer |  |
 | oRespawnerMinSpawnDist | number |  |
 | oOpenableGrillUnk88 | integer |  |
-| oOpenableGrillUnkF4 | [Object](#Object) | read-only |
+| oOpenableGrillUnkF4 | [Object](#Object) |  |
 | oIntroPeachYawFromFocus | number |  |
 | oIntroPeachPitchFromFocus | number |  |
 | oIntroPeachDistToCamera | number |  |
@@ -1182,15 +1182,15 @@
 | oPitouneUnkF8 | number |  |
 | oPitouneUnkFC | number |  |
 | oPlatformTimer | integer |  |
-| oPlatformUnkF8 | [Object](#Object) | read-only |
+| oPlatformUnkF8 | [Object](#Object) |  |
 | oPlatformUnkFC | integer |  |
 | oPlatformUnk10C | number |  |
 | oPlatformUnk110 | number |  |
 | oPlatformOnTrackBaseBallIndex | integer |  |
 | oPlatformOnTrackDistMovedSinceLastBall | number |  |
 | oPlatformOnTrackSkiLiftRollVel | number |  |
-| oPlatformOnTrackStartWaypoint | [Waypoint](#Waypoint) | read-only |
-| oPlatformOnTrackPrevWaypoint | [Waypoint](#Waypoint) | read-only |
+| oPlatformOnTrackStartWaypoint | [Waypoint](#Waypoint) |  |
+| oPlatformOnTrackPrevWaypoint | [Waypoint](#Waypoint) |  |
 | oPlatformOnTrackPrevWaypointFlags | integer |  |
 | oPlatformOnTrackPitch | integer |  |
 | oPlatformOnTrackYaw | integer |  |
@@ -1239,7 +1239,7 @@
 | oSkeeterWaitTime | integer |  |
 | oSkeeterLastWaterY | number |  |
 | oSkeeterUnk1AC | integer |  |
-| oJrbSlidingBoxUnkF4 | [Object](#Object) | read-only |
+| oJrbSlidingBoxUnkF4 | [Object](#Object) |  |
 | oJrbSlidingBoxUnkF8 | integer |  |
 | oJrbSlidingBoxUnkFC | number |  |
 | oWFSlidBrickPtfmMovVel | number |  |
@@ -1393,10 +1393,10 @@
 | oWhitePuffUnkF4 | number |  |
 | oWhitePuffUnkF8 | integer |  |
 | oWhitePuffUnkFC | integer |  |
-| oStrongWindParticlePenguinObj | [Object](#Object) | read-only |
+| oStrongWindParticlePenguinObj | [Object](#Object) |  |
 | oWhompShakeVal | integer |  |
 | oWigglerFallThroughFloorsHeight | number |  |
-| oWigglerSegments | [ChainSegment](#ChainSegment) | read-only |
+| oWigglerSegments | [ChainSegment](#ChainSegment) |  |
 | oWigglerWalkAnimSpeed | number |  |
 | oWigglerSquishSpeed | number |  |
 | oWigglerTimeUntilRandomTurn | integer |  |
@@ -1442,8 +1442,8 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | gfx | [GraphNodeObject](#GraphNodeObject) | read-only |
-| next | [ObjectNode](#ObjectNode) | read-only |
-| prev | [ObjectNode](#ObjectNode) | read-only |
+| next | [ObjectNode](#ObjectNode) |  |
+| prev | [ObjectNode](#ObjectNode) |  |
 
 [:arrow_up_small:](#)
 
@@ -1453,9 +1453,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| next | [ObjectWarpNode](#ObjectWarpNode) | read-only |
+| next | [ObjectWarpNode](#ObjectWarpNode) |  |
 | node | [WarpNode](#WarpNode) | read-only |
-| object | [Object](#Object) | read-only |
+| object | [Object](#Object) |  |
 
 [:arrow_up_small:](#)
 
@@ -1495,7 +1495,7 @@
 | headRotation | [Vec3s](#Vec3s) | read-only |
 | pos | [Vec3f](#Vec3f) | read-only |
 | unused | integer |  |
-| usedObj | [Object](#Object) | read-only |
+| usedObj | [Object](#Object) |  |
 
 [:arrow_up_small:](#)
 
@@ -1505,16 +1505,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| currCeil | [Surface](#Surface) | read-only |
+| currCeil | [Surface](#Surface) |  |
 | currCeilHeight | number |  |
 | currCeilType | integer |  |
-| currFloor | [Surface](#Surface) | read-only |
+| currFloor | [Surface](#Surface) |  |
 | currFloorHeight | number |  |
 | currFloorType | integer |  |
-| prevCeil | [Surface](#Surface) | read-only |
+| prevCeil | [Surface](#Surface) |  |
 | prevCeilHeight | number |  |
 | prevCeilType | integer |  |
-| prevFloor | [Surface](#Surface) | read-only |
+| prevFloor | [Surface](#Surface) |  |
 | prevFloorHeight | number |  |
 | prevFloorType | integer |  |
 | waterHeight | number |  |
@@ -1530,10 +1530,10 @@
 | activeAreaIndex | integer |  |
 | areaIndex | integer |  |
 | behaviorArg | integer |  |
-| next | [SpawnInfo](#SpawnInfo) | read-only |
+| next | [SpawnInfo](#SpawnInfo) |  |
 | startAngle | [Vec3s](#Vec3s) | read-only |
 | startPos | [Vec3s](#Vec3s) | read-only |
-| unk18 | [GraphNode](#GraphNode) | read-only |
+| unk18 | [GraphNode](#GraphNode) |  |
 
 [:arrow_up_small:](#)
 
@@ -1580,7 +1580,7 @@
 | lowerY | integer |  |
 | modifiedTimestamp | integer |  |
 | normal | [Vec3f](#Vec3f) | read-only |
-| object | [Object](#Object) | read-only |
+| object | [Object](#Object) |  |
 | originOffset | number |  |
 | prevVertex1 | [Vec3s](#Vec3s) | read-only |
 | prevVertex2 | [Vec3s](#Vec3s) | read-only |

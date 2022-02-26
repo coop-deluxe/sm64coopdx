@@ -43,6 +43,8 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     obj->oHomeY = y;
     obj->oHomeZ = z;
 
+    obj->createdThroughNetwork = true;
+
     if (objSetupFunction != 0) {
         lua_State* L = gLuaState;
         lua_rawgeti(L, LUA_REGISTRYINDEX, objSetupFunction);

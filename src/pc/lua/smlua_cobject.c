@@ -181,6 +181,7 @@ static int smlua__set_field(lua_State* L) {
         return 0;
     }
 
+    void* valuePointer = NULL;
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     switch (data->valueType) {
         case LVT_BOOL:*(u8*) p = smlua_to_boolean(L, -1); break;
@@ -191,6 +192,14 @@ static int smlua__set_field(lua_State* L) {
         case LVT_S16: *(s16*)p = smlua_to_integer(L, -1); break;
         case LVT_S32: *(s32*)p = smlua_to_integer(L, -1); break;
         case LVT_F32: *(f32*)p = smlua_to_number(L, -1);  break;
+
+        case LVT_COBJECT_P:
+            valuePointer = smlua_to_cobject(L, -1, data->lot);
+            if (gSmLuaConvertSuccess) {
+                *(u8**)p = valuePointer;
+            }
+            break;
+
         default:
             LOG_LUA("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
             smlua_logline();
