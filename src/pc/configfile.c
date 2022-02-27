@@ -423,6 +423,7 @@ void configfile_save(const char *filename) {
     // save enabled mods
     for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
         struct ModListEntry* entry = &gModTableLocal.entries[i];
+        if (entry == NULL) { continue; }
         if (!entry->enabled) { continue; }
         fprintf(file, "%s %s\n", "enable-mod:", entry->name);
     }
