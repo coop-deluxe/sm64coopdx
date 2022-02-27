@@ -889,6 +889,9 @@ s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
 
     vec3f_copy(result, gVec3fZero);
     spline_get_weights(m, weights, m->splineKeyframeFraction, m->splineState);
+
+    if (m->splineKeyframe == NULL) { return FALSE; }
+
     for (i = 0; i < 4; i++) {
         result[0] += weights[i] * m->splineKeyframe[i][1];
         result[1] += weights[i] * m->splineKeyframe[i][2];
