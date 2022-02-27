@@ -394,7 +394,6 @@ struct CameraStoredInfo sCameraStoreCutscene;
 // first iteration of data
 u32 unused8032CFC0 = 0;
 struct Object *gCutsceneFocus = NULL;
-const BehaviorScript *gCutsceneFocusBehavior = NULL;
 // other camera focuses?
 u32 unused8032CFC8 = 0;
 u32 unused8032CFCC = 0;
@@ -3278,7 +3277,6 @@ void reset_camera(struct Camera *c) {
     gCutsceneObjSpawn = 0;
     gObjCutsceneDone = FALSE;
     gCutsceneFocus = NULL;
-    gCutsceneFocusBehavior = NULL;
     unused8032CFC8 = 0;
     unused8032CFCC = 0;
     gSecondCameraFocus = NULL;
@@ -6946,7 +6944,6 @@ void start_object_cutscene(u8 cutscene, struct Object *o) {
     sObjectCutscene = cutscene;
     gRecentCutscene = 0;
     gCutsceneFocus = o;
-    gCutsceneFocusBehavior = o->behavior;
     gObjCutsceneDone = FALSE;
 }
 
@@ -11298,14 +11295,9 @@ void play_cutscene(struct Camera *c) {
     gCameraMovementFlags &= ~CAM_MOVING_INTO_MODE;
 
     if (gCutsceneFocus != NULL) {
-        if (gCutsceneFocus->activeFlags == ACTIVE_FLAG_DEACTIVATED || gCutsceneFocus->behavior != gCutsceneFocusBehavior) {
+        if (gCutsceneFocus->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
             gObjCutsceneDone = true;
             gTimeStopState = 0;
-
-            sStatusFlags |= CAM_FLAG_SMOOTH_MOVEMENT;
-            gCutsceneTimer = CUTSCENE_STOP;
-            c->cutscene = 0;
-            return;
         }
     }
 
