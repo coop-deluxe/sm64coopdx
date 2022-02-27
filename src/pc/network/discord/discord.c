@@ -21,26 +21,24 @@ static int64_t applicationId = 752700005210390568;
 struct DiscordApplication app = { 0 };
 bool gDiscordInitialized = false;
 bool gDiscordFailed = false;
+static int already_run = 0;
 
 static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
     LOGFILE_INFO(LFT_DISCORD, "callback (%d): %s", level, message);
 }
 
-void discord_fatal(int rc) {
-#if defined(_WIN32) || defined(_WIN64)
+void discord_fatal_message(int rc) {
     char errorMessage[132] = { 0 };
-    snprintf(errorMessage, 132, "Discord threw an error.\r\n\r\nTo fix: \r\n1. Close the game.\r\n2. Restart Discord.\r\n3. Start the game.\r\n\r\nRC: %d", rc);
-    fflush(stdout);
-    fflush(stderr);
-    LOGFILE_ERROR(LFT_DISCORD, "discord fatal %d", rc);
-    logfile_close(LFT_DISCORD);
-    MessageBox(NULL,
-        errorMessage,
-        "Fatal Discord Error",
-        MB_ICONERROR | MB_OK | MB_DEFBUTTON1
-    );
-    exit(1);
-#else
+    snprintf(errorMessage, 132, "Discord threw an error.\nTo fix: \n1. Close the game.\n2. Restart Discord.\n3. Start the game.\nRC: %d", rc);
+    djui_popup_create(errorMessage, 6);
+}
+
+void discord_fatal(int rc) {
+    if (already_run == 0) {
+        already_run = 1;
+        discord_fatal_message(rc);
+    }
+
     SOFT_ASSERT(rc != DiscordResult_ServiceUnavailable);
     SOFT_ASSERT(rc != DiscordResult_InvalidVersion);
     SOFT_ASSERT(rc != DiscordResult_LockFailed);
@@ -83,7 +81,6 @@ void discord_fatal(int rc) {
     SOFT_ASSERT(rc != DiscordResult_PurchaseError);
     SOFT_ASSERT(rc != DiscordResult_TransactionAborted);
     SOFT_ASSERT(rc == DiscordResult_Ok);
-#endif
 }
 
 static void set_instance_env_variable(void) {
