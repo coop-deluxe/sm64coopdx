@@ -22,6 +22,7 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     }
 
     struct Object* obj = spawn_object(gMarioStates[0].marioObj, loadedModelId, behavior);
+
     if (obj == NULL) {
         LOG_ERROR("failed to allocate object");
         return NULL;
