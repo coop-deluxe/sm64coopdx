@@ -18,6 +18,7 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
+#include "pc/configfile.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -66,7 +67,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
-        for (int i = 1; i < MAX_PLAYERS; i++) {
+        for (int i = 1; i < configAmountofPlayers; i++) {
             if (!gNetworkPlayers[i].connected) {
                 globalIndex = i;
                 break;

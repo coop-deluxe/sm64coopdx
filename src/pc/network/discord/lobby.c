@@ -3,6 +3,7 @@
 #include "discord_network.h"
 #include "pc/logfile.h"
 #include "pc/utils/misc.h"
+#include "pc/configfile.h"
 
 #define MAX_LOBBY_RETRY 5
 #define MAX_LOBBY_RETRY_WAIT_TIME 6
@@ -45,7 +46,7 @@ static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult resu
     gCurActivity.type = DiscordActivityType_Playing;
     snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id);
     gCurActivity.party.size.current_size = 1;
-    gCurActivity.party.size.max_size = MAX_PLAYERS;
+    gCurActivity.party.size.max_size = configAmountofPlayers;
 
     char secretJoin[128] = "";
     snprintf(secretJoin, 128, DISCORD_ID_FORMAT ":%s", lobby->id, lobby->secret);
