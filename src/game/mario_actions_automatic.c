@@ -65,7 +65,14 @@ void play_climbing_sounds(struct MarioState *m, s32 b) {
 
 s32 set_pole_position(struct MarioState *m, f32 offsetY) {
     if (m->usedObj == NULL) { m->usedObj = cur_obj_find_nearest_pole(); }
-    if (m->usedObj == NULL) { return POLE_NONE; }
+    
+    // This is here so if somehow a pole despawns while you are on it.
+    // You will just drop from it.
+    if (m->usedObj == NULL) {
+        // If Mario is no longer interacting with the pole, stop the pole holding action.
+        set_mario_action(m, ACT_FREEFALL, 0);
+        return POLE_FELL_OFF;
+    }
 
     UNUSED s32 unused1;
     UNUSED s32 unused2;
