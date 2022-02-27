@@ -2,6 +2,7 @@ Developers:
     djoslin0
     fgsfds
     FluffaLuigi
+    Isaac0-dev
     kebabstorm
     MegaMech
     theclashingfritz
@@ -22,7 +23,6 @@ Contributors:
     Filipianosol
     GammaTendonNine
     gunvalk
-    IsaacBrumby
     jkcoxson
     Llennpie
     LuigiNoodle
