@@ -224,7 +224,7 @@ void main_func(void) {
     mod_list_init();
     configfile_load(configfile_name());
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
-    if (configPlayerPalette >= 16) { configPlayerPalette = 0; }
+    if (configPlayerPalette >= 24) { configPlayerPalette = 0; }
 
     if (gCLIOpts.FullScreen == 1)
         configWindow.fullscreen = true;
