@@ -213,7 +213,7 @@ void coin_inside_boo_act_1(void) {
     }
     cur_obj_move_standard(-30);
     bhv_coin_sparkles_init();
-    if (cur_obj_has_model(MODEL_BLUE_COIN))
+    if (cur_obj_has_model(smlua_model_util_load(E_MODEL_BLUE_COIN)))
         o->oDamageOrCoinValue = 5;
     if (cur_obj_wait_then_blink(400, 20))
         obj_mark_for_deletion(o);
