@@ -103,6 +103,7 @@ bool         configSkipIntro     = 0;
 bool         configShareLives    = 0;
 bool         configEnableCheats  = 0;
 bool         configBubbleDeath   = true;
+unsigned int configAmountofPlayers   = 16;
 bool         configHUD           = true;
 #ifdef DISCORDRPC
 bool         configDiscordRPC    = true;
@@ -175,6 +176,7 @@ static const struct ConfigOption options[] = {
     {.name = "share_lives",          .type = CONFIG_TYPE_BOOL, .boolValue = &configShareLives},
     {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
     {.name = "bubble_death",         .type = CONFIG_TYPE_BOOL, .boolValue = &configBubbleDeath},
+    {.name = "amount_of_players",    .type = CONFIG_TYPE_UINT, .uintValue = &configAmountofPlayers},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif

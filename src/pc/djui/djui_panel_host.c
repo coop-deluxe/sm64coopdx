@@ -49,6 +49,12 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
         djui_inputbox_select_all(sInputboxPort);
         return;
     }
+    
+    // Doesn't let you host if the player limit is not good
+    if (configAmountofPlayers < 2 || configAmountofPlayers > 16) {
+        return;
+    }
+    
     configHostPort = atoi(sInputboxPort->buffer);
     djui_panel_host_message_create(caller);
 }
