@@ -71,6 +71,7 @@ static struct Surface *alloc_surface(void) {
     //  we, um...
     // Perhaps originally just debug feedback?
     if (gSurfacesAllocated >= sSurfacePoolSize) {
+        return NULL;
     }
 
     surface->type = 0;
@@ -363,6 +364,7 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
     nz *= mag;
 
     surface = alloc_surface();
+    if (surface == NULL) { return NULL; }
 
     vec3s_copy(surface->prevVertex1, surface->vertex1);
     vec3s_copy(surface->prevVertex2, surface->vertex2);

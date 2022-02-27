@@ -21,7 +21,7 @@ static bool sIgnoreInteractableUntilCursorReleased = false;
 struct DjuiBase* gDjuiHovered = NULL;
 struct DjuiBase* gDjuiCursorDownOn = NULL;
 struct DjuiBase* gInteractableFocus = NULL;
-static struct DjuiBase* sInteractableBinding = NULL;
+struct DjuiBase* gInteractableBinding = NULL;
 static struct DjuiBase* sMouseDown    = NULL;
 bool gInteractableOverridePad         = false;
 OSContPad gInteractablePad            = { 0 };
@@ -163,11 +163,11 @@ static void djui_interactable_cursor_update_active(struct DjuiBase* base) {
 }
 
 bool djui_interactable_is_binding(void) {
-    return sInteractableBinding != NULL;
+    return gInteractableBinding != NULL;
 }
 
 void djui_interactable_set_binding(struct DjuiBase* base) {
-    sInteractableBinding = base;
+    gInteractableBinding = base;
     djui_cursor_set_visible(base == NULL);
     if (base == NULL) {
         sIgnoreInteractableUntilCursorReleased = true;
@@ -186,7 +186,7 @@ bool djui_interactable_is_input_focus(struct DjuiBase* base) {
 }
 
 bool djui_interactable_on_key_down(int scancode) {
-    if (sInteractableBinding != NULL) {
+    if (gInteractableBinding != NULL) {
         return true;
     }
 
@@ -377,8 +377,8 @@ void djui_interactable_update(void) {
         if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
     }
 
-    if (sInteractableBinding != NULL) {
-        djui_interactable_on_bind(sInteractableBinding);
+    if (gInteractableBinding != NULL) {
+        djui_interactable_on_bind(gInteractableBinding);
     } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
         // cursor down events
         if (gDjuiHovered != NULL) {
