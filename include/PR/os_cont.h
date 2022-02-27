@@ -123,6 +123,8 @@ typedef struct {
 
 #define CONT_A      0x8000
 #define CONT_B      0x4000
+#define CONT_X      0x0040
+#define CONT_Y      0x0080
 #define CONT_G	    0x2000
 #define CONT_START  0x1000
 #define CONT_UP     0x0800
@@ -140,6 +142,8 @@ typedef struct {
 
 #define A_BUTTON	CONT_A
 #define B_BUTTON	CONT_B
+#define X_BUTTON	CONT_X
+#define Y_BUTTON	CONT_Y
 #define L_TRIG		CONT_L
 #define R_TRIG		CONT_R
 #define Z_TRIG		CONT_G

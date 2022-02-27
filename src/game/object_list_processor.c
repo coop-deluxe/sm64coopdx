@@ -282,14 +282,16 @@ void bhv_mario_update(void) {
         vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
     }
 
+    gMarioState->particleFlags = 0;
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
 
     u32 particleFlags = 0;
     s32 i;
 
     particleFlags = execute_mario_action(gCurrentObject);
-    gCurrentObject->oMarioParticleFlags = particleFlags;
     smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
+    particleFlags |= gMarioState->particleFlags;
+    gCurrentObject->oMarioParticleFlags = particleFlags;
 
     // Mario code updates MarioState's versions of position etc, so we need
     // to sync it with the Mario object

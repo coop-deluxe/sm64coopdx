@@ -92,6 +92,8 @@ static void keyboard_bindkeys(void) {
     keyboard_add_binds(STICK_RIGHT,  configKeyStickRight);
     keyboard_add_binds(A_BUTTON,     configKeyA);
     keyboard_add_binds(B_BUTTON,     configKeyB);
+    keyboard_add_binds(X_BUTTON,     configKeyX);
+    keyboard_add_binds(Y_BUTTON,     configKeyY);
     keyboard_add_binds(Z_TRIG,       configKeyZ);
     keyboard_add_binds(U_CBUTTONS,   configKeyCUp);
     keyboard_add_binds(L_CBUTTONS,   configKeyCLeft);

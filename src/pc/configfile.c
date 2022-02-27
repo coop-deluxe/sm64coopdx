@@ -62,7 +62,9 @@ unsigned int configEnvVolume = MAX_VOLUME;
 
 // Keyboard mappings (VK_ values, by default keyboard/gamepad/mouse)
 unsigned int configKeyA[MAX_BINDS]          = { 0x0026,   0x1000,     0x1103     };
-unsigned int configKeyB[MAX_BINDS]          = { 0x0033,   0x1002,     0x1101     };
+unsigned int configKeyB[MAX_BINDS]          = { 0x0033,   0x1001,     0x1101     };
+unsigned int configKeyX[MAX_BINDS]          = { 0x0025,   0x1002,     VK_INVALID };
+unsigned int configKeyY[MAX_BINDS]          = { 0x0032,   0x1003,     VK_INVALID };
 unsigned int configKeyStart[MAX_BINDS]      = { 0x0039,   0x1006,     VK_INVALID };
 unsigned int configKeyL[MAX_BINDS]          = { 0x002A,   0x1009,     0x1104     };
 unsigned int configKeyR[MAX_BINDS]          = { 0x0036,   0x100A,     0x101B     };
@@ -137,6 +139,8 @@ static const struct ConfigOption options[] = {
     {.name = "env_volume",           .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
     {.name = "key_a",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
+    {.name = "key_x",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyX},
+    {.name = "key_y",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyY},
     {.name = "key_start",            .type = CONFIG_TYPE_BIND, .uintValue = configKeyStart},
     {.name = "key_l",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyL},
     {.name = "key_r",                .type = CONFIG_TYPE_BIND, .uintValue = configKeyR},
