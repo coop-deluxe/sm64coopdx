@@ -77,3 +77,102 @@ struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedI
 struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z) {
     spawn_object_internal(behaviorId, modelId, x, y, z, 0, false);
 }
+
+//
+// Helpers to iterate through the object table
+//
+
+struct Object *obj_get_first(enum ObjectList objList) {
+    if (gObjectLists && objList >= 0 && objList < NUM_OBJ_LISTS) {
+        struct Object *head = (struct Object *) &gObjectLists[objList];
+        struct Object *obj = (struct Object *) head->header.next;
+        if (obj != head) {
+            return obj;
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
+    const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    if (behavior) {
+        enum ObjectList objList = get_object_list_from_behavior(behavior);
+        for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED) {
+                return obj;
+            }
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value) {
+    const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    if (behavior) {
+        enum ObjectList objList = get_object_list_from_behavior(behavior);
+        for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_S32(fieldIndex) == value) {
+                return obj;
+            }
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value) {
+    const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    if (behavior) {
+        enum ObjectList objList = get_object_list_from_behavior(behavior);
+        for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_F32(fieldIndex) == value) {
+                return obj;
+            }
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_next(struct Object *o) {
+    if (gObjectLists && o) {
+        enum ObjectList objList = get_object_list_from_behavior(o->behavior);
+        struct Object *head = (struct Object *) &gObjectLists[objList];
+        struct Object *next = (struct Object *) o->header.next;
+        if (next != head) {
+            return next;
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_next_with_same_behavior_id(struct Object *o) {
+    if (o) {
+        for (struct Object *obj = obj_get_next(o); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED) {
+                return obj;
+            }
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value) {
+    if (o) {
+        for (struct Object *obj = obj_get_next(o); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_S32(fieldIndex) == value) {
+                return obj;
+            }
+        }
+    }
+    return NULL;
+}
+
+struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o, s32 fieldIndex, f32 value) {
+    if (o) {
+        for (struct Object *obj = obj_get_next(o); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_F32(fieldIndex) == value) {
+                return obj;
+            }
+        }
+    }
+    return NULL;
+}
