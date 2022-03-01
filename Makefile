@@ -94,9 +94,15 @@ ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
   EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
   EXTRA_CFLAGS := -Wno-expansion-to-defined
+
+  EXTRA_CPP_INCLUDES := -I ../include/cpp
+  EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
 else
   EXTRA_INCLUDES ?=
   EXTRA_CFLAGS ?=
+
+  EXTRA_CPP_INCLUDES ?=
+  EXTRA_CPP_FLAGS ?=
 endif
 
 EXTRACT_ASSETS := $(PYTHON) ./extract_assets.py
@@ -1161,8 +1167,8 @@ $(GLOBAL_ASM_DEP).$(NON_MATCHING):
 	touch $@
 
 $(BUILD_DIR)/%.o: %.cpp
-	@$(CXX) -fsyntax-only $(CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	$(CXX) -c $(CFLAGS) -o $@ $<
+	@$(CXX) -fsyntax-only $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(CXX) -c $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR)/%.o: %.c
 	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
