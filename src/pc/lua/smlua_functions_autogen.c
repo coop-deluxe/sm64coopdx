@@ -52,6 +52,38 @@ int smlua_func_get_id_from_behavior(lua_State* L) {
  // camera.h //
 //////////////
 
+int smlua_func_set_camera_mode(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Camera* c = (struct Camera*)smlua_to_cobject(L, 1, LOT_CAMERA);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 mode = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 frames = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    set_camera_mode(c, mode, frames);
+
+    return 1;
+}
+
+int smlua_func_set_camera_mode_fixed(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct Camera* c = (struct Camera*)smlua_to_cobject(L, 1, LOT_CAMERA);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 x = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 y = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 z = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, set_camera_mode_fixed(c, x, y, z));
+
+    return 1;
+}
+
 int smlua_func_set_camera_pitch_shake(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -132,21 +164,6 @@ int smlua_func_set_environmental_camera_shake(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     set_environmental_camera_shake(shake);
-
-    return 1;
-}
-
-int smlua_func_set_camera_mode(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    struct Camera* c = (struct Camera *) smlua_to_cobject(L, 1, LOT_CAMERA);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s16 mode = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s16 frames = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    set_camera_mode(c, mode, frames);
 
     return 1;
 }
@@ -5301,6 +5318,110 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
  // smlua_obj_utils.h //
 ///////////////////////
 
+int smlua_func_obj_get_first(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int objList = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first(objList));
+
+    return 1;
+}
+
+int smlua_func_obj_get_first_with_behavior_id(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id(behaviorId));
+
+    return 1;
+}
+
+int smlua_func_obj_get_first_with_behavior_id_and_field_f32(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 value = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value));
+
+    return 1;
+}
+
+int smlua_func_obj_get_first_with_behavior_id_and_field_s32(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 value = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next(o));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next_with_same_behavior_id(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id(o));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next_with_same_behavior_id_and_field_f32(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 value = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 value = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value));
+
+    return 1;
+}
+
 int smlua_func_spawn_sync_object(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
@@ -5318,110 +5439,6 @@ int smlua_func_spawn_sync_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     smlua_push_object(L, LOT_OBJECT, spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction));
-
-    return 1;
-}
-
-int smlua_func_obj_get_first(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    int objList = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_first(objList));
-
-    return 1;
-}
-
-int smlua_func_obj_get_first_with_behavior_id(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    int behaviorId = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id(behaviorId));
-
-    return 1;
-}
-
-int smlua_func_obj_get_first_with_behavior_id_and_field_s32(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    int behaviorId = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    int fieldIndex = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    int value = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value));
-
-    return 1;
-}
-
-int smlua_func_obj_get_first_with_behavior_id_and_field_f32(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    int behaviorId = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    int fieldIndex = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    float value = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value));
-
-    return 1;
-}
-
-int smlua_func_obj_get_next(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_next(o));
-
-    return 1;
-}
-
-int smlua_func_obj_get_next_with_same_behavior_id(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id(o));
-
-    return 1;
-}
-
-int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    int fieldIndex = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    int value = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value));
-
-    return 1;
-}
-
-int smlua_func_obj_get_next_with_same_behavior_id_and_field_f32(lua_State *L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    int fieldIndex = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    float value = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value));
 
     return 1;
 }
@@ -5825,13 +5842,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior);
 
     // camera.h
+    smlua_bind_function(L, "set_camera_mode", smlua_func_set_camera_mode);
+    smlua_bind_function(L, "set_camera_mode_fixed", smlua_func_set_camera_mode_fixed);
     smlua_bind_function(L, "set_camera_pitch_shake", smlua_func_set_camera_pitch_shake);
     smlua_bind_function(L, "set_camera_roll_shake", smlua_func_set_camera_roll_shake);
     smlua_bind_function(L, "set_camera_shake_from_hit", smlua_func_set_camera_shake_from_hit);
     smlua_bind_function(L, "set_camera_shake_from_point", smlua_func_set_camera_shake_from_point);
     smlua_bind_function(L, "set_camera_yaw_shake", smlua_func_set_camera_yaw_shake);
     smlua_bind_function(L, "set_environmental_camera_shake", smlua_func_set_environmental_camera_shake);
-    smlua_bind_function(L, "set_camera_mode", smlua_func_set_camera_mode);
 
     // characters.h
     smlua_bind_function(L, "get_character", smlua_func_get_character);
@@ -6241,15 +6259,15 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
 
     // smlua_obj_utils.h
-    smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);
     smlua_bind_function(L, "obj_get_first_with_behavior_id", smlua_func_obj_get_first_with_behavior_id);
-    smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_s32", smlua_func_obj_get_first_with_behavior_id_and_field_s32);
     smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_f32", smlua_func_obj_get_first_with_behavior_id_and_field_f32);
+    smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_s32", smlua_func_obj_get_first_with_behavior_id_and_field_s32);
     smlua_bind_function(L, "obj_get_next", smlua_func_obj_get_next);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id", smlua_func_obj_get_next_with_same_behavior_id);
-    smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_s32", smlua_func_obj_get_next_with_same_behavior_id_and_field_s32);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_f32", smlua_func_obj_get_next_with_same_behavior_id_and_field_f32);
+    smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_s32", smlua_func_obj_get_next_with_same_behavior_id_and_field_s32);
+    smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
 
     // sound_init.h
     smlua_bind_function(L, "disable_background_sound", smlua_func_disable_background_sound);

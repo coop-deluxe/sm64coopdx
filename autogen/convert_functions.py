@@ -43,7 +43,7 @@ in_files = [
 
 override_allowed_functions = {
     "src/audio/external.h":           [ " play_", "fade" ],
-    "src/game/camera.h":              [ "set_.*camera_.*shake" ],
+    "src/game/camera.h":              [ "set_.*camera_.*shake", "set_camera_mode" ],
     "src/game/thread6.c":             [ "queue_rumble_"],
     "src/pc/djui/djui_popup.h" :      [ "create" ],
     "src/game/save_file.h":           [ "save_file_get_" ],
