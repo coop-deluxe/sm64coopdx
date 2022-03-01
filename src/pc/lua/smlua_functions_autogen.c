@@ -136,6 +136,21 @@ int smlua_func_set_environmental_camera_shake(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_camera_mode(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Camera* c = (struct Camera *) smlua_to_cobject(L, 1, LOT_CAMERA);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 mode = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 frames = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    set_camera_mode(c, mode, frames);
+
+    return 1;
+}
+
   //////////////////
  // characters.h //
 //////////////////
@@ -5307,6 +5322,110 @@ int smlua_func_spawn_sync_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_first(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int objList = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first(objList));
+
+    return 1;
+}
+
+int smlua_func_obj_get_first_with_behavior_id(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id(behaviorId));
+
+    return 1;
+}
+
+int smlua_func_obj_get_first_with_behavior_id_and_field_s32(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int value = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value));
+
+    return 1;
+}
+
+int smlua_func_obj_get_first_with_behavior_id_and_field_f32(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    float value = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next(o));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next_with_same_behavior_id(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id(o));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int value = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value));
+
+    return 1;
+}
+
+int smlua_func_obj_get_next_with_same_behavior_id_and_field_f32(lua_State *L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object *o = (struct Object *) smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int fieldIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    float value = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value));
+
+    return 1;
+}
+
   //////////////////
  // sound_init.h //
 //////////////////
@@ -5712,6 +5831,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_camera_shake_from_point", smlua_func_set_camera_shake_from_point);
     smlua_bind_function(L, "set_camera_yaw_shake", smlua_func_set_camera_yaw_shake);
     smlua_bind_function(L, "set_environmental_camera_shake", smlua_func_set_environmental_camera_shake);
+    smlua_bind_function(L, "set_camera_mode", smlua_func_set_camera_mode);
 
     // characters.h
     smlua_bind_function(L, "get_character", smlua_func_get_character);
@@ -6122,6 +6242,14 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_obj_utils.h
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
+    smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);
+    smlua_bind_function(L, "obj_get_first_with_behavior_id", smlua_func_obj_get_first_with_behavior_id);
+    smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_s32", smlua_func_obj_get_first_with_behavior_id_and_field_s32);
+    smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_f32", smlua_func_obj_get_first_with_behavior_id_and_field_f32);
+    smlua_bind_function(L, "obj_get_next", smlua_func_obj_get_next);
+    smlua_bind_function(L, "obj_get_next_with_same_behavior_id", smlua_func_obj_get_next_with_same_behavior_id);
+    smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_s32", smlua_func_obj_get_next_with_same_behavior_id_and_field_s32);
+    smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_f32", smlua_func_obj_get_next_with_same_behavior_id_and_field_f32);
 
     // sound_init.h
     smlua_bind_function(L, "disable_background_sound", smlua_func_disable_background_sound);
