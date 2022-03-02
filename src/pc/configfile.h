@@ -30,6 +30,8 @@ extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
 extern unsigned int configKeyA[];
 extern unsigned int configKeyB[];
+extern unsigned int configKeyX[];
+extern unsigned int configKeyY[];
 extern unsigned int configKeyStart[];
 extern unsigned int configKeyL[];
 extern unsigned int configKeyR[];

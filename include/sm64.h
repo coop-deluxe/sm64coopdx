@@ -428,7 +428,7 @@
 
 #define VALID_BUTTONS (A_BUTTON   | B_BUTTON   | Z_TRIG     | START_BUTTON | \
                        U_JPAD     | D_JPAD     | L_JPAD     | R_JPAD       | \
-                       L_TRIG     | R_TRIG     |                             \
+                       L_TRIG     | R_TRIG     | X_BUTTON   | Y_BUTTON     | \
                        U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS   )
 
 #define C_BUTTONS     (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS   )

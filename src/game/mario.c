@@ -1467,7 +1467,6 @@ copyPlayerGoto:;
  * Handles Mario's input flags as well as a couple timers.
  */
 void update_mario_inputs(struct MarioState *m) {
-    m->particleFlags = 0;
     if (m->playerIndex == 0) { m->input = 0; }
 
     u8 localIsPaused = (m->playerIndex == 0) && (sCurrPlayMode == PLAY_MODE_PAUSED || m->freeze > 0);

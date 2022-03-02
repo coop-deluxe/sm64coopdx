@@ -8,6 +8,8 @@
 <br />
 
 - camera.h
+   - [set_camera_mode](#set_camera_mode)
+   - [set_camera_mode_fixed](#set_camera_mode_fixed)
    - [set_camera_pitch_shake](#set_camera_pitch_shake)
    - [set_camera_roll_shake](#set_camera_roll_shake)
    - [set_camera_shake_from_hit](#set_camera_shake_from_hit)
@@ -454,6 +456,14 @@
 <br />
 
 - smlua_obj_utils.h
+   - [obj_get_first](#obj_get_first)
+   - [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
+   - [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
+   - [obj_get_first_with_behavior_id_and_field_s32](#obj_get_first_with_behavior_id_and_field_s32)
+   - [obj_get_next](#obj_get_next)
+   - [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
+   - [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
+   - [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
    - [spawn_sync_object](#spawn_sync_object)
 
 <br />
@@ -546,6 +556,51 @@
 
 <br />
 
+
+## [set_camera_mode](#set_camera_mode)
+
+### Lua Example
+`set_camera_mode(c, mode, frames)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| mode | integer |
+| frames | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void set_camera_mode(struct Camera *c, s16 mode, s16 frames);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_camera_mode_fixed](#set_camera_mode_fixed)
+
+### Lua Example
+`local integerValue = set_camera_mode_fixed(c, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| x | integer |
+| y | integer |
+| z | integer |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [set_camera_pitch_shake](#set_camera_pitch_shake)
 
@@ -8029,6 +8084,174 @@
 
 <br />
 
+
+## [obj_get_first](#obj_get_first)
+
+### Lua Example
+`local ObjectValue = obj_get_first(objList)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| objList | integer |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_first(enum ObjectList objList);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
+
+### Lua Example
+`local ObjectValue = obj_get_first_with_behavior_id(behaviorId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behaviorId | integer |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
+
+### Lua Example
+`local ObjectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behaviorId | integer |
+| fieldIndex | integer |
+| value | number |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_first_with_behavior_id_and_field_s32](#obj_get_first_with_behavior_id_and_field_s32)
+
+### Lua Example
+`local ObjectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behaviorId | integer |
+| fieldIndex | integer |
+| value | integer |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_next](#obj_get_next)
+
+### Lua Example
+`local ObjectValue = obj_get_next(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_next(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
+
+### Lua Example
+`local ObjectValue = obj_get_next_with_same_behavior_id(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_next_with_same_behavior_id(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
+
+### Lua Example
+`local ObjectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | integer |
+| value | number |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o, s32 fieldIndex, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
+
+### Lua Example
+`local ObjectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| fieldIndex | integer |
+| value | integer |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [spawn_sync_object](#spawn_sync_object)
 
