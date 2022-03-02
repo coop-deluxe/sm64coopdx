@@ -51,12 +51,6 @@ void network_receive_level_request(struct Packet* p) {
         return;
     }
 
-    // anti spoof
-    if (packet_spoofed(p, globalIndex)) {
-        LOG_ERROR("rx spoofed level request");
-        return;
-    }
-
     // send level
     network_send_level(toNp, false);
 }

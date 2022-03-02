@@ -44,12 +44,6 @@ void network_receive_area_request(struct Packet* p) {
         return;
     }
 
-    // anti spoof
-    if (packet_spoofed(p, globalIndex)) {
-        LOG_ERROR("rx spoofed area request");
-        return;
-    }
-
     // send area
     network_send_area(toNp);
 }

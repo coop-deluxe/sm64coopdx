@@ -294,12 +294,6 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     struct NetworkPlayer* np = network_player_from_global_index(fromGlobalIndex);
     *fromLocalIndex = (np != NULL) ? np->localIndex : p->localIndex;
 
-    // anti spoof
-    if (packet_spoofed(p, fromGlobalIndex)) {
-        LOG_ERROR("rx spoofed object");
-        return NULL;
-    }
-
     // get sync ID, sanity check
     u32 syncId = 0;
     packet_read(p, &syncId, sizeof(u32));
