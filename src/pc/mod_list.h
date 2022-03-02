@@ -9,6 +9,7 @@
 #include "src/pc/platform.h"
 
 #define MOD_PATH "./mods"
+#define MAX_MOD_SIZE (2 * 1048576) // 2MB
 
 struct ModListEntry {
     char* name;
@@ -43,6 +44,7 @@ void mod_table_clear(struct ModTable* table);
 void mod_list_alloc(struct ModTable* table, u16 count);
 
 void mod_list_update_selectable(void);
+void mod_list_size_enforce(void);
 
 void mod_list_init(void);
 void mod_list_shutdown(void);

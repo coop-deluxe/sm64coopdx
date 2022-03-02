@@ -48,8 +48,8 @@ void network_send_mod_list(void) {
         packet_write(&p, &i, sizeof(u16));
         packet_write(&p, &nameLength, sizeof(u16));
         packet_write(&p, entry->name, sizeof(u8) * nameLength);
-        packet_write(&p, &entry->size, sizeof(u16));
-        LOG_INFO("    '%s': %u", entry->name, (u16)entry->size);
+        packet_write(&p, &entry->size, sizeof(u64));
+        LOG_INFO("    '%s': %llu", entry->name, (u64)entry->size);
     }
     network_send_to(0, &p);
 }
@@ -107,12 +107,17 @@ void network_receive_mod_list(struct Packet* p) {
         char* name = (char*)calloc(nameLength + 1, sizeof(char));
         packet_read(p, name, nameLength * sizeof(u8));
 
-        u16 size = 0;
-        packet_read(p, &size, sizeof(u16));
+        u64 size = 0;
+        packet_read(p, &size, sizeof(u64));
+        if (size >= MAX_MOD_SIZE) {
+            djui_popup_create("Server had too large of a mod.\nQuitting.", 4);
+            network_shutdown(false);
+            return;
+        }
 
         mod_list_add_tmp(i, remoteIndex, name, size);
 
-        LOG_INFO("    '%s': %u", name, size);
+        LOG_INFO("    '%s': %llu", name, size);
     }
 
     network_send_next_download_request();

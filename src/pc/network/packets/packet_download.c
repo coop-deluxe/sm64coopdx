@@ -21,7 +21,6 @@ void network_send_next_download_request(void) {
         network_send_download_request(i, entry->remoteIndex, entry->curOffset);
         return;
     }
-    //LOG_INFO("sending join request");
     network_send_join_request();
     djui_panel_modlist_create(NULL);
 }
@@ -134,7 +133,7 @@ void network_receive_download(struct Packet* p) {
     packet_read(p, &chunkSize, sizeof(u16));
     packet_read(p, chunk, chunkSize * sizeof(u8));
 
-    //LOG_ERROR("Received download %u:%llu", clientIndex, offset);
+    //LOG_INFO("Received download %u:%llu", clientIndex, offset);
 
     if (clientIndex >= gModTableRemote.entryCount) {
         LOG_ERROR("Received download of invalid index %u:%llu", clientIndex, offset);
@@ -153,7 +152,7 @@ void network_receive_download(struct Packet* p) {
     }
 
     if ((offset + chunkSize) > entry->size) {
-        LOG_ERROR("Received download of invalid chunk size %u:%llu:%u", clientIndex, offset, chunkSize);
+        LOG_ERROR("Received download of invalid chunk size %u:%llu:%u -- %llu", clientIndex, offset, chunkSize, entry->size);
         return;
     }
 
@@ -197,7 +196,7 @@ void network_receive_download(struct Packet* p) {
             entry->complete = true;
         }
 
-        entry->curOffset += CHUNK_SIZE * OFFSET_COUNT;
+        entry->curOffset += (u64)CHUNK_SIZE * OFFSET_COUNT;
         network_send_next_download_request();
     }
 }

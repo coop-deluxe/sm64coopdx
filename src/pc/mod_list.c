@@ -253,6 +253,8 @@ void mod_list_update_selectable(void) {
             }
         }
     }
+
+    mod_list_size_enforce();
 }
 
 static void mod_list_load_local(const char* path) {
@@ -293,6 +295,15 @@ static void mod_list_load_local(const char* path) {
     }
 
     closedir(d);
+}
+
+void mod_list_size_enforce(void) {
+    for (int i = 0; i < gModTableLocal.entryCount; i++) {
+        if (gModTableLocal.entries[i].size >= MAX_MOD_SIZE) {
+            gModTableLocal.entries[i].enabled = false;
+            gModTableLocal.entries[i].selectable = false;
+        }
+    }
 }
 
 void mod_list_init(void) {

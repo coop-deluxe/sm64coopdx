@@ -89,6 +89,7 @@ void smlua_init(void) {
     smlua_cobject_init_globals();
 
     // load scripts
+    mod_list_size_enforce();
     LOG_INFO("Loading scripts:");
     struct ModTable* table = gModTableCurrent;
     for (int i = 0; i < table->entryCount; i++) {
