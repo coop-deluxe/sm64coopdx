@@ -2464,6 +2464,7 @@ s32 cur_obj_is_mario_on_platform(void) {
 s32 cur_obj_is_any_player_on_platform(void) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].marioObj == NULL) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
             return TRUE;
         }
