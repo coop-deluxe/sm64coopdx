@@ -39,6 +39,9 @@
 *.idb
 *.pdb
 
+# Stackdumps
+*.stackdump
+
 # datadump
 /tools/ddump/*
 
