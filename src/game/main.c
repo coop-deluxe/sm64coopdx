@@ -103,8 +103,8 @@ void handle_debug_key_sequences(void) {
 
 void unknown_main_func(void) {
     // uninitialized
-    OSTime time;
-    u32 b;
+    OSTime time = 0;
+    u32 b = 0;
 
     osSetTime(time);
     osMapTLB(0, b, NULL, 0, 0, 0);
@@ -112,7 +112,8 @@ void unknown_main_func(void) {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnonnull"
-    sprintf(NULL, NULL);
+    // wtf is this
+    //sprintf(NULL, NULL);
 #pragma GCC diagnostic pop
 }
 

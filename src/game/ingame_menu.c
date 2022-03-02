@@ -1937,16 +1937,18 @@ void render_dialog_entries(void) {
 
     render_dialog_box_type(dialog, dialog->linesPerBox);
 
+#ifdef VERSION_EU
+    u32 scissorHeight = ensure_nonnegative((240 - dialog->width) + ((dialog->linesPerBox * 80) / DIAG_VAL4) / gDialogBoxScale);
+#else
+    u32 scissorHeight = ensure_nonnegative(240 + ((dialog->linesPerBox * 80) / DIAG_VAL4) - dialog->width);
+#endif
+
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE,
                   0,
                   ensure_nonnegative(DIAG_VAL2 - dialog->width),
-#ifdef VERSION_EU
                   SCREEN_WIDTH,
-                  ensure_nonnegative((240 - dialog->width) + ((dialog->linesPerBox * 80) / DIAG_VAL4) / gDialogBoxScale));
-#else
-                  SCREEN_WIDTH,
-                  ensure_nonnegative(240 + ((dialog->linesPerBox * 80) / DIAG_VAL4) - dialog->width));
-#endif
+                  scissorHeight);
+
 #if defined(VERSION_JP) || defined(VERSION_SH)
     handle_dialog_text_and_pages(0, dialog);
 #else

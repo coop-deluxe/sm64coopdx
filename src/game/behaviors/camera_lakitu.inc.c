@@ -114,8 +114,8 @@ static void camera_lakitu_intro_act_show_dialog(void) {
     int distanceToPlayer = dist_between_objects(o, player);
     int angleToPlayer = obj_angle_to_object(o, player);
 
-    s16 targetMovePitch;
-    s16 targetMoveYaw;
+    s16 targetMovePitch = 0;
+    s16 targetMoveYaw = 0;
 
     cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY);
 

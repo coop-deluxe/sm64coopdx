@@ -99,14 +99,21 @@ void network_remember_reliable(struct Packet* p) {
 
     if (tail == NULL) {
         // start of the list
-        SOFT_ASSERT(head == NULL);
+        if (head != NULL) {
+            free(node);
+            SOFT_ASSERT(head == NULL);
+        }
+
         head = node;
         tail = node;
         return;
     }
 
     // add to end of list
-    SOFT_ASSERT(tail->next == NULL);
+    if (tail->next != NULL) {
+        free(node);
+        SOFT_ASSERT(tail->next == NULL);
+    }
     tail->next = node;
     node->prev = tail;
     tail = node;

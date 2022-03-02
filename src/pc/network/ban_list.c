@@ -15,7 +15,9 @@ void ban_list_add(char* address, bool perm) {
         gBanPerm = malloc(sizeof(bool) * gBanCount);
     } else {
         gBanAddresses = realloc(gBanAddresses, sizeof(char*) * gBanCount);
+        assert(gBanAddresses != NULL);
         gBanPerm = realloc(gBanPerm, sizeof(bool) * gBanCount);
+        assert(gBanPerm != NULL);
     }
     if (gBanAddresses == NULL) {
         LOG_ERROR("Failed to allocate gBanAddresses");

@@ -135,8 +135,8 @@ const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerColors);
 void set_player_colors(u8 paletteIndex, const u8 shirt[4], const u8 pants[4]) {
     // choose the last color in the table for extra players
     if (paletteIndex >= gNumPlayerColors) paletteIndex = gNumPlayerColors - 1;
-    const u8 pAmb[3] = { pants[0] >> pants[4], pants[1] >> pants[4], pants[2] >> pants[4] };
-    const u8 sAmb[3] = { shirt[0] >> shirt[4], shirt[1] >> shirt[4], shirt[2] >> shirt[4] };
+    const u8 pAmb[3] = { pants[0] >> pants[3], pants[1] >> pants[3], pants[2] >> pants[3] };
+    const u8 sAmb[3] = { shirt[0] >> shirt[3], shirt[1] >> shirt[3], shirt[2] >> shirt[3] };
     gPlayerColors[paletteIndex].pants =
       (Lights1) gdSPDefLights1(pAmb[0], pAmb[1], pAmb[2], pants[0], pants[1], pants[2], 0x28, 0x28, 0x28);
     gPlayerColors[paletteIndex].shirt =

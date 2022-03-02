@@ -148,7 +148,7 @@ struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
         return NULL;
     }
 
-    struct Object *star;
+    struct Object *star = NULL;
     star = spawn_star(star, x, y, z);
     star->oBehParams2ndByte = 0;
     network_send_spawn_star(star, 0, x, y, z, behParams);
@@ -163,7 +163,7 @@ struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
         return NULL;
     }
 
-    struct Object * star;
+    struct Object * star = NULL;
     star = spawn_star(star, x, y, z);
     star->oBehParams2ndByte = 1;
     network_send_spawn_star(star, 1, x, y, z, behParams);
@@ -178,7 +178,7 @@ struct Object* spawn_no_exit_star(f32 x, f32 y, f32 z) {
         return NULL;
     }
 
-    struct Object * star;
+    struct Object * star = NULL;
     star = spawn_star(star, x, y, z);
     star->oBehParams2ndByte = 1;
     star->oInteractionSubtype |= INT_SUBTYPE_NO_EXIT;

@@ -1,3 +1,18 @@
 #!/bin/bash
-make BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 STRICT=1 && winpty cgdb ./build/us_pc/sm64.us.f3dex2e.exe -ex 'break debug_breakpoint_here'
-#make BETTERCAMERA=1 NODRAWINGDISTANCE=1 DEBUG=1 IMMEDIATELOAD=1 DEVELOPMENT=1 STRICT=1 && winpty cgdb ./build/us_pc/sm64.us.f3dex2e.exe -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_server.txt'
+
+set -e
+if [ $# -eq 0 ]; then
+    make DEBUG=1 DEVELOPMENT=1 STRICT=1 -j
+else
+    make DEBUG=1 DEVELOPMENT=1 -j
+fi
+
+# find file
+FILE=./build/us_pc/sm64.us.f3dex2e.exe
+WINPTY=winpty
+if [ ! -f "$FILE" ]; then
+    FILE=./build/us_pc/sm64.us.f3dex2e
+    WINPTY=
+fi
+
+$WINPTY cgdb $FILE -ex 'break debug_breakpoint_here'

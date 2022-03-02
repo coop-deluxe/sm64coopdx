@@ -27,7 +27,3 @@ sleep 2
 $FILE --client 127.0.0.1 27015 --configfile sm64config_p7.txt  &
 sleep 2
 $FILE --client 127.0.0.1 27015 --configfile sm64config_p8.txt  &
-
-#sleep 2
-#winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_p1.txt' -ex 'quit'
-#winpty cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --client 127.0.0.1 27015 --configfile sm64config_p4.txt' -ex 'quit'

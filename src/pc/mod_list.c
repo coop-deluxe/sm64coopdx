@@ -25,7 +25,7 @@ static bool acceptable_file(char* string) {
 static void mod_list_delete_tmp(void) {
     struct dirent* dir;
     DIR* d = opendir(sTmpPath);
-    if (!d) { closedir(d); return; }
+    if (!d) { return; }
 
     static char path[SYS_MAX_PATH] = { 0 };
     while ((dir = readdir(d)) != NULL) {

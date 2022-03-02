@@ -13,6 +13,7 @@ function compiler_no_discord() {
     mv ./build ./build_no_discord
 }
 
+compiler DUMMY DUMMY DUMMY "" 64 dummy_64
 compiler GL_LEGACY SDL1 SDL1 SDL1 64 legacy_1
 #compiler GL SDL1 SDL1 SDL1 64 gl_1
 #compiler D3D11 DXGI SDL1 SDL1 64 d3d11_1

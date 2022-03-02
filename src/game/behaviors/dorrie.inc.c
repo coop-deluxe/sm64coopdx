@@ -29,8 +29,8 @@ void dorrie_raise_head(void) {
 
 void dorrie_act_move(void) {
     s16 startYaw;
-    s16 targetYaw;
-    s16 targetSpeed;
+    s16 targetYaw = 0;
+    s16 targetSpeed = 0;
     s16 circularTurn;
 
     startYaw = o->oMoveAngleYaw;

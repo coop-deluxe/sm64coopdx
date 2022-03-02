@@ -206,7 +206,7 @@ void *dma_sample_data(uintptr_t devAddr, u32 size, s32 arg2, u8 *arg3) {
     uintptr_t dmaDevAddr;
     u32 transfer;
     u32 i;
-    u32 dmaIndex;
+    u32 dmaIndex = 0;
     ssize_t bufferPos;
     UNUSED u32 pad;
 
@@ -518,8 +518,7 @@ void patch_audio_bank(struct AudioBank *mem, u8 *offset, u32 numInstruments, u32
         }
     }
 
-    //! Doesn't affect EU, but required for US/JP
-    temp = &*mem;
+    temp = mem;
 #ifndef VERSION_EU
     if (numInstruments >= 1)
 #endif
@@ -921,7 +920,7 @@ void audio_init() {
     UNUSED s8 pad[16];
 #else
     UNUSED s8 pad[32];
-    u8 buf[0x10];
+    u8 buf[0x10] = { 0 };
 #endif
     s32 i, UNUSED j, UNUSED k;
     UNUSED s32 lim1; // lim1 unused in EU
@@ -957,8 +956,6 @@ void audio_init() {
     D_EU_802298D0 = 20.03042f;
     gRefreshRate = 50;
     port_eu_init();
-    if (k) {
-    }
 #endif
 
 #ifdef TARGET_N64

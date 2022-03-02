@@ -303,12 +303,12 @@ s16 sLakituPitch;
  */
 f32 sZoomAmount;
 
-s16 sCSideButtonYaw;
+s16 sCSideButtonYaw = 0;
 
 /**
  * Sound timer used to space out sounds in behind Mario mode
  */
-s16 sBehindMarioSoundTimer;
+s16 sBehindMarioSoundTimer = 0;
 
 /**
  * Virtually unused aside being set to 0 and compared with gCameraZoomDist (which is never < 0)
@@ -322,7 +322,7 @@ s16 sCUpCameraPitch;
 /**
  * The current mode's yaw, which gets added to the camera's yaw.
  */
-s16 sModeOffsetYaw;
+s16 sModeOffsetYaw = 0;
 
 /**
  * Stores Mario's yaw around the stairs, relative to the camera's position.
@@ -355,7 +355,7 @@ f32 sCannonYOffset;
  * ones have multiple uses.
  * Check the cutscene_start functions for documentation on the cvars used by a specific cutscene.
  */
-struct CutsceneVariable sCutsceneVars[10];
+struct CutsceneVariable sCutsceneVars[10] = { 0 };
 struct ModeTransitionInfo sModeInfo;
 /**
  * Offset added to sFixedModeBasePosition when Mario is inside, near the castle lobby entrance
@@ -1729,7 +1729,7 @@ void mode_boss_fight_camera(struct Camera *c) {
  * @see update_parallel_tracking_camera
  */
 void mode_parallel_tracking_camera(struct Camera *c) {
-    s16 dummy;
+    s16 dummy = 0;
 
     radial_camera_input(c, 0.f);
     set_fov_function(CAM_FOV_DEFAULT);
@@ -1764,7 +1764,7 @@ s32 update_behind_mario_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     f32 dist;
     UNUSED u8 unused3[4];
     s16 absPitch;
-    s16 pitch;
+    s16 pitch = 0;
     s16 yaw;
     s16 goalPitch = -sMarioCamState->faceAngle[0];
     s16 marioYaw = sMarioCamState->faceAngle[1] + DEGREES(180);
@@ -1965,8 +1965,8 @@ s16 update_slide_camera(struct Camera *c) {
     f32 distCamToFocus;
     f32 maxCamDist;
     f32 pitchScale;
-    s16 camPitch;
-    s16 camYaw;
+    s16 camPitch = 0;
+    s16 camYaw = 0;
     UNUSED struct MarioState *marioState = &gMarioStates[0];
     s16 goalPitch = 0x1555;
     s16 goalYaw = sMarioCamState->faceAngle[1] + DEGREES(180);
@@ -2081,7 +2081,7 @@ s16 update_default_camera(struct Camera *c) {
     f32 gasHeight;
     s16 avoidYaw;
     s16 pitch;
-    s16 yaw;
+    s16 yaw = 0;
     s16 yawGoal = sMarioCamState->faceAngle[1] + DEGREES(180);
     f32 posHeight;
     f32 focHeight;
@@ -2426,7 +2426,7 @@ s32 update_spiral_stairs_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     // unused
     s16 posPitch;
     /// The camera's yaw around the stairs
-    s16 posYaw;
+    s16 posYaw = 0;
     UNUSED s32 unused2;
     Vec3f cPos;
     Vec3f checkPos;
@@ -6450,7 +6450,7 @@ struct CameraTrigger sCamBBH[] = {
  *
  * Each table is terminated with NULL_TRIGGER
  */
-struct CameraTrigger *sCameraTriggers[LEVEL_COUNT + 1] = {
+struct CameraTrigger *sCameraTriggers[LEVEL_COUNT + 2] = {
     NULL,
     #include "levels/level_defines.h"
 };
