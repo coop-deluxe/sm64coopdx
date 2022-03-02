@@ -65,6 +65,20 @@ int smlua_func_atan2s(lua_State* L) {
     return 1;
 }
 
+int smlua_func_init_mario_after_warp(lua_State* L) {
+    if (network_player_connected_count() < 2) {
+        if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+    
+
+        init_mario_after_warp();
+    
+        return 1;
+    } else {
+        LOG_LUA("This function can only be used in single-player");
+    }
+    return 0;
+}
+
 void smlua_bind_functions(void) {
     lua_State* L = gLuaState;
 
@@ -72,4 +86,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "sins", smlua_func_sins);
     smlua_bind_function(L, "coss", smlua_func_coss);
     smlua_bind_function(L, "atan2s", smlua_func_atan2s);
+    smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
 }
