@@ -220,24 +220,25 @@ void coin_inside_boo_act_1(void) {
 }
 
 void coin_inside_boo_act_0(void) {
-    s16 sp26;
-    f32 sp20;
     struct Object *parent = o->parentObj;
+    
     cur_obj_become_intangible();
-    if (o->oTimer == 0 && gCurrLevelNum == LEVEL_BBH) {
-        cur_obj_set_model(smlua_model_util_load(E_MODEL_BLUE_COIN));
-        cur_obj_scale(0.7);
-    }
-    if (parent == NULL || (parent->behavior != bhvGhostHuntBoo && parent->behavior != bhvBoo)) {
+    
+    if (parent == NULL || (parent->behavior != bhvMerryGoRoundBoo && parent->behavior != bhvGhostHuntBoo && parent->behavior != bhvBoo)) {
         o->parentObj = NULL;
         obj_mark_for_deletion(o);
         return;
     }
+    
+    if (o->oTimer == 0 && gCurrLevelNum == LEVEL_BBH) {
+        cur_obj_set_model(smlua_model_util_load(E_MODEL_BLUE_COIN));
+        cur_obj_scale(0.7);
+    }
     obj_copy_pos(o, parent);
     if (parent->oBooDeathStatus == BOO_DEATH_STATUS_DYING) {
         o->oAction = 1;
-        sp26 = gMarioObject->oMoveAngleYaw;
-        sp20 = 3.0f;
+        s16 sp26 = gMarioObject->oMoveAngleYaw;
+        f32 sp20 = 3.0f;
         o->oVelX = sins(sp26) * sp20;
         o->oVelZ = coss(sp26) * sp20;
         o->oVelY = 35.0f;
