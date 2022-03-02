@@ -41,12 +41,6 @@ void network_receive_sync_valid(struct Packet* p) {
     packet_read(p, &areaIndex, sizeof(s16));
     packet_read(p, &fromGlobalIndex, sizeof(u8));
 
-    // anti spoof
-    if (packet_spoofed(p, fromGlobalIndex)) {
-        LOG_ERROR("rx spoofed sync valid");
-        return;
-    }
-
     if (gNetworkType != NT_SERVER) {
         extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
         if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || (areaIndex != gCurrAreaIndex && areaIndex != -1)) {

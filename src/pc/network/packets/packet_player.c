@@ -207,12 +207,6 @@ void network_receive_player(struct Packet* p) {
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
 
-    // anti spoof
-    if (packet_spoofed(p, globalIndex)) {
-        LOG_ERROR("rx spoofed player");
-        return;
-    }
-
     // prevent receiving a packet about our player
     if (gNetworkPlayerLocal && globalIndex == gNetworkPlayerLocal->globalIndex) { return; }
 
