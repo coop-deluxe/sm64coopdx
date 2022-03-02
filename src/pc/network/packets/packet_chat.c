@@ -11,8 +11,8 @@ static void print_sync_object_table(void) {
     LOG_INFO("Sync Object Table");
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o == NULL) { continue; }
-        u16 behaviorId = get_id_from_behavior(gSyncObjects[i].behavior);
-        LOG_INFO("%03d: %04X", i, behaviorId);
+        u32 behaviorId = get_id_from_behavior(gSyncObjects[i].behavior);
+        LOG_INFO("%03d: %08X", i, behaviorId);
         behaviorId = behaviorId; // suppress warning
     }
     LOG_INFO(" ");

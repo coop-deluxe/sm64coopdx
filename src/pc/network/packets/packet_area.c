@@ -84,7 +84,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             packet_write(&p, &so->o->oBehParams, sizeof(s32));
             packet_write(&p, &so->o->oRespawnerModelToRespawn, sizeof(s32));
             packet_write(&p, &so->o->oRespawnerMinSpawnDist, sizeof(f32));
-            packet_write(&p, &behaviorToRespawn, sizeof(s32));
+            packet_write(&p, &behaviorToRespawn, sizeof(u32));
             packet_write(&p, &so->o->oSyncID, sizeof(u32));
             LOG_INFO("tx respawner");
         }

@@ -42,21 +42,21 @@ static struct Object* find_nearest_item(const BehaviorScript *behavior, f32* pos
 
 void network_send_collect_item(struct Object* o) {
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
-    u16 behaviorId = get_id_from_behavior(o->behavior);
+    u32 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_COLLECT_ITEM, true, PLMT_AREA);
-    packet_write(&p, &behaviorId, sizeof(u16));
+    packet_write(&p, &behaviorId, sizeof(u32));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
 
     network_send(&p);
 }
 
 void network_receive_collect_item(struct Packet* p) {
-    u16 behaviorId;
+    u32 behaviorId;
     f32 pos[3] = { 0 };
 
-    packet_read(p, &behaviorId, sizeof(u16));
+    packet_read(p, &behaviorId, sizeof(u32));
     packet_read(p, &pos, sizeof(f32) * 3);
 
     const void* behavior = get_behavior_from_id(behaviorId);

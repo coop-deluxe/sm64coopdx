@@ -48,11 +48,11 @@ static struct Object* find_nearest_coin(const BehaviorScript *behavior, f32* pos
 
 void network_send_collect_coin(struct Object* o) {
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
-    u16 behaviorId = get_id_from_behavior(o->behavior);
+    u32 behaviorId = get_id_from_behavior(o->behavior);
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_COLLECT_COIN, true, PLMT_LEVEL);
-    packet_write(&p, &behaviorId, sizeof(u16));
+    packet_write(&p, &behaviorId, sizeof(u32));
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
     packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
     packet_write(&p, &o->oDamageOrCoinValue, sizeof(s32));
@@ -64,13 +64,13 @@ void network_send_collect_coin(struct Object* o) {
 void network_receive_collect_coin(struct Packet* p) {
     s16 oldNumCoins = gMarioStates[0].numCoins;
 
-    u16 behaviorId;
+    u32 behaviorId;
     f32 pos[3] = { 0 };
     s16 numCoins = 0;
     s32 coinValue = 0;
     s16 areaIndex = 0;
 
-    packet_read(p, &behaviorId, sizeof(u16));
+    packet_read(p, &behaviorId, sizeof(u32));
     packet_read(p, &pos, sizeof(f32) * 3);
     packet_read(p, &numCoins, sizeof(s16));
     packet_read(p, &coinValue, sizeof(s32));
