@@ -11,7 +11,6 @@ void sinking_rectangular_plat_actions(f32 a0, s32 a1) {
             break;
         case 2:
             break;
-            break; // Two breaks needed?
     }
 }
 

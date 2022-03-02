@@ -29,10 +29,11 @@ void bhv_spindrift_loop(void) {
     switch (o->oAction) {
         case 0:
             approach_forward_vel(&o->oForwardVel, 4.0f, 1.0f);
-            if (cur_obj_lateral_dist_from_mario_to_home() > 1000.0f)
+            if (cur_obj_lateral_dist_from_mario_to_home() > 1000.0f) {
                 angleToPlayer = cur_obj_angle_to_home();
-            else if (distanceToPlayer > 300.0f)
-                angleToPlayer = angleToPlayer;
+            } else if (distanceToPlayer > 300.0f) {
+                //angleToPlayer = angleToPlayer;
+            }
             cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
             break;
         case 1:

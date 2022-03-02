@@ -47,15 +47,9 @@ static void check_amp_attack(void) {
     obj_set_hitbox(o, &sAmpHitbox);
 
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-        // Unnecessary if statement, maybe caused by a macro for
-        //     if (o->oInteractStatus & INT_STATUS_INTERACTED)
-        //         o->oAction = X;
-        // ?
-        if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-            // This function is used for both normal amps and homing amps,
-            // AMP_ACT_ATTACK_COOLDOWN == HOMING_AMP_ACT_ATTACK_COOLDOWN
-            o->oAction = AMP_ACT_ATTACK_COOLDOWN;
-        }
+        // This function is used for both normal amps and homing amps,
+        // AMP_ACT_ATTACK_COOLDOWN == HOMING_AMP_ACT_ATTACK_COOLDOWN
+        o->oAction = AMP_ACT_ATTACK_COOLDOWN;
 
         // Clear interact status
         o->oInteractStatus = 0;

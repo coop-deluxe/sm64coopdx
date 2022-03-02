@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]; then
 	EXTRA=""
 else
-	EXTRA="--enable=all --suppress=constStatement --suppress=duplicateCondition --suppress=redundantAssignment --suppress=variableScope --suppress=unusedVariable --suppress=unreadVariable"
+	EXTRA="--enable=all --suppress=constStatement --suppress=duplicateCondition --suppress=redundantAssignment --suppress=variableScope --suppress=unusedVariable --suppress=unreadVariable --suppress=shadowVariable"
 fi
 
 INCLUDES="-Iinclude -Isrc -I. -Ilib/lua/include"

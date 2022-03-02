@@ -65,11 +65,12 @@ void bhv_jrb_sliding_box_loop(void) {
     s16 sp1E;
     if (o->oJrbSlidingBoxUnkF4 == NULL) {
         sp3C = cur_obj_nearest_object_with_behavior(bhvInSunkenShip3);
-        if (sp3C != NULL) // NULL check only for assignment, not for dereference?
+        if (sp3C != NULL) {
             o->oJrbSlidingBoxUnkF4 = sp3C;
-        o->oParentRelativePosX = o->oPosX - sp3C->oPosX;
-        o->oParentRelativePosY = o->oPosY - sp3C->oPosY;
-        o->oParentRelativePosZ = o->oPosZ - sp3C->oPosZ;
+            o->oParentRelativePosX = o->oPosX - sp3C->oPosX;
+            o->oParentRelativePosY = o->oPosY - sp3C->oPosY;
+            o->oParentRelativePosZ = o->oPosZ - sp3C->oPosZ;
+        }
     } else {
         sp3C = o->oJrbSlidingBoxUnkF4;
         sp40[0] = sp3C->oFaceAnglePitch;

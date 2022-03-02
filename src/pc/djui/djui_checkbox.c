@@ -33,9 +33,11 @@ static void djui_checkbox_get_cursor_hover_location(struct DjuiBase* base, f32* 
 
 static void djui_checkbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
+    if (checkbox == NULL) { return; }
+
     *checkbox->value = !(*checkbox->value);
     djui_base_set_visible(&checkbox->rectValue->base, *checkbox->value);
-    if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
+    if (base->interactable != NULL && base->interactable->on_value_change != NULL) {
         base->interactable->on_value_change(base);
     }
 }

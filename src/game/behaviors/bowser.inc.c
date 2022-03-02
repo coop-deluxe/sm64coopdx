@@ -875,7 +875,9 @@ void bowser_spawn_grand_star_key(void) {
             network_send_spawn_objects(spawn_objects, models, 1);
         }
     }
-    gSecondCameraFocus->oAngleVelYaw = o->oAngleVelYaw;
+    if (gSecondCameraFocus != NULL) {
+        gSecondCameraFocus->oAngleVelYaw = o->oAngleVelYaw;
+    }
 }
 
 void bowser_fly_back_dead(void) {

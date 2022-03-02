@@ -66,17 +66,17 @@ int smlua_func_atan2s(lua_State* L) {
 }
 
 int smlua_func_init_mario_after_warp(lua_State* L) {
-    if (network_player_connected_count() < 2) {
-        if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
-    
-
-        init_mario_after_warp();
-    
-        return 1;
-    } else {
+    if (network_player_connected_count() >= 2) {
         LOG_LUA("This function can only be used in single-player");
+        return 0;
     }
-    return 0;
+
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+    extern void init_mario_after_warp(void);
+    init_mario_after_warp();
+
+    return 1;
 }
 
 void smlua_bind_functions(void) {

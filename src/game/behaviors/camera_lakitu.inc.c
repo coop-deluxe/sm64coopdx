@@ -68,8 +68,7 @@ static void camera_lakitu_intro_act_trigger_cutscene(void) {
     //! These bounds are slightly smaller than the actual bridge bounds, allowing
     //  the RTA speedrunning method of lakitu skip
     if (player->oPosX > -544.0f && player->oPosX < 545.0f && player->oPosY > 800.0f
-        && player->oPosZ > -2000.0f && player->oPosZ < -177.0f
-        && player->oPosZ < -177.0f) // always double check your conditions
+        && player->oPosZ > -2000.0f && player->oPosZ < -177.0f)
     {
         if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_trigger_cutscene_continue_dialog) == 1) {
             o->oAction = CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD;

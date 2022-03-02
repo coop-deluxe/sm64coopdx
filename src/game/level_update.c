@@ -385,8 +385,6 @@ void set_mario_initial_action(struct MarioState *m, u32 spawnType, u32 actionArg
     set_mario_initial_cap_powerup(m);
 }
 
-#include "pc/debuglog.h"
-
 void init_mario_after_warp(void) {
     struct ObjectWarpNode *spawnNode = area_get_warp_node(sWarpDest.nodeId);
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
@@ -442,7 +440,6 @@ void init_mario_after_warp(void) {
                 gMarioState[0].marioObj->oPosY = spawnNode->object->oPosY;
                 gMarioState[0].marioObj->oPosZ = spawnNode->object->oPosZ;
             }
-            LOG_INFO(">>> override offset spawn <<<");
         }
 
         gMarioState->interactObj = spawnNode->object;

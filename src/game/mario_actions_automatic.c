@@ -1024,7 +1024,7 @@ s32 act_bubbled(struct MarioState* m) {
     if (gLocalBubbleCounter > 0) { gLocalBubbleCounter--; }
 
     // pop bubble
-    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && gLocalBubbleCounter <= 0) {
+    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && gLocalBubbleCounter == 0) {
         m->marioObj->activeFlags &= ~ACTIVE_FLAG_MOVE_THROUGH_GRATE;
         m->hurtCounter = 0;
         m->healCounter = 31;

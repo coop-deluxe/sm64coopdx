@@ -120,7 +120,7 @@ void tuxies_mother_act_0(void) {
     cur_obj_init_animation_with_sound(3);
     if (sp28 < 500.0f)
         sp2C = 1;
-    if (sp24->heldByPlayerIndex == 0 && sp24 != NULL && sp28 < 300.0f && sp24->oHeldState != HELD_FREE) {
+    if (sp24 != NULL && sp24->heldByPlayerIndex == 0 && sp28 < 300.0f && sp24->oHeldState != HELD_FREE) {
         o->oAction = 1;
         sp24->oSmallPenguinUnk88 = 1;
         o->prevObj = sp24;

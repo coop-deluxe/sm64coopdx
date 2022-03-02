@@ -106,7 +106,7 @@ const char* get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex) {
     }
 
     // If we are in in Course 0 we are in the castle which doesn't have a string
-    if (courseNum && courseNum > 0 && courseNum < 27) {
+    if (courseNum > 0 && courseNum < 27) {
         void** courseNameTbl;
 
 #ifndef VERSION_EU

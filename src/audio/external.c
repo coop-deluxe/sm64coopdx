@@ -24,6 +24,7 @@
 // files. We should really fix our naming to be less ambiguous...
 #define MAX_BG_MUSIC_QUEUE_SIZE 6
 #define SOUND_BANK_COUNT 12
+#define SOUND_INDEX_COUNT 40
 #define MAX_CHANNELS_PER_SOUND 1
 
 #define SEQUENCE_NONE 0xFF
@@ -359,7 +360,7 @@ struct ChannelVolumeScaleFade D_80360928[3][CHANNELS_MAX];
 u8 sUsedChannelsForSoundBank[SOUND_BANK_COUNT];
 u8 sCurrentSound[SOUND_BANK_COUNT][MAX_CHANNELS_PER_SOUND]; // index into gSoundBanks
 // list item memory for D_803320A4 and D_803320B0
-struct SoundCharacteristics gSoundBanks[SOUND_BANK_COUNT][40] = { 0 };
+struct SoundCharacteristics gSoundBanks[SOUND_BANK_COUNT][SOUND_INDEX_COUNT] = { 0 };
 u8 D_80363808[SOUND_BANK_COUNT];
 u8 D_80363812;
 static u8 sCapVolumeTo40;
@@ -1073,7 +1074,7 @@ void update_game_sound(void) {
         func_8031E16C(bankIndex);
         for (j = 0; j < MAX_CHANNELS_PER_SOUND; j++) {
             index = sCurrentSound[bankIndex][j];
-            if (index < 0xff && gSoundBanks[bankIndex][index].soundStatus != SOUND_STATUS_STOPPED) {
+            if (index < SOUND_INDEX_COUNT && gSoundBanks[bankIndex][index].soundStatus != SOUND_STATUS_STOPPED) {
                 soundStatus = gSoundBanks[bankIndex][index].soundBits & SOUNDARGS_MASK_STATUS;
                 soundId = (gSoundBanks[bankIndex][index].soundBits >> SOUNDARGS_SHIFT_SOUNDID);
                 gSoundBanks[bankIndex][index].soundStatus = soundStatus;
@@ -1378,7 +1379,7 @@ void update_game_sound(void) {
             }
 
             // add custom pitch bend
-            if (gSoundBanks[bankIndex][index].customFreqScale != 0) {
+            if (index < SOUND_INDEX_COUNT && gSoundBanks[bankIndex][index].customFreqScale != 0) {
                 gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->freqScale *= gSoundBanks[bankIndex][index].customFreqScale;
             }
             channelIndex++;

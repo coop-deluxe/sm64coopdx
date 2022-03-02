@@ -88,7 +88,7 @@ void chuckya_act_0(void) {
     s32 sp28;
     if (o->oTimer == 0)
         o->oChuckyaUnkFC = 0;
-    angleToPlayer = obj_angle_to_object(o, player);
+
     switch (sp28 = o->oSubAction) {
         case 0:
             o->oForwardVel = 0;

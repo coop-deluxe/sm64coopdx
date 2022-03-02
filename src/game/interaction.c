@@ -1260,7 +1260,7 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
         if (m2->playerIndex == 0) {
             m2->squishTimer = max(m2->squishTimer, 4);
         }
-        f32 velY = fmax(fmin(50.0f, 10.0f + fabs(m->vel[1])), 30.0f);
+        f32 velY;
         if (m2->action == ACT_CROUCHING) {
             mario_stop_riding_and_holding(m);
             set_mario_action(m, ACT_TWIRLING, 0);

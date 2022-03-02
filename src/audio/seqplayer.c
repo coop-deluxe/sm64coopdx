@@ -1219,8 +1219,9 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         break;
 
                     case 0xf8: // chan_loop; loop start, N iterations (or 256 if N = 0)
-                        if (0 && state->depth >= 4) {
+                        if (state->depth >= 4) {
                             eu_stubbed_printf_0("Audio:Track :Loops Macro Level Over Error!\n");
+                            break;
                         }
                         state->remLoopIters[state->depth] = m64_read_u8(state);
 #ifdef VERSION_EU
@@ -1835,8 +1836,9 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
                         break;
 
                     case 0xf8: // seq_loop; loop start, N iterations (or 256 if N = 0)
-                        if (0 && state->depth >= 4) {
+                        if (state->depth >= 4) {
                             eu_stubbed_printf_0("Macro Level Over Error!\n");
+                            break;
                         }
                         state->remLoopIters[state->depth] = m64_read_u8(state);
 #ifdef VERSION_EU

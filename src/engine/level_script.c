@@ -444,7 +444,7 @@ static void level_cmd_init_mario(void) {
 
         spawnInfo->activeAreaIndex = -1;
         spawnInfo->areaIndex = 0;
-        spawnInfo->behaviorArg = (u32)i | (1 << 31);
+        spawnInfo->behaviorArg = (u32)i | ((u32)1 << 31);
         spawnInfo->behaviorScript = behaviorScript;
         spawnInfo->unk18 = unk18;
         spawnInfo->next = NULL;
