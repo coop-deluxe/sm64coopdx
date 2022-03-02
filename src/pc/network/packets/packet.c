@@ -138,7 +138,7 @@ void packet_receive(struct Packet* p) {
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
         for (int i = 0; i < MAX_RX_SEQ_IDS; i++) {
             if (np->rxSeqIds[i] == p->seqId && np->rxPacketHash[i] == packetHash) {
-                LOG_INFO("received duplicate packet");
+                LOG_INFO("received duplicate packet %u", packetType);
                 return;
             }
         }
@@ -179,4 +179,12 @@ void packet_receive(struct Packet* p) {
             }
         }
     }
+}
+
+bool packet_spoofed(struct Packet* p, u8 globalIndex) {
+    if (gNetworkSystem->requireServerBroadcast) { return false; }
+    if (p->localIndex == UNKNOWN_LOCAL_INDEX) { return false; }
+    if (p->localIndex >= MAX_PLAYERS) { return true; }
+
+    return (gNetworkPlayers[p->localIndex].globalIndex != globalIndex);
 }

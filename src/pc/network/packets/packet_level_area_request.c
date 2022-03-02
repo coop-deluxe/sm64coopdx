@@ -53,6 +53,12 @@ void network_receive_level_area_request(struct Packet* p) {
         return;
     }
 
+    // anti spoof
+    if (packet_spoofed(p, globalIndex)) {
+        LOG_ERROR("rx spoofed level area request");
+        return;
+    }
+
     // send level area
     network_send_level(toNp, true);
 }

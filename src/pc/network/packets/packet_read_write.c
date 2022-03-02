@@ -164,7 +164,7 @@ u8 packet_initial_read(struct Packet* packet) {
         packet_read(packet, &packet->orderedGroupId,      sizeof(u8));
         packet_read(packet, &packet->orderedSeqId,        sizeof(u8));
     }
-    
+
     // read location
     if (packet->levelAreaMustMatch) {
         packet_read(packet, &packet->courseNum, sizeof(u8));

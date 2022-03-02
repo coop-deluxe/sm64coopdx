@@ -75,6 +75,12 @@ void network_receive_spawn_star_nle(struct Packet* p) {
     packet_read(p, &syncId, sizeof(u32));
     packet_read(p, &params, sizeof(u32));
 
+    // anti spoof
+    if (packet_spoofed(p, globalIndex)) {
+        LOG_ERROR("rx spoofed star");
+        return;
+    }
+
     // grab network player first
     struct Object* object = NULL;
     if (globalIndex != UNKNOWN_GLOBAL_INDEX) {

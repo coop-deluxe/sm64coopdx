@@ -131,6 +131,7 @@ struct LSTNetworkType {
 // packet.c
 void packet_process(struct Packet* p);
 void packet_receive(struct Packet* packet);
+bool packet_spoofed(struct Packet* p, u8 globalIndex);
 
 // packet_read_write.c
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch);

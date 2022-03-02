@@ -36,6 +36,12 @@ void network_receive_player_settings(struct Packet* p) {
         return;
     }
 
+    // anti spoof
+    if (packet_spoofed(p, globalId)) {
+        LOG_ERROR("rx spoofed player settings");
+        return;
+    }
+
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
     snprintf(np->name, MAX_PLAYER_STRING, "%s", playerName);
     np->modelIndex = playerModel;

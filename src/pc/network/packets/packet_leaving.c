@@ -37,6 +37,12 @@ void network_receive_leaving(struct Packet* p) {
     u8 globalIndex = 0;
     packet_read(p, &globalIndex, sizeof(u8));
 
+    // anti spoof
+    if (packet_spoofed(p, globalIndex)) {
+        LOG_ERROR("rx spoofed leaving");
+        return;
+    }
+
     LOG_INFO("Received leaving event for %d", globalIndex);
     network_player_disconnected(globalIndex);
 }

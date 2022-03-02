@@ -42,7 +42,7 @@ void smlua_cobject_allowlist_add(u16 lot, u64 pointer) {
     u16 m = smlua_lot_mapping(lot);
     if (sCachedAllowed[m] == pointer) { return; }
     sCachedAllowed[m] = pointer;
-    
+
     struct CObjectAllowListNode* curNode = sAllowList[m];
     struct CObjectAllowListNode* prevNode = NULL;
     while (curNode != NULL) {

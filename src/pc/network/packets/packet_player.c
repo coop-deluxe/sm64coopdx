@@ -13,6 +13,7 @@
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
+#include "pc/debuglog.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -205,6 +206,12 @@ void network_receive_player(struct Packet* p) {
     packet_read(p, &globalIndex, sizeof(u8));
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
+
+    // anti spoof
+    if (packet_spoofed(p, globalIndex)) {
+        LOG_ERROR("rx spoofed player");
+        return;
+    }
 
     // prevent receiving a packet about our player
     if (gNetworkPlayerLocal && globalIndex == gNetworkPlayerLocal->globalIndex) { return; }

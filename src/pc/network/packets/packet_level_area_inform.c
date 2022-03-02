@@ -66,6 +66,13 @@ void network_receive_level_area_inform(struct Packet* p) {
         LOG_INFO("Received old level area inform seq: %d vs %d", sLevelAreaInformSeq[0][globalIndex], seq);
         return;
     }
+
+    // anti spoof
+    if (packet_spoofed(p, globalIndex)) {
+        LOG_ERROR("rx spoofed level area inform");
+        return;
+    }
+
     sLevelAreaInformSeq[0][globalIndex] = seq;
 
     network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
