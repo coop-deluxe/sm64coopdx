@@ -24,6 +24,8 @@ in_files = [
     "src/pc/lua/smlua_model_utils.h",
     "include/object_constants.h",
     "include/mario_geo_switch_case_ids.h",
+    "src/game/object_list_processor.h",
+    "src/engine/graph_node.h",
 ]
 
 exclude_constants = {
@@ -31,7 +33,7 @@ exclude_constants = {
 }
 
 include_constants = {
-    "include/object_constants.h" : [ "^ACTIVE_FLAG_", "^ACTIVE_PARTICLE_", "^HELD_", "^OBJ_FLAG_", "^RESPAWN_INFO_", ],
+    "include/object_constants.h" : [ "^ACTIVE_FLAG_", "^ACTIVE_PARTICLE_", "^HELD_", "^OBJ_FLAG_", "^RESPAWN_INFO_", "^OBJ_MOVE_" ],
 }
 
 pretend_find = [

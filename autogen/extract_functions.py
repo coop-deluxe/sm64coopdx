@@ -2,6 +2,19 @@ import os
 import re
 import sys
 
+replacements = {
+    'BAD_RETURN(s8)':  'void',
+    'BAD_RETURN(s16)': 'void',
+    'BAD_RETURN(s32)': 'void',
+    'BAD_RETURN(s64)': 'void',
+    'BAD_RETURN(u8)':  'void',
+    'BAD_RETURN(u16)': 'void',
+    'BAD_RETURN(u32)': 'void',
+    'BAD_RETURN(u64)': 'void',
+    'BAD_RETURN(f32)': 'void',
+    'BAD_RETURN(f64)': 'void',
+}
+
 def extract_functions(filename):
     with open(filename) as file:
         lines = file.readlines()
@@ -18,6 +31,9 @@ def extract_functions(filename):
             gobbling = False
         if not gobbling:
             txt += line + '\n'
+
+    for replacement in replacements:
+        txt = txt.replace(replacement, replacements[replacement])
 
     # strip directives and comments
     in_directive = False

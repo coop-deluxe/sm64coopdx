@@ -14,6 +14,7 @@
 #include "types.h"
 #include "pc/network/network.h"
 #include "pc/network/reservation_area.h"
+#include "pc/lua/smlua_hooks.h"
 
 /**
  * An unused linked list struct that seems to have been replaced by ObjectNode.
@@ -334,6 +335,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     s32 objListIndex;
     struct Object *obj;
     struct ObjectNode *objList;
+    bhvScript = smlua_override_behavior(bhvScript);
     const BehaviorScript *behavior = bhvScript;
 
     // If the first behavior script command is "begin <object list>", then

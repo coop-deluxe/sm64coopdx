@@ -4,6 +4,7 @@
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
 - [Area](#Area)
+- [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
 - [CameraFOVStatus](#CameraFOVStatus)
 - [CameraStoredInfo](#CameraStoredInfo)
@@ -114,6 +115,21 @@
 | terrainData | Pointer <integer> | read-only |
 | terrainType | integer |  |
 | warpNodes | [ObjectWarpNode](#ObjectWarpNode) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BullyCollisionData](#BullyCollisionData)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| conversionRatio | number |  |
+| posX | number |  |
+| posZ | number |  |
+| radius | number |  |
+| velX | number |  |
+| velZ | number |  |
 
 [:arrow_up_small:](#)
 

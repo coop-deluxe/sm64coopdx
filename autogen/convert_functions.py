@@ -66,7 +66,7 @@ override_disallowed_functions = {
     "src/game/sound_init.h":               [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":      [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":     [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update" ],
-    "src/game/object_helpers.c":           [ "spawn_obj" ],
+    "src/game/object_helpers.c":           [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_" ],
     "src/game/obj_behaviors.c":            [ "debug_" ],
     "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
 }

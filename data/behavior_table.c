@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "behavior_table.h"
+#include "pc/lua/smlua_hooks.h"
 
 const BehaviorScript* gBehaviorTable[id_bhv_max_count] = {
     [id_bhvStarDoor] = bhvStarDoor,
@@ -525,8 +526,12 @@ enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior) {
 }
 
 const BehaviorScript* get_behavior_from_id(enum BehaviorId id) {
+    const BehaviorScript* behavior = get_lua_behavior_from_id(id);
+    if (behavior != NULL) { return behavior; }
+
     if (id < 0 || id >= id_bhv_max_count) {
         return NULL;
     }
+
     return gBehaviorTable[id];
 }

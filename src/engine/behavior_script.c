@@ -14,6 +14,7 @@
 #include "graph_node.h"
 #include "surface_collision.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua_hooks.h"
 #include "game/rng_position.h"
 
 // Macros for retrieving arguments from behavior scripts.
@@ -1022,12 +1023,14 @@ cur_obj_update_begin:;
 
     // Execute the behavior script.
     gCurBhvCommand = gCurrentObject->curBhvCommand;
+    u8 skipBehavior = smlua_call_behavior_hook(&gCurBhvCommand, gCurrentObject);
 
-    do {
-        bhvCmdProc = BehaviorCmdTable[*gCurBhvCommand >> 24];
-        bhvProcResult = bhvCmdProc();
-    } while (bhvProcResult == BHV_PROC_CONTINUE);
-
+    if (!skipBehavior) {
+        do {
+            bhvCmdProc = BehaviorCmdTable[*gCurBhvCommand >> 24];
+            bhvProcResult = bhvCmdProc();
+        } while (bhvProcResult == BHV_PROC_CONTINUE);
+    }
     gCurrentObject->curBhvCommand = gCurBhvCommand;
 
     // Increment the object's timer.

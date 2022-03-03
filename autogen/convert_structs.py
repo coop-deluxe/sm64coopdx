@@ -13,7 +13,8 @@ in_files = [
     'src/engine/surface_collision.h',
     'src/pc/network/network_player.h',
     'src/pc/djui/djui_hud_utils.h',
-    'src/game/object_helpers.h'
+    'src/game/object_helpers.h',
+    'src/game/mario_step.h'
 ]
 
 smlua_cobject_autogen = 'src/pc/lua/smlua_cobject_autogen'

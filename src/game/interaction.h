@@ -37,7 +37,7 @@ enum InteractionType {
     INTERACT_SNUFIT_BULLET  = /* 0x10000000 */ (1 << 28),
     INTERACT_SHOCK          = /* 0x20000000 */ (1 << 29),
     INTERACT_IGLOO_BARRIER  = /* 0x40000000 */ (1 << 30),
-    INTERACT_PLAYER         = /* 0x80000000 */ ((u32)1 << 31),
+    INTERACT_PLAYER         = /* 0x80000000 */ (1 << 31),
 };
 
 // INTERACT_WARP

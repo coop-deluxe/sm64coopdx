@@ -9,6 +9,7 @@
 #include "src/pc/network/network_player.h"
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/game/object_helpers.h"
+#include "src/game/mario_step.h"
 
 #include "include/object_fields.h"
 
@@ -61,6 +62,16 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "unused28",          LVT_COBJECT_P, offsetof(struct Area, unused28),          false, LOT_???            }, <--- UNIMPLEMENTED
     { "warpNodes",         LVT_COBJECT_P, offsetof(struct Area, warpNodes),         false, LOT_OBJECTWARPNODE },
 //  { "whirlpools",        LOT_???,       offsetof(struct Area, whirlpools),        false, LOT_???            }, <--- UNIMPLEMENTED
+};
+
+#define LUA_BULLY_COLLISION_DATA_FIELD_COUNT 6
+static struct LuaObjectField sBullyCollisionDataFields[LUA_BULLY_COLLISION_DATA_FIELD_COUNT] = {
+    { "conversionRatio", LVT_F32, offsetof(struct BullyCollisionData, conversionRatio), false, LOT_NONE },
+    { "posX",            LVT_F32, offsetof(struct BullyCollisionData, posX),            false, LOT_NONE },
+    { "posZ",            LVT_F32, offsetof(struct BullyCollisionData, posZ),            false, LOT_NONE },
+    { "radius",          LVT_F32, offsetof(struct BullyCollisionData, radius),          false, LOT_NONE },
+    { "velX",            LVT_F32, offsetof(struct BullyCollisionData, velX),            false, LOT_NONE },
+    { "velZ",            LVT_F32, offsetof(struct BullyCollisionData, velZ),            false, LOT_NONE },
 };
 
 #define LUA_CAMERA_FIELD_COUNT 12
@@ -1487,6 +1498,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_ANIMINFO,              sAnimInfoFields,              LUA_ANIM_INFO_FIELD_COUNT               },
     { LOT_ANIMATION,             sAnimationFields,             LUA_ANIMATION_FIELD_COUNT               },
     { LOT_AREA,                  sAreaFields,                  LUA_AREA_FIELD_COUNT                    },
+    { LOT_BULLYCOLLISIONDATA,    sBullyCollisionDataFields,    LUA_BULLY_COLLISION_DATA_FIELD_COUNT    },
     { LOT_CAMERA,                sCameraFields,                LUA_CAMERA_FIELD_COUNT                  },
     { LOT_CAMERAFOVSTATUS,       sCameraFOVStatusFields,       LUA_CAMERA_FOVSTATUS_FIELD_COUNT        },
     { LOT_CAMERASTOREDINFO,      sCameraStoredInfoFields,      LUA_CAMERA_STORED_INFO_FIELD_COUNT      },

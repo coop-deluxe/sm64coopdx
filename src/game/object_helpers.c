@@ -35,9 +35,16 @@ s8 D_8032F0A0[] = { -8, 8, -4, 4 };
 s16 D_8032F0A4[] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 static s8 sLevelsWithRooms[] = { LEVEL_BBH, LEVEL_CASTLE, LEVEL_HMC, -1 };
 
-static s32 clear_move_flag(u32 *, s32);
-
 #define o gCurrentObject
+
+s32 clear_move_flag(u32 *bitSet, s32 flag) {
+    if (*bitSet & flag) {
+        *bitSet &= flag ^ 0xFFFFFFFF;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
 
 Gfx *geo_update_projectile_pos_from_parent(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx) {
     Mat4 sp20;
@@ -640,7 +647,7 @@ struct Object *spawn_object_with_scale(struct Object *parent, s32 model, const B
     return obj;
 }
 
-static void obj_build_relative_transform(struct Object *obj) {
+void obj_build_relative_transform(struct Object *obj) {
     obj_build_transform_from_pos_and_angle(obj, O_PARENT_RELATIVE_POS_INDEX, O_FACE_ANGLE_INDEX);
     obj_translate_local(obj, O_POS_INDEX, O_PARENT_RELATIVE_POS_INDEX);
 }
@@ -1056,7 +1063,7 @@ struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f3
     return foundObj;
 }
 
-static void cur_obj_reset_timer_and_subaction(void) {
+void cur_obj_reset_timer_and_subaction(void) {
     o->oTimer = 0;
     o->oSubAction = 0;
 }
@@ -1185,7 +1192,7 @@ void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C) {
     o->oAction = sp1C;
 }
 
-static void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
+void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
     o->oMoveFlags = 0;
     o->oFloorHeight = find_floor_height(o->oPosX, o->oPosY + 160.0f, o->oPosZ);
 
@@ -1300,7 +1307,7 @@ struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
     return floor;
 }
 
-static void apply_drag_to_value(f32 *value, f32 dragStrength) {
+void apply_drag_to_value(f32 *value, f32 dragStrength) {
     f32 decel;
 
     if (*value != 0) {
@@ -1326,7 +1333,7 @@ void cur_obj_apply_drag_xz(f32 dragStrength) {
     apply_drag_to_value(&o->oVelZ, dragStrength);
 }
 
-static s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
+s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
     struct Surface *intendedFloor = NULL;
 
     f32 intendedX = o->oPosX + o->oVelX;
@@ -1385,7 +1392,7 @@ static s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlop
     return FALSE;
 }
 
-static void cur_obj_move_update_underwater_flags(void) {
+void cur_obj_move_update_underwater_flags(void) {
     f32 decelY = (f32)(sqrtf(o->oVelY * o->oVelY) * (o->oDragStrength * 7.0f)) / 100.0L;
 
     if (o->oVelY > 0) {
@@ -1402,7 +1409,7 @@ static void cur_obj_move_update_underwater_flags(void) {
     }
 }
 
-static void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bounciness) {
+void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bounciness) {
     o->oMoveFlags &= ~OBJ_MOVE_BOUNCE;
 
     if (o->oPosY < o->oFloorHeight) {
@@ -1437,7 +1444,7 @@ static void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bouncin
     o->oMoveFlags &= ~OBJ_MOVE_MASK_IN_WATER;
 }
 
-static f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
+f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
     f32 waterLevel;
 
     o->oVelY += gravity + buoyancy;
@@ -1506,15 +1513,6 @@ void cur_obj_move_y(f32 gravity, f32 bounciness, f32 buoyancy) {
 }
 
 static void stub_obj_helpers_1(void) {
-}
-
-static s32 clear_move_flag(u32 *bitSet, s32 flag) {
-    if (*bitSet & flag) {
-        *bitSet &= flag ^ 0xFFFFFFFF;
-        return TRUE;
-    } else {
-        return FALSE;
-    }
 }
 
 void cur_obj_unused_resolve_wall_collisions(f32 offsetY, f32 radius) {
@@ -1730,7 +1728,7 @@ void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height) {
     o->hurtboxHeight = height;
 }
 
-static void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30,
+void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30,
                                     const BehaviorScript *coinBehavior,
                                     s16 posJitter, s16 model) {
     s32 i;
@@ -1809,7 +1807,7 @@ s32 cur_obj_advance_looping_anim(void) {
     return result;
 }
 
-static s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
+s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
     struct Surface *intendedFloor;
     f32 intendedX, intendedFloorHeight, intendedZ;
     f32 deltaFloorHeight;
@@ -1870,7 +1868,7 @@ s32 cur_obj_resolve_wall_collisions(void) {
     return FALSE;
 }
 
-static void cur_obj_update_floor(void) {
+void cur_obj_update_floor(void) {
     struct Surface *floor = cur_obj_update_floor_height_and_get_floor();
     o->oFloor = floor;
 
@@ -1893,7 +1891,7 @@ static void cur_obj_update_floor(void) {
     }
 }
 
-static void cur_obj_update_floor_and_resolve_wall_collisions(s16 steepSlopeDegrees) {
+void cur_obj_update_floor_and_resolve_wall_collisions(s16 steepSlopeDegrees) {
 #ifdef VERSION_JP
     o->oMoveFlags &= ~OBJ_MOVE_ABOVE_LAVA;
 #else
@@ -1969,7 +1967,7 @@ void cur_obj_move_standard(s16 steepSlopeAngleDegrees) {
     }
 }
 
-static s32 cur_obj_within_12k_bounds(void) {
+s32 cur_obj_within_12k_bounds(void) {
     if (o->oPosX < -12000.0f || 12000.0f < o->oPosX) {
         return FALSE;
     }
@@ -2203,7 +2201,7 @@ void obj_translate_xz_random(struct Object *obj, f32 rangeLength) {
     obj->oPosZ += random_float() * rangeLength - rangeLength * 0.5f;
 }
 
-static void obj_build_vel_from_transform(struct Object *a0) {
+void obj_build_vel_from_transform(struct Object *a0) {
     f32 spC = a0->oUnkC0;
     f32 sp8 = a0->oUnkBC;
     f32 sp4 = a0->oForwardVel;
@@ -2500,7 +2498,7 @@ void cur_obj_call_action_function(void (*actionFunctions[])(void)) {
     actionFunction();
 }
 
-static struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
+struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
     struct Object *sp1C = spawn_object(o, MODEL_STAR, bhvSpawnedStarNoLevelExit);
     if (sp1C == NULL) { return NULL; }
     sp1C->oSparkleSpawnUnk1B0 = sp24;
@@ -2742,7 +2740,7 @@ s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 h
     return cur_obj_can_mario_activate_textbox(m, radius, height, 0x1000);
 }
 
-static void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult) {
+void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult) {
     if (m->playerIndex != 0) { return; }
 
     o->oDialogResponse = dialogResult;

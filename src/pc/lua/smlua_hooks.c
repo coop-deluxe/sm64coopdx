@@ -1,7 +1,9 @@
 #include "smlua.h"
+#include "src/game/object_list_processor.h"
 #include "pc/djui/djui_chat_message.h"
 
 #define MAX_HOOKED_REFERENCES 64
+#define LUA_BEHAVIOR_FLAG (1 << 15)
 
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
@@ -177,7 +179,7 @@ struct LuaHookedMarioAction {
     int reference;
 };
 
-#define MAX_HOOKED_ACTIONS 64
+#define MAX_HOOKED_ACTIONS 128
 
 static struct LuaHookedMarioAction sHookedMarioActions[MAX_HOOKED_ACTIONS] = { 0 };
 static int sHookedMarioActionsCount = 0;
@@ -273,6 +275,148 @@ u32 smlua_get_action_interaction_type(struct MarioState* m) {
         }
     }
     return interactionType;
+}
+
+  //////////////////////
+ // hooked behaviors //
+//////////////////////
+
+struct LuaHookedBehavior {
+    u32 behaviorId;
+    BehaviorScript behavior[2];
+    int initReference;
+    int loopReference;
+};
+
+#define MAX_HOOKED_BEHAVIORS 256
+
+static struct LuaHookedBehavior sHookedBehaviors[MAX_HOOKED_BEHAVIORS] = { 0 };
+static int sHookedBehaviorsCount = 0;
+
+const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior) {
+    enum BehaviorId id = get_id_from_behavior(behavior);
+    const BehaviorScript* luaBehavior = get_lua_behavior_from_id(id);
+    if (luaBehavior != NULL) { return luaBehavior; }
+    return behavior;
+}
+
+const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
+    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+        if (hooked->behaviorId != id) { continue; }
+        return hooked->behavior;
+    }
+    return NULL;
+}
+
+int smlua_hook_behavior(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
+        LOG_LUA("Hooked behaviors exceeded maximum references!");
+        smlua_logline();
+        return 0;
+    }
+
+    lua_Integer overrideBehaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Hook behavior: tried to override invalid behavior: %lld, %u", overrideBehaviorId, gSmLuaConvertSuccess);
+        smlua_logline();
+        return 0;
+    }
+
+    lua_Integer objectList = smlua_to_integer(L, 2);
+    if (objectList <= 0 || objectList >= NUM_OBJ_LISTS || !gSmLuaConvertSuccess) {
+        LOG_LUA("Hook behavior: tried use invalid object list: %lld, %u", objectList, gSmLuaConvertSuccess);
+        smlua_logline();
+        return 0;
+    }
+
+    int initReference = 0;
+    int initReferenceType = lua_type(L, 3);
+    if (initReferenceType == LUA_TNIL) {
+        // nothing
+    } else if (initReferenceType == LUA_TFUNCTION) {
+        // get reference
+        lua_pushvalue(L, 3);
+        initReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    } else {
+        LOG_LUA("Hook behavior: tried to reference non-function for init");
+        smlua_logline();
+        return 0;
+    }
+
+    int loopReference = 0;
+    int loopReferenceType = lua_type(L, 4);
+    if (loopReferenceType == LUA_TNIL) {
+        // nothing
+    } else if (loopReferenceType == LUA_TFUNCTION) {
+        // get reference
+        lua_pushvalue(L, 4);
+        loopReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    } else {
+        LOG_LUA("Hook behavior: tried to reference non-function for loop");
+        smlua_logline();
+        return 0;
+    }
+
+    struct LuaHookedBehavior* hooked = &sHookedBehaviors[sHookedBehaviorsCount];
+    u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
+    hooked->behaviorId = overrideBehaviorId != 0 ? overrideBehaviorId : customBehaviorId;
+    hooked->behavior[0] = (((unsigned int) (((unsigned int)(0x00) & ((0x01 << (8)) - 1)) << (24))) | ((unsigned int) (((unsigned int)(objectList) & ((0x01 << (8)) - 1)) << (16)))); // gross. this is BEGIN(objectList)
+    hooked->behavior[1] = (((unsigned int) (((unsigned int)(0x39) & ((0x01 << (8)) - 1)) << (24))) | ((unsigned int) (((unsigned int)(customBehaviorId) & ((0x01 << (16)) - 1)) << (0)))); // gross. this is ID(customBehaviorId)
+    hooked->initReference = initReference;
+    hooked->loopReference = loopReference;
+
+    sHookedBehaviorsCount++;
+
+    // return behavior ID
+    lua_pushinteger(L, customBehaviorId);
+
+    return 1;
+}
+
+bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
+    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+
+        // find behavior
+        if (object->behavior != hooked->behavior) {
+            continue;
+        }
+
+        // retrieve and remember first run
+        bool firstRun = (*behavior == hooked->behavior);
+        if (firstRun) { *behavior = &hooked->behavior[1]; }
+
+        // get function and null check it
+        int reference = firstRun ? hooked->initReference : hooked->loopReference;
+        if (reference == 0) {
+            return true;
+        }
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, reference);
+
+        // push object
+        smlua_push_object(L, LOT_OBJECT, object);
+
+        // call the callback
+        if (0 != lua_pcall(L, 1, 0, 0)) {
+            LOG_LUA("Failed to call the behavior callback: %u, %s", hooked->behaviorId, lua_tostring(L, -1));
+            smlua_logline();
+            return true;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
   /////////////////////////
@@ -473,6 +617,16 @@ static void smlua_clear_hooks(void) {
         sHookedChatCommands[i].reference = 0;
     }
     sHookedChatCommandsCount = 0;
+
+    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+        hooked->behaviorId = 0;
+        hooked->behavior[0] = 0;
+        hooked->behavior[1] = 0;
+        hooked->initReference = 0;
+        hooked->loopReference = 0;
+    }
+    sHookedBehaviorsCount = 0;
 }
 
 void smlua_bind_hooks(void) {
@@ -483,4 +637,5 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_mario_action", smlua_hook_mario_action);
     smlua_bind_function(L, "hook_chat_command", smlua_hook_chat_command);
     smlua_bind_function(L, "hook_on_sync_table_change", smlua_hook_on_sync_table_change);
+    smlua_bind_function(L, "hook_behavior", smlua_hook_behavior);
 }
