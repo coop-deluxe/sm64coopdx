@@ -78,42 +78,39 @@ void discord_activity_update(bool hosting) {
         gCurActivity.party.size.max_size = 1;
     }
 
-    if (gCurActivity.details[0] == '\0') {
-        snprintf(gCurActivity.details, 128, "%s", get_version());
+    snprintf(gCurActivity.details, 128, "%s", get_version());
 
-        bool displayDash = true;
-        bool displayComma = false;
+    bool displayDash = true;
+    bool displayComma = false;
 
-        if (gRegisteredMods.string != NULL) {
-            strncat(gCurActivity.details, " - ", 127);
+    if (gRegisteredMods.string != NULL) {
+        strncat(gCurActivity.details, " - ", 127);
+        displayDash = false;
+
+        // add patches to activity
+        struct StringLinkedList* node = &gRegisteredMods;
+        while (node != NULL && node->string != NULL) {
+            if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
+            strncat(gCurActivity.details, node->string, 127);
+            displayComma = true;
+            node = node->next;
+        }
+    }
+
+    struct ModTable* table = gModTableCurrent;
+    if (table != NULL && table->entryCount > 0) {
+        // add mods to activity
+        for (int i = 0; i < table->entryCount; i++) {
+            struct ModListEntry* entry = &table->entries[i];
+            if (!entry->enabled) { continue; }
+            if (displayDash) { strncat(gCurActivity.details, " - ", 127); }
+            if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
+
+            strncat(gCurActivity.details, entry->displayName ? entry->displayName : entry->name, 127);
+
             displayDash = false;
-
-            // add patches to activity
-            struct StringLinkedList* node = &gRegisteredMods;
-            while (node != NULL && node->string != NULL) {
-                if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
-                strncat(gCurActivity.details, node->string, 127);
-                displayComma = true;
-                node = node->next;
-            }
+            displayComma = true;
         }
-
-        struct ModTable* table = gModTableCurrent;
-        if (table != NULL && table->entryCount > 0) {
-            // add mods to activity
-            for (int i = 0; i < table->entryCount; i++) {
-                struct ModListEntry* entry = &table->entries[i];
-                if (!entry->enabled) { continue; }
-                if (displayDash) { strncat(gCurActivity.details, " - ", 127); }
-                if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
-
-                strncat(gCurActivity.details, entry->displayName ? entry->displayName : entry->name, 127);
-
-                displayDash = false;
-                displayComma = true;
-            }
-        }
-
     }
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
