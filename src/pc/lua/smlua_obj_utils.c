@@ -78,6 +78,10 @@ struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExten
     spawn_object_internal(behaviorId, modelId, x, y, z, 0, false);
 }
 
+void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId) {
+    o->header.gfx.sharedChild = gLoadedGraphNodes[smlua_model_util_load(modelId)];
+}
+
 //
 // Helpers to iterate through the object table
 //

@@ -7371,6 +7371,19 @@ int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_set_model_extended(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int modelId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    obj_set_model_extended(o, modelId);
+
+    return 1;
+}
+
 int smlua_func_spawn_sync_object(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
@@ -7591,6 +7604,21 @@ int smlua_func_find_ceil(lua_State* L) {
     return 1;
 }
 */
+
+int smlua_func_find_ceil_height(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, find_ceil_height(x, y, z));
+
+    return 1;
+}
 
 /*
 int smlua_func_find_floor(lua_State* L) {
@@ -8372,6 +8400,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id", smlua_func_obj_get_next_with_same_behavior_id);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_f32", smlua_func_obj_get_next_with_same_behavior_id_and_field_f32);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_s32", smlua_func_obj_get_next_with_same_behavior_id_and_field_s32);
+    smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
 
     // sound_init.h
@@ -8395,6 +8424,7 @@ void smlua_bind_functions_autogen(void) {
 
     // surface_collision.h
     //smlua_bind_function(L, "find_ceil", smlua_func_find_ceil); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "find_ceil_height", smlua_func_find_ceil_height);
     //smlua_bind_function(L, "find_floor", smlua_func_find_floor); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_floor_height", smlua_func_find_floor_height);
     //smlua_bind_function(L, "find_floor_height_and_data", smlua_func_find_floor_height_and_data); <--- UNIMPLEMENTED
