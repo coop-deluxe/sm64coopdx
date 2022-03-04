@@ -1,9 +1,12 @@
 #include "smlua.h"
 #include "src/game/object_list_processor.h"
 #include "pc/djui/djui_chat_message.h"
+#include "pc/crash_handler.h"
 
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
+
+static u64* sBehaviorOffset = &gPcDebug.bhvOffset;
 
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
@@ -294,10 +297,13 @@ static struct LuaHookedBehavior sHookedBehaviors[MAX_HOOKED_BEHAVIORS] = { 0 };
 static int sHookedBehaviorsCount = 0;
 
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return behavior; }
+
     enum BehaviorId id = get_id_from_behavior(behavior);
     const BehaviorScript* luaBehavior = get_lua_behavior_from_id(id);
     if (luaBehavior != NULL) { return luaBehavior; }
-    return behavior;
+    return behavior + *sBehaviorOffset;
 }
 
 const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id) {

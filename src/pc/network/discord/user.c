@@ -1,12 +1,14 @@
 #include "user.h"
 #include "pc/configfile.h"
 #include "pc/logfile.h"
+#include "pc/crash_handler.h"
 
 static void on_current_user_update(UNUSED void* data) {
     LOGFILE_INFO(LFT_DISCORD, "> on_current_user_update");
     struct DiscordUser user;
     app.users->get_current_user(app.users, &user);
     app.userId = user.id;
+    gPcDebug.id = user.id;
 
     // copy over discord username if we haven't set one yet
     if (configPlayerName[0] == '\0' && strlen(user.username) > 0) {

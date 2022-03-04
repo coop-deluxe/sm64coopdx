@@ -5,6 +5,7 @@ Developers:
     Isaac0-dev
     kebabstorm
     MegaMech
+    PeachyPeach
     theclashingfritz
 
 Contributors:
@@ -26,7 +27,6 @@ Contributors:
     jkcoxson
     Llennpie
     LuigiNoodle
-    PeachyPeach
     PoltixeTheDerg
     s4ys
     sm64rise

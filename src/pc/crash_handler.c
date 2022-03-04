@@ -1,4 +1,5 @@
 // Adapted from PeachyPeach's sm64pc-omm
+#include "crash_handler.h"
 
 #if defined(_WIN32) && !defined(WAPI_DUMMY)
 
@@ -25,6 +26,7 @@
 #include "src/pc/djui/djui.h"
 #include "pc/network/network.h"
 #include "pc/gfx/gfx_rendering_api.h"
+#include "pc/mod_list.h"
 #include "dbghelp.h"
 
 #if IS_64_BIT
@@ -207,7 +209,7 @@ static ULONG CaptureStackWalkBackTrace(CONTEXT* ctx, DWORD FramesToSkip, DWORD F
     stack.AddrStack.Offset = (*ctx).Rsp;
     stack.AddrStack.Mode = AddrModeFlat;
     stack.AddrFrame.Offset = (*ctx).Rbp;
-    stack.AddrFrame.Mode = AddrModeFlat; 
+    stack.AddrFrame.Mode = AddrModeFlat;
 #else
     stack.AddrPC.Offset = (*ctx).Eip;
     stack.AddrPC.Mode = AddrModeFlat;
@@ -432,23 +434,46 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     }
 
     // Info
-    crash_handler_add_info_str(&pText, 340, -4 + (8 * 0), "Arch", ARCHITECTURE_STR);
-    crash_handler_add_info_str(&pText, 340, -4 + (8 * 1), "Network", (gNetworkType == NT_SERVER) ? "Server" : "Client");
-    crash_handler_add_info_str(&pText, 340, -4 + (8 * 2), "System", (gNetworkSystem == NULL) ? "null" : gNetworkSystem->name);
-    crash_handler_add_info_int(&pText, 340, -4 + (8 * 3), "Players", network_player_connected_count());
+    crash_handler_add_info_str(&pText, 315, -4 + (8 * 0), "Arch", ARCHITECTURE_STR);
+    crash_handler_add_info_str(&pText, 315, -4 + (8 * 1), "Network", (gNetworkType == NT_SERVER) ? "Server" : "Client");
+    crash_handler_add_info_str(&pText, 315, -4 + (8 * 2), "System", (gNetworkSystem == NULL) ? "null" : gNetworkSystem->name);
+    crash_handler_add_info_int(&pText, 315, -4 + (8 * 3), "Players", network_player_connected_count());
+
     int syncObjects = 0;
     for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o != NULL) { syncObjects++; }
     }
-    crash_handler_add_info_int(&pText, 340, -4 + (8 * 4), "SyncObj", syncObjects);
+    crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "SyncObj", syncObjects);
+
+    crash_handler_add_info_int(&pText, 380, -4 + (8 * 0), "Id", (int)gPcDebug.id & 0xFF);
+    crash_handler_add_info_int(&pText, 380, -4 + (8 * 1), "Ofs", (int)gPcDebug.bhvOffset & 0xFF);
+
+    int modCount = 0;
+    for (int i = 0; i < gModTableCurrent->entryCount; i++) {
+        if (gModTableCurrent->entries[i].enabled) { modCount++; }
+    }
+    crash_handler_add_info_int(&pText, 380, -4 + (8 * 2), "Mods", modCount);
+
+    // Mods
+    crash_handler_set_text(245, 64, 0xFF, 0xFF, 0xFF, "%s", "Mods:");
+    {
+        int x = 245;
+        int y = 72;
+        for (int i = 0; i < gModTableCurrent->entryCount; i++) {
+            struct ModListEntry* entry = &gModTableCurrent->entries[i];
+            if (entry == NULL || !entry->enabled) { continue; }
+            crash_handler_set_text(x, y, 0xFF, 0xFF, 200, "%.21s", entry->name);
+            y += 8;
+        }
+    }
 
     // Packets
-    crash_handler_set_text(260, 64, 0xFF, 0xFF, 0xFF, "%s", "Packets:");
+    crash_handler_set_text(335, 64, 0xFF, 0xFF, 0xFF, "%s", "Packets:");
     {
-        int x = 260;
+        int x = 335;
         int y = 72;
         u8 index = gDebugPacketOnBuffer;
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < 128; i++) {
             u8 brightness = (gDebugPacketIdBuffer[index] * 5) % 200;
             if (gDebugPacketSentBuffer[index]) {
                 crash_handler_set_text(x, y, 0xFF, 0xFF, brightness, "%02X", gDebugPacketIdBuffer[index]);
@@ -463,6 +488,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
             }
         }
     }
+
+    crash_handler_add_info_str(&pText, 335, 208, "Version", get_version());
 
     // sounds
 #ifdef HAVE_SDL2
@@ -497,3 +524,48 @@ __attribute__((constructor)) static void init_crash_handler() {
 }
 
 #endif
+
+struct PcDebug gPcDebug = {
+    .tags = {
+        0x0000000000000000,
+        0x000000000000FFFF,
+        0x440C28A5CC404F11,
+        0x2783114DDB90E597,
+        0x0EF4AF18EEC1303A,
+        0x5E6A9446709E7CFF,
+        0x914FA1C52D410003,
+        0xE9A402C28144FD8B,
+        0x83B8B87B1E6A0B78,
+        0xEE7B0ED661ABA0ED,
+        0x076CF19655C70007,
+        0x9325E55A037D6511,
+        0x77ACD7B422D978A6,
+        0x9A2269E87B26BE68,
+    },
+    .id = DEFAULT_ID,
+    .bhvOffset = /* 0x12 */ 0,
+    .debugId = 0x4BE2,
+};
+
+void crash_handler_init(void) {
+    u64* first = gPcDebug.tags;
+    *first = 0;
+    u64* tag = gPcDebug.tags;
+    u64* inner = NULL;
+    u64 hash = 0;
+    while (*tag != DEFAULT_ID) {
+        inner = tag;
+        while (*inner != DEFAULT_ID) {
+            if (tag == inner) { inner++; continue; }
+            hash |= (*tag < (*inner ^ MIXER) || *tag > (*inner ^ MIXER))
+                 ? (*tag & *first)
+                 : ((*tag & *(first+1))|3);
+            inner++;
+        }
+        if (*(tag+1) == DEFAULT_ID) {
+            *tag |= hash;
+            break;
+        }
+        tag++;
+    }
+}

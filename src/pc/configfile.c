@@ -15,6 +15,7 @@
 #include "fs/fs.h"
 #include "pc/mod_list.h"
 #include "pc/network/ban_list.h"
+#include "pc/crash_handler.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -24,6 +25,7 @@ enum ConfigOptionType {
     CONFIG_TYPE_FLOAT,
     CONFIG_TYPE_BIND,
     CONFIG_TYPE_STRING,
+    CONFIG_TYPE_U64,
 };
 
 struct ConfigOption {
@@ -34,6 +36,7 @@ struct ConfigOption {
         unsigned int *uintValue;
         float* floatValue;
         char* stringValue;
+        u64* u64Value;
     };
     int maxStringLength;
 };
@@ -198,6 +201,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
     {.name = "coop_60fps",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &config60Fps},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configDrawDistance},
+    {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
+    {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
@@ -365,6 +370,9 @@ void configfile_load(const char *filename) {
                             memset(option->stringValue, '\0', option->maxStringLength);
                             snprintf(option->stringValue, option->maxStringLength, "%s", tokens[1]);
                             break;
+                        case CONFIG_TYPE_U64:
+                            sscanf(tokens[1], "%llu", option->u64Value);
+                            break;
                         default:
                             assert(0); // bad type
                     }
@@ -418,6 +426,9 @@ void configfile_save(const char *filename) {
                 break;
             case CONFIG_TYPE_STRING:
                 fprintf(file, "%s %s\n", option->name, option->stringValue);
+                break;
+            case CONFIG_TYPE_U64:
+                fprintf(file, "%s %llu\n", option->name, *option->u64Value);
                 break;
             default:
                 assert(0); // unknown type

@@ -13,6 +13,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/mod_list.h"
+#include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 
 // Mario 64 specific externs
@@ -71,6 +72,8 @@ bool network_init(enum NetworkType inNetworkType) {
         return false;
     }
 
+    crash_handler_init();
+
     // set server settings
     gServerSettings.playerInteractions = configPlayerInteraction;
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
@@ -110,6 +113,8 @@ bool network_init(enum NetworkType inNetworkType) {
 
         djui_chat_box_create();
     }
+
+    configfile_save(configfile_name());
 
     LOG_INFO("initialized");
 
