@@ -23,8 +23,11 @@ enum LuaValueType {
     LVT_STRING_P,
     LVT_BEHAVIORSCRIPT,
     LVT_BEHAVIORSCRIPT_P,
+    LVT_OBJECTANIMPOINTER,
+    LVT_OBJECTANIMPOINTER_P,
     LVT_LUAFUNCTION,
     LVT_POINTER,
+    LVT_MAX,
 };
 
 enum LuaObjectType {
@@ -50,6 +53,7 @@ struct LuaObjectTable {
 };
 
 bool smlua_valid_lot(u16 lot);
+bool smlua_valid_lvt(u16 lvt);
 void smlua_cobject_init_globals(void);
 void smlua_bind_cobject(void);
 

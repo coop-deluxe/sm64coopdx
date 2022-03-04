@@ -61,6 +61,7 @@ static void smlua_load_script(char* path, u16 remoteIndex) {
 void smlua_init(void) {
     smlua_shutdown();
     smlua_cobject_allowlist_init();
+    smlua_cpointer_allowlist_init();
 
     gLuaState = luaL_newstate();
     lua_State* L = gLuaState;
@@ -108,6 +109,7 @@ void smlua_update(void) {
 
 void smlua_shutdown(void) {
     smlua_cobject_allowlist_shutdown();
+    smlua_cpointer_allowlist_shutdown();
     lua_State* L = gLuaState;
     if (L != NULL) {
         lua_close(L);

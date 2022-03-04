@@ -14,7 +14,8 @@ in_files = [
     'src/pc/network/network_player.h',
     'src/pc/djui/djui_hud_utils.h',
     'src/game/object_helpers.h',
-    'src/game/mario_step.h'
+    'src/game/mario_step.h',
+    'src/pc/lua/smlua_anim_utils.h',
 ]
 
 smlua_cobject_autogen = 'src/pc/lua/smlua_cobject_autogen'
@@ -55,6 +56,7 @@ override_field_names = {
 
 override_field_types = {
     "Surface": { "normal": "Vec3f" },
+    "Object": { "oAnimations": "ObjectAnimPointer*"}
 }
 
 override_field_immutable = {
@@ -63,6 +65,7 @@ override_field_immutable = {
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
     "Object": ["oSyncID", "createdThroughNetwork"],
+    "GlobalObjectAnimations": [ "*"],
 }
 
 sLuaManuallyDefinedStructs = [

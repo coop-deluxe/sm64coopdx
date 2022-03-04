@@ -6,6 +6,7 @@
 #include "audio/external.h"
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "pc/lua/smlua_anim_utils.h"
 
 #define LUA_VEC3S_FIELD_COUNT 3
 static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
@@ -64,6 +65,10 @@ bool smlua_valid_lot(u16 lot) {
     return false;
 }
 
+bool smlua_valid_lvt(u16 lvt) {
+    return (lvt < LVT_MAX);
+}
+
 static int smlua__get_field(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -116,6 +121,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_STRING:     lua_pushstring(L, (char*)p);               break;
         case LVT_STRING_P:   lua_pushstring(L, *(char**)p);             break;
         case LVT_BEHAVIORSCRIPT: lua_pushinteger(L, *(s32*)p);          break;
+        case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);       break;
 
         // pointers
         case LVT_U8_P:
@@ -126,6 +132,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_S32_P:
         case LVT_F32_P:
         case LVT_BEHAVIORSCRIPT_P:
+        case LVT_OBJECTANIMPOINTER_P:
             smlua_push_pointer(L, data->valueType, *(u8**)p);
             break;
 
@@ -200,6 +207,22 @@ static int smlua__set_field(lua_State* L) {
             }
             break;
 
+        // pointers
+        case LVT_U8_P:
+        case LVT_U16_P:
+        case LVT_U32_P:
+        case LVT_S8_P:
+        case LVT_S16_P:
+        case LVT_S32_P:
+        case LVT_F32_P:
+        case LVT_BEHAVIORSCRIPT_P:
+        case LVT_OBJECTANIMPOINTER_P:
+            valuePointer = smlua_to_cpointer(L, -1, data->valueType);
+            if (gSmLuaConvertSuccess) {
+                *(u8**)p = valuePointer;
+            }
+            break;
+
         default:
             LOG_LUA("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
             smlua_logline();
@@ -253,6 +276,11 @@ void smlua_cobject_init_globals(void) {
     {
         smlua_push_object(L, LOT_GLOBALTEXTURES, &gGlobalTextures);
         lua_setglobal(L, "gTextures");
+    }
+
+    {
+        smlua_push_object(L, LOT_GLOBALOBJECTANIMATIONS, &gGlobalObjectAnimations);
+        lua_setglobal(L, "gObjectAnimations");
     }
 
 }

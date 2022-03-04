@@ -16,6 +16,7 @@
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
 - [FloorGeometry](#FloorGeometry)
+- [GlobalObjectAnimations](#GlobalObjectAnimations)
 - [GlobalTextures](#GlobalTextures)
 - [GraphNode](#GraphNode)
 - [GraphNodeObject](#GraphNodeObject)
@@ -349,6 +350,68 @@
 | normalY | number |  |
 | normalZ | number |  |
 | originOffset | number |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GlobalObjectAnimations](#GlobalObjectAnimations)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| amp_seg8_anims_08004034 | Pointer <ObjectAnimPointer> | read-only |
+| birds_seg5_anims_050009E8 | Pointer <ObjectAnimPointer> | read-only |
+| blue_fish_seg3_anims_0301C2B0 | Pointer <ObjectAnimPointer> | read-only |
+| bobomb_seg8_anims_0802396C | Pointer <ObjectAnimPointer> | read-only |
+| bookend_seg5_anims_05002540 | Pointer <ObjectAnimPointer> | read-only |
+| bowser_key_seg3_anims_list | Pointer <ObjectAnimPointer> | read-only |
+| bowser_seg6_anims_06057690 | Pointer <ObjectAnimPointer> | read-only |
+| bub_seg6_anims_06012354 | Pointer <ObjectAnimPointer> | read-only |
+| bully_seg5_anims_0500470C | Pointer <ObjectAnimPointer> | read-only |
+| butterfly_seg3_anims_030056B0 | Pointer <ObjectAnimPointer> | read-only |
+| castle_grounds_seg7_anims_flags | Pointer <ObjectAnimPointer> | read-only |
+| chain_chomp_seg6_anims_06025178 | Pointer <ObjectAnimPointer> | read-only |
+| chair_seg5_anims_05005784 | Pointer <ObjectAnimPointer> | read-only |
+| chilly_chief_seg6_anims_06003994 | Pointer <ObjectAnimPointer> | read-only |
+| chuckya_seg8_anims_0800C070 | Pointer <ObjectAnimPointer> | read-only |
+| clam_shell_seg5_anims_05001744 | Pointer <ObjectAnimPointer> | read-only |
+| door_seg3_anims_030156C0 | Pointer <ObjectAnimPointer> | read-only |
+| dorrie_seg6_anims_0600F638 | Pointer <ObjectAnimPointer> | read-only |
+| eyerok_seg5_anims_050116E4 | Pointer <ObjectAnimPointer> | read-only |
+| flyguy_seg8_anims_08011A64 | Pointer <ObjectAnimPointer> | read-only |
+| goomba_seg8_anims_0801DA4C | Pointer <ObjectAnimPointer> | read-only |
+| heave_ho_seg5_anims_0501534C | Pointer <ObjectAnimPointer> | read-only |
+| hoot_seg5_anims_05005768 | Pointer <ObjectAnimPointer> | read-only |
+| king_bobomb_seg5_anims_0500FE30 | Pointer <ObjectAnimPointer> | read-only |
+| klepto_seg5_anims_05008CFC | Pointer <ObjectAnimPointer> | read-only |
+| koopa_flag_seg6_anims_06001028 | Pointer <ObjectAnimPointer> | read-only |
+| koopa_seg6_anims_06011364 | Pointer <ObjectAnimPointer> | read-only |
+| lakitu_enemy_seg5_anims_050144D4 | Pointer <ObjectAnimPointer> | read-only |
+| lakitu_seg6_anims_060058F8 | Pointer <ObjectAnimPointer> | read-only |
+| mad_piano_seg5_anims_05009B14 | Pointer <ObjectAnimPointer> | read-only |
+| manta_seg5_anims_05008EB4 | Pointer <ObjectAnimPointer> | read-only |
+| mips_seg6_anims_06015634 | Pointer <ObjectAnimPointer> | read-only |
+| moneybag_seg6_anims_06005E5C | Pointer <ObjectAnimPointer> | read-only |
+| monty_mole_seg5_anims_05007248 | Pointer <ObjectAnimPointer> | read-only |
+| peach_seg5_anims_0501C41C | Pointer <ObjectAnimPointer> | read-only |
+| penguin_seg5_anims_05008B74 | Pointer <ObjectAnimPointer> | read-only |
+| piranha_plant_seg6_anims_0601C31C | Pointer <ObjectAnimPointer> | read-only |
+| scuttlebug_seg6_anims_06015064 | Pointer <ObjectAnimPointer> | read-only |
+| seaweed_seg6_anims_0600A4D4 | Pointer <ObjectAnimPointer> | read-only |
+| skeeter_seg6_anims_06007DE0 | Pointer <ObjectAnimPointer> | read-only |
+| snowman_seg5_anims_0500D118 | Pointer <ObjectAnimPointer> | read-only |
+| spindrift_seg5_anims_05002D68 | Pointer <ObjectAnimPointer> | read-only |
+| spiny_seg5_anims_05016EAC | Pointer <ObjectAnimPointer> | read-only |
+| sushi_seg5_anims_0500AE54 | Pointer <ObjectAnimPointer> | read-only |
+| swoop_seg6_anims_060070D0 | Pointer <ObjectAnimPointer> | read-only |
+| toad_seg6_anims_0600FB58 | Pointer <ObjectAnimPointer> | read-only |
+| ukiki_seg5_anims_05015784 | Pointer <ObjectAnimPointer> | read-only |
+| unagi_seg5_anims_05012824 | Pointer <ObjectAnimPointer> | read-only |
+| water_ring_seg6_anims_06013F7C | Pointer <ObjectAnimPointer> | read-only |
+| whomp_seg6_anims_06020A04 | Pointer <ObjectAnimPointer> | read-only |
+| wiggler_seg5_anims_0500C874 | Pointer <ObjectAnimPointer> | read-only |
+| wiggler_seg5_anims_0500EC8C | Pointer <ObjectAnimPointer> | read-only |
+| yoshi_seg5_anims_05024100 | Pointer <ObjectAnimPointer> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -733,6 +796,7 @@
 | oAngleVelPitch | integer |  |
 | oAngleVelYaw | integer |  |
 | oAngleVelRoll | integer |  |
+| oAnimations | Pointer <ObjectAnimPointer> |  |
 | oHeldState | integer |  |
 | oWallHitboxRadius | number |  |
 | oDragStrength | number |  |

@@ -175,12 +175,11 @@ void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     lua_pop(L, 1);
     if (!gSmLuaConvertSuccess) { return NULL; }
 
-    // TODO: check allowlist
-    /*if (!smlua_cobject_allowlist_contains(lot, (u64)(intptr_t)pointer)) {
-        LOG_LUA("smlua_to_cobject received a pointer not in allow list. '%u', '%llu", lot, (u64)(intptr_t)pointer);
+    if (!smlua_cpointer_allowlist_contains(lvt, (u64)(intptr_t)pointer)) {
+        LOG_LUA("smlua_to_cpointer received a pointer not in allow list. '%u', '%llu", lvt, (u64)(intptr_t)pointer);
         gSmLuaConvertSuccess = false;
         return NULL;
-    }*/
+    }
 
     if (pointer == NULL) {
         LOG_LUA("smlua_to_cpointer received null pointer.");
@@ -275,8 +274,8 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p) {
         lua_pushnil(L);
         return;
     }
-    // TODO: add to allowlist
-    //smlua_cobject_allowlist_add(lot, (u64)(intptr_t)p);
+
+    smlua_cpointer_allowlist_add(lvt, (u64)(intptr_t)p);
 
     lua_newtable(L);
     int t = lua_gettop(L);
