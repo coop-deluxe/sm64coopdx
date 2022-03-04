@@ -618,6 +618,7 @@
    - [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
    - [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
    - [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
+   - [obj_set_model_extended](#obj_set_model_extended)
    - [spawn_sync_object](#spawn_sync_object)
 
 <br />
@@ -644,6 +645,7 @@
 <br />
 
 - surface_collision.h
+   - [find_ceil_height](#find_ceil_height)
    - [find_floor_height](#find_floor_height)
    - [find_poison_gas_level](#find_poison_gas_level)
    - [find_wall_collisions](#find_wall_collisions)
@@ -11465,6 +11467,27 @@
 
 <br />
 
+## [obj_set_model_extended](#obj_set_model_extended)
+
+### Lua Example
+`obj_set_model_extended(o, modelId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| modelId | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [spawn_sync_object](#spawn_sync_object)
 
 ### Lua Example
@@ -11825,6 +11848,28 @@
 
 <br />
 
+
+## [find_ceil_height](#find_ceil_height)
+
+### Lua Example
+`local numberValue = find_ceil_height(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | number |
+| y | number |
+| z | number |
+
+### Returns
+- number
+
+### C Prototype
+`f32 find_ceil_height(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [find_floor_height](#find_floor_height)
 

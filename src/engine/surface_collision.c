@@ -358,6 +358,14 @@ f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil) {
     return height;
 }
 
+f32 find_ceil_height(f32 x, f32 y, f32 z) {
+    struct Surface *ceil;
+
+    f32 ceilHeight = find_ceil(x, y, z, &ceil);
+
+    return ceilHeight;
+}
+
 /**************************************************
  *                     FLOORS                     *
  **************************************************/
