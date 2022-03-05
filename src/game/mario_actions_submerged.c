@@ -940,6 +940,7 @@ static s32 act_drowning(struct MarioState *m) {
     play_character_sound_if_no_flag(m, CHAR_SOUND_DROWNING, MARIO_ACTION_SOUND_PLAYED);
     stationary_slow_down(m);
     perform_water_step(m);
+    m->invincTimer = 2;
 
     return FALSE;
 }
@@ -949,6 +950,7 @@ static s32 act_water_death(struct MarioState *m) {
     perform_water_step(m);
 
     m->marioBodyState->eyeState = MARIO_EYES_DEAD;
+    m->invincTimer = 2;
 
     set_mario_animation(m, MARIO_ANIM_WATER_DYING);
     if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 35) {
