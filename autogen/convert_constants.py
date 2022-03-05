@@ -243,7 +243,7 @@ def doc_constant_index(processed_files):
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
         constants = sorted(constants, key=lambda d: d['identifier'])
         for c in constants:
-            s += '    - [%s](#%s)\n' % (c['identifier'], c['identifier'])
+            s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
     s += '\n<br />\n\n'
     return s
 

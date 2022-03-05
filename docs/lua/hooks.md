@@ -21,8 +21,8 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 | ----- | ---- | ----- |
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) | Set to `0` to create a new behavior |
 | objectList | [enum ObjectList](constants.md#enum-ObjectList) |  |
-| initFunction | Lua Function | Runs once per object |
-| loopFunction | Lua Function | Runs once per frame per object |
+| initFunction([Object](structs.md#Object) obj) | Lua Function | Runs once per object |
+| loopFunction([Object](structs.md#Object) obj) | Lua Function | Runs once per frame per object |
 
 ### Returns
 - [enum BehaviorId](constants.md#enum-BehaviorId)
@@ -55,7 +55,7 @@ id_bhvExample = hook_behavior(0, OBJ_LIST_DEFAULT, bhv_example_init, bhv_example
 | ----- | ---- |
 | command | string |
 | description | string |
-| func | Lua Function |
+| func(`string` message) -> `bool` | Lua Function |
 
 ### Lua Example
 
@@ -101,7 +101,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | Field | Type |
 | ----- | ---- |
 | hook_event_type | [HookEventType](#Hook-Event-Types) |
-| func | Lua Function |
+| func(`...`) | Lua Function |
 
 ### Lua Example
 
@@ -126,7 +126,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 | Field | Type |
 | ----- | ---- |
 | action_id | integer |
-| func | Lua Function |
+| func([MarioState](structs.md#MarioState) m) | Lua Function |
 | interaction_type | [enum InteractionFlag](constants.md#enum-InteractionFlag) <optional> |
 
 ### Lua Example
@@ -207,7 +207,7 @@ hook_mario_action(ACT_WALL_SLIDE, act_wall_slide)
 | syncTable | SyncTable |
 | field | value |
 | tag | value |
-| func | Lua Function |
+| func(`value` tag, `value` oldValue, `value` newValue) | Lua Function |
 
 ### Lua Example
 
