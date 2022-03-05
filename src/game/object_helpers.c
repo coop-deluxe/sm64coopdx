@@ -2138,17 +2138,24 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
     startWaypoint = o->oPathedStartWaypoint;
     lastWaypoint = o->oPathedPrevWaypoint;
 
-    if ((lastWaypoint + 1)->flags != WAYPOINT_FLAGS_END) {
-        targetWaypoint = lastWaypoint + 1;
+    struct Waypoint *tmpWaypoint = (lastWaypoint + 1);
+    if (tmpWaypoint != NULL && tmpWaypoint->flags != WAYPOINT_FLAGS_END) {
+        targetWaypoint = tmpWaypoint;
     } else {
         targetWaypoint = startWaypoint;
     }
 
-    o->oPathedPrevWaypointFlags = lastWaypoint->flags | WAYPOINT_FLAGS_INITIALIZED;
+    if (targetWaypoint == NULL) {
+        return PATH_NONE;
+    }
 
-    prevToNextX = targetWaypoint->pos[0] - lastWaypoint->pos[0];
-    prevToNextY = targetWaypoint->pos[1] - lastWaypoint->pos[1];
-    prevToNextZ = targetWaypoint->pos[2] - lastWaypoint->pos[2];
+    if (lastWaypoint != NULL) {
+        o->oPathedPrevWaypointFlags = lastWaypoint->flags | WAYPOINT_FLAGS_INITIALIZED;
+    }
+
+    prevToNextX = targetWaypoint->pos[0] - (lastWaypoint != NULL) ? lastWaypoint->pos[0] : 0;
+    prevToNextY = targetWaypoint->pos[1] - (lastWaypoint != NULL) ? lastWaypoint->pos[1] : 0;
+    prevToNextZ = targetWaypoint->pos[2] - (lastWaypoint != NULL) ? lastWaypoint->pos[2] : 0;
 
     objToNextX = targetWaypoint->pos[0] - o->oPosX;
     objToNextY = targetWaypoint->pos[1] - o->oPosY;
@@ -2161,7 +2168,8 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
     // If dot(prevToNext, objToNext) <= 0 (i.e. reached other side of target waypoint)
     if (prevToNextX * objToNextX + prevToNextY * objToNextY + prevToNextZ * objToNextZ <= 0.0f) {
         o->oPathedPrevWaypoint = targetWaypoint;
-        if ((targetWaypoint + 1)->flags == WAYPOINT_FLAGS_END) {
+        tmpWaypoint = (targetWaypoint + 1);
+        if (tmpWaypoint != NULL && tmpWaypoint->flags == WAYPOINT_FLAGS_END) {
             return PATH_REACHED_END;
         } else {
             return PATH_REACHED_WAYPOINT;
