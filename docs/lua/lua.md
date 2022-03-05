@@ -34,3 +34,5 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 - [Hide and Seek](../../mods/hide-and-seek.lua)
 - [HUD Rendering](examples/hud.lua)
 - [Object Spawning](examples/spawn-stuff.lua)
+- [Custom Ball Behavior](examples/behavior-ball.lua)
+- [Replace Goomba Behavior](examples/behavior-goomba.lua)

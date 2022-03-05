@@ -155,7 +155,9 @@ manual_documentation = """
 
 ## [define_custom_obj_fields](#define_custom_obj_fields)
 
-Defines a custom set of overlapping object fields. The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
+Defines a custom set of overlapping object fields.
+
+The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
 
 ### Lua Example
 `define_custom_obj_fields({ oCustomField1 = 'u32', oCustomField2 = 's32', oCustomField3 = 'f32' })`
