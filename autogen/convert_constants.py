@@ -276,6 +276,7 @@ def doc_file(processed_file):
     for c in constants:
         s += doc_constant(c)
 
+    s += '\n[:arrow_up_small:](#)\n'
     s += '\n<br />\n\n'
     return s
 

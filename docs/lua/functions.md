@@ -679,7 +679,7 @@
 ## [get_behavior_from_id](#get_behavior_from_id)
 
 ### Lua Example
-`local `Pointer` <`BehaviorScript`>Value = get_behavior_from_id(id)`
+`local Pointer <BehaviorScript>Value = get_behavior_from_id(id)`
 
 ### Parameters
 | Field | Type |
@@ -747,7 +747,7 @@
 ## [set_camera_mode_fixed](#set_camera_mode_fixed)
 
 ### Lua Example
-`local `integer`Value = set_camera_mode_fixed(c, x, y, z)`
+`local integerValue = set_camera_mode_fixed(c, x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -925,7 +925,7 @@
 ## [get_character_anim_offset](#get_character_anim_offset)
 
 ### Lua Example
-`local `number`Value = get_character_anim_offset(m)`
+`local numberValue = get_character_anim_offset(m)`
 
 ### Parameters
 | Field | Type |
@@ -1062,7 +1062,7 @@
 ## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
 
 ### Lua Example
-`local `integer`Value = djui_hud_get_screen_height()`
+`local integerValue = djui_hud_get_screen_height()`
 
 ### Parameters
 - None
@@ -1080,7 +1080,7 @@
 ## [djui_hud_get_screen_width](#djui_hud_get_screen_width)
 
 ### Lua Example
-`local `integer`Value = djui_hud_get_screen_width()`
+`local integerValue = djui_hud_get_screen_width()`
 
 ### Parameters
 - None
@@ -1098,7 +1098,7 @@
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Lua Example
-`local `number`Value = djui_hud_measure_text(message)`
+`local numberValue = djui_hud_measure_text(message)`
 
 ### Parameters
 | Field | Type |
@@ -1611,7 +1611,7 @@
 ## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
 ### Lua Example
-`local `integer`Value = does_mario_have_normal_cap_on_head(m)`
+`local integerValue = does_mario_have_normal_cap_on_head(m)`
 
 ### Parameters
 | Field | Type |
@@ -1631,7 +1631,7 @@
 ## [get_door_save_file_flag](#get_door_save_file_flag)
 
 ### Lua Example
-`local `integer`Value = get_door_save_file_flag(door)`
+`local integerValue = get_door_save_file_flag(door)`
 
 ### Parameters
 | Field | Type |
@@ -1672,7 +1672,7 @@
 ## [mario_check_object_grab](#mario_check_object_grab)
 
 ### Lua Example
-`local `integer`Value = mario_check_object_grab(m)`
+`local integerValue = mario_check_object_grab(m)`
 
 ### Parameters
 | Field | Type |
@@ -1753,7 +1753,7 @@
 ## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
 
 ### Lua Example
-`local `integer`Value = mario_lose_cap_to_enemy(m, arg)`
+`local integerValue = mario_lose_cap_to_enemy(m, arg)`
 
 ### Parameters
 | Field | Type |
@@ -1774,7 +1774,7 @@
 ## [mario_obj_angle_to_object](#mario_obj_angle_to_object)
 
 ### Lua Example
-`local `integer`Value = mario_obj_angle_to_object(m, o)`
+`local integerValue = mario_obj_angle_to_object(m, o)`
 
 ### Parameters
 | Field | Type |
@@ -1881,7 +1881,7 @@
 ## [get_level_name](#get_level_name)
 
 ### Lua Example
-`local `string`Value = get_level_name(courseNum, levelNum, areaIndex)`
+`local stringValue = get_level_name(courseNum, levelNum, areaIndex)`
 
 ### Parameters
 | Field | Type |
@@ -1929,7 +1929,7 @@
 ## [check_common_action_exits](#check_common_action_exits)
 
 ### Lua Example
-`local `integer`Value = check_common_action_exits(m)`
+`local integerValue = check_common_action_exits(m)`
 
 ### Parameters
 | Field | Type |
@@ -1949,7 +1949,7 @@
 ## [check_common_hold_action_exits](#check_common_hold_action_exits)
 
 ### Lua Example
-`local `integer`Value = check_common_hold_action_exits(m)`
+`local integerValue = check_common_hold_action_exits(m)`
 
 ### Parameters
 | Field | Type |
@@ -1969,7 +1969,7 @@
 ## [drop_and_set_mario_action](#drop_and_set_mario_action)
 
 ### Lua Example
-`local `integer`Value = drop_and_set_mario_action(m, action, actionArg)`
+`local integerValue = drop_and_set_mario_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
@@ -1991,7 +1991,7 @@
 ## [execute_mario_action](#execute_mario_action)
 
 ### Lua Example
-`local `integer`Value = execute_mario_action(o)`
+`local integerValue = execute_mario_action(o)`
 
 ### Parameters
 | Field | Type |
@@ -2011,7 +2011,7 @@
 ## [find_floor_height_relative_polar](#find_floor_height_relative_polar)
 
 ### Lua Example
-`local `number`Value = find_floor_height_relative_polar(m, angleFromMario, distFromMario)`
+`local numberValue = find_floor_height_relative_polar(m, angleFromMario, distFromMario)`
 
 ### Parameters
 | Field | Type |
@@ -2033,7 +2033,7 @@
 ## [find_floor_slope](#find_floor_slope)
 
 ### Lua Example
-`local `integer`Value = find_floor_slope(m, yawOffset)`
+`local integerValue = find_floor_slope(m, yawOffset)`
 
 ### Parameters
 | Field | Type |
@@ -2054,7 +2054,7 @@
 ## [find_mario_anim_flags_and_translation](#find_mario_anim_flags_and_translation)
 
 ### Lua Example
-`local `integer`Value = find_mario_anim_flags_and_translation(o, yaw, translation)`
+`local integerValue = find_mario_anim_flags_and_translation(o, yaw, translation)`
 
 ### Parameters
 | Field | Type |
@@ -2076,7 +2076,7 @@
 ## [force_idle_state](#force_idle_state)
 
 ### Lua Example
-`local `integer`Value = force_idle_state(m)`
+`local integerValue = force_idle_state(m)`
 
 ### Parameters
 | Field | Type |
@@ -2096,7 +2096,7 @@
 ## [hurt_and_set_mario_action](#hurt_and_set_mario_action)
 
 ### Lua Example
-`local `integer`Value = hurt_and_set_mario_action(m, action, actionArg, hurtCounter)`
+`local integerValue = hurt_and_set_mario_action(m, action, actionArg, hurtCounter)`
 
 ### Parameters
 | Field | Type |
@@ -2119,7 +2119,7 @@
 ## [is_anim_at_end](#is_anim_at_end)
 
 ### Lua Example
-`local `integer`Value = is_anim_at_end(m)`
+`local integerValue = is_anim_at_end(m)`
 
 ### Parameters
 | Field | Type |
@@ -2139,7 +2139,7 @@
 ## [is_anim_past_end](#is_anim_past_end)
 
 ### Lua Example
-`local `integer`Value = is_anim_past_end(m)`
+`local integerValue = is_anim_past_end(m)`
 
 ### Parameters
 | Field | Type |
@@ -2159,7 +2159,7 @@
 ## [is_anim_past_frame](#is_anim_past_frame)
 
 ### Lua Example
-`local `integer`Value = is_anim_past_frame(m, animFrame)`
+`local integerValue = is_anim_past_frame(m, animFrame)`
 
 ### Parameters
 | Field | Type |
@@ -2180,7 +2180,7 @@
 ## [mario_facing_downhill](#mario_facing_downhill)
 
 ### Lua Example
-`local `integer`Value = mario_facing_downhill(m, turnYaw)`
+`local integerValue = mario_facing_downhill(m, turnYaw)`
 
 ### Parameters
 | Field | Type |
@@ -2201,7 +2201,7 @@
 ## [mario_floor_is_slippery](#mario_floor_is_slippery)
 
 ### Lua Example
-`local `integer`Value = mario_floor_is_slippery(m)`
+`local integerValue = mario_floor_is_slippery(m)`
 
 ### Parameters
 | Field | Type |
@@ -2221,7 +2221,7 @@
 ## [mario_floor_is_slope](#mario_floor_is_slope)
 
 ### Lua Example
-`local `integer`Value = mario_floor_is_slope(m)`
+`local integerValue = mario_floor_is_slope(m)`
 
 ### Parameters
 | Field | Type |
@@ -2241,7 +2241,7 @@
 ## [mario_floor_is_steep](#mario_floor_is_steep)
 
 ### Lua Example
-`local `integer`Value = mario_floor_is_steep(m)`
+`local integerValue = mario_floor_is_steep(m)`
 
 ### Parameters
 | Field | Type |
@@ -2261,7 +2261,7 @@
 ## [mario_get_floor_class](#mario_get_floor_class)
 
 ### Lua Example
-`local `integer`Value = mario_get_floor_class(m)`
+`local integerValue = mario_get_floor_class(m)`
 
 ### Parameters
 | Field | Type |
@@ -2281,7 +2281,7 @@
 ## [mario_get_terrain_sound_addend](#mario_get_terrain_sound_addend)
 
 ### Lua Example
-`local `integer`Value = mario_get_terrain_sound_addend(m)`
+`local integerValue = mario_get_terrain_sound_addend(m)`
 
 ### Parameters
 | Field | Type |
@@ -2556,7 +2556,7 @@
 ## [return_mario_anim_y_translation](#return_mario_anim_y_translation)
 
 ### Lua Example
-`local `integer`Value = return_mario_anim_y_translation(m)`
+`local integerValue = return_mario_anim_y_translation(m)`
 
 ### Parameters
 | Field | Type |
@@ -2597,7 +2597,7 @@
 ## [set_jump_from_landing](#set_jump_from_landing)
 
 ### Lua Example
-`local `integer`Value = set_jump_from_landing(m)`
+`local integerValue = set_jump_from_landing(m)`
 
 ### Parameters
 | Field | Type |
@@ -2617,7 +2617,7 @@
 ## [set_jumping_action](#set_jumping_action)
 
 ### Lua Example
-`local `integer`Value = set_jumping_action(m, action, actionArg)`
+`local integerValue = set_jumping_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
@@ -2639,7 +2639,7 @@
 ## [set_mario_action](#set_mario_action)
 
 ### Lua Example
-`local `integer`Value = set_mario_action(m, action, actionArg)`
+`local integerValue = set_mario_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
@@ -2661,7 +2661,7 @@
 ## [set_mario_anim_with_accel](#set_mario_anim_with_accel)
 
 ### Lua Example
-`local `integer`Value = set_mario_anim_with_accel(m, targetAnimID, accel)`
+`local integerValue = set_mario_anim_with_accel(m, targetAnimID, accel)`
 
 ### Parameters
 | Field | Type |
@@ -2683,7 +2683,7 @@
 ## [set_mario_animation](#set_mario_animation)
 
 ### Lua Example
-`local `integer`Value = set_mario_animation(m, targetAnimID)`
+`local integerValue = set_mario_animation(m, targetAnimID)`
 
 ### Parameters
 | Field | Type |
@@ -2724,7 +2724,7 @@
 ## [set_water_plunge_action](#set_water_plunge_action)
 
 ### Lua Example
-`local `integer`Value = set_water_plunge_action(m)`
+`local integerValue = set_water_plunge_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -2744,7 +2744,7 @@
 ## [transition_submerged_to_walking](#transition_submerged_to_walking)
 
 ### Lua Example
-`local `integer`Value = transition_submerged_to_walking(m)`
+`local integerValue = transition_submerged_to_walking(m)`
 
 ### Parameters
 | Field | Type |
@@ -2810,7 +2810,7 @@
 ## [check_common_airborne_cancels](#check_common_airborne_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_airborne_cancels(m)`
+`local integerValue = check_common_airborne_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -2830,7 +2830,7 @@
 ## [check_fall_damage](#check_fall_damage)
 
 ### Lua Example
-`local `integer`Value = check_fall_damage(m, hardFallAction)`
+`local integerValue = check_fall_damage(m, hardFallAction)`
 
 ### Parameters
 | Field | Type |
@@ -2851,7 +2851,7 @@
 ## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
 
 ### Lua Example
-`local `integer`Value = check_fall_damage_or_get_stuck(m, hardFallAction)`
+`local integerValue = check_fall_damage_or_get_stuck(m, hardFallAction)`
 
 ### Parameters
 | Field | Type |
@@ -2872,7 +2872,7 @@
 ## [check_horizontal_wind](#check_horizontal_wind)
 
 ### Lua Example
-`local `integer`Value = check_horizontal_wind(m)`
+`local integerValue = check_horizontal_wind(m)`
 
 ### Parameters
 | Field | Type |
@@ -2892,7 +2892,7 @@
 ## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
 
 ### Lua Example
-`local `integer`Value = check_kick_or_dive_in_air(m)`
+`local integerValue = check_kick_or_dive_in_air(m)`
 
 ### Parameters
 | Field | Type |
@@ -2912,7 +2912,7 @@
 ## [check_wall_kick](#check_wall_kick)
 
 ### Lua Example
-`local `integer`Value = check_wall_kick(m)`
+`local integerValue = check_wall_kick(m)`
 
 ### Parameters
 | Field | Type |
@@ -2932,7 +2932,7 @@
 ## [common_air_action_step](#common_air_action_step)
 
 ### Lua Example
-`local `integer`Value = common_air_action_step(m, landAction, animation, stepArg)`
+`local integerValue = common_air_action_step(m, landAction, animation, stepArg)`
 
 ### Parameters
 | Field | Type |
@@ -2955,7 +2955,7 @@
 ## [common_air_knockback_step](#common_air_knockback_step)
 
 ### Lua Example
-`local `integer`Value = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
+`local integerValue = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
 
 ### Parameters
 | Field | Type |
@@ -2979,7 +2979,7 @@
 ## [lava_boost_on_wall](#lava_boost_on_wall)
 
 ### Lua Example
-`local `integer`Value = lava_boost_on_wall(m)`
+`local integerValue = lava_boost_on_wall(m)`
 
 ### Parameters
 | Field | Type |
@@ -2999,7 +2999,7 @@
 ## [mario_execute_airborne_action](#mario_execute_airborne_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_airborne_action(m)`
+`local integerValue = mario_execute_airborne_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3082,7 +3082,7 @@
 ## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
 
 ### Lua Example
-`local `integer`Value = should_get_stuck_in_ground(m)`
+`local integerValue = should_get_stuck_in_ground(m)`
 
 ### Parameters
 | Field | Type |
@@ -3248,7 +3248,7 @@
 ## [check_common_automatic_cancels](#check_common_automatic_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_automatic_cancels(m)`
+`local integerValue = check_common_automatic_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -3288,7 +3288,7 @@
 ## [let_go_of_ledge](#let_go_of_ledge)
 
 ### Lua Example
-`local `integer`Value = let_go_of_ledge(m)`
+`local integerValue = let_go_of_ledge(m)`
 
 ### Parameters
 | Field | Type |
@@ -3308,7 +3308,7 @@
 ## [mario_execute_automatic_action](#mario_execute_automatic_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_automatic_action(m)`
+`local integerValue = mario_execute_automatic_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3328,7 +3328,7 @@
 ## [perform_hanging_step](#perform_hanging_step)
 
 ### Lua Example
-`local `integer`Value = perform_hanging_step(m, nextPos)`
+`local integerValue = perform_hanging_step(m, nextPos)`
 
 ### Parameters
 | Field | Type |
@@ -3370,7 +3370,7 @@
 ## [set_pole_position](#set_pole_position)
 
 ### Lua Example
-`local `integer`Value = set_pole_position(m, offsetY)`
+`local integerValue = set_pole_position(m, offsetY)`
 
 ### Parameters
 | Field | Type |
@@ -3391,7 +3391,7 @@
 ## [update_hang_moving](#update_hang_moving)
 
 ### Lua Example
-`local `integer`Value = update_hang_moving(m)`
+`local integerValue = update_hang_moving(m)`
 
 ### Parameters
 | Field | Type |
@@ -3515,7 +3515,7 @@
 ## [common_death_handler](#common_death_handler)
 
 ### Lua Example
-`local `integer`Value = common_death_handler(m, animation, frameToDeathWarp)`
+`local integerValue = common_death_handler(m, animation, frameToDeathWarp)`
 
 ### Parameters
 | Field | Type |
@@ -3621,7 +3621,7 @@
 ## [get_star_collection_dialog](#get_star_collection_dialog)
 
 ### Lua Example
-`local `integer`Value = get_star_collection_dialog(m)`
+`local integerValue = get_star_collection_dialog(m)`
 
 ### Parameters
 | Field | Type |
@@ -3661,7 +3661,7 @@
 ## [launch_mario_until_land](#launch_mario_until_land)
 
 ### Lua Example
-`local `integer`Value = launch_mario_until_land(m, endAction, animation, forwardVel)`
+`local integerValue = launch_mario_until_land(m, endAction, animation, forwardVel)`
 
 ### Parameters
 | Field | Type |
@@ -3684,7 +3684,7 @@
 ## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_cutscene_action(m)`
+`local integerValue = mario_execute_cutscene_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3704,7 +3704,7 @@
 ## [mario_ready_to_speak](#mario_ready_to_speak)
 
 ### Lua Example
-`local `integer`Value = mario_ready_to_speak(m)`
+`local integerValue = mario_ready_to_speak(m)`
 
 ### Parameters
 | Field | Type |
@@ -3742,7 +3742,7 @@
 ## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
 
 ### Lua Example
-`local `integer`Value = should_start_or_continue_dialog(m, object)`
+`local integerValue = should_start_or_continue_dialog(m, object)`
 
 ### Parameters
 | Field | Type |
@@ -3814,7 +3814,7 @@
 ## [analog_stick_held_back](#analog_stick_held_back)
 
 ### Lua Example
-`local `integer`Value = analog_stick_held_back(m)`
+`local integerValue = analog_stick_held_back(m)`
 
 ### Parameters
 | Field | Type |
@@ -3894,7 +3894,7 @@
 ## [apply_landing_accel](#apply_landing_accel)
 
 ### Lua Example
-`local `integer`Value = apply_landing_accel(m, frictionFactor)`
+`local integerValue = apply_landing_accel(m, frictionFactor)`
 
 ### Parameters
 | Field | Type |
@@ -3935,7 +3935,7 @@
 ## [apply_slope_decel](#apply_slope_decel)
 
 ### Lua Example
-`local `integer`Value = apply_slope_decel(m, decelCoef)`
+`local integerValue = apply_slope_decel(m, decelCoef)`
 
 ### Parameters
 | Field | Type |
@@ -3956,7 +3956,7 @@
 ## [begin_braking_action](#begin_braking_action)
 
 ### Lua Example
-`local `integer`Value = begin_braking_action(m)`
+`local integerValue = begin_braking_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3976,7 +3976,7 @@
 ## [begin_walking_action](#begin_walking_action)
 
 ### Lua Example
-`local `integer`Value = begin_walking_action(m, forwardVel, action, actionArg)`
+`local integerValue = begin_walking_action(m, forwardVel, action, actionArg)`
 
 ### Parameters
 | Field | Type |
@@ -3999,7 +3999,7 @@
 ## [check_common_moving_cancels](#check_common_moving_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_moving_cancels(m)`
+`local integerValue = check_common_moving_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4019,7 +4019,7 @@
 ## [check_ground_dive_or_punch](#check_ground_dive_or_punch)
 
 ### Lua Example
-`local `integer`Value = check_ground_dive_or_punch(m)`
+`local integerValue = check_ground_dive_or_punch(m)`
 
 ### Parameters
 | Field | Type |
@@ -4059,7 +4059,7 @@
 ## [common_ground_knockback_action](#common_ground_knockback_action)
 
 ### Lua Example
-`local `integer`Value = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
+`local integerValue = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
 
 ### Parameters
 | Field | Type |
@@ -4083,7 +4083,7 @@
 ## [common_landing_action](#common_landing_action)
 
 ### Lua Example
-`local `integer`Value = common_landing_action(m, animation, airAction)`
+`local integerValue = common_landing_action(m, animation, airAction)`
 
 ### Parameters
 | Field | Type |
@@ -4128,7 +4128,7 @@
 ## [common_slide_action_with_jump](#common_slide_action_with_jump)
 
 ### Lua Example
-`local `integer`Value = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
+`local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
 
 ### Parameters
 | Field | Type |
@@ -4152,7 +4152,7 @@
 ## [mario_execute_moving_action](#mario_execute_moving_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_moving_action(m)`
+`local integerValue = mario_execute_moving_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4215,7 +4215,7 @@
 ## [quicksand_jump_land_action](#quicksand_jump_land_action)
 
 ### Lua Example
-`local `integer`Value = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
+`local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
 
 ### Parameters
 | Field | Type |
@@ -4239,7 +4239,7 @@
 ## [set_triple_jump_action](#set_triple_jump_action)
 
 ### Lua Example
-`local `integer`Value = set_triple_jump_action(m, action, actionArg)`
+`local integerValue = set_triple_jump_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
@@ -4261,7 +4261,7 @@
 ## [should_begin_sliding](#should_begin_sliding)
 
 ### Lua Example
-`local `integer`Value = should_begin_sliding(m)`
+`local integerValue = should_begin_sliding(m)`
 
 ### Parameters
 | Field | Type |
@@ -4303,7 +4303,7 @@
 ## [stomach_slide_action](#stomach_slide_action)
 
 ### Lua Example
-`local `integer`Value = stomach_slide_action(m, stopAction, airAction, animation)`
+`local integerValue = stomach_slide_action(m, stopAction, airAction, animation)`
 
 ### Parameters
 | Field | Type |
@@ -4367,7 +4367,7 @@
 ## [tilt_body_running](#tilt_body_running)
 
 ### Lua Example
-`local `integer`Value = tilt_body_running(m)`
+`local integerValue = tilt_body_running(m)`
 
 ### Parameters
 | Field | Type |
@@ -4408,7 +4408,7 @@
 ## [update_decelerating_speed](#update_decelerating_speed)
 
 ### Lua Example
-`local `integer`Value = update_decelerating_speed(m)`
+`local integerValue = update_decelerating_speed(m)`
 
 ### Parameters
 | Field | Type |
@@ -4448,7 +4448,7 @@
 ## [update_sliding](#update_sliding)
 
 ### Lua Example
-`local `integer`Value = update_sliding(m, stopSpeed)`
+`local integerValue = update_sliding(m, stopSpeed)`
 
 ### Parameters
 | Field | Type |
@@ -4539,7 +4539,7 @@
 ## [check_common_object_cancels](#check_common_object_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_object_cancels(m)`
+`local integerValue = check_common_object_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4559,7 +4559,7 @@
 ## [mario_execute_object_action](#mario_execute_object_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_object_action(m)`
+`local integerValue = mario_execute_object_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4579,7 +4579,7 @@
 ## [mario_update_punch_sequence](#mario_update_punch_sequence)
 
 ### Lua Example
-`local `integer`Value = mario_update_punch_sequence(m)`
+`local integerValue = mario_update_punch_sequence(m)`
 
 ### Parameters
 | Field | Type |
@@ -4605,7 +4605,7 @@
 ## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_hold_idle_cancels(m)`
+`local integerValue = check_common_hold_idle_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4625,7 +4625,7 @@
 ## [check_common_idle_cancels](#check_common_idle_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_idle_cancels(m)`
+`local integerValue = check_common_idle_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4645,7 +4645,7 @@
 ## [check_common_landing_cancels](#check_common_landing_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_landing_cancels(m, action)`
+`local integerValue = check_common_landing_cancels(m, action)`
 
 ### Parameters
 | Field | Type |
@@ -4666,7 +4666,7 @@
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Lua Example
-`local `integer`Value = check_common_stationary_cancels(m)`
+`local integerValue = check_common_stationary_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4686,7 +4686,7 @@
 ## [landing_step](#landing_step)
 
 ### Lua Example
-`local `integer`Value = landing_step(m, arg1, action)`
+`local integerValue = landing_step(m, arg1, action)`
 
 ### Parameters
 | Field | Type |
@@ -4708,7 +4708,7 @@
 ## [mario_execute_stationary_action](#mario_execute_stationary_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_stationary_action(m)`
+`local integerValue = mario_execute_stationary_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4820,7 +4820,7 @@
 ## [mario_execute_submerged_action](#mario_execute_submerged_action)
 
 ### Lua Example
-`local `integer`Value = mario_execute_submerged_action(m)`
+`local integerValue = mario_execute_submerged_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4840,7 +4840,7 @@
 ## [perform_water_full_step](#perform_water_full_step)
 
 ### Lua Example
-`local `integer`Value = perform_water_full_step(m, nextPos)`
+`local integerValue = perform_water_full_step(m, nextPos)`
 
 ### Parameters
 | Field | Type |
@@ -4861,7 +4861,7 @@
 ## [perform_water_step](#perform_water_step)
 
 ### Lua Example
-`local `integer`Value = perform_water_step(m)`
+`local integerValue = perform_water_step(m)`
 
 ### Parameters
 | Field | Type |
@@ -4908,7 +4908,7 @@
 ## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
 
 ### Lua Example
-`local `number`Value = get_additive_y_vel_for_jumps()`
+`local numberValue = get_additive_y_vel_for_jumps()`
 
 ### Parameters
 - None
@@ -4973,7 +4973,7 @@
 ## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
 
 ### Lua Example
-`local `integer`Value = mario_push_off_steep_floor(arg0, arg1, arg2)`
+`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
 
 ### Parameters
 | Field | Type |
@@ -4995,7 +4995,7 @@
 ## [mario_update_moving_sand](#mario_update_moving_sand)
 
 ### Lua Example
-`local `integer`Value = mario_update_moving_sand(arg0)`
+`local integerValue = mario_update_moving_sand(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5015,7 +5015,7 @@
 ## [mario_update_quicksand](#mario_update_quicksand)
 
 ### Lua Example
-`local `integer`Value = mario_update_quicksand(arg0, arg1)`
+`local integerValue = mario_update_quicksand(arg0, arg1)`
 
 ### Parameters
 | Field | Type |
@@ -5036,7 +5036,7 @@
 ## [mario_update_windy_ground](#mario_update_windy_ground)
 
 ### Lua Example
-`local `integer`Value = mario_update_windy_ground(arg0)`
+`local integerValue = mario_update_windy_ground(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5056,7 +5056,7 @@
 ## [perform_air_step](#perform_air_step)
 
 ### Lua Example
-`local `integer`Value = perform_air_step(arg0, arg1)`
+`local integerValue = perform_air_step(arg0, arg1)`
 
 ### Parameters
 | Field | Type |
@@ -5077,7 +5077,7 @@
 ## [perform_ground_step](#perform_ground_step)
 
 ### Lua Example
-`local `integer`Value = perform_ground_step(arg0)`
+`local integerValue = perform_ground_step(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5117,7 +5117,7 @@
 ## [stationary_ground_step](#stationary_ground_step)
 
 ### Lua Example
-`local `integer`Value = stationary_ground_step(arg0)`
+`local integerValue = stationary_ground_step(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5226,7 +5226,7 @@
 ## [network_player_connected_count](#network_player_connected_count)
 
 ### Lua Example
-`local `integer`Value = network_player_connected_count()`
+`local integerValue = network_player_connected_count()`
 
 ### Parameters
 - None
@@ -5295,7 +5295,7 @@
 ## [network_get_player_text_color_string](#network_get_player_text_color_string)
 
 ### Lua Example
-`local `string`Value = network_get_player_text_color_string(localIndex)`
+`local stringValue = network_get_player_text_color_string(localIndex)`
 
 ### Parameters
 | Field | Type |
@@ -5315,7 +5315,7 @@
 ## [network_global_index_from_local](#network_global_index_from_local)
 
 ### Lua Example
-`local `integer`Value = network_global_index_from_local(localIndex)`
+`local integerValue = network_global_index_from_local(localIndex)`
 
 ### Parameters
 | Field | Type |
@@ -5335,7 +5335,7 @@
 ## [network_is_server](#network_is_server)
 
 ### Lua Example
-`local `bool`Value = network_is_server()`
+`local boolValue = network_is_server()`
 
 ### Parameters
 - None
@@ -5353,7 +5353,7 @@
 ## [network_local_index_from_global](#network_local_index_from_global)
 
 ### Lua Example
-`local `integer`Value = network_local_index_from_global(globalIndex)`
+`local integerValue = network_local_index_from_global(globalIndex)`
 
 ### Parameters
 | Field | Type |
@@ -5379,7 +5379,7 @@
 ## [absf_2](#absf_2)
 
 ### Lua Example
-`local `number`Value = absf_2(f)`
+`local numberValue = absf_2(f)`
 
 ### Parameters
 | Field | Type |
@@ -5467,7 +5467,7 @@
 ## [current_mario_room_check](#current_mario_room_check)
 
 ### Lua Example
-`local `integer`Value = current_mario_room_check(room)`
+`local integerValue = current_mario_room_check(room)`
 
 ### Parameters
 | Field | Type |
@@ -5487,7 +5487,7 @@
 ## [is_player_active](#is_player_active)
 
 ### Lua Example
-`local `integer`Value = is_player_active(m)`
+`local integerValue = is_player_active(m)`
 
 ### Parameters
 | Field | Type |
@@ -5507,7 +5507,7 @@
 ## [is_point_close_to_object](#is_point_close_to_object)
 
 ### Lua Example
-`local `integer`Value = is_point_close_to_object(obj, x, y, z, dist)`
+`local integerValue = is_point_close_to_object(obj, x, y, z, dist)`
 
 ### Parameters
 | Field | Type |
@@ -5531,7 +5531,7 @@
 ## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
 
 ### Lua Example
-`local `integer`Value = is_point_within_radius_of_mario(x, y, z, dist)`
+`local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`
 
 ### Parameters
 | Field | Type |
@@ -5615,7 +5615,7 @@
 ## [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
 
 ### Lua Example
-`local `integer`Value = obj_check_if_facing_toward_angle(base, goal, range)`
+`local integerValue = obj_check_if_facing_toward_angle(base, goal, range)`
 
 ### Parameters
 | Field | Type |
@@ -5637,7 +5637,7 @@
 ## [obj_find_wall](#obj_find_wall)
 
 ### Lua Example
-`local `integer`Value = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
+`local integerValue = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
 
 ### Parameters
 | Field | Type |
@@ -5661,7 +5661,7 @@
 ## [obj_find_wall_displacement](#obj_find_wall_displacement)
 
 ### Lua Example
-`local `integer`Value = obj_find_wall_displacement(dist, x, y, z, radius)`
+`local integerValue = obj_find_wall_displacement(dist, x, y, z, radius)`
 
 ### Parameters
 | Field | Type |
@@ -5685,7 +5685,7 @@
 ## [obj_flicker_and_disappear](#obj_flicker_and_disappear)
 
 ### Lua Example
-`local `integer`Value = obj_flicker_and_disappear(obj, lifeSpan)`
+`local integerValue = obj_flicker_and_disappear(obj, lifeSpan)`
 
 ### Parameters
 | Field | Type |
@@ -5706,7 +5706,7 @@
 ## [obj_lava_death](#obj_lava_death)
 
 ### Lua Example
-`local `integer`Value = obj_lava_death()`
+`local integerValue = obj_lava_death()`
 
 ### Parameters
 - None
@@ -5791,7 +5791,7 @@
 ## [obj_return_home_if_safe](#obj_return_home_if_safe)
 
 ### Lua Example
-`local `integer`Value = obj_return_home_if_safe(obj, homeX, y, homeZ, dist)`
+`local integerValue = obj_return_home_if_safe(obj, homeX, y, homeZ, dist)`
 
 ### Parameters
 | Field | Type |
@@ -5875,7 +5875,7 @@
 ## [object_step](#object_step)
 
 ### Lua Example
-`local `integer`Value = object_step()`
+`local integerValue = object_step()`
 
 ### Parameters
 - None
@@ -5893,7 +5893,7 @@
 ## [object_step_without_floor_orient](#object_step_without_floor_orient)
 
 ### Lua Example
-`local `integer`Value = object_step_without_floor_orient()`
+`local integerValue = object_step_without_floor_orient()`
 
 ### Parameters
 - None
@@ -5973,7 +5973,7 @@
 ## [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
 
 ### Lua Example
-`local `integer`Value = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
+`local integerValue = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
 
 ### Parameters
 | Field | Type |
@@ -6028,7 +6028,7 @@
 ## [approach_f32_ptr](#approach_f32_ptr)
 
 ### Lua Example
-`local `integer`Value = approach_f32_ptr(px, target, delta)`
+`local integerValue = approach_f32_ptr(px, target, delta)`
 
 ### Parameters
 | Field | Type |
@@ -6050,7 +6050,7 @@
 ## [cur_obj_init_anim_and_check_if_end](#cur_obj_init_anim_and_check_if_end)
 
 ### Lua Example
-`local `integer`Value = cur_obj_init_anim_and_check_if_end(arg0)`
+`local integerValue = cur_obj_init_anim_and_check_if_end(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -6070,7 +6070,7 @@
 ## [cur_obj_init_anim_check_frame](#cur_obj_init_anim_check_frame)
 
 ### Lua Example
-`local `integer`Value = cur_obj_init_anim_check_frame(arg0, arg1)`
+`local integerValue = cur_obj_init_anim_check_frame(arg0, arg1)`
 
 ### Parameters
 | Field | Type |
@@ -6111,7 +6111,7 @@
 ## [cur_obj_play_sound_at_anim_range](#cur_obj_play_sound_at_anim_range)
 
 ### Lua Example
-`local `integer`Value = cur_obj_play_sound_at_anim_range(arg0, arg1, sound)`
+`local integerValue = cur_obj_play_sound_at_anim_range(arg0, arg1, sound)`
 
 ### Parameters
 | Field | Type |
@@ -6133,7 +6133,7 @@
 ## [cur_obj_set_anim_if_at_end](#cur_obj_set_anim_if_at_end)
 
 ### Lua Example
-`local `integer`Value = cur_obj_set_anim_if_at_end(arg0)`
+`local integerValue = cur_obj_set_anim_if_at_end(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -6214,7 +6214,7 @@
 ## [obj_bounce_off_walls_edges_objects](#obj_bounce_off_walls_edges_objects)
 
 ### Lua Example
-`local `integer`Value = obj_bounce_off_walls_edges_objects(targetYaw)`
+`local integerValue = obj_bounce_off_walls_edges_objects(targetYaw)`
 
 ### Parameters
 | Field | Type |
@@ -6234,7 +6234,7 @@
 ## [obj_check_attacks](#obj_check_attacks)
 
 ### Lua Example
-`local `integer`Value = obj_check_attacks(hitbox, attackedMarioAction)`
+`local integerValue = obj_check_attacks(hitbox, attackedMarioAction)`
 
 ### Parameters
 | Field | Type |
@@ -6275,7 +6275,7 @@
 ## [obj_die_if_above_lava_and_health_non_positive](#obj_die_if_above_lava_and_health_non_positive)
 
 ### Lua Example
-`local `integer`Value = obj_die_if_above_lava_and_health_non_positive()`
+`local integerValue = obj_die_if_above_lava_and_health_non_positive()`
 
 ### Parameters
 - None
@@ -6311,7 +6311,7 @@
 ## [obj_face_pitch_approach](#obj_face_pitch_approach)
 
 ### Lua Example
-`local `integer`Value = obj_face_pitch_approach(targetPitch, deltaPitch)`
+`local integerValue = obj_face_pitch_approach(targetPitch, deltaPitch)`
 
 ### Parameters
 | Field | Type |
@@ -6332,7 +6332,7 @@
 ## [obj_face_roll_approach](#obj_face_roll_approach)
 
 ### Lua Example
-`local `integer`Value = obj_face_roll_approach(targetRoll, deltaRoll)`
+`local integerValue = obj_face_roll_approach(targetRoll, deltaRoll)`
 
 ### Parameters
 | Field | Type |
@@ -6353,7 +6353,7 @@
 ## [obj_face_yaw_approach](#obj_face_yaw_approach)
 
 ### Lua Example
-`local `integer`Value = obj_face_yaw_approach(targetYaw, deltaYaw)`
+`local integerValue = obj_face_yaw_approach(targetYaw, deltaYaw)`
 
 ### Parameters
 | Field | Type |
@@ -6374,7 +6374,7 @@
 ## [obj_forward_vel_approach](#obj_forward_vel_approach)
 
 ### Lua Example
-`local `integer`Value = obj_forward_vel_approach(target, delta)`
+`local integerValue = obj_forward_vel_approach(target, delta)`
 
 ### Parameters
 | Field | Type |
@@ -6395,7 +6395,7 @@
 ## [obj_get_pitch_from_vel](#obj_get_pitch_from_vel)
 
 ### Lua Example
-`local `integer`Value = obj_get_pitch_from_vel()`
+`local integerValue = obj_get_pitch_from_vel()`
 
 ### Parameters
 - None
@@ -6413,7 +6413,7 @@
 ## [obj_get_pitch_to_home](#obj_get_pitch_to_home)
 
 ### Lua Example
-`local `integer`Value = obj_get_pitch_to_home(latDistToHome)`
+`local integerValue = obj_get_pitch_to_home(latDistToHome)`
 
 ### Parameters
 | Field | Type |
@@ -6433,7 +6433,7 @@
 ## [obj_grow_then_shrink](#obj_grow_then_shrink)
 
 ### Lua Example
-`local `integer`Value = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`
+`local integerValue = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`
 
 ### Parameters
 | Field | Type |
@@ -6455,7 +6455,7 @@
 ## [obj_handle_attacks](#obj_handle_attacks)
 
 ### Lua Example
-`local `integer`Value = obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)`
+`local integerValue = obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)`
 
 ### Parameters
 | Field | Type |
@@ -6477,7 +6477,7 @@
 ## [obj_is_near_to_and_facing_mario](#obj_is_near_to_and_facing_mario)
 
 ### Lua Example
-`local `integer`Value = obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)`
+`local integerValue = obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)`
 
 ### Parameters
 | Field | Type |
@@ -6499,7 +6499,7 @@
 ## [obj_is_rendering_enabled](#obj_is_rendering_enabled)
 
 ### Lua Example
-`local `integer`Value = obj_is_rendering_enabled()`
+`local integerValue = obj_is_rendering_enabled()`
 
 ### Parameters
 - None
@@ -6517,7 +6517,7 @@
 ## [obj_move_for_one_second](#obj_move_for_one_second)
 
 ### Lua Example
-`local `integer`Value = obj_move_for_one_second(endAction)`
+`local integerValue = obj_move_for_one_second(endAction)`
 
 ### Parameters
 | Field | Type |
@@ -6537,7 +6537,7 @@
 ## [obj_move_pitch_approach](#obj_move_pitch_approach)
 
 ### Lua Example
-`local `integer`Value = obj_move_pitch_approach(target, delta)`
+`local integerValue = obj_move_pitch_approach(target, delta)`
 
 ### Parameters
 | Field | Type |
@@ -6558,7 +6558,7 @@
 ## [obj_random_fixed_turn](#obj_random_fixed_turn)
 
 ### Lua Example
-`local `integer`Value = obj_random_fixed_turn(delta)`
+`local integerValue = obj_random_fixed_turn(delta)`
 
 ### Parameters
 | Field | Type |
@@ -6578,7 +6578,7 @@
 ## [obj_resolve_collisions_and_turn](#obj_resolve_collisions_and_turn)
 
 ### Lua Example
-`local `integer`Value = obj_resolve_collisions_and_turn(targetYaw, turnSpeed)`
+`local integerValue = obj_resolve_collisions_and_turn(targetYaw, turnSpeed)`
 
 ### Parameters
 | Field | Type |
@@ -6599,7 +6599,7 @@
 ## [obj_resolve_object_collisions](#obj_resolve_object_collisions)
 
 ### Lua Example
-`local `integer`Value = obj_resolve_object_collisions(targetYaw)`
+`local integerValue = obj_resolve_object_collisions(targetYaw)`
 
 ### Parameters
 | Field | Type |
@@ -6720,7 +6720,7 @@
 ## [obj_smooth_turn](#obj_smooth_turn)
 
 ### Lua Example
-`local `integer`Value = obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)`
+`local integerValue = obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)`
 
 ### Parameters
 | Field | Type |
@@ -6773,7 +6773,7 @@
 ## [obj_turn_pitch_toward_mario](#obj_turn_pitch_toward_mario)
 
 ### Lua Example
-`local `integer`Value = obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)`
+`local integerValue = obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)`
 
 ### Parameters
 | Field | Type |
@@ -6836,7 +6836,7 @@
 ## [obj_update_standard_actions](#obj_update_standard_actions)
 
 ### Lua Example
-`local `integer`Value = obj_update_standard_actions(scale)`
+`local integerValue = obj_update_standard_actions(scale)`
 
 ### Parameters
 | Field | Type |
@@ -6856,7 +6856,7 @@
 ## [obj_y_vel_approach](#obj_y_vel_approach)
 
 ### Lua Example
-`local `integer`Value = obj_y_vel_approach(target, delta)`
+`local integerValue = obj_y_vel_approach(target, delta)`
 
 ### Parameters
 | Field | Type |
@@ -6877,7 +6877,7 @@
 ## [oscillate_toward](#oscillate_toward)
 
 ### Lua Example
-`local `integer`Value = oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)`
+`local integerValue = oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)`
 
 ### Parameters
 | Field | Type |
@@ -6925,7 +6925,7 @@
 ## [random_linear_offset](#random_linear_offset)
 
 ### Lua Example
-`local `integer`Value = random_linear_offset(base, range)`
+`local integerValue = random_linear_offset(base, range)`
 
 ### Parameters
 | Field | Type |
@@ -6946,7 +6946,7 @@
 ## [random_mod_offset](#random_mod_offset)
 
 ### Lua Example
-`local `integer`Value = random_mod_offset(base, step, mod)`
+`local integerValue = random_mod_offset(base, step, mod)`
 
 ### Parameters
 | Field | Type |
@@ -6974,7 +6974,7 @@
 ## [abs_angle_diff](#abs_angle_diff)
 
 ### Lua Example
-`local `integer`Value = abs_angle_diff(x0, x1)`
+`local integerValue = abs_angle_diff(x0, x1)`
 
 ### Parameters
 | Field | Type |
@@ -7016,7 +7016,7 @@
 ## [approach_f32_signed](#approach_f32_signed)
 
 ### Lua Example
-`local `integer`Value = approach_f32_signed(value, target, increment)`
+`local integerValue = approach_f32_signed(value, target, increment)`
 
 ### Parameters
 | Field | Type |
@@ -7038,7 +7038,7 @@
 ## [approach_f32_symmetric](#approach_f32_symmetric)
 
 ### Lua Example
-`local `number`Value = approach_f32_symmetric(value, target, increment)`
+`local numberValue = approach_f32_symmetric(value, target, increment)`
 
 ### Parameters
 | Field | Type |
@@ -7060,7 +7060,7 @@
 ## [approach_s16_symmetric](#approach_s16_symmetric)
 
 ### Lua Example
-`local `integer`Value = approach_s16_symmetric(value, target, increment)`
+`local integerValue = approach_s16_symmetric(value, target, increment)`
 
 ### Parameters
 | Field | Type |
@@ -7118,7 +7118,7 @@
 ## [bit_shift_left](#bit_shift_left)
 
 ### Lua Example
-`local `integer`Value = bit_shift_left(a0)`
+`local integerValue = bit_shift_left(a0)`
 
 ### Parameters
 | Field | Type |
@@ -7158,7 +7158,7 @@
 ## [clear_move_flag](#clear_move_flag)
 
 ### Lua Example
-`local `integer`Value = clear_move_flag(bitSet, flag)`
+`local integerValue = clear_move_flag(bitSet, flag)`
 
 ### Parameters
 | Field | Type |
@@ -7199,7 +7199,7 @@
 ## [count_objects_with_behavior](#count_objects_with_behavior)
 
 ### Lua Example
-`local `integer`Value = count_objects_with_behavior(behavior)`
+`local integerValue = count_objects_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
@@ -7219,7 +7219,7 @@
 ## [count_unimportant_objects](#count_unimportant_objects)
 
 ### Lua Example
-`local `integer`Value = count_unimportant_objects()`
+`local integerValue = count_unimportant_objects()`
 
 ### Parameters
 - None
@@ -7237,7 +7237,7 @@
 ## [cur_obj_abs_y_dist_to_home](#cur_obj_abs_y_dist_to_home)
 
 ### Lua Example
-`local `number`Value = cur_obj_abs_y_dist_to_home()`
+`local numberValue = cur_obj_abs_y_dist_to_home()`
 
 ### Parameters
 - None
@@ -7255,7 +7255,7 @@
 ## [cur_obj_advance_looping_anim](#cur_obj_advance_looping_anim)
 
 ### Lua Example
-`local `integer`Value = cur_obj_advance_looping_anim()`
+`local integerValue = cur_obj_advance_looping_anim()`
 
 ### Parameters
 - None
@@ -7291,7 +7291,7 @@
 ## [cur_obj_angle_to_home](#cur_obj_angle_to_home)
 
 ### Lua Example
-`local `integer`Value = cur_obj_angle_to_home()`
+`local integerValue = cur_obj_angle_to_home()`
 
 ### Parameters
 - None
@@ -7365,7 +7365,7 @@
 ## [cur_obj_can_mario_activate_textbox](#cur_obj_can_mario_activate_textbox)
 
 ### Lua Example
-`local `integer`Value = cur_obj_can_mario_activate_textbox(m, radius, height, unused)`
+`local integerValue = cur_obj_can_mario_activate_textbox(m, radius, height, unused)`
 
 ### Parameters
 | Field | Type |
@@ -7388,7 +7388,7 @@
 ## [cur_obj_can_mario_activate_textbox_2](#cur_obj_can_mario_activate_textbox_2)
 
 ### Lua Example
-`local `integer`Value = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
+`local integerValue = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
 
 ### Parameters
 | Field | Type |
@@ -7430,7 +7430,7 @@
 ## [cur_obj_check_anim_frame](#cur_obj_check_anim_frame)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_anim_frame(frame)`
+`local integerValue = cur_obj_check_anim_frame(frame)`
 
 ### Parameters
 | Field | Type |
@@ -7450,7 +7450,7 @@
 ## [cur_obj_check_anim_frame_in_range](#cur_obj_check_anim_frame_in_range)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_anim_frame_in_range(startFrame, rangeLength)`
+`local integerValue = cur_obj_check_anim_frame_in_range(startFrame, rangeLength)`
 
 ### Parameters
 | Field | Type |
@@ -7471,7 +7471,7 @@
 ## [cur_obj_check_frame_prior_current_frame](#cur_obj_check_frame_prior_current_frame)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_frame_prior_current_frame(a0)`
+`local integerValue = cur_obj_check_frame_prior_current_frame(a0)`
 
 ### Parameters
 | Field | Type |
@@ -7491,7 +7491,7 @@
 ## [cur_obj_check_grabbed_mario](#cur_obj_check_grabbed_mario)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_grabbed_mario()`
+`local integerValue = cur_obj_check_grabbed_mario()`
 
 ### Parameters
 - None
@@ -7509,7 +7509,7 @@
 ## [cur_obj_check_if_at_animation_end](#cur_obj_check_if_at_animation_end)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_if_at_animation_end()`
+`local integerValue = cur_obj_check_if_at_animation_end()`
 
 ### Parameters
 - None
@@ -7527,7 +7527,7 @@
 ## [cur_obj_check_if_near_animation_end](#cur_obj_check_if_near_animation_end)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_if_near_animation_end()`
+`local integerValue = cur_obj_check_if_near_animation_end()`
 
 ### Parameters
 - None
@@ -7545,7 +7545,7 @@
 ## [cur_obj_check_interacted](#cur_obj_check_interacted)
 
 ### Lua Example
-`local `integer`Value = cur_obj_check_interacted()`
+`local integerValue = cur_obj_check_interacted()`
 
 ### Parameters
 - None
@@ -7563,7 +7563,7 @@
 ## [cur_obj_clear_interact_status_flag](#cur_obj_clear_interact_status_flag)
 
 ### Lua Example
-`local `integer`Value = cur_obj_clear_interact_status_flag(flag)`
+`local integerValue = cur_obj_clear_interact_status_flag(flag)`
 
 ### Parameters
 | Field | Type |
@@ -7601,7 +7601,7 @@
 ## [cur_obj_count_objects_with_behavior](#cur_obj_count_objects_with_behavior)
 
 ### Lua Example
-`local `integer`Value = cur_obj_count_objects_with_behavior(behavior, dist)`
+`local integerValue = cur_obj_count_objects_with_behavior(behavior, dist)`
 
 ### Parameters
 | Field | Type |
@@ -7622,7 +7622,7 @@
 ## [cur_obj_detect_steep_floor](#cur_obj_detect_steep_floor)
 
 ### Lua Example
-`local `integer`Value = cur_obj_detect_steep_floor(steepAngleDegrees)`
+`local integerValue = cur_obj_detect_steep_floor(steepAngleDegrees)`
 
 ### Parameters
 | Field | Type |
@@ -7698,7 +7698,7 @@
 ## [cur_obj_dist_to_nearest_object_with_behavior](#cur_obj_dist_to_nearest_object_with_behavior)
 
 ### Lua Example
-`local `number`Value = cur_obj_dist_to_nearest_object_with_behavior(behavior)`
+`local numberValue = cur_obj_dist_to_nearest_object_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
@@ -7892,7 +7892,7 @@
 ## [cur_obj_follow_path](#cur_obj_follow_path)
 
 ### Lua Example
-`local `integer`Value = cur_obj_follow_path(unusedArg)`
+`local integerValue = cur_obj_follow_path(unusedArg)`
 
 ### Parameters
 | Field | Type |
@@ -7973,7 +7973,7 @@
 ## [cur_obj_has_behavior](#cur_obj_has_behavior)
 
 ### Lua Example
-`local `integer`Value = cur_obj_has_behavior(behavior)`
+`local integerValue = cur_obj_has_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
@@ -7993,7 +7993,7 @@
 ## [cur_obj_has_model](#cur_obj_has_model)
 
 ### Lua Example
-`local `integer`Value = cur_obj_has_model(modelID)`
+`local integerValue = cur_obj_has_model(modelID)`
 
 ### Parameters
 | Field | Type |
@@ -8031,7 +8031,7 @@
 ## [cur_obj_hide_if_mario_far_away_y](#cur_obj_hide_if_mario_far_away_y)
 
 ### Lua Example
-`local `integer`Value = cur_obj_hide_if_mario_far_away_y(distY)`
+`local integerValue = cur_obj_hide_if_mario_far_away_y(distY)`
 
 ### Parameters
 | Field | Type |
@@ -8110,7 +8110,7 @@
 ## [cur_obj_init_animation_and_check_if_near_end](#cur_obj_init_animation_and_check_if_near_end)
 
 ### Lua Example
-`local `integer`Value = cur_obj_init_animation_and_check_if_near_end(animIndex)`
+`local integerValue = cur_obj_init_animation_and_check_if_near_end(animIndex)`
 
 ### Parameters
 | Field | Type |
@@ -8191,7 +8191,7 @@
 ## [cur_obj_is_any_player_on_platform](#cur_obj_is_any_player_on_platform)
 
 ### Lua Example
-`local `integer`Value = cur_obj_is_any_player_on_platform()`
+`local integerValue = cur_obj_is_any_player_on_platform()`
 
 ### Parameters
 - None
@@ -8209,7 +8209,7 @@
 ## [cur_obj_is_mario_ground_pounding_platform](#cur_obj_is_mario_ground_pounding_platform)
 
 ### Lua Example
-`local `integer`Value = cur_obj_is_mario_ground_pounding_platform()`
+`local integerValue = cur_obj_is_mario_ground_pounding_platform()`
 
 ### Parameters
 - None
@@ -8227,7 +8227,7 @@
 ## [cur_obj_is_mario_on_platform](#cur_obj_is_mario_on_platform)
 
 ### Lua Example
-`local `integer`Value = cur_obj_is_mario_on_platform()`
+`local integerValue = cur_obj_is_mario_on_platform()`
 
 ### Parameters
 - None
@@ -8245,7 +8245,7 @@
 ## [cur_obj_lateral_dist_from_mario_to_home](#cur_obj_lateral_dist_from_mario_to_home)
 
 ### Lua Example
-`local `number`Value = cur_obj_lateral_dist_from_mario_to_home()`
+`local numberValue = cur_obj_lateral_dist_from_mario_to_home()`
 
 ### Parameters
 - None
@@ -8263,7 +8263,7 @@
 ## [cur_obj_lateral_dist_from_obj_to_home](#cur_obj_lateral_dist_from_obj_to_home)
 
 ### Lua Example
-`local `number`Value = cur_obj_lateral_dist_from_obj_to_home(obj)`
+`local numberValue = cur_obj_lateral_dist_from_obj_to_home(obj)`
 
 ### Parameters
 | Field | Type |
@@ -8283,7 +8283,7 @@
 ## [cur_obj_lateral_dist_to_home](#cur_obj_lateral_dist_to_home)
 
 ### Lua Example
-`local `number`Value = cur_obj_lateral_dist_to_home()`
+`local numberValue = cur_obj_lateral_dist_to_home()`
 
 ### Parameters
 - None
@@ -8301,7 +8301,7 @@
 ## [cur_obj_mario_far_away](#cur_obj_mario_far_away)
 
 ### Lua Example
-`local `integer`Value = cur_obj_mario_far_away()`
+`local integerValue = cur_obj_mario_far_away()`
 
 ### Parameters
 - None
@@ -8360,7 +8360,7 @@
 ## [cur_obj_move_up_and_down](#cur_obj_move_up_and_down)
 
 ### Lua Example
-`local `integer`Value = cur_obj_move_up_and_down(a0)`
+`local integerValue = cur_obj_move_up_and_down(a0)`
 
 ### Parameters
 | Field | Type |
@@ -8473,7 +8473,7 @@
 ## [cur_obj_move_xz](#cur_obj_move_xz)
 
 ### Lua Example
-`local `integer`Value = cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)`
+`local integerValue = cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)`
 
 ### Parameters
 | Field | Type |
@@ -8534,7 +8534,7 @@
 ## [cur_obj_move_y_and_get_water_level](#cur_obj_move_y_and_get_water_level)
 
 ### Lua Example
-`local `number`Value = cur_obj_move_y_and_get_water_level(gravity, buoyancy)`
+`local numberValue = cur_obj_move_y_and_get_water_level(gravity, buoyancy)`
 
 ### Parameters
 | Field | Type |
@@ -8593,7 +8593,7 @@
 ## [cur_obj_outside_home_rectangle](#cur_obj_outside_home_rectangle)
 
 ### Lua Example
-`local `integer`Value = cur_obj_outside_home_rectangle(minX, maxX, minZ, maxZ)`
+`local integerValue = cur_obj_outside_home_rectangle(minX, maxX, minZ, maxZ)`
 
 ### Parameters
 | Field | Type |
@@ -8616,7 +8616,7 @@
 ## [cur_obj_outside_home_square](#cur_obj_outside_home_square)
 
 ### Lua Example
-`local `integer`Value = cur_obj_outside_home_square(halfLength)`
+`local integerValue = cur_obj_outside_home_square(halfLength)`
 
 ### Parameters
 | Field | Type |
@@ -8636,7 +8636,7 @@
 ## [cur_obj_progress_direction_table](#cur_obj_progress_direction_table)
 
 ### Lua Example
-`local `integer`Value = cur_obj_progress_direction_table()`
+`local integerValue = cur_obj_progress_direction_table()`
 
 ### Parameters
 - None
@@ -8695,7 +8695,7 @@
 ## [cur_obj_reflect_move_angle_off_wall](#cur_obj_reflect_move_angle_off_wall)
 
 ### Lua Example
-`local `integer`Value = cur_obj_reflect_move_angle_off_wall()`
+`local integerValue = cur_obj_reflect_move_angle_off_wall()`
 
 ### Parameters
 - None
@@ -8731,7 +8731,7 @@
 ## [cur_obj_resolve_wall_collisions](#cur_obj_resolve_wall_collisions)
 
 ### Lua Example
-`local `integer`Value = cur_obj_resolve_wall_collisions()`
+`local integerValue = cur_obj_resolve_wall_collisions()`
 
 ### Parameters
 - None
@@ -8803,7 +8803,7 @@
 ## [cur_obj_rotate_yaw_toward](#cur_obj_rotate_yaw_toward)
 
 ### Lua Example
-`local `integer`Value = cur_obj_rotate_yaw_toward(target, increment)`
+`local integerValue = cur_obj_rotate_yaw_toward(target, increment)`
 
 ### Parameters
 | Field | Type |
@@ -8887,7 +8887,7 @@
 ## [cur_obj_set_direction_table](#cur_obj_set_direction_table)
 
 ### Lua Example
-`local `integer`Value = cur_obj_set_direction_table(a0)`
+`local integerValue = cur_obj_set_direction_table(a0)`
 
 ### Parameters
 | Field | Type |
@@ -8925,7 +8925,7 @@
 ## [cur_obj_set_hitbox_and_die_if_attacked](#cur_obj_set_hitbox_and_die_if_attacked)
 
 ### Lua Example
-`local `integer`Value = cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)`
+`local integerValue = cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)`
 
 ### Parameters
 | Field | Type |
@@ -9209,7 +9209,7 @@
 ## [cur_obj_shake_y_until](#cur_obj_shake_y_until)
 
 ### Lua Example
-`local `integer`Value = cur_obj_shake_y_until(cycles, amount)`
+`local integerValue = cur_obj_shake_y_until(cycles, amount)`
 
 ### Parameters
 | Field | Type |
@@ -9524,7 +9524,7 @@
 ## [cur_obj_wait_then_blink](#cur_obj_wait_then_blink)
 
 ### Lua Example
-`local `integer`Value = cur_obj_wait_then_blink(timeUntilBlinking, numBlinks)`
+`local integerValue = cur_obj_wait_then_blink(timeUntilBlinking, numBlinks)`
 
 ### Parameters
 | Field | Type |
@@ -9545,7 +9545,7 @@
 ## [cur_obj_was_attacked_or_ground_pounded](#cur_obj_was_attacked_or_ground_pounded)
 
 ### Lua Example
-`local `integer`Value = cur_obj_was_attacked_or_ground_pounded()`
+`local integerValue = cur_obj_was_attacked_or_ground_pounded()`
 
 ### Parameters
 - None
@@ -9563,7 +9563,7 @@
 ## [cur_obj_within_12k_bounds](#cur_obj_within_12k_bounds)
 
 ### Lua Example
-`local `integer`Value = cur_obj_within_12k_bounds()`
+`local integerValue = cur_obj_within_12k_bounds()`
 
 ### Parameters
 - None
@@ -9617,7 +9617,7 @@
 ## [dist_between_object_and_point](#dist_between_object_and_point)
 
 ### Lua Example
-`local `number`Value = dist_between_object_and_point(obj, pointX, pointY, pointZ)`
+`local numberValue = dist_between_object_and_point(obj, pointX, pointY, pointZ)`
 
 ### Parameters
 | Field | Type |
@@ -9640,7 +9640,7 @@
 ## [dist_between_objects](#dist_between_objects)
 
 ### Lua Example
-`local `number`Value = dist_between_objects(obj1, obj2)`
+`local numberValue = dist_between_objects(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -9715,7 +9715,7 @@
 ## [geo_offset_klepto_debug](#geo_offset_klepto_debug)
 
 ### Lua Example
-`local `integer`Value = geo_offset_klepto_debug(callContext, a1, sp8)`
+`local integerValue = geo_offset_klepto_debug(callContext, a1, sp8)`
 
 ### Parameters
 | Field | Type |
@@ -9737,7 +9737,7 @@
 ## [get_object_list_from_behavior](#get_object_list_from_behavior)
 
 ### Lua Example
-`local `integer`Value = get_object_list_from_behavior(behavior)`
+`local integerValue = get_object_list_from_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
@@ -9757,7 +9757,7 @@
 ## [increment_velocity_toward_range](#increment_velocity_toward_range)
 
 ### Lua Example
-`local `number`Value = increment_velocity_toward_range(value, center, zeroThreshold, increment)`
+`local numberValue = increment_velocity_toward_range(value, center, zeroThreshold, increment)`
 
 ### Parameters
 | Field | Type |
@@ -9780,7 +9780,7 @@
 ## [is_item_in_array](#is_item_in_array)
 
 ### Lua Example
-`local `integer`Value = is_item_in_array(item, array)`
+`local integerValue = is_item_in_array(item, array)`
 
 ### Parameters
 | Field | Type |
@@ -9801,7 +9801,7 @@
 ## [is_mario_moving_fast_or_in_air](#is_mario_moving_fast_or_in_air)
 
 ### Lua Example
-`local `integer`Value = is_mario_moving_fast_or_in_air(speedThreshold)`
+`local integerValue = is_mario_moving_fast_or_in_air(speedThreshold)`
 
 ### Parameters
 | Field | Type |
@@ -9821,7 +9821,7 @@
 ## [lateral_dist_between_objects](#lateral_dist_between_objects)
 
 ### Lua Example
-`local `number`Value = lateral_dist_between_objects(obj1, obj2)`
+`local numberValue = lateral_dist_between_objects(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -9842,7 +9842,7 @@
 ## [mario_is_dive_sliding](#mario_is_dive_sliding)
 
 ### Lua Example
-`local `integer`Value = mario_is_dive_sliding(m)`
+`local integerValue = mario_is_dive_sliding(m)`
 
 ### Parameters
 | Field | Type |
@@ -9862,7 +9862,7 @@
 ## [mario_is_in_air_action](#mario_is_in_air_action)
 
 ### Lua Example
-`local `integer`Value = mario_is_in_air_action(m)`
+`local integerValue = mario_is_in_air_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -9882,7 +9882,7 @@
 ## [mario_is_within_rectangle](#mario_is_within_rectangle)
 
 ### Lua Example
-`local `integer`Value = mario_is_within_rectangle(minX, maxX, minZ, maxZ)`
+`local integerValue = mario_is_within_rectangle(minX, maxX, minZ, maxZ)`
 
 ### Parameters
 | Field | Type |
@@ -9925,7 +9925,7 @@
 ## [obj_angle_to_object](#obj_angle_to_object)
 
 ### Lua Example
-`local `integer`Value = obj_angle_to_object(obj1, obj2)`
+`local integerValue = obj_angle_to_object(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -9946,7 +9946,7 @@
 ## [obj_angle_to_point](#obj_angle_to_point)
 
 ### Lua Example
-`local `integer`Value = obj_angle_to_point(obj, pointX, pointZ)`
+`local integerValue = obj_angle_to_point(obj, pointX, pointZ)`
 
 ### Parameters
 | Field | Type |
@@ -9988,7 +9988,7 @@
 ## [obj_attack_collided_from_other_object](#obj_attack_collided_from_other_object)
 
 ### Lua Example
-`local `integer`Value = obj_attack_collided_from_other_object(obj)`
+`local integerValue = obj_attack_collided_from_other_object(obj)`
 
 ### Parameters
 | Field | Type |
@@ -10110,7 +10110,7 @@
 ## [obj_check_if_collided_with_object](#obj_check_if_collided_with_object)
 
 ### Lua Example
-`local `integer`Value = obj_check_if_collided_with_object(obj1, obj2)`
+`local integerValue = obj_check_if_collided_with_object(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -10298,7 +10298,7 @@
 ## [obj_has_behavior](#obj_has_behavior)
 
 ### Lua Example
-`local `integer`Value = obj_has_behavior(obj, behavior)`
+`local integerValue = obj_has_behavior(obj, behavior)`
 
 ### Parameters
 | Field | Type |
@@ -10340,7 +10340,7 @@
 ## [obj_is_hidden](#obj_is_hidden)
 
 ### Lua Example
-`local `integer`Value = obj_is_hidden(obj)`
+`local integerValue = obj_is_hidden(obj)`
 
 ### Parameters
 | Field | Type |
@@ -10380,7 +10380,7 @@
 ## [obj_pitch_to_object](#obj_pitch_to_object)
 
 ### Lua Example
-`local `integer`Value = obj_pitch_to_object(obj, target)`
+`local integerValue = obj_pitch_to_object(obj, target)`
 
 ### Parameters
 | Field | Type |
@@ -10878,7 +10878,7 @@
 ## [obj_turn_toward_object](#obj_turn_toward_object)
 
 ### Lua Example
-`local `integer`Value = obj_turn_toward_object(obj, target, angleIndex, turnAmount)`
+`local integerValue = obj_turn_toward_object(obj, target, angleIndex, turnAmount)`
 
 ### Parameters
 | Field | Type |
@@ -10901,7 +10901,7 @@
 ## [player_performed_grab_escape_action](#player_performed_grab_escape_action)
 
 ### Lua Example
-`local `integer`Value = player_performed_grab_escape_action()`
+`local integerValue = player_performed_grab_escape_action()`
 
 ### Parameters
 - None
@@ -10919,7 +10919,7 @@
 ## [random_f32_around_zero](#random_f32_around_zero)
 
 ### Lua Example
-`local `number`Value = random_f32_around_zero(diameter)`
+`local numberValue = random_f32_around_zero(diameter)`
 
 ### Parameters
 | Field | Type |
@@ -10981,7 +10981,7 @@
 ## [signum_positive](#signum_positive)
 
 ### Lua Example
-`local `integer`Value = signum_positive(x)`
+`local integerValue = signum_positive(x)`
 
 ### Parameters
 | Field | Type |
@@ -11144,7 +11144,7 @@
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Lua Example
-`local `integer`Value = save_file_get_cap_pos(capPos)`
+`local integerValue = save_file_get_cap_pos(capPos)`
 
 ### Parameters
 | Field | Type |
@@ -11164,7 +11164,7 @@
 ## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
 
 ### Lua Example
-`local `integer`Value = save_file_get_course_coin_score(fileIndex, courseIndex)`
+`local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
 
 ### Parameters
 | Field | Type |
@@ -11185,7 +11185,7 @@
 ## [save_file_get_course_star_count](#save_file_get_course_star_count)
 
 ### Lua Example
-`local `integer`Value = save_file_get_course_star_count(fileIndex, courseIndex)`
+`local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
 
 ### Parameters
 | Field | Type |
@@ -11206,7 +11206,7 @@
 ## [save_file_get_flags](#save_file_get_flags)
 
 ### Lua Example
-`local `integer`Value = save_file_get_flags()`
+`local integerValue = save_file_get_flags()`
 
 ### Parameters
 - None
@@ -11224,7 +11224,7 @@
 ## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
 
 ### Lua Example
-`local `integer`Value = save_file_get_max_coin_score(courseIndex)`
+`local integerValue = save_file_get_max_coin_score(courseIndex)`
 
 ### Parameters
 | Field | Type |
@@ -11244,7 +11244,7 @@
 ## [save_file_get_sound_mode](#save_file_get_sound_mode)
 
 ### Lua Example
-`local `integer`Value = save_file_get_sound_mode()`
+`local integerValue = save_file_get_sound_mode()`
 
 ### Parameters
 - None
@@ -11262,7 +11262,7 @@
 ## [save_file_get_star_flags](#save_file_get_star_flags)
 
 ### Lua Example
-`local `integer`Value = save_file_get_star_flags(fileIndex, courseIndex)`
+`local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
 
 ### Parameters
 | Field | Type |
@@ -11283,7 +11283,7 @@
 ## [save_file_get_total_star_count](#save_file_get_total_star_count)
 
 ### Lua Example
-`local `integer`Value = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
+`local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
 
 ### Parameters
 | Field | Type |
@@ -11861,7 +11861,7 @@
 ## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
 
 ### Lua Example
-`local `integer`Value = calc_dist_to_volume_range_1(distance)`
+`local integerValue = calc_dist_to_volume_range_1(distance)`
 
 ### Parameters
 | Field | Type |
@@ -11881,7 +11881,7 @@
 ## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
 
 ### Lua Example
-`local `integer`Value = calc_dist_to_volume_range_2(distance)`
+`local integerValue = calc_dist_to_volume_range_2(distance)`
 
 ### Parameters
 | Field | Type |
@@ -11967,7 +11967,7 @@
 ## [find_ceil_height](#find_ceil_height)
 
 ### Lua Example
-`local `number`Value = find_ceil_height(x, y, z)`
+`local numberValue = find_ceil_height(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -11989,7 +11989,7 @@
 ## [find_floor_height](#find_floor_height)
 
 ### Lua Example
-`local `number`Value = find_floor_height(x, y, z)`
+`local numberValue = find_floor_height(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -12011,7 +12011,7 @@
 ## [find_poison_gas_level](#find_poison_gas_level)
 
 ### Lua Example
-`local `number`Value = find_poison_gas_level(x, z)`
+`local numberValue = find_poison_gas_level(x, z)`
 
 ### Parameters
 | Field | Type |
@@ -12032,7 +12032,7 @@
 ## [find_wall_collisions](#find_wall_collisions)
 
 ### Lua Example
-`local `integer`Value = find_wall_collisions(colData)`
+`local integerValue = find_wall_collisions(colData)`
 
 ### Parameters
 | Field | Type |
@@ -12052,7 +12052,7 @@
 ## [find_water_level](#find_water_level)
 
 ### Lua Example
-`local `number`Value = find_water_level(x, z)`
+`local numberValue = find_water_level(x, z)`
 
 ### Parameters
 | Field | Type |

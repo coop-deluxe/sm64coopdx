@@ -515,6 +515,8 @@
 - SOUND_TERRAIN_WATER
 - SOUND_VIBRATO
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [behavior_table.h](#behavior_table.h)
@@ -1038,6 +1040,8 @@
 | id_bhvIntroScene | 513 |
 | id_bhv_max_count | 514 |
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [camera.h](#camera.h)
@@ -1220,6 +1224,8 @@
 - SHAKE_SHOCK
 - SHAKE_SMALL_DAMAGE
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [characters.h](#characters.h)
@@ -1282,6 +1288,8 @@
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [djui_hud_utils.h](#djui_hud_utils.h)
@@ -1300,6 +1308,8 @@
 | RESOLUTION_DJUI | 0 |
 | RESOLUTION_N64 | 1 |
 | RESOLUTION_COUNT | 2 |
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -1344,6 +1354,8 @@
 - GRAPH_RENDER_PLAYER
 - GRAPH_RENDER_Z_BUFFER
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [interaction.c](#interaction.c)
@@ -1363,6 +1375,8 @@
 | INT_FAST_ATTACK_OR_SHELL | (1 << 5) |
 | INT_HIT_FROM_ABOVE | (1 << 6) |
 | INT_HIT_FROM_BELOW | (1 << 7) |
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -1441,6 +1455,8 @@
 | INTERACT_SHOCK | (1 << 29) |
 | INTERACT_IGLOO_BARRIER | (1 << 30) |
 | INTERACT_PLAYER | (1 << 31) |
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -1659,6 +1675,8 @@
 | MARIO_ANIM_FORWARD_SPINNING_FLIP | 207 |
 | MARIO_ANIM_TRIPLE_JUMP_FLY | 208 |
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [mario_geo_switch_case_ids.h](#mario_geo_switch_case_ids.h)
@@ -1702,6 +1720,8 @@
 | MARIO_HAND_HOLDING_WING_CAP | 4 |
 | MARIO_HAND_RIGHT_OPEN | 5 |
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [network_player.h](#network_player.h)
@@ -1718,6 +1738,8 @@
 | NPT_LOCAL | 1 |
 | NPT_SERVER | 2 |
 | NPT_CLIENT | 3 |
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -1797,6 +1819,8 @@
 - RESPAWN_INFO_TYPE_32
 - RESPAWN_INFO_TYPE_NULL
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [object_list_processor.h](#object_list_processor.h)
@@ -1826,6 +1850,8 @@
 | OBJ_LIST_SPAWNER | 11 |
 | OBJ_LIST_UNIMPORTANT | 12 |
 | NUM_OBJ_LISTS | 13 |
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -1879,6 +1905,8 @@
 - X_BUTTON
 - Y_BUTTON
 - Z_TRIG
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -2237,6 +2265,8 @@
 - WATER_STEP_HIT_WALL
 - WATER_STEP_NONE
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [smlua_hooks.h](#smlua_hooks.h)
@@ -2255,6 +2285,8 @@
 | HOOK_ON_HUD_RENDER | 8 |
 | HOOK_ON_INTERACT | 9 |
 | HOOK_MAX | 10 |
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -2640,6 +2672,8 @@
 | E_MODEL_WARIOS_WINGED_METAL_CAP | 374 |
 | E_MODEL_MAX | 375 |
 
+[:arrow_up_small:](#)
+
 <br />
 
 ## [types.h](#types.h)
@@ -2673,6 +2707,8 @@
 | SPTASK_STATE_INTERRUPTED | 2 |
 | SPTASK_STATE_FINISHED | 3 |
 | SPTASK_STATE_FINISHED_DP | 4 |
+
+[:arrow_up_small:](#)
 
 <br />
 

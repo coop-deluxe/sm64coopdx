@@ -451,7 +451,7 @@ def doc_function(function):
 
     s += "\n### Lua Example\n"
     if rtype != None:
-        s += "`local %sValue = %s(%s)`\n" % (rtype, fid, param_str)
+        s += "`local %sValue = %s(%s)`\n" % (rtype.replace('`', ''), fid, param_str)
     else:
         s += "`%s(%s)`\n" % (fid, param_str)
 
