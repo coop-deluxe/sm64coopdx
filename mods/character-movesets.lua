@@ -50,6 +50,12 @@ function act_spin_pound(m)
 
     set_mario_animation(m, MARIO_ANIM_TWIRL)
 
+    m.particleFlags = m.particleFlags | PARTICLE_DUST
+
+    if (m.controller.buttonDown & Z_TRIG) == 0 then
+        set_mario_action(m, ACT_TWIRLING, 5)
+    end
+
     local stepResult = perform_air_step(m, 0)
     if stepResult == AIR_STEP_LANDED then
         if should_get_stuck_in_ground(m) ~= 0 then
@@ -85,6 +91,7 @@ function act_spin_pound(m)
     if e.rotAngle >  0x10000 then e.rotAngle = e.rotAngle - 0x10000 end
     if e.rotAngle < -0x10000 then e.rotAngle = e.rotAngle + 0x10000 end
     m.marioObj.header.gfx.angle.y = m.marioObj.header.gfx.angle.y + e.rotAngle * spinDirFactor
+    m.marioBodyState.handState = MARIO_HAND_OPEN
 
     m.actionTimer = m.actionTimer + 1
 
@@ -236,7 +243,7 @@ function luigi_update(m)
     end
 
     -- twirl pound
-    if m.action == ACT_TWIRLING and (m.input & INPUT_Z_PRESSED) ~= 0 then
+    if m.action == ACT_TWIRLING and (m.controller.buttonDown & Z_TRIG) ~= 0 then
         set_mario_action(m, ACT_SPIN_POUND, 0)
     end
 
@@ -786,7 +793,7 @@ function wario_before_phys_step(m)
     if (m.action & ACT_HOLD_WATER_JUMP) then
         return
     end
-    
+
     -- faster holding item
     if m.heldObj ~= nil then
         m.vel.y = m.vel.y - 1
