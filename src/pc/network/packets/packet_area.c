@@ -136,6 +136,11 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
 void network_receive_area(struct Packet* p) {
     LOG_INFO("rx area");
+    
+    if (p == NULL) {
+        LOG_ERROR("rx area: the packet was NULL, failed to recieve the area.");
+        return;
+    }
 
     // read level location
     s16 courseNum, actNum, levelNum, areaIndex;
@@ -172,7 +177,7 @@ void network_receive_area(struct Packet* p) {
     // read removed sync ids
     area_remove_sync_ids_clear();
     packet_read(p, &sRemoveSyncIdsIndex, sizeof(u8));
-    for (int i = 0; i < sRemoveSyncIdsIndex; i++) {
+    for (s32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         packet_read(p, &sRemoveSyncIds[i], sizeof(u8));
         struct SyncObject* so = &gSyncObjects[sRemoveSyncIds[i]];
         if (so->o != NULL) {
@@ -187,7 +192,7 @@ void network_receive_area(struct Packet* p) {
     packet_read(p, &respawnerCount, sizeof(u8));
 
     // read respawners
-    for (int i = 0; i < respawnerCount; i++) {
+    for (s32 i = 0; i < respawnerCount; i++) {
         f32 posX, posY, posZ;
         packet_read(p, &posX, sizeof(f32));
         packet_read(p, &posY, sizeof(f32));
@@ -205,6 +210,22 @@ void network_receive_area(struct Packet* p) {
         packet_read(p, &syncId, sizeof(u32));
 
         struct SyncObject* so = &gSyncObjects[syncId];
+        
+        if (so == NULL) {
+            LOG_ERROR("rx area: Sync object was NULL, Skipping respawner.");
+            LOG_DEBUG("rx area debug: Sync Object DEBUG:\n\n \
+                       POS X: %f\n \
+                       POS Y: %f\n \
+                       POS Z: %f\n \
+                       BEHAVIOR PARAMS: 0x%X\n \
+                       RESPAWN MODEL: %i\n \
+                       MIN RESPAWN DIST: %f\n \
+                       RESPAWN BEHAVIOR: %u\n \
+                       SYNC ID: %u\n\n",
+                       posX, posY, posZ, behParams, respawnerModelToRespawn,
+                       respawnerMinSpawnDist, behaviorToRespawn, syncId);
+            continue;
+        }
 
         LOG_INFO("rx respawner");
         if (syncId < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
