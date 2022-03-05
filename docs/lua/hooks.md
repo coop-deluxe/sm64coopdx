@@ -19,8 +19,9 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 
 | Field | Type | Notes |
 | ----- | ---- | ----- |
-| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) | Set to `0` to create a new behavior |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) | Set to `nil` to create a new behavior |
 | objectList | [enum ObjectList](constants.md#enum-ObjectList) |  |
+| replaceBehavior | `bool` | Prevents the original behavior code from running |
 | initFunction | `Lua Function` ([Object](structs.md#Object) obj) | Runs once per object |
 | loopFunction | `Lua Function` ([Object](structs.md#Object) obj) | Runs once per frame per object |
 

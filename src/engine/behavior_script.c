@@ -1023,7 +1023,7 @@ cur_obj_update_begin:;
 
     // Execute the behavior script.
     gCurBhvCommand = gCurrentObject->curBhvCommand;
-    u8 skipBehavior = smlua_call_behavior_hook(&gCurBhvCommand, gCurrentObject);
+    u8 skipBehavior = smlua_call_behavior_hook(&gCurBhvCommand, gCurrentObject, true);
 
     if (!skipBehavior) {
         do {
@@ -1031,6 +1031,8 @@ cur_obj_update_begin:;
             bhvProcResult = bhvCmdProc();
         } while (bhvProcResult == BHV_PROC_CONTINUE);
     }
+
+    smlua_call_behavior_hook(&gCurBhvCommand, gCurrentObject, false);
     gCurrentObject->curBhvCommand = gCurBhvCommand;
 
     // Increment the object's timer.

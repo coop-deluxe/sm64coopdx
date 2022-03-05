@@ -49,4 +49,5 @@ All of this is a holdover from when there were only two players. It was a reason
 - [HUD Rendering](examples/hud.lua)
 - [Object Spawning](examples/spawn-stuff.lua)
 - [Custom Ball Behavior](examples/behavior-ball.lua)
-- [Replace Goomba Behavior](examples/behavior-goomba.lua)
+- [Replace Goomba Behavior](examples/behavior-replace-goomba.lua)
+- [Add to Goomba Behavior](examples/behavior-add-to-goomba.lua)

@@ -81,7 +81,7 @@ function bhv_ball_loop(obj)
     end
 end
 
-id_bhvBall = hook_behavior(0, OBJ_LIST_DEFAULT, bhv_ball_init, bhv_ball_loop)
+id_bhvBall = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_ball_init, bhv_ball_loop)
 
 function mario_update_local(m)
     if (m.controller.buttonPressed & D_JPAD) ~= 0 then

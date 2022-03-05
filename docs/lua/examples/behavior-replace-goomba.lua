@@ -92,4 +92,4 @@ function bhv_custom_goomba_loop(obj)
 end
 
 -- hook the behavior
-id_bhvCustomGoomba = hook_behavior(id_bhvGoomba, OBJ_LIST_PUSHABLE, bhv_custom_goomba_init, bhv_custom_goomba_loop)
+id_bhvCustomGoomba = hook_behavior(id_bhvGoomba, OBJ_LIST_PUSHABLE, true, bhv_custom_goomba_init, bhv_custom_goomba_loop)

@@ -335,13 +335,12 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     s32 objListIndex;
     struct Object *obj;
     struct ObjectNode *objList;
-    bhvScript = smlua_override_behavior(bhvScript);
-    const BehaviorScript *behavior = bhvScript;
+    const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
 
     // If the first behavior script command is "begin <object list>", then
     // extract the object list from it
-    if ((bhvScript[0] >> 24) == 0) {
-        objListIndex = (bhvScript[0] >> 16) & 0xFFFF;
+    if ((behavior[0] >> 24) == 0) {
+        objListIndex = (behavior[0] >> 16) & 0xFFFF;
     } else {
         objListIndex = OBJ_LIST_DEFAULT;
     }
