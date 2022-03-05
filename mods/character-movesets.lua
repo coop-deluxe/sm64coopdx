@@ -50,12 +50,6 @@ function act_spin_pound(m)
 
     set_mario_animation(m, MARIO_ANIM_TWIRL)
 
-    if (m.input & INPUT_B_PRESSED) ~= 0 then
-        mario_set_forward_vel(m, 10.0)
-        m.vel.y = 35
-        set_mario_action(m, ACT_DIVE, 0)
-    end
-
     local stepResult = perform_air_step(m, 0)
     if stepResult == AIR_STEP_LANDED then
         if should_get_stuck_in_ground(m) ~= 0 then
@@ -788,6 +782,11 @@ function wario_before_phys_step(m)
         end
     end
 
+    -- fixes the momentum bug
+    if (m.action & ACT_HOLD_WATER_JUMP) then
+        return
+    end
+    
     -- faster holding item
     if m.heldObj ~= nil then
         m.vel.y = m.vel.y - 1
