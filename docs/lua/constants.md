@@ -2658,6 +2658,13 @@
 - PLAY_MODE_NORMAL
 - PLAY_MODE_PAUSED
 
+### [enum AreaTimerType](#AreaTimerType)
+| Identifier | Value |
+| :--------- | :---- |
+| AREA_TIMER_TYPE_NONE | 0 |
+| AREA_TIMER_TYPE_LOOP | 1 |
+| AREA_TIMER_TYPE_MAXIMUM | 2 |
+
 ### [enum SpTaskState](#SpTaskState)
 | Identifier | Value |
 | :--------- | :---- |

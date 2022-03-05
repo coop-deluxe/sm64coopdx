@@ -29,7 +29,7 @@ in_files = [
 ]
 
 exclude_constants = {
-    '*': [ '^MAXCONTROLLERS$', '^LEVEL_.*', '^AREA_.*', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ]
+    '*': [ '^MAXCONTROLLERS$', '^LEVEL_.*', '^AREA_[^T].*', '^AREA_T[HTO]', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ]
 }
 
 include_constants = {
