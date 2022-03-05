@@ -149,17 +149,20 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
  * Sets the animation to a specific "next" frame from the frame given.
  */
 void set_anim_to_frame(struct MarioState *m, s16 animFrame) {
+    if (m == NULL || m->marioObj == NULL) { return; }
+
     struct AnimInfo *animInfo = &m->marioObj->header.gfx.animInfo;
     struct Animation *curAnim = animInfo->curAnim;
+    if (animInfo == NULL) { return; }
 
     if (animInfo->animAccel) {
-        if (curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_FORWARD) {
             animInfo->animFrameAccelAssist = (animFrame << 0x10) + animInfo->animAccel;
         } else {
             animInfo->animFrameAccelAssist = (animFrame << 0x10) - animInfo->animAccel;
         }
     } else {
-        if (curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_FORWARD) {
             animInfo->animFrame = animFrame + 1;
         } else {
             animInfo->animFrame = animFrame - 1;
