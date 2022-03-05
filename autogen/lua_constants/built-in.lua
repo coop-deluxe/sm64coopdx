@@ -1,9 +1,9 @@
 _CObject = {
     __index = function (t,k)
-        return _get_field(t['_lot'], t['_pointer'], k)
+        return _get_field(t['_lot'], t['_pointer'], k, t)
     end,
     __newindex = function (t,k,v)
-        _set_field(t['_lot'], t['_pointer'], k, v)
+        _set_field(t['_lot'], t['_pointer'], k, v, t)
     end,
     __eq = function (a, b)
         return a['_pointer'] == b['_pointer'] and a['_lot'] == b['_lot'] and a['_pointer'] ~= nil and a['_lot'] ~= nil

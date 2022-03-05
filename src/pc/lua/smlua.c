@@ -3,6 +3,8 @@
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
+struct ModListEntry* gLuaLoadingEntry = NULL;
+struct ModListEntry* gLuaActiveEntry = NULL;
 
 static void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
@@ -46,6 +48,7 @@ static void smlua_load_script(char* path, u16 remoteIndex) {
 
     // load per-file globals
     smlua_sync_table_init_globals(path, remoteIndex);
+    smlua_cobject_init_per_file_globals(path);
 
     // run chunks
     if (lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
@@ -97,7 +100,11 @@ void smlua_init(void) {
         struct ModListEntry* entry = &table->entries[i];
         if (!entry->enabled) { continue; }
         LOG_INFO("    %s", entry->path);
+        gLuaLoadingEntry = entry;
+        gLuaActiveEntry = entry;
         smlua_load_script(entry->path, entry->remoteIndex);
+        gLuaActiveEntry = NULL;
+        gLuaLoadingEntry = NULL;
     }
 }
 

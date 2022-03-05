@@ -137,11 +137,26 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         lua_pushvalue(L, prevValueIndex);
         lua_pushvalue(L, valueIndex);
 
+        // get entry
+        u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
+        struct ModListEntry* setEntry = NULL;
+        for (int i = 0; i < gModTableCurrent->entryCount; i++) {
+            struct ModListEntry* entry = &gModTableCurrent->entries[i];
+            if (!entry->enabled) { continue; }
+            if (entry->remoteIndex == modRemoteIndex) {
+                setEntry = entry;
+                break;
+            }
+        }
+
         // call hook
+        struct ModListEntry* prev = gLuaActiveEntry;
+        gLuaActiveEntry = setEntry;
         if (0 != lua_pcall(L, 3, 0, 0)) {
             LOG_LUA("Failed to call the hook_on_changed callback: %s", lua_tostring(L, -1));
             smlua_logline();
         }
+        gLuaActiveEntry = prev;
     }
 
     lua_pop(L, 1); // pop _hook_on_changed's value

@@ -79,6 +79,10 @@ int smlua_func_init_mario_after_warp(lua_State* L) {
     return 1;
 }
 
+  //////////
+ // bind //
+//////////
+
 void smlua_bind_functions(void) {
     lua_State* L = gLuaState;
 

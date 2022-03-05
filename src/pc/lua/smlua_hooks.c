@@ -11,9 +11,18 @@ static u64* sBehaviorOffset = &gPcDebug.bhvOffset;
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
     int count;
+    struct ModListEntry* entry;
 };
 
 static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
+
+static int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct ModListEntry* activeEntry) {
+    struct ModListEntry* prev = gLuaActiveEntry;
+    gLuaActiveEntry = activeEntry;
+    int rc = lua_pcall(L, nargs, nresults, errfunc);
+    gLuaActiveEntry = prev;
+    return rc;
+}
 
 int smlua_hook_event(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -44,6 +53,7 @@ int smlua_hook_event(lua_State* L) {
 
     hook->reference[hook->count] = ref;
     hook->count++;
+    hook->entry = gLuaActiveEntry;
 
     return 1;
 }
@@ -57,7 +67,7 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != lua_pcall(L, 0, 0, 0)) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->entry)) {
             LOG_LUA("Failed to call the event_hook callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -80,7 +90,7 @@ void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != lua_pcall(L, 1, 0, 0)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->entry)) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -109,7 +119,7 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != lua_pcall(L, 2, 0, 0)) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->entry)) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -141,7 +151,7 @@ void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, st
         lua_pushboolean(L, interactValue);
 
         // call the callback
-        if (0 != lua_pcall(L, 4, 0, 0)) {
+        if (0 != smlua_call_hook(L, 4, 0, 0, hook->entry)) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -164,7 +174,7 @@ void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookTyp
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != lua_pcall(L, 1, 0, 0)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->entry)) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -180,6 +190,7 @@ struct LuaHookedMarioAction {
     u32 action;
     u32 interactionType;
     int reference;
+    struct ModListEntry* entry;
 };
 
 #define MAX_HOOKED_ACTIONS 128
@@ -190,6 +201,12 @@ static int sHookedMarioActionsCount = 0;
 int smlua_hook_mario_action(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_range(L, 2, 3)) { return 0; }
+
+    if (gLuaLoadingEntry == NULL) {
+        LOG_LUA("hook_mario_action() can only be called on load.");
+        return 0;
+    }
+
     int paramCount = lua_gettop(L);
 
     if (sHookedMarioActionsCount >= MAX_HOOKED_ACTIONS) {
@@ -228,6 +245,7 @@ int smlua_hook_mario_action(lua_State* L) {
     hooked->action = action;
     hooked->interactionType = interactionType;
     hooked->reference = ref;
+    hooked->entry = gLuaActiveEntry;
     if (!gSmLuaConvertSuccess) { return 0; }
 
     sHookedMarioActionsCount++;
@@ -238,9 +256,10 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
     for (int i = 0; i < sHookedMarioActionsCount; i++) {
-        if (sHookedMarioActions[i].action == m->action) {
+        struct LuaHookedMarioAction* hook = &sHookedMarioActions[i];
+        if (hook->action == m->action) {
             // push the callback onto the stack
-            lua_rawgeti(L, LUA_REGISTRYINDEX, sHookedMarioActions[i].reference);
+            lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference);
 
             // push mario state
             lua_getglobal(L, "gMarioStates");
@@ -249,7 +268,7 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             lua_remove(L, -2);
 
             // call the callback
-            if (0 != lua_pcall(L, 1, 1, 0)) {
+            if (0 != smlua_call_hook(L, 1, 1, 0, hook->entry)) {
                 LOG_LUA("Failed to call the action callback: %u, %s", m->action, lua_tostring(L, -1));
                 smlua_logline();
                 continue;
@@ -289,6 +308,7 @@ struct LuaHookedBehavior {
     BehaviorScript behavior[2];
     int initReference;
     int loopReference;
+    struct ModListEntry* entry;
 };
 
 #define MAX_HOOKED_BEHAVIORS 256
@@ -320,6 +340,11 @@ const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id) {
 int smlua_hook_behavior(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    if (gLuaLoadingEntry == NULL) {
+        LOG_LUA("hook_behavior() can only be called on load.");
+        return 0;
+    }
 
     if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
         LOG_LUA("Hooked behaviors exceeded maximum references!");
@@ -376,6 +401,7 @@ int smlua_hook_behavior(lua_State* L) {
     hooked->behavior[1] = (((unsigned int) (((unsigned int)(0x39) & ((0x01 << (8)) - 1)) << (24))) | ((unsigned int) (((unsigned int)(customBehaviorId) & ((0x01 << (16)) - 1)) << (0)))); // gross. this is ID(customBehaviorId)
     hooked->initReference = initReference;
     hooked->loopReference = loopReference;
+    hooked->entry = gLuaActiveEntry;
 
     sHookedBehaviorsCount++;
 
@@ -413,7 +439,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         smlua_push_object(L, LOT_OBJECT, object);
 
         // call the callback
-        if (0 != lua_pcall(L, 1, 0, 0)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hooked->entry)) {
             LOG_LUA("Failed to call the behavior callback: %u, %s", hooked->behaviorId, lua_tostring(L, -1));
             smlua_logline();
             return true;
@@ -433,6 +459,7 @@ struct LuaHookedChatCommand {
     char* command;
     char* description;
     int reference;
+    struct ModListEntry* entry;
 };
 
 #define MAX_HOOKED_CHAT_COMMANDS 64
@@ -443,6 +470,11 @@ static int sHookedChatCommandsCount = 0;
 int smlua_hook_chat_command(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    if (gLuaLoadingEntry == NULL) {
+        LOG_LUA("hook_chat_command() can only be called on load.");
+        return 0;
+    }
 
     if (sHookedChatCommandsCount >= MAX_HOOKED_CHAT_COMMANDS) {
         LOG_LUA("Hooked chat command exceeded maximum references!");
@@ -475,6 +507,7 @@ int smlua_hook_chat_command(lua_State* L) {
     hooked->command = strdup(command);
     hooked->description = strdup(description);
     hooked->reference = ref;
+    hooked->entry = gLuaActiveEntry;
     if (!gSmLuaConvertSuccess) { return 0; }
 
     sHookedChatCommandsCount++;
@@ -508,7 +541,7 @@ bool smlua_call_chat_command_hook(char* command) {
         lua_pushstring(L, params);
 
         // call the callback
-        if (0 != lua_pcall(L, 1, 1, 0)) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->entry)) {
             LOG_LUA("Failed to call the chat command callback: %s, %s", command, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -537,10 +570,10 @@ void smlua_display_chat_commands(void) {
     }
 }
 
+
   //////////////////////////////
  // hooked sync table change //
 //////////////////////////////
-
 
 int smlua_hook_on_sync_table_change(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
@@ -551,6 +584,11 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
     int keyIndex = 2;
     int tagIndex = 3;
     int funcIndex = 4;
+
+    if (gLuaLoadingEntry == NULL) {
+        LOG_LUA("hook_on_sync_table_change() can only be called on load.");
+        return 0;
+    }
 
     if (lua_type(L, syncTableIndex) != LUA_TTABLE) {
         LOG_LUA("Tried to attach a non-table to hook_on_sync_table_change: %d", lua_type(L, syncTableIndex));
