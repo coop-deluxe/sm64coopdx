@@ -211,7 +211,7 @@ void network_receive_area(struct Packet* p) {
 
         struct SyncObject* so = &gSyncObjects[syncId];
         
-        if (so == NULL) {
+        if (so == NULL || syncId >= MAX_SYNC_OBJECTS) {
             LOG_ERROR("rx area: Sync object was NULL, Skipping respawner.");
             LOG_DEBUG("rx area debug: Sync Object DEBUG:\n\n \
                        POS X: %f\n \
@@ -240,8 +240,10 @@ void network_receive_area(struct Packet* p) {
             }
 
             struct Object* o = so->o;
-            o->oSyncID = 0;
-            o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            if (o != NULL) {
+                o->oSyncID = 0;
+                o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            }
 
             if (respawner != NULL) { so->o = respawner; }
             LOG_INFO("rx respawner replaced!");
