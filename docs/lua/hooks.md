@@ -3,6 +3,47 @@
 # Hooks
 Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [functions](functions.md) allow Lua to trigger SM64 code.
 
+# Supported Hooks
+- [hook_behavior](#hook_behavior)
+- [hook_chat_command](#hook_chat_command)
+- [hook_event](#hook_event)
+- [hook_mario_action](#hook_mario_action)
+- [hook_on_sync_table_change](#hook_on_sync_table_change)
+
+<br />
+
+## [hook_behavior](#hook_behavior)
+`hook_behavior()` allows Lua mods to override existing behaviors or create new ones.
+
+### Parameters
+
+| Field | Type | Notes |
+| ----- | ---- | ----- |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) | Set to `0` to create a new behavior |
+| objectList | [enum ObjectList](constants.md#enum-ObjectList) |  |
+| initFunction | Lua Function | Runs once per object |
+| loopFunction | Lua Function | Runs once per frame per object |
+
+### Returns
+- [enum BehaviorId](constants.md#enum-BehaviorId)
+
+### Lua Example
+
+```lua
+function bhv_example_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    network_init_object(obj, true, nil)
+end
+
+function bhv_example_loop(obj)
+    obj.oPosY = obj.oPosY + 1
+end
+
+id_bhvExample = hook_behavior(0, OBJ_LIST_DEFAULT, bhv_example_init, bhv_example_loop)
+```
+
+[:arrow_up_small:](#)
+
 <br />
 
 ## [hook_chat_command](#hook_chat_command)
@@ -53,7 +94,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_PLAYER_CONNECTED | Called when a player connects | [MarioState](structs.md#MarioState) connector |
 | HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
 | HOOK_ON_HUD_RENDER | Called when the HUD is being rendered | None |
-| HOOK_ON_INTERACT | Called when mario interacts with an object | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [InteractType](constants.md#InteractType) interactType, bool interactValue |
+| HOOK_ON_INTERACT | Called when mario interacts with an object | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [enum InteractionType](constants.md#enum-InteractionType) interactType, bool interactValue |
 
 ### Parameters
 
@@ -86,7 +127,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 | ----- | ---- |
 | action_id | integer |
 | func | Lua Function |
-| interaction_type | [enum InteractionFlag](constants.md#InteractionFlag) <optional> |
+| interaction_type | [enum InteractionFlag](constants.md#enum-InteractionFlag) <optional> |
 
 ### Lua Example
 
