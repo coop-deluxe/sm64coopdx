@@ -42,6 +42,10 @@ void network_receive_player_settings(struct Packet* p) {
         return;
     }
 
+    // sanity check
+    if (playerModel >= CT_MAX) { playerModel = CT_MARIO; }
+    if (playerPalette >= PALETTE_MAX) { playerPalette = 0; }
+
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
     snprintf(np->name, MAX_PLAYER_STRING, "%s", playerName);
     np->modelIndex = playerModel;

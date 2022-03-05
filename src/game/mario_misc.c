@@ -85,7 +85,7 @@ struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node f
         gdSPDefLights1((pr >> 1), (pg >> 1), (pb >> 1), pr, pg, pb, 0x28, 0x28, 0x28), \
     }
 
-struct PlayerColor gPlayerColors[] = {
+struct PlayerColor gPlayerColors[PALETTE_MAX] = {
     // default mario
     DEFINE_PLAYER_COLOR(0xff, 0x00, 0x00, /**/ 0x00, 0x00, 0xff),
     // default luigi
