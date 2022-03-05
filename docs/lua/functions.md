@@ -679,15 +679,15 @@
 ## [get_behavior_from_id](#get_behavior_from_id)
 
 ### Lua Example
-`local Pointer <BehaviorScript>Value = get_behavior_from_id(id)`
+`local `Pointer` <`BehaviorScript`>Value = get_behavior_from_id(id)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| id | integer |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-- Pointer <BehaviorScript>
+- `Pointer` <`BehaviorScript`>
 
 ### C Prototype
 `const BehaviorScript* get_behavior_from_id(enum BehaviorId id);`
@@ -699,15 +699,15 @@
 ## [get_id_from_behavior](#get_id_from_behavior)
 
 ### Lua Example
-`local integerValue = get_id_from_behavior(behavior)`
+`local enum BehaviorIdValue = get_id_from_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-- integer
+[enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
@@ -731,8 +731,8 @@
 | Field | Type |
 | ----- | ---- |
 | c | [Camera](structs.md#Camera) |
-| mode | integer |
-| frames | integer |
+| mode | `integer` |
+| frames | `integer` |
 
 ### Returns
 - None
@@ -747,18 +747,18 @@
 ## [set_camera_mode_fixed](#set_camera_mode_fixed)
 
 ### Lua Example
-`local integerValue = set_camera_mode_fixed(c, x, y, z)`
+`local `integer`Value = set_camera_mode_fixed(c, x, y, z)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | c | [Camera](structs.md#Camera) |
-| x | integer |
-| y | integer |
-| z | integer |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);`
@@ -775,9 +775,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| mag | integer |
-| decay | integer |
-| inc | integer |
+| mag | `integer` |
+| decay | `integer` |
+| inc | `integer` |
 
 ### Returns
 - None
@@ -797,9 +797,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| mag | integer |
-| decay | integer |
-| inc | integer |
+| mag | `integer` |
+| decay | `integer` |
+| inc | `integer` |
 
 ### Returns
 - None
@@ -819,7 +819,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| shake | integer |
+| shake | `integer` |
 
 ### Returns
 - None
@@ -839,10 +839,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| shake | integer |
-| posX | number |
-| posY | number |
-| posZ | number |
+| shake | `integer` |
+| posX | `number` |
+| posY | `number` |
+| posZ | `number` |
 
 ### Returns
 - None
@@ -862,9 +862,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| mag | integer |
-| decay | integer |
-| inc | integer |
+| mag | `integer` |
+| decay | `integer` |
+| inc | `integer` |
 
 ### Returns
 - None
@@ -884,7 +884,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| shake | integer |
+| shake | `integer` |
 
 ### Returns
 - None
@@ -925,7 +925,7 @@
 ## [get_character_anim_offset](#get_character_anim_offset)
 
 ### Lua Example
-`local numberValue = get_character_anim_offset(m)`
+`local `number`Value = get_character_anim_offset(m)`
 
 ### Parameters
 | Field | Type |
@@ -933,7 +933,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 get_character_anim_offset(struct MarioState* m);`
@@ -951,7 +951,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| characterSound | integer |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
 
 ### Returns
 - None
@@ -972,8 +972,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| characterSound | integer |
-| flags | integer |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
+| flags | `integer` |
 
 ### Returns
 - None
@@ -994,8 +994,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| characterSound | integer |
-| offset | integer |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
+| offset | `integer` |
 
 ### Returns
 - None
@@ -1041,7 +1041,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| message | string |
+| message | `string` |
 
 ### Returns
 - None
@@ -1062,13 +1062,13 @@
 ## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
 
 ### Lua Example
-`local integerValue = djui_hud_get_screen_height()`
+`local `integer`Value = djui_hud_get_screen_height()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 djui_hud_get_screen_height(void);`
@@ -1080,13 +1080,13 @@
 ## [djui_hud_get_screen_width](#djui_hud_get_screen_width)
 
 ### Lua Example
-`local integerValue = djui_hud_get_screen_width()`
+`local `integer`Value = djui_hud_get_screen_width()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 djui_hud_get_screen_width(void);`
@@ -1098,15 +1098,15 @@
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Lua Example
-`local numberValue = djui_hud_measure_text(message)`
+`local `number`Value = djui_hud_measure_text(message)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| message | string |
+| message | `string` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 djui_hud_measure_text(const char* message);`
@@ -1123,10 +1123,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| message | string |
-| x | float |
-| y | float |
-| scale | float |
+| message | `string` |
+| x | `float` |
+| y | `float` |
+| scale | `float` |
 
 ### Returns
 - None
@@ -1146,10 +1146,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | number |
-| y | number |
-| width | number |
-| height | number |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
 
 ### Returns
 - None
@@ -1170,10 +1170,10 @@
 | Field | Type |
 | ----- | ---- |
 | texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | number |
-| y | number |
-| scaleW | number |
-| scaleH | number |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
 
 ### Returns
 - None
@@ -1193,10 +1193,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| r | integer |
-| g | integer |
-| b | integer |
-| a | integer |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
 
 ### Returns
 - None
@@ -1216,7 +1216,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fontType | integer |
+| fontType | [enum DjuiFontType](constants.md#enum-DjuiFontType) |
 
 ### Returns
 - None
@@ -1236,7 +1236,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| resolutionType | integer |
+| resolutionType | [enum HudUtilsResolution](constants.md#enum-HudUtilsResolution) |
 
 ### Returns
 - None
@@ -1262,8 +1262,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| message | string |
-| lines | int |
+| message | `string` |
+| lines | `int` |
 
 ### Returns
 - None
@@ -1289,9 +1289,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| player | integer |
-| targetScale | integer |
-| fadeTimer | integer |
+| player | `integer` |
+| targetScale | `integer` |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -1311,8 +1311,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
-| fadeOut | integer |
+| arg0 | `integer` |
+| fadeOut | `integer` |
 
 ### Returns
 - None
@@ -1350,7 +1350,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dialogID | integer |
+| dialogID | `integer` |
 
 ### Returns
 - None
@@ -1370,9 +1370,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| player | integer |
-| seqArgs | integer |
-| fadeTimer | integer |
+| player | `integer` |
+| seqArgs | `integer` |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -1410,7 +1410,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
+| arg0 | `integer` |
 
 ### Returns
 - None
@@ -1466,10 +1466,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| seqId | integer |
-| bgMusicVolume | integer |
-| volume | integer |
-| fadeTimer | integer |
+| seqId | `integer` |
+| bgMusicVolume | `integer` |
+| volume | `integer` |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -1489,7 +1489,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| soundBits | integer |
+| soundBits | `integer` |
 | pos | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
@@ -1510,9 +1510,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| soundBits | integer |
+| soundBits | `integer` |
 | pos | [Vec3f](structs.md#Vec3f) |
-| freqScale | number |
+| freqScale | `number` |
 
 ### Returns
 - None
@@ -1568,8 +1568,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| player | integer |
-| fadeTimer | integer |
+| player | `integer` |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -1589,8 +1589,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| player | integer |
-| fadeTimer | integer |
+| player | `integer` |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -1611,7 +1611,7 @@
 ## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
 ### Lua Example
-`local integerValue = does_mario_have_normal_cap_on_head(m)`
+`local `integer`Value = does_mario_have_normal_cap_on_head(m)`
 
 ### Parameters
 | Field | Type |
@@ -1619,7 +1619,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 does_mario_have_normal_cap_on_head(struct MarioState *m);`
@@ -1631,7 +1631,7 @@
 ## [get_door_save_file_flag](#get_door_save_file_flag)
 
 ### Lua Example
-`local integerValue = get_door_save_file_flag(door)`
+`local `integer`Value = get_door_save_file_flag(door)`
 
 ### Parameters
 | Field | Type |
@@ -1639,7 +1639,7 @@
 | door | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 get_door_save_file_flag(struct Object *door);`
@@ -1657,7 +1657,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| capSpeed | number |
+| capSpeed | `number` |
 
 ### Returns
 - None
@@ -1672,7 +1672,7 @@
 ## [mario_check_object_grab](#mario_check_object_grab)
 
 ### Lua Example
-`local integerValue = mario_check_object_grab(m)`
+`local `integer`Value = mario_check_object_grab(m)`
 
 ### Parameters
 | Field | Type |
@@ -1680,7 +1680,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_check_object_grab(struct MarioState *m);`
@@ -1718,7 +1718,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| interactType | integer |
+| interactType | `integer` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -1753,16 +1753,16 @@
 ## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
 
 ### Lua Example
-`local integerValue = mario_lose_cap_to_enemy(m, arg)`
+`local `integer`Value = mario_lose_cap_to_enemy(m, arg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| arg | integer |
+| arg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);`
@@ -1774,7 +1774,7 @@
 ## [mario_obj_angle_to_object](#mario_obj_angle_to_object)
 
 ### Lua Example
-`local integerValue = mario_obj_angle_to_object(m, o)`
+`local `integer`Value = mario_obj_angle_to_object(m, o)`
 
 ### Parameters
 | Field | Type |
@@ -1783,7 +1783,7 @@
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o);`
@@ -1881,17 +1881,17 @@
 ## [get_level_name](#get_level_name)
 
 ### Lua Example
-`local stringValue = get_level_name(courseNum, levelNum, areaIndex)`
+`local `string`Value = get_level_name(courseNum, levelNum, areaIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| courseNum | integer |
-| levelNum | integer |
-| areaIndex | integer |
+| courseNum | `integer` |
+| levelNum | `integer` |
+| areaIndex | `integer` |
 
 ### Returns
-- string
+- `string`
 
 ### C Prototype
 `const char* get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex);`
@@ -1929,7 +1929,7 @@
 ## [check_common_action_exits](#check_common_action_exits)
 
 ### Lua Example
-`local integerValue = check_common_action_exits(m)`
+`local `integer`Value = check_common_action_exits(m)`
 
 ### Parameters
 | Field | Type |
@@ -1937,7 +1937,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_action_exits(struct MarioState *m);`
@@ -1949,7 +1949,7 @@
 ## [check_common_hold_action_exits](#check_common_hold_action_exits)
 
 ### Lua Example
-`local integerValue = check_common_hold_action_exits(m)`
+`local `integer`Value = check_common_hold_action_exits(m)`
 
 ### Parameters
 | Field | Type |
@@ -1957,7 +1957,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_hold_action_exits(struct MarioState *m);`
@@ -1969,17 +1969,17 @@
 ## [drop_and_set_mario_action](#drop_and_set_mario_action)
 
 ### Lua Example
-`local integerValue = drop_and_set_mario_action(m, action, actionArg)`
+`local `integer`Value = drop_and_set_mario_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| action | integer |
-| actionArg | integer |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 drop_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg);`
@@ -1991,7 +1991,7 @@
 ## [execute_mario_action](#execute_mario_action)
 
 ### Lua Example
-`local integerValue = execute_mario_action(o)`
+`local `integer`Value = execute_mario_action(o)`
 
 ### Parameters
 | Field | Type |
@@ -1999,7 +1999,7 @@
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 execute_mario_action(UNUSED struct Object *o);`
@@ -2011,17 +2011,17 @@
 ## [find_floor_height_relative_polar](#find_floor_height_relative_polar)
 
 ### Lua Example
-`local numberValue = find_floor_height_relative_polar(m, angleFromMario, distFromMario)`
+`local `number`Value = find_floor_height_relative_polar(m, angleFromMario, distFromMario)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| angleFromMario | integer |
-| distFromMario | number |
+| angleFromMario | `integer` |
+| distFromMario | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 find_floor_height_relative_polar(struct MarioState *m, s16 angleFromMario, f32 distFromMario);`
@@ -2033,16 +2033,16 @@
 ## [find_floor_slope](#find_floor_slope)
 
 ### Lua Example
-`local integerValue = find_floor_slope(m, yawOffset)`
+`local `integer`Value = find_floor_slope(m, yawOffset)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| yawOffset | integer |
+| yawOffset | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 find_floor_slope(struct MarioState *m, s16 yawOffset);`
@@ -2054,17 +2054,17 @@
 ## [find_mario_anim_flags_and_translation](#find_mario_anim_flags_and_translation)
 
 ### Lua Example
-`local integerValue = find_mario_anim_flags_and_translation(o, yaw, translation)`
+`local `integer`Value = find_mario_anim_flags_and_translation(o, yaw, translation)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | o | [Object](structs.md#Object) |
-| yaw | integer |
+| yaw | `integer` |
 | translation | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, Vec3s translation);`
@@ -2076,7 +2076,7 @@
 ## [force_idle_state](#force_idle_state)
 
 ### Lua Example
-`local integerValue = force_idle_state(m)`
+`local `integer`Value = force_idle_state(m)`
 
 ### Parameters
 | Field | Type |
@@ -2084,7 +2084,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 force_idle_state(struct MarioState* m);`
@@ -2096,18 +2096,18 @@
 ## [hurt_and_set_mario_action](#hurt_and_set_mario_action)
 
 ### Lua Example
-`local integerValue = hurt_and_set_mario_action(m, action, actionArg, hurtCounter)`
+`local `integer`Value = hurt_and_set_mario_action(m, action, actionArg, hurtCounter)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| action | integer |
-| actionArg | integer |
-| hurtCounter | integer |
+| action | `integer` |
+| actionArg | `integer` |
+| hurtCounter | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 hurt_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg, s16 hurtCounter);`
@@ -2119,7 +2119,7 @@
 ## [is_anim_at_end](#is_anim_at_end)
 
 ### Lua Example
-`local integerValue = is_anim_at_end(m)`
+`local `integer`Value = is_anim_at_end(m)`
 
 ### Parameters
 | Field | Type |
@@ -2127,7 +2127,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_anim_at_end(struct MarioState *m);`
@@ -2139,7 +2139,7 @@
 ## [is_anim_past_end](#is_anim_past_end)
 
 ### Lua Example
-`local integerValue = is_anim_past_end(m)`
+`local `integer`Value = is_anim_past_end(m)`
 
 ### Parameters
 | Field | Type |
@@ -2147,7 +2147,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_anim_past_end(struct MarioState *m);`
@@ -2159,16 +2159,16 @@
 ## [is_anim_past_frame](#is_anim_past_frame)
 
 ### Lua Example
-`local integerValue = is_anim_past_frame(m, animFrame)`
+`local `integer`Value = is_anim_past_frame(m, animFrame)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animFrame | integer |
+| animFrame | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);`
@@ -2180,16 +2180,16 @@
 ## [mario_facing_downhill](#mario_facing_downhill)
 
 ### Lua Example
-`local integerValue = mario_facing_downhill(m, turnYaw)`
+`local `integer`Value = mario_facing_downhill(m, turnYaw)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| turnYaw | integer |
+| turnYaw | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw);`
@@ -2201,7 +2201,7 @@
 ## [mario_floor_is_slippery](#mario_floor_is_slippery)
 
 ### Lua Example
-`local integerValue = mario_floor_is_slippery(m)`
+`local `integer`Value = mario_floor_is_slippery(m)`
 
 ### Parameters
 | Field | Type |
@@ -2209,7 +2209,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_floor_is_slippery(struct MarioState *m);`
@@ -2221,7 +2221,7 @@
 ## [mario_floor_is_slope](#mario_floor_is_slope)
 
 ### Lua Example
-`local integerValue = mario_floor_is_slope(m)`
+`local `integer`Value = mario_floor_is_slope(m)`
 
 ### Parameters
 | Field | Type |
@@ -2229,7 +2229,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_floor_is_slope(struct MarioState *m);`
@@ -2241,7 +2241,7 @@
 ## [mario_floor_is_steep](#mario_floor_is_steep)
 
 ### Lua Example
-`local integerValue = mario_floor_is_steep(m)`
+`local `integer`Value = mario_floor_is_steep(m)`
 
 ### Parameters
 | Field | Type |
@@ -2249,7 +2249,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_floor_is_steep(struct MarioState *m);`
@@ -2261,7 +2261,7 @@
 ## [mario_get_floor_class](#mario_get_floor_class)
 
 ### Lua Example
-`local integerValue = mario_get_floor_class(m)`
+`local `integer`Value = mario_get_floor_class(m)`
 
 ### Parameters
 | Field | Type |
@@ -2269,7 +2269,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_get_floor_class(struct MarioState *m);`
@@ -2281,7 +2281,7 @@
 ## [mario_get_terrain_sound_addend](#mario_get_terrain_sound_addend)
 
 ### Lua Example
-`local integerValue = mario_get_terrain_sound_addend(m)`
+`local `integer`Value = mario_get_terrain_sound_addend(m)`
 
 ### Parameters
 | Field | Type |
@@ -2289,7 +2289,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_get_terrain_sound_addend(struct MarioState *m);`
@@ -2327,7 +2327,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| speed | number |
+| speed | `number` |
 
 ### Returns
 - None
@@ -2348,8 +2348,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
-| waveParticleType | integer |
+| soundBits | `integer` |
+| waveParticleType | `integer` |
 
 ### Returns
 - None
@@ -2370,7 +2370,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
+| soundBits | `integer` |
 
 ### Returns
 - None
@@ -2391,7 +2391,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
+| soundBits | `integer` |
 
 ### Returns
 - None
@@ -2432,7 +2432,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
+| soundBits | `integer` |
 
 ### Returns
 - None
@@ -2453,7 +2453,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
+| soundBits | `integer` |
 
 ### Returns
 - None
@@ -2474,8 +2474,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| primarySoundBits | integer |
-| scondarySoundBits | integer |
+| primarySoundBits | `integer` |
+| scondarySoundBits | `integer` |
 
 ### Returns
 - None
@@ -2496,8 +2496,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
-| waveParticleType | integer |
+| soundBits | `integer` |
+| waveParticleType | `integer` |
 
 ### Returns
 - None
@@ -2518,8 +2518,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| soundBits | integer |
-| flags | integer |
+| soundBits | `integer` |
+| flags | `integer` |
 
 ### Returns
 - None
@@ -2540,8 +2540,8 @@
 | Field | Type |
 | ----- | ---- |
 | pos | [Vec3f](structs.md#Vec3f) |
-| offset | number |
-| radius | number |
+| offset | `number` |
+| radius | `number` |
 
 ### Returns
 [Surface](structs.md#Surface)
@@ -2556,7 +2556,7 @@
 ## [return_mario_anim_y_translation](#return_mario_anim_y_translation)
 
 ### Lua Example
-`local integerValue = return_mario_anim_y_translation(m)`
+`local `integer`Value = return_mario_anim_y_translation(m)`
 
 ### Parameters
 | Field | Type |
@@ -2564,7 +2564,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 return_mario_anim_y_translation(struct MarioState *m);`
@@ -2582,7 +2582,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animFrame | integer |
+| animFrame | `integer` |
 
 ### Returns
 - None
@@ -2597,7 +2597,7 @@
 ## [set_jump_from_landing](#set_jump_from_landing)
 
 ### Lua Example
-`local integerValue = set_jump_from_landing(m)`
+`local `integer`Value = set_jump_from_landing(m)`
 
 ### Parameters
 | Field | Type |
@@ -2605,7 +2605,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 set_jump_from_landing(struct MarioState *m);`
@@ -2617,17 +2617,17 @@
 ## [set_jumping_action](#set_jumping_action)
 
 ### Lua Example
-`local integerValue = set_jumping_action(m, action, actionArg)`
+`local `integer`Value = set_jumping_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| action | integer |
-| actionArg | integer |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 set_jumping_action(struct MarioState *m, u32 action, u32 actionArg);`
@@ -2639,17 +2639,17 @@
 ## [set_mario_action](#set_mario_action)
 
 ### Lua Example
-`local integerValue = set_mario_action(m, action, actionArg)`
+`local `integer`Value = set_mario_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| action | integer |
-| actionArg | integer |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg);`
@@ -2661,17 +2661,17 @@
 ## [set_mario_anim_with_accel](#set_mario_anim_with_accel)
 
 ### Lua Example
-`local integerValue = set_mario_anim_with_accel(m, targetAnimID, accel)`
+`local `integer`Value = set_mario_anim_with_accel(m, targetAnimID, accel)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| targetAnimID | integer |
-| accel | integer |
+| targetAnimID | `integer` |
+| accel | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);`
@@ -2683,16 +2683,16 @@
 ## [set_mario_animation](#set_mario_animation)
 
 ### Lua Example
-`local integerValue = set_mario_animation(m, targetAnimID)`
+`local `integer`Value = set_mario_animation(m, targetAnimID)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| targetAnimID | integer |
+| targetAnimID | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);`
@@ -2724,7 +2724,7 @@
 ## [set_water_plunge_action](#set_water_plunge_action)
 
 ### Lua Example
-`local integerValue = set_water_plunge_action(m)`
+`local `integer`Value = set_water_plunge_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -2732,7 +2732,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 set_water_plunge_action(struct MarioState *m);`
@@ -2744,7 +2744,7 @@
 ## [transition_submerged_to_walking](#transition_submerged_to_walking)
 
 ### Lua Example
-`local integerValue = transition_submerged_to_walking(m)`
+`local `integer`Value = transition_submerged_to_walking(m)`
 
 ### Parameters
 | Field | Type |
@@ -2752,7 +2752,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 transition_submerged_to_walking(struct MarioState *m);`
@@ -2810,7 +2810,7 @@
 ## [check_common_airborne_cancels](#check_common_airborne_cancels)
 
 ### Lua Example
-`local integerValue = check_common_airborne_cancels(m)`
+`local `integer`Value = check_common_airborne_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -2818,7 +2818,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_airborne_cancels(struct MarioState *m);`
@@ -2830,16 +2830,16 @@
 ## [check_fall_damage](#check_fall_damage)
 
 ### Lua Example
-`local integerValue = check_fall_damage(m, hardFallAction)`
+`local `integer`Value = check_fall_damage(m, hardFallAction)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| hardFallAction | integer |
+| hardFallAction | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_fall_damage(struct MarioState *m, u32 hardFallAction);`
@@ -2851,16 +2851,16 @@
 ## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
 
 ### Lua Example
-`local integerValue = check_fall_damage_or_get_stuck(m, hardFallAction)`
+`local `integer`Value = check_fall_damage_or_get_stuck(m, hardFallAction)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| hardFallAction | integer |
+| hardFallAction | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction);`
@@ -2872,7 +2872,7 @@
 ## [check_horizontal_wind](#check_horizontal_wind)
 
 ### Lua Example
-`local integerValue = check_horizontal_wind(m)`
+`local `integer`Value = check_horizontal_wind(m)`
 
 ### Parameters
 | Field | Type |
@@ -2880,7 +2880,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_horizontal_wind(struct MarioState *m);`
@@ -2892,7 +2892,7 @@
 ## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
 
 ### Lua Example
-`local integerValue = check_kick_or_dive_in_air(m)`
+`local `integer`Value = check_kick_or_dive_in_air(m)`
 
 ### Parameters
 | Field | Type |
@@ -2900,7 +2900,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_kick_or_dive_in_air(struct MarioState *m);`
@@ -2912,7 +2912,7 @@
 ## [check_wall_kick](#check_wall_kick)
 
 ### Lua Example
-`local integerValue = check_wall_kick(m)`
+`local `integer`Value = check_wall_kick(m)`
 
 ### Parameters
 | Field | Type |
@@ -2920,7 +2920,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_wall_kick(struct MarioState *m);`
@@ -2932,18 +2932,18 @@
 ## [common_air_action_step](#common_air_action_step)
 
 ### Lua Example
-`local integerValue = common_air_action_step(m, landAction, animation, stepArg)`
+`local `integer`Value = common_air_action_step(m, landAction, animation, stepArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| landAction | integer |
-| animation | integer |
-| stepArg | integer |
+| landAction | `integer` |
+| animation | `integer` |
+| stepArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, u32 stepArg);`
@@ -2955,19 +2955,19 @@
 ## [common_air_knockback_step](#common_air_knockback_step)
 
 ### Lua Example
-`local integerValue = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
+`local `integer`Value = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| landAction | integer |
-| hardFallAction | integer |
-| animation | integer |
-| speed | number |
+| landAction | `integer` |
+| hardFallAction | `integer` |
+| animation | `integer` |
+| speed | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFallAction, s32 animation, f32 speed);`
@@ -2979,7 +2979,7 @@
 ## [lava_boost_on_wall](#lava_boost_on_wall)
 
 ### Lua Example
-`local integerValue = lava_boost_on_wall(m)`
+`local `integer`Value = lava_boost_on_wall(m)`
 
 ### Parameters
 | Field | Type |
@@ -2987,7 +2987,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 lava_boost_on_wall(struct MarioState *m);`
@@ -2999,7 +2999,7 @@
 ## [mario_execute_airborne_action](#mario_execute_airborne_action)
 
 ### Lua Example
-`local integerValue = mario_execute_airborne_action(m)`
+`local `integer`Value = mario_execute_airborne_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3007,7 +3007,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_airborne_action(struct MarioState *m);`
@@ -3045,9 +3045,9 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| frame1 | integer |
-| frame2 | integer |
-| frame3 | integer |
+| frame1 | `integer` |
+| frame2 | `integer` |
+| frame3 | `integer` |
 
 ### Returns
 - None
@@ -3082,7 +3082,7 @@
 ## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
 
 ### Lua Example
-`local integerValue = should_get_stuck_in_ground(m)`
+`local `integer`Value = should_get_stuck_in_ground(m)`
 
 ### Parameters
 | Field | Type |
@@ -3090,7 +3090,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 should_get_stuck_in_ground(struct MarioState *m);`
@@ -3248,7 +3248,7 @@
 ## [check_common_automatic_cancels](#check_common_automatic_cancels)
 
 ### Lua Example
-`local integerValue = check_common_automatic_cancels(m)`
+`local `integer`Value = check_common_automatic_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -3256,7 +3256,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_automatic_cancels(struct MarioState *m);`
@@ -3288,7 +3288,7 @@
 ## [let_go_of_ledge](#let_go_of_ledge)
 
 ### Lua Example
-`local integerValue = let_go_of_ledge(m)`
+`local `integer`Value = let_go_of_ledge(m)`
 
 ### Parameters
 | Field | Type |
@@ -3296,7 +3296,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 let_go_of_ledge(struct MarioState *m);`
@@ -3308,7 +3308,7 @@
 ## [mario_execute_automatic_action](#mario_execute_automatic_action)
 
 ### Lua Example
-`local integerValue = mario_execute_automatic_action(m)`
+`local `integer`Value = mario_execute_automatic_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3316,7 +3316,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_automatic_action(struct MarioState *m);`
@@ -3328,7 +3328,7 @@
 ## [perform_hanging_step](#perform_hanging_step)
 
 ### Lua Example
-`local integerValue = perform_hanging_step(m, nextPos)`
+`local `integer`Value = perform_hanging_step(m, nextPos)`
 
 ### Parameters
 | Field | Type |
@@ -3337,7 +3337,7 @@
 | nextPos | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);`
@@ -3355,7 +3355,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| b | integer |
+| b | `integer` |
 
 ### Returns
 - None
@@ -3370,16 +3370,16 @@
 ## [set_pole_position](#set_pole_position)
 
 ### Lua Example
-`local integerValue = set_pole_position(m, offsetY)`
+`local `integer`Value = set_pole_position(m, offsetY)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| offsetY | number |
+| offsetY | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 set_pole_position(struct MarioState *m, f32 offsetY);`
@@ -3391,7 +3391,7 @@
 ## [update_hang_moving](#update_hang_moving)
 
 ### Lua Example
-`local integerValue = update_hang_moving(m)`
+`local `integer`Value = update_hang_moving(m)`
 
 ### Parameters
 | Field | Type |
@@ -3399,7 +3399,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 update_hang_moving(struct MarioState *m);`
@@ -3437,8 +3437,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation | integer |
-| endAction | integer |
+| animation | `integer` |
+| endAction | `integer` |
 
 ### Returns
 - None
@@ -3515,17 +3515,17 @@
 ## [common_death_handler](#common_death_handler)
 
 ### Lua Example
-`local integerValue = common_death_handler(m, animation, frameToDeathWarp)`
+`local `integer`Value = common_death_handler(m, animation, frameToDeathWarp)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation | integer |
-| frameToDeathWarp | integer |
+| animation | `integer` |
+| frameToDeathWarp | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWarp);`
@@ -3583,7 +3583,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| isInWater | integer |
+| isInWater | `integer` |
 
 ### Returns
 - None
@@ -3603,10 +3603,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | integer |
-| y | integer |
-| z | integer |
-| radius | number |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+| radius | `number` |
 
 ### Returns
 - None
@@ -3621,7 +3621,7 @@
 ## [get_star_collection_dialog](#get_star_collection_dialog)
 
 ### Lua Example
-`local integerValue = get_star_collection_dialog(m)`
+`local `integer`Value = get_star_collection_dialog(m)`
 
 ### Parameters
 | Field | Type |
@@ -3629,7 +3629,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 get_star_collection_dialog(struct MarioState *m);`
@@ -3661,18 +3661,18 @@
 ## [launch_mario_until_land](#launch_mario_until_land)
 
 ### Lua Example
-`local integerValue = launch_mario_until_land(m, endAction, animation, forwardVel)`
+`local `integer`Value = launch_mario_until_land(m, endAction, animation, forwardVel)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| endAction | integer |
-| animation | integer |
-| forwardVel | number |
+| endAction | `integer` |
+| animation | `integer` |
+| forwardVel | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
@@ -3684,7 +3684,7 @@
 ## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
 
 ### Lua Example
-`local integerValue = mario_execute_cutscene_action(m)`
+`local `integer`Value = mario_execute_cutscene_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3692,7 +3692,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_cutscene_action(struct MarioState *m);`
@@ -3704,7 +3704,7 @@
 ## [mario_ready_to_speak](#mario_ready_to_speak)
 
 ### Lua Example
-`local integerValue = mario_ready_to_speak(m)`
+`local `integer`Value = mario_ready_to_speak(m)`
 
 ### Parameters
 | Field | Type |
@@ -3712,7 +3712,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_ready_to_speak(struct MarioState* m);`
@@ -3742,7 +3742,7 @@
 ## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
 
 ### Lua Example
-`local integerValue = should_start_or_continue_dialog(m, object)`
+`local `integer`Value = should_start_or_continue_dialog(m, object)`
 
 ### Parameters
 | Field | Type |
@@ -3751,7 +3751,7 @@
 | object | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);`
@@ -3769,11 +3769,11 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation | integer |
-| unstuckFrame | integer |
-| target2 | integer |
-| target3 | integer |
-| endAction | integer |
+| animation | `integer` |
+| unstuckFrame | `integer` |
+| target2 | `integer` |
+| target3 | `integer` |
+| endAction | `integer` |
 
 ### Returns
 - None
@@ -3814,7 +3814,7 @@
 ## [analog_stick_held_back](#analog_stick_held_back)
 
 ### Lua Example
-`local integerValue = analog_stick_held_back(m)`
+`local `integer`Value = analog_stick_held_back(m)`
 
 ### Parameters
 | Field | Type |
@@ -3822,7 +3822,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 analog_stick_held_back(struct MarioState *m);`
@@ -3894,16 +3894,16 @@
 ## [apply_landing_accel](#apply_landing_accel)
 
 ### Lua Example
-`local integerValue = apply_landing_accel(m, frictionFactor)`
+`local `integer`Value = apply_landing_accel(m, frictionFactor)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| frictionFactor | number |
+| frictionFactor | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor);`
@@ -3935,16 +3935,16 @@
 ## [apply_slope_decel](#apply_slope_decel)
 
 ### Lua Example
-`local integerValue = apply_slope_decel(m, decelCoef)`
+`local `integer`Value = apply_slope_decel(m, decelCoef)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| decelCoef | number |
+| decelCoef | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 apply_slope_decel(struct MarioState *m, f32 decelCoef);`
@@ -3956,7 +3956,7 @@
 ## [begin_braking_action](#begin_braking_action)
 
 ### Lua Example
-`local integerValue = begin_braking_action(m)`
+`local `integer`Value = begin_braking_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -3964,7 +3964,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 begin_braking_action(struct MarioState *m);`
@@ -3976,18 +3976,18 @@
 ## [begin_walking_action](#begin_walking_action)
 
 ### Lua Example
-`local integerValue = begin_walking_action(m, forwardVel, action, actionArg)`
+`local `integer`Value = begin_walking_action(m, forwardVel, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| forwardVel | number |
-| action | integer |
-| actionArg | integer |
+| forwardVel | `number` |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 begin_walking_action(struct MarioState *m, f32 forwardVel, u32 action, u32 actionArg);`
@@ -3999,7 +3999,7 @@
 ## [check_common_moving_cancels](#check_common_moving_cancels)
 
 ### Lua Example
-`local integerValue = check_common_moving_cancels(m)`
+`local `integer`Value = check_common_moving_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4007,7 +4007,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_moving_cancels(struct MarioState *m);`
@@ -4019,7 +4019,7 @@
 ## [check_ground_dive_or_punch](#check_ground_dive_or_punch)
 
 ### Lua Example
-`local integerValue = check_ground_dive_or_punch(m)`
+`local `integer`Value = check_ground_dive_or_punch(m)`
 
 ### Parameters
 | Field | Type |
@@ -4027,7 +4027,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_ground_dive_or_punch(struct MarioState *m);`
@@ -4059,19 +4059,19 @@
 ## [common_ground_knockback_action](#common_ground_knockback_action)
 
 ### Lua Example
-`local integerValue = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
+`local `integer`Value = common_ground_knockback_action(m, animation, arg2, arg3, arg4)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation | integer |
-| arg2 | integer |
-| arg3 | integer |
-| arg4 | integer |
+| animation | `integer` |
+| arg2 | `integer` |
+| arg3 | `integer` |
+| arg4 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2, s32 arg3, s32 arg4);`
@@ -4083,17 +4083,17 @@
 ## [common_landing_action](#common_landing_action)
 
 ### Lua Example
-`local integerValue = common_landing_action(m, animation, airAction)`
+`local `integer`Value = common_landing_action(m, animation, airAction)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation | integer |
-| airAction | integer |
+| animation | `integer` |
+| airAction | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction);`
@@ -4111,9 +4111,9 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| endAction | integer |
-| airAction | integer |
-| animation | integer |
+| endAction | `integer` |
+| airAction | `integer` |
+| animation | `integer` |
 
 ### Returns
 - None
@@ -4128,19 +4128,19 @@
 ## [common_slide_action_with_jump](#common_slide_action_with_jump)
 
 ### Lua Example
-`local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
+`local `integer`Value = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| stopAction | integer |
-| jumpAction | integer |
-| airAction | integer |
-| animation | integer |
+| stopAction | `integer` |
+| jumpAction | `integer` |
+| airAction | `integer` |
+| animation | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 common_slide_action_with_jump(struct MarioState *m, u32 stopAction, u32 jumpAction, u32 airAction, s32 animation);`
@@ -4152,7 +4152,7 @@
 ## [mario_execute_moving_action](#mario_execute_moving_action)
 
 ### Lua Example
-`local integerValue = mario_execute_moving_action(m)`
+`local `integer`Value = mario_execute_moving_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4160,7 +4160,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_moving_action(struct MarioState *m);`
@@ -4178,8 +4178,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| frame1 | integer |
-| frame2 | integer |
+| frame1 | `integer` |
+| frame2 | `integer` |
 
 ### Returns
 - None
@@ -4215,19 +4215,19 @@
 ## [quicksand_jump_land_action](#quicksand_jump_land_action)
 
 ### Lua Example
-`local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
+`local `integer`Value = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation1 | integer |
-| animation2 | integer |
-| endAction | integer |
-| airAction | integer |
+| animation1 | `integer` |
+| animation2 | `integer` |
+| endAction | `integer` |
+| airAction | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 quicksand_jump_land_action(struct MarioState *m, s32 animation1, s32 animation2, u32 endAction, u32 airAction);`
@@ -4239,17 +4239,17 @@
 ## [set_triple_jump_action](#set_triple_jump_action)
 
 ### Lua Example
-`local integerValue = set_triple_jump_action(m, action, actionArg)`
+`local `integer`Value = set_triple_jump_action(m, action, actionArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| action | integer |
-| actionArg | integer |
+| action | `integer` |
+| actionArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 set_triple_jump_action(struct MarioState *m, UNUSED u32 action, UNUSED u32 actionArg);`
@@ -4261,7 +4261,7 @@
 ## [should_begin_sliding](#should_begin_sliding)
 
 ### Lua Example
-`local integerValue = should_begin_sliding(m)`
+`local `integer`Value = should_begin_sliding(m)`
 
 ### Parameters
 | Field | Type |
@@ -4269,7 +4269,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 should_begin_sliding(struct MarioState *m);`
@@ -4287,8 +4287,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| fastAction | integer |
-| slowAction | integer |
+| fastAction | `integer` |
+| slowAction | `integer` |
 
 ### Returns
 - None
@@ -4303,18 +4303,18 @@
 ## [stomach_slide_action](#stomach_slide_action)
 
 ### Lua Example
-`local integerValue = stomach_slide_action(m, stopAction, airAction, animation)`
+`local `integer`Value = stomach_slide_action(m, stopAction, airAction, animation)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| stopAction | integer |
-| airAction | integer |
-| animation | integer |
+| stopAction | `integer` |
+| airAction | `integer` |
+| animation | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 stomach_slide_action(struct MarioState *m, u32 stopAction, u32 airAction, s32 animation);`
@@ -4352,7 +4352,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| startYaw | integer |
+| startYaw | `integer` |
 
 ### Returns
 - None
@@ -4367,7 +4367,7 @@
 ## [tilt_body_running](#tilt_body_running)
 
 ### Lua Example
-`local integerValue = tilt_body_running(m)`
+`local `integer`Value = tilt_body_running(m)`
 
 ### Parameters
 | Field | Type |
@@ -4375,7 +4375,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 tilt_body_running(struct MarioState *m);`
@@ -4393,7 +4393,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| startYaw | integer |
+| startYaw | `integer` |
 
 ### Returns
 - None
@@ -4408,7 +4408,7 @@
 ## [update_decelerating_speed](#update_decelerating_speed)
 
 ### Lua Example
-`local integerValue = update_decelerating_speed(m)`
+`local `integer`Value = update_decelerating_speed(m)`
 
 ### Parameters
 | Field | Type |
@@ -4416,7 +4416,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 update_decelerating_speed(struct MarioState *m);`
@@ -4448,16 +4448,16 @@
 ## [update_sliding](#update_sliding)
 
 ### Lua Example
-`local integerValue = update_sliding(m, stopSpeed)`
+`local `integer`Value = update_sliding(m, stopSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| stopSpeed | number |
+| stopSpeed | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 update_sliding(struct MarioState *m, f32 stopSpeed);`
@@ -4475,8 +4475,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| accel | number |
-| lossFactor | number |
+| accel | `number` |
+| lossFactor | `number` |
 
 ### Returns
 - None
@@ -4523,8 +4523,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animation | integer |
-| endAction | integer |
+| animation | `integer` |
+| endAction | `integer` |
 
 ### Returns
 - None
@@ -4539,7 +4539,7 @@
 ## [check_common_object_cancels](#check_common_object_cancels)
 
 ### Lua Example
-`local integerValue = check_common_object_cancels(m)`
+`local `integer`Value = check_common_object_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4547,7 +4547,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_object_cancels(struct MarioState *m);`
@@ -4559,7 +4559,7 @@
 ## [mario_execute_object_action](#mario_execute_object_action)
 
 ### Lua Example
-`local integerValue = mario_execute_object_action(m)`
+`local `integer`Value = mario_execute_object_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4567,7 +4567,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_object_action(struct MarioState *m);`
@@ -4579,7 +4579,7 @@
 ## [mario_update_punch_sequence](#mario_update_punch_sequence)
 
 ### Lua Example
-`local integerValue = mario_update_punch_sequence(m)`
+`local `integer`Value = mario_update_punch_sequence(m)`
 
 ### Parameters
 | Field | Type |
@@ -4587,7 +4587,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_update_punch_sequence(struct MarioState *m);`
@@ -4605,7 +4605,7 @@
 ## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
 
 ### Lua Example
-`local integerValue = check_common_hold_idle_cancels(m)`
+`local `integer`Value = check_common_hold_idle_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4613,7 +4613,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_hold_idle_cancels(struct MarioState *m);`
@@ -4625,7 +4625,7 @@
 ## [check_common_idle_cancels](#check_common_idle_cancels)
 
 ### Lua Example
-`local integerValue = check_common_idle_cancels(m)`
+`local `integer`Value = check_common_idle_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4633,7 +4633,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_idle_cancels(struct MarioState *m);`
@@ -4645,16 +4645,16 @@
 ## [check_common_landing_cancels](#check_common_landing_cancels)
 
 ### Lua Example
-`local integerValue = check_common_landing_cancels(m, action)`
+`local `integer`Value = check_common_landing_cancels(m, action)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| action | integer |
+| action | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_landing_cancels(struct MarioState *m, u32 action);`
@@ -4666,7 +4666,7 @@
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Lua Example
-`local integerValue = check_common_stationary_cancels(m)`
+`local `integer`Value = check_common_stationary_cancels(m)`
 
 ### Parameters
 | Field | Type |
@@ -4674,7 +4674,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 check_common_stationary_cancels(struct MarioState *m);`
@@ -4686,17 +4686,17 @@
 ## [landing_step](#landing_step)
 
 ### Lua Example
-`local integerValue = landing_step(m, arg1, action)`
+`local `integer`Value = landing_step(m, arg1, action)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| arg1 | integer |
-| action | integer |
+| arg1 | `integer` |
+| action | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 landing_step(struct MarioState *m, s32 arg1, u32 action);`
@@ -4708,7 +4708,7 @@
 ## [mario_execute_stationary_action](#mario_execute_stationary_action)
 
 ### Lua Example
-`local integerValue = mario_execute_stationary_action(m)`
+`local `integer`Value = mario_execute_stationary_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4716,7 +4716,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_stationary_action(struct MarioState *m);`
@@ -4734,9 +4734,9 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| actionState | integer |
-| animFrame | integer |
-| sound | integer |
+| actionState | `integer` |
+| animFrame | `integer` |
+| sound | `integer` |
 
 ### Returns
 - None
@@ -4757,8 +4757,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| animID | integer |
-| action | integer |
+| animID | `integer` |
+| action | `integer` |
 
 ### Returns
 - None
@@ -4820,7 +4820,7 @@
 ## [mario_execute_submerged_action](#mario_execute_submerged_action)
 
 ### Lua Example
-`local integerValue = mario_execute_submerged_action(m)`
+`local `integer`Value = mario_execute_submerged_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -4828,7 +4828,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_execute_submerged_action(struct MarioState *m);`
@@ -4840,7 +4840,7 @@
 ## [perform_water_full_step](#perform_water_full_step)
 
 ### Lua Example
-`local integerValue = perform_water_full_step(m, nextPos)`
+`local `integer`Value = perform_water_full_step(m, nextPos)`
 
 ### Parameters
 | Field | Type |
@@ -4849,7 +4849,7 @@
 | nextPos | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);`
@@ -4861,7 +4861,7 @@
 ## [perform_water_step](#perform_water_step)
 
 ### Lua Example
-`local integerValue = perform_water_step(m)`
+`local `integer`Value = perform_water_step(m)`
 
 ### Parameters
 | Field | Type |
@@ -4869,7 +4869,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 perform_water_step(struct MarioState *m);`
@@ -4887,7 +4887,7 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| particleFlag | integer |
+| particleFlag | `integer` |
 
 ### Returns
 - None
@@ -4908,13 +4908,13 @@
 ## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
 
 ### Lua Example
-`local numberValue = get_additive_y_vel_for_jumps()`
+`local `number`Value = get_additive_y_vel_for_jumps()`
 
 ### Parameters
 - None
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 get_additive_y_vel_for_jumps(void);`
@@ -4932,12 +4932,12 @@
 | Field | Type |
 | ----- | ---- |
 | data | [BullyCollisionData](structs.md#BullyCollisionData) |
-| posX | number |
-| posZ | number |
-| forwardVel | number |
-| yaw | integer |
-| conversionRatio | number |
-| radius | number |
+| posX | `number` |
+| posZ | `number` |
+| forwardVel | `number` |
+| yaw | `integer` |
+| conversionRatio | `number` |
+| radius | `number` |
 
 ### Returns
 - None
@@ -4958,7 +4958,7 @@
 | Field | Type |
 | ----- | ---- |
 | arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | integer |
+| arg1 | `integer` |
 
 ### Returns
 - None
@@ -4973,17 +4973,17 @@
 ## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
 
 ### Lua Example
-`local integerValue = mario_push_off_steep_floor(arg0, arg1, arg2)`
+`local `integer`Value = mario_push_off_steep_floor(arg0, arg1, arg2)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | integer |
-| arg2 | integer |
+| arg1 | `integer` |
+| arg2 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_push_off_steep_floor(struct MarioState *, u32, u32);`
@@ -4995,7 +4995,7 @@
 ## [mario_update_moving_sand](#mario_update_moving_sand)
 
 ### Lua Example
-`local integerValue = mario_update_moving_sand(arg0)`
+`local `integer`Value = mario_update_moving_sand(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5003,7 +5003,7 @@
 | arg0 | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_update_moving_sand(struct MarioState *);`
@@ -5015,16 +5015,16 @@
 ## [mario_update_quicksand](#mario_update_quicksand)
 
 ### Lua Example
-`local integerValue = mario_update_quicksand(arg0, arg1)`
+`local `integer`Value = mario_update_quicksand(arg0, arg1)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | number |
+| arg1 | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_update_quicksand(struct MarioState *, f32);`
@@ -5036,7 +5036,7 @@
 ## [mario_update_windy_ground](#mario_update_windy_ground)
 
 ### Lua Example
-`local integerValue = mario_update_windy_ground(arg0)`
+`local `integer`Value = mario_update_windy_ground(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5044,7 +5044,7 @@
 | arg0 | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 mario_update_windy_ground(struct MarioState *);`
@@ -5056,16 +5056,16 @@
 ## [perform_air_step](#perform_air_step)
 
 ### Lua Example
-`local integerValue = perform_air_step(arg0, arg1)`
+`local `integer`Value = perform_air_step(arg0, arg1)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | arg0 | [MarioState](structs.md#MarioState) |
-| arg1 | integer |
+| arg1 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 perform_air_step(struct MarioState *, u32);`
@@ -5077,7 +5077,7 @@
 ## [perform_ground_step](#perform_ground_step)
 
 ### Lua Example
-`local integerValue = perform_ground_step(arg0)`
+`local `integer`Value = perform_ground_step(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5085,7 +5085,7 @@
 | arg0 | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 perform_ground_step(struct MarioState *);`
@@ -5117,7 +5117,7 @@
 ## [stationary_ground_step](#stationary_ground_step)
 
 ### Lua Example
-`local integerValue = stationary_ground_step(arg0)`
+`local `integer`Value = stationary_ground_step(arg0)`
 
 ### Parameters
 | Field | Type |
@@ -5125,7 +5125,7 @@
 | arg0 | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 stationary_ground_step(struct MarioState *);`
@@ -5168,10 +5168,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| courseNum | integer |
-| actNum | integer |
-| levelNum | integer |
-| areaIndex | integer |
+| courseNum | `integer` |
+| actNum | `integer` |
+| levelNum | `integer` |
+| areaIndex | `integer` |
 
 ### Returns
 [NetworkPlayer](structs.md#NetworkPlayer)
@@ -5191,9 +5191,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| courseNum | integer |
-| actNum | integer |
-| levelNum | integer |
+| courseNum | `integer` |
+| actNum | `integer` |
+| levelNum | `integer` |
 
 ### Returns
 [NetworkPlayer](structs.md#NetworkPlayer)
@@ -5226,13 +5226,13 @@
 ## [network_player_connected_count](#network_player_connected_count)
 
 ### Lua Example
-`local integerValue = network_player_connected_count()`
+`local `integer`Value = network_player_connected_count()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u8 network_player_connected_count(void);`
@@ -5249,7 +5249,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| globalIndex | integer |
+| globalIndex | `integer` |
 
 ### Returns
 [NetworkPlayer](structs.md#NetworkPlayer)
@@ -5270,11 +5270,11 @@
 | Field | Type |
 | ----- | ---- |
 | np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| description | string |
-| r | integer |
-| g | integer |
-| b | integer |
-| a | integer |
+| description | `string` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
 
 ### Returns
 - None
@@ -5295,15 +5295,15 @@
 ## [network_get_player_text_color_string](#network_get_player_text_color_string)
 
 ### Lua Example
-`local stringValue = network_get_player_text_color_string(localIndex)`
+`local `string`Value = network_get_player_text_color_string(localIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| localIndex | integer |
+| localIndex | `integer` |
 
 ### Returns
-- string
+- `string`
 
 ### C Prototype
 `char* network_get_player_text_color_string(u8 localIndex);`
@@ -5315,15 +5315,15 @@
 ## [network_global_index_from_local](#network_global_index_from_local)
 
 ### Lua Example
-`local integerValue = network_global_index_from_local(localIndex)`
+`local `integer`Value = network_global_index_from_local(localIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| localIndex | integer |
+| localIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u8 network_global_index_from_local(u8 localIndex);`
@@ -5335,13 +5335,13 @@
 ## [network_is_server](#network_is_server)
 
 ### Lua Example
-`local boolValue = network_is_server()`
+`local `bool`Value = network_is_server()`
 
 ### Parameters
 - None
 
 ### Returns
-- bool
+- `bool`
 
 ### C Prototype
 `bool network_is_server(void);`
@@ -5353,15 +5353,15 @@
 ## [network_local_index_from_global](#network_local_index_from_global)
 
 ### Lua Example
-`local integerValue = network_local_index_from_global(globalIndex)`
+`local `integer`Value = network_local_index_from_global(globalIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| globalIndex | integer |
+| globalIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u8 network_local_index_from_global(u8 globalIndex);`
@@ -5379,15 +5379,15 @@
 ## [absf_2](#absf_2)
 
 ### Lua Example
-`local numberValue = absf_2(f)`
+`local `number`Value = absf_2(f)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| f | number |
+| f | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 absf_2(f32 f);`
@@ -5405,9 +5405,9 @@
 | Field | Type |
 | ----- | ---- |
 | objFloor | [Surface](structs.md#Surface) |
-| objFloorY | number |
-| objVelX | number |
-| objVelZ | number |
+| objFloorY | `number` |
+| objVelX | `number` |
+| objVelZ | `number` |
 
 ### Returns
 - None
@@ -5428,10 +5428,10 @@
 | Field | Type |
 | ----- | ---- |
 | objFloor | [Surface](structs.md#Surface) |
-| floorY | number |
-| objVelX | number |
-| objVelZ | number |
-| waterY | number |
+| floorY | `number` |
+| objVelX | `number` |
+| objVelZ | `number` |
+| waterY | `number` |
 
 ### Returns
 - None
@@ -5451,8 +5451,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| objFriction | Pointer <number> |
-| floor_nY | number |
+| objFriction | `Pointer` <`number`> |
+| floor_nY | `number` |
 
 ### Returns
 - None
@@ -5467,15 +5467,15 @@
 ## [current_mario_room_check](#current_mario_room_check)
 
 ### Lua Example
-`local integerValue = current_mario_room_check(room)`
+`local `integer`Value = current_mario_room_check(room)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| room | integer |
+| room | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s8 current_mario_room_check(s16 room);`
@@ -5487,7 +5487,7 @@
 ## [is_player_active](#is_player_active)
 
 ### Lua Example
-`local integerValue = is_player_active(m)`
+`local `integer`Value = is_player_active(m)`
 
 ### Parameters
 | Field | Type |
@@ -5495,7 +5495,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u8 is_player_active(struct MarioState* m);`
@@ -5507,19 +5507,19 @@
 ## [is_point_close_to_object](#is_point_close_to_object)
 
 ### Lua Example
-`local integerValue = is_point_close_to_object(obj, x, y, z, dist)`
+`local `integer`Value = is_point_close_to_object(obj, x, y, z, dist)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| x | number |
-| y | number |
-| z | number |
-| dist | integer |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| dist | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist);`
@@ -5531,18 +5531,18 @@
 ## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
 
 ### Lua Example
-`local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`
+`local `integer`Value = is_point_within_radius_of_mario(x, y, z, dist)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | number |
-| y | number |
-| z | number |
-| dist | integer |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| dist | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);`
@@ -5599,7 +5599,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| collisionFlags | integer |
+| collisionFlags | `integer` |
 | floor | [Surface](structs.md#Surface) |
 
 ### Returns
@@ -5615,17 +5615,17 @@
 ## [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
 
 ### Lua Example
-`local integerValue = obj_check_if_facing_toward_angle(base, goal, range)`
+`local `integer`Value = obj_check_if_facing_toward_angle(base, goal, range)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| base | integer |
-| goal | integer |
-| range | integer |
+| base | `integer` |
+| goal | `integer` |
+| range | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range);`
@@ -5637,19 +5637,19 @@
 ## [obj_find_wall](#obj_find_wall)
 
 ### Lua Example
-`local integerValue = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
+`local `integer`Value = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| objNewX | number |
-| objY | number |
-| objNewZ | number |
-| objVelX | number |
-| objVelZ | number |
+| objNewX | `number` |
+| objY | `number` |
+| objNewZ | `number` |
+| objVelX | `number` |
+| objVelZ | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ);`
@@ -5661,19 +5661,19 @@
 ## [obj_find_wall_displacement](#obj_find_wall_displacement)
 
 ### Lua Example
-`local integerValue = obj_find_wall_displacement(dist, x, y, z, radius)`
+`local `integer`Value = obj_find_wall_displacement(dist, x, y, z, radius)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | dist | [Vec3f](structs.md#Vec3f) |
-| x | number |
-| y | number |
-| z | number |
-| radius | number |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| radius | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
@@ -5685,16 +5685,16 @@
 ## [obj_flicker_and_disappear](#obj_flicker_and_disappear)
 
 ### Lua Example
-`local integerValue = obj_flicker_and_disappear(obj, lifeSpan)`
+`local `integer`Value = obj_flicker_and_disappear(obj, lifeSpan)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| lifeSpan | integer |
+| lifeSpan | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan);`
@@ -5706,13 +5706,13 @@
 ## [obj_lava_death](#obj_lava_death)
 
 ### Lua Example
-`local integerValue = obj_lava_death()`
+`local `integer`Value = obj_lava_death()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_lava_death(void);`
@@ -5750,9 +5750,9 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| normalX | number |
-| normalY | number |
-| normalZ | number |
+| normalX | `number` |
+| normalY | `number` |
+| normalZ | `number` |
 
 ### Returns
 - None
@@ -5773,10 +5773,10 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| homeX | number |
-| homeY | number |
-| homeZ | number |
-| baseDisp | integer |
+| homeX | `number` |
+| homeY | `number` |
+| homeZ | `number` |
+| baseDisp | `integer` |
 
 ### Returns
 - None
@@ -5791,19 +5791,19 @@
 ## [obj_return_home_if_safe](#obj_return_home_if_safe)
 
 ### Lua Example
-`local integerValue = obj_return_home_if_safe(obj, homeX, y, homeZ, dist)`
+`local `integer`Value = obj_return_home_if_safe(obj, homeX, y, homeZ, dist)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| homeX | number |
-| y | number |
-| homeZ | number |
-| dist | integer |
+| homeX | `number` |
+| y | `number` |
+| homeZ | `number` |
+| dist | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist);`
@@ -5821,7 +5821,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| nCoins | integer |
+| nCoins | `integer` |
 
 ### Returns
 - None
@@ -5841,8 +5841,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| waterY | integer |
-| objY | integer |
+| waterY | `integer` |
+| objY | `integer` |
 
 ### Returns
 - None
@@ -5875,13 +5875,13 @@
 ## [object_step](#object_step)
 
 ### Lua Example
-`local integerValue = object_step()`
+`local `integer`Value = object_step()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 object_step(void);`
@@ -5893,13 +5893,13 @@
 ## [object_step_without_floor_orient](#object_step_without_floor_orient)
 
 ### Lua Example
-`local integerValue = object_step_without_floor_orient()`
+`local `integer`Value = object_step_without_floor_orient()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 object_step_without_floor_orient(void);`
@@ -5917,7 +5917,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| dist | integer |
+| dist | `integer` |
 
 ### Returns
 - None
@@ -5955,10 +5955,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behParam | integer |
-| relX | integer |
-| relY | integer |
-| relZ | integer |
+| behParam | `integer` |
+| relX | `integer` |
+| relY | `integer` |
+| relZ | `integer` |
 
 ### Returns
 - None
@@ -5973,18 +5973,18 @@
 ## [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
 
 ### Lua Example
-`local integerValue = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
+`local `integer`Value = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | objFloor | [Surface](structs.md#Surface) |
-| floorY | number |
-| objVelX | number |
-| objVelZ | number |
+| floorY | `number` |
+| objVelX | `number` |
+| objVelZ | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ);`
@@ -6001,13 +6001,13 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| velX | number |
-| velZ | number |
-| nX | number |
-| nY | number |
-| nZ | number |
-| objYawX | Pointer <number> |
-| objYawZ | Pointer <number> |
+| velX | `number` |
+| velZ | `number` |
+| nX | `number` |
+| nY | `number` |
+| nZ | `number` |
+| objYawX | `Pointer` <`number`> |
+| objYawZ | `Pointer` <`number`> |
 
 ### Returns
 - None
@@ -6028,17 +6028,17 @@
 ## [approach_f32_ptr](#approach_f32_ptr)
 
 ### Lua Example
-`local integerValue = approach_f32_ptr(px, target, delta)`
+`local `integer`Value = approach_f32_ptr(px, target, delta)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| px | Pointer <number> |
-| target | number |
-| delta | number |
+| px | `Pointer` <`number`> |
+| target | `number` |
+| delta | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 approach_f32_ptr(f32 *px, f32 target, f32 delta);`
@@ -6050,15 +6050,15 @@
 ## [cur_obj_init_anim_and_check_if_end](#cur_obj_init_anim_and_check_if_end)
 
 ### Lua Example
-`local integerValue = cur_obj_init_anim_and_check_if_end(arg0)`
+`local `integer`Value = cur_obj_init_anim_and_check_if_end(arg0)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
+| arg0 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_init_anim_and_check_if_end(s32 arg0);`
@@ -6070,16 +6070,16 @@
 ## [cur_obj_init_anim_check_frame](#cur_obj_init_anim_check_frame)
 
 ### Lua Example
-`local integerValue = cur_obj_init_anim_check_frame(arg0, arg1)`
+`local `integer`Value = cur_obj_init_anim_check_frame(arg0, arg1)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
-| arg1 | integer |
+| arg0 | `integer` |
+| arg1 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_init_anim_check_frame(s32 arg0, s32 arg1);`
@@ -6096,7 +6096,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
+| arg0 | `integer` |
 
 ### Returns
 - None
@@ -6111,17 +6111,17 @@
 ## [cur_obj_play_sound_at_anim_range](#cur_obj_play_sound_at_anim_range)
 
 ### Lua Example
-`local integerValue = cur_obj_play_sound_at_anim_range(arg0, arg1, sound)`
+`local `integer`Value = cur_obj_play_sound_at_anim_range(arg0, arg1, sound)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
-| arg1 | integer |
-| sound | integer |
+| arg0 | `integer` |
+| arg1 | `integer` |
+| sound | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound);`
@@ -6133,15 +6133,15 @@
 ## [cur_obj_set_anim_if_at_end](#cur_obj_set_anim_if_at_end)
 
 ### Lua Example
-`local integerValue = cur_obj_set_anim_if_at_end(arg0)`
+`local `integer`Value = cur_obj_set_anim_if_at_end(arg0)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | integer |
+| arg0 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_set_anim_if_at_end(s32 arg0);`
@@ -6158,8 +6158,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | number |
-| arg1 | number |
+| arg0 | `number` |
+| arg1 | `number` |
 
 ### Returns
 - None
@@ -6179,7 +6179,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| baseScale | number |
+| baseScale | `number` |
 
 ### Returns
 - None
@@ -6199,7 +6199,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| baseScale | number |
+| baseScale | `number` |
 
 ### Returns
 - None
@@ -6214,15 +6214,15 @@
 ## [obj_bounce_off_walls_edges_objects](#obj_bounce_off_walls_edges_objects)
 
 ### Lua Example
-`local integerValue = obj_bounce_off_walls_edges_objects(targetYaw)`
+`local `integer`Value = obj_bounce_off_walls_edges_objects(targetYaw)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetYaw | Pointer <integer> |
+| targetYaw | `Pointer` <`integer`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw);`
@@ -6234,16 +6234,16 @@
 ## [obj_check_attacks](#obj_check_attacks)
 
 ### Lua Example
-`local integerValue = obj_check_attacks(hitbox, attackedMarioAction)`
+`local `integer`Value = obj_check_attacks(hitbox, attackedMarioAction)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | hitbox | [ObjectHitbox](structs.md#ObjectHitbox) |
-| attackedMarioAction | integer |
+| attackedMarioAction | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_check_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction);`
@@ -6260,7 +6260,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| speed | number |
+| speed | `number` |
 
 ### Returns
 - None
@@ -6275,13 +6275,13 @@
 ## [obj_die_if_above_lava_and_health_non_positive](#obj_die_if_above_lava_and_health_non_positive)
 
 ### Lua Example
-`local integerValue = obj_die_if_above_lava_and_health_non_positive()`
+`local `integer`Value = obj_die_if_above_lava_and_health_non_positive()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_die_if_above_lava_and_health_non_positive(void);`
@@ -6311,16 +6311,16 @@
 ## [obj_face_pitch_approach](#obj_face_pitch_approach)
 
 ### Lua Example
-`local integerValue = obj_face_pitch_approach(targetPitch, deltaPitch)`
+`local `integer`Value = obj_face_pitch_approach(targetPitch, deltaPitch)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetPitch | integer |
-| deltaPitch | integer |
+| targetPitch | `integer` |
+| deltaPitch | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_face_pitch_approach(s16 targetPitch, s16 deltaPitch);`
@@ -6332,16 +6332,16 @@
 ## [obj_face_roll_approach](#obj_face_roll_approach)
 
 ### Lua Example
-`local integerValue = obj_face_roll_approach(targetRoll, deltaRoll)`
+`local `integer`Value = obj_face_roll_approach(targetRoll, deltaRoll)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetRoll | integer |
-| deltaRoll | integer |
+| targetRoll | `integer` |
+| deltaRoll | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll);`
@@ -6353,16 +6353,16 @@
 ## [obj_face_yaw_approach](#obj_face_yaw_approach)
 
 ### Lua Example
-`local integerValue = obj_face_yaw_approach(targetYaw, deltaYaw)`
+`local `integer`Value = obj_face_yaw_approach(targetYaw, deltaYaw)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetYaw | integer |
-| deltaYaw | integer |
+| targetYaw | `integer` |
+| deltaYaw | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_face_yaw_approach(s16 targetYaw, s16 deltaYaw);`
@@ -6374,16 +6374,16 @@
 ## [obj_forward_vel_approach](#obj_forward_vel_approach)
 
 ### Lua Example
-`local integerValue = obj_forward_vel_approach(target, delta)`
+`local `integer`Value = obj_forward_vel_approach(target, delta)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| target | number |
-| delta | number |
+| target | `number` |
+| delta | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_forward_vel_approach(f32 target, f32 delta);`
@@ -6395,13 +6395,13 @@
 ## [obj_get_pitch_from_vel](#obj_get_pitch_from_vel)
 
 ### Lua Example
-`local integerValue = obj_get_pitch_from_vel()`
+`local `integer`Value = obj_get_pitch_from_vel()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_get_pitch_from_vel(void);`
@@ -6413,15 +6413,15 @@
 ## [obj_get_pitch_to_home](#obj_get_pitch_to_home)
 
 ### Lua Example
-`local integerValue = obj_get_pitch_to_home(latDistToHome)`
+`local `integer`Value = obj_get_pitch_to_home(latDistToHome)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| latDistToHome | number |
+| latDistToHome | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_get_pitch_to_home(f32 latDistToHome);`
@@ -6433,17 +6433,17 @@
 ## [obj_grow_then_shrink](#obj_grow_then_shrink)
 
 ### Lua Example
-`local integerValue = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`
+`local `integer`Value = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| scaleVel | Pointer <number> |
-| shootFireScale | number |
-| endScale | number |
+| scaleVel | `Pointer` <`number`> |
+| shootFireScale | `number` |
+| endScale | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale);`
@@ -6455,17 +6455,17 @@
 ## [obj_handle_attacks](#obj_handle_attacks)
 
 ### Lua Example
-`local integerValue = obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)`
+`local `integer`Value = obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | hitbox | [ObjectHitbox](structs.md#ObjectHitbox) |
-| attackedMarioAction | integer |
-| attackHandlers | Pointer <integer> |
+| attackedMarioAction | `integer` |
+| attackHandlers | `Pointer` <`integer`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_handle_attacks(struct ObjectHitbox *hitbox, s32 attackedMarioAction, u8 *attackHandlers);`
@@ -6477,17 +6477,17 @@
 ## [obj_is_near_to_and_facing_mario](#obj_is_near_to_and_facing_mario)
 
 ### Lua Example
-`local integerValue = obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)`
+`local `integer`Value = obj_is_near_to_and_facing_mario(m, maxDist, maxAngleDiff)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| maxDist | number |
-| maxAngleDiff | integer |
+| maxDist | `number` |
+| maxAngleDiff | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAngleDiff);`
@@ -6499,13 +6499,13 @@
 ## [obj_is_rendering_enabled](#obj_is_rendering_enabled)
 
 ### Lua Example
-`local integerValue = obj_is_rendering_enabled()`
+`local `integer`Value = obj_is_rendering_enabled()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_is_rendering_enabled(void);`
@@ -6517,15 +6517,15 @@
 ## [obj_move_for_one_second](#obj_move_for_one_second)
 
 ### Lua Example
-`local integerValue = obj_move_for_one_second(endAction)`
+`local `integer`Value = obj_move_for_one_second(endAction)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| endAction | integer |
+| endAction | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_move_for_one_second(s32 endAction);`
@@ -6537,16 +6537,16 @@
 ## [obj_move_pitch_approach](#obj_move_pitch_approach)
 
 ### Lua Example
-`local integerValue = obj_move_pitch_approach(target, delta)`
+`local `integer`Value = obj_move_pitch_approach(target, delta)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| target | integer |
-| delta | integer |
+| target | `integer` |
+| delta | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_move_pitch_approach(s16 target, s16 delta);`
@@ -6558,15 +6558,15 @@
 ## [obj_random_fixed_turn](#obj_random_fixed_turn)
 
 ### Lua Example
-`local integerValue = obj_random_fixed_turn(delta)`
+`local `integer`Value = obj_random_fixed_turn(delta)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| delta | integer |
+| delta | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_random_fixed_turn(s16 delta);`
@@ -6578,16 +6578,16 @@
 ## [obj_resolve_collisions_and_turn](#obj_resolve_collisions_and_turn)
 
 ### Lua Example
-`local integerValue = obj_resolve_collisions_and_turn(targetYaw, turnSpeed)`
+`local `integer`Value = obj_resolve_collisions_and_turn(targetYaw, turnSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetYaw | integer |
-| turnSpeed | integer |
+| targetYaw | `integer` |
+| turnSpeed | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_resolve_collisions_and_turn(s16 targetYaw, s16 turnSpeed);`
@@ -6599,15 +6599,15 @@
 ## [obj_resolve_object_collisions](#obj_resolve_object_collisions)
 
 ### Lua Example
-`local integerValue = obj_resolve_object_collisions(targetYaw)`
+`local `integer`Value = obj_resolve_object_collisions(targetYaw)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetYaw | Pointer <integer> |
+| targetYaw | `Pointer` <`integer`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_resolve_object_collisions(s32 *targetYaw);`
@@ -6624,9 +6624,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetYaw | integer |
-| maxRoll | integer |
-| rollSpeed | integer |
+| targetYaw | `integer` |
+| maxRoll | `integer` |
+| rollSpeed | `integer` |
 
 ### Returns
 - None
@@ -6646,8 +6646,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetYaw | integer |
-| turnAmount | integer |
+| targetYaw | `integer` |
+| turnAmount | `integer` |
 
 ### Returns
 - None
@@ -6667,7 +6667,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| distFromHome | number |
+| distFromHome | `number` |
 
 ### Returns
 - None
@@ -6687,7 +6687,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| attackType | integer |
+| attackType | `integer` |
 
 ### Returns
 - None
@@ -6720,21 +6720,21 @@
 ## [obj_smooth_turn](#obj_smooth_turn)
 
 ### Lua Example
-`local integerValue = obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)`
+`local `integer`Value = obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| angleVel | Pointer <integer> |
-| angle | Pointer <integer> |
-| targetAngle | integer |
-| targetSpeedProportion | number |
-| accel | integer |
-| minSpeed | integer |
-| maxSpeed | integer |
+| angleVel | `Pointer` <`integer`> |
+| angle | `Pointer` <`integer`> |
+| targetAngle | `integer` |
+| targetSpeedProportion | `number` |
+| accel | `integer` |
+| minSpeed | `integer` |
+| maxSpeed | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedProportion, s16 accel, s16 minSpeed, s16 maxSpeed);`
@@ -6751,14 +6751,14 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| relativePosX | integer |
-| relativePosY | integer |
-| relativePosZ | integer |
-| scale | number |
-| model | integer |
-| startSpeed | number |
-| endSpeed | number |
-| movePitch | integer |
+| relativePosX | `integer` |
+| relativePosY | `integer` |
+| relativePosZ | `integer` |
+| scale | `number` |
+| model | `integer` |
+| startSpeed | `number` |
+| endSpeed | `number` |
+| movePitch | `integer` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -6773,17 +6773,17 @@
 ## [obj_turn_pitch_toward_mario](#obj_turn_pitch_toward_mario)
 
 ### Lua Example
-`local integerValue = obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)`
+`local `integer`Value = obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| targetOffsetY | number |
-| turnAmount | integer |
+| targetOffsetY | `number` |
+| turnAmount | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 turnAmount);`
@@ -6818,10 +6818,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| blinkTimer | Pointer <integer> |
-| baseCycleLength | integer |
-| cycleLengthRange | integer |
-| blinkLength | integer |
+| blinkTimer | `Pointer` <`integer`> |
+| baseCycleLength | `integer` |
+| cycleLengthRange | `integer` |
+| blinkLength | `integer` |
 
 ### Returns
 - None
@@ -6836,15 +6836,15 @@
 ## [obj_update_standard_actions](#obj_update_standard_actions)
 
 ### Lua Example
-`local integerValue = obj_update_standard_actions(scale)`
+`local `integer`Value = obj_update_standard_actions(scale)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| scale | number |
+| scale | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_update_standard_actions(f32 scale);`
@@ -6856,16 +6856,16 @@
 ## [obj_y_vel_approach](#obj_y_vel_approach)
 
 ### Lua Example
-`local integerValue = obj_y_vel_approach(target, delta)`
+`local `integer`Value = obj_y_vel_approach(target, delta)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| target | number |
-| delta | number |
+| target | `number` |
+| delta | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_y_vel_approach(f32 target, f32 delta);`
@@ -6877,20 +6877,20 @@
 ## [oscillate_toward](#oscillate_toward)
 
 ### Lua Example
-`local integerValue = oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)`
+`local `integer`Value = oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | Pointer <integer> |
-| vel | Pointer <number> |
-| target | integer |
-| velCloseToZero | number |
-| accel | number |
-| slowdown | number |
+| value | `Pointer` <`integer`> |
+| vel | `Pointer` <`number`> |
+| target | `integer` |
+| velCloseToZero | `number` |
+| accel | `number` |
+| slowdown | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 accel, f32 slowdown);`
@@ -6907,10 +6907,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| ballIndex | integer |
-| x | number |
-| y | number |
-| z | number |
+| ballIndex | `integer` |
+| x | `number` |
+| y | `number` |
+| z | `number` |
 
 ### Returns
 - None
@@ -6925,16 +6925,16 @@
 ## [random_linear_offset](#random_linear_offset)
 
 ### Lua Example
-`local integerValue = random_linear_offset(base, range)`
+`local `integer`Value = random_linear_offset(base, range)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| base | integer |
-| range | integer |
+| base | `integer` |
+| range | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 random_linear_offset(s16 base, s16 range);`
@@ -6946,17 +6946,17 @@
 ## [random_mod_offset](#random_mod_offset)
 
 ### Lua Example
-`local integerValue = random_mod_offset(base, step, mod)`
+`local `integer`Value = random_mod_offset(base, step, mod)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| base | integer |
-| step | integer |
-| mod | integer |
+| base | `integer` |
+| step | `integer` |
+| mod | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 random_mod_offset(s16 base, s16 step, s16 mod);`
@@ -6974,16 +6974,16 @@
 ## [abs_angle_diff](#abs_angle_diff)
 
 ### Lua Example
-`local integerValue = abs_angle_diff(x0, x1)`
+`local `integer`Value = abs_angle_diff(x0, x1)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x0 | integer |
-| x1 | integer |
+| x0 | `integer` |
+| x1 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 abs_angle_diff(s16 x0, s16 x1);`
@@ -7000,8 +7000,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | Pointer <number> |
-| dragStrength | number |
+| value | `Pointer` <`number`> |
+| dragStrength | `number` |
 
 ### Returns
 - None
@@ -7016,17 +7016,17 @@
 ## [approach_f32_signed](#approach_f32_signed)
 
 ### Lua Example
-`local integerValue = approach_f32_signed(value, target, increment)`
+`local `integer`Value = approach_f32_signed(value, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | Pointer <number> |
-| target | number |
-| increment | number |
+| value | `Pointer` <`number`> |
+| target | `number` |
+| increment | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 approach_f32_signed(f32 *value, f32 target, f32 increment);`
@@ -7038,17 +7038,17 @@
 ## [approach_f32_symmetric](#approach_f32_symmetric)
 
 ### Lua Example
-`local numberValue = approach_f32_symmetric(value, target, increment)`
+`local `number`Value = approach_f32_symmetric(value, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | number |
-| target | number |
-| increment | number |
+| value | `number` |
+| target | `number` |
+| increment | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 approach_f32_symmetric(f32 value, f32 target, f32 increment);`
@@ -7060,17 +7060,17 @@
 ## [approach_s16_symmetric](#approach_s16_symmetric)
 
 ### Lua Example
-`local integerValue = approach_s16_symmetric(value, target, increment)`
+`local `integer`Value = approach_s16_symmetric(value, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | integer |
-| target | integer |
-| increment | integer |
+| value | `integer` |
+| target | `integer` |
+| increment | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 approach_s16_symmetric(s16 value, s16 target, s16 increment);`
@@ -7118,15 +7118,15 @@
 ## [bit_shift_left](#bit_shift_left)
 
 ### Lua Example
-`local integerValue = bit_shift_left(a0)`
+`local `integer`Value = bit_shift_left(a0)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | integer |
+| a0 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 bit_shift_left(s32 a0);`
@@ -7158,16 +7158,16 @@
 ## [clear_move_flag](#clear_move_flag)
 
 ### Lua Example
-`local integerValue = clear_move_flag(bitSet, flag)`
+`local `integer`Value = clear_move_flag(bitSet, flag)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| bitSet | Pointer <integer> |
-| flag | integer |
+| bitSet | `Pointer` <`integer`> |
+| flag | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 clear_move_flag(u32 *bitSet, s32 flag);`
@@ -7184,7 +7184,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| flags | integer |
+| flags | `integer` |
 
 ### Returns
 - None
@@ -7199,15 +7199,15 @@
 ## [count_objects_with_behavior](#count_objects_with_behavior)
 
 ### Lua Example
-`local integerValue = count_objects_with_behavior(behavior)`
+`local `integer`Value = count_objects_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 count_objects_with_behavior(const BehaviorScript *behavior);`
@@ -7219,13 +7219,13 @@
 ## [count_unimportant_objects](#count_unimportant_objects)
 
 ### Lua Example
-`local integerValue = count_unimportant_objects()`
+`local `integer`Value = count_unimportant_objects()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 count_unimportant_objects(void);`
@@ -7237,13 +7237,13 @@
 ## [cur_obj_abs_y_dist_to_home](#cur_obj_abs_y_dist_to_home)
 
 ### Lua Example
-`local numberValue = cur_obj_abs_y_dist_to_home()`
+`local `number`Value = cur_obj_abs_y_dist_to_home()`
 
 ### Parameters
 - None
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 cur_obj_abs_y_dist_to_home(void);`
@@ -7255,13 +7255,13 @@
 ## [cur_obj_advance_looping_anim](#cur_obj_advance_looping_anim)
 
 ### Lua Example
-`local integerValue = cur_obj_advance_looping_anim()`
+`local `integer`Value = cur_obj_advance_looping_anim()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_advance_looping_anim(void);`
@@ -7291,13 +7291,13 @@
 ## [cur_obj_angle_to_home](#cur_obj_angle_to_home)
 
 ### Lua Example
-`local integerValue = cur_obj_angle_to_home()`
+`local `integer`Value = cur_obj_angle_to_home()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 cur_obj_angle_to_home(void);`
@@ -7314,7 +7314,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dragStrength | number |
+| dragStrength | `number` |
 
 ### Returns
 - None
@@ -7365,18 +7365,18 @@
 ## [cur_obj_can_mario_activate_textbox](#cur_obj_can_mario_activate_textbox)
 
 ### Lua Example
-`local integerValue = cur_obj_can_mario_activate_textbox(m, radius, height, unused)`
+`local `integer`Value = cur_obj_can_mario_activate_textbox(m, radius, height, unused)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| radius | number |
-| height | number |
-| unused | integer |
+| radius | `number` |
+| height | `number` |
+| unused | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused);`
@@ -7388,17 +7388,17 @@
 ## [cur_obj_can_mario_activate_textbox_2](#cur_obj_can_mario_activate_textbox_2)
 
 ### Lua Example
-`local integerValue = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
+`local `integer`Value = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| radius | number |
-| height | number |
+| radius | `number` |
+| height | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height);`
@@ -7415,7 +7415,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| action | integer |
+| action | `integer` |
 
 ### Returns
 - None
@@ -7430,15 +7430,15 @@
 ## [cur_obj_check_anim_frame](#cur_obj_check_anim_frame)
 
 ### Lua Example
-`local integerValue = cur_obj_check_anim_frame(frame)`
+`local `integer`Value = cur_obj_check_anim_frame(frame)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| frame | integer |
+| frame | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_anim_frame(s32 frame);`
@@ -7450,16 +7450,16 @@
 ## [cur_obj_check_anim_frame_in_range](#cur_obj_check_anim_frame_in_range)
 
 ### Lua Example
-`local integerValue = cur_obj_check_anim_frame_in_range(startFrame, rangeLength)`
+`local `integer`Value = cur_obj_check_anim_frame_in_range(startFrame, rangeLength)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| startFrame | integer |
-| rangeLength | integer |
+| startFrame | `integer` |
+| rangeLength | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength);`
@@ -7471,15 +7471,15 @@
 ## [cur_obj_check_frame_prior_current_frame](#cur_obj_check_frame_prior_current_frame)
 
 ### Lua Example
-`local integerValue = cur_obj_check_frame_prior_current_frame(a0)`
+`local `integer`Value = cur_obj_check_frame_prior_current_frame(a0)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | Pointer <integer> |
+| a0 | `Pointer` <`integer`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_frame_prior_current_frame(s16 *a0);`
@@ -7491,13 +7491,13 @@
 ## [cur_obj_check_grabbed_mario](#cur_obj_check_grabbed_mario)
 
 ### Lua Example
-`local integerValue = cur_obj_check_grabbed_mario()`
+`local `integer`Value = cur_obj_check_grabbed_mario()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_grabbed_mario(void);`
@@ -7509,13 +7509,13 @@
 ## [cur_obj_check_if_at_animation_end](#cur_obj_check_if_at_animation_end)
 
 ### Lua Example
-`local integerValue = cur_obj_check_if_at_animation_end()`
+`local `integer`Value = cur_obj_check_if_at_animation_end()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_if_at_animation_end(void);`
@@ -7527,13 +7527,13 @@
 ## [cur_obj_check_if_near_animation_end](#cur_obj_check_if_near_animation_end)
 
 ### Lua Example
-`local integerValue = cur_obj_check_if_near_animation_end()`
+`local `integer`Value = cur_obj_check_if_near_animation_end()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_if_near_animation_end(void);`
@@ -7545,13 +7545,13 @@
 ## [cur_obj_check_interacted](#cur_obj_check_interacted)
 
 ### Lua Example
-`local integerValue = cur_obj_check_interacted()`
+`local `integer`Value = cur_obj_check_interacted()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_check_interacted(void);`
@@ -7563,15 +7563,15 @@
 ## [cur_obj_clear_interact_status_flag](#cur_obj_clear_interact_status_flag)
 
 ### Lua Example
-`local integerValue = cur_obj_clear_interact_status_flag(flag)`
+`local `integer`Value = cur_obj_clear_interact_status_flag(flag)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| flag | integer |
+| flag | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_clear_interact_status_flag(s32 flag);`
@@ -7601,16 +7601,16 @@
 ## [cur_obj_count_objects_with_behavior](#cur_obj_count_objects_with_behavior)
 
 ### Lua Example
-`local integerValue = cur_obj_count_objects_with_behavior(behavior, dist)`
+`local `integer`Value = cur_obj_count_objects_with_behavior(behavior, dist)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
-| dist | number |
+| behavior | `Pointer` <`BehaviorScript`> |
+| dist | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist);`
@@ -7622,15 +7622,15 @@
 ## [cur_obj_detect_steep_floor](#cur_obj_detect_steep_floor)
 
 ### Lua Example
-`local integerValue = cur_obj_detect_steep_floor(steepAngleDegrees)`
+`local `integer`Value = cur_obj_detect_steep_floor(steepAngleDegrees)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| steepAngleDegrees | integer |
+| steepAngleDegrees | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees);`
@@ -7698,15 +7698,15 @@
 ## [cur_obj_dist_to_nearest_object_with_behavior](#cur_obj_dist_to_nearest_object_with_behavior)
 
 ### Lua Example
-`local numberValue = cur_obj_dist_to_nearest_object_with_behavior(behavior)`
+`local `number`Value = cur_obj_dist_to_nearest_object_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior);`
@@ -7798,8 +7798,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| dialogFlags | integer |
-| dialogResult | integer |
+| dialogFlags | `integer` |
+| dialogResult | `integer` |
 
 ### Returns
 - None
@@ -7837,8 +7837,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
-| maxDist | number |
+| behavior | `Pointer` <`BehaviorScript`> |
+| maxDist | `number` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -7858,8 +7858,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
-| dist | Pointer <number> |
+| behavior | `Pointer` <`BehaviorScript`> |
+| dist | `Pointer` <`number`> |
 
 ### Returns
 [Object](structs.md#Object)
@@ -7892,15 +7892,15 @@
 ## [cur_obj_follow_path](#cur_obj_follow_path)
 
 ### Lua Example
-`local integerValue = cur_obj_follow_path(unusedArg)`
+`local `integer`Value = cur_obj_follow_path(unusedArg)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| unusedArg | integer |
+| unusedArg | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_follow_path(UNUSED s32 unusedArg);`
@@ -7917,8 +7917,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| target | number |
-| increment | number |
+| target | `number` |
+| increment | `number` |
 
 ### Returns
 - None
@@ -7956,9 +7956,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| forwardVel | number |
-| velY | number |
-| thrownAction | integer |
+| forwardVel | `number` |
+| velY | `number` |
+| thrownAction | `integer` |
 
 ### Returns
 - None
@@ -7973,15 +7973,15 @@
 ## [cur_obj_has_behavior](#cur_obj_has_behavior)
 
 ### Lua Example
-`local integerValue = cur_obj_has_behavior(behavior)`
+`local `integer`Value = cur_obj_has_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_has_behavior(const BehaviorScript *behavior);`
@@ -7993,15 +7993,15 @@
 ## [cur_obj_has_model](#cur_obj_has_model)
 
 ### Lua Example
-`local integerValue = cur_obj_has_model(modelID)`
+`local `integer`Value = cur_obj_has_model(modelID)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| modelID | integer |
+| modelID | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_has_model(u16 modelID);`
@@ -8031,15 +8031,15 @@
 ## [cur_obj_hide_if_mario_far_away_y](#cur_obj_hide_if_mario_far_away_y)
 
 ### Lua Example
-`local integerValue = cur_obj_hide_if_mario_far_away_y(distY)`
+`local `integer`Value = cur_obj_hide_if_mario_far_away_y(distY)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| distY | number |
+| distY | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_hide_if_mario_far_away_y(f32 distY);`
@@ -8074,7 +8074,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animIndex | integer |
+| animIndex | `integer` |
 
 ### Returns
 - None
@@ -8094,8 +8094,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animIndex | integer |
-| animFrame | integer |
+| animIndex | `integer` |
+| animFrame | `integer` |
 
 ### Returns
 - None
@@ -8110,15 +8110,15 @@
 ## [cur_obj_init_animation_and_check_if_near_end](#cur_obj_init_animation_and_check_if_near_end)
 
 ### Lua Example
-`local integerValue = cur_obj_init_animation_and_check_if_near_end(animIndex)`
+`local `integer`Value = cur_obj_init_animation_and_check_if_near_end(animIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animIndex | integer |
+| animIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_init_animation_and_check_if_near_end(s32 animIndex);`
@@ -8135,7 +8135,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animIndex | integer |
+| animIndex | `integer` |
 
 ### Returns
 - None
@@ -8155,8 +8155,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animIndex | integer |
-| accel | number |
+| animIndex | `integer` |
+| accel | `number` |
 
 ### Returns
 - None
@@ -8176,7 +8176,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animIndex | integer |
+| animIndex | `integer` |
 
 ### Returns
 - None
@@ -8191,13 +8191,13 @@
 ## [cur_obj_is_any_player_on_platform](#cur_obj_is_any_player_on_platform)
 
 ### Lua Example
-`local integerValue = cur_obj_is_any_player_on_platform()`
+`local `integer`Value = cur_obj_is_any_player_on_platform()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_is_any_player_on_platform(void);`
@@ -8209,13 +8209,13 @@
 ## [cur_obj_is_mario_ground_pounding_platform](#cur_obj_is_mario_ground_pounding_platform)
 
 ### Lua Example
-`local integerValue = cur_obj_is_mario_ground_pounding_platform()`
+`local `integer`Value = cur_obj_is_mario_ground_pounding_platform()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_is_mario_ground_pounding_platform(void);`
@@ -8227,13 +8227,13 @@
 ## [cur_obj_is_mario_on_platform](#cur_obj_is_mario_on_platform)
 
 ### Lua Example
-`local integerValue = cur_obj_is_mario_on_platform()`
+`local `integer`Value = cur_obj_is_mario_on_platform()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_is_mario_on_platform(void);`
@@ -8245,13 +8245,13 @@
 ## [cur_obj_lateral_dist_from_mario_to_home](#cur_obj_lateral_dist_from_mario_to_home)
 
 ### Lua Example
-`local numberValue = cur_obj_lateral_dist_from_mario_to_home()`
+`local `number`Value = cur_obj_lateral_dist_from_mario_to_home()`
 
 ### Parameters
 - None
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 cur_obj_lateral_dist_from_mario_to_home(void);`
@@ -8263,7 +8263,7 @@
 ## [cur_obj_lateral_dist_from_obj_to_home](#cur_obj_lateral_dist_from_obj_to_home)
 
 ### Lua Example
-`local numberValue = cur_obj_lateral_dist_from_obj_to_home(obj)`
+`local `number`Value = cur_obj_lateral_dist_from_obj_to_home(obj)`
 
 ### Parameters
 | Field | Type |
@@ -8271,7 +8271,7 @@
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj);`
@@ -8283,13 +8283,13 @@
 ## [cur_obj_lateral_dist_to_home](#cur_obj_lateral_dist_to_home)
 
 ### Lua Example
-`local numberValue = cur_obj_lateral_dist_to_home()`
+`local `number`Value = cur_obj_lateral_dist_to_home()`
 
 ### Parameters
 - None
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 cur_obj_lateral_dist_to_home(void);`
@@ -8301,13 +8301,13 @@
 ## [cur_obj_mario_far_away](#cur_obj_mario_far_away)
 
 ### Lua Example
-`local integerValue = cur_obj_mario_far_away()`
+`local `integer`Value = cur_obj_mario_far_away()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_mario_far_away(void);`
@@ -8324,8 +8324,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| forwardVel | number |
-| velY | number |
+| forwardVel | `number` |
+| velY | `number` |
 
 ### Returns
 - None
@@ -8345,7 +8345,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| steepSlopeAngleDegrees | integer |
+| steepSlopeAngleDegrees | `integer` |
 
 ### Returns
 - None
@@ -8360,15 +8360,15 @@
 ## [cur_obj_move_up_and_down](#cur_obj_move_up_and_down)
 
 ### Lua Example
-`local integerValue = cur_obj_move_up_and_down(a0)`
+`local `integer`Value = cur_obj_move_up_and_down(a0)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | integer |
+| a0 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_move_up_and_down(s32 a0);`
@@ -8385,8 +8385,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| gravity | number |
-| bounciness | number |
+| gravity | `number` |
+| bounciness | `number` |
 
 ### Returns
 - None
@@ -8473,16 +8473,16 @@
 ## [cur_obj_move_xz](#cur_obj_move_xz)
 
 ### Lua Example
-`local integerValue = cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)`
+`local `integer`Value = cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| steepSlopeNormalY | number |
-| careAboutEdgesAndSteepSlopes | integer |
+| steepSlopeNormalY | `number` |
+| careAboutEdgesAndSteepSlopes | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes);`
@@ -8517,9 +8517,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| gravity | number |
-| bounciness | number |
-| buoyancy | number |
+| gravity | `number` |
+| bounciness | `number` |
+| buoyancy | `number` |
 
 ### Returns
 - None
@@ -8534,16 +8534,16 @@
 ## [cur_obj_move_y_and_get_water_level](#cur_obj_move_y_and_get_water_level)
 
 ### Lua Example
-`local numberValue = cur_obj_move_y_and_get_water_level(gravity, buoyancy)`
+`local `number`Value = cur_obj_move_y_and_get_water_level(gravity, buoyancy)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| gravity | number |
-| buoyancy | number |
+| gravity | `number` |
+| buoyancy | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy);`
@@ -8578,7 +8578,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
 [Object](structs.md#Object)
@@ -8593,18 +8593,18 @@
 ## [cur_obj_outside_home_rectangle](#cur_obj_outside_home_rectangle)
 
 ### Lua Example
-`local integerValue = cur_obj_outside_home_rectangle(minX, maxX, minZ, maxZ)`
+`local `integer`Value = cur_obj_outside_home_rectangle(minX, maxX, minZ, maxZ)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| minX | number |
-| maxX | number |
-| minZ | number |
-| maxZ | number |
+| minX | `number` |
+| maxX | `number` |
+| minZ | `number` |
+| maxZ | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_outside_home_rectangle(f32 minX, f32 maxX, f32 minZ, f32 maxZ);`
@@ -8616,15 +8616,15 @@
 ## [cur_obj_outside_home_square](#cur_obj_outside_home_square)
 
 ### Lua Example
-`local integerValue = cur_obj_outside_home_square(halfLength)`
+`local `integer`Value = cur_obj_outside_home_square(halfLength)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| halfLength | number |
+| halfLength | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_outside_home_square(f32 halfLength);`
@@ -8636,13 +8636,13 @@
 ## [cur_obj_progress_direction_table](#cur_obj_progress_direction_table)
 
 ### Lua Example
-`local integerValue = cur_obj_progress_direction_table()`
+`local `integer`Value = cur_obj_progress_direction_table()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_progress_direction_table(void);`
@@ -8659,7 +8659,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| radius | number |
+| radius | `number` |
 
 ### Returns
 - None
@@ -8679,8 +8679,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| radius | number |
-| extentY | number |
+| radius | `number` |
+| extentY | `number` |
 
 ### Returns
 - None
@@ -8695,13 +8695,13 @@
 ## [cur_obj_reflect_move_angle_off_wall](#cur_obj_reflect_move_angle_off_wall)
 
 ### Lua Example
-`local integerValue = cur_obj_reflect_move_angle_off_wall()`
+`local `integer`Value = cur_obj_reflect_move_angle_off_wall()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 cur_obj_reflect_move_angle_off_wall(void);`
@@ -8731,13 +8731,13 @@
 ## [cur_obj_resolve_wall_collisions](#cur_obj_resolve_wall_collisions)
 
 ### Lua Example
-`local integerValue = cur_obj_resolve_wall_collisions()`
+`local `integer`Value = cur_obj_resolve_wall_collisions()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_resolve_wall_collisions(void);`
@@ -8803,16 +8803,16 @@
 ## [cur_obj_rotate_yaw_toward](#cur_obj_rotate_yaw_toward)
 
 ### Lua Example
-`local integerValue = cur_obj_rotate_yaw_toward(target, increment)`
+`local `integer`Value = cur_obj_rotate_yaw_toward(target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| target | integer |
-| increment | integer |
+| target | `integer` |
+| increment | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment);`
@@ -8829,7 +8829,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| scale | number |
+| scale | `number` |
 
 ### Returns
 - None
@@ -8849,10 +8849,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | integer |
-| a1 | integer |
-| sp10 | number |
-| sp14 | number |
+| a0 | `integer` |
+| a1 | `integer` |
+| sp10 | `number` |
+| sp14 | `number` |
 
 ### Returns
 - None
@@ -8872,7 +8872,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
 - None
@@ -8887,15 +8887,15 @@
 ## [cur_obj_set_direction_table](#cur_obj_set_direction_table)
 
 ### Lua Example
-`local integerValue = cur_obj_set_direction_table(a0)`
+`local `integer`Value = cur_obj_set_direction_table(a0)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | Pointer <integer> |
+| a0 | `Pointer` <`integer`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_set_direction_table(s8 *a0);`
@@ -8925,17 +8925,17 @@
 ## [cur_obj_set_hitbox_and_die_if_attacked](#cur_obj_set_hitbox_and_die_if_attacked)
 
 ### Lua Example
-`local integerValue = cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)`
+`local `integer`Value = cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | hitbox | [ObjectHitbox](structs.md#ObjectHitbox) |
-| deathSound | integer |
-| noLootCoins | integer |
+| deathSound | `integer` |
+| noLootCoins | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deathSound, s32 noLootCoins);`
@@ -8952,8 +8952,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| radius | number |
-| height | number |
+| radius | `number` |
+| height | `number` |
 
 ### Returns
 - None
@@ -8973,8 +8973,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| radius | number |
-| height | number |
+| radius | `number` |
+| height | `number` |
 
 ### Returns
 - None
@@ -8994,7 +8994,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| modelID | integer |
+| modelID | `integer` |
 
 ### Returns
 - None
@@ -9015,9 +9015,9 @@
 | Field | Type |
 | ----- | ---- |
 | other | [Object](structs.md#Object) |
-| dleft | number |
-| dy | number |
-| dforward | number |
+| dleft | `number` |
+| dy | `number` |
+| dforward | `number` |
 
 ### Returns
 - None
@@ -9037,9 +9037,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dleft | number |
-| dy | number |
-| dforward | number |
+| dleft | `number` |
+| dy | `number` |
+| dforward | `number` |
 
 ### Returns
 - None
@@ -9132,8 +9132,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| f12 | number |
-| f14 | number |
+| f12 | `number` |
+| f14 | `number` |
 
 ### Returns
 - None
@@ -9153,8 +9153,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | number |
-| sp1C | integer |
+| sp18 | `number` |
+| sp1C | `integer` |
 
 ### Returns
 - None
@@ -9174,7 +9174,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| shake | integer |
+| shake | `integer` |
 
 ### Returns
 - None
@@ -9194,7 +9194,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| amount | number |
+| amount | `number` |
 
 ### Returns
 - None
@@ -9209,16 +9209,16 @@
 ## [cur_obj_shake_y_until](#cur_obj_shake_y_until)
 
 ### Lua Example
-`local integerValue = cur_obj_shake_y_until(cycles, amount)`
+`local `integer`Value = cur_obj_shake_y_until(cycles, amount)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| cycles | integer |
-| amount | integer |
+| cycles | `integer` |
+| amount | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_shake_y_until(s32 cycles, s32 amount);`
@@ -9293,10 +9293,10 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| targetX | number |
-| targetY | number |
-| targetZ | number |
-| offsetY | number |
+| targetX | `number` |
+| targetY | `number` |
+| targetZ | `number` |
+| offsetY | `number` |
 
 ### Returns
 - None
@@ -9317,7 +9317,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| cameraEvent | integer |
+| cameraEvent | `integer` |
 
 ### Returns
 - None
@@ -9355,8 +9355,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | integer |
-| sp1C | integer |
+| sp18 | `integer` |
+| sp1C | `integer` |
 
 ### Returns
 - None
@@ -9394,9 +9394,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| animFrame1 | integer |
-| animFrame2 | integer |
-| sound | integer |
+| animFrame1 | `integer` |
+| animFrame2 | `integer` |
+| sound | `integer` |
 
 ### Returns
 - None
@@ -9416,8 +9416,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| offsetY | number |
-| radius | number |
+| offsetY | `number` |
+| radius | `number` |
 
 ### Returns
 - None
@@ -9455,7 +9455,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| steepSlopeDegrees | integer |
+| steepSlopeDegrees | `integer` |
 
 ### Returns
 - None
@@ -9524,16 +9524,16 @@
 ## [cur_obj_wait_then_blink](#cur_obj_wait_then_blink)
 
 ### Lua Example
-`local integerValue = cur_obj_wait_then_blink(timeUntilBlinking, numBlinks)`
+`local `integer`Value = cur_obj_wait_then_blink(timeUntilBlinking, numBlinks)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| timeUntilBlinking | integer |
-| numBlinks | integer |
+| timeUntilBlinking | `integer` |
+| numBlinks | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks);`
@@ -9545,13 +9545,13 @@
 ## [cur_obj_was_attacked_or_ground_pounded](#cur_obj_was_attacked_or_ground_pounded)
 
 ### Lua Example
-`local integerValue = cur_obj_was_attacked_or_ground_pounded()`
+`local `integer`Value = cur_obj_was_attacked_or_ground_pounded()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_was_attacked_or_ground_pounded(void);`
@@ -9563,13 +9563,13 @@
 ## [cur_obj_within_12k_bounds](#cur_obj_within_12k_bounds)
 
 ### Lua Example
-`local integerValue = cur_obj_within_12k_bounds()`
+`local `integer`Value = cur_obj_within_12k_bounds()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 cur_obj_within_12k_bounds(void);`
@@ -9617,18 +9617,18 @@
 ## [dist_between_object_and_point](#dist_between_object_and_point)
 
 ### Lua Example
-`local numberValue = dist_between_object_and_point(obj, pointX, pointY, pointZ)`
+`local `number`Value = dist_between_object_and_point(obj, pointX, pointY, pointZ)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| pointX | number |
-| pointY | number |
-| pointZ | number |
+| pointX | `number` |
+| pointY | `number` |
+| pointZ | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f32 pointZ);`
@@ -9640,7 +9640,7 @@
 ## [dist_between_objects](#dist_between_objects)
 
 ### Lua Example
-`local numberValue = dist_between_objects(obj1, obj2)`
+`local `number`Value = dist_between_objects(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -9649,7 +9649,7 @@
 | obj2 | [Object](structs.md#Object) |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 dist_between_objects(struct Object *obj1, struct Object *obj2);`
@@ -9715,17 +9715,17 @@
 ## [geo_offset_klepto_debug](#geo_offset_klepto_debug)
 
 ### Lua Example
-`local integerValue = geo_offset_klepto_debug(callContext, a1, sp8)`
+`local `integer`Value = geo_offset_klepto_debug(callContext, a1, sp8)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| callContext | integer |
+| callContext | `integer` |
 | a1 | [GraphNode](structs.md#GraphNode) |
-| sp8 | integer |
+| sp8 | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 geo_offset_klepto_debug(s32 callContext, struct GraphNode *a1, UNUSED s32 sp8);`
@@ -9737,15 +9737,15 @@
 ## [get_object_list_from_behavior](#get_object_list_from_behavior)
 
 ### Lua Example
-`local integerValue = get_object_list_from_behavior(behavior)`
+`local `integer`Value = get_object_list_from_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 get_object_list_from_behavior(const BehaviorScript *behavior);`
@@ -9757,18 +9757,18 @@
 ## [increment_velocity_toward_range](#increment_velocity_toward_range)
 
 ### Lua Example
-`local numberValue = increment_velocity_toward_range(value, center, zeroThreshold, increment)`
+`local `number`Value = increment_velocity_toward_range(value, center, zeroThreshold, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | number |
-| center | number |
-| zeroThreshold | number |
-| increment | number |
+| value | `number` |
+| center | `number` |
+| zeroThreshold | `number` |
+| increment | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 increment_velocity_toward_range(f32 value, f32 center, f32 zeroThreshold, f32 increment);`
@@ -9780,16 +9780,16 @@
 ## [is_item_in_array](#is_item_in_array)
 
 ### Lua Example
-`local integerValue = is_item_in_array(item, array)`
+`local `integer`Value = is_item_in_array(item, array)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| item | integer |
-| array | Pointer <integer> |
+| item | `integer` |
+| array | `Pointer` <`integer`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_item_in_array(s8 item, s8 *array);`
@@ -9801,15 +9801,15 @@
 ## [is_mario_moving_fast_or_in_air](#is_mario_moving_fast_or_in_air)
 
 ### Lua Example
-`local integerValue = is_mario_moving_fast_or_in_air(speedThreshold)`
+`local `integer`Value = is_mario_moving_fast_or_in_air(speedThreshold)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| speedThreshold | integer |
+| speedThreshold | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 is_mario_moving_fast_or_in_air(s32 speedThreshold);`
@@ -9821,7 +9821,7 @@
 ## [lateral_dist_between_objects](#lateral_dist_between_objects)
 
 ### Lua Example
-`local numberValue = lateral_dist_between_objects(obj1, obj2)`
+`local `number`Value = lateral_dist_between_objects(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -9830,7 +9830,7 @@
 | obj2 | [Object](structs.md#Object) |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2);`
@@ -9842,7 +9842,7 @@
 ## [mario_is_dive_sliding](#mario_is_dive_sliding)
 
 ### Lua Example
-`local integerValue = mario_is_dive_sliding(m)`
+`local `integer`Value = mario_is_dive_sliding(m)`
 
 ### Parameters
 | Field | Type |
@@ -9850,7 +9850,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_is_dive_sliding(struct MarioState* m);`
@@ -9862,7 +9862,7 @@
 ## [mario_is_in_air_action](#mario_is_in_air_action)
 
 ### Lua Example
-`local integerValue = mario_is_in_air_action(m)`
+`local `integer`Value = mario_is_in_air_action(m)`
 
 ### Parameters
 | Field | Type |
@@ -9870,7 +9870,7 @@
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_is_in_air_action(struct MarioState* m);`
@@ -9882,18 +9882,18 @@
 ## [mario_is_within_rectangle](#mario_is_within_rectangle)
 
 ### Lua Example
-`local integerValue = mario_is_within_rectangle(minX, maxX, minZ, maxZ)`
+`local `integer`Value = mario_is_within_rectangle(minX, maxX, minZ, maxZ)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| minX | integer |
-| maxX | integer |
-| minZ | integer |
-| maxZ | integer |
+| minX | `integer` |
+| maxX | `integer` |
+| minZ | `integer` |
+| maxZ | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 mario_is_within_rectangle(s16 minX, s16 maxX, s16 minZ, s16 maxZ);`
@@ -9910,7 +9910,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| flag | integer |
+| flag | `integer` |
 
 ### Returns
 - None
@@ -9925,7 +9925,7 @@
 ## [obj_angle_to_object](#obj_angle_to_object)
 
 ### Lua Example
-`local integerValue = obj_angle_to_object(obj1, obj2)`
+`local `integer`Value = obj_angle_to_object(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -9934,7 +9934,7 @@
 | obj2 | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2);`
@@ -9946,17 +9946,17 @@
 ## [obj_angle_to_point](#obj_angle_to_point)
 
 ### Lua Example
-`local integerValue = obj_angle_to_point(obj, pointX, pointZ)`
+`local `integer`Value = obj_angle_to_point(obj, pointX, pointZ)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| pointX | number |
-| pointZ | number |
+| pointX | `number` |
+| pointZ | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ);`
@@ -9988,7 +9988,7 @@
 ## [obj_attack_collided_from_other_object](#obj_attack_collided_from_other_object)
 
 ### Lua Example
-`local integerValue = obj_attack_collided_from_other_object(obj)`
+`local `integer`Value = obj_attack_collided_from_other_object(obj)`
 
 ### Parameters
 | Field | Type |
@@ -9996,7 +9996,7 @@
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_attack_collided_from_other_object(struct Object *obj);`
@@ -10054,8 +10054,8 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| posIndex | integer |
-| angleIndex | integer |
+| posIndex | `integer` |
+| angleIndex | `integer` |
 
 ### Returns
 - None
@@ -10110,7 +10110,7 @@
 ## [obj_check_if_collided_with_object](#obj_check_if_collided_with_object)
 
 ### Lua Example
-`local integerValue = obj_check_if_collided_with_object(obj1, obj2)`
+`local `integer`Value = obj_check_if_collided_with_object(obj1, obj2)`
 
 ### Parameters
 | Field | Type |
@@ -10119,7 +10119,7 @@
 | obj2 | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2);`
@@ -10282,8 +10282,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | number |
-| sp1C | integer |
+| sp18 | `number` |
+| sp1C | `integer` |
 
 ### Returns
 - None
@@ -10298,16 +10298,16 @@
 ## [obj_has_behavior](#obj_has_behavior)
 
 ### Lua Example
-`local integerValue = obj_has_behavior(obj, behavior)`
+`local `integer`Value = obj_has_behavior(obj, behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior);`
@@ -10325,7 +10325,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| animIndex | integer |
+| animIndex | `integer` |
 
 ### Returns
 - None
@@ -10340,7 +10340,7 @@
 ## [obj_is_hidden](#obj_is_hidden)
 
 ### Lua Example
-`local integerValue = obj_is_hidden(obj)`
+`local `integer`Value = obj_is_hidden(obj)`
 
 ### Parameters
 | Field | Type |
@@ -10348,7 +10348,7 @@
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 obj_is_hidden(struct Object *obj);`
@@ -10380,7 +10380,7 @@
 ## [obj_pitch_to_object](#obj_pitch_to_object)
 
 ### Lua Example
-`local integerValue = obj_pitch_to_object(obj, target)`
+`local `integer`Value = obj_pitch_to_object(obj, target)`
 
 ### Parameters
 | Field | Type |
@@ -10389,7 +10389,7 @@
 | target | [Object](structs.md#Object) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_pitch_to_object(struct Object* obj, struct Object* target);`
@@ -10407,7 +10407,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| scale | number |
+| scale | `number` |
 
 ### Returns
 - None
@@ -10428,8 +10428,8 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| rangeLength | number |
-| minScale | number |
+| rangeLength | `number` |
+| minScale | `number` |
 
 ### Returns
 - None
@@ -10450,9 +10450,9 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| xScale | number |
-| yScale | number |
-| zScale | number |
+| xScale | `number` |
+| yScale | `number` |
+| zScale | `number` |
 
 ### Returns
 - None
@@ -10473,9 +10473,9 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| pitch | integer |
-| yaw | integer |
-| roll | integer |
+| pitch | `integer` |
+| yaw | `integer` |
+| roll | `integer` |
 
 ### Returns
 - None
@@ -10496,7 +10496,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| behavior | Pointer <BehaviorScript> |
+| behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
 - None
@@ -10618,7 +10618,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| heldBehavior | Pointer <BehaviorScript> |
+| heldBehavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
 - None
@@ -10660,9 +10660,9 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| relX | integer |
-| relY | integer |
-| relZ | integer |
+| relX | `integer` |
+| relY | `integer` |
+| relZ | `integer` |
 
 ### Returns
 - None
@@ -10683,9 +10683,9 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| x | integer |
-| y | integer |
-| z | integer |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
 
 ### Returns
 - None
@@ -10707,9 +10707,9 @@
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | other | [Object](structs.md#Object) |
-| dleft | number |
-| dy | number |
-| dforward | number |
+| dleft | `number` |
+| dy | `number` |
+| dforward | `number` |
 
 ### Returns
 - None
@@ -10750,9 +10750,9 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| numCoins | integer |
-| sp28 | number |
-| posJitter | integer |
+| numCoins | `integer` |
+| sp28 | `number` |
+| posJitter | `integer` |
 
 ### Returns
 - None
@@ -10773,11 +10773,11 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| numCoins | integer |
-| sp30 | number |
-| coinBehavior | Pointer <BehaviorScript> |
-| posJitter | integer |
-| model | integer |
+| numCoins | `integer` |
+| sp30 | `number` |
+| coinBehavior | `Pointer` <`BehaviorScript`> |
+| posJitter | `integer` |
+| model | `integer` |
 
 ### Returns
 - None
@@ -10798,8 +10798,8 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| numCoins | integer |
-| sp28 | number |
+| numCoins | `integer` |
+| sp28 | `number` |
 
 ### Returns
 - None
@@ -10820,8 +10820,8 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| posIndex | integer |
-| localTranslateIndex | integer |
+| posIndex | `integer` |
+| localTranslateIndex | `integer` |
 
 ### Returns
 - None
@@ -10842,7 +10842,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| rangeLength | number |
+| rangeLength | `number` |
 
 ### Returns
 - None
@@ -10863,7 +10863,7 @@
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| rangeLength | number |
+| rangeLength | `number` |
 
 ### Returns
 - None
@@ -10878,18 +10878,18 @@
 ## [obj_turn_toward_object](#obj_turn_toward_object)
 
 ### Lua Example
-`local integerValue = obj_turn_toward_object(obj, target, angleIndex, turnAmount)`
+`local `integer`Value = obj_turn_toward_object(obj, target, angleIndex, turnAmount)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | target | [Object](structs.md#Object) |
-| angleIndex | integer |
-| turnAmount | integer |
+| angleIndex | `integer` |
+| turnAmount | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount);`
@@ -10901,13 +10901,13 @@
 ## [player_performed_grab_escape_action](#player_performed_grab_escape_action)
 
 ### Lua Example
-`local integerValue = player_performed_grab_escape_action()`
+`local `integer`Value = player_performed_grab_escape_action()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 player_performed_grab_escape_action(void);`
@@ -10919,15 +10919,15 @@
 ## [random_f32_around_zero](#random_f32_around_zero)
 
 ### Lua Example
-`local numberValue = random_f32_around_zero(diameter)`
+`local `number`Value = random_f32_around_zero(diameter)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| diameter | number |
+| diameter | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 random_f32_around_zero(f32 diameter);`
@@ -10944,9 +10944,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp0 | integer |
-| sp4 | integer |
-| sp8 | number |
+| sp0 | `integer` |
+| sp4 | `integer` |
+| sp8 | `number` |
 
 ### Returns
 - None
@@ -10966,7 +10966,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| flags | integer |
+| flags | `integer` |
 
 ### Returns
 - None
@@ -10981,15 +10981,15 @@
 ## [signum_positive](#signum_positive)
 
 ### Lua Example
-`local integerValue = signum_positive(x)`
+`local `integer`Value = signum_positive(x)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | integer |
+| x | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 signum_positive(s32 x);`
@@ -11042,7 +11042,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | integer |
+| sp18 | `integer` |
 
 ### Returns
 - None
@@ -11062,8 +11062,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp20 | integer |
-| sp24 | integer |
+| sp20 | `integer` |
+| sp24 | `integer` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11104,8 +11104,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp0 | integer |
-| sp4 | integer |
+| sp0 | `integer` |
+| sp4 | `integer` |
 
 ### Returns
 - None
@@ -11144,7 +11144,7 @@
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Lua Example
-`local integerValue = save_file_get_cap_pos(capPos)`
+`local `integer`Value = save_file_get_cap_pos(capPos)`
 
 ### Parameters
 | Field | Type |
@@ -11152,7 +11152,7 @@
 | capPos | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 save_file_get_cap_pos(Vec3s capPos);`
@@ -11164,16 +11164,16 @@
 ## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
 
 ### Lua Example
-`local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
+`local `integer`Value = save_file_get_course_coin_score(fileIndex, courseIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fileIndex | integer |
-| courseIndex | integer |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);`
@@ -11185,16 +11185,16 @@
 ## [save_file_get_course_star_count](#save_file_get_course_star_count)
 
 ### Lua Example
-`local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
+`local `integer`Value = save_file_get_course_star_count(fileIndex, courseIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fileIndex | integer |
-| courseIndex | integer |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 save_file_get_course_star_count(s32 fileIndex, s32 courseIndex);`
@@ -11206,13 +11206,13 @@
 ## [save_file_get_flags](#save_file_get_flags)
 
 ### Lua Example
-`local integerValue = save_file_get_flags()`
+`local `integer`Value = save_file_get_flags()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 save_file_get_flags(void);`
@@ -11224,15 +11224,15 @@
 ## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
 
 ### Lua Example
-`local integerValue = save_file_get_max_coin_score(courseIndex)`
+`local `integer`Value = save_file_get_max_coin_score(courseIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| courseIndex | integer |
+| courseIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 save_file_get_max_coin_score(s32 courseIndex);`
@@ -11244,13 +11244,13 @@
 ## [save_file_get_sound_mode](#save_file_get_sound_mode)
 
 ### Lua Example
-`local integerValue = save_file_get_sound_mode()`
+`local `integer`Value = save_file_get_sound_mode()`
 
 ### Parameters
 - None
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u16 save_file_get_sound_mode(void);`
@@ -11262,16 +11262,16 @@
 ## [save_file_get_star_flags](#save_file_get_star_flags)
 
 ### Lua Example
-`local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
+`local `integer`Value = save_file_get_star_flags(fileIndex, courseIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fileIndex | integer |
-| courseIndex | integer |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);`
@@ -11283,17 +11283,17 @@
 ## [save_file_get_total_star_count](#save_file_get_total_star_count)
 
 ### Lua Example
-`local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
+`local `integer`Value = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fileIndex | integer |
-| minCourse | integer |
-| maxCourse | integer |
+| fileIndex | `integer` |
+| minCourse | `integer` |
+| maxCourse | `integer` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
@@ -11316,7 +11316,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| objList | integer |
+| objList | [enum ObjectList](constants.md#enum-ObjectList) |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11336,7 +11336,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behaviorId | integer |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11356,9 +11356,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behaviorId | integer |
-| fieldIndex | integer |
-| value | number |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+| fieldIndex | `integer` |
+| value | `number` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11378,9 +11378,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behaviorId | integer |
-| fieldIndex | integer |
-| value | integer |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+| fieldIndex | `integer` |
+| value | `integer` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11441,8 +11441,8 @@
 | Field | Type |
 | ----- | ---- |
 | o | [Object](structs.md#Object) |
-| fieldIndex | integer |
-| value | number |
+| fieldIndex | `integer` |
+| value | `number` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11463,8 +11463,8 @@
 | Field | Type |
 | ----- | ---- |
 | o | [Object](structs.md#Object) |
-| fieldIndex | integer |
-| value | integer |
+| fieldIndex | `integer` |
+| value | `integer` |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11485,7 +11485,7 @@
 | Field | Type |
 | ----- | ---- |
 | o | [Object](structs.md#Object) |
-| modelId | integer |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
 
 ### Returns
 - None
@@ -11505,12 +11505,12 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| behaviorId | integer |
-| modelId | integer |
-| x | number |
-| y | number |
-| z | number |
-| objSetupFunction | LuaFunction() |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| objSetupFunction | `Lua Function` () |
 
 ### Returns
 [Object](structs.md#Object)
@@ -11590,7 +11590,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fadeTimer | integer |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -11610,7 +11610,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fadeOutTime | integer |
+| fadeOutTime | `integer` |
 
 ### Returns
 - None
@@ -11630,7 +11630,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | integer |
+| a | `integer` |
 
 ### Returns
 - None
@@ -11650,7 +11650,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| seqArgs | integer |
+| seqArgs | `integer` |
 
 ### Returns
 - None
@@ -11670,7 +11670,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| seqArgs | integer |
+| seqArgs | `integer` |
 
 ### Returns
 - None
@@ -11708,7 +11708,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| soundMenuFlags | integer |
+| soundMenuFlags | `integer` |
 
 ### Returns
 - None
@@ -11764,7 +11764,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | integer |
+| a | `integer` |
 
 ### Returns
 - None
@@ -11802,9 +11802,9 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | integer |
-| seqArgs | integer |
-| fadeTimer | integer |
+| a | `integer` |
+| seqArgs | `integer` |
+| fadeTimer | `integer` |
 
 ### Returns
 - None
@@ -11861,15 +11861,15 @@
 ## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
 
 ### Lua Example
-`local integerValue = calc_dist_to_volume_range_1(distance)`
+`local `integer`Value = calc_dist_to_volume_range_1(distance)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| distance | number |
+| distance | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 calc_dist_to_volume_range_1(f32 distance);`
@@ -11881,15 +11881,15 @@
 ## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
 
 ### Lua Example
-`local integerValue = calc_dist_to_volume_range_2(distance)`
+`local `integer`Value = calc_dist_to_volume_range_2(distance)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| distance | number |
+| distance | `number` |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 calc_dist_to_volume_range_2(f32 distance);`
@@ -11906,7 +11906,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| soundMagic | integer |
+| soundMagic | `integer` |
 
 ### Returns
 - None
@@ -11926,7 +11926,7 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| soundMagic | integer |
+| soundMagic | `integer` |
 
 ### Returns
 - None
@@ -11967,17 +11967,17 @@
 ## [find_ceil_height](#find_ceil_height)
 
 ### Lua Example
-`local numberValue = find_ceil_height(x, y, z)`
+`local `number`Value = find_ceil_height(x, y, z)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | number |
-| y | number |
-| z | number |
+| x | `number` |
+| y | `number` |
+| z | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 find_ceil_height(f32 x, f32 y, f32 z);`
@@ -11989,17 +11989,17 @@
 ## [find_floor_height](#find_floor_height)
 
 ### Lua Example
-`local numberValue = find_floor_height(x, y, z)`
+`local `number`Value = find_floor_height(x, y, z)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | number |
-| y | number |
-| z | number |
+| x | `number` |
+| y | `number` |
+| z | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 find_floor_height(f32 x, f32 y, f32 z);`
@@ -12011,16 +12011,16 @@
 ## [find_poison_gas_level](#find_poison_gas_level)
 
 ### Lua Example
-`local numberValue = find_poison_gas_level(x, z)`
+`local `number`Value = find_poison_gas_level(x, z)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | number |
-| z | number |
+| x | `number` |
+| z | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 find_poison_gas_level(f32 x, f32 z);`
@@ -12032,7 +12032,7 @@
 ## [find_wall_collisions](#find_wall_collisions)
 
 ### Lua Example
-`local integerValue = find_wall_collisions(colData)`
+`local `integer`Value = find_wall_collisions(colData)`
 
 ### Parameters
 | Field | Type |
@@ -12040,7 +12040,7 @@
 | colData | [WallCollisionData](structs.md#WallCollisionData) |
 
 ### Returns
-- integer
+- `integer`
 
 ### C Prototype
 `s32 find_wall_collisions(struct WallCollisionData *colData);`
@@ -12052,16 +12052,16 @@
 ## [find_water_level](#find_water_level)
 
 ### Lua Example
-`local numberValue = find_water_level(x, z)`
+`local `number`Value = find_water_level(x, z)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | number |
-| z | number |
+| x | `number` |
+| z | `number` |
 
 ### Returns
-- number
+- `number`
 
 ### C Prototype
 `f32 find_water_level(f32 x, f32 z);`
@@ -12084,8 +12084,8 @@
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | integer |
-| a1 | integer |
+| a0 | `integer` |
+| a1 | `integer` |
 
 ### Returns
 - None
@@ -12106,8 +12106,8 @@
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| a0 | integer |
-| a1 | integer |
+| a0 | `integer` |
+| a1 | `integer` |
 
 ### Returns
 - None
@@ -12128,8 +12128,8 @@
 | Field | Type |
 | ----- | ---- |
 | object | [Object](structs.md#Object) |
-| a0 | integer |
-| a1 | integer |
+| a0 | `integer` |
+| a1 | `integer` |
 
 ### Returns
 - None

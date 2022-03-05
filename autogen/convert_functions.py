@@ -432,7 +432,7 @@ def doc_lua_func_param(param):
         lfp_type, lfp_link = translate_type_to_lua(lfp_type)
 
         if lfp_link:
-            s += '[%s](structs.md#%s)' % (lfp_type, lfp_type)
+            s += '[%s](%s)' % (lfp_type, lfp_link)
         else:
             s += lfp_type
 
@@ -469,7 +469,7 @@ def doc_function(function):
                 ptype = doc_lua_func_param(param)
 
             if plink:
-                s += '| %s | [%s](structs.md#%s) |\n'  % (pid, ptype, ptype)
+                s += '| %s | [%s](%s) |\n'  % (pid, ptype, plink)
                 continue
 
             s += '| %s | %s |\n'  % (pid, ptype)
@@ -480,7 +480,7 @@ def doc_function(function):
     s += '\n### Returns\n'
     if rtype != None:
         if rlink:
-            s += '[%s](structs.md#%s)\n' % (rtype, rtype)
+            s += '[%s](%s)\n' % (rtype, rlink)
         else:
             s += '- %s\n' % rtype
     else:

@@ -115,38 +115,42 @@ def translate_type_to_lot(ptype):
 
 def translate_type_to_lua(ptype):
     if ptype.startswith('struct '):
-        return ptype.split(' ')[1].replace('*', ''), True
+        ptype = ptype.split(' ')[1].replace('*', '')
+        return ptype, 'structs.md#%s' % ptype
 
     if ptype == 'const char*':
-        return 'string', False
+        return '`string`', None
 
     if ptype == 'char*' or ('char' in ptype and '[' in ptype):
-        return 'string', False
+        return '`string`', None
 
     if 'Vec3' in ptype:
-        return ptype, True
+        return ptype, 'structs.md#%s' % ptype
 
     if ptype.startswith('enum '):
-        return 'integer', False
+        return ptype, 'constants.md#%s' % ptype.replace(' ', '-')
 
     if ptype in usf_types:
         if ptype.startswith('f'):
-            return 'number', False
+            return '`number`', None
         else:
-            return 'integer', False
+            return '`integer`', None
 
     if 'void' == ptype:
-        return None, False
+        return None, None
 
     if ptype == 'LuaFunction':
-        return 'LuaFunction()', False
+        return '`Lua Function` ()', None
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()
-        s = 'Pointer <%s>' % translate_type_to_lua(ptype)[0]
-        return s, False
+        s = '`Pointer` <%s>' % translate_type_to_lua(ptype)[0]
+        return s, None
 
-    return ptype, False
+    if not ptype.startswith('`'):
+        ptype = '`' + ptype + '`'
+
+    return ptype, None
 
 def gen_comment_header(f):
     comment_h = "// " + f + " //"

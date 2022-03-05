@@ -315,15 +315,15 @@ def doc_struct_field(struct, field):
     if '???' in lvt or '???' in lot:
         return ''
 
-    ftype, do_link = translate_type_to_lua(ftype)
+    ftype, flink = translate_type_to_lua(ftype)
 
     restrictions = ('', 'read-only')[fimmutable == 'true']
 
     global total_fields
     total_fields += 1
 
-    if do_link:
-        return '| %s | [%s](#%s) | %s |\n'  % (fid, ftype, ftype, restrictions)
+    if flink:
+        return '| %s | [%s](%s) | %s |\n'  % (fid, ftype, flink, restrictions)
 
     return '| %s | %s | %s |\n'  % (fid, ftype, restrictions)
 
