@@ -239,7 +239,7 @@ def build_to_c(built_files):
 def doc_constant_index(processed_files):
     s = '# Supported Constants\n'
     for processed_file in processed_files:
-        s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
+        s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'].replace('.', ''))
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
         constants = sorted(constants, key=lambda d: d['identifier'])
         for c in constants:
