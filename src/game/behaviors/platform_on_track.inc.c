@@ -48,15 +48,37 @@ static void platform_on_track_mario_not_on_platform(void) {
     }
 }
 
+static u32 platformTrackPathedPrevWaypoint = 0;
+
+static void bhv_platform_track_on_received_post(UNUSED u8 fromLocalIndex) {
+    if (o->oPathedStartWaypoint == NULL) { return; }
+    o->oPathedPrevWaypoint = (struct Waypoint*)o->oPathedStartWaypoint + platformTrackPathedPrevWaypoint;
+}
+
+static void bhv_platform_track_on_sent_pre(void) {
+    if (o->oPathedStartWaypoint == NULL) { platformTrackPathedPrevWaypoint = 0; return; }
+    platformTrackPathedPrevWaypoint = ((u8*)o->oPathedPrevWaypoint - (u8*)o->oPathedStartWaypoint) / sizeof(struct Waypoint*);
+}
+
 /**
  * Init function for bhvPlatformOnTrack.
  */
 void bhv_platform_on_track_init(void) {
-
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 1000.0f);
-        so->fullObjectSync = TRUE;
-        so->maxUpdateRate = 5.0f;
+        if (so != NULL) {
+            so->on_sent_pre = bhv_platform_track_on_sent_pre;
+            so->on_received_post = bhv_platform_track_on_received_post;
+            so->maxUpdateRate = 5.0f;
+            network_init_object_field(o, &platformTrackPathedPrevWaypoint);
+            network_init_object_field(o, &o->oPlatformOnTrackBaseBallIndex);
+            network_init_object_field(o, &o->oPlatformOnTrackDistMovedSinceLastBall);
+            network_init_object_field(o, &o->oPlatformOnTrackSkiLiftRollVel);
+            network_init_object_field(o, &o->oPlatformOnTrackPrevWaypointFlags);
+            network_init_object_field(o, &o->oPlatformOnTrackPitch);
+            network_init_object_field(o, &o->oPlatformOnTrackYaw);
+            network_init_object_field(o, &o->oPlatformOnTrackOffsetY);
+        }
     }
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
