@@ -1,6 +1,14 @@
 ## [:rewind: Lua Reference](lua.md)
 
 # Supported Functions
+
+- manually written functions
+   - [define_custom_obj_fields](#define_custom_obj_fields)
+   - [network_init_object](#network_init_object)
+   - [network_send_object](#network_send_object)
+
+<br />
+
 - behavior_table.h
    - [get_behavior_from_id](#get_behavior_from_id)
    - [get_id_from_behavior](#get_id_from_behavior)
@@ -671,6 +679,77 @@
 
 
 ---
+# manually written functions
+
+<br />
+
+## [define_custom_obj_fields](#define_custom_obj_fields)
+
+Defines a custom set of overlapping object fields. The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
+
+### Lua Example
+`define_custom_obj_fields({ oCustomField1 = 'u32', oCustomField2 = 's32', oCustomField3 = 'f32' })`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fieldTable | `Lua Table` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+## [network_init_object](#network_init_object)
+
+Enables synchronization on an object.
+
+- Setting `standardSync` to `true` will automatically synchronize the object at a rate that is determined based on player distance. The commonly used object fields will be automatically synchronized.
+- Setting `standardSync` to `false` will not automatically synchronize the object, or add commonly used object fields. The mod must manually call `network_send_object()` when fields have changed.
+
+The `fieldTable` parameter can be `nil`, or a list of object fields.
+
+### Lua Example
+`network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField3' })`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| object | [Object](structs.md#Object) |
+| standardSync | `bool` |
+| fieldTable | `Lua Table` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_send_object](#network_send_object)
+
+Sends a packet that synchronizes an object. This does not need to be called when `standardSync` is enabled.
+
+The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+
+### Lua Example
+`network_send_object(obj, false)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| object | [Object](structs.md#Object) |
+| reliable | `bool` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+
+---
 # functions from behavior_table.h
 
 <br />
@@ -679,7 +758,7 @@
 ## [get_behavior_from_id](#get_behavior_from_id)
 
 ### Lua Example
-`local Pointer <BehaviorScript>Value = get_behavior_from_id(id)`
+`local PointerValue = get_behavior_from_id(id)`
 
 ### Parameters
 | Field | Type |
@@ -699,7 +778,7 @@
 ## [get_id_from_behavior](#get_id_from_behavior)
 
 ### Lua Example
-`local enum BehaviorIdValue = get_id_from_behavior(behavior)`
+`local enumValue = get_id_from_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
