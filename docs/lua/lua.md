@@ -26,6 +26,20 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 
 <br />
 
+## Important notes on player indices
+
+Something important to realize is that the `localIndex` for each player is different (unfortunately).
+
+So the order of `gMarioStates[]`, `gNetworkPlayers[]`, and `gPlayerSyncTable[]` is different for each player.
+
+Luckily `gPlayerSyncTable[]` will automatically translate the player indices, so setting `gPlayerSyncTable[0].example = 1` will set it for the correct player for everyone.
+
+The `globalIndex` of each player is consistent among everyone connected. So if you absolutely need to sort things in order you will have to grab it from `gNetworkPlayers[<LOCAL INDEX HERE>].globalIndex`.
+
+All of this is a holdover from when there were only two players. It was a reasonable idea back then.
+
+<br />
+
 ## Example Lua mods
 - [Extended Moveset](../../mods/extended-moveset.lua)
 - [Character Movesets](../../mods/character-movesets.lua)
