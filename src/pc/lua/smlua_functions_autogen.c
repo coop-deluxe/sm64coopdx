@@ -20,6 +20,7 @@
 #include "src/pc/network/network_player.h"
 #include "include/behavior_table.h"
 #include "src/pc/lua/smlua_obj_utils.h"
+#include "src/pc/lua/smlua_misc_utils.h"
 
 
   //////////////////////
@@ -7263,6 +7264,31 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
     return 1;
 }
 
+  ////////////////////////
+ // smlua_misc_utils.h //
+////////////////////////
+
+int smlua_func_collision_find_surface_on_ray(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
+
+    f32 startX = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 startY = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 startZ = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 endX = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 endY = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 endZ = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ));
+
+    return 1;
+}
+
   ///////////////////////
  // smlua_obj_utils.h //
 ///////////////////////
@@ -8454,6 +8480,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_sound_mode", smlua_func_save_file_get_sound_mode);
     smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
+
+    // smlua_misc_utils.h
+    smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
 
     // smlua_obj_utils.h
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);

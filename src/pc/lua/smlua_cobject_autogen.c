@@ -11,6 +11,7 @@
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
 #include "src/pc/lua/smlua_anim_utils.h"
+#include "src/pc/lua/smlua_misc_utils.h"
 #include "src/game/spawn_sound.h"
 
 #include "include/object_fields.h"
@@ -1404,6 +1405,12 @@ static struct LuaObjectField sPlayerGeometryFields[LUA_PLAYER_GEOMETRY_FIELD_COU
     { "waterHeight",     LVT_F32,       offsetof(struct PlayerGeometry, waterHeight),     false, LOT_NONE    },
 };
 
+#define LUA_RAY_INTERSECTION_INFO_FIELD_COUNT 2
+static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INFO_FIELD_COUNT] = {
+    { "hitPos",  LVT_COBJECT,   offsetof(struct RayIntersectionInfo, hitPos),  true,  LOT_VEC3F   },
+    { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
+};
+
 #define LUA_SOUND_STATE_FIELD_COUNT 4
 static struct LuaObjectField sSoundStateFields[LUA_SOUND_STATE_FIELD_COUNT] = {
     { "animFrame1", LVT_S8,  offsetof(struct SoundState, animFrame1), false, LOT_NONE },
@@ -1599,6 +1606,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_PARALLELTRACKINGPOINT,  sParallelTrackingPointFields,  LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT  },
     { LOT_PLAYERCAMERASTATE,      sPlayerCameraStateFields,      LUA_PLAYER_CAMERA_STATE_FIELD_COUNT      },
     { LOT_PLAYERGEOMETRY,         sPlayerGeometryFields,         LUA_PLAYER_GEOMETRY_FIELD_COUNT          },
+    { LOT_RAYINTERSECTIONINFO,    sRayIntersectionInfoFields,    LUA_RAY_INTERSECTION_INFO_FIELD_COUNT    },
     { LOT_SOUNDSTATE,             sSoundStateFields,             LUA_SOUND_STATE_FIELD_COUNT              },
     { LOT_SPAWNINFO,              sSpawnInfoFields,              LUA_SPAWN_INFO_FIELD_COUNT               },
     { LOT_SPAWNPARTICLESINFO,     sSpawnParticlesInfoFields,     LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT     },

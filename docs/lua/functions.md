@@ -617,6 +617,11 @@
 
 <br />
 
+- smlua_misc_utils.h
+   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+<br />
+
 - smlua_obj_utils.h
    - [obj_get_first](#obj_get_first)
    - [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
@@ -11378,6 +11383,37 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_misc_utils.h
+
+<br />
+
+
+## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+### Lua Example
+`local RayIntersectionInfoValue = collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| endX | `number` |
+| endY | `number` |
+| endZ | `number` |
+
+### Returns
+[RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ);`
 
 [:arrow_up_small:](#)
 

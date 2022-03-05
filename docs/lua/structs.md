@@ -39,6 +39,7 @@
 - [ParallelTrackingPoint](#ParallelTrackingPoint)
 - [PlayerCameraState](#PlayerCameraState)
 - [PlayerGeometry](#PlayerGeometry)
+- [RayIntersectionInfo](#RayIntersectionInfo)
 - [SPTask](#SPTask)
 - [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
@@ -1599,6 +1600,17 @@
 | prevFloorHeight | `number` |  |
 | prevFloorType | `integer` |  |
 | waterHeight | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [RayIntersectionInfo](#RayIntersectionInfo)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| hitPos | [Vec3f](structs.md#Vec3f) | read-only |
+| surface | [Surface](structs.md#Surface) |  |
 
 [:arrow_up_small:](#)
 

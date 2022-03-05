@@ -36,6 +36,7 @@ in_files = [
     "src/pc/network/network_player.h",
     "include/behavior_table.h",
     "src/pc/lua/smlua_obj_utils.h",
+    "src/pc/lua/smlua_misc_utils.h",
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
