@@ -78,6 +78,16 @@ struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExten
     spawn_object_internal(behaviorId, modelId, x, y, z, 0, false);
 }
 
+s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
+    const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    return o->behavior == behavior;
+}
+
+s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId) {
+    struct GraphNode *model = gLoadedGraphNodes[smlua_model_util_load(modelId)];
+    return o->header.gfx.sharedChild == model;
+}
+
 void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId) {
     o->header.gfx.sharedChild = gLoadedGraphNodes[smlua_model_util_load(modelId)];
 }

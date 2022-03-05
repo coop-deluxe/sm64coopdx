@@ -10,6 +10,8 @@ struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedI
 // this is too dangerous for now
 //struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z);
 
+s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId);
+s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId);
 void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);
 
 //

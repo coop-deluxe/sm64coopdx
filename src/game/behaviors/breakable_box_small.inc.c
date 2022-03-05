@@ -47,7 +47,9 @@ void small_breakable_box_act_move(void) {
         }
     }
 
-    if (sp1E & 2) {
+    // Set these flags to break the small box without a wall collision
+    s32 breakStatus = ATTACK_KICK_OR_TRIP | INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED | INT_STATUS_STOP_RIDING;
+    if ((sp1E & 2) || (o->oInteractStatus & breakStatus) == breakStatus) {
         spawn_mist_particles();
         spawn_triangle_break_particles(20, 138, 0.7f, 3);
         obj_spawn_yellow_coins(o, 3);

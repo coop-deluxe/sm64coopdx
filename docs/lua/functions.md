@@ -631,6 +631,8 @@
    - [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
    - [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
    - [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
+   - [obj_has_behavior_id](#obj_has_behavior_id)
+   - [obj_has_model_extended](#obj_has_model_extended)
    - [obj_set_model_extended](#obj_set_model_extended)
    - [spawn_sync_object](#spawn_sync_object)
 
@@ -11588,6 +11590,48 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_has_behavior_id](#obj_has_behavior_id)
+
+### Lua Example
+`local integerValue = obj_has_behavior_id(o, behaviorId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_has_model_extended](#obj_has_model_extended)
+
+### Lua Example
+`local integerValue = obj_has_model_extended(o, modelId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId);`
 
 [:arrow_up_small:](#)
 
