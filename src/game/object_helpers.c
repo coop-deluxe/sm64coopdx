@@ -2138,8 +2138,13 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
     startWaypoint = o->oPathedStartWaypoint;
     lastWaypoint = o->oPathedPrevWaypoint;
 
-    if ((lastWaypoint + 1)->flags != WAYPOINT_FLAGS_END) {
-        targetWaypoint = lastWaypoint + 1;
+    // sanity check waypoints
+    if (lastWaypoint == NULL) { lastWaypoint = startWaypoint; }
+    struct Waypoint* tmpWaypoint = (lastWaypoint + 1);
+    if (tmpWaypoint == NULL) { tmpWaypoint = lastWaypoint; }
+
+    if (tmpWaypoint->flags != WAYPOINT_FLAGS_END) {
+        targetWaypoint = tmpWaypoint;
     } else {
         targetWaypoint = startWaypoint;
     }
@@ -2161,7 +2166,9 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
     // If dot(prevToNext, objToNext) <= 0 (i.e. reached other side of target waypoint)
     if (prevToNextX * objToNextX + prevToNextY * objToNextY + prevToNextZ * objToNextZ <= 0.0f) {
         o->oPathedPrevWaypoint = targetWaypoint;
-        if ((targetWaypoint + 1)->flags == WAYPOINT_FLAGS_END) {
+        struct Waypoint* tmpWaypoint2 = (targetWaypoint + 1);
+        if (tmpWaypoint2 == NULL) { tmpWaypoint2 = targetWaypoint; }
+        if (tmpWaypoint2->flags == WAYPOINT_FLAGS_END) {
             return PATH_REACHED_END;
         } else {
             return PATH_REACHED_WAYPOINT;
