@@ -40,6 +40,7 @@
 - [PlayerCameraState](#PlayerCameraState)
 - [PlayerGeometry](#PlayerGeometry)
 - [SPTask](#SPTask)
+- [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [Struct802A272C](#Struct802A272C)
@@ -1598,6 +1599,19 @@
 | prevFloorHeight | number |  |
 | prevFloorType | integer |  |
 | waterHeight | number |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [SoundState](#SoundState)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| animFrame1 | integer |  |
+| animFrame2 | integer |  |
+| playSound | integer |  |
+| soundMagic | integer |  |
 
 [:arrow_up_small:](#)
 

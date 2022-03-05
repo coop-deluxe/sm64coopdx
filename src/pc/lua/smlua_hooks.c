@@ -305,6 +305,7 @@ u32 smlua_get_action_interaction_type(struct MarioState* m) {
 
 struct LuaHookedBehavior {
     u32 behaviorId;
+    u32 overrideId;
     BehaviorScript behavior[2];
     int initReference;
     int loopReference;
@@ -331,7 +332,7 @@ const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id) {
     if (L == NULL) { return false; }
     for (int i = 0; i < sHookedBehaviorsCount; i++) {
         struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
-        if (hooked->behaviorId != id) { continue; }
+        if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
         return hooked->behavior;
     }
     return NULL;
@@ -396,7 +397,8 @@ int smlua_hook_behavior(lua_State* L) {
 
     struct LuaHookedBehavior* hooked = &sHookedBehaviors[sHookedBehaviorsCount];
     u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
-    hooked->behaviorId = overrideBehaviorId != 0 ? overrideBehaviorId : customBehaviorId;
+    hooked->behaviorId = customBehaviorId;
+    hooked->overrideId = (overrideBehaviorId == 0) ? customBehaviorId : overrideBehaviorId;
     hooked->behavior[0] = (((unsigned int) (((unsigned int)(0x00) & ((0x01 << (8)) - 1)) << (24))) | ((unsigned int) (((unsigned int)(objectList) & ((0x01 << (8)) - 1)) << (16)))); // gross. this is BEGIN(objectList)
     hooked->behavior[1] = (((unsigned int) (((unsigned int)(0x39) & ((0x01 << (8)) - 1)) << (24))) | ((unsigned int) (((unsigned int)(customBehaviorId) & ((0x01 << (16)) - 1)) << (0)))); // gross. this is ID(customBehaviorId)
     hooked->initReference = initReference;
@@ -643,11 +645,13 @@ static void smlua_clear_hooks(void) {
             sHookedEvents[i].reference[j] = 0;
         }
         sHookedEvents[i].count = 0;
+        sHookedEvents[i].entry = NULL;
     }
 
     for (int i = 0; i < sHookedMarioActionsCount; i++) {
         sHookedMarioActions[i].action = 0;
         sHookedMarioActions[i].reference = 0;
+        sHookedMarioActions[i].entry = NULL;
     }
     sHookedMarioActionsCount = 0;
 
@@ -659,6 +663,7 @@ static void smlua_clear_hooks(void) {
         sHookedChatCommands[i].description = NULL;
 
         sHookedChatCommands[i].reference = 0;
+        sHookedChatCommands[i].entry = NULL;
     }
     sHookedChatCommandsCount = 0;
 
@@ -669,6 +674,7 @@ static void smlua_clear_hooks(void) {
         hooked->behavior[1] = 0;
         hooked->initReference = 0;
         hooked->loopReference = 0;
+        hooked->entry = NULL;
     }
     sHookedBehaviorsCount = 0;
 }

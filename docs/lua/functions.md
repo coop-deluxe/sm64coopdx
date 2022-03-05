@@ -644,6 +644,15 @@
 
 <br />
 
+- spawn_sound.c
+   - [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
+   - [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
+   - [cur_obj_play_sound_1](#cur_obj_play_sound_1)
+   - [cur_obj_play_sound_2](#cur_obj_play_sound_2)
+   - [exec_anim_sound_state](#exec_anim_sound_state)
+
+<br />
+
 - surface_collision.h
    - [find_ceil_height](#find_ceil_height)
    - [find_floor_height](#find_floor_height)
@@ -11838,6 +11847,112 @@
 
 ### C Prototype
 `void stop_shell_music(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from spawn_sound.c
+
+<br />
+
+
+## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
+
+### Lua Example
+`local integerValue = calc_dist_to_volume_range_1(distance)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| distance | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 calc_dist_to_volume_range_1(f32 distance);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
+
+### Lua Example
+`local integerValue = calc_dist_to_volume_range_2(distance)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| distance | number |
+
+### Returns
+- integer
+
+### C Prototype
+`s32 calc_dist_to_volume_range_2(f32 distance);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_play_sound_1](#cur_obj_play_sound_1)
+
+### Lua Example
+`cur_obj_play_sound_1(soundMagic)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| soundMagic | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_play_sound_1(s32 soundMagic);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_play_sound_2](#cur_obj_play_sound_2)
+
+### Lua Example
+`cur_obj_play_sound_2(soundMagic)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| soundMagic | integer |
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_play_sound_2(s32 soundMagic);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [exec_anim_sound_state](#exec_anim_sound_state)
+
+### Lua Example
+`exec_anim_sound_state(soundStates)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| soundStates | [SoundState](structs.md#SoundState) |
+
+### Returns
+- None
+
+### C Prototype
+`void exec_anim_sound_state(struct SoundState *soundStates);`
 
 [:arrow_up_small:](#)
 

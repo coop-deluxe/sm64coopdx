@@ -54,6 +54,8 @@ struct LuaObjectTable {
 
 bool smlua_valid_lot(u16 lot);
 bool smlua_valid_lvt(u16 lvt);
+struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key);
+struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyIndex);
 void smlua_cobject_init_globals(void);
 void smlua_cobject_init_per_file_globals(char* path);
 void smlua_bind_cobject(void);

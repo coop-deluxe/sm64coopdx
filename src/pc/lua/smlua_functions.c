@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "smlua_cobject.h"
 
 #include "game/level_update.h"
 #include "game/area.h"
@@ -79,6 +80,83 @@ int smlua_func_init_mario_after_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_init_object(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct Object* obj = smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess || obj == NULL) { return 0; }
+
+    bool standardSync = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    if (lua_type(L, 3) != LUA_TNIL && lua_type(L, 3) != LUA_TTABLE) {
+        LOG_LUA("network_init_object() called with an invalid type for param 3: %u", lua_type(L, 3));
+        return 0;
+    }
+
+    struct SyncObject* so = network_init_object(obj, standardSync ? 4000.0f : SYNC_DISTANCE_ONLY_EVENTS);
+    if (so == NULL) {
+        LOG_LUA("Failed to allocate sync object.");
+        return 0;
+    }
+
+    if (lua_type(L, 3) == LUA_TTABLE) {
+        lua_pushnil(L);  // first key
+
+        while (lua_next(L, 3) != 0) {
+            // uses 'key' (at index -2) and 'value' (at index -1)
+            if (lua_type(L, -1) != LUA_TSTRING) {
+                LOG_LUA("Invalid type passed to network_init_object(): %u", lua_type(L, -1));
+                lua_pop(L, 1); // pop value
+                continue;
+            }
+            const char* fieldIdentifier = smlua_to_string(L, -1);
+            if (!gSmLuaConvertSuccess || fieldIdentifier[0] != 'o') {
+                LOG_LUA("Invalid field passed to network_init_object()");
+                lua_pop(L, 1); // pop value
+                continue;
+            }
+
+            struct LuaObjectField* data = smlua_get_object_field(LOT_OBJECT, fieldIdentifier);
+            if (data == NULL) {
+                data = smlua_get_custom_field(L, LOT_OBJECT, lua_gettop(L));
+            }
+            if (data == NULL) {
+                LOG_LUA("Invalid field passed to network_init_object(): %s", fieldIdentifier);
+                lua_pop(L, 1); // pop value
+                continue;
+            }
+
+            u8* field = ((u8*)(intptr_t)obj) + data->valueOffset;
+            network_init_object_field(obj, field);
+
+            lua_pop(L, 1); // pop value
+        }
+        lua_pop(L, 1); // pop key
+    }
+
+    return 1;
+}
+
+int smlua_func_network_send_object(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj = smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess || obj == NULL) { return 0; }
+
+    bool reliable = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    if (obj->oSyncID == 0 || gSyncObjects[obj->oSyncID].o != obj) {
+        LOG_LUA("Failed to retrieve sync object.");
+        return 0;
+    }
+
+    network_send_object_reliability(obj, reliable);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -91,4 +169,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "coss", smlua_func_coss);
     smlua_bind_function(L, "atan2s", smlua_func_atan2s);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
+    smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);
+    smlua_bind_function(L, "network_send_object", smlua_func_network_send_object);
 }

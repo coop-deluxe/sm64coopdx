@@ -11,6 +11,7 @@
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
 #include "src/pc/lua/smlua_anim_utils.h"
+#include "src/game/spawn_sound.h"
 
 #include "include/object_fields.h"
 
@@ -1403,6 +1404,14 @@ static struct LuaObjectField sPlayerGeometryFields[LUA_PLAYER_GEOMETRY_FIELD_COU
     { "waterHeight",     LVT_F32,       offsetof(struct PlayerGeometry, waterHeight),     false, LOT_NONE    },
 };
 
+#define LUA_SOUND_STATE_FIELD_COUNT 4
+static struct LuaObjectField sSoundStateFields[LUA_SOUND_STATE_FIELD_COUNT] = {
+    { "animFrame1", LVT_S8,  offsetof(struct SoundState, animFrame1), false, LOT_NONE },
+    { "animFrame2", LVT_S8,  offsetof(struct SoundState, animFrame2), false, LOT_NONE },
+    { "playSound",  LVT_S16, offsetof(struct SoundState, playSound),  false, LOT_NONE },
+    { "soundMagic", LVT_S32, offsetof(struct SoundState, soundMagic), false, LOT_NONE },
+};
+
 #define LUA_SPAWN_INFO_FIELD_COUNT 7
 static struct LuaObjectField sSpawnInfoFields[LUA_SPAWN_INFO_FIELD_COUNT] = {
     { "activeAreaIndex", LVT_S8,        offsetof(struct SpawnInfo, activeAreaIndex), false, LOT_NONE      },
@@ -1590,6 +1599,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_PARALLELTRACKINGPOINT,  sParallelTrackingPointFields,  LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT  },
     { LOT_PLAYERCAMERASTATE,      sPlayerCameraStateFields,      LUA_PLAYER_CAMERA_STATE_FIELD_COUNT      },
     { LOT_PLAYERGEOMETRY,         sPlayerGeometryFields,         LUA_PLAYER_GEOMETRY_FIELD_COUNT          },
+    { LOT_SOUNDSTATE,             sSoundStateFields,             LUA_SOUND_STATE_FIELD_COUNT              },
     { LOT_SPAWNINFO,              sSpawnInfoFields,              LUA_SPAWN_INFO_FIELD_COUNT               },
     { LOT_SPAWNPARTICLESINFO,     sSpawnParticlesInfoFields,     LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT     },
     { LOT_STRUCT802A272C,         sStruct802A272CFields,         LUA_STRUCT802_A272_C_FIELD_COUNT         },

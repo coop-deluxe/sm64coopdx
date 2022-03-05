@@ -7582,6 +7582,70 @@ int smlua_func_stop_shell_music(UNUSED lua_State* L) {
     return 1;
 }
 
+  ///////////////////
+ // spawn_sound.c //
+///////////////////
+
+int smlua_func_calc_dist_to_volume_range_1(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    f32 distance = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s32 calc_dist_to_volume_range_1(f32 distance);
+    lua_pushinteger(L, calc_dist_to_volume_range_1(distance));
+
+    return 1;
+}
+
+int smlua_func_calc_dist_to_volume_range_2(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    f32 distance = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern s32 calc_dist_to_volume_range_2(f32 distance);
+    lua_pushinteger(L, calc_dist_to_volume_range_2(distance));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_play_sound_1(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 soundMagic = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_play_sound_1(s32 soundMagic);
+    cur_obj_play_sound_1(soundMagic);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_play_sound_2(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 soundMagic = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void cur_obj_play_sound_2(s32 soundMagic);
+    cur_obj_play_sound_2(soundMagic);
+
+    return 1;
+}
+
+int smlua_func_exec_anim_sound_state(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct SoundState* soundStates = (struct SoundState*)smlua_to_cobject(L, 1, LOT_SOUNDSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void exec_anim_sound_state(struct SoundState *soundStates);
+    exec_anim_sound_state(soundStates);
+
+    return 1;
+}
+
   /////////////////////////
  // surface_collision.h //
 /////////////////////////
@@ -8421,6 +8485,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_background_music", smlua_func_set_background_music);
     smlua_bind_function(L, "stop_cap_music", smlua_func_stop_cap_music);
     smlua_bind_function(L, "stop_shell_music", smlua_func_stop_shell_music);
+
+    // spawn_sound.c
+    smlua_bind_function(L, "calc_dist_to_volume_range_1", smlua_func_calc_dist_to_volume_range_1);
+    smlua_bind_function(L, "calc_dist_to_volume_range_2", smlua_func_calc_dist_to_volume_range_2);
+    smlua_bind_function(L, "cur_obj_play_sound_1", smlua_func_cur_obj_play_sound_1);
+    smlua_bind_function(L, "cur_obj_play_sound_2", smlua_func_cur_obj_play_sound_2);
+    smlua_bind_function(L, "exec_anim_sound_state", smlua_func_exec_anim_sound_state);
 
     // surface_collision.h
     //smlua_bind_function(L, "find_ceil", smlua_func_find_ceil); <--- UNIMPLEMENTED

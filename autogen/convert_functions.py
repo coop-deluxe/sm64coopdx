@@ -39,6 +39,7 @@ in_files = [
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
+    "src/game/spawn_sound.c",
 ]
 
 override_allowed_functions = {
@@ -69,6 +70,7 @@ override_disallowed_functions = {
     "src/game/object_helpers.c":           [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_" ],
     "src/game/obj_behaviors.c":            [ "debug_" ],
     "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
+    "src/game/spawn_sound.c":              [ "spawner" ],
 }
 
 lua_function_params = {
