@@ -80,6 +80,36 @@ function vec3f_mul(dest, a)
     return dest
 end
 
+function vec3f_normalize(dest)
+    local invsqrt = 1.0 / math.sqrt(dest.x * dest.x + dest.y * dest.y + dest.z * dest.z)
+    if invsqrt == 0 then
+        return dest
+    end
+
+    dest.x = dest.x * invsqrt
+    dest.y = dest.y * invsqrt
+    dest.z = dest.z * invsqrt
+
+    return dest
+end
+
+function vec3f_length(a)
+    return math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
+end
+
+function vec3f_dot(a, b)
+    return a.x * b.x + a.y * b.y + a.z * b.z
+end
+
+function vec3f_project(vec, onto)
+  local numerator = vec3f_dot(vec, onto)
+  local denominator = vec3f_dot(onto, onto)
+  local out = {}
+  vec3f_copy(out, onto)
+  vec3f_mul(out, numerator / denominator)
+  return out
+end
+
 function vec3f_dist(v1, v2)
     dx = v1.x - v2.x
     dy = v1.y - v2.y
