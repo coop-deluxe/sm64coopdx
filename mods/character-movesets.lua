@@ -600,7 +600,7 @@ function act_wario_air_dash(m)
 
     -- corkscrew conk
     if (m.input & INPUT_A_PRESSED) ~= 0 then
-	m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
+        m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
         set_jumping_action(m, ACT_CORKSCREW_CONK, 0)
         play_character_sound(m, CHAR_SOUND_YAHOO)
     end
@@ -828,11 +828,11 @@ function wario_on_set_action(m)
             mario_set_forward_vel(m, 60)
             m.vel.x = 0
             -- nerf the conk when executed in the air
-	    if (m.prevAction == ACT_WARIO_DASH) then
-	        m.vel.y = 70.0
-	    elseif (m.prevAction == ACT_WARIO_AIR_DASH) then
-		m.vel.y = 60.0
-	    end
+            if (m.prevAction == ACT_WARIO_DASH) then
+                m.vel.y = 70.0
+            elseif (m.prevAction == ACT_WARIO_AIR_DASH) then
+                m.vel.y = 60.0
+            end
             m.vel.z = 0
         elseif m.action == ACT_SLIDE_KICK then
             mario_set_forward_vel(m, 70)
