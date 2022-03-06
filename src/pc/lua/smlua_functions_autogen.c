@@ -7397,6 +7397,32 @@ int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_has_behavior_id(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int behaviorId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, obj_has_behavior_id(o, behaviorId));
+
+    return 1;
+}
+
+int smlua_func_obj_has_model_extended(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int modelId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, obj_has_model_extended(o, modelId));
+
+    return 1;
+}
+
 int smlua_func_obj_set_model_extended(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -8493,6 +8519,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id", smlua_func_obj_get_next_with_same_behavior_id);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_f32", smlua_func_obj_get_next_with_same_behavior_id_and_field_f32);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_s32", smlua_func_obj_get_next_with_same_behavior_id_and_field_s32);
+    smlua_bind_function(L, "obj_has_behavior_id", smlua_func_obj_has_behavior_id);
+    smlua_bind_function(L, "obj_has_model_extended", smlua_func_obj_has_model_extended);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
 
