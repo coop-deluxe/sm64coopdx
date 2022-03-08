@@ -324,17 +324,18 @@ const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior) {
     if (L == NULL) { return behavior; }
 
     enum BehaviorId id = get_id_from_behavior(behavior);
-    const BehaviorScript* luaBehavior = get_lua_behavior_from_id(id);
+    const BehaviorScript* luaBehavior = get_lua_behavior_from_id(id, false);
     if (luaBehavior != NULL) { return luaBehavior; }
     return behavior + *sBehaviorOffset;
 }
 
-const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id) {
+const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id, bool returnOriginal) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
     for (int i = 0; i < sHookedBehaviorsCount; i++) {
         struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
         if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
+        if (returnOriginal && !hooked->replace) { return hooked->originalBehavior; }
         return hooked->behavior;
     }
     return NULL;
@@ -450,7 +451,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         }
 
         // retrieve and remember first run
-        bool firstRun = (object->curBhvCommand == hooked->originalBehavior);
+        bool firstRun = (object->curBhvCommand == hooked->originalBehavior) || (object->curBhvCommand == hooked->behavior);
         if (firstRun && hooked->replace) { *behavior = &hooked->behavior[1]; }
 
         // get function and null check it
