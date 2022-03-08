@@ -1021,12 +1021,12 @@ function mario_update_local(m)
     local np = gNetworkPlayers[m.playerIndex]
     local s = gPlayerSyncTable[m.playerIndex]
 
-    if (m.controller.buttonPressed & D_JPAD) ~= 0 then
-        print(m.pos.x, m.pos.y, m.pos.z)
-        sSoccerBall.oPosX = m.pos.x
-        sSoccerBall.oPosY = m.pos.y - 100
-        sSoccerBall.oPosZ = m.pos.z
-    end
+    --if (m.controller.buttonPressed & D_JPAD) ~= 0 then
+    --    print(m.pos.x, m.pos.y, m.pos.z)
+    --    sSoccerBall.oPosX = m.pos.x
+    --    sSoccerBall.oPosY = m.pos.y - 100
+    --    sSoccerBall.oPosZ = m.pos.z
+    --end
 
     -- force players into certain positions and angles
     if gGlobalSyncTable.gameState == GAME_STATE_WAIT then
