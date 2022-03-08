@@ -111,7 +111,7 @@ int smlua_func_network_init_object(lua_State* L) {
                 continue;
             }
             const char* fieldIdentifier = smlua_to_string(L, -1);
-            if (!gSmLuaConvertSuccess || fieldIdentifier[0] != 'o') {
+            if (!gSmLuaConvertSuccess) {
                 LOG_LUA("Invalid field passed to network_init_object()");
                 lua_pop(L, 1); // pop value
                 continue;
@@ -121,7 +121,8 @@ int smlua_func_network_init_object(lua_State* L) {
             if (data == NULL) {
                 data = smlua_get_custom_field(L, LOT_OBJECT, lua_gettop(L));
             }
-            if (data == NULL) {
+            bool validLvt = (data->valueType == LVT_U32) || (data->valueType == LVT_S32) || (data->valueType == LVT_F32);
+            if (data == NULL || !validLvt) {
                 LOG_LUA("Invalid field passed to network_init_object(): %s", fieldIdentifier);
                 lua_pop(L, 1); // pop value
                 continue;
