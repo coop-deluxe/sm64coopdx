@@ -3,6 +3,7 @@
 #ifdef DEBUG
 
 void debug_keyboard_on_key_down(int scancode);
+void debug_keyboard_on_key_up(int scancode);
 
 #endif
 #endif
