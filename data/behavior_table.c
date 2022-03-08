@@ -526,7 +526,7 @@ enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior) {
 }
 
 const BehaviorScript* get_behavior_from_id(enum BehaviorId id) {
-    const BehaviorScript* behavior = get_lua_behavior_from_id(id);
+    const BehaviorScript* behavior = get_lua_behavior_from_id(id, true);
     if (behavior != NULL) { return behavior; }
 
     if (id < 0 || id >= id_bhv_max_count) {

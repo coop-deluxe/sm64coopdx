@@ -38,7 +38,7 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
-const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id);
+const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id, bool returnOriginal);
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before);
 
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
