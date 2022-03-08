@@ -14,6 +14,8 @@
 #ifdef DEBUG
 #include "pc/lua/smlua.h"
 
+
+static bool sHoldingAlt = false;
 static u8 warpToLevel = LEVEL_BOB;
 static u8 warpToArea = 27;
 // warpToArea: 26 = basement
@@ -31,6 +33,7 @@ static u8 warpToArea = 27;
 #define SCANCODE_8 0x09
 #define SCANCODE_9 0x0A
 #define SCANCODE_F5 0x3f
+#define SCANCODE_ALT 0x38
 
 static void debug_breakpoint_here(void) {
     // create easy breakpoint position for debugging
@@ -151,17 +154,23 @@ static void debug_spawn_object(void) {
 }
 
 void debug_keyboard_on_key_down(int scancode) {
-    scancode = scancode;
     switch (scancode & 0xFF) {
+        case SCANCODE_ALT: sHoldingAlt = true; break;
         case SCANCODE_3: debug_breakpoint_here(); break;
 #ifdef DEVELOPMENT
-        case SCANCODE_6: debug_warp_level(warpToLevel); break;
-        case SCANCODE_7: debug_warp_area(); break;
-        case SCANCODE_8: debug_spawn_object(); break;
-        case SCANCODE_9: debug_warp_to(); break;
-        case SCANCODE_0: debug_suicide(); break;
+        case SCANCODE_6:  if (sHoldingAlt) { debug_warp_level(warpToLevel); } break;
+        case SCANCODE_7:  if (sHoldingAlt) { debug_warp_area();             } break;
+        case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object();          } break;
+        case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();               } break;
+        case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();               } break;
         case SCANCODE_F5: debug_reload_lua(); break;
 #endif
+    }
+}
+
+void debug_keyboard_on_key_up(int scancode) {
+    switch (scancode & 0xFF) {
+        case SCANCODE_ALT: sHoldingAlt = false; break;
     }
 }
 

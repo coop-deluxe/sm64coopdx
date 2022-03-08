@@ -55,6 +55,9 @@ bool keyboard_on_key_down(int scancode) {
 }
 
 bool keyboard_on_key_up(int scancode) {
+#ifdef DEBUG
+    debug_keyboard_on_key_up(scancode);
+#endif
     djui_interactable_on_key_up(scancode);
 
     int mapped = keyboard_map_scancode(scancode);
