@@ -62,30 +62,38 @@ static f32 sWigglerSpeeds[] = { 2.0f, 40.0f, 30.0f, 16.0f };
  * attack.
  */
 void bhv_wiggler_body_part_update(void) {
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 dxz;
-    struct ChainSegment *segment = &o->parentObj->oWigglerSegments[o->oBehParams2ndByte];
-    f32 posOffset;
+    if (o == NULL) { return; }
+    
+    struct Object *parent = o->parentObj;
+    
+    if (parent == NULL) { return; }
+    
+    // Sanity check the array size of our segments,
+    // This should never be higher then 3
+    // in normal circumstances.
+    if (o->oBehParams2ndByte > 3) { return; }
+    
+    struct ChainSegment *segment = &parent->oWigglerSegments[o->oBehParams2ndByte];
+    
+    if (segment == NULL) { return; }
 
-    cur_obj_scale(o->parentObj->header.gfx.scale[0]);
+    cur_obj_scale(parent->header.gfx.scale[0]);
 
     o->oFaceAnglePitch = segment->pitch;
     o->oFaceAngleYaw = segment->yaw;
 
     // TODO: What is this for?
-    posOffset = -37.5f * o->header.gfx.scale[0];
-    dy = posOffset * coss(o->oFaceAnglePitch) - posOffset;
-    dxz = posOffset * sins(o->oFaceAnglePitch);
-    dx = dxz * sins(o->oFaceAngleYaw);
-    dz = dxz * coss(o->oFaceAngleYaw);
+    f32 posOffset = -37.5f * o->header.gfx.scale[0];
+    f32 dy = posOffset * coss(o->oFaceAnglePitch) - posOffset;
+    f32 dxz = posOffset * sins(o->oFaceAnglePitch);
+    f32 dx = dxz * sins(o->oFaceAngleYaw);
+    f32 dz = dxz * coss(o->oFaceAngleYaw);
 
     o->oPosX = segment->posX + dx;
     o->oPosY = segment->posY + dy;
     o->oPosZ = segment->posZ + dz;
 
-    if (o->oPosY < o->parentObj->oWigglerFallThroughFloorsHeight) {
+    if (o->oPosY < parent->oWigglerFallThroughFloorsHeight) {
         //! Since position is recomputed each frame, tilting the wiggler up
         //  while on the ground could cause the tail segments to clip through
         //  the floor
@@ -100,12 +108,12 @@ void bhv_wiggler_body_part_update(void) {
     segment->posY = o->oPosY;
 
     // Inherit walking animation speed from wiggler
-    cur_obj_init_animation_with_accel_and_sound(0, o->parentObj->oWigglerWalkAnimSpeed);
-    if (o->parentObj->oWigglerWalkAnimSpeed == 0.0f) {
+    cur_obj_init_animation_with_accel_and_sound(0, parent->oWigglerWalkAnimSpeed);
+    if (parent->oWigglerWalkAnimSpeed == 0.0f) {
         cur_obj_reverse_animation();
     }
 
-    if (o->parentObj->oAction == WIGGLER_ACT_SHRINK) {
+    if (parent->oAction == WIGGLER_ACT_SHRINK) {
         cur_obj_become_intangible();
     } else {
         cur_obj_become_tangible();
@@ -117,17 +125,13 @@ void bhv_wiggler_body_part_update(void) {
  * Initialize the segment data and spawn the body part objects.
  */
 void wiggler_init_segments(void) {
-    s32 i;
-    struct ChainSegment *segments;
-    struct Object *bodyPart;
-
-    segments = mem_pool_alloc(gObjectMemoryPool, 4 * sizeof(struct ChainSegment));
+    struct ChainSegment *segments = mem_pool_alloc(gObjectMemoryPool, 4 * sizeof(struct ChainSegment));
     if (segments != NULL) {
         // Each segment represents the global position and orientation of each
         // object. Segment 0 represents the wiggler's head, and segment i>0
         // represents body part i.
         o->oWigglerSegments = segments;
-        for (i = 0; i <= 3; i++) {
+        for (s32 i = 0; i <= 3; i++) {
             chain_segment_init(segments + i);
 
             (segments + i)->posX = o->oPosX;
@@ -141,9 +145,8 @@ void wiggler_init_segments(void) {
         o->header.gfx.animInfo.animFrame = -1;
 
         // Spawn each body part
-        for (i = 1; i <= 3; i++) {
-            bodyPart =
-                spawn_object_relative(i, 0, 0, 0, o, MODEL_WIGGLER_BODY, bhvWigglerBody);
+        for (s32 i = 1; i <= 3; i++) {
+            struct Object *bodyPart = spawn_object_relative(i, 0, 0, 0, o, MODEL_WIGGLER_BODY, bhvWigglerBody);
             if (bodyPart != NULL) {
                 obj_init_animation_with_sound(bodyPart, wiggler_seg5_anims_0500C874, 0);
                 bodyPart->header.gfx.animInfo.animFrame = (23 * i) % 26 - 1;
@@ -166,37 +169,26 @@ void wiggler_init_segments(void) {
  * for a body part to get stuck on geometry and separate from the rest of the
  * body.
  */
- void wiggler_update_segments(void) {
-    struct ChainSegment *prevBodyPart;
-    struct ChainSegment *bodyPart;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    s16 dpitch;
-    s16 dyaw;
-    f32 dxz;
-    s32 i;
-    f32 segmentLength;
+void wiggler_update_segments(void) {
+    f32 segmentLength = 35.0f * o->header.gfx.scale[0];
 
-    segmentLength = 35.0f * o->header.gfx.scale[0];
+    for (s32 i = 1; i <= 3; i++) {
+        struct ChainSegment *prevBodyPart = &o->oWigglerSegments[i - 1];
+        struct ChainSegment *bodyPart = &o->oWigglerSegments[i];
 
-    for (i = 1; i <= 3; i++) {
-        prevBodyPart = &o->oWigglerSegments[i - 1];
-        bodyPart = &o->oWigglerSegments[i];
-
-        dx = bodyPart->posX - prevBodyPart->posX;
-        dy = bodyPart->posY - prevBodyPart->posY;
-        dz = bodyPart->posZ - prevBodyPart->posZ;
+        f32 dx = bodyPart->posX - prevBodyPart->posX;
+        f32 dy = bodyPart->posY - prevBodyPart->posY;
+        f32 dz = bodyPart->posZ - prevBodyPart->posZ;
 
         // As the head turns, propagate this rotation backward if the difference
         // is more than 45 degrees
-        dyaw = atan2s(-dz, -dx) - prevBodyPart->yaw;
+        s16 dyaw = atan2s(-dz, -dx) - prevBodyPart->yaw;
         clamp_s16(&dyaw, -0x2000, 0x2000);
         bodyPart->yaw = prevBodyPart->yaw + dyaw;
 
         // As the head tilts, propagate the tilt backward
-        dxz = sqrtf(dx * dx + dz * dz);
-        dpitch = atan2s(dxz, dy) - prevBodyPart->pitch;
+        f32 dxz = sqrtf(dx * dx + dz * dz);
+        s16 dpitch = atan2s(dxz, dy) - prevBodyPart->pitch;
         clamp_s16(&dpitch, -0x2000, 0x2000);
         bodyPart->pitch = prevBodyPart->pitch + dpitch;
 
@@ -218,12 +210,10 @@ void wiggler_init_segments(void) {
  * If attacked by mario, enter either the jumped on or knockback action.
  */
 static void wiggler_act_walk(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    int distanceToPlayer = o->oDistanceToMario;
-    int angleToPlayer = o->oAngleToMario;
-
-    s16 yawTurnSpeed;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState->marioObj;
+    s32 distanceToPlayer = o->oDistanceToMario;
+    s32 angleToPlayer = o->oAngleToMario;
 
     o->oWigglerWalkAnimSpeed = 0.06f * o->oForwardVel;
 
@@ -274,7 +264,7 @@ static void wiggler_act_walk(void) {
 
         // If moving at high speeds, could overflow. But can't reach such speeds
         // in practice
-        yawTurnSpeed = (s16)(30.0f * o->oForwardVel);
+        s16 yawTurnSpeed = (s16)(30.0f * o->oForwardVel);
         cur_obj_rotate_yaw_toward(o->oWigglerTargetYaw, yawTurnSpeed);
         obj_face_yaw_approach(o->oMoveAngleYaw, 2 * yawTurnSpeed);
 
