@@ -80,6 +80,19 @@ int smlua_func_init_mario_after_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_reset_level(lua_State* L) {
+    if (network_player_connected_count() >= 2) {
+        LOG_LUA("This function can only be used in single-player");
+        return 0;
+    }
+    
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+    gChangeLevel = gCurrLevelNum;
+
+    return 1;
+}
+
 int smlua_func_network_init_object(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -172,4 +185,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
     smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);
     smlua_bind_function(L, "network_send_object", smlua_func_network_send_object);
+    smlua_bind_function(L, "reset_level", smlua_func_reset_level);
 }
