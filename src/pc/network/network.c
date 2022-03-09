@@ -256,7 +256,10 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
 void network_send(struct Packet* p) {
     // prevent errors during writing from propagating
-    if (p->writeError) { return; }
+    if (p->writeError) {
+        LOG_ERROR("packet has write error: %u", p->packetType);
+        return;
+    }
 
     // set the flags again
     packet_set_flags(p);
@@ -266,6 +269,7 @@ void network_send(struct Packet* p) {
         if (gNetworkSystem != NULL && gNetworkSystem->requireServerBroadcast && gNetworkPlayerServer != NULL) {
             int i = gNetworkPlayerServer->localIndex;
             p->localIndex = i;
+            p->sent = false;
             network_send_to(i, p);
             return;
         }
@@ -288,6 +292,7 @@ void network_send(struct Packet* p) {
         }
 
         p->localIndex = i;
+        p->sent = false;
         network_send_to(i, p);
     }
 }
