@@ -133,7 +133,7 @@ void packet_receive(struct Packet* p) {
     }
 
     // check if we've already seen this packet
-    if (p->localIndex != 0 && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
+    if (p->localIndex != 0 && p->localIndex != UNKNOWN_LOCAL_INDEX && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
         u32 packetHash = packet_hash(p);
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
         for (int i = 0; i < MAX_RX_SEQ_IDS; i++) {
@@ -164,7 +164,7 @@ void packet_receive(struct Packet* p) {
             packet_process(p);
         }
     } else {
-        LOG_INFO("packet initial read failed, packetType: %d", packetType);
+        LOG_ERROR("packet initial read failed, packetType: %d", packetType);
     }
 
     // broadcast packet
