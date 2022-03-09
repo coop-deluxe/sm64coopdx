@@ -152,7 +152,7 @@ void network_receive_download(struct Packet* p) {
     }
 
     if ((offset + chunkSize) > entry->size) {
-        LOG_ERROR("Received download of invalid chunk size %u:%llu:%u -- %llu", clientIndex, offset, chunkSize, entry->size);
+        LOG_ERROR("Received download of invalid chunk size %u:%llu:%u -- %llu", clientIndex, (u64)offset, chunkSize, (u64)entry->size);
         return;
     }
 
