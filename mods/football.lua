@@ -13,6 +13,19 @@ ballWaterDrag = 0.9
 ballParallelInertia = 0.3
 ballPerpendicularInertia = 1
 
+ballActionValues = {
+    [ACT_WATER_PUNCH] =       { xz = 20, y = 40, directionless = false },
+    [ACT_MOVE_PUNCHING] =     { xz = 35, y =  0, directionless = false },
+    [ACT_PUNCHING] =          { xz = 35, y =  0, directionless = false },
+    [ACT_GROUND_POUND] =      { xz = 40, y = 40, directionless = true  },
+    [ACT_GROUND_POUND_LAND] = { xz = 40, y = 40, directionless = true  },
+    [ACT_JUMP_KICK] =         { xz = 10, y = 32, directionless = false },
+    [ACT_SLIDE_KICK_SLIDE] =  { xz = -7, y = 25, directionless = false },
+    [ACT_SLIDE_KICK] =        { xz = -7, y = 25, directionless = false },
+    [ACT_LONG_JUMP] =         { xz =  0, y =  0, directionless = false },
+    [ACT_CROUCH_SLIDE] =      { xz =  0, y =  0, directionless = false },
+}
+
 ---------------
 -- globals --
 ---------------
@@ -24,6 +37,17 @@ gInitializeBalls = {}
 -----------
 -- utils --
 -----------
+
+function clamp(x, a, b)
+    if x < a then return a end
+    if x > b then return b end
+    return x
+end
+
+function vec3f_degrees_between(a, b)
+    local ansAgain = math.acos(vec3f_dot(a, b) / (vec3f_length(a) * vec3f_length(b)))
+    return math.deg(ansAgain)
+end
 
 function my_global_index()
     return gNetworkPlayers[gMarioStates[0].playerIndex].globalIndex
@@ -182,116 +206,183 @@ function bhv_ball_init(obj)
 end
 
 function bhv_ball_player_collision(obj)
+    local alterPos = { x = 0, y = 0, z = 0}
+
     local m = nearest_mario_state_to_object(obj)
+    if m == nil then return alterPos end
     local player = m.marioObj
+    if player == nil then return alterPos end
+
     local playerRadius = 37
-    local playerHeight = 160 / 2
-    local alterPos = { x = 0, y = 0, z = 0 }
+    local playerHeight = 160
+
+    local objPoint = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
     local v = { x = obj.oVelX, y = obj.oVelY, z = obj.oVelZ }
-    local playerBallRadius = ballRadius
 
     -- figure out player-to-ball radius
-    if (m.action & ACT_FLAG_ATTACKING) ~= 0 then
+    local alterBallFlags = (ACT_FLAG_ATTACKING | ACT_FLAG_BUTT_OR_STOMACH_SLIDE | ACT_FLAG_DIVING)
+    local playerBallRadius = ballRadius
+    if ballActionValues[m.action] ~= nil or (m.action & alterBallFlags) ~= 0 then
         playerBallRadius = playerBallRadius + 50
     end
 
-    -- figure out if our height collides
-    local heightOverlap = math.abs((player.oPosY + playerHeight * 0.5) - obj.oPosY) < (playerHeight + playerBallRadius)
+    ------------------------------------------------
+    -- calculate position and determine collision --
+    ------------------------------------------------
 
-    -- figure out if our radius collides
-    local xdiff = player.oPosX - obj.oPosX
-    local zdiff = player.oPosZ - obj.oPosZ
-    local xzmag = math.sqrt(xdiff * xdiff + zdiff * zdiff)
-    local radiusOverlap = xzmag <= (playerRadius + playerBallRadius)
-    local xzdiff = (playerRadius + playerBallRadius) - xzmag
+    -- calculate cylinder values
+    local cylY1 = player.oPosY + playerRadius
+    local cylY2 = player.oPosY + playerHeight - playerRadius
+    local cylPoint = { x = player.oPosX, y = clamp(obj.oPosY, cylY1, cylY2), z = player.oPosZ }
+    local cylDist = vec3f_dist(cylPoint, objPoint)
 
-    -- check if player should affect ball
-    if heightOverlap and radiusOverlap then
-        -- detect if the local player touched it
-        if m.playerIndex == 0 then
-            gBallTouchedLocal = true
+    -- check for collision
+    if cylDist > (playerBallRadius + playerRadius) then
+        return alterPos
+    end
+
+    gBallTouchedLocal = (m.playerIndex == 0)
+
+    local vDifference = { x = objPoint.x - cylPoint.x, y = objPoint.y - cylPoint.y, z = objPoint.z - cylPoint.z }
+    local differenceDir = { x = vDifference.x, y = vDifference.y, z = vDifference.z }
+    vec3f_normalize(differenceDir)
+
+    alterPos.x = (cylPoint.x + differenceDir.x * (playerBallRadius + playerRadius + 1)) - objPoint.x
+    alterPos.y = (cylPoint.y + differenceDir.y * (playerBallRadius + playerRadius + 1)) - objPoint.y
+    alterPos.z = (cylPoint.z + differenceDir.z * (playerBallRadius + playerRadius + 1)) - objPoint.z
+
+    -----------------------------------------
+    -- figure out player's attack velocity --
+    -----------------------------------------
+
+    local vPlayer = { x = player.oVelX, y = player.oVelY, z = player.oVelZ }
+    local playerTheta = (m.faceAngle.y / 0x8000) * math.pi
+
+    -- have attacks alter velocity further
+    local alterXz = 0
+    local alterY = 0
+    local alterDirectionless = false
+
+    if ballActionValues[m.action] ~= nil then
+        alterXz = ballActionValues[m.action].xz
+        alterY = ballActionValues[m.action].y
+        alterDirectionless = ballActionValues[m.action].directionless
+    elseif ((m.action & (ACT_FLAG_BUTT_OR_STOMACH_SLIDE | ACT_FLAG_DIVING)) ~= 0) or (m.action == ACT_SLIDE_KICK_SLIDE) or (m.action == ACT_SLIDE_KICK) then
+        -- dive or slide sends it upward, and slows xz
+        alterXz = -7
+        alterY = 25
+    elseif (m.action & ACT_FLAG_ATTACKING) ~= 0 then
+        -- other attacks should just do something reasonable
+        alterXz = 10
+        alterY = 10
+    end
+
+    -- adjust angle
+    local theta = playerTheta
+    if alterDirectionless and differenceDir.z ~= 0 then
+        theta = math.atan2(differenceDir.x, differenceDir.z)
+    end
+
+    vPlayer.x = vPlayer.x + math.sin(theta) * alterXz
+    vPlayer.z = vPlayer.z + math.cos(theta) * alterXz
+    if vPlayer.y < alterY then vPlayer.y = vPlayer.y + alterY end
+
+    local vPlayerMag = vec3f_length(vPlayer)
+
+    -------------------------------------------------
+    -- figure out which velocity interaction to do --
+    -------------------------------------------------
+
+    local v = { x = obj.oVelX, y = obj.oVelY, z = obj.oVelZ }
+
+    local doReflection = (vPlayerMag == 0)
+
+    -- make sure ball is offset in the vPlayer direction
+    if not doReflection then
+        local objCylDir = { x = cylPoint.x - objPoint.x, y = cylPoint.y - objPoint.y, z = cylPoint.z - objPoint.z }
+        local objCylDirXZ = { x = objCylDir.x, y = 0, z = objCylDir.z }
+        local objCylDirMag = vec3f_length(objCylDir)
+
+        local vPlayerXZ = { x = vPlayer.x, y = 0, z = vPlayer.z }
+        local vPlayerXZMag = vec3f_length(vPlayerXZ)
+
+        if objCylDirMag > 0 and vPlayerXZMag > 0 then
+            doReflection = (vec3f_degrees_between(vPlayer, objCylDir)) <= 120
+                       and (vec3f_degrees_between(vPlayerXZ, objCylDirXZ)) <= 120
         end
+    end
 
-        -- detect hit from top
-        local heightMag = math.abs(obj.oPosY - player.oPosY - 167.5)
-        if obj.oVelY <= 0 and (heightMag < xzmag or xzmag < 1) and heightMag < playerBallRadius then
-            alterPos.y = heightMag + 1
-            obj.oVelY = obj.oVelY * -ballRestitution
-            if math.abs(obj.oVelX) < math.abs(xdiff * 0.2) then obj.oVelX = -xdiff * 0.2 end
-            if obj.oVelY < player.oVelY + 5 then obj.oVelY = player.oVelY + 5 end
-            if math.abs(obj.oVelZ) < math.abs(zdiff * 0.2) then obj.oVelZ = -zdiff * 0.2 end
-            return alterPos
-        end
+    --------------------------------------
+    -- calculate velocity (interaction) --
+    --------------------------------------
 
-        -- prevent division by zero
-        if xzmag < 1 then
-            xdiff = 1
-            zdiff = 0
-            xzmag = 1
-        end
+    if not doReflection then
+        local vPlayerDir = { x = vPlayer.x, y = vPlayer.y, z = vPlayer.z }
+        vec3f_normalize(vPlayerDir)
 
-        -- reflect the current velocity against the player
-        local n = { x = xdiff / xzmag, y = 0, z = zdiff / xzmag }
-        local perpendicular = vec3f_project(v, n)
+        -- split velocity into parallel/perpendicular to normal
+        local perpendicular = vec3f_project(v, vPlayerDir)
         local parallel = { x = v.x - perpendicular.x, y = v.y - perpendicular.y, z = v.z - perpendicular.z }
+
+        -- apply friction
+        vec3f_mul(parallel, 0.5)
+
+        local parallelMag = vec3f_length(parallel)
+        local perpendicularMag = vec3f_length(perpendicular)
+
+        if perpendicularMag == 0 or perpendicularMag < vPlayerMag then
+            vec3f_copy(perpendicular, vPlayer)
+        end
+
+        -- reflect velocity along normal
+        local reflect = {
+            x = parallel.x + perpendicular.x,
+            y = parallel.y + perpendicular.y,
+            z = parallel.z + perpendicular.z
+        }
+
+        -- set new velocity
+        obj.oVelX = reflect.x
+        obj.oVelY = reflect.y
+        obj.oVelZ = reflect.z
+    end
+
+    -------------------------------------
+    -- calculate velocity (reflection) --
+    -------------------------------------
+
+    if doReflection then
+        -- split velocity into parallel/perpendicular to normal
+        local perpendicular = vec3f_project(v, differenceDir)
+        local parallel = { x = v.x - perpendicular.x, y = v.y - perpendicular.y, z = v.z - perpendicular.z }
+
+        -- apply friction and restitution
+        vec3f_mul(parallel, ballFriction)
+        vec3f_mul(perpendicular, ballRestitution)
+
+        -- play sounds
+        local parallelLength = vec3f_length(parallel)
+        local perpendicularLength = vec3f_length(perpendicular)
+
+        if perpendicularLength > 5 then
+            cur_obj_play_sound_2(SOUND_GENERAL_BOX_LANDING_2)
+        elseif parallelLength > 3 then
+            cur_obj_play_sound_2(SOUND_ENV_SLIDING)
+        end
+
+        local pushOutMag = 10
+
+        -- reflect velocity along normal
         local reflect = {
             x = parallel.x - perpendicular.x,
             y = parallel.y - perpendicular.y,
             z = parallel.z - perpendicular.z
         }
 
-        obj.oVelX = reflect.x
-        obj.oVelZ = reflect.z
-
-        -- move ball outside of player
-        alterPos.x = -xdiff / xzmag * (xzdiff + 1)
-        alterPos.z = -zdiff / xzmag * (xzdiff + 1)
-
-        -- when ball is moved outside of player, give it speed in that direction
-        local addVel = { x = alterPos.x * 0.25, y = 0, z = alterPos.z * 0.25 }
-        local addVelMag = math.sqrt(addVel.x * addVel.x + addVel.z * addVel.z)
-        if addVelMag > 10 then 
-            addVel.x = addVel.x / addVelMag * 10
-            addVel.z = addVel.z / addVelMag * 10
-        end
-
-        -- also obtain the player's speed
-        addVel.x = addVel.x + player.oVelX
-        addVel.z = addVel.z + player.oVelZ
-
-        -- have attacks alter velocity further
-        if (m.action == ACT_WATER_PUNCH) then
-            -- water punch launches it
-            addVel.x = addVel.x + xdiff / xzmag * -20
-            addVel.z = addVel.z + zdiff / xzmag * -20
-            obj.oVelY = obj.oVelY + 40
-            if obj.oVelY > 40 then obj.oVelY = 40 end
-        elseif (m.action & ACT_FLAG_ATTACKING) ~= 0 then
-            if (m.action == ACT_MOVE_PUNCHING) or (m.action == ACT_PUNCHING) or (m.action == ACT_GROUND_POUND) then
-                -- normal punch or ground pound launches it
-                addVel.x = addVel.x + xdiff / xzmag * -30
-                addVel.z = addVel.z + zdiff / xzmag * -30
-                if m.action == ACT_GROUND_POUND then
-                    obj.oVelY = obj.oVelY + 25
-                    if obj.oVelY > 25 then obj.oVelY = 25 end
-                end
-            else
-                -- other attacks send it upward, and decrease the xz force
-                addVel.x = addVel.x - player.oVelX * 0.3
-                addVel.z = addVel.z - player.oVelZ * 0.3
-                obj.oVelY = obj.oVelY + 25
-                if obj.oVelY > 25 then obj.oVelY = 25 end
-            end
-        end
-
-        -- apply attack velocity
-        -- this isn't the correct way to do this but whatever
-        addVelMag = math.sqrt(addVel.x * addVel.x + addVel.z * addVel.z)
-        local v = { x = obj.oVelX, y = 0, z = obj.oVelZ }
-        if vec3f_length(v) < addVelMag * 1.5 then
-            obj.oVelX = addVel.x
-            obj.oVelZ = addVel.z
-        end
+        -- set new velocity
+        obj.oVelX = reflect.x + differenceDir.x * pushOutMag
+        obj.oVelY = reflect.y + differenceDir.y * pushOutMag
+        obj.oVelZ = reflect.z + differenceDir.z * pushOutMag
     end
 
     return alterPos
@@ -346,13 +437,13 @@ function bhv_ball_loop(obj)
 
 
     -- detect player collisions
-    local alter = bhv_ball_player_collision(obj)
+    local alterPos = bhv_ball_player_collision(obj)
 
     -- alter end-point based on player collisions
     local a = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
     local v = { x = obj.oVelX, y = obj.oVelY, z = obj.oVelZ }
     local b = { x = v.x, y = v.y, z = v.z }
-    vec3f_sum(b, b, alter)
+    vec3f_sum(b, b, alterPos)
 
     -- regular movement
     local info = collision_find_surface_on_ray(
@@ -772,8 +863,8 @@ function gamemode_active()
                 sStateTimer = sOverTimeout
             else
                 -- set sparkle
-                if scorerNp ~= nil then
-                    local scorerS = gPlayerSyncTable[scorerNp.localIndex]
+                local scorerS = gPlayerSyncTable[scorerNp.localIndex]
+                if scorerNp ~= nil and scorerS.team == scoringTeam then
                     scorerS.sparkle = true
                 end
                 gGlobalSyncTable.gameState = GAME_STATE_SCORE
@@ -1021,12 +1112,10 @@ function mario_update_local(m)
     local np = gNetworkPlayers[m.playerIndex]
     local s = gPlayerSyncTable[m.playerIndex]
 
-    --if (m.controller.buttonPressed & D_JPAD) ~= 0 then
-    --    print(m.pos.x, m.pos.y, m.pos.z)
-    --    sSoccerBall.oPosX = m.pos.x
-    --    sSoccerBall.oPosY = m.pos.y - 100
-    --    sSoccerBall.oPosZ = m.pos.z
-    --end
+    if (m.controller.buttonPressed & D_JPAD) ~= 0 then
+        --print(m.pos.x, m.pos.y, m.pos.z)
+        --sSoccerBall = spawn_or_move_ball(m.pos.x, m.pos.y, m.pos.z)
+    end
 
     -- force players into certain positions and angles
     if gGlobalSyncTable.gameState == GAME_STATE_WAIT then
@@ -1042,6 +1131,9 @@ function mario_update_local(m)
                 end
             end
         end
+
+        -- center camera
+        m.controller.buttonDown = m.controller.buttonDown | L_TRIG
 
         -- figure out spawn position
         local teamTheta = (3.14 / -2)
@@ -1073,11 +1165,13 @@ function mario_update_local(m)
         m.vel.x = 0
         m.vel.y = 0
         m.vel.z = 0
+        m.forwardVel = 0
+        m.slideVelX = 0
+        m.slideVelZ = 0
         set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, 0)
 
         -- fix vanilla camera
         if m.area.camera.mode == CAMERA_MODE_WATER_SURFACE then
-            print(m.area.camera.mode)
             set_camera_mode(m.area.camera, CAMERA_MODE_FREE_ROAM, 1)
         end
     elseif m.action == ACT_READING_AUTOMATIC_DIALOG then
