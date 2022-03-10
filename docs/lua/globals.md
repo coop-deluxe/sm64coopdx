@@ -44,6 +44,13 @@ The `gObjectAnimations` table contains references to object animations. Listed i
 
 <br />
 
+## [gGlobalObjectCollisionData](#gGlobalObjectCollisionData)
+The `gGlobalObjectCollisionData` table contains references to object collision data. Listed in [GlobalObjectCollisionData](structs.md#GlobalObjectCollisionData).
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gGlobalSyncTable](#gGlobalSyncTable)
 The `gGlobalSyncTable` is a table used for networking. Any field set inside of this table is automatically synchronized with all other clients. Do not use this table for player-specific variables, keep those in [gPlayerSyncTable](#gPlayerSyncTable). Player-specific variable will desynchronize within this table since it doesn't automatically translate `playerIndex`.
 

@@ -776,7 +776,7 @@ static s32 bhv_cmd_set_int_random_from_table(void) {
 static s32 bhv_cmd_load_collision_data(void) {
     u32 *collisionData = segmented_to_virtual(BHV_CMD_GET_VPTR(1));
 
-    gCurrentObject->collisionData = collisionData;
+    gCurrentObject->collisionData = (Collision*)collisionData;
 
     gCurBhvCommand += 2;
     return BHV_PROC_CONTINUE;

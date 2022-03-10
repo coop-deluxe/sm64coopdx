@@ -8,6 +8,7 @@
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_anim_utils.h"
+#include "pc/lua/smlua_collision_utils.h"
 #include "pc/mod_list.h"
 
 #define LUA_VEC3S_FIELD_COUNT 3
@@ -304,6 +305,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_STRING_P:   lua_pushstring(L, *(char**)p);             break;
         case LVT_BEHAVIORSCRIPT: lua_pushinteger(L, *(s32*)p);          break;
         case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);       break;
+        case LVT_COLLISION:  lua_pushinteger(L, *(s32*)p);              break;
 
         // pointers
         case LVT_U8_P:
@@ -315,6 +317,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_F32_P:
         case LVT_BEHAVIORSCRIPT_P:
         case LVT_OBJECTANIMPOINTER_P:
+        case LVT_COLLISION_P:
             smlua_push_pointer(L, data->valueType, *(u8**)p);
             break;
 
@@ -403,6 +406,7 @@ static int smlua__set_field(lua_State* L) {
         case LVT_F32_P:
         case LVT_BEHAVIORSCRIPT_P:
         case LVT_OBJECTANIMPOINTER_P:
+        case LVT_COLLISION_P:
             valuePointer = smlua_to_cpointer(L, 4, data->valueType);
             if (gSmLuaConvertSuccess) {
                 *(u8**)p = valuePointer;
@@ -472,6 +476,11 @@ void smlua_cobject_init_globals(void) {
     {
         smlua_push_object(L, LOT_GLOBALOBJECTANIMATIONS, &gGlobalObjectAnimations);
         lua_setglobal(L, "gObjectAnimations");
+    }
+
+    {
+        smlua_push_object(L, LOT_GLOBALOBJECTCOLLISIONDATA, &gGlobalObjectCollisionData);
+        lua_setglobal(L, "gGlobalObjectCollisionData");
     }
 
 }

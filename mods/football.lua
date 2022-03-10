@@ -222,9 +222,6 @@ function bhv_ball_init(obj)
     obj.hitboxRadius = 100
     obj.hitboxHeight = 100
 
-    -- area timer
-    table.insert(gInitializeBalls, obj)
-
     -- custom values
     obj.oNetworkTime = 0
     obj.oHitTime = 0

@@ -21,6 +21,8 @@
 #include "include/behavior_table.h"
 #include "src/pc/lua/smlua_obj_utils.h"
 #include "src/pc/lua/smlua_misc_utils.h"
+#include "src/pc/lua/smlua_collision_utils.h"
+#include "src/engine/surface_load.h"
 
 
   //////////////////////
@@ -7264,9 +7266,9 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
     return 1;
 }
 
-  ////////////////////////
- // smlua_misc_utils.h //
-////////////////////////
+  /////////////////////////////
+ // smlua_collision_utils.h //
+/////////////////////////////
 
 int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
@@ -7288,6 +7290,10 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
 
     return 1;
 }
+
+  ////////////////////////
+ // smlua_misc_utils.h //
+////////////////////////
 
 int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
@@ -7912,6 +7918,65 @@ int smlua_func_find_water_level(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushnumber(L, find_water_level(x, z));
+
+    return 1;
+}
+
+  ////////////////////
+ // surface_load.h //
+////////////////////
+
+int smlua_func_alloc_surface_pools(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    alloc_surface_pools();
+
+    return 1;
+}
+
+int smlua_func_clear_dynamic_surfaces(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    clear_dynamic_surfaces();
+
+    return 1;
+}
+
+int smlua_func_get_area_terrain_size(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s16 * data = (s16 *)smlua_to_cpointer(L, 1, LVT_S16_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, get_area_terrain_size(data));
+
+    return 1;
+}
+
+int smlua_func_load_area_terrain(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    s16 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 * data = (s16 *)smlua_to_cpointer(L, 2, LVT_S16_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s8 * surfaceRooms = (s8 *)smlua_to_cpointer(L, 3, LVT_S8_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 * macroObjects = (s16 *)smlua_to_cpointer(L, 4, LVT_S16_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    load_area_terrain(index, data, surfaceRooms, macroObjects);
+
+    return 1;
+}
+
+int smlua_func_load_object_collision_model(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    load_object_collision_model();
 
     return 1;
 }
@@ -8548,8 +8613,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
 
-    // smlua_misc_utils.h
+    // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
+
+    // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
 
     // smlua_obj_utils.h
@@ -8604,6 +8671,13 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "find_surface_on_ray", smlua_func_find_surface_on_ray); <--- UNIMPLEMENTED
     smlua_bind_function(L, "find_wall_collisions", smlua_func_find_wall_collisions);
     smlua_bind_function(L, "find_water_level", smlua_func_find_water_level);
+
+    // surface_load.h
+    smlua_bind_function(L, "alloc_surface_pools", smlua_func_alloc_surface_pools);
+    smlua_bind_function(L, "clear_dynamic_surfaces", smlua_func_clear_dynamic_surfaces);
+    smlua_bind_function(L, "get_area_terrain_size", smlua_func_get_area_terrain_size);
+    smlua_bind_function(L, "load_area_terrain", smlua_func_load_area_terrain);
+    smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);
 
     // thread6.c
     smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);

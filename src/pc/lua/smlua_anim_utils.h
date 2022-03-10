@@ -58,6 +58,7 @@ struct GlobalObjectAnimations {
     ObjectAnimPointer* wiggler_seg5_anims_0500EC8C;
     ObjectAnimPointer* yoshi_seg5_anims_05024100;
 };
+
 extern struct GlobalObjectAnimations gGlobalObjectAnimations;
 
 #endif

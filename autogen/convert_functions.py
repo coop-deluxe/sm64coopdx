@@ -37,10 +37,12 @@ in_files = [
     "include/behavior_table.h",
     "src/pc/lua/smlua_obj_utils.h",
     "src/pc/lua/smlua_misc_utils.h",
+    'src/pc/lua/smlua_collision_utils.h',
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
     "src/game/spawn_sound.c",
+    "src/engine/surface_load.h",
 ]
 
 override_allowed_functions = {

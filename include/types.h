@@ -220,7 +220,7 @@ struct Object
     /*0x20C*/ const BehaviorScript *behavior;
     /*0x210*/ u32 heldByPlayerIndex;
     /*0x214*/ struct Object *platform;
-    /*0x218*/ void *collisionData;
+    /*0x218*/ Collision *collisionData;
     /*0x21C*/ Mat4 transform;
     /*0x25C*/ void *respawnInfo;
     /*?????*/ u8 coopFlags;

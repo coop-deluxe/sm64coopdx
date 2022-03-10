@@ -617,8 +617,12 @@
 
 <br />
 
-- smlua_misc_utils.h
+- smlua_collision_utils.h
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+<br />
+
+- smlua_misc_utils.h
    - [get_network_area_timer](#get_network_area_timer)
 
 <br />
@@ -677,6 +681,15 @@
    - [find_poison_gas_level](#find_poison_gas_level)
    - [find_wall_collisions](#find_wall_collisions)
    - [find_water_level](#find_water_level)
+
+<br />
+
+- surface_load.h
+   - [alloc_surface_pools](#alloc_surface_pools)
+   - [clear_dynamic_surfaces](#clear_dynamic_surfaces)
+   - [get_area_terrain_size](#get_area_terrain_size)
+   - [load_area_terrain](#load_area_terrain)
+   - [load_object_collision_model](#load_object_collision_model)
 
 <br />
 
@@ -11394,7 +11407,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 <br />
 
 ---
-# functions from smlua_misc_utils.h
+# functions from smlua_collision_utils.h
 
 <br />
 
@@ -11423,6 +11436,12 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 [:arrow_up_small:](#)
 
 <br />
+
+---
+# functions from smlua_misc_utils.h
+
+<br />
+
 
 ## [get_network_area_timer](#get_network_area_timer)
 
@@ -12292,6 +12311,109 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `f32 find_water_level(f32 x, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from surface_load.h
+
+<br />
+
+
+## [alloc_surface_pools](#alloc_surface_pools)
+
+### Lua Example
+`alloc_surface_pools()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void alloc_surface_pools(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clear_dynamic_surfaces](#clear_dynamic_surfaces)
+
+### Lua Example
+`clear_dynamic_surfaces()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void clear_dynamic_surfaces(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_area_terrain_size](#get_area_terrain_size)
+
+### Lua Example
+`local integerValue = get_area_terrain_size(data)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| data | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_area_terrain_size(s16 *data);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [load_area_terrain](#load_area_terrain)
+
+### Lua Example
+`load_area_terrain(index, data, surfaceRooms, macroObjects)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| data | `Pointer` <`integer`> |
+| surfaceRooms | `Pointer` <`integer`> |
+| macroObjects | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [load_object_collision_model](#load_object_collision_model)
+
+### Lua Example
+`load_object_collision_model()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void load_object_collision_model(void);`
 
 [:arrow_up_small:](#)
 

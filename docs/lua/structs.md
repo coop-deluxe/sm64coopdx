@@ -17,6 +17,7 @@
 - [CutsceneVariable](#CutsceneVariable)
 - [FloorGeometry](#FloorGeometry)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
+- [GlobalObjectCollisionData](#GlobalObjectCollisionData)
 - [GlobalTextures](#GlobalTextures)
 - [GraphNode](#GraphNode)
 - [GraphNodeObject](#GraphNodeObject)
@@ -419,6 +420,114 @@
 
 <br />
 
+## [GlobalObjectCollisionData](#GlobalObjectCollisionData)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| bbh_seg7_collision_coffin | `Pointer` <`Collision`> |  |
+| bbh_seg7_collision_haunted_bookshelf | `Pointer` <`Collision`> |  |
+| bbh_seg7_collision_merry_go_round | `Pointer` <`Collision`> |  |
+| bbh_seg7_collision_mesh_elevator | `Pointer` <`Collision`> |  |
+| bbh_seg7_collision_staircase_step | `Pointer` <`Collision`> |  |
+| bbh_seg7_collision_tilt_floor_platform | `Pointer` <`Collision`> |  |
+| bitdw_seg7_collision_moving_pyramid | `Pointer` <`Collision`> |  |
+| bitfs_seg7_collision_inverted_pyramid | `Pointer` <`Collision`> |  |
+| bitfs_seg7_collision_sinking_cage_platform | `Pointer` <`Collision`> |  |
+| bitfs_seg7_collision_sinking_platform | `Pointer` <`Collision`> |  |
+| bitfs_seg7_collision_squishable_platform | `Pointer` <`Collision`> |  |
+| blue_coin_switch_seg8_collision_08000E98 | `Pointer` <`Collision`> |  |
+| bob_seg7_collision_chain_chomp_gate | `Pointer` <`Collision`> |  |
+| bowser_2_seg7_collision_tilting_platform | `Pointer` <`Collision`> |  |
+| breakable_box_seg8_collision_08012D70 | `Pointer` <`Collision`> |  |
+| cannon_lid_seg8_collision_08004950 | `Pointer` <`Collision`> |  |
+| capswitch_collision_050033D0 | `Pointer` <`Collision`> |  |
+| capswitch_collision_05003448 | `Pointer` <`Collision`> |  |
+| castle_grounds_seg7_collision_cannon_grill | `Pointer` <`Collision`> |  |
+| castle_grounds_seg7_collision_moat_grills | `Pointer` <`Collision`> |  |
+| checkerboard_platform_seg8_collision_0800D710 | `Pointer` <`Collision`> |  |
+| ddd_seg7_collision_bowser_sub_door | `Pointer` <`Collision`> |  |
+| ddd_seg7_collision_submarine | `Pointer` <`Collision`> |  |
+| door_seg3_collision_0301CE78 | `Pointer` <`Collision`> |  |
+| dorrie_seg6_collision_0600F644 | `Pointer` <`Collision`> |  |
+| exclamation_box_outline_seg8_collision_08025F78 | `Pointer` <`Collision`> |  |
+| hmc_seg7_collision_controllable_platform | `Pointer` <`Collision`> |  |
+| hmc_seg7_collision_controllable_platform_sub | `Pointer` <`Collision`> |  |
+| hmc_seg7_collision_elevator | `Pointer` <`Collision`> |  |
+| inside_castle_seg7_collision_floor_trap | `Pointer` <`Collision`> |  |
+| inside_castle_seg7_collision_star_door | `Pointer` <`Collision`> |  |
+| inside_castle_seg7_collision_water_level_pillar | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_floating_box | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_floating_platform | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_in_sunken_ship | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_in_sunken_ship_2 | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_in_sunken_ship_3 | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_pillar_base | `Pointer` <`Collision`> |  |
+| jrb_seg7_collision_rock_solid | `Pointer` <`Collision`> |  |
+| lll_hexagonal_mesh_seg3_collision_0301CECC | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_drawbridge | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_falling_wall | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_floating_block | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_hexagonal_platform | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_inverted_pyramid | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_octagonal_moving_platform | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_pitoune | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_puzzle_piece | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_rotating_fire_bars | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_rotating_platform | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_sinking_pyramids | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_slow_tilting_platform | `Pointer` <`Collision`> |  |
+| lll_seg7_collision_wood_piece | `Pointer` <`Collision`> |  |
+| metal_box_seg8_collision_08024C28 | `Pointer` <`Collision`> |  |
+| penguin_seg5_collision_05008B88 | `Pointer` <`Collision`> |  |
+| poundable_pole_collision_06002490 | `Pointer` <`Collision`> |  |
+| purple_switch_seg8_collision_0800C7A8 | `Pointer` <`Collision`> |  |
+| rr_seg7_collision_donut_platform | `Pointer` <`Collision`> |  |
+| rr_seg7_collision_elevator_platform | `Pointer` <`Collision`> |  |
+| rr_seg7_collision_pendulum | `Pointer` <`Collision`> |  |
+| rr_seg7_collision_rotating_platform_with_fire | `Pointer` <`Collision`> |  |
+| sl_seg7_collision_pound_explodes | `Pointer` <`Collision`> |  |
+| sl_seg7_collision_sliding_snow_mound | `Pointer` <`Collision`> |  |
+| springboard_collision_05001A28 | `Pointer` <`Collision`> |  |
+| ssl_seg7_collision_0702808C | `Pointer` <`Collision`> |  |
+| ssl_seg7_collision_grindel | `Pointer` <`Collision`> |  |
+| ssl_seg7_collision_pyramid_elevator | `Pointer` <`Collision`> |  |
+| ssl_seg7_collision_pyramid_top | `Pointer` <`Collision`> |  |
+| ssl_seg7_collision_spindel | `Pointer` <`Collision`> |  |
+| ssl_seg7_collision_tox_box | `Pointer` <`Collision`> |  |
+| thi_seg7_collision_top_trap | `Pointer` <`Collision`> |  |
+| thwomp_seg5_collision_0500B7D0 | `Pointer` <`Collision`> |  |
+| thwomp_seg5_collision_0500B92C | `Pointer` <`Collision`> |  |
+| ttc_seg7_collision_clock_main_rotation | `Pointer` <`Collision`> |  |
+| ttc_seg7_collision_clock_pendulum | `Pointer` <`Collision`> |  |
+| ttc_seg7_collision_clock_platform | `Pointer` <`Collision`> |  |
+| ttc_seg7_collision_rotating_clock_platform2 | `Pointer` <`Collision`> |  |
+| ttc_seg7_collision_sliding_surface | `Pointer` <`Collision`> |  |
+| ttm_seg7_collision_pitoune_2 | `Pointer` <`Collision`> |  |
+| ttm_seg7_collision_podium_warp | `Pointer` <`Collision`> |  |
+| ttm_seg7_collision_ukiki_cage | `Pointer` <`Collision`> |  |
+| warp_pipe_seg3_collision_03009AC8 | `Pointer` <`Collision`> |  |
+| wdw_seg7_collision_arrow_lift | `Pointer` <`Collision`> |  |
+| wdw_seg7_collision_express_elevator_platform | `Pointer` <`Collision`> |  |
+| wdw_seg7_collision_rect_floating_platform | `Pointer` <`Collision`> |  |
+| wdw_seg7_collision_square_floating_platform | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_breakable_wall | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_breakable_wall_2 | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_bullet_bill_cannon | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_clocklike_rotation | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_kickable_board | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_large_bomp | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_platform | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_sliding_brick_platform | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_small_bomp | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_tower | `Pointer` <`Collision`> |  |
+| wf_seg7_collision_tower_door | `Pointer` <`Collision`> |  |
+| whomp_seg6_collision_06020A0C | `Pointer` <`Collision`> |  |
+| wooden_signpost_seg3_collision_0302DD80 | `Pointer` <`Collision`> |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [GlobalTextures](#GlobalTextures)
 
 | Field | Type | Access |
@@ -747,6 +856,7 @@
 | bhvDelayTimer | `integer` |  |
 | bhvStackIndex | `integer` |  |
 | collidedObjInteractTypes | `integer` |  |
+| collisionData | `Pointer` <`Collision`> |  |
 | coopFlags | `integer` | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | globalPlayerIndex | `integer` |  |
