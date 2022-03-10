@@ -1,4 +1,5 @@
 #include <PR/ultratypes.h>
+#include <stdio.h>
 
 #include "audio/external.h"
 #include "engine/geo_layout.h"
@@ -80,7 +81,12 @@ struct LinkedList *unused_try_allocate(struct LinkedList *destList,
  * freeList is empty.
  */
 struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNode *freeList) {
-    struct ObjectNode *nextObj;
+    struct ObjectNode *nextObj = NULL;
+    
+    if (destList == NULL || freeList == NULL) {
+        fprintf(stderr, "FATAL ERROR: Failed to try and allocate a object because either the destList %p or freeList %p was NULL!\n", destList, freeList);
+        return NULL;
+    }
 
     if ((nextObj = freeList->next) != NULL) {
         // Remove from free list
@@ -89,12 +95,16 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
         // Insert at end of destination list
         nextObj->prev = destList->prev;
         nextObj->next = destList;
-        destList->prev->next = nextObj;
+        if (destList->prev != NULL) {
+            destList->prev->next = nextObj;
+        } else {
+            fprintf(stderr, "ERROR: The previous object in the destination list %p was NULL! Unexpected errors may occur.\n", destList);
+        }
         destList->prev = nextObj;
     } else {
         return NULL;
     }
-
+    
     geo_remove_child(&nextObj->gfx.node);
     geo_add_child(&gObjParentGraphNode, &nextObj->gfx.node);
 
@@ -133,7 +143,6 @@ static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *ob
  * Add every object in the pool to the free object list.
  */
 void init_free_object_list(void) {
-    s32 i;
     s32 poolLength = OBJECT_POOL_CAPACITY;
 
     // Add the first object in the pool to the free list
@@ -141,7 +150,7 @@ void init_free_object_list(void) {
     gFreeObjectList.next = (struct ObjectNode *) obj;
 
     // Link each object in the pool to the following object
-    for (i = 0; i < poolLength - 1; i++) {
+    for (s32 i = 0; i < poolLength - 1; i++) {
         obj->header.next = &(obj + 1)->header;
         obj++;
     }
@@ -154,9 +163,7 @@ void init_free_object_list(void) {
  * Clear each object list, without adding the objects back to the free list.
  */
 void clear_object_lists(struct ObjectNode *objLists) {
-    s32 i;
-
-    for (i = 0; i < NUM_OBJ_LISTS; i++) {
+    for (s32 i = 0; i < NUM_OBJ_LISTS; i++) {
         objLists[i].next = &objLists[i];
         objLists[i].prev = &objLists[i];
     }
@@ -187,7 +194,6 @@ static void unused_delete_leaf_nodes(struct Object *obj) {
  * Free the given object.
  */
 void unload_object(struct Object *obj) {
-
     obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     obj->prevObj = NULL;
 
@@ -203,12 +209,10 @@ void unload_object(struct Object *obj) {
     if (obj->oSyncID != 0 && gNetworkType != NT_NONE) {
         if (gSyncObjects[obj->oSyncID].syncDeathEvent) {
             network_send_object(obj);
+        } else if (gNetworkType == NT_SERVER) {
+            reservation_area_release(gNetworkPlayerLocal, obj->oSyncID);
         } else {
-            if (gNetworkType == NT_SERVER) {
-                reservation_area_release(gNetworkPlayerLocal, obj->oSyncID);
-            } else {
-                network_send_reservation_release(obj->oSyncID);
-            }
+            network_send_reservation_release(obj->oSyncID);
         }
     }
 
@@ -221,7 +225,6 @@ void unload_object(struct Object *obj) {
  * infinite loop.
  */
 struct Object *allocate_object(struct ObjectNode *objList) {
-    s32 i;
     struct Object *obj = try_allocate_object(objList, &gFreeObjectList);
 
     // The object list is full if the newly created pointer is NULL.
@@ -257,13 +260,13 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->numCollidedObjs = 0;
 
 #if IS_64_BIT
-    for (i = 0; i < 0x50; i++) {
+    for (s32 i = 0; i < 0x50; i++) {
         obj->rawData.asS32[i] = 0;
         obj->ptrData.asVoidPtr[i] = NULL;
     }
 #else
     // -O2 needs everything until = on the same line
-    for (i = 0; i < 0x50; i++) obj->rawData.asS32[i] = 0;
+    for (s32 i = 0; i < 0x50; i++) obj->rawData.asS32[i] = 0;
 #endif
 
     obj->unused1 = 0;
@@ -332,21 +335,22 @@ static void snap_object_to_floor(struct Object *obj) {
  * Spawn an object at the origin with the behavior script at virtual address bhvScript.
  */
 struct Object *create_object(const BehaviorScript *bhvScript) {
-    s32 objListIndex;
-    struct Object *obj;
-    struct ObjectNode *objList;
+    s32 objListIndex = OBJ_LIST_DEFAULT;
     const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
 
     // If the first behavior script command is "begin <object list>", then
     // extract the object list from it
     if ((behavior[0] >> 24) == 0) {
         objListIndex = (behavior[0] >> 16) & 0xFFFF;
-    } else {
-        objListIndex = OBJ_LIST_DEFAULT;
+    }
+    
+    if (objListIndex >= NUM_OBJ_LISTS) {
+        fprintf(stderr, "Failed to create object with non-existent object list index %i with behavior script %p.\n", objListIndex, bhvScript);
+        return NULL;
     }
 
-    objList = &gObjectLists[objListIndex];
-    obj = allocate_object(objList);
+    struct ObjectNode *objList = &gObjectLists[objListIndex];
+    struct Object *obj = allocate_object(objList);
     if (obj == NULL) { return NULL; }
 
     obj->curBhvCommand = bhvScript;
