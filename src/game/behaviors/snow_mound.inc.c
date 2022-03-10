@@ -35,10 +35,12 @@ void bhv_snow_mound_spawn_loop(void) {
 
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->override_ownership = bhv_snow_mound_spawn_override_ownership;
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
+        if (so) {
+            so->override_ownership = bhv_snow_mound_spawn_override_ownership;
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+        }
     }
 
     if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)

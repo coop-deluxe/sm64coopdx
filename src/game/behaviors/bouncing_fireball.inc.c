@@ -35,10 +35,12 @@ void bhv_bouncing_fireball_override_ownership(u8* shouldOverride, u8* shouldOwn)
 void bhv_bouncing_fireball_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->override_ownership = bhv_bouncing_fireball_override_ownership;
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
+        if (so) {
+            so->override_ownership = bhv_bouncing_fireball_override_ownership;
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oTimer);
+        }
     }
 
     struct Object* player = nearest_player_to_object(o);

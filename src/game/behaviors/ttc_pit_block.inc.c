@@ -46,9 +46,11 @@ void bhv_ttc_pit_block_init(void) {
     }
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->minUpdateRate = 5.0f;
-    network_init_object_field(o, &o->oTTCPitBlockDir);
-    network_init_object_field(o, &o->oTTCPitBlockWaitTime);
+    if (so) {
+        so->minUpdateRate = 5.0f;
+        network_init_object_field(o, &o->oTTCPitBlockDir);
+        network_init_object_field(o, &o->oTTCPitBlockWaitTime);
+    }
 }
 
 /**

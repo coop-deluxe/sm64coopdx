@@ -39,16 +39,18 @@ static void bhv_bully_override_ownership(u8* shouldOverride, u8* shouldOwn) {
 
 static void bhv_bully_network_init(void) {
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oFlags);
-    network_init_object_field(o, &o->oBullyKBTimerAndMinionKOCounter);
-    network_init_object_field(o, &o->oForwardVel);
-    network_init_object_field(o, &o->oBullyPrevX);
-    network_init_object_field(o, &o->oBullyPrevY);
-    network_init_object_field(o, &o->oBullyPrevZ);
-    network_init_object_field(o, &o->oBullyMarioCollisionAngle);
-    so->syncDeathEvent = FALSE;
-    so->ignore_if_true = bhv_bully_ignore_if_true;
-    so->override_ownership = bhv_bully_override_ownership;
+    if (so) {
+        network_init_object_field(o, &o->oFlags);
+        network_init_object_field(o, &o->oBullyKBTimerAndMinionKOCounter);
+        network_init_object_field(o, &o->oForwardVel);
+        network_init_object_field(o, &o->oBullyPrevX);
+        network_init_object_field(o, &o->oBullyPrevY);
+        network_init_object_field(o, &o->oBullyPrevZ);
+        network_init_object_field(o, &o->oBullyMarioCollisionAngle);
+        so->syncDeathEvent = FALSE;
+        so->ignore_if_true = bhv_bully_ignore_if_true;
+        so->override_ownership = bhv_bully_override_ownership;
+    }
 }
 
 void bhv_small_bully_init(void) {

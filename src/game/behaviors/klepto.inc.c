@@ -105,24 +105,26 @@ void bhv_klepto_init(void) {
     }
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->on_received_pre = bhv_klepto_on_received_pre;
-    so->on_received_post = bhv_klepto_on_received_post;
-    network_init_object_field(o, &o->oAnimState);
-    network_init_object_field(o, &o->oFlags);
-    network_init_object_field(o, &o->oKleptoDistanceToTarget);
-    network_init_object_field(o, &o->oKleptoUnkF8);
-    network_init_object_field(o, &o->oKleptoUnkFC);
-    network_init_object_field(o, &o->oKleptoSpeed);
-    network_init_object_field(o, &o->oKleptoTimeUntilTargetChange);
-    network_init_object_field(o, &o->oKleptoTargetNumber);
-    network_init_object_field(o, &o->oKleptoUnk1B0);
-    network_init_object_field(o, &o->oSoundStateID);
-    network_init_object_field(o, &o->oHomeX);
-    network_init_object_field(o, &o->oHomeY);
-    network_init_object_field(o, &o->oHomeZ);
-    network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->oGravity);
-    network_init_object_field(o, &o->globalPlayerIndex);
+    if (so) {
+        so->on_received_pre = bhv_klepto_on_received_pre;
+        so->on_received_post = bhv_klepto_on_received_post;
+        network_init_object_field(o, &o->oAnimState);
+        network_init_object_field(o, &o->oFlags);
+        network_init_object_field(o, &o->oKleptoDistanceToTarget);
+        network_init_object_field(o, &o->oKleptoUnkF8);
+        network_init_object_field(o, &o->oKleptoUnkFC);
+        network_init_object_field(o, &o->oKleptoSpeed);
+        network_init_object_field(o, &o->oKleptoTimeUntilTargetChange);
+        network_init_object_field(o, &o->oKleptoTargetNumber);
+        network_init_object_field(o, &o->oKleptoUnk1B0);
+        network_init_object_field(o, &o->oSoundStateID);
+        network_init_object_field(o, &o->oHomeX);
+        network_init_object_field(o, &o->oHomeY);
+        network_init_object_field(o, &o->oHomeZ);
+        network_init_object_field(o, &o->oMoveAnglePitch);
+        network_init_object_field(o, &o->oGravity);
+        network_init_object_field(o, &o->globalPlayerIndex);
+    }
 }
 
 static void klepto_change_target(void) {

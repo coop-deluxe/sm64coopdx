@@ -165,13 +165,15 @@ void bhv_dorrie_update(void) {
     if (!network_sync_object_initialized(o)) {
         for (int i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->ignore_if_true = bhv_dorrie_ignore_if_true;
-        network_init_object_field(o, &o->oDorrieOffsetY);
-        network_init_object_field(o, &o->oDorrieVelY);
-        network_init_object_field(o, &o->oDorrieYawVel);
-        network_init_object_field(o, &o->oDorrieLiftingMario);
-        network_init_object_field(o, &o->oDorrieNeckAngle);
-        network_init_object_field(o, &o->oAngleVelYaw);
+        if (so) {
+            so->ignore_if_true = bhv_dorrie_ignore_if_true;
+            network_init_object_field(o, &o->oDorrieOffsetY);
+            network_init_object_field(o, &o->oDorrieVelY);
+            network_init_object_field(o, &o->oDorrieYawVel);
+            network_init_object_field(o, &o->oDorrieLiftingMario);
+            network_init_object_field(o, &o->oDorrieNeckAngle);
+            network_init_object_field(o, &o->oAngleVelYaw);
+        }
     }
 
     f32 boundsShift;

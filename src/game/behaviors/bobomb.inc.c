@@ -41,9 +41,7 @@ void bobomb_act_explode(void) {
         }
 
         bobomb_spawn_coin();
-        if (!o->createdThroughNetwork) {
-            create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
-        }
+        create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }
@@ -133,15 +131,13 @@ void generic_bobomb_free_loop(void) {
             break;
 
         case BOBOMB_ACT_LAVA_DEATH:
-            if (obj_lava_death() == 1 && !o->createdThroughNetwork)
+            if (obj_lava_death() == 1)
                 create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
             break;
 
         case BOBOMB_ACT_DEATH_PLANE_DEATH:
             o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-            if (!o->createdThroughNetwork) {
-                create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
-            }
+            create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
             break;
     }
 
@@ -162,15 +158,13 @@ void stationary_bobomb_free_loop(void) {
             break;
 
         case BOBOMB_ACT_LAVA_DEATH:
-            if (obj_lava_death() == 1 && !o->createdThroughNetwork)
+            if (obj_lava_death() == 1)
                 create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
             break;
 
         case BOBOMB_ACT_DEATH_PLANE_DEATH:
             o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-            if (!o->createdThroughNetwork) {
-                create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
-            }
+            create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
             break;
     }
 

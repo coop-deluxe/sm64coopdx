@@ -197,9 +197,11 @@ void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_bo
 
 void bhv_exclamation_box_init(void) {
     struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    so->syncDeathEvent = FALSE;
-    network_init_object_field(o, &o->oExclamationBoxForce);
-    network_init_object_field(o, &o->areaTimer);
+    if (so) {
+        so->syncDeathEvent = FALSE;
+        network_init_object_field(o, &o->oExclamationBoxForce);
+        network_init_object_field(o, &o->areaTimer);
+    }
 
     o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;
     o->areaTimer = 0;

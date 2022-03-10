@@ -265,16 +265,18 @@ static u8 bhv_haunted_bookshelf_manager_ignore_if_true(void) {
 void bhv_haunted_bookshelf_manager_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->syncDeathEvent = FALSE;
-        so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
-        so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->activeFlags);
-        network_init_object_field(o, &o->oBookSwitchManagerUnkF8);
-        network_init_object_field(o, &o->oBookSwitchManagerUnkF4);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oForwardVel);
+        if (so) {
+            so->syncDeathEvent = FALSE;
+            so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
+            so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->activeFlags);
+            network_init_object_field(o, &o->oBookSwitchManagerUnkF8);
+            network_init_object_field(o, &o->oBookSwitchManagerUnkF4);
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oPosX);
+            network_init_object_field(o, &o->oForwardVel);
+        }
     }
 
     switch (o->oAction) {
@@ -299,15 +301,17 @@ void bhv_haunted_bookshelf_manager_loop(void) {
 void bhv_book_switch_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
-        so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
+        if (so) {
+            so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
+            so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
 
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oBookSwitchUnkF4);
-        network_init_object_field(o, &o->oIntangibleTimer);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oPosZ);
-        network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oBookSwitchUnkF4);
+            network_init_object_field(o, &o->oIntangibleTimer);
+            network_init_object_field(o, &o->oPosX);
+            network_init_object_field(o, &o->oPosZ);
+            network_init_object_field(o, &o->oTimer);
+        }
     }
 
     s32 sp3C;

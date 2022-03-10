@@ -101,10 +101,12 @@ static u8 bhv_pyramid_top_ignore_if_true(void) {
 void bhv_pyramid_top_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->ignore_if_true = bhv_pyramid_top_ignore_if_true;
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
+        if (so) {
+            so->ignore_if_true = bhv_pyramid_top_ignore_if_true;
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oTimer);
+        }
     }
     switch (o->oAction) {
         case PYRAMID_TOP_ACT_CHECK_IF_SOLVED:

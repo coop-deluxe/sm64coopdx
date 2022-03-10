@@ -585,7 +585,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "collidedObjInteractTypes",                   LVT_U32,                 offsetof(struct Object, collidedObjInteractTypes),                   false, LOT_NONE         },
 //  { "collidedObjs",                               LOT_???,                 offsetof(struct Object, collidedObjs),                               false, LOT_???          }, <--- UNIMPLEMENTED
 //  { "collisionData",                              LVT_???,                 offsetof(struct Object, collisionData),                              false, LOT_???          }, <--- UNIMPLEMENTED
-    { "createdThroughNetwork",                      LVT_U8,                  offsetof(struct Object, createdThroughNetwork),                      true,  LOT_NONE         },
+    { "coopFlags",                                  LVT_U8,                  offsetof(struct Object, coopFlags),                                  true,  LOT_NONE         },
     { "curBhvCommand",                              LVT_BEHAVIORSCRIPT_P,    offsetof(struct Object, curBhvCommand),                              true,  LOT_POINTER      },
     { "globalPlayerIndex",                          LVT_U8,                  offsetof(struct Object, globalPlayerIndex),                          false, LOT_NONE         },
     { "header",                                     LVT_COBJECT,             offsetof(struct Object, header),                                     true,  LOT_OBJECTNODE   },

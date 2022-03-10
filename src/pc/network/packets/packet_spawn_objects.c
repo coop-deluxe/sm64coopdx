@@ -170,7 +170,8 @@ void network_receive_spawn_objects(struct Packet* p) {
         }
 
         o->globalPlayerIndex = data.globalPlayerIndex;
-        o->createdThroughNetwork = true;
+        o->coopFlags |= COOP_OBJ_FLAG_NETWORK;
+
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);
 
         o->header.gfx.scale[0] = scale[0];

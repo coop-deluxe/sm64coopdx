@@ -18,10 +18,12 @@ void bhv_hoot_init(void) {
     localTalkToHoot = 0;
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->ignore_if_true = bhv_hoot_ignore_if_true;
-    network_init_object_field(o, &o->oHootAvailability);
-    network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+    if (so) {
+        so->ignore_if_true = bhv_hoot_ignore_if_true;
+        network_init_object_field(o, &o->oHootAvailability);
+        network_init_object_field(o, &o->oMoveAnglePitch);
+        network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+    }
 }
 
 // sp28 = arg0

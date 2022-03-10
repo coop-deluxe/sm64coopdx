@@ -747,7 +747,7 @@
 | bhvDelayTimer | `integer` |  |
 | bhvStackIndex | `integer` |  |
 | collidedObjInteractTypes | `integer` |  |
-| createdThroughNetwork | `integer` | read-only |
+| coopFlags | `integer` | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | globalPlayerIndex | `integer` |  |
 | header | [ObjectNode](structs.md#ObjectNode) | read-only |

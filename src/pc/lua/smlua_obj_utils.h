@@ -6,9 +6,7 @@
 #include "game/object_list_processor.h"
 
 struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
-
-// this is too dangerous for now
-//struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z);
+struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 
 s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId);
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId);

@@ -7456,6 +7456,27 @@ int smlua_func_obj_set_model_extended(lua_State* L) {
     return 1;
 }
 
+int smlua_func_spawn_non_sync_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
+
+    int behaviorId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    int modelId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 x = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 y = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 z = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction));
+
+    return 1;
+}
+
 int smlua_func_spawn_sync_object(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
 
@@ -8544,6 +8565,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_has_behavior_id", smlua_func_obj_has_behavior_id);
     smlua_bind_function(L, "obj_has_model_extended", smlua_func_obj_has_model_extended);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
+    smlua_bind_function(L, "spawn_non_sync_object", smlua_func_spawn_non_sync_object);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
 
     // sound_init.h

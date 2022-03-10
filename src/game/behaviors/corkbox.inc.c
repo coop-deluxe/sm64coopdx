@@ -56,6 +56,10 @@ void bhv_respawner_loop(void) {
 }
 
 void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnDist) {
+    if (!(o->coopFlags & COOP_OBJ_FLAG_LUA)) {
+        return;
+    }
+
     struct Object *respawner = spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvRespawner, o->oHomeX,
                                                          o->oHomeY, o->oHomeZ, 0, 0, 0);
     u8 syncID = o->oSyncID;

@@ -785,7 +785,7 @@ static s32 bhv_cmd_load_collision_data(void) {
 // Command 0x2D: Sets the home position of the object to its current position.
 // Usage: SET_HOME()
 static s32 bhv_cmd_set_home(void) {
-    if (!gCurrentObject->createdThroughNetwork) {
+    if (!(gCurrentObject->coopFlags & (COOP_OBJ_FLAG_LUA | COOP_OBJ_FLAG_NETWORK))) {
         gCurrentObject->oHomeX = gCurrentObject->oPosX;
         gCurrentObject->oHomeY = gCurrentObject->oPosY;
         gCurrentObject->oHomeZ = gCurrentObject->oPosZ;

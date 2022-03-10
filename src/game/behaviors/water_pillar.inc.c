@@ -67,11 +67,13 @@ void bhv_water_level_pillar_init(void) {
         o->oWaterLevelPillarDrained = 1;
 
     struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    so->ignore_if_true = bhv_water_level_pillar_ignore_if_true;
-    network_init_object_field(o, &o->oAction);
-    network_init_object_field(o, &o->oPrevAction);
-    network_init_object_field(o, &o->oTimer);
-    network_init_object_field(o, &o->oWaterLevelPillarDrained);
+    if (so) {
+        so->ignore_if_true = bhv_water_level_pillar_ignore_if_true;
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+        network_init_object_field(o, &o->oWaterLevelPillarDrained);
+    }
 }
 
 void bhv_water_level_pillar_loop(void) {

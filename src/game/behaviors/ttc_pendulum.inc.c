@@ -26,13 +26,15 @@ void bhv_ttc_pendulum_init(void) {
     }
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->minUpdateRate = 5.0f;
-    network_init_object_field(o, &o->oTTCPendulumAccelDir);
-    network_init_object_field(o, &o->oTTCPendulumAngle);
-    network_init_object_field(o, &o->oTTCPendulumAngleVel);
-    network_init_object_field(o, &o->oTTCPendulumAngleAccel);
-    network_init_object_field(o, &o->oTTCPendulumDelay);
-    network_init_object_field(o, &o->oTTCPendulumSoundTimer);
+    if (so) {
+        so->minUpdateRate = 5.0f;
+        network_init_object_field(o, &o->oTTCPendulumAccelDir);
+        network_init_object_field(o, &o->oTTCPendulumAngle);
+        network_init_object_field(o, &o->oTTCPendulumAngleVel);
+        network_init_object_field(o, &o->oTTCPendulumAngleAccel);
+        network_init_object_field(o, &o->oTTCPendulumDelay);
+        network_init_object_field(o, &o->oTTCPendulumSoundTimer);
+    }
 }
 
 /**

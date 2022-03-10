@@ -31,10 +31,12 @@ static struct ObjectHitbox sWaterBombHitbox = {
 void bhv_water_bomb_spawner_update(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->fullObjectSync = TRUE;
-        so->maxUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oWaterBombSpawnerBombActive);
-        network_init_object_field(o, &o->oWaterBombSpawnerTimeToSpawn);
+        if (so) {
+            so->fullObjectSync = TRUE;
+            so->maxUpdateRate = 5.0f;
+            network_init_object_field(o, &o->oWaterBombSpawnerBombActive);
+            network_init_object_field(o, &o->oWaterBombSpawnerTimeToSpawn);
+        }
     }
 
     f32 latDistToMario = 9999;

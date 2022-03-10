@@ -364,11 +364,13 @@ u8 king_bobomb_ignore_if_true(void) {
 void bhv_king_bobomb_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->ignore_if_true = king_bobomb_ignore_if_true;
-        network_init_object_field(o, &o->oKingBobombUnk88);
-        network_init_object_field(o, &o->oFlags);
-        network_init_object_field(o, &o->oHealth);
-        network_init_object_field(o, &o->oInteractStatus);
+        if (so) {
+            so->ignore_if_true = king_bobomb_ignore_if_true;
+            network_init_object_field(o, &o->oKingBobombUnk88);
+            network_init_object_field(o, &o->oFlags);
+            network_init_object_field(o, &o->oHealth);
+            network_init_object_field(o, &o->oInteractStatus);
+        }
     }
 
     f32 sp34 = 20.0f;

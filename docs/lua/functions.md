@@ -636,6 +636,7 @@
    - [obj_has_behavior_id](#obj_has_behavior_id)
    - [obj_has_model_extended](#obj_has_model_extended)
    - [obj_set_model_extended](#obj_set_model_extended)
+   - [spawn_non_sync_object](#spawn_non_sync_object)
    - [spawn_sync_object](#spawn_sync_object)
 
 <br />
@@ -11693,6 +11694,31 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [spawn_non_sync_object](#spawn_non_sync_object)
+
+### Lua Example
+`local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| objSetupFunction | `Lua Function` () |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 

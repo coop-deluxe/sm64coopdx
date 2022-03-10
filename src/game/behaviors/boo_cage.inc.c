@@ -30,6 +30,7 @@ static void bhv_boo_cage_on_received_post(UNUSED u8 localIndex) {
 
 void bhv_boo_cage_init(void) {
     struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (so == NULL) { return; }
     so->on_received_post = bhv_boo_cage_on_received_post;
     network_init_object_field(o, &o->oAction);
     network_init_object_field(o, &o->oPosX);

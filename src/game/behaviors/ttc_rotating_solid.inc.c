@@ -33,13 +33,15 @@ void bhv_ttc_rotating_solid_init(void) {
     o->oTTCRotatingSolidRotationDelay = sTTCRotatingSolidInitialDelays[gTTCSpeedSetting];
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->minUpdateRate = 5.0f;
-    network_init_object_field(o, &o->oTTCRotatingSolidNumTurns);
-    network_init_object_field(o, &o->oTTCRotatingSolidRotationDelay);
-    network_init_object_field(o, &o->oTTCRotatingSolidVelY);
-    network_init_object_field(o, &o->oTTCChangeDirTimer);
-    network_init_object_field(o, &o->oAngleVelRoll);
-    network_init_object_field(o, &o->oFaceAngleRoll);
+    if (so) {
+        so->minUpdateRate = 5.0f;
+        network_init_object_field(o, &o->oTTCRotatingSolidNumTurns);
+        network_init_object_field(o, &o->oTTCRotatingSolidRotationDelay);
+        network_init_object_field(o, &o->oTTCRotatingSolidVelY);
+        network_init_object_field(o, &o->oTTCChangeDirTimer);
+        network_init_object_field(o, &o->oAngleVelRoll);
+        network_init_object_field(o, &o->oFaceAngleRoll);
+    }
 }
 
 /**

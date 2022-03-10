@@ -235,20 +235,22 @@ void bhv_spiny_update(void) {
     // PARTIAL_UPDATE
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->syncDeathEvent = FALSE;
-        so->on_received_post = bhv_spiny_on_received_post;
-        so->on_sent_pre = bhv_spiny_on_sent_pre;
-        so->override_ownership = bhv_spiny_override_ownership;
+        if (so) {
+            so->syncDeathEvent = FALSE;
+            so->on_received_post = bhv_spiny_on_received_post;
+            so->on_sent_pre = bhv_spiny_on_sent_pre;
+            so->override_ownership = bhv_spiny_override_ownership;
 
-        network_init_object_field(o, &o->oGraphYOffset);
-        network_init_object_field(o, &o->oFaceAngleYaw);
-        network_init_object_field(o, &o->oSpinyTimeUntilTurn);
-        network_init_object_field(o, &o->oSpinyTargetYaw);
-        network_init_object_field(o, &o->oSpinyTurningAwayFromWall);
-        network_init_object_field(o, &o->oMoveFlags);
-        network_init_object_field(o, &o->oInteractType);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &spinyAnimCache);
+            network_init_object_field(o, &o->oGraphYOffset);
+            network_init_object_field(o, &o->oFaceAngleYaw);
+            network_init_object_field(o, &o->oSpinyTimeUntilTurn);
+            network_init_object_field(o, &o->oSpinyTargetYaw);
+            network_init_object_field(o, &o->oSpinyTurningAwayFromWall);
+            network_init_object_field(o, &o->oMoveFlags);
+            network_init_object_field(o, &o->oInteractType);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &spinyAnimCache);
+        }
 
 
         struct Object* lakitu = cur_obj_nearest_object_with_behavior(bhvEnemyLakitu);

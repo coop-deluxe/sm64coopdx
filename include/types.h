@@ -18,7 +18,6 @@
     #define BAD_RETURN(cmd) cmd
 #endif
 
-
 struct Controller
 {
   /*0x00*/ s16 rawStickX;       //
@@ -224,7 +223,7 @@ struct Object
     /*0x218*/ void *collisionData;
     /*0x21C*/ Mat4 transform;
     /*0x25C*/ void *respawnInfo;
-    /*?????*/ u8 createdThroughNetwork;
+    /*?????*/ u8 coopFlags;
     /*?????*/ enum AreaTimerType areaTimerType;
     /*?????*/ u32 areaTimer;
     /*?????*/ u32 areaTimerDuration;
@@ -409,6 +408,10 @@ struct TextureInfo
 #define PLAY_MODE_FRAME_ADVANCE 5
 
 #define MAX_PLAYERS 16
+
+#define COOP_OBJ_FLAG_NETWORK  (1 << 0)
+#define COOP_OBJ_FLAG_LUA      (1 << 1)
+#define COOP_OBJ_FLAG_NON_SYNC (1 << 2)
 
 #include "src/game/characters.h"
 

@@ -23,10 +23,12 @@ void bhv_sunken_ship_part_loop(void) {
 void bhv_ship_part_3_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->maxUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oFaceAngleRoll);
-        network_init_object_field(o, &o->oShipPart3UnkF4);
+        if (so) {
+            so->maxUpdateRate = 5.0f;
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &o->oFaceAngleRoll);
+            network_init_object_field(o, &o->oShipPart3UnkF4);
+        }
     }
 
     s16 sp1E = o->oFaceAnglePitch;
@@ -44,14 +46,16 @@ void bhv_ship_part_3_loop(void) {
 void bhv_jrb_sliding_box_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->maxUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oFaceAngleRoll);
-        network_init_object_field(o, &o->oJrbSlidingBoxUnkF8);
-        network_init_object_field(o, &o->oJrbSlidingBoxUnkFC);
-        network_init_object_field(o, &o->oParentRelativePosX);
-        network_init_object_field(o, &o->oParentRelativePosY);
-        network_init_object_field(o, &o->oParentRelativePosZ);
+        if (so) {
+            so->maxUpdateRate = 5.0f;
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &o->oFaceAngleRoll);
+            network_init_object_field(o, &o->oJrbSlidingBoxUnkF8);
+            network_init_object_field(o, &o->oJrbSlidingBoxUnkFC);
+            network_init_object_field(o, &o->oParentRelativePosX);
+            network_init_object_field(o, &o->oParentRelativePosY);
+            network_init_object_field(o, &o->oParentRelativePosZ);
+        }
     }
 
     Mat4 sp60;

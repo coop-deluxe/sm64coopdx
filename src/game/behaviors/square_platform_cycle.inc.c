@@ -9,8 +9,10 @@ void bhv_squarish_path_parent_init(void) {
     o->oPosZ += radius;
 
     struct SyncObject* so = network_init_object(o, 2000.0f);
-    so->hasStandardFields = FALSE;
-    so->maxUpdateRate = 5.0f;
+    if (so) {
+        so->hasStandardFields = FALSE;
+        so->maxUpdateRate = 5.0f;
+    }
 
     for (int i = 0; i < 2; i++) {
         s16 action = (i == 0) ? 1 : 3;

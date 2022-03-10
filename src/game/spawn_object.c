@@ -304,7 +304,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->header.gfx.pos[2] = -10000.0f;
     obj->header.gfx.throwMatrix = NULL;
 
-    obj->createdThroughNetwork = false;
+    obj->coopFlags = 0;
 
     obj->areaTimerType = AREA_TIMER_TYPE_NONE;
     obj->areaTimer = 0;

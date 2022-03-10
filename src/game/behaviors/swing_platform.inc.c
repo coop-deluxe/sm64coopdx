@@ -3,11 +3,13 @@ void bhv_swing_platform_init(void) {
     o->oSwingPlatformAngle = 0x2000;
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->minUpdateRate = 5.0f;
-    network_init_object_field(o, &o->oSwingPlatformAngle);
-    network_init_object_field(o, &o->oFaceAngleRoll);
-    network_init_object_field(o, &o->oSwingPlatformSpeed);
-    network_init_object_field(o, &o->oAngleVelRoll);
+    if (so) {
+        so->minUpdateRate = 5.0f;
+        network_init_object_field(o, &o->oSwingPlatformAngle);
+        network_init_object_field(o, &o->oFaceAngleRoll);
+        network_init_object_field(o, &o->oSwingPlatformSpeed);
+        network_init_object_field(o, &o->oAngleVelRoll);
+    }
 }
 
 void bhv_swing_platform_update(void) {

@@ -271,7 +271,9 @@ struct ObjectHitbox sMrIHitbox = {
 void bhv_mr_i_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->fullObjectSync = TRUE;
+        if (so) {
+            so->fullObjectSync = TRUE;
+        }
     }
 
     struct Object* player = nearest_player_to_object(o);

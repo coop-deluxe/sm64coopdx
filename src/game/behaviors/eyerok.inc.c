@@ -48,6 +48,7 @@ void bhv_eyerok_boss_init(void) {
     hands[1] = eyerok_spawn_hand(1, MODEL_EYEROK_RIGHT_HAND, bhvEyerokHand);
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
+    if (!so) { return; }
     so->override_ownership = bhv_eyerok_boss_override_ownership;
     so->ignore_if_true = bhv_eyerok_boss_ignore_if_true;
     so->minUpdateRate = 1.0f;

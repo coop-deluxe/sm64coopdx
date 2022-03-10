@@ -254,7 +254,9 @@ void bhv_bob_pit_bowling_ball_init(void) {
     o->oBuoyancy = 2.0f;
 
     struct SyncObject* so = network_init_object(o, 5000.0f);
-    so->maxUpdateRate = 5.0f;
+    if (so) {
+        so->maxUpdateRate = 5.0f;
+    }
 }
 
 void bhv_bob_pit_bowling_ball_loop(void) {

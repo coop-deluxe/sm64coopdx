@@ -447,6 +447,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 0), "Id", (int)gPcDebug.id & 0xFF);
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 1), "Ofs", (int)gPcDebug.bhvOffset & 0xFF);
+    crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "Objs", gPrevFrameObjectCount);
 
     int modCount = 0;
     for (int i = 0; i < gModTableCurrent->entryCount; i++) {

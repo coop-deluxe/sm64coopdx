@@ -192,14 +192,16 @@ static void pokey_act_uninitialized(void) {
 
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oPokeyAliveBodyPartFlags);
-        network_init_object_field(o, &o->oPokeyNumAliveBodyParts);
-        network_init_object_field(o, &o->oPokeyHeadWasKilled);
-        network_init_object_field(o, &o->oPokeyTargetYaw);
-        network_init_object_field(o, &o->oPokeyChangeTargetTimer);
-        network_init_object_field(o, &o->oPokeyTurningAwayFromWall);
-        so->on_received_pre = pokey_on_received_pre;
-        so->on_received_post = pokey_on_received_post;
+        if (so) {
+            network_init_object_field(o, &o->oPokeyAliveBodyPartFlags);
+            network_init_object_field(o, &o->oPokeyNumAliveBodyParts);
+            network_init_object_field(o, &o->oPokeyHeadWasKilled);
+            network_init_object_field(o, &o->oPokeyTargetYaw);
+            network_init_object_field(o, &o->oPokeyChangeTargetTimer);
+            network_init_object_field(o, &o->oPokeyTurningAwayFromWall);
+            so->on_received_pre = pokey_on_received_pre;
+            so->on_received_post = pokey_on_received_post;
+        }
     }
 }
 

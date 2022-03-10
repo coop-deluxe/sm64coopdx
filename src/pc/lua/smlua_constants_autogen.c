@@ -2662,4 +2662,7 @@ char gSmluaConstants[] = ""
 "PLAY_MODE_CHANGE_LEVEL = 4\n"
 "PLAY_MODE_FRAME_ADVANCE = 5\n"
 "MAX_PLAYERS = 16\n"
+"COOP_OBJ_FLAG_NETWORK = (1 << 0)\n"
+"COOP_OBJ_FLAG_LUA = (1 << 1)\n"
+"COOP_OBJ_FLAG_NON_SYNC = (1 << 2)\n"
 ;

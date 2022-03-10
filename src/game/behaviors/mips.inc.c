@@ -55,14 +55,16 @@ void bhv_mips_init(void) {
     cur_obj_init_animation(0);
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oMipsStartWaypointIndex);
-    network_init_object_field(o, &o->oForwardVel);
-    network_init_object_field(o, &o->oMipsStarStatus);
-    network_init_object_field(o, &o->oBehParams2ndByte);
-    network_init_object_field(o, &o->oHeldState);
-    network_init_object_field(o, &o->oFlags);
-    so->on_received_pre = bhv_mips_on_received_pre;
-    so->on_received_post = bhv_mips_on_received_post;
+    if (so) {
+        network_init_object_field(o, &o->oMipsStartWaypointIndex);
+        network_init_object_field(o, &o->oForwardVel);
+        network_init_object_field(o, &o->oMipsStarStatus);
+        network_init_object_field(o, &o->oBehParams2ndByte);
+        network_init_object_field(o, &o->oHeldState);
+        network_init_object_field(o, &o->oFlags);
+        so->on_received_pre = bhv_mips_on_received_pre;
+        so->on_received_post = bhv_mips_on_received_post;
+    }
 }
 
 /**

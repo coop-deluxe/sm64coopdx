@@ -46,14 +46,16 @@ static void bhv_fire_spitter_on_received_post(UNUSED u8 localIndex) {
 void bhv_fire_spitter_update(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->on_received_post = bhv_fire_spitter_on_received_post;
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oFireSpitterScaleVel);
-        network_init_object_field(o, &o->header.gfx.scale[0]);
-        network_init_object_field(o, &o->header.gfx.scale[1]);
-        network_init_object_field(o, &o->header.gfx.scale[2]);
+        if (so) {
+            so->on_received_post = bhv_fire_spitter_on_received_post;
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oFireSpitterScaleVel);
+            network_init_object_field(o, &o->header.gfx.scale[0]);
+            network_init_object_field(o, &o->header.gfx.scale[1]);
+            network_init_object_field(o, &o->header.gfx.scale[2]);
+        }
     }
 
     cur_obj_scale(o->header.gfx.scale[0]);

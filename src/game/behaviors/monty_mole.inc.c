@@ -169,16 +169,18 @@ void bhv_monty_mole_init(void) {
     o->oMontyMoleHoleZ = 0;
 
     struct SyncObject* so = network_init_object(o, 4000.0f);
-    so->on_received_post = bhv_monty_mole_on_received_post;
-    network_init_object_field(o, &o->oMontyMoleHeightRelativeToFloor);
-    network_init_object_field(o, &o->oMontyMoleHoleX);
-    network_init_object_field(o, &o->oMontyMoleHoleY);
-    network_init_object_field(o, &o->oMontyMoleHoleZ);
-    network_init_object_field(o, &o->oFaceAnglePitch);
-    network_init_object_field(o, &o->oGravity);
-    network_init_object_field(o, &o->header.gfx.node.flags);
-    network_init_object_field(o, &o->oIntangibleTimer);
-    network_init_object_field(o, &o->oFaceAnglePitch);
+    if (so) {
+        so->on_received_post = bhv_monty_mole_on_received_post;
+        network_init_object_field(o, &o->oMontyMoleHeightRelativeToFloor);
+        network_init_object_field(o, &o->oMontyMoleHoleX);
+        network_init_object_field(o, &o->oMontyMoleHoleY);
+        network_init_object_field(o, &o->oMontyMoleHoleZ);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+        network_init_object_field(o, &o->oGravity);
+        network_init_object_field(o, &o->header.gfx.node.flags);
+        network_init_object_field(o, &o->oIntangibleTimer);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+    }
 }
 
 /**

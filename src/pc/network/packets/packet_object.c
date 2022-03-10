@@ -111,6 +111,10 @@ void network_override_object(u8 syncId, struct Object* o) {
 }
 
 struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) {
+    if (o->coopFlags & COOP_OBJ_FLAG_NON_SYNC) {
+        return NULL;
+    }
+
     bool hadSyncId = (o->oSyncID != 0);
     // generate new sync ID
     if (!network_set_sync_id(o)) {
@@ -157,6 +161,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
 }
 
 void network_init_object_field(struct Object *o, void* field) {
+    if (o->coopFlags & COOP_OBJ_FLAG_NON_SYNC) { return; }
     if (o->oSyncID == 0) { return; }
 
     // remember to synchronize this extra field

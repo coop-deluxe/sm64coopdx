@@ -1352,12 +1352,14 @@ void bhv_bowser_init(void) {
     o->oBowserEyesShut = 0;
 
     struct SyncObject* so = network_init_object(o, 8000.0f);
-    so->override_ownership = bhv_bowser_override_ownership;
-    so->ignore_if_true = bhv_bowser_ignore_if_true;
-    so->fullObjectSync = TRUE;
-    network_init_object_field(o, &o->header.gfx.node.flags);
-    network_init_object_field(o, &networkBowserAnimationIndex);
-    network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+    if (so) {
+        so->override_ownership = bhv_bowser_override_ownership;
+        so->ignore_if_true = bhv_bowser_ignore_if_true;
+        so->fullObjectSync = TRUE;
+        network_init_object_field(o, &o->header.gfx.node.flags);
+        network_init_object_field(o, &networkBowserAnimationIndex);
+        network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+    }
 }
 
 #undef BITDW
@@ -1591,10 +1593,12 @@ u8 bhv_falling_bowser_platform_ignore_if_true(void) {
 void bhv_falling_bowser_platform_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        so->ignore_if_true = bhv_falling_bowser_platform_ignore_if_true;
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
+        if (so) {
+            so->ignore_if_true = bhv_falling_bowser_platform_ignore_if_true;
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oTimer);
+        }
     }
 
     cur_obj_call_action_function(sFallingBowserPlatformActions);

@@ -3,9 +3,11 @@
 void bhv_squishable_platform_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->minUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oPlatformTimer);
-        network_init_object_field(o, &o->header.gfx.scale[1]);
+        if (so) {
+            so->minUpdateRate = 5.0f;
+            network_init_object_field(o, &o->oPlatformTimer);
+            network_init_object_field(o, &o->header.gfx.scale[1]);
+        }
     }
 
     if ((((o->oPlatformTimer / 0x80) % 300) == 0) && network_owns_object(o)) {
@@ -19,8 +21,10 @@ void bhv_squishable_platform_loop(void) {
 void bhv_bitfs_sinking_platform_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->minUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oPlatformTimer);
+        if (so) {
+            so->minUpdateRate = 5.0f;
+            network_init_object_field(o, &o->oPlatformTimer);
+        }
     }
 
     o->oPosY -=
@@ -37,8 +41,10 @@ void bhv_ddd_moving_pole_loop(void) {
 void bhv_bitfs_sinking_cage_platform_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
-        so->minUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oPlatformTimer);
+        if (so) {
+            so->minUpdateRate = 5.0f;
+            network_init_object_field(o, &o->oPlatformTimer);
+        }
     }
 
     if ((((o->oPlatformTimer / 0x100) % 60) == 0) && network_owns_object(o)) {

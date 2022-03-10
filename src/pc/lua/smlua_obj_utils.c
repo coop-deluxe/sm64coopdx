@@ -44,7 +44,8 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     obj->oHomeY = y;
     obj->oHomeZ = z;
 
-    obj->createdThroughNetwork = true;
+    obj->coopFlags = COOP_OBJ_FLAG_LUA;
+    if (!doSync) { obj->coopFlags |= COOP_OBJ_FLAG_NON_SYNC; }
 
     if (objSetupFunction != 0) {
         lua_State* L = gLuaState;
@@ -73,9 +74,8 @@ struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedI
     spawn_object_internal(behaviorId, modelId, x, y, z, objSetupFunction, true);
 }
 
-// this is too dangerous for now
-struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z) {
-    spawn_object_internal(behaviorId, modelId, x, y, z, 0, false);
+struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction) {
+    spawn_object_internal(behaviorId, modelId, x, y, z, objSetupFunction, false);
 }
 
 s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
