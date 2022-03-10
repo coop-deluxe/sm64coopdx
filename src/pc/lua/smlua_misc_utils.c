@@ -12,3 +12,7 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
     find_surface_on_ray(orig, end, &info.surface, info.hitPos);
     return &info;
 }
+
+u32 get_network_area_timer(void) {
+    return gNetworkAreaTimer;
+}

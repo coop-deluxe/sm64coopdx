@@ -7289,6 +7289,15 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_network_area_timer());
+
+    return 1;
+}
+
   ///////////////////////
  // smlua_obj_utils.h //
 ///////////////////////
@@ -8520,6 +8529,7 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
+    smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
 
     // smlua_obj_utils.h
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);

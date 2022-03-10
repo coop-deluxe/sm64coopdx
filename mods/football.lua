@@ -32,7 +32,6 @@ ballActionValues = {
 
 gBallTouchedLocal = false
 gCachedBalls = {}
-gInitializeBalls = {}
 
 -----------
 -- utils --
@@ -128,8 +127,8 @@ function spawn_or_move_ball(x, y, z)
         obj.oVelZ = 0
 
         obj.oGlobalOwner = my_global_index()
-        obj.oHitTime = obj.areaTimer
-        obj.oNetworkTime = obj.areaTimer
+        obj.oHitTime = get_network_area_timer()
+        obj.oNetworkTime = get_network_area_timer()
         network_send_object(obj, false)
 
         return obj
@@ -615,13 +614,13 @@ function bhv_ball_loop(obj)
     end
 
     -- send out object if we touched it
-    local updateRateSend = (obj.oGlobalOwner == my_global_index() and (obj.areaTimer - obj.oNetworkTime) > 5)
+    local updateRateSend = (obj.oGlobalOwner == my_global_index() and (get_network_area_timer() - obj.oNetworkTime) > 5)
     if gBallTouchedLocal or updateRateSend then
         if gBallTouchedLocal then
             obj.oGlobalOwner = my_global_index()
-            obj.oHitTime = obj.areaTimer
+            obj.oHitTime = get_network_area_timer()
         end
-        obj.oNetworkTime = obj.areaTimer
+        obj.oNetworkTime = get_network_area_timer()
         network_send_object(obj, false)
     end
 
@@ -645,18 +644,6 @@ function bhv_ball_loop(obj)
     cb.oVelX = obj.oVelX
     cb.oVelY = obj.oVelY
     cb.oVelZ = obj.oVelZ
-end
-
-function ball_update()
-    -- hack: we have to set the area timer outside of the behavior or bad things happen
-    for i, obj in ipairs(gInitializeBalls) do
-        if obj ~= nil then
-            obj.areaTimerDuration = 0
-            obj.areaTimerType = AREA_TIMER_TYPE_MAXIMUM
-            obj.areaTimer = 0
-        end
-        gInitializeBalls[i] = nil
-    end
 end
 
 id_bhvBall = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_ball_init, bhv_ball_loop)
@@ -828,8 +815,8 @@ function gamemode_wait()
         -- claim the ball
         if sSoccerBall.oGlobalOwner ~= my_global_index() then
             sSoccerBall.oGlobalOwner = my_global_index()
-            sSoccerBall.oHitTime = sSoccerBall.areaTimer
-            sSoccerBall.oNetworkTime = sSoccerBall.areaTimer
+            sSoccerBall.oHitTime = get_network_area_timer()
+            sSoccerBall.oNetworkTime = get_network_area_timer()
             network_send_object(sSoccerBall, false)
         end
 
@@ -1283,8 +1270,6 @@ end
 function update()
     local m = gMarioStates[0]
     local np = gNetworkPlayers[m.playerIndex]
-
-    ball_update()
 
     if np.currAreaSyncValid then
         gamemode_update()

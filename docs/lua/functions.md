@@ -619,6 +619,7 @@
 
 - smlua_misc_utils.h
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+   - [get_network_area_timer](#get_network_area_timer)
 
 <br />
 
@@ -11417,6 +11418,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_area_timer](#get_network_area_timer)
+
+### Lua Example
+`local integerValue = get_network_area_timer()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_network_area_timer(void);`
 
 [:arrow_up_small:](#)
 
