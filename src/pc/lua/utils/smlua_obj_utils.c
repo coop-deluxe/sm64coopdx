@@ -3,7 +3,7 @@
 #include "object_fields.h"
 #include "src/game/object_helpers.h"
 
-#include "smlua.h"
+#include "pc/lua/smlua.h"
 #include "smlua_obj_utils.h"
 #include "smlua_model_utils.h"
 #include "pc/debuglog.h"

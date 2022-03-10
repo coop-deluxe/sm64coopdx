@@ -7,8 +7,8 @@
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/lua/smlua.h"
-#include "pc/lua/smlua_anim_utils.h"
-#include "pc/lua/smlua_collision_utils.h"
+#include "pc/lua/utils/smlua_anim_utils.h"
+#include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/mod_list.h"
 
 #define LUA_VEC3S_FIELD_COUNT 3

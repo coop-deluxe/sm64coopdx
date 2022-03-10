@@ -10,9 +10,9 @@
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
-#include "src/pc/lua/smlua_anim_utils.h"
-#include "src/pc/lua/smlua_misc_utils.h"
-#include "src/pc/lua/smlua_collision_utils.h"
+#include "src/pc/lua/utils/smlua_anim_utils.h"
+#include "src/pc/lua/utils/smlua_misc_utils.h"
+#include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/game/spawn_sound.h"
 
 #include "include/object_fields.h"

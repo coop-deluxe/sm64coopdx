@@ -35,9 +35,9 @@ in_files = [
     "src/pc/djui/djui_hud_utils.h",
     "src/pc/network/network_player.h",
     "include/behavior_table.h",
-    "src/pc/lua/smlua_obj_utils.h",
-    "src/pc/lua/smlua_misc_utils.h",
-    'src/pc/lua/smlua_collision_utils.h',
+    "src/pc/lua/utils/smlua_obj_utils.h",
+    "src/pc/lua/utils/smlua_misc_utils.h",
+    'src/pc/lua/utils/smlua_collision_utils.h',
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
@@ -77,7 +77,7 @@ override_disallowed_functions = {
 }
 
 lua_function_params = {
-    "src/pc/lua/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
+    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
 }
 
 ###########################################################

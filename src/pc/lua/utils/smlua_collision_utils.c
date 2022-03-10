@@ -2,7 +2,7 @@
 
 #include "src/engine/surface_collision.h"
 
-#include "smlua.h"
+#include "pc/lua/smlua.h"
 #include "smlua_collision_utils.h"
 #include "pc/debuglog.h"
 

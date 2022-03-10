@@ -7,7 +7,7 @@
 #include "src/game/area.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
-#include "src/pc/lua/smlua_model_utils.h"
+#include "src/pc/lua/utils/smlua_model_utils.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 

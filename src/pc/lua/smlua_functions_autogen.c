@@ -19,9 +19,9 @@
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/pc/network/network_player.h"
 #include "include/behavior_table.h"
-#include "src/pc/lua/smlua_obj_utils.h"
-#include "src/pc/lua/smlua_misc_utils.h"
-#include "src/pc/lua/smlua_collision_utils.h"
+#include "src/pc/lua/utils/smlua_obj_utils.h"
+#include "src/pc/lua/utils/smlua_misc_utils.h"
+#include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/engine/surface_load.h"
 
 

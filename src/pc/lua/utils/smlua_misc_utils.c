@@ -1,6 +1,6 @@
 #include "types.h"
 
-#include "smlua.h"
+#include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
 

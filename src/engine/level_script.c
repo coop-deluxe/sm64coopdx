@@ -23,7 +23,7 @@
 #include "surface_collision.h"
 #include "surface_load.h"
 #include "level_table.h"
-#include "src/pc/lua/smlua_model_utils.h"
+#include "src/pc/lua/utils/smlua_model_utils.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
 

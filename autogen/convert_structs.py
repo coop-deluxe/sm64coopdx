@@ -15,9 +15,9 @@ in_files = [
     'src/pc/djui/djui_hud_utils.h',
     'src/game/object_helpers.h',
     'src/game/mario_step.h',
-    'src/pc/lua/smlua_anim_utils.h',
-    'src/pc/lua/smlua_misc_utils.h',
-    'src/pc/lua/smlua_collision_utils.h',
+    'src/pc/lua/utils/smlua_anim_utils.h',
+    'src/pc/lua/utils/smlua_misc_utils.h',
+    'src/pc/lua/utils/smlua_collision_utils.h',
     'src/game/spawn_sound.h',
 ]
 
