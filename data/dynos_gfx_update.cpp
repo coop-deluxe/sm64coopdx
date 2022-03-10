@@ -107,6 +107,7 @@ void DynOS_Gfx_Update() {
         const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
         for (s32 i = 0; i != pDynosPacks.Count(); ++i) {
 #ifdef COOP
+            // TODO: needs to be adjusted from djui
             _Enabled.Add(true);
 #else
             _Enabled.Add(DynOS_Opt_GetValue(String("dynos_pack_%d", i)));

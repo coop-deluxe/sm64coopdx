@@ -3,9 +3,7 @@ extern "C" {
 #include "sm64.h"
 #include "level_commands.h"
 #include "game/level_update.h"
-#ifndef COOP
 #include "game/options_menu.h"
-#endif
 #include "game/object_list_processor.h"
 extern s16 gMenuMode;
 extern s8 gDialogBoxState;
@@ -19,9 +17,7 @@ extern void omm_opt_init();
 //
 
 void DynOS_ReturnToMainMenu() {
-#ifndef COOP
     optmenu_toggle();
-#endif
     level_set_transition(0, NULL);
     gDialogBoxState = 0;
     gMenuMode = -1;
@@ -33,18 +29,10 @@ void DynOS_ReturnToMainMenu() {
 //
 
 DYNOS_AT_STARTUP void DynOS_Init() {
-
-#ifdef COOP
-    Array<String> _Packs = DynOS_Gfx_Init();
-    if (_Packs.Count() == 0) {
-        return;
-    }
-#else
 #ifdef OMM_DEFINES_H
     omm_opt_init();
 #endif
     DynOS_Opt_Init();
-#endif
 }
 
 //
@@ -57,9 +45,7 @@ void DynOS_UpdateOpt(void *aPad) {
         DynOS_Warp_SetParam(gCurrLevelNum, -1);
         sDynosIsLevelEntry = false;
     }
-#ifndef COOP
     DynOS_Opt_Update((OSContPad *) aPad);
-#endif
     gPrevFrameObjectCount = 0;
 }
 

@@ -10,9 +10,7 @@ extern "C" {
 #include "game/level_update.h"
 #include "game/sound_init.h"
 #include "game/object_list_processor.h"
-#ifndef COOP
 #include "game/options_menu.h"
-#endif
 extern s8 gDialogBoxState;
 extern s16 gMenuMode;
 extern s32 gWdwWaterLevelSet;
@@ -25,10 +23,8 @@ extern void set_play_mode(s16);
 // Data
 //
 
-#ifndef COOP
        s32 gDDDBowsersSub     = -1;
        s32 gDDDPoles          = -1;
-#endif
 static s32 sDynosWarpLevelNum = -1;
 static s32 sDynosWarpAreaNum  = -1;
 static s32 sDynosWarpActNum   = -1;
@@ -64,9 +60,7 @@ bool DynOS_Warp_ExitLevel(s32 aDelay) {
     }
 
     // Close the pause menu if it was open
-#ifndef COOP
     optmenu_toggle();
-#endif
     level_set_transition(0, NULL);
     gDialogBoxState = 0;
     gMenuMode = -1;
@@ -98,9 +92,7 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
     }
 
     // Close the pause menu if it was open
-#ifndef COOP
     optmenu_toggle();
-#endif
     level_set_transition(0, NULL);
     gDialogBoxState = 0;
     gMenuMode = -1;
@@ -155,7 +147,6 @@ void DynOS_Warp_SetParam(s32 aLevel, s32 aIndex) {
         sDynosWarpPrevParamIndex = aIndex;
     }
 
-#ifndef COOP
     switch (aLevel) {
     case LEVEL_DDD:
         switch (aIndex) {
@@ -195,7 +186,6 @@ void DynOS_Warp_SetParam(s32 aLevel, s32 aIndex) {
         }
         break;
     }
-#endif
 }
 
 //
@@ -209,9 +199,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
     if (sDynosWarpTargetArea == -1) {
 
         // Close the pause menu if it was open
-#ifndef COOP
         optmenu_toggle();
-#endif
         level_set_transition(0, NULL);
         gDialogBoxState = 0;
         gMenuMode = -1;
@@ -323,13 +311,11 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         }
     }
 
-#ifndef COOP
     // Reset DDD settings to default
     if (gCurrCourseNum == COURSE_NONE) {
         gDDDBowsersSub = -1;
         gDDDPoles = -1;
     }
-#endif
 
     return NULL;
 }

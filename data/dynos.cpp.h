@@ -616,7 +616,6 @@ void DynOS_ReturnToMainMenu();
 // Opt
 //
 
-#ifndef COOP
 s32 DynOS_Opt_GetValue(const String &aName);
 void DynOS_Opt_SetValue(const String &aName, s32 aValue);
 void DynOS_Opt_AddAction(const String &aFuncName, bool (*aFuncPtr)(const char *), bool aOverwrite);
@@ -629,7 +628,6 @@ void DynOS_Opt_LoadConfig(DynosOption *aMenu);
 void DynOS_Opt_SaveConfig(DynosOption *aMenu);
 void DynOS_Opt_DrawMenu(DynosOption *aCurrentOption, DynosOption *aCurrentMenu, DynosOption *aOptionsMenu, DynosOption *aDynosMenu);
 void DynOS_Opt_DrawPrompt(DynosOption *aCurrentMenu, DynosOption *aOptionsMenu, DynosOption *aDynosMenu);
-#endif
 
 //
 // Gfx
