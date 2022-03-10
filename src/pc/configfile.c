@@ -41,6 +41,12 @@ struct ConfigOption {
     int maxStringLength;
 };
 
+struct FunctionConfigOption {
+    const char *name;
+    void (*read)(char**, int);
+    void (*write)(FILE*);
+};
+
 /*
  *Config options and default values
  */
@@ -180,29 +186,69 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
-    {.name = "share_lives",          .type = CONFIG_TYPE_BOOL, .boolValue = &configShareLives},
     {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
-    {.name = "bubble_death",         .type = CONFIG_TYPE_BOOL, .boolValue = &configBubbleDeath},
-    {.name = "amount_of_players",    .type = CONFIG_TYPE_UINT, .uintValue = &configAmountofPlayers},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif
+    // debug
+    {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
+    {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
     // coop-specific
-    {.name = "coop_join_ip",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp, .maxStringLength = MAX_CONFIG_STRING},
-    {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configJoinPort},
-    {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
-    {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
-    {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
-    {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
-    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .boolValue   = &configStayInLevelAfterStar},
-    {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
-    {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
-    {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
-    {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
+    {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configAmountofPlayers},
+    {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configBubbleDeath},
     {.name = "coop_60fps",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &config60Fps},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configDrawDistance},
-    {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
-    {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
+    {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
+    {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},
+    {.name = "coop_join_ip",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configJoinPort},
+    {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configNetworkSystem},
+    {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerInteraction},
+    {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
+    {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
+    {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
+    {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
+    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .boolValue   = &configStayInLevelAfterStar},
+    {.name = "share_lives",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShareLives},
+};
+
+// FunctionConfigOption functions
+
+static void enable_mod_read(char** tokens, UNUSED int numTokens) {
+    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
+        struct ModListEntry* entry = &gModTableLocal.entries[i];
+        if (!strcmp(tokens[1], entry->name)) {
+            entry->enabled = true;
+            break;
+        }
+    }
+}
+
+static void enable_mod_write(FILE* file) {
+    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
+        struct ModListEntry* entry = &gModTableLocal.entries[i];
+        if (entry == NULL) { continue; }
+        if (!entry->enabled) { continue; }
+        fprintf(file, "%s %s\n", "enable-mod:", entry->name);
+    }
+}
+
+static void ban_read(char** tokens, UNUSED int numTokens) {
+    ban_list_add(tokens[1], true);
+}
+
+static void ban_write(FILE* file) {
+    for (unsigned int i = 0; i < gBanCount; i++) {
+        if (gBanAddresses == NULL) { break; }
+        if (gBanAddresses[i] == NULL) { continue; }
+        if (!gBanPerm[i]) { continue; }
+        fprintf(file, "%s %s\n", "ban:", gBanAddresses[i]);
+    }
+}
+
+static const struct FunctionConfigOption functionOptions[] = {
+    { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
+    { .name = "ban:",        .read = ban_read,        .write = ban_write        },
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
@@ -306,10 +352,12 @@ void configfile_load(const char *filename) {
         char *tokens[1 + MAX_BINDS];
         int numTokens;
 
+        // skip whitespace
         while (isspace(*p))
             p++;
 
-        if (!*p || *p == '#') { // comment or empty line
+        // skip comment or empty line
+        if (!*p || *p == '#') {
             free(line);
             continue;
         }
@@ -319,26 +367,15 @@ void configfile_load(const char *filename) {
             if (numTokens >= 2) {
                 const struct ConfigOption *option = NULL;
 
-                // enable mods
-                if (!strcmp(tokens[0], "enable-mod:")) {
-                    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
-                        struct ModListEntry* entry = &gModTableLocal.entries[i];
-                        if (!strcmp(tokens[1], entry->name)) {
-                            entry->enabled = true;
-                            break;
-                        }
+                // find functionOption
+                for (unsigned int i = 0; i < ARRAY_LEN(functionOptions); i++) {
+                    if (strcmp(tokens[0], functionOptions[i].name) == 0) {
+                        functionOptions[i].read(tokens, numTokens);
+                        goto NEXT_OPTION;
                     }
-                    free(line);
-                    continue;
                 }
 
-                // ban list
-                if (!strcmp(tokens[0], "ban:")) {
-                    ban_list_add(tokens[1], true);
-                    free(line);
-                    continue;
-                }
-
+                // find option
                 for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
                     if (strcmp(tokens[0], options[i].name) == 0) {
                         option = &options[i];
@@ -383,6 +420,7 @@ void configfile_load(const char *filename) {
             } else
                 puts("error: expected value");
         }
+NEXT_OPTION:
         free(line);
     }
 
@@ -435,20 +473,9 @@ void configfile_save(const char *filename) {
         }
     }
 
-    // save enabled mods
-    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
-        struct ModListEntry* entry = &gModTableLocal.entries[i];
-        if (entry == NULL) { continue; }
-        if (!entry->enabled) { continue; }
-        fprintf(file, "%s %s\n", "enable-mod:", entry->name);
-    }
-
-    // save ban list
-    for (unsigned int i = 0; i < gBanCount; i++) {
-        if (gBanAddresses == NULL) { break; }
-        if (gBanAddresses[i] == NULL) { continue; }
-        if (!gBanPerm[i]) { continue; }
-        fprintf(file, "%s %s\n", "ban:", gBanAddresses[i]);
+    // save function options
+    for (unsigned int i = 0; i < ARRAY_LEN(functionOptions); i++) {
+        functionOptions[i].write(file);
     }
 
     fclose(file);
