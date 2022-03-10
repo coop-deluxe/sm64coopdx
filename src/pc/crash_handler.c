@@ -463,6 +463,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
         for (int i = 0; i < gModTableCurrent->entryCount; i++) {
             struct ModListEntry* entry = &gModTableCurrent->entries[i];
             if (entry == NULL || !entry->enabled) { continue; }
+            u8 b = (gPcDebug.lastModRun == entry) ? 0 : 0xFF;
             crash_handler_set_text(x, y, 0xFF, 0xFF, 200, "%.21s", entry->name);
             y += 8;
         }
@@ -546,6 +547,7 @@ struct PcDebug gPcDebug = {
     .id = DEFAULT_ID,
     .bhvOffset = /* 0x12 */ 0,
     .debugId = 0x4BE2,
+    .lastModRun = NULL,
 };
 
 void crash_handler_init(void) {

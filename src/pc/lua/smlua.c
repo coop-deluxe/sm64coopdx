@@ -1,5 +1,6 @@
 #include "smlua.h"
 #include "pc/mod_list.h"
+#include "pc/crash_handler.h"
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
@@ -102,6 +103,7 @@ void smlua_init(void) {
         LOG_INFO("    %s", entry->path);
         gLuaLoadingEntry = entry;
         gLuaActiveEntry = entry;
+        gPcDebug.lastModRun = gLuaActiveEntry;
         smlua_load_script(entry->path, entry->remoteIndex);
         gLuaActiveEntry = NULL;
         gLuaLoadingEntry = NULL;

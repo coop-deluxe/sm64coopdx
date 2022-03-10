@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "pc/crash_handler.h"
 #include "pc/mod_list.h"
 #include "pc/network/network.h"
 
@@ -152,6 +153,7 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         // call hook
         struct ModListEntry* prev = gLuaActiveEntry;
         gLuaActiveEntry = setEntry;
+        gPcDebug.lastModRun = gLuaActiveEntry;
         if (0 != lua_pcall(L, 3, 0, 0)) {
             LOG_LUA("Failed to call the hook_on_changed callback: %s", lua_tostring(L, -1));
             smlua_logline();

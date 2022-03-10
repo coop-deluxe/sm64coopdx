@@ -11,6 +11,7 @@ struct PcDebug {
     u64 id;
     u64 bhvOffset;
     u64 debugId;
+    void* lastModRun;
 };
 
 extern struct PcDebug gPcDebug;
