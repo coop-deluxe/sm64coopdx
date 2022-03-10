@@ -6,6 +6,7 @@
 
 #include <ultra64.h>
 #include "macros.h"
+#include "data/dynos.c.h"
 #include "pc/network/version.h"
 
 // Certain functions are marked as having return values, but do not
@@ -112,6 +113,7 @@ struct GraphNode
     /*0x08*/ struct GraphNode *next;
     /*0x0C*/ struct GraphNode *parent;
     /*0x10*/ struct GraphNode *children;
+    /*0x14*/ const void *georef;
 };
 
 struct AnimInfo

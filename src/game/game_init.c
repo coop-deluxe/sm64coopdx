@@ -394,9 +394,6 @@ void adjust_analog_stick(struct Controller *controller) {
 // if a demo sequence exists, this will run the demo
 // input list until it is complete. called every frame.
 void run_demo_inputs(void) {
-    // eliminate the unused bits.
-    gControllers[0].controllerData->button &= VALID_BUTTONS;
-
     /*
         Check if a demo inputs list
         exists and if so, run the
@@ -465,6 +462,7 @@ void read_controller_inputs(void) {
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
         osContGetReadData(gInteractableOverridePad ? &gInteractablePad : &gControllerPads[0]);
+        dynos_update_opt((void *) &gControllerPads[0]);
     }
     run_demo_inputs();
 

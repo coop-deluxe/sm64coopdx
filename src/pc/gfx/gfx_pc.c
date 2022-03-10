@@ -6,10 +6,8 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#ifdef EXTERNAL_DATA
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
-#endif
 
 #ifndef _LANGUAGE_C
 #define _LANGUAGE_C
@@ -52,13 +50,8 @@
 #define MAX_LIGHTS 8
 #define MAX_VERTICES 64
 
-#ifdef EXTERNAL_DATA
 # define MAX_CACHED_TEXTURES 4096 // for preloading purposes
 # define HASH_SHIFT 0
-#else
-# define MAX_CACHED_TEXTURES 512
-# define HASH_SHIFT 5
-#endif
 
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)
 #define HASH_MASK (HASHMAP_LEN - 1)
@@ -606,6 +599,8 @@ static bool preload_texture(void *user, const char *path) {
 #endif // EXTERNAL_DATA
 
 static void import_texture(int tile) {
+    extern s32 dynos_gfx_import_texture(void **output, void *ptr, s32 tile, void *grapi, void **hashmap, void *pool, s32 *poolpos, s32 poolsize);
+    if (dynos_gfx_import_texture((void **) &rendering_state.textures[tile], (void *) rdp.loaded_texture[tile].addr, tile, gfx_rapi, (void **) gfx_texture_cache.hashmap, (void *) gfx_texture_cache.pool, (int *) &gfx_texture_cache.pool_pos, MAX_CACHED_TEXTURES)) { return; }
     uint8_t fmt = rdp.texture_tile.fmt;
     uint8_t siz = rdp.texture_tile.siz;
 

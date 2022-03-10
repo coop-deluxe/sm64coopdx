@@ -98,6 +98,10 @@ static void debug_warp_level(u8 level) {
 }
 
 static void debug_warp_area() {
+    extern bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
+    dynos_warp_to_level(LEVEL_CCM, 1, 5);
+    return;
+
     if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
 
     struct ObjectWarpNode* objectNode = gCurrentArea->warpNodes;
