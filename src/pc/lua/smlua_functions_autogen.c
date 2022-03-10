@@ -7397,6 +7397,17 @@ int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_temp_spawn_particles_info(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int modelId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_object(L, LOT_SPAWNPARTICLESINFO, obj_get_temp_spawn_particles_info(modelId));
+
+    return 1;
+}
+
 int smlua_func_obj_has_behavior_id(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -8519,6 +8530,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id", smlua_func_obj_get_next_with_same_behavior_id);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_f32", smlua_func_obj_get_next_with_same_behavior_id_and_field_f32);
     smlua_bind_function(L, "obj_get_next_with_same_behavior_id_and_field_s32", smlua_func_obj_get_next_with_same_behavior_id_and_field_s32);
+    smlua_bind_function(L, "obj_get_temp_spawn_particles_info", smlua_func_obj_get_temp_spawn_particles_info);
     smlua_bind_function(L, "obj_has_behavior_id", smlua_func_obj_has_behavior_id);
     smlua_bind_function(L, "obj_has_model_extended", smlua_func_obj_has_model_extended);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);

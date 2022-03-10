@@ -68,6 +68,7 @@ override_field_immutable = {
     "TextureInfo": [ "*" ],
     "Object": ["oSyncID", "createdThroughNetwork"],
     "GlobalObjectAnimations": [ "*"],
+    "SpawnParticlesInfo": [ "model" ],
 }
 
 sLuaManuallyDefinedStructs = [

@@ -631,6 +631,7 @@
    - [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
    - [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
    - [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
+   - [obj_get_temp_spawn_particles_info](#obj_get_temp_spawn_particles_info)
    - [obj_has_behavior_id](#obj_has_behavior_id)
    - [obj_has_model_extended](#obj_has_model_extended)
    - [obj_set_model_extended](#obj_set_model_extended)
@@ -11590,6 +11591,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_temp_spawn_particles_info](#obj_get_temp_spawn_particles_info)
+
+### Lua Example
+`local SpawnParticlesInfoValue = obj_get_temp_spawn_particles_info(modelId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+
+### Returns
+[SpawnParticlesInfo](structs.md#SpawnParticlesInfo)
+
+### C Prototype
+`struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);`
 
 [:arrow_up_small:](#)
 

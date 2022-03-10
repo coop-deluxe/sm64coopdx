@@ -14,7 +14,7 @@ void bhv_tree_snow_or_leaf_loop(void) {
         obj_mark_for_deletion(o);
     if (o->oTimer > 100)
         obj_mark_for_deletion(o);
-    if (gPrevFrameObjectCount > 212)
+    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 212 / 240))
         obj_mark_for_deletion(o);
     o->oFaceAnglePitch += o->oAngleVelPitch;
     o->oFaceAngleRoll += o->oAngleVelRoll;

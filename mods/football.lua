@@ -163,6 +163,48 @@ define_custom_obj_fields({
     oFrozen = 'u32',
 })
 
+function bhv_ball_particle_trail(obj)
+    local spi = obj_get_temp_spawn_particles_info(E_MODEL_SPARKLES)
+    if spi == nil then
+        return nil
+    end
+
+    spi.behParam = 2
+    spi.count = 1
+    spi.offsetY = -1 * ballRadius
+    spi.forwardVelBase = 8
+    spi.forwardVelRange = 0
+    spi.velYBase = 6
+    spi.velYRange = 0
+    spi.gravity = 0
+    spi.dragStrength = 5
+    spi.sizeBase = 10
+    spi.sizeRange = 30
+
+    cur_obj_spawn_particles(spi)
+end
+
+function bhv_ball_particle_bounce(obj)
+    local spi = obj_get_temp_spawn_particles_info(E_MODEL_MIST)
+    if spi == nil then
+        return nil
+    end
+
+    spi.behParam = 3
+    spi.count = 5
+    spi.offsetY = -1 * ballRadius
+    spi.forwardVelBase = 6
+    spi.forwardVelRange = -6
+    spi.velYBase = 6
+    spi.velYRange = -6
+    spi.gravity = 0
+    spi.dragStrength = 5
+    spi.sizeBase = 8
+    spi.sizeRange = 13
+
+    cur_obj_spawn_particles(spi)
+end
+
 function bhv_ball_init(obj)
     -- flags and such
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -245,7 +287,9 @@ function bhv_ball_player_collision(obj)
 
     local vDifference = { x = objPoint.x - cylPoint.x, y = objPoint.y - cylPoint.y, z = objPoint.z - cylPoint.z }
     local differenceDir = { x = vDifference.x, y = vDifference.y, z = vDifference.z }
-    vec3f_normalize(differenceDir)
+    if vec3f_length(differenceDir) ~= 0 then
+        vec3f_normalize(differenceDir)
+    end
 
     alterPos.x = (cylPoint.x + differenceDir.x * (playerBallRadius + playerRadius + 1)) - objPoint.x
     alterPos.y = (cylPoint.y + differenceDir.y * (playerBallRadius + playerRadius + 1)) - objPoint.y
@@ -310,6 +354,11 @@ function bhv_ball_player_collision(obj)
             doReflection = (vec3f_degrees_between(vPlayer, objCylDir)) <= 120
                        and (vec3f_degrees_between(vPlayerXZ, objCylDirXZ)) <= 120
         end
+    end
+
+    -- make sure player has a velocity
+    if not doReflection and vPlayerMag == 0 then
+        doReflection = true
     end
 
     --------------------------------------
@@ -456,8 +505,10 @@ function bhv_ball_loop(obj)
 
     -- detect normal along movement vector
     local vMag = vec3f_length(v)
-    local vNorm = { x = v.x / vMag, y = v.y / vMag, z = v.z / vMag }
-    b = { x = v.x + vNorm.x * (vMag + ballRadius), y = v.y + vNorm.y * (vMag + ballRadius), z = v.z + vNorm.z * (vMag + ballRadius) }
+    if vMag > 0 then
+        local vNorm = { x = v.x / vMag, y = v.y / vMag, z = v.z / vMag }
+        b = { x = v.x + vNorm.x * (vMag + ballRadius), y = v.y + vNorm.y * (vMag + ballRadius), z = v.z + vNorm.z * (vMag + ballRadius) }
+    end
 
     info = collision_find_surface_on_ray(
             a.x, a.y, a.z,
@@ -467,6 +518,7 @@ function bhv_ball_loop(obj)
     local colNormals = {}
     if info.surface ~= nil then
         table.insert(colNormals, { x = info.surface.normal.x, y = info.surface.normal.y, z = info.surface.normal.z })
+        bhv_ball_particle_bounce(obj)
     else
         table.insert(colNormals, nil)
     end
@@ -572,6 +624,16 @@ function bhv_ball_loop(obj)
         obj.oNetworkTime = obj.areaTimer
         network_send_object(obj, false)
     end
+
+    -- spawn a particle trail
+    if vMag > 50 then
+        bhv_ball_particle_trail(obj)
+    end
+
+    -- hack: make sure we never set velocity to nan
+    if obj.oVelX ~= obj.oVelX then obj.oVelX = 0 end
+    if obj.oVelY ~= obj.oVelY then obj.oVelY = 0 end
+    if obj.oVelZ ~= obj.oVelZ then obj.oVelZ = 0 end
 
     -- hack: save pos/vel to detect packets
     cb.oGlobalOwner = obj.oGlobalOwner

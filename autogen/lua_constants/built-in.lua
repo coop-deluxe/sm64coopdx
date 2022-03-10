@@ -81,11 +81,12 @@ function vec3f_mul(dest, a)
 end
 
 function vec3f_normalize(dest)
-    local invsqrt = 1.0 / math.sqrt(dest.x * dest.x + dest.y * dest.y + dest.z * dest.z)
-    if invsqrt == 0 then
+    local divisor = math.sqrt(dest.x * dest.x + dest.y * dest.y + dest.z * dest.z)
+    if divisor == 0 then
         return dest
     end
 
+    local invsqrt = 1.0 / divisor
     dest.x = dest.x * invsqrt
     dest.y = dest.y * invsqrt
     dest.z = dest.z * invsqrt

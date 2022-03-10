@@ -2238,13 +2238,14 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     s32 numParticles = info->count;
 
     // If there are a lot of objects already, limit the number of particles
-    if (gPrevFrameObjectCount > 150 && numParticles > 10) {
+    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 150 / 240) && numParticles > 10) {
         numParticles = 10;
     }
+    
 
     // We're close to running out of object slots, so don't spawn particles at
     // all
-    if (gPrevFrameObjectCount > 210) {
+    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 210 / 240)) {
         numParticles = 0;
     }
 

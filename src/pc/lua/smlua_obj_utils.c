@@ -190,3 +190,16 @@ struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o
     }
     return NULL;
 }
+
+struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId) {
+    static struct SpawnParticlesInfo spi = { 0 };
+
+    u8 loadedModelId = smlua_model_util_load(modelId);
+    if (loadedModelId == 0xFF) {
+        LOG_ERROR("failed to load model  %u", modelId);
+        return NULL;
+    }
+    spi.model = loadedModelId;
+
+    return &spi;
+}

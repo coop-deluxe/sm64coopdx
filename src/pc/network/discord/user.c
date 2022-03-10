@@ -5,8 +5,10 @@
 
 static void on_current_user_update(UNUSED void* data) {
     LOGFILE_INFO(LFT_DISCORD, "> on_current_user_update");
-    struct DiscordUser user;
+    struct DiscordUser user = { 0 };
     app.users->get_current_user(app.users, &user);
+
+    // remember user id
     app.userId = user.id;
     gPcDebug.id = user.id;
 

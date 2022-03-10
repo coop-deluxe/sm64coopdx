@@ -1655,7 +1655,7 @@
 | forwardVelBase | `integer` |  |
 | forwardVelRange | `integer` |  |
 | gravity | `integer` |  |
-| model | `integer` |  |
+| model | `integer` | read-only |
 | offsetY | `integer` |  |
 | sizeBase | `number` |  |
 | sizeRange | `number` |  |
