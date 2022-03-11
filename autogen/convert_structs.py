@@ -62,6 +62,10 @@ override_field_types = {
     "Object": { "oAnimations": "ObjectAnimPointer*"}
 }
 
+override_field_mutable = {
+    "NetworkPlayer": [ "overrideModelIndex", "overridePaletteIndex" ],
+}
+
 override_field_immutable = {
     "MarioState": [ "playerIndex" ],
     "Character": [ "*" ],
@@ -211,6 +215,10 @@ def get_struct_field_info(struct, field):
     if sid in override_field_immutable:
         if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
             fimmutable = 'true'
+
+    if sid in override_field_mutable:
+        if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
+            fimmutable = 'false'
 
     return fid, ftype, fimmutable, lvt, lot
 

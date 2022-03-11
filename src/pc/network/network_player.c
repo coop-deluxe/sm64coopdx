@@ -17,12 +17,19 @@ static char sDefaultPlayerName[] = "Player";
 void network_player_init(void) {
     gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : 0;
     gNetworkPlayers[0].paletteIndex = configPlayerPalette;
+    gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
+    gNetworkPlayers[0].overridePaletteIndex = gNetworkPlayers[0].paletteIndex;
 }
 
 void network_player_update_model(u8 localIndex) {
     struct MarioState* m = &gMarioStates[localIndex];
     if (m == NULL) { return; }
-    m->character = &gCharacters[gNetworkPlayers[localIndex].modelIndex];
+    struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+
+    u8 index = np->overrideModelIndex;
+    if (index >= CT_MAX) { index = 0; }
+    m->character = &gCharacters[index];
+
     if (m->marioObj == NULL) { return; }
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
 }
@@ -116,9 +123,13 @@ void network_player_update(void) {
     if (!network_player_any_connected()) { return; }
 
     if (gNetworkType == NT_SERVER) {
-        for (int i = 1; i < MAX_PLAYERS; i++) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
-            if (!np->connected) { continue; }
+            if (!np->connected && i > 0) { continue; }
+
+            network_player_update_model(i);
+            if (i == 0) { continue; }
+
             float elapsed = (clock_elapsed() - np->lastReceived);
 #ifndef DEVELOPMENT
             if (elapsed > NETWORK_PLAYER_TIMEOUT) {
@@ -179,6 +190,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->lastSent = clock_elapsed();
         if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }
 
+        if (np->modelIndex   == np->overrideModelIndex)   { np->overrideModelIndex   = modelIndex;   }
+        if (np->paletteIndex == np->overridePaletteIndex) { np->overridePaletteIndex = paletteIndex; }
         np->modelIndex = modelIndex;
         np->paletteIndex = paletteIndex;
         network_player_update_model(localIndex);
@@ -208,6 +221,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->fadeOpacity = 0;
     np->modelIndex = modelIndex;
     np->paletteIndex = paletteIndex;
+    np->overrideModelIndex = modelIndex;
+    np->overridePaletteIndex = paletteIndex;
     snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
     network_player_update_model(localIndex);
 

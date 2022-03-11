@@ -514,7 +514,9 @@ function bhv_ball_loop(obj)
     local colNormals = {}
     if info.surface ~= nil then
         table.insert(colNormals, { x = info.surface.normal.x, y = info.surface.normal.y, z = info.surface.normal.z })
-        bhv_ball_particle_bounce(obj)
+        if vMag > 5 then
+            bhv_ball_particle_bounce(obj)
+        end
     else
         table.insert(colNormals, nil)
     end
@@ -673,8 +675,8 @@ gGlobalSyncTable.gameState = GAME_STATE_WAIT
 gGlobalSyncTable.displayText = ' '
 gGlobalSyncTable.displayFont = FONT_HUD
 gGlobalSyncTable.displayColor = 0xFFFFFF
-gGlobalSyncTable.scoreNormal = 0
-gGlobalSyncTable.scoreMetal = 0
+gGlobalSyncTable.scoreRed = 0
+gGlobalSyncTable.scoreBlue = 0
 
 function gamemode_initialize()
     -- prevent warp doors from working
@@ -872,24 +874,24 @@ function gamemode_active()
             end
 
             if scoringTeam == 1 then
-                gGlobalSyncTable.scoreNormal = gGlobalSyncTable.scoreNormal + 1
+                gGlobalSyncTable.scoreRed = gGlobalSyncTable.scoreRed + 1
                 gGlobalSyncTable.displayFont = FONT_NORMAL
-                gGlobalSyncTable.displayColor = 0x99FF99
-                if gGlobalSyncTable.scoreNormal >= sMaxScore then
-                    gGlobalSyncTable.displayText = 'normal team wins!'
+                gGlobalSyncTable.displayColor = 0xFF9999
+                if gGlobalSyncTable.scoreRed >= sMaxScore then
+                    gGlobalSyncTable.displayText = 'red team wins!'
                     gameOver = true
                 else
-                    gGlobalSyncTable.displayText = 'normal team scored' .. displayName
+                    gGlobalSyncTable.displayText = 'red team scored' .. displayName
                 end
             else
-                gGlobalSyncTable.scoreMetal = gGlobalSyncTable.scoreMetal + 1
+                gGlobalSyncTable.scoreBlue = gGlobalSyncTable.scoreBlue + 1
                 gGlobalSyncTable.displayFont = FONT_NORMAL
                 gGlobalSyncTable.displayColor = 0x9999FF
-                if gGlobalSyncTable.scoreMetal >= sMaxScore then
-                    gGlobalSyncTable.displayText = 'metal team wins!'
+                if gGlobalSyncTable.scoreBlue >= sMaxScore then
+                    gGlobalSyncTable.displayText = 'blue team wins!'
                     gameOver = true
                 else
-                gGlobalSyncTable.displayText = 'metal team scored' .. displayName
+                gGlobalSyncTable.displayText = 'blue team scored' .. displayName
                 end
             end
 
@@ -962,7 +964,7 @@ function gamemode_oob()
 
         gGlobalSyncTable.displayFont = FONT_NORMAL
         gGlobalSyncTable.displayText = 'out of bounds'
-        gGlobalSyncTable.displayColor = 0xFF9999
+        gGlobalSyncTable.displayColor = 0xFFFFFF
 
         -- start the round
         if sStateTimer <= 0 then
@@ -984,8 +986,8 @@ function gamemode_over()
         if sStateTimer <= 0 then
             -- shuffle teams
             gamemode_shuffle()
-            gGlobalSyncTable.scoreMetal = 0
-            gGlobalSyncTable.scoreNormal = 0
+            gGlobalSyncTable.scoreRed = 0
+            gGlobalSyncTable.scoreBlue = 0
             gGlobalSyncTable.gameState = GAME_STATE_WAIT
             sStateTimer = sWaitTimeout
         end
@@ -1072,15 +1074,15 @@ function hud_score_render()
     end
 
     -- render
-    djui_hud_set_color(100, 255, 100, 180);
+    djui_hud_set_color(255, 100, 100, 180);
     djui_hud_render_rect(x - xOffset, y, width, height + 4);
 
     djui_hud_set_color(100, 100, 255, 180);
     djui_hud_render_rect(x + xOffset, y, width, height + 4);
 
     djui_hud_set_color(255, 255, 255, 255);
-    djui_hud_print_text(tostring(gGlobalSyncTable.scoreNormal), x - xOffset + textOffset, y + 2, 1);
-    djui_hud_print_text(tostring(gGlobalSyncTable.scoreMetal), x + xOffset + textOffset, y + 2, 1);
+    djui_hud_print_text(tostring(gGlobalSyncTable.scoreRed), x - xOffset + textOffset, y + 2, 1);
+    djui_hud_print_text(tostring(gGlobalSyncTable.scoreBlue), x + xOffset + textOffset, y + 2, 1);
 end
 
 function on_hud_render()
@@ -1140,8 +1142,8 @@ function on_football_reset_command(msg)
     elseif msg == 'game' then
         djui_chat_message_create('Resetting the game.')
         gamemode_shuffle()
-        gGlobalSyncTable.scoreMetal = 0
-        gGlobalSyncTable.scoreNormal = 0
+        gGlobalSyncTable.scoreRed = 0
+        gGlobalSyncTable.scoreBlue = 0
         gGlobalSyncTable.displayText = ' '
         gGlobalSyncTable.gameState = GAME_STATE_WAIT
         sStateTimer = sWaitTimeout
@@ -1238,21 +1240,24 @@ function mario_update(m)
 
     -- set metal state and health
     local s = gPlayerSyncTable[m.playerIndex]
+    local np = gNetworkPlayers[m.playerIndex]
     if s.team == 2 then
-        m.marioBodyState.modelState = MODEL_STATE_METAL
+        np.overridePaletteIndex = 7
+        m.marioBodyState.modelState = 0
     elseif s.team == 1 then
+        np.overridePaletteIndex = 15
         m.marioBodyState.modelState = 0
     else
+        np.overridePaletteIndex = np.paletteIndex
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
     end
     m.health = 0x880
 
     -- update description
-    local np = gNetworkPlayers[m.playerIndex]
     if s.team == 1 then
-        network_player_set_description(np, "normal", 64, 255, 64, 255)
+        network_player_set_description(np, "red", 255, 64, 64, 255)
     elseif s.team == 2 then
-        network_player_set_description(np, "metal", 64, 64, 255, 255)
+        network_player_set_description(np, "blue", 64, 64, 255, 255)
     else
         network_player_set_description(np, "unknown", 64, 64, 64, 255)
     end

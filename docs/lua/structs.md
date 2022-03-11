@@ -837,6 +837,8 @@
 | modelIndex | `integer` | read-only |
 | name | `string` | read-only |
 | onRxSeqId | `integer` | read-only |
+| overrideModelIndex | `integer` |  |
+| overridePaletteIndex | `integer` |  |
 | paletteIndex | `integer` | read-only |
 | type | `integer` | read-only |
 

@@ -44,6 +44,9 @@ struct NetworkPlayer {
     u8 descriptionB;
     u8 descriptionA;
 
+    u8 overrideModelIndex;
+    u8 overridePaletteIndex;
+
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
 };

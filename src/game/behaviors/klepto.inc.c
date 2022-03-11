@@ -422,7 +422,7 @@ void bhv_klepto_update(void) {
             if (network_owns_object(o) && kleptoHoldingCap) {
                 struct NetworkPlayer* np = network_player_from_global_index(o->globalPlayerIndex);
                 if (np == NULL) { np = gNetworkPlayerLocal; }
-                u8 modelIndex = (np->modelIndex < CT_MAX) ? np->modelIndex : 0;
+                u8 modelIndex = (np->overrideModelIndex < CT_MAX) ? np->overrideModelIndex : 0;
                 u32 capModel = gCharacters[modelIndex].capModelId;
 
                 save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
