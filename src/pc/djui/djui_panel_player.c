@@ -41,7 +41,9 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
 
 void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
-    gNetworkPlayers[0].modelIndex = configPlayerModel;
+    if (gNetworkPlayers[0].overrideModelIndex   == gNetworkPlayers[0].modelIndex)   { gNetworkPlayers[0].overrideModelIndex   = configPlayerModel;   }
+    if (gNetworkPlayers[0].overridePaletteIndex == gNetworkPlayers[0].paletteIndex) { gNetworkPlayers[0].overridePaletteIndex = configPlayerPalette; }
+    gNetworkPlayers[0].modelIndex   = configPlayerModel;
     gNetworkPlayers[0].paletteIndex = configPlayerPalette;
     network_player_update_model(0);
 

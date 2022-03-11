@@ -488,7 +488,7 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     struct MarioBodyState* bodyState = &gBodyStates[plrIdx];
     s32 action = bodyState->action;
 
-    u8 charIndex = gNetworkPlayers[plrIdx].modelIndex;
+    u8 charIndex = gNetworkPlayers[plrIdx].overrideModelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
     struct Character* character = &gCharacters[charIndex];
 
@@ -807,7 +807,7 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     Gfx* gfx = NULL;
     u8 index = geo_get_processing_object_index();
-    u8 colorIndex = gNetworkPlayers[index].paletteIndex;
+    u8 colorIndex = gNetworkPlayers[index].overridePaletteIndex;
     struct MarioBodyState* bodyState = &gBodyStates[index];
 
     if (callContext == GEO_CONTEXT_RENDER) {
@@ -838,8 +838,8 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
 Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
     if (callContext != GEO_CONTEXT_RENDER) { return NULL; }
     u8 globalIndex = geo_get_processing_object_index();
-    u8 colorIndex = gNetworkPlayers[globalIndex].paletteIndex;
-    u8 charIndex = gNetworkPlayers[globalIndex].modelIndex;
+    u8 colorIndex = gNetworkPlayers[globalIndex].overridePaletteIndex;
+    u8 charIndex = gNetworkPlayers[globalIndex].overrideModelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
     struct Character* character = &gCharacters[charIndex];
 

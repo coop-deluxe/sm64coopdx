@@ -66,6 +66,10 @@ void network_set_system(enum NetworkSystemType nsType) {
 }
 
 bool network_init(enum NetworkType inNetworkType) {
+    // reset override hide hud
+    extern u8 gOverrideHideHud;
+    gOverrideHideHud = 0;
+
     // sanity check network system
     if (gNetworkSystem == NULL) {
         LOG_ERROR("no network system attached");

@@ -18,6 +18,7 @@
 #include "pc/network/network.h"
 
 extern bool gDjuiInMainMenu;
+u8 gOverrideHideHud;
 
 /* @file hud.c
  * This file implements HUD rendering and power meter animations.
@@ -492,32 +493,34 @@ void render_hud(void) {
         create_dl_ortho_matrix();
 #endif
 
+        bool showHud = (configHUD && !gDjuiInMainMenu && !gOverrideHideHud);
+
         if (gCurrentArea != NULL && gCurrentArea->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             render_hud_cannon_reticle();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && configHUD && !gDjuiInMainMenu) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud) {
             render_hud_mario_lives();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT && configHUD && !gDjuiInMainMenu) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT && showHud) {
             render_hud_coins();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_STAR_COUNT && configHUD && !gDjuiInMainMenu) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_STAR_COUNT && showHud) {
             render_hud_stars();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_KEYS && configHUD && !gDjuiInMainMenu) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_KEYS && showHud) {
             render_hud_keys();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && configHUD && !gDjuiInMainMenu) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && showHud) {
             render_hud_power_meter();
             render_hud_camera_status();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && configHUD && !gDjuiInMainMenu) {
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
         }
     }

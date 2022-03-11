@@ -48,7 +48,11 @@ void network_receive_player_settings(struct Packet* p) {
 
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
     snprintf(np->name, MAX_PLAYER_STRING, "%s", playerName);
-    np->modelIndex = playerModel;
+
+    if (np->modelIndex   == np->overrideModelIndex)   { np->overrideModelIndex   = playerModel;   }
+    if (np->paletteIndex == np->overridePaletteIndex) { np->overridePaletteIndex = playerPalette; }
+
+    np->modelIndex   = playerModel;
     np->paletteIndex = playerPalette;
 
     network_player_update_model(np->localIndex);

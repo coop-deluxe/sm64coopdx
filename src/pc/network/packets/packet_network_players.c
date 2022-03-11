@@ -114,7 +114,7 @@ void network_receive_network_players(struct Packet* p) {
                     gNetworkSystem->save_id(localIndex, networkId);
                 }
             } else {
-                np->modelIndex = (modelIndex < CT_MAX) ? modelIndex : 0;
+                np->modelIndex   = (modelIndex < CT_MAX) ? modelIndex : 0;
                 np->paletteIndex = paletteIndex;
                 network_player_update_model(localIndex);
             }

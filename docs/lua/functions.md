@@ -624,6 +624,8 @@
 
 - smlua_misc_utils.h
    - [get_network_area_timer](#get_network_area_timer)
+   - [hud_hide](#hud_hide)
+   - [hud_show](#hud_show)
 
 <br />
 
@@ -11456,6 +11458,42 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `u32 get_network_area_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_hide](#hud_hide)
+
+### Lua Example
+`hud_hide()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void hud_hide(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_show](#hud_show)
+
+### Lua Example
+`hud_show()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void hud_show(void);`
 
 [:arrow_up_small:](#)
 

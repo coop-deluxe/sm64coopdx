@@ -2181,8 +2181,8 @@ static void init_single_mario(struct MarioState* m) {
         gNetworkPlayers[playerIndex].fadeOpacity = 0;
     }
 
-    // set mario/luigi model
-    u8 modelIndex = gNetworkPlayers[playerIndex].modelIndex;
+    // set character model
+    u8 modelIndex = gNetworkPlayers[playerIndex].overrideModelIndex;
     if (modelIndex >= CT_MAX) { modelIndex = 0; }
     m->character = &gCharacters[modelIndex];
     m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];

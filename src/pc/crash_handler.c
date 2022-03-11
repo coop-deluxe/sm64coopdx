@@ -20,6 +20,7 @@
 #include "pc/gfx/gfx_pc.h"
 #include "game/game_init.h"
 #include "game/ingame_menu.h"
+#include "game/object_list_processor.h"
 #include "game/segment2.h"
 #include "game/mario.h"
 #include "gfx_dimensions.h"

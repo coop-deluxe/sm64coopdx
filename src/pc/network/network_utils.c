@@ -30,7 +30,7 @@ u8* network_get_player_text_color(u8 localIndex) {
     if (localIndex >= MAX_PLAYERS) { localIndex = 0; }
 
     struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
-    u8* rgb = get_player_color(np->paletteIndex, 0);
+    u8* rgb = get_player_color(np->overridePaletteIndex, 0);
     static u8 sTextRgb[3] = { 0 };
     for (int i = 0; i < 3; i++) {
         sTextRgb[i] = 127 + rgb[i] / 2;
