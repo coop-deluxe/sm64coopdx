@@ -679,6 +679,9 @@ gGlobalSyncTable.scoreRed = 0
 gGlobalSyncTable.scoreBlue = 0
 
 function gamemode_initialize()
+    -- hide the SM64 HUD
+    hud_hide()
+
     -- prevent warp doors from working
     local wasRefreshed = false
     local obj = obj_get_first(OBJ_LIST_SURFACE)

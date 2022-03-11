@@ -7304,6 +7304,24 @@ int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_hud_hide(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    hud_hide();
+
+    return 1;
+}
+
+int smlua_func_hud_show(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    hud_show();
+
+    return 1;
+}
+
   ///////////////////////
  // smlua_obj_utils.h //
 ///////////////////////
@@ -8618,6 +8636,8 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
+    smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
+    smlua_bind_function(L, "hud_show", smlua_func_hud_show);
 
     // smlua_obj_utils.h
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);

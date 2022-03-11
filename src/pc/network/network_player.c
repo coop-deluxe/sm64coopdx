@@ -120,15 +120,19 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
 }
 
 void network_player_update(void) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected && i > 0) { continue; }
+
+        network_player_update_model(i);
+    }
+
     if (!network_player_any_connected()) { return; }
 
     if (gNetworkType == NT_SERVER) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (int i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected && i > 0) { continue; }
-
-            network_player_update_model(i);
-            if (i == 0) { continue; }
 
             float elapsed = (clock_elapsed() - np->lastReceived);
 #ifndef DEVELOPMENT
