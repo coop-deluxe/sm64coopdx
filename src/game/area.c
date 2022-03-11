@@ -146,7 +146,7 @@ void print_intro_text(void) {
 
 u32 get_mario_spawn_type(struct Object *o) {
     if (o == NULL) { return 0; }
-    
+
     const BehaviorScript *behavior = virtual_to_segmented(0x13, o->behavior);
 
     for (s32 i = 0; i < 20; i++) {
