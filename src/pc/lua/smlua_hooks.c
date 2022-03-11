@@ -10,8 +10,8 @@ static u64* sBehaviorOffset = &gPcDebug.bhvOffset;
 
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
+    struct ModListEntry* entry[MAX_HOOKED_REFERENCES];
     int count;
-    struct ModListEntry* entry;
 };
 
 static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
@@ -52,8 +52,8 @@ int smlua_hook_event(lua_State* L) {
     }
 
     hook->reference[hook->count] = ref;
+    hook->entry[hook->count] = gLuaActiveEntry;
     hook->count++;
-    hook->entry = gLuaActiveEntry;
 
     return 1;
 }
@@ -67,7 +67,7 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->entry)) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->entry[i])) {
             LOG_LUA("Failed to call the event_hook callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -90,7 +90,7 @@ void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->entry)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->entry[i])) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -119,7 +119,7 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->entry)) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->entry[i])) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -151,7 +151,7 @@ void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, st
         lua_pushboolean(L, interactValue);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 4, 0, 0, hook->entry)) {
+        if (0 != smlua_call_hook(L, 4, 0, 0, hook->entry[i])) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -174,7 +174,7 @@ void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookTyp
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->entry)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->entry[i])) {
             LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
             smlua_logline();
             continue;
@@ -668,29 +668,32 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
 
 static void smlua_clear_hooks(void) {
     for (int i = 0; i < HOOK_MAX; i++) {
-        for (int j = 0; j < sHookedEvents[i].count; j++) {
-            sHookedEvents[i].reference[j] = 0;
+        struct LuaHookedEvent* hooked = &sHookedEvents[i];
+        for (int j = 0; j < hooked->count; j++) {
+            hooked->reference[j] = 0;
+            hooked->entry[j] = NULL;
         }
-        sHookedEvents[i].count = 0;
-        sHookedEvents[i].entry = NULL;
+        hooked->count = 0;
     }
 
     for (int i = 0; i < sHookedMarioActionsCount; i++) {
-        sHookedMarioActions[i].action = 0;
-        sHookedMarioActions[i].reference = 0;
-        sHookedMarioActions[i].entry = NULL;
+        struct LuaHookedMarioAction* hooked = &sHookedMarioActions[i];
+        hooked->action = 0;
+        hooked->entry = NULL;
+        hooked->reference = 0;
     }
     sHookedMarioActionsCount = 0;
 
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
-        if (sHookedChatCommands[i].command != NULL) { free(sHookedChatCommands[i].command); }
-        sHookedChatCommands[i].command = NULL;
+        struct LuaHookedChatCommand* hooked = &sHookedChatCommands[i];
+        if (hooked->command != NULL) { free(hooked->command); }
+        hooked->command = NULL;
 
-        if (sHookedChatCommands[i].description != NULL) { free(sHookedChatCommands[i].description); }
-        sHookedChatCommands[i].description = NULL;
+        if (hooked->description != NULL) { free(sHookedChatCommands[i].description); }
+        hooked->description = NULL;
 
-        sHookedChatCommands[i].reference = 0;
-        sHookedChatCommands[i].entry = NULL;
+        hooked->reference = 0;
+        hooked->entry = NULL;
     }
     sHookedChatCommandsCount = 0;
 
