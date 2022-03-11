@@ -103,16 +103,19 @@ void DynOS_Gfx_Update() {
     if (gObjectLists) {
 
         // Check packs
+#ifdef COOP
+        Array<bool> &_Enabled = DynOS_Gfx_GetPacksEnabled();
+        const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
+        while (_Enabled.Count() < pDynosPacks.Count()) {
+            _Enabled.Add(true);
+        }
+#else
         Array<bool> _Enabled;
         const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
         for (s32 i = 0; i != pDynosPacks.Count(); ++i) {
-#ifdef COOP
-            // TODO: needs to be adjusted from djui
-            _Enabled.Add(true);
-#else
             _Enabled.Add(DynOS_Opt_GetValue(String("dynos_pack_%d", i)));
-#endif
         }
+#endif
 
         // Loop through all object lists
         for (s32 list : { OBJ_LIST_PLAYER, OBJ_LIST_DESTRUCTIVE, OBJ_LIST_GENACTOR, OBJ_LIST_PUSHABLE, OBJ_LIST_LEVEL, OBJ_LIST_DEFAULT, OBJ_LIST_SURFACE, OBJ_LIST_POLELIKE, OBJ_LIST_UNIMPORTANT }) {

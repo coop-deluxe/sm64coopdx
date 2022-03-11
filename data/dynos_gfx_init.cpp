@@ -10,6 +10,13 @@ Array<PackData *> &DynOS_Gfx_GetPacks() {
     return sPacks;
 }
 
+#ifdef COOP
+Array<bool> &DynOS_Gfx_GetPacksEnabled() {
+    static Array<bool> sPacksEnabled;
+    return sPacksEnabled;
+}
+#endif
+
 Array<String> DynOS_Gfx_Init() {
 
     // Alloc and init the actors gfx list

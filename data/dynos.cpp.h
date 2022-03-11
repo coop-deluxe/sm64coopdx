@@ -637,6 +637,9 @@ u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, 
 bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
 Array<ActorGfx> &DynOS_Gfx_GetActorList();
 Array<PackData *> &DynOS_Gfx_GetPacks();
+#ifdef COOP
+Array<bool> &DynOS_Gfx_GetPacksEnabled();
+#endif
 Array<String> DynOS_Gfx_Init();
 void DynOS_Gfx_Update();
 void DynOS_Gfx_SwapAnimations(void *aPtr);

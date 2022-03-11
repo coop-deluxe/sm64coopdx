@@ -643,10 +643,10 @@ void DynOS_Opt_Init() {
 
     // Model loader
     DynOS_Opt_CreateModelPacksSubMenu();
-#endif
 
     // Init config
     DynOS_Opt_LoadConfig(sDynosMenu);
+#endif
 }
 
 //
