@@ -17,7 +17,20 @@ int dynos_packs_get_count(void) {
 
 const char* dynos_packs_get(s32 index) {
     std::string path = DynOS_Gfx_GetPacks()[index]->mPath;
-    return path.substr(path.find(DYNOS_PACKS_FOLDER) + DYNOS_PACK_PATH_SPLIT_LEN).c_str();
+
+    // extract basename
+    const char* cpath = path.c_str();
+    const char* ctoken = cpath;
+    while (*ctoken != '\0') {
+        if (*ctoken == '/' || *ctoken == '\\') {
+            if (*(ctoken + 1) != '\0') {
+                cpath = (ctoken + 1);
+            }
+        }
+        ctoken++;
+    }
+
+    return cpath;
 }
 
 bool dynos_packs_get_enabled(s32 index) {
