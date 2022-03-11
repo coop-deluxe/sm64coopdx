@@ -31,6 +31,7 @@
 #include "djui_popup.h"
 #include "djui_chat_box.h"
 #include "djui_chat_message.h"
+#include "djui_paginated.h"
 
 #include "djui_panel.h"
 #include "djui_panel_menu.h"

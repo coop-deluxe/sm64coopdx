@@ -84,7 +84,7 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * gModTableLocal.entryCount + 64 * 1 + 16 * (gModTableLocal.entryCount + 1);
+    f32 bodyHeight = (416) + 64 * 1 + 16 * 1;
 
     mod_list_update_selectable();
 
@@ -93,23 +93,26 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     sModPanelBody = body;
     {
+        struct DjuiPaginated* paginated = djui_paginated_create(&body->base, 8);
+        struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gModTableLocal.entryCount; i++) {
             struct ModListEntry* entry = &gModTableLocal.entries[i];
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, entry->displayName ? entry->displayName : entry->name, &entry->enabled);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, entry->displayName ? entry->displayName : entry->name, &entry->enabled);
             checkbox->base.tag = i;
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
-            djui_base_set_enabled(&checkbox->base, entry->selectable);
-            djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
-            djui_interactable_hook_value_change(&checkbox->base, djui_mod_checkbox_on_value_change);
+            if (i == 0) { defaultBase = &checkbox->base; }
         }
+        djui_paginated_calculate_height(paginated);
 
         struct DjuiButton* button1 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button1->base, 1.0f, 64);
         djui_button_set_style(button1, 1);
         djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
-        defaultBase = &button1->base;
+        if (defaultBase == NULL) { defaultBase = &button1->base; }
+
+        panel->bodySize.value = paginated->base.height.value + 16 + 64;
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;

@@ -21,6 +21,7 @@ void djui_flow_layout_set_margin_type(struct DjuiFlowLayout* layout, enum DjuiSc
 ////////////
 
 static void djui_flow_layout_on_child_render(struct DjuiBase* base, struct DjuiBase* child) {
+    if (!child->visible) { return; }
     struct DjuiFlowLayout* layout = (struct DjuiFlowLayout*)base;
     switch (layout->flowDirection) {
         case DJUI_FLOW_DIR_DOWN:
