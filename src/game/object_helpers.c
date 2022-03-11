@@ -2921,6 +2921,8 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
 s32 cur_obj_has_model(u16 modelID) {
     if (o->header.gfx.sharedChild == gLoadedGraphNodes[modelID]) {
         return TRUE;
+    } else if (o->header.gfx.sharedChild && gLoadedGraphNodes[modelID] && o->header.gfx.sharedChild->georef == gLoadedGraphNodes[modelID]->georef) {
+        return TRUE;
     } else {
         return FALSE;
     }

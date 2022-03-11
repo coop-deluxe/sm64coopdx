@@ -2821,6 +2821,12 @@ s16 render_pause_courses_and_castle(void) {
     if (gPlayer1Controller->buttonPressed & R_TRIG)
         djui_panel_pause_create(NULL);
 
+#ifndef COOP
+    // call into DynOS's menu system
+    optmenu_draw();
+    optmenu_draw_prompt();
+#endif
+
     return 0;
 }
 

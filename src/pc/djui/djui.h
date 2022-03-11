@@ -53,6 +53,7 @@
 #include "djui_panel_controls_n64.h"
 #include "djui_panel_controls_extra.h"
 #include "djui_panel_display.h"
+#include "djui_panel_dynos.h"
 #include "djui_panel_sound.h"
 #include "djui_panel_confirm.h"
 #include "djui_panel_cheats.h"

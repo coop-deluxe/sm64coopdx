@@ -42,6 +42,7 @@ struct DjuiBase {
     bool addChildrenToHead;
     bool abandonAfterChildRenderFail;
     s32 tag;
+    bool bTag;
     void (*get_cursor_hover_location)(struct DjuiBase*, f32* x, f32* y);
     void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
     void (*on_render_pre)(struct DjuiBase*, bool*);
