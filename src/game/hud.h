@@ -25,7 +25,7 @@ enum CameraHUDLut {
     GLYPH_CAM_WARIO_HEAD,
 };
 
-u8 gOverrideHideHud;
+extern u8 gOverrideHideHud;
 
 void set_hud_camera_status(s16 status);
 void render_hud(void);
