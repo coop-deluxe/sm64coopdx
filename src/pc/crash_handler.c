@@ -447,6 +447,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 0), "Id", (int)gPcDebug.id & 0xFF);
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 1), "Ofs", (int)gPcDebug.bhvOffset & 0xFF);
+    extern s16 gPrevFrameObjectCount;
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "Objs", gPrevFrameObjectCount);
 
     int modCount = 0;
@@ -463,8 +464,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
         for (int i = 0; i < gModTableCurrent->entryCount; i++) {
             struct ModListEntry* entry = &gModTableCurrent->entries[i];
             if (entry == NULL || !entry->enabled) { continue; }
-            u8 b = (gPcDebug.lastModRun == entry) ? 0 : 0xFF;
-            crash_handler_set_text(x, y, 0xFF, 0xFF, 200, "%.21s", entry->name);
+            u8 g = (gPcDebug.lastModRun == entry) ? 0 : 0xFF;
+            crash_handler_set_text(x, y, 0xFF, g, 200, "%.21s", entry->name);
             y += 8;
         }
     }

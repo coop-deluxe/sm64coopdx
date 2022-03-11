@@ -106,9 +106,6 @@ void DynOS_Gfx_Update() {
 #ifdef COOP
         Array<bool> &_Enabled = DynOS_Gfx_GetPacksEnabled();
         const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
-        while (_Enabled.Count() < pDynosPacks.Count()) {
-            _Enabled.Add(true);
-        }
 #else
         Array<bool> _Enabled;
         const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();

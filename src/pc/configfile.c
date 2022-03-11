@@ -246,9 +246,38 @@ static void ban_write(FILE* file) {
     }
 }
 
+static void dynos_pack_read(char** tokens, UNUSED int numTokens) {
+    if (numTokens < 3) { return; }
+    char fullPackName[256] = { 0 };
+    for (int i = 1; i < numTokens - 1; i++) {
+        strncat(fullPackName, tokens[i], 255);
+    }
+
+    bool enabled = !(strcmp(tokens[numTokens-1], "true"));
+    int packCount = dynos_packs_get_count();
+
+    for (int i = 0; i < packCount; i++) {
+        const char* pack = dynos_packs_get(i);
+        if (!strcmp(fullPackName, pack)) {
+            dynos_packs_set_enabled(i, enabled);
+            break;
+        }
+    }
+}
+
+static void dynos_pack_write(FILE* file) {
+    int packCount = dynos_packs_get_count();
+    for (int i = 0; i < packCount; i++) {
+        bool enabled = dynos_packs_get_enabled(i);
+        const char* pack = dynos_packs_get(i);
+        fprintf(file, "%s %s %s\n", "dynos-pack:", pack, enabled ? "true" : "false");
+    }
+}
+
 static const struct FunctionConfigOption functionOptions[] = {
     { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
     { .name = "ban:",        .read = ban_read,        .write = ban_write        },
+    { .name = "dynos-pack:", .read = dynos_pack_read, .write = dynos_pack_write },
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

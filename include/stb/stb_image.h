@@ -332,6 +332,12 @@ extern "C" {
 #define STBIDEF extern
 #endif
 
+#ifdef __GNUC__
+#define UNUSED __attribute__((unused))
+#else
+#define UNUSED
+#endif
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // PRIMARY API - works on images of any type
@@ -6336,7 +6342,7 @@ static stbi_uc *stbi__process_gif_raster(stbi__context *s, stbi__gif *g)
 
 // this function is designed to support animated gifs, although stb_image doesn't support it
 // two back is the image from two frames ago, used for a very specific disposal format
-static stbi_uc *stbi__gif_load_next(stbi__context *s, stbi__gif *g, int *comp, int req_comp, stbi_uc *two_back)
+static stbi_uc *stbi__gif_load_next(stbi__context *s, stbi__gif *g, int *comp, UNUSED int req_comp, UNUSED stbi_uc *two_back)
 {
    int dispose; 
    int first_frame; 
@@ -6560,7 +6566,7 @@ static void *stbi__load_gif_main(stbi__context *s, int **delays, int *x, int *y,
    }
 }
 
-static void *stbi__gif_load(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri)
+static void *stbi__gif_load(stbi__context *s, int *x, int *y, int *comp, int req_comp, UNUSED stbi__result_info *ri)
 {
    stbi_uc *u = 0;
    stbi__gif g;

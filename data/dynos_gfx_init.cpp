@@ -51,6 +51,10 @@ Array<String> DynOS_Gfx_Init() {
 
                 // Add pack to pack list
                 pDynosPacks.Add(_Pack);
+#ifdef COOP
+                // Add enabled flag
+                DynOS_Gfx_GetPacksEnabled().Add(true);
+#endif
             }
         }
         closedir(_DynosPacksDir);
