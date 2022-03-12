@@ -21,8 +21,6 @@ void djui_panel_controls_n64_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, "Right",       configKeyStickRight);
             djui_bind_create(&bindBody->base, "A",           configKeyA);
             djui_bind_create(&bindBody->base, "B",           configKeyB);
-            djui_bind_create(&bindBody->base, "X",           configKeyX);
-            djui_bind_create(&bindBody->base, "Y",           configKeyY);
             djui_bind_create(&bindBody->base, "Start",       configKeyStart);
             djui_bind_create(&bindBody->base, "L",           configKeyL);
             djui_bind_create(&bindBody->base, "R",           configKeyR);

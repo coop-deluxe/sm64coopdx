@@ -2,7 +2,7 @@
 #include "src/pc/configfile.h"
 
 void djui_panel_controls_extra_create(struct DjuiBase* caller) {
-    f32 bindBodyHeight = 28 * 6 + 1 * 5;
+    f32 bindBodyHeight = 28 * 8 + 1 * 7;
     f32 bodyHeight = bindBodyHeight + 16 + 64;
 
     struct DjuiBase* defaultBase = NULL;
@@ -21,6 +21,8 @@ void djui_panel_controls_extra_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, "D Down",  configKeyDDown);
             djui_bind_create(&bindBody->base, "D Left",  configKeyDLeft);
             djui_bind_create(&bindBody->base, "D Right", configKeyDRight);
+            djui_bind_create(&bindBody->base, "X",       configKeyX);
+            djui_bind_create(&bindBody->base, "Y",       configKeyY);
         }
 
         struct DjuiButton* buttonBack = djui_button_create(&body->base, "Back");
