@@ -16,11 +16,6 @@
 
 
 static bool sHoldingAlt = false;
-static u8 warpToLevel = LEVEL_BOB;
-static u8 warpToArea = 27;
-// warpToArea: 26 = basement
-// warpToArea: 27 = upstairs
-// warpToArea: 29 = courtyard
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
@@ -39,89 +34,18 @@ static void debug_breakpoint_here(void) {
     // create easy breakpoint position for debugging
 }
 
-static void debug_warp_level(u8 level) {
+extern bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
+
+static void debug_warp_level1() {
     // warp to credits
     //set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
     //return;
 
-    if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
-    gCurrCourseNum = 0;
-    gCurrLevelNum = 0;
-    gCurrAreaIndex = 0;
-    gCurrActStarNum = 0;
-    gChangeLevel = level;
-    return;
-
-    // find level from painting
-    /*for (int i = 0; i < 45; i++) {
-        struct WarpNode* node = &gCurrentArea->paintingWarpNodes[i];
-        if (node == NULL) { break; }
-        if (node->destLevel == level) {
-            sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
-            sWarpDest.levelNum = node->destLevel;
-            sWarpDest.areaIdx = node->destArea;
-            sWarpDest.nodeId = node->destNode;
-            sWarpDest.arg = 0;
-
-            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
-            return;
-        }
-    }
-
-    struct ObjectWarpNode* objectNode = gCurrentArea->warpNodes;
-    while (objectNode != NULL) {
-        struct WarpNode* node = &objectNode->node;
-        if (node->destLevel == level) {
-            sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
-            sWarpDest.levelNum = node->destLevel;
-            sWarpDest.areaIdx = node->destArea;
-            sWarpDest.nodeId = node->destNode;
-            sWarpDest.arg = 0;
-
-            sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
-            return;
-        }
-        objectNode = objectNode->next;
-    }
-
-    // failed, go to main castle area
-    sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
-    sWarpDest.levelNum = LEVEL_CASTLE;
-    sWarpDest.areaIdx = 1;
-    sWarpDest.nodeId = 0x1F;
-    sWarpDest.arg = 0;
-    sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
-    D_80339ECA = 0;
-    D_80339EE0 = 0;
-    extern s16 gSavedCourseNum;
-    gSavedCourseNum = 0;*/
+    dynos_warp_to_level(LEVEL_BOB, 1, 1);
 }
 
-static void debug_warp_area() {
-    extern bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
-    dynos_warp_to_level(LEVEL_CCM, 1, 5);
-    return;
-
-    if (sCurrPlayMode == PLAY_MODE_CHANGE_LEVEL) { return; }
-
-    struct ObjectWarpNode* objectNode = gCurrentArea->warpNodes;
-    u8 onArea = 0;
-    while (objectNode != NULL) {
-        struct WarpNode* node = &objectNode->node;
-        if (gCurrCourseNum == 0 || (node->destLevel == gCurrLevelNum && node->destArea != gCurrAreaIndex)) {
-            if (gCurrCourseNum != 0 || ++onArea == warpToArea) {
-                sWarpDest.type = WARP_TYPE_CHANGE_AREA;
-                sWarpDest.levelNum = node->destLevel;
-                sWarpDest.areaIdx = node->destArea;
-                sWarpDest.nodeId = node->destNode;
-                sWarpDest.arg = 0;
-
-                sCurrPlayMode = PLAY_MODE_CHANGE_LEVEL;
-                return;
-            }
-        }
-        objectNode = objectNode->next;
-    }
+static void debug_warp_level2() {
+    dynos_warp_to_level(LEVEL_BOWSER_2, 1, 1);
 }
 
 static void debug_grand_star(void) {
@@ -162,11 +86,11 @@ void debug_keyboard_on_key_down(int scancode) {
         case SCANCODE_ALT: sHoldingAlt = true; break;
         case SCANCODE_3: debug_breakpoint_here(); break;
 #ifdef DEVELOPMENT
-        case SCANCODE_6:  if (sHoldingAlt) { debug_warp_level(warpToLevel); } break;
-        case SCANCODE_7:  if (sHoldingAlt) { debug_warp_area();             } break;
-        case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object();          } break;
-        case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();               } break;
-        case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();               } break;
+        case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
+        case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
+        case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object(); } break;
+        case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
+        case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;
         case SCANCODE_F5: debug_reload_lua(); break;
 #endif
     }
