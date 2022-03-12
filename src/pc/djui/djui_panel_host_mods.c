@@ -101,6 +101,9 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             checkbox->base.tag = i;
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
+            djui_base_set_enabled(&checkbox->base, entry->selectable);
+            djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
+            djui_interactable_hook_value_change(&checkbox->base, djui_mod_checkbox_on_value_change);
             if (i == 0) { defaultBase = &checkbox->base; }
         }
         djui_paginated_calculate_height(paginated);
