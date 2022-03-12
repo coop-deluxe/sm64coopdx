@@ -36,6 +36,7 @@
 #include "save_file.h"
 #include "sound_init.h"
 #include "thread6.h"
+#include "obj_behaviors.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
@@ -393,6 +394,23 @@ void play_mario_sound(struct MarioState *m, s32 actionSound, s32 marioSound) {
 /**************************************************
  *                     ACTIONS                    *
  **************************************************/
+
+bool mario_can_bubble(struct MarioState* m) {
+    if (!gServerSettings.bubbleDeath) { return false; }
+    if (m->playerIndex != 0) { return false; }
+    if (m->action == ACT_BUBBLED) { return false; }
+
+    u8 allInBubble = TRUE;
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
+            allInBubble = FALSE;
+            break;
+        }
+    }
+    if (allInBubble) { return false; }
+    return true;
+}
 
 void mario_set_bubbled(struct MarioState* m) {
     if (m->playerIndex != 0) { return; }

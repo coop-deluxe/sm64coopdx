@@ -2163,30 +2163,30 @@ void mario_process_interactions(struct MarioState *m) {
 }
 
 void check_death_barrier(struct MarioState *m) {
-    if (!gServerSettings.bubbleDeath) {
-        if (m->pos[1] < m->floorHeight + 2048.0f) {
-            if (level_trigger_warp(m, WARP_OP_WARP_FLOOR) == 20 && !(m->flags & MARIO_UNKNOWN_18)) {
-                play_sound(SOUND_MARIO_WAAAOOOW, m->marioObj->header.gfx.cameraToObject);
-            }
-        }
-        return;
-    }
+    if (m->playerIndex != 0) { return; }
 
     if (m->pos[1] < m->floorHeight + 2048.0f) {
-        switch (gCurrCourseNum) {
-            case COURSE_COTMC:    // (20) Cavern of the Metal Cap
-            case COURSE_TOTWC:    // (21) Tower of the Wing Cap
-            case COURSE_VCUTM:    // (22) Vanish Cap Under the Moat
-            case COURSE_WMOTR:    // (23) Winged Mario over the Rainbow
-                break;
-            default:
-                m->pos[1] = m->floorHeight + 2048.0f;
-                if (m->vel[1] < 0) { m->vel[1] = 0; }
-                mario_set_bubbled(m);
-                return;
+        if (mario_can_bubble(m)) {
+            switch (gCurrCourseNum) {
+                case COURSE_COTMC:    // (20) Cavern of the Metal Cap
+                case COURSE_TOTWC:    // (21) Tower of the Wing Cap
+                case COURSE_VCUTM:    // (22) Vanish Cap Under the Moat
+                case COURSE_WMOTR:    // (23) Winged Mario over the Rainbow
+                    break;
+                default:
+                    mario_set_bubbled(m);
+                    return;
+            }
         }
+
+        if (m->action == ACT_BUBBLED) {
+            m->pos[1] = m->floorHeight + 2048.0f;
+            if (m->vel[1] < 0) { m->vel[1] = 0; }
+            return;
+        }
+
         if (level_trigger_warp(m, WARP_OP_WARP_FLOOR) == 20 && !(m->flags & MARIO_UNKNOWN_18)) {
-            play_character_sound(m, CHAR_SOUND_WAAAOOOW);
+            play_sound(SOUND_MARIO_WAAAOOOW, m->marioObj->header.gfx.cameraToObject);
         }
     }
 }

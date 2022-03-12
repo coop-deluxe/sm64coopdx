@@ -945,7 +945,7 @@ s32 act_bubbled(struct MarioState* m) {
         }
         if (allInBubble) {
             level_trigger_warp(m, WARP_OP_DEATH);
-            return set_mario_action(m, ACT_DEATH_ON_BACK, 0);
+            return set_mario_action(m, ACT_SOFT_BONK, 0);
         }
     }
 
