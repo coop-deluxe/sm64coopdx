@@ -288,10 +288,6 @@ void main_func(void) {
 
     djui_init();
 
-#ifdef UNSTABLE_BRANCH
-    djui_popup_create("This is an \\#ffa0a0\\unstable\\#dcdcdc\\ branch build.\nExpect many strange bugs.", 2);
-#endif
-
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
         strncpy(configJoinIp, gCLIOpts.JoinIp, IP_MAX_LEN);
