@@ -626,6 +626,10 @@
    - [get_network_area_timer](#get_network_area_timer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
+   - [warp_exit_level](#warp_exit_level)
+   - [warp_restart_level](#warp_restart_level)
+   - [warp_to_castle](#warp_to_castle)
+   - [warp_to_level](#warp_to_level)
 
 <br />
 
@@ -11494,6 +11498,86 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void hud_show(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_exit_level](#warp_exit_level)
+
+### Lua Example
+`local boolValue = warp_exit_level(aDelay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aDelay | `integer` |
+
+### Returns
+- `bool`
+
+### C Prototype
+`bool warp_exit_level(s32 aDelay);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_restart_level](#warp_restart_level)
+
+### Lua Example
+`local boolValue = warp_restart_level()`
+
+### Parameters
+- None
+
+### Returns
+- `bool`
+
+### C Prototype
+`bool warp_restart_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_castle](#warp_to_castle)
+
+### Lua Example
+`local boolValue = warp_to_castle(aLevel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+
+### Returns
+- `bool`
+
+### C Prototype
+`bool warp_to_castle(s32 aLevel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_level](#warp_to_level)
+
+### Lua Example
+`local boolValue = warp_to_level(aLevel, aArea, aAct)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+
+### Returns
+- `bool`
+
+### C Prototype
+`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
 
 [:arrow_up_small:](#)
 

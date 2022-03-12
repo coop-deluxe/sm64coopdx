@@ -7,6 +7,18 @@ bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return DynOS_Warp_ToLevel(aLevel, aArea, aAct);
 }
 
+bool dynos_warp_restart_level(void) {
+    return DynOS_Warp_RestartLevel();
+}
+
+bool dynos_warp_exit_level(s32 aDelay) {
+    return DynOS_Warp_ExitLevel(aDelay);
+}
+
+bool dynos_warp_to_castle(s32 aLevel) {
+    return DynOS_Warp_ToCastle(aLevel);
+}
+
 // -- dynos packs -- //
 
 #define DYNOS_PACK_PATH_SPLIT_LEN 12

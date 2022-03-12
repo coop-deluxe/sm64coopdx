@@ -426,6 +426,7 @@ static struct LuaObjectField sGlobalTexturesFields[LUA_GLOBAL_TEXTURES_FIELD_COU
 static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
     { "children", LVT_COBJECT_P, offsetof(struct GraphNode, children), false, LOT_GRAPHNODE },
     { "flags",    LVT_S16,       offsetof(struct GraphNode, flags),    false, LOT_NONE      },
+//  { "georef",   LVT_???,       offsetof(struct GraphNode, georef),   true,  LOT_???       }, <--- UNIMPLEMENTED
     { "next",     LVT_COBJECT_P, offsetof(struct GraphNode, next),     false, LOT_GRAPHNODE },
     { "parent",   LVT_COBJECT_P, offsetof(struct GraphNode, parent),   false, LOT_GRAPHNODE },
     { "prev",     LVT_COBJECT_P, offsetof(struct GraphNode, prev),     false, LOT_GRAPHNODE },

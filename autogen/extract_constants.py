@@ -2,9 +2,27 @@ import os
 import re
 import sys
 
+def extract_level_defines(txt):
+    tmp = txt
+    txt = 'enum LevelNum {\n    LEVEL_NONE,\n'
+    for line in tmp.splitlines():
+        if line.startswith('STUB_LEVEL') or line.startswith('DEFINE_LEVEL'):
+            txt += '    ' + line.split(',')[1].strip() + ',\n'
+    txt += '    LEVEL_COUNT,\n };'
+    return txt
+
+extra_steps = {
+    "levels/level_defines.h": extract_level_defines,
+}
+
 def extract_constants(filename):
     with open(filename) as file:
         txt = file.read()
+
+    # perform special functions
+    short_filename = filename.split('/../', 1)[-1]
+    if short_filename in extra_steps:
+        txt = extra_steps[short_filename](txt)
 
     # strip comments
     txt = re.sub('//.*', ' ', txt)
@@ -82,4 +100,6 @@ def extract_constants(filename):
 
     return txt
 
-#print(extract_constants("include/audio_defines.h"))
+
+if __name__ == "__main__":
+    print(extract_constants(sys.argv[1]))

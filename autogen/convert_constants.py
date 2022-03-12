@@ -26,10 +26,11 @@ in_files = [
     "include/mario_geo_switch_case_ids.h",
     "src/game/object_list_processor.h",
     "src/engine/graph_node.h",
+    "levels/level_defines.h",
 ]
 
 exclude_constants = {
-    '*': [ '^MAXCONTROLLERS$', '^LEVEL_.*', '^AREA_[^T].*', '^AREA_T[HTO]', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ]
+    '*': [ '^MAXCONTROLLERS$', '^AREA_[^T].*', '^AREA_T[HTO]', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ]
 }
 
 include_constants = {
@@ -125,6 +126,7 @@ def process_enum(filename, line):
 
             if saw_constant(field):
                 print('>>> ' + line)
+
         index += 1
 
     ret['constants'] = constants

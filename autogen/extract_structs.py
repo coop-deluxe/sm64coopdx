@@ -72,3 +72,6 @@ def extract_structs(filename):
         txt += line + '\n'
 
     return txt.splitlines()
+
+if __name__ == "__main__":
+    print(extract_structs(sys.argv[1]))

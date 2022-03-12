@@ -7322,6 +7322,52 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_warp_exit_level(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 aDelay = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushboolean(L, warp_exit_level(aDelay));
+
+    return 1;
+}
+
+int smlua_func_warp_restart_level(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, warp_restart_level());
+
+    return 1;
+}
+
+int smlua_func_warp_to_castle(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushboolean(L, warp_to_castle(aLevel));
+
+    return 1;
+}
+
+int smlua_func_warp_to_level(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 aArea = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 aAct = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushboolean(L, warp_to_level(aLevel, aArea, aAct));
+
+    return 1;
+}
+
   ///////////////////////
  // smlua_obj_utils.h //
 ///////////////////////
@@ -8638,6 +8684,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
+    smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
+    smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
+    smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
+    smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
 
     // smlua_obj_utils.h
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);
