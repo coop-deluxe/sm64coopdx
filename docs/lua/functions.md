@@ -634,6 +634,7 @@
 <br />
 
 - smlua_obj_utils.h
+   - [get_temp_object_hitbox](#get_temp_object_hitbox)
    - [obj_get_first](#obj_get_first)
    - [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
@@ -11588,6 +11589,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+
+## [get_temp_object_hitbox](#get_temp_object_hitbox)
+
+### Lua Example
+`local ObjectHitboxValue = get_temp_object_hitbox()`
+
+### Parameters
+- None
+
+### Returns
+[ObjectHitbox](structs.md#ObjectHitbox)
+
+### C Prototype
+`struct ObjectHitbox* get_temp_object_hitbox(void);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [obj_get_first](#obj_get_first)
 

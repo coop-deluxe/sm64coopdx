@@ -195,14 +195,21 @@ struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o
 }
 
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId) {
-    static struct SpawnParticlesInfo spi = { 0 };
+    static struct SpawnParticlesInfo sTmpSpi = { 0 };
+    memset(&sTmpSpi, 0, sizeof(struct SpawnParticlesInfo));
 
     u8 loadedModelId = smlua_model_util_load(modelId);
     if (loadedModelId == 0xFF) {
         LOG_ERROR("failed to load model  %u", modelId);
         return NULL;
     }
-    spi.model = loadedModelId;
+    sTmpSpi.model = loadedModelId;
 
-    return &spi;
+    return &sTmpSpi;
+}
+
+struct ObjectHitbox* get_temp_object_hitbox(void) {
+    static struct ObjectHitbox sTmpHitbox = { 0 };
+    memset(&sTmpHitbox, 0, sizeof(struct ObjectHitbox));
+    return &sTmpHitbox;
 }

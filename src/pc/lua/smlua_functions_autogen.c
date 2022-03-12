@@ -7372,6 +7372,15 @@ int smlua_func_warp_to_level(lua_State* L) {
  // smlua_obj_utils.h //
 ///////////////////////
 
+int smlua_func_get_temp_object_hitbox(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    smlua_push_object(L, LOT_OBJECTHITBOX, get_temp_object_hitbox());
+
+    return 1;
+}
+
 int smlua_func_obj_get_first(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -8690,6 +8699,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
 
     // smlua_obj_utils.h
+    smlua_bind_function(L, "get_temp_object_hitbox", smlua_func_get_temp_object_hitbox);
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);
     smlua_bind_function(L, "obj_get_first_with_behavior_id", smlua_func_obj_get_first_with_behavior_id);
     smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_f32", smlua_func_obj_get_first_with_behavior_id_and_field_f32);
