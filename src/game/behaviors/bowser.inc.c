@@ -1359,6 +1359,9 @@ void bhv_bowser_init(void) {
         network_init_object_field(o, &o->header.gfx.node.flags);
         network_init_object_field(o, &networkBowserAnimationIndex);
         network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+        network_init_object_field(o, &o->header.gfx.scale[0]);
+        network_init_object_field(o, &o->header.gfx.scale[1]);
+        network_init_object_field(o, &o->header.gfx.scale[2]);
     }
 }
 
