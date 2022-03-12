@@ -82,7 +82,7 @@ extern unsigned int configHostPort;
 extern unsigned int configHostSaveSlot;
 extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
-extern bool         configStayInLevelAfterStar;
+extern unsigned int configStayInLevelAfterStar;
 extern unsigned int configNetworkSystem;
 extern char         configPlayerName[];
 extern unsigned int configPlayerModel;

@@ -63,9 +63,10 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         djui_base_set_size(&selectionbox2->base, 1.0f, 32);
         djui_interactable_hook_value_change(&selectionbox2->base, djui_panel_host_settings_knockback_change);
 
-        struct DjuiCheckbox* checkbox1 = djui_checkbox_create(&body->base, "Stay in level after star", &configStayInLevelAfterStar);
-        djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox1->base, 1.0f, 32);
+        char* lChoices[3] = { "Leave level", "Stay in level", "Non-stop" };
+        struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(&body->base, "On star collection", lChoices, 3, &configStayInLevelAfterStar);
+        djui_base_set_size_type(&selectionbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&selectionbox3->base, 1.0f, 32);
 
         struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Skip intro cutscene", &configSkipIntro);
         djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

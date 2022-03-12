@@ -126,7 +126,7 @@ unsigned int configHostPort                      = DEFAULT_PORT;
 unsigned int configHostSaveSlot                  = 1;
 unsigned int configPlayerInteraction             = 1;
 unsigned int configPlayerKnockbackStrength       = 25;
-bool         configStayInLevelAfterStar          = 0;
+unsigned int configStayInLevelAfterStar          = 0;
 unsigned int configNetworkSystem                 = 0;
 char         configPlayerName[MAX_PLAYER_STRING] = "";
 unsigned int configPlayerModel                   = 0;
@@ -208,7 +208,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
     {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
-    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .boolValue   = &configStayInLevelAfterStar},
+    {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "share_lives",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShareLives},
 };
 
