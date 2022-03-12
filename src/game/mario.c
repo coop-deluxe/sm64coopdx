@@ -2129,8 +2129,24 @@ static void init_single_mario(struct MarioState* m) {
     u16 spawnAngle = m->faceAngle[1] + 0x4000 + 0x10000 * ((f32)globalIndex / ((f32)connectedPlayers + 1));
     f32 spawnMag = 60.0f * ((connectedPlayers + 1) / 2.0f);
     if (spawnMag > 120) { spawnMag = 120; }
-    m->pos[0] -= spawnMag * sins(spawnAngle);
-    m->pos[2] -= spawnMag * coss(spawnAngle);
+
+    // figure out if we should apply offset
+    u8 nearbyPlayers = 1;
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+        if (np->currCourseNum == gCurrCourseNum && np->currLevelNum == gCurrLevelNum && np->currActNum == gCurrActStarNum && np->currAreaIndex == gCurrAreaIndex) {
+            nearbyPlayers++;
+        }
+    }
+
+    if (nearbyPlayers > 1) {
+        m->pos[0] -= spawnMag * sins(spawnAngle);
+        m->pos[2] -= spawnMag * coss(spawnAngle);
+        LOG_INFO("spawn offset!, %u", nearbyPlayers);
+    } else {
+        LOG_INFO("no spawn offset!, %u", nearbyPlayers);
+    }
 
     m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
 
