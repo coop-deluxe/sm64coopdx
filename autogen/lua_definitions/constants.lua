@@ -5263,22 +5263,25 @@ HOOK_ON_SET_MARIO_ACTION = 3
 HOOK_BEFORE_PHYS_STEP = 4
 
 --- @type LuaHookedEventType
-HOOK_ON_PVP_ATTACK = 5
+HOOK_ALLOW_PVP_ATTACK = 5
 
 --- @type LuaHookedEventType
-HOOK_ON_PLAYER_CONNECTED = 6
+HOOK_ON_PVP_ATTACK = 6
 
 --- @type LuaHookedEventType
-HOOK_ON_PLAYER_DISCONNECTED = 7
+HOOK_ON_PLAYER_CONNECTED = 7
 
 --- @type LuaHookedEventType
-HOOK_ON_HUD_RENDER = 8
+HOOK_ON_PLAYER_DISCONNECTED = 8
 
 --- @type LuaHookedEventType
-HOOK_ON_INTERACT = 9
+HOOK_ON_HUD_RENDER = 9
 
 --- @type LuaHookedEventType
-HOOK_MAX = 10
+HOOK_ON_INTERACT = 10
+
+--- @type LuaHookedEventType
+HOOK_MAX = 11
 
 --- @class ModelExtendedId
 
@@ -6731,28 +6734,6 @@ SOUND_ENV_ELEVATOR3 = SOUND_ARG_LOAD(SOUND_BANK_ENV, 0x0C, 0x00, 0)
 --- @type integer
 SOUND_ENV_ELEVATOR4 = SOUND_ARG_LOAD(SOUND_BANK_ENV, 0x0D, 0x00, 0)
 
-<<<<<<< HEAD
---- @type LuaHookedEventType
-HOOK_ALLOW_PVP_ATTACK = 5
-
---- @type LuaHookedEventType
-HOOK_ON_PVP_ATTACK = 6
-
---- @type LuaHookedEventType
-HOOK_ON_PLAYER_CONNECTED = 7
-
---- @type LuaHookedEventType
-HOOK_ON_PLAYER_DISCONNECTED = 8
-
---- @type LuaHookedEventType
-HOOK_ON_HUD_RENDER = 9
-
---- @type LuaHookedEventType
-HOOK_ON_INTERACT = 10
-
---- @type LuaHookedEventType
-HOOK_MAX = 11
-=======
 --- @type integer
 SOUND_ENV_ELEVATOR4_2 = SOUND_ARG_LOAD(SOUND_BANK_ENV, 0x0D, 0x00, SOUND_NO_VOLUME_LOSS)
 
@@ -6770,7 +6751,6 @@ SOUND_ENV_MOVING_SAND_SNOW = SOUND_ARG_LOAD(SOUND_BANK_ENV, 0x06, 0x00, 0)
 
 --- @type integer
 SOUND_ENV_SINK_QUICKSAND = SOUND_ARG_LOAD(SOUND_BANK_ENV, 0x18, 0x80, 0)
->>>>>>> 84aa5ad890e47bb4d73815ba102789cc368dc288
 
 --- @type integer
 SOUND_ENV_SLIDING = SOUND_ARG_LOAD(SOUND_BANK_ENV, 0x13, 0x00, 0)
