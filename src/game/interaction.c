@@ -1364,7 +1364,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         }
 
         // determine if slide attack should be ignored
-        if ((interaction & INT_ATTACK_SLIDE) && player_is_sliding(m2)) {
+        if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(m2)) {
             // determine the difference in velocities
             Vec3f velDiff;
             vec3f_dif(velDiff, m->vel, m2->vel);
