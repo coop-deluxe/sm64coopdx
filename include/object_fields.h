@@ -922,8 +922,9 @@
 #define /*0x0F4*/ oSoundEffectUnkF4 OBJECT_FIELD_S32(0x1B)
 
 /* Star Spawn */
-#define /*0x0F4*/ oStarSpawnDisFromHome OBJECT_FIELD_F32(0x1B)
-#define /*0x0FC*/ oStarSpawnUnkFC       OBJECT_FIELD_F32(0x1D)
+#define /*0x0F4*/ oStarSpawnDisFromHome      OBJECT_FIELD_F32(0x1B)
+#define /*0x0F8*/ oStarSpawnUnkFC            OBJECT_FIELD_F32(0x1D)
+#define /*0x0FC*/ oStarSpawnExtCutsceneFlags OBJECT_FIELD_S16(0x1E, 0)
 
 /* Hidden Star */
 // Secrets/Red Coins

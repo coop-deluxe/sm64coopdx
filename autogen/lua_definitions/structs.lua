@@ -618,10 +618,10 @@
 --- @field public oBBallSpawnerMaxSpawnDist number
 --- @field public oBBallSpawnerPeriodMinus1 integer
 --- @field public oBBallSpawnerSpawnOdds number
---- @field public oBackAndForthPlatformUnk100 number
---- @field public oBackAndForthPlatformUnkF4 number
---- @field public oBackAndForthPlatformUnkF8 number
---- @field public oBackAndForthPlatformUnkFC number
+--- @field public oBackAndForthPlatformDirection number
+--- @field public oBackAndForthPlatformDistance number
+--- @field public oBackAndForthPlatformPathLength number
+--- @field public oBackAndForthPlatformVel number
 --- @field public oBehParams integer
 --- @field public oBehParams2ndByte integer
 --- @field public oBetaTrampolineMarioOnTrampoline integer
@@ -634,7 +634,7 @@
 --- @field public oBlueFishRandomAngle number
 --- @field public oBlueFishRandomTime integer
 --- @field public oBlueFishRandomVel number
---- @field public oBlueFlameUnkF8 number
+--- @field public oBlueFlameNextScale number
 --- @field public oBobombBlinkTimer integer
 --- @field public oBobombBuddyBlinkTimer integer
 --- @field public oBobombBuddyCannonStatus integer
@@ -829,18 +829,18 @@
 --- @field public oFireSpitterScaleVel number
 --- @field public oFishActiveDistance number
 --- @field public oFishDepthDistance number
---- @field public oFishPosY number
---- @field public oFishRandomOffset number
---- @field public oFishRandomSpeed integer
---- @field public oFishRandomVel number
---- @field public oFishRespawnDistance number
+--- @field public oFishGoalVel number
+--- @field public oFishGoalY number
+--- @field public oFishHeightOffset number
+--- @field public oFishRoamDistance number
 --- @field public oFishWaterLevel number
+--- @field public oFishYawVel integer
 --- @field public oFlags integer
+--- @field public oFlameBowser Object
+--- @field public oFlameScale number
+--- @field public oFlameSpeedTimerOffset integer
 --- @field public oFlameThowerFlameUnk110 integer
 --- @field public oFlameThowerUnk110 integer
---- @field public oFlameUnk100 Object
---- @field public oFlameUnkF4 number
---- @field public oFlameUnkF8 integer
 --- @field public oFlameUnkFC number
 --- @field public oFloatingPlatformUnk100 integer
 --- @field public oFloatingPlatformUnkF4 integer
@@ -968,9 +968,8 @@
 --- @field public oMacroUnk108 number
 --- @field public oMacroUnk10C number
 --- @field public oMacroUnk110 number
---- @field public oMantaUnk1AC integer
---- @field public oMantaUnkF4 integer
---- @field public oMantaUnkF8 integer
+--- @field public oMantaTargetPitch integer
+--- @field public oMantaTargetYaw integer
 --- @field public oMarioBurnTimer integer
 --- @field public oMarioCannonInputYaw integer
 --- @field public oMarioCannonObjectYaw integer
@@ -1128,9 +1127,9 @@
 --- @field public oSmallPenguinUnk88 integer
 --- @field public oSmallPiranhaFlameEndSpeed number
 --- @field public oSmallPiranhaFlameModel integer
+--- @field public oSmallPiranhaFlameNextFlameTimer integer
+--- @field public oSmallPiranhaFlameSpeed number
 --- @field public oSmallPiranhaFlameStartSpeed number
---- @field public oSmallPiranhaFlameUnk100 integer
---- @field public oSmallPiranhaFlameUnk104 number
 --- @field public oSmokeTimer integer
 --- @field public oSnowmansBottomUnk1AC integer
 --- @field public oSnowmansBottomUnkF4 number
@@ -1160,6 +1159,7 @@
 --- @field public oStarSelectorTimer integer
 --- @field public oStarSelectorType integer
 --- @field public oStarSpawnDisFromHome number
+--- @field public oStarSpawnExtCutsceneFlags integer
 --- @field public oStarSpawnUnkFC number
 --- @field public oStrongWindParticlePenguinObj Object
 --- @field public oSubAction integer
@@ -1455,7 +1455,7 @@
 --- @field public numWalls integer
 --- @field public offsetY number
 --- @field public radius number
---- @field public unk14 integer
+--- @field public unused integer
 
 --- @class WarpNode
 --- @field public destArea integer

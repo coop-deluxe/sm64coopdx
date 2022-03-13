@@ -678,7 +678,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                 LVT_U8,     offsetof(struct NetworkPlayer, type),                 true,  LOT_NONE },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 749
+#define LUA_OBJECT_FIELD_COUNT 750
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -1272,6 +1272,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oStarSelectorTimer",                         LVT_S32,                 offsetof(struct Object, oStarSelectorTimer),                         false, LOT_NONE         },
     { "oStarSelectorType",                          LVT_S32,                 offsetof(struct Object, oStarSelectorType),                          false, LOT_NONE         },
     { "oStarSpawnDisFromHome",                      LVT_F32,                 offsetof(struct Object, oStarSpawnDisFromHome),                      false, LOT_NONE         },
+    { "oStarSpawnExtCutsceneFlags",                 LVT_S16,                 offsetof(struct Object, oStarSpawnExtCutsceneFlags),                 false, LOT_NONE         },
     { "oStarSpawnUnkFC",                            LVT_F32,                 offsetof(struct Object, oStarSpawnUnkFC),                            false, LOT_NONE         },
     { "oStrongWindParticlePenguinObj",              LVT_COBJECT_P,           offsetof(struct Object, oStrongWindParticlePenguinObj),              false, LOT_OBJECT       },
     { "oSubAction",                                 LVT_S32,                 offsetof(struct Object, oSubAction),                                 false, LOT_NONE         },

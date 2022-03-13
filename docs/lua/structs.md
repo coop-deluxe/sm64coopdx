@@ -1462,6 +1462,7 @@
 | oSoundEffectUnkF4 | `integer` |  |
 | oStarSpawnDisFromHome | `number` |  |
 | oStarSpawnUnkFC | `number` |  |
+| oStarSpawnExtCutsceneFlags | `integer` |  |
 | oHiddenStarTriggerCounter | `integer` |  |
 | oSparkleSpawnUnk1B0 | `integer` |  |
 | oUnlockDoorStarState | `integer` |  |

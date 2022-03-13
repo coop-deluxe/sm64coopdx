@@ -572,6 +572,26 @@ struct Object* nearest_player_to_object(struct Object *obj) {
 }
 
 /**
+ * Returns whether or not the MarioState is the closet MarioState
+ * to the object. 
+ */
+u8 is_nearest_mario_state_to_object(struct MarioState *m, struct Object *obj) {
+    if (m == NULL || obj == NULL) { return FALSE; }
+    struct MarioState *nearest = nearest_mario_state_to_object(obj);
+    return m == nearest;
+}
+
+/**
+ * Returns whether or not the player is the closet player
+ * to the object. 
+ */
+u8 is_nearest_player_to_object(struct Object *m, struct Object *obj) {
+    if (m == NULL || obj == NULL) { return FALSE; }
+    struct MarioState *nearest = nearest_mario_state_to_object(obj);
+    return m == nearest->marioObj;
+}
+
+/**
  * Checks whether a point is within distance of a given point. Test is exclusive.
  */
 s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {

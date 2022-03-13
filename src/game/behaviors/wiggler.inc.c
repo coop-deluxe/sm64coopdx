@@ -365,7 +365,14 @@ static void wiggler_act_shrink(void) {
 
         // 4 is the default scale, so shrink to 1/4 of regular size
         if (approach_f32_ptr(&o->header.gfx.scale[0], 1.0f, 0.1f)) {
-            spawn_default_star(0.0f, 2048.0f, 0.0f);
+            struct Object *star = spawn_default_star(0.0f, 2048.0f, 0.0f);
+            
+            // If we're not the closet to Wiggler,
+            // Don't play this cutscene!
+            if (star != NULL && nearest_mario_state_to_object(o) != &gMarioStates[0]) {
+                star->oStarSpawnExtCutsceneFlags = 0;
+            }
+            
             o->oAction = WIGGLER_ACT_FALL_THROUGH_FLOOR;
         }
 
@@ -421,7 +428,7 @@ void bhv_wiggler_on_received_post(UNUSED u8 localIndex) {
     posDiff[0] = o->oPosX - wigglerPrePos[0];
     posDiff[1] = o->oPosY - wigglerPrePos[1];
     posDiff[2] = o->oPosZ - wigglerPrePos[2];
-    for (int i = 0; i < 3; i++) {
+    for (s32 i = 0; i < 3; i++) {
         o->oWigglerSegments[i].posX += posDiff[0];
         o->oWigglerSegments[i].posY += posDiff[1];
         o->oWigglerSegments[i].posZ += posDiff[2];
@@ -458,8 +465,8 @@ void bhv_wiggler_update(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     o->oDistanceToMario = distanceToPlayer;
     o->oAngleToMario = angleToPlayer;
 

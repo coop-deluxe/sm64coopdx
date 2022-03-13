@@ -318,6 +318,8 @@
    - [calc_new_obj_vel_and_pos_y_underwater](#calc_new_obj_vel_and_pos_y_underwater)
    - [calc_obj_friction](#calc_obj_friction)
    - [current_mario_room_check](#current_mario_room_check)
+   - [is_nearest_mario_state_to_object](#is_nearest_mario_state_to_object)
+   - [is_nearest_player_to_object](#is_nearest_player_to_object)
    - [is_player_active](#is_player_active)
    - [is_point_close_to_object](#is_point_close_to_object)
    - [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
@@ -5634,6 +5636,48 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s8 current_mario_room_check(s16 room);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_nearest_mario_state_to_object](#is_nearest_mario_state_to_object)
+
+### Lua Example
+`local integerValue = is_nearest_mario_state_to_object(m, obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_nearest_mario_state_to_object(struct MarioState *m, struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_nearest_player_to_object](#is_nearest_player_to_object)
+
+### Lua Example
+`local integerValue = is_nearest_player_to_object(m, obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [Object](structs.md#Object) |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_nearest_player_to_object(struct Object *m, struct Object *obj);`
 
 [:arrow_up_small:](#)
 

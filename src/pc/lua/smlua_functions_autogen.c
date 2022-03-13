@@ -3252,6 +3252,34 @@ int smlua_func_geo_obj_transparency_something(lua_State* L) {
 }
 */
 
+int smlua_func_is_nearest_mario_state_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u8 is_nearest_mario_state_to_object(struct MarioState *m, struct Object *obj);
+    lua_pushinteger(L, is_nearest_mario_state_to_object(m, obj));
+
+    return 1;
+}
+
+int smlua_func_is_nearest_player_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* m = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u8 is_nearest_player_to_object(struct Object *m, struct Object *obj);
+    lua_pushinteger(L, is_nearest_player_to_object(m, obj));
+
+    return 1;
+}
+
 int smlua_func_is_player_active(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -8408,6 +8436,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "calc_obj_friction", smlua_func_calc_obj_friction);
     smlua_bind_function(L, "current_mario_room_check", smlua_func_current_mario_room_check);
     //smlua_bind_function(L, "geo_obj_transparency_something", smlua_func_geo_obj_transparency_something); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "is_nearest_mario_state_to_object", smlua_func_is_nearest_mario_state_to_object);
+    smlua_bind_function(L, "is_nearest_player_to_object", smlua_func_is_nearest_player_to_object);
     smlua_bind_function(L, "is_player_active", smlua_func_is_player_active);
     smlua_bind_function(L, "is_point_close_to_object", smlua_func_is_point_close_to_object);
     smlua_bind_function(L, "is_point_within_radius_of_mario", smlua_func_is_point_within_radius_of_mario);
