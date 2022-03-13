@@ -975,6 +975,17 @@ int smlua_func_is_anim_past_frame(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mario_can_bubble(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushboolean(L, mario_can_bubble(m));
+
+    return 1;
+}
+
 int smlua_func_mario_facing_downhill(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -8198,6 +8209,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "is_anim_at_end", smlua_func_is_anim_at_end);
     smlua_bind_function(L, "is_anim_past_end", smlua_func_is_anim_past_end);
     smlua_bind_function(L, "is_anim_past_frame", smlua_func_is_anim_past_frame);
+    smlua_bind_function(L, "mario_can_bubble", smlua_func_mario_can_bubble);
     smlua_bind_function(L, "mario_facing_downhill", smlua_func_mario_facing_downhill);
     smlua_bind_function(L, "mario_floor_is_slippery", smlua_func_mario_floor_is_slippery);
     smlua_bind_function(L, "mario_floor_is_slope", smlua_func_mario_floor_is_slope);

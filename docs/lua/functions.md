@@ -116,6 +116,7 @@
    - [is_anim_at_end](#is_anim_at_end)
    - [is_anim_past_end](#is_anim_past_end)
    - [is_anim_past_frame](#is_anim_past_frame)
+   - [mario_can_bubble](#mario_can_bubble)
    - [mario_facing_downhill](#mario_facing_downhill)
    - [mario_floor_is_slippery](#mario_floor_is_slippery)
    - [mario_floor_is_slope](#mario_floor_is_slope)
@@ -2283,6 +2284,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_can_bubble](#mario_can_bubble)
+
+### Lua Example
+`local boolValue = mario_can_bubble(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `bool`
+
+### C Prototype
+`bool mario_can_bubble(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 

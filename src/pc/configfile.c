@@ -252,6 +252,7 @@ static void dynos_pack_read(char** tokens, UNUSED int numTokens) {
     if (numTokens < 3) { return; }
     char fullPackName[256] = { 0 };
     for (int i = 1; i < numTokens - 1; i++) {
+        if (i != 1) { strncat(fullPackName, " ", 255); }
         strncat(fullPackName, tokens[i], 255);
     }
 
