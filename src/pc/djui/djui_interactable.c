@@ -6,7 +6,7 @@
 #include "src/pc/controller/controller_keyboard.h"
 #include "src/pc/utils/misc.h"
 
-#include "audio_defines.h"
+#include "sounds.h"
 #include "audio/external.h"
 
 #define CALL_CALLBACK(x) if (base->interactable->x != NULL) { base->interactable->x(base); }
@@ -399,7 +399,7 @@ void djui_interactable_update(void) {
         djui_interactable_cursor_update_active(&gDjuiRoot->base);
         if (lastHovered != gDjuiHovered) {
             djui_interactable_on_hover_end(lastHovered);
-            play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, gDefaultSoundArgs);
+            play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, gGlobalSoundSource);
         }
         djui_interactable_on_hover(gDjuiHovered);
     }

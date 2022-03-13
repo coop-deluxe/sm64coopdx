@@ -15,7 +15,7 @@
 #include "save_file.h"
 #include "sound_init.h"
 #include "surface_terrains.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
@@ -336,10 +336,10 @@ s32 act_sleeping(struct MarioState *m) {
 
 s32 act_waking_up(struct MarioState *m) {
     if (!m->actionTimer) {
-        func_803205E8(get_character(m)->soundSnoring1, m->marioObj->header.gfx.cameraToObject);
-        func_803205E8(get_character(m)->soundSnoring2, m->marioObj->header.gfx.cameraToObject);
+        stop_sound(get_character(m)->soundSnoring1, m->marioObj->header.gfx.cameraToObject);
+        stop_sound(get_character(m)->soundSnoring2, m->marioObj->header.gfx.cameraToObject);
 #ifndef VERSION_JP
-        func_803205E8(get_character(m)->soundSnoring3, m->marioObj->header.gfx.cameraToObject);
+        stop_sound(get_character(m)->soundSnoring3, m->marioObj->header.gfx.cameraToObject);
 #endif
         if (m->playerIndex == 0) {
             raise_background_noise(2);

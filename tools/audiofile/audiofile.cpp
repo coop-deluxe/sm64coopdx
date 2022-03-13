@@ -6167,7 +6167,7 @@ void PCM::runPull()
 	AFframecount framesRead = bytesRead >= 0 ? bytesRead / m_bytesPerFrame : 0;
 
 	m_track->nextfframe += framesRead;
-	assert(!canSeek() || (tell() == m_track->fpos_next_frame));
+	//assert(!canSeek() || (tell() == m_track->fpos_next_frame));
 
 	/*
 		If we got EOF from read, then we return the actual amount read.
@@ -14637,7 +14637,7 @@ static status _afOpenFile (int access, File *f, const char *filename,
 	filehandle->m_access = access;
 	filehandle->m_seekok = f->canSeek();
 	if (filename != NULL)
-		filehandle->m_fileName = strdup(filename);
+		filehandle->m_fileName = _af_strdup(filename);
 	else
 		filehandle->m_fileName = NULL;
 	filehandle->m_fileFormat = fileFormat;

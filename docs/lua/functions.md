@@ -75,8 +75,9 @@
    - [play_sound_with_freq_scale](#play_sound_with_freq_scale)
    - [play_star_fanfare](#play_star_fanfare)
    - [play_toads_jingle](#play_toads_jingle)
-   - [sequence_player_fade_out](#sequence_player_fade_out)
-   - [sequence_player_unlower](#sequence_player_unlower)
+   - [seq_player_fade_out](#seq_player_fade_out)
+   - [seq_player_lower_volume](#seq_player_lower_volume)
+   - [seq_player_unlower_volume](#seq_player_unlower_volume)
 
 <br />
 
@@ -606,6 +607,13 @@
 
 <br />
 
+- rumble_init.c
+   - [queue_rumble_data](#queue_rumble_data)
+   - [queue_rumble_data_mario](#queue_rumble_data_mario)
+   - [queue_rumble_data_object](#queue_rumble_data_object)
+
+<br />
+
 - save_file.h
    - [save_file_get_cap_pos](#save_file_get_cap_pos)
    - [save_file_get_course_coin_score](#save_file_get_course_coin_score)
@@ -698,13 +706,6 @@
    - [get_area_terrain_size](#get_area_terrain_size)
    - [load_area_terrain](#load_area_terrain)
    - [load_object_collision_model](#load_object_collision_model)
-
-<br />
-
-- thread6.c
-   - [queue_rumble_data](#queue_rumble_data)
-   - [queue_rumble_data_mario](#queue_rumble_data_mario)
-   - [queue_rumble_data_object](#queue_rumble_data_object)
 
 <br />
 
@@ -1396,20 +1397,20 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [fade_volume_scale](#fade_volume_scale)
 
 ### Lua Example
-`fade_volume_scale(player, targetScale, fadeTimer)`
+`fade_volume_scale(player, targetScale, fadeDuration)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | player | `integer` |
 | targetScale | `integer` |
-| fadeTimer | `integer` |
+| fadeDuration | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void fade_volume_scale(u8 player, u8 targetScale, u16 fadeTimer);`
+`void fade_volume_scale(u8 player, u8 targetScale, u16 fadeDuration);`
 
 [:arrow_up_small:](#)
 
@@ -1672,43 +1673,65 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
-## [sequence_player_fade_out](#sequence_player_fade_out)
+## [seq_player_fade_out](#seq_player_fade_out)
 
 ### Lua Example
-`sequence_player_fade_out(player, fadeTimer)`
+`seq_player_fade_out(player, fadeDuration)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | player | `integer` |
-| fadeTimer | `integer` |
+| fadeDuration | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void sequence_player_fade_out(u8 player, u16 fadeTimer);`
+`void seq_player_fade_out(u8 player, u16 fadeDuration);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [sequence_player_unlower](#sequence_player_unlower)
+## [seq_player_lower_volume](#seq_player_lower_volume)
 
 ### Lua Example
-`sequence_player_unlower(player, fadeTimer)`
+`seq_player_lower_volume(player, fadeDuration, percentage)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | player | `integer` |
-| fadeTimer | `integer` |
+| fadeDuration | `integer` |
+| percentage | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void sequence_player_unlower(u8 player, u16 fadeTimer);`
+`void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [seq_player_unlower_volume](#seq_player_unlower_volume)
+
+### Lua Example
+`seq_player_unlower_volume(player, fadeDuration)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| fadeDuration | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void seq_player_unlower_volume(u8 player, u16 fadeDuration);`
 
 [:arrow_up_small:](#)
 
@@ -5654,7 +5677,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist);`
+`s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist);`
 
 [:arrow_up_small:](#)
 
@@ -5677,7 +5700,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);`
+`s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);`
 
 [:arrow_up_small:](#)
 
@@ -5760,7 +5783,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range);`
+`s8 obj_check_if_facing_toward_angle(u32 base, u32 goal, s16 range);`
 
 [:arrow_up_small:](#)
 
@@ -5784,7 +5807,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ);`
+`s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ);`
 
 [:arrow_up_small:](#)
 
@@ -5808,7 +5831,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
+`s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -5829,7 +5852,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan);`
+`s8 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan);`
 
 [:arrow_up_small:](#)
 
@@ -5847,7 +5870,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 obj_lava_death(void);`
+`s8 obj_lava_death(void);`
 
 [:arrow_up_small:](#)
 
@@ -5938,7 +5961,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist);`
+`s8 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist);`
 
 [:arrow_up_small:](#)
 
@@ -6119,7 +6142,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `integer`
 
 ### C Prototype
-`s32 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ);`
+`s8 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ);`
 
 [:arrow_up_small:](#)
 
@@ -11268,6 +11291,77 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 <br />
 
 ---
+# functions from rumble_init.c
+
+<br />
+
+
+## [queue_rumble_data](#queue_rumble_data)
+
+### Lua Example
+`queue_rumble_data(a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data(s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_data_mario](#queue_rumble_data_mario)
+
+### Lua Example
+`queue_rumble_data_mario(m, a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_data_object](#queue_rumble_data_object)
+
+### Lua Example
+`queue_rumble_data_object(object, a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| object | [Object](structs.md#Object) |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from save_file.h
 
 <br />
@@ -12576,77 +12670,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void load_object_collision_model(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from thread6.c
-
-<br />
-
-
-## [queue_rumble_data](#queue_rumble_data)
-
-### Lua Example
-`queue_rumble_data(a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data(s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [queue_rumble_data_mario](#queue_rumble_data_mario)
-
-### Lua Example
-`queue_rumble_data_mario(m, a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [queue_rumble_data_object](#queue_rumble_data_object)
-
-### Lua Example
-`queue_rumble_data_object(object, a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| object | [Object](structs.md#Object) |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
 
 [:arrow_up_small:](#)
 

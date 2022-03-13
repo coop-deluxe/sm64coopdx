@@ -363,7 +363,7 @@ void bhv_book_switch_loop(void) {
             if (approach_f32_ptr(&o->oBookSwitchUnkF4, 0.0f, 20.0f)) {
                 if (o->oAction != 0) {
                     if (o->parentObj->oBookSwitchManagerUnkF4 == o->oBehParams2ndByte) {
-                        play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gDefaultSoundArgs);
+                        play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gGlobalSoundSource);
                         if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                             o->parentObj->oBookSwitchManagerUnkF4 += 1;
                             network_send_object(o->parentObj);
@@ -372,7 +372,7 @@ void bhv_book_switch_loop(void) {
                         sp36 = random_u16() & 0x1;
                         sp34 = player->oPosZ + 1.5f * marioState->vel[2];
 
-                        play_sound(SOUND_MENU_CAMERA_BUZZ, gDefaultSoundArgs);
+                        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
                         if (sp34 > 0) {
                             sp34 = 0;
                         }

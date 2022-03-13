@@ -15,7 +15,7 @@
 #include "audio/external.h"
 #include "behavior_data.h"
 #include "level_table.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"

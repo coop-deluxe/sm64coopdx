@@ -1,5 +1,5 @@
-#ifndef THREAD6_H
-#define THREAD6_H
+#ifndef RUMBLE_INIT_H
+#define RUMBLE_INIT_H
 
 extern s32 gRumblePakTimer;
 
@@ -19,4 +19,4 @@ void create_thread_6(void);
 void rumble_thread_update_vi(void);
 void thread6_rumble_loop(void *a0);
 
-#endif // THREAD6_H
+#endif // RUMBLE_INIT_H

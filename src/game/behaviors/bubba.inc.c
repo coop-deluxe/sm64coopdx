@@ -55,11 +55,8 @@ void bubba_act_0(void) {
 void bubba_act_1(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
-
-    s16 val06;
-    s16 val04;
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     treat_far_home_as_mario(2500.0f, &distanceToPlayer, &angleToPlayer);
 
@@ -72,13 +69,12 @@ void bubba_act_1(void) {
         } else if (o->oBubbaUnk100 < 15) {
             o->oAnimState = 1;
         } else if (o->oBubbaUnk100 == 20) {
-            val06 = 10000 - (s16)(20.0f * (find_water_level(o->oPosX, o->oPosZ) - o->oPosY));
+            s16 val06 = 10000 - (s16)(20.0f * (find_water_level(o->oPosX, o->oPosZ) - o->oPosY));
             o->oBubbaUnk1AC -= val06;
             o->oMoveAnglePitch = o->oBubbaUnk1AC;
             o->oBubbaUnkF4 = 40.0f;
             obj_compute_vel_from_move_pitch(o->oBubbaUnkF4);
             o->oAnimState = 0;
-            ;
         } else {
             o->oBubbaUnk1AE = angleToPlayer;
             o->oBubbaUnk1AC = o->oBubbaUnk104;
@@ -88,7 +84,7 @@ void bubba_act_1(void) {
         }
     } else {
         if (abs_angle_diff(player->oFaceAngleYaw, angleToPlayer) < 0x3000) {
-            val04 = 0x4000 - atan2s(800.0f, distanceToPlayer - 800.0f);
+            s16 val04 = 0x4000 - atan2s(800.0f, distanceToPlayer - 800.0f);
             if ((s16)(o->oMoveAngleYaw - angleToPlayer) < 0) {
                 val04 = -val04;
             }
@@ -134,8 +130,6 @@ void bhv_bubba_loop(void) {
     int angleToPlayer = obj_angle_to_object(o, player);
 
     UNUSED s32 unused;
-    struct Object *sp38;
-    s16 sp36;
 
     o->oInteractionSubtype &= ~INT_SUBTYPE_EATS_MARIO;
     o->oBubbaUnk104 = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
@@ -164,18 +158,17 @@ void bhv_bubba_loop(void) {
 
     if (o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER) {
         if (o->oMoveFlags & OBJ_MOVE_ENTERED_WATER) {
-            sp38 = spawn_object(o, MODEL_WATER_SPLASH, bhvWaterSplash);
+            struct Object *sp38 = spawn_object(o, MODEL_WATER_SPLASH, bhvWaterSplash);
             if (sp38 != NULL) {
                 obj_scale(sp38, 3.0f);
             }
 
             o->oBubbaUnk108 = o->oVelY;
             o->oBubbaUnk10C = 0.0f;
-            ;
         } else {
             approach_f32_ptr(&o->oBubbaUnk108, 0.0f, 4.0f);
             if ((o->oBubbaUnk10C -= o->oBubbaUnk108) > 1.0f) {
-                sp36 = random_u16();
+                s16 sp36 = random_u16();
                 o->oBubbaUnk10C -= 1.0f;
                 spawn_object_relative(0, 150.0f * coss(sp36), 0x64, 150.0f * sins(sp36), o,
                                       MODEL_WHITE_PARTICLE_SMALL, bhvSmallParticleSnow);

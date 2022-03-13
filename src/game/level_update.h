@@ -11,23 +11,23 @@
 #define TIMER_CONTROL_STOP  2
 #define TIMER_CONTROL_HIDE  3
 
-#define WARP_OP_NONE          0x00
-#define WARP_OP_LOOK_UP       0x01
-#define WARP_OP_UNKNOWN_02    0x02
-#define WARP_OP_WARP_DOOR     0x03
-#define WARP_OP_WARP_OBJECT   0x04
-#define WARP_OP_TELEPORT      0x05
-#define WARP_OP_STAR_EXIT     0x11
-#define WARP_OP_DEATH         0x12
-#define WARP_OP_WARP_FLOOR    0x13
-#define WARP_OP_GAME_OVER     0x14
-#define WARP_OP_CREDITS_END   0x15
-#define WARP_OP_DEMO_NEXT     0x16
-#define WARP_OP_CREDITS_START 0x17
-#define WARP_OP_CREDITS_NEXT  0x18
-#define WARP_OP_DEMO_END      0x19
-#define WARP_OP_FORCE_SYNC    0x20
-#define WARP_OP_EXIT          0x21
+#define WARP_OP_NONE                      0x00
+#define WARP_OP_LOOK_UP                   0x01
+#define WARP_OP_SPIN_SHRINK               0x02
+#define WARP_OP_WARP_DOOR                 0x03
+#define WARP_OP_WARP_OBJECT               0x04
+#define WARP_OP_TELEPORT                  0x05
+#define WARP_OP_STAR_EXIT                 0x11
+#define WARP_OP_DEATH                     0x12
+#define WARP_OP_WARP_FLOOR                0x13
+#define WARP_OP_GAME_OVER                 0x14
+#define WARP_OP_CREDITS_END               0x15
+#define WARP_OP_DEMO_NEXT                 0x16
+#define WARP_OP_CREDITS_START             0x17
+#define WARP_OP_CREDITS_NEXT              0x18
+#define WARP_OP_DEMO_END                  0x19
+#define WARP_OP_FORCE_SYNC                0x20
+#define WARP_OP_EXIT                      0x21
 
 #define WARP_OP_TRIGGERS_LEVEL_SELECT 0x10
 
