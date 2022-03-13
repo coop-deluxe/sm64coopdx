@@ -78,20 +78,22 @@ void discord_activity_update(bool hosting) {
         gCurActivity.party.size.max_size = 1;
     }
 
-    snprintf(gCurActivity.details, 128, "%s", get_version());
+    char details[256] = { 0 };
+
+    snprintf(details, 127, "%s", get_version());
 
     bool displayDash = true;
     bool displayComma = false;
 
     if (gRegisteredMods.string != NULL) {
-        strncat(gCurActivity.details, " - ", 127);
+        strncat(details, " - ", 127);
         displayDash = false;
 
         // add patches to activity
         struct StringLinkedList* node = &gRegisteredMods;
         while (node != NULL && node->string != NULL) {
-            if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
-            strncat(gCurActivity.details, node->string, 127);
+            if (displayComma) { strncat(details, ", ", 127); }
+            strncat(details, node->string, 127);
             displayComma = true;
             node = node->next;
         }
@@ -103,15 +105,17 @@ void discord_activity_update(bool hosting) {
         for (int i = 0; i < table->entryCount; i++) {
             struct ModListEntry* entry = &table->entries[i];
             if (!entry->enabled) { continue; }
-            if (displayDash) { strncat(gCurActivity.details, " - ", 127); }
-            if (displayComma) { strncat(gCurActivity.details, ", ", 127); }
+            if (displayDash) { strncat(details, " - ", 127); }
+            if (displayComma) { strncat(details, ", ", 127); }
 
-            strncat(gCurActivity.details, entry->displayName ? entry->displayName : entry->name, 127);
+            strncat(details, entry->displayName ? entry->displayName : entry->name, 127);
 
             displayDash = false;
             displayComma = true;
         }
     }
+
+    snprintf(gCurActivity.details, 125, "%s", details);
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
     LOGFILE_INFO(LFT_DISCORD, "set activity");
