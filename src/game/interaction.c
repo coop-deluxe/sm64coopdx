@@ -1356,6 +1356,12 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     u8 isIgnoredAttack = (m->action == ACT_JUMP || m->action == ACT_DOUBLE_JUMP || m->action == ACT_LONG_JUMP || m->action == ACT_SIDE_FLIP);
 
     if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable) {
+        bool allow = true;
+        smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, m, m2, &allow);
+        if (!allow) {
+            // Lua blocked the interaction
+            return false;
+        }
 
         // determine if slide attack should be ignored
         if ((interaction & INT_ATTACK_SLIDE) && player_is_sliding(m2)) {

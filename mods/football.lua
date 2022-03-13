@@ -1067,6 +1067,16 @@ function on_player_connected(m)
     s.team = selectTeam
 end
 
+--- @param m1 MarioState
+--- @param m2 MarioState
+function allow_pvp_attack(m1, m2)
+    local s1 = gPlayerSyncTable[m1.playerIndex]
+    local s2 = gPlayerSyncTable[m2.playerIndex]
+    if s1.team == s2.team then
+        return false
+    end
+    return true
+end
 
 function hud_score_render()
     djui_hud_set_font(FONT_HUD)
@@ -1300,6 +1310,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
+hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 hook_chat_command('football-reset', "[game|ball] resets the game or ball", on_football_reset_command)
 
 for i=0,(MAX_PLAYERS-1) do

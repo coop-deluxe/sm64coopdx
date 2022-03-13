@@ -6682,22 +6682,25 @@ HOOK_ON_SET_MARIO_ACTION = 3
 HOOK_BEFORE_PHYS_STEP = 4
 
 --- @type LuaHookedEventType
-HOOK_ON_PVP_ATTACK = 5
+HOOK_ALLOW_PVP_ATTACK = 5
 
 --- @type LuaHookedEventType
-HOOK_ON_PLAYER_CONNECTED = 6
+HOOK_ON_PVP_ATTACK = 6
 
 --- @type LuaHookedEventType
-HOOK_ON_PLAYER_DISCONNECTED = 7
+HOOK_ON_PLAYER_CONNECTED = 7
 
 --- @type LuaHookedEventType
-HOOK_ON_HUD_RENDER = 8
+HOOK_ON_PLAYER_DISCONNECTED = 8
 
 --- @type LuaHookedEventType
-HOOK_ON_INTERACT = 9
+HOOK_ON_HUD_RENDER = 9
 
 --- @type LuaHookedEventType
-HOOK_MAX = 10
+HOOK_ON_INTERACT = 10
+
+--- @type LuaHookedEventType
+HOOK_MAX = 11
 
 --- @class ModelExtendedId
 

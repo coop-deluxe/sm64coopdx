@@ -10,6 +10,7 @@ enum LuaHookedEventType {
     HOOK_BEFORE_MARIO_UPDATE,
     HOOK_ON_SET_MARIO_ACTION,
     HOOK_BEFORE_PHYS_STEP,
+    HOOK_ALLOW_PVP_ATTACK,
     HOOK_ON_PVP_ATTACK,
     HOOK_ON_PLAYER_CONNECTED,
     HOOK_ON_PLAYER_DISCONNECTED,
@@ -24,6 +25,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_BEFORE_MARIO_UPDATE",
     "HOOK_ON_SET_MARIO_ACTION",
     "HOOK_BEFORE_PHYS_STEP",
+    "HOOK_ALLOW_PVP_ATTACK",
     "HOOK_ON_PVP_ATTACK",
     "HOOK_ON_PLAYER_CONNECTED",
     "HOOK_ON_PLAYER_DISCONNECTED",
@@ -35,6 +37,7 @@ static char* LuaHookedEventTypeName[] = {
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
+void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue);
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
