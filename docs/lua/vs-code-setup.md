@@ -35,7 +35,7 @@ Setting up Visual Studio Code will allow you to have all of the modern benefits 
 ---
 
 6. Open a lua mod file be amazed at autocompletion and all of that good stuff
-![autocompletion](https://user-images.githubusercontent.com/12403224/158046824-1894318a-7ce9-41ef-bacc-17f95fa05f31.png)
+![autocompletion](https://user-images.githubusercontent.com/12403224/158046991-77670bae-33a9-467c-a07d-3ce6eba28673.png)
 
 ---
 
