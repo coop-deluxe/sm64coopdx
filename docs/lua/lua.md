@@ -14,6 +14,7 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 ## Tips
 - When developing Lua mods, run the game from a console. Lua errors and logs will appear there.
 - You can use the `print()` command when debugging. Your logs will show up in the console.
+- [Setting up Visual Studio Code](vs-code-setup.md) will give you autocomplete and other nice things.
 
 <br />
 
