@@ -71,6 +71,7 @@ extern bool         configHUD;
 extern bool         configSkipIntro;
 extern bool         configShareLives;
 extern bool         configEnableCheats;
+extern bool         configDisablePopups;
 extern bool         configBubbleDeath;
 extern unsigned int configAmountofPlayers;
 #ifdef DISCORDRPC

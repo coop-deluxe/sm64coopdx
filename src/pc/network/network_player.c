@@ -327,7 +327,9 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
         } else {
             snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ entered\n%s", playerColorString, np->name, get_level_name(courseNum, levelNum, areaIndex));
         }
-        djui_popup_create(popupMsg, 1);
+        if (configDisablePopups == 0) {
+            djui_popup_create(popupMsg, 1);
+        }
     }
 
     np->currCourseNum = courseNum;

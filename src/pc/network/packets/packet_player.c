@@ -344,7 +344,9 @@ void network_receive_player(struct Packet* p) {
         char* playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ died", playerColorString, np->name);
-        djui_popup_create(popupMsg, 1);
+        if (configDisablePopups == 0) {
+            djui_popup_create(popupMsg, 1);
+        }
     }
 
     // action changed, reset timer

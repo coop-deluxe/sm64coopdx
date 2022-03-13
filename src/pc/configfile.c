@@ -113,6 +113,7 @@ bool         configCameraMouse   = false;
 bool         configSkipIntro     = 0;
 bool         configShareLives    = 0;
 bool         configEnableCheats  = 0;
+bool         configDisablePopups  = 0;
 bool         configBubbleDeath   = true;
 unsigned int configAmountofPlayers   = 16;
 bool         configHUD           = true;
@@ -186,6 +187,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
+    {.name = "enable_popups",        .type = CONFIG_TYPE_BOOL, .boolValue = &configDisablePopups},
     {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},

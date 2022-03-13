@@ -7,7 +7,7 @@ static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 7 + 64 * 2 + 16 * 7;
+    f32 bodyHeight = 32 * 7 + 64 * 2 + 32 * 7;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\D\\#1be700\\I\\#00b3ff\\S\\#ffef00\\P\\#ff0800\\L\\#1be700\\A\\#00b3ff\\Y");
@@ -28,6 +28,10 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "HUD", &configHUD);
         djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox4->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups);
+        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox5->base, 1.0f, 32);
 
         char* filterChoices[3] = { "Nearest", "Linear", "Tripoint" };
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Filtering", filterChoices, 3, &configFiltering);
