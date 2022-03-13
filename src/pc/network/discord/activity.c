@@ -66,6 +66,52 @@ static void on_activity_join_request(UNUSED void* data, struct DiscordUser* user
     //app.activities->send_request_reply(app.activities, user->id, DiscordActivityJoinRequestReply_Yes, NULL, on_activity_join_request_callback);
 }
 
+static void strncat_len(char* destination, char* source, size_t destinationLength, size_t sourceLength) {
+    char altered[128] = { 0 };
+    snprintf(altered, (sourceLength < 127) ? sourceLength : 127, "%s", source);
+    strncat(destination, altered, destinationLength);
+}
+
+static bool discord_populate_details(char* details, bool shorten) {
+    snprintf(details, 127, "%s", get_version());
+
+    bool displayDash = true;
+    bool displayComma = false;
+    size_t catLength = shorten ? 14 : 64;
+
+    if (gRegisteredMods.string != NULL) {
+        strncat_len(details, " - ", 127, catLength);
+        displayDash = false;
+
+        // add patches to activity
+        struct StringLinkedList* node = &gRegisteredMods;
+        while (node != NULL && node->string != NULL) {
+            if (displayComma) { strncat_len(details, ", ", 127, catLength); }
+            strncat_len(details, node->string, 127, catLength);
+            displayComma = true;
+            node = node->next;
+        }
+    }
+
+    struct ModTable* table = gModTableCurrent;
+    if (table != NULL && table->entryCount > 0) {
+        // add mods to activity
+        for (int i = 0; i < table->entryCount; i++) {
+            struct ModListEntry* entry = &table->entries[i];
+            if (!entry->enabled) { continue; }
+            if (displayDash) { strncat_len(details, " - ", 127, catLength); }
+            if (displayComma) { strncat_len(details, ", ", 127, catLength); }
+
+            strncat_len(details, entry->displayName ? entry->displayName : entry->name, 127, catLength);
+
+            displayDash = false;
+            displayComma = true;
+        }
+    }
+
+    return (strlen(details) >= 125);
+}
+
 void discord_activity_update(bool hosting) {
     gCurActivity.type = DiscordActivityType_Playing;
     if (gCurActivity.party.size.current_size > 1) {
@@ -79,40 +125,9 @@ void discord_activity_update(bool hosting) {
     }
 
     char details[256] = { 0 };
-
-    snprintf(details, 127, "%s", get_version());
-
-    bool displayDash = true;
-    bool displayComma = false;
-
-    if (gRegisteredMods.string != NULL) {
-        strncat(details, " - ", 127);
-        displayDash = false;
-
-        // add patches to activity
-        struct StringLinkedList* node = &gRegisteredMods;
-        while (node != NULL && node->string != NULL) {
-            if (displayComma) { strncat(details, ", ", 127); }
-            strncat(details, node->string, 127);
-            displayComma = true;
-            node = node->next;
-        }
-    }
-
-    struct ModTable* table = gModTableCurrent;
-    if (table != NULL && table->entryCount > 0) {
-        // add mods to activity
-        for (int i = 0; i < table->entryCount; i++) {
-            struct ModListEntry* entry = &table->entries[i];
-            if (!entry->enabled) { continue; }
-            if (displayDash) { strncat(details, " - ", 127); }
-            if (displayComma) { strncat(details, ", ", 127); }
-
-            strncat(details, entry->displayName ? entry->displayName : entry->name, 127);
-
-            displayDash = false;
-            displayComma = true;
-        }
+    bool overrun = discord_populate_details(details, false);
+    if (overrun) {
+        discord_populate_details(details, true);
     }
 
     snprintf(gCurActivity.details, 125, "%s", details);
