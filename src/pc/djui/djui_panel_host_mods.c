@@ -7,7 +7,7 @@
 #include "pc/cheats.h"
 #include "pc/mod_list.h"
 
-static struct DjuiFlowLayout* sModPanelBody = NULL;
+static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
 
@@ -60,7 +60,7 @@ static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     mod_list_update_selectable();
 
     u16 index = 0;
-    struct DjuiBaseChild* node = sModPanelBody->base.child;
+    struct DjuiBaseChild* node = sModLayout->base.child;
     while (node != NULL) {
         if (index >= gModTableLocal.entryCount) { break; }
         struct ModListEntry* entry = &gModTableLocal.entries[index];
@@ -91,9 +91,9 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
-    sModPanelBody = body;
     {
         struct DjuiPaginated* paginated = djui_paginated_create(&body->base, 8);
+        sModLayout = paginated->layout;
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gModTableLocal.entryCount; i++) {
             struct ModListEntry* entry = &gModTableLocal.entries[i];

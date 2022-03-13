@@ -7,7 +7,7 @@ static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 7 + 64 * 2 + 32 * 7;
+    f32 bodyHeight = 32 * 7 + 64 * 2 + 16 * 8;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\D\\#1be700\\I\\#00b3ff\\S\\#ffef00\\P\\#ff0800\\L\\#1be700\\A\\#00b3ff\\Y");
