@@ -11,6 +11,7 @@ struct LogFile {
     bool firstOpen;
     FILE* file;
 };
+#pragma pack()
 
 enum LogFileType {
     LFT_HANG,

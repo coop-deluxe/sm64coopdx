@@ -609,7 +609,7 @@ SDL1_USED := 0
 SDL2_USED := 0
 
 # suppress warnings
-BACKEND_CFLAGS += -Wno-format-truncation -Wno-format-security -Wno-trigraphs
+BACKEND_CFLAGS += -Wno-format-security -Wno-trigraphs
 BACKEND_CFLAGS += $(EXTRA_CFLAGS)
 
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
@@ -627,6 +627,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
     BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
+    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++0x
   else
     BACKEND_LDFLAGS += -lGL
   endif
