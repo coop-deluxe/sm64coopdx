@@ -1,5 +1,6 @@
 -- name: Football (soccer)
 -- description: Play football in the castle grounds.\nOnly use a save that has lowered the water in the moat.
+-- incompatible: gamemode
 
 ---------------
 -- constants --
