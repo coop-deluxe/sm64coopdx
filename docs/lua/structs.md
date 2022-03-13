@@ -236,7 +236,7 @@
 | capMetalWingModelId | `integer` | read-only |
 | capModelId | `integer` | read-only |
 | capWingModelId | `integer` | read-only |
-| hudHead | `char` | read-only |
+| hudHead | `integer` | read-only |
 | hudHeadTexture | [TextureInfo](structs.md#TextureInfo) | read-only |
 | modelId | `integer` | read-only |
 | name | `string` | read-only |
@@ -816,14 +816,14 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| connected | `bool` | read-only |
+| connected | `boolean` | read-only |
 | currActNum | `integer` | read-only |
 | currAreaIndex | `integer` | read-only |
-| currAreaSyncValid | `bool` | read-only |
+| currAreaSyncValid | `boolean` | read-only |
 | currCourseNum | `integer` | read-only |
 | currLevelAreaSeqId | `integer` | read-only |
 | currLevelNum | `integer` | read-only |
-| currLevelSyncValid | `bool` | read-only |
+| currLevelSyncValid | `boolean` | read-only |
 | description | `string` | read-only |
 | descriptionA | `integer` | read-only |
 | descriptionB | `integer` | read-only |
@@ -1818,10 +1818,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| bitSize | `const u8` | read-only |
-| height | `const u32` | read-only |
+| bitSize | `integer` | read-only |
+| height | `integer` | read-only |
 | texture | `Pointer` <`integer`> | read-only |
-| width | `const u32` | read-only |
+| width | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1849,9 +1849,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| x | `float` |  |
-| y | `float` |  |
-| z | `float` |  |
+| x | `number` |  |
+| y | `number` |  |
+| z | `number` |  |
 
 [:arrow_up_small:](#)
 

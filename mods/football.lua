@@ -163,6 +163,7 @@ define_custom_obj_fields({
     oFrozen = 'u32',
 })
 
+--- @param obj Object
 function bhv_ball_particle_trail(obj)
     local spi = obj_get_temp_spawn_particles_info(E_MODEL_SPARKLES)
     if spi == nil then
@@ -184,6 +185,7 @@ function bhv_ball_particle_trail(obj)
     cur_obj_spawn_particles(spi)
 end
 
+--- @param obj Object
 function bhv_ball_particle_bounce(obj)
     local spi = obj_get_temp_spawn_particles_info(E_MODEL_MIST)
     if spi == nil then
@@ -205,6 +207,7 @@ function bhv_ball_particle_bounce(obj)
     cur_obj_spawn_particles(spi)
 end
 
+--- @param obj Object
 function bhv_ball_init(obj)
     -- flags and such
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -244,6 +247,7 @@ function bhv_ball_init(obj)
     })
 end
 
+--- @param obj Object
 function bhv_ball_player_collision(obj)
     local alterPos = { x = 0, y = 0, z = 0}
 
@@ -434,6 +438,8 @@ function bhv_ball_player_collision(obj)
     return alterPos
 end
 
+--- @param obj Object
+--- @param offset Vec3f
 function bhv_ball_resolve(obj, offset)
     local a   = { x = obj.oPosX + 0, y = obj.oPosY + 0, z = obj.oPosZ + 0 }
     local dir = { x = offset.x * -1.0, y = offset.y * -1.0, z = offset.z * -1.0}
@@ -450,6 +456,7 @@ function bhv_ball_resolve(obj, offset)
     return { x = info.surface.normal.x, y = info.surface.normal.y, z = info.surface.normal.z }
 end
 
+--- @param obj Object
 function bhv_ball_loop(obj)
     if obj.oFrozen ~= 0 then
         return
@@ -1026,6 +1033,7 @@ function gamemode_update()
     end
 end
 
+--- @param m MarioState
 function on_player_connected(m)
     -- only run on server
     if not network_is_server() then
@@ -1160,6 +1168,7 @@ end
 -- update stuff --
 ------------------
 
+--- @param m MarioState
 function mario_update_local(m)
     local np = gNetworkPlayers[m.playerIndex]
     local s = gPlayerSyncTable[m.playerIndex]
@@ -1231,6 +1240,7 @@ function mario_update_local(m)
     end
 end
 
+--- @param m MarioState
 function mario_update(m)
     if m.playerIndex == 0 then
         mario_update_local(m)

@@ -45,6 +45,9 @@ _ReadOnlyTable = {
     end
 }
 
+--- @param dest Vec3f
+--- @param src Vec3f
+--- @return Vec3f
 function vec3f_copy(dest, src)
     dest.x = src.x
     dest.y = src.y
@@ -52,6 +55,11 @@ function vec3f_copy(dest, src)
     return dest
 end
 
+--- @param dest Vec3f
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return Vec3f
 function vec3f_set(dest, x, y, z)
     dest.x = x
     dest.y = y
@@ -59,6 +67,9 @@ function vec3f_set(dest, x, y, z)
     return dest
 end
 
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @return Vec3f
 function vec3f_add(dest, a)
     dest.x = dest.x + a.x
     dest.y = dest.y + a.y
@@ -66,6 +77,10 @@ function vec3f_add(dest, a)
     return dest
 end
 
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return Vec3f
 function vec3f_sum(dest, a, b)
     dest.x = a.x + b.x
     dest.y = a.y + b.y
@@ -73,6 +88,9 @@ function vec3f_sum(dest, a, b)
     return dest
 end
 
+--- @param dest Vec3f
+--- @param a number
+--- @return Vec3f
 function vec3f_mul(dest, a)
     dest.x = dest.x * a
     dest.y = dest.y * a
@@ -80,6 +98,8 @@ function vec3f_mul(dest, a)
     return dest
 end
 
+--- @param dest Vec3f
+--- @return Vec3f
 function vec3f_normalize(dest)
     local divisor = math.sqrt(dest.x * dest.x + dest.y * dest.y + dest.z * dest.z)
     if divisor == 0 then
@@ -94,14 +114,22 @@ function vec3f_normalize(dest)
     return dest
 end
 
+--- @param a Vec3f
+--- @return number
 function vec3f_length(a)
     return math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
 end
 
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return number
 function vec3f_dot(a, b)
     return a.x * b.x + a.y * b.y + a.z * b.z
 end
 
+--- @param vec Vec3f
+--- @param onto Vec3f
+--- @return Vec3f
 function vec3f_project(vec, onto)
   local numerator = vec3f_dot(vec, onto)
   local denominator = vec3f_dot(onto, onto)
@@ -111,6 +139,9 @@ function vec3f_project(vec, onto)
   return out
 end
 
+--- @param v1 Vec3f
+--- @param v2 Vec3f
+--- @return number
 function vec3f_dist(v1, v2)
     dx = v1.x - v2.x
     dy = v1.y - v2.y
@@ -118,6 +149,9 @@ function vec3f_dist(v1, v2)
     return math.sqrt(dx * dx + dy * dy + dz * dz)
 end
 
+--- @param dest Vec3s
+--- @param src Vec3s
+--- @return Vec3s
 function vec3s_copy(dest, src)
     dest.x = src.x
     dest.y = src.y
@@ -125,6 +159,11 @@ function vec3s_copy(dest, src)
     return dest
 end
 
+--- @param dest Vec3s
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return Vec3s
 function vec3s_set(dest, x, y, z)
     dest.x = x
     dest.y = y
@@ -132,6 +171,9 @@ function vec3s_set(dest, x, y, z)
     return dest
 end
 
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @return Vec3s
 function vec3s_add(dest, a)
     dest.x = dest.x + a.x
     dest.y = dest.y + a.y
@@ -139,6 +181,10 @@ function vec3s_add(dest, a)
     return dest
 end
 
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Vec3s
 function vec3s_sum(dest, a, b)
     dest.x = a.x + b.x
     dest.y = a.y + b.y
@@ -146,6 +192,9 @@ function vec3s_sum(dest, a, b)
     return dest
 end
 
+--- @param dest Vec3s
+--- @param a number
+--- @return Vec3s
 function vec3s_mul(dest, a)
     dest.x = dest.x * a
     dest.y = dest.y * a
@@ -153,6 +202,9 @@ function vec3s_mul(dest, a)
     return dest
 end
 
+--- @param v1 Vec3s
+--- @param v2 Vec3s
+--- @return number
 function vec3s_dist(v1, v2)
     dx = v1.x - v2.x
     dy = v1.y - v2.y
@@ -160,6 +212,11 @@ function vec3s_dist(v1, v2)
     return math.sqrt(dx * dx + dy * dy + dz * dz)
 end
 
+--- @param current number
+--- @param target number
+--- @param inc number
+--- @param dec number
+--- @return number
 function approach_f32(current, target, inc, dec)
     if current < target then
         current = current + inc
@@ -175,6 +232,11 @@ function approach_f32(current, target, inc, dec)
     return current;
 end
 
+--- @param current number
+--- @param target number
+--- @param inc number
+--- @param dec number
+--- @return number
 function approach_s32(current, target, inc, dec)
     if current < target then
         current = current + inc
@@ -190,6 +252,12 @@ function approach_s32(current, target, inc, dec)
     return current;
 end
 
+--- @param bank number
+--- @param playFlags number
+--- @param soundID number
+--- @param priority number
+--- @param flags2 number
+--- @return number
 function SOUND_ARG_LOAD(bank, playFlags, soundID, priority, flags2)
     return ((bank << 28) | (playFlags << 24) | (soundID << 16) | (priority << 8) | (flags2 << 4) | 1)
 end

@@ -1236,9 +1236,9 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| x | `float` |
-| y | `float` |
-| scale | `float` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
 
 ### Returns
 - None
@@ -1375,7 +1375,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| lines | `int` |
+| lines | `integer` |
 
 ### Returns
 - None
@@ -2292,7 +2292,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [mario_can_bubble](#mario_can_bubble)
 
 ### Lua Example
-`local boolValue = mario_can_bubble(m)`
+`local booleanValue = mario_can_bubble(m)`
 
 ### Parameters
 | Field | Type |
@@ -2300,7 +2300,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-- `bool`
+- `boolean`
 
 ### C Prototype
 `bool mario_can_bubble(struct MarioState* m);`
@@ -5467,13 +5467,13 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [network_is_server](#network_is_server)
 
 ### Lua Example
-`local boolValue = network_is_server()`
+`local booleanValue = network_is_server()`
 
 ### Parameters
 - None
 
 ### Returns
-- `bool`
+- `boolean`
 
 ### C Prototype
 `bool network_is_server(void);`
@@ -11528,7 +11528,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [warp_exit_level](#warp_exit_level)
 
 ### Lua Example
-`local boolValue = warp_exit_level(aDelay)`
+`local booleanValue = warp_exit_level(aDelay)`
 
 ### Parameters
 | Field | Type |
@@ -11536,7 +11536,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | aDelay | `integer` |
 
 ### Returns
-- `bool`
+- `boolean`
 
 ### C Prototype
 `bool warp_exit_level(s32 aDelay);`
@@ -11548,13 +11548,13 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [warp_restart_level](#warp_restart_level)
 
 ### Lua Example
-`local boolValue = warp_restart_level()`
+`local booleanValue = warp_restart_level()`
 
 ### Parameters
 - None
 
 ### Returns
-- `bool`
+- `boolean`
 
 ### C Prototype
 `bool warp_restart_level(void);`
@@ -11566,7 +11566,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [warp_to_castle](#warp_to_castle)
 
 ### Lua Example
-`local boolValue = warp_to_castle(aLevel)`
+`local booleanValue = warp_to_castle(aLevel)`
 
 ### Parameters
 | Field | Type |
@@ -11574,7 +11574,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | aLevel | `integer` |
 
 ### Returns
-- `bool`
+- `boolean`
 
 ### C Prototype
 `bool warp_to_castle(s32 aLevel);`
@@ -11586,7 +11586,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [warp_to_level](#warp_to_level)
 
 ### Lua Example
-`local boolValue = warp_to_level(aLevel, aArea, aAct)`
+`local booleanValue = warp_to_level(aLevel, aArea, aAct)`
 
 ### Parameters
 | Field | Type |
@@ -11596,7 +11596,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | aAct | `integer` |
 
 ### Returns
-- `bool`
+- `boolean`
 
 ### C Prototype
 `bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`

@@ -124,6 +124,8 @@ def translate_type_to_lua(ptype):
     if ptype == 'char*' or ('char' in ptype and '[' in ptype):
         return '`string`', None
 
+    ptype = ptype.replace('const ', '')
+
     if 'Vec3' in ptype:
         return ptype, 'structs.md#%s' % ptype
 
@@ -135,6 +137,18 @@ def translate_type_to_lua(ptype):
             return '`number`', None
         else:
             return '`integer`', None
+
+    if ptype == 'char':
+        return '`integer`', None
+
+    if ptype == 'int':
+        return '`integer`', None
+
+    if ptype == 'float':
+        return '`number`', None
+
+    if ptype == 'bool':
+        return '`boolean`', None
 
     if 'void' == ptype:
         return None, None
@@ -161,3 +175,10 @@ def gen_comment_header(f):
     s += ""   + comment_l + "\n"
     s += "\n"
     return s
+
+def translate_to_def(ptype):
+    if ptype == None:
+        return 'nil'
+    if 'Lua Function' in ptype:
+        return 'function'
+    return ptype.replace('enum ', '').replace('const ', '').replace(' ', '').replace('`', '').replace('<', '_').replace('>', '')
