@@ -434,7 +434,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             init_camera(gCurrentArea->camera);
             sDelayedWarpOp = WARP_OP_NONE;
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 15, 0x00, 0x00, 0x00);
-            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gDefaultSoundArgs);
+            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gGlobalSoundSource);
 
             // Set music
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);

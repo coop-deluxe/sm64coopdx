@@ -59,7 +59,7 @@ void king_bobomb_act_0(void) {
         o->oHealth = 3;
         if (should_start_or_continue_dialog(marioState, o) && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 500.0f, 100.0f)) {
             o->oSubAction++;
-            func_8031FFB4(SEQ_PLAYER_LEVEL, 60, 40);
+            seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
         }
     } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, DIALOG_017, king_bobomb_act_0_continue_dialog)) {
         o->oAction = 2;
@@ -68,7 +68,7 @@ void king_bobomb_act_0(void) {
 }
 
 s32 mario_is_far_below_object(f32 arg0) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (arg0 >= o->oPosY - gMarioStates[i].marioObj->oPosY) { return FALSE; }
     }
@@ -159,10 +159,10 @@ void king_bobomb_act_1(void) {
     o->oVelY = 0;
     cur_obj_init_animation_with_sound(11);
     struct MarioState* marioState = king_bobomb_nearest_mario_state();
-    int distanceToPlayer = (marioState != NULL) ? dist_between_objects(o, marioState->marioObj) : 3000;
+    s32 distanceToPlayer = (marioState != NULL) ? dist_between_objects(o, marioState->marioObj) : 3000;
 
     if (marioState != NULL) {
-        int angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
+        s32 angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
         o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToPlayer, 512);
     }
 
@@ -190,7 +190,6 @@ void king_bobomb_act_6(void) {
             o->oKingBobombUnk104++;
         if (o->oKingBobombUnk104 > 3) {
             o->oSubAction++;
-            ; // Needed to match
         }
     } else {
         if (o->oSubAction == 1) {
@@ -227,6 +226,8 @@ void king_bobomb_act_7(void) {
 
 void king_bobomb_act_8(void) {
     if (!(o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE)) {
+        struct Object *star = NULL;
+        
         create_sound_spawner(SOUND_OBJ_KING_WHOMP_DEATH);
         cur_obj_hide();
         cur_obj_become_intangible();
@@ -234,11 +235,20 @@ void king_bobomb_act_8(void) {
         spawn_triangle_break_particles(20, 138, 3.0f, 4);
         cur_obj_shake_screen(SHAKE_POS_SMALL);
 #ifndef VERSION_JP
-        cur_obj_spawn_star_at_y_offset(2000.0f, 4500.0f, -4500.0f, 200.0f);
+        //cur_obj_spawn_star_at_y_offset(2000.0f, 4500.0f, -4500.0f, 200.0f);
+        f32 objectPosY = o->oPosY;
+        o->oPosY += 200.0f + gDebugInfo[5][0];
+        star = spawn_default_star(2000.0f, 4500.0f, -4500.0f);
+        o->oPosY = objectPosY;
 #else
         o->oPosY += 100.0f;
-        spawn_default_star(2000.0f, 4500.0f, -4500.0f);
+        star = spawn_default_star(2000.0f, 4500.0f, -4500.0f);
 #endif
+        // If we're not the closet to King-Bombomb,
+        // Don't play this cutscene!
+        if (star != NULL && nearest_mario_state_to_object(o) != &gMarioStates[0]) {
+            star->oStarSpawnExtCutsceneFlags = 0;
+        }
     }
     if (o->oTimer == 60)
         stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));

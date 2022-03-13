@@ -631,6 +631,8 @@ static void koopa_the_quick_act_show_init_text(void) {
     }
 
     if (response == 1) {
+        UNUSED s32 unused;
+
         gMarioShotFromCannon = FALSE;
         o->oAction = KOOPA_THE_QUICK_ACT_RACE;
         o->oForwardVel = 0.0f;

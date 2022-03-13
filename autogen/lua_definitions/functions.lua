@@ -195,9 +195,9 @@ end
 
 --- @param player integer
 --- @param targetScale integer
---- @param fadeTimer integer
+--- @param fadeDuration integer
 --- @return nil
-function fade_volume_scale(player, targetScale, fadeTimer)
+function fade_volume_scale(player, targetScale, fadeDuration)
     -- ...
 end
 
@@ -283,16 +283,24 @@ function play_toads_jingle()
 end
 
 --- @param player integer
---- @param fadeTimer integer
+--- @param fadeDuration integer
 --- @return nil
-function sequence_player_fade_out(player, fadeTimer)
+function seq_player_fade_out(player, fadeDuration)
     -- ...
 end
 
 --- @param player integer
---- @param fadeTimer integer
+--- @param fadeDuration integer
+--- @param percentage integer
 --- @return nil
-function sequence_player_unlower(player, fadeTimer)
+function seq_player_lower_volume(player, fadeDuration, percentage)
+    -- ...
+end
+
+--- @param player integer
+--- @param fadeDuration integer
+--- @return nil
+function seq_player_unlower_volume(player, fadeDuration)
     -- ...
 end
 
@@ -1542,6 +1550,20 @@ end
 --- @param room integer
 --- @return integer
 function current_mario_room_check(room)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param obj Object
+--- @return integer
+function is_nearest_mario_state_to_object(m, obj)
+    -- ...
+end
+
+--- @param m Object
+--- @param obj Object
+--- @return integer
+function is_nearest_player_to_object(m, obj)
     -- ...
 end
 
@@ -3369,6 +3391,29 @@ function stub_obj_helpers_4()
     -- ...
 end
 
+--- @param a0 integer
+--- @param a1 integer
+--- @return nil
+function queue_rumble_data(a0, a1)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param a0 integer
+--- @param a1 integer
+--- @return nil
+function queue_rumble_data_mario(m, a0, a1)
+    -- ...
+end
+
+--- @param object Object
+--- @param a0 integer
+--- @param a1 integer
+--- @return nil
+function queue_rumble_data_object(object, a0, a1)
+    -- ...
+end
+
 --- @param capPos Vec3s
 --- @return integer
 function save_file_get_cap_pos(capPos)
@@ -3769,29 +3814,6 @@ end
 
 --- @return nil
 function load_object_collision_model()
-    -- ...
-end
-
---- @param a0 integer
---- @param a1 integer
---- @return nil
-function queue_rumble_data(a0, a1)
-    -- ...
-end
-
---- @param m MarioState
---- @param a0 integer
---- @param a1 integer
---- @return nil
-function queue_rumble_data_mario(m, a0, a1)
-    -- ...
-end
-
---- @param object Object
---- @param a0 integer
---- @param a1 integer
---- @return nil
-function queue_rumble_data_object(object, a0, a1)
     -- ...
 end
 

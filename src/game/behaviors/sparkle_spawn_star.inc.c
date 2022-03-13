@@ -13,10 +13,9 @@ struct ObjectHitbox sSparkleSpawnStarHitbox = {
 };
 
 void bhv_spawned_star_init(void) {
-    s32 sp24;
     if (!(o->oInteractionSubtype & INT_SUBTYPE_NO_EXIT))
         o->oBehParams = o->parentObj->oBehParams;
-    sp24 = (o->oBehParams >> 24) & 0xFF;
+    s32 sp24 = (o->oBehParams >> 24) & 0xFF;
     if (bit_shift_left(sp24) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1))
         cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
     cur_obj_play_sound_2(SOUND_GENERAL2_STAR_APPEARS);
@@ -25,12 +24,12 @@ void bhv_spawned_star_init(void) {
     // path due to jankiness in oBehParams. Send the spawn event here instead.
     u8 spawnedFromExclamationBox = (o->parentObj != NULL && o->parentObj->behavior == bhvExclamationBox);
     if (gNetworkAreaLoaded && spawnedFromExclamationBox) {
+        o->oStarSpawnExtCutsceneFlags = 1;
         o->parentObj = o;
         struct Object* spawn_objects[] = { o };
         u32 models[] = { MODEL_STAR };
         network_send_spawn_objects(spawn_objects, models, 1);
     }
-
 }
 
 void set_sparkle_spawn_star_hitbox(void) {
@@ -42,10 +41,8 @@ void set_sparkle_spawn_star_hitbox(void) {
 }
 
 void set_home_to_mario(void) {
-    f32 sp1C;
-    f32 sp18;
     u8 parentIsMario = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (o->parentObj == gMarioStates[i].marioObj) {
             parentIsMario = TRUE;
             break;
@@ -63,8 +60,8 @@ void set_home_to_mario(void) {
     }
     o->oHomeY += 250.0f;
     o->oPosY = o->oHomeY;
-    sp1C = o->oHomeX - o->oPosX;
-    sp18 = o->oHomeZ - o->oPosZ;
+    f32 sp1C = o->oHomeX - o->oPosX;
+    f32 sp18 = o->oHomeZ - o->oPosZ;
     o->oForwardVel = sqrtf(sp1C * sp1C + sp18 * sp18) / 23.0f;
 }
 
@@ -80,8 +77,14 @@ void slow_star_rotation(void) {
 
 void bhv_spawned_star_loop(void) {
     if (o->oAction == 0) {
+        // All of these are for checking if we spawned the star, If 
+        // we didn't. We don't need the time stop.
+        u8 playExclamationBoxCutscene = (is_nearest_mario_state_to_object(gMarioState, o) && o->oStarSpawnExtCutsceneFlags);
+        u8 playGenericSpawnCutscene = (o->parentObj != NULL && o->parentObj == gMarioStates[0].marioObj);
+        u8 playCutscene = (playExclamationBoxCutscene || playGenericSpawnCutscene);
+        
         if (o->oTimer == 0) {
-            if ((gMarioStates[0].action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE) {
+            if (playCutscene && ((gMarioStates[0].action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE)) {
                 cutscene_object(CUTSCENE_STAR_SPAWN, o);
                 gMarioStates[0].freeze = 60;
                 set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
@@ -139,22 +142,22 @@ void bhv_spawned_star_loop(void) {
     o->oInteractStatus = 0;
 }
 
-void bhv_spawn_star_no_level_exit(struct Object* object, u32 sp20, u8 networkSendEvent) {
+void bhv_spawn_star_no_level_exit(struct Object* object, u32 params, u8 networkSendEvent) {
     // de-duplication checking
     for (int i = 0; i < gSpawnedStarNLECount; i++) {
-        if (gSpawnedStarNLE[i] == sp20) { return; }
+        if (gSpawnedStarNLE[i] == params) { return; }
     }
     if (gSpawnedStarNLECount < 8) {
-        gSpawnedStarNLE[gSpawnedStarNLECount++] = sp20;
+        gSpawnedStarNLE[gSpawnedStarNLECount++] = params;
     }
 
-    struct Object *sp1C = spawn_object(object, MODEL_STAR, bhvSpawnedStarNoLevelExit);
-    if (sp1C != NULL) {
-        sp1C->oBehParams = sp20 << 24;
-        sp1C->oInteractionSubtype = INT_SUBTYPE_NO_EXIT;
-        obj_set_angle(sp1C, 0, 0, 0);
+    struct Object *star = spawn_object(object, MODEL_STAR, bhvSpawnedStarNoLevelExit);
+    if (star != NULL) {
+        star->oBehParams = params << 24;
+        star->oInteractionSubtype = INT_SUBTYPE_NO_EXIT;
+        obj_set_angle(star, 0, 0, 0);
     }
     if (networkSendEvent) {
-        network_send_spawn_star_nle(object, sp20);
+        network_send_spawn_star_nle(object, params);
     }
 }

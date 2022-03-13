@@ -35,7 +35,7 @@
 #include "print.h"
 #include "save_file.h"
 #include "sound_init.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #include "obj_behaviors.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
@@ -291,7 +291,7 @@ void play_mario_jump_sound(struct MarioState *m) {
  */
 void adjust_sound_for_speed(struct MarioState *m) {
     s32 absForwardVel = (m->forwardVel > 0.0f) ? m->forwardVel : -m->forwardVel;
-    func_80320A4C(1, (absForwardVel > 100) ? 100 : absForwardVel);
+    set_sound_moving_speed(SOUND_BANK_MOVING, (absForwardVel > 100) ? 100 : absForwardVel);
 }
 
 /**
@@ -1649,7 +1649,7 @@ void update_mario_health(struct MarioState *m) {
         if (m->playerIndex == 0) {
             // Play a noise to alert the player when Mario is close to drowning.
             if (((m->action & ACT_GROUP_MASK) == ACT_GROUP_SUBMERGED) && (m->health < 0x300)) {
-                play_sound(SOUND_MOVING_ALMOST_DROWNING, gDefaultSoundArgs);
+                play_sound(SOUND_MOVING_ALMOST_DROWNING, gGlobalSoundSource);
                 if (!gRumblePakTimer) {
                     gRumblePakTimer = 36;
                     if (is_rumble_finished_and_queue_empty()) {
@@ -1975,10 +1975,10 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // HACK: mute snoring even when we skip the waking up action
         if (gMarioState->isSnoring && gMarioState->action != ACT_SLEEPING) {
-                func_803205E8(get_character(gMarioState)->soundSnoring1, gMarioState->marioObj->header.gfx.cameraToObject);
-                func_803205E8(get_character(gMarioState)->soundSnoring2, gMarioState->marioObj->header.gfx.cameraToObject);
+                stop_sound(get_character(gMarioState)->soundSnoring1, gMarioState->marioObj->header.gfx.cameraToObject);
+                stop_sound(get_character(gMarioState)->soundSnoring2, gMarioState->marioObj->header.gfx.cameraToObject);
 #ifndef VERSION_JP
-                func_803205E8(get_character(gMarioState)->soundSnoring3, gMarioState->marioObj->header.gfx.cameraToObject);
+                stop_sound(get_character(gMarioState)->soundSnoring3, gMarioState->marioObj->header.gfx.cameraToObject);
 #endif
                 gMarioState->isSnoring = FALSE;
         }

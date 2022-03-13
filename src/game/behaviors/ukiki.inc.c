@@ -358,7 +358,7 @@ u8 ukiki_act_go_to_cage_continue_dialog(void) { return o->oAction == UKIKI_ACT_G
 void ukiki_act_go_to_cage(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     struct Object* obj;
     f32 latDistToCage = 0.0f;

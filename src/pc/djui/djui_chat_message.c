@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
-#include "audio_defines.h"
+#include "sounds.h"
 #include "audio/external.h"
 #include "game/mario_misc.h"
 #include "djui.h"
@@ -55,7 +55,7 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     char chatMsg[256] = { 0 };
     snprintf(chatMsg, 256, "%s%s:\\#dcdcdc\\ %s", playerColorString, (np != NULL) ? np->name : "Player", message);
 
-    play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gDefaultSoundArgs);
+    play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource);
     djui_chat_message_create(chatMsg);
 }
 

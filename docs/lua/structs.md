@@ -993,10 +993,10 @@
 | oHomingAmpAvgY | `number` |  |
 | oArrowLiftDisplacement | `number` |  |
 | oArrowLiftUnk100 | `integer` |  |
-| oBackAndForthPlatformUnkF4 | `number` |  |
-| oBackAndForthPlatformUnkF8 | `number` |  |
-| oBackAndForthPlatformUnkFC | `number` |  |
-| oBackAndForthPlatformUnk100 | `number` |  |
+| oBackAndForthPlatformDirection | `number` |  |
+| oBackAndForthPlatformPathLength | `number` |  |
+| oBackAndForthPlatformDistance | `number` |  |
+| oBackAndForthPlatformVel | `number` |  |
 | oBirdSpeed | `number` |  |
 | oBirdTargetPitch | `integer` |  |
 | oBirdTargetYaw | `integer` |  |
@@ -1182,23 +1182,23 @@
 | oBlueFishRandomTime | `integer` |  |
 | oBlueFishRandomAngle | `number` |  |
 | oFishWaterLevel | `number` |  |
-| oFishPosY | `number` |  |
-| oFishRandomOffset | `number` |  |
-| oFishRandomSpeed | `integer` |  |
-| oFishRespawnDistance | `number` |  |
-| oFishRandomVel | `number` |  |
+| oFishGoalY | `number` |  |
+| oFishHeightOffset | `number` |  |
+| oFishYawVel | `integer` |  |
+| oFishRoamDistance | `number` |  |
+| oFishGoalVel | `number` |  |
 | oFishDepthDistance | `number` |  |
 | oFishActiveDistance | `number` |  |
-| oFlameUnkF4 | `number` |  |
-| oFlameUnkF8 | `integer` |  |
+| oFlameScale | `number` |  |
+| oFlameSpeedTimerOffset | `integer` |  |
 | oFlameUnkFC | `number` |  |
-| oFlameUnk100 | [Object](structs.md#Object) |  |
-| oBlueFlameUnkF8 | `number` |  |
+| oFlameBowser | [Object](structs.md#Object) |  |
+| oBlueFlameNextScale | `number` |  |
 | oSmallPiranhaFlameStartSpeed | `number` |  |
 | oSmallPiranhaFlameEndSpeed | `number` |  |
 | oSmallPiranhaFlameModel | `integer` |  |
-| oSmallPiranhaFlameUnk100 | `integer` |  |
-| oSmallPiranhaFlameUnk104 | `number` |  |
+| oSmallPiranhaFlameNextFlameTimer | `integer` |  |
+| oSmallPiranhaFlameSpeed | `number` |  |
 | oMovingFlameTimer | `integer` |  |
 | oFlameThowerFlameUnk110 | `integer` |  |
 | oFlameThowerUnk110 | `integer` |  |
@@ -1309,9 +1309,8 @@
 | oMenuButtonScale | `number` |  |
 | oMenuButtonActionPhase | `integer` |  |
 | oMenuButtonIsCustom | `integer` |  |
-| oMantaUnkF4 | `integer` |  |
-| oMantaUnkF8 | `integer` |  |
-| oMantaUnk1AC | `integer` |  |
+| oMantaTargetPitch | `integer` |  |
+| oMantaTargetYaw | `integer` |  |
 | oMerryGoRoundStopped | `integer` |  |
 | oMerryGoRoundMusicShouldPlay | `integer` |  |
 | oMerryGoRoundMarioIsOutside | `integer` |  |
@@ -1463,6 +1462,7 @@
 | oSoundEffectUnkF4 | `integer` |  |
 | oStarSpawnDisFromHome | `number` |  |
 | oStarSpawnUnkFC | `number` |  |
+| oStarSpawnExtCutsceneFlags | `integer` |  |
 | oHiddenStarTriggerCounter | `integer` |  |
 | oSparkleSpawnUnk1B0 | `integer` |  |
 | oUnlockDoorStarState | `integer` |  |
@@ -1876,7 +1876,7 @@
 | numWalls | `integer` |  |
 | offsetY | `number` |  |
 | radius | `number` |  |
-| unk14 | `integer` |  |
+| unused | `integer` |  |
 
 [:arrow_up_small:](#)
 

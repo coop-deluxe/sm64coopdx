@@ -285,7 +285,7 @@ void unload_area(void) {
 }
 
 void load_mario_area(void) {
-    func_80320890();
+    stop_sounds_in_continuous_banks();
     load_area(gMarioSpawnInfo->areaIndex);
 
     for (int i = 0; i < MAX_PLAYERS; i++) {

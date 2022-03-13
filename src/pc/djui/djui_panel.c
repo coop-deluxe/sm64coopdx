@@ -1,6 +1,6 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
-#include "audio_defines.h"
+#include "sounds.h"
 #include "audio/external.h"
 #include "src/game/bettercamera.h"
 
@@ -61,7 +61,7 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
         djui_cursor_input_controlled_center(panel->defaultElementBase);
         djui_base_set_enabled(panel->base, true);
     } else {
-        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gDefaultSoundArgs);
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
     }
 }
 
@@ -92,7 +92,7 @@ void djui_panel_back(void) {
     djui_base_set_visible(sPanelList->base, true);
 
     // play a sound
-    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gDefaultSoundArgs);
+    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
 
     gDjuiPanelJoinMessageVisible = false;
 }

@@ -7,9 +7,8 @@
 #include "mario.h"
 #include "audio/external.h"
 #include "interaction.h"
-#include "audio_defines.h"
 #include "engine/math_util.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #include "behavior_data.h"
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
@@ -451,7 +450,7 @@ s32 act_holding_bowser(struct MarioState *m) {
 s32 act_releasing_bowser(struct MarioState *m) {
     if (++m->actionTimer == 1 && m->playerIndex == 0) {
         if (m->actionArg == 0) {
-            queue_rumble_data_mario(m, 4, 50);
+            queue_rumble_data_mario(m, 5, 50);
             mario_throw_held_object(m);
         } else {
             queue_rumble_data_mario(m, 4, 50);

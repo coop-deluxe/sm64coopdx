@@ -40,7 +40,7 @@
 
 #include "game/game_init.h"
 #include "game/main.h"
-#include "game/thread6.h"
+#include "game/rumble_init.h"
 
 #ifdef DISCORDRPC
 #include "pc/discord/discordrpc.h"
@@ -61,8 +61,7 @@ s8 gShowProfiler;
 s8 gShowDebugText;
 
 s32 gRumblePakPfs;
-struct RumbleData gRumbleDataQueue[3];
-struct StructSH8031D9B0 gCurrRumbleSettings;
+u32 gNumVblanks = 0;
 
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api;

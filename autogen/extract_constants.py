@@ -100,6 +100,5 @@ def extract_constants(filename):
 
     return txt
 
-
 if __name__ == "__main__":
     print(extract_constants(sys.argv[1]))

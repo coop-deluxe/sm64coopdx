@@ -23,7 +23,7 @@
 #include "seq_ids.h"
 #include "sm64.h"
 #include "sound_init.h"
-#include "thread6.h"
+#include "rumble_init.h"
 
 #include "pc/configfile.h"
 #include "pc/network/network.h"

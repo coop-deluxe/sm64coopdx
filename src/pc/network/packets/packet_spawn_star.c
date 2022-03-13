@@ -47,6 +47,7 @@ void network_receive_spawn_star(struct Packet* p) {
     if (o != NULL) {
         packet_read(p, &o->oPosX, sizeof(u32) * 3);
         packet_read(p, &o->oHomeX, sizeof(u32) * 3);
+        o->oStarSpawnExtCutsceneFlags = 0;
     }
 }
 

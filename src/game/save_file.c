@@ -9,7 +9,7 @@
 #include "sound_init.h"
 #include "level_table.h"
 #include "course_table.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #include "macros.h"
 #include "pc/ini.h"
 #include "pc/network/network.h"

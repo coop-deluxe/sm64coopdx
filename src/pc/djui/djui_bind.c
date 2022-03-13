@@ -3,7 +3,7 @@
 #include "djui.h"
 #include "src/pc/controller/controller_api.h"
 #include "src/pc/controller/controller_bind_mapping.h"
-#include "audio_defines.h"
+#include "sounds.h"
 #include "audio/external.h"
 
 #define VK_ESCAPE 1
@@ -39,7 +39,7 @@ static void djui_bind_button_on_bind(struct DjuiBase* caller) {
     djui_text_set_text(button->text, "???");
 #endif
     djui_interactable_set_binding(NULL);
-    play_sound(SOUND_MENU_CHANGE_SELECT, gDefaultSoundArgs);
+    play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource);
     controller_reconfigure();
 }
 

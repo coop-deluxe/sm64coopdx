@@ -26,7 +26,7 @@
 #include "save_file.h"
 #include "seq_ids.h"
 #include "sound_init.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #include "obj_behaviors.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/debuglog.h"
@@ -1466,7 +1466,7 @@ s32 act_bbh_enter_spin(struct MarioState *m) {
             mario_set_forward_vel(m, forwardVel);
             m->flags &= ~MARIO_UNKNOWN_08;
             if (perform_air_step(m, 0) == AIR_STEP_LANDED) {
-                level_trigger_warp(m, WARP_OP_UNKNOWN_02);
+                level_trigger_warp(m, WARP_OP_SPIN_SHRINK);
                 queue_rumble_data_mario(m, 15, 80);
                 m->actionState = 4;
             }
@@ -1912,7 +1912,7 @@ static void intro_cutscene_jump_out_of_pipe(struct MarioState *m) {
         set_mario_animation(m, MARIO_ANIM_SINGLE_JUMP);
         mario_set_forward_vel(m, 10.0f);
         if (perform_air_step(m, 0) == AIR_STEP_LANDED) {
-            sound_banks_enable(2, 0x0330);
+            sound_banks_enable(SEQ_PLAYER_SFX, SOUND_BANKS_DISABLED_DURING_INTRO_CUTSCENE);
             play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
 #ifndef VERSION_JP
             play_character_sound(m, CHAR_SOUND_HAHA);
@@ -2264,9 +2264,12 @@ static void end_peach_cutscene_summon_jumbo_star(struct MarioState *m) {
     play_sound(SOUND_AIR_PEACH_TWINKLE, sEndJumboStarObj->header.gfx.cameraToObject);
 }
 
-#ifdef VERSION_EU
+#if defined(VERSION_EU)
     #define TIMER_FADE_IN_PEACH 201
     #define TIMER_DESCEND_PEACH 280
+#elif defined(VERSION_SH)
+    #define TIMER_FADE_IN_PEACH 276
+    #define TIMER_DESCEND_PEACH 400
 #else
     #define TIMER_FADE_IN_PEACH 276
     #define TIMER_DESCEND_PEACH 355
@@ -2279,7 +2282,7 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
         play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 14, 255, 255, 255);
     }
     if (m->actionTimer == 2) {
-        play_sound(SOUND_MENU_STAR_SOUND, gDefaultSoundArgs);
+        play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
     }
     if (m->actionTimer == 44) {
         play_transition(WARP_TRANSITION_FADE_FROM_COLOR, 192, 255, 255, 255);
@@ -2401,52 +2404,87 @@ static void end_peach_cutscene_dialog_1(struct MarioState *m) {
     if (m->playerIndex != 0) { return; }
 
     switch (m->actionTimer) {
+#ifdef VERSION_SH
+        case 110:
+#else
         case 80:
+#endif
             sEndPeachAnimation = 6;
             break;
-
+            
+#ifdef VERSION_SH
+        case 111:
+#else
         case 81:
+#endif
             D_8032CBE4 = 3;
             break;
 
+#ifdef VERSION_SH
+        case 175:
+#else
         case 145:
+#endif
             D_8032CBE4 = 2;
             break;
 
+#ifdef VERSION_SH
+        case 258:
+#else
         case 228:
+#endif
             D_8032CBE4 = 1;
             D_8032CBE8 = 1;
             break;
 
+#ifdef VERSION_SH
+        case 260:
+#else
         case 230:
+#endif
             set_cutscene_message(160, 227, 0, 30);
 #ifndef VERSION_JP
-            func_8031FFB4(SEQ_PLAYER_LEVEL, 60, 40);
+            seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             play_sound(SOUND_PEACH_MARIO, sEndPeachObj->header.gfx.cameraToObject);
 #endif
             break;
 
+#ifdef VERSION_SH
+        case 305:
+#else
         case 275:
+#endif
             D_8032CBE4 = 0;
             D_8032CBE8 = 0;
             break;
 
+#ifdef VERSION_SH
+        case 320:
+#else
         case 290:
+#endif
             set_cutscene_message(160, 227, 1, 60);
 #ifndef VERSION_JP
             play_sound(SOUND_PEACH_POWER_OF_THE_STARS, sEndPeachObj->header.gfx.cameraToObject);
 #endif
             break;
 
+#ifdef VERSION_SH
+        case 510:
+#else
         case 480:
+#endif
             advance_cutscene_step(m);
             break;
     }
 }
 
-#ifdef VERSION_EU
+#if defined(VERSION_EU)
     #define TIMER_SOMETHING_SPECIAL 150
     #define TIMER_PEACH_KISS        260
+#elif defined(VERSION_SH)
+    #define TIMER_SOMETHING_SPECIAL 170
+    #define TIMER_PEACH_KISS        250
 #else
     #define TIMER_SOMETHING_SPECIAL 130
     #define TIMER_PEACH_KISS        200
@@ -2461,18 +2499,30 @@ static void end_peach_cutscene_dialog_2(struct MarioState *m) {
     sEndPeachAnimation = 9;
 
     switch (m->actionTimer) {
+#ifdef VERSION_SH
+        case 39:
+#else
         case 29:
+#endif
             set_cutscene_message(160, 227, 2, 30);
 #ifndef VERSION_JP
             play_sound(SOUND_PEACH_THANKS_TO_YOU, sEndPeachObj->header.gfx.cameraToObject);
 #endif
             break;
 
+#ifdef VERSION_SH
+        case 65:
+#else        
         case 45:
+#endif
             D_8032CBE8 = 1;
             break;
 
+#ifdef VERSION_SH
+        case 105:
+#else
         case 75:
+#endif
             set_cutscene_message(160, 227, 3, 30);
 #ifndef VERSION_JP
             play_sound(SOUND_PEACH_THANK_YOU_MARIO, sEndPeachObj->header.gfx.cameraToObject);
@@ -2585,7 +2635,7 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
         case 140:
             if (m->playerIndex == 0) {
 #ifndef VERSION_JP
-                sequence_player_unlower(SEQ_PLAYER_LEVEL, 60);
+                seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
 #endif
                 play_cutscene_music(SEQUENCE_ARGS(15, SEQ_EVENT_CUTSCENE_CREDITS));
             }
@@ -2745,10 +2795,14 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
     return FALSE;
 }
 
-#ifdef VERSION_EU
+#if defined(VERSION_EU)
     #define TIMER_CREDITS_SHOW      51
     #define TIMER_CREDITS_PROGRESS  80
     #define TIMER_CREDITS_WARP     160
+#elif defined(VERSION_SH)
+    #define TIMER_CREDITS_SHOW      61
+    #define TIMER_CREDITS_PROGRESS  90
+    #define TIMER_CREDITS_WARP     204
 #else
     #define TIMER_CREDITS_SHOW      61
     #define TIMER_CREDITS_PROGRESS  90

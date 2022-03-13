@@ -386,7 +386,7 @@ static s32 DynOS_Opt_ProcessInput(DynosOption *aOpt, s32 input) {
 }
 
 static void DynOS_Opt_Open(DynosOption *aMenu) {
-    play_sound(SOUND_DYNOS_SELECT, gDefaultSoundArgs);
+    play_sound(SOUND_DYNOS_SELECT, gGlobalSoundSource);
     sCurrentMenu = aMenu;
     sCurrentOpt = aMenu;
 }
@@ -394,7 +394,7 @@ static void DynOS_Opt_Open(DynosOption *aMenu) {
 static void DynOS_Opt_Close(bool aPlaySavedSfx) {
     if (sCurrentMenu != NULL) {
         if (aPlaySavedSfx) {
-            play_sound(SOUND_DYNOS_SAVED, gDefaultSoundArgs);
+            play_sound(SOUND_DYNOS_SAVED, gGlobalSoundSource);
         }
 #ifdef BETTERCAMERA
         newcam_init_settings();
@@ -431,7 +431,7 @@ static void DynOS_Opt_ProcessInputs() {
     if (sBindingState != 0) {
         u32 _Key = (sCurrentOpt->mDynos ? (u32) DynOS_Opt_ControllerGetKeyPressed() : controller_get_raw_key());
         if (_Key != VK_INVALID) {
-            play_sound(SOUND_DYNOS_SELECT, gDefaultSoundArgs);
+            play_sound(SOUND_DYNOS_SELECT, gGlobalSoundSource);
             sCurrentOpt->mBind.mBinds[sCurrentOpt->mBind.mIndex] = _Key;
             sBindingState = false;
         }
@@ -447,7 +447,7 @@ static void DynOS_Opt_ProcessInputs() {
             } else {
                 while (sCurrentOpt->mNext) sCurrentOpt = sCurrentOpt->mNext;
             }
-            play_sound(SOUND_DYNOS_SELECT, gDefaultSoundArgs);
+            play_sound(SOUND_DYNOS_SELECT, gGlobalSoundSource);
             return;
         }
 
@@ -458,15 +458,15 @@ static void DynOS_Opt_ProcessInputs() {
             } else {
                 while (sCurrentOpt->mPrev) sCurrentOpt = sCurrentOpt->mPrev;
             }
-            play_sound(SOUND_DYNOS_SELECT, gDefaultSoundArgs);
+            play_sound(SOUND_DYNOS_SELECT, gGlobalSoundSource);
             return;
         }
 
         // Left
         if (_StickX < -60) {
             switch (DynOS_Opt_ProcessInput(sCurrentOpt, INPUT_LEFT)) {
-                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gDefaultSoundArgs); break;
-                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gDefaultSoundArgs); break;
+                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gGlobalSoundSource); break;
+                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gGlobalSoundSource); break;
                 case RESULT_NONE:   break;
             }
             return;
@@ -475,8 +475,8 @@ static void DynOS_Opt_ProcessInputs() {
         // Right
         if (_StickX > +60) {
             switch (DynOS_Opt_ProcessInput(sCurrentOpt, INPUT_RIGHT)) {
-                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gDefaultSoundArgs); break;
-                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gDefaultSoundArgs); break;
+                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gGlobalSoundSource); break;
+                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gGlobalSoundSource); break;
                 case RESULT_NONE:   break;
             }
             return;
@@ -485,8 +485,8 @@ static void DynOS_Opt_ProcessInputs() {
         // A
         if (gPlayer1Controller->buttonPressed & A_BUTTON) {
             switch (DynOS_Opt_ProcessInput(sCurrentOpt, INPUT_A)) {
-                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gDefaultSoundArgs); break;
-                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gDefaultSoundArgs); break;
+                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gGlobalSoundSource); break;
+                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gGlobalSoundSource); break;
                 case RESULT_NONE:   break;
             }
             return;
@@ -496,7 +496,7 @@ static void DynOS_Opt_ProcessInputs() {
         if (gPlayer1Controller->buttonPressed & B_BUTTON) {
             if (sCurrentOpt->mParent != NULL) {
                 sCurrentOpt = sCurrentOpt->mParent;
-                play_sound(SOUND_DYNOS_SELECT, gDefaultSoundArgs);
+                play_sound(SOUND_DYNOS_SELECT, gGlobalSoundSource);
             } else {
                 DynOS_Opt_Close(true);
             }
@@ -506,8 +506,8 @@ static void DynOS_Opt_ProcessInputs() {
         // Z
         if (gPlayer1Controller->buttonPressed & Z_TRIG) {
             switch (DynOS_Opt_ProcessInput(sCurrentOpt, INPUT_Z)) {
-                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gDefaultSoundArgs); break;
-                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gDefaultSoundArgs); break;
+                case RESULT_OK:     play_sound(SOUND_DYNOS_OK, gGlobalSoundSource); break;
+                case RESULT_CANCEL: play_sound(SOUND_DYNOS_CANCEL, gGlobalSoundSource); break;
                 case RESULT_NONE:
                     if (sCurrentMenu == sDynosMenu) {
                         DynOS_Opt_Close(true);

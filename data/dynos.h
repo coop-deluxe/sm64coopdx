@@ -19,7 +19,7 @@ extern "C" {
 #endif
 #include "config.h"
 #include "pc/fs/fs.h"
-#include "audio_defines.h"
+#include "sounds.h"
 #undef STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #ifdef __cplusplus

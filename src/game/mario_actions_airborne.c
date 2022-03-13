@@ -12,7 +12,7 @@
 #include "mario.h"
 #include "mario_step.h"
 #include "save_file.h"
-#include "thread6.h"
+#include "rumble_init.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
@@ -717,6 +717,9 @@ s32 act_twirling(struct MarioState *m) {
     }
 
     m->marioObj->header.gfx.angle[1] += m->twirlYaw;
+#ifdef VERSION_SH
+    reset_rumble_timers();
+#endif
     return FALSE;
 }
 
@@ -1114,7 +1117,7 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
 
         case AIR_STEP_LANDED:
             if (m->action == ACT_SOFT_BONK) {
-                queue_rumble_data_mario(m, 5, 80);
+                queue_rumble_data_mario(m, 5, 40);
             }
             if (!check_fall_damage_or_get_stuck(m, hardFallAction)) {
 #ifndef VERSION_JP
@@ -1865,7 +1868,7 @@ s32 act_flying(struct MarioState *m) {
                 }
 #endif
             }
-            queue_rumble_data_mario(m, 5, 80);
+            queue_rumble_data_mario(m, 5, 60);
             break;
 
         case AIR_STEP_HIT_WALL:

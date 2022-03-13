@@ -14,7 +14,7 @@ in_files = [
     "src/pc/lua/smlua_hooks.h",
     "src/game/camera.h",
     "include/mario_animation_ids.h",
-    "include/audio_defines.h",
+    "include/sounds.h",
     "src/game/characters.h",
     "src/pc/network/network_player.h",
     "include/PR/os_cont.h",

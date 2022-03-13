@@ -29,7 +29,7 @@ void whomp_act_0(void) {
         if (o->oSubAction == 0) {
             if (distanceToPlayer < 600.0f) {
                 o->oSubAction++;
-                func_8031FFB4(SEQ_PLAYER_LEVEL, 60, 40);
+                seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             } else {
                 cur_obj_set_pos_to_home();
                 o->oHealth = 3;
