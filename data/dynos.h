@@ -10,7 +10,9 @@
 #include <math.h>
 #include <limits.h>
 #include <dirent.h>
+#ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
+#endif
 #ifdef __cplusplus
 #include <new>
 #include <utility>

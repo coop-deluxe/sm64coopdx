@@ -4,7 +4,7 @@ extern "C" {
 }
 
 static bool DynOS_Opt_ControllerIsKeyDown(s32 aCont, s32 aKey) {
-
+#ifdef HAVE_SDL2
     // Keyboard
     if (aCont == 0 && aKey >= 0 && aKey < SDL_NUM_SCANCODES) {
         return SDL_GetKeyboardState(NULL)[aKey];
@@ -28,11 +28,13 @@ static bool DynOS_Opt_ControllerIsKeyDown(s32 aCont, s32 aKey) {
         }
     }
     // Invalid
+#endif
     return false;
 }
 
 #define MAX_CONTS 8
 bool DynOS_Opt_ControllerUpdate(DynosOption *aOpt, void *aData) {
+#ifdef HAVE_SDL2
     if (aOpt->mType == DOPT_BIND) {
         OSContPad *pad = (OSContPad *) aData;
         for (s32 _Cont = 0; _Cont < MAX_CONTS; ++_Cont)
@@ -40,12 +42,14 @@ bool DynOS_Opt_ControllerUpdate(DynosOption *aOpt, void *aData) {
             pad->button |= aOpt->mBind.mMask * DynOS_Opt_ControllerIsKeyDown(_Cont, aOpt->mBind.mBinds[_Bind]);
         }
     }
+#endif
     return false;
 }
 
 #define MAX_GKEYS (SDL_CONTROLLER_BUTTON_MAX + SDL_CONTROLLER_AXIS_MAX * 2)
 s32 sBindingState = 0; // 0 = No bind, 1 = Wait for all keys released, 2 = Return first pressed key
 s32 DynOS_Opt_ControllerGetKeyPressed() {
+#ifdef HAVE_SDL2
 
     // Keyboard
     for (s32 _Key = 0; _Key < SDL_NUM_SCANCODES; ++_Key) {
@@ -66,5 +70,6 @@ s32 DynOS_Opt_ControllerGetKeyPressed() {
 
     // No key
     sBindingState = 2;
+#endif
     return VK_INVALID;
 }
