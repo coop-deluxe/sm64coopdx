@@ -70,5 +70,46 @@ Array<String> DynOS_Gfx_Init() {
         SysPath _DirName = _Pack->mPath.substr(MAX(_DirSep1, _DirSep2));
         _PackNames.Add(_DirName.c_str());
     }
+    
+#ifdef COOP
+    Array<PackData *> &pDynosUserPacks = DynOS_Gfx_GetPacks();
+    SysPath _DynosPacksUserFolder = fstring("%s/%s", DYNOS_USER_FOLDER, DYNOS_PACKS_FOLDER);
+    DIR *_DynosPacksUserDir = opendir(_DynosPacksUserFolder.c_str());
+    if (_DynosPacksUserDir) {
+        struct dirent *_DynosPacksUserEnt = NULL;
+        while ((_DynosPacksUserEnt = readdir(_DynosPacksUserDir)) != NULL) {
+
+            // Skip . and ..
+            if (SysPath(_DynosPacksUserEnt->d_name) == ".") continue;
+            if (SysPath(_DynosPacksUserEnt->d_name) == "..") continue;
+
+            // If pack folder exists, add it to the pack list
+            SysPath _PackFolder = fstring("%s/%s", _DynosPacksUserFolder.c_str(), _DynosPacksUserEnt->d_name);
+            if (fs_sys_dir_exists(_PackFolder.c_str())) {
+                PackData *_Pack = New<PackData>();
+
+                // Scan folder for subfolders to convert into .bin files
+                _Pack->mPath = _PackFolder;
+                DynOS_Gfx_GeneratePack(_PackFolder);
+
+                // Add pack to pack list
+                pDynosPacks.Add(_Pack);
+
+                // Add enabled flag
+                DynOS_Gfx_GetPacksEnabled().Add(true);
+
+            }
+        }
+        closedir(_DynosPacksUserDir);
+    }
+    for (const auto& _Pack : pDynosUserPacks) {
+        u64 _DirSep1 = _Pack->mPath.find_last_of('\\');
+        u64 _DirSep2 = _Pack->mPath.find_last_of('/');
+        if (_DirSep1++ == SysPath::npos) _DirSep1 = 0;
+        if (_DirSep2++ == SysPath::npos) _DirSep2 = 0;
+        SysPath _DirName = _Pack->mPath.substr(MAX(_DirSep1, _DirSep2));
+        _PackNames.Add(_DirName.c_str());
+    }
+#endif
     return _PackNames;
 }
