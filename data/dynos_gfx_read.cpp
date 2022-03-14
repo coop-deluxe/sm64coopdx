@@ -1813,8 +1813,13 @@ void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder) {
     }
 
     // Generate a binary file for each actor found in the GfxData
+#ifdef COOP
+    for (auto &_GeoNode : _GfxData->mGeoLayouts) {
+        String _GeoRootName = _GeoNode->mName;
+#else
     for (s32 i = 0; i != DynOS_Geo_GetActorCount(); ++i) {
         String _GeoRootName = DynOS_Geo_GetActorName(i);
+#endif
         DataNode<GeoLayout> *_GeoRoot = GetGeoLayout(_GfxData, _GeoRootName);
         if (_GeoRoot != NULL) {
 
@@ -1852,8 +1857,13 @@ void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder) {
             SysPath _AnimsFolder = fstring("%s/%s/anims", aPackFolder.c_str(), _ActorFolder.begin());
             ScanAnimationFolder(_GfxData, _AnimsFolder);
 
+#ifdef COOP
+            // Create table for player model animations
+            if ((_GeoRootName == "mario_geo" || _GeoRootName == "luigi_geo" || _GeoRootName == "toad_player_geo" || _GeoRootName == "wario_geo" || _GeoRootName == "waluigi_geo") && !_GfxData->mAnimations.Empty()) {
+#else
             // Create table for mario_geo animations or luigi_geo animations
             if ((_GeoRootName == "mario_geo" || _GeoRootName == "luigi_geo") && !_GfxData->mAnimations.Empty()) {
+#endif
                 _GfxData->mAnimationTable.Resize(256);
                 for (s32 i = 0; i != 256; ++i) {
                     String _AnimName("anim_%02X", i);
