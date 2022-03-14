@@ -282,11 +282,11 @@ const Gfx waluigi_cap_seg3_dl_03022F48[] = {
 const Gfx waluigi_cap_seg3_dl_03022FF8[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_MODULATERGBFADE, G_CC_MODULATERGBFADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
     gsDPLoadTextureBlock(waluigi_cap_seg3_texture_0301CF50, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPLight(&waluigi_cap_seg3_lights_0301CF20.l, 1),
-    gsSPLight(&waluigi_cap_seg3_lights_0301CF20.a, 2),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsSPDisplayList(waluigi_cap_seg3_dl_03022B30),
     gsSPDisplayList(waluigi_cap_seg3_dl_03022B68),
     gsSPDisplayList(waluigi_cap_seg3_dl_03022CC8),
@@ -376,7 +376,7 @@ const Gfx waluigi_cap_seg3_dl_03023160[] = {
 const Gfx waluigi_cap_seg3_dl_03023298[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_MODULATERGBFADE, G_CC_MODULATERGBFADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, waluigi_cap_seg3_texture_0301CF50),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD),
     gsDPLoadSync(),

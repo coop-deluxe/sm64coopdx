@@ -3422,7 +3422,7 @@ Gfx mat_wario_overalls[] = {
 
 Gfx mat_wario_metal[] = {
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(0, 0, 0, TEXEL0, 0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0, 0, 0, 0, ENVIRONMENT),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
 	gsSPSetGeometryMode(G_TEXTURE_GEN),
 	gsSPTexture(4031, 1983, 0, 0, 1),
 	gsDPTileSync(),
@@ -3433,6 +3433,8 @@ Gfx mat_wario_metal[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
 	gsSPEndDisplayList(),
 };
 

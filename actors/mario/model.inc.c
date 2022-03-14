@@ -37,99 +37,99 @@ static const Lights1 mario_brown2_lights_group = gdSPDefLights1(
 );
 
 // 0x04000090
-ALIGNED8 static const Texture mario_texture_metal[] = {
+ALIGNED8 static const u8 mario_texture_metal[] = {
 #include "actors/mario/mario_metal.rgba16.inc.c"
 };
 
 // 0x04001090
-ALIGNED8 static const Texture mario_texture_yellow_button[] = {
+ALIGNED8 static const u8 mario_texture_yellow_button[] = {
 #include "actors/mario/mario_overalls_button.rgba16.inc.c"
 };
 
 // 0x04001890
-ALIGNED8 static const Texture mario_texture_m_logo[] = {
+ALIGNED8 static const u8 mario_texture_m_logo[] = {
 #include "actors/mario/custom_mario_logo.rgba16.inc.c"
 };
 
 // 0x04002090
-ALIGNED8 static const Texture mario_texture_hair_sideburn[] = {
+ALIGNED8 static const u8 mario_texture_hair_sideburn[] = {
 #include "actors/mario/mario_sideburn.rgba16.inc.c"
 };
 
 // 0x04002890
-ALIGNED8 static const Texture mario_texture_mustache[] = {
+ALIGNED8 static const u8 mario_texture_mustache[] = {
 #include "actors/mario/mario_mustache.rgba16.inc.c"
 };
 
 // 0x04003090
-ALIGNED8 static const Texture mario_texture_eyes_front[] = {
+ALIGNED8 static const u8 mario_texture_eyes_front[] = {
 #include "actors/mario/mario_eyes_center.rgba16.inc.c"
 };
 
 // 0x04003890
-ALIGNED8 static const Texture mario_texture_eyes_half_closed[] = {
+ALIGNED8 static const u8 mario_texture_eyes_half_closed[] = {
 #include "actors/mario/mario_eyes_half_closed.rgba16.inc.c"
 };
 
 // 0x04004090
-ALIGNED8 static const Texture mario_texture_eyes_closed[] = {
+ALIGNED8 static const u8 mario_texture_eyes_closed[] = {
 #include "actors/mario/mario_eyes_closed.rgba16.inc.c"
 };
 
 // Unreferenced
 // 0x04004890
-ALIGNED8 static const Texture mario_texture_eyes_closed_unused1[] = {
+ALIGNED8 static const u8 mario_texture_eyes_closed_unused1[] = {
 #include "actors/mario/mario_eyes_closed_unused_0.rgba16.inc.c"
 };
 
 // Unreferenced
 // 0x04005090
-ALIGNED8 static const Texture mario_texture_eyes_closed_unused2[] = {
+ALIGNED8 static const u8 mario_texture_eyes_closed_unused2[] = {
 #include "actors/mario/mario_eyes_closed_unused_1.rgba16.inc.c"
 };
 
 // 0x04005890
-ALIGNED8 static const Texture mario_texture_eyes_right[] = {
+ALIGNED8 static const u8 mario_texture_eyes_right[] = {
 #include "actors/mario/mario_eyes_left_unused.rgba16.inc.c"
 };
 
 // 0x04006090
-ALIGNED8 static const Texture mario_texture_eyes_left[] = {
+ALIGNED8 static const u8 mario_texture_eyes_left[] = {
 #include "actors/mario/mario_eyes_right_unused.rgba16.inc.c"
 };
 
 // 0x04006890
-ALIGNED8 static const Texture mario_texture_eyes_up[] = {
+ALIGNED8 static const u8 mario_texture_eyes_up[] = {
 #include "actors/mario/mario_eyes_up_unused.rgba16.inc.c"
 };
 
 // 0x04007090
-ALIGNED8 static const Texture mario_texture_eyes_down[] = {
+ALIGNED8 static const u8 mario_texture_eyes_down[] = {
 #include "actors/mario/mario_eyes_down_unused.rgba16.inc.c"
 };
 
 // 0x04007890
-ALIGNED8 static const Texture mario_texture_eyes_dead[] = {
+ALIGNED8 static const u8 mario_texture_eyes_dead[] = {
 #include "actors/mario/mario_eyes_dead.rgba16.inc.c"
 };
 
 // 0x04008090
-ALIGNED8 static const Texture mario_texture_wings_half_1[] = {
+ALIGNED8 static const u8 mario_texture_wings_half_1[] = {
 #include "actors/mario/mario_wing.rgba16.inc.c"
 };
 
 // 0x04009090
-ALIGNED8 static const Texture mario_texture_wings_half_2[] = {
+ALIGNED8 static const u8 mario_texture_wings_half_2[] = {
 #include "actors/mario/mario_wing_tip.rgba16.inc.c"
 };
 
 // 0x0400A090
-ALIGNED8 static const Texture mario_texture_metal_wings_half_1[] = {
+ALIGNED8 static const u8 mario_texture_metal_wings_half_1[] = {
 #include "actors/mario/mario_metal_wing_unused.rgba16.inc.c"
 };
 
 // 0x0400B090
-ALIGNED8 static const Texture mario_texture_metal_wings_half_2[] = {
+ALIGNED8 static const u8 mario_texture_metal_wings_half_2[] = {
 #include "actors/mario/mario_metal_wing_tip_unused.rgba16.inc.c"
 };
 
@@ -391,11 +391,11 @@ const Gfx mario_butt[] = {
 const Gfx mario_metal_butt[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_DECALFADE, G_CC_DECALFADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
     gsDPLoadTextureBlock(mario_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPLight(&mario_white_lights_group.l, 1),
-    gsSPLight(&mario_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsSPDisplayList(mario_butt_dl),
     gsSPEndDisplayList(),
 };
@@ -989,11 +989,11 @@ const Gfx mario_left_thigh[] = {
 const Gfx mario_metal_left_thigh[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_DECALFADE, G_CC_DECALFADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
     gsDPLoadTextureBlock(mario_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPLight(&mario_white_lights_group.l, 1),
-    gsSPLight(&mario_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsSPDisplayList(mario_left_thigh_dl),
     gsSPEndDisplayList(),
 };

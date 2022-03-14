@@ -14,18 +14,22 @@ ALIGNED8 static const u8 toad_player_texture_metal[] = {
 const Gfx toad_player_metal_start[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_DECALFADE, G_CC_DECALFADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsDPLoadTextureBlock(toad_player_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPLight(&toad_player_lights_white.l, 1),
-    gsSPLight(&toad_player_lights_white.a, 2),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsSPEndDisplayList(),
 };
 
 const Gfx toad_player_metal_stop[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetAlphaCompare(G_AC_NONE),
@@ -1067,6 +1071,38 @@ const Gfx toad_player_dl_body_inner[] = {
     gsSPEndDisplayList(),
 };
 
+const Gfx toad_player_metal_dl_body_inner[] = {
+    gsSPVertex(toad_player_vertex_body_1, 14, 0),
+    gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
+    gsSP2Triangles( 3,  5,  6, 0x0,  3,  6,  7, 0x0),
+    gsSP2Triangles( 7,  8,  3, 0x0,  3,  9,  4, 0x0),
+    gsSP2Triangles( 3,  8,  9, 0x0, 10,  7,  6, 0x0),
+    gsSP2Triangles(10,  6, 11, 0x0, 11,  6,  5, 0x0),
+    gsSP2Triangles( 7,  0,  8, 0x0,  0,  7, 10, 0x0),
+    gsSP2Triangles( 2, 12, 13, 0x0,  2,  1, 12, 0x0),
+    gsSP2Triangles( 2,  8,  0, 0x0,  2, 13,  9, 0x0),
+    gsSP1Triangle( 2,  9,  8, 0x0),
+    gsSPVertex(toad_player_vertex_body_2, 12, 0),
+    gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
+    gsSP2Triangles( 3,  5,  6, 0x0,  7,  8,  1, 0x0),
+    gsSP2Triangles( 7,  1,  9, 0x0,  7, 10,  8, 0x0),
+    gsSP2Triangles( 7,  9,  4, 0x0,  5,  4,  9, 0x0),
+    gsSP2Triangles( 5,  9,  0, 0x0,  0,  9,  1, 0x0),
+    gsSP2Triangles(11,  6,  0, 0x0, 11,  0,  2, 0x0),
+    gsSP1Triangle( 0,  6,  5, 0x0),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
+    gsSPVertex(toad_player_vertex_body_3, 12, 0),
+    gsSP2Triangles( 0,  1,  2, 0x0,  2,  3,  0, 0x0),
+    gsSP2Triangles( 4,  2,  1, 0x0,  4,  1,  5, 0x0),
+    gsSP2Triangles( 6,  7,  2, 0x0,  6,  2,  4, 0x0),
+    gsSP2Triangles( 2,  7,  3, 0x0,  5,  8,  4, 0x0),
+    gsSP2Triangles( 6,  8,  9, 0x0,  6,  4,  8, 0x0),
+    gsSP2Triangles(10,  3,  7, 0x0,  7, 11, 10, 0x0),
+    gsSP2Triangles( 7,  6, 11, 0x0,  9, 11,  6, 0x0),
+    gsSPEndDisplayList(),
+};
+
 const Gfx toad_player_dl_body[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
@@ -1080,8 +1116,13 @@ const Gfx toad_player_dl_body[] = {
 };
 
 const Gfx toad_player_metal_dl_body[] = {
-    gsSPDisplayList(toad_player_dl_body_inner),
+    gsSPDisplayList(toad_player_metal_dl_body_inner),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
+
     gsSPDisplayList(toad_player_dl_jacket_inner),
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
     gsSPEndDisplayList(),
 };
 
@@ -1383,9 +1424,13 @@ const Gfx toad_player_dl_foot_right_metal[] = {
     gsSPDisplayList(toad_player_dl_foot_right_inner),
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetAlphaCompare(G_AC_NONE),
+
+    gsSPCopyLightEXT(1, 5),
+	gsSPCopyLightEXT(2, 6),
+
     gsSPEndDisplayList(),
 };
