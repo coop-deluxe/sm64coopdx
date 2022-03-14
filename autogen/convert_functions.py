@@ -39,6 +39,7 @@ in_files = [
     "src/pc/lua/utils/smlua_obj_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
     'src/pc/lua/utils/smlua_collision_utils.h',
+    'src/pc/lua/utils/smlua_model_utils.h',
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
@@ -47,11 +48,12 @@ in_files = [
 ]
 
 override_allowed_functions = {
-    "src/audio/external.h":           [ " play_", "fade" ],
-    "src/game/camera.h":              [ "set_.*camera_.*shake", "set_camera_mode" ],
-    "src/game/rumble_init.c":         [ "queue_rumble_"],
-    "src/pc/djui/djui_popup.h" :      [ "create" ],
-    "src/game/save_file.h":           [ "save_file_get_" ],
+    "src/audio/external.h":                 [ " play_", "fade" ],
+    "src/game/camera.h":                    [ "set_.*camera_.*shake", "set_camera_mode" ],
+    "src/game/rumble_init.c":               [ "queue_rumble_"],
+    "src/pc/djui/djui_popup.h" :            [ "create" ],
+    "src/game/save_file.h":                 [ "save_file_get_" ],
+    "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
 }
 
 override_disallowed_functions = {

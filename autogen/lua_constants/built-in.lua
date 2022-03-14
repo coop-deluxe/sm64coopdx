@@ -259,5 +259,6 @@ end
 --- @param flags2 number
 --- @return number
 function SOUND_ARG_LOAD(bank, playFlags, soundID, priority, flags2)
+    if flags2 == nil then flags2 = 0 end
     return ((bank << 28) | (playFlags << 24) | (soundID << 16) | (priority << 8) | (flags2 << 4) | 1)
 end

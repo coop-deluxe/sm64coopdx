@@ -1,6 +1,6 @@
 #include <PR/ultratypes.h>
 
-#ifdef DEVELOPMENT
+#if defined(AUDIO_DEVELOPMENT) || defined(DEVELOPMENT)
 #include <stdio.h>
 #include <assert.h>
 #endif
@@ -280,7 +280,7 @@ void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u3
     struct SequenceChannel* seqChannel;
     s32 i;
 
-#ifdef DEVELOPMENT
+#ifdef AUDIO_DEVELOPMENT
     printf("debug: Enabling channels (extended) with corresponding bits %X\n", channelBits);
 #endif
 
@@ -305,12 +305,12 @@ void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u3
                 seqChannel->noteAllocPolicy = seqPlayer->noteAllocPolicy;
             }
 
-#ifdef DEVELOPMENT
+#ifdef AUDIO_DEVELOPMENT
             printf("debug: Tried to enable channel (extended) %i with result of validity %u.\n", i, IS_SEQUENCE_CHANNEL_VALID(seqChannel));
 #endif
         }
 
-#ifdef DEVELOPMENT
+#ifdef AUDIO_DEVELOPMENT
         printf("debug: Checked channel (extended) %i for enable with bit %u.\n", i, channelBits & 1);
 #endif
 
@@ -326,7 +326,7 @@ void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer,
     struct SequenceChannel* seqChannel;
     s32 i;
 
-#ifdef DEVELOPMENT
+#ifdef AUDIO_DEVELOPMENT
     printf("debug: Disabling channels (extended) with corresponding bits %X\n", channelBits);
 #endif
 

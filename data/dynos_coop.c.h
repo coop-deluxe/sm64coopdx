@@ -13,6 +13,8 @@ const char* dynos_packs_get(s32 index);
 bool dynos_packs_get_enabled(s32 index);
 void dynos_packs_set_enabled(s32 index, bool value);
 
+const void* dynos_geolayout_get(const char *name);
+
 #endif
 #endif
 #endif

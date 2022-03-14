@@ -53,5 +53,9 @@ void dynos_packs_set_enabled(s32 index, bool value) {
     DynOS_Gfx_GetPacksEnabled()[index] = value;
 }
 
+const void* dynos_geolayout_get(const char *name) {
+    return DynOS_Geo_GetActorLayoutFromName(name);
+}
+
 }
 #endif

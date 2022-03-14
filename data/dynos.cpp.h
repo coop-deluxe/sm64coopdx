@@ -662,6 +662,11 @@ s32 DynOS_String_Width(const u8 *aStr64);
 // Geo
 //
 
+#ifdef COOP
+void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName);
+const void *DynOS_Geo_GetActorLayoutFromName(const char *aActorName);
+#endif
+
 s32 DynOS_Geo_GetActorCount();
 const char *DynOS_Geo_GetActorName(s32 aIndex);
 const void *DynOS_Geo_GetActorLayout(s32 aIndex);

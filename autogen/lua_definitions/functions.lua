@@ -3516,6 +3516,12 @@ function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
+--- @param name string
+--- @return integer
+function smlua_model_util_get_id(name)
+    -- ...
+end
+
 --- @return ObjectHitbox
 function get_temp_object_hitbox()
     -- ...

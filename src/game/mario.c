@@ -2161,9 +2161,6 @@ static void init_single_mario(struct MarioState* m) {
     if (nearbyPlayers > 1) {
         m->pos[0] -= spawnMag * sins(spawnAngle);
         m->pos[2] -= spawnMag * coss(spawnAngle);
-        LOG_INFO("spawn offset!, %u", nearbyPlayers);
-    } else {
-        LOG_INFO("no spawn offset!, %u", nearbyPlayers);
     }
 
     m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);

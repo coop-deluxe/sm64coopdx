@@ -65,7 +65,7 @@ struct ModelUtilsInfo {
 #define MODEL_UTIL_GEO(x, y) [x] = { .id = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .cacheId = 0xFF }
 #define MODEL_UTIL_DL(x, y, z) [x] = { .id = x, .asset = y, .layer = z, .isDisplayList = true, .cacheId = 0xFF }
 
-struct ModelUtilsInfo sModels[] = {
+struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_NONE,                    NULL),
 
     // actors
@@ -449,6 +449,9 @@ struct ModelUtilsInfo sModels[] = {
     MODEL_UTIL_GEO(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
 };
 
+struct ModelUtilsInfo* sCustomModels = NULL;
+u32 sCustomModelsCount = 0;
+
 struct ModelUtilsInfo sCachedAssets[256] = { 0 };
 
 void smlua_model_util_remember(u8 modelId, u8 layer, const void* asset, u8 isDisplayList) {
@@ -467,16 +470,23 @@ void smlua_model_util_clear(void) {
         }
         sModels[i].cacheId = 0xFF;
     }
+
+    for (u32 i = 0; i < sCustomModelsCount; i++) {
+        if (sCustomModels[i].cacheId != 0xFF) {
+            gLoadedGraphNodes[sCustomModels[i].cacheId] = NULL;
+        }
+        sCustomModels[i].cacheId = 0xFF;
+    }
 }
 
 u8 smlua_model_util_load(enum ModelExtendedId id) {
     if (id == E_MODEL_NONE) { return MODEL_NONE; }
-    if (id >= E_MODEL_MAX) {
-        LOG_ERROR("id invalid");
-        return 0xFF;
-    }
+    if (id == E_MODEL_MAX) { LOG_ERROR("id invalid"); return MODEL_NONE; }
+    if (id > E_MODEL_MAX + sCustomModelsCount) { LOG_ERROR("id invalid"); return MODEL_NONE; }
 
-    struct ModelUtilsInfo* info = &sModels[id];
+    struct ModelUtilsInfo* info = (id >= E_MODEL_MAX)
+                                ? &sCustomModels[id - E_MODEL_MAX - 1]
+                                : &sModels[id];
 
     // check cache
     if (info->cacheId != 0xFF) {
@@ -517,4 +527,34 @@ u8 smlua_model_util_load(enum ModelExtendedId id) {
     info->cacheId = emptyCacheId;
 
     return emptyCacheId;
+}
+
+u32 smlua_model_util_get_id(const char* name) {
+    // find geolayout
+    const void* layout = dynos_geolayout_get(name);
+    if (layout == NULL) { return E_MODEL_NONE; }
+
+    // find existing model
+    for (u32 i = 0; i < E_MODEL_MAX; i++) {
+        if (sModels[i].asset == layout) {
+            return i;
+        }
+    }
+    for (u32 i = 0; i < sCustomModelsCount; i++) {
+        if (sCustomModels[i].asset == layout) {
+            return E_MODEL_MAX + i + 1;
+        }
+    }
+
+    // allocate custom model
+    u32 customIndex = sCustomModelsCount++;
+    sCustomModels = realloc(sCustomModels, sizeof(struct ModelUtilsInfo) * sCustomModelsCount);
+    struct ModelUtilsInfo* info = &sCustomModels[customIndex];
+    info->asset = layout;
+    info->cacheId = 0xFF;
+    info->id = E_MODEL_MAX + sCustomModelsCount;
+    info->isDisplayList = false;
+    info->layer = LAYER_OPAQUE;
+
+    return info->id;
 }

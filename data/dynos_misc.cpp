@@ -336,6 +336,76 @@ define_actor(warios_winged_metal_cap_geo),
 #endif
 };
 
+#ifdef COOP
+static Array<Pair<const char*, void *>> sDynosCustomActors;
+
+void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName) {
+    // check for duplicates
+    for (s32 i = 0; i < DynOS_Geo_GetActorCount(); ++i) {
+        if (!strcmp(DynOS_Geo_GetActorName(i), aActorName)) {
+            return;
+        }
+    }
+
+    GfxData *_GfxData = DynOS_Gfx_LoadFromBinary(aPackFolder, aActorName);
+    if (!_GfxData) {
+        return;
+    }
+
+    void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
+    if (!geoLayout) {
+        return;
+    }
+
+    // Add to custom actors
+    s32 index = DynOS_Geo_GetActorCount();
+    sDynosCustomActors.Add({ strdup(aActorName), geoLayout });
+
+    // Alloc and init the actors gfx list
+    Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
+    pActorGfxList.Resize(DynOS_Geo_GetActorCount());
+    pActorGfxList[index].mPackIndex = -1;
+    pActorGfxList[index].mGfxData   = NULL; // maybe _GfxData?
+    pActorGfxList[index].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(index), true);
+}
+
+s32 DynOS_Geo_GetActorCount() {
+    s32 arrayCount = (s32) (sizeof(sDynosActors) / (2 * sizeof(sDynosActors[0])));
+    return (s32) arrayCount + sDynosCustomActors.Count();
+}
+
+const char *DynOS_Geo_GetActorName(s32 aIndex) {
+    s32 arrayCount = (s32) (sizeof(sDynosActors) / (2 * sizeof(sDynosActors[0])));
+    if (aIndex < arrayCount) { return (const char *) sDynosActors[2 * aIndex]; }
+    return sDynosCustomActors[aIndex - arrayCount].first;
+}
+
+const void *DynOS_Geo_GetActorLayout(s32 aIndex) {
+    s32 arrayCount = (s32) (sizeof(sDynosActors) / (2 * sizeof(sDynosActors[0])));
+    if (aIndex < arrayCount) { return (const void *) sDynosActors[2 * aIndex + 1]; }
+    return sDynosCustomActors[aIndex - arrayCount].second;
+}
+
+const void *DynOS_Geo_GetActorLayoutFromName(const char *aActorName) {
+    for (s32 i = 0; i < DynOS_Geo_GetActorCount(); ++i) {
+        if (!strcmp(DynOS_Geo_GetActorName(i), aActorName)) {
+            return DynOS_Geo_GetActorLayout(i);
+        }
+    }
+    return NULL;
+}
+
+s32 DynOS_Geo_GetActorIndex(const void *aGeoLayout) {
+    for (s32 i = 0; i < DynOS_Geo_GetActorCount(); ++i) {
+        if (DynOS_Geo_GetActorLayout(i) == aGeoLayout) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+#else // NORMAL DYNOS
+
 s32 DynOS_Geo_GetActorCount() {
     return (s32) (sizeof(sDynosActors) / (2 * sizeof(sDynosActors[0])));
 }
@@ -356,6 +426,8 @@ s32 DynOS_Geo_GetActorIndex(const void *aGeoLayout) {
     }
     return -1;
 }
+
+#endif // NORMAL DYNOS END
 
 //
 // Geo Functions

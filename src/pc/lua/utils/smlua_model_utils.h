@@ -390,5 +390,6 @@ enum ModelExtendedId {
 void smlua_model_util_remember(u8 modelId, u8 layer, const void* asset, u8 isDisplayList);
 void smlua_model_util_clear(void);
 u8 smlua_model_util_load(enum ModelExtendedId id);
+u32 smlua_model_util_get_id(const char* name);
 
 #endif

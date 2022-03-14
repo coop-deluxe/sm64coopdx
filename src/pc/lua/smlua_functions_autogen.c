@@ -22,6 +22,7 @@
 #include "src/pc/lua/utils/smlua_obj_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
 #include "src/pc/lua/utils/smlua_collision_utils.h"
+#include "src/pc/lua/utils/smlua_model_utils.h"
 #include "src/engine/surface_load.h"
 
 
@@ -7472,6 +7473,21 @@ int smlua_func_warp_to_level(lua_State* L) {
     return 1;
 }
 
+  /////////////////////////
+ // smlua_model_utils.h //
+/////////////////////////
+
+int smlua_func_smlua_model_util_get_id(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, smlua_model_util_get_id(name));
+
+    return 1;
+}
+
   ///////////////////////
  // smlua_obj_utils.h //
 ///////////////////////
@@ -8760,6 +8776,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
     smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
+
+    // smlua_model_utils.h
+    smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
 
     // smlua_obj_utils.h
     smlua_bind_function(L, "get_temp_object_hitbox", smlua_func_get_temp_object_hitbox);

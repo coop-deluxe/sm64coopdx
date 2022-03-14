@@ -644,6 +644,11 @@
 
 <br />
 
+- smlua_model_utils.h
+   - [smlua_model_util_get_id](#smlua_model_util_get_id)
+
+<br />
+
 - smlua_obj_utils.h
    - [get_temp_object_hitbox](#get_temp_object_hitbox)
    - [obj_get_first](#obj_get_first)
@@ -11738,6 +11743,32 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_model_utils.h
+
+<br />
+
+
+## [smlua_model_util_get_id](#smlua_model_util_get_id)
+
+### Lua Example
+`local integerValue = smlua_model_util_get_id(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 smlua_model_util_get_id(const char* name);`
 
 [:arrow_up_small:](#)
 
