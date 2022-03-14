@@ -3,6 +3,7 @@
 #include "src/pc/network/network.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
+#include "src/pc/debuglog.h"
 
 #ifdef DISCORD_SDK
 static char* sJoiningDiscord = "\
@@ -89,7 +90,9 @@ static bool djui_panel_join_ip_valid(char* buffer) {
 
 static void djui_panel_join_ip_text_set_new(void) {
     char buffer[256] = { 0 };
-    snprintf(buffer, 256, "%s", sInputboxIp->buffer);
+    if (snprintf(buffer, 256, "%s", sInputboxIp->buffer) < 0) {
+        LOG_INFO("truncating IP");
+    }
 
     bool afterSpacer = false;
     int port = 0;
@@ -105,7 +108,9 @@ static void djui_panel_join_ip_text_set_new(void) {
         }
     }
 
-    snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", buffer);
+    if (snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", buffer) < 0) {
+        LOG_INFO("truncating IP");
+    }
     if (port >= 1 && port <= 65535) {
         configJoinPort = port;
     } else {
@@ -116,11 +121,11 @@ static void djui_panel_join_ip_text_set_new(void) {
 static void djui_panel_join_ip_text_set(struct DjuiInputbox* inputbox1) {
     char buffer[256] = { 0 };
     if (strlen(configJoinIp) > 0 && configJoinPort != DEFAULT_PORT) {
-        snprintf(buffer, 256, "%s:%d", configJoinIp, configJoinPort);
+        if (snprintf(buffer, 256, "%s:%d", configJoinIp, configJoinPort) < 0) { LOG_INFO("truncating IP"); }
     } else if (strlen(configJoinIp) > 0) {
-        snprintf(buffer, 256, "%s", configJoinIp);
+        if (snprintf(buffer, 256, "%s", configJoinIp) < 0) { LOG_INFO("truncating IP"); }
     } else {
-        snprintf(buffer, 256, "127.0.0.1");
+        if (snprintf(buffer, 256, "127.0.0.1") < 0) { LOG_INFO("truncating IP"); }
     }
 
     djui_inputbox_set_text(inputbox1, buffer);

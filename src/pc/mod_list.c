@@ -29,7 +29,7 @@ static void mod_list_delete_tmp(void) {
 
     static char path[SYS_MAX_PATH] = { 0 };
     while ((dir = readdir(d)) != NULL) {
-        snprintf(path, SYS_MAX_PATH - 1, "%s/%s", sTmpPath, dir->d_name);
+        if (snprintf(path, SYS_MAX_PATH - 1, "%s/%s", sTmpPath, dir->d_name) < 0) { continue; }
         if (!fs_sys_file_exists(path)) { continue; }
 
 #if defined(_WIN32)
@@ -81,8 +81,11 @@ void mod_list_add_tmp(u16 index, u16 remoteIndex, char* name, size_t size) {
         n++;
     }
 
-    snprintf(entry->path, SYS_MAX_PATH - 1, "%s/%s-%u-%s", sTmpPath, sTmpSession, index, sanitizedName);
-    entry->fp = fopen(entry->path, "wb");
+    if (snprintf(entry->path, SYS_MAX_PATH - 1, "%s/%s-%u-%s", sTmpPath, sTmpSession, index, sanitizedName) >= 0) {
+        entry->fp = fopen(entry->path, "wb");
+    } else {
+        entry->fp = NULL;
+    }
 
     entry->remoteIndex = remoteIndex;
     entry->complete = false;
@@ -122,13 +125,13 @@ void mod_list_extract_lua_fields(struct ModListEntry* entry) {
         char* extracted = NULL;
         if (entry->displayName == NULL && (extracted = extract_lua_field("-- name:", buffer))) {
             entry->displayName = calloc(33, sizeof(char));
-            snprintf(entry->displayName, 32, "%s", extracted);
+            if (snprintf(entry->displayName, 32, "%s", extracted) < 0) {}
         } else if (entry->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
             entry->incompatible = calloc(257, sizeof(char));
-            snprintf(entry->incompatible, 256, "%s", extracted);
+            if (snprintf(entry->incompatible, 256, "%s", extracted) < 0) {}
         } else if (entry->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
             entry->description = calloc(513, sizeof(char));
-            snprintf(entry->description, 512, "%s", extracted);
+            if (snprintf(entry->description, 512, "%s", extracted) < 0) {}
         }
     }
 

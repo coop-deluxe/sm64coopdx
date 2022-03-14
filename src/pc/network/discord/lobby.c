@@ -44,12 +44,16 @@ static void on_lobby_create_callback(UNUSED void* data, enum EDiscordResult resu
     LOGFILE_INFO(LFT_DISCORD, "Lobby locked: %d", lobby->locked);
 
     gCurActivity.type = DiscordActivityType_Playing;
-    snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id);
+    if (snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id) < 0) {
+        LOGFILE_ERROR(LFT_DISCORD, "truncating party id");
+    }
     gCurActivity.party.size.current_size = 1;
     gCurActivity.party.size.max_size = configAmountofPlayers;
 
     char secretJoin[128] = "";
-    snprintf(secretJoin, 128, DISCORD_ID_FORMAT ":%s", lobby->id, lobby->secret);
+    if (snprintf(secretJoin, 128, DISCORD_ID_FORMAT ":%s", lobby->id, lobby->secret) < 0) {
+        LOGFILE_ERROR(LFT_DISCORD, "truncating secret");
+    }
     strcpy(gCurActivity.secrets.join, secretJoin);
 
     isHosting = true;

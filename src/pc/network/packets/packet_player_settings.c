@@ -4,7 +4,9 @@
 
 void network_send_player_settings(void) {
     char playerName[MAX_PLAYER_STRING+1] = { 0 };
-    snprintf(playerName, MAX_PLAYER_STRING, "%s", configPlayerName);
+    if (snprintf(playerName, MAX_PLAYER_STRING, "%s", configPlayerName) < 0) {
+        LOG_INFO("truncating player name");
+    }
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_PLAYER_SETTINGS, true, PLMT_NONE);
@@ -14,7 +16,9 @@ void network_send_player_settings(void) {
     packet_write(&p, &configPlayerPalette, sizeof(u8));
 
     if (gNetworkPlayerLocal != NULL) {
-        snprintf(gNetworkPlayerLocal->name, MAX_PLAYER_STRING, "%s", playerName);
+        if (snprintf(gNetworkPlayerLocal->name, MAX_PLAYER_STRING, "%s", playerName) < 0) {
+            LOG_INFO("truncating player name");
+        }
     }
 
     network_send(&p);
@@ -47,7 +51,9 @@ void network_receive_player_settings(struct Packet* p) {
     if (playerPalette >= PALETTE_MAX) { playerPalette = 0; }
 
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
-    snprintf(np->name, MAX_PLAYER_STRING, "%s", playerName);
+    if (snprintf(np->name, MAX_PLAYER_STRING, "%s", playerName) < 0) {
+        LOG_INFO("truncating player name");
+    }
 
     if (np->modelIndex   == np->overrideModelIndex)   { np->overrideModelIndex   = playerModel;   }
     if (np->paletteIndex == np->overridePaletteIndex) { np->overridePaletteIndex = playerPalette; }

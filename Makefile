@@ -406,22 +406,14 @@ endif
 # Luigi and wario sounds don't work on 32-bit right now
 # And the audio code is so terrible I don't care enough to figure it out at the moment
 ifeq ($(TARGET_BITS), 32)
-  $(shell rm -rf sound/samples/sfx_custom_luigi/*.aiff)
-  $(shell rm -rf sound/samples/sfx_custom_luigi_peach/*.aiff)
-  $(shell rm -rf sound/samples/sfx_custom_wario/*.aiff)
-  $(shell rm -rf sound/samples/sfx_custom_wario_peach/*.aiff)
+  _ := $(shell rm -rf sound/samples/sfx_custom_luigi/*.aiff)
+  _ := $(shell rm -rf sound/samples/sfx_custom_luigi_peach/*.aiff)
+  _ := $(shell rm -rf sound/samples/sfx_custom_wario/*.aiff)
+  _ := $(shell rm -rf sound/samples/sfx_custom_wario_peach/*.aiff)
 endif
 
-# Copy missing luigi sounds from mario sound banks
-#$(shell mkdir -p sound/samples/sfx_custom_luigi sound/samples/sfx_custom_luigi_peach )
-#$(shell cp -n sound/samples/sfx_mario/*.aiff sound/samples/sfx_custom_luigi/ )
-#$(shell cp -n sound/samples/sfx_mario_peach/*.aiff sound/samples/sfx_custom_luigi_peach/ )
-
-# Copy missing wario sounds from mario sound banks
-#$(shell mkdir -p sound/samples/sfx_custom_wario sound/samples/sfx_custom_wario_peach )
-#$(shell cp -n sound/samples/sfx_mario/*.aiff sound/samples/sfx_custom_wario/ )
-#$(shell cp -n sound/samples/sfx_mario_peach/*.aiff sound/samples/sfx_custom_wario_peach/ )
-
+# Copy missing character sounds from mario sound banks
+_ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
 
 #==============================================================================#
 # Target Executable and Sources                                                #

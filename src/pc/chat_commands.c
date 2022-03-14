@@ -20,7 +20,9 @@ static struct NetworkPlayer* chat_get_network_player(char* name) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         char id[16] = { 0 };
-        snprintf(id, 16, "%d", i);
+        if (snprintf(id, 16, "%d", i) < 0) {
+            // do nothing
+        }
         if (strcmp(id, name) == 0) {
             return &gNetworkPlayers[i];
         }

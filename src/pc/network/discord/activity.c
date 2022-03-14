@@ -28,7 +28,9 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
     network_init(NT_CLIENT);
 
     gCurActivity.type = DiscordActivityType_Playing;
-    snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id);
+    if (snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id) < 0) {
+        LOGFILE_ERROR(LFT_DISCORD, "Truncating party id");
+    }
     gCurActivity.party.size.current_size = 2;
     gCurActivity.party.size.max_size = lobby->capacity;
 
@@ -130,7 +132,9 @@ void discord_activity_update(bool hosting) {
         discord_populate_details(details, true);
     }
 
-    snprintf(gCurActivity.details, 125, "%s", details);
+    if (snprintf(gCurActivity.details, 125, "%s", details) < 0) {
+        LOGFILE_INFO(LFT_DISCORD, "truncating details");
+    }
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
     LOGFILE_INFO(LFT_DISCORD, "set activity");

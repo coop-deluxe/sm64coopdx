@@ -358,14 +358,18 @@ void *fs_load_file(const char *vpath, uint64_t *outsize) {
 
 const char *fs_get_write_path(const char *vpath) {
     static char path[SYS_MAX_PATH];
-    snprintf(path, sizeof(path), "%s/%s", fs_writepath, vpath);
+    if (snprintf(path, sizeof(path), "%s/%s", fs_writepath, vpath) < 0) {
+        return NULL;
+    }
     return path;
 }
 
 const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path)  {
     // ! means "executable directory"
     if (path[0] == '!') {
-        snprintf(buf, bufsiz, "%s%s", sys_exe_path(), path + 1);
+        if (snprintf(buf, bufsiz, "%s%s", sys_exe_path(), path + 1) < 0) { 
+            return NULL;
+        }
     } else {
         strncpy(buf, path, bufsiz);
         buf[bufsiz-1] = 0;
@@ -407,7 +411,9 @@ bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur)
 
     while ((ent = readdir(dir)) != NULL) {
         if (ent->d_name[0] == 0 || ent->d_name[0] == '.') continue; // skip ./.. and hidden files
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", base, ent->d_name);
+        if (snprintf(fullpath, sizeof(fullpath), "%s/%s", base, ent->d_name) < 0) {
+            continue;
+        }
         if (fs_sys_dir_exists(fullpath)) {
             if (recur) {
                 if (!fs_sys_walk(fullpath, walk, user, recur)) {

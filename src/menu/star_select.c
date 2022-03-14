@@ -402,9 +402,13 @@ void print_act_selector_strings(void) {
         if (playersInAct > 0) {
             char message[16] = { 0 };
             if (playersInAct == 1) {
-                snprintf(message, 16, "join");
+                if (snprintf(message, 16, "join") < 0) {
+                    // do nothing
+                }
             } else {
-                snprintf(message, 16, "%d players", playersInAct);
+                if (snprintf(message, 16, "%d players", playersInAct) < 0) {
+                    // do nothing
+                }
             }
 
             gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
