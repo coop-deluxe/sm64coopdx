@@ -12,7 +12,7 @@
 #include "pc/djui/djui.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 
@@ -109,6 +109,7 @@ bool network_init(enum NetworkType inNetworkType) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
+        mods_activate(&gLocalMods);
         smlua_init();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);

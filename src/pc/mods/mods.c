@@ -42,7 +42,7 @@ void mods_activate(struct Mods* mods) {
 
             char fullPath[SYS_MAX_PATH] = { 0 };
             if (!mod_file_full_path(fullPath, mod, file)) {
-                LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, relativePath);
+                LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, file->relativePath);
                 continue;
             }
 

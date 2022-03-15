@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "djui.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 
 struct DjuiThreePanel* gDjuiModList = NULL;
 
@@ -17,9 +17,9 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
 
     // count mods
     int enabledCount = 0;
-    for (int i = 0; i < gModTableCurrent->entryCount; i++) {
-        struct ModListEntry* entry = &gModTableCurrent->entries[i];
-        if (!entry->enabled) { continue; }
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        struct Mod* mod = gActiveMods.entries[i];
+        if (!mod->enabled) { continue; }
         enabledCount++;
     }
 
@@ -42,9 +42,9 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     djui_flow_layout_set_margin(body, 4);
 
-    for (int i = 0; i < gModTableCurrent->entryCount; i++) {
-        struct ModListEntry* entry = &gModTableCurrent->entries[i];
-        if (!entry->enabled) { continue; }
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        struct Mod* mod = gActiveMods.entries[i];
+        if (!mod->enabled) { continue; }
 
         struct DjuiFlowLayout* row = djui_flow_layout_create(&body->base);
         djui_base_set_size_type(&row->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -55,7 +55,7 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
         djui_flow_layout_set_margin(row, 8);
 
         int t = 220;
-        struct DjuiText* t2 = djui_text_create(&row->base, entry->displayName ? entry->displayName : entry->name);
+        struct DjuiText* t2 = djui_text_create(&row->base, mod->name);
         djui_base_set_size_type(&t2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&t2->base, 1.0f, 32.0f);
         djui_base_set_color(&t2->base, t, t, t, 255);

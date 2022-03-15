@@ -31,8 +31,8 @@
 
 extern lua_State* gLuaState;
 extern u8 gLuaInitializingScript;
-extern struct ModListEntry* gLuaLoadingEntry;
-extern struct ModListEntry* gLuaActiveEntry;
+extern struct Mod* gLuaLoadingMod;
+extern struct Mod* gLuaActiveMod;
 
 void smlua_init(void);
 void smlua_update(void);

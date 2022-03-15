@@ -1,11 +1,12 @@
 #include "smlua.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
 #include "pc/crash_handler.h"
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
-struct ModListEntry* gLuaLoadingEntry = NULL;
-struct ModListEntry* gLuaActiveEntry = NULL;
+struct Mod* gLuaLoadingMod = NULL;
+struct Mod* gLuaActiveMod = NULL;
 
 static void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
@@ -25,35 +26,54 @@ static void smlua_exec_str(char* str) {
     lua_pop(L, lua_gettop(L));
 }
 
-static void smlua_load_script(char* path, u16 remoteIndex) {
+static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex) {
     lua_State* L = gLuaState;
+
+    char fullPath[SYS_MAX_PATH] = { 0 };
+    if (!mod_file_full_path(fullPath, mod, file)) {
+        LOG_ERROR("Failed to concat path: '%s' + '%s", mod->relativePath, file->relativePath);
+        return;
+    }
+
     gLuaInitializingScript = 1;
-    if (luaL_loadfile(L, path) != LUA_OK) {
-        LOG_LUA("Failed to load lua script '%s'.", path);
+    if (luaL_loadfile(L, fullPath) != LUA_OK) {
+        LOG_LUA("Failed to load lua script '%s'.", fullPath);
         puts(smlua_to_string(L, lua_gettop(L)));
         return;
     }
 
-    lua_newtable(L); // create _ENV tables
-    lua_newtable(L); // create metatable
-    lua_getglobal(L, "_G"); // get global table
+    // check if this is the first time this mod has been loaded
+    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
+    bool firstInit = (lua_type(L, -1) == LUA_TNIL);
+    lua_pop(L, 1);
 
-    // set global as the metatable
-    lua_setfield(L, -2, "__index");
-    lua_setmetatable(L, -2);
+    // create mod's "global" table
+    if (firstInit) {
+        lua_newtable(L); // create _ENV tables
+        lua_newtable(L); // create metatable
+        lua_getglobal(L, "_G"); // get global table
 
-    // push to registry with path as name (must be unique)
-    lua_setfield(L, LUA_REGISTRYINDEX, path);
-    lua_getfield(L, LUA_REGISTRYINDEX, path);
+        // set global as the metatable
+        lua_setfield(L, -2, "__index");
+        lua_setmetatable(L, -2);
+
+        // push to registry with path as name (must be unique)
+        lua_setfield(L, LUA_REGISTRYINDEX, mod->relativePath);
+    }
+
+    // load mod's "global" table
+    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
     lua_setupvalue(L, 1, 1); // set upvalue (_ENV)
 
     // load per-file globals
-    smlua_sync_table_init_globals(path, remoteIndex);
-    smlua_cobject_init_per_file_globals(path);
+    if (firstInit) {
+        smlua_sync_table_init_globals(mod->relativePath, remoteIndex);
+        smlua_cobject_init_per_file_globals(mod->relativePath);
+    }
 
     // run chunks
     if (lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
-        LOG_LUA("Failed to execute lua script '%s'.", path);
+        LOG_LUA("Failed to execute lua script '%s'.", fullPath);
         puts(smlua_to_string(L, lua_gettop(L)));
         smlua_dump_stack();
         gLuaInitializingScript = 0;
@@ -94,19 +114,24 @@ void smlua_init(void) {
     smlua_cobject_init_globals();
 
     // load scripts
-    mod_list_size_enforce();
+    mods_size_enforce(&gActiveMods);
     LOG_INFO("Loading scripts:");
-    struct ModTable* table = gModTableCurrent;
-    for (int i = 0; i < table->entryCount; i++) {
-        struct ModListEntry* entry = &table->entries[i];
-        if (!entry->enabled) { continue; }
-        LOG_INFO("    %s", entry->path);
-        gLuaLoadingEntry = entry;
-        gLuaActiveEntry = entry;
-        gPcDebug.lastModRun = gLuaActiveEntry;
-        smlua_load_script(entry->path, entry->remoteIndex);
-        gLuaActiveEntry = NULL;
-        gLuaLoadingEntry = NULL;
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        struct Mod* mod = gActiveMods.entries[i];
+        if (!mod->enabled) { continue; }
+        LOG_INFO("    %s", mod->relativePath);
+        gLuaLoadingMod = mod;
+        gLuaActiveMod = mod;
+        gPcDebug.lastModRun = gLuaActiveMod;
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+            if (!str_ends_with(file->relativePath, ".lua")) {
+                continue;
+            }
+            smlua_load_script(mod, file, i);
+        }
+        gLuaActiveMod = NULL;
+        gLuaLoadingMod = NULL;
     }
 }
 

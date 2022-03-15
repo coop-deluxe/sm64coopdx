@@ -9,7 +9,7 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 
 #define LUA_VEC3S_FIELD_COUNT 3
 static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
@@ -85,14 +85,14 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         return 0;
     }
 
-    if (gLuaLoadingEntry == NULL) {
+    if (gLuaLoadingMod == NULL) {
         LOG_LUA("define_custom_obj_fields() can only be called on load.");
         return 0;
     }
 
     // get _custom_object_fields
     lua_getglobal(L, "_G"); // get global table
-    lua_getfield(L, LUA_REGISTRYINDEX, gLuaLoadingEntry->path); // push file's "global" table
+    lua_getfield(L, LUA_REGISTRYINDEX, gLuaLoadingMod->relativePath); // push file's "global" table
     int fileGlobalIndex = lua_gettop(L);
     lua_getfield(L, fileGlobalIndex, "_custom_object_fields");
     lua_remove(L, -2); // remove file's "global" table
@@ -180,14 +180,14 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     static struct LuaObjectField lof = { 0 };
     if (lot != LOT_OBJECT) { return NULL; }
 
-    if (gLuaActiveEntry == NULL) {
+    if (gLuaActiveMod == NULL) {
         LOG_LUA("Failed to retrieve active mod entry.");
         return NULL;
     }
 
     // get _custom_object_fields
     lua_getglobal(L, "_G"); // get global table
-    lua_getfield(L, LUA_REGISTRYINDEX, gLuaActiveEntry->path); // push file's "global" table
+    lua_getfield(L, LUA_REGISTRYINDEX, gLuaActiveMod->relativePath); // push file's "global" table
     int fileGlobalIndex = lua_gettop(L);
     lua_getfield(L, fileGlobalIndex, "_custom_object_fields");
     lua_remove(L, -2); // remove file's "global" table

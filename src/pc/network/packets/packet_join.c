@@ -17,6 +17,7 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "pc/mods/mods.h"
 #include "pc/lua/smlua.h"
 #include "pc/configfile.h"
 
@@ -231,6 +232,7 @@ void network_receive_join(struct Packet* p) {
     extern s16 gChangeLevel;
     gChangeLevel = 16;
 
+    mods_activate(&gRemoteMods);
     smlua_init();
 
     network_send_network_players_request();

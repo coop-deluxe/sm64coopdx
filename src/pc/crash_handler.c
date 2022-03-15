@@ -26,7 +26,7 @@
 #include "src/pc/djui/djui.h"
 #include "pc/network/network.h"
 #include "pc/gfx/gfx_rendering_api.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 #include "dbghelp.h"
 
 #if IS_64_BIT
@@ -451,8 +451,9 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "Objs", gPrevFrameObjectCount);
 
     int modCount = 0;
-    for (int i = 0; i < gModTableCurrent->entryCount; i++) {
-        if (gModTableCurrent->entries[i].enabled) { modCount++; }
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        struct Mod* mod = gActiveMods.entries[i];
+        if (mod->enabled) { modCount++; }
     }
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 2), "Mods", modCount);
 
@@ -461,11 +462,11 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     {
         int x = 245;
         int y = 72;
-        for (int i = 0; i < gModTableCurrent->entryCount; i++) {
-            struct ModListEntry* entry = &gModTableCurrent->entries[i];
-            if (entry == NULL || !entry->enabled) { continue; }
-            u8 g = (gPcDebug.lastModRun == entry) ? 0 : 0xFF;
-            crash_handler_set_text(x, y, 0xFF, g, 200, "%.21s", entry->name);
+        for (int i = 0; i < gActiveMods.entryCount; i++) {
+            struct Mod* mod = gActiveMods.entries[i];
+            if (mod == NULL || !mod->enabled) { continue; }
+            u8 g = (gPcDebug.lastModRun == mod) ? 0 : 0xFF;
+            crash_handler_set_text(x, y, 0xFF, g, 200, "%.21s", mod->name);
             y += 8;
         }
     }

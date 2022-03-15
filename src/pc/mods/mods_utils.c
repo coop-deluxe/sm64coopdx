@@ -4,9 +4,9 @@
 #include "mods_utils.h"
 #include "pc/debuglog.h"
 
-void mods_size_enforce(void) {
-    for (int i = 0; i < gLocalMods.entryCount; i++) {
-        struct Mod* mod = gLocalMods.entries[i];
+void mods_size_enforce(struct Mods* mods) {
+    for (int i = 0; i < mods->entryCount; i++) {
+        struct Mod* mod = mods->entries[i];
         if (mod->size >= MAX_MOD_SIZE) {
             mod->enabled = false;
             mod->selectable = false;
@@ -64,7 +64,7 @@ void mods_update_selectable(void) {
         }
     }
 
-    mods_size_enforce();
+    mods_size_enforce(&gLocalMods);
 }
 
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile) {

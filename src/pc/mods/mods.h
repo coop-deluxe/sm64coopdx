@@ -18,6 +18,7 @@ extern struct Mods gLocalMods;
 extern struct Mods gRemoteMods;
 extern struct Mods gActiveMods;
 
+void mods_activate(struct Mods* mods);
 void mods_clear(struct Mods* mods);
 void mods_init(void);
 void mods_shutdown(void);

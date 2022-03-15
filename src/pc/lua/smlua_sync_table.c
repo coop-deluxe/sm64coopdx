@@ -1,6 +1,6 @@
 #include "smlua.h"
 #include "pc/crash_handler.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 #include "pc/network/network.h"
 
 #define MAX_UNWOUND_SIZE 256
@@ -140,25 +140,17 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
 
         // get entry
         u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
-        struct ModListEntry* setEntry = NULL;
-        for (int i = 0; i < gModTableCurrent->entryCount; i++) {
-            struct ModListEntry* entry = &gModTableCurrent->entries[i];
-            if (!entry->enabled) { continue; }
-            if (entry->remoteIndex == modRemoteIndex) {
-                setEntry = entry;
-                break;
-            }
-        }
+        struct Mod* mod = gActiveMods.entries[modRemoteIndex];
 
         // call hook
-        struct ModListEntry* prev = gLuaActiveEntry;
-        gLuaActiveEntry = setEntry;
-        gPcDebug.lastModRun = gLuaActiveEntry;
+        struct Mod* prev = gLuaActiveMod;
+        gLuaActiveMod = mod;
+        gPcDebug.lastModRun = gLuaActiveMod;
         if (0 != lua_pcall(L, 3, 0, 0)) {
             LOG_LUA("Failed to call the hook_on_changed callback: %s", lua_tostring(L, -1));
             smlua_logline();
         }
-        gLuaActiveEntry = prev;
+        gLuaActiveMod = prev;
     }
 
     lua_pop(L, 1); // pop _hook_on_changed's value
@@ -318,26 +310,9 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
 
-    // figure out mod table
-    struct ModTable* table = NULL;
-    if (gNetworkType == NT_SERVER) {
-        table = &gModTableLocal;
-    } else if (gNetworkType == NT_CLIENT) {
-        table = &gModTableRemote;
-    } else {
-        LOG_ERROR("Received sync table field packet with an unknown network type: %d", gNetworkType);
-        return;
-    }
-
     // figure out entry
-    struct ModListEntry* entry = NULL;
-    for (int i = 0; i < table->entryCount; i++) {
-        if (table->entries[i].remoteIndex == modRemoteIndex) {
-            entry = &table->entries[i];
-            break;
-        }
-    }
-    if (entry == NULL) {
+    struct Mod* mod = gActiveMods.entries[modRemoteIndex];
+    if (mod == NULL) {
         LOG_ERROR("Could not find mod list entry for modRemoteIndex: %u", modRemoteIndex);
         return;
     }
@@ -349,7 +324,7 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     }
 
     lua_getglobal(L, "_G"); // get global table
-    lua_getfield(L, LUA_REGISTRYINDEX, entry->path); // get the file's "global" table
+    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // get the file's "global" table
     lua_remove(L, -2); // remove global table
     int fileGlobalIndex = lua_gettop(L);
 
@@ -591,10 +566,10 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
 void smlua_sync_table_send_all(u8 toLocalIndex) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     LUA_STACK_CHECK_BEGIN();
-    for (int i = 0; i < gModTableLocal.entryCount; i++) {
-        struct ModListEntry* entry = &gModTableLocal.entries[i];
-        if (!entry->enabled) { continue; }
-        smlua_sync_table_send_all_file(toLocalIndex, entry->path);
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        struct Mod* mod = gActiveMods.entries[i];
+        if (!mod->enabled) { continue; }
+        smlua_sync_table_send_all_file(toLocalIndex, mod->relativePath);
     }
     LUA_STACK_CHECK_END();
 }

@@ -4,7 +4,7 @@
 #include "pc/network/network.h"
 #include "pc/network/version.h"
 #include "pc/djui/djui.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 #include "pc/logfile.h"
 
 #define HASH_LENGTH 8
@@ -95,16 +95,15 @@ static bool discord_populate_details(char* details, bool shorten) {
         }
     }
 
-    struct ModTable* table = gModTableCurrent;
-    if (table != NULL && table->entryCount > 0) {
+    if (gActiveMods.entryCount > 0) {
         // add mods to activity
-        for (int i = 0; i < table->entryCount; i++) {
-            struct ModListEntry* entry = &table->entries[i];
-            if (!entry->enabled) { continue; }
+        for (int i = 0; i < gActiveMods.entryCount; i++) {
+            struct Mod* mod = gActiveMods.entries[i];
+            if (!mod->enabled) { continue; }
             if (displayDash) { strncat_len(details, " - ", 127, catLength); }
             if (displayComma) { strncat_len(details, ", ", 127, catLength); }
 
-            strncat_len(details, entry->displayName ? entry->displayName : entry->name, 127, catLength);
+            strncat_len(details, mod->name, 127, catLength);
 
             displayDash = false;
             displayComma = true;

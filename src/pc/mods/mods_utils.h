@@ -5,7 +5,7 @@
 #include <types.h>
 #include "src/pc/platform.h"
 
-void mods_size_enforce(void);
+void mods_size_enforce(struct Mods* mods);
 void mods_update_selectable(void);
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile);
 
