@@ -50,6 +50,7 @@
 #include "pc/djui/djui.h"
 
 #include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -171,6 +172,7 @@ void game_deinit(void) {
     network_shutdown(true);
     smlua_shutdown();
     mod_list_shutdown();
+    mods_shutdown();
     inited = false;
 }
 
@@ -221,6 +223,7 @@ void main_func(void) {
     fs_init(sys_ropaths, gamedir, userpath);
 
     mod_list_init();
+    mods_init();
     configfile_load(configfile_name());
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
     if (configPlayerPalette >= PALETTE_MAX) { configPlayerPalette = 0; }

@@ -455,7 +455,7 @@ SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels
 BIN_DIRS := bin bin/$(VERSION)
 
 # PC files
-SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/djui src/pc/lua src/pc/lua/utils
+SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/djui src/pc/lua src/pc/lua/utils
 
 #ifeq ($(DISCORDRPC),1)
 #  SRC_DIRS += src/pc/discord
