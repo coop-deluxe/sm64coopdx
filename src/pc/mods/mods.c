@@ -5,19 +5,55 @@
 
 #define MOD_DIRECTORY "mods"
 
-static struct Mods gLocalMods = { 0 };
+struct Mods gLocalMods = { 0 };
+struct Mods gRemoteMods = { 0 };
+struct Mods gActiveMods = { 0 };
 
-void mods_clear(struct Mods* mods) {
-    for (int i = 0; i < mods->modCount; i ++) {
-        struct Mod* mod = &mods->entries[i];
-        mod_clear(mod);
+void mods_activate(struct Mods* mods) {
+    mods_clear(&gActiveMods);
+
+    // count enabled
+    u16 enabledCount = 0;
+    for (int i = 0; i < mods->entryCount; i++) {
+        struct Mod* mod = mods->entries[i];
+        if (mod->enabled) { enabledCount++; }
     }
 
-    if (mods->entries != NULL) {
-        free(mods->entries);
-        mods->entries = NULL;
+    // allocate
+    gActiveMods.entries = calloc(enabledCount, sizeof(struct Mod*));
+    if (gActiveMods.entries == NULL) {
+        LOG_ERROR("Failed to allocate active mods table!");
+        return;
     }
-    mods->modCount = 0;
+
+    // copy enabled entries
+    for (int i = 0; i < mods->entryCount; i++) {
+        struct Mod* mod = mods->entries[i];
+        if (mod->enabled) {
+            gActiveMods.entries[gActiveMods.entryCount++] = mod;
+        }
+    }
+
+    // open file pointers
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        struct Mod* mod = gActiveMods.entries[i];
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+
+            char fullPath[SYS_MAX_PATH] = { 0 };
+            if (!mod_file_full_path(fullPath, mod, file)) {
+                LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, relativePath);
+                continue;
+            }
+
+            file->fp = fopen(fullPath, "rb");
+            if (file->fp == NULL) {
+                LOG_ERROR("Failed to open file '%s'", fullPath);
+                continue;
+            }
+
+        }
+    }
 }
 
 static void mods_load(struct Mods* mods, char* modsBasePath) {
@@ -78,8 +114,50 @@ void mods_init(void) {
     // load mods
     if (hasUserPath) { mods_load(&gLocalMods, userModPath); }
     mods_load(&gLocalMods, "./" MOD_DIRECTORY);
+
+    // calculate total size
+    gLocalMods.size = 0;
+    for (int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        gLocalMods.size += mod->size;
+    }
+}
+
+void mods_clear(struct Mods* mods) {
+    if (mods == &gActiveMods) {
+        // don't clear the mods of gActiveMods since they're a copy
+        // just close all file pointers
+        for (int i = 0; i < mods->entryCount; i ++) {
+            struct Mod* mod = mods->entries[i];
+            for (int j = 0; j < mod->fileCount; j++) {
+                struct ModFile* file = &mod->files[j];
+                if (file->fp != NULL) {
+                    fclose(file->fp);
+                    file->fp = NULL;
+                }
+            }
+        }
+    } else {
+        // clear mods of gLocalMods and gRemoteMods
+        for (int i = 0; i < mods->entryCount; i ++) {
+            struct Mod* mod = mods->entries[i];
+            mod_clear(mod);
+        }
+    }
+
+    // cleanup entries
+    if (mods->entries != NULL) {
+        free(mods->entries);
+        mods->entries = NULL;
+    }
+
+    // cleanup params
+    mods->entryCount = 0;
+    mods->size = 0;
 }
 
 void mods_shutdown(void) {
+    mods_clear(&gRemoteMods);
+    mods_clear(&gActiveMods);
     mods_clear(&gLocalMods);
 }

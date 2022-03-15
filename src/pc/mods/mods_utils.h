@@ -5,6 +5,10 @@
 #include <types.h>
 #include "src/pc/platform.h"
 
+void mods_size_enforce(void);
+void mods_update_selectable(void);
+bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile);
+
 bool str_ends_with(char* string, char* suffix);
 
 char* extract_lua_field(char* fieldName, char* buffer);

@@ -49,7 +49,6 @@
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
 
-#include "pc/mod_list.h"
 #include "pc/mods/mods.h"
 
 OSMesg D_80339BEC;
@@ -171,7 +170,6 @@ void game_deinit(void) {
     gfx_shutdown();
     network_shutdown(true);
     smlua_shutdown();
-    mod_list_shutdown();
     mods_shutdown();
     inited = false;
 }
@@ -222,7 +220,6 @@ void main_func(void) {
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
-    mod_list_init();
     mods_init();
     configfile_load(configfile_name());
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }

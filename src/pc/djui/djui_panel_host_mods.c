@@ -5,7 +5,8 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
 
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
@@ -43,10 +44,11 @@ static void djui_panel_host_mods_description_create() {
 
 static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
     char* description = "";
-    if (base->tag >= 0 && base->tag < gModTableLocal.entryCount) {
-        char* d = gModTableLocal.entries[base->tag].description;
+    if (base->tag >= 0 && base->tag < gLocalMods.entryCount) {
+        struct Mod* mod = gLocalMods.entries[base->tag];
+        char* d = mod->description;
         if (d != NULL) {
-            description = gModTableLocal.entries[base->tag].description;
+            description = mod->description;
         }
     }
     djui_text_set_text(sTooltip, description);
@@ -57,15 +59,15 @@ static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
 }
 
 static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
-    mod_list_update_selectable();
+    mods_update_selectable();
 
     u16 index = 0;
     struct DjuiBaseChild* node = sModLayout->base.child;
     while (node != NULL) {
-        if (index >= gModTableLocal.entryCount) { break; }
-        struct ModListEntry* entry = &gModTableLocal.entries[index];
+        if (index >= gLocalMods.entryCount) { break; }
+        struct Mod* mod = gLocalMods.entries[index];
 
-        djui_base_set_enabled(node->base, entry->selectable);
+        djui_base_set_enabled(node->base, mod->selectable);
  
         // iterate
         index++;
@@ -86,7 +88,7 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
     f32 bodyHeight = (416) + 64 * 1 + 16 * 1;
 
-    mod_list_update_selectable();
+    mods_update_selectable();
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
@@ -95,13 +97,13 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         struct DjuiPaginated* paginated = djui_paginated_create(&body->base, 8);
         sModLayout = paginated->layout;
         struct DjuiBase* layoutBase = &paginated->layout->base;
-        for (int i = 0; i < gModTableLocal.entryCount; i++) {
-            struct ModListEntry* entry = &gModTableLocal.entries[i];
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, entry->displayName ? entry->displayName : entry->name, &entry->enabled);
+        for (int i = 0; i < gLocalMods.entryCount; i++) {
+            struct Mod* mod = gLocalMods.entries[i];
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled);
             checkbox->base.tag = i;
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
-            djui_base_set_enabled(&checkbox->base, entry->selectable);
+            djui_base_set_enabled(&checkbox->base, mod->selectable);
             djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
             djui_interactable_hook_value_change(&checkbox->base, djui_mod_checkbox_on_value_change);
             if (i == 0) { defaultBase = &checkbox->base; }

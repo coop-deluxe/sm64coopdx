@@ -13,7 +13,7 @@
 #include "gfx/gfx_window_manager_api.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
-#include "pc/mod_list.h"
+#include "pc/mods/mods.h"
 #include "pc/network/ban_list.h"
 #include "pc/crash_handler.h"
 
@@ -217,21 +217,27 @@ static const struct ConfigOption options[] = {
 // FunctionConfigOption functions
 
 static void enable_mod_read(char** tokens, UNUSED int numTokens) {
-    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
-        struct ModListEntry* entry = &gModTableLocal.entries[i];
-        if (!strcmp(tokens[1], entry->name)) {
-            entry->enabled = true;
+    char combined[256] = { 0 };
+    for (int i = 1; i < numTokens; i++) {
+        if (i != 1) { strncat(combined, " ", 255); }
+        strncat(combined, tokens[i], 255);
+    }
+
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (!strcmp(combined, mod->relativePath)) {
+            mod->enabled = true;
             break;
         }
     }
 }
 
 static void enable_mod_write(FILE* file) {
-    for (unsigned int i = 0; i < gModTableLocal.entryCount; i++) {
-        struct ModListEntry* entry = &gModTableLocal.entries[i];
-        if (entry == NULL) { continue; }
-        if (!entry->enabled) { continue; }
-        fprintf(file, "%s %s\n", "enable-mod:", entry->name);
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod == NULL) { continue; }
+        if (!mod->enabled) { continue; }
+        fprintf(file, "%s %s\n", "enable-mod:", mod->relativePath);
     }
 }
 

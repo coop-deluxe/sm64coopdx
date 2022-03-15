@@ -7,7 +7,10 @@
 void mod_clear(struct Mod* mod) {
     for (int j = 0; j < mod->fileCount; j++) {
         struct ModFile* file = &mod->files[j];
-        file = file;
+        if (file->fp != NULL) {
+            fclose(file->fp);
+            file->fp = NULL;
+        }
     }
 
     if (mod->name != NULL) {
@@ -30,6 +33,8 @@ void mod_clear(struct Mod* mod) {
     }
 
     mod->fileCount = 0;
+    mod->size = 0;
+    free(mod);
 }
 
 static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
@@ -50,6 +55,28 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
         LOG_ERROR("Failed to remember relative path '%s'", relativePath);
         return NULL;
     }
+
+    // figure out full path
+    char fullPath[SYS_MAX_PATH] = { 0 };
+    if (!mod_file_full_path(fullPath, mod, file)) {
+        LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, relativePath);
+        return NULL;
+    }
+
+    // open file
+    FILE* f = fopen(fullPath, "rb");
+    if (f == NULL) {
+        LOG_ERROR("Failed to open '%s'", fullPath);
+        return NULL;
+    }
+
+    // get size
+    fseek(f, 0, SEEK_END);
+    file->size = ftell(f);
+    mod->size += file->size;
+
+    // close file
+    fclose(f);
 
     return file;
 }
@@ -112,7 +139,7 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
         while ((dir = readdir(d)) != NULL) {
             // sanity check / fill path[]
             if (!directory_sanity_check(dir, actorsPath, path)) { continue; }
-            if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s/actors/%s", modName, dir->d_name) < 0) {
+            if (snprintf(relativePath, SYS_MAX_PATH - 1, "actors/%s", dir->d_name) < 0) {
                 LOG_ERROR("Could not concat actor path!");
                 return false;
             }
@@ -229,23 +256,28 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     }
 
     // make sure mod is unique
-    for (int i = 0; i < mods->modCount; i++) {
-        struct Mod* compareMod = &mods->entries[i];
+    for (int i = 0; i < mods->entryCount; i++) {
+        struct Mod* compareMod = mods->entries[i];
         if (!strcmp(compareMod->relativePath, modName)) {
             return true;
         }
     }
 
     // allocate mod
-    u16 modIndex = mods->modCount++;
-    mods->entries = realloc(mods->entries, sizeof(struct Mod) * mods->modCount);
+    u16 modIndex = mods->entryCount++;
+    mods->entries = realloc(mods->entries, sizeof(struct Mod*) * mods->entryCount);
     if (mods->entries == NULL) {
         LOG_ERROR("Failed to allocate entries!");
         mods_clear(mods);
         return false;
     }
-    struct Mod* mod = &mods->entries[modIndex];
-    memset(mod, 0, sizeof(struct Mod));
+    mods->entries[modIndex] = calloc(1, sizeof(struct Mod));
+    struct Mod* mod = mods->entries[modIndex];
+    if (mod == NULL) {
+        LOG_ERROR("Failed to allocate mod!");
+        mods_clear(mods);
+        return false;
+    }
 
     // set paths
     char* cpyPath = isDirectory ? fullPath : basePath;

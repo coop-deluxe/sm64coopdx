@@ -9,6 +9,8 @@ struct Mods;
 
 struct ModFile {
     char relativePath[SYS_MAX_PATH];
+    size_t size;
+    FILE* fp;
 };
 
 struct Mod {
@@ -21,6 +23,8 @@ struct Mod {
     u16 fileCount;
     bool isDirectory;
     bool enabled;
+    bool selectable;
+    size_t size;
 };
 
 void mod_clear(struct Mod* mod);
