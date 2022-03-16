@@ -167,8 +167,7 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
         struct dirent* dir = NULL;
         DIR* d = opendir(actorsPath);
         if (!d) {
-            LOG_ERROR("Could not open directory '%s'", actorsPath);
-            return false;
+            return true;
         }
 
         // iterate mod directory
