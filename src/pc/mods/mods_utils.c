@@ -167,6 +167,36 @@ char* extract_lua_field(char* fieldName, char* buffer) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+bool path_is_portable_filename(char* string) {
+    char* s = string;
+    while (*s != '\0') {
+        char c = *s;
+
+        if (c < ' ' || c > '~') {
+            // outside of printable range
+            return false;
+        }
+
+        switch (c) {
+            // unallowed in filenames
+            case '/':
+            case '\\':
+            case '<':
+            case '>':
+            case ':':
+            case '"':
+            case '|':
+            case '?':
+            case '*':
+            return false;
+        }
+
+        s++;
+    }
+
+    return true;
+}
+
 bool path_exists(char* path) {
     struct stat sb = { 0 };
     return (stat(path, &sb) == 0);
@@ -208,6 +238,9 @@ char* path_basename(char* path) {
 }
 
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
+    // skip non-portable filenames
+    if (!path_is_portable_filename(dir->d_name)) { return false; }
+
     // skip anything that contains \ or /
     if (strchr(dir->d_name, '/') != NULL)  { return false; }
     if (strchr(dir->d_name, '\\') != NULL) { return false; }
