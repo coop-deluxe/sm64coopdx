@@ -855,6 +855,7 @@ void bowser_spawn_grand_star_key(void) {
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
             reward->oHomeZ = reward->oPosZ;
+            network_set_sync_id(reward);
             struct Object* spawn_objects[] = { reward };
             u32 models[] = { MODEL_STAR };
             network_send_spawn_objects(spawn_objects, models, 1);
@@ -951,7 +952,6 @@ u8 bowser_dead_not_bits_end_continue_dialog(void) { return o->oAction == 4 && o-
 s32 bowser_dead_not_bits_end(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
 
-    s32 ret = 0;
     if (o->oBowserUnkF8 < 2) {
         if (o->oBowserUnkF8 == 0) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
@@ -970,23 +970,21 @@ s32 bowser_dead_not_bits_end(void) {
         spawn_triangle_break_particles(20, 116, 1.0f, 0);
         bowser_spawn_grand_star_key();
         set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
-        ret = 1;
+        return 1;
     }
-    return ret;
+    return 0;
 }
 
 u8 bowser_dead_bits_end_continue_dialog(void) { return o->oAction == 4 && o->oBowserUnkF8 < 2; }
 
 s32 bowser_dead_bits_end(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    UNUSED s32 unused;
-    s32 ret = 0;
-    s32 dialogID;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    
     if (o->oBowserUnkF8 < 2) {
-        if (gHudDisplay.stars < 120)
+        s32 dialogID = DIALOG_163;
+        if (gHudDisplay.stars < 120) {
             dialogID = DIALOG_121;
-        else
-            dialogID = DIALOG_163;
+        }
         if (o->oBowserUnkF8 == 0) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             o->oBowserUnkF8++;
@@ -1002,9 +1000,9 @@ s32 bowser_dead_bits_end(void) {
         o->oOpacity -= 4;
     else {
         bowser_dead_hide();
-        ret = 1;
+        return 1;
     }
-    return ret;
+    return 0;
 }
 
 void bowser_act_dead(void) {

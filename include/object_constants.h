@@ -744,7 +744,8 @@
     #define PYRAMID_ELEVATOR_IDLE              0
     #define PYRAMID_ELEVATOR_START_MOVING      1
     #define PYRAMID_ELEVATOR_CONSTANT_VELOCITY 2
-    #define PYRAMID_ELEVATOR_AT_BOTTOM         3
+    #define PYRAMID_ELEVATOR_END_MOVING        3
+    #define PYRAMID_ELEVATOR_AT_BOTTOM         4
 
 /* Pyramid top */
     #define PYRAMID_TOP_ACT_CHECK_IF_SOLVED 0

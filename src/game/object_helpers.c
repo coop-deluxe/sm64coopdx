@@ -2462,9 +2462,8 @@ void stub_obj_helpers_4(void) {
 s32 cur_obj_is_mario_on_platform(void) {
     if (gMarioObject->platform == o) {
         return TRUE;
-    } else {
-        return FALSE;
     }
+    return FALSE;
 }
 
 s32 cur_obj_is_any_player_on_platform(void) {
