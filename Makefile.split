@@ -97,6 +97,9 @@ ZCUSTOM_DIRS += waluigi
 CUSTOM_DIRS += wario_cap
 ZCUSTOM_DIRS += wario
 
+# Add coop-specific
+CUSTOM_DIRS += error_model
+
 # Actor Textures
 CUSTOM_TEXTURES                 := $(foreach dir,$(CUSTOM_DIRS),     $(wildcard actors/$(dir)/*.png))
 AMP_CHUCKYA_TEXTURES            := $(foreach dir,$(AMP_DIRS),        $(wildcard actors/$(dir)/*.png))

@@ -4,5 +4,8 @@
 #include "geo_commands.h"
 #include "make_const_nonconst.h"
 
+// error_model
+#include "error_model/model.inc.c"
+
 // luigi_cap
 #include "luigi_cap/model.inc.c"

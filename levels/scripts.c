@@ -142,6 +142,8 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo),
     LOAD_MODEL_FROM_GEO(MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
 
+    LOAD_MODEL_FROM_GEO(MODEL_ERROR_MODEL,               error_model_geo),
+
     // CUSTOM MODELS END
 
     FREE_LEVEL_POOL(),

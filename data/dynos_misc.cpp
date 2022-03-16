@@ -314,6 +314,7 @@ define_actor(yellow_sphere_geo),
 define_actor(yoshi_geo),
 define_actor(yoshi_egg_geo),
 #ifdef COOP
+define_actor(error_model_geo),
 define_actor(luigi_geo),
 define_actor(luigis_cap_geo),
 define_actor(luigis_metal_cap_geo),

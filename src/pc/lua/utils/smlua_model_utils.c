@@ -227,6 +227,7 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_MR_I,                    mr_i_geo),
     MODEL_UTIL_GEO(E_MODEL_DORRIE,                  dorrie_geo),
     MODEL_UTIL_GEO(E_MODEL_SNUFIT,                  snufit_geo),
+    MODEL_UTIL_GEO(E_MODEL_ERROR_MODEL,             error_model_geo),
 
     // level
     MODEL_UTIL_GEO(E_MODEL_BUBBLY_TREE,                        bubbly_tree_geo),
@@ -532,7 +533,7 @@ u8 smlua_model_util_load(enum ModelExtendedId id) {
 u32 smlua_model_util_get_id(const char* name) {
     // find geolayout
     const void* layout = dynos_geolayout_get(name);
-    if (layout == NULL) { return E_MODEL_NONE; }
+    if (layout == NULL) { return E_MODEL_ERROR_MODEL; }
 
     // find existing model
     for (u32 i = 0; i < E_MODEL_MAX; i++) {

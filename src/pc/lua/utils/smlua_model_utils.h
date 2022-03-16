@@ -163,6 +163,7 @@ enum ModelExtendedId {
     E_MODEL_MR_I,
     E_MODEL_DORRIE,
     E_MODEL_SNUFIT,
+    E_MODEL_ERROR_MODEL,
 
     // level
     E_MODEL_BUBBLY_TREE,

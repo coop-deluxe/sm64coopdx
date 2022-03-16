@@ -612,4 +612,6 @@
 #define MODEL_WARIOS_WING_CAP             0xF4 // warios_wing_cap_geo
 #define MODEL_WARIOS_WINGED_METAL_CAP     0xF5 // warios_winged_metal_cap_geo
 
+#define MODEL_ERROR_MODEL                 0xF6 // error_model_geo
+
 #endif // MODEL_IDS_H
