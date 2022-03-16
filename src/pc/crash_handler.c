@@ -450,12 +450,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     extern s16 gPrevFrameObjectCount;
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "Objs", gPrevFrameObjectCount);
 
-    int modCount = 0;
-    for (int i = 0; i < gActiveMods.entryCount; i++) {
-        struct Mod* mod = gActiveMods.entries[i];
-        if (mod->enabled) { modCount++; }
-    }
-    crash_handler_add_info_int(&pText, 380, -4 + (8 * 2), "Mods", modCount);
+    crash_handler_add_info_int(&pText, 380, -4 + (8 * 2), "Mods", gActiveMods.entryCount);
 
     // Mods
     crash_handler_set_text(245, 64, 0xFF, 0xFF, 0xFF, "%s", "Mods:");
@@ -464,7 +459,6 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
         int y = 72;
         for (int i = 0; i < gActiveMods.entryCount; i++) {
             struct Mod* mod = gActiveMods.entries[i];
-            if (mod == NULL || !mod->enabled) { continue; }
             u8 g = (gPcDebug.lastModRun == mod) ? 0 : 0xFF;
             crash_handler_set_text(x, y, 0xFF, g, 200, "%.21s", mod->name);
             y += 8;

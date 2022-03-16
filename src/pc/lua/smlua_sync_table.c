@@ -568,7 +568,6 @@ void smlua_sync_table_send_all(u8 toLocalIndex) {
     LUA_STACK_CHECK_BEGIN();
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        if (!mod->enabled) { continue; }
         smlua_sync_table_send_all_file(toLocalIndex, mod->relativePath);
     }
     LUA_STACK_CHECK_END();

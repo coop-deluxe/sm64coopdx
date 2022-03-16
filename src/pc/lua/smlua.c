@@ -118,7 +118,6 @@ void smlua_init(void) {
     LOG_INFO("Loading scripts:");
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        if (!mod->enabled) { continue; }
         LOG_INFO("    %s", mod->relativePath);
         gLuaLoadingMod = mod;
         gLuaActiveMod = mod;

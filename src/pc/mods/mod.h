@@ -10,7 +10,10 @@ struct Mods;
 struct ModFile {
     char relativePath[SYS_MAX_PATH];
     size_t size;
+
     FILE* fp;
+    u64 curOffset;
+    bool complete;
 };
 
 struct Mod {

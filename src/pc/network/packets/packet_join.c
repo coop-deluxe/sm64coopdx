@@ -233,6 +233,7 @@ void network_receive_join(struct Packet* p) {
     gChangeLevel = 16;
 
     mods_activate(&gRemoteMods);
+    djui_panel_modlist_create(NULL);
     smlua_init();
 
     network_send_network_players_request();

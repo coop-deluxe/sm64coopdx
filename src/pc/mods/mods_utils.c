@@ -67,8 +67,77 @@ void mods_update_selectable(void) {
     mods_size_enforce(&gLocalMods);
 }
 
+static void mods_delete_folder(char* path) {
+    LOG_INFO("Deleting tmp folder '%s'", path);
+    struct dirent* dir;
+    DIR* d = opendir(path);
+    if (!d) { return; }
+
+    char fullPath[SYS_MAX_PATH] = { 0 };
+    while ((dir = readdir(d)) != NULL) {
+        if (!strcmp(dir->d_name, ".")) { continue; }
+        if (!strcmp(dir->d_name, "..")) { continue; }
+        if (!concat_path(fullPath, path, dir->d_name)) { continue; }
+
+        if (is_directory(fullPath)) {
+            mods_delete_folder(fullPath);
+        } else if (fs_sys_file_exists(fullPath)) {
+            if (unlink(fullPath) == -1) {
+                LOG_ERROR("Failed to remove tmp file '%s'", fullPath);
+                continue;
+            }
+        }
+
+    }
+
+    closedir(d);
+    rmdir(path);
+}
+
+void mods_delete_tmp(void) {
+    // ensure tmpPath exists
+    char tmpPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(tmpPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(TMP_DIRECTORY)) < 0) {
+        LOG_ERROR("Failed to concat tmp path");
+        return;
+    }
+
+    // sanity
+    if (strlen(tmpPath) < 1) { return; }
+
+    // delete
+    mods_delete_folder(tmpPath);
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile) {
-    return concat_path(destination, mod->basePath, modFile->relativePath);
+    if (!concat_path(destination, mod->basePath, modFile->relativePath)) { return false; }
+    normalize_path(destination);
+    return true;
+}
+
+bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
+    char path[SYS_MAX_PATH] = { 0 };
+    if (!mod_file_full_path(path, mod, modFile)) {
+        return false;
+    }
+
+    // sanity
+    if (strlen(path) < 1) { return false; }
+
+    char tmpPath[SYS_MAX_PATH] = { 0 };
+    char* p = path;
+    u16 index = 0;
+    while (*p != '\0') {
+        if (*p == '/' || *p == '\\') {
+            if (snprintf(tmpPath, index + 1, "%s", path) < 0) { }
+            if (!fs_sys_dir_exists(tmpPath)) { fs_sys_mkdir(tmpPath); }
+        }
+        index++;
+        p++;
+    }
+
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

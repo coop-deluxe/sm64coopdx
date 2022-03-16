@@ -2,6 +2,7 @@
 
 #include "djui.h"
 #include "pc/mods/mods.h"
+#include "pc/debuglog.h"
 
 struct DjuiThreePanel* gDjuiModList = NULL;
 
@@ -15,18 +16,10 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
         gDjuiModList = NULL;
     }
 
-    // count mods
-    int enabledCount = 0;
-    for (int i = 0; i < gActiveMods.entryCount; i++) {
-        struct Mod* mod = gActiveMods.entries[i];
-        if (!mod->enabled) { continue; }
-        enabledCount++;
-    }
-
     // only create if we have mods
-    if (enabledCount == 0) { return; }
+    if (gActiveMods.entryCount == 0) { return; }
 
-    f32 bodyHeight = (enabledCount * 32) + (enabledCount - 1) * 4;
+    f32 bodyHeight = (gActiveMods.entryCount * 32) + (gActiveMods.entryCount - 1) * 4;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
     gDjuiModList = panel;
 
@@ -44,7 +37,6 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
 
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        if (!mod->enabled) { continue; }
 
         struct DjuiFlowLayout* row = djui_flow_layout_create(&body->base);
         djui_base_set_size_type(&row->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

@@ -99,7 +99,6 @@ static bool discord_populate_details(char* details, bool shorten) {
         // add mods to activity
         for (int i = 0; i < gActiveMods.entryCount; i++) {
             struct Mod* mod = gActiveMods.entries[i];
-            if (!mod->enabled) { continue; }
             if (displayDash) { strncat_len(details, " - ", 127, catLength); }
             if (displayComma) { strncat_len(details, ", ", 127, catLength); }
 

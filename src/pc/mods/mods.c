@@ -4,10 +4,41 @@
 #include "pc/debuglog.h"
 
 #define MOD_DIRECTORY "mods"
+#define MAX_SESSION_CHARS 7
 
 struct Mods gLocalMods = { 0 };
 struct Mods gRemoteMods = { 0 };
 struct Mods gActiveMods = { 0 };
+
+char gRemoteModsBasePath[SYS_MAX_PATH] = { 0 };
+
+bool mods_generate_remote_base_path(void) {
+    srand(time(0));
+
+    // ensure tmpPath exists
+    char tmpPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(tmpPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(TMP_DIRECTORY)) < 0) {
+        LOG_ERROR("Failed to concat tmp path");
+        return false;
+    }
+    if (!fs_sys_dir_exists(tmpPath)) { fs_sys_mkdir(tmpPath); }
+
+    // generate session
+    char session[MAX_SESSION_CHARS + 1] = { 0 };
+    if (snprintf(session, MAX_SESSION_CHARS, "%06X", (u32)(rand() % 0xFFFFFF)) < 0) {
+        LOG_ERROR("Failed to generate session");
+        return false;
+    }
+
+    // combine
+    if (!concat_path(gRemoteModsBasePath, tmpPath, session)) {
+        LOG_ERROR("Failed to combine session path");
+        return false;
+    }
+
+    // make directory
+    if (!fs_sys_dir_exists(gRemoteModsBasePath)) { fs_sys_mkdir(gRemoteModsBasePath); }
+}
 
 void mods_activate(struct Mods* mods) {
     mods_clear(&gActiveMods);
@@ -35,23 +66,25 @@ void mods_activate(struct Mods* mods) {
     }
 
     // open file pointers
-    for (int i = 0; i < gActiveMods.entryCount; i++) {
-        struct Mod* mod = gActiveMods.entries[i];
-        for (int j = 0; j < mod->fileCount; j++) {
-            struct ModFile* file = &mod->files[j];
+    if (mods != &gRemoteMods) {
+        for (int i = 0; i < gActiveMods.entryCount; i++) {
+            struct Mod* mod = gActiveMods.entries[i];
+            for (int j = 0; j < mod->fileCount; j++) {
+                struct ModFile* file = &mod->files[j];
 
-            char fullPath[SYS_MAX_PATH] = { 0 };
-            if (!mod_file_full_path(fullPath, mod, file)) {
-                LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, file->relativePath);
-                continue;
+                char fullPath[SYS_MAX_PATH] = { 0 };
+                if (!mod_file_full_path(fullPath, mod, file)) {
+                    LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, file->relativePath);
+                    continue;
+                }
+
+                file->fp = fopen(fullPath, "rb");
+                if (file->fp == NULL) {
+                    LOG_ERROR("Failed to open file '%s'", fullPath);
+                    continue;
+                }
+
             }
-
-            file->fp = fopen(fullPath, "rb");
-            if (file->fp == NULL) {
-                LOG_ERROR("Failed to open file '%s'", fullPath);
-                continue;
-            }
-
         }
     }
 }
@@ -160,4 +193,5 @@ void mods_shutdown(void) {
     mods_clear(&gRemoteMods);
     mods_clear(&gActiveMods);
     mods_clear(&gLocalMods);
+    mods_delete_tmp();
 }
