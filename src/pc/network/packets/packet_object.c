@@ -150,7 +150,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->on_forget = NULL;
     so->syncDeathEvent = true;
     if (!hadSyncId) {
-        so->extendedModelId = 0xFF;
+        so->extendedModelId = 0xFFFF;
     }
     so->randomSeed = (u16)(o->oSyncID * 7951);
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);

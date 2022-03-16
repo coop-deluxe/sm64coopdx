@@ -30,6 +30,7 @@ struct Mod {
     size_t size;
 };
 
+void mod_activate(struct Mod* mod);
 void mod_clear(struct Mod* mod);
 bool mod_load(struct Mods* mods, char* basePath, char* modName);
 

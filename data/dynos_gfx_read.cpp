@@ -1826,9 +1826,6 @@ void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder) {
             // If there is an existing binary file for this layout, skip and go to the next actor
             SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
             if (fs_sys_file_exists(_BinFilename.c_str())) {
-#ifdef COOP
-                DynOS_Geo_AddActorCustom(aPackFolder, _GeoRootName.begin());
-#endif
                 continue;
             }
 
@@ -1884,10 +1881,6 @@ void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder) {
             } else {
                 Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
             }
-#ifdef COOP
-            // Add to custom actors
-            DynOS_Geo_AddActorCustom(aPackFolder, _GeoRootName.begin());
-#endif
             // Clear data pointers
             ClearGfxDataNodes(_GfxData->mLights);
             ClearGfxDataNodes(_GfxData->mTextures);

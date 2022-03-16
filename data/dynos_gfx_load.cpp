@@ -272,7 +272,11 @@ GfxData *DynOS_Gfx_LoadFromBinary(const SysPath &aPackFolder, const char *aActor
     // Look for actor in pack
     if (_Pack) {
         for (s32 i = 0; i != _Pack->mGfxData.Count(); ++i) {
+#ifdef COOP
+            if (!strcmp(_Pack->mGfxData[i].first, aActorName)) {
+#else
             if (_Pack->mGfxData[i].first == aActorName) { // Perfectly valid, aActorName comes from static RO data, so its address never changes during execution
+#endif
                 return _Pack->mGfxData[i].second;
             }
         }

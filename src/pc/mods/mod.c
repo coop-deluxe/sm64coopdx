@@ -1,8 +1,46 @@
 #include "mod.h"
 #include "mods.h"
 #include "mods_utils.h"
+#include "data/dynos_coop.c.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
+
+void mod_activate(struct Mod* mod) {
+    // activate dynos models
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        if (!str_ends_with(file->relativePath, ".bin")) {
+            continue;
+        }
+
+        char dynosPath[SYS_MAX_PATH] = { 0 };
+        if (snprintf(dynosPath, SYS_MAX_PATH - 1, "%s/actors", mod->basePath) < 0) {
+            LOG_ERROR("Failed to concat dynos path");
+            continue;
+        }
+
+        // copy geo name
+        char geoName[64] = { 0 };
+        if (snprintf(geoName, 63, "%s", path_basename(file->relativePath)) < 0) {
+            LOG_ERROR("Truncated geo name");
+            continue;
+        }
+
+        // remove '.bin'
+        char* g = geoName;
+        while (*g != '\0') {
+            if (*g == '.') {
+                *g = '\0';
+                break;
+            }
+            g++;
+        }
+
+        // Add to custom actors
+        dynos_add_actor_custom(dynosPath, geoName);
+        LOG_INFO("Activating DynOS: '%s', '%s'", dynosPath, geoName);
+    }
+}
 
 void mod_clear(struct Mod* mod) {
     for (int j = 0; j < mod->fileCount; j++) {

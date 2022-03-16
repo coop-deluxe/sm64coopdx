@@ -21,7 +21,7 @@ struct SpawnObjectData {
     s16 activeFlags;
     s32 rawData[80];
     u8 globalPlayerIndex;
-    u8 extendedModelId;
+    u16 extendedModelId;
 };
 #pragma pack()
 
@@ -74,9 +74,9 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         u32 model = models[i];
         u8 parentId = generate_parent_id(objects, i, true);
         u32 behaviorId = get_id_from_behavior(o->behavior);
-        u8 extendedModelId = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o)
-                           ? gSyncObjects[o->oSyncID].extendedModelId
-                           : 0xFF;
+        u16 extendedModelId = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o)
+                            ? gSyncObjects[o->oSyncID].extendedModelId
+                            : 0xFFFF;
         packet_write(&p, &parentId, sizeof(u8));
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
@@ -86,7 +86,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
         packet_write(&p, &o->globalPlayerIndex, sizeof(u8));
-        packet_write(&p, &extendedModelId, sizeof(u8));
+        packet_write(&p, &extendedModelId, sizeof(u16));
     }
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
@@ -122,7 +122,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &scale[1], sizeof(f32));
         packet_read(p, &scale[2], sizeof(f32));
         packet_read(p, &data.globalPlayerIndex, sizeof(u8));
-        packet_read(p, &data.extendedModelId, sizeof(u8));
+        packet_read(p, &data.extendedModelId, sizeof(u16));
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u8)-1) {
@@ -155,7 +155,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         }
 
         // load extended model
-        if (data.extendedModelId != 0xFF) {
+        if (data.extendedModelId != 0xFFFF) {
             u8 loadedModelId = smlua_model_util_load(data.extendedModelId);
             if (loadedModelId != 0xFF) {
                 data.model = loadedModelId;
