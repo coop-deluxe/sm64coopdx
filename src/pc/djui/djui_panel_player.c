@@ -122,7 +122,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             "Fortress",
             "Battlements",
             "Blueberry Pie",
-            "B&R",
+            "Raspberry",
             "Bubblegum",
         };
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Palette", paletteChoices, PALETTE_MAX, &configPlayerPalette);
