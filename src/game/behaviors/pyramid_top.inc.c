@@ -14,14 +14,10 @@
  * Spawn the four pillars' touch detectors.
  */
 void bhv_pyramid_top_init(void) {
-    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, 1789, 1024, 764, 0, 0,
-                              0);
-    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, 1789, 896, -2579, 0, 0,
-                              0);
-    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, -5883, 1024, -2579, 0, 0,
-                              0);
-    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, -5883, 1024, 764, 0, 0,
-                              0);
+    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, 1789, 1024, 764, 0, 0, 0);
+    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, 1789, 896, -2579, 0, 0, 0);
+    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, -5883, 1024, -2579, 0, 0, 0);
+    spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvPyramidPillarTouchDetector, -5883, 1024, 764, 0, 0, 0);
 }
 
 /**
@@ -71,16 +67,11 @@ void bhv_pyramid_top_spinning(void) {
  * Explode the pyramid top, generating dust and pyramid fragments.
  */
 void bhv_pyramid_top_explode(void) {
-    struct Object *pyramidFragment;
-    s16 i;
-
     spawn_mist_particles_variable(0, 0, 690);
 
     // Generate 30 pyramid fragments with random properties.
-    for (i = 0; i < 30; i++) {
-        pyramidFragment = spawn_object(
-            o, MODEL_DIRT_ANIMATION, bhvPyramidTopFragment
-        );
+    for (s16 i = 0; i < 30; i++) {
+        struct Object *pyramidFragment = spawn_object(o, MODEL_DIRT_ANIMATION, bhvPyramidTopFragment);
         if (pyramidFragment != NULL) {
             pyramidFragment->oForwardVel = random_float() * 50 + 80;
             pyramidFragment->oVelY = random_float() * 80 + 20;
@@ -92,22 +83,21 @@ void bhv_pyramid_top_explode(void) {
 
     // Deactivate the pyramid top.
     o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-}
-
-static u8 bhv_pyramid_top_ignore_if_true(void) {
-    return (o->oAction != PYRAMID_TOP_ACT_SPINNING);
+    // Make sure the object is set to be disabled for others.
+    network_send_object(o);
 }
 
 void bhv_pyramid_top_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            so->ignore_if_true = bhv_pyramid_top_ignore_if_true;
+            network_init_object_field(o, &o->activeFlags);
             network_init_object_field(o, &o->oAction);
             network_init_object_field(o, &o->oPrevAction);
             network_init_object_field(o, &o->oTimer);
         }
     }
+    
     switch (o->oAction) {
         case PYRAMID_TOP_ACT_CHECK_IF_SOLVED:
             if (o->oPyramidTopPillarsTouched == 4) {

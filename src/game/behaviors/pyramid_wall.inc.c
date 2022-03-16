@@ -11,7 +11,6 @@
  * positions.
  */
 void bhv_ssl_moving_pyramid_wall_init(void) {
-
     switch (o->oBehParams2ndByte) {
         case PYRAMID_WALL_BP_POSITION_HIGH:
             break;
@@ -26,12 +25,17 @@ void bhv_ssl_moving_pyramid_wall_init(void) {
             o->oAction = PYRAMID_WALL_ACT_MOVING_UP;
             break;
     }
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &o->oPrevAction);
-    network_init_object_field(o, &o->oAction);
-    network_init_object_field(o, &o->oTimer);
-    network_init_object_field(o, &o->oVelY);
-    network_init_object_field(o, &o->oPosY);
+    
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oVelY);
+            network_init_object_field(o, &o->oPosY);
+        }
+    }
 }
 
 /**

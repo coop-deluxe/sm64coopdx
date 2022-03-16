@@ -21,7 +21,7 @@ static u8 sKleptoAttackHandlers[] = { 2, 2, 5, 5, 2, 2 };
 static void klepto_target_mario(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     o->oKleptoDistanceToTarget = lateral_dist_between_objects(player, o);
     o->oKleptoUnk1B0 = obj_turn_pitch_toward_mario(marioState, 250.0f, 0);
     o->oKleptoYawToTarget = angleToPlayer;
@@ -129,23 +129,18 @@ void bhv_klepto_init(void) {
 
 static void klepto_change_target(void) {
     s32 newTarget = 0;
-    s32 i;
-    f32 dx;
-    f32 dz;
-    f32 targetDist;
-    f32 minTargetDist;
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (distanceToPlayer > 2000.0f) {
-        minTargetDist = 99999.0f;
+        f32 minTargetDist = 99999.0f;
 
-        for (i = 0; i < 3; i++) {
-            dx = player->oPosX - sKleptoTargetPositions[i][0];
-            dz = player->oPosZ - sKleptoTargetPositions[i][2];
+        for (s32 i = 0; i < 3; i++) {
+            f32 dx = player->oPosX - sKleptoTargetPositions[i][0];
+            f32 dz = player->oPosZ - sKleptoTargetPositions[i][2];
 
-            targetDist = sqrtf(dx * dx + dz * dz);
+            f32 targetDist = sqrtf(dx * dx + dz * dz);
             if (targetDist < minTargetDist) {
                 minTargetDist = targetDist;
                 newTarget = i;
@@ -166,11 +161,8 @@ static void klepto_change_target(void) {
 }
 
 static void klepto_circle_target(f32 radius, f32 targetSpeed) {
-    s16 turnAmount;
-    f32 accel;
-
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oAnimState != KLEPTO_ANIM_STATE_HOLDING_NOTHING
         && ((o->oTimer > 60 && distanceToPlayer > 2000.0f)
@@ -179,8 +171,8 @@ static void klepto_circle_target(f32 radius, f32 targetSpeed) {
         o->oKleptoTimeUntilTargetChange = random_linear_offset(300, 300);
         o->oAction = KLEPTO_ACT_APPROACH_TARGET_HOLDING;
     } else {
-        turnAmount = 0x4000 - atan2s(radius, o->oKleptoDistanceToTarget - radius);
-        accel = 0.05f;
+        s16 turnAmount = 0x4000 - atan2s(radius, o->oKleptoDistanceToTarget - radius);
+        f32 accel = 0.05f;
         if ((s16)(o->oMoveAngleYaw - o->oKleptoYawToTarget) < 0) {
             turnAmount = -turnAmount;
         }
@@ -235,7 +227,7 @@ static void klepto_act_turn_toward_mario(void) {
     klepto_target_mario();
 
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     if (klepto_set_and_check_if_anim_at_end() && cur_obj_check_if_at_animation_end() && o->oKleptoDistanceToTarget > 800.0f
         && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x800 && o->oKleptoUnk1B0 < 0x400) {
@@ -254,8 +246,8 @@ static void klepto_act_turn_toward_mario(void) {
 static void klepto_act_dive_at_mario(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     approach_f32_ptr(&o->oKleptoSpeed, 60.0f, 10.0f);
     if (o->oSoundStateID == 2) {
@@ -373,11 +365,9 @@ void obj_set_speed_to_zero(void) {
 }
 
 void bhv_klepto_update(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
-
-    UNUSED s32 unused;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState->marioObj;
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     cur_obj_update_floor_and_walls();
 
@@ -437,7 +427,13 @@ void bhv_klepto_update(void) {
                 }
 
             } else if (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_STAR) {
-                spawn_default_star(-5550.0f, 300.0f, -930.0f);
+                struct Object *star = spawn_default_star(-5550.0f, 300.0f, -930.0f);
+
+                // If we're not the closet to Klepto,
+                // Don't play the cutscene!
+                if (star != NULL && marioState != &gMarioStates[0]) {
+                    star->oStarSpawnExtCutsceneFlags = 0;
+                }
             }
 
             if (network_owns_object(o)) {
