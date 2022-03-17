@@ -71,7 +71,6 @@ extern bool         configHUD;
 extern bool         configSkipIntro;
 extern bool         configShareLives;
 extern bool         configEnableCheats;
-extern bool         configDisablePopups;
 extern bool         configBubbleDeath;
 extern unsigned int configAmountofPlayers;
 #ifdef DISCORDRPC
@@ -90,6 +89,8 @@ extern unsigned int configPlayerModel;
 extern unsigned int configPlayerPalette;
 extern unsigned int config60Fps;
 extern unsigned int configDrawDistance;
+extern bool         configDisablePopups;
+extern bool         configDisableDownloadedModels;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

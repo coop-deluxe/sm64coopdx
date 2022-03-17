@@ -3,6 +3,9 @@ extern "C" {
 #include "object_fields.h"
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
+#ifdef COOP
+#include "pc/configfile.h"
+#endif
 }
 
 //
@@ -129,8 +132,17 @@ void DynOS_Gfx_Update() {
 
                         // Replace the object's model and animations
                         ActorGfx *_ActorGfx = &DynOS_Gfx_GetActorList()[_ActorIndex];
+#ifdef COOP
+                        if (configDisableDownloadedModels && _ActorGfx->mPackIndex == 99) {
+                            extern const GeoLayout error_model_geo[];
+                            s32 actorIndex = DynOS_Geo_IsCustomActor(_ActorIndex) ? DynOS_Geo_GetActorIndex(error_model_geo) : _ActorIndex;
+                            const void* geoLayout = DynOS_Geo_GetActorLayout(actorIndex);
+                            _ActorGfx->mPackIndex = -1;
+                            _ActorGfx->mGfxData   = NULL;
+                            _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, true);
+                        }
+#endif
                         for (s32 i = 0; i != pDynosPacks.Count(); ++i) {
-
                             // If enabled and no pack is selected
                             // load the pack's model and replace the default actor's model
                             if (_Enabled[i] && _ActorGfx->mPackIndex == -1) {

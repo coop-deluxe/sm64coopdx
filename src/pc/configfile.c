@@ -113,9 +113,8 @@ bool         configCameraMouse   = false;
 bool         configSkipIntro     = 0;
 bool         configShareLives    = 0;
 bool         configEnableCheats  = 0;
-bool         configDisablePopups  = 0;
 bool         configBubbleDeath   = true;
-unsigned int configAmountofPlayers   = 16;
+unsigned int configAmountofPlayers = 16;
 bool         configHUD           = true;
 #ifdef DISCORDRPC
 bool         configDiscordRPC    = true;
@@ -134,6 +133,8 @@ unsigned int configPlayerModel                   = 0;
 unsigned int configPlayerPalette                 = 0;
 unsigned int config60Fps                         = 1;
 unsigned int configDrawDistance                  = 5;
+bool         configDisablePopups                 = 0;
+bool         configDisableDownloadedModels       = 0;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -187,7 +188,6 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
-    {.name = "enable_popups",        .type = CONFIG_TYPE_BOOL, .boolValue = &configDisablePopups},
     {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
@@ -212,6 +212,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_palette",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerPalette},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "share_lives",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShareLives},
+    {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
+    {.name = "disable_downloaded_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDownloadedModels},
 };
 
 // FunctionConfigOption functions

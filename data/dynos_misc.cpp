@@ -380,7 +380,7 @@ void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName
     // Alloc and init the actors gfx list
     Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
     pActorGfxList.Resize(DynOS_Geo_GetActorCount());
-    pActorGfxList[index].mPackIndex = -1;
+    pActorGfxList[index].mPackIndex = 99;
     pActorGfxList[index].mGfxData   = _GfxData;
     pActorGfxList[index].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, true);
 }
@@ -418,6 +418,11 @@ s32 DynOS_Geo_GetActorIndex(const void *aGeoLayout) {
         }
     }
     return -1;
+}
+
+bool DynOS_Geo_IsCustomActor(s32 aIndex) {
+    s32 arrayCount = (s32) (sizeof(sDynosActors) / (2 * sizeof(sDynosActors[0])));
+    return aIndex >= arrayCount;
 }
 
 #else // NORMAL DYNOS
