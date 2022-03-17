@@ -522,6 +522,11 @@ void init_mario_after_warp(void) {
         }
 #endif
     }
+
+    if (gNetworkPlayerLocal != NULL) {
+        network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+    }
+
     smlua_call_event_hooks(HOOK_ON_WARP);
 }
 
@@ -1415,6 +1420,9 @@ s32 init_level(void) {
         sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_DISABLED_DURING_INTRO_CUTSCENE);
     }
 
+    if (gNetworkPlayerLocal != NULL) {
+        network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+    }
     smlua_call_event_hooks(HOOK_ON_LEVEL_INIT);
 
     return 1;
