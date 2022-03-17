@@ -41,6 +41,7 @@
 #include "pc/cheats.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/network/socket/socket.h"
 #include "pc/logfile.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
@@ -1517,10 +1518,12 @@ void update_mario_inputs(struct MarioState *m) {
 
     /* Developer stuff */
 #ifdef DEVELOPMENT
-    if (m->playerIndex == 0) {
-        if (m->action != ACT_DEBUG_FREE_MOVE && m->controller->buttonPressed & L_TRIG && m->controller->buttonDown & Z_TRIG) {
-            set_mario_action(m, ACT_DEBUG_FREE_MOVE, 0);
-            m->marioObj->oTimer = 0;
+    if (gNetworkSystem == &gNetworkSystemSocket) {
+        if (m->playerIndex == 0) {
+            if (m->action != ACT_DEBUG_FREE_MOVE && m->controller->buttonPressed & L_TRIG && m->controller->buttonDown & Z_TRIG) {
+                set_mario_action(m, ACT_DEBUG_FREE_MOVE, 0);
+                m->marioObj->oTimer = 0;
+            }
         }
     }
 #endif

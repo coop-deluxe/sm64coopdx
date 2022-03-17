@@ -13,6 +13,7 @@
 
 #ifdef DEBUG
 #include "pc/lua/smlua.h"
+#include "pc/network/socket/socket.h"
 
 
 static bool sHoldingAlt = false;
@@ -82,23 +83,27 @@ static void debug_spawn_object(void) {
 }
 
 void debug_keyboard_on_key_down(int scancode) {
-    switch (scancode & 0xFF) {
-        case SCANCODE_ALT: sHoldingAlt = true; break;
-        case SCANCODE_3: debug_breakpoint_here(); break;
+    if (gNetworkSystem == &gNetworkSystemSocket) {
+        switch (scancode & 0xFF) {
+            case SCANCODE_ALT: sHoldingAlt = true; break;
+            case SCANCODE_3: debug_breakpoint_here(); break;
 #ifdef DEVELOPMENT
-        case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
-        case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
-        case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object(); } break;
-        case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
-        case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;
-        case SCANCODE_F5: debug_reload_lua(); break;
+            case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
+            case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
+            case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object(); } break;
+            case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
+            case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;
+            case SCANCODE_F5: debug_reload_lua(); break;
 #endif
+        }
     }
 }
 
 void debug_keyboard_on_key_up(int scancode) {
-    switch (scancode & 0xFF) {
-        case SCANCODE_ALT: sHoldingAlt = false; break;
+    if (gNetworkSystem == &gNetworkSystemSocket) {
+        switch (scancode & 0xFF) {
+            case SCANCODE_ALT: sHoldingAlt = false; break;
+        }
     }
 }
 
