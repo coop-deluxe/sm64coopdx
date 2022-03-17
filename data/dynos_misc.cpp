@@ -348,7 +348,11 @@ void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName
         }
     }
 
-    GfxData *_GfxData = DynOS_Gfx_LoadFromBinary(aPackFolder, aActorName);
+    u16 actorLen = strlen(aActorName);
+    char* actorName = (char*)calloc(1, sizeof(char) * (actorLen + 1));
+    strcpy(actorName, aActorName);
+
+    GfxData *_GfxData = DynOS_Gfx_LoadFromBinary(aPackFolder, actorName);
     if (!_GfxData) {
         return;
     }
@@ -360,13 +364,13 @@ void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName
 
     // Add to custom actors
     s32 index = DynOS_Geo_GetActorCount();
-    sDynosCustomActors.Add({ strdup(aActorName), geoLayout });
+    sDynosCustomActors.Add({ actorName, geoLayout });
 
     // Alloc and init the actors gfx list
     Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
     pActorGfxList.Resize(DynOS_Geo_GetActorCount());
     pActorGfxList[index].mPackIndex = -1;
-    pActorGfxList[index].mGfxData   = NULL; // maybe _GfxData?
+    pActorGfxList[index].mGfxData   = _GfxData;
     pActorGfxList[index].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(index), true);
 }
 
