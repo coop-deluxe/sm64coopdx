@@ -214,7 +214,10 @@ void unload_object(struct Object *obj) {
         } else {
             network_send_reservation_release(obj->oSyncID);
         }
+        smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
     }
+
+    smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_UNLOAD, obj);
 
     deallocate_object(&gFreeObjectList, &obj->header);
 }

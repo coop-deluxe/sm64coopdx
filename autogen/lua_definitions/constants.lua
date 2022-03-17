@@ -5294,7 +5294,13 @@ HOOK_ON_WARP = 12
 HOOK_ON_SYNC_VALID = 13
 
 --- @type LuaHookedEventType
-HOOK_MAX = 14
+HOOK_ON_OBJECT_UNLOAD = 14
+
+--- @type LuaHookedEventType
+HOOK_ON_SYNC_OBJECT_UNLOAD = 15
+
+--- @type LuaHookedEventType
+HOOK_MAX = 16
 
 --- @class ModelExtendedId
 
