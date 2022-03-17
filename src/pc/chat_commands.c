@@ -1,4 +1,5 @@
 #include "pc/network/network.h"
+#include "pc/network/socket/socket.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui_chat_message.h"
 #include "chat_commands.h"
@@ -88,7 +89,11 @@ bool exec_chat_command(char* command) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
-            snprintf(line, 128, "\\#82f9ff\\%u \\#fff982\\- %s%s\n", np->globalIndex, network_get_player_text_color_string(np->localIndex), np->name);
+            if (gNetworkSystem == &gNetworkSystemSocket) {
+                snprintf(line, 128, "\\#82f9ff\\%u\\#fff982\\ - %s%s\n", np->globalIndex, network_get_player_text_color_string(np->localIndex), np->name);
+            } else {
+                snprintf(line, 128, "\\#82f9ff\\%u\\#fff982\\ - \\#82f9ff\\%s\\#fff982\\ - %s%s\n", np->globalIndex, gNetworkSystem->get_id_str(np->localIndex), network_get_player_text_color_string(np->localIndex), np->name);
+            }
             strncat(message, line, 599);
         }
         djui_chat_message_create(message);

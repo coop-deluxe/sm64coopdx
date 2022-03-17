@@ -41,13 +41,17 @@ void discord_network_flush(void) {
 }
 
 s64 ns_discord_get_id(u8 localId) {
+    if (localId == 0) { return app.userId; }
     return gNetworkUserIds[localId];
 }
 
 char* ns_discord_get_id_str(u8 localId) {
-    if (localId == UNKNOWN_LOCAL_INDEX) { localId = 0; }
     static char id_str[22] = { 0 };
-    snprintf(id_str, 22, "%lld", (long long int)gNetworkUserIds[localId]);
+    if (localId == UNKNOWN_LOCAL_INDEX) {
+        snprintf(id_str, 22, "???");
+    } else {
+        snprintf(id_str, 22, "%lld", (long long int)ns_discord_get_id(localId));
+    }
     return id_str;
 }
 
