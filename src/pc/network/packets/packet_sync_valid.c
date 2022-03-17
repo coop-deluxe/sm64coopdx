@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include "../network.h"
+#include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    if (toNp == gNetworkPlayerLocal && !toNp->currAreaSyncValid) {
+        smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
+    }
+
     // set the NetworkPlayers sync valid
     toNp->currLevelSyncValid = true;
     toNp->currAreaSyncValid  = true;
@@ -53,6 +58,10 @@ void network_receive_sync_valid(struct Packet* p) {
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
         LOG_ERROR("Receiving sync valid from inactive player!");
         return;
+    }
+
+    if (np == gNetworkPlayerLocal && !np->currAreaSyncValid) {
+        smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
     }
 
     np->currLevelSyncValid = true;

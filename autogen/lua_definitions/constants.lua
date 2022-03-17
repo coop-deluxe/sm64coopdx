@@ -5282,7 +5282,16 @@ HOOK_ON_HUD_RENDER = 9
 HOOK_ON_INTERACT = 10
 
 --- @type LuaHookedEventType
-HOOK_MAX = 11
+HOOK_ON_LEVEL_INIT = 11
+
+--- @type LuaHookedEventType
+HOOK_ON_WARP = 12
+
+--- @type LuaHookedEventType
+HOOK_ON_SYNC_VALID = 13
+
+--- @type LuaHookedEventType
+HOOK_MAX = 14
 
 --- @class ModelExtendedId
 

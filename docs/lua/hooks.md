@@ -97,6 +97,9 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_PLAYER_DISCONNECTED | Called when a player disconnects | [MarioState](structs.md#MarioState) disconnector |
 | HOOK_ON_HUD_RENDER | Called when the HUD is being rendered | None |
 | HOOK_ON_INTERACT | Called when mario interacts with an object | [MarioState](structs.md#MarioState) interactor, [Object](structs.md#Object) interactee, [enum InteractionType](constants.md#enum-InteractionType) interactType, bool interactValue |
+| HOOK_ON_LEVEL_INIT | Called when the level is initialized | None |
+| HOOK_ON_WARP | Called when the local player warps | None |
+| HOOK_ON_SYNC_VALID | Called when the current area is synchronized | None |
 
 ### Parameters
 

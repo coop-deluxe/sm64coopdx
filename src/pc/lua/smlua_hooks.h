@@ -16,6 +16,9 @@ enum LuaHookedEventType {
     HOOK_ON_PLAYER_DISCONNECTED,
     HOOK_ON_HUD_RENDER,
     HOOK_ON_INTERACT,
+    HOOK_ON_LEVEL_INIT,
+    HOOK_ON_WARP,
+    HOOK_ON_SYNC_VALID,
     HOOK_MAX,
 };
 
@@ -31,6 +34,9 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PLAYER_DISCONNECTED",
     "HOOK_ON_HUD_RENDER",
     "HOOK_ON_INTERACT",
+    "HOOK_ON_LEVEL_INIT",
+    "HOOK_ON_WARP",
+    "HOOK_ON_SYNC_VALID",
     "HOOK_MAX"
 };
 

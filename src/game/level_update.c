@@ -36,6 +36,7 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/djui/djui.h"
+#include "pc/lua/smlua_hooks.h"
 
 #include "game/screen_transition.h"
 
@@ -521,6 +522,7 @@ void init_mario_after_warp(void) {
         }
 #endif
     }
+    smlua_call_event_hooks(HOOK_ON_WARP);
 }
 
 // used for warps inside one level
@@ -1412,6 +1414,8 @@ s32 init_level(void) {
     if (gMarioState->action == ACT_INTRO_CUTSCENE) {
         sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_DISABLED_DURING_INTRO_CUTSCENE);
     }
+
+    smlua_call_event_hooks(HOOK_ON_LEVEL_INIT);
 
     return 1;
 }
