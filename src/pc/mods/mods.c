@@ -147,7 +147,10 @@ void mods_init(void) {
 
     // load mods
     if (hasUserPath) { mods_load(&gLocalMods, userModPath); }
-    mods_load(&gLocalMods, "./" MOD_DIRECTORY);
+    char defaultModsPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(defaultModsPath, SYS_MAX_PATH - 1, "%s", "./" MOD_DIRECTORY) >= 0) {
+        mods_load(&gLocalMods, defaultModsPath);
+    }
 
     // calculate total size
     gLocalMods.size = 0;
