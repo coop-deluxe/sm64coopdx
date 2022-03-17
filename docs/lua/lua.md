@@ -15,7 +15,7 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 - When developing Lua mods, run the game from a console. Lua errors and logs will appear there.
 - You can use the `print()` command when debugging. Your logs will show up in the console.
 - [Setting up Visual Studio Code](vs-code-setup.md) will give you autocomplete and other nice things.
-
+- You can create a folder within the mods folder containing multiple lua scripts as long as one script is called `main.lua`. Dynos actors can be placed inside this mod folder under `<your mod folder>/actors/`.
 <br />
 
 ## Sections
@@ -54,3 +54,4 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Replace Goomba Behavior](examples/behavior-replace-goomba.lua)
 - [Add to Goomba Behavior](examples/behavior-add-to-goomba.lua)
 - [Behavior with Surface Collisions](examples/behavior-surface-collisions.lua)
+- [Custom Box Model](examples/custom-box-model)
