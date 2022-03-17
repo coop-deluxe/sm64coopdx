@@ -53,6 +53,10 @@ void dynos_packs_set_enabled(s32 index, bool value) {
     DynOS_Gfx_GetPacksEnabled()[index] = value;
 }
 
+void dynos_generate_packs(const char* directory) {
+    DynOS_Gfx_GeneratePacks(directory);
+}
+
 void dynos_add_actor_custom(const char *modPath, const char* geoName) {
     DynOS_Geo_AddActorCustom(modPath, geoName);
 }

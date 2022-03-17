@@ -639,6 +639,7 @@ Array<ActorGfx> &DynOS_Gfx_GetActorList();
 Array<PackData *> &DynOS_Gfx_GetPacks();
 #ifdef COOP
 Array<bool> &DynOS_Gfx_GetPacksEnabled();
+void DynOS_Gfx_GeneratePacks(const char* directory);
 #endif
 Array<String> DynOS_Gfx_Init();
 void DynOS_Gfx_Update();

@@ -342,9 +342,13 @@ static Array<Pair<const char*, void *>> sDynosCustomActors;
 
 void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName) {
     // check for duplicates
+    bool isUnique = true;
+    s32 foundIndex = -1;
     for (s32 i = 0; i < DynOS_Geo_GetActorCount(); ++i) {
         if (!strcmp(DynOS_Geo_GetActorName(i), aActorName)) {
-            return;
+            isUnique = false;
+            foundIndex = i;
+            break;
         }
     }
 
@@ -354,24 +358,31 @@ void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName
 
     GfxData *_GfxData = DynOS_Gfx_LoadFromBinary(aPackFolder, actorName);
     if (!_GfxData) {
+        free(actorName);
         return;
     }
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
+        free(actorName);
         return;
     }
 
     // Add to custom actors
     s32 index = DynOS_Geo_GetActorCount();
-    sDynosCustomActors.Add({ actorName, geoLayout });
+    if (isUnique) {
+        sDynosCustomActors.Add({ actorName, geoLayout });
+    } else {
+        index = foundIndex;
+        free(actorName);
+    }
 
     // Alloc and init the actors gfx list
     Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
     pActorGfxList.Resize(DynOS_Geo_GetActorCount());
     pActorGfxList[index].mPackIndex = -1;
     pActorGfxList[index].mGfxData   = _GfxData;
-    pActorGfxList[index].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(index), true);
+    pActorGfxList[index].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, true);
 }
 
 s32 DynOS_Geo_GetActorCount() {

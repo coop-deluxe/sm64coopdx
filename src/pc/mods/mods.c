@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include "mods.h"
 #include "mods_utils.h"
+#include "data/dynos_coop.c.h"
 #include "pc/debuglog.h"
 
 #define MOD_DIRECTORY "mods"
@@ -91,6 +92,9 @@ void mods_activate(struct Mods* mods) {
 }
 
 static void mods_load(struct Mods* mods, char* modsBasePath) {
+    // generate bins
+    dynos_generate_packs(modsBasePath);
+
     // sanity check
     if (modsBasePath == NULL) {
         LOG_ERROR("Trying to load from NULL path!");

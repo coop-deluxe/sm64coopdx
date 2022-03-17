@@ -15,6 +15,26 @@ Array<bool> &DynOS_Gfx_GetPacksEnabled() {
     static Array<bool> sPacksEnabled;
     return sPacksEnabled;
 }
+
+void DynOS_Gfx_GeneratePacks(const char* directory) {
+    DIR *modsDir = opendir(directory);
+    if (!modsDir) { return; }
+
+    struct dirent *dir = NULL;
+    while ((dir = readdir(modsDir)) != NULL) {
+        // Skip . and ..
+        if (SysPath(dir->d_name) == ".") continue;
+        if (SysPath(dir->d_name) == "..") continue;
+
+        // If pack folder exists, generate bins
+        SysPath _PackFolder = fstring("%s/%s/actors", directory, dir->d_name);
+        if (fs_sys_dir_exists(_PackFolder.c_str())) {
+            DynOS_Gfx_GeneratePack(_PackFolder);
+        }
+    }
+
+    closedir(modsDir);
+}
 #endif
 
 Array<String> DynOS_Gfx_Init() {
