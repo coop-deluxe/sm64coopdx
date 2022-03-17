@@ -11,4 +11,6 @@ bool warp_restart_level(void);
 bool warp_exit_level(s32 aDelay);
 bool warp_to_castle(s32 aLevel);
 
+u32 allocate_mario_action(u32 actFlags);
+
 #endif

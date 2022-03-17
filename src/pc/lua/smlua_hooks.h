@@ -40,6 +40,8 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_MAX"
 };
 
+extern u32 gLuaMarioActionIndex;
+
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);

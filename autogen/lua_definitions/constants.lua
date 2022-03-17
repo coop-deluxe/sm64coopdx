@@ -4386,6 +4386,9 @@ ACT_FLAG_BUTT_OR_STOMACH_SLIDE = (1 << 18)
 ACT_FLAG_CONTROL_JUMP_HEIGHT = (1 << 25)
 
 --- @type integer
+ACT_FLAG_CUSTOM_ACTION = (1 << 30)
+
+--- @type integer
 ACT_FLAG_DIVING = (1 << 19)
 
 --- @type integer

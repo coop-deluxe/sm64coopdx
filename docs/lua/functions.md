@@ -634,6 +634,7 @@
 <br />
 
 - smlua_misc_utils.h
+   - [allocate_mario_action](#allocate_mario_action)
    - [get_network_area_timer](#get_network_area_timer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
@@ -11613,6 +11614,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+
+## [allocate_mario_action](#allocate_mario_action)
+
+### Lua Example
+`local integerValue = allocate_mario_action(actFlags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| actFlags | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 allocate_mario_action(u32 actFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [get_network_area_timer](#get_network_area_timer)
 

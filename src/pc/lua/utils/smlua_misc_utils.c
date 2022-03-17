@@ -1,3 +1,4 @@
+#include "sm64.h"
 #include "types.h"
 
 #include "data/dynos_coop.c.h"
@@ -32,4 +33,9 @@ bool warp_exit_level(s32 aDelay) {
 
 bool warp_to_castle(s32 aLevel) {
     return dynos_warp_to_castle(aLevel);
+}
+
+u32 allocate_mario_action(u32 actFlags) {
+    actFlags = actFlags & (~((u32)0xFF));
+    return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
 }

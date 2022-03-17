@@ -36,8 +36,8 @@ end
 -- luigi --
 -----------
 
-ACT_SPIN_POUND_LAND = (0x037 | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
-ACT_SPIN_POUND      = (0x08F | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_SPIN_POUND_LAND = allocate_mario_action(ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
+ACT_SPIN_POUND      = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
 
 function act_spin_pound(m)
     local e = gStateExtras[m.playerIndex]
@@ -360,7 +360,7 @@ gEventTable[CT_TOAD] = {
 -- waluigi --
 -------------
 
-ACT_WALL_SLIDE = (0x0BF | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WALL_SLIDE = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
 
 function act_wall_slide(m)
     if (m.input & INPUT_A_PRESSED) ~= 0 then
@@ -482,10 +482,10 @@ gEventTable[CT_WALUIGI] = {
 -- wario --
 -----------
 
-ACT_WARIO_DASH         = (0x05B | ACT_FLAG_MOVING | ACT_FLAG_ATTACKING)
-ACT_WARIO_AIR_DASH     = (0x05B | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
-ACT_CORKSCREW_CONK     = (0x05D | ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-ACT_WARIO_SPINNING_OBJ = (0x05B | ACT_FLAG_STATIONARY)
+ACT_WARIO_DASH         = allocate_mario_action(ACT_FLAG_MOVING | ACT_FLAG_ATTACKING)
+ACT_WARIO_AIR_DASH     = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_CORKSCREW_CONK     = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WARIO_SPINNING_OBJ = allocate_mario_action(ACT_FLAG_STATIONARY)
 
 function act_corkscrew_conk(m)
     local e = gStateExtras[m.playerIndex]

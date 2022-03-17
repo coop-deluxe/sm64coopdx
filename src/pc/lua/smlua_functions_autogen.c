@@ -7400,6 +7400,17 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
  // smlua_misc_utils.h //
 ////////////////////////
 
+int smlua_func_allocate_mario_action(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 actFlags = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, allocate_mario_action(actFlags));
+
+    return 1;
+}
+
 int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -8769,6 +8780,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
 
     // smlua_misc_utils.h
+    smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);

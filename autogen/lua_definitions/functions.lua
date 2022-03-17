@@ -3476,6 +3476,12 @@ function collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ)
     -- ...
 end
 
+--- @param actFlags integer
+--- @return integer
+function allocate_mario_action(actFlags)
+    -- ...
+end
+
 --- @return integer
 function get_network_area_timer()
     -- ...

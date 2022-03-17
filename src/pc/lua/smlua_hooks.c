@@ -230,6 +230,7 @@ struct LuaHookedMarioAction {
 
 static struct LuaHookedMarioAction sHookedMarioActions[MAX_HOOKED_ACTIONS] = { 0 };
 static int sHookedMarioActionsCount = 0;
+u32 gLuaMarioActionIndex = 0;
 
 int smlua_hook_mario_action(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -742,6 +743,7 @@ static void smlua_clear_hooks(void) {
         hooked->mod = NULL;
     }
     sHookedBehaviorsCount = 0;
+    gLuaMarioActionIndex = 0;
 }
 
 void smlua_bind_hooks(void) {
