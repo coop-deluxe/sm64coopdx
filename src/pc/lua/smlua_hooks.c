@@ -373,6 +373,17 @@ struct LuaHookedBehavior {
 static struct LuaHookedBehavior sHookedBehaviors[MAX_HOOKED_BEHAVIORS] = { 0 };
 static int sHookedBehaviorsCount = 0;
 
+enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior) {
+    enum BehaviorId id = get_id_from_behavior(behavior);
+    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+        if (hooked->behavior == behavior) {
+            id = hooked->overrideId;
+        }
+    }
+    return id;
+}
+
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior) {
     lua_State* L = gLuaState;
     if (L == NULL) { return behavior; }

@@ -330,6 +330,102 @@ static int smlua__get_field(lua_State* L) {
     return 1;
 }
 
+static bool smlua_field_valid(struct LuaObjectField* data, enum LuaObjectType lot, size_t offset) {
+    size_t minimum = MIN(offset, data->valueOffset);
+    size_t maximum = MAX(offset + sizeof(void*), data->valueOffset + sizeof(u32));
+    size_t length = maximum - minimum;
+    size_t maxlength = sizeof(void*) + sizeof(u32);
+
+    if (length >= maxlength) {
+        return (data->lot == lot) && (lot != LOT_NONE);
+    }
+
+    return (length >= maxlength);
+}
+
+static bool smlua_is_valid_object_field(struct Object* obj, struct LuaObjectField* data) {
+    enum BehaviorId behaviorId = smlua_get_original_behavior_id(obj->behavior);
+    switch (behaviorId) {
+        case id_bhvBowlingBall:
+        case id_bhvKoopa:
+        case id_bhvMantaRay:
+        case id_bhvMips:
+        case id_bhvPlatformOnTrack:
+        case id_bhvRacingPenguin:
+        case id_bhvSnowmansBottom:
+        case id_bhvUkiki:
+        case id_bhvUnagi:
+            if (!smlua_field_valid(data, LOT_WAYPOINT, offsetof(struct Object, oPathedStartWaypoint))) { return false; }
+            if (!smlua_field_valid(data, LOT_WAYPOINT, offsetof(struct Object, oPathedPrevWaypoint))) { return false; }
+            break;
+        case id_bhvHiddenBlueCoin:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oHiddenBlueCoinSwitch))) { return false; }
+            break;
+        case id_bhvBoo:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oBooParentBigBoo))) { return false; }
+            break;
+        case id_bhvLllBowserPuzzlePiece:
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oBowserPuzzlePieceActionList))) { return false; }
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oBowserPuzzlePieceNextAction))) { return false; }
+            break;
+        case id_bhvChainChomp:
+            for (int i = 0; i < 4; i++) {
+                if (!smlua_field_valid(data, LOT_CHAINSEGMENT, offsetof(struct Object, oChainChompSegments) + sizeof(struct ChainSegment *) * i)) { return false; }
+            }
+            break;
+        case id_bhvBowser:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oFlameBowser))) { return false; }
+            break;
+        case id_bhvHauntedChair:
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oHauntedChairUnk100))) { return false; }
+            break;
+        case id_bhvBreakableBox:
+        case id_bhvHiddenObject:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oHiddenObjectUnkF4))) { return false; }
+            break;
+        case id_bhvBeginningLakitu:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oIntroLakituCloud))) { return false; }
+            break;
+        case id_bhvMontyMole:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oMontyMoleCurrentHole))) { return false; }
+            break;
+        case id_bhvMrBlizzard:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oMrBlizzardHeldObj))) { return false; }
+            break;
+        case id_bhvRespawner:
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oRespawnerBehaviorToRespawn))) { return false; }
+            break;
+        case id_bhvOpenableGrill:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oOpenableGrillUnkF4))) { return false; }
+            break;
+        case id_bhvFallingBowserPlatform:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oPlatformUnkF8))) { return false; }
+            break;
+        case id_bhvJrbSlidingBox:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oJrbSlidingBoxUnkF4))) { return false; }
+            break;
+        case id_bhvToxBox:
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oToxBoxMovementPattern))) { return false; }
+            break;
+        case id_bhvTTCTreadmill:
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oTTCTreadmillBigSurface))) { return false; }
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oTTCTreadmillSmallSurface))) { return false; }
+            break;
+        case id_bhvStrongWindParticle:
+            if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oStrongWindParticlePenguinObj))) { return false; }
+            break;
+        case id_bhvWigglerHead:
+            for (int i = 0; i < 3; i++) {
+                if (!smlua_field_valid(data, LOT_CHAINSEGMENT, offsetof(struct Object, oWigglerSegments) + sizeof(struct ChainSegment *) * i)) { return false; }
+            }
+            break;
+        default:
+            break;
+    }
+
+    return true;
+}
+
 static int smlua__set_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
     if (!smlua_functions_valid_param_count(L, 5)) { return 0; }
@@ -365,10 +461,20 @@ static int smlua__set_field(lua_State* L) {
     if (data == NULL) {
         data = smlua_get_custom_field(L, lot, 3);
     }
+
     if (data == NULL) {
         LOG_LUA("_set_field on invalid key '%s'", key);
         smlua_logline();
         return 0;
+    }
+
+    if ((u32)lot == (u32)LOT_OBJECT) {
+        struct Object* obj = (struct Object*)pointer;
+        if (!smlua_is_valid_object_field(obj, data)) {
+            LOG_LUA("_set_field tried to set a custom field that overlapped with a pointer. '%s'", key);
+            smlua_logline();
+            return 0;
+        }
     }
 
     if (data->immutable) {
