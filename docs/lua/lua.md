@@ -55,3 +55,4 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Add to Goomba Behavior](examples/behavior-add-to-goomba.lua)
 - [Behavior with Surface Collisions](examples/behavior-surface-collisions.lua)
 - [Custom Box Model](examples/custom-box-model)
+- [Custom Player Model](examples/koopa-player-model)
