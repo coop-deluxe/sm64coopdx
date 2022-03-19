@@ -1045,6 +1045,12 @@ endif
 #all: $(ROM)
 all: $(EXE)
 
+ifeq ($(WINDOWS_BUILD),1)
+exemap: $(EXE)
+	$(V)$(OBJDUMP) -t $(EXE) > $(BUILD_DIR)/coop.map
+all: exemap
+endif
+
 ifeq ($(COMPARE),1)
 	@$(PRINT) "$(GREEN)Checking if ROM matches.. $(NO_COL)\n"
 	@$(SHA1SUM) --quiet -c $(TARGET).sha1 && $(PRINT) "$(TARGET): $(GREEN)OK$(NO_COL)\n" || ($(PRINT) "$(YELLOW)Building the ROM file has succeeded, but does not match the original ROM.\nThis is expected, and not an error, if you are making modifications.\nTo silence this message, use 'make COMPARE=0.' $(NO_COL)\n" && false)

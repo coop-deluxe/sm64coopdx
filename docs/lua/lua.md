@@ -41,13 +41,10 @@ All of this is a holdover from when there were only two players. It was a reason
 
 <br />
 
-## Example Lua mods
-- [Extended Moveset](../../mods/extended-moveset.lua)
-- [Character Movesets](../../mods/character-movesets.lua)
+## Example Lua mods (small)
 - [Low Gravity](../../mods/low-gravity.lua)
 - [Faster Swimming](../../mods/faster-swimming.lua)
-- [Hide and Seek Gamemode](../../mods/hide-and-seek.lua)
-- [Football (soccer) Gamemode](../../mods/football.lua)
+- [Mario Run](../../mods/Mario-Run.lua)
 - [HUD Rendering](examples/hud.lua)
 - [Object Spawning](examples/spawn-stuff.lua)
 - [Custom Ball Behavior](examples/behavior-ball.lua)
@@ -56,3 +53,11 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Behavior with Surface Collisions](examples/behavior-surface-collisions.lua)
 - [Custom Box Model](examples/custom-box-model)
 - [Custom Player Model](examples/koopa-player-model)
+- [Moonjump](examples/Moonjump.lua)
+- [Instant Clip](examples/Instant_Clip.lua)
+
+## Example Lua mods (large)
+- [Extended Moveset](../../mods/extended-moveset.lua)
+- [Character Movesets](../../mods/character-movesets.lua)
+- [Hide and Seek Gamemode](../../mods/hide-and-seek.lua)
+- [Football (soccer) Gamemode](../../mods/football.lua)
