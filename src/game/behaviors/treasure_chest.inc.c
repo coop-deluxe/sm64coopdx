@@ -19,42 +19,43 @@ void bhv_treasure_chest_top_loop(void) {
     struct Object* sp34 = o->parentObj->parentObj;
 
     switch (o->oAction) {
-    case 0:
-        if (o->parentObj->oAction == 1)
-            o->oAction = 1;
-        break;
-
-    case 1:
-        if (o->oTimer == 0) {
-            if (sp34->oTreasureChestUnkFC == 0) {
-                spawn_object_relative(0, 0, -80, 120, o, MODEL_BUBBLE, bhvWaterAirBubble);
-                play_sound(SOUND_GENERAL_CLAM_SHELL1, o->header.gfx.cameraToObject);
+        case 0:
+            if (o->parentObj->oAction == 1) {
+                o->oAction = 1;
             }
-            else {
-                play_sound(SOUND_GENERAL_OPEN_CHEST, o->header.gfx.cameraToObject);
+            break;
+
+        case 1:
+            if (o->oTimer == 0) {
+                if (sp34->oTreasureChestUnkFC == 0) {
+                    spawn_object_relative(0, 0, -80, 120, o, MODEL_BUBBLE, bhvWaterAirBubble);
+                    play_sound(SOUND_GENERAL_CLAM_SHELL1, o->header.gfx.cameraToObject);
+                } else {
+                    play_sound(SOUND_GENERAL_OPEN_CHEST, o->header.gfx.cameraToObject);
+                }
             }
-        }
 
-        o->oFaceAnglePitch += -0x200;
-        if (o->oFaceAnglePitch < -0x4000) {
-            o->oFaceAnglePitch = -0x4000;
-            o->oAction++;
-            if (o->parentObj->oBehParams2ndByte != 4)
-                spawn_orange_number(o->parentObj->oBehParams2ndByte, 0, -40, 0);
-        }
-        break;
+            o->oFaceAnglePitch += -0x200;
+            if (o->oFaceAnglePitch < -0x4000) {
+                o->oFaceAnglePitch = -0x4000;
+                o->oAction++;
+                if (o->parentObj->oBehParams2ndByte != 4)
+                    spawn_orange_number(o->parentObj->oBehParams2ndByte, 0, -40, 0);
+            }
+            break;
 
-    case 2:
-        if (o->parentObj->oAction == 0)
-            o->oAction = 3;
-        break;
+        case 2:
+            if (o->parentObj->oAction == 0) {
+                o->oAction = 3;
+            }
+            break;
 
-    case 3:
-        o->oFaceAnglePitch += 0x800;
-        if (o->oFaceAnglePitch > 0) {
-            o->oFaceAnglePitch = 0;
-            o->oAction = 0;
-        }
+        case 3:
+            o->oFaceAnglePitch += 0x800;
+            if (o->oFaceAnglePitch > 0) {
+                o->oFaceAnglePitch = 0;
+                o->oAction = 0;
+            }
     }
 }
 
