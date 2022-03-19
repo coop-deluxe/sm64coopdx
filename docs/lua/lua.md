@@ -48,6 +48,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Faster Swimming](../../mods/faster-swimming.lua)
 - [Hide and Seek Gamemode](../../mods/hide-and-seek.lua)
 - [Football (soccer) Gamemode](../../mods/football.lua)
+- [Mario Run](../../mods/Mario-Run.lua)
 - [HUD Rendering](examples/hud.lua)
 - [Object Spawning](examples/spawn-stuff.lua)
 - [Custom Ball Behavior](examples/behavior-ball.lua)
@@ -55,3 +56,5 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Add to Goomba Behavior](examples/behavior-add-to-goomba.lua)
 - [Behavior with Surface Collisions](examples/behavior-surface-collisions.lua)
 - [Custom Box Model](examples/custom-box-model)
+- [Moonjump](examples/Moonjump.lua)
+- [Instant Clip](examples/Instant_Clip.lua)
