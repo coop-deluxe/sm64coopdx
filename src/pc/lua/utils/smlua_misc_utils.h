@@ -13,4 +13,8 @@ bool warp_to_castle(s32 aLevel);
 
 u32 allocate_mario_action(u32 actFlags);
 
+f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);
+f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
+f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
+
 #endif

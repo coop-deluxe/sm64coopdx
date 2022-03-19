@@ -39,3 +39,18 @@ u32 allocate_mario_action(u32 actFlags) {
     actFlags = actFlags & (~((u32)0xFF));
     return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
 }
+
+f32 get_hand_foot_pos_x(struct MarioState* m, u8 index) {
+    if (index >= 4) { index = 0; }
+    return m->marioBodyState->handFootPos[index][0];
+}
+
+f32 get_hand_foot_pos_y(struct MarioState* m, u8 index) {
+    if (index >= 4) { index = 0; }
+    return m->marioBodyState->handFootPos[index][1];
+}
+
+f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
+    if (index >= 4) { index = 0; }
+    return m->marioBodyState->handFootPos[index][2];
+}

@@ -613,6 +613,8 @@
    - [queue_rumble_data](#queue_rumble_data)
    - [queue_rumble_data_mario](#queue_rumble_data_mario)
    - [queue_rumble_data_object](#queue_rumble_data_object)
+   - [reset_rumble_timers](#reset_rumble_timers)
+   - [reset_rumble_timers_2](#reset_rumble_timers_2)
 
 <br />
 
@@ -630,11 +632,15 @@
 
 - smlua_collision_utils.h
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+   - [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
 
 <br />
 
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
+   - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
+   - [get_hand_foot_pos_y](#get_hand_foot_pos_y)
+   - [get_hand_foot_pos_z](#get_hand_foot_pos_z)
    - [get_network_area_timer](#get_network_area_timer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
@@ -11411,6 +11417,47 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [reset_rumble_timers](#reset_rumble_timers)
+
+### Lua Example
+`reset_rumble_timers(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_rumble_timers(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_rumble_timers_2](#reset_rumble_timers_2)
+
+### Lua Example
+`reset_rumble_timers_2(m, a0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| a0 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from save_file.h
 
@@ -11609,6 +11656,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
+
+### Lua Example
+`local SurfaceValue = get_water_surface_pseudo_floor()`
+
+### Parameters
+- None
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_water_surface_pseudo_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_misc_utils.h
 
@@ -11630,6 +11695,69 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `u32 allocate_mario_action(u32 actFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
+
+### Lua Example
+`local numberValue = get_hand_foot_pos_x(m, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_hand_foot_pos_y](#get_hand_foot_pos_y)
+
+### Lua Example
+`local numberValue = get_hand_foot_pos_y(m, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_hand_foot_pos_z](#get_hand_foot_pos_z)
+
+### Lua Example
+`local numberValue = get_hand_foot_pos_z(m, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
 
 [:arrow_up_small:](#)
 

@@ -9,8 +9,10 @@
 #include "pc/debuglog.h"
 
 static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction, bool doSync) {
-    // prevent spawning objects before area is synchronized
-    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return NULL; }
+    if (doSync) {
+        // prevent spawning objects before area is synchronized
+        if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return NULL; }
+    }
 
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
     if (behavior == NULL) {

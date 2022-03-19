@@ -112,4 +112,6 @@ extern struct GlobalObjectCollisionData gGlobalObjectCollisionData;
 
 struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ);
 
+struct Surface* get_water_surface_pseudo_floor(void);
+
 #endif

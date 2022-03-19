@@ -1,6 +1,7 @@
 #include "types.h"
 
 #include "src/engine/surface_collision.h"
+#include "game/mario_step.h"
 
 #include "pc/lua/smlua.h"
 #include "smlua_collision_utils.h"
@@ -159,4 +160,8 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
     Vec3f end = { endX, endY, endZ };
     find_surface_on_ray(orig, end, &info.surface, info.hitPos);
     return &info;
+}
+
+struct Surface* get_water_surface_pseudo_floor(void) {
+    return &gWaterSurfacePseudoFloor;
 }

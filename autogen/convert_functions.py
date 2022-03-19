@@ -50,7 +50,7 @@ in_files = [
 override_allowed_functions = {
     "src/audio/external.h":                 [ " play_", "fade" ],
     "src/game/camera.h":                    [ "set_.*camera_.*shake", "set_camera_mode" ],
-    "src/game/rumble_init.c":               [ "queue_rumble_"],
+    "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h" :            [ "create" ],
     "src/game/save_file.h":                 [ "save_file_get_" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],

@@ -251,18 +251,24 @@ function approach_s32(current, target, inc, dec)
             current = target
         end
     end
+
+    -- keep within 32 bits
+    if current > 2147483647 then
+        current = -2147483648 + (current - 2147483647)
+    elseif current < -2147483648 then
+        current = 2147483647 + (current - (-2147483648))
+    end
     return current;
 end
 
 --- @param bank number
---- @param playFlags number
 --- @param soundID number
 --- @param priority number
---- @param flags2 number
+--- @param flags number
 --- @return number
-function SOUND_ARG_LOAD(bank, playFlags, soundID, priority, flags2)
-    if flags2 == nil then flags2 = 0 end
-    return ((bank << 28) | (playFlags << 24) | (soundID << 16) | (priority << 8) | (flags2 << 4) | 1)
+function SOUND_ARG_LOAD(bank, soundID, priority, flags)
+    if flags == nil then flags = 0 end
+    return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
 end
 
 
@@ -3749,6 +3755,21 @@ NPT_SERVER = 2
 
 --- @type NetworkPlayerType
 NPT_CLIENT = 3
+
+--- @type integer
+OBJ_COL_FLAGS_LANDED = (OBJ_COL_FLAG_GROUNDED | OBJ_COL_FLAG_NO_Y_VEL)
+
+--- @type integer
+OBJ_COL_FLAG_GROUNDED = (1 << 0)
+
+--- @type integer
+OBJ_COL_FLAG_HIT_WALL = (1 << 1)
+
+--- @type integer
+OBJ_COL_FLAG_NO_Y_VEL = (1 << 3)
+
+--- @type integer
+OBJ_COL_FLAG_UNDERWATER = (1 << 2)
 
 --- @type integer
 ACTIVE_FLAG_ACTIVE = (1 << 0)

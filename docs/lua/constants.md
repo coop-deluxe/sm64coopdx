@@ -26,6 +26,7 @@
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
+- [obj_behaviors.c](#obj_behaviorsc)
 - [object_constants.h](#object_constantsh)
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
@@ -1311,6 +1312,17 @@
 | NPT_LOCAL | 1 |
 | NPT_SERVER | 2 |
 | NPT_CLIENT | 3 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_behaviors.c](#obj_behaviors.c)
+- OBJ_COL_FLAGS_LANDED
+- OBJ_COL_FLAG_GROUNDED
+- OBJ_COL_FLAG_HIT_WALL
+- OBJ_COL_FLAG_NO_Y_VEL
+- OBJ_COL_FLAG_UNDERWATER
 
 [:arrow_up_small:](#)
 

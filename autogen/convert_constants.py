@@ -28,10 +28,12 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/engine/graph_node.h",
     "levels/level_defines.h",
+    "src/game/obj_behaviors.c",
 ]
 
 exclude_constants = {
-    '*': [ '^MAXCONTROLLERS$', '^AREA_[^T].*', '^AREA_T[HTO]', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ]
+    '*': [ '^MAXCONTROLLERS$', '^AREA_[^T].*', '^AREA_T[HTO]', '^CONT_ERR.*', '^READ_MASK$', '^SIGN_RANGE$', ],
+    'src/game/obj_behaviors.c': ['^o$'],
 }
 
 include_constants = {

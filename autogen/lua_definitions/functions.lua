@@ -3414,6 +3414,19 @@ function queue_rumble_data_object(object, a0, a1)
     -- ...
 end
 
+--- @param m MarioState
+--- @return nil
+function reset_rumble_timers(m)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param a0 integer
+--- @return nil
+function reset_rumble_timers_2(m, a0)
+    -- ...
+end
+
 --- @param capPos Vec3s
 --- @return integer
 function save_file_get_cap_pos(capPos)
@@ -3476,9 +3489,35 @@ function collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ)
     -- ...
 end
 
+--- @return Surface
+function get_water_surface_pseudo_floor()
+    -- ...
+end
+
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param index integer
+--- @return number
+function get_hand_foot_pos_x(m, index)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param index integer
+--- @return number
+function get_hand_foot_pos_y(m, index)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param index integer
+--- @return number
+function get_hand_foot_pos_z(m, index)
     -- ...
 end
 

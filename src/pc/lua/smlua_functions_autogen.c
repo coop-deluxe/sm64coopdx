@@ -7263,6 +7263,32 @@ int smlua_func_queue_rumble_data_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_reset_rumble_timers(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void reset_rumble_timers(struct MarioState* m);
+    reset_rumble_timers(m);
+
+    return 1;
+}
+
+int smlua_func_reset_rumble_timers_2(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 a0 = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void reset_rumble_timers_2(struct MarioState* m, s32 a0);
+    reset_rumble_timers_2(m, a0);
+
+    return 1;
+}
+
   /////////////////
  // save_file.h //
 /////////////////
@@ -7396,6 +7422,15 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_water_surface_pseudo_floor(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    smlua_push_object(L, LOT_SURFACE, get_water_surface_pseudo_floor());
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -7407,6 +7442,45 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, allocate_mario_action(actFlags));
+
+    return 1;
+}
+
+int smlua_func_get_hand_foot_pos_x(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, get_hand_foot_pos_x(m, index));
+
+    return 1;
+}
+
+int smlua_func_get_hand_foot_pos_y(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, get_hand_foot_pos_y(m, index));
+
+    return 1;
+}
+
+int smlua_func_get_hand_foot_pos_z(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, get_hand_foot_pos_z(m, index));
 
     return 1;
 }
@@ -8765,6 +8839,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);
     smlua_bind_function(L, "queue_rumble_data_mario", smlua_func_queue_rumble_data_mario);
     smlua_bind_function(L, "queue_rumble_data_object", smlua_func_queue_rumble_data_object);
+    smlua_bind_function(L, "reset_rumble_timers", smlua_func_reset_rumble_timers);
+    smlua_bind_function(L, "reset_rumble_timers_2", smlua_func_reset_rumble_timers_2);
 
     // save_file.h
     smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);
@@ -8778,9 +8854,13 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
+    smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
+    smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
+    smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
