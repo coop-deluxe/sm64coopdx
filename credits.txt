@@ -28,6 +28,7 @@ Contributors:
     jkcoxson
     Llennpie
     LuigiNoodle
+    mjcox24
     PoltixeTheDerg
     s4ys
     sm64rise
