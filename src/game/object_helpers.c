@@ -321,6 +321,7 @@ void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) 
 }
 
 f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2) {
+    if (obj1 == NULL || obj2 == NULL) { return 0; }
     f32 dx = obj1->oPosX - obj2->oPosX;
     f32 dz = obj1->oPosZ - obj2->oPosZ;
 
@@ -328,6 +329,7 @@ f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2) {
 }
 
 f32 dist_between_objects(struct Object *obj1, struct Object *obj2) {
+    if (obj1 == NULL || obj2 == NULL) { return 0; }
     f32 dx = obj1->oPosX - obj2->oPosX;
     f32 dy = obj1->oPosY - obj2->oPosY;
     f32 dz = obj1->oPosZ - obj2->oPosZ;
@@ -336,6 +338,7 @@ f32 dist_between_objects(struct Object *obj1, struct Object *obj2) {
 }
 
 f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f32 pointZ) {
+    if (obj == NULL) { return 0; }
     f32 dx = (f32)obj->oPosX - pointX;
     f32 dy = (f32)obj->oPosY - pointY;
     f32 dz = (f32)obj->oPosZ - pointZ;
