@@ -269,11 +269,11 @@ endif
 # Check for certain target types.
 
 ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
-     DEFINES += -DUSE_GLES
+     DEFINES += USE_GLES=1
 endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
-     DEFINES += -DOSX_BUILD
+     DEFINES += OSX_BUILD=1
 endif
 
 ifeq ($(TARGET_WEB),1)
