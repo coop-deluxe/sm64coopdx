@@ -188,10 +188,14 @@ endef
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),distclean)
+ifeq ($(WINDOWS_AUTO_BUILDER),1)
+include $(BUILD_DIR)/level_rules.mk
+else
 $(BUILD_DIR)/level_rules.mk: levels/level_rules.mk levels/level_defines.h
 	@$(PRINT) "$(GREEN)Preprocessing level make rules: $(BLUE)$@ $(NO_COL)\n"
-	@$(CPP) $(VERSION_CFLAGS) -I . $(EXTRA_INCLUDES) -o $@ $<
+	$(V)$(CPP) $(VERSION_CFLAGS) -I . $(EXTRA_INCLUDES) -o $@ $<
 include $(BUILD_DIR)/level_rules.mk
+endif
 endif
 endif
 

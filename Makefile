@@ -2,9 +2,6 @@
 
 include util.mk
 
-# Dynos
-include dynos.mk
-
 # Default target
 default: all
 
@@ -96,7 +93,7 @@ $(eval $(call validate-option,COMPILER,ido gcc))
 
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
-  EXTRA_INCLUDES := ../include/1 ../include/2 ../include/3 ../include/4
+  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
   EXTRA_CFLAGS := -Wno-expansion-to-defined
 
   EXTRA_CPP_INCLUDES := ../include/cpp
@@ -475,6 +472,9 @@ GODDARD_SRC_DIRS := src/goddard src/goddard/dynlists
 
 # File dependencies and variables for specific files
 include Makefile.split
+
+# Dynos
+include dynos.mk
 
 # Source code files
 LEVEL_C_FILES     := $(wildcard levels/*/leveldata.c) $(wildcard levels/*/script.c) $(wildcard levels/*/geo.c)
