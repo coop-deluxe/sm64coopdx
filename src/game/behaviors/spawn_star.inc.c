@@ -142,6 +142,7 @@ static u8 spawn_star_deduplication(u32* array, u8* count, u32 behParams) {
 
 struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
     if (sCurrPlayMode != PLAY_MODE_NORMAL && sCurrPlayMode != PLAY_MODE_PAUSED) { return NULL; }
+    if (o == NULL) { return NULL; }
     u32 behParams = o->oBehParams;
 
     // de-duplication checking
