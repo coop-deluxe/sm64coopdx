@@ -7,7 +7,9 @@
 #include "src/game/area.h"
 #include "behavior_data.h"
 #include "behavior_table.h"
+#include "src/pc/lua/smlua.h"
 #include "src/pc/lua/utils/smlua_model_utils.h"
+#include "src/pc/lua/utils/smlua_obj_utils.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -22,6 +24,7 @@ struct SpawnObjectData {
     s32 rawData[80];
     u8 globalPlayerIndex;
     u16 extendedModelId;
+    u8 extraFieldCount;
 };
 #pragma pack()
 
@@ -87,6 +90,13 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
         packet_write(&p, &o->globalPlayerIndex, sizeof(u8));
         packet_write(&p, &extendedModelId, sizeof(u16));
+        packet_write(&p, &gSpawnObjectFieldCount, sizeof(u8));
+        for (u8 j = 0; j < gSpawnObjectFieldCount; j++) {
+            struct LuaObjectField* field = &gSpawnObjectFields[j];
+            u64 valueOffset = field->valueOffset;
+            packet_write(&p, &valueOffset, sizeof(u64));
+            packet_write(&p, (&o->rawData.asU32[0] + field->valueOffset), sizeof(u32));
+        }
     }
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
@@ -123,6 +133,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &scale[2], sizeof(f32));
         packet_read(p, &data.globalPlayerIndex, sizeof(u8));
         packet_read(p, &data.extendedModelId, sizeof(u16));
+        packet_read(p, &data.extraFieldCount, sizeof(u8));
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u8)-1) {
@@ -180,6 +191,18 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         // correct the temporary parent with the object itself
         if (data.parentId == (u8)-1) { o->parentObj = o; }
+
+        // get extra fields
+        for (int j = 0; j < data.extraFieldCount; j++) {
+            u64 valueOffset;
+            u32 value;
+            packet_read(p, &valueOffset, sizeof(u64));
+            if (valueOffset < (u64)(&o->rawData.asU32[0] - &o->rawData.asU32[0x50])) {
+                packet_read(p, (&o->rawData.asU32[0] + valueOffset), sizeof(u32));
+            } else {
+                packet_read(p, &value, sizeof(u32));
+            }
+        }
 
         if (o->oSyncID != 0 && o->oSyncID >= RESERVED_IDS_SYNC_OBJECT_OFFSET) {
             if (o->oSyncID >= MAX_SYNC_OBJECTS) {

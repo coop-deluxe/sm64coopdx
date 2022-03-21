@@ -8,6 +8,30 @@
 #include "smlua_model_utils.h"
 #include "pc/debuglog.h"
 
+#define MAX_SPAWN_OBJECT_FIELDS 16
+struct LuaObjectField gSpawnObjectFields[MAX_SPAWN_OBJECT_FIELDS] = { 0 };
+u8 gSpawnObjectFieldCount = 0;
+bool gSpawningObject = false;
+
+void spawn_object_remember_field(struct LuaObjectField* field) {
+    // make sure it's a field that isn't normally sent in spawn object packet
+    if (field->valueOffset < (sizeof(s32) * 80)) {
+        return;
+    }
+
+    // check for duplicates
+    for (int i = 0; i < gSpawnObjectFieldCount; i++) {
+        if (field->valueOffset == gSpawnObjectFields[i].valueOffset) { return; }
+    }
+
+    // remember field
+    memcpy(&gSpawnObjectFields[gSpawnObjectFieldCount], field, sizeof(struct LuaObjectField));
+    gSpawnObjectFieldCount++;
+    if (gSpawnObjectFieldCount >= MAX_SPAWN_OBJECT_FIELDS) {
+        gSpawnObjectFieldCount = MAX_SPAWN_OBJECT_FIELDS - 1;
+    }
+}
+
 static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction, bool doSync) {
     if (doSync) {
         // prevent spawning objects before area is synchronized
@@ -53,6 +77,8 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     if (!doSync) { obj->coopFlags |= COOP_OBJ_FLAG_NON_SYNC; }
 
     if (objSetupFunction != 0) {
+        gSpawningObject = true;
+        gSpawnObjectFieldCount = 0;
         lua_State* L = gLuaState;
         lua_rawgeti(L, LUA_REGISTRYINDEX, objSetupFunction);
         smlua_push_object(L, LOT_OBJECT, obj);
@@ -71,6 +97,9 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
         u32 models[] = { loadedModelId };
         network_send_spawn_objects(spawn_objects, models, 1);
     }
+
+    gSpawningObject = false;
+    gSpawnObjectFieldCount = 0;
 
     return obj;
 }

@@ -9,6 +9,7 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/mods/mods.h"
 
 #define LUA_VEC3S_FIELD_COUNT 3
@@ -468,6 +469,12 @@ static int smlua__set_field(lua_State* L) {
         return 0;
     }
 
+    if (data->immutable) {
+        LOG_LUA("_set_field on immutable key '%s'", key);
+        smlua_logline();
+        return 0;
+    }
+
     if ((u32)lot == (u32)LOT_OBJECT) {
         struct Object* obj = (struct Object*)pointer;
         if (!smlua_is_valid_object_field(obj, data)) {
@@ -475,12 +482,9 @@ static int smlua__set_field(lua_State* L) {
             smlua_logline();
             return 0;
         }
-    }
-
-    if (data->immutable) {
-        LOG_LUA("_set_field on immutable key '%s'", key);
-        smlua_logline();
-        return 0;
+        if (gSpawningObject) {
+            spawn_object_remember_field(data);
+        }
     }
 
     void* valuePointer = NULL;
