@@ -18,6 +18,7 @@ u64 osClockRate = 62500000;
 s32 osPiStartDma(UNUSED OSIoMesg *mb, UNUSED s32 priority, UNUSED s32 direction,
                  uintptr_t devAddr, void *vAddr, size_t nbytes,
                  UNUSED OSMesgQueue *mq) {
+    //printf("osPiStartDma: Copying %u bytes from %p to %p!\n", nbytes, (void *)devAddr, vAddr);
     memcpy(vAddr, (const void *) devAddr, nbytes);
     return 0;
 }
@@ -32,9 +33,11 @@ void osCreateMesgQueue(OSMesgQueue *mq, OSMesg *msgBuf, s32 count) {
 
 void osSetEventMesg(UNUSED OSEvent e, UNUSED OSMesgQueue *mq, UNUSED OSMesg msg) {
 }
+
 s32 osJamMesg(UNUSED OSMesgQueue *mq, UNUSED OSMesg msg, UNUSED s32 flag) {
     return 0;
 }
+
 s32 osSendMesg(UNUSED OSMesgQueue *mq, UNUSED OSMesg msg, UNUSED s32 flag) {
 #ifdef VERSION_EU
     s32 index;
