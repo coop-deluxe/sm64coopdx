@@ -19,6 +19,11 @@ void spawn_object_remember_field(struct LuaObjectField* field) {
         return;
     }
 
+    // make sure it's a field that can be transmitted
+    if (field->valueType != LVT_F32 && field->valueType != LVT_S32 && field->valueType != LVT_U32) {
+        return;
+    }
+
     // check for duplicates
     for (int i = 0; i < gSpawnObjectFieldCount; i++) {
         if (field->valueOffset == gSpawnObjectFields[i].valueOffset) { return; }
