@@ -10,7 +10,7 @@ static void bhv_bowser_bomb_hit_player(void) {
     networkBowserBombHit = 0;
 
     o->oInteractStatus &= ~INT_STATUS_INTERACTED;
-    spawn_object(o, MODEL_EXPLOSION, bhvExplosion);
+    spawn_object(o, smlua_model_util_load(E_MODEL_EXPLOSION), bhvExplosion);
     o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }
 
@@ -21,7 +21,7 @@ static void bhv_bowser_bomb_interacted(void) {
     }
     networkBowserBombHit = 0;
 
-    spawn_object(o, MODEL_BOWSER_FLAMES, bhvBowserBombExplosion);
+    spawn_object(o, smlua_model_util_load(E_MODEL_BOWSER_FLAMES), bhvBowserBombExplosion);
     create_sound_spawner(SOUND_GENERAL_BOWSER_BOMB_EXPLOSION);
     set_camera_shake_from_point(SHAKE_POS_LARGE, o->oPosX, o->oPosY, o->oPosZ);
     o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
@@ -56,7 +56,7 @@ void bhv_bowser_bomb_explosion_loop(void) {
 
     cur_obj_scale((f32) o->oTimer / 14.0f * 9.0 + 1.0);
     if ((o->oTimer % 4 == 0) && (o->oTimer < 20)) {
-        mineSmoke = spawn_object(o, MODEL_BOWSER_SMOKE, bhvBowserBombSmoke);
+        mineSmoke = spawn_object(o, smlua_model_util_load(E_MODEL_BOWSER_SMOKE), bhvBowserBombSmoke);
         if (mineSmoke != NULL) {
             mineSmoke->oPosX += random_float() * 600.0f - 400.0f;
             mineSmoke->oPosZ += random_float() * 600.0f - 400.0f;
