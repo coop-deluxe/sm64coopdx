@@ -119,6 +119,7 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
     packet_write(&p, &modRemoteIndex, sizeof(u16));
 
     packet_write(&p, &lntKeyCount, sizeof(u16));
+
     for (int i = 0; i < lntKeyCount; i++) {
         if (!packet_write_lnt(&p, &lntKeys[i])) { return; }
     }

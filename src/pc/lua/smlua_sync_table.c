@@ -261,7 +261,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     lua_pop(L, 1); // pop seq value
 
     // set seq number
-    if (!gLuaInitializingScript && alterSeq) {
+    if (alterSeq) {
         seq += MAX_PLAYERS + (MAX_PLAYERS - gNetworkPlayers[0].globalIndex);
         lua_pushvalue(L, keyIndex);
         lua_pushinteger(L, seq);
@@ -282,7 +282,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     }
 
     // send over the network
-    if (!gLuaInitializingScript && seq > 0) {
+    if (!gLuaInitializingScript) {
         network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, sUnwoundLntsCount, sUnwoundLnts, &lntValue);
     }
 
@@ -513,14 +513,17 @@ static void smlua_sync_table_send_table(u8 toLocalIndex) {
     lua_pushnil(L); // first key
     while (lua_next(L, internalIndex) != 0) {
         // uses 'key' (at index -2) and 'value' (at index -1)
-        //LOG_INFO("    sending sync table field: %s", lua_tostring(L, -2));
 
-        lua_pushvalue(L, tableIndex); // insert sync table
-        lua_insert(L, -3); // re-order sync table
-
-        smlua_sync_table_send_field(toLocalIndex, internalIndex, false);
-
-        lua_remove(L, -3); // remove sync table
+        if (lua_type(L, -1) == LUA_TTABLE) {
+            LOG_INFO("    sending sync table field (table): %s", lua_tostring(L, -2));
+            smlua_sync_table_send_table(toLocalIndex);
+        } else {
+            LOG_INFO("    sending sync table field: %s", lua_tostring(L, -2));
+            lua_pushvalue(L, tableIndex); // insert sync table
+            lua_insert(L, -3); // re-order sync table
+            smlua_sync_table_send_field(toLocalIndex, internalIndex, false);
+            lua_remove(L, -3); // remove sync table
+        }
 
         lua_pop(L, 1); // removed value ; keeps 'key' for next iteration
     }
