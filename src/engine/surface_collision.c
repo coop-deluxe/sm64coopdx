@@ -425,6 +425,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
     // Iterate through the list of floors until there are no more floors.
     while (surfaceNode != NULL) {
         surf = surfaceNode->surface;
+        if (surf == NULL) { break; }
         surfaceNode = surfaceNode->next;
         interpolate = gInterpolatingSurfaces && surf->modifiedTimestamp == gGlobalTimer;
 
@@ -521,7 +522,10 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
             continue;
         }
 
-        *pheight = height;
+        if (pheight != NULL) {
+            *pheight = height;
+        }
+
         if (interpolate) {
             static struct Surface s;
             s.type = surf->type;
