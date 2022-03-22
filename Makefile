@@ -2,9 +2,6 @@
 
 include util.mk
 
-# Dynos
-include dynos.mk
-
 # Default target
 default: all
 
@@ -96,10 +93,10 @@ $(eval $(call validate-option,COMPILER,ido gcc))
 
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
-  EXTRA_INCLUDES := ../include/1 ../include/2 ../include/3 ../include/4
+  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
   EXTRA_CFLAGS := -Wno-expansion-to-defined
 
-  EXTRA_CPP_INCLUDES := ../include/cpp
+  EXTRA_CPP_INCLUDES := -I ../include/cpp
   EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
 else
   EXTRA_INCLUDES ?=
@@ -389,12 +386,15 @@ ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
   endif
 
   # Make tools if out of date
-  $(info Building tools...)
-  #DUMMY != $(MAKE) -s -C $(TOOLS_DIR) $(if $(filter-out ido0,$(COMPILER)$(USE_QEMU_IRIX)),all-except-recomp,) >&2 || echo FAIL
-  DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
-    ifeq ($(DUMMY),FAIL)
-      $(error Failed to build tools)
-    endif
+  ifeq ($(WINDOWS_AUTO_BUILDER),0)
+    $(info Building tools...)
+    #DUMMY != $(MAKE) -s -C $(TOOLS_DIR) $(if $(filter-out ido0,$(COMPILER)$(USE_QEMU_IRIX)),all-except-recomp,) >&2 || echo FAIL
+    DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
+      ifeq ($(DUMMY),FAIL)
+        $(error Failed to build tools)
+      endif
+  endif
+
   $(info Building Game...)
 
 endif
@@ -472,6 +472,9 @@ GODDARD_SRC_DIRS := src/goddard src/goddard/dynlists
 
 # File dependencies and variables for specific files
 include Makefile.split
+
+# Dynos
+include dynos.mk
 
 # Source code files
 LEVEL_C_FILES     := $(wildcard levels/*/leveldata.c) $(wildcard levels/*/script.c) $(wildcard levels/*/geo.c)
@@ -591,7 +594,10 @@ ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
 endif
 
-ifeq ($(COMPILER),gcc)
+ifeq ($(WINDOWS_AUTO_BUILDER),1)
+  CC      := cc
+  CXX     := g++
+else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
 else ifeq ($(TARGET_WEB),1) # As in, web PC port

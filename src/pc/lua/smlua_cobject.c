@@ -337,8 +337,8 @@ static bool smlua_field_valid(struct LuaObjectField* data, enum LuaObjectType lo
     size_t length = maximum - minimum;
     size_t maxlength = sizeof(void*) + sizeof(u32);
 
-    if (length < maxlength) {
-        return (data->lot == lot) && (data->valueOffset == offset) && (lot != LOT_NONE);
+    if (length >= maxlength) {
+        return (data->lot == lot) && (lot != LOT_NONE);
     }
 
     return (length >= maxlength);
