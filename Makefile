@@ -96,7 +96,7 @@ ifeq ($(WINDOWS_AUTO_BUILDER),1)
   EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
   EXTRA_CFLAGS := -Wno-expansion-to-defined
 
-  EXTRA_CPP_INCLUDES := ../include/cpp
+  EXTRA_CPP_INCLUDES := -I ../include/cpp
   EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
 else
   EXTRA_INCLUDES ?=
