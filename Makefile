@@ -594,7 +594,10 @@ ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
 endif
 
-ifeq ($(COMPILER),gcc)
+ifeq ($(WINDOWS_AUTO_BUILDER),1)
+  CC      := cc
+  CXX     := g++
+else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
 else ifeq ($(TARGET_WEB),1) # As in, web PC port
