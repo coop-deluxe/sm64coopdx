@@ -39,6 +39,8 @@ bool mods_generate_remote_base_path(void) {
 
     // make directory
     if (!fs_sys_dir_exists(gRemoteModsBasePath)) { fs_sys_mkdir(gRemoteModsBasePath); }
+
+    return true;
 }
 
 void mods_activate(struct Mods* mods) {
