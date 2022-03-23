@@ -380,6 +380,11 @@ static bool smlua_is_valid_object_field(struct Object* obj, struct LuaObjectFiel
         case id_bhvHauntedChair:
             if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oHauntedChairUnk100))) { return false; }
             break;
+        case id_bhvHiddenStar:
+        case id_bhvHiddenRedCoinStar:
+        case id_bhvBowserCourseRedCoinStar:
+            if (!smlua_field_valid(data, LOT_NONE, offsetof(struct Object, oHiddenStarLastInteractedObject ))) { return false; }
+            break;
         case id_bhvBreakableBox:
         case id_bhvHiddenObject:
             if (!smlua_field_valid(data, LOT_OBJECT, offsetof(struct Object, oHiddenObjectUnkF4))) { return false; }

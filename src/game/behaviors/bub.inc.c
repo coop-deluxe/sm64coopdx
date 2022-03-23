@@ -48,8 +48,8 @@ void bub_act_0(void) {
 
 void bub_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     f32 dy;
     if (o->oTimer == 0) {
         o->oForwardVel = random_float() * 2 + 2;
@@ -80,8 +80,8 @@ void bub_act_1(void) {
 
 void bub_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     f32 dy;
     if (o->oTimer < 20) {
         if (o->oInteractStatus & INT_STATUS_INTERACTED)
@@ -116,12 +116,14 @@ void (*sCheepCheepActions[])(void) = { bub_act_0, bub_act_1, bub_act_2 };
 
 void bhv_bub_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oCheepCheepUnkF4);
-        network_init_object_field(o, &o->oCheepCheepUnkF8);
-        network_init_object_field(o, &o->oCheepCheepUnkFC);
-        network_init_object_field(o, &o->oCheepCheepUnk104);
-        network_init_object_field(o, &o->oCheepCheepUnk108);
+        struct SyncObject *so = network_init_object(o, 4000.0f);
+        if (so) {
+            network_init_object_field(o, &o->oCheepCheepUnkF4);
+            network_init_object_field(o, &o->oCheepCheepUnkF8);
+            network_init_object_field(o, &o->oCheepCheepUnkFC);
+            network_init_object_field(o, &o->oCheepCheepUnk104);
+            network_init_object_field(o, &o->oCheepCheepUnk108);
+        }
     }
 
     struct Object* player = nearest_player_to_object(o);

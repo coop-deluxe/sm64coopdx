@@ -38,20 +38,22 @@ void bhv_camera_lakitu_init(void) {
         spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
     }
     lakituTargetLocalIndex = UNKNOWN_LOCAL_INDEX;
-
-    struct SyncObject* so = network_init_object(o, 4000.0f);
-    if (so) {
-        so->ignore_if_true = bhv_camera_lakitu_ignore_if_true;
-        so->override_ownership = bhv_camera_lakitu_override_ownership;
-        so->on_received_post = bhv_camera_lakitu_on_received_post;
-        network_init_object_field(o, &o->oAngleVelPitch);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oCameraLakituBlinkTimer);
-        network_init_object_field(o, &o->oCameraLakituSpeed);
-        network_init_object_field(o, &o->oCameraLakituCircleRadius);
-        network_init_object_field(o, &o->oCameraLakituFinishedDialog);
-        network_init_object_field(o, &o->oCameraLakituUnk104);
-        network_init_object_field(o, &o->oCameraLakituPitchVel);
+    
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject *so = network_init_object(o, 4000.0f);
+        if (so) {
+            so->ignore_if_true = bhv_camera_lakitu_ignore_if_true;
+            so->override_ownership = bhv_camera_lakitu_override_ownership;
+            so->on_received_post = bhv_camera_lakitu_on_received_post;
+            network_init_object_field(o, &o->oAngleVelPitch);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &o->oCameraLakituBlinkTimer);
+            network_init_object_field(o, &o->oCameraLakituSpeed);
+            network_init_object_field(o, &o->oCameraLakituCircleRadius);
+            network_init_object_field(o, &o->oCameraLakituFinishedDialog);
+            network_init_object_field(o, &o->oCameraLakituUnk104);
+            network_init_object_field(o, &o->oCameraLakituPitchVel);
+        }
     }
 }
 
@@ -112,8 +114,8 @@ static void camera_lakitu_intro_act_show_dialog(void) {
         marioState = &gMarioStates[lakituTargetLocalIndex];
     }
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 targetMovePitch = 0;
     s16 targetMoveYaw = 0;

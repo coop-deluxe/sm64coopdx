@@ -24,7 +24,7 @@ static u8 boo_ignore_update(void) {
 }
 
 struct SyncObject* boo_network_init_object(void) {
-    struct SyncObject* so = network_init_object(o, 4000.0f);
+    struct SyncObject *so = network_init_object(o, 4000.0f);
     if (so == NULL) { return NULL; }
     so->ignore_if_true = boo_ignore_update;
     network_init_object_field(o, &o->oBooBaseScale);

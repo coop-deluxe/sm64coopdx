@@ -1526,10 +1526,11 @@
 | oTTCSpinnerDir | `integer` |  |
 | oTTCChangeDirTimer | `integer` |  |
 | oBetaTrampolineMarioOnTrampoline | `integer` |  |
-| oTreasureChestUnkF4 | `integer` |  |
-| oTreasureChestUnkF8 | `integer` |  |
-| oTreasureChestUnkFC | `integer` |  |
+| oTreasureChestCurrentAnswer | `integer` |  |
+| oTreasureChestIsLastInteractionIncorrect | `integer` |  |
+| oTreasureChestIsAboveWater | `integer` |  |
 | oTreasureChestSound | `integer` |  |
+| oTreasureChestLastNetworkPlayerIndex | `integer` |  |
 | oTreeSnowOrLeafUnkF4 | `integer` |  |
 | oTreeSnowOrLeafUnkF8 | `integer` |  |
 | oTreeSnowOrLeafUnkFC | `integer` |  |
