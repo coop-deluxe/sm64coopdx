@@ -120,9 +120,12 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
 
     packet_write(&p, &lntKeyCount, sizeof(u16));
 
+    //LOG_INFO("TX SYNC (%llu):", seq);
     for (int i = 0; i < lntKeyCount; i++) {
         if (!packet_write_lnt(&p, &lntKeys[i])) { return; }
+        //LOG_INFO("  %s", smlua_lnt_to_str(&lntKeys[i]));
     }
+    //LOG_INFO("    -> %s", smlua_lnt_to_str(lntValue));
 
     if (!packet_write_lnt(&p, lntValue)) { return; }
 
@@ -146,9 +149,13 @@ void network_receive_lua_sync_table(struct Packet* p) {
     packet_read(p, &modRemoteIndex, sizeof(u16));
 
     packet_read(p, &lntKeyCount, sizeof(u16));
+
+    //LOG_INFO("RX SYNC (%llu):", seq);
     for (int i = 0; i < lntKeyCount; i++) {
         if (!packet_read_lnt(p, &lntKeys[i])) { goto cleanup; }
+        //LOG_INFO("  %s", smlua_lnt_to_str(&lntKeys[i]));
     }
+    //LOG_INFO("    -> %s", smlua_lnt_to_str(&lntValue));
 
     if (!packet_read_lnt(p, &lntValue)) { goto cleanup; }
 

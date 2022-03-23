@@ -515,10 +515,8 @@ static void smlua_sync_table_send_table(u8 toLocalIndex) {
         // uses 'key' (at index -2) and 'value' (at index -1)
 
         if (lua_type(L, -1) == LUA_TTABLE) {
-            LOG_INFO("    sending sync table field (table): %s", lua_tostring(L, -2));
             smlua_sync_table_send_table(toLocalIndex);
         } else {
-            LOG_INFO("    sending sync table field: %s", lua_tostring(L, -2));
             lua_pushvalue(L, tableIndex); // insert sync table
             lua_insert(L, -3); // re-order sync table
             smlua_sync_table_send_field(toLocalIndex, internalIndex, false);
