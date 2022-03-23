@@ -187,7 +187,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 void network_receive_spawn_objects(struct Packet* p);
 
 // packet_spawn_star.c
-void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams);
+void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams, u8 networkPlayerIndex);
 void network_receive_spawn_star(struct Packet* p);
 void network_send_spawn_star_nle(struct Object* o, u32 params);
 void network_receive_spawn_star_nle(struct Packet* p);

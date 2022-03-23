@@ -23,23 +23,18 @@ static struct ObjectHitbox sRedCoinHitbox = {
  * Red coin initialization function. Sets the coin's hitbox and parent object.
  */
 void bhv_red_coin_init(void) {
-    // This floor and floor height are unused. Perhaps for orange number spawns originally?
-    struct Surface *dummyFloor;
-    UNUSED f32 floorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &dummyFloor);
-
-    struct Object *hiddenRedCoinStar;
-
     // Set the red coins to have a parent of the closest red coin star.
-    hiddenRedCoinStar = cur_obj_nearest_object_with_behavior(bhvHiddenRedCoinStar);
-    if (hiddenRedCoinStar != NULL)
-        o->parentObj = hiddenRedCoinStar;
-    else {
+    struct Object *hiddenRedCoinStar = cur_obj_nearest_object_with_behavior(bhvHiddenRedCoinStar);
+    // If it's not a typical red coin star, it's a Bowser one.
+    if (hiddenRedCoinStar == NULL) {
         hiddenRedCoinStar = cur_obj_nearest_object_with_behavior(bhvBowserCourseRedCoinStar);
-        if (hiddenRedCoinStar != NULL) {
-            o->parentObj = hiddenRedCoinStar;
-        } else {
-            o->parentObj = NULL;
-        }
+    }
+    
+    // If we found a red coin star, It's our parent.
+    if (hiddenRedCoinStar != NULL) {
+        o->parentObj = hiddenRedCoinStar;
+    } else {
+        o->parentObj = NULL;
     }
 
     obj_set_hitbox(o, &sRedCoinHitbox);
@@ -56,6 +51,13 @@ void bhv_red_coin_loop(void) {
         if (o->parentObj != NULL) {
             // ...increment the star's counter.
             o->parentObj->oHiddenStarTriggerCounter++;
+            
+            // Set the last person who interacted with a red coin to the 
+            // parent so only they get the star cutscene.
+            struct MarioState *player = nearest_mario_state_to_object(o);
+            if (player) {
+                o->parentObj->oHiddenStarLastInteractedObject = player;
+            }
 
             // For JP version, play an identical sound for all coins.
 #ifdef VERSION_JP

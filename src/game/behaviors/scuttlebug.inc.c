@@ -25,21 +25,21 @@ s32 update_angle_from_move_flags(s32 *angle) {
 
 void bhv_scuttlebug_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oFlags);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oHomeX);
-        network_init_object_field(o, &o->oHomeY);
-        network_init_object_field(o, &o->oHomeZ);
-        network_init_object_field(o, &o->oInteractStatus);
-        network_init_object_field(o, &o->oScuttlebugUnkF4);
+        struct SyncObject *so = network_init_object(o, 4000.0f);
+        if (so) {
+            network_init_object_field(o, &o->oFlags);
+            network_init_object_field(o, &o->oForwardVel);
+            network_init_object_field(o, &o->oHomeX);
+            network_init_object_field(o, &o->oHomeY);
+            network_init_object_field(o, &o->oHomeZ);
+            network_init_object_field(o, &o->oInteractStatus);
+            network_init_object_field(o, &o->oScuttlebugUnkF4);
+        }
     }
 
-    struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    struct Object *player = nearest_player_to_object(o);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
-    UNUSED s32 unused;
-    f32 sp18;
     cur_obj_update_floor_and_walls();
     if (o->oSubAction != 0
         && cur_obj_set_hitbox_and_die_if_attacked(&sScuttlebugHitbox, SOUND_OBJ_DYING_ENEMY1,
@@ -114,13 +114,16 @@ void bhv_scuttlebug_loop(void) {
                 o->oSubAction = 0;
             break;
     }
-    if (o->oForwardVel < 10.0f)
+    f32 sp18;
+    if (o->oForwardVel < 10.0f) {
         sp18 = 1.0f;
-    else
+    } else {
         sp18 = 3.0f;
+    }
     cur_obj_init_animation_with_accel_and_sound(0, sp18);
-    if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND)
+    if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         set_obj_anim_with_accel_and_sound(1, 23, SOUND_OBJ2_SCUTTLEBUG_WALK);
+    }
     if (o->parentObj != o) {
         if (obj_is_hidden(o))
             obj_mark_for_deletion(o);
@@ -134,31 +137,32 @@ void bhv_scuttlebug_loop(void) {
 
 void bhv_scuttlebug_spawn_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oScuttlebugSpawnerUnkF4);
-        network_init_object_field(o, &o->oScuttlebugSpawnerUnk88);
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oScuttlebugSpawnerUnkF4);
+            network_init_object_field(o, &o->oScuttlebugSpawnerUnk88);
+        }
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (marioState->playerIndex != 0) { return; }
 
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
-    struct Object *scuttlebug;
     if (o->oAction == 0) {
         if (o->oTimer > 30 && 500.0f < distanceToPlayer && distanceToPlayer < 1500.0f) {
             cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
-            scuttlebug = spawn_object(o, MODEL_SCUTTLEBUG, bhvScuttlebug);
+            struct Object *scuttlebug = spawn_object(o, MODEL_SCUTTLEBUG, bhvScuttlebug);
             if (scuttlebug != NULL) {
                 scuttlebug->oScuttlebugUnkF4 = o->oScuttlebugSpawnerUnkF4;
                 scuttlebug->oForwardVel = 30.0f;
                 scuttlebug->oVelY = 80.0f;
 
                 network_set_sync_id(scuttlebug);
-                struct Object* spawn_objects[] = { scuttlebug };
+                struct Object *spawn_objects[] = { scuttlebug };
                 u32 models[] = { MODEL_SCUTTLEBUG };
                 network_send_spawn_objects(spawn_objects, models, 1);
             }

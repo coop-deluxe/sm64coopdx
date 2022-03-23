@@ -4,18 +4,19 @@ u8 bhv_sl_snowman_wind_loop_continue_dialog(void) { return o->oSubAction == SL_S
 
 void bhv_sl_snowman_wind_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oSubAction);
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oSubAction);
+        }
     }
 
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    struct Object *player = nearest_player_to_object(o);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
-    UNUSED s32 unusedVar = 0;
     s16 marioAngleFromWindSource;
     Vec3f tempPos;
     

@@ -97,7 +97,7 @@ static void homing_amp_appear_loop(void) {
  */
 static void homing_amp_chase_loop(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     // Lock on to Mario if he ever goes within 11.25 degrees of the amp's line of sight
     if ((angleToPlayer - 0x400 < o->oMoveAngleYaw)
@@ -199,15 +199,17 @@ static void amp_attack_cooldown_loop(void) {
  */
 void bhv_homing_amp_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oAmpYPhase);
-        network_init_object_field(o, &o->oAnimState);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oFaceAngleYaw);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oFriction);
-        network_init_object_field(o, &o->oHomingAmpAvgY);
-        network_init_object_field(o, &o->oHomingAmpLockedOn);
+        struct SyncObject *so = network_init_object(o, 4000.0f);
+        if (so) {
+            network_init_object_field(o, &o->oAmpYPhase);
+            network_init_object_field(o, &o->oAnimState);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &o->oFaceAngleYaw);
+            network_init_object_field(o, &o->oForwardVel);
+            network_init_object_field(o, &o->oFriction);
+            network_init_object_field(o, &o->oHomingAmpAvgY);
+            network_init_object_field(o, &o->oHomingAmpLockedOn);
+        }
     }
 
     switch (o->oAction) {
@@ -342,13 +344,15 @@ static void circling_amp_idle_loop(void) {
  */
 void bhv_circling_amp_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oAmpYPhase);
-        network_init_object_field(o, &o->oAnimState);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oFaceAngleYaw);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oFriction);
+        struct SyncObject *so = network_init_object(o, 4000.0f);
+        if (so) {
+            network_init_object_field(o, &o->oAmpYPhase);
+            network_init_object_field(o, &o->oAnimState);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &o->oFaceAngleYaw);
+            network_init_object_field(o, &o->oForwardVel);
+            network_init_object_field(o, &o->oFriction);
+        }
     }
 
     switch (o->oAction) {

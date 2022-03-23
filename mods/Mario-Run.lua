@@ -1,5 +1,5 @@
 -- name: Mario RUN!
--- description: Mario Is contantly runing
+-- description: Mario is constantly running.
 
 Threshold = 50 --set Threshold to 50
 

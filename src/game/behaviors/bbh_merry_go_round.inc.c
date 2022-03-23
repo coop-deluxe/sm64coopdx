@@ -21,14 +21,13 @@ static void handle_merry_go_round_music(void) {
         }
     } else {
         // Get Mario's floor and floor surface type
-        struct Surface *marioFloor;
-        u16 marioFloorType;
+        struct Surface *marioFloor = NULL;
+        struct Object *marioObject = gMarioObjects[0];
+        u16 marioFloorType = 0;
 
-        find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &marioFloor);
+        find_floor(marioObject->oPosX, marioObject->oPosY, marioObject->oPosZ, &marioFloor);
 
-        if (marioFloor == NULL) {
-            marioFloorType = 0;
-        } else {
+        if (marioFloor != NULL) {
             marioFloorType = marioFloor->type;
         }
 

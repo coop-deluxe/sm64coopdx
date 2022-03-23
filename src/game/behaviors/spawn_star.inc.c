@@ -140,7 +140,7 @@ static u8 spawn_star_deduplication(u32* array, u8* count, u32 behParams) {
     return TRUE;
 }
 
-struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
+struct Object *spawn_default_star(f32 x, f32 y, f32 z) {
     if (sCurrPlayMode != PLAY_MODE_NORMAL && sCurrPlayMode != PLAY_MODE_PAUSED) { return NULL; }
     if (o == NULL) { return NULL; }
     u32 behParams = o->oBehParams;
@@ -154,12 +154,12 @@ struct Object* spawn_default_star(f32 x, f32 y, f32 z) {
     star = spawn_star(star, x, y, z);
     if (star != NULL) {
         star->oBehParams2ndByte = 0;
-        network_send_spawn_star(star, 0, x, y, z, behParams);
+        network_send_spawn_star(star, 0, x, y, z, behParams, UNKNOWN_GLOBAL_INDEX);
     }
     return star;
 }
 
-struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
+struct Object *spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
     u32 behParams = o->oBehParams;
 
     // de-duplication checking
@@ -171,12 +171,12 @@ struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
     star = spawn_star(star, x, y, z);
     if (star != NULL) {
         star->oBehParams2ndByte = 1;
-        network_send_spawn_star(star, 1, x, y, z, behParams);
+        network_send_spawn_star(star, 1, x, y, z, behParams, UNKNOWN_GLOBAL_INDEX);
     }
     return star;
 }
 
-struct Object* spawn_no_exit_star(f32 x, f32 y, f32 z) {
+struct Object *spawn_no_exit_star(f32 x, f32 y, f32 z) {
     u32 behParams = o->oBehParams;
 
     // de-duplication checking
@@ -189,14 +189,45 @@ struct Object* spawn_no_exit_star(f32 x, f32 y, f32 z) {
     if (star != NULL) {
         star->oBehParams2ndByte = 1;
         star->oInteractionSubtype |= INT_SUBTYPE_NO_EXIT;
-        network_send_spawn_star(star, 2, x, y, z, behParams);
+        network_send_spawn_star(star, 2, x, y, z, behParams, UNKNOWN_GLOBAL_INDEX);
+    }
+    return star;
+}
+
+/**
+ * A special star spawning routine just for a networked stars.
+ * These stars require the global index for a network player for proper
+ * cutscene functionality. 
+ */
+struct Object *spawn_networked_default_star(f32 x, f32 y, f32 z, u8 networkPlayerIndex) {
+    if (sCurrPlayMode != PLAY_MODE_NORMAL && sCurrPlayMode != PLAY_MODE_PAUSED) { return NULL; }
+    if (o == NULL) { return NULL; }
+    u32 behParams = o->oBehParams;
+
+    // de-duplication checking
+    if (spawn_star_deduplication(gSpawnedStarDefault, &gSpawnedStarDefaultCount, behParams)) {
+        return NULL;
+    }
+
+    struct Object *star = NULL;
+    star = spawn_star(star, x, y, z);
+    if (star != NULL) {
+        star->oBehParams2ndByte = 0;
+        //printf("spawn_networked_default_star: Network Player Index is %i, Our Global Index is %i.\n", networkPlayerIndex, gNetworkPlayers[0].globalIndex);
+        if (networkPlayerIndex == gNetworkPlayers[0].globalIndex) {
+            star->oStarSpawnExtCutsceneFlags = 1;
+        } else {
+            star->oStarSpawnExtCutsceneFlags = 0;
+        }
+        network_send_spawn_star(star, 0, x, y, z, behParams, networkPlayerIndex);
     }
     return star;
 }
 
 void bhv_hidden_red_coin_star_init(void) {
-    if (gCurrCourseNum != COURSE_JRB)
+    if (gCurrCourseNum != COURSE_JRB) {
         spawn_object(o, MODEL_TRANSPARENT_STAR, bhvRedCoinStarMarker);
+    }
 
     s16 redCoins = count_objects_with_behavior(bhvRedCoin);
     if (redCoins == 0) {
@@ -206,20 +237,48 @@ void bhv_hidden_red_coin_star_init(void) {
     }
 
     o->oHiddenStarTriggerCounter = 8 - redCoins;
+    
+    // We haven't interacted with a player yet.
+    // We also don't sync this as not only is it not required
+    // but it also is only set for an interaction.
+    // Therefore this object must already be loaded for it to be set
+    // and if it wasn't. You couldn't of possibly been the one
+    // who last interacted to begin with.
+    o->oHiddenStarLastInteractedObject = NULL;
+    
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oHiddenStarTriggerCounter);
+            network_init_object_field(o, &o->oPosX);
+            network_init_object_field(o, &o->oPosY);
+            network_init_object_field(o, &o->oPosZ);
+            network_init_object_field(o, &o->oTimer);
+        }
+    }
 }
 
 void bhv_hidden_red_coin_star_loop(void) {
     gRedCoinsCollected = o->oHiddenStarTriggerCounter;
     switch (o->oAction) {
         case 0:
-            if (o->oHiddenStarTriggerCounter == 8)
+            if (o->oHiddenStarTriggerCounter == 8) {
                 o->oAction = 1;
+            }
             break;
 
         case 1:
             if (o->oTimer > 2) {
-                spawn_red_coin_cutscene_star(o->oPosX, o->oPosY, o->oPosZ);
-                spawn_mist_particles();
+                struct Object *obj = spawn_red_coin_cutscene_star(o->oPosX, o->oPosY, o->oPosZ);
+                if (obj != NULL) {
+                    if (o->oHiddenStarLastInteractedObject == &gMarioStates[0]) {
+                        obj->oStarSpawnExtCutsceneFlags = 1;
+                    } else {
+                        obj->oStarSpawnExtCutsceneFlags = 0;
+                    }
+                    spawn_mist_particles();
+                }
                 o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
             }
             break;

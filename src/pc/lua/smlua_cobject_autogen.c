@@ -678,7 +678,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                 LVT_U8,     offsetof(struct NetworkPlayer, type),                 true,  LOT_NONE },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 750
+#define LUA_OBJECT_FIELD_COUNT 751
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -999,6 +999,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oHeldState",                                 LVT_U32,                 offsetof(struct Object, oHeldState),                                 false, LOT_NONE         },
     { "oHiddenBlueCoinSwitch",                      LVT_COBJECT_P,           offsetof(struct Object, oHiddenBlueCoinSwitch),                      false, LOT_OBJECT       },
     { "oHiddenObjectUnkF4",                         LVT_COBJECT_P,           offsetof(struct Object, oHiddenObjectUnkF4),                         false, LOT_OBJECT       },
+//  { "oHiddenStarLastInteractedObject",            LVT_???,                 offsetof(struct Object, oHiddenStarLastInteractedObject),            false, LOT_???          }, <--- UNIMPLEMENTED
     { "oHiddenStarTriggerCounter",                  LVT_S32,                 offsetof(struct Object, oHiddenStarTriggerCounter),                  false, LOT_NONE         },
     { "oHomeX",                                     LVT_F32,                 offsetof(struct Object, oHomeX),                                     false, LOT_NONE         },
     { "oHomeY",                                     LVT_F32,                 offsetof(struct Object, oHomeY),                                     false, LOT_NONE         },
@@ -1332,10 +1333,11 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oToadMessageState",                          LVT_S32,                 offsetof(struct Object, oToadMessageState),                          false, LOT_NONE         },
 //  { "oToxBoxMovementPattern",                     LVT_???,                 offsetof(struct Object, oToxBoxMovementPattern),                     false, LOT_???          }, <--- UNIMPLEMENTED
     { "oToxBoxMovementStep",                        LVT_S32,                 offsetof(struct Object, oToxBoxMovementStep),                        false, LOT_NONE         },
+    { "oTreasureChestCurrentAnswer",                LVT_S32,                 offsetof(struct Object, oTreasureChestCurrentAnswer),                false, LOT_NONE         },
+    { "oTreasureChestIsAboveWater",                 LVT_S32,                 offsetof(struct Object, oTreasureChestIsAboveWater),                 false, LOT_NONE         },
+    { "oTreasureChestIsLastInteractionIncorrect",   LVT_S32,                 offsetof(struct Object, oTreasureChestIsLastInteractionIncorrect),   false, LOT_NONE         },
+    { "oTreasureChestLastNetworkPlayerIndex",       LVT_S16,                 offsetof(struct Object, oTreasureChestLastNetworkPlayerIndex),       false, LOT_NONE         },
     { "oTreasureChestSound",                        LVT_S32,                 offsetof(struct Object, oTreasureChestSound),                        false, LOT_NONE         },
-    { "oTreasureChestUnkF4",                        LVT_S32,                 offsetof(struct Object, oTreasureChestUnkF4),                        false, LOT_NONE         },
-    { "oTreasureChestUnkF8",                        LVT_S32,                 offsetof(struct Object, oTreasureChestUnkF8),                        false, LOT_NONE         },
-    { "oTreasureChestUnkFC",                        LVT_S32,                 offsetof(struct Object, oTreasureChestUnkFC),                        false, LOT_NONE         },
     { "oTreeSnowOrLeafUnkF4",                       LVT_S32,                 offsetof(struct Object, oTreeSnowOrLeafUnkF4),                       false, LOT_NONE         },
     { "oTreeSnowOrLeafUnkF8",                       LVT_S32,                 offsetof(struct Object, oTreeSnowOrLeafUnkF8),                       false, LOT_NONE         },
     { "oTreeSnowOrLeafUnkFC",                       LVT_S32,                 offsetof(struct Object, oTreeSnowOrLeafUnkFC),                       false, LOT_NONE         },

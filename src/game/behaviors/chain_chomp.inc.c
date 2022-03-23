@@ -28,8 +28,13 @@ static struct ObjectHitbox sChainChompHitbox = {
  * Update function for chain chomp part / pivot.
  */
 void bhv_chain_chomp_chain_part_update(void) {
-    if (o->parentObj->behavior != (BehaviorScript*)&bhvChainChomp || o->parentObj->oAction == CHAIN_CHOMP_ACT_UNLOAD_CHAIN) {
+    if (!network_sync_object_initialized(o)) {
+        network_init_object(o, SYNC_DISTANCE_ONLY_DEATH);
+    }
+    
+    if (o->parentObj->behavior != (BehaviorScript *)&bhvChainChomp || o->parentObj->oAction == CHAIN_CHOMP_ACT_UNLOAD_CHAIN) {
         obj_mark_for_deletion(o);
+        network_send_object(o);
     } else if (o->oBehParams2ndByte != CHAIN_CHOMP_CHAIN_PART_BP_PIVOT) {
         struct ChainSegment *segment = &o->parentObj->oChainChompSegments[o->oBehParams2ndByte];
 
@@ -47,17 +52,14 @@ void bhv_chain_chomp_chain_part_update(void) {
  * When mario gets close enough, allocate chain segments and spawn their objects.
  */
 static void chain_chomp_act_uninitialized(void) {
-    struct ChainSegment *segments;
-    s32 i;
-
-    segments = mem_pool_alloc(gObjectMemoryPool, 5 * sizeof(struct ChainSegment));
+    struct ChainSegment *segments = mem_pool_alloc(gObjectMemoryPool, 5 * sizeof(struct ChainSegment));
     if (segments != NULL) {
         // Each segment represents the offset of a chain part to the pivot.
         // Segment 0 connects the pivot to the chain chomp itself. Segment
         // 1 connects the pivot to the chain part next to the chain chomp
         // (chain part 1), etc.
         o->oChainChompSegments = segments;
-        for (i = 0; i <= 4; i++) {
+        for (s32 i = 0; i <= 4; i++) {
             chain_segment_init(&segments[i]);
         }
 
@@ -69,7 +71,7 @@ static void chain_chomp_act_uninitialized(void) {
             != NULL) {
             // Spawn the non-pivot chain parts, starting from the chain
             // chomp and moving toward the pivot
-            for (i = 1; i <= 4; i++) {
+            for (s32 i = 1; i <= 4; i++) {
                 spawn_object_relative(i, 0, 0, 0, o, MODEL_METALLIC_BALL, bhvChainChompChainPart);
             }
 
@@ -84,15 +86,7 @@ static void chain_chomp_act_uninitialized(void) {
  * part as well as from the pivot.
  */
 static void chain_chomp_update_chain_segments(void) {
-    struct ChainSegment *prevSegment;
-    struct ChainSegment *segment;
-    f32 offsetX;
-    f32 offsetY;
-    f32 offsetZ;
-    f32 offset;
     f32 segmentVelY;
-    f32 maxTotalOffset;
-    s32 i;
 
     if (o->oVelY < 0.0f) {
         segmentVelY = o->oVelY;
@@ -103,9 +97,9 @@ static void chain_chomp_update_chain_segments(void) {
     // Segment 0 connects the pivot to the chain chomp itself, and segment i>0
     // connects the pivot to chain part i (1 is closest to the chain chomp).
 
-    for (i = 1; i <= 4; i++) {
-        prevSegment = &o->oChainChompSegments[i - 1];
-        segment = &o->oChainChompSegments[i];
+    for (s32 i = 1; i <= 4; i++) {
+        struct ChainSegment *prevSegment = &o->oChainChompSegments[i - 1];
+        struct ChainSegment *segment = &o->oChainChompSegments[i];
 
         // Apply gravity
 
@@ -116,10 +110,10 @@ static void chain_chomp_update_chain_segments(void) {
         // Cap distance to previous chain part (so that the tail follows the
         // chomp)
 
-        offsetX = segment->posX - prevSegment->posX;
-        offsetY = segment->posY - prevSegment->posY;
-        offsetZ = segment->posZ - prevSegment->posZ;
-        offset = sqrtf(offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ);
+        f32 offsetX = segment->posX - prevSegment->posX;
+        f32 offsetY = segment->posY - prevSegment->posY;
+        f32 offsetZ = segment->posZ - prevSegment->posZ;
+        f32 offset = sqrtf(offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ);
 
         if (offset > o->oChainChompMaxDistBetweenChainParts) {
             offset = o->oChainChompMaxDistBetweenChainParts / offset;
@@ -136,7 +130,7 @@ static void chain_chomp_update_chain_segments(void) {
         offsetZ += prevSegment->posZ;
         offset = sqrtf(offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ);
 
-        maxTotalOffset = o->oChainChompMaxDistFromPivotPerChainPart * (5 - i);
+        f32 maxTotalOffset = o->oChainChompMaxDistFromPivotPerChainPart * (5 - i);
         if (offset > maxTotalOffset) {
             offset = maxTotalOffset / offset;
             offsetX *= offset;
@@ -168,9 +162,9 @@ static void chain_chomp_sub_act_turn(void) {
     chain_chomp_restore_normal_chain_lengths();
     obj_move_pitch_approach(0, 0x100);
 
-    struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    struct Object *player = nearest_player_to_object(o);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
@@ -343,8 +337,6 @@ static void chain_chomp_released_end_cutscene(void) {
  * released.
  */
 static void chain_chomp_act_move(void) {
-    f32 maxDistToPivot;
-
     // Unload chain if mario is far enough
     cur_obj_update_floor_and_walls();
 
@@ -389,7 +381,7 @@ static void chain_chomp_act_move(void) {
                 + o->oChainChompSegments[0].posZ * o->oChainChompSegments[0].posZ);
 
     // If the chain is fully stretched
-    maxDistToPivot = o->oChainChompMaxDistFromPivotPerChainPart * 5;
+    f32 maxDistToPivot = o->oChainChompMaxDistFromPivotPerChainPart * 5;
     if (o->oChainChompDistToPivot > maxDistToPivot) {
         f32 ratio = maxDistToPivot / o->oChainChompDistToPivot;
         o->oChainChompDistToPivot = maxDistToPivot;
@@ -524,9 +516,9 @@ void bhv_wooden_post_update(void) {
     if (o->oWoodenPostOffsetY != 0.0f) {
         o->oPosY = o->oHomeY + o->oWoodenPostOffsetY;
     } else if (!(o->oBehParams & WOODEN_POST_BP_NO_COINS_MASK)) {
-        struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
-        int angleToPlayer = obj_angle_to_object(o, player);
+        struct Object *player = nearest_player_to_object(o);
+        s32 distanceToPlayer = dist_between_objects(o, player);
+        s32 angleToPlayer = obj_angle_to_object(o, player);
 
         // Reset the timer once mario is far enough
         if (distanceToPlayer > 400.0f) {
@@ -536,9 +528,9 @@ void bhv_wooden_post_update(void) {
             // coins
             o->oWoodenPostTotalMarioAngle += (s16)(angleToPlayer - o->oWoodenPostPrevAngleToMario);
             if (absi(o->oWoodenPostTotalMarioAngle) > 0x30000 && o->oTimer < 200) {
-                network_send_object(o);
                 obj_spawn_loot_yellow_coins(o, 5, 20.0f);
                 set_object_respawn_info_bits(o, 1);
+                network_send_object(o);
             }
         }
 

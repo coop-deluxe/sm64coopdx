@@ -7,7 +7,7 @@
 
 extern struct Object* gCurrentObject;
 
-void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams) {
+void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams, u8 networkPlayerIndex) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_STAR, true, PLMT_AREA);
     packet_write(&p, &starType, sizeof(u8));
@@ -15,6 +15,7 @@ void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z,
     packet_write(&p, &y, sizeof(f32));
     packet_write(&p, &z, sizeof(f32));
     packet_write(&p, &behParams, sizeof(u32));
+    packet_write(&p, &networkPlayerIndex, sizeof(u8));
 
     packet_write(&p, &o->oPosX, sizeof(u32) * 3);
     packet_write(&p, &o->oHomeX, sizeof(u32) * 3);
@@ -26,12 +27,14 @@ void network_receive_spawn_star(struct Packet* p) {
     u8 starType;
     f32 x, y, z;
     u32 behParams;
+    u8 networkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
     packet_read(p, &starType, sizeof(u8));
     packet_read(p, &x, sizeof(f32));
     packet_read(p, &y, sizeof(f32));
     packet_read(p, &z, sizeof(f32));
     packet_read(p, &behParams, sizeof(u32));
+    packet_read(p, &networkPlayerIndex, sizeof(u8));
 
     u32 oldBehParams = gCurrentObject->oBehParams;
     gCurrentObject->oBehParams = behParams;
@@ -47,7 +50,19 @@ void network_receive_spawn_star(struct Packet* p) {
     if (o != NULL) {
         packet_read(p, &o->oPosX, sizeof(u32) * 3);
         packet_read(p, &o->oHomeX, sizeof(u32) * 3);
-        o->oStarSpawnExtCutsceneFlags = 0;
+        
+        // Here we check if we're supposed to play the cutscene or not depending on if
+        // the global player index sent matches us.
+        // If the network player index is -1, Then the cutscene will always be skipped.
+        // This check is vital for objects which are network owned specfically.
+        // Leaving this the only way to properly set the cutscene flags 
+        // for those who don't own the object.
+        //printf("network_receive_spawn_star: Network Player Index is %i, Our Global Index is %i.\n", networkPlayerIndex, gNetworkPlayers[0].globalIndex);
+        if (networkPlayerIndex == gNetworkPlayers[0].globalIndex) {
+            o->oStarSpawnExtCutsceneFlags = 1;
+        } else {
+            o->oStarSpawnExtCutsceneFlags = 0;
+        }
     }
 }
 

@@ -1369,9 +1369,15 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
             Vec3f velDiff;
             vec3f_dif(velDiff, m->vel, m2->vel);
 
-            if (vec3f_length(velDiff) < 40) {
-                // the difference vectors are not different enough, do not attack
-                return FALSE;
+            if (m->action == ACT_SLIDE_KICK_SLIDE || m->action == ACT_SLIDE_KICK) {
+                if (vec3f_length(m->vel) < 15) {
+                    return FALSE;
+                }
+            } else {
+                if (vec3f_length(m->vel) < 40) {
+                    // the difference vectors are not different enough, do not attack
+                    return FALSE;
+                }
             }
             if (vec3f_length(m2->vel) > vec3f_length(m->vel)) {
                 // the one being attacked is going faster, do not attack

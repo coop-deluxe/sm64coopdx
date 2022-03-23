@@ -42,6 +42,9 @@
 # Stackdumps
 *.stackdump
 
+# Backup files
+*.bak
+
 # datadump
 /tools/ddump/*
 

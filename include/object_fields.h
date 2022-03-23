@@ -928,7 +928,8 @@
 
 /* Hidden Star */
 // Secrets/Red Coins
-#define /*0x0F4*/ oHiddenStarTriggerCounter OBJECT_FIELD_S32(0x1B)
+#define /*0x0F4*/ oHiddenStarTriggerCounter       OBJECT_FIELD_S32(0x1B)
+#define /*0x0F8*/ oHiddenStarLastInteractedObject OBJECT_FIELD_VPTR(0x1D)
 
 // Overall very difficult to determine usage, mostly stubbed code.
 /* Sparkle Spawn Star */
@@ -1037,10 +1038,11 @@
 #define /*0x110*/ oBetaTrampolineMarioOnTrampoline OBJECT_FIELD_S32(0x22)
 
 /* Treasure Chest */
-#define /*0x0F4*/ oTreasureChestUnkF4 OBJECT_FIELD_S32(0x1B)
-#define /*0x0F8*/ oTreasureChestUnkF8 OBJECT_FIELD_S32(0x1C)
-#define /*0x0FC*/ oTreasureChestUnkFC OBJECT_FIELD_S32(0x1D)
-#define /*0x100*/ oTreasureChestSound OBJECT_FIELD_S32(0x1E)
+#define /*0x0F4*/ oTreasureChestCurrentAnswer                OBJECT_FIELD_S32(0x1B)
+#define /*0x0F8*/ oTreasureChestIsLastInteractionIncorrect   OBJECT_FIELD_S32(0x1C)
+#define /*0x0FC*/ oTreasureChestIsAboveWater                 OBJECT_FIELD_S32(0x1D)
+#define /*0x100*/ oTreasureChestSound                        OBJECT_FIELD_S32(0x1E)
+#define /*0x104*/ oTreasureChestLastNetworkPlayerIndex       OBJECT_FIELD_S16(0x21, 0)
 
 /* Tree Snow Or Leaf */
 #define /*0x0F4*/ oTreeSnowOrLeafUnkF4 OBJECT_FIELD_S32(0x1B)

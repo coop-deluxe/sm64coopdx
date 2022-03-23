@@ -1218,10 +1218,11 @@
 --- @field public oToadMessageRecentlyTalked integer
 --- @field public oToadMessageState integer
 --- @field public oToxBoxMovementStep integer
+--- @field public oTreasureChestCurrentAnswer integer
+--- @field public oTreasureChestIsAboveWater integer
+--- @field public oTreasureChestIsLastInteractionIncorrect integer
+--- @field public oTreasureChestLastNetworkPlayerIndex integer
 --- @field public oTreasureChestSound integer
---- @field public oTreasureChestUnkF4 integer
---- @field public oTreasureChestUnkF8 integer
---- @field public oTreasureChestUnkFC integer
 --- @field public oTreeSnowOrLeafUnkF4 integer
 --- @field public oTreeSnowOrLeafUnkF8 integer
 --- @field public oTreeSnowOrLeafUnkFC integer

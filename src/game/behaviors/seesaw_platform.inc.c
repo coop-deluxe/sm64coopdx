@@ -24,16 +24,19 @@ void bhv_seesaw_platform_init(void) {
         o->oCollisionDistance = 2000.0f;
     }
 
-    network_init_object(o, 1000.0f);
-    network_init_object_field(o, &o->oSeesawPlatformPitchVel);
-    network_init_object_field(o, &o->oFaceAnglePitch);
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject *so = network_init_object(o, 1000.0f);
+        if (so) {
+            network_init_object_field(o, &o->oSeesawPlatformPitchVel);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+        }
+    }
 }
 
 /**
  * Update function for bhvSeesawPlatform.
  */
 void bhv_seesaw_platform_update(void) {
-    UNUSED s32 startPitch = o->oFaceAnglePitch;
     o->oFaceAnglePitch += (s32) o->oSeesawPlatformPitchVel;
 
     if (absf(o->oSeesawPlatformPitchVel) > 10.0f) {
@@ -44,7 +47,7 @@ void bhv_seesaw_platform_update(void) {
     f32 y = 0;
     f32 z = 0;
     u8 playersTouched = 0;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
             x += gMarioStates[i].marioObj->oPosX;
@@ -59,12 +62,11 @@ void bhv_seesaw_platform_update(void) {
         y /= (f32)playersTouched;
         z /= (f32)playersTouched;
 
-        int distanceToPlayer = dist_between_object_and_point(o, x, y, z);
-        int angleToPlayer = obj_angle_to_point(o, x, z);
+        s32 distanceToPlayer = dist_between_object_and_point(o, x, y, z);
+        s32 angleToPlayer = obj_angle_to_point(o, x, z);
 
         // Rotate toward mario
         f32 rotation = distanceToPlayer * coss(angleToPlayer - o->oMoveAngleYaw);
-        UNUSED s32 unused;
 
         // Deceleration is faster than acceleration
         if (o->oSeesawPlatformPitchVel * rotation < 0) {

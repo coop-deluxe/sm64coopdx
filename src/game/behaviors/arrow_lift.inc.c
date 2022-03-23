@@ -60,10 +60,12 @@ static s8 arrow_lift_move_back(void) {
  */
 void bhv_arrow_lift_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oAction);
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oTimer);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oAction);
+        }
     }
 
     switch (o->oAction) {
