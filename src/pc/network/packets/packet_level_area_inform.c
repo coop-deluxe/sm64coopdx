@@ -33,7 +33,7 @@ void network_send_level_area_inform(struct NetworkPlayer* np) {
         network_send_to(np2->localIndex, &p);
     }
 
-    LOG_INFO("tx level area inform for global %d", np->globalIndex);
+    LOG_INFO("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
 }
 
 void network_receive_level_area_inform(struct Packet* p) {
@@ -53,7 +53,7 @@ void network_receive_level_area_inform(struct Packet* p) {
     packet_read(p, &levelSyncValid, sizeof(u8));
     packet_read(p, &areaSyncValid,  sizeof(u8));
 
-    LOG_INFO("rx level area inform for global %d", globalIndex);
+    LOG_INFO("rx level area inform for global %d: (%d, %d, %d, %d)", globalIndex, courseNum, actNum, levelNum, areaIndex);
 
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
