@@ -1346,6 +1346,11 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         return FALSE;
     }
 
+    // don't attack each other on level load
+    if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) {
+        return FALSE;
+    }
+
     u32 interaction = determine_interaction(m, o);
 
     // attacked

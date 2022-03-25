@@ -81,6 +81,7 @@ struct Area
     /*0x38*/ u16 musicParam2;
     /*????*/ u8 cachedBehaviors[256];
     /*????*/ Vec3f cachedPositions[256];
+    /*????*/ u32 localAreaTimer;
 };
 
 // All the transition data to be used in screen_transition.c

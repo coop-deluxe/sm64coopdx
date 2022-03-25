@@ -1309,6 +1309,10 @@ s32 update_level(void) {
         return changeLevel;
     }
 
+    if (gCurrentArea != NULL) {
+        gCurrentArea->localAreaTimer++;
+    }
+
     switch (sCurrPlayMode) {
         case PLAY_MODE_NORMAL:
             changeLevel = play_mode_normal();
