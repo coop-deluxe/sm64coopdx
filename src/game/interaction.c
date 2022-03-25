@@ -944,6 +944,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         if (grandStar) {
             return set_mario_action(m, ACT_JUMBO_STAR_CUTSCENE, 0);
         }
+        save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 
         if (!noExit || gServerSettings.stayInLevelAfterStar != 2) {
             return set_mario_action(m, starGrabAction, noExit + 2 * grandStar);

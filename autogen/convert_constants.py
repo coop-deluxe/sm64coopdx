@@ -29,6 +29,7 @@ in_files = [
     "src/engine/graph_node.h",
     "levels/level_defines.h",
     "src/game/obj_behaviors.c",
+    "src/game/save_file.h",
 ]
 
 exclude_constants = {

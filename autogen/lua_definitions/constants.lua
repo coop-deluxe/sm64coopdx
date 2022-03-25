@@ -4209,6 +4209,104 @@ Y_BUTTON = CONT_Y
 Z_TRIG = CONT_G
 
 --- @type integer
+EEPROM_SIZE = 0x200
+
+--- @type integer
+NUM_SAVE_FILES = 4
+
+--- @type integer
+SAVE_FLAG_CAP_ON_GROUND = (1 << 16)
+
+--- @type integer
+SAVE_FLAG_CAP_ON_KLEPTO = (1 << 17)
+
+--- @type integer
+SAVE_FLAG_CAP_ON_MR_BLIZZARD = (1 << 19)
+
+--- @type integer
+SAVE_FLAG_CAP_ON_UKIKI = (1 << 18)
+
+--- @type integer
+SAVE_FLAG_COLLECTED_MIPS_STAR_1 = (1 << 27)
+
+--- @type integer
+SAVE_FLAG_COLLECTED_MIPS_STAR_2 = (1 << 28)
+
+--- @type integer
+SAVE_FLAG_COLLECTED_TOAD_STAR_1 = (1 << 24)
+
+--- @type integer
+SAVE_FLAG_COLLECTED_TOAD_STAR_2 = (1 << 25)
+
+--- @type integer
+SAVE_FLAG_COLLECTED_TOAD_STAR_3 = (1 << 26)
+
+--- @type integer
+SAVE_FLAG_DDD_MOVED_BACK = (1 << 8)
+
+--- @type integer
+SAVE_FLAG_FILE_EXISTS = (1 << 0)
+
+--- @type integer
+SAVE_FLAG_HAVE_KEY_1 = (1 << 4)
+
+--- @type integer
+SAVE_FLAG_HAVE_KEY_2 = (1 << 5)
+
+--- @type integer
+SAVE_FLAG_HAVE_METAL_CAP = (1 << 2)
+
+--- @type integer
+SAVE_FLAG_HAVE_VANISH_CAP = (1 << 3)
+
+--- @type integer
+SAVE_FLAG_HAVE_WING_CAP = (1 << 1)
+
+--- @type integer
+SAVE_FLAG_MOAT_DRAINED = (1 << 9)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_50_STAR_DOOR = (1 << 20)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_BASEMENT_DOOR = (1 << 6)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_BITDW_DOOR = (1 << 14)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_BITFS_DOOR = (1 << 15)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_CCM_DOOR = (1 << 12)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_JRB_DOOR = (1 << 13)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_PSS_DOOR = (1 << 10)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR = (1 << 7)
+
+--- @type integer
+SAVE_FLAG_UNLOCKED_WF_DOOR = (1 << 11)
+
+--- @class SaveFileIndex
+
+--- @type SaveFileIndex
+SAVE_FILE_A = 0
+
+--- @type SaveFileIndex
+SAVE_FILE_B = 1
+
+--- @type SaveFileIndex
+SAVE_FILE_C = 2
+
+--- @type SaveFileIndex
+SAVE_FILE_D = 3
+
+--- @type integer
 ACT_AIR_HIT_WALL = 0x000008A7
 
 --- @type integer

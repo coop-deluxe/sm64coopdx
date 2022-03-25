@@ -31,6 +31,8 @@
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
 - [os_cont.h](#os_conth)
+- [save_file.h](#save_fileh)
+    - [enum SaveFileIndex](#enum-SaveFileIndex)
 - [sm64.h](#sm64h)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
@@ -1490,6 +1492,48 @@
 - X_BUTTON
 - Y_BUTTON
 - Z_TRIG
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file.h](#save_file.h)
+- EEPROM_SIZE
+- NUM_SAVE_FILES
+- SAVE_FLAG_CAP_ON_GROUND
+- SAVE_FLAG_CAP_ON_KLEPTO
+- SAVE_FLAG_CAP_ON_MR_BLIZZARD
+- SAVE_FLAG_CAP_ON_UKIKI
+- SAVE_FLAG_COLLECTED_MIPS_STAR_1
+- SAVE_FLAG_COLLECTED_MIPS_STAR_2
+- SAVE_FLAG_COLLECTED_TOAD_STAR_1
+- SAVE_FLAG_COLLECTED_TOAD_STAR_2
+- SAVE_FLAG_COLLECTED_TOAD_STAR_3
+- SAVE_FLAG_DDD_MOVED_BACK
+- SAVE_FLAG_FILE_EXISTS
+- SAVE_FLAG_HAVE_KEY_1
+- SAVE_FLAG_HAVE_KEY_2
+- SAVE_FLAG_HAVE_METAL_CAP
+- SAVE_FLAG_HAVE_VANISH_CAP
+- SAVE_FLAG_HAVE_WING_CAP
+- SAVE_FLAG_MOAT_DRAINED
+- SAVE_FLAG_UNLOCKED_50_STAR_DOOR
+- SAVE_FLAG_UNLOCKED_BASEMENT_DOOR
+- SAVE_FLAG_UNLOCKED_BITDW_DOOR
+- SAVE_FLAG_UNLOCKED_BITFS_DOOR
+- SAVE_FLAG_UNLOCKED_CCM_DOOR
+- SAVE_FLAG_UNLOCKED_JRB_DOOR
+- SAVE_FLAG_UNLOCKED_PSS_DOOR
+- SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR
+- SAVE_FLAG_UNLOCKED_WF_DOOR
+
+### [enum SaveFileIndex](#SaveFileIndex)
+| Identifier | Value |
+| :--------- | :---- |
+| SAVE_FILE_A | 0 |
+| SAVE_FILE_B | 1 |
+| SAVE_FILE_C | 2 |
+| SAVE_FILE_D | 3 |
 
 [:arrow_up_small:](#)
 

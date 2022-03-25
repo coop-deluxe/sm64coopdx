@@ -1016,6 +1016,8 @@ s32 act_bubbled(struct MarioState* m) {
     if (m->playerIndex == 0) {
         if (m->numLives == -1) {
             m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+            level_trigger_warp(m, WARP_OP_DEATH);
+            return set_mario_action(m, ACT_SOFT_BONK, 0);
         } else {
             m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         }

@@ -3427,6 +3427,12 @@ function reset_rumble_timers_2(m, a0)
     -- ...
 end
 
+--- @param flags integer
+--- @return nil
+function save_file_clear_flags(flags)
+    -- ...
+end
+
 --- @param capPos Vec3s
 --- @return integer
 function save_file_get_cap_pos(capPos)
@@ -3475,6 +3481,12 @@ end
 --- @param maxCourse integer
 --- @return integer
 function save_file_get_total_star_count(fileIndex, minCourse, maxCourse)
+    -- ...
+end
+
+--- @param flags integer
+--- @return nil
+function save_file_set_flags(flags)
     -- ...
 end
 
