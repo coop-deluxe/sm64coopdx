@@ -7293,6 +7293,17 @@ int smlua_func_reset_rumble_timers_2(lua_State* L) {
  // save_file.h //
 /////////////////
 
+int smlua_func_save_file_clear_flags(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 flags = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    save_file_clear_flags(flags);
+
+    return 1;
+}
+
 int smlua_func_save_file_get_cap_pos(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -7393,6 +7404,17 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, save_file_get_total_star_count(fileIndex, minCourse, maxCourse));
+
+    return 1;
+}
+
+int smlua_func_save_file_set_flags(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 flags = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    save_file_set_flags(flags);
 
     return 1;
 }
@@ -8843,6 +8865,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "reset_rumble_timers_2", smlua_func_reset_rumble_timers_2);
 
     // save_file.h
+    smlua_bind_function(L, "save_file_clear_flags", smlua_func_save_file_clear_flags);
     smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);
     smlua_bind_function(L, "save_file_get_course_coin_score", smlua_func_save_file_get_course_coin_score);
     smlua_bind_function(L, "save_file_get_course_star_count", smlua_func_save_file_get_course_star_count);
@@ -8851,6 +8874,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_sound_mode", smlua_func_save_file_get_sound_mode);
     smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
+    smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);

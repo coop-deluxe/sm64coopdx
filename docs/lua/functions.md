@@ -619,6 +619,7 @@
 <br />
 
 - save_file.h
+   - [save_file_clear_flags](#save_file_clear_flags)
    - [save_file_get_cap_pos](#save_file_get_cap_pos)
    - [save_file_get_course_coin_score](#save_file_get_course_coin_score)
    - [save_file_get_course_star_count](#save_file_get_course_star_count)
@@ -627,6 +628,7 @@
    - [save_file_get_sound_mode](#save_file_get_sound_mode)
    - [save_file_get_star_flags](#save_file_get_star_flags)
    - [save_file_get_total_star_count](#save_file_get_total_star_count)
+   - [save_file_set_flags](#save_file_set_flags)
 
 <br />
 
@@ -11464,6 +11466,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 <br />
 
 
+## [save_file_clear_flags](#save_file_clear_flags)
+
+### Lua Example
+`save_file_clear_flags(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_clear_flags(u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Lua Example
@@ -11620,6 +11642,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_flags](#save_file_set_flags)
+
+### Lua Example
+`save_file_set_flags(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_flags(u32 flags);`
 
 [:arrow_up_small:](#)
 
