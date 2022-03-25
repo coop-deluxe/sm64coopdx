@@ -487,9 +487,6 @@ static int smlua__set_field(lua_State* L) {
             smlua_logline();
             return 0;
         }
-        if (gSpawningObject) {
-            spawn_object_remember_field(data);
-        }
     }
 
     void* valuePointer = NULL;

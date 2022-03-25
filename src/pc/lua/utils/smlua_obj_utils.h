@@ -5,11 +5,6 @@
 #include "smlua_model_utils.h"
 #include "game/object_list_processor.h"
 
-extern struct LuaObjectField gSpawnObjectFields[];
-extern u8 gSpawnObjectFieldCount;
-extern bool gSpawningObject;
-void spawn_object_remember_field(struct LuaObjectField* field);
-
 struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 
