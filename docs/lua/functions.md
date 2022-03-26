@@ -220,6 +220,7 @@
    - [set_mario_action](#set_mario_action)
    - [set_mario_anim_with_accel](#set_mario_anim_with_accel)
    - [set_mario_animation](#set_mario_animation)
+   - [set_mario_y_vel_based_on_fspeed](#set_mario_y_vel_based_on_fspeed)
    - [set_steep_jump_action](#set_steep_jump_action)
    - [set_water_plunge_action](#set_water_plunge_action)
    - [transition_submerged_to_walking](#transition_submerged_to_walking)
@@ -4573,6 +4574,28 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_mario_y_vel_based_on_fspeed](#set_mario_y_vel_based_on_fspeed)
+
+### Lua Example
+`set_mario_y_vel_based_on_fspeed(m, initialVelY, multiplier)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| initialVelY | `number` |
+| multiplier | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_mario_y_vel_based_on_fspeed(struct MarioState *m, f32 initialVelY, f32 multiplier);`
 
 [:arrow_up_small:](#)
 

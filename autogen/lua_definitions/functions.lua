@@ -1225,6 +1225,14 @@ function set_mario_animation(m, targetAnimID)
 end
 
 --- @param m MarioState
+--- @param initialVelY number
+--- @param multiplier number
+--- @return nil
+function set_mario_y_vel_based_on_fspeed(m, initialVelY, multiplier)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return nil
 function set_steep_jump_action(m)
     -- ...

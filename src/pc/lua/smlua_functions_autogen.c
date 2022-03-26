@@ -2963,6 +2963,21 @@ int smlua_func_set_mario_animation(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_mario_y_vel_based_on_fspeed(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 initialVelY = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    f32 multiplier = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    set_mario_y_vel_based_on_fspeed(m, initialVelY, multiplier);
+
+    return 1;
+}
+
 int smlua_func_set_steep_jump_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -10110,6 +10125,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_mario_action", smlua_func_set_mario_action);
     smlua_bind_function(L, "set_mario_anim_with_accel", smlua_func_set_mario_anim_with_accel);
     smlua_bind_function(L, "set_mario_animation", smlua_func_set_mario_animation);
+    smlua_bind_function(L, "set_mario_y_vel_based_on_fspeed", smlua_func_set_mario_y_vel_based_on_fspeed);
     smlua_bind_function(L, "set_steep_jump_action", smlua_func_set_steep_jump_action);
     smlua_bind_function(L, "set_water_plunge_action", smlua_func_set_water_plunge_action);
     smlua_bind_function(L, "transition_submerged_to_walking", smlua_func_transition_submerged_to_walking);
