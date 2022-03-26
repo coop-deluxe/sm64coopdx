@@ -117,7 +117,7 @@ void discord_activity_update(bool hosting) {
     if (gCurActivity.party.size.current_size > 1) {
         strcpy(gCurActivity.state, "Playing!");
     } else if (hosting) {
-        strcpy(gCurActivity.state, "Waiting for player...");
+        strcpy(gCurActivity.state, "Waiting for players...");
     } else {
         strcpy(gCurActivity.state, "In-game.");
         gCurActivity.party.size.current_size = 1;
@@ -136,6 +136,21 @@ void discord_activity_update(bool hosting) {
 
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
     LOGFILE_INFO(LFT_DISCORD, "set activity");
+}
+
+void discord_activity_update_check(void) {
+    if (gNetworkType == NT_NONE) { return; }
+    bool shouldUpdate = false;
+    u8 connectedCount = network_player_connected_count();
+
+    if (connectedCount > 0 && connectedCount != gCurActivity.party.size.current_size) {
+        gCurActivity.party.size.current_size = connectedCount;
+        shouldUpdate = true;
+    }
+
+    if (shouldUpdate) {
+        discord_activity_update(gNetworkType == NT_SERVER);
+    }
 }
 
 struct IDiscordActivityEvents* discord_activity_initialize(void) {

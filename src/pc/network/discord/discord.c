@@ -138,6 +138,8 @@ static bool ns_discord_match_addr(void* addr1, void* addr2) {
 
 static void ns_discord_update(void) {
     if (!gDiscordInitialized) { return; }
+
+    discord_activity_update_check();
     discord_lobby_update();
     DISCORD_REQUIRE(app.core->run_callbacks(app.core));
     discord_network_flush();
