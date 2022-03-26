@@ -56,7 +56,7 @@ void bhv_respawner_loop(void) {
 }
 
 void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnDist) {
-    if (!(o->coopFlags & COOP_OBJ_FLAG_LUA)) {
+    if ((o->coopFlags & (COOP_OBJ_FLAG_LUA | COOP_OBJ_FLAG_NETWORK))) {
         return;
     }
 
