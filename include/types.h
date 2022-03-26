@@ -293,6 +293,7 @@ struct MarioBodyState
     /*0x18*/ Vec3f heldObjLastPosition; /// also known as HOLP
     /*????*/ Vec3f torsoPos;
     /*????*/ Vec3f handFootPos[4];
+    /*????*/ u32 updateTorsoTime;
     //u8 padding[4];
 };
 
