@@ -102,6 +102,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_SYNC_VALID | Called when the current area is synchronized | None |
 | HOOK_ON_OBJECT_UNLOAD | Called when any object is unloaded | [Object](structs.md#Object) unloadedObject |
 | HOOK_ON_SYNC_OBJECT_UNLOAD | Called when any networked object is unloaded | [Object](structs.md#Object) unloadedObject |
+| HOOK_ON_PAUSE_EXIT | Called when the local player exits through the pause screen |  `boolean` usedExitToCastle |
 
 ### Parameters
 

@@ -1920,7 +1920,8 @@
 | HOOK_ON_SYNC_VALID | 13 |
 | HOOK_ON_OBJECT_UNLOAD | 14 |
 | HOOK_ON_SYNC_OBJECT_UNLOAD | 15 |
-| HOOK_MAX | 16 |
+| HOOK_ON_PAUSE_EXIT | 16 |
+| HOOK_MAX | 17 |
 
 [:arrow_up_small:](#)
 

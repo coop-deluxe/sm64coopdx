@@ -1152,6 +1152,8 @@ s32 play_mode_normal(void) {
     return 0;
 }
 
+#include <stdio.h> // DO NOT COMMIT
+
 s32 play_mode_paused(void) {
     if (gPauseScreenMode == 0) {
         set_menu_mode(RENDER_PAUSE_SCREEN);
@@ -1162,6 +1164,7 @@ s32 play_mode_paused(void) {
     } else if (gPauseScreenMode == 2) {
         level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
         set_play_mode(PLAY_MODE_NORMAL);
+        smlua_call_event_hooks_bool_param(HOOK_ON_PAUSE_EXIT, false);
     } else if (gPauseScreenMode == 3) {
         // Exit level
         if (gDebugLevelSelect) {
@@ -1172,6 +1175,7 @@ s32 play_mode_paused(void) {
             gSavedCourseNum = COURSE_NONE;
         }
         set_play_mode(PLAY_MODE_CHANGE_LEVEL);
+        smlua_call_event_hooks_bool_param(HOOK_ON_PAUSE_EXIT, true);
     } /* else if (gPauseScreenMode == 4) {
         // We should only be getting "int 4" to here
         initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);

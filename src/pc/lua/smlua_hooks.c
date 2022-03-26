@@ -75,6 +75,26 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
     }
 }
 
+void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push value
+        lua_pushboolean(L, value);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
+            smlua_logline();
+            continue;
+        }
+    }
+}
+
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }

@@ -21,6 +21,7 @@ enum LuaHookedEventType {
     HOOK_ON_SYNC_VALID,
     HOOK_ON_OBJECT_UNLOAD,
     HOOK_ON_SYNC_OBJECT_UNLOAD,
+    HOOK_ON_PAUSE_EXIT,
     HOOK_MAX,
 };
 
@@ -41,12 +42,14 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_SYNC_VALID",
     "HOOK_ON_OBJECT_UNLOAD",
     "HOOK_ON_SYNC_OBJECT_UNLOAD",
+    "HOOK_ON_PAUSE_EXIT",
     "HOOK_MAX"
 };
 
 extern u32 gLuaMarioActionIndex;
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
+void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
 void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue);

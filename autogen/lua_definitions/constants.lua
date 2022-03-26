@@ -5419,7 +5419,10 @@ HOOK_ON_OBJECT_UNLOAD = 14
 HOOK_ON_SYNC_OBJECT_UNLOAD = 15
 
 --- @type LuaHookedEventType
-HOOK_MAX = 16
+HOOK_ON_PAUSE_EXIT = 16
+
+--- @type LuaHookedEventType
+HOOK_MAX = 17
 
 --- @class ModelExtendedId
 
