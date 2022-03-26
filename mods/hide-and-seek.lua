@@ -418,6 +418,15 @@ function on_pause_exit(exitToCastle)
     end
 end
 
+function allow_pvp_attack(m1, m2)
+    local s1 = gPlayerSyncTable[m1.playerIndex]
+    local s2 = gPlayerSyncTable[m2.playerIndex]
+    if s1.seeking == s2.seeking then
+        return false
+    end
+    return true
+end
+
 -----------------------
 -- network callbacks --
 -----------------------
@@ -470,6 +479,7 @@ hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
+hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
 hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
