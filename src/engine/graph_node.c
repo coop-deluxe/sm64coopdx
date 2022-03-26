@@ -578,12 +578,16 @@ struct GraphNode *geo_remove_child(struct GraphNode *graphNode) {
     struct GraphNode *parent;
     struct GraphNode **firstChild;
 
+    if (graphNode == NULL) { return NULL; }
+
     parent = graphNode->parent;
     firstChild = &parent->children;
 
     // Remove link with siblings
-    graphNode->prev->next = graphNode->next;
-    graphNode->next->prev = graphNode->prev;
+    if (graphNode->prev != NULL && graphNode->next != NULL) {
+        graphNode->prev->next = graphNode->next;
+        graphNode->next->prev = graphNode->prev;
+    }
 
     // If this node was the first child, a new first child must be chosen
     if (*firstChild == graphNode) {
