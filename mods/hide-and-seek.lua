@@ -388,6 +388,14 @@ function on_hide_and_seek_command(msg)
     return false
 end
 
+function on_pause_exit(exitToCastle)
+    local s = gPlayerSyncTable[0]
+    if not s.seeking then
+        s.seeking = true
+        network_player_set_description(gNetworkPlayers[0], "seeker", 255, 64, 64, 255)
+    end
+end
+
 -----------------------
 -- network callbacks --
 -----------------------
@@ -439,6 +447,7 @@ hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
+hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
 
@@ -449,3 +458,4 @@ for i=0,(MAX_PLAYERS-1) do
     hook_on_sync_table_change(gPlayerSyncTable[i], 'seeking', i, on_seeking_changed)
     network_player_set_description(gNetworkPlayers[i], "seeker", 255, 64, 64, 255)
 end
+
