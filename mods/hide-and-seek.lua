@@ -11,6 +11,7 @@ ROUND_STATE_ACTIVE      = 1
 ROUND_STATE_SEEKERS_WIN = 2
 ROUND_STATE_HIDERS_WIN  = 3
 ROUND_STATE_UNKNOWN_END = 4
+gGlobalSyncTable.campingTimer = true -- enable/disable camping timer
 gGlobalSyncTable.roundState   = ROUND_STATE_WAIT -- current round state
 gGlobalSyncTable.displayTimer = 0 -- the displayed timer
 sRoundTimer        = 0            -- the server's round timer
@@ -156,7 +157,11 @@ function update()
 
     -- check if local player is camping
     if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-        camping_detection(gMarioStates[0])
+        if gGlobalSyncTable.campingTimer then
+            camping_detection(gMarioStates[0])
+        else
+            sDistanceTimer = 0
+        end
     else
         sDistanceTimer = 0
     end
@@ -388,6 +393,23 @@ function on_hide_and_seek_command(msg)
     return false
 end
 
+function on_anti_camp_command(msg)
+    if not network_is_server() then
+        djui_chat_message_create('Only the server can change this setting!')
+        return true
+    end
+    if msg == 'on' then
+        djui_chat_message_create('Anti-camping timer: enabled')
+        gGlobalSyncTable.campingTimer = true
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Anti-camping timer: disabled')
+        gGlobalSyncTable.campingTimer = false
+        return true
+    end
+    return false
+end
+
 function on_pause_exit(exitToCastle)
     local s = gPlayerSyncTable[0]
     if not s.seeking then
@@ -450,6 +472,7 @@ hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
+hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
 
 -- call functions when certain sync table values change
 hook_on_sync_table_change(gGlobalSyncTable, 'roundState', 0, on_round_state_changed)
