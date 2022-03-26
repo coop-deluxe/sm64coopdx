@@ -457,7 +457,9 @@ function on_seeking_changed(tag, oldVal, newVal)
         play_sound(SOUND_OBJ_BOWSER_LAUGH, m.marioObj.header.gfx.cameraToObject)
         playerColor = network_get_player_text_color_string(m.playerIndex)
         djui_popup_create(playerColor .. np.name .. '\\#ffa0a0\\ is now a seeker', 2)
-        sLastSeekerIndex = m.playerIndex
+        if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+            sLastSeekerIndex = m.playerIndex
+        end
         sRoundTimer = 0
     end
 
