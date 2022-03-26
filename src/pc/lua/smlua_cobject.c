@@ -485,6 +485,11 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, "gGlobalObjectCollisionData");
     }
 
+    {
+        smlua_push_object(L, LOT_LAKITUSTATE, &gLakituState);
+        lua_setglobal(L, "gLakituState");
+    }
+
 }
 
 void smlua_cobject_init_per_file_globals(char* path) {

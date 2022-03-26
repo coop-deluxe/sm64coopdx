@@ -51,6 +51,13 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
+## [gLakituState](#gLakituState)
+`gLakituState`'s fields are listed in [LakituState](structs.md#LakituState).
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gGlobalSyncTable](#gGlobalSyncTable)
 The `gGlobalSyncTable` is a table used for networking. Any field set inside of this table is automatically synchronized with all other clients. Do not use this table for player-specific variables, keep those in [gPlayerSyncTable](#gPlayerSyncTable). Player-specific variable will desynchronize within this table since it doesn't automatically translate `playerIndex`.
 

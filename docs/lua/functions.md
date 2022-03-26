@@ -47,7 +47,6 @@
    - [is_range_behind_surface](#is_range_behind_surface)
    - [is_within_100_units_of_mario](#is_within_100_units_of_mario)
    - [move_mario_head_c_up](#move_mario_head_c_up)
-   - [move_point_along_spline](#move_point_along_spline)
    - [next_lakitu_state](#next_lakitu_state)
    - [obj_rotate_towards_point](#obj_rotate_towards_point)
    - [object_pos_to_vec3f](#object_pos_to_vec3f)
@@ -1594,29 +1593,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void move_mario_head_c_up(UNUSED struct Camera *c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [move_point_along_spline](#move_point_along_spline)
-
-### Lua Example
-`local integerValue = move_point_along_spline(p, spline[], splineSegment, progress)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| p | [Vec3f](structs.md#Vec3f) |
-| spline[] | [CutsceneSplinePoint](structs.md#CutsceneSplinePoint) |
-| splineSegment | `Pointer` <`integer`> |
-| progress | `Pointer` <`number`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 move_point_along_spline(Vec3f p, struct CutsceneSplinePoint spline[], s16 *splineSegment, f32 *progress);`
 
 [:arrow_up_small:](#)
 

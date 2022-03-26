@@ -740,33 +740,6 @@ int smlua_func_move_mario_head_c_up(lua_State* L) {
     return 1;
 }
 
-int smlua_func_move_point_along_spline(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
-
-
-    f32* p = smlua_get_vec3f_from_buffer();
-    p[0] = smlua_get_number_field(1, "x");
-    if (!gSmLuaConvertSuccess) { return 0; }
-    p[1] = smlua_get_number_field(1, "y");
-    if (!gSmLuaConvertSuccess) { return 0; }
-    p[2] = smlua_get_number_field(1, "z");
-    if (!gSmLuaConvertSuccess) { return 0; }
-    struct CutsceneSplinePoint spline[] = (struct CutsceneSplinePoint)smlua_to_cobject(L, 2, LOT_CUTSCENESPLINEPOINT);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s16 * splineSegment = (s16 *)smlua_to_cpointer(L, 3, LVT_S16_P);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    f32 * progress = (f32 *)smlua_to_cpointer(L, 4, LVT_F32_P);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    lua_pushinteger(L, move_point_along_spline(p, spline[], splineSegment, progress));
-
-    smlua_push_number_field(1, "x", p[0]);
-    smlua_push_number_field(1, "y", p[1]);
-    smlua_push_number_field(1, "z", p[2]);
-
-    return 1;
-}
-
 int smlua_func_next_lakitu_state(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 7)) { return 0; }
 
@@ -9980,7 +9953,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "is_range_behind_surface", smlua_func_is_range_behind_surface);
     smlua_bind_function(L, "is_within_100_units_of_mario", smlua_func_is_within_100_units_of_mario);
     smlua_bind_function(L, "move_mario_head_c_up", smlua_func_move_mario_head_c_up);
-    smlua_bind_function(L, "move_point_along_spline", smlua_func_move_point_along_spline);
     smlua_bind_function(L, "next_lakitu_state", smlua_func_next_lakitu_state);
     smlua_bind_function(L, "obj_rotate_towards_point", smlua_func_obj_rotate_towards_point);
     smlua_bind_function(L, "object_pos_to_vec3f", smlua_func_object_pos_to_vec3f);

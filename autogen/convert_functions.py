@@ -77,7 +77,7 @@ override_disallowed_functions = {
     "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
     "src/game/spawn_sound.c":              [ "spawner" ],
     "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera" ],
+    "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
 }
 
 lua_function_params = {

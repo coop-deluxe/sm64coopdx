@@ -248,15 +248,6 @@ function move_mario_head_c_up(c)
     -- ...
 end
 
---- @param p Vec3f
---- @param spline[] CutsceneSplinePoint
---- @param splineSegment Pointer_integer
---- @param progress Pointer_number
---- @return integer
-function move_point_along_spline(p, spline[], splineSegment, progress)
-    -- ...
-end
-
 --- @param newPos Vec3f
 --- @param newFoc Vec3f
 --- @param curPos Vec3f
