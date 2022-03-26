@@ -11,14 +11,15 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
     toNp->currLevelSyncValid = true;
     toNp->currAreaSyncValid  = true;
 
-    if (toNp == gNetworkPlayerLocal && !wasAreaSyncValid) {
-        network_player_update_course_level(toNp, courseNum, actNum, levelNum, areaIndex);
-        smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
-    }
-
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
         // the player is the server, no need to send sync valid
         gNetworkAreaSyncing = false;
+
+        // call hooks
+        if (toNp == gNetworkPlayerLocal && !wasAreaSyncValid) {
+            network_player_update_course_level(toNp, courseNum, actNum, levelNum, (areaIndex != -1) ? areaIndex : toNp->currAreaIndex);
+            smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
+        }
 
         // but we do need to send level area inform
         network_send_level_area_inform(toNp);
@@ -68,7 +69,7 @@ void network_receive_sync_valid(struct Packet* p) {
     np->currAreaSyncValid = true;
 
     if (np == gNetworkPlayerLocal && !wasAreaSyncValid) {
-        network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
+        network_player_update_course_level(np, courseNum, actNum, levelNum, (areaIndex != -1) ? areaIndex : np->currAreaIndex);
         smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
     }
 
