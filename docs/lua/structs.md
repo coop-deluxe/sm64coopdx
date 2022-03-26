@@ -42,6 +42,7 @@
 - [PlayerGeometry](#PlayerGeometry)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [SPTask](#SPTask)
+- [ServerSettings](#ServerSettings)
 - [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
@@ -1726,6 +1727,23 @@
 | ----- | ---- | ------ |
 | hitPos | [Vec3f](structs.md#Vec3f) | read-only |
 | surface | [Surface](structs.md#Surface) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ServerSettings](#ServerSettings)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| bubbleDeath | `integer` |  |
+| enableCheats | `integer` |  |
+| headlessServer | `integer` |  |
+| playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
+| playerKnockbackStrength | `integer` |  |
+| shareLives | `integer` |  |
+| skipIntro | `integer` |  |
+| stayInLevelAfterStar | `integer` |  |
 
 [:arrow_up_small:](#)
 

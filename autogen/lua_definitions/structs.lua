@@ -1386,6 +1386,16 @@
 --- @field public hitPos Vec3f
 --- @field public surface Surface
 
+--- @class ServerSettings
+--- @field public bubbleDeath integer
+--- @field public enableCheats integer
+--- @field public headlessServer integer
+--- @field public playerInteractions PlayerInteractions
+--- @field public playerKnockbackStrength integer
+--- @field public shareLives integer
+--- @field public skipIntro integer
+--- @field public stayInLevelAfterStar integer
+
 --- @class SoundState
 --- @field public animFrame1 integer
 --- @field public animFrame2 integer

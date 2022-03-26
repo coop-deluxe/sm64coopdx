@@ -24,6 +24,9 @@
     - [enum MarioEyesGSCId](#enum-MarioEyesGSCId)
     - [enum MarioGrabPosGSCId](#enum-MarioGrabPosGSCId)
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
+- [network.h](#networkh)
+    - [enum NetworkSystemType](#enum-NetworkSystemType)
+    - [enum PlayerInteractions](#enum-PlayerInteractions)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
@@ -1295,6 +1298,29 @@
 | MARIO_HAND_HOLDING_CAP | 3 |
 | MARIO_HAND_HOLDING_WING_CAP | 4 |
 | MARIO_HAND_RIGHT_OPEN | 5 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network.h](#network.h)
+- MAX_SYNC_OBJECTS
+- MAX_SYNC_OBJECT_FIELDS
+- PACKET_LENGTH
+- SYNC_DISTANCE_INFINITE
+
+### [enum NetworkSystemType](#NetworkSystemType)
+| Identifier | Value |
+| :--------- | :---- |
+| NS_SOCKET | 0 |
+| NS_DISCORD | 1 |
+
+### [enum PlayerInteractions](#PlayerInteractions)
+| Identifier | Value |
+| :--------- | :---- |
+| PLAYER_INTERACTIONS_NONE | 0 |
+| PLAYER_INTERACTIONS_SOLID | 1 |
+| PLAYER_INTERACTIONS_PVP | 2 |
 
 [:arrow_up_small:](#)
 

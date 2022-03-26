@@ -16,6 +16,7 @@ in_files = [
     "include/mario_animation_ids.h",
     "include/sounds.h",
     "src/game/characters.h",
+    "src/pc/network/network.h",
     "src/pc/network/network_player.h",
     "include/PR/os_cont.h",
     "src/game/interaction.c",

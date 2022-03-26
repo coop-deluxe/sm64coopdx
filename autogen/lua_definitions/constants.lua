@@ -3728,6 +3728,37 @@ MARIO_HAND_HOLDING_WING_CAP = 4
 MARIO_HAND_RIGHT_OPEN = 5
 
 --- @type integer
+MAX_SYNC_OBJECTS = 256
+
+--- @type integer
+MAX_SYNC_OBJECT_FIELDS = 64
+
+--- @type integer
+PACKET_LENGTH = 2048
+
+--- @type integer
+SYNC_DISTANCE_INFINITE = 0
+
+--- @class NetworkSystemType
+
+--- @type NetworkSystemType
+NS_SOCKET = 0
+
+--- @type NetworkSystemType
+NS_DISCORD = 1
+
+--- @class PlayerInteractions
+
+--- @type PlayerInteractions
+PLAYER_INTERACTIONS_NONE = 0
+
+--- @type PlayerInteractions
+PLAYER_INTERACTIONS_SOLID = 1
+
+--- @type PlayerInteractions
+PLAYER_INTERACTIONS_PVP = 2
+
+--- @type integer
 MAX_RX_SEQ_IDS = 16
 
 --- @type integer

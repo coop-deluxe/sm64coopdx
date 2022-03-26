@@ -19,6 +19,7 @@ in_files = [
     'src/pc/lua/utils/smlua_misc_utils.h',
     'src/pc/lua/utils/smlua_collision_utils.h',
     'src/game/spawn_sound.h',
+    'src/pc/network/network.h',
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -80,10 +81,17 @@ override_field_immutable = {
     "Area": [ "localAreaTimer" ],
 }
 
-sLuaManuallyDefinedStructs = [
-    'struct Vec3f { float x; float y; float z; }',
-    'struct Vec3s { s16 x; s16 y; s16 z; }'
-]
+override_allowed_structs = {
+    "src/pc/network/network.h": [ 'ServerSettings' ]
+}
+
+sLuaManuallyDefinedStructs = [{
+    'path': 'n/a',
+    'structs': [
+        'struct Vec3f { float x; float y; float z; }',
+        'struct Vec3s { s16 x; s16 y; s16 z; }'
+    ]
+}]
 
 total_structs = 0
 total_fields = 0
@@ -188,10 +196,15 @@ def parse_struct(struct_str):
 
     return struct
 
-def parse_structs(struct_strs):
+def parse_structs(extracted):
     structs = []
-    for struct_str in struct_strs:
-        structs.append(parse_struct(struct_str))
+    for e in extracted:
+        for struct in e['structs']:
+            parsed = parse_struct(struct)
+            if e['path'] in override_allowed_structs:
+                if parsed['identifier'] not in override_allowed_structs[e['path']]:
+                    continue
+            structs.append(parsed)
     return structs
 
 ############################################################################
@@ -445,7 +458,10 @@ def build_files():
     extracted = []
     for in_file in in_files:
         path = get_path(in_file)
-        extracted.extend(extract_structs(path))
+        extracted.append({
+            'path': in_file,
+            'structs': extract_structs(path)
+        })
 
     parsed = parse_structs(extracted)
     parsed = sorted(parsed, key=lambda d: d['identifier'])

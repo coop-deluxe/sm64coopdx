@@ -490,6 +490,11 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, "gLakituState");
     }
 
+    {
+        smlua_push_object(L, LOT_SERVERSETTINGS, &gServerSettings);
+        lua_setglobal(L, "gServerSettings");
+    }
+
 }
 
 void smlua_cobject_init_per_file_globals(char* path) {

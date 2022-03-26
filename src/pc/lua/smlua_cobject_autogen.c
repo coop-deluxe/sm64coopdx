@@ -14,6 +14,7 @@
 #include "src/pc/lua/utils/smlua_misc_utils.h"
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/game/spawn_sound.h"
+#include "src/pc/network/network.h"
 
 #include "include/object_fields.h"
 
@@ -1522,6 +1523,18 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 8
+static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
+    { "bubbleDeath",             LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),             false, LOT_NONE },
+    { "enableCheats",            LVT_U8,  offsetof(struct ServerSettings, enableCheats),            false, LOT_NONE },
+    { "headlessServer",          LVT_U8,  offsetof(struct ServerSettings, headlessServer),          false, LOT_NONE },
+    { "playerInteractions",      LVT_S32, offsetof(struct ServerSettings, playerInteractions),      false, LOT_NONE },
+    { "playerKnockbackStrength", LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength), false, LOT_NONE },
+    { "shareLives",              LVT_U8,  offsetof(struct ServerSettings, shareLives),              false, LOT_NONE },
+    { "skipIntro",               LVT_U8,  offsetof(struct ServerSettings, skipIntro),               false, LOT_NONE },
+    { "stayInLevelAfterStar",    LVT_U8,  offsetof(struct ServerSettings, stayInLevelAfterStar),    false, LOT_NONE },
+};
+
 #define LUA_SOUND_STATE_FIELD_COUNT 4
 static struct LuaObjectField sSoundStateFields[LUA_SOUND_STATE_FIELD_COUNT] = {
     { "animFrame1", LVT_S8,  offsetof(struct SoundState, animFrame1), false, LOT_NONE },
@@ -1719,6 +1732,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_PLAYERCAMERASTATE,         sPlayerCameraStateFields,         LUA_PLAYER_CAMERA_STATE_FIELD_COUNT          },
     { LOT_PLAYERGEOMETRY,            sPlayerGeometryFields,            LUA_PLAYER_GEOMETRY_FIELD_COUNT              },
     { LOT_RAYINTERSECTIONINFO,       sRayIntersectionInfoFields,       LUA_RAY_INTERSECTION_INFO_FIELD_COUNT        },
+    { LOT_SERVERSETTINGS,            sServerSettingsFields,            LUA_SERVER_SETTINGS_FIELD_COUNT              },
     { LOT_SOUNDSTATE,                sSoundStateFields,                LUA_SOUND_STATE_FIELD_COUNT                  },
     { LOT_SPAWNINFO,                 sSpawnInfoFields,                 LUA_SPAWN_INFO_FIELD_COUNT                   },
     { LOT_SPAWNPARTICLESINFO,        sSpawnParticlesInfoFields,        LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT         },

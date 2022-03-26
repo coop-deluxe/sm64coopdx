@@ -58,6 +58,15 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
+## [gServerSettings](#gServerSettings)
+`gServerSettings`'s fields are listed in [ServerSettings](structs.md#ServerSettings).
+
+__**NOTE**__: You should only change the fields in this struct on init, and it shouldn't be done inside of if statements or functions. Failing to follow this advice can result in desyncs.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gGlobalSyncTable](#gGlobalSyncTable)
 The `gGlobalSyncTable` is a table used for networking. Any field set inside of this table is automatically synchronized with all other clients. Do not use this table for player-specific variables, keep those in [gPlayerSyncTable](#gPlayerSyncTable). Player-specific variable will desynchronize within this table since it doesn't automatically translate `playerIndex`.
 
