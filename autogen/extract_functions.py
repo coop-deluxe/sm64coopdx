@@ -13,16 +13,27 @@ replacements = {
     'BAD_RETURN(u64)': 'void',
     'BAD_RETURN(f32)': 'void',
     'BAD_RETURN(f64)': 'void',
+
 }
 
 def extract_functions(filename):
     with open(filename) as file:
         lines = file.readlines()
 
-    # deal with certain ifdefs
+    # combine lines
     txt = ''
-    gobbling = False
     for line in lines:
+        txt += line
+
+    # convert multi-line stuff
+    txt = txt.replace('\r', ' ')
+    txt = txt.replace('\\\n', ' ')
+
+    # deal with certain ifdefs
+    gobbling = False
+    tmp = txt
+    txt = ''
+    for line in tmp.splitlines():
         if line.strip() == '#ifdef AVOID_UB':
             gobbling = True
         if line.strip() == '#else':
@@ -32,6 +43,7 @@ def extract_functions(filename):
         if not gobbling:
             txt += line + '\n'
 
+    # do string replacements
     for replacement in replacements:
         txt = txt.replace(replacement, replacements[replacement])
 
@@ -42,6 +54,8 @@ def extract_functions(filename):
     for line in tmp.splitlines():
         if line.strip().startswith('#') or in_directive:
             in_directive = line.strip().endswith('\\')
+            continue
+        if line.strip().startswith('typedef'):
             continue
         if '//' in line:
             line = line.split('//', 1)[0]

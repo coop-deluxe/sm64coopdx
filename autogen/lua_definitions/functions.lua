@@ -13,6 +13,422 @@ function get_id_from_behavior(behavior)
 end
 
 --- @param c Camera
+--- @param goal number
+--- @param inc number
+--- @return nil
+function approach_camera_height(c, goal, inc)
+    -- ...
+end
+
+--- @param current number
+--- @param target number
+--- @param multiplier number
+--- @return number
+function approach_f32_asymptotic(current, target, multiplier)
+    -- ...
+end
+
+--- @param current Pointer_number
+--- @param target number
+--- @param multiplier number
+--- @return integer
+function approach_f32_asymptotic_bool(current, target, multiplier)
+    -- ...
+end
+
+--- @param current integer
+--- @param target integer
+--- @param divisor integer
+--- @return integer
+function approach_s16_asymptotic(current, target, divisor)
+    -- ...
+end
+
+--- @param current Pointer_integer
+--- @param target integer
+--- @param divisor integer
+--- @return integer
+function approach_s16_asymptotic_bool(current, target, divisor)
+    -- ...
+end
+
+--- @param current Vec3f
+--- @param target Vec3f
+--- @param xMul number
+--- @param yMul number
+--- @param zMul number
+--- @return nil
+function approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)
+    -- ...
+end
+
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return number
+function calc_abs_dist(a, b)
+    -- ...
+end
+
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return number
+function calc_hor_dist(a, b)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param pitch Pointer_integer
+--- @param yaw Pointer_integer
+--- @return nil
+function calculate_angles(from, to, pitch, yaw)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @return integer
+function calculate_pitch(from, to)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @return integer
+function calculate_yaw(from, to)
+    -- ...
+end
+
+--- @param angle integer
+--- @return integer
+function cam_select_alt_mode(angle)
+    -- ...
+end
+
+--- @param value number
+--- @param target number
+--- @param increment number
+--- @return number
+function camera_approach_f32_symmetric(value, target, increment)
+    -- ...
+end
+
+--- @param current Pointer_number
+--- @param target number
+--- @param increment number
+--- @return integer
+function camera_approach_f32_symmetric_bool(current, target, increment)
+    -- ...
+end
+
+--- @param current Pointer_integer
+--- @param target integer
+--- @param increment integer
+--- @return integer
+function camera_approach_s16_symmetric_bool(current, target, increment)
+    -- ...
+end
+
+--- @param c Camera
+--- @return integer
+function camera_course_processing(c)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param maxPitch integer
+--- @param minPitch integer
+--- @return integer
+function clamp_pitch(from, to, maxPitch, minPitch)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param origin Vec3f
+--- @param xMax number
+--- @param xMin number
+--- @param zMax number
+--- @param zMin number
+--- @return integer
+function clamp_positions_and_find_yaw(pos, origin, xMax, xMin, zMax, zMin)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param offsetY number
+--- @param radius number
+--- @return integer
+function collide_with_walls(pos, offsetY, radius)
+    -- ...
+end
+
+--- @param cutscene integer
+--- @param o Object
+--- @return integer
+function cutscene_object(cutscene, o)
+    -- ...
+end
+
+--- @param cutscene integer
+--- @param o Object
+--- @param dialogID integer
+--- @return integer
+function cutscene_object_with_dialog(cutscene, o, dialogID)
+    -- ...
+end
+
+--- @param cutscene integer
+--- @param o Object
+--- @return integer
+function cutscene_object_without_dialog(cutscene, o)
+    -- ...
+end
+
+--- @param preset integer
+--- @return nil
+function cutscene_set_fov_shake_preset(preset)
+    -- ...
+end
+
+--- @param obj integer
+--- @param frame integer
+--- @return integer
+function cutscene_spawn_obj(obj, frame)
+    -- ...
+end
+
+--- @param currentState integer
+--- @param buttonsPressed integer
+--- @param buttonsDown integer
+--- @return integer
+function find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)
+    -- ...
+end
+
+--- @param pg PlayerGeometry
+--- @return nil
+function find_mario_floor_and_ceil(pg)
+    -- ...
+end
+
+--- @param c Camera
+--- @return integer
+function get_cutscene_from_mario_status(c)
+    -- ...
+end
+
+--- @param c Camera
+--- @return nil
+function handle_c_button_movement(c)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param surf Surface
+--- @param range integer
+--- @param surfType integer
+--- @return integer
+function is_range_behind_surface(from, to, surf, range, surfType)
+    -- ...
+end
+
+--- @param posX number
+--- @param posY number
+--- @param posZ number
+--- @return integer
+function is_within_100_units_of_mario(posX, posY, posZ)
+    -- ...
+end
+
+--- @param c Camera
+--- @return nil
+function move_mario_head_c_up(c)
+    -- ...
+end
+
+--- @param p Vec3f
+--- @param spline[] CutsceneSplinePoint
+--- @param splineSegment Pointer_integer
+--- @param progress Pointer_number
+--- @return integer
+function move_point_along_spline(p, spline[], splineSegment, progress)
+    -- ...
+end
+
+--- @param newPos Vec3f
+--- @param newFoc Vec3f
+--- @param curPos Vec3f
+--- @param curFoc Vec3f
+--- @param oldPos Vec3f
+--- @param oldFoc Vec3f
+--- @param yaw integer
+--- @return integer
+function next_lakitu_state(newPos, newFoc, curPos, curFoc, oldPos, oldFoc, yaw)
+    -- ...
+end
+
+--- @param o Object
+--- @param point Vec3f
+--- @param pitchOff integer
+--- @param yawOff integer
+--- @param pitchDiv integer
+--- @param yawDiv integer
+--- @return nil
+function obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)
+    -- ...
+end
+
+--- @param dst Vec3f
+--- @param o Object
+--- @return nil
+function object_pos_to_vec3f(dst, o)
+    -- ...
+end
+
+--- @param dst Vec3f
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param rotation Vec3s
+--- @return nil
+function offset_rotated(dst, from, to, rotation)
+    -- ...
+end
+
+--- @param c Camera
+--- @param areaYaw integer
+--- @return integer
+function offset_yaw_outward_radial(c, areaYaw)
+    -- ...
+end
+
+--- @return nil
+function play_camera_buzz_if_c_sideways()
+    -- ...
+end
+
+--- @return nil
+function play_camera_buzz_if_cbutton()
+    -- ...
+end
+
+--- @return nil
+function play_camera_buzz_if_cdown()
+    -- ...
+end
+
+--- @param c Camera
+--- @return nil
+function play_cutscene(c)
+    -- ...
+end
+
+--- @return nil
+function play_sound_button_change_blocked()
+    -- ...
+end
+
+--- @return nil
+function play_sound_cbutton_down()
+    -- ...
+end
+
+--- @return nil
+function play_sound_cbutton_side()
+    -- ...
+end
+
+--- @return nil
+function play_sound_cbutton_up()
+    -- ...
+end
+
+--- @return nil
+function play_sound_if_cam_switched_to_lakitu_or_mario()
+    -- ...
+end
+
+--- @return nil
+function play_sound_rbutton_changed()
+    -- ...
+end
+
+--- @param c Camera
+--- @param unused number
+--- @return integer
+function radial_camera_input(c, unused)
+    -- ...
+end
+
+--- @param dst Vec3s
+--- @param xRange integer
+--- @param yRange integer
+--- @param zRange integer
+--- @return nil
+function random_vec3s(dst, xRange, yRange, zRange)
+    -- ...
+end
+
+--- @param c Camera
+--- @return nil
+function reset_camera(c)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param lastGood Vec3f
+--- @return nil
+function resolve_geometry_collisions(pos, lastGood)
+    -- ...
+end
+
+--- @param c Camera
+--- @param cPos Vec3f
+--- @param avoidYaw Pointer_integer
+--- @param yawRange integer
+--- @return integer
+function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
+    -- ...
+end
+
+--- @param dst Vec3f
+--- @param src Vec3f
+--- @param yaw integer
+--- @return nil
+function rotate_in_xz(dst, src, yaw)
+    -- ...
+end
+
+--- @param dst Vec3f
+--- @param src Vec3f
+--- @param pitch integer
+--- @return nil
+function rotate_in_yz(dst, src, pitch)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param scale number
+--- @return nil
+function scale_along_line(dest, from, to, scale)
+    -- ...
+end
+
+--- @return nil
+function select_mario_cam_mode()
+    -- ...
+end
+
+--- @param mode integer
+--- @return integer
+function set_cam_angle(mode)
+    -- ...
+end
+
+--- @param c Camera
 --- @param mode integer
 --- @param frames integer
 --- @return nil
@@ -71,6 +487,160 @@ end
 --- @param shake integer
 --- @return nil
 function set_environmental_camera_shake(shake)
+    -- ...
+end
+
+--- @param preset integer
+--- @return nil
+function set_fixed_cam_axis_sa_lobby(preset)
+    -- ...
+end
+
+--- @param func integer
+--- @return nil
+function set_fov_function(func)
+    -- ...
+end
+
+--- @param amplitude integer
+--- @param decay integer
+--- @param shakeSpeed integer
+--- @return nil
+function set_fov_shake(amplitude, decay, shakeSpeed)
+    -- ...
+end
+
+--- @param preset integer
+--- @param posX number
+--- @param posY number
+--- @param posZ number
+--- @return nil
+function set_fov_shake_from_point_preset(preset, posX, posY, posZ)
+    -- ...
+end
+
+--- @param mode integer
+--- @return nil
+function set_handheld_shake(mode)
+    -- ...
+end
+
+--- @param dst Pointer_number
+--- @param goal number
+--- @param scale number
+--- @return integer
+function set_or_approach_f32_asymptotic(dst, goal, scale)
+    -- ...
+end
+
+--- @param current Pointer_integer
+--- @param target integer
+--- @param increment integer
+--- @return integer
+function set_or_approach_s16_symmetric(current, target, increment)
+    -- ...
+end
+
+--- @param dst Vec3f
+--- @param goal Vec3f
+--- @param xMul number
+--- @param yMul number
+--- @param zMul number
+--- @return nil
+function set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)
+    -- ...
+end
+
+--- @param mag integer
+--- @param decay integer
+--- @param inc integer
+--- @param maxDist number
+--- @param posX number
+--- @param posY number
+--- @param posZ number
+--- @return nil
+function set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param focus Vec3f
+--- @return nil
+function shake_camera_handheld(pos, focus)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param focus Vec3f
+--- @return nil
+function shake_camera_pitch(pos, focus)
+    -- ...
+end
+
+--- @param roll Pointer_integer
+--- @return nil
+function shake_camera_roll(roll)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param focus Vec3f
+--- @return nil
+function shake_camera_yaw(pos, focus)
+    -- ...
+end
+
+--- @param c Camera
+--- @return nil
+function soft_reset_camera(c)
+    -- ...
+end
+
+--- @param c Camera
+--- @param cutscene integer
+--- @return nil
+function start_cutscene(c, cutscene)
+    -- ...
+end
+
+--- @param cutscene integer
+--- @return integer
+function start_object_cutscene_without_focus(cutscene)
+    -- ...
+end
+
+--- @param c Camera
+--- @param frames integer
+--- @return nil
+function transition_next_state(c, frames)
+    -- ...
+end
+
+--- @param trigger integer
+--- @return integer
+function trigger_cutscene_dialog(trigger)
+    -- ...
+end
+
+--- @param dst Vec3f
+--- @param src Vec3f
+--- @return nil
+function vec3f_sub(dst, src)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3f
+--- @return nil
+function vec3f_to_object_pos(o, src)
+    -- ...
+end
+
+--- @param displacementX number
+--- @param displacementY number
+--- @param displacementZ number
+--- @return nil
+function warp_camera(displacementX, displacementY, displacementZ)
     -- ...
 end
 

@@ -149,7 +149,8 @@ def process_define(filename, line):
             continue
         p = re.sub(r'0x[a-fA-F0-9]+', '', p)
         if re.search('[a-z]', p) != None:
-            print('UNRECOGNIZED DEFINE: ' + line)
+            if 'gCurrentObject' not in line:
+                print('UNRECOGNIZED DEFINE: ' + line)
             return None
 
     if not allowed_identifier(filename, ident):

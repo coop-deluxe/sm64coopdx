@@ -49,7 +49,6 @@ in_files = [
 
 override_allowed_functions = {
     "src/audio/external.h":                 [ " play_", "fade" ],
-    "src/game/camera.h":                    [ "set_.*camera_.*shake", "set_camera_mode" ],
     "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h" :            [ "create" ],
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags" ],
@@ -78,6 +77,7 @@ override_disallowed_functions = {
     "src/game/obj_behaviors_2.c":          [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
     "src/game/spawn_sound.c":              [ "spawner" ],
     "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field" ],
+    "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera" ],
 }
 
 lua_function_params = {

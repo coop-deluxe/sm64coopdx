@@ -16,6 +16,63 @@
 <br />
 
 - camera.h
+   - [approach_camera_height](#approach_camera_height)
+   - [approach_f32_asymptotic](#approach_f32_asymptotic)
+   - [approach_f32_asymptotic_bool](#approach_f32_asymptotic_bool)
+   - [approach_s16_asymptotic](#approach_s16_asymptotic)
+   - [approach_s16_asymptotic_bool](#approach_s16_asymptotic_bool)
+   - [approach_vec3f_asymptotic](#approach_vec3f_asymptotic)
+   - [calc_abs_dist](#calc_abs_dist)
+   - [calc_hor_dist](#calc_hor_dist)
+   - [calculate_angles](#calculate_angles)
+   - [calculate_pitch](#calculate_pitch)
+   - [calculate_yaw](#calculate_yaw)
+   - [cam_select_alt_mode](#cam_select_alt_mode)
+   - [camera_approach_f32_symmetric](#camera_approach_f32_symmetric)
+   - [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
+   - [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
+   - [camera_course_processing](#camera_course_processing)
+   - [clamp_pitch](#clamp_pitch)
+   - [clamp_positions_and_find_yaw](#clamp_positions_and_find_yaw)
+   - [collide_with_walls](#collide_with_walls)
+   - [cutscene_object](#cutscene_object)
+   - [cutscene_object_with_dialog](#cutscene_object_with_dialog)
+   - [cutscene_object_without_dialog](#cutscene_object_without_dialog)
+   - [cutscene_set_fov_shake_preset](#cutscene_set_fov_shake_preset)
+   - [cutscene_spawn_obj](#cutscene_spawn_obj)
+   - [find_c_buttons_pressed](#find_c_buttons_pressed)
+   - [find_mario_floor_and_ceil](#find_mario_floor_and_ceil)
+   - [get_cutscene_from_mario_status](#get_cutscene_from_mario_status)
+   - [handle_c_button_movement](#handle_c_button_movement)
+   - [is_range_behind_surface](#is_range_behind_surface)
+   - [is_within_100_units_of_mario](#is_within_100_units_of_mario)
+   - [move_mario_head_c_up](#move_mario_head_c_up)
+   - [move_point_along_spline](#move_point_along_spline)
+   - [next_lakitu_state](#next_lakitu_state)
+   - [obj_rotate_towards_point](#obj_rotate_towards_point)
+   - [object_pos_to_vec3f](#object_pos_to_vec3f)
+   - [offset_rotated](#offset_rotated)
+   - [offset_yaw_outward_radial](#offset_yaw_outward_radial)
+   - [play_camera_buzz_if_c_sideways](#play_camera_buzz_if_c_sideways)
+   - [play_camera_buzz_if_cbutton](#play_camera_buzz_if_cbutton)
+   - [play_camera_buzz_if_cdown](#play_camera_buzz_if_cdown)
+   - [play_cutscene](#play_cutscene)
+   - [play_sound_button_change_blocked](#play_sound_button_change_blocked)
+   - [play_sound_cbutton_down](#play_sound_cbutton_down)
+   - [play_sound_cbutton_side](#play_sound_cbutton_side)
+   - [play_sound_cbutton_up](#play_sound_cbutton_up)
+   - [play_sound_if_cam_switched_to_lakitu_or_mario](#play_sound_if_cam_switched_to_lakitu_or_mario)
+   - [play_sound_rbutton_changed](#play_sound_rbutton_changed)
+   - [radial_camera_input](#radial_camera_input)
+   - [random_vec3s](#random_vec3s)
+   - [reset_camera](#reset_camera)
+   - [resolve_geometry_collisions](#resolve_geometry_collisions)
+   - [rotate_camera_around_walls](#rotate_camera_around_walls)
+   - [rotate_in_xz](#rotate_in_xz)
+   - [rotate_in_yz](#rotate_in_yz)
+   - [scale_along_line](#scale_along_line)
+   - [select_mario_cam_mode](#select_mario_cam_mode)
+   - [set_cam_angle](#set_cam_angle)
    - [set_camera_mode](#set_camera_mode)
    - [set_camera_mode_fixed](#set_camera_mode_fixed)
    - [set_camera_pitch_shake](#set_camera_pitch_shake)
@@ -24,6 +81,27 @@
    - [set_camera_shake_from_point](#set_camera_shake_from_point)
    - [set_camera_yaw_shake](#set_camera_yaw_shake)
    - [set_environmental_camera_shake](#set_environmental_camera_shake)
+   - [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
+   - [set_fov_function](#set_fov_function)
+   - [set_fov_shake](#set_fov_shake)
+   - [set_fov_shake_from_point_preset](#set_fov_shake_from_point_preset)
+   - [set_handheld_shake](#set_handheld_shake)
+   - [set_or_approach_f32_asymptotic](#set_or_approach_f32_asymptotic)
+   - [set_or_approach_s16_symmetric](#set_or_approach_s16_symmetric)
+   - [set_or_approach_vec3f_asymptotic](#set_or_approach_vec3f_asymptotic)
+   - [set_pitch_shake_from_point](#set_pitch_shake_from_point)
+   - [shake_camera_handheld](#shake_camera_handheld)
+   - [shake_camera_pitch](#shake_camera_pitch)
+   - [shake_camera_roll](#shake_camera_roll)
+   - [shake_camera_yaw](#shake_camera_yaw)
+   - [soft_reset_camera](#soft_reset_camera)
+   - [start_cutscene](#start_cutscene)
+   - [start_object_cutscene_without_focus](#start_object_cutscene_without_focus)
+   - [transition_next_state](#transition_next_state)
+   - [trigger_cutscene_dialog](#trigger_cutscene_dialog)
+   - [vec3f_sub](#vec3f_sub)
+   - [vec3f_to_object_pos](#vec3f_to_object_pos)
+   - [warp_camera](#warp_camera)
 
 <br />
 
@@ -851,6 +929,1210 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 <br />
 
 
+## [approach_camera_height](#approach_camera_height)
+
+### Lua Example
+`approach_camera_height(c, goal, inc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| goal | `number` |
+| inc | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void approach_camera_height(struct Camera *c, f32 goal, f32 inc);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_f32_asymptotic](#approach_f32_asymptotic)
+
+### Lua Example
+`local numberValue = approach_f32_asymptotic(current, target, multiplier)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `number` |
+| target | `number` |
+| multiplier | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 approach_f32_asymptotic(f32 current, f32 target, f32 multiplier);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_f32_asymptotic_bool](#approach_f32_asymptotic_bool)
+
+### Lua Example
+`local integerValue = approach_f32_asymptotic_bool(current, target, multiplier)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `Pointer` <`number`> |
+| target | `number` |
+| multiplier | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_s16_asymptotic](#approach_s16_asymptotic)
+
+### Lua Example
+`local integerValue = approach_s16_asymptotic(current, target, divisor)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `integer` |
+| target | `integer` |
+| divisor | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 approach_s16_asymptotic(s16 current, s16 target, s16 divisor);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_s16_asymptotic_bool](#approach_s16_asymptotic_bool)
+
+### Lua Example
+`local integerValue = approach_s16_asymptotic_bool(current, target, divisor)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `Pointer` <`integer`> |
+| target | `integer` |
+| divisor | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_vec3f_asymptotic](#approach_vec3f_asymptotic)
+
+### Lua Example
+`approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | [Vec3f](structs.md#Vec3f) |
+| target | [Vec3f](structs.md#Vec3f) |
+| xMul | `number` |
+| yMul | `number` |
+| zMul | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void approach_vec3f_asymptotic(Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calc_abs_dist](#calc_abs_dist)
+
+### Lua Example
+`local numberValue = calc_abs_dist(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 calc_abs_dist(Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calc_hor_dist](#calc_hor_dist)
+
+### Lua Example
+`local numberValue = calc_hor_dist(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 calc_hor_dist(Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calculate_angles](#calculate_angles)
+
+### Lua Example
+`calculate_angles(from, to, pitch, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| pitch | `Pointer` <`integer`> |
+| yaw | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calculate_pitch](#calculate_pitch)
+
+### Lua Example
+`local integerValue = calculate_pitch(from, to)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 calculate_pitch(Vec3f from, Vec3f to);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [calculate_yaw](#calculate_yaw)
+
+### Lua Example
+`local integerValue = calculate_yaw(from, to)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 calculate_yaw(Vec3f from, Vec3f to);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cam_select_alt_mode](#cam_select_alt_mode)
+
+### Lua Example
+`local integerValue = cam_select_alt_mode(angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| angle | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 cam_select_alt_mode(s32 angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_approach_f32_symmetric](#camera_approach_f32_symmetric)
+
+### Lua Example
+`local numberValue = camera_approach_f32_symmetric(value, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `number` |
+| target | `number` |
+| increment | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 camera_approach_f32_symmetric(f32 value, f32 target, f32 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
+
+### Lua Example
+`local integerValue = camera_approach_f32_symmetric_bool(current, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `Pointer` <`number`> |
+| target | `number` |
+| increment | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
+
+### Lua Example
+`local integerValue = camera_approach_s16_symmetric_bool(current, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `Pointer` <`integer`> |
+| target | `integer` |
+| increment | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_course_processing](#camera_course_processing)
+
+### Lua Example
+`local integerValue = camera_course_processing(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 camera_course_processing(struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clamp_pitch](#clamp_pitch)
+
+### Lua Example
+`local integerValue = clamp_pitch(from, to, maxPitch, minPitch)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| maxPitch | `integer` |
+| minPitch | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 clamp_pitch(Vec3f from, Vec3f to, s16 maxPitch, s16 minPitch);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clamp_positions_and_find_yaw](#clamp_positions_and_find_yaw)
+
+### Lua Example
+`local integerValue = clamp_positions_and_find_yaw(pos, origin, xMax, xMin, zMax, zMin)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| origin | [Vec3f](structs.md#Vec3f) |
+| xMax | `number` |
+| xMin | `number` |
+| zMax | `number` |
+| zMin | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 clamp_positions_and_find_yaw(Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [collide_with_walls](#collide_with_walls)
+
+### Lua Example
+`local integerValue = collide_with_walls(pos, offsetY, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| offsetY | `number` |
+| radius | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 collide_with_walls(Vec3f pos, f32 offsetY, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_object](#cutscene_object)
+
+### Lua Example
+`local integerValue = cutscene_object(cutscene, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cutscene | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 cutscene_object(u8 cutscene, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_object_with_dialog](#cutscene_object_with_dialog)
+
+### Lua Example
+`local integerValue = cutscene_object_with_dialog(cutscene, o, dialogID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cutscene | `integer` |
+| o | [Object](structs.md#Object) |
+| dialogID | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_object_without_dialog](#cutscene_object_without_dialog)
+
+### Lua Example
+`local integerValue = cutscene_object_without_dialog(cutscene, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cutscene | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 cutscene_object_without_dialog(u8 cutscene, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_set_fov_shake_preset](#cutscene_set_fov_shake_preset)
+
+### Lua Example
+`cutscene_set_fov_shake_preset(preset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| preset | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void cutscene_set_fov_shake_preset(u8 preset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cutscene_spawn_obj](#cutscene_spawn_obj)
+
+### Lua Example
+`local integerValue = cutscene_spawn_obj(obj, frame)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | `integer` |
+| frame | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 cutscene_spawn_obj(u32 obj, s16 frame);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_c_buttons_pressed](#find_c_buttons_pressed)
+
+### Lua Example
+`local integerValue = find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| currentState | `integer` |
+| buttonsPressed | `integer` |
+| buttonsDown | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 find_c_buttons_pressed(u16 currentState, u16 buttonsPressed, u16 buttonsDown);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_mario_floor_and_ceil](#find_mario_floor_and_ceil)
+
+### Lua Example
+`find_mario_floor_and_ceil(pg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pg | [PlayerGeometry](structs.md#PlayerGeometry) |
+
+### Returns
+- None
+
+### C Prototype
+`void find_mario_floor_and_ceil(struct PlayerGeometry *pg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_cutscene_from_mario_status](#get_cutscene_from_mario_status)
+
+### Lua Example
+`local integerValue = get_cutscene_from_mario_status(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_cutscene_from_mario_status(struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [handle_c_button_movement](#handle_c_button_movement)
+
+### Lua Example
+`handle_c_button_movement(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- None
+
+### C Prototype
+`void handle_c_button_movement(struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_range_behind_surface](#is_range_behind_surface)
+
+### Lua Example
+`local integerValue = is_range_behind_surface(from, to, surf, range, surfType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| surf | [Surface](structs.md#Surface) |
+| range | `integer` |
+| surfType | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 is_range_behind_surface(Vec3f from, Vec3f to, struct Surface *surf, s16 range, s16 surfType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_within_100_units_of_mario](#is_within_100_units_of_mario)
+
+### Lua Example
+`local integerValue = is_within_100_units_of_mario(posX, posY, posZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| posX | `number` |
+| posY | `number` |
+| posZ | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 is_within_100_units_of_mario(f32 posX, f32 posY, f32 posZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [move_mario_head_c_up](#move_mario_head_c_up)
+
+### Lua Example
+`move_mario_head_c_up(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- None
+
+### C Prototype
+`void move_mario_head_c_up(UNUSED struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [move_point_along_spline](#move_point_along_spline)
+
+### Lua Example
+`local integerValue = move_point_along_spline(p, spline[], splineSegment, progress)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| p | [Vec3f](structs.md#Vec3f) |
+| spline[] | [CutsceneSplinePoint](structs.md#CutsceneSplinePoint) |
+| splineSegment | `Pointer` <`integer`> |
+| progress | `Pointer` <`number`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 move_point_along_spline(Vec3f p, struct CutsceneSplinePoint spline[], s16 *splineSegment, f32 *progress);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [next_lakitu_state](#next_lakitu_state)
+
+### Lua Example
+`local integerValue = next_lakitu_state(newPos, newFoc, curPos, curFoc, oldPos, oldFoc, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| newPos | [Vec3f](structs.md#Vec3f) |
+| newFoc | [Vec3f](structs.md#Vec3f) |
+| curPos | [Vec3f](structs.md#Vec3f) |
+| curFoc | [Vec3f](structs.md#Vec3f) |
+| oldPos | [Vec3f](structs.md#Vec3f) |
+| oldFoc | [Vec3f](structs.md#Vec3f) |
+| yaw | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_rotate_towards_point](#obj_rotate_towards_point)
+
+### Lua Example
+`obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| point | [Vec3f](structs.md#Vec3f) |
+| pitchOff | `integer` |
+| yawOff | `integer` |
+| pitchDiv | `integer` |
+| yawDiv | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 yawOff, s16 pitchDiv, s16 yawDiv);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_pos_to_vec3f](#object_pos_to_vec3f)
+
+### Lua Example
+`object_pos_to_vec3f(dst, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3f](structs.md#Vec3f) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void object_pos_to_vec3f(Vec3f dst, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [offset_rotated](#offset_rotated)
+
+### Lua Example
+`offset_rotated(dst, from, to, rotation)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3f](structs.md#Vec3f) |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| rotation | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void offset_rotated(Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [offset_yaw_outward_radial](#offset_yaw_outward_radial)
+
+### Lua Example
+`local integerValue = offset_yaw_outward_radial(c, areaYaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| areaYaw | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 offset_yaw_outward_radial(struct Camera *c, s16 areaYaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_camera_buzz_if_c_sideways](#play_camera_buzz_if_c_sideways)
+
+### Lua Example
+`play_camera_buzz_if_c_sideways()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_camera_buzz_if_c_sideways(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_camera_buzz_if_cbutton](#play_camera_buzz_if_cbutton)
+
+### Lua Example
+`play_camera_buzz_if_cbutton()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_camera_buzz_if_cbutton(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_camera_buzz_if_cdown](#play_camera_buzz_if_cdown)
+
+### Lua Example
+`play_camera_buzz_if_cdown()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_camera_buzz_if_cdown(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_cutscene](#play_cutscene)
+
+### Lua Example
+`play_cutscene(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- None
+
+### C Prototype
+`void play_cutscene(struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_button_change_blocked](#play_sound_button_change_blocked)
+
+### Lua Example
+`play_sound_button_change_blocked()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_button_change_blocked(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_cbutton_down](#play_sound_cbutton_down)
+
+### Lua Example
+`play_sound_cbutton_down()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_cbutton_down(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_cbutton_side](#play_sound_cbutton_side)
+
+### Lua Example
+`play_sound_cbutton_side()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_cbutton_side(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_cbutton_up](#play_sound_cbutton_up)
+
+### Lua Example
+`play_sound_cbutton_up()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_cbutton_up(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_if_cam_switched_to_lakitu_or_mario](#play_sound_if_cam_switched_to_lakitu_or_mario)
+
+### Lua Example
+`play_sound_if_cam_switched_to_lakitu_or_mario()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_if_cam_switched_to_lakitu_or_mario(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_sound_rbutton_changed](#play_sound_rbutton_changed)
+
+### Lua Example
+`play_sound_rbutton_changed()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void play_sound_rbutton_changed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [radial_camera_input](#radial_camera_input)
+
+### Lua Example
+`local integerValue = radial_camera_input(c, unused)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| unused | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 radial_camera_input(struct Camera *c, UNUSED f32 unused);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [random_vec3s](#random_vec3s)
+
+### Lua Example
+`random_vec3s(dst, xRange, yRange, zRange)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3s](structs.md#Vec3s) |
+| xRange | `integer` |
+| yRange | `integer` |
+| zRange | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void random_vec3s(Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_camera](#reset_camera)
+
+### Lua Example
+`reset_camera(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_camera(struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [resolve_geometry_collisions](#resolve_geometry_collisions)
+
+### Lua Example
+`resolve_geometry_collisions(pos, lastGood)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| lastGood | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [rotate_camera_around_walls](#rotate_camera_around_walls)
+
+### Lua Example
+`local integerValue = rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| cPos | [Vec3f](structs.md#Vec3f) |
+| avoidYaw | `Pointer` <`integer`> |
+| yawRange | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [rotate_in_xz](#rotate_in_xz)
+
+### Lua Example
+`rotate_in_xz(dst, src, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3f](structs.md#Vec3f) |
+| src | [Vec3f](structs.md#Vec3f) |
+| yaw | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void rotate_in_xz(Vec3f dst, Vec3f src, s16 yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [rotate_in_yz](#rotate_in_yz)
+
+### Lua Example
+`rotate_in_yz(dst, src, pitch)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3f](structs.md#Vec3f) |
+| src | [Vec3f](structs.md#Vec3f) |
+| pitch | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void rotate_in_yz(Vec3f dst, Vec3f src, s16 pitch);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [scale_along_line](#scale_along_line)
+
+### Lua Example
+`scale_along_line(dest, from, to, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void scale_along_line(Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [select_mario_cam_mode](#select_mario_cam_mode)
+
+### Lua Example
+`select_mario_cam_mode()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void select_mario_cam_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_cam_angle](#set_cam_angle)
+
+### Lua Example
+`local integerValue = set_cam_angle(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 set_cam_angle(s32 mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_camera_mode](#set_camera_mode)
 
 ### Lua Example
@@ -1020,6 +2302,454 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void set_environmental_camera_shake(s16 shake);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
+
+### Lua Example
+`set_fixed_cam_axis_sa_lobby(preset)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| preset | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fov_function](#set_fov_function)
+
+### Lua Example
+`set_fov_function(func)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| func | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fov_function(u8 func);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fov_shake](#set_fov_shake)
+
+### Lua Example
+`set_fov_shake(amplitude, decay, shakeSpeed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| amplitude | `integer` |
+| decay | `integer` |
+| shakeSpeed | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fov_shake(s16 amplitude, s16 decay, s16 shakeSpeed);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_fov_shake_from_point_preset](#set_fov_shake_from_point_preset)
+
+### Lua Example
+`set_fov_shake_from_point_preset(preset, posX, posY, posZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| preset | `integer` |
+| posX | `number` |
+| posY | `number` |
+| posZ | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_fov_shake_from_point_preset(u8 preset, f32 posX, f32 posY, f32 posZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_handheld_shake](#set_handheld_shake)
+
+### Lua Example
+`set_handheld_shake(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_handheld_shake(u8 mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_or_approach_f32_asymptotic](#set_or_approach_f32_asymptotic)
+
+### Lua Example
+`local integerValue = set_or_approach_f32_asymptotic(dst, goal, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | `Pointer` <`number`> |
+| goal | `number` |
+| scale | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_or_approach_s16_symmetric](#set_or_approach_s16_symmetric)
+
+### Lua Example
+`local integerValue = set_or_approach_s16_symmetric(current, target, increment)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `Pointer` <`integer`> |
+| target | `integer` |
+| increment | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_or_approach_vec3f_asymptotic](#set_or_approach_vec3f_asymptotic)
+
+### Lua Example
+`set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3f](structs.md#Vec3f) |
+| goal | [Vec3f](structs.md#Vec3f) |
+| xMul | `number` |
+| yMul | `number` |
+| zMul | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_or_approach_vec3f_asymptotic(Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_pitch_shake_from_point](#set_pitch_shake_from_point)
+
+### Lua Example
+`set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mag | `integer` |
+| decay | `integer` |
+| inc | `integer` |
+| maxDist | `number` |
+| posX | `number` |
+| posY | `number` |
+| posZ | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_pitch_shake_from_point(s16 mag, s16 decay, s16 inc, f32 maxDist, f32 posX, f32 posY, f32 posZ);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [shake_camera_handheld](#shake_camera_handheld)
+
+### Lua Example
+`shake_camera_handheld(pos, focus)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| focus | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void shake_camera_handheld(Vec3f pos, Vec3f focus);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [shake_camera_pitch](#shake_camera_pitch)
+
+### Lua Example
+`shake_camera_pitch(pos, focus)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| focus | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void shake_camera_pitch(Vec3f pos, Vec3f focus);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [shake_camera_roll](#shake_camera_roll)
+
+### Lua Example
+`shake_camera_roll(roll)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| roll | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void shake_camera_roll(s16 *roll);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [shake_camera_yaw](#shake_camera_yaw)
+
+### Lua Example
+`shake_camera_yaw(pos, focus)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| focus | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void shake_camera_yaw(Vec3f pos, Vec3f focus);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [soft_reset_camera](#soft_reset_camera)
+
+### Lua Example
+`soft_reset_camera(c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- None
+
+### C Prototype
+`void soft_reset_camera(struct Camera* c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [start_cutscene](#start_cutscene)
+
+### Lua Example
+`start_cutscene(c, cutscene)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| cutscene | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void start_cutscene(struct Camera *c, u8 cutscene);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [start_object_cutscene_without_focus](#start_object_cutscene_without_focus)
+
+### Lua Example
+`local integerValue = start_object_cutscene_without_focus(cutscene)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cutscene | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 start_object_cutscene_without_focus(u8 cutscene);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [transition_next_state](#transition_next_state)
+
+### Lua Example
+`transition_next_state(c, frames)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| c | [Camera](structs.md#Camera) |
+| frames | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void transition_next_state(UNUSED struct Camera *c, s16 frames);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [trigger_cutscene_dialog](#trigger_cutscene_dialog)
+
+### Lua Example
+`local integerValue = trigger_cutscene_dialog(trigger)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| trigger | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 trigger_cutscene_dialog(s32 trigger);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_sub](#vec3f_sub)
+
+### Lua Example
+`vec3f_sub(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3f](structs.md#Vec3f) |
+| src | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_sub(Vec3f dst, Vec3f src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_to_object_pos](#vec3f_to_object_pos)
+
+### Lua Example
+`vec3f_to_object_pos(o, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| src | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_to_object_pos(struct Object *o, Vec3f src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_camera](#warp_camera)
+
+### Lua Example
+`warp_camera(displacementX, displacementY, displacementZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| displacementX | `number` |
+| displacementY | `number` |
+| displacementZ | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ);`
 
 [:arrow_up_small:](#)
 
