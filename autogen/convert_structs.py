@@ -76,6 +76,8 @@ override_field_immutable = {
     "Object": ["oSyncID", "coopFlags"],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
+    "MarioBodyState": [ "updateTorsoTime" ],
+    "Area": [ "localAreaTimer" ],
 }
 
 sLuaManuallyDefinedStructs = [

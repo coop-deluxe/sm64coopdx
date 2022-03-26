@@ -29,6 +29,7 @@
 --- @field public flags integer
 --- @field public index integer
 --- @field public instantWarps InstantWarp
+--- @field public localAreaTimer integer
 --- @field public macroObjects Pointer_integer
 --- @field public musicParam integer
 --- @field public musicParam2 integer
@@ -461,6 +462,7 @@
 --- @field public punchState integer
 --- @field public torsoAngle Vec3s
 --- @field public torsoPos Vec3f
+--- @field public updateTorsoTime integer
 --- @field public wingFlutter integer
 
 --- @class MarioState

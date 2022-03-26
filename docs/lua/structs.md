@@ -110,6 +110,7 @@
 | flags | `integer` |  |
 | index | `integer` |  |
 | instantWarps | [InstantWarp](structs.md#InstantWarp) |  |
+| localAreaTimer | `integer` | read-only |
 | macroObjects | `Pointer` <`integer`> | read-only |
 | musicParam | `integer` |  |
 | musicParam2 | `integer` |  |
@@ -710,6 +711,7 @@
 | punchState | `integer` |  |
 | torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
+| updateTorsoTime | `integer` | read-only |
 | wingFlutter | `integer` |  |
 
 [:arrow_up_small:](#)
