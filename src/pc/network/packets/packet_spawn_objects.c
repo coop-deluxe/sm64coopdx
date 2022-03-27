@@ -84,7 +84,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
         packet_write(&p, &o->activeFlags, sizeof(s16));
-        packet_write(&p, o->rawData.asU32, sizeof(s32) * 80);
+        packet_write(&p, o->rawData.asU32, sizeof(u32) * 0x50);
         packet_write(&p, &o->header.gfx.scale[0], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
@@ -120,7 +120,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &data.model, sizeof(u32));
         packet_read(p, &data.behaviorId, sizeof(u32));
         packet_read(p, &data.activeFlags, sizeof(s16));
-        packet_read(p, &data.rawData, sizeof(s32) * 80);
+        packet_read(p, &data.rawData, sizeof(u32) * 0x50);
         packet_read(p, &scale[0], sizeof(f32));
         packet_read(p, &scale[1], sizeof(f32));
         packet_read(p, &scale[2], sizeof(f32));

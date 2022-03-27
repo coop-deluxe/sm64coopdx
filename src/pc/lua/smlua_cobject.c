@@ -77,6 +77,50 @@ bool smlua_valid_lvt(u16 lvt) {
  // obj behavior //
 //////////////////
 
+#define CUSTOM_FIELD_MAX 11
+#define CUSTOM_FIELD_ITEM_LEN 48
+struct CustomFieldItem {
+    char key[CUSTOM_FIELD_ITEM_LEN];
+    enum LuaValueType lvt;
+    struct CustomFieldItem* next;
+};
+
+static void smlua_add_custom_field_linked(struct CustomFieldItem** head, struct CustomFieldItem* item, const char* key, enum LuaValueType lvt) {
+    snprintf(item->key, CUSTOM_FIELD_ITEM_LEN, "%s", key);
+    item->lvt = lvt;
+    item->next = NULL;
+
+    if (*head == NULL) {
+        item->next = *head;
+        *head = item;
+        return;
+    }
+
+    struct CustomFieldItem* prev = NULL;
+    struct CustomFieldItem* node = *head;
+    while (node != NULL) {
+        if (strcmp(node->key, item->key) > 0) {
+            if (prev == NULL) {
+                item->next = *head;
+                *head = item;
+                return;
+            } else {
+                item->next = prev->next;
+                prev->next = item;
+                return;
+            }
+        }
+
+        prev = node;
+        node = node->next;
+    }
+
+    if (prev != NULL) {
+        item->next = prev->next;
+        prev->next = item;
+    }
+}
+
 static int smlua_func_define_custom_obj_fields(lua_State* L) {
     LUA_STACK_CHECK_BEGIN();
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
@@ -91,6 +135,10 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         return 0;
     }
 
+    struct CustomFieldItem* customFieldsHead = NULL;
+    struct CustomFieldItem customFields[CUSTOM_FIELD_MAX] = { 0 };
+    u16 customFieldCount = 0;
+
     // get _custom_object_fields
     lua_getglobal(L, "_G"); // get global table
     lua_getfield(L, LUA_REGISTRYINDEX, gLuaLoadingMod->relativePath); // push file's "global" table
@@ -99,8 +147,6 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
     lua_remove(L, -2); // remove file's "global" table
     lua_remove(L, -2); // remove global table
     int customObjectFieldsIndex = lua_gettop(L);
-
-    u32 fieldIndex = 0x1B;
 
     // table is in the stack at index 't'
     lua_pushnil(L);  // first key
@@ -127,6 +173,11 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
             lua_settop(L, iterationTop);
             continue;
         }
+        if (strlen(key) >= CUSTOM_FIELD_ITEM_LEN) {
+            LOG_LUA("Too long of key name for define_custom_obj_fields()");
+            lua_settop(L, iterationTop);
+            continue;
+        }
 
         const char* value = smlua_to_string(L, valueIndex);
         enum LuaValueType lvt = LVT_U32;
@@ -138,6 +189,22 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
             return 0;
         }
 
+        if (customFieldCount >= CUSTOM_FIELD_MAX) {
+            LOG_LUA("Ran out of custom fields!");
+            return 0;
+        }
+
+        smlua_add_custom_field_linked(&customFieldsHead, &customFields[customFieldCount], key, lvt);
+        customFieldCount++;
+
+        lua_settop(L, iterationTop);
+    }
+
+    lua_settop(L, iterationTop);
+
+    struct CustomFieldItem* node = customFieldsHead;
+    u32 fieldIndex = 0x1B;
+    while (node != NULL) {
         // keep fieldIndex in range
         if (fieldIndex < 0x1B) {
             fieldIndex = 0x1B;
@@ -149,7 +216,7 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         }
 
         lua_pushvalue(L, customObjectFieldsIndex);
-        lua_pushvalue(L, keyIndex);
+        lua_pushstring(L, node->key);
         lua_newtable(L);
         {
             // set fieldIndex
@@ -159,16 +226,17 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
 
             // set lvt
             lua_pushstring(L, "_lvt");
-            lua_pushinteger(L, lvt);
+            lua_pushinteger(L, node->lvt);
             lua_rawset(L, -3);
         }
         lua_settable(L, -3); // set _custom_object_fields
 
         fieldIndex++;
+
+        node = node->next;
         lua_settop(L, iterationTop);
     }
 
-    lua_settop(L, iterationTop);
     lua_pop(L, 1); // pop key
     lua_pop(L, 1); // pop _custom_object_fields
 
