@@ -5,7 +5,7 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-static void player_changed_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+static void player_changed_level(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // set NetworkPlayer variables
     network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
     np->currLevelSyncValid = false;
@@ -13,9 +13,9 @@ static void player_changed_level(struct NetworkPlayer* np, s16 courseNum, s16 ac
     reservation_area_change(np);
 
     // find a NetworkPlayer around that location
-    struct NetworkPlayer* npLevelAreaMatch = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex);
-    struct NetworkPlayer* npLevelMatch     = get_network_player_from_level(courseNum, actNum, levelNum);
-    struct NetworkPlayer* npAny = (npLevelAreaMatch == NULL) ? npLevelMatch : npLevelAreaMatch;
+    struct NetworkPlayer *npLevelAreaMatch = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex);
+    struct NetworkPlayer *npLevelMatch     = get_network_player_from_level(courseNum, actNum, levelNum);
+    struct NetworkPlayer *npAny = (npLevelAreaMatch == NULL) ? npLevelMatch : npLevelAreaMatch;
 
     bool inCredits = (np->currActNum == 99);
     if (npAny == NULL || inCredits) {
@@ -58,7 +58,7 @@ void network_send_change_level(void) {
     packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
 
-    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    struct NetworkPlayer *np = gNetworkPlayerLocal;
     network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     np->currAreaSyncValid  = false;
     np->currLevelSyncValid = false;
@@ -66,11 +66,11 @@ void network_send_change_level(void) {
     LOG_INFO("tx change level");
 }
 
-void network_receive_change_level(struct Packet* p) {
+void network_receive_change_level(struct Packet *p) {
     LOG_INFO("rx change level");
 
     SOFT_ASSERT(gNetworkType == NT_SERVER);
-    struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
+    struct NetworkPlayer *np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
         LOG_ERROR("Receiving change level from inactive player!");
         return;

@@ -10,11 +10,11 @@
 
 static u16 sLevelAreaInformSeq[MAX_PLAYERS][MAX_PLAYERS] = { 0 };
 
-void network_send_level_area_inform(struct NetworkPlayer* np) {
+void network_send_level_area_inform(struct NetworkPlayer *np) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
-    for (int i = 1; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np2 = &gNetworkPlayers[i];
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np2 = &gNetworkPlayers[i];
         if (!np2->connected) { continue; }
         if (np2->localIndex == np->localIndex) { continue; }
 
@@ -36,8 +36,7 @@ void network_send_level_area_inform(struct NetworkPlayer* np) {
     LOG_INFO("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
 }
 
-void network_receive_level_area_inform(struct Packet* p) {
-
+void network_receive_level_area_inform(struct Packet *p) {
     SOFT_ASSERT(gNetworkType != NT_SERVER);
 
     u16 seq;
@@ -55,7 +54,7 @@ void network_receive_level_area_inform(struct Packet* p) {
 
     LOG_INFO("rx level area inform for global %d: (%d, %d, %d, %d)", globalIndex, courseNum, actNum, levelNum, areaIndex);
 
-    struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+    struct NetworkPlayer *np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
         LOG_ERROR("Receiving level area inform from inactive player!");
         return;

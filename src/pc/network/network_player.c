@@ -10,8 +10,8 @@
 #include "pc/lua/smlua_hooks.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
-struct NetworkPlayer* gNetworkPlayerLocal = NULL;
-struct NetworkPlayer* gNetworkPlayerServer = NULL;
+struct NetworkPlayer *gNetworkPlayerLocal = NULL;
+struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 
 void network_player_init(void) {
@@ -35,7 +35,7 @@ void network_player_update_model(u8 localIndex) {
 }
 
 bool network_player_any_connected(void) {
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (gNetworkPlayers[i].connected) { return true; }
     }
     return false;
@@ -43,13 +43,13 @@ bool network_player_any_connected(void) {
 
 u8 network_player_connected_count(void) {
     u8 count = 0;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gNetworkPlayers[i].connected) { count++; }
     }
     return count;
 }
 
-void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a) {
+void network_player_set_description(struct NetworkPlayer *np, const char *description, u8 r, u8 g, u8 b, u8 a) {
     if (np == NULL) { return; }
 
     if (description != NULL) {
@@ -64,8 +64,8 @@ void network_player_set_description(struct NetworkPlayer* np, const char* descri
     np->descriptionA = a;
 }
 
-struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+struct NetworkPlayer *network_player_from_global_index(u8 globalIndex) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         if (gNetworkPlayers[i].globalIndex == globalIndex) {
             return &gNetworkPlayers[i];
@@ -74,9 +74,9 @@ struct NetworkPlayer* network_player_from_global_index(u8 globalIndex) {
     return NULL;
 }
 
-struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
+struct NetworkPlayer *get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected)                 { continue; }
         if (!np->currLevelSyncValid)        { continue; }
         if (np->currCourseNum != courseNum) { continue; }
@@ -87,9 +87,9 @@ struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s
     return NULL;
 }
 
-struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
+struct NetworkPlayer *get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected)                 { continue; }
         if (!np->currLevelSyncValid)        { continue; }
         if (!np->currAreaSyncValid)         { continue; }
@@ -102,11 +102,11 @@ struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s1
     return NULL;
 }
 
-struct NetworkPlayer* get_network_player_smallest_global(void) {
+struct NetworkPlayer *get_network_player_smallest_global(void) {
     struct NetworkPlayer* lNp = gNetworkPlayerLocal;
     struct NetworkPlayer* smallest = gNetworkPlayerLocal;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected)                          { continue; }
         if (!np->currLevelSyncValid)                 { continue; }
         if (!np->currAreaSyncValid)                  { continue; }
@@ -120,8 +120,8 @@ struct NetworkPlayer* get_network_player_smallest_global(void) {
 }
 
 void network_player_update(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected && i > 0) { continue; }
 
         network_player_update_model(i);
@@ -130,8 +130,8 @@ void network_player_update(void) {
     if (!network_player_any_connected()) { return; }
 
     if (gNetworkType == NT_SERVER) {
-        for (int i = 1; i < MAX_PLAYERS; i++) {
-            struct NetworkPlayer* np = &gNetworkPlayers[i];
+        for (s32 i = 1; i < MAX_PLAYERS; i++) {
+            struct NetworkPlayer *np = &gNetworkPlayers[i];
             if (!np->connected && i > 0) { continue; }
 
             float elapsed = (clock_elapsed() - np->lastReceived);
@@ -148,7 +148,7 @@ void network_player_update(void) {
             }
         }
     } else if (gNetworkType == NT_CLIENT && gNetworkSentJoin) {
-        struct NetworkPlayer* np = gNetworkPlayerServer;
+        struct NetworkPlayer *np = gNetworkPlayerServer;
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);
 
@@ -166,7 +166,7 @@ void network_player_update(void) {
     }
 }
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name) {
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char *name) {
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
     if (gNetworkType == NT_SERVER) {
@@ -180,7 +180,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     } else {
         assert(false);
     }
-    struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+    struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
 
     // ensure that a name is given
     if (name[0] == '\0') {
@@ -236,9 +236,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->onRxSeqId = 0;
 
     if (localIndex != 0) {
-        for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[localIndex] = 0; }
+        for (s32 j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[localIndex] = 0; }
     }
-    for (int j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; np->rxPacketHash[j] = 0; }
+    for (s32 j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; np->rxPacketHash[j] = 0; }
     packet_ordered_clear(globalIndex);
 
     // set up network player pointers
@@ -253,7 +253,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     // display connected popup
     if (type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
-        char* playerColorString = network_get_player_text_color_string(np->localIndex);
+        char *playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ connected", playerColorString, np->name);
         djui_popup_create(popupMsg, 1);
@@ -280,7 +280,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         return UNKNOWN_GLOBAL_INDEX;
     }
 
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
         if (np->globalIndex != globalIndex) { continue; }
@@ -294,11 +294,11 @@ u8 network_player_disconnected(u8 globalIndex) {
         np->currAreaSyncValid  = false;
         gNetworkSystem->clear_id(i);
         network_forget_all_reliable_from(i);
-        for (int j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
+        for (s32 j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
-        char* playerColorString = network_get_player_text_color_string(np->localIndex);
+        char *playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ disconnected", playerColorString, np->name);
         djui_popup_create(popupMsg, 1);
@@ -313,13 +313,14 @@ u8 network_player_disconnected(u8 globalIndex) {
     return UNKNOWN_GLOBAL_INDEX;
 }
 
-void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
-    // display popup
+void network_player_update_course_level(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     bool inCredits = (np->currActNum == 99);
+    
     if (np->currCourseNum != courseNum && np->localIndex != 0 && !inCredits) {
-        char* playerColorString = network_get_player_text_color_string(np->localIndex);
+        char *playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
+        
         if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
             snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ left this level", playerColorString, np->name);
         } else if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
@@ -327,6 +328,8 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
         } else {
             snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ entered\n%s", playerColorString, np->name, get_level_name(courseNum, levelNum, areaIndex));
         }
+        
+        // display popup
         if (configDisablePopups == 0) {
             djui_popup_create(popupMsg, 1);
         }
@@ -341,8 +344,8 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
 void network_player_shutdown(void) {
     gNetworkPlayerLocal = NULL;
     gNetworkPlayerServer = NULL;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* networkPlayer = &gNetworkPlayers[i];
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *networkPlayer = &gNetworkPlayers[i];
         networkPlayer->connected = false;
         gNetworkSystem->clear_id(i);
     }

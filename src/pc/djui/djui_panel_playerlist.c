@@ -16,7 +16,7 @@ static struct DjuiText* djuiTextNames[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextDescriptions[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
 
-static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
+static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     u8 charIndex = np->overrideModelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
     djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture.texture;
@@ -39,9 +39,10 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer* np) {
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
-    int j = 0;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
+    s32 j = 0;
+    
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
         playerlist_update_row(j++, np);
     }
@@ -65,7 +66,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     djui_flow_layout_set_margin(body, 4);
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct DjuiFlowLayout* row = djui_flow_layout_create(&body->base);
         djui_base_set_size_type(&row->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&row->base, 1.0f, 32.0f);

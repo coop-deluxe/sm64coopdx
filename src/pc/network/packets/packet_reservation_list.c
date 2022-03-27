@@ -21,7 +21,7 @@ void network_send_reservation_list(struct NetworkPlayer* np, u8 syncIds[]) {
     packet_write(&p, &np->currLevelNum,  sizeof(u8));
     packet_write(&p, &np->currAreaIndex, sizeof(u8));
 
-    for (int i = 0; i < RESERVED_IDS_PER_PLAYER_COUNT; i++) {
+    for (s32 i = 0; i < RESERVED_IDS_PER_PLAYER_COUNT; i++) {
         packet_write(&p, &syncIds[i], sizeof(u8));
     }
 
@@ -46,7 +46,7 @@ void network_receive_reservation_list(struct Packet* p) {
     }
 
     u8 syncIds[RESERVED_IDS_PER_PLAYER_COUNT];
-    for (int i = 0; i < RESERVED_IDS_PER_PLAYER_COUNT; i++) {
+    for (s32 i = 0; i < RESERVED_IDS_PER_PLAYER_COUNT; i++) {
         packet_read(p, &syncIds[i], sizeof(u8));
     }
 

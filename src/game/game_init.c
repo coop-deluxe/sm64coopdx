@@ -355,13 +355,11 @@ static void record_demo(void) {
 // take the updated controller struct and calculate
 // the new x, y, and distance floats.
 void adjust_analog_stick(struct Controller *controller) {
-    UNUSED u8 pad[8];
-
-    // reset the controller's x and y floats.
+    // Reset the controller's x and y floats.
     controller->stickX = 0;
     controller->stickY = 0;
 
-    // modulate the rawStickX and rawStickY to be the new f32 values by adding/subtracting 6.
+    // Modulate the rawStickX and rawStickY to be the new f32 values by adding/subtracting 6.
     if (controller->rawStickX <= -8) {
         controller->stickX = controller->rawStickX + 6;
     }
@@ -378,11 +376,11 @@ void adjust_analog_stick(struct Controller *controller) {
         controller->stickY = controller->rawStickY - 6;
     }
 
-    // calculate f32 magnitude from the center by vector length.
+    // Calculate f32 magnitude from the center by vector length.
     controller->stickMag =
         sqrtf(controller->stickX * controller->stickX + controller->stickY * controller->stickY);
 
-    // magnitude cannot exceed 64.0f: if it does, modify the values appropriately to
+    // Magnitude cannot exceed 64.0f: if it does, modify the values appropriately to
     // flatten the values down to the allowed maximum value.
     if (controller->stickMag > 64) {
         controller->stickX *= 64 / controller->stickMag;
@@ -455,9 +453,7 @@ void run_demo_inputs(void) {
 
 // update the controller struct with available inputs if present.
 void read_controller_inputs(void) {
-    s32 i;
-
-    // if any controllers are plugged in, update the
+    // If any controllers are plugged in, update the
     // controller information.
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
@@ -466,7 +462,7 @@ void read_controller_inputs(void) {
     }
     run_demo_inputs();
 
-    for (i = 0; i < 1; i++) {
+    for (s32 i = 0; i < 1; i++) {
         struct Controller *controller = &gControllers[i];
 
         // if we're receiving inputs, update the controller struct
@@ -555,7 +551,7 @@ void setup_game_memory(void) {
     gPhysicalFrameBuffers[0] = VIRTUAL_TO_PHYSICAL(gFrameBuffer0);
     gPhysicalFrameBuffers[1] = VIRTUAL_TO_PHYSICAL(gFrameBuffer1);
     gPhysicalFrameBuffers[2] = VIRTUAL_TO_PHYSICAL(gFrameBuffer2);
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         D_80339CF0[i] = main_pool_alloc(0x4000, MEMORY_POOL_LEFT);
         set_segment_base_addr(17, (void *)D_80339CF0[i]);
         func_80278A78(&D_80339D10[i], gMarioAnims, D_80339CF0[i]);
