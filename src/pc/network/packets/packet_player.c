@@ -360,7 +360,7 @@ void network_receive_player(struct Packet* p) {
         vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
         vec3s_copy(m->marioObj->header.gfx.angle, m->faceAngle);
     }
-    
+
 #ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER && configEnableCheats == 0) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -372,8 +372,8 @@ void network_receive_player(struct Packet* p) {
             }
         }
     }
-}
 #endif
+}
 
 void network_update_player(void) {
     if (!network_player_any_connected()) { return; }
