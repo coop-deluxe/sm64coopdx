@@ -198,15 +198,13 @@ void clear_areas(void) {
         np->currLevelSyncValid = false;
     }
 
-    s32 i;
-
     gCurrentArea = NULL;
     gWarpTransition.isActive = FALSE;
     gWarpTransition.pauseRendering = FALSE;
     gPlayerSpawnInfos[0].areaIndex = -1;
     gPlayerSpawnInfos[1].areaIndex = -1;
 
-    for (i = 0; i < 8; i++) {
+    for (s32 i = 0; i < 8; i++) {
         gAreaData[i].index = i;
         gAreaData[i].flags = 0;
         gAreaData[i].terrainType = 0;
@@ -232,15 +230,13 @@ void clear_areas(void) {
 }
 
 void clear_area_graph_nodes(void) {
-    s32 i;
-
     if (gCurrentArea != NULL) {
         geo_call_global_function_nodes(&gCurrentArea->unk04->node, GEO_CONTEXT_AREA_UNLOAD);
         gCurrentArea = NULL;
         gWarpTransition.isActive = FALSE;
     }
 
-    for (i = 0; i < 8; i++) {
+    for (s32 i = 0; i < 8; i++) {
         if (gAreaData[i].unk04 != NULL) {
             geo_call_global_function_nodes(&gAreaData[i].unk04->node, GEO_CONTEXT_AREA_INIT);
             gAreaData[i].unk04 = NULL;
@@ -289,7 +285,7 @@ void load_mario_area(void) {
     stop_sounds_in_continuous_banks();
     load_area(gMarioSpawnInfo->areaIndex);
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gMarioStates[i].spawnInfo->areaIndex = gCurrentArea->index;
     }
 
@@ -320,13 +316,13 @@ void change_area(s32 index) {
         if (gCurrentArea != NULL) {
             gCurrentArea->flags = areaFlags;
         }
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gMarioStates[i].marioObj->oActiveParticleFlags = 0;
         }
     }
 
     if (areaFlags & 0x01) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gMarioStates[i].marioObj->header.gfx.areaIndex = index;
             gMarioStates[i].spawnInfo->areaIndex = index;
         }

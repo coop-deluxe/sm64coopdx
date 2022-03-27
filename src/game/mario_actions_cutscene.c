@@ -608,6 +608,18 @@ s32 act_debug_free_move(struct MarioState *m) {
     f32 speed;
     u32 action;
 
+#ifndef DEVELOPMENT
+    if (gNetworkType == NT_SERVER && configEnableCheats == 0 && m->action == ACT_DEBUG_FREE_MOVE) {
+        if (m->pos[1] <= m->waterLevel - 100) {
+            action = ACT_WATER_IDLE;
+        } else {
+            action = ACT_FREEFALL;
+        }
+        set_mario_action(m, action, 0);
+        return FALSE;
+    }
+#endif
+
     // integer immediates, generates convert instructions for some reason
     speed = gPlayer1Controller->buttonDown & B_BUTTON ? 1 : 4;
 

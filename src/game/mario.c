@@ -1894,7 +1894,7 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
 s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
     // hide inactive players
-    struct NetworkPlayer* np = &gNetworkPlayers[gMarioState->playerIndex];
+    struct NetworkPlayer *np = &gNetworkPlayers[gMarioState->playerIndex];
     if (gMarioState->playerIndex != 0) {
         bool levelAreaMismatch = ((gNetworkPlayerLocal == NULL)
             || np->currCourseNum != gNetworkPlayerLocal->currCourseNum
@@ -2153,8 +2153,8 @@ static void init_single_mario(struct MarioState* m) {
 
     // figure out if we should apply offset
     u8 nearbyPlayers = 1;
-    for (int i = 1; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer* np = &gNetworkPlayers[i];
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
         if (np->currCourseNum == gCurrCourseNum && np->currLevelNum == gCurrLevelNum && np->currActNum == gCurrActStarNum && np->currAreaIndex == gCurrAreaIndex) {
             nearbyPlayers++;
@@ -2194,10 +2194,9 @@ static void init_single_mario(struct MarioState* m) {
     vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
 
     // cap will never be lying on the ground in coop
-    /* struct Object* capObject;
-    Vec3s capPos;
+    /* Vec3s capPos;
     if (save_file_get_cap_pos(capPos)) {
-        capObject = spawn_object(m->marioObj, MODEL_MARIOS_CAP, bhvNormalCap);
+        struct Object *capObject = spawn_object(m->marioObj, MODEL_MARIOS_CAP, bhvNormalCap);
 
         capObject->oPosX = capPos[0];
         capObject->oPosY = capPos[1];
@@ -2223,7 +2222,7 @@ static void init_single_mario(struct MarioState* m) {
 }
 
 void init_mario(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gMarioStates[i].playerIndex = i;
         init_single_mario(&gMarioStates[i]);
     }
@@ -2251,7 +2250,7 @@ static void init_mario_single_from_save_file(struct MarioState* m, u16 index) {
 }
 
 void init_mario_from_save_file(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         init_mario_single_from_save_file(&gMarioStates[i], i);
     }
     gHudDisplay.coins = 0;

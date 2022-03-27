@@ -15,7 +15,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_NETWORK_PLAYERS, true, PLMT_NONE);
     packet_write(&p, &connectedCount, sizeof(u8));
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         u8 npType = gNetworkPlayers[i].type;
         if (npType == NPT_LOCAL) { npType = NPT_SERVER; }
@@ -62,14 +62,14 @@ void network_receive_network_players_request(struct Packet* p) {
 void network_send_network_players(u8 exceptLocalIndex) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     LOG_INFO("sending list of network players to all");
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         if (i == exceptLocalIndex) { continue; }
         network_send_to_network_players(i);
     }
 }
 
-void network_receive_network_players(struct Packet* p) {
+void network_receive_network_players(struct Packet *p) {
     LOG_INFO("receiving list of network players");
     if (gNetworkType != NT_CLIENT) {
         LOG_ERROR("received list of clients as a non-client");
@@ -77,7 +77,7 @@ void network_receive_network_players(struct Packet* p) {
     }
     u8 connectedCount = 0;
     packet_read(p, &connectedCount, sizeof(u8));
-    for (int i = 0; i < connectedCount; i++) {
+    for (s16 i = 0; i < connectedCount; i++) {
         u8 npType, globalIndex;
         u16 levelAreaSeqId;
         s16 courseNum, actNum, levelNum, areaIndex;
@@ -103,7 +103,7 @@ void network_receive_network_players(struct Packet* p) {
         u8 localIndex = network_player_connected(npType, globalIndex, modelIndex, paletteIndex, playerName);
         LOG_INFO("received network player [%d == %d] (%d)", globalIndex, npType, localIndex);
         if (localIndex != UNKNOWN_GLOBAL_INDEX) {
-            struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+            struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
             if (localIndex != 0) {
                 np->currLevelAreaSeqId = levelAreaSeqId;
                 network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);

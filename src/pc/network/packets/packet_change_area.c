@@ -5,14 +5,14 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-static void player_changed_area(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+static void player_changed_area(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // set NetworkPlayer variables
     network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
     np->currAreaSyncValid  = false;
     reservation_area_change(np);
 
     // find a NetworkPlayer at that area
-    struct NetworkPlayer* npLevelAreaMatch = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex);
+    struct NetworkPlayer *npLevelAreaMatch = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex);
 
     bool inCredits = (np->currActNum == 99);
     if (npLevelAreaMatch == NULL || inCredits) {
@@ -52,18 +52,18 @@ void network_send_change_area(void) {
     packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
 
-    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    struct NetworkPlayer *np = gNetworkPlayerLocal;
     network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     np->currAreaSyncValid  = false;
 
     LOG_INFO("tx change area");
 }
 
-void network_receive_change_area(struct Packet* p) {
+void network_receive_change_area(struct Packet *p) {
     LOG_INFO("rx change area");
 
     SOFT_ASSERT(gNetworkType == NT_SERVER);
-    struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
+    struct NetworkPlayer *np = &gNetworkPlayers[p->localIndex];
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) {
         LOG_ERROR("Receiving change area from inactive player!");
         return;
