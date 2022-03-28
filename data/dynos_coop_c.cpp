@@ -65,5 +65,13 @@ const void* dynos_geolayout_get(const char *name) {
     return DynOS_Geo_GetActorLayoutFromName(name);
 }
 
+void dynos_add_collision_custom(const char *modPath, const char* collisionName) {
+    DynOS_Col_AddCollisionCustom(modPath, collisionName);
+}
+
+Collision* dynos_collision_get(const char* collisionName) {
+    return DynOS_Col_GetCollision(collisionName);
+}
+
 }
 #endif

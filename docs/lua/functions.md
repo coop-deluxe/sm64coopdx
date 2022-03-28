@@ -713,6 +713,7 @@
 - smlua_collision_utils.h
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](#smlua_collision_util_get)
 
 <br />
 
@@ -3752,7 +3753,7 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 - `string`
 
 ### C Prototype
-`const char* get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex);`
+`const char *get_level_name(s16 courseNum, s16 levelNum, s16 areaIndex);`
 
 [:arrow_up_small:](#)
 
@@ -13440,6 +13441,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `struct Surface* get_water_surface_pseudo_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_util_get](#smlua_collision_util_get)
+
+### Lua Example
+`local PointerValue = smlua_collision_util_get(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get(const char* name);`
 
 [:arrow_up_small:](#)
 

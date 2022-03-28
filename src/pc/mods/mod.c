@@ -5,40 +5,74 @@
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
+static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
+    char dynosPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(dynosPath, SYS_MAX_PATH - 1, "%s/actors", mod->basePath) < 0) {
+        LOG_ERROR("Failed to concat dynos path");
+        return;
+    }
+
+    // copy geo name
+    char geoName[64] = { 0 };
+    if (snprintf(geoName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated geo name");
+        return;
+    }
+
+    // remove '.bin'
+    char* g = geoName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to custom actors
+    dynos_add_actor_custom(dynosPath, geoName);
+    LOG_INFO("Activating DynOS bin: '%s', '%s'", dynosPath, geoName);
+}
+
+static void mod_activate_col(struct Mod* mod, struct ModFile* file) {
+    char dynosPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(dynosPath, SYS_MAX_PATH - 1, "%s/actors", mod->basePath) < 0) {
+        LOG_ERROR("Failed to concat dynos path");
+        return;
+    }
+
+    // copy geo name
+    char colName[64] = { 0 };
+    if (snprintf(colName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated col name");
+        return;
+    }
+
+    // remove '.col'
+    char* g = colName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to custom actors
+    dynos_add_collision_custom(dynosPath, colName);
+    LOG_INFO("Activating DynOS col: '%s', '%s'", dynosPath, colName);
+}
+
 void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        if (!str_ends_with(file->relativePath, ".bin")) {
-            continue;
+        if (str_ends_with(file->relativePath, ".bin")) {
+            mod_activate_bin(mod, file);
         }
-
-        char dynosPath[SYS_MAX_PATH] = { 0 };
-        if (snprintf(dynosPath, SYS_MAX_PATH - 1, "%s/actors", mod->basePath) < 0) {
-            LOG_ERROR("Failed to concat dynos path");
-            continue;
+        if (str_ends_with(file->relativePath, ".col")) {
+            mod_activate_col(mod, file);
         }
-
-        // copy geo name
-        char geoName[64] = { 0 };
-        if (snprintf(geoName, 63, "%s", path_basename(file->relativePath)) < 0) {
-            LOG_ERROR("Truncated geo name");
-            continue;
-        }
-
-        // remove '.bin'
-        char* g = geoName;
-        while (*g != '\0') {
-            if (*g == '.') {
-                *g = '\0';
-                break;
-            }
-            g++;
-        }
-
-        // Add to custom actors
-        dynos_add_actor_custom(dynosPath, geoName);
-        LOG_INFO("Activating DynOS: '%s', '%s'", dynosPath, geoName);
     }
 }
 
@@ -181,8 +215,8 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
                 return false;
             }
 
-            // only consider bin files
-            if (!str_ends_with(path, ".bin")) {
+            // only consider bin and col files
+            if (!str_ends_with(path, ".bin") && !str_ends_with(path, ".col")) {
                 continue;
             }
 

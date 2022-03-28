@@ -3,6 +3,8 @@
 #define DYNOS_COOP_C_H
 #ifndef __cplusplus
 
+#include "types.h"
+
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool dynos_warp_restart_level(void);
 bool dynos_warp_exit_level(s32 aDelay);
@@ -17,6 +19,9 @@ void dynos_generate_packs(const char* directory);
 
 void dynos_add_actor_custom(const char *modPath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
+
+void dynos_add_collision_custom(const char *modPath, const char* collisionName);
+Collision* dynos_collision_get(const char* collisionName);
 
 #endif
 #endif

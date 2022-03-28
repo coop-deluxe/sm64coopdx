@@ -593,3 +593,42 @@ void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory) {
     free(_Pool);
     return NULL;
 }
+
+#ifdef COOP
+
+// Collisions
+
+static Array<Pair<const char*, DataNode<Collision>*>> sDynosCustomCollisions;
+
+void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName) {
+    // check for duplicates
+    for (s32 i = 0; i < sDynosCustomCollisions.Count(); ++i) {
+        if (!strcmp(sDynosCustomCollisions[i].first, aCollisionName)) {
+            return;
+        }
+    }
+
+    u16 collisionLen = strlen(aCollisionName);
+    char* collisionName = (char*)calloc(1, sizeof(char) * (collisionLen + 1));
+    strcpy(collisionName, aCollisionName);
+
+    DataNode<Collision>* _Node = DynOS_Col_LoadFromBinary(aPackFolder, collisionName);
+    if (!_Node) {
+        free(collisionName);
+        return;
+    }
+
+    // Add to custom collisions
+    sDynosCustomCollisions.Add({ collisionName, _Node });
+}
+
+Collision* DynOS_Col_GetCollision(const char* collisionName) {
+    for (s32 i = 0; i < sDynosCustomCollisions.Count(); ++i) {
+        if (!strcmp(sDynosCustomCollisions[i].first, collisionName)) {
+            return sDynosCustomCollisions[i].second->mData;
+        }
+    }
+    return NULL;
+}
+
+#endif

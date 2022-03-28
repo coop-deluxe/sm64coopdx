@@ -4075,6 +4075,12 @@ function get_water_surface_pseudo_floor()
     -- ...
 end
 
+--- @param name string
+--- @return Pointer_Collision
+function smlua_collision_util_get(name)
+    -- ...
+end
+
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)
@@ -4452,3 +4458,4 @@ end
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
 --- @class Pointer_integer
+--- @class Pointer_Collision

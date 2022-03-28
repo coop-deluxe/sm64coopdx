@@ -239,6 +239,27 @@ static void WriteAnimationTable(FILE* aFile, GfxData* aGfxData) {
     }
 }
 
+#ifdef COOP
+
+//
+// Collisions
+//
+
+static void WriteCollisionData(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
+    if (!aNode->mData) return;
+
+    // Name
+    aNode->mName.Write(aFile);
+
+    // Data
+    WriteBytes<u32>(aFile, aNode->mSize);
+    for (u32 i = 0; i != aNode->mSize; ++i) {
+        WriteBytes<Collision>(aFile, aNode->mData[i]);
+    }
+}
+
+#endif
+
 //
 // Write
 //
@@ -282,6 +303,23 @@ bool DynOS_Gfx_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
     fclose(_File);
     return true;
 }
+
+#ifdef COOP
+
+bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node) {
+    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    if (!_File) {
+        PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        return false;
+    }
+
+    WriteCollisionData(_File, aGfxData, _Node);
+
+    fclose(_File);
+    return true;
+}
+
+#endif
 
 //
 // Free

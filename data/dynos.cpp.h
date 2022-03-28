@@ -26,6 +26,9 @@ enum {
     DATA_TYPE_ANIMATION,
     DATA_TYPE_ANIMATION_TABLE,
     DATA_TYPE_GFXDYNCMD,
+#ifdef COOP
+    DATA_TYPE_COLLISION,
+#endif
     DATA_TYPE_UNUSED,
 };
 
@@ -420,6 +423,9 @@ struct GfxData : NoCopy {
     DataNodes<Vtx> mVertices;
     DataNodes<Gfx> mDisplayLists;
     DataNodes<GeoLayout> mGeoLayouts;
+#ifdef COOP
+    DataNodes<Collision> mCollisions;
+#endif
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -645,6 +651,10 @@ Array<String> DynOS_Gfx_Init();
 void DynOS_Gfx_Update();
 void DynOS_Gfx_SwapAnimations(void *aPtr);
 bool DynOS_Gfx_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData);
+#ifdef COOP
+bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node);
+DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
+#endif
 GfxData *DynOS_Gfx_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName);
 void DynOS_Gfx_Free(GfxData *aGfxData);
 void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder);
@@ -677,6 +687,11 @@ void *DynOS_Geo_GetFunctionPointerFromName(const String &aName);
 void *DynOS_Geo_GetFunctionPointerFromIndex(s32 aIndex);
 s32 DynOS_Geo_GetFunctionIndex(const void *aPtr);
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
+
+#ifdef COOP
+void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName);
+Collision* DynOS_Col_GetCollision(const char* collisionName);
+#endif
 
 //
 // Levels

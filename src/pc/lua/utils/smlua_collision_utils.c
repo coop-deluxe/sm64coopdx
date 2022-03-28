@@ -165,3 +165,7 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
 struct Surface* get_water_surface_pseudo_floor(void) {
     return &gWaterSurfacePseudoFloor;
 }
+
+Collision* smlua_collision_util_get(const char* name) {
+    return dynos_collision_get(name);
+}

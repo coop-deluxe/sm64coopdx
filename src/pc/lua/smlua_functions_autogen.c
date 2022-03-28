@@ -9096,6 +9096,17 @@ int smlua_func_get_water_surface_pseudo_floor(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_collision_util_get(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_pointer(L, LVT_COLLISION_P, (void*)smlua_collision_util_get(name));
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -10603,6 +10614,7 @@ void smlua_bind_functions_autogen(void) {
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
+    smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);

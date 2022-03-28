@@ -114,4 +114,6 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
 
 struct Surface* get_water_surface_pseudo_floor(void);
 
+Collision* smlua_collision_util_get(const char* name);
+
 #endif
