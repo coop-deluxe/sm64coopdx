@@ -7,8 +7,8 @@
 
 static void player_changed_area(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
     // set NetworkPlayer variables
-    network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
     np->currAreaSyncValid  = false;
+    network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
     reservation_area_change(np);
 
     // find a NetworkPlayer at that area
@@ -18,14 +18,11 @@ static void player_changed_area(struct NetworkPlayer *np, s16 courseNum, s16 act
     if (npLevelAreaMatch == NULL || inCredits) {
         // no NetworkPlayer in the level
         network_send_sync_valid(np, courseNum, actNum, levelNum, areaIndex);
-        network_send_level_area_inform(np);
         return;
     }
 
     // matching NetworkPlayer is client
     network_send_area_request(np, npLevelAreaMatch);
-
-    network_send_level_area_inform(np);
 }
 
 void network_send_change_area(void) {
@@ -52,9 +49,9 @@ void network_send_change_area(void) {
     packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
 
-    struct NetworkPlayer *np = gNetworkPlayerLocal;
-    network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
     np->currAreaSyncValid  = false;
+    network_player_update_course_level(np, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
 
     LOG_INFO("tx change area");
 }

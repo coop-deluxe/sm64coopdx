@@ -106,9 +106,9 @@ void network_receive_network_players(struct Packet *p) {
             struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
             if (localIndex != 0) {
                 np->currLevelAreaSeqId = levelAreaSeqId;
-                network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
                 np->currLevelSyncValid = levelSyncValid;
                 np->currAreaSyncValid = areaSyncValid;
+                network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
                 LOG_INFO("received network player location (%d, %d, %d, %d)", courseNum, actNum, levelNum, areaIndex);
                 if (gNetworkType == NT_CLIENT && globalIndex != 0 && localIndex != 0) {
                     gNetworkSystem->save_id(localIndex, networkId);

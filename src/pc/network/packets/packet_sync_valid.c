@@ -5,7 +5,7 @@
 #include "pc/debuglog.h"
 
 void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
-    bool wasAreaSyncValid = toNp->currAreaSyncValid;
+    bool wasSyncValid = (toNp->currLevelSyncValid && toNp->currAreaSyncValid);
 
     // set the NetworkPlayers sync valid
     toNp->currLevelSyncValid = true;
@@ -16,13 +16,10 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
         gNetworkAreaSyncing = false;
 
         // call hooks
-        if (toNp == gNetworkPlayerLocal && !wasAreaSyncValid) {
-            network_player_update_course_level(toNp, courseNum, actNum, levelNum, (areaIndex != -1) ? areaIndex : toNp->currAreaIndex);
+        if (!wasSyncValid) {
+            network_player_update_course_level(toNp, courseNum, actNum, levelNum, areaIndex);
             smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
         }
-
-        // but we do need to send level area inform
-        network_send_level_area_inform(toNp);
         return;
     }
 
@@ -64,12 +61,12 @@ void network_receive_sync_valid(struct Packet* p) {
         return;
     }
 
-    bool wasAreaSyncValid = np->currAreaSyncValid;
+    bool wasSyncValid = (np->currLevelSyncValid && np->currAreaSyncValid);
     np->currLevelSyncValid = true;
     np->currAreaSyncValid = true;
 
-    if (np == gNetworkPlayerLocal && !wasAreaSyncValid) {
-        network_player_update_course_level(np, courseNum, actNum, levelNum, (areaIndex != -1) ? areaIndex : np->currAreaIndex);
+    if (np == gNetworkPlayerLocal && !wasSyncValid) {
+        network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
         smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
     }
 
@@ -77,11 +74,6 @@ void network_receive_sync_valid(struct Packet* p) {
     if (fromGlobalIndex != gNetworkPlayerServer->globalIndex) {
         LOG_INFO("informing server of sync valid");
         network_send_sync_valid(gNetworkPlayerServer, courseNum, actNum, levelNum, areaIndex);
-    }
-
-    // inform everyone that this player is valid
-    if (gNetworkType == NT_SERVER) {
-        network_send_level_area_inform(np);
     }
 
     // we're no longer syncing

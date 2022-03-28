@@ -293,7 +293,7 @@ void network_send_level_macro(struct NetworkPlayer* destNp);
 void network_receive_level_macro(struct Packet* p);
 
 // packet_level_area_inform.c
-void network_send_level_area_inform(struct NetworkPlayer* np);
+void network_send_level_area_inform(void);
 void network_receive_level_area_inform(struct Packet* p);
 
 // packet_level_respawn_info.c

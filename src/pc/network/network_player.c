@@ -217,9 +217,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     // update course/level
     np->currLevelAreaSeqId = 0;
-    network_player_update_course_level(np, 0, 0, 16, 1);
     np->currLevelSyncValid = false;
     np->currAreaSyncValid = false;
+    network_player_update_course_level(np, 0, 0, 16, 1);
 
     // update visuals
     np->fadeOpacity = 0;
@@ -313,7 +313,13 @@ u8 network_player_disconnected(u8 globalIndex) {
     return UNKNOWN_GLOBAL_INDEX;
 }
 
-void network_player_update_course_level(struct NetworkPlayer *np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex) {
+    // prevent sync valid packets from corrupting areaIndex
+    if (areaIndex == -1) {
+        areaIndex = np->currAreaIndex;
+    }
+
+    // display popup
     bool inCredits = (np->currActNum == 99);
     
     if (np->currCourseNum != courseNum && np->localIndex != 0 && !inCredits) {
@@ -335,10 +341,19 @@ void network_player_update_course_level(struct NetworkPlayer *np, s16 courseNum,
         }
     }
 
+    bool mismatch = (np->currCourseNum != courseNum)
+                 || (np->currActNum    != actNum)
+                 || (np->currLevelNum  != levelNum)
+                 || (np->currAreaIndex != areaIndex);
+
     np->currCourseNum = courseNum;
     np->currActNum    = actNum;
     np->currLevelNum  = levelNum;
     np->currAreaIndex = areaIndex;
+
+    if (mismatch && (np == gNetworkPlayerLocal)) {
+        network_send_level_area_inform();
+    }
 }
 
 void network_player_shutdown(void) {

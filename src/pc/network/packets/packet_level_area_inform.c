@@ -8,37 +8,27 @@
 #include "game/level_info.h"
 #include "game/mario_misc.h"
 
-static u16 sLevelAreaInformSeq[MAX_PLAYERS][MAX_PLAYERS] = { 0 };
+void network_send_level_area_inform(void) {
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    if (np == NULL) { return; }
+    np->currLevelAreaSeqId++;
 
-void network_send_level_area_inform(struct NetworkPlayer *np) {
-    SOFT_ASSERT(gNetworkType == NT_SERVER);
-
-    for (s32 i = 1; i < MAX_PLAYERS; i++) {
-        struct NetworkPlayer *np2 = &gNetworkPlayers[i];
-        if (!np2->connected) { continue; }
-        if (np2->localIndex == np->localIndex) { continue; }
-
-        u16 seq = ++sLevelAreaInformSeq[np->globalIndex][i];
-
-        struct Packet p = { 0 };
-        packet_init(&p, PACKET_LEVEL_AREA_INFORM, true, PLMT_NONE);
-        packet_write(&p, &seq,                    sizeof(u16));
-        packet_write(&p, &np->globalIndex,        sizeof(u8));
-        packet_write(&p, &np->currCourseNum,      sizeof(s16));
-        packet_write(&p, &np->currActNum,         sizeof(s16));
-        packet_write(&p, &np->currLevelNum,       sizeof(s16));
-        packet_write(&p, &np->currAreaIndex,      sizeof(s16));
-        packet_write(&p, &np->currLevelSyncValid, sizeof(u8));
-        packet_write(&p, &np->currAreaSyncValid,  sizeof(u8));
-        network_send_to(np2->localIndex, &p);
-    }
+    struct Packet p = { 0 };
+    packet_init(&p, PACKET_LEVEL_AREA_INFORM, true, PLMT_NONE);
+    packet_write(&p, &np->currLevelAreaSeqId, sizeof(u16));
+    packet_write(&p, &np->globalIndex,        sizeof(u8));
+    packet_write(&p, &np->currCourseNum,      sizeof(s16));
+    packet_write(&p, &np->currActNum,         sizeof(s16));
+    packet_write(&p, &np->currLevelNum,       sizeof(s16));
+    packet_write(&p, &np->currAreaIndex,      sizeof(s16));
+    packet_write(&p, &np->currLevelSyncValid, sizeof(u8));
+    packet_write(&p, &np->currAreaSyncValid,  sizeof(u8));
+    network_send(&p);
 
     LOG_INFO("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
 }
 
-void network_receive_level_area_inform(struct Packet *p) {
-    SOFT_ASSERT(gNetworkType != NT_SERVER);
-
+void network_receive_level_area_inform(struct Packet* p) {
     u16 seq;
     u8 globalIndex;
     s16 courseNum, actNum, levelNum, areaIndex;
@@ -61,14 +51,14 @@ void network_receive_level_area_inform(struct Packet *p) {
     }
 
     if (np == gNetworkPlayerLocal) { return; }
-    if (sLevelAreaInformSeq[0][globalIndex] >= seq && abs(sLevelAreaInformSeq[0][globalIndex] - seq) < 256) {
-        LOG_INFO("Received old level area inform seq: %d vs %d", sLevelAreaInformSeq[0][globalIndex], seq);
+
+    if (np->currLevelAreaSeqId >= seq && abs(np->currLevelAreaSeqId - seq) < 256) {
+        LOG_INFO("Received old level area inform seq: %d vs %d", np->currLevelAreaSeqId, seq);
         return;
     }
 
-    sLevelAreaInformSeq[0][globalIndex] = seq;
-
-    network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
+    np->currLevelAreaSeqId = seq;
     np->currLevelSyncValid = levelSyncValid;
     np->currAreaSyncValid  = areaSyncValid;
+    network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
 }
