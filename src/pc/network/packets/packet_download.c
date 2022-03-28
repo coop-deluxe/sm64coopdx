@@ -6,7 +6,7 @@
 #include "pc/debuglog.h"
 
 #define CHUNK_SIZE 400
-#define OFFSET_COUNT 5
+#define OFFSET_COUNT 40
 
 static u64 sOffset[OFFSET_COUNT] = { 0 };
 static bool sWaitingForOffset[OFFSET_COUNT] = { 0 };
