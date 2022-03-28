@@ -108,7 +108,7 @@ s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
         return 1;
     }
 
-    //! no return value
+    return 0;
 }
 
 s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
@@ -140,7 +140,7 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
         return 1;
     }
 
-    //! no return value
+    return 0;
 }
 
 void clear_object_collision(struct Object *a) {

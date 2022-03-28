@@ -246,7 +246,7 @@ bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     if (strchr(dir->d_name, '\\') != NULL) { return false; }
 
     // skip anything that starts with .
-    if (dir->d_name == NULL || dir->d_name[0] == '.') { return false; }
+    if (dir->d_name[0] == '.') { return false; }
 
     // build path
     if (!concat_path(outPath, dirPath, dir->d_name)) {
