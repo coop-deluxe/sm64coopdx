@@ -85,25 +85,27 @@ WINDOWS_BUILD ?= 0
 
 WINDOWS_AUTO_BUILDER ?= 0
 
+# Setup extra cflags
+EXTRA_CFLAGS ?=
+EXTRA_CPP_FLAGS ?=
+EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs
 
 # COMPILER - selects the C compiler to use
 #   gcc - uses the GNU C Compiler
 COMPILER = gcc
-$(eval $(call validate-option,COMPILER,ido gcc))
+$(eval $(call validate-option,COMPILER,ido gcc clang))
 
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
   EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
-  EXTRA_CFLAGS := -Wno-expansion-to-defined
+  EXTRA_CFLAGS += -Wno-expansion-to-defined
 
   EXTRA_CPP_INCLUDES := -I ../include/cpp
   EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
 else
   EXTRA_INCLUDES ?=
-  EXTRA_CFLAGS ?=
 
   EXTRA_CPP_INCLUDES ?=
-  EXTRA_CPP_FLAGS ?=
 endif
 
 # Attempt to detect OS
@@ -600,6 +602,11 @@ ifeq ($(WINDOWS_AUTO_BUILDER),1)
 else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
+else ifeq ($(COMPILER),clang)
+  CC      := clang
+  CXX     := clang++
+  CPP     := clang++
+  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas
 else ifeq ($(TARGET_WEB),1) # As in, web PC port
   CC     := emcc
   CXX    := emcc
@@ -669,7 +676,9 @@ ifeq ($(TARGET_N64),1)
   CC_CFLAGS := -fno-builtin
 else
   TARGET_CFLAGS := -D_LANGUAGE_C
+  TARGET_CFLAGS += $(EXTRA_CFLAGS)
 endif
+
 
 INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src .
 ifeq ($(TARGET_N64),1)
@@ -689,10 +698,6 @@ BACKEND_LDFLAG0S :=
 
 SDL1_USED := 0
 SDL2_USED := 0
-
-# suppress warnings
-BACKEND_CFLAGS += -Wno-format-security -Wno-trigraphs
-BACKEND_CFLAGS += $(EXTRA_CFLAGS)
 
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
 ifeq ($(WINDOW_API),DXGI)
