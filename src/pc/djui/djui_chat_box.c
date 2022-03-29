@@ -7,11 +7,17 @@
 
 struct DjuiChatBox* gDjuiChatBox = NULL;
 bool gDjuiChatBoxFocus = false;
+static bool sDjuiChatBoxClearText = false;
 
 bool djui_chat_box_render(struct DjuiBase* base) {
     struct DjuiChatBox* chatBox = (struct DjuiChatBox*)base;
     struct DjuiBase* ccBase = &chatBox->chatContainer->base;
     djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
+    if (sDjuiChatBoxClearText) {
+        sDjuiChatBoxClearText = false;
+        djui_inputbox_set_text(gDjuiChatBox->chatInput, "");
+        djui_inputbox_select_all(gDjuiChatBox->chatInput);
+    }
     return true;
 }
 
@@ -90,6 +96,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
 
 void djui_chat_box_toggle(void) {
     if (gDjuiChatBox == NULL) { return; }
+    if (!gDjuiChatBoxFocus) { sDjuiChatBoxClearText = true; }
     gDjuiChatBoxFocus = !gDjuiChatBoxFocus;
     djui_chat_box_set_focus_style();
     gDjuiChatBox->scrolling = false;
