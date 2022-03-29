@@ -704,11 +704,13 @@ s32 act_grabbed(struct MarioState *m) {
         }
 
         // error state, get out of grab
-        if (heldObjIsHeld || m->heldByObj == NULL || !(m->heldByObj->oInteractStatus | INT_STATUS_GRABBED_MARIO)) {
+        if (heldObjIsHeld || m->heldByObj == NULL || !(m->heldByObj->oInteractStatus | INT_STATUS_GRABBED_MARIO) || (m->heldByObj->usingObj != m->marioObj && m->actionArg != 0)) {
             m->heldByObj = NULL;
             return set_mario_action(m, (m->forwardVel >= 0.0f) ? ACT_THROWN_FORWARD : ACT_THROWN_BACKWARD, FALSE);
         }
     }
+
+    if (m->actionArg == 0) { m->actionArg = 1; }
 
     return FALSE;
 }

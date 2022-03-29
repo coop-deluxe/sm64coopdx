@@ -4,7 +4,7 @@ void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct MarioState* marioState = &gMarioStates[i];
-        struct Object* player = gMarioStates[i].marioObj;
+        struct Object* player = marioState->marioObj;
         if (marioState->heldByObj != o->parentObj && marioState->heldByObj != o) { continue; }
         if (marioState->action != ACT_GRABBED) { continue; }
         switch (o->parentObj->oChuckyaUnk88) {
@@ -150,6 +150,7 @@ void chuckya_act_1(void) {
                 o->oChuckyaUnk88 = 3;
                 o->oAction = 3;
                 o->oInteractStatus &= ~(INT_STATUS_GRABBED_MARIO);
+                o->usingObj = NULL;
             } else {
                 cur_obj_init_animation_with_sound(1);
                 o->oMoveAngleYaw += INT_STATUS_GRABBED_MARIO;
@@ -165,6 +166,7 @@ void chuckya_act_1(void) {
                 o->oChuckyaUnk88 = 2;
                 o->oAction = 3;
                 o->oInteractStatus &= ~(INT_STATUS_GRABBED_MARIO);
+                o->usingObj = NULL;
             }
         }
     }
@@ -196,17 +198,33 @@ void chuckya_move(void) {
         o->oAction = 1;
         o->oChuckyaUnk88 = 1;
         cur_obj_play_sound_2(SOUND_OBJ_UNKNOWN3);
+        o->usingObj = nearest_player_to_object(o);
     }
+}
+
+void bhv_chuckya_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = (gMarioStates[0].heldByObj == o);
+    if (*shouldOverride) {
+        *shouldOwn = true;
+    }
+}
+
+u8 bhv_chuckya_ignore_if_true(void) {
+    return (gMarioStates[0].heldByObj == o);
 }
 
 void bhv_chuckya_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oChuckyaUnk88);
-        network_init_object_field(o, &o->oChuckyaUnkF8);
-        network_init_object_field(o, &o->oChuckyaUnkFC);
-        network_init_object_field(o, &o->oChuckyaUnk100);
-        network_init_object_field(o, &o->oFaceAnglePitch);
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        if (so != NULL) {
+            so->override_ownership = bhv_chuckya_override_ownership;
+            so->ignore_if_true = bhv_chuckya_ignore_if_true;
+            network_init_object_field(o, &o->oChuckyaUnk88);
+            network_init_object_field(o, &o->oChuckyaUnkF8);
+            network_init_object_field(o, &o->oChuckyaUnkFC);
+            network_init_object_field(o, &o->oChuckyaUnk100);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+        }
     }
 
     f32 sp2C = 20.0f;

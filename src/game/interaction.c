@@ -1836,6 +1836,8 @@ u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct O
 }
 
 u32 check_object_grab_mario(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
+    if (m != &gMarioStates[0]) { return false; }
+
     if ((!(m->action & (ACT_FLAG_AIR | ACT_FLAG_INVULNERABLE | ACT_FLAG_ATTACKING)) || !sInvulnerable)
         && (o->oInteractionSubtype & INT_SUBTYPE_GRABS_MARIO)) {
         if (object_facing_mario(m, o, 0x2AAA)) {
@@ -1849,6 +1851,7 @@ u32 check_object_grab_mario(struct MarioState *m, UNUSED u32 interactType, struc
             update_mario_sound_and_camera(m);
             play_character_sound(m, CHAR_SOUND_OOOF);
             queue_rumble_data_mario(m, 5, 80);
+            o->usingObj = m->marioObj;
             return set_mario_action(m, ACT_GRABBED, 0);
         }
     }

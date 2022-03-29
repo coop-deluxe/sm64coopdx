@@ -5,6 +5,8 @@ s16 D_8032F460[][2] = { { 30, 0 }, { 42, 1 }, { 52, 0 },  { 64, 1 },  { 74, 0 },
 
 void bhv_heave_ho_throw_mario_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (gMarioStates[0].heldByObj == o->parentObj) { marioState = &gMarioStates[0]; }
+
     struct Object* player = marioState->marioObj;
     o->oParentRelativePosX = 200.0f;
     o->oParentRelativePosY = -50.0f;
@@ -21,6 +23,7 @@ void bhv_heave_ho_throw_mario_loop(void) {
             marioState->forwardVel = -45.0f;
             marioState->vel[1] = 95.0f;
             o->parentObj->oHeaveHoUnk88 = 0;
+            o->parentObj->usingObj = NULL;
             break;
     }
 }
@@ -106,17 +109,33 @@ void heave_ho_move(void) {
         o->oInteractStatus = 0;
         o->oHeaveHoUnk88 = 1;
         o->oAction = 3;
+        o->usingObj = nearest_player_to_object(o);
     }
+}
+
+void bhv_heave_ho_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = (gMarioStates[0].heldByObj == o);
+    if (*shouldOverride) {
+        *shouldOwn = true;
+    }
+}
+
+u8 bhv_heave_ho_ignore_if_true(void) {
+    return (gMarioStates[0].heldByObj == o);
 }
 
 void bhv_heave_ho_loop(void) {
     if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oHeaveHoUnk88);
-        network_init_object_field(o, &o->oHeaveHoUnkF4);
-        network_init_object_field(o, &o->oInteractStatus);
-        network_init_object_field(o, &o->oGraphYOffset);
-        network_init_object_field(o, &o->oFaceAngleYaw);
+        struct SyncObject* so = network_init_object(o, 4000.0f);
+        if (so != NULL) {
+            so->override_ownership = bhv_heave_ho_override_ownership;
+            so->ignore_if_true = bhv_heave_ho_ignore_if_true;
+            network_init_object_field(o, &o->oHeaveHoUnk88);
+            network_init_object_field(o, &o->oHeaveHoUnkF4);
+            network_init_object_field(o, &o->oInteractStatus);
+            network_init_object_field(o, &o->oGraphYOffset);
+            network_init_object_field(o, &o->oFaceAngleYaw);
+        }
     }
 
     cur_obj_scale(2.0f);

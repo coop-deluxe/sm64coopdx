@@ -133,6 +133,7 @@ void king_bobomb_act_3(void) {
                 o->oAction = 2;
                 o->oKingBobombUnk108 = 35;
                 o->oInteractStatus &= ~(INT_STATUS_GRABBED_MARIO);
+                o->usingObj = NULL;
             } else {
                 o->oForwardVel = 3.0f;
                 if (o->oKingBobombUnk104 > 20 && cur_obj_rotate_yaw_toward(0, 0x400)) {
@@ -149,6 +150,7 @@ void king_bobomb_act_3(void) {
             } else if (cur_obj_check_if_near_animation_end()) {
                 o->oAction = 1;
                 o->oInteractStatus &= ~(INT_STATUS_GRABBED_MARIO);
+                o->usingObj = NULL;
             }
         }
     }
@@ -367,15 +369,23 @@ void king_bobomb_move(void) {
         cur_obj_disable_rendering();
 }
 
-u8 king_bobomb_ignore_if_true(void) {
-    return o->oAction == 8;
+void bhv_king_bobomb_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    *shouldOverride = (gMarioStates[0].heldByObj == o);
+    if (*shouldOverride) {
+        *shouldOwn = true;
+    }
+}
+
+u8 bhv_king_bobomb_ignore_if_true(void) {
+    return (o->oAction == 8) || (gMarioStates[0].heldByObj == o);
 }
 
 void bhv_king_bobomb_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, 4000.0f);
         if (so) {
-            so->ignore_if_true = king_bobomb_ignore_if_true;
+            so->override_ownership = bhv_king_bobomb_override_ownership;
+            so->ignore_if_true = bhv_king_bobomb_ignore_if_true;
             network_init_object_field(o, &o->oKingBobombUnk88);
             network_init_object_field(o, &o->oFlags);
             network_init_object_field(o, &o->oHealth);

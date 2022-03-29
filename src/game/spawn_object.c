@@ -312,6 +312,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->areaTimerDuration = 0;
     obj->areaTimerRunOnceCallback = NULL;
 
+    obj->usingObj = NULL;
+
     return obj;
 }
 
