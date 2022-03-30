@@ -42,7 +42,7 @@ void rolling_log_roll_log(void) {
     f32 z = 0;
 
     u8 playersTouched = 0;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         if (player->platform != o) { continue; }

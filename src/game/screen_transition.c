@@ -20,8 +20,8 @@ static Gfx *sScreenTransitionVerticesPos[2];
 static Vtx *sScreenTransitionVertices;
 
 void reset_screen_transition_timers(void) {
-    for (int i = 0; i < 4; i++) { sTransitionColorFadeCount[i] = 0; }
-    for (int i = 0; i < 2; i++) { sTransitionTextureFadeCount[i] = 0; }
+    for (s32 i = 0; i < 4; i++) { sTransitionColorFadeCount[i] = 0; }
+    for (s32 i = 0; i < 2; i++) { sTransitionTextureFadeCount[i] = 0; }
 }
 
 void patch_screen_transition_interpolated(void) {

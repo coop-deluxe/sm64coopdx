@@ -1083,7 +1083,7 @@ static void geo_process_object(struct Object *node) {
     Vec3f scaleInterpolated;
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
         gCurGraphNodeMarioState = NULL;
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (gMarioStates[i].marioObj == node) {
                 gCurGraphNodeMarioState = &gMarioStates[i];
                 break;

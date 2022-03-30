@@ -20,7 +20,7 @@ struct Object *gMarioPlatform = NULL;
  * within 4 units of the floor. Set his referenced platform object accordingly.
  */
 void update_mario_platform(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Surface *floor;
         UNUSED u32 unused;
         f32 marioX;
@@ -177,7 +177,7 @@ void apply_platform_displacement(u32 playerIndex, struct Object *platform) {
  * If Mario's platform is not null, apply platform displacement.
  */
 void apply_mario_platform_displacement(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
         if (player == NULL) { continue; }
 

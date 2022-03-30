@@ -136,7 +136,7 @@ void packet_receive(struct Packet* p) {
     if (p->localIndex != 0 && p->localIndex != UNKNOWN_LOCAL_INDEX && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
         u32 packetHash = packet_hash(p);
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
-        for (int i = 0; i < MAX_RX_SEQ_IDS; i++) {
+        for (s32 i = 0; i < MAX_RX_SEQ_IDS; i++) {
             if (np->rxSeqIds[i] == p->seqId && np->rxPacketHash[i] == packetHash) {
                 LOG_INFO("received duplicate packet %u", packetType);
                 return;
@@ -170,7 +170,7 @@ void packet_receive(struct Packet* p) {
     // broadcast packet
     if (p->requestBroadcast) {
         if (gNetworkType == NT_SERVER && gNetworkSystem->requireServerBroadcast) {
-            for (int i = 1; i < MAX_PLAYERS; i++) {
+            for (s32 i = 1; i < MAX_PLAYERS; i++) {
                 if (!gNetworkPlayers[i].connected) { continue; }
                 if (i == p->localIndex) { continue; }
                 struct Packet p2 = { 0 };

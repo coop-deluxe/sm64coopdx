@@ -44,7 +44,7 @@ void tweester_scale_and_move(f32 preScale) {
  */
 void tweester_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oSubAction == TWEESTER_SUB_ACT_WAIT) {
         cur_obj_become_tangible();
@@ -74,8 +74,8 @@ void tweester_act_idle(void) {
 void tweester_act_chase(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     f32 activationRadius = o->oBehParams2ndByte * 100;
 

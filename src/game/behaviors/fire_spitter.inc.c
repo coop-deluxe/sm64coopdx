@@ -1,7 +1,7 @@
 
 static void fire_spitter_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     approach_f32_ptr(&o->header.gfx.scale[0], 0.2f, 0.002f);
     if (o->oTimer > 150 && distanceToPlayer < 800.0f && !(o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER)) {
         o->oAction = FIRE_SPITTER_ACT_SPIT_FIRE;
@@ -13,7 +13,7 @@ static void fire_spitter_act_spit_fire(void) {
     s32 scaleStatus;
 
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     o->oMoveAngleYaw = angleToPlayer;
 

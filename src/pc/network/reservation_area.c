@@ -40,7 +40,7 @@ void reservation_area_debug(void) {
     printf("\n============ %02d ============\n", gNetworkPlayerLocal->globalIndex);
 
     printf("reservation area per player:\n");
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct ReservationArea* ra = sReservationAreaPerPlayer[i];
         if (ra != NULL) {
             printf("  %d : (%d, %d, %d, %d)\n", i, ra->courseNum, ra->actNum, ra->levelNum, ra->areaIndex);

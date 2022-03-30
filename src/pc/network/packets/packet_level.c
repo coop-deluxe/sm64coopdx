@@ -76,7 +76,7 @@ void network_receive_level(struct Packet* p) {
 
     // hacky way to override red coins collected
     gRedCoinsCollected = redCoinsCollected;
-    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         struct Object* o = &gObjectPool[i];
         if (o->behavior == bhvBowserCourseRedCoinStar || o->behavior == bhvHiddenRedCoinStar) {
             o->oHiddenStarTriggerCounter = redCoinsCollected;

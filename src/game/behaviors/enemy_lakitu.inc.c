@@ -61,8 +61,8 @@ static void enemy_lakitu_update_vel_y(f32 offsetY) {
 static void enemy_lakitu_update_speed_and_angle(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     f32 minSpeed;
     s16 turnSpeed;
@@ -102,8 +102,8 @@ static void enemy_lakitu_update_speed_and_angle(void) {
 static void enemy_lakitu_sub_act_no_spiny(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
 
@@ -148,8 +148,8 @@ static void enemy_lakitu_sub_act_hold_spiny(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
 
@@ -217,7 +217,7 @@ static void enemy_lakitu_act_main(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer <= o->oDrawingDistance) {
         cur_obj_move_standard(78);
     }

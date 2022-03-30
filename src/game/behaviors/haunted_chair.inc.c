@@ -39,7 +39,7 @@ void haunted_chair_act_0(void) {
     s16 val0E;
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->parentObj != o) {
         if (o->oHauntedChairUnk104 == 0) {
@@ -111,7 +111,7 @@ void haunted_chair_act_1(void) {
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     if (o->oTimer < 70) {
         if (o->oTimer < 50) {

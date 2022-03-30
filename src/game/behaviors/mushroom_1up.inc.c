@@ -60,7 +60,7 @@ void pole_1up_move_towards_mario(void) {
 
 void one_up_move_away_from_mario(s16 sp1A) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     o->oForwardVel = 8.0f;
     o->oMoveAngleYaw = angleToPlayer + 0x8000;
@@ -378,7 +378,7 @@ void bhv_1up_hidden_in_pole_spawner_loop(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (player == gMarioStates[0].marioObj && distanceToPlayer < 700) {
         struct Object* spawn_objects[3];
         u32 models[3];
@@ -391,7 +391,7 @@ void bhv_1up_hidden_in_pole_spawner_loop(void) {
             models[1 + sp2F] = MODEL_NONE;
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (s32 i = 0; i < 3; i++) {
             if (spawn_objects[i] == NULL) { continue; }
             spawn_objects[i]->parentObj = spawn_objects[i];
             network_set_sync_id(spawn_objects[i]);

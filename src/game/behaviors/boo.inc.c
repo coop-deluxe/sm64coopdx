@@ -56,7 +56,7 @@ void bhv_boo_init(void) {
 
 static s32 boo_should_be_stopped(void) {
     if (cur_obj_has_behavior(bhvMerryGoRoundBigBoo) || cur_obj_has_behavior(bhvMerryGoRoundBoo)) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].currentRoom == BBH_DYNAMIC_SURFACE_ROOM || gMarioStates[i].currentRoom == BBH_NEAR_MERRY_GO_ROUND_ROOM) { return FALSE; }
         }
@@ -83,10 +83,10 @@ static s32 boo_should_be_stopped(void) {
 
 static s32 boo_should_be_active(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, marioState->marioObj);
+    s32 distanceToPlayer = dist_between_objects(o, marioState->marioObj);
 
     u8 inRoom = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].currentRoom == o->oRoom || gMarioStates[i].currentRoom == 0) { inRoom = TRUE; }
     }
@@ -178,7 +178,7 @@ static void boo_oscillate(s32 ignoreOpacity) {
 
 static s32 boo_vanish_or_appear(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 relativeAngleToMario = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
     s16 relativeMarioFaceAngle = abs_angle_diff(o->oMoveAngleYaw, player->oFaceAngleYaw);
@@ -207,7 +207,7 @@ static s32 boo_vanish_or_appear(void) {
 
 static void boo_set_move_yaw_for_during_hit(s32 hurt) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     cur_obj_become_intangible();
 
@@ -377,7 +377,7 @@ static s32 boo_get_attack_status(void) {
 static void boo_chase_mario(f32 a0, s16 a1, f32 a2) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     f32 sp1C;
     s16 sp1A;
@@ -621,7 +621,7 @@ static void big_boo_act_1(void) {
     // redundant; this check is in boo_should_be_stopped
     if (cur_obj_has_behavior(bhvMerryGoRoundBigBoo)) {
         u8 inRoom = FALSE;
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].currentRoom == BBH_DYNAMIC_SURFACE_ROOM || gMarioStates[i].currentRoom == BBH_NEAR_MERRY_GO_ROUND_ROOM) { inRoom = TRUE; }
         }
@@ -712,7 +712,7 @@ static void big_boo_act_4(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oBehParams2ndByte == 0) {
         obj_set_pos(o, 973, 0, 626);
@@ -877,7 +877,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     switch (o->oAction) {
         case 0:
@@ -949,11 +949,11 @@ void bhv_boo_in_castle_loop(void) {
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     u8 inRoom = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (marioState->floor == NULL) { continue; }
         inRoom = inRoom || (marioState->floor->room == 1);

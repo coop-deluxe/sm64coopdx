@@ -236,7 +236,7 @@ static void bowser_debug_actions(void) // unused
 void bowser_bitdw_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
 
     f32 rand = random_float();
@@ -273,7 +273,7 @@ void bowser_bitdw_act_controller(void) {
 void bowser_bitfs_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
 
     f32 rand = random_float();
@@ -305,7 +305,7 @@ void bowser_bitfs_act_controller(void) {
 void bowser_general_bits_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
 
     f32 rand = random_float();
@@ -394,7 +394,7 @@ void bowser_act_breath_fire(void) {
 void bowser_act_walk_to_mario(void) // turn towards Mario
 {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     UNUSED s32 facing; // is Bowser facing Mario?
     s16 turnSpeed;
@@ -427,8 +427,8 @@ void bowser_act_walk_to_mario(void) // turn towards Mario
 
 void bowser_act_teleport(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     switch (o->oSubAction) {
         case 0:
@@ -536,7 +536,7 @@ s32 bowser_set_anim_in_air(void) {
 
 s32 bowser_land(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oMoveFlags & OBJ_MOVE_LANDED) {
         o->oForwardVel = 0;
@@ -667,7 +667,7 @@ void bowser_act_turn_from_edge(void) {
 
 void bowser_act_charge_mario(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s32 sp34;
     if (o->oTimer == 0)
@@ -906,8 +906,8 @@ void bowser_dead_bounce(void) {
 
 s32 bowser_dead_wait_for_mario(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s32 ret = 0;
     cur_obj_become_intangible();
@@ -1246,8 +1246,8 @@ void bowser_thrown_dropped_update(void) {
 
 void bhv_bowser_loop(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     // look for animation difference and override
     struct Animation* anim = NULL;
@@ -1305,7 +1305,7 @@ void bhv_bowser_loop(void) {
     // update animation index
     anim = o->oAnimations[networkBowserAnimationIndex];
     if (o->header.gfx.animInfo.curAnim != anim) {
-        for (int i = 0; i < 32; i++) {
+        for (s32 i = 0; i < 32; i++) {
             if (o->header.gfx.animInfo.curAnim == o->oAnimations[i]) {
                 networkBowserAnimationIndex = i;
             }
@@ -1385,7 +1385,7 @@ Gfx *geo_update_body_rot_from_parent(s32 run, UNUSED struct GraphNode *node, Mat
 
 void bowser_open_eye_switch(struct Object *a0, struct GraphNodeSwitchCase *switchCase) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s32 sp1C;
     s16 sp1A;

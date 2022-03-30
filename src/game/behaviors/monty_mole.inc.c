@@ -59,7 +59,7 @@ static struct Object *link_objects_with_behavior(const BehaviorScript *behavior)
  */
 static struct Object *monty_mole_select_available_hole(f32 minDistToMario) {
     struct Object* player;
-    int distanceToPlayer;
+    s32 distanceToPlayer;
 
     struct Object *hole = sMontyMoleHoleList;
     s32 numAvailableHoles = 0;
@@ -218,13 +218,13 @@ static void monty_mole_act_select_hole(void) {
         o->oPosZ = o->oMontyMoleCurrentHole->oPosZ;
 
         struct Object* holePlayer = nearest_player_to_object(o->oMontyMoleCurrentHole);
-        int angleToHolePlayer = obj_angle_to_object(o->oMontyMoleCurrentHole, holePlayer);
+        s32 angleToHolePlayer = obj_angle_to_object(o->oMontyMoleCurrentHole, holePlayer);
 
         o->oFaceAnglePitch = 0;
         o->oMoveAngleYaw = angleToHolePlayer;
 
         struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
+        s32 distanceToPlayer = dist_between_objects(o, player);
 
         if (distanceToPlayer > 500.0f || minDistToMario > 100.0f || random_sign() < 0) {
             o->oAction = MONTY_MOLE_ACT_RISE_FROM_HOLE;
@@ -267,7 +267,7 @@ static void monty_mole_act_rise_from_hole(void) {
  */
 static void monty_mole_act_spawn_rock(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     struct Object *rock;
 
@@ -489,7 +489,7 @@ static void monty_mole_rock_act_held(void) {
 
     if (o->parentObj == NULL || o->parentObj->prevObj == NULL) {
         struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
+        s32 distanceToPlayer = dist_between_objects(o, player);
         if (distanceToPlayer > 600.0f) {
             distanceToPlayer = 600.0f;
         }

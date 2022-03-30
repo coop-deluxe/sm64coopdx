@@ -71,7 +71,7 @@ void flying_bookend_act_1(void) {
 void flying_bookend_act_2(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     cur_obj_init_animation_with_sound(1);
     cur_obj_update_floor_and_walls();
@@ -321,7 +321,7 @@ void bhv_book_switch_loop(void) {
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     o->header.gfx.scale[0] = 2.0f;
     o->header.gfx.scale[1] = 0.9f;

@@ -44,7 +44,7 @@ void heave_ho_act_1(void) {
 
 void heave_ho_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     UNUSED s32 unused;
     s16 angleVel;

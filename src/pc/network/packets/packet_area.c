@@ -19,7 +19,7 @@ u8 sRemoveSyncIdsIndex = 0;
 
 void area_remove_sync_ids_add(u8 syncId) {
     if (syncId >= RESERVED_IDS_SYNC_OBJECT_OFFSET) { return; }
-    for (int i = 0; i < sRemoveSyncIdsIndex; i++) {
+    for (s32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         if (sRemoveSyncIds[i] == syncId) { return; }
     }
     sRemoveSyncIds[sRemoveSyncIdsIndex++] = syncId;
@@ -59,14 +59,14 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // write sync id removals
         packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
-        for (int i = 0; i < sRemoveSyncIdsIndex; i++) {
+        for (s32 i = 0; i < sRemoveSyncIdsIndex; i++) {
             packet_write(&p, &sRemoveSyncIds[i], sizeof(u8));
             LOG_INFO("tx remove sync id %d", sRemoveSyncIds[i]);
         }
 
         // count respawners and write
         u8 respawnerCount = 0;
-        for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL || so->o->behavior != bhvRespawner) { continue; }
             respawnerCount++;
@@ -74,7 +74,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         packet_write(&p, &respawnerCount, sizeof(u8));
 
         // write respawners
-        for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL || so->o->behavior != bhvRespawner) { continue; }
             u32 behaviorToRespawn = get_id_from_behavior(so->o->oRespawnerBehaviorToRespawn);
@@ -93,7 +93,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         network_send_to(toNp->localIndex, &p);
 
         // send non-static objects
-        for (int i = RESERVED_IDS_SYNC_OBJECT_OFFSET; i < MAX_SYNC_OBJECTS; i++) {
+        for (s32 i = RESERVED_IDS_SYNC_OBJECT_OFFSET; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL || so->o->oSyncID != (u32)i) { continue; }
             if (so->o->behavior == bhvRespawner) { continue; }
@@ -102,7 +102,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             // TODO: move find model to a utility file/function
             // find model
             u32 model = 0;
-            for (int j = 0; j < 256; j++) {
+            for (s32 j = 0; j < 256; j++) {
                 if (so->o->header.gfx.sharedChild == gLoadedGraphNodes[j]) {
                     model = j;
                     break;
@@ -115,7 +115,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         }
 
         // send last reliable ent packet
-        for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+        for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL) { continue; }
             if (so->lastReliablePacketIsStale) { continue; }

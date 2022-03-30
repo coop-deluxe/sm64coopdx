@@ -183,7 +183,7 @@ static void racing_penguin_act_race(void) {
     // fact that one player can fall off while the other player completes the
     // race.
     /*u8 isInAir = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         isInAir = isInAir || mario_is_in_air_action(&gMarioStates[i]);
     }
@@ -290,7 +290,7 @@ void bhv_racing_penguin_update(void) {
 
 void bhv_penguin_race_finish_line_update(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->parentObj->oRacingPenguinReachedBottom
         || (distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f)) {
@@ -303,7 +303,7 @@ void bhv_penguin_race_finish_line_update(void) {
 
 void bhv_penguin_race_shortcut_check_update(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer < 500.0f && !o->parentObj->oRacingPenguinMarioCheated) {
         o->parentObj->oRacingPenguinMarioCheated = TRUE;
         network_send_object(o->parentObj);

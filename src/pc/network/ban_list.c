@@ -36,7 +36,7 @@ bool ban_list_contains(char* address) {
         return false;
     }
 
-    for (int i = 0; i < gBanCount; i++) {
+    for (s32 i = 0; i < gBanCount; i++) {
         if (gBanAddresses[i] == NULL) { continue; }
         if (strcmp(address, gBanAddresses[i]) == 0) {
             return true;

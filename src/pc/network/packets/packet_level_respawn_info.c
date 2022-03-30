@@ -130,7 +130,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     // send the packet
     if (gNetworkType == NT_SERVER) {
         // broadcast
-        for (int i = 1; i < MAX_PLAYERS; i++) {
+        for (s32 i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected)                      { continue; }
             if (!np->currLevelSyncValid)             { continue; }
@@ -178,7 +178,7 @@ void network_receive_level_respawn_info(struct Packet* p) {
         }
 
         // broadcast this change to the other players in that level
-        for (int i = 1; i < MAX_PLAYERS; i++) {
+        for (s32 i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
             if (!np->currLevelSyncValid) { continue; }

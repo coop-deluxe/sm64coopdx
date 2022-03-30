@@ -61,8 +61,8 @@ static void skeeter_act_idle(void) {
 }
 
 static void skeeter_act_lunge(void) {
-    int distanceToPlayer = o->oDistanceToMario;
-    int angleToPlayer = o->oAngleToMario;
+    s32 distanceToPlayer = o->oDistanceToMario;
+    s32 angleToPlayer = o->oAngleToMario;
 
     if (!(o->oMoveFlags & OBJ_MOVE_AT_WATER_SURFACE)) {
         o->oAction = SKEETER_ACT_IDLE;
@@ -93,8 +93,8 @@ static void skeeter_act_lunge(void) {
 }
 
 static void skeeter_act_walk(void) {
-    int distanceToPlayer = o->oDistanceToMario;
-    int angleToPlayer = o->oAngleToMario;
+    s32 distanceToPlayer = o->oDistanceToMario;
+    s32 angleToPlayer = o->oAngleToMario;
 
     f32 sp24;
 
@@ -156,8 +156,8 @@ void bhv_skeeter_update(void) {
     o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
     o->oDistanceToMario = distanceToPlayer;
     o->oAngleToMario = angleToPlayer;

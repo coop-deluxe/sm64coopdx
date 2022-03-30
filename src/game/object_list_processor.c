@@ -265,14 +265,14 @@ void spawn_particle(u32 activeParticleFlag, s16 model, const BehaviorScript *beh
 void bhv_mario_update(void) {
     // force indices to be well behaved
     // this may cause unintended side effects
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].marioObj == NULL) { continue; }
         gMarioStates[i].marioObj->oBehParams = i + 1;
         gMarioStates[i].marioObj->globalPlayerIndex = gNetworkPlayers[i].globalIndex;
     }
 
     // set mario state to the current player
-    int stateIndex = (gCurrentObject->oBehParams - 1);
+    s32 stateIndex = (gCurrentObject->oBehParams - 1);
     gMarioState = &gMarioStates[stateIndex];
 
     // sanity check torsoPos, it isn't updated off-screen otherwise
@@ -574,12 +574,12 @@ void clear_objects(void) {
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
     gMarioObject = NULL;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gMarioObjects[i] = NULL;
     }
     gMarioCurrentRoom = 0;
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gMarioStates[i].currentRoom = 0;
     }
 

@@ -434,7 +434,7 @@ u8 str_ascii_char_to_dialog(char c) {
 }
 
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
-    for (int i = 0; i < length; i++) {
+    for (s32 i = 0; i < length; i++) {
         dialog[i] = str_ascii_char_to_dialog(string[i]);
     }
     dialog[length] = DIALOG_CHAR_TERMINATOR;
@@ -464,7 +464,7 @@ f32 get_generic_ascii_string_width(const char* ascii) {
 }
 
 f32 get_generic_dialog_height(u8* dialog) {
-    int lines = 0;
+    s32 lines = 0;
     u8* d = dialog;
     while (*d != DIALOG_CHAR_TERMINATOR) {
         if (*d == DIALOG_CHAR_NEWLINE) { lines++; }

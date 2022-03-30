@@ -56,7 +56,7 @@ void adjust_rolling_face_pitch(f32 f12) {
 
 void snowmans_bottom_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     UNUSED s16 sp26;
     s32 sp20 = 0;

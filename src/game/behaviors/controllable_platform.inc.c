@@ -96,7 +96,7 @@ void bhv_controllable_platform_init(void) {
     network_init_object_field(o, &o->oFaceAnglePitch);
     network_init_object_field(o, &o->oFaceAngleRoll);
     network_init_object_field(o, &o->header.gfx.node.flags);
-    for (int i = 0; i < 4; i++) {
+    for (s32 i = 0; i < 4; i++) {
         if (controllablePlatformSubs[i] == NULL) { continue; }
         network_init_object_field(o, &controllablePlatformSubs[i]->oAction);
         network_init_object_field(o, &controllablePlatformSubs[i]->oPrevAction);
@@ -172,7 +172,7 @@ void controllable_platform_tilt_from_mario(void) {
     f32 x = 0;
     f32 z = 0;
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].marioObj->platform == o || gMarioStates[i].marioObj->platform == cur_obj_nearest_object_with_behavior(bhvControllablePlatformSub)) {
             x += gMarioStates[i].pos[0];
             z += gMarioStates[i].pos[2];
@@ -273,7 +273,7 @@ void bhv_controllable_platform_loop(void) {
                 o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
                 D_80331694 = 0;
                 o->oTimer = 0;
-                for (int i = 0; i < 4; i++) {
+                for (s32 i = 0; i < 4; i++) {
                     controllablePlatformSubs[i]->oParentRelativePosY = 51.0f;
                     controllablePlatformSubs[i]->oAction = 0;
                     controllablePlatformSubs[i]->oTimer = 0;

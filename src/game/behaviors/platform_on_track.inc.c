@@ -280,7 +280,7 @@ static void platform_on_track_rock_ski_lift(void) {
     o->oFaceAngleRoll += (s32) o->oPlatformOnTrackSkiLiftRollVel;
 
     struct Object* player = NULL;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform != o) { continue; }
         player = gMarioStates[i].marioObj;
@@ -289,8 +289,8 @@ static void platform_on_track_rock_ski_lift(void) {
 
     // Tilt away from the moving direction and toward mario
     if (player != NULL) {
-        int distanceToPlayer = dist_between_objects(o, player);
-        int angleToPlayer = obj_angle_to_object(o, player);
+        s32 distanceToPlayer = dist_between_objects(o, player);
+        s32 angleToPlayer = obj_angle_to_object(o, player);
         targetRoll = o->oForwardVel * sins(o->oMoveAngleYaw) * -50.0f
                      + (s32)(distanceToPlayer * sins(angleToPlayer - o->oFaceAngleYaw) * -4.0f);
     }

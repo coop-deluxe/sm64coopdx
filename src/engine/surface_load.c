@@ -774,7 +774,7 @@ void load_object_collision_model(void) {
     f32 tangibleDist = gCurrentObject->oCollisionDistance;
 
     u8 anyPlayerInTangibleRange = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
         if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
     }

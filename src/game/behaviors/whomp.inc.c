@@ -19,7 +19,7 @@ u8 whomp_act_0_continue_dialog(void) { return o->oAction == 0; }
 void whomp_act_0(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
     cur_obj_set_pos_to_home();
@@ -61,8 +61,8 @@ void whomp_act_7(void) {
 
 void whomp_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 sp26;
     f32 sp20;
@@ -90,8 +90,8 @@ void whomp_act_1(void) {
 
 void whomp_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 sp1E;
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);

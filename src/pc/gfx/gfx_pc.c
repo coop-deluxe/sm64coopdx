@@ -228,11 +228,11 @@ static void gfx_generate_cc(struct ColorCombiner *comb, uint32_t cc_id) {
     uint8_t c[2][4];
     uint32_t shader_id = (cc_id >> 24) << 24;
     uint8_t shader_input_mapping[2][4] = {{0}};
-    for (int i = 0; i < 4; i++) {
+    for (int32_t i = 0; i < 4; i++) {
         c[0][i] = (cc_id >> (i * 3)) & 7;
         c[1][i] = (cc_id >> (12 + i * 3)) & 7;
     }
-    for (int i = 0; i < 2; i++) {
+    for (int32_t i = 0; i < 2; i++) {
         if (c[i][0] == c[i][1] || c[i][2] == CC_0) {
             c[i][0] = c[i][1] = c[i][2] = 0;
         }
@@ -691,7 +691,7 @@ static void calculate_normal_dir(const Light_t *light, float coeffs[3]) {
 
 static void gfx_matrix_mul(float res[4][4], const float a[4][4], const float b[4][4]) {
     float tmp[4][4];
-    for (int i = 0; i < 4; i++) {
+    for (int32_t i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             tmp[i][j] = a[i][0] * b[0][j] +
                         a[i][1] * b[1][j] +
@@ -706,7 +706,7 @@ static void gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
     float matrix[4][4];
 #if 0
     // Original code when fixed point matrices were used
-    for (int i = 0; i < 4; i++) {
+    for (int32_t i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j += 2) {
             int32_t int_part = addr[i * 2 + j / 2];
             uint32_t frac_part = addr[8 + i * 2 + j / 2];
@@ -772,7 +772,7 @@ static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *verti
         
         if (rsp.geometry_mode & G_LIGHTING) {
             if (rsp.lights_changed) {
-                for (int i = 0; i < rsp.current_num_lights - 1; i++) {
+                for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                     calculate_normal_dir(&rsp.current_lights[i], rsp.current_lights_coeffs[i]);
                 }
                 static const Light_t lookat_x = {{0, 0, 0}, 0, {0, 0, 0}, 0, {127, 0, 0}, 0};
@@ -786,7 +786,7 @@ static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *verti
             int g = rsp.current_lights[rsp.current_num_lights - 1].col[1];
             int b = rsp.current_lights[rsp.current_num_lights - 1].col[2];
             
-            for (int i = 0; i < rsp.current_num_lights - 1; i++) {
+            for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
                 intensity += vn->n[0] * rsp.current_lights_coeffs[i][0];
                 intensity += vn->n[1] * rsp.current_lights_coeffs[i][1];
@@ -970,7 +970,7 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     bool used_textures[2];
     gfx_rapi->shader_get_info(prg, &num_inputs, used_textures);
     
-    for (int i = 0; i < 2; i++) {
+    for (int32_t i = 0; i < 2; i++) {
         if (used_textures[i]) {
             if (rdp.textures_changed[i]) {
                 gfx_flush();
@@ -994,7 +994,7 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     
     bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();
     
-    for (int i = 0; i < 3; i++) {
+    for (int32_t i = 0; i < 3; i++) {
         float z = v_arr[i]->z, w = v_arr[i]->w;
         if (z_is_from_0_to_1) {
             z = (z + w) / 2.0f;
@@ -1488,7 +1488,7 @@ static void gfx_dp_fill_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int32_t
         lry += 1 << 2;
     }
     
-    for (int i = MAX_VERTICES; i < MAX_VERTICES + 4; i++) {
+    for (int32_t i = MAX_VERTICES; i < MAX_VERTICES + 4; i++) {
         struct LoadedVertex* v = &rsp.loaded_vertices[i];
         v->color = rdp.fill_color;
     }

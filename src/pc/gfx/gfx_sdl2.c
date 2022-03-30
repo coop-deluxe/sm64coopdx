@@ -68,7 +68,7 @@ int test_vsync(void) {
     // combination with that we can't control the queue size (i.e. lag)
     // is a reason this generic SDL2 backend should only be used as last resort.
 
-    for (int i = 0; i < 8; ++i)
+    for (int32_t i = 0; i < 8; ++i)
         SDL_GL_SwapWindow(wnd);
 
     Uint32 start = SDL_GetTicks();

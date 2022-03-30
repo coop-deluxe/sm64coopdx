@@ -222,7 +222,7 @@ void packet_ordered_clear(u8 globalIndex) {
 void packet_ordered_update(void) {
     f32 currentClock = clock_elapsed();
     // check all ordered tables for a time out
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct OrderedPacketTable* opt = orderedPacketTable[i];
         while (opt != NULL) {
             struct OrderedPacketTable* optNext = opt->next;

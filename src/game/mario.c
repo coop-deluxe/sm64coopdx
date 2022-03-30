@@ -402,7 +402,7 @@ bool mario_can_bubble(struct MarioState* m) {
     if (m->action == ACT_BUBBLED) { return false; }
 
     u8 allInBubble = TRUE;
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
             allInBubble = FALSE;
@@ -1471,7 +1471,7 @@ copyPlayerGoto:;
         if (!copiedPlayer) {
             // try to prevent OOB by copying position of other player
             struct Surface* floor2 = NULL;
-            for (int i = 0; i < MAX_PLAYERS; i++) {
+            for (s32 i = 0; i < MAX_PLAYERS; i++) {
                 struct MarioState* m2 = &gMarioStates[i];
                 if (m == m2) { continue; }
                 find_floor(m2->pos[0], m2->pos[1], m2->pos[2], &floor2);
@@ -1873,7 +1873,7 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
 
     // save to log
     fprintf(f, "(gMarioState->action: hang prevention begin)\n");
-    for (int i = 0; i < MAX_HANG_PREVENTION; i++) {
+    for (s32 i = 0; i < MAX_HANG_PREVENTION; i++) {
         fprintf(f, "%08X\n", hangPreventionActions[i]);
     }
     fprintf(f, "(gMarioState->action: hang prevention end)\n");

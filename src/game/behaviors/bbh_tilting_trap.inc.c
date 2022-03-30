@@ -20,7 +20,7 @@ void bhv_bbh_tilting_trap_platform_loop(void) {
     f32 y = 0;
     f32 z = 0;
     u8 playersTouched = 0;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
             x += gMarioStates[i].marioObj->oPosX;
@@ -30,8 +30,8 @@ void bhv_bbh_tilting_trap_platform_loop(void) {
         }
     }
 
-    int distanceToPlayer = 0;
-    int angleToPlayer = 0;
+    s32 distanceToPlayer = 0;
+    s32 angleToPlayer = 0;
     if (playersTouched > 0) {
         x /= (f32)playersTouched;
         y /= (f32)playersTouched;

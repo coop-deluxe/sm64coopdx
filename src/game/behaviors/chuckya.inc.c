@@ -1,7 +1,7 @@
 // chuckya.c.inc
 
 void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct MarioState* marioState = &gMarioStates[i];
         struct Object* player = gMarioStates[i].marioObj;
@@ -39,8 +39,8 @@ void bhv_chuckya_anchor_mario_loop(void) {
 
 s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     s32 sp1C = 0;
     if (o->oChuckyaUnkF8 != 4) {
         if (sp24 < cur_obj_lateral_dist_from_mario_to_home()) {
@@ -82,7 +82,7 @@ s32 approach_forward_vel(f32 *arr, f32 spC, f32 sp10) {
 
 void chuckya_act_0(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     s32 sp3C = 0;
     UNUSED u8 pad[16];
     s32 sp28;

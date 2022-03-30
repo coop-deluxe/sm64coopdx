@@ -40,11 +40,11 @@ struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
     struct LuaObjectTable* ot = &sLuaObjectTable[lot];
 
     // binary search
-    int min = 0;
-    int max = ot->fieldCount - 1;
-    int i = (min + max) / 2;
+    s32 min = 0;
+    s32 max = ot->fieldCount - 1;
+    s32 i = (min + max) / 2;
     while (true) {
-        int rc = strcmp(key, ot->fields[i].key);
+        s32 rc = strcmp(key, ot->fields[i].key);
         if (rc == 0) {
             return &ot->fields[i];
         } else if (rc < 0) {
@@ -150,7 +150,7 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
 
     // table is in the stack at index 't'
     lua_pushnil(L);  // first key
-    int iterationTop = lua_gettop(L);
+    s32 iterationTop = lua_gettop(L);
     while (lua_next(L, 1) != 0) {
         int keyIndex = lua_gettop(L) - 1;
         int valueIndex = lua_gettop(L) - 0;
@@ -508,7 +508,7 @@ void smlua_cobject_init_globals(void) {
     {
         lua_newtable(L);
         int t = lua_gettop(gLuaState);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             lua_pushinteger(L, i);
             smlua_push_object(L, LOT_MARIOSTATE, &gMarioStates[i]);
             lua_settable(L, t);
@@ -519,7 +519,7 @@ void smlua_cobject_init_globals(void) {
     {
         lua_newtable(L);
         int t = lua_gettop(gLuaState);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             lua_pushinteger(L, i);
             smlua_push_object(L, LOT_NETWORKPLAYER, &gNetworkPlayers[i]);
             lua_settable(L, t);
@@ -530,7 +530,7 @@ void smlua_cobject_init_globals(void) {
     {
         lua_newtable(L);
         int t = lua_gettop(gLuaState);
-        for (int i = 0; i < CT_MAX; i++) {
+        for (s32 i = 0; i < CT_MAX; i++) {
             lua_pushinteger(L, i);
             smlua_push_object(L, LOT_CHARACTER, &gCharacters[i]);
             lua_settable(L, t);

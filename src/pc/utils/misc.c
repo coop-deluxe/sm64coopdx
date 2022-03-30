@@ -20,7 +20,7 @@ float smoothstep(float edge0, float edge1, float x) {
 
 void update_all_mario_stars(void) {
     s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gMarioStates[i].numStars = numStars;
     }
 }
@@ -37,8 +37,8 @@ static void _clock_gettime(struct timespec* clock_time) {
 
 #ifdef DEVELOPMENT
     // give each instance a random offset for testing purposed
-    static int randomOffset1 = 0;
-    static int randomOffset2 = 0;
+    static s32 randomOffset1 = 0;
+    static s32 randomOffset2 = 0;
     if (randomOffset1 == 0) {
         time_t t;
         srand((unsigned)time(&t));

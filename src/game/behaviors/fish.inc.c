@@ -103,8 +103,8 @@ static void fish_vertical_roam(s32 speed) {
  */
 static void fish_act_roam(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     f32 fishY = o->oPosY - player->oPosY;
     
@@ -161,8 +161,8 @@ static void fish_act_roam(void) {
  */
 static void fish_act_flee(void)  {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     f32 fishY = o->oPosY - gMarioObject->oPosY;
     UNUSED s32 distance;

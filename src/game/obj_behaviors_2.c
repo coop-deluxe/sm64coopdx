@@ -118,8 +118,8 @@ void obj_set_dist_from_home(f32 distFromHome) {
 
 s32 obj_is_near_to_and_facing_mario(struct MarioState* m, f32 maxDist, s16 maxAngleDiff) {
     struct Object* player = m->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     if (distanceToPlayer < maxDist
         && abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) < maxAngleDiff) {
         return TRUE;
@@ -881,7 +881,7 @@ s32 obj_move_for_one_second(s32 endAction) {
  * attack Mario (e.g. fly guy shooting fire or lunging), especially when combined
  * with partial updates.
  */
-void treat_far_home_as_mario(f32 threshold, int* distanceToPlayer, int* angleToPlayer) {
+void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToPlayer) {
     f32 dx = o->oHomeX - o->oPosX;
     f32 dy = o->oHomeY - o->oPosY;
     f32 dz = o->oHomeZ - o->oPosZ;

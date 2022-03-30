@@ -33,7 +33,7 @@
 int smlua_func_get_behavior_from_id(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    int id = smlua_to_integer(L, 1);
+    s32 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     smlua_push_pointer(L, LVT_BEHAVIORSCRIPT_P, (void*)get_behavior_from_id(id));

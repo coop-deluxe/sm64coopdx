@@ -502,7 +502,7 @@ void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
  * Checks if a point is within distance from Mario's graphical position. Test is exclusive.
  */
 s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         f32 mGfxX = player->header.gfx.pos[0];
@@ -544,7 +544,7 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     f32 nearestDist = 0;
     u8 checkActive = TRUE;
     do {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (gMarioStates[i].marioObj == obj) { continue; }
             if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
             float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
@@ -612,7 +612,7 @@ s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {
  * Sets an object as visible if within a certain distance of Mario's graphical position.
  */
 void set_object_visibility(struct Object *obj, s32 dist) {
-    int distanceToPlayer = dist_between_objects(obj, gMarioStates[0].marioObj);
+    s32 distanceToPlayer = dist_between_objects(obj, gMarioStates[0].marioObj);
     if (distanceToPlayer < dist * draw_distance_scalar()) {
         obj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
     } else {
@@ -768,7 +768,7 @@ s8 current_mario_room_check(s16 room) {
 s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
     s16 dialogueResponse;
 
-    int angleToPlayer = obj_angle_to_object(o, m->marioObj);
+    s32 angleToPlayer = obj_angle_to_object(o, m->marioObj);
 
     if ((is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, (s32) dist) == TRUE
          && obj_check_if_facing_toward_angle(o->oFaceAngleYaw, m->marioObj->header.gfx.angle[1] + 0x8000, 0x1000) == TRUE

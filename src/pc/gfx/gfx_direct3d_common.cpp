@@ -6,7 +6,7 @@
 #include "gfx_cc.h"
 
 void get_cc_features(uint32_t shader_id, CCFeatures *cc_features) {
-    for (int i = 0; i < 4; i++) {
+    for (int32_t i = 0; i < 4; i++) {
         cc_features->c[0][i] = (shader_id >> (i * 3)) & 7;
         cc_features->c[1][i] = (shader_id >> (12 + i * 3)) & 7;
     }
@@ -20,8 +20,8 @@ void get_cc_features(uint32_t shader_id, CCFeatures *cc_features) {
     cc_features->used_textures[1] = false;
     cc_features->num_inputs = 0;
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int32_t i = 0; i < 2; i++) {
+        for (int32_t j = 0; j < 4; j++) {
             if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_4) {
                 if (cc_features->c[i][j] > cc_features->num_inputs) {
                     cc_features->num_inputs = cc_features->c[i][j];
@@ -55,7 +55,7 @@ static void append_line(char *buf, size_t *len, const char *str) {
     buf[(*len)++] = '\n';
 }
 
-static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_alpha, bool inputs_have_alpha, bool hint_single_element) {
+static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_alpha, bool inputs_have_alpha, bool hint_single_element) {
     if (!only_alpha) {
         switch (item) {
             default:
@@ -161,7 +161,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "    float4 fog : FOG;");
         num_floats += 4;
     }
-    for (int i = 0; i < cc_features.num_inputs; i++) {
+    for (int32_t i = 0; i < cc_features.num_inputs; i++) {
         len += sprintf(buf + len, "    float%d input%d : INPUT%d;\r\n", cc_features.opt_alpha ? 4 : 3, i + 1, i);
         num_floats += cc_features.opt_alpha ? 4 : 3;
     }
@@ -224,7 +224,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     if (cc_features.opt_fog) {
         append_str(buf, &len, ", float4 fog : FOG");
     }
-    for (int i = 0; i < cc_features.num_inputs; i++) {
+    for (int32_t i = 0; i < cc_features.num_inputs; i++) {
         len += sprintf(buf + len, ", float%d input%d : INPUT%d", cc_features.opt_alpha ? 4 : 3, i + 1, i);
     }
     append_line(buf, &len, ") {");
@@ -239,7 +239,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     if (cc_features.opt_fog) {
         append_line(buf, &len, "    result.fog = fog;");
     }
-    for (int i = 0; i < cc_features.num_inputs; i++) {
+    for (int32_t i = 0; i < cc_features.num_inputs; i++) {
         len += sprintf(buf + len, "    result.input%d = input%d;\r\n", i + 1, i + 1);
     }
     append_line(buf, &len, "    return result;");

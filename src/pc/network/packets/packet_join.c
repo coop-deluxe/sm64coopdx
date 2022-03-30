@@ -115,7 +115,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     struct StringLinkedList* node = &gRegisteredMods;
     char nullchar = '\0';
     while (node != NULL && node->string != NULL) {
-        int length = strlen(node->string);
+        s32 length = strlen(node->string);
         packet_write(&p, node->string, sizeof(u8) * length);
         packet_write(&p, &nullchar, sizeof(u8));
         LOG_INFO("sending registered mod: %s", node->string);
@@ -176,9 +176,9 @@ void network_receive_join(struct Packet* p) {
     Cheats.EnableCheats = gServerSettings.enableCheats;
 
     struct StringLinkedList head = { 0 };
-    for (int i = 0; i < modCount; i++) {
+    for (s32 i = 0; i < modCount; i++) {
         char* modName = (char*) &p->buffer[p->cursor];
-        int length = strlen(modName);
+        s32 length = strlen(modName);
         LOG_INFO("host has mod: %s", modName);
         string_linked_list_append(&head, modName);
         p->cursor += length + 1;

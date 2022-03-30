@@ -129,7 +129,7 @@ struct Object *spawn_star(struct Object *obj, f32 x, f32 y, f32 z) {
 }
 
 static u8 spawn_star_deduplication(u32* array, u8* count, u32 behParams) {
-    for (int i = 0; i < *count; i++) {
+    for (s32 i = 0; i < *count; i++) {
         if (array[i] == behParams) { return TRUE; }
     }
     if (*count < 8) {

@@ -208,7 +208,7 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node) {
 
             // display both sides of door
             gDoorCurrentRoom = 0;
-            for (int i = 0; i < MAX_PLAYERS; i++) {
+            for (s32 i = 0; i < MAX_PLAYERS; i++) {
                 struct MarioState* m = &gMarioStates[i];
                 if (!is_player_active(m)) { continue; }
 
@@ -2333,7 +2333,7 @@ s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
 }
 
 s32 cur_obj_is_mario_ground_pounding_platform(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
             if (gMarioStates[i].action == ACT_GROUND_POUND_LAND) {
@@ -2355,7 +2355,7 @@ void spawn_mist_particles_with_sound(u32 sp18) {
 }
 
 void cur_obj_push_mario_away(f32 radius) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
         f32 marioRelX = player->oPosX - o->oPosX;
         f32 marioRelZ = player->oPosZ - o->oPosZ;
@@ -2371,7 +2371,7 @@ void cur_obj_push_mario_away(f32 radius) {
 }
 
 void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
         f32 marioRelY = player->oPosY - o->oPosY;
 
@@ -2470,7 +2470,7 @@ s32 cur_obj_is_mario_on_platform(void) {
 }
 
 s32 cur_obj_is_any_player_on_platform(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj == NULL) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
@@ -2529,7 +2529,7 @@ s32 bit_shift_left(s32 a0) {
 }
 
 s32 cur_obj_mario_far_away(void) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         f32 dx = o->oHomeX - player->oPosX;
@@ -2600,7 +2600,7 @@ void cur_obj_enable_rendering_if_mario_in_room(void) {
 
     u8 marioInRoom = FALSE;
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].currentRoom != 0) {
             s16 currentRoom = gMarioStates[i].currentRoom;
             if (currentRoom == o->oRoom) {
@@ -2718,11 +2718,25 @@ void enable_time_stop(void) {
     gTimeStopState |= TIME_STOP_ENABLED;
 }
 
+void enable_time_stop_if_alone(void) {
+    if (network_player_connected_count() > 1) {
+        return;
+    }
+    gTimeStopState |= TIME_STOP_ENABLED;
+}
+
 void disable_time_stop(void) {
     gTimeStopState &= ~TIME_STOP_ENABLED;
 }
 
 void set_time_stop_flags(s32 flags) {
+    gTimeStopState |= flags;
+}
+
+void set_time_stop_flags_if_alone(s32 flags) {
+    if (network_player_connected_count() > 1) {
+        return;
+    }
     gTimeStopState |= flags;
 }
 

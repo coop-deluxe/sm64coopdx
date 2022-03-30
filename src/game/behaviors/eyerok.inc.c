@@ -62,7 +62,7 @@ void bhv_eyerok_boss_init(void) {
     network_init_object_field(o, &o->oEyerokBossUnk10C);
     network_init_object_field(o, &o->oEyerokBossUnk110);
     network_init_object_field(o, &o->oEyerokBossUnk1AC);
-    for (int i = 0; i < 2; i++) {
+    for (s32 i = 0; i < 2; i++) {
         network_init_object_field(o, &hands[i]->oPosX);
         network_init_object_field(o, &hands[i]->oPosY);
         network_init_object_field(o, &hands[i]->oPosZ);
@@ -87,7 +87,7 @@ void bhv_eyerok_boss_init(void) {
 
 static void eyerok_boss_act_sleep(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (o->oTimer == 0) {
     } else if (distanceToPlayer < 500.0f) {
         cur_obj_play_sound_2(SOUND_OBJ_EYEROK_EXPLODE);
@@ -243,7 +243,7 @@ void bhv_eyerok_boss_loop(void) {
 
 static s32 eyerok_hand_check_attacked(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     if (o->oEyerokReceivedAttack != 0 && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x3000) {
         cur_obj_play_sound_2(SOUND_OBJ2_EYEROK_SOUND_SHORT);
 
@@ -302,7 +302,7 @@ static void eyerok_hand_act_sleep(void) {
 
 static void eyerok_hand_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     cur_obj_init_animation_with_sound(2);
 
     if (o->parentObj->oAction == EYEROK_BOSS_ACT_FIGHT) {
@@ -362,7 +362,7 @@ static void eyerok_hand_act_open(void) {
 
 static void eyerok_hand_act_show_eye(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     UNUSED s16 val06;
 
     cur_obj_init_animation_with_sound(5);
@@ -487,7 +487,7 @@ static void eyerok_hand_act_retreat(void) {
 
 static void eyerok_hand_act_target_mario(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     if (eyerok_check_mario_relative_z(400) != 0 || o->oPosZ - player->oPosZ > 0.0f
         || o->oPosZ - o->parentObj->oPosZ > 1700.0f || absf(o->oPosX - o->parentObj->oPosX) > 900.0f
         || (o->oMoveFlags & OBJ_MOVE_HIT_WALL)) {
@@ -504,8 +504,8 @@ static void eyerok_hand_act_target_mario(void) {
 
 static void eyerok_hand_act_smash(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     s16 sp1E;
 
     if (o->oTimer > 20) {

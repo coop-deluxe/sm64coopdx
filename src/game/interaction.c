@@ -676,7 +676,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
         f32 scaler = 1;
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
@@ -907,7 +907,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
             starGrabAction = ACT_FALL_AFTER_STAR_GRAB;
         }
 
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* marioState = &gMarioStates[i];
             if (!is_player_active(marioState)) { continue; }
             if (marioState->marioObj == NULL) { continue; }
@@ -927,7 +927,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         save_file_collect_star_or_key(m->numCoins, starIndex, 0);
 
         s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gMarioStates[i].numStars = numStars;
         }
 
@@ -1035,7 +1035,7 @@ u32 display_door_dialog(struct MarioState *m, u32 actionArg) {
 
 u8 prevent_interact_door(struct MarioState* m, struct Object* o) {
     // prevent multiple star/key unlocks on the same door
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct MarioState* m2 = &gMarioStates[i];
         if (m2 == m) { continue; }
         if (!is_player_active(m2)) { continue; }
@@ -1323,7 +1323,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     if (m->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
     struct MarioState* m2 = NULL;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (o == gMarioStates[i].marioObj) {
             if (!is_player_active(&gMarioStates[i])) { return FALSE; }
             m2 = &gMarioStates[i];
@@ -1805,7 +1805,7 @@ u32 interact_koopa_shell(struct MarioState *m, UNUSED u32 interactType, struct O
         return FALSE;
     }
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].riddenObj == o) { return FALSE; }
     }

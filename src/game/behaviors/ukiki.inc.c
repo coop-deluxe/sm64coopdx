@@ -28,7 +28,7 @@ void handle_cap_ukiki_reset(void) {
  */
 s32 is_cap_ukiki_and_mario_has_normal_cap_on_head(void) {
     if (o->oBehParams2ndByte == UKIKI_CAP) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (!does_mario_have_normal_cap_on_head(&gMarioStates[i])) { return FALSE; }
         }
@@ -125,8 +125,8 @@ void idle_ukiki_taunt(void) {
  */
 void ukiki_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     idle_ukiki_taunt();
 
@@ -213,7 +213,7 @@ void ukiki_act_wait_to_respawn(void) {
  */
 void ukiki_act_unused_turn(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     idle_ukiki_taunt();
 
     if (o->oSubAction == UKIKI_SUB_ACT_TAUNT_JUMP_CLAP) {
@@ -226,8 +226,8 @@ void ukiki_act_unused_turn(void) {
  */
 void ukiki_act_turn_to_mario(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     s32 facingMario;
 
     // Initialize the action with a random fVel from 2-5.
@@ -258,8 +258,8 @@ void ukiki_act_turn_to_mario(void) {
 void ukiki_act_run(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s32 fleeMario = TRUE;
     s16 goalYaw = angleToPlayer + 0x8000;
@@ -690,7 +690,7 @@ void bhv_ukiki_loop(void) {
     }
 
     if (o->oUkikiHasCap & UKIKI_CAP_ON) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (!does_mario_have_normal_cap_on_head(&gMarioStates[i])) {
                 o->oAnimState = UKIKI_ANIM_STATE_CAP_ON;

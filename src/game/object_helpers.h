@@ -277,8 +277,10 @@ Gfx *geo_offset_klepto_held_object(s32 callContext, struct GraphNode *node, UNUS
 s32 geo_offset_klepto_debug(s32 a0, struct GraphNode *a1, UNUSED s32 sp8);
 s32 obj_is_hidden(struct Object *obj);
 void enable_time_stop(void);
+void enable_time_stop_if_alone(void);
 void disable_time_stop(void);
 void set_time_stop_flags(s32 flags);
+void set_time_stop_flags_if_alone(s32 flags);
 void clear_time_stop_flags(s32 flags);
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused);
 s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height);

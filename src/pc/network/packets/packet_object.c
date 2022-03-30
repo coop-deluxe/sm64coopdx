@@ -94,11 +94,11 @@ static bool should_own_object(struct SyncObject* so) {
     }
 
     if (gMarioStates[0].heldByObj == so->o) { return true; }
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].heldByObj == so->o) { return false; }
     }
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (i != 0 && !is_player_active(&gMarioStates[i])) { continue; }
         if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[i], so->o)) { return false; }
     }
@@ -133,7 +133,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     so->lastReliablePacketIsStale = false;
     so->rememberLastReliablePacket = true;
     so->behavior = (BehaviorScript*)o->behavior;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         so->rxEventId[i] = 0;
     }
     so->txEventId = 0;
@@ -205,7 +205,7 @@ void network_clear_sync_objects(void) {
 
 u8 network_find_cached_sync_id(struct Object* o) {
     u8 behaviorId = get_id_from_behavior(o->behavior);
-    for (int i = 1; i < 256; i++) {
+    for (s32 i = 1; i < 256; i++) {
         if (gSyncObjects[i].o != NULL) { continue; }
         u8 cachedBehaviorId = gCurrentArea->cachedBehaviors[i];
         if (cachedBehaviorId != behaviorId) { continue; }
@@ -226,7 +226,7 @@ bool network_set_sync_id(struct Object* o) {
         syncId = network_find_cached_sync_id(o);
         if (syncId == 0) {
             // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
-            for (int i = 1; i < MAX_SYNC_OBJECTS; i++) {
+            for (s32 i = 1; i < MAX_SYNC_OBJECTS; i++) {
                 sNextSyncId++;
                 sNextSyncId = sNextSyncId % RESERVED_IDS_SYNC_OBJECT_OFFSET;
                 if (gSyncObjects[sNextSyncId].o != NULL) { continue; }
@@ -625,10 +625,10 @@ void network_receive_object(struct Packet* p) {
         deltaPos[0] = o->oPosX - oldPos[0];
         deltaPos[2] = o->oPosY - oldPos[1];
         deltaPos[1] = o->oPosZ - oldPos[2];
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].marioObj->platform != o) { continue; }
-            for (int j = 0; j < 3; j++) { gMarioStates[i].pos[j] += deltaPos[j]; }
+            for (s32 j = 0; j < 3; j++) { gMarioStates[i].pos[j] += deltaPos[j]; }
         }
     }
 

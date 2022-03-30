@@ -415,7 +415,7 @@ void bobomb_buddy_act_turn_to_talk(void) {
         cur_obj_play_sound_2(SOUND_OBJ_BOBOMB_WALK);
 
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToPlayer, 0x1000);
     if ((s16) o->oMoveAngleYaw == (s16) angleToPlayer)
         o->oAction = BOBOMB_BUDDY_ACT_TALK;

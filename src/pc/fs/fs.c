@@ -73,7 +73,7 @@ static void scan_path_dir(const char *ropath, const char *dir) {
     fs_pathlist_t plist = fs_sys_enumerate(dirpath, false);
     if (plist.paths) {
         qsort(plist.paths, plist.numpaths, sizeof(char *), mount_cmp);
-        for (int i = 0; i < plist.numpaths; ++i)
+        for (int32_t i = 0; i < plist.numpaths; ++i)
             fs_mount(plist.paths[i]);
         fs_pathlist_free(&plist);
     }
@@ -121,7 +121,7 @@ bool fs_mount(const char *realpath) {
     void *pack = NULL;
     fs_packtype_t *packer = NULL;
     bool tried = false;
-    for (unsigned int i = 0; i < sizeof(fs_packers) / sizeof(fs_packers[0]); ++i) {
+    for (uint32_t i = 0; i < sizeof(fs_packers) / sizeof(fs_packers[0]); ++i) {
         if (ext && sys_strcasecmp(ext, fs_packers[i]->extension))
             continue;
         tried = true;
@@ -301,7 +301,7 @@ fs_pathlist_t fs_enumerate(const char *base, const bool recur) {
 
 void fs_pathlist_free(fs_pathlist_t *pathlist) {
     if (!pathlist || !pathlist->paths) return;
-    for (int i = 0; i < pathlist->numpaths; ++i)
+    for (int32_t i = 0; i < pathlist->numpaths; ++i)
         free(pathlist->paths[i]);
     free(pathlist->paths);
     pathlist->paths = NULL;

@@ -146,7 +146,7 @@ void bhv_blue_coin_sliding_jumping_init(void) {
 
 void blue_coin_sliding_away_from_mario(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 collisionFlags;
 
