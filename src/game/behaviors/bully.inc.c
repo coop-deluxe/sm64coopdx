@@ -249,7 +249,10 @@ void bully_act_level_death(void) {
             else {
                 spawn_default_star(0, 950.0f, -6800.0f);
                 struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
-                if (lllTumblingBridge != NULL) { lllTumblingBridge->oIntangibleTimer = 0; }
+                if (lllTumblingBridge != NULL) {
+                    lllTumblingBridge->oIntangibleTimer = 0;
+                    network_send_object(lllTumblingBridge);
+                }
             }
         }
     }

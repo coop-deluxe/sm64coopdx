@@ -13,6 +13,23 @@ struct Struct8032F34C sTumblingBridgeParams[] = {
 };
 
 void bhv_tumbling_bridge_platform_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field_with_size(o, &o->activeFlags, 16);
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPosX);
+            network_init_object_field(o, &o->oPosY);
+            network_init_object_field(o, &o->oPosZ);
+            network_init_object_field(o, &o->oVelX);
+            network_init_object_field(o, &o->oVelY);
+            network_init_object_field(o, &o->oVelZ);
+            network_init_object_field(o, &o->oFaceAnglePitch);
+            network_init_object_field(o, &o->oFaceAngleYaw);
+            network_init_object_field(o, &o->oFaceAngleRoll);
+        }
+    }
+
     if (o->parentObj != NULL && gCurrCourseNum == COURSE_LLL) {
         if (o->parentObj->oIntangibleTimer == -1) {
             cur_obj_hide();
@@ -48,14 +65,18 @@ void bhv_tumbling_bridge_platform_loop(void) {
             o->oGravity = -3.0f;
             cur_obj_rotate_face_angle_using_vel();
             cur_obj_move_using_fvel_and_gravity();
-            if (o->oPosY < o->oFloorHeight - 300.0f)
+            if (o->oPosY < o->oFloorHeight - 300.0f) {
                 o->oAction++;
+                network_send_object(o);
+            }
             break;
         case 3:
             break;
     }
-    if (o->parentObj->oAction == 3)
+    if (o->parentObj->oAction == 3) {
         obj_mark_for_deletion(o);
+        network_send_object(o);
+    }
 
     if (o->parentObj != NULL && o->parentObj->oIntangibleTimer != -1) {
         load_object_collision_model();
@@ -133,5 +154,12 @@ s16 D_8032F38C[] = { -51, 0,     0, -461, 0,   0, -512, 0,   0,    -2611, 0,
                      0,   -2360, 0, 0,    214, 0, 0,    -50, 1945, 1,     0 };
 
 void bhv_tumbling_bridge_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oIntangibleTimer);
+        }
+    }
+
     cur_obj_call_action_function(sTumblingBridgeActions);
 }
