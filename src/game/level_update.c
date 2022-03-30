@@ -1481,7 +1481,7 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum) {
 #endif
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
-    gNeverEnteredCastle = !save_file_exists(gCurrSaveFileNum - 1) && gCLIOpts.SkipIntro == 0 && configSkipIntro == 0;
+    gNeverEnteredCastle = !save_file_exists(gCurrSaveFileNum - 1) && (gServerSettings.skipIntro == 0);
     if (gNetworkType == NT_NONE) { gNeverEnteredCastle = true; }
 
     gCurrLevelNum = levelNum;
@@ -1551,7 +1551,7 @@ s32 lvl_exiting_credits(UNUSED s16 arg0, UNUSED s32 arg1) {
 void fake_lvl_init_from_save_file(void) {
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
-    gNeverEnteredCastle = !save_file_exists(gCurrSaveFileNum - 1) && gServerSettings.skipIntro;
+    gNeverEnteredCastle = !save_file_exists(gCurrSaveFileNum - 1) && (gServerSettings.skipIntro == 0);
     if (gNetworkType == NT_NONE) { gNeverEnteredCastle = true; }
 
     gCurrCreditsEntry = NULL;
