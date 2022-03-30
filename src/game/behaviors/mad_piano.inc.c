@@ -16,7 +16,7 @@ static void mad_piano_act_wait(void) {
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (distanceToPlayer < 500.0f) {
         if (o->oTimer > 20) {
@@ -39,8 +39,8 @@ static void mad_piano_act_attack(void) {
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     if (distanceToPlayer < 500.0f) {
         o->oTimer = 0;

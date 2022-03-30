@@ -23,7 +23,7 @@ void smlua_cobject_allowlist_init(void) {
 }
 
 void smlua_cobject_allowlist_shutdown(void) {
-    for (int i = 0; i < LOT_COUNT; i++) {
+    for (s32 i = 0; i < LOT_COUNT; i++) {
         sCachedObjectAllowed[i] = 0;
         struct CAllowListNode* node = sObjectAllowList[i];
         while (node != NULL) {
@@ -88,7 +88,7 @@ void smlua_cpointer_allowlist_init(void) {
 }
 
 void smlua_cpointer_allowlist_shutdown(void) {
-    for (int i = 0; i < LVT_MAX; i++) {
+    for (s32 i = 0; i < LVT_MAX; i++) {
         sCachedPointerAllowed[i] = 0;
         struct CAllowListNode* node = sPointerAllowList[i];
         while (node != NULL) {

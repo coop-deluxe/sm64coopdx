@@ -85,7 +85,7 @@ void bhv_tilting_inverted_pyramid_loop(void) {
     f32 y = 0;
     f32 z = 0;
     u8 playersTouched = 0;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform != o) { continue; }
         x += gMarioStates[i].marioObj->oPosX;

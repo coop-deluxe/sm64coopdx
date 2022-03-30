@@ -4,7 +4,7 @@
 
 static void print_sync_object_table(void) {
     LOG_INFO("Sync Object Table");
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o == NULL) { continue; }
         u32 behaviorId = get_id_from_behavior(gSyncObjects[i].behavior);
         LOG_INFO("%03d: %08X", i, behaviorId);
@@ -15,7 +15,7 @@ static void print_sync_object_table(void) {
 
 void network_send_debug_sync(void) {
     u8 objectCount = 0;
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o == NULL) { continue; }
         objectCount++;
     }
@@ -23,7 +23,7 @@ void network_send_debug_sync(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_DEBUG_SYNC, true, PLMT_AREA);
     packet_write(&p, &objectCount, sizeof(u8));
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o == NULL) { continue; }
         u32 behaviorId = get_id_from_behavior((gSyncObjects[i].behavior == NULL) ? gSyncObjects[i].behavior : gSyncObjects[i].o->behavior);
         packet_write(&p, &i, sizeof(u8));
@@ -37,7 +37,7 @@ void network_receive_debug_sync(struct Packet* p) {
     u32 remoteBehaviorIds[MAX_SYNC_OBJECTS] = { 0 };
 
     packet_read(p, &objectCount, sizeof(u8));
-    for (int i = 0; i < objectCount; i++) {
+    for (s32 i = 0; i < objectCount; i++) {
         u8 j;
         u32 behaviorId;
         packet_read(p, &j, sizeof(u8));
@@ -46,7 +46,7 @@ void network_receive_debug_sync(struct Packet* p) {
     }
 
     bool hasMismatch = false;
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         u32 localBehaviorId = (gSyncObjects[i].o == NULL) ? 0 : get_id_from_behavior(gSyncObjects[i].behavior);
         u32 remoteBehaviorId = remoteBehaviorIds[i];
         if (localBehaviorId != remoteBehaviorId) {
@@ -58,7 +58,7 @@ void network_receive_debug_sync(struct Packet* p) {
 
     LOG_INFO(" ");
     LOG_INFO("Sync Object Table Mismatch");
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         u32 localBehaviorId = (gSyncObjects[i].o == NULL) ? 0 : get_id_from_behavior(gSyncObjects[i].behavior);
         u32 remoteBehaviorId = remoteBehaviorIds[i];
         if (localBehaviorId == 0 && remoteBehaviorId == 0) { continue; }

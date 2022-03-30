@@ -67,7 +67,7 @@ static void cloud_fwoosh_update(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oCloudBlowing) {
         o->header.gfx.scale[0] += o->oCloudGrowSpeed;

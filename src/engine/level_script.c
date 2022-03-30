@@ -429,7 +429,7 @@ static void level_cmd_init_mario(void) {
     struct GraphNode* unk18 = gLoadedGraphNodes[CMD_GET(u8, 3)];
 
     struct SpawnInfo* lastSpawnInfo = NULL;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[i];
         vec3s_set(spawnInfo->startPos, 0, 0, 0);
         vec3s_set(spawnInfo->startAngle, 0, 0, 0);
@@ -676,7 +676,7 @@ static void level_cmd_set_mario_start_pos(void) {
     vec3s_copy(pos, CMD_GET(Vec3s, 6));
 #endif
     s16 angle = CMD_GET(s16, 4);
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gPlayerSpawnInfos[i].areaIndex = areaIndex;
 
 #if IS_64_BIT

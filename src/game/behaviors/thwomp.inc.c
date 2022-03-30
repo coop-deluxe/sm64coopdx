@@ -21,7 +21,7 @@ void grindel_thwomp_act_2(void) {
 
 void grindel_thwomp_act_3(void) {
     if (o->oTimer == 0) {
-        int distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
+        s32 distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
         if (distanceToPlayer < 1500.0f) {
             cur_obj_shake_screen(SHAKE_POS_SMALL);
             cur_obj_play_sound_2(SOUND_OBJ_THWOMP);

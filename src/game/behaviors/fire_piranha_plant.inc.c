@@ -53,8 +53,8 @@ void bhv_fire_piranha_plant_init(void) {
 
 static void fire_piranha_plant_act_hide(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     if (o->oFirePiranhaPlantDeathSpinTimer != 0) {
         o->oMoveAngleYaw += (s32) o->oFirePiranhaPlantDeathSpinVel;
@@ -101,7 +101,7 @@ static void fire_piranha_plant_act_hide(void) {
 
 static void fire_piranha_plant_act_grow(void) {
     struct Object* player = nearest_player_to_object(o);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     cur_obj_init_anim_extend(4);
 

@@ -468,7 +468,7 @@ void smlua_sync_table_init_globals(char* path, u16 modRemoteIndex) {
         int internalTableIndex = lua_gettop(L);
 
         // create player sync tables
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             lua_pushinteger(L, i);
             int keyIndex = lua_gettop(L);
             smlua_sync_table_create(modRemoteIndex, LST_PLAYER, &tableIndex, &keyIndex);
@@ -547,7 +547,7 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
 
     {
         lua_getfield(L, -1, "gPlayerSyncTable");
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             // get gPlayerSyncTable[i]
             lua_pushinteger(L, i);
             lua_gettable(L, -2);

@@ -42,7 +42,7 @@ void bhv_flamethrower_loop(void) {
     }
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     struct Object *flame;
     f32 flameVel;

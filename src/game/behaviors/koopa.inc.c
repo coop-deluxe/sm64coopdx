@@ -176,8 +176,8 @@ static void koopa_play_footstep_sound(s8 animFrame1, s8 animFrame2) {
  * running away.
  */
 static s32 koopa_check_run_from_mario(void) {
-    int distanceToPlayer = o->oDistanceToMario;
-    int angleToPlayer = o->oAngleToMario;
+    s32 distanceToPlayer = o->oDistanceToMario;
+    s32 angleToPlayer = o->oAngleToMario;
     if (distanceToPlayer < 300.0f && abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x3000) {
         o->oAction = KOOPA_SHELLED_ACT_RUN_FROM_MARIO;
         return TRUE;
@@ -242,8 +242,8 @@ static void koopa_shelled_act_walk(void) {
     if (o->oKoopaTurningAwayFromWall) {
         o->oKoopaTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oKoopaTargetYaw, 0x200);
     } else {
-        int distanceToPlayer = o->oDistanceToMario;
-        int angleToPlayer = o->oAngleToMario;
+        s32 distanceToPlayer = o->oDistanceToMario;
+        s32 angleToPlayer = o->oAngleToMario;
         // If far from home, then begin turning toward home
         if (distanceToPlayer >= 25000.0f) {
             o->oKoopaTargetYaw = angleToPlayer;
@@ -276,8 +276,8 @@ static void koopa_shelled_act_run_from_mario(void) {
     cur_obj_init_animation_with_sound(1);
     koopa_play_footstep_sound(0, 11);
 
-    int distanceToPlayer = o->oDistanceToMario;
-    int angleToPlayer = o->oAngleToMario;
+    s32 distanceToPlayer = o->oDistanceToMario;
+    s32 angleToPlayer = o->oAngleToMario;
 
     // If far from home, run toward it
     if (distanceToPlayer >= 25000.0f) {
@@ -343,7 +343,7 @@ void shelled_koopa_attack_handler(s32 attackType) {
         // If attacked from the side, get knocked away from mario
         if (attackType != ATTACK_FROM_ABOVE && attackType != ATTACK_GROUND_POUND_OR_TWIRL) {
             struct Object* player = nearest_player_to_object(o);
-            int angleToPlayer = obj_angle_to_object(o, player);
+            s32 angleToPlayer = obj_angle_to_object(o, player);
             o->oMoveAngleYaw = angleToPlayer;
         }
 
@@ -422,8 +422,8 @@ static void koopa_shelled_update(void) {
  * action.
  */
 static void koopa_unshelled_act_run(void) {
-    int distanceToPlayer = o->oDistanceToMario;
-    int angleToPlayer = o->oAngleToMario;
+    s32 distanceToPlayer = o->oDistanceToMario;
+    s32 angleToPlayer = o->oAngleToMario;
 
     f32 distToShell = 99999.0f;
     struct Object *shell;
@@ -494,7 +494,7 @@ static void koopa_unshelled_act_dive(void) {
     if (o->oTimer > 10) {
         shell = cur_obj_find_nearest_object_with_behavior(bhvKoopaShell, &distToShell);
 
-        int distanceToPlayer = o->oDistanceToMario;
+        s32 distanceToPlayer = o->oDistanceToMario;
 
         // If we got the shell and mario didn't, put on the shell
         //! The shell comes after koopa in processing order, and the shell is
@@ -731,7 +731,7 @@ static void koopa_the_quick_act_race(void) {
                     koopa_the_quick_animate_footsteps();
 
                     struct Object* player = nearest_player_to_object(o);
-                    int distanceToPlayer = dist_between_objects(o, player);
+                    s32 distanceToPlayer = dist_between_objects(o, player);
 
                     if (o->parentObj->oKoopaRaceEndpointRaceStatus != 0 && distanceToPlayer > 1500.0f
                         && (o->oPathedPrevWaypointFlags & WAYPOINT_MASK_00FF) < 28) {
@@ -924,8 +924,8 @@ void bhv_koopa_update(void) {
         koopa_the_quick_update();
     } else if (obj_update_standard_actions(o->oKoopaAgility * 1.5f)) {
         struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
-        int angleToPlayer = obj_angle_to_object(o, player);
+        s32 distanceToPlayer = dist_between_objects(o, player);
+        s32 angleToPlayer = obj_angle_to_object(o, player);
 
         o->oKoopaDistanceToMario = distanceToPlayer;
         o->oKoopaAngleToMario = angleToPlayer;
@@ -959,7 +959,7 @@ void bhv_koopa_update(void) {
 void bhv_koopa_race_endpoint_update(void) {
     if (o->oKoopaRaceEndpointRaceBegun && !o->oKoopaRaceEndpointRaceEnded) {
         struct Object* player = nearest_player_to_object(o);
-        int distanceToPlayer = dist_between_objects(o, player);
+        s32 distanceToPlayer = dist_between_objects(o, player);
         if (o->oKoopaRaceEndpointKoopaFinished || distanceToPlayer < 400.0f) {
             o->oKoopaRaceEndpointRaceEnded = TRUE;
             level_control_timer(TIMER_CONTROL_STOP);

@@ -16,7 +16,7 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {
-    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         struct Object* o = &gObjectPool[i];
         if (o->respawnInfo == respawnInfo) { return o; }
     }
@@ -114,7 +114,7 @@ void network_send_level_macro(struct NetworkPlayer* destNp) {
         return;
     }
 
-    for (int i = 0; i < 8; i++) {
+    for (s32 i = 0; i < 8; i++) {
         network_send_level_macro_area(destNp, i);
     }
 }
@@ -195,7 +195,7 @@ void network_receive_level_macro(struct Packet* p) {
                 o->oCoinUnkF4 = (o->oBehParams >> 8) & 0xFF;
 
                 u8 childIndex = 0;
-                for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+                for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
                     struct Object* o2 = &gObjectPool[i];
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
@@ -206,7 +206,7 @@ void network_receive_level_macro(struct Packet* p) {
                 }
                 LOG_INFO("rx macro special: coin formation");
             } else if (behavior == bhvGoombaTripletSpawner) {
-                for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+                for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
                     struct Object* o2 = &gObjectPool[i];
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }

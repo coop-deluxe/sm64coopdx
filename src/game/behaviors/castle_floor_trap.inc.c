@@ -2,7 +2,7 @@
 
 void bhv_floor_trap_in_castle_loop(void) {
     u8 onPlatform = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         onPlatform = onPlatform || (gMarioStates[i].marioObj->platform == o);
     }
@@ -43,7 +43,7 @@ void bhv_castle_floor_trap_open(void) {
 
 void bhv_castle_floor_trap_close_detect(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer > 1000.0f)
         o->oAction = 3; // close trapdoor
 }

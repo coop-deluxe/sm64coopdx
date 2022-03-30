@@ -123,7 +123,7 @@ void tumbling_bridge_act_1(void) {
 
 void tumbling_bridge_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     cur_obj_hide();
     if (cur_obj_has_behavior(bhvLllTumblingBridge))
@@ -141,7 +141,7 @@ void tumbling_bridge_act_3(void) {
 
 void tumbling_bridge_act_0(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (cur_obj_has_behavior(bhvLllTumblingBridge) || distanceToPlayer < 1000.0f)
         o->oAction = 1;

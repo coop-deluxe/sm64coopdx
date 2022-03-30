@@ -155,7 +155,7 @@ void set_player_colors(u8 paletteIndex, const u8 shirt[4], const u8 pants[4]) {
  * 0 = shirt, 1 = pants
  * Returns RGB, not RGBA!
  */
-u8 *get_player_color(u8 paletteIndex, const int which) {
+u8 *get_player_color(u8 paletteIndex, const s32 which) {
     // choose the last color in the table for extra players
     if (paletteIndex >= gNumPlayerColors) paletteIndex = gNumPlayerColors - 1;
     if (which == 0)
@@ -405,7 +405,7 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
 
 static u8 geo_get_processing_object_index(void) {
     // sloppy way to fix mirror marios
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if ((struct GraphNodeObject*)gCurGraphNodeObject == &gMirrorMario[i]) {
             return i;
         }
@@ -735,7 +735,7 @@ Gfx* geo_switch_mario_hand_grab_pos(s32 callContext, struct GraphNode* b, Mat4* 
  * a mirror image of the player.
  */
 Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         f32 mirroredX;
         struct MarioState* marioState = &gMarioStates[i];
         struct Object* mario = marioState->marioObj;
@@ -784,7 +784,7 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
     Gfx* gfx = NULL;
 
     u8 isMirrorMario = FALSE;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gCurGraphNodeObject == &gMirrorMario[i]) {
             isMirrorMario = TRUE;
         }

@@ -30,7 +30,7 @@ bool fs_dirtree_init(fs_dirtree_t *tree, const size_t entry_len) {
 void fs_dirtree_free(fs_dirtree_t *tree) {
     if (!tree) return;
     if (tree->root) free(tree->root);
-    for (int i = 0; i < FS_NUMBUCKETS; ++i) {
+    for (int32_t i = 0; i < FS_NUMBUCKETS; ++i) {
         fs_dirtree_entry_t *ent, *next;
         for (ent = tree->buckets[i]; ent; ent = next) {
             next = ent->next_hash;

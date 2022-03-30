@@ -1,7 +1,7 @@
 #include "gfx_cc.h"
 
 void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features) {
-    for (int i = 0; i < 4; i++) {
+    for (int32_t i = 0; i < 4; i++) {
         cc_features->c[0][i] = (shader_id >> (i * 3)) & 7;
         cc_features->c[1][i] = (shader_id >> (12 + i * 3)) & 7;
     }
@@ -15,8 +15,8 @@ void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features) {
     cc_features->used_textures[1] = false;
     cc_features->num_inputs = 0;
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int32_t i = 0; i < 2; i++) {
+        for (int32_t j = 0; j < 4; j++) {
             if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_4) {
                 if (cc_features->c[i][j] > cc_features->num_inputs) {
                     cc_features->num_inputs = cc_features->c[i][j];

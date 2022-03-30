@@ -117,7 +117,7 @@ void set_warp_transition_rgb(u8 red, u8 green, u8 blue) {
     gWarpTransBlue = blue;
 }
 
-static int scale_x_to_correct_aspect_center(int x) {
+static s32 scale_x_to_correct_aspect_center(s32 x) {
     f32 aspect = GFX_DIMENSIONS_ASPECT_RATIO;
     return x + (SCREEN_HEIGHT * aspect / 2) - (SCREEN_WIDTH / 2);
 }

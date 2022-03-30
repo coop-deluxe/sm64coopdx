@@ -5,7 +5,7 @@ struct MarioState* king_bobomb_nearest_mario_state() {
     f32 nearestDist = 0;
     u8 checkActive = TRUE;
     do {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
             float ydiff = (o->oPosY - gMarioStates[i].marioObj->oPosY);
             if (ydiff >= 1200) { continue; }
@@ -96,7 +96,7 @@ void king_bobomb_act_2(void) {
             o->oForwardVel = 3.0f;
             struct MarioState* marioState = king_bobomb_nearest_mario_state();
             if (marioState != NULL) {
-                int angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
+                s32 angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
                 cur_obj_rotate_yaw_toward(angleToPlayer, 0x100);
             }
         } else {
@@ -204,7 +204,7 @@ void king_bobomb_act_6(void) {
             cur_obj_init_animation_with_sound(11);
             struct MarioState* marioState = king_bobomb_nearest_mario_state();
             if (marioState != NULL) {
-                int angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
+                s32 angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
                 if (cur_obj_rotate_yaw_toward(angleToPlayer, 0x800) == 1) {
                     o->oAction = 2;
                 }
@@ -362,7 +362,7 @@ void king_bobomb_move(void) {
         cur_obj_move_using_fvel_and_gravity();
     cur_obj_call_action_function(sKingBobombActions);
     exec_anim_sound_state(sKingBobombSoundStates);
-    int distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
+    s32 distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
     if (distanceToPlayer < 5000.0f * draw_distance_scalar())
         cur_obj_enable_rendering();
     else

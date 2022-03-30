@@ -176,7 +176,7 @@ static void bhv_cannon_base_sanity_check(void) {
     if (o->oCannonPlayerIndex == 0) {
         inUse = (gMarioStates[0].action == ACT_IN_CANNON && gMarioStates[0].interactObj == o);
     } else {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].action == ACT_IN_CANNON && gMarioStates[i].interactObj == o) {
                 inUse = TRUE;

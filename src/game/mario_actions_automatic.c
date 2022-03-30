@@ -697,7 +697,7 @@ s32 act_grabbed(struct MarioState *m) {
         // check if the object holding me is being held
         u8 heldObjIsHeld = FALSE;
         if (m->heldByObj != NULL) {
-            for (int i = 0; i < MAX_PLAYERS; i++) {
+            for (s32 i = 0; i < MAX_PLAYERS; i++) {
                 if (!is_player_active(&gMarioStates[i])) { continue; }
                 if (gMarioStates[i].heldObj == m->heldByObj) { heldObjIsHeld = TRUE; }
             }
@@ -929,16 +929,17 @@ static void bubbled_offset_visual(struct MarioState* m) {
 }
 
 s32 act_bubbled(struct MarioState* m) {
+    set_camera_mode(m->area->camera, CAMERA_MODE_FREE_ROAM, 1);
     struct MarioState* targetMarioState = nearest_mario_state_to_object(m->marioObj);
     struct Object* target = targetMarioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(m->marioObj, target);
-    int pitchToPlayer = obj_pitch_to_object(m->marioObj, target);
-    int distanceToPlayer = dist_between_objects(m->marioObj, target);
+    s32 angleToPlayer = obj_angle_to_object(m->marioObj, target);
+    s32 pitchToPlayer = obj_pitch_to_object(m->marioObj, target);
+    s32 distanceToPlayer = dist_between_objects(m->marioObj, target);
 
     // trigger warp if all are bubbled
     if (m->playerIndex == 0) {
         u8 allInBubble = TRUE;
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
                 allInBubble = FALSE;
@@ -978,7 +979,7 @@ s32 act_bubbled(struct MarioState* m) {
     // set and smooth velocity
     Vec3f oldVel = { m->vel[0], m->vel[1], m->vel[2] };
     set_vel_from_pitch_and_yaw(m);
-    for (int i = 0; i < 3; i++) {
+    for (s32 i = 0; i < 3; i++) {
         m->vel[i] = (oldVel[i] * 0.9f + m->vel[i] * 0.1f);
     }
 

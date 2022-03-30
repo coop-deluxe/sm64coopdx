@@ -95,7 +95,7 @@ void coffin_act_idle(void) {
 
             struct MarioState* marioState = nearest_mario_state_to_object(o);
             struct Object* player = marioState->marioObj;
-            int distanceToPlayer = dist_between_objects(o, player);
+            s32 distanceToPlayer = dist_between_objects(o, player);
 
             dx = player->oPosX - o->oPosX;
             dz = player->oPosZ - o->oPosZ;

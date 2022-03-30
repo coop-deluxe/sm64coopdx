@@ -132,7 +132,7 @@ void produce_one_frame(void) {
     u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
     //printf("Audio samples: %d %u\n", samples_left, num_audio_samples);
     s16 audio_buffer[SAMPLES_HIGH * 2 * 2];
-    for (int i = 0; i < 2; i++) {
+    for (s32 i = 0; i < 2; i++) {
         /*if (audio_cnt-- == 0) {
             audio_cnt = 2;
         }
@@ -202,7 +202,7 @@ static void on_anim_frame(double time) {
         target_time = time - 0.010;
     }
 
-    for (int i = 0; i < 2; i++) {
+    for (s32 i = 0; i < 2; i++) {
         // If refresh rate is 15 Hz or something we might need to generate two frames
         if (time >= target_time) {
             produce_one_frame();

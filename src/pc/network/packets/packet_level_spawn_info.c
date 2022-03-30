@@ -15,7 +15,7 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
-    for (int i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         struct Object* o = &gObjectPool[i];
         if (o->respawnInfo == respawnInfo) { return o; }
     }
@@ -84,7 +84,7 @@ void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
         return;
     }
 
-    for (int i = 0; i < 8; i++) {
+    for (s32 i = 0; i < 8; i++) {
         network_send_level_spawn_info_area(destNp, i);
     }
 }

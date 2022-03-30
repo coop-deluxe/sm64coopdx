@@ -18,7 +18,7 @@ static u8 sConfirmPlayerIndex = 0;
 
 static struct NetworkPlayer* chat_get_network_player(char* name) {
     // check for id
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         char id[16] = { 0 };
         if (snprintf(id, 16, "%d", i) < 0) {
@@ -30,7 +30,7 @@ static struct NetworkPlayer* chat_get_network_player(char* name) {
     }
 
     // check for name
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) { continue; }
         if (strcmp(gNetworkPlayers[i].name, name) == 0) {
             return &gNetworkPlayers[i];
@@ -86,7 +86,7 @@ bool exec_chat_command(char* command) {
         char message[600] = { 0 };
         char line[128] = { 0 };
         strncat(message, "\\#fff982\\Players:\n", 599);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
             if (gNetworkSystem == &gNetworkSystemSocket) {

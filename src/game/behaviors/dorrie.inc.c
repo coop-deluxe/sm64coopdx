@@ -16,7 +16,7 @@ void dorrie_raise_head(void) {
     xzDisp = 440.0f * (coss(o->oDorrieNeckAngle) - coss(startAngle));
     yDisp = 440.0f * (sins(o->oDorrieNeckAngle) - sins(startAngle));
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (!dorrieLiftingPlayer[i]) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
@@ -46,7 +46,7 @@ void dorrie_act_move(void) {
     } else {
 
         u8 anyPlayerOnPlatform = FALSE;
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             struct Object* player = gMarioStates[i].marioObj;
             if (player->platform != o) { continue; }
@@ -88,7 +88,7 @@ static u8 dorrie_act_lower_head_continue_dialog(void) {
 }
 
 void dorrie_act_lower_head(void) {
-    int distanceToLocalPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
+    s32 distanceToLocalPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
 
     if (cur_obj_init_anim_check_frame(2, 35)) {
         cur_obj_reverse_animation();
@@ -131,13 +131,13 @@ void dorrie_act_raise_head(void) {
     o->collisionData = segmented_to_virtual(dorrie_seg6_collision_0600F644);
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = DORRIE_ACT_MOVE;
-        for (int i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
+        for (s32 i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
     } else if (o->oDorrieLiftingMario && o->header.gfx.animInfo.animFrame < 74) {
 
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (gMarioStates[i].marioObj->platform != o) { continue; }
-            int dist = dist_between_objects(o, gMarioStates[0].marioObj);
+            s32 dist = dist_between_objects(o, gMarioStates[0].marioObj);
             if (dist <= 780.0f) { continue; }
             dorrieLiftingPlayer[i] = TRUE;
         }
@@ -159,11 +159,11 @@ void dorrie_act_raise_head(void) {
 
 void bhv_dorrie_update(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     if (!network_sync_object_initialized(o)) {
-        for (int i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
+        for (s32 i = 0; i < MAX_PLAYERS; i++) { dorrieLiftingPlayer[i] = FALSE; }
         struct SyncObject* so = network_init_object(o, 4000.0f);
         if (so) {
             so->ignore_if_true = bhv_dorrie_ignore_if_true;

@@ -16,10 +16,10 @@ extern float gDownloadProgress;
 void network_start_download_requests(void) {
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
-    for (int i = 0; i < gRemoteMods.entryCount; i++) {
+    for (s32 i = 0; i < gRemoteMods.entryCount; i++) {
         struct Mod* mod = gRemoteMods.entries[i];
         mod->enabled = true;
-        for (int j = 0; j < mod->fileCount; j++) {
+        for (s32 j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             char fullPath[SYS_MAX_PATH] = { 0 };
             if (!mod_file_full_path(fullPath, mod, file)) {
@@ -39,9 +39,9 @@ void network_start_download_requests(void) {
 
 void network_send_next_download_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    for (int i = 0; i < gRemoteMods.entryCount; i++) {
+    for (s32 i = 0; i < gRemoteMods.entryCount; i++) {
         struct Mod* mod = gRemoteMods.entries[i];
-        for (int j = 0; j < mod->fileCount; j++) {
+        for (s32 j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             if (file->complete) { continue; }
             //LOG_INFO("sending download request: %d, %d, %lld", i, file->remoteIndex, file->curOffset);
@@ -64,7 +64,7 @@ void network_send_download_request(u16 modIndex, u16 fileIndex, u64 offset) {
 
     struct Mod* mod = gRemoteMods.entries[modIndex];
     struct ModFile* file = &mod->files[fileIndex];
-    for (int i = 0; i < OFFSET_COUNT; i++) {
+    for (s32 i = 0; i < OFFSET_COUNT; i++) {
         sOffset[i] = offset + CHUNK_SIZE * i;
         sWaitingForOffset[i] = (sOffset[i] < file->size);
     }
@@ -96,7 +96,7 @@ void network_receive_download_request(struct Packet* p) {
 
     struct ModFile* file = &mod->files[fileIndex];
 
-    for (int i = 0; i < OFFSET_COUNT; i++) {
+    for (s32 i = 0; i < OFFSET_COUNT; i++) {
         u64 o = offset + CHUNK_SIZE * i;
         if (o >= file->size) { break; }
         network_send_download(modIndex, fileIndex, o);
@@ -206,7 +206,7 @@ void network_receive_download(struct Packet* p) {
     // check if we're still waiting for chunks
     bool found = false;
     bool waiting = false;
-    for (int i = 0; i < OFFSET_COUNT; i++) {
+    for (s32 i = 0; i < OFFSET_COUNT; i++) {
         if (sOffset[i] == offset) {
             found = sWaitingForOffset[i];
             sWaitingForOffset[i] = false;

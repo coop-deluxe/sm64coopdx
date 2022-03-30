@@ -144,7 +144,7 @@ void bhv_spawned_star_loop(void) {
 
 void bhv_spawn_star_no_level_exit(struct Object* object, u32 params, u8 networkSendEvent) {
     // de-duplication checking
-    for (int i = 0; i < gSpawnedStarNLECount; i++) {
+    for (s32 i = 0; i < gSpawnedStarNLECount; i++) {
         if (gSpawnedStarNLE[i] == params) { return; }
     }
     if (gSpawnedStarNLECount < 8) {

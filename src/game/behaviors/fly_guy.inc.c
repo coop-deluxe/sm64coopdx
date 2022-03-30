@@ -29,8 +29,8 @@ static s16 sFlyGuyJitterAmounts[] = { 0x1000, -0x2000, 0x2000 };
  */
 static void fly_guy_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
 
@@ -64,8 +64,8 @@ static void fly_guy_act_idle(void) {
 static void fly_guy_act_approach_mario(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
 
@@ -148,7 +148,7 @@ static void fly_guy_act_lunge(void) {
 static void fly_guy_act_shoot_fire(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     treat_far_home_as_mario(2000.0f, NULL, &angleToPlayer);
 

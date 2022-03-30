@@ -23,7 +23,7 @@ void piranha_plant_act_idle(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer < 1200.0f) {
         o->oAction = PIRANHA_PLANT_ACT_SLEEPING;
         if (network_owns_object(o)) { network_send_object(o); }
@@ -91,7 +91,7 @@ void piranha_plant_act_sleeping(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer < 400.0f) {
         if (mario_moving_fast_enough_to_make_piranha_plant_bite()) {
             o->oAction = PIRANHA_PLANT_ACT_WOKEN_UP;
@@ -209,7 +209,7 @@ void piranha_plant_act_shrink_and_die(void) {
  */
 void piranha_plant_act_wait_to_respawn(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer > 1200.0f) {
         o->oAction = PIRANHA_PLANT_ACT_RESPAWN;
         if (network_owns_object(o)) { network_send_object(o); }
@@ -257,8 +257,8 @@ static s8 sPiranhaPlantBiteSoundFrames[] = { 12, 28, 50, 64, -1 };
 void piranha_plant_act_biting(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
-    int distanceToPlayer = dist_between_objects(o, player);
-    int angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s32 frame = o->header.gfx.animInfo.animFrame;
 
@@ -313,7 +313,7 @@ s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
  */
 void piranha_plant_act_stopped_biting(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
     cur_obj_become_intangible();
     cur_obj_init_animation_with_sound(6);
 

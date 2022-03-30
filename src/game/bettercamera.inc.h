@@ -498,7 +498,7 @@ static void newcam_bounding_box(void) {
     camdirs[2][1] = -NEW_CAM_BOUNDING_BOX_VRADIUS;
     camdirs[3][1] =  NEW_CAM_BOUNDING_BOX_VRADIUS;
 
-    for (int i = 0; i < NEW_CAM_BOUNDING_BOX_RAYS; i++) {
+    for (s32 i = 0; i < NEW_CAM_BOUNDING_BOX_RAYS; i++) {
         struct Surface* surf;
         Vec3f offset = { 0 };
 
@@ -514,7 +514,7 @@ static void newcam_bounding_box(void) {
     }
 
     Vec3f avg = { 0 };
-    for (int i = 0; i < NEW_CAM_BOUNDING_BOX_RAYS; i++) {
+    for (s32 i = 0; i < NEW_CAM_BOUNDING_BOX_RAYS; i++) {
         vec3f_add(avg, raypos[i]);
     }
     vec3f_mul(avg, 1.0f / ((f32)NEW_CAM_BOUNDING_BOX_RAYS));

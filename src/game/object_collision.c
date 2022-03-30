@@ -9,10 +9,8 @@
 
 struct Object *debug_print_obj_collision(struct Object *a) {
     struct Object *sp24;
-    UNUSED s32 unused;
-    s32 i;
 
-    for (i = 0; i < a->numCollidedObjs; i++) {
+    for (s32 i = 0; i < a->numCollidedObjs; i++) {
         print_debug_top_down_objectinfo("ON", 0);
         sp24 = a->collidedObjs[i];
         if (sp24 != gMarioObject) {
@@ -191,7 +189,7 @@ void check_player_object_collision(void) {
     }
 
     extern struct MarioState gMarioStates[];
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         detect_player_hitbox_overlap(&gMarioStates[0], &gMarioStates[i]);
     }
 }

@@ -36,7 +36,7 @@ void bhv_donut_platform_update(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oAction == 2) {
         cur_obj_set_pos_to_home();

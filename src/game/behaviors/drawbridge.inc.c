@@ -19,7 +19,7 @@ void bhv_lll_drawbridge_spawner_init(void) {
 
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, 3000.0f);
-        for (int i = 0; i < 2; i++) {
+        for (s32 i = 0; i < 2; i++) {
             if (drawbridge[i] == NULL) { continue; }
             network_init_object_field(o, &drawbridge[i]->oFaceAngleRoll);
             network_init_object_field(o, &drawbridge[i]->oAction);

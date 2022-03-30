@@ -230,8 +230,8 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     // rate limit packets
     bool tooManyPackets = false;
-    int maxPacketsPerSecond = (gNetworkType == NT_SERVER) ? (MAX_PACKETS_PER_SECOND_PER_PLAYER * (u16)network_player_connected_count()) : MAX_PACKETS_PER_SECOND_PER_PLAYER;
-    static int sPacketsPerSecond[MAX_PLAYERS] = { 0 };
+    s32 maxPacketsPerSecond = (gNetworkType == NT_SERVER) ? (MAX_PACKETS_PER_SECOND_PER_PLAYER * (u16)network_player_connected_count()) : MAX_PACKETS_PER_SECOND_PER_PLAYER;
+    static s32 sPacketsPerSecond[MAX_PLAYERS] = { 0 };
     static f32 sPacketsPerSecondTime[MAX_PLAYERS] = { 0 };
     f32 currentTime = clock_elapsed();
     if ((currentTime - sPacketsPerSecondTime[localIndex]) > 0) {
@@ -280,7 +280,7 @@ void network_send(struct Packet* p) {
         }
     }
 
-    for (int i = 1; i < MAX_PLAYERS; i++) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
 

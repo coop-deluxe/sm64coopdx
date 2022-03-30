@@ -14,7 +14,7 @@ void bhv_squarish_path_parent_init(void) {
         so->maxUpdateRate = 5.0f;
     }
 
-    for (int i = 0; i < 2; i++) {
+    for (s32 i = 0; i < 2; i++) {
         s16 action = (i == 0) ? 1 : 3;
         s16 offset = (i == 0) ? (-radius) : (radius);
         struct Object* square = spawn_object(o, MODEL_BITDW_SQUARE_PLATFORM, bhvSquarishPathMoving);

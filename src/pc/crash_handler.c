@@ -439,8 +439,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     crash_handler_add_info_str(&pText, 315, -4 + (8 * 2), "System", (gNetworkSystem == NULL) ? "null" : gNetworkSystem->name);
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 3), "Players", network_player_connected_count());
 
-    int syncObjects = 0;
-    for (int i = 0; i < MAX_SYNC_OBJECTS; i++) {
+    s32 syncObjects = 0;
+    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
         if (gSyncObjects[i].o != NULL) { syncObjects++; }
     }
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "SyncObj", syncObjects);
@@ -455,9 +455,9 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     // Mods
     crash_handler_set_text(245, 64, 0xFF, 0xFF, 0xFF, "%s", "Mods:");
     {
-        int x = 245;
-        int y = 72;
-        for (int i = 0; i < gActiveMods.entryCount; i++) {
+        s32 x = 245;
+        s32 y = 72;
+        for (s32 i = 0; i < gActiveMods.entryCount; i++) {
             struct Mod* mod = gActiveMods.entries[i];
             u8 g = (gPcDebug.lastModRun == mod) ? 0 : 0xFF;
             crash_handler_set_text(x, y, 0xFF, g, 200, "%.21s", mod->name);
@@ -468,10 +468,10 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     // Packets
     crash_handler_set_text(335, 64, 0xFF, 0xFF, 0xFF, "%s", "Packets:");
     {
-        int x = 335;
-        int y = 72;
+        s32 x = 335;
+        s32 y = 72;
         u8 index = gDebugPacketOnBuffer;
-        for (int i = 0; i < 128; i++) {
+        for (s32 i = 0; i < 128; i++) {
             u8 brightness = (gDebugPacketIdBuffer[index] * 5) % 200;
             if (gDebugPacketSentBuffer[index]) {
                 crash_handler_set_text(x, y, 0xFF, 0xFF, brightness, "%02X", gDebugPacketIdBuffer[index]);

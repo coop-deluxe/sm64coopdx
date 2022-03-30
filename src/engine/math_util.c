@@ -45,8 +45,7 @@ void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b) {
 }
 
 /// Multiply vector 'dest' by a
-void *vec3f_mul(Vec3f dest, f32 a)
-{
+void *vec3f_mul(Vec3f dest, f32 a) {
     dest[0] *= a;
     dest[1] *= a;
     dest[2] *= a;

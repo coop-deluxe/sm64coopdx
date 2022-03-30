@@ -74,7 +74,7 @@ static void bhv_spiny_on_sent_pre(void) {
  */
 static s32 spiny_check_active(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->parentObj == NULL || o->parentObj->behavior != bhvEnemyLakitu) {
         obj_mark_for_deletion(o);

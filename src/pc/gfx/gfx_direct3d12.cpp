@@ -349,7 +349,7 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
         heap_desc.Properties.Type = D3D12_HEAP_TYPE_DEFAULT;
         heap_desc.Flags = D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
         ThrowIfFailed(d3d.device->CreateHeap(&heap_desc, IID_PPV_ARGS(&found_heap->heap)));
-        for (int i = 0; i < textures_per_heap; i++) {
+        for (int32_t i = 0; i < textures_per_heap; i++) {
             found_heap->free_list.push_back(i);
         }
     }
@@ -474,7 +474,7 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
             if (prg->shader_id & SHADER_OPT_FOG) {
                 ied[ied_pos++] = D3D12_INPUT_ELEMENT_DESC{"FOG", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0};
             }
-            for (int i = 0; i < prg->num_inputs; i++) {
+            for (int32_t i = 0; i < prg->num_inputs; i++) {
                 DXGI_FORMAT format = (prg->shader_id & SHADER_OPT_ALPHA) ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
                 ied[ied_pos++] = D3D12_INPUT_ELEMENT_DESC{"INPUT", (UINT)i, format, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0};
             }
@@ -534,7 +534,7 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
         d3d.command_list->SetGraphicsRootConstantBufferView(root_param_index++, d3d.noise_cb->GetGPUVirtualAddress());
     }
     
-    for (int i = 0; i < 2; i++) {
+    for (int32_t i = 0; i < 2; i++) {
         if (prg->used_textures[i]) {
             struct TextureData& td = d3d.textures[d3d.current_texture_ids[i]];
             if (td.last_frame_counter != d3d.frame_counter) {

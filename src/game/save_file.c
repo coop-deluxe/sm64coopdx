@@ -73,7 +73,7 @@ static inline void bswap_signature(struct SaveBlockSignature *data) {
  * Byteswap all multibyte fields in a MainMenuSaveData.
  */
 static inline void bswap_menudata(struct MainMenuSaveData *data) {
-    for (int i = 0; i < NUM_SAVE_FILES; ++i)
+    for (s32 i = 0; i < NUM_SAVE_FILES; ++i)
         data->coinScoreAges[i] = BSWAP32(data->coinScoreAges[i]);
     data->soundMode = BSWAP16(data->soundMode);
 #ifdef VERSION_EU
@@ -322,10 +322,10 @@ static void restore_save_file_data(s32 fileIndex, s32 srcSlot) {
  */
 static u8 save_file_need_bswap(const struct SaveBuffer *buf) {
     // check all signatures just in case
-    for (int i = 0; i < 2; ++i) {
+    for (s32 i = 0; i < 2; ++i) {
         if (buf->menuData[i].signature.magic == BSWAP16(MENU_DATA_MAGIC))
             return TRUE;
-        for (int j = 0; j < NUM_SAVE_FILES; ++j) {
+        for (s32 j = 0; j < NUM_SAVE_FILES; ++j) {
             if (buf->files[j][i].signature.magic == BSWAP16(SAVE_FILE_MAGIC))
                 return TRUE;
         }
@@ -339,7 +339,7 @@ static u8 save_file_need_bswap(const struct SaveBuffer *buf) {
 static void save_file_bswap(struct SaveBuffer *buf) {
     bswap_menudata(buf->menuData + 0);
     bswap_menudata(buf->menuData + 1);
-    for (int i = 0; i < NUM_SAVE_FILES; ++i) {
+    for (s32 i = 0; i < NUM_SAVE_FILES; ++i) {
         bswap_savefile(buf->files[i] + 0);
         bswap_savefile(buf->files[i] + 1);
     }
@@ -407,7 +407,7 @@ BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
 
 #ifdef TEXTSAVES
 static void save_file_load_textsaves(void) {
-    for (int file = 0; file < NUM_SAVE_FILES; file++) {
+    for (s32 file = 0; file < NUM_SAVE_FILES; file++) {
         read_text_save(file);
     }
     gSaveFileModified = TRUE;

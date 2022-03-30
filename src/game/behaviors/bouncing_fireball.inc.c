@@ -29,7 +29,7 @@ void bhv_bouncing_fireball_flame_loop(void) {
 
 void bhv_bouncing_fireball_loop(void) {
     struct Object* player = nearest_player_to_object(o);
-    int distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
     struct Object *sp2C;
     f32 sp28;

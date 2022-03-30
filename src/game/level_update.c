@@ -405,7 +405,7 @@ void init_mario_after_warp(void) {
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
     if (gMarioState->action != ACT_UNINITIALIZED) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gPlayerSpawnInfos[i].startPos[0] = (s16) spawnNode->object->oPosX;
             gPlayerSpawnInfos[i].startPos[1] = (s16) spawnNode->object->oPosY;
             gPlayerSpawnInfos[i].startPos[2] = (s16) spawnNode->object->oPosZ;
@@ -580,7 +580,7 @@ void warp_credits(void) {
         gCurrCreditsEntry = &sCreditsSequence[0];
     }
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         vec3s_set(gPlayerSpawnInfos[i].startPos, gCurrCreditsEntry->marioPos[0],
                   gCurrCreditsEntry->marioPos[1], gCurrCreditsEntry->marioPos[2]);
 
@@ -637,7 +637,7 @@ void check_instant_warp(void) {
                 vec3f_copy(gMarioStates[0].nonInstantWarpPos, gMarioStates[0].pos);
 
                 if (changeOfArea) {
-                    for (int i = 0; i < MAX_PLAYERS; i++) {
+                    for (s32 i = 0; i < MAX_PLAYERS; i++) {
                         gMarioStates[i].marioObj->oIntangibleTimer = 30;
                     }
                 }
@@ -649,7 +649,7 @@ void check_instant_warp(void) {
                 cameraAngle = gMarioStates[0].area->camera->yaw;
                 change_area(warp->area);
 
-                for (int i = 0; i < MAX_PLAYERS; i++) {
+                for (s32 i = 0; i < MAX_PLAYERS; i++) {
                     gMarioStates[i].area = gCurrentArea;
                 }
 
@@ -1219,7 +1219,7 @@ void level_set_transition(s16 length, void (*updateFunction)(s16 *)) {
  */
 s32 play_mode_change_area(void) {
     // fade out all players
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gNetworkPlayers[i].fadeOpacity = 0;
     }
 
@@ -1248,7 +1248,7 @@ s32 play_mode_change_area(void) {
  */
 s32 play_mode_change_level(void) {
     // fade out all players
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
         gNetworkPlayers[i].fadeOpacity = 0;
     }
 
