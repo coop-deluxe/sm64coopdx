@@ -61,7 +61,10 @@ void bhv_hidden_star_trigger_loop(void) {
     if ((o->oInteractStatus & INT_STATUS_INTERACTED) || obj_check_if_collided_with_object(o, gMarioObjects[0]) == 1) {
         struct Object *hiddenStar = cur_obj_nearest_object_with_behavior(bhvHiddenStar);
         if (hiddenStar != NULL) {
-            hiddenStar->oHiddenStarTriggerCounter++;
+
+            s16 count = (count_objects_with_behavior(bhvHiddenStarTrigger) - 1);
+            hiddenStar->oHiddenStarTriggerCounter = 5 - count;
+
             if (hiddenStar->oHiddenStarTriggerCounter != 5) {
                 spawn_orange_number(hiddenStar->oHiddenStarTriggerCounter, 0, 0, 0);
             }
