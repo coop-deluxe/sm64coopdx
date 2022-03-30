@@ -495,8 +495,14 @@ void network_send_object(struct Object* o) {
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
     // sanity check SyncObject
-    if (!network_sync_object_initialized(o)) { LOG_ERROR("tried to send uninitialized sync obj"); return; }
-    if (o->behavior == bhvRespawner) { LOG_INFO("tried to send respawner sync obj"); return; }
+    if (!network_sync_object_initialized(o)) {
+        LOG_ERROR("tried to send uninitialized sync obj");
+        return;
+    }
+    if (o->behavior == bhvRespawner) {
+        LOG_INFO("tried to send respawner sync obj");
+        return;
+    }
 
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     if (so == NULL) { LOG_ERROR("tried to send null sync obj"); return; }
