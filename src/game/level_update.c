@@ -1152,8 +1152,6 @@ s32 play_mode_normal(void) {
     return 0;
 }
 
-#include <stdio.h> // DO NOT COMMIT
-
 s32 play_mode_paused(void) {
     if (gPauseScreenMode == 0) {
         set_menu_mode(RENDER_PAUSE_SCREEN);

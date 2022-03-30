@@ -1,5 +1,5 @@
 // controllable_platform.c.inc
-
+static s8 oldD_80331694 = 0;
 static s8 D_80331694 = 0;
 static struct Object* controllablePlatformSubs[4] = { 0 };
 
@@ -55,6 +55,10 @@ void bhv_controllable_platform_sub_loop(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }
 
+static void bhv_controllable_platform_on_received_post(UNUSED u8 localIndex) {
+    oldD_80331694 = D_80331694;
+}
+
 void bhv_controllable_platform_init(void) {
     controllablePlatformSubs[0] = spawn_object_rel_with_rot(o, MODEL_HMC_METAL_ARROW_PLATFORM, bhvControllablePlatformSub, 0,
                                                             51, 204, 0, 0, 0);
@@ -76,31 +80,34 @@ void bhv_controllable_platform_init(void) {
 
     o->oControllablePlatformUnkFC = o->oPosY;
 
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &o->oPosX);
-    network_init_object_field(o, &o->oPosY);
-    network_init_object_field(o, &o->oPosZ);
-    network_init_object_field(o, &o->oVelX);
-    network_init_object_field(o, &o->oVelY);
-    network_init_object_field(o, &o->oVelZ);
-    network_init_object_field(o, &o->oAction);
-    network_init_object_field(o, &o->oPrevAction);
-    network_init_object_field(o, &o->oTimer);
-    network_init_object_field_with_size(o, &o->activeFlags, 16);
-    network_init_object_field_with_size(o, &D_80331694, 8);
-    network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (so != NULL) {
+        so->on_received_post = bhv_controllable_platform_on_received_post;
+        network_init_object_field(o, &o->oPosX);
+        network_init_object_field(o, &o->oPosY);
+        network_init_object_field(o, &o->oPosZ);
+        network_init_object_field(o, &o->oVelX);
+        network_init_object_field(o, &o->oVelY);
+        network_init_object_field(o, &o->oVelZ);
+        network_init_object_field(o, &o->oAction);
+        network_init_object_field(o, &o->oPrevAction);
+        network_init_object_field(o, &o->oTimer);
+        network_init_object_field_with_size(o, &o->activeFlags, 16);
+        network_init_object_field_with_size(o, &D_80331694, 8);
+        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
 
-    network_init_object_field(o, &o->oControllablePlatformUnkF8);
-    network_init_object_field(o, &o->oControllablePlatformUnkFC);
-    network_init_object_field(o, &o->oControllablePlatformUnk100);
-    network_init_object_field(o, &o->oFaceAnglePitch);
-    network_init_object_field(o, &o->oFaceAngleRoll);
-    for (int i = 0; i < 4; i++) {
-        if (controllablePlatformSubs[i] == NULL) { continue; }
-        network_init_object_field(o, &controllablePlatformSubs[i]->oAction);
-        network_init_object_field(o, &controllablePlatformSubs[i]->oPrevAction);
-        network_init_object_field(o, &controllablePlatformSubs[i]->oTimer);
-        network_init_object_field(o, &controllablePlatformSubs[i]->oParentRelativePosY);
+        network_init_object_field(o, &o->oControllablePlatformUnkF8);
+        network_init_object_field(o, &o->oControllablePlatformUnkFC);
+        network_init_object_field(o, &o->oControllablePlatformUnk100);
+        network_init_object_field(o, &o->oFaceAnglePitch);
+        network_init_object_field(o, &o->oFaceAngleRoll);
+        for (int i = 0; i < 4; i++) {
+            if (controllablePlatformSubs[i] == NULL) { continue; }
+            network_init_object_field(o, &controllablePlatformSubs[i]->oAction);
+            network_init_object_field(o, &controllablePlatformSubs[i]->oPrevAction);
+            network_init_object_field(o, &controllablePlatformSubs[i]->oTimer);
+            network_init_object_field(o, &controllablePlatformSubs[i]->oParentRelativePosY);
+        }
     }
 }
 
@@ -208,8 +215,6 @@ void bhv_controllable_platform_loop(void) {
     o->oVelX = 0;
     o->oVelZ = 0;
 
-    s8 oldD_80331694 = D_80331694;
-
     switch (D_80331694) {
         case 0:
             o->oFaceAnglePitch /= 2;
@@ -279,7 +284,6 @@ void bhv_controllable_platform_loop(void) {
                     controllablePlatformSubs[i]->oVelX = 0;
                     controllablePlatformSubs[i]->oVelZ = 0;
                 }
-                network_send_object(o);
             }
             break;
     }
@@ -293,4 +297,5 @@ void bhv_controllable_platform_loop(void) {
     if (network_owns_object(o) && oldD_80331694 != D_80331694) {
         network_send_object(o);
     }
+    oldD_80331694 = D_80331694;
 }

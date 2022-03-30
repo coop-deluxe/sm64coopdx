@@ -351,8 +351,25 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     np->currLevelNum  = levelNum;
     np->currAreaIndex = areaIndex;
 
-    if (mismatch && (np == gNetworkPlayerLocal)) {
-        network_send_level_area_inform();
+    if (mismatch) {
+        if (np == gNetworkPlayerLocal) {
+            network_send_level_area_inform();
+
+            for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
+                struct SyncObject* so = &gSyncObjects[i];
+                if (so == NULL) { continue; }
+                so->txEventId = 0;
+            }
+
+        } else {
+
+            for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
+                struct SyncObject* so = &gSyncObjects[i];
+                if (so == NULL) { continue; }
+                so->rxEventId[np->localIndex] = 0;
+            }
+
+        }
     }
 }
 

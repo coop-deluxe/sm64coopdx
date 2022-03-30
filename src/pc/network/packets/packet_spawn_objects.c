@@ -190,8 +190,13 @@ void network_receive_spawn_objects(struct Packet* p) {
                 return;
             }
             // check if they've allocated one of their reserved sync objects
-            gSyncObjects[o->oSyncID].o = o;
-            gSyncObjects[o->oSyncID].extendedModelId = data.extendedModelId;
+            struct SyncObject* so = &gSyncObjects[o->oSyncID];
+            so->o = o;
+            so->extendedModelId = data.extendedModelId;
+            so->txEventId = 0;
+            for (s32 j = 0; j < MAX_PLAYERS; j++) {
+                so->rxEventId[j] = 0;
+            }
         }
 
         spawned[i] = o;

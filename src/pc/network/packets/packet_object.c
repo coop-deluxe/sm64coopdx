@@ -338,6 +338,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     gCurrentObject = o;
     if ((so->ignore_if_true != NULL) && ((*so->ignore_if_true)() != FALSE)) {
         gCurrentObject = tmp;
+        LOG_INFO("ignored sync object due to callback");
         return NULL;
     }
     gCurrentObject = tmp;
@@ -347,6 +348,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     u16 eventId = 0;
     packet_read(p, &eventId, sizeof(u16));
     if (so->rxEventId[*fromLocalIndex] > eventId && (u16)abs(eventId - so->rxEventId[*fromLocalIndex]) < USHRT_MAX / 2) {
+        LOG_INFO("ignored sync object due to eventId");
         return NULL;
     }
     so->rxEventId[*fromLocalIndex] = eventId;
@@ -456,6 +458,7 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
     u8 extraFieldsCount = 0;
     packet_read(p, &extraFieldsCount, sizeof(u8));
     if (extraFieldsCount != so->extraFieldCount) {
+        LOG_ERROR("mismatching extra fields count");
         return;
     }
 
@@ -492,11 +495,11 @@ void network_send_object(struct Object* o) {
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
     // sanity check SyncObject
-    if (!network_sync_object_initialized(o)) { return; }
-    if (o->behavior == bhvRespawner) { return; }
+    if (!network_sync_object_initialized(o)) { LOG_ERROR("tried to send uninitialized sync obj"); return; }
+    if (o->behavior == bhvRespawner) { LOG_INFO("tried to send respawner sync obj"); return; }
 
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
-    if (so == NULL) { return; }
+    if (so == NULL) { LOG_ERROR("tried to send null sync obj"); return; }
     if (o != so->o) {
         LOG_ERROR("object mismatch for %d", o->oSyncID);
         return;
@@ -512,14 +515,25 @@ void network_send_object(struct Object* o) {
 }
 
 void network_send_object_reliability(struct Object* o, bool reliable) {
-    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
+        LOG_INFO("tried to send sync obj when area sync invalid");
+        return;
+    }
     // prevent sending objects during credits sequence
     if (gCurrActStarNum == 99) { return; }
+
     // sanity check SyncObject
-    if (!network_sync_object_initialized(o)) { return; }
+    if (!network_sync_object_initialized(o)) {
+        LOG_ERROR("tried to send uninitialized sync obj");
+        return;
+    }
+
     u8 syncId = o->oSyncID;
     struct SyncObject* so = &gSyncObjects[syncId];
-    if (so == NULL) { return; }
+    if (so == NULL) {
+        LOG_ERROR("tried to send null sync obj");
+        return;
+    }
     if (o != so->o) {
         LOG_ERROR("object mismatch for %d", syncId);
         return;
@@ -591,9 +605,15 @@ void network_receive_object(struct Packet* p) {
     // read the header and sanity check the packet
     u8 fromLocalIndex = 0;
     struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
-    if (so == NULL) { return; }
+    if (so == NULL) {
+        LOG_ERROR("received null sync object");
+        return;
+    }
     struct Object* o = so->o;
-    if (!network_sync_object_initialized(o)) { return; }
+    if (!network_sync_object_initialized(o)) {
+        LOG_ERROR("received uninitialized sync object");
+        return;
+    }
 
     // make sure no one can update an object we're holding
     if (gMarioStates[0].heldObj == o) { return; }
