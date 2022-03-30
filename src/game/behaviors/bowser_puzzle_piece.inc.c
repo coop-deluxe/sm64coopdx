@@ -129,6 +129,15 @@ void bhv_lll_bowser_puzzle_loop(void) {
     struct Object* player = nearest_player_to_object(o);
     int distanceToPlayer = dist_between_objects(o, player);
 
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so) {
+            network_init_object_field(o, &o->oAction);
+            network_init_object_field(o, &o->oPrevAction);
+            network_init_object_field(o, &o->oBowserPuzzleCompletionFlags);
+        }
+    }
+
     switch (o->oAction) {
         case BOWSER_PUZZLE_ACT_SPAWN_PIECES:
             bhv_lll_bowser_puzzle_spawn_pieces(480.0f);
@@ -145,6 +154,7 @@ void bhv_lll_bowser_puzzle_loop(void) {
 
                 // Go to next action so we don't spawn 5 coins ever again.
                 o->oAction++;
+                network_send_object(o);
             }
             break;
         case BOWSER_PUZZLE_ACT_DONE:
