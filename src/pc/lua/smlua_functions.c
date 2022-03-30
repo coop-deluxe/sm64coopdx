@@ -134,15 +134,20 @@ int smlua_func_network_init_object(lua_State* L) {
             if (data == NULL) {
                 data = smlua_get_custom_field(L, LOT_OBJECT, lua_gettop(L));
             }
-            bool validLvt = (data->valueType == LVT_U32) || (data->valueType == LVT_S32) || (data->valueType == LVT_F32);
-            if (data == NULL || !validLvt) {
+
+            u8 lvtSize = 0;
+            if ((data->valueType == LVT_U32) || (data->valueType == LVT_S32) || (data->valueType == LVT_F32)) { lvtSize = 32; }
+            if ((data->valueType == LVT_U16) || (data->valueType == LVT_S16)) { lvtSize = 16; }
+            if ((data->valueType == LVT_U8) || (data->valueType == LVT_S8)) { lvtSize = 8; }
+
+            if (data == NULL || lvtSize == 0) {
                 LOG_LUA("Invalid field passed to network_init_object(): %s", fieldIdentifier);
                 lua_pop(L, 1); // pop value
                 continue;
             }
 
             u8* field = ((u8*)(intptr_t)obj) + data->valueOffset;
-            network_init_object_field(obj, field);
+            network_init_object_field_with_size(obj, field, lvtSize);
 
             lua_pop(L, 1); // pop value
         }
