@@ -214,6 +214,13 @@ void unload_object(struct Object *obj) {
         } else {
             network_send_reservation_release(obj->oSyncID);
         }
+
+        // forget sync object
+        struct SyncObject* so = &gSyncObjects[obj->oSyncID];
+        if ((obj == so->o) && (obj->behavior == so->behavior)) {
+            network_forget_sync_object(so);
+        }
+
         smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
     }
 
