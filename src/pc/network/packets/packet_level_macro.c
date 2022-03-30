@@ -91,7 +91,8 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
         bool writable = (*respawnInfo != 0) && (
             (behavior == bhvCoinFormation) ||
             (behavior == bhvGoombaTripletSpawner) ||
-            (behavior == bhvWoodenPost)
+            (behavior == bhvWoodenPost) ||
+            (behavior == bhvBobomb)
             );
 
         if (writable) {
@@ -229,6 +230,11 @@ void network_receive_level_macro(struct Packet* p) {
             } else if (behavior == bhvWoodenPost) {
                 o->oBehParams |= WOODEN_POST_BP_NO_COINS_MASK;
                 LOG_INFO("rx macro special: wooden post");
+            } else if (behavior == bhvBobomb) {
+                o->oBehParams |= (0x1 << 8);
+                LOG_INFO("rx macro special: bobomb");
+            } else {
+                LOG_INFO("rx macro special: %u", get_id_from_behavior(behavior));
             }
         }
     }
