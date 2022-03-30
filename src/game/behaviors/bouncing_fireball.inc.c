@@ -27,22 +27,7 @@ void bhv_bouncing_fireball_flame_loop(void) {
     o->oInteractStatus = 0;
 }
 
-void bhv_bouncing_fireball_override_ownership(u8* shouldOverride, u8* shouldOwn) {
-    *shouldOverride = TRUE;
-    *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
-}
-
 void bhv_bouncing_fireball_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        if (so) {
-            so->override_ownership = bhv_bouncing_fireball_override_ownership;
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
-        }
-    }
-
     struct Object* player = nearest_player_to_object(o);
     int distanceToPlayer = dist_between_objects(o, player);
 
@@ -54,20 +39,12 @@ void bhv_bouncing_fireball_loop(void) {
                 o->oAction = 1;
             break;
         case 1:
-            if (network_owns_object(o)) {
-                sp2C = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
-                sp28 = (10 - o->oTimer) * 0.5;
-                if (sp2C != NULL) {
-                    obj_scale_xyz(sp2C, sp28, sp28, sp28);
-                    if (o->oTimer == 0)
-                        obj_become_tangible(sp2C);
-
-                    struct Object* spawn_objects[] = { sp2C };
-                    u32 models[] = { MODEL_RED_FLAME };
-                    network_send_spawn_objects(spawn_objects, models, 1);
-                }
-
-                network_send_object(o);
+            sp2C = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
+            sp28 = (10 - o->oTimer) * 0.5;
+            if (sp2C != NULL) {
+                obj_scale_xyz(sp2C, sp28, sp28, sp28);
+                if (o->oTimer == 0)
+                    obj_become_tangible(sp2C);
             }
             if (o->oTimer > 10)
                 o->oAction++;

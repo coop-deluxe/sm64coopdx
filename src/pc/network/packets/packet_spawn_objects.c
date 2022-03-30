@@ -94,10 +94,10 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
         network_send(&p);
-        LOG_INFO("tx spawn objects (BROADCAST)");
+        LOG_INFO("tx spawn objects (BROADCAST) | %u", get_id_from_behavior(objects[0]->behavior));
     } else {
         network_send_to(sendToLocalIndex, &p);
-        LOG_INFO("tx spawn objects to %d", gNetworkPlayers[sendToLocalIndex].globalIndex);
+        LOG_INFO("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
     }
 }
 
