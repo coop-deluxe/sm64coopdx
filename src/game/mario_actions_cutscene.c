@@ -732,7 +732,9 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
 }
 
 s32 act_star_dance(struct MarioState *m) {
-    m->faceAngle[1] = m->area->camera->yaw;
+    if (m == &gMarioStates[0]) {
+        m->faceAngle[1] = m->area->camera->yaw;
+    }
     set_mario_animation(m, m->actionState == 2 ? MARIO_ANIM_RETURN_FROM_STAR_DANCE
                                                : MARIO_ANIM_STAR_DANCE);
     general_star_dance_handler(m, 0);
@@ -744,7 +746,9 @@ s32 act_star_dance(struct MarioState *m) {
 }
 
 s32 act_star_dance_water(struct MarioState *m) {
-    m->faceAngle[1] = m->area->camera->yaw;
+    if (m == &gMarioStates[0]) {
+        m->faceAngle[1] = m->area->camera->yaw;
+    }
     set_mario_animation(m, m->actionState == 2 ? MARIO_ANIM_RETURN_FROM_WATER_STAR_DANCE
                                                : MARIO_ANIM_WATER_STAR_DANCE);
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
