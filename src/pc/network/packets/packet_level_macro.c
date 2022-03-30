@@ -87,15 +87,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
         s16* respawnInfo = macroObjList++;
 
         // check for special cases
-        const BehaviorScript* behavior = MacroObjectPresets[presetID].behavior;
-        bool writable = (*respawnInfo != 0) && (
-            (behavior == bhvCoinFormation) ||
-            (behavior == bhvGoombaTripletSpawner) ||
-            (behavior == bhvWoodenPost) ||
-            (behavior == bhvBobomb)
-            );
-
-        if (writable) {
+        if (*respawnInfo != 0) {
             *macroSpecialCount = *macroSpecialCount + 1;
             u16 offset = respawnInfo - area->macroObjects;
             packet_write(&p, &offset, sizeof(u16));
@@ -227,13 +219,9 @@ void network_receive_level_macro(struct Packet* p) {
                     }
                 }
                 LOG_INFO("rx macro special: goomba triplet");
-            } else if (behavior == bhvWoodenPost) {
-                o->oBehParams |= WOODEN_POST_BP_NO_COINS_MASK;
-                LOG_INFO("rx macro special: wooden post");
-            } else if (behavior == bhvBobomb) {
-                o->oBehParams |= (0x1 << 8);
-                LOG_INFO("rx macro special: bobomb");
             } else {
+                o->oBehParams = (((*respawnInfo) & 0x00FF) << 16) + ((*respawnInfo) & 0xFF00);
+                o->oBehParams2ndByte = (*respawnInfo) & 0x00FF;
                 LOG_INFO("rx macro special: %u", get_id_from_behavior(behavior));
             }
         }
