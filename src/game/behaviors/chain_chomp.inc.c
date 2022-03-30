@@ -455,7 +455,7 @@ void bhv_chain_chomp_update(void) {
         if (so) {
             so->syncDeathEvent = FALSE;
             network_init_object_field(o, &o->oChainChompUnk104);
-            network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+            network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
         }
     }
 

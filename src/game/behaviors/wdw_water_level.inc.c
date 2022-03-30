@@ -25,7 +25,7 @@ void bhv_water_level_diamond_loop(void) {
         network_init_object_field(o, &o->oWaterLevelTriggerTargetWaterLevel);
         network_init_object_field(o, &o->oAngleVelYaw);
         network_init_object_field(o, &o->oFaceAngleYaw);
-        network_init_object_field(o, &gWDWWaterLevelChanging);
+        network_init_object_field_with_size(o, &gWDWWaterLevelChanging, 16);
     }
 
     if (gEnvironmentRegions != NULL) {

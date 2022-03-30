@@ -1355,9 +1355,9 @@ void bhv_bowser_init(void) {
         so->override_ownership = bhv_bowser_override_ownership;
         so->ignore_if_true = bhv_bowser_ignore_if_true;
         so->fullObjectSync = TRUE;
-        network_init_object_field(o, &o->header.gfx.node.flags);
+        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+        network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
         network_init_object_field(o, &networkBowserAnimationIndex);
-        network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
         network_init_object_field(o, &o->header.gfx.scale[0]);
         network_init_object_field(o, &o->header.gfx.scale[1]);
         network_init_object_field(o, &o->header.gfx.scale[2]);

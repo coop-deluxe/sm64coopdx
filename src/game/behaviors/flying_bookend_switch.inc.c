@@ -269,8 +269,8 @@ void bhv_haunted_bookshelf_manager_loop(void) {
             so->syncDeathEvent = FALSE;
             so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
             so->ignore_if_true = bhv_haunted_bookshelf_manager_ignore_if_true;
+            network_init_object_field_with_size(o, &o->activeFlags, 16);
             network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->activeFlags);
             network_init_object_field(o, &o->oBookSwitchManagerUnkF8);
             network_init_object_field(o, &o->oBookSwitchManagerUnkF4);
             network_init_object_field(o, &o->oTimer);

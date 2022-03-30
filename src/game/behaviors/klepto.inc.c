@@ -123,7 +123,7 @@ void bhv_klepto_init(void) {
         network_init_object_field(o, &o->oHomeZ);
         network_init_object_field(o, &o->oMoveAnglePitch);
         network_init_object_field(o, &o->oGravity);
-        network_init_object_field(o, &o->globalPlayerIndex);
+        network_init_object_field_with_size(o, &o->globalPlayerIndex, 8);
     }
 }
 

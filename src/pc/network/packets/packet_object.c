@@ -154,6 +154,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     }
     so->randomSeed = (u16)(o->oSyncID * 7951);
     memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
+    memset(so->extraFieldsSize, 0, sizeof(u8) * MAX_SYNC_OBJECT_FIELDS);
 
     sLastSyncEntReliablePacket[o->oSyncID].error = true;
 
@@ -167,7 +168,23 @@ void network_init_object_field(struct Object *o, void* field) {
     // remember to synchronize this extra field
     struct SyncObject* so = &gSyncObjects[o->oSyncID];
     u8 index = so->extraFieldCount++;
+    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) { return; }
     so->extraFields[index] = field;
+    so->extraFieldsSize[index] = 32;
+}
+
+void network_init_object_field_with_size(struct Object *o, void* field, u8 size) {
+    if (o->coopFlags & COOP_OBJ_FLAG_NON_SYNC) { return; }
+    if (o->oSyncID == 0) { return; }
+
+    SOFT_ASSERT(size == 8 || size == 16 || size == 32 || size == 64);
+
+    // remember to synchronize this extra field
+    struct SyncObject* so = &gSyncObjects[o->oSyncID];
+    u8 index = so->extraFieldCount++;
+    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) { return; }
+    so->extraFields[index] = field;
+    so->extraFieldsSize[index] = size;
 }
 
 bool network_owns_object(struct Object* o) {
@@ -427,7 +444,7 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
     // write the extra field
     for (u8 i = 0; i < so->extraFieldCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
-        packet_write(p, so->extraFields[i], sizeof(u32));
+        packet_write(p, so->extraFields[i], so->extraFieldsSize[i] / 8);
     }
 }
 
@@ -445,7 +462,7 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
     // read the extra fields
     for (u8 i = 0; i < extraFieldsCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
-        packet_read(p, so->extraFields[i], sizeof(u32));
+        packet_read(p, so->extraFields[i], so->extraFieldsSize[i] / 8);
     }
 }
 

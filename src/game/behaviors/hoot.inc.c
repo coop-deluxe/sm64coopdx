@@ -22,7 +22,7 @@ void bhv_hoot_init(void) {
         so->ignore_if_true = bhv_hoot_ignore_if_true;
         network_init_object_field(o, &o->oHootAvailability);
         network_init_object_field(o, &o->oMoveAnglePitch);
-        network_init_object_field(o, &o->header.gfx.animInfo.animFrame);
+        network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
     }
 }
 

@@ -171,6 +171,7 @@ void forget_ent_reliable_packet(struct Object* o);
 void network_override_object(u8 syncId, struct Object* o);
 struct SyncObject* network_init_object(struct Object* object, float maxSyncDistance);
 void network_init_object_field(struct Object* o, void* field);
+void network_init_object_field_with_size(struct Object *o, void* field, u8 size);
 bool network_owns_object(struct Object* o);
 bool network_sync_object_initialized(struct Object* o);
 void network_clear_sync_objects(void);

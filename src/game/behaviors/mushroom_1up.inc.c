@@ -227,9 +227,9 @@ void bhv_1up_hidden_loop(void) {
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oForwardVel);
         network_init_object_field(o, &o->o1UpHiddenUnkF4);
-        network_init_object_field(o, &o->header.gfx.node.flags);
-        network_init_object_field(o, &o->activeFlags);
         network_init_object_field(o, &o->oIntangibleTimer);
+        network_init_object_field_with_size(o, &o->activeFlags, 16);
+        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 
     s16 sp26;
@@ -281,7 +281,7 @@ void bhv_1up_hidden_loop(void) {
 void bhv_1up_hidden_trigger_loop(void) {
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->activeFlags);
+        network_init_object_field_with_size(o, &o->activeFlags, 16);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -305,9 +305,9 @@ void bhv_1up_hidden_in_pole_loop(void) {
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oForwardVel);
         network_init_object_field(o, &o->o1UpHiddenUnkF4);
-        network_init_object_field(o, &o->header.gfx.node.flags);
-        network_init_object_field(o, &o->activeFlags);
         network_init_object_field(o, &o->oIntangibleTimer);
+        network_init_object_field_with_size(o, &o->activeFlags, 16);
+        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 
     UNUSED s16 sp26;
@@ -352,7 +352,7 @@ void bhv_1up_hidden_in_pole_loop(void) {
 void bhv_1up_hidden_in_pole_trigger_loop(void) {
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->activeFlags);
+        network_init_object_field_with_size(o, &o->activeFlags, 16);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -370,7 +370,7 @@ void bhv_1up_hidden_in_pole_trigger_loop(void) {
 void bhv_1up_hidden_in_pole_spawner_loop(void) {
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->activeFlags);
+        network_init_object_field_with_size(o, &o->activeFlags, 16);
     }
 
     if (gNetworkAreaSyncing || !gNetworkAreaLoaded) {

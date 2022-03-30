@@ -77,7 +77,6 @@ void bhv_controllable_platform_init(void) {
     o->oControllablePlatformUnkFC = o->oPosY;
 
     network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &D_80331694);
     network_init_object_field(o, &o->oPosX);
     network_init_object_field(o, &o->oPosY);
     network_init_object_field(o, &o->oPosZ);
@@ -87,15 +86,15 @@ void bhv_controllable_platform_init(void) {
     network_init_object_field(o, &o->oAction);
     network_init_object_field(o, &o->oPrevAction);
     network_init_object_field(o, &o->oTimer);
-    network_init_object_field(o, &o->activeFlags);
-    network_init_object_field(o, &o->header.gfx.node.flags);
+    network_init_object_field_with_size(o, &o->activeFlags, 16);
+    network_init_object_field_with_size(o, &D_80331694, 8);
+    network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
 
     network_init_object_field(o, &o->oControllablePlatformUnkF8);
     network_init_object_field(o, &o->oControllablePlatformUnkFC);
     network_init_object_field(o, &o->oControllablePlatformUnk100);
     network_init_object_field(o, &o->oFaceAnglePitch);
     network_init_object_field(o, &o->oFaceAngleRoll);
-    network_init_object_field(o, &o->header.gfx.node.flags);
     for (int i = 0; i < 4; i++) {
         if (controllablePlatformSubs[i] == NULL) { continue; }
         network_init_object_field(o, &controllablePlatformSubs[i]->oAction);

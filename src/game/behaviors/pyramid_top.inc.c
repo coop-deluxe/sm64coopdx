@@ -91,7 +91,7 @@ void bhv_pyramid_top_loop(void) {
     if (!network_sync_object_initialized(o)) {
         struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->activeFlags);
+            network_init_object_field_with_size(o, &o->activeFlags, 16);
             network_init_object_field(o, &o->oAction);
             network_init_object_field(o, &o->oPrevAction);
             network_init_object_field(o, &o->oTimer);

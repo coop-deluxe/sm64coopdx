@@ -21,7 +21,7 @@ void bhv_thi_tiny_island_top_loop(void) {
         network_init_object_field(o, &o->oAction);
         network_init_object_field(o, &o->oPrevAction);
         network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->header.gfx.node.flags);
+        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);

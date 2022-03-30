@@ -177,9 +177,9 @@ void bhv_monty_mole_init(void) {
         network_init_object_field(o, &o->oMontyMoleHoleZ);
         network_init_object_field(o, &o->oFaceAnglePitch);
         network_init_object_field(o, &o->oGravity);
-        network_init_object_field(o, &o->header.gfx.node.flags);
         network_init_object_field(o, &o->oIntangibleTimer);
         network_init_object_field(o, &o->oFaceAnglePitch);
+        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 }
 

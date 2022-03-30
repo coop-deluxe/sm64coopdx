@@ -655,7 +655,7 @@ void bhv_ukiki_init(void) {
     network_init_object_field(o, &o->oUkikiChaseFleeRange);
     network_init_object_field(o, &o->oUkikiCageSpinTimer);
     network_init_object_field(o, &o->oIntangibleTimer);
-    network_init_object_field(o, &o->globalPlayerIndex);
+    network_init_object_field_with_size(o, &o->globalPlayerIndex, 8);
 }
 
 /**
