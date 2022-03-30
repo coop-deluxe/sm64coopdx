@@ -2142,6 +2142,12 @@ function is_player_active(m)
     -- ...
 end
 
+--- @param m MarioState
+--- @return integer
+function is_player_in_local_area(m)
+    -- ...
+end
+
 --- @param obj Object
 --- @param x number
 --- @param y number
@@ -2639,6 +2645,14 @@ end
 --- @param mod integer
 --- @return integer
 function random_mod_offset(base, step, mod)
+    -- ...
+end
+
+--- @param threshold number
+--- @param distanceToPlayer Pointer_integer
+--- @param angleToPlayer Pointer_integer
+--- @return nil
+function treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer)
     -- ...
 end
 
@@ -3476,6 +3490,11 @@ function enable_time_stop()
 end
 
 --- @return nil
+function enable_time_stop_if_alone()
+    -- ...
+end
+
+--- @return nil
 function enable_time_stop_including_mario()
     -- ...
 end
@@ -3909,6 +3928,12 @@ end
 --- @param flags integer
 --- @return nil
 function set_time_stop_flags(flags)
+    -- ...
+end
+
+--- @param flags integer
+--- @return nil
+function set_time_stop_flags_if_alone(flags)
     -- ...
 end
 

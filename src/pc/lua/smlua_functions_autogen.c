@@ -33,7 +33,7 @@
 int smlua_func_get_behavior_from_id(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
-    s32 id = smlua_to_integer(L, 1);
+    int id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
 
     smlua_push_pointer(L, LVT_BEHAVIORSCRIPT_P, (void*)get_behavior_from_id(id));
@@ -4936,6 +4936,18 @@ int smlua_func_is_player_active(lua_State* L) {
     return 1;
 }
 
+int smlua_func_is_player_in_local_area(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern u8 is_player_in_local_area(struct MarioState* m);
+    lua_pushinteger(L, is_player_in_local_area(m));
+
+    return 1;
+}
+
 int smlua_func_is_point_close_to_object(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
 
@@ -5950,23 +5962,21 @@ int smlua_func_random_mod_offset(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_treat_far_home_as_mario(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
     f32 threshold = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  int* distanceToPlayer = (int*)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+    s32* distanceToPlayer = (s32*)smlua_to_cpointer(L, 2, LVT_S32_P);
     if (!gSmLuaConvertSuccess) { return 0; }
-//  int* angleToPlayer = (int*)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    s32* angleToPlayer = (s32*)smlua_to_cpointer(L, 3, LVT_S32_P);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    extern void treat_far_home_as_mario(f32 threshold, int* distanceToPlayer, int* angleToPlayer);
+    extern void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToPlayer);
     treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer);
 
     return 1;
 }
-*/
 
   //////////////////////
  // object_helpers.c //
@@ -7656,6 +7666,16 @@ int smlua_func_enable_time_stop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_enable_time_stop_if_alone(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void enable_time_stop_if_alone(void);
+    enable_time_stop_if_alone();
+
+    return 1;
+}
+
 int smlua_func_enable_time_stop_including_mario(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -8756,6 +8776,18 @@ int smlua_func_set_time_stop_flags(lua_State* L) {
 
     extern void set_time_stop_flags(s32 flags);
     set_time_stop_flags(flags);
+
+    return 1;
+}
+
+int smlua_func_set_time_stop_flags_if_alone(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 flags = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern void set_time_stop_flags_if_alone(s32 flags);
+    set_time_stop_flags_if_alone(flags);
 
     return 1;
 }
@@ -10297,6 +10329,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "is_nearest_mario_state_to_object", smlua_func_is_nearest_mario_state_to_object);
     smlua_bind_function(L, "is_nearest_player_to_object", smlua_func_is_nearest_player_to_object);
     smlua_bind_function(L, "is_player_active", smlua_func_is_player_active);
+    smlua_bind_function(L, "is_player_in_local_area", smlua_func_is_player_in_local_area);
     smlua_bind_function(L, "is_point_close_to_object", smlua_func_is_point_close_to_object);
     smlua_bind_function(L, "is_point_within_radius_of_mario", smlua_func_is_point_within_radius_of_mario);
     smlua_bind_function(L, "nearest_mario_state_to_object", smlua_func_nearest_mario_state_to_object);
@@ -10368,7 +10401,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "platform_on_track_update_pos_or_spawn_ball", smlua_func_platform_on_track_update_pos_or_spawn_ball);
     smlua_bind_function(L, "random_linear_offset", smlua_func_random_linear_offset);
     smlua_bind_function(L, "random_mod_offset", smlua_func_random_mod_offset);
-    //smlua_bind_function(L, "treat_far_home_as_mario", smlua_func_treat_far_home_as_mario); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "treat_far_home_as_mario", smlua_func_treat_far_home_as_mario);
 
     // object_helpers.c
     smlua_bind_function(L, "abs_angle_diff", smlua_func_abs_angle_diff);
@@ -10510,6 +10543,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "dist_between_object_and_point", smlua_func_dist_between_object_and_point);
     smlua_bind_function(L, "dist_between_objects", smlua_func_dist_between_objects);
     smlua_bind_function(L, "enable_time_stop", smlua_func_enable_time_stop);
+    smlua_bind_function(L, "enable_time_stop_if_alone", smlua_func_enable_time_stop_if_alone);
     smlua_bind_function(L, "enable_time_stop_including_mario", smlua_func_enable_time_stop_including_mario);
     smlua_bind_function(L, "find_unimportant_object", smlua_func_find_unimportant_object);
     smlua_bind_function(L, "geo_offset_klepto_debug", smlua_func_geo_offset_klepto_debug);
@@ -10583,6 +10617,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "random_f32_around_zero", smlua_func_random_f32_around_zero);
     smlua_bind_function(L, "set_mario_interact_hoot_if_in_range", smlua_func_set_mario_interact_hoot_if_in_range);
     smlua_bind_function(L, "set_time_stop_flags", smlua_func_set_time_stop_flags);
+    smlua_bind_function(L, "set_time_stop_flags_if_alone", smlua_func_set_time_stop_flags_if_alone);
     smlua_bind_function(L, "signum_positive", smlua_func_signum_positive);
     smlua_bind_function(L, "spawn_base_star_with_no_lvl_exit", smlua_func_spawn_base_star_with_no_lvl_exit);
     smlua_bind_function(L, "spawn_mist_particles", smlua_func_spawn_mist_particles);

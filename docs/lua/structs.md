@@ -113,6 +113,7 @@
 | instantWarps | [InstantWarp](structs.md#InstantWarp) |  |
 | localAreaTimer | `integer` | read-only |
 | macroObjects | `Pointer` <`integer`> | read-only |
+| macroObjectsAltered | `Pointer` <`integer`> | read-only |
 | musicParam | `integer` |  |
 | musicParam2 | `integer` |  |
 | objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) |  |
@@ -878,6 +879,7 @@
 | prevObj | [Object](structs.md#Object) |  |
 | respawnInfoType | `integer` |  |
 | unused1 | `integer` |  |
+| usingObj | [Object](structs.md#Object) |  |
 
 ### Object-Independent Data Fields
 | Field | Type | Access |

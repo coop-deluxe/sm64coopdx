@@ -508,7 +508,7 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
         if (m->actionState == 9) {
             // only show dialog for local player
             if (m == &gMarioStates[0]) {
-                actionArg = m->actionArg;
+                u32 actionArg = m->actionArg;
                 if (GET_HIGH_U16_OF_32(actionArg) == 0) {
                     create_dialog_box(GET_LOW_U16_OF_32(actionArg));
                 } else {
@@ -1428,13 +1428,14 @@ s32 act_bbh_enter_spin(struct MarioState *m) {
 
     switch (m->actionState) {
         case 0:
-            f32 floorDist = 512.0f - (m->pos[1] - m->floorHeight);
-            m->vel[1] = floorDist > 0 ? sqrtf(4.0f * floorDist + 1.0f) - 1.0f : 2.0f;
+            {
+                f32 floorDist = 512.0f - (m->pos[1] - m->floorHeight);
+                m->vel[1] = floorDist > 0 ? sqrtf(4.0f * floorDist + 1.0f) - 1.0f : 2.0f;
 
-            m->actionState = 1;
-            m->actionTimer = 100;
+                m->actionState = 1;
+                m->actionTimer = 100;
+            }
             // fall through
-
         case 1:
             m->faceAngle[1] = atan2s(cageDZ, cageDX);
             mario_set_forward_vel(m, forwardVel);

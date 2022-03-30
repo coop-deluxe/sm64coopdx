@@ -31,6 +31,7 @@
 --- @field public instantWarps InstantWarp
 --- @field public localAreaTimer integer
 --- @field public macroObjects Pointer_integer
+--- @field public macroObjectsAltered Pointer_integer
 --- @field public musicParam integer
 --- @field public musicParam2 integer
 --- @field public objectSpawnInfos SpawnInfo
@@ -1326,6 +1327,7 @@
 --- @field public prevObj Object
 --- @field public respawnInfoType integer
 --- @field public unused1 integer
+--- @field public usingObj Object
 
 --- @class ObjectHitbox
 --- @field public damageOrCoinValue integer

@@ -399,6 +399,7 @@
    - [is_nearest_mario_state_to_object](#is_nearest_mario_state_to_object)
    - [is_nearest_player_to_object](#is_nearest_player_to_object)
    - [is_player_active](#is_player_active)
+   - [is_player_in_local_area](#is_player_in_local_area)
    - [is_point_close_to_object](#is_point_close_to_object)
    - [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
    - [nearest_mario_state_to_object](#nearest_mario_state_to_object)
@@ -472,6 +473,7 @@
    - [platform_on_track_update_pos_or_spawn_ball](#platform_on_track_update_pos_or_spawn_ball)
    - [random_linear_offset](#random_linear_offset)
    - [random_mod_offset](#random_mod_offset)
+   - [treat_far_home_as_mario](#treat_far_home_as_mario)
 
 <br />
 
@@ -614,6 +616,7 @@
    - [dist_between_object_and_point](#dist_between_object_and_point)
    - [dist_between_objects](#dist_between_objects)
    - [enable_time_stop](#enable_time_stop)
+   - [enable_time_stop_if_alone](#enable_time_stop_if_alone)
    - [enable_time_stop_including_mario](#enable_time_stop_including_mario)
    - [find_unimportant_object](#find_unimportant_object)
    - [geo_offset_klepto_debug](#geo_offset_klepto_debug)
@@ -676,6 +679,7 @@
    - [random_f32_around_zero](#random_f32_around_zero)
    - [set_mario_interact_hoot_if_in_range](#set_mario_interact_hoot_if_in_range)
    - [set_time_stop_flags](#set_time_stop_flags)
+   - [set_time_stop_flags_if_alone](#set_time_stop_flags_if_alone)
    - [signum_positive](#signum_positive)
    - [spawn_base_star_with_no_lvl_exit](#spawn_base_star_with_no_lvl_exit)
    - [spawn_mist_particles](#spawn_mist_particles)
@@ -7447,6 +7451,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [is_player_in_local_area](#is_player_in_local_area)
+
+### Lua Example
+`local integerValue = is_player_in_local_area(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_player_in_local_area(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_point_close_to_object](#is_point_close_to_object)
 
 ### Lua Example
@@ -8903,6 +8927,28 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s16 random_mod_offset(s16 base, s16 step, s16 mod);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [treat_far_home_as_mario](#treat_far_home_as_mario)
+
+### Lua Example
+`treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| threshold | `number` |
+| distanceToPlayer | `Pointer` <`integer`> |
+| angleToPlayer | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToPlayer);`
 
 [:arrow_up_small:](#)
 
@@ -11619,6 +11665,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [enable_time_stop_if_alone](#enable_time_stop_if_alone)
+
+### Lua Example
+`enable_time_stop_if_alone()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void enable_time_stop_if_alone(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [enable_time_stop_including_mario](#enable_time_stop_including_mario)
 
 ### Lua Example
@@ -12916,6 +12980,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void set_time_stop_flags(s32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_time_stop_flags_if_alone](#set_time_stop_flags_if_alone)
+
+### Lua Example
+`set_time_stop_flags_if_alone(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_time_stop_flags_if_alone(s32 flags);`
 
 [:arrow_up_small:](#)
 

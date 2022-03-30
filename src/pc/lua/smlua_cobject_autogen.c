@@ -46,28 +46,29 @@ static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "values",            LVT_S16_P, offsetof(struct Animation, values),            true,  LOT_POINTER },
 };
 
-#define LUA_AREA_FIELD_COUNT 14
+#define LUA_AREA_FIELD_COUNT 15
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
-//  { "cachedBehaviors",   LOT_???,       offsetof(struct Area, cachedBehaviors),   false, LOT_???            }, <--- UNIMPLEMENTED
-//  { "cachedPositions",   LOT_???,       offsetof(struct Area, cachedPositions),   false, LOT_???            }, <--- UNIMPLEMENTED
-    { "camera",            LVT_COBJECT_P, offsetof(struct Area, camera),            false, LOT_CAMERA         },
-//  { "dialog",            LOT_???,       offsetof(struct Area, dialog),            false, LOT_???            }, <--- UNIMPLEMENTED
-    { "flags",             LVT_S8,        offsetof(struct Area, flags),             false, LOT_NONE           },
-    { "index",             LVT_S8,        offsetof(struct Area, index),             false, LOT_NONE           },
-    { "instantWarps",      LVT_COBJECT_P, offsetof(struct Area, instantWarps),      false, LOT_INSTANTWARP    },
-    { "localAreaTimer",    LVT_U32,       offsetof(struct Area, localAreaTimer),    true,  LOT_NONE           },
-    { "macroObjects",      LVT_S16_P,     offsetof(struct Area, macroObjects),      true,  LOT_POINTER        },
-    { "musicParam",        LVT_U16,       offsetof(struct Area, musicParam),        false, LOT_NONE           },
-    { "musicParam2",       LVT_U16,       offsetof(struct Area, musicParam2),       false, LOT_NONE           },
-    { "objectSpawnInfos",  LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),  false, LOT_SPAWNINFO      },
-    { "paintingWarpNodes", LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes), false, LOT_WARPNODE       },
-    { "surfaceRooms",      LVT_S8_P,      offsetof(struct Area, surfaceRooms),      true,  LOT_POINTER        },
-    { "terrainData",       LVT_S16_P,     offsetof(struct Area, terrainData),       true,  LOT_POINTER        },
-    { "terrainType",       LVT_U16,       offsetof(struct Area, terrainType),       false, LOT_NONE           },
-//  { "unk04",             LVT_COBJECT_P, offsetof(struct Area, unk04),             false, LOT_???            }, <--- UNIMPLEMENTED
-//  { "unused28",          LVT_COBJECT_P, offsetof(struct Area, unused28),          false, LOT_???            }, <--- UNIMPLEMENTED
-    { "warpNodes",         LVT_COBJECT_P, offsetof(struct Area, warpNodes),         false, LOT_OBJECTWARPNODE },
-//  { "whirlpools",        LOT_???,       offsetof(struct Area, whirlpools),        false, LOT_???            }, <--- UNIMPLEMENTED
+//  { "cachedBehaviors",     LOT_???,       offsetof(struct Area, cachedBehaviors),     false, LOT_???            }, <--- UNIMPLEMENTED
+//  { "cachedPositions",     LOT_???,       offsetof(struct Area, cachedPositions),     false, LOT_???            }, <--- UNIMPLEMENTED
+    { "camera",              LVT_COBJECT_P, offsetof(struct Area, camera),              false, LOT_CAMERA         },
+//  { "dialog",              LOT_???,       offsetof(struct Area, dialog),              false, LOT_???            }, <--- UNIMPLEMENTED
+    { "flags",               LVT_S8,        offsetof(struct Area, flags),               false, LOT_NONE           },
+    { "index",               LVT_S8,        offsetof(struct Area, index),               false, LOT_NONE           },
+    { "instantWarps",        LVT_COBJECT_P, offsetof(struct Area, instantWarps),        false, LOT_INSTANTWARP    },
+    { "localAreaTimer",      LVT_U32,       offsetof(struct Area, localAreaTimer),      true,  LOT_NONE           },
+    { "macroObjects",        LVT_S16_P,     offsetof(struct Area, macroObjects),        true,  LOT_POINTER        },
+    { "macroObjectsAltered", LVT_U8_P,      offsetof(struct Area, macroObjectsAltered), true,  LOT_POINTER        },
+    { "musicParam",          LVT_U16,       offsetof(struct Area, musicParam),          false, LOT_NONE           },
+    { "musicParam2",         LVT_U16,       offsetof(struct Area, musicParam2),         false, LOT_NONE           },
+    { "objectSpawnInfos",    LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),    false, LOT_SPAWNINFO      },
+    { "paintingWarpNodes",   LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes),   false, LOT_WARPNODE       },
+    { "surfaceRooms",        LVT_S8_P,      offsetof(struct Area, surfaceRooms),        true,  LOT_POINTER        },
+    { "terrainData",         LVT_S16_P,     offsetof(struct Area, terrainData),         true,  LOT_POINTER        },
+    { "terrainType",         LVT_U16,       offsetof(struct Area, terrainType),         false, LOT_NONE           },
+//  { "unk04",               LVT_COBJECT_P, offsetof(struct Area, unk04),               false, LOT_???            }, <--- UNIMPLEMENTED
+//  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???            }, <--- UNIMPLEMENTED
+    { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           false, LOT_OBJECTWARPNODE },
+//  { "whirlpools",          LOT_???,       offsetof(struct Area, whirlpools),          false, LOT_???            }, <--- UNIMPLEMENTED
 };
 
 #define LUA_BULLY_COLLISION_DATA_FIELD_COUNT 6
@@ -681,7 +682,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                 LVT_U8,     offsetof(struct NetworkPlayer, type),                 true,  LOT_NONE },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 751
+#define LUA_OBJECT_FIELD_COUNT 752
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -1446,6 +1447,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "respawnInfoType",                            LVT_S16,                 offsetof(struct Object, respawnInfoType),                            false, LOT_NONE         },
 //  { "transform",                                  LVT_???,                 offsetof(struct Object, transform),                                  false, LOT_???          }, <--- UNIMPLEMENTED
     { "unused1",                                    LVT_U32,                 offsetof(struct Object, unused1),                                    false, LOT_NONE         },
+    { "usingObj",                                   LVT_COBJECT_P,           offsetof(struct Object, usingObj),                                   false, LOT_OBJECT       },
 };
 
 #define LUA_OBJECT_HITBOX_FIELD_COUNT 9
