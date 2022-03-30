@@ -536,6 +536,23 @@ u8 is_player_active(struct MarioState* m) {
     return TRUE;
 }
 
+u8 is_player_in_local_area(struct MarioState* m) {
+    if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
+    struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
+    if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
+    if (np->type != NPT_LOCAL) {
+        if (!np->connected) { return FALSE; }
+        if (gNetworkPlayerLocal == NULL) { return FALSE; }
+        bool levelAreaMismatch =
+            (np->currCourseNum   != gNetworkPlayerLocal->currCourseNum
+            || np->currActNum    != gNetworkPlayerLocal->currActNum
+            || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
+            || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
+        if (levelAreaMismatch) { return FALSE; }
+    }
+    return TRUE;
+}
+
 /**
  * Returns closest MarioState
  */

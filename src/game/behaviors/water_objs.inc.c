@@ -91,7 +91,7 @@ void bhv_bubble_player_loop(void) {
     o->header.gfx.scale[2] = scale;
 
     // check if the bubble popped
-    if (marioState->action != ACT_BUBBLED) {
+    if (marioState->action != ACT_BUBBLED || !is_player_in_local_area(marioState)) {
         spawn_mist_particles();
         create_sound_spawner(SOUND_OBJ_DIVING_IN_WATER);
         marioState->bubbleObj = NULL;
