@@ -301,6 +301,18 @@ void djui_interactable_update_pad(void) {
     static f32 padHoldTimer = 0;
 
     enum PadHoldDirection padHoldDirection = sKeyboardHoldDirection;
+    // allow dpad to navigate
+    if (padHoldDirection == PAD_HOLD_DIR_NONE) {
+        if (pad->button & U_JPAD) {
+            padHoldDirection = PAD_HOLD_DIR_UP;
+        } else if (pad->button & D_JPAD) {
+            padHoldDirection = PAD_HOLD_DIR_DOWN;
+        } else if (pad->button & L_JPAD) {
+            padHoldDirection = PAD_HOLD_DIR_LEFT;
+        } else if (pad->button & R_JPAD) {
+            padHoldDirection = PAD_HOLD_DIR_RIGHT;
+        }
+    }
     if (padHoldDirection != PAD_HOLD_DIR_NONE) {
         switch (padHoldDirection) {
             case PAD_HOLD_DIR_UP:    pad->stick_x =   0; pad->stick_y = -64; break;
