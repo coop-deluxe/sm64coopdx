@@ -454,6 +454,10 @@ void set_object_respawn_info_bits(struct Object *obj, u8 bits) {
     }
 
     if (newRespawnInfoBits != oldRespawnInfoBits) {
+        if (obj->respawnInfoType == RESPAWN_INFO_TYPE_16) {
+            u16 index = ((s16*)obj->respawnInfo) - gCurrentArea->macroObjects;
+            gCurrentArea->macroObjectsAltered[index] = 1;
+        }
         network_send_level_respawn_info(obj, newRespawnInfoBits);
     }
 }

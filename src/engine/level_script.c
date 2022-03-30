@@ -643,6 +643,9 @@ static void level_cmd_set_macro_objects(void) {
         }
         gAreas[sCurrAreaIndex].macroObjects = alloc_only_pool_alloc(sLevelPool, len * sizeof(MacroObject));
         memcpy(gAreas[sCurrAreaIndex].macroObjects, data, len * sizeof(MacroObject));
+
+        gAreas[sCurrAreaIndex].macroObjectsAltered = alloc_only_pool_alloc(sLevelPool, len * sizeof(u8));
+        memset(gAreas[sCurrAreaIndex].macroObjectsAltered, 0, len);
     }
     sCurrentCmd = CMD_NEXT;
 }

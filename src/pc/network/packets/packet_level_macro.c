@@ -87,12 +87,12 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
         s16* respawnInfo = macroObjList++;
 
         // check for special cases
-        if (*respawnInfo != 0) {
+        u16 index = respawnInfo - area->macroObjects;
+        if (area->macroObjectsAltered[index] != 0) {
             *macroSpecialCount = *macroSpecialCount + 1;
-            u16 offset = respawnInfo - area->macroObjects;
-            packet_write(&p, &offset, sizeof(u16));
+            packet_write(&p, &index, sizeof(u16));
             packet_write(&p, respawnInfo, sizeof(s16));
-            LOG_INFO("tx macro special: offset %d, respawnInfo %d", offset, *respawnInfo);
+            LOG_INFO("tx macro special: index %d, respawnInfo %d", index, *respawnInfo);
         }
     }
 
@@ -148,13 +148,14 @@ void network_receive_level_macro(struct Packet* p) {
     LOG_INFO("rx macro (count %d)", macroDeletionCount);
 
     while (macroDeletionCount-- > 0) {
-        u16 offset;
-        packet_read(p, &offset, sizeof(u16));
-        LOG_INFO("rx macro deletion: offset %d", offset);
+        u16 index;
+        packet_read(p, &index, sizeof(u16));
+        LOG_INFO("rx macro deletion: index %d", index);
 
         // mark respawninfo as dont respawn
-        s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + offset;
+        s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + index;
         *respawnInfo |= RESPAWN_INFO_DONT_RESPAWN << 8;
+        gAreaData[thisAreaIndex].macroObjectsAltered[index] = true;
 
         struct Object* o = get_object_matching_respawn_info(respawnInfo);
         if (o != NULL) {
@@ -174,12 +175,13 @@ void network_receive_level_macro(struct Packet* p) {
     u8 macroSpecialCount;
     packet_read(p, &macroSpecialCount, sizeof(u8));
     while (macroSpecialCount-- > 0) {
-        u16 offset;
-        packet_read(p, &offset, sizeof(u16));
+        u16 index;
+        packet_read(p, &index, sizeof(u16));
 
-        s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + offset;
+        s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + index;
         packet_read(p, respawnInfo, sizeof(s16));
-        LOG_INFO("rx macro special: offset %d, respawnInfo %d", offset, *respawnInfo);
+        LOG_INFO("rx macro special: index %d, respawnInfo %d", index, *respawnInfo);
+        gAreaData[thisAreaIndex].macroObjectsAltered[index] = true;
 
         s32 presetID = (*(respawnInfo - 4) & 0x1FF) - 31;
         const BehaviorScript* behavior = MacroObjectPresets[presetID].behavior;
