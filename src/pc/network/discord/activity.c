@@ -121,7 +121,7 @@ void discord_activity_update(bool hosting) {
     } else {
         strcpy(gCurActivity.state, "In-game.");
         gCurActivity.party.size.current_size = 1;
-        gCurActivity.party.size.max_size = 1;
+        if (gCurActivity.party.size.max_size < 1) { gCurActivity.party.size.max_size = 1; }
     }
 
     char details[256] = { 0 };
@@ -143,9 +143,11 @@ void discord_activity_update_check(void) {
     bool shouldUpdate = false;
     u8 connectedCount = network_player_connected_count();
 
-    if (connectedCount > 0 && connectedCount != gCurActivity.party.size.current_size) {
-        gCurActivity.party.size.current_size = connectedCount;
-        shouldUpdate = true;
+    if (connectedCount > 0) {
+        if (connectedCount != gCurActivity.party.size.current_size) {
+            gCurActivity.party.size.current_size = connectedCount;
+            shouldUpdate = true;
+        }
     }
 
     if (shouldUpdate) {
