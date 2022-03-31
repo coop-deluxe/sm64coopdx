@@ -2136,6 +2136,11 @@ function is_nearest_player_to_object(m, obj)
     -- ...
 end
 
+--- @return integer
+function is_other_player_active()
+    -- ...
+end
+
 --- @param m MarioState
 --- @return integer
 function is_player_active(m)
@@ -2164,6 +2169,18 @@ end
 --- @param dist integer
 --- @return integer
 function is_point_within_radius_of_mario(x, y, z, dist)
+    -- ...
+end
+
+--- @param obj Object
+--- @return MarioState
+function nearest_interacting_mario_state_to_object(obj)
+    -- ...
+end
+
+--- @param obj Object
+--- @return Object
+function nearest_interacting_player_to_object(obj)
     -- ...
 end
 
@@ -3496,6 +3513,12 @@ end
 
 --- @return nil
 function enable_time_stop_including_mario()
+    -- ...
+end
+
+--- @param behavior Pointer_BehaviorScript
+--- @return Object
+function find_object_with_behavior(behavior)
     -- ...
 end
 

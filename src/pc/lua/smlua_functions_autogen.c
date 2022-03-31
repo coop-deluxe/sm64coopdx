@@ -4924,6 +4924,16 @@ int smlua_func_is_nearest_player_to_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_is_other_player_active(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern u8 is_other_player_active(void);
+    lua_pushinteger(L, is_other_player_active());
+
+    return 1;
+}
+
 int smlua_func_is_player_active(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -4982,6 +4992,30 @@ int smlua_func_is_point_within_radius_of_mario(lua_State* L) {
 
     extern s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);
     lua_pushinteger(L, is_point_within_radius_of_mario(x, y, z, dist));
+
+    return 1;
+}
+
+int smlua_func_nearest_interacting_mario_state_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj);
+    smlua_push_object(L, LOT_MARIOSTATE, nearest_interacting_mario_state_to_object(obj));
+
+    return 1;
+}
+
+int smlua_func_nearest_interacting_player_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct Object *nearest_interacting_player_to_object(struct Object *obj);
+    smlua_push_object(L, LOT_OBJECT, nearest_interacting_player_to_object(obj));
 
     return 1;
 }
@@ -7686,6 +7720,18 @@ int smlua_func_enable_time_stop_including_mario(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_find_object_with_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern struct Object *find_object_with_behavior(const BehaviorScript *behavior);
+    smlua_push_object(L, LOT_OBJECT, find_object_with_behavior(behavior));
+
+    return 1;
+}
+
 int smlua_func_find_unimportant_object(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -10328,10 +10374,13 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "geo_obj_transparency_something", smlua_func_geo_obj_transparency_something); <--- UNIMPLEMENTED
     smlua_bind_function(L, "is_nearest_mario_state_to_object", smlua_func_is_nearest_mario_state_to_object);
     smlua_bind_function(L, "is_nearest_player_to_object", smlua_func_is_nearest_player_to_object);
+    smlua_bind_function(L, "is_other_player_active", smlua_func_is_other_player_active);
     smlua_bind_function(L, "is_player_active", smlua_func_is_player_active);
     smlua_bind_function(L, "is_player_in_local_area", smlua_func_is_player_in_local_area);
     smlua_bind_function(L, "is_point_close_to_object", smlua_func_is_point_close_to_object);
     smlua_bind_function(L, "is_point_within_radius_of_mario", smlua_func_is_point_within_radius_of_mario);
+    smlua_bind_function(L, "nearest_interacting_mario_state_to_object", smlua_func_nearest_interacting_mario_state_to_object);
+    smlua_bind_function(L, "nearest_interacting_player_to_object", smlua_func_nearest_interacting_player_to_object);
     smlua_bind_function(L, "nearest_mario_state_to_object", smlua_func_nearest_mario_state_to_object);
     smlua_bind_function(L, "nearest_player_to_object", smlua_func_nearest_player_to_object);
     smlua_bind_function(L, "obj_check_floor_death", smlua_func_obj_check_floor_death);
@@ -10545,6 +10594,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "enable_time_stop", smlua_func_enable_time_stop);
     smlua_bind_function(L, "enable_time_stop_if_alone", smlua_func_enable_time_stop_if_alone);
     smlua_bind_function(L, "enable_time_stop_including_mario", smlua_func_enable_time_stop_including_mario);
+    smlua_bind_function(L, "find_object_with_behavior", smlua_func_find_object_with_behavior);
     smlua_bind_function(L, "find_unimportant_object", smlua_func_find_unimportant_object);
     smlua_bind_function(L, "geo_offset_klepto_debug", smlua_func_geo_offset_klepto_debug);
     //smlua_bind_function(L, "geo_offset_klepto_held_object", smlua_func_geo_offset_klepto_held_object); <--- UNIMPLEMENTED

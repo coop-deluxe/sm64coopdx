@@ -398,10 +398,13 @@
    - [current_mario_room_check](#current_mario_room_check)
    - [is_nearest_mario_state_to_object](#is_nearest_mario_state_to_object)
    - [is_nearest_player_to_object](#is_nearest_player_to_object)
+   - [is_other_player_active](#is_other_player_active)
    - [is_player_active](#is_player_active)
    - [is_player_in_local_area](#is_player_in_local_area)
    - [is_point_close_to_object](#is_point_close_to_object)
    - [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
+   - [nearest_interacting_mario_state_to_object](#nearest_interacting_mario_state_to_object)
+   - [nearest_interacting_player_to_object](#nearest_interacting_player_to_object)
    - [nearest_mario_state_to_object](#nearest_mario_state_to_object)
    - [nearest_player_to_object](#nearest_player_to_object)
    - [obj_check_floor_death](#obj_check_floor_death)
@@ -618,6 +621,7 @@
    - [enable_time_stop](#enable_time_stop)
    - [enable_time_stop_if_alone](#enable_time_stop_if_alone)
    - [enable_time_stop_including_mario](#enable_time_stop_including_mario)
+   - [find_object_with_behavior](#find_object_with_behavior)
    - [find_unimportant_object](#find_unimportant_object)
    - [geo_offset_klepto_debug](#geo_offset_klepto_debug)
    - [get_object_list_from_behavior](#get_object_list_from_behavior)
@@ -7431,6 +7435,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [is_other_player_active](#is_other_player_active)
+
+### Lua Example
+`local integerValue = is_other_player_active()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_other_player_active(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_player_active](#is_player_active)
 
 ### Lua Example
@@ -7513,6 +7535,46 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [nearest_interacting_mario_state_to_object](#nearest_interacting_mario_state_to_object)
+
+### Lua Example
+`local MarioStateValue = nearest_interacting_mario_state_to_object(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+[MarioState](structs.md#MarioState)
+
+### C Prototype
+`struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [nearest_interacting_player_to_object](#nearest_interacting_player_to_object)
+
+### Lua Example
+`local ObjectValue = nearest_interacting_player_to_object(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *nearest_interacting_player_to_object(struct Object *obj);`
 
 [:arrow_up_small:](#)
 
@@ -11696,6 +11758,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void enable_time_stop_including_mario(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_object_with_behavior](#find_object_with_behavior)
+
+### Lua Example
+`local ObjectValue = find_object_with_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *find_object_with_behavior(const BehaviorScript *behavior);`
 
 [:arrow_up_small:](#)
 
