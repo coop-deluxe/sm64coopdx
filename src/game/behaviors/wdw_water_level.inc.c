@@ -1,7 +1,27 @@
 // wdw_water_level.c.inc
+static u32 sWaterDiamondPicked = 0;
+
+static void bhv_init_changing_water_level_on_received_post(UNUSED u8 fromLocalIndex) {
+    struct SyncObject* diamondSo = &gSyncObjects[sWaterDiamondPicked];
+    if (diamondSo == NULL || diamondSo->behavior != bhvWaterLevelDiamond) { return; }
+    struct Object* diamond = get_sync_objects_object(sWaterDiamondPicked);
+    if (diamond == NULL || diamond->behavior != bhvWaterLevelDiamond) { return; }
+
+    diamond->oAction = WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL;
+    gWDWWaterLevelChanging = 1;
+}
 
 // called when WDW is loaded.
 void bhv_init_changing_water_level_loop(void) {
+    if (!network_sync_object_initialized(o)) {
+        sWaterDiamondPicked = 0;
+        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        if (so != NULL) {
+            so->on_received_post = bhv_init_changing_water_level_on_received_post;
+            network_init_object_field(o, &sWaterDiamondPicked);
+        }
+    }
+
     if (gCurrentObject->oAction == 0) {
         if (gEnvironmentRegions != NULL)
             gCurrentObject->oAction++;
@@ -17,15 +37,10 @@ void bhv_water_level_diamond_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;
 
+    struct Object* manager = cur_obj_nearest_object_with_behavior(bhvInitializeChangingWaterLevel);
+
     if (!network_sync_object_initialized(o)) {
         network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oWaterLevelTriggerTargetWaterLevel);
-        network_init_object_field(o, &o->oAngleVelYaw);
-        network_init_object_field(o, &o->oFaceAngleYaw);
-        network_init_object_field_with_size(o, &gWDWWaterLevelChanging, 16);
     }
 
     if (gEnvironmentRegions != NULL) {
@@ -37,13 +52,14 @@ void bhv_water_level_diamond_loop(void) {
                     o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_IDLE
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE:
-                if (obj_check_if_collided_with_object(o, player)) {
+                if (marioState == &gMarioStates[0] && obj_check_if_collided_with_object(o, player)) {
                     if (gWDWWaterLevelChanging == 0) {
                         o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL
                         gWDWWaterLevelChanging = 1;
-                        network_send_object(o);
-                        if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].behavior == o->behavior) {
-                            gSyncObjects[o->oSyncID].lastReliablePacketIsStale = false;
+
+                        if (manager != NULL && o->oSyncID != 0) {
+                            sWaterDiamondPicked = o->oSyncID;
+                            network_send_object(manager);
                         }
                     }
                 }

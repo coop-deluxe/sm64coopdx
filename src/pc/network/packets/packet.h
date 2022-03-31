@@ -166,6 +166,7 @@ void network_update_player(void);
 void network_receive_player(struct Packet* p);
 
 // packet_object.c
+struct Object* get_sync_objects_object(u32 index);
 struct Packet* get_last_sync_ent_reliable_packet(u8 syncId);
 void forget_ent_reliable_packet(struct Object* o);
 void network_override_object(u8 syncId, struct Object* o);

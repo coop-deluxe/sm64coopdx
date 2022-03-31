@@ -18,6 +18,10 @@ struct SyncObject gSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
 struct Packet sLastSyncEntReliablePacket[MAX_SYNC_OBJECTS] = { 0 };
 u8 sNextSyncId = 0;
 
+struct Object* get_sync_objects_object(u32 index) {
+    return gSyncObjects[index].o;
+}
+
 struct Packet* get_last_sync_ent_reliable_packet(u8 syncId) {
     return &sLastSyncEntReliablePacket[syncId];
 }
