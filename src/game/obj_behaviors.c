@@ -536,6 +536,14 @@ u8 is_player_active(struct MarioState* m) {
     return TRUE;
 }
 
+u8 is_other_player_active(void) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
+        struct MarioState *m = &gMarioStates[i];
+        if (is_player_active(m)) { return TRUE; }
+    }
+    return FALSE;
+}
+
 u8 is_player_in_local_area(struct MarioState* m) {
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
@@ -586,6 +594,43 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
  */
 struct Object* nearest_player_to_object(struct Object *obj) {
     struct MarioState* nearest = nearest_mario_state_to_object(obj);
+    return nearest->marioObj;
+}
+
+/**
+ * Returns closest MarioState that's interacting with the object.
+ */
+struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj) {
+    struct MarioState *nearest = NULL;
+    f32 nearestDist = 0;
+    u8 checkActive = TRUE;
+    do {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
+            if (gMarioStates[i].marioObj == obj) { continue; }
+            if (gMarioStates[i].interactObj != obj) { continue; }
+            if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
+            float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
+            if (nearest == NULL || dist < nearestDist) {
+                nearest = &gMarioStates[i];
+                nearestDist = dist;
+            }
+        }
+        if (!checkActive) { break; }
+        checkActive = FALSE;
+    } while (nearest == NULL);
+
+    if (nearest == NULL) {
+        nearest = &gMarioStates[0];
+    }
+
+    return nearest;
+}
+
+/**
+ * Returns closest marioObj that's interacting with the object.
+ */
+struct Object *nearest_interacting_player_to_object(struct Object *obj) {
+    struct MarioState *nearest = nearest_interacting_mario_state_to_object(obj);
     return nearest->marioObj;
 }
 

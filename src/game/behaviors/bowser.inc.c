@@ -1,19 +1,22 @@
 // bowser.c.inc
 static u32 networkBowserAnimationIndex = 0;
 static u8 bowserIsDying = FALSE;
+static u8 bowserCutscenePlayed = FALSE;
+static u8 bowserIsCutscenePlayer = FALSE;
 
 void bowser_tail_anchor_act_0(void) {
     struct Object* bowser = o->parentObj;
     struct Object* player = nearest_player_to_object(o);
     cur_obj_become_tangible();
     cur_obj_scale(1.0f);
-    if (bowser->oAction == 19)
+    if (bowser->oAction == 5 || bowser->oAction == 6 || bowser->oAction == 19 || bowser->oAction == 20) {
         bowser->oIntangibleTimer = -1;
-    else if (obj_check_if_collided_with_object(o, player)) {
+    } else if (obj_check_if_collided_with_object(o, player)) {
         bowser->oIntangibleTimer = 0;
         o->oAction = 2;
-    } else
+    } else {
         bowser->oIntangibleTimer = -1;
+    }
 }
 
 void bowser_tail_anchor_act_1(void) {
@@ -177,31 +180,37 @@ s32 bowser_set_anim_look_up_and_walk(void) {
 s32 bowser_set_anim_slow_gait(void) {
     o->oForwardVel = 3.0f;
     cur_obj_init_animation_with_sound(13);
-    if (cur_obj_check_if_near_animation_end())
+    if (cur_obj_check_if_near_animation_end()) {
         return 1;
-    else
-        return 0;
+    }
+    return 0;
 }
 
 s32 bowser_set_anim_look_down(void) {
     cur_obj_init_animation_with_sound(14);
-    if (cur_obj_check_anim_frame(20))
+    if (cur_obj_check_anim_frame(20)) {
         o->oForwardVel = 0.0f;
-    if (cur_obj_check_if_near_animation_end())
+    }
+    if (cur_obj_check_if_near_animation_end()) {
         return 1;
-    else
-        return 0;
+    }
+    return 0;
 }
 
 void bowser_initialize_action(void) {
-    if (o->oBowserUnk88 == 0)
+    if (o->oBowserUnk88 == 0 && !bowserCutscenePlayed) {
         o->oAction = 5;
-    else if (o->oBowserUnk88 == 1)
+    } else if (o->oBowserUnk88 == 1 && !bowserCutscenePlayed) {
         o->oAction = 6;
-    else if (o->oBehParams2ndByte == 1)
+    } else if (o->oBehParams2ndByte == 1) {
+        bowserCutscenePlayed = TRUE;
         o->oAction = 13;
-    else
+        if (bowserIsCutscenePlayer) { network_send_object_reliability(o, TRUE); }
+    } else {
+        bowserCutscenePlayed = TRUE;
         o->oAction = 0;
+        if (bowserIsCutscenePlayer) { network_send_object_reliability(o, TRUE); }
+    }
 }
 
 void bowser_act_text_wait(void) // not much
@@ -374,12 +383,13 @@ void bowser_act_default(void) // only lasts one frame
     o->oAngleVelYaw = 0;
     o->oForwardVel = 0.0f;
     o->oVelY = 0.0f;
-    if (BITDW)
+    if (BITDW) {
         bowser_bitdw_act_controller();
-    else if (BITFS)
+    } else if (BITFS) {
         bowser_bitfs_act_controller();
-    else
+    } else {
         bowser_bits_act_controller();
+    }
     // Action 14 commonly follows
 }
 
@@ -850,12 +860,14 @@ void bowser_spawn_grand_star_key(void) {
         reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_STAR, bhvGrandStar);
         gSecondCameraFocus = reward;
 
-        if (prevReward == NULL && reward != NULL) {
+        if (network_owns_object(o) && prevReward == NULL && reward != NULL) {
             // set the home position
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
             reward->oHomeZ = reward->oPosZ;
+            
             network_set_sync_id(reward);
+            
             struct Object* spawn_objects[] = { reward };
             u32 models[] = { MODEL_STAR };
             network_send_spawn_objects(spawn_objects, models, 1);
@@ -921,7 +933,6 @@ s32 bowser_dead_wait_for_mario(void) {
 
 s32 bowser_dead_twirl_into_trophy(void) {
     bowserIsDying = TRUE;
-    s32 ret = 0;
     if (o->header.gfx.scale[0] < 0.8)
         o->oAngleVelYaw += 0x80;
     if (o->header.gfx.scale[0] > 0.2) {
@@ -933,11 +944,11 @@ s32 bowser_dead_twirl_into_trophy(void) {
         o->oGravity = 0.0f;
     }
     if (o->header.gfx.scale[1] < 0.5)
-        ret = 1;
+        return 1;
     o->oMoveAngleYaw += o->oAngleVelYaw;
     if (o->oOpacity >= 3)
         o->oOpacity -= 2;
-    return ret;
+    return 0;
 }
 
 void bowser_dead_hide(void) {
@@ -1094,6 +1105,9 @@ void bowser_act_ride_tilting_platform(void) {
     cur_obj_extend_animation_if_at_end();
 }
 
+void bowser_act_nothing(void) {
+    
+}
 
 s32 bowser_check_fallen_off_stage(void) // bowser off stage?
 {
@@ -1114,7 +1128,8 @@ void (*sBowserActions[])(void) = { bowser_act_default,  bowser_act_thrown_droppe
                                    bowser_act_dead,  bowser_act_text_wait,  bowser_act_intro_walk,  bowser_act_charge_mario,
                                    bowser_act_spit_fire_into_sky,  bowser_act_spit_fire_onto_floor,  bowser_act_hit_edge, bowser_act_turn_from_edge,
                                    bowser_act_hit_mine, bowser_act_jump, bowser_act_walk_to_mario, bowser_act_breath_fire,
-                                   bowser_act_teleport, bowser_act_jump_towards_mario, bowser_act_unused_slow_walk, bowser_act_ride_tilting_platform };
+                                   bowser_act_teleport, bowser_act_jump_towards_mario, bowser_act_unused_slow_walk, bowser_act_ride_tilting_platform,
+                                   bowser_act_nothing, };
 struct SoundState D_8032F5B8[] = { { 0, 0, 0, NO_SOUND },
                                    { 0, 0, 0, NO_SOUND },
                                    { 0, 0, 0, NO_SOUND },
@@ -1257,8 +1272,13 @@ void bhv_bowser_loop(void) {
             geo_obj_init_animation(&o->header.gfx, &anim);
         }
     }
+    
+    // If Bowser isn't in a cutscene, It's been played already.
+    if (!bowserCutscenePlayed && (o->oAction != 5 && o->oAction != 6 && o->oAction != 20)) {
+        bowserCutscenePlayed = TRUE;
+    }
 
-    s16 angleToMario;  // AngleToMario    from Bowser's perspective
+    s16 angleToMario;  // AngleToMario from Bowser's perspective
     s16 angleToCentre; // AngleToCentre from Bowser's perspective
 
     o->oBowserDistToCentre = sqrtf(o->oPosX * o->oPosX + o->oPosZ * o->oPosZ);
@@ -1314,6 +1334,13 @@ void bhv_bowser_loop(void) {
 }
 
 void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+    // Nothing state sanity check.
+    if (o->oAction == 20) {
+        *shouldOverride = TRUE;
+        *shouldOwn = FALSE;
+        return;
+    }
+    
     // tilting platform
     static u8 tiltingTimer = 0;
     if (o->oAction == 19) { tiltingTimer = 5; }
@@ -1327,6 +1354,7 @@ void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
 static u8 bhv_bowser_ignore_if_true(void) {
     if (bowserIsDying) { return TRUE; }
     if (o->oAction == 19) { return TRUE; } // let the platform get to a stable state
+    if (bowserIsCutscenePlayer && (o->oAction == 5 || o->oAction == 6)) { return TRUE; } // Ignore updates till our cutscene is done.
     return FALSE;
 }
 
@@ -1346,21 +1374,32 @@ void bhv_bowser_init(void) {
     o->oBowserUnk1B2 = D_8032F690[level];
     o->oHealth = D_8032F694[level];
     cur_obj_start_cam_event(o, CAM_EVENT_BOWSER_INIT);
-    o->oAction = 5;
     o->oBowserUnk1AE = 0;
     o->oBowserEyesShut = 0;
-
-    struct SyncObject* so = network_init_object(o, 8000.0f);
-    if (so) {
-        so->override_ownership = bhv_bowser_override_ownership;
-        so->ignore_if_true = bhv_bowser_ignore_if_true;
-        so->fullObjectSync = TRUE;
-        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
-        network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
-        network_init_object_field(o, &networkBowserAnimationIndex);
-        network_init_object_field(o, &o->header.gfx.scale[0]);
-        network_init_object_field(o, &o->header.gfx.scale[1]);
-        network_init_object_field(o, &o->header.gfx.scale[2]);
+    bowserCutscenePlayed = FALSE;
+    
+    // Make sure we're the first to trigger Bowser.
+    if (!is_other_player_active()) {
+        bowserIsCutscenePlayer = TRUE;
+        o->oAction = 5; // bowser_act_text_wait
+    } else { // If we aren't do nothing till we get our sync.
+        bowserIsCutscenePlayer = FALSE;
+        o->oAction = 20; // bowser_act_nothing
+    }
+    
+    if (!network_sync_object_initialized(o)) {
+        struct SyncObject* so = network_init_object(o, 8000.0f);
+        if (so) {
+            so->override_ownership = bhv_bowser_override_ownership;
+            so->ignore_if_true = bhv_bowser_ignore_if_true;
+            so->fullObjectSync = TRUE;
+            network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+            network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
+            network_init_object_field(o, &networkBowserAnimationIndex);
+            network_init_object_field(o, &o->header.gfx.scale[0]);
+            network_init_object_field(o, &o->header.gfx.scale[1]);
+            network_init_object_field(o, &o->header.gfx.scale[2]);
+        }
     }
 }
 

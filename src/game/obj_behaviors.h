@@ -163,9 +163,12 @@ void bhv_rr_cruiser_wing_init(void);
 void bhv_rr_cruiser_wing_loop(void);
 struct Object* spawn_default_star(f32 sp20, f32 sp24, f32 sp28);
 u8 is_player_active(struct MarioState* m);
+u8 is_other_player_active(void);
 u8 is_player_in_local_area(struct MarioState* m);
 struct MarioState* nearest_mario_state_to_object(struct Object* obj);
 struct Object* nearest_player_to_object(struct Object* obj);
+struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj);
+struct Object *nearest_interacting_player_to_object(struct Object *obj);
 u8 is_nearest_mario_state_to_object(struct MarioState* m, struct Object* obj);
 u8 is_nearest_player_to_object(struct Object* m, struct Object* obj);
 #endif // OBJ_BEHAVIORS_H
