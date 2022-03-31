@@ -1036,6 +1036,22 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     return count;
 }
 
+struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
+    uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
+    struct ObjectNode *listHead = &gObjectLists[get_object_list_from_behavior(behaviorAddr)];
+    struct ObjectNode *obj = listHead->next;
+
+    while (listHead != obj) {
+        if (((struct Object *) obj)->behavior == behaviorAddr) {
+            return (struct Object *)obj;
+        }
+
+        obj = obj->next;
+    }
+
+    return NULL;
+}
+
 struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist) {
     const BehaviorScript *behaviorAddr = segmented_to_virtual(behavior);
     struct ObjectNode *listHead;

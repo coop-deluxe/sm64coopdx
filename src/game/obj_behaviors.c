@@ -536,6 +536,14 @@ u8 is_player_active(struct MarioState* m) {
     return TRUE;
 }
 
+u8 is_other_player_active(void) {
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
+        struct MarioState *m = &gMarioStates[i];
+        if (is_player_active(m)) { return TRUE; }
+    }
+    return FALSE;
+}
+
 u8 is_player_in_local_area(struct MarioState* m) {
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];

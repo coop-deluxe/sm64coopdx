@@ -3336,7 +3336,8 @@ void reset_camera(struct Camera *c) {
 }
 
 void init_camera(struct Camera *c) {
-    struct Surface *floor = 0;
+    struct Surface *floor = NULL;
+    struct Object *obj = NULL;
     Vec3f marioOffset;
     s32 i;
 
@@ -3391,18 +3392,34 @@ void init_camera(struct Camera *c) {
         case LEVEL_BOWSER_1:
 #ifndef VERSION_JP
             if (gCurrDemoInput == NULL) {
+                // Make sure Bowser is in a state that we'd start speaking to him in.
+                obj = find_object_with_behavior(bhvBowser);
+                if (obj != NULL && obj->oAction != 5) { break; }
+                
                 start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
             } else if (gSecondCameraFocus != NULL) {
                 gSecondCameraFocus->oBowserUnk88 = 2;
             }
 #else
+            // Make sure Bowser is in a state that we'd start speaking to him in.
+            obj = find_object_with_behavior(bhvBowser);
+            if (obj != NULL && obj->oAction != 5) { break; }
+            
             start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
 #endif
             break;
         case LEVEL_BOWSER_2:
+            // Make sure Bowser is in a state that we'd start speaking to him in.
+            obj = find_object_with_behavior(bhvBowser);
+            if (obj != NULL && obj->oAction != 5) { break; }
+            
             start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
             break;
         case LEVEL_BOWSER_3:
+            // Make sure Bowser is in a state that we'd start speaking to him in.
+            obj = find_object_with_behavior(bhvBowser);
+            if (obj != NULL && obj->oAction != 5) { break; }
+  
             start_cutscene(c, CUTSCENE_ENTER_BOWSER_ARENA);
             break;
 
