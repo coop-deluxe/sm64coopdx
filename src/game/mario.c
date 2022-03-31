@@ -1529,6 +1529,12 @@ void update_mario_inputs(struct MarioState *m) {
 #endif
     /* End of developer stuff */
 
+    if ((m->action == ACT_END_PEACH_CUTSCENE || m->action == ACT_CREDITS_CUTSCENE) && m->controller->buttonPressed & START_BUTTON) {
+        gCurrActStarNum = 0;
+        gCurrActNum = 0;
+        gChangeLevel = 16;
+    }
+
     if (m->playerIndex == 0) {
         if (!localIsPaused && gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
             if (m->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
