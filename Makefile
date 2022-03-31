@@ -58,6 +58,9 @@ DISCORD_SDK ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
 
+# Should It compile with windows Icon
+ICON ?= 1
+
 # Various workarounds for weird toolchains
 
 NO_BZERO_BCOPY ?= 0
@@ -827,6 +830,20 @@ else
 #  ifeq ($(DISCORDRPC),1)
 #    LDFLAGS += -ldl -Wl,-rpath .
 #  endif
+endif
+
+#icon
+ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(ICON),1)
+
+    Command := mkdir $(BUILD_DIR)/res
+    Reponce := $(shell $(call Command))
+
+    Command := windres -o $(BUILD_DIR)/res/icon.o -i res/icon.rc
+    Reponce := $(shell $(call Command))
+
+    LDFLAGS += $(BUILD_DIR)/res/icon.o
+  endif
 endif
 
 # Coop specific libraries
