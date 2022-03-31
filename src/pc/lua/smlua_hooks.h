@@ -50,6 +50,7 @@ extern u32 gLuaMarioActionIndex;
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value);
+void smlua_call_event_hooks_bool_param_ret_bool(enum LuaHookedEventType hookType, bool value, bool* returnValue);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
 void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue);

@@ -416,6 +416,7 @@ function on_pause_exit(exitToCastle)
         s.seeking = true
         network_player_set_description(gNetworkPlayers[0], "seeker", 255, 64, 64, 255)
     end
+    return true
 end
 
 function allow_pvp_attack(m1, m2)

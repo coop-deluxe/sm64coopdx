@@ -1162,20 +1162,26 @@ s32 play_mode_paused(void) {
         gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
         set_play_mode(PLAY_MODE_NORMAL);
     } else if (gPauseScreenMode == 2) {
-        level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
-        set_play_mode(PLAY_MODE_NORMAL);
-        smlua_call_event_hooks_bool_param(HOOK_ON_PAUSE_EXIT, false);
-    } else if (gPauseScreenMode == 3) {
-        // Exit level
-        if (gDebugLevelSelect) {
-            fade_into_special_warp(-9, 1);
-        } else {
-            initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
-            fade_into_special_warp(0, 0);
-            gSavedCourseNum = COURSE_NONE;
+        bool allowExit = true;
+        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, false, &allowExit);
+        if (allowExit) {
+            level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
+            set_play_mode(PLAY_MODE_NORMAL);
         }
-        set_play_mode(PLAY_MODE_CHANGE_LEVEL);
-        smlua_call_event_hooks_bool_param(HOOK_ON_PAUSE_EXIT, true);
+    } else if (gPauseScreenMode == 3) {
+        bool allowExit = true;
+        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, true, &allowExit);
+        if (allowExit) {
+            // Exit level
+            if (gDebugLevelSelect) {
+                fade_into_special_warp(-9, 1);
+            } else {
+                initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
+                fade_into_special_warp(0, 0);
+                gSavedCourseNum = COURSE_NONE;
+            }
+            set_play_mode(PLAY_MODE_CHANGE_LEVEL);
+        }
     } /* else if (gPauseScreenMode == 4) {
         // We should only be getting "int 4" to here
         initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
