@@ -51,6 +51,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Replace Goomba Behavior](examples/behavior-replace-goomba.lua)
 - [Add to Goomba Behavior](examples/behavior-add-to-goomba.lua)
 - [Behavior with Surface Collisions](examples/behavior-surface-collisions.lua)
+- [Custom Surface Collisions](examples/big-paddle)
 - [Custom Box Model](examples/custom-box-model)
 - [Custom Player Model](examples/koopa-player-model)
 - [Moonjump](examples/Moonjump.lua)
