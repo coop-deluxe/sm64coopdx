@@ -2,6 +2,8 @@
 
 extern "C" {
 #include "include/surface_terrains.h"
+#include "include/level_misc_macros.h"
+#include "include/special_preset_names.h"
 }
 
 // Free data pointers, but keep nodes and tokens intact
@@ -183,6 +185,92 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
     col_constant(SURFACE_FLAG_NO_CAM_COLLISION);
     col_constant(SURFACE_FLAG_X_PROJECTION);
 
+    // Specials
+    col_constant(special_null_start);
+    col_constant(special_yellow_coin);
+    col_constant(special_yellow_coin_2);
+    col_constant(special_unknown_3);
+    col_constant(special_boo);
+    col_constant(special_unknown_5);
+    col_constant(special_lll_moving_octagonal_mesh_platform);
+    col_constant(special_snow_ball);
+    col_constant(special_lll_drawbridge_spawner);
+    col_constant(special_empty_9);
+    col_constant(special_lll_rotating_block_with_fire_bars);
+    col_constant(special_lll_floating_wood_bridge);
+    col_constant(special_tumbling_platform);
+    col_constant(special_lll_rotating_hexagonal_ring);
+    col_constant(special_lll_sinking_rectangular_platform);
+    col_constant(special_lll_sinking_square_platforms);
+    col_constant(special_lll_tilting_square_platform);
+    col_constant(special_lll_bowser_puzzle);
+    col_constant(special_mr_i);
+    col_constant(special_small_bully);
+    col_constant(special_big_bully);
+    col_constant(special_empty_21);
+    col_constant(special_empty_22);
+    col_constant(special_empty_23);
+    col_constant(special_empty_24);
+    col_constant(special_empty_25);
+    col_constant(special_moving_blue_coin);
+    col_constant(special_jrb_chest);
+    col_constant(special_water_ring);
+    col_constant(special_mine);
+    col_constant(special_empty_30);
+    col_constant(special_empty_31);
+    col_constant(special_butterfly);
+    col_constant(special_bowser);
+    col_constant(special_wf_rotating_wooden_platform);
+    col_constant(special_small_bomp);
+    col_constant(special_wf_sliding_platform);
+    col_constant(special_tower_platform_group);
+    col_constant(special_rotating_counter_clockwise);
+    col_constant(special_wf_tumbling_bridge);
+    col_constant(special_large_bomp);
+    col_constant(special_level_geo_03);
+    col_constant(special_level_geo_04);
+    col_constant(special_level_geo_05);
+    col_constant(special_level_geo_06);
+    col_constant(special_level_geo_07);
+    col_constant(special_level_geo_08);
+    col_constant(special_level_geo_09);
+    col_constant(special_level_geo_0A);
+    col_constant(special_level_geo_0B);
+    col_constant(special_level_geo_0C);
+    col_constant(special_level_geo_0D);
+    col_constant(special_level_geo_0E);
+    col_constant(special_level_geo_0F);
+    col_constant(special_level_geo_10);
+    col_constant(special_level_geo_11);
+    col_constant(special_level_geo_12);
+    col_constant(special_level_geo_13);
+    col_constant(special_level_geo_14);
+    col_constant(special_level_geo_15);
+    col_constant(special_level_geo_16);
+    col_constant(special_bubble_tree);
+    col_constant(special_spiky_tree);
+    col_constant(special_snow_tree);
+    col_constant(special_unknown_tree);
+    col_constant(special_palm_tree);
+    col_constant(special_wooden_door);
+    col_constant(special_haunted_door);
+    col_constant(special_unknown_door);
+    col_constant(special_metal_door);
+    col_constant(special_hmc_door);
+    col_constant(special_unknown2_door);
+    col_constant(special_wooden_door_warp);
+    col_constant(special_unknown1_door_warp);
+    col_constant(special_metal_door_warp);
+    col_constant(special_unknown2_door_warp);
+    col_constant(special_unknown3_door_warp);
+    col_constant(special_castle_door_warp);
+    col_constant(special_castle_door);
+    col_constant(special_0stars_door);
+    col_constant(special_1star_door);
+    col_constant(special_3star_door);
+    col_constant(special_key_door);
+    col_constant(special_null_end);
+
     // Other constants
     col_constant(NULL);
 
@@ -251,6 +339,20 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
         return;                                                      \
     }
 
+#define col_symbol_5(symb, n)                                          \
+    if (_Symbol == #symb) {                                            \
+        s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
+        s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
+        s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
+        s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
+        s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
+        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }         \
+        Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4) }; \
+        memcpy(aHead, _Cl, sizeof(_Cl));                               \
+        aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                       \
+        return;                                                        \
+    }
+
 #define col_symbol_6(symb, n)                                                 \
     if (_Symbol == #symb) {                                                   \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
@@ -280,6 +382,9 @@ static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, 
     col_symbol_1(COL_SPECIAL_INIT, 0);
     col_symbol_1(COL_WATER_BOX_INIT, 0);
     col_symbol_6(COL_WATER_BOX, 0);
+    col_symbol_4(SPECIAL_OBJECT, 0);
+    col_symbol_5(SPECIAL_OBJECT_WITH_YAW, 0);
+    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM, 0);
 
     // Unknown
     PrintError("  ERROR: Unknown col symbol: %s", _Symbol.begin());
