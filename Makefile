@@ -832,15 +832,15 @@ else
 #  endif
 endif
 
-#icon
+# Icon
 ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(ICON),1)
 
     Command := mkdir $(BUILD_DIR)/res
-    Reponce := $(shell $(call Command))
+    Reponse := $(shell $(call Command))
 
     Command := windres -o $(BUILD_DIR)/res/icon.o -i res/icon.rc
-    Reponce := $(shell $(call Command))
+    Reponse := $(shell $(call Command))
 
     LDFLAGS += $(BUILD_DIR)/res/icon.o
   endif
