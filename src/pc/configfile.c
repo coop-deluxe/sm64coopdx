@@ -256,10 +256,10 @@ static void ban_write(FILE* file) {
     }
 }
 
-static void dynos_pack_read(char** tokens, UNUSED int numTokens) {
+static void dynos_pack_read(char** tokens, int numTokens) {
     if (numTokens < 3) { return; }
     char fullPackName[256] = { 0 };
-    for (int i = 1; i < numTokens - 1; i++) {
+    for (int i = 1; i < numTokens-1; i++) {
         if (i != 1) { strncat(fullPackName, " ", 255); }
         strncat(fullPackName, tokens[i], 255);
     }
@@ -389,7 +389,7 @@ void configfile_load(const char *filename) {
     // Go through each line in the file
     while ((line = read_file_line(file)) != NULL) {
         char *p = line;
-        char *tokens[1 + MAX_BINDS];
+        char *tokens[20];
         int numTokens;
 
         // skip whitespace
