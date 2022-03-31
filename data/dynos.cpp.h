@@ -429,6 +429,9 @@ struct GfxData : NoCopy {
     DataNodes<AnimData> mAnimations;
     Array<Pair<String, void *>> mAnimationTable;
 
+    // Generate
+    Array<DataNode<GeoLayout> *> mGenerateGeoLayouts;
+
     // Current
     u64 mLoadIndex = 0;
     s32 mErrorCount = 0;

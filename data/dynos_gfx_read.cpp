@@ -146,6 +146,9 @@ static void ScanModelFile(GfxData *aGfxData, const SysPath &aFilename) {
     FILE *_File = fopen(aFilename.c_str(), "rb");
     if (!_File) return;
 
+    // Remember the geo layout count
+    s32 prevGeoLayoutCount = aGfxData->mGeoLayouts.Count();
+
     // Load file into a buffer while removing all comments
     char *_FileBuffer = LoadFileBuffer(_File, aGfxData);
     fclose(_File);
@@ -265,6 +268,26 @@ static void ScanModelFile(GfxData *aGfxData, const SysPath &aFilename) {
             pDataStart  = NULL;
             _DataIgnore = false;
             _Buffer     = "";
+        }
+    }
+
+    // Figure out which geo layouts to generate
+    s32 geoLayoutCount = aGfxData->mGeoLayouts.Count();
+    if (geoLayoutCount > prevGeoLayoutCount) {
+        // find actors to generate
+        bool foundActor = false;
+        for (s32 i = prevGeoLayoutCount; i < geoLayoutCount; i++) {
+            String _GeoRootName = aGfxData->mGeoLayouts[i]->mName;
+            const void* actor = DynOS_Geo_GetActorLayoutFromName(_GeoRootName.begin());
+            if (actor != NULL) {
+                foundActor = true;
+                aGfxData->mGenerateGeoLayouts.Add(aGfxData->mGeoLayouts[i]);
+            }
+        }
+
+        // if we haven't found an actor, just add the last geo layout found
+        if (!foundActor) {
+            aGfxData->mGenerateGeoLayouts.Add(aGfxData->mGeoLayouts[geoLayoutCount - 1]);
         }
     }
 
@@ -1783,13 +1806,10 @@ static String GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64
     return String();
 }
 
-static bool DynOS_Gfx_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData, bool onlyConsiderActors) {
+static bool DynOS_Gfx_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     bool generated = false;
-    for (auto &_GeoNode : _GfxData->mGeoLayouts) {
+    for (auto &_GeoNode : _GfxData->mGenerateGeoLayouts) {
         String _GeoRootName = _GeoNode->mName;
-        const void* actor = DynOS_Geo_GetActorLayoutFromName(_GeoRootName.begin());
-        if (onlyConsiderActors && actor == NULL) { continue; }
-        if (!onlyConsiderActors && _GeoNode != _GfxData->mGeoLayouts[_GfxData->mGeoLayouts.Count() - 1]) { continue; }
 
         DataNode<GeoLayout> *_GeoRoot = GetGeoLayout(_GfxData, _GeoRootName);
         if (_GeoRoot != NULL) {
@@ -1893,8 +1913,7 @@ void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder) {
 
     // Generate a binary file for each actor found in the GfxData
     DynOS_Col_GeneratePack(aPackFolder, _ActorsFolders, _GfxData);
-    bool foundActor = DynOS_Gfx_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData, true);
-    if (!foundActor) { DynOS_Gfx_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData, false); }
+    DynOS_Gfx_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
 
     DynOS_Gfx_Free(_GfxData);
 }
