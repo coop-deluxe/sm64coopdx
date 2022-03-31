@@ -6,7 +6,6 @@
 
 #include <ultra64.h>
 #include "macros.h"
-#include "data/dynos.c.h"
 #include "pc/network/version.h"
 
 // Certain functions are marked as having return values, but do not
@@ -406,6 +405,6 @@ struct TextureInfo
 #define COOP_OBJ_FLAG_NON_SYNC (1 << 2)
 
 #include "src/game/characters.h"
-#include "data/dynos_coop.c.h"
+#include "data/dynos.c.h"
 
 #endif // _SM64_TYPES_H_

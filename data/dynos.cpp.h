@@ -26,9 +26,7 @@ enum {
     DATA_TYPE_ANIMATION,
     DATA_TYPE_ANIMATION_TABLE,
     DATA_TYPE_GFXDYNCMD,
-#ifdef COOP
     DATA_TYPE_COLLISION,
-#endif
     DATA_TYPE_UNUSED,
 };
 
@@ -423,9 +421,7 @@ struct GfxData : NoCopy {
     DataNodes<Vtx> mVertices;
     DataNodes<Gfx> mDisplayLists;
     DataNodes<GeoLayout> mGeoLayouts;
-#ifdef COOP
     DataNodes<Collision> mCollisions;
-#endif
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -643,18 +639,12 @@ u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, 
 bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
 Array<ActorGfx> &DynOS_Gfx_GetActorList();
 Array<PackData *> &DynOS_Gfx_GetPacks();
-#ifdef COOP
 Array<bool> &DynOS_Gfx_GetPacksEnabled();
 void DynOS_Gfx_GeneratePacks(const char* directory);
-#endif
 Array<String> DynOS_Gfx_Init();
 void DynOS_Gfx_Update();
 void DynOS_Gfx_SwapAnimations(void *aPtr);
 bool DynOS_Gfx_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData);
-#ifdef COOP
-bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node);
-DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
-#endif
 GfxData *DynOS_Gfx_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName);
 void DynOS_Gfx_Free(GfxData *aGfxData);
 void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder);
@@ -673,12 +663,9 @@ s32 DynOS_String_Width(const u8 *aStr64);
 // Geo
 //
 
-#ifdef COOP
 void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName);
 const void *DynOS_Geo_GetActorLayoutFromName(const char *aActorName);
 bool DynOS_Geo_IsCustomActor(s32 aIndex);
-#endif
-
 s32 DynOS_Geo_GetActorCount();
 const char *DynOS_Geo_GetActorName(s32 aIndex);
 const void *DynOS_Geo_GetActorLayout(s32 aIndex);
@@ -687,11 +674,6 @@ void *DynOS_Geo_GetFunctionPointerFromName(const String &aName);
 void *DynOS_Geo_GetFunctionPointerFromIndex(s32 aIndex);
 s32 DynOS_Geo_GetFunctionIndex(const void *aPtr);
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
-
-#ifdef COOP
-void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName);
-Collision* DynOS_Col_GetCollision(const char* collisionName);
-#endif
 
 //
 // Levels
@@ -719,6 +701,21 @@ bool DynOS_Warp_ExitLevel(s32 aDelay);
 bool DynOS_Warp_ToCastle(s32 aLevel);
 void DynOS_Warp_SetParam(s32 aLevel, s32 aIndex);
 const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
+
+//
+// Collisions
+//
+
+bool DynOS_Col_GeneratePack(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
+bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node);
+DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
+
+//
+// Coop Misc
+//
+
+void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName);
+Collision* DynOS_Col_GetCollision(const char* collisionName);
 
 #endif
 #endif

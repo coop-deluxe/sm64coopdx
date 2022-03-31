@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "mods.h"
 #include "mods_utils.h"
-#include "data/dynos_coop.c.h"
+#include "data/dynos.c.h"
 #include "pc/debuglog.h"
 
 #define MOD_DIRECTORY "mods"

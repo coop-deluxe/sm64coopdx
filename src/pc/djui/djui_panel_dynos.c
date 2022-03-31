@@ -1,7 +1,7 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
-#include "data/dynos_coop.c.h"
+#include "data/dynos.c.h"
 
 static void djui_panel_dynos_apply(struct DjuiBase* caller) {
     dynos_packs_set_enabled(caller->tag, caller->bTag);

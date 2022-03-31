@@ -26,16 +26,12 @@ void DynOS_Opt_LoadConfig(DynosOption *aMenu) {
 
                     // Option values
                     switch (_Opt->mType) {
-#ifdef COOP
                         case DOPT_TOGGLE: {
                             unsigned char boolValue = 0;
                             sscanf(_DataBegin, "%hhu\n", &boolValue);
                             _Opt->mToggle.mTog[0] = boolValue;
                             break;
                         }
-#else
-                        case DOPT_TOGGLE: sscanf(_DataBegin, "%hhu\n",           &_Opt->mToggle.mTog[0]); break;
-#endif
                         case DOPT_CHOICE: sscanf(_DataBegin, "%d\n",             &_Opt->mChoice.mIndex[0]); break;
                         case DOPT_SCROLL: sscanf(_DataBegin, "%d\n",             &_Opt->mScroll.mValue[0]); break;
                         case DOPT_BIND:   sscanf(_DataBegin, "%04X;%04X;%04X\n", &_Opt->mBind.mBinds[0], &_Opt->mBind.mBinds[1], &_Opt->mBind.mBinds[2]); break;

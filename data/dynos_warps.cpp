@@ -236,9 +236,8 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         gCurrActNum = MAX(1, sDynosWarpActNum * (gCurrCourseNum <= COURSE_STAGES_MAX));
         gDialogCourseActNum = gCurrActNum;
         gCurrAreaIndex = sDynosWarpAreaNum;
-#ifdef COOP
         gCurrActStarNum = sDynosWarpActNum;
-#else
+#ifndef COOP
         DynOS_Warp_SetParam(gCurrLevelNum, DynOS_Opt_GetValue("dynos_warp_param"));
 #endif
         sDynosWarpTargetArea = gCurrAreaIndex;

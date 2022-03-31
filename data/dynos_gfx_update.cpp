@@ -3,9 +3,7 @@ extern "C" {
 #include "object_fields.h"
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
-#ifdef COOP
 #include "pc/configfile.h"
-#endif
 }
 
 //
@@ -106,19 +104,11 @@ void DynOS_Gfx_Update() {
     if (gObjectLists) {
 
         // Check packs
-#ifdef COOP
         Array<bool> &_Enabled = DynOS_Gfx_GetPacksEnabled();
         const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
         while (_Enabled.Count() < pDynosPacks.Count()) {
             _Enabled.Add(true);
         }
-#else
-        Array<bool> _Enabled;
-        const Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
-        for (s32 i = 0; i != pDynosPacks.Count(); ++i) {
-            _Enabled.Add(DynOS_Opt_GetValue(String("dynos_pack_%d", i)));
-        }
-#endif
 
         // Loop through all object lists
         for (s32 list : { OBJ_LIST_PLAYER, OBJ_LIST_DESTRUCTIVE, OBJ_LIST_GENACTOR, OBJ_LIST_PUSHABLE, OBJ_LIST_LEVEL, OBJ_LIST_DEFAULT, OBJ_LIST_SURFACE, OBJ_LIST_POLELIKE, OBJ_LIST_UNIMPORTANT }) {
@@ -132,7 +122,8 @@ void DynOS_Gfx_Update() {
 
                         // Replace the object's model and animations
                         ActorGfx *_ActorGfx = &DynOS_Gfx_GetActorList()[_ActorIndex];
-#ifdef COOP
+
+                        // Check for disabled downloaded models
                         if (configDisableDownloadedModels && _ActorGfx->mPackIndex == 99) {
                             extern const GeoLayout error_model_geo[];
                             s32 actorIndex = DynOS_Geo_IsCustomActor(_ActorIndex) ? DynOS_Geo_GetActorIndex(error_model_geo) : _ActorIndex;
@@ -141,7 +132,7 @@ void DynOS_Gfx_Update() {
                             _ActorGfx->mGfxData   = NULL;
                             _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, true);
                         }
-#endif
+
                         for (s32 i = 0; i != pDynosPacks.Count(); ++i) {
                             // If enabled and no pack is selected
                             // load the pack's model and replace the default actor's model

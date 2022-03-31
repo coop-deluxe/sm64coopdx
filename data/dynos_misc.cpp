@@ -34,10 +34,8 @@ extern "C" {
 #include "actors/group15.h"
 #include "actors/group16.h"
 #include "actors/group17.h"
-#ifdef COOP
 #include "actors/custom0.h"
 #include "actors/zcustom0.h"
-#endif
 }
 
 //
@@ -313,7 +311,7 @@ define_actor(wooden_signpost_geo),
 define_actor(yellow_sphere_geo),
 define_actor(yoshi_geo),
 define_actor(yoshi_egg_geo),
-#ifdef COOP
+// coop models
 define_actor(error_model_geo),
 define_actor(luigi_geo),
 define_actor(luigis_cap_geo),
@@ -334,10 +332,8 @@ define_actor(warios_cap_geo),
 define_actor(warios_metal_cap_geo),
 define_actor(warios_wing_cap_geo),
 define_actor(warios_winged_metal_cap_geo),
-#endif
 };
 
-#ifdef COOP
 static Array<Pair<const char*, void *>> sDynosCustomActors;
 
 void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName) {
@@ -425,31 +421,6 @@ bool DynOS_Geo_IsCustomActor(s32 aIndex) {
     return aIndex >= arrayCount;
 }
 
-#else // NORMAL DYNOS
-
-s32 DynOS_Geo_GetActorCount() {
-    return (s32) (sizeof(sDynosActors) / (2 * sizeof(sDynosActors[0])));
-}
-
-const char *DynOS_Geo_GetActorName(s32 aIndex) {
-    return (const char *) sDynosActors[2 * aIndex];
-}
-
-const void *DynOS_Geo_GetActorLayout(s32 aIndex) {
-    return (const void *) sDynosActors[2 * aIndex + 1];
-}
-
-s32 DynOS_Geo_GetActorIndex(const void *aGeoLayout) {
-    for (s32 i = 0; i != DynOS_Geo_GetActorCount(); ++i) {
-        if (sDynosActors[2 * i + 1] == aGeoLayout) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-#endif // NORMAL DYNOS END
-
 //
 // Geo Functions
 //
@@ -506,9 +477,8 @@ static const Array<Pair<const char *, void *>> sGeoFunctions = {
     { "geo_rotate_coin", (void *) geo_rotate_3d_coin },
     define_geo_function(geo_offset_klepto_held_object),
     define_geo_function(geo_switch_peach_eyes),
-#ifdef COOP
+    // coop-specific
     define_geo_function(geo_mario_set_player_colors),
-#endif
 };
 #undef define_geo_function
 return sGeoFunctions;
@@ -594,8 +564,6 @@ void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory) {
     return NULL;
 }
 
-#ifdef COOP
-
 // Collisions
 
 static Array<Pair<const char*, DataNode<Collision>*>> sDynosCustomCollisions;
@@ -630,5 +598,3 @@ Collision* DynOS_Col_GetCollision(const char* collisionName) {
     }
     return NULL;
 }
-
-#endif

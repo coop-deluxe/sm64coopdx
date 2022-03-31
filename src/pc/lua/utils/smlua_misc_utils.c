@@ -1,7 +1,7 @@
 #include "sm64.h"
 #include "types.h"
 
-#include "data/dynos_coop.c.h"
+#include "data/dynos.c.h"
 #include "game/hud.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"

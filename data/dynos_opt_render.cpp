@@ -62,11 +62,7 @@ static void PrintString(const Label& aLabel, s32 aX, s32 aY, u32 aFrontColorRGBA
 }
 
 static void PrintBox(s32 aX, s32 aY, s32 aWidth, s32 aHeight, u32 aColorRGBA, bool aAlignLeft) {
-#ifdef COOP
     if ((aColorRGBA & 0xFF) != 0) {
-#else
-    if ((aColorRGBA && 0xFF) != 0) {
-#endif
         Mtx *_Matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
         if (!_Matrix) return;
         if (aAlignLeft) {
