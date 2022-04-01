@@ -44,4 +44,8 @@ Sounds:
     Andrat         :  Luigi voice lines
     Dark the Eagle :  Wario voice lines
 
-sm64ex-coop was built on top of sm64ex, which was built on top of the sm64 decomp project
+The custom models, animations, and warps use DynOS. DynOS was created by PeachyPeach.
+
+The game's icon uses cap models from Render96.
+
+sm64ex-coop was built on top of sm64ex, which was built on top of the sm64 decomp project.
