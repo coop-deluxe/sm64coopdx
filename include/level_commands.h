@@ -91,7 +91,7 @@
 
 
 #define SKIP_IF(op, arg) \
-    CMD_BBBB(0x0E, 0x08, op, 0) \
+    CMD_BBBB(0x0E, 0x08, op, 0), \
     CMD_W(arg)
 
 #define SKIP() \

@@ -27,6 +27,7 @@ enum {
     DATA_TYPE_ANIMATION_TABLE,
     DATA_TYPE_GFXDYNCMD,
     DATA_TYPE_COLLISION,
+    DATA_TYPE_LEVEL_SCRIPT,
     DATA_TYPE_UNUSED,
 };
 
@@ -422,6 +423,7 @@ struct GfxData : NoCopy {
     DataNodes<Gfx> mDisplayLists;
     DataNodes<GeoLayout> mGeoLayouts;
     DataNodes<Collision> mCollisions;
+    DataNodes<LevelScript> mLevelScripts;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -651,6 +653,7 @@ bool DynOS_Gfx_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData);
 GfxData *DynOS_Gfx_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName);
 void DynOS_Gfx_Free(GfxData *aGfxData);
 void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder);
+void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 
 //
 // String
@@ -712,6 +715,12 @@ const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 bool DynOS_Col_GeneratePack(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node);
 DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
+
+//
+// Levels
+//
+
+bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 
 //
 // Coop Misc

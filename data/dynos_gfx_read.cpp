@@ -204,6 +204,8 @@ static void ScanModelFile(GfxData *aGfxData, const SysPath &aFilename) {
                     _DataType = DATA_TYPE_GEO_LAYOUT;
                 } else if (_Buffer == "Collision") {
                     _DataType = DATA_TYPE_COLLISION;
+                } else if (_Buffer == "LevelScript") {
+                    _DataType = DATA_TYPE_LEVEL_SCRIPT;
                 } else {
                     PrintError("  ERROR: Unknown type name: %s", _Buffer.begin());
                 }
@@ -228,6 +230,7 @@ static void ScanModelFile(GfxData *aGfxData, const SysPath &aFilename) {
                     case DATA_TYPE_DISPLAY_LIST: AppendNewNode(aGfxData, aGfxData->mDisplayLists, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_GEO_LAYOUT:   AppendNewNode(aGfxData, aGfxData->mGeoLayouts,   _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_COLLISION:    AppendNewNode(aGfxData, aGfxData->mCollisions,   _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_LEVEL_SCRIPT: AppendNewNode(aGfxData, aGfxData->mLevelScripts, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_UNUSED:       pDataTokens = (Array<String> *) 1;                                                 break;
                 }
                 _Buffer.Clear();
@@ -1914,6 +1917,40 @@ void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder) {
     // Generate a binary file for each actor found in the GfxData
     DynOS_Col_GeneratePack(aPackFolder, _ActorsFolders, _GfxData);
     DynOS_Gfx_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
+
+    DynOS_Gfx_Free(_GfxData);
+}
+
+void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
+    Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());
+    Array<Pair<u64, String>> _ActorsFolders;
+    GfxData *_GfxData = New<GfxData>();
+
+    DIR *aPackDir = opendir(aPackFolder.c_str());
+    if (aPackDir) {
+        struct dirent *_PackEnt = NULL;
+        while ((_PackEnt = readdir(aPackDir)) != NULL) {
+
+            // Skip . and ..
+            if (SysPath(_PackEnt->d_name) == ".") continue;
+            if (SysPath(_PackEnt->d_name) == "..") continue;
+
+            // For each subfolder, read tokens from script.c
+            SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (fs_sys_dir_exists(_Folder.c_str())) {
+                _GfxData->mModelIdentifier = 0;
+                ScanModelFile(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));
+                ScanModelFile(_GfxData, fstring("%s/area_1/collision.inc.c", _Folder.c_str()));
+                ScanModelFile(_GfxData, fstring("%s/area_1/geo.inc.c", _Folder.c_str()));
+                ScanModelFile(_GfxData, fstring("%s/script.c", _Folder.c_str()));
+                //ScanModelFile(_GfxData, fstring("%s/area_1/macro.inc.c", _Folder.c_str()));
+            }
+        }
+        closedir(aPackDir);
+    }
+
+    // Generate a binary file for each actor found in the GfxData
+    DynOS_Lvl_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
 
     DynOS_Gfx_Free(_GfxData);
 }

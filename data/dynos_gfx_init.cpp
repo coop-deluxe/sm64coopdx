@@ -26,9 +26,13 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         if (SysPath(dir->d_name) == "..") continue;
 
         // If pack folder exists, generate bins
-        SysPath _PackFolder = fstring("%s/%s/actors", directory, dir->d_name);
-        if (fs_sys_dir_exists(_PackFolder.c_str())) {
-            DynOS_Gfx_GeneratePack(_PackFolder);
+        SysPath _LevelPackFolder = fstring("%s/%s/levels", directory, dir->d_name);
+        if (fs_sys_dir_exists(_LevelPackFolder.c_str())) {
+            DynOS_Lvl_GeneratePack(_LevelPackFolder);
+        }
+        SysPath _ActorPackFolder = fstring("%s/%s/actors", directory, dir->d_name);
+        if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
+            DynOS_Gfx_GeneratePack(_ActorPackFolder);
         }
     }
 

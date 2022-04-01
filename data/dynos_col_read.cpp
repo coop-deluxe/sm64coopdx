@@ -293,67 +293,62 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
         return;                                  \
     }
 
-#define col_symbol_1(symb, n)                                        \
+#define col_symbol_1(symb)                                           \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
         Collision _Cl[] = { symb(_Arg0) };                           \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_2(symb, n)                                        \
+#define col_symbol_2(symb)                                           \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
         Collision _Cl[] = { symb(_Arg0, _Arg1) };                    \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_3(symb, n)                                        \
+#define col_symbol_3(symb)                                           \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2) };             \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_4(symb, n)                                        \
+#define col_symbol_4(symb)                                           \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3) };      \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_5(symb, n)                                          \
+#define col_symbol_5(symb)                                             \
     if (_Symbol == #symb) {                                            \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }         \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4) }; \
         memcpy(aHead, _Cl, sizeof(_Cl));                               \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                       \
         return;                                                        \
     }
 
-#define col_symbol_6(symb, n)                                                 \
+#define col_symbol_6(symb)                                                    \
     if (_Symbol == #symb) {                                                   \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
@@ -361,7 +356,6 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg5 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5) }; \
         memcpy(aHead, _Cl, sizeof(_Cl));                                      \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                              \
@@ -372,19 +366,19 @@ static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, 
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
     col_symbol_0(COL_INIT);
-    col_symbol_1(COL_VERTEX_INIT, 0);
-    col_symbol_3(COL_VERTEX, 0);
-    col_symbol_2(COL_TRI_INIT, 0);
-    col_symbol_3(COL_TRI, 0);
-    col_symbol_4(COL_TRI_SPECIAL, 0);
+    col_symbol_1(COL_VERTEX_INIT);
+    col_symbol_3(COL_VERTEX);
+    col_symbol_2(COL_TRI_INIT);
+    col_symbol_3(COL_TRI);
+    col_symbol_4(COL_TRI_SPECIAL);
     col_symbol_0(COL_TRI_STOP);
     col_symbol_0(COL_END);
-    col_symbol_1(COL_SPECIAL_INIT, 0);
-    col_symbol_1(COL_WATER_BOX_INIT, 0);
-    col_symbol_6(COL_WATER_BOX, 0);
-    col_symbol_4(SPECIAL_OBJECT, 0);
-    col_symbol_5(SPECIAL_OBJECT_WITH_YAW, 0);
-    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM, 0);
+    col_symbol_1(COL_SPECIAL_INIT);
+    col_symbol_1(COL_WATER_BOX_INIT);
+    col_symbol_6(COL_WATER_BOX);
+    col_symbol_4(SPECIAL_OBJECT);
+    col_symbol_5(SPECIAL_OBJECT_WITH_YAW);
+    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM);
 
     // Unknown
     PrintError("  ERROR: Unknown col symbol: %s", _Symbol.begin());
