@@ -1669,6 +1669,37 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
     return generated;
 }
 
+static void DynOS_Lvl_GeneratePack_Recursive(const SysPath &directory, GfxData *_GfxData) {
+    DIR *aPackDir = opendir(directory.c_str());
+    if (aPackDir) {
+        struct dirent *_PackEnt = NULL;
+        while ((_PackEnt = readdir(aPackDir)) != NULL) {
+
+            // Skip . and ..
+            if (SysPath(_PackEnt->d_name) == ".") continue;
+            if (SysPath(_PackEnt->d_name) == "..") continue;
+
+            SysPath path = fstring("%s/%s", directory.c_str(), _PackEnt->d_name);
+
+            // Recurse through subfolders
+            if (fs_sys_dir_exists(path.c_str())) {
+                DynOS_Lvl_GeneratePack_Recursive(path, _GfxData);
+                continue;
+            }
+
+            // skip files that don't end in '.c'
+            size_t nameLen = strlen(_PackEnt->d_name);
+            if (_PackEnt->d_name[nameLen - 2] != '.' || _PackEnt->d_name[nameLen - 1] != 'c') {
+                continue;
+            }
+
+            // read the file
+            DynOS_Read_Source(_GfxData, path.c_str());
+        }
+        closedir(aPackDir);
+    }
+}
+
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
     Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());
     Array<Pair<u64, String>> _ActorsFolders;
@@ -1685,14 +1716,13 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
 
             // For each subfolder, read tokens from script.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-            if (fs_sys_dir_exists(_Folder.c_str())) {
-                _GfxData->mModelIdentifier = 0;
-                DynOS_Read_Source(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));
-                DynOS_Read_Source(_GfxData, fstring("%s/area_1/collision.inc.c", _Folder.c_str()));
-                DynOS_Read_Source(_GfxData, fstring("%s/area_1/geo.inc.c", _Folder.c_str()));
-                DynOS_Read_Source(_GfxData, fstring("%s/script.c", _Folder.c_str()));
-                DynOS_Read_Source(_GfxData, fstring("%s/area_1/macro.inc.c", _Folder.c_str()));
-            }
+            if (!fs_sys_dir_exists(_Folder.c_str())) continue;
+
+            // Only parse folders with a 'script.c'
+            if (!fs_sys_file_exists(fstring("%s/script.c", _Folder.c_str()).c_str())) continue;
+
+            _GfxData->mModelIdentifier = 0;
+            DynOS_Lvl_GeneratePack_Recursive(_Folder, _GfxData);
         }
         closedir(aPackDir);
     }

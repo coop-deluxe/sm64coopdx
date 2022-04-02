@@ -139,6 +139,13 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
         // Scanning data type
         if (_DataType == DATA_TYPE_NONE) {
 
+            // skip includes
+            if (!strncmp(c, "#include", 8)) {
+                while (*c != '\n' && *c != '\0') {
+                    c++;
+                }
+            }
+
             // Reading data type name
             if ((*c >= 'A' && *c <= 'Z') || (*c >= 'a' && *c <= 'z') || (*c >= '0' && *c <= '9') || (*c == '_') || (*c == '\"')) {
                 if (*c == '\"') {
