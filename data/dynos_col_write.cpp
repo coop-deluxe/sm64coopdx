@@ -8,6 +8,7 @@ static void WriteCollisionData(FILE* aFile, GfxData* aGfxData, DataNode<Collisio
     if (!aNode->mData) return;
 
     // Name
+    WriteBytes<u8>(aFile, DATA_TYPE_COLLISION);
     aNode->mName.Write(aFile);
 
     // Data

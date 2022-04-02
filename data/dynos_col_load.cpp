@@ -26,7 +26,10 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const 
     SysPath _Filename = fstring("%s/%s.col", aPackFolder.begin(), aCollisionName);
     FILE *_File = fopen(_Filename.c_str(), "rb");
     if (_File) {
-        collisionNode = LoadCollisionData(_File);
+        u8 type = ReadBytes<u8>(_File);
+        if (type == DATA_TYPE_COLLISION) {
+            collisionNode = LoadCollisionData(_File);
+        }
         fclose(_File);
     }
 
