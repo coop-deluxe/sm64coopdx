@@ -9,7 +9,7 @@ extern "C" {
 // Free data pointers, but keep nodes and tokens intact
 // Delete nodes generated from GfxDynCmds
 template <typename T>
-static void ClearColDataNodes(DataNodes<T> &aDataNodes) {
+void ClearGfxDataNodes(DataNodes<T> &aDataNodes) {
     for (s32 i = aDataNodes.Count(); i != 0; --i) {
         Delete(aDataNodes[i - 1]->mData);
     }
@@ -405,7 +405,7 @@ DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNo
  // Writing //
 /////////////
 
-static void WriteCollisionData(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
+void DynOS_Col_Write(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
     if (!aNode->mData) return;
 
     // Name
@@ -419,14 +419,14 @@ static void WriteCollisionData(FILE* aFile, GfxData* aGfxData, DataNode<Collisio
     }
 }
 
-bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node) {
+static bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node) {
     FILE *_File = fopen(aOutputFilename.c_str(), "wb");
     if (!_File) {
         PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
     }
 
-    WriteCollisionData(_File, aGfxData, _Node);
+    DynOS_Col_Write(_File, aGfxData, _Node);
 
     fclose(_File);
     return true;
@@ -466,4 +466,38 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const 
     }
 
     return collisionNode;
+}
+
+  //////////////
+ // Generate //
+//////////////
+
+void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
+    for (auto &_ColNode : _GfxData->mCollisions) {
+        String _ColRootName = _ColNode->mName;
+
+        // If there is an existing binary file for this collision, skip and go to the next actor
+        SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
+        if (fs_sys_file_exists(_ColFilename.c_str())) {
+            continue;
+        }
+
+        // Init
+        _GfxData->mErrorCount = 0;
+        _GfxData->mLoadIndex = 0;
+
+        // Parse data
+        PrintNoNewLine("%s.col: Model identifier: %X - Processing... ", _ColRootName.begin(), _GfxData->mModelIdentifier);
+        DynOS_Col_Parse(_GfxData, _ColNode, true);
+
+        // Write if no error
+        if (_GfxData->mErrorCount == 0) {
+            DynOS_Col_WriteBinary(_ColFilename, _GfxData, _ColNode);
+        } else {
+            Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
+        }
+
+        // Clear data pointers
+        ClearGfxDataNodes(_GfxData->mCollisions);
+    }
 }

@@ -32,7 +32,7 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         }
         SysPath _ActorPackFolder = fstring("%s/%s/actors", directory, dir->d_name);
         if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
-            DynOS_Gfx_GeneratePack(_ActorPackFolder);
+            DynOS_Actor_GeneratePack(_ActorPackFolder);
         }
     }
 
@@ -57,7 +57,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
 
                 // Scan folder for subfolders to convert into .bin files
                 _Pack->mPath = _PackFolder;
-                DynOS_Gfx_GeneratePack(_PackFolder);
+                DynOS_Actor_GeneratePack(_PackFolder);
 
                 // Add pack to pack list
                 pDynosPacks.Add(_Pack);

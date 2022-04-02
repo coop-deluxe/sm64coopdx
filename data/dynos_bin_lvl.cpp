@@ -1478,7 +1478,7 @@ static DataNode<LevelScript> *GetLevelScript(GfxData *aGfxData, const String& aG
     return NULL;
 }
 
-bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
+static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     bool generated = false;
     for (auto &_LvlNode : _GfxData->mLevelScripts) {
         String _LvlRootName = _LvlNode->mName;
@@ -1511,4 +1511,42 @@ bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64,
         generated = true;
     }
     return generated;
+}
+
+  //////////////
+ // Generate //
+//////////////
+
+void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
+    Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());
+    Array<Pair<u64, String>> _ActorsFolders;
+    GfxData *_GfxData = New<GfxData>();
+
+    DIR *aPackDir = opendir(aPackFolder.c_str());
+    if (aPackDir) {
+        struct dirent *_PackEnt = NULL;
+        while ((_PackEnt = readdir(aPackDir)) != NULL) {
+
+            // Skip . and ..
+            if (SysPath(_PackEnt->d_name) == ".") continue;
+            if (SysPath(_PackEnt->d_name) == "..") continue;
+
+            // For each subfolder, read tokens from script.c
+            SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (fs_sys_dir_exists(_Folder.c_str())) {
+                _GfxData->mModelIdentifier = 0;
+                DynOS_Read_Source(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));
+                DynOS_Read_Source(_GfxData, fstring("%s/area_1/collision.inc.c", _Folder.c_str()));
+                DynOS_Read_Source(_GfxData, fstring("%s/area_1/geo.inc.c", _Folder.c_str()));
+                DynOS_Read_Source(_GfxData, fstring("%s/script.c", _Folder.c_str()));
+                DynOS_Read_Source(_GfxData, fstring("%s/area_1/macro.inc.c", _Folder.c_str()));
+            }
+        }
+        closedir(aPackDir);
+    }
+
+    // Generate a binary file for each actor found in the GfxData
+    DynOS_Lvl_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
+
+    DynOS_Gfx_Free(_GfxData);
 }

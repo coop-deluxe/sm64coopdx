@@ -647,15 +647,10 @@ bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRA
 Array<ActorGfx> &DynOS_Gfx_GetActorList();
 Array<PackData *> &DynOS_Gfx_GetPacks();
 Array<bool> &DynOS_Gfx_GetPacksEnabled();
-void DynOS_Gfx_GeneratePacks(const char* directory);
 Array<String> DynOS_Gfx_Init();
 void DynOS_Gfx_Update();
 void DynOS_Gfx_SwapAnimations(void *aPtr);
-bool DynOS_Gfx_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData);
-GfxData *DynOS_Gfx_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName);
 void DynOS_Gfx_Free(GfxData *aGfxData);
-void DynOS_Gfx_GeneratePack(const SysPath &aPackFolder);
-void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 
 //
 // String
@@ -714,34 +709,66 @@ const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 // Collisions
 //
 
-bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node);
-DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
-
-//
-// Levels
-//
-
-bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
-
-//
-// Coop Misc
-//
-
 void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName);
 Collision* DynOS_Col_GetCollision(const char* collisionName);
 
+//
+// Bin
+//
+
+void DynOS_Gfx_GeneratePacks(const char* directory);
+s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success);
+void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
+char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
+
+void DynOS_Anim_ScanFolder(GfxData *aGfxData, const SysPath &aAnimsFolder);
+void DynOS_Anim_Table_Write(FILE* aFile, GfxData* aGfxData);
+void DynOS_Anim_Write(FILE* aFile, GfxData* aGfxData);
+void DynOS_Anim_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Anim_Table_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent);
+void DynOS_Col_Write(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode);
+DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
+void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 
 DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent);
-DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
-DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode);
-DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
-DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
-DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent);
-DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent);
-DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
+void DynOS_Geo_Write(FILE *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode);
+void DynOS_Geo_Load(FILE *aFile, GfxData *aGfxData);
 
+DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
+void DynOS_Gfx_Write(FILE *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode);
+void DynOS_Gfx_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
+void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
+void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
+// TODO: DynOS_MacroObject_Write
+// TODO: DynOS_MacroObject_Load
+
+DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
+void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
+void DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData);
 void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
-s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success);
+
+DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode);
+void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
+void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData);
+
+void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData);
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue);
+
+void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData);
+
+GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName);
+void DynOS_Actor_GeneratePack(const SysPath &aPackFolder);
+
+DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent);
+// TODO: DynOS_Lvl_Write
+// TODO: DynOS_Lvl_Load
+void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 
 #endif
 #endif

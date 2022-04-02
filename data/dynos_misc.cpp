@@ -352,7 +352,7 @@ void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName
     char* actorName = (char*)calloc(1, sizeof(char) * (actorLen + 1));
     strcpy(actorName, aActorName);
 
-    GfxData *_GfxData = DynOS_Gfx_LoadFromBinary(aPackFolder, actorName);
+    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aPackFolder, actorName);
     if (!_GfxData) {
         free(actorName);
         return;

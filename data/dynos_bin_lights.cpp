@@ -34,3 +34,36 @@ DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNod
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
     return aNode;
 }
+
+  /////////////
+ // Writing //
+/////////////
+
+void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode) {
+    if (!aNode->mData) return;
+
+    // Header
+    WriteBytes<u8>(aFile, DATA_TYPE_LIGHT);
+    aNode->mName.Write(aFile);
+
+    // Data
+    WriteBytes<Lights1>(aFile, *aNode->mData);
+}
+
+  /////////////
+ // Reading //
+/////////////
+
+void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData) {
+    DataNode<Lights1> *_Node = New<DataNode<Lights1>>();
+
+    // Name
+    _Node->mName.Read(aFile);
+
+    // Data
+    _Node->mData = New<Lights1>();
+    *_Node->mData = ReadBytes<Lights1>(aFile);
+
+    // Append
+    aGfxData->mLights.Add(_Node);
+}

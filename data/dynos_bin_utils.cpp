@@ -1,5 +1,51 @@
 #include "dynos.cpp.h"
 
+  //////////
+ // Misc //
+//////////
+
+void DynOS_Gfx_Free(GfxData* aGfxData) {
+    if (aGfxData) {
+        for (auto& _Node : aGfxData->mLights) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mTextures) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mVertices) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mDisplayLists) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mGeoLayouts) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mAnimations) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mCollisions) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mLevelScripts) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        for (auto& _Node : aGfxData->mMacroObjects) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
+        Delete(aGfxData);
+    }
+}
+
   ///////////////////////
  // Recursive Descent //
 ///////////////////////

@@ -108,3 +108,50 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode) 
     aNode->mLoadIndex         = aGfxData->mLoadIndex++;
     return aNode;
 }
+
+  /////////////
+ // Writing //
+/////////////
+
+void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode) {
+    if (!aNode->mData) return;
+
+    // Header
+    WriteBytes<u8>(aFile, DATA_TYPE_TEXTURE);
+    aNode->mName.Write(aFile);
+
+    // Data
+    aNode->mData->mPngData.Write(aFile);
+}
+
+  /////////////
+ // Reading //
+/////////////
+
+void DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData) {
+    DataNode<TexData> *_Node = New<DataNode<TexData>>();
+
+    // Name
+    _Node->mName.Read(aFile);
+
+    // Data
+    _Node->mData = New<TexData>();
+    _Node->mData->mUploaded = false;
+    _Node->mData->mPngData.Read(aFile);
+    if (!_Node->mData->mPngData.Empty()) {
+        u8 *_RawData = stbi_load_from_memory(_Node->mData->mPngData.begin(), _Node->mData->mPngData.Count(), &_Node->mData->mRawWidth, &_Node->mData->mRawHeight, NULL, 4);
+        _Node->mData->mRawFormat = G_IM_FMT_RGBA;
+        _Node->mData->mRawSize   = G_IM_SIZ_32b;
+        _Node->mData->mRawData   = Array<u8>(_RawData, _RawData + (_Node->mData->mRawWidth * _Node->mData->mRawHeight * 4));
+        free(_RawData);
+    } else { // Probably a palette
+        _Node->mData->mRawData   = Array<u8>();
+        _Node->mData->mRawWidth  = 0;
+        _Node->mData->mRawHeight = 0;
+        _Node->mData->mRawFormat = 0;
+        _Node->mData->mRawSize   = 0;
+    }
+
+    // Append
+    aGfxData->mTextures.Add(_Node);
+}
