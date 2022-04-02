@@ -41,9 +41,9 @@ void *DynOS_Lvl_GetFunctionPointerFromName(const String &aName) {
     return NULL;
 }
 
-//
-// Parse level script file
-//
+  /////////////
+ // Parsing //
+/////////////
 
 #define LEVEL_SCRIPT_SIZE_PER_TOKEN 4
 
@@ -58,17 +58,630 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     }
 
     // Behavior constants
+    lvl_constant(bhvStarDoor);
+    lvl_constant(bhvMrI);
+    lvl_constant(bhvMrIBody);
+    lvl_constant(bhvMrIParticle);
+    lvl_constant(bhvPurpleParticle);
+    lvl_constant(bhvGiantPole);
+    lvl_constant(bhvPoleGrabbing);
+    lvl_constant(bhvThiHugeIslandTop);
+    lvl_constant(bhvThiTinyIslandTop);
+    lvl_constant(bhvCapSwitchBase);
+    lvl_constant(bhvCapSwitch);
+    lvl_constant(bhvKingBobomb);
+    lvl_constant(bhvBobombAnchorMario);
+    lvl_constant(bhvBetaChestBottom);
+    lvl_constant(bhvBetaChestLid);
+    lvl_constant(bhvBubbleParticleSpawner);
+    lvl_constant(bhvBubbleMaybe);
+    lvl_constant(bhvBubblePlayer);
+    lvl_constant(bhvSmallWaterWave);
+    lvl_constant(bhvSmallWaterWave398);
+    lvl_constant(bhvWaterAirBubble);
+    lvl_constant(bhvSmallParticle);
+    lvl_constant(bhvPlungeBubble);
+    lvl_constant(bhvSmallParticleSnow);
+    lvl_constant(bhvSmallParticleBubbles);
+    lvl_constant(bhvFishGroup);
+    lvl_constant(bhvCannon);
+    lvl_constant(bhvCannonBarrel);
+    lvl_constant(bhvCannonBaseUnused);
+    lvl_constant(bhvChuckya);
+    lvl_constant(bhvChuckyaAnchorMario);
+    lvl_constant(bhvUnused05A8);
+    lvl_constant(bhvRotatingPlatform);
+    lvl_constant(bhvTower);
+    lvl_constant(bhvBulletBillCannon);
+    lvl_constant(bhvWfBreakableWallRight);
+    lvl_constant(bhvWfBreakableWallLeft);
+    lvl_constant(bhvKickableBoard);
+    lvl_constant(bhvTowerDoor);
+    lvl_constant(bhvRotatingCounterClockwise);
+    lvl_constant(bhvWfRotatingWoodenPlatform);
+    lvl_constant(bhvKoopaShellUnderwater);
+    lvl_constant(bhvExitPodiumWarp);
+    lvl_constant(bhvFadingWarp);
+    lvl_constant(bhvWarp);
+    lvl_constant(bhvWarpPipe);
+    lvl_constant(bhvWhitePuffExplosion);
+    lvl_constant(bhvSpawnedStar);
+    lvl_constant(bhvSpawnedStarNoLevelExit);
+    lvl_constant(bhvMrIBlueCoin);
+    lvl_constant(bhvCoinInsideBoo);
+    lvl_constant(bhvCoinFormationSpawn);
+    lvl_constant(bhvCoinFormation);
+    lvl_constant(bhvOneCoin);
+    lvl_constant(bhvYellowCoin);
+    lvl_constant(bhvTemporaryYellowCoin);
+    lvl_constant(bhvThreeCoinsSpawn);
+    lvl_constant(bhvTenCoinsSpawn);
+    lvl_constant(bhvSingleCoinGetsSpawned);
+    lvl_constant(bhvCoinSparkles);
+    lvl_constant(bhvGoldenCoinSparkles);
+    lvl_constant(bhvWallTinyStarParticle);
+    lvl_constant(bhvVertStarParticleSpawner);
+    lvl_constant(bhvPoundTinyStarParticle);
+    lvl_constant(bhvHorStarParticleSpawner);
+    lvl_constant(bhvPunchTinyTriangle);
+    lvl_constant(bhvTriangleParticleSpawner);
+    lvl_constant(bhvDoorWarp);
+    lvl_constant(bhvDoor);
+    lvl_constant(bhvGrindel);
+    lvl_constant(bhvThwomp2);
+    lvl_constant(bhvThwomp);
+    lvl_constant(bhvTumblingBridgePlatform);
+    lvl_constant(bhvWfTumblingBridge);
+    lvl_constant(bhvBbhTumblingBridge);
+    lvl_constant(bhvLllTumblingBridge);
+    lvl_constant(bhvFlame);
+    lvl_constant(bhvAnotherElavator);
+    lvl_constant(bhvRrElevatorPlatform);
+    lvl_constant(bhvHmcElevatorPlatform);
+    lvl_constant(bhvWaterMist);
+    lvl_constant(bhvBreathParticleSpawner);
+    lvl_constant(bhvBreakBoxTriangle);
+    lvl_constant(bhvWaterMist2);
+    lvl_constant(bhvUnused0DFC);
+    lvl_constant(bhvMistCircParticleSpawner);
+    lvl_constant(bhvDirtParticleSpawner);
+    lvl_constant(bhvSnowParticleSpawner);
+    lvl_constant(bhvWind);
+    lvl_constant(bhvEndToad);
+    lvl_constant(bhvEndPeach);
+    lvl_constant(bhvUnusedParticleSpawn);
+    lvl_constant(bhvUkiki);
+    lvl_constant(bhvUkikiCageChild);
+    lvl_constant(bhvUkikiCageStar);
+    lvl_constant(bhvUkikiCage);
+    lvl_constant(bhvBitfsSinkingPlatforms);
+    lvl_constant(bhvBitfsSinkingCagePlatform);
+    lvl_constant(bhvDddMovingPole);
+    lvl_constant(bhvBitfsTiltingInvertedPyramid);
+    lvl_constant(bhvSquishablePlatform);
+    lvl_constant(bhvCutOutObject);
+    lvl_constant(bhvBetaMovingFlamesSpawn);
+    lvl_constant(bhvBetaMovingFlames);
+    lvl_constant(bhvRrRotatingBridgePlatform);
+    lvl_constant(bhvFlamethrower);
+    lvl_constant(bhvFlamethrowerFlame);
+    lvl_constant(bhvBouncingFireball);
+    lvl_constant(bhvBouncingFireballFlame);
+    lvl_constant(bhvBowserShockWave);
+    lvl_constant(bhvFireParticleSpawner);
+    lvl_constant(bhvBlackSmokeMario);
+    lvl_constant(bhvBlackSmokeBowser);
+    lvl_constant(bhvBlackSmokeUpward);
+    lvl_constant(bhvBetaFishSplashSpawner);
+    lvl_constant(bhvSpindrift);
+    lvl_constant(bhvTowerPlatformGroup);
+    lvl_constant(bhvWfSlidingTowerPlatform);
+    lvl_constant(bhvWfElevatorTowerPlatform);
+    lvl_constant(bhvWfSolidTowerPlatform);
+    lvl_constant(bhvLeafParticleSpawner);
+    lvl_constant(bhvTreeSnow);
+    lvl_constant(bhvTreeLeaf);
+    lvl_constant(bhvAnotherTiltingPlatform);
+    lvl_constant(bhvSquarishPathMoving);
+    lvl_constant(bhvSquarishPathParent);
+    lvl_constant(bhvPiranhaPlantBubble);
+    lvl_constant(bhvPiranhaPlantWakingBubbles);
+    lvl_constant(bhvFloorSwitchAnimatesObject);
+    lvl_constant(bhvFloorSwitchGrills);
+    lvl_constant(bhvFloorSwitchHardcodedModel);
+    lvl_constant(bhvFloorSwitchHiddenObjects);
+    lvl_constant(bhvHiddenObject);
+    lvl_constant(bhvBreakableBox);
+    lvl_constant(bhvPushableMetalBox);
+    lvl_constant(bhvHeaveHo);
+    lvl_constant(bhvHeaveHoThrowMario);
+    lvl_constant(bhvCcmTouchedStarSpawn);
+    lvl_constant(bhvUnusedPoundablePlatform);
+    lvl_constant(bhvBetaTrampolineTop);
+    lvl_constant(bhvBetaTrampolineSpring);
+    lvl_constant(bhvJumpingBox);
+    lvl_constant(bhvBooCage);
+    lvl_constant(bhvStub);
+    lvl_constant(bhvIgloo);
+    lvl_constant(bhvBowserKey);
+    lvl_constant(bhvGrandStar);
+    lvl_constant(bhvBetaBooKey);
+    lvl_constant(bhvAlphaBooKey);
+    lvl_constant(bhvBulletBill);
+    lvl_constant(bhvWhitePuffSmoke);
+    lvl_constant(bhvUnused1820);
+    lvl_constant(bhvBowserTailAnchor);
+    lvl_constant(bhvBowser);
+    lvl_constant(bhvBowserBodyAnchor);
+    lvl_constant(bhvBowserFlameSpawn);
+    lvl_constant(bhvTiltingBowserLavaPlatform);
+    lvl_constant(bhvFallingBowserPlatform);
+    lvl_constant(bhvBlueBowserFlame);
+    lvl_constant(bhvFlameFloatingLanding);
+    lvl_constant(bhvBlueFlamesGroup);
+    lvl_constant(bhvFlameBouncing);
+    lvl_constant(bhvFlameMovingForwardGrowing);
+    lvl_constant(bhvFlameBowser);
+    lvl_constant(bhvFlameLargeBurningOut);
+    lvl_constant(bhvBlueFish);
+    lvl_constant(bhvTankFishGroup);
+    lvl_constant(bhvCheckerboardElevatorGroup);
+    lvl_constant(bhvCheckerboardPlatformSub);
+    lvl_constant(bhvBowserKeyUnlockDoor);
+    lvl_constant(bhvBowserKeyCourseExit);
+    lvl_constant(bhvInvisibleObjectsUnderBridge);
+    lvl_constant(bhvWaterLevelPillar);
+    lvl_constant(bhvDddWarp);
+    lvl_constant(bhvMoatGrills);
+    lvl_constant(bhvClockMinuteHand);
+    lvl_constant(bhvClockHourHand);
+    lvl_constant(bhvMacroUkiki);
+    lvl_constant(bhvStub1D0C);
+    lvl_constant(bhvLllRotatingHexagonalPlatform);
+    lvl_constant(bhvLllSinkingRockBlock);
+    lvl_constant(bhvStub1D70);
+    lvl_constant(bhvLllMovingOctagonalMeshPlatform);
+    lvl_constant(bhvSnowBall);
+    lvl_constant(bhvLllRotatingBlockWithFireBars);
+    lvl_constant(bhvLllRotatingHexFlame);
+    lvl_constant(bhvLllWoodPiece);
+    lvl_constant(bhvLllFloatingWoodBridge);
+    lvl_constant(bhvVolcanoFlames);
+    lvl_constant(bhvLllRotatingHexagonalRing);
+    lvl_constant(bhvLllSinkingRectangularPlatform);
+    lvl_constant(bhvLllSinkingSquarePlatforms);
+    lvl_constant(bhvLllTiltingInvertedPyramid);
+    lvl_constant(bhvUnused1F30);
+    lvl_constant(bhvKoopaShell);
+    lvl_constant(bhvKoopaShellFlame);
+    lvl_constant(bhvToxBox);
+    lvl_constant(bhvPiranhaPlant);
+    lvl_constant(bhvLllHexagonalMesh);
+    lvl_constant(bhvLllBowserPuzzlePiece);
+    lvl_constant(bhvLllBowserPuzzle);
+    lvl_constant(bhvTuxiesMother);
+    lvl_constant(bhvPenguinBaby);
+    lvl_constant(bhvUnused20E0);
+    lvl_constant(bhvSmallPenguin);
+    lvl_constant(bhvManyBlueFishSpawner);
+    lvl_constant(bhvFewBlueFishSpawner);
+    lvl_constant(bhvFishSpawner);
+    lvl_constant(bhvFish);
+    lvl_constant(bhvWdwExpressElevator);
+    lvl_constant(bhvWdwExpressElevatorPlatform);
+    lvl_constant(bhvChirpChirp);
+    lvl_constant(bhvChirpChirpUnused);
+    lvl_constant(bhvBub);
+    lvl_constant(bhvExclamationBox);
+    lvl_constant(bhvRotatingExclamationMark);
+    lvl_constant(bhvSoundSpawner);
+    lvl_constant(bhvRockSolid);
+    lvl_constant(bhvBowserSubDoor);
+    lvl_constant(bhvBowsersSub);
+    lvl_constant(bhvSushiShark);
+    lvl_constant(bhvSushiSharkCollisionChild);
+    lvl_constant(bhvJrbSlidingBox);
+    lvl_constant(bhvShipPart3);
+    lvl_constant(bhvInSunkenShip3);
+    lvl_constant(bhvSunkenShipPart);
+    lvl_constant(bhvSunkenShipSetRotation);
+    lvl_constant(bhvSunkenShipPart2);
+    lvl_constant(bhvInSunkenShip);
+    lvl_constant(bhvInSunkenShip2);
+    lvl_constant(bhvMistParticleSpawner);
+    lvl_constant(bhvWhitePuff1);
+    lvl_constant(bhvWhitePuff2);
+    lvl_constant(bhvWhitePuffSmoke2);
+    lvl_constant(bhvPurpleSwitchHiddenBoxes);
+    lvl_constant(bhvBlueCoinSwitch);
+    lvl_constant(bhvHiddenBlueCoin);
+    lvl_constant(bhvOpenableCageDoor);
+    lvl_constant(bhvOpenableGrill);
+    lvl_constant(bhvWaterLevelDiamond);
+    lvl_constant(bhvInitializeChangingWaterLevel);
+    lvl_constant(bhvTweesterSandParticle);
+    lvl_constant(bhvTweester);
+    lvl_constant(bhvMerryGoRoundBooManager);
+    lvl_constant(bhvPlaysMusicTrackWhenTouched);
+    lvl_constant(bhvAnimatedTexture);
+    lvl_constant(bhvBooInCastle);
+    lvl_constant(bhvBooWithCage);
+    lvl_constant(bhvBalconyBigBoo);
+    lvl_constant(bhvMerryGoRoundBigBoo);
+    lvl_constant(bhvGhostHuntBigBoo);
+    lvl_constant(bhvCourtyardBooTriplet);
+    lvl_constant(bhvBoo);
+    lvl_constant(bhvMerryGoRoundBoo);
+    lvl_constant(bhvGhostHuntBoo);
+    lvl_constant(bhvHiddenStaircaseStep);
+    lvl_constant(bhvBooBossSpawnedBridge);
+    lvl_constant(bhvBbhTiltingTrapPlatform);
+    lvl_constant(bhvHauntedBookshelf);
+    lvl_constant(bhvMeshElevator);
+    lvl_constant(bhvMerryGoRound);
+    lvl_constant(bhvInsideCannon);
+    lvl_constant(bhvBetaBowserAnchor);
+    lvl_constant(bhvStaticCheckeredPlatform);
+    lvl_constant(bhvUnused2A10);
+    lvl_constant(bhvStar);
+    lvl_constant(bhvStaticObject);
+    lvl_constant(bhvUnused2A54);
+    lvl_constant(bhvCastleFloorTrap);
+    lvl_constant(bhvFloorTrapInCastle);
+    lvl_constant(bhvTree);
+    lvl_constant(bhvSparkle);
+    lvl_constant(bhvSparkleSpawn);
+    lvl_constant(bhvSparkleParticleSpawner);
+    lvl_constant(bhvScuttlebug);
+    lvl_constant(bhvScuttlebugSpawn);
+    lvl_constant(bhvWhompKingBoss);
+    lvl_constant(bhvSmallWhomp);
+    lvl_constant(bhvWaterSplash);
+    lvl_constant(bhvWaterDroplet);
+    lvl_constant(bhvWaterDropletSplash);
+    lvl_constant(bhvBubbleSplash);
+    lvl_constant(bhvIdleWaterWave);
+    lvl_constant(bhvObjectWaterSplash);
+    lvl_constant(bhvShallowWaterWave);
+    lvl_constant(bhvShallowWaterSplash);
+    lvl_constant(bhvObjectWaveTrail);
+    lvl_constant(bhvWaveTrail);
+    lvl_constant(bhvTinyStrongWindParticle);
+    lvl_constant(bhvStrongWindParticle);
+    lvl_constant(bhvSLSnowmanWind);
+    lvl_constant(bhvSLWalkingPenguin);
+    lvl_constant(bhvYellowBall);
     lvl_constant(bhvMario);
+    lvl_constant(bhvToadMessage);
+    lvl_constant(bhvUnlockDoorStar);
+    lvl_constant(bhvInstantActiveWarp);
     lvl_constant(bhvAirborneWarp);
+    lvl_constant(bhvHardAirKnockBackWarp);
+    lvl_constant(bhvSpinAirborneCircleWarp);
+    lvl_constant(bhvDeathWarp);
+    lvl_constant(bhvSpinAirborneWarp);
+    lvl_constant(bhvFlyingWarp);
+    lvl_constant(bhvPaintingStarCollectWarp);
+    lvl_constant(bhvPaintingDeathWarp);
+    lvl_constant(bhvAirborneDeathWarp);
+    lvl_constant(bhvAirborneStarCollectWarp);
+    lvl_constant(bhvLaunchStarCollectWarp);
+    lvl_constant(bhvLaunchDeathWarp);
+    lvl_constant(bhvSwimmingWarp);
+    lvl_constant(bhvRandomAnimatedTexture);
+    lvl_constant(bhvYellowBackgroundInMenu);
+    lvl_constant(bhvMenuButton);
+    lvl_constant(bhvMenuButtonManager);
+    lvl_constant(bhvActSelectorStarType);
+    lvl_constant(bhvActSelector);
+    lvl_constant(bhvMovingYellowCoin);
+    lvl_constant(bhvMovingBlueCoin);
+    lvl_constant(bhvBlueCoinSliding);
+    lvl_constant(bhvBlueCoinJumping);
+    lvl_constant(bhvSeaweed);
+    lvl_constant(bhvSeaweedBundle);
+    lvl_constant(bhvBobomb);
+    lvl_constant(bhvBobombFuseSmoke);
+    lvl_constant(bhvBobombBuddy);
+    lvl_constant(bhvBobombBuddyOpensCannon);
+    lvl_constant(bhvCannonClosed);
+    lvl_constant(bhvWhirlpool);
+    lvl_constant(bhvJetStream);
+    lvl_constant(bhvMessagePanel);
+    lvl_constant(bhvSignOnWall);
+    lvl_constant(bhvHomingAmp);
+    lvl_constant(bhvCirclingAmp);
+    lvl_constant(bhvButterfly);
+    lvl_constant(bhvHoot);
+    lvl_constant(bhvBetaHoldableObject);
+    lvl_constant(bhvCarrySomething1);
+    lvl_constant(bhvCarrySomething2);
+    lvl_constant(bhvCarrySomething3);
+    lvl_constant(bhvCarrySomething4);
+    lvl_constant(bhvCarrySomething5);
+    lvl_constant(bhvCarrySomething6);
+    lvl_constant(bhvObjectBubble);
+    lvl_constant(bhvObjectWaterWave);
+    lvl_constant(bhvExplosion);
+    lvl_constant(bhvBobombBullyDeathSmoke);
+    lvl_constant(bhvSmoke);
+    lvl_constant(bhvBobombExplosionBubble);
+    lvl_constant(bhvBobombExplosionBubble3600);
+    lvl_constant(bhvRespawner);
+    lvl_constant(bhvSmallBully);
+    lvl_constant(bhvBigBully);
+    lvl_constant(bhvBigBullyWithMinions);
+    lvl_constant(bhvSmallChillBully);
+    lvl_constant(bhvBigChillBully);
+    lvl_constant(bhvJetStreamRingSpawner);
+    lvl_constant(bhvJetStreamWaterRing);
+    lvl_constant(bhvMantaRayWaterRing);
+    lvl_constant(bhvMantaRayRingManager);
+    lvl_constant(bhvBowserBomb);
+    lvl_constant(bhvBowserBombExplosion);
+    lvl_constant(bhvBowserBombSmoke);
+    lvl_constant(bhvCelebrationStar);
+    lvl_constant(bhvCelebrationStarSparkle);
+    lvl_constant(bhvStarKeyCollectionPuffSpawner);
+    lvl_constant(bhvLllDrawbridgeSpawner);
+    lvl_constant(bhvLllDrawbridge);
+    lvl_constant(bhvSmallBomp);
+    lvl_constant(bhvLargeBomp);
+    lvl_constant(bhvWfSlidingPlatform);
+    lvl_constant(bhvMoneybag);
+    lvl_constant(bhvMoneybagHidden);
+    lvl_constant(bhvPitBowlingBall);
+    lvl_constant(bhvFreeBowlingBall);
+    lvl_constant(bhvBowlingBall);
+    lvl_constant(bhvTtmBowlingBallSpawner);
+    lvl_constant(bhvBobBowlingBallSpawner);
+    lvl_constant(bhvThiBowlingBallSpawner);
+    lvl_constant(bhvRrCruiserWing);
+    lvl_constant(bhvSpindel);
+    lvl_constant(bhvSslMovingPyramidWall);
+    lvl_constant(bhvPyramidElevator);
+    lvl_constant(bhvPyramidElevatorTrajectoryMarkerBall);
+    lvl_constant(bhvPyramidTop);
+    lvl_constant(bhvPyramidTopFragment);
+    lvl_constant(bhvPyramidPillarTouchDetector);
+    lvl_constant(bhvWaterfallSoundLoop);
+    lvl_constant(bhvVolcanoSoundLoop);
+    lvl_constant(bhvCastleFlagWaving);
+    lvl_constant(bhvBirdsSoundLoop);
+    lvl_constant(bhvAmbientSounds);
+    lvl_constant(bhvSandSoundLoop);
+    lvl_constant(bhvHiddenAt120Stars);
+    lvl_constant(bhvSnowmansBottom);
+    lvl_constant(bhvSnowmansHead);
+    lvl_constant(bhvSnowmansBodyCheckpoint);
+    lvl_constant(bhvBigSnowmanWhole);
+    lvl_constant(bhvBigBoulder);
+    lvl_constant(bhvBigBoulderGenerator);
+    lvl_constant(bhvWingCap);
+    lvl_constant(bhvMetalCap);
+    lvl_constant(bhvNormalCap);
+    lvl_constant(bhvVanishCap);
+    lvl_constant(bhvStar);
+    lvl_constant(bhvStarSpawnCoordinates);
+    lvl_constant(bhvHiddenRedCoinStar);
+    lvl_constant(bhvRedCoin);
+    lvl_constant(bhvBowserCourseRedCoinStar);
+    lvl_constant(bhvHiddenStar);
+    lvl_constant(bhvHiddenStarTrigger);
+    lvl_constant(bhvTtmRollingLog);
+    lvl_constant(bhvLllVolcanoFallingTrap);
+    lvl_constant(bhvLllRollingLog);
+    lvl_constant(bhv1upWalking);
+    lvl_constant(bhv1upRunningAway);
+    lvl_constant(bhv1upSliding);
+    lvl_constant(bhv1Up);
+    lvl_constant(bhv1upJumpOnApproach);
+    lvl_constant(bhvHidden1up);
+    lvl_constant(bhvHidden1upTrigger);
+    lvl_constant(bhvHidden1upInPole);
+    lvl_constant(bhvHidden1upInPoleTrigger);
+    lvl_constant(bhvHidden1upInPoleSpawner);
+    lvl_constant(bhvControllablePlatform);
+    lvl_constant(bhvControllablePlatformSub);
+    lvl_constant(bhvBreakableBoxSmall);
+    lvl_constant(bhvSlidingSnowMound);
+    lvl_constant(bhvSnowMoundSpawn);
+    lvl_constant(bhvWdwSquareFloatingPlatform);
+    lvl_constant(bhvWdwRectangularFloatingPlatform);
+    lvl_constant(bhvJrbFloatingPlatform);
+    lvl_constant(bhvArrowLift);
+    lvl_constant(bhvOrangeNumber);
+    lvl_constant(bhvMantaRay);
+    lvl_constant(bhvFallingPillar);
+    lvl_constant(bhvFallingPillarHitbox);
+    lvl_constant(bhvPillarBase);
+    lvl_constant(bhvJrbFloatingBox);
+    lvl_constant(bhvDecorativePendulum);
+    lvl_constant(bhvTreasureChestsShip);
+    lvl_constant(bhvTreasureChestsJrb);
+    lvl_constant(bhvTreasureChests);
+    lvl_constant(bhvTreasureChestBottom);
+    lvl_constant(bhvTreasureChestTop);
+    lvl_constant(bhvMips);
+    lvl_constant(bhvYoshi);
+    lvl_constant(bhvKoopa);
+    lvl_constant(bhvKoopaRaceEndpoint);
+    lvl_constant(bhvKoopaFlag);
+    lvl_constant(bhvPokey);
+    lvl_constant(bhvPokeyBodyPart);
+    lvl_constant(bhvSwoop);
+    lvl_constant(bhvFlyGuy);
+    lvl_constant(bhvGoomba);
+    lvl_constant(bhvGoombaTripletSpawner);
+    lvl_constant(bhvChainChomp);
+    lvl_constant(bhvChainChompChainPart);
+    lvl_constant(bhvWoodenPost);
+    lvl_constant(bhvChainChompGate);
+    lvl_constant(bhvWigglerHead);
+    lvl_constant(bhvWigglerBody);
+    lvl_constant(bhvEnemyLakitu);
+    lvl_constant(bhvCameraLakitu);
+    lvl_constant(bhvCloud);
+    lvl_constant(bhvCloudPart);
+    lvl_constant(bhvSpiny);
+    lvl_constant(bhvMontyMole);
+    lvl_constant(bhvMontyMoleHole);
+    lvl_constant(bhvMontyMoleRock);
+    lvl_constant(bhvPlatformOnTrack);
+    lvl_constant(bhvTrackBall);
+    lvl_constant(bhvSeesawPlatform);
+    lvl_constant(bhvFerrisWheelAxle);
+    lvl_constant(bhvFerrisWheelPlatform);
+    lvl_constant(bhvWaterBombSpawner);
+    lvl_constant(bhvWaterBomb);
+    lvl_constant(bhvWaterBombShadow);
+    lvl_constant(bhvTTCRotatingSolid);
+    lvl_constant(bhvTTCPendulum);
+    lvl_constant(bhvTTCTreadmill);
+    lvl_constant(bhvTTCMovingBar);
+    lvl_constant(bhvTTCCog);
+    lvl_constant(bhvTTCPitBlock);
+    lvl_constant(bhvTTCElevator);
+    lvl_constant(bhvTTC2DRotator);
+    lvl_constant(bhvTTCSpinner);
+    lvl_constant(bhvMrBlizzard);
+    lvl_constant(bhvMrBlizzardSnowball);
+    lvl_constant(bhvSlidingPlatform2);
+    lvl_constant(bhvOctagonalPlatformRotating);
+    lvl_constant(bhvAnimatesOnFloorSwitchPress);
+    lvl_constant(bhvActivatedBackAndForthPlatform);
+    lvl_constant(bhvRecoveryHeart);
+    lvl_constant(bhvWaterBombCannon);
+    lvl_constant(bhvCannonBarrelBubbles);
+    lvl_constant(bhvUnagi);
+    lvl_constant(bhvUnagiSubobject);
+    lvl_constant(bhvDorrie);
+    lvl_constant(bhvHauntedChair);
+    lvl_constant(bhvMadPiano);
+    lvl_constant(bhvFlyingBookend);
+    lvl_constant(bhvBookendSpawn);
+    lvl_constant(bhvHauntedBookshelfManager);
+    lvl_constant(bhvBookSwitch);
+    lvl_constant(bhvFirePiranhaPlant);
+    lvl_constant(bhvSmallPiranhaFlame);
+    lvl_constant(bhvFireSpitter);
+    lvl_constant(bhvFlyguyFlame);
+    lvl_constant(bhvSnufit);
+    lvl_constant(bhvSnufitBalls);
+    lvl_constant(bhvHorizontalGrindel);
+    lvl_constant(bhvEyerokBoss);
+    lvl_constant(bhvEyerokHand);
+    lvl_constant(bhvKlepto);
+    lvl_constant(bhvBird);
+    lvl_constant(bhvRacingPenguin);
+    lvl_constant(bhvPenguinRaceFinishLine);
+    lvl_constant(bhvPenguinRaceShortcutCheck);
+    lvl_constant(bhvCoffinSpawner);
+    lvl_constant(bhvCoffin);
+    lvl_constant(bhvClamShell);
+    lvl_constant(bhvSkeeter);
+    lvl_constant(bhvSkeeterWave);
+    lvl_constant(bhvSwingPlatform);
+    lvl_constant(bhvDonutPlatformSpawner);
+    lvl_constant(bhvDonutPlatform);
+    lvl_constant(bhvDDDPole);
+    lvl_constant(bhvRedCoinStarMarker);
+    lvl_constant(bhvTripletButterfly);
+    lvl_constant(bhvBubba);
+    lvl_constant(bhvBeginningLakitu);
+    lvl_constant(bhvBeginningPeach);
+    lvl_constant(bhvEndBirds1);
+    lvl_constant(bhvEndBirds2);
+    lvl_constant(bhvIntroScene);
+    lvl_constant(bhvUnusedFakeStar);
 
     // Level constants
+    lvl_constant(LEVEL_UNKNOWN_1);
+    lvl_constant(LEVEL_UNKNOWN_2);
+    lvl_constant(LEVEL_UNKNOWN_3);
+    lvl_constant(LEVEL_BBH);
+    lvl_constant(LEVEL_CCM);
+    lvl_constant(LEVEL_CASTLE);
+    lvl_constant(LEVEL_HMC);
+    lvl_constant(LEVEL_SSL);
     lvl_constant(LEVEL_BOB);
+    lvl_constant(LEVEL_SL);
+    lvl_constant(LEVEL_WDW);
+    lvl_constant(LEVEL_JRB);
+    lvl_constant(LEVEL_THI);
+    lvl_constant(LEVEL_TTC);
+    lvl_constant(LEVEL_RR);
+    lvl_constant(LEVEL_CASTLE_GROUNDS);
+    lvl_constant(LEVEL_BITDW);
+    lvl_constant(LEVEL_VCUTM);
+    lvl_constant(LEVEL_BITFS);
+    lvl_constant(LEVEL_SA);
+    lvl_constant(LEVEL_BITS);
+    lvl_constant(LEVEL_LLL);
+    lvl_constant(LEVEL_DDD);
+    lvl_constant(LEVEL_WF);
+    lvl_constant(LEVEL_ENDING);
+    lvl_constant(LEVEL_CASTLE_COURTYARD);
+    lvl_constant(LEVEL_PSS);
+    lvl_constant(LEVEL_COTMC);
+    lvl_constant(LEVEL_TOTWC);
+    lvl_constant(LEVEL_BOWSER_1);
+    lvl_constant(LEVEL_WMOTR);
+    lvl_constant(LEVEL_UNKNOWN_32);
+    lvl_constant(LEVEL_BOWSER_2);
+    lvl_constant(LEVEL_BOWSER_3);
+    lvl_constant(LEVEL_UNKNOWN_35);
+    lvl_constant(LEVEL_TTM);
+    lvl_constant(LEVEL_UNKNOWN_37);
+    lvl_constant(LEVEL_UNKNOWN_38);
 
     // Surface constants
     lvl_constant(TERRAIN_GRASS);
+    lvl_constant(TERRAIN_STONE);
+    lvl_constant(TERRAIN_SNOW);
+    lvl_constant(TERRAIN_SAND);
+    lvl_constant(TERRAIN_SPOOKY);
+    lvl_constant(TERRAIN_WATER);
+    lvl_constant(TERRAIN_SLIDE);
+    lvl_constant(TERRAIN_MASK);
 
     // Seq ids constants
+    lvl_constant(SEQ_SOUND_PLAYER);
+    lvl_constant(SEQ_EVENT_CUTSCENE_COLLECT_STAR);
+    lvl_constant(SEQ_MENU_TITLE_SCREEN);
     lvl_constant(SEQ_LEVEL_GRASS);
+    lvl_constant(SEQ_LEVEL_INSIDE_CASTLE);
+    lvl_constant(SEQ_LEVEL_WATER);
+    lvl_constant(SEQ_LEVEL_HOT);
+    lvl_constant(SEQ_LEVEL_BOSS_KOOPA);
+    lvl_constant(SEQ_LEVEL_SNOW);
+    lvl_constant(SEQ_LEVEL_SLIDE);
+    lvl_constant(SEQ_LEVEL_SPOOKY);
+    lvl_constant(SEQ_EVENT_PIRANHA_PLANT);
+    lvl_constant(SEQ_LEVEL_UNDERGROUND);
+    lvl_constant(SEQ_MENU_STAR_SELECT);
+    lvl_constant(SEQ_EVENT_POWERUP);
+    lvl_constant(SEQ_EVENT_METAL_CAP);
+    lvl_constant(SEQ_EVENT_KOOPA_MESSAGE);
+    lvl_constant(SEQ_LEVEL_KOOPA_ROAD);
+    lvl_constant(SEQ_EVENT_HIGH_SCORE);
+    lvl_constant(SEQ_EVENT_MERRY_GO_ROUND);
+    lvl_constant(SEQ_EVENT_RACE);
+    lvl_constant(SEQ_EVENT_CUTSCENE_STAR_SPAWN);
+    lvl_constant(SEQ_EVENT_BOSS);
+    lvl_constant(SEQ_EVENT_CUTSCENE_COLLECT_KEY);
+    lvl_constant(SEQ_EVENT_ENDLESS_STAIRS);
+    lvl_constant(SEQ_LEVEL_BOSS_KOOPA_FINAL);
+    lvl_constant(SEQ_EVENT_CUTSCENE_CREDITS);
+    lvl_constant(SEQ_EVENT_SOLVE_PUZZLE);
+    lvl_constant(SEQ_EVENT_TOAD_MESSAGE);
+    lvl_constant(SEQ_EVENT_PEACH_MESSAGE);
+    lvl_constant(SEQ_EVENT_CUTSCENE_INTRO);
+    lvl_constant(SEQ_EVENT_CUTSCENE_VICTORY);
+    lvl_constant(SEQ_EVENT_CUTSCENE_ENDING);
+    lvl_constant(SEQ_MENU_FILE_SELECT);
+    lvl_constant(SEQ_EVENT_CUTSCENE_LAKITU);
+    lvl_constant(SEQ_COUNT);
 
     // Model constants
     lvl_constant(ACT_1);
@@ -533,7 +1146,7 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     lvl_constant(MODEL_WARIOS_WINGED_METAL_CAP);
     lvl_constant(MODEL_ERROR_MODEL);
 
-    // OP constants
+    // level command constants
     lvl_constant(OP_AND);
     lvl_constant(OP_NAND);
     lvl_constant(OP_EQ);
@@ -544,35 +1157,56 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     lvl_constant(OP_GEQ);
     lvl_constant(OP_SET);
     lvl_constant(OP_GET);
-
-    // VAR_CURR constants
     lvl_constant(VAR_CURR_SAVE_FILE_NUM);
     lvl_constant(VAR_CURR_COURSE_NUM);
     lvl_constant(VAR_CURR_ACT_NUM);
     lvl_constant(VAR_CURR_LEVEL_NUM);
     lvl_constant(VAR_CURR_AREA_INDEX);
-
-    // WARP constants
     lvl_constant(WARP_CHECKPOINT);
     lvl_constant(WARP_NO_CHECKPOINT);
-
-    // WHIRLPOOL constants
     lvl_constant(WHIRLPOOL_COND_ALWAYS);
     lvl_constant(WHIRLPOOL_COND_BOWSER2_BEATEN);
     lvl_constant(WHIRLPOOL_COND_AT_LEAST_SECOND_STAR);
-
-    // FACE constants
     lvl_constant(REGULAR_FACE);
     lvl_constant(DIZZY_FACE);
 
     // Other constants
     lvl_constant(NULL);
 
+    // Geo layouts
+    for (auto& _Node : aGfxData->mGeoLayouts) {
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_Geo_Parse(aGfxData, _Node, false)->mData;
+        }
+    }
+
+    // Collisions
+    for (auto& _Node : aGfxData->mCollisions) {
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_Col_Parse(aGfxData, _Node, false)->mData;
+        }
+    }
+
+    // MacroObjects
+    for (auto& _Node : aGfxData->mMacroObjects) {
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_MacroObject_Parse(aGfxData, _Node, false)->mData;
+        }
+    }
+
     // Integers
     s32 x;
     if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
         return (LevelScript) x;
     }
+
+    // Recursive descent parsing
+    bool rdSuccess = false;
+    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess);
+    if (rdSuccess) {
+        return (LevelScript)rdValue;
+    }
+
 
     // Unknown
     PrintError("  ERROR: Unknown lvl arg: %s", _Arg.begin());
@@ -587,40 +1221,40 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
         return;                                  \
     }
 
-#define lvl_symbol_1(symb, n)                                                \
-    if (_Symbol == #symb) {                                                  \
+#define lvl_symbol_1(symb, n)                                                        \
+    if (_Symbol == #symb) {                                                          \
         LevelScript _Arg0 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }               \
-        LevelScript _Ls[] = { symb(_Arg0) };                                 \
-        memcpy(aHead, _Ls, sizeof(_Ls));                                     \
-        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));                             \
-        return;                                                              \
+        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                       \
+        LevelScript _Ls[] = { symb(_Arg0) };                                         \
+        memcpy(aHead, _Ls, sizeof(_Ls));                                             \
+        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));                                     \
+        return;                                                                      \
     }
 
-#define lvl_symbol_2(symb, n1, n2)                                           \
-    if (_Symbol == #symb) {                                                  \
+#define lvl_symbol_2(symb, n1, n2)                                                   \
+    if (_Symbol == #symb) {                                                          \
         LevelScript _Arg0 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
         LevelScript _Arg1 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n1 != 0) { aGfxData->mPointerList.Add(aHead + n1); }             \
-        if (n2 != 0) { aGfxData->mPointerList.Add(aHead + n2); }             \
-        LevelScript _Ls[] = { symb(_Arg0, _Arg1) };                          \
-        memcpy(aHead, _Ls, sizeof(_Ls));                                     \
-        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));                             \
-        return;                                                              \
+        if (n1 != 0) { aGfxData->mPointerList.Add(aHead + n1); }                     \
+        if (n2 != 0) { aGfxData->mPointerList.Add(aHead + n2); }                     \
+        LevelScript _Ls[] = { symb(_Arg0, _Arg1) };                                  \
+        memcpy(aHead, _Ls, sizeof(_Ls));                                             \
+        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));                                     \
+        return;                                                                      \
     }
 
-#define lvl_symbol_3(symb, n1, n2, n3)                                       \
-    if (_Symbol == #symb) {                                                  \
+#define lvl_symbol_3(symb, n1, n2, n3)                                               \
+    if (_Symbol == #symb) {                                                          \
         LevelScript _Arg0 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
         LevelScript _Arg1 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
         LevelScript _Arg2 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n1 != 0) { aGfxData->mPointerList.Add(aHead + n1); }             \
-        if (n2 != 0) { aGfxData->mPointerList.Add(aHead + n2); }             \
-        if (n3 != 0) { aGfxData->mPointerList.Add(aHead + n3); }             \
-        LevelScript _Ls[] = { symb(_Arg0, _Arg1, _Arg2) };                   \
-        memcpy(aHead, _Ls, sizeof(_Ls));                                     \
-        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));                             \
-        return;                                                              \
+        if (n1 != 0) { aGfxData->mPointerList.Add(aHead + n1); }                     \
+        if (n2 != 0) { aGfxData->mPointerList.Add(aHead + n2); }                     \
+        if (n3 != 0) { aGfxData->mPointerList.Add(aHead + n3); }                     \
+        LevelScript _Ls[] = { symb(_Arg0, _Arg1, _Arg2) };                           \
+        memcpy(aHead, _Ls, sizeof(_Ls));                                             \
+        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));                                     \
+        return;                                                                      \
     }
 
 #define lvl_symbol_4(symb, n1, n2, n3)                                       \
@@ -714,6 +1348,12 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
         return;                                                              \
     }
 
+#define lvl_symbol_noop(symb, skipCount) \
+    if (_Symbol == #symb) {              \
+        aTokenIndex += skipCount;        \
+        return;                          \
+    }
+
 static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNode, LevelScript*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
@@ -749,9 +1389,9 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_0(POP_POOL);
     lvl_symbol_3(FIXED_LOAD, 1, 2, 3);
     lvl_symbol_3(LOAD_RAW, 1, 2, 0);
-    lvl_symbol_3(LOAD_MIO0, 1, 2, 0);
+    lvl_symbol_noop(LOAD_MIO0, 3);
     lvl_symbol_1(LOAD_MARIO_HEAD, 0);
-    lvl_symbol_3(LOAD_MIO0_TEXTURE, 1, 2, 0);
+    lvl_symbol_noop(LOAD_MIO0_TEXTURE, 3);
 
     // levels
     lvl_symbol_0(INIT_LEVEL);
@@ -812,7 +1452,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     PrintError("  ERROR: Unknown lvl symbol: %s", _Symbol.begin());
 }
 
-static DataNode<LevelScript>* ParseLevelScriptData(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent) {
+DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent) {
     if (aNode->mData) return aNode;
 
     // Level script data
@@ -857,7 +1497,7 @@ bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64,
 
         // Parse data
         PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
-        ParseLevelScriptData(_GfxData, _LvlRoot, true);
+        DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
         // Write if no error
         if (_GfxData->mErrorCount == 0) {

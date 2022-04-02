@@ -15,9 +15,9 @@ static void ClearColDataNodes(DataNodes<T> &aDataNodes) {
     }
 }
 
-//
-// Parse collision file
-//
+  /////////////
+ // Parsing //
+/////////////
 
 #define COLLISION_SIZE_PER_TOKEN 4
 
@@ -384,7 +384,7 @@ static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, 
     PrintError("  ERROR: Unknown col symbol: %s", _Symbol.begin());
 }
 
-static DataNode<Collision>* ParseCollisionData(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent) {
+DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent) {
     if (aNode->mData) return aNode;
 
     // Collision data
@@ -399,48 +399,4 @@ static DataNode<Collision>* ParseCollisionData(GfxData* aGfxData, DataNode<Colli
     aNode->mSize = (u32)(_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
     return aNode;
-}
-
-static DataNode<Collision> *GetCollision(GfxData *aGfxData, const String& aGeoRoot) {
-    for (DataNode<Collision> *_Node : aGfxData->mCollisions) {
-        if (_Node->mName == aGeoRoot) {
-            return _Node;
-        }
-    }
-    return NULL;
-}
-
-bool DynOS_Col_GeneratePack(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
-    bool generated = false;
-    for (auto &_ColNode : _GfxData->mCollisions) {
-        String _ColRootName = _ColNode->mName;
-        DataNode<Collision> *_ColRoot = GetCollision(_GfxData, _ColRootName);
-        if (_ColRoot != NULL) {
-
-            // If there is an existing binary file for this collision, skip and go to the next actor
-            SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
-            if (fs_sys_file_exists(_ColFilename.c_str())) {
-                continue;
-            }
-
-            // Init
-            _GfxData->mErrorCount = 0;
-            _GfxData->mLoadIndex = 0;
-
-            // Parse data
-            PrintNoNewLine("%s.col: Model identifier: %X - Processing... ", _ColRootName.begin(), _GfxData->mModelIdentifier);
-            ParseCollisionData(_GfxData, _ColRoot, true);
-
-            // Write if no error
-            if (_GfxData->mErrorCount == 0) {
-                DynOS_Col_WriteBinary(_ColFilename, _GfxData, _ColRoot);
-            } else {
-                Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
-            }
-            // Clear data pointers
-            ClearColDataNodes(_GfxData->mCollisions);
-            generated = true;
-        }
-    }
-    return generated;
 }

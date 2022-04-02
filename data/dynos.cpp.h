@@ -28,6 +28,7 @@ enum {
     DATA_TYPE_GFXDYNCMD,
     DATA_TYPE_COLLISION,
     DATA_TYPE_LEVEL_SCRIPT,
+    DATA_TYPE_MACRO_OBJECT,
     DATA_TYPE_UNUSED,
 };
 
@@ -424,6 +425,7 @@ struct GfxData : NoCopy {
     DataNodes<GeoLayout> mGeoLayouts;
     DataNodes<Collision> mCollisions;
     DataNodes<LevelScript> mLevelScripts;
+    DataNodes<MacroObject> mMacroObjects;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -712,7 +714,6 @@ const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 // Collisions
 //
 
-bool DynOS_Col_GeneratePack(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node);
 DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
 
@@ -728,6 +729,19 @@ bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64,
 
 void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName);
 Collision* DynOS_Col_GetCollision(const char* collisionName);
+
+
+DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent);
+DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
+DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode);
+DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
+DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
+DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent);
+DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent);
+DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
+
+void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
+s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success);
 
 #endif
 #endif
