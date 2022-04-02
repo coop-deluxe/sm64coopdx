@@ -42,6 +42,10 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
             Delete(_Node->mData);
             Delete(_Node);
         }
+        for (auto& _Node : aGfxData->mTrajectories) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
         Delete(aGfxData);
     }
 }

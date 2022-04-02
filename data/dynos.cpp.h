@@ -29,6 +29,7 @@ enum {
     DATA_TYPE_COLLISION,
     DATA_TYPE_LEVEL_SCRIPT,
     DATA_TYPE_MACRO_OBJECT,
+    DATA_TYPE_TRAJECTORY,
     DATA_TYPE_UNUSED,
 };
 
@@ -426,6 +427,7 @@ struct GfxData : NoCopy {
     DataNodes<Collision> mCollisions;
     DataNodes<LevelScript> mLevelScripts;
     DataNodes<MacroObject> mMacroObjects;
+    DataNodes<Trajectory> mTrajectories;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -752,6 +754,10 @@ void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
 void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode);
 DataNode<MacroObject>* DynOS_MacroObject_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<Trajectory>* DynOS_Trajectory_Parse(GfxData* aGfxData, DataNode<Trajectory>* aNode, bool aDisplayPercent);
+void DynOS_Trajectory_Write(FILE* aFile, GfxData* aGfxData, DataNode<Trajectory> *aNode);
+DataNode<Trajectory>* DynOS_Trajectory_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);

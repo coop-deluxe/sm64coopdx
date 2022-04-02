@@ -191,6 +191,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     _DataType = DATA_TYPE_LEVEL_SCRIPT;
                 } else if (_Buffer == "MacroObject") {
                     _DataType = DATA_TYPE_MACRO_OBJECT;
+                } else if (_Buffer == "Trajectory") {
+                    _DataType = DATA_TYPE_TRAJECTORY;
                 } else {
                     PrintError("  ERROR: Unknown type name: %s", _Buffer.begin());
                 }
@@ -217,6 +219,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     case DATA_TYPE_COLLISION:    AppendNewNode(aGfxData, aGfxData->mCollisions,   _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_LEVEL_SCRIPT: AppendNewNode(aGfxData, aGfxData->mLevelScripts, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_MACRO_OBJECT: AppendNewNode(aGfxData, aGfxData->mMacroObjects, _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_TRAJECTORY:   AppendNewNode(aGfxData, aGfxData->mTrajectories, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_UNUSED:       pDataTokens = (Array<String> *) 1;                                                 break;
                 }
                 _Buffer.Clear();

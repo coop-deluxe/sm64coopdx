@@ -60,6 +60,13 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    // Trajectories
+    for (auto& _Node : aGfxData->mTrajectories) {
+        if (_Node->mData == aPtr) {
+            return { _Node->mName, 0 };
+        }
+    }
+
     // Behaviors
     enum BehaviorId id = get_id_from_vanilla_behavior((const BehaviorScript*) aPtr);
     if (id >= 0 && id < id_bhv_max_count) {
@@ -176,6 +183,13 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
 
     // Macro objects
     for (auto &_Node : aGfxData->mMacroObjects) {
+        if (_Node->mName == aPtrName) {
+            return (void *) _Node->mData;
+        }
+    }
+
+    // Trajectories
+    for (auto &_Node : aGfxData->mTrajectories) {
         if (_Node->mName == aPtrName) {
             return (void *) _Node->mData;
         }
