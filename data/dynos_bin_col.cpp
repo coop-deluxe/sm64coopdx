@@ -436,7 +436,7 @@ static bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
  // Loading //
 /////////////
 
-static DataNode<Collision>* LoadCollisionData(FILE *aFile) {
+DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData) {
     DataNode<Collision> *_Node = New<DataNode<Collision>>();
 
     // Name
@@ -447,6 +447,11 @@ static DataNode<Collision>* LoadCollisionData(FILE *aFile) {
     _Node->mData = New<Collision>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         _Node->mData[i] = ReadBytes<Collision>(aFile);
+    }
+
+    // Add it
+    if (aGfxData != NULL) {
+        aGfxData->mCollisions.Add(_Node);
     }
 
     return _Node;
@@ -460,7 +465,7 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const 
     if (_File) {
         u8 type = ReadBytes<u8>(_File);
         if (type == DATA_TYPE_COLLISION) {
-            collisionNode = LoadCollisionData(_File);
+            collisionNode = DynOS_Col_Load(_File, NULL);
         }
         fclose(_File);
     }

@@ -464,3 +464,46 @@ DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<Macro
 }
 
 #pragma GCC diagnostic pop
+
+  /////////////
+ // Writing //
+/////////////
+
+void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode) {
+    if (!aNode->mData) return;
+
+    // Name
+    WriteBytes<u8>(aFile, DATA_TYPE_MACRO_OBJECT);
+    aNode->mName.Write(aFile);
+
+    // Data
+    WriteBytes<u32>(aFile, aNode->mSize);
+    for (u32 i = 0; i != aNode->mSize; ++i) {
+        WriteBytes<MacroObject>(aFile, aNode->mData[i]);
+    }
+}
+
+  /////////////
+ // Reading //
+/////////////
+
+DataNode<MacroObject>* DynOS_MacroObject_Load(FILE *aFile, GfxData *aGfxData) {
+    DataNode<MacroObject> *_Node = New<DataNode<MacroObject>>();
+
+    // Name
+    _Node->mName.Read(aFile);
+
+    // Data
+    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mData = New<MacroObject>(_Node->mSize);
+    for (u32 i = 0; i != _Node->mSize; ++i) {
+        _Node->mData[i] = ReadBytes<MacroObject>(aFile);
+    }
+
+    // Add it
+    if (aGfxData != NULL) {
+        aGfxData->mMacroObjects.Add(_Node);
+    }
+
+    return _Node;
+}

@@ -30,8 +30,13 @@ void dynos_add_actor_custom(const char *modPath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 
 // -- collisions -- //
-void dynos_add_collision_custom(const char *modPath, const char* collisionName);
+void dynos_add_collision(const char *modPath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
+
+// -- levels -- //
+
+void dynos_add_level(const char *modPath, const char* levelName);
+LevelScript* dynos_level_get(const char* levelName);
 
 #endif
 #endif

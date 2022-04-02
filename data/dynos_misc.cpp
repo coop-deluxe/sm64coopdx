@@ -564,14 +564,16 @@ void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory) {
     return NULL;
 }
 
-// Collisions
+  ////////////////
+ // Collisions //
+////////////////
 
-static Array<Pair<const char*, DataNode<Collision>*>> sDynosCustomCollisions;
+static Array<Pair<const char*, DataNode<Collision>*>> sDynosCollisions;
 
-void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName) {
+void DynOS_Col_Add(const SysPath &aPackFolder, const char *aCollisionName) {
     // check for duplicates
-    for (s32 i = 0; i < sDynosCustomCollisions.Count(); ++i) {
-        if (!strcmp(sDynosCustomCollisions[i].first, aCollisionName)) {
+    for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
+        if (!strcmp(sDynosCollisions[i].first, aCollisionName)) {
             return;
         }
     }
@@ -586,14 +588,52 @@ void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aColli
         return;
     }
 
-    // Add to custom collisions
-    sDynosCustomCollisions.Add({ collisionName, _Node });
+    // Add to collisions
+    sDynosCollisions.Add({ collisionName, _Node });
 }
 
-Collision* DynOS_Col_GetCollision(const char* collisionName) {
-    for (s32 i = 0; i < sDynosCustomCollisions.Count(); ++i) {
-        if (!strcmp(sDynosCustomCollisions[i].first, collisionName)) {
-            return sDynosCustomCollisions[i].second->mData;
+Collision* DynOS_Col_Get(const char* collisionName) {
+    for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
+        if (!strcmp(sDynosCollisions[i].first, collisionName)) {
+            return sDynosCollisions[i].second->mData;
+        }
+    }
+    return NULL;
+}
+
+  ////////////
+ // Levels //
+////////////
+
+static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
+
+void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName) {
+    // check for duplicates
+    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
+        if (!strcmp(sDynosCustomLevelScripts[i].first, aLevelName)) {
+            return;
+        }
+    }
+
+    u16 levelLen = strlen(aLevelName);
+    char* levelName = (char*)calloc(1, sizeof(char) * (levelLen + 1));
+    strcpy(levelName, aLevelName);
+
+    GfxData* _Node = DynOS_Lvl_LoadFromBinary(aPackFolder, levelName);
+    if (!_Node) {
+        free(levelName);
+        return;
+    }
+
+    // Add to levels
+    sDynosCustomLevelScripts.Add({ levelName, _Node });
+}
+
+LevelScript* DynOS_Lvl_Get(const char* levelName) {
+    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
+        if (!strcmp(sDynosCustomLevelScripts[i].first, levelName)) {
+            auto& scripts = sDynosCustomLevelScripts[i].second->mLevelScripts;
+            return scripts[scripts.Count() - 1]->mData;
         }
     }
     return NULL;

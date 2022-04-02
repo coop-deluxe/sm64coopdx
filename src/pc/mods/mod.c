@@ -59,8 +59,37 @@ static void mod_activate_col(struct Mod* mod, struct ModFile* file) {
     }
 
     // Add to custom actors
-    dynos_add_collision_custom(dynosPath, colName);
+    dynos_add_collision(dynosPath, colName);
     LOG_INFO("Activating DynOS col: '%s', '%s'", dynosPath, colName);
+}
+
+static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
+    char dynosPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(dynosPath, SYS_MAX_PATH - 1, "%s/levels", mod->basePath) < 0) {
+        LOG_ERROR("Failed to concat dynos path");
+        return;
+    }
+
+    // copy geo name
+    char lvlName[64] = { 0 };
+    if (snprintf(lvlName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated lvl name");
+        return;
+    }
+
+    // remove '.lvl'
+    char* g = lvlName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to levels
+    dynos_add_level(dynosPath, lvlName);
+    LOG_INFO("Activating DynOS lvl: '%s', '%s'", dynosPath, lvlName);
 }
 
 void mod_activate(struct Mod* mod) {
@@ -72,6 +101,9 @@ void mod_activate(struct Mod* mod) {
         }
         if (str_ends_with(file->relativePath, ".col")) {
             mod_activate_col(mod, file);
+        }
+        if (str_ends_with(file->relativePath, ".lvl")) {
+            mod_activate_lvl(mod, file);
         }
     }
 }
@@ -200,34 +232,69 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
         // open actors directory
         struct dirent* dir = NULL;
         DIR* d = opendir(actorsPath);
-        if (!d) {
-            return true;
-        }
+        if (d) {
+            // iterate mod directory
+            char path[SYS_MAX_PATH] = { 0 };
+            char relativePath[SYS_MAX_PATH] = { 0 };
+            while ((dir = readdir(d)) != NULL) {
+                // sanity check / fill path[]
+                if (!directory_sanity_check(dir, actorsPath, path)) { continue; }
+                if (snprintf(relativePath, SYS_MAX_PATH - 1, "actors/%s", dir->d_name) < 0) {
+                    LOG_ERROR("Could not concat actor path!");
+                    return false;
+                }
 
-        // iterate mod directory
-        char path[SYS_MAX_PATH] = { 0 };
-        char relativePath[SYS_MAX_PATH] = { 0 };
-        while ((dir = readdir(d)) != NULL) {
-            // sanity check / fill path[]
-            if (!directory_sanity_check(dir, actorsPath, path)) { continue; }
-            if (snprintf(relativePath, SYS_MAX_PATH - 1, "actors/%s", dir->d_name) < 0) {
-                LOG_ERROR("Could not concat actor path!");
-                return false;
+                // only consider bin, and col files
+                if (!str_ends_with(path, ".bin") && !str_ends_with(path, ".col")) {
+                    continue;
+                }
+
+                // allocate file
+                struct ModFile* file = mod_allocate_file(mod, relativePath);
+                if (file == NULL) { return false; }
             }
 
-            // only consider bin and col files
-            if (!str_ends_with(path, ".bin") && !str_ends_with(path, ".col")) {
-                continue;
-            }
-
-            // allocate file
-            struct ModFile* file = mod_allocate_file(mod, relativePath);
-            if (file == NULL) { return false; }
+            closedir(d);
         }
-
-        closedir(d);
     }
 
+    // deal with levels directory
+    {
+        // concat levels directory
+        char levelsPath[SYS_MAX_PATH] = { 0 };
+        if (!concat_path(levelsPath, fullPath, "levels")) {
+            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "levels");
+            return false;
+        }
+
+        // open levels directory
+        struct dirent* dir = NULL;
+        DIR* d = opendir(levelsPath);
+        if (d) {
+            // iterate mod directory
+            char path[SYS_MAX_PATH] = { 0 };
+            char relativePath[SYS_MAX_PATH] = { 0 };
+            while ((dir = readdir(d)) != NULL) {
+                // sanity check / fill path[]
+                if (!directory_sanity_check(dir, levelsPath, path)) { continue; }
+                if (snprintf(relativePath, SYS_MAX_PATH - 1, "levels/%s", dir->d_name) < 0) {
+                    LOG_ERROR("Could not concat level path!");
+                    return false;
+                }
+
+                // only consider lvl files
+                if (!str_ends_with(path, ".lvl")) {
+                    continue;
+                }
+
+                // allocate file
+                struct ModFile* file = mod_allocate_file(mod, relativePath);
+                if (file == NULL) { return false; }
+            }
+
+            closedir(d);
+        }
+    }
     return true;
 }
 

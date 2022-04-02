@@ -1,12 +1,13 @@
 #include "dynos.cpp.h"
-
+extern "C" {
+#include "behavior_table.h"
+}
   /////////////
  // Writing //
 /////////////
 
 typedef Pair<String, u32> PointerData;
 static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
-
     // Lights
     for (auto& _Node : aGfxData->mLights) {
         if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
@@ -59,6 +60,12 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    // Behaviors
+    enum BehaviorId id = get_id_from_vanilla_behavior((const BehaviorScript*) aPtr);
+    if (id >= 0 && id < id_bhv_max_count) {
+        return { get_behavior_name_from_id(id), 0 };
+    }
+
     // Vertices
     String _VtxArrayName = "";
     uintptr_t _VtxArrayStart = 0;
@@ -88,6 +95,14 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
     if (_GeoFunctionIndex != -1) {
         WriteBytes<u32>(aFile, FUNCTION_CODE);
         WriteBytes<s32>(aFile, _GeoFunctionIndex);
+        return;
+    }
+
+    // Lvl function
+    s32 _LvlFunctionIndex = DynOS_Lvl_GetFunctionIndex(aPtr);
+    if (_LvlFunctionIndex != -1) {
+        WriteBytes<u32>(aFile, FUNCTION_CODE);
+        WriteBytes<s32>(aFile, _LvlFunctionIndex);
         return;
     }
 
@@ -166,17 +181,25 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         }
     }
 
+    // Behaviors
+    enum BehaviorId id = get_id_from_behavior_name(aPtrName.begin());
+    if (id >= 0 && id < id_bhv_max_count) {
+        return (void*)get_behavior_from_id(id);
+    }
+
     // Error
     sys_fatal("Pointer not found: %s", aPtrName.begin());
     return NULL;
 }
 
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue) {
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl) {
 
     // FUNC
     if (aValue == FUNCTION_CODE) {
-        s32 _GeoFunctionIndex = ReadBytes<s32>(aFile);
-        return DynOS_Geo_GetFunctionPointerFromIndex(_GeoFunctionIndex);
+        s32 _FunctionIndex = ReadBytes<s32>(aFile);
+        return isLvl
+             ? DynOS_Lvl_GetFunctionPointerFromIndex(_FunctionIndex)
+             : DynOS_Geo_GetFunctionPointerFromIndex(_FunctionIndex);
     }
 
     // PNTR

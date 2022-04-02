@@ -693,6 +693,9 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId);
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea);
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 
+void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName);
+LevelScript* DynOS_Lvl_Get(const char* levelName);
+
 //
 // Warps
 //
@@ -709,8 +712,8 @@ const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 // Collisions
 //
 
-void DynOS_Col_AddCollisionCustom(const SysPath &aPackFolder, const char *aCollisionName);
-Collision* DynOS_Col_GetCollision(const char* collisionName);
+void DynOS_Col_Add(const SysPath &aPackFolder, const char *aCollisionName);
+Collision* DynOS_Col_Get(const char* collisionName);
 
 //
 // Bin
@@ -729,6 +732,7 @@ void DynOS_Anim_Table_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent);
 void DynOS_Col_Write(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode);
+DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName);
 void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 
@@ -745,8 +749,8 @@ void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode
 void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
-// TODO: DynOS_MacroObject_Write
-// TODO: DynOS_MacroObject_Load
+void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode);
+DataNode<MacroObject>* DynOS_MacroObject_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
@@ -758,7 +762,7 @@ void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
 void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData);
 
 void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData);
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue);
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl);
 
 void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData);
 
@@ -766,9 +770,10 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder);
 
 DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent);
-// TODO: DynOS_Lvl_Write
-// TODO: DynOS_Lvl_Load
+GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevelName);
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
+s32 DynOS_Lvl_GetFunctionIndex(const void *aPtr);
+void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex);
 
 #endif
 #endif

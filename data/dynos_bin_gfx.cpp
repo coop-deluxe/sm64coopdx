@@ -894,7 +894,7 @@ void DynOS_Gfx_Load(FILE *aFile, GfxData *aGfxData) {
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _WordsW0 = ReadBytes<u32>(aFile);
         u32 _WordsW1 = ReadBytes<u32>(aFile);
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _WordsW1);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _WordsW1, false);
         if (_Ptr) {
             _Node->mData[i].words.w0 = (uintptr_t) _WordsW0;
             _Node->mData[i].words.w1 = (uintptr_t) _Ptr;

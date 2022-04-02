@@ -146,6 +146,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                 } else if (!_DataIgnore) {
                     _Buffer.Add(*c);
                 }
+            } else if (*c == '<' || *c == '>') {
+                _DataIgnore = !_DataIgnore;
             }
 
             // Retrieving data type

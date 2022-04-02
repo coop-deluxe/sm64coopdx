@@ -375,6 +375,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_BEHAVIORSCRIPT: lua_pushinteger(L, *(s32*)p);          break;
         case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);       break;
         case LVT_COLLISION:  lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_LEVELSCRIPT: lua_pushinteger(L, *(s32*)p);             break;
 
         // pointers
         case LVT_U8_P:
@@ -387,6 +388,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_BEHAVIORSCRIPT_P:
         case LVT_OBJECTANIMPOINTER_P:
         case LVT_COLLISION_P:
+        case LVT_LEVELSCRIPT_P:
             smlua_push_pointer(L, data->valueType, *(u8**)p);
             break;
 

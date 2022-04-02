@@ -89,12 +89,22 @@ const void* dynos_geolayout_get(const char *name) {
 
 // -- collisions -- //
 
-void dynos_add_collision_custom(const char *modPath, const char* collisionName) {
-    DynOS_Col_AddCollisionCustom(modPath, collisionName);
+void dynos_add_collision(const char *modPath, const char* collisionName) {
+    DynOS_Col_Add(modPath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
-    return DynOS_Col_GetCollision(collisionName);
+    return DynOS_Col_Get(collisionName);
+}
+
+// -- levels -- //
+
+void dynos_add_level(const char *modPath, const char* levelName) {
+    DynOS_Lvl_Add(modPath, levelName);
+}
+
+LevelScript* dynos_level_get(const char* levelName) {
+    return DynOS_Lvl_Get(levelName);
 }
 
 }

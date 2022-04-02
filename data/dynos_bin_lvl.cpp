@@ -33,12 +33,25 @@ return sLvlFunctions;
 #define sLvlFunctions __LvlFunctions()
 
 void *DynOS_Lvl_GetFunctionPointerFromName(const String &aName) {
-    for (const auto &_GeoFunction : sLvlFunctions) {
-        if (aName == _GeoFunction.first) {
-            return _GeoFunction.second;
+    for (const auto &_LvlFunction : sLvlFunctions) {
+        if (aName == _LvlFunction.first) {
+            return _LvlFunction.second;
         }
     };
     return NULL;
+}
+
+s32 DynOS_Lvl_GetFunctionIndex(const void *aPtr) {
+    for (const auto &_LvlFunction : sLvlFunctions) {
+        if (_LvlFunction.second == aPtr) {
+            return (s32) (&_LvlFunction - sLvlFunctions.begin());
+        }
+    }
+    return -1;
+}
+
+void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex) {
+    return sLvlFunctions[aIndex].second;
 }
 
   /////////////
@@ -1478,6 +1491,149 @@ static DataNode<LevelScript> *GetLevelScript(GfxData *aGfxData, const String& aG
     return NULL;
 }
 
+  /////////////
+ // Writing //
+/////////////
+
+static void DynOS_Lvl_Write(FILE* aFile, GfxData* aGfxData, DataNode<LevelScript> *aNode) {
+    if (!aNode->mData) return;
+
+    // Name
+    WriteBytes<u8>(aFile, DATA_TYPE_LEVEL_SCRIPT);
+    aNode->mName.Write(aFile);
+
+    // Data
+    WriteBytes<u32>(aFile, aNode->mSize);
+    for (u32 i = 0; i != aNode->mSize; ++i) {
+        LevelScript *_Head = &aNode->mData[i];
+        if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
+            DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData);
+        } else {
+            WriteBytes<u32>(aFile, *((u32 *) _Head));
+        }
+    }
+}
+
+static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
+    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    if (!_File) {
+        PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        return false;
+    }
+
+    for (u64 i = 0; i != aGfxData->mLoadIndex; ++i) {
+        for (auto &_Node : aGfxData->mLights) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Lights_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mTextures) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Tex_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mVertices) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Vtx_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mDisplayLists) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Gfx_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mGeoLayouts) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Geo_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mCollisions) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Col_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mLevelScripts) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Lvl_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mMacroObjects) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_MacroObject_Write(_File, aGfxData, _Node);
+            }
+        }
+    }
+    fclose(_File);
+    return true;
+}
+
+  /////////////
+ // Reading //
+/////////////
+
+static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
+    DataNode<LevelScript> *_Node = New<DataNode<LevelScript>>();
+
+    // Name
+    _Node->mName.Read(aFile);
+
+    // Data
+    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mData = New<LevelScript>(_Node->mSize);
+    for (u32 i = 0; i != _Node->mSize; ++i) {
+        u32 _Value = ReadBytes<u32>(aFile);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, true);
+        if (_Ptr) {
+            _Node->mData[i] = (uintptr_t) _Ptr;
+        } else {
+            _Node->mData[i] = (uintptr_t) _Value;
+        }
+    }
+
+    // Add it
+    if (aGfxData != NULL) {
+        aGfxData->mLevelScripts.Add(_Node);
+    }
+
+    return _Node;
+}
+
+GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevelName) {
+    struct DynosGfxDataCache { SysPath mPackFolder; Array<Pair<const char *, GfxData *>> mGfxData; };
+    static Array<DynosGfxDataCache *> sDynosGfxDataCache;
+
+    // Load data from binary file
+    GfxData *_GfxData = NULL;
+    SysPath _Filename = fstring("%s/%s.lvl", aPackFolder.begin(), aLevelName);
+    FILE *_File = fopen(_Filename.c_str(), "rb");
+    if (_File) {
+        _GfxData = New<GfxData>();
+        for (bool _Done = false; !_Done;) {
+            switch (ReadBytes<u8>(_File)) {
+                case DATA_TYPE_LIGHT:           DynOS_Lights_Load     (_File, _GfxData); break;
+                case DATA_TYPE_TEXTURE:         DynOS_Tex_Load        (_File, _GfxData); break;
+                case DATA_TYPE_VERTEX:          DynOS_Vtx_Load        (_File, _GfxData); break;
+                case DATA_TYPE_DISPLAY_LIST:    DynOS_Gfx_Load        (_File, _GfxData); break;
+                case DATA_TYPE_GEO_LAYOUT:      DynOS_Geo_Load        (_File, _GfxData); break;
+                case DATA_TYPE_ANIMATION:       DynOS_Anim_Load       (_File, _GfxData); break;
+                case DATA_TYPE_ANIMATION_TABLE: DynOS_Anim_Table_Load (_File, _GfxData); break;
+                case DATA_TYPE_GFXDYNCMD:       DynOS_GfxDynCmd_Load  (_File, _GfxData); break;
+                case DATA_TYPE_COLLISION:       DynOS_Col_Load        (_File, _GfxData); break;
+                case DATA_TYPE_LEVEL_SCRIPT:    DynOS_Lvl_Load        (_File, _GfxData); break;
+                case DATA_TYPE_MACRO_OBJECT:    DynOS_MacroObject_Load(_File, _GfxData); break;
+                default:                        _Done = true;                            break;
+            }
+        }
+        fclose(_File);
+    }
+
+    return _GfxData;
+}
+
+  //////////////
+ // Generate //
+//////////////
+
 static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     bool generated = false;
     for (auto &_LvlNode : _GfxData->mLevelScripts) {
@@ -1501,7 +1657,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
 
         // Write if no error
         if (_GfxData->mErrorCount == 0) {
-            //DynOS_Lvl_WriteBinary(_LvlFilename, _GfxData, _LvlRoot);
+            DynOS_Lvl_WriteBinary(_LvlFilename, _GfxData);
         } else {
             Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
         }
@@ -1512,10 +1668,6 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
     }
     return generated;
 }
-
-  //////////////
- // Generate //
-//////////////
 
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
     Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());

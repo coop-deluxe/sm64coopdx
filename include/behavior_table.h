@@ -3,8 +3,6 @@
 
 #include "behavior_data.h"
 
-extern const BehaviorScript* gBehaviorTable[];
-
 enum BehaviorId {
     id_bhvStarDoor,
     id_bhvMrI,
@@ -524,6 +522,9 @@ enum BehaviorId {
 };
 
 enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);
+enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);
 const BehaviorScript* get_behavior_from_id(enum BehaviorId id);
+const char* get_behavior_name_from_id(enum BehaviorId id);
+enum BehaviorId get_id_from_behavior_name(const char* name);
 
 #endif
