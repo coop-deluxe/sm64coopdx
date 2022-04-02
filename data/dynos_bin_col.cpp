@@ -400,3 +400,70 @@ DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNo
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
     return aNode;
 }
+
+  /////////////
+ // Writing //
+/////////////
+
+static void WriteCollisionData(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
+    if (!aNode->mData) return;
+
+    // Name
+    WriteBytes<u8>(aFile, DATA_TYPE_COLLISION);
+    aNode->mName.Write(aFile);
+
+    // Data
+    WriteBytes<u32>(aFile, aNode->mSize);
+    for (u32 i = 0; i != aNode->mSize; ++i) {
+        WriteBytes<Collision>(aFile, aNode->mData[i]);
+    }
+}
+
+bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node) {
+    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    if (!_File) {
+        PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        return false;
+    }
+
+    WriteCollisionData(_File, aGfxData, _Node);
+
+    fclose(_File);
+    return true;
+}
+
+  /////////////
+ // Loading //
+/////////////
+
+static DataNode<Collision>* LoadCollisionData(FILE *aFile) {
+    DataNode<Collision> *_Node = New<DataNode<Collision>>();
+
+    // Name
+    _Node->mName.Read(aFile);
+
+    // Data
+    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mData = New<Collision>(_Node->mSize);
+    for (u32 i = 0; i != _Node->mSize; ++i) {
+        _Node->mData[i] = ReadBytes<Collision>(aFile);
+    }
+
+    return _Node;
+}
+
+DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName) {
+    // Load data from binary file
+    DataNode<Collision>* collisionNode = NULL;
+    SysPath _Filename = fstring("%s/%s.col", aPackFolder.begin(), aCollisionName);
+    FILE *_File = fopen(_Filename.c_str(), "rb");
+    if (_File) {
+        u8 type = ReadBytes<u8>(_File);
+        if (type == DATA_TYPE_COLLISION) {
+            collisionNode = LoadCollisionData(_File);
+        }
+        fclose(_File);
+    }
+
+    return collisionNode;
+}
