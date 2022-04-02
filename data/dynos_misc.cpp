@@ -638,3 +638,17 @@ LevelScript* DynOS_Lvl_Get(const char* levelName) {
     }
     return NULL;
 }
+
+DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr) {
+    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
+        auto &mTextures = sDynosCustomLevelScripts[i].second->mTextures;
+        for (s32 j = 0; j < mTextures.Count(); j++) {
+            auto &texture = mTextures[j];
+            if (texture == aPtr) {
+                return texture;
+            }
+
+        }
+    }
+    return NULL;
+}

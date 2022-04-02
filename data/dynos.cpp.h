@@ -695,6 +695,7 @@ s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 
 void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName);
 LevelScript* DynOS_Lvl_Get(const char* levelName);
+DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr);
 
 //
 // Warps
