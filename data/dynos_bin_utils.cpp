@@ -65,6 +65,32 @@ static void ParseWhitespace() {
     }
 }
 
+static bool IsAlphabetical(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+static bool IsAlphaNumeric(char c) {
+    return IsAlphabetical(c) || (c >= '0' && c <= '9');
+}
+
+static bool IsIdentifierBeginning(char c) {
+    return IsAlphabetical(c) || (c == '_');
+}
+
+static bool IsIdentifierCharacter(char c) {
+    return IsAlphaNumeric(c) || (c == '_');
+}
+
+static bool ParseOperator(const char* op) {
+    size_t opLen = strlen(op);
+    if (!strncmp(sRdString, op, opLen)) {
+        sRdString += opLen;
+        ParseWhitespace();
+        return true;
+    }
+    return false;
+}
+
 static s64 ParseNumeric() {
     String numeric = "";
     char* c = sRdString;
@@ -95,41 +121,48 @@ static s64 ParseFactor() {
     char* c = sRdString;
 
     // check for unary op
-    if (*c == '-') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f1 = ParseFactor();
-        return -f1;
-    } else if (*c == '+') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f1 = ParseFactor();
-        return +f1;
-    } else if (*c == '!') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f1 = ParseFactor();
-        return !f1;
-    } else if (*c == '~') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f1 = ParseFactor();
-        return ~f1;
+    if (ParseOperator("-")) {
+        return -ParseFactor();
+    } else if (ParseOperator("+")) {
+        return +ParseFactor();
+    } else if (ParseOperator("!")) {
+        return !ParseFactor();
+    } else if (ParseOperator("~")) {
+        return ~ParseFactor();
     }
 
     // check for numeric
     if (*c >= '0' && *c <= '9') {
         return ParseNumeric();
+    }
 
     // check for sub expression
-    } else if (*c >= '(') {
-        sRdString++;
-        ParseWhitespace();
+    if (ParseOperator("(")) {
         s64 e1 = ParseExpression();
-        if (*sRdString == ')') {
-            sRdString++;
-            ParseWhitespace();
+        if (ParseOperator(")")) {
             return e1;
+        } else {
+            sRdError = true;
+            return 0;
+        }
+    }
+
+    // check for known identifier
+    if (IsIdentifierBeginning(*c)) {
+        String identifier = "";
+        char* cTmp = c;
+        while (IsIdentifierCharacter(*cTmp)) {
+            identifier.Add(*cTmp);
+            cTmp++;
+        }
+
+        // TODO: this was made so that recursive descent can parse the constants...
+        // but RD should really use any function pointer passed to it
+        bool constantFound = false;
+        s64 constantValue = DynOS_Lvl_ParseLevelScriptConstants(identifier, &constantFound);
+        if (constantFound) {
+            sRdString = cTmp;
+            return constantValue;
         }
     }
 
@@ -140,21 +173,12 @@ static s64 ParseFactor() {
 static s64 ParseTerm() {
     s64 f1 = ParseFactor();
 
-    if (*sRdString == '*') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f2 = ParseFactor();
-        return f1 * f2;
-    } else if (*sRdString == '/') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f2 = ParseFactor();
-        return f1 / f2;
-    } else if (*sRdString == '%') {
-        sRdString++;
-        ParseWhitespace();
-        s64 f2 = ParseFactor();
-        return f1 % f2;
+    if (ParseOperator("*")) {
+        return f1 * ParseFactor();
+    } else if (ParseOperator("/")) {
+        return f1 / ParseFactor();
+    } else if (ParseOperator("%")) {
+        return f1 % ParseFactor();
     }
 
     return f1;
@@ -163,37 +187,59 @@ static s64 ParseTerm() {
 static s64 ParseAddSubExpression() {
     s64 t1 = ParseTerm();
 
-    if (*sRdString == '+') {
-        sRdString++;
-        ParseWhitespace();
-        s64 t2 = ParseTerm();
-        return t1 + t2;
-    } else if (*sRdString == '+') {
-        sRdString++;
-        ParseWhitespace();
-        s64 t2 = ParseTerm();
-        return t1 - t2;
+    if (ParseOperator("+")) {
+        return t1 + ParseTerm();
+    } else if (ParseOperator("-")) {
+        return t1 - ParseTerm();
     }
 
     return t1;
 }
 
-static s64 ParseExpression() {
+static s64 ParseShiftExpression() {
     s64 e1 = ParseAddSubExpression();
 
-    if (*sRdString == '<' && *(sRdString + 1) == '<') {
-        sRdString += 2;
-        ParseWhitespace();
-        s64 e2 = ParseAddSubExpression();
-        return e1 << e2;
-    } else if (*sRdString == '>' && *(sRdString + 1) == '>') {
-        sRdString += 2;
-        ParseWhitespace();
-        s64 e2 = ParseAddSubExpression();
-        return e1 >> e2;
+    if (ParseOperator("<<")) {
+        return e1 << ParseAddSubExpression();
+    } else if (ParseOperator(">>")) {
+        return e1 >> ParseAddSubExpression();
     }
 
     return e1;
+}
+
+static s64 ParseBitAndExpression() {
+    s64 e1 = ParseShiftExpression();
+
+    if (ParseOperator("&")) {
+        return e1 & ParseShiftExpression();
+    }
+
+    return e1;
+}
+
+static s64 ParseBitXorExpression() {
+    s64 e1 = ParseBitAndExpression();
+
+    if (ParseOperator("^")) {
+        return e1 ^ ParseBitAndExpression();
+    }
+
+    return e1;
+}
+
+static s64 ParseBitOrExpression() {
+    s64 e1 = ParseBitXorExpression();
+
+    if (ParseOperator("|")) {
+        return e1 | ParseBitXorExpression();
+    }
+
+    return e1;
+}
+
+static s64 ParseExpression() {
+    return ParseBitOrExpression();
 }
 
 s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success) {

@@ -2,6 +2,7 @@
 extern "C" {
 #include <assert.h>
 #include "sm64.h"
+#include "include/textures.h"
 }
 
 #pragma GCC diagnostic push

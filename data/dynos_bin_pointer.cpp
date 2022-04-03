@@ -1,7 +1,32 @@
 #include "dynos.cpp.h"
 extern "C" {
 #include "behavior_table.h"
+#include "levels/scripts.h"
 }
+
+#define define_pointer(ptr) (const void *) #ptr, (const void *) ptr
+static const void *sDynosPointers[] = {
+    define_pointer(level_main_scripts_entry),
+    define_pointer(script_func_global_1),
+    define_pointer(script_func_global_2),
+    define_pointer(script_func_global_3),
+    define_pointer(script_func_global_4),
+    define_pointer(script_func_global_5),
+    define_pointer(script_func_global_6),
+    define_pointer(script_func_global_7),
+    define_pointer(script_func_global_8),
+    define_pointer(script_func_global_9),
+    define_pointer(script_func_global_10),
+    define_pointer(script_func_global_11),
+    define_pointer(script_func_global_12),
+    define_pointer(script_func_global_13),
+    define_pointer(script_func_global_14),
+    define_pointer(script_func_global_15),
+    define_pointer(script_func_global_16),
+    define_pointer(script_func_global_17),
+    define_pointer(script_func_global_18),
+};
+
   /////////////
  // Writing //
 /////////////
@@ -73,6 +98,25 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { get_behavior_name_from_id(id), 0 };
     }
 
+    // Vanilla Geos
+    s32 actorCount = DynOS_Geo_GetActorCount();
+    for (s32 i = 0; i < actorCount; i++) {
+        if (DynOS_Geo_IsCustomActor(i)) { break; }
+        if (aPtr == DynOS_Geo_GetActorLayout(i)) {
+            return { DynOS_Geo_GetActorName(i), 0 };
+        }
+    }
+
+    // Vanilla Pointers
+    s32 pointerCount = (s32) (sizeof(sDynosPointers) / (2 * sizeof(sDynosPointers[0])));
+    for (s32 i = 0; i < pointerCount; i++) {
+        const char* ptrName = (const char*)sDynosPointers[i * 2 + 0];
+        const void* ptr = sDynosPointers[i * 2 + 1];
+        if (ptr == aPtr) {
+            return { ptrName, 0 };
+        }
+    }
+
     // Vertices
     String _VtxArrayName = "";
     uintptr_t _VtxArrayStart = 0;
@@ -115,6 +159,9 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
 
     // Pointer
     PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData);
+    if (strlen(_PtrData.first.begin()) == 0) {
+        _PtrData = _PtrData;
+    }
     WriteBytes<u32>(aFile, POINTER_CODE);
     _PtrData.first.Write(aFile);
     WriteBytes<u32>(aFile, _PtrData.second);
@@ -199,6 +246,25 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     enum BehaviorId id = get_id_from_behavior_name(aPtrName.begin());
     if (id >= 0 && id < id_bhv_max_count) {
         return (void*)get_behavior_from_id(id);
+    }
+
+    // Vanilla Geos
+    s32 actorCount = DynOS_Geo_GetActorCount();
+    for (s32 i = 0; i < actorCount; i++) {
+        if (DynOS_Geo_IsCustomActor(i)) { break; }
+        if (!strcmp(aPtrName.begin(), DynOS_Geo_GetActorName(i))) {
+            return (void*)DynOS_Geo_GetActorLayout(i);
+        }
+    }
+
+    // Vanilla Pointers
+    s32 pointerCount = (s32) (sizeof(sDynosPointers) / (2 * sizeof(sDynosPointers[0])));
+    for (s32 i = 0; i < pointerCount; i++) {
+        const char* ptrName = (const char*)sDynosPointers[i * 2 + 0];
+        const void* ptr = sDynosPointers[i * 2 + 1];
+        if (!strcmp(aPtrName.begin(), ptrName)) {
+            return (void*)ptr;
+        }
     }
 
     // Error

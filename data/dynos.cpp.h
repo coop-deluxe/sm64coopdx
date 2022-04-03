@@ -781,6 +781,7 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevel
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 s32 DynOS_Lvl_GetFunctionIndex(const void *aPtr);
 void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex);
+s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found);
 
 #endif
 #endif

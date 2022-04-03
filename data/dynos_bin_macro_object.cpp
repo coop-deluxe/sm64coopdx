@@ -395,6 +395,13 @@ static s64 ParseMacroObjectSymbolArg(GfxData* aGfxData, DataNode<MacroObject>* a
         return (s64) x;
     }
 
+    // Check level constants
+    bool constantFound = false;
+    s64 constantValue = DynOS_Lvl_ParseLevelScriptConstants(_Arg, &constantFound);
+    if (constantFound) {
+        return (LevelScript) constantValue;
+    }
+
     // Unknown
     PrintError("  ERROR: Unknown macro object arg: %s", _Arg.begin());
     return 0;

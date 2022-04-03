@@ -7,6 +7,8 @@ extern "C" {
 #include "include/seq_ids.h"
 #include "level_commands.h"
 #include "src/game/level_update.h"
+#include "include/dialog_ids.h"
+#include "levels/scripts.h"
 }
 
 // Free data pointers, but keep nodes and tokens intact
@@ -61,14 +63,11 @@ void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex) {
 #define LEVEL_SCRIPT_SIZE_PER_TOKEN 4
 
 #define lvl_constant(x) if (_Arg == #x) { return (LevelScript) (x); }
-static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex) {
-    const String& _Arg = aNode->mTokens[aTokenIndex++];
 
-    // Lvl functions
-    void *_LvlFunctionPtr = DynOS_Lvl_GetFunctionPointerFromName(_Arg);
-    if (_LvlFunctionPtr != NULL) {
-        return (LevelScript) _LvlFunctionPtr;
-    }
+// TODO: this was made so that recursive descent can parse the constants...
+// but RD should really use any function pointer passed to it
+s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
+    *found = true;
 
     // Behavior constants
     lvl_constant(bhvStarDoor);
@@ -1159,6 +1158,200 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     lvl_constant(MODEL_WARIOS_WINGED_METAL_CAP);
     lvl_constant(MODEL_ERROR_MODEL);
 
+    // dialog constants
+    lvl_constant(DIALOG_000);
+    lvl_constant(DIALOG_001);
+    lvl_constant(DIALOG_002);
+    lvl_constant(DIALOG_003);
+    lvl_constant(DIALOG_004);
+    lvl_constant(DIALOG_005);
+    lvl_constant(DIALOG_006);
+    lvl_constant(DIALOG_007);
+    lvl_constant(DIALOG_008);
+    lvl_constant(DIALOG_009);
+    lvl_constant(DIALOG_010);
+    lvl_constant(DIALOG_011);
+    lvl_constant(DIALOG_012);
+    lvl_constant(DIALOG_013);
+    lvl_constant(DIALOG_014);
+    lvl_constant(DIALOG_015);
+    lvl_constant(DIALOG_016);
+    lvl_constant(DIALOG_017);
+    lvl_constant(DIALOG_018);
+    lvl_constant(DIALOG_019);
+    lvl_constant(DIALOG_020);
+    lvl_constant(DIALOG_021);
+    lvl_constant(DIALOG_022);
+    lvl_constant(DIALOG_023);
+    lvl_constant(DIALOG_024);
+    lvl_constant(DIALOG_025);
+    lvl_constant(DIALOG_026);
+    lvl_constant(DIALOG_027);
+    lvl_constant(DIALOG_028);
+    lvl_constant(DIALOG_029);
+    lvl_constant(DIALOG_030);
+    lvl_constant(DIALOG_031);
+    lvl_constant(DIALOG_032);
+    lvl_constant(DIALOG_033);
+    lvl_constant(DIALOG_034);
+    lvl_constant(DIALOG_035);
+    lvl_constant(DIALOG_036);
+    lvl_constant(DIALOG_037);
+    lvl_constant(DIALOG_038);
+    lvl_constant(DIALOG_039);
+    lvl_constant(DIALOG_040);
+    lvl_constant(DIALOG_041);
+    lvl_constant(DIALOG_042);
+    lvl_constant(DIALOG_043);
+    lvl_constant(DIALOG_044);
+    lvl_constant(DIALOG_045);
+    lvl_constant(DIALOG_046);
+    lvl_constant(DIALOG_047);
+    lvl_constant(DIALOG_048);
+    lvl_constant(DIALOG_049);
+    lvl_constant(DIALOG_050);
+    lvl_constant(DIALOG_051);
+    lvl_constant(DIALOG_052);
+    lvl_constant(DIALOG_053);
+    lvl_constant(DIALOG_054);
+    lvl_constant(DIALOG_055);
+    lvl_constant(DIALOG_056);
+    lvl_constant(DIALOG_057);
+    lvl_constant(DIALOG_058);
+    lvl_constant(DIALOG_059);
+    lvl_constant(DIALOG_060);
+    lvl_constant(DIALOG_061);
+    lvl_constant(DIALOG_062);
+    lvl_constant(DIALOG_063);
+    lvl_constant(DIALOG_064);
+    lvl_constant(DIALOG_065);
+    lvl_constant(DIALOG_066);
+    lvl_constant(DIALOG_067);
+    lvl_constant(DIALOG_068);
+    lvl_constant(DIALOG_069);
+    lvl_constant(DIALOG_070);
+    lvl_constant(DIALOG_071);
+    lvl_constant(DIALOG_072);
+    lvl_constant(DIALOG_073);
+    lvl_constant(DIALOG_074);
+    lvl_constant(DIALOG_075);
+    lvl_constant(DIALOG_076);
+    lvl_constant(DIALOG_077);
+    lvl_constant(DIALOG_078);
+    lvl_constant(DIALOG_079);
+    lvl_constant(DIALOG_080);
+    lvl_constant(DIALOG_081);
+    lvl_constant(DIALOG_082);
+    lvl_constant(DIALOG_083);
+    lvl_constant(DIALOG_084);
+    lvl_constant(DIALOG_085);
+    lvl_constant(DIALOG_086);
+    lvl_constant(DIALOG_087);
+    lvl_constant(DIALOG_088);
+    lvl_constant(DIALOG_089);
+    lvl_constant(DIALOG_090);
+    lvl_constant(DIALOG_091);
+    lvl_constant(DIALOG_092);
+    lvl_constant(DIALOG_093);
+    lvl_constant(DIALOG_094);
+    lvl_constant(DIALOG_095);
+    lvl_constant(DIALOG_096);
+    lvl_constant(DIALOG_097);
+    lvl_constant(DIALOG_098);
+    lvl_constant(DIALOG_099);
+    lvl_constant(DIALOG_100);
+    lvl_constant(DIALOG_101);
+    lvl_constant(DIALOG_102);
+    lvl_constant(DIALOG_103);
+    lvl_constant(DIALOG_104);
+    lvl_constant(DIALOG_105);
+    lvl_constant(DIALOG_106);
+    lvl_constant(DIALOG_107);
+    lvl_constant(DIALOG_108);
+    lvl_constant(DIALOG_109);
+    lvl_constant(DIALOG_110);
+    lvl_constant(DIALOG_111);
+    lvl_constant(DIALOG_112);
+    lvl_constant(DIALOG_113);
+    lvl_constant(DIALOG_114);
+    lvl_constant(DIALOG_115);
+    lvl_constant(DIALOG_116);
+    lvl_constant(DIALOG_117);
+    lvl_constant(DIALOG_118);
+    lvl_constant(DIALOG_119);
+    lvl_constant(DIALOG_120);
+    lvl_constant(DIALOG_121);
+    lvl_constant(DIALOG_122);
+    lvl_constant(DIALOG_123);
+    lvl_constant(DIALOG_124);
+    lvl_constant(DIALOG_125);
+    lvl_constant(DIALOG_126);
+    lvl_constant(DIALOG_127);
+    lvl_constant(DIALOG_128);
+    lvl_constant(DIALOG_129);
+    lvl_constant(DIALOG_130);
+    lvl_constant(DIALOG_131);
+    lvl_constant(DIALOG_132);
+    lvl_constant(DIALOG_133);
+    lvl_constant(DIALOG_134);
+    lvl_constant(DIALOG_135);
+    lvl_constant(DIALOG_136);
+    lvl_constant(DIALOG_137);
+    lvl_constant(DIALOG_138);
+    lvl_constant(DIALOG_139);
+    lvl_constant(DIALOG_140);
+    lvl_constant(DIALOG_141);
+    lvl_constant(DIALOG_142);
+    lvl_constant(DIALOG_143);
+    lvl_constant(DIALOG_144);
+    lvl_constant(DIALOG_145);
+    lvl_constant(DIALOG_146);
+    lvl_constant(DIALOG_147);
+    lvl_constant(DIALOG_148);
+    lvl_constant(DIALOG_149);
+    lvl_constant(DIALOG_150);
+    lvl_constant(DIALOG_151);
+    lvl_constant(DIALOG_152);
+    lvl_constant(DIALOG_153);
+    lvl_constant(DIALOG_154);
+    lvl_constant(DIALOG_155);
+    lvl_constant(DIALOG_156);
+    lvl_constant(DIALOG_157);
+    lvl_constant(DIALOG_158);
+    lvl_constant(DIALOG_159);
+    lvl_constant(DIALOG_160);
+    lvl_constant(DIALOG_161);
+    lvl_constant(DIALOG_162);
+    lvl_constant(DIALOG_163);
+    lvl_constant(DIALOG_164);
+    lvl_constant(DIALOG_165);
+    lvl_constant(DIALOG_166);
+    lvl_constant(DIALOG_167);
+    lvl_constant(DIALOG_168);
+    lvl_constant(DIALOG_169);
+    lvl_constant(DIALOG_COUNT);
+
+    // global scripts
+    lvl_constant(level_main_scripts_entry);
+    lvl_constant(script_func_global_1);
+    lvl_constant(script_func_global_2);
+    lvl_constant(script_func_global_3);
+    lvl_constant(script_func_global_4);
+    lvl_constant(script_func_global_5);
+    lvl_constant(script_func_global_6);
+    lvl_constant(script_func_global_7);
+    lvl_constant(script_func_global_8);
+    lvl_constant(script_func_global_9);
+    lvl_constant(script_func_global_10);
+    lvl_constant(script_func_global_11);
+    lvl_constant(script_func_global_12);
+    lvl_constant(script_func_global_13);
+    lvl_constant(script_func_global_14);
+    lvl_constant(script_func_global_15);
+    lvl_constant(script_func_global_16);
+    lvl_constant(script_func_global_17);
+    lvl_constant(script_func_global_18);
+
     // level command constants
     lvl_constant(OP_AND);
     lvl_constant(OP_NAND);
@@ -1183,34 +1376,69 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     lvl_constant(REGULAR_FACE);
     lvl_constant(DIZZY_FACE);
 
+    // vanilla geos
+    s32 actorCount = DynOS_Geo_GetActorCount();
+    for (s32 i = 0; i < actorCount; i++) {
+        if (DynOS_Geo_IsCustomActor(i)) { break; }
+        if (!strcmp(_Arg.begin(), DynOS_Geo_GetActorName(i))) {
+            return (LevelScript)DynOS_Geo_GetActorLayout(i);
+        }
+    }
+
+    *found = false;
+    return 0;
+}
+
+static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex) {
+    const String& _Arg = aNode->mTokens[aTokenIndex++];
+
+    // Lvl functions
+    void *_LvlFunctionPtr = DynOS_Lvl_GetFunctionPointerFromName(_Arg);
+    if (_LvlFunctionPtr != NULL) {
+        return (LevelScript) _LvlFunctionPtr;
+    }
+
+    bool constantFound = false;
+    s64 constantValue = DynOS_Lvl_ParseLevelScriptConstants(_Arg, &constantFound);
+    if (constantFound) {
+        return (LevelScript) constantValue;
+    }
+
     // Other constants
     lvl_constant(NULL);
+
+    // Level Scripts
+    for (auto& _Node : aGfxData->mLevelScripts) {
+        if (_Arg == _Node->mName) {
+            return (LevelScript) DynOS_Lvl_Parse(aGfxData, _Node, false)->mData;
+        }
+    }
 
     // Geo layouts
     for (auto& _Node : aGfxData->mGeoLayouts) {
         if (_Arg == _Node->mName) {
-            return (s64) DynOS_Geo_Parse(aGfxData, _Node, false)->mData;
+            return (LevelScript) DynOS_Geo_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // Collisions
     for (auto& _Node : aGfxData->mCollisions) {
         if (_Arg == _Node->mName) {
-            return (s64) DynOS_Col_Parse(aGfxData, _Node, false)->mData;
+            return (LevelScript) DynOS_Col_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // MacroObjects
     for (auto& _Node : aGfxData->mMacroObjects) {
         if (_Arg == _Node->mName) {
-            return (s64) DynOS_MacroObject_Parse(aGfxData, _Node, false)->mData;
+            return (LevelScript) DynOS_MacroObject_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // Trajectories
     for (auto& _Node : aGfxData->mTrajectories) {
         if (_Arg == _Node->mName) {
-            return (s64) DynOS_Trajectory_Parse(aGfxData, _Node, false)->mData;
+            return (LevelScript) DynOS_Trajectory_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
@@ -1408,7 +1636,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_0(PUSH_POOL);
     lvl_symbol_0(POP_POOL);
     lvl_symbol_3(FIXED_LOAD, 1, 2, 3);
-    lvl_symbol_3(LOAD_RAW, 1, 2, 0);
+    lvl_symbol_noop(LOAD_RAW, 3);
     lvl_symbol_noop(LOAD_MIO0, 3);
     lvl_symbol_1(LOAD_MARIO_HEAD, 0);
     lvl_symbol_noop(LOAD_MIO0_TEXTURE, 3);
@@ -1429,8 +1657,8 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_3(CMD23, 1, 0, 0);
 
     // objects
-    lvl_symbol_10(OBJECT_WITH_ACTS, 3, 0, 0);
-    lvl_symbol_9(OBJECT, 0, 0, 0);
+    lvl_symbol_10(OBJECT_WITH_ACTS, 5, 0, 0);
+    lvl_symbol_9(OBJECT, 5, 0, 0);
     lvl_symbol_3(MARIO, 2, 0, 0);
 
     // warps
@@ -1652,7 +1880,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         String _LvlRootName = _LvlNode->mName;
         DataNode<LevelScript> *_LvlRoot = GetLevelScript(_GfxData, _LvlRootName);
         if (_LvlRoot == NULL) { continue; }
-
+        if (_LvlRootName.Find("_entry") == -1) { continue; }
         // If there is an existing binary file for this level, skip and go to the next level
         SysPath _LvlFilename = fstring("%s/%s.lvl", aPackFolder.c_str(), _LvlRootName.begin());
         if (fs_sys_file_exists(_LvlFilename.c_str())) {
@@ -1662,6 +1890,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         // Init
         _GfxData->mErrorCount = 0;
         _GfxData->mLoadIndex = 0;
+        _GfxData->mPackFolder = aPackFolder;
 
         // Parse data
         PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
