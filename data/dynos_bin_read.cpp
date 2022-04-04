@@ -15,6 +15,7 @@ static IfDefPtr GetNearestIfDefPointer(char *pFileBuffer) {
         { "#ifndef VERSION_JP", 18, false },
         { "#ifdef VERSION_EU",  17, true  },
         { "#ifdef TEXTURE_FIX", 18, false },
+        { "#if defined(VERSION_JP) || defined(VERSION_SH)", 47, false },
     };
     IfDefPtr _Nearest = { NULL, 0, false };
     for (const auto &_IfDef : sIfDefs) {
@@ -178,7 +179,9 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                 } else if (_Buffer == "Lights1") {
                     _DataType = DATA_TYPE_LIGHT;
                 } else if (_Buffer == "u8") {
-                    _DataType = DATA_TYPE_TEXTURE;
+                    _DataType = strstr(aFilename.c_str(), "room")
+                              ? DATA_TYPE_ROOMS
+                              : DATA_TYPE_TEXTURE;
                 } else if (_Buffer == "Texture") {
                     _DataType = DATA_TYPE_TEXTURE;
                 } else if (_Buffer == "Vtx") {
@@ -228,6 +231,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     case DATA_TYPE_TRAJECTORY:   AppendNewNode(aGfxData, aGfxData->mTrajectories, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_MOVTEX:       AppendNewNode(aGfxData, aGfxData->mMovtexs,      _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_MOVTEXQC:     AppendNewNode(aGfxData, aGfxData->mMovtexQCs,    _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_ROOMS:        AppendNewNode(aGfxData, aGfxData->mRooms,        _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_UNUSED:       pDataTokens = (Array<String> *) 1;                                                 break;
                 }
                 _Buffer.Clear();

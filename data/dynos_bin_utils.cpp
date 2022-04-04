@@ -54,6 +54,10 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
             Delete(_Node->mData);
             Delete(_Node);
         }
+        for (auto& _Node : aGfxData->mRooms) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
         Delete(aGfxData);
     }
 }

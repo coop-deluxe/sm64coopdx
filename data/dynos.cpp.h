@@ -33,6 +33,7 @@ enum {
     DATA_TYPE_TRAJECTORY,
     DATA_TYPE_MOVTEX,
     DATA_TYPE_MOVTEXQC,
+    DATA_TYPE_ROOMS,
     DATA_TYPE_UNUSED,
 };
 
@@ -434,6 +435,7 @@ struct GfxData : NoCopy {
     DataNodes<Trajectory> mTrajectories;
     DataNodes<Movtex> mMovtexs;
     DataNodes<MovtexQC> mMovtexQCs;
+    DataNodes<u8> mRooms;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -772,6 +774,10 @@ DataNode<Movtex>* DynOS_Movtex_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<MovtexQC>* DynOS_MovtexQC_Parse(GfxData* aGfxData, DataNode<MovtexQC>* aNode);
 void DynOS_MovtexQC_Write(FILE* aFile, GfxData* aGfxData, DataNode<MovtexQC> *aNode);
 DataNode<MovtexQC>* DynOS_MovtexQC_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<u8>* DynOS_Rooms_Parse(GfxData* aGfxData, DataNode<u8>* aNode);
+void DynOS_Rooms_Write(FILE* aFile, GfxData* aGfxData, DataNode<u8> *aNode);
+DataNode<u8>* DynOS_Rooms_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);

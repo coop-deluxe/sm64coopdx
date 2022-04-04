@@ -1456,6 +1456,13 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
         }
     }
 
+    // Rooms
+    for (auto& _Node : aGfxData->mRooms) {
+        if (_Arg == _Node->mName) {
+            return (LevelScript) DynOS_Rooms_Parse(aGfxData, _Node)->mData;
+        }
+    }
+
     // Integers
     s32 x;
     if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
@@ -1825,6 +1832,11 @@ static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
                 DynOS_MovtexQC_Write(_File, aGfxData, _Node);
             }
         }
+        for (auto &_Node : aGfxData->mRooms) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Rooms_Write(_File, aGfxData, _Node);
+            }
+        }
     }
     fclose(_File);
     return true;
@@ -1884,6 +1896,10 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevel
                 case DATA_TYPE_COLLISION:       DynOS_Col_Load        (_File, _GfxData); break;
                 case DATA_TYPE_LEVEL_SCRIPT:    DynOS_Lvl_Load        (_File, _GfxData); break;
                 case DATA_TYPE_MACRO_OBJECT:    DynOS_MacroObject_Load(_File, _GfxData); break;
+                case DATA_TYPE_TRAJECTORY:      DynOS_Trajectory_Load (_File, _GfxData); break;
+                case DATA_TYPE_MOVTEX:          DynOS_Movtex_Load     (_File, _GfxData); break;
+                case DATA_TYPE_MOVTEXQC:        DynOS_MovtexQC_Load   (_File, _GfxData); break;
+                case DATA_TYPE_ROOMS:           DynOS_Rooms_Load      (_File, _GfxData); break;
                 default:                        _Done = true;                            break;
             }
         }
