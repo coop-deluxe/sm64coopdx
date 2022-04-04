@@ -9,6 +9,7 @@ extern "C" {
 #include "src/game/level_update.h"
 #include "include/dialog_ids.h"
 #include "levels/scripts.h"
+#include "src/game/area.h"
 }
 
 // Free data pointers, but keep nodes and tokens intact
@@ -658,6 +659,8 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     lvl_constant(TERRAIN_MASK);
 
     // Seq ids constants
+    lvl_constant(SEQ_BASE_ID);
+    lvl_constant(SEQ_VARIATION);
     lvl_constant(SEQ_SOUND_PLAYER);
     lvl_constant(SEQ_EVENT_CUTSCENE_COLLECT_STAR);
     lvl_constant(SEQ_MENU_TITLE_SCREEN);
@@ -1376,6 +1379,18 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     lvl_constant(REGULAR_FACE);
     lvl_constant(DIZZY_FACE);
 
+    // warp transitions
+    lvl_constant(WARP_TRANSITION_FADE_FROM_COLOR);
+    lvl_constant(WARP_TRANSITION_FADE_INTO_COLOR);
+    lvl_constant(WARP_TRANSITION_FADE_FROM_STAR);
+    lvl_constant(WARP_TRANSITION_FADE_INTO_STAR);
+    lvl_constant(WARP_TRANSITION_FADE_FROM_CIRCLE);
+    lvl_constant(WARP_TRANSITION_FADE_INTO_CIRCLE);
+    lvl_constant(WARP_TRANSITION_FADE_FROM_MARIO);
+    lvl_constant(WARP_TRANSITION_FADE_INTO_MARIO);
+    lvl_constant(WARP_TRANSITION_FADE_FROM_BOWSER);
+    lvl_constant(WARP_TRANSITION_FADE_INTO_BOWSER);
+
     // vanilla geos
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
@@ -1406,6 +1421,7 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
 
     // Other constants
     lvl_constant(NULL);
+    lvl_constant(FALSE);
 
     // Level Scripts
     for (auto& _Node : aGfxData->mLevelScripts) {
@@ -1983,7 +1999,6 @@ static void DynOS_Lvl_GeneratePack_Recursive(const SysPath &directory, GfxData *
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
     Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());
     Array<Pair<u64, String>> _ActorsFolders;
-    GfxData *_GfxData = New<GfxData>();
 
     DIR *aPackDir = opendir(aPackFolder.c_str());
     if (aPackDir) {
@@ -2001,14 +2016,16 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             // Only parse folders with a 'script.c'
             if (!fs_sys_file_exists(fstring("%s/script.c", _Folder.c_str()).c_str())) continue;
 
+            GfxData *_GfxData = New<GfxData>();
             _GfxData->mModelIdentifier = 0;
+
             DynOS_Lvl_GeneratePack_Recursive(_Folder, _GfxData);
+
+            // Generate a binary file for each level found in the GfxData
+            DynOS_Lvl_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
+            DynOS_Gfx_Free(_GfxData);
+
         }
         closedir(aPackDir);
     }
-
-    // Generate a binary file for each actor found in the GfxData
-    DynOS_Lvl_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
-
-    DynOS_Gfx_Free(_GfxData);
 }

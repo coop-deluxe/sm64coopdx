@@ -630,6 +630,11 @@ void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName) {
 }
 
 LevelScript* DynOS_Lvl_Get(const char* levelName) {
+    static u32 index = 0; // DO NOT COMMIT
+    index = (index + 1) % sDynosCustomLevelScripts.Count();  // DO NOT COMMIT
+    auto& scripts = sDynosCustomLevelScripts[index].second->mLevelScripts; // DO NOT COMMIT
+    return scripts[scripts.Count() - 1]->mData; // DO NOT COMMIT
+
     for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
         if (!strcmp(sDynosCustomLevelScripts[i].first, levelName)) {
             auto& scripts = sDynosCustomLevelScripts[i].second->mLevelScripts;

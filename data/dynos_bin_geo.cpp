@@ -4,6 +4,7 @@ extern "C" {
 #include "geo_commands.h"
 #include "src/game/camera.h"
 #include "src/game/envfx_snow.h"
+#include "src/game/paintings.h"
 }
 
 #pragma GCC diagnostic push
@@ -111,6 +112,13 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     s32 x;
     if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
         return (s64) x;
+    }
+
+    // Complex
+    s32 a;
+    s32 b;
+    if (sscanf(_Arg.begin(), "PAINTING_ID(%d,%d)", &a, &b) == 2) {
+        return PAINTING_ID(a, b);
     }
 
     // Unknown
