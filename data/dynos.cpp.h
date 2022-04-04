@@ -5,6 +5,7 @@
 #include "dynos.h"
 extern "C" {
 #include "engine/math_util.h"
+#include "src/game/moving_texture.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -30,6 +31,8 @@ enum {
     DATA_TYPE_LEVEL_SCRIPT,
     DATA_TYPE_MACRO_OBJECT,
     DATA_TYPE_TRAJECTORY,
+    DATA_TYPE_MOVTEX,
+    DATA_TYPE_MOVTEXQC,
     DATA_TYPE_UNUSED,
 };
 
@@ -365,6 +368,7 @@ template <typename U, typename V>
 using Pair = std::pair<U, V>;
 
 typedef std::string SysPath;
+typedef struct MovtexQuadCollection MovtexQC;
 
 class NoCopy {
   protected:
@@ -428,6 +432,8 @@ struct GfxData : NoCopy {
     DataNodes<LevelScript> mLevelScripts;
     DataNodes<MacroObject> mMacroObjects;
     DataNodes<Trajectory> mTrajectories;
+    DataNodes<Movtex> mMovtexs;
+    DataNodes<MovtexQC> mMovtexQCs;
 
     // Animation data
     Array<AnimBuffer<s16> *> mAnimValues;
@@ -758,6 +764,14 @@ DataNode<MacroObject>* DynOS_MacroObject_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<Trajectory>* DynOS_Trajectory_Parse(GfxData* aGfxData, DataNode<Trajectory>* aNode, bool aDisplayPercent);
 void DynOS_Trajectory_Write(FILE* aFile, GfxData* aGfxData, DataNode<Trajectory> *aNode);
 DataNode<Trajectory>* DynOS_Trajectory_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<Movtex>* DynOS_Movtex_Parse(GfxData* aGfxData, DataNode<Movtex>* aNode, bool aDisplayPercent);
+void DynOS_Movtex_Write(FILE* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode);
+DataNode<Movtex>* DynOS_Movtex_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<MovtexQC>* DynOS_MovtexQC_Parse(GfxData* aGfxData, DataNode<MovtexQC>* aNode);
+void DynOS_MovtexQC_Write(FILE* aFile, GfxData* aGfxData, DataNode<MovtexQC> *aNode);
+DataNode<MovtexQC>* DynOS_MovtexQC_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);

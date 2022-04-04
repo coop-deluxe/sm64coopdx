@@ -171,6 +171,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     // Ignore ALIGNED8 keyword
                 } else if (_Buffer == "UNUSED") {
                     // Ignore UNUSED keyword
+                } else if (_Buffer == "struct") {
+                    // Ignore struct keyword
                 } else if (_Buffer == "u64") {
                     _DataType = DATA_TYPE_UNUSED;
                 } else if (_Buffer == "Lights1") {
@@ -193,6 +195,10 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     _DataType = DATA_TYPE_MACRO_OBJECT;
                 } else if (_Buffer == "Trajectory") {
                     _DataType = DATA_TYPE_TRAJECTORY;
+                } else if (_Buffer == "Movtex") {
+                    _DataType = DATA_TYPE_MOVTEX;
+                } else if (_Buffer == "MovtexQuadCollection") {
+                    _DataType = DATA_TYPE_MOVTEXQC;
                 } else {
                     PrintError("  ERROR: Unknown type name: %s", _Buffer.begin());
                 }
@@ -220,6 +226,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     case DATA_TYPE_LEVEL_SCRIPT: AppendNewNode(aGfxData, aGfxData->mLevelScripts, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_MACRO_OBJECT: AppendNewNode(aGfxData, aGfxData->mMacroObjects, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_TRAJECTORY:   AppendNewNode(aGfxData, aGfxData->mTrajectories, _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_MOVTEX:       AppendNewNode(aGfxData, aGfxData->mMovtexs,      _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_MOVTEXQC:     AppendNewNode(aGfxData, aGfxData->mMovtexQCs,    _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_UNUSED:       pDataTokens = (Array<String> *) 1;                                                 break;
                 }
                 _Buffer.Clear();

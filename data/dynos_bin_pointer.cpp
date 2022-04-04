@@ -92,6 +92,20 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    // Movtexs
+    for (auto& _Node : aGfxData->mMovtexs) {
+        if (_Node->mData == aPtr) {
+            return { _Node->mName, 0 };
+        }
+    }
+
+    // MovtexQCs
+    for (auto& _Node : aGfxData->mMovtexQCs) {
+        if (_Node->mData == aPtr) {
+            return { _Node->mName, 0 };
+        }
+    }
+
     // Behaviors
     enum BehaviorId id = get_id_from_vanilla_behavior((const BehaviorScript*) aPtr);
     if (id >= 0 && id < id_bhv_max_count) {
@@ -160,7 +174,7 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
     // Pointer
     PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData);
     if (strlen(_PtrData.first.begin()) == 0) {
-        _PtrData = _PtrData;
+        _PtrData = _PtrData; // DO NOT COMMIT
     }
     WriteBytes<u32>(aFile, POINTER_CODE);
     _PtrData.first.Write(aFile);
@@ -237,6 +251,20 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
 
     // Trajectories
     for (auto &_Node : aGfxData->mTrajectories) {
+        if (_Node->mName == aPtrName) {
+            return (void *) _Node->mData;
+        }
+    }
+
+    // Movtexs
+    for (auto &_Node : aGfxData->mMovtexs) {
+        if (_Node->mName == aPtrName) {
+            return (void *) _Node->mData;
+        }
+    }
+
+    // MovtexQCs
+    for (auto &_Node : aGfxData->mMovtexQCs) {
         if (_Node->mName == aPtrName) {
             return (void *) _Node->mData;
         }

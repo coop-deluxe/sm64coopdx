@@ -1442,6 +1442,20 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
         }
     }
 
+    // Movtexs
+    for (auto& _Node : aGfxData->mMovtexs) {
+        if (_Arg == _Node->mName) {
+            return (LevelScript) DynOS_Movtex_Parse(aGfxData, _Node, false)->mData;
+        }
+    }
+
+    // MovtexQCs
+    for (auto& _Node : aGfxData->mMovtexQCs) {
+        if (_Arg == _Node->mName) {
+            return (LevelScript) DynOS_MovtexQC_Parse(aGfxData, _Node)->mData;
+        }
+    }
+
     // Integers
     s32 x;
     if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
@@ -1454,7 +1468,6 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
     if (rdSuccess) {
         return (LevelScript)rdValue;
     }
-
 
     // Unknown
     PrintError("  ERROR: Unknown lvl arg: %s", _Arg.begin());
@@ -1800,6 +1813,16 @@ static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
         for (auto &_Node : aGfxData->mTrajectories) {
             if (_Node->mLoadIndex == i) {
                 DynOS_Trajectory_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mMovtexs) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_Movtex_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mMovtexQCs) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_MovtexQC_Write(_File, aGfxData, _Node);
             }
         }
     }

@@ -226,6 +226,7 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
 
 const void *DynOS_Level_GetScript(s32 aLevel) {
     DynOS_Level_Init();
+    return DynOS_Lvl_Get("level_bob_entry"); // DO NOT COMMIT
     return sDynosLevelScripts[aLevel];
 }
 
