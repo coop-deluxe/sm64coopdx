@@ -231,6 +231,26 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
     return true;
 }
 
+static void mod_set_loading_order(struct Mod* mod) {
+    if (mod->fileCount <= 1) {
+        return;
+    }
+
+    // TODO: add a way to specify the loading order of a mod's files?
+
+    // By default, this is the alphabetical order on relative path
+    for (s32 i = 1; i < mod->fileCount; ++i) {
+        struct ModFile file = mod->files[i];
+        for (s32 j = 0; j < i; ++j) {
+            if (strcmp(file.relativePath, mod->files[j].relativePath) < 0) {
+                memmove(mod->files + j + 1, mod->files + j, sizeof(struct ModFile) * (i - j));
+                memcpy(mod->files + j, &file, sizeof(struct ModFile));
+                break;
+            }
+        }
+    }
+}
+
 static void mod_extract_fields(struct Mod* mod) {
     // get full path
     char path[SYS_MAX_PATH] = { 0 };
@@ -371,6 +391,9 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         LOG_ERROR("Failed to load mod files for '%s'", modName);
         return false;
     }
+
+    // set loading order
+    mod_set_loading_order(mod);
 
     // extract fields
     mod_extract_fields(mod);

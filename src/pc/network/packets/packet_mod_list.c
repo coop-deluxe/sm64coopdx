@@ -170,6 +170,11 @@ void network_receive_mod_list(struct Packet* p) {
             packet_read(p, &relativePathLength, sizeof(u16));
             packet_read(p, file->relativePath, relativePathLength * sizeof(u8));
             packet_read(p, &file->size, sizeof(u64));
+            if (mod->isDirectory && !strstr(file->relativePath, "actors")) {
+                char tmp[SYS_MAX_PATH];
+                snprintf(tmp, SYS_MAX_PATH, "%s-%s", mod->relativePath, file->relativePath);
+                memcpy(file->relativePath, tmp, strlen(tmp) + 1);
+            }
             normalize_path(file->relativePath);
             LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
         }
