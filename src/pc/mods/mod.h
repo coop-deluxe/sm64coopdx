@@ -23,6 +23,7 @@ struct Mod {
     char relativePath[SYS_MAX_PATH];
     char basePath[SYS_MAX_PATH];
     struct ModFile* files;
+    s32 index;
     u16 fileCount;
     bool isDirectory;
     bool enabled;

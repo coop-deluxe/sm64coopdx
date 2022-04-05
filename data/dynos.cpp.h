@@ -10,6 +10,7 @@ extern "C" {
 
 #define FUNCTION_CODE   (u32) 0x434E5546
 #define POINTER_CODE    (u32) 0x52544E50
+#define LUA_VAR_CODE    (u32) 0x5641554C
 
 //
 // Enums
@@ -450,8 +451,10 @@ struct GfxData : NoCopy {
     u64 mLoadIndex = 0;
     s32 mErrorCount = 0;
     u32 mModelIdentifier = 0;
+    s32 mModIndex = 0;
     SysPath mPackFolder;
     Array<void *> mPointerList;
+    Array<String> mPointerTokenList;
     GfxContext mGfxContext;
     Array<GfxContext> mGeoNodeStack;
 };
@@ -703,8 +706,9 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId);
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea);
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 
-void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName);
+void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName);
 LevelScript* DynOS_Lvl_Get(const char* levelName);
+s32 DynOS_Lvl_GetModIndex(void* levelScript);
 DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr);
 
 //

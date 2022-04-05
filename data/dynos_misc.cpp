@@ -36,6 +36,7 @@ extern "C" {
 #include "actors/group17.h"
 #include "actors/custom0.h"
 #include "actors/zcustom0.h"
+#include "levels/wf/header.h"
 }
 
 //
@@ -607,7 +608,7 @@ Collision* DynOS_Col_Get(const char* collisionName) {
 
 static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
 
-void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName) {
+void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName) {
     // check for duplicates
     for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
         if (!strcmp(sDynosCustomLevelScripts[i].first, aLevelName)) {
@@ -624,6 +625,9 @@ void DynOS_Lvl_Add(const SysPath &aPackFolder, const char *aLevelName) {
         free(levelName);
         return;
     }
+
+    // remember index
+    _Node->mModIndex = modIndex;
 
     // Add to levels
     sDynosCustomLevelScripts.Add({ levelName, _Node });
@@ -642,6 +646,16 @@ LevelScript* DynOS_Lvl_Get(const char* levelName) {
         }
     }
     return NULL;
+}
+
+s32 DynOS_Lvl_GetModIndex(void* levelScript) {
+    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
+        auto& scripts = sDynosCustomLevelScripts[i].second->mLevelScripts;
+        if (levelScript == scripts[scripts.Count() - 1]->mData) {
+            return sDynosCustomLevelScripts[i].second->mModIndex;
+        }
+    }
+    return -1;
 }
 
 DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr) {

@@ -142,6 +142,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         _GfxData->mModelIdentifier            = _GeoNode->mModelIdentifier;
         _GfxData->mPackFolder                 = aPackFolder;
         _GfxData->mPointerList                = { NULL }; // The NULL pointer is needed, so we add it here
+        _GfxData->mPointerTokenList           = { };
         _GfxData->mGfxContext.mCurrentTexture = NULL;
         _GfxData->mGfxContext.mCurrentPalette = NULL;
         _GfxData->mGeoNodeStack.Clear();

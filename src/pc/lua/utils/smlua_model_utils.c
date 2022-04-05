@@ -480,7 +480,7 @@ void smlua_model_util_clear(void) {
     }
 }
 
-u8 smlua_model_util_load(enum ModelExtendedId id) {
+u8 smlua_model_util_load_with_pool(enum ModelExtendedId id, struct AllocOnlyPool* pool) {
     if (id == E_MODEL_NONE) { return MODEL_NONE; }
     if (id == E_MODEL_MAX) { LOG_ERROR("id invalid"); return MODEL_NONE; }
     if (id > E_MODEL_MAX + sCustomModelsCount) { LOG_ERROR("id invalid"); return MODEL_NONE; }
@@ -514,20 +514,31 @@ u8 smlua_model_util_load(enum ModelExtendedId id) {
     }
 
     // load
-    struct AllocOnlyPool* pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
+    bool resizePool = false;
+    if (pool == NULL) {
+        pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
+        resizePool = true;
+    }
+
     if (info->isDisplayList) {
         gLoadedGraphNodes[emptyCacheId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
     } else {
         gLoadedGraphNodes[emptyCacheId] = process_geo_layout(pool, (void*)info->asset);
     }
-    alloc_only_pool_resize(pool, pool->usedSpace);
-    //LOG_INFO("Loaded at runtime");
+
+    if (resizePool) {
+        alloc_only_pool_resize(pool, pool->usedSpace);
+    }
 
     // remember
     smlua_model_util_remember(emptyCacheId, info->layer, info->asset, info->isDisplayList);
     info->cacheId = emptyCacheId;
 
     return emptyCacheId;
+}
+
+u8 smlua_model_util_load(enum ModelExtendedId id) {
+    return smlua_model_util_load_with_pool(id, NULL);
 }
 
 u32 smlua_model_util_get_id(const char* name) {

@@ -140,8 +140,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
         // Scanning data type
         if (_DataType == DATA_TYPE_NONE) {
 
-            // skip includes
-            if (!strncmp(c, "#include", 8)) {
+            // skip includes and externs
+            if (!strncmp(c, "#include", 8) || !strncmp(c, "extern ", 7)) {
                 while (*c != '\n' && *c != '\0') {
                     c++;
                 }

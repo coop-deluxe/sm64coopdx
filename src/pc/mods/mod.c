@@ -88,7 +88,7 @@ static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
     }
 
     // Add to levels
-    dynos_add_level(dynosPath, lvlName);
+    dynos_add_level(mod->index, dynosPath, lvlName);
     LOG_INFO("Activating DynOS lvl: '%s', '%s'", dynosPath, lvlName);
 }
 

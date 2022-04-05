@@ -64,6 +64,7 @@ void mods_activate(struct Mods* mods) {
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
         if (mod->enabled) {
+            mod->index = gActiveMods.entryCount;
             gActiveMods.entries[gActiveMods.entryCount++] = mod;
             mod_activate(mod);
         }

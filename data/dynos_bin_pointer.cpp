@@ -178,6 +178,16 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
         return;
     }
 
+    // Lua variable
+    for (s32 i = 0; i < aGfxData->mPointerTokenList.Count(); i++) {
+        if (aPtr == aGfxData->mPointerTokenList[i].begin()) {
+            String& token = aGfxData->mPointerTokenList[i];
+            WriteBytes<u32>(aFile, LUA_VAR_CODE);
+            token.Write(aFile);
+            return;
+        }
+    }
+
     // Pointer
     PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData);
     if (strlen(_PtrData.first.begin()) == 0) {
@@ -322,6 +332,14 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl)
         return isLvl
              ? DynOS_Lvl_GetFunctionPointerFromIndex(_FunctionIndex)
              : DynOS_Geo_GetFunctionPointerFromIndex(_FunctionIndex);
+    }
+
+    // LUAV
+    if (aValue == LUA_VAR_CODE) {
+        String token; token.Read(aFile);
+        u32 index = aGfxData->mPointerTokenList.Count();
+        aGfxData->mPointerTokenList.Add(token);
+        return aGfxData->mPointerTokenList[index].begin();
     }
 
     // PNTR

@@ -24,6 +24,7 @@
 #include "surface_load.h"
 #include "level_table.h"
 #include "src/pc/lua/utils/smlua_model_utils.h"
+#include "src/pc/lua/smlua.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
 
@@ -38,6 +39,8 @@ struct LevelCommand {
 };
 
 enum ScriptStatus { SCRIPT_RUNNING = 1, SCRIPT_PAUSED = 0, SCRIPT_PAUSED2 = -1 };
+
+s32 gLevelScriptModIndex = -1;
 
 static uintptr_t sStack[32];
 
@@ -820,6 +823,51 @@ static void level_cmd_cleardemoptr(void)
     sCurrentCmd = CMD_NEXT;
 }
 
+// coop
+static void level_cmd_place_object_ext(void) {
+    u8 val7 = 1 << (gCurrActNum - 1);
+    struct SpawnInfo *spawnInfo;
+
+    u16 modIndex = gLevelScriptModIndex;
+    char* modelStr = CMD_GET(char*, 20);
+    char* behStr = CMD_GET(char*, 24);
+
+    gSmLuaConvertSuccess = true;
+    enum ModelExtendedId modelId = smlua_get_mod_variable(modIndex, modelStr);
+    enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
+
+    if ((gLevelScriptModIndex == -1) || !gSmLuaConvertSuccess) {
+        LOG_ERROR("Failed to place custom object: %u, %u", modelId, behId);
+        sCurrentCmd = CMD_NEXT;
+        return;
+    }
+
+    if (sCurrAreaIndex != -1 && ((CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
+        spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
+
+        spawnInfo->startPos[0] = CMD_GET(s16, 4);
+        spawnInfo->startPos[1] = CMD_GET(s16, 6);
+        spawnInfo->startPos[2] = CMD_GET(s16, 8);
+
+        spawnInfo->startAngle[0] = CMD_GET(s16, 10) * 0x8000 / 180;
+        spawnInfo->startAngle[1] = CMD_GET(s16, 12) * 0x8000 / 180;
+        spawnInfo->startAngle[2] = CMD_GET(s16, 14) * 0x8000 / 180;
+
+        spawnInfo->areaIndex = sCurrAreaIndex;
+        spawnInfo->activeAreaIndex = sCurrAreaIndex;
+
+        spawnInfo->behaviorArg = CMD_GET(u32, 16);
+
+        spawnInfo->behaviorScript = (BehaviorScript*)get_behavior_from_id(behId);
+        spawnInfo->unk18 = gLoadedGraphNodes[smlua_model_util_load_with_pool(modelId, sLevelPool)];
+        spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
+
+        gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
+    }
+
+    sCurrentCmd = CMD_NEXT;
+}
+
 static void (*LevelScriptJumpTable[])(void) = {
     /*00*/ level_cmd_load_and_execute,
     /*01*/ level_cmd_exit_and_execute,
@@ -884,6 +932,9 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*3C*/ level_cmd_get_or_set_var,
     /*3D*/ level_cmd_advdemo,
     /*3E*/ level_cmd_cleardemoptr,
+
+    // coop
+    /*3F*/ level_cmd_place_object_ext,
 };
 
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
