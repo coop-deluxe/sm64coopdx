@@ -310,6 +310,14 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     gfx_constant(G_ZS_PIXEL);
     gfx_constant(G_ZS_PRIM);
 
+    // MW constants
+    gfx_constant(G_MW_MATRIX);
+    gfx_constant(G_MW_NUMLIGHT);
+    gfx_constant(G_MW_CLIP);
+    gfx_constant(G_MW_SEGMENT);
+    gfx_constant(G_MW_FOG);
+    gfx_constant(G_MW_LIGHTCOL);
+
     // Common values
     gfx_constant((4-1)<<G_TEXTURE_IMAGE_FRAC);
     gfx_constant((8-1)<<G_TEXTURE_IMAGE_FRAC);
@@ -346,10 +354,10 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     gfx_constant(CALC_DXT(64,G_IM_SIZ_32b_BYTES));
     gfx_constant(CALC_DXT(128,G_IM_SIZ_32b_BYTES));
     gfx_constant(CALC_DXT(256,G_IM_SIZ_32b_BYTES));
+    gfx_constant(G_CULL_BACK|G_LIGHTING);
 
     // Lights
     for (auto& _Node : aGfxData->mLights) {
-
         // Light pointer
         if (_Arg == _Node->mName) {
             return (s64) DynOS_Lights_Parse(aGfxData, _Node)->mData;
@@ -365,6 +373,50 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         String _Diffuse("&%s.l", _Node->mName.begin());
         if (_Arg == _Diffuse) {
             return (s64) &(DynOS_Lights_Parse(aGfxData, _Node)->mData->l[0]);
+        }
+    }
+
+    for (auto& _Node : aGfxData->mLightTs) {
+        // Light pointer
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_LightT_Parse(aGfxData, _Node)->mData;
+        }
+
+        // Diffuse pointer
+        String _Diffuse("&%s.col", _Node->mName.begin());
+        if (_Arg == _Diffuse) {
+            return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->col[0]);
+        }
+
+        // Diffuse copy pointer
+        String _DiffuseC("&%s.colc", _Node->mName.begin());
+        if (_Arg == _DiffuseC) {
+            return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->colc[0]);
+        }
+
+        // Dir pointer
+        String _Dir("&%s.dir", _Node->mName.begin());
+        if (_Arg == _Dir) {
+            return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->dir[0]);
+        }
+    }
+
+    for (auto& _Node : aGfxData->mAmbientTs) {
+        // Light pointer
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_AmbientT_Parse(aGfxData, _Node)->mData;
+        }
+
+        // Diffuse pointer
+        String _Diffuse("&%s.col", _Node->mName.begin());
+        if (_Arg == _Diffuse) {
+            return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->col[0]);
+        }
+
+        // Diffuse copy pointer
+        String _DiffuseC("&%s.colc", _Node->mName.begin());
+        if (_Arg == _DiffuseC) {
+            return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->colc[0]);
         }
     }
 
@@ -662,6 +714,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_2(gsSPCopyLightEXT, false);
     gfx_symbol_2(gsSPFogFactor, false);
     gfx_symbol_1(gsDPSetTextureLOD, false);
+    gfx_symbol_3(gsMoveWd, false);
 
     // Special symbols
     if (_Symbol == "gsSPTexture") {

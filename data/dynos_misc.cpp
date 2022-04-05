@@ -36,6 +36,7 @@ extern "C" {
 #include "actors/group17.h"
 #include "actors/custom0.h"
 #include "actors/zcustom0.h"
+#include "levels/bob/header.h"
 #include "levels/wf/header.h"
 }
 
@@ -605,6 +606,75 @@ Collision* DynOS_Col_Get(const char* collisionName) {
   ////////////
  // Levels //
 ////////////
+
+#define define_lvl_geo(geo) (const void *) #geo, (const void *) geo
+static const void *sDynosLevelGeos[] = {
+    define_lvl_geo(wf_geo_0007E0),
+    define_lvl_geo(wf_geo_000820),
+    define_lvl_geo(wf_geo_000860),
+    define_lvl_geo(wf_geo_000878),
+    define_lvl_geo(wf_geo_000890),
+    define_lvl_geo(wf_geo_0008A8),
+    define_lvl_geo(wf_geo_0008E8),
+    define_lvl_geo(wf_geo_000900),
+    define_lvl_geo(wf_geo_000940),
+    define_lvl_geo(wf_geo_000958),
+    define_lvl_geo(wf_geo_0009A0),
+    define_lvl_geo(wf_geo_0009B8),
+    define_lvl_geo(wf_geo_0009D0),
+    define_lvl_geo(wf_geo_0009E8),
+    define_lvl_geo(wf_geo_000A00),
+    define_lvl_geo(wf_geo_000A40),
+    define_lvl_geo(wf_geo_000A58),
+    define_lvl_geo(wf_geo_000A98),
+    define_lvl_geo(wf_geo_000AB0),
+    define_lvl_geo(wf_geo_000AC8),
+    define_lvl_geo(wf_geo_000AE0),
+    define_lvl_geo(wf_geo_000AF8),
+    define_lvl_geo(wf_geo_000B10),
+    define_lvl_geo(wf_geo_000B38),
+    define_lvl_geo(wf_geo_000B60),
+    define_lvl_geo(wf_geo_000B78),
+    define_lvl_geo(wf_geo_000B90),
+    define_lvl_geo(wf_geo_000BA8),
+    define_lvl_geo(wf_geo_000BC8),
+    define_lvl_geo(wf_geo_000BE0),
+    define_lvl_geo(wf_geo_000BF8),
+    define_lvl_geo(bob_geo_000440),
+    define_lvl_geo(bob_geo_000458),
+    define_lvl_geo(bob_geo_000470),
+    define_lvl_geo(bob_geo_000488),
+};
+
+s32 DynOS_Lvl_GetGeoCount() {
+    return (s32) (sizeof(sDynosLevelGeos) / (2 * sizeof(sDynosLevelGeos[0])));
+}
+
+const char *DynOS_Lvl_GetGeoName(s32 aIndex) {
+     return (const char *) sDynosLevelGeos[2 * aIndex];
+}
+
+const void *DynOS_Lvl_GetGeoLayout(s32 aIndex) {
+    return (const void *) sDynosLevelGeos[2 * aIndex + 1];
+}
+
+const void *DynOS_Lvl_GetGeoLayoutFromName(const char *aGeoName) {
+    for (s32 i = 0; i < DynOS_Lvl_GetGeoCount(); ++i) {
+        if (!strcmp(DynOS_Lvl_GetGeoName(i), aGeoName)) {
+            return DynOS_Lvl_GetGeoLayout(i);
+        }
+    }
+    return NULL;
+}
+
+s32 DynOS_Lvl_GetGeoIndex(const void *aGeoLayout) {
+    for (s32 i = 0; i < DynOS_Lvl_GetGeoCount(); ++i) {
+        if (DynOS_Lvl_GetGeoLayout(i) == aGeoLayout) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
 

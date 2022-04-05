@@ -19,6 +19,8 @@ extern "C" {
 enum {
     DATA_TYPE_NONE = 0,
     DATA_TYPE_LIGHT,
+    DATA_TYPE_LIGHT_T,
+    DATA_TYPE_AMBIENT_T,
     DATA_TYPE_TEXTURE,
     DATA_TYPE_VERTEX,
     DATA_TYPE_DISPLAY_LIST,
@@ -426,6 +428,8 @@ struct GfxData : NoCopy {
 
     // Model data
     DataNodes<Lights1> mLights;
+    DataNodes<Light_t> mLightTs;
+    DataNodes<Ambient_t> mAmbientTs;
     DataNodes<TexData> mTextures;
     DataNodes<Vtx> mVertices;
     DataNodes<Gfx> mDisplayLists;
@@ -691,6 +695,12 @@ void *DynOS_Geo_GetFunctionPointerFromIndex(s32 aIndex);
 s32 DynOS_Geo_GetFunctionIndex(const void *aPtr);
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
 
+s32 DynOS_Lvl_GetGeoCount();
+const char *DynOS_Lvl_GetGeoName(s32 aIndex);
+const void *DynOS_Lvl_GetGeoLayout(s32 aIndex);
+const void *DynOS_Lvl_GetGeoLayoutFromName(const char *aGeoName);
+s32 DynOS_Lvl_GetGeoIndex(const void *aGeoLayout);
+
 //
 // Levels
 //
@@ -762,6 +772,14 @@ void DynOS_Gfx_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
 void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
 void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<Light_t>* DynOS_LightT_Parse(GfxData* aGfxData, DataNode<Light_t>* aNode);
+void DynOS_LightT_Write(FILE* aFile, GfxData* aGfxData, DataNode<Light_t> *aNode);
+void DynOS_LightT_Load(FILE *aFile, GfxData *aGfxData);
+
+DataNode<Ambient_t>* DynOS_AmbientT_Parse(GfxData* aGfxData, DataNode<Ambient_t>* aNode);
+void DynOS_AmbientT_Write(FILE* aFile, GfxData* aGfxData, DataNode<Ambient_t> *aNode);
+void DynOS_AmbientT_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
 void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode);

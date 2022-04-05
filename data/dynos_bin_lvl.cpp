@@ -1391,12 +1391,20 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     lvl_constant(WARP_TRANSITION_FADE_FROM_BOWSER);
     lvl_constant(WARP_TRANSITION_FADE_INTO_BOWSER);
 
-    // vanilla geos
+    // vanilla actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
         if (DynOS_Geo_IsCustomActor(i)) { break; }
         if (!strcmp(_Arg.begin(), DynOS_Geo_GetActorName(i))) {
             return (LevelScript)DynOS_Geo_GetActorLayout(i);
+        }
+    }
+
+    // vanilla level geos
+    s32 lvlGeoCount = DynOS_Lvl_GetGeoCount();
+    for (s32 i = 0; i < lvlGeoCount; i++) {
+        if (!strcmp(_Arg.begin(), DynOS_Lvl_GetGeoName(i))) {
+            return (LevelScript)DynOS_Lvl_GetGeoLayout(i);
         }
     }
 
@@ -1847,6 +1855,16 @@ static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
                 DynOS_Lights_Write(_File, aGfxData, _Node);
             }
         }
+        for (auto &_Node : aGfxData->mLightTs) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_LightT_Write(_File, aGfxData, _Node);
+            }
+        }
+        for (auto &_Node : aGfxData->mAmbientTs) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_AmbientT_Write(_File, aGfxData, _Node);
+            }
+        }
         for (auto &_Node : aGfxData->mTextures) {
             if (_Node->mLoadIndex == i) {
                 DynOS_Tex_Write(_File, aGfxData, _Node);
@@ -1951,6 +1969,8 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevel
         for (bool _Done = false; !_Done;) {
             switch (ReadBytes<u8>(_File)) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load     (_File, _GfxData); break;
+                case DATA_TYPE_LIGHT_T:         DynOS_LightT_Load     (_File, _GfxData); break;
+                case DATA_TYPE_AMBIENT_T:       DynOS_AmbientT_Load   (_File, _GfxData); break;
                 case DATA_TYPE_TEXTURE:         DynOS_Tex_Load        (_File, _GfxData); break;
                 case DATA_TYPE_VERTEX:          DynOS_Vtx_Load        (_File, _GfxData); break;
                 case DATA_TYPE_DISPLAY_LIST:    DynOS_Gfx_Load        (_File, _GfxData); break;

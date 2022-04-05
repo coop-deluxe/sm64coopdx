@@ -178,6 +178,10 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     _DataType = DATA_TYPE_UNUSED;
                 } else if (_Buffer == "Lights1") {
                     _DataType = DATA_TYPE_LIGHT;
+                } else if (_Buffer == "Light_t") {
+                    _DataType = DATA_TYPE_LIGHT_T;
+                } else if (_Buffer == "Ambient_t") {
+                    _DataType = DATA_TYPE_AMBIENT_T;
                 } else if (_Buffer == "u8") {
                     _DataType = strstr(aFilename.c_str(), "room")
                               ? DATA_TYPE_ROOMS
@@ -221,6 +225,8 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             else if (_Buffer.Length() != 0) {
                 switch (_DataType) {
                     case DATA_TYPE_LIGHT:        AppendNewNode(aGfxData, aGfxData->mLights,       _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_LIGHT_T:      AppendNewNode(aGfxData, aGfxData->mLightTs,      _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_AMBIENT_T:    AppendNewNode(aGfxData, aGfxData->mAmbientTs,    _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_TEXTURE:      AppendNewNode(aGfxData, aGfxData->mTextures,     _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_VERTEX:       AppendNewNode(aGfxData, aGfxData->mVertices,     _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_DISPLAY_LIST: AppendNewNode(aGfxData, aGfxData->mDisplayLists, _Buffer, pDataName, pDataTokens); break;

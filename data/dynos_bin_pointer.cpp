@@ -43,6 +43,27 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    for (auto& _Node : aGfxData->mLightTs) {
+        if (&_Node->mData->col[0] == aPtr) {
+            return { _Node->mName, 1 };
+        }
+        if (&_Node->mData->colc[0] == aPtr) {
+            return { _Node->mName, 2 };
+        }
+        if (&_Node->mData->dir[0] == aPtr) {
+            return { _Node->mName, 3 };
+        }
+    }
+
+    for (auto& _Node : aGfxData->mAmbientTs) {
+        if (&_Node->mData->col[0] == aPtr) {
+            return { _Node->mName, 1 };
+        }
+        if (&_Node->mData->colc[0] == aPtr) {
+            return { _Node->mName, 2 };
+        }
+    }
+
     // Textures
     for (auto& _Node : aGfxData->mTextures) {
         if (_Node == aPtr) {
@@ -119,12 +140,20 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { get_behavior_name_from_id(id), 0 };
     }
 
-    // Vanilla Geos
+    // Vanilla Actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
         if (DynOS_Geo_IsCustomActor(i)) { break; }
         if (aPtr == DynOS_Geo_GetActorLayout(i)) {
             return { DynOS_Geo_GetActorName(i), 0 };
+        }
+    }
+
+    // Vanilla Lvl Geos
+    s32 lvlGeoCount = DynOS_Lvl_GetGeoCount();
+    for (s32 i = 0; i < lvlGeoCount; i++) {
+        if (aPtr == DynOS_Lvl_GetGeoLayout(i)) {
+            return { DynOS_Lvl_GetGeoName(i), 0 };
         }
     }
 
@@ -217,6 +246,33 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         }
     }
 
+    for (auto& _Node : aGfxData->mLightTs) {
+        if (_Node->mName == aPtrName) {
+            if (aPtrData == 1) {
+                return (void *) &_Node->mData->col[0];
+            }
+            if (aPtrData == 2) {
+                return (void *) &_Node->mData->colc[0];
+            }
+            if (aPtrData == 3) {
+                return (void *) &_Node->mData->dir[0];
+            }
+            sys_fatal("Unknown Light type: %u", aPtrData);
+        }
+    }
+
+    for (auto& _Node : aGfxData->mAmbientTs) {
+        if (_Node->mName == aPtrName) {
+            if (aPtrData == 1) {
+                return (void *) &_Node->mData->col[0];
+            }
+            if (aPtrData == 2) {
+                return (void *) &_Node->mData->colc[0];
+            }
+            sys_fatal("Unknown Light type: %u", aPtrData);
+        }
+    }
+
     // Textures
     for (auto& _Node : aGfxData->mTextures) {
         if (_Node->mName == aPtrName) {
@@ -300,12 +356,20 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         return (void*)get_behavior_from_id(id);
     }
 
-    // Vanilla Geos
+    // Vanilla Actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
         if (DynOS_Geo_IsCustomActor(i)) { break; }
         if (!strcmp(aPtrName.begin(), DynOS_Geo_GetActorName(i))) {
             return (void*)DynOS_Geo_GetActorLayout(i);
+        }
+    }
+
+    // Vanilla Lvl Geos
+    s32 lvlGeoCount = DynOS_Lvl_GetGeoCount();
+    for (s32 i = 0; i < lvlGeoCount; i++) {
+        if (!strcmp(aPtrName.begin(), DynOS_Lvl_GetGeoName(i))) {
+            return (void*)DynOS_Lvl_GetGeoLayout(i);
         }
     }
 
