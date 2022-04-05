@@ -2005,6 +2005,14 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
+        // Force all of the movtexs into the compiled lvl
+        for (auto &_MovtexNode : _GfxData->mMovtexs) {
+            DynOS_Movtex_Parse(_GfxData, _MovtexNode, false);
+        }
+        for (auto &_MovtexQCNode : _GfxData->mMovtexQCs) {
+            DynOS_MovtexQC_Parse(_GfxData, _MovtexQCNode);
+        }
+
         // Write if no error
         if (_GfxData->mErrorCount == 0) {
             DynOS_Lvl_WriteBinary(_LvlFilename, _GfxData);

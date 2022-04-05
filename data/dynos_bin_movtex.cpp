@@ -132,6 +132,15 @@ static void ParseMovtexSymbol(GfxData* aGfxData, DataNode<Movtex>* aNode, Movtex
     movtex_symbol_0(MOV_TEX_END);
     movtex_symbol_0(MOV_TEX_ROT_END);
 
+    // Integers
+    s32 x;
+    if ((_Symbol[1] == 'x' && sscanf(_Symbol.begin(), "%x", &x) == 1) || (sscanf(_Symbol.begin(), "%d", &x) == 1)) {
+        Movtex _Mt[] = { (s16)x };
+        memcpy(aHead, _Mt, sizeof(_Mt));
+        aHead += (sizeof(_Mt) / sizeof(_Mt[0]));
+        return;
+    }
+
     // Unknown
     PrintError("  ERROR: Unknown movtex symbol: %s", _Symbol.begin());
 }
