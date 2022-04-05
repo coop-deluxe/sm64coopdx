@@ -727,12 +727,14 @@
 
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
+   - [get_environment_region](#get_environment_region)
    - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](#get_hand_foot_pos_z)
    - [get_network_area_timer](#get_network_area_timer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
+   - [set_environment_region](#set_environment_region)
    - [warp_exit_level](#warp_exit_level)
    - [warp_restart_level](#warp_restart_level)
    - [warp_to_castle](#warp_to_castle)
@@ -13658,6 +13660,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [get_environment_region](#get_environment_region)
+
+### Lua Example
+`local numberValue = get_environment_region(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_environment_region(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
 
 ### Lua Example
@@ -13770,6 +13792,27 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void hud_show(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_environment_region](#set_environment_region)
+
+### Lua Example
+`set_environment_region(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_environment_region(u8 index, s32 value);`
 
 [:arrow_up_small:](#)
 

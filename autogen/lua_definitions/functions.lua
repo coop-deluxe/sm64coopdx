@@ -4135,6 +4135,12 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
+--- @param index integer
+--- @return number
+function get_environment_region(index)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param index integer
 --- @return number
@@ -4168,6 +4174,13 @@ end
 
 --- @return nil
 function hud_show()
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+--- @return nil
+function set_environment_region(index, value)
     -- ...
 end
 
