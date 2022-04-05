@@ -65,8 +65,6 @@ void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex) {
 
 #define lvl_constant(x) if (_Arg == #x) { return (LevelScript) (x); }
 
-// TODO: this was made so that recursive descent can parse the constants...
-// but RD should really use any function pointer passed to it
 s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     *found = true;
 
@@ -1391,6 +1389,10 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     lvl_constant(WARP_TRANSITION_FADE_FROM_BOWSER);
     lvl_constant(WARP_TRANSITION_FADE_INTO_BOWSER);
 
+    // Other constants
+    lvl_constant(NULL);
+    lvl_constant(FALSE);
+
     // vanilla actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
@@ -1426,10 +1428,6 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     if (constantFound) {
         return (LevelScript) constantValue;
     }
-
-    // Other constants
-    lvl_constant(NULL);
-    lvl_constant(FALSE);
 
     // Level Scripts
     for (auto& _Node : aGfxData->mLevelScripts) {
@@ -1495,7 +1493,7 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
 
     // Recursive descent parsing
     bool rdSuccess = false;
-    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess);
+    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Lvl_ParseLevelScriptConstants);
     if (rdSuccess) {
         return (LevelScript)rdValue;
     }
@@ -1726,20 +1724,9 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         } else {
-            // remember model/beh as pointer
-            aGfxData->mPointerList.Add(aHead + 5);
-            aGfxData->mPointerList.Add(aHead + 6);
-
-            // add model/beh tokens
-            u32 tokenListIndex = aGfxData->mPointerTokenList.Count();
-            aGfxData->mPointerTokenList.Add(aNode->mTokens[topTokenIndex + 0]);
-            aGfxData->mPointerTokenList.Add(aNode->mTokens[topTokenIndex + 8]);
-
-            // get model/beh tokens
-            String& modelToken = aGfxData->mPointerTokenList[tokenListIndex + 0];
-            String& behToken   = aGfxData->mPointerTokenList[tokenListIndex + 1];
-
-            LevelScript _Ls[] = { OBJECT_EXT(modelToken.begin(), posX, posY, posZ, angleX, angleY, angleZ, behParam, behToken.begin()) };
+            u32 modelIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 5, aNode->mTokens[topTokenIndex + 0]);
+            u32 behIndex   = DynOS_Lua_RememberVariable(aGfxData, aHead + 6, aNode->mTokens[topTokenIndex + 8]);
+            LevelScript _Ls[] = { OBJECT_EXT(modelIndex, posX, posY, posZ, angleX, angleY, angleZ, behParam, behIndex) };
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         }
@@ -1761,7 +1748,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
         LevelScript angleZ   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         LevelScript behParam = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         LevelScript beh      = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        LevelScript acts      = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript acts     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
 
         if (foundModel && foundBeh) {
             aGfxData->mPointerList.Add(aHead + 5);
@@ -1769,20 +1756,9 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         } else {
-            // remember model/beh as pointer
-            aGfxData->mPointerList.Add(aHead + 5);
-            aGfxData->mPointerList.Add(aHead + 6);
-
-            // add model/beh tokens
-            u32 tokenListIndex = aGfxData->mPointerTokenList.Count();
-            aGfxData->mPointerTokenList.Add(aNode->mTokens[topTokenIndex + 0]);
-            aGfxData->mPointerTokenList.Add(aNode->mTokens[topTokenIndex + 8]);
-
-            // get model/beh tokens
-            String& modelToken = aGfxData->mPointerTokenList[tokenListIndex + 0];
-            String& behToken   = aGfxData->mPointerTokenList[tokenListIndex + 1];
-
-            LevelScript _Ls[] = { OBJECT_WITH_ACTS_EXT(modelToken.begin(), posX, posY, posZ, angleX, angleY, angleZ, behParam, behToken.begin(), acts) };
+            u32 modelIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 5, aNode->mTokens[topTokenIndex + 0]);
+            u32 behIndex   = DynOS_Lua_RememberVariable(aGfxData, aHead + 6, aNode->mTokens[topTokenIndex + 8]);
+            LevelScript _Ls[] = { OBJECT_WITH_ACTS_EXT(modelIndex, posX, posY, posZ, angleX, angleY, angleZ, behParam, behIndex, acts) };
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         }
@@ -1836,6 +1812,8 @@ static void DynOS_Lvl_Write(FILE* aFile, GfxData* aGfxData, DataNode<LevelScript
         LevelScript *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData);
+        } else if (aGfxData->mLuaPointerList.Find((void *) _Head) != -1) {
+            DynOS_Pointer_Lua_Write(aFile, *(u32 *)_Head, aGfxData);
         } else {
             WriteBytes<u32>(aFile, *((u32 *) _Head));
         }
@@ -2012,9 +1990,16 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         }
 
         // Init
-        _GfxData->mErrorCount = 0;
-        _GfxData->mLoadIndex = 0;
-        _GfxData->mPackFolder = aPackFolder;
+        _GfxData->mLoadIndex                  = 0;
+        _GfxData->mErrorCount                 = 0;
+        _GfxData->mModelIdentifier            = _LvlRoot->mModelIdentifier;
+        _GfxData->mPackFolder                 = aPackFolder;
+        _GfxData->mPointerList                = { NULL }; // The NULL pointer is needed, so we add it here
+        _GfxData->mLuaPointerList             = { };
+        _GfxData->mLuaTokenList               = { };
+        _GfxData->mGfxContext.mCurrentTexture = NULL;
+        _GfxData->mGfxContext.mCurrentPalette = NULL;
+        _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
         PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);

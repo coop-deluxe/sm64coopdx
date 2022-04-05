@@ -70,12 +70,29 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
     }
 }
 
+u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, String& token) {
+    // remember as lua pointer
+    aGfxData->mLuaPointerList.Add(aPtr);
+
+    // find existing token
+    for (u32 i = 0; i < aGfxData->mLuaTokenList.Count(); i++) {
+        if (aGfxData->mLuaTokenList[i] == token) {
+            return i;
+        }
+    }
+
+    // add token
+    aGfxData->mLuaTokenList.Add(token);
+    return aGfxData->mLuaTokenList.Count() - 1;
+}
+
   ///////////////////////
  // Recursive Descent //
 ///////////////////////
 
 static char* sRdString = NULL;
 static bool sRdError = false;
+static RDConstantFunc sRdConstantFunc = NULL;
 
 static s64 ParseExpression();
 
@@ -176,13 +193,13 @@ static s64 ParseFactor() {
             cTmp++;
         }
 
-        // TODO: this was made so that recursive descent can parse the constants...
-        // but RD should really use any function pointer passed to it
-        bool constantFound = false;
-        s64 constantValue = DynOS_Lvl_ParseLevelScriptConstants(identifier, &constantFound);
-        if (constantFound) {
-            sRdString = cTmp;
-            return constantValue;
+        if (sRdConstantFunc != NULL) {
+            bool constantFound = false;
+            s64 constantValue = sRdConstantFunc(identifier, &constantFound);
+            if (constantFound) {
+                sRdString = cTmp;
+                return constantValue;
+            }
         }
     }
 
@@ -262,9 +279,10 @@ static s64 ParseExpression() {
     return ParseBitOrExpression();
 }
 
-s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success) {
+s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func) {
     sRdString = (char*)expr;
     sRdError = false;
+    sRdConstantFunc = func;
     s64 value = ParseExpression();
     sRdString = NULL;
     *success = !sRdError;

@@ -450,6 +450,7 @@ struct GfxData : NoCopy {
 
     // Generate
     Array<DataNode<GeoLayout> *> mGenerateGeoLayouts;
+    Array<DataNode<LevelScript> *> mGenerateLevelScripts;
 
     // Current
     u64 mLoadIndex = 0;
@@ -458,7 +459,8 @@ struct GfxData : NoCopy {
     s32 mModIndex = 0;
     SysPath mPackFolder;
     Array<void *> mPointerList;
-    Array<String> mPointerTokenList;
+    Array<void *> mLuaPointerList;
+    Array<String> mLuaTokenList;
     GfxContext mGfxContext;
     Array<GfxContext> mGeoNodeStack;
 };
@@ -744,8 +746,11 @@ Collision* DynOS_Col_Get(const char* collisionName);
 // Bin
 //
 
+typedef s64 (*RDConstantFunc)(const String& _Arg, bool* found);
+
+u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, String& token);
 void DynOS_Gfx_GeneratePacks(const char* directory);
-s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success);
+s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func);
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
 char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
 
@@ -768,6 +773,7 @@ void DynOS_Geo_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
 void DynOS_Gfx_Write(FILE *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode);
 void DynOS_Gfx_Load(FILE *aFile, GfxData *aGfxData);
+s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found);
 
 DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
 void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
@@ -810,6 +816,7 @@ DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode);
 void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
 void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData);
 
+void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData);
 void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData);
 void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl);
 

@@ -15,18 +15,9 @@ extern "C" {
 /////////////
 
 #define gfx_constant(x) if (_Arg == #x) { return (s64) (x); }
-static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pTokenIndex, const char *aPrefix) {
-    assert(aPrefix != NULL);
-    String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
-    String _Arg("%s%s", aPrefix, _Token.begin());
 
-    // Offset
-    s32 _Offset = 0;
-    s32 _Plus = _Arg.Find('+');
-    if (_Plus != -1) {
-        _Offset = _Arg.SubString(_Plus + 1).ParseInt();
-        _Arg = _Arg.SubString(0, _Plus);
-    }
+s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
+    *found = true;
 
     // Constants
     gfx_constant(NULL);
@@ -123,10 +114,6 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     gfx_constant(G_TX_CLAMP);
     gfx_constant(G_TX_NOMASK);
     gfx_constant(G_TX_NOLOD);
-    gfx_constant(G_TX_WRAP|G_TX_NOMIRROR);
-    gfx_constant(G_TX_WRAP|G_TX_MIRROR);
-    gfx_constant(G_TX_CLAMP|G_TX_NOMIRROR);
-    gfx_constant(G_TX_CLAMP|G_TX_MIRROR);
 
     // Render modes
     gfx_constant(G_RM_AA_ZB_OPA_SURF);
@@ -239,14 +226,6 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     gfx_constant(G_TEXTURE_GEN_LINEAR);
     gfx_constant(G_LOD);
     gfx_constant(G_CLIPPING);
-    gfx_constant(G_FOG|G_TEXTURE_GEN);
-    gfx_constant(G_LIGHTING|G_CULL_BACK);
-    gfx_constant(G_LIGHTING|G_SHADING_SMOOTH);
-    gfx_constant(G_CULL_BACK|G_SHADING_SMOOTH);
-    gfx_constant(G_LIGHTING|G_CULL_BACK|G_SHADING_SMOOTH);
-    gfx_constant(G_TEXTURE_GEN|G_SHADING_SMOOTH);
-    gfx_constant(G_TEXTURE_GEN|G_LIGHTING|G_CULL_BACK);
-    gfx_constant(G_TEXTURE_GEN|G_CULL_BACK|G_SHADING_SMOOTH);
 
     // Alpha modes
     gfx_constant(G_AC_NONE);
@@ -318,14 +297,13 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     gfx_constant(G_MW_FOG);
     gfx_constant(G_MW_LIGHTCOL);
 
+    // Texture/scale/rotate constants
+    gfx_constant(G_TEXTURE_IMAGE_FRAC);
+    gfx_constant(G_TEXTURE_SCALE_FRAC);
+    gfx_constant(G_SCALE_FRAC);
+    gfx_constant(G_ROTATE_FRAC);
+
     // Common values
-    gfx_constant((4-1)<<G_TEXTURE_IMAGE_FRAC);
-    gfx_constant((8-1)<<G_TEXTURE_IMAGE_FRAC);
-    gfx_constant((16-1)<<G_TEXTURE_IMAGE_FRAC);
-    gfx_constant((32-1)<<G_TEXTURE_IMAGE_FRAC);
-    gfx_constant((64-1)<<G_TEXTURE_IMAGE_FRAC);
-    gfx_constant((128-1)<<G_TEXTURE_IMAGE_FRAC);
-    gfx_constant((256-1)<<G_TEXTURE_IMAGE_FRAC);
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));
     gfx_constant(CALC_DXT(8,G_IM_SIZ_4b_BYTES));
     gfx_constant(CALC_DXT(16,G_IM_SIZ_4b_BYTES));
@@ -354,7 +332,29 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     gfx_constant(CALC_DXT(64,G_IM_SIZ_32b_BYTES));
     gfx_constant(CALC_DXT(128,G_IM_SIZ_32b_BYTES));
     gfx_constant(CALC_DXT(256,G_IM_SIZ_32b_BYTES));
-    gfx_constant(G_CULL_BACK|G_LIGHTING);
+
+    *found = false;
+    return 0;
+}
+
+static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pTokenIndex, const char *aPrefix) {
+    assert(aPrefix != NULL);
+    String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
+    String _Arg("%s%s", aPrefix, _Token.begin());
+
+    bool constantFound = false;
+    s64 constantValue = DynOS_Gfx_ParseGfxConstants(_Arg, &constantFound);
+    if (constantFound) {
+        return constantValue;
+    }
+
+    // Offset
+    s32 _Offset = 0;
+    s32 _Plus = _Arg.Find('+');
+    if (_Plus != -1) {
+        _Offset = _Arg.SubString(_Plus + 1).ParseInt();
+        _Arg = _Arg.SubString(0, _Plus);
+    }
 
     // Lights
     for (auto& _Node : aGfxData->mLights) {
@@ -445,6 +445,13 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     s32 x;
     if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
         return (s64) x;
+    }
+
+    // Recursive descent parsing
+    bool rdSuccess = false;
+    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
+    if (rdSuccess) {
+        return (LevelScript)rdValue;
     }
 
     // Unknown

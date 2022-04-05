@@ -121,9 +121,6 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
     FILE *_File = fopen(aFilename.c_str(), "rb");
     if (!_File) return;
 
-    // Remember the geo layout count
-    s32 prevGeoLayoutCount = aGfxData->mGeoLayouts.Count();
-
     // Load file into a buffer while removing all comments
     char *_FileBuffer = DynOS_Read_Buffer(_File, aGfxData);
     fclose(_File);
@@ -278,26 +275,6 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             pDataStart  = NULL;
             _DataIgnore = false;
             _Buffer     = "";
-        }
-    }
-
-    // Figure out which geo layouts to generate
-    s32 geoLayoutCount = aGfxData->mGeoLayouts.Count();
-    if (geoLayoutCount > prevGeoLayoutCount) {
-        // find actors to generate
-        bool foundActor = false;
-        for (s32 i = prevGeoLayoutCount; i < geoLayoutCount; i++) {
-            String _GeoRootName = aGfxData->mGeoLayouts[i]->mName;
-            const void* actor = DynOS_Geo_GetActorLayoutFromName(_GeoRootName.begin());
-            if (actor != NULL) {
-                foundActor = true;
-                aGfxData->mGenerateGeoLayouts.Add(aGfxData->mGeoLayouts[i]);
-            }
-        }
-
-        // if we haven't found an actor, just add the last geo layout found
-        if (!foundActor) {
-            aGfxData->mGenerateGeoLayouts.Add(aGfxData->mGeoLayouts[geoLayoutCount - 1]);
         }
     }
 

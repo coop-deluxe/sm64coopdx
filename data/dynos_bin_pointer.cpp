@@ -183,12 +183,29 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     return { _VtxArrayName, (u32)((const Vtx*)aPtr - (const Vtx*)_VtxArrayStart) };
 }
 
+void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData) {
+    String& token = aGfxData->mLuaTokenList[index];
+    WriteBytes<u32>(aFile, LUA_VAR_CODE);
+    token.Write(aFile);
+}
+
 void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
 
     // NULL
     if (!aPtr) {
         WriteBytes<u32>(aFile, 0);
         return;
+    }
+
+    // Lua variable
+    for (s32 i = 0; i < aGfxData->mLuaPointerList.Count(); i++) {
+        if (aPtr == aGfxData->mLuaPointerList[i]) {
+            u32 index = *((u32*)aPtr);
+            String& token = aGfxData->mLuaTokenList[index];
+            WriteBytes<u32>(aFile, LUA_VAR_CODE);
+            token.Write(aFile);
+            return;
+        }
     }
 
     // Geo function
@@ -207,21 +224,8 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
         return;
     }
 
-    // Lua variable
-    for (s32 i = 0; i < aGfxData->mPointerTokenList.Count(); i++) {
-        if (aPtr == aGfxData->mPointerTokenList[i].begin()) {
-            String& token = aGfxData->mPointerTokenList[i];
-            WriteBytes<u32>(aFile, LUA_VAR_CODE);
-            token.Write(aFile);
-            return;
-        }
-    }
-
     // Pointer
     PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData);
-    if (strlen(_PtrData.first.begin()) == 0) {
-        _PtrData = _PtrData; // DO NOT COMMIT
-    }
     WriteBytes<u32>(aFile, POINTER_CODE);
     _PtrData.first.Write(aFile);
     WriteBytes<u32>(aFile, _PtrData.second);
@@ -390,20 +394,20 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
 
 void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl) {
 
+    // LUAV
+    if (aValue == LUA_VAR_CODE) {
+        String token; token.Read(aFile);
+        u32 index = aGfxData->mLuaTokenList.Count();
+        aGfxData->mLuaTokenList.Add(token);
+        return aGfxData->mLuaTokenList[index].begin();
+    }
+
     // FUNC
     if (aValue == FUNCTION_CODE) {
         s32 _FunctionIndex = ReadBytes<s32>(aFile);
         return isLvl
              ? DynOS_Lvl_GetFunctionPointerFromIndex(_FunctionIndex)
              : DynOS_Geo_GetFunctionPointerFromIndex(_FunctionIndex);
-    }
-
-    // LUAV
-    if (aValue == LUA_VAR_CODE) {
-        String token; token.Read(aFile);
-        u32 index = aGfxData->mPointerTokenList.Count();
-        aGfxData->mPointerTokenList.Add(token);
-        return aGfxData->mPointerTokenList[index].begin();
     }
 
     // PNTR
