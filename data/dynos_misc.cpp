@@ -1,6 +1,7 @@
 #include "dynos.cpp.h"
 extern "C" {
 #include "object_fields.h"
+#include "engine/level_script.h"
 #include "game/object_helpers.h"
 #include "game/segment2.h"
 #include "game/level_geo.h"
@@ -501,6 +502,7 @@ static const Array<Pair<const char *, void *>> sGeoFunctions = {
     define_geo_function(geo_switch_peach_eyes),
     // coop-specific
     define_geo_function(geo_mario_set_player_colors),
+    define_geo_function(geo_movtex_draw_water_regions_ext),
 };
 #undef define_geo_function
 return sGeoFunctions;
@@ -1132,7 +1134,9 @@ void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelN
 
 LevelScript* DynOS_Lvl_Get(const char* levelName) {
     static u32 index = 0; // DO NOT COMMIT
-    index = (index + 1) % sDynosCustomLevelScripts.Count();  // DO NOT COMMIT
+    s32 levelScriptCount = sDynosCustomLevelScripts.Count(); // DO NOT COMMIT
+    if (levelScriptCount < 1) { return NULL; } // DO NOT COMMIT
+    index = (index + 1) % levelScriptCount;  // DO NOT COMMIT
     auto& scripts = sDynosCustomLevelScripts[index].second->mLevelScripts; // DO NOT COMMIT
     Print("Going to level: %s\n", scripts[scripts.Count() - 1]->mName); // DO NOT COMMIT
     return scripts[scripts.Count() - 1]->mData; // DO NOT COMMIT
@@ -1168,4 +1172,19 @@ DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr) {
         }
     }
     return NULL;
+}
+
+DataNode<MovtexQC> *DynOS_Lvl_MovtexQuadCollection_GetFromIndex(s32 index) {
+    s32 modIndex = gLevelScriptModIndex - 1;
+    // Sanity check our currently loaded mod.
+    if (modIndex < 0 || modIndex >= sDynosCustomLevelScripts.Count()) { return NULL; }
+    
+    auto &mMovtexQCs = sDynosCustomLevelScripts[modIndex].second->mMovtexQCs;
+    
+    // Sanity check the index we passed.
+    if (index < 0 || index >= mMovtexQCs.Count()) { return NULL; }
+    
+    auto &movetexQC = mMovtexQCs[index];
+    
+    return movetexQC;
 }

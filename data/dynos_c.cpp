@@ -1,5 +1,6 @@
 #include "dynos.cpp.h"
 extern "C" {
+#include "src/game/moving_texture.h"
 
 // -- built in -- //
 
@@ -105,6 +106,13 @@ void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
 
 LevelScript* dynos_level_get(const char* levelName) {
     return DynOS_Lvl_Get(levelName);
+}
+
+struct MovtexQuadCollection *dynos_level_movtexqc_getfromindex(s32 index) {
+    DataNode<MovtexQC> *node = DynOS_Lvl_MovtexQuadCollection_GetFromIndex(index);
+    if (node == NULL) { return NULL; }
+    
+    return node->mData;
 }
 
 }
