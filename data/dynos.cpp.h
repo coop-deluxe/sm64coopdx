@@ -724,6 +724,7 @@ void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelN
 LevelScript* DynOS_Lvl_Get(const char* levelName);
 s32 DynOS_Lvl_GetModIndex(void* levelScript);
 DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr);
+DataNode<MovtexQC> *DynOS_Lvl_MovtexQuadCollection_GetFromIndex(s32 index);
 void DynOS_Lvl_Load_Background(void *aPtr);
 
 //

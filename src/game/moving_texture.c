@@ -13,6 +13,7 @@
 #include "geo_misc.h"
 #include "rendering_graph_node.h"
 #include "object_list_processor.h"
+#include "data/dynos.c.h"
 
 /**
  * This file contains functions for generating display lists with moving textures
@@ -621,28 +622,25 @@ void movtex_change_texture_format(u32 quadCollectionId, Gfx **gfx) {
  */
 Gfx *geo_movtex_draw_water_regions(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
     Gfx *gfxHead = NULL;
-    Gfx *gfx = NULL;
-    Gfx *subList;
-    void *quadCollection;
-    struct GraphNodeGenerated *asGenerated;
-    s16 numWaterBoxes;
-    s16 waterId;
-    s16 waterY;
-    s32 i;
 
     if (callContext == GEO_CONTEXT_RENDER) {
         gMovtexVtxColor = MOVTEX_VTX_COLOR_DEFAULT;
         if (gEnvironmentRegions == NULL) {
             return NULL;
         }
-        numWaterBoxes = gEnvironmentRegions[0];
+        s16 numWaterBoxes = gEnvironmentRegions[0];
         gfxHead = alloc_display_list((numWaterBoxes + 3) * sizeof(*gfxHead));
         if (gfxHead == NULL) {
             return NULL;
-        } else {
-            gfx = gfxHead;
         }
-        asGenerated = (struct GraphNodeGenerated *) node;
+        
+        Gfx *gfx = gfxHead;
+            
+        struct GraphNodeGenerated *asGenerated = (struct GraphNodeGenerated *) node;
+        if (asGenerated == NULL) {
+            return NULL;
+        }
+        
         if (asGenerated->parameter == JRB_MOVTEX_INTIAL_MIST) {
             if (gLakituState.goalPos[1] < 1024.0) { // if camera under water
                 return NULL;
@@ -655,22 +653,75 @@ Gfx *geo_movtex_draw_water_regions(s32 callContext, struct GraphNode *node, UNUS
         } else if (asGenerated->parameter == SSL_MOVTEX_TOXBOX_QUICKSAND_MIST) {
             gMovtexVtxColor = MOVTEX_VTX_COLOR_RED;
         }
-        quadCollection = get_quad_collection_from_id(asGenerated->parameter);
+        
+        void *quadCollection = get_quad_collection_from_id(asGenerated->parameter);
         if (quadCollection == NULL) {
             return NULL;
         }
 
-        asGenerated->fnNode.node.flags =
-            (asGenerated->fnNode.node.flags & 0xFF) | (LAYER_TRANSPARENT_INTER << 8);
+        asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (LAYER_TRANSPARENT_INTER << 8);
 
         movtex_change_texture_format(asGenerated->parameter, &gfx);
         gMovetexLastTextureId = -1;
-        for (i = 0; i < numWaterBoxes; i++) {
-            waterId = gEnvironmentRegions[i * 6 + 1];
-            waterY = gEnvironmentRegions[i * 6 + 6];
-            subList = movtex_gen_quads_id(waterId, waterY, quadCollection);
-            if (subList != NULL)
+        for (s32 i = 0; i < numWaterBoxes; i++) {
+            s16 waterId = gEnvironmentRegions[i * 6 + 1];
+            s16 waterY = gEnvironmentRegions[i * 6 + 6];
+            Gfx *subList = movtex_gen_quads_id(waterId, waterY, quadCollection);
+            if (subList != NULL) {
                 gSPDisplayList(gfx++, VIRTUAL_TO_PHYSICAL(subList));
+            }
+        }
+        gSPDisplayList(gfx++, dl_waterbox_end);
+        gSPEndDisplayList(gfx);
+    }
+    return gfxHead;
+}
+
+/**
+ * Geo script responsible for drawing quads with a moving texture at the height
+ * of the corresponding water region for DynOS. The node's parameter determines which quad
+ * collection is drawn, see moving_texture.h.
+ */
+Gfx *geo_movtex_draw_water_regions_ext(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
+    Gfx *gfxHead = NULL;
+    void *quadCollection = NULL;
+
+    if (callContext == GEO_CONTEXT_RENDER) {
+        if (gEnvironmentRegions == NULL) {
+            return NULL;
+        }
+        
+        gMovtexVtxColor = MOVTEX_VTX_COLOR_DEFAULT;
+        
+        s16 numWaterBoxes = gEnvironmentRegions[0];
+        gfxHead = alloc_display_list((numWaterBoxes + 3) * sizeof(*gfxHead));
+        if (gfxHead == NULL) {
+            return NULL;
+        }
+        
+        Gfx *gfx = gfxHead;
+            
+        struct GraphNodeGenerated *asGenerated = (struct GraphNodeGenerated *) node;
+        if (asGenerated == NULL) {
+            return NULL;
+        }
+        
+        quadCollection = dynos_level_movtexqc_getfromindex(asGenerated->parameter);
+        if (quadCollection == NULL) {
+            return NULL;
+        }
+
+        asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (LAYER_TRANSPARENT_INTER << 8);
+
+        movtex_change_texture_format(asGenerated->parameter, &gfx);
+        gMovetexLastTextureId = -1;
+        for (s32 i = 0; i < numWaterBoxes; i++) {
+            s16 waterId = gEnvironmentRegions[i * 6 + 1];
+            s16 waterY = gEnvironmentRegions[i * 6 + 6];
+            Gfx *subList = movtex_gen_quads_id(waterId, waterY, quadCollection);
+            if (subList != NULL) {
+                gSPDisplayList(gfx++, VIRTUAL_TO_PHYSICAL(subList));
+            }
         }
         gSPDisplayList(gfx++, dl_waterbox_end);
         gSPEndDisplayList(gfx);
