@@ -282,7 +282,6 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     geo_symbol_3(GEO_SHADOW, 0);
     geo_symbol_0(GEO_RENDER_OBJ);
     geo_symbol_2(GEO_ASM, 1);
-    geo_symbol_2(GEO_BACKGROUND, 1);
     geo_symbol_1(GEO_BACKGROUND_COLOR, 0);
     geo_symbol_0(GEO_NOP_1A);
     geo_symbol_5(GEO_HELD_OBJECT, 2);
@@ -342,6 +341,40 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
         }
 
         *(aHead++) = GEO_CLOSE_NODE();
+        return;
+    }
+
+    // Background
+    if (_Symbol == "GEO_BACKGROUND") {
+        // check if this is a custom background
+        const String& backgroundName = aNode->mTokens[aTokenIndex];
+        DataNode<TexData*>* node = NULL;
+        for (auto& _Node : aGfxData->mTextureLists) {
+            if (backgroundName == _Node->mName) {
+                node = _Node;
+                break;
+            }
+        }
+
+        if (node) {
+            // custom background cmd
+            node = DynOS_TexList_Parse(aGfxData, node);
+            aTokenIndex++; // skip background name
+            s64 func = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
+            aGfxData->mPointerList.Add(aHead + 1);
+            aGfxData->mPointerList.Add(aHead + 2);
+            GeoLayout _Gl[] = { GEO_BACKGROUND_EXT(node, func) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        } else {
+            // regular background cmd
+            s64 background = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
+            s64 func = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
+            aGfxData->mPointerList.Add(aHead + 1);
+            GeoLayout _Gl[] = { GEO_BACKGROUND(background, func) };
+            memcpy(aHead, _Gl, sizeof(_Gl));
+            aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
+        }
         return;
     }
 

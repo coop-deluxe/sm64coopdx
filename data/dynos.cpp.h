@@ -37,6 +37,7 @@ enum {
     DATA_TYPE_ROOMS,
     DATA_TYPE_LIGHT_T,
     DATA_TYPE_AMBIENT_T,
+    DATA_TYPE_TEXTURE_LIST,
     DATA_TYPE_UNUSED,
 };
 
@@ -431,6 +432,7 @@ struct GfxData : NoCopy {
     DataNodes<Light_t> mLightTs;
     DataNodes<Ambient_t> mAmbientTs;
     DataNodes<TexData> mTextures;
+    DataNodes<TexData*> mTextureLists;
     DataNodes<Vtx> mVertices;
     DataNodes<Gfx> mDisplayLists;
     DataNodes<GeoLayout> mGeoLayouts;
@@ -722,6 +724,7 @@ void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelN
 LevelScript* DynOS_Lvl_Get(const char* levelName);
 s32 DynOS_Lvl_GetModIndex(void* levelScript);
 DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr);
+void DynOS_Lvl_Load_Background(void *aPtr);
 
 //
 // Warps
@@ -811,6 +814,10 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
 void DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData);
 void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
+
+DataNode<TexData*>* DynOS_TexList_Parse(GfxData* aGfxData, DataNode<TexData*>* aNode);
+void DynOS_TexList_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode);
+DataNode<TexData*>* DynOS_TexList_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode);
 void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);

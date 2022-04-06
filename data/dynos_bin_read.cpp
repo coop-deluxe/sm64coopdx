@@ -137,7 +137,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
         // Scanning data type
         if (_DataType == DATA_TYPE_NONE) {
 
-            // skip includes and externs
+            // skip entire line of includes and externs
             if (!strncmp(c, "#include", 8) || !strncmp(c, "extern ", 7)) {
                 while (*c != '\n' && *c != '\0') {
                     c++;
@@ -184,7 +184,12 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                               ? DATA_TYPE_ROOMS
                               : DATA_TYPE_TEXTURE;
                 } else if (_Buffer == "Texture") {
-                    _DataType = DATA_TYPE_TEXTURE;
+                    // check if this is a 'Texture*' or a 'Texture'
+                    char* peek = c;
+                    while(*peek == ' ') { peek++; }
+                    _DataType = (*peek == '*')
+                              ? DATA_TYPE_TEXTURE_LIST
+                              : DATA_TYPE_TEXTURE;
                 } else if (_Buffer == "Vtx") {
                     _DataType = DATA_TYPE_VERTEX;
                 } else if (_Buffer == "Gfx") {
@@ -218,6 +223,11 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                 _Buffer.Add(*c);
             }
 
+            // Skip const
+            else if (_Buffer == "const") {
+                _Buffer.Clear();
+            }
+
             // Adding new data node
             else if (_Buffer.Length() != 0) {
                 switch (_DataType) {
@@ -225,6 +235,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     case DATA_TYPE_LIGHT_T:      AppendNewNode(aGfxData, aGfxData->mLightTs,      _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_AMBIENT_T:    AppendNewNode(aGfxData, aGfxData->mAmbientTs,    _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_TEXTURE:      AppendNewNode(aGfxData, aGfxData->mTextures,     _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_TEXTURE_LIST: AppendNewNode(aGfxData, aGfxData->mTextureLists, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_VERTEX:       AppendNewNode(aGfxData, aGfxData->mVertices,     _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_DISPLAY_LIST: AppendNewNode(aGfxData, aGfxData->mDisplayLists, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_GEO_LAYOUT:   AppendNewNode(aGfxData, aGfxData->mGeoLayouts,   _Buffer, pDataName, pDataTokens); break;

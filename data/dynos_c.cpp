@@ -107,4 +107,8 @@ LevelScript* dynos_level_get(const char* levelName) {
     return DynOS_Lvl_Get(levelName);
 }
 
+void dynos_level_load_background(void *ptr) {
+    DynOS_Lvl_Load_Background(ptr);
+}
+
 }

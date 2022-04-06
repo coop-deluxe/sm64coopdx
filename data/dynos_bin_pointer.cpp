@@ -71,6 +71,13 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    // Texture Lists
+    for (auto& _Node : aGfxData->mTextureLists) {
+        if (_Node == aPtr) {
+            return { _Node->mName, 0 };
+        }
+    }
+
     // Display lists
     for (auto& _Node : aGfxData->mDisplayLists) {
         if (_Node == aPtr) {
@@ -279,6 +286,13 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
 
     // Textures
     for (auto& _Node : aGfxData->mTextures) {
+        if (_Node->mName == aPtrName) {
+            return (void *) _Node;
+        }
+    }
+
+    // Texture Lists
+    for (auto& _Node : aGfxData->mTextureLists) {
         if (_Node->mName == aPtrName) {
             return (void *) _Node;
         }

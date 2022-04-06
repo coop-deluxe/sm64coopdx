@@ -14,6 +14,8 @@ extern "C" {
 #include "game/object_list_processor.h"
 #include "game/behavior_actions.h"
 #include "game/rendering_graph_node.h"
+#include "game/skybox.h"
+
 #include "actors/common0.h"
 #include "actors/common1.h"
 #include "actors/group0.h"
@@ -36,6 +38,7 @@ extern "C" {
 #include "actors/group17.h"
 #include "actors/custom0.h"
 #include "actors/zcustom0.h"
+
 #include "levels/bbh/header.h"
 #include "levels/bitdw/header.h"
 #include "levels/bitfs/header.h"
@@ -1168,4 +1171,37 @@ DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr) {
         }
     }
     return NULL;
+}
+
+void DynOS_Lvl_Load_Background(void *aPtr) {
+    // ensure this texture list exists
+    GfxData* foundGfxData = NULL;
+    DataNode<TexData*>* foundList = NULL;
+    for (auto& script : sDynosCustomLevelScripts) {
+        auto &textureLists = script.second->mTextureLists;
+        for (auto& textureList : textureLists) {
+            if (textureList == aPtr) {
+                foundGfxData = script.second;
+                foundList = textureList;
+                goto double_break;
+            }
+        }
+    }
+double_break:
+
+    if (foundList == NULL) {
+        Print("Could not find custom background");
+        return;
+    }
+
+    // Load up custom background
+    for (s32 i = 0; i < 80; i++) {
+        // find texture
+        for (auto& tex : foundGfxData->mTextures) {
+            if (tex->mData == foundList->mData[i]) {
+                gCustomSkyboxPtrList[i] = (Texture*)tex;
+                break;
+            }
+        }
+    }
 }

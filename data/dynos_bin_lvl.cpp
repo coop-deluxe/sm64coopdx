@@ -1848,6 +1848,11 @@ static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
                 DynOS_Tex_Write(_File, aGfxData, _Node);
             }
         }
+        for (auto &_Node : aGfxData->mTextureLists) {
+            if (_Node->mLoadIndex == i) {
+                DynOS_TexList_Write(_File, aGfxData, _Node);
+            }
+        }
         for (auto &_Node : aGfxData->mVertices) {
             if (_Node->mLoadIndex == i) {
                 DynOS_Vtx_Write(_File, aGfxData, _Node);
@@ -1950,6 +1955,7 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevel
                 case DATA_TYPE_LIGHT_T:         DynOS_LightT_Load     (_File, _GfxData); break;
                 case DATA_TYPE_AMBIENT_T:       DynOS_AmbientT_Load   (_File, _GfxData); break;
                 case DATA_TYPE_TEXTURE:         DynOS_Tex_Load        (_File, _GfxData); break;
+                case DATA_TYPE_TEXTURE_LIST:    DynOS_TexList_Load    (_File, _GfxData); break;
                 case DATA_TYPE_VERTEX:          DynOS_Vtx_Load        (_File, _GfxData); break;
                 case DATA_TYPE_DISPLAY_LIST:    DynOS_Gfx_Load        (_File, _GfxData); break;
                 case DATA_TYPE_GEO_LAYOUT:      DynOS_Geo_Load        (_File, _GfxData); break;

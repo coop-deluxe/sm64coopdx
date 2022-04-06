@@ -34,9 +34,9 @@ void dynos_add_collision(const char *modPath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
 
 // -- levels -- //
-
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName);
 LevelScript* dynos_level_get(const char* levelName);
+void dynos_level_load_background(void *ptr);
 
 #endif
 #endif

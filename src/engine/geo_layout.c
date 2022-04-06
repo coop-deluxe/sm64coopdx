@@ -5,6 +5,7 @@
 #include "math_util.h"
 #include "game/memory.h"
 #include "graph_node.h"
+#include "geo_commands.h"
 
 typedef void (*GeoLayoutCommandProc)(void);
 
@@ -42,6 +43,8 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_nop2,
     geo_layout_cmd_nop3,
     geo_layout_cmd_node_culling_radius,
+    // coop
+    geo_layout_cmd_node_background_ext,
 };
 
 struct GraphNode gObjParentGraphNode;
@@ -765,6 +768,26 @@ void geo_layout_cmd_node_culling_radius(void) {
     graphNode = init_graph_node_culling_radius(gGraphNodePool, NULL, cur_geo_cmd_s16(0x02));
     register_scene_graph_node(&graphNode->node);
     gGeoLayoutCommand += 0x04 << CMD_SIZE_SHIFT;
+}
+
+/*
+  0x21: Create custom background scene graph node
+*/
+void geo_layout_cmd_node_background_ext(void) {
+    struct GraphNodeBackground *graphNode;
+
+    void* bgPtr = cur_geo_cmd_ptr(0x04);
+    dynos_level_load_background(bgPtr);
+
+    graphNode = init_graph_node_background(
+        gGraphNodePool, NULL,
+        BACKGROUND_CUSTOM, // background ID, or RGBA5551 color if asm function is null
+        (GraphNodeFunc) cur_geo_cmd_ptr(0x08), // asm function
+        0);
+
+    register_scene_graph_node(&graphNode->fnNode.node);
+
+    gGeoLayoutCommand += 0x0C << CMD_SIZE_SHIFT;
 }
 
 struct GraphNode *process_geo_layout(struct AllocOnlyPool *pool, void *segptr) {
