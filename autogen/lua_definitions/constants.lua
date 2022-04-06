@@ -275,1549 +275,1612 @@ end
 --- @class BehaviorId
 
 --- @type BehaviorId
-id_bhvStarDoor = 0
+id_bhv1Up = 0
 
 --- @type BehaviorId
-id_bhvMrI = 1
+id_bhv1upJumpOnApproach = 1
 
 --- @type BehaviorId
-id_bhvMrIBody = 2
+id_bhv1upRunningAway = 2
 
 --- @type BehaviorId
-id_bhvMrIParticle = 3
+id_bhv1upSliding = 3
 
 --- @type BehaviorId
-id_bhvPurpleParticle = 4
+id_bhv1upWalking = 4
 
 --- @type BehaviorId
-id_bhvGiantPole = 5
+id_bhvActivatedBackAndForthPlatform = 5
 
 --- @type BehaviorId
-id_bhvPoleGrabbing = 6
+id_bhvActSelector = 6
 
 --- @type BehaviorId
-id_bhvThiHugeIslandTop = 7
+id_bhvActSelectorStarType = 7
 
 --- @type BehaviorId
-id_bhvThiTinyIslandTop = 8
+id_bhvAirborneDeathWarp = 8
 
 --- @type BehaviorId
-id_bhvCapSwitchBase = 9
+id_bhvAirborneStarCollectWarp = 9
 
 --- @type BehaviorId
-id_bhvCapSwitch = 10
+id_bhvAirborneWarp = 10
 
 --- @type BehaviorId
-id_bhvKingBobomb = 11
+id_bhvAlphaBooKey = 11
 
 --- @type BehaviorId
-id_bhvBobombAnchorMario = 12
+id_bhvAmbientSounds = 12
 
 --- @type BehaviorId
-id_bhvBetaChestBottom = 13
+id_bhvAnimatedTexture = 13
 
 --- @type BehaviorId
-id_bhvBetaChestLid = 14
+id_bhvAnimatesOnFloorSwitchPress = 14
 
 --- @type BehaviorId
-id_bhvBubbleParticleSpawner = 15
+id_bhvAnotherElavator = 15
 
 --- @type BehaviorId
-id_bhvBubbleMaybe = 16
+id_bhvAnotherTiltingPlatform = 16
 
 --- @type BehaviorId
-id_bhvBubblePlayer = 17
+id_bhvArrowLift = 17
 
 --- @type BehaviorId
-id_bhvSmallWaterWave = 18
+id_bhvBalconyBigBoo = 18
 
 --- @type BehaviorId
-id_bhvWaterAirBubble = 19
+id_bhvBbhTiltingTrapPlatform = 19
 
 --- @type BehaviorId
-id_bhvSmallParticle = 20
+id_bhvBbhTumblingBridge = 20
 
 --- @type BehaviorId
-id_bhvPlungeBubble = 21
+id_bhvBeginningLakitu = 21
 
 --- @type BehaviorId
-id_bhvSmallParticleSnow = 22
+id_bhvBeginningPeach = 22
 
 --- @type BehaviorId
-id_bhvSmallParticleBubbles = 23
+id_bhvBetaBooKey = 23
 
 --- @type BehaviorId
-id_bhvFishGroup = 24
+id_bhvBetaBowserAnchor = 24
 
 --- @type BehaviorId
-id_bhvCannon = 25
+id_bhvBetaChestBottom = 25
 
 --- @type BehaviorId
-id_bhvCannonBarrel = 26
+id_bhvBetaChestLid = 26
 
 --- @type BehaviorId
-id_bhvCannonBaseUnused = 27
+id_bhvBetaFishSplashSpawner = 27
 
 --- @type BehaviorId
-id_bhvChuckya = 28
+id_bhvBetaHoldableObject = 28
 
 --- @type BehaviorId
-id_bhvChuckyaAnchorMario = 29
+id_bhvBetaMovingFlames = 29
 
 --- @type BehaviorId
-id_bhvUnused05A8 = 30
+id_bhvBetaMovingFlamesSpawn = 30
 
 --- @type BehaviorId
-id_bhvRotatingPlatform = 31
+id_bhvBetaTrampolineSpring = 31
 
 --- @type BehaviorId
-id_bhvTower = 32
+id_bhvBetaTrampolineTop = 32
 
 --- @type BehaviorId
-id_bhvBulletBillCannon = 33
+id_bhvBigBoulder = 33
 
 --- @type BehaviorId
-id_bhvWfBreakableWallRight = 34
+id_bhvBigBoulderGenerator = 34
 
 --- @type BehaviorId
-id_bhvWfBreakableWallLeft = 35
+id_bhvBigBully = 35
 
 --- @type BehaviorId
-id_bhvKickableBoard = 36
+id_bhvBigBullyWithMinions = 36
 
 --- @type BehaviorId
-id_bhvTowerDoor = 37
+id_bhvBigChillBully = 37
 
 --- @type BehaviorId
-id_bhvRotatingCounterClockwise = 38
+id_bhvBigSnowmanWhole = 38
 
 --- @type BehaviorId
-id_bhvWfRotatingWoodenPlatform = 39
+id_bhvBird = 39
 
 --- @type BehaviorId
-id_bhvKoopaShellUnderwater = 40
+id_bhvBirdsSoundLoop = 40
 
 --- @type BehaviorId
-id_bhvExitPodiumWarp = 41
+id_bhvBitfsSinkingCagePlatform = 41
 
 --- @type BehaviorId
-id_bhvFadingWarp = 42
+id_bhvBitfsSinkingPlatforms = 42
 
 --- @type BehaviorId
-id_bhvWarp = 43
+id_bhvBitfsTiltingInvertedPyramid = 43
 
 --- @type BehaviorId
-id_bhvWarpPipe = 44
+id_bhvBlackSmokeBowser = 44
 
 --- @type BehaviorId
-id_bhvWhitePuffExplosion = 45
+id_bhvBlackSmokeMario = 45
 
 --- @type BehaviorId
-id_bhvSpawnedStar = 46
+id_bhvBlackSmokeUpward = 46
 
 --- @type BehaviorId
-id_bhvSpawnedStarNoLevelExit = 47
+id_bhvBlueBowserFlame = 47
 
 --- @type BehaviorId
-id_bhvMrIBlueCoin = 48
+id_bhvBlueCoinJumping = 48
 
 --- @type BehaviorId
-id_bhvCoinInsideBoo = 49
+id_bhvBlueCoinSliding = 49
 
 --- @type BehaviorId
-id_bhvCoinFormationSpawn = 50
+id_bhvBlueCoinSwitch = 50
 
 --- @type BehaviorId
-id_bhvCoinFormation = 51
+id_bhvBlueFish = 51
 
 --- @type BehaviorId
-id_bhvOneCoin = 52
+id_bhvBlueFlamesGroup = 52
 
 --- @type BehaviorId
-id_bhvYellowCoin = 53
+id_bhvBobBowlingBallSpawner = 53
 
 --- @type BehaviorId
-id_bhvTemporaryYellowCoin = 54
+id_bhvBobomb = 54
 
 --- @type BehaviorId
-id_bhvThreeCoinsSpawn = 55
+id_bhvBobombAnchorMario = 55
 
 --- @type BehaviorId
-id_bhvTenCoinsSpawn = 56
+id_bhvBobombBuddy = 56
 
 --- @type BehaviorId
-id_bhvSingleCoinGetsSpawned = 57
+id_bhvBobombBuddyOpensCannon = 57
 
 --- @type BehaviorId
-id_bhvCoinSparkles = 58
+id_bhvBobombBullyDeathSmoke = 58
 
 --- @type BehaviorId
-id_bhvGoldenCoinSparkles = 59
+id_bhvBobombExplosionBubble = 59
 
 --- @type BehaviorId
-id_bhvWallTinyStarParticle = 60
+id_bhvBobombExplosionBubble3600 = 60
 
 --- @type BehaviorId
-id_bhvVertStarParticleSpawner = 61
+id_bhvBobombFuseSmoke = 61
 
 --- @type BehaviorId
-id_bhvPoundTinyStarParticle = 62
+id_bhvBoo = 62
 
 --- @type BehaviorId
-id_bhvHorStarParticleSpawner = 63
+id_bhvBooBossSpawnedBridge = 63
 
 --- @type BehaviorId
-id_bhvPunchTinyTriangle = 64
+id_bhvBooCage = 64
 
 --- @type BehaviorId
-id_bhvTriangleParticleSpawner = 65
+id_bhvBooInCastle = 65
 
 --- @type BehaviorId
-id_bhvDoorWarp = 66
+id_bhvBookendSpawn = 66
 
 --- @type BehaviorId
-id_bhvDoor = 67
+id_bhvBookSwitch = 67
 
 --- @type BehaviorId
-id_bhvGrindel = 68
+id_bhvBooWithCage = 68
 
 --- @type BehaviorId
-id_bhvThwomp2 = 69
+id_bhvBouncingFireball = 69
 
 --- @type BehaviorId
-id_bhvThwomp = 70
+id_bhvBouncingFireballFlame = 70
 
 --- @type BehaviorId
-id_bhvTumblingBridgePlatform = 71
+id_bhvBowlingBall = 71
 
 --- @type BehaviorId
-id_bhvWfTumblingBridge = 72
+id_bhvBowser = 72
 
 --- @type BehaviorId
-id_bhvBbhTumblingBridge = 73
+id_bhvBowserBodyAnchor = 73
 
 --- @type BehaviorId
-id_bhvLllTumblingBridge = 74
+id_bhvBowserBomb = 74
 
 --- @type BehaviorId
-id_bhvFlame = 75
+id_bhvBowserBombExplosion = 75
 
 --- @type BehaviorId
-id_bhvAnotherElavator = 76
+id_bhvBowserBombSmoke = 76
 
 --- @type BehaviorId
-id_bhvRrElevatorPlatform = 77
+id_bhvBowserCourseRedCoinStar = 77
 
 --- @type BehaviorId
-id_bhvHmcElevatorPlatform = 78
+id_bhvBowserFlameSpawn = 78
 
 --- @type BehaviorId
-id_bhvWaterMist = 79
+id_bhvBowserKey = 79
 
 --- @type BehaviorId
-id_bhvBreathParticleSpawner = 80
+id_bhvBowserKeyCourseExit = 80
 
 --- @type BehaviorId
-id_bhvBreakBoxTriangle = 81
+id_bhvBowserKeyUnlockDoor = 81
 
 --- @type BehaviorId
-id_bhvWaterMist2 = 82
+id_bhvBowserShockWave = 82
 
 --- @type BehaviorId
-id_bhvUnused0DFC = 83
+id_bhvBowsersSub = 83
 
 --- @type BehaviorId
-id_bhvMistCircParticleSpawner = 84
+id_bhvBowserSubDoor = 84
 
 --- @type BehaviorId
-id_bhvDirtParticleSpawner = 85
+id_bhvBowserTailAnchor = 85
 
 --- @type BehaviorId
-id_bhvSnowParticleSpawner = 86
+id_bhvBreakableBox = 86
 
 --- @type BehaviorId
-id_bhvWind = 87
+id_bhvBreakableBoxSmall = 87
 
 --- @type BehaviorId
-id_bhvEndToad = 88
+id_bhvBreakBoxTriangle = 88
 
 --- @type BehaviorId
-id_bhvEndPeach = 89
+id_bhvBreathParticleSpawner = 89
 
 --- @type BehaviorId
-id_bhvUnusedParticleSpawn = 90
+id_bhvBub = 90
 
 --- @type BehaviorId
-id_bhvUkiki = 91
+id_bhvBubba = 91
 
 --- @type BehaviorId
-id_bhvUkikiCageChild = 92
+id_bhvBubbleMaybe = 92
 
 --- @type BehaviorId
-id_bhvUkikiCageStar = 93
+id_bhvBubbleParticleSpawner = 93
 
 --- @type BehaviorId
-id_bhvUkikiCage = 94
+id_bhvBubblePlayer = 94
 
 --- @type BehaviorId
-id_bhvBitfsSinkingPlatforms = 95
+id_bhvBubbleSplash = 95
 
 --- @type BehaviorId
-id_bhvBitfsSinkingCagePlatform = 96
+id_bhvBulletBill = 96
 
 --- @type BehaviorId
-id_bhvDddMovingPole = 97
+id_bhvBulletBillCannon = 97
 
 --- @type BehaviorId
-id_bhvBitfsTiltingInvertedPyramid = 98
+id_bhvButterfly = 98
 
 --- @type BehaviorId
-id_bhvSquishablePlatform = 99
+id_bhvCameraLakitu = 99
 
 --- @type BehaviorId
-id_bhvCutOutObject = 100
+id_bhvCannon = 100
 
 --- @type BehaviorId
-id_bhvBetaMovingFlames = 101
+id_bhvCannonBarrel = 101
 
 --- @type BehaviorId
-id_bhvRrRotatingBridgePlatform = 102
+id_bhvCannonBarrelBubbles = 102
 
 --- @type BehaviorId
-id_bhvFlamethrower = 103
+id_bhvCannonBaseUnused = 103
 
 --- @type BehaviorId
-id_bhvFlamethrowerFlame = 104
+id_bhvCannonClosed = 104
 
 --- @type BehaviorId
-id_bhvBouncingFireball = 105
+id_bhvCapSwitch = 105
 
 --- @type BehaviorId
-id_bhvBouncingFireballFlame = 106
+id_bhvCapSwitchBase = 106
 
 --- @type BehaviorId
-id_bhvBowserShockWave = 107
+id_bhvCarrySomething1 = 107
 
 --- @type BehaviorId
-id_bhvFireParticleSpawner = 108
+id_bhvCarrySomething2 = 108
 
 --- @type BehaviorId
-id_bhvBlackSmokeMario = 109
+id_bhvCarrySomething3 = 109
 
 --- @type BehaviorId
-id_bhvBlackSmokeBowser = 110
+id_bhvCarrySomething4 = 110
 
 --- @type BehaviorId
-id_bhvBlackSmokeUpward = 111
+id_bhvCarrySomething5 = 111
 
 --- @type BehaviorId
-id_bhvBetaFishSplashSpawner = 112
+id_bhvCarrySomething6 = 112
 
 --- @type BehaviorId
-id_bhvSpindrift = 113
+id_bhvCastleFlagWaving = 113
 
 --- @type BehaviorId
-id_bhvTowerPlatformGroup = 114
+id_bhvCastleFloorTrap = 114
 
 --- @type BehaviorId
-id_bhvWfSlidingTowerPlatform = 115
+id_bhvCcmTouchedStarSpawn = 115
 
 --- @type BehaviorId
-id_bhvWfElevatorTowerPlatform = 116
+id_bhvCelebrationStar = 116
 
 --- @type BehaviorId
-id_bhvWfSolidTowerPlatform = 117
+id_bhvCelebrationStarSparkle = 117
 
 --- @type BehaviorId
-id_bhvLeafParticleSpawner = 118
+id_bhvChainChomp = 118
 
 --- @type BehaviorId
-id_bhvTreeSnow = 119
+id_bhvChainChompChainPart = 119
 
 --- @type BehaviorId
-id_bhvTreeLeaf = 120
+id_bhvChainChompGate = 120
 
 --- @type BehaviorId
-id_bhvAnotherTiltingPlatform = 121
+id_bhvCheckerboardElevatorGroup = 121
 
 --- @type BehaviorId
-id_bhvSquarishPathMoving = 122
+id_bhvCheckerboardPlatformSub = 122
 
 --- @type BehaviorId
-id_bhvSquarishPathParent = 123
+id_bhvChirpChirp = 123
 
 --- @type BehaviorId
-id_bhvPiranhaPlantBubble = 124
+id_bhvChirpChirpUnused = 124
 
 --- @type BehaviorId
-id_bhvPiranhaPlantWakingBubbles = 125
+id_bhvChuckya = 125
 
 --- @type BehaviorId
-id_bhvFloorSwitchAnimatesObject = 126
+id_bhvChuckyaAnchorMario = 126
 
 --- @type BehaviorId
-id_bhvFloorSwitchGrills = 127
+id_bhvCirclingAmp = 127
 
 --- @type BehaviorId
-id_bhvFloorSwitchHardcodedModel = 128
+id_bhvClamShell = 128
 
 --- @type BehaviorId
-id_bhvFloorSwitchHiddenObjects = 129
+id_bhvClockHourHand = 129
 
 --- @type BehaviorId
-id_bhvHiddenObject = 130
+id_bhvClockMinuteHand = 130
 
 --- @type BehaviorId
-id_bhvBreakableBox = 131
+id_bhvCloud = 131
 
 --- @type BehaviorId
-id_bhvPushableMetalBox = 132
+id_bhvCloudPart = 132
 
 --- @type BehaviorId
-id_bhvHeaveHo = 133
+id_bhvCoffin = 133
 
 --- @type BehaviorId
-id_bhvHeaveHoThrowMario = 134
+id_bhvCoffinSpawner = 134
 
 --- @type BehaviorId
-id_bhvCcmTouchedStarSpawn = 135
+id_bhvCoinFormation = 135
 
 --- @type BehaviorId
-id_bhvUnusedPoundablePlatform = 136
+id_bhvCoinFormationSpawn = 136
 
 --- @type BehaviorId
-id_bhvBetaTrampolineTop = 137
+id_bhvCoinInsideBoo = 137
 
 --- @type BehaviorId
-id_bhvBetaTrampolineSpring = 138
+id_bhvCoinSparkles = 138
 
 --- @type BehaviorId
-id_bhvJumpingBox = 139
+id_bhvControllablePlatform = 139
 
 --- @type BehaviorId
-id_bhvBooCage = 140
+id_bhvControllablePlatformSub = 140
 
 --- @type BehaviorId
-id_bhvStub = 141
+id_bhvCourtyardBooTriplet = 141
 
 --- @type BehaviorId
-id_bhvIgloo = 142
+id_bhvCutOutObject = 142
 
 --- @type BehaviorId
-id_bhvBowserKey = 143
+id_bhvDddMovingPole = 143
 
 --- @type BehaviorId
-id_bhvGrandStar = 144
+id_bhvDDDPole = 144
 
 --- @type BehaviorId
-id_bhvBetaBooKey = 145
+id_bhvDddWarp = 145
 
 --- @type BehaviorId
-id_bhvAlphaBooKey = 146
+id_bhvDeathWarp = 146
 
 --- @type BehaviorId
-id_bhvBulletBill = 147
+id_bhvDecorativePendulum = 147
 
 --- @type BehaviorId
-id_bhvWhitePuffSmoke = 148
+id_bhvDirtParticleSpawner = 148
 
 --- @type BehaviorId
-id_bhvUnused1820 = 149
+id_bhvDonutPlatform = 149
 
 --- @type BehaviorId
-id_bhvBowserTailAnchor = 150
+id_bhvDonutPlatformSpawner = 150
 
 --- @type BehaviorId
-id_bhvBowser = 151
+id_bhvDoor = 151
 
 --- @type BehaviorId
-id_bhvBowserBodyAnchor = 152
+id_bhvDoorWarp = 152
 
 --- @type BehaviorId
-id_bhvBowserFlameSpawn = 153
+id_bhvDorrie = 153
 
 --- @type BehaviorId
-id_bhvTiltingBowserLavaPlatform = 154
+id_bhvEndBirds1 = 154
 
 --- @type BehaviorId
-id_bhvFallingBowserPlatform = 155
+id_bhvEndBirds2 = 155
 
 --- @type BehaviorId
-id_bhvBlueBowserFlame = 156
+id_bhvEndPeach = 156
 
 --- @type BehaviorId
-id_bhvFlameFloatingLanding = 157
+id_bhvEndToad = 157
 
 --- @type BehaviorId
-id_bhvBlueFlamesGroup = 158
+id_bhvEnemyLakitu = 158
 
 --- @type BehaviorId
-id_bhvFlameBouncing = 159
+id_bhvExclamationBox = 159
 
 --- @type BehaviorId
-id_bhvFlameMovingForwardGrowing = 160
+id_bhvExitPodiumWarp = 160
 
 --- @type BehaviorId
-id_bhvFlameBowser = 161
+id_bhvExplosion = 161
 
 --- @type BehaviorId
-id_bhvFlameLargeBurningOut = 162
+id_bhvEyerokBoss = 162
 
 --- @type BehaviorId
-id_bhvBlueFish = 163
+id_bhvEyerokHand = 163
 
 --- @type BehaviorId
-id_bhvTankFishGroup = 164
+id_bhvFadingWarp = 164
 
 --- @type BehaviorId
-id_bhvCheckerboardElevatorGroup = 165
+id_bhvFallingBowserPlatform = 165
 
 --- @type BehaviorId
-id_bhvCheckerboardPlatformSub = 166
+id_bhvFallingPillar = 166
 
 --- @type BehaviorId
-id_bhvBowserKeyUnlockDoor = 167
+id_bhvFallingPillarHitbox = 167
 
 --- @type BehaviorId
-id_bhvBowserKeyCourseExit = 168
+id_bhvFerrisWheelAxle = 168
 
 --- @type BehaviorId
-id_bhvInvisibleObjectsUnderBridge = 169
+id_bhvFerrisWheelPlatform = 169
 
 --- @type BehaviorId
-id_bhvWaterLevelPillar = 170
+id_bhvFewBlueFishSpawner = 170
 
 --- @type BehaviorId
-id_bhvDddWarp = 171
+id_bhvFireParticleSpawner = 171
 
 --- @type BehaviorId
-id_bhvMoatGrills = 172
+id_bhvFirePiranhaPlant = 172
 
 --- @type BehaviorId
-id_bhvClockMinuteHand = 173
+id_bhvFireSpitter = 173
 
 --- @type BehaviorId
-id_bhvClockHourHand = 174
+id_bhvFish = 174
 
 --- @type BehaviorId
-id_bhvMacroUkiki = 175
+id_bhvFishGroup = 175
 
 --- @type BehaviorId
-id_bhvStub1D0C = 176
+id_bhvFishSpawner = 176
 
 --- @type BehaviorId
-id_bhvLllRotatingHexagonalPlatform = 177
+id_bhvFlame = 177
 
 --- @type BehaviorId
-id_bhvLllSinkingRockBlock = 178
+id_bhvFlameBouncing = 178
 
 --- @type BehaviorId
-id_bhvStub1D70 = 179
+id_bhvFlameBowser = 179
 
 --- @type BehaviorId
-id_bhvLllMovingOctagonalMeshPlatform = 180
+id_bhvFlameFloatingLanding = 180
 
 --- @type BehaviorId
-id_bhvLllRotatingBlockWithFireBars = 181
+id_bhvFlameLargeBurningOut = 181
 
 --- @type BehaviorId
-id_bhvLllRotatingHexFlame = 182
+id_bhvFlameMovingForwardGrowing = 182
 
 --- @type BehaviorId
-id_bhvLllWoodPiece = 183
+id_bhvFlamethrower = 183
 
 --- @type BehaviorId
-id_bhvLllFloatingWoodBridge = 184
+id_bhvFlamethrowerFlame = 184
 
 --- @type BehaviorId
-id_bhvVolcanoFlames = 185
+id_bhvFloorSwitchAnimatesObject = 185
 
 --- @type BehaviorId
-id_bhvLllRotatingHexagonalRing = 186
+id_bhvFloorSwitchGrills = 186
 
 --- @type BehaviorId
-id_bhvLllSinkingRectangularPlatform = 187
+id_bhvFloorSwitchHardcodedModel = 187
 
 --- @type BehaviorId
-id_bhvLllSinkingSquarePlatforms = 188
+id_bhvFloorSwitchHiddenObjects = 188
 
 --- @type BehaviorId
-id_bhvLllTiltingInvertedPyramid = 189
+id_bhvFloorTrapInCastle = 189
 
 --- @type BehaviorId
-id_bhvUnused1F30 = 190
+id_bhvFlyGuy = 190
 
 --- @type BehaviorId
-id_bhvKoopaShell = 191
+id_bhvFlyguyFlame = 191
 
 --- @type BehaviorId
-id_bhvKoopaShellFlame = 192
+id_bhvFlyingBookend = 192
 
 --- @type BehaviorId
-id_bhvToxBox = 193
+id_bhvFlyingWarp = 193
 
 --- @type BehaviorId
-id_bhvPiranhaPlant = 194
+id_bhvFreeBowlingBall = 194
 
 --- @type BehaviorId
-id_bhvLllHexagonalMesh = 195
+id_bhvGhostHuntBigBoo = 195
 
 --- @type BehaviorId
-id_bhvLllBowserPuzzlePiece = 196
+id_bhvGhostHuntBoo = 196
 
 --- @type BehaviorId
-id_bhvLllBowserPuzzle = 197
+id_bhvGiantPole = 197
 
 --- @type BehaviorId
-id_bhvTuxiesMother = 198
+id_bhvGoldenCoinSparkles = 198
 
 --- @type BehaviorId
-id_bhvPenguinBaby = 199
+id_bhvGoomba = 199
 
 --- @type BehaviorId
-id_bhvUnused20E0 = 200
+id_bhvGoombaTripletSpawner = 200
 
 --- @type BehaviorId
-id_bhvSmallPenguin = 201
+id_bhvGrandStar = 201
 
 --- @type BehaviorId
-id_bhvManyBlueFishSpawner = 202
+id_bhvGrindel = 202
 
 --- @type BehaviorId
-id_bhvFewBlueFishSpawner = 203
+id_bhvHardAirKnockBackWarp = 203
 
 --- @type BehaviorId
-id_bhvFishSpawner = 204
+id_bhvHauntedBookshelf = 204
 
 --- @type BehaviorId
-id_bhvFish = 205
+id_bhvHauntedBookshelfManager = 205
 
 --- @type BehaviorId
-id_bhvWdwExpressElevator = 206
+id_bhvHauntedChair = 206
 
 --- @type BehaviorId
-id_bhvWdwExpressElevatorPlatform = 207
+id_bhvHeaveHo = 207
 
 --- @type BehaviorId
-id_bhvChirpChirp = 208
+id_bhvHeaveHoThrowMario = 208
 
 --- @type BehaviorId
-id_bhvBub = 209
+id_bhvHidden1up = 209
 
 --- @type BehaviorId
-id_bhvExclamationBox = 210
+id_bhvHidden1upInPole = 210
 
 --- @type BehaviorId
-id_bhvRotatingExclamationMark = 211
+id_bhvHidden1upInPoleSpawner = 211
 
 --- @type BehaviorId
-id_bhvSoundSpawner = 212
+id_bhvHidden1upInPoleTrigger = 212
 
 --- @type BehaviorId
-id_bhvRockSolid = 213
+id_bhvHidden1upTrigger = 213
 
 --- @type BehaviorId
-id_bhvBowserSubDoor = 214
+id_bhvHiddenAt120Stars = 214
 
 --- @type BehaviorId
-id_bhvBowsersSub = 215
+id_bhvHiddenBlueCoin = 215
 
 --- @type BehaviorId
-id_bhvSushiShark = 216
+id_bhvHiddenObject = 216
 
 --- @type BehaviorId
-id_bhvSushiSharkCollisionChild = 217
+id_bhvHiddenRedCoinStar = 217
 
 --- @type BehaviorId
-id_bhvJrbSlidingBox = 218
+id_bhvHiddenStaircaseStep = 218
 
 --- @type BehaviorId
-id_bhvShipPart3 = 219
+id_bhvHiddenStar = 219
 
 --- @type BehaviorId
-id_bhvInSunkenShip3 = 220
+id_bhvHiddenStarTrigger = 220
 
 --- @type BehaviorId
-id_bhvSunkenShipPart = 221
+id_bhvHmcElevatorPlatform = 221
 
 --- @type BehaviorId
-id_bhvSunkenShipPart2 = 222
+id_bhvHomingAmp = 222
 
 --- @type BehaviorId
-id_bhvInSunkenShip = 223
+id_bhvHoot = 223
 
 --- @type BehaviorId
-id_bhvInSunkenShip2 = 224
+id_bhvHorizontalGrindel = 224
 
 --- @type BehaviorId
-id_bhvMistParticleSpawner = 225
+id_bhvHorStarParticleSpawner = 225
 
 --- @type BehaviorId
-id_bhvWhitePuff1 = 226
+id_bhvIdleWaterWave = 226
 
 --- @type BehaviorId
-id_bhvWhitePuff2 = 227
+id_bhvIgloo = 227
 
 --- @type BehaviorId
-id_bhvWhitePuffSmoke2 = 228
+id_bhvInitializeChangingWaterLevel = 228
 
 --- @type BehaviorId
-id_bhvPurpleSwitchHiddenBoxes = 229
+id_bhvInsideCannon = 229
 
 --- @type BehaviorId
-id_bhvBlueCoinSwitch = 230
+id_bhvInstantActiveWarp = 230
 
 --- @type BehaviorId
-id_bhvHiddenBlueCoin = 231
+id_bhvInSunkenShip = 231
 
 --- @type BehaviorId
-id_bhvOpenableCageDoor = 232
+id_bhvInSunkenShip2 = 232
 
 --- @type BehaviorId
-id_bhvOpenableGrill = 233
+id_bhvInSunkenShip3 = 233
 
 --- @type BehaviorId
-id_bhvWaterLevelDiamond = 234
+id_bhvIntroScene = 234
 
 --- @type BehaviorId
-id_bhvInitializeChangingWaterLevel = 235
+id_bhvInvisibleObjectsUnderBridge = 235
 
 --- @type BehaviorId
-id_bhvTweesterSandParticle = 236
+id_bhvJetStream = 236
 
 --- @type BehaviorId
-id_bhvTweester = 237
+id_bhvJetStreamRingSpawner = 237
 
 --- @type BehaviorId
-id_bhvMerryGoRoundBooManager = 238
+id_bhvJetStreamWaterRing = 238
 
 --- @type BehaviorId
-id_bhvAnimatedTexture = 239
+id_bhvJrbFloatingBox = 239
 
 --- @type BehaviorId
-id_bhvBooInCastle = 240
+id_bhvJrbFloatingPlatform = 240
 
 --- @type BehaviorId
-id_bhvBooWithCage = 241
+id_bhvJrbSlidingBox = 241
 
 --- @type BehaviorId
-id_bhvBalconyBigBoo = 242
+id_bhvJumpingBox = 242
 
 --- @type BehaviorId
-id_bhvMerryGoRoundBigBoo = 243
+id_bhvKickableBoard = 243
 
 --- @type BehaviorId
-id_bhvGhostHuntBigBoo = 244
+id_bhvKingBobomb = 244
 
 --- @type BehaviorId
-id_bhvCourtyardBooTriplet = 245
+id_bhvKlepto = 245
 
 --- @type BehaviorId
-id_bhvBoo = 246
+id_bhvKoopa = 246
 
 --- @type BehaviorId
-id_bhvMerryGoRoundBoo = 247
+id_bhvKoopaFlag = 247
 
 --- @type BehaviorId
-id_bhvGhostHuntBoo = 248
+id_bhvKoopaRaceEndpoint = 248
 
 --- @type BehaviorId
-id_bhvHiddenStaircaseStep = 249
+id_bhvKoopaShell = 249
 
 --- @type BehaviorId
-id_bhvBooBossSpawnedBridge = 250
+id_bhvKoopaShellFlame = 250
 
 --- @type BehaviorId
-id_bhvBbhTiltingTrapPlatform = 251
+id_bhvKoopaShellUnderwater = 251
 
 --- @type BehaviorId
-id_bhvHauntedBookshelf = 252
+id_bhvLargeBomp = 252
 
 --- @type BehaviorId
-id_bhvMeshElevator = 253
+id_bhvLaunchDeathWarp = 253
 
 --- @type BehaviorId
-id_bhvMerryGoRound = 254
+id_bhvLaunchStarCollectWarp = 254
 
 --- @type BehaviorId
-id_bhvPlaysMusicTrackWhenTouched = 255
+id_bhvLeafParticleSpawner = 255
 
 --- @type BehaviorId
-id_bhvBetaBowserAnchor = 256
+id_bhvLllBowserPuzzle = 256
 
 --- @type BehaviorId
-id_bhvStaticCheckeredPlatform = 257
+id_bhvLllBowserPuzzlePiece = 257
 
 --- @type BehaviorId
-id_bhvUnused2A10 = 258
+id_bhvLllDrawbridge = 258
 
 --- @type BehaviorId
-id_bhvUnusedFakeStar = 259
+id_bhvLllDrawbridgeSpawner = 259
 
 --- @type BehaviorId
-id_bhvStaticObject = 260
+id_bhvLllFloatingWoodBridge = 260
 
 --- @type BehaviorId
-id_bhvUnused2A54 = 261
+id_bhvLllHexagonalMesh = 261
 
 --- @type BehaviorId
-id_bhvCastleFloorTrap = 262
+id_bhvLllMovingOctagonalMeshPlatform = 262
 
 --- @type BehaviorId
-id_bhvFloorTrapInCastle = 263
+id_bhvLllRollingLog = 263
 
 --- @type BehaviorId
-id_bhvTree = 264
+id_bhvLllRotatingBlockWithFireBars = 264
 
 --- @type BehaviorId
-id_bhvSparkle = 265
+id_bhvLllRotatingHexagonalPlatform = 265
 
 --- @type BehaviorId
-id_bhvSparkleSpawn = 266
+id_bhvLllRotatingHexagonalRing = 266
 
 --- @type BehaviorId
-id_bhvSparkleParticleSpawner = 267
+id_bhvLllRotatingHexFlame = 267
 
 --- @type BehaviorId
-id_bhvScuttlebug = 268
+id_bhvLllSinkingRectangularPlatform = 268
 
 --- @type BehaviorId
-id_bhvScuttlebugSpawn = 269
+id_bhvLllSinkingRockBlock = 269
 
 --- @type BehaviorId
-id_bhvWhompKingBoss = 270
+id_bhvLllSinkingSquarePlatforms = 270
 
 --- @type BehaviorId
-id_bhvSmallWhomp = 271
+id_bhvLllTiltingInvertedPyramid = 271
 
 --- @type BehaviorId
-id_bhvWaterSplash = 272
+id_bhvLllTumblingBridge = 272
 
 --- @type BehaviorId
-id_bhvWaterDroplet = 273
+id_bhvLllVolcanoFallingTrap = 273
 
 --- @type BehaviorId
-id_bhvWaterDropletSplash = 274
+id_bhvLllWoodPiece = 274
 
 --- @type BehaviorId
-id_bhvBubbleSplash = 275
+id_bhvMacroUkiki = 275
 
 --- @type BehaviorId
-id_bhvIdleWaterWave = 276
+id_bhvMadPiano = 276
 
 --- @type BehaviorId
-id_bhvObjectWaterSplash = 277
+id_bhvMantaRay = 277
 
 --- @type BehaviorId
-id_bhvShallowWaterWave = 278
+id_bhvMantaRayRingManager = 278
 
 --- @type BehaviorId
-id_bhvShallowWaterSplash = 279
+id_bhvMantaRayWaterRing = 279
 
 --- @type BehaviorId
-id_bhvObjectWaveTrail = 280
+id_bhvManyBlueFishSpawner = 280
 
 --- @type BehaviorId
-id_bhvWaveTrail = 281
+id_bhvMario = 281
 
 --- @type BehaviorId
-id_bhvTinyStrongWindParticle = 282
+id_bhvMenuButton = 282
 
 --- @type BehaviorId
-id_bhvStrongWindParticle = 283
+id_bhvMenuButtonManager = 283
 
 --- @type BehaviorId
-id_bhvSLSnowmanWind = 284
+id_bhvMerryGoRound = 284
 
 --- @type BehaviorId
-id_bhvSLWalkingPenguin = 285
+id_bhvMerryGoRoundBigBoo = 285
 
 --- @type BehaviorId
-id_bhvYellowBall = 286
+id_bhvMerryGoRoundBoo = 286
 
 --- @type BehaviorId
-id_bhvMario = 287
+id_bhvMerryGoRoundBooManager = 287
 
 --- @type BehaviorId
-id_bhvToadMessage = 288
+id_bhvMeshElevator = 288
 
 --- @type BehaviorId
-id_bhvUnlockDoorStar = 289
+id_bhvMessagePanel = 289
 
 --- @type BehaviorId
-id_bhvRandomAnimatedTexture = 290
+id_bhvMetalCap = 290
 
 --- @type BehaviorId
-id_bhvYellowBackgroundInMenu = 291
+id_bhvMips = 291
 
 --- @type BehaviorId
-id_bhvMenuButton = 292
+id_bhvMistCircParticleSpawner = 292
 
 --- @type BehaviorId
-id_bhvMenuButtonManager = 293
+id_bhvMistParticleSpawner = 293
 
 --- @type BehaviorId
-id_bhvActSelectorStarType = 294
+id_bhvMoatGrills = 294
 
 --- @type BehaviorId
-id_bhvActSelector = 295
+id_bhvMoneybag = 295
 
 --- @type BehaviorId
-id_bhvMovingYellowCoin = 296
+id_bhvMoneybagHidden = 296
 
 --- @type BehaviorId
-id_bhvMovingBlueCoin = 297
+id_bhvMontyMole = 297
 
 --- @type BehaviorId
-id_bhvBlueCoinSliding = 298
+id_bhvMontyMoleHole = 298
 
 --- @type BehaviorId
-id_bhvBlueCoinJumping = 299
+id_bhvMontyMoleRock = 299
 
 --- @type BehaviorId
-id_bhvSeaweed = 300
+id_bhvMovingBlueCoin = 300
 
 --- @type BehaviorId
-id_bhvSeaweedBundle = 301
+id_bhvMovingYellowCoin = 301
 
 --- @type BehaviorId
-id_bhvBobomb = 302
+id_bhvMrBlizzard = 302
 
 --- @type BehaviorId
-id_bhvBobombFuseSmoke = 303
+id_bhvMrBlizzardSnowball = 303
 
 --- @type BehaviorId
-id_bhvBobombBuddy = 304
+id_bhvMrI = 304
 
 --- @type BehaviorId
-id_bhvBobombBuddyOpensCannon = 305
+id_bhvMrIBlueCoin = 305
 
 --- @type BehaviorId
-id_bhvCannonClosed = 306
+id_bhvMrIBody = 306
 
 --- @type BehaviorId
-id_bhvWhirlpool = 307
+id_bhvMrIParticle = 307
 
 --- @type BehaviorId
-id_bhvJetStream = 308
+id_bhvNormalCap = 308
 
 --- @type BehaviorId
-id_bhvMessagePanel = 309
+id_bhvObjectBubble = 309
 
 --- @type BehaviorId
-id_bhvSignOnWall = 310
+id_bhvObjectWaterSplash = 310
 
 --- @type BehaviorId
-id_bhvHomingAmp = 311
+id_bhvObjectWaterWave = 311
 
 --- @type BehaviorId
-id_bhvCirclingAmp = 312
+id_bhvObjectWaveTrail = 312
 
 --- @type BehaviorId
-id_bhvButterfly = 313
+id_bhvOctagonalPlatformRotating = 313
 
 --- @type BehaviorId
-id_bhvHoot = 314
+id_bhvOneCoin = 314
 
 --- @type BehaviorId
-id_bhvBetaHoldableObject = 315
+id_bhvOpenableCageDoor = 315
 
 --- @type BehaviorId
-id_bhvCarrySomething1 = 316
+id_bhvOpenableGrill = 316
 
 --- @type BehaviorId
-id_bhvCarrySomething2 = 317
+id_bhvOrangeNumber = 317
 
 --- @type BehaviorId
-id_bhvCarrySomething3 = 318
+id_bhvPaintingDeathWarp = 318
 
 --- @type BehaviorId
-id_bhvCarrySomething4 = 319
+id_bhvPaintingStarCollectWarp = 319
 
 --- @type BehaviorId
-id_bhvCarrySomething5 = 320
+id_bhvPenguinBaby = 320
 
 --- @type BehaviorId
-id_bhvCarrySomething6 = 321
+id_bhvPenguinRaceFinishLine = 321
 
 --- @type BehaviorId
-id_bhvObjectBubble = 322
+id_bhvPenguinRaceShortcutCheck = 322
 
 --- @type BehaviorId
-id_bhvObjectWaterWave = 323
+id_bhvPillarBase = 323
 
 --- @type BehaviorId
-id_bhvExplosion = 324
+id_bhvPiranhaPlant = 324
 
 --- @type BehaviorId
-id_bhvBobombBullyDeathSmoke = 325
+id_bhvPiranhaPlantBubble = 325
 
 --- @type BehaviorId
-id_bhvSmoke = 326
+id_bhvPiranhaPlantWakingBubbles = 326
 
 --- @type BehaviorId
-id_bhvBobombExplosionBubble = 327
+id_bhvPitBowlingBall = 327
 
 --- @type BehaviorId
-id_bhvRespawner = 328
+id_bhvPlatformOnTrack = 328
 
 --- @type BehaviorId
-id_bhvSmallBully = 329
+id_bhvPlaysMusicTrackWhenTouched = 329
 
 --- @type BehaviorId
-id_bhvBigBully = 330
+id_bhvPlungeBubble = 330
 
 --- @type BehaviorId
-id_bhvBigBullyWithMinions = 331
+id_bhvPokey = 331
 
 --- @type BehaviorId
-id_bhvSmallChillBully = 332
+id_bhvPokeyBodyPart = 332
 
 --- @type BehaviorId
-id_bhvBigChillBully = 333
+id_bhvPoleGrabbing = 333
 
 --- @type BehaviorId
-id_bhvJetStreamRingSpawner = 334
+id_bhvPoundTinyStarParticle = 334
 
 --- @type BehaviorId
-id_bhvJetStreamWaterRing = 335
+id_bhvPunchTinyTriangle = 335
 
 --- @type BehaviorId
-id_bhvMantaRayWaterRing = 336
+id_bhvPurpleParticle = 336
 
 --- @type BehaviorId
-id_bhvMantaRayRingManager = 337
+id_bhvPurpleSwitchHiddenBoxes = 337
 
 --- @type BehaviorId
-id_bhvBowserBomb = 338
+id_bhvPushableMetalBox = 338
 
 --- @type BehaviorId
-id_bhvBowserBombExplosion = 339
+id_bhvPyramidElevator = 339
 
 --- @type BehaviorId
-id_bhvBowserBombSmoke = 340
+id_bhvPyramidElevatorTrajectoryMarkerBall = 340
 
 --- @type BehaviorId
-id_bhvCelebrationStar = 341
+id_bhvPyramidPillarTouchDetector = 341
 
 --- @type BehaviorId
-id_bhvCelebrationStarSparkle = 342
+id_bhvPyramidTop = 342
 
 --- @type BehaviorId
-id_bhvStarKeyCollectionPuffSpawner = 343
+id_bhvPyramidTopFragment = 343
 
 --- @type BehaviorId
-id_bhvLllDrawbridgeSpawner = 344
+id_bhvRacingPenguin = 344
 
 --- @type BehaviorId
-id_bhvLllDrawbridge = 345
+id_bhvRandomAnimatedTexture = 345
 
 --- @type BehaviorId
-id_bhvSmallBomp = 346
+id_bhvRecoveryHeart = 346
 
 --- @type BehaviorId
-id_bhvLargeBomp = 347
+id_bhvRedCoin = 347
 
 --- @type BehaviorId
-id_bhvWfSlidingPlatform = 348
+id_bhvRedCoinStarMarker = 348
 
 --- @type BehaviorId
-id_bhvMoneybag = 349
+id_bhvRespawner = 349
 
 --- @type BehaviorId
-id_bhvMoneybagHidden = 350
+id_bhvRockSolid = 350
 
 --- @type BehaviorId
-id_bhvPitBowlingBall = 351
+id_bhvRotatingCounterClockwise = 351
 
 --- @type BehaviorId
-id_bhvFreeBowlingBall = 352
+id_bhvRotatingExclamationMark = 352
 
 --- @type BehaviorId
-id_bhvBowlingBall = 353
+id_bhvRotatingPlatform = 353
 
 --- @type BehaviorId
-id_bhvTtmBowlingBallSpawner = 354
+id_bhvRrCruiserWing = 354
 
 --- @type BehaviorId
-id_bhvBobBowlingBallSpawner = 355
+id_bhvRrElevatorPlatform = 355
 
 --- @type BehaviorId
-id_bhvThiBowlingBallSpawner = 356
+id_bhvRrRotatingBridgePlatform = 356
 
 --- @type BehaviorId
-id_bhvRrCruiserWing = 357
+id_bhvSandSoundLoop = 357
 
 --- @type BehaviorId
-id_bhvSpindel = 358
+id_bhvScuttlebug = 358
 
 --- @type BehaviorId
-id_bhvSslMovingPyramidWall = 359
+id_bhvScuttlebugSpawn = 359
 
 --- @type BehaviorId
-id_bhvPyramidElevator = 360
+id_bhvSeaweed = 360
 
 --- @type BehaviorId
-id_bhvPyramidElevatorTrajectoryMarkerBall = 361
+id_bhvSeaweedBundle = 361
 
 --- @type BehaviorId
-id_bhvPyramidTop = 362
+id_bhvSeesawPlatform = 362
 
 --- @type BehaviorId
-id_bhvPyramidTopFragment = 363
+id_bhvShallowWaterSplash = 363
 
 --- @type BehaviorId
-id_bhvPyramidPillarTouchDetector = 364
+id_bhvShallowWaterWave = 364
 
 --- @type BehaviorId
-id_bhvWaterfallSoundLoop = 365
+id_bhvShipPart3 = 365
 
 --- @type BehaviorId
-id_bhvVolcanoSoundLoop = 366
+id_bhvSignOnWall = 366
 
 --- @type BehaviorId
-id_bhvCastleFlagWaving = 367
+id_bhvSingleCoinGetsSpawned = 367
 
 --- @type BehaviorId
-id_bhvBirdsSoundLoop = 368
+id_bhvSkeeter = 368
 
 --- @type BehaviorId
-id_bhvAmbientSounds = 369
+id_bhvSkeeterWave = 369
 
 --- @type BehaviorId
-id_bhvSandSoundLoop = 370
+id_bhvSlidingPlatform2 = 370
 
 --- @type BehaviorId
-id_bhvHiddenAt120Stars = 371
+id_bhvSlidingSnowMound = 371
 
 --- @type BehaviorId
-id_bhvSnowmansBottom = 372
+id_bhvSLSnowmanWind = 372
 
 --- @type BehaviorId
-id_bhvSnowmansHead = 373
+id_bhvSLWalkingPenguin = 373
 
 --- @type BehaviorId
-id_bhvSnowmansBodyCheckpoint = 374
+id_bhvSmallBomp = 374
 
 --- @type BehaviorId
-id_bhvBigSnowmanWhole = 375
+id_bhvSmallBully = 375
 
 --- @type BehaviorId
-id_bhvBigBoulder = 376
+id_bhvSmallChillBully = 376
 
 --- @type BehaviorId
-id_bhvBigBoulderGenerator = 377
+id_bhvSmallParticle = 377
 
 --- @type BehaviorId
-id_bhvWingCap = 378
+id_bhvSmallParticleBubbles = 378
 
 --- @type BehaviorId
-id_bhvMetalCap = 379
+id_bhvSmallParticleSnow = 379
 
 --- @type BehaviorId
-id_bhvNormalCap = 380
+id_bhvSmallPenguin = 380
 
 --- @type BehaviorId
-id_bhvVanishCap = 381
+id_bhvSmallPiranhaFlame = 381
 
 --- @type BehaviorId
-id_bhvStar = 382
+id_bhvSmallWaterWave = 382
 
 --- @type BehaviorId
-id_bhvStarSpawnCoordinates = 383
+id_bhvSmallWaterWave398 = 383
 
 --- @type BehaviorId
-id_bhvHiddenRedCoinStar = 384
+id_bhvSmallWhomp = 384
 
 --- @type BehaviorId
-id_bhvRedCoin = 385
+id_bhvSmoke = 385
 
 --- @type BehaviorId
-id_bhvBowserCourseRedCoinStar = 386
+id_bhvSnowBall = 386
 
 --- @type BehaviorId
-id_bhvHiddenStar = 387
+id_bhvSnowmansBodyCheckpoint = 387
 
 --- @type BehaviorId
-id_bhvHiddenStarTrigger = 388
+id_bhvSnowmansBottom = 388
 
 --- @type BehaviorId
-id_bhvTtmRollingLog = 389
+id_bhvSnowmansHead = 389
 
 --- @type BehaviorId
-id_bhvLllVolcanoFallingTrap = 390
+id_bhvSnowMoundSpawn = 390
 
 --- @type BehaviorId
-id_bhvLllRollingLog = 391
+id_bhvSnowParticleSpawner = 391
 
 --- @type BehaviorId
-id_bhv1upWalking = 392
+id_bhvSnufit = 392
 
 --- @type BehaviorId
-id_bhv1upRunningAway = 393
+id_bhvSnufitBalls = 393
 
 --- @type BehaviorId
-id_bhv1upSliding = 394
+id_bhvSoundSpawner = 394
 
 --- @type BehaviorId
-id_bhv1Up = 395
+id_bhvSparkle = 395
 
 --- @type BehaviorId
-id_bhv1upJumpOnApproach = 396
+id_bhvSparkleParticleSpawner = 396
 
 --- @type BehaviorId
-id_bhvHidden1up = 397
+id_bhvSparkleSpawn = 397
 
 --- @type BehaviorId
-id_bhvHidden1upTrigger = 398
+id_bhvSpawnedStar = 398
 
 --- @type BehaviorId
-id_bhvHidden1upInPole = 399
+id_bhvSpawnedStarNoLevelExit = 399
 
 --- @type BehaviorId
-id_bhvHidden1upInPoleTrigger = 400
+id_bhvSpinAirborneCircleWarp = 400
 
 --- @type BehaviorId
-id_bhvHidden1upInPoleSpawner = 401
+id_bhvSpinAirborneWarp = 401
 
 --- @type BehaviorId
-id_bhvControllablePlatform = 402
+id_bhvSpindel = 402
 
 --- @type BehaviorId
-id_bhvControllablePlatformSub = 403
+id_bhvSpindrift = 403
 
 --- @type BehaviorId
-id_bhvBreakableBoxSmall = 404
+id_bhvSpiny = 404
 
 --- @type BehaviorId
-id_bhvSlidingSnowMound = 405
+id_bhvSquarishPathMoving = 405
 
 --- @type BehaviorId
-id_bhvSnowMoundSpawn = 406
+id_bhvSquarishPathParent = 406
 
 --- @type BehaviorId
-id_bhvWdwSquareFloatingPlatform = 407
+id_bhvSquishablePlatform = 407
 
 --- @type BehaviorId
-id_bhvWdwRectangularFloatingPlatform = 408
+id_bhvSslMovingPyramidWall = 408
 
 --- @type BehaviorId
-id_bhvJrbFloatingPlatform = 409
+id_bhvStar = 409
 
 --- @type BehaviorId
-id_bhvArrowLift = 410
+id_bhvStarDoor = 410
 
 --- @type BehaviorId
-id_bhvOrangeNumber = 411
+id_bhvStarKeyCollectionPuffSpawner = 411
 
 --- @type BehaviorId
-id_bhvMantaRay = 412
+id_bhvStarSpawnCoordinates = 412
 
 --- @type BehaviorId
-id_bhvFallingPillar = 413
+id_bhvStaticCheckeredPlatform = 413
 
 --- @type BehaviorId
-id_bhvFallingPillarHitbox = 414
+id_bhvStaticObject = 414
 
 --- @type BehaviorId
-id_bhvPillarBase = 415
+id_bhvStrongWindParticle = 415
 
 --- @type BehaviorId
-id_bhvJrbFloatingBox = 416
+id_bhvStub = 416
 
 --- @type BehaviorId
-id_bhvDecorativePendulum = 417
+id_bhvStub1D0C = 417
 
 --- @type BehaviorId
-id_bhvTreasureChestsShip = 418
+id_bhvStub1D70 = 418
 
 --- @type BehaviorId
-id_bhvTreasureChestsJrb = 419
+id_bhvSunkenShipPart = 419
 
 --- @type BehaviorId
-id_bhvTreasureChests = 420
+id_bhvSunkenShipPart2 = 420
 
 --- @type BehaviorId
-id_bhvTreasureChestBottom = 421
+id_bhvSunkenShipSetRotation = 421
 
 --- @type BehaviorId
-id_bhvTreasureChestTop = 422
+id_bhvSushiShark = 422
 
 --- @type BehaviorId
-id_bhvMips = 423
+id_bhvSushiSharkCollisionChild = 423
 
 --- @type BehaviorId
-id_bhvYoshi = 424
+id_bhvSwimmingWarp = 424
 
 --- @type BehaviorId
-id_bhvKoopa = 425
+id_bhvSwingPlatform = 425
 
 --- @type BehaviorId
-id_bhvKoopaRaceEndpoint = 426
+id_bhvSwoop = 426
 
 --- @type BehaviorId
-id_bhvKoopaFlag = 427
+id_bhvTankFishGroup = 427
 
 --- @type BehaviorId
-id_bhvPokey = 428
+id_bhvTemporaryYellowCoin = 428
 
 --- @type BehaviorId
-id_bhvPokeyBodyPart = 429
+id_bhvTenCoinsSpawn = 429
 
 --- @type BehaviorId
-id_bhvSwoop = 430
+id_bhvThiBowlingBallSpawner = 430
 
 --- @type BehaviorId
-id_bhvFlyGuy = 431
+id_bhvThiHugeIslandTop = 431
 
 --- @type BehaviorId
-id_bhvGoomba = 432
+id_bhvThiTinyIslandTop = 432
 
 --- @type BehaviorId
-id_bhvGoombaTripletSpawner = 433
+id_bhvThreeCoinsSpawn = 433
 
 --- @type BehaviorId
-id_bhvChainChomp = 434
+id_bhvThwomp = 434
 
 --- @type BehaviorId
-id_bhvChainChompChainPart = 435
+id_bhvThwomp2 = 435
 
 --- @type BehaviorId
-id_bhvWoodenPost = 436
+id_bhvTiltingBowserLavaPlatform = 436
 
 --- @type BehaviorId
-id_bhvChainChompGate = 437
+id_bhvTinyStrongWindParticle = 437
 
 --- @type BehaviorId
-id_bhvWigglerHead = 438
+id_bhvToadMessage = 438
 
 --- @type BehaviorId
-id_bhvWigglerBody = 439
+id_bhvTower = 439
 
 --- @type BehaviorId
-id_bhvEnemyLakitu = 440
+id_bhvTowerDoor = 440
 
 --- @type BehaviorId
-id_bhvCameraLakitu = 441
+id_bhvTowerPlatformGroup = 441
 
 --- @type BehaviorId
-id_bhvCloud = 442
+id_bhvToxBox = 442
 
 --- @type BehaviorId
-id_bhvCloudPart = 443
+id_bhvTrackBall = 443
 
 --- @type BehaviorId
-id_bhvSpiny = 444
+id_bhvTreasureChestBottom = 444
 
 --- @type BehaviorId
-id_bhvMontyMole = 445
+id_bhvTreasureChests = 445
 
 --- @type BehaviorId
-id_bhvMontyMoleHole = 446
+id_bhvTreasureChestsJrb = 446
 
 --- @type BehaviorId
-id_bhvMontyMoleRock = 447
+id_bhvTreasureChestsShip = 447
 
 --- @type BehaviorId
-id_bhvPlatformOnTrack = 448
+id_bhvTreasureChestTop = 448
 
 --- @type BehaviorId
-id_bhvTrackBall = 449
+id_bhvTree = 449
 
 --- @type BehaviorId
-id_bhvSeesawPlatform = 450
+id_bhvTreeLeaf = 450
 
 --- @type BehaviorId
-id_bhvFerrisWheelAxle = 451
+id_bhvTreeSnow = 451
 
 --- @type BehaviorId
-id_bhvFerrisWheelPlatform = 452
+id_bhvTriangleParticleSpawner = 452
 
 --- @type BehaviorId
-id_bhvWaterBombSpawner = 453
+id_bhvTripletButterfly = 453
 
 --- @type BehaviorId
-id_bhvWaterBomb = 454
+id_bhvTTC2DRotator = 454
 
 --- @type BehaviorId
-id_bhvWaterBombShadow = 455
+id_bhvTTCCog = 455
 
 --- @type BehaviorId
-id_bhvTTCRotatingSolid = 456
+id_bhvTTCElevator = 456
 
 --- @type BehaviorId
-id_bhvTTCPendulum = 457
+id_bhvTTCMovingBar = 457
 
 --- @type BehaviorId
-id_bhvTTCTreadmill = 458
+id_bhvTTCPendulum = 458
 
 --- @type BehaviorId
-id_bhvTTCMovingBar = 459
+id_bhvTTCPitBlock = 459
 
 --- @type BehaviorId
-id_bhvTTCCog = 460
+id_bhvTTCRotatingSolid = 460
 
 --- @type BehaviorId
-id_bhvTTCPitBlock = 461
+id_bhvTTCSpinner = 461
 
 --- @type BehaviorId
-id_bhvTTCElevator = 462
+id_bhvTTCTreadmill = 462
 
 --- @type BehaviorId
-id_bhvTTC2DRotator = 463
+id_bhvTtmBowlingBallSpawner = 463
 
 --- @type BehaviorId
-id_bhvTTCSpinner = 464
+id_bhvTtmRollingLog = 464
 
 --- @type BehaviorId
-id_bhvMrBlizzard = 465
+id_bhvTumblingBridgePlatform = 465
 
 --- @type BehaviorId
-id_bhvMrBlizzardSnowball = 466
+id_bhvTuxiesMother = 466
 
 --- @type BehaviorId
-id_bhvSlidingPlatform2 = 467
+id_bhvTweester = 467
 
 --- @type BehaviorId
-id_bhvOctagonalPlatformRotating = 468
+id_bhvTweesterSandParticle = 468
 
 --- @type BehaviorId
-id_bhvAnimatesOnFloorSwitchPress = 469
+id_bhvUkiki = 469
 
 --- @type BehaviorId
-id_bhvActivatedBackAndForthPlatform = 470
+id_bhvUkikiCage = 470
 
 --- @type BehaviorId
-id_bhvRecoveryHeart = 471
+id_bhvUkikiCageChild = 471
 
 --- @type BehaviorId
-id_bhvWaterBombCannon = 472
+id_bhvUkikiCageStar = 472
 
 --- @type BehaviorId
-id_bhvCannonBarrelBubbles = 473
+id_bhvUnagi = 473
 
 --- @type BehaviorId
-id_bhvUnagi = 474
+id_bhvUnagiSubobject = 474
 
 --- @type BehaviorId
-id_bhvUnagiSubobject = 475
+id_bhvUnlockDoorStar = 475
 
 --- @type BehaviorId
-id_bhvDorrie = 476
+id_bhvUnused05A8 = 476
 
 --- @type BehaviorId
-id_bhvHauntedChair = 477
+id_bhvUnused0DFC = 477
 
 --- @type BehaviorId
-id_bhvMadPiano = 478
+id_bhvUnused1820 = 478
 
 --- @type BehaviorId
-id_bhvFlyingBookend = 479
+id_bhvUnused1F30 = 479
 
 --- @type BehaviorId
-id_bhvBookendSpawn = 480
+id_bhvUnused20E0 = 480
 
 --- @type BehaviorId
-id_bhvHauntedBookshelfManager = 481
+id_bhvUnused2A10 = 481
 
 --- @type BehaviorId
-id_bhvBookSwitch = 482
+id_bhvUnused2A54 = 482
 
 --- @type BehaviorId
-id_bhvFirePiranhaPlant = 483
+id_bhvUnusedFakeStar = 483
 
 --- @type BehaviorId
-id_bhvSmallPiranhaFlame = 484
+id_bhvUnusedParticleSpawn = 484
 
 --- @type BehaviorId
-id_bhvFireSpitter = 485
+id_bhvUnusedPoundablePlatform = 485
 
 --- @type BehaviorId
-id_bhvFlyguyFlame = 486
+id_bhvVanishCap = 486
 
 --- @type BehaviorId
-id_bhvSnufit = 487
+id_bhvVertStarParticleSpawner = 487
 
 --- @type BehaviorId
-id_bhvSnufitBalls = 488
+id_bhvVolcanoFlames = 488
 
 --- @type BehaviorId
-id_bhvHorizontalGrindel = 489
+id_bhvVolcanoSoundLoop = 489
 
 --- @type BehaviorId
-id_bhvEyerokBoss = 490
+id_bhvWallTinyStarParticle = 490
 
 --- @type BehaviorId
-id_bhvEyerokHand = 491
+id_bhvWarp = 491
 
 --- @type BehaviorId
-id_bhvKlepto = 492
+id_bhvWarpPipe = 492
 
 --- @type BehaviorId
-id_bhvBird = 493
+id_bhvWaterAirBubble = 493
 
 --- @type BehaviorId
-id_bhvRacingPenguin = 494
+id_bhvWaterBomb = 494
 
 --- @type BehaviorId
-id_bhvPenguinRaceFinishLine = 495
+id_bhvWaterBombCannon = 495
 
 --- @type BehaviorId
-id_bhvPenguinRaceShortcutCheck = 496
+id_bhvWaterBombShadow = 496
 
 --- @type BehaviorId
-id_bhvCoffinSpawner = 497
+id_bhvWaterBombSpawner = 497
 
 --- @type BehaviorId
-id_bhvCoffin = 498
+id_bhvWaterDroplet = 498
 
 --- @type BehaviorId
-id_bhvClamShell = 499
+id_bhvWaterDropletSplash = 499
 
 --- @type BehaviorId
-id_bhvSkeeter = 500
+id_bhvWaterfallSoundLoop = 500
 
 --- @type BehaviorId
-id_bhvSkeeterWave = 501
+id_bhvWaterLevelDiamond = 501
 
 --- @type BehaviorId
-id_bhvSwingPlatform = 502
+id_bhvWaterLevelPillar = 502
 
 --- @type BehaviorId
-id_bhvDonutPlatformSpawner = 503
+id_bhvWaterMist = 503
 
 --- @type BehaviorId
-id_bhvDonutPlatform = 504
+id_bhvWaterMist2 = 504
 
 --- @type BehaviorId
-id_bhvDDDPole = 505
+id_bhvWaterSplash = 505
 
 --- @type BehaviorId
-id_bhvRedCoinStarMarker = 506
+id_bhvWaveTrail = 506
 
 --- @type BehaviorId
-id_bhvTripletButterfly = 507
+id_bhvWdwExpressElevator = 507
 
 --- @type BehaviorId
-id_bhvBubba = 508
+id_bhvWdwExpressElevatorPlatform = 508
 
 --- @type BehaviorId
-id_bhvBeginningLakitu = 509
+id_bhvWdwRectangularFloatingPlatform = 509
 
 --- @type BehaviorId
-id_bhvBeginningPeach = 510
+id_bhvWdwSquareFloatingPlatform = 510
 
 --- @type BehaviorId
-id_bhvEndBirds1 = 511
+id_bhvWfBreakableWallLeft = 511
 
 --- @type BehaviorId
-id_bhvEndBirds2 = 512
+id_bhvWfBreakableWallRight = 512
 
 --- @type BehaviorId
-id_bhvIntroScene = 513
+id_bhvWfElevatorTowerPlatform = 513
 
 --- @type BehaviorId
-id_bhv_max_count = 514
+id_bhvWfRotatingWoodenPlatform = 514
+
+--- @type BehaviorId
+id_bhvWfSlidingPlatform = 515
+
+--- @type BehaviorId
+id_bhvWfSlidingTowerPlatform = 516
+
+--- @type BehaviorId
+id_bhvWfSolidTowerPlatform = 517
+
+--- @type BehaviorId
+id_bhvWfTumblingBridge = 518
+
+--- @type BehaviorId
+id_bhvWhirlpool = 519
+
+--- @type BehaviorId
+id_bhvWhitePuff1 = 520
+
+--- @type BehaviorId
+id_bhvWhitePuff2 = 521
+
+--- @type BehaviorId
+id_bhvWhitePuffExplosion = 522
+
+--- @type BehaviorId
+id_bhvWhitePuffSmoke = 523
+
+--- @type BehaviorId
+id_bhvWhitePuffSmoke2 = 524
+
+--- @type BehaviorId
+id_bhvWhompKingBoss = 525
+
+--- @type BehaviorId
+id_bhvWigglerBody = 526
+
+--- @type BehaviorId
+id_bhvWigglerHead = 527
+
+--- @type BehaviorId
+id_bhvWind = 528
+
+--- @type BehaviorId
+id_bhvWingCap = 529
+
+--- @type BehaviorId
+id_bhvWoodenPost = 530
+
+--- @type BehaviorId
+id_bhvYellowBackgroundInMenu = 531
+
+--- @type BehaviorId
+id_bhvYellowBall = 532
+
+--- @type BehaviorId
+id_bhvYellowCoin = 533
+
+--- @type BehaviorId
+id_bhvYoshi = 534
+
+--- @type BehaviorId
+id_bhv_max_count = 535
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E

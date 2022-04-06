@@ -6,9 +6,27 @@ function get_behavior_from_id(id)
     -- ...
 end
 
+--- @param id BehaviorId
+--- @return string
+function get_behavior_name_from_id(id)
+    -- ...
+end
+
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
 function get_id_from_behavior(behavior)
+    -- ...
+end
+
+--- @param name string
+--- @return BehaviorId
+function get_id_from_behavior_name(name)
+    -- ...
+end
+
+--- @param behavior Pointer_BehaviorScript
+--- @return BehaviorId
+function get_id_from_vanilla_behavior(behavior)
     -- ...
 end
 
@@ -4135,6 +4153,12 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
+--- @param index integer
+--- @return number
+function get_environment_region(index)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param index integer
 --- @return number
@@ -4168,6 +4192,13 @@ end
 
 --- @return nil
 function hud_show()
+    -- ...
+end
+
+--- @param index integer
+--- @param value integer
+--- @return nil
+function set_environment_region(index, value)
     -- ...
 end
 

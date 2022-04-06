@@ -41,6 +41,17 @@ int smlua_func_get_behavior_from_id(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_behavior_name_from_id(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushstring(L, get_behavior_name_from_id(id));
+
+    return 1;
+}
+
 int smlua_func_get_id_from_behavior(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -48,6 +59,28 @@ int smlua_func_get_id_from_behavior(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     lua_pushinteger(L, get_id_from_behavior(behavior));
+
+    return 1;
+}
+
+int smlua_func_get_id_from_behavior_name(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, get_id_from_behavior_name(name));
+
+    return 1;
+}
+
+int smlua_func_get_id_from_vanilla_behavior(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, get_id_from_vanilla_behavior(behavior));
 
     return 1;
 }
@@ -9200,6 +9233,17 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_environment_region(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, get_environment_region(index));
+
+    return 1;
+}
+
 int smlua_func_get_hand_foot_pos_x(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -9262,6 +9306,19 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
 
 
     hud_show();
+
+    return 1;
+}
+
+int smlua_func_set_environment_region(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    u8 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s32 value = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    set_environment_region(index, value);
 
     return 1;
 }
@@ -10031,7 +10088,10 @@ void smlua_bind_functions_autogen(void) {
 
     // behavior_table.h
     smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id);
+    smlua_bind_function(L, "get_behavior_name_from_id", smlua_func_get_behavior_name_from_id);
     smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior);
+    smlua_bind_function(L, "get_id_from_behavior_name", smlua_func_get_id_from_behavior_name);
+    smlua_bind_function(L, "get_id_from_vanilla_behavior", smlua_func_get_id_from_vanilla_behavior);
 
     // camera.h
     smlua_bind_function(L, "approach_camera_height", smlua_func_approach_camera_height);
@@ -10714,12 +10774,14 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
+    smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
     smlua_bind_function(L, "smlua_level_util_get", smlua_func_smlua_level_util_get);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);

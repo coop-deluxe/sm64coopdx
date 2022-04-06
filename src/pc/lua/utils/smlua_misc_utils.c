@@ -7,6 +7,8 @@
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
 
+#include "game/object_list_processor.h"
+
 u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
 }
@@ -57,4 +59,17 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
 
 LevelScript* smlua_level_util_get(const char* name) {
     return dynos_level_get(name);
+}
+
+f32 get_environment_region(u8 index) {
+    if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
+        return gEnvironmentRegions[6 * (int)index];
+    }
+    return -11000;
+}
+
+void set_environment_region(u8 index, s32 value) {
+    if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
+        gEnvironmentRegions[6 * (int)index] = value;
+    }
 }

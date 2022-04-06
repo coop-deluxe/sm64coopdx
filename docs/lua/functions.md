@@ -11,7 +11,10 @@
 
 - behavior_table.h
    - [get_behavior_from_id](#get_behavior_from_id)
+   - [get_behavior_name_from_id](#get_behavior_name_from_id)
    - [get_id_from_behavior](#get_id_from_behavior)
+   - [get_id_from_behavior_name](#get_id_from_behavior_name)
+   - [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
 
 <br />
 
@@ -727,12 +730,14 @@
 
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
+   - [get_environment_region](#get_environment_region)
    - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](#get_hand_foot_pos_z)
    - [get_network_area_timer](#get_network_area_timer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
+   - [set_environment_region](#set_environment_region)
    - [smlua_level_util_get](#smlua_level_util_get)
    - [warp_exit_level](#warp_exit_level)
    - [warp_restart_level](#warp_restart_level)
@@ -913,6 +918,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [get_behavior_name_from_id](#get_behavior_name_from_id)
+
+### Lua Example
+`local stringValue = get_behavior_name_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_behavior_name_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_id_from_behavior](#get_id_from_behavior)
 
 ### Lua Example
@@ -928,6 +953,46 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_behavior_name](#get_id_from_behavior_name)
+
+### Lua Example
+`local enumValue = get_id_from_behavior_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_behavior_name(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
+
+### Lua Example
+`local enumValue = get_id_from_vanilla_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+[enum BehaviorId](constants.md#enum-BehaviorId)
+
+### C Prototype
+`enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
 
 [:arrow_up_small:](#)
 
@@ -13659,6 +13724,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [get_environment_region](#get_environment_region)
+
+### Lua Example
+`local numberValue = get_environment_region(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_environment_region(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
 
 ### Lua Example
@@ -13771,6 +13856,27 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void hud_show(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_environment_region](#set_environment_region)
+
+### Lua Example
+`set_environment_region(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_environment_region(u8 index, s32 value);`
 
 [:arrow_up_small:](#)
 

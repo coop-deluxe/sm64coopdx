@@ -18,5 +18,7 @@ f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 
 LevelScript* smlua_level_util_get(const char* name);
+f32 get_environment_region(u8 index);
+void set_environment_region(u8 index, s32 value);
 
 #endif

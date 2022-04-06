@@ -946,9 +946,11 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         }
         save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 
-        if (!noExit || gServerSettings.stayInLevelAfterStar != 2) {
-            return set_mario_action(m, starGrabAction, noExit + 2 * grandStar);
+        if (noExit && gServerSettings.stayInLevelAfterStar == 2) {
+            return TRUE;
         }
+
+        return set_mario_action(m, starGrabAction, noExit + 2 * grandStar);
     }
 
     return FALSE;
