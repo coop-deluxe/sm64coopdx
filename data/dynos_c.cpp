@@ -118,3 +118,5 @@ struct MovtexQuadCollection *dynos_level_movtexqc_getfromindex(s32 index) {
 void dynos_level_load_background(void *ptr) {
     DynOS_Lvl_Load_Background(ptr);
 }
+
+}
