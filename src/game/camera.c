@@ -885,21 +885,21 @@ void pan_ahead_of_player(struct Camera *c) {
     vec3f_add(c->focus, pan);
 }
 
-s16 find_in_bounds_yaw_wdw_bob_thi(Vec3f pos, Vec3f origin, s16 yaw) {
-    switch (gCurrLevelArea) {
-        case AREA_WDW_MAIN:
-            yaw = clamp_positions_and_find_yaw(pos, origin, 4508.f, -3739.f, 4508.f, -3739.f);
-            break;
-        case AREA_BOB:
-            yaw = clamp_positions_and_find_yaw(pos, origin, 8000.f, -8000.f, 7050.f, -8000.f);
-            break;
-        case AREA_THI_HUGE:
-            yaw = clamp_positions_and_find_yaw(pos, origin, 8192.f, -8192.f, 8192.f, -8192.f);
-            break;
-        case AREA_THI_TINY:
-            yaw = clamp_positions_and_find_yaw(pos, origin, 2458.f, -2458.f, 2458.f, -2458.f);
-            break;
-    }
+s16 find_in_bounds_yaw_wdw_bob_thi(UNUSED Vec3f pos, UNUSED Vec3f origin, s16 yaw) {
+    // switch (gCurrLevelArea) {
+    //     case AREA_WDW_MAIN:
+    //         yaw = clamp_positions_and_find_yaw(pos, origin, 4508.f, -3739.f, 4508.f, -3739.f);
+    //         break;
+    //     case AREA_BOB:
+    //         yaw = clamp_positions_and_find_yaw(pos, origin, 8000.f, -8000.f, 7050.f, -8000.f);
+    //         break;
+    //     case AREA_THI_HUGE:
+    //         yaw = clamp_positions_and_find_yaw(pos, origin, 8192.f, -8192.f, 8192.f, -8192.f);
+    //         break;
+    //     case AREA_THI_TINY:
+    //         yaw = clamp_positions_and_find_yaw(pos, origin, 2458.f, -2458.f, 2458.f, -2458.f);
+    //         break;
+    // }
     return yaw;
 }
 

@@ -2003,12 +2003,12 @@ s32 cur_obj_within_12k_bounds(void) {
 }
 
 void cur_obj_move_using_vel_and_gravity(void) {
-    if (cur_obj_within_12k_bounds()) {
+    //if (cur_obj_within_12k_bounds()) {
         o->oPosX += o->oVelX;
         o->oPosZ += o->oVelZ;
         o->oVelY += o->oGravity; //! No terminal velocity
         o->oPosY += o->oVelY;
-    }
+    //}
 }
 
 void cur_obj_move_using_fvel_and_gravity(void) {

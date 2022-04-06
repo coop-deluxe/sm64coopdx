@@ -226,7 +226,9 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
 
 const void *DynOS_Level_GetScript(s32 aLevel) {
     DynOS_Level_Init();
-    return DynOS_Lvl_Get("level_castle_inside_entry"); // DO NOT COMMIT
+    if (aLevel != LEVEL_WDW) {
+        return DynOS_Lvl_Get(""); // DO NOT COMMIT
+    }
     return sDynosLevelScripts[aLevel];
 }
 

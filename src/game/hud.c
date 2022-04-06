@@ -8,6 +8,7 @@
 #include "level_update.h"
 #include "camera.h"
 #include "print.h"
+#include "engine/surface_load.h"
 #include "ingame_menu.h"
 #include "hud.h"
 #include "segment2.h"
@@ -522,6 +523,16 @@ void render_hud(void) {
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
+        }
+
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_SURFACES)
+        {
+            print_text(10, 40, "SURFACE POOL FULL");
+        }
+
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_NODES)
+        {
+            print_text(10, 60, "SURFACE NODE POOL FULL");
         }
     }
 }
