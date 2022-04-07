@@ -609,6 +609,16 @@ void DynOS_Col_Add(const SysPath &aPackFolder, const char *aCollisionName) {
 }
 
 Collision* DynOS_Col_Get(const char* collisionName) {
+    // check levels
+    for (auto& lvl : sDynosCustomLevelScripts) {
+        for (auto& col : lvl.second->mCollisions) {
+            if (col->mName == collisionName) {
+                return col->mData;
+            }
+        }
+    }
+
+    // check normal actor collisions
     for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
         if (!strcmp(sDynosCollisions[i].first, collisionName)) {
             return sDynosCollisions[i].second->mData;

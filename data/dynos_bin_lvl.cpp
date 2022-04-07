@@ -2015,12 +2015,18 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
-        // Force all of the movtexs into the compiled lvl
-        for (auto &_MovtexNode : _GfxData->mMovtexs) {
-            DynOS_Movtex_Parse(_GfxData, _MovtexNode, false);
+        // Force all of the movtexs and collisions into the compiled lvl
+        for (auto &_Node : _GfxData->mMovtexs) {
+            if (_Node->mModelIdentifier != _GfxData->mModelIdentifier) { continue; }
+            DynOS_Movtex_Parse(_GfxData, _Node, false);
         }
-        for (auto &_MovtexQCNode : _GfxData->mMovtexQCs) {
-            DynOS_MovtexQC_Parse(_GfxData, _MovtexQCNode);
+        for (auto &_Node : _GfxData->mMovtexQCs) {
+            if (_Node->mModelIdentifier != _GfxData->mModelIdentifier) { continue; }
+            DynOS_MovtexQC_Parse(_GfxData, _Node);
+        }
+        for (auto &_Node : _GfxData->mCollisions) {
+            if (_Node->mModelIdentifier != _GfxData->mModelIdentifier) { continue; }
+            DynOS_Col_Parse(_GfxData, _Node, false);
         }
 
         // Write if no error
@@ -2107,6 +2113,7 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             // Only parse folders with a 'script.c'
             if (!fs_sys_file_exists(fstring("%s/script.c", _Folder.c_str()).c_str()) && !fs_sys_file_exists(fstring("%s/custom.script.c", _Folder.c_str()).c_str())) continue;
 
+            _GfxData->mModelIdentifier++;
             DynOS_Lvl_GeneratePack_Recursive(_Folder, _GfxData);
 
         }
