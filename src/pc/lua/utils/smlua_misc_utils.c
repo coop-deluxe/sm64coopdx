@@ -13,6 +13,24 @@ u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
 }
 
+///
+
+s32* get_temp_s32_pointer(s32 initialValue) {
+    static s32 value = 0;
+    value = initialValue;
+    return &value;
+}
+
+s32 deref_s32_pointer(s32* pointer) {
+    if (pointer == NULL) {
+        LOG_LUA("Tried to dereference null pointer!");
+        return 0;
+    }
+    return *pointer;
+}
+
+///
+
 void hud_hide(void) {
     gOverrideHideHud = 1;
 }
@@ -20,6 +38,8 @@ void hud_hide(void) {
 void hud_show(void) {
     gOverrideHideHud = 0;
 }
+
+///
 
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return dynos_warp_to_level(aLevel, aArea, aAct);
@@ -37,10 +57,14 @@ bool warp_to_castle(s32 aLevel) {
     return dynos_warp_to_castle(aLevel);
 }
 
+///
+
 u32 allocate_mario_action(u32 actFlags) {
     actFlags = actFlags & (~((u32)0xFF));
     return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
 }
+
+///
 
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index) {
     if (index >= 4) { index = 0; }
@@ -57,9 +81,13 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     return m->marioBodyState->handFootPos[index][2];
 }
 
+///
+
 LevelScript* smlua_level_util_get(const char* name) {
     return dynos_level_get(name);
 }
+
+///
 
 f32 get_environment_region(u8 index) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {

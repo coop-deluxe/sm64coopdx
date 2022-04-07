@@ -3866,6 +3866,33 @@ OBJ_COL_FLAG_NO_Y_VEL = (1 << 3)
 OBJ_COL_FLAG_UNDERWATER = (1 << 2)
 
 --- @type integer
+ATTACK_HANDLER_DIE_IF_HEALTH_NON_POSITIVE = 1
+
+--- @type integer
+ATTACK_HANDLER_KNOCKBACK = 2
+
+--- @type integer
+ATTACK_HANDLER_NOP = 0
+
+--- @type integer
+ATTACK_HANDLER_SET_SPEED_TO_ZERO = 5
+
+--- @type integer
+ATTACK_HANDLER_SPECIAL_HUGE_GOOMBA_WEAKLY_ATTACKED = 7
+
+--- @type integer
+ATTACK_HANDLER_SPECIAL_KOOPA_LOSE_SHELL = 4
+
+--- @type integer
+ATTACK_HANDLER_SPECIAL_WIGGLER_JUMPED_ON = 6
+
+--- @type integer
+ATTACK_HANDLER_SQUISHED = 3
+
+--- @type integer
+ATTACK_HANDLER_SQUISHED_WITH_BLUE_COIN = 8
+
+--- @type integer
 ACTIVE_FLAG_ACTIVE = (1 << 0)
 
 --- @type integer

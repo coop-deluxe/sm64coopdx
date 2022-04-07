@@ -64,6 +64,7 @@ void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex) {
 #define LEVEL_SCRIPT_SIZE_PER_TOKEN 4
 
 #define lvl_constant(x) if (_Arg == #x) { return (LevelScript) (x); }
+#define lvl_legacy_constant(x, y) if (_Arg == #x) { return (LevelScript) (y); }
 
 s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     *found = true;
@@ -605,6 +606,11 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     lvl_constant(bhvEndBirds2);
     lvl_constant(bhvIntroScene);
     lvl_constant(bhvUnusedFakeStar);
+
+    // Legacy behavior names
+    lvl_legacy_constant(bhvFish2, bhvManyBlueFishSpawner);
+    lvl_legacy_constant(bhvFish3, bhvFewBlueFishSpawner);
+    lvl_legacy_constant(bhvLargeFishGroup, bhvFishSpawner);
 
     // Level constants
     lvl_constant(LEVEL_UNKNOWN_1);

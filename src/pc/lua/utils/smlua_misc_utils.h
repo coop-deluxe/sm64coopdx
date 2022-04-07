@@ -3,6 +3,9 @@
 
 u32 get_network_area_timer(void);
 
+s32* get_temp_s32_pointer(s32 initialValue);
+s32 deref_s32_pointer(s32* pointer);
+
 void hud_hide(void);
 void hud_show(void);
 

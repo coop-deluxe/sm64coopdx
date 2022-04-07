@@ -698,6 +698,11 @@
 
 <br />
 
+- object_list_processor.h
+   - [set_object_respawn_info_bits](#set_object_respawn_info_bits)
+
+<br />
+
 - rumble_init.c
    - [queue_rumble_data](#queue_rumble_data)
    - [queue_rumble_data_mario](#queue_rumble_data_mario)
@@ -730,11 +735,13 @@
 
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
+   - [deref_s32_pointer](#deref_s32_pointer)
    - [get_environment_region](#get_environment_region)
    - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](#get_hand_foot_pos_z)
    - [get_network_area_timer](#get_network_area_timer)
+   - [get_temp_s32_pointer](#get_temp_s32_pointer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
    - [set_environment_region](#set_environment_region)
@@ -13311,6 +13318,33 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 <br />
 
 ---
+# functions from object_list_processor.h
+
+<br />
+
+
+## [set_object_respawn_info_bits](#set_object_respawn_info_bits)
+
+### Lua Example
+`set_object_respawn_info_bits(obj, bits)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| bits | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_object_respawn_info_bits(struct Object *obj, u8 bits);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from rumble_init.c
 
 <br />
@@ -13724,6 +13758,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [deref_s32_pointer](#deref_s32_pointer)
+
+### Lua Example
+`local integerValue = deref_s32_pointer(pointer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pointer | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 deref_s32_pointer(s32* pointer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_environment_region](#get_environment_region)
 
 ### Lua Example
@@ -13820,6 +13874,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `u32 get_network_area_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_temp_s32_pointer](#get_temp_s32_pointer)
+
+### Lua Example
+`local PointerValue = get_temp_s32_pointer(initialValue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| initialValue | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32* get_temp_s32_pointer(s32 initialValue);`
 
 [:arrow_up_small:](#)
 

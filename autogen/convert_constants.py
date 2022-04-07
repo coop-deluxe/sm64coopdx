@@ -31,6 +31,7 @@ in_files = [
     "levels/level_defines.h",
     "src/game/obj_behaviors.c",
     "src/game/save_file.h",
+    "src/game/obj_behaviors_2.h",
 ]
 
 exclude_constants = {

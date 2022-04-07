@@ -30,6 +30,7 @@
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
+- [obj_behaviors_2.h](#obj_behaviors_2h)
 - [object_constants.h](#object_constantsh)
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
@@ -1372,6 +1373,21 @@
 - OBJ_COL_FLAG_HIT_WALL
 - OBJ_COL_FLAG_NO_Y_VEL
 - OBJ_COL_FLAG_UNDERWATER
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_behaviors_2.h](#obj_behaviors_2.h)
+- ATTACK_HANDLER_DIE_IF_HEALTH_NON_POSITIVE
+- ATTACK_HANDLER_KNOCKBACK
+- ATTACK_HANDLER_NOP
+- ATTACK_HANDLER_SET_SPEED_TO_ZERO
+- ATTACK_HANDLER_SPECIAL_HUGE_GOOMBA_WEAKLY_ATTACKED
+- ATTACK_HANDLER_SPECIAL_KOOPA_LOSE_SHELL
+- ATTACK_HANDLER_SPECIAL_WIGGLER_JUMPED_ON
+- ATTACK_HANDLER_SQUISHED
+- ATTACK_HANDLER_SQUISHED_WITH_BLUE_COIN
 
 [:arrow_up_small:](#)
 

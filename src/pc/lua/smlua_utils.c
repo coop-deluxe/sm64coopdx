@@ -150,6 +150,10 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 }
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
+    if (lua_type(L, index) == LUA_TNIL) {
+        return NULL;
+    }
+
     if (lua_type(L, index) != LUA_TTABLE) {
         LOG_LUA("smlua_to_cpointer received improper type '%d'", lua_type(L, index));
         smlua_logline();

@@ -24,6 +24,7 @@
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/pc/lua/utils/smlua_model_utils.h"
 #include "src/engine/surface_load.h"
+#include "src/game/object_list_processor.h"
 
 
   //////////////////////
@@ -8967,6 +8968,23 @@ int smlua_func_stub_obj_helpers_4(UNUSED lua_State* L) {
     return 1;
 }
 
+  /////////////////////////////
+ // object_list_processor.h //
+/////////////////////////////
+
+int smlua_func_set_object_respawn_info_bits(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 bits = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    set_object_respawn_info_bits(obj, bits);
+
+    return 1;
+}
+
   ///////////////////
  // rumble_init.c //
 ///////////////////
@@ -9233,6 +9251,17 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     return 1;
 }
 
+int smlua_func_deref_s32_pointer(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32* pointer = (s32*)smlua_to_cpointer(L, 1, LVT_S32_P);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, deref_s32_pointer(pointer));
+
+    return 1;
+}
+
 int smlua_func_get_environment_region(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -9288,6 +9317,17 @@ int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
 
 
     lua_pushinteger(L, get_network_area_timer());
+
+    return 1;
+}
+
+int smlua_func_get_temp_s32_pointer(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 initialValue = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_push_pointer(L, LVT_S32_P, (void*)get_temp_s32_pointer(initialValue));
 
     return 1;
 }
@@ -10748,6 +10788,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stub_obj_helpers_3", smlua_func_stub_obj_helpers_3);
     smlua_bind_function(L, "stub_obj_helpers_4", smlua_func_stub_obj_helpers_4);
 
+    // object_list_processor.h
+    smlua_bind_function(L, "set_object_respawn_info_bits", smlua_func_set_object_respawn_info_bits);
+
     // rumble_init.c
     smlua_bind_function(L, "queue_rumble_data", smlua_func_queue_rumble_data);
     smlua_bind_function(L, "queue_rumble_data_mario", smlua_func_queue_rumble_data_mario);
@@ -10774,11 +10817,13 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
+    smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);

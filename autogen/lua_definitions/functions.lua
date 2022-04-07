@@ -4026,6 +4026,13 @@ function stub_obj_helpers_4()
     -- ...
 end
 
+--- @param obj Object
+--- @param bits integer
+--- @return nil
+function set_object_respawn_info_bits(obj, bits)
+    -- ...
+end
+
 --- @param a0 integer
 --- @param a1 integer
 --- @return nil
@@ -4153,6 +4160,12 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
+--- @param pointer Pointer_integer
+--- @return integer
+function deref_s32_pointer(pointer)
+    -- ...
+end
+
 --- @param index integer
 --- @return number
 function get_environment_region(index)
@@ -4182,6 +4195,12 @@ end
 
 --- @return integer
 function get_network_area_timer()
+    -- ...
+end
+
+--- @param initialValue integer
+--- @return Pointer_integer
+function get_temp_s32_pointer(initialValue)
     -- ...
 end
 

@@ -6,7 +6,7 @@
 #include "src/pc/platform.h"
 #include "mod.h"
 
-#define MAX_MOD_SIZE (5 * 1048576) // 5MB
+#define MAX_MOD_SIZE (10 * 1048576) // 10MB
 #define TMP_DIRECTORY "tmp"
 
 struct Mods {
