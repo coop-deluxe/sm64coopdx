@@ -798,26 +798,34 @@ void cur_obj_scale(f32 scale) {
 
 void cur_obj_init_animation(s32 animIndex) {
     struct Animation **anims = o->oAnimations;
-    geo_obj_init_animation(&o->header.gfx, &anims[animIndex]);
+    if (anims != NULL) {
+        geo_obj_init_animation(&o->header.gfx, &anims[animIndex]);
+    }
 }
 
 void cur_obj_init_animation_with_sound(s32 animIndex) {
     struct Animation **anims = o->oAnimations;
-    geo_obj_init_animation(&o->header.gfx, &anims[animIndex]);
+    if (anims != NULL) {
+        geo_obj_init_animation(&o->header.gfx, &anims[animIndex]);
+    }
     o->oSoundStateID = animIndex;
 }
 
 void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
     struct Animation **anims = o->oAnimations;
-    s32 animAccel = (s32)(accel * 65536.0f);
-    geo_obj_init_animation_accel(&o->header.gfx, &anims[animIndex], animAccel);
+    if (anims != NULL) {
+        s32 animAccel = (s32)(accel * 65536.0f);
+        geo_obj_init_animation_accel(&o->header.gfx, &anims[animIndex], animAccel);
+    }
     o->oSoundStateID = animIndex;
 }
 
 void obj_init_animation_with_sound(struct Object *obj, const struct Animation * const* animations, s32 animIndex) {
     struct Animation **anims = (struct Animation **)animations;
     obj->oAnimations = (struct Animation **)animations;
-    geo_obj_init_animation(&obj->header.gfx, &anims[animIndex]);
+    if (anims != NULL) {
+        geo_obj_init_animation(&obj->header.gfx, &anims[animIndex]);
+    }
     obj->oSoundStateID = animIndex;
 }
 

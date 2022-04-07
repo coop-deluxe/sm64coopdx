@@ -251,6 +251,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         sWarpDest.arg = 0;
         void* levelScript = (void *) DynOS_Level_GetScript(gCurrLevelNum);
         gLevelScriptModIndex = DynOS_Lvl_GetModIndex(levelScript);
+        gLevelScriptActive = (LevelScript*)levelScript;
         return levelScript;
 
     } else {

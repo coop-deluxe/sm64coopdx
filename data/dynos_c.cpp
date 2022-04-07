@@ -108,6 +108,10 @@ LevelScript* dynos_level_get(const char* levelName) {
     return DynOS_Lvl_Get(levelName);
 }
 
+const char* dynos_level_get_token(u32 index) {
+    return DynOS_Lvl_Get_Token(index);
+}
+
 struct MovtexQuadCollection *dynos_level_movtexqc_getfromindex(s32 index) {
     DataNode<MovtexQC> *node = DynOS_Lvl_MovtexQuadCollection_GetFromIndex(index);
     if (node == NULL) { return NULL; }

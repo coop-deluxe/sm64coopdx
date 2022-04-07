@@ -393,9 +393,14 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl)
     // LUAV
     if (aValue == LUA_VAR_CODE) {
         String token; token.Read(aFile);
+        for (s32 i = 0; i < aGfxData->mLuaTokenList.Count(); i++) {
+            if (token == aGfxData->mLuaTokenList[i]) {
+                return (void*)(uintptr_t)(i+1);
+            }
+        }
         u32 index = aGfxData->mLuaTokenList.Count();
         aGfxData->mLuaTokenList.Add(token);
-        return aGfxData->mLuaTokenList[index].begin();
+        return (void*)(uintptr_t)(index+1);
     }
 
     // FUNC

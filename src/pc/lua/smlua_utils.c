@@ -372,7 +372,7 @@ lua_Number smlua_get_number_field(int index, char* name) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-s64 smlua_get_mod_variable(u16 modIndex, char* variable) {
+s64 smlua_get_mod_variable(u16 modIndex, const char* variable) {
     lua_State* L = gLuaState;
 
     // figure out entry
@@ -385,7 +385,7 @@ s64 smlua_get_mod_variable(u16 modIndex, char* variable) {
     int prevTop = lua_gettop(L);
     lua_getglobal(L, "_G"); // get global table
     lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // get the file's "global" table
-    s64 value = smlua_get_integer_field(-1, variable);
+    s64 value = smlua_get_integer_field(-1, (char*)variable);
     lua_settop(L, prevTop);
 
     // return variable

@@ -717,6 +717,7 @@ s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName);
 LevelScript* DynOS_Lvl_Get(const char* levelName);
 s32 DynOS_Lvl_GetModIndex(void* levelScript);
+const char* DynOS_Lvl_Get_Token(u32 index);
 DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr);
 DataNode<MovtexQC> *DynOS_Lvl_MovtexQuadCollection_GetFromIndex(s32 index);
 void DynOS_Lvl_Load_Background(void *aPtr);

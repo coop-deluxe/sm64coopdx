@@ -41,6 +41,7 @@ struct LevelCommand {
 enum ScriptStatus { SCRIPT_RUNNING = 1, SCRIPT_PAUSED = 0, SCRIPT_PAUSED2 = -1 };
 
 s32 gLevelScriptModIndex = -1;
+LevelScript* gLevelScriptActive = NULL;
 
 static uintptr_t sStack[32];
 
@@ -829,7 +830,7 @@ static void level_cmd_place_object_ext(void) {
     struct SpawnInfo *spawnInfo;
 
     u16 modIndex = gLevelScriptModIndex;
-    char* behStr = CMD_GET(char*, 20);
+    const char* behStr = dynos_level_get_token(CMD_GET(u32, 20));
 
     gSmLuaConvertSuccess = true;
     enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
@@ -872,8 +873,8 @@ static void level_cmd_place_object_ext2(void) {
     struct SpawnInfo *spawnInfo;
 
     u16 modIndex = gLevelScriptModIndex;
-    char* modelStr = CMD_GET(char*, 20);
-    char* behStr = CMD_GET(char*, 24);
+    const char* modelStr = dynos_level_get_token(CMD_GET(u32, 20));
+    const char* behStr = dynos_level_get_token(CMD_GET(u32, 24));
 
     gSmLuaConvertSuccess = true;
     enum ModelExtendedId modelId = smlua_get_mod_variable(modIndex, modelStr);
@@ -906,6 +907,19 @@ static void level_cmd_place_object_ext2(void) {
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
+    }
+
+    sCurrentCmd = CMD_NEXT;
+}
+
+static void level_cmd_load_model_from_geo_ext(void) {
+    s16 modelSlot = CMD_GET(s16, 2);
+
+    const char* geoName = dynos_level_get_token(CMD_GET(u32, 4));
+    u32 modelId = smlua_model_util_get_id(geoName);
+
+    if (modelSlot < 256) {
+        smlua_model_util_load_with_pool_and_cache_id(modelId, sLevelPool, modelSlot);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -979,6 +993,7 @@ static void (*LevelScriptJumpTable[])(void) = {
     // coop
     /*3F*/ level_cmd_place_object_ext,
     /*40*/ level_cmd_place_object_ext2,
+    /*41*/ level_cmd_load_model_from_geo_ext,
 };
 
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {

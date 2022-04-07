@@ -6,6 +6,7 @@
 struct LevelCommand;
 
 extern s32 gLevelScriptModIndex;
+extern LevelScript* gLevelScriptActive;
 
 extern u8 level_script_entry[];
 

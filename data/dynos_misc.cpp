@@ -404,6 +404,8 @@ const void *DynOS_Geo_GetActorLayout(s32 aIndex) {
 }
 
 const void *DynOS_Geo_GetActorLayoutFromName(const char *aActorName) {
+    if (aActorName == NULL) { return NULL; }
+
     // check levels
     for (auto& lvl : sDynosCustomLevelScripts) {
         for (auto& geo : lvl.second->mGeoLayouts) {
@@ -698,19 +700,47 @@ DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr) {
     return NULL;
 }
 
+static GfxData* DynOS_Lvl_Get_Active_Gfx(void) {
+    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
+        auto& gfxData = sDynosCustomLevelScripts[i].second;
+        auto& scripts = gfxData->mLevelScripts;
+        if (gLevelScriptActive == scripts[scripts.Count() - 1]->mData) {
+            return gfxData;
+        }
+    }
+    return NULL;
+}
+
+const char* DynOS_Lvl_Get_Token(u32 index) {
+    GfxData* gfxData = DynOS_Lvl_Get_Active_Gfx();
+    if (gfxData == NULL) {
+        return NULL;
+    }
+
+    // have to 1-index due to to pointer read code
+    index = index - 1;
+
+    if (index >= gfxData->mLuaTokenList.Count()) {
+        return NULL;
+    }
+ 
+    return gfxData->mLuaTokenList[index].begin();
+}
+
 DataNode<MovtexQC> *DynOS_Lvl_MovtexQuadCollection_GetFromIndex(s32 index) {
-    s32 modIndex = gLevelScriptModIndex - 1;
-    // Sanity check our currently loaded mod.
-    if (modIndex < 0 || modIndex >= sDynosCustomLevelScripts.Count()) { return NULL; }
-    
-    auto &mMovtexQCs = sDynosCustomLevelScripts[modIndex].second->mMovtexQCs;
+    GfxData* gfxData = DynOS_Lvl_Get_Active_Gfx();
+    if (gfxData == NULL) {
+        return NULL;
+    }
+
+    auto &mMovtexQCs = gfxData->mMovtexQCs;
     
     // Sanity check the index we passed.
-    if (index < 0 || index >= mMovtexQCs.Count()) { return NULL; }
+    if (index < 0 || index >= mMovtexQCs.Count()) {
+        return NULL;
+    }
     
-    auto &movetexQC = mMovtexQCs[index];
-    
-    return movetexQC;
+    return mMovtexQCs[index];
 }
 
 void DynOS_Lvl_Load_Background(void *aPtr) {

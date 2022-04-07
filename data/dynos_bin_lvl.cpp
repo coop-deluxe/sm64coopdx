@@ -1665,7 +1665,6 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
 
     // models
     lvl_symbol_3(LOAD_MODEL_FROM_DL, 1, 0, 0);
-    lvl_symbol_2(LOAD_MODEL_FROM_GEO, 1, 0);
     lvl_symbol_3(CMD23, 1, 0, 0);
 
     // objects
@@ -1773,6 +1772,26 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
             u32 modelIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 5, aNode->mTokens[topTokenIndex + 0]);
             u32 behIndex   = DynOS_Lua_RememberVariable(aGfxData, aHead + 6, aNode->mTokens[topTokenIndex + 8]);
             LevelScript _Ls[] = { OBJECT_WITH_ACTS_EXT2(modelIndex, posX, posY, posZ, angleX, angleY, angleZ, behParam, behIndex, acts) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        }
+        return;
+    }
+
+    // LOAD_MODEL_FROM_GEO
+    if (_Symbol == "LOAD_MODEL_FROM_GEO") {
+        u64 topTokenIndex = aTokenIndex;
+        bool foundGeo = true;
+        LevelScript model = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript geo   = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundGeo);
+        if (foundGeo) {
+            aGfxData->mPointerList.Add(aHead + 1);
+            LevelScript _Ls[] = { LOAD_MODEL_FROM_GEO(model, geo) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        } else {
+            u32 geoIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 1]);
+            LevelScript _Ls[] = { LOAD_MODEL_FROM_GEO_EXT(model, geo) };
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         }

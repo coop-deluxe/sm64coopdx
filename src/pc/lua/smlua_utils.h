@@ -34,7 +34,7 @@ lua_Number smlua_get_number_field(int index, char* name);
 
 char* smlua_lnt_to_str(struct LSTNetworkType* lnt);
 
-s64 smlua_get_mod_variable(u16 modIndex, char* variable) ;
+s64 smlua_get_mod_variable(u16 modIndex, const char* variable) ;
 
 void smlua_logline(void);
 void smlua_dump_stack(void);

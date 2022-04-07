@@ -303,4 +303,8 @@
 #define OBJECT_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
     OBJECT_WITH_ACTS_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, 0x1F)
 
+#define LOAD_MODEL_FROM_GEO_EXT(model, geo) \
+    CMD_BBH(0x41, 0x08, model), \
+    CMD_PTR(geo)
+
 #endif // LEVEL_COMMANDS_H

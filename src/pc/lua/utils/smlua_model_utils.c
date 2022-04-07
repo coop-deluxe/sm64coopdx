@@ -480,7 +480,7 @@ void smlua_model_util_clear(void) {
     }
 }
 
-u8 smlua_model_util_load_with_pool(enum ModelExtendedId id, struct AllocOnlyPool* pool) {
+u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId id, struct AllocOnlyPool* pool, u8 cacheId) {
     if (id == E_MODEL_NONE) { return MODEL_NONE; }
     if (id == E_MODEL_MAX) { LOG_ERROR("id invalid"); return MODEL_NONE; }
     if (id > E_MODEL_MAX + sCustomModelsCount) { LOG_ERROR("id invalid"); return MODEL_NONE; }
@@ -496,21 +496,25 @@ u8 smlua_model_util_load_with_pool(enum ModelExtendedId id, struct AllocOnlyPool
     }
 
     // find cached asset
-    bool foundEmptyCacheId = false;
     u8 emptyCacheId = 0;
-    for (int i = 0; i < 255; i++) {
-        if (sCachedAssets[i].asset == info->asset) {
-            //LOG_INFO("Found in cached assets");
-            return sCachedAssets[i].id;
+    if (cacheId == 0) {
+        bool foundEmptyCacheId = false;
+        for (int i = 0; i < 255; i++) {
+            if (sCachedAssets[i].asset == info->asset) {
+                //LOG_INFO("Found in cached assets");
+                return sCachedAssets[i].id;
+            }
+            if (sCachedAssets[i].asset == NULL) {
+                foundEmptyCacheId = true;
+                emptyCacheId = i;
+            }
         }
-        if (sCachedAssets[i].asset == NULL) {
-            foundEmptyCacheId = true;
-            emptyCacheId = i;
+        if (!foundEmptyCacheId) {
+            LOG_ERROR("No empty cache");
+            return 0xFF;
         }
-    }
-    if (!foundEmptyCacheId) {
-        LOG_ERROR("No empty cache");
-        return 0xFF;
+    } else {
+        emptyCacheId = cacheId;
     }
 
     // load
@@ -535,6 +539,10 @@ u8 smlua_model_util_load_with_pool(enum ModelExtendedId id, struct AllocOnlyPool
     info->cacheId = emptyCacheId;
 
     return emptyCacheId;
+}
+
+u8 smlua_model_util_load_with_pool(enum ModelExtendedId id, struct AllocOnlyPool* pool) {
+    return smlua_model_util_load_with_pool_and_cache_id(id, pool, 0);
 }
 
 u8 smlua_model_util_load(enum ModelExtendedId id) {
