@@ -523,6 +523,7 @@ static void load_environmental_regions(s16 **data) {
     numRegions = *(*data)++;
 
     if (numRegions > 20) {
+        numRegions = 20;
     }
 
     for (i = 0; i < numRegions; i++) {

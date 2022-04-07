@@ -49,10 +49,10 @@ int dynos_packs_get_count(void) {
 }
 
 const char* dynos_packs_get(s32 index) {
-    std::string path = DynOS_Gfx_GetPacks()[index]->mPath;
+    const char* path = DynOS_Gfx_GetPacks()[index]->mPath.c_str();
 
     // extract basename
-    const char* cpath = path.c_str();
+    const char* cpath = path;
     const char* ctoken = cpath;
     while (*ctoken != '\0') {
         if (*ctoken == '/' || *ctoken == '\\') {

@@ -378,12 +378,14 @@ s64 smlua_get_mod_variable(u16 modIndex, char* variable) {
         return 0;
     }
 
+    int prevTop = lua_gettop(L);
     lua_getglobal(L, "_G"); // get global table
     lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // get the file's "global" table
-    lua_remove(L, -2); // remove global table
+    s64 value = smlua_get_integer_field(-1, variable);
+    lua_settop(L, prevTop);
 
-    // push variable
-    return smlua_get_integer_field(-1, variable);
+    // return variable
+    return value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

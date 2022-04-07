@@ -156,7 +156,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
 
     if (!gDiscordInitialized) {
         // set up discord params
-        struct DiscordCreateParams params;
+        struct DiscordCreateParams params = { 0 };
         DiscordCreateParamsSetDefault(&params);
         params.client_id = applicationId;
         params.flags = DiscordCreateFlags_NoRequireDiscord;

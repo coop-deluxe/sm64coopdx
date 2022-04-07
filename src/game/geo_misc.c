@@ -196,6 +196,7 @@ Gfx *geo_exec_cake_end_screen(s32 callContext, struct GraphNode *node, UNUSED f3
 
     if (callContext == GEO_CONTEXT_RENDER) {
         displayList = alloc_display_list(3 * sizeof(*displayList));
+        if (displayList == NULL) { return NULL; }
         displayListHead = displayList;
 
         generatedNode->fnNode.node.flags = (generatedNode->fnNode.node.flags & 0xFF) | 0x100;

@@ -391,10 +391,12 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
     if (alpha == 255) {
         node->fnNode.node.flags = (node->fnNode.node.flags & 0xFF) | (LAYER_OPAQUE << 8);
         gfxHead = alloc_display_list(2 * sizeof(*gfxHead));
+        if (gfxHead == NULL) { return NULL; }
         gfx = gfxHead;
     } else {
         node->fnNode.node.flags = (node->fnNode.node.flags & 0xFF) | (LAYER_TRANSPARENT << 8);
         gfxHead = alloc_display_list(3 * sizeof(*gfxHead));
+        if (gfxHead == NULL) { return NULL; }
         gfx = gfxHead;
         gDPSetAlphaCompare(gfx++, G_AC_DITHER);
     }
@@ -792,6 +794,7 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
 
     if (callContext == GEO_CONTEXT_RENDER && isMirrorMario) {
         gfx = alloc_display_list(3 * sizeof(*gfx));
+        if (gfx == NULL) { return NULL; }
 
         if ((asGenerated->parameter & 0x01) == 0) {
             gSPClearGeometryMode(&gfx[0], G_CULL_BACK);
@@ -822,6 +825,7 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
         // extra players get last color
         if (colorIndex >= gNumPlayerColors) colorIndex = gNumPlayerColors - 1;
         gfx = alloc_display_list(5 * sizeof(*gfx));
+        if (gfx == NULL) { return NULL; }
         // put the player colors into lights 3, 4, 5, 6
         // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
         gSPLight(gfx + 0, &gPlayerColors[colorIndex].pants.l, 3);
@@ -855,6 +859,7 @@ Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED 
     if (character->capEnemyGfx      != NULL) { dpLength++; }
     if (character->capEnemyDecalGfx != NULL) { dpLength++; }
     Gfx* gfx = alloc_display_list(dpLength * sizeof(*gfx));
+    if (gfx == NULL) { return NULL; }
     Gfx* onGfx = gfx;
 
     // put the player colors into lights 3, 4, 5, 6

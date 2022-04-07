@@ -1523,6 +1523,7 @@ Gfx *geo_bits_bowser_coloring(s32 run, struct GraphNode *node, UNUSED s32 a2) {
         else
             sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
         sp28 = sp2C = alloc_display_list(2 * sizeof(Gfx));
+        if (sp28 == NULL) { return NULL; }
 
         if (sp24->oBowserUnk1B2 != 0) {
             gSPClearGeometryMode(sp28++, G_LIGHTING);

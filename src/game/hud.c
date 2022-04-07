@@ -71,6 +71,7 @@ static Gfx *sPowerMeterDisplayListPos;
 void patch_interpolated_hud(void) {
     if (sPowerMeterDisplayListPos != NULL) {
         Mtx *mtx = alloc_display_list(sizeof(Mtx));
+        if (mtx == NULL) { return; }
         guTranslate(mtx, (f32) sPowerMeterHUD.x, (f32) sPowerMeterHUD.y, 0);
         gSPMatrix(sPowerMeterDisplayListPos, VIRTUAL_TO_PHYSICAL(mtx),
               G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);

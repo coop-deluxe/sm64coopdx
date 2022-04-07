@@ -142,24 +142,29 @@ void patch_interpolated_dialog(void) {
 
     if (sInterpolatedDialogOffsetPos != NULL) {
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guTranslate(matrix, 0, sInterpolatedDialogOffset, 0);
         gSPMatrix(sInterpolatedDialogOffsetPos, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         sInterpolatedDialogOffsetPos = NULL;
     }
     if (sInterpolatedDialogRotationPos != NULL) {
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guScale(matrix, 1.0 / sInterpolatedDialogScale, 1.0 / sInterpolatedDialogScale, 1.0f);
         gSPMatrix(sInterpolatedDialogRotationPos++, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guRotate(matrix, sInterpolatedDialogRotation * 4.0f, 0, 0, 1.0f);
         gSPMatrix(sInterpolatedDialogRotationPos, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         sInterpolatedDialogRotationPos = NULL;
     }
     if (sInterpolatedDialogZoomPos != NULL) {
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guTranslate(matrix, 65.0 - (65.0 / sInterpolatedDialogScale), (40.0 / sInterpolatedDialogScale) - 40, 0);
         gSPMatrix(sInterpolatedDialogZoomPos++, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guScale(matrix, 1.0 / sInterpolatedDialogScale, 1.0 / sInterpolatedDialogScale, 1.0f);
         gSPMatrix(sInterpolatedDialogZoomPos, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         sInterpolatedDialogZoomPos = NULL;

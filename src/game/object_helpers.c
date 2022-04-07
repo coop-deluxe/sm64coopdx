@@ -81,6 +81,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
 
         objectOpacity = objectGraphNode->oOpacity;
         dlStart = alloc_display_list(sizeof(Gfx) * 3);
+        if (dlStart == NULL) { return NULL; }
 
         dlHead = dlStart;
 

@@ -111,6 +111,7 @@ Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *no
         }
 
         gfxHead = alloc_display_list(3 * sizeof(Gfx));
+        if (gfxHead == NULL) { return NULL; }
         gfx = gfxHead;
         obj->header.gfx.node.flags =
             (obj->header.gfx.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
