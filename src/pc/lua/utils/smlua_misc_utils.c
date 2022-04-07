@@ -83,6 +83,13 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
 
 ///
 
+s16 get_current_save_file_num(void) {
+    extern s16 gCurrSaveFileNum;
+    return gCurrSaveFileNum;
+}
+
+///
+
 LevelScript* smlua_level_util_get(const char* name) {
     return dynos_level_get(name);
 }

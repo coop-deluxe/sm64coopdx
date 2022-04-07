@@ -47,6 +47,7 @@ in_files = [
     "src/engine/surface_load.h",
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
+    "src/game/mario_misc.h",
 ]
 
 override_allowed_functions = {
@@ -56,6 +57,7 @@ override_allowed_functions = {
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
+    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ]
 }
 
 override_disallowed_functions = {

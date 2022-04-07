@@ -926,6 +926,14 @@
 
 <br />
 
+- mario_misc.h
+   - [bhv_toad_message_init](#bhv_toad_message_init)
+   - [bhv_toad_message_loop](#bhv_toad_message_loop)
+   - [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
+   - [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
+
+<br />
+
 - mario_step.h
    - [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
    - [init_bully_collision_data](#init_bully_collision_data)
@@ -1303,6 +1311,7 @@
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
    - [deref_s32_pointer](#deref_s32_pointer)
+   - [get_current_save_file_num](#get_current_save_file_num)
    - [get_environment_region](#get_environment_region)
    - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](#get_hand_foot_pos_y)
@@ -17649,6 +17658,84 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 <br />
 
 ---
+# functions from mario_misc.h
+
+<br />
+
+
+## [bhv_toad_message_init](#bhv_toad_message_init)
+
+### Lua Example
+`bhv_toad_message_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_toad_message_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_toad_message_loop](#bhv_toad_message_loop)
+
+### Lua Example
+`bhv_toad_message_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_toad_message_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
+
+### Lua Example
+`bhv_unlock_door_star_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_unlock_door_star_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
+
+### Lua Example
+`bhv_unlock_door_star_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_unlock_door_star_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from mario_step.h
 
 <br />
@@ -24540,6 +24627,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s32 deref_s32_pointer(s32* pointer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_save_file_num](#get_current_save_file_num)
+
+### Lua Example
+`local integerValue = get_current_save_file_num()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_current_save_file_num(void);`
 
 [:arrow_up_small:](#)
 

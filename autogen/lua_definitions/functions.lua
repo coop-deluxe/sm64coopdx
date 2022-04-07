@@ -4812,6 +4812,26 @@ function set_swimming_at_surface_particles(m, particleFlag)
     -- ...
 end
 
+--- @return nil
+function bhv_toad_message_init()
+    -- ...
+end
+
+--- @return nil
+function bhv_toad_message_loop()
+    -- ...
+end
+
+--- @return nil
+function bhv_unlock_door_star_init()
+    -- ...
+end
+
+--- @return nil
+function bhv_unlock_door_star_loop()
+    -- ...
+end
+
 --- @return number
 function get_additive_y_vel_for_jumps()
     -- ...
@@ -7022,6 +7042,11 @@ end
 --- @param pointer Pointer_integer
 --- @return integer
 function deref_s32_pointer(pointer)
+    -- ...
+end
+
+--- @return integer
+function get_current_save_file_num()
     -- ...
 end
 

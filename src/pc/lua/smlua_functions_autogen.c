@@ -26,6 +26,7 @@
 #include "src/engine/surface_load.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
+#include "src/game/mario_misc.h"
 
 
   ////////////////////////
@@ -9898,6 +9899,46 @@ int smlua_func_set_swimming_at_surface_particles(lua_State* L) {
 }
 
   //////////////////
+ // mario_misc.h //
+//////////////////
+
+int smlua_func_bhv_toad_message_init(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    bhv_toad_message_init();
+
+    return 1;
+}
+
+int smlua_func_bhv_toad_message_loop(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    bhv_toad_message_loop();
+
+    return 1;
+}
+
+int smlua_func_bhv_unlock_door_star_init(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    bhv_unlock_door_star_init();
+
+    return 1;
+}
+
+int smlua_func_bhv_unlock_door_star_loop(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    bhv_unlock_door_star_loop();
+
+    return 1;
+}
+
+  //////////////////
  // mario_step.h //
 //////////////////
 
@@ -14615,6 +14656,15 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_current_save_file_num());
+
+    return 1;
+}
+
 int smlua_func_get_environment_region(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -16375,6 +16425,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "perform_water_step", smlua_func_perform_water_step);
     smlua_bind_function(L, "set_swimming_at_surface_particles", smlua_func_set_swimming_at_surface_particles);
 
+    // mario_misc.h
+    smlua_bind_function(L, "bhv_toad_message_init", smlua_func_bhv_toad_message_init);
+    smlua_bind_function(L, "bhv_toad_message_loop", smlua_func_bhv_toad_message_loop);
+    smlua_bind_function(L, "bhv_unlock_door_star_init", smlua_func_bhv_unlock_door_star_init);
+    smlua_bind_function(L, "bhv_unlock_door_star_loop", smlua_func_bhv_unlock_door_star_loop);
+
     // mario_step.h
     smlua_bind_function(L, "get_additive_y_vel_for_jumps", smlua_func_get_additive_y_vel_for_jumps);
     smlua_bind_function(L, "init_bully_collision_data", smlua_func_init_bully_collision_data);
@@ -16745,6 +16801,7 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
+    smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
