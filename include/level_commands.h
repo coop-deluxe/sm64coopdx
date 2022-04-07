@@ -285,7 +285,13 @@
 // coop
 
 #define OBJECT_WITH_ACTS_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
-    CMD_BBBB(0x3F, 0x1C, acts, 0), \
+    CMD_BBBB(0x3F, 0x18, acts, model), \
+    CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
+    CMD_W(behParam), \
+    CMD_PTR(beh)
+
+#define OBJECT_WITH_ACTS_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBBB(0x40, 0x1C, acts, 0), \
     CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
     CMD_W(behParam), \
     CMD_PTR(model), \
@@ -293,5 +299,8 @@
 
 #define OBJECT_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
     OBJECT_WITH_ACTS_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, 0x1F)
+
+#define OBJECT_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
+    OBJECT_WITH_ACTS_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, 0x1F)
 
 #endif // LEVEL_COMMANDS_H
