@@ -46,6 +46,7 @@ in_files = [
     "src/game/spawn_sound.c",
     "src/engine/surface_load.h",
     "src/game/object_list_processor.h",
+    "src/game/behavior_actions.h",
 ]
 
 override_allowed_functions = {
@@ -80,6 +81,7 @@ override_disallowed_functions = {
     "src/game/spawn_sound.c":              [ "spawner" ],
     "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field" ],
     "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
+    "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ]
 }
 
 lua_function_params = {
