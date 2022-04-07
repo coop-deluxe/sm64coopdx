@@ -4,29 +4,6 @@ extern "C" {
 #include "levels/scripts.h"
 }
 
-#define define_pointer(ptr) (const void *) #ptr, (const void *) ptr
-static const void *sDynosPointers[] = {
-    define_pointer(level_main_scripts_entry),
-    define_pointer(script_func_global_1),
-    define_pointer(script_func_global_2),
-    define_pointer(script_func_global_3),
-    define_pointer(script_func_global_4),
-    define_pointer(script_func_global_5),
-    define_pointer(script_func_global_6),
-    define_pointer(script_func_global_7),
-    define_pointer(script_func_global_8),
-    define_pointer(script_func_global_9),
-    define_pointer(script_func_global_10),
-    define_pointer(script_func_global_11),
-    define_pointer(script_func_global_12),
-    define_pointer(script_func_global_13),
-    define_pointer(script_func_global_14),
-    define_pointer(script_func_global_15),
-    define_pointer(script_func_global_16),
-    define_pointer(script_func_global_17),
-    define_pointer(script_func_global_18),
-};
-
   /////////////
  // Writing //
 /////////////
@@ -43,6 +20,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    // Light_ts
     for (auto& _Node : aGfxData->mLightTs) {
         if (&_Node->mData->col[0] == aPtr) {
             return { _Node->mName, 1 };
@@ -55,6 +33,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
+    // Ambient_ts
     for (auto& _Node : aGfxData->mAmbientTs) {
         if (&_Node->mData->col[0] == aPtr) {
             return { _Node->mName, 1 };
@@ -157,21 +136,21 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     }
 
     // Vanilla Lvl Geos
-    s32 lvlGeoCount = DynOS_Lvl_GetGeoCount();
-    for (s32 i = 0; i < lvlGeoCount; i++) {
-        if (aPtr == DynOS_Lvl_GetGeoLayout(i)) {
-            return { DynOS_Lvl_GetGeoName(i), 0 };
-        }
+    auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromData((const GeoLayout*)aPtr);
+    if (vanillaGeo != NULL) {
+        return { vanillaGeo, 0 };
     }
 
-    // Vanilla Pointers
-    s32 pointerCount = (s32) (sizeof(sDynosPointers) / (2 * sizeof(sDynosPointers[0])));
-    for (s32 i = 0; i < pointerCount; i++) {
-        const char* ptrName = (const char*)sDynosPointers[i * 2 + 0];
-        const void* ptr = sDynosPointers[i * 2 + 1];
-        if (ptr == aPtr) {
-            return { ptrName, 0 };
-        }
+    // Vanilla Script Pointers
+    auto vanillaScriptPtr = DynOS_Mgr_VanillaScriptPtr_GetFromData(aPtr);
+    if (vanillaScriptPtr != NULL) {
+        return { vanillaScriptPtr, 0 };
+    }
+
+    // Vanilla Textures
+    auto vanillaTex = DynOS_Mgr_VanillaTex_GetFromData((const Texture*)aPtr);
+    if (vanillaTex != NULL) {
+        return { vanillaTex, 0 };
     }
 
     // Vertices
@@ -188,6 +167,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
     return { _VtxArrayName, (u32)((const Vtx*)aPtr - (const Vtx*)_VtxArrayStart) };
+
 }
 
 void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData) {
@@ -257,6 +237,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         }
     }
 
+    // Light_ts
     for (auto& _Node : aGfxData->mLightTs) {
         if (_Node->mName == aPtrName) {
             if (aPtrData == 1) {
@@ -272,6 +253,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         }
     }
 
+    // Ambient_ts
     for (auto& _Node : aGfxData->mAmbientTs) {
         if (_Node->mName == aPtrName) {
             if (aPtrData == 1) {
@@ -384,21 +366,21 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Vanilla Lvl Geos
-    s32 lvlGeoCount = DynOS_Lvl_GetGeoCount();
-    for (s32 i = 0; i < lvlGeoCount; i++) {
-        if (!strcmp(aPtrName.begin(), DynOS_Lvl_GetGeoName(i))) {
-            return (void*)DynOS_Lvl_GetGeoLayout(i);
-        }
+    auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(aPtrName.begin());
+    if (vanillaGeo != NULL) {
+        return (void*)vanillaGeo;
     }
 
-    // Vanilla Pointers
-    s32 pointerCount = (s32) (sizeof(sDynosPointers) / (2 * sizeof(sDynosPointers[0])));
-    for (s32 i = 0; i < pointerCount; i++) {
-        const char* ptrName = (const char*)sDynosPointers[i * 2 + 0];
-        const void* ptr = sDynosPointers[i * 2 + 1];
-        if (!strcmp(aPtrName.begin(), ptrName)) {
-            return (void*)ptr;
-        }
+    // Vanilla Script Pointers
+    auto vanillaScriptPtr = DynOS_Mgr_VanillaScriptPtr_GetFromName(aPtrName.begin());
+    if (vanillaScriptPtr != NULL) {
+        return (void*)vanillaScriptPtr;
+    }
+
+    // Vanilla Textures
+    auto vanillaTex = DynOS_Mgr_VanillaTex_GetFromName(aPtrName.begin());
+    if (vanillaTex != NULL) {
+        return (void*)vanillaTex;
     }
 
     // Error

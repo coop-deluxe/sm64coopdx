@@ -447,6 +447,12 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         return (s64) x;
     }
 
+    // Vanilla textures
+    auto vanillaTex = DynOS_Mgr_VanillaTex_GetFromName(_Arg.begin());
+    if (vanillaTex != NULL) {
+        return (s64)vanillaTex;
+    }
+
     // Recursive descent parsing
     bool rdSuccess = false;
     s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
@@ -674,9 +680,12 @@ static Array<s64> ParseGfxSetCombineMode(GfxData* aGfxData, DataNode<Gfx>* aNode
 }
 
 static void UpdateTextureInfo(GfxData* aGfxData, s64 *aTexPtr, s32 aFormat, s32 aSize, s32 aWidth, s32 aHeight) {
-
     // Update current texture pointers
     if (aTexPtr && (*aTexPtr)) {
+        if (DynOS_Mgr_VanillaTex_GetFromData(*(const Texture**)aTexPtr)) {
+            return;
+        }
+
         aGfxData->mGfxContext.mCurrentPalette = aGfxData->mGfxContext.mCurrentTexture;
         aGfxData->mGfxContext.mCurrentTexture = (DataNode<TexData>*) (*aTexPtr);
     }

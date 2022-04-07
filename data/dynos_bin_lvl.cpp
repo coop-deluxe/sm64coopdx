@@ -1399,23 +1399,6 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     lvl_constant(NULL);
     lvl_constant(FALSE);
 
-    // vanilla actors
-    s32 actorCount = DynOS_Geo_GetActorCount();
-    for (s32 i = 0; i < actorCount; i++) {
-        if (DynOS_Geo_IsCustomActor(i)) { break; }
-        if (!strcmp(_Arg.begin(), DynOS_Geo_GetActorName(i))) {
-            return (LevelScript)DynOS_Geo_GetActorLayout(i);
-        }
-    }
-
-    // vanilla level geos
-    s32 lvlGeoCount = DynOS_Lvl_GetGeoCount();
-    for (s32 i = 0; i < lvlGeoCount; i++) {
-        if (!strcmp(_Arg.begin(), DynOS_Lvl_GetGeoName(i))) {
-            return (LevelScript)DynOS_Lvl_GetGeoLayout(i);
-        }
-    }
-
     *found = false;
     return 0;
 }
@@ -1489,6 +1472,21 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         if (_Arg == _Node->mName) {
             return (LevelScript) DynOS_Rooms_Parse(aGfxData, _Node)->mData;
         }
+    }
+
+    // vanilla actors
+    s32 actorCount = DynOS_Geo_GetActorCount();
+    for (s32 i = 0; i < actorCount; i++) {
+        if (DynOS_Geo_IsCustomActor(i)) { break; }
+        if (!strcmp(_Arg.begin(), DynOS_Geo_GetActorName(i))) {
+            return (LevelScript)DynOS_Geo_GetActorLayout(i);
+        }
+    }
+
+    // Vanilla Lvl Geos
+    auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(_Arg.begin());
+    if (vanillaGeo != NULL) {
+        return (LevelScript)vanillaGeo;
     }
 
     // Integers
@@ -2033,7 +2031,23 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         }
 
         // Clear data pointers
+        ClearLvlDataNodes(_GfxData->mLights);
+        ClearLvlDataNodes(_GfxData->mLightTs);
+        ClearLvlDataNodes(_GfxData->mAmbientTs);
+        ClearLvlDataNodes(_GfxData->mTextures);
+        ClearLvlDataNodes(_GfxData->mTextureLists);
+        ClearLvlDataNodes(_GfxData->mVertices);
+        ClearLvlDataNodes(_GfxData->mDisplayLists);
+        ClearLvlDataNodes(_GfxData->mGeoLayouts);
+        ClearLvlDataNodes(_GfxData->mCollisions);
         ClearLvlDataNodes(_GfxData->mLevelScripts);
+        ClearLvlDataNodes(_GfxData->mMacroObjects);
+        ClearLvlDataNodes(_GfxData->mTrajectories);
+        ClearLvlDataNodes(_GfxData->mMovtexs);
+        ClearLvlDataNodes(_GfxData->mMovtexQCs);
+        ClearLvlDataNodes(_GfxData->mRooms);
+        ClearLvlDataNodes(_GfxData->mGenerateGeoLayouts);
+        ClearLvlDataNodes(_GfxData->mGenerateLevelScripts);
         generated = true;
     }
     return generated;
@@ -2074,6 +2088,9 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
     Print("---------- Level pack folder: \"%s\" ----------", aPackFolder.c_str());
     Array<Pair<u64, String>> _ActorsFolders;
 
+    GfxData *_GfxData = New<GfxData>();
+    _GfxData->mModelIdentifier = 0;
+
     DIR *aPackDir = opendir(aPackFolder.c_str());
     if (aPackDir) {
         struct dirent *_PackEnt = NULL;
@@ -2090,16 +2107,13 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             // Only parse folders with a 'script.c'
             if (!fs_sys_file_exists(fstring("%s/script.c", _Folder.c_str()).c_str()) && !fs_sys_file_exists(fstring("%s/custom.script.c", _Folder.c_str()).c_str())) continue;
 
-            GfxData *_GfxData = New<GfxData>();
-            _GfxData->mModelIdentifier = 0;
-
             DynOS_Lvl_GeneratePack_Recursive(_Folder, _GfxData);
-
-            // Generate a binary file for each level found in the GfxData
-            DynOS_Lvl_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
-            DynOS_Gfx_Free(_GfxData);
 
         }
         closedir(aPackDir);
     }
+
+    // Generate a binary file for each level found in the GfxData
+    DynOS_Lvl_GeneratePack_Internal(aPackFolder, _ActorsFolders, _GfxData);
+    DynOS_Gfx_Free(_GfxData);
 }

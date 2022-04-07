@@ -699,12 +699,6 @@ void *DynOS_Geo_GetFunctionPointerFromIndex(s32 aIndex);
 s32 DynOS_Geo_GetFunctionIndex(const void *aPtr);
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
 
-s32 DynOS_Lvl_GetGeoCount();
-const char *DynOS_Lvl_GetGeoName(s32 aIndex);
-const void *DynOS_Lvl_GetGeoLayout(s32 aIndex);
-const void *DynOS_Lvl_GetGeoLayoutFromName(const char *aGeoName);
-s32 DynOS_Lvl_GetGeoIndex(const void *aGeoLayout);
-
 //
 // Levels
 //
@@ -745,6 +739,17 @@ const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 
 void DynOS_Col_Add(const SysPath &aPackFolder, const char *aCollisionName);
 Collision* DynOS_Col_Get(const char* collisionName);
+
+//
+// Managers
+//
+
+const void*      DynOS_Mgr_VanillaScriptPtr_GetFromName(const char* aDataName);
+const char*      DynOS_Mgr_VanillaScriptPtr_GetFromData(const void* aData);
+const GeoLayout* DynOS_Mgr_VanillaLvlGeo_GetFromName(const char* aDataName);
+const char*      DynOS_Mgr_VanillaLvlGeo_GetFromData(const GeoLayout* aData);
+const Texture*   DynOS_Mgr_VanillaTex_GetFromName(const char* aDataName);
+const char*      DynOS_Mgr_VanillaTex_GetFromData(const Texture* aData);
 
 //
 // Bin
