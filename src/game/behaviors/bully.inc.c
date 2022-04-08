@@ -340,7 +340,11 @@ void bhv_big_bully_with_minions_init(void) {
 void big_bully_spawn_star(void) {
     if (obj_lava_death() == 1) {
         spawn_mist_particles();
+<<<<<<< HEAD
         f32* starPos = gStarPositions.BigBullyStarPos;
+=======
+        f32* starPos = gStarPositions.BigBullyTrioStarPos;
+>>>>>>> 5eb6122af28ea24721350109b0e0bf2affa0650a
         spawn_default_star(starPos[0], starPos[1], starPos[2]);
     }
 }
