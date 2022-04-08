@@ -1386,7 +1386,7 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     }
 
     // Built-in functions
-    const void *_FunctionPtr = DynOS_Mgr_VanillaFunc_GetFromName(_Arg.begin());
+    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
     if (_FunctionPtr != NULL) {
         return (s64) _FunctionPtr;
     }
@@ -1458,7 +1458,7 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         }
     }
 
-    // vanilla actors
+    // Built-in actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
         if (DynOS_Geo_IsCustomActor(i)) { break; }
@@ -1467,16 +1467,16 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         }
     }
 
-    // Vanilla Lvl Geos
-    auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(_Arg.begin());
-    if (vanillaGeo != NULL) {
-        return (LevelScript)vanillaGeo;
+    // Built-in Lvl Geos
+    auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromName(_Arg.begin());
+    if (builtinGeo != NULL) {
+        return (LevelScript)builtinGeo;
     }
 
-    // Vanilla Lvl Cols
-    auto vanillaCol = DynOS_Mgr_VanillaLvlCol_GetFromName(_Arg.begin());
-    if (vanillaCol != NULL) {
-        return (LevelScript)vanillaCol;
+    // Built-in Lvl Cols
+    auto builtinCol = DynOS_Builtin_LvlCol_GetFromName(_Arg.begin());
+    if (builtinCol != NULL) {
+        return (LevelScript)builtinCol;
     }
 
     // Recursive descent parsing

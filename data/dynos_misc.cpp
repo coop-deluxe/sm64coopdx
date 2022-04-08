@@ -138,22 +138,6 @@ s32 DynOS_String_Width(const u8 *aStr64) {
 }
 
 //
-// Geo
-//
-
-static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
-    if (callContext == GEO_CONTEXT_RENDER) {
-        struct Object *obj = (struct Object *) gCurGraphNodeObject;
-        struct GraphNodeRotation *rotNode = (struct GraphNodeRotation *) ((struct GraphNode *) node)->next;
-        rotNode->rotation[0] = 0;
-        rotNode->rotation[1] = obj->oAnimState;
-        rotNode->rotation[2] = 0;
-        obj->oAnimState += 0x0800;
-    }
-    return NULL;
-}
-
-//
 // Actors
 //
 

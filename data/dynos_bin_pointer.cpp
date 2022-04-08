@@ -119,7 +119,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { get_behavior_name_from_id(id), 0 };
     }
 
-    // Vanilla Actors
+    // Built-in Actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
         if (DynOS_Geo_IsCustomActor(i)) { break; }
@@ -128,28 +128,28 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
-    // Vanilla Lvl Geos
-    auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromData((const GeoLayout*)aPtr);
-    if (vanillaGeo != NULL) {
-        return { vanillaGeo, 0 };
+    // Built-in Lvl Geos
+    auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromData((const GeoLayout*)aPtr);
+    if (builtinGeo != NULL) {
+        return { builtinGeo, 0 };
     }
 
-    // Vanilla Lvl Cols
-    auto vanillaCol = DynOS_Mgr_VanillaLvlCol_GetFromData((const Collision*)aPtr);
-    if (vanillaCol != NULL) {
-        return { vanillaCol, 0 };
+    // Built-in Lvl Cols
+    auto builtinCol = DynOS_Builtin_LvlCol_GetFromData((const Collision*)aPtr);
+    if (builtinCol != NULL) {
+        return { builtinCol, 0 };
     }
 
-    // Vanilla Script Pointers
-    auto vanillaScriptPtr = DynOS_Mgr_VanillaScriptPtr_GetFromData(aPtr);
-    if (vanillaScriptPtr != NULL) {
-        return { vanillaScriptPtr, 0 };
+    // Built-in Script Pointers
+    auto builtinScriptPtr = DynOS_Builtin_ScriptPtr_GetFromData(aPtr);
+    if (builtinScriptPtr != NULL) {
+        return { builtinScriptPtr, 0 };
     }
 
-    // Vanilla Textures
-    auto vanillaTex = DynOS_Mgr_VanillaTex_GetFromData((const Texture*)aPtr);
-    if (vanillaTex != NULL) {
-        return { vanillaTex, 0 };
+    // Built-in Textures
+    auto builtinTex = DynOS_Builtin_Tex_GetFromData((const Texture*)aPtr);
+    if (builtinTex != NULL) {
+        return { builtinTex, 0 };
     }
 
     // the ones below use a saved offset
@@ -209,7 +209,7 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
     }
 
     // Built-in functions
-    s32 _GeoFunctionIndex = DynOS_Mgr_VanillaFunc_GetIndexFromData(aPtr);
+    s32 _GeoFunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr);
     if (_GeoFunctionIndex != -1) {
         WriteBytes<u32>(aFile, FUNCTION_CODE);
         WriteBytes<s32>(aFile, _GeoFunctionIndex);
@@ -361,7 +361,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         return (void*)get_behavior_from_id(id);
     }
 
-    // Vanilla Actors
+    // Built-in Actors
     s32 actorCount = DynOS_Geo_GetActorCount();
     for (s32 i = 0; i < actorCount; i++) {
         if (DynOS_Geo_IsCustomActor(i)) { break; }
@@ -370,28 +370,28 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         }
     }
 
-    // Vanilla Lvl Geos
-    auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(aPtrName.begin());
-    if (vanillaGeo != NULL) {
-        return (void*)vanillaGeo;
+    // Built-in Lvl Geos
+    auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromName(aPtrName.begin());
+    if (builtinGeo != NULL) {
+        return (void*)builtinGeo;
     }
 
-    // Vanilla Lvl Cols
-    auto vanillaCol = DynOS_Mgr_VanillaLvlCol_GetFromName(aPtrName.begin());
-    if (vanillaCol != NULL) {
-        return (void*)vanillaCol;
+    // Built-in Lvl Cols
+    auto builtinCol = DynOS_Builtin_LvlCol_GetFromName(aPtrName.begin());
+    if (builtinCol != NULL) {
+        return (void*)builtinCol;
     }
 
-    // Vanilla Script Pointers
-    auto vanillaScriptPtr = DynOS_Mgr_VanillaScriptPtr_GetFromName(aPtrName.begin());
-    if (vanillaScriptPtr != NULL) {
-        return (void*)vanillaScriptPtr;
+    // Built-in Script Pointers
+    auto builtinScriptPtr = DynOS_Builtin_ScriptPtr_GetFromName(aPtrName.begin());
+    if (builtinScriptPtr != NULL) {
+        return (void*)builtinScriptPtr;
     }
 
-    // Vanilla Textures
-    auto vanillaTex = DynOS_Mgr_VanillaTex_GetFromName(aPtrName.begin());
-    if (vanillaTex != NULL) {
-        return (void*)vanillaTex;
+    // Built-in Textures
+    auto builtinTex = DynOS_Builtin_Tex_GetFromName(aPtrName.begin());
+    if (builtinTex != NULL) {
+        return (void*)builtinTex;
     }
 
     // Error
@@ -417,7 +417,7 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue) {
     // FUNC
     if (aValue == FUNCTION_CODE) {
         s32 _FunctionIndex = ReadBytes<s32>(aFile);
-        return (void*) DynOS_Mgr_VanillaFunc_GetFromIndex(_FunctionIndex);
+        return (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex);
     }
 
     // PNTR

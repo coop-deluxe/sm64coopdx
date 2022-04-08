@@ -743,17 +743,17 @@ Collision* DynOS_Col_Get(const char* collisionName);
 // Managers
 //
 
-const void*      DynOS_Mgr_VanillaScriptPtr_GetFromName(const char* aDataName);
-const char*      DynOS_Mgr_VanillaScriptPtr_GetFromData(const void* aData);
-const GeoLayout* DynOS_Mgr_VanillaLvlGeo_GetFromName(const char* aDataName);
-const char*      DynOS_Mgr_VanillaLvlGeo_GetFromData(const GeoLayout* aData);
-const Collision* DynOS_Mgr_VanillaLvlCol_GetFromName(const char* aDataName);
-const char*      DynOS_Mgr_VanillaLvlCol_GetFromData(const Collision* aData);
-const Texture*   DynOS_Mgr_VanillaTex_GetFromName(const char* aDataName);
-const char*      DynOS_Mgr_VanillaTex_GetFromData(const Texture* aData);
-const void*      DynOS_Mgr_VanillaFunc_GetFromName(const char* aDataName);
-const void*      DynOS_Mgr_VanillaFunc_GetFromIndex(s32 aIndex);
-s32              DynOS_Mgr_VanillaFunc_GetIndexFromData(const void* aData);
+const void*      DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName);
+const char*      DynOS_Builtin_ScriptPtr_GetFromData(const void* aData);
+const GeoLayout* DynOS_Builtin_LvlGeo_GetFromName(const char* aDataName);
+const char*      DynOS_Builtin_LvlGeo_GetFromData(const GeoLayout* aData);
+const Collision* DynOS_Builtin_LvlCol_GetFromName(const char* aDataName);
+const char*      DynOS_Builtin_LvlCol_GetFromData(const Collision* aData);
+const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
+const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
+const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
+const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
+s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
 
 //
 // Bin

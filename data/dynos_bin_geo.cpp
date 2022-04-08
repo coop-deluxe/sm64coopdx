@@ -28,7 +28,7 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     }
 
     // Built-in functions
-    const void *_FunctionPtr = DynOS_Mgr_VanillaFunc_GetFromName(_Arg.begin());
+    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
     if (_FunctionPtr != NULL) {
         return (s64) _FunctionPtr;
     }

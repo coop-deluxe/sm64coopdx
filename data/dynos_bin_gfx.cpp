@@ -453,10 +453,10 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         }
     }
 
-    // Vanilla textures
-    auto vanillaTex = DynOS_Mgr_VanillaTex_GetFromName(_Arg.begin());
-    if (vanillaTex != NULL) {
-        return (s64)vanillaTex;
+    // Built-in textures
+    auto builtinTex = DynOS_Builtin_Tex_GetFromName(_Arg.begin());
+    if (builtinTex != NULL) {
+        return (s64)builtinTex;
     }
 
     // Recursive descent parsing
@@ -688,7 +688,7 @@ static Array<s64> ParseGfxSetCombineMode(GfxData* aGfxData, DataNode<Gfx>* aNode
 static void UpdateTextureInfo(GfxData* aGfxData, s64 *aTexPtr, s32 aFormat, s32 aSize, s32 aWidth, s32 aHeight) {
     // Update current texture pointers
     if (aTexPtr && (*aTexPtr)) {
-        if (DynOS_Mgr_VanillaTex_GetFromData(*(const Texture**)aTexPtr)) {
+        if (DynOS_Builtin_Tex_GetFromData(*(const Texture**)aTexPtr)) {
             return;
         }
 
