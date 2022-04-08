@@ -18,6 +18,13 @@ extern "C" {
 static s64 ParseMacroObjectSymbolArg(GfxData* aGfxData, DataNode<MacroObject>* aNode, u64& aTokenIndex) {
     const String& _Arg = aNode->mTokens[aTokenIndex++];
 
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
     // Surface constants
     macro_object_constant(macro_yellow_coin);
     macro_object_constant(macro_yellow_coin_2);
@@ -388,12 +395,6 @@ static s64 ParseMacroObjectSymbolArg(GfxData* aGfxData, DataNode<MacroObject>* a
 
     // Other constants
     macro_object_constant(NULL);
-
-    // Integers
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        return (s64) x;
-    }
 
     // Check level constants
     bool constantFound = false;

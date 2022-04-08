@@ -17,6 +17,13 @@ extern "C" {
 static s64 ParseMovtexSymbolArg(GfxData* aGfxData, DataNode<Movtex>* aNode, u64& aTokenIndex) {
     const String& _Arg = aNode->mTokens[aTokenIndex++];
 
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
     // texture constants
     movtex_constant(TEXTURE_WATER);
     movtex_constant(TEXTURE_MIST);
@@ -31,12 +38,6 @@ static s64 ParseMovtexSymbolArg(GfxData* aGfxData, DataNode<Movtex>* aNode, u64&
 
     // Other constants
     movtex_constant(NULL);
-
-    // Integers
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        return (s64) x;
-    }
 
     // Unknown
     PrintError("  ERROR: Unknown movtex arg: %s", _Arg.begin());

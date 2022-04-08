@@ -1406,6 +1406,13 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
 static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex, bool* found) {
     const String& _Arg = aNode->mTokens[aTokenIndex++];
 
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
     // Lvl functions
     void *_LvlFunctionPtr = DynOS_Lvl_GetFunctionPointerFromName(_Arg);
     if (_LvlFunctionPtr != NULL) {
@@ -1487,12 +1494,6 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(_Arg.begin());
     if (vanillaGeo != NULL) {
         return (LevelScript)vanillaGeo;
-    }
-
-    // Integers
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        return (LevelScript) x;
     }
 
     // Recursive descent parsing
@@ -1638,6 +1639,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_2(SKIP_IF, 0, 0);
     lvl_symbol_0(SKIP);
     lvl_symbol_0(SKIP_NOP);
+    lvl_symbol_3(JUMP_AREA_EXT, 2, 0, 0);
 
     // calls
     lvl_symbol_2(CALL, 1, 0);
@@ -1795,6 +1797,18 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         }
+        return;
+    }
+
+    // JUMP_AREA
+    if (_Symbol == "JUMP_AREA") {
+        LevelScript _Arg0 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript _Arg1 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript _Arg2 = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        aGfxData->mPointerList.Add(aHead + 2);
+        LevelScript _Ls[] = { JUMP_AREA_EXT(_Arg0, _Arg1, _Arg2) };
+        memcpy(aHead, _Ls, sizeof(_Ls));
+        aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         return;
     }
 

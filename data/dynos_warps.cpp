@@ -11,7 +11,6 @@ extern "C" {
 #include "game/sound_init.h"
 #include "game/object_list_processor.h"
 #include "game/options_menu.h"
-#include "engine/level_script.h"
 extern s8 gDialogBoxState;
 extern s16 gMenuMode;
 extern s32 gWdwWaterLevelSet;
@@ -249,10 +248,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         sWarpDest.areaIdx = gCurrAreaIndex;
         sWarpDest.nodeId = 0;
         sWarpDest.arg = 0;
-        void* levelScript = (void *) DynOS_Level_GetScript(gCurrLevelNum);
-        gLevelScriptModIndex = DynOS_Lvl_GetModIndex(levelScript);
-        gLevelScriptActive = (LevelScript*)levelScript;
-        return levelScript;
+        return (void *) DynOS_Level_GetScript(gCurrLevelNum);
 
     } else {
 

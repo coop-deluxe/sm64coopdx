@@ -764,6 +764,8 @@ s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
 char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
 
+s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found);
+
 void DynOS_Anim_ScanFolder(GfxData *aGfxData, const SysPath &aAnimsFolder);
 void DynOS_Anim_Table_Write(FILE* aFile, GfxData* aGfxData);
 void DynOS_Anim_Write(FILE* aFile, GfxData* aGfxData);

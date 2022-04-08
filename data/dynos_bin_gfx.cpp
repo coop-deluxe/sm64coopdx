@@ -342,6 +342,13 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
     String _Arg("%s%s", aPrefix, _Token.begin());
 
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
     bool constantFound = false;
     s64 constantValue = DynOS_Gfx_ParseGfxConstants(_Arg, &constantFound);
     if (constantFound) {
@@ -373,6 +380,27 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         String _Diffuse("&%s.l", _Node->mName.begin());
         if (_Arg == _Diffuse) {
             return (s64) &(DynOS_Lights_Parse(aGfxData, _Node)->mData->l[0]);
+        }
+    }
+
+    // Textures
+    for (auto& _Node : aGfxData->mTextures) {
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_Tex_Parse(aGfxData, _Node);
+        }
+    }
+
+    // Vertex arrays
+    for (auto& _Node : aGfxData->mVertices) {
+        if (_Arg == _Node->mName) {
+            return (s64) (DynOS_Vtx_Parse(aGfxData, _Node)->mData + _Offset);
+        }
+    }
+
+    // Display lists
+    for (auto& _Node : aGfxData->mDisplayLists) {
+        if (_Arg == _Node->mName) {
+            return (s64) DynOS_Gfx_Parse(aGfxData, _Node);
         }
     }
 
@@ -418,33 +446,6 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
         if (_Arg == _DiffuseC) {
             return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->colc[0]);
         }
-    }
-
-    // Textures
-    for (auto& _Node : aGfxData->mTextures) {
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_Tex_Parse(aGfxData, _Node);
-        }
-    }
-
-    // Vertex arrays
-    for (auto& _Node : aGfxData->mVertices) {
-        if (_Arg == _Node->mName) {
-            return (s64) (DynOS_Vtx_Parse(aGfxData, _Node)->mData + _Offset);
-        }
-    }
-
-    // Display lists
-    for (auto& _Node : aGfxData->mDisplayLists) {
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_Gfx_Parse(aGfxData, _Node);
-        }
-    }
-
-    // Integers
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        return (s64) x;
     }
 
     // Vanilla textures

@@ -4,6 +4,16 @@
  // Misc //
 //////////
 
+s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found) {
+    s32 x;
+    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
+        *found = true;
+        return (s64) x;
+    }
+    *found = false;
+    return 0;
+}
+
 void DynOS_Gfx_Free(GfxData* aGfxData) {
     if (aGfxData) {
         for (auto& _Node : aGfxData->mLights) {

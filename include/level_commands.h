@@ -307,4 +307,9 @@
     CMD_BBH(0x41, 0x08, model), \
     CMD_PTR(geo)
 
+#define JUMP_AREA_EXT(op, arg, target) \
+    CMD_BBBB(0x42, 0x0C, op, 0x00), \
+    CMD_W(arg), \
+    CMD_PTR(target)
+
 #endif // LEVEL_COMMANDS_H

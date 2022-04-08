@@ -20,6 +20,13 @@ extern "C" {
 static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64& aTokenIndex) {
     const String& _Arg = aNode->mTokens[aTokenIndex++];
 
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
     // Geo functions
     void *_GeoFunctionPtr = DynOS_Geo_GetFunctionPointerFromName(_Arg);
     if (_GeoFunctionPtr != NULL) {
@@ -106,12 +113,6 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
         if (_Arg == _Node->mName) {
             return (s64) DynOS_Geo_Parse(aGfxData, _Node, false)->mData;
         }
-    }
-
-    // Integers
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        return (s64) x;
     }
 
     // Complex

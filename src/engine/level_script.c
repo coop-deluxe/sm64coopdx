@@ -14,6 +14,7 @@
 #include "game/profiler.h"
 #include "game/save_file.h"
 #include "game/sound_init.h"
+#include "game/level_update.h"
 #include "goddard/renderer.h"
 #include "geo_layout.h"
 #include "graph_node.h"
@@ -58,6 +59,10 @@ static uintptr_t *sStackBase = NULL;
 static s16 sScriptStatus;
 static s32 sRegister;
 static struct LevelCommand *sCurrentCmd;
+
+static s32 eval_script_area(s32 arg) {
+    return (sWarpDest.areaIdx == arg);
+}
 
 static s32 eval_script_op(s8 op, s32 arg) {
     s32 result = 0;
@@ -925,6 +930,14 @@ static void level_cmd_load_model_from_geo_ext(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+static void level_cmd_jump_area_ext(void) {
+    if (eval_script_area(CMD_GET(s32, 4))) {
+        sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 8));
+    } else {
+        sCurrentCmd = CMD_NEXT;
+    }
+}
+
 static void (*LevelScriptJumpTable[])(void) = {
     /*00*/ level_cmd_load_and_execute,
     /*01*/ level_cmd_exit_and_execute,
@@ -994,6 +1007,7 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*3F*/ level_cmd_place_object_ext,
     /*40*/ level_cmd_place_object_ext2,
     /*41*/ level_cmd_load_model_from_geo_ext,
+    /*42*/ level_cmd_jump_area_ext,
 };
 
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {

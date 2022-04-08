@@ -11,6 +11,7 @@ extern "C" {
 
 extern "C" {
 extern const BehaviorScript *sWarpBhvSpawnTable[];
+#include "engine/level_script.h"
 }
 
 #define DYNOS_LEVEL_TEXT_EMPTY              ""
@@ -227,7 +228,13 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
 const void *DynOS_Level_GetScript(s32 aLevel) {
     DynOS_Level_Init();
     if (aLevel != LEVEL_WDW) {
-        return DynOS_Lvl_Get(""); // DO NOT COMMIT
+        LevelScript* script = DynOS_Lvl_Get("");
+        sDynosCurrentLevelNum = aLevel;
+        sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
+        DynOS_Level_ParseScript(script, DynOS_Level_PreprocessScript);
+        gLevelScriptModIndex = DynOS_Lvl_GetModIndex(script);
+        gLevelScriptActive = (LevelScript*)script;
+        return script; // DO NOT COMMIT
     }
     return sDynosLevelScripts[aLevel];
 }
@@ -705,6 +712,18 @@ static LvlCmd *DynOS_Level_CmdClearDemoPointer(Stack &aStack, LvlCmd *aCmd) {
     return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
 }
 
+static LvlCmd *DynOS_Level_CmdPlaceObjectExt(Stack &aStack, LvlCmd *aCmd) {
+    return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
+}
+
+static LvlCmd *DynOS_Level_CmdPlaceObjectExt2(Stack &aStack, LvlCmd *aCmd) {
+    return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
+}
+
+static LvlCmd *DynOS_Level_CmdLoadModelFromGeoExt(Stack &aStack, LvlCmd *aCmd) {
+    return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
+}
+
 static LvlCmd *DynOS_Level_CmdJumpArea(Stack &aStack, LvlCmd *aCmd, s32 (*aPreprocessFunction)(u8, void *)) {
     DynOS_Level_ParseScript((const void *) DynOS_Level_CmdGet(aCmd, 8), aPreprocessFunction);
     return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
@@ -715,7 +734,7 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
     _Stack.mBaseIndex = -1;
     _Stack.mTopIndex = 0;
     for (LvlCmd *_Cmd = (LvlCmd *) aScript; _Cmd != NULL;) {
-        u8 _CmdType = (_Cmd->mType & 0x3F);
+        u8 _CmdType = (_Cmd->mType & 0xFF);
         s32 _Action = aPreprocessFunction(_CmdType, (void *) _Cmd);
         switch (_Action) {
             case 0:
@@ -783,7 +802,11 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
                     case 0x3C: _Cmd = DynOS_Level_CmdGetOrSet(_Stack, _Cmd); break;
                     case 0x3D: _Cmd = DynOS_Level_CmdAdvanceDemo(_Stack, _Cmd); break;
                     case 0x3E: _Cmd = DynOS_Level_CmdClearDemoPointer(_Stack, _Cmd); break;
-                    case 0x3F: _Cmd = DynOS_Level_CmdJumpArea(_Stack, _Cmd, aPreprocessFunction); break;
+                    // coop
+                    case 0x3F: _Cmd = DynOS_Level_CmdPlaceObjectExt(_Stack, _Cmd); break;
+                    case 0x40: _Cmd = DynOS_Level_CmdPlaceObjectExt2(_Stack, _Cmd); break;
+                    case 0x41: _Cmd = DynOS_Level_CmdLoadModelFromGeoExt(_Stack, _Cmd); break;
+                    case 0x42: _Cmd = DynOS_Level_CmdJumpArea(_Stack, _Cmd, aPreprocessFunction); break;
                 } break;
 
             case 1:
