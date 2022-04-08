@@ -1404,13 +1404,21 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
 }
 
 static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex, bool* found) {
-    const String& _Arg = aNode->mTokens[aTokenIndex++];
+    String _Arg = aNode->mTokens[aTokenIndex++];
 
     // Integers
     bool integerFound = false;
     s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
     if (integerFound) {
         return integerValue;
+    }
+
+    // Offset
+    s32 _Offset = 0;
+    s32 _Plus = _Arg.Find('+');
+    if (_Plus != -1) {
+        _Offset = _Arg.SubString(_Plus + 1).ParseInt();
+        _Arg = _Arg.SubString(0, _Plus);
     }
 
     // Lvl functions
@@ -1428,7 +1436,12 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     // Level Scripts
     for (auto& _Node : aGfxData->mLevelScripts) {
         if (_Arg == _Node->mName) {
-            return (LevelScript) DynOS_Lvl_Parse(aGfxData, _Node, false)->mData;
+            auto base = DynOS_Lvl_Parse(aGfxData, _Node, false)->mData;
+            auto data = base + _Offset;
+            if (_Offset != 0) {
+                aGfxData->mPointerOffsetList.Add({ data, base });
+            }
+            return (LevelScript) data;
         }
     }
 
@@ -1494,6 +1507,12 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(_Arg.begin());
     if (vanillaGeo != NULL) {
         return (LevelScript)vanillaGeo;
+    }
+
+    // Vanilla Lvl Cols
+    auto vanillaCol = DynOS_Mgr_VanillaLvlCol_GetFromName(_Arg.begin());
+    if (vanillaCol != NULL) {
+        return (LevelScript)vanillaCol;
     }
 
     // Recursive descent parsing
@@ -1609,10 +1628,13 @@ static LevelScript ParseLevelScriptSymbolArg(GfxData* aGfxData, DataNode<LevelSc
         return;                                                                      \
     }
 
-#define lvl_symbol_noop(symb, skipCount) \
-    if (_Symbol == #symb) {              \
-        aTokenIndex += skipCount;        \
-        return;                          \
+#define lvl_symbol_noop_3(symb)                  \
+    if (_Symbol == #symb) {                      \
+        aTokenIndex += 3;                        \
+        LevelScript _Ls[] = { symb(0, 0, 0) };   \
+        memcpy(aHead, _Ls, sizeof(_Ls));         \
+        aHead += (sizeof(_Ls) / sizeof(_Ls[0])); \
+        return;                                  \
     }
 
 static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNode, LevelScript*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
@@ -1650,10 +1672,10 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_0(PUSH_POOL);
     lvl_symbol_0(POP_POOL);
     lvl_symbol_3(FIXED_LOAD, 1, 2, 3);
-    lvl_symbol_noop(LOAD_RAW, 3);
-    lvl_symbol_noop(LOAD_MIO0, 3);
+    lvl_symbol_noop_3(LOAD_RAW);
+    lvl_symbol_noop_3(LOAD_MIO0);
     lvl_symbol_1(LOAD_MARIO_HEAD, 0);
-    lvl_symbol_noop(LOAD_MIO0_TEXTURE, 3);
+    lvl_symbol_noop_3(LOAD_MIO0_TEXTURE);
 
     // levels
     lvl_symbol_0(INIT_LEVEL);
@@ -1968,6 +1990,13 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
     // Data
     _Node->mSize = ReadBytes<u32>(aFile);
     _Node->mData = New<LevelScript>(_Node->mSize);
+
+    // Add it
+    if (aGfxData != NULL) {
+        aGfxData->mLevelScripts.Add(_Node);
+    }
+
+    // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = ReadBytes<u32>(aFile);
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, true);
@@ -1976,11 +2005,6 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
         } else {
             _Node->mData[i] = (uintptr_t) _Value;
         }
-    }
-
-    // Add it
-    if (aGfxData != NULL) {
-        aGfxData->mLevelScripts.Add(_Node);
     }
 
     return _Node;
@@ -2048,6 +2072,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         _GfxData->mModelIdentifier            = _LvlRoot->mModelIdentifier;
         _GfxData->mPackFolder                 = aPackFolder;
         _GfxData->mPointerList                = { NULL }; // The NULL pointer is needed, so we add it here
+        _GfxData->mPointerOffsetList          = { };
         _GfxData->mLuaPointerList             = { };
         _GfxData->mLuaTokenList               = { };
         _GfxData->mGfxContext.mCurrentTexture = NULL;
@@ -2097,6 +2122,10 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         ClearLvlDataNodes(_GfxData->mRooms);
         ClearLvlDataNodes(_GfxData->mGenerateGeoLayouts);
         ClearLvlDataNodes(_GfxData->mGenerateLevelScripts);
+        _GfxData->mPointerList.Clear();
+        _GfxData->mPointerOffsetList.Clear();
+        _GfxData->mLuaPointerList.Clear();
+        _GfxData->mLuaTokenList.Clear();
         generated = true;
     }
     return generated;

@@ -393,7 +393,12 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     // Vertex arrays
     for (auto& _Node : aGfxData->mVertices) {
         if (_Arg == _Node->mName) {
-            return (s64) (DynOS_Vtx_Parse(aGfxData, _Node)->mData + _Offset);
+            auto base = DynOS_Vtx_Parse(aGfxData, _Node)->mData;
+            auto data = base + _Offset;
+            if (_Offset != 0) {
+                aGfxData->mPointerOffsetList.Add({ (const void*)data, (const void*)base });
+            }
+            return (s64) data;
         }
     }
 

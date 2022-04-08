@@ -5,13 +5,42 @@
 //////////
 
 s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found) {
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        *found = true;
-        return (s64) x;
+    const char* argStr = _Arg.begin();
+    if (argStr[0] == '0' && argStr[1] == 'x') {
+        // is a hex number
+        argStr += 2;
+        while(*argStr != '\0') {
+            if (*argStr >= '0' && *argStr <= '9') {
+                // good
+            } else if (*argStr >= 'a' && *argStr <= 'f') {
+                // good
+            } else if (*argStr >= 'A' && *argStr <= 'F') {
+                // good
+            } else {
+                // bad character
+                *found = false;
+                return 0;
+            }
+            argStr++;
+        }
+    } else {
+        // is a decimal number
+        while(*argStr != '\0') {
+            if (*argStr >= '0' && *argStr <= '9') {
+                // good
+            } else if (*argStr == '-' || *argStr == '+') {
+                // good
+            } else {
+                // bad character
+                *found = false;
+                return 0;
+            }
+            argStr++;
+        }
     }
-    *found = false;
-    return 0;
+
+    *found = true;
+    return _Arg.ParseInt();
 }
 
 void DynOS_Gfx_Free(GfxData* aGfxData) {
@@ -146,18 +175,32 @@ static s64 ParseNumeric() {
     String numeric = "";
     char* c = sRdString;
 
-    // check for hex
     if (*c == '0' && *(c+1) == 'x') {
+        // is hex
         numeric.Add(*c);
         c++;
         numeric.Add(*c);
         c++;
-    }
-
-    // continue adding to string
-    while (*c >= '0' && *c <= '9') {
-        numeric.Add(*c);
-        c++;
+        while (true) {
+            if (*c >= '0' && *c <= '9') {
+                // good
+            } else if (*c >= 'a' && *c <= 'f') {
+                // good
+            } else if (*c >= 'A' && *c <= 'F') {
+                // good
+            } else {
+                // bad
+                break;
+            }
+            numeric.Add(*c);
+            c++;
+        }
+    } else {
+        // is decimal
+        while (*c >= '0' && *c <= '9') {
+            numeric.Add(*c);
+            c++;
+        }
     }
 
     // advance parsing

@@ -22,15 +22,9 @@ void ClearGfxDataNodes(DataNodes<T> &aDataNodes) {
 #define COLLISION_SIZE_PER_TOKEN 4
 
 #define col_constant(x) if (_Arg == #x) { return (s16) (x); }
-static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64& aTokenIndex) {
-    const String& _Arg = aNode->mTokens[aTokenIndex++];
 
-    // Integers
-    bool integerFound = false;
-    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
-    if (integerFound) {
-        return integerValue;
-    }
+static s64 DynOS_Col_ParseConstants(const String& _Arg, bool* found) {
+    *found = true;
 
     // Surface constants
     col_constant(SURFACE_DEFAULT);
@@ -278,8 +272,33 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
     col_constant(special_key_door);
     col_constant(special_null_end);
 
-    // Other constants
-    col_constant(NULL);
+    *found = false;
+    return 0;
+}
+
+static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64& aTokenIndex) {
+    const String& _Arg = aNode->mTokens[aTokenIndex++];
+
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
+    // Constants
+    bool constantFound = false;
+    s64 constantValue = DynOS_Col_ParseConstants(_Arg, &constantFound);
+    if (constantFound) {
+        return constantValue;
+    }
+
+    // Recursive descent parsing
+    bool rdSuccess = false;
+    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Col_ParseConstants);
+    if (rdSuccess) {
+        return rdValue;
+    }
 
     // Unknown
     PrintError("  ERROR: Unknown col arg: %s", _Arg.begin());

@@ -78,13 +78,6 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
-    // Level scripts
-    for (auto& _Node : aGfxData->mLevelScripts) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
-        }
-    }
-
     // Macro objects
     for (auto& _Node : aGfxData->mMacroObjects) {
         if (_Node->mData == aPtr) {
@@ -141,6 +134,12 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { vanillaGeo, 0 };
     }
 
+    // Vanilla Lvl Cols
+    auto vanillaCol = DynOS_Mgr_VanillaLvlCol_GetFromData((const Collision*)aPtr);
+    if (vanillaCol != NULL) {
+        return { vanillaCol, 0 };
+    }
+
     // Vanilla Script Pointers
     auto vanillaScriptPtr = DynOS_Mgr_VanillaScriptPtr_GetFromData(aPtr);
     if (vanillaScriptPtr != NULL) {
@@ -153,21 +152,35 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { vanillaTex, 0 };
     }
 
+    // the ones below use a saved offset
+
+    s32 _Offset = 0;
+    for (auto& pair : aGfxData->mPointerOffsetList) {
+        if (pair.first == aPtr) {
+            _Offset = (s32)((const LevelScript*)pair.first - (const LevelScript*)pair.second);
+            aPtr = pair.second;
+            break;
+        }
+    }
+
+    // Level scripts
+    for (auto& _Node : aGfxData->mLevelScripts) {
+        if (_Node->mData == aPtr) {
+            return { _Node->mName, _Offset };
+        }
+    }
+
     // Vertices
     String _VtxArrayName = "";
     uintptr_t _VtxArrayStart = 0;
     for (auto& _Node : aGfxData->mVertices) {
         if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
-        }
-        if ((uintptr_t)_Node->mData <= (uintptr_t)aPtr &&
-            (uintptr_t)_Node->mData >= _VtxArrayStart) {
-            _VtxArrayName = _Node->mName;
-            _VtxArrayStart = (uintptr_t)_Node->mData;
+            return { _Node->mName, _Offset };
         }
     }
-    return { _VtxArrayName, (u32)((const Vtx*)aPtr - (const Vtx*)_VtxArrayStart) };
 
+    PrintError("Unable to find pointer!");
+    return { "", 0 };
 }
 
 void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData) {
@@ -311,7 +324,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     // Level scripts
     for (auto &_Node : aGfxData->mLevelScripts) {
         if (_Node->mName == aPtrName) {
-            return (void *) _Node->mData;
+            return (void *) (_Node->mData + aPtrData);
         }
     }
 
@@ -369,6 +382,12 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     auto vanillaGeo = DynOS_Mgr_VanillaLvlGeo_GetFromName(aPtrName.begin());
     if (vanillaGeo != NULL) {
         return (void*)vanillaGeo;
+    }
+
+    // Vanilla Lvl Cols
+    auto vanillaCol = DynOS_Mgr_VanillaLvlCol_GetFromName(aPtrName.begin());
+    if (vanillaCol != NULL) {
+        return (void*)vanillaCol;
     }
 
     // Vanilla Script Pointers

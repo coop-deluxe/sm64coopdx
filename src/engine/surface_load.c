@@ -558,31 +558,30 @@ void alloc_surface_pools(void) {
 /**
  * Get the size of the terrain data, to get the correct size when copying later.
  */
-u32 get_area_terrain_size(s16 *data) {
-    s16 *startPos = data;
+u32 get_area_terrain_size(s16 *terrainData) {
+    s16 *startPos = terrainData;
     s32 end = FALSE;
     s16 terrainLoadType;
     s32 numVertices;
     s32 numRegions;
     s32 numSurfaces;
     s16 hasForce;
-
     while (!end) {
-        terrainLoadType = *data++;
+        terrainLoadType = *terrainData++;
 
         switch (terrainLoadType) {
             case TERRAIN_LOAD_VERTICES:
-                numVertices = *data++;
-                data += 3 * numVertices;
+                numVertices = *terrainData++;
+                terrainData += 3 * numVertices;
                 break;
 
             case TERRAIN_LOAD_OBJECTS:
-                data += get_special_objects_size(data);
+                terrainData += get_special_objects_size(terrainData);
                 break;
 
             case TERRAIN_LOAD_ENVIRONMENT:
-                numRegions = *data++;
-                data += 6 * numRegions;
+                numRegions = *terrainData++;
+                terrainData += 6 * numRegions;
                 break;
 
             case TERRAIN_LOAD_CONTINUE:
@@ -593,14 +592,14 @@ u32 get_area_terrain_size(s16 *data) {
                 break;
 
             default:
-                numSurfaces = *data++;
+                numSurfaces = *terrainData++;
                 hasForce = surface_has_force(terrainLoadType);
-                data += (3 + hasForce) * numSurfaces;
+                terrainData += (3 + hasForce) * numSurfaces;
                 break;
         }
     }
 
-    return data - startPos;
+    return terrainData - startPos;
 }
 
 
