@@ -706,7 +706,7 @@ Gfx *geo_movtex_draw_water_regions_ext(s32 callContext, struct GraphNode *node, 
             return NULL;
         }
         
-        quadCollection = dynos_level_movtexqc_getfromindex(asGenerated->parameter);
+        quadCollection = dynos_level_get_movtexqc(asGenerated->parameter);
         if (quadCollection == NULL) {
             return NULL;
         }

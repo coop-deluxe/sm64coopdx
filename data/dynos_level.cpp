@@ -228,7 +228,7 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
 const void *DynOS_Level_GetScript(s32 aLevel) {
     DynOS_Level_Init();
     if (aLevel != LEVEL_WDW) {
-        LevelScript* script = DynOS_Lvl_Get("");
+        LevelScript* script = DynOS_Lvl_GetScript("");
         sDynosCurrentLevelNum = aLevel;
         sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
         DynOS_Level_ParseScript(script, DynOS_Level_PreprocessScript);

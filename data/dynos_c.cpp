@@ -91,7 +91,7 @@ const void* dynos_geolayout_get(const char *name) {
 // -- collisions -- //
 
 void dynos_add_collision(const char *modPath, const char* collisionName) {
-    DynOS_Col_Add(modPath, collisionName);
+    DynOS_Col_Activate(modPath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
@@ -101,26 +101,26 @@ Collision* dynos_collision_get(const char* collisionName) {
 // -- levels -- //
 
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
-    DynOS_Lvl_Add(modIndex, modPath, levelName);
+    DynOS_Lvl_Activate(modIndex, modPath, levelName);
 }
 
 LevelScript* dynos_level_get(const char* levelName) {
-    return DynOS_Lvl_Get(levelName);
+    return DynOS_Lvl_GetScript(levelName);
 }
 
 const char* dynos_level_get_token(u32 index) {
-    return DynOS_Lvl_Get_Token(index);
+    return DynOS_Lvl_GetToken(index);
 }
 
-struct MovtexQuadCollection *dynos_level_movtexqc_getfromindex(s32 index) {
-    DataNode<MovtexQC> *node = DynOS_Lvl_MovtexQuadCollection_GetFromIndex(index);
+struct MovtexQuadCollection *dynos_level_get_movtexqc(s32 index) {
+    DataNode<MovtexQC> *node = DynOS_Lvl_GetMovtexQuadCollection(index);
     if (node == NULL) { return NULL; }
     
     return node->mData;
 }
 
 void dynos_level_load_background(void *ptr) {
-    DynOS_Lvl_Load_Background(ptr);
+    DynOS_Lvl_LoadBackground(ptr);
 }
 
 }

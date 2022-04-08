@@ -38,7 +38,7 @@ Collision* dynos_collision_get(const char* collisionName);
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName);
 LevelScript* dynos_level_get(const char* levelName);
 const char* dynos_level_get_token(u32 index);
-struct MovtexQuadCollection *dynos_level_movtexqc_getfromindex(s32 index);
+struct MovtexQuadCollection *dynos_level_get_movtexqc(s32 index);
 void dynos_level_load_background(void *ptr);
 
 #endif

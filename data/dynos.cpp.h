@@ -712,14 +712,6 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId);
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea);
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 
-void DynOS_Lvl_Add(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName);
-LevelScript* DynOS_Lvl_Get(const char* levelName);
-s32 DynOS_Lvl_GetModIndex(void* levelScript);
-const char* DynOS_Lvl_Get_Token(u32 index);
-DataNode<TexData> *DynOS_Lvl_Texture_Get(void *aPtr);
-DataNode<MovtexQC> *DynOS_Lvl_MovtexQuadCollection_GetFromIndex(s32 index);
-void DynOS_Lvl_Load_Background(void *aPtr);
-
 //
 // Warps
 //
@@ -733,14 +725,7 @@ void DynOS_Warp_SetParam(s32 aLevel, s32 aIndex);
 const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 
 //
-// Collisions
-//
-
-void DynOS_Col_Add(const SysPath &aPackFolder, const char *aCollisionName);
-Collision* DynOS_Col_Get(const char* collisionName);
-
-//
-// Managers
+// Builtin
 //
 
 const void*      DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName);
@@ -754,6 +739,26 @@ const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
+
+//
+// Lvl Manager
+//
+
+Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray();
+void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName);
+LevelScript* DynOS_Lvl_GetScript(const char* levelName);
+s32 DynOS_Lvl_GetModIndex(void* levelScript);
+DataNode<TexData> *DynOS_Lvl_GetTexture(void *aPtr);
+const char* DynOS_Lvl_GetToken(u32 index);
+DataNode<MovtexQC> *DynOS_Lvl_GetMovtexQuadCollection(s32 index);
+void DynOS_Lvl_LoadBackground(void *aPtr);
+
+//
+// Col Manager
+//
+
+void DynOS_Col_Activate(const SysPath &aPackFolder, const char *aCollisionName);
+Collision* DynOS_Col_Get(const char* collisionName);
 
 //
 // Bin
