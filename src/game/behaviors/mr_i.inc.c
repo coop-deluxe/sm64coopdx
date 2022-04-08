@@ -116,7 +116,8 @@ void mr_i_act_3(void) {
             o->oMrISize = sp1C * 0.6;
             if (o->oBehParams2ndByte) {
                 o->oPosY += 100.0f;
-                spawn_default_star(1370, 2000.0f, -320.0f);
+                f32* starPos = gStarPositions.MrIStarPos;
+                spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 obj_mark_for_deletion(o);
             } else
                 cur_obj_spawn_loot_blue_coin();

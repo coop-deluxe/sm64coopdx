@@ -240,11 +240,15 @@ void king_bobomb_act_8(void) {
         //cur_obj_spawn_star_at_y_offset(2000.0f, 4500.0f, -4500.0f, 200.0f);
         f32 objectPosY = o->oPosY;
         o->oPosY += 200.0f + gDebugInfo[5][0];
-        star = spawn_default_star(2000.0f, 4500.0f, -4500.0f);
+
+        f32* starPos = gStarPositions.KingBobombStarPos;
+        star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
+
         o->oPosY = objectPosY;
 #else
         o->oPosY += 100.0f;
-        star = spawn_default_star(2000.0f, 4500.0f, -4500.0f);
+        f32* starPos = gStarPositions.KingBobombStarPos;
+        star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
 #endif
         // If we're not the closet to King-Bombomb,
         // Don't play this cutscene!

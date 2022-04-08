@@ -31,6 +31,7 @@
 #include "save_file.h"
 #include "spawn_object.h"
 #include "spawn_sound.h"
+#include "hardcoded.h"
 #include "engine/surface_load.h"
 #include "pc/network/network.h"
 #include "pc/network/reservation_area.h"

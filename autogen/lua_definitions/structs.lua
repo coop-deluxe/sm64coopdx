@@ -1427,6 +1427,34 @@
 --- @field public velYBase integer
 --- @field public velYRange integer
 
+--- @class StarPositions
+--- @field public BalconyBooStarPos Vec3f
+--- @field public BigBullyStarPos Vec3f
+--- @field public BigBullyTrioStarPos Vec3f
+--- @field public BigPiranhasStarPos Vec3f
+--- @field public CcmSlideStarPos Vec3f
+--- @field public ChillBullyStarPos Vec3f
+--- @field public EyerockStarPos Vec3f
+--- @field public GhostHuntBooStarPos Vec3f
+--- @field public JetstreamRingStarPos Vec3f
+--- @field public KingBobombStarPos Vec3f
+--- @field public KingWhompStarPos Vec3f
+--- @field public KleptoStarPos Vec3f
+--- @field public KoopaBobStarPos Vec3f
+--- @field public KoopaThiStarPos Vec3f
+--- @field public MantaRayStarPos Vec3f
+--- @field public MerryGoRoundStarPos Vec3f
+--- @field public MrIStarPos Vec3f
+--- @field public PssSlideStarPos Vec3f
+--- @field public RacingPenguinStarPos Vec3f
+--- @field public SnowmanHeadStarPos Vec3f
+--- @field public TreasureChestStarPos Vec3f
+--- @field public TreasureJrbStarPos Vec3f
+--- @field public TuxieMotherStarPos Vec3f
+--- @field public UkikiCageStarPos Vec3f
+--- @field public UnagiStarPos Vec3f
+--- @field public WigglerStarPos Vec3f
+
 --- @class Struct802A272C
 --- @field public vecF Vec3f
 --- @field public vecS Vec3s

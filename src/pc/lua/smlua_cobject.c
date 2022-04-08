@@ -3,6 +3,7 @@
 #include "game/level_update.h"
 #include "game/area.h"
 #include "game/mario.h"
+#include "game/hardcoded.h"
 #include "audio/external.h"
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -563,6 +564,11 @@ void smlua_cobject_init_globals(void) {
     {
         smlua_push_object(L, LOT_SERVERSETTINGS, &gServerSettings);
         lua_setglobal(L, "gServerSettings");
+    }
+
+    {
+        smlua_push_object(L, LOT_STARPOSITIONS, &gStarPositions);
+        lua_setglobal(L, "gStarPositions");
     }
 
 }

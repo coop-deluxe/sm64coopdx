@@ -24,6 +24,7 @@
 #include "sm64.h"
 #include "sound_init.h"
 #include "rumble_init.h"
+#include "hardcoded.h"
 
 #include "pc/configfile.h"
 #include "pc/network/network.h"
@@ -2244,7 +2245,8 @@ void pss_end_slide(struct MarioState *m) {
             // PSS secret star uses oBehParams to spawn
             s32 tmp = m->marioObj->oBehParams;
             m->marioObj->oBehParams = (1 << 24);
-            spawn_default_star(-6358.0f, -4300.0f, 4700.0f);
+            f32* starPos = gStarPositions.PssSlideStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
             m->marioObj->oBehParams = tmp;
         }
         gPssSlideStarted = FALSE;
