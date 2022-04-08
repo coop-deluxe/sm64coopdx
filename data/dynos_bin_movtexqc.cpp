@@ -84,7 +84,7 @@ DataNode<MovtexQC>* DynOS_MovtexQC_Load(FILE *aFile, GfxData *aGfxData) {
     for (u32 i = 0; i != _Node->mSize; ++i) {
         _Node->mData[i].id = ReadBytes<s16>(aFile);
         u32 _Value = ReadBytes<u32>(aFile);
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, false);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value);
         _Node->mData[i].quadArraySegmented = (Movtex*)_Ptr;
     }
 

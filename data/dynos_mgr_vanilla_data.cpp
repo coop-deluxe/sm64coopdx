@@ -2,6 +2,22 @@
 extern "C" {
 #include "behavior_table.h"
 #include "levels/scripts.h"
+#include "object_fields.h"
+#include "engine/level_script.h"
+#include "game/object_helpers.h"
+#include "game/segment2.h"
+#include "game/level_geo.h"
+#include "game/level_update.h"
+#include "game/moving_texture.h"
+#include "game/paintings.h"
+#include "game/geo_misc.h"
+#include "game/mario_misc.h"
+#include "game/mario_actions_cutscene.h"
+#include "game/screen_transition.h"
+#include "game/object_list_processor.h"
+#include "game/behavior_actions.h"
+#include "game/rendering_graph_node.h"
+#include "game/skybox.h"
 
 #include "levels/bbh/header.h"
 #include "levels/bitdw/header.h"
@@ -38,7 +54,6 @@ extern "C" {
 
 #include "textures.h"
 }
-
 
 #define MGR_FIND_DATA(_DataTable, _Cast)                               \
     size_t _count = sizeof(_DataTable) / (2 * sizeof(_DataTable[0]));  \
@@ -1037,4 +1052,97 @@ const Texture* DynOS_Mgr_VanillaTex_GetFromName(const char* aDataName) {
 
 const char* DynOS_Mgr_VanillaTex_GetFromData(const Texture* aData) {
     MGR_FIND_NAME(sDynosVanillaTexs);
+}
+
+  ////////////////////
+ // Functions Ptrs //
+////////////////////
+
+static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
+    if (callContext == GEO_CONTEXT_RENDER) {
+        struct Object *obj = (struct Object *) gCurGraphNodeObject;
+        struct GraphNodeRotation *rotNode = (struct GraphNodeRotation *) ((struct GraphNode *) node)->next;
+        rotNode->rotation[0] = 0;
+        rotNode->rotation[1] = obj->oAnimState;
+        rotNode->rotation[2] = 0;
+        obj->oAnimState += 0x0800;
+    }
+    return NULL;
+}
+
+#define define_vanilla_func(tex) (const void*) #tex, (const void*) tex
+static const void* sDynosVanillaFuncs[] = {
+    define_vanilla_func(geo_mirror_mario_set_alpha),
+    define_vanilla_func(geo_switch_mario_stand_run),
+    define_vanilla_func(geo_switch_mario_eyes),
+    define_vanilla_func(geo_mario_tilt_torso),
+    define_vanilla_func(geo_mario_head_rotation),
+    define_vanilla_func(geo_switch_mario_hand),
+    define_vanilla_func(geo_mario_hand_foot_scaler),
+    define_vanilla_func(geo_switch_mario_cap_effect),
+    define_vanilla_func(geo_switch_mario_cap_on_off),
+    define_vanilla_func(geo_mario_rotate_wing_cap_wings),
+    define_vanilla_func(geo_switch_mario_hand_grab_pos),
+    define_vanilla_func(geo_render_mirror_mario),
+    define_vanilla_func(geo_mirror_mario_backface_culling),
+    define_vanilla_func(geo_update_projectile_pos_from_parent),
+    define_vanilla_func(geo_update_layer_transparency),
+    define_vanilla_func(geo_switch_anim_state),
+    define_vanilla_func(geo_switch_area),
+    define_vanilla_func(geo_camera_main),
+    define_vanilla_func(geo_camera_fov),
+    define_vanilla_func(geo_envfx_main),
+    define_vanilla_func(geo_skybox_main),
+    define_vanilla_func(geo_wdw_set_initial_water_level),
+    define_vanilla_func(geo_movtex_pause_control),
+    define_vanilla_func(geo_movtex_draw_water_regions),
+    define_vanilla_func(geo_movtex_draw_nocolor),
+    define_vanilla_func(geo_movtex_draw_colored),
+    define_vanilla_func(geo_movtex_draw_colored_no_update),
+    define_vanilla_func(geo_movtex_draw_colored_2_no_update),
+    define_vanilla_func(geo_movtex_update_horizontal),
+    define_vanilla_func(geo_movtex_draw_colored_no_update),
+    define_vanilla_func(geo_painting_draw),
+    define_vanilla_func(geo_painting_update),
+    define_vanilla_func(geo_exec_inside_castle_light),
+    define_vanilla_func(geo_exec_flying_carpet_timer_update),
+    define_vanilla_func(geo_exec_flying_carpet_create),
+    define_vanilla_func(geo_exec_cake_end_screen),
+    define_vanilla_func(geo_cannon_circle_base),
+    define_vanilla_func(geo_move_mario_part_from_parent),
+    define_vanilla_func(geo_bits_bowser_coloring),
+    define_vanilla_func(geo_update_body_rot_from_parent),
+    define_vanilla_func(geo_switch_bowser_eyes),
+    define_vanilla_func(geo_switch_tuxie_mother_eyes),
+    define_vanilla_func(geo_update_held_mario_pos),
+    define_vanilla_func(geo_snufit_move_mask),
+    define_vanilla_func(geo_snufit_scale_body),
+    define_vanilla_func(geo_scale_bowser_key),
+    (const void *) "geo_rotate_coin", (const void *) geo_rotate_3d_coin,
+    define_vanilla_func(geo_offset_klepto_held_object),
+    define_vanilla_func(geo_switch_peach_eyes),
+    // coop-specific
+    define_vanilla_func(geo_mario_set_player_colors),
+    define_vanilla_func(geo_movtex_draw_water_regions_ext),
+    define_vanilla_func(lvl_init_or_update),
+};
+
+const void* DynOS_Mgr_VanillaFunc_GetFromName(const char* aDataName) {
+    MGR_FIND_DATA(sDynosVanillaFuncs, (const void*));
+}
+
+const void* DynOS_Mgr_VanillaFunc_GetFromIndex(s32 aIndex) {
+    size_t count = sizeof(sDynosVanillaFuncs) / (2 * sizeof(sDynosVanillaFuncs[0]));
+    if (aIndex < 0 || aIndex >= count) { return NULL; }
+    return (const void*)sDynosVanillaFuncs[aIndex * 2 + 1];
+}
+
+s32 DynOS_Mgr_VanillaFunc_GetIndexFromData(const void* aData) {
+    size_t count = sizeof(sDynosVanillaFuncs) / (2 * sizeof(sDynosVanillaFuncs[0]));
+    for (s32 i = 0; i < count; i++) {
+        if ((const void*)sDynosVanillaFuncs[i * 2 + 1] == aData) {
+            return i;
+        }
+    }
+    return -1;
 }

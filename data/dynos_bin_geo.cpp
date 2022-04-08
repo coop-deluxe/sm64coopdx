@@ -27,10 +27,10 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
         return integerValue;
     }
 
-    // Geo functions
-    void *_GeoFunctionPtr = DynOS_Geo_GetFunctionPointerFromName(_Arg);
-    if (_GeoFunctionPtr != NULL) {
-        return (s64) _GeoFunctionPtr;
+    // Built-in functions
+    const void *_FunctionPtr = DynOS_Mgr_VanillaFunc_GetFromName(_Arg.begin());
+    if (_FunctionPtr != NULL) {
+        return (s64) _FunctionPtr;
     }
 
     // Layer constants
@@ -440,7 +440,7 @@ void DynOS_Geo_Load(FILE *aFile, GfxData *aGfxData) {
     _Node->mData = New<GeoLayout>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = ReadBytes<u32>(aFile);
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, false);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;
         } else {

@@ -21,42 +21,6 @@ static void ClearLvlDataNodes(DataNodes<T> &aDataNodes) {
     }
 }
 
-//
-// Lvl Functions
-//
-
-static const Array<Pair<const char *, void *>> &__LvlFunctions() {
-#define define_lvl_function(name) { #name, (void *) name }
-static const Array<Pair<const char *, void *>> sLvlFunctions = {
-    define_lvl_function(lvl_init_or_update)
-};
-#undef define_lvl_function
-return sLvlFunctions;
-}
-#define sLvlFunctions __LvlFunctions()
-
-void *DynOS_Lvl_GetFunctionPointerFromName(const String &aName) {
-    for (const auto &_LvlFunction : sLvlFunctions) {
-        if (aName == _LvlFunction.first) {
-            return _LvlFunction.second;
-        }
-    };
-    return NULL;
-}
-
-s32 DynOS_Lvl_GetFunctionIndex(const void *aPtr) {
-    for (const auto &_LvlFunction : sLvlFunctions) {
-        if (_LvlFunction.second == aPtr) {
-            return (s32) (&_LvlFunction - sLvlFunctions.begin());
-        }
-    }
-    return -1;
-}
-
-void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex) {
-    return sLvlFunctions[aIndex].second;
-}
-
   /////////////
  // Parsing //
 /////////////
@@ -1421,10 +1385,10 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         _Arg = _Arg.SubString(0, _Plus);
     }
 
-    // Lvl functions
-    void *_LvlFunctionPtr = DynOS_Lvl_GetFunctionPointerFromName(_Arg);
-    if (_LvlFunctionPtr != NULL) {
-        return (LevelScript) _LvlFunctionPtr;
+    // Built-in functions
+    const void *_FunctionPtr = DynOS_Mgr_VanillaFunc_GetFromName(_Arg.begin());
+    if (_FunctionPtr != NULL) {
+        return (s64) _FunctionPtr;
     }
 
     bool constantFound = false;
@@ -1999,7 +1963,7 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
     // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = ReadBytes<u32>(aFile);
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, true);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;
         } else {

@@ -695,9 +695,6 @@ s32 DynOS_Geo_GetActorCount();
 const char *DynOS_Geo_GetActorName(s32 aIndex);
 const void *DynOS_Geo_GetActorLayout(s32 aIndex);
 s32 DynOS_Geo_GetActorIndex(const void *aGeoLayout);
-void *DynOS_Geo_GetFunctionPointerFromName(const String &aName);
-void *DynOS_Geo_GetFunctionPointerFromIndex(s32 aIndex);
-s32 DynOS_Geo_GetFunctionIndex(const void *aPtr);
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
 
 //
@@ -754,6 +751,9 @@ const Collision* DynOS_Mgr_VanillaLvlCol_GetFromName(const char* aDataName);
 const char*      DynOS_Mgr_VanillaLvlCol_GetFromData(const Collision* aData);
 const Texture*   DynOS_Mgr_VanillaTex_GetFromName(const char* aDataName);
 const char*      DynOS_Mgr_VanillaTex_GetFromData(const Texture* aData);
+const void*      DynOS_Mgr_VanillaFunc_GetFromName(const char* aDataName);
+const void*      DynOS_Mgr_VanillaFunc_GetFromIndex(s32 aIndex);
+s32              DynOS_Mgr_VanillaFunc_GetIndexFromData(const void* aData);
 
 //
 // Bin
@@ -837,7 +837,7 @@ void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData);
 
 void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData);
 void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData);
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl);
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue);
 
 void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData);
 
@@ -847,8 +847,6 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder);
 DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent);
 GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevelName);
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
-s32 DynOS_Lvl_GetFunctionIndex(const void *aPtr);
-void *DynOS_Lvl_GetFunctionPointerFromIndex(s32 aIndex);
 s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found);
 
 #endif

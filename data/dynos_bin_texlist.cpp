@@ -76,7 +76,7 @@ DataNode<TexData*>* DynOS_TexList_Load(FILE *aFile, GfxData *aGfxData) {
     _Node->mData = New<TexData*>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = ReadBytes<u32>(aFile);
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, false);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value);
         if (_Ptr == NULL) {
             PrintError("Could not read texture in texlist");
         } else {

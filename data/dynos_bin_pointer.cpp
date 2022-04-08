@@ -208,19 +208,11 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
         }
     }
 
-    // Geo function
-    s32 _GeoFunctionIndex = DynOS_Geo_GetFunctionIndex(aPtr);
+    // Built-in functions
+    s32 _GeoFunctionIndex = DynOS_Mgr_VanillaFunc_GetIndexFromData(aPtr);
     if (_GeoFunctionIndex != -1) {
         WriteBytes<u32>(aFile, FUNCTION_CODE);
         WriteBytes<s32>(aFile, _GeoFunctionIndex);
-        return;
-    }
-
-    // Lvl function
-    s32 _LvlFunctionIndex = DynOS_Lvl_GetFunctionIndex(aPtr);
-    if (_LvlFunctionIndex != -1) {
-        WriteBytes<u32>(aFile, FUNCTION_CODE);
-        WriteBytes<s32>(aFile, _LvlFunctionIndex);
         return;
     }
 
@@ -407,7 +399,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     return NULL;
 }
 
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl) {
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue) {
 
     // LUAV
     if (aValue == LUA_VAR_CODE) {
@@ -425,9 +417,7 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, bool isLvl)
     // FUNC
     if (aValue == FUNCTION_CODE) {
         s32 _FunctionIndex = ReadBytes<s32>(aFile);
-        return isLvl
-             ? DynOS_Lvl_GetFunctionPointerFromIndex(_FunctionIndex)
-             : DynOS_Geo_GetFunctionPointerFromIndex(_FunctionIndex);
+        return (void*) DynOS_Mgr_VanillaFunc_GetFromIndex(_FunctionIndex);
     }
 
     // PNTR
