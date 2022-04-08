@@ -28,6 +28,9 @@ gGlobalSyncTable = {}
 --- @type SyncTable[]
 gPlayerSyncTable = {}
 
+--- @type StarPositions
+gStarPositions = {}
+
 -----------
 -- hooks --
 -----------

@@ -84,10 +84,12 @@ void tuxies_mother_act_1(void) {
                 // or 1, which is not affected by the bitwise AND.
                 o->prevObj->OBJECT_FIELD_S32(o->oInteractionSubtype) &= ~INT_SUBTYPE_DROP_IMMEDIATELY;
                 obj_set_behavior(o->prevObj, bhvUnused20E0);
+
+                f32* starPos = gStarPositions.TuxieMotherStarPos;
 #ifndef VERSION_JP
-                cur_obj_spawn_star_at_y_offset(3167.0f, -4300.0f, 5108.0f, 200.0f);
+                cur_obj_spawn_star_at_y_offset(starPos[0], starPos[1], starPos[2], 200.0f);
 #else
-                spawn_default_star(3500.0f, -4300.0f, 4650.0f);
+                spawn_default_star(starPos[0], starPos[1], starPos[2]);
 #endif
                 o->oAction = 2;
                 network_send_object(o);

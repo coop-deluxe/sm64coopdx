@@ -20,6 +20,7 @@ in_files = [
     'src/pc/lua/utils/smlua_collision_utils.h',
     'src/game/spawn_sound.h',
     'src/pc/network/network.h',
+    'src/game/hardcoded.h',
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'

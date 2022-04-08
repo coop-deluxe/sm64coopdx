@@ -46,6 +46,7 @@
 - [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
+- [StarPositions](#StarPositions)
 - [Struct802A272C](#Struct802A272C)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
@@ -1796,6 +1797,41 @@
 | sizeRange | `number` |  |
 | velYBase | `integer` |  |
 | velYRange | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [StarPositions](#StarPositions)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| BalconyBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigBullyTrioStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigPiranhasStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| CcmSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| ChillBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| EyerockStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| GhostHuntBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| JetstreamRingStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KingBobombStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KingWhompStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KleptoStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KoopaBobStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KoopaThiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MantaRayStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MerryGoRoundStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MrIStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| PssSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| RacingPenguinStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| SnowmanHeadStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TreasureChestStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TreasureJrbStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TuxieMotherStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| UkikiCageStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| UnagiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| WigglerStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 

@@ -45,6 +45,7 @@
 #include "spawn_sound.h"
 #include "game/rng_position.h"
 #include "rumble_init.h"
+#include "hardcoded.h"
 #include "pc/lua/utils/smlua_model_utils.h"
 
 #define o gCurrentObject

@@ -15,6 +15,7 @@
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/game/spawn_sound.h"
 #include "src/pc/network/network.h"
+#include "src/game/hardcoded.h"
 
 #include "include/object_fields.h"
 
@@ -1573,6 +1574,36 @@ static struct LuaObjectField sSpawnParticlesInfoFields[LUA_SPAWN_PARTICLES_INFO_
     { "velYRange",       LVT_S8,  offsetof(struct SpawnParticlesInfo, velYRange),       false, LOT_NONE },
 };
 
+#define LUA_STAR_POSITIONS_FIELD_COUNT 26
+static struct LuaObjectField sStarPositionsFields[LUA_STAR_POSITIONS_FIELD_COUNT] = {
+    { "BalconyBooStarPos",    LVT_COBJECT, offsetof(struct StarPositions, BalconyBooStarPos),    true, LOT_VEC3F },
+    { "BigBullyStarPos",      LVT_COBJECT, offsetof(struct StarPositions, BigBullyStarPos),      true, LOT_VEC3F },
+    { "BigBullyTrioStarPos",  LVT_COBJECT, offsetof(struct StarPositions, BigBullyTrioStarPos),  true, LOT_VEC3F },
+    { "BigPiranhasStarPos",   LVT_COBJECT, offsetof(struct StarPositions, BigPiranhasStarPos),   true, LOT_VEC3F },
+    { "CcmSlideStarPos",      LVT_COBJECT, offsetof(struct StarPositions, CcmSlideStarPos),      true, LOT_VEC3F },
+    { "ChillBullyStarPos",    LVT_COBJECT, offsetof(struct StarPositions, ChillBullyStarPos),    true, LOT_VEC3F },
+    { "EyerockStarPos",       LVT_COBJECT, offsetof(struct StarPositions, EyerockStarPos),       true, LOT_VEC3F },
+    { "GhostHuntBooStarPos",  LVT_COBJECT, offsetof(struct StarPositions, GhostHuntBooStarPos),  true, LOT_VEC3F },
+    { "JetstreamRingStarPos", LVT_COBJECT, offsetof(struct StarPositions, JetstreamRingStarPos), true, LOT_VEC3F },
+    { "KingBobombStarPos",    LVT_COBJECT, offsetof(struct StarPositions, KingBobombStarPos),    true, LOT_VEC3F },
+    { "KingWhompStarPos",     LVT_COBJECT, offsetof(struct StarPositions, KingWhompStarPos),     true, LOT_VEC3F },
+    { "KleptoStarPos",        LVT_COBJECT, offsetof(struct StarPositions, KleptoStarPos),        true, LOT_VEC3F },
+    { "KoopaBobStarPos",      LVT_COBJECT, offsetof(struct StarPositions, KoopaBobStarPos),      true, LOT_VEC3F },
+    { "KoopaThiStarPos",      LVT_COBJECT, offsetof(struct StarPositions, KoopaThiStarPos),      true, LOT_VEC3F },
+    { "MantaRayStarPos",      LVT_COBJECT, offsetof(struct StarPositions, MantaRayStarPos),      true, LOT_VEC3F },
+    { "MerryGoRoundStarPos",  LVT_COBJECT, offsetof(struct StarPositions, MerryGoRoundStarPos),  true, LOT_VEC3F },
+    { "MrIStarPos",           LVT_COBJECT, offsetof(struct StarPositions, MrIStarPos),           true, LOT_VEC3F },
+    { "PssSlideStarPos",      LVT_COBJECT, offsetof(struct StarPositions, PssSlideStarPos),      true, LOT_VEC3F },
+    { "RacingPenguinStarPos", LVT_COBJECT, offsetof(struct StarPositions, RacingPenguinStarPos), true, LOT_VEC3F },
+    { "SnowmanHeadStarPos",   LVT_COBJECT, offsetof(struct StarPositions, SnowmanHeadStarPos),   true, LOT_VEC3F },
+    { "TreasureChestStarPos", LVT_COBJECT, offsetof(struct StarPositions, TreasureChestStarPos), true, LOT_VEC3F },
+    { "TreasureJrbStarPos",   LVT_COBJECT, offsetof(struct StarPositions, TreasureJrbStarPos),   true, LOT_VEC3F },
+    { "TuxieMotherStarPos",   LVT_COBJECT, offsetof(struct StarPositions, TuxieMotherStarPos),   true, LOT_VEC3F },
+    { "UkikiCageStarPos",     LVT_COBJECT, offsetof(struct StarPositions, UkikiCageStarPos),     true, LOT_VEC3F },
+    { "UnagiStarPos",         LVT_COBJECT, offsetof(struct StarPositions, UnagiStarPos),         true, LOT_VEC3F },
+    { "WigglerStarPos",       LVT_COBJECT, offsetof(struct StarPositions, WigglerStarPos),       true, LOT_VEC3F },
+};
+
 #define LUA_STRUCT802_A272_C_FIELD_COUNT 2
 static struct LuaObjectField sStruct802A272CFields[LUA_STRUCT802_A272_C_FIELD_COUNT] = {
     { "vecF", LVT_COBJECT, offsetof(struct Struct802A272C, vecF), true, LOT_VEC3F },
@@ -1738,6 +1769,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SOUNDSTATE,                sSoundStateFields,                LUA_SOUND_STATE_FIELD_COUNT                  },
     { LOT_SPAWNINFO,                 sSpawnInfoFields,                 LUA_SPAWN_INFO_FIELD_COUNT                   },
     { LOT_SPAWNPARTICLESINFO,        sSpawnParticlesInfoFields,        LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT         },
+    { LOT_STARPOSITIONS,             sStarPositionsFields,             LUA_STAR_POSITIONS_FIELD_COUNT               },
     { LOT_STRUCT802A272C,            sStruct802A272CFields,            LUA_STRUCT802_A272_C_FIELD_COUNT             },
     { LOT_SURFACE,                   sSurfaceFields,                   LUA_SURFACE_FIELD_COUNT                      },
     { LOT_TEXTUREINFO,               sTextureInfoFields,               LUA_TEXTURE_INFO_FIELD_COUNT                 },

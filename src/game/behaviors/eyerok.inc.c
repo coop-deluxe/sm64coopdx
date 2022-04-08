@@ -187,7 +187,8 @@ static void eyerok_boss_act_die(void) {
     /*struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (o->oTimer == 60) {
         if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, DIALOG_118, eyerok_boss_act_die_continue_dialog)) {
-            spawn_default_star(0.0f, -900.0f, -3700.0f);
+            f32* starPos = gStarPositions.EyerockStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
         } else {
             o->oTimer -= 1;
         }
@@ -197,7 +198,8 @@ static void eyerok_boss_act_die(void) {
     }*/
     stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
     if (network_owns_object(o)) {
-        spawn_default_star(0.0f, -900.0f, -3700.0f);
+        f32* starPos = gStarPositions.EyerockStarPos;
+        spawn_default_star(starPos[0], starPos[1], starPos[2]);
         network_send_object_reliability(o, TRUE);
     }
     o->oAction = EYEROK_BOSS_ACT_DEAD;

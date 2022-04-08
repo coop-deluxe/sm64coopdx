@@ -254,7 +254,10 @@ void bhv_treasure_chest_jrb_loop(void) {
         case 1:
             if (o->oTimer == 60) {
                 spawn_mist_particles();
-                spawn_networked_default_star(-1800.0f, -2500.0f, -1700.0f, o->oTreasureChestLastNetworkPlayerIndex);
+
+                f32* starPos = gStarPositions.TreasureJrbStarPos;
+                spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oTreasureChestLastNetworkPlayerIndex);
+
                 o->oAction = 2;
             }
             break;
@@ -319,7 +322,10 @@ void bhv_treasure_chest_loop(void) {
         case 1:
             if (o->oTimer == 60) {
                 spawn_mist_particles();
-                spawn_networked_default_star(-1900.0f, -4000.0f, -1400.0f, o->oTreasureChestLastNetworkPlayerIndex);
+
+                f32* starPos = gStarPositions.TreasureJrbStarPos;
+                spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oTreasureChestLastNetworkPlayerIndex);
+
                 o->oAction = 2;
             }
             break;
