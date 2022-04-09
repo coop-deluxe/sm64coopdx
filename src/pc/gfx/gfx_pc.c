@@ -524,7 +524,7 @@ static inline void load_texture(const char *fullpath) {
         }
     }
 
-    fprintf(stderr, "could not load texture: `%s`\n", fullpath);
+    fprintf(stderr, "Could not load texture: `%s`\n", fullpath);
     // replace with missing texture
     gfx_rapi->upload_texture(missing_texture, MISSING_W, MISSING_H);
 }
@@ -578,7 +578,7 @@ static bool preload_texture(void *user, const char *path) {
     // get the format and size from filename
     u8 fmt, siz;
     if (!texname_to_texformat(texname, &fmt, &siz)) {
-        fprintf(stderr, "unknown texture format: `%s`, skipping\n", texname);
+        fprintf(stderr, "Unknown texture format: `%s`, skipping\n", texname);
         return true; // just skip it, might be a stray skybox or something
     }
 
@@ -590,8 +590,11 @@ static bool preload_texture(void *user, const char *path) {
     assert(actualname);
 
     struct TextureHashmapNode *n;
-    if (!gfx_texture_cache_lookup(0, &n, actualname, fmt, siz))
+    if (!gfx_texture_cache_lookup(0, &n, actualname, fmt, siz)) {
+        //fprintf(stdout, "Loading new texture: `%s.`\n", actualname);
         load_texture(path); // new texture, load it
+    }
+    
 
     return true;
 }
