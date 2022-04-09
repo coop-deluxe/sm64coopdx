@@ -440,6 +440,9 @@
 --- @field public unusedVec2 Vec3s
 --- @field public yaw integer
 
+--- @class LevelValues
+--- @field public entryLevel LevelNum
+
 --- @class LinearTransitionPoint
 --- @field public dist number
 --- @field public focus Vec3f

@@ -1,5 +1,9 @@
 #include "hardcoded.h"
 
+struct LevelValues gLevelValues = {
+    .entryLevel = LEVEL_CASTLE_GROUNDS,
+};
+
 struct StarPositions gStarPositions = {
     .KoopaBobStarPos      = {  3030.0f,  4500.0f, -4600.0f },
     .KoopaThiStarPos      = {  7100.0f, -1300.0f, -6000.0f },

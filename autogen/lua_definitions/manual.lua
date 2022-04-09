@@ -31,6 +31,9 @@ gPlayerSyncTable = {}
 --- @type StarPositions
 gStarPositions = {}
 
+--- @type LevelValues
+gLevelValues = {}
+
 -----------
 -- hooks --
 -----------

@@ -530,6 +530,11 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
+#define LUA_LEVEL_VALUES_FIELD_COUNT 1
+static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
+    { "entryLevel", LVT_S32, offsetof(struct LevelValues, entryLevel), false, LOT_NONE },
+};
+
 #define LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT 5
 static struct LuaObjectField sLinearTransitionPointFields[LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT] = {
     { "dist",  LVT_F32,     offsetof(struct LinearTransitionPoint, dist),  false, LOT_NONE  },
@@ -1750,6 +1755,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_HANDHELDSHAKEPOINT,        sHandheldShakePointFields,        LUA_HANDHELD_SHAKE_POINT_FIELD_COUNT         },
     { LOT_INSTANTWARP,               sInstantWarpFields,               LUA_INSTANT_WARP_FIELD_COUNT                 },
     { LOT_LAKITUSTATE,               sLakituStateFields,               LUA_LAKITU_STATE_FIELD_COUNT                 },
+    { LOT_LEVELVALUES,               sLevelValuesFields,               LUA_LEVEL_VALUES_FIELD_COUNT                 },
     { LOT_LINEARTRANSITIONPOINT,     sLinearTransitionPointFields,     LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT      },
     { LOT_MARIOANIMATION,            sMarioAnimationFields,            LUA_MARIO_ANIMATION_FIELD_COUNT              },
     { LOT_MARIOBODYSTATE,            sMarioBodyStateFields,            LUA_MARIO_BODY_STATE_FIELD_COUNT             },

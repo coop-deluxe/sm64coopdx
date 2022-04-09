@@ -7,6 +7,7 @@
 #include "pc/utils/misc.h"
 #include "game/area.h"
 #include "game/level_info.h"
+#include "game/hardcoded.h"
 #include "pc/lua/smlua_hooks.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
@@ -219,7 +220,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->currLevelAreaSeqId = 0;
     np->currLevelSyncValid = false;
     np->currAreaSyncValid = false;
-    network_player_update_course_level(np, 0, 0, 16, 1);
+    network_player_update_course_level(np, 0, 0, gLevelValues.entryLevel, 1);
 
     // update visuals
     np->fadeOpacity = 0;

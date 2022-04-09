@@ -1,5 +1,10 @@
 #ifndef HARDCODED_H
 #include "types.h"
+#include "level_table.h"
+
+struct LevelValues {
+    enum LevelNum entryLevel;
+};
 
 struct StarPositions {
     Vec3f KoopaBobStarPos;
@@ -30,6 +35,7 @@ struct StarPositions {
     Vec3f JetstreamRingStarPos;
 };
 
+extern struct LevelValues gLevelValues;
 extern struct StarPositions gStarPositions;
 
 #endif

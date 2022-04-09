@@ -25,6 +25,7 @@
 - [HandheldShakePoint](#HandheldShakePoint)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
+- [LevelValues](#LevelValues)
 - [LinearTransitionPoint](#LinearTransitionPoint)
 - [MarioAnimDmaRelatedThing](#MarioAnimDmaRelatedThing)
 - [MarioAnimation](#MarioAnimation)
@@ -669,6 +670,16 @@
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec2 | [Vec3s](structs.md#Vec3s) | read-only |
 | yaw | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [LevelValues](#LevelValues)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 
 [:arrow_up_small:](#)
 

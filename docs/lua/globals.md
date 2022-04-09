@@ -65,6 +65,13 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
+## [gLevelValues](#gLevelValues)
+`gLevelValues`'s fields are listed in [LevelValue](structs.md#LevelValue).
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gServerSettings](#gServerSettings)
 `gServerSettings`'s fields are listed in [ServerSettings](structs.md#ServerSettings).
 

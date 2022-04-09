@@ -37,6 +37,7 @@
 #include "sound_init.h"
 #include "rumble_init.h"
 #include "obj_behaviors.h"
+#include "hardcoded.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
@@ -1533,7 +1534,7 @@ void update_mario_inputs(struct MarioState *m) {
         gCurrCreditsEntry = NULL;
         gCurrActStarNum = 0;
         gCurrActNum = 0;
-        gChangeLevel = 16;
+        gChangeLevel = gLevelValues.entryLevel;
     }
 
     if (m->playerIndex == 0) {

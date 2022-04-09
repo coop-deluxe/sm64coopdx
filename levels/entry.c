@@ -14,7 +14,6 @@
 
 const LevelScript level_script_entry[] = {
     SET_REG(/*value*/ LEVEL_CASTLE_GROUNDS),
-    //JUMP(/*target*/ level_main_scripts_entry),
     EXECUTE(/*seg*/ 0x14, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ level_main_scripts_entry),
     JUMP(level_script_entry),
 

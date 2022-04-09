@@ -571,6 +571,11 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, "gStarPositions");
     }
 
+    {
+        smlua_push_object(L, LOT_LEVELVALUES, &gLevelValues);
+        lua_setglobal(L, "gLevelValues");
+    }
+
 }
 
 void smlua_cobject_init_per_file_globals(char* path) {
