@@ -46,7 +46,7 @@ static void debug_warp_level1() {
 }
 
 static void debug_warp_level2() {
-    dynos_warp_to_level(LEVEL_WDW, 1, 1);
+    dynos_warp_to_level(LEVEL_WDW, 2, 1);
 }
 
 static void debug_grand_star(void) {

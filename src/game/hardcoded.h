@@ -47,37 +47,40 @@ extern struct LevelValues gLevelValues;
 ///////////////
 
 struct BehaviorTrajectories {
-    const Trajectory* KoopaBobTrajectory;
-    const Trajectory* KoopaThiTrajectory;
-    const Trajectory* UnagiTrajectory;
-    const Trajectory* Unagi2Trajectory;
-    const Trajectory* SnowmanHeadTrajectory;
-    const Trajectory* RacingPenguinTrajectory;
-    const Trajectory* BowlingBallBobTrajectory;
-    const Trajectory* BowlingBallBob2Trajectory;
-    const Trajectory* BowlingBallTtmTrajectory;
-    const Trajectory* MipsTrajectory;
-    const Trajectory* Mips2Trajectory;
-    const Trajectory* Mips3Trajectory;
-    const Trajectory* Mips4Trajectory;
-    const Trajectory* Mips5Trajectory;
-    const Trajectory* Mips6Trajectory;
-    const Trajectory* Mips7Trajectory;
-    const Trajectory* Mips8Trajectory;
-    const Trajectory* Mips9Trajectory;
-    const Trajectory* Mips10Trajectory;
-    const Trajectory* PlatformRrTrajectory;
-    const Trajectory* PlatformRr2Trajectory;
-    const Trajectory* PlatformRr3Trajectory;
-    const Trajectory* PlatformRr4Trajectory;
-    const Trajectory* PlatformCcmTrajectory;
-    const Trajectory* PlatformBitfsTrajectory;
-    const Trajectory* PlatformHmcTrajectory;
-    const Trajectory* PlatformLllTrajectory;
-    const Trajectory* PlatformLll2Trajectory;
+    Trajectory* KoopaBobTrajectory;
+    Trajectory* KoopaThiTrajectory;
+    Trajectory* UnagiTrajectory;
+    Trajectory* Unagi2Trajectory;
+    Trajectory* SnowmanHeadTrajectory;
+    Trajectory* RacingPenguinTrajectory;
+    Trajectory* BowlingBallBobTrajectory;
+    Trajectory* BowlingBallBob2Trajectory;
+    Trajectory* BowlingBallTtmTrajectory;
+    Trajectory* MipsTrajectory;
+    Trajectory* Mips2Trajectory;
+    Trajectory* Mips3Trajectory;
+    Trajectory* Mips4Trajectory;
+    Trajectory* Mips5Trajectory;
+    Trajectory* Mips6Trajectory;
+    Trajectory* Mips7Trajectory;
+    Trajectory* Mips8Trajectory;
+    Trajectory* Mips9Trajectory;
+    Trajectory* Mips10Trajectory;
+    Trajectory* PlatformRrTrajectory;
+    Trajectory* PlatformRr2Trajectory;
+    Trajectory* PlatformRr3Trajectory;
+    Trajectory* PlatformRr4Trajectory;
+    Trajectory* PlatformCcmTrajectory;
+    Trajectory* PlatformBitfsTrajectory;
+    Trajectory* PlatformHmcTrajectory;
+    Trajectory* PlatformLllTrajectory;
+    Trajectory* PlatformLll2Trajectory;
 };
 
 struct BehaviorValues {
+    f32 KoopaBobAgility;
+    f32 KoopaThiAgility;
+    f32 KoopaCatchupAgility;
     struct BehaviorTrajectories trajectories;
 };
 

@@ -2,7 +2,7 @@
  * Behavior for MIPS (everyone's favorite yellow rabbit).
  */
 
-static const Trajectory** sMipsPaths[] = {
+static Trajectory** sMipsPaths[] = {
     &gBehaviorValues.trajectories.MipsTrajectory,
     &gBehaviorValues.trajectories.Mips2Trajectory,
     &gBehaviorValues.trajectories.Mips3Trajectory,

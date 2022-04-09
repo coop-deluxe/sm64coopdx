@@ -4,8 +4,14 @@ extern "C" {
 #include "game/skybox.h"
 }
 
+struct OverrideLevelScript {
+    const void* originalScript;
+    const void* newScript;
+    GfxData* gfxData;
+};
+
 static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
-static Array<Pair<const void*, const void*>> sDynosOverrideLevelScripts;
+static Array<struct OverrideLevelScript> sDynosOverrideLevelScripts;
 
 Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
@@ -45,7 +51,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aL
     }
 
     DynOS_Level_Override((void*)originalScript, newScriptNode->mData);
-    sDynosOverrideLevelScripts.Add({ originalScript, newScriptNode->mData});
+    sDynosOverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
 }
 
 DataNode<TexData> *DynOS_Lvl_GetTexture(void *aPtr) {
@@ -105,6 +111,17 @@ DataNode<MovtexQC> *DynOS_Lvl_GetMovtexQuadCollection(s32 index) {
     return mMovtexQCs[index];
 }
 
+Trajectory* DynOS_Lvl_GetTrajectory(const char* aName) {
+    for (auto& script : sDynosCustomLevelScripts) {
+        for (auto& trajectoryNode : script.second->mTrajectories) {
+            if (trajectoryNode->mName == aName) {
+                return trajectoryNode->mData;
+            }
+        }
+    }
+    return NULL;
+}
+
 void DynOS_Lvl_LoadBackground(void *aPtr) {
     // ensure this texture list exists
     GfxData* foundGfxData = NULL;
@@ -139,13 +156,11 @@ double_break:
 }
 
 void *DynOS_Lvl_Override(void *aCmd) {
-    for (auto& overridePair : sDynosOverrideLevelScripts) {
-        if (aCmd == overridePair.first || aCmd == overridePair.second) {
-            aCmd = (void*)overridePair.second;
-            for (auto& customPair : sDynosCustomLevelScripts) {
-                gLevelScriptModIndex = customPair.second->mModIndex;
-                gLevelScriptActive = (LevelScript*)aCmd;
-            }
+    for (auto& overrideStruct : sDynosOverrideLevelScripts) {
+        if (aCmd == overrideStruct.originalScript || aCmd == overrideStruct.newScript) {
+            aCmd = (void*)overrideStruct.newScript;
+            gLevelScriptModIndex = overrideStruct.gfxData->mModIndex;
+            gLevelScriptActive = (LevelScript*)aCmd;
         }
     }
     return aCmd;

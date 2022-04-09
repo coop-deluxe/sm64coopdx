@@ -227,7 +227,7 @@ def get_struct_field_info(struct, field):
     lvt = translate_type_to_lvt(ftype)
     lot = translate_type_to_lot(ftype)
     fimmutable = str(lvt == 'LVT_COBJECT' or 'const ' in ftype).lower()
-    if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt:
+    if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
 
     if sid in override_field_immutable:

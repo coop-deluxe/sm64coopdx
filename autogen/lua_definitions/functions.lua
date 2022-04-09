@@ -7141,6 +7141,12 @@ function get_temp_object_hitbox()
     -- ...
 end
 
+--- @param name string
+--- @return Pointer_Trajectory
+function get_trajectory(name)
+    -- ...
+end
+
 --- @param objList ObjectList
 --- @return Object
 function obj_get_first(objList)
@@ -7441,3 +7447,4 @@ end
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
 --- @class Pointer_Collision
+--- @class Pointer_Trajectory

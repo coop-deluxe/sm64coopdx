@@ -740,11 +740,11 @@ static void koopa_the_quick_act_race(void) {
                         && (o->oPathedPrevWaypointFlags & WAYPOINT_MASK_00FF) < 28) {
                         // Move faster if mario has already finished the race or
                         // cheated by shooting from cannon
-                        o->oKoopaAgility = 8.0f;
+                        o->oKoopaAgility = gBehaviorValues.KoopaCatchupAgility;
                     } else if (o->oKoopaTheQuickRaceIndex != KOOPA_THE_QUICK_BOB_INDEX) {
-                        o->oKoopaAgility = 6.0f;
+                        o->oKoopaAgility = gBehaviorValues.KoopaThiAgility;
                     } else {
-                        o->oKoopaAgility = 4.0f;
+                        o->oKoopaAgility = gBehaviorValues.KoopaBobAgility;
                     }
 
                     obj_forward_vel_approach(o->oKoopaAgility * 6.0f * downhillSteepness,

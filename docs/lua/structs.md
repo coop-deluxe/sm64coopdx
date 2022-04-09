@@ -135,34 +135,34 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> | read-only |
-| BowlingBallBobTrajectory | `Pointer` <`Trajectory`> | read-only |
-| BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> | read-only |
-| KoopaBobTrajectory | `Pointer` <`Trajectory`> | read-only |
-| KoopaThiTrajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips10Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips2Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips3Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips4Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips5Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips6Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips7Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips8Trajectory | `Pointer` <`Trajectory`> | read-only |
-| Mips9Trajectory | `Pointer` <`Trajectory`> | read-only |
-| MipsTrajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformBitfsTrajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformCcmTrajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformHmcTrajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformLll2Trajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformLllTrajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformRr2Trajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformRr3Trajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformRr4Trajectory | `Pointer` <`Trajectory`> | read-only |
-| PlatformRrTrajectory | `Pointer` <`Trajectory`> | read-only |
-| RacingPenguinTrajectory | `Pointer` <`Trajectory`> | read-only |
-| SnowmanHeadTrajectory | `Pointer` <`Trajectory`> | read-only |
-| Unagi2Trajectory | `Pointer` <`Trajectory`> | read-only |
-| UnagiTrajectory | `Pointer` <`Trajectory`> | read-only |
+| BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallBobTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> |  |
+| KoopaBobTrajectory | `Pointer` <`Trajectory`> |  |
+| KoopaThiTrajectory | `Pointer` <`Trajectory`> |  |
+| Mips10Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips2Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips3Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips4Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips5Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips6Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips7Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips8Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips9Trajectory | `Pointer` <`Trajectory`> |  |
+| MipsTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformBitfsTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformCcmTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformHmcTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformLll2Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformLllTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRr2Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRr3Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRr4Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRrTrajectory | `Pointer` <`Trajectory`> |  |
+| RacingPenguinTrajectory | `Pointer` <`Trajectory`> |  |
+| SnowmanHeadTrajectory | `Pointer` <`Trajectory`> |  |
+| Unagi2Trajectory | `Pointer` <`Trajectory`> |  |
+| UnagiTrajectory | `Pointer` <`Trajectory`> |  |
 
 [:arrow_up_small:](#)
 
@@ -172,6 +172,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| KoopaBobAgility | `number` |  |
+| KoopaCatchupAgility | `number` |  |
+| KoopaThiAgility | `number` |  |
 | trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
 
 [:arrow_up_small:](#)

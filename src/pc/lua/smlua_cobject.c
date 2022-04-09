@@ -482,6 +482,7 @@ static int smlua__set_field(lua_State* L) {
         case LVT_BEHAVIORSCRIPT_P:
         case LVT_OBJECTANIMPOINTER_P:
         case LVT_COLLISION_P:
+        case LVT_TRAJECTORY_P:
             valuePointer = smlua_to_cpointer(L, 4, data->valueType);
             if (gSmLuaConvertSuccess) {
                 *(u8**)p = valuePointer;

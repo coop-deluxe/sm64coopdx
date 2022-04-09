@@ -72,6 +72,9 @@
 --- @field public UnagiTrajectory Pointer_Trajectory
 
 --- @class BehaviorValues
+--- @field public KoopaBobAgility number
+--- @field public KoopaCatchupAgility number
+--- @field public KoopaThiAgility number
 --- @field public trajectories BehaviorTrajectories
 
 --- @class BullyCollisionData

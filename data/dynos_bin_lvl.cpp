@@ -2044,7 +2044,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         PrintNoNewLine("%s.lvl: Model identifier: %X - Processing... ", _LvlRootName.begin(), _GfxData->mModelIdentifier);
         DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
-        // Force all of the movtexs and collisions into the compiled lvl
+        // Force all of the movtexs, collisions, and trajectories into the compiled lvl
         for (auto &_Node : _GfxData->mMovtexs) {
             if (_Node->mModelIdentifier != _GfxData->mModelIdentifier) { continue; }
             DynOS_Movtex_Parse(_GfxData, _Node, false);
@@ -2056,6 +2056,10 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         for (auto &_Node : _GfxData->mCollisions) {
             if (_Node->mModelIdentifier != _GfxData->mModelIdentifier) { continue; }
             DynOS_Col_Parse(_GfxData, _Node, false);
+        }
+        for (auto &_Node : _GfxData->mTrajectories) {
+            if (_Node->mModelIdentifier != _GfxData->mModelIdentifier) { continue; }
+            DynOS_Trajectory_Parse(_GfxData, _Node, false);
         }
 
         // Write if no error

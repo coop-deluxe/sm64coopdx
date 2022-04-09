@@ -18,7 +18,7 @@ static void const *sPlatformOnTrackCollisionModels[] = {
 /**
  * Paths for the different instances of these platforms.
  */
-static const Trajectory** sPlatformOnTrackPaths[] = {
+static Trajectory** sPlatformOnTrackPaths[] = {
     &gBehaviorValues.trajectories.PlatformRrTrajectory,
     &gBehaviorValues.trajectories.PlatformRr2Trajectory,
     &gBehaviorValues.trajectories.PlatformCcmTrajectory,

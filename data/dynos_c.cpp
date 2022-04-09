@@ -119,6 +119,10 @@ struct MovtexQuadCollection *dynos_level_get_movtexqc(s32 index) {
     return node->mData;
 }
 
+Trajectory* dynos_level_get_trajectory(const char* name) {
+    return DynOS_Lvl_GetTrajectory(name);
+}
+
 void dynos_level_load_background(void *ptr) {
     DynOS_Lvl_LoadBackground(ptr);
 }

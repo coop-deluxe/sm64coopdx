@@ -12,6 +12,8 @@ s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId);
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId);
 void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);
 
+Trajectory* get_trajectory(const char* name);
+
 //
 // Helpers to iterate through the object table
 //
