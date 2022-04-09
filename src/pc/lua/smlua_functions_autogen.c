@@ -14753,6 +14753,23 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_movtexqc_register(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 level = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 area = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 type = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    movtexqc_register(name, level, area, type);
+
+    return 1;
+}
+
 int smlua_func_set_environment_region(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -16810,6 +16827,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
+    smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);

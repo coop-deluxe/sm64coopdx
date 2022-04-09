@@ -1320,6 +1320,7 @@
    - [get_temp_s32_pointer](#get_temp_s32_pointer)
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
+   - [movtexqc_register](#movtexqc_register)
    - [set_environment_region](#set_environment_region)
    - [warp_exit_level](#warp_exit_level)
    - [warp_restart_level](#warp_restart_level)
@@ -24802,6 +24803,29 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void hud_show(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [movtexqc_register](#movtexqc_register)
+
+### Lua Example
+`movtexqc_register(name, level, area, type)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| level | `integer` |
+| area | `integer` |
+| type | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void movtexqc_register(const char* name, s16 level, s16 area, s16 type);`
 
 [:arrow_up_small:](#)
 

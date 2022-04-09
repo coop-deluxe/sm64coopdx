@@ -831,17 +831,18 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
 
 s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
     DynOS_Level_Init();
-    s16 *bestWarp = NULL;
+    //s16 *bestWarp = NULL;
     for (const auto &_Warp : sDynosLevelWarps[aLevel]) {
         if (_Warp.mArea == aArea) {
             if (_Warp.mId == aWarpId) {
                 return (s16 *) &_Warp;
             } else {
-                bestWarp = (s16 *) &_Warp;
+                //bestWarp = (s16 *) &_Warp;
             }
         }
     }
-    return bestWarp;
+    //return bestWarp;
+    return NULL;
 }
 
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea) {

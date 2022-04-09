@@ -102,6 +102,26 @@ Collision* dynos_collision_get(const char* collisionName) {
     return DynOS_Col_Get(collisionName);
 }
 
+// -- movtexqcs -- //
+
+void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
+    DynOS_MovtexQC_Register(name, level, area, type);
+}
+
+struct MovtexQuadCollection* dynos_movtexqc_get_from_id(u32 id) {
+    DataNode<MovtexQC> *node = DynOS_MovtexQC_GetFromId(id);
+    if (node == NULL) { return NULL; }
+
+    return node->mData;
+}
+
+struct MovtexQuadCollection* dynos_movtexqc_get_from_index(s32 index) {
+    DataNode<MovtexQC> *node = DynOS_MovtexQC_GetFromIndex(index);
+    if (node == NULL) { return NULL; }
+
+    return node->mData;
+}
+
 // -- levels -- //
 
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
@@ -110,13 +130,6 @@ void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
 
 const char* dynos_level_get_token(u32 index) {
     return DynOS_Lvl_GetToken(index);
-}
-
-struct MovtexQuadCollection *dynos_level_get_movtexqc(s32 index) {
-    DataNode<MovtexQC> *node = DynOS_Lvl_GetMovtexQuadCollection(index);
-    if (node == NULL) { return NULL; }
-    
-    return node->mData;
 }
 
 Trajectory* dynos_level_get_trajectory(const char* name) {

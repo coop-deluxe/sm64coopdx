@@ -757,13 +757,14 @@ bool DynOS_Actor_IsCustom(s32 aIndex);
 //
 
 Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray();
-void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName);
-DataNode<TexData> *DynOS_Lvl_GetTexture(void *aPtr);
+void  DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName);
+DataNode<TexData>*  DynOS_Lvl_GetTexture(void *aPtr);
+GfxData* DynOS_Lvl_GetActiveGfx(void);
 const char* DynOS_Lvl_GetToken(u32 index);
-DataNode<MovtexQC> *DynOS_Lvl_GetMovtexQuadCollection(s32 index);
+DataNode<MovtexQC>* DynOS_Lvl_GetMovtexQuadCollection(s32 index);
 Trajectory* DynOS_Lvl_GetTrajectory(const char* aName);
 void DynOS_Lvl_LoadBackground(void *aPtr);
-void *DynOS_Lvl_Override(void *aCmd);
+void* DynOS_Lvl_Override(void *aCmd);
 
 //
 // Col Manager
@@ -771,6 +772,14 @@ void *DynOS_Lvl_Override(void *aCmd);
 
 void DynOS_Col_Activate(const SysPath &aPackFolder, const char *aCollisionName);
 Collision* DynOS_Col_Get(const char* collisionName);
+
+//
+// Movtexqc Manager
+//
+
+void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type);
+DataNode<MovtexQC>* DynOS_MovtexQC_GetFromId(u32 id);
+DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index);
 
 //
 // Bin

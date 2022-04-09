@@ -552,7 +552,10 @@ u8 smlua_model_util_load(enum ModelExtendedId id) {
 u32 smlua_model_util_get_id(const char* name) {
     // find geolayout
     const void* layout = dynos_geolayout_get(name);
-    if (layout == NULL) { return E_MODEL_ERROR_MODEL; }
+    if (layout == NULL) {
+        LOG_ERROR("Failed to find model: %s", name);
+        return E_MODEL_ERROR_MODEL;
+    }
 
     // find existing model
     for (u32 i = 0; i < E_MODEL_MAX; i++) {

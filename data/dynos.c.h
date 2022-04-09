@@ -36,10 +36,14 @@ const void* dynos_geolayout_get(const char *name);
 void dynos_add_collision(const char *modPath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
 
+// -- movtexqcs -- //
+void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type);
+struct MovtexQuadCollection* dynos_movtexqc_get_from_id(u32 id);
+struct MovtexQuadCollection* dynos_movtexqc_get_from_index(s32 index);
+
 // -- levels -- //
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName);
 const char* dynos_level_get_token(u32 index);
-struct MovtexQuadCollection *dynos_level_get_movtexqc(s32 index);
 Trajectory* dynos_level_get_trajectory(const char* name);
 void dynos_level_load_background(void *ptr);
 

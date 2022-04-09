@@ -40,7 +40,6 @@ exclude_constants = {
 }
 
 include_constants = {
-    "include/object_constants.h" : [ "^ACTIVE_FLAG_", "^ACTIVE_PARTICLE_", "^HELD_", "^OBJ_FLAG_", "^RESPAWN_INFO_", "^OBJ_MOVE_" ],
 }
 
 pretend_find = [

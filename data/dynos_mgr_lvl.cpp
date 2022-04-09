@@ -68,7 +68,7 @@ DataNode<TexData> *DynOS_Lvl_GetTexture(void *aPtr) {
     return NULL;
 }
 
-static GfxData* DynOS_Lvl_GetActiveGfx(void) {
+GfxData* DynOS_Lvl_GetActiveGfx(void) {
     for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
         auto& gfxData = sDynosCustomLevelScripts[i].second;
         auto& scripts = gfxData->mLevelScripts;
@@ -93,22 +93,6 @@ const char* DynOS_Lvl_GetToken(u32 index) {
     }
  
     return gfxData->mLuaTokenList[index].begin();
-}
-
-DataNode<MovtexQC> *DynOS_Lvl_GetMovtexQuadCollection(s32 index) {
-    GfxData* gfxData = DynOS_Lvl_GetActiveGfx();
-    if (gfxData == NULL) {
-        return NULL;
-    }
-
-    auto &mMovtexQCs = gfxData->mMovtexQCs;
-
-    // Sanity check the index we passed.
-    if (index < 0 || index >= mMovtexQCs.Count()) {
-        return NULL;
-    }
-
-    return mMovtexQCs[index];
 }
 
 Trajectory* DynOS_Lvl_GetTrajectory(const char* aName) {

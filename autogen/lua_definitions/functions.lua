@@ -7098,6 +7098,15 @@ function hud_show()
     -- ...
 end
 
+--- @param name string
+--- @param level integer
+--- @param area integer
+--- @param type integer
+--- @return nil
+function movtexqc_register(name, level, area, type)
+    -- ...
+end
+
 --- @param index integer
 --- @param value integer
 --- @return nil

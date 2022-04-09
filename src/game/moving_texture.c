@@ -590,7 +590,7 @@ void *get_quad_collection_from_id(u32 id) {
         case TTM_MOVTEX_PUDDLE:
             return ttm_movtex_puddle;
         default:
-            return NULL;
+            return dynos_movtexqc_get_from_id(id);
     }
 }
 
@@ -706,7 +706,7 @@ Gfx *geo_movtex_draw_water_regions_ext(s32 callContext, struct GraphNode *node, 
             return NULL;
         }
         
-        quadCollection = dynos_level_get_movtexqc(asGenerated->parameter);
+        quadCollection = dynos_movtexqc_get_from_index(asGenerated->parameter);
         if (quadCollection == NULL) {
             return NULL;
         }
