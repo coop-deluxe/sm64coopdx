@@ -37,7 +37,7 @@ void bhv_ukiki_cage_star_loop(void) {
             obj_mark_for_deletion(o);
             spawn_mist_particles();
             spawn_triangle_break_particles(20, 138, 0.7, 3);
-            f32* starPos = gStarPositions.UkikiCageStarPos;
+            f32* starPos = gLevelValues.starPositions.UkikiCageStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
             break;
     }

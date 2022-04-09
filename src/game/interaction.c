@@ -2245,7 +2245,7 @@ void pss_end_slide(struct MarioState *m) {
             // PSS secret star uses oBehParams to spawn
             s32 tmp = m->marioObj->oBehParams;
             m->marioObj->oBehParams = (1 << 24);
-            f32* starPos = gStarPositions.PssSlideStarPos;
+            f32* starPos = gLevelValues.starPositions.PssSlideStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
             m->marioObj->oBehParams = tmp;
         }

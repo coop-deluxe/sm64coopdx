@@ -58,13 +58,6 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
-## [gStarPositions](#gLakituState)
-`gStarPositions`'s fields are listed in [StarPosition](structs.md#StarPosition). These are where stars will spawn for certain stars.
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [gLevelValues](#gLevelValues)
 `gLevelValues`'s fields are listed in [LevelValue](structs.md#LevelValue).
 

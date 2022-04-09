@@ -252,7 +252,7 @@ static void racing_penguin_act_show_final_text(void) {
         }
     } else if (o->oRacingPenguinMarioWon) {
 
-    f32* starPos = gStarPositions.RacingPenguinStarPos;
+    f32* starPos = gLevelValues.starPositions.RacingPenguinStarPos;
 #ifdef VERSION_JP
         spawn_default_star(starPos[0], starPos[1], starPos[2]);
 #else

@@ -442,6 +442,7 @@
 
 --- @class LevelValues
 --- @field public entryLevel LevelNum
+--- @field public starPositions StarPositions
 
 --- @class LinearTransitionPoint
 --- @field public dist number

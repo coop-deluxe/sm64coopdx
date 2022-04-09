@@ -2,10 +2,6 @@
 #include "types.h"
 #include "level_table.h"
 
-struct LevelValues {
-    enum LevelNum entryLevel;
-};
-
 struct StarPositions {
     Vec3f KoopaBobStarPos;
     Vec3f KoopaThiStarPos;
@@ -35,7 +31,11 @@ struct StarPositions {
     Vec3f JetstreamRingStarPos;
 };
 
+struct LevelValues {
+    enum LevelNum entryLevel;
+    struct StarPositions starPositions;
+};
+
 extern struct LevelValues gLevelValues;
-extern struct StarPositions gStarPositions;
 
 #endif

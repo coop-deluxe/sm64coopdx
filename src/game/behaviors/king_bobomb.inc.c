@@ -241,13 +241,13 @@ void king_bobomb_act_8(void) {
         f32 objectPosY = o->oPosY;
         o->oPosY += 200.0f + gDebugInfo[5][0];
 
-        f32* starPos = gStarPositions.KingBobombStarPos;
+        f32* starPos = gLevelValues.starPositions.KingBobombStarPos;
         star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
         o->oPosY = objectPosY;
 #else
         o->oPosY += 100.0f;
-        f32* starPos = gStarPositions.KingBobombStarPos;
+        f32* starPos = gLevelValues.starPositions.KingBobombStarPos;
         star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
 #endif
         // If we're not the closet to King-Bombomb,

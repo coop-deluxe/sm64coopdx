@@ -85,7 +85,7 @@ void tuxies_mother_act_1(void) {
                 o->prevObj->OBJECT_FIELD_S32(o->oInteractionSubtype) &= ~INT_SUBTYPE_DROP_IMMEDIATELY;
                 obj_set_behavior(o->prevObj, bhvUnused20E0);
 
-                f32* starPos = gStarPositions.TuxieMotherStarPos;
+                f32* starPos = gLevelValues.starPositions.TuxieMotherStarPos;
 #ifndef VERSION_JP
                 cur_obj_spawn_star_at_y_offset(starPos[0], starPos[1], starPos[2], 200.0f);
 #else

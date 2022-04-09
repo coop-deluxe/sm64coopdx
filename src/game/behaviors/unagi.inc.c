@@ -215,7 +215,7 @@ void bhv_unagi_subobject_loop(void) {
         if (o->oBehParams2ndByte == -4) {
             if (o->parentObj->oAnimState != 0 && distanceToPlayer < 150.0f) {
                 o->oBehParams = o->parentObj->oBehParams;
-                f32* starPos = gStarPositions.UnagiStarPos;
+                f32* starPos = gLevelValues.starPositions.UnagiStarPos;
                 spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 o->parentObj->oAnimState = 0;
             }

@@ -242,7 +242,7 @@ void whomp_act_8(void) {
             cur_obj_shake_screen(SHAKE_POS_SMALL);
             o->oPosY += 100.0f;
 
-            f32* starPos = gStarPositions.KingWhompStarPos;
+            f32* starPos = gLevelValues.starPositions.KingWhompStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
             cur_obj_play_sound_2(SOUND_OBJ_KING_WHOMP_DEATH);

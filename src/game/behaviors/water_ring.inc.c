@@ -194,7 +194,7 @@ void bhv_jet_stream_ring_spawner_loop(void) {
             if (o->oWaterRingSpawnerRingsCollected == 5) {
                 spawn_mist_particles();
 
-                f32* starPos = gStarPositions.JetstreamRingStarPos;
+                f32* starPos = gLevelValues.starPositions.JetstreamRingStarPos;
                 spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
                 o->oAction = JS_RING_SPAWNER_ACT_INACTIVE;

@@ -28,9 +28,6 @@ gGlobalSyncTable = {}
 --- @type SyncTable[]
 gPlayerSyncTable = {}
 
---- @type StarPositions
-gStarPositions = {}
-
 --- @type LevelValues
 gLevelValues = {}
 

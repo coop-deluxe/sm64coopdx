@@ -243,7 +243,7 @@ void bhv_snowmans_head_loop(void) {
         case 4:
             if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, DIALOG_111, 700.0f, 2, bhv_snowmans_head_action_4_continue_dialog)) {
                 spawn_mist_particles();
-                f32* starPos = gStarPositions.SnowmanHeadStarPos;
+                f32* starPos = gLevelValues.starPositions.SnowmanHeadStarPos;
                 spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 o->oAction = 1;
                 network_send_object(o);

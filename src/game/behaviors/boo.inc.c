@@ -654,19 +654,19 @@ static void big_boo_act_2(void) {
 }
 
 static void big_boo_spawn_ghost_hunt_star(void) {
-    f32* starPos = gStarPositions.GhostHuntBooStarPos;
+    f32* starPos = gLevelValues.starPositions.GhostHuntBooStarPos;
     spawn_default_star(starPos[0], starPos[1], starPos[2]);
 }
 
 static void big_boo_spawn_balcony_star(void) {
-    f32* starPos = gStarPositions.BalconyBooStarPos;
+    f32* starPos = gLevelValues.starPositions.BalconyBooStarPos;
     spawn_default_star(starPos[0], starPos[1], starPos[2]);
 }
 
 static void big_boo_spawn_merry_go_round_star(void) {
     struct Object *merryGoRound;
 
-    f32* starPos = gStarPositions.MerryGoRoundStarPos;
+    f32* starPos = gLevelValues.starPositions.MerryGoRoundStarPos;
     spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
     merryGoRound = cur_obj_nearest_object_with_behavior(bhvMerryGoRound);

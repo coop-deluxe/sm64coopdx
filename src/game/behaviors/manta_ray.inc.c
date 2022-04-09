@@ -133,7 +133,7 @@ void bhv_manta_ray_loop(void) {
             // Spawn a star after collecting 5 rings.
             if (o->oWaterRingSpawnerRingsCollected == 5) {
                 spawn_mist_particles();
-                f32* starPos = gStarPositions.MantaRayStarPos;
+                f32* starPos = gLevelValues.starPositions.MantaRayStarPos;
                 spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 o->oAction = MANTA_ACT_NO_RINGS;
             }
