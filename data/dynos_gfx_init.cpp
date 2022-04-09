@@ -74,11 +74,11 @@ Array<String> DynOS_Gfx_Init() {
 
     // Alloc and init the actors gfx list
     Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
-    pActorGfxList.Resize(DynOS_Geo_GetActorCount());
-    for (s32 i = 0; i != DynOS_Geo_GetActorCount(); ++i) {
+    pActorGfxList.Resize(DynOS_Actor_GetCount());
+    for (s32 i = 0; i != DynOS_Actor_GetCount(); ++i) {
         pActorGfxList[i].mPackIndex = -1;
         pActorGfxList[i].mGfxData   = NULL;
-        pActorGfxList[i].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(i), false);
+        pActorGfxList[i].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Actor_GetLayoutFromIndex(i), false);
     }
 
     // Scan the DynOS packs folder

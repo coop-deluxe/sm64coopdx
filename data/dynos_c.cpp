@@ -81,11 +81,11 @@ void dynos_generate_packs(const char* directory) {
 // -- geos -- //
 
 void dynos_add_actor_custom(const char *modPath, const char* geoName) {
-    DynOS_Geo_AddActorCustom(modPath, geoName);
+    DynOS_Actor_AddCustom(modPath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
-    return DynOS_Geo_GetActorLayoutFromName(name);
+    return DynOS_Actor_GetLayoutFromName(name);
 }
 
 // -- collisions -- //

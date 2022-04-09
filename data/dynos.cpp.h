@@ -688,13 +688,6 @@ s32 DynOS_String_Width(const u8 *aStr64);
 // Geo
 //
 
-void DynOS_Geo_AddActorCustom(const SysPath &aPackFolder, const char *aActorName);
-const void *DynOS_Geo_GetActorLayoutFromName(const char *aActorName);
-bool DynOS_Geo_IsCustomActor(s32 aIndex);
-s32 DynOS_Geo_GetActorCount();
-const char *DynOS_Geo_GetActorName(s32 aIndex);
-const void *DynOS_Geo_GetActorLayout(s32 aIndex);
-s32 DynOS_Geo_GetActorIndex(const void *aGeoLayout);
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory);
 
 //
@@ -730,6 +723,11 @@ const char *DynOS_Warp_GetParamName(s32 aLevel, s32 aIndex);
 
 const void*      DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_ScriptPtr_GetFromData(const void* aData);
+const GeoLayout* DynOS_Builtin_Actor_GetFromName(const char* aDataName);
+const char*      DynOS_Builtin_Actor_GetFromData(const GeoLayout* aData);
+const GeoLayout* DynOS_Builtin_Actor_GetFromIndex(s32 aIndex);
+const char*      DynOS_Builtin_Actor_GetNameFromIndex(s32 aIndex);
+s32              DynOS_Builtin_Actor_GetCount();
 const GeoLayout* DynOS_Builtin_LvlGeo_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_LvlGeo_GetFromData(const GeoLayout* aData);
 const Collision* DynOS_Builtin_LvlCol_GetFromName(const char* aDataName);
@@ -739,6 +737,18 @@ const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
+
+//
+// Actor Manager
+//
+
+void DynOS_Actor_AddCustom(const SysPath &aPackFolder, const char *aActorName);
+s32 DynOS_Actor_GetCount();
+const char *DynOS_Actor_GetName(s32 aIndex);
+const void *DynOS_Actor_GetLayoutFromIndex(s32 aIndex);
+const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
+s32 DynOS_Actor_GetIndex(const void *aGeoLayout);
+bool DynOS_Actor_IsCustom(s32 aIndex);
 
 //
 // Lvl Manager

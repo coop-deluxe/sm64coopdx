@@ -1459,12 +1459,9 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     }
 
     // Built-in actors
-    s32 actorCount = DynOS_Geo_GetActorCount();
-    for (s32 i = 0; i < actorCount; i++) {
-        if (DynOS_Geo_IsCustomActor(i)) { break; }
-        if (!strcmp(_Arg.begin(), DynOS_Geo_GetActorName(i))) {
-            return (LevelScript)DynOS_Geo_GetActorLayout(i);
-        }
+    auto builtinActor = DynOS_Builtin_Actor_GetFromName(_Arg.begin());
+    if (builtinActor != NULL) {
+        return (LevelScript)builtinActor;
     }
 
     // Built-in Lvl Geos

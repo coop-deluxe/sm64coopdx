@@ -256,7 +256,7 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
                     bool foundActor = false;
                     for (s32 i = prevGeoLayoutCount; i < geoLayoutCount; i++) {
                         String _GeoRootName = _GfxData->mGeoLayouts[i]->mName;
-                        const void* actor = DynOS_Geo_GetActorLayoutFromName(_GeoRootName.begin());
+                        const void* actor = DynOS_Actor_GetLayoutFromName(_GeoRootName.begin());
                         if (actor != NULL) {
                             foundActor = true;
                             _GfxData->mGenerateGeoLayouts.Add(_GfxData->mGeoLayouts[i]);

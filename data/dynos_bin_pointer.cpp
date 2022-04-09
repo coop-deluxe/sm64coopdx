@@ -120,12 +120,9 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     }
 
     // Built-in Actors
-    s32 actorCount = DynOS_Geo_GetActorCount();
-    for (s32 i = 0; i < actorCount; i++) {
-        if (DynOS_Geo_IsCustomActor(i)) { break; }
-        if (aPtr == DynOS_Geo_GetActorLayout(i)) {
-            return { DynOS_Geo_GetActorName(i), 0 };
-        }
+    auto builtinActor = DynOS_Builtin_Actor_GetFromData((const GeoLayout*)aPtr);
+    if (builtinActor != NULL) {
+        return { builtinActor, 0 };
     }
 
     // Built-in Lvl Geos
@@ -362,12 +359,9 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Built-in Actors
-    s32 actorCount = DynOS_Geo_GetActorCount();
-    for (s32 i = 0; i < actorCount; i++) {
-        if (DynOS_Geo_IsCustomActor(i)) { break; }
-        if (!strcmp(aPtrName.begin(), DynOS_Geo_GetActorName(i))) {
-            return (void*)DynOS_Geo_GetActorLayout(i);
-        }
+    auto builtinActor = DynOS_Builtin_Actor_GetFromName(aPtrName.begin());
+    if (builtinActor != NULL) {
+        return (void*)builtinActor;
     }
 
     // Built-in Lvl Geos
