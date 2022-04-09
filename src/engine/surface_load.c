@@ -323,7 +323,7 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
     s32 maxY, minY;
     f32 nx, ny, nz;
     f32 mag;
-    s16 offset1, offset2, offset3;
+    s32 offset1, offset2, offset3;
 
     offset1 = 3 * (*vertexIndices)[0];
     offset2 = 3 * (*vertexIndices)[1];

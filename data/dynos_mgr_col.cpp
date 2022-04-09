@@ -37,11 +37,13 @@ Collision* DynOS_Col_Get(const char* collisionName) {
         }
     }
 
-    // check normal actor collisions
+    // check mod actor collisions
     for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
         if (!strcmp(sDynosCollisions[i].first, collisionName)) {
             return sDynosCollisions[i].second->mData;
         }
     }
-    return NULL;
+
+    // check builtin collisions
+    return (Collision*)DynOS_Builtin_LvlCol_GetFromName(collisionName);
 }

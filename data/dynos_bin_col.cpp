@@ -15,6 +15,162 @@ void ClearGfxDataNodes(DataNodes<T> &aDataNodes) {
     }
 }
 
+  ////////////////
+ // Validation //
+////////////////
+
+#define COL_SECTION_UNKNOWN   0
+#define COL_SECTION_VTX       1
+#define COL_SECTION_TRI       2
+#define COL_SECTION_SPECIAL   3
+#define COL_SECTION_WATER_BOX 4
+#define COL_SECTION_END       5
+
+struct CollisionValidationData {
+    u32 tokenIndex;
+    u8 section;
+    const char* lastSymbol;
+    u32 vtxAlloc;
+    u32 vtxCount;
+    u32 triAlloc;
+    u32 triCount;
+    u32 specialAlloc;
+    u32 specialCount;
+    u32 waterBoxAlloc;
+    u32 waterBoxCount;
+};
+
+static void ValidateColSectionChange(GfxData* aGfxData, struct CollisionValidationData& aColValData, u8 section) {
+    if (aColValData.section == COL_SECTION_END) {
+        PrintError("Found new col section after COL_END");
+    }
+
+    if (aColValData.section != section) {
+        if (aColValData.vtxAlloc != aColValData.vtxCount) {
+            PrintError("Improper vtx count found in section. Allocated: %u, Defined: %u", aColValData.vtxAlloc, aColValData.vtxCount);
+        }
+        if (aColValData.triAlloc != aColValData.triCount) {
+            PrintError("Improper triangle count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
+        }
+        if (aColValData.specialAlloc != aColValData.specialCount) {
+            PrintError("Improper sepcial count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
+        }
+        if (aColValData.waterBoxAlloc != aColValData.waterBoxCount) {
+            PrintError("Improper water box count found in section. Allocated: %u, Defined: %u", aColValData.waterBoxAlloc, aColValData.waterBoxCount);
+        }
+    }
+
+    aColValData.section = section;
+}
+
+static void ValidateColInit(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
+    if (aColValData.tokenIndex != 0) {
+        PrintError("COL_INIT found after the first token");
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_VTX);
+}
+
+static void ValidateColVertexInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0) {
+    if (strcmp(aColValData.lastSymbol, "COL_INIT") != 0) {
+        PrintError("COL_VERTEX_INIT found outside of vertex section");
+    }
+    if (arg0 < 0) {
+        PrintError("COL_VERTEX_INIT with a negative count: %d", arg0);
+    }
+    aColValData.vtxAlloc = arg0;
+    aColValData.vtxCount = 0;
+}
+
+static void ValidateColVertex(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2) {
+    if (aColValData.section != COL_SECTION_VTX) {
+        PrintError("COL_VERTEX found outside of vertex section");
+    }
+    aColValData.vtxCount++;
+}
+
+static void ValidateColTriInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1) {
+    if (arg1 < 0) {
+        PrintError("COL_TRI_INIT with a negative count: %d", arg1);
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_TRI);
+    aColValData.triAlloc = arg1;
+    aColValData.triCount = 0;
+}
+
+static void ValidateColTri(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2) {
+    if (aColValData.section != COL_SECTION_TRI) {
+        PrintError("COL_TRI found outside of triangle section");
+    }
+    if (arg0 < 0 || arg0 > aColValData.vtxCount) {
+        PrintError("COL_TRI used vertex outside of known range for first param: %d", arg0);
+    }
+    if (arg1 < 0 || arg1 > aColValData.vtxCount) {
+        PrintError("COL_TRI used vertex outside of known range for second param: %d", arg1);
+    }
+    if (arg2 < 0 || arg2 > aColValData.vtxCount) {
+        PrintError("COL_TRI used vertex outside of known range for third param: %d", arg2);
+    }
+    aColValData.triCount++;
+}
+
+static void ValidateColTriSpecial(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    ValidateColTri(aGfxData, aColValData, arg0, arg1, arg2);
+}
+
+static void ValidateColStop(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_UNKNOWN);
+}
+
+static void ValidateColEnd(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_END);
+}
+
+static void ValidateColSpecialInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0) {
+    if (arg0 < 0) {
+        PrintError("COL_SPECIAL_INIT with a negative count: %d", arg0);
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_SPECIAL);
+    aColValData.specialAlloc = arg0;
+    aColValData.specialCount = 0;
+}
+
+static void ValidateColWaterBoxInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0) {
+    if (arg0 < 0) {
+        PrintError("COL_WATER_BOX_INIT with a negative count: %d", arg0);
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_WATER_BOX);
+    aColValData.waterBoxAlloc = arg0;
+    aColValData.waterBoxCount = 0;
+}
+
+static void ValidateColWaterBox(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    if (aColValData.section != COL_SECTION_WATER_BOX) {
+        PrintError("COL_WATER_BOX found outside of water box section");
+    }
+    aColValData.waterBoxCount++;
+}
+
+static void ValidateColSpecialObject(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    if (aColValData.section != COL_SECTION_SPECIAL) {
+        PrintError("SPECIAL_OBJECT found outside of special section");
+    }
+    aColValData.specialCount++;
+}
+
+static void ValidateColSpecialObjectWithYaw(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    if (aColValData.section != COL_SECTION_SPECIAL) {
+        PrintError("SPECIAL_OBJECT_WITH_YAW found outside of special section");
+    }
+    aColValData.specialCount++;
+}
+
+static void ValidateColSpecialObjectWithYawAndParam(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    if (aColValData.section != COL_SECTION_SPECIAL) {
+        PrintError("SPECIAL_OBJECT_WITH_YAW_AND_PARAM found outside of special section");
+    }
+    aColValData.specialCount++;
+}
+
   /////////////
  // Parsing //
 /////////////
@@ -305,70 +461,83 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
     return 0;
 }
 
-#define col_symbol_0(symb)                       \
-    if (_Symbol == #symb) {                      \
-        Collision _Cl[] = { symb() };            \
-        memcpy(aHead, _Cl, sizeof(_Cl));         \
-        aHead += (sizeof(_Cl) / sizeof(_Cl[0])); \
-        return;                                  \
+#define col_symbol_0(symb, validate)              \
+    if (_Symbol == #symb) {                       \
+        validate(aGfxData, aColValData);          \
+        aColValData.lastSymbol = _Symbol.begin(); \
+        Collision _Cl[] = { symb() };             \
+        memcpy(aHead, _Cl, sizeof(_Cl));          \
+        aHead += (sizeof(_Cl) / sizeof(_Cl[0]));  \
+        return;                                   \
     }
 
-#define col_symbol_1(symb)                                           \
+#define col_symbol_1(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
+        validate(aGfxData, aColValData, _Arg0);                      \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0) };                           \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_2(symb)                                           \
+#define col_symbol_2(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
+        validate(aGfxData, aColValData, _Arg0, _Arg1);               \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0, _Arg1) };                    \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_3(symb)                                           \
+#define col_symbol_3(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2);        \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2) };             \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_4(symb)                                           \
+#define col_symbol_4(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2, _Arg3); \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3) };      \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_5(symb)                                             \
+#define col_symbol_5(symb, validate)                                   \
     if (_Symbol == #symb) {                                            \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2, _Arg3,    \
+                 _Arg4);                                               \
+        aColValData.lastSymbol = _Symbol.begin();                      \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4) }; \
         memcpy(aHead, _Cl, sizeof(_Cl));                               \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                       \
         return;                                                        \
     }
 
-#define col_symbol_6(symb)                                                    \
+#define col_symbol_6(symb, validate)                                          \
     if (_Symbol == #symb) {                                                   \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
@@ -376,29 +545,33 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg5 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2, _Arg3,           \
+                 _Arg4, _Arg5);                                               \
+        aColValData.lastSymbol = _Symbol.begin();                             \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5) }; \
         memcpy(aHead, _Cl, sizeof(_Cl));                                      \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                              \
         return;                                                               \
     }
 
-static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, Collision*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
+static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, Collision*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes, struct CollisionValidationData& aColValData) {
+    aColValData.tokenIndex = aTokenIndex;
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
-    col_symbol_0(COL_INIT);
-    col_symbol_1(COL_VERTEX_INIT);
-    col_symbol_3(COL_VERTEX);
-    col_symbol_2(COL_TRI_INIT);
-    col_symbol_3(COL_TRI);
-    col_symbol_4(COL_TRI_SPECIAL);
-    col_symbol_0(COL_TRI_STOP);
-    col_symbol_0(COL_END);
-    col_symbol_1(COL_SPECIAL_INIT);
-    col_symbol_1(COL_WATER_BOX_INIT);
-    col_symbol_6(COL_WATER_BOX);
-    col_symbol_4(SPECIAL_OBJECT);
-    col_symbol_5(SPECIAL_OBJECT_WITH_YAW);
-    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM);
+    col_symbol_0(COL_INIT, ValidateColInit);
+    col_symbol_1(COL_VERTEX_INIT, ValidateColVertexInit);
+    col_symbol_3(COL_VERTEX, ValidateColVertex);
+    col_symbol_2(COL_TRI_INIT, ValidateColTriInit);
+    col_symbol_3(COL_TRI, ValidateColTri);
+    col_symbol_4(COL_TRI_SPECIAL, ValidateColTriSpecial);
+    col_symbol_0(COL_TRI_STOP, ValidateColStop);
+    col_symbol_0(COL_END, ValidateColEnd);
+    col_symbol_1(COL_SPECIAL_INIT, ValidateColSpecialInit);
+    col_symbol_1(COL_WATER_BOX_INIT, ValidateColWaterBoxInit);
+    col_symbol_6(COL_WATER_BOX, ValidateColWaterBox);
+    col_symbol_4(SPECIAL_OBJECT, ValidateColSpecialObject);
+    col_symbol_5(SPECIAL_OBJECT_WITH_YAW, ValidateColSpecialObjectWithYaw);
+    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM, ValidateColSpecialObjectWithYawAndParam);
 
     // Unknown
     PrintError("  ERROR: Unknown col symbol: %s", _Symbol.begin());
@@ -411,13 +584,27 @@ DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNo
     aNode->mData = New<Collision>(aNode->mTokens.Count() * COLLISION_SIZE_PER_TOKEN);
     Collision* _Head = aNode->mData;
     Array<u64> _SwitchNodes;
+
+    struct CollisionValidationData colValData = { 0 };
+    colValData.lastSymbol = aNode->mTokens[0].begin();
+
     for (u64 _TokenIndex = 0; _TokenIndex < aNode->mTokens.Count();) { // Don't increment _TokenIndex here!
-        ParseCollisionSymbol(aGfxData, aNode, _Head, _TokenIndex, _SwitchNodes);
+        ParseCollisionSymbol(aGfxData, aNode, _Head, _TokenIndex, _SwitchNodes, colValData);
         if (aDisplayPercent && aGfxData->mErrorCount == 0) { PrintNoNewLine("%3d%%\b\b\b\b", (s32) (_TokenIndex * 100) / aNode->mTokens.Count()); }
     }
+
+    if (colValData.section != COL_SECTION_END) {
+        PrintError("Collision did not end with COL_END");
+    }
+
     if (aDisplayPercent && aGfxData->mErrorCount == 0) { Print("100%%"); }
     aNode->mSize = (u32)(_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
+
+    if (aGfxData->mErrorCount > 0) {
+        Print("Failed to parse collision: '%s'", aNode->mName);
+    }
+
     return aNode;
 }
 
