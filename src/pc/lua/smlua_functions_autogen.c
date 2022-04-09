@@ -14766,17 +14766,6 @@ int smlua_func_set_environment_region(lua_State* L) {
     return 1;
 }
 
-int smlua_func_smlua_level_util_get(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    const char* name = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    smlua_push_pointer(L, LVT_LEVELSCRIPT_P, (void*)smlua_level_util_get(name));
-
-    return 1;
-}
-
 int smlua_func_warp_exit_level(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -16811,7 +16800,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
-    smlua_bind_function(L, "smlua_level_util_get", smlua_func_smlua_level_util_get);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);

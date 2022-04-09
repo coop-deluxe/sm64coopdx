@@ -22,8 +22,6 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 
 s16 get_current_save_file_num(void);
 
-LevelScript* smlua_level_util_get(const char* name);
-
 f32 get_environment_region(u8 index);
 void set_environment_region(u8 index, s32 value);
 

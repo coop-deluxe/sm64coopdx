@@ -6,6 +6,8 @@
 #include "types.h"
 #include "src/game/moving_texture.h"
 
+void *dynos_swap_cmd(void *cmd);
+
 // -- built in -- //
 void *dynos_update_cmd         (void *cmd);
 void  dynos_update_gfx         ();
@@ -36,7 +38,6 @@ Collision* dynos_collision_get(const char* collisionName);
 
 // -- levels -- //
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName);
-LevelScript* dynos_level_get(const char* levelName);
 const char* dynos_level_get_token(u32 index);
 struct MovtexQuadCollection *dynos_level_get_movtexqc(s32 index);
 void dynos_level_load_background(void *ptr);

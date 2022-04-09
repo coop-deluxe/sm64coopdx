@@ -225,17 +225,19 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
     return (s32) gLevelToCourseNumTable[aLevel - 1];
 }
 
+void DynOS_Level_Override(void* originalScript, void* newScript) {
+    for (s32 i = 0; i < LEVEL_COUNT; i++) {
+        if (sDynosLevelScripts[i] == originalScript) {
+            sDynosLevelWarps[i].Clear();
+            DynOS_Level_ParseScript(newScript, DynOS_Level_PreprocessScript);
+            sDynosLevelScripts[i] = newScript;
+            return;
+        }
+    }
+}
+
 const void *DynOS_Level_GetScript(s32 aLevel) {
     DynOS_Level_Init();
-    if (aLevel != LEVEL_WDW) {
-        LevelScript* script = DynOS_Lvl_GetScript("");
-        sDynosCurrentLevelNum = aLevel;
-        sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
-        DynOS_Level_ParseScript(script, DynOS_Level_PreprocessScript);
-        gLevelScriptModIndex = DynOS_Lvl_GetModIndex(script);
-        gLevelScriptActive = (LevelScript*)script;
-        return script; // DO NOT COMMIT
-    }
     return sDynosLevelScripts[aLevel];
 }
 

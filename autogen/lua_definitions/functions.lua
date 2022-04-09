@@ -7105,12 +7105,6 @@ function set_environment_region(index, value)
     -- ...
 end
 
---- @param name string
---- @return Pointer_LevelScript
-function smlua_level_util_get(name)
-    -- ...
-end
-
 --- @param aDelay integer
 --- @return boolean
 function warp_exit_level(aDelay)
@@ -7447,4 +7441,3 @@ end
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
 --- @class Pointer_Collision
---- @class Pointer_LevelScript

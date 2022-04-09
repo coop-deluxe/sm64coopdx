@@ -1321,7 +1321,6 @@
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
    - [set_environment_region](#set_environment_region)
-   - [smlua_level_util_get](#smlua_level_util_get)
    - [warp_exit_level](#warp_exit_level)
    - [warp_restart_level](#warp_restart_level)
    - [warp_to_castle](#warp_to_castle)
@@ -24823,26 +24822,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_level_util_get](#smlua_level_util_get)
-
-### Lua Example
-`local PointerValue = smlua_level_util_get(name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-
-### Returns
-- `Pointer` <`LevelScript`>
-
-### C Prototype
-`LevelScript* smlua_level_util_get(const char* name);`
 
 [:arrow_up_small:](#)
 

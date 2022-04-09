@@ -5,6 +5,7 @@ extern "C" {
 }
 
 static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
+static Array<Pair<const void*, const void*>> sDynosOverrideLevelScripts;
 
 Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
@@ -33,36 +34,18 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aL
 
     // Add to levels
     sDynosCustomLevelScripts.Add({ levelName, _Node });
-}
 
-LevelScript* DynOS_Lvl_GetScript(const char* levelName) {
-    if (strlen(levelName) == 0) {
-        static u32 index = 0; // DO NOT COMMIT
-        s32 levelScriptCount = sDynosCustomLevelScripts.Count(); // DO NOT COMMIT
-        if (levelScriptCount < 1) { return NULL; } // DO NOT COMMIT
-        index = (index + 1) % levelScriptCount;  // DO NOT COMMIT
-        auto& scripts = sDynosCustomLevelScripts[index].second->mLevelScripts; // DO NOT COMMIT
-        Print("Going to level: %s\n", scripts[scripts.Count() - 1]->mName); // DO NOT COMMIT
-        return scripts[scripts.Count() - 1]->mData; // DO NOT COMMIT
+    // Override vanilla script
+    auto& newScripts = _Node->mLevelScripts; // DO NOT COMMIT
+    auto& newScriptNode = newScripts[newScripts.Count() - 1];
+    const void* originalScript = DynOS_Builtin_ScriptPtr_GetFromName(newScriptNode->mName.begin());
+    if (originalScript == NULL) {
+        Print("Could not find level to override: '%s'", newScriptNode->mName);
+        return;
     }
 
-    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
-        if (!strcmp(sDynosCustomLevelScripts[i].first, levelName)) {
-            auto& scripts = sDynosCustomLevelScripts[i].second->mLevelScripts;
-            return scripts[scripts.Count() - 1]->mData;
-        }
-    }
-    return NULL;
-}
-
-s32 DynOS_Lvl_GetModIndex(void* levelScript) {
-    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
-        auto& scripts = sDynosCustomLevelScripts[i].second->mLevelScripts;
-        if (levelScript == scripts[scripts.Count() - 1]->mData) {
-            return sDynosCustomLevelScripts[i].second->mModIndex;
-        }
-    }
-    return -1;
+    DynOS_Level_Override((void*)originalScript, newScriptNode->mData);
+    sDynosOverrideLevelScripts.Add({ originalScript, newScriptNode->mData});
 }
 
 DataNode<TexData> *DynOS_Lvl_GetTexture(void *aPtr) {
@@ -153,4 +136,17 @@ double_break:
             }
         }
     }
+}
+
+void *DynOS_Lvl_Override(void *aCmd) {
+    for (auto& overridePair : sDynosOverrideLevelScripts) {
+        if (aCmd == overridePair.first || aCmd == overridePair.second) {
+            aCmd = (void*)overridePair.second;
+            for (auto& customPair : sDynosCustomLevelScripts) {
+                gLevelScriptModIndex = customPair.second->mModIndex;
+                gLevelScriptActive = (LevelScript*)aCmd;
+            }
+        }
+    }
+    return aCmd;
 }

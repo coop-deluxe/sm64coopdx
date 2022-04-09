@@ -49,6 +49,10 @@ void DynOS_UpdateOpt(void *aPad) {
     gPrevFrameObjectCount = 0;
 }
 
+void *DynOS_SwapCmd(void *aCmd) {
+    return DynOS_Lvl_Override(aCmd);
+}
+
 void *DynOS_UpdateCmd(void *aCmd) {
     static const uintptr_t sCmdLevelEntry[] = { CALL(0, lvl_init_or_update) };
     sDynosIsLevelEntry |= (memcmp(aCmd, sCmdLevelEntry, sizeof(sCmdLevelEntry)) == 0);

@@ -90,12 +90,6 @@ s16 get_current_save_file_num(void) {
 
 ///
 
-LevelScript* smlua_level_util_get(const char* name) {
-    return dynos_level_get(name);
-}
-
-///
-
 f32 get_environment_region(u8 index) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         return gEnvironmentRegions[6 * (int)index];

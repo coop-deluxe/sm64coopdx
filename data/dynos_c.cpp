@@ -2,6 +2,10 @@
 extern "C" {
 #include "src/game/moving_texture.h"
 
+void *dynos_swap_cmd(void *cmd) {
+    return DynOS_SwapCmd(cmd);
+}
+
 // -- built in -- //
 
 void *dynos_update_cmd(void *cmd) {
@@ -102,10 +106,6 @@ Collision* dynos_collision_get(const char* collisionName) {
 
 void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
     DynOS_Lvl_Activate(modIndex, modPath, levelName);
-}
-
-LevelScript* dynos_level_get(const char* levelName) {
-    return DynOS_Lvl_GetScript(levelName);
 }
 
 const char* dynos_level_get_token(u32 index) {
