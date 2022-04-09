@@ -72,6 +72,43 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "whirlpools",          LOT_???,       offsetof(struct Area, whirlpools),          false, LOT_???            }, <--- UNIMPLEMENTED
 };
 
+#define LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT 28
+static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT] = {
+    { "BowlingBallBob2Trajectory", LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, BowlingBallBob2Trajectory), true, LOT_POINTER },
+    { "BowlingBallBobTrajectory",  LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, BowlingBallBobTrajectory),  true, LOT_POINTER },
+    { "BowlingBallTtmTrajectory",  LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, BowlingBallTtmTrajectory),  true, LOT_POINTER },
+    { "KoopaBobTrajectory",        LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, KoopaBobTrajectory),        true, LOT_POINTER },
+    { "KoopaThiTrajectory",        LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, KoopaThiTrajectory),        true, LOT_POINTER },
+    { "Mips10Trajectory",          LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips10Trajectory),          true, LOT_POINTER },
+    { "Mips2Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips2Trajectory),           true, LOT_POINTER },
+    { "Mips3Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips3Trajectory),           true, LOT_POINTER },
+    { "Mips4Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips4Trajectory),           true, LOT_POINTER },
+    { "Mips5Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips5Trajectory),           true, LOT_POINTER },
+    { "Mips6Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips6Trajectory),           true, LOT_POINTER },
+    { "Mips7Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips7Trajectory),           true, LOT_POINTER },
+    { "Mips8Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips8Trajectory),           true, LOT_POINTER },
+    { "Mips9Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips9Trajectory),           true, LOT_POINTER },
+    { "MipsTrajectory",            LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, MipsTrajectory),            true, LOT_POINTER },
+    { "PlatformBitfsTrajectory",   LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformBitfsTrajectory),   true, LOT_POINTER },
+    { "PlatformCcmTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformCcmTrajectory),     true, LOT_POINTER },
+    { "PlatformHmcTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformHmcTrajectory),     true, LOT_POINTER },
+    { "PlatformLll2Trajectory",    LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformLll2Trajectory),    true, LOT_POINTER },
+    { "PlatformLllTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformLllTrajectory),     true, LOT_POINTER },
+    { "PlatformRr2Trajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRr2Trajectory),     true, LOT_POINTER },
+    { "PlatformRr3Trajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRr3Trajectory),     true, LOT_POINTER },
+    { "PlatformRr4Trajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRr4Trajectory),     true, LOT_POINTER },
+    { "PlatformRrTrajectory",      LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRrTrajectory),      true, LOT_POINTER },
+    { "RacingPenguinTrajectory",   LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, RacingPenguinTrajectory),   true, LOT_POINTER },
+    { "SnowmanHeadTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, SnowmanHeadTrajectory),     true, LOT_POINTER },
+    { "Unagi2Trajectory",          LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Unagi2Trajectory),          true, LOT_POINTER },
+    { "UnagiTrajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),           true, LOT_POINTER },
+};
+
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 1
+static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
+    { "trajectories", LVT_COBJECT, offsetof(struct BehaviorValues, trajectories), true, LOT_BEHAVIORTRAJECTORIES },
+};
+
 #define LUA_BULLY_COLLISION_DATA_FIELD_COUNT 6
 static struct LuaObjectField sBullyCollisionDataFields[LUA_BULLY_COLLISION_DATA_FIELD_COUNT] = {
     { "conversionRatio", LVT_F32, offsetof(struct BullyCollisionData, conversionRatio), false, LOT_NONE },
@@ -1735,6 +1772,8 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_ANIMINFO,                  sAnimInfoFields,                  LUA_ANIM_INFO_FIELD_COUNT                    },
     { LOT_ANIMATION,                 sAnimationFields,                 LUA_ANIMATION_FIELD_COUNT                    },
     { LOT_AREA,                      sAreaFields,                      LUA_AREA_FIELD_COUNT                         },
+    { LOT_BEHAVIORTRAJECTORIES,      sBehaviorTrajectoriesFields,      LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT        },
+    { LOT_BEHAVIORVALUES,            sBehaviorValuesFields,            LUA_BEHAVIOR_VALUES_FIELD_COUNT              },
     { LOT_BULLYCOLLISIONDATA,        sBullyCollisionDataFields,        LUA_BULLY_COLLISION_DATA_FIELD_COUNT         },
     { LOT_CAMERA,                    sCameraFields,                    LUA_CAMERA_FIELD_COUNT                       },
     { LOT_CAMERAFOVSTATUS,           sCameraFOVStatusFields,           LUA_CAMERA_FOVSTATUS_FIELD_COUNT             },

@@ -53,16 +53,14 @@ static u8 sKoopaShelledAttackHandlers[] = {
 struct KoopaTheQuickProperties {
     s16 initText;
     s16 winText;
-    void const *path;
-    Vec3s starPos;
 };
 
 /**
  * Properties for the BoB race and the THI race.
  */
 static struct KoopaTheQuickProperties sKoopaTheQuickProperties[] = {
-    { DIALOG_005, DIALOG_007, bob_seg7_trajectory_koopa, { 3030, 4500, -4600 } },
-    { DIALOG_009, DIALOG_031, thi_seg7_trajectory_koopa, { 7100, -1300, -6000 } }
+    { DIALOG_005, DIALOG_007 },
+    { DIALOG_009, DIALOG_031 }
 };
 
 static u32 koopaPathedStartWaypoint = 0;
@@ -70,14 +68,18 @@ static u32 koopaPathedPrevWaypoint = 0;
 static u32 koopaShotFromCannon = 0;
 
 static void bhv_koopa_the_quick_on_received_post(UNUSED u8 fromLocalIndex) {
-    void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+    void* path = (o->oKoopaTheQuickRaceIndex == 0)
+               ? (void*) gBehaviorValues.trajectories.KoopaBobTrajectory
+               : (void*) gBehaviorValues.trajectories.KoopaThiTrajectory;
     o->oPathedStartWaypoint = (struct Waypoint*)path + koopaPathedStartWaypoint;
     o->oPathedPrevWaypoint  = (struct Waypoint*)path + koopaPathedPrevWaypoint;
     gMarioShotFromCannon = koopaShotFromCannon;
 }
 
 static void bhv_koopa_the_quick_on_sent_pre(void) {
-    void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+    void* path = (o->oKoopaTheQuickRaceIndex == 0)
+               ? (void*) gBehaviorValues.trajectories.KoopaBobTrajectory
+               : (void*) gBehaviorValues.trajectories.KoopaThiTrajectory;
     koopaPathedStartWaypoint = ((void*)o->oPathedStartWaypoint - path) / sizeof(struct Waypoint*);
     koopaPathedPrevWaypoint  = ((void*)o->oPathedPrevWaypoint  - path) / sizeof(struct Waypoint*);
     koopaShotFromCannon = gMarioShotFromCannon;
@@ -638,8 +640,9 @@ static void koopa_the_quick_act_show_init_text(void) {
         o->oForwardVel = 0.0f;
 
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
-        o->oPathedStartWaypoint = o->oPathedPrevWaypoint =
-            segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = (o->oKoopaTheQuickRaceIndex == 0)
+               ? (struct Waypoint*) gBehaviorValues.trajectories.KoopaBobTrajectory
+               : (struct Waypoint*) gBehaviorValues.trajectories.KoopaThiTrajectory;
 
         o->oKoopaTurningAwayFromWall = FALSE;
         o->oFlags |= OBJ_FLAG_ACTIVE_FROM_AFAR;

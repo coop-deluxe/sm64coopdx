@@ -62,7 +62,7 @@ void snowmans_bottom_act_1(void) {
     s32 sp20 = 0;
     UNUSED s16 sp1E;
 
-    o->oPathedStartWaypoint = segmented_to_virtual(&ccm_seg7_trajectory_snowman);
+    o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.SnowmanHeadTrajectory);
     sp26 = object_step_without_floor_orient();
     sp20 = cur_obj_follow_path(sp20);
     o->oSnowmansBottomUnkF8 = o->oPathedTargetYaw;

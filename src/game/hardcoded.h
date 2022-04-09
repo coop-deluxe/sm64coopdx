@@ -2,6 +2,10 @@
 #include "types.h"
 #include "level_table.h"
 
+  ////////////
+ // Levels //
+////////////
+
 struct StarPositions {
     Vec3f KoopaBobStarPos;
     Vec3f KoopaThiStarPos;
@@ -37,5 +41,46 @@ struct LevelValues {
 };
 
 extern struct LevelValues gLevelValues;
+
+  ///////////////
+ // Behaviors //
+///////////////
+
+struct BehaviorTrajectories {
+    const Trajectory* KoopaBobTrajectory;
+    const Trajectory* KoopaThiTrajectory;
+    const Trajectory* UnagiTrajectory;
+    const Trajectory* Unagi2Trajectory;
+    const Trajectory* SnowmanHeadTrajectory;
+    const Trajectory* RacingPenguinTrajectory;
+    const Trajectory* BowlingBallBobTrajectory;
+    const Trajectory* BowlingBallBob2Trajectory;
+    const Trajectory* BowlingBallTtmTrajectory;
+    const Trajectory* MipsTrajectory;
+    const Trajectory* Mips2Trajectory;
+    const Trajectory* Mips3Trajectory;
+    const Trajectory* Mips4Trajectory;
+    const Trajectory* Mips5Trajectory;
+    const Trajectory* Mips6Trajectory;
+    const Trajectory* Mips7Trajectory;
+    const Trajectory* Mips8Trajectory;
+    const Trajectory* Mips9Trajectory;
+    const Trajectory* Mips10Trajectory;
+    const Trajectory* PlatformRrTrajectory;
+    const Trajectory* PlatformRr2Trajectory;
+    const Trajectory* PlatformRr3Trajectory;
+    const Trajectory* PlatformRr4Trajectory;
+    const Trajectory* PlatformCcmTrajectory;
+    const Trajectory* PlatformBitfsTrajectory;
+    const Trajectory* PlatformHmcTrajectory;
+    const Trajectory* PlatformLllTrajectory;
+    const Trajectory* PlatformLll2Trajectory;
+};
+
+struct BehaviorValues {
+    struct BehaviorTrajectories trajectories;
+};
+
+extern struct BehaviorValues gBehaviorValues;
 
 #endif

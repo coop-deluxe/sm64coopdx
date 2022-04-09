@@ -361,22 +361,23 @@ static int smlua__get_field(lua_State* L) {
 
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     switch (data->valueType) {
-        case LVT_BOOL:       lua_pushboolean(L, *(u8* )p);              break;
-        case LVT_U8:         lua_pushinteger(L, *(u8* )p);              break;
-        case LVT_U16:        lua_pushinteger(L, *(u16*)p);              break;
-        case LVT_U32:        lua_pushinteger(L, *(u32*)p);              break;
-        case LVT_S8:         lua_pushinteger(L, *(s8* )p);              break;
-        case LVT_S16:        lua_pushinteger(L, *(s16*)p);              break;
-        case LVT_S32:        lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_F32:        lua_pushnumber( L, *(f32*)p);              break;
-        case LVT_COBJECT:    smlua_push_object(L, data->lot, p);        break;
-        case LVT_COBJECT_P:  smlua_push_object(L, data->lot, *(u8**)p); break;
-        case LVT_STRING:     lua_pushstring(L, (char*)p);               break;
-        case LVT_STRING_P:   lua_pushstring(L, *(char**)p);             break;
-        case LVT_BEHAVIORSCRIPT: lua_pushinteger(L, *(s32*)p);          break;
-        case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);       break;
-        case LVT_COLLISION:  lua_pushinteger(L, *(s32*)p);              break;
-        case LVT_LEVELSCRIPT: lua_pushinteger(L, *(s32*)p);             break;
+        case LVT_BOOL:              lua_pushboolean(L, *(u8* )p);              break;
+        case LVT_U8:                lua_pushinteger(L, *(u8* )p);              break;
+        case LVT_U16:               lua_pushinteger(L, *(u16*)p);              break;
+        case LVT_U32:               lua_pushinteger(L, *(u32*)p);              break;
+        case LVT_S8:                lua_pushinteger(L, *(s8* )p);              break;
+        case LVT_S16:               lua_pushinteger(L, *(s16*)p);              break;
+        case LVT_S32:               lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_F32:               lua_pushnumber( L, *(f32*)p);              break;
+        case LVT_COBJECT:           smlua_push_object(L, data->lot, p);        break;
+        case LVT_COBJECT_P:         smlua_push_object(L, data->lot, *(u8**)p); break;
+        case LVT_STRING:            lua_pushstring(L, (char*)p);               break;
+        case LVT_STRING_P:          lua_pushstring(L, *(char**)p);             break;
+        case LVT_BEHAVIORSCRIPT:    lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_COLLISION:         lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_LEVELSCRIPT:       lua_pushinteger(L, *(s32*)p);              break;
+        case LVT_TRAJECTORY:        lua_pushinteger(L, *(s16*)p);              break;
 
         // pointers
         case LVT_U8_P:
@@ -390,6 +391,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_OBJECTANIMPOINTER_P:
         case LVT_COLLISION_P:
         case LVT_LEVELSCRIPT_P:
+        case LVT_TRAJECTORY_P:
             smlua_push_pointer(L, data->valueType, *(u8**)p);
             break;
 
@@ -569,6 +571,11 @@ void smlua_cobject_init_globals(void) {
     {
         smlua_push_object(L, LOT_LEVELVALUES, &gLevelValues);
         lua_setglobal(L, "gLevelValues");
+    }
+
+    {
+        smlua_push_object(L, LOT_BEHAVIORVALUES, &gBehaviorValues);
+        lua_setglobal(L, "gBehaviorValues");
     }
 
 }

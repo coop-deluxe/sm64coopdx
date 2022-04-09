@@ -13,13 +13,13 @@ static u32 penguinPathedStartWaypoint = 0;
 static u32 penguinPathedPrevWaypoint = 0;
 
 static void bhv_racing_penguin_the_quick_on_received_post(UNUSED u8 fromLocalIndex) {
-    void* path = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+    void* path = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
     o->oPathedStartWaypoint = (struct Waypoint*)path + penguinPathedStartWaypoint;
     o->oPathedPrevWaypoint  = (struct Waypoint*)path + penguinPathedPrevWaypoint;
 }
 
 static void bhv_racing_penguin_the_quick_on_sent_pre(void) {
-    void* path = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+    void* path = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
     penguinPathedStartWaypoint = ((void*)o->oPathedStartWaypoint - path) / sizeof(struct Waypoint*);
     penguinPathedPrevWaypoint  = ((void*)o->oPathedPrevWaypoint - path) / sizeof(struct Waypoint*);
 }
@@ -105,7 +105,7 @@ static void racing_penguin_act_show_init_text(void) {
         child->parentObj = o;
 
         o->oPathedStartWaypoint = o->oPathedPrevWaypoint =
-            segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+            segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
         o->oPathedPrevWaypointFlags = 0;
 
         o->oAction = RACING_PENGUIN_ACT_PREPARE_FOR_RACE;
@@ -141,7 +141,7 @@ static void racing_penguin_act_race(void) {
         child = cur_obj_nearest_object_with_behavior(bhvPenguinRaceShortcutCheck);
         child->parentObj = o;
 
-        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
         o->oPathedPrevWaypointFlags = 0;
     }
 

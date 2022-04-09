@@ -41,6 +41,39 @@
 --- @field public terrainType integer
 --- @field public warpNodes ObjectWarpNode
 
+--- @class BehaviorTrajectories
+--- @field public BowlingBallBob2Trajectory Pointer_Trajectory
+--- @field public BowlingBallBobTrajectory Pointer_Trajectory
+--- @field public BowlingBallTtmTrajectory Pointer_Trajectory
+--- @field public KoopaBobTrajectory Pointer_Trajectory
+--- @field public KoopaThiTrajectory Pointer_Trajectory
+--- @field public Mips10Trajectory Pointer_Trajectory
+--- @field public Mips2Trajectory Pointer_Trajectory
+--- @field public Mips3Trajectory Pointer_Trajectory
+--- @field public Mips4Trajectory Pointer_Trajectory
+--- @field public Mips5Trajectory Pointer_Trajectory
+--- @field public Mips6Trajectory Pointer_Trajectory
+--- @field public Mips7Trajectory Pointer_Trajectory
+--- @field public Mips8Trajectory Pointer_Trajectory
+--- @field public Mips9Trajectory Pointer_Trajectory
+--- @field public MipsTrajectory Pointer_Trajectory
+--- @field public PlatformBitfsTrajectory Pointer_Trajectory
+--- @field public PlatformCcmTrajectory Pointer_Trajectory
+--- @field public PlatformHmcTrajectory Pointer_Trajectory
+--- @field public PlatformLll2Trajectory Pointer_Trajectory
+--- @field public PlatformLllTrajectory Pointer_Trajectory
+--- @field public PlatformRr2Trajectory Pointer_Trajectory
+--- @field public PlatformRr3Trajectory Pointer_Trajectory
+--- @field public PlatformRr4Trajectory Pointer_Trajectory
+--- @field public PlatformRrTrajectory Pointer_Trajectory
+--- @field public RacingPenguinTrajectory Pointer_Trajectory
+--- @field public SnowmanHeadTrajectory Pointer_Trajectory
+--- @field public Unagi2Trajectory Pointer_Trajectory
+--- @field public UnagiTrajectory Pointer_Trajectory
+
+--- @class BehaviorValues
+--- @field public trajectories BehaviorTrajectories
+
 --- @class BullyCollisionData
 --- @field public conversionRatio number
 --- @field public posX number
@@ -1565,6 +1598,7 @@
 --- @field public z integer
 
 --- @class Pointer_integer
+--- @class Pointer_Trajectory
 --- @class Pointer_ObjectAnimPointer
 --- @class Pointer_Collision
 --- @class Pointer_BehaviorScript

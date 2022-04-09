@@ -1,5 +1,42 @@
 #include "hardcoded.h"
 
+#include "levels/bbh/header.h"
+#include "levels/bitdw/header.h"
+#include "levels/bitfs/header.h"
+#include "levels/bits/header.h"
+#include "levels/bob/header.h"
+#include "levels/bowser_1/header.h"
+#include "levels/bowser_2/header.h"
+#include "levels/bowser_2/header.h"
+#include "levels/bowser_3/header.h"
+#include "levels/bowser_3/header.h"
+#include "levels/castle_courtyard/header.h"
+#include "levels/castle_grounds/header.h"
+#include "levels/castle_inside/header.h"
+#include "levels/ccm/header.h"
+#include "levels/cotmc/header.h"
+#include "levels/ddd/header.h"
+#include "levels/hmc/header.h"
+#include "levels/jrb/header.h"
+#include "levels/lll/header.h"
+#include "levels/pss/header.h"
+#include "levels/rr/header.h"
+#include "levels/sa/header.h"
+#include "levels/sl/header.h"
+#include "levels/ssl/header.h"
+#include "levels/thi/header.h"
+#include "levels/totwc/header.h"
+#include "levels/ttc/header.h"
+#include "levels/ttm/header.h"
+#include "levels/vcutm/header.h"
+#include "levels/wdw/header.h"
+#include "levels/wf/header.h"
+#include "levels/wmotr/header.h"
+
+  ////////////
+ // Levels //
+////////////
+
 struct LevelValues gLevelValues = {
     .entryLevel = LEVEL_CASTLE_GROUNDS,
     .starPositions = {
@@ -33,5 +70,42 @@ struct LevelValues gLevelValues = {
         .UkikiCageStarPos     = {  2500.0f, -1200.0f,  1300.0f },
         .UnagiStarPos         = {  6833.0f, -3654.0f,  2230.0f },
         .JetstreamRingStarPos = {  3400.0f, -3200.0f,  -500.0f },
+    },
+};
+
+  ///////////////
+ // Behaviors //
+///////////////
+
+struct BehaviorValues gBehaviorValues = {
+    .trajectories = {
+        .KoopaBobTrajectory        = bob_seg7_trajectory_koopa,
+        .KoopaThiTrajectory        = thi_seg7_trajectory_koopa,
+        .UnagiTrajectory           = jrb_seg7_trajectory_unagi_1,
+        .Unagi2Trajectory          = jrb_seg7_trajectory_unagi_2,
+        .SnowmanHeadTrajectory     = ccm_seg7_trajectory_snowman,
+        .RacingPenguinTrajectory   = ccm_seg7_trajectory_penguin_race,
+        .BowlingBallBobTrajectory  = bob_seg7_metal_ball_path0,
+        .BowlingBallBob2Trajectory = bob_seg7_metal_ball_path1,
+        .BowlingBallTtmTrajectory  = ttm_seg7_trajectory_070170A0,
+        .MipsTrajectory            = inside_castle_seg7_trajectory_mips_0,
+        .Mips2Trajectory           = inside_castle_seg7_trajectory_mips_1,
+        .Mips3Trajectory           = inside_castle_seg7_trajectory_mips_2,
+        .Mips4Trajectory           = inside_castle_seg7_trajectory_mips_3,
+        .Mips5Trajectory           = inside_castle_seg7_trajectory_mips_4,
+        .Mips6Trajectory           = inside_castle_seg7_trajectory_mips_5,
+        .Mips7Trajectory           = inside_castle_seg7_trajectory_mips_6,
+        .Mips8Trajectory           = inside_castle_seg7_trajectory_mips_7,
+        .Mips9Trajectory           = inside_castle_seg7_trajectory_mips_8,
+        .Mips10Trajectory          = inside_castle_seg7_trajectory_mips_9,
+        .PlatformRrTrajectory      = rr_seg7_trajectory_0702EC3C,
+        .PlatformRr2Trajectory     = rr_seg7_trajectory_0702ECC0,
+        .PlatformRr3Trajectory     = rr_seg7_trajectory_0702ED9C,
+        .PlatformRr4Trajectory     = rr_seg7_trajectory_0702EEE0,
+        .PlatformCcmTrajectory     = ccm_seg7_trajectory_0701669C,
+        .PlatformBitfsTrajectory   = bitfs_seg7_trajectory_070159AC,
+        .PlatformHmcTrajectory     = hmc_seg7_trajectory_0702B86C,
+        .PlatformLllTrajectory     = lll_seg7_trajectory_0702856C,
+        .PlatformLll2Trajectory    = lll_seg7_trajectory_07028660,
     },
 };

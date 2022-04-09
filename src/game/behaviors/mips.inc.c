@@ -2,6 +2,19 @@
  * Behavior for MIPS (everyone's favorite yellow rabbit).
  */
 
+static const Trajectory** sMipsPaths[] = {
+    &gBehaviorValues.trajectories.MipsTrajectory,
+    &gBehaviorValues.trajectories.Mips2Trajectory,
+    &gBehaviorValues.trajectories.Mips3Trajectory,
+    &gBehaviorValues.trajectories.Mips4Trajectory,
+    &gBehaviorValues.trajectories.Mips5Trajectory,
+    &gBehaviorValues.trajectories.Mips6Trajectory,
+    &gBehaviorValues.trajectories.Mips7Trajectory,
+    &gBehaviorValues.trajectories.Mips8Trajectory,
+    &gBehaviorValues.trajectories.Mips9Trajectory,
+    &gBehaviorValues.trajectories.Mips10Trajectory,
+};
+
 static u32 mipsPrevHeldState = 0;
 
 static void bhv_mips_on_received_pre(UNUSED u8 fromLocalIndex) {
@@ -77,16 +90,13 @@ s16 bhv_mips_find_furthest_waypoint_to_mario(void) {
     s16 furthestWaypointIndex = -1;
     f32 furthestWaypointDistance = -10000.0f;
     f32 distanceToMario;
-    struct Waypoint **pathBase;
     struct Waypoint *waypoint;
-
-    pathBase = segmented_to_virtual(&inside_castle_seg7_trajectory_mips);
 
     struct Object* player = nearest_player_to_object(o);
 
     // For each waypoint in MIPS path...
     for (i = 0; i < 10; i++) {
-        waypoint = segmented_to_virtual(pathBase[i]);
+        waypoint = segmented_to_virtual(*sMipsPaths[i]);
         x = waypoint->pos[0];
         y = waypoint->pos[1];
         z = waypoint->pos[2];
@@ -136,12 +146,12 @@ void bhv_mips_act_wait_for_nearby_mario(void) {
 void bhv_mips_act_follow_path(void) {
     s16 collisionFlags = 0;
     s32 followStatus = 0;
-    struct Waypoint **pathBase;
+    struct Waypoint ***pathBase;
     struct Waypoint *waypoint;
 
     // Retrieve current waypoint.
-    pathBase = segmented_to_virtual(&inside_castle_seg7_trajectory_mips);
-    waypoint = segmented_to_virtual(*(pathBase + o->oMipsStartWaypointIndex));
+    pathBase = segmented_to_virtual(sMipsPaths);
+    waypoint = segmented_to_virtual(*(*pathBase + o->oMipsStartWaypointIndex));
 
     // Set start waypoint and follow the path from there.
     o->oPathedStartWaypoint = waypoint;

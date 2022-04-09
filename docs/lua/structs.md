@@ -4,6 +4,8 @@
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
 - [Area](#Area)
+- [BehaviorTrajectories](#BehaviorTrajectories)
+- [BehaviorValues](#BehaviorValues)
 - [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
 - [CameraFOVStatus](#CameraFOVStatus)
@@ -124,6 +126,53 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BehaviorTrajectories](#BehaviorTrajectories)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> | read-only |
+| BowlingBallBobTrajectory | `Pointer` <`Trajectory`> | read-only |
+| BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> | read-only |
+| KoopaBobTrajectory | `Pointer` <`Trajectory`> | read-only |
+| KoopaThiTrajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips10Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips2Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips3Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips4Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips5Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips6Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips7Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips8Trajectory | `Pointer` <`Trajectory`> | read-only |
+| Mips9Trajectory | `Pointer` <`Trajectory`> | read-only |
+| MipsTrajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformBitfsTrajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformCcmTrajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformHmcTrajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformLll2Trajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformLllTrajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformRr2Trajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformRr3Trajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformRr4Trajectory | `Pointer` <`Trajectory`> | read-only |
+| PlatformRrTrajectory | `Pointer` <`Trajectory`> | read-only |
+| RacingPenguinTrajectory | `Pointer` <`Trajectory`> | read-only |
+| SnowmanHeadTrajectory | `Pointer` <`Trajectory`> | read-only |
+| Unagi2Trajectory | `Pointer` <`Trajectory`> | read-only |
+| UnagiTrajectory | `Pointer` <`Trajectory`> | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BehaviorValues](#BehaviorValues)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
 
 [:arrow_up_small:](#)
 
