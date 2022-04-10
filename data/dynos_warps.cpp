@@ -36,7 +36,7 @@ static s32 sDynosExitAreaNum  = -1;
 //
 
 bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct) {
-    if (/*DynOS_Level_GetCourse(aLevel) == COURSE_NONE || */!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
+    if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
         return false;
     }
 

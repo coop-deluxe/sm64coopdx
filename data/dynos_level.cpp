@@ -832,23 +832,34 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
 
 s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
     DynOS_Level_Init();
-    //s16 *bestWarp = NULL;
     for (const auto &_Warp : sDynosLevelWarps[aLevel]) {
         if (_Warp.mArea == aArea) {
             if (_Warp.mId == aWarpId) {
                 return (s16 *) &_Warp;
-            } else {
-                //bestWarp = (s16 *) &_Warp;
             }
         }
     }
-    //return bestWarp;
     return NULL;
 }
 
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea) {
     DynOS_Level_Init();
     if (aLevel == LEVEL_TTM && aArea > 2) return NULL;
+
+    // override vanilla castle warps
+    if (DynOS_Level_GetCourse(aLevel) == COURSE_NONE) {
+        extern const LevelScript level_castle_grounds_entry[];
+        extern const LevelScript level_castle_inside_entry[];
+        extern const LevelScript level_castle_courtyard_entry[];
+        if (sDynosLevelScripts[aLevel] == level_castle_inside_entry) {
+            return DynOS_Level_GetWarp(aLevel, aArea, (aArea == 3) ? 0x00 : 0x01);
+        } else if (sDynosLevelScripts[aLevel] == level_castle_grounds_entry) {
+            return DynOS_Level_GetWarp(aLevel, aArea, 0x00);
+        } else if (sDynosLevelScripts[aLevel] == level_castle_courtyard_entry) {
+            return DynOS_Level_GetWarp(aLevel, aArea, 0x01);
+        }
+    }
+
     return DynOS_Level_GetWarp(aLevel, aArea, 0x0A);
 }
 
