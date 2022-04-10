@@ -16,10 +16,10 @@ if [ ! -f "$FILE" ]; then
 fi
 
 # no debug, direct
-$FILE --server 27015 --configfile sm64config_server.txt  &
-sleep 2
-$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
-exit
+#$FILE --server 27015 --configfile sm64config_server.txt  &
+#sleep 2
+#$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  &
+#exit
 
 # no debug, discord
 #$FILE --discord 2 --configfile sm64config_server.txt  &
@@ -27,9 +27,9 @@ exit
 #exit
 
 # debug on server
-#$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  & > /dev/null
-#$WINPTY cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_server.txt' -ex 'quit'
-#exit
+$FILE --client 127.0.0.1 27015 --configfile sm64config_client.txt  & > /dev/null
+$WINPTY cgdb $FILE -ex 'break debug_breakpoint_here' -ex 'run --server 27015 --configfile sm64config_server.txt' -ex 'quit'
+exit
 
 # debug on client
 $FILE --server 27015 --configfile sm64config_server.txt & > /dev/null

@@ -7026,6 +7026,11 @@ function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m
     -- ...
 end
 
+--- @return nil
+function smlua_audio_utils_reset_all()
+    -- ...
+end
+
 --- @param startX number
 --- @param startY number
 --- @param startZ number

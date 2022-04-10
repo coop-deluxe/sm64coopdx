@@ -14637,6 +14637,15 @@ int smlua_func_smlua_audio_utils_replace_sequence(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_audio_utils_reset_all(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    smlua_audio_utils_reset_all();
+
+    return 1;
+}
+
   /////////////////////////////
  // smlua_collision_utils.h //
 /////////////////////////////
@@ -16973,6 +16982,7 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_audio_utils.h
     smlua_bind_function(L, "smlua_audio_utils_replace_sequence", smlua_func_smlua_audio_utils_replace_sequence);
+    smlua_bind_function(L, "smlua_audio_utils_reset_all", smlua_func_smlua_audio_utils_reset_all);
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);

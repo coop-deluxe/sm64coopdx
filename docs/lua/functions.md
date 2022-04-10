@@ -1304,6 +1304,7 @@
 
 - smlua_audio_utils.h
    - [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+   - [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
 
 <br />
 
@@ -24579,6 +24580,24 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
+
+### Lua Example
+`smlua_audio_utils_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_reset_all(void);`
 
 [:arrow_up_small:](#)
 

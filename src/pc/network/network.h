@@ -22,7 +22,7 @@ extern struct MarioState gMarioStates[];
 #define SYNC_DISTANCE_INFINITE 0
 #define MAX_SYNC_OBJECTS 256 // note: increasing this requires code to be rewritten
 #define MAX_SYNC_OBJECT_FIELDS 64
-#define PACKET_LENGTH 2048
+#define PACKET_LENGTH 3000
 #define NETWORKTYPESTR (gNetworkType == NT_CLIENT                            \
                         ? "Client"                                           \
                         : (gNetworkType == NT_SERVER ? "Server" : " None ")) \
