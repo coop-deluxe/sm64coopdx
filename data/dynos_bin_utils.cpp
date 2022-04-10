@@ -25,10 +25,14 @@ s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found) {
         }
     } else {
         // is a decimal number
+        if (*argStr == '-' || *argStr == '+') {
+            // good
+            argStr++;
+        }
         while(*argStr != '\0') {
             if (*argStr >= '0' && *argStr <= '9') {
                 // good
-            } else if (*argStr == '-' || *argStr == '+') {
+            } else if (*argStr == '.') {
                 // good
             } else {
                 // bad character
