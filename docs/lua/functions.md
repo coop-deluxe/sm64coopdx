@@ -24564,20 +24564,21 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 ## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
 
 ### Lua Example
-`smlua_audio_utils_replace_sequence(sequenceId, bankId, m64Name)`
+`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | sequenceId | `integer` |
 | bankId | `integer` |
+| defaultVolume | `integer` |
 | m64Name | `string` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, const char* m64Name);`
+`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
 
 [:arrow_up_small:](#)
 

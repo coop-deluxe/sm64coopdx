@@ -7019,9 +7019,10 @@ end
 
 --- @param sequenceId integer
 --- @param bankId integer
+--- @param defaultVolume integer
 --- @param m64Name string
 --- @return nil
-function smlua_audio_utils_replace_sequence(sequenceId, bankId, m64Name)
+function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)
     -- ...
 end
 

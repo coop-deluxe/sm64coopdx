@@ -1,4 +1,5 @@
 #include "types.h"
+#include "audio/external.h"
 #include "pc/mods/mods.h"
 #include "pc/lua/smlua.h"
 #include "pc/debuglog.h"
@@ -16,14 +17,14 @@ struct AudioOverride {
 
 struct AudioOverride sAudioOverrides[MAX_OVERRIDE] = { 0 };
 
-static smlua_audio_utils_reset(struct AudioOverride* override) {
+static void smlua_audio_utils_reset(struct AudioOverride* override) {
     if (override == NULL) { return; }
 
     override->enabled = false;
     override->loaded = false;
 
     if (override->filename) {
-        free(override->filename);
+        free((char*)override->filename);
         override->filename = NULL;
     }
 
@@ -31,13 +32,14 @@ static smlua_audio_utils_reset(struct AudioOverride* override) {
     override->bank = 0;
 
     if (override->buffer != NULL) {
-        free(override->filename);
-        override->filename = NULL;
+        free((u8*)override->buffer);
+        override->buffer = NULL;
     }
 }
 
 void smlua_audio_utils_reset_all(void) {
     for (s32 i = 0; i < MAX_OVERRIDE; i++) {
+        if (sAudioOverrides[i].enabled) { sound_reset_background_music_default_volume(i); }
         smlua_audio_utils_reset(&sAudioOverrides[i]);
     }
 }
@@ -83,7 +85,7 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
     return true;
 }
 
-void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, const char* m64Name) {
+void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name) {
     if (gLuaActiveMod == NULL) { return; }
     if (sequenceId >= MAX_OVERRIDE) {
         LOG_LUA("Invalid sequenceId given to smlua_audio_utils_replace_sequence(): %d", sequenceId);
@@ -111,6 +113,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, const char* m6
             override->filename = strdup(fullPath);
             override->enabled = true;
             override->bank = bankId;
+            sound_set_background_music_default_volume(sequenceId, defaultVolume);
             return;
         }
     }

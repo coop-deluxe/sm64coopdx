@@ -14621,16 +14621,18 @@ int smlua_func_save_file_set_flags(lua_State* L) {
 /////////////////////////
 
 int smlua_func_smlua_audio_utils_replace_sequence(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
     u8 sequenceId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { return 0; }
     u8 bankId = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { return 0; }
-    const char* m64Name = smlua_to_string(L, 3);
+    u8 defaultVolume = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* m64Name = smlua_to_string(L, 4);
     if (!gSmLuaConvertSuccess) { return 0; }
 
-    smlua_audio_utils_replace_sequence(sequenceId, bankId, m64Name);
+    smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name);
 
     return 1;
 }

@@ -3,6 +3,7 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/crash_handler.h"
 #include "pc/lua/utils/smlua_text_utils.h"
+#include "pc/lua/utils/smlua_audio_utils.h"
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
