@@ -32,6 +32,7 @@ in_files = [
     "src/game/obj_behaviors.c",
     "src/game/save_file.h",
     "src/game/obj_behaviors_2.h",
+    "include/dialog_ids.h",
 ]
 
 exclude_constants = {

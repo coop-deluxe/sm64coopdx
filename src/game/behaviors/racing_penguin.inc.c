@@ -1,12 +1,12 @@
 struct RacingPenguinData {
-    s16 text;
-    f32 radius;
-    f32 height;
+    s16* text;
+    f32* radius;
+    f32* height;
 };
 
 static struct RacingPenguinData sRacingPenguinData[] = {
-    { DIALOG_055, 200.0f, 200.0f },
-    { DIALOG_164, 350.0f, 250.0f },
+    { (s16*) &gBehaviorValues.dialogs.RacingPenguinStartDialog, &gBehaviorValues.RacingPenguinRadius, &gBehaviorValues.RacingPenguinHeight },
+    { (s16*) &gBehaviorValues.dialogs.RacingPenguinBigStartDialog, &gBehaviorValues.RacingPenguinBigRadius, &gBehaviorValues.RacingPenguinBigHeight },
 };
 
 static u32 penguinPathedStartWaypoint = 0;
@@ -32,8 +32,8 @@ void bhv_racing_penguin_the_quick_override_ownership(u8* shouldOverride, u8* sho
 void bhv_racing_penguin_run_once(void) {
     cur_obj_align_gfx_with_floor();
     cur_obj_push_mario_away_from_cylinder(
-        sRacingPenguinData[o->oBehParams2ndByte].radius,
-        sRacingPenguinData[o->oBehParams2ndByte].height);
+        *sRacingPenguinData[o->oBehParams2ndByte].radius,
+        *sRacingPenguinData[o->oBehParams2ndByte].height);
 }
 
 void bhv_racing_penguin_init(void) {
@@ -93,7 +93,7 @@ static void racing_penguin_act_wait_for_mario(void) {
 u8 racing_penguin_act_show_init_text_continue_dialog(void) { return o->oAction == RACING_PENGUIN_ACT_SHOW_INIT_TEXT; }
 
 static void racing_penguin_act_show_init_text(void) {
-    s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
+    s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], *sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
 
     if (response == 1) {
         struct Object *child;
@@ -227,13 +227,13 @@ static void racing_penguin_act_show_final_text(void) {
             if (cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
                 if (o->oRacingPenguinMarioWon) {
                     if (o->oRacingPenguinMarioCheated) {
-                        o->oRacingPenguinFinalTextbox = DIALOG_132;
+                        o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinCheatDialog;
                         o->oRacingPenguinMarioWon = FALSE;
                     } else {
-                        o->oRacingPenguinFinalTextbox = DIALOG_056;
+                        o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinWinDialog;
                     }
                 } else {
-                    o->oRacingPenguinFinalTextbox = DIALOG_037;
+                    o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinLostDialog;
                 }
             }
         } else {

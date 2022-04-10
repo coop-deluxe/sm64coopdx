@@ -7,6 +7,8 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
+- [dialog_ids.h](#dialog_idsh)
+    - [enum DialogId](#enum-DialogId)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
@@ -838,6 +840,187 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [dialog_ids.h](#dialog_ids.h)
+
+### [enum DialogId](#DialogId)
+| Identifier | Value |
+| :--------- | :---- |
+| DIALOG_000 | 0 |
+| DIALOG_001 | 1 |
+| DIALOG_002 | 2 |
+| DIALOG_003 | 3 |
+| DIALOG_004 | 4 |
+| DIALOG_005 | 5 |
+| DIALOG_006 | 6 |
+| DIALOG_007 | 7 |
+| DIALOG_008 | 8 |
+| DIALOG_009 | 9 |
+| DIALOG_010 | 10 |
+| DIALOG_011 | 11 |
+| DIALOG_012 | 12 |
+| DIALOG_013 | 13 |
+| DIALOG_014 | 14 |
+| DIALOG_015 | 15 |
+| DIALOG_016 | 16 |
+| DIALOG_017 | 17 |
+| DIALOG_018 | 18 |
+| DIALOG_019 | 19 |
+| DIALOG_020 | 20 |
+| DIALOG_021 | 21 |
+| DIALOG_022 | 22 |
+| DIALOG_023 | 23 |
+| DIALOG_024 | 24 |
+| DIALOG_025 | 25 |
+| DIALOG_026 | 26 |
+| DIALOG_027 | 27 |
+| DIALOG_028 | 28 |
+| DIALOG_029 | 29 |
+| DIALOG_030 | 30 |
+| DIALOG_031 | 31 |
+| DIALOG_032 | 32 |
+| DIALOG_033 | 33 |
+| DIALOG_034 | 34 |
+| DIALOG_035 | 35 |
+| DIALOG_036 | 36 |
+| DIALOG_037 | 37 |
+| DIALOG_038 | 38 |
+| DIALOG_039 | 39 |
+| DIALOG_040 | 40 |
+| DIALOG_041 | 41 |
+| DIALOG_042 | 42 |
+| DIALOG_043 | 43 |
+| DIALOG_044 | 44 |
+| DIALOG_045 | 45 |
+| DIALOG_046 | 46 |
+| DIALOG_047 | 47 |
+| DIALOG_048 | 48 |
+| DIALOG_049 | 49 |
+| DIALOG_050 | 50 |
+| DIALOG_051 | 51 |
+| DIALOG_052 | 52 |
+| DIALOG_053 | 53 |
+| DIALOG_054 | 54 |
+| DIALOG_055 | 55 |
+| DIALOG_056 | 56 |
+| DIALOG_057 | 57 |
+| DIALOG_058 | 58 |
+| DIALOG_059 | 59 |
+| DIALOG_060 | 60 |
+| DIALOG_061 | 61 |
+| DIALOG_062 | 62 |
+| DIALOG_063 | 63 |
+| DIALOG_064 | 64 |
+| DIALOG_065 | 65 |
+| DIALOG_066 | 66 |
+| DIALOG_067 | 67 |
+| DIALOG_068 | 68 |
+| DIALOG_069 | 69 |
+| DIALOG_070 | 70 |
+| DIALOG_071 | 71 |
+| DIALOG_072 | 72 |
+| DIALOG_073 | 73 |
+| DIALOG_074 | 74 |
+| DIALOG_075 | 75 |
+| DIALOG_076 | 76 |
+| DIALOG_077 | 77 |
+| DIALOG_078 | 78 |
+| DIALOG_079 | 79 |
+| DIALOG_080 | 80 |
+| DIALOG_081 | 81 |
+| DIALOG_082 | 82 |
+| DIALOG_083 | 83 |
+| DIALOG_084 | 84 |
+| DIALOG_085 | 85 |
+| DIALOG_086 | 86 |
+| DIALOG_087 | 87 |
+| DIALOG_088 | 88 |
+| DIALOG_089 | 89 |
+| DIALOG_090 | 90 |
+| DIALOG_091 | 91 |
+| DIALOG_092 | 92 |
+| DIALOG_093 | 93 |
+| DIALOG_094 | 94 |
+| DIALOG_095 | 95 |
+| DIALOG_096 | 96 |
+| DIALOG_097 | 97 |
+| DIALOG_098 | 98 |
+| DIALOG_099 | 99 |
+| DIALOG_100 | 100 |
+| DIALOG_101 | 101 |
+| DIALOG_102 | 102 |
+| DIALOG_103 | 103 |
+| DIALOG_104 | 104 |
+| DIALOG_105 | 105 |
+| DIALOG_106 | 106 |
+| DIALOG_107 | 107 |
+| DIALOG_108 | 108 |
+| DIALOG_109 | 109 |
+| DIALOG_110 | 110 |
+| DIALOG_111 | 111 |
+| DIALOG_112 | 112 |
+| DIALOG_113 | 113 |
+| DIALOG_114 | 114 |
+| DIALOG_115 | 115 |
+| DIALOG_116 | 116 |
+| DIALOG_117 | 117 |
+| DIALOG_118 | 118 |
+| DIALOG_119 | 119 |
+| DIALOG_120 | 120 |
+| DIALOG_121 | 121 |
+| DIALOG_122 | 122 |
+| DIALOG_123 | 123 |
+| DIALOG_124 | 124 |
+| DIALOG_125 | 125 |
+| DIALOG_126 | 126 |
+| DIALOG_127 | 127 |
+| DIALOG_128 | 128 |
+| DIALOG_129 | 129 |
+| DIALOG_130 | 130 |
+| DIALOG_131 | 131 |
+| DIALOG_132 | 132 |
+| DIALOG_133 | 133 |
+| DIALOG_134 | 134 |
+| DIALOG_135 | 135 |
+| DIALOG_136 | 136 |
+| DIALOG_137 | 137 |
+| DIALOG_138 | 138 |
+| DIALOG_139 | 139 |
+| DIALOG_140 | 140 |
+| DIALOG_141 | 141 |
+| DIALOG_142 | 142 |
+| DIALOG_143 | 143 |
+| DIALOG_144 | 144 |
+| DIALOG_145 | 145 |
+| DIALOG_146 | 146 |
+| DIALOG_147 | 147 |
+| DIALOG_148 | 148 |
+| DIALOG_149 | 149 |
+| DIALOG_150 | 150 |
+| DIALOG_151 | 151 |
+| DIALOG_152 | 152 |
+| DIALOG_153 | 153 |
+| DIALOG_154 | 154 |
+| DIALOG_155 | 155 |
+| DIALOG_156 | 156 |
+| DIALOG_157 | 157 |
+| DIALOG_158 | 158 |
+| DIALOG_159 | 159 |
+| DIALOG_160 | 160 |
+| DIALOG_161 | 161 |
+| DIALOG_162 | 162 |
+| DIALOG_163 | 163 |
+| DIALOG_164 | 164 |
+| DIALOG_165 | 165 |
+| DIALOG_166 | 166 |
+| DIALOG_167 | 167 |
+| DIALOG_168 | 168 |
+| DIALOG_169 | 169 |
+| DIALOG_COUNT | 170 |
 
 [:arrow_up_small:](#)
 

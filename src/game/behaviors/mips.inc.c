@@ -276,9 +276,9 @@ void bhv_mips_held(void) {
     if (o->oMipsStarStatus == MIPS_STAR_STATUS_HAVENT_SPAWNED_STAR) {
         // Choose dialog based on which MIPS encounter this is.
         if (o->oBehParams2ndByte == 0)
-            dialogID = DIALOG_084;
+            dialogID = gBehaviorValues.dialogs.Mips1Dialog;
         else
-            dialogID = DIALOG_162;
+            dialogID = gBehaviorValues.dialogs.Mips2Dialog;
 
         if (should_start_or_continue_dialog(&gMarioStates[o->heldByPlayerIndex], o) && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_mips_held_continue_dialog) == 2) {
             //o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;

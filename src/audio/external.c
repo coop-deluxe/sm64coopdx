@@ -10,6 +10,7 @@
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
 #include "game/camera.h"
+#include "game/hardcoded.h"
 #include "seq_ids.h"
 #include "dialog_ids.h"
 #include "level_table.h"
@@ -2276,7 +2277,7 @@ void play_dialog_sound(u8 dialogID) {
 
 #ifndef VERSION_JP
     // "You've stepped on the (Wing|Metal|Vanish) Cap Switch"
-    if (dialogID == DIALOG_010 || dialogID == DIALOG_011 || dialogID == DIALOG_012) {
+    if (dialogID == gBehaviorValues.dialogs.CapswitchWingDialog || dialogID == gBehaviorValues.dialogs.CapswitchMetalDialog || dialogID == gBehaviorValues.dialogs.CapswitchVanishDialog) {
         play_puzzle_jingle();
     }
 #endif

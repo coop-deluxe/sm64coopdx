@@ -405,7 +405,7 @@ void ukiki_act_go_to_cage(void) {
         case UKIKI_SUB_ACT_CAGE_TALK_TO_MARIO:
             cur_obj_init_animation_with_sound(UKIKI_ANIM_HANDSTAND);
 
-            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 3, 1, CUTSCENE_DIALOG, DIALOG_080, ukiki_act_go_to_cage_continue_dialog)) {
+            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 3, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.UkikiCageDialog, ukiki_act_go_to_cage_continue_dialog)) {
                 o->oSubAction++;
                 network_send_object_reliability(o, TRUE);
             }
@@ -547,7 +547,7 @@ void cage_ukiki_held_loop(void) {
         switch(o->oUkikiTextState) {
             case UKIKI_TEXT_DEFAULT:
                 if (set_mario_npc_dialog(heldByMario, 2, cage_ukiki_held_default_continue_dialog) == 2) {
-                    create_dialog_box_with_response(DIALOG_079);
+                    create_dialog_box_with_response(gBehaviorValues.dialogs.UkikiHeldDialog);
                     o->oUkikiTextState = UKIKI_TEXT_CAGE_TEXTBOX;
                 }
                 break;
@@ -611,7 +611,7 @@ void cap_ukiki_held_loop(void) {
             break;
 
         case UKIKI_TEXT_STEAL_CAP:
-            if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 2, DIALOG_100, 0, hat_ukiki_held_loop_1)) {
+            if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 2, gBehaviorValues.dialogs.UkikiCapStealDialog, 0, hat_ukiki_held_loop_1)) {
                 o->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                 o->oUkikiTextState = UKIKI_TEXT_STOLE_CAP;
                 network_send_object(o);
@@ -622,7 +622,7 @@ void cap_ukiki_held_loop(void) {
             break;
 
         case UKIKI_TEXT_HAS_CAP:
-            if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 18, DIALOG_101, 0, hat_ukiki_held_loop_2)) {
+            if (should_start_or_continue_dialog(heldByMario, o) && cur_obj_update_dialog(heldByMario, 2, 18, gBehaviorValues.dialogs.UkikiCapGiveDialog, 0, hat_ukiki_held_loop_2)) {
                 mario_retrieve_cap(heldByMario);
                 set_mario_npc_dialog(heldByMario, 0, NULL);
                 o->oUkikiHasCap &= ~UKIKI_CAP_ON;

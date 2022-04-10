@@ -226,7 +226,7 @@ static void wiggler_act_walk(void) {
 
         // If Mario is positioned below the wiggler, assume he entered through the
         // lower cave entrance, so don't display text.
-        if (player->oPosY < o->oPosY || (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, DIALOG_150, wiggler_act_walk_continue_dialog) != 0)) {
+        if (player->oPosY < o->oPosY || (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.WigglerDialog, wiggler_act_walk_continue_dialog) != 0)) {
             o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
             network_send_object_reliability(o, TRUE);
         }
@@ -295,7 +295,11 @@ static void wiggler_act_jumped_on(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
 
     // Text to show on first, second, and third attack.
-    s32 attackText[3] = { DIALOG_152, DIALOG_168, DIALOG_151 };
+    s32* attackText[3] = {
+        (s32*) &gBehaviorValues.dialogs.WigglerAttack1Dialog,
+        (s32*) &gBehaviorValues.dialogs.WigglerAttack2Dialog,
+        (s32*) &gBehaviorValues.dialogs.WigglerAttack3Dialog
+    };
 
     // Shrink until the squish speed becomes 0, then unisquish
     if (approach_f32_ptr(&o->oWigglerSquishSpeed, 0.0f, 0.05f)) {
@@ -309,7 +313,7 @@ static void wiggler_act_jumped_on(void) {
     // defeated) or go back to walking
     if (o->header.gfx.scale[1] >= 4.0f) {
         if (o->oTimer > 30) {
-            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, attackText[o->oHealth - 2], wiggler_act_jumped_on_continue_dialog) != 0) {
+            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, *attackText[o->oHealth - 2], wiggler_act_jumped_on_continue_dialog) != 0) {
                 // Because we don't want the wiggler to disappear after being
                 // defeated, we leave its health at 1
                 if (--o->oHealth <= 1) {

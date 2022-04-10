@@ -2570,6 +2570,521 @@ CT_WARIO = 4
 --- @type CharacterType
 CT_MAX = 5
 
+--- @class DialogId
+
+--- @type DialogId
+DIALOG_000 = 0
+
+--- @type DialogId
+DIALOG_001 = 1
+
+--- @type DialogId
+DIALOG_002 = 2
+
+--- @type DialogId
+DIALOG_003 = 3
+
+--- @type DialogId
+DIALOG_004 = 4
+
+--- @type DialogId
+DIALOG_005 = 5
+
+--- @type DialogId
+DIALOG_006 = 6
+
+--- @type DialogId
+DIALOG_007 = 7
+
+--- @type DialogId
+DIALOG_008 = 8
+
+--- @type DialogId
+DIALOG_009 = 9
+
+--- @type DialogId
+DIALOG_010 = 10
+
+--- @type DialogId
+DIALOG_011 = 11
+
+--- @type DialogId
+DIALOG_012 = 12
+
+--- @type DialogId
+DIALOG_013 = 13
+
+--- @type DialogId
+DIALOG_014 = 14
+
+--- @type DialogId
+DIALOG_015 = 15
+
+--- @type DialogId
+DIALOG_016 = 16
+
+--- @type DialogId
+DIALOG_017 = 17
+
+--- @type DialogId
+DIALOG_018 = 18
+
+--- @type DialogId
+DIALOG_019 = 19
+
+--- @type DialogId
+DIALOG_020 = 20
+
+--- @type DialogId
+DIALOG_021 = 21
+
+--- @type DialogId
+DIALOG_022 = 22
+
+--- @type DialogId
+DIALOG_023 = 23
+
+--- @type DialogId
+DIALOG_024 = 24
+
+--- @type DialogId
+DIALOG_025 = 25
+
+--- @type DialogId
+DIALOG_026 = 26
+
+--- @type DialogId
+DIALOG_027 = 27
+
+--- @type DialogId
+DIALOG_028 = 28
+
+--- @type DialogId
+DIALOG_029 = 29
+
+--- @type DialogId
+DIALOG_030 = 30
+
+--- @type DialogId
+DIALOG_031 = 31
+
+--- @type DialogId
+DIALOG_032 = 32
+
+--- @type DialogId
+DIALOG_033 = 33
+
+--- @type DialogId
+DIALOG_034 = 34
+
+--- @type DialogId
+DIALOG_035 = 35
+
+--- @type DialogId
+DIALOG_036 = 36
+
+--- @type DialogId
+DIALOG_037 = 37
+
+--- @type DialogId
+DIALOG_038 = 38
+
+--- @type DialogId
+DIALOG_039 = 39
+
+--- @type DialogId
+DIALOG_040 = 40
+
+--- @type DialogId
+DIALOG_041 = 41
+
+--- @type DialogId
+DIALOG_042 = 42
+
+--- @type DialogId
+DIALOG_043 = 43
+
+--- @type DialogId
+DIALOG_044 = 44
+
+--- @type DialogId
+DIALOG_045 = 45
+
+--- @type DialogId
+DIALOG_046 = 46
+
+--- @type DialogId
+DIALOG_047 = 47
+
+--- @type DialogId
+DIALOG_048 = 48
+
+--- @type DialogId
+DIALOG_049 = 49
+
+--- @type DialogId
+DIALOG_050 = 50
+
+--- @type DialogId
+DIALOG_051 = 51
+
+--- @type DialogId
+DIALOG_052 = 52
+
+--- @type DialogId
+DIALOG_053 = 53
+
+--- @type DialogId
+DIALOG_054 = 54
+
+--- @type DialogId
+DIALOG_055 = 55
+
+--- @type DialogId
+DIALOG_056 = 56
+
+--- @type DialogId
+DIALOG_057 = 57
+
+--- @type DialogId
+DIALOG_058 = 58
+
+--- @type DialogId
+DIALOG_059 = 59
+
+--- @type DialogId
+DIALOG_060 = 60
+
+--- @type DialogId
+DIALOG_061 = 61
+
+--- @type DialogId
+DIALOG_062 = 62
+
+--- @type DialogId
+DIALOG_063 = 63
+
+--- @type DialogId
+DIALOG_064 = 64
+
+--- @type DialogId
+DIALOG_065 = 65
+
+--- @type DialogId
+DIALOG_066 = 66
+
+--- @type DialogId
+DIALOG_067 = 67
+
+--- @type DialogId
+DIALOG_068 = 68
+
+--- @type DialogId
+DIALOG_069 = 69
+
+--- @type DialogId
+DIALOG_070 = 70
+
+--- @type DialogId
+DIALOG_071 = 71
+
+--- @type DialogId
+DIALOG_072 = 72
+
+--- @type DialogId
+DIALOG_073 = 73
+
+--- @type DialogId
+DIALOG_074 = 74
+
+--- @type DialogId
+DIALOG_075 = 75
+
+--- @type DialogId
+DIALOG_076 = 76
+
+--- @type DialogId
+DIALOG_077 = 77
+
+--- @type DialogId
+DIALOG_078 = 78
+
+--- @type DialogId
+DIALOG_079 = 79
+
+--- @type DialogId
+DIALOG_080 = 80
+
+--- @type DialogId
+DIALOG_081 = 81
+
+--- @type DialogId
+DIALOG_082 = 82
+
+--- @type DialogId
+DIALOG_083 = 83
+
+--- @type DialogId
+DIALOG_084 = 84
+
+--- @type DialogId
+DIALOG_085 = 85
+
+--- @type DialogId
+DIALOG_086 = 86
+
+--- @type DialogId
+DIALOG_087 = 87
+
+--- @type DialogId
+DIALOG_088 = 88
+
+--- @type DialogId
+DIALOG_089 = 89
+
+--- @type DialogId
+DIALOG_090 = 90
+
+--- @type DialogId
+DIALOG_091 = 91
+
+--- @type DialogId
+DIALOG_092 = 92
+
+--- @type DialogId
+DIALOG_093 = 93
+
+--- @type DialogId
+DIALOG_094 = 94
+
+--- @type DialogId
+DIALOG_095 = 95
+
+--- @type DialogId
+DIALOG_096 = 96
+
+--- @type DialogId
+DIALOG_097 = 97
+
+--- @type DialogId
+DIALOG_098 = 98
+
+--- @type DialogId
+DIALOG_099 = 99
+
+--- @type DialogId
+DIALOG_100 = 100
+
+--- @type DialogId
+DIALOG_101 = 101
+
+--- @type DialogId
+DIALOG_102 = 102
+
+--- @type DialogId
+DIALOG_103 = 103
+
+--- @type DialogId
+DIALOG_104 = 104
+
+--- @type DialogId
+DIALOG_105 = 105
+
+--- @type DialogId
+DIALOG_106 = 106
+
+--- @type DialogId
+DIALOG_107 = 107
+
+--- @type DialogId
+DIALOG_108 = 108
+
+--- @type DialogId
+DIALOG_109 = 109
+
+--- @type DialogId
+DIALOG_110 = 110
+
+--- @type DialogId
+DIALOG_111 = 111
+
+--- @type DialogId
+DIALOG_112 = 112
+
+--- @type DialogId
+DIALOG_113 = 113
+
+--- @type DialogId
+DIALOG_114 = 114
+
+--- @type DialogId
+DIALOG_115 = 115
+
+--- @type DialogId
+DIALOG_116 = 116
+
+--- @type DialogId
+DIALOG_117 = 117
+
+--- @type DialogId
+DIALOG_118 = 118
+
+--- @type DialogId
+DIALOG_119 = 119
+
+--- @type DialogId
+DIALOG_120 = 120
+
+--- @type DialogId
+DIALOG_121 = 121
+
+--- @type DialogId
+DIALOG_122 = 122
+
+--- @type DialogId
+DIALOG_123 = 123
+
+--- @type DialogId
+DIALOG_124 = 124
+
+--- @type DialogId
+DIALOG_125 = 125
+
+--- @type DialogId
+DIALOG_126 = 126
+
+--- @type DialogId
+DIALOG_127 = 127
+
+--- @type DialogId
+DIALOG_128 = 128
+
+--- @type DialogId
+DIALOG_129 = 129
+
+--- @type DialogId
+DIALOG_130 = 130
+
+--- @type DialogId
+DIALOG_131 = 131
+
+--- @type DialogId
+DIALOG_132 = 132
+
+--- @type DialogId
+DIALOG_133 = 133
+
+--- @type DialogId
+DIALOG_134 = 134
+
+--- @type DialogId
+DIALOG_135 = 135
+
+--- @type DialogId
+DIALOG_136 = 136
+
+--- @type DialogId
+DIALOG_137 = 137
+
+--- @type DialogId
+DIALOG_138 = 138
+
+--- @type DialogId
+DIALOG_139 = 139
+
+--- @type DialogId
+DIALOG_140 = 140
+
+--- @type DialogId
+DIALOG_141 = 141
+
+--- @type DialogId
+DIALOG_142 = 142
+
+--- @type DialogId
+DIALOG_143 = 143
+
+--- @type DialogId
+DIALOG_144 = 144
+
+--- @type DialogId
+DIALOG_145 = 145
+
+--- @type DialogId
+DIALOG_146 = 146
+
+--- @type DialogId
+DIALOG_147 = 147
+
+--- @type DialogId
+DIALOG_148 = 148
+
+--- @type DialogId
+DIALOG_149 = 149
+
+--- @type DialogId
+DIALOG_150 = 150
+
+--- @type DialogId
+DIALOG_151 = 151
+
+--- @type DialogId
+DIALOG_152 = 152
+
+--- @type DialogId
+DIALOG_153 = 153
+
+--- @type DialogId
+DIALOG_154 = 154
+
+--- @type DialogId
+DIALOG_155 = 155
+
+--- @type DialogId
+DIALOG_156 = 156
+
+--- @type DialogId
+DIALOG_157 = 157
+
+--- @type DialogId
+DIALOG_158 = 158
+
+--- @type DialogId
+DIALOG_159 = 159
+
+--- @type DialogId
+DIALOG_160 = 160
+
+--- @type DialogId
+DIALOG_161 = 161
+
+--- @type DialogId
+DIALOG_162 = 162
+
+--- @type DialogId
+DIALOG_163 = 163
+
+--- @type DialogId
+DIALOG_164 = 164
+
+--- @type DialogId
+DIALOG_165 = 165
+
+--- @type DialogId
+DIALOG_166 = 166
+
+--- @type DialogId
+DIALOG_167 = 167
+
+--- @type DialogId
+DIALOG_168 = 168
+
+--- @type DialogId
+DIALOG_169 = 169
+
+--- @type DialogId
+DIALOG_COUNT = 170
+
 --- @class DjuiFontType
 
 --- @type DjuiFontType

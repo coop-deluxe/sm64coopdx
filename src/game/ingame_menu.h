@@ -6,7 +6,7 @@
 #define ASCII_TO_DIALOG(asc)                                       \
     (((asc) >= '0' && (asc) <= '9') ? ((asc) - '0') :              \
      ((asc) >= 'A' && (asc) <= 'Z') ? ((asc) - 'A' + 0x0A) :       \
-     ((asc) >= 'a' && (asc) <= 'z') ? ((asc) - 'a' + 0x24) : 0x00)
+     ((asc) >= 'a' && (asc) <= 'z') ? ((asc) - 'a' + 0x24) : 0xF4)
 
 #define MENU_MTX_PUSH   1
 #define MENU_MTX_NOPUSH 2

@@ -2,6 +2,7 @@
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/crash_handler.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
@@ -141,6 +142,7 @@ void smlua_update(void) {
 }
 
 void smlua_shutdown(void) {
+    dialog_reset_all();
     smlua_cobject_allowlist_shutdown();
     smlua_cpointer_allowlist_shutdown();
     lua_State* L = gLuaState;

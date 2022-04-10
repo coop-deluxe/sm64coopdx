@@ -7045,6 +7045,22 @@ function deref_s32_pointer(pointer)
     -- ...
 end
 
+--- @param dialogId DialogId
+--- @param unused integer
+--- @param linesPerBox integer
+--- @param leftOffset integer
+--- @param width integer
+--- @param str string
+--- @return nil
+function dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
+    -- ...
+end
+
+--- @return nil
+function dialog_reset_all()
+    -- ...
+end
+
 --- @return integer
 function get_current_save_file_num()
     -- ...

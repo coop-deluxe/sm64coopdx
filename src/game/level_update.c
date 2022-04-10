@@ -20,6 +20,7 @@
 #include "ingame_menu.h"
 #include "obj_behaviors.h"
 #include "save_file.h"
+#include "hardcoded.h"
 #include "debug_course.h"
 #ifdef VERSION_EU
 #include "memory.h"
@@ -280,26 +281,16 @@ void load_level_init_text(u32 arg) {
     s32 gotAchievement;
     u32 dialogID = gCurrentArea->dialog[arg];
 
-    switch (dialogID) {
-        case DIALOG_129:
-            gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_VANISH_CAP;
-            break;
-
-        case DIALOG_130:
-            gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_METAL_CAP;
-            break;
-
-        case DIALOG_131:
-            gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_WING_CAP;
-            break;
-
-        case 255:
-            gotAchievement = TRUE;
-            break;
-
-        default:
-            gotAchievement = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
-            break;
+    if (dialogID == gBehaviorValues.dialogs.VanishCourseDialog) {
+        gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_VANISH_CAP;
+    } else if (dialogID == gBehaviorValues.dialogs.MetalCourseDialog) {
+        gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_METAL_CAP;
+    } else if (dialogID == gBehaviorValues.dialogs.WingCourseDialog) {
+        gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_WING_CAP;
+    } else if (dialogID == 255) {
+        gotAchievement = TRUE;
+    } else {
+        gotAchievement = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
     }
 
     if (!gotAchievement) {

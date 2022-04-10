@@ -1,6 +1,8 @@
 #ifndef SMLUA_MISC_UTILS_H
 #define SMLUA_MISC_UTILS_H
 
+#include "dialog_ids.h"
+
 u32 get_network_area_timer(void);
 
 s32* get_temp_s32_pointer(s32 initialValue);
@@ -19,6 +21,9 @@ u32 allocate_mario_action(u32 actFlags);
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
+
+void dialog_reset_all(void);
+void dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
 
 s16 get_current_save_file_num(void);
 

@@ -1311,6 +1311,8 @@
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
    - [deref_s32_pointer](#deref_s32_pointer)
+   - [dialog_replace](#dialog_replace)
+   - [dialog_reset_all](#dialog_reset_all)
    - [get_current_save_file_num](#get_current_save_file_num)
    - [get_environment_region](#get_environment_region)
    - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
@@ -24628,6 +24630,49 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s32 deref_s32_pointer(s32* pointer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [dialog_replace](#dialog_replace)
+
+### Lua Example
+`dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+| unused | `integer` |
+| linesPerBox | `integer` |
+| leftOffset | `integer` |
+| width | `integer` |
+| str | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [dialog_reset_all](#dialog_reset_all)
+
+### Lua Example
+`dialog_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void dialog_reset_all(void);`
 
 [:arrow_up_small:](#)
 

@@ -140,7 +140,7 @@ void bhv_snowmans_bottom_loop(void) {
             if (should_start_or_continue_dialog(marioState, o)
                 && (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 400) == 1)
                 && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog) == 2) {
-                sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_110);
+                sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.SnowmanHeadBodyDialog);
                 if (sp1E) {
                     o->oForwardVel = 10.0f;
                     o->oAction = 1;
@@ -217,7 +217,7 @@ void bhv_snowmans_head_loop(void) {
 
     switch (o->oAction) {
         case 0:
-            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, DIALOG_109, 400.0f, 1, bhv_snowmans_head_action_0_continue_dialog))
+            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, gBehaviorValues.dialogs.SnowmanHeadDialog, 400.0f, 1, bhv_snowmans_head_action_0_continue_dialog))
                 o->oAction = 1;
             break;
 
@@ -241,7 +241,7 @@ void bhv_snowmans_head_loop(void) {
             break;
 
         case 4:
-            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, DIALOG_111, 700.0f, 2, bhv_snowmans_head_action_4_continue_dialog)) {
+            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, gBehaviorValues.dialogs.SnowmanHeadAfterDialog, 700.0f, 2, bhv_snowmans_head_action_4_continue_dialog)) {
                 spawn_mist_particles();
                 f32* starPos = gLevelValues.starPositions.SnowmanHeadStarPos;
                 spawn_default_star(starPos[0], starPos[1], starPos[2]);

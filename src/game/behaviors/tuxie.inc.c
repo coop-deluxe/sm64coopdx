@@ -58,15 +58,17 @@ void tuxies_mother_act_1(void) {
             if (!cur_obj_is_mario_on_platform()) {
                 sp2C = (o->oBehParams >> 0x10) & 0xFF;
                 sp28 = (o->prevObj->oBehParams >> 0x10) & 0xFF;
-                if (sp2C == sp28)
-                    dialogID = DIALOG_058;
-                else
-                    dialogID = DIALOG_059;
+                if (sp2C == sp28) {
+                    dialogID = gBehaviorValues.dialogs.TuxieMotherBabyFoundDialog;
+                } else {
+                    dialogID = gBehaviorValues.dialogs.TuxieMotherBabyWrongDialog;
+                }
                 if (cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, dialogID, tuxies_mother_act_1_continue_dialog)) {
-                    if (dialogID == DIALOG_058)
+                    if (dialogID == (s32) gBehaviorValues.dialogs.TuxieMotherBabyFoundDialog) {
                         o->oSubAction = 1;
-                    else
+                    } else {
                         o->oSubAction = 2;
+                    }
                     o->prevObj->oInteractionSubtype |= INT_SUBTYPE_DROP_IMMEDIATELY;
                 }
             } else
@@ -134,7 +136,7 @@ void tuxies_mother_act_0(void) {
                         o->oSubAction++;
                 break;
             case 1:
-                if (cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, DIALOG_057, tuxies_mother_act_0_continue_dialog))
+                if (cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.TuxieMotherDialog, tuxies_mother_act_0_continue_dialog))
                     o->oSubAction++;
                 break;
             case 2:

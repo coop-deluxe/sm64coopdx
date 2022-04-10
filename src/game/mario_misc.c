@@ -22,20 +22,21 @@
 #include "rendering_graph_node.h"
 #include "save_file.h"
 #include "skybox.h"
+#include "hardcoded.h"
 #include "sound_init.h"
 #include "pc/network/network.h"
 
-#define TOAD_STAR_1_REQUIREMENT 12
-#define TOAD_STAR_2_REQUIREMENT 25
-#define TOAD_STAR_3_REQUIREMENT 35
+#define TOAD_STAR_1_REQUIREMENT gBehaviorValues.ToadStar1Requirement
+#define TOAD_STAR_2_REQUIREMENT gBehaviorValues.ToadStar2Requirement
+#define TOAD_STAR_3_REQUIREMENT gBehaviorValues.ToadStar3Requirement
 
-#define TOAD_STAR_1_DIALOG DIALOG_082
-#define TOAD_STAR_2_DIALOG DIALOG_076
-#define TOAD_STAR_3_DIALOG DIALOG_083
+#define TOAD_STAR_1_DIALOG gBehaviorValues.dialogs.ToadStar1Dialog
+#define TOAD_STAR_2_DIALOG gBehaviorValues.dialogs.ToadStar2Dialog
+#define TOAD_STAR_3_DIALOG gBehaviorValues.dialogs.ToadStar3Dialog
 
-#define TOAD_STAR_1_DIALOG_AFTER DIALOG_154
-#define TOAD_STAR_2_DIALOG_AFTER DIALOG_155
-#define TOAD_STAR_3_DIALOG_AFTER DIALOG_156
+#define TOAD_STAR_1_DIALOG_AFTER gBehaviorValues.dialogs.ToadStar1AfterDialog
+#define TOAD_STAR_2_DIALOG_AFTER gBehaviorValues.dialogs.ToadStar2AfterDialog
+#define TOAD_STAR_3_DIALOG_AFTER gBehaviorValues.dialogs.ToadStar3AfterDialog
 
 enum ToadMessageStates {
     TOAD_MESSAGE_FADED,
@@ -212,19 +213,17 @@ static void toad_message_talking(void) {
         != 0) {
         gCurrentObject->oToadMessageRecentlyTalked = TRUE;
         gCurrentObject->oToadMessageState = TOAD_MESSAGE_FADING;
-        switch (gCurrentObject->oToadMessageDialogId) {
-            case TOAD_STAR_1_DIALOG:
-                gCurrentObject->oToadMessageDialogId = TOAD_STAR_1_DIALOG_AFTER;
-                bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 0, TRUE);
-                break;
-            case TOAD_STAR_2_DIALOG:
-                gCurrentObject->oToadMessageDialogId = TOAD_STAR_2_DIALOG_AFTER;
-                bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 1, TRUE);
-                break;
-            case TOAD_STAR_3_DIALOG:
-                gCurrentObject->oToadMessageDialogId = TOAD_STAR_3_DIALOG_AFTER;
-                bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 2, TRUE);
-                break;
+
+        u32 dialogId = gCurrentObject->oToadMessageDialogId;
+        if (dialogId == TOAD_STAR_1_DIALOG) {
+            gCurrentObject->oToadMessageDialogId = TOAD_STAR_1_DIALOG_AFTER;
+            bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 0, TRUE);
+        } else if (dialogId == TOAD_STAR_2_DIALOG) {
+            gCurrentObject->oToadMessageDialogId = TOAD_STAR_2_DIALOG_AFTER;
+            bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 1, TRUE);
+        } else if (dialogId == TOAD_STAR_3_DIALOG) {
+            gCurrentObject->oToadMessageDialogId = TOAD_STAR_3_DIALOG_AFTER;
+            bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 2, TRUE);
         }
     }
 }
@@ -270,26 +269,23 @@ void bhv_toad_message_init(void) {
     s32 dialogId = (gCurrentObject->oBehParams >> 24) & 0xFF;
     s32 enoughStars = TRUE;
 
-    switch (dialogId) {
-        case TOAD_STAR_1_DIALOG:
-            enoughStars = (starCount >= TOAD_STAR_1_REQUIREMENT);
-            if (saveFlags & SAVE_FLAG_COLLECTED_TOAD_STAR_1) {
-                dialogId = TOAD_STAR_1_DIALOG_AFTER;
-            }
-            break;
-        case TOAD_STAR_2_DIALOG:
-            enoughStars = (starCount >= TOAD_STAR_2_REQUIREMENT);
-            if (saveFlags & SAVE_FLAG_COLLECTED_TOAD_STAR_2) {
-                dialogId = TOAD_STAR_2_DIALOG_AFTER;
-            }
-            break;
-        case TOAD_STAR_3_DIALOG:
-            enoughStars = (starCount >= TOAD_STAR_3_REQUIREMENT);
-            if (saveFlags & SAVE_FLAG_COLLECTED_TOAD_STAR_3) {
-                dialogId = TOAD_STAR_3_DIALOG_AFTER;
-            }
-            break;
+    if (dialogId == (s32)TOAD_STAR_1_DIALOG) {
+        enoughStars = (starCount >= TOAD_STAR_1_REQUIREMENT);
+        if (saveFlags & SAVE_FLAG_COLLECTED_TOAD_STAR_1) {
+            dialogId = TOAD_STAR_1_DIALOG_AFTER;
+        }
+    } else if (dialogId == (s32)TOAD_STAR_2_DIALOG) {
+        enoughStars = (starCount >= TOAD_STAR_2_REQUIREMENT);
+        if (saveFlags & SAVE_FLAG_COLLECTED_TOAD_STAR_2) {
+            dialogId = TOAD_STAR_2_DIALOG_AFTER;
+        }
+    } else if (dialogId == (s32)TOAD_STAR_3_DIALOG) {
+        enoughStars = (starCount >= TOAD_STAR_3_REQUIREMENT);
+        if (saveFlags & SAVE_FLAG_COLLECTED_TOAD_STAR_3) {
+            dialogId = TOAD_STAR_3_DIALOG_AFTER;
+        }
     }
+
     if (enoughStars) {
         gCurrentObject->oToadMessageDialogId = dialogId;
         gCurrentObject->oToadMessageRecentlyTalked = FALSE;

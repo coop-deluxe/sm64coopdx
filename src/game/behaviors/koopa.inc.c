@@ -51,16 +51,16 @@ static u8 sKoopaShelledAttackHandlers[] = {
  * Data to control the behavior of each instance of Koopa the Quick.
  */
 struct KoopaTheQuickProperties {
-    s16 initText;
-    s16 winText;
+    s16* initText;
+    s16* winText;
 };
 
 /**
  * Properties for the BoB race and the THI race.
  */
 static struct KoopaTheQuickProperties sKoopaTheQuickProperties[] = {
-    { DIALOG_005, DIALOG_007 },
-    { DIALOG_009, DIALOG_031 }
+    { (s16*) &gBehaviorValues.dialogs.KoopaQuickBobStartDialog, (s16*) &gBehaviorValues.dialogs.KoopaQuickBobWinDialog },
+    { (s16*) &gBehaviorValues.dialogs.KoopaQuickThiStartDialog, (s16*) &gBehaviorValues.dialogs.KoopaQuickThiWinDialog }
 };
 
 static u32 koopaPathedStartWaypoint = 0;
@@ -629,7 +629,7 @@ static void koopa_the_quick_act_show_init_text(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     s32 response = 0;
     if (should_start_or_continue_dialog(marioState, o)) {
-        response = obj_update_race_proposition_dialog(&gMarioStates[0], sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].initText, koopa_the_quick_act_show_init_text_continue_dialog);
+        response = obj_update_race_proposition_dialog(&gMarioStates[0], *sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].initText, koopa_the_quick_act_show_init_text_continue_dialog);
     }
 
     if (response == 1) {
@@ -849,14 +849,14 @@ static void koopa_the_quick_act_after_race(void) {
                 if (o->parentObj->oKoopaRaceEndpointRaceStatus < 0) {
                     // Mario cheated
                     o->parentObj->oKoopaRaceEndpointRaceStatus = 0;
-                    o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_006;
+                    o->parentObj->oKoopaRaceEndpointUnk100 = gBehaviorValues.dialogs.KoopaQuickCheatedDialog;
                 } else {
                     // Mario won
-                    o->parentObj->oKoopaRaceEndpointUnk100 = sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].winText;
+                    o->parentObj->oKoopaRaceEndpointUnk100 = *sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].winText;
                 }
             } else {
                 // KtQ won
-                o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_041;
+                o->parentObj->oKoopaRaceEndpointUnk100 = gBehaviorValues.dialogs.KoopaQuickLostDialog;
             }
 
             o->oFlags &= ~OBJ_FLAG_ACTIVE_FROM_AFAR;
