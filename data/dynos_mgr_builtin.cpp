@@ -1382,6 +1382,7 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(geo_mario_set_player_colors),
     define_builtin(geo_movtex_draw_water_regions_ext),
     define_builtin(lvl_init_or_update),
+    define_builtin(geo_choose_area_ext),
 };
 
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName) {

@@ -237,6 +237,13 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node) {
     return NULL;
 }
 
+Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
+    struct GraphNodeSwitchCase *switchCase;
+    switchCase = (struct GraphNodeSwitchCase *) node;
+    switchCase->selectedCase = sWarpDest.areaIdx-1;
+    return NULL;
+}
+
 void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     f32 spC = a1->oParentRelativePosX;
     f32 sp8 = a1->oParentRelativePosY;
