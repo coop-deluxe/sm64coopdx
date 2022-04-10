@@ -1369,6 +1369,7 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
 
 static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex, bool* found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
+    *found = true;
 
     // Integers
     bool integerFound = false;
@@ -1766,7 +1767,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     // LOAD_MODEL_FROM_GEO
     if (_Symbol == "LOAD_MODEL_FROM_GEO") {
         u64 topTokenIndex = aTokenIndex;
-        bool foundGeo = true;
+        bool foundGeo = false;
         LevelScript model = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         LevelScript geo   = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundGeo);
         if (foundGeo) {
@@ -1776,7 +1777,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         } else {
             u32 geoIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 1]);
-            LevelScript _Ls[] = { LOAD_MODEL_FROM_GEO_EXT(model, geo) };
+            LevelScript _Ls[] = { LOAD_MODEL_FROM_GEO_EXT(model, geoIndex) };
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
         }
