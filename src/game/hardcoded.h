@@ -38,6 +38,9 @@ struct StarPositions {
 
 struct LevelValues {
     enum LevelNum entryLevel;
+    enum LevelNum exitCastleLevel;
+    s16 exitCastleArea;
+    u8 exitCastleWarpNode;
     struct StarPositions starPositions;
 };
 

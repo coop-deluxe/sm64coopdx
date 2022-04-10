@@ -30,8 +30,8 @@ static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
     }
 
     // Add to custom actors
-    dynos_add_actor_custom(dynosPath, geoName);
     LOG_INFO("Activating DynOS bin: '%s', '%s'", dynosPath, geoName);
+    dynos_add_actor_custom(dynosPath, geoName);
 }
 
 static void mod_activate_col(struct Mod* mod, struct ModFile* file) {
@@ -59,8 +59,8 @@ static void mod_activate_col(struct Mod* mod, struct ModFile* file) {
     }
 
     // Add to custom actors
-    dynos_add_collision(dynosPath, colName);
     LOG_INFO("Activating DynOS col: '%s', '%s'", dynosPath, colName);
+    dynos_add_collision(dynosPath, colName);
 }
 
 static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
@@ -88,8 +88,8 @@ static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
     }
 
     // Add to levels
-    dynos_add_level(mod->index, dynosPath, lvlName);
     LOG_INFO("Activating DynOS lvl: '%s', '%s'", dynosPath, lvlName);
+    dynos_add_level(mod->index, dynosPath, lvlName);
 }
 
 void mod_activate(struct Mod* mod) {

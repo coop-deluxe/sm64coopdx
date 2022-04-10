@@ -834,6 +834,9 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| exitCastleArea | `integer` |  |
+| exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| exitCastleWarpNode | `integer` |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 
 [:arrow_up_small:](#)

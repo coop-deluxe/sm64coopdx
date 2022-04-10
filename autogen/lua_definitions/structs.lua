@@ -572,6 +572,9 @@
 
 --- @class LevelValues
 --- @field public entryLevel LevelNum
+--- @field public exitCastleArea integer
+--- @field public exitCastleLevel LevelNum
+--- @field public exitCastleWarpNode integer
 --- @field public starPositions StarPositions
 
 --- @class LinearTransitionPoint

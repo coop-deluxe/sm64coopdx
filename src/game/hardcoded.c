@@ -39,6 +39,9 @@
 
 struct LevelValues gLevelValues = {
     .entryLevel = LEVEL_CASTLE_GROUNDS,
+    .exitCastleLevel = LEVEL_CASTLE,
+    .exitCastleArea = 1,
+    .exitCastleWarpNode = 0x1F,
     .starPositions = {
         .KoopaBobStarPos      = {  3030.0f,  4500.0f, -4600.0f },
         .KoopaThiStarPos      = {  7100.0f, -1300.0f, -6000.0f },
