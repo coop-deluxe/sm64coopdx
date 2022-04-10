@@ -7017,6 +7017,14 @@ function save_file_set_flags(flags)
     -- ...
 end
 
+--- @param sequenceId integer
+--- @param bankId integer
+--- @param m64Name string
+--- @return nil
+function smlua_audio_utils_replace_sequence(sequenceId, bankId, m64Name)
+    -- ...
+end
+
 --- @param startX number
 --- @param startY number
 --- @param startZ number

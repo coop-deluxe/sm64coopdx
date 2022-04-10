@@ -1561,4 +1561,7 @@ void fake_lvl_init_from_save_file(void) {
     save_file_move_cap_to_default_location();
     select_mario_cam_mode();
     set_yoshi_as_not_dead();
+    fadeout_music(30);
+
+    gChangeLevel = gLevelValues.entryLevel;
 }

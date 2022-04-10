@@ -143,6 +143,7 @@ void smlua_update(void) {
 
 void smlua_shutdown(void) {
     smlua_text_utils_reset_all();
+    smlua_audio_utils_reset_all();
     smlua_cobject_allowlist_shutdown();
     smlua_cpointer_allowlist_shutdown();
     lua_State* L = gLuaState;

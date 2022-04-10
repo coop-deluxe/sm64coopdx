@@ -295,6 +295,44 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
             closedir(d);
         }
     }
+
+    // deal with sound directory
+    {
+        // concat sound directory
+        char soundPath[SYS_MAX_PATH] = { 0 };
+        if (!concat_path(soundPath, fullPath, "sound")) {
+            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "sound");
+            return false;
+        }
+
+        // open sound directory
+        struct dirent* dir = NULL;
+        DIR* d = opendir(soundPath);
+        if (d) {
+            // iterate mod directory
+            char path[SYS_MAX_PATH] = { 0 };
+            char relativePath[SYS_MAX_PATH] = { 0 };
+            while ((dir = readdir(d)) != NULL) {
+                // sanity check / fill path[]
+                if (!directory_sanity_check(dir, soundPath, path)) { continue; }
+                if (snprintf(relativePath, SYS_MAX_PATH - 1, "sound/%s", dir->d_name) < 0) {
+                    LOG_ERROR("Could not concat sound path!");
+                    return false;
+                }
+
+                // only consider m64 files
+                if (!str_ends_with(path, ".m64")) {
+                    continue;
+                }
+
+                // allocate file
+                struct ModFile* file = mod_allocate_file(mod, relativePath);
+                if (file == NULL) { return false; }
+            }
+
+            closedir(d);
+        }
+    }
     return true;
 }
 

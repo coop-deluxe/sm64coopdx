@@ -4,6 +4,7 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "behavior_table.h"
+#include "src/game/hardcoded.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
 #endif

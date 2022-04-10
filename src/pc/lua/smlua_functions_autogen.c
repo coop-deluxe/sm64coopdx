@@ -24,6 +24,7 @@
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/pc/lua/utils/smlua_model_utils.h"
 #include "src/pc/lua/utils/smlua_text_utils.h"
+#include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/engine/surface_load.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
@@ -13182,6 +13183,24 @@ int smlua_func_find_unimportant_object(UNUSED lua_State* L) {
     return 1;
 }
 
+/*
+int smlua_func_geo_choose_area_ext(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 callContext = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct GraphNode* node = (struct GraphNode*)smlua_to_cobject(L, 2, LOT_GRAPHNODE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+//  Mat4 mtx = (Mat4)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    extern Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
+    UNIMPLEMENTED -->(L, geo_choose_area_ext(callContext, node, mtx));
+
+    return 1;
+}
+*/
+
 int smlua_func_geo_offset_klepto_debug(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -14593,6 +14612,25 @@ int smlua_func_save_file_set_flags(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     save_file_set_flags(flags);
+
+    return 1;
+}
+
+  /////////////////////////
+ // smlua_audio_utils.h //
+/////////////////////////
+
+int smlua_func_smlua_audio_utils_replace_sequence(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    u8 sequenceId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u8 bankId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* m64Name = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_audio_utils_replace_sequence(sequenceId, bankId, m64Name);
 
     return 1;
 }
@@ -16827,6 +16865,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "enable_time_stop_including_mario", smlua_func_enable_time_stop_including_mario);
     smlua_bind_function(L, "find_object_with_behavior", smlua_func_find_object_with_behavior);
     smlua_bind_function(L, "find_unimportant_object", smlua_func_find_unimportant_object);
+    //smlua_bind_function(L, "geo_choose_area_ext", smlua_func_geo_choose_area_ext); <--- UNIMPLEMENTED
     smlua_bind_function(L, "geo_offset_klepto_debug", smlua_func_geo_offset_klepto_debug);
     //smlua_bind_function(L, "geo_offset_klepto_held_object", smlua_func_geo_offset_klepto_held_object); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_switch_anim_state", smlua_func_geo_switch_anim_state); <--- UNIMPLEMENTED
@@ -16929,6 +16968,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_star_flags", smlua_func_save_file_get_star_flags);
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
+
+    // smlua_audio_utils.h
+    smlua_bind_function(L, "smlua_audio_utils_replace_sequence", smlua_func_smlua_audio_utils_replace_sequence);
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);

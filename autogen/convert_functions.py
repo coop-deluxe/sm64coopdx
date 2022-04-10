@@ -41,6 +41,7 @@ in_files = [
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
@@ -58,7 +59,7 @@ override_allowed_functions = {
     "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
-    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ]
+    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
 }
 
 override_disallowed_functions = {
@@ -84,7 +85,8 @@ override_disallowed_functions = {
     "src/game/spawn_sound.c":              [ "spawner" ],
     "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field" ],
     "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
-    "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ]
+    "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ],
+    "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override"],
 }
 
 lua_function_params = {

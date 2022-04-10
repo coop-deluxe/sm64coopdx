@@ -1302,6 +1302,11 @@
 
 <br />
 
+- smlua_audio_utils.h
+   - [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+
+<br />
+
 - smlua_collision_utils.h
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
@@ -24545,6 +24550,34 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void save_file_set_flags(u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_audio_utils.h
+
+<br />
+
+
+## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+
+### Lua Example
+`smlua_audio_utils_replace_sequence(sequenceId, bankId, m64Name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sequenceId | `integer` |
+| bankId | `integer` |
+| m64Name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, const char* m64Name);`
 
 [:arrow_up_small:](#)
 
