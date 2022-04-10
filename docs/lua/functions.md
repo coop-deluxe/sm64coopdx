@@ -602,6 +602,7 @@
    - [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
    - [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
    - [camera_course_processing](#camera_course_processing)
+   - [camera_set_use_course_specific_settings](#camera_set_use_course_specific_settings)
    - [clamp_pitch](#clamp_pitch)
    - [clamp_positions_and_find_yaw](#clamp_positions_and_find_yaw)
    - [collide_with_walls](#collide_with_walls)
@@ -12141,6 +12142,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s16 camera_course_processing(struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_use_course_specific_settings](#camera_set_use_course_specific_settings)
+
+### Lua Example
+`camera_set_use_course_specific_settings(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_use_course_specific_settings(u8 enable);`
 
 [:arrow_up_small:](#)
 

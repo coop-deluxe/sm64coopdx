@@ -5795,6 +5795,17 @@ int smlua_func_camera_course_processing(lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_set_use_course_specific_settings(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 enable = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    camera_set_use_course_specific_settings(enable);
+
+    return 1;
+}
+
 int smlua_func_clamp_pitch(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -16252,6 +16263,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_approach_f32_symmetric_bool", smlua_func_camera_approach_f32_symmetric_bool);
     smlua_bind_function(L, "camera_approach_s16_symmetric_bool", smlua_func_camera_approach_s16_symmetric_bool);
     smlua_bind_function(L, "camera_course_processing", smlua_func_camera_course_processing);
+    smlua_bind_function(L, "camera_set_use_course_specific_settings", smlua_func_camera_set_use_course_specific_settings);
     smlua_bind_function(L, "clamp_pitch", smlua_func_clamp_pitch);
     smlua_bind_function(L, "clamp_positions_and_find_yaw", smlua_func_clamp_positions_and_find_yaw);
     smlua_bind_function(L, "collide_with_walls", smlua_func_collide_with_walls);

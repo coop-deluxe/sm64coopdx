@@ -35,6 +35,7 @@
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
 static u8 sSoftResettingCamera = FALSE;
+u8 gCameraUseCourseSpecificSettings = TRUE;
 
 /**
  * @file camera.c
@@ -948,7 +949,7 @@ s32 update_8_directions_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     calc_y_to_curr_floor(&posY, 1.f, 200.f, &focusY, 0.9f, 200.f);
     focus_on_mario(focus, pos, posY + yOff, focusY + yOff, sLakituDist + baseDist, pitch, camYaw);
     pan_ahead_of_player(c);
-    if (gCurrLevelArea == AREA_DDD_SUB) {
+    if (gCameraUseCourseSpecificSettings && gCurrLevelArea == AREA_DDD_SUB) {
         camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
     }
 
@@ -6598,6 +6599,7 @@ struct CutsceneSplinePoint sEndingLookAtSkyFocus[] = {
  * @return the camera's mode after processing, although this is unused in the code
  */
 s16 camera_course_processing(struct Camera *c) {
+    if (!gCameraUseCourseSpecificSettings) { return 0; }
     s16 level = gCurrLevelNum;
     s16 mode;
     s8 area = gCurrentArea->index;
@@ -11698,6 +11700,10 @@ void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 y
     vec3f_get_dist_and_angle(oPos, point, &dist, &pitch, &yaw);
     o->oMoveAnglePitch = approach_s16_asymptotic(o->oMoveAnglePitch, pitchOff - pitch, pitchDiv);
     o->oMoveAngleYaw = approach_s16_asymptotic(o->oMoveAngleYaw, yaw + yawOff, yawDiv);
+}
+
+void camera_set_use_course_specific_settings(u8 enable) {
+    gCameraUseCourseSpecificSettings = enable;
 }
 
 #include "behaviors/intro_peach.inc.c"

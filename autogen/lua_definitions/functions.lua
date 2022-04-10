@@ -3012,6 +3012,12 @@ function camera_course_processing(c)
     -- ...
 end
 
+--- @param enable integer
+--- @return nil
+function camera_set_use_course_specific_settings(enable)
+    -- ...
+end
+
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param maxPitch integer
