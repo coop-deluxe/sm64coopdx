@@ -1311,8 +1311,6 @@
 - smlua_misc_utils.h
    - [allocate_mario_action](#allocate_mario_action)
    - [deref_s32_pointer](#deref_s32_pointer)
-   - [dialog_replace](#dialog_replace)
-   - [dialog_reset_all](#dialog_reset_all)
    - [get_current_save_file_num](#get_current_save_file_num)
    - [get_environment_region](#get_environment_region)
    - [get_hand_foot_pos_x](#get_hand_foot_pos_x)
@@ -1353,6 +1351,16 @@
    - [obj_set_model_extended](#obj_set_model_extended)
    - [spawn_non_sync_object](#spawn_non_sync_object)
    - [spawn_sync_object](#spawn_sync_object)
+
+<br />
+
+- smlua_text_utils.h
+   - [smlua_text_utils_castle_secret_stars_replace](#smlua_text_utils_castle_secret_stars_replace)
+   - [smlua_text_utils_course_acts_replace](#smlua_text_utils_course_acts_replace)
+   - [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
+   - [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
+   - [smlua_text_utils_reset_all](#smlua_text_utils_reset_all)
+   - [smlua_text_utils_secret_star_replace](#smlua_text_utils_secret_star_replace)
 
 <br />
 
@@ -24635,49 +24643,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
-## [dialog_replace](#dialog_replace)
-
-### Lua Example
-`dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dialogId | [enum DialogId](constants.md#enum-DialogId) |
-| unused | `integer` |
-| linesPerBox | `integer` |
-| leftOffset | `integer` |
-| width | `integer` |
-| str | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [dialog_reset_all](#dialog_reset_all)
-
-### Lua Example
-`dialog_reset_all()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void dialog_reset_all(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Lua Example
@@ -25343,6 +25308,144 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_text_utils.h
+
+<br />
+
+
+## [smlua_text_utils_castle_secret_stars_replace](#smlua_text_utils_castle_secret_stars_replace)
+
+### Lua Example
+`smlua_text_utils_castle_secret_stars_replace(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_castle_secret_stars_replace(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_course_acts_replace](#smlua_text_utils_course_acts_replace)
+
+### Lua Example
+`smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| courseName | `string` |
+| act1 | `string` |
+| act2 | `string` |
+| act3 | `string` |
+| act4 | `string` |
+| act5 | `string` |
+| act6 | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
+
+### Lua Example
+`smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+| unused | `integer` |
+| linesPerBox | `integer` |
+| leftOffset | `integer` |
+| width | `integer` |
+| str | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
+
+### Lua Example
+`smlua_text_utils_extra_text_replace(index, text)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| text | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_extra_text_replace(s16 index, const char* text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_reset_all](#smlua_text_utils_reset_all)
+
+### Lua Example
+`smlua_text_utils_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_reset_all(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_secret_star_replace](#smlua_text_utils_secret_star_replace)
+
+### Lua Example
+`smlua_text_utils_secret_star_replace(courseNum, courseName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| courseName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName);`
 
 [:arrow_up_small:](#)
 

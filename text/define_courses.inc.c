@@ -19,7 +19,12 @@
 #define SECRET_STAR(id, name) GLUE2(COURSE_TABLE, _ ## id),
 #define CASTLE_SECRET_STARS(str) GLUE2(COURSE_TABLE, _castle_secret_stars),
 
-const u8 *const COURSE_TABLE[] = {
+const u8* COURSE_TABLE[] = {
+#include "courses.h"
+    NULL
+};
+
+const u8* GLUE2(COURSE_TABLE, _original)[] = {
 #include "courses.h"
     NULL
 };

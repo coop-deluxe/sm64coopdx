@@ -7045,22 +7045,6 @@ function deref_s32_pointer(pointer)
     -- ...
 end
 
---- @param dialogId DialogId
---- @param unused integer
---- @param linesPerBox integer
---- @param leftOffset integer
---- @param width integer
---- @param str string
---- @return nil
-function dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
-    -- ...
-end
-
---- @return nil
-function dialog_reset_all()
-    -- ...
-end
-
 --- @return integer
 function get_current_save_file_num()
     -- ...
@@ -7274,6 +7258,55 @@ end
 --- @param objSetupFunction function
 --- @return Object
 function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
+    -- ...
+end
+
+--- @param name string
+--- @return nil
+function smlua_text_utils_castle_secret_stars_replace(name)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param courseName string
+--- @param act1 string
+--- @param act2 string
+--- @param act3 string
+--- @param act4 string
+--- @param act5 string
+--- @param act6 string
+--- @return nil
+function smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- @param unused integer
+--- @param linesPerBox integer
+--- @param leftOffset integer
+--- @param width integer
+--- @param str string
+--- @return nil
+function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
+    -- ...
+end
+
+--- @param index integer
+--- @param text string
+--- @return nil
+function smlua_text_utils_extra_text_replace(index, text)
+    -- ...
+end
+
+--- @return nil
+function smlua_text_utils_reset_all()
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param courseName string
+--- @return nil
+function smlua_text_utils_secret_star_replace(courseNum, courseName)
     -- ...
 end
 

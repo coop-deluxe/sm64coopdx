@@ -104,7 +104,12 @@ const struct DialogEntry *const seg2_dialog_table[] = {
     act_name_ ## id ## _4, act_name_ ## id ## _5, act_name_ ## id ## _6,
 #define EXTRA_TEXT(id, str) extra_text_ ## id,
 
-const u8 *const seg2_act_name_table[] = {
+const u8* seg2_act_name_table[] = {
+#include "courses.h"
+    NULL
+};
+
+const u8* seg2_act_name_table_original[] = {
 #include "courses.h"
     NULL
 };

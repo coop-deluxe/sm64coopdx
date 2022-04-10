@@ -23,6 +23,7 @@
 #include "src/pc/lua/utils/smlua_misc_utils.h"
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/pc/lua/utils/smlua_model_utils.h"
+#include "src/pc/lua/utils/smlua_text_utils.h"
 #include "src/engine/surface_load.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
@@ -14656,36 +14657,6 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
-int smlua_func_dialog_replace(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
-
-    int dialogId = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    u32 unused = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s8 linesPerBox = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s16 leftOffset = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    s16 width = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { return 0; }
-    const char* str = smlua_to_string(L, 6);
-    if (!gSmLuaConvertSuccess) { return 0; }
-
-    dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str);
-
-    return 1;
-}
-
-int smlua_func_dialog_reset_all(UNUSED lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
-
-
-    dialog_reset_all();
-
-    return 1;
-}
-
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -15090,6 +15061,102 @@ int smlua_func_spawn_sync_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     smlua_push_object(L, LOT_OBJECT, spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction));
+
+    return 1;
+}
+
+  ////////////////////////
+ // smlua_text_utils.h //
+////////////////////////
+
+int smlua_func_smlua_text_utils_castle_secret_stars_replace(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_text_utils_castle_secret_stars_replace(name);
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_course_acts_replace(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 8)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* courseName = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* act1 = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* act2 = smlua_to_string(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* act3 = smlua_to_string(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* act4 = smlua_to_string(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* act5 = smlua_to_string(L, 7);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* act6 = smlua_to_string(L, 8);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_text_utils_course_acts_replace(courseNum, courseName, act1, act2, act3, act4, act5, act6);
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_dialog_replace(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 6)) { return 0; }
+
+    int dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    u32 unused = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s8 linesPerBox = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 leftOffset = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    s16 width = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* str = smlua_to_string(L, 6);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str);
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_extra_text_replace(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s16 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* text = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_text_utils_extra_text_replace(index, text);
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_reset_all(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    smlua_text_utils_reset_all();
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_secret_star_replace(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    const char* courseName = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    smlua_text_utils_secret_star_replace(courseNum, courseName);
 
     return 1;
 }
@@ -16848,8 +16915,6 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
-    smlua_bind_function(L, "dialog_replace", smlua_func_dialog_replace);
-    smlua_bind_function(L, "dialog_reset_all", smlua_func_dialog_reset_all);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
@@ -16886,6 +16951,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "spawn_non_sync_object", smlua_func_spawn_non_sync_object);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
+
+    // smlua_text_utils.h
+    smlua_bind_function(L, "smlua_text_utils_castle_secret_stars_replace", smlua_func_smlua_text_utils_castle_secret_stars_replace);
+    smlua_bind_function(L, "smlua_text_utils_course_acts_replace", smlua_func_smlua_text_utils_course_acts_replace);
+    smlua_bind_function(L, "smlua_text_utils_dialog_replace", smlua_func_smlua_text_utils_dialog_replace);
+    smlua_bind_function(L, "smlua_text_utils_extra_text_replace", smlua_func_smlua_text_utils_extra_text_replace);
+    smlua_bind_function(L, "smlua_text_utils_reset_all", smlua_func_smlua_text_utils_reset_all);
+    smlua_bind_function(L, "smlua_text_utils_secret_star_replace", smlua_func_smlua_text_utils_secret_star_replace);
 
     // sound_init.h
     smlua_bind_function(L, "disable_background_sound", smlua_func_disable_background_sound);

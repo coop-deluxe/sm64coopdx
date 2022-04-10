@@ -6,9 +6,6 @@
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
-#include "game/ingame_menu.h"
-#include "game/segment2.h"
-
 #include "game/object_list_processor.h"
 
 u32 get_network_area_timer(void) {
@@ -108,42 +105,3 @@ void set_environment_region(u8 index, s32 value) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
 }
-
-///
-
-static bool sReplacedDialog[DIALOG_COUNT] = { 0 };
-
-void dialog_reset_all(void) {
-    void **dialogTable = segmented_to_virtual(seg2_dialog_table);
-
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        struct DialogEntry *dialog = segmented_to_virtual(dialogTable[i]);
-        if (sReplacedDialog[i]) {
-            free((u8*)dialog->str);
-            dialog->str = seg2_dialog_original[i];
-        }
-    }
-}
-
-void dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
-    if (dialogId >= DIALOG_COUNT) { return; }
-
-    void **dialogTable = segmented_to_virtual(seg2_dialog_table);
-    struct DialogEntry *dialog = segmented_to_virtual(dialogTable[dialogId]);
-
-    s32 len = strlen(str);
-    u8* dialogStr = calloc(len + 1, sizeof(u8));
-    str_ascii_to_dialog(str, dialogStr, len);
-
-    if (sReplacedDialog[dialogId]) {
-        free((u8*)dialog->str);
-    }
-
-    dialog->unused = unused;
-    dialog->linesPerBox = linesPerBox;
-    dialog->leftOffset = leftOffset;
-    dialog->width = width;
-    dialog->str = (const u8*)dialogStr;
-    sReplacedDialog[dialogId] = true;
-}
-

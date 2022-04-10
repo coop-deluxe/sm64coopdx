@@ -18,6 +18,9 @@ Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
 }
 
 void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName) {
+    // make sure vanilla levels were parsed
+    DynOS_Level_GetCount();
+
     // check for duplicates
     for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
         if (!strcmp(sDynosCustomLevelScripts[i].first, aLevelName)) {

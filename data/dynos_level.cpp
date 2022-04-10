@@ -228,6 +228,7 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
 void DynOS_Level_Override(void* originalScript, void* newScript) {
     for (s32 i = 0; i < LEVEL_COUNT; i++) {
         if (sDynosLevelScripts[i] == originalScript) {
+            sDynosCurrentLevelNum = i;
             sDynosLevelWarps[i].Clear();
             DynOS_Level_ParseScript(newScript, DynOS_Level_PreprocessScript);
             sDynosLevelScripts[i] = newScript;
