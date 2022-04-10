@@ -103,6 +103,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_OBJECT_UNLOAD | Called when any object is unloaded | [Object](structs.md#Object) unloadedObject |
 | HOOK_ON_SYNC_OBJECT_UNLOAD | Called when any networked object is unloaded | [Object](structs.md#Object) unloadedObject |
 | HOOK_ON_PAUSE_EXIT | Called when the local player exits through the pause screen, return `false` to prevent the exit |  `boolean` usedExitToCastle |
+| HOOK_GET_STAR_COLLECTION_DIALOG | Called when the local player collects a star, return a [DialogId](constants.md#enum-DialogId) to show a message |  None |
 
 ### Parameters
 

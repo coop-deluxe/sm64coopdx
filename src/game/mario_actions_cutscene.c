@@ -241,6 +241,10 @@ static void stub_is_textbox_active(u16 *a0) {
 s32 get_star_collection_dialog(struct MarioState *m) {
     s32 dialogID = 0;
 
+    if (smlua_call_event_hooks_ret_int(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
+        return dialogID;
+    }
+
     for (s32 i = 0; i < ARRAY_COUNT(sStarsNeededForDialog); i++) {
         s32 numStarsRequired = sStarsNeededForDialog[i];
         if (m->prevNumStarsForDialog < numStarsRequired && m->numStars >= numStarsRequired) {

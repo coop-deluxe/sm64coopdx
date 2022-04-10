@@ -7721,7 +7721,10 @@ HOOK_ON_SYNC_OBJECT_UNLOAD = 15
 HOOK_ON_PAUSE_EXIT = 16
 
 --- @type LuaHookedEventType
-HOOK_MAX = 17
+HOOK_GET_STAR_COLLECTION_DIALOG = 17
+
+--- @type LuaHookedEventType
+HOOK_MAX = 18
 
 --- @class ModelExtendedId
 

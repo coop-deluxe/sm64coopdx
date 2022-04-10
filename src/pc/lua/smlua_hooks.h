@@ -22,6 +22,7 @@ enum LuaHookedEventType {
     HOOK_ON_OBJECT_UNLOAD,
     HOOK_ON_SYNC_OBJECT_UNLOAD,
     HOOK_ON_PAUSE_EXIT,
+    HOOK_GET_STAR_COLLECTION_DIALOG,
     HOOK_MAX,
 };
 
@@ -43,6 +44,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_OBJECT_UNLOAD",
     "HOOK_ON_SYNC_OBJECT_UNLOAD",
     "HOOK_ON_PAUSE_EXIT",
+    "HOOK_GET_STAR_COLLECTION_DIALOG",
     "HOOK_MAX"
 };
 
@@ -56,6 +58,7 @@ void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struc
 void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue);
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
+bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
