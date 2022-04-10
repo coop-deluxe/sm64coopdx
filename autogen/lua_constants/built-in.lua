@@ -269,6 +269,10 @@ function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
 end
 
+-------------
+-- courses --
+-------------
+
 --- @type integer
 COURSE_NONE     = 0
 --- @type integer
@@ -321,3 +325,11 @@ COURSE_WMOTR    = 23
 COURSE_SA       = 24
 --- @type integer
 COURSE_CAKE_END = 25
+--- @type integer
+COURSE_END = 26
+--- @type integer
+COURSE_MAX = 25
+--- @type integer
+COURSE_COUNT = 25
+--- @type integer
+COURSE_MIN = 1

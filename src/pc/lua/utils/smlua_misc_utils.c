@@ -87,6 +87,11 @@ s16 get_current_save_file_num(void) {
     return gCurrSaveFileNum;
 }
 
+void save_file_set_using_backup_slot(bool usingBackupSlot) {
+    extern u8 gSaveFileUsingBackupSlot;
+    gSaveFileUsingBackupSlot = usingBackupSlot ? 1 : 0;
+}
+
 ///
 
 void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {

@@ -109,6 +109,9 @@ bool network_init(enum NetworkType inNetworkType) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
+        extern s16 gCurrSaveFileNum;
+        gCurrSaveFileNum = configHostSaveSlot;
+
         mods_activate(&gLocalMods);
         smlua_init();
 

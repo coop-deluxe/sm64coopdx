@@ -12,6 +12,7 @@
 
 extern s16 gCurrSaveFileNum;
 extern s16 gCurrCourseNum;
+extern u8 gSaveFileUsingBackupSlot;
 
 static f32 dist_to_pos(struct Object* o, f32* pos) {
     f32 x = o->oPosX - pos[0]; x *= x;
@@ -58,6 +59,7 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
     packet_write(&p, &behaviorId, sizeof(u32));
     packet_write(&p, &coinScore,  sizeof(s16));
     packet_write(&p, &starIndex,  sizeof(s16));
+    packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
 
     network_send(&p);
 }
@@ -71,6 +73,7 @@ void network_receive_collect_star(struct Packet* p) {
     s16 lastStarActNum  = gCurrActStarNum;
     s16 lastLevelNum    = gCurrLevelNum;
     s16 lastAreaIndex   = gCurrAreaIndex;
+    u8  lastBackupSlot  = gSaveFileUsingBackupSlot;
 
     packet_read(p, &gCurrSaveFileNum, sizeof(s16));
     packet_read(p, &gCurrCourseNum,   sizeof(s16));
@@ -81,15 +84,12 @@ void network_receive_collect_star(struct Packet* p) {
     packet_read(p, &behaviorId, sizeof(u32));
     packet_read(p, &coinScore,  sizeof(s16));
     packet_read(p, &starIndex,  sizeof(s16));
+    packet_read(p, &gSaveFileUsingBackupSlot, sizeof(u8));
+    if (gSaveFileUsingBackupSlot != 0) { gSaveFileUsingBackupSlot = 1; }
 
     const void* behavior = get_behavior_from_id(behaviorId);
 
     save_file_collect_star_or_key(coinScore, starIndex, 1);
-
-    s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        gMarioStates[i].numStars = numStars;
-    }
 
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     bool levelAreaMismatch = ((np == NULL)
@@ -98,11 +98,17 @@ void network_receive_collect_star(struct Packet* p) {
         || np->currLevelNum  != gCurrLevelNum
         || np->currAreaIndex != gCurrAreaIndex);
 
-    gCurrSaveFileNum = lastSaveFileNum;
-    gCurrCourseNum   = lastCourseNum;
-    gCurrActStarNum  = lastStarActNum;
-    gCurrLevelNum    = lastLevelNum;
-    gCurrAreaIndex   = lastAreaIndex;
+    gCurrSaveFileNum         = lastSaveFileNum;
+    gCurrCourseNum           = lastCourseNum;
+    gCurrActStarNum          = lastStarActNum;
+    gCurrLevelNum            = lastLevelNum;
+    gCurrAreaIndex           = lastAreaIndex;
+    gSaveFileUsingBackupSlot = lastBackupSlot;
+
+    s32 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        gMarioStates[i].numStars = numStars;
+    }
 
     if (!levelAreaMismatch) {
         struct Object* star = find_nearest_star(behavior, pos, 500);

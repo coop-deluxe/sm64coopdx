@@ -23,6 +23,7 @@ f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 
 s16 get_current_save_file_num(void);
+void save_file_set_using_backup_slot(bool usingBackupSlot);
 
 void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 f32 get_environment_region(u8 index);

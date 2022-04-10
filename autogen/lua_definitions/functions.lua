@@ -7107,6 +7107,12 @@ function movtexqc_register(name, level, area, type)
     -- ...
 end
 
+--- @param usingBackupSlot boolean
+--- @return nil
+function save_file_set_using_backup_slot(usingBackupSlot)
+    -- ...
+end
+
 --- @param index integer
 --- @param value integer
 --- @return nil

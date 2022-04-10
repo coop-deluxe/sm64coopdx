@@ -1321,6 +1321,7 @@
    - [hud_hide](#hud_hide)
    - [hud_show](#hud_show)
    - [movtexqc_register](#movtexqc_register)
+   - [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
    - [set_environment_region](#set_environment_region)
    - [warp_exit_level](#warp_exit_level)
    - [warp_restart_level](#warp_restart_level)
@@ -24836,6 +24837,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void movtexqc_register(const char* name, s16 level, s16 area, s16 type);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
+
+### Lua Example
+`save_file_set_using_backup_slot(usingBackupSlot)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| usingBackupSlot | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_using_backup_slot(bool usingBackupSlot);`
 
 [:arrow_up_small:](#)
 

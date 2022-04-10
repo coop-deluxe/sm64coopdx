@@ -14771,6 +14771,17 @@ int smlua_func_movtexqc_register(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_set_using_backup_slot(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool usingBackupSlot = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    save_file_set_using_backup_slot(usingBackupSlot);
+
+    return 1;
+}
+
 int smlua_func_set_environment_region(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -16925,6 +16936,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
+    smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);

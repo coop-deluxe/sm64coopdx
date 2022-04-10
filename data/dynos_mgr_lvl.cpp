@@ -45,7 +45,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aL
     sDynosCustomLevelScripts.Add({ levelName, _Node });
 
     // Override vanilla script
-    auto& newScripts = _Node->mLevelScripts; // DO NOT COMMIT
+    auto& newScripts = _Node->mLevelScripts;
     auto& newScriptNode = newScripts[newScripts.Count() - 1];
     const void* originalScript = DynOS_Builtin_ScriptPtr_GetFromName(newScriptNode->mName.begin());
     if (originalScript == NULL) {
