@@ -463,6 +463,7 @@ static u16 sCustomModelsCount = 0;
 
 #define MAX_CACHED_ASSETS 256
 struct ModelUtilsInfo* sCachedAssets[MAX_CACHED_ASSETS] = { 0 };
+bool sCachedAssetTaken[MAX_CACHED_ASSETS] = { 0 };
 
 void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, UNUSED u8 isDisplayList) {
     struct ModelUtilsInfo* found = NULL;
@@ -492,8 +493,9 @@ void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, 
     }
 
     // remember
-    if (sCachedAssets[loadedId] != NULL && sCachedAssets[loadedId] != found) {
+    if (sCachedAssetTaken[loadedId] && sCachedAssets[loadedId] != found) {
         if (sCachedAssets[loadedId]->permanent) {
+            // TODO: we need to restore the permanent model afterward
             LOG_ERROR("OVERRIDING PERMANENT MODEL: %u -> %u", sCachedAssets[loadedId]->loadedId, loadedId);
         } else {
             LOG_INFO("Overriding model: loadedId %u was extId %u, now extId %u", loadedId, sCachedAssets[loadedId]->extId, found->extId);
@@ -502,16 +504,19 @@ void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, 
     }
     found->loadedId = loadedId;
     sCachedAssets[loadedId] = found;
+    sCachedAssetTaken[loadedId] = true;
     //LOG_INFO("Remember model: %u -> %u", found->extId, loadedId);
 }
 
 void smlua_model_util_clear(void) {
+    // TODO: we need to restore replaced permanent models
     for (int i = 0; i < MAX_CACHED_ASSETS; i++) {
         struct ModelUtilsInfo* m = sCachedAssets[i];
         if (m == NULL || m->permanent) { continue; }
         //LOG_INFO("Forget: %u -> %u", m->extId, m->loadedId);
         m->loadedId = UNLOADED_ID;
         sCachedAssets[i] = NULL;
+        sCachedAssetTaken[i] = false;
     }
 
     //LOG_INFO("Cleared runtime model cache.");
@@ -543,7 +548,7 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
                 //LOG_INFO("Found in cache (but late, confused?) - %u -> %u", extId, i);
                 info->loadedId = m->loadedId;
                 return info->loadedId;
-            } else if (m == NULL) {
+            } else if (!sCachedAssetTaken[i]) {
                 pickLoadedId = i;
             }
         }
