@@ -92,6 +92,11 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         return;
     }
 
+    if (bankId >= 64) {
+        LOG_LUA("Invalid bankId given to smlua_audio_utils_replace_sequence(): %d", bankId);
+        return;
+    }
+
     char m64path[SYS_MAX_PATH] = { 0 };
     if (snprintf(m64path, SYS_MAX_PATH-1, "sound/%s.m64", m64Name) < 0) {
         LOG_LUA("Could not find m64 at path: %s", m64path);
