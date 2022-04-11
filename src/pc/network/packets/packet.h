@@ -331,9 +331,9 @@ void network_receive_mod_list(struct Packet* p);
 // packet_download.c
 void network_start_download_requests(void);
 void network_send_next_download_request(void);
-void network_send_download_request(u16 clientIndex, u16 serverIndex, u64 offset);
+void network_send_download_request(u64 offset);
 void network_receive_download_request(struct Packet* p);
-void network_send_download(u16 clientIndex, u16 serverIndex, u64 offset);
+void network_send_download(u64 offset);
 void network_receive_download(struct Packet* p);
 
 // packet_lua_sync_table.c

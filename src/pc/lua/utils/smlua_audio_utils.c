@@ -115,6 +115,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
             struct AudioOverride* override = &sAudioOverrides[sequenceId];
             smlua_audio_utils_reset(override);
+            LOG_INFO("Loading audio: %s", fullPath);
             override->filename = strdup(fullPath);
             override->enabled = true;
             override->bank = bankId;

@@ -131,7 +131,10 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
     while (*p != '\0') {
         if (*p == '/' || *p == '\\') {
             if (snprintf(tmpPath, index + 1, "%s", path) < 0) { }
-            if (!fs_sys_dir_exists(tmpPath)) { fs_sys_mkdir(tmpPath); }
+            if (!fs_sys_dir_exists(tmpPath)) {
+                fs_sys_mkdir(tmpPath);
+                LOG_INFO("Creating mod path: %s", tmpPath);
+            }
         }
         index++;
         p++;

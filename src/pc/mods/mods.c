@@ -61,11 +61,13 @@ void mods_activate(struct Mods* mods) {
     }
 
     // copy enabled entries
+    gActiveMods.size = 0;
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
         if (mod->enabled) {
             mod->index = gActiveMods.entryCount;
             gActiveMods.entries[gActiveMods.entryCount++] = mod;
+            gActiveMods.size += mod->size;
             mod_activate(mod);
         }
     }

@@ -230,8 +230,6 @@ void network_receive_join(struct Packet* p) {
     update_all_mario_stars();
 
     fake_lvl_init_from_save_file();
-    extern s16 gChangeLevel;
-    gChangeLevel = gLevelValues.entryLevel;
 
     mods_activate(&gRemoteMods);
     djui_panel_modlist_create(NULL);
@@ -239,4 +237,7 @@ void network_receive_join(struct Packet* p) {
 
     network_send_network_players_request();
     network_send_lua_sync_table_request();
+
+    extern s16 gChangeLevel;
+    gChangeLevel = gLevelValues.entryLevel;
 }

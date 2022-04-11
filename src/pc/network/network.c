@@ -120,6 +120,11 @@ bool network_init(enum NetworkType inNetworkType) {
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
+        if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
+            extern s16 gChangeLevelTransition;
+            gChangeLevelTransition = gLevelValues.entryLevel;
+        }
+
         djui_chat_box_create();
     }
 
