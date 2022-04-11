@@ -99,7 +99,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
     char m64path[SYS_MAX_PATH] = { 0 };
     if (snprintf(m64path, SYS_MAX_PATH-1, "sound/%s.m64", m64Name) < 0) {
-        LOG_LUA("Could not find m64 at path: %s", m64path);
+        LOG_LUA("Could not concat m64path: %s", m64path);
         return;
     }
 
