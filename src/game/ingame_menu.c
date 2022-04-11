@@ -2975,6 +2975,7 @@ void print_hud_course_complete_coins(s16 x, s16 y) {
 
 void play_star_fanfare_and_flash_hud(s32 arg, u8 starNum) {
     if (gHudDisplay.coins == gCourseCompleteCoins && (gCurrCourseStarFlags & starNum) == 0 && gHudFlash == 0) {
+        gCurrCourseStarFlags |= starNum; // SM74 was spamming fanfare without this line
         play_star_fanfare();
         gHudFlash = arg;
     }

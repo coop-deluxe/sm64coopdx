@@ -242,6 +242,7 @@ s32 get_star_collection_dialog(struct MarioState *m) {
     s32 dialogID = 0;
 
     if (smlua_call_event_hooks_ret_int(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
+        m->prevNumStarsForDialog = m->numStars;
         return dialogID;
     }
 
