@@ -96,6 +96,7 @@ void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
+        normalize_path(file->relativePath);
         if (str_ends_with(file->relativePath, ".bin")) {
             mod_activate_bin(mod, file);
         }

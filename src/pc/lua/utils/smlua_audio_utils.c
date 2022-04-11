@@ -3,6 +3,7 @@
 #include "pc/mods/mods.h"
 #include "pc/lua/smlua.h"
 #include "pc/debuglog.h"
+#include "pc/mods/mods_utils.h"
 
 #define MAX_OVERRIDE 64
 
@@ -102,6 +103,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         LOG_LUA("Could not concat m64path: %s", m64path);
         return;
     }
+    normalize_path(m64path);
 
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
@@ -112,6 +114,8 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
                 LOG_ERROR("Failed to concat full path to m64: %s", m64Name);
                 return;
             }
+            normalize_path(fullPath);
+
 
             struct AudioOverride* override = &sAudioOverrides[sequenceId];
             smlua_audio_utils_reset(override);
