@@ -280,6 +280,7 @@ void network_receive_download(struct Packet* p) {
     packet_read(p, &chunk,         sizeof(u8) * chunkLength);
 
     // mark the offset group as received
+    bool foundGroup = false;
     for (u64 i = 0; i < 2; i++) {
         struct OffsetGroup* og = &sOffsetGroup[i];
         for (u64 j = 0; j < OFFSET_COUNT; j++) {
@@ -295,6 +296,11 @@ void network_receive_download(struct Packet* p) {
         }
     }
 after_group:;
+
+    if (!foundGroup) {
+        LOG_INFO("Received chunk from an inactive offset group");
+        return;
+    }
 
     // write the chunk
     u64 chunkPour = 0;
