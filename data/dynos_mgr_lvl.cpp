@@ -49,7 +49,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aL
     auto& newScriptNode = newScripts[newScripts.Count() - 1];
     const void* originalScript = DynOS_Builtin_ScriptPtr_GetFromName(newScriptNode->mName.begin());
     if (originalScript == NULL) {
-        Print("Could not find level to override: '%s'", newScriptNode->mName);
+        Print("Could not find level to override: '%s'", newScriptNode->mName.begin());
         return;
     }
 

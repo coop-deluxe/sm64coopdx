@@ -602,7 +602,7 @@ DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNo
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
 
     if (aGfxData->mErrorCount > 0) {
-        Print("Failed to parse collision: '%s'", aNode->mName);
+        Print("Failed to parse collision: '%s'", aNode->mName.begin());
     }
 
     return aNode;
