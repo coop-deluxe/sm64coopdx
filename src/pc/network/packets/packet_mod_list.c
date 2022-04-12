@@ -146,9 +146,17 @@ void network_receive_mod_list(struct Packet* p) {
         totalSize += mod->size;
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
 
-        if (snprintf(mod->basePath, SYS_MAX_PATH - 1, "%s", gRemoteModsBasePath) < 0) {
-            LOG_ERROR("Failed save remote base path!");
-            return;
+        if (mod->isDirectory) {
+            if (snprintf(mod->basePath, SYS_MAX_PATH - 1, "%s/%s", gRemoteModsBasePath, mod->relativePath) < 0) {
+                LOG_ERROR("Failed save remote base path!");
+                return;
+            }
+            normalize_path(mod->basePath);
+        } else {
+            if (snprintf(mod->basePath, SYS_MAX_PATH - 1, "%s", gRemoteModsBasePath) < 0) {
+                LOG_ERROR("Failed save remote base path!");
+                return;
+            }
         }
 
         if (mod->size >= MAX_MOD_SIZE) {
@@ -171,13 +179,6 @@ void network_receive_mod_list(struct Packet* p) {
             packet_read(p, file->relativePath, relativePathLength * sizeof(u8));
             packet_read(p, &file->size, sizeof(u64));
             file->fp = NULL;
-            if (mod->isDirectory && !strstr(file->relativePath, "actors") && !strstr(file->relativePath, "levels") && !strstr(file->relativePath, "sound")) {
-                char tmp[SYS_MAX_PATH];
-                if (snprintf(tmp, SYS_MAX_PATH, "%s-%s", mod->relativePath, file->relativePath) >= 0) {
-                    memcpy(file->relativePath, tmp, strlen(tmp) + 1);
-                }
-            }
-            normalize_path(file->relativePath);
             LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
         }
     }
