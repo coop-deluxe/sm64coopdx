@@ -670,14 +670,10 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const 
     SysPath _Filename = fstring("%s/%s.col", aPackFolder.begin(), aCollisionName);
     FILE *_File = fopen(_Filename.c_str(), "rb");
     if (_File) {
-        // backwards compatibility
-        //long prevPos = ftell(_File);
         u8 type = ReadBytes<u8>(_File);
-        //if (type != DATA_TYPE_COLLISION) { fseek(_File, prevPos, SEEK_SET); }
         if (type == DATA_TYPE_COLLISION) {
             collisionNode = DynOS_Col_Load(_File, NULL);
         }
-        // DO NOT COMMIT - figure out wtf is going on
         fclose(_File);
     }
 

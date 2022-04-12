@@ -347,6 +347,5 @@ s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc
     s64 value = ParseExpression();
     sRdString = NULL;
     *success = !sRdError;
-    //Print(">>> PARSING %s == %d :: %u", expr, value, *success);
     return value;
 }

@@ -1402,7 +1402,7 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     for (auto& _Node : aGfxData->mLevelScripts) {
         if (_Arg == _Node->mName) {
             auto base = DynOS_Lvl_Parse(aGfxData, _Node, false)->mData;
-            auto data = base + _Offset;
+            auto data = (u8*)base + _Offset;
             if (_Offset != 0) {
                 aGfxData->mPointerOffsetList.Add({ data, base });
             }

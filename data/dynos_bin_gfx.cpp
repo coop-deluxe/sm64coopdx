@@ -394,7 +394,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     for (auto& _Node : aGfxData->mVertices) {
         if (_Arg == _Node->mName) {
             auto base = DynOS_Vtx_Parse(aGfxData, _Node)->mData;
-            auto data = base + _Offset;
+            auto data = (u8*)base + _Offset;
             if (_Offset != 0) {
                 aGfxData->mPointerOffsetList.Add({ (const void*)data, (const void*)base });
             }

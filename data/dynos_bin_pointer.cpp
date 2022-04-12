@@ -154,7 +154,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     s32 _Offset = 0;
     for (auto& pair : aGfxData->mPointerOffsetList) {
         if (pair.first == aPtr) {
-            _Offset = (s32)((const LevelScript*)pair.first - (const LevelScript*)pair.second);
+            _Offset = (s32)((u8*)pair.first - (u8*)pair.second);
             aPtr = pair.second;
             break;
         }

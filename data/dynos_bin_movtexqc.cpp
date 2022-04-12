@@ -16,6 +16,11 @@ extern "C" {
 static Movtex* ParseMovtexQCSymbolArg(GfxData* aGfxData, DataNode<MovtexQC>* aNode, u64 aTokenIndex) {
     const String& _Arg = aNode->mTokens[aTokenIndex];
 
+    // Other constants
+    if (_Arg == "NULL") {
+        return (s64)0;
+    }
+
     // Movtexs
     for (auto& _Node : aGfxData->mMovtexs) {
         if (_Arg == _Node->mName) {
