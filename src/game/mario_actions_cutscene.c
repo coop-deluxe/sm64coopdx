@@ -600,7 +600,7 @@ s32 act_debug_free_move(struct MarioState *m) {
     u32 action = ACT_IDLE;
 
 #ifndef DEVELOPMENT
-    if (gNetworkType == NT_SERVER && configEnableCheats == 0 && m->action == ACT_DEBUG_FREE_MOVE) {
+    if (gNetworkType == NT_SERVER && gServerSettings.enableCheats == 0 && m->action == ACT_DEBUG_FREE_MOVE) {
         if (m->pos[1] <= m->waterLevel - 100) {
             action = ACT_WATER_IDLE;
         } else {

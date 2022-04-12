@@ -1534,6 +1534,8 @@ void update_mario_inputs(struct MarioState *m) {
         gCurrActStarNum = 0;
         gCurrActNum = 0;
         gChangeLevel = 16;
+        m->health = 0x880;
+        play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
     }
 
     if (m->playerIndex == 0) {

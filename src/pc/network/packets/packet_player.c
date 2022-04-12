@@ -362,14 +362,10 @@ void network_receive_player(struct Packet* p) {
     }
 
 #ifndef DEVELOPMENT
-    if (gNetworkType == NT_SERVER && configEnableCheats == 0) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            struct NetworkPlayer* np = &gNetworkPlayers[i];
-            struct MarioState* m = &gMarioStates[np->localIndex];
-            if (m->action == ACT_DEBUG_FREE_MOVE) {
-                network_send_kick(np->localIndex, EKT_CLOSE_CONNECTION);
-                network_player_disconnected(np->localIndex);
-            }
+    if (gNetworkType == NT_SERVER && gServerSettings.enableCheats == 0) {
+        if (m->action == ACT_DEBUG_FREE_MOVE) {
+            network_send_kick(np->localIndex, EKT_CLOSE_CONNECTION);
+            network_player_disconnected(np->localIndex);
         }
     }
 #endif

@@ -929,7 +929,9 @@ static void bubbled_offset_visual(struct MarioState* m) {
 }
 
 s32 act_bubbled(struct MarioState* m) {
-    set_camera_mode(m->area->camera, CAMERA_MODE_FREE_ROAM, 1);
+    if (m->playerIndex == 0) {
+        set_camera_mode(m->area->camera, CAMERA_MODE_FREE_ROAM, 1);
+    }
     struct MarioState* targetMarioState = nearest_mario_state_to_object(m->marioObj);
     struct Object* target = targetMarioState->marioObj;
     s32 angleToPlayer = obj_angle_to_object(m->marioObj, target);
