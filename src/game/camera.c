@@ -461,6 +461,8 @@ s32 update_fixed_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_8_directions_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_slide_or_0f_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_spiral_stairs_camera(struct Camera *c, Vec3f, Vec3f);
+s32 update_rom_hack_camera(struct Camera *c, Vec3f, Vec3f);
+void mode_rom_hack_camera(struct Camera *c);
 
 typedef s32 (*CameraTransition)(struct Camera *c, Vec3f, Vec3f);
 CameraTransition sModeTransitions[] = {
@@ -481,7 +483,9 @@ CameraTransition sModeTransitions[] = {
     update_8_directions_camera,
     update_slide_or_0f_camera,
     update_mario_camera,
-    update_spiral_stairs_camera
+    update_spiral_stairs_camera,
+    NULL,
+    update_rom_hack_camera,
 };
 
 // Move these two tables to another include file?
@@ -3206,6 +3210,10 @@ void update_camera(struct Camera *c) {
                     mode_spiral_stairs_camera(c);
                     break;
 
+                case CAMERA_MODE_ROM_HACK:
+                    mode_rom_hack_camera(c);
+                    break;
+
 #ifdef BETTERCAMERA
                 case CAMERA_MODE_NEWCAM:
                     newcam_loop(c);
@@ -3455,7 +3463,7 @@ void init_camera(struct Camera *c) {
             vec3f_set(sFixedModeBasePosition, -2985.f, 478.f, -5568.f);
             break;
     }
-    if (c->mode == CAMERA_MODE_8_DIRECTIONS) {
+    if ((c->mode == CAMERA_MODE_8_DIRECTIONS) || c->mode == CAMERA_MODE_ROM_HACK) {
         gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
     }
     switch (gCurrLevelArea) {
@@ -11711,3 +11719,265 @@ void camera_set_use_course_specific_settings(u8 enable) {
 #include "behaviors/end_birds_1.inc.c"
 #include "behaviors/end_birds_2.inc.c"
 #include "behaviors/intro_scene.inc.c"
+
+///////////////////////
+
+static s16 sRomHackYaw = 0;
+static u8 sRomHackZoom = 1;
+static s8 sRomHackIsUpdate = 0;
+
+static void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
+    f32 numerator = vec3f_dot(vec, onto);
+    f32 denominator = vec3f_dot(onto, onto);
+    if (denominator == 0) {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        return;
+    }
+    vec3f_copy(out, onto);
+    vec3f_mul(out, numerator / denominator);
+}
+
+static f32 vec3f_dist(Vec3f v1, Vec3f v2) {
+    Vec3f diff = {
+        v1[0] - v2[0],
+        v1[1] - v2[1],
+        v1[2] - v2[2],
+    };
+    return vec3f_length(diff);
+}
+
+static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
+    // do collision checking
+    struct Surface *surf = NULL;
+    f32 floorHeight = find_floor(desiredPos[0], desiredPos[1], desiredPos[2], &surf);
+    if (surf == NULL || floorHeight <= -11000) {
+        return false;
+    }
+
+    f32 mDist;
+    s16 mPitch;
+    s16 mYaw;
+    vec3f_get_dist_and_angle(desiredPos, gMarioStates[0].pos, &mDist, &mPitch, &mYaw);
+
+    s16 degreeMult = sRomHackZoom ? 7 : 5;
+
+    for (s16 yawOffset = -1; yawOffset <= 1; yawOffset++) {
+        for (s16 pitchOffset = -1; pitchOffset <= 1; pitchOffset++) {
+            if (abs(yawOffset) == 1 && abs(pitchOffset) == 1) { continue; }
+            Vec3f target;
+            vec3f_set_dist_and_angle(desiredPos,
+                target,
+                mDist,
+                mPitch + DEGREES(pitchOffset) * degreeMult,
+                mYaw + DEGREES(yawOffset) * degreeMult);
+
+            target[1] += 75;
+
+            Vec3f camdir;
+            camdir[0] = target[0] - desiredPos[0];
+            camdir[1] = target[1] - desiredPos[1];
+            camdir[2] = target[2] - desiredPos[2];
+
+            Vec3f hitpos;
+            find_surface_on_ray(desiredPos, camdir, &surf, hitpos);
+            if (surf == NULL) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
+    Vec3f movement = {
+        dir[0] * dist,
+        dir[1] * dist,
+        dir[2] * dist,
+    };
+
+    struct Surface* surf = NULL;
+    Vec3f hitpos;
+    find_surface_on_ray(pos, movement, &surf, hitpos);
+    if (surf == NULL) {
+        pos[0] += movement[0];
+        pos[1] += movement[1];
+        pos[2] += movement[2];
+        return;
+    }
+
+    Vec3f prevPos = {
+        pos[0],
+        pos[1],
+        pos[2],
+    };
+
+    // figure out dir normal
+    Vec3f dirNorm;
+    vec3f_copy(dirNorm, dir);
+    vec3f_normalize(dirNorm);
+
+    // figure out parallel direction
+    Vec3f normal = {
+        surf->normal.x,
+        surf->normal.y,
+        surf->normal.z,
+    };
+    vec3f_project(dirNorm, normal, dir);
+    dir[0] = dirNorm[0] - dir[0];
+    dir[1] = dirNorm[1] - dir[1];
+    dir[2] = dirNorm[2] - dir[2];
+    vec3f_normalize(dir);
+
+    // move pos off of hitpos
+    pos[0] = hitpos[0];
+    pos[1] = hitpos[1];
+    pos[2] = hitpos[2];
+    vec3f_mul(dirNorm, 100);
+    vec3f_sub(pos, dirNorm);
+
+    // figure out remaining length
+    f32 moveDist = vec3f_dist(prevPos, pos);
+    dist = dist * 0.7 - moveDist;
+    if (dist > 10 && vec3f_length(dir) > 0 && moveDist > 1) {
+        rom_hack_cam_walk(pos, dir, dist);
+    }
+}
+
+/**
+ * A mode that has 8 camera angles, 45 degrees apart, that is slightly smarter
+ */
+void mode_rom_hack_camera(struct Camera *c) {
+    s16 oldAreaYaw = sAreaYaw;
+
+    // look left
+    if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
+        sRomHackYaw += DEGREES(45);
+        play_sound_cbutton_side();
+    }
+
+    // look right
+    if (gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
+        sRomHackYaw -= DEGREES(45);
+        play_sound_cbutton_side();
+    }
+
+    // zoom in
+    if ((gMarioStates[0].controller->buttonPressed & U_CBUTTONS)) {
+        if (!sRomHackZoom) {
+            sRomHackZoom = 1;
+            play_sound_cbutton_up();
+        } else {
+            set_mode_c_up(c);
+        }
+    }
+
+    // zoom out
+    if ((gMarioStates[0].controller->buttonPressed & D_CBUTTONS)) {
+        if (sRomHackZoom) {
+            play_sound_cbutton_down();
+        } else {
+            play_sound_button_change_blocked();
+        }
+        sRomHackZoom = 0;
+    }
+
+    // center camera
+    if (gMarioStates[0].controller->buttonPressed & L_TRIG) {
+        sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].intendedYaw;
+        sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
+    }
+
+    // clamp yaw
+    sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
+
+    // update the camera focus and such
+    Vec3f pos;
+    sRomHackIsUpdate = 1;
+    update_rom_hack_camera(c, c->focus, pos);
+    sRomHackIsUpdate = 0;
+
+    // figure out desired position
+    f32 desiredDist = sRomHackZoom ? 900 : 1400;
+    f32 desiredHeight = sRomHackZoom ? 350 : 500;
+    f32* mPos = &gMarioStates[0].pos[0];
+    pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
+    pos[1] = mPos[1] + desiredHeight;
+    pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
+
+    if (rom_hack_cam_can_see_mario(pos)) {
+        // we can see mario, no need to adjust
+        c->pos[0] = pos[0];
+        c->pos[1] = pos[1];
+        c->pos[2] = pos[2];
+    } else {
+        // we can't see mario, raycast a position
+        Vec3f dir;
+        dir[0] = pos[0] - mPos[0];
+        dir[1] = pos[1] - mPos[1];
+        dir[2] = pos[2] - mPos[2];
+        vec3f_normalize(dir);
+
+        // start at mario
+        c->pos[0] = gMarioStates[0].pos[0];
+        c->pos[1] = gMarioStates[0].pos[1] + 50;
+        c->pos[2] = gMarioStates[0].pos[2];
+
+        rom_hack_cam_walk(c->pos, dir, desiredDist);
+    }
+
+
+    // tween
+    c->pos[0] = c->pos[0] * 0.2 + oldPos[0] * 0.8;
+    c->pos[1] = c->pos[1] * 0.2 + oldPos[1] * 0.8;
+    c->pos[2] = c->pos[2] * 0.2 + oldPos[2] * 0.8;
+    set_camera_height(c, c->pos[1]);
+
+    // update HUD
+    if (sRomHackZoom) {
+        gCameraMovementFlags &= ~(CAM_MOVE_ZOOMED_OUT);
+    } else {
+        gCameraMovementFlags |= (CAM_MOVE_ZOOMED_OUT);
+    }
+
+    // update camera yaw
+    c->yaw = atan2s(
+        c->pos[2] - gMarioStates[0].pos[2],
+        c->pos[0] - gMarioStates[0].pos[0]);
+
+    // update area yaw
+    sAreaYaw = sRomHackYaw;
+    sAreaYawChange = sAreaYaw - oldAreaYaw;
+}
+
+s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
+    UNUSED f32 cenDistX = sMarioCamState->pos[0] - c->areaCenX;
+    UNUSED f32 cenDistZ = sMarioCamState->pos[2] - c->areaCenZ;
+
+    // if rom hack camera was just set, figure out the yaw to use
+    if (!sRomHackIsUpdate) {
+        sRomHackYaw = DEGREES(90) - atan2s(
+            c->pos[2] - gMarioStates[0].pos[2],
+            c->pos[0] - gMarioStates[0].pos[0]);
+    }
+
+    s16 camYaw = c->yaw;
+    s16 pitch = look_down_slopes(camYaw);
+    f32 posY;
+    f32 focusY;
+    f32 yOff = 125.f;
+    f32 baseDist = 1000;
+
+    sAreaYaw = camYaw;
+    calc_y_to_curr_floor(&posY, 1.f, 200.f, &focusY, 0.9f, 200.f);
+    focus_on_mario(focus, pos, posY + yOff, focusY + yOff, sLakituDist + baseDist, pitch, sAreaYaw);
+    pan_ahead_of_player(c);
+    if (gCameraUseCourseSpecificSettings && gCurrLevelArea == AREA_DDD_SUB) {
+        camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
+    }
+
+    c->yaw = DEGREES(90) - sRomHackYaw;
+    return camYaw;
+}

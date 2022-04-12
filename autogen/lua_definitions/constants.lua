@@ -1986,6 +1986,9 @@ CAMERA_MODE_PARALLEL_TRACKING = 0x0C
 CAMERA_MODE_RADIAL = 0x01
 
 --- @type integer
+CAMERA_MODE_ROM_HACK = 0x13
+
+--- @type integer
 CAMERA_MODE_SLIDE_HOOT = 0x09
 
 --- @type integer

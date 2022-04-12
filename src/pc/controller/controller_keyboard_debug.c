@@ -49,6 +49,30 @@ static void debug_warp_level2() {
     dynos_warp_to_level(gCurrLevelNum, gCurrAreaIndex^3, 1);
 }
 
+#include "src/game/camera.h"
+static void debug_warp_level3() {
+    //dynos_warp_to_level(gCurrLevelNum, gCurrAreaIndex^3, 1);
+    u8 cameraModes[] = {
+        CAMERA_MODE_NONE,
+        CAMERA_MODE_RADIAL,
+        CAMERA_MODE_OUTWARD_RADIAL,
+        CAMERA_MODE_BEHIND_MARIO,
+        CAMERA_MODE_CLOSE,
+        CAMERA_MODE_WATER_SURFACE,
+        CAMERA_MODE_SLIDE_HOOT,
+        CAMERA_MODE_INSIDE_CANNON,
+        CAMERA_MODE_BOSS_FIGHT,
+        CAMERA_MODE_FIXED,
+        CAMERA_MODE_8_DIRECTIONS,
+        CAMERA_MODE_FREE_ROAM,
+        CAMERA_MODE_SPIRAL_STAIRS,
+    };
+    static int index = 0;
+    index = (index + 1)%15;
+    printf(">>> %u\n", index);
+    set_camera_mode(gCamera, cameraModes[index], 0);
+}
+
 static void debug_grand_star(void) {
     set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
 }
@@ -90,6 +114,7 @@ void debug_keyboard_on_key_down(int scancode) {
 #ifdef DEVELOPMENT
             case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
             case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
+            case SCANCODE_4:  if (sHoldingAlt) { debug_warp_level3();  } break;
             case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object(); } break;
             case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
             case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;
