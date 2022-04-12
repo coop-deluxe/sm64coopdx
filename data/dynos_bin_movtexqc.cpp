@@ -12,14 +12,12 @@ extern "C" {
  // Parsing //
 /////////////
 
-#define movtexqc_constant(x) if (_Arg == #x) { return (s64) (x); }
+#define movtexqc_constant(x) if (_Arg == #x) { return (Movtex*) (x); }
 static Movtex* ParseMovtexQCSymbolArg(GfxData* aGfxData, DataNode<MovtexQC>* aNode, u64 aTokenIndex) {
     const String& _Arg = aNode->mTokens[aTokenIndex];
 
     // Other constants
-    if (_Arg == "NULL") {
-        return (s64)0;
-    }
+    movtexqc_constant(NULL);
 
     // Movtexs
     for (auto& _Node : aGfxData->mMovtexs) {
