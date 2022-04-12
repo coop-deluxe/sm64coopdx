@@ -11852,6 +11852,12 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
 void mode_rom_hack_camera(struct Camera *c) {
     s16 oldAreaYaw = sAreaYaw;
 
+    Vec3f oldPos = {
+        c->pos[0],
+        c->pos[1],
+        c->pos[2],
+    };
+
     // look left
     if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
         sRomHackYaw += DEGREES(45);
