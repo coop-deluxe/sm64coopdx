@@ -74,7 +74,7 @@ static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGf
 
 GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName) {
     struct DynosGfxDataCache { SysPath mPackFolder; Array<Pair<const char *, GfxData *>> mGfxData; };
-    static Array<DynosGfxDataCache *> sDynosGfxDataCache;
+    static Array<DynosGfxDataCache *> sDynosGfxDataCache = {};
 
     // Look for pack in cache
     DynosGfxDataCache *_Pack = NULL;
@@ -128,6 +128,7 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
         _Pack->mGfxData.Add({ aActorName, _GfxData });
         sDynosGfxDataCache.Add(_Pack);
     }
+
     return _GfxData;
 }
 

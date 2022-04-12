@@ -39,7 +39,6 @@ void DynOS_Actor_AddCustom(const SysPath &aPackFolder, const char *aActorName) {
         sDynosCustomActors.Add({ actorName, geoLayout });
     } else {
         index = foundIndex;
-        free(actorName);
     }
 
     // Alloc and init the actors gfx list
