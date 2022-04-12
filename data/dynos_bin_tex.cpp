@@ -9,14 +9,19 @@ extern "C" {
 ///////////
 
 static TexData* LoadTextureFromFile(GfxData *aGfxData, const String& aFile) {
-
     // Image file
-    String _TexturePath = aFile.SubString(aFile.Find('/') + 1); // Remove the "actors/"
-    SysPath _Filename = fstring("%s/%s.png", aGfxData->mPackFolder.c_str(), _TexturePath.begin());
+    SysPath _Filename = fstring("%s/%s.png", aGfxData->mPackFolder.c_str(), aFile.begin());
     FILE *_File = fopen(_Filename.c_str(), "rb");
+    // Check as if we're an Actor.
     if (!_File) {
-        PrintError("  ERROR: Unable to open file \"%s\"", _Filename.c_str());
-        return NULL;
+        String _TexturePath = aFile.SubString(aFile.Find('/') + 1); // Remove the "actors/"
+        SysPath _ActorFilename = fstring("%s/%s.png", aGfxData->mPackFolder.c_str(), _TexturePath.begin());
+        _File = fopen(_ActorFilename.c_str(), "rb");
+        // The file does not exist in either spot!
+        if (!_File) {
+            PrintError("  ERROR: Unable to open file at \"%s\" or \"%s\"", _Filename.c_str(), _ActorFilename.c_str());
+            return NULL;
+        }
     }
 
     // Texture data
