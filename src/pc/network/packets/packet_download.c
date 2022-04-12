@@ -283,6 +283,7 @@ void network_receive_download(struct Packet* p) {
     bool foundGroup = false;
     for (u64 i = 0; i < 2; i++) {
         struct OffsetGroup* og = &sOffsetGroup[i];
+        if (!og->active) { continue; }
         for (u64 j = 0; j < OFFSET_COUNT; j++) {
             if (og->offset[j] != receiveOffset) {
                 continue;
@@ -292,6 +293,7 @@ void network_receive_download(struct Packet* p) {
                 return;
             }
             og->rx[j] = true;
+            foundGroup = true;
             goto after_group;
         }
     }
