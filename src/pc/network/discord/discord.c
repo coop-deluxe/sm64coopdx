@@ -39,48 +39,9 @@ void discord_fatal(int rc) {
         discord_fatal_message(rc);
     }
 
-    SOFT_ASSERT(rc != DiscordResult_ServiceUnavailable);
-    SOFT_ASSERT(rc != DiscordResult_InvalidVersion);
-    SOFT_ASSERT(rc != DiscordResult_LockFailed);
-    SOFT_ASSERT(rc != DiscordResult_InternalError);
-    SOFT_ASSERT(rc != DiscordResult_InvalidPayload);
-    SOFT_ASSERT(rc != DiscordResult_InvalidCommand);
-    SOFT_ASSERT(rc != DiscordResult_InvalidPermissions);
-    SOFT_ASSERT(rc != DiscordResult_NotFetched);
-    SOFT_ASSERT(rc != DiscordResult_NotFound);
-    SOFT_ASSERT(rc != DiscordResult_Conflict);
-    SOFT_ASSERT(rc != DiscordResult_InvalidSecret);
-    SOFT_ASSERT(rc != DiscordResult_InvalidJoinSecret);
-    SOFT_ASSERT(rc != DiscordResult_NoEligibleActivity);
-    SOFT_ASSERT(rc != DiscordResult_InvalidInvite);
-    SOFT_ASSERT(rc != DiscordResult_NotAuthenticated);
-    SOFT_ASSERT(rc != DiscordResult_InvalidAccessToken);
-    SOFT_ASSERT(rc != DiscordResult_ApplicationMismatch);
-    SOFT_ASSERT(rc != DiscordResult_InvalidDataUrl);
-    SOFT_ASSERT(rc != DiscordResult_InvalidBase64);
-    SOFT_ASSERT(rc != DiscordResult_NotFiltered);
-    SOFT_ASSERT(rc != DiscordResult_LobbyFull);
-    SOFT_ASSERT(rc != DiscordResult_InvalidFilename);
-    SOFT_ASSERT(rc != DiscordResult_InvalidFileSize);
-    SOFT_ASSERT(rc != DiscordResult_InvalidEntitlement);
-    SOFT_ASSERT(rc != DiscordResult_NotInstalled);
-    SOFT_ASSERT(rc != DiscordResult_NotRunning);
-    SOFT_ASSERT(rc != DiscordResult_InsufficientBuffer);
-    SOFT_ASSERT(rc != DiscordResult_PurchaseCanceled);
-    SOFT_ASSERT(rc != DiscordResult_InvalidGuild);
-    SOFT_ASSERT(rc != DiscordResult_InvalidEvent);
-    SOFT_ASSERT(rc != DiscordResult_InvalidChannel);
-    SOFT_ASSERT(rc != DiscordResult_InvalidOrigin);
-    SOFT_ASSERT(rc != DiscordResult_RateLimited);
-    SOFT_ASSERT(rc != DiscordResult_OAuth2Error);
-    SOFT_ASSERT(rc != DiscordResult_SelectChannelTimeout);
-    SOFT_ASSERT(rc != DiscordResult_SelectVoiceForceRequired);
-    SOFT_ASSERT(rc != DiscordResult_CaptureShortcutAlreadyListening);
-    SOFT_ASSERT(rc != DiscordResult_UnauthorizedForAchievement);
-    SOFT_ASSERT(rc != DiscordResult_InvalidGiftCode);
-    SOFT_ASSERT(rc != DiscordResult_PurchaseError);
-    SOFT_ASSERT(rc != DiscordResult_TransactionAborted);
-    SOFT_ASSERT(rc == DiscordResult_Ok);
+    if (rc != DiscordResult_Ok) {
+        LOG_ERROR("Discord threw an error. RC: %d", rc);
+    }
 }
 
 static void set_instance_env_variable(void) {
