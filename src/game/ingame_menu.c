@@ -2369,6 +2369,10 @@ u8 gTextCourseArr[][7] = {
 #endif
 
 void render_pause_my_score_coins(void) {
+    // sanity check
+    if (!COURSE_IS_VALID_COURSE(gCurrCourseNum)) { return; }
+    if (gCurrActNum <= 0 || gCurrActNum > 6) { return; }
+
 #ifdef VERSION_EU
     u8 textMyScore[][10] = {
         { TEXT_MY_SCORE },
