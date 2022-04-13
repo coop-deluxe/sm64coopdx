@@ -230,12 +230,13 @@ void bookshelf_manager_act_3(void) {
     if (o->parentObj == NULL || o->parentObj->behavior != bhvHauntedBookshelf) {
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
     }
+
     if (o->oTimer > 85) {
         if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
             o->oAction = 4;
             network_send_object(o);
         }
-    } else {
+    } else if (o->parentObj != NULL) {
         o->oForwardVel = o->parentObj->oPosX - o->oPosX;
         o->oPosX = o->parentObj->oPosX;
     }
