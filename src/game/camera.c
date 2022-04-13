@@ -31,6 +31,7 @@
 #include "game/hardcoded.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
@@ -2871,6 +2872,12 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
     struct LinearTransitionPoint *start = &sModeInfo.transitionStart;
     struct LinearTransitionPoint *end = &sModeInfo.transitionEnd;
 
+    bool returnValue = true;
+    smlua_call_event_hooks_set_camera_mode_params(HOOK_ON_SET_CAMERA_MODE, c, mode, frames, &returnValue);
+    if (!returnValue) {
+        return;
+    }
+
 #ifdef BETTERCAMERA
     if (mode != CAMERA_MODE_NEWCAM && gLakituState.mode != CAMERA_MODE_NEWCAM)
     {
@@ -3021,11 +3028,10 @@ void update_lakitu(struct Camera *c) {
             distToFloor = find_floor(gLakituState.pos[0],
                                      gLakituState.pos[1] + 20.0f,
                                      gLakituState.pos[2], &floor);
+            gCheckingSurfaceCollisionsForCamera = false;
             if (distToFloor != FLOOR_LOWER_LIMIT) {
                 if (gLakituState.pos[1] < (distToFloor += 100.0f)) {
                     gLakituState.pos[1] = distToFloor;
-                } else {
-                    gCheckingSurfaceCollisionsForCamera = FALSE;
                 }
             }
         }
@@ -11725,6 +11731,8 @@ void camera_set_use_course_specific_settings(u8 enable) {
 static s16 sRomHackYaw = 0;
 static u8 sRomHackZoom = 1;
 static s8 sRomHackIsUpdate = 0;
+static f32 sRomHackWaterFocus = 0;
+static f32 sRomHackWaterPitchOffset = 0;
 
 static void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
     f32 numerator = vec3f_dot(vec, onto);
@@ -11801,6 +11809,7 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
     struct Surface* surf = NULL;
     Vec3f hitpos;
     find_surface_on_ray(pos, movement, &surf, hitpos);
+
     if (surf == NULL) {
         pos[0] += movement[0];
         pos[1] += movement[1];
@@ -11850,6 +11859,7 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
  * A mode that has 8 camera angles, 45 degrees apart, that is slightly smarter
  */
 void mode_rom_hack_camera(struct Camera *c) {
+    extern bool configCameraInvertX;
     s16 oldAreaYaw = sAreaYaw;
 
     Vec3f oldPos = {
@@ -11860,13 +11870,13 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // look left
     if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
-        sRomHackYaw += DEGREES(45);
+        sRomHackYaw += DEGREES(45) * (configCameraInvertX ? -1 : 1);
         play_sound_cbutton_side();
     }
 
     // look right
     if (gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
-        sRomHackYaw -= DEGREES(45);
+        sRomHackYaw -= DEGREES(45) * (configCameraInvertX ? -1 : 1);
         play_sound_cbutton_side();
     }
 
@@ -11922,24 +11932,23 @@ void mode_rom_hack_camera(struct Camera *c) {
         // we can't see mario, raycast a position
         Vec3f dir;
         dir[0] = pos[0] - mPos[0];
-        dir[1] = pos[1] - mPos[1];
+        dir[1] = pos[1] - (mPos[1] + 150);
         dir[2] = pos[2] - mPos[2];
         vec3f_normalize(dir);
 
         // start at mario
         c->pos[0] = gMarioStates[0].pos[0];
-        c->pos[1] = gMarioStates[0].pos[1] + 50;
+        c->pos[1] = gMarioStates[0].pos[1] + 150;
         c->pos[2] = gMarioStates[0].pos[2];
 
         rom_hack_cam_walk(c->pos, dir, desiredDist);
     }
 
-
     // tween
-    c->pos[0] = c->pos[0] * 0.2 + oldPos[0] * 0.8;
-    c->pos[1] = c->pos[1] * 0.2 + oldPos[1] * 0.8;
-    c->pos[2] = c->pos[2] * 0.2 + oldPos[2] * 0.8;
-    set_camera_height(c, c->pos[1]);
+    oldPos[0] = oldPos[0];
+    c->pos[0] = c->pos[0] * 0.15 + oldPos[0] * 0.85;
+    c->pos[1] = c->pos[1] * 0.15 + oldPos[1] * 0.85;
+    c->pos[2] = c->pos[2] * 0.15 + oldPos[2] * 0.85;
 
     // update HUD
     if (sRomHackZoom) {
@@ -11984,6 +11993,30 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
         camYaw = clamp_positions_and_find_yaw(pos, focus, 6839.f, 995.f, 5994.f, -3945.f);
     }
 
+    // adjust focus when under water
+    struct MarioState* m = &gMarioStates[0];
+    if (m->pos[1] <= (m->waterLevel - 100)) {
+        sRomHackWaterFocus = MIN(sRomHackWaterFocus + 0.05f, 1.0f);
+    } else {
+        sRomHackWaterFocus = MAX(sRomHackWaterFocus - 0.05f, 0.0f);
+    }
+
+    if (sRomHackWaterFocus > 0) {
+        Vec3f waterFocus;
+        vec3f_set_dist_and_angle(m->pos, waterFocus, 300, m->faceAngle[0], m->faceAngle[1]);
+        waterFocus[0] = m->pos[0];
+        waterFocus[2] = m->pos[2];
+        sRomHackWaterPitchOffset = sRomHackWaterPitchOffset * 0.9f + waterFocus[1] * 0.1f;
+        waterFocus[1] = sRomHackWaterPitchOffset;
+        float other = 1.0f - sRomHackWaterFocus;
+        c->focus[0] = c->focus[0] * other + waterFocus[0] * sRomHackWaterFocus;
+        c->focus[1] = c->focus[1] * other + waterFocus[1] * sRomHackWaterFocus;
+        c->focus[2] = c->focus[2] * other + waterFocus[2] * sRomHackWaterFocus;
+    } else {
+        sRomHackWaterPitchOffset = m->pos[1];
+    }
+
     c->yaw = DEGREES(90) - sRomHackYaw;
     return camYaw;
 }
+

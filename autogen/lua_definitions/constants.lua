@@ -7727,7 +7727,10 @@ HOOK_ON_PAUSE_EXIT = 16
 HOOK_GET_STAR_COLLECTION_DIALOG = 17
 
 --- @type LuaHookedEventType
-HOOK_MAX = 18
+HOOK_ON_SET_CAMERA_MODE = 18
+
+--- @type LuaHookedEventType
+HOOK_MAX = 19
 
 --- @class ModelExtendedId
 

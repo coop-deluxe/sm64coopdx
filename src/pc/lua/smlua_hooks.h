@@ -2,6 +2,7 @@
 #define SMLUA_HOOKS_H
 
 #include <stdbool.h>
+#include "src/game/camera.h"
 #include "include/behavior_table.h"
 
 enum LuaHookedEventType {
@@ -23,6 +24,7 @@ enum LuaHookedEventType {
     HOOK_ON_SYNC_OBJECT_UNLOAD,
     HOOK_ON_PAUSE_EXIT,
     HOOK_GET_STAR_COLLECTION_DIALOG,
+    HOOK_ON_SET_CAMERA_MODE,
     HOOK_MAX,
 };
 
@@ -45,6 +47,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_SYNC_OBJECT_UNLOAD",
     "HOOK_ON_PAUSE_EXIT",
     "HOOK_GET_STAR_COLLECTION_DIALOG",
+    "HOOK_ON_SET_CAMERA_MODE",
     "HOOK_MAX"
 };
 
@@ -59,6 +62,7 @@ void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookTy
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
+void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
