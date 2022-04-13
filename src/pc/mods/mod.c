@@ -1,8 +1,10 @@
 #include "mod.h"
 #include "mods.h"
 #include "mods_utils.h"
+#include "mod_cache.h"
 #include "data/dynos.c.h"
 #include "pc/utils/misc.h"
+#include "pc/utils/md5.h"
 #include "pc/debuglog.h"
 
 static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
@@ -107,6 +109,7 @@ void mod_activate(struct Mod* mod) {
             mod_activate_lvl(mod, file);
         }
     }
+    mod_md5_hash(mod);
 }
 
 void mod_clear(struct Mod* mod) {
@@ -518,5 +521,108 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         }
     }
 
+    // hash and cache if we haven't before
+    struct ModCacheEntry* cache = mod_cache_get_from_path(fullPath);
+    if (cache == NULL) {
+        mod_md5_hash(mod);
+        mod_cache_add(mod->dataHash, strdup(fullPath));
+    }
+
     return true;
+}
+
+#define MD5_BUFFER_SIZE 1024
+
+void mod_md5_hash(struct Mod* mod) {
+    char path[SYS_MAX_PATH] = { 0 };
+    u8 buffer[MD5_BUFFER_SIZE] = { 0 };
+
+    mod->hashProcessed = false;
+
+    MD5_CTX ctx = { 0 };
+    MD5_Init(&ctx);
+
+    for (u32 i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        if (!concat_path(path, mod->basePath, file->relativePath)) {
+            LOG_ERROR("Failed to combine path for mod hashing.");
+            return;
+        }
+
+        // open file pointer
+        FILE* fp = fopen(path, "rb");
+        if (fp == NULL) {
+            LOG_ERROR("Failed to open filepointer for mod hashing: '%s'.", path);
+            continue;
+        }
+
+        // read bytes and md5 them
+        size_t readBytes = 0;
+        do {
+            readBytes = fread(buffer, sizeof(u8), MD5_BUFFER_SIZE, fp);
+            MD5_Update(&ctx, buffer, readBytes);
+        } while (readBytes >= MD5_BUFFER_SIZE);
+
+        // close file pointer
+        fclose(fp);
+    }
+
+    // finish computing
+    MD5_Final(mod->dataHash, &ctx);
+    mod->hashProcessed = true;
+
+    if (mod->isDirectory) {
+        mod_cache_add(mod->dataHash, strdup(mod->basePath));
+    } else {
+        if (!concat_path(path, mod->basePath, mod->files[0].relativePath)) {
+            LOG_ERROR("Failed to combine path for mod hashing.");
+            return;
+        }
+        mod_cache_add(mod->dataHash, strdup(path));
+    }
+}
+
+void mod_load_from_cache(struct Mod* mod) {
+    mod->loadedFromCache = false;
+    struct ModCacheEntry* cache = mod_cache_get_from_hash(mod->dataHash);
+    if (cache == NULL) { return; }
+
+    // remember previous base path and hash
+    char oldBasePath[SYS_MAX_PATH] = { 0 };
+    snprintf(oldBasePath, SYS_MAX_PATH, "%s", mod->basePath);
+    u8 oldDataHash[16] = { 0 };
+    memcpy(oldDataHash, mod->dataHash, sizeof(u8) * 16);
+
+    // override base path
+    if (mod->isDirectory) {
+        snprintf(mod->basePath, SYS_MAX_PATH-1, "%s", cache->path);
+    } else {
+        path_get_folder(cache->path, mod->basePath);
+    }
+
+    // hash our local version of the mod
+    mod_md5_hash(mod);
+
+    // check if hashes match
+    if (mod->hashProcessed && !memcmp(mod->dataHash, oldDataHash, sizeof(u8) * 16)) {
+        // close file pointers
+        for (s32 i = 0; i < mod->fileCount; i++) {
+            struct ModFile* file = &mod->files[i];
+            if (file->fp != NULL) {
+                fclose(file->fp);
+                file->fp = NULL;
+            }
+        }
+
+        // mod is loaded and enabled
+        mod->loadedFromCache = true;
+        mod->enabled = true;
+        LOG_INFO("Loaded from cache: %s", mod->name);
+        return;
+    }
+
+    // error condition, load old base path and hash
+    snprintf(mod->basePath, SYS_MAX_PATH, "%s", oldBasePath);
+    memcpy(mod->dataHash, oldDataHash, sizeof(u8) * 16);
+    LOG_INFO("Could not load from cache: %s", mod->name);
 }

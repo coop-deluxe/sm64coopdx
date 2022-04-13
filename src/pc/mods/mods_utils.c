@@ -240,6 +240,18 @@ char* path_basename(char* path) {
     return base;
 }
 
+void path_get_folder(char* path, char* outpath) {
+    char* baseNamePath = path_basename(path);
+    char* p = path;
+    char* o = outpath;
+    while (*p != '\0' && p != baseNamePath) {
+        *o = *p;
+        o++;
+        p++;
+    }
+    *o = '\0';
+}
+
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     // skip non-portable filenames
     if (!path_is_portable_filename(dir->d_name)) { return false; }

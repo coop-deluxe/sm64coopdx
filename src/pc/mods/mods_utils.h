@@ -22,6 +22,7 @@ bool is_directory(char* path);
 void normalize_path(char* path);
 bool concat_path(char* destination, char* path, char* fname);
 char* path_basename(char* path);
+void path_get_folder(char* path, char* outpath);
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 
 #endif

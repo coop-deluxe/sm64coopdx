@@ -29,10 +29,15 @@ struct Mod {
     bool enabled;
     bool selectable;
     size_t size;
+    u8 dataHash[16];
+    bool hashProcessed;
+    bool loadedFromCache;
 };
 
 void mod_activate(struct Mod* mod);
 void mod_clear(struct Mod* mod);
 bool mod_load(struct Mods* mods, char* basePath, char* modName);
+void mod_md5_hash(struct Mod* mod);
+void mod_load_from_cache(struct Mod* mod);
 
 #endif

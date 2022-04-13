@@ -39,8 +39,8 @@ void network_send_mod_list(void) {
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     LOG_INFO("sending version: %s", version);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
-
     packet_write(&p, &gActiveMods.entryCount, sizeof(u16));
+
     LOG_INFO("sent mod list (%u):", gActiveMods.entryCount);
     for (u16 i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
@@ -57,6 +57,7 @@ void network_send_mod_list(void) {
         packet_write(&p, mod->relativePath, sizeof(u8) * relativePathLength);
         packet_write(&p, &modSize, sizeof(u64));
         packet_write(&p, &mod->isDirectory, sizeof(u8));
+        packet_write(&p, &mod->dataHash[0], sizeof(u8) * 16);
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
 
         packet_write(&p, &mod->fileCount, sizeof(u16));
@@ -142,6 +143,7 @@ void network_receive_mod_list(struct Packet* p) {
         packet_read(p, mod->relativePath, relativePathLength * sizeof(u8));
         packet_read(p, &mod->size, sizeof(u64));
         packet_read(p, &mod->isDirectory, sizeof(u8));
+        packet_read(p, &mod->dataHash, sizeof(u8) * 16);
         normalize_path(mod->relativePath);
         totalSize += mod->size;
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
@@ -181,6 +183,8 @@ void network_receive_mod_list(struct Packet* p) {
             file->fp = NULL;
             LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
         }
+
+        mod_load_from_cache(mod);
     }
     gRemoteMods.size = totalSize;
 
