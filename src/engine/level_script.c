@@ -60,6 +60,8 @@ static s16 sScriptStatus;
 static s32 sRegister;
 static struct LevelCommand *sCurrentCmd;
 
+static u8 sLevelOwnedGraphNodes[MAX_LOADED_GRAPH_NODES] = { 0 };
+
 static s32 eval_script_area(s32 arg) {
     return (sWarpDest.areaIdx == arg);
 }
@@ -316,7 +318,6 @@ static void level_cmd_init_level(void) {
     main_pool_push_state();
     smlua_model_util_clear();
 
-
     sCurrentCmd = CMD_NEXT;
 }
 
@@ -324,12 +325,29 @@ static void level_cmd_clear_level(void) {
     clear_objects();
     clear_area_graph_nodes();
     clear_areas();
+
+    // reset the level's graph nodes to NULL
+    for (s32 i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
+        if (sLevelOwnedGraphNodes[i]) {
+            gLoadedGraphNodes[i] = NULL;
+            sLevelOwnedGraphNodes[i] = false;
+        }
+    }
     main_pool_pop_state();
+
 
     sCurrentCmd = CMD_NEXT;
 }
 
 static void level_cmd_alloc_level_pool(void) {
+
+    // reset level graph node ownership
+    for (s32 i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
+        if (sLevelOwnedGraphNodes[i]) {
+            sLevelOwnedGraphNodes[i] = false;
+        }
+    }
+
     if (sLevelPool == NULL) {
         sLevelPool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool),
                                           MEMORY_POOL_LEFT);
@@ -390,6 +408,7 @@ static void level_cmd_load_model_from_dl(void) {
     if (val1 < 256) {
         gLoadedGraphNodes[val1] =
             (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
+        sLevelOwnedGraphNodes[val1] = true;
         smlua_model_util_remember(val1, val2, val3, 1);
     }
 
@@ -402,6 +421,7 @@ static void level_cmd_load_model_from_geo(void) {
 
     if (arg0 < 256) {
         gLoadedGraphNodes[arg0] = process_geo_layout(sLevelPool, arg1);
+        sLevelOwnedGraphNodes[arg0] = true;
         smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1, 0);
     }
 
@@ -425,6 +445,7 @@ static void level_cmd_23(void) {
         // is being stored to the array, so cast the pointer.
         gLoadedGraphNodes[model] =
             (struct GraphNode *) init_graph_node_scale(sLevelPool, 0, arg0H, arg1, arg2.f);
+        sLevelOwnedGraphNodes[model] = true;
         smlua_model_util_remember(model, arg0H, arg1, 1);
     }
 

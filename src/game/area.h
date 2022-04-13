@@ -7,6 +7,8 @@
 #include "camera.h"
 #include "engine/graph_node.h"
 
+#define MAX_LOADED_GRAPH_NODES 0x100
+
 struct WarpNode
 {
     /*00*/ u8 id;

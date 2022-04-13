@@ -26,7 +26,7 @@
 #include "pc/network/network.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
-struct GraphNode *D_8033A160[0x100];
+struct GraphNode *D_8033A160[MAX_LOADED_GRAPH_NODES];
 struct Area gAreaData[8];
 
 struct WarpTransition gWarpTransition;
