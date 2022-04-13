@@ -37,16 +37,18 @@ void bhv_animates_on_floor_switch_press_init(void) {
 
 void bhv_animates_on_floor_switch_press_loop(void) {
     if (o->oFloorSwitchPressAnimationUnk100 != 0) {
-        if (o->parentObj->oAction != 2) {
+        if (o->parentObj != NULL && o->parentObj->oAction != 2) {
             o->oFloorSwitchPressAnimationUnk100 = 0;
         }
 
         if (o->oFloorSwitchPressAnimationUnkFC != 0) {
-            o->oFloorSwitchPressAnimationUnkF4 = D_80331ACC[o->oBehParams2ndByte];
+            if (o->oBehParams2ndByte >= 0 && o->oBehParams2ndByte <= 2) {
+                o->oFloorSwitchPressAnimationUnkF4 = D_80331ACC[o->oBehParams2ndByte];
+            }
         } else {
             o->oFloorSwitchPressAnimationUnkF4 = 0;
         }
-    } else if (o->parentObj->oAction == 2) {
+    } else if (o->parentObj != NULL && o->parentObj->oAction == 2) {
         o->oFloorSwitchPressAnimationUnkFC ^= 1;
         o->oFloorSwitchPressAnimationUnk100 = 1;
     }
@@ -70,8 +72,12 @@ void bhv_animates_on_floor_switch_press_loop(void) {
         o->oFloorSwitchPressAnimationUnkFC = 1;
     }
 
-    o->collisionData = segmented_to_virtual(
-        D_80331A54[o->oBehParams2ndByte][o->oFloorSwitchPressAnimationUnkF8 / 2].unk00);
+    u8 group = (u8)o->oBehParams2ndByte;
+    u8 fType = (u8)o->oFloorSwitchPressAnimationUnkF8 / 2;
+    if (group <= 2 && fType <= 4) {
+        o->collisionData = segmented_to_virtual(
+            D_80331A54[group][fType].unk00);
 
-    cur_obj_set_model(D_80331A54[o->oBehParams2ndByte][o->oFloorSwitchPressAnimationUnkF8 / 2].unk04);
+        cur_obj_set_model(D_80331A54[group][fType].unk04);
+    }
 }
