@@ -135,6 +135,7 @@ void mod_cache_save(void) {
     FILE* fp = fopen(filename, "wb");
     if (fp == NULL) {
         LOG_ERROR("Failed to open mod cache save fp: %s", filename);
+        return;
     }
 
     u16 version = MOD_CACHE_VERSION;
@@ -143,7 +144,7 @@ void mod_cache_save(void) {
     struct ModCacheEntry* node = sModCacheHead;
     while (node != NULL) {
         fwrite(node->dataHash, sizeof(u8), 16, fp);
-        fwrite(node->lastLoaded, sizeof(u64), 1, fp);
+        fwrite(&node->lastLoaded, sizeof(u64), 1, fp);
         u16 pathLen = strlen(node->path);
         fwrite(&pathLen, sizeof(u16), 1, fp);
         fwrite(node->path, sizeof(u8), pathLen + 1, fp);
