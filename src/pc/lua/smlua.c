@@ -55,6 +55,13 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
         lua_newtable(L); // create metatable
         lua_getglobal(L, "_G"); // get global table
 
+        // remove certain default functions
+        lua_pushstring(L, "load");           lua_pushnil(L); lua_settable(L, -3);
+        lua_pushstring(L, "loadfile");       lua_pushnil(L); lua_settable(L, -3);
+        lua_pushstring(L, "loadstring");     lua_pushnil(L); lua_settable(L, -3);
+        lua_pushstring(L, "collectgarbage"); lua_pushnil(L); lua_settable(L, -3);
+        lua_pushstring(L, "dofile");         lua_pushnil(L); lua_settable(L, -3);
+
         // set global as the metatable
         lua_setfield(L, -2, "__index");
         lua_setmetatable(L, -2);
