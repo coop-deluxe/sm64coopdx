@@ -1076,6 +1076,11 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
     struct Object *whirlpool = m->usedObj;
 
+    // sanity check
+    if (marioObj == NULL || whirlpool == NULL) {
+        return FALSE;
+    }
+
     f32 dx = m->pos[0] - whirlpool->oPosX;
     f32 dz = m->pos[2] - whirlpool->oPosZ;
     f32 distance = sqrtf(dx * dx + dz * dz);
