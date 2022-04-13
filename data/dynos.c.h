@@ -4,6 +4,9 @@
 
 #include "dynos.h"
 #include "types.h"
+#include "src/game/moving_texture.h"
+
+void *dynos_swap_cmd(void *cmd);
 
 // -- built in -- //
 void *dynos_update_cmd         (void *cmd);
@@ -30,9 +33,19 @@ void dynos_add_actor_custom(const char *modPath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 
 // -- collisions -- //
-void dynos_add_collision_custom(const char *modPath, const char* collisionName);
+void dynos_add_collision(const char *modPath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
+
+// -- movtexqcs -- //
+void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type);
+struct MovtexQuadCollection* dynos_movtexqc_get_from_id(u32 id);
+struct MovtexQuadCollection* dynos_movtexqc_get_from_index(s32 index);
+
+// -- levels -- //
+void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName);
+const char* dynos_level_get_token(u32 index);
+Trajectory* dynos_level_get_trajectory(const char* name);
+void dynos_level_load_background(void *ptr);
 
 #endif
 #endif
- 

@@ -31,6 +31,8 @@ in_files = [
     "levels/level_defines.h",
     "src/game/obj_behaviors.c",
     "src/game/save_file.h",
+    "src/game/obj_behaviors_2.h",
+    "include/dialog_ids.h",
 ]
 
 exclude_constants = {
@@ -39,7 +41,6 @@ exclude_constants = {
 }
 
 include_constants = {
-    "include/object_constants.h" : [ "^ACTIVE_FLAG_", "^ACTIVE_PARTICLE_", "^HELD_", "^OBJ_FLAG_", "^RESPAWN_INFO_", "^OBJ_MOVE_" ],
 }
 
 pretend_find = [

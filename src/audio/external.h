@@ -68,6 +68,9 @@ void audio_set_sound_mode(u8 arg0);
 
 void audio_init(void); // in load.c
 
+void sound_reset_background_music_default_volume(u8 seqId);
+void sound_set_background_music_default_volume(u8 seqId, u8 volume);
+
 #if defined(VERSION_EU) || defined(VERSION_SH)
 struct SPTask *unused_80321460();
 struct SPTask *unused_80321460(void);

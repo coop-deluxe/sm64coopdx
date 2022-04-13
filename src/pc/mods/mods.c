@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include "mods.h"
 #include "mods_utils.h"
+#include "mod_cache.h"
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
 
@@ -61,10 +62,14 @@ void mods_activate(struct Mods* mods) {
     }
 
     // copy enabled entries
+    gActiveMods.entryCount = 0;
+    gActiveMods.size = 0;
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
         if (mod->enabled) {
+            mod->index = gActiveMods.entryCount;
             gActiveMods.entries[gActiveMods.entryCount++] = mod;
+            gActiveMods.size += mod->size;
             mod_activate(mod);
         }
     }
@@ -91,6 +96,7 @@ void mods_activate(struct Mods* mods) {
             }
         }
     }
+    mod_cache_save();
 }
 
 static void mods_load(struct Mods* mods, char* modsBasePath) {
@@ -138,6 +144,9 @@ static void mods_load(struct Mods* mods, char* modsBasePath) {
 }
 
 void mods_init(void) {
+    // load mod cache
+    mod_cache_load();
+
     // figure out user path
     bool hasUserPath = true;
     char userModPath[SYS_MAX_PATH] = { 0 };
@@ -200,8 +209,9 @@ void mods_clear(struct Mods* mods) {
 }
 
 void mods_shutdown(void) {
+    mod_cache_save();
+    mod_cache_shutdown();
     mods_clear(&gRemoteMods);
     mods_clear(&gActiveMods);
     mods_clear(&gLocalMods);
-    mods_delete_tmp();
 }

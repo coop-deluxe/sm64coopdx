@@ -20,6 +20,7 @@ in_files = [
     'src/pc/lua/utils/smlua_collision_utils.h',
     'src/game/spawn_sound.h',
     'src/pc/network/network.h',
+    'src/game/hardcoded.h',
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -62,7 +63,7 @@ override_field_names = {
 
 override_field_types = {
     "Surface": { "normal": "Vec3f" },
-    "Object": { "oAnimations": "ObjectAnimPointer*"}
+    "Object": { "oAnimations": "ObjectAnimPointer*"},
 }
 
 override_field_mutable = {
@@ -226,7 +227,7 @@ def get_struct_field_info(struct, field):
     lvt = translate_type_to_lvt(ftype)
     lot = translate_type_to_lot(ftype)
     fimmutable = str(lvt == 'LVT_COBJECT' or 'const ' in ftype).lower()
-    if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt:
+    if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
 
     if sid in override_field_immutable:

@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#define PACKET_LENGTH 2048
+#define PACKET_LENGTH 3000
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 
 struct NetworkPlayer;
@@ -58,6 +58,9 @@ enum PacketType {
     PACKET_MOD_LIST,
     PACKET_DOWNLOAD_REQUEST,
     PACKET_DOWNLOAD,
+    PACKET_MOD_LIST_ENTRY,
+    PACKET_MOD_LIST_FILE,
+    PACKET_MOD_LIST_DONE,
 
     PACKET_LUA_SYNC_TABLE_REQUEST,
     PACKET_LUA_SYNC_TABLE,
@@ -327,13 +330,16 @@ void network_send_mod_list_request(void);
 void network_receive_mod_list_request(UNUSED struct Packet* p);
 void network_send_mod_list(void);
 void network_receive_mod_list(struct Packet* p);
+void network_receive_mod_list_entry(struct Packet* p);
+void network_receive_mod_list_file(struct Packet* p);
+void network_receive_mod_list_done(struct Packet* p);
 
 // packet_download.c
 void network_start_download_requests(void);
 void network_send_next_download_request(void);
-void network_send_download_request(u16 clientIndex, u16 serverIndex, u64 offset);
+void network_send_download_request(u64 offset);
 void network_receive_download_request(struct Packet* p);
-void network_send_download(u16 clientIndex, u16 serverIndex, u64 offset);
+void network_send_download(u64 offset);
 void network_receive_download(struct Packet* p);
 
 // packet_lua_sync_table.c

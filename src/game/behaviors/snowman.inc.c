@@ -62,7 +62,7 @@ void snowmans_bottom_act_1(void) {
     s32 sp20 = 0;
     UNUSED s16 sp1E;
 
-    o->oPathedStartWaypoint = segmented_to_virtual(&ccm_seg7_trajectory_snowman);
+    o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.SnowmanHeadTrajectory);
     sp26 = object_step_without_floor_orient();
     sp20 = cur_obj_follow_path(sp20);
     o->oSnowmansBottomUnkF8 = o->oPathedTargetYaw;
@@ -140,7 +140,7 @@ void bhv_snowmans_bottom_loop(void) {
             if (should_start_or_continue_dialog(marioState, o)
                 && (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 400) == 1)
                 && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog) == 2) {
-                sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_110);
+                sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.SnowmanHeadBodyDialog);
                 if (sp1E) {
                     o->oForwardVel = 10.0f;
                     o->oAction = 1;
@@ -217,7 +217,7 @@ void bhv_snowmans_head_loop(void) {
 
     switch (o->oAction) {
         case 0:
-            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, DIALOG_109, 400.0f, 1, bhv_snowmans_head_action_0_continue_dialog))
+            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, gBehaviorValues.dialogs.SnowmanHeadDialog, 400.0f, 1, bhv_snowmans_head_action_0_continue_dialog))
                 o->oAction = 1;
             break;
 
@@ -241,9 +241,10 @@ void bhv_snowmans_head_loop(void) {
             break;
 
         case 4:
-            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, DIALOG_111, 700.0f, 2, bhv_snowmans_head_action_4_continue_dialog)) {
+            if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, gBehaviorValues.dialogs.SnowmanHeadAfterDialog, 700.0f, 2, bhv_snowmans_head_action_4_continue_dialog)) {
                 spawn_mist_particles();
-                spawn_default_star(-4700.0f, -1024.0f, 1890.0f);
+                f32* starPos = gLevelValues.starPositions.SnowmanHeadStarPos;
+                spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 o->oAction = 1;
                 network_send_object(o);
             }

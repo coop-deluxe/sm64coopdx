@@ -1,7 +1,12 @@
 #ifndef SMLUA_MISC_UTILS_H
 #define SMLUA_MISC_UTILS_H
 
+#include "dialog_ids.h"
+
 u32 get_network_area_timer(void);
+
+s32* get_temp_s32_pointer(s32 initialValue);
+s32 deref_s32_pointer(s32* pointer);
 
 void hud_hide(void);
 void hud_show(void);
@@ -17,6 +22,10 @@ f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 
+s16 get_current_save_file_num(void);
+void save_file_set_using_backup_slot(bool usingBackupSlot);
+
+void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 f32 get_environment_region(u8 index);
 void set_environment_region(u8 index, s32 value);
 

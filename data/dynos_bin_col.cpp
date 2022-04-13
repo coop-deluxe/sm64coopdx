@@ -9,21 +9,178 @@ extern "C" {
 // Free data pointers, but keep nodes and tokens intact
 // Delete nodes generated from GfxDynCmds
 template <typename T>
-static void ClearColDataNodes(DataNodes<T> &aDataNodes) {
+void ClearGfxDataNodes(DataNodes<T> &aDataNodes) {
     for (s32 i = aDataNodes.Count(); i != 0; --i) {
         Delete(aDataNodes[i - 1]->mData);
     }
 }
 
-//
-// Parse collision file
-//
+  ////////////////
+ // Validation //
+////////////////
+
+#define COL_SECTION_UNKNOWN   0
+#define COL_SECTION_VTX       1
+#define COL_SECTION_TRI       2
+#define COL_SECTION_SPECIAL   3
+#define COL_SECTION_WATER_BOX 4
+#define COL_SECTION_END       5
+
+struct CollisionValidationData {
+    u32 tokenIndex;
+    u8 section;
+    const char* lastSymbol;
+    u32 vtxAlloc;
+    u32 vtxCount;
+    u32 triAlloc;
+    u32 triCount;
+    u32 specialAlloc;
+    u32 specialCount;
+    u32 waterBoxAlloc;
+    u32 waterBoxCount;
+};
+
+static void ValidateColSectionChange(GfxData* aGfxData, struct CollisionValidationData& aColValData, u8 section) {
+    if (aColValData.section == COL_SECTION_END) {
+        PrintError("Found new col section after COL_END");
+    }
+
+    if (aColValData.section != section) {
+        if (aColValData.vtxAlloc != aColValData.vtxCount) {
+            PrintError("Improper vtx count found in section. Allocated: %u, Defined: %u", aColValData.vtxAlloc, aColValData.vtxCount);
+        }
+        if (aColValData.triAlloc != aColValData.triCount) {
+            PrintError("Improper triangle count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
+        }
+        if (aColValData.specialAlloc != aColValData.specialCount) {
+            PrintError("Improper sepcial count found in section. Allocated: %u, Defined: %u", aColValData.triAlloc, aColValData.triCount);
+        }
+        if (aColValData.waterBoxAlloc != aColValData.waterBoxCount) {
+            PrintError("Improper water box count found in section. Allocated: %u, Defined: %u", aColValData.waterBoxAlloc, aColValData.waterBoxCount);
+        }
+    }
+
+    aColValData.section = section;
+}
+
+static void ValidateColInit(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
+    if (aColValData.tokenIndex != 0) {
+        PrintError("COL_INIT found after the first token");
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_VTX);
+}
+
+static void ValidateColVertexInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0) {
+    if (strcmp(aColValData.lastSymbol, "COL_INIT") != 0) {
+        PrintError("COL_VERTEX_INIT found outside of vertex section");
+    }
+    if (arg0 < 0) {
+        PrintError("COL_VERTEX_INIT with a negative count: %d", arg0);
+    }
+    aColValData.vtxAlloc = arg0;
+    aColValData.vtxCount = 0;
+}
+
+static void ValidateColVertex(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2) {
+    if (aColValData.section != COL_SECTION_VTX) {
+        PrintError("COL_VERTEX found outside of vertex section");
+    }
+    aColValData.vtxCount++;
+}
+
+static void ValidateColTriInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1) {
+    if (arg1 < 0) {
+        PrintError("COL_TRI_INIT with a negative count: %d", arg1);
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_TRI);
+    aColValData.triAlloc = arg1;
+    aColValData.triCount = 0;
+}
+
+static void ValidateColTri(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2) {
+    if (aColValData.section != COL_SECTION_TRI) {
+        PrintError("COL_TRI found outside of triangle section");
+    }
+    if (arg0 < 0 || arg0 > aColValData.vtxCount) {
+        PrintError("COL_TRI used vertex outside of known range for first param: %d", arg0);
+    }
+    if (arg1 < 0 || arg1 > aColValData.vtxCount) {
+        PrintError("COL_TRI used vertex outside of known range for second param: %d", arg1);
+    }
+    if (arg2 < 0 || arg2 > aColValData.vtxCount) {
+        PrintError("COL_TRI used vertex outside of known range for third param: %d", arg2);
+    }
+    aColValData.triCount++;
+}
+
+static void ValidateColTriSpecial(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    ValidateColTri(aGfxData, aColValData, arg0, arg1, arg2);
+}
+
+static void ValidateColStop(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_UNKNOWN);
+}
+
+static void ValidateColEnd(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_END);
+}
+
+static void ValidateColSpecialInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0) {
+    if (arg0 < 0) {
+        PrintError("COL_SPECIAL_INIT with a negative count: %d", arg0);
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_SPECIAL);
+    aColValData.specialAlloc = arg0;
+    aColValData.specialCount = 0;
+}
+
+static void ValidateColWaterBoxInit(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0) {
+    if (arg0 < 0) {
+        PrintError("COL_WATER_BOX_INIT with a negative count: %d", arg0);
+    }
+    ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_WATER_BOX);
+    aColValData.waterBoxAlloc = arg0;
+    aColValData.waterBoxCount = 0;
+}
+
+static void ValidateColWaterBox(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    if (aColValData.section != COL_SECTION_WATER_BOX) {
+        PrintError("COL_WATER_BOX found outside of water box section");
+    }
+    aColValData.waterBoxCount++;
+}
+
+static void ValidateColSpecialObject(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    if (aColValData.section != COL_SECTION_SPECIAL) {
+        PrintError("SPECIAL_OBJECT found outside of special section");
+    }
+    aColValData.specialCount++;
+}
+
+static void ValidateColSpecialObjectWithYaw(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    if (aColValData.section != COL_SECTION_SPECIAL) {
+        PrintError("SPECIAL_OBJECT_WITH_YAW found outside of special section");
+    }
+    aColValData.specialCount++;
+}
+
+static void ValidateColSpecialObjectWithYawAndParam(GfxData* aGfxData, struct CollisionValidationData& aColValData, s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    if (aColValData.section != COL_SECTION_SPECIAL) {
+        PrintError("SPECIAL_OBJECT_WITH_YAW_AND_PARAM found outside of special section");
+    }
+    aColValData.specialCount++;
+}
+
+  /////////////
+ // Parsing //
+/////////////
 
 #define COLLISION_SIZE_PER_TOKEN 4
 
 #define col_constant(x) if (_Arg == #x) { return (s16) (x); }
-static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64& aTokenIndex) {
-    const String& _Arg = aNode->mTokens[aTokenIndex++];
+
+static s64 DynOS_Col_ParseConstants(const String& _Arg, bool* found) {
+    *found = true;
 
     // Surface constants
     col_constant(SURFACE_DEFAULT);
@@ -271,13 +428,32 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
     col_constant(special_key_door);
     col_constant(special_null_end);
 
-    // Other constants
-    col_constant(NULL);
+    *found = false;
+    return 0;
+}
+
+static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64& aTokenIndex) {
+    const String& _Arg = aNode->mTokens[aTokenIndex++];
 
     // Integers
-    s32 x;
-    if ((_Arg[1] == 'x' && sscanf(_Arg.begin(), "%x", &x) == 1) || (sscanf(_Arg.begin(), "%d", &x) == 1)) {
-        return (s16) x;
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
+    // Constants
+    bool constantFound = false;
+    s64 constantValue = DynOS_Col_ParseConstants(_Arg, &constantFound);
+    if (constantFound) {
+        return constantValue;
+    }
+
+    // Recursive descent parsing
+    bool rdSuccess = false;
+    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Col_ParseConstants);
+    if (rdSuccess) {
+        return rdValue;
     }
 
     // Unknown
@@ -285,75 +461,83 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
     return 0;
 }
 
-#define col_symbol_0(symb)                       \
-    if (_Symbol == #symb) {                      \
-        Collision _Cl[] = { symb() };            \
-        memcpy(aHead, _Cl, sizeof(_Cl));         \
-        aHead += (sizeof(_Cl) / sizeof(_Cl[0])); \
-        return;                                  \
+#define col_symbol_0(symb, validate)              \
+    if (_Symbol == #symb) {                       \
+        validate(aGfxData, aColValData);          \
+        aColValData.lastSymbol = _Symbol.begin(); \
+        Collision _Cl[] = { symb() };             \
+        memcpy(aHead, _Cl, sizeof(_Cl));          \
+        aHead += (sizeof(_Cl) / sizeof(_Cl[0]));  \
+        return;                                   \
     }
 
-#define col_symbol_1(symb, n)                                        \
+#define col_symbol_1(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
+        validate(aGfxData, aColValData, _Arg0);                      \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0) };                           \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_2(symb, n)                                        \
+#define col_symbol_2(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
+        validate(aGfxData, aColValData, _Arg0, _Arg1);               \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0, _Arg1) };                    \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_3(symb, n)                                        \
+#define col_symbol_3(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2);        \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2) };             \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_4(symb, n)                                        \
+#define col_symbol_4(symb, validate)                                 \
     if (_Symbol == #symb) {                                          \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2, _Arg3); \
+        aColValData.lastSymbol = _Symbol.begin();                    \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3) };      \
         memcpy(aHead, _Cl, sizeof(_Cl));                             \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                     \
         return;                                                      \
     }
 
-#define col_symbol_5(symb, n)                                          \
+#define col_symbol_5(symb, validate)                                   \
     if (_Symbol == #symb) {                                            \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg2 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
         s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }         \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2, _Arg3,    \
+                 _Arg4);                                               \
+        aColValData.lastSymbol = _Symbol.begin();                      \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4) }; \
         memcpy(aHead, _Cl, sizeof(_Cl));                               \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                       \
         return;                                                        \
     }
 
-#define col_symbol_6(symb, n)                                                 \
+#define col_symbol_6(symb, validate)                                          \
     if (_Symbol == #symb) {                                                   \
         s16 _Arg0 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg1 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
@@ -361,92 +545,171 @@ static s16 ParseColSymbolArg(GfxData* aGfxData, DataNode<Collision>* aNode, u64&
         s16 _Arg3 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg4 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
         s16 _Arg5 = ParseColSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                \
+        validate(aGfxData, aColValData, _Arg0, _Arg1, _Arg2, _Arg3,           \
+                 _Arg4, _Arg5);                                               \
+        aColValData.lastSymbol = _Symbol.begin();                             \
         Collision _Cl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5) }; \
         memcpy(aHead, _Cl, sizeof(_Cl));                                      \
         aHead += (sizeof(_Cl) / sizeof(_Cl[0]));                              \
         return;                                                               \
     }
 
-static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, Collision*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
+static void ParseCollisionSymbol(GfxData* aGfxData, DataNode<Collision>* aNode, Collision*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes, struct CollisionValidationData& aColValData) {
+    aColValData.tokenIndex = aTokenIndex;
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
-    col_symbol_0(COL_INIT);
-    col_symbol_1(COL_VERTEX_INIT, 0);
-    col_symbol_3(COL_VERTEX, 0);
-    col_symbol_2(COL_TRI_INIT, 0);
-    col_symbol_3(COL_TRI, 0);
-    col_symbol_4(COL_TRI_SPECIAL, 0);
-    col_symbol_0(COL_TRI_STOP);
-    col_symbol_0(COL_END);
-    col_symbol_1(COL_SPECIAL_INIT, 0);
-    col_symbol_1(COL_WATER_BOX_INIT, 0);
-    col_symbol_6(COL_WATER_BOX, 0);
-    col_symbol_4(SPECIAL_OBJECT, 0);
-    col_symbol_5(SPECIAL_OBJECT_WITH_YAW, 0);
-    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM, 0);
+    col_symbol_0(COL_INIT, ValidateColInit);
+    col_symbol_1(COL_VERTEX_INIT, ValidateColVertexInit);
+    col_symbol_3(COL_VERTEX, ValidateColVertex);
+    col_symbol_2(COL_TRI_INIT, ValidateColTriInit);
+    col_symbol_3(COL_TRI, ValidateColTri);
+    col_symbol_4(COL_TRI_SPECIAL, ValidateColTriSpecial);
+    col_symbol_0(COL_TRI_STOP, ValidateColStop);
+    col_symbol_0(COL_END, ValidateColEnd);
+    col_symbol_1(COL_SPECIAL_INIT, ValidateColSpecialInit);
+    col_symbol_1(COL_WATER_BOX_INIT, ValidateColWaterBoxInit);
+    col_symbol_6(COL_WATER_BOX, ValidateColWaterBox);
+    col_symbol_4(SPECIAL_OBJECT, ValidateColSpecialObject);
+    col_symbol_5(SPECIAL_OBJECT_WITH_YAW, ValidateColSpecialObjectWithYaw);
+    col_symbol_6(SPECIAL_OBJECT_WITH_YAW_AND_PARAM, ValidateColSpecialObjectWithYawAndParam);
 
     // Unknown
     PrintError("  ERROR: Unknown col symbol: %s", _Symbol.begin());
 }
 
-static DataNode<Collision>* ParseCollisionData(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent) {
+DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent) {
     if (aNode->mData) return aNode;
 
     // Collision data
     aNode->mData = New<Collision>(aNode->mTokens.Count() * COLLISION_SIZE_PER_TOKEN);
     Collision* _Head = aNode->mData;
     Array<u64> _SwitchNodes;
+
+    struct CollisionValidationData colValData = { 0 };
+    colValData.lastSymbol = aNode->mTokens[0].begin();
+
     for (u64 _TokenIndex = 0; _TokenIndex < aNode->mTokens.Count();) { // Don't increment _TokenIndex here!
-        ParseCollisionSymbol(aGfxData, aNode, _Head, _TokenIndex, _SwitchNodes);
+        ParseCollisionSymbol(aGfxData, aNode, _Head, _TokenIndex, _SwitchNodes, colValData);
         if (aDisplayPercent && aGfxData->mErrorCount == 0) { PrintNoNewLine("%3d%%\b\b\b\b", (s32) (_TokenIndex * 100) / aNode->mTokens.Count()); }
     }
+
+    if (colValData.section != COL_SECTION_END) {
+        PrintError("Collision did not end with COL_END");
+    }
+
     if (aDisplayPercent && aGfxData->mErrorCount == 0) { Print("100%%"); }
     aNode->mSize = (u32)(_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
+
+    if (aGfxData->mErrorCount > 0) {
+        Print("Failed to parse collision: '%s'", aNode->mName.begin());
+    }
+
     return aNode;
 }
 
-static DataNode<Collision> *GetCollision(GfxData *aGfxData, const String& aGeoRoot) {
-    for (DataNode<Collision> *_Node : aGfxData->mCollisions) {
-        if (_Node->mName == aGeoRoot) {
-            return _Node;
-        }
+  /////////////
+ // Writing //
+/////////////
+
+void DynOS_Col_Write(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
+    if (!aNode->mData) return;
+
+    // Name
+    WriteBytes<u8>(aFile, DATA_TYPE_COLLISION);
+    aNode->mName.Write(aFile);
+
+    // Data
+    WriteBytes<u32>(aFile, aNode->mSize);
+    for (u32 i = 0; i != aNode->mSize; ++i) {
+        WriteBytes<Collision>(aFile, aNode->mData[i]);
     }
-    return NULL;
 }
 
-bool DynOS_Col_GeneratePack(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
-    bool generated = false;
+static bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node) {
+    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    if (!_File) {
+        PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
+        return false;
+    }
+
+    DynOS_Col_Write(_File, aGfxData, _Node);
+
+    fclose(_File);
+    return true;
+}
+
+  /////////////
+ // Loading //
+/////////////
+
+DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData) {
+    DataNode<Collision> *_Node = New<DataNode<Collision>>();
+
+    // Name
+    _Node->mName.Read(aFile);
+
+    // Data
+    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mData = New<Collision>(_Node->mSize);
+    for (u32 i = 0; i != _Node->mSize; ++i) {
+        _Node->mData[i] = ReadBytes<Collision>(aFile);
+    }
+
+    // Add it
+    if (aGfxData != NULL) {
+        aGfxData->mCollisions.Add(_Node);
+    }
+
+    return _Node;
+}
+
+DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName) {
+    // Load data from binary file
+    DataNode<Collision>* collisionNode = NULL;
+    SysPath _Filename = fstring("%s/%s.col", aPackFolder.begin(), aCollisionName);
+    FILE *_File = fopen(_Filename.c_str(), "rb");
+    if (_File) {
+        u8 type = ReadBytes<u8>(_File);
+        if (type == DATA_TYPE_COLLISION) {
+            collisionNode = DynOS_Col_Load(_File, NULL);
+        }
+        fclose(_File);
+    }
+
+    return collisionNode;
+}
+
+  //////////////
+ // Generate //
+//////////////
+
+void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     for (auto &_ColNode : _GfxData->mCollisions) {
         String _ColRootName = _ColNode->mName;
-        DataNode<Collision> *_ColRoot = GetCollision(_GfxData, _ColRootName);
-        if (_ColRoot != NULL) {
 
-            // If there is an existing binary file for this collision, skip and go to the next actor
-            SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
-            if (fs_sys_file_exists(_ColFilename.c_str())) {
-                continue;
-            }
-
-            // Init
-            _GfxData->mErrorCount = 0;
-            _GfxData->mLoadIndex = 0;
-
-            // Parse data
-            PrintNoNewLine("%s.col: Model identifier: %X - Processing... ", _ColRootName.begin(), _GfxData->mModelIdentifier);
-            ParseCollisionData(_GfxData, _ColRoot, true);
-
-            // Write if no error
-            if (_GfxData->mErrorCount == 0) {
-                DynOS_Col_WriteBinary(_ColFilename, _GfxData, _ColRoot);
-            } else {
-                Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
-            }
-            // Clear data pointers
-            ClearColDataNodes(_GfxData->mCollisions);
-            generated = true;
+        // If there is an existing binary file for this collision, skip and go to the next actor
+        SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
+        if (fs_sys_file_exists(_ColFilename.c_str())) {
+            continue;
         }
+
+        // Init
+        _GfxData->mErrorCount = 0;
+        _GfxData->mLoadIndex = 0;
+
+        // Parse data
+        PrintNoNewLine("%s.col: Model identifier: %X - Processing... ", _ColRootName.begin(), _GfxData->mModelIdentifier);
+        DynOS_Col_Parse(_GfxData, _ColNode, true);
+
+        // Write if no error
+        if (_GfxData->mErrorCount == 0) {
+            DynOS_Col_WriteBinary(_ColFilename, _GfxData, _ColNode);
+        } else {
+            Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
+        }
+
+        // Clear data pointers
+        ClearGfxDataNodes(_GfxData->mCollisions);
     }
-    return generated;
 }

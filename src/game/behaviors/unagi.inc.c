@@ -14,14 +14,14 @@ struct ObjectHitbox sUnagiHitbox = {
 
 void bhv_unagi_init(void) {
     if (o->oBehParams2ndByte != 1) {
-        o->oPathedStartWaypoint = segmented_to_virtual(jrb_seg7_trajectory_unagi_1);
+        o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.UnagiTrajectory);
         if (o->oBehParams2ndByte == 0) {
             o->oFaceAnglePitch = -7600;
         } else {
             o->oAction = 1;
         }
     } else {
-        o->oPathedStartWaypoint = segmented_to_virtual(jrb_seg7_trajectory_unagi_2);
+        o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.Unagi2Trajectory);
         o->oAction = 3;
         o->oAnimState = 1;
 
@@ -215,7 +215,8 @@ void bhv_unagi_subobject_loop(void) {
         if (o->oBehParams2ndByte == -4) {
             if (o->parentObj->oAnimState != 0 && distanceToPlayer < 150.0f) {
                 o->oBehParams = o->parentObj->oBehParams;
-                spawn_default_star(6833.0f, -3654.0f, 2230.0f);
+                f32* starPos = gLevelValues.starPositions.UnagiStarPos;
+                spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 o->parentObj->oAnimState = 0;
             }
         } else {

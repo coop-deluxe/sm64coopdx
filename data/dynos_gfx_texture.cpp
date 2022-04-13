@@ -257,7 +257,7 @@ static DataNode<TexData> *DynOS_Gfx_RetrieveNode(void *aPtr) {
             }
         }
     }
-    return NULL;
+    return DynOS_Lvl_GetTexture(aPtr);
 }
 
 static bool DynOS_Gfx_ImportTexture_Typed(THN **aOutput, void *aPtr, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {

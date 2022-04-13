@@ -40,6 +40,8 @@ s16 sSurfacePoolSize;
 
 u8 unused8038EEA8[0x30];
 
+u8 gSurfacePoolError = 0;
+
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
@@ -52,7 +54,11 @@ static struct SurfaceNode *alloc_surface_node(void) {
     //! A bounds check! If there's more surface nodes than 7000 allowed,
     //  we, um...
     // Perhaps originally just debug feedback?
-    if (gSurfaceNodesAllocated >= 7000) {
+    if (gSurfaceNodesAllocated >= SURFACE_NODE_POOL_SIZE) {
+        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_NODES;
+        return NULL;
+    } else {
+        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_NODES;
     }
 
     return node;
@@ -71,7 +77,10 @@ static struct Surface *alloc_surface(void) {
     //  we, um...
     // Perhaps originally just debug feedback?
     if (gSurfacesAllocated >= sSurfacePoolSize) {
+        gSurfacePoolError |= NOT_ENOUGH_ROOM_FOR_SURFACES;
         return NULL;
+    } else {
+        gSurfacePoolError &= ~NOT_ENOUGH_ROOM_FOR_SURFACES;
     }
 
     surface->type = 0;
@@ -114,6 +123,7 @@ static void clear_static_surfaces(void) {
  */
 static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surface *surface) {
     struct SurfaceNode *newNode = alloc_surface_node();
+    if (newNode == NULL) { return; }
     struct SurfaceNode *list;
     s16 surfacePriority;
     s16 priority;
@@ -201,7 +211,7 @@ static s16 max_3(s16 a0, s16 a1, s16 a2) {
  * time). This function determines the lower cell for a given x/z position.
  * @param coord The coordinate to test
  */
-static s16 lower_cell_index(s16 coord) {
+static s16 lower_cell_index(s32 coord) {
     s16 index;
 
     // Move from range [-0x2000, 0x2000) to [0, 0x4000)
@@ -233,7 +243,7 @@ static s16 lower_cell_index(s16 coord) {
  * time). This function determines the upper cell for a given x/z position.
  * @param coord The coordinate to test
  */
-static s16 upper_cell_index(s16 coord) {
+static s16 upper_cell_index(s32 coord) {
     s16 index;
 
     // Move from range [-0x2000, 0x2000) to [0, 0x4000)
@@ -313,7 +323,7 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
     s32 maxY, minY;
     f32 nx, ny, nz;
     f32 mag;
-    s16 offset1, offset2, offset3;
+    s32 offset1, offset2, offset3;
 
     offset1 = 3 * (*vertexIndices)[0];
     offset2 = 3 * (*vertexIndices)[1];
@@ -513,6 +523,7 @@ static void load_environmental_regions(s16 **data) {
     numRegions = *(*data)++;
 
     if (numRegions > 20) {
+        numRegions = 20;
     }
 
     for (i = 0; i < numRegions; i++) {
@@ -536,8 +547,8 @@ static void load_environmental_regions(s16 **data) {
  * Allocate some of the main pool for surfaces (2300 surf) and for surface nodes (7000 nodes).
  */
 void alloc_surface_pools(void) {
-    sSurfacePoolSize = 2300;
-    sSurfaceNodePool = main_pool_alloc(7000 * sizeof(struct SurfaceNode), MEMORY_POOL_LEFT);
+    sSurfacePoolSize = SURFACE_POOL_SIZE;
+    sSurfaceNodePool = main_pool_alloc(SURFACE_NODE_POOL_SIZE * sizeof(struct SurfaceNode), MEMORY_POOL_LEFT);
     sSurfacePool = main_pool_alloc(sSurfacePoolSize * sizeof(struct Surface), MEMORY_POOL_LEFT);
 
     gCCMEnteredSlide = 0;
@@ -547,31 +558,30 @@ void alloc_surface_pools(void) {
 /**
  * Get the size of the terrain data, to get the correct size when copying later.
  */
-u32 get_area_terrain_size(s16 *data) {
-    s16 *startPos = data;
+u32 get_area_terrain_size(s16 *terrainData) {
+    s16 *startPos = terrainData;
     s32 end = FALSE;
     s16 terrainLoadType;
     s32 numVertices;
     s32 numRegions;
     s32 numSurfaces;
     s16 hasForce;
-
     while (!end) {
-        terrainLoadType = *data++;
+        terrainLoadType = *terrainData++;
 
         switch (terrainLoadType) {
             case TERRAIN_LOAD_VERTICES:
-                numVertices = *data++;
-                data += 3 * numVertices;
+                numVertices = *terrainData++;
+                terrainData += 3 * numVertices;
                 break;
 
             case TERRAIN_LOAD_OBJECTS:
-                data += get_special_objects_size(data);
+                terrainData += get_special_objects_size(terrainData);
                 break;
 
             case TERRAIN_LOAD_ENVIRONMENT:
-                numRegions = *data++;
-                data += 6 * numRegions;
+                numRegions = *terrainData++;
+                terrainData += 6 * numRegions;
                 break;
 
             case TERRAIN_LOAD_CONTINUE:
@@ -582,14 +592,14 @@ u32 get_area_terrain_size(s16 *data) {
                 break;
 
             default:
-                numSurfaces = *data++;
+                numSurfaces = *terrainData++;
                 hasForce = surface_has_force(terrainLoadType);
-                data += (3 + hasForce) * numSurfaces;
+                terrainData += (3 + hasForce) * numSurfaces;
                 break;
         }
     }
 
-    return data - startPos;
+    return terrainData - startPos;
 }
 
 

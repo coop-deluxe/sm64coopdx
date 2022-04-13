@@ -142,24 +142,29 @@ void patch_interpolated_dialog(void) {
 
     if (sInterpolatedDialogOffsetPos != NULL) {
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guTranslate(matrix, 0, sInterpolatedDialogOffset, 0);
         gSPMatrix(sInterpolatedDialogOffsetPos, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         sInterpolatedDialogOffsetPos = NULL;
     }
     if (sInterpolatedDialogRotationPos != NULL) {
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guScale(matrix, 1.0 / sInterpolatedDialogScale, 1.0 / sInterpolatedDialogScale, 1.0f);
         gSPMatrix(sInterpolatedDialogRotationPos++, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guRotate(matrix, sInterpolatedDialogRotation * 4.0f, 0, 0, 1.0f);
         gSPMatrix(sInterpolatedDialogRotationPos, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         sInterpolatedDialogRotationPos = NULL;
     }
     if (sInterpolatedDialogZoomPos != NULL) {
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guTranslate(matrix, 65.0 - (65.0 / sInterpolatedDialogScale), (40.0 / sInterpolatedDialogScale) - 40, 0);
         gSPMatrix(sInterpolatedDialogZoomPos++, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
+        if (matrix == NULL) { return; }
         guScale(matrix, 1.0 / sInterpolatedDialogScale, 1.0 / sInterpolatedDialogScale, 1.0f);
         gSPMatrix(sInterpolatedDialogZoomPos, VIRTUAL_TO_PHYSICAL(matrix), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
         sInterpolatedDialogZoomPos = NULL;
@@ -413,31 +418,73 @@ void render_multi_text_string(s16 *xPos, s16 *yPos, s8 multiTextID)
 
 u8 str_ascii_char_to_dialog(char c) {
     switch (c) {
+        case '/': return 0xD0;
+        case '>': return 0x53;
+        case '<': return 0x52;
+        case '|': return 0x51;
+        case '^': return 0x50;
+        case '\n': return 0xFE;
+        case '$': return 0xF9;
+        case '~': return 0xF7;
+        case '?': return 0xF4;
+        case '%': return 0xF3;
+        case '!': return 0xF2;
+        case ':': return 0xE6;
+        case '&': return 0xE5;
+        case '+': return 0xE4;
+        case ')': return 0xE3;
+        case '(': return 0xE1;
+        case '-': return 0x9F;
+        case ' ': return 0x9E;
+        case ',': return 0x6F;
+        case '.': return 0x3F;
         case '\'': return 0x3E;
-        case '.':  return 0x3F;
-        case ',':  return DIALOG_CHAR_COMMA;
-        case '-':  return 0x9F;
-        case '(':  return 0xE1;
-        case ')':  return 0xE3;
-        case '&':  return 0xE5;
-        case '!':  return 0xF2;
-        case '%':  return 0xF3;
-        case '?':  return 0xF4;
-        case '"':  return 0xF6; // 0xF5 is opening quote
-        case '~':  return 0xF7;
-        case '*':  return 0xFB;
-        case ' ':  return DIALOG_CHAR_SPACE;
-        case '\n': return DIALOG_CHAR_NEWLINE;
         case '\0': return DIALOG_CHAR_TERMINATOR;
         default:   return ((u8)c < 0xF0) ? ASCII_TO_DIALOG(c) : c;
     }
 }
 
 void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
-    for (s32 i = 0; i < length; i++) {
-        dialog[i] = str_ascii_char_to_dialog(string[i]);
+    char* c = (char*) string;
+    u8* d = dialog;
+    u16 converted = 0;
+
+    while (*c != '\0' && converted < (length - 1)) {
+        if (!strncmp(c, "you", 3) && (c[3] < 'a' || c[3] > 'z')) {
+            *d = 0xD2;
+            c += 2;
+        } else if (!strncmp(c, "the", 3) && (c[3] < 'a' || c[3] > 'z')) {
+            *d = 0xD1;
+            c += 2;
+        } else if (!strncmp(c, "[R]", 3)) {
+            *d = 0x58;
+            c += 2;
+        } else if (!strncmp(c, "[Z]", 3)) {
+            *d = 0x57;
+            c += 2;
+        } else if (!strncmp(c, "[C]", 3)) {
+            *d = 0x56;
+            c += 2;
+        } else if (!strncmp(c, "[B]", 3)) {
+            *d = 0x55;
+            c += 2;
+        } else if (!strncmp(c, "[A]", 3)) {
+            *d = 0x54;
+            c += 2;
+        } else if (!strncmp(c, "[Z]", 3)) {
+            *d = 0x57;
+            c += 2;
+        } else if (!strncmp(c, ")(", 2)) {
+            *d = 0xE2;
+            c += 1;
+        } else {
+            *d = str_ascii_char_to_dialog(*c);
+        }
+        d++;
+        c++;
+        converted++;
     }
-    dialog[length] = DIALOG_CHAR_TERMINATOR;
+    *d = DIALOG_CHAR_TERMINATOR;
 }
 
 f32 get_generic_dialog_width(u8* dialog) {
@@ -2928,6 +2975,7 @@ void print_hud_course_complete_coins(s16 x, s16 y) {
 
 void play_star_fanfare_and_flash_hud(s32 arg, u8 starNum) {
     if (gHudDisplay.coins == gCourseCompleteCoins && (gCurrCourseStarFlags & starNum) == 0 && gHudFlash == 0) {
+        gCurrCourseStarFlags |= starNum; // SM74 was spamming fanfare without this line
         play_star_fanfare();
         gHudFlash = arg;
     }

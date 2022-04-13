@@ -524,6 +524,7 @@ Gfx *envfx_update_bubble_particles(s32 mode, UNUSED Vec3s marioPos, Vec3s camFro
 
     for (i = 0; i < sBubbleParticleMaxCount; i += 5) {
         Vtx *interpolatedVertBuf = alloc_display_list(15 * sizeof(Vtx));
+        if (interpolatedVertBuf == NULL) { continue; }
         s32 j, k;
         gDPPipeSync(sGfxCursor++);
         envfx_set_bubble_texture(mode, i);

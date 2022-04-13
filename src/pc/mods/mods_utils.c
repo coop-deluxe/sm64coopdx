@@ -94,20 +94,6 @@ static void mods_delete_folder(char* path) {
     rmdir(path);
 }
 
-void mods_delete_tmp(void) {
-    // ensure tmpPath exists
-    char tmpPath[SYS_MAX_PATH] = { 0 };
-    if (snprintf(tmpPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(TMP_DIRECTORY)) < 0) {
-        LOG_ERROR("Failed to concat tmp path");
-        return;
-    }
-
-    // sanity
-    if (strlen(tmpPath) < 1) { return; }
-
-    // delete
-    mods_delete_folder(tmpPath);
-}
 //////////////////////////////////////////////////////////////////////////////////////////
 
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile) {
@@ -131,7 +117,10 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
     while (*p != '\0') {
         if (*p == '/' || *p == '\\') {
             if (snprintf(tmpPath, index + 1, "%s", path) < 0) { }
-            if (!fs_sys_dir_exists(tmpPath)) { fs_sys_mkdir(tmpPath); }
+            if (!fs_sys_dir_exists(tmpPath)) {
+                fs_sys_mkdir(tmpPath);
+                LOG_INFO("Creating mod path: %s", tmpPath);
+            }
         }
         index++;
         p++;
@@ -235,6 +224,18 @@ char* path_basename(char* path) {
         path++;
     }
     return base;
+}
+
+void path_get_folder(char* path, char* outpath) {
+    char* baseNamePath = path_basename(path);
+    char* p = path;
+    char* o = outpath;
+    while (*p != '\0' && p != baseNamePath) {
+        *o = *p;
+        o++;
+        p++;
+    }
+    *o = '\0';
 }
 
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {

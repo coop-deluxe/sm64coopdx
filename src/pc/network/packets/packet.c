@@ -83,6 +83,9 @@ void packet_process(struct Packet* p) {
         case PACKET_MOD_LIST:                network_receive_mod_list(p);                break;
         case PACKET_DOWNLOAD_REQUEST:        network_receive_download_request(p);        break;
         case PACKET_DOWNLOAD:                network_receive_download(p);                break;
+        case PACKET_MOD_LIST_ENTRY:          network_receive_mod_list_entry(p);          break;
+        case PACKET_MOD_LIST_FILE:           network_receive_mod_list_file(p);           break;
+        case PACKET_MOD_LIST_DONE:           network_receive_mod_list_done(p);           break;
 
         case PACKET_LUA_SYNC_TABLE_REQUEST:  network_receive_lua_sync_table_request(p);  break;
         case PACKET_LUA_SYNC_TABLE:          network_receive_lua_sync_table(p);          break;

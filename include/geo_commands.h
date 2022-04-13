@@ -21,6 +21,7 @@
 #define BACKGROUND_GREEN_SKY        7
 #define BACKGROUND_ABOVE_CLOUDS     8
 #define BACKGROUND_PURPLE_SKY       9
+#define BACKGROUND_CUSTOM           10
 
 // geo layout macros
 
@@ -428,5 +429,14 @@
  */
 #define GEO_CULLING_RADIUS(cullingRadius) \
     CMD_BBH(0x20, 0x00, cullingRadius)
+
+
+/**
+ * 0x21: Custom backgrounds (skyboxes)
+ */
+#define GEO_BACKGROUND_EXT(background, function) \
+    CMD_BBH(0x21, 0x00, 0x00), \
+    CMD_PTR(background), \
+    CMD_PTR(function)
 
 #endif // GEO_COMMANDS_H

@@ -123,7 +123,7 @@ u8 eyerok_boss_act_show_intro_text_continue_dialog(void) { return o->oAction == 
 static void eyerok_boss_act_show_intro_text(void) {
     // todo: get dialog working again
     /*struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, DIALOG_117, eyerok_boss_act_show_intro_text_continue_dialog)) {
+    if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.EyerokIntroDialog, eyerok_boss_act_show_intro_text_continue_dialog)) {
         o->oAction = EYEROK_BOSS_ACT_FIGHT;
         network_send_object_reliability(o, TRUE);
     }*/
@@ -186,8 +186,9 @@ static void eyerok_boss_act_die(void) {
     // todo: get dialog working again
     /*struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (o->oTimer == 60) {
-        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, DIALOG_118, eyerok_boss_act_die_continue_dialog)) {
-            spawn_default_star(0.0f, -900.0f, -3700.0f);
+        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.EyerokDefeatedDialog, eyerok_boss_act_die_continue_dialog)) {
+            f32* starPos = gLevelValues.starPositions.EyerockStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
         } else {
             o->oTimer -= 1;
         }
@@ -197,7 +198,8 @@ static void eyerok_boss_act_die(void) {
     }*/
     stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
     if (network_owns_object(o)) {
-        spawn_default_star(0.0f, -900.0f, -3700.0f);
+        f32* starPos = gLevelValues.starPositions.EyerockStarPos;
+        spawn_default_star(starPos[0], starPos[1], starPos[2]);
         network_send_object_reliability(o, TRUE);
     }
     o->oAction = EYEROK_BOSS_ACT_DEAD;

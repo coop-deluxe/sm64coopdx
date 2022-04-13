@@ -74,7 +74,8 @@ static void fire_piranha_plant_act_hide(void) {
 
             if ((u16)(o->oBehParams >> 16) != 0 && o->oHealth == 0) {
                 if (++sNumKilledFirePiranhaPlants == 5) {
-                    spawn_default_star(-6300.0f, -1850.0f, -6300.0f);
+                    f32* starPos = gLevelValues.starPositions.BigPiranhasStarPos;
+                    spawn_default_star(starPos[0], starPos[1], starPos[2]);
                     network_send_object(o);
                 }
 

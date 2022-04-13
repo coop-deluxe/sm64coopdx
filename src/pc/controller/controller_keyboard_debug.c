@@ -46,7 +46,11 @@ static void debug_warp_level1() {
 }
 
 static void debug_warp_level2() {
-    dynos_warp_to_level(LEVEL_WDW, 1, 1);
+    dynos_warp_to_level(gCurrLevelNum, gCurrAreaIndex^3, 1);
+}
+
+static void debug_warp_level3() {
+    dynos_warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 1);
 }
 
 static void debug_grand_star(void) {
@@ -90,6 +94,7 @@ void debug_keyboard_on_key_down(int scancode) {
 #ifdef DEVELOPMENT
             case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
             case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
+            case SCANCODE_4:  if (sHoldingAlt) { debug_warp_level3();  } break;
             case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object(); } break;
             case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
             case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;

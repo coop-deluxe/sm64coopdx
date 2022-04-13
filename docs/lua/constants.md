@@ -7,6 +7,8 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
+- [dialog_ids.h](#dialog_idsh)
+    - [enum DialogId](#enum-DialogId)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
@@ -30,6 +32,7 @@
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
+- [obj_behaviors_2.h](#obj_behaviors_2h)
 - [object_constants.h](#object_constantsh)
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
@@ -53,521 +56,542 @@
 ### [enum BehaviorId](#BehaviorId)
 | Identifier | Value |
 | :--------- | :---- |
-| id_bhvStarDoor | 0 |
-| id_bhvMrI | 1 |
-| id_bhvMrIBody | 2 |
-| id_bhvMrIParticle | 3 |
-| id_bhvPurpleParticle | 4 |
-| id_bhvGiantPole | 5 |
-| id_bhvPoleGrabbing | 6 |
-| id_bhvThiHugeIslandTop | 7 |
-| id_bhvThiTinyIslandTop | 8 |
-| id_bhvCapSwitchBase | 9 |
-| id_bhvCapSwitch | 10 |
-| id_bhvKingBobomb | 11 |
-| id_bhvBobombAnchorMario | 12 |
-| id_bhvBetaChestBottom | 13 |
-| id_bhvBetaChestLid | 14 |
-| id_bhvBubbleParticleSpawner | 15 |
-| id_bhvBubbleMaybe | 16 |
-| id_bhvBubblePlayer | 17 |
-| id_bhvSmallWaterWave | 18 |
-| id_bhvWaterAirBubble | 19 |
-| id_bhvSmallParticle | 20 |
-| id_bhvPlungeBubble | 21 |
-| id_bhvSmallParticleSnow | 22 |
-| id_bhvSmallParticleBubbles | 23 |
-| id_bhvFishGroup | 24 |
-| id_bhvCannon | 25 |
-| id_bhvCannonBarrel | 26 |
-| id_bhvCannonBaseUnused | 27 |
-| id_bhvChuckya | 28 |
-| id_bhvChuckyaAnchorMario | 29 |
-| id_bhvUnused05A8 | 30 |
-| id_bhvRotatingPlatform | 31 |
-| id_bhvTower | 32 |
-| id_bhvBulletBillCannon | 33 |
-| id_bhvWfBreakableWallRight | 34 |
-| id_bhvWfBreakableWallLeft | 35 |
-| id_bhvKickableBoard | 36 |
-| id_bhvTowerDoor | 37 |
-| id_bhvRotatingCounterClockwise | 38 |
-| id_bhvWfRotatingWoodenPlatform | 39 |
-| id_bhvKoopaShellUnderwater | 40 |
-| id_bhvExitPodiumWarp | 41 |
-| id_bhvFadingWarp | 42 |
-| id_bhvWarp | 43 |
-| id_bhvWarpPipe | 44 |
-| id_bhvWhitePuffExplosion | 45 |
-| id_bhvSpawnedStar | 46 |
-| id_bhvSpawnedStarNoLevelExit | 47 |
-| id_bhvMrIBlueCoin | 48 |
-| id_bhvCoinInsideBoo | 49 |
-| id_bhvCoinFormationSpawn | 50 |
-| id_bhvCoinFormation | 51 |
-| id_bhvOneCoin | 52 |
-| id_bhvYellowCoin | 53 |
-| id_bhvTemporaryYellowCoin | 54 |
-| id_bhvThreeCoinsSpawn | 55 |
-| id_bhvTenCoinsSpawn | 56 |
-| id_bhvSingleCoinGetsSpawned | 57 |
-| id_bhvCoinSparkles | 58 |
-| id_bhvGoldenCoinSparkles | 59 |
-| id_bhvWallTinyStarParticle | 60 |
-| id_bhvVertStarParticleSpawner | 61 |
-| id_bhvPoundTinyStarParticle | 62 |
-| id_bhvHorStarParticleSpawner | 63 |
-| id_bhvPunchTinyTriangle | 64 |
-| id_bhvTriangleParticleSpawner | 65 |
-| id_bhvDoorWarp | 66 |
-| id_bhvDoor | 67 |
-| id_bhvGrindel | 68 |
-| id_bhvThwomp2 | 69 |
-| id_bhvThwomp | 70 |
-| id_bhvTumblingBridgePlatform | 71 |
-| id_bhvWfTumblingBridge | 72 |
-| id_bhvBbhTumblingBridge | 73 |
-| id_bhvLllTumblingBridge | 74 |
-| id_bhvFlame | 75 |
-| id_bhvAnotherElavator | 76 |
-| id_bhvRrElevatorPlatform | 77 |
-| id_bhvHmcElevatorPlatform | 78 |
-| id_bhvWaterMist | 79 |
-| id_bhvBreathParticleSpawner | 80 |
-| id_bhvBreakBoxTriangle | 81 |
-| id_bhvWaterMist2 | 82 |
-| id_bhvUnused0DFC | 83 |
-| id_bhvMistCircParticleSpawner | 84 |
-| id_bhvDirtParticleSpawner | 85 |
-| id_bhvSnowParticleSpawner | 86 |
-| id_bhvWind | 87 |
-| id_bhvEndToad | 88 |
-| id_bhvEndPeach | 89 |
-| id_bhvUnusedParticleSpawn | 90 |
-| id_bhvUkiki | 91 |
-| id_bhvUkikiCageChild | 92 |
-| id_bhvUkikiCageStar | 93 |
-| id_bhvUkikiCage | 94 |
-| id_bhvBitfsSinkingPlatforms | 95 |
-| id_bhvBitfsSinkingCagePlatform | 96 |
-| id_bhvDddMovingPole | 97 |
-| id_bhvBitfsTiltingInvertedPyramid | 98 |
-| id_bhvSquishablePlatform | 99 |
-| id_bhvCutOutObject | 100 |
-| id_bhvBetaMovingFlames | 101 |
-| id_bhvRrRotatingBridgePlatform | 102 |
-| id_bhvFlamethrower | 103 |
-| id_bhvFlamethrowerFlame | 104 |
-| id_bhvBouncingFireball | 105 |
-| id_bhvBouncingFireballFlame | 106 |
-| id_bhvBowserShockWave | 107 |
-| id_bhvFireParticleSpawner | 108 |
-| id_bhvBlackSmokeMario | 109 |
-| id_bhvBlackSmokeBowser | 110 |
-| id_bhvBlackSmokeUpward | 111 |
-| id_bhvBetaFishSplashSpawner | 112 |
-| id_bhvSpindrift | 113 |
-| id_bhvTowerPlatformGroup | 114 |
-| id_bhvWfSlidingTowerPlatform | 115 |
-| id_bhvWfElevatorTowerPlatform | 116 |
-| id_bhvWfSolidTowerPlatform | 117 |
-| id_bhvLeafParticleSpawner | 118 |
-| id_bhvTreeSnow | 119 |
-| id_bhvTreeLeaf | 120 |
-| id_bhvAnotherTiltingPlatform | 121 |
-| id_bhvSquarishPathMoving | 122 |
-| id_bhvSquarishPathParent | 123 |
-| id_bhvPiranhaPlantBubble | 124 |
-| id_bhvPiranhaPlantWakingBubbles | 125 |
-| id_bhvFloorSwitchAnimatesObject | 126 |
-| id_bhvFloorSwitchGrills | 127 |
-| id_bhvFloorSwitchHardcodedModel | 128 |
-| id_bhvFloorSwitchHiddenObjects | 129 |
-| id_bhvHiddenObject | 130 |
-| id_bhvBreakableBox | 131 |
-| id_bhvPushableMetalBox | 132 |
-| id_bhvHeaveHo | 133 |
-| id_bhvHeaveHoThrowMario | 134 |
-| id_bhvCcmTouchedStarSpawn | 135 |
-| id_bhvUnusedPoundablePlatform | 136 |
-| id_bhvBetaTrampolineTop | 137 |
-| id_bhvBetaTrampolineSpring | 138 |
-| id_bhvJumpingBox | 139 |
-| id_bhvBooCage | 140 |
-| id_bhvStub | 141 |
-| id_bhvIgloo | 142 |
-| id_bhvBowserKey | 143 |
-| id_bhvGrandStar | 144 |
-| id_bhvBetaBooKey | 145 |
-| id_bhvAlphaBooKey | 146 |
-| id_bhvBulletBill | 147 |
-| id_bhvWhitePuffSmoke | 148 |
-| id_bhvUnused1820 | 149 |
-| id_bhvBowserTailAnchor | 150 |
-| id_bhvBowser | 151 |
-| id_bhvBowserBodyAnchor | 152 |
-| id_bhvBowserFlameSpawn | 153 |
-| id_bhvTiltingBowserLavaPlatform | 154 |
-| id_bhvFallingBowserPlatform | 155 |
-| id_bhvBlueBowserFlame | 156 |
-| id_bhvFlameFloatingLanding | 157 |
-| id_bhvBlueFlamesGroup | 158 |
-| id_bhvFlameBouncing | 159 |
-| id_bhvFlameMovingForwardGrowing | 160 |
-| id_bhvFlameBowser | 161 |
-| id_bhvFlameLargeBurningOut | 162 |
-| id_bhvBlueFish | 163 |
-| id_bhvTankFishGroup | 164 |
-| id_bhvCheckerboardElevatorGroup | 165 |
-| id_bhvCheckerboardPlatformSub | 166 |
-| id_bhvBowserKeyUnlockDoor | 167 |
-| id_bhvBowserKeyCourseExit | 168 |
-| id_bhvInvisibleObjectsUnderBridge | 169 |
-| id_bhvWaterLevelPillar | 170 |
-| id_bhvDddWarp | 171 |
-| id_bhvMoatGrills | 172 |
-| id_bhvClockMinuteHand | 173 |
-| id_bhvClockHourHand | 174 |
-| id_bhvMacroUkiki | 175 |
-| id_bhvStub1D0C | 176 |
-| id_bhvLllRotatingHexagonalPlatform | 177 |
-| id_bhvLllSinkingRockBlock | 178 |
-| id_bhvStub1D70 | 179 |
-| id_bhvLllMovingOctagonalMeshPlatform | 180 |
-| id_bhvLllRotatingBlockWithFireBars | 181 |
-| id_bhvLllRotatingHexFlame | 182 |
-| id_bhvLllWoodPiece | 183 |
-| id_bhvLllFloatingWoodBridge | 184 |
-| id_bhvVolcanoFlames | 185 |
-| id_bhvLllRotatingHexagonalRing | 186 |
-| id_bhvLllSinkingRectangularPlatform | 187 |
-| id_bhvLllSinkingSquarePlatforms | 188 |
-| id_bhvLllTiltingInvertedPyramid | 189 |
-| id_bhvUnused1F30 | 190 |
-| id_bhvKoopaShell | 191 |
-| id_bhvKoopaShellFlame | 192 |
-| id_bhvToxBox | 193 |
-| id_bhvPiranhaPlant | 194 |
-| id_bhvLllHexagonalMesh | 195 |
-| id_bhvLllBowserPuzzlePiece | 196 |
-| id_bhvLllBowserPuzzle | 197 |
-| id_bhvTuxiesMother | 198 |
-| id_bhvPenguinBaby | 199 |
-| id_bhvUnused20E0 | 200 |
-| id_bhvSmallPenguin | 201 |
-| id_bhvManyBlueFishSpawner | 202 |
-| id_bhvFewBlueFishSpawner | 203 |
-| id_bhvFishSpawner | 204 |
-| id_bhvFish | 205 |
-| id_bhvWdwExpressElevator | 206 |
-| id_bhvWdwExpressElevatorPlatform | 207 |
-| id_bhvChirpChirp | 208 |
-| id_bhvBub | 209 |
-| id_bhvExclamationBox | 210 |
-| id_bhvRotatingExclamationMark | 211 |
-| id_bhvSoundSpawner | 212 |
-| id_bhvRockSolid | 213 |
-| id_bhvBowserSubDoor | 214 |
-| id_bhvBowsersSub | 215 |
-| id_bhvSushiShark | 216 |
-| id_bhvSushiSharkCollisionChild | 217 |
-| id_bhvJrbSlidingBox | 218 |
-| id_bhvShipPart3 | 219 |
-| id_bhvInSunkenShip3 | 220 |
-| id_bhvSunkenShipPart | 221 |
-| id_bhvSunkenShipPart2 | 222 |
-| id_bhvInSunkenShip | 223 |
-| id_bhvInSunkenShip2 | 224 |
-| id_bhvMistParticleSpawner | 225 |
-| id_bhvWhitePuff1 | 226 |
-| id_bhvWhitePuff2 | 227 |
-| id_bhvWhitePuffSmoke2 | 228 |
-| id_bhvPurpleSwitchHiddenBoxes | 229 |
-| id_bhvBlueCoinSwitch | 230 |
-| id_bhvHiddenBlueCoin | 231 |
-| id_bhvOpenableCageDoor | 232 |
-| id_bhvOpenableGrill | 233 |
-| id_bhvWaterLevelDiamond | 234 |
-| id_bhvInitializeChangingWaterLevel | 235 |
-| id_bhvTweesterSandParticle | 236 |
-| id_bhvTweester | 237 |
-| id_bhvMerryGoRoundBooManager | 238 |
-| id_bhvAnimatedTexture | 239 |
-| id_bhvBooInCastle | 240 |
-| id_bhvBooWithCage | 241 |
-| id_bhvBalconyBigBoo | 242 |
-| id_bhvMerryGoRoundBigBoo | 243 |
-| id_bhvGhostHuntBigBoo | 244 |
-| id_bhvCourtyardBooTriplet | 245 |
-| id_bhvBoo | 246 |
-| id_bhvMerryGoRoundBoo | 247 |
-| id_bhvGhostHuntBoo | 248 |
-| id_bhvHiddenStaircaseStep | 249 |
-| id_bhvBooBossSpawnedBridge | 250 |
-| id_bhvBbhTiltingTrapPlatform | 251 |
-| id_bhvHauntedBookshelf | 252 |
-| id_bhvMeshElevator | 253 |
-| id_bhvMerryGoRound | 254 |
-| id_bhvPlaysMusicTrackWhenTouched | 255 |
-| id_bhvBetaBowserAnchor | 256 |
-| id_bhvStaticCheckeredPlatform | 257 |
-| id_bhvUnused2A10 | 258 |
-| id_bhvUnusedFakeStar | 259 |
-| id_bhvStaticObject | 260 |
-| id_bhvUnused2A54 | 261 |
-| id_bhvCastleFloorTrap | 262 |
-| id_bhvFloorTrapInCastle | 263 |
-| id_bhvTree | 264 |
-| id_bhvSparkle | 265 |
-| id_bhvSparkleSpawn | 266 |
-| id_bhvSparkleParticleSpawner | 267 |
-| id_bhvScuttlebug | 268 |
-| id_bhvScuttlebugSpawn | 269 |
-| id_bhvWhompKingBoss | 270 |
-| id_bhvSmallWhomp | 271 |
-| id_bhvWaterSplash | 272 |
-| id_bhvWaterDroplet | 273 |
-| id_bhvWaterDropletSplash | 274 |
-| id_bhvBubbleSplash | 275 |
-| id_bhvIdleWaterWave | 276 |
-| id_bhvObjectWaterSplash | 277 |
-| id_bhvShallowWaterWave | 278 |
-| id_bhvShallowWaterSplash | 279 |
-| id_bhvObjectWaveTrail | 280 |
-| id_bhvWaveTrail | 281 |
-| id_bhvTinyStrongWindParticle | 282 |
-| id_bhvStrongWindParticle | 283 |
-| id_bhvSLSnowmanWind | 284 |
-| id_bhvSLWalkingPenguin | 285 |
-| id_bhvYellowBall | 286 |
-| id_bhvMario | 287 |
-| id_bhvToadMessage | 288 |
-| id_bhvUnlockDoorStar | 289 |
-| id_bhvRandomAnimatedTexture | 290 |
-| id_bhvYellowBackgroundInMenu | 291 |
-| id_bhvMenuButton | 292 |
-| id_bhvMenuButtonManager | 293 |
-| id_bhvActSelectorStarType | 294 |
-| id_bhvActSelector | 295 |
-| id_bhvMovingYellowCoin | 296 |
-| id_bhvMovingBlueCoin | 297 |
-| id_bhvBlueCoinSliding | 298 |
-| id_bhvBlueCoinJumping | 299 |
-| id_bhvSeaweed | 300 |
-| id_bhvSeaweedBundle | 301 |
-| id_bhvBobomb | 302 |
-| id_bhvBobombFuseSmoke | 303 |
-| id_bhvBobombBuddy | 304 |
-| id_bhvBobombBuddyOpensCannon | 305 |
-| id_bhvCannonClosed | 306 |
-| id_bhvWhirlpool | 307 |
-| id_bhvJetStream | 308 |
-| id_bhvMessagePanel | 309 |
-| id_bhvSignOnWall | 310 |
-| id_bhvHomingAmp | 311 |
-| id_bhvCirclingAmp | 312 |
-| id_bhvButterfly | 313 |
-| id_bhvHoot | 314 |
-| id_bhvBetaHoldableObject | 315 |
-| id_bhvCarrySomething1 | 316 |
-| id_bhvCarrySomething2 | 317 |
-| id_bhvCarrySomething3 | 318 |
-| id_bhvCarrySomething4 | 319 |
-| id_bhvCarrySomething5 | 320 |
-| id_bhvCarrySomething6 | 321 |
-| id_bhvObjectBubble | 322 |
-| id_bhvObjectWaterWave | 323 |
-| id_bhvExplosion | 324 |
-| id_bhvBobombBullyDeathSmoke | 325 |
-| id_bhvSmoke | 326 |
-| id_bhvBobombExplosionBubble | 327 |
-| id_bhvRespawner | 328 |
-| id_bhvSmallBully | 329 |
-| id_bhvBigBully | 330 |
-| id_bhvBigBullyWithMinions | 331 |
-| id_bhvSmallChillBully | 332 |
-| id_bhvBigChillBully | 333 |
-| id_bhvJetStreamRingSpawner | 334 |
-| id_bhvJetStreamWaterRing | 335 |
-| id_bhvMantaRayWaterRing | 336 |
-| id_bhvMantaRayRingManager | 337 |
-| id_bhvBowserBomb | 338 |
-| id_bhvBowserBombExplosion | 339 |
-| id_bhvBowserBombSmoke | 340 |
-| id_bhvCelebrationStar | 341 |
-| id_bhvCelebrationStarSparkle | 342 |
-| id_bhvStarKeyCollectionPuffSpawner | 343 |
-| id_bhvLllDrawbridgeSpawner | 344 |
-| id_bhvLllDrawbridge | 345 |
-| id_bhvSmallBomp | 346 |
-| id_bhvLargeBomp | 347 |
-| id_bhvWfSlidingPlatform | 348 |
-| id_bhvMoneybag | 349 |
-| id_bhvMoneybagHidden | 350 |
-| id_bhvPitBowlingBall | 351 |
-| id_bhvFreeBowlingBall | 352 |
-| id_bhvBowlingBall | 353 |
-| id_bhvTtmBowlingBallSpawner | 354 |
-| id_bhvBobBowlingBallSpawner | 355 |
-| id_bhvThiBowlingBallSpawner | 356 |
-| id_bhvRrCruiserWing | 357 |
-| id_bhvSpindel | 358 |
-| id_bhvSslMovingPyramidWall | 359 |
-| id_bhvPyramidElevator | 360 |
-| id_bhvPyramidElevatorTrajectoryMarkerBall | 361 |
-| id_bhvPyramidTop | 362 |
-| id_bhvPyramidTopFragment | 363 |
-| id_bhvPyramidPillarTouchDetector | 364 |
-| id_bhvWaterfallSoundLoop | 365 |
-| id_bhvVolcanoSoundLoop | 366 |
-| id_bhvCastleFlagWaving | 367 |
-| id_bhvBirdsSoundLoop | 368 |
-| id_bhvAmbientSounds | 369 |
-| id_bhvSandSoundLoop | 370 |
-| id_bhvHiddenAt120Stars | 371 |
-| id_bhvSnowmansBottom | 372 |
-| id_bhvSnowmansHead | 373 |
-| id_bhvSnowmansBodyCheckpoint | 374 |
-| id_bhvBigSnowmanWhole | 375 |
-| id_bhvBigBoulder | 376 |
-| id_bhvBigBoulderGenerator | 377 |
-| id_bhvWingCap | 378 |
-| id_bhvMetalCap | 379 |
-| id_bhvNormalCap | 380 |
-| id_bhvVanishCap | 381 |
-| id_bhvStar | 382 |
-| id_bhvStarSpawnCoordinates | 383 |
-| id_bhvHiddenRedCoinStar | 384 |
-| id_bhvRedCoin | 385 |
-| id_bhvBowserCourseRedCoinStar | 386 |
-| id_bhvHiddenStar | 387 |
-| id_bhvHiddenStarTrigger | 388 |
-| id_bhvTtmRollingLog | 389 |
-| id_bhvLllVolcanoFallingTrap | 390 |
-| id_bhvLllRollingLog | 391 |
-| id_bhv1upWalking | 392 |
-| id_bhv1upRunningAway | 393 |
-| id_bhv1upSliding | 394 |
-| id_bhv1Up | 395 |
-| id_bhv1upJumpOnApproach | 396 |
-| id_bhvHidden1up | 397 |
-| id_bhvHidden1upTrigger | 398 |
-| id_bhvHidden1upInPole | 399 |
-| id_bhvHidden1upInPoleTrigger | 400 |
-| id_bhvHidden1upInPoleSpawner | 401 |
-| id_bhvControllablePlatform | 402 |
-| id_bhvControllablePlatformSub | 403 |
-| id_bhvBreakableBoxSmall | 404 |
-| id_bhvSlidingSnowMound | 405 |
-| id_bhvSnowMoundSpawn | 406 |
-| id_bhvWdwSquareFloatingPlatform | 407 |
-| id_bhvWdwRectangularFloatingPlatform | 408 |
-| id_bhvJrbFloatingPlatform | 409 |
-| id_bhvArrowLift | 410 |
-| id_bhvOrangeNumber | 411 |
-| id_bhvMantaRay | 412 |
-| id_bhvFallingPillar | 413 |
-| id_bhvFallingPillarHitbox | 414 |
-| id_bhvPillarBase | 415 |
-| id_bhvJrbFloatingBox | 416 |
-| id_bhvDecorativePendulum | 417 |
-| id_bhvTreasureChestsShip | 418 |
-| id_bhvTreasureChestsJrb | 419 |
-| id_bhvTreasureChests | 420 |
-| id_bhvTreasureChestBottom | 421 |
-| id_bhvTreasureChestTop | 422 |
-| id_bhvMips | 423 |
-| id_bhvYoshi | 424 |
-| id_bhvKoopa | 425 |
-| id_bhvKoopaRaceEndpoint | 426 |
-| id_bhvKoopaFlag | 427 |
-| id_bhvPokey | 428 |
-| id_bhvPokeyBodyPart | 429 |
-| id_bhvSwoop | 430 |
-| id_bhvFlyGuy | 431 |
-| id_bhvGoomba | 432 |
-| id_bhvGoombaTripletSpawner | 433 |
-| id_bhvChainChomp | 434 |
-| id_bhvChainChompChainPart | 435 |
-| id_bhvWoodenPost | 436 |
-| id_bhvChainChompGate | 437 |
-| id_bhvWigglerHead | 438 |
-| id_bhvWigglerBody | 439 |
-| id_bhvEnemyLakitu | 440 |
-| id_bhvCameraLakitu | 441 |
-| id_bhvCloud | 442 |
-| id_bhvCloudPart | 443 |
-| id_bhvSpiny | 444 |
-| id_bhvMontyMole | 445 |
-| id_bhvMontyMoleHole | 446 |
-| id_bhvMontyMoleRock | 447 |
-| id_bhvPlatformOnTrack | 448 |
-| id_bhvTrackBall | 449 |
-| id_bhvSeesawPlatform | 450 |
-| id_bhvFerrisWheelAxle | 451 |
-| id_bhvFerrisWheelPlatform | 452 |
-| id_bhvWaterBombSpawner | 453 |
-| id_bhvWaterBomb | 454 |
-| id_bhvWaterBombShadow | 455 |
-| id_bhvTTCRotatingSolid | 456 |
-| id_bhvTTCPendulum | 457 |
-| id_bhvTTCTreadmill | 458 |
-| id_bhvTTCMovingBar | 459 |
-| id_bhvTTCCog | 460 |
-| id_bhvTTCPitBlock | 461 |
-| id_bhvTTCElevator | 462 |
-| id_bhvTTC2DRotator | 463 |
-| id_bhvTTCSpinner | 464 |
-| id_bhvMrBlizzard | 465 |
-| id_bhvMrBlizzardSnowball | 466 |
-| id_bhvSlidingPlatform2 | 467 |
-| id_bhvOctagonalPlatformRotating | 468 |
-| id_bhvAnimatesOnFloorSwitchPress | 469 |
-| id_bhvActivatedBackAndForthPlatform | 470 |
-| id_bhvRecoveryHeart | 471 |
-| id_bhvWaterBombCannon | 472 |
-| id_bhvCannonBarrelBubbles | 473 |
-| id_bhvUnagi | 474 |
-| id_bhvUnagiSubobject | 475 |
-| id_bhvDorrie | 476 |
-| id_bhvHauntedChair | 477 |
-| id_bhvMadPiano | 478 |
-| id_bhvFlyingBookend | 479 |
-| id_bhvBookendSpawn | 480 |
-| id_bhvHauntedBookshelfManager | 481 |
-| id_bhvBookSwitch | 482 |
-| id_bhvFirePiranhaPlant | 483 |
-| id_bhvSmallPiranhaFlame | 484 |
-| id_bhvFireSpitter | 485 |
-| id_bhvFlyguyFlame | 486 |
-| id_bhvSnufit | 487 |
-| id_bhvSnufitBalls | 488 |
-| id_bhvHorizontalGrindel | 489 |
-| id_bhvEyerokBoss | 490 |
-| id_bhvEyerokHand | 491 |
-| id_bhvKlepto | 492 |
-| id_bhvBird | 493 |
-| id_bhvRacingPenguin | 494 |
-| id_bhvPenguinRaceFinishLine | 495 |
-| id_bhvPenguinRaceShortcutCheck | 496 |
-| id_bhvCoffinSpawner | 497 |
-| id_bhvCoffin | 498 |
-| id_bhvClamShell | 499 |
-| id_bhvSkeeter | 500 |
-| id_bhvSkeeterWave | 501 |
-| id_bhvSwingPlatform | 502 |
-| id_bhvDonutPlatformSpawner | 503 |
-| id_bhvDonutPlatform | 504 |
-| id_bhvDDDPole | 505 |
-| id_bhvRedCoinStarMarker | 506 |
-| id_bhvTripletButterfly | 507 |
-| id_bhvBubba | 508 |
-| id_bhvBeginningLakitu | 509 |
-| id_bhvBeginningPeach | 510 |
-| id_bhvEndBirds1 | 511 |
-| id_bhvEndBirds2 | 512 |
-| id_bhvIntroScene | 513 |
-| id_bhv_max_count | 514 |
+| id_bhv1Up | 0 |
+| id_bhv1upJumpOnApproach | 1 |
+| id_bhv1upRunningAway | 2 |
+| id_bhv1upSliding | 3 |
+| id_bhv1upWalking | 4 |
+| id_bhvActivatedBackAndForthPlatform | 5 |
+| id_bhvActSelector | 6 |
+| id_bhvActSelectorStarType | 7 |
+| id_bhvAirborneDeathWarp | 8 |
+| id_bhvAirborneStarCollectWarp | 9 |
+| id_bhvAirborneWarp | 10 |
+| id_bhvAlphaBooKey | 11 |
+| id_bhvAmbientSounds | 12 |
+| id_bhvAnimatedTexture | 13 |
+| id_bhvAnimatesOnFloorSwitchPress | 14 |
+| id_bhvAnotherElavator | 15 |
+| id_bhvAnotherTiltingPlatform | 16 |
+| id_bhvArrowLift | 17 |
+| id_bhvBalconyBigBoo | 18 |
+| id_bhvBbhTiltingTrapPlatform | 19 |
+| id_bhvBbhTumblingBridge | 20 |
+| id_bhvBeginningLakitu | 21 |
+| id_bhvBeginningPeach | 22 |
+| id_bhvBetaBooKey | 23 |
+| id_bhvBetaBowserAnchor | 24 |
+| id_bhvBetaChestBottom | 25 |
+| id_bhvBetaChestLid | 26 |
+| id_bhvBetaFishSplashSpawner | 27 |
+| id_bhvBetaHoldableObject | 28 |
+| id_bhvBetaMovingFlames | 29 |
+| id_bhvBetaMovingFlamesSpawn | 30 |
+| id_bhvBetaTrampolineSpring | 31 |
+| id_bhvBetaTrampolineTop | 32 |
+| id_bhvBigBoulder | 33 |
+| id_bhvBigBoulderGenerator | 34 |
+| id_bhvBigBully | 35 |
+| id_bhvBigBullyWithMinions | 36 |
+| id_bhvBigChillBully | 37 |
+| id_bhvBigSnowmanWhole | 38 |
+| id_bhvBird | 39 |
+| id_bhvBirdsSoundLoop | 40 |
+| id_bhvBitfsSinkingCagePlatform | 41 |
+| id_bhvBitfsSinkingPlatforms | 42 |
+| id_bhvBitfsTiltingInvertedPyramid | 43 |
+| id_bhvBlackSmokeBowser | 44 |
+| id_bhvBlackSmokeMario | 45 |
+| id_bhvBlackSmokeUpward | 46 |
+| id_bhvBlueBowserFlame | 47 |
+| id_bhvBlueCoinJumping | 48 |
+| id_bhvBlueCoinSliding | 49 |
+| id_bhvBlueCoinSwitch | 50 |
+| id_bhvBlueFish | 51 |
+| id_bhvBlueFlamesGroup | 52 |
+| id_bhvBobBowlingBallSpawner | 53 |
+| id_bhvBobomb | 54 |
+| id_bhvBobombAnchorMario | 55 |
+| id_bhvBobombBuddy | 56 |
+| id_bhvBobombBuddyOpensCannon | 57 |
+| id_bhvBobombBullyDeathSmoke | 58 |
+| id_bhvBobombExplosionBubble | 59 |
+| id_bhvBobombExplosionBubble3600 | 60 |
+| id_bhvBobombFuseSmoke | 61 |
+| id_bhvBoo | 62 |
+| id_bhvBooBossSpawnedBridge | 63 |
+| id_bhvBooCage | 64 |
+| id_bhvBooInCastle | 65 |
+| id_bhvBookendSpawn | 66 |
+| id_bhvBookSwitch | 67 |
+| id_bhvBooWithCage | 68 |
+| id_bhvBouncingFireball | 69 |
+| id_bhvBouncingFireballFlame | 70 |
+| id_bhvBowlingBall | 71 |
+| id_bhvBowser | 72 |
+| id_bhvBowserBodyAnchor | 73 |
+| id_bhvBowserBomb | 74 |
+| id_bhvBowserBombExplosion | 75 |
+| id_bhvBowserBombSmoke | 76 |
+| id_bhvBowserCourseRedCoinStar | 77 |
+| id_bhvBowserFlameSpawn | 78 |
+| id_bhvBowserKey | 79 |
+| id_bhvBowserKeyCourseExit | 80 |
+| id_bhvBowserKeyUnlockDoor | 81 |
+| id_bhvBowserShockWave | 82 |
+| id_bhvBowsersSub | 83 |
+| id_bhvBowserSubDoor | 84 |
+| id_bhvBowserTailAnchor | 85 |
+| id_bhvBreakableBox | 86 |
+| id_bhvBreakableBoxSmall | 87 |
+| id_bhvBreakBoxTriangle | 88 |
+| id_bhvBreathParticleSpawner | 89 |
+| id_bhvBub | 90 |
+| id_bhvBubba | 91 |
+| id_bhvBubbleMaybe | 92 |
+| id_bhvBubbleParticleSpawner | 93 |
+| id_bhvBubblePlayer | 94 |
+| id_bhvBubbleSplash | 95 |
+| id_bhvBulletBill | 96 |
+| id_bhvBulletBillCannon | 97 |
+| id_bhvButterfly | 98 |
+| id_bhvCameraLakitu | 99 |
+| id_bhvCannon | 100 |
+| id_bhvCannonBarrel | 101 |
+| id_bhvCannonBarrelBubbles | 102 |
+| id_bhvCannonBaseUnused | 103 |
+| id_bhvCannonClosed | 104 |
+| id_bhvCapSwitch | 105 |
+| id_bhvCapSwitchBase | 106 |
+| id_bhvCarrySomething1 | 107 |
+| id_bhvCarrySomething2 | 108 |
+| id_bhvCarrySomething3 | 109 |
+| id_bhvCarrySomething4 | 110 |
+| id_bhvCarrySomething5 | 111 |
+| id_bhvCarrySomething6 | 112 |
+| id_bhvCastleFlagWaving | 113 |
+| id_bhvCastleFloorTrap | 114 |
+| id_bhvCcmTouchedStarSpawn | 115 |
+| id_bhvCelebrationStar | 116 |
+| id_bhvCelebrationStarSparkle | 117 |
+| id_bhvChainChomp | 118 |
+| id_bhvChainChompChainPart | 119 |
+| id_bhvChainChompGate | 120 |
+| id_bhvCheckerboardElevatorGroup | 121 |
+| id_bhvCheckerboardPlatformSub | 122 |
+| id_bhvChirpChirp | 123 |
+| id_bhvChirpChirpUnused | 124 |
+| id_bhvChuckya | 125 |
+| id_bhvChuckyaAnchorMario | 126 |
+| id_bhvCirclingAmp | 127 |
+| id_bhvClamShell | 128 |
+| id_bhvClockHourHand | 129 |
+| id_bhvClockMinuteHand | 130 |
+| id_bhvCloud | 131 |
+| id_bhvCloudPart | 132 |
+| id_bhvCoffin | 133 |
+| id_bhvCoffinSpawner | 134 |
+| id_bhvCoinFormation | 135 |
+| id_bhvCoinFormationSpawn | 136 |
+| id_bhvCoinInsideBoo | 137 |
+| id_bhvCoinSparkles | 138 |
+| id_bhvControllablePlatform | 139 |
+| id_bhvControllablePlatformSub | 140 |
+| id_bhvCourtyardBooTriplet | 141 |
+| id_bhvCutOutObject | 142 |
+| id_bhvDddMovingPole | 143 |
+| id_bhvDDDPole | 144 |
+| id_bhvDddWarp | 145 |
+| id_bhvDeathWarp | 146 |
+| id_bhvDecorativePendulum | 147 |
+| id_bhvDirtParticleSpawner | 148 |
+| id_bhvDonutPlatform | 149 |
+| id_bhvDonutPlatformSpawner | 150 |
+| id_bhvDoor | 151 |
+| id_bhvDoorWarp | 152 |
+| id_bhvDorrie | 153 |
+| id_bhvEndBirds1 | 154 |
+| id_bhvEndBirds2 | 155 |
+| id_bhvEndPeach | 156 |
+| id_bhvEndToad | 157 |
+| id_bhvEnemyLakitu | 158 |
+| id_bhvExclamationBox | 159 |
+| id_bhvExitPodiumWarp | 160 |
+| id_bhvExplosion | 161 |
+| id_bhvEyerokBoss | 162 |
+| id_bhvEyerokHand | 163 |
+| id_bhvFadingWarp | 164 |
+| id_bhvFallingBowserPlatform | 165 |
+| id_bhvFallingPillar | 166 |
+| id_bhvFallingPillarHitbox | 167 |
+| id_bhvFerrisWheelAxle | 168 |
+| id_bhvFerrisWheelPlatform | 169 |
+| id_bhvFewBlueFishSpawner | 170 |
+| id_bhvFireParticleSpawner | 171 |
+| id_bhvFirePiranhaPlant | 172 |
+| id_bhvFireSpitter | 173 |
+| id_bhvFish | 174 |
+| id_bhvFishGroup | 175 |
+| id_bhvFishSpawner | 176 |
+| id_bhvFlame | 177 |
+| id_bhvFlameBouncing | 178 |
+| id_bhvFlameBowser | 179 |
+| id_bhvFlameFloatingLanding | 180 |
+| id_bhvFlameLargeBurningOut | 181 |
+| id_bhvFlameMovingForwardGrowing | 182 |
+| id_bhvFlamethrower | 183 |
+| id_bhvFlamethrowerFlame | 184 |
+| id_bhvFloorSwitchAnimatesObject | 185 |
+| id_bhvFloorSwitchGrills | 186 |
+| id_bhvFloorSwitchHardcodedModel | 187 |
+| id_bhvFloorSwitchHiddenObjects | 188 |
+| id_bhvFloorTrapInCastle | 189 |
+| id_bhvFlyGuy | 190 |
+| id_bhvFlyguyFlame | 191 |
+| id_bhvFlyingBookend | 192 |
+| id_bhvFlyingWarp | 193 |
+| id_bhvFreeBowlingBall | 194 |
+| id_bhvGhostHuntBigBoo | 195 |
+| id_bhvGhostHuntBoo | 196 |
+| id_bhvGiantPole | 197 |
+| id_bhvGoldenCoinSparkles | 198 |
+| id_bhvGoomba | 199 |
+| id_bhvGoombaTripletSpawner | 200 |
+| id_bhvGrandStar | 201 |
+| id_bhvGrindel | 202 |
+| id_bhvHardAirKnockBackWarp | 203 |
+| id_bhvHauntedBookshelf | 204 |
+| id_bhvHauntedBookshelfManager | 205 |
+| id_bhvHauntedChair | 206 |
+| id_bhvHeaveHo | 207 |
+| id_bhvHeaveHoThrowMario | 208 |
+| id_bhvHidden1up | 209 |
+| id_bhvHidden1upInPole | 210 |
+| id_bhvHidden1upInPoleSpawner | 211 |
+| id_bhvHidden1upInPoleTrigger | 212 |
+| id_bhvHidden1upTrigger | 213 |
+| id_bhvHiddenAt120Stars | 214 |
+| id_bhvHiddenBlueCoin | 215 |
+| id_bhvHiddenObject | 216 |
+| id_bhvHiddenRedCoinStar | 217 |
+| id_bhvHiddenStaircaseStep | 218 |
+| id_bhvHiddenStar | 219 |
+| id_bhvHiddenStarTrigger | 220 |
+| id_bhvHmcElevatorPlatform | 221 |
+| id_bhvHomingAmp | 222 |
+| id_bhvHoot | 223 |
+| id_bhvHorizontalGrindel | 224 |
+| id_bhvHorStarParticleSpawner | 225 |
+| id_bhvIdleWaterWave | 226 |
+| id_bhvIgloo | 227 |
+| id_bhvInitializeChangingWaterLevel | 228 |
+| id_bhvInsideCannon | 229 |
+| id_bhvInstantActiveWarp | 230 |
+| id_bhvInSunkenShip | 231 |
+| id_bhvInSunkenShip2 | 232 |
+| id_bhvInSunkenShip3 | 233 |
+| id_bhvIntroScene | 234 |
+| id_bhvInvisibleObjectsUnderBridge | 235 |
+| id_bhvJetStream | 236 |
+| id_bhvJetStreamRingSpawner | 237 |
+| id_bhvJetStreamWaterRing | 238 |
+| id_bhvJrbFloatingBox | 239 |
+| id_bhvJrbFloatingPlatform | 240 |
+| id_bhvJrbSlidingBox | 241 |
+| id_bhvJumpingBox | 242 |
+| id_bhvKickableBoard | 243 |
+| id_bhvKingBobomb | 244 |
+| id_bhvKlepto | 245 |
+| id_bhvKoopa | 246 |
+| id_bhvKoopaFlag | 247 |
+| id_bhvKoopaRaceEndpoint | 248 |
+| id_bhvKoopaShell | 249 |
+| id_bhvKoopaShellFlame | 250 |
+| id_bhvKoopaShellUnderwater | 251 |
+| id_bhvLargeBomp | 252 |
+| id_bhvLaunchDeathWarp | 253 |
+| id_bhvLaunchStarCollectWarp | 254 |
+| id_bhvLeafParticleSpawner | 255 |
+| id_bhvLllBowserPuzzle | 256 |
+| id_bhvLllBowserPuzzlePiece | 257 |
+| id_bhvLllDrawbridge | 258 |
+| id_bhvLllDrawbridgeSpawner | 259 |
+| id_bhvLllFloatingWoodBridge | 260 |
+| id_bhvLllHexagonalMesh | 261 |
+| id_bhvLllMovingOctagonalMeshPlatform | 262 |
+| id_bhvLllRollingLog | 263 |
+| id_bhvLllRotatingBlockWithFireBars | 264 |
+| id_bhvLllRotatingHexagonalPlatform | 265 |
+| id_bhvLllRotatingHexagonalRing | 266 |
+| id_bhvLllRotatingHexFlame | 267 |
+| id_bhvLllSinkingRectangularPlatform | 268 |
+| id_bhvLllSinkingRockBlock | 269 |
+| id_bhvLllSinkingSquarePlatforms | 270 |
+| id_bhvLllTiltingInvertedPyramid | 271 |
+| id_bhvLllTumblingBridge | 272 |
+| id_bhvLllVolcanoFallingTrap | 273 |
+| id_bhvLllWoodPiece | 274 |
+| id_bhvMacroUkiki | 275 |
+| id_bhvMadPiano | 276 |
+| id_bhvMantaRay | 277 |
+| id_bhvMantaRayRingManager | 278 |
+| id_bhvMantaRayWaterRing | 279 |
+| id_bhvManyBlueFishSpawner | 280 |
+| id_bhvMario | 281 |
+| id_bhvMenuButton | 282 |
+| id_bhvMenuButtonManager | 283 |
+| id_bhvMerryGoRound | 284 |
+| id_bhvMerryGoRoundBigBoo | 285 |
+| id_bhvMerryGoRoundBoo | 286 |
+| id_bhvMerryGoRoundBooManager | 287 |
+| id_bhvMeshElevator | 288 |
+| id_bhvMessagePanel | 289 |
+| id_bhvMetalCap | 290 |
+| id_bhvMips | 291 |
+| id_bhvMistCircParticleSpawner | 292 |
+| id_bhvMistParticleSpawner | 293 |
+| id_bhvMoatGrills | 294 |
+| id_bhvMoneybag | 295 |
+| id_bhvMoneybagHidden | 296 |
+| id_bhvMontyMole | 297 |
+| id_bhvMontyMoleHole | 298 |
+| id_bhvMontyMoleRock | 299 |
+| id_bhvMovingBlueCoin | 300 |
+| id_bhvMovingYellowCoin | 301 |
+| id_bhvMrBlizzard | 302 |
+| id_bhvMrBlizzardSnowball | 303 |
+| id_bhvMrI | 304 |
+| id_bhvMrIBlueCoin | 305 |
+| id_bhvMrIBody | 306 |
+| id_bhvMrIParticle | 307 |
+| id_bhvNormalCap | 308 |
+| id_bhvObjectBubble | 309 |
+| id_bhvObjectWaterSplash | 310 |
+| id_bhvObjectWaterWave | 311 |
+| id_bhvObjectWaveTrail | 312 |
+| id_bhvOctagonalPlatformRotating | 313 |
+| id_bhvOneCoin | 314 |
+| id_bhvOpenableCageDoor | 315 |
+| id_bhvOpenableGrill | 316 |
+| id_bhvOrangeNumber | 317 |
+| id_bhvPaintingDeathWarp | 318 |
+| id_bhvPaintingStarCollectWarp | 319 |
+| id_bhvPenguinBaby | 320 |
+| id_bhvPenguinRaceFinishLine | 321 |
+| id_bhvPenguinRaceShortcutCheck | 322 |
+| id_bhvPillarBase | 323 |
+| id_bhvPiranhaPlant | 324 |
+| id_bhvPiranhaPlantBubble | 325 |
+| id_bhvPiranhaPlantWakingBubbles | 326 |
+| id_bhvPitBowlingBall | 327 |
+| id_bhvPlatformOnTrack | 328 |
+| id_bhvPlaysMusicTrackWhenTouched | 329 |
+| id_bhvPlungeBubble | 330 |
+| id_bhvPokey | 331 |
+| id_bhvPokeyBodyPart | 332 |
+| id_bhvPoleGrabbing | 333 |
+| id_bhvPoundTinyStarParticle | 334 |
+| id_bhvPunchTinyTriangle | 335 |
+| id_bhvPurpleParticle | 336 |
+| id_bhvPurpleSwitchHiddenBoxes | 337 |
+| id_bhvPushableMetalBox | 338 |
+| id_bhvPyramidElevator | 339 |
+| id_bhvPyramidElevatorTrajectoryMarkerBall | 340 |
+| id_bhvPyramidPillarTouchDetector | 341 |
+| id_bhvPyramidTop | 342 |
+| id_bhvPyramidTopFragment | 343 |
+| id_bhvRacingPenguin | 344 |
+| id_bhvRandomAnimatedTexture | 345 |
+| id_bhvRecoveryHeart | 346 |
+| id_bhvRedCoin | 347 |
+| id_bhvRedCoinStarMarker | 348 |
+| id_bhvRespawner | 349 |
+| id_bhvRockSolid | 350 |
+| id_bhvRotatingCounterClockwise | 351 |
+| id_bhvRotatingExclamationMark | 352 |
+| id_bhvRotatingPlatform | 353 |
+| id_bhvRrCruiserWing | 354 |
+| id_bhvRrElevatorPlatform | 355 |
+| id_bhvRrRotatingBridgePlatform | 356 |
+| id_bhvSandSoundLoop | 357 |
+| id_bhvScuttlebug | 358 |
+| id_bhvScuttlebugSpawn | 359 |
+| id_bhvSeaweed | 360 |
+| id_bhvSeaweedBundle | 361 |
+| id_bhvSeesawPlatform | 362 |
+| id_bhvShallowWaterSplash | 363 |
+| id_bhvShallowWaterWave | 364 |
+| id_bhvShipPart3 | 365 |
+| id_bhvSignOnWall | 366 |
+| id_bhvSingleCoinGetsSpawned | 367 |
+| id_bhvSkeeter | 368 |
+| id_bhvSkeeterWave | 369 |
+| id_bhvSlidingPlatform2 | 370 |
+| id_bhvSlidingSnowMound | 371 |
+| id_bhvSLSnowmanWind | 372 |
+| id_bhvSLWalkingPenguin | 373 |
+| id_bhvSmallBomp | 374 |
+| id_bhvSmallBully | 375 |
+| id_bhvSmallChillBully | 376 |
+| id_bhvSmallParticle | 377 |
+| id_bhvSmallParticleBubbles | 378 |
+| id_bhvSmallParticleSnow | 379 |
+| id_bhvSmallPenguin | 380 |
+| id_bhvSmallPiranhaFlame | 381 |
+| id_bhvSmallWaterWave | 382 |
+| id_bhvSmallWaterWave398 | 383 |
+| id_bhvSmallWhomp | 384 |
+| id_bhvSmoke | 385 |
+| id_bhvSnowBall | 386 |
+| id_bhvSnowmansBodyCheckpoint | 387 |
+| id_bhvSnowmansBottom | 388 |
+| id_bhvSnowmansHead | 389 |
+| id_bhvSnowMoundSpawn | 390 |
+| id_bhvSnowParticleSpawner | 391 |
+| id_bhvSnufit | 392 |
+| id_bhvSnufitBalls | 393 |
+| id_bhvSoundSpawner | 394 |
+| id_bhvSparkle | 395 |
+| id_bhvSparkleParticleSpawner | 396 |
+| id_bhvSparkleSpawn | 397 |
+| id_bhvSpawnedStar | 398 |
+| id_bhvSpawnedStarNoLevelExit | 399 |
+| id_bhvSpinAirborneCircleWarp | 400 |
+| id_bhvSpinAirborneWarp | 401 |
+| id_bhvSpindel | 402 |
+| id_bhvSpindrift | 403 |
+| id_bhvSpiny | 404 |
+| id_bhvSquarishPathMoving | 405 |
+| id_bhvSquarishPathParent | 406 |
+| id_bhvSquishablePlatform | 407 |
+| id_bhvSslMovingPyramidWall | 408 |
+| id_bhvStar | 409 |
+| id_bhvStarDoor | 410 |
+| id_bhvStarKeyCollectionPuffSpawner | 411 |
+| id_bhvStarSpawnCoordinates | 412 |
+| id_bhvStaticCheckeredPlatform | 413 |
+| id_bhvStaticObject | 414 |
+| id_bhvStrongWindParticle | 415 |
+| id_bhvStub | 416 |
+| id_bhvStub1D0C | 417 |
+| id_bhvStub1D70 | 418 |
+| id_bhvSunkenShipPart | 419 |
+| id_bhvSunkenShipPart2 | 420 |
+| id_bhvSunkenShipSetRotation | 421 |
+| id_bhvSushiShark | 422 |
+| id_bhvSushiSharkCollisionChild | 423 |
+| id_bhvSwimmingWarp | 424 |
+| id_bhvSwingPlatform | 425 |
+| id_bhvSwoop | 426 |
+| id_bhvTankFishGroup | 427 |
+| id_bhvTemporaryYellowCoin | 428 |
+| id_bhvTenCoinsSpawn | 429 |
+| id_bhvThiBowlingBallSpawner | 430 |
+| id_bhvThiHugeIslandTop | 431 |
+| id_bhvThiTinyIslandTop | 432 |
+| id_bhvThreeCoinsSpawn | 433 |
+| id_bhvThwomp | 434 |
+| id_bhvThwomp2 | 435 |
+| id_bhvTiltingBowserLavaPlatform | 436 |
+| id_bhvTinyStrongWindParticle | 437 |
+| id_bhvToadMessage | 438 |
+| id_bhvTower | 439 |
+| id_bhvTowerDoor | 440 |
+| id_bhvTowerPlatformGroup | 441 |
+| id_bhvToxBox | 442 |
+| id_bhvTrackBall | 443 |
+| id_bhvTreasureChestBottom | 444 |
+| id_bhvTreasureChests | 445 |
+| id_bhvTreasureChestsJrb | 446 |
+| id_bhvTreasureChestsShip | 447 |
+| id_bhvTreasureChestTop | 448 |
+| id_bhvTree | 449 |
+| id_bhvTreeLeaf | 450 |
+| id_bhvTreeSnow | 451 |
+| id_bhvTriangleParticleSpawner | 452 |
+| id_bhvTripletButterfly | 453 |
+| id_bhvTTC2DRotator | 454 |
+| id_bhvTTCCog | 455 |
+| id_bhvTTCElevator | 456 |
+| id_bhvTTCMovingBar | 457 |
+| id_bhvTTCPendulum | 458 |
+| id_bhvTTCPitBlock | 459 |
+| id_bhvTTCRotatingSolid | 460 |
+| id_bhvTTCSpinner | 461 |
+| id_bhvTTCTreadmill | 462 |
+| id_bhvTtmBowlingBallSpawner | 463 |
+| id_bhvTtmRollingLog | 464 |
+| id_bhvTumblingBridgePlatform | 465 |
+| id_bhvTuxiesMother | 466 |
+| id_bhvTweester | 467 |
+| id_bhvTweesterSandParticle | 468 |
+| id_bhvUkiki | 469 |
+| id_bhvUkikiCage | 470 |
+| id_bhvUkikiCageChild | 471 |
+| id_bhvUkikiCageStar | 472 |
+| id_bhvUnagi | 473 |
+| id_bhvUnagiSubobject | 474 |
+| id_bhvUnlockDoorStar | 475 |
+| id_bhvUnused05A8 | 476 |
+| id_bhvUnused0DFC | 477 |
+| id_bhvUnused1820 | 478 |
+| id_bhvUnused1F30 | 479 |
+| id_bhvUnused20E0 | 480 |
+| id_bhvUnused2A10 | 481 |
+| id_bhvUnused2A54 | 482 |
+| id_bhvUnusedFakeStar | 483 |
+| id_bhvUnusedParticleSpawn | 484 |
+| id_bhvUnusedPoundablePlatform | 485 |
+| id_bhvVanishCap | 486 |
+| id_bhvVertStarParticleSpawner | 487 |
+| id_bhvVolcanoFlames | 488 |
+| id_bhvVolcanoSoundLoop | 489 |
+| id_bhvWallTinyStarParticle | 490 |
+| id_bhvWarp | 491 |
+| id_bhvWarpPipe | 492 |
+| id_bhvWaterAirBubble | 493 |
+| id_bhvWaterBomb | 494 |
+| id_bhvWaterBombCannon | 495 |
+| id_bhvWaterBombShadow | 496 |
+| id_bhvWaterBombSpawner | 497 |
+| id_bhvWaterDroplet | 498 |
+| id_bhvWaterDropletSplash | 499 |
+| id_bhvWaterfallSoundLoop | 500 |
+| id_bhvWaterLevelDiamond | 501 |
+| id_bhvWaterLevelPillar | 502 |
+| id_bhvWaterMist | 503 |
+| id_bhvWaterMist2 | 504 |
+| id_bhvWaterSplash | 505 |
+| id_bhvWaveTrail | 506 |
+| id_bhvWdwExpressElevator | 507 |
+| id_bhvWdwExpressElevatorPlatform | 508 |
+| id_bhvWdwRectangularFloatingPlatform | 509 |
+| id_bhvWdwSquareFloatingPlatform | 510 |
+| id_bhvWfBreakableWallLeft | 511 |
+| id_bhvWfBreakableWallRight | 512 |
+| id_bhvWfElevatorTowerPlatform | 513 |
+| id_bhvWfRotatingWoodenPlatform | 514 |
+| id_bhvWfSlidingPlatform | 515 |
+| id_bhvWfSlidingTowerPlatform | 516 |
+| id_bhvWfSolidTowerPlatform | 517 |
+| id_bhvWfTumblingBridge | 518 |
+| id_bhvWhirlpool | 519 |
+| id_bhvWhitePuff1 | 520 |
+| id_bhvWhitePuff2 | 521 |
+| id_bhvWhitePuffExplosion | 522 |
+| id_bhvWhitePuffSmoke | 523 |
+| id_bhvWhitePuffSmoke2 | 524 |
+| id_bhvWhompKingBoss | 525 |
+| id_bhvWigglerBody | 526 |
+| id_bhvWigglerHead | 527 |
+| id_bhvWind | 528 |
+| id_bhvWingCap | 529 |
+| id_bhvWoodenPost | 530 |
+| id_bhvYellowBackgroundInMenu | 531 |
+| id_bhvYellowBall | 532 |
+| id_bhvYellowCoin | 533 |
+| id_bhvYoshi | 534 |
+| id_bhv_max_count | 535 |
 
 [:arrow_up_small:](#)
 
@@ -587,6 +611,7 @@
 - CAMERA_MODE_OUTWARD_RADIAL
 - CAMERA_MODE_PARALLEL_TRACKING
 - CAMERA_MODE_RADIAL
+- CAMERA_MODE_ROM_HACK
 - CAMERA_MODE_SLIDE_HOOT
 - CAMERA_MODE_SPIRAL_STAIRS
 - CAMERA_MODE_WATER_SURFACE
@@ -816,6 +841,187 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [dialog_ids.h](#dialog_ids.h)
+
+### [enum DialogId](#DialogId)
+| Identifier | Value |
+| :--------- | :---- |
+| DIALOG_000 | 0 |
+| DIALOG_001 | 1 |
+| DIALOG_002 | 2 |
+| DIALOG_003 | 3 |
+| DIALOG_004 | 4 |
+| DIALOG_005 | 5 |
+| DIALOG_006 | 6 |
+| DIALOG_007 | 7 |
+| DIALOG_008 | 8 |
+| DIALOG_009 | 9 |
+| DIALOG_010 | 10 |
+| DIALOG_011 | 11 |
+| DIALOG_012 | 12 |
+| DIALOG_013 | 13 |
+| DIALOG_014 | 14 |
+| DIALOG_015 | 15 |
+| DIALOG_016 | 16 |
+| DIALOG_017 | 17 |
+| DIALOG_018 | 18 |
+| DIALOG_019 | 19 |
+| DIALOG_020 | 20 |
+| DIALOG_021 | 21 |
+| DIALOG_022 | 22 |
+| DIALOG_023 | 23 |
+| DIALOG_024 | 24 |
+| DIALOG_025 | 25 |
+| DIALOG_026 | 26 |
+| DIALOG_027 | 27 |
+| DIALOG_028 | 28 |
+| DIALOG_029 | 29 |
+| DIALOG_030 | 30 |
+| DIALOG_031 | 31 |
+| DIALOG_032 | 32 |
+| DIALOG_033 | 33 |
+| DIALOG_034 | 34 |
+| DIALOG_035 | 35 |
+| DIALOG_036 | 36 |
+| DIALOG_037 | 37 |
+| DIALOG_038 | 38 |
+| DIALOG_039 | 39 |
+| DIALOG_040 | 40 |
+| DIALOG_041 | 41 |
+| DIALOG_042 | 42 |
+| DIALOG_043 | 43 |
+| DIALOG_044 | 44 |
+| DIALOG_045 | 45 |
+| DIALOG_046 | 46 |
+| DIALOG_047 | 47 |
+| DIALOG_048 | 48 |
+| DIALOG_049 | 49 |
+| DIALOG_050 | 50 |
+| DIALOG_051 | 51 |
+| DIALOG_052 | 52 |
+| DIALOG_053 | 53 |
+| DIALOG_054 | 54 |
+| DIALOG_055 | 55 |
+| DIALOG_056 | 56 |
+| DIALOG_057 | 57 |
+| DIALOG_058 | 58 |
+| DIALOG_059 | 59 |
+| DIALOG_060 | 60 |
+| DIALOG_061 | 61 |
+| DIALOG_062 | 62 |
+| DIALOG_063 | 63 |
+| DIALOG_064 | 64 |
+| DIALOG_065 | 65 |
+| DIALOG_066 | 66 |
+| DIALOG_067 | 67 |
+| DIALOG_068 | 68 |
+| DIALOG_069 | 69 |
+| DIALOG_070 | 70 |
+| DIALOG_071 | 71 |
+| DIALOG_072 | 72 |
+| DIALOG_073 | 73 |
+| DIALOG_074 | 74 |
+| DIALOG_075 | 75 |
+| DIALOG_076 | 76 |
+| DIALOG_077 | 77 |
+| DIALOG_078 | 78 |
+| DIALOG_079 | 79 |
+| DIALOG_080 | 80 |
+| DIALOG_081 | 81 |
+| DIALOG_082 | 82 |
+| DIALOG_083 | 83 |
+| DIALOG_084 | 84 |
+| DIALOG_085 | 85 |
+| DIALOG_086 | 86 |
+| DIALOG_087 | 87 |
+| DIALOG_088 | 88 |
+| DIALOG_089 | 89 |
+| DIALOG_090 | 90 |
+| DIALOG_091 | 91 |
+| DIALOG_092 | 92 |
+| DIALOG_093 | 93 |
+| DIALOG_094 | 94 |
+| DIALOG_095 | 95 |
+| DIALOG_096 | 96 |
+| DIALOG_097 | 97 |
+| DIALOG_098 | 98 |
+| DIALOG_099 | 99 |
+| DIALOG_100 | 100 |
+| DIALOG_101 | 101 |
+| DIALOG_102 | 102 |
+| DIALOG_103 | 103 |
+| DIALOG_104 | 104 |
+| DIALOG_105 | 105 |
+| DIALOG_106 | 106 |
+| DIALOG_107 | 107 |
+| DIALOG_108 | 108 |
+| DIALOG_109 | 109 |
+| DIALOG_110 | 110 |
+| DIALOG_111 | 111 |
+| DIALOG_112 | 112 |
+| DIALOG_113 | 113 |
+| DIALOG_114 | 114 |
+| DIALOG_115 | 115 |
+| DIALOG_116 | 116 |
+| DIALOG_117 | 117 |
+| DIALOG_118 | 118 |
+| DIALOG_119 | 119 |
+| DIALOG_120 | 120 |
+| DIALOG_121 | 121 |
+| DIALOG_122 | 122 |
+| DIALOG_123 | 123 |
+| DIALOG_124 | 124 |
+| DIALOG_125 | 125 |
+| DIALOG_126 | 126 |
+| DIALOG_127 | 127 |
+| DIALOG_128 | 128 |
+| DIALOG_129 | 129 |
+| DIALOG_130 | 130 |
+| DIALOG_131 | 131 |
+| DIALOG_132 | 132 |
+| DIALOG_133 | 133 |
+| DIALOG_134 | 134 |
+| DIALOG_135 | 135 |
+| DIALOG_136 | 136 |
+| DIALOG_137 | 137 |
+| DIALOG_138 | 138 |
+| DIALOG_139 | 139 |
+| DIALOG_140 | 140 |
+| DIALOG_141 | 141 |
+| DIALOG_142 | 142 |
+| DIALOG_143 | 143 |
+| DIALOG_144 | 144 |
+| DIALOG_145 | 145 |
+| DIALOG_146 | 146 |
+| DIALOG_147 | 147 |
+| DIALOG_148 | 148 |
+| DIALOG_149 | 149 |
+| DIALOG_150 | 150 |
+| DIALOG_151 | 151 |
+| DIALOG_152 | 152 |
+| DIALOG_153 | 153 |
+| DIALOG_154 | 154 |
+| DIALOG_155 | 155 |
+| DIALOG_156 | 156 |
+| DIALOG_157 | 157 |
+| DIALOG_158 | 158 |
+| DIALOG_159 | 159 |
+| DIALOG_160 | 160 |
+| DIALOG_161 | 161 |
+| DIALOG_162 | 162 |
+| DIALOG_163 | 163 |
+| DIALOG_164 | 164 |
+| DIALOG_165 | 165 |
+| DIALOG_166 | 166 |
+| DIALOG_167 | 167 |
+| DIALOG_168 | 168 |
+| DIALOG_169 | 169 |
+| DIALOG_COUNT | 170 |
 
 [:arrow_up_small:](#)
 
@@ -1356,7 +1562,25 @@
 
 <br />
 
+## [obj_behaviors_2.h](#obj_behaviors_2.h)
+- ATTACK_HANDLER_DIE_IF_HEALTH_NON_POSITIVE
+- ATTACK_HANDLER_KNOCKBACK
+- ATTACK_HANDLER_NOP
+- ATTACK_HANDLER_SET_SPEED_TO_ZERO
+- ATTACK_HANDLER_SPECIAL_HUGE_GOOMBA_WEAKLY_ATTACKED
+- ATTACK_HANDLER_SPECIAL_KOOPA_LOSE_SHELL
+- ATTACK_HANDLER_SPECIAL_WIGGLER_JUMPED_ON
+- ATTACK_HANDLER_SQUISHED
+- ATTACK_HANDLER_SQUISHED_WITH_BLUE_COIN
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [object_constants.h](#object_constants.h)
+- ACTIVATED_BF_PLAT_TYPE_BITFS_ELEVATOR
+- ACTIVATED_BF_PLAT_TYPE_BITFS_MESH_PLAT
+- ACTIVATED_BF_PLAT_TYPE_BITS_ARROW_PLAT
 - ACTIVE_FLAG_ACTIVE
 - ACTIVE_FLAG_DEACTIVATED
 - ACTIVE_FLAG_DITHERED_ALPHA
@@ -1389,10 +1613,345 @@
 - ACTIVE_PARTICLE_V_STAR
 - ACTIVE_PARTICLE_WATER_SPLASH
 - ACTIVE_PARTICLE_WAVE_TRAIL
+- AMP_ACT_ATTACK_COOLDOWN
+- AMP_ACT_IDLE
+- AMP_BP_ROT_RADIUS_0
+- AMP_BP_ROT_RADIUS_200
+- AMP_BP_ROT_RADIUS_300
+- AMP_BP_ROT_RADIUS_400
+- ARROW_LIFT_ACT_IDLE
+- ARROW_LIFT_ACT_MOVING_AWAY
+- ARROW_LIFT_ACT_MOVING_BACK
+- ARROW_LIFT_DONE_MOVING
+- ARROW_LIFT_NOT_DONE_MOVING
+- BBALL_ACT_INITIALIZE
+- BBALL_ACT_ROLL
+- BBALL_BP_STYPE_BOB_LOWER
+- BBALL_BP_STYPE_BOB_UPPER
+- BBALL_BP_STYPE_THI_LARGE
+- BBALL_BP_STYPE_THI_SMALL
+- BBALL_BP_STYPE_TTM
+- BBH_DYNAMIC_SURFACE_ROOM
+- BBH_NEAR_MERRY_GO_ROUND_ROOM
+- BBH_OUTSIDE_ROOM
+- BBH_TILTING_TRAP_PLATFORM_ACT_MARIO_OFF
+- BBH_TILTING_TRAP_PLATFORM_ACT_MARIO_ON
+- BETA_BOO_KEY_ACT_DROPPED
+- BETA_BOO_KEY_ACT_DROPPING
+- BETA_BOO_KEY_ACT_IN_BOO
+- BETA_CHEST_ACT_IDLE_CLOSED
+- BETA_CHEST_ACT_IDLE_OPEN
+- BETA_CHEST_ACT_OPENING
+- BIRD_ACT_FLY
+- BIRD_ACT_INACTIVE
+- BIRD_BP_SPAWNED
+- BIRD_BP_SPAWNER
+- BLUE_COIN_SWITCH_ACT_IDLE
+- BLUE_COIN_SWITCH_ACT_RECEDING
+- BLUE_COIN_SWITCH_ACT_TICKING
+- BLUE_FISH_ACT_ASCEND
+- BLUE_FISH_ACT_DIVE
+- BLUE_FISH_ACT_DUPLICATE
+- BLUE_FISH_ACT_ROOM
+- BLUE_FISH_ACT_SPAWN
+- BLUE_FISH_ACT_TURN
+- BLUE_FISH_ACT_TURN_BACK
+- BOBOMB_ACT_CHASE_MARIO
+- BOBOMB_ACT_DEATH_PLANE_DEATH
+- BOBOMB_ACT_EXPLODE
+- BOBOMB_ACT_LAUNCHED
+- BOBOMB_ACT_LAVA_DEATH
+- BOBOMB_ACT_PATROL
+- BOBOMB_BP_STYPE_GENERIC
+- BOBOMB_BP_STYPE_STATIONARY
+- BOBOMB_BUDDY_ACT_IDLE
+- BOBOMB_BUDDY_ACT_TALK
+- BOBOMB_BUDDY_ACT_TURN_TO_TALK
+- BOBOMB_BUDDY_BP_STYPE_BOB_CANNON_KBB
+- BOBOMB_BUDDY_BP_STYPE_BOB_GRASS
+- BOBOMB_BUDDY_BP_STYPE_BOB_GRASS_KBB
+- BOBOMB_BUDDY_BP_STYPE_GENERIC
+- BOBOMB_BUDDY_CANNON_OPENED
+- BOBOMB_BUDDY_CANNON_OPENING
+- BOBOMB_BUDDY_CANNON_STOP_TALKING
+- BOBOMB_BUDDY_CANNON_UNOPENED
+- BOBOMB_BUDDY_HAS_NOT_TALKED
+- BOBOMB_BUDDY_HAS_TALKED
+- BOBOMB_BUDDY_ROLE_ADVICE
+- BOBOMB_BUDDY_ROLE_CANNON
+- BOMP_ACT_EXTEND
+- BOMP_ACT_POKE_OUT
+- BOMP_ACT_RETRACT
+- BOMP_ACT_WAIT
+- BOO_ATTACKED
+- BOO_BOUNCED_ON
+- BOO_CAGE_ACT_FALLING
+- BOO_CAGE_ACT_IN_BOO
+- BOO_CAGE_ACT_MARIO_JUMPING_IN
+- BOO_CAGE_ACT_ON_GROUND
+- BOO_CAGE_ACT_USELESS
+- BOO_DEATH_STATUS_ALIVE
+- BOO_DEATH_STATUS_DEAD
+- BOO_DEATH_STATUS_DYING
+- BOO_NOT_ATTACKED
+- BOWSER_PUZZLE_ACT_DONE
+- BOWSER_PUZZLE_ACT_SPAWN_PIECES
+- BOWSER_PUZZLE_ACT_WAIT_FOR_COMPLETE
+- BULLY_ACT_ACTIVATE_AND_FALL
+- BULLY_ACT_BACK_UP
+- BULLY_ACT_CHASE_MARIO
+- BULLY_ACT_DEATH_PLANE_DEATH
+- BULLY_ACT_INACTIVE
+- BULLY_ACT_KNOCKBACK
+- BULLY_ACT_LAVA_DEATH
+- BULLY_ACT_PATROL
+- BULLY_BP_SIZE_BIG
+- BULLY_BP_SIZE_SMALL
+- BULLY_STYPE_CHILL
+- BULLY_STYPE_GENERIC
+- BULLY_STYPE_MINION
+- BUTTERFLY_ACT_FOLLOW_MARIO
+- BUTTERFLY_ACT_RESTING
+- BUTTERFLY_ACT_RETURN_HOME
+- CAMERA_LAKITU_BP_FOLLOW_CAMERA
+- CAMERA_LAKITU_BP_INTRO
+- CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD
+- CAMERA_LAKITU_INTRO_ACT_TRIGGER_CUTSCENE
+- CAMERA_LAKITU_INTRO_ACT_UNK2
+- CANNON_TRAP_DOOR_ACT_CAM_ZOOM
+- CANNON_TRAP_DOOR_ACT_CLOSED
+- CANNON_TRAP_DOOR_ACT_OPEN
+- CANNON_TRAP_DOOR_ACT_OPENING
+- CELEB_STAR_ACT_FACE_CAMERA
+- CELEB_STAR_ACT_SPIN_AROUND_MARIO
+- CHAIN_CHOMP_ACT_MOVE
+- CHAIN_CHOMP_ACT_UNINITIALIZED
+- CHAIN_CHOMP_ACT_UNLOAD_CHAIN
+- CHAIN_CHOMP_CHAIN_PART_BP_PIVOT
+- CHAIN_CHOMP_NOT_RELEASED
+- CHAIN_CHOMP_RELEASED_BREAK_GATE
+- CHAIN_CHOMP_RELEASED_END_CUTSCENE
+- CHAIN_CHOMP_RELEASED_JUMP_AWAY
+- CHAIN_CHOMP_RELEASED_LUNGE_AROUND
+- CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE
+- CHAIN_CHOMP_SUB_ACT_LUNGE
+- CHAIN_CHOMP_SUB_ACT_TURN
+- CLOUD_ACT_FWOOSH_HIDDEN
+- CLOUD_ACT_MAIN
+- CLOUD_ACT_SPAWN_PARTS
+- CLOUD_ACT_UNLOAD
+- CLOUD_BP_FWOOSH
+- CLOUD_BP_LAKITU_CLOUD
+- COFFIN_ACT_IDLE
+- COFFIN_ACT_STAND_UP
+- COFFIN_BP_STATIC
+- COFFIN_SPAWNER_ACT_COFFINS_UNLOADED
+- DIALOG_UNK1_AWAIT_DIALOG
+- DIALOG_UNK1_BEGIN_DIALOG
+- DIALOG_UNK1_DISABLE_TIME_STOP
+- DIALOG_UNK1_ENABLE_TIME_STOP
+- DIALOG_UNK1_FLAG_4
+- DIALOG_UNK1_FLAG_DEFAULT
+- DIALOG_UNK1_FLAG_RESPONSE
+- DIALOG_UNK1_INTERRUPT_MARIO_ACTION
+- DIALOG_UNK2_AWAIT_DIALOG
+- DIALOG_UNK2_ENABLE_TIME_STOP
+- DIALOG_UNK2_END_DIALOG
+- DIALOG_UNK2_FLAG_0
+- DIALOG_UNK2_LEAVE_TIME_STOP_ENABLED
+- DIALOG_UNK2_TURN_AND_INTERRUPT_MARIO_ACTION
+- DORRIE_ACT_LOWER_HEAD
+- DORRIE_ACT_MOVE
+- DORRIE_ACT_RAISE_HEAD
+- ENEMY_LAKITU_ACT_MAIN
+- ENEMY_LAKITU_ACT_UNINITIALIZED
+- ENEMY_LAKITU_SUB_ACT_HOLD_SPINY
+- ENEMY_LAKITU_SUB_ACT_NO_SPINY
+- ENEMY_LAKITU_SUB_ACT_THROW_SPINY
+- EYEROK_BOSS_ACT_DEAD
+- EYEROK_BOSS_ACT_DIE
+- EYEROK_BOSS_ACT_FIGHT
+- EYEROK_BOSS_ACT_PAUSE
+- EYEROK_BOSS_ACT_SHOW_INTRO_TEXT
+- EYEROK_BOSS_ACT_SLEEP
+- EYEROK_BOSS_ACT_WAKE_UP
+- EYEROK_HAND_ACT_ATTACKED
+- EYEROK_HAND_ACT_BECOME_ACTIVE
+- EYEROK_HAND_ACT_BEGIN_DOUBLE_POUND
+- EYEROK_HAND_ACT_CLOSE
+- EYEROK_HAND_ACT_DEAD
+- EYEROK_HAND_ACT_DIE
+- EYEROK_HAND_ACT_DOUBLE_POUND
+- EYEROK_HAND_ACT_FIST_PUSH
+- EYEROK_HAND_ACT_FIST_SWEEP
+- EYEROK_HAND_ACT_IDLE
+- EYEROK_HAND_ACT_OPEN
+- EYEROK_HAND_ACT_PAUSE
+- EYEROK_HAND_ACT_RECOVER
+- EYEROK_HAND_ACT_RETREAT
+- EYEROK_HAND_ACT_SHOW_EYE
+- EYEROK_HAND_ACT_SLEEP
+- EYEROK_HAND_ACT_SMASH
+- EYEROK_HAND_ACT_TARGET_MARIO
+- FAKE_MONEYBAG_COIN_ACT_IDLE
+- FAKE_MONEYBAG_COIN_ACT_TRANSFORM
+- FALLING_PILLAR_ACT_FALLING
+- FALLING_PILLAR_ACT_IDLE
+- FALLING_PILLAR_ACT_TURNING
+- FIRE_PIRANHA_PLANT_ACT_GROW
+- FIRE_PIRANHA_PLANT_ACT_HIDE
+- FIRE_SPITTER_ACT_IDLE
+- FIRE_SPITTER_ACT_SPIT_FIRE
+- FISH_ACT_FLEE
+- FISH_ACT_INIT
+- FISH_ACT_ROAM
+- FISH_SPAWNER_ACT_IDLE
+- FISH_SPAWNER_ACT_RESPAWN
+- FISH_SPAWNER_ACT_SPAWN
+- FISH_SPAWNER_BP_FEW_BLUE
+- FISH_SPAWNER_BP_FEW_CYAN
+- FISH_SPAWNER_BP_MANY_BLUE
+- FISH_SPAWNER_BP_MANY_CYAN
+- FLY_GUY_ACT_APPROACH_MARIO
+- FLY_GUY_ACT_IDLE
+- FLY_GUY_ACT_LUNGE
+- FLY_GUY_ACT_SHOOT_FIRE
+- FREE_BBALL_ACT_IDLE
+- FREE_BBALL_ACT_RESET
+- FREE_BBALL_ACT_ROLL
+- GOOMBA_ACT_ATTACKED_MARIO
+- GOOMBA_ACT_JUMP
+- GOOMBA_ACT_WALK
+- GOOMBA_BP_SIZE_MASK
+- GOOMBA_BP_TRIPLET_FLAG_MASK
+- GOOMBA_SIZE_HUGE
+- GOOMBA_SIZE_REGULAR
+- GOOMBA_SIZE_TINY
+- GOOMBA_TRIPLET_SPAWNER_ACT_LOADED
+- GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED
+- GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK
+- GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK
+- HAUNTED_BOOKSHELF_ACT_IDLE
+- HAUNTED_BOOKSHELF_ACT_RECEDE
 - HELD_DROPPED
 - HELD_FREE
 - HELD_HELD
 - HELD_THROWN
+- HIDDEN_BLUE_COIN_ACT_ACTIVE
+- HIDDEN_BLUE_COIN_ACT_INACTIVE
+- HIDDEN_BLUE_COIN_ACT_WAITING
+- HOMING_AMP_ACT_APPEAR
+- HOMING_AMP_ACT_ATTACK_COOLDOWN
+- HOMING_AMP_ACT_CHASE
+- HOMING_AMP_ACT_GIVE_UP
+- HOMING_AMP_ACT_INACTIVE
+- HOOT_ACT_ASCENT
+- HOOT_ACT_CARRY
+- HOOT_ACT_TIRED
+- HOOT_AVAIL_ASLEEP_IN_TREE
+- HOOT_AVAIL_READY_TO_FLY
+- HOOT_AVAIL_WANTS_TO_TALK
+- JS_RING_SPAWNER_ACT_ACTIVE
+- JS_RING_SPAWNER_ACT_INACTIVE
+- KLEPTO_ACT_APPROACH_TARGET_HOLDING
+- KLEPTO_ACT_CIRCLE_TARGET_HOLDING
+- KLEPTO_ACT_DIVE_AT_MARIO
+- KLEPTO_ACT_RESET_POSITION
+- KLEPTO_ACT_RETREAT
+- KLEPTO_ACT_STRUCK_BY_MARIO
+- KLEPTO_ACT_TURN_TOWARD_MARIO
+- KLEPTO_ACT_WAIT_FOR_MARIO
+- KLEPTO_ANIM_STATE_HOLDING_CAP
+- KLEPTO_ANIM_STATE_HOLDING_NOTHING
+- KLEPTO_ANIM_STATE_HOLDING_STAR
+- KOOPA_BP_KOOPA_THE_QUICK_BASE
+- KOOPA_BP_KOOPA_THE_QUICK_BOB
+- KOOPA_BP_KOOPA_THE_QUICK_THI
+- KOOPA_BP_NORMAL
+- KOOPA_BP_TINY
+- KOOPA_BP_UNSHELLED
+- KOOPA_SHELLED_ACT_DIE
+- KOOPA_SHELLED_ACT_LYING
+- KOOPA_SHELLED_ACT_RUN_FROM_MARIO
+- KOOPA_SHELLED_ACT_STOPPED
+- KOOPA_SHELLED_ACT_WALK
+- KOOPA_SHELLED_SUB_ACT_START_WALK
+- KOOPA_SHELLED_SUB_ACT_STOP_WALK
+- KOOPA_SHELLED_SUB_ACT_WALK
+- KOOPA_THE_QUICK_ACT_AFTER_RACE
+- KOOPA_THE_QUICK_ACT_DECELERATE
+- KOOPA_THE_QUICK_ACT_RACE
+- KOOPA_THE_QUICK_ACT_SHOW_INIT_TEXT
+- KOOPA_THE_QUICK_ACT_STOP
+- KOOPA_THE_QUICK_ACT_UNUSED1
+- KOOPA_THE_QUICK_ACT_WAIT_BEFORE_RACE
+- KOOPA_THE_QUICK_BOB_INDEX
+- KOOPA_THE_QUICK_SUB_ACT_JUMP
+- KOOPA_THE_QUICK_SUB_ACT_RUN
+- KOOPA_THE_QUICK_SUB_ACT_START_RUN
+- KOOPA_THE_QUICK_THI_INDEX
+- KOOPA_UNSHELLED_ACT_DIVE
+- KOOPA_UNSHELLED_ACT_LYING
+- KOOPA_UNSHELLED_ACT_RUN
+- KOOPA_UNSHELLED_ACT_UNUSED3
+- LLL_DRAWBRIDGE_ACT_LOWER
+- LLL_DRAWBRIDGE_ACT_RAISE
+- MAD_PIANO_ACT_ATTACK
+- MAD_PIANO_ACT_WAIT
+- MANTA_ACT_NO_RINGS
+- MANTA_ACT_SPAWN_RINGS
+- MIPS_ACT_FALL_DOWN
+- MIPS_ACT_FOLLOW_PATH
+- MIPS_ACT_IDLE
+- MIPS_ACT_WAIT_FOR_ANIMATION_DONE
+- MIPS_ACT_WAIT_FOR_NEARBY_MARIO
+- MIPS_STAR_STATUS_ALREADY_SPAWNED_STAR
+- MIPS_STAR_STATUS_HAVENT_SPAWNED_STAR
+- MIPS_STAR_STATUS_SHOULD_SPAWN_STAR
+- MONEYBAG_ACT_APPEAR
+- MONEYBAG_ACT_DEATH
+- MONEYBAG_ACT_DISAPPEAR
+- MONEYBAG_ACT_MOVE_AROUND
+- MONEYBAG_ACT_RETURN_HOME
+- MONEYBAG_ACT_UNUSED_APPEAR
+- MONEYBAG_JUMP_JUMP
+- MONEYBAG_JUMP_JUMP_AND_BOUNCE
+- MONEYBAG_JUMP_LANDING
+- MONEYBAG_JUMP_PREPARE
+- MONEYBAG_JUMP_WALK_AROUND
+- MONEYBAG_JUMP_WALK_HOME
+- MONTY_MOLE_ACT_BEGIN_JUMP_INTO_HOLE
+- MONTY_MOLE_ACT_HIDE
+- MONTY_MOLE_ACT_JUMP_INTO_HOLE
+- MONTY_MOLE_ACT_JUMP_OUT_OF_HOLE
+- MONTY_MOLE_ACT_RISE_FROM_HOLE
+- MONTY_MOLE_ACT_SELECT_HOLE
+- MONTY_MOLE_ACT_SPAWN_ROCK
+- MONTY_MOLE_ACT_THROW_ROCK
+- MONTY_MOLE_BP_NO_ROCK
+- MONTY_MOLE_ROCK_ACT_HELD
+- MONTY_MOLE_ROCK_ACT_MOVE
+- MOV_BCOIN_ACT_MOVING
+- MOV_BCOIN_ACT_STILL
+- MOV_YCOIN_ACT_BLINKING
+- MOV_YCOIN_ACT_DEATH_PLANE_DEATH
+- MOV_YCOIN_ACT_IDLE
+- MOV_YCOIN_ACT_LAVA_DEATH
+- MR_BLIZZARD_ACT_BURROW
+- MR_BLIZZARD_ACT_DEATH
+- MR_BLIZZARD_ACT_HIDE_UNHIDE
+- MR_BLIZZARD_ACT_JUMP
+- MR_BLIZZARD_ACT_RISE_FROM_GROUND
+- MR_BLIZZARD_ACT_ROTATE
+- MR_BLIZZARD_ACT_SPAWN_SNOWBALL
+- MR_BLIZZARD_ACT_THROW_SNOWBALL
+- MR_BLIZZARD_STYPE_JUMPING
+- MR_BLIZZARD_STYPE_NO_CAP
+- OBJ_ACT_DEATH_PLANE_DEATH
+- OBJ_ACT_HORIZONTAL_KNOCKBACK
+- OBJ_ACT_LAVA_DEATH
+- OBJ_ACT_SQUISHED
+- OBJ_ACT_VERTICAL_KNOCKBACK
 - OBJ_FLAG_0020
 - OBJ_FLAG_0100
 - OBJ_FLAG_1000
@@ -1427,10 +1986,205 @@
 - OBJ_MOVE_OUT_SCOPE
 - OBJ_MOVE_UNDERWATER_OFF_GROUND
 - OBJ_MOVE_UNDERWATER_ON_GROUND
+- PENGUIN_ANIM_IDLE
+- PENGUIN_ANIM_WALK
+- PENGUIN_WALK_BABY
+- PENGUIN_WALK_BIG
+- PIRANHA_PLANT_ACT_ATTACKED
+- PIRANHA_PLANT_ACT_BITING
+- PIRANHA_PLANT_ACT_IDLE
+- PIRANHA_PLANT_ACT_RESPAWN
+- PIRANHA_PLANT_ACT_SHRINK_AND_DIE
+- PIRANHA_PLANT_ACT_SLEEPING
+- PIRANHA_PLANT_ACT_STOPPED_BITING
+- PIRANHA_PLANT_ACT_WAIT_TO_RESPAWN
+- PIRANHA_PLANT_ACT_WOKEN_UP
+- PIRANHA_PLANT_BUBBLE_ACT_BURST
+- PIRANHA_PLANT_BUBBLE_ACT_GROW_SHRINK_LOOP
+- PIRANHA_PLANT_BUBBLE_ACT_IDLE
+- PLATFORM_ON_TRACK_ACT_FALL
+- PLATFORM_ON_TRACK_ACT_INIT
+- PLATFORM_ON_TRACK_ACT_MOVE_ALONG_TRACK
+- PLATFORM_ON_TRACK_ACT_PAUSE_BRIEFLY
+- PLATFORM_ON_TRACK_ACT_WAIT_FOR_MARIO
+- PLATFORM_ON_TRACK_BP_DONT_DISAPPEAR
+- PLATFORM_ON_TRACK_BP_DONT_TURN_ROLL
+- PLATFORM_ON_TRACK_BP_DONT_TURN_YAW
+- PLATFORM_ON_TRACK_BP_MASK_PATH
+- PLATFORM_ON_TRACK_BP_MASK_TYPE
+- PLATFORM_ON_TRACK_BP_RETURN_TO_START
+- PLATFORM_ON_TRACK_TYPE_CARPET
+- PLATFORM_ON_TRACK_TYPE_CHECKERED
+- PLATFORM_ON_TRACK_TYPE_GRATE
+- PLATFORM_ON_TRACK_TYPE_SKI_LIFT
+- POKEY_ACT_UNINITIALIZED
+- POKEY_ACT_UNLOAD_PARTS
+- POKEY_ACT_WANDER
+- PURPLE_SWITCH_IDLE
+- PURPLE_SWITCH_PRESSED
+- PURPLE_SWITCH_TICKING
+- PURPLE_SWITCH_UNPRESSED
+- PURPLE_SWITCH_WAIT_FOR_MARIO_TO_GET_OFF
+- PYRAMID_ELEVATOR_AT_BOTTOM
+- PYRAMID_ELEVATOR_CONSTANT_VELOCITY
+- PYRAMID_ELEVATOR_END_MOVING
+- PYRAMID_ELEVATOR_IDLE
+- PYRAMID_ELEVATOR_START_MOVING
+- PYRAMID_TOP_ACT_CHECK_IF_SOLVED
+- PYRAMID_TOP_ACT_EXPLODE
+- PYRAMID_TOP_ACT_SPINNING
+- PYRAMID_WALL_ACT_MOVING_DOWN
+- PYRAMID_WALL_ACT_MOVING_UP
+- PYRAMID_WALL_BP_POSITION_HIGH
+- PYRAMID_WALL_BP_POSITION_LOW
+- PYRAMID_WALL_BP_POSITION_MIDDLE
+- RACING_PENGUIN_ACT_FINISH_RACE
+- RACING_PENGUIN_ACT_PREPARE_FOR_RACE
+- RACING_PENGUIN_ACT_RACE
+- RACING_PENGUIN_ACT_SHOW_FINAL_TEXT
+- RACING_PENGUIN_ACT_SHOW_INIT_TEXT
+- RACING_PENGUIN_ACT_WAIT_FOR_MARIO
 - RESPAWN_INFO_DONT_RESPAWN
 - RESPAWN_INFO_TYPE_16
 - RESPAWN_INFO_TYPE_32
 - RESPAWN_INFO_TYPE_NULL
+- SKEETER_ACT_IDLE
+- SKEETER_ACT_LUNGE
+- SKEETER_ACT_WALK
+- SL_SNOWMAN_WIND_ACT_BLOWING
+- SL_SNOWMAN_WIND_ACT_IDLE
+- SL_SNOWMAN_WIND_ACT_TALKING
+- SL_WALKING_PENGUIN_ACT_MOVING_FORWARDS
+- SL_WALKING_PENGUIN_ACT_RETURNING
+- SL_WALKING_PENGUIN_ACT_TURNING_BACK
+- SL_WALKING_PENGUIN_ACT_TURNING_FORWARDS
+- SNUFIT_ACT_IDLE
+- SNUFIT_ACT_SHOOT
+- SPINY_ACT_ATTACKED_MARIO
+- SPINY_ACT_HELD_BY_LAKITU
+- SPINY_ACT_THROWN_BY_LAKITU
+- SPINY_ACT_WALK
+- SWOOP_ACT_IDLE
+- SWOOP_ACT_MOVE
+- TRIPLET_BUTTERFLY_ACT_ACTIVATE
+- TRIPLET_BUTTERFLY_ACT_EXPLODE
+- TRIPLET_BUTTERFLY_ACT_INIT
+- TRIPLET_BUTTERFLY_ACT_WANDER
+- TRIPLET_BUTTERFLY_BP_BUTTERFLY_NUM
+- TRIPLET_BUTTERFLY_BP_NO_BOMBS
+- TRIPLET_BUTTERFLY_TYPE_EXPLODES
+- TRIPLET_BUTTERFLY_TYPE_NORMAL
+- TRIPLET_BUTTERFLY_TYPE_SPAWN_1UP
+- TTC_2D_ROTATOR_BP_2D_COG
+- TTC_2D_ROTATOR_BP_HAND
+- TTC_COG_BP_DIR_CCW
+- TTC_COG_BP_DIR_CW
+- TTC_COG_BP_DIR_MASK
+- TTC_COG_BP_SHAPE_HEXAGON
+- TTC_COG_BP_SHAPE_MASK
+- TTC_COG_BP_SHAPE_TRIANGLE
+- TTC_MOVING_BAR_ACT_EXTEND
+- TTC_MOVING_BAR_ACT_PULL_BACK
+- TTC_MOVING_BAR_ACT_RETRACT
+- TTC_MOVING_BAR_ACT_WAIT
+- TTC_ROTATING_SOLID_BP_CUBE
+- TTC_ROTATING_SOLID_BP_TRIANGULAR_PRISM
+- TTC_SPEED_FAST
+- TTC_SPEED_RANDOM
+- TTC_SPEED_SLOW
+- TTC_SPEED_STOPPED
+- TWEESTER_ACT_CHASE
+- TWEESTER_ACT_HIDE
+- TWEESTER_ACT_IDLE
+- TWEESTER_SUB_ACT_CHASE
+- TWEESTER_SUB_ACT_WAIT
+- UKIKI_ACT_GO_TO_CAGE
+- UKIKI_ACT_IDLE
+- UKIKI_ACT_JUMP
+- UKIKI_ACT_RETURN_HOME
+- UKIKI_ACT_RUN
+- UKIKI_ACT_TURN_TO_MARIO
+- UKIKI_ACT_UNUSED_TURN
+- UKIKI_ACT_WAIT_TO_RESPAWN
+- UKIKI_ANIM_HANDSTAND
+- UKIKI_ANIM_HELD
+- UKIKI_ANIM_ITCH
+- UKIKI_ANIM_JUMP
+- UKIKI_ANIM_JUMP_CLAP
+- UKIKI_ANIM_LAND
+- UKIKI_ANIM_RUN
+- UKIKI_ANIM_SCREECH
+- UKIKI_ANIM_STATE_CAP_ON
+- UKIKI_ANIM_STATE_DEFAULT
+- UKIKI_ANIM_STATE_EYE_CLOSED
+- UKIKI_ANIM_TURN
+- UKIKI_ANIM_UNUSED_APOSE
+- UKIKI_ANIM_UNUSED_DEATH
+- UKIKI_ANIM_UNUSED_HOP
+- UKIKI_ANIM_UNUSED_WALK
+- UKIKI_CAGE
+- UKIKI_CAGE_ACT_FALL
+- UKIKI_CAGE_ACT_HIDE
+- UKIKI_CAGE_ACT_SPIN
+- UKIKI_CAGE_ACT_WAIT_FOR_UKIKI
+- UKIKI_CAGE_STAR_ACT_IN_CAGE
+- UKIKI_CAGE_STAR_ACT_SPAWN_STAR
+- UKIKI_CAP
+- UKIKI_CAP_ON
+- UKIKI_SUB_ACT_CAGE_DESPAWN
+- UKIKI_SUB_ACT_CAGE_JUMP_TO_CAGE
+- UKIKI_SUB_ACT_CAGE_LAND_ON_CAGE
+- UKIKI_SUB_ACT_CAGE_RUN_TO_CAGE
+- UKIKI_SUB_ACT_CAGE_SPIN_ON_CAGE
+- UKIKI_SUB_ACT_CAGE_TALK_TO_MARIO
+- UKIKI_SUB_ACT_CAGE_TURN_TO_CAGE
+- UKIKI_SUB_ACT_CAGE_WAIT_FOR_MARIO
+- UKIKI_SUB_ACT_TAUNT_HANDSTAND
+- UKIKI_SUB_ACT_TAUNT_ITCH
+- UKIKI_SUB_ACT_TAUNT_JUMP_CLAP
+- UKIKI_SUB_ACT_TAUNT_NONE
+- UKIKI_SUB_ACT_TAUNT_SCREECH
+- UKIKI_TEXT_CAGE_TEXTBOX
+- UKIKI_TEXT_DEFAULT
+- UKIKI_TEXT_DO_NOT_LET_GO
+- UKIKI_TEXT_GAVE_CAP_BACK
+- UKIKI_TEXT_GO_TO_CAGE
+- UKIKI_TEXT_HAS_CAP
+- UKIKI_TEXT_STEAL_CAP
+- UKIKI_TEXT_STOLE_CAP
+- WATER_BOMB_ACT_DROP
+- WATER_BOMB_ACT_EXPLODE
+- WATER_BOMB_ACT_INIT
+- WATER_BOMB_ACT_SHOT_FROM_CANNON
+- WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL
+- WATER_LEVEL_DIAMOND_ACT_IDLE
+- WATER_LEVEL_DIAMOND_ACT_IDLE_SPINNING
+- WATER_LEVEL_DIAMOND_ACT_INIT
+- WATER_RING_ACT_COLLECTED
+- WATER_RING_ACT_NOT_COLLECTED
+- WF_SLID_BRICK_PTFM_ACT_EXTEND
+- WF_SLID_BRICK_PTFM_ACT_RETRACT
+- WF_SLID_BRICK_PTFM_ACT_WAIT
+- WF_SLID_BRICK_PTFM_BP_MOV_VEL_10
+- WF_SLID_BRICK_PTFM_BP_MOV_VEL_15
+- WF_SLID_BRICK_PTFM_BP_MOV_VEL_20
+- WIGGLER_ACT_FALL_THROUGH_FLOOR
+- WIGGLER_ACT_JUMPED_ON
+- WIGGLER_ACT_KNOCKBACK
+- WIGGLER_ACT_SHRINK
+- WIGGLER_ACT_UNINITIALIZED
+- WIGGLER_ACT_WALK
+- WIGGLER_TEXT_STATUS_AWAIT_DIALOG
+- WIGGLER_TEXT_STATUS_COMPLETED_DIALOG
+- WIGGLER_TEXT_STATUS_SHOWING_DIALOG
+- WOODEN_POST_BP_NO_COINS_MASK
+- YOSHI_ACT_CREDITS
+- YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN
+- YOSHI_ACT_GIVE_PRESENT
+- YOSHI_ACT_IDLE
+- YOSHI_ACT_TALK
+- YOSHI_ACT_WALK
+- YOSHI_ACT_WALK_JUMP_OFF_ROOF
 
 [:arrow_up_small:](#)
 
@@ -1947,7 +2701,8 @@
 | HOOK_ON_OBJECT_UNLOAD | 14 |
 | HOOK_ON_SYNC_OBJECT_UNLOAD | 15 |
 | HOOK_ON_PAUSE_EXIT | 16 |
-| HOOK_MAX | 17 |
+| HOOK_GET_STAR_COLLECTION_DIALOG | 17 |
+| HOOK_MAX | 18 |
 
 [:arrow_up_small:](#)
 

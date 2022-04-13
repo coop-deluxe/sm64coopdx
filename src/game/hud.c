@@ -8,6 +8,7 @@
 #include "level_update.h"
 #include "camera.h"
 #include "print.h"
+#include "engine/surface_load.h"
 #include "ingame_menu.h"
 #include "hud.h"
 #include "segment2.h"
@@ -70,6 +71,7 @@ static Gfx *sPowerMeterDisplayListPos;
 void patch_interpolated_hud(void) {
     if (sPowerMeterDisplayListPos != NULL) {
         Mtx *mtx = alloc_display_list(sizeof(Mtx));
+        if (mtx == NULL) { return; }
         guTranslate(mtx, (f32) sPowerMeterHUD.x, (f32) sPowerMeterHUD.y, 0);
         gSPMatrix(sPowerMeterDisplayListPos, VIRTUAL_TO_PHYSICAL(mtx),
               G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
@@ -522,6 +524,16 @@ void render_hud(void) {
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
+        }
+
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_SURFACES)
+        {
+            print_text(10, 40, "SURFACE POOL FULL");
+        }
+
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_NODES)
+        {
+            print_text(10, 60, "SURFACE NODE POOL FULL");
         }
     }
 }

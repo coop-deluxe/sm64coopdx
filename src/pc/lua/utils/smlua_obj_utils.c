@@ -97,6 +97,10 @@ void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId) {
     o->header.gfx.sharedChild = gLoadedGraphNodes[smlua_model_util_load(modelId)];
 }
 
+Trajectory* get_trajectory(const char* name) {
+    return dynos_level_get_trajectory(name);
+}
+
 //
 // Helpers to iterate through the object table
 //

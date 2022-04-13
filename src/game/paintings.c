@@ -961,7 +961,7 @@ Gfx *painting_model_view_transform(struct Painting *painting) {
     Gfx *dlist = alloc_display_list(5 * sizeof(Gfx));
     Gfx *gfx = dlist;
 
-    if (rotX == NULL || rotY == NULL || translate == NULL || dlist == NULL) {
+    if (rotX == NULL || rotY == NULL || translate == NULL || scale == NULL || dlist == NULL) {
         return NULL;
     }
 

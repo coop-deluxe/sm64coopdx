@@ -15,6 +15,7 @@
 #include "src/pc/lua/utils/smlua_collision_utils.h"
 #include "src/game/spawn_sound.h"
 #include "src/pc/network/network.h"
+#include "src/game/hardcoded.h"
 
 #include "include/object_fields.h"
 
@@ -69,6 +70,142 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???            }, <--- UNIMPLEMENTED
     { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           false, LOT_OBJECTWARPNODE },
 //  { "whirlpools",          LOT_???,       offsetof(struct Area, whirlpools),          false, LOT_???            }, <--- UNIMPLEMENTED
+};
+
+#define LUA_BEHAVIOR_DIALOGS_FIELD_COUNT 84
+static struct LuaObjectField sBehaviorDialogsFields[LUA_BEHAVIOR_DIALOGS_FIELD_COUNT] = {
+    { "BobombBuddyBob1Dialog",         LVT_S32, offsetof(struct BehaviorDialogs, BobombBuddyBob1Dialog),         false, LOT_NONE },
+    { "BobombBuddyBob2Dialog",         LVT_S32, offsetof(struct BehaviorDialogs, BobombBuddyBob2Dialog),         false, LOT_NONE },
+    { "BobombBuddyOther1Dialog",       LVT_S32, offsetof(struct BehaviorDialogs, BobombBuddyOther1Dialog),       false, LOT_NONE },
+    { "BobombBuddyOther2Dialog",       LVT_S32, offsetof(struct BehaviorDialogs, BobombBuddyOther2Dialog),       false, LOT_NONE },
+    { "Bowser1DefeatedDialog",         LVT_S32, offsetof(struct BehaviorDialogs, Bowser1DefeatedDialog),         false, LOT_NONE },
+    { "Bowser1Dialog",                 LVT_S32, offsetof(struct BehaviorDialogs, Bowser1Dialog),                 false, LOT_NONE },
+    { "Bowser2DefeatedDialog",         LVT_S32, offsetof(struct BehaviorDialogs, Bowser2DefeatedDialog),         false, LOT_NONE },
+    { "Bowser2Dialog",                 LVT_S32, offsetof(struct BehaviorDialogs, Bowser2Dialog),                 false, LOT_NONE },
+    { "Bowser3Defeated120StarsDialog", LVT_S32, offsetof(struct BehaviorDialogs, Bowser3Defeated120StarsDialog), false, LOT_NONE },
+    { "Bowser3DefeatedDialog",         LVT_S32, offsetof(struct BehaviorDialogs, Bowser3DefeatedDialog),         false, LOT_NONE },
+    { "Bowser3Dialog",                 LVT_S32, offsetof(struct BehaviorDialogs, Bowser3Dialog),                 false, LOT_NONE },
+    { "CapswitchBaseDialog",           LVT_S32, offsetof(struct BehaviorDialogs, CapswitchBaseDialog),           false, LOT_NONE },
+    { "CapswitchMetalDialog",          LVT_S32, offsetof(struct BehaviorDialogs, CapswitchMetalDialog),          false, LOT_NONE },
+    { "CapswitchVanishDialog",         LVT_S32, offsetof(struct BehaviorDialogs, CapswitchVanishDialog),         false, LOT_NONE },
+    { "CapswitchWingDialog",           LVT_S32, offsetof(struct BehaviorDialogs, CapswitchWingDialog),           false, LOT_NONE },
+    { "CastleEnterDialog",             LVT_S32, offsetof(struct BehaviorDialogs, CastleEnterDialog),             false, LOT_NONE },
+    { "CollectedStarDialog",           LVT_S32, offsetof(struct BehaviorDialogs, CollectedStarDialog),           false, LOT_NONE },
+    { "DefaultCutsceneDialog",         LVT_S32, offsetof(struct BehaviorDialogs, DefaultCutsceneDialog),         false, LOT_NONE },
+    { "DoorNeed1StarDialog",           LVT_S32, offsetof(struct BehaviorDialogs, DoorNeed1StarDialog),           false, LOT_NONE },
+    { "DoorNeed30StarsDialog",         LVT_S32, offsetof(struct BehaviorDialogs, DoorNeed30StarsDialog),         false, LOT_NONE },
+    { "DoorNeed3StarsDialog",          LVT_S32, offsetof(struct BehaviorDialogs, DoorNeed3StarsDialog),          false, LOT_NONE },
+    { "DoorNeed50StarsDialog",         LVT_S32, offsetof(struct BehaviorDialogs, DoorNeed50StarsDialog),         false, LOT_NONE },
+    { "DoorNeed70StarsDialog",         LVT_S32, offsetof(struct BehaviorDialogs, DoorNeed70StarsDialog),         false, LOT_NONE },
+    { "DoorNeed8StarsDialog",          LVT_S32, offsetof(struct BehaviorDialogs, DoorNeed8StarsDialog),          false, LOT_NONE },
+    { "DoorNeedKeyDialog",             LVT_S32, offsetof(struct BehaviorDialogs, DoorNeedKeyDialog),             false, LOT_NONE },
+    { "EyerokDefeatedDialog",          LVT_S32, offsetof(struct BehaviorDialogs, EyerokDefeatedDialog),          false, LOT_NONE },
+    { "EyerokIntroDialog",             LVT_S32, offsetof(struct BehaviorDialogs, EyerokIntroDialog),             false, LOT_NONE },
+    { "GhostHuntAfterDialog",          LVT_S32, offsetof(struct BehaviorDialogs, GhostHuntAfterDialog),          false, LOT_NONE },
+    { "GhostHuntDialog",               LVT_S32, offsetof(struct BehaviorDialogs, GhostHuntDialog),               false, LOT_NONE },
+    { "HootIntroDialog",               LVT_S32, offsetof(struct BehaviorDialogs, HootIntroDialog),               false, LOT_NONE },
+    { "HootTiredDialog",               LVT_S32, offsetof(struct BehaviorDialogs, HootTiredDialog),               false, LOT_NONE },
+    { "HundredCoinsDialog",            LVT_S32, offsetof(struct BehaviorDialogs, HundredCoinsDialog),            false, LOT_NONE },
+    { "IntroPipeDialog",               LVT_S32, offsetof(struct BehaviorDialogs, IntroPipeDialog),               false, LOT_NONE },
+    { "KeyDoor1DontHaveDialog",        LVT_S32, offsetof(struct BehaviorDialogs, KeyDoor1DontHaveDialog),        false, LOT_NONE },
+    { "KeyDoor1HaveDialog",            LVT_S32, offsetof(struct BehaviorDialogs, KeyDoor1HaveDialog),            false, LOT_NONE },
+    { "KeyDoor2DontHaveDialog",        LVT_S32, offsetof(struct BehaviorDialogs, KeyDoor2DontHaveDialog),        false, LOT_NONE },
+    { "KeyDoor2HaveDialog",            LVT_S32, offsetof(struct BehaviorDialogs, KeyDoor2HaveDialog),            false, LOT_NONE },
+    { "KingBobombCheatDialog",         LVT_S32, offsetof(struct BehaviorDialogs, KingBobombCheatDialog),         false, LOT_NONE },
+    { "KingBobombDefeatDialog",        LVT_S32, offsetof(struct BehaviorDialogs, KingBobombDefeatDialog),        false, LOT_NONE },
+    { "KingBobombIntroDialog",         LVT_S32, offsetof(struct BehaviorDialogs, KingBobombIntroDialog),         false, LOT_NONE },
+    { "KingWhompDefeatDialog",         LVT_S32, offsetof(struct BehaviorDialogs, KingWhompDefeatDialog),         false, LOT_NONE },
+    { "KingWhompDialog",               LVT_S32, offsetof(struct BehaviorDialogs, KingWhompDialog),               false, LOT_NONE },
+    { "KoopaQuickBobStartDialog",      LVT_S32, offsetof(struct BehaviorDialogs, KoopaQuickBobStartDialog),      false, LOT_NONE },
+    { "KoopaQuickBobWinDialog",        LVT_S32, offsetof(struct BehaviorDialogs, KoopaQuickBobWinDialog),        false, LOT_NONE },
+    { "KoopaQuickCheatedDialog",       LVT_S32, offsetof(struct BehaviorDialogs, KoopaQuickCheatedDialog),       false, LOT_NONE },
+    { "KoopaQuickLostDialog",          LVT_S32, offsetof(struct BehaviorDialogs, KoopaQuickLostDialog),          false, LOT_NONE },
+    { "KoopaQuickThiStartDialog",      LVT_S32, offsetof(struct BehaviorDialogs, KoopaQuickThiStartDialog),      false, LOT_NONE },
+    { "KoopaQuickThiWinDialog",        LVT_S32, offsetof(struct BehaviorDialogs, KoopaQuickThiWinDialog),        false, LOT_NONE },
+    { "LakituIntroDialog",             LVT_S32, offsetof(struct BehaviorDialogs, LakituIntroDialog),             false, LOT_NONE },
+    { "MetalCourseDialog",             LVT_S32, offsetof(struct BehaviorDialogs, MetalCourseDialog),             false, LOT_NONE },
+    { "Mips1Dialog",                   LVT_S32, offsetof(struct BehaviorDialogs, Mips1Dialog),                   false, LOT_NONE },
+    { "Mips2Dialog",                   LVT_S32, offsetof(struct BehaviorDialogs, Mips2Dialog),                   false, LOT_NONE },
+    { "PeachLetterDialog",             LVT_S32, offsetof(struct BehaviorDialogs, PeachLetterDialog),             false, LOT_NONE },
+    { "RacingPenguinBigStartDialog",   LVT_S32, offsetof(struct BehaviorDialogs, RacingPenguinBigStartDialog),   false, LOT_NONE },
+    { "RacingPenguinCheatDialog",      LVT_S32, offsetof(struct BehaviorDialogs, RacingPenguinCheatDialog),      false, LOT_NONE },
+    { "RacingPenguinLostDialog",       LVT_S32, offsetof(struct BehaviorDialogs, RacingPenguinLostDialog),       false, LOT_NONE },
+    { "RacingPenguinStartDialog",      LVT_S32, offsetof(struct BehaviorDialogs, RacingPenguinStartDialog),      false, LOT_NONE },
+    { "RacingPenguinWinDialog",        LVT_S32, offsetof(struct BehaviorDialogs, RacingPenguinWinDialog),        false, LOT_NONE },
+    { "SnowmanHeadAfterDialog",        LVT_S32, offsetof(struct BehaviorDialogs, SnowmanHeadAfterDialog),        false, LOT_NONE },
+    { "SnowmanHeadBodyDialog",         LVT_S32, offsetof(struct BehaviorDialogs, SnowmanHeadBodyDialog),         false, LOT_NONE },
+    { "SnowmanHeadDialog",             LVT_S32, offsetof(struct BehaviorDialogs, SnowmanHeadDialog),             false, LOT_NONE },
+    { "SnowmanWindDialog",             LVT_S32, offsetof(struct BehaviorDialogs, SnowmanWindDialog),             false, LOT_NONE },
+    { "StarCollectionBaseDialog",      LVT_S32, offsetof(struct BehaviorDialogs, StarCollectionBaseDialog),      false, LOT_NONE },
+    { "StarDoorDialog",                LVT_S32, offsetof(struct BehaviorDialogs, StarDoorDialog),                false, LOT_NONE },
+    { "ToadStar1AfterDialog",          LVT_S32, offsetof(struct BehaviorDialogs, ToadStar1AfterDialog),          false, LOT_NONE },
+    { "ToadStar1Dialog",               LVT_S32, offsetof(struct BehaviorDialogs, ToadStar1Dialog),               false, LOT_NONE },
+    { "ToadStar2AfterDialog",          LVT_S32, offsetof(struct BehaviorDialogs, ToadStar2AfterDialog),          false, LOT_NONE },
+    { "ToadStar2Dialog",               LVT_S32, offsetof(struct BehaviorDialogs, ToadStar2Dialog),               false, LOT_NONE },
+    { "ToadStar3AfterDialog",          LVT_S32, offsetof(struct BehaviorDialogs, ToadStar3AfterDialog),          false, LOT_NONE },
+    { "ToadStar3Dialog",               LVT_S32, offsetof(struct BehaviorDialogs, ToadStar3Dialog),               false, LOT_NONE },
+    { "TuxieMotherBabyFoundDialog",    LVT_S32, offsetof(struct BehaviorDialogs, TuxieMotherBabyFoundDialog),    false, LOT_NONE },
+    { "TuxieMotherBabyWrongDialog",    LVT_S32, offsetof(struct BehaviorDialogs, TuxieMotherBabyWrongDialog),    false, LOT_NONE },
+    { "TuxieMotherDialog",             LVT_S32, offsetof(struct BehaviorDialogs, TuxieMotherDialog),             false, LOT_NONE },
+    { "UkikiCageDialog",               LVT_S32, offsetof(struct BehaviorDialogs, UkikiCageDialog),               false, LOT_NONE },
+    { "UkikiCapGiveDialog",            LVT_S32, offsetof(struct BehaviorDialogs, UkikiCapGiveDialog),            false, LOT_NONE },
+    { "UkikiCapStealDialog",           LVT_S32, offsetof(struct BehaviorDialogs, UkikiCapStealDialog),           false, LOT_NONE },
+    { "UkikiHeldDialog",               LVT_S32, offsetof(struct BehaviorDialogs, UkikiHeldDialog),               false, LOT_NONE },
+    { "VanishCourseDialog",            LVT_S32, offsetof(struct BehaviorDialogs, VanishCourseDialog),            false, LOT_NONE },
+    { "WigglerAttack1Dialog",          LVT_S32, offsetof(struct BehaviorDialogs, WigglerAttack1Dialog),          false, LOT_NONE },
+    { "WigglerAttack2Dialog",          LVT_S32, offsetof(struct BehaviorDialogs, WigglerAttack2Dialog),          false, LOT_NONE },
+    { "WigglerAttack3Dialog",          LVT_S32, offsetof(struct BehaviorDialogs, WigglerAttack3Dialog),          false, LOT_NONE },
+    { "WigglerDialog",                 LVT_S32, offsetof(struct BehaviorDialogs, WigglerDialog),                 false, LOT_NONE },
+    { "WingCourseDialog",              LVT_S32, offsetof(struct BehaviorDialogs, WingCourseDialog),              false, LOT_NONE },
+    { "YoshiDialog",                   LVT_S32, offsetof(struct BehaviorDialogs, YoshiDialog),                   false, LOT_NONE },
+};
+
+#define LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT 28
+static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT] = {
+    { "BowlingBallBob2Trajectory", LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, BowlingBallBob2Trajectory), false, LOT_POINTER },
+    { "BowlingBallBobTrajectory",  LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, BowlingBallBobTrajectory),  false, LOT_POINTER },
+    { "BowlingBallTtmTrajectory",  LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, BowlingBallTtmTrajectory),  false, LOT_POINTER },
+    { "KoopaBobTrajectory",        LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, KoopaBobTrajectory),        false, LOT_POINTER },
+    { "KoopaThiTrajectory",        LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, KoopaThiTrajectory),        false, LOT_POINTER },
+    { "Mips10Trajectory",          LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips10Trajectory),          false, LOT_POINTER },
+    { "Mips2Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips2Trajectory),           false, LOT_POINTER },
+    { "Mips3Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips3Trajectory),           false, LOT_POINTER },
+    { "Mips4Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips4Trajectory),           false, LOT_POINTER },
+    { "Mips5Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips5Trajectory),           false, LOT_POINTER },
+    { "Mips6Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips6Trajectory),           false, LOT_POINTER },
+    { "Mips7Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips7Trajectory),           false, LOT_POINTER },
+    { "Mips8Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips8Trajectory),           false, LOT_POINTER },
+    { "Mips9Trajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Mips9Trajectory),           false, LOT_POINTER },
+    { "MipsTrajectory",            LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, MipsTrajectory),            false, LOT_POINTER },
+    { "PlatformBitfsTrajectory",   LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformBitfsTrajectory),   false, LOT_POINTER },
+    { "PlatformCcmTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformCcmTrajectory),     false, LOT_POINTER },
+    { "PlatformHmcTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformHmcTrajectory),     false, LOT_POINTER },
+    { "PlatformLll2Trajectory",    LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformLll2Trajectory),    false, LOT_POINTER },
+    { "PlatformLllTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformLllTrajectory),     false, LOT_POINTER },
+    { "PlatformRr2Trajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRr2Trajectory),     false, LOT_POINTER },
+    { "PlatformRr3Trajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRr3Trajectory),     false, LOT_POINTER },
+    { "PlatformRr4Trajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRr4Trajectory),     false, LOT_POINTER },
+    { "PlatformRrTrajectory",      LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, PlatformRrTrajectory),      false, LOT_POINTER },
+    { "RacingPenguinTrajectory",   LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, RacingPenguinTrajectory),   false, LOT_POINTER },
+    { "SnowmanHeadTrajectory",     LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, SnowmanHeadTrajectory),     false, LOT_POINTER },
+    { "Unagi2Trajectory",          LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, Unagi2Trajectory),          false, LOT_POINTER },
+    { "UnagiTrajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),           false, LOT_POINTER },
+};
+
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 12
+static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
+    { "KoopaBobAgility",        LVT_F32,     offsetof(struct BehaviorValues, KoopaBobAgility),        false, LOT_NONE                 },
+    { "KoopaCatchupAgility",    LVT_F32,     offsetof(struct BehaviorValues, KoopaCatchupAgility),    false, LOT_NONE                 },
+    { "KoopaThiAgility",        LVT_F32,     offsetof(struct BehaviorValues, KoopaThiAgility),        false, LOT_NONE                 },
+    { "RacingPenguinBigHeight", LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigHeight), false, LOT_NONE                 },
+    { "RacingPenguinBigRadius", LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigRadius), false, LOT_NONE                 },
+    { "RacingPenguinHeight",    LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinHeight),    false, LOT_NONE                 },
+    { "RacingPenguinRadius",    LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinRadius),    false, LOT_NONE                 },
+    { "ToadStar1Requirement",   LVT_U16,     offsetof(struct BehaviorValues, ToadStar1Requirement),   false, LOT_NONE                 },
+    { "ToadStar2Requirement",   LVT_U16,     offsetof(struct BehaviorValues, ToadStar2Requirement),   false, LOT_NONE                 },
+    { "ToadStar3Requirement",   LVT_U16,     offsetof(struct BehaviorValues, ToadStar3Requirement),   false, LOT_NONE                 },
+    { "dialogs",                LVT_COBJECT, offsetof(struct BehaviorValues, dialogs),                true,  LOT_BEHAVIORDIALOGS      },
+    { "trajectories",           LVT_COBJECT, offsetof(struct BehaviorValues, trajectories),           true,  LOT_BEHAVIORTRAJECTORIES },
 };
 
 #define LUA_BULLY_COLLISION_DATA_FIELD_COUNT 6
@@ -527,6 +664,15 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "unusedVec1",                       LVT_COBJECT, offsetof(struct LakituState, unusedVec1),                       true,  LOT_VEC3F },
     { "unusedVec2",                       LVT_COBJECT, offsetof(struct LakituState, unusedVec2),                       true,  LOT_VEC3S },
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
+};
+
+#define LUA_LEVEL_VALUES_FIELD_COUNT 5
+static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
+    { "entryLevel",         LVT_S32,     offsetof(struct LevelValues, entryLevel),         false, LOT_NONE          },
+    { "exitCastleArea",     LVT_S16,     offsetof(struct LevelValues, exitCastleArea),     false, LOT_NONE          },
+    { "exitCastleLevel",    LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),    false, LOT_NONE          },
+    { "exitCastleWarpNode", LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode), false, LOT_NONE          },
+    { "starPositions",      LVT_COBJECT, offsetof(struct LevelValues, starPositions),      true,  LOT_STARPOSITIONS },
 };
 
 #define LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT 5
@@ -1573,6 +1719,36 @@ static struct LuaObjectField sSpawnParticlesInfoFields[LUA_SPAWN_PARTICLES_INFO_
     { "velYRange",       LVT_S8,  offsetof(struct SpawnParticlesInfo, velYRange),       false, LOT_NONE },
 };
 
+#define LUA_STAR_POSITIONS_FIELD_COUNT 26
+static struct LuaObjectField sStarPositionsFields[LUA_STAR_POSITIONS_FIELD_COUNT] = {
+    { "BalconyBooStarPos",    LVT_COBJECT, offsetof(struct StarPositions, BalconyBooStarPos),    true, LOT_VEC3F },
+    { "BigBullyStarPos",      LVT_COBJECT, offsetof(struct StarPositions, BigBullyStarPos),      true, LOT_VEC3F },
+    { "BigBullyTrioStarPos",  LVT_COBJECT, offsetof(struct StarPositions, BigBullyTrioStarPos),  true, LOT_VEC3F },
+    { "BigPiranhasStarPos",   LVT_COBJECT, offsetof(struct StarPositions, BigPiranhasStarPos),   true, LOT_VEC3F },
+    { "CcmSlideStarPos",      LVT_COBJECT, offsetof(struct StarPositions, CcmSlideStarPos),      true, LOT_VEC3F },
+    { "ChillBullyStarPos",    LVT_COBJECT, offsetof(struct StarPositions, ChillBullyStarPos),    true, LOT_VEC3F },
+    { "EyerockStarPos",       LVT_COBJECT, offsetof(struct StarPositions, EyerockStarPos),       true, LOT_VEC3F },
+    { "GhostHuntBooStarPos",  LVT_COBJECT, offsetof(struct StarPositions, GhostHuntBooStarPos),  true, LOT_VEC3F },
+    { "JetstreamRingStarPos", LVT_COBJECT, offsetof(struct StarPositions, JetstreamRingStarPos), true, LOT_VEC3F },
+    { "KingBobombStarPos",    LVT_COBJECT, offsetof(struct StarPositions, KingBobombStarPos),    true, LOT_VEC3F },
+    { "KingWhompStarPos",     LVT_COBJECT, offsetof(struct StarPositions, KingWhompStarPos),     true, LOT_VEC3F },
+    { "KleptoStarPos",        LVT_COBJECT, offsetof(struct StarPositions, KleptoStarPos),        true, LOT_VEC3F },
+    { "KoopaBobStarPos",      LVT_COBJECT, offsetof(struct StarPositions, KoopaBobStarPos),      true, LOT_VEC3F },
+    { "KoopaThiStarPos",      LVT_COBJECT, offsetof(struct StarPositions, KoopaThiStarPos),      true, LOT_VEC3F },
+    { "MantaRayStarPos",      LVT_COBJECT, offsetof(struct StarPositions, MantaRayStarPos),      true, LOT_VEC3F },
+    { "MerryGoRoundStarPos",  LVT_COBJECT, offsetof(struct StarPositions, MerryGoRoundStarPos),  true, LOT_VEC3F },
+    { "MrIStarPos",           LVT_COBJECT, offsetof(struct StarPositions, MrIStarPos),           true, LOT_VEC3F },
+    { "PssSlideStarPos",      LVT_COBJECT, offsetof(struct StarPositions, PssSlideStarPos),      true, LOT_VEC3F },
+    { "RacingPenguinStarPos", LVT_COBJECT, offsetof(struct StarPositions, RacingPenguinStarPos), true, LOT_VEC3F },
+    { "SnowmanHeadStarPos",   LVT_COBJECT, offsetof(struct StarPositions, SnowmanHeadStarPos),   true, LOT_VEC3F },
+    { "TreasureChestStarPos", LVT_COBJECT, offsetof(struct StarPositions, TreasureChestStarPos), true, LOT_VEC3F },
+    { "TreasureJrbStarPos",   LVT_COBJECT, offsetof(struct StarPositions, TreasureJrbStarPos),   true, LOT_VEC3F },
+    { "TuxieMotherStarPos",   LVT_COBJECT, offsetof(struct StarPositions, TuxieMotherStarPos),   true, LOT_VEC3F },
+    { "UkikiCageStarPos",     LVT_COBJECT, offsetof(struct StarPositions, UkikiCageStarPos),     true, LOT_VEC3F },
+    { "UnagiStarPos",         LVT_COBJECT, offsetof(struct StarPositions, UnagiStarPos),         true, LOT_VEC3F },
+    { "WigglerStarPos",       LVT_COBJECT, offsetof(struct StarPositions, WigglerStarPos),       true, LOT_VEC3F },
+};
+
 #define LUA_STRUCT802_A272_C_FIELD_COUNT 2
 static struct LuaObjectField sStruct802A272CFields[LUA_STRUCT802_A272_C_FIELD_COUNT] = {
     { "vecF", LVT_COBJECT, offsetof(struct Struct802A272C, vecF), true, LOT_VEC3F },
@@ -1698,6 +1874,9 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_ANIMINFO,                  sAnimInfoFields,                  LUA_ANIM_INFO_FIELD_COUNT                    },
     { LOT_ANIMATION,                 sAnimationFields,                 LUA_ANIMATION_FIELD_COUNT                    },
     { LOT_AREA,                      sAreaFields,                      LUA_AREA_FIELD_COUNT                         },
+    { LOT_BEHAVIORDIALOGS,           sBehaviorDialogsFields,           LUA_BEHAVIOR_DIALOGS_FIELD_COUNT             },
+    { LOT_BEHAVIORTRAJECTORIES,      sBehaviorTrajectoriesFields,      LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT        },
+    { LOT_BEHAVIORVALUES,            sBehaviorValuesFields,            LUA_BEHAVIOR_VALUES_FIELD_COUNT              },
     { LOT_BULLYCOLLISIONDATA,        sBullyCollisionDataFields,        LUA_BULLY_COLLISION_DATA_FIELD_COUNT         },
     { LOT_CAMERA,                    sCameraFields,                    LUA_CAMERA_FIELD_COUNT                       },
     { LOT_CAMERAFOVSTATUS,           sCameraFOVStatusFields,           LUA_CAMERA_FOVSTATUS_FIELD_COUNT             },
@@ -1719,6 +1898,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_HANDHELDSHAKEPOINT,        sHandheldShakePointFields,        LUA_HANDHELD_SHAKE_POINT_FIELD_COUNT         },
     { LOT_INSTANTWARP,               sInstantWarpFields,               LUA_INSTANT_WARP_FIELD_COUNT                 },
     { LOT_LAKITUSTATE,               sLakituStateFields,               LUA_LAKITU_STATE_FIELD_COUNT                 },
+    { LOT_LEVELVALUES,               sLevelValuesFields,               LUA_LEVEL_VALUES_FIELD_COUNT                 },
     { LOT_LINEARTRANSITIONPOINT,     sLinearTransitionPointFields,     LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT      },
     { LOT_MARIOANIMATION,            sMarioAnimationFields,            LUA_MARIO_ANIMATION_FIELD_COUNT              },
     { LOT_MARIOBODYSTATE,            sMarioBodyStateFields,            LUA_MARIO_BODY_STATE_FIELD_COUNT             },
@@ -1738,6 +1918,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SOUNDSTATE,                sSoundStateFields,                LUA_SOUND_STATE_FIELD_COUNT                  },
     { LOT_SPAWNINFO,                 sSpawnInfoFields,                 LUA_SPAWN_INFO_FIELD_COUNT                   },
     { LOT_SPAWNPARTICLESINFO,        sSpawnParticlesInfoFields,        LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT         },
+    { LOT_STARPOSITIONS,             sStarPositionsFields,             LUA_STAR_POSITIONS_FIELD_COUNT               },
     { LOT_STRUCT802A272C,            sStruct802A272CFields,            LUA_STRUCT802_A272_C_FIELD_COUNT             },
     { LOT_SURFACE,                   sSurfaceFields,                   LUA_SURFACE_FIELD_COUNT                      },
     { LOT_TEXTUREINFO,               sTextureInfoFields,               LUA_TEXTURE_INFO_FIELD_COUNT                 },

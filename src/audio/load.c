@@ -10,6 +10,7 @@
 
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
+#include "pc/lua/utils/smlua_audio_utils.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
@@ -1374,6 +1375,7 @@ void *sequence_dma_immediate(s32 seqId, s32 arg1) {
     seqLength = gSeqFileHeader->seqArray[seqId].len + 0xf;
     seqLength = ALIGN16(seqLength);
     seqData = gSeqFileHeader->seqArray[seqId].offset;
+
     ptr = alloc_bank_or_seq(&gSeqLoadedPool, 1, seqLength, arg1, seqId);
     if (ptr == NULL) {
         return NULL;
@@ -1396,6 +1398,7 @@ void *sequence_dma_async(s32 seqId, s32 arg1, struct SequencePlayer *seqPlayer) 
     seqLength = gSeqFileHeader->seqArray[seqId].len + 0xf;
     seqLength = ALIGN16(seqLength);
     seqData = gSeqFileHeader->seqArray[seqId].offset;
+
     ptr = alloc_bank_or_seq(&gSeqLoadedPool, 1, seqLength, arg1, seqId);
     if (ptr == NULL) {
         eu_stubbed_printf_0("Heap Overflow Error\n");
@@ -1557,6 +1560,25 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
     void *sequenceData;
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
     UNUSED u32 padding[2];
+
+    // do custom music override
+    {
+        s32 bankId = 0;
+        if (smlua_audio_utils_override(seqId, &bankId, &sequenceData)) {
+            sequence_player_disable(seqPlayer);
+            seqPlayer->defaultBank[0] = bankId;
+            if (!bank_load_immediate(bankId, 2)) { return; }
+            seqPlayer->seqId = seqId;
+            gSeqLoadStatus[seqId] = SOUND_LOAD_STATUS_COMPLETE;
+            init_sequence_player(player);
+            seqPlayer->scriptState.depth = 0;
+            seqPlayer->delay = 0;
+            seqPlayer->enabled = TRUE;
+            seqPlayer->seqData = sequenceData;
+            seqPlayer->scriptState.pc = sequenceData;
+            return;
+        }
+    }
 
     if (seqId >= gSequenceCount) {
         return;

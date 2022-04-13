@@ -201,7 +201,7 @@ void bhv_yoshi_loop(void) {
             break;
 
         case 2:
-            if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_161)) {
+            if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.YoshiDialog)) {
                 sYoshiTalkingState = 3;
                 o->oInteractStatus = 0;
                 o->oHomeX = sYoshiHomeLocations[2];

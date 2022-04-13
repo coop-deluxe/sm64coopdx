@@ -55,69 +55,76 @@
 #include "pc/debuglog.h"
 
 struct ModelUtilsInfo {
-    enum ModelExtendedId id;
-    const void* asset;
+    enum ModelExtendedId extId;
     u8 layer;
+    u8 loadedId;
+    bool permanent;
     bool isDisplayList;
-    u8 cacheId;
+    const void* asset;
 };
 
-#define MODEL_UTIL_GEO(x, y) [x] = { .id = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .cacheId = 0xFF }
-#define MODEL_UTIL_DL(x, y, z) [x] = { .id = x, .asset = y, .layer = z, .isDisplayList = true, .cacheId = 0xFF }
+#define UNLOADED_ID 0xFF
+
+#define MODEL_UTIL_GEO(x, y)        [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = false }
+#define MODEL_UTIL_DL(x, y, z)      [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = false }
+#define MODEL_UTIL_GEO_PERM(x, y)   [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = true  }
+#define MODEL_UTIL_DL_PERM(x, y, z) [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = true  }
 
 struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_NONE,                    NULL),
 
     // actors
-    MODEL_UTIL_GEO(E_MODEL_MARIO,                   mario_geo),
-    MODEL_UTIL_GEO(E_MODEL_SMOKE,                   smoke_geo),
-    MODEL_UTIL_GEO(E_MODEL_SPARKLES,                sparkles_geo),
-    MODEL_UTIL_GEO(E_MODEL_BUBBLE,                  bubble_geo),
-    MODEL_UTIL_GEO(E_MODEL_SMALL_WATER_SPLASH,      small_water_splash_geo),
-    MODEL_UTIL_GEO(E_MODEL_IDLE_WATER_WAVE,         idle_water_wave_geo),
-    MODEL_UTIL_GEO(E_MODEL_WATER_SPLASH,            water_splash_geo),
-    MODEL_UTIL_GEO(E_MODEL_WAVE_TRAIL,              wave_trail_geo),
-    MODEL_UTIL_GEO(E_MODEL_YELLOW_COIN,             yellow_coin_geo),
-    MODEL_UTIL_GEO(E_MODEL_STAR,                    star_geo),
-    MODEL_UTIL_GEO(E_MODEL_TRANSPARENT_STAR,        transparent_star_geo),
-    MODEL_UTIL_GEO(E_MODEL_WOODEN_SIGNPOST,         wooden_signpost_geo),
-    MODEL_UTIL_DL (E_MODEL_WHITE_PARTICLE_SMALL,    white_particle_small_dl, LAYER_ALPHA),
-    MODEL_UTIL_GEO(E_MODEL_RED_FLAME,               red_flame_geo),
-    MODEL_UTIL_GEO(E_MODEL_BLUE_FLAME,              blue_flame_geo),
-    MODEL_UTIL_GEO(E_MODEL_BURN_SMOKE,              burn_smoke_geo),
-    MODEL_UTIL_GEO(E_MODEL_LEAVES,                  leaves_geo),
-    MODEL_UTIL_GEO(E_MODEL_PURPLE_MARBLE,           purple_marble_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIO,                   mario_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SMOKE,                   smoke_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SPARKLES,                sparkles_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BUBBLE,                  bubble_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SMALL_WATER_SPLASH,      small_water_splash_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_IDLE_WATER_WAVE,         idle_water_wave_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WATER_SPLASH,            water_splash_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WAVE_TRAIL,              wave_trail_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_YELLOW_COIN,             yellow_coin_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_STAR,                    star_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TRANSPARENT_STAR,        transparent_star_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WOODEN_SIGNPOST,         wooden_signpost_geo),
+    MODEL_UTIL_DL_PERM (E_MODEL_WHITE_PARTICLE_SMALL,    white_particle_small_dl, LAYER_ALPHA),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_FLAME,               red_flame_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_FLAME,              blue_flame_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BURN_SMOKE,              burn_smoke_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LEAVES,                  leaves_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_PURPLE_MARBLE,           purple_marble_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_FISH,                    fish_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_FISH_SHADOW,             fish_shadow_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SPARKLES_ANIMATION,      sparkles_animation_geo),
+    MODEL_UTIL_DL_PERM (E_MODEL_SAND_DUST,               sand_seg3_dl_0302BCD0, LAYER_ALPHA),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BUTTERFLY,               butterfly_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BURN_SMOKE_UNUSED,       burn_smoke_geo),
+    MODEL_UTIL_DL_PERM (E_MODEL_PEBBLE,                  pebble_seg3_dl_0301CB00, LAYER_ALPHA),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MIST,                    mist_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WHITE_PUFF,              white_puff_geo),
+    MODEL_UTIL_DL_PERM (E_MODEL_WHITE_PARTICLE_DL,       white_particle_dl, LAYER_ALPHA),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WHITE_PARTICLE,          white_particle_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_YELLOW_COIN_NO_SHADOW,   yellow_coin_no_shadow_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_COIN,               blue_coin_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_COIN_NO_SHADOW,     blue_coin_no_shadow_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_WINGED_METAL_CAP, marios_winged_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_METAL_CAP,        marios_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_WING_CAP,         marios_wing_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_CAP,              marios_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BOWSER_KEY_CUTSCENE,     bowser_key_cutscene_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BOWSER_KEY,              bowser_key_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_FLAME_SHADOW,        red_flame_shadow_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_1UP,                     mushroom_1up_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_COIN,                red_coin_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_COIN_NO_SHADOW,      red_coin_no_shadow_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_NUMBER,                  number_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_EXPLOSION,               explosion_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_DIRT_ANIMATION,          dirt_animation_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_CARTOON_STAR,            cartoon_star_geo),
+
+    // Non-permanent actors
     MODEL_UTIL_GEO(E_MODEL_TRAMPOLINE,              springboard_top_geo),
     MODEL_UTIL_GEO(E_MODEL_TRAMPOLINE_CENTER,       springboard_spring_geo),
     MODEL_UTIL_GEO(E_MODEL_TRAMPOLINE_BASE,         springboard_bottom_geo),
-    MODEL_UTIL_GEO(E_MODEL_FISH,                    fish_geo),
-    MODEL_UTIL_GEO(E_MODEL_FISH_SHADOW,             fish_shadow_geo),
-    MODEL_UTIL_GEO(E_MODEL_SPARKLES_ANIMATION,      sparkles_animation_geo),
-    MODEL_UTIL_DL (E_MODEL_SAND_DUST,               sand_seg3_dl_0302BCD0, LAYER_ALPHA),
-    MODEL_UTIL_GEO(E_MODEL_BUTTERFLY,               butterfly_geo),
-    MODEL_UTIL_GEO(E_MODEL_BURN_SMOKE_UNUSED,       burn_smoke_geo),
-    MODEL_UTIL_DL (E_MODEL_PEBBLE,                  pebble_seg3_dl_0301CB00, LAYER_ALPHA),
-    MODEL_UTIL_GEO(E_MODEL_MIST,                    mist_geo),
-    MODEL_UTIL_GEO(E_MODEL_WHITE_PUFF,              white_puff_geo),
-    MODEL_UTIL_DL (E_MODEL_WHITE_PARTICLE_DL,       white_particle_dl, LAYER_ALPHA),
-    MODEL_UTIL_GEO(E_MODEL_WHITE_PARTICLE,          white_particle_geo),
-    MODEL_UTIL_GEO(E_MODEL_YELLOW_COIN_NO_SHADOW,   yellow_coin_no_shadow_geo),
-    MODEL_UTIL_GEO(E_MODEL_BLUE_COIN,               blue_coin_geo),
-    MODEL_UTIL_GEO(E_MODEL_BLUE_COIN_NO_SHADOW,     blue_coin_no_shadow_geo),
-    MODEL_UTIL_GEO(E_MODEL_MARIOS_WINGED_METAL_CAP, marios_winged_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_MARIOS_METAL_CAP,        marios_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_MARIOS_WING_CAP,         marios_wing_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_MARIOS_CAP,              marios_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_BOWSER_KEY_CUTSCENE,     bowser_key_cutscene_geo),
-    MODEL_UTIL_GEO(E_MODEL_BOWSER_KEY,              bowser_key_geo),
-    MODEL_UTIL_GEO(E_MODEL_RED_FLAME_SHADOW,        red_flame_shadow_geo),
-    MODEL_UTIL_GEO(E_MODEL_1UP,                     mushroom_1up_geo),
-    MODEL_UTIL_GEO(E_MODEL_RED_COIN,                red_coin_geo),
-    MODEL_UTIL_GEO(E_MODEL_RED_COIN_NO_SHADOW,      red_coin_no_shadow_geo),
-    MODEL_UTIL_GEO(E_MODEL_NUMBER,                  number_geo),
-    MODEL_UTIL_GEO(E_MODEL_EXPLOSION,               explosion_geo),
-    MODEL_UTIL_GEO(E_MODEL_DIRT_ANIMATION,          dirt_animation_geo),
-    MODEL_UTIL_GEO(E_MODEL_CARTOON_STAR,            cartoon_star_geo),
     MODEL_UTIL_GEO(E_MODEL_BLUE_COIN_SWITCH,        blue_coin_switch_geo),
     MODEL_UTIL_GEO(E_MODEL_AMP,                     amp_geo),
     MODEL_UTIL_GEO(E_MODEL_PURPLE_SWITCH,           purple_switch_geo),
@@ -428,134 +435,197 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_TTM_MOON_SMILEY,                    ttm_geo_000DBC),
 
     // custom models
-    MODEL_UTIL_GEO(E_MODEL_BUBBLE_PLAYER,             water_bomb_geo),
-    MODEL_UTIL_GEO(E_MODEL_LUIGI,                     luigi_geo),
-    MODEL_UTIL_GEO(E_MODEL_LUIGIS_CAP,                luigis_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_LUIGIS_METAL_CAP,          luigis_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_LUIGIS_WING_CAP,           luigis_wing_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_LUIGIS_WINGED_METAL_CAP,   luigis_winged_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_TOAD_PLAYER,               toad_player_geo),
-    MODEL_UTIL_GEO(E_MODEL_TOADS_CAP,                 toads_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_TOADS_METAL_CAP,           toads_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_TOADS_WING_CAP,            toads_wing_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WALUIGI,                   waluigi_geo),
-    MODEL_UTIL_GEO(E_MODEL_WALUIGIS_CAP,              waluigis_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WALUIGIS_METAL_CAP,        waluigis_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WALUIGIS_WING_CAP,         waluigis_wing_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WALUIGIS_WINGED_METAL_CAP, waluigis_winged_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WARIO,                     wario_geo),
-    MODEL_UTIL_GEO(E_MODEL_WARIOS_CAP,                warios_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WARIOS_METAL_CAP,          warios_metal_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo),
-    MODEL_UTIL_GEO(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BUBBLE_PLAYER,             water_bomb_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGI,                     luigi_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_CAP,                luigis_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_METAL_CAP,          luigis_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_WING_CAP,           luigis_wing_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_WINGED_METAL_CAP,   luigis_winged_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOAD_PLAYER,               toad_player_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_CAP,                 toads_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_METAL_CAP,           toads_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_WING_CAP,            toads_wing_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGI,                   waluigi_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_CAP,              waluigis_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_METAL_CAP,        waluigis_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_WING_CAP,         waluigis_wing_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_WINGED_METAL_CAP, waluigis_winged_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIO,                     wario_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_CAP,                warios_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_METAL_CAP,          warios_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
 };
 
-struct ModelUtilsInfo* sCustomModels = NULL;
-u32 sCustomModelsCount = 0;
+#define MAX_CUSTOM_MODELS 256
+struct ModelUtilsInfo sCustomModels[MAX_CUSTOM_MODELS] = { 0 };
+static u16 sCustomModelsCount = 0;
 
-struct ModelUtilsInfo sCachedAssets[256] = { 0 };
+#define MAX_CACHED_ASSETS 256
+struct ModelUtilsInfo* sCachedAssets[MAX_CACHED_ASSETS] = { 0 };
+bool sCachedAssetTaken[MAX_CACHED_ASSETS] = { 0 };
 
-void smlua_model_util_remember(u8 modelId, u8 layer, const void* asset, u8 isDisplayList) {
-    struct ModelUtilsInfo* c = &sCachedAssets[modelId];
-    c->id = modelId;
-    c->layer = layer;
-    c->asset = asset;
-    c->isDisplayList = isDisplayList;
+void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, UNUSED u8 isDisplayList) {
+    struct ModelUtilsInfo* found = NULL;
+
+    // find in sModels
+    for (s32 i = 0; i < E_MODEL_MAX; i++) {
+        struct ModelUtilsInfo* m = &sModels[i];
+        if (m->asset != asset) { continue; }
+        found = m;
+        break;
+    }
+
+    // find in sCustomModels
+    if (!found) {
+        for (s32 i = 0; i < sCustomModelsCount; i++) {
+            struct ModelUtilsInfo* m = &sCustomModels[i];
+            if (m->asset != asset) { continue; }
+            found = m;
+            break;
+        }
+    }
+
+    // sanity check
+    if (found == NULL) {
+        LOG_ERROR("Could not find asset to remember!");
+        return;
+    }
+
+    // remember
+    if (sCachedAssetTaken[loadedId] && sCachedAssets[loadedId] != found) {
+        if (sCachedAssets[loadedId]->permanent) {
+            // TODO: we need to restore the permanent model afterward
+            LOG_ERROR("OVERRIDING PERMANENT MODEL: %u -> %u", sCachedAssets[loadedId]->loadedId, loadedId);
+        } else {
+            LOG_INFO("Overriding model: loadedId %u was extId %u, now extId %u", loadedId, sCachedAssets[loadedId]->extId, found->extId);
+        }
+        sCachedAssets[loadedId]->loadedId = UNLOADED_ID;
+    }
+    found->loadedId = loadedId;
+    sCachedAssets[loadedId] = found;
+    sCachedAssetTaken[loadedId] = true;
+    //LOG_INFO("Remember model: %u -> %u", found->extId, loadedId);
 }
 
 void smlua_model_util_clear(void) {
-    memset(sCachedAssets, 0, sizeof(sCachedAssets));
-    for (int i = 0; i < E_MODEL_MAX; i++) {
-        if (sModels[i].cacheId != 0xFF) {
-            gLoadedGraphNodes[sModels[i].cacheId] = NULL;
-        }
-        sModels[i].cacheId = 0xFF;
+    // TODO: we need to restore replaced permanent models
+    for (int i = 0; i < MAX_CACHED_ASSETS; i++) {
+        struct ModelUtilsInfo* m = sCachedAssets[i];
+        if (m == NULL || m->permanent) { continue; }
+        //LOG_INFO("Forget: %u -> %u", m->extId, m->loadedId);
+        m->loadedId = UNLOADED_ID;
+        sCachedAssets[i] = NULL;
+        sCachedAssetTaken[i] = false;
     }
 
-    for (u32 i = 0; i < sCustomModelsCount; i++) {
-        if (sCustomModels[i].cacheId != 0xFF) {
-            gLoadedGraphNodes[sCustomModels[i].cacheId] = NULL;
-        }
-        sCustomModels[i].cacheId = 0xFF;
-    }
+    //LOG_INFO("Cleared runtime model cache.");
 }
 
-u8 smlua_model_util_load(enum ModelExtendedId id) {
-    if (id == E_MODEL_NONE) { return MODEL_NONE; }
-    if (id == E_MODEL_MAX) { LOG_ERROR("id invalid"); return MODEL_NONE; }
-    if (id > E_MODEL_MAX + sCustomModelsCount) { LOG_ERROR("id invalid"); return MODEL_NONE; }
+u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u8 loadedId) {
+    if (extId == E_MODEL_NONE) { return MODEL_NONE; }
+    if (extId >= (u16)(E_MODEL_MAX + sCustomModelsCount)) {
+        LOG_ERROR("Tried to load invalid extId: %u >= %u (%u)", extId, (E_MODEL_MAX + sCustomModelsCount), sCustomModelsCount);
+        extId = E_MODEL_ERROR_MODEL;
+    }
 
-    struct ModelUtilsInfo* info = (id >= E_MODEL_MAX)
-                                ? &sCustomModels[id - E_MODEL_MAX - 1]
-                                : &sModels[id];
+    struct ModelUtilsInfo* info = (extId >= E_MODEL_MAX)
+                                ? &sCustomModels[extId - E_MODEL_MAX]
+                                : &sModels[extId];
 
     // check cache
-    if (info->cacheId != 0xFF) {
-        //LOG_INFO("Found in info cache");
-        return info->cacheId;
+    if (info->loadedId != UNLOADED_ID) {
+        //LOG_INFO("Found in cache - %u -> %u", extId, info->loadedId);
+        return info->loadedId;
     }
 
     // find cached asset
-    bool foundEmptyCacheId = false;
-    u8 emptyCacheId = 0;
-    for (int i = 0; i < 255; i++) {
-        if (sCachedAssets[i].asset == info->asset) {
-            //LOG_INFO("Found in cached assets");
-            return sCachedAssets[i].id;
+    u8 pickLoadedId = loadedId;
+    if (loadedId == UNLOADED_ID) {
+        for (s32 i = 0; i < (MAX_CACHED_ASSETS-1); i++) {
+            struct ModelUtilsInfo* m = sCachedAssets[i];
+            if (m == info) {
+                //LOG_INFO("Found in cache (but late, confused?) - %u -> %u", extId, i);
+                info->loadedId = m->loadedId;
+                return info->loadedId;
+            } else if (!sCachedAssetTaken[i]) {
+                pickLoadedId = i;
+            }
         }
-        if (sCachedAssets[i].asset == NULL) {
-            foundEmptyCacheId = true;
-            emptyCacheId = i;
+
+        if (pickLoadedId == UNLOADED_ID) {
+            LOG_ERROR("Could not find slot for extId - %u", extId);
+            return UNLOADED_ID;
         }
-    }
-    if (!foundEmptyCacheId) {
-        LOG_ERROR("No empty cache");
-        return 0xFF;
     }
 
     // load
-    struct AllocOnlyPool* pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
-    if (info->isDisplayList) {
-        gLoadedGraphNodes[emptyCacheId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
-    } else {
-        gLoadedGraphNodes[emptyCacheId] = process_geo_layout(pool, (void*)info->asset);
+    bool resizePool = false;
+    if (pool == NULL) {
+        pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
+        resizePool = true;
     }
-    alloc_only_pool_resize(pool, pool->usedSpace);
-    //LOG_INFO("Loaded at runtime");
+
+    if (info->isDisplayList) {
+        gLoadedGraphNodes[pickLoadedId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
+    } else {
+        gLoadedGraphNodes[pickLoadedId] = process_geo_layout(pool, (void*)info->asset);
+    }
+
+    if (resizePool) {
+        alloc_only_pool_resize(pool, pool->usedSpace);
+    }
 
     // remember
-    smlua_model_util_remember(emptyCacheId, info->layer, info->asset, info->isDisplayList);
-    info->cacheId = emptyCacheId;
+    smlua_model_util_remember(pickLoadedId, info->layer, info->asset, info->isDisplayList);
+    //LOG_INFO("Loaded custom model - %u -> %u", extId, pickLoadedId);
 
-    return emptyCacheId;
+    return pickLoadedId;
+}
+
+u8 smlua_model_util_load_with_pool(enum ModelExtendedId extId, struct AllocOnlyPool* pool) {
+    return smlua_model_util_load_with_pool_and_cache_id(extId, pool, UNLOADED_ID);
+}
+
+u8 smlua_model_util_load(enum ModelExtendedId extId) {
+    return smlua_model_util_load_with_pool(extId, NULL);
 }
 
 u32 smlua_model_util_get_id(const char* name) {
     // find geolayout
     const void* layout = dynos_geolayout_get(name);
-    if (layout == NULL) { return E_MODEL_ERROR_MODEL; }
+    if (layout == NULL) {
+        LOG_ERROR("Failed to find model: %s - %u", name, E_MODEL_ERROR_MODEL);
+        return E_MODEL_ERROR_MODEL;
+    }
 
     // find existing model
     for (u32 i = 0; i < E_MODEL_MAX; i++) {
-        if (sModels[i].asset == layout) {
-            return i;
+        struct ModelUtilsInfo* m = &sModels[i];
+        if (m->asset == layout) {
+            //LOG_INFO("Found existing model: %s :: %u -> %u", name, m->extId, m->loadedId);
+            return m->extId;
         }
     }
     for (u32 i = 0; i < sCustomModelsCount; i++) {
-        if (sCustomModels[i].asset == layout) {
-            return E_MODEL_MAX + i + 1;
+        struct ModelUtilsInfo* m = &sCustomModels[i];
+        if (m->asset == layout) {
+            //LOG_INFO("Found existing custom model: %s :: %u -> %u", name, m->extId, m->loadedId);
+            return m->extId;
         }
     }
 
     // allocate custom model
-    u32 customIndex = sCustomModelsCount++;
-    sCustomModels = realloc(sCustomModels, sizeof(struct ModelUtilsInfo) * sCustomModelsCount);
+    u16 customIndex = sCustomModelsCount++;
     struct ModelUtilsInfo* info = &sCustomModels[customIndex];
     info->asset = layout;
-    info->cacheId = 0xFF;
-    info->id = E_MODEL_MAX + sCustomModelsCount;
+    info->loadedId = UNLOADED_ID;
+    info->extId = E_MODEL_MAX + customIndex;
     info->isDisplayList = false;
     info->layer = LAYER_OPAQUE;
+    //LOG_INFO("Allocated model: %s :: %u -> %u", name, info->extId, info->loadedId);
 
-    return info->id;
+    return info->extId;
 }
+
+

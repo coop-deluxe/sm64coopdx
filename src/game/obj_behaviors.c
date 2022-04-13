@@ -31,6 +31,7 @@
 #include "save_file.h"
 #include "spawn_object.h"
 #include "spawn_sound.h"
+#include "hardcoded.h"
 #include "engine/surface_load.h"
 #include "pc/network/network.h"
 #include "pc/network/reservation_area.h"
@@ -74,9 +75,6 @@ s16 sPrevCheckMarioRoom = 0;
  */
 s8 sYoshiDead = FALSE;
 
-extern void *ccm_seg7_trajectory_snowman;
-extern void *inside_castle_seg7_trajectory_mips;
-
 /**
  * Resets yoshi as spawned/despawned upon new file select.
  * Possibly a function with stubbed code.
@@ -111,6 +109,7 @@ Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *no
         }
 
         gfxHead = alloc_display_list(3 * sizeof(Gfx));
+        if (gfxHead == NULL) { return NULL; }
         gfx = gfxHead;
         obj->header.gfx.node.flags =
             (obj->header.gfx.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);

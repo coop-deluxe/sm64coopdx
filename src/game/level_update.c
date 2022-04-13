@@ -20,6 +20,7 @@
 #include "ingame_menu.h"
 #include "obj_behaviors.h"
 #include "save_file.h"
+#include "hardcoded.h"
 #include "debug_course.h"
 #ifdef VERSION_EU
 #include "memory.h"
@@ -280,26 +281,16 @@ void load_level_init_text(u32 arg) {
     s32 gotAchievement;
     u32 dialogID = gCurrentArea->dialog[arg];
 
-    switch (dialogID) {
-        case DIALOG_129:
-            gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_VANISH_CAP;
-            break;
-
-        case DIALOG_130:
-            gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_METAL_CAP;
-            break;
-
-        case DIALOG_131:
-            gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_WING_CAP;
-            break;
-
-        case 255:
-            gotAchievement = TRUE;
-            break;
-
-        default:
-            gotAchievement = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
-            break;
+    if (dialogID == gBehaviorValues.dialogs.VanishCourseDialog) {
+        gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_VANISH_CAP;
+    } else if (dialogID == gBehaviorValues.dialogs.MetalCourseDialog) {
+        gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_METAL_CAP;
+    } else if (dialogID == gBehaviorValues.dialogs.WingCourseDialog) {
+        gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_WING_CAP;
+    } else if (dialogID == 255) {
+        gotAchievement = TRUE;
+    } else {
+        gotAchievement = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
     }
 
     if (!gotAchievement) {
@@ -401,8 +392,9 @@ void set_mario_initial_action(struct MarioState *m, u32 spawnType, u32 actionArg
 
 void init_mario_after_warp(void) {
     struct ObjectWarpNode *spawnNode = area_get_warp_node(sWarpDest.nodeId);
-    if (spawnNode == NULL) { spawnNode = gCurrentArea->warpNodes; }
-    if (spawnNode == NULL) { return; }
+    if (spawnNode == NULL || spawnNode->object == NULL) { spawnNode = &gCurrentArea->warpNodes[0xFA]; }
+    if (spawnNode == NULL || spawnNode->object == NULL) { spawnNode = &gCurrentArea->warpNodes[0x00]; }
+    if (spawnNode == NULL || spawnNode->object == NULL) { return; }
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
     if (gMarioState->action != ACT_UNINITIALIZED) {
@@ -1176,7 +1168,7 @@ s32 play_mode_paused(void) {
             if (gDebugLevelSelect) {
                 fade_into_special_warp(-9, 1);
             } else {
-                initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
+                initiate_warp(gLevelValues.exitCastleLevel, gLevelValues.exitCastleArea, gLevelValues.exitCastleWarpNode, 0);
                 fade_into_special_warp(0, 0);
                 gSavedCourseNum = COURSE_NONE;
             }
@@ -1570,4 +1562,7 @@ void fake_lvl_init_from_save_file(void) {
     save_file_move_cap_to_default_location();
     select_mario_cam_mode();
     set_yoshi_as_not_dead();
+    fadeout_music(30);
+
+    gChangeLevel = gLevelValues.entryLevel;
 }

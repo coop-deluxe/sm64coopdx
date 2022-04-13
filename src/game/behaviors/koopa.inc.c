@@ -51,18 +51,16 @@ static u8 sKoopaShelledAttackHandlers[] = {
  * Data to control the behavior of each instance of Koopa the Quick.
  */
 struct KoopaTheQuickProperties {
-    s16 initText;
-    s16 winText;
-    void const *path;
-    Vec3s starPos;
+    s16* initText;
+    s16* winText;
 };
 
 /**
  * Properties for the BoB race and the THI race.
  */
 static struct KoopaTheQuickProperties sKoopaTheQuickProperties[] = {
-    { DIALOG_005, DIALOG_007, bob_seg7_trajectory_koopa, { 3030, 4500, -4600 } },
-    { DIALOG_009, DIALOG_031, thi_seg7_trajectory_koopa, { 7100, -1300, -6000 } }
+    { (s16*) &gBehaviorValues.dialogs.KoopaQuickBobStartDialog, (s16*) &gBehaviorValues.dialogs.KoopaQuickBobWinDialog },
+    { (s16*) &gBehaviorValues.dialogs.KoopaQuickThiStartDialog, (s16*) &gBehaviorValues.dialogs.KoopaQuickThiWinDialog }
 };
 
 static u32 koopaPathedStartWaypoint = 0;
@@ -70,14 +68,18 @@ static u32 koopaPathedPrevWaypoint = 0;
 static u32 koopaShotFromCannon = 0;
 
 static void bhv_koopa_the_quick_on_received_post(UNUSED u8 fromLocalIndex) {
-    void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+    void* path = (o->oKoopaTheQuickRaceIndex == 0)
+               ? (void*) gBehaviorValues.trajectories.KoopaBobTrajectory
+               : (void*) gBehaviorValues.trajectories.KoopaThiTrajectory;
     o->oPathedStartWaypoint = (struct Waypoint*)path + koopaPathedStartWaypoint;
     o->oPathedPrevWaypoint  = (struct Waypoint*)path + koopaPathedPrevWaypoint;
     gMarioShotFromCannon = koopaShotFromCannon;
 }
 
 static void bhv_koopa_the_quick_on_sent_pre(void) {
-    void* path = segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+    void* path = (o->oKoopaTheQuickRaceIndex == 0)
+               ? (void*) gBehaviorValues.trajectories.KoopaBobTrajectory
+               : (void*) gBehaviorValues.trajectories.KoopaThiTrajectory;
     koopaPathedStartWaypoint = ((void*)o->oPathedStartWaypoint - path) / sizeof(struct Waypoint*);
     koopaPathedPrevWaypoint  = ((void*)o->oPathedPrevWaypoint  - path) / sizeof(struct Waypoint*);
     koopaShotFromCannon = gMarioShotFromCannon;
@@ -627,7 +629,7 @@ static void koopa_the_quick_act_show_init_text(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     s32 response = 0;
     if (should_start_or_continue_dialog(marioState, o)) {
-        response = obj_update_race_proposition_dialog(&gMarioStates[0], sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].initText, koopa_the_quick_act_show_init_text_continue_dialog);
+        response = obj_update_race_proposition_dialog(&gMarioStates[0], *sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].initText, koopa_the_quick_act_show_init_text_continue_dialog);
     }
 
     if (response == 1) {
@@ -638,8 +640,9 @@ static void koopa_the_quick_act_show_init_text(void) {
         o->oForwardVel = 0.0f;
 
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
-        o->oPathedStartWaypoint = o->oPathedPrevWaypoint =
-            segmented_to_virtual(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].path);
+        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = (o->oKoopaTheQuickRaceIndex == 0)
+               ? (struct Waypoint*) gBehaviorValues.trajectories.KoopaBobTrajectory
+               : (struct Waypoint*) gBehaviorValues.trajectories.KoopaThiTrajectory;
 
         o->oKoopaTurningAwayFromWall = FALSE;
         o->oFlags |= OBJ_FLAG_ACTIVE_FROM_AFAR;
@@ -737,11 +740,11 @@ static void koopa_the_quick_act_race(void) {
                         && (o->oPathedPrevWaypointFlags & WAYPOINT_MASK_00FF) < 28) {
                         // Move faster if mario has already finished the race or
                         // cheated by shooting from cannon
-                        o->oKoopaAgility = 8.0f;
+                        o->oKoopaAgility = gBehaviorValues.KoopaCatchupAgility;
                     } else if (o->oKoopaTheQuickRaceIndex != KOOPA_THE_QUICK_BOB_INDEX) {
-                        o->oKoopaAgility = 6.0f;
+                        o->oKoopaAgility = gBehaviorValues.KoopaThiAgility;
                     } else {
-                        o->oKoopaAgility = 4.0f;
+                        o->oKoopaAgility = gBehaviorValues.KoopaBobAgility;
                     }
 
                     obj_forward_vel_approach(o->oKoopaAgility * 6.0f * downhillSteepness,
@@ -846,14 +849,14 @@ static void koopa_the_quick_act_after_race(void) {
                 if (o->parentObj->oKoopaRaceEndpointRaceStatus < 0) {
                     // Mario cheated
                     o->parentObj->oKoopaRaceEndpointRaceStatus = 0;
-                    o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_006;
+                    o->parentObj->oKoopaRaceEndpointUnk100 = gBehaviorValues.dialogs.KoopaQuickCheatedDialog;
                 } else {
                     // Mario won
-                    o->parentObj->oKoopaRaceEndpointUnk100 = sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].winText;
+                    o->parentObj->oKoopaRaceEndpointUnk100 = *sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].winText;
                 }
             } else {
                 // KtQ won
-                o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_041;
+                o->parentObj->oKoopaRaceEndpointUnk100 = gBehaviorValues.dialogs.KoopaQuickLostDialog;
             }
 
             o->oFlags &= ~OBJ_FLAG_ACTIVE_FROM_AFAR;
@@ -867,9 +870,13 @@ static void koopa_the_quick_act_after_race(void) {
             }
         }
     } else if (o->parentObj->oKoopaRaceEndpointRaceStatus != 0) {
-        spawn_default_star(sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].starPos[0],
-                           sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].starPos[1],
-                           sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].starPos[2]);
+        if (o->oKoopaTheQuickRaceIndex == 0) {
+                f32* starPos = gLevelValues.starPositions.KoopaBobStarPos;
+                spawn_default_star(starPos[0], starPos[1], starPos[2]);
+        } else {
+                f32* starPos = gLevelValues.starPositions.KoopaThiStarPos;
+                spawn_default_star(starPos[0], starPos[1], starPos[2]);
+        }
 
         o->parentObj->oKoopaRaceEndpointRaceStatus = 0;
     }

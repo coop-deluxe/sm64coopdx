@@ -64,6 +64,7 @@ static Vec3f sIntroScale;
 void patch_title_screen_scales(void) {
     if (sIntroScalePos != NULL) {
         Mtx *scaleMat = alloc_display_list(sizeof(*scaleMat));
+        if (scaleMat == NULL) { return; }
         guScale(scaleMat, sIntroScale[0], sIntroScale[1], sIntroScale[2]);
         gSPMatrix(sIntroScalePos, scaleMat, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
         sIntroScalePos = NULL;
@@ -94,6 +95,7 @@ Gfx *geo_title_screen(s32 state, struct GraphNode *sp54, UNUSED void *context) {
         scaleMat = alloc_display_list(sizeof(*scaleMat));
         dl = alloc_display_list(4 * sizeof(*dl));
         dlIter = dl;
+        if (scaleMat == NULL || dl == NULL) { return NULL; }
 
         // determine scale based on the frame counter
         if (sIntroFrameCounter >= 0 && sIntroFrameCounter < INTRO_STEPS_ZOOM_IN) {
@@ -152,6 +154,7 @@ Gfx *geo_intro_super_mario_64_logo(s32 state, struct GraphNode *node, UNUSED voi
         graphNode->flags = (graphNode->flags & 0xFF) | (LAYER_OPAQUE << 8);
         scaleMat = alloc_display_list(sizeof(*scaleMat));
         dl = alloc_display_list(4 * sizeof(*dl));
+        if (scaleMat == NULL || dl == NULL) { return NULL; }
         dlIter = dl;
 
         // determine scale based on the frame counter
@@ -200,6 +203,7 @@ Gfx *geo_intro_tm_copyright(s32 state, struct GraphNode *node, UNUSED void *cont
         sTmCopyrightAlpha = 0;
     } else if (state == 1) {  // draw
         dl = alloc_display_list(5 * sizeof(*dl));
+        if (dl == NULL) { return NULL; }
         dlIter = dl;
         gSPDisplayList(dlIter++, dl_proj_mtx_fullscreen);
         gDPSetEnvColor(dlIter++, 255, 255, 255, sTmCopyrightAlpha);
@@ -257,6 +261,7 @@ static Gfx *intro_backdrop_one_image(s32 index, s8 *backgroundTable) {
 
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Gfx *displayList = alloc_display_list(36 * sizeof(*displayList));
+    if (mtx == NULL || displayList == NULL) { return NULL; }
     Gfx *displayListIter = displayList;
     const u8 *const *vIntroBgTable = segmented_to_virtual(textureTables[backgroundTable[index]]);
     s32 i;
@@ -299,6 +304,7 @@ Gfx *geo_intro_regular_backdrop(s32 state, struct GraphNode *node, UNUSED void *
 
     if (state == 1) {  // draw
         dl = alloc_display_list(((num_tiles_h*3)+4) * sizeof(*dl));
+        if (dl == NULL) { return NULL; }
         dlIter = dl;
         graphNode->node.flags = (graphNode->node.flags & 0xFF) | (LAYER_OPAQUE << 8);
         gSPDisplayList(dlIter++, &dl_proj_mtx_fullscreen);
@@ -338,6 +344,7 @@ Gfx *geo_intro_gameover_backdrop(s32 state, struct GraphNode *node, UNUSED void 
             gameOverBackgroundTable[i] = INTRO_BACKGROUND_GAME_OVER;
     } else {  // draw
         dl = alloc_display_list(((num_tiles_h*3)+4) * sizeof(*dl));
+        if (dl == NULL) { return NULL; }
         dlIter = dl;
         if (sGameOverTableIndex == -2) {
             if (sGameOverFrameCounter == 180) {

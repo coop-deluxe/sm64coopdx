@@ -26,9 +26,13 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         if (SysPath(dir->d_name) == "..") continue;
 
         // If pack folder exists, generate bins
-        SysPath _PackFolder = fstring("%s/%s/actors", directory, dir->d_name);
-        if (fs_sys_dir_exists(_PackFolder.c_str())) {
-            DynOS_Gfx_GeneratePack(_PackFolder);
+        SysPath _LevelPackFolder = fstring("%s/%s/levels", directory, dir->d_name);
+        if (fs_sys_dir_exists(_LevelPackFolder.c_str())) {
+            DynOS_Lvl_GeneratePack(_LevelPackFolder);
+        }
+        SysPath _ActorPackFolder = fstring("%s/%s/actors", directory, dir->d_name);
+        if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
+            DynOS_Actor_GeneratePack(_ActorPackFolder);
         }
     }
 
@@ -53,7 +57,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
 
                 // Scan folder for subfolders to convert into .bin files
                 _Pack->mPath = _PackFolder;
-                DynOS_Gfx_GeneratePack(_PackFolder);
+                DynOS_Actor_GeneratePack(_PackFolder);
 
                 // Add pack to pack list
                 pDynosPacks.Add(_Pack);
@@ -70,11 +74,11 @@ Array<String> DynOS_Gfx_Init() {
 
     // Alloc and init the actors gfx list
     Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
-    pActorGfxList.Resize(DynOS_Geo_GetActorCount());
-    for (s32 i = 0; i != DynOS_Geo_GetActorCount(); ++i) {
+    pActorGfxList.Resize(DynOS_Actor_GetCount());
+    for (s32 i = 0; i != DynOS_Actor_GetCount(); ++i) {
         pActorGfxList[i].mPackIndex = -1;
         pActorGfxList[i].mGfxData   = NULL;
-        pActorGfxList[i].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(i), false);
+        pActorGfxList[i].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Actor_GetLayoutFromIndex(i), false);
     }
 
     // Scan the DynOS packs folder

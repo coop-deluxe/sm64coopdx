@@ -223,7 +223,6 @@ extern const u8 snow_09009800[];
 // spooky
 extern const u8 spooky_09000000[];
 extern const u8 spooky_09000800[];
-extern const u8 spooky_09001000[];
 extern const u8 spooky_09001800[];
 extern const u8 spooky_09002800[];
 extern const u8 spooky_09003800[];

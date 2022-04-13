@@ -45,8 +45,16 @@ const struct DialogEntry *const seg2_debug_text_table[] = {
 #include "dialogs.h"
 
 #undef DEFINE_DIALOG
+#define DEFINE_DIALOG(id, _1, _2, _3, _4, _5) dialog_text_ ## id,
+
+const u8* seg2_dialog_original[] = {
+#include "dialogs.h"
+    NULL
+};
+
+#undef DEFINE_DIALOG
 #define DEFINE_DIALOG(id, unused, linesPerBox, leftOffset, width, _) \
-    static const struct DialogEntry dialog_entry_ ## id = { \
+    static struct DialogEntry dialog_entry_ ## id = { \
         unused, linesPerBox, leftOffset, width, dialog_text_ ## id \
     };
 
@@ -59,7 +67,6 @@ const struct DialogEntry *const seg2_dialog_table[] = {
 #include "dialogs.h"
     NULL
 };
-
 
 // == courses ==
 // (defines en_course_name_table etc.)
@@ -97,7 +104,12 @@ const struct DialogEntry *const seg2_dialog_table[] = {
     act_name_ ## id ## _4, act_name_ ## id ## _5, act_name_ ## id ## _6,
 #define EXTRA_TEXT(id, str) extra_text_ ## id,
 
-const u8 *const seg2_act_name_table[] = {
+const u8* seg2_act_name_table[] = {
+#include "courses.h"
+    NULL
+};
+
+const u8* seg2_act_name_table_original[] = {
 #include "courses.h"
     NULL
 };

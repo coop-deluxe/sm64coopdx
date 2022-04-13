@@ -12,6 +12,7 @@
 #include "memory.h"
 #include "segment_symbols.h"
 #include "segments.h"
+#include "pc/debuglog.h"
 
 // round up to the next multiple
 #define ALIGN4(val) (((val) + 0x3) & ~0x3)
@@ -132,6 +133,9 @@ void *main_pool_alloc(u32 size, u32 side) {
             addr = (u8 *) sPoolListHeadR + 16;
         }
     }
+    if (addr == NULL) {
+        LOG_ERROR("Main pool alloc failed!");
+    }
     return addr;
 }
 
@@ -176,6 +180,9 @@ void *main_pool_realloc(void *addr, u32 size) {
     if (block->next == sPoolListHeadL) {
         main_pool_free(addr);
         newAddr = main_pool_alloc(size, MEMORY_POOL_LEFT);
+    }
+    if (addr == NULL) {
+        LOG_ERROR("Main pool realloc failed!");
     }
     return newAddr;
 }
@@ -259,6 +266,9 @@ struct AllocOnlyPool *alloc_only_pool_init(u32 size, u32 side) {
         subPool->startPtr = (u8 *) addr + sizeof(struct AllocOnlyPool);
         subPool->freePtr = (u8 *) addr + sizeof(struct AllocOnlyPool);
     }
+    if (addr == NULL) {
+        LOG_ERROR("Alloc only pool init failed!");
+    }
     return subPool;
 }
 
@@ -274,6 +284,9 @@ void *alloc_only_pool_alloc(struct AllocOnlyPool *pool, s32 size) {
         addr = pool->freePtr;
         pool->freePtr += size;
         pool->usedSpace += size;
+    }
+    if (addr == NULL) {
+        LOG_ERROR("Alloc only pool alloc failed!");
     }
     return addr;
 }
@@ -291,6 +304,9 @@ struct AllocOnlyPool *alloc_only_pool_resize(struct AllocOnlyPool *pool, u32 siz
     newPool = main_pool_realloc(pool, size + sizeof(struct AllocOnlyPool));
     if (newPool != NULL) {
         pool->totalSpace = size;
+    }
+    if (newPool == NULL) {
+        LOG_ERROR("Alloc only pool realloc failed!");
     }
     return newPool;
 }
@@ -318,6 +334,9 @@ struct MemoryPool *mem_pool_init(u32 size, u32 side) {
         block->next = NULL;
         block->size = pool->totalSpace;
     }
+    if (addr == NULL) {
+        LOG_ERROR("Mem pool init failed!");
+    }
     return pool;
 }
 
@@ -344,6 +363,9 @@ void *mem_pool_alloc(struct MemoryPool *pool, u32 size) {
             break;
         }
         freeBlock = freeBlock->next;
+    }
+    if (addr == NULL) {
+        LOG_ERROR("Mem pool alloc failed!");
     }
     return addr;
 }
@@ -398,6 +420,7 @@ void *alloc_display_list(u32 size) {
         gGfxPoolEnd -= size;
         ptr = gGfxPoolEnd;
     } else {
+        LOG_ERROR("Failed to alloc display list!");
     }
     return ptr;
 }

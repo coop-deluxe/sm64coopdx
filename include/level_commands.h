@@ -91,7 +91,7 @@
 
 
 #define SKIP_IF(op, arg) \
-    CMD_BBBB(0x0E, 0x08, op, 0) \
+    CMD_BBBB(0x0E, 0x08, op, 0), \
     CMD_W(arg)
 
 #define SKIP() \
@@ -281,5 +281,35 @@
 
 #define CLEAR_DEMO_PTR() \
     CMD_BBH(0x3E, 0x04, 0x0000)
+
+// coop
+
+#define OBJECT_WITH_ACTS_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBBB(0x3F, 0x18, acts, model), \
+    CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
+    CMD_W(behParam), \
+    CMD_PTR(beh)
+
+#define OBJECT_WITH_ACTS_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBBB(0x40, 0x1C, acts, 0), \
+    CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
+    CMD_W(behParam), \
+    CMD_PTR(model), \
+    CMD_PTR(beh)
+
+#define OBJECT_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
+    OBJECT_WITH_ACTS_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, 0x1F)
+
+#define OBJECT_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
+    OBJECT_WITH_ACTS_EXT2(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, 0x1F)
+
+#define LOAD_MODEL_FROM_GEO_EXT(model, geo) \
+    CMD_BBH(0x41, 0x08, model), \
+    CMD_PTR(geo)
+
+#define JUMP_AREA_EXT(op, arg, target) \
+    CMD_BBBB(0x42, 0x0C, op, 0x00), \
+    CMD_W(arg), \
+    CMD_PTR(target)
 
 #endif // LEVEL_COMMANDS_H

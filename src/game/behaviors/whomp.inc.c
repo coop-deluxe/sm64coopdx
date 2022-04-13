@@ -34,7 +34,7 @@ void whomp_act_0(void) {
                 cur_obj_set_pos_to_home();
                 o->oHealth = 3;
             }
-        } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, DIALOG_114, whomp_act_0_continue_dialog)) {
+        } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDialog, whomp_act_0_continue_dialog)) {
             o->oAction = 2;
             network_send_object(o);
         }
@@ -233,7 +233,7 @@ u8 whomp_act_8_continue_dialog(void) { return o->oAction == 8; }
 void whomp_act_8(void) {
     if (o->oBehParams2ndByte != 0) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, DIALOG_115, whomp_act_8_continue_dialog)) {
+        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDefeatDialog, whomp_act_8_continue_dialog)) {
             obj_set_angle(o, 0, 0, 0);
             cur_obj_hide();
             cur_obj_become_intangible();
@@ -241,7 +241,10 @@ void whomp_act_8(void) {
             spawn_triangle_break_particles(20, 138, 3.0f, 4);
             cur_obj_shake_screen(SHAKE_POS_SMALL);
             o->oPosY += 100.0f;
-            spawn_default_star(180.0f, 3880.0f, 340.0f);
+
+            f32* starPos = gLevelValues.starPositions.KingWhompStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
+
             cur_obj_play_sound_2(SOUND_OBJ_KING_WHOMP_DEATH);
             o->oAction = 9;
             network_send_object(o);

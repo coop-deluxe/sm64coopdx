@@ -370,7 +370,7 @@ void append_snowflake_vertex_buffer(Gfx *gfx, s32 index, Vec3s vertex1, Vec3s ve
     Vtx *vertBufInterpolated = (Vtx *) alloc_display_list(15 * sizeof(Vtx));
     Vtx *v;
 
-    if (vertBuf == NULL) {
+    if (vertBuf == NULL || vertBufInterpolated == NULL) {
         return;
     }
 

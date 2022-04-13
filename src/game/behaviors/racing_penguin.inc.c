@@ -1,25 +1,25 @@
 struct RacingPenguinData {
-    s16 text;
-    f32 radius;
-    f32 height;
+    s16* text;
+    f32* radius;
+    f32* height;
 };
 
 static struct RacingPenguinData sRacingPenguinData[] = {
-    { DIALOG_055, 200.0f, 200.0f },
-    { DIALOG_164, 350.0f, 250.0f },
+    { (s16*) &gBehaviorValues.dialogs.RacingPenguinStartDialog, &gBehaviorValues.RacingPenguinRadius, &gBehaviorValues.RacingPenguinHeight },
+    { (s16*) &gBehaviorValues.dialogs.RacingPenguinBigStartDialog, &gBehaviorValues.RacingPenguinBigRadius, &gBehaviorValues.RacingPenguinBigHeight },
 };
 
 static u32 penguinPathedStartWaypoint = 0;
 static u32 penguinPathedPrevWaypoint = 0;
 
 static void bhv_racing_penguin_the_quick_on_received_post(UNUSED u8 fromLocalIndex) {
-    void* path = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+    void* path = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
     o->oPathedStartWaypoint = (struct Waypoint*)path + penguinPathedStartWaypoint;
     o->oPathedPrevWaypoint  = (struct Waypoint*)path + penguinPathedPrevWaypoint;
 }
 
 static void bhv_racing_penguin_the_quick_on_sent_pre(void) {
-    void* path = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+    void* path = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
     penguinPathedStartWaypoint = ((void*)o->oPathedStartWaypoint - path) / sizeof(struct Waypoint*);
     penguinPathedPrevWaypoint  = ((void*)o->oPathedPrevWaypoint - path) / sizeof(struct Waypoint*);
 }
@@ -32,8 +32,8 @@ void bhv_racing_penguin_the_quick_override_ownership(u8* shouldOverride, u8* sho
 void bhv_racing_penguin_run_once(void) {
     cur_obj_align_gfx_with_floor();
     cur_obj_push_mario_away_from_cylinder(
-        sRacingPenguinData[o->oBehParams2ndByte].radius,
-        sRacingPenguinData[o->oBehParams2ndByte].height);
+        *sRacingPenguinData[o->oBehParams2ndByte].radius,
+        *sRacingPenguinData[o->oBehParams2ndByte].height);
 }
 
 void bhv_racing_penguin_init(void) {
@@ -93,7 +93,7 @@ static void racing_penguin_act_wait_for_mario(void) {
 u8 racing_penguin_act_show_init_text_continue_dialog(void) { return o->oAction == RACING_PENGUIN_ACT_SHOW_INIT_TEXT; }
 
 static void racing_penguin_act_show_init_text(void) {
-    s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
+    s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], *sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
 
     if (response == 1) {
         struct Object *child;
@@ -105,7 +105,7 @@ static void racing_penguin_act_show_init_text(void) {
         child->parentObj = o;
 
         o->oPathedStartWaypoint = o->oPathedPrevWaypoint =
-            segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+            segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
         o->oPathedPrevWaypointFlags = 0;
 
         o->oAction = RACING_PENGUIN_ACT_PREPARE_FOR_RACE;
@@ -141,7 +141,7 @@ static void racing_penguin_act_race(void) {
         child = cur_obj_nearest_object_with_behavior(bhvPenguinRaceShortcutCheck);
         child->parentObj = o;
 
-        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(ccm_seg7_trajectory_penguin_race);
+        o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
         o->oPathedPrevWaypointFlags = 0;
     }
 
@@ -227,13 +227,13 @@ static void racing_penguin_act_show_final_text(void) {
             if (cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
                 if (o->oRacingPenguinMarioWon) {
                     if (o->oRacingPenguinMarioCheated) {
-                        o->oRacingPenguinFinalTextbox = DIALOG_132;
+                        o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinCheatDialog;
                         o->oRacingPenguinMarioWon = FALSE;
                     } else {
-                        o->oRacingPenguinFinalTextbox = DIALOG_056;
+                        o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinWinDialog;
                     }
                 } else {
-                    o->oRacingPenguinFinalTextbox = DIALOG_037;
+                    o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinLostDialog;
                 }
             }
         } else {
@@ -251,10 +251,12 @@ static void racing_penguin_act_show_final_text(void) {
             o->oTimer = 0;
         }
     } else if (o->oRacingPenguinMarioWon) {
+
+    f32* starPos = gLevelValues.starPositions.RacingPenguinStarPos;
 #ifdef VERSION_JP
-        spawn_default_star(-7339.0f, -5700.0f, -6774.0f);
+        spawn_default_star(starPos[0], starPos[1], starPos[2]);
 #else
-        cur_obj_spawn_star_at_y_offset(-7339.0f, -5700.0f, -6774.0f, 200.0f);
+        cur_obj_spawn_star_at_y_offset(starPos[0], starPos[1], starPos[2], 200.0f);
 #endif
         o->oRacingPenguinMarioWon = FALSE;
         if (network_owns_object(o)) { network_send_object(o); }

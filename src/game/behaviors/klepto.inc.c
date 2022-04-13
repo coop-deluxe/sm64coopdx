@@ -427,7 +427,8 @@ void bhv_klepto_update(void) {
                 }
 
             } else if (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_STAR) {
-                struct Object *star = spawn_default_star(-5550.0f, 300.0f, -930.0f);
+                f32* starPos = gLevelValues.starPositions.KleptoStarPos;
+                struct Object* star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
                 // If we're not the closet to Klepto,
                 // Don't play the cutscene!

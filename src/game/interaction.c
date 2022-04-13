@@ -24,6 +24,7 @@
 #include "sm64.h"
 #include "sound_init.h"
 #include "rumble_init.h"
+#include "hardcoded.h"
 
 #include "pc/configfile.h"
 #include "pc/network/network.h"
@@ -1062,7 +1063,7 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
     if (m->action == ACT_WALKING || m->action == ACT_DECELERATING) {
         if (warpDoorId == 1 && !(saveFlags & SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR)) {
             if (!(saveFlags & SAVE_FLAG_HAVE_KEY_2)) {
-                if (display_door_dialog(m, (saveFlags & SAVE_FLAG_HAVE_KEY_1) ? DIALOG_023 : DIALOG_022)) {
+                if (display_door_dialog(m, (saveFlags & SAVE_FLAG_HAVE_KEY_1) ? gBehaviorValues.dialogs.KeyDoor1HaveDialog : gBehaviorValues.dialogs.KeyDoor1DontHaveDialog)) {
                     sDisplayingDoorText = TRUE;
                 }
                 return FALSE;
@@ -1073,7 +1074,7 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
 
         if (warpDoorId == 2 && !(saveFlags & SAVE_FLAG_UNLOCKED_BASEMENT_DOOR)) {
             if (!(saveFlags & SAVE_FLAG_HAVE_KEY_1)) {
-                if (display_door_dialog(m, (saveFlags & SAVE_FLAG_HAVE_KEY_2) ? DIALOG_023 : DIALOG_022)) {
+                if (display_door_dialog(m, (saveFlags & SAVE_FLAG_HAVE_KEY_2) ? gBehaviorValues.dialogs.KeyDoor2HaveDialog : gBehaviorValues.dialogs.KeyDoor2DontHaveDialog)) {
                     sDisplayingDoorText = TRUE;
                 }
                 return FALSE;
@@ -1179,26 +1180,26 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
 
             return set_mario_action(m, enterDoorAction, actionArg);
         } else if (!sDisplayingDoorText) {
-            u32 text = DIALOG_022 << 16;
+            u32 text = gBehaviorValues.dialogs.DoorNeedKeyDialog << 16;
 
             switch (requiredNumStars) {
                 case 1:
-                    text = DIALOG_024 << 16;
+                    text = gBehaviorValues.dialogs.DoorNeed1StarDialog << 16;
                     break;
                 case 3:
-                    text = DIALOG_025 << 16;
+                    text = gBehaviorValues.dialogs.DoorNeed3StarsDialog << 16;
                     break;
                 case 8:
-                    text = DIALOG_026 << 16;
+                    text = gBehaviorValues.dialogs.DoorNeed8StarsDialog << 16;
                     break;
                 case 30:
-                    text = DIALOG_027 << 16;
+                    text = gBehaviorValues.dialogs.DoorNeed30StarsDialog << 16;
                     break;
                 case 50:
-                    text = DIALOG_028 << 16;
+                    text = gBehaviorValues.dialogs.DoorNeed50StarsDialog << 16;
                     break;
                 case 70:
-                    text = DIALOG_029 << 16;
+                    text = gBehaviorValues.dialogs.DoorNeed70StarsDialog << 16;
                     break;
             }
 
@@ -2244,7 +2245,8 @@ void pss_end_slide(struct MarioState *m) {
             // PSS secret star uses oBehParams to spawn
             s32 tmp = m->marioObj->oBehParams;
             m->marioObj->oBehParams = (1 << 24);
-            spawn_default_star(-6358.0f, -4300.0f, 4700.0f);
+            f32* starPos = gLevelValues.starPositions.PssSlideStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
             m->marioObj->oBehParams = tmp;
         }
         gPssSlideStarted = FALSE;

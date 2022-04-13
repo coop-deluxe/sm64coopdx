@@ -268,3 +268,68 @@ function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     if flags == nil then flags = 0 end
     return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
 end
+
+-------------
+-- courses --
+-------------
+
+--- @type integer
+COURSE_NONE     = 0
+--- @type integer
+COURSE_BOB      = 1
+--- @type integer
+COURSE_WF       = 2
+--- @type integer
+COURSE_JRB      = 3
+--- @type integer
+COURSE_CCM      = 4
+--- @type integer
+COURSE_BBH      = 5
+--- @type integer
+COURSE_HMC      = 6
+--- @type integer
+COURSE_LLL      = 7
+--- @type integer
+COURSE_SSL      = 8
+--- @type integer
+COURSE_DDD      = 9
+--- @type integer
+COURSE_SL       = 10
+--- @type integer
+COURSE_WDW      = 11
+--- @type integer
+COURSE_TTM      = 12
+--- @type integer
+COURSE_THI      = 13
+--- @type integer
+COURSE_TTC      = 14
+--- @type integer
+COURSE_RR       = 15
+--- @type integer
+COURSE_BITDW    = 16
+--- @type integer
+COURSE_BITFS    = 17
+--- @type integer
+COURSE_BITS     = 18
+--- @type integer
+COURSE_PSS      = 19
+--- @type integer
+COURSE_COTMC    = 20
+--- @type integer
+COURSE_TOTWC    = 21
+--- @type integer
+COURSE_VCUTM    = 22
+--- @type integer
+COURSE_WMOTR    = 23
+--- @type integer
+COURSE_SA       = 24
+--- @type integer
+COURSE_CAKE_END = 25
+--- @type integer
+COURSE_END = 26
+--- @type integer
+COURSE_MAX = 25
+--- @type integer
+COURSE_COUNT = 25
+--- @type integer
+COURSE_MIN = 1

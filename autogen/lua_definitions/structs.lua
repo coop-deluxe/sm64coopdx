@@ -41,6 +41,136 @@
 --- @field public terrainType integer
 --- @field public warpNodes ObjectWarpNode
 
+--- @class BehaviorDialogs
+--- @field public BobombBuddyBob1Dialog DialogId
+--- @field public BobombBuddyBob2Dialog DialogId
+--- @field public BobombBuddyOther1Dialog DialogId
+--- @field public BobombBuddyOther2Dialog DialogId
+--- @field public Bowser1DefeatedDialog DialogId
+--- @field public Bowser1Dialog DialogId
+--- @field public Bowser2DefeatedDialog DialogId
+--- @field public Bowser2Dialog DialogId
+--- @field public Bowser3Defeated120StarsDialog DialogId
+--- @field public Bowser3DefeatedDialog DialogId
+--- @field public Bowser3Dialog DialogId
+--- @field public CapswitchBaseDialog DialogId
+--- @field public CapswitchMetalDialog DialogId
+--- @field public CapswitchVanishDialog DialogId
+--- @field public CapswitchWingDialog DialogId
+--- @field public CastleEnterDialog DialogId
+--- @field public CollectedStarDialog DialogId
+--- @field public DefaultCutsceneDialog DialogId
+--- @field public DoorNeed1StarDialog DialogId
+--- @field public DoorNeed30StarsDialog DialogId
+--- @field public DoorNeed3StarsDialog DialogId
+--- @field public DoorNeed50StarsDialog DialogId
+--- @field public DoorNeed70StarsDialog DialogId
+--- @field public DoorNeed8StarsDialog DialogId
+--- @field public DoorNeedKeyDialog DialogId
+--- @field public EyerokDefeatedDialog DialogId
+--- @field public EyerokIntroDialog DialogId
+--- @field public GhostHuntAfterDialog DialogId
+--- @field public GhostHuntDialog DialogId
+--- @field public HootIntroDialog DialogId
+--- @field public HootTiredDialog DialogId
+--- @field public HundredCoinsDialog DialogId
+--- @field public IntroPipeDialog DialogId
+--- @field public KeyDoor1DontHaveDialog DialogId
+--- @field public KeyDoor1HaveDialog DialogId
+--- @field public KeyDoor2DontHaveDialog DialogId
+--- @field public KeyDoor2HaveDialog DialogId
+--- @field public KingBobombCheatDialog DialogId
+--- @field public KingBobombDefeatDialog DialogId
+--- @field public KingBobombIntroDialog DialogId
+--- @field public KingWhompDefeatDialog DialogId
+--- @field public KingWhompDialog DialogId
+--- @field public KoopaQuickBobStartDialog DialogId
+--- @field public KoopaQuickBobWinDialog DialogId
+--- @field public KoopaQuickCheatedDialog DialogId
+--- @field public KoopaQuickLostDialog DialogId
+--- @field public KoopaQuickThiStartDialog DialogId
+--- @field public KoopaQuickThiWinDialog DialogId
+--- @field public LakituIntroDialog DialogId
+--- @field public MetalCourseDialog DialogId
+--- @field public Mips1Dialog DialogId
+--- @field public Mips2Dialog DialogId
+--- @field public PeachLetterDialog DialogId
+--- @field public RacingPenguinBigStartDialog DialogId
+--- @field public RacingPenguinCheatDialog DialogId
+--- @field public RacingPenguinLostDialog DialogId
+--- @field public RacingPenguinStartDialog DialogId
+--- @field public RacingPenguinWinDialog DialogId
+--- @field public SnowmanHeadAfterDialog DialogId
+--- @field public SnowmanHeadBodyDialog DialogId
+--- @field public SnowmanHeadDialog DialogId
+--- @field public SnowmanWindDialog DialogId
+--- @field public StarCollectionBaseDialog DialogId
+--- @field public StarDoorDialog DialogId
+--- @field public ToadStar1AfterDialog DialogId
+--- @field public ToadStar1Dialog DialogId
+--- @field public ToadStar2AfterDialog DialogId
+--- @field public ToadStar2Dialog DialogId
+--- @field public ToadStar3AfterDialog DialogId
+--- @field public ToadStar3Dialog DialogId
+--- @field public TuxieMotherBabyFoundDialog DialogId
+--- @field public TuxieMotherBabyWrongDialog DialogId
+--- @field public TuxieMotherDialog DialogId
+--- @field public UkikiCageDialog DialogId
+--- @field public UkikiCapGiveDialog DialogId
+--- @field public UkikiCapStealDialog DialogId
+--- @field public UkikiHeldDialog DialogId
+--- @field public VanishCourseDialog DialogId
+--- @field public WigglerAttack1Dialog DialogId
+--- @field public WigglerAttack2Dialog DialogId
+--- @field public WigglerAttack3Dialog DialogId
+--- @field public WigglerDialog DialogId
+--- @field public WingCourseDialog DialogId
+--- @field public YoshiDialog DialogId
+
+--- @class BehaviorTrajectories
+--- @field public BowlingBallBob2Trajectory Pointer_Trajectory
+--- @field public BowlingBallBobTrajectory Pointer_Trajectory
+--- @field public BowlingBallTtmTrajectory Pointer_Trajectory
+--- @field public KoopaBobTrajectory Pointer_Trajectory
+--- @field public KoopaThiTrajectory Pointer_Trajectory
+--- @field public Mips10Trajectory Pointer_Trajectory
+--- @field public Mips2Trajectory Pointer_Trajectory
+--- @field public Mips3Trajectory Pointer_Trajectory
+--- @field public Mips4Trajectory Pointer_Trajectory
+--- @field public Mips5Trajectory Pointer_Trajectory
+--- @field public Mips6Trajectory Pointer_Trajectory
+--- @field public Mips7Trajectory Pointer_Trajectory
+--- @field public Mips8Trajectory Pointer_Trajectory
+--- @field public Mips9Trajectory Pointer_Trajectory
+--- @field public MipsTrajectory Pointer_Trajectory
+--- @field public PlatformBitfsTrajectory Pointer_Trajectory
+--- @field public PlatformCcmTrajectory Pointer_Trajectory
+--- @field public PlatformHmcTrajectory Pointer_Trajectory
+--- @field public PlatformLll2Trajectory Pointer_Trajectory
+--- @field public PlatformLllTrajectory Pointer_Trajectory
+--- @field public PlatformRr2Trajectory Pointer_Trajectory
+--- @field public PlatformRr3Trajectory Pointer_Trajectory
+--- @field public PlatformRr4Trajectory Pointer_Trajectory
+--- @field public PlatformRrTrajectory Pointer_Trajectory
+--- @field public RacingPenguinTrajectory Pointer_Trajectory
+--- @field public SnowmanHeadTrajectory Pointer_Trajectory
+--- @field public Unagi2Trajectory Pointer_Trajectory
+--- @field public UnagiTrajectory Pointer_Trajectory
+
+--- @class BehaviorValues
+--- @field public KoopaBobAgility number
+--- @field public KoopaCatchupAgility number
+--- @field public KoopaThiAgility number
+--- @field public RacingPenguinBigHeight number
+--- @field public RacingPenguinBigRadius number
+--- @field public RacingPenguinHeight number
+--- @field public RacingPenguinRadius number
+--- @field public ToadStar1Requirement integer
+--- @field public ToadStar2Requirement integer
+--- @field public ToadStar3Requirement integer
+--- @field public dialogs BehaviorDialogs
+--- @field public trajectories BehaviorTrajectories
+
 --- @class BullyCollisionData
 --- @field public conversionRatio number
 --- @field public posX number
@@ -439,6 +569,13 @@
 --- @field public unusedVec1 Vec3f
 --- @field public unusedVec2 Vec3s
 --- @field public yaw integer
+
+--- @class LevelValues
+--- @field public entryLevel LevelNum
+--- @field public exitCastleArea integer
+--- @field public exitCastleLevel LevelNum
+--- @field public exitCastleWarpNode integer
+--- @field public starPositions StarPositions
 
 --- @class LinearTransitionPoint
 --- @field public dist number
@@ -1427,6 +1564,34 @@
 --- @field public velYBase integer
 --- @field public velYRange integer
 
+--- @class StarPositions
+--- @field public BalconyBooStarPos Vec3f
+--- @field public BigBullyStarPos Vec3f
+--- @field public BigBullyTrioStarPos Vec3f
+--- @field public BigPiranhasStarPos Vec3f
+--- @field public CcmSlideStarPos Vec3f
+--- @field public ChillBullyStarPos Vec3f
+--- @field public EyerockStarPos Vec3f
+--- @field public GhostHuntBooStarPos Vec3f
+--- @field public JetstreamRingStarPos Vec3f
+--- @field public KingBobombStarPos Vec3f
+--- @field public KingWhompStarPos Vec3f
+--- @field public KleptoStarPos Vec3f
+--- @field public KoopaBobStarPos Vec3f
+--- @field public KoopaThiStarPos Vec3f
+--- @field public MantaRayStarPos Vec3f
+--- @field public MerryGoRoundStarPos Vec3f
+--- @field public MrIStarPos Vec3f
+--- @field public PssSlideStarPos Vec3f
+--- @field public RacingPenguinStarPos Vec3f
+--- @field public SnowmanHeadStarPos Vec3f
+--- @field public TreasureChestStarPos Vec3f
+--- @field public TreasureJrbStarPos Vec3f
+--- @field public TuxieMotherStarPos Vec3f
+--- @field public UkikiCageStarPos Vec3f
+--- @field public UnagiStarPos Vec3f
+--- @field public WigglerStarPos Vec3f
+
 --- @class Struct802A272C
 --- @field public vecF Vec3f
 --- @field public vecS Vec3s
@@ -1533,6 +1698,7 @@
 --- @field public z integer
 
 --- @class Pointer_integer
+--- @class Pointer_Trajectory
 --- @class Pointer_ObjectAnimPointer
 --- @class Pointer_Collision
 --- @class Pointer_BehaviorScript

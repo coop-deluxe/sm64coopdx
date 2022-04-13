@@ -28,6 +28,7 @@
 #include "sound_init.h"
 #include "rumble_init.h"
 #include "obj_behaviors.h"
+#include "hardcoded.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
@@ -240,10 +241,15 @@ static void stub_is_textbox_active(u16 *a0) {
 s32 get_star_collection_dialog(struct MarioState *m) {
     s32 dialogID = 0;
 
+    if (smlua_call_event_hooks_ret_int(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
+        m->prevNumStarsForDialog = m->numStars;
+        return dialogID;
+    }
+
     for (s32 i = 0; i < ARRAY_COUNT(sStarsNeededForDialog); i++) {
         s32 numStarsRequired = sStarsNeededForDialog[i];
         if (m->prevNumStarsForDialog < numStarsRequired && m->numStars >= numStarsRequired) {
-            dialogID = i + DIALOG_141;
+            dialogID = i + gBehaviorValues.dialogs.StarCollectionBaseDialog;
             break;
         }
     }
@@ -693,7 +699,9 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                     level_trigger_warp(m, WARP_OP_STAR_EXIT);
                 } else if (m->playerIndex == 0) {
                     enable_time_stop_if_alone();
-                    create_dialog_box_with_response(gLastCompletedStarNum == 7 ? DIALOG_013 : DIALOG_014);
+                    create_dialog_box_with_response((gLastCompletedStarNum == 7)
+                        ? gBehaviorValues.dialogs.HundredCoinsDialog
+                        : gBehaviorValues.dialogs.CollectedStarDialog);
                     m->actionState = 1;
                 } else {
                     set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
@@ -957,7 +965,7 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             if (m->playerIndex != 0) { allowRemoteStarSpawn = TRUE; }
             if (is_anim_at_end(m)) {
                 save_file_set_flags(get_door_save_file_flag(m->usedObj));
-                set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, DIALOG_038);
+                set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, gBehaviorValues.dialogs.StarDoorDialog);
             }
             break;
     }
@@ -1084,7 +1092,7 @@ s32 act_warp_door_spawn(struct MarioState *m) {
     } else if (m->usedObj == NULL || (m->usedObj->oAction == 0 || m->usedObj->oAction == 100)) {
         if (m->playerIndex == 0) {
             if (gNeverEnteredCastle == TRUE && gCurrLevelNum == LEVEL_CASTLE) {
-                set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, DIALOG_021);
+                set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, gBehaviorValues.dialogs.CastleEnterDialog);
             } else {
                 set_mario_action(m, ACT_IDLE, 0);
             }

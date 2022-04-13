@@ -33,10 +33,12 @@
 #endif
 
 // Static assertions
+#ifndef __cplusplus
 #ifdef __GNUC__
 #define STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
 #else
 #define STATIC_ASSERT(cond, msg) typedef char GLUE2(static_assertion_failed, __LINE__)[(cond) ? 1 : -1]
+#endif
 #endif
 
 // Align to 8-byte boundary for DMA requirements

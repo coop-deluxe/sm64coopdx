@@ -4,6 +4,7 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "behavior_table.h"
+#include "src/game/hardcoded.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
 #endif
@@ -109,12 +110,20 @@ bool network_init(enum NetworkType inNetworkType) {
     gNetworkType = inNetworkType;
 
     if (gNetworkType == NT_SERVER) {
+        extern s16 gCurrSaveFileNum;
+        gCurrSaveFileNum = configHostSaveSlot;
+
         mods_activate(&gLocalMods);
         smlua_init();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
+
+        if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
+            extern s16 gChangeLevelTransition;
+            gChangeLevelTransition = gLevelValues.entryLevel;
+        }
 
         djui_chat_box_create();
     }
@@ -167,6 +176,9 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
         || (packetType == PACKET_ACK)
         || (packetType == PACKET_MOD_LIST_REQUEST)
         || (packetType == PACKET_MOD_LIST)
+        || (packetType == PACKET_MOD_LIST_ENTRY)
+        || (packetType == PACKET_MOD_LIST_FILE)
+        || (packetType == PACKET_MOD_LIST_DONE)
         || (packetType == PACKET_DOWNLOAD_REQUEST)
         || (packetType == PACKET_DOWNLOAD)
         || (packetType == PACKET_KEEP_ALIVE)

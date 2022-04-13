@@ -115,6 +115,7 @@
 #ifdef BETTERCAMERA
 #define CAMERA_MODE_NEWCAM            0x12
 #endif
+#define CAMERA_MODE_ROM_HACK          0x13
 
 #define CAM_MOVE_RETURN_TO_MIDDLE       0x0001
 #define CAM_MOVE_ZOOMED_OUT             0x0002
@@ -674,6 +675,7 @@ extern s32 gObjCutsceneDone;
 extern struct Camera *gCamera;
 #endif
 
+extern u8 gCameraUseCourseSpecificSettings;
 extern struct Object *gCutsceneFocus;
 extern struct Object *gSecondCameraFocus;
 extern u8 gRecentCutscene;
@@ -777,5 +779,7 @@ void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 y
 Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context);
 
 s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);
+
+void camera_set_use_course_specific_settings(u8 enable);
 
 #endif // CAMERA_H

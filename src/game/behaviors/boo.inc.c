@@ -508,9 +508,9 @@ static void boo_act_4(void) {
 
     // If there are no remaining "minion" boos, show the dialog of the Big Boo
     if (cur_obj_nearest_object_with_behavior(bhvGhostHuntBoo) == NULL) {
-        dialogID = DIALOG_108;
+        dialogID = gBehaviorValues.dialogs.GhostHuntAfterDialog;
     } else {
-        dialogID = DIALOG_107;
+        dialogID = gBehaviorValues.dialogs.GhostHuntDialog;
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
@@ -518,7 +518,7 @@ static void boo_act_4(void) {
         create_sound_spawner(SOUND_OBJ_DYING_ENEMY1);
         obj_mark_for_deletion(o);
 
-        if (dialogID == DIALOG_108) { // If the Big Boo should spawn, play the jingle
+        if (dialogID == (s32) gBehaviorValues.dialogs.GhostHuntAfterDialog) { // If the Big Boo should spawn, play the jingle
             play_puzzle_jingle();
         }
     }
@@ -654,17 +654,20 @@ static void big_boo_act_2(void) {
 }
 
 static void big_boo_spawn_ghost_hunt_star(void) {
-    spawn_default_star(980.0f, 1100.0f, 250.0f);
+    f32* starPos = gLevelValues.starPositions.GhostHuntBooStarPos;
+    spawn_default_star(starPos[0], starPos[1], starPos[2]);
 }
 
 static void big_boo_spawn_balcony_star(void) {
-    spawn_default_star(700.0f, 3200.0f, 1900.0f);
+    f32* starPos = gLevelValues.starPositions.BalconyBooStarPos;
+    spawn_default_star(starPos[0], starPos[1], starPos[2]);
 }
 
 static void big_boo_spawn_merry_go_round_star(void) {
     struct Object *merryGoRound;
 
-    spawn_default_star(-1600.0f, -2100.0f, 205.0f);
+    f32* starPos = gLevelValues.starPositions.MerryGoRoundStarPos;
+    spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
     merryGoRound = cur_obj_nearest_object_with_behavior(bhvMerryGoRound);
 

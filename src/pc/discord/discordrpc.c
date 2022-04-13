@@ -36,8 +36,8 @@
 
 extern s16 gCurrCourseNum;
 extern s16 gCurrActNum;
-extern u8 seg2_course_name_table[];
-extern u8 seg2_act_name_table[];
+extern u8* seg2_course_name_table[];
+extern u8* seg2_act_name_table[];
 
 static time_t lastUpdatedTime;
 

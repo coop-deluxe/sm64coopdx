@@ -278,6 +278,7 @@ static void geo_process_master_list(struct GraphNodeMasterList *node) {
 static void geo_process_ortho_projection(struct GraphNodeOrthoProjection *node) {
     if (node->node.children != NULL) {
         Mtx *mtx = alloc_display_list(sizeof(*mtx));
+        if (mtx == NULL) { return; }
         f32 left = (gCurGraphNodeRoot->x - gCurGraphNodeRoot->width) / 2.0f * node->scale;
         f32 right = (gCurGraphNodeRoot->x + gCurGraphNodeRoot->width) / 2.0f * node->scale;
         f32 top = (gCurGraphNodeRoot->y - gCurGraphNodeRoot->height) / 2.0f * node->scale;
@@ -302,6 +303,7 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
         u16 perspNorm;
         Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
         Mtx *mtx = alloc_display_list(sizeof(*mtx));
+        if (mtx == NULL || mtxInterpolated == NULL) { return; }
         f32 fovInterpolated;
 
 #ifdef VERSION_EU
@@ -413,6 +415,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     Mtx *rollMtx = alloc_display_list(sizeof(*rollMtx));
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (rollMtx == NULL || mtx == NULL || mtxInterpolated == NULL) { return; }
     Vec3f posInterpolated;
     Vec3f focusInterpolated;
 
@@ -476,6 +479,7 @@ static void geo_process_translation_rotation(struct GraphNodeTranslationRotation
     Vec3f translation;
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (mtx == NULL || mtxInterpolated == NULL) { return; }
 
     vec3s_to_vec3f(translation, node->translation);
     mtxf_rotate_zxy_and_translate(mtxf, translation, node->rotation);
@@ -505,6 +509,7 @@ static void geo_process_translation(struct GraphNodeTranslation *node) {
     Vec3f translation;
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (mtx == NULL || mtxInterpolated == NULL) { return; }
 
     vec3s_to_vec3f(translation, node->translation);
     mtxf_rotate_zxy_and_translate(mtxf, translation, gVec3sZero);
@@ -533,6 +538,7 @@ static void geo_process_rotation(struct GraphNodeRotation *node) {
     Mat4 mtxf;
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (mtx == NULL || mtxInterpolated == NULL) { return; }
     Vec3s rotationInterpolated;
 
     mtxf_rotate_zxy_and_translate(mtxf, gVec3fZero, node->rotation);
@@ -568,6 +574,7 @@ static void geo_process_scale(struct GraphNodeScale *node) {
     Vec3f scaleVec;
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (mtx == NULL || mtxInterpolated == NULL) { return; }
 
     vec3f_set(scaleVec, node->scale, node->scale, node->scale);
     mtxf_scale_vec3f(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex], scaleVec);
@@ -596,6 +603,7 @@ static void geo_process_billboard(struct GraphNodeBillboard *node) {
     Vec3f translation;
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (mtx == NULL || mtxInterpolated == NULL) { return; }
 
     gMatStackIndex++;
     vec3s_to_vec3f(translation, node->translation);
@@ -706,6 +714,7 @@ static void geo_process_background(struct GraphNodeBackground *node) {
         Gfx *gfxStart = alloc_display_list(sizeof(Gfx) * 8);
 #endif
         Gfx *gfx = gfxStart;
+        if (gfx == NULL) { return; }
 
         gDPPipeSync(gfx++);
         gDPSetCycleType(gfx++, G_CYC_FILL);
@@ -776,6 +785,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     Vec3f translationInterpolated;
     Mtx *matrixPtr = alloc_display_list(sizeof(*matrixPtr));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (matrixPtr == NULL || mtxInterpolated == NULL) { return; }
     u16 *animAttribute = gCurrAnimAttribute;
     u8 animType = gCurAnimType;
 
@@ -945,6 +955,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
         if (shadowListInterpolated != NULL && shadowList != NULL) {
             mtx = alloc_display_list(sizeof(*mtx));
             mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+            if (mtx == NULL || mtxInterpolated == NULL) { return; }
             gMatStackIndex++;
 
             mtxf_translate(mtxf, shadowPos);
@@ -1190,6 +1201,7 @@ static void geo_process_object(struct Object *node) {
         if (obj_is_in_view(&node->header.gfx, gMatStack[gMatStackIndex])) {
             Mtx *mtx = alloc_display_list(sizeof(*mtx));
             Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+            if (mtx == NULL || mtxInterpolated == NULL) { return; }
 
             mtxf_to_mtx(mtx, gMatStack[gMatStackIndex]);
             gMatStackFixed[gMatStackIndex] = mtx;
@@ -1244,6 +1256,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
     Vec3f translation;
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     Mtx *mtxInterpolated = alloc_display_list(sizeof(*mtxInterpolated));
+    if (mtx == NULL || mtxInterpolated == NULL) { return; }
     Vec3f scaleInterpolated;
 
 #ifdef F3DEX_GBI_2
@@ -1442,11 +1455,13 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
     if (node->node.flags & GRAPH_RENDER_ACTIVE) {
         Mtx *initialMatrix;
         Vp *viewport = alloc_display_list(sizeof(*viewport));
+        if (viewport == NULL) { return; }
         Vp *viewportInterpolated = viewport;
 
         gDisplayListHeap = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool),
                                                 MEMORY_POOL_LEFT);
         initialMatrix = alloc_display_list(sizeof(*initialMatrix));
+        if (initialMatrix == NULL) { return; }
         gMatStackIndex = 0;
         gCurAnimType = 0;
         vec3s_set(viewport->vp.vtrans, node->x * 4, node->y * 4, 511);
@@ -1454,6 +1469,7 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         if (b != NULL) {
             clear_frame_buffer(clearColor);
             viewportInterpolated = alloc_display_list(sizeof(*viewportInterpolated));
+            if (viewportInterpolated == NULL) { return; }
             interpolate_vectors_s16(viewportInterpolated->vp.vtrans, sPrevViewport.vp.vtrans, b->vp.vtrans);
             interpolate_vectors_s16(viewportInterpolated->vp.vscale, sPrevViewport.vp.vscale, b->vp.vscale);
 

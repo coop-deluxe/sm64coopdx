@@ -1,5 +1,10 @@
 #include "dynos.cpp.h"
 extern "C" {
+#include "src/game/moving_texture.h"
+
+void *dynos_swap_cmd(void *cmd) {
+    return DynOS_SwapCmd(cmd);
+}
 
 // -- built in -- //
 
@@ -48,10 +53,10 @@ int dynos_packs_get_count(void) {
 }
 
 const char* dynos_packs_get(s32 index) {
-    std::string path = DynOS_Gfx_GetPacks()[index]->mPath;
+    const char* path = DynOS_Gfx_GetPacks()[index]->mPath.c_str();
 
     // extract basename
-    const char* cpath = path.c_str();
+    const char* cpath = path;
     const char* ctoken = cpath;
     while (*ctoken != '\0') {
         if (*ctoken == '/' || *ctoken == '\\') {
@@ -80,21 +85,59 @@ void dynos_generate_packs(const char* directory) {
 // -- geos -- //
 
 void dynos_add_actor_custom(const char *modPath, const char* geoName) {
-    DynOS_Geo_AddActorCustom(modPath, geoName);
+    DynOS_Actor_AddCustom(modPath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
-    return DynOS_Geo_GetActorLayoutFromName(name);
+    return DynOS_Actor_GetLayoutFromName(name);
 }
 
 // -- collisions -- //
 
-void dynos_add_collision_custom(const char *modPath, const char* collisionName) {
-    DynOS_Col_AddCollisionCustom(modPath, collisionName);
+void dynos_add_collision(const char *modPath, const char* collisionName) {
+    DynOS_Col_Activate(modPath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
-    return DynOS_Col_GetCollision(collisionName);
+    return DynOS_Col_Get(collisionName);
+}
+
+// -- movtexqcs -- //
+
+void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
+    DynOS_MovtexQC_Register(name, level, area, type);
+}
+
+struct MovtexQuadCollection* dynos_movtexqc_get_from_id(u32 id) {
+    DataNode<MovtexQC> *node = DynOS_MovtexQC_GetFromId(id);
+    if (node == NULL) { return NULL; }
+
+    return node->mData;
+}
+
+struct MovtexQuadCollection* dynos_movtexqc_get_from_index(s32 index) {
+    DataNode<MovtexQC> *node = DynOS_MovtexQC_GetFromIndex(index);
+    if (node == NULL) { return NULL; }
+
+    return node->mData;
+}
+
+// -- levels -- //
+
+void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
+    DynOS_Lvl_Activate(modIndex, modPath, levelName);
+}
+
+const char* dynos_level_get_token(u32 index) {
+    return DynOS_Lvl_GetToken(index);
+}
+
+Trajectory* dynos_level_get_trajectory(const char* name) {
+    return DynOS_Lvl_GetTrajectory(name);
+}
+
+void dynos_level_load_background(void *ptr) {
+    DynOS_Lvl_LoadBackground(ptr);
 }
 
 }

@@ -38,7 +38,11 @@ s8 D_8032F4FC[] = { 7, 8, 9, 12, 13, 14, 15, 4, 3, 16, 17, 19, 3, 3, 3, 3 };
 s16 D_8032F50C[] = { 60, 0 };
 s16 D_8032F510[] = { 50, 0 };
 s8 D_8032F514[] = { 24, 42, 60, -1 };
-s16 sBowserDefeatedDialogText[3] = { DIALOG_119, DIALOG_120, DIALOG_121 };
+s16* sBowserDefeatedDialogText[3] = {
+    (s16*) &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
+    (s16*) &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
+    (s16*) &gBehaviorValues.dialogs.Bowser3DefeatedDialog
+};
 s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1, -20, 134 },
                         { -1, 20, 154 }, { 1, 40, 164 },  { -1, -40, 174 },  { 1, -80, 179 },
                         { -1, 80, 184 }, { 1, 160, 186 }, { -1, -160, 186 }, { 1, 0, 0 }, };
@@ -968,7 +972,7 @@ s32 bowser_dead_not_bits_end(void) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             o->oBowserUnkF8++;
         }
-        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog(marioState, 2, 18, sBowserDefeatedDialogText[o->oBehParams2ndByte], 0, bowser_dead_not_bits_end_continue_dialog)) {
+        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog(marioState, 2, 18, *sBowserDefeatedDialogText[o->oBehParams2ndByte], 0, bowser_dead_not_bits_end_continue_dialog)) {
             o->oBowserUnkF8++;
             cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_EXPLODE);
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
@@ -992,9 +996,9 @@ s32 bowser_dead_bits_end(void) {
     struct MarioState *marioState = nearest_mario_state_to_object(o);
     
     if (o->oBowserUnkF8 < 2) {
-        s32 dialogID = DIALOG_163;
+        s32 dialogID = gBehaviorValues.dialogs.Bowser3Defeated120StarsDialog;
         if (gHudDisplay.stars < 120) {
-            dialogID = DIALOG_121;
+            dialogID = gBehaviorValues.dialogs.Bowser3DefeatedDialog;
         }
         if (o->oBowserUnkF8 == 0) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
@@ -1523,6 +1527,7 @@ Gfx *geo_bits_bowser_coloring(s32 run, struct GraphNode *node, UNUSED s32 a2) {
         else
             sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
         sp28 = sp2C = alloc_display_list(2 * sizeof(Gfx));
+        if (sp28 == NULL) { return NULL; }
 
         if (sp24->oBowserUnk1B2 != 0) {
             gSPClearGeometryMode(sp28++, G_LIGHTING);

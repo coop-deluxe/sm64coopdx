@@ -28,6 +28,12 @@ gGlobalSyncTable = {}
 --- @type SyncTable[]
 gPlayerSyncTable = {}
 
+--- @type LevelValues
+gLevelValues = {}
+
+--- @type BehaviorValues
+gBehaviorValues = {}
+
 -----------
 -- hooks --
 -----------

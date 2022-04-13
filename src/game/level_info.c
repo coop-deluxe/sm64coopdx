@@ -7,7 +7,7 @@
 #include "level_table.h"
 #include "types.h"
 
-extern u8 seg2_course_name_table[];
+extern u8* seg2_course_name_table[];
 
 static const char charset[0xFF + 1] = {
     ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 7

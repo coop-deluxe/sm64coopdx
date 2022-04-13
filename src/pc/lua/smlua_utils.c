@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "src/pc/mods/mods.h"
 
 u8 gSmLuaConvertSuccess = false;
 
@@ -149,6 +150,10 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 }
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
+    if (lua_type(L, index) == LUA_TNIL) {
+        return NULL;
+    }
+
     if (lua_type(L, index) != LUA_TTABLE) {
         LOG_LUA("smlua_to_cpointer received improper type '%d'", lua_type(L, index));
         smlua_logline();
@@ -191,6 +196,7 @@ void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     gSmLuaConvertSuccess = true;
     return pointer;
 }
+
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     struct LSTNetworkType lnt = { 0 };
     int valueType = lua_type(L, index);
@@ -362,6 +368,28 @@ lua_Number smlua_get_number_field(int index, char* name) {
     lua_Number val = smlua_to_number(gLuaState, -1);
     lua_pop(gLuaState, 1);
     return val;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+s64 smlua_get_mod_variable(u16 modIndex, const char* variable) {
+    lua_State* L = gLuaState;
+
+    // figure out entry
+    struct Mod* mod = gActiveMods.entries[modIndex];
+    if (mod == NULL) {
+        LOG_ERROR("Could not find mod list entry for modIndex: %u", modIndex);
+        return 0;
+    }
+
+    int prevTop = lua_gettop(L);
+    lua_getglobal(L, "_G"); // get global table
+    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // get the file's "global" table
+    s64 value = smlua_get_integer_field(-1, (char*)variable);
+    lua_settop(L, prevTop);
+
+    // return variable
+    return value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

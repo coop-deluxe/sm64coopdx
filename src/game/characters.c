@@ -515,9 +515,6 @@ void update_character_anim_offset(struct MarioState* m) {
     if (m->curAnimOffset > 40)  { m->curAnimOffset = 40; }
     if (m->curAnimOffset < -40) { m->curAnimOffset = -40; }
 
-    //s32 animID = marioObj->header.gfx.animInfo.animID;
-    //LOG_INFO(">>> [%d] : %d :: %f, %f", animID, sAnimTypes[animID], m->curAnimOffset, m->minimumBoneY);
-
     marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;
     marioObj->header.gfx.node.flags |= GRAPH_RENDER_PLAYER;
 }

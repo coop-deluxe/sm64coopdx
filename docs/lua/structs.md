@@ -4,6 +4,9 @@
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
 - [Area](#Area)
+- [BehaviorDialogs](#BehaviorDialogs)
+- [BehaviorTrajectories](#BehaviorTrajectories)
+- [BehaviorValues](#BehaviorValues)
 - [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
 - [CameraFOVStatus](#CameraFOVStatus)
@@ -25,6 +28,7 @@
 - [HandheldShakePoint](#HandheldShakePoint)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
+- [LevelValues](#LevelValues)
 - [LinearTransitionPoint](#LinearTransitionPoint)
 - [MarioAnimDmaRelatedThing](#MarioAnimDmaRelatedThing)
 - [MarioAnimation](#MarioAnimation)
@@ -46,6 +50,7 @@
 - [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
+- [StarPositions](#StarPositions)
 - [Struct802A272C](#Struct802A272C)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
@@ -122,6 +127,157 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BehaviorDialogs](#BehaviorDialogs)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| BobombBuddyBob1Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| BobombBuddyBob2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| BobombBuddyOther1Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| BobombBuddyOther2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser1DefeatedDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser1Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser2DefeatedDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser3Defeated120StarsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser3DefeatedDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Bowser3Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| CapswitchBaseDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| CapswitchMetalDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| CapswitchVanishDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| CapswitchWingDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| CastleEnterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| CollectedStarDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DefaultCutsceneDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeed1StarDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeed30StarsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeed3StarsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeed50StarsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeed70StarsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeed8StarsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| DoorNeedKeyDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| EyerokDefeatedDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| EyerokIntroDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| GhostHuntAfterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| GhostHuntDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| HootIntroDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| HootTiredDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| HundredCoinsDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| IntroPipeDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KeyDoor1DontHaveDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KeyDoor1HaveDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KeyDoor2DontHaveDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KeyDoor2HaveDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KingBobombCheatDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KingBobombDefeatDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KingBobombIntroDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KingWhompDefeatDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KingWhompDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KoopaQuickBobStartDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KoopaQuickBobWinDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KoopaQuickCheatedDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KoopaQuickLostDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KoopaQuickThiStartDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| KoopaQuickThiWinDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| LakituIntroDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| MetalCourseDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Mips1Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| Mips2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| PeachLetterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| RacingPenguinBigStartDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| RacingPenguinCheatDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| RacingPenguinLostDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| RacingPenguinStartDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| RacingPenguinWinDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| SnowmanHeadAfterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| SnowmanHeadBodyDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| SnowmanHeadDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| SnowmanWindDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| StarCollectionBaseDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| StarDoorDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| ToadStar1AfterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| ToadStar1Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| ToadStar2AfterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| ToadStar2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| ToadStar3AfterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| ToadStar3Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| TuxieMotherBabyFoundDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| TuxieMotherBabyWrongDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| TuxieMotherDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| UkikiCageDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| UkikiCapGiveDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| UkikiCapStealDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| UkikiHeldDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| VanishCourseDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| WigglerAttack1Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| WigglerAttack2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| WigglerAttack3Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| WigglerDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| WingCourseDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| YoshiDialog | [enum DialogId](constants.md#enum-DialogId) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BehaviorTrajectories](#BehaviorTrajectories)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallBobTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> |  |
+| KoopaBobTrajectory | `Pointer` <`Trajectory`> |  |
+| KoopaThiTrajectory | `Pointer` <`Trajectory`> |  |
+| Mips10Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips2Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips3Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips4Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips5Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips6Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips7Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips8Trajectory | `Pointer` <`Trajectory`> |  |
+| Mips9Trajectory | `Pointer` <`Trajectory`> |  |
+| MipsTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformBitfsTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformCcmTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformHmcTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformLll2Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformLllTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRr2Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRr3Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRr4Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRrTrajectory | `Pointer` <`Trajectory`> |  |
+| RacingPenguinTrajectory | `Pointer` <`Trajectory`> |  |
+| SnowmanHeadTrajectory | `Pointer` <`Trajectory`> |  |
+| Unagi2Trajectory | `Pointer` <`Trajectory`> |  |
+| UnagiTrajectory | `Pointer` <`Trajectory`> |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BehaviorValues](#BehaviorValues)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| KoopaBobAgility | `number` |  |
+| KoopaCatchupAgility | `number` |  |
+| KoopaThiAgility | `number` |  |
+| RacingPenguinBigHeight | `number` |  |
+| RacingPenguinBigRadius | `number` |  |
+| RacingPenguinHeight | `number` |  |
+| RacingPenguinRadius | `number` |  |
+| ToadStar1Requirement | `integer` |  |
+| ToadStar2Requirement | `integer` |  |
+| ToadStar3Requirement | `integer` |  |
+| dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
+| trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -668,6 +824,20 @@
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec2 | [Vec3s](structs.md#Vec3s) | read-only |
 | yaw | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [LevelValues](#LevelValues)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| exitCastleArea | `integer` |  |
+| exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| exitCastleWarpNode | `integer` |  |
+| starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1796,6 +1966,41 @@
 | sizeRange | `number` |  |
 | velYBase | `integer` |  |
 | velYRange | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [StarPositions](#StarPositions)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| BalconyBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigBullyTrioStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigPiranhasStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| CcmSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| ChillBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| EyerockStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| GhostHuntBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| JetstreamRingStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KingBobombStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KingWhompStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KleptoStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KoopaBobStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KoopaThiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MantaRayStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MerryGoRoundStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MrIStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| PssSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| RacingPenguinStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| SnowmanHeadStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TreasureChestStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TreasureJrbStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TuxieMotherStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| UkikiCageStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| UnagiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| WigglerStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 

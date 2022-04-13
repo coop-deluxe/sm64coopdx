@@ -271,1553 +271,1680 @@ function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
 end
 
+-------------
+-- courses --
+-------------
+
+--- @type integer
+COURSE_NONE     = 0
+--- @type integer
+COURSE_BOB      = 1
+--- @type integer
+COURSE_WF       = 2
+--- @type integer
+COURSE_JRB      = 3
+--- @type integer
+COURSE_CCM      = 4
+--- @type integer
+COURSE_BBH      = 5
+--- @type integer
+COURSE_HMC      = 6
+--- @type integer
+COURSE_LLL      = 7
+--- @type integer
+COURSE_SSL      = 8
+--- @type integer
+COURSE_DDD      = 9
+--- @type integer
+COURSE_SL       = 10
+--- @type integer
+COURSE_WDW      = 11
+--- @type integer
+COURSE_TTM      = 12
+--- @type integer
+COURSE_THI      = 13
+--- @type integer
+COURSE_TTC      = 14
+--- @type integer
+COURSE_RR       = 15
+--- @type integer
+COURSE_BITDW    = 16
+--- @type integer
+COURSE_BITFS    = 17
+--- @type integer
+COURSE_BITS     = 18
+--- @type integer
+COURSE_PSS      = 19
+--- @type integer
+COURSE_COTMC    = 20
+--- @type integer
+COURSE_TOTWC    = 21
+--- @type integer
+COURSE_VCUTM    = 22
+--- @type integer
+COURSE_WMOTR    = 23
+--- @type integer
+COURSE_SA       = 24
+--- @type integer
+COURSE_CAKE_END = 25
+--- @type integer
+COURSE_END = 26
+--- @type integer
+COURSE_MAX = 25
+--- @type integer
+COURSE_COUNT = 25
+--- @type integer
+COURSE_MIN = 1
 
 --- @class BehaviorId
 
 --- @type BehaviorId
-id_bhvStarDoor = 0
+id_bhv1Up = 0
 
 --- @type BehaviorId
-id_bhvMrI = 1
+id_bhv1upJumpOnApproach = 1
 
 --- @type BehaviorId
-id_bhvMrIBody = 2
+id_bhv1upRunningAway = 2
 
 --- @type BehaviorId
-id_bhvMrIParticle = 3
+id_bhv1upSliding = 3
 
 --- @type BehaviorId
-id_bhvPurpleParticle = 4
+id_bhv1upWalking = 4
 
 --- @type BehaviorId
-id_bhvGiantPole = 5
+id_bhvActivatedBackAndForthPlatform = 5
 
 --- @type BehaviorId
-id_bhvPoleGrabbing = 6
+id_bhvActSelector = 6
 
 --- @type BehaviorId
-id_bhvThiHugeIslandTop = 7
+id_bhvActSelectorStarType = 7
 
 --- @type BehaviorId
-id_bhvThiTinyIslandTop = 8
+id_bhvAirborneDeathWarp = 8
 
 --- @type BehaviorId
-id_bhvCapSwitchBase = 9
+id_bhvAirborneStarCollectWarp = 9
 
 --- @type BehaviorId
-id_bhvCapSwitch = 10
+id_bhvAirborneWarp = 10
 
 --- @type BehaviorId
-id_bhvKingBobomb = 11
+id_bhvAlphaBooKey = 11
 
 --- @type BehaviorId
-id_bhvBobombAnchorMario = 12
+id_bhvAmbientSounds = 12
 
 --- @type BehaviorId
-id_bhvBetaChestBottom = 13
+id_bhvAnimatedTexture = 13
 
 --- @type BehaviorId
-id_bhvBetaChestLid = 14
+id_bhvAnimatesOnFloorSwitchPress = 14
 
 --- @type BehaviorId
-id_bhvBubbleParticleSpawner = 15
+id_bhvAnotherElavator = 15
 
 --- @type BehaviorId
-id_bhvBubbleMaybe = 16
+id_bhvAnotherTiltingPlatform = 16
 
 --- @type BehaviorId
-id_bhvBubblePlayer = 17
+id_bhvArrowLift = 17
 
 --- @type BehaviorId
-id_bhvSmallWaterWave = 18
+id_bhvBalconyBigBoo = 18
 
 --- @type BehaviorId
-id_bhvWaterAirBubble = 19
+id_bhvBbhTiltingTrapPlatform = 19
 
 --- @type BehaviorId
-id_bhvSmallParticle = 20
+id_bhvBbhTumblingBridge = 20
 
 --- @type BehaviorId
-id_bhvPlungeBubble = 21
+id_bhvBeginningLakitu = 21
 
 --- @type BehaviorId
-id_bhvSmallParticleSnow = 22
+id_bhvBeginningPeach = 22
 
 --- @type BehaviorId
-id_bhvSmallParticleBubbles = 23
+id_bhvBetaBooKey = 23
 
 --- @type BehaviorId
-id_bhvFishGroup = 24
+id_bhvBetaBowserAnchor = 24
 
 --- @type BehaviorId
-id_bhvCannon = 25
+id_bhvBetaChestBottom = 25
 
 --- @type BehaviorId
-id_bhvCannonBarrel = 26
+id_bhvBetaChestLid = 26
 
 --- @type BehaviorId
-id_bhvCannonBaseUnused = 27
+id_bhvBetaFishSplashSpawner = 27
 
 --- @type BehaviorId
-id_bhvChuckya = 28
+id_bhvBetaHoldableObject = 28
 
 --- @type BehaviorId
-id_bhvChuckyaAnchorMario = 29
+id_bhvBetaMovingFlames = 29
 
 --- @type BehaviorId
-id_bhvUnused05A8 = 30
+id_bhvBetaMovingFlamesSpawn = 30
 
 --- @type BehaviorId
-id_bhvRotatingPlatform = 31
+id_bhvBetaTrampolineSpring = 31
 
 --- @type BehaviorId
-id_bhvTower = 32
+id_bhvBetaTrampolineTop = 32
 
 --- @type BehaviorId
-id_bhvBulletBillCannon = 33
+id_bhvBigBoulder = 33
 
 --- @type BehaviorId
-id_bhvWfBreakableWallRight = 34
+id_bhvBigBoulderGenerator = 34
 
 --- @type BehaviorId
-id_bhvWfBreakableWallLeft = 35
+id_bhvBigBully = 35
 
 --- @type BehaviorId
-id_bhvKickableBoard = 36
+id_bhvBigBullyWithMinions = 36
 
 --- @type BehaviorId
-id_bhvTowerDoor = 37
+id_bhvBigChillBully = 37
 
 --- @type BehaviorId
-id_bhvRotatingCounterClockwise = 38
+id_bhvBigSnowmanWhole = 38
 
 --- @type BehaviorId
-id_bhvWfRotatingWoodenPlatform = 39
+id_bhvBird = 39
 
 --- @type BehaviorId
-id_bhvKoopaShellUnderwater = 40
+id_bhvBirdsSoundLoop = 40
 
 --- @type BehaviorId
-id_bhvExitPodiumWarp = 41
+id_bhvBitfsSinkingCagePlatform = 41
 
 --- @type BehaviorId
-id_bhvFadingWarp = 42
+id_bhvBitfsSinkingPlatforms = 42
 
 --- @type BehaviorId
-id_bhvWarp = 43
+id_bhvBitfsTiltingInvertedPyramid = 43
 
 --- @type BehaviorId
-id_bhvWarpPipe = 44
+id_bhvBlackSmokeBowser = 44
 
 --- @type BehaviorId
-id_bhvWhitePuffExplosion = 45
+id_bhvBlackSmokeMario = 45
 
 --- @type BehaviorId
-id_bhvSpawnedStar = 46
+id_bhvBlackSmokeUpward = 46
 
 --- @type BehaviorId
-id_bhvSpawnedStarNoLevelExit = 47
+id_bhvBlueBowserFlame = 47
 
 --- @type BehaviorId
-id_bhvMrIBlueCoin = 48
+id_bhvBlueCoinJumping = 48
 
 --- @type BehaviorId
-id_bhvCoinInsideBoo = 49
+id_bhvBlueCoinSliding = 49
 
 --- @type BehaviorId
-id_bhvCoinFormationSpawn = 50
+id_bhvBlueCoinSwitch = 50
 
 --- @type BehaviorId
-id_bhvCoinFormation = 51
+id_bhvBlueFish = 51
 
 --- @type BehaviorId
-id_bhvOneCoin = 52
+id_bhvBlueFlamesGroup = 52
 
 --- @type BehaviorId
-id_bhvYellowCoin = 53
+id_bhvBobBowlingBallSpawner = 53
 
 --- @type BehaviorId
-id_bhvTemporaryYellowCoin = 54
+id_bhvBobomb = 54
 
 --- @type BehaviorId
-id_bhvThreeCoinsSpawn = 55
+id_bhvBobombAnchorMario = 55
 
 --- @type BehaviorId
-id_bhvTenCoinsSpawn = 56
+id_bhvBobombBuddy = 56
 
 --- @type BehaviorId
-id_bhvSingleCoinGetsSpawned = 57
+id_bhvBobombBuddyOpensCannon = 57
 
 --- @type BehaviorId
-id_bhvCoinSparkles = 58
+id_bhvBobombBullyDeathSmoke = 58
 
 --- @type BehaviorId
-id_bhvGoldenCoinSparkles = 59
+id_bhvBobombExplosionBubble = 59
 
 --- @type BehaviorId
-id_bhvWallTinyStarParticle = 60
+id_bhvBobombExplosionBubble3600 = 60
 
 --- @type BehaviorId
-id_bhvVertStarParticleSpawner = 61
+id_bhvBobombFuseSmoke = 61
 
 --- @type BehaviorId
-id_bhvPoundTinyStarParticle = 62
+id_bhvBoo = 62
 
 --- @type BehaviorId
-id_bhvHorStarParticleSpawner = 63
+id_bhvBooBossSpawnedBridge = 63
 
 --- @type BehaviorId
-id_bhvPunchTinyTriangle = 64
+id_bhvBooCage = 64
 
 --- @type BehaviorId
-id_bhvTriangleParticleSpawner = 65
+id_bhvBooInCastle = 65
 
 --- @type BehaviorId
-id_bhvDoorWarp = 66
+id_bhvBookendSpawn = 66
 
 --- @type BehaviorId
-id_bhvDoor = 67
+id_bhvBookSwitch = 67
 
 --- @type BehaviorId
-id_bhvGrindel = 68
+id_bhvBooWithCage = 68
 
 --- @type BehaviorId
-id_bhvThwomp2 = 69
+id_bhvBouncingFireball = 69
 
 --- @type BehaviorId
-id_bhvThwomp = 70
+id_bhvBouncingFireballFlame = 70
 
 --- @type BehaviorId
-id_bhvTumblingBridgePlatform = 71
+id_bhvBowlingBall = 71
 
 --- @type BehaviorId
-id_bhvWfTumblingBridge = 72
+id_bhvBowser = 72
 
 --- @type BehaviorId
-id_bhvBbhTumblingBridge = 73
+id_bhvBowserBodyAnchor = 73
 
 --- @type BehaviorId
-id_bhvLllTumblingBridge = 74
+id_bhvBowserBomb = 74
 
 --- @type BehaviorId
-id_bhvFlame = 75
+id_bhvBowserBombExplosion = 75
 
 --- @type BehaviorId
-id_bhvAnotherElavator = 76
+id_bhvBowserBombSmoke = 76
 
 --- @type BehaviorId
-id_bhvRrElevatorPlatform = 77
+id_bhvBowserCourseRedCoinStar = 77
 
 --- @type BehaviorId
-id_bhvHmcElevatorPlatform = 78
+id_bhvBowserFlameSpawn = 78
 
 --- @type BehaviorId
-id_bhvWaterMist = 79
+id_bhvBowserKey = 79
 
 --- @type BehaviorId
-id_bhvBreathParticleSpawner = 80
+id_bhvBowserKeyCourseExit = 80
 
 --- @type BehaviorId
-id_bhvBreakBoxTriangle = 81
+id_bhvBowserKeyUnlockDoor = 81
 
 --- @type BehaviorId
-id_bhvWaterMist2 = 82
+id_bhvBowserShockWave = 82
 
 --- @type BehaviorId
-id_bhvUnused0DFC = 83
+id_bhvBowsersSub = 83
 
 --- @type BehaviorId
-id_bhvMistCircParticleSpawner = 84
+id_bhvBowserSubDoor = 84
 
 --- @type BehaviorId
-id_bhvDirtParticleSpawner = 85
+id_bhvBowserTailAnchor = 85
 
 --- @type BehaviorId
-id_bhvSnowParticleSpawner = 86
+id_bhvBreakableBox = 86
 
 --- @type BehaviorId
-id_bhvWind = 87
+id_bhvBreakableBoxSmall = 87
 
 --- @type BehaviorId
-id_bhvEndToad = 88
+id_bhvBreakBoxTriangle = 88
 
 --- @type BehaviorId
-id_bhvEndPeach = 89
+id_bhvBreathParticleSpawner = 89
 
 --- @type BehaviorId
-id_bhvUnusedParticleSpawn = 90
+id_bhvBub = 90
 
 --- @type BehaviorId
-id_bhvUkiki = 91
+id_bhvBubba = 91
 
 --- @type BehaviorId
-id_bhvUkikiCageChild = 92
+id_bhvBubbleMaybe = 92
 
 --- @type BehaviorId
-id_bhvUkikiCageStar = 93
+id_bhvBubbleParticleSpawner = 93
 
 --- @type BehaviorId
-id_bhvUkikiCage = 94
+id_bhvBubblePlayer = 94
 
 --- @type BehaviorId
-id_bhvBitfsSinkingPlatforms = 95
+id_bhvBubbleSplash = 95
 
 --- @type BehaviorId
-id_bhvBitfsSinkingCagePlatform = 96
+id_bhvBulletBill = 96
 
 --- @type BehaviorId
-id_bhvDddMovingPole = 97
+id_bhvBulletBillCannon = 97
 
 --- @type BehaviorId
-id_bhvBitfsTiltingInvertedPyramid = 98
+id_bhvButterfly = 98
 
 --- @type BehaviorId
-id_bhvSquishablePlatform = 99
+id_bhvCameraLakitu = 99
 
 --- @type BehaviorId
-id_bhvCutOutObject = 100
+id_bhvCannon = 100
 
 --- @type BehaviorId
-id_bhvBetaMovingFlames = 101
+id_bhvCannonBarrel = 101
 
 --- @type BehaviorId
-id_bhvRrRotatingBridgePlatform = 102
+id_bhvCannonBarrelBubbles = 102
 
 --- @type BehaviorId
-id_bhvFlamethrower = 103
+id_bhvCannonBaseUnused = 103
 
 --- @type BehaviorId
-id_bhvFlamethrowerFlame = 104
+id_bhvCannonClosed = 104
 
 --- @type BehaviorId
-id_bhvBouncingFireball = 105
+id_bhvCapSwitch = 105
 
 --- @type BehaviorId
-id_bhvBouncingFireballFlame = 106
+id_bhvCapSwitchBase = 106
 
 --- @type BehaviorId
-id_bhvBowserShockWave = 107
+id_bhvCarrySomething1 = 107
 
 --- @type BehaviorId
-id_bhvFireParticleSpawner = 108
+id_bhvCarrySomething2 = 108
 
 --- @type BehaviorId
-id_bhvBlackSmokeMario = 109
+id_bhvCarrySomething3 = 109
 
 --- @type BehaviorId
-id_bhvBlackSmokeBowser = 110
+id_bhvCarrySomething4 = 110
 
 --- @type BehaviorId
-id_bhvBlackSmokeUpward = 111
+id_bhvCarrySomething5 = 111
 
 --- @type BehaviorId
-id_bhvBetaFishSplashSpawner = 112
+id_bhvCarrySomething6 = 112
 
 --- @type BehaviorId
-id_bhvSpindrift = 113
+id_bhvCastleFlagWaving = 113
 
 --- @type BehaviorId
-id_bhvTowerPlatformGroup = 114
+id_bhvCastleFloorTrap = 114
 
 --- @type BehaviorId
-id_bhvWfSlidingTowerPlatform = 115
+id_bhvCcmTouchedStarSpawn = 115
 
 --- @type BehaviorId
-id_bhvWfElevatorTowerPlatform = 116
+id_bhvCelebrationStar = 116
 
 --- @type BehaviorId
-id_bhvWfSolidTowerPlatform = 117
+id_bhvCelebrationStarSparkle = 117
 
 --- @type BehaviorId
-id_bhvLeafParticleSpawner = 118
+id_bhvChainChomp = 118
 
 --- @type BehaviorId
-id_bhvTreeSnow = 119
+id_bhvChainChompChainPart = 119
 
 --- @type BehaviorId
-id_bhvTreeLeaf = 120
+id_bhvChainChompGate = 120
 
 --- @type BehaviorId
-id_bhvAnotherTiltingPlatform = 121
+id_bhvCheckerboardElevatorGroup = 121
 
 --- @type BehaviorId
-id_bhvSquarishPathMoving = 122
+id_bhvCheckerboardPlatformSub = 122
 
 --- @type BehaviorId
-id_bhvSquarishPathParent = 123
+id_bhvChirpChirp = 123
 
 --- @type BehaviorId
-id_bhvPiranhaPlantBubble = 124
+id_bhvChirpChirpUnused = 124
 
 --- @type BehaviorId
-id_bhvPiranhaPlantWakingBubbles = 125
+id_bhvChuckya = 125
 
 --- @type BehaviorId
-id_bhvFloorSwitchAnimatesObject = 126
+id_bhvChuckyaAnchorMario = 126
 
 --- @type BehaviorId
-id_bhvFloorSwitchGrills = 127
+id_bhvCirclingAmp = 127
 
 --- @type BehaviorId
-id_bhvFloorSwitchHardcodedModel = 128
+id_bhvClamShell = 128
 
 --- @type BehaviorId
-id_bhvFloorSwitchHiddenObjects = 129
+id_bhvClockHourHand = 129
 
 --- @type BehaviorId
-id_bhvHiddenObject = 130
+id_bhvClockMinuteHand = 130
 
 --- @type BehaviorId
-id_bhvBreakableBox = 131
+id_bhvCloud = 131
 
 --- @type BehaviorId
-id_bhvPushableMetalBox = 132
+id_bhvCloudPart = 132
 
 --- @type BehaviorId
-id_bhvHeaveHo = 133
+id_bhvCoffin = 133
 
 --- @type BehaviorId
-id_bhvHeaveHoThrowMario = 134
+id_bhvCoffinSpawner = 134
 
 --- @type BehaviorId
-id_bhvCcmTouchedStarSpawn = 135
+id_bhvCoinFormation = 135
 
 --- @type BehaviorId
-id_bhvUnusedPoundablePlatform = 136
+id_bhvCoinFormationSpawn = 136
 
 --- @type BehaviorId
-id_bhvBetaTrampolineTop = 137
+id_bhvCoinInsideBoo = 137
 
 --- @type BehaviorId
-id_bhvBetaTrampolineSpring = 138
+id_bhvCoinSparkles = 138
 
 --- @type BehaviorId
-id_bhvJumpingBox = 139
+id_bhvControllablePlatform = 139
 
 --- @type BehaviorId
-id_bhvBooCage = 140
+id_bhvControllablePlatformSub = 140
 
 --- @type BehaviorId
-id_bhvStub = 141
+id_bhvCourtyardBooTriplet = 141
 
 --- @type BehaviorId
-id_bhvIgloo = 142
+id_bhvCutOutObject = 142
 
 --- @type BehaviorId
-id_bhvBowserKey = 143
+id_bhvDddMovingPole = 143
 
 --- @type BehaviorId
-id_bhvGrandStar = 144
+id_bhvDDDPole = 144
 
 --- @type BehaviorId
-id_bhvBetaBooKey = 145
+id_bhvDddWarp = 145
 
 --- @type BehaviorId
-id_bhvAlphaBooKey = 146
+id_bhvDeathWarp = 146
 
 --- @type BehaviorId
-id_bhvBulletBill = 147
+id_bhvDecorativePendulum = 147
 
 --- @type BehaviorId
-id_bhvWhitePuffSmoke = 148
+id_bhvDirtParticleSpawner = 148
 
 --- @type BehaviorId
-id_bhvUnused1820 = 149
+id_bhvDonutPlatform = 149
 
 --- @type BehaviorId
-id_bhvBowserTailAnchor = 150
+id_bhvDonutPlatformSpawner = 150
 
 --- @type BehaviorId
-id_bhvBowser = 151
+id_bhvDoor = 151
 
 --- @type BehaviorId
-id_bhvBowserBodyAnchor = 152
+id_bhvDoorWarp = 152
 
 --- @type BehaviorId
-id_bhvBowserFlameSpawn = 153
+id_bhvDorrie = 153
 
 --- @type BehaviorId
-id_bhvTiltingBowserLavaPlatform = 154
+id_bhvEndBirds1 = 154
 
 --- @type BehaviorId
-id_bhvFallingBowserPlatform = 155
+id_bhvEndBirds2 = 155
 
 --- @type BehaviorId
-id_bhvBlueBowserFlame = 156
+id_bhvEndPeach = 156
 
 --- @type BehaviorId
-id_bhvFlameFloatingLanding = 157
+id_bhvEndToad = 157
 
 --- @type BehaviorId
-id_bhvBlueFlamesGroup = 158
+id_bhvEnemyLakitu = 158
 
 --- @type BehaviorId
-id_bhvFlameBouncing = 159
+id_bhvExclamationBox = 159
 
 --- @type BehaviorId
-id_bhvFlameMovingForwardGrowing = 160
+id_bhvExitPodiumWarp = 160
 
 --- @type BehaviorId
-id_bhvFlameBowser = 161
+id_bhvExplosion = 161
 
 --- @type BehaviorId
-id_bhvFlameLargeBurningOut = 162
+id_bhvEyerokBoss = 162
 
 --- @type BehaviorId
-id_bhvBlueFish = 163
+id_bhvEyerokHand = 163
 
 --- @type BehaviorId
-id_bhvTankFishGroup = 164
+id_bhvFadingWarp = 164
 
 --- @type BehaviorId
-id_bhvCheckerboardElevatorGroup = 165
+id_bhvFallingBowserPlatform = 165
 
 --- @type BehaviorId
-id_bhvCheckerboardPlatformSub = 166
+id_bhvFallingPillar = 166
 
 --- @type BehaviorId
-id_bhvBowserKeyUnlockDoor = 167
+id_bhvFallingPillarHitbox = 167
 
 --- @type BehaviorId
-id_bhvBowserKeyCourseExit = 168
+id_bhvFerrisWheelAxle = 168
 
 --- @type BehaviorId
-id_bhvInvisibleObjectsUnderBridge = 169
+id_bhvFerrisWheelPlatform = 169
 
 --- @type BehaviorId
-id_bhvWaterLevelPillar = 170
+id_bhvFewBlueFishSpawner = 170
 
 --- @type BehaviorId
-id_bhvDddWarp = 171
+id_bhvFireParticleSpawner = 171
 
 --- @type BehaviorId
-id_bhvMoatGrills = 172
+id_bhvFirePiranhaPlant = 172
 
 --- @type BehaviorId
-id_bhvClockMinuteHand = 173
+id_bhvFireSpitter = 173
 
 --- @type BehaviorId
-id_bhvClockHourHand = 174
+id_bhvFish = 174
 
 --- @type BehaviorId
-id_bhvMacroUkiki = 175
+id_bhvFishGroup = 175
 
 --- @type BehaviorId
-id_bhvStub1D0C = 176
+id_bhvFishSpawner = 176
 
 --- @type BehaviorId
-id_bhvLllRotatingHexagonalPlatform = 177
+id_bhvFlame = 177
 
 --- @type BehaviorId
-id_bhvLllSinkingRockBlock = 178
+id_bhvFlameBouncing = 178
 
 --- @type BehaviorId
-id_bhvStub1D70 = 179
+id_bhvFlameBowser = 179
 
 --- @type BehaviorId
-id_bhvLllMovingOctagonalMeshPlatform = 180
+id_bhvFlameFloatingLanding = 180
 
 --- @type BehaviorId
-id_bhvLllRotatingBlockWithFireBars = 181
+id_bhvFlameLargeBurningOut = 181
 
 --- @type BehaviorId
-id_bhvLllRotatingHexFlame = 182
+id_bhvFlameMovingForwardGrowing = 182
 
 --- @type BehaviorId
-id_bhvLllWoodPiece = 183
+id_bhvFlamethrower = 183
 
 --- @type BehaviorId
-id_bhvLllFloatingWoodBridge = 184
+id_bhvFlamethrowerFlame = 184
 
 --- @type BehaviorId
-id_bhvVolcanoFlames = 185
+id_bhvFloorSwitchAnimatesObject = 185
 
 --- @type BehaviorId
-id_bhvLllRotatingHexagonalRing = 186
+id_bhvFloorSwitchGrills = 186
 
 --- @type BehaviorId
-id_bhvLllSinkingRectangularPlatform = 187
+id_bhvFloorSwitchHardcodedModel = 187
 
 --- @type BehaviorId
-id_bhvLllSinkingSquarePlatforms = 188
+id_bhvFloorSwitchHiddenObjects = 188
 
 --- @type BehaviorId
-id_bhvLllTiltingInvertedPyramid = 189
+id_bhvFloorTrapInCastle = 189
 
 --- @type BehaviorId
-id_bhvUnused1F30 = 190
+id_bhvFlyGuy = 190
 
 --- @type BehaviorId
-id_bhvKoopaShell = 191
+id_bhvFlyguyFlame = 191
 
 --- @type BehaviorId
-id_bhvKoopaShellFlame = 192
+id_bhvFlyingBookend = 192
 
 --- @type BehaviorId
-id_bhvToxBox = 193
+id_bhvFlyingWarp = 193
 
 --- @type BehaviorId
-id_bhvPiranhaPlant = 194
+id_bhvFreeBowlingBall = 194
 
 --- @type BehaviorId
-id_bhvLllHexagonalMesh = 195
+id_bhvGhostHuntBigBoo = 195
 
 --- @type BehaviorId
-id_bhvLllBowserPuzzlePiece = 196
+id_bhvGhostHuntBoo = 196
 
 --- @type BehaviorId
-id_bhvLllBowserPuzzle = 197
+id_bhvGiantPole = 197
 
 --- @type BehaviorId
-id_bhvTuxiesMother = 198
+id_bhvGoldenCoinSparkles = 198
 
 --- @type BehaviorId
-id_bhvPenguinBaby = 199
+id_bhvGoomba = 199
 
 --- @type BehaviorId
-id_bhvUnused20E0 = 200
+id_bhvGoombaTripletSpawner = 200
 
 --- @type BehaviorId
-id_bhvSmallPenguin = 201
+id_bhvGrandStar = 201
 
 --- @type BehaviorId
-id_bhvManyBlueFishSpawner = 202
+id_bhvGrindel = 202
 
 --- @type BehaviorId
-id_bhvFewBlueFishSpawner = 203
+id_bhvHardAirKnockBackWarp = 203
 
 --- @type BehaviorId
-id_bhvFishSpawner = 204
+id_bhvHauntedBookshelf = 204
 
 --- @type BehaviorId
-id_bhvFish = 205
+id_bhvHauntedBookshelfManager = 205
 
 --- @type BehaviorId
-id_bhvWdwExpressElevator = 206
+id_bhvHauntedChair = 206
 
 --- @type BehaviorId
-id_bhvWdwExpressElevatorPlatform = 207
+id_bhvHeaveHo = 207
 
 --- @type BehaviorId
-id_bhvChirpChirp = 208
+id_bhvHeaveHoThrowMario = 208
 
 --- @type BehaviorId
-id_bhvBub = 209
+id_bhvHidden1up = 209
 
 --- @type BehaviorId
-id_bhvExclamationBox = 210
+id_bhvHidden1upInPole = 210
 
 --- @type BehaviorId
-id_bhvRotatingExclamationMark = 211
+id_bhvHidden1upInPoleSpawner = 211
 
 --- @type BehaviorId
-id_bhvSoundSpawner = 212
+id_bhvHidden1upInPoleTrigger = 212
 
 --- @type BehaviorId
-id_bhvRockSolid = 213
+id_bhvHidden1upTrigger = 213
 
 --- @type BehaviorId
-id_bhvBowserSubDoor = 214
+id_bhvHiddenAt120Stars = 214
 
 --- @type BehaviorId
-id_bhvBowsersSub = 215
+id_bhvHiddenBlueCoin = 215
 
 --- @type BehaviorId
-id_bhvSushiShark = 216
+id_bhvHiddenObject = 216
 
 --- @type BehaviorId
-id_bhvSushiSharkCollisionChild = 217
+id_bhvHiddenRedCoinStar = 217
 
 --- @type BehaviorId
-id_bhvJrbSlidingBox = 218
+id_bhvHiddenStaircaseStep = 218
 
 --- @type BehaviorId
-id_bhvShipPart3 = 219
+id_bhvHiddenStar = 219
 
 --- @type BehaviorId
-id_bhvInSunkenShip3 = 220
+id_bhvHiddenStarTrigger = 220
 
 --- @type BehaviorId
-id_bhvSunkenShipPart = 221
+id_bhvHmcElevatorPlatform = 221
 
 --- @type BehaviorId
-id_bhvSunkenShipPart2 = 222
+id_bhvHomingAmp = 222
 
 --- @type BehaviorId
-id_bhvInSunkenShip = 223
+id_bhvHoot = 223
 
 --- @type BehaviorId
-id_bhvInSunkenShip2 = 224
+id_bhvHorizontalGrindel = 224
 
 --- @type BehaviorId
-id_bhvMistParticleSpawner = 225
+id_bhvHorStarParticleSpawner = 225
 
 --- @type BehaviorId
-id_bhvWhitePuff1 = 226
+id_bhvIdleWaterWave = 226
 
 --- @type BehaviorId
-id_bhvWhitePuff2 = 227
+id_bhvIgloo = 227
 
 --- @type BehaviorId
-id_bhvWhitePuffSmoke2 = 228
+id_bhvInitializeChangingWaterLevel = 228
 
 --- @type BehaviorId
-id_bhvPurpleSwitchHiddenBoxes = 229
+id_bhvInsideCannon = 229
 
 --- @type BehaviorId
-id_bhvBlueCoinSwitch = 230
+id_bhvInstantActiveWarp = 230
 
 --- @type BehaviorId
-id_bhvHiddenBlueCoin = 231
+id_bhvInSunkenShip = 231
 
 --- @type BehaviorId
-id_bhvOpenableCageDoor = 232
+id_bhvInSunkenShip2 = 232
 
 --- @type BehaviorId
-id_bhvOpenableGrill = 233
+id_bhvInSunkenShip3 = 233
 
 --- @type BehaviorId
-id_bhvWaterLevelDiamond = 234
+id_bhvIntroScene = 234
 
 --- @type BehaviorId
-id_bhvInitializeChangingWaterLevel = 235
+id_bhvInvisibleObjectsUnderBridge = 235
 
 --- @type BehaviorId
-id_bhvTweesterSandParticle = 236
+id_bhvJetStream = 236
 
 --- @type BehaviorId
-id_bhvTweester = 237
+id_bhvJetStreamRingSpawner = 237
 
 --- @type BehaviorId
-id_bhvMerryGoRoundBooManager = 238
+id_bhvJetStreamWaterRing = 238
 
 --- @type BehaviorId
-id_bhvAnimatedTexture = 239
+id_bhvJrbFloatingBox = 239
 
 --- @type BehaviorId
-id_bhvBooInCastle = 240
+id_bhvJrbFloatingPlatform = 240
 
 --- @type BehaviorId
-id_bhvBooWithCage = 241
+id_bhvJrbSlidingBox = 241
 
 --- @type BehaviorId
-id_bhvBalconyBigBoo = 242
+id_bhvJumpingBox = 242
 
 --- @type BehaviorId
-id_bhvMerryGoRoundBigBoo = 243
+id_bhvKickableBoard = 243
 
 --- @type BehaviorId
-id_bhvGhostHuntBigBoo = 244
+id_bhvKingBobomb = 244
 
 --- @type BehaviorId
-id_bhvCourtyardBooTriplet = 245
+id_bhvKlepto = 245
 
 --- @type BehaviorId
-id_bhvBoo = 246
+id_bhvKoopa = 246
 
 --- @type BehaviorId
-id_bhvMerryGoRoundBoo = 247
+id_bhvKoopaFlag = 247
 
 --- @type BehaviorId
-id_bhvGhostHuntBoo = 248
+id_bhvKoopaRaceEndpoint = 248
 
 --- @type BehaviorId
-id_bhvHiddenStaircaseStep = 249
+id_bhvKoopaShell = 249
 
 --- @type BehaviorId
-id_bhvBooBossSpawnedBridge = 250
+id_bhvKoopaShellFlame = 250
 
 --- @type BehaviorId
-id_bhvBbhTiltingTrapPlatform = 251
+id_bhvKoopaShellUnderwater = 251
 
 --- @type BehaviorId
-id_bhvHauntedBookshelf = 252
+id_bhvLargeBomp = 252
 
 --- @type BehaviorId
-id_bhvMeshElevator = 253
+id_bhvLaunchDeathWarp = 253
 
 --- @type BehaviorId
-id_bhvMerryGoRound = 254
+id_bhvLaunchStarCollectWarp = 254
 
 --- @type BehaviorId
-id_bhvPlaysMusicTrackWhenTouched = 255
+id_bhvLeafParticleSpawner = 255
 
 --- @type BehaviorId
-id_bhvBetaBowserAnchor = 256
+id_bhvLllBowserPuzzle = 256
 
 --- @type BehaviorId
-id_bhvStaticCheckeredPlatform = 257
+id_bhvLllBowserPuzzlePiece = 257
 
 --- @type BehaviorId
-id_bhvUnused2A10 = 258
+id_bhvLllDrawbridge = 258
 
 --- @type BehaviorId
-id_bhvUnusedFakeStar = 259
+id_bhvLllDrawbridgeSpawner = 259
 
 --- @type BehaviorId
-id_bhvStaticObject = 260
+id_bhvLllFloatingWoodBridge = 260
 
 --- @type BehaviorId
-id_bhvUnused2A54 = 261
+id_bhvLllHexagonalMesh = 261
 
 --- @type BehaviorId
-id_bhvCastleFloorTrap = 262
+id_bhvLllMovingOctagonalMeshPlatform = 262
 
 --- @type BehaviorId
-id_bhvFloorTrapInCastle = 263
+id_bhvLllRollingLog = 263
 
 --- @type BehaviorId
-id_bhvTree = 264
+id_bhvLllRotatingBlockWithFireBars = 264
 
 --- @type BehaviorId
-id_bhvSparkle = 265
+id_bhvLllRotatingHexagonalPlatform = 265
 
 --- @type BehaviorId
-id_bhvSparkleSpawn = 266
+id_bhvLllRotatingHexagonalRing = 266
 
 --- @type BehaviorId
-id_bhvSparkleParticleSpawner = 267
+id_bhvLllRotatingHexFlame = 267
 
 --- @type BehaviorId
-id_bhvScuttlebug = 268
+id_bhvLllSinkingRectangularPlatform = 268
 
 --- @type BehaviorId
-id_bhvScuttlebugSpawn = 269
+id_bhvLllSinkingRockBlock = 269
 
 --- @type BehaviorId
-id_bhvWhompKingBoss = 270
+id_bhvLllSinkingSquarePlatforms = 270
 
 --- @type BehaviorId
-id_bhvSmallWhomp = 271
+id_bhvLllTiltingInvertedPyramid = 271
 
 --- @type BehaviorId
-id_bhvWaterSplash = 272
+id_bhvLllTumblingBridge = 272
 
 --- @type BehaviorId
-id_bhvWaterDroplet = 273
+id_bhvLllVolcanoFallingTrap = 273
 
 --- @type BehaviorId
-id_bhvWaterDropletSplash = 274
+id_bhvLllWoodPiece = 274
 
 --- @type BehaviorId
-id_bhvBubbleSplash = 275
+id_bhvMacroUkiki = 275
 
 --- @type BehaviorId
-id_bhvIdleWaterWave = 276
+id_bhvMadPiano = 276
 
 --- @type BehaviorId
-id_bhvObjectWaterSplash = 277
+id_bhvMantaRay = 277
 
 --- @type BehaviorId
-id_bhvShallowWaterWave = 278
+id_bhvMantaRayRingManager = 278
 
 --- @type BehaviorId
-id_bhvShallowWaterSplash = 279
+id_bhvMantaRayWaterRing = 279
 
 --- @type BehaviorId
-id_bhvObjectWaveTrail = 280
+id_bhvManyBlueFishSpawner = 280
 
 --- @type BehaviorId
-id_bhvWaveTrail = 281
+id_bhvMario = 281
 
 --- @type BehaviorId
-id_bhvTinyStrongWindParticle = 282
+id_bhvMenuButton = 282
 
 --- @type BehaviorId
-id_bhvStrongWindParticle = 283
+id_bhvMenuButtonManager = 283
 
 --- @type BehaviorId
-id_bhvSLSnowmanWind = 284
+id_bhvMerryGoRound = 284
 
 --- @type BehaviorId
-id_bhvSLWalkingPenguin = 285
+id_bhvMerryGoRoundBigBoo = 285
 
 --- @type BehaviorId
-id_bhvYellowBall = 286
+id_bhvMerryGoRoundBoo = 286
 
 --- @type BehaviorId
-id_bhvMario = 287
+id_bhvMerryGoRoundBooManager = 287
 
 --- @type BehaviorId
-id_bhvToadMessage = 288
+id_bhvMeshElevator = 288
 
 --- @type BehaviorId
-id_bhvUnlockDoorStar = 289
+id_bhvMessagePanel = 289
 
 --- @type BehaviorId
-id_bhvRandomAnimatedTexture = 290
+id_bhvMetalCap = 290
 
 --- @type BehaviorId
-id_bhvYellowBackgroundInMenu = 291
+id_bhvMips = 291
 
 --- @type BehaviorId
-id_bhvMenuButton = 292
+id_bhvMistCircParticleSpawner = 292
 
 --- @type BehaviorId
-id_bhvMenuButtonManager = 293
+id_bhvMistParticleSpawner = 293
 
 --- @type BehaviorId
-id_bhvActSelectorStarType = 294
+id_bhvMoatGrills = 294
 
 --- @type BehaviorId
-id_bhvActSelector = 295
+id_bhvMoneybag = 295
 
 --- @type BehaviorId
-id_bhvMovingYellowCoin = 296
+id_bhvMoneybagHidden = 296
 
 --- @type BehaviorId
-id_bhvMovingBlueCoin = 297
+id_bhvMontyMole = 297
 
 --- @type BehaviorId
-id_bhvBlueCoinSliding = 298
+id_bhvMontyMoleHole = 298
 
 --- @type BehaviorId
-id_bhvBlueCoinJumping = 299
+id_bhvMontyMoleRock = 299
 
 --- @type BehaviorId
-id_bhvSeaweed = 300
+id_bhvMovingBlueCoin = 300
 
 --- @type BehaviorId
-id_bhvSeaweedBundle = 301
+id_bhvMovingYellowCoin = 301
 
 --- @type BehaviorId
-id_bhvBobomb = 302
+id_bhvMrBlizzard = 302
 
 --- @type BehaviorId
-id_bhvBobombFuseSmoke = 303
+id_bhvMrBlizzardSnowball = 303
 
 --- @type BehaviorId
-id_bhvBobombBuddy = 304
+id_bhvMrI = 304
 
 --- @type BehaviorId
-id_bhvBobombBuddyOpensCannon = 305
+id_bhvMrIBlueCoin = 305
 
 --- @type BehaviorId
-id_bhvCannonClosed = 306
+id_bhvMrIBody = 306
 
 --- @type BehaviorId
-id_bhvWhirlpool = 307
+id_bhvMrIParticle = 307
 
 --- @type BehaviorId
-id_bhvJetStream = 308
+id_bhvNormalCap = 308
 
 --- @type BehaviorId
-id_bhvMessagePanel = 309
+id_bhvObjectBubble = 309
 
 --- @type BehaviorId
-id_bhvSignOnWall = 310
+id_bhvObjectWaterSplash = 310
 
 --- @type BehaviorId
-id_bhvHomingAmp = 311
+id_bhvObjectWaterWave = 311
 
 --- @type BehaviorId
-id_bhvCirclingAmp = 312
+id_bhvObjectWaveTrail = 312
 
 --- @type BehaviorId
-id_bhvButterfly = 313
+id_bhvOctagonalPlatformRotating = 313
 
 --- @type BehaviorId
-id_bhvHoot = 314
+id_bhvOneCoin = 314
 
 --- @type BehaviorId
-id_bhvBetaHoldableObject = 315
+id_bhvOpenableCageDoor = 315
 
 --- @type BehaviorId
-id_bhvCarrySomething1 = 316
+id_bhvOpenableGrill = 316
 
 --- @type BehaviorId
-id_bhvCarrySomething2 = 317
+id_bhvOrangeNumber = 317
 
 --- @type BehaviorId
-id_bhvCarrySomething3 = 318
+id_bhvPaintingDeathWarp = 318
 
 --- @type BehaviorId
-id_bhvCarrySomething4 = 319
+id_bhvPaintingStarCollectWarp = 319
 
 --- @type BehaviorId
-id_bhvCarrySomething5 = 320
+id_bhvPenguinBaby = 320
 
 --- @type BehaviorId
-id_bhvCarrySomething6 = 321
+id_bhvPenguinRaceFinishLine = 321
 
 --- @type BehaviorId
-id_bhvObjectBubble = 322
+id_bhvPenguinRaceShortcutCheck = 322
 
 --- @type BehaviorId
-id_bhvObjectWaterWave = 323
+id_bhvPillarBase = 323
 
 --- @type BehaviorId
-id_bhvExplosion = 324
+id_bhvPiranhaPlant = 324
 
 --- @type BehaviorId
-id_bhvBobombBullyDeathSmoke = 325
+id_bhvPiranhaPlantBubble = 325
 
 --- @type BehaviorId
-id_bhvSmoke = 326
+id_bhvPiranhaPlantWakingBubbles = 326
 
 --- @type BehaviorId
-id_bhvBobombExplosionBubble = 327
+id_bhvPitBowlingBall = 327
 
 --- @type BehaviorId
-id_bhvRespawner = 328
+id_bhvPlatformOnTrack = 328
 
 --- @type BehaviorId
-id_bhvSmallBully = 329
+id_bhvPlaysMusicTrackWhenTouched = 329
 
 --- @type BehaviorId
-id_bhvBigBully = 330
+id_bhvPlungeBubble = 330
 
 --- @type BehaviorId
-id_bhvBigBullyWithMinions = 331
+id_bhvPokey = 331
 
 --- @type BehaviorId
-id_bhvSmallChillBully = 332
+id_bhvPokeyBodyPart = 332
 
 --- @type BehaviorId
-id_bhvBigChillBully = 333
+id_bhvPoleGrabbing = 333
 
 --- @type BehaviorId
-id_bhvJetStreamRingSpawner = 334
+id_bhvPoundTinyStarParticle = 334
 
 --- @type BehaviorId
-id_bhvJetStreamWaterRing = 335
+id_bhvPunchTinyTriangle = 335
 
 --- @type BehaviorId
-id_bhvMantaRayWaterRing = 336
+id_bhvPurpleParticle = 336
 
 --- @type BehaviorId
-id_bhvMantaRayRingManager = 337
+id_bhvPurpleSwitchHiddenBoxes = 337
 
 --- @type BehaviorId
-id_bhvBowserBomb = 338
+id_bhvPushableMetalBox = 338
 
 --- @type BehaviorId
-id_bhvBowserBombExplosion = 339
+id_bhvPyramidElevator = 339
 
 --- @type BehaviorId
-id_bhvBowserBombSmoke = 340
+id_bhvPyramidElevatorTrajectoryMarkerBall = 340
 
 --- @type BehaviorId
-id_bhvCelebrationStar = 341
+id_bhvPyramidPillarTouchDetector = 341
 
 --- @type BehaviorId
-id_bhvCelebrationStarSparkle = 342
+id_bhvPyramidTop = 342
 
 --- @type BehaviorId
-id_bhvStarKeyCollectionPuffSpawner = 343
+id_bhvPyramidTopFragment = 343
 
 --- @type BehaviorId
-id_bhvLllDrawbridgeSpawner = 344
+id_bhvRacingPenguin = 344
 
 --- @type BehaviorId
-id_bhvLllDrawbridge = 345
+id_bhvRandomAnimatedTexture = 345
 
 --- @type BehaviorId
-id_bhvSmallBomp = 346
+id_bhvRecoveryHeart = 346
 
 --- @type BehaviorId
-id_bhvLargeBomp = 347
+id_bhvRedCoin = 347
 
 --- @type BehaviorId
-id_bhvWfSlidingPlatform = 348
+id_bhvRedCoinStarMarker = 348
 
 --- @type BehaviorId
-id_bhvMoneybag = 349
+id_bhvRespawner = 349
 
 --- @type BehaviorId
-id_bhvMoneybagHidden = 350
+id_bhvRockSolid = 350
 
 --- @type BehaviorId
-id_bhvPitBowlingBall = 351
+id_bhvRotatingCounterClockwise = 351
 
 --- @type BehaviorId
-id_bhvFreeBowlingBall = 352
+id_bhvRotatingExclamationMark = 352
 
 --- @type BehaviorId
-id_bhvBowlingBall = 353
+id_bhvRotatingPlatform = 353
 
 --- @type BehaviorId
-id_bhvTtmBowlingBallSpawner = 354
+id_bhvRrCruiserWing = 354
 
 --- @type BehaviorId
-id_bhvBobBowlingBallSpawner = 355
+id_bhvRrElevatorPlatform = 355
 
 --- @type BehaviorId
-id_bhvThiBowlingBallSpawner = 356
+id_bhvRrRotatingBridgePlatform = 356
 
 --- @type BehaviorId
-id_bhvRrCruiserWing = 357
+id_bhvSandSoundLoop = 357
 
 --- @type BehaviorId
-id_bhvSpindel = 358
+id_bhvScuttlebug = 358
 
 --- @type BehaviorId
-id_bhvSslMovingPyramidWall = 359
+id_bhvScuttlebugSpawn = 359
 
 --- @type BehaviorId
-id_bhvPyramidElevator = 360
+id_bhvSeaweed = 360
 
 --- @type BehaviorId
-id_bhvPyramidElevatorTrajectoryMarkerBall = 361
+id_bhvSeaweedBundle = 361
 
 --- @type BehaviorId
-id_bhvPyramidTop = 362
+id_bhvSeesawPlatform = 362
 
 --- @type BehaviorId
-id_bhvPyramidTopFragment = 363
+id_bhvShallowWaterSplash = 363
 
 --- @type BehaviorId
-id_bhvPyramidPillarTouchDetector = 364
+id_bhvShallowWaterWave = 364
 
 --- @type BehaviorId
-id_bhvWaterfallSoundLoop = 365
+id_bhvShipPart3 = 365
 
 --- @type BehaviorId
-id_bhvVolcanoSoundLoop = 366
+id_bhvSignOnWall = 366
 
 --- @type BehaviorId
-id_bhvCastleFlagWaving = 367
+id_bhvSingleCoinGetsSpawned = 367
 
 --- @type BehaviorId
-id_bhvBirdsSoundLoop = 368
+id_bhvSkeeter = 368
 
 --- @type BehaviorId
-id_bhvAmbientSounds = 369
+id_bhvSkeeterWave = 369
 
 --- @type BehaviorId
-id_bhvSandSoundLoop = 370
+id_bhvSlidingPlatform2 = 370
 
 --- @type BehaviorId
-id_bhvHiddenAt120Stars = 371
+id_bhvSlidingSnowMound = 371
 
 --- @type BehaviorId
-id_bhvSnowmansBottom = 372
+id_bhvSLSnowmanWind = 372
 
 --- @type BehaviorId
-id_bhvSnowmansHead = 373
+id_bhvSLWalkingPenguin = 373
 
 --- @type BehaviorId
-id_bhvSnowmansBodyCheckpoint = 374
+id_bhvSmallBomp = 374
 
 --- @type BehaviorId
-id_bhvBigSnowmanWhole = 375
+id_bhvSmallBully = 375
 
 --- @type BehaviorId
-id_bhvBigBoulder = 376
+id_bhvSmallChillBully = 376
 
 --- @type BehaviorId
-id_bhvBigBoulderGenerator = 377
+id_bhvSmallParticle = 377
 
 --- @type BehaviorId
-id_bhvWingCap = 378
+id_bhvSmallParticleBubbles = 378
 
 --- @type BehaviorId
-id_bhvMetalCap = 379
+id_bhvSmallParticleSnow = 379
 
 --- @type BehaviorId
-id_bhvNormalCap = 380
+id_bhvSmallPenguin = 380
 
 --- @type BehaviorId
-id_bhvVanishCap = 381
+id_bhvSmallPiranhaFlame = 381
 
 --- @type BehaviorId
-id_bhvStar = 382
+id_bhvSmallWaterWave = 382
 
 --- @type BehaviorId
-id_bhvStarSpawnCoordinates = 383
+id_bhvSmallWaterWave398 = 383
 
 --- @type BehaviorId
-id_bhvHiddenRedCoinStar = 384
+id_bhvSmallWhomp = 384
 
 --- @type BehaviorId
-id_bhvRedCoin = 385
+id_bhvSmoke = 385
 
 --- @type BehaviorId
-id_bhvBowserCourseRedCoinStar = 386
+id_bhvSnowBall = 386
 
 --- @type BehaviorId
-id_bhvHiddenStar = 387
+id_bhvSnowmansBodyCheckpoint = 387
 
 --- @type BehaviorId
-id_bhvHiddenStarTrigger = 388
+id_bhvSnowmansBottom = 388
 
 --- @type BehaviorId
-id_bhvTtmRollingLog = 389
+id_bhvSnowmansHead = 389
 
 --- @type BehaviorId
-id_bhvLllVolcanoFallingTrap = 390
+id_bhvSnowMoundSpawn = 390
 
 --- @type BehaviorId
-id_bhvLllRollingLog = 391
+id_bhvSnowParticleSpawner = 391
 
 --- @type BehaviorId
-id_bhv1upWalking = 392
+id_bhvSnufit = 392
 
 --- @type BehaviorId
-id_bhv1upRunningAway = 393
+id_bhvSnufitBalls = 393
 
 --- @type BehaviorId
-id_bhv1upSliding = 394
+id_bhvSoundSpawner = 394
 
 --- @type BehaviorId
-id_bhv1Up = 395
+id_bhvSparkle = 395
 
 --- @type BehaviorId
-id_bhv1upJumpOnApproach = 396
+id_bhvSparkleParticleSpawner = 396
 
 --- @type BehaviorId
-id_bhvHidden1up = 397
+id_bhvSparkleSpawn = 397
 
 --- @type BehaviorId
-id_bhvHidden1upTrigger = 398
+id_bhvSpawnedStar = 398
 
 --- @type BehaviorId
-id_bhvHidden1upInPole = 399
+id_bhvSpawnedStarNoLevelExit = 399
 
 --- @type BehaviorId
-id_bhvHidden1upInPoleTrigger = 400
+id_bhvSpinAirborneCircleWarp = 400
 
 --- @type BehaviorId
-id_bhvHidden1upInPoleSpawner = 401
+id_bhvSpinAirborneWarp = 401
 
 --- @type BehaviorId
-id_bhvControllablePlatform = 402
+id_bhvSpindel = 402
 
 --- @type BehaviorId
-id_bhvControllablePlatformSub = 403
+id_bhvSpindrift = 403
 
 --- @type BehaviorId
-id_bhvBreakableBoxSmall = 404
+id_bhvSpiny = 404
 
 --- @type BehaviorId
-id_bhvSlidingSnowMound = 405
+id_bhvSquarishPathMoving = 405
 
 --- @type BehaviorId
-id_bhvSnowMoundSpawn = 406
+id_bhvSquarishPathParent = 406
 
 --- @type BehaviorId
-id_bhvWdwSquareFloatingPlatform = 407
+id_bhvSquishablePlatform = 407
 
 --- @type BehaviorId
-id_bhvWdwRectangularFloatingPlatform = 408
+id_bhvSslMovingPyramidWall = 408
 
 --- @type BehaviorId
-id_bhvJrbFloatingPlatform = 409
+id_bhvStar = 409
 
 --- @type BehaviorId
-id_bhvArrowLift = 410
+id_bhvStarDoor = 410
 
 --- @type BehaviorId
-id_bhvOrangeNumber = 411
+id_bhvStarKeyCollectionPuffSpawner = 411
 
 --- @type BehaviorId
-id_bhvMantaRay = 412
+id_bhvStarSpawnCoordinates = 412
 
 --- @type BehaviorId
-id_bhvFallingPillar = 413
+id_bhvStaticCheckeredPlatform = 413
 
 --- @type BehaviorId
-id_bhvFallingPillarHitbox = 414
+id_bhvStaticObject = 414
 
 --- @type BehaviorId
-id_bhvPillarBase = 415
+id_bhvStrongWindParticle = 415
 
 --- @type BehaviorId
-id_bhvJrbFloatingBox = 416
+id_bhvStub = 416
 
 --- @type BehaviorId
-id_bhvDecorativePendulum = 417
+id_bhvStub1D0C = 417
 
 --- @type BehaviorId
-id_bhvTreasureChestsShip = 418
+id_bhvStub1D70 = 418
 
 --- @type BehaviorId
-id_bhvTreasureChestsJrb = 419
+id_bhvSunkenShipPart = 419
 
 --- @type BehaviorId
-id_bhvTreasureChests = 420
+id_bhvSunkenShipPart2 = 420
 
 --- @type BehaviorId
-id_bhvTreasureChestBottom = 421
+id_bhvSunkenShipSetRotation = 421
 
 --- @type BehaviorId
-id_bhvTreasureChestTop = 422
+id_bhvSushiShark = 422
 
 --- @type BehaviorId
-id_bhvMips = 423
+id_bhvSushiSharkCollisionChild = 423
 
 --- @type BehaviorId
-id_bhvYoshi = 424
+id_bhvSwimmingWarp = 424
 
 --- @type BehaviorId
-id_bhvKoopa = 425
+id_bhvSwingPlatform = 425
 
 --- @type BehaviorId
-id_bhvKoopaRaceEndpoint = 426
+id_bhvSwoop = 426
 
 --- @type BehaviorId
-id_bhvKoopaFlag = 427
+id_bhvTankFishGroup = 427
 
 --- @type BehaviorId
-id_bhvPokey = 428
+id_bhvTemporaryYellowCoin = 428
 
 --- @type BehaviorId
-id_bhvPokeyBodyPart = 429
+id_bhvTenCoinsSpawn = 429
 
 --- @type BehaviorId
-id_bhvSwoop = 430
+id_bhvThiBowlingBallSpawner = 430
 
 --- @type BehaviorId
-id_bhvFlyGuy = 431
+id_bhvThiHugeIslandTop = 431
 
 --- @type BehaviorId
-id_bhvGoomba = 432
+id_bhvThiTinyIslandTop = 432
 
 --- @type BehaviorId
-id_bhvGoombaTripletSpawner = 433
+id_bhvThreeCoinsSpawn = 433
 
 --- @type BehaviorId
-id_bhvChainChomp = 434
+id_bhvThwomp = 434
 
 --- @type BehaviorId
-id_bhvChainChompChainPart = 435
+id_bhvThwomp2 = 435
 
 --- @type BehaviorId
-id_bhvWoodenPost = 436
+id_bhvTiltingBowserLavaPlatform = 436
 
 --- @type BehaviorId
-id_bhvChainChompGate = 437
+id_bhvTinyStrongWindParticle = 437
 
 --- @type BehaviorId
-id_bhvWigglerHead = 438
+id_bhvToadMessage = 438
 
 --- @type BehaviorId
-id_bhvWigglerBody = 439
+id_bhvTower = 439
 
 --- @type BehaviorId
-id_bhvEnemyLakitu = 440
+id_bhvTowerDoor = 440
 
 --- @type BehaviorId
-id_bhvCameraLakitu = 441
+id_bhvTowerPlatformGroup = 441
 
 --- @type BehaviorId
-id_bhvCloud = 442
+id_bhvToxBox = 442
 
 --- @type BehaviorId
-id_bhvCloudPart = 443
+id_bhvTrackBall = 443
 
 --- @type BehaviorId
-id_bhvSpiny = 444
+id_bhvTreasureChestBottom = 444
 
 --- @type BehaviorId
-id_bhvMontyMole = 445
+id_bhvTreasureChests = 445
 
 --- @type BehaviorId
-id_bhvMontyMoleHole = 446
+id_bhvTreasureChestsJrb = 446
 
 --- @type BehaviorId
-id_bhvMontyMoleRock = 447
+id_bhvTreasureChestsShip = 447
 
 --- @type BehaviorId
-id_bhvPlatformOnTrack = 448
+id_bhvTreasureChestTop = 448
 
 --- @type BehaviorId
-id_bhvTrackBall = 449
+id_bhvTree = 449
 
 --- @type BehaviorId
-id_bhvSeesawPlatform = 450
+id_bhvTreeLeaf = 450
 
 --- @type BehaviorId
-id_bhvFerrisWheelAxle = 451
+id_bhvTreeSnow = 451
 
 --- @type BehaviorId
-id_bhvFerrisWheelPlatform = 452
+id_bhvTriangleParticleSpawner = 452
 
 --- @type BehaviorId
-id_bhvWaterBombSpawner = 453
+id_bhvTripletButterfly = 453
 
 --- @type BehaviorId
-id_bhvWaterBomb = 454
+id_bhvTTC2DRotator = 454
 
 --- @type BehaviorId
-id_bhvWaterBombShadow = 455
+id_bhvTTCCog = 455
 
 --- @type BehaviorId
-id_bhvTTCRotatingSolid = 456
+id_bhvTTCElevator = 456
 
 --- @type BehaviorId
-id_bhvTTCPendulum = 457
+id_bhvTTCMovingBar = 457
 
 --- @type BehaviorId
-id_bhvTTCTreadmill = 458
+id_bhvTTCPendulum = 458
 
 --- @type BehaviorId
-id_bhvTTCMovingBar = 459
+id_bhvTTCPitBlock = 459
 
 --- @type BehaviorId
-id_bhvTTCCog = 460
+id_bhvTTCRotatingSolid = 460
 
 --- @type BehaviorId
-id_bhvTTCPitBlock = 461
+id_bhvTTCSpinner = 461
 
 --- @type BehaviorId
-id_bhvTTCElevator = 462
+id_bhvTTCTreadmill = 462
 
 --- @type BehaviorId
-id_bhvTTC2DRotator = 463
+id_bhvTtmBowlingBallSpawner = 463
 
 --- @type BehaviorId
-id_bhvTTCSpinner = 464
+id_bhvTtmRollingLog = 464
 
 --- @type BehaviorId
-id_bhvMrBlizzard = 465
+id_bhvTumblingBridgePlatform = 465
 
 --- @type BehaviorId
-id_bhvMrBlizzardSnowball = 466
+id_bhvTuxiesMother = 466
 
 --- @type BehaviorId
-id_bhvSlidingPlatform2 = 467
+id_bhvTweester = 467
 
 --- @type BehaviorId
-id_bhvOctagonalPlatformRotating = 468
+id_bhvTweesterSandParticle = 468
 
 --- @type BehaviorId
-id_bhvAnimatesOnFloorSwitchPress = 469
+id_bhvUkiki = 469
 
 --- @type BehaviorId
-id_bhvActivatedBackAndForthPlatform = 470
+id_bhvUkikiCage = 470
 
 --- @type BehaviorId
-id_bhvRecoveryHeart = 471
+id_bhvUkikiCageChild = 471
 
 --- @type BehaviorId
-id_bhvWaterBombCannon = 472
+id_bhvUkikiCageStar = 472
 
 --- @type BehaviorId
-id_bhvCannonBarrelBubbles = 473
+id_bhvUnagi = 473
 
 --- @type BehaviorId
-id_bhvUnagi = 474
+id_bhvUnagiSubobject = 474
 
 --- @type BehaviorId
-id_bhvUnagiSubobject = 475
+id_bhvUnlockDoorStar = 475
 
 --- @type BehaviorId
-id_bhvDorrie = 476
+id_bhvUnused05A8 = 476
 
 --- @type BehaviorId
-id_bhvHauntedChair = 477
+id_bhvUnused0DFC = 477
 
 --- @type BehaviorId
-id_bhvMadPiano = 478
+id_bhvUnused1820 = 478
 
 --- @type BehaviorId
-id_bhvFlyingBookend = 479
+id_bhvUnused1F30 = 479
 
 --- @type BehaviorId
-id_bhvBookendSpawn = 480
+id_bhvUnused20E0 = 480
 
 --- @type BehaviorId
-id_bhvHauntedBookshelfManager = 481
+id_bhvUnused2A10 = 481
 
 --- @type BehaviorId
-id_bhvBookSwitch = 482
+id_bhvUnused2A54 = 482
 
 --- @type BehaviorId
-id_bhvFirePiranhaPlant = 483
+id_bhvUnusedFakeStar = 483
 
 --- @type BehaviorId
-id_bhvSmallPiranhaFlame = 484
+id_bhvUnusedParticleSpawn = 484
 
 --- @type BehaviorId
-id_bhvFireSpitter = 485
+id_bhvUnusedPoundablePlatform = 485
 
 --- @type BehaviorId
-id_bhvFlyguyFlame = 486
+id_bhvVanishCap = 486
 
 --- @type BehaviorId
-id_bhvSnufit = 487
+id_bhvVertStarParticleSpawner = 487
 
 --- @type BehaviorId
-id_bhvSnufitBalls = 488
+id_bhvVolcanoFlames = 488
 
 --- @type BehaviorId
-id_bhvHorizontalGrindel = 489
+id_bhvVolcanoSoundLoop = 489
 
 --- @type BehaviorId
-id_bhvEyerokBoss = 490
+id_bhvWallTinyStarParticle = 490
 
 --- @type BehaviorId
-id_bhvEyerokHand = 491
+id_bhvWarp = 491
 
 --- @type BehaviorId
-id_bhvKlepto = 492
+id_bhvWarpPipe = 492
 
 --- @type BehaviorId
-id_bhvBird = 493
+id_bhvWaterAirBubble = 493
 
 --- @type BehaviorId
-id_bhvRacingPenguin = 494
+id_bhvWaterBomb = 494
 
 --- @type BehaviorId
-id_bhvPenguinRaceFinishLine = 495
+id_bhvWaterBombCannon = 495
 
 --- @type BehaviorId
-id_bhvPenguinRaceShortcutCheck = 496
+id_bhvWaterBombShadow = 496
 
 --- @type BehaviorId
-id_bhvCoffinSpawner = 497
+id_bhvWaterBombSpawner = 497
 
 --- @type BehaviorId
-id_bhvCoffin = 498
+id_bhvWaterDroplet = 498
 
 --- @type BehaviorId
-id_bhvClamShell = 499
+id_bhvWaterDropletSplash = 499
 
 --- @type BehaviorId
-id_bhvSkeeter = 500
+id_bhvWaterfallSoundLoop = 500
 
 --- @type BehaviorId
-id_bhvSkeeterWave = 501
+id_bhvWaterLevelDiamond = 501
 
 --- @type BehaviorId
-id_bhvSwingPlatform = 502
+id_bhvWaterLevelPillar = 502
 
 --- @type BehaviorId
-id_bhvDonutPlatformSpawner = 503
+id_bhvWaterMist = 503
 
 --- @type BehaviorId
-id_bhvDonutPlatform = 504
+id_bhvWaterMist2 = 504
 
 --- @type BehaviorId
-id_bhvDDDPole = 505
+id_bhvWaterSplash = 505
 
 --- @type BehaviorId
-id_bhvRedCoinStarMarker = 506
+id_bhvWaveTrail = 506
 
 --- @type BehaviorId
-id_bhvTripletButterfly = 507
+id_bhvWdwExpressElevator = 507
 
 --- @type BehaviorId
-id_bhvBubba = 508
+id_bhvWdwExpressElevatorPlatform = 508
 
 --- @type BehaviorId
-id_bhvBeginningLakitu = 509
+id_bhvWdwRectangularFloatingPlatform = 509
 
 --- @type BehaviorId
-id_bhvBeginningPeach = 510
+id_bhvWdwSquareFloatingPlatform = 510
 
 --- @type BehaviorId
-id_bhvEndBirds1 = 511
+id_bhvWfBreakableWallLeft = 511
 
 --- @type BehaviorId
-id_bhvEndBirds2 = 512
+id_bhvWfBreakableWallRight = 512
 
 --- @type BehaviorId
-id_bhvIntroScene = 513
+id_bhvWfElevatorTowerPlatform = 513
 
 --- @type BehaviorId
-id_bhv_max_count = 514
+id_bhvWfRotatingWoodenPlatform = 514
+
+--- @type BehaviorId
+id_bhvWfSlidingPlatform = 515
+
+--- @type BehaviorId
+id_bhvWfSlidingTowerPlatform = 516
+
+--- @type BehaviorId
+id_bhvWfSolidTowerPlatform = 517
+
+--- @type BehaviorId
+id_bhvWfTumblingBridge = 518
+
+--- @type BehaviorId
+id_bhvWhirlpool = 519
+
+--- @type BehaviorId
+id_bhvWhitePuff1 = 520
+
+--- @type BehaviorId
+id_bhvWhitePuff2 = 521
+
+--- @type BehaviorId
+id_bhvWhitePuffExplosion = 522
+
+--- @type BehaviorId
+id_bhvWhitePuffSmoke = 523
+
+--- @type BehaviorId
+id_bhvWhitePuffSmoke2 = 524
+
+--- @type BehaviorId
+id_bhvWhompKingBoss = 525
+
+--- @type BehaviorId
+id_bhvWigglerBody = 526
+
+--- @type BehaviorId
+id_bhvWigglerHead = 527
+
+--- @type BehaviorId
+id_bhvWind = 528
+
+--- @type BehaviorId
+id_bhvWingCap = 529
+
+--- @type BehaviorId
+id_bhvWoodenPost = 530
+
+--- @type BehaviorId
+id_bhvYellowBackgroundInMenu = 531
+
+--- @type BehaviorId
+id_bhvYellowBall = 532
+
+--- @type BehaviorId
+id_bhvYellowCoin = 533
+
+--- @type BehaviorId
+id_bhvYoshi = 534
+
+--- @type BehaviorId
+id_bhv_max_count = 535
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E
@@ -1857,6 +1984,9 @@ CAMERA_MODE_PARALLEL_TRACKING = 0x0C
 
 --- @type integer
 CAMERA_MODE_RADIAL = 0x01
+
+--- @type integer
+CAMERA_MODE_ROM_HACK = 0x13
 
 --- @type integer
 CAMERA_MODE_SLIDE_HOOT = 0x09
@@ -2506,6 +2636,521 @@ CT_WARIO = 4
 
 --- @type CharacterType
 CT_MAX = 5
+
+--- @class DialogId
+
+--- @type DialogId
+DIALOG_000 = 0
+
+--- @type DialogId
+DIALOG_001 = 1
+
+--- @type DialogId
+DIALOG_002 = 2
+
+--- @type DialogId
+DIALOG_003 = 3
+
+--- @type DialogId
+DIALOG_004 = 4
+
+--- @type DialogId
+DIALOG_005 = 5
+
+--- @type DialogId
+DIALOG_006 = 6
+
+--- @type DialogId
+DIALOG_007 = 7
+
+--- @type DialogId
+DIALOG_008 = 8
+
+--- @type DialogId
+DIALOG_009 = 9
+
+--- @type DialogId
+DIALOG_010 = 10
+
+--- @type DialogId
+DIALOG_011 = 11
+
+--- @type DialogId
+DIALOG_012 = 12
+
+--- @type DialogId
+DIALOG_013 = 13
+
+--- @type DialogId
+DIALOG_014 = 14
+
+--- @type DialogId
+DIALOG_015 = 15
+
+--- @type DialogId
+DIALOG_016 = 16
+
+--- @type DialogId
+DIALOG_017 = 17
+
+--- @type DialogId
+DIALOG_018 = 18
+
+--- @type DialogId
+DIALOG_019 = 19
+
+--- @type DialogId
+DIALOG_020 = 20
+
+--- @type DialogId
+DIALOG_021 = 21
+
+--- @type DialogId
+DIALOG_022 = 22
+
+--- @type DialogId
+DIALOG_023 = 23
+
+--- @type DialogId
+DIALOG_024 = 24
+
+--- @type DialogId
+DIALOG_025 = 25
+
+--- @type DialogId
+DIALOG_026 = 26
+
+--- @type DialogId
+DIALOG_027 = 27
+
+--- @type DialogId
+DIALOG_028 = 28
+
+--- @type DialogId
+DIALOG_029 = 29
+
+--- @type DialogId
+DIALOG_030 = 30
+
+--- @type DialogId
+DIALOG_031 = 31
+
+--- @type DialogId
+DIALOG_032 = 32
+
+--- @type DialogId
+DIALOG_033 = 33
+
+--- @type DialogId
+DIALOG_034 = 34
+
+--- @type DialogId
+DIALOG_035 = 35
+
+--- @type DialogId
+DIALOG_036 = 36
+
+--- @type DialogId
+DIALOG_037 = 37
+
+--- @type DialogId
+DIALOG_038 = 38
+
+--- @type DialogId
+DIALOG_039 = 39
+
+--- @type DialogId
+DIALOG_040 = 40
+
+--- @type DialogId
+DIALOG_041 = 41
+
+--- @type DialogId
+DIALOG_042 = 42
+
+--- @type DialogId
+DIALOG_043 = 43
+
+--- @type DialogId
+DIALOG_044 = 44
+
+--- @type DialogId
+DIALOG_045 = 45
+
+--- @type DialogId
+DIALOG_046 = 46
+
+--- @type DialogId
+DIALOG_047 = 47
+
+--- @type DialogId
+DIALOG_048 = 48
+
+--- @type DialogId
+DIALOG_049 = 49
+
+--- @type DialogId
+DIALOG_050 = 50
+
+--- @type DialogId
+DIALOG_051 = 51
+
+--- @type DialogId
+DIALOG_052 = 52
+
+--- @type DialogId
+DIALOG_053 = 53
+
+--- @type DialogId
+DIALOG_054 = 54
+
+--- @type DialogId
+DIALOG_055 = 55
+
+--- @type DialogId
+DIALOG_056 = 56
+
+--- @type DialogId
+DIALOG_057 = 57
+
+--- @type DialogId
+DIALOG_058 = 58
+
+--- @type DialogId
+DIALOG_059 = 59
+
+--- @type DialogId
+DIALOG_060 = 60
+
+--- @type DialogId
+DIALOG_061 = 61
+
+--- @type DialogId
+DIALOG_062 = 62
+
+--- @type DialogId
+DIALOG_063 = 63
+
+--- @type DialogId
+DIALOG_064 = 64
+
+--- @type DialogId
+DIALOG_065 = 65
+
+--- @type DialogId
+DIALOG_066 = 66
+
+--- @type DialogId
+DIALOG_067 = 67
+
+--- @type DialogId
+DIALOG_068 = 68
+
+--- @type DialogId
+DIALOG_069 = 69
+
+--- @type DialogId
+DIALOG_070 = 70
+
+--- @type DialogId
+DIALOG_071 = 71
+
+--- @type DialogId
+DIALOG_072 = 72
+
+--- @type DialogId
+DIALOG_073 = 73
+
+--- @type DialogId
+DIALOG_074 = 74
+
+--- @type DialogId
+DIALOG_075 = 75
+
+--- @type DialogId
+DIALOG_076 = 76
+
+--- @type DialogId
+DIALOG_077 = 77
+
+--- @type DialogId
+DIALOG_078 = 78
+
+--- @type DialogId
+DIALOG_079 = 79
+
+--- @type DialogId
+DIALOG_080 = 80
+
+--- @type DialogId
+DIALOG_081 = 81
+
+--- @type DialogId
+DIALOG_082 = 82
+
+--- @type DialogId
+DIALOG_083 = 83
+
+--- @type DialogId
+DIALOG_084 = 84
+
+--- @type DialogId
+DIALOG_085 = 85
+
+--- @type DialogId
+DIALOG_086 = 86
+
+--- @type DialogId
+DIALOG_087 = 87
+
+--- @type DialogId
+DIALOG_088 = 88
+
+--- @type DialogId
+DIALOG_089 = 89
+
+--- @type DialogId
+DIALOG_090 = 90
+
+--- @type DialogId
+DIALOG_091 = 91
+
+--- @type DialogId
+DIALOG_092 = 92
+
+--- @type DialogId
+DIALOG_093 = 93
+
+--- @type DialogId
+DIALOG_094 = 94
+
+--- @type DialogId
+DIALOG_095 = 95
+
+--- @type DialogId
+DIALOG_096 = 96
+
+--- @type DialogId
+DIALOG_097 = 97
+
+--- @type DialogId
+DIALOG_098 = 98
+
+--- @type DialogId
+DIALOG_099 = 99
+
+--- @type DialogId
+DIALOG_100 = 100
+
+--- @type DialogId
+DIALOG_101 = 101
+
+--- @type DialogId
+DIALOG_102 = 102
+
+--- @type DialogId
+DIALOG_103 = 103
+
+--- @type DialogId
+DIALOG_104 = 104
+
+--- @type DialogId
+DIALOG_105 = 105
+
+--- @type DialogId
+DIALOG_106 = 106
+
+--- @type DialogId
+DIALOG_107 = 107
+
+--- @type DialogId
+DIALOG_108 = 108
+
+--- @type DialogId
+DIALOG_109 = 109
+
+--- @type DialogId
+DIALOG_110 = 110
+
+--- @type DialogId
+DIALOG_111 = 111
+
+--- @type DialogId
+DIALOG_112 = 112
+
+--- @type DialogId
+DIALOG_113 = 113
+
+--- @type DialogId
+DIALOG_114 = 114
+
+--- @type DialogId
+DIALOG_115 = 115
+
+--- @type DialogId
+DIALOG_116 = 116
+
+--- @type DialogId
+DIALOG_117 = 117
+
+--- @type DialogId
+DIALOG_118 = 118
+
+--- @type DialogId
+DIALOG_119 = 119
+
+--- @type DialogId
+DIALOG_120 = 120
+
+--- @type DialogId
+DIALOG_121 = 121
+
+--- @type DialogId
+DIALOG_122 = 122
+
+--- @type DialogId
+DIALOG_123 = 123
+
+--- @type DialogId
+DIALOG_124 = 124
+
+--- @type DialogId
+DIALOG_125 = 125
+
+--- @type DialogId
+DIALOG_126 = 126
+
+--- @type DialogId
+DIALOG_127 = 127
+
+--- @type DialogId
+DIALOG_128 = 128
+
+--- @type DialogId
+DIALOG_129 = 129
+
+--- @type DialogId
+DIALOG_130 = 130
+
+--- @type DialogId
+DIALOG_131 = 131
+
+--- @type DialogId
+DIALOG_132 = 132
+
+--- @type DialogId
+DIALOG_133 = 133
+
+--- @type DialogId
+DIALOG_134 = 134
+
+--- @type DialogId
+DIALOG_135 = 135
+
+--- @type DialogId
+DIALOG_136 = 136
+
+--- @type DialogId
+DIALOG_137 = 137
+
+--- @type DialogId
+DIALOG_138 = 138
+
+--- @type DialogId
+DIALOG_139 = 139
+
+--- @type DialogId
+DIALOG_140 = 140
+
+--- @type DialogId
+DIALOG_141 = 141
+
+--- @type DialogId
+DIALOG_142 = 142
+
+--- @type DialogId
+DIALOG_143 = 143
+
+--- @type DialogId
+DIALOG_144 = 144
+
+--- @type DialogId
+DIALOG_145 = 145
+
+--- @type DialogId
+DIALOG_146 = 146
+
+--- @type DialogId
+DIALOG_147 = 147
+
+--- @type DialogId
+DIALOG_148 = 148
+
+--- @type DialogId
+DIALOG_149 = 149
+
+--- @type DialogId
+DIALOG_150 = 150
+
+--- @type DialogId
+DIALOG_151 = 151
+
+--- @type DialogId
+DIALOG_152 = 152
+
+--- @type DialogId
+DIALOG_153 = 153
+
+--- @type DialogId
+DIALOG_154 = 154
+
+--- @type DialogId
+DIALOG_155 = 155
+
+--- @type DialogId
+DIALOG_156 = 156
+
+--- @type DialogId
+DIALOG_157 = 157
+
+--- @type DialogId
+DIALOG_158 = 158
+
+--- @type DialogId
+DIALOG_159 = 159
+
+--- @type DialogId
+DIALOG_160 = 160
+
+--- @type DialogId
+DIALOG_161 = 161
+
+--- @type DialogId
+DIALOG_162 = 162
+
+--- @type DialogId
+DIALOG_163 = 163
+
+--- @type DialogId
+DIALOG_164 = 164
+
+--- @type DialogId
+DIALOG_165 = 165
+
+--- @type DialogId
+DIALOG_166 = 166
+
+--- @type DialogId
+DIALOG_167 = 167
+
+--- @type DialogId
+DIALOG_168 = 168
+
+--- @type DialogId
+DIALOG_169 = 169
+
+--- @type DialogId
+DIALOG_COUNT = 170
 
 --- @class DjuiFontType
 
@@ -3734,7 +4379,7 @@ MAX_SYNC_OBJECTS = 256
 MAX_SYNC_OBJECT_FIELDS = 64
 
 --- @type integer
-PACKET_LENGTH = 2048
+PACKET_LENGTH = 3000
 
 --- @type integer
 SYNC_DISTANCE_INFINITE = 0
@@ -3801,6 +4446,42 @@ OBJ_COL_FLAG_NO_Y_VEL = (1 << 3)
 
 --- @type integer
 OBJ_COL_FLAG_UNDERWATER = (1 << 2)
+
+--- @type integer
+ATTACK_HANDLER_DIE_IF_HEALTH_NON_POSITIVE = 1
+
+--- @type integer
+ATTACK_HANDLER_KNOCKBACK = 2
+
+--- @type integer
+ATTACK_HANDLER_NOP = 0
+
+--- @type integer
+ATTACK_HANDLER_SET_SPEED_TO_ZERO = 5
+
+--- @type integer
+ATTACK_HANDLER_SPECIAL_HUGE_GOOMBA_WEAKLY_ATTACKED = 7
+
+--- @type integer
+ATTACK_HANDLER_SPECIAL_KOOPA_LOSE_SHELL = 4
+
+--- @type integer
+ATTACK_HANDLER_SPECIAL_WIGGLER_JUMPED_ON = 6
+
+--- @type integer
+ATTACK_HANDLER_SQUISHED = 3
+
+--- @type integer
+ATTACK_HANDLER_SQUISHED_WITH_BLUE_COIN = 8
+
+--- @type integer
+ACTIVATED_BF_PLAT_TYPE_BITFS_ELEVATOR = 2
+
+--- @type integer
+ACTIVATED_BF_PLAT_TYPE_BITFS_MESH_PLAT = 1
+
+--- @type integer
+ACTIVATED_BF_PLAT_TYPE_BITS_ARROW_PLAT = 0
 
 --- @type integer
 ACTIVE_FLAG_ACTIVE = (1 << 0)
@@ -3899,6 +4580,666 @@ ACTIVE_PARTICLE_WATER_SPLASH = (1 << 6)
 ACTIVE_PARTICLE_WAVE_TRAIL = (1 << 10)
 
 --- @type integer
+AMP_ACT_ATTACK_COOLDOWN = 4
+
+--- @type integer
+AMP_ACT_IDLE = 2
+
+--- @type integer
+AMP_BP_ROT_RADIUS_0 = 3
+
+--- @type integer
+AMP_BP_ROT_RADIUS_200 = 0
+
+--- @type integer
+AMP_BP_ROT_RADIUS_300 = 1
+
+--- @type integer
+AMP_BP_ROT_RADIUS_400 = 2
+
+--- @type integer
+ARROW_LIFT_ACT_IDLE = 0
+
+--- @type integer
+ARROW_LIFT_ACT_MOVING_AWAY = 1
+
+--- @type integer
+ARROW_LIFT_ACT_MOVING_BACK = 2
+
+--- @type integer
+ARROW_LIFT_DONE_MOVING = 1
+
+--- @type integer
+ARROW_LIFT_NOT_DONE_MOVING = 0
+
+--- @type integer
+BBALL_ACT_INITIALIZE = 0
+
+--- @type integer
+BBALL_ACT_ROLL = 1
+
+--- @type integer
+BBALL_BP_STYPE_BOB_LOWER = 2
+
+--- @type integer
+BBALL_BP_STYPE_BOB_UPPER = 0
+
+--- @type integer
+BBALL_BP_STYPE_THI_LARGE = 3
+
+--- @type integer
+BBALL_BP_STYPE_THI_SMALL = 4
+
+--- @type integer
+BBALL_BP_STYPE_TTM = 1
+
+--- @type integer
+BBH_DYNAMIC_SURFACE_ROOM = 0
+
+--- @type integer
+BBH_NEAR_MERRY_GO_ROUND_ROOM = 10
+
+--- @type integer
+BBH_OUTSIDE_ROOM = 13
+
+--- @type integer
+BBH_TILTING_TRAP_PLATFORM_ACT_MARIO_OFF = 1
+
+--- @type integer
+BBH_TILTING_TRAP_PLATFORM_ACT_MARIO_ON = 0
+
+--- @type integer
+BETA_BOO_KEY_ACT_DROPPED = 2
+
+--- @type integer
+BETA_BOO_KEY_ACT_DROPPING = 1
+
+--- @type integer
+BETA_BOO_KEY_ACT_IN_BOO = 0
+
+--- @type integer
+BETA_CHEST_ACT_IDLE_CLOSED = 0
+
+--- @type integer
+BETA_CHEST_ACT_IDLE_OPEN = 2
+
+--- @type integer
+BETA_CHEST_ACT_OPENING = 1
+
+--- @type integer
+BIRD_ACT_FLY = 1
+
+--- @type integer
+BIRD_ACT_INACTIVE = 0
+
+--- @type integer
+BIRD_BP_SPAWNED = 0
+
+--- @type integer
+BIRD_BP_SPAWNER = 1
+
+--- @type integer
+BLUE_COIN_SWITCH_ACT_IDLE = 0
+
+--- @type integer
+BLUE_COIN_SWITCH_ACT_RECEDING = 1
+
+--- @type integer
+BLUE_COIN_SWITCH_ACT_TICKING = 2
+
+--- @type integer
+BLUE_FISH_ACT_ASCEND = 2
+
+--- @type integer
+BLUE_FISH_ACT_DIVE = 0
+
+--- @type integer
+BLUE_FISH_ACT_DUPLICATE = 2
+
+--- @type integer
+BLUE_FISH_ACT_ROOM = 1
+
+--- @type integer
+BLUE_FISH_ACT_SPAWN = 0
+
+--- @type integer
+BLUE_FISH_ACT_TURN = 1
+
+--- @type integer
+BLUE_FISH_ACT_TURN_BACK = 3
+
+--- @type integer
+BOBOMB_ACT_CHASE_MARIO = 2
+
+--- @type integer
+BOBOMB_ACT_DEATH_PLANE_DEATH = 101
+
+--- @type integer
+BOBOMB_ACT_EXPLODE = 3
+
+--- @type integer
+BOBOMB_ACT_LAUNCHED = 1
+
+--- @type integer
+BOBOMB_ACT_LAVA_DEATH = 100
+
+--- @type integer
+BOBOMB_ACT_PATROL = 0
+
+--- @type integer
+BOBOMB_BP_STYPE_GENERIC = 0
+
+--- @type integer
+BOBOMB_BP_STYPE_STATIONARY = 1
+
+--- @type integer
+BOBOMB_BUDDY_ACT_IDLE = 0
+
+--- @type integer
+BOBOMB_BUDDY_ACT_TALK = 3
+
+--- @type integer
+BOBOMB_BUDDY_ACT_TURN_TO_TALK = 2
+
+--- @type integer
+BOBOMB_BUDDY_BP_STYPE_BOB_CANNON_KBB = 2
+
+--- @type integer
+BOBOMB_BUDDY_BP_STYPE_BOB_GRASS = 3
+
+--- @type integer
+BOBOMB_BUDDY_BP_STYPE_BOB_GRASS_KBB = 1
+
+--- @type integer
+BOBOMB_BUDDY_BP_STYPE_GENERIC = 0
+
+--- @type integer
+BOBOMB_BUDDY_CANNON_OPENED = 2
+
+--- @type integer
+BOBOMB_BUDDY_CANNON_OPENING = 1
+
+--- @type integer
+BOBOMB_BUDDY_CANNON_STOP_TALKING = 3
+
+--- @type integer
+BOBOMB_BUDDY_CANNON_UNOPENED = 0
+
+--- @type integer
+BOBOMB_BUDDY_HAS_NOT_TALKED = 0
+
+--- @type integer
+BOBOMB_BUDDY_HAS_TALKED = 2
+
+--- @type integer
+BOBOMB_BUDDY_ROLE_ADVICE = 0
+
+--- @type integer
+BOBOMB_BUDDY_ROLE_CANNON = 1
+
+--- @type integer
+BOMP_ACT_EXTEND = 2
+
+--- @type integer
+BOMP_ACT_POKE_OUT = 1
+
+--- @type integer
+BOMP_ACT_RETRACT = 3
+
+--- @type integer
+BOMP_ACT_WAIT = 0
+
+--- @type integer
+BOO_ATTACKED = 1
+
+--- @type integer
+BOO_BOUNCED_ON = -1
+
+--- @type integer
+BOO_CAGE_ACT_FALLING = 1
+
+--- @type integer
+BOO_CAGE_ACT_IN_BOO = 0
+
+--- @type integer
+BOO_CAGE_ACT_MARIO_JUMPING_IN = 3
+
+--- @type integer
+BOO_CAGE_ACT_ON_GROUND = 2
+
+--- @type integer
+BOO_CAGE_ACT_USELESS = 4
+
+--- @type integer
+BOO_DEATH_STATUS_ALIVE = 0
+
+--- @type integer
+BOO_DEATH_STATUS_DEAD = 2
+
+--- @type integer
+BOO_DEATH_STATUS_DYING = 1
+
+--- @type integer
+BOO_NOT_ATTACKED = 0
+
+--- @type integer
+BOWSER_PUZZLE_ACT_DONE = 2
+
+--- @type integer
+BOWSER_PUZZLE_ACT_SPAWN_PIECES = 0
+
+--- @type integer
+BOWSER_PUZZLE_ACT_WAIT_FOR_COMPLETE = 1
+
+--- @type integer
+BULLY_ACT_ACTIVATE_AND_FALL = 5
+
+--- @type integer
+BULLY_ACT_BACK_UP = 3
+
+--- @type integer
+BULLY_ACT_CHASE_MARIO = 1
+
+--- @type integer
+BULLY_ACT_DEATH_PLANE_DEATH = 101
+
+--- @type integer
+BULLY_ACT_INACTIVE = 4
+
+--- @type integer
+BULLY_ACT_KNOCKBACK = 2
+
+--- @type integer
+BULLY_ACT_LAVA_DEATH = 100
+
+--- @type integer
+BULLY_ACT_PATROL = 0
+
+--- @type integer
+BULLY_BP_SIZE_BIG = 1
+
+--- @type integer
+BULLY_BP_SIZE_SMALL = 0
+
+--- @type integer
+BULLY_STYPE_CHILL = 16
+
+--- @type integer
+BULLY_STYPE_GENERIC = 0
+
+--- @type integer
+BULLY_STYPE_MINION = 1
+
+--- @type integer
+BUTTERFLY_ACT_FOLLOW_MARIO = 1
+
+--- @type integer
+BUTTERFLY_ACT_RESTING = 0
+
+--- @type integer
+BUTTERFLY_ACT_RETURN_HOME = 2
+
+--- @type integer
+CAMERA_LAKITU_BP_FOLLOW_CAMERA = 0
+
+--- @type integer
+CAMERA_LAKITU_BP_INTRO = 1
+
+--- @type integer
+CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD = 1
+
+--- @type integer
+CAMERA_LAKITU_INTRO_ACT_TRIGGER_CUTSCENE = 0
+
+--- @type integer
+CAMERA_LAKITU_INTRO_ACT_UNK2 = 2
+
+--- @type integer
+CANNON_TRAP_DOOR_ACT_CAM_ZOOM = 1
+
+--- @type integer
+CANNON_TRAP_DOOR_ACT_CLOSED = 0
+
+--- @type integer
+CANNON_TRAP_DOOR_ACT_OPEN = 3
+
+--- @type integer
+CANNON_TRAP_DOOR_ACT_OPENING = 2
+
+--- @type integer
+CELEB_STAR_ACT_FACE_CAMERA = 1
+
+--- @type integer
+CELEB_STAR_ACT_SPIN_AROUND_MARIO = 0
+
+--- @type integer
+CHAIN_CHOMP_ACT_MOVE = 1
+
+--- @type integer
+CHAIN_CHOMP_ACT_UNINITIALIZED = 0
+
+--- @type integer
+CHAIN_CHOMP_ACT_UNLOAD_CHAIN = 2
+
+--- @type integer
+CHAIN_CHOMP_CHAIN_PART_BP_PIVOT = 0
+
+--- @type integer
+CHAIN_CHOMP_NOT_RELEASED = 0
+
+--- @type integer
+CHAIN_CHOMP_RELEASED_BREAK_GATE = 3
+
+--- @type integer
+CHAIN_CHOMP_RELEASED_END_CUTSCENE = 5
+
+--- @type integer
+CHAIN_CHOMP_RELEASED_JUMP_AWAY = 4
+
+--- @type integer
+CHAIN_CHOMP_RELEASED_LUNGE_AROUND = 2
+
+--- @type integer
+CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE = 1
+
+--- @type integer
+CHAIN_CHOMP_SUB_ACT_LUNGE = 1
+
+--- @type integer
+CHAIN_CHOMP_SUB_ACT_TURN = 0
+
+--- @type integer
+CLOUD_ACT_FWOOSH_HIDDEN = 3
+
+--- @type integer
+CLOUD_ACT_MAIN = 1
+
+--- @type integer
+CLOUD_ACT_SPAWN_PARTS = 0
+
+--- @type integer
+CLOUD_ACT_UNLOAD = 2
+
+--- @type integer
+CLOUD_BP_FWOOSH = 0
+
+--- @type integer
+CLOUD_BP_LAKITU_CLOUD = 1
+
+--- @type integer
+COFFIN_ACT_IDLE = 0
+
+--- @type integer
+COFFIN_ACT_STAND_UP = 1
+
+--- @type integer
+COFFIN_BP_STATIC = 0
+
+--- @type integer
+COFFIN_SPAWNER_ACT_COFFINS_UNLOADED = 0
+
+--- @type integer
+DIALOG_UNK1_AWAIT_DIALOG = 3
+
+--- @type integer
+DIALOG_UNK1_BEGIN_DIALOG = 2
+
+--- @type integer
+DIALOG_UNK1_DISABLE_TIME_STOP = 4
+
+--- @type integer
+DIALOG_UNK1_ENABLE_TIME_STOP = 0
+
+--- @type integer
+DIALOG_UNK1_FLAG_4 = (1 << 4)
+
+--- @type integer
+DIALOG_UNK1_FLAG_DEFAULT = (1 << 1)
+
+--- @type integer
+DIALOG_UNK1_FLAG_RESPONSE = (1 << 2)
+
+--- @type integer
+DIALOG_UNK1_INTERRUPT_MARIO_ACTION = 1
+
+--- @type integer
+DIALOG_UNK2_AWAIT_DIALOG = 2
+
+--- @type integer
+DIALOG_UNK2_ENABLE_TIME_STOP = 0
+
+--- @type integer
+DIALOG_UNK2_END_DIALOG = 3
+
+--- @type integer
+DIALOG_UNK2_FLAG_0 = (1 << 0)
+
+--- @type integer
+DIALOG_UNK2_LEAVE_TIME_STOP_ENABLED = (1 << 4)
+
+--- @type integer
+DIALOG_UNK2_TURN_AND_INTERRUPT_MARIO_ACTION = 1
+
+--- @type integer
+DORRIE_ACT_LOWER_HEAD = 1
+
+--- @type integer
+DORRIE_ACT_MOVE = 0
+
+--- @type integer
+DORRIE_ACT_RAISE_HEAD = 2
+
+--- @type integer
+ENEMY_LAKITU_ACT_MAIN = 1
+
+--- @type integer
+ENEMY_LAKITU_ACT_UNINITIALIZED = 0
+
+--- @type integer
+ENEMY_LAKITU_SUB_ACT_HOLD_SPINY = 1
+
+--- @type integer
+ENEMY_LAKITU_SUB_ACT_NO_SPINY = 0
+
+--- @type integer
+ENEMY_LAKITU_SUB_ACT_THROW_SPINY = 2
+
+--- @type integer
+EYEROK_BOSS_ACT_DEAD = 5
+
+--- @type integer
+EYEROK_BOSS_ACT_DIE = 4
+
+--- @type integer
+EYEROK_BOSS_ACT_FIGHT = 3
+
+--- @type integer
+EYEROK_BOSS_ACT_PAUSE = 6
+
+--- @type integer
+EYEROK_BOSS_ACT_SHOW_INTRO_TEXT = 2
+
+--- @type integer
+EYEROK_BOSS_ACT_SLEEP = 0
+
+--- @type integer
+EYEROK_BOSS_ACT_WAKE_UP = 1
+
+--- @type integer
+EYEROK_HAND_ACT_ATTACKED = 12
+
+--- @type integer
+EYEROK_HAND_ACT_BECOME_ACTIVE = 14
+
+--- @type integer
+EYEROK_HAND_ACT_BEGIN_DOUBLE_POUND = 10
+
+--- @type integer
+EYEROK_HAND_ACT_CLOSE = 4
+
+--- @type integer
+EYEROK_HAND_ACT_DEAD = 16
+
+--- @type integer
+EYEROK_HAND_ACT_DIE = 15
+
+--- @type integer
+EYEROK_HAND_ACT_DOUBLE_POUND = 11
+
+--- @type integer
+EYEROK_HAND_ACT_FIST_PUSH = 8
+
+--- @type integer
+EYEROK_HAND_ACT_FIST_SWEEP = 9
+
+--- @type integer
+EYEROK_HAND_ACT_IDLE = 1
+
+--- @type integer
+EYEROK_HAND_ACT_OPEN = 2
+
+--- @type integer
+EYEROK_HAND_ACT_PAUSE = 17
+
+--- @type integer
+EYEROK_HAND_ACT_RECOVER = 13
+
+--- @type integer
+EYEROK_HAND_ACT_RETREAT = 5
+
+--- @type integer
+EYEROK_HAND_ACT_SHOW_EYE = 3
+
+--- @type integer
+EYEROK_HAND_ACT_SLEEP = 0
+
+--- @type integer
+EYEROK_HAND_ACT_SMASH = 7
+
+--- @type integer
+EYEROK_HAND_ACT_TARGET_MARIO = 6
+
+--- @type integer
+FAKE_MONEYBAG_COIN_ACT_IDLE = 0
+
+--- @type integer
+FAKE_MONEYBAG_COIN_ACT_TRANSFORM = 1
+
+--- @type integer
+FALLING_PILLAR_ACT_FALLING = 2
+
+--- @type integer
+FALLING_PILLAR_ACT_IDLE = 0
+
+--- @type integer
+FALLING_PILLAR_ACT_TURNING = 1
+
+--- @type integer
+FIRE_PIRANHA_PLANT_ACT_GROW = 1
+
+--- @type integer
+FIRE_PIRANHA_PLANT_ACT_HIDE = 0
+
+--- @type integer
+FIRE_SPITTER_ACT_IDLE = 0
+
+--- @type integer
+FIRE_SPITTER_ACT_SPIT_FIRE = 1
+
+--- @type integer
+FISH_ACT_FLEE = 2
+
+--- @type integer
+FISH_ACT_INIT = 0
+
+--- @type integer
+FISH_ACT_ROAM = 1
+
+--- @type integer
+FISH_SPAWNER_ACT_IDLE = 1
+
+--- @type integer
+FISH_SPAWNER_ACT_RESPAWN = 2
+
+--- @type integer
+FISH_SPAWNER_ACT_SPAWN = 0
+
+--- @type integer
+FISH_SPAWNER_BP_FEW_BLUE = 1
+
+--- @type integer
+FISH_SPAWNER_BP_FEW_CYAN = 3
+
+--- @type integer
+FISH_SPAWNER_BP_MANY_BLUE = 0
+
+--- @type integer
+FISH_SPAWNER_BP_MANY_CYAN = 2
+
+--- @type integer
+FLY_GUY_ACT_APPROACH_MARIO = 1
+
+--- @type integer
+FLY_GUY_ACT_IDLE = 0
+
+--- @type integer
+FLY_GUY_ACT_LUNGE = 2
+
+--- @type integer
+FLY_GUY_ACT_SHOOT_FIRE = 3
+
+--- @type integer
+FREE_BBALL_ACT_IDLE = 0
+
+--- @type integer
+FREE_BBALL_ACT_RESET = 2
+
+--- @type integer
+FREE_BBALL_ACT_ROLL = 1
+
+--- @type integer
+GOOMBA_ACT_ATTACKED_MARIO = 1
+
+--- @type integer
+GOOMBA_ACT_JUMP = 2
+
+--- @type integer
+GOOMBA_ACT_WALK = 0
+
+--- @type integer
+GOOMBA_BP_SIZE_MASK = 0x00000003
+
+--- @type integer
+GOOMBA_BP_TRIPLET_FLAG_MASK = 0x000000FC
+
+--- @type integer
+GOOMBA_SIZE_HUGE = 1
+
+--- @type integer
+GOOMBA_SIZE_REGULAR = 0
+
+--- @type integer
+GOOMBA_SIZE_TINY = 2
+
+--- @type integer
+GOOMBA_TRIPLET_SPAWNER_ACT_LOADED = 1
+
+--- @type integer
+GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED = 0
+
+--- @type integer
+GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK = 0x000000FC
+
+--- @type integer
+GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK = 0x00000003
+
+--- @type integer
+HAUNTED_BOOKSHELF_ACT_IDLE = 0
+
+--- @type integer
+HAUNTED_BOOKSHELF_ACT_RECEDE = 1
+
+--- @type integer
 HELD_DROPPED = 3
 
 --- @type integer
@@ -3909,6 +5250,351 @@ HELD_HELD = 1
 
 --- @type integer
 HELD_THROWN = 2
+
+--- @type integer
+HIDDEN_BLUE_COIN_ACT_ACTIVE = 2
+
+--- @type integer
+HIDDEN_BLUE_COIN_ACT_INACTIVE = 0
+
+--- @type integer
+HIDDEN_BLUE_COIN_ACT_WAITING = 1
+
+--- @type integer
+HOMING_AMP_ACT_APPEAR = 1
+
+--- @type integer
+HOMING_AMP_ACT_ATTACK_COOLDOWN = 4
+
+--- @type integer
+HOMING_AMP_ACT_CHASE = 2
+
+--- @type integer
+HOMING_AMP_ACT_GIVE_UP = 3
+
+--- @type integer
+HOMING_AMP_ACT_INACTIVE = 0
+
+--- @type integer
+HOOT_ACT_ASCENT = 0
+
+--- @type integer
+HOOT_ACT_CARRY = 1
+
+--- @type integer
+HOOT_ACT_TIRED = 2
+
+--- @type integer
+HOOT_AVAIL_ASLEEP_IN_TREE = 0
+
+--- @type integer
+HOOT_AVAIL_READY_TO_FLY = 2
+
+--- @type integer
+HOOT_AVAIL_WANTS_TO_TALK = 1
+
+--- @type integer
+JS_RING_SPAWNER_ACT_ACTIVE = 0
+
+--- @type integer
+JS_RING_SPAWNER_ACT_INACTIVE = 1
+
+--- @type integer
+KLEPTO_ACT_APPROACH_TARGET_HOLDING = 1
+
+--- @type integer
+KLEPTO_ACT_CIRCLE_TARGET_HOLDING = 0
+
+--- @type integer
+KLEPTO_ACT_DIVE_AT_MARIO = 4
+
+--- @type integer
+KLEPTO_ACT_RESET_POSITION = 5
+
+--- @type integer
+KLEPTO_ACT_RETREAT = 7
+
+--- @type integer
+KLEPTO_ACT_STRUCK_BY_MARIO = 6
+
+--- @type integer
+KLEPTO_ACT_TURN_TOWARD_MARIO = 3
+
+--- @type integer
+KLEPTO_ACT_WAIT_FOR_MARIO = 2
+
+--- @type integer
+KLEPTO_ANIM_STATE_HOLDING_CAP = 1
+
+--- @type integer
+KLEPTO_ANIM_STATE_HOLDING_NOTHING = 0
+
+--- @type integer
+KLEPTO_ANIM_STATE_HOLDING_STAR = 2
+
+--- @type integer
+KOOPA_BP_KOOPA_THE_QUICK_BASE = 2
+
+--- @type integer
+KOOPA_BP_KOOPA_THE_QUICK_BOB = (KOOPA_BP_KOOPA_THE_QUICK_BASE + KOOPA_THE_QUICK_BOB_INDEX)
+
+--- @type integer
+KOOPA_BP_KOOPA_THE_QUICK_THI = (KOOPA_BP_KOOPA_THE_QUICK_BASE + KOOPA_THE_QUICK_THI_INDEX)
+
+--- @type integer
+KOOPA_BP_NORMAL = 1
+
+--- @type integer
+KOOPA_BP_TINY = 4
+
+--- @type integer
+KOOPA_BP_UNSHELLED = 0
+
+--- @type integer
+KOOPA_SHELLED_ACT_DIE = 4
+
+--- @type integer
+KOOPA_SHELLED_ACT_LYING = 3
+
+--- @type integer
+KOOPA_SHELLED_ACT_RUN_FROM_MARIO = 2
+
+--- @type integer
+KOOPA_SHELLED_ACT_STOPPED = 0
+
+--- @type integer
+KOOPA_SHELLED_ACT_WALK = 1
+
+--- @type integer
+KOOPA_SHELLED_SUB_ACT_START_WALK = 0
+
+--- @type integer
+KOOPA_SHELLED_SUB_ACT_STOP_WALK = 2
+
+--- @type integer
+KOOPA_SHELLED_SUB_ACT_WALK = 1
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_AFTER_RACE = 6
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_DECELERATE = 4
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_RACE = 3
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_SHOW_INIT_TEXT = 2
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_STOP = 5
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_UNUSED1 = 1
+
+--- @type integer
+KOOPA_THE_QUICK_ACT_WAIT_BEFORE_RACE = 0
+
+--- @type integer
+KOOPA_THE_QUICK_BOB_INDEX = 0
+
+--- @type integer
+KOOPA_THE_QUICK_SUB_ACT_JUMP = 2
+
+--- @type integer
+KOOPA_THE_QUICK_SUB_ACT_RUN = 1
+
+--- @type integer
+KOOPA_THE_QUICK_SUB_ACT_START_RUN = 0
+
+--- @type integer
+KOOPA_THE_QUICK_THI_INDEX = 1
+
+--- @type integer
+KOOPA_UNSHELLED_ACT_DIVE = 1
+
+--- @type integer
+KOOPA_UNSHELLED_ACT_LYING = 2
+
+--- @type integer
+KOOPA_UNSHELLED_ACT_RUN = 0
+
+--- @type integer
+KOOPA_UNSHELLED_ACT_UNUSED3 = 3
+
+--- @type integer
+LLL_DRAWBRIDGE_ACT_LOWER = 0
+
+--- @type integer
+LLL_DRAWBRIDGE_ACT_RAISE = 1
+
+--- @type integer
+MAD_PIANO_ACT_ATTACK = 1
+
+--- @type integer
+MAD_PIANO_ACT_WAIT = 0
+
+--- @type integer
+MANTA_ACT_NO_RINGS = 1
+
+--- @type integer
+MANTA_ACT_SPAWN_RINGS = 0
+
+--- @type integer
+MIPS_ACT_FALL_DOWN = 3
+
+--- @type integer
+MIPS_ACT_FOLLOW_PATH = 1
+
+--- @type integer
+MIPS_ACT_IDLE = 4
+
+--- @type integer
+MIPS_ACT_WAIT_FOR_ANIMATION_DONE = 2
+
+--- @type integer
+MIPS_ACT_WAIT_FOR_NEARBY_MARIO = 0
+
+--- @type integer
+MIPS_STAR_STATUS_ALREADY_SPAWNED_STAR = 2
+
+--- @type integer
+MIPS_STAR_STATUS_HAVENT_SPAWNED_STAR = 0
+
+--- @type integer
+MIPS_STAR_STATUS_SHOULD_SPAWN_STAR = 1
+
+--- @type integer
+MONEYBAG_ACT_APPEAR = 0
+
+--- @type integer
+MONEYBAG_ACT_DEATH = 5
+
+--- @type integer
+MONEYBAG_ACT_DISAPPEAR = 4
+
+--- @type integer
+MONEYBAG_ACT_MOVE_AROUND = 2
+
+--- @type integer
+MONEYBAG_ACT_RETURN_HOME = 3
+
+--- @type integer
+MONEYBAG_ACT_UNUSED_APPEAR = 1
+
+--- @type integer
+MONEYBAG_JUMP_JUMP = 2
+
+--- @type integer
+MONEYBAG_JUMP_JUMP_AND_BOUNCE = 3
+
+--- @type integer
+MONEYBAG_JUMP_LANDING = 0
+
+--- @type integer
+MONEYBAG_JUMP_PREPARE = 1
+
+--- @type integer
+MONEYBAG_JUMP_WALK_AROUND = 4
+
+--- @type integer
+MONEYBAG_JUMP_WALK_HOME = 5
+
+--- @type integer
+MONTY_MOLE_ACT_BEGIN_JUMP_INTO_HOLE = 3
+
+--- @type integer
+MONTY_MOLE_ACT_HIDE = 6
+
+--- @type integer
+MONTY_MOLE_ACT_JUMP_INTO_HOLE = 5
+
+--- @type integer
+MONTY_MOLE_ACT_JUMP_OUT_OF_HOLE = 7
+
+--- @type integer
+MONTY_MOLE_ACT_RISE_FROM_HOLE = 1
+
+--- @type integer
+MONTY_MOLE_ACT_SELECT_HOLE = 0
+
+--- @type integer
+MONTY_MOLE_ACT_SPAWN_ROCK = 2
+
+--- @type integer
+MONTY_MOLE_ACT_THROW_ROCK = 4
+
+--- @type integer
+MONTY_MOLE_BP_NO_ROCK = 0
+
+--- @type integer
+MONTY_MOLE_ROCK_ACT_HELD = 0
+
+--- @type integer
+MONTY_MOLE_ROCK_ACT_MOVE = 1
+
+--- @type integer
+MOV_BCOIN_ACT_MOVING = 1
+
+--- @type integer
+MOV_BCOIN_ACT_STILL = 0
+
+--- @type integer
+MOV_YCOIN_ACT_BLINKING = 1
+
+--- @type integer
+MOV_YCOIN_ACT_DEATH_PLANE_DEATH = 101
+
+--- @type integer
+MOV_YCOIN_ACT_IDLE = 0
+
+--- @type integer
+MOV_YCOIN_ACT_LAVA_DEATH = 100
+
+--- @type integer
+MR_BLIZZARD_ACT_BURROW = 5
+
+--- @type integer
+MR_BLIZZARD_ACT_DEATH = 6
+
+--- @type integer
+MR_BLIZZARD_ACT_HIDE_UNHIDE = 1
+
+--- @type integer
+MR_BLIZZARD_ACT_JUMP = 7
+
+--- @type integer
+MR_BLIZZARD_ACT_RISE_FROM_GROUND = 2
+
+--- @type integer
+MR_BLIZZARD_ACT_ROTATE = 3
+
+--- @type integer
+MR_BLIZZARD_ACT_SPAWN_SNOWBALL = 0
+
+--- @type integer
+MR_BLIZZARD_ACT_THROW_SNOWBALL = 4
+
+--- @type integer
+MR_BLIZZARD_STYPE_JUMPING = 1
+
+--- @type integer
+MR_BLIZZARD_STYPE_NO_CAP = 0
+
+--- @type integer
+OBJ_ACT_DEATH_PLANE_DEATH = 101
+
+--- @type integer
+OBJ_ACT_HORIZONTAL_KNOCKBACK = 100
+
+--- @type integer
+OBJ_ACT_LAVA_DEATH = 100
+
+--- @type integer
+OBJ_ACT_SQUISHED = 102
+
+--- @type integer
+OBJ_ACT_VERTICAL_KNOCKBACK = 101
 
 --- @type integer
 OBJ_FLAG_0020 = (1 << 5)
@@ -4013,6 +5699,180 @@ OBJ_MOVE_UNDERWATER_OFF_GROUND = (1 << 5)
 OBJ_MOVE_UNDERWATER_ON_GROUND = (1 << 6)
 
 --- @type integer
+PENGUIN_ANIM_IDLE = 3
+
+--- @type integer
+PENGUIN_ANIM_WALK = 0
+
+--- @type integer
+PENGUIN_WALK_BABY = 0
+
+--- @type integer
+PENGUIN_WALK_BIG = 1
+
+--- @type integer
+PIRANHA_PLANT_ACT_ATTACKED = 5
+
+--- @type integer
+PIRANHA_PLANT_ACT_BITING = 2
+
+--- @type integer
+PIRANHA_PLANT_ACT_IDLE = 0
+
+--- @type integer
+PIRANHA_PLANT_ACT_RESPAWN = 8
+
+--- @type integer
+PIRANHA_PLANT_ACT_SHRINK_AND_DIE = 6
+
+--- @type integer
+PIRANHA_PLANT_ACT_SLEEPING = 1
+
+--- @type integer
+PIRANHA_PLANT_ACT_STOPPED_BITING = 4
+
+--- @type integer
+PIRANHA_PLANT_ACT_WAIT_TO_RESPAWN = 7
+
+--- @type integer
+PIRANHA_PLANT_ACT_WOKEN_UP = 3
+
+--- @type integer
+PIRANHA_PLANT_BUBBLE_ACT_BURST = 2
+
+--- @type integer
+PIRANHA_PLANT_BUBBLE_ACT_GROW_SHRINK_LOOP = 1
+
+--- @type integer
+PIRANHA_PLANT_BUBBLE_ACT_IDLE = 0
+
+--- @type integer
+PLATFORM_ON_TRACK_ACT_FALL = 4
+
+--- @type integer
+PLATFORM_ON_TRACK_ACT_INIT = 0
+
+--- @type integer
+PLATFORM_ON_TRACK_ACT_MOVE_ALONG_TRACK = 2
+
+--- @type integer
+PLATFORM_ON_TRACK_ACT_PAUSE_BRIEFLY = 3
+
+--- @type integer
+PLATFORM_ON_TRACK_ACT_WAIT_FOR_MARIO = 1
+
+--- @type integer
+PLATFORM_ON_TRACK_BP_DONT_DISAPPEAR = (1 << 9)
+
+--- @type integer
+PLATFORM_ON_TRACK_BP_DONT_TURN_ROLL = (1 << 11)
+
+--- @type integer
+PLATFORM_ON_TRACK_BP_DONT_TURN_YAW = (1 << 10)
+
+--- @type integer
+PLATFORM_ON_TRACK_BP_MASK_PATH = 0xF
+
+--- @type integer
+PLATFORM_ON_TRACK_BP_MASK_TYPE = (0x7 << 4)
+
+--- @type integer
+PLATFORM_ON_TRACK_BP_RETURN_TO_START = (1 << 8)
+
+--- @type integer
+PLATFORM_ON_TRACK_TYPE_CARPET = 0
+
+--- @type integer
+PLATFORM_ON_TRACK_TYPE_CHECKERED = 2
+
+--- @type integer
+PLATFORM_ON_TRACK_TYPE_GRATE = 3
+
+--- @type integer
+PLATFORM_ON_TRACK_TYPE_SKI_LIFT = 1
+
+--- @type integer
+POKEY_ACT_UNINITIALIZED = 0
+
+--- @type integer
+POKEY_ACT_UNLOAD_PARTS = 2
+
+--- @type integer
+POKEY_ACT_WANDER = 1
+
+--- @type integer
+PURPLE_SWITCH_IDLE = 0
+
+--- @type integer
+PURPLE_SWITCH_PRESSED = 1
+
+--- @type integer
+PURPLE_SWITCH_TICKING = 2
+
+--- @type integer
+PURPLE_SWITCH_UNPRESSED = 3
+
+--- @type integer
+PURPLE_SWITCH_WAIT_FOR_MARIO_TO_GET_OFF = 4
+
+--- @type integer
+PYRAMID_ELEVATOR_AT_BOTTOM = 4
+
+--- @type integer
+PYRAMID_ELEVATOR_CONSTANT_VELOCITY = 2
+
+--- @type integer
+PYRAMID_ELEVATOR_END_MOVING = 3
+
+--- @type integer
+PYRAMID_ELEVATOR_IDLE = 0
+
+--- @type integer
+PYRAMID_ELEVATOR_START_MOVING = 1
+
+--- @type integer
+PYRAMID_TOP_ACT_CHECK_IF_SOLVED = 0
+
+--- @type integer
+PYRAMID_TOP_ACT_EXPLODE = 2
+
+--- @type integer
+PYRAMID_TOP_ACT_SPINNING = 1
+
+--- @type integer
+PYRAMID_WALL_ACT_MOVING_DOWN = 0
+
+--- @type integer
+PYRAMID_WALL_ACT_MOVING_UP = 1
+
+--- @type integer
+PYRAMID_WALL_BP_POSITION_HIGH = 0
+
+--- @type integer
+PYRAMID_WALL_BP_POSITION_LOW = 2
+
+--- @type integer
+PYRAMID_WALL_BP_POSITION_MIDDLE = 1
+
+--- @type integer
+RACING_PENGUIN_ACT_FINISH_RACE = 4
+
+--- @type integer
+RACING_PENGUIN_ACT_PREPARE_FOR_RACE = 2
+
+--- @type integer
+RACING_PENGUIN_ACT_RACE = 3
+
+--- @type integer
+RACING_PENGUIN_ACT_SHOW_FINAL_TEXT = 5
+
+--- @type integer
+RACING_PENGUIN_ACT_SHOW_INIT_TEXT = 1
+
+--- @type integer
+RACING_PENGUIN_ACT_WAIT_FOR_MARIO = 0
+
+--- @type integer
 RESPAWN_INFO_DONT_RESPAWN = 0xFF
 
 --- @type integer
@@ -4023,6 +5883,417 @@ RESPAWN_INFO_TYPE_32 = 1
 
 --- @type integer
 RESPAWN_INFO_TYPE_NULL = 0
+
+--- @type integer
+SKEETER_ACT_IDLE = 0
+
+--- @type integer
+SKEETER_ACT_LUNGE = 1
+
+--- @type integer
+SKEETER_ACT_WALK = 2
+
+--- @type integer
+SL_SNOWMAN_WIND_ACT_BLOWING = 2
+
+--- @type integer
+SL_SNOWMAN_WIND_ACT_IDLE = 0
+
+--- @type integer
+SL_SNOWMAN_WIND_ACT_TALKING = 1
+
+--- @type integer
+SL_WALKING_PENGUIN_ACT_MOVING_FORWARDS = 0
+
+--- @type integer
+SL_WALKING_PENGUIN_ACT_RETURNING = 2
+
+--- @type integer
+SL_WALKING_PENGUIN_ACT_TURNING_BACK = 1
+
+--- @type integer
+SL_WALKING_PENGUIN_ACT_TURNING_FORWARDS = 3
+
+--- @type integer
+SNUFIT_ACT_IDLE = 0
+
+--- @type integer
+SNUFIT_ACT_SHOOT = 1
+
+--- @type integer
+SPINY_ACT_ATTACKED_MARIO = 3
+
+--- @type integer
+SPINY_ACT_HELD_BY_LAKITU = 1
+
+--- @type integer
+SPINY_ACT_THROWN_BY_LAKITU = 2
+
+--- @type integer
+SPINY_ACT_WALK = 0
+
+--- @type integer
+SWOOP_ACT_IDLE = 0
+
+--- @type integer
+SWOOP_ACT_MOVE = 1
+
+--- @type integer
+TRIPLET_BUTTERFLY_ACT_ACTIVATE = 2
+
+--- @type integer
+TRIPLET_BUTTERFLY_ACT_EXPLODE = 3
+
+--- @type integer
+TRIPLET_BUTTERFLY_ACT_INIT = 0
+
+--- @type integer
+TRIPLET_BUTTERFLY_ACT_WANDER = 1
+
+--- @type integer
+TRIPLET_BUTTERFLY_BP_BUTTERFLY_NUM = 0x00000003
+
+--- @type integer
+TRIPLET_BUTTERFLY_BP_NO_BOMBS = 0x00000004
+
+--- @type integer
+TRIPLET_BUTTERFLY_TYPE_EXPLODES = 0
+
+--- @type integer
+TRIPLET_BUTTERFLY_TYPE_NORMAL = -1
+
+--- @type integer
+TRIPLET_BUTTERFLY_TYPE_SPAWN_1UP = 1
+
+--- @type integer
+TTC_2D_ROTATOR_BP_2D_COG = 1
+
+--- @type integer
+TTC_2D_ROTATOR_BP_HAND = 0
+
+--- @type integer
+TTC_COG_BP_DIR_CCW = (0 << 0)
+
+--- @type integer
+TTC_COG_BP_DIR_CW = (1 << 0)
+
+--- @type integer
+TTC_COG_BP_DIR_MASK = 0x00000001
+
+--- @type integer
+TTC_COG_BP_SHAPE_HEXAGON = (0 << 1)
+
+--- @type integer
+TTC_COG_BP_SHAPE_MASK = 0x00000002
+
+--- @type integer
+TTC_COG_BP_SHAPE_TRIANGLE = (1 << 1)
+
+--- @type integer
+TTC_MOVING_BAR_ACT_EXTEND = 2
+
+--- @type integer
+TTC_MOVING_BAR_ACT_PULL_BACK = 1
+
+--- @type integer
+TTC_MOVING_BAR_ACT_RETRACT = 3
+
+--- @type integer
+TTC_MOVING_BAR_ACT_WAIT = 0
+
+--- @type integer
+TTC_ROTATING_SOLID_BP_CUBE = 0
+
+--- @type integer
+TTC_ROTATING_SOLID_BP_TRIANGULAR_PRISM = 1
+
+--- @type integer
+TTC_SPEED_FAST = 1
+
+--- @type integer
+TTC_SPEED_RANDOM = 2
+
+--- @type integer
+TTC_SPEED_SLOW = 0
+
+--- @type integer
+TTC_SPEED_STOPPED = 3
+
+--- @type integer
+TWEESTER_ACT_CHASE = 1
+
+--- @type integer
+TWEESTER_ACT_HIDE = 2
+
+--- @type integer
+TWEESTER_ACT_IDLE = 0
+
+--- @type integer
+TWEESTER_SUB_ACT_CHASE = 0
+
+--- @type integer
+TWEESTER_SUB_ACT_WAIT = 0
+
+--- @type integer
+UKIKI_ACT_GO_TO_CAGE = 4
+
+--- @type integer
+UKIKI_ACT_IDLE = 0
+
+--- @type integer
+UKIKI_ACT_JUMP = 3
+
+--- @type integer
+UKIKI_ACT_RETURN_HOME = 7
+
+--- @type integer
+UKIKI_ACT_RUN = 1
+
+--- @type integer
+UKIKI_ACT_TURN_TO_MARIO = 2
+
+--- @type integer
+UKIKI_ACT_UNUSED_TURN = 6
+
+--- @type integer
+UKIKI_ACT_WAIT_TO_RESPAWN = 5
+
+--- @type integer
+UKIKI_ANIM_HANDSTAND = 10
+
+--- @type integer
+UKIKI_ANIM_HELD = 12
+
+--- @type integer
+UKIKI_ANIM_ITCH = 9
+
+--- @type integer
+UKIKI_ANIM_JUMP = 8
+
+--- @type integer
+UKIKI_ANIM_JUMP_CLAP = 5
+
+--- @type integer
+UKIKI_ANIM_LAND = 7
+
+--- @type integer
+UKIKI_ANIM_RUN = 0
+
+--- @type integer
+UKIKI_ANIM_SCREECH = 4
+
+--- @type integer
+UKIKI_ANIM_STATE_CAP_ON = 2
+
+--- @type integer
+UKIKI_ANIM_STATE_DEFAULT = 0
+
+--- @type integer
+UKIKI_ANIM_STATE_EYE_CLOSED = 1
+
+--- @type integer
+UKIKI_ANIM_TURN = 11
+
+--- @type integer
+UKIKI_ANIM_UNUSED_APOSE = 2
+
+--- @type integer
+UKIKI_ANIM_UNUSED_DEATH = 3
+
+--- @type integer
+UKIKI_ANIM_UNUSED_HOP = 6
+
+--- @type integer
+UKIKI_ANIM_UNUSED_WALK = 1
+
+--- @type integer
+UKIKI_CAGE = 0
+
+--- @type integer
+UKIKI_CAGE_ACT_FALL = 2
+
+--- @type integer
+UKIKI_CAGE_ACT_HIDE = 3
+
+--- @type integer
+UKIKI_CAGE_ACT_SPIN = 1
+
+--- @type integer
+UKIKI_CAGE_ACT_WAIT_FOR_UKIKI = 0
+
+--- @type integer
+UKIKI_CAGE_STAR_ACT_IN_CAGE = 0
+
+--- @type integer
+UKIKI_CAGE_STAR_ACT_SPAWN_STAR = 1
+
+--- @type integer
+UKIKI_CAP = 1
+
+--- @type integer
+UKIKI_CAP_ON = 1
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_DESPAWN = 7
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_JUMP_TO_CAGE = 4
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_LAND_ON_CAGE = 5
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_RUN_TO_CAGE = 0
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_SPIN_ON_CAGE = 6
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_TALK_TO_MARIO = 2
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_TURN_TO_CAGE = 3
+
+--- @type integer
+UKIKI_SUB_ACT_CAGE_WAIT_FOR_MARIO = 1
+
+--- @type integer
+UKIKI_SUB_ACT_TAUNT_HANDSTAND = 4
+
+--- @type integer
+UKIKI_SUB_ACT_TAUNT_ITCH = 1
+
+--- @type integer
+UKIKI_SUB_ACT_TAUNT_JUMP_CLAP = 3
+
+--- @type integer
+UKIKI_SUB_ACT_TAUNT_NONE = 0
+
+--- @type integer
+UKIKI_SUB_ACT_TAUNT_SCREECH = 2
+
+--- @type integer
+UKIKI_TEXT_CAGE_TEXTBOX = 1
+
+--- @type integer
+UKIKI_TEXT_DEFAULT = 0
+
+--- @type integer
+UKIKI_TEXT_DO_NOT_LET_GO = 6
+
+--- @type integer
+UKIKI_TEXT_GAVE_CAP_BACK = 5
+
+--- @type integer
+UKIKI_TEXT_GO_TO_CAGE = 2
+
+--- @type integer
+UKIKI_TEXT_HAS_CAP = 4
+
+--- @type integer
+UKIKI_TEXT_STEAL_CAP = 7
+
+--- @type integer
+UKIKI_TEXT_STOLE_CAP = 3
+
+--- @type integer
+WATER_BOMB_ACT_DROP = 2
+
+--- @type integer
+WATER_BOMB_ACT_EXPLODE = 3
+
+--- @type integer
+WATER_BOMB_ACT_INIT = 1
+
+--- @type integer
+WATER_BOMB_ACT_SHOT_FROM_CANNON = 0
+
+--- @type integer
+WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL = 2
+
+--- @type integer
+WATER_LEVEL_DIAMOND_ACT_IDLE = 1
+
+--- @type integer
+WATER_LEVEL_DIAMOND_ACT_IDLE_SPINNING = 3
+
+--- @type integer
+WATER_LEVEL_DIAMOND_ACT_INIT = 0
+
+--- @type integer
+WATER_RING_ACT_COLLECTED = 1
+
+--- @type integer
+WATER_RING_ACT_NOT_COLLECTED = 0
+
+--- @type integer
+WF_SLID_BRICK_PTFM_ACT_EXTEND = 1
+
+--- @type integer
+WF_SLID_BRICK_PTFM_ACT_RETRACT = 2
+
+--- @type integer
+WF_SLID_BRICK_PTFM_ACT_WAIT = 0
+
+--- @type integer
+WF_SLID_BRICK_PTFM_BP_MOV_VEL_10 = 1
+
+--- @type integer
+WF_SLID_BRICK_PTFM_BP_MOV_VEL_15 = 2
+
+--- @type integer
+WF_SLID_BRICK_PTFM_BP_MOV_VEL_20 = 3
+
+--- @type integer
+WIGGLER_ACT_FALL_THROUGH_FLOOR = 5
+
+--- @type integer
+WIGGLER_ACT_JUMPED_ON = 3
+
+--- @type integer
+WIGGLER_ACT_KNOCKBACK = 2
+
+--- @type integer
+WIGGLER_ACT_SHRINK = 4
+
+--- @type integer
+WIGGLER_ACT_UNINITIALIZED = 0
+
+--- @type integer
+WIGGLER_ACT_WALK = 1
+
+--- @type integer
+WIGGLER_TEXT_STATUS_AWAIT_DIALOG = 0
+
+--- @type integer
+WIGGLER_TEXT_STATUS_COMPLETED_DIALOG = 2
+
+--- @type integer
+WIGGLER_TEXT_STATUS_SHOWING_DIALOG = 1
+
+--- @type integer
+WOODEN_POST_BP_NO_COINS_MASK = 0x0000FF00
+
+--- @type integer
+YOSHI_ACT_CREDITS = 10
+
+--- @type integer
+YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN = 4
+
+--- @type integer
+YOSHI_ACT_GIVE_PRESENT = 5
+
+--- @type integer
+YOSHI_ACT_IDLE = 0
+
+--- @type integer
+YOSHI_ACT_TALK = 2
+
+--- @type integer
+YOSHI_ACT_WALK = 1
+
+--- @type integer
+YOSHI_ACT_WALK_JUMP_OFF_ROOF = 3
 
 --- @type integer
 OBJECT_POOL_CAPACITY = 960
@@ -5453,7 +7724,10 @@ HOOK_ON_SYNC_OBJECT_UNLOAD = 15
 HOOK_ON_PAUSE_EXIT = 16
 
 --- @type LuaHookedEventType
-HOOK_MAX = 17
+HOOK_GET_STAR_COLLECTION_DIALOG = 17
+
+--- @type LuaHookedEventType
+HOOK_MAX = 18
 
 --- @class ModelExtendedId
 

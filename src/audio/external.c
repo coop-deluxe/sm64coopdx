@@ -10,6 +10,7 @@
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
 #include "game/camera.h"
+#include "game/hardcoded.h"
 #include "seq_ids.h"
 #include "dialog_ids.h"
 #include "level_table.h"
@@ -279,8 +280,7 @@ u16 sLevelAcousticReaches[LEVEL_COUNT] = {
 #define VOLUME_RANGE_UNK2 0.8f
 #endif
 
-// Default volume for background music sequences (playing on player 0).
-u8 sBackgroundMusicDefaultVolume[] = {
+const u8 sBackgroundMusicDefaultVolumeDefault[] = {
     127, // SEQ_SOUND_PLAYER
     80,  // SEQ_EVENT_CUTSCENE_COLLECT_STAR
     80,  // SEQ_MENU_TITLE_SCREEN
@@ -318,7 +318,75 @@ u8 sBackgroundMusicDefaultVolume[] = {
     0,   // SEQ_EVENT_CUTSCENE_LAKITU (not in JP)
 };
 
-STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == SEQ_COUNT,
+// Default volume for background music sequences (playing on player 0).
+u8 sBackgroundMusicDefaultVolume[64] = {
+    127, // SEQ_SOUND_PLAYER
+    80,  // SEQ_EVENT_CUTSCENE_COLLECT_STAR
+    80,  // SEQ_MENU_TITLE_SCREEN
+    75,  // SEQ_LEVEL_GRASS
+    70,  // SEQ_LEVEL_INSIDE_CASTLE
+    75,  // SEQ_LEVEL_WATER
+    75,  // SEQ_LEVEL_HOT
+    75,  // SEQ_LEVEL_BOSS_KOOPA
+    70,  // SEQ_LEVEL_SNOW
+    65,  // SEQ_LEVEL_SLIDE
+    80,  // SEQ_LEVEL_SPOOKY
+    65,  // SEQ_EVENT_PIRANHA_PLANT
+    85,  // SEQ_LEVEL_UNDERGROUND
+    75,  // SEQ_MENU_STAR_SELECT
+    65,  // SEQ_EVENT_POWERUP
+    70,  // SEQ_EVENT_METAL_CAP
+    65,  // SEQ_EVENT_KOOPA_MESSAGE
+    70,  // SEQ_LEVEL_KOOPA_ROAD
+    70,  // SEQ_EVENT_HIGH_SCORE
+    65,  // SEQ_EVENT_MERRY_GO_ROUND
+    80,  // SEQ_EVENT_RACE
+    70,  // SEQ_EVENT_CUTSCENE_STAR_SPAWN
+    85,  // SEQ_EVENT_BOSS
+    75,  // SEQ_EVENT_CUTSCENE_COLLECT_KEY
+    75,  // SEQ_EVENT_ENDLESS_STAIRS
+    85,  // SEQ_LEVEL_BOSS_KOOPA_FINAL
+    70,  // SEQ_EVENT_CUTSCENE_CREDITS
+    80,  // SEQ_EVENT_SOLVE_PUZZLE
+    80,  // SEQ_EVENT_TOAD_MESSAGE
+    70,  // SEQ_EVENT_PEACH_MESSAGE
+    75,  // SEQ_EVENT_CUTSCENE_INTRO
+    80,  // SEQ_EVENT_CUTSCENE_VICTORY
+    70,  // SEQ_EVENT_CUTSCENE_ENDING
+    65,  // SEQ_MENU_FILE_SELECT
+    0,   // SEQ_EVENT_CUTSCENE_LAKITU (not in JP)
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+    75,  // SEQ_???
+};
+
+STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == 64,
               "change this array if you are adding sequences");
 
 u8 sCurrentBackgroundMusicSeqId = SEQUENCE_NONE;
@@ -2276,7 +2344,7 @@ void play_dialog_sound(u8 dialogID) {
 
 #ifndef VERSION_JP
     // "You've stepped on the (Wing|Metal|Vanish) Cap Switch"
-    if (dialogID == DIALOG_010 || dialogID == DIALOG_011 || dialogID == DIALOG_012) {
+    if (dialogID == gBehaviorValues.dialogs.CapswitchWingDialog || dialogID == gBehaviorValues.dialogs.CapswitchMetalDialog || dialogID == gBehaviorValues.dialogs.CapswitchVanishDialog) {
         play_puzzle_jingle();
     }
 #endif
@@ -2664,4 +2732,17 @@ void unused_80321460(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2, UNUSED s
 
 void unused_80321474(UNUSED s32 arg0) {
 }
+
+void sound_reset_background_music_default_volume(u8 seqId) {
+    if (seqId >= SEQ_EVENT_CUTSCENE_LAKITU) {
+        sBackgroundMusicDefaultVolume[seqId] = 75;
+        return;
+    }
+    sBackgroundMusicDefaultVolume[seqId] = sBackgroundMusicDefaultVolumeDefault[seqId];
+}
+
+void sound_set_background_music_default_volume(u8 seqId, u8 volume) {
+    sBackgroundMusicDefaultVolume[seqId] = volume;
+}
+
 #endif
