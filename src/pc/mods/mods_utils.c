@@ -94,20 +94,6 @@ static void mods_delete_folder(char* path) {
     rmdir(path);
 }
 
-void mods_delete_tmp(void) {
-    // ensure tmpPath exists
-    char tmpPath[SYS_MAX_PATH] = { 0 };
-    if (snprintf(tmpPath, SYS_MAX_PATH - 1, "%s", fs_get_write_path(TMP_DIRECTORY)) < 0) {
-        LOG_ERROR("Failed to concat tmp path");
-        return;
-    }
-
-    // sanity
-    if (strlen(tmpPath) < 1) { return; }
-
-    // delete
-    mods_delete_folder(tmpPath);
-}
 //////////////////////////////////////////////////////////////////////////////////////////
 
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile) {

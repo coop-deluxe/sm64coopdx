@@ -525,7 +525,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     struct ModCacheEntry* cache = mod_cache_get_from_path(fullPath);
     if (cache == NULL) {
         mod_md5_hash(mod);
-        mod_cache_add(mod->dataHash, strdup(fullPath));
+        mod_cache_add(mod->dataHash, 0, strdup(fullPath));
     }
 
     return true;
@@ -572,13 +572,13 @@ void mod_md5_hash(struct Mod* mod) {
     mod->hashProcessed = true;
 
     if (mod->isDirectory) {
-        mod_cache_add(mod->dataHash, strdup(mod->basePath));
+        mod_cache_add(mod->dataHash, 0, strdup(mod->basePath));
     } else {
         if (!concat_path(path, mod->basePath, mod->files[0].relativePath)) {
             LOG_ERROR("Failed to combine path for mod hashing.");
             return;
         }
-        mod_cache_add(mod->dataHash, strdup(path));
+        mod_cache_add(mod->dataHash, 0, strdup(path));
     }
 }
 

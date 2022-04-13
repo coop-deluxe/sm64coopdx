@@ -5,7 +5,7 @@
 #include "pc/debuglog.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
-#define MOD_CACHE_VERSION 1
+#define MOD_CACHE_VERSION 2
 
 struct ModCacheEntry* sModCacheHead = NULL;
 
@@ -49,13 +49,15 @@ struct ModCacheEntry* mod_cache_get_from_path(const char* path) {
     return NULL;
 }
 
-void mod_cache_add(u8* dataHash, const char* path) {
+void mod_cache_add(u8* dataHash, u64 lastLoaded, const char* path) {
     if (mod_cache_get_from_hash(dataHash)) {
         return;
     }
 
     struct ModCacheEntry* node = calloc(1, sizeof(struct ModCacheEntry));
     memcpy(node->dataHash, dataHash, 16);
+    if (lastLoaded == 0) { lastLoaded = clock(); }
+    node->lastLoaded = lastLoaded;
     node->path = (char*)path;
     node->next = NULL;
 
@@ -107,17 +109,20 @@ void mod_cache_load(void) {
 
     while (true) {
         u8 dataHash[16] = { 0 };
+        u64 lastLoaded = 0;
         u16 pathLen;
 
         if (fread(dataHash, sizeof(u8), 16, fp) == 0) {
             break;
         }
+
+        fread(&lastLoaded, sizeof(u64), 1, fp);
         fread(&pathLen, sizeof(u16), 1, fp);
 
         const char* path = calloc(pathLen + 1, sizeof(u8));
         fread((char*)path, sizeof(u8), pathLen + 1, fp);
 
-        mod_cache_add(dataHash, path);
+        mod_cache_add(dataHash, lastLoaded, path);
     }
     LOG_INFO("Loading mod cache complete");
 
@@ -138,6 +143,7 @@ void mod_cache_save(void) {
     struct ModCacheEntry* node = sModCacheHead;
     while (node != NULL) {
         fwrite(node->dataHash, sizeof(u8), 16, fp);
+        fwrite(node->lastLoaded, sizeof(u64), 1, fp);
         u16 pathLen = strlen(node->path);
         fwrite(&pathLen, sizeof(u16), 1, fp);
         fwrite(node->path, sizeof(u8), pathLen + 1, fp);

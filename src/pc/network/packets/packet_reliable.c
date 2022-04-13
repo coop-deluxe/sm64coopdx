@@ -125,6 +125,9 @@ static float network_adjust_max_elapsed(enum PacketType packetType, float maxEla
         case PACKET_DOWNLOAD:
         case PACKET_MOD_LIST_REQUEST:
         case PACKET_MOD_LIST:
+        case PACKET_MOD_LIST_ENTRY:
+        case PACKET_MOD_LIST_FILE:
+        case PACKET_MOD_LIST_DONE:
             return 0.2f + maxElapsed * 2.0f;
         default:
             return maxElapsed;

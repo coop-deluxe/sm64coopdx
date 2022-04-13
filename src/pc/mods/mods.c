@@ -62,6 +62,7 @@ void mods_activate(struct Mods* mods) {
     }
 
     // copy enabled entries
+    gActiveMods.entryCount = 0;
     gActiveMods.size = 0;
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
@@ -213,5 +214,4 @@ void mods_shutdown(void) {
     mods_clear(&gRemoteMods);
     mods_clear(&gActiveMods);
     mods_clear(&gLocalMods);
-    mods_delete_tmp();
 }

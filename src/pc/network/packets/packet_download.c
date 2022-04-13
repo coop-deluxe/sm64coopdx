@@ -61,7 +61,7 @@ static void mark_groups_loaded_from_hash(void) {
         if (mod->loadedFromCache) {
             // if we loaded from cache, mark bytes as downloaded
             sTotalDownloadBytes += mod->size;
-            LOG_INFO("Loaded from cache: %s, %lu", mod->name, mod->size);
+            LOG_INFO("Loaded from cache: %s, %llu", mod->name, mod->size);
         } else {
             // if we haven't loaded from cache, we need this offset group
             u64 ogIndexStart = fileStartOffset / GROUP_SIZE;
