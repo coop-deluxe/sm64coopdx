@@ -42,9 +42,9 @@ All of this is a holdover from when there were only two players. It was a reason
 <br />
 
 ## Example Lua mods (small)
-- [Low Gravity](../../mods/low-gravity.lua)
+- [Low Gravity](examples/mods/low-gravity.lua)
 - [Faster Swimming](../../mods/faster-swimming.lua)
-- [Mario Run](../../mods/Mario-Run.lua)
+- [Mario Run](examples/Mario-Run.lua)
 - [HUD Rendering](examples/hud.lua)
 - [Object Spawning](examples/spawn-stuff.lua)
 - [Custom Ball Behavior](examples/behavior-ball.lua)
