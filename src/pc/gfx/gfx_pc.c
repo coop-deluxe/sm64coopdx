@@ -512,7 +512,7 @@ static inline void load_texture(const char *fullpath) {
     int w, h;
     u64 imgsize = 0;
 
-    u8 *imgdata = fs_load_file(fullpath, &imgsize);
+    u8 *imgdata = fs_load_file(fullpath, (uint64_t*) &imgsize);
     if (imgdata) {
         // TODO: implement stbi_callbacks or some shit instead of loading the whole texture
         u8 *data = stbi_load_from_memory(imgdata, imgsize, &w, &h, NULL, 4);
@@ -567,7 +567,7 @@ static bool texname_to_texformat(const char *name, u8 *fmt, u8 *siz) {
 // calls import_texture() on every texture in the res folder
 // we can get the format and size from the texture files
 // and then cache them using gfx_texture_cache_lookup
-static bool preload_texture(void *user, const char *path) {
+static bool preload_texture(UNUSED void *user, const char *path) {
     // strip off the extension
     char texname[SYS_MAX_PATH];
     strncpy(texname, path, sizeof(texname));
@@ -590,7 +590,7 @@ static bool preload_texture(void *user, const char *path) {
     assert(actualname);
 
     struct TextureHashmapNode *n;
-    if (!gfx_texture_cache_lookup(0, &n, actualname, fmt, siz)) {
+    if (!gfx_texture_cache_lookup(0, &n, (unsigned char*)actualname, fmt, siz)) {
         //fprintf(stdout, "Loading new texture: `%s.`\n", actualname);
         load_texture(path); // new texture, load it
     }
