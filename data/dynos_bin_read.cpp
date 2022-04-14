@@ -104,6 +104,9 @@ char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData) {
         }
     }
 
+    // Make sure it's NULL terminated
+    _FileBuffer[_Length] = '\0';
+
     return _FileBuffer;
 }
 
@@ -141,6 +144,9 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             if (!strncmp(c, "#include", 8) || !strncmp(c, "extern ", 7)) {
                 while (*c != '\n' && *c != '\0') {
                     c++;
+                }
+                if (*c == '\0') {
+                    break;
                 }
             }
 
