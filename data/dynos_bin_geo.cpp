@@ -64,6 +64,7 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     geo_constant(SHADOW_SQUARE_TOGGLABLE);
     geo_constant(SHADOW_RECTANGLE_HARDCODED_OFFSET);
     geo_constant(SHADOW_CIRCLE_PLAYER);
+    geo_constant(SHADOW_SPIKE_EXT);
 
     // Envfx constants
     geo_constant(ENVFX_MODE_NONE);

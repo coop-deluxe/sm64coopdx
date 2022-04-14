@@ -28,6 +28,7 @@ extern Gfx dl_screen_transition_end[];
 extern Gfx dl_transition_draw_filled_region[];
 extern Gfx dl_shadow_circle[];
 extern Gfx dl_shadow_square[];
+extern Gfx dl_shadow_spike_ext[];
 extern Gfx dl_shadow_9_verts[];
 extern Gfx dl_shadow_4_verts[];
 extern Gfx dl_shadow_end[];

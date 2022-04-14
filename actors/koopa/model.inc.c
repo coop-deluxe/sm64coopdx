@@ -57,42 +57,42 @@ static const Lights1 koopa_seg6_lights_06002630 = gdSPDefLights1(
 //     Due to debate in the PR surrounding the fix to this, said fix is on
 //     a compile-time variable. Use TEXTURE_FIX=1 at compile time to fix this.
 // 0x06002648
-ALIGNED8 static const Texture koopa_seg6_texture_06002648[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06002648[] = {
 #include "actors/koopa/koopa_shell_front.rgba16.inc.c"
 };
 
 // 0x06002E48
-ALIGNED8 static const Texture koopa_seg6_texture_06002E48[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06002E48[] = {
 #include "actors/koopa/koopa_shell_back.rgba16.inc.c"
 };
 
 // 0x06003648
-ALIGNED8 static const Texture koopa_seg6_texture_06003648[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06003648[] = {
 #include "actors/koopa/koopa_shoe.rgba16.inc.c"
 };
 
 // 0x06003E48
-ALIGNED8 static const Texture koopa_seg6_texture_06003E48[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06003E48[] = {
 #include "actors/koopa/koopa_shell_front_top.rgba16.inc.c"
 };
 
 // 0x06004648
-ALIGNED8 static const Texture koopa_seg6_texture_06004648[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06004648[] = {
 #include "actors/koopa/koopa_eyes_open.rgba16.inc.c"
 };
 
 // 0x06004E48
-ALIGNED8 static const Texture koopa_seg6_texture_06004E48[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06004E48[] = {
 #include "actors/koopa/koopa_eyes_closed.rgba16.inc.c"
 };
 
 // 0x06005648
-ALIGNED8 static const Texture koopa_seg6_texture_06005648[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06005648[] = {
 #include "actors/koopa/koopa_eye_border.rgba16.inc.c"
 };
 
 // 0x06005E48
-ALIGNED8 static const Texture koopa_seg6_texture_06005E48[] = {
+ALIGNED8 const Texture koopa_seg6_texture_06005E48[] = {
 #include "actors/koopa/koopa_nostrils.rgba16.inc.c"
 };
 

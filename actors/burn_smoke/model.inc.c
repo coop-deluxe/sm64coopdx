@@ -15,7 +15,7 @@ static const Vtx burn_smoke_seg4_vertex_040217C0[] = {
 //     said fix is on a compile-time variable. Use TEXTURE_FIX=1 at compile time
 //     to fix this.
 // 0x04021800
-ALIGNED8 static const Texture burn_smoke_seg4_texture_04021800[] = {
+ALIGNED8 const Texture burn_smoke_seg4_texture_04021800[] = {
 #include "actors/burn_smoke/burn_smoke.ia16.inc.c"
 };
 
