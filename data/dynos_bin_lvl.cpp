@@ -2086,14 +2086,15 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         ClearLvlDataNodes(_GfxData->mMovtexs);
         ClearLvlDataNodes(_GfxData->mMovtexQCs);
         ClearLvlDataNodes(_GfxData->mRooms);
-        ClearLvlDataNodes(_GfxData->mGenerateGeoLayouts);
-        ClearLvlDataNodes(_GfxData->mGenerateLevelScripts);
         _GfxData->mPointerList.Clear();
         _GfxData->mPointerOffsetList.Clear();
         _GfxData->mLuaPointerList.Clear();
         _GfxData->mLuaTokenList.Clear();
         generated = true;
     }
+
+    _GfxData->mChildGeoLayouts.Clear();
+
     return generated;
 }
 

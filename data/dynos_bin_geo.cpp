@@ -111,7 +111,9 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     // Geo layouts
     for (auto& _Node : aGfxData->mGeoLayouts) {
         if (_Arg == _Node->mName) {
-            return (s64) DynOS_Geo_Parse(aGfxData, _Node, false)->mData;
+            auto geoNode = DynOS_Geo_Parse(aGfxData, _Node, false);
+            aGfxData->mChildGeoLayouts.Add(geoNode);
+            return (s64) geoNode->mData;
         }
     }
 

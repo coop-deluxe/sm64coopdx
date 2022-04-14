@@ -146,7 +146,15 @@ static String GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64
 }
 
 static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
-    for (auto &_GeoNode : _GfxData->mGenerateGeoLayouts) {
+    // generate in reverse order to detect children
+    for (s32 geoIndex = _GfxData->mGeoLayouts.Count() - 1; geoIndex >= 0; geoIndex--) {
+        auto &_GeoNode = _GfxData->mGeoLayouts[geoIndex];
+
+        // if this is a child geo layout, don't save it as a bin
+        if (_GfxData->mChildGeoLayouts.Find(_GeoNode) != -1) {
+            continue;
+        }
+
         String _GeoRootName = _GeoNode->mName;
 
         // If there is an existing binary file for this layout, skip and go to the next actor
@@ -220,6 +228,8 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         _GfxData->mLuaPointerList.Clear();
         _GfxData->mLuaTokenList.Clear();
     }
+
+    _GfxData->mChildGeoLayouts.Clear();
 }
 
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
@@ -249,26 +259,6 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
                 DynOS_Read_Source(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/geo.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/collision.inc.c", _Folder.c_str()));
-
-                // Figure out which geo layouts to generate
-                s32 geoLayoutCount = _GfxData->mGeoLayouts.Count();
-                if (geoLayoutCount > prevGeoLayoutCount) {
-                    // find actors to generate
-                    bool foundActor = false;
-                    for (s32 i = prevGeoLayoutCount; i < geoLayoutCount; i++) {
-                        String _GeoRootName = _GfxData->mGeoLayouts[i]->mName;
-                        const void* actor = DynOS_Actor_GetLayoutFromName(_GeoRootName.begin());
-                        if (actor != NULL) {
-                            foundActor = true;
-                            _GfxData->mGenerateGeoLayouts.Add(_GfxData->mGeoLayouts[i]);
-                        }
-                    }
-
-                    // if we haven't found an actor, just add the last geo layout found
-                    if (!foundActor) {
-                        _GfxData->mGenerateGeoLayouts.Add(_GfxData->mGeoLayouts[geoLayoutCount - 1]);
-                    }
-                }
 
                 if (_GfxData->mModelIdentifier != 0) {
                     _ActorsFolders.Add({ _GfxData->mModelIdentifier, String(_PackEnt->d_name) });

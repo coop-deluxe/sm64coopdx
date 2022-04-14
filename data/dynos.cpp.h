@@ -450,9 +450,8 @@ struct GfxData : NoCopy {
     DataNodes<AnimData> mAnimations;
     Array<Pair<String, void *>> mAnimationTable;
 
-    // Generate
-    Array<DataNode<GeoLayout> *> mGenerateGeoLayouts;
-    Array<DataNode<LevelScript> *> mGenerateLevelScripts;
+    // Skip bin output of children
+    Array<DataNode<GeoLayout> *> mChildGeoLayouts;
 
     // Current
     u64 mLoadIndex = 0;
