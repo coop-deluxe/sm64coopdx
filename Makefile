@@ -57,6 +57,8 @@ DISCORDRPC ?= 0
 DISCORD_SDK ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
+# Enable compiling with more debug info.
+DEBUG_INFO_LEVEL ?= 2
 
 # Various workarounds for weird toolchains
 
@@ -140,10 +142,6 @@ ifeq ($(WINDOWS_BUILD),1)
   endif
 endif
 
-ifneq ($(TARGET_BITS),0)
-  BITS := -m$(TARGET_BITS)
-endif
-
 # Determine default windows target bits
 
 ifeq ($(WINDOWS_BUILD), 1)
@@ -157,6 +155,10 @@ ifeq ($(WINDOWS_BUILD), 1)
       TARGET_BITS := 32
     endif
   endif
+endif
+
+ifneq ($(TARGET_BITS),0)
+  BITS := -m$(TARGET_BITS)
 endif
 
 
@@ -173,24 +175,53 @@ GRUCODE ?= f3dex2e
 
 ifeq      ($(VERSION),jp)
   DEFINES   += VERSION_JP=1
-  OPT_FLAGS := -g
   #GRUCODE   ?= f3d_old
   VERSION_JP_US  ?= true
 else ifeq ($(VERSION),us)
   DEFINES   += VERSION_US=1
-  OPT_FLAGS := -g
   #GRUCODE   ?= f3d_old
   VERSION_JP_US  ?= true
 else ifeq ($(VERSION),eu)
   DEFINES   += VERSION_EU=1
-  OPT_FLAGS := -O2
   #GRUCODE   ?= f3d_new
   VERSION_JP_US  ?= false
 else ifeq ($(VERSION),sh)
   DEFINES   += VERSION_SH=1
-  OPT_FLAGS := -O2
   #GRUCODE   ?= f3d_new
   VERSION_JP_US  ?= false
+endif
+
+# Determine our optimization level.
+ifeq ($(DEBUG),0)
+  # Can't use O2 or higher right now for auto-builders, coop-compiler produces strange graphical errors
+  # likely due to undefined behavior somewhere
+  ifeq ($(WINDOWS_AUTO_BUILDER),1)
+    OPT_FLAGS := -O1
+  else
+    OPT_FLAGS := -O2
+  endif
+else
+  OPT_FLAGS := -Og
+endif
+
+# Set our level of debug symbol info,
+# Including an option to disable it.
+
+# Level 0 produces no debug information at all. Thus, -g0 negates -g.
+# Level 1 produces minimal information, enough for making backtraces in parts of the program that you don’t plan to debug. This includes descriptions of functions and external variables, and line number tables, but no information about local variables.
+# Level 3 includes extra information, such as all the macro definitions present in the program. Some debuggers support macro expansion when you use -g3.
+# From https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html
+
+ifeq ($(DEBUG_INFO_LEVEL),3)
+  OPT_FLAGS += -g -g3
+else ifeq ($(DEBUG_INFO_LEVEL),1)
+  OPT_FLAGS += -g -g1
+else ifeq ($(DEBUG_INFO_LEVEL),0)
+  # If we're compiling with -0g. I don't believe this will do anything worthwhile.
+  OPT_FLAGS += -g0
+else 
+  # This is our default AND level 2.
+  OPT_FLAGS += -g
 endif
 
 ifeq ($(TARGET_WEB),1)
