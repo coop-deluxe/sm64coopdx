@@ -119,6 +119,8 @@ u16 newcam_modeflags;
 s16 newcam_saved_mode = -1;
 s16 newcam_saved_defmode = -1;
 
+extern bool gDjuiInMainMenu;
+
 ///This is called at every level initialisation.
 void newcam_init(struct Camera *c, u8 dv) {
     newcam_tilt = 1500;
@@ -194,7 +196,6 @@ void newcam_init_settings(void) {
     newcam_degrade      = (f32)configCameraDegrade;
 
     // setup main menu camera
-    extern bool gDjuiInMainMenu;
     if (gDjuiInMainMenu) { newcam_tilt = 5; }
 
     newcam_toggle(configEnableCamera || gDjuiInMainMenu);
@@ -382,7 +383,7 @@ static void newcam_rotate_button(void) {
             newcam_tilt_acc -= (newcam_tilt_acc*((f32)newcam_degrade/100));
     }
 
-    if (newcam_mouse == 1) {
+    if ((newcam_mouse == 1) && !gDjuiInMainMenu) {
         newcam_yaw += ivrt(0) * mouse_x * 16;
         newcam_tilt += ivrt(1) * mouse_y * 16;
     }
