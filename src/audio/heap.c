@@ -268,6 +268,7 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
     u32 alignedSize = ALIGN16(size);
 
     if (pool == NULL || pool->cur == NULL) {
+        fprintf(stderr, "soundAlloc failed: pull was invalid\n");
         return NULL;
     }
 

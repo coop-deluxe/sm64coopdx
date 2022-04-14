@@ -1984,8 +1984,8 @@ void audio_init() {
 
     // Load bank sets for each sequence (assets/bank_sets.s)
     data = LOAD_DATA(gBankSetsData);
-    gAlBankSets = soundAlloc(&gAudioInitPool, 0x800);
-    audio_dma_copy_immediate((uintptr_t)data, gAlBankSets, 0x800);
+    gAlBankSets = soundAlloc(&gAudioInitPool, 160);
+    audio_dma_copy_immediate((uintptr_t)data, gAlBankSets, 160);
 
     init_sequence_players();
     gAudioLoadLock = AUDIO_LOCK_NOT_LOADING;
