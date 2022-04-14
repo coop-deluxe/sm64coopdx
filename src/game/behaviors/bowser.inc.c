@@ -549,7 +549,7 @@ s32 bowser_set_anim_in_air(void) {
 }
 
 s32 bowser_land(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object* player = gMarioStates[0].marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oMoveFlags & OBJ_MOVE_LANDED) {
