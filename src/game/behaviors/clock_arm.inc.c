@@ -4,17 +4,20 @@
 void bhv_rotating_clock_arm_loop(void) {
     struct Surface *marioSurface;
     u16 rollAngle = o->oFaceAngleRoll;
-    o->oFloorHeight =
-        find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &marioSurface);
+    if (gMarioObject != NULL) {
+        o->oFloorHeight = find_floor(gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ, &marioSurface);
+    }
 
     // Seems to make sure Mario is on a default surface & 4 frames pass before
     //   allowing him to change the Tick Tock Clock speed setting.
     // Probably a safety check for when you leave the level through the painting
     //   to make sure the setting isn't accidentally locked in as you fly out.
     if (o->oAction == 0) {
-        if (marioSurface->type == SURFACE_DEFAULT)
-            if (o->oTimer >= 4)
+        if (marioSurface != NULL && (marioSurface->type == SURFACE_DEFAULT)) {
+            if (o->oTimer >= 4) {
                 o->oAction++;
+            }
+        }
     } else if (o->oAction == 1) {
         // If Mario is touching the Tick Tock Clock painting...
         if (marioSurface != NULL
@@ -40,11 +43,11 @@ void bhv_rotating_clock_arm_loop(void) {
 
             // Increment the action to stop animating the hands.
             o->oAction++;
-        } else {
         }
     }
 
     // Only rotate the hands until Mario enters the painting.
-    if (o->oAction < 2)
+    if (o->oAction < 2) {
         cur_obj_rotate_face_angle_using_vel();
+    }
 }
