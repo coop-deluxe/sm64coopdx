@@ -13,7 +13,8 @@ struct Struct8032F34C sTumblingBridgeParams[] = {
 };
 
 void bhv_tumbling_bridge_platform_loop(void) {
-    if (!network_sync_object_initialized(o)) {
+    u8 isLLL = obj_has_behavior(o->parentObj, bhvLllTumblingBridge);
+    if (isLLL && !network_sync_object_initialized(o)) {
         struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             network_init_object_field_with_size(o, &o->activeFlags, 16);
@@ -67,7 +68,7 @@ void bhv_tumbling_bridge_platform_loop(void) {
             cur_obj_move_using_fvel_and_gravity();
             if (o->oPosY < o->oFloorHeight - 300.0f) {
                 o->oAction++;
-                network_send_object(o);
+                if (isLLL) { network_send_object(o); }
             }
             break;
         case 3:
@@ -75,7 +76,7 @@ void bhv_tumbling_bridge_platform_loop(void) {
     }
     if (o->parentObj->oAction == 3) {
         obj_mark_for_deletion(o);
-        network_send_object(o);
+        if (isLLL) { network_send_object(o); }
     }
 
     if (o->parentObj != NULL && o->parentObj->oIntangibleTimer != -1) {

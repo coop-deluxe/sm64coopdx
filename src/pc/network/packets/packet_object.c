@@ -122,7 +122,7 @@ struct SyncObject* network_init_object(struct Object *o, float maxSyncDistance) 
     bool hadSyncId = (o->oSyncID != 0);
     // generate new sync ID
     if (!network_set_sync_id(o)) {
-        LOG_ERROR("failed to sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
+        LOG_ERROR("failed to set sync id for object w/behavior %d (init_object)", get_id_from_behavior(o->behavior));
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         return NULL;
     }
@@ -267,11 +267,11 @@ bool network_set_sync_id(struct Object* o) {
     }
 
     if (syncId == 0) {
-        LOG_ERROR("failed to sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
+        LOG_ERROR("failed to set sync id for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
         return false;
     }
     if (gSyncObjects[syncId].o != NULL) {
-        LOG_ERROR("failed to sync id (o) for object w/behavior %d", get_id_from_behavior(o->behavior));
+        LOG_ERROR("failed to set sync id (o) for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
         return false;
     }
 
