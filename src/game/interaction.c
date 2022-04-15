@@ -700,7 +700,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
-        m->knockbackTimer = 3;
+        m->knockbackTimer = 10;
 
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
@@ -1374,6 +1374,10 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, m, m2, &allow);
         if (!allow) {
             // Lua blocked the interaction
+            return false;
+        }
+
+        if (m2->knockbackTimer > 0) {
             return false;
         }
 

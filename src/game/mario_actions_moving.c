@@ -1625,7 +1625,7 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
             }
         }
     } else {
-        m->knockbackTimer = 3;
+        m->knockbackTimer = 10;
     }
 
     animFrame = set_mario_animation(m, animation);
