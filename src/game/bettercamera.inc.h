@@ -523,6 +523,51 @@ static void newcam_bounding_box(void) {
     vec3f_copy(newcam_pos, avg);
 }
 
+static u8 newcam_can_see_mario(void) {
+    // do collision checking
+    struct Surface *surf = NULL;
+    f32 floorHeight = find_floor(newcam_pos[0], newcam_pos[1], newcam_pos[2], &surf);
+    if (surf == NULL || floorHeight <= -11000) {
+        return false;
+    }
+
+    f32 mDist;
+    s16 mPitch;
+    s16 mYaw;
+    vec3f_get_dist_and_angle(newcam_pos, gMarioStates[0].pos, &mDist, &mPitch, &mYaw);
+
+    f32 divisor = (mDist / 795.0f);
+    if (divisor < 1) { divisor = 1; }
+    f32 degreeMult = 6 / divisor;
+
+    for (s16 yawOffset = -1; yawOffset <= 1; yawOffset++) {
+        for (s16 pitchOffset = -1; pitchOffset <= 1; pitchOffset++) {
+            if (abs(yawOffset) == 1 && abs(pitchOffset) == 1) { continue; }
+            Vec3f target;
+            vec3f_set_dist_and_angle(newcam_pos,
+                target,
+                mDist,
+                mPitch + DEGREES(pitchOffset) * degreeMult,
+                mYaw + DEGREES(yawOffset) * degreeMult);
+
+            target[1] += 75;
+
+            Vec3f camdir;
+            camdir[0] = target[0] - newcam_pos[0];
+            camdir[1] = target[1] - newcam_pos[1];
+            camdir[2] = target[2] - newcam_pos[2];
+
+            Vec3f hitpos;
+            find_surface_on_ray(newcam_pos, camdir, &surf, hitpos);
+            if (surf == NULL) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 static void newcam_collision(void) {
     struct Surface *surf;
     Vec3f camdir;
@@ -532,24 +577,28 @@ static void newcam_collision(void) {
     camdir[1] = newcam_pos[1]-newcam_lookat[1];
     camdir[2] = newcam_pos[2]-newcam_lookat[2];
 
-    find_surface_on_ray(newcam_pos_target, camdir, &surf, hitpos);
+    if (newcam_can_see_mario()) {
+        newcam_coldist = sqrtf((newcam_pos_target[0] - newcam_pos[0]) * (newcam_pos_target[0] - newcam_pos[0]) + (newcam_pos_target[1] - newcam_pos[1]) * (newcam_pos_target[1] - newcam_pos[1]) + (newcam_pos_target[2] - newcam_pos[2]) * (newcam_pos_target[2] - newcam_pos[2]));
+    } else {
+        find_surface_on_ray(newcam_pos_target, camdir, &surf, hitpos);
 
-    newcam_coldist = sqrtf((newcam_pos_target[0] - hitpos[0]) * (newcam_pos_target[0] - hitpos[0]) + (newcam_pos_target[1] - hitpos[1]) * (newcam_pos_target[1] - hitpos[1]) + (newcam_pos_target[2] - hitpos[2]) * (newcam_pos_target[2] - hitpos[2]));
+        newcam_coldist = sqrtf((newcam_pos_target[0] - hitpos[0]) * (newcam_pos_target[0] - hitpos[0]) + (newcam_pos_target[1] - hitpos[1]) * (newcam_pos_target[1] - hitpos[1]) + (newcam_pos_target[2] - hitpos[2]) * (newcam_pos_target[2] - hitpos[2]));
 
-    if (surf) {
-        // offset the hit pos by the hit normal
-        Vec3f offset = { 0 };
-        offset[0] = surf->normal.x;
-        offset[1] = surf->normal.y;
-        offset[2] = surf->normal.z;
-        vec3f_mul(offset, 5.0f);
-        vec3f_add(hitpos, offset);
+        if (surf) {
+            // offset the hit pos by the hit normal
+            Vec3f offset = { 0 };
+            offset[0] = surf->normal.x;
+            offset[1] = surf->normal.y;
+            offset[2] = surf->normal.z;
+            vec3f_mul(offset, 5.0f);
+            vec3f_add(hitpos, offset);
 
-        newcam_pos[0] = hitpos[0];
-        newcam_pos[1] = hitpos[1];
-        newcam_pos[2] = hitpos[2];
-        newcam_pan_x = 0;
-        newcam_pan_z = 0;
+            newcam_pos[0] = hitpos[0];
+            newcam_pos[1] = hitpos[1];
+            newcam_pos[2] = hitpos[2];
+            newcam_pan_x = 0;
+            newcam_pan_z = 0;
+        }
     }
 }
 
