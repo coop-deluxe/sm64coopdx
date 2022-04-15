@@ -1,4 +1,5 @@
 extern const Gfx toad_player_metal_start[];
+extern const Gfx toad_player_metal_stop[];
 
 extern const Gfx toad_player_dl_face[];
 extern const Gfx toad_player_dl_eyes_closed[];
@@ -28,6 +29,7 @@ extern const Gfx toad_player_dl_head_base[];
 extern const Gfx toad_player_dl_head_transparent[];
 
 extern const Gfx toad_player_metal_dl_body[];
+extern Gfx toad_material_revert_render_settings[];
 
 #ifndef VERSION_JP
 extern const Gfx toad_player_dl_face_2[];

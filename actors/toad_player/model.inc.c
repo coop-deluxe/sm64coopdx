@@ -27,12 +27,8 @@ const Gfx toad_player_metal_start[] = {
 const Gfx toad_player_metal_stop[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_TEXTURE_GEN),
-    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
-    gsDPSetEnvColor(255, 255, 255, 255),
-    gsDPSetAlphaCompare(G_AC_NONE),
     gsSPEndDisplayList(),
 };
 
@@ -1434,3 +1430,15 @@ const Gfx toad_player_dl_foot_right_metal[] = {
 
     gsSPEndDisplayList(),
 };
+
+Gfx toad_material_revert_render_settings[] = {
+    gsDPPipeSync(),
+    gsSPSetGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+    gsSPTexture(65535, 65535, 0, 0, 0),
+    gsDPSetEnvColor(255, 255, 255, 255),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPEndDisplayList(),
+};
+
