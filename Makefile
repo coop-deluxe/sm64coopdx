@@ -201,7 +201,7 @@ ifeq ($(DEBUG),0)
     OPT_FLAGS := -O2
   endif
 else
-  OPT_FLAGS := -Og
+  OPT_FLAGS := -O0
 endif
 
 # Set our level of debug symbol info,
@@ -633,6 +633,7 @@ ifeq ($(WINDOWS_AUTO_BUILDER),1)
 else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
+  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
 else ifeq ($(COMPILER),clang)
   CC      := clang
   CXX     := clang++
