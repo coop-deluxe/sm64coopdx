@@ -311,9 +311,10 @@ static void wiggler_act_jumped_on(void) {
 
     // Wait for a second after unsquishing, then show text and either shrink (if
     // defeated) or go back to walking
+    s16 dialogIndex = (o->oHealth - 2);
     if (o->header.gfx.scale[1] >= 4.0f) {
         if (o->oTimer > 30) {
-            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, *attackText[o->oHealth - 2], wiggler_act_jumped_on_continue_dialog) != 0) {
+            if ((dialogIndex >= 0 && dialogIndex <= 2) && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, *attackText[dialogIndex], wiggler_act_jumped_on_continue_dialog) != 0) {
                 // Because we don't want the wiggler to disappear after being
                 // defeated, we leave its health at 1
                 if (--o->oHealth <= 1) {
