@@ -2154,6 +2154,11 @@ static void init_single_mario(struct MarioState* m) {
     vec3s_to_vec3f(m->pos, spawnInfo->startPos);
     vec3f_set(m->vel, 0, 0, 0);
 
+    if (m->marioObj != NULL) {
+        vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
+        m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
+    }
+
     // offset spawning
     u8 connectedPlayers = network_player_connected_count();
     u8 globalIndex = gNetworkPlayers[m->playerIndex].globalIndex;
