@@ -15,7 +15,7 @@ static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* ca
     switch (sKnockbackIndex) {
         case 0:  configPlayerKnockbackStrength = 10; break;
         case 1:  configPlayerKnockbackStrength = 25; break;
-        default: configPlayerKnockbackStrength = 75; break;
+        default: configPlayerKnockbackStrength = 60; break;
     }
 }
 

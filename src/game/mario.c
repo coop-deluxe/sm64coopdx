@@ -1903,6 +1903,11 @@ static u8 prevent_hang(u32 hangPreventionActions[], u8* hangPreventionIndex) {
  */
 s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
+
+    if (gMarioState->knockbackTimer > 0) {
+        gMarioState->knockbackTimer--;
+    }
+
     // hide inactive players
     struct NetworkPlayer *np = &gNetworkPlayers[gMarioState->playerIndex];
     if (gMarioState->playerIndex != 0) {

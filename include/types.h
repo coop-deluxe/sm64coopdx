@@ -382,6 +382,7 @@ struct MarioState
     /*????*/ u8 wasNetworkVisible;
     /*????*/ f32 minimumBoneY;
     /*????*/ f32 curAnimOffset;
+    /*????*/ u8 knockbackTimer;
 };
 
 struct TextureInfo

@@ -1105,8 +1105,12 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
                               f32 speed) {
     u32 stepResult;
 
-    if (m->interactObj == NULL || !(m->interactObj->oInteractType & INTERACT_PLAYER)) {
-        mario_set_forward_vel(m, speed);
+    if (m->knockbackTimer == 0) {
+        if (m->interactObj == NULL || !(m->interactObj->oInteractType & INTERACT_PLAYER)) {
+            mario_set_forward_vel(m, speed);
+        }
+    } else {
+        m->knockbackTimer = 3;
     }
 
     stepResult = perform_air_step(m, 0);
