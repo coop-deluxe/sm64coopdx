@@ -1744,6 +1744,26 @@ static const void* sDynosBuiltinTexs[] = {
     define_builtin(bobomb_seg8_texture_08020A60),
     define_builtin(bobomb_seg8_texture_08021A60),
     define_builtin(bobomb_seg8_texture_08022260),
+    // mario
+    define_builtin(mario_texture_metal),
+    define_builtin(mario_texture_yellow_button),
+    define_builtin(mario_texture_m_logo),
+    define_builtin(mario_texture_hair_sideburn),
+    define_builtin(mario_texture_mustache),
+    define_builtin(mario_texture_eyes_front),
+    define_builtin(mario_texture_eyes_half_closed),
+    define_builtin(mario_texture_eyes_closed),
+    define_builtin(mario_texture_eyes_closed_unused1),
+    define_builtin(mario_texture_eyes_closed_unused2),
+    define_builtin(mario_texture_eyes_right),
+    define_builtin(mario_texture_eyes_left),
+    define_builtin(mario_texture_eyes_up),
+    define_builtin(mario_texture_eyes_down),
+    define_builtin(mario_texture_eyes_dead),
+    define_builtin(mario_texture_wings_half_1),
+    define_builtin(mario_texture_wings_half_2),
+    define_builtin(mario_texture_metal_wings_half_1),
+    define_builtin(mario_texture_metal_wings_half_2),
 };
 
 const Texture* DynOS_Builtin_Tex_GetFromName(const char* aDataName) {

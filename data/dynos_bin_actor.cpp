@@ -146,6 +146,18 @@ static String GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64
 }
 
 static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
+    // do not regen this folder if we find any existing bins
+    for (s32 geoIndex = _GfxData->mGeoLayouts.Count() - 1; geoIndex >= 0; geoIndex--) {
+        auto &_GeoNode = _GfxData->mGeoLayouts[geoIndex];
+        String _GeoRootName = _GeoNode->mName;
+
+        // If there is an existing binary file for this layout, skip and go to the next actor
+        SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
+        if (fs_sys_file_exists(_BinFilename.c_str())) {
+            return;
+        }
+    }
+
     // generate in reverse order to detect children
     for (s32 geoIndex = _GfxData->mGeoLayouts.Count() - 1; geoIndex >= 0; geoIndex--) {
         auto &_GeoNode = _GfxData->mGeoLayouts[geoIndex];
@@ -159,9 +171,6 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 
         // If there is an existing binary file for this layout, skip and go to the next actor
         SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
-        if (fs_sys_file_exists(_BinFilename.c_str())) {
-            continue;
-        }
 
         // Init
         _GfxData->mLoadIndex                  = 0;
