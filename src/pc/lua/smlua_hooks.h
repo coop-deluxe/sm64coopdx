@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "include/behavior_table.h"
 
+// forward declare
 struct Camera;
 
 enum LuaHookedEventType {
