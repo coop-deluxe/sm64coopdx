@@ -12,12 +12,12 @@ static Vec3s sVec3sBuffer[VEC3S_BUFFER_COUNT] = { 0 };
 static u8 sVec3sBufferIndex = 0;
 
 f32* smlua_get_vec3f_from_buffer(void) {
-    if (sVec3fBufferIndex > VEC3F_BUFFER_COUNT) { sVec3fBufferIndex = 0; }
+    if (sVec3fBufferIndex >= VEC3F_BUFFER_COUNT) { sVec3fBufferIndex = 0; }
     return sVec3fBuffer[sVec3fBufferIndex++];
 }
 
 s16* smlua_get_vec3s_from_buffer(void) {
-    if (sVec3sBufferIndex > VEC3S_BUFFER_COUNT) { sVec3sBufferIndex = 0; }
+    if (sVec3sBufferIndex >= VEC3S_BUFFER_COUNT) { sVec3sBufferIndex = 0; }
     return sVec3sBuffer[sVec3sBufferIndex++];
 }
 
