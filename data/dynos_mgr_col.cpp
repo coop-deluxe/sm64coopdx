@@ -2,7 +2,7 @@
 
 static Array<Pair<const char*, DataNode<Collision>*>> sDynosCollisions;
 
-void DynOS_Col_Activate(const SysPath &aPackFolder, const char *aCollisionName) {
+void DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
     // check for duplicates
     for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
         if (!strcmp(sDynosCollisions[i].first, aCollisionName)) {
@@ -16,7 +16,7 @@ void DynOS_Col_Activate(const SysPath &aPackFolder, const char *aCollisionName) 
     strcpy(collisionName, aCollisionName);
 
     // Load
-    DataNode<Collision>* _Node = DynOS_Col_LoadFromBinary(aPackFolder, collisionName);
+    DataNode<Collision>* _Node = DynOS_Col_LoadFromBinary(aFilename, collisionName);
     if (!_Node) {
         free(collisionName);
         return;

@@ -17,7 +17,7 @@ Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
 }
 
-void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aLevelName) {
+void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLevelName) {
     // make sure vanilla levels were parsed
     DynOS_Level_GetCount();
 
@@ -32,7 +32,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aPackFolder, const char *aL
     char* levelName = (char*)calloc(1, sizeof(char) * (levelLen + 1));
     strcpy(levelName, aLevelName);
 
-    GfxData* _Node = DynOS_Lvl_LoadFromBinary(aPackFolder, levelName);
+    GfxData* _Node = DynOS_Lvl_LoadFromBinary(aFilename, levelName);
     if (!_Node) {
         free(levelName);
         return;

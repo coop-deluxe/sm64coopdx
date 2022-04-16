@@ -31,15 +31,9 @@ static void smlua_exec_str(char* str) {
 static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex) {
     lua_State* L = gLuaState;
 
-    char fullPath[SYS_MAX_PATH] = { 0 };
-    if (!mod_file_full_path(fullPath, mod, file)) {
-        LOG_ERROR("Failed to concat path: '%s' + '%s", mod->relativePath, file->relativePath);
-        return;
-    }
-
     gLuaInitializingScript = 1;
-    if (luaL_loadfile(L, fullPath) != LUA_OK) {
-        LOG_LUA("Failed to load lua script '%s'.", fullPath);
+    if (luaL_loadfile(L, file->cachedPath) != LUA_OK) {
+        LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
         puts(smlua_to_string(L, lua_gettop(L)));
         return;
     }
@@ -82,7 +76,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
 
     // run chunks
     if (lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
-        LOG_LUA("Failed to execute lua script '%s'.", fullPath);
+        LOG_LUA("Failed to execute lua script '%s'.", file->cachedPath);
         puts(smlua_to_string(L, lua_gettop(L)));
         smlua_dump_stack();
         gLuaInitializingScript = 0;

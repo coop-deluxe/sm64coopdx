@@ -81,15 +81,9 @@ void mods_activate(struct Mods* mods) {
             for (int j = 0; j < mod->fileCount; j++) {
                 struct ModFile* file = &mod->files[j];
 
-                char fullPath[SYS_MAX_PATH] = { 0 };
-                if (!mod_file_full_path(fullPath, mod, file)) {
-                    LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, file->relativePath);
-                    continue;
-                }
-
-                file->fp = fopen(fullPath, "rb");
+                file->fp = fopen(file->cachedPath, "rb");
                 if (file->fp == NULL) {
-                    LOG_ERROR("Failed to open file '%s'", fullPath);
+                    LOG_ERROR("Failed to open file '%s'", file->cachedPath);
                     continue;
                 }
 

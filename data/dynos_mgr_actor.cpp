@@ -5,7 +5,7 @@ static Array<Pair<const char*, void *>> sDynosCustomActors;
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
 
-void DynOS_Actor_AddCustom(const SysPath &aPackFolder, const char *aActorName) {
+void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     // check for duplicates
     bool isUnique = true;
     s32 foundIndex = -1;
@@ -21,7 +21,7 @@ void DynOS_Actor_AddCustom(const SysPath &aPackFolder, const char *aActorName) {
     char* actorName = (char*)calloc(1, sizeof(char) * (actorLen + 1));
     strcpy(actorName, aActorName);
 
-    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aPackFolder, actorName);
+    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName, aFilename);
     if (!_GfxData) {
         free(actorName);
         return;

@@ -4,6 +4,7 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
+#include "pc/mods/mod_cache.h"
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
@@ -63,7 +64,6 @@ void network_send_mod_list(void) {
         packet_write(&p, mod->relativePath, sizeof(u8) * relativePathLength);
         packet_write(&p, &modSize, sizeof(u64));
         packet_write(&p, &mod->isDirectory, sizeof(u8));
-        packet_write(&p, &mod->dataHash[0], sizeof(u8) * 16);
         packet_write(&p, &mod->fileCount, sizeof(u16));
         network_send_to(0, &p);
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
@@ -79,6 +79,7 @@ void network_send_mod_list(void) {
             packet_write(&p, &relativePathLength, sizeof(u16));
             packet_write(&p, file->relativePath, sizeof(u8) * relativePathLength);
             packet_write(&p, &fileSize, sizeof(u64));
+            packet_write(&p, &file->dataHash[0], sizeof(u8) * 16);
             network_send_to(0, &p);
             LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
         }
@@ -184,7 +185,6 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, mod->relativePath, relativePathLength * sizeof(u8));
     packet_read(p, &mod->size, sizeof(u64));
     packet_read(p, &mod->isDirectory, sizeof(u8));
-    packet_read(p, &mod->dataHash, sizeof(u8) * 16);
     normalize_path(mod->relativePath);
     LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
 
@@ -258,9 +258,18 @@ void network_receive_mod_list_file(struct Packet* p) {
     packet_read(p, &relativePathLength, sizeof(u16));
     packet_read(p, file->relativePath, relativePathLength * sizeof(u8));
     packet_read(p, &file->size, sizeof(u64));
+    packet_read(p, &file->dataHash, sizeof(u8) * 16);
     file->fp = NULL;
     LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
 
+    struct ModCacheEntry* cache = mod_cache_get_from_hash(file->dataHash);
+    if (cache != NULL) {
+        LOG_INFO("Found file in cache: %s -> %s", file->relativePath, cache->path);
+        if (file->cachedPath != NULL) {
+            free((char*)file->cachedPath);
+        }
+        file->cachedPath = strdup(cache->path);
+    }
 }
 
 void network_receive_mod_list_done(struct Packet* p) {
@@ -277,7 +286,6 @@ void network_receive_mod_list_done(struct Packet* p) {
     for (u16 i = 0; i < gRemoteMods.entryCount; i++) {
         struct Mod* mod = gRemoteMods.entries[i];
         totalSize += mod->size;
-        mod_load_from_cache(mod);
     }
     gRemoteMods.size = totalSize;
 

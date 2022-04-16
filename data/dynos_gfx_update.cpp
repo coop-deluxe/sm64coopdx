@@ -140,7 +140,8 @@ void DynOS_Gfx_Update() {
                 if (_Enabled[i] && _ActorGfx->mPackIndex == -1) {
 
                     // Load Gfx data from binary
-                    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(pDynosPacks[i]->mPath, DynOS_Actor_GetName(_ActorIndex));
+                    SysPath _Filename = fstring("%s/%s.bin", pDynosPacks[i]->mPath.begin(), DynOS_Actor_GetName(_ActorIndex));
+                    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(pDynosPacks[i]->mPath, DynOS_Actor_GetName(_ActorIndex), _Filename);
                     if (_GfxData) {
                         _ActorGfx->mPackIndex = i;
                         _ActorGfx->mGfxData   = _GfxData;

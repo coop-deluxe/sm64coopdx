@@ -57,23 +57,24 @@ static void mark_groups_loaded_from_hash(void) {
     u64 fileStartOffset = 0;
     for (u64 modIndex = 0; modIndex < gRemoteMods.entryCount; modIndex++) {
         struct Mod* mod = gRemoteMods.entries[modIndex];
-
-        if (mod->loadedFromCache) {
-            // if we loaded from cache, mark bytes as downloaded
-            sTotalDownloadBytes += mod->size;
-            LOG_INFO("Loaded from cache: %s, %llu", mod->name, (u64)mod->size);
-        } else {
-            // if we haven't loaded from cache, we need this offset group
-            u64 ogIndexStart = fileStartOffset / GROUP_SIZE;
-            u64 ogIndexEnd = (fileStartOffset + mod->size) / GROUP_SIZE;
-            do {
-                LOG_INFO("Marking group as required: %llu (%s)", ogIndexStart, mod->name);
-                offsetGroupRequired[ogIndexStart] = 1;
-                ogIndexStart++;
-            } while (ogIndexStart <= ogIndexEnd);
+        for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
+            struct ModFile* file = &mod->files[fileIndex];
+            if (file->cachedPath != NULL) {
+                // if we loaded from cache, mark bytes as downloaded
+                sTotalDownloadBytes += file->size;
+                LOG_INFO("Loaded from cache: %s, %llu", file->cachedPath, (u64)file->size);
+            } else {
+                // if we haven't loaded from cache, we need this offset group
+                u64 ogIndexStart = fileStartOffset / GROUP_SIZE;
+                u64 ogIndexEnd = (fileStartOffset + mod->size) / GROUP_SIZE;
+                do {
+                    LOG_INFO("Marking group as required: %llu (%s)", ogIndexStart, file->relativePath);
+                    offsetGroupRequired[ogIndexStart] = 1;
+                    ogIndexStart++;
+                } while (ogIndexStart <= ogIndexEnd);
+            }
+            fileStartOffset += file->size;
         }
-
-        fileStartOffset += mod->size;
     }
 
     for (u64 ogIndex = 0; ogIndex < sOffsetGroupCount; ogIndex++) {
@@ -184,6 +185,7 @@ static void network_update_offset_groups(void) {
                 fclose(modFile->fp);
                 modFile->fp = NULL;
             }
+            mod->enabled = true;
         }
         LOG_INFO("Download complete!");
         network_send_join_request();
@@ -305,8 +307,6 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
         return;
     }
     LOG_INFO("Opened mod file pointer: %s", fullPath);
-
-    mod->enabled = true;
 }
 
 void network_receive_download(struct Packet* p) {
@@ -378,7 +378,7 @@ after_group:;
             u64 fileWriteLength = MIN((modFile->size - fileWriteOffset), (chunkLength - chunkPour));
 
             // read from file, filling chunk
-            if (!mod->loadedFromCache) {
+            if (!modFile->cachedPath) {
                 open_mod_file(mod, modFile);
                 fseek(modFile->fp, fileWriteOffset, SEEK_SET);
                 fwrite(&chunk[chunkPour], sizeof(u8), fileWriteLength, modFile->fp);

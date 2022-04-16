@@ -84,8 +84,8 @@ void dynos_generate_packs(const char* directory) {
 
 // -- geos -- //
 
-void dynos_add_actor_custom(const char *modPath, const char* geoName) {
-    DynOS_Actor_AddCustom(modPath, geoName);
+void dynos_add_actor_custom(const char *filePath, const char* geoName) {
+    DynOS_Actor_AddCustom(filePath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
@@ -94,8 +94,8 @@ const void* dynos_geolayout_get(const char *name) {
 
 // -- collisions -- //
 
-void dynos_add_collision(const char *modPath, const char* collisionName) {
-    DynOS_Col_Activate(modPath, collisionName);
+void dynos_add_collision(const char *filePath, const char* collisionName) {
+    DynOS_Col_Activate(filePath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
@@ -124,8 +124,8 @@ struct MovtexQuadCollection* dynos_movtexqc_get_from_index(s32 index) {
 
 // -- levels -- //
 
-void dynos_add_level(s32 modIndex, const char *modPath, const char* levelName) {
-    DynOS_Lvl_Activate(modIndex, modPath, levelName);
+void dynos_add_level(s32 modIndex, const char *filePath, const char* levelName) {
+    DynOS_Lvl_Activate(modIndex, filePath, levelName);
 }
 
 const char* dynos_level_get_token(u32 index) {

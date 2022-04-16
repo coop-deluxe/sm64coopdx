@@ -1972,14 +1972,13 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
     return _Node;
 }
 
-GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aPackFolder, const char *aLevelName) {
+GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelName) {
     struct DynosGfxDataCache { SysPath mPackFolder; Array<Pair<const char *, GfxData *>> mGfxData; };
     static Array<DynosGfxDataCache *> sDynosGfxDataCache;
 
     // Load data from binary file
     GfxData *_GfxData = NULL;
-    SysPath _Filename = fstring("%s/%s.lvl", aPackFolder.begin(), aLevelName);
-    FILE *_File = fopen(_Filename.c_str(), "rb");
+    FILE *_File = fopen(aFilename.c_str(), "rb");
     if (_File) {
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {

@@ -108,19 +108,10 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
         if (!strcmp(file->relativePath, m64path)) {
-
-            char fullPath[SYS_MAX_PATH] = { 0 };
-            if (snprintf(fullPath, SYS_MAX_PATH - 1, "%s/%s", gLuaActiveMod->basePath, m64path) < 0) {
-                LOG_ERROR("Failed to concat full path to m64: %s", m64Name);
-                return;
-            }
-            normalize_path(fullPath);
-
-
             struct AudioOverride* override = &sAudioOverrides[sequenceId];
             smlua_audio_utils_reset(override);
-            LOG_INFO("Loading audio: %s", fullPath);
-            override->filename = strdup(fullPath);
+            LOG_INFO("Loading audio: %s", file->cachedPath);
+            override->filename = strdup(file->cachedPath);
             override->enabled = true;
             override->bank = bankId;
             sound_set_background_music_default_volume(sequenceId, defaultVolume);

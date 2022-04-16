@@ -664,11 +664,10 @@ DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData) {
     return _Node;
 }
 
-DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aPackFolder, const char *aCollisionName) {
+DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const char *aCollisionName) {
     // Load data from binary file
     DataNode<Collision>* collisionNode = NULL;
-    SysPath _Filename = fstring("%s/%s.col", aPackFolder.begin(), aCollisionName);
-    FILE *_File = fopen(_Filename.c_str(), "rb");
+    FILE *_File = fopen(aFilename.c_str(), "rb");
     if (_File) {
         u8 type = ReadBytes<u8>(_File);
         if (type == DATA_TYPE_COLLISION) {

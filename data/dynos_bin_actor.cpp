@@ -72,7 +72,7 @@ static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGf
  // Reading //
 /////////////
 
-GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName) {
+GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName, const SysPath &aFilename) {
     struct DynosGfxDataCache { SysPath mPackFolder; Array<Pair<const char *, GfxData *>> mGfxData; };
     static Array<DynosGfxDataCache *> sDynosGfxDataCache = {};
 
@@ -96,8 +96,7 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
 
     // Load data from binary file
     GfxData *_GfxData = NULL;
-    SysPath _Filename = fstring("%s/%s.bin", aPackFolder.begin(), aActorName);
-    FILE *_File = fopen(_Filename.c_str(), "rb");
+    FILE *_File = fopen(aFilename.c_str(), "rb");
     if (_File) {
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
