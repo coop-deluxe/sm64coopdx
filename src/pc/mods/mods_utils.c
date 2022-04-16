@@ -174,14 +174,14 @@ const char* path_to_executable(void) {
 #if defined(_WIN32) || defined(_WIN64)
     HMODULE hModule = GetModuleHandle(NULL);
     if (hModule == NULL) {
-        LOG_ERROR("unable to retrieve absolute exe path!");
+        LOG_ERROR("unable to retrieve absolute windows path!");
         return NULL;
     }
     GetModuleFileName(hModule, exePath, SYS_MAX_PATH-1);
 #elif defined(OSX_BUILD)
     u32 bufsize = SYS_MAX_PATH-1;
-    if (!_NSGetExecutablePath(exePath, &bufsize)) {
-        LOG_ERROR("unable to retrieve absolute exe path!");
+    if (_NSGetExecutablePath(exePath, &bufsize) != 0) {
+        LOG_ERROR("unable to retrieve absolute mac path!");
         return NULL;
     }
 #else
@@ -189,7 +189,7 @@ const char* path_to_executable(void) {
     snprintf(procPath, SYS_MAX_PATH-1, "/proc/%d/exe", getpid());
     s32 rc = readlink(procPath, exePath, SYS_MAX_PATH-1);
     if (rc <= 0) {
-        LOG_ERROR("unable to retrieve absolute exe path!");
+        LOG_ERROR("unable to retrieve absolute linux path!");
         return NULL;
     }
 #endif
