@@ -175,8 +175,9 @@ const char* path_to_executable(void) {
     }
     GetModuleFileName(hModule, exePath, SYS_MAX_PATH-1);
 #else
-    snprintf(exePath, MAX_LAUNCH_CMD - 1, "/proc/%d/exe", getpid());
-    rc = readlink(exePath, cmd, MAX_LAUNCH_CMD - 1);
+    char procPath[SYS_MAX_PATH] = { 0 };
+    snprintf(procPath, SYS_MAX_PATH-1, "/proc/%d/exe", getpid());
+    s32 rc = readlink(procPath, exePath, SYS_MAX_PATH-1);
     if (rc <= 0) {
         LOG_ERROR("unable to retrieve absolute exe path!");
         return NULL;
