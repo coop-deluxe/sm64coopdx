@@ -32,8 +32,17 @@ end
 
 function on_set_camera_mode(c, mode, frames)
     local m = gMarioStates[0]
+
+    if mode == CAMERA_MODE_ROM_HACK then
+        return true
+    end
+
     if sOverrideCameraModes[mode] ~= nil then
         -- do not allow change
+        if mode ~= CAMERA_MODE_ROM_HACK then
+            set_camera_mode(c, CAMERA_MODE_ROM_HACK, frames)
+            return false
+        end
         return false
     end
 
