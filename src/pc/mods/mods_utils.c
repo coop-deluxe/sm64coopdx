@@ -11,6 +11,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef OSX_BUILD
+#include <mach-o/dyld.h>
+#endif
+
 void mods_size_enforce(struct Mods* mods) {
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
@@ -174,6 +178,12 @@ const char* path_to_executable(void) {
         return NULL;
     }
     GetModuleFileName(hModule, exePath, SYS_MAX_PATH-1);
+#elif defined(OSX_BUILD)
+    u32 bufsize = SYS_MAX_PATH-1;
+    if (!_NSGetExecutablePath(exePath, &bufsize)) {
+        LOG_ERROR("unable to retrieve absolute exe path!");
+        return NULL;
+    }
 #else
     char procPath[SYS_MAX_PATH] = { 0 };
     snprintf(procPath, SYS_MAX_PATH-1, "/proc/%d/exe", getpid());
