@@ -40,6 +40,9 @@ bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct) {
         return false;
     }
 
+    // stop music
+    play_music(SEQ_PLAYER_LEVEL, 0, 0);
+
     sDynosWarpLevelNum = aLevel;
     sDynosWarpAreaNum  = aArea;
     sDynosWarpActNum   = aAct;
