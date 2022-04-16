@@ -39,6 +39,8 @@
 - [os_cont.h](#os_conth)
 - [save_file.h](#save_fileh)
     - [enum SaveFileIndex](#enum-SaveFileIndex)
+- [seq_ids.h](#seq_idsh)
+    - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
@@ -2314,6 +2316,54 @@
 | SAVE_FILE_B | 1 |
 | SAVE_FILE_C | 2 |
 | SAVE_FILE_D | 3 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [seq_ids.h](#seq_ids.h)
+- SEQ_BASE_ID
+- SEQ_VARIATION
+
+### [enum SeqId](#SeqId)
+| Identifier | Value |
+| :--------- | :---- |
+| SEQ_SOUND_PLAYER | 0 |
+| SEQ_EVENT_CUTSCENE_COLLECT_STAR | 1 |
+| SEQ_MENU_TITLE_SCREEN | 2 |
+| SEQ_LEVEL_GRASS | 3 |
+| SEQ_LEVEL_INSIDE_CASTLE | 4 |
+| SEQ_LEVEL_WATER | 5 |
+| SEQ_LEVEL_HOT | 6 |
+| SEQ_LEVEL_BOSS_KOOPA | 7 |
+| SEQ_LEVEL_SNOW | 8 |
+| SEQ_LEVEL_SLIDE | 9 |
+| SEQ_LEVEL_SPOOKY | 10 |
+| SEQ_EVENT_PIRANHA_PLANT | 11 |
+| SEQ_LEVEL_UNDERGROUND | 12 |
+| SEQ_MENU_STAR_SELECT | 13 |
+| SEQ_EVENT_POWERUP | 14 |
+| SEQ_EVENT_METAL_CAP | 15 |
+| SEQ_EVENT_KOOPA_MESSAGE | 16 |
+| SEQ_LEVEL_KOOPA_ROAD | 17 |
+| SEQ_EVENT_HIGH_SCORE | 18 |
+| SEQ_EVENT_MERRY_GO_ROUND | 19 |
+| SEQ_EVENT_RACE | 20 |
+| SEQ_EVENT_CUTSCENE_STAR_SPAWN | 21 |
+| SEQ_EVENT_BOSS | 22 |
+| SEQ_EVENT_CUTSCENE_COLLECT_KEY | 23 |
+| SEQ_EVENT_ENDLESS_STAIRS | 24 |
+| SEQ_LEVEL_BOSS_KOOPA_FINAL | 25 |
+| SEQ_EVENT_CUTSCENE_CREDITS | 26 |
+| SEQ_EVENT_SOLVE_PUZZLE | 27 |
+| SEQ_EVENT_TOAD_MESSAGE | 28 |
+| SEQ_EVENT_PEACH_MESSAGE | 29 |
+| SEQ_EVENT_CUTSCENE_INTRO | 30 |
+| SEQ_EVENT_CUTSCENE_VICTORY | 31 |
+| SEQ_EVENT_CUTSCENE_ENDING | 32 |
+| SEQ_MENU_FILE_SELECT | 33 |
+| SEQ_EVENT_CUTSCENE_LAKITU | 34 |
+| SEQ_COUNT | 35 |
 
 [:arrow_up_small:](#)
 

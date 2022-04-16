@@ -33,6 +33,7 @@ in_files = [
     "src/game/save_file.h",
     "src/game/obj_behaviors_2.h",
     "include/dialog_ids.h",
+    "include/seq_ids.h",
 ]
 
 exclude_constants = {

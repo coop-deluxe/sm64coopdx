@@ -6609,6 +6609,122 @@ SAVE_FILE_C = 2
 SAVE_FILE_D = 3
 
 --- @type integer
+SEQ_BASE_ID = 0x7f
+
+--- @type integer
+SEQ_VARIATION = 0x80
+
+--- @class SeqId
+
+--- @type SeqId
+SEQ_SOUND_PLAYER = 0
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_COLLECT_STAR = 1
+
+--- @type SeqId
+SEQ_MENU_TITLE_SCREEN = 2
+
+--- @type SeqId
+SEQ_LEVEL_GRASS = 3
+
+--- @type SeqId
+SEQ_LEVEL_INSIDE_CASTLE = 4
+
+--- @type SeqId
+SEQ_LEVEL_WATER = 5
+
+--- @type SeqId
+SEQ_LEVEL_HOT = 6
+
+--- @type SeqId
+SEQ_LEVEL_BOSS_KOOPA = 7
+
+--- @type SeqId
+SEQ_LEVEL_SNOW = 8
+
+--- @type SeqId
+SEQ_LEVEL_SLIDE = 9
+
+--- @type SeqId
+SEQ_LEVEL_SPOOKY = 10
+
+--- @type SeqId
+SEQ_EVENT_PIRANHA_PLANT = 11
+
+--- @type SeqId
+SEQ_LEVEL_UNDERGROUND = 12
+
+--- @type SeqId
+SEQ_MENU_STAR_SELECT = 13
+
+--- @type SeqId
+SEQ_EVENT_POWERUP = 14
+
+--- @type SeqId
+SEQ_EVENT_METAL_CAP = 15
+
+--- @type SeqId
+SEQ_EVENT_KOOPA_MESSAGE = 16
+
+--- @type SeqId
+SEQ_LEVEL_KOOPA_ROAD = 17
+
+--- @type SeqId
+SEQ_EVENT_HIGH_SCORE = 18
+
+--- @type SeqId
+SEQ_EVENT_MERRY_GO_ROUND = 19
+
+--- @type SeqId
+SEQ_EVENT_RACE = 20
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_STAR_SPAWN = 21
+
+--- @type SeqId
+SEQ_EVENT_BOSS = 22
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_COLLECT_KEY = 23
+
+--- @type SeqId
+SEQ_EVENT_ENDLESS_STAIRS = 24
+
+--- @type SeqId
+SEQ_LEVEL_BOSS_KOOPA_FINAL = 25
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_CREDITS = 26
+
+--- @type SeqId
+SEQ_EVENT_SOLVE_PUZZLE = 27
+
+--- @type SeqId
+SEQ_EVENT_TOAD_MESSAGE = 28
+
+--- @type SeqId
+SEQ_EVENT_PEACH_MESSAGE = 29
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_INTRO = 30
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_VICTORY = 31
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_ENDING = 32
+
+--- @type SeqId
+SEQ_MENU_FILE_SELECT = 33
+
+--- @type SeqId
+SEQ_EVENT_CUTSCENE_LAKITU = 34
+
+--- @type SeqId
+SEQ_COUNT = 35
+
+--- @type integer
 ACT_AIR_HIT_WALL = 0x000008A7
 
 --- @type integer
