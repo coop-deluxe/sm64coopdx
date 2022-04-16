@@ -575,6 +575,7 @@
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
+--- @field public skipCreditsAt LevelNum
 --- @field public starPositions StarPositions
 
 --- @class LinearTransitionPoint
@@ -642,6 +643,7 @@
 --- @field public interactObj Object
 --- @field public invincTimer integer
 --- @field public isSnoring integer
+--- @field public knockbackTimer integer
 --- @field public marioBodyState MarioBodyState
 --- @field public marioObj Object
 --- @field public minimumBoneY number

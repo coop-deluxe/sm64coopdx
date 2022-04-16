@@ -160,5 +160,6 @@ void star_select_finish_selection(void);
 s32 lvl_exiting_credits(UNUSED s16 arg0, UNUSED s32 arg1);
 
 void fake_lvl_init_from_save_file(void);
+void lvl_skip_credits(void);
 
 #endif // LEVEL_UPDATE_H

@@ -1531,12 +1531,7 @@ void update_mario_inputs(struct MarioState *m) {
     /* End of developer stuff */
 
     if ((m->action == ACT_END_PEACH_CUTSCENE || m->action == ACT_CREDITS_CUTSCENE) && m->controller->buttonPressed & START_BUTTON) {
-        gCurrCreditsEntry = NULL;
-        gCurrActStarNum = 0;
-        gCurrActNum = 0;
-        gChangeLevel = gLevelValues.entryLevel;
-        m->health = 0x880;
-        play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
+        lvl_skip_credits();
     }
 
     if (m->playerIndex == 0) {

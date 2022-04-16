@@ -42,6 +42,7 @@ struct LevelValues gLevelValues = {
     .exitCastleLevel = LEVEL_CASTLE,
     .exitCastleArea = 1,
     .exitCastleWarpNode = 0x1F,
+    .skipCreditsAt = (LEVEL_MAX+1),
     .starPositions = {
         .KoopaBobStarPos      = {  3030.0f,  4500.0f, -4600.0f },
         .KoopaThiStarPos      = {  7100.0f, -1300.0f, -6000.0f },

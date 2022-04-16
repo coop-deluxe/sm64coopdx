@@ -41,6 +41,7 @@ struct LevelValues {
     enum LevelNum exitCastleLevel;
     s16 exitCastleArea;
     u8 exitCastleWarpNode;
+    enum LevelNum skipCreditsAt;
     struct StarPositions starPositions;
 };
 

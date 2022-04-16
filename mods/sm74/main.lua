@@ -9,6 +9,7 @@
 gLevelValues.entryLevel = LEVEL_CASTLE_COURTYARD
 gLevelValues.exitCastleLevel = LEVEL_CASTLE_COURTYARD
 gLevelValues.exitCastleWarpNode = 0x40
+gLevelValues.skipCreditsAt = LEVEL_BOB
 
 ---------------------
 -- behavior values --

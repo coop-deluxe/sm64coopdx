@@ -573,6 +573,11 @@ void warp_credits(void) {
         gCurrCreditsEntry = &sCreditsSequence[0];
     }
 
+    if ((gCurrCreditsEntry != NULL) && (gCurrCreditsEntry->levelNum == gLevelValues.skipCreditsAt)) {
+        lvl_skip_credits();
+        return;
+    }
+
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         vec3s_set(gPlayerSpawnInfos[i].startPos, gCurrCreditsEntry->marioPos[0],
                   gCurrCreditsEntry->marioPos[1], gCurrCreditsEntry->marioPos[2]);
@@ -967,26 +972,36 @@ void initiate_delayed_warp(void) {
 
                 case WARP_OP_CREDITS_START:
                     gCurrCreditsEntry = &sCreditsSequence[0];
-                    // instance players in the credits
-                    gCurrActStarNum = 99;
-                    gCurrActNum = 99;
-                    initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
-                                  WARP_NODE_CREDITS_START, 0);
+
+                    if ((gCurrCreditsEntry != NULL) && (gCurrCreditsEntry->levelNum == gLevelValues.skipCreditsAt)) {
+                        lvl_skip_credits();
+                    } else {
+                        // instance players in the credits
+                        gCurrActStarNum = 99;
+                        gCurrActNum = 99;
+                        initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
+                                    WARP_NODE_CREDITS_START, 0);
+                    }
                     break;
 
                 case WARP_OP_CREDITS_NEXT:
                     sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_ALL);
 
                     gCurrCreditsEntry += 1;
-                    gCurrActNum = gCurrCreditsEntry->unk02 & 0x07;
-                    if ((gCurrCreditsEntry + 1)->levelNum == LEVEL_NONE) {
-                        destWarpNode = WARP_NODE_CREDITS_END;
-                    } else {
-                        destWarpNode = WARP_NODE_CREDITS_NEXT;
-                    }
 
-                    initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
-                                  destWarpNode, 0);
+                    if ((gCurrCreditsEntry != NULL) && (gCurrCreditsEntry->levelNum == gLevelValues.skipCreditsAt)) {
+                        lvl_skip_credits();
+                    } else {
+                        gCurrActNum = gCurrCreditsEntry->unk02 & 0x07;
+                        if ((gCurrCreditsEntry + 1)->levelNum == LEVEL_NONE) {
+                            destWarpNode = WARP_NODE_CREDITS_END;
+                        } else {
+                            destWarpNode = WARP_NODE_CREDITS_NEXT;
+                        }
+
+                        initiate_warp(gCurrCreditsEntry->levelNum, gCurrCreditsEntry->areaIndex,
+                                    destWarpNode, 0);
+                    }
                     break;
 
                 default:
@@ -1565,4 +1580,13 @@ void fake_lvl_init_from_save_file(void) {
     fadeout_music(30);
 
     gChangeLevel = gLevelValues.entryLevel;
+}
+
+void lvl_skip_credits(void) {
+    gCurrCreditsEntry = NULL;
+    gCurrActStarNum = 0;
+    gCurrActNum = 0;
+    gChangeLevel = gLevelValues.entryLevel;
+    gMarioStates[0].health = 0x880;
+    play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
 }

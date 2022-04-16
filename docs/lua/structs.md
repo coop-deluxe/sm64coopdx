@@ -837,6 +837,7 @@
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
+| skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 
 [:arrow_up_small:](#)
@@ -932,6 +933,7 @@
 | interactObj | [Object](structs.md#Object) |  |
 | invincTimer | `integer` |  |
 | isSnoring | `integer` |  |
+| knockbackTimer | `integer` |  |
 | marioBodyState | [MarioBodyState](structs.md#MarioBodyState) |  |
 | marioObj | [Object](structs.md#Object) |  |
 | minimumBoneY | `number` |  |

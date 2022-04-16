@@ -666,12 +666,13 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 5
+#define LUA_LEVEL_VALUES_FIELD_COUNT 6
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "entryLevel",         LVT_S32,     offsetof(struct LevelValues, entryLevel),         false, LOT_NONE          },
     { "exitCastleArea",     LVT_S16,     offsetof(struct LevelValues, exitCastleArea),     false, LOT_NONE          },
     { "exitCastleLevel",    LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),    false, LOT_NONE          },
     { "exitCastleWarpNode", LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode), false, LOT_NONE          },
+    { "skipCreditsAt",      LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),      false, LOT_NONE          },
     { "starPositions",      LVT_COBJECT, offsetof(struct LevelValues, starPositions),      true,  LOT_STARPOSITIONS },
 };
 
@@ -710,7 +711,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 72
+#define LUA_MARIO_STATE_FIELD_COUNT 73
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -750,6 +751,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "interactObj",              LVT_COBJECT_P, offsetof(struct MarioState, interactObj),              false, LOT_OBJECT            },
     { "invincTimer",              LVT_S16,       offsetof(struct MarioState, invincTimer),              false, LOT_NONE              },
     { "isSnoring",                LVT_U8,        offsetof(struct MarioState, isSnoring),                false, LOT_NONE              },
+    { "knockbackTimer",           LVT_U8,        offsetof(struct MarioState, knockbackTimer),           false, LOT_NONE              },
     { "marioBodyState",           LVT_COBJECT_P, offsetof(struct MarioState, marioBodyState),           false, LOT_MARIOBODYSTATE    },
     { "marioObj",                 LVT_COBJECT_P, offsetof(struct MarioState, marioObj),                 false, LOT_OBJECT            },
     { "minimumBoneY",             LVT_F32,       offsetof(struct MarioState, minimumBoneY),             false, LOT_NONE              },

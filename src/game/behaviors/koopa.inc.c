@@ -871,11 +871,11 @@ static void koopa_the_quick_act_after_race(void) {
         }
     } else if (o->parentObj->oKoopaRaceEndpointRaceStatus != 0) {
         if (o->oKoopaTheQuickRaceIndex == 0) {
-                f32* starPos = gLevelValues.starPositions.KoopaBobStarPos;
-                spawn_default_star(starPos[0], starPos[1], starPos[2]);
+            f32* starPos = gLevelValues.starPositions.KoopaBobStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
         } else {
-                f32* starPos = gLevelValues.starPositions.KoopaThiStarPos;
-                spawn_default_star(starPos[0], starPos[1], starPos[2]);
+            f32* starPos = gLevelValues.starPositions.KoopaThiStarPos;
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
         }
 
         o->parentObj->oKoopaRaceEndpointRaceStatus = 0;
