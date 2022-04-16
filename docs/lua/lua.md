@@ -57,6 +57,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Moonjump](examples/moonjump.lua)
 - [Instant Clip](examples/instant-clip.lua)
 - [Water Height Changer](examples/water-level.lua)
+- [Custom Level](examples/custom-level)
 
 ## Example Lua mods (large)
 - [Extended Moveset](../../mods/extended-moveset.lua)
