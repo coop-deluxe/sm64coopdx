@@ -2174,6 +2174,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                     loBits = cmd & 7;
                     switch (cmd & 0xf8) {
                         case 0x80:
+                            if (loBits >= LAYERS_MAX) break;
                             if (seqChannel->layers[loBits] != NULL) {
                                 value = seqChannel->layers[loBits]->finished;
                             } else {
@@ -2218,6 +2219,7 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
                         break;
 #else
                     case 0x00: // chan_testlayerfinished
+                        if (loBits >= LAYERS_MAX) break;
                         if (seqChannel->layers[loBits] != NULL) {
                             value = seqChannel->layers[loBits]->finished;
                         }
