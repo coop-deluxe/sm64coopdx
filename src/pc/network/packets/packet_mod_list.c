@@ -269,6 +269,7 @@ void network_receive_mod_list_file(struct Packet* p) {
             free((char*)file->cachedPath);
         }
         file->cachedPath = strdup(cache->path);
+        normalize_path(file->cachedPath);
     }
 }
 
