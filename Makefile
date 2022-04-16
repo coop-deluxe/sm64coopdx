@@ -599,6 +599,9 @@ endif
 
 MOD_DIR := mods
 
+# Remove old mod dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(MOD_DIR))
+
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
 
