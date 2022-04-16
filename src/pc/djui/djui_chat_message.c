@@ -60,6 +60,7 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
 }
 
 void djui_chat_message_create(const char* message) {
+    if (gDjuiChatBox == NULL || gDjuiChatBox->chatFlow == NULL) { return; }
     struct DjuiChatMessage* chatMessage = calloc(1, sizeof(struct DjuiChatMessage));
     struct DjuiBase* base = &chatMessage->base;
     djui_base_init(&gDjuiChatBox->chatFlow->base, base, djui_chat_message_render, djui_chat_message_destroy);
