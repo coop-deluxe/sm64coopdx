@@ -2,8 +2,9 @@
 #define SMLUA_HOOKS_H
 
 #include <stdbool.h>
-#include "src/game/camera.h"
 #include "include/behavior_table.h"
+
+struct Camera;
 
 enum LuaHookedEventType {
     HOOK_UPDATE,
