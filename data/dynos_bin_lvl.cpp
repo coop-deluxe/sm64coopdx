@@ -2149,6 +2149,10 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
             if (!fs_sys_dir_exists(_Folder.c_str())) continue;
 
+            // Prevent generating from folders that likely already generated
+            SysPath _LvlFile = fstring("%s/level_%s_entry.lvl", aPackFolder.c_str(), _PackEnt->d_name);
+            if (fs_sys_file_exists(_LvlFile.c_str())) continue;
+
             // Only parse folders with a 'script.c'
             if (!fs_sys_file_exists(fstring("%s/script.c", _Folder.c_str()).c_str()) && !fs_sys_file_exists(fstring("%s/custom.script.c", _Folder.c_str()).c_str())) continue;
 
