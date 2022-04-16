@@ -538,6 +538,7 @@ void mod_md5_hash(struct Mod* mod) {
     u8 buffer[MD5_BUFFER_SIZE] = { 0 };
 
     mod->hashProcessed = false;
+    mod_set_loading_order(mod);
 
     MD5_CTX ctx = { 0 };
     MD5_Init(&ctx);
@@ -548,6 +549,7 @@ void mod_md5_hash(struct Mod* mod) {
             LOG_ERROR("Failed to combine path for mod hashing.");
             return;
         }
+        normalize_path(path);
 
         // open file pointer
         FILE* fp = fopen(path, "rb");
