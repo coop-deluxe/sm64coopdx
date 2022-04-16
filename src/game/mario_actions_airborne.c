@@ -2239,7 +2239,10 @@ s32 mario_execute_airborne_action(struct MarioState *m) {
             case ACT_RIDING_HOOT:          cancel = act_riding_hoot(m);          break;
             case ACT_TOP_OF_POLE_JUMP:     cancel = act_top_of_pole_jump(m);     break;
             case ACT_VERTICAL_WIND:        cancel = act_vertical_wind(m);        break;
-            default: LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action); return true;
+            default:
+                LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
+                set_mario_action(m, ACT_FREEFALL, 0);
+                return false;
         }
         /* clang-format on */
     }
