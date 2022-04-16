@@ -10174,10 +10174,12 @@ BAD_RETURN(s32) cutscene_enter_painting(struct Camera *c) {
 
         find_floor(sMarioCamState->pos[0], sMarioCamState->pos[1] + 50.f, sMarioCamState->pos[2], &floor);
 
-        if ((floor->type < SURFACE_PAINTING_WOBBLE_A6) || (floor->type > SURFACE_PAINTING_WARP_F9)) {
-            c->cutscene = 0;
-            gCutsceneTimer = CUTSCENE_STOP;
-            sStatusFlags |= CAM_FLAG_SMOOTH_MOVEMENT;
+        if (floor != NULL) {
+            if ((floor->type < SURFACE_PAINTING_WOBBLE_A6) || (floor->type > SURFACE_PAINTING_WARP_F9)) {
+                c->cutscene = 0;
+                gCutsceneTimer = CUTSCENE_STOP;
+                sStatusFlags |= CAM_FLAG_SMOOTH_MOVEMENT;
+            }
         }
     }
     c->mode = CAMERA_MODE_CLOSE;
