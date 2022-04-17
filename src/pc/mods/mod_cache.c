@@ -8,7 +8,7 @@
 #include "pc/utils/md5.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
-#define MOD_CACHE_VERSION 4
+#define MOD_CACHE_VERSION 5
 #define MD5_BUFFER_SIZE 1024
 
 struct ModCacheEntry* sModCacheHead = NULL;
@@ -138,17 +138,9 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file) {
         return;
     }
 
-    if (modFilePath[0] == '.' && (modFilePath[1] == '/' || modFilePath[1] == '\\')) {
-        char modAbsFilePath[SYS_MAX_PATH] = { 0 };
-        getcwd(modAbsFilePath, SYS_MAX_PATH-1);
-        strncat(modAbsFilePath, "/", SYS_MAX_PATH-1);
-        strncat(modAbsFilePath, modFilePath, SYS_MAX_PATH-1);
-        normalize_path(modAbsFilePath);
-        file->cachedPath = strdup(modAbsFilePath);
-    } else {
-        normalize_path(modFilePath);
-        file->cachedPath = strdup(modFilePath);
-    }
+    // set path
+    normalize_path(modFilePath);
+    file->cachedPath = strdup(modFilePath);
 
     // hash and cache
     mod_cache_md5(file->cachedPath, file->dataHash);

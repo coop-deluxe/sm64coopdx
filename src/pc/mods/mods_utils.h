@@ -15,6 +15,7 @@ bool str_ends_with(char* string, char* suffix);
 
 char* extract_lua_field(char* fieldName, char* buffer);
 
+const char* path_to_executable(void);
 bool path_is_portable_filename(char* string);
 bool path_exists(char* path);
 bool is_directory(char* path);

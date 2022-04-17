@@ -4,6 +4,13 @@
 #include "mods_utils.h"
 #include "pc/debuglog.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#include <winuser.h>
+#else
+#include <unistd.h>
+#endif
+
 void mods_size_enforce(struct Mods* mods) {
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
@@ -155,6 +162,28 @@ char* extract_lua_field(char* fieldName, char* buffer) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
+const char* path_to_executable(void) {
+    static char exePath[SYS_MAX_PATH] = { 0 };
+    if (exePath[0] != '\0') { return exePath; }
+
+#if defined(_WIN32) || defined(_WIN64)
+    HMODULE hModule = GetModuleHandle(NULL);
+    if (hModule == NULL) {
+        LOG_ERROR("unable to retrieve absolute exe path!");
+        return NULL;
+    }
+    GetModuleFileName(hModule, exePath, SYS_MAX_PATH-1);
+#else
+    snprintf(exePath, MAX_LAUNCH_CMD - 1, "/proc/%d/exe", getpid());
+    rc = readlink(exePath, cmd, MAX_LAUNCH_CMD - 1);
+    if (rc <= 0) {
+        LOG_ERROR("unable to retrieve absolute exe path!");
+        return NULL;
+    }
+#endif
+    return exePath;
+}
 
 bool path_is_portable_filename(char* string) {
     char* s = string;

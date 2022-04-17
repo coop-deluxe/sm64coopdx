@@ -107,7 +107,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        if (!strcmp(file->relativePath, m64path)) {
+        if (str_ends_with(file->cachedPath, m64path)) {
             struct AudioOverride* override = &sAudioOverrides[sequenceId];
             smlua_audio_utils_reset(override);
             LOG_INFO("Loading audio: %s", file->cachedPath);
