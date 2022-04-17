@@ -665,8 +665,7 @@ extern s32        osPiRawReadIo(u32, u32 *);
 extern s32        osPiRawStartDma(s32, u32, void *, u32);
 extern s32        osPiWriteIo(u32, u32);
 extern s32        osPiReadIo(u32, u32 *);
-extern s32        osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32,
-                     OSMesgQueue *);
+extern s32        osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern void        osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
 
 /* Video interface (Vi) */
