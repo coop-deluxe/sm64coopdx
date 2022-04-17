@@ -31,33 +31,88 @@ void mod_cache_shutdown(void) {
     }    
 }
 
+void mod_cache_md5(const char* inPath, u8* outDataPath) {
+    char cpath[SYS_MAX_PATH] = { 0 };
+    u8 buffer[MD5_BUFFER_SIZE] = { 0 };
+
+    MD5_CTX ctx = { 0 };
+    MD5_Init(&ctx);
+
+    snprintf(cpath, SYS_MAX_PATH-1, "%s", inPath);
+    normalize_path(cpath);
+
+    // open file pointer
+    FILE* fp = fopen(cpath, "rb");
+    if (fp == NULL) {
+        LOG_ERROR("Failed to open filepointer for mod hashing: '%s'.", cpath);
+        return;
+    }
+
+    // read bytes and md5 them
+    size_t readBytes = 0;
+    do {
+        readBytes = fread(buffer, sizeof(u8), MD5_BUFFER_SIZE, fp);
+        MD5_Update(&ctx, buffer, readBytes);
+    } while (readBytes >= MD5_BUFFER_SIZE);
+
+    // close file pointer
+    fclose(fp);
+
+    // finish computing
+    MD5_Final(outDataPath, &ctx);
+}
+
+static bool mod_cache_is_valid(struct ModCacheEntry* node) {
+    u8 dataHash[16];
+    mod_cache_md5(node->path, dataHash);
+    return !memcmp(node->dataHash, dataHash, 16);
+}
+
 struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
     struct ModCacheEntry* node = sModCacheHead;
-    char str[128] = { 0 };
-    MD5_ToString(dataHash, str);
+    struct ModCacheEntry* prev = NULL;
     while (node != NULL) {
-        MD5_ToString(node->dataHash, str);
+        struct ModCacheEntry* next = node->next;
         if (!memcmp(node->dataHash, dataHash, 16)) {
-            return node;
+            if (mod_cache_is_valid(node)) {
+                return node;
+            } else {
+                mod_cache_remove_node(node, prev);
+            }
         }
-        node = node->next;
+        prev = node;
+        node = next;
     }
     return NULL;
 }
 
 struct ModCacheEntry* mod_cache_get_from_path(const char* path) {
     struct ModCacheEntry* node = sModCacheHead;
+    struct ModCacheEntry* prev = NULL;
     while (node != NULL) {
+        struct ModCacheEntry* next = node->next;
         if (!strcmp(node->path, path)) {
-            return node;
+            if (mod_cache_is_valid(node)) {
+                return node;
+            } else {
+                mod_cache_remove_node(node, prev);
+            }
         }
-        node = node->next;
+        prev = node;
+        node = next;
     }
     return NULL;
 }
 
 void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
+    // sanity check
     if (mod_cache_get_from_hash(dataHash)) {
+        return;
+    }
+    if (path == NULL || strlen(path) == 0) {
+        return;
+    }
+    if (!fs_sys_file_exists(path)) {
         return;
     }
 
@@ -95,38 +150,15 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
     }
 }
 
-void mod_cache_md5(const char* inPath, u8* outDataPath) {
-    char cpath[SYS_MAX_PATH] = { 0 };
-    u8 buffer[MD5_BUFFER_SIZE] = { 0 };
-
-    MD5_CTX ctx = { 0 };
-    MD5_Init(&ctx);
-
-    snprintf(cpath, SYS_MAX_PATH-1, "%s", inPath);
-    normalize_path(cpath);
-
-    // open file pointer
-    FILE* fp = fopen(cpath, "rb");
-    if (fp == NULL) {
-        LOG_ERROR("Failed to open filepointer for mod hashing: '%s'.", cpath);
+void mod_cache_add(struct Mod* mod, struct ModFile* file) {
+    // sanity check
+    if (mod == NULL || file == NULL) {
+        return;
+    }
+    if (mod->basePath == NULL || file->relativePath == NULL) {
         return;
     }
 
-    // read bytes and md5 them
-    size_t readBytes = 0;
-    do {
-        readBytes = fread(buffer, sizeof(u8), MD5_BUFFER_SIZE, fp);
-        MD5_Update(&ctx, buffer, readBytes);
-    } while (readBytes >= MD5_BUFFER_SIZE);
-
-    // close file pointer
-    fclose(fp);
-
-    // finish computing
-    MD5_Final(outDataPath, &ctx);
-}
-
-void mod_cache_add(struct Mod* mod, struct ModFile* file) {
     // if we already have a cached path, don't do anything
     if (file->cachedPath != NULL) {
         return;
@@ -193,6 +225,12 @@ void mod_cache_load(void) {
 void mod_cache_save(void) {
     LOG_INFO("Saving mod cache");
     const char* filename = fs_get_write_path(MOD_CACHE_FILENAME);
+
+    if (filename == NULL) {
+        LOG_ERROR("Failed to get filename for mod cache");
+        return;
+    }
+
     FILE* fp = fopen(filename, "wb");
     if (fp == NULL) {
         LOG_ERROR("Failed to open mod cache save fp: %s", filename);
@@ -204,9 +242,12 @@ void mod_cache_save(void) {
 
     struct ModCacheEntry* node = sModCacheHead;
     while (node != NULL) {
+        if (node->path == NULL) { continue; }
+        u16 pathLen = strlen(node->path);
+        if (pathLen == 0) { continue; }
+
         fwrite(node->dataHash, sizeof(u8), 16, fp);
         fwrite(&node->lastLoaded, sizeof(u64), 1, fp);
-        u16 pathLen = strlen(node->path);
         fwrite(&pathLen, sizeof(u16), 1, fp);
         fwrite(node->path, sizeof(u8), pathLen + 1, fp);
         node = node->next;
