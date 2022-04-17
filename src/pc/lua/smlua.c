@@ -4,11 +4,22 @@
 #include "pc/crash_handler.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/djui/djui.h"
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
 struct Mod* gLuaLoadingMod = NULL;
 struct Mod* gLuaActiveMod = NULL;
+struct Mod* gLuaLastHookMod = NULL;
+
+void smlua_mod_error(void) {
+    struct Mod* mod = gLuaActiveMod;
+    if (mod == NULL) { mod = gLuaLastHookMod; }
+    if (mod == NULL) { return; }
+    char txt[255] = { 0 };
+    snprintf(txt, 254, "%s has lua script errors!", mod->name);
+    djui_lua_error(txt);
+}
 
 static void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
@@ -124,6 +135,7 @@ void smlua_init(void) {
         LOG_INFO("    %s", mod->relativePath);
         gLuaLoadingMod = mod;
         gLuaActiveMod = mod;
+        gLuaLastHookMod = mod;
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
@@ -153,4 +165,7 @@ void smlua_shutdown(void) {
         lua_close(L);
         gLuaState = NULL;
     }
+    gLuaLoadingMod = NULL;
+    gLuaActiveMod = NULL;
+    gLuaLastHookMod = NULL;
 }

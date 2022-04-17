@@ -65,5 +65,6 @@ extern bool gDjuiDisabled;
 
 void djui_init(void);
 void djui_connect_menu_open(void);
+void djui_lua_error(char* text);
 void djui_render_patch(void);
 void djui_render(void);

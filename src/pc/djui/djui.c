@@ -10,6 +10,8 @@ static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
 static struct DjuiText* sDjuiPauseOptions = NULL;
+static struct DjuiText* sDjuiLuaError = NULL;
+static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
 bool gDjuiDisabled = false;
 
@@ -23,6 +25,15 @@ void djui_init(void) {
     djui_text_set_drop_shadow(sDjuiPauseOptions, 0, 0, 0, 255);
     djui_text_set_alignment(sDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_visible(&sDjuiPauseOptions->base, false);
+
+    sDjuiLuaError = djui_text_create(&gDjuiRoot->base, "");
+    djui_base_set_size_type(&sDjuiLuaError->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&sDjuiLuaError->base, 1.0f, 32);
+    djui_base_set_location(&sDjuiLuaError->base, 0, 64);
+    djui_text_set_drop_shadow(sDjuiLuaError, 0, 0, 0, 255);
+    djui_text_set_alignment(sDjuiLuaError, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_visible(&sDjuiLuaError->base, false);
+    djui_base_set_color(&sDjuiLuaError->base, 255, 0, 0, 255);
 
     djui_panel_playerlist_create(NULL);
 
@@ -39,6 +50,12 @@ void djui_connect_menu_open(void) {
     djui_panel_main_create(NULL);
     djui_panel_join_create(NULL);
     djui_panel_join_message_create(NULL);
+}
+
+void djui_lua_error(char* text) {
+    djui_text_set_text(sDjuiLuaError, text);
+    djui_base_set_visible(&sDjuiLuaError->base, true);
+    sDjuiLuaErrorTimeout = 30 * 5;
 }
 
 void djui_render_patch(void) {
@@ -65,6 +82,13 @@ void djui_render(void) {
     djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
     if (gDjuiRoot != NULL) {
         djui_base_render(&gDjuiRoot->base);
+    }
+
+    if (sDjuiLuaErrorTimeout > 0) {
+        sDjuiLuaErrorTimeout--;
+        if (sDjuiLuaErrorTimeout == 0) {
+            djui_base_set_visible(&sDjuiLuaError->base, false);
+        }
     }
 
     djui_cursor_update();

@@ -19,6 +19,7 @@ static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 static int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod) {
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
+    gLuaLastHookMod = activeMod;
     int rc = lua_pcall(L, nargs, nresults, errfunc);
     gLuaActiveMod = prev;
     return rc;
@@ -440,6 +441,7 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             }
 
             // output the return value
+            *returnValue = false;
             if (lua_type(L, -1) == LUA_TBOOLEAN || lua_type(L, -1) == LUA_TNUMBER) {
                 *returnValue = smlua_to_integer(L, -1);
             }

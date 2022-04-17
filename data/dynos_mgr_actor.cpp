@@ -23,7 +23,7 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
 
     GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName, aFilename);
     if (!_GfxData) {
-        Print("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aPackFolder.c_str());
+        Print("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aFilename.c_str());
         free(actorName);
         return;
     }
