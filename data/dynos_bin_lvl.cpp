@@ -1367,8 +1367,23 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
     return 0;
 }
 
+template <typename T>
+DataNode<T>* FindDataNode(DataNodes<T>& aDataNodes, String& aName, u32 aModelIdentifier) {
+    DataNode<T>* best = NULL;
+    for (auto& node : aDataNodes) {
+        if (aName == node->mName) {
+            if (aModelIdentifier == node->mModelIdentifier) {
+                return node;
+            }
+            best = node;
+        }
+    }
+    return best;
+}
+
 static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex, bool* found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
+    u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
     // Integers
@@ -1399,8 +1414,9 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     }
 
     // Level Scripts
-    for (auto& _Node : aGfxData->mLevelScripts) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<LevelScript>(aGfxData->mLevelScripts, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             auto base = DynOS_Lvl_Parse(aGfxData, _Node, false)->mData;
             auto data = (u8*)base + _Offset;
             if (_Offset != 0) {
@@ -1411,50 +1427,57 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
     }
 
     // Geo layouts
-    for (auto& _Node : aGfxData->mGeoLayouts) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<GeoLayout>(aGfxData->mGeoLayouts, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_Geo_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // Collisions
-    for (auto& _Node : aGfxData->mCollisions) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<Collision>(aGfxData->mCollisions, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_Col_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // MacroObjects
-    for (auto& _Node : aGfxData->mMacroObjects) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<MacroObject>(aGfxData->mMacroObjects, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_MacroObject_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // Trajectories
-    for (auto& _Node : aGfxData->mTrajectories) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<Trajectory>(aGfxData->mTrajectories, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_Trajectory_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // Movtexs
-    for (auto& _Node : aGfxData->mMovtexs) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<Movtex>(aGfxData->mMovtexs, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_Movtex_Parse(aGfxData, _Node, false)->mData;
         }
     }
 
     // MovtexQCs
-    for (auto& _Node : aGfxData->mMovtexQCs) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<MovtexQC>(aGfxData->mMovtexQCs, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_MovtexQC_Parse(aGfxData, _Node)->mData;
         }
     }
 
     // Rooms
-    for (auto& _Node : aGfxData->mRooms) {
-        if (_Arg == _Node->mName) {
+    {
+        auto _Node = FindDataNode<u8>(aGfxData->mRooms, _Arg, aGfxData->mModelIdentifier);
+        if (_Node != NULL) {
             return (LevelScript) DynOS_Rooms_Parse(aGfxData, _Node)->mData;
         }
     }
