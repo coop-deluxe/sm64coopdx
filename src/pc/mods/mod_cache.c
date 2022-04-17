@@ -242,14 +242,15 @@ void mod_cache_save(void) {
 
     struct ModCacheEntry* node = sModCacheHead;
     while (node != NULL) {
-        if (node->path == NULL) { continue; }
+        if (node->path == NULL) { goto iterate; }
         u16 pathLen = strlen(node->path);
-        if (pathLen == 0) { continue; }
+        if (pathLen == 0) { goto iterate; }
 
         fwrite(node->dataHash, sizeof(u8), 16, fp);
         fwrite(&node->lastLoaded, sizeof(u64), 1, fp);
         fwrite(&pathLen, sizeof(u16), 1, fp);
         fwrite(node->path, sizeof(u8), pathLen + 1, fp);
+iterate:
         node = node->next;
     }
 
