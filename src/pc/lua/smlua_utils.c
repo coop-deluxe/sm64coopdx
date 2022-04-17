@@ -66,7 +66,10 @@ lua_Integer smlua_to_integer(lua_State* L, int index) {
 }
 
 lua_Number smlua_to_number(lua_State* L, int index) {
-    if (lua_type(L, index) != LUA_TNUMBER) {
+    if (lua_type(L, index) == LUA_TBOOLEAN) {
+        gSmLuaConvertSuccess = true;
+        return lua_toboolean(L, index) ? 1 : 0;
+    } else if (lua_type(L, index) != LUA_TNUMBER) {
         LOG_LUA("smlua_to_number received improper type '%d'", lua_type(L, index));
         smlua_logline();
         gSmLuaConvertSuccess = false;

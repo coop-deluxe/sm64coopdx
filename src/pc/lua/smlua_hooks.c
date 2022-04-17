@@ -440,10 +440,10 @@ bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
             }
 
             // output the return value
-            *returnValue = smlua_to_integer(L, -1);
+            if (lua_type(L, -1) == LUA_TBOOLEAN || lua_type(L, -1) == LUA_TNUMBER) {
+                *returnValue = smlua_to_integer(L, -1);
+            }
             lua_pop(L, 1);
-
-            if (!gSmLuaConvertSuccess) { return false; }
 
             return true;
         }
@@ -753,7 +753,10 @@ bool smlua_call_chat_command_hook(char* command) {
         }
 
         // output the return value
-        bool returnValue = smlua_to_boolean(L, -1);
+        bool returnValue = false;
+        if (lua_type(L, -1) == LUA_TBOOLEAN) {
+            returnValue = smlua_to_boolean(L, -1);
+        }
         lua_pop(L, 1);
 
         if (!gSmLuaConvertSuccess) { return false; }
