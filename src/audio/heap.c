@@ -28,17 +28,17 @@ s8 gReverbDownsampleRate;
 u8 sReverbDownsampleRateLog; // never read
 #endif
 
-struct SoundAllocPool gAudioSessionPool;
-struct SoundAllocPool gAudioInitPool;
-struct SoundAllocPool gNotesAndBuffersPool;
+struct SoundAllocPool gAudioSessionPool = {};
+struct SoundAllocPool gAudioInitPool = {};
+struct SoundAllocPool gNotesAndBuffersPool = {};
 u8 sAudioHeapPad[0x20]; // probably two unused pools
-struct SoundAllocPool gSeqAndBankPool;
-struct SoundAllocPool gPersistentCommonPool;
-struct SoundAllocPool gTemporaryCommonPool;
+struct SoundAllocPool gSeqAndBankPool = {};
+struct SoundAllocPool gPersistentCommonPool = {};
+struct SoundAllocPool gTemporaryCommonPool = {};
 
-struct SoundMultiPool gSeqLoadedPool;
-struct SoundMultiPool gBankLoadedPool;
-struct SoundMultiPool gUnusedLoadedPool;
+struct SoundMultiPool gSeqLoadedPool = {};
+struct SoundMultiPool gBankLoadedPool = {};
+struct SoundMultiPool gUnusedLoadedPool = {};
 
 #ifdef VERSION_SH
 struct Unk1Pool gUnkPool1;

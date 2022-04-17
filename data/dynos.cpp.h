@@ -618,6 +618,14 @@ void Print(const char *aFmt, Args... aArgs) {
     aGfxData->mErrorCount++; \
 }
 
+#if DEBUG
+#define PrintDebug(...) { Print(__VA_ARGS__); }
+#define PrintDebugNoNewLine(...) { PrintNoNewLine(__VA_ARGS__); }
+#else
+#define PrintDebug(...)
+#define PrintDebugNoNewLine(...)
+#endif
+
 template <typename... Args>
 SysPath fstring(const char *aFmt, Args... aArgs) {
     char buffer[1024];

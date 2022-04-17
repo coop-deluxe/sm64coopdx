@@ -23,12 +23,14 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
 
     GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName, aFilename);
     if (!_GfxData) {
+        Print("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aPackFolder.c_str());
         free(actorName);
         return;
     }
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
+        Print("  ERROR: Couldn't load geo layout for \"%s\"", actorName);
         free(actorName);
         return;
     }

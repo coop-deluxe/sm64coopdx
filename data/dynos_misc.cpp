@@ -136,8 +136,9 @@ static void _RelocateGraphNodePointers(struct GraphNode *aHead, u64 aOffset) {
     } while (_Node != aHead);
 }
 
+static Array<Pair<void *, void *>> sLoadedGraphNodes = {};
+
 void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory) {
-    static Array<Pair<void *, void *>> sLoadedGraphNodes;
     if (aKeepInMemory) {
         s32 _LoadedGraphNodeIndex = sLoadedGraphNodes.FindIf([&aGeoLayout](const Pair<void *, void *> &aLoadedGraphNode) { return aLoadedGraphNode.first == aGeoLayout; });
         if (_LoadedGraphNodeIndex != -1) {
