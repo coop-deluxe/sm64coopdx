@@ -38,9 +38,6 @@ bool mods_generate_remote_base_path(void) {
         return false;
     }
 
-    // make directory
-    if (!fs_sys_dir_exists(gRemoteModsBasePath)) { fs_sys_mkdir(gRemoteModsBasePath); }
-
     return true;
 }
 
@@ -190,6 +187,7 @@ void mods_clear(struct Mods* mods) {
         for (int i = 0; i < mods->entryCount; i ++) {
             struct Mod* mod = mods->entries[i];
             mod_clear(mod);
+            mods->entries[i] = NULL;
         }
     }
 
