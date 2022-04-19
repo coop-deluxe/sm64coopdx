@@ -395,6 +395,29 @@ s64 smlua_get_mod_variable(u16 modIndex, const char* variable) {
     return value;
 }
 
+s64 smlua_get_any_mod_variable(const char* variable) {
+    lua_State* L = gLuaState;
+
+    s64 value = 0;
+    for (s32 i = 0; i < gActiveMods.entryCount; i++) {
+        // figure out entry
+        struct Mod* mod = gActiveMods.entries[i];
+
+        int prevTop = lua_gettop(L);
+        lua_getglobal(L, "_G"); // get global table
+        lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // get the file's "global" table
+        value = smlua_get_integer_field(-1, (char*)variable);
+        lua_settop(L, prevTop);
+
+        if (gSmLuaConvertSuccess) {
+            return value;
+        }
+    }
+
+    // return variable
+    return value;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 char* smlua_lnt_to_str(struct LSTNetworkType* lnt) {

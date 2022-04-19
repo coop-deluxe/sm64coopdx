@@ -861,8 +861,13 @@ static void level_cmd_place_object_ext(void) {
     gSmLuaConvertSuccess = true;
     enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
 
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_mod_variable(behStr);
+    }
+
     if ((gLevelScriptModIndex == -1) || !gSmLuaConvertSuccess) {
-        LOG_ERROR("Failed to place custom object: %u", behId);
+        LOG_ERROR("Failed to place custom object: %u :: %s", behId, behStr);
         sCurrentCmd = CMD_NEXT;
         return;
     }
@@ -904,7 +909,17 @@ static void level_cmd_place_object_ext2(void) {
 
     gSmLuaConvertSuccess = true;
     enum ModelExtendedId modelId = smlua_get_mod_variable(modIndex, modelStr);
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        modelId = smlua_get_any_mod_variable(modelStr);
+    }
+
+    gSmLuaConvertSuccess = true;
     enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_mod_variable(behStr);
+    }
 
     if ((gLevelScriptModIndex == -1) || !gSmLuaConvertSuccess) {
         LOG_ERROR("Failed to place custom object: %u, %u", modelId, behId);
