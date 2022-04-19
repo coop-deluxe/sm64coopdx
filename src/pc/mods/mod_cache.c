@@ -75,7 +75,7 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
 
 static bool mod_cache_is_valid(struct ModCacheEntry* node) {
     if (node == NULL || node->path == NULL || strlen(node->path) == 0) {
-        return;
+        return false;
     }
     u8 dataHash[16] = { 0 };
     mod_cache_md5(node->path, dataHash);
