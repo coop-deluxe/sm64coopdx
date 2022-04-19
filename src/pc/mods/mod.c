@@ -123,6 +123,7 @@ void mod_clear(struct Mod* mod) {
 
     if (mod->files != NULL) {
         free(mod->files);
+        mod->files = NULL;
     }
 
     mod->fileCount = 0;

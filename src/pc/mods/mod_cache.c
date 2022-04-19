@@ -8,7 +8,7 @@
 #include "pc/utils/md5.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
-#define MOD_CACHE_VERSION 5
+#define MOD_CACHE_VERSION 6
 #define MD5_BUFFER_SIZE 1024
 
 struct ModCacheEntry* sModCacheHead = NULL;
@@ -20,6 +20,7 @@ static void mod_cache_remove_node(struct ModCacheEntry* node, struct ModCacheEnt
     LOG_INFO("Removing node: %s", node->path);
     if (node->path) {
         free(node->path);
+        node->path = NULL;
     }
     free(node);
 }
@@ -35,10 +36,20 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
     char cpath[SYS_MAX_PATH] = { 0 };
     u8 buffer[MD5_BUFFER_SIZE] = { 0 };
 
+    for (u8 i = 0; i < 16; i++) {
+        outDataPath[i] = 0;
+    }
+
     MD5_CTX ctx = { 0 };
     MD5_Init(&ctx);
 
     snprintf(cpath, SYS_MAX_PATH-1, "%s", inPath);
+
+    if (strlen(cpath) == 0) {
+        LOG_ERROR("Failed to retrieve path");
+        return;
+    }
+
     normalize_path(cpath);
 
     // open file pointer
@@ -63,12 +74,16 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
 }
 
 static bool mod_cache_is_valid(struct ModCacheEntry* node) {
-    u8 dataHash[16];
+    if (node == NULL || node->path == NULL || strlen(node->path) == 0) {
+        return;
+    }
+    u8 dataHash[16] = { 0 };
     mod_cache_md5(node->path, dataHash);
     return !memcmp(node->dataHash, dataHash, 16);
 }
 
 struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
+    if (dataHash == NULL) { return NULL; }
     struct ModCacheEntry* node = sModCacheHead;
     struct ModCacheEntry* prev = NULL;
     while (node != NULL) {
@@ -87,6 +102,7 @@ struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
 }
 
 struct ModCacheEntry* mod_cache_get_from_path(const char* path) {
+    if (path == NULL || strlen(path) == 0) { return NULL; }
     struct ModCacheEntry* node = sModCacheHead;
     struct ModCacheEntry* prev = NULL;
     while (node != NULL) {
@@ -106,18 +122,30 @@ struct ModCacheEntry* mod_cache_get_from_path(const char* path) {
 
 void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
     // sanity check
-    if (mod_cache_get_from_hash(dataHash)) {
-        return;
-    }
     if (path == NULL || strlen(path) == 0) {
+        LOG_ERROR("Invalid path");
         return;
     }
     if (!fs_sys_file_exists(path)) {
+        LOG_ERROR("File does not exist: %s", path);
+        return;
+    }
+    normalize_path((char*)path);
+
+    bool foundNonZero = false;
+    for (u8 i = 0; i < 16; i++) {
+        if (dataHash[i] != 0) {
+            foundNonZero = true;
+            break;
+        }
+    }
+    if (!foundNonZero) {
+        LOG_ERROR("Hash was all zeros for path '%s'", path);
         return;
     }
 
     struct ModCacheEntry* node = calloc(1, sizeof(struct ModCacheEntry));
-    memcpy(node->dataHash, dataHash, 16);
+    memcpy(node->dataHash, dataHash, sizeof(u8) * 16);
     if (lastLoaded == 0) { lastLoaded = clock(); }
     node->lastLoaded = lastLoaded;
     node->path = (char*)path;
@@ -125,6 +153,8 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
 
     if (sModCacheHead == NULL) {
         sModCacheHead = node;
+        LOG_INFO("Added head: %s", node->path);
+        return;
     }
 
     struct ModCacheEntry* n = sModCacheHead;
@@ -148,14 +178,18 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
         prev = n;
         n = next;
     }
+
+    LOG_ERROR("Did not add node for some reason?");
 }
 
 void mod_cache_add(struct Mod* mod, struct ModFile* file) {
     // sanity check
     if (mod == NULL || file == NULL) {
+        LOG_ERROR("Could not add to cache, mod or file is null");
         return;
     }
     if (mod->basePath == NULL || file->relativePath == NULL) {
+        LOG_ERROR("Could not add to cache, basepath or relativepath is null");
         return;
     }
 
@@ -167,6 +201,7 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file) {
     // build the path
     char modFilePath[SYS_MAX_PATH] = { 0 };
     if (!concat_path(modFilePath, mod->basePath, file->relativePath)) {
+        LOG_ERROR("Could not concat mod file path");
         return;
     }
 
@@ -195,6 +230,7 @@ void mod_cache_load(void) {
     if (version != MOD_CACHE_VERSION) {
         fclose(fp);
         LOG_INFO("Mod cache version mismatch");
+        mods_delete_tmp();
         return;
     }
 
@@ -226,7 +262,7 @@ void mod_cache_save(void) {
     LOG_INFO("Saving mod cache");
     const char* filename = fs_get_write_path(MOD_CACHE_FILENAME);
 
-    if (filename == NULL) {
+    if (filename == NULL || strlen(filename) == 0) {
         LOG_ERROR("Failed to get filename for mod cache");
         return;
     }
@@ -242,6 +278,7 @@ void mod_cache_save(void) {
 
     struct ModCacheEntry* node = sModCacheHead;
     while (node != NULL) {
+        struct ModCacheEntry* next = node->next;
         if (node->path == NULL) { goto iterate; }
         u16 pathLen = strlen(node->path);
         if (pathLen == 0) { goto iterate; }
@@ -251,7 +288,7 @@ void mod_cache_save(void) {
         fwrite(&pathLen, sizeof(u16), 1, fp);
         fwrite(node->path, sizeof(u8), pathLen + 1, fp);
 iterate:
-        node = node->next;
+        node = next;
     }
 
     fclose(fp);
