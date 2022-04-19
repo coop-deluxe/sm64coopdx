@@ -211,7 +211,7 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file) {
 
     // hash and cache
     mod_cache_md5(file->cachedPath, file->dataHash);
-    mod_cache_add_internal(file->dataHash, 0, file->cachedPath);
+    mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
 }
 
 void mod_cache_load(void) {
