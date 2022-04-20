@@ -7176,6 +7176,13 @@ function get_trajectory(name)
     -- ...
 end
 
+--- @param o1 Object
+--- @param o2 Object
+--- @return integer
+function obj_check_hitbox_overlap(o1, o2)
+    -- ...
+end
+
 --- @param objList ObjectList
 --- @return Object
 function obj_get_first(objList)
@@ -7253,9 +7260,33 @@ function obj_has_model_extended(o, modelId)
 end
 
 --- @param o Object
+--- @return integer
+function obj_is_valid_for_interaction(o)
+    -- ...
+end
+
+--- @param o Object
+--- @param dx number
+--- @param dy number
+--- @param dz number
+--- @return nil
+function obj_move_xyz(o, dx, dy, dz)
+    -- ...
+end
+
+--- @param o Object
 --- @param modelId ModelExtendedId
 --- @return nil
 function obj_set_model_extended(o, modelId)
+    -- ...
+end
+
+--- @param o Object
+--- @param vx number
+--- @param vy number
+--- @param vz number
+--- @return nil
+function obj_set_vel(o, vx, vy, vz)
     -- ...
 end
 

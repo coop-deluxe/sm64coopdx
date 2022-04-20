@@ -3,6 +3,76 @@
 #include "pc/djui/djui_chat_message.h"
 #include "pc/crash_handler.h"
 
+#if defined(LUA_PROFILER)
+#include "../mods/mods.h"
+#include "game/print.h"
+#include "gfx_dimensions.h"
+
+extern u64 SDL_GetPerformanceCounter(void);
+extern u64 SDL_GetPerformanceFrequency(void);
+
+#define MAX_PROFILED_MODS 16
+#define REFRESH_RATE 15
+
+static struct {
+    f64 start;
+    f64 end;
+    f64 sum;
+    f64 disp;
+} sLuaProfilerCounters[MAX_PROFILED_MODS];
+
+static void lua_profiler_start_counter(struct Mod *mod) {
+    for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
+        if (gActiveMods.entries[i] == mod) {
+            f64 freq = SDL_GetPerformanceFrequency();
+            f64 curr = SDL_GetPerformanceCounter();
+            sLuaProfilerCounters[i].start = curr / freq;
+            return;
+        }
+    }
+}
+
+static void lua_profiler_stop_counter(struct Mod *mod) {
+    for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
+        if (gActiveMods.entries[i] == mod) {
+            f64 freq = SDL_GetPerformanceFrequency();
+            f64 curr = SDL_GetPerformanceCounter();
+            sLuaProfilerCounters[i].end = curr / freq;
+            sLuaProfilerCounters[i].sum += sLuaProfilerCounters[i].end - sLuaProfilerCounters[i].start;
+            return;
+        }
+    }
+}
+
+void lua_profiler_update_counters() {
+    if (gGlobalTimer % REFRESH_RATE == 0) {
+        for (s32 i = 0; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i) {
+            sLuaProfilerCounters[i].disp = sLuaProfilerCounters[i].sum / (f64) REFRESH_RATE;
+            sLuaProfilerCounters[i].sum = 0;
+        }
+    }
+    for (s32 i = 0, y = SCREEN_HEIGHT - 60; i != MIN(MAX_PROFILED_MODS, gActiveMods.entryCount); ++i, y -= 18) {
+        const char *modName = gActiveMods.entries[i]->relativePath;
+        s32 modCounterUs = (s32) (sLuaProfilerCounters[i].disp * 1000000.0);
+        char text[256];
+        snprintf(text, 256, "             %05d", modCounterUs);
+        memcpy(text, modName, MIN(12, strlen(modName) - (gActiveMods.entries[i]->isDirectory ? 0 : 4)));
+        for (s32 j = 0; j != 12; ++j) {
+            char c = text[j];
+            if (c >= 'a' && c <= 'z') c -= ('a' - 'A');
+            if (c == 'J') c = 'I';
+            if (c == 'Q') c = 'O';
+            if (c == 'V') c = 'U';
+            if (c == 'X') c = '*';
+            if (c == 'Z') c = '2';
+            if ((c < '0' || c > '9') && (c < 'A' || c > 'Z')) c = ' ';
+            text[j] = c;
+        }
+        print_text(GFX_DIMENSIONS_FROM_LEFT_EDGE(4), y, text);
+    }
+}
+#endif
+
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
 
@@ -20,7 +90,13 @@ static int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, s
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
+#if defined(LUA_PROFILER)
+    lua_profiler_start_counter(activeMod);
+#endif
     int rc = lua_pcall(L, nargs, nresults, errfunc);
+#if defined(LUA_PROFILER)
+    lua_profiler_stop_counter(activeMod);
+#endif
     gLuaActiveMod = prev;
     return rc;
 }

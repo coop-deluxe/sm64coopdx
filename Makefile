@@ -21,6 +21,9 @@ DEBUG ?= 0
 # Enable development/testing flags
 DEVELOPMENT ?= 0
 
+# Enable lua profiler
+LUA_PROFILER ?= 0
+
 # Build for the N64 (turn this off for ports)
 TARGET_N64 = 0
 
@@ -970,6 +973,12 @@ endif
 ifeq ($(DEVELOPMENT),1)
   CC_CHECK_CFLAGS += -DDEVELOPMENT
   CFLAGS += -DDEVELOPMENT
+endif
+
+# Check for lua profiler option
+ifeq ($(LUA_PROFILER),1)
+  CC_CHECK_CFLAGS += -DLUA_PROFILER
+  CFLAGS += -DLUA_PROFILER
 endif
 
 # Check for texture fix option

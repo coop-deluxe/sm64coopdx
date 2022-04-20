@@ -1103,6 +1103,27 @@ s32 act_warp_door_spawn(struct MarioState *m) {
     return FALSE;
 }
 
+static s32 launch_mario_until_land_no_collision(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel) {
+    mario_set_forward_vel(m, forwardVel);
+    set_mario_animation(m, animation);
+    m->pos[0] += m->vel[0];
+    m->pos[1] += m->vel[1];
+    m->pos[2] += m->vel[2];
+    m->vel[1] -= 4.f;
+    if (m->vel[1] < -75.f) {
+        m->vel[1] = -75.f;
+    }
+    f32 floorHeight = find_floor_height(m->pos[0], m->pos[1], m->pos[2]);
+    s32 landed = floorHeight >= m->pos[1];
+    if (landed) {
+        m->pos[1] = floorHeight;
+        set_mario_action(m, endAction, 0);
+    }
+    vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
+    vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
+    return landed;
+}
+
 s32 act_emerge_from_pipe(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
 
@@ -1121,6 +1142,16 @@ s32 act_emerge_from_pipe(struct MarioState *m) {
         } else {
             play_sound_if_no_flag(m, SOUND_MENU_ENTER_PIPE, MARIO_ACTION_SOUND_PLAYED);
         }
+    }
+
+    // After Mario has exited the pipe, disable wall and ceiling collision until Mario lands
+    // Fix softlocks in narrow places
+    if (m->actionTimer > 15) {
+        if (launch_mario_until_land_no_collision(m, ACT_JUMP_LAND_STOP, MARIO_ANIM_SINGLE_JUMP, 8.0f)) {
+            mario_set_forward_vel(m, 0.0f);
+            play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
+        }
+        return FALSE;
     }
 
     if (launch_mario_until_land(m, ACT_JUMP_LAND_STOP, MARIO_ANIM_SINGLE_JUMP, 8.0f)) {
@@ -2894,7 +2925,7 @@ static s32 check_for_instant_quicksand(struct MarioState *m) {
     if (m->action == ACT_BUBBLED) { return FALSE; }
 
     if (m->floor->type == SURFACE_INSTANT_QUICKSAND && m->action & ACT_FLAG_INVULNERABLE
-        && m->action != ACT_QUICKSAND_DEATH) {
+        && m->action != ACT_QUICKSAND_DEATH && m->action != ACT_SHOCKED) {
         update_mario_sound_and_camera(m);
         return drop_and_set_mario_action(m, ACT_QUICKSAND_DEATH, 0);
     }
