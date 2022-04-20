@@ -1278,7 +1278,7 @@ $(BUILD_DIR)/%.aifc: $(BUILD_DIR)/%.table %.aiff
 
 $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 	@$(PRINT) "$(GREEN)Generating endian-bitwidth $(NO_COL)\n"
-	$(V)$(CC) -c $(CFLAGS) -o $@.dummy2 $< 2>$@.dummy1; true
+	$(V)$(CC) $(PROF_FLAGS) -c $(CFLAGS) -o $@.dummy2 $< 2>$@.dummy1; true
 	$(V)grep -o 'msgbegin --endian .* --bitwidth .* msgend' $@.dummy1 > $@.dummy2
 	$(V)head -n1 <$@.dummy2 | cut -d' ' -f2-5 > $@
 	@$(RM) $@.dummy1
@@ -1382,12 +1382,12 @@ $(BUILD_DIR)/%.o: %.cpp
 # Compile C code
 $(BUILD_DIR)/%.o: %.c
 	$(call print,Compiling:,$<,$@)
-	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	$(V)$(CC) -c $(CFLAGS) -o $@ $<
+	@$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CC) $(PROF_FLAGS) -c $(CFLAGS) -o $@ $<
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c
 	$(call print,Compiling:,$<,$@)
-	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	$(V)$(CC) -c $(CFLAGS) -o $@ $<
+	@$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CC) $(PROF_FLAGS) -c $(CFLAGS) -o $@ $<
 
 # Alternate compiler flags needed for matching
 ifeq ($(COMPILER),ido)
