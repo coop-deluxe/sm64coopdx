@@ -732,6 +732,7 @@
 --- @field public hitboxDownOffset number
 --- @field public hitboxHeight number
 --- @field public hitboxRadius number
+--- @field public hookRender integer
 --- @field public hurtboxHeight number
 --- @field public hurtboxRadius number
 --- @field public numCollidedObjs integer

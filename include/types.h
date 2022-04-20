@@ -219,6 +219,7 @@ struct Object
     /*?????*/ void (*areaTimerRunOnceCallback)(void);
     /*?????*/ u8 globalPlayerIndex;
     /*?????*/ struct Object* usingObj;
+    /*?????*/ u8 hookRender;
 };
 
 struct ObjectHitbox

@@ -1043,6 +1043,7 @@
 | hitboxDownOffset | `number` |  |
 | hitboxHeight | `number` |  |
 | hitboxRadius | `number` |  |
+| hookRender | `integer` |  |
 | hurtboxHeight | `number` |  |
 | hurtboxRadius | `number` |  |
 | numCollidedObjs | `integer` |  |

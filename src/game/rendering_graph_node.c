@@ -11,6 +11,7 @@
 #include "shadow.h"
 #include "sm64.h"
 #include "game/level_update.h"
+#include "pc/lua/smlua_hooks.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -1078,7 +1079,11 @@ static void geo_process_object(struct Object *node) {
     Mat4 mtxf;
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
     Vec3f scaleInterpolated;
-    
+
+    if (node->hookRender) {
+        smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_RENDER, node);
+    }
+
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
         gCurGraphNodeMarioState = NULL;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {

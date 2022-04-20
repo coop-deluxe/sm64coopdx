@@ -830,7 +830,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                 LVT_U8,     offsetof(struct NetworkPlayer, type),                 true,  LOT_NONE },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 752
+#define LUA_OBJECT_FIELD_COUNT 753
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -852,6 +852,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "hitboxDownOffset",                           LVT_F32,                 offsetof(struct Object, hitboxDownOffset),                           false, LOT_NONE         },
     { "hitboxHeight",                               LVT_F32,                 offsetof(struct Object, hitboxHeight),                               false, LOT_NONE         },
     { "hitboxRadius",                               LVT_F32,                 offsetof(struct Object, hitboxRadius),                               false, LOT_NONE         },
+    { "hookRender",                                 LVT_U8,                  offsetof(struct Object, hookRender),                                 false, LOT_NONE         },
     { "hurtboxHeight",                              LVT_F32,                 offsetof(struct Object, hurtboxHeight),                              false, LOT_NONE         },
     { "hurtboxRadius",                              LVT_F32,                 offsetof(struct Object, hurtboxRadius),                              false, LOT_NONE         },
     { "numCollidedObjs",                            LVT_S16,                 offsetof(struct Object, numCollidedObjs),                            false, LOT_NONE         },

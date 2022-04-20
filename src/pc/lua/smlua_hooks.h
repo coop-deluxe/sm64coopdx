@@ -27,6 +27,7 @@ enum LuaHookedEventType {
     HOOK_ON_PAUSE_EXIT,
     HOOK_GET_STAR_COLLECTION_DIALOG,
     HOOK_ON_SET_CAMERA_MODE,
+    HOOK_ON_OBJECT_RENDER,
     HOOK_MAX,
 };
 
@@ -50,6 +51,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PAUSE_EXIT",
     "HOOK_GET_STAR_COLLECTION_DIALOG",
     "HOOK_ON_SET_CAMERA_MODE",
+    "HOOK_ON_OBJECT_RENDER",
     "HOOK_MAX"
 };
 
