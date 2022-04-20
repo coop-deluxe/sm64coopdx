@@ -34,6 +34,7 @@
 #include "hardcoded.h"
 #include "engine/surface_load.h"
 #include "pc/network/network.h"
+#include "pc/network/network_player.h"
 #include "pc/network/reservation_area.h"
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "game/rng_position.h"
@@ -949,6 +950,8 @@ s8 UNUSED debug_sequence_tracker(s16 debugInputSequence[]) {
     return FALSE;
 }
 
+// We need the spawn_star file first so the spawn_star functions can be accessed by below behaviors.
+#include "behaviors/spawn_star.inc.c"
 #include "behaviors/moving_coin.inc.c"
 #include "behaviors/seaweed.inc.c"
 #include "behaviors/bobomb.inc.c"
@@ -986,7 +989,6 @@ s8 UNUSED debug_sequence_tracker(s16 debugInputSequence[]) {
 #include "behaviors/snowman.inc.c"
 #include "behaviors/boulder.inc.c"
 #include "behaviors/cap.inc.c"
-#include "behaviors/spawn_star.inc.c"
 #include "behaviors/red_coin.inc.c"
 #include "behaviors/hidden_star.inc.c"
 #include "behaviors/rolling_log.inc.c"

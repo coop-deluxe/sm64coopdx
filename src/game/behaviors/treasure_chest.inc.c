@@ -1,7 +1,5 @@
 // treasure_chest.c.inc
 
-#include "pc/network/network_player.h"
-
 /**
  * Hitbox for treasure chest bottom.
  */
@@ -323,7 +321,7 @@ void bhv_treasure_chest_loop(void) {
             if (o->oTimer == 60) {
                 spawn_mist_particles();
 
-                f32* starPos = gLevelValues.starPositions.TreasureJrbStarPos;
+                f32* starPos = gLevelValues.starPositions.TreasureChestStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oTreasureChestLastNetworkPlayerIndex);
 
                 o->oAction = 2;
