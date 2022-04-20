@@ -21,6 +21,9 @@ DEBUG ?= 0
 # Enable development/testing flags
 DEVELOPMENT ?= 0
 
+# Enable lua profiler
+LUA_PROFILER ?= 0
+
 # Build for the N64 (turn this off for ports)
 TARGET_N64 = 0
 
@@ -972,6 +975,12 @@ ifeq ($(DEVELOPMENT),1)
   CFLAGS += -DDEVELOPMENT
 endif
 
+# Check for lua profiler option
+ifeq ($(LUA_PROFILER),1)
+  CC_CHECK_CFLAGS += -DLUA_PROFILER
+  CFLAGS += -DLUA_PROFILER
+endif
+
 # Check for texture fix option
 ifeq ($(TEXTURE_FIX),1)
   CC_CHECK_CFLAGS += -DTEXTURE_FIX
@@ -1496,7 +1505,8 @@ ifeq ($(TARGET_N64),1)
 	$(OBJDUMP) -D $< > $@
 else
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(MOD_DIR)
-	$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
+	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
 endif
 
 

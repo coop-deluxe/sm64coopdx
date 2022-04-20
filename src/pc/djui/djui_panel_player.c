@@ -124,6 +124,8 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             "Blueberry Pie",
             "Raspberry",
             "Bubblegum",
+            "Ice Mario",
+            "Ice Luigi",
         };
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Palette", paletteChoices, PALETTE_MAX, &configPlayerPalette);
         djui_base_set_size_type(&selectionbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

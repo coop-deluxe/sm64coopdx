@@ -14,7 +14,7 @@
 struct PCCLIOptions gCLIOpts;
 
 static void print_help(void) {
-    printf("Super Mario 64 PC Port\n");
+    printf("\nsm64ex-coop\n");
     printf("%-20s\tEnables the cheat menu.\n", "--cheats");
     printf("%-20s\tSaves the configuration file as CONFIGNAME.\n", "--configfile CONFIGNAME");
     printf("%-20s\tSets additional data directory name (only 'res' is used by default).\n", "--gamedir DIRNAME");
@@ -22,6 +22,9 @@ static void print_help(void) {
     printf("%-20s\tStarts the game in full screen mode.\n", "--fullscreen");
     printf("%-20s\tSkips the Peach and Castle intro when starting a new game.\n", "--skip-intro");
     printf("%-20s\tStarts the game in windowed mode.\n", "--windowed");
+    printf("%-20s\tStarts the game and creates a new server.\n", "--server PORT");
+    printf("%-20s\tStarts the game and joins an existing server.\n", "--client IP PORT");
+    printf("%-20s\tStarts the game using a poolsize of your choice.\n", "--poolsize POOLSIZE");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {

@@ -14,6 +14,10 @@
 #include "pc/ini.h"
 #include "pc/network/network.h"
 
+#ifndef bcopy
+#define bcopy(b1,b2,len) (memmove((b2), (b1), (len)), (void) 0)
+#endif
+
 #define MENU_DATA_MAGIC 0x4849
 #define SAVE_FILE_MAGIC 0x4441
 

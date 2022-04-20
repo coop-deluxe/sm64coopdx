@@ -535,5 +535,10 @@ void render_hud(void) {
         {
             print_text(10, 60, "SURFACE NODE POOL FULL");
         }
+
+#if defined(LUA_PROFILER)
+        extern void lua_profiler_update_counters();
+        lua_profiler_update_counters();
+#endif
     }
 }

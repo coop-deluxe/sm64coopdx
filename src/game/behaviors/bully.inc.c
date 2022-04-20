@@ -47,6 +47,7 @@ static void bhv_bully_network_init(void) {
         network_init_object_field(o, &o->oBullyPrevY);
         network_init_object_field(o, &o->oBullyPrevZ);
         network_init_object_field(o, &o->oBullyMarioCollisionAngle);
+        network_init_object_field(o, &o->oBullyLastNetworkPlayerIndex);
         so->syncDeathEvent = FALSE;
         so->ignore_if_true = bhv_bully_ignore_if_true;
         so->override_ownership = bhv_bully_override_ownership;
@@ -62,6 +63,11 @@ void bhv_small_bully_init(void) {
     o->oGravity = 4.0;
     o->oFriction = 0.91;
     o->oBuoyancy = 1.3;
+    
+    // We only set this here so it has a set value just in case.
+    // A mod may make a small bully spawn a star.
+    // For whatever reason that may be.
+    o->oBullyLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
     obj_set_hitbox(o, &sSmallBullyHitbox);
     bhv_bully_network_init();
@@ -77,6 +83,14 @@ void bhv_big_bully_init(void) {
     o->oGravity = 5.0;
     o->oFriction = 0.93;
     o->oBuoyancy = 1.3;
+    
+    // We haven't interacted with a player yet.
+    // We also don't sync this as not only is it not required
+    // but it also is only set for an interaction.
+    // Therefore this object must already be loaded for it to be set
+    // and if it wasn't. You couldn't of possibly been the one
+    // who last interacted to begin with.
+    o->oBullyLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
     obj_set_hitbox(o, &sBigBullyHitbox);
     bhv_bully_network_init();
@@ -94,16 +108,21 @@ void bully_check_mario_collision(void) {
     o->oAction != BULLY_ACT_LAVA_DEATH && o->oAction != BULLY_ACT_DEATH_PLANE_DEATH &&
 #endif
     o->oInteractStatus & INT_STATUS_INTERACTED) {
-        if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL)
+        if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL) {
             cur_obj_play_sound_2(SOUND_OBJ2_BULLY_ATTACKED);
-        else
+        } else {
             cur_obj_play_sound_2(SOUND_OBJ2_LARGE_BULLY_ATTACKED);
+        }
 
         o->oInteractStatus &= ~INT_STATUS_INTERACTED;
         o->oAction = BULLY_ACT_KNOCKBACK;
         o->oFlags &= ~0x8; /* bit 3 */
         cur_obj_init_animation(3);
         o->oBullyMarioCollisionAngle = o->oMoveAngleYaw;
+
+        // Get the player who interacted with us.
+        struct MarioState *player = nearest_interacting_mario_state_to_object(o);
+        o->oBullyLastNetworkPlayerIndex = gNetworkPlayers[player->playerIndex].globalIndex;
     }
 }
 
@@ -119,12 +138,14 @@ void bully_act_chase_mario(void) {
         obj_turn_toward_object(o, player, 16, 4096);
     } else if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL) {
         o->oForwardVel = 20.0;
-        if (o->oTimer >= 31)
+        if (o->oTimer >= 31) {
             o->oTimer = 0;
+        }
     } else {
         o->oForwardVel = 30.0;
-        if (o->oTimer >= 36)
+        if (o->oTimer >= 36) {
             o->oTimer = 0;
+        }
     }
 
     if (!is_point_within_radius_of_mario(homeX, posY, homeZ, 1000)) {
@@ -141,8 +162,9 @@ void bully_act_knockback(void) {
         o->oFlags |= 0x8; /* bit 3 */
         o->oMoveAngleYaw = o->oFaceAngleYaw;
         obj_turn_toward_object(o, player, 16, 1280);
-    } else
+    } else {
         o->header.gfx.animInfo.animFrame = 0;
+    }
 
     if (o->oBullyKBTimerAndMinionKOCounter == 18) {
         o->oAction = BULLY_ACT_CHASE_MARIO;
@@ -214,8 +236,9 @@ void bully_step(void) {
     obj_check_floor_death(collisionFlags, sObjFloor);
 
     if (o->oBullySubtype & BULLY_STYPE_CHILL) {
-        if (o->oPosY < 1030.0f)
+        if (o->oPosY < 1030.0f) {
             o->oAction = BULLY_ACT_LAVA_DEATH;
+        }
     }
 }
 
@@ -246,10 +269,10 @@ void bully_act_level_death(void) {
 
             if (o->oBullySubtype == BULLY_STYPE_CHILL) {
                 f32* starPos = gLevelValues.starPositions.ChillBullyStarPos;
-                spawn_default_star(starPos[0], starPos[1], starPos[2]);
+                spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
             } else {
                 f32* starPos = gLevelValues.starPositions.BigBullyTrioStarPos;
-                spawn_default_star(starPos[0], starPos[1], starPos[2]);
+                spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
                 struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
                 if (lllTumblingBridge != NULL) {
                     lllTumblingBridge->oIntangibleTimer = 0;
@@ -341,7 +364,7 @@ void big_bully_spawn_star(void) {
     if (obj_lava_death() == 1) {
         spawn_mist_particles();
         f32* starPos = gLevelValues.starPositions.BigBullyStarPos;
-        spawn_default_star(starPos[0], starPos[1], starPos[2]);
+        spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
     }
 }
 

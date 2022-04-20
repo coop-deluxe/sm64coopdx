@@ -1344,6 +1344,7 @@
 - smlua_obj_utils.h
    - [get_temp_object_hitbox](#get_temp_object_hitbox)
    - [get_trajectory](#get_trajectory)
+   - [obj_check_hitbox_overlap](#obj_check_hitbox_overlap)
    - [obj_get_first](#obj_get_first)
    - [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
@@ -1355,7 +1356,10 @@
    - [obj_get_temp_spawn_particles_info](#obj_get_temp_spawn_particles_info)
    - [obj_has_behavior_id](#obj_has_behavior_id)
    - [obj_has_model_extended](#obj_has_model_extended)
+   - [obj_is_valid_for_interaction](#obj_is_valid_for_interaction)
+   - [obj_move_xyz](#obj_move_xyz)
    - [obj_set_model_extended](#obj_set_model_extended)
+   - [obj_set_vel](#obj_set_vel)
    - [spawn_non_sync_object](#spawn_non_sync_object)
    - [spawn_sync_object](#spawn_sync_object)
 
@@ -25086,6 +25090,27 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [obj_check_hitbox_overlap](#obj_check_hitbox_overlap)
+
+### Lua Example
+`local integerValue = obj_check_hitbox_overlap(o1, o2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o1 | [Object](structs.md#Object) |
+| o2 | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_check_hitbox_overlap(struct Object *o1, struct Object *o2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_get_first](#obj_get_first)
 
 ### Lua Example
@@ -25316,6 +25341,49 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [obj_is_valid_for_interaction](#obj_is_valid_for_interaction)
+
+### Lua Example
+`local integerValue = obj_is_valid_for_interaction(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_is_valid_for_interaction(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_move_xyz](#obj_move_xyz)
+
+### Lua Example
+`obj_move_xyz(o, dx, dy, dz)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| dx | `number` |
+| dy | `number` |
+| dz | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_set_model_extended](#obj_set_model_extended)
 
 ### Lua Example
@@ -25332,6 +25400,29 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_vel](#obj_set_vel)
+
+### Lua Example
+`obj_set_vel(o, vx, vy, vz)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| vx | `number` |
+| vy | `number` |
+| vz | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz);`
 
 [:arrow_up_small:](#)
 

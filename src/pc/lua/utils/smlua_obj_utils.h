@@ -33,4 +33,9 @@ struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);
 struct ObjectHitbox* get_temp_object_hitbox(void);
 
+s32 obj_is_valid_for_interaction(struct Object *o);
+s32 obj_check_hitbox_overlap(struct Object *o1, struct Object *o2);
+void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz);
+void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);
+
 #endif

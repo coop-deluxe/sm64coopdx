@@ -2,6 +2,8 @@
 #include "object_constants.h"
 #include "object_fields.h"
 #include "src/game/object_helpers.h"
+#include "src/game/interaction.h"
+#include "engine/math_util.h"
 
 #include "pc/lua/smlua.h"
 #include "smlua_obj_utils.h"
@@ -218,4 +220,33 @@ struct ObjectHitbox* get_temp_object_hitbox(void) {
     static struct ObjectHitbox sTmpHitbox = { 0 };
     memset(&sTmpHitbox, 0, sizeof(struct ObjectHitbox));
     return &sTmpHitbox;
+}
+
+s32 obj_is_valid_for_interaction(struct Object *o) {
+    return o->activeFlags != ACTIVE_FLAG_DEACTIVATED && o->oIntangibleTimer == 0 && (o->oInteractStatus & INT_STATUS_INTERACTED) == 0;
+}
+
+s32 obj_check_hitbox_overlap(struct Object *o1, struct Object *o2) {
+    f32 r2 = sqr(max(o1->hitboxRadius, o1->hurtboxRadius) + max(o2->hitboxRadius, o2->hurtboxRadius));
+    f32 d2 = sqr(o1->oPosX - o2->oPosX) + sqr(o1->oPosZ - o2->oPosZ);
+    if (d2 > r2) return FALSE;
+    f32 hb1lb = o1->oPosY - o1->hitboxDownOffset;
+    f32 hb1ub = hb1lb + max(o1->hitboxHeight, o1->hurtboxHeight);
+    f32 hb2lb = o2->oPosY - o2->hitboxDownOffset;
+    f32 hb2ub = hb2lb + max(o2->hitboxHeight, o2->hurtboxHeight);
+    f32 hbsoh = max(o1->hitboxHeight, o1->hurtboxHeight) + max(o2->hitboxHeight, o2->hurtboxHeight);
+    if (hb2ub - hb1lb > hbsoh || hb1ub - hb2lb > hbsoh) return FALSE;
+    return TRUE;
+}
+
+void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz) {
+    o->oVelX = vx;
+    o->oVelY = vy;
+    o->oVelZ = vz;
+}
+
+void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz) {
+    o->oPosX += dx;
+    o->oPosY += dy;
+    o->oPosZ += dz;
 }
