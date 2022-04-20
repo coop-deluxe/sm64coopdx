@@ -4,11 +4,11 @@
 #include "data/dynos.c.h"
 
 static void djui_panel_dynos_apply(struct DjuiBase* caller) {
-    dynos_packs_set_enabled(caller->tag, caller->bTag);
+    dynos_pack_set_enabled(caller->tag, caller->bTag);
 }
 
 void djui_panel_dynos_create(struct DjuiBase* caller) {
-    int packCount = dynos_packs_get_count();
+    int packCount = dynos_pack_get_count();
     f32 bodyHeight = (416) + 64 * 1 + 16 * 1;
 
     struct DjuiBase* defaultBase = NULL;
@@ -19,8 +19,8 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         struct DjuiPaginated* paginated = djui_paginated_create(&body->base, 8);
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < packCount; i++) {
-            bool tmp = dynos_packs_get_enabled(i);
-            const char* pack = dynos_packs_get(i);
+            bool tmp = dynos_pack_get_enabled(i);
+            const char* pack = dynos_pack_get_name(i);
 
             struct DjuiCheckbox* checkbox1 = djui_checkbox_create(layoutBase, pack, &tmp);
             checkbox1->base.tag = i;

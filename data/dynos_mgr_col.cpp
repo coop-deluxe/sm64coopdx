@@ -1,11 +1,16 @@
 #include "dynos.cpp.h"
 
-static Array<Pair<const char*, DataNode<Collision>*>> sDynosCollisions;
+static Array<Pair<const char*, DataNode<Collision>*>>& DynosCollisions() {
+    static Array<Pair<const char*, DataNode<Collision>*>> sDynosCollisions;
+    return sDynosCollisions;
+}
 
 void DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
+    auto& _DynosCollisions = DynosCollisions();
+
     // check for duplicates
-    for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
-        if (!strcmp(sDynosCollisions[i].first, aCollisionName)) {
+    for (s32 i = 0; i < _DynosCollisions.Count(); ++i) {
+        if (!strcmp(_DynosCollisions[i].first, aCollisionName)) {
             return;
         }
     }
@@ -23,10 +28,12 @@ void DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
     }
 
     // Add to collisions
-    sDynosCollisions.Add({ collisionName, _Node });
+    _DynosCollisions.Add({ collisionName, _Node });
 }
 
 Collision* DynOS_Col_Get(const char* collisionName) {
+    auto& _DynosCollisions = DynosCollisions();
+
     // check levels
     auto& levelsArray = DynOS_Lvl_GetArray();
     for (auto& lvl : levelsArray) {
@@ -38,9 +45,9 @@ Collision* DynOS_Col_Get(const char* collisionName) {
     }
 
     // check mod actor collisions
-    for (s32 i = 0; i < sDynosCollisions.Count(); ++i) {
-        if (!strcmp(sDynosCollisions[i].first, collisionName)) {
-            return sDynosCollisions[i].second->mData;
+    for (s32 i = 0; i < _DynosCollisions.Count(); ++i) {
+        if (!strcmp(_DynosCollisions[i].first, collisionName)) {
+            return _DynosCollisions[i].second->mData;
         }
     }
 

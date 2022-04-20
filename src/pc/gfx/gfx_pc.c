@@ -692,7 +692,7 @@ static void calculate_normal_dir(const Light_t *light, float coeffs[3]) {
     gfx_normalize_vector(coeffs);
 }
 
-static void gfx_matrix_mul(float res[4][4], const float a[4][4], const float b[4][4]) {
+static void OPTIMIZE_O3 gfx_matrix_mul(float res[4][4], const float a[4][4], const float b[4][4]) {
     float tmp[4][4];
     for (int32_t i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -757,7 +757,7 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * (4.0f / 3.0f) / ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
 }
 
-static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
+static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
     for (size_t i = 0; i < n_vertices; i++, dest_index++) {
         const Vtx_t *v = &vertices[i].v;
         const Vtx_tn *vn = &vertices[i].n;
@@ -862,7 +862,7 @@ static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *verti
     }
 }
 
-static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
+static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     struct LoadedVertex *v1 = &rsp.loaded_vertices[vtx1_idx];
     struct LoadedVertex *v2 = &rsp.loaded_vertices[vtx2_idx];
     struct LoadedVertex *v3 = &rsp.loaded_vertices[vtx3_idx];
@@ -1525,7 +1525,7 @@ static inline void *seg_addr(uintptr_t w1) {
 #define C0(pos, width) ((cmd->words.w0 >> (pos)) & ((1U << width) - 1))
 #define C1(pos, width) ((cmd->words.w1 >> (pos)) & ((1U << width) - 1))
 
-static void gfx_run_dl(Gfx* cmd) {
+static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
     for (;;) {
         uint32_t opcode = cmd->words.w0 >> 24;
         

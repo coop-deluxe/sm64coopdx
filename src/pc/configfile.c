@@ -265,22 +265,22 @@ static void dynos_pack_read(char** tokens, int numTokens) {
     }
 
     bool enabled = !(strcmp(tokens[numTokens-1], "true"));
-    int packCount = dynos_packs_get_count();
+    int packCount = dynos_pack_get_count();
 
     for (int i = 0; i < packCount; i++) {
-        const char* pack = dynos_packs_get(i);
+        const char* pack = dynos_pack_get_name(i);
         if (!strcmp(fullPackName, pack)) {
-            dynos_packs_set_enabled(i, enabled);
+            dynos_pack_set_enabled(i, enabled);
             break;
         }
     }
 }
 
 static void dynos_pack_write(FILE* file) {
-    int packCount = dynos_packs_get_count();
+    int packCount = dynos_pack_get_count();
     for (int i = 0; i < packCount; i++) {
-        bool enabled = dynos_packs_get_enabled(i);
-        const char* pack = dynos_packs_get(i);
+        bool enabled = dynos_pack_get_enabled(i);
+        const char* pack = dynos_pack_get_name(i);
         fprintf(file, "%s %s %s\n", "dynos-pack:", pack, enabled ? "true" : "false");
     }
 }

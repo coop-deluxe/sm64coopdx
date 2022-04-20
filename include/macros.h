@@ -79,4 +79,13 @@
 # define LE_TO_HOST32(x) (x)
 #endif
 
+// Optimize
+#ifdef __clang__
+#define OPTIMIZE_O3
+#elif __GNUC__
+#define OPTIMIZE_O3 __attribute__((optimize("O3")))
+#else
+#define OPTIMIZE_O3
+#endif
+
 #endif // MACROS_H

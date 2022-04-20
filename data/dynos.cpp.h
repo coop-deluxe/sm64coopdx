@@ -474,7 +474,11 @@ struct ActorGfx {
 };
 
 struct PackData {
+    s32 mIndex;
+    bool mEnabled;
     SysPath mPath;
+    String mDisplayName;
+    Array<Pair<const char *, GfxData *>> mGfxData;
 };
 
 typedef Pair<String, const u8 *> Label;
@@ -672,12 +676,8 @@ void DynOS_Opt_DrawPrompt(DynosOption *aCurrentMenu, DynosOption *aOptionsMenu, 
 // Gfx
 //
 
-Array<ActorGfx> &DynOS_Gfx_GetActorList();
-Array<PackData *> &DynOS_Gfx_GetPacks();
-Array<bool> &DynOS_Gfx_GetPacksEnabled();
-Array<String> DynOS_Gfx_Init();
+void DynOS_Gfx_Init();
 void DynOS_Gfx_Update();
-void DynOS_Gfx_SwapAnimations(void *aPtr);
 void DynOS_Gfx_Free(GfxData *aGfxData);
 
 //
@@ -746,16 +746,34 @@ const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
 
 //
+// Pack Manager
+//
+
+s32 DynOS_Pack_GetCount();
+void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled);
+PackData* DynOS_Pack_GetFromIndex(s32 aIndex);
+PackData* DynOS_Pack_GetFromPath(const SysPath& aPath);
+PackData* DynOS_Pack_Add(const SysPath& aPath);
+Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName);
+void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
+
+//
 // Actor Manager
 //
 
 void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName);
-s32 DynOS_Actor_GetCount();
-const char *DynOS_Actor_GetName(s32 aIndex);
-const void *DynOS_Actor_GetLayoutFromIndex(s32 aIndex);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
-s32 DynOS_Actor_GetIndex(const void *aGeoLayout);
-bool DynOS_Actor_IsCustom(s32 aIndex);
+ActorGfx* DynOS_Actor_GetActorGfx(const void* aGeoref);
+void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
+void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
+void DynOS_Actor_Override(void** aSharedChild);
+void DynOS_Actor_Override_All(void);
+
+//
+// Anim Manager
+//
+
+void DynOS_Anim_Swap(void *aPtr);
 
 //
 // Tex Manager
@@ -880,7 +898,7 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue);
 
 void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData);
 
-GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName, const SysPath &aFilename);
+GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName, const SysPath &aFilename, bool aAddToPack);
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder);
 
 DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>* aNode, bool aDisplayPercent);

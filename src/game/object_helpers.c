@@ -1290,6 +1290,7 @@ void cur_obj_set_model(s32 modelID) {
 
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
+    dynos_actor_override((void*)&obj->header.gfx.sharedChild);
 }
 
 void mario_set_flag(s32 flag) {

@@ -10,20 +10,26 @@ struct OverrideLevelScript {
     GfxData* gfxData;
 };
 
-static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
-static Array<struct OverrideLevelScript> sDynosOverrideLevelScripts;
+static Array<struct OverrideLevelScript>& DynosOverrideLevelScripts() {
+    static Array<struct OverrideLevelScript> sDynosOverrideLevelScripts;
+    return sDynosOverrideLevelScripts;
+}
 
 Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
+    static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
     return sDynosCustomLevelScripts;
 }
 
 void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLevelName) {
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+    auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
+
     // make sure vanilla levels were parsed
     DynOS_Level_GetCount();
 
     // check for duplicates
-    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
-        if (!strcmp(sDynosCustomLevelScripts[i].first, aLevelName)) {
+    for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
+        if (!strcmp(_CustomLevelScripts[i].first, aLevelName)) {
             return;
         }
     }
@@ -42,7 +48,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     _Node->mModIndex = modIndex;
 
     // Add to levels
-    sDynosCustomLevelScripts.Add({ levelName, _Node });
+    _CustomLevelScripts.Add({ levelName, _Node });
 
     // Override vanilla script
     auto& newScripts = _Node->mLevelScripts;
@@ -54,13 +60,15 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     }
 
     DynOS_Level_Override((void*)originalScript, newScriptNode->mData);
-    sDynosOverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
+    _OverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
     DynOS_Tex_Valid(_Node);
 }
 
 GfxData* DynOS_Lvl_GetActiveGfx(void) {
-    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
-        auto& gfxData = sDynosCustomLevelScripts[i].second;
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+
+    for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
+        auto& gfxData = _CustomLevelScripts[i].second;
         auto& scripts = gfxData->mLevelScripts;
         if (gLevelScriptActive == scripts[scripts.Count() - 1]->mData) {
             return gfxData;
@@ -86,7 +94,9 @@ const char* DynOS_Lvl_GetToken(u32 index) {
 }
 
 Trajectory* DynOS_Lvl_GetTrajectory(const char* aName) {
-    for (auto& script : sDynosCustomLevelScripts) {
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+
+    for (auto& script : _CustomLevelScripts) {
         for (auto& trajectoryNode : script.second->mTrajectories) {
             if (trajectoryNode->mName == aName) {
                 return trajectoryNode->mData;
@@ -97,10 +107,12 @@ Trajectory* DynOS_Lvl_GetTrajectory(const char* aName) {
 }
 
 void DynOS_Lvl_LoadBackground(void *aPtr) {
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+
     // ensure this texture list exists
     GfxData* foundGfxData = NULL;
     DataNode<TexData*>* foundList = NULL;
-    for (auto& script : sDynosCustomLevelScripts) {
+    for (auto& script : _CustomLevelScripts) {
         auto &textureLists = script.second->mTextureLists;
         for (auto& textureList : textureLists) {
             if (textureList == aPtr) {
@@ -130,7 +142,9 @@ double_break:
 }
 
 void *DynOS_Lvl_Override(void *aCmd) {
-    for (auto& overrideStruct : sDynosOverrideLevelScripts) {
+    auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
+
+    for (auto& overrideStruct : _OverrideLevelScripts) {
         if (aCmd == overrideStruct.originalScript || aCmd == overrideStruct.newScript) {
             aCmd = (void*)overrideStruct.newScript;
             gLevelScriptModIndex = overrideStruct.gfxData->mModIndex;

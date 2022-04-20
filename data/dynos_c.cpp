@@ -25,7 +25,7 @@ s32 dynos_tex_import(void **output, void *ptr, s32 tile, void *grapi, void **has
 }
 
 void dynos_gfx_swap_animations(void *ptr) {
-    return DynOS_Gfx_SwapAnimations(ptr);
+    return DynOS_Anim_Swap(ptr);
 }
 
 // -- warps -- //
@@ -48,34 +48,31 @@ bool dynos_warp_to_castle(s32 aLevel) {
 
 // -- dynos packs -- //
 
-int dynos_packs_get_count(void) {
-    return DynOS_Gfx_GetPacks().Count();
+int dynos_pack_get_count(void) {
+    return DynOS_Pack_GetCount();
 }
 
-const char* dynos_packs_get(s32 index) {
-    const char* path = DynOS_Gfx_GetPacks()[index]->mPath.c_str();
-
-    // extract basename
-    const char* cpath = path;
-    const char* ctoken = cpath;
-    while (*ctoken != '\0') {
-        if (*ctoken == '/' || *ctoken == '\\') {
-            if (*(ctoken + 1) != '\0') {
-                cpath = (ctoken + 1);
-            }
-        }
-        ctoken++;
+const char* dynos_pack_get_name(s32 index) {
+    PackData* _Pack = DynOS_Pack_GetFromIndex(index);
+    if (_Pack) {
+        return _Pack->mDisplayName.begin();
     }
-
-    return cpath;
+    return NULL;
 }
 
-bool dynos_packs_get_enabled(s32 index) {
-    return DynOS_Gfx_GetPacksEnabled()[index];
+bool dynos_pack_get_enabled(s32 index) {
+    PackData* _Pack = DynOS_Pack_GetFromIndex(index);
+    if (_Pack) {
+        return _Pack->mEnabled;
+    }
+    return false;
 }
 
-void dynos_packs_set_enabled(s32 index, bool value) {
-    DynOS_Gfx_GetPacksEnabled()[index] = value;
+void dynos_pack_set_enabled(s32 index, bool value) {
+    PackData* _Pack = DynOS_Pack_GetFromIndex(index);
+    if (_Pack) {
+        DynOS_Pack_SetEnabled(_Pack, value);
+    }
 }
 
 void dynos_generate_packs(const char* directory) {
@@ -83,6 +80,10 @@ void dynos_generate_packs(const char* directory) {
 }
 
 // -- geos -- //
+
+void dynos_actor_override(void** aSharedChild) {
+    DynOS_Actor_Override(aSharedChild);
+}
 
 void dynos_add_actor_custom(const char *filePath, const char* geoName) {
     DynOS_Actor_AddCustom(filePath, geoName);

@@ -10,11 +10,16 @@ struct RegisteredMovtexQC {
     s16 type;
 };
 
-static Array<RegisteredMovtexQC> sDynosRegisteredMovtexQCs;
+static Array<RegisteredMovtexQC>& DynosRegisteredMovtexQCs() {
+    static Array<RegisteredMovtexQC> sDynosRegisteredMovtexQCs;
+    return sDynosRegisteredMovtexQCs;
+}
 
 void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type) {
+    auto& _DynosRegisteredMovtexQCs = DynosRegisteredMovtexQCs();
+
     // check for duplicates
-    for (auto& registered : sDynosRegisteredMovtexQCs) {
+    for (auto& registered : _DynosRegisteredMovtexQCs) {
         if (registered.level == level && registered.area == area && registered.type == type) { return; }
     }
 
@@ -23,7 +28,7 @@ void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type) {
         for (auto& node : lvlPair.second->mMovtexQCs) {
             if (node->mName == name) {
                 // add it
-                sDynosRegisteredMovtexQCs.Add({
+                _DynosRegisteredMovtexQCs.Add({
                     .dataNode = node,
                     .level    = level,
                     .area     = area,
@@ -35,9 +40,11 @@ void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type) {
 }
 
 DataNode<MovtexQC>* DynOS_MovtexQC_GetFromId(u32 id) {
+    auto& _DynosRegisteredMovtexQCs = DynosRegisteredMovtexQCs();
+
     // find the datanode
     s16 type = (id & 0xF);
-    for (auto& registered : sDynosRegisteredMovtexQCs) {
+    for (auto& registered : _DynosRegisteredMovtexQCs) {
         if (registered.level == gCurrLevelNum && registered.area == gCurrAreaIndex && registered.type == type) {
             return registered.dataNode;
         }

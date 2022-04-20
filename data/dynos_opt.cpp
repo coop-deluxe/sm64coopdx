@@ -605,7 +605,7 @@ static u32 DynOS_Opt_GetHash(const String& aStr) {
 }
 
 static void DynOS_Opt_CreateModelPacksSubMenu() {
-    Array<String> _Packs = DynOS_Gfx_Init();
+    /*Array<String> _Packs = DynOS_Gfx_Init();
     if (_Packs.Count() == 0) {
         return;
     }
@@ -615,7 +615,7 @@ static void DynOS_Opt_CreateModelPacksSubMenu() {
         DynOS_Opt_CreateToggle(String("dynos_pack_%d", i), String("dynos_pack_%08X", DynOS_Opt_GetHash(_Packs[i])), _Packs[i], false);
     }
     DynOS_Opt_CreateButton("dynos_packs_disable_all", "Disable all packs", "DynOS_Opt_DisableAllPacks");
-    DynOS_Opt_EndSubMenu();
+    DynOS_Opt_EndSubMenu();*/
 }
 
 void DynOS_Opt_Init() {

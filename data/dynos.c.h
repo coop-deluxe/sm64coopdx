@@ -22,13 +22,14 @@ bool dynos_warp_exit_level(s32 aDelay);
 bool dynos_warp_to_castle(s32 aLevel);
 
 // -- dynos packs -- //
-int dynos_packs_get_count(void);
-const char* dynos_packs_get(s32 index);
-bool dynos_packs_get_enabled(s32 index);
-void dynos_packs_set_enabled(s32 index, bool value);
+int dynos_pack_get_count(void);
+const char* dynos_pack_get_name(s32 index);
+bool dynos_pack_get_enabled(s32 index);
+void dynos_pack_set_enabled(s32 index, bool value);
 void dynos_generate_packs(const char* directory);
 
 // -- geos -- //
+void dynos_actor_override(void** aSharedChild);
 void dynos_add_actor_custom(const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 

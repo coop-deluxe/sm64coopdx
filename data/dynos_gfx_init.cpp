@@ -1,20 +1,5 @@
 #include "dynos.cpp.h"
 
-Array<ActorGfx> &DynOS_Gfx_GetActorList() {
-    static Array<ActorGfx> sActorGfxList;
-    return sActorGfxList;
-}
-
-Array<PackData *> &DynOS_Gfx_GetPacks() {
-    static Array<PackData *> sPacks;
-    return sPacks;
-}
-
-Array<bool> &DynOS_Gfx_GetPacksEnabled() {
-    static Array<bool> sPacksEnabled;
-    return sPacksEnabled;
-}
-
 void DynOS_Gfx_GeneratePacks(const char* directory) {
     DIR *modsDir = opendir(directory);
     if (!modsDir) { return; }
@@ -39,8 +24,31 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
     closedir(modsDir);
 }
 
+static void ScanPackBins(SysPath aPackFolder) {
+    DIR *_PackDir = opendir(aPackFolder.c_str());
+    if (!_PackDir) { return; }
+
+    struct dirent *_PackEnt = NULL;
+    while ((_PackEnt = readdir(_PackDir)) != NULL) {
+        // Skip . and ..
+        if (SysPath(_PackEnt->d_name) == ".") continue;
+        if (SysPath(_PackEnt->d_name) == "..") continue;
+
+        // Skip non .bin
+        s32 length = strlen(_PackEnt->d_name);
+        if (length < 5) { continue; }
+        if (strncmp(&_PackEnt->d_name[length - 4], ".bin", 4)) { continue; }
+
+        String _ActorName = _PackEnt->d_name;
+        _ActorName[length - 4] = '\0';
+
+        SysPath _FileName = fstring("%s/%s", aPackFolder.begin(), _PackEnt->d_name);
+
+        DynOS_Actor_LoadFromBinary(aPackFolder, strdup(_ActorName.begin()), _FileName, true);
+    }
+}
+
 static void ScanPacksFolder(SysPath _DynosPacksFolder) {
-    Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
     DIR *_DynosPacksDir = opendir(_DynosPacksFolder.c_str());
     if (_DynosPacksDir) {
         struct dirent *_DynosPacksEnt = NULL;
@@ -53,34 +61,16 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
             // If pack folder exists, add it to the pack list
             SysPath _PackFolder = fstring("%s/%s", _DynosPacksFolder.c_str(), _DynosPacksEnt->d_name);
             if (fs_sys_dir_exists(_PackFolder.c_str())) {
-                PackData *_Pack = New<PackData>();
-
-                // Scan folder for subfolders to convert into .bin files
-                _Pack->mPath = _PackFolder;
+                struct PackData* _Pack = DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
-
-                // Add pack to pack list
-                pDynosPacks.Add(_Pack);
-
-                // Add enabled flag
-                DynOS_Gfx_GetPacksEnabled().Add(true);
+                ScanPackBins(_PackFolder);
             }
         }
         closedir(_DynosPacksDir);
     }
 }
 
-Array<String> DynOS_Gfx_Init() {
-
-    // Alloc and init the actors gfx list
-    Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
-    pActorGfxList.Resize(DynOS_Actor_GetCount());
-    for (s32 i = 0; i != DynOS_Actor_GetCount(); ++i) {
-        pActorGfxList[i].mPackIndex = -1;
-        pActorGfxList[i].mGfxData   = NULL;
-        pActorGfxList[i].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Actor_GetLayoutFromIndex(i), false);
-    }
-
+void DynOS_Gfx_Init() {
     // Scan the DynOS packs folder
     SysPath _DynosPacksFolder = fstring("%s/%s", DYNOS_EXE_FOLDER, DYNOS_PACKS_FOLDER);
     ScanPacksFolder(_DynosPacksFolder);
@@ -88,18 +78,4 @@ Array<String> DynOS_Gfx_Init() {
     // Scan the user path folder
     SysPath _DynosPacksUserFolder = fstring("%s/%s", DYNOS_USER_FOLDER, DYNOS_PACKS_FOLDER);
     ScanPacksFolder(_DynosPacksUserFolder);
-
-    // Return a list of pack names
-    Array<PackData *> &pDynosPacks = DynOS_Gfx_GetPacks();
-    Array<String> _PackNames;
-    for (const auto& _Pack : pDynosPacks) {
-        u64 _DirSep1 = _Pack->mPath.find_last_of('\\');
-        u64 _DirSep2 = _Pack->mPath.find_last_of('/');
-        if (_DirSep1++ == SysPath::npos) _DirSep1 = 0;
-        if (_DirSep2++ == SysPath::npos) _DirSep2 = 0;
-        SysPath _DirName = _Pack->mPath.substr(MAX(_DirSep1, _DirSep2));
-        _PackNames.Add(_DirName.c_str());
-    }
-
-    return _PackNames;
 }

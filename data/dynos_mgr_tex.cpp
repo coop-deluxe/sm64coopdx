@@ -4,7 +4,11 @@ extern "C" {
 #include "pc/gfx/gfx_rendering_api.h"
 }
 
-static std::set<DataNode<TexData> *> sDynosValidTextures;
+// static set
+static std::set<DataNode<TexData> *>& DynosValidTextures() {
+    static std::set<DataNode<TexData> *> sDynosValidTextures;
+    return sDynosValidTextures;
+}
 
 //
 // Conversion
@@ -251,13 +255,13 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
 
 void DynOS_Tex_Valid(GfxData* aGfxData) {
     for (auto &_Texture : aGfxData->mTextures) {
-        sDynosValidTextures.insert(_Texture);
+        DynosValidTextures().insert(_Texture);
     }
 }
 
 void DynOS_Tex_Invalid(GfxData* aGfxData) {
     for (auto &_Texture : aGfxData->mTextures) {
-        sDynosValidTextures.erase(_Texture);
+        DynosValidTextures().erase(_Texture);
     }
 }
 
@@ -266,7 +270,8 @@ void DynOS_Tex_Invalid(GfxData* aGfxData) {
 //
 
 static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
-    if (sDynosValidTextures.find((DataNode<TexData>*)aPtr) != sDynosValidTextures.end()) {
+    auto& _ValidTextures = DynosValidTextures();
+    if (_ValidTextures.find((DataNode<TexData>*)aPtr) != _ValidTextures.end()) {
         return (DataNode<TexData>*)aPtr;
     }
     return NULL;

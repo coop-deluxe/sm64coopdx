@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <ultra64.h>
+#include "macros.h"
 
 #ifdef __SSE4_1__
 #include <immintrin.h>
@@ -87,7 +88,7 @@ static int16_t resample_table[64][4] = {
     {0xffd8, 0x0e5f, 0x6696, 0x0b39}, {0xffdf, 0x0d46, 0x66ad, 0x0c39}
 };
 
-static inline int16_t clamp16(int32_t v) {
+static inline int16_t OPTIMIZE_O3 clamp16(int32_t v) {
     if (v < -0x8000) {
         return -0x8000;
     } else if (v > 0x7fff) {
@@ -206,7 +207,7 @@ void aSetLoopImpl(ADPCM_STATE *adpcm_loop_state) {
     rspa.adpcm_loop_state = adpcm_loop_state;
 }
 
-void aADPCMdecImpl(uint8_t flags, ADPCM_STATE state) {
+void OPTIMIZE_O3 aADPCMdecImpl(uint8_t flags, ADPCM_STATE state) {
 #if HAS_SSE41
     const __m128i tblrev = _mm_setr_epi8(12, 13, 10, 11, 8, 9, 6, 7, 4, 5, 2, 3, 0, 1, -1, -1);
     const __m128i pos0 = _mm_set_epi8(3, -1, 3, -1, 2, -1, 2, -1, 1, -1, 1, -1, 0, -1, 0, -1);
@@ -374,7 +375,7 @@ void aADPCMdecImpl(uint8_t flags, ADPCM_STATE state) {
     memcpy(state, out - 16, 16 * sizeof(int16_t));
 }
 
-void aResampleImpl(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state) {
+void OPTIMIZE_O3 aResampleImpl(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state) {
     int16_t tmp[16];
     int16_t *in_initial = rspa.buf.as_s16 + rspa.in / sizeof(int16_t);
     int16_t *in = in_initial;
@@ -527,7 +528,7 @@ void aResampleImpl(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state) {
 }
 
 
-void aEnvMixerImpl(uint8_t flags, ENVMIX_STATE state) {
+void OPTIMIZE_O3 aEnvMixerImpl(uint8_t flags, ENVMIX_STATE state) {
     int16_t *in = rspa.buf.as_s16 + rspa.in / sizeof(int16_t);
     int16_t *dry[2] = {rspa.buf.as_s16 + rspa.out / sizeof(int16_t), rspa.buf.as_s16 + rspa.dry_right / sizeof(int16_t)};
     int16_t *wet[2] = {rspa.buf.as_s16 + rspa.wet_left / sizeof(int16_t), rspa.buf.as_s16 + rspa.wet_right / sizeof(int16_t)};

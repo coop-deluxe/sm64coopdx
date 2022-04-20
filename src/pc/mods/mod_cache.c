@@ -188,10 +188,6 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file) {
         LOG_ERROR("Could not add to cache, mod or file is null");
         return;
     }
-    if (mod->basePath == NULL || file->relativePath == NULL) {
-        LOG_ERROR("Could not add to cache, basepath or relativepath is null");
-        return;
-    }
 
     // if we already have a cached path, don't do anything
     if (file->cachedPath != NULL) {

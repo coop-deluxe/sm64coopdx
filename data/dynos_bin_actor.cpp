@@ -72,25 +72,15 @@ static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGf
  // Reading //
 /////////////
 
-GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName, const SysPath &aFilename) {
-    struct DynosGfxDataCache { SysPath mPackFolder; Array<Pair<const char *, GfxData *>> mGfxData; };
-    static Array<DynosGfxDataCache *> sDynosGfxDataCache = {};
-
+GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName, const SysPath &aFilename, bool aAddToPack) {
     // Look for pack in cache
-    DynosGfxDataCache *_Pack = NULL;
-    for (s32 i = 0; i != sDynosGfxDataCache.Count(); ++i) {
-        if (sDynosGfxDataCache[i]->mPackFolder == aPackFolder) {
-            _Pack = sDynosGfxDataCache[i];
-            break;
-        }
-    }
+    PackData* _Pack = DynOS_Pack_GetFromPath(aPackFolder);
 
     // Look for actor in pack
     if (_Pack) {
-        for (s32 i = 0; i != _Pack->mGfxData.Count(); ++i) {
-            if (!strcmp(_Pack->mGfxData[i].first, aActorName)) {
-                return _Pack->mGfxData[i].second;
-            }
+        auto _ActorPair = DynOS_Pack_GetActor(_Pack, aActorName);
+        if (_ActorPair != NULL) {
+            return _ActorPair->second;
         }
     }
 
@@ -119,13 +109,13 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
     }
 
     // Add data to cache, even if not loaded
-    if (_Pack) {
-        _Pack->mGfxData.Add({ aActorName, _GfxData });
-    } else {
-        _Pack = New<DynosGfxDataCache>();
-        _Pack->mPackFolder = aPackFolder;
-        _Pack->mGfxData.Add({ aActorName, _GfxData });
-        sDynosGfxDataCache.Add(_Pack);
+    if (aAddToPack) {
+        if (_Pack) {
+            DynOS_Pack_AddActor(_Pack, aActorName, _GfxData);
+        } else {
+            _Pack = DynOS_Pack_Add(aPackFolder);
+            DynOS_Pack_AddActor(_Pack, aActorName, _GfxData);
+        }
     }
 
     return _GfxData;
