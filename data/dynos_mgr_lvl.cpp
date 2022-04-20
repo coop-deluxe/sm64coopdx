@@ -55,20 +55,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
 
     DynOS_Level_Override((void*)originalScript, newScriptNode->mData);
     sDynosOverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
-}
-
-DataNode<TexData> *DynOS_Lvl_GetTexture(void *aPtr) {
-    for (s32 i = 0; i < sDynosCustomLevelScripts.Count(); ++i) {
-        auto &mTextures = sDynosCustomLevelScripts[i].second->mTextures;
-        for (s32 j = 0; j < mTextures.Count(); j++) {
-            auto &texture = mTextures[j];
-            if (texture == aPtr) {
-                return texture;
-            }
-
-        }
-    }
-    return NULL;
+    DynOS_Tex_Valid(_Node);
 }
 
 GfxData* DynOS_Lvl_GetActiveGfx(void) {

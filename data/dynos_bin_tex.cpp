@@ -37,7 +37,7 @@ void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture) {
 
     // Convert to RGBA32
     const u8 *_Palette = (aGfxData->mGfxContext.mCurrentPalette ? aGfxData->mGfxContext.mCurrentPalette->mData->mRawData.begin() : NULL);
-    u8 *_Buffer = DynOS_Gfx_TextureConvertToRGBA32(aTexture->mRawData.begin(), aTexture->mRawData.Count(), aTexture->mRawFormat, aTexture->mRawSize, _Palette);
+    u8 *_Buffer = DynOS_Tex_ConvertToRGBA32(aTexture->mRawData.begin(), aTexture->mRawData.Count(), aTexture->mRawFormat, aTexture->mRawSize, _Palette);
     if (_Buffer == NULL) {
         PrintError("  ERROR: Unknown texture format");
         return;

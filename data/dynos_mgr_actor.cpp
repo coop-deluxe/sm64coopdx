@@ -49,6 +49,7 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     pActorGfxList[index].mPackIndex = 99;
     pActorGfxList[index].mGfxData   = _GfxData;
     pActorGfxList[index].mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
+    DynOS_Tex_Valid(_GfxData);
 }
 
 s32 DynOS_Actor_GetCount() {

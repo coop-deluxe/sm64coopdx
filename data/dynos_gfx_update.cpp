@@ -147,6 +147,7 @@ void DynOS_Gfx_Update() {
                         _ActorGfx->mGfxData   = _GfxData;
                         _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode((*(_GfxData->mGeoLayouts.end() - 1))->mData, true);
                         _ActorGfx->mGraphNode->georef = DynOS_Actor_GetLayoutFromIndex(_ActorIndex);
+                        DynOS_Tex_Valid(_GfxData);
                         break;
                     }
                 }
@@ -154,6 +155,7 @@ void DynOS_Gfx_Update() {
                 // If disabled and this pack is the one selected
                 // replace the actor's model by the default one
                 else if (!_Enabled[i] && _ActorGfx->mPackIndex == i) {
+                    DynOS_Tex_Invalid(_ActorGfx->mGfxData);
                     _ActorGfx->mPackIndex = -1;
                     _ActorGfx->mGfxData   = NULL;
                     _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Actor_GetLayoutFromIndex(_ActorIndex), true);

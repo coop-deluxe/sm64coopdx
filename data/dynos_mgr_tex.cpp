@@ -1,7 +1,10 @@
+#include <set>
 #include "dynos.cpp.h"
 extern "C" {
 #include "pc/gfx/gfx_rendering_api.h"
 }
+
+static std::set<DataNode<TexData> *> sDynosValidTextures;
 
 //
 // Conversion
@@ -162,7 +165,7 @@ static u8 *I8_RGBA32(const u8 *aData, u64 aLength) {
     return _Buffer;
 }
 
-u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize, const u8 *aPalette) {
+u8 *DynOS_Tex_ConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize, const u8 *aPalette) {
     switch   ((aFormat       << 8) | aSize       ) {
         case ((G_IM_FMT_RGBA << 8) | G_IM_SIZ_16b): return RGBA16_RGBA32(aData, aLength);
         case ((G_IM_FMT_RGBA << 8) | G_IM_SIZ_32b): return RGBA32_RGBA32(aData, aLength);
@@ -182,7 +185,7 @@ u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, 
 //
 
 typedef struct GfxRenderingAPI GRAPI;
-static void DynOS_Gfx_UploadTexture(DataNode<TexData> *aNode, GRAPI *aGfxRApi, s32 aTile, s32 aTexId) {
+static void DynOS_Tex_Upload(DataNode<TexData> *aNode, GRAPI *aGfxRApi, s32 aTile, s32 aTexId) {
     aGfxRApi->select_texture(aTile, aTexId);
     aGfxRApi->upload_texture(aNode->mData->mRawData.begin(), aNode->mData->mRawWidth, aNode->mData->mRawHeight);
     aNode->mData->mUploaded = true;
@@ -201,7 +204,7 @@ struct THN {
     bool mLInf;
 };
 
-static bool DynOS_Gfx_CacheTexture(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {
+static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {
 
     // Find texture in cache
     uintptr_t _Hash = ((uintptr_t) aNode) & ((aPoolSize * 2) - 1);
@@ -210,7 +213,7 @@ static bool DynOS_Gfx_CacheTexture(THN **aOutput, DataNode<TexData> *aNode, s32 
         if ((*_Node)->mAddr == (const void *) aNode) {
             aGfxRApi->select_texture(aTile, (*_Node)->mTexId);
             if (!aNode->mData->mUploaded) {
-                DynOS_Gfx_UploadTexture(aNode, aGfxRApi, aTile, (*_Node)->mTexId);
+                DynOS_Tex_Upload(aNode, aGfxRApi, aTile, (*_Node)->mTexId);
             }
             (*aOutput) = (*_Node);
             return true;
@@ -243,36 +246,45 @@ static bool DynOS_Gfx_CacheTexture(THN **aOutput, DataNode<TexData> *aNode, s32 
 }
 
 //
+// Make textures valid/invalid
+//
+
+void DynOS_Tex_Valid(GfxData* aGfxData) {
+    for (auto &_Texture : aGfxData->mTextures) {
+        sDynosValidTextures.insert(_Texture);
+    }
+}
+
+void DynOS_Tex_Invalid(GfxData* aGfxData) {
+    for (auto &_Texture : aGfxData->mTextures) {
+        sDynosValidTextures.erase(_Texture);
+    }
+}
+
+//
 // Import
 //
 
-static DataNode<TexData> *DynOS_Gfx_RetrieveNode(void *aPtr) {
-    Array<ActorGfx> &pActorGfxList = DynOS_Gfx_GetActorList();
-    for (auto& _ActorGfx : pActorGfxList) {
-        if (_ActorGfx.mGfxData) {
-            for (auto &_Node : _ActorGfx.mGfxData->mTextures) {
-                if ((void*) _Node == aPtr) {
-                    return _Node;
-                }
-            }
-        }
+static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
+    if (sDynosValidTextures.find((DataNode<TexData>*)aPtr) != sDynosValidTextures.end()) {
+        return (DataNode<TexData>*)aPtr;
     }
-    return DynOS_Lvl_GetTexture(aPtr);
+    return NULL;
 }
 
-static bool DynOS_Gfx_ImportTexture_Typed(THN **aOutput, void *aPtr, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {
-    DataNode<TexData> *_Node = DynOS_Gfx_RetrieveNode(aPtr);
+static bool DynOS_Tex_Import_Typed(THN **aOutput, void *aPtr, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {
+    DataNode<TexData> *_Node = DynOS_Tex_RetrieveNode(aPtr);
     if (_Node) {
-        if (!DynOS_Gfx_CacheTexture(aOutput, _Node, aTile, aGfxRApi, aHashMap, aPool, aPoolPos, aPoolSize)) {
-            DynOS_Gfx_UploadTexture(_Node, aGfxRApi, aTile, (*aOutput)->mTexId);
+        if (!DynOS_Tex_Cache(aOutput, _Node, aTile, aGfxRApi, aHashMap, aPool, aPoolPos, aPoolSize)) {
+            DynOS_Tex_Upload(_Node, aGfxRApi, aTile, (*aOutput)->mTexId);
         }
         return true;
     }
     return false;
 }
 
-bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize) {
-    return DynOS_Gfx_ImportTexture_Typed(
+bool DynOS_Tex_Import(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize) {
+    return DynOS_Tex_Import_Typed(
         (THN **)  aOutput,
         (void *)  aPtr,
         (s32)     aTile,

@@ -672,8 +672,6 @@ void DynOS_Opt_DrawPrompt(DynosOption *aCurrentMenu, DynosOption *aOptionsMenu, 
 // Gfx
 //
 
-u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize, const u8 *aPalette);
-bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
 Array<ActorGfx> &DynOS_Gfx_GetActorList();
 Array<PackData *> &DynOS_Gfx_GetPacks();
 Array<bool> &DynOS_Gfx_GetPacksEnabled();
@@ -760,12 +758,20 @@ s32 DynOS_Actor_GetIndex(const void *aGeoLayout);
 bool DynOS_Actor_IsCustom(s32 aIndex);
 
 //
+// Tex Manager
+//
+
+void DynOS_Tex_Valid(GfxData* aGfxData);
+void DynOS_Tex_Invalid(GfxData* aGfxData);
+u8 *DynOS_Tex_ConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize, const u8 *aPalette);
+bool DynOS_Tex_Import(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
+
+//
 // Lvl Manager
 //
 
 Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray();
 void  DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilePath, const char *aLevelName);
-DataNode<TexData>*  DynOS_Lvl_GetTexture(void *aPtr);
 GfxData* DynOS_Lvl_GetActiveGfx(void);
 const char* DynOS_Lvl_GetToken(u32 index);
 DataNode<MovtexQC>* DynOS_Lvl_GetMovtexQuadCollection(s32 index);
