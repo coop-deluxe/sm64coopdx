@@ -19,9 +19,9 @@ void bhv_collect_star_init(void) {
     starId = (o->oBehParams >> 24) & 0xFF;
     currentLevelStarFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
     if (currentLevelStarFlags & (1 << starId)) {
-        o->header.gfx.sharedChild = gLoadedGraphNodes[MODEL_TRANSPARENT_STAR];
+        cur_obj_set_model(MODEL_TRANSPARENT_STAR);
     } else {
-        o->header.gfx.sharedChild = gLoadedGraphNodes[MODEL_STAR];
+        cur_obj_set_model(MODEL_STAR);
     }
 
     obj_set_hitbox(o, &sCollectStarHitbox);

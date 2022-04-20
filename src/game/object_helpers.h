@@ -168,6 +168,7 @@ void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C);
 void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction);
 void cur_obj_get_dropped(void);
 void cur_obj_set_model(s32 modelID);
+void obj_set_model(struct Object* obj, s32 modelID);
 void mario_set_flag(s32 flag);
 s32 cur_obj_clear_interact_status_flag(s32 flag);
 void obj_mark_for_deletion(struct Object *obj);

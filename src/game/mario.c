@@ -2233,7 +2233,7 @@ static void init_single_mario(struct MarioState* m) {
     u8 modelIndex = gNetworkPlayers[playerIndex].overrideModelIndex;
     if (modelIndex >= CT_MAX) { modelIndex = 0; }
     m->character = &gCharacters[modelIndex];
-    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
+    obj_set_model(m->marioObj, m->character->modelId);
 }
 
 void init_mario(void) {

@@ -6193,12 +6193,6 @@ function cur_obj_set_hurtbox_radius_and_height(radius, height)
     -- ...
 end
 
---- @param modelID integer
---- @return nil
-function cur_obj_set_model(modelID)
-    -- ...
-end
-
 --- @param other Object
 --- @param dleft number
 --- @param dy number

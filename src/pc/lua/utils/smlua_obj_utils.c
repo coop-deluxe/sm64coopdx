@@ -94,7 +94,7 @@ s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId) {
 }
 
 void obj_set_model_extended(struct Object *o, enum ModelExtendedId modelId) {
-    o->header.gfx.sharedChild = gLoadedGraphNodes[smlua_model_util_load(modelId)];
+    obj_set_model(o, smlua_model_util_load(modelId));
 }
 
 Trajectory* get_trajectory(const char* name) {

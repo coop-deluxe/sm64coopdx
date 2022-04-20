@@ -183,7 +183,7 @@ static s32 bhv_cmd_cylboard(void) {
 static s32 bhv_cmd_set_model(void) {
     s32 modelID = BHV_CMD_GET_2ND_S16(0);
 
-    gCurrentObject->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
+    obj_set_model(gCurrentObject, modelID);
 
     gCurBhvCommand++;
     return BHV_PROC_CONTINUE;

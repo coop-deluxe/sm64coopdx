@@ -1285,7 +1285,11 @@ void cur_obj_get_dropped(void) {
 }
 
 void cur_obj_set_model(s32 modelID) {
-    o->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
+    obj_set_model(o, modelID);
+}
+
+void obj_set_model(struct Object* obj, s32 modelID) {
+    obj->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
 }
 
 void mario_set_flag(s32 flag) {

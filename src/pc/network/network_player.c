@@ -8,6 +8,7 @@
 #include "game/area.h"
 #include "game/level_info.h"
 #include "game/hardcoded.h"
+#include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
@@ -32,7 +33,7 @@ void network_player_update_model(u8 localIndex) {
     m->character = &gCharacters[index];
 
     if (m->marioObj == NULL) { return; }
-    m->marioObj->header.gfx.sharedChild = gLoadedGraphNodes[m->character->modelId];
+    obj_set_model(m->marioObj, m->character->modelId);
 }
 
 bool network_player_any_connected(void) {

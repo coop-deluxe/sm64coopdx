@@ -1163,7 +1163,6 @@
    - [cur_obj_set_hitbox_and_die_if_attacked](#cur_obj_set_hitbox_and_die_if_attacked)
    - [cur_obj_set_hitbox_radius_and_height](#cur_obj_set_hitbox_radius_and_height)
    - [cur_obj_set_hurtbox_radius_and_height](#cur_obj_set_hurtbox_radius_and_height)
-   - [cur_obj_set_model](#cur_obj_set_model)
    - [cur_obj_set_pos_relative](#cur_obj_set_pos_relative)
    - [cur_obj_set_pos_relative_to_parent](#cur_obj_set_pos_relative_to_parent)
    - [cur_obj_set_pos_to_home](#cur_obj_set_pos_to_home)
@@ -21998,26 +21997,6 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cur_obj_set_model](#cur_obj_set_model)
-
-### Lua Example
-`cur_obj_set_model(modelID)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| modelID | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void cur_obj_set_model(s32 modelID);`
 
 [:arrow_up_small:](#)
 
