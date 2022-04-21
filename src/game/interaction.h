@@ -116,5 +116,7 @@ u32 get_door_save_file_flag(struct Object *door);
 void mario_process_interactions(struct MarioState *m);
 void mario_handle_special_floors(struct MarioState *m);
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);
+u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);
+u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 #endif // INTERACTION_H

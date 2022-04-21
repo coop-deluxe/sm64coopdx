@@ -732,6 +732,7 @@
 - interaction.h
    - [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
    - [get_door_save_file_flag](#get_door_save_file_flag)
+   - [interact_damage](#interact_damage)
    - [mario_blow_off_cap](#mario_blow_off_cap)
    - [mario_check_object_grab](#mario_check_object_grab)
    - [mario_drop_held_object](#mario_drop_held_object)
@@ -744,6 +745,7 @@
    - [mario_stop_riding_object](#mario_stop_riding_object)
    - [mario_throw_held_object](#mario_throw_held_object)
    - [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
+   - [take_damage_and_knock_back](#take_damage_and_knock_back)
 
 <br />
 
@@ -14407,6 +14409,28 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [interact_damage](#interact_damage)
+
+### Lua Example
+`local integerValue = interact_damage(m, interactType, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| interactType | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mario_blow_off_cap](#mario_blow_off_cap)
 
 ### Lua Example
@@ -14647,6 +14671,27 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [take_damage_and_knock_back](#take_damage_and_knock_back)
+
+### Lua Example
+`local integerValue = take_damage_and_knock_back(m, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);`
 
 [:arrow_up_small:](#)
 

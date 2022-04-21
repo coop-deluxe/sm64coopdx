@@ -2160,10 +2160,14 @@ void mario_process_interactions(struct MarioState *m) {
     sDelayInvincTimer = FALSE;
     sInvulnerable = (m->action & ACT_FLAG_INVULNERABLE) || m->invincTimer != 0;
 
-    if (!(m->action & ACT_FLAG_INTANGIBLE) && m->collidedObjInteractTypes != 0 && is_player_active(m) && m->playerIndex == 0) {
+    if (!(m->action & ACT_FLAG_INTANGIBLE) && m->collidedObjInteractTypes != 0 && is_player_active(m)) {
         s32 i;
         for (i = 0; i < 32; i++) {
             u32 interactType = sInteractionHandlers[i].interactType;
+            if (m->playerIndex != 0 && interactType != (u32)INTERACT_PLAYER) {
+                // skip interactions for remote
+                continue;
+            }
             if (m->collidedObjInteractTypes & interactType) {
                 struct Object *object = mario_get_collided_object(m, interactType);
 

@@ -3761,6 +3761,14 @@ function get_door_save_file_flag(door)
 end
 
 --- @param m MarioState
+--- @param interactType integer
+--- @param o Object
+--- @return integer
+function interact_damage(m, interactType, o)
+    -- ...
+end
+
+--- @param m MarioState
 --- @param capSpeed number
 --- @return nil
 function mario_blow_off_cap(m, capSpeed)
@@ -3834,6 +3842,13 @@ end
 --- @param victim MarioState
 --- @return integer
 function passes_pvp_interaction_checks(attacker, victim)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param o Object
+--- @return integer
+function take_damage_and_knock_back(m, o)
     -- ...
 end
 
