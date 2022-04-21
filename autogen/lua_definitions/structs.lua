@@ -596,6 +596,7 @@
 --- @field public grabPos integer
 --- @field public handState integer
 --- @field public headAngle Vec3s
+--- @field public headPos Vec3f
 --- @field public heldObjLastPosition Vec3f
 --- @field public modelState integer
 --- @field public punchState integer

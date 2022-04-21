@@ -281,6 +281,7 @@ struct MarioBodyState
     /*????*/ Vec3f torsoPos;
     /*????*/ Vec3f handFootPos[4];
     /*????*/ u32 updateTorsoTime;
+    /*????*/ Vec3f headPos;
     //u8 padding[4];
 };
 

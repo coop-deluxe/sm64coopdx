@@ -879,6 +879,7 @@
 | grabPos | `integer` |  |
 | handState | `integer` |  |
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
+| headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
 | modelState | `integer` |  |
 | punchState | `integer` |  |

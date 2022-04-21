@@ -693,7 +693,7 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION },
 };
 
-#define LUA_MARIO_BODY_STATE_FIELD_COUNT 13
+#define LUA_MARIO_BODY_STATE_FIELD_COUNT 14
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE  },
     { "capState",            LVT_S8,      offsetof(struct MarioBodyState, capState),            false, LOT_NONE  },
@@ -702,6 +702,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
 //  { "handFootPos",         LOT_???,     offsetof(struct MarioBodyState, handFootPos),         false, LOT_???   }, <--- UNIMPLEMENTED
     { "handState",           LVT_S8,      offsetof(struct MarioBodyState, handState),           false, LOT_NONE  },
     { "headAngle",           LVT_COBJECT, offsetof(struct MarioBodyState, headAngle),           true,  LOT_VEC3S },
+    { "headPos",             LVT_COBJECT, offsetof(struct MarioBodyState, headPos),             true,  LOT_VEC3F },
     { "heldObjLastPosition", LVT_COBJECT, offsetof(struct MarioBodyState, heldObjLastPosition), true,  LOT_VEC3F },
     { "modelState",          LVT_S16,     offsetof(struct MarioBodyState, modelState),          false, LOT_NONE  },
     { "punchState",          LVT_U8,      offsetof(struct MarioBodyState, punchState),          false, LOT_NONE  },
