@@ -2484,7 +2484,7 @@ SHAKE_SHOCK = 10
 SHAKE_SMALL_DAMAGE = 3
 
 --- @type integer
-PALETTE_MAX = 30
+PALETTE_MAX = 32
 
 --- @class CharacterSound
 

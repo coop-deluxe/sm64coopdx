@@ -3830,6 +3830,13 @@ function mario_throw_held_object(m)
     -- ...
 end
 
+--- @param attacker MarioState
+--- @param victim MarioState
+--- @return integer
+function passes_pvp_interaction_checks(attacker, victim)
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param levelNum integer
 --- @param areaIndex integer

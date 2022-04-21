@@ -743,6 +743,7 @@
    - [mario_stop_riding_and_holding](#mario_stop_riding_and_holding)
    - [mario_stop_riding_object](#mario_stop_riding_object)
    - [mario_throw_held_object](#mario_throw_held_object)
+   - [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
 
 <br />
 
@@ -14625,6 +14626,27 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `void mario_throw_held_object(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
+
+### Lua Example
+`local integerValue = passes_pvp_interaction_checks(attacker, victim)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| attacker | [MarioState](structs.md#MarioState) |
+| victim | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);`
 
 [:arrow_up_small:](#)
 

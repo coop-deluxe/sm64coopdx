@@ -1325,6 +1325,21 @@ u8 player_is_sliding(struct MarioState* m) {
     return FALSE;
 }
 
+u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim) {
+    // attacked
+    u8 isInCutscene = ((attacker->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((victim->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
+    isInCutscene = isInCutscene || (attacker->action == ACT_IN_CANNON) || (victim->action == ACT_IN_CANNON);
+    u8 isAttackerInvulnerable = (attacker->action & ACT_FLAG_INVULNERABLE) || attacker->invincTimer != 0 || attacker->hurtCounter != 0;
+    u8 isInvulnerable = (victim->action & ACT_FLAG_INVULNERABLE) || victim->invincTimer != 0 || victim->hurtCounter != 0 || isInCutscene;
+    u8 isIgnoredAttack = (attacker->action == ACT_JUMP || attacker->action == ACT_DOUBLE_JUMP || attacker->action == ACT_LONG_JUMP || attacker->action == ACT_SIDE_FLIP);
+
+    if (victim->knockbackTimer > 0) {
+        return false;
+    }
+
+    return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable);
+}
+
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
     if (!is_player_active(m)) { return FALSE; }
     if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
@@ -1362,22 +1377,11 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
 
     u32 interaction = determine_interaction(m, o);
 
-    // attacked
-    u8 isInCutscene = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((m2->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
-    isInCutscene = isInCutscene || (m->action == ACT_IN_CANNON) || (m2->action == ACT_IN_CANNON);
-    u8 isAttackerInvulnerable = (m->action & ACT_FLAG_INVULNERABLE) || m->invincTimer != 0 || m->hurtCounter != 0;
-    u8 isInvulnerable = (m2->action & ACT_FLAG_INVULNERABLE) || m2->invincTimer != 0 || m2->hurtCounter != 0 || isInCutscene;
-    u8 isIgnoredAttack = (m->action == ACT_JUMP || m->action == ACT_DOUBLE_JUMP || m->action == ACT_LONG_JUMP || m->action == ACT_SIDE_FLIP);
-
-    if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && !isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable) {
+    if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && passes_pvp_interaction_checks(m, m2)) {
         bool allow = true;
         smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, m, m2, &allow);
         if (!allow) {
             // Lua blocked the interaction
-            return false;
-        }
-
-        if (m2->knockbackTimer > 0) {
             return false;
         }
 

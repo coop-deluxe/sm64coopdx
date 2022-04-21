@@ -831,7 +831,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                 LVT_U8,     offsetof(struct NetworkPlayer, type),                 true,  LOT_NONE },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 753
+#define LUA_OBJECT_FIELD_COUNT 754
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -971,6 +971,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oBubbaUnkFC",                                LVT_S32,                 offsetof(struct Object, oBubbaUnkFC),                                false, LOT_NONE         },
     { "oBulletBillInitialMoveYaw",                  LVT_S32,                 offsetof(struct Object, oBulletBillInitialMoveYaw),                  false, LOT_NONE         },
     { "oBullyKBTimerAndMinionKOCounter",            LVT_S32,                 offsetof(struct Object, oBullyKBTimerAndMinionKOCounter),            false, LOT_NONE         },
+    { "oBullyLastNetworkPlayerIndex",               LVT_S16,                 offsetof(struct Object, oBullyLastNetworkPlayerIndex),               false, LOT_NONE         },
     { "oBullyMarioCollisionAngle",                  LVT_S32,                 offsetof(struct Object, oBullyMarioCollisionAngle),                  false, LOT_NONE         },
     { "oBullyPrevX",                                LVT_F32,                 offsetof(struct Object, oBullyPrevX),                                false, LOT_NONE         },
     { "oBullyPrevY",                                LVT_F32,                 offsetof(struct Object, oBullyPrevY),                                false, LOT_NONE         },

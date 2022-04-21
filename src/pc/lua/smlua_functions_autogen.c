@@ -7822,6 +7822,19 @@ int smlua_func_mario_throw_held_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_passes_pvp_interaction_checks(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* attacker = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+    struct MarioState* victim = (struct MarioState*)smlua_to_cobject(L, 2, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, passes_pvp_interaction_checks(attacker, victim));
+
+    return 1;
+}
+
   //////////////////
  // level_info.h //
 //////////////////
@@ -16490,6 +16503,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_stop_riding_and_holding", smlua_func_mario_stop_riding_and_holding);
     smlua_bind_function(L, "mario_stop_riding_object", smlua_func_mario_stop_riding_object);
     smlua_bind_function(L, "mario_throw_held_object", smlua_func_mario_throw_held_object);
+    smlua_bind_function(L, "passes_pvp_interaction_checks", smlua_func_passes_pvp_interaction_checks);
 
     // level_info.h
     smlua_bind_function(L, "get_level_name", smlua_func_get_level_name);

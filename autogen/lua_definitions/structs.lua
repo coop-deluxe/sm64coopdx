@@ -849,6 +849,7 @@
 --- @field public oBubbaUnkFC integer
 --- @field public oBulletBillInitialMoveYaw integer
 --- @field public oBullyKBTimerAndMinionKOCounter integer
+--- @field public oBullyLastNetworkPlayerIndex integer
 --- @field public oBullyMarioCollisionAngle integer
 --- @field public oBullyPrevX number
 --- @field public oBullyPrevY number

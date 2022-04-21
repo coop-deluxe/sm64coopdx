@@ -1260,6 +1260,7 @@
 | oBullyPrevZ | `number` |  |
 | oBullyKBTimerAndMinionKOCounter | `integer` |  |
 | oBullyMarioCollisionAngle | `integer` |  |
+| oBullyLastNetworkPlayerIndex | `integer` |  |
 | oButterflyYPhase | `integer` |  |
 | oTripletButterflyScale | `number` |  |
 | oTripletButterflySpeed | `number` |  |
