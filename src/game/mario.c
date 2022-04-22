@@ -2107,7 +2107,7 @@ s32 force_idle_state(struct MarioState* m) {
  *                  INITIALIZATION                *
  **************************************************/
 
-static void init_single_mario(struct MarioState* m) {
+void init_single_mario(struct MarioState* m) {
 
     u16 playerIndex = m->playerIndex;
     struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[playerIndex];

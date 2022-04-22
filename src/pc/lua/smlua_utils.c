@@ -397,6 +397,7 @@ s64 smlua_get_mod_variable(u16 modIndex, const char* variable) {
 
 s64 smlua_get_any_mod_variable(const char* variable) {
     lua_State* L = gLuaState;
+    u8 prevSuppress = gSmLuaSuppressErrors;
 
     s64 value = 0;
     for (s32 i = 0; i < gActiveMods.entryCount; i++) {
@@ -406,15 +407,18 @@ s64 smlua_get_any_mod_variable(const char* variable) {
         int prevTop = lua_gettop(L);
         lua_getglobal(L, "_G"); // get global table
         lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath); // get the file's "global" table
+        gSmLuaSuppressErrors = true;
         value = smlua_get_integer_field(-1, (char*)variable);
         lua_settop(L, prevTop);
 
         if (gSmLuaConvertSuccess) {
+            gSmLuaSuppressErrors = prevSuppress;
             return value;
         }
     }
 
     // return variable
+    gSmLuaSuppressErrors = prevSuppress;
     return value;
 }
 

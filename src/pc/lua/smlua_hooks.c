@@ -223,6 +223,37 @@ void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct
     }
 }
 
+void smlua_call_event_hooks_mario_param_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, bool* returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push mario state
+        lua_getglobal(L, "gMarioStates");
+        lua_pushinteger(L, m->playerIndex);
+        lua_gettable(L, -2);
+        lua_remove(L, -2);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
+            smlua_logline();
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TBOOLEAN) {
+            *returnValue = smlua_to_boolean(L, -1);
+        }
+        lua_settop(L, prevTop);
+    }
+}
+
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }

@@ -765,6 +765,7 @@
    - [find_mario_anim_flags_and_translation](#find_mario_anim_flags_and_translation)
    - [force_idle_state](#force_idle_state)
    - [hurt_and_set_mario_action](#hurt_and_set_mario_action)
+   - [init_single_mario](#init_single_mario)
    - [is_anim_at_end](#is_anim_at_end)
    - [is_anim_past_end](#is_anim_past_end)
    - [is_anim_past_frame](#is_anim_past_frame)
@@ -14936,6 +14937,26 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ### C Prototype
 `s32 hurt_and_set_mario_action(struct MarioState *m, u32 action, u32 actionArg, s16 hurtCounter);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [init_single_mario](#init_single_mario)
+
+### Lua Example
+`init_single_mario(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void init_single_mario(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 

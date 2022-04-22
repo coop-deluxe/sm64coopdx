@@ -8,6 +8,7 @@
 
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
+u8 gSmLuaSuppressErrors = 0;
 struct Mod* gLuaLoadingMod = NULL;
 struct Mod* gLuaActiveMod = NULL;
 struct Mod* gLuaLastHookMod = NULL;

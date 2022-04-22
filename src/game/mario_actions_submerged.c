@@ -20,6 +20,7 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f
@@ -944,10 +945,16 @@ static s32 act_drowning(struct MarioState *m) {
             if (m->marioObj->header.gfx.animInfo.animFrame == 30) {
                 if (m->playerIndex != 0) {
                     // do nothing
-                } else if (mario_can_bubble(m)) {
-                    mario_set_bubbled(m);
                 } else {
-                    level_trigger_warp(m, WARP_OP_DEATH);
+                    bool allowDeath = true;
+                    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                    if (!allowDeath) { return FALSE; }
+
+                    if (mario_can_bubble(m)) {
+                        mario_set_bubbled(m);
+                    } else {
+                        level_trigger_warp(m, WARP_OP_DEATH);
+                    }
                 }
             }
             break;
@@ -972,10 +979,16 @@ static s32 act_water_death(struct MarioState *m) {
     if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 35) {
         if (m->playerIndex != 0) {
             // do nothing
-        } else if (mario_can_bubble(m)) {
-            mario_set_bubbled(m);
         } else {
-            level_trigger_warp(m, WARP_OP_DEATH);
+            bool allowDeath = true;
+            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            if (!allowDeath) { return FALSE; }
+
+            if (mario_can_bubble(m)) {
+                mario_set_bubbled(m);
+            } else {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
         }
     }
 
@@ -1090,10 +1103,16 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
         if (distance < 16.1f && m->actionTimer++ == 16) {
             if (m->playerIndex != 0) {
                 // do nothing
-            } else if (mario_can_bubble(m)) {
-                mario_set_bubbled(m);
             } else {
-                level_trigger_warp(m, WARP_OP_DEATH);
+                bool allowDeath = true;
+                smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                if (!allowDeath) { reset_rumble_timers(m); return FALSE; }
+
+                if (mario_can_bubble(m)) {
+                    mario_set_bubbled(m);
+                } else {
+                    level_trigger_warp(m, WARP_OP_DEATH);
+                }
             }
         }
     }

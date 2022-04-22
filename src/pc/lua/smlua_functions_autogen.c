@@ -8026,6 +8026,17 @@ int smlua_func_hurt_and_set_mario_action(lua_State* L) {
     return 1;
 }
 
+int smlua_func_init_single_mario(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    init_single_mario(m);
+
+    return 1;
+}
+
 int smlua_func_is_anim_at_end(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -16549,6 +16560,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "find_mario_anim_flags_and_translation", smlua_func_find_mario_anim_flags_and_translation);
     smlua_bind_function(L, "force_idle_state", smlua_func_force_idle_state);
     smlua_bind_function(L, "hurt_and_set_mario_action", smlua_func_hurt_and_set_mario_action);
+    smlua_bind_function(L, "init_single_mario", smlua_func_init_single_mario);
     smlua_bind_function(L, "is_anim_at_end", smlua_func_is_anim_at_end);
     smlua_bind_function(L, "is_anim_past_end", smlua_func_is_anim_past_end);
     smlua_bind_function(L, "is_anim_past_frame", smlua_func_is_anim_past_frame);

@@ -19,7 +19,7 @@
 
 #include "pc/debuglog.h"
 
-#define LOG_LUA(...)  ( _debuglog_print_log("LUA ", __FILE__), printf(__VA_ARGS__), printf("\n"), smlua_mod_error() )
+#define LOG_LUA(...)  { if (!gSmLuaSuppressErrors) { _debuglog_print_log("LUA ", __FILE__), printf(__VA_ARGS__), printf("\n"), smlua_mod_error(); } }
 
 #ifdef DEVELOPMENT
 #define LUA_STACK_CHECK_BEGIN() int __LUA_STACK_TOP = lua_gettop(gLuaState)
@@ -31,6 +31,7 @@
 
 extern lua_State* gLuaState;
 extern u8 gLuaInitializingScript;
+extern u8 gSmLuaSuppressErrors;
 extern struct Mod* gLuaLoadingMod;
 extern struct Mod* gLuaActiveMod;
 extern struct Mod* gLuaLastHookMod;

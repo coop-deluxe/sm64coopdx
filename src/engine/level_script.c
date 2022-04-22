@@ -858,16 +858,24 @@ static void level_cmd_place_object_ext(void) {
     u16 modIndex = gLevelScriptModIndex;
     const char* behStr = dynos_level_get_token(CMD_GET(u32, 20));
 
+    if (gLevelScriptModIndex == -1) {
+        LOG_ERROR("Could not find level script mod index");
+        sCurrentCmd = CMD_NEXT;
+        return;
+    }
+
     gSmLuaConvertSuccess = true;
+    gSmLuaSuppressErrors = true;
     enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
+    gSmLuaSuppressErrors = false;
 
     if (!gSmLuaConvertSuccess) {
         gSmLuaConvertSuccess = true;
         behId = smlua_get_any_mod_variable(behStr);
     }
 
-    if ((gLevelScriptModIndex == -1) || !gSmLuaConvertSuccess) {
-        LOG_ERROR("Failed to place custom object: %u :: %s", behId, behStr);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to place custom object, could not find behavior '%s'", behStr);
         sCurrentCmd = CMD_NEXT;
         return;
     }
@@ -907,22 +915,37 @@ static void level_cmd_place_object_ext2(void) {
     const char* modelStr = dynos_level_get_token(CMD_GET(u32, 20));
     const char* behStr = dynos_level_get_token(CMD_GET(u32, 24));
 
+    if (gLevelScriptModIndex == -1) {
+        LOG_ERROR("Could not find level script mod index");
+        sCurrentCmd = CMD_NEXT;
+        return;
+    }
+
     gSmLuaConvertSuccess = true;
+    gSmLuaSuppressErrors = true;
     enum ModelExtendedId modelId = smlua_get_mod_variable(modIndex, modelStr);
+    gSmLuaSuppressErrors = false;
     if (!gSmLuaConvertSuccess) {
         gSmLuaConvertSuccess = true;
         modelId = smlua_get_any_mod_variable(modelStr);
     }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to place custom object, could not find model '%s'", modelStr);
+        sCurrentCmd = CMD_NEXT;
+        return;
+    }
 
     gSmLuaConvertSuccess = true;
+    gSmLuaSuppressErrors = true;
     enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
+    gSmLuaSuppressErrors = false;
     if (!gSmLuaConvertSuccess) {
         gSmLuaConvertSuccess = true;
         behId = smlua_get_any_mod_variable(behStr);
     }
 
-    if ((gLevelScriptModIndex == -1) || !gSmLuaConvertSuccess) {
-        LOG_ERROR("Failed to place custom object: %u, %u", modelId, behId);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to place custom object, could not find behavior '%s'", behStr);
         sCurrentCmd = CMD_NEXT;
         return;
     }

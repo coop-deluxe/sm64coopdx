@@ -106,6 +106,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_GET_STAR_COLLECTION_DIALOG | Called when the local player collects a star, return a [DialogId](constants.md#enum-DialogId) to show a message | None |
 | HOOK_ON_SET_CAMERA_MODE | Called when the camera mode gets set, return `false` to prevent the camera mode from being set | [Camera](structs.md#Camera), `integer` mode, `integer` frames |
 | HOOK_ON_OBJECT_RENDER | Called right before an object is rendered. **Note:** You must set the `hookRender` field of the object to a non-zero value | [Object](structs.md#Object) |
+| HOOK_ON_DEATH | Called when the local player dies, return `false` to prevent normal death sequence | [MarioState](structs.md#MarioState) |
 
 ### Parameters
 

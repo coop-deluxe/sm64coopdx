@@ -28,6 +28,7 @@ enum LuaHookedEventType {
     HOOK_GET_STAR_COLLECTION_DIALOG,
     HOOK_ON_SET_CAMERA_MODE,
     HOOK_ON_OBJECT_RENDER,
+    HOOK_ON_DEATH,
     HOOK_MAX,
 };
 
@@ -52,6 +53,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_GET_STAR_COLLECTION_DIALOG",
     "HOOK_ON_SET_CAMERA_MODE",
     "HOOK_ON_OBJECT_RENDER",
+    "HOOK_ON_DEATH",
     "HOOK_MAX"
 };
 
@@ -61,6 +63,7 @@ void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value);
 void smlua_call_event_hooks_bool_param_ret_bool(enum LuaHookedEventType hookType, bool value, bool* returnValue);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
+void smlua_call_event_hooks_mario_param_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, bool* returnValue);
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
 void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue);
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);

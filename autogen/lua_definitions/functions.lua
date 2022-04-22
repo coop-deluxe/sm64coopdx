@@ -3931,6 +3931,12 @@ function hurt_and_set_mario_action(m, action, actionArg, hurtCounter)
 end
 
 --- @param m MarioState
+--- @return nil
+function init_single_mario(m)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return integer
 function is_anim_at_end(m)
     -- ...

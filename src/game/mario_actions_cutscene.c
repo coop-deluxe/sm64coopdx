@@ -35,6 +35,7 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/smlua_hooks.h"
 
 // TODO: put this elsewhere
 enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
@@ -777,10 +778,16 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
     if (animFrame == frameToDeathWarp) {
         if (m->playerIndex != 0) {
             // do nothing
-        } else if (mario_can_bubble(m)) {
-            mario_set_bubbled(m);
         } else {
-            level_trigger_warp(m, WARP_OP_DEATH);
+            bool allowDeath = true;
+            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            if (!allowDeath) { return animFrame; }
+
+            if (mario_can_bubble(m)) {
+                mario_set_bubbled(m);
+            } else {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
         }
     }
     m->marioBodyState->eyeState = MARIO_EYES_DEAD;
@@ -842,12 +849,18 @@ s32 act_quicksand_death(struct MarioState *m) {
         if ((m->quicksandDepth += 5.0f) >= 180.0f) {
             if (m->playerIndex != 0) {
                 // do nothing
-            } else if (mario_can_bubble(m)) {
-                mario_set_bubbled(m);
             } else {
-                level_trigger_warp(m, WARP_OP_DEATH);
+                m->actionState = 2;
+                bool allowDeath = true;
+                smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                if (!allowDeath) { return FALSE; }
+
+                if (mario_can_bubble(m)) {
+                    mario_set_bubbled(m);
+                } else {
+                    level_trigger_warp(m, WARP_OP_DEATH);
+                }
             }
-            m->actionState = 2;
         }
     }
     stationary_ground_step(m);
@@ -862,11 +875,17 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
     if (m->actionTimer++ == 60) {
         if (m->playerIndex != 0) {
             // do nothing
-        } else if (mario_can_bubble(m)) {
-            m->health = 0xFF;
-            mario_set_bubbled(m);
         } else {
-            level_trigger_warp(m, WARP_OP_DEATH);
+            bool allowDeath = true;
+            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            if (!allowDeath) { return FALSE; }
+
+            if (mario_can_bubble(m)) {
+                m->health = 0xFF;
+                mario_set_bubbled(m);
+            } else {
+                level_trigger_warp(m, WARP_OP_DEATH);
+            }
         }
     }
 
@@ -1743,15 +1762,21 @@ s32 act_squished(struct MarioState *m) {
         if (m->playerIndex != 0) {
             // never kill remote marios
             m->health = 0x100;
-        } else if (mario_can_bubble(m)) {
-            mario_set_bubbled(m);
         } else {
-            // 0 units of health
-            m->health = 0x00FF;
-            m->hurtCounter = 0;
-            level_trigger_warp(m, WARP_OP_DEATH);
-            // woosh, he's gone!
-            set_mario_action(m, ACT_DISAPPEARED, 0);
+            bool allowDeath = true;
+            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            if (!allowDeath) { return FALSE; }
+
+            if (mario_can_bubble(m)) {
+                mario_set_bubbled(m);
+            } else {
+                // 0 units of health
+                m->health = 0x00FF;
+                m->hurtCounter = 0;
+                level_trigger_warp(m, WARP_OP_DEATH);
+                // woosh, he's gone!
+                set_mario_action(m, ACT_DISAPPEARED, 0);
+            }
         }
     }
     stop_and_set_height_to_floor(m);

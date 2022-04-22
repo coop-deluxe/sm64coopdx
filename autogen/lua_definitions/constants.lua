@@ -4404,7 +4404,7 @@ PLAYER_INTERACTIONS_SOLID = 1
 PLAYER_INTERACTIONS_PVP = 2
 
 --- @type integer
-MAX_RX_SEQ_IDS = 16
+MAX_RX_SEQ_IDS = 64
 
 --- @type integer
 NETWORK_PLAYER_TIMEOUT = 10
@@ -7849,7 +7849,10 @@ HOOK_ON_SET_CAMERA_MODE = 18
 HOOK_ON_OBJECT_RENDER = 19
 
 --- @type LuaHookedEventType
-HOOK_MAX = 20
+HOOK_ON_DEATH = 20
+
+--- @type LuaHookedEventType
+HOOK_MAX = 21
 
 --- @class ModelExtendedId
 

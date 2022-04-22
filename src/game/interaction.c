@@ -2209,6 +2209,10 @@ void check_death_barrier(struct MarioState *m) {
     if (m->playerIndex != 0) { return; }
 
     if (m->pos[1] < m->floorHeight + 2048.0f) {
+        bool allowDeath = true;
+        smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+        if (!allowDeath) { return; }
+
         if (mario_can_bubble(m)) {
             switch (gCurrCourseNum) {
                 case COURSE_COTMC:    // (20) Cavern of the Metal Cap
