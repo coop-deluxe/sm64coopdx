@@ -9,7 +9,7 @@
 #define UNKNOWN_GLOBAL_INDEX ((u8)-1)
 #define UNKNOWN_NETWORK_INDEX ((u64)-1)
 #define NETWORK_PLAYER_TIMEOUT 10
-#define MAX_RX_SEQ_IDS 16
+#define MAX_RX_SEQ_IDS 64
 
 enum NetworkPlayerType {
     NPT_UNKNOWN,
