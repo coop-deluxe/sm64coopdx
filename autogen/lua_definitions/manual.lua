@@ -120,3 +120,17 @@ function network_send_object(object, reliable)
     -- ...
 end
 
+--- @param reliable boolean
+--- @param dataTable table
+--- @return nil
+function network_send(reliable, dataTable)
+    -- ...
+end
+
+--- @param toLocalIndex integer
+--- @param reliable boolean
+--- @param dataTable table
+--- @return nil
+function network_send_to(toLocalIndex, reliable, dataTable)
+    -- ...
+end

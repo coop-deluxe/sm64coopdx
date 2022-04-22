@@ -6,6 +6,8 @@
    - [define_custom_obj_fields](#define_custom_obj_fields)
    - [network_init_object](#network_init_object)
    - [network_send_object](#network_send_object)
+   - [network_send_to](#network_send_to)
+   - [network_send](#network_send)
 
 <br />
 
@@ -1492,6 +1494,55 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | ----- | ---- |
 | object | [Object](structs.md#Object) |
 | reliable | `bool` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_send_to](#network_send_to)
+
+Sends a packet to a particular player (using their local index) containing whatever data you want.
+
+`dataTable` can only contain strings, integers, numbers, booleans, and nil
+
+The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+
+### Lua Example
+`network_send_to(localPlayerIndex, reliable, { data1 = 'hello', data2 = 10})`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localPlayerIndex | `integer` |
+| reliable | `bool` |
+| dataTable | `table` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_send](#network_send)
+
+Sends a packet to all players containing whatever data you want.
+
+`dataTable` can only contain strings, integers, numbers, booleans, and nil
+
+The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+
+### Lua Example
+`network_send(reliable, { data1 = 'hello', data2 = 10})`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| reliable | `bool` |
+| dataTable | `table` |
 
 ### C Prototype
 `N/A`

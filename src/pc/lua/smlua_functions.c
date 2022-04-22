@@ -176,6 +176,16 @@ int smlua_func_network_send_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_send(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+    network_send_lua_custom(true);
+}
+
+int smlua_func_network_send_to(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
+    network_send_lua_custom(false);
+}
+
   //////////
  // bind //
 //////////
@@ -191,4 +201,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);
     smlua_bind_function(L, "network_send_object", smlua_func_network_send_object);
     smlua_bind_function(L, "reset_level", smlua_func_reset_level);
+    smlua_bind_function(L, "network_send", smlua_func_network_send);
+    smlua_bind_function(L, "network_send_to", smlua_func_network_send_to);
 }

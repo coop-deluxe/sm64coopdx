@@ -260,6 +260,94 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+bool packet_write_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
+    u8 lntType = lnt->type;
+    packet_write(p, &lntType, sizeof(u8));
+
+    switch (lnt->type) {
+        case LST_NETWORK_TYPE_NUMBER: {
+            f64 number = lnt->value.number;
+            packet_write(p, &number, sizeof(f64));
+            return true;
+        }
+
+        case LST_NETWORK_TYPE_INTEGER: {
+            s64 integer = lnt->value.integer;
+            packet_write(p, &integer, sizeof(s64));
+            return true;
+        }
+
+        case LST_NETWORK_TYPE_BOOLEAN: {
+            packet_write(p, &lnt->value.boolean, sizeof(u8));
+            return true;
+        }
+
+        case LST_NETWORK_TYPE_STRING: {
+            u16 valueLength = strlen(lnt->value.string);
+            if (valueLength < 1 || valueLength > 256) {
+                LOG_ERROR("attempted to send lua variable with invalid string length: %u", valueLength);
+                return false;
+            }
+            packet_write(p, &valueLength, sizeof(u16));
+            packet_write(p, lnt->value.string, valueLength * sizeof(u8));
+            return true;
+        }
+
+        case LST_NETWORK_TYPE_NIL: {
+            // no-op
+            return true;
+        }
+
+        default:
+            break;
+    }
+
+    LOG_ERROR("attempted to send lua variable with invalid lnt type: %d", lnt->type);
+    return false;
+}
+
+bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
+    packet_read(p, &lnt->type, sizeof(u8));
+
+    switch (lnt->type) {
+        case LST_NETWORK_TYPE_NUMBER:
+            packet_read(p, &lnt->value.number, sizeof(f64));
+            return true;
+
+        case LST_NETWORK_TYPE_INTEGER:
+            packet_read(p, &lnt->value.integer, sizeof(s64));
+            return true;
+
+        case LST_NETWORK_TYPE_BOOLEAN:
+            packet_read(p, &lnt->value.boolean, sizeof(u8));
+            return true;
+
+        case LST_NETWORK_TYPE_STRING: {
+            u16 valueLength = 0;
+            packet_read(p, &valueLength, sizeof(u16));
+            if (valueLength < 1 || valueLength > 256) {
+                LOG_ERROR("received lua variable with invalid value length: %d", valueLength);
+                return false;
+            }
+            lnt->value.string = calloc(valueLength + 1, sizeof(char));
+            packet_read(p, lnt->value.string, valueLength * sizeof(u8));
+            return true;
+        }
+
+        case LST_NETWORK_TYPE_NIL:
+            // no-op
+            return true;
+
+        default:
+            break;
+    }
+
+    LOG_ERROR("received lua variable with invalid type: %d", lnt->type);
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void smlua_push_object(lua_State* L, u16 lot, void* p) {
     if (p == NULL) {
         lua_pushnil(L);

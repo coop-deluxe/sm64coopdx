@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "pc/mods/mod.h"
 #include "src/game/object_list_processor.h"
 #include "pc/djui/djui_chat_message.h"
 #include "pc/crash_handler.h"
@@ -451,6 +452,27 @@ void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookT
             *returnValue = smlua_to_boolean(L, -1);
         }
         lua_settop(L, prevTop);
+    }
+}
+
+void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        if (hook->mod[i]->index != modIndex) { continue; }
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push value
+        lua_pushvalue(L, valueIndex);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u, %s", hookType, lua_tostring(L, -1));
+            smlua_logline();
+            continue;
+        }
     }
 }
 

@@ -92,7 +92,9 @@ void packet_process(struct Packet* p) {
 
         case PACKET_NETWORK_PLAYERS_REQUEST: network_receive_network_players_request(p); break;
 
-        case PACKET_REQUEST_FAILED:          network_receive_request_failed(p); break;
+        case PACKET_REQUEST_FAILED:          network_receive_request_failed(p);          break;
+
+        case PACKET_LUA_CUSTOM:              network_receive_lua_custom(p);              break;
 
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;

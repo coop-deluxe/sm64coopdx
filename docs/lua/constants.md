@@ -2755,7 +2755,8 @@
 | HOOK_ON_SET_CAMERA_MODE | 18 |
 | HOOK_ON_OBJECT_RENDER | 19 |
 | HOOK_ON_DEATH | 20 |
-| HOOK_MAX | 21 |
+| HOOK_ON_PACKET_RECEIVE | 21 |
+| HOOK_MAX | 22 |
 
 [:arrow_up_small:](#)
 

@@ -7852,7 +7852,10 @@ HOOK_ON_OBJECT_RENDER = 19
 HOOK_ON_DEATH = 20
 
 --- @type LuaHookedEventType
-HOOK_MAX = 21
+HOOK_ON_PACKET_RECEIVE = 21
+
+--- @type LuaHookedEventType
+HOOK_MAX = 22
 
 --- @class ModelExtendedId
 

@@ -3,6 +3,8 @@
 
 extern u8 gSmLuaConvertSuccess;
 typedef int LuaFunction;
+struct Packet;
+struct LSTNetworkType;
 
 f32* smlua_get_vec3f_from_buffer(void);
 s16* smlua_get_vec3s_from_buffer(void);
@@ -18,6 +20,9 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index);
 void* smlua_to_cobject(lua_State* L, int index, u16 lot);
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt);
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index);
+
+bool packet_write_lnt(struct Packet* p, struct LSTNetworkType* lnt);
+bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt);
 
 void smlua_push_object(lua_State* L, u16 lot, void* p);
 void smlua_push_pointer(lua_State* L, u16 lvt, void* p);
