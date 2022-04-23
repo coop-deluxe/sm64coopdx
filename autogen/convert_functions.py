@@ -115,9 +115,7 @@ $[BINDS]
 param_vec3f_before_call = """
     f32* $[IDENTIFIER] = smlua_get_vec3f_from_buffer();
     $[IDENTIFIER][0] = smlua_get_number_field($[INDEX], "x");
-    if (!gSmLuaConvertSuccess) { return 0; }
     $[IDENTIFIER][1] = smlua_get_number_field($[INDEX], "y");
-    if (!gSmLuaConvertSuccess) { return 0; }
     $[IDENTIFIER][2] = smlua_get_number_field($[INDEX], "z");
 """
 
@@ -135,9 +133,7 @@ param_override_build['Vec3f'] = {
 param_vec3s_before_call = """
     s16* $[IDENTIFIER] = smlua_get_vec3s_from_buffer();
     $[IDENTIFIER][0] = smlua_get_integer_field($[INDEX], "x");
-    if (!gSmLuaConvertSuccess) { return 0; }
     $[IDENTIFIER][1] = smlua_get_integer_field($[INDEX], "y");
-    if (!gSmLuaConvertSuccess) { return 0; }
     $[IDENTIFIER][2] = smlua_get_integer_field($[INDEX], "z");
 """
 
@@ -401,7 +397,7 @@ def build_function(function, do_extern):
     i = 1
     for param in function['params']:
         s += build_param(param, i)
-        s += '    if (!gSmLuaConvertSuccess) { return 0; }\n'
+        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %d"); return 0; }\n' % i
         i += 1
     s += '\n'
 

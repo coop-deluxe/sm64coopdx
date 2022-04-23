@@ -36,7 +36,7 @@ int smlua_func_sins(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     lua_pushnumber(L, sins(x));
     return 1;
@@ -46,7 +46,7 @@ int smlua_func_coss(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     lua_pushnumber(L, coss(x));
     return 1;
@@ -56,9 +56,9 @@ int smlua_func_atan2s(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
     f32 y = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
     f32 x = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
 
     lua_pushinteger(L, atan2s(y, x));
     return 1;
@@ -95,10 +95,10 @@ int smlua_func_network_init_object(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
     struct Object* obj = smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess || obj == NULL) { return 0; }
+    if (!gSmLuaConvertSuccess || obj == NULL) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     bool standardSync = smlua_to_boolean(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
 
     if (lua_type(L, 3) != LUA_TNIL && lua_type(L, 3) != LUA_TTABLE) {
         LOG_LUA_LINE("network_init_object() called with an invalid type for param 3: %u", lua_type(L, 3));
@@ -159,10 +159,10 @@ int smlua_func_network_send_object(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
     struct Object* obj = smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess || obj == NULL) { return 0; }
+    if (!gSmLuaConvertSuccess || obj == NULL) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     bool reliable = smlua_to_boolean(L, 2);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
 
     if (obj->oSyncID == 0 || gSyncObjects[obj->oSyncID].o != obj) {
         LOG_LUA_LINE("Failed to retrieve sync object.");

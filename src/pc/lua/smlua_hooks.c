@@ -104,7 +104,10 @@ int smlua_hook_event(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
     u16 hookType = smlua_to_integer(L, -2);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Invalid hook type given to hook_event(): %d", hookType);
+        return 0;
+    }
 
     if (hookType >= HOOK_MAX) {
         LOG_LUA_LINE("Hook Type: %d exceeds max!", hookType);

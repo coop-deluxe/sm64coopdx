@@ -330,7 +330,10 @@ static int smlua__get_field(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     const char* key = smlua_to_string(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Tried to get a non-string field of cobject");
+        return 0;
+    }
 
     if (pointer == 0) {
         LOG_LUA_LINE("_get_field on null pointer");
@@ -413,7 +416,10 @@ static int smlua__set_field(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     const char* key = smlua_to_string(L, 3);
-    if (!gSmLuaConvertSuccess) { return 0; }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Tried to set a non-string field of cobject");
+        return 0;
+    }
 
     if (pointer == 0) {
         LOG_LUA_LINE("_set_field on null pointer");

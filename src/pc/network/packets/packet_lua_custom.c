@@ -26,12 +26,18 @@ void network_send_lua_custom(bool broadcast) {
             LOG_LUA_LINE("Tried to send packet to invalid local index: %d", toLocalIndex)
             return;
         }
-        if (!gSmLuaConvertSuccess) { return; }
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("Invalid 'localIndex' type");
+            return;
+        }
     }
 
     // get reliability
     bool reliability = smlua_to_boolean(L, paramIndex++);
-    if (!gSmLuaConvertSuccess) { return; }
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Invalid 'reliable' type");
+        return;
+    }
 
     // write packet header
     struct Packet p = { 0 };
