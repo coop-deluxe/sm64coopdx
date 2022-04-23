@@ -90,6 +90,25 @@ void mods_activate(struct Mods* mods) {
     mod_cache_save();
 }
 
+static void mods_sort(struct Mods* mods) {
+    if (mods->entryCount <= 1) {
+        return;
+    }
+
+    // By default, this is the alphabetical order on name
+    for (s32 i = 1; i < mods->entryCount; ++i) {
+        struct Mod* mod = mods->entries[i];
+        for (s32 j = 0; j < i; ++j) {
+            struct Mod* mod2 = mods->entries[j];
+            if (strcmp(mod->name, mod2->name) < 0) {
+                mods->entries[i] = mod2;
+                mods->entries[j] = mod;
+                mod = mods->entries[i];
+            }
+        }
+    }
+}
+
 static void mods_load(struct Mods* mods, char* modsBasePath) {
     // generate bins
     dynos_generate_packs(modsBasePath);
@@ -159,6 +178,9 @@ void mods_init(void) {
     path_get_folder((char*)exePath, defaultModsPath);
     strncat(defaultModsPath, MOD_DIRECTORY, SYS_MAX_PATH-1);
     mods_load(&gLocalMods, defaultModsPath);
+
+    // sort
+    mods_sort(&gLocalMods);
 
     // calculate total size
     gLocalMods.size = 0;
