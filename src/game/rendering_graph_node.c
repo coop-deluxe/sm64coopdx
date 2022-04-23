@@ -1113,7 +1113,7 @@ static void geo_process_object(struct Object *node) {
             }
             mtxf_copy(node->header.gfx.prevThrowMatrix, *node->header.gfx.throwMatrix);
             node->header.gfx.prevThrowMatrixTimestamp = gGlobalTimer;
-        } else if (node->header.gfx.node.flags & GRAPH_RENDER_CYLBOARD) {
+        } else if ((node->header.gfx.node.flags & GRAPH_RENDER_CYLBOARD) && !(node->header.gfx.sharedChild && node->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D)) {
             Vec3f posInterpolated;
             if (gGlobalTimer == node->header.gfx.prevTimestamp + 1 &&
                 gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&
@@ -1128,7 +1128,7 @@ static void geo_process_object(struct Object *node) {
                            node->header.gfx.pos, gCurGraphNodeCamera->roll);
             mtxf_cylboard(gMatStackInterpolated[gMatStackIndex + 1], gMatStackInterpolated[gMatStackIndex],
                            posInterpolated, gCurGraphNodeCamera->roll);
-        } else if (node->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD) {
+        } else if ((node->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD) && !(node->header.gfx.sharedChild && node->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D)) {
             Vec3f posInterpolated;
             if (gGlobalTimer == node->header.gfx.prevTimestamp + 1 &&
                 gGlobalTimer != node->header.gfx.skipInterpolationTimestamp &&

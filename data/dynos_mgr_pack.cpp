@@ -1,4 +1,7 @@
 #include "dynos.cpp.h"
+extern "C" {
+#include "engine/graph_node.h"
+}
 
 static Array<PackData>& DynosPacks() {
     static Array<PackData> sDynosPacks;
@@ -20,6 +23,15 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
         .mGraphNode = graphNode,
         .mPackIndex = aPackIndex,
     };
+
+    // Check if we should disable billboards
+    u32 vertices = 0;
+    for (auto& vtx : aGfxData->mVertices) {
+        vertices += vtx->mSize;
+    }
+    if (vertices > 6) {
+        actorGfx.mGraphNode->extraFlags |= GRAPH_EXTRA_FORCE_3D;
+    }
 
     DynOS_Actor_Valid(georef, actorGfx);
 }

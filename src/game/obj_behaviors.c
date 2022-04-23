@@ -225,7 +225,7 @@ void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ)
     }
 
     // Passes on orienting billboard objects, i.e. coins, trees, etc.
-    if (obj->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD) {
+    if ((obj->header.gfx.node.flags & GRAPH_RENDER_BILLBOARD) && !(obj->header.gfx.sharedChild && obj->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D)) {
         return;
     }
 

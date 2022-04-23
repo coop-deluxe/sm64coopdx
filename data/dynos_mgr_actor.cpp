@@ -144,7 +144,7 @@ void DynOS_Actor_Override_All(void) {
         struct Object *_Head = (struct Object *) &gObjectLists[list];
         for (struct Object *_Object = (struct Object *) _Head->header.next; _Object != _Head; _Object = (struct Object *) _Object->header.next) {
             if (_Object->header.gfx.sharedChild != NULL && _Object->header.gfx.sharedChild->georef != NULL) {
-                GraphNode* georef =(GraphNode*)_Object->header.gfx.sharedChild->georef;
+                GraphNode* georef = (GraphNode*)_Object->header.gfx.sharedChild->georef;
                 _Object->header.gfx.sharedChild = (GraphNode *) DynOS_Geo_GetGraphNode(georef, true);
             }
             DynOS_Actor_Override((void**)&_Object->header.gfx.sharedChild);

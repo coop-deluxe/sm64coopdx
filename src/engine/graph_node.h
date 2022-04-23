@@ -16,6 +16,9 @@
 #define GRAPH_RENDER_CYLBOARD       (1 << 6)
 #define GRAPH_RENDER_PLAYER         (1 << 7)
 
+// Extra, custom, flags
+#define GRAPH_EXTRA_FORCE_3D        (1 << 0)
+
 // Whether the node type has a function pointer of type GraphNodeFunc
 #define GRAPH_NODE_TYPE_FUNCTIONAL            0x100
 

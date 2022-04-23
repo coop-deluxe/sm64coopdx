@@ -167,6 +167,7 @@ void *DynOS_Geo_GetGraphNode(const void *aGeoLayout, bool aKeepInMemory) {
         if (aKeepInMemory) {
             sLoadedGraphNodes.Add({ (void *) aGeoLayout, (void *) _Node });
         }
+
         free(_Pool);
         return _Node;
     }

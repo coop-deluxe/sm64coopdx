@@ -113,6 +113,7 @@ struct GraphNode
     /*0x0C*/ struct GraphNode *parent;
     /*0x10*/ struct GraphNode *children;
     /*0x14*/ const void *georef;
+    /*????*/ u8 extraFlags;
 };
 
 struct AnimInfo
