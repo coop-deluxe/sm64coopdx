@@ -291,44 +291,20 @@ public:
     inline bool Empty() const { return mCount == 0; }
 
 public:
-    bool operator==(const char *aString) const {
-        if (strlen(aString) != mCount) return false;
-        for (u8 i = 0; i != mCount; ++i) {
-            if (aString[i] != mBuffer[i]) {
-                return false;
-            }
-        }
-        return true;
+    bool OPTIMIZE_O3 operator==(const char *aString) const {
+        return !strcmp(mBuffer, aString);
     }
 
-    bool operator==(const String &aOther) const {
-        if (aOther.mCount != mCount) return false;
-        for (u8 i = 0; i != mCount; ++i) {
-            if (aOther.mBuffer[i] != mBuffer[i]) {
-                return false;
-            }
-        }
-        return true;
+    bool OPTIMIZE_O3 operator==(const String &aOther) const {
+        return !strcmp(mBuffer, aOther.mBuffer);
     }
 
-    bool operator!=(const char *aString) const {
-        if (strlen(aString) != mCount) return true;
-        for (u8 i = 0; i != mCount; ++i) {
-            if (aString[i] != mBuffer[i]) {
-                return true;
-            }
-        }
-        return false;
+    bool OPTIMIZE_O3 operator!=(const char *aString) const {
+        return strcmp(mBuffer, aString);
     }
 
-    bool operator!=(const String &aOther) const {
-        if (aOther.mCount != mCount) return true;
-        for (u8 i = 0; i != mCount; ++i) {
-            if (aOther.mBuffer[i] != mBuffer[i]) {
-                return true;
-            }
-        }
-        return false;
+    bool OPTIMIZE_O3 operator!=(const String &aOther) const {
+        return strcmp(mBuffer, aOther.mBuffer);
     }
 
 public:

@@ -1866,7 +1866,7 @@ static uint32_t sDjuiOverrideW       = 0;
 static uint32_t sDjuiOverrideH       = 0;
 static uint32_t sDjuiOverrideB       = 0;
 
-static void djui_gfx_dp_execute_clipping(void) {
+static void OPTIMIZE_O3 djui_gfx_dp_execute_clipping(void) {
     if (!sDjuiClip) { return; }
     sDjuiClip = false;
 
@@ -1941,7 +1941,7 @@ static void djui_gfx_dp_execute_clipping(void) {
     }
 }
 
-static void djui_gfx_dp_execute_override(void) {
+static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     if (!sDjuiOverride) { return; }
     sDjuiOverride = false;
 
@@ -1974,14 +1974,14 @@ static void djui_gfx_dp_execute_override(void) {
     rdp.textures_changed[1] = true;
 }
 
-static void djui_gfx_dp_execute_djui(uint32_t opcode) {
+static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     switch (opcode) {
         case G_TEXOVERRIDE_DJUI: djui_gfx_dp_execute_override(); break;
         case G_TEXCLIP_DJUI:     djui_gfx_dp_execute_clipping(); break;
     }
 }
 
-static void djui_gfx_dp_set_clipping(bool rotatedUV, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
+static void OPTIMIZE_O3 djui_gfx_dp_set_clipping(bool rotatedUV, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
     sDjuiClipRotatedUV = rotatedUV;
     sDjuiClipX1 = x1;
     sDjuiClipY1 = y1;
@@ -1990,7 +1990,7 @@ static void djui_gfx_dp_set_clipping(bool rotatedUV, uint32_t x1, uint32_t y1, u
     sDjuiClip   = true;
 }
 
-static void djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint32_t b) {
+static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint32_t b) {
     sDjuiOverrideTexture = texture;
     sDjuiOverrideW = w;
     sDjuiOverrideH = h;
@@ -1998,7 +1998,7 @@ static void djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint
     sDjuiOverride  = (texture != NULL);
 }
 
-void djui_gfx_run_dl(Gfx* cmd) {
+void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {
     uint32_t opcode = cmd->words.w0 >> 24;
     switch (opcode) {
         case G_TEXCLIP_DJUI:

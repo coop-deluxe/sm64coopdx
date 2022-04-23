@@ -12,18 +12,20 @@ static Vtx djui_font_normal_vertices[] = {
     {{{ 0,   0, 0}, 0, { 512, 256}, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
-const Gfx dl_font_normal_display_list[] = {
+const Gfx dl_font_normal_display_list_begin[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsDPSetTextureFilter(G_TF_POINT),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 3, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 4, G_TX_NOLOD),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, ((16 * 8 + G_IM_SIZ_4b_INCR) >> G_IM_SIZ_4b_SHIFT) - 1, CALC_DXT(16, G_IM_SIZ_4b_BYTES)),
     gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_4b, 1, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 3, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 4, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (16 - 1) << G_TEXTURE_IMAGE_FRAC, (8 - 1) << G_TEXTURE_IMAGE_FRAC),
+    gsSPEndDisplayList(),
+};
+
+const Gfx dl_font_normal_display_list[] = {
+    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, ((16 * 8 + G_IM_SIZ_4b_INCR) >> G_IM_SIZ_4b_SHIFT) - 1, CALC_DXT(16, G_IM_SIZ_4b_BYTES)),
     gsSPVertex(djui_font_normal_vertices, 4, 0),
     gsSPExecuteDjui(G_TEXCLIP_DJUI),
     gsSP2Triangles(0,  1,  2, 0x0, 0,  2,  3, 0x0),
@@ -54,7 +56,7 @@ static const struct DjuiFont sDjuiFontNormal = {
     .lineHeight           = 0.8125f,
     .defaultFontScale     = 32.0f,
     .rotatedUV            = true,
-    .textBeginDisplayList = NULL,
+    .textBeginDisplayList = dl_font_normal_display_list_begin,
     .render_char          = djui_font_normal_render_char,
     .char_width           = djui_font_normal_char_width,
 };
