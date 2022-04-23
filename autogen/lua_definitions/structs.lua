@@ -680,6 +680,18 @@
 --- @field public wasNetworkVisible integer
 --- @field public waterLevel integer
 
+--- @class Mod
+--- @field public basePath string
+--- @field public description string
+--- @field public enabled boolean
+--- @field public fileCount integer
+--- @field public incompatible string
+--- @field public index integer
+--- @field public isDirectory boolean
+--- @field public name string
+--- @field public relativePath string
+--- @field public selectable boolean
+
 --- @class ModeTransitionInfo
 --- @field public frame integer
 --- @field public lastMode integer

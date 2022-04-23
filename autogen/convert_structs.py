@@ -21,6 +21,7 @@ in_files = [
     'src/game/spawn_sound.h',
     'src/pc/network/network.h',
     'src/game/hardcoded.h',
+    'src/pc/mods/mod.h',
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -70,6 +71,10 @@ override_field_mutable = {
     "NetworkPlayer": [ "overrideModelIndex", "overridePaletteIndex" ],
 }
 
+override_field_invisible = {
+    "Mod": [ "files" ]
+}
+
 override_field_immutable = {
     "MarioState": [ "playerIndex" ],
     "Character": [ "*" ],
@@ -80,10 +85,13 @@ override_field_immutable = {
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime" ],
     "Area": [ "localAreaTimer" ],
+    "Mod": [ "*" ],
+    "ModFile": [ "*" ],
 }
 
 override_allowed_structs = {
-    "src/pc/network/network.h": [ 'ServerSettings' ]
+    "src/pc/network/network.h": [ 'ServerSettings' ],
+    "src/pc/mods/mod.h":        [ 'Mod' ],
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -248,6 +256,10 @@ def build_struct(struct):
     for field in struct['fields']:
         fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
 
+        if sid in override_field_invisible:
+            if fid in override_field_invisible[sid]:
+                continue
+
         row = []
         row.append('    { '                                                 )
         row.append('"%s", '                    % fid                        )
@@ -341,6 +353,11 @@ def doc_struct_index(structs):
 def doc_struct_field(struct, field):
     fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
 
+    sid = struct['identifier']
+    if sid in override_field_invisible:
+        if fid in override_field_invisible[sid]:
+            return ''
+
     if '???' in lvt or '???' in lot:
         return ''
 
@@ -424,6 +441,10 @@ def def_struct(struct):
 
     for field in struct['fields']:
         fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+
+        if sid in override_field_invisible:
+            if fid in override_field_invisible[sid]:
+                continue
 
         if '???' in lvt or '???' in lot:
             continue

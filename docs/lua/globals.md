@@ -23,6 +23,13 @@ It is indexed by the local `playerIndex`, so `gNetworkPlayers[0]` is always the 
 
 <br />
 
+## [gActiveMods](#gNetworkPlayers)
+The `gActiveMods[]` table is an array that starts at `0`, and contains a [Mod](structs.md#Mod) struct for each active mod.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gCharacter](#gCharacter)
 The `gCharacter[]` table is an array from `0` to `(CT_MAX - 1)` that contains a [Character](structs.md#Character) struct for each possible character.
 

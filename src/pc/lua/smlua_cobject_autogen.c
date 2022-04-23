@@ -16,6 +16,7 @@
 #include "src/game/spawn_sound.h"
 #include "src/pc/network/network.h"
 #include "src/game/hardcoded.h"
+#include "src/pc/mods/mod.h"
 
 #include "include/object_fields.h"
 
@@ -788,6 +789,21 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "wallKickTimer",            LVT_U8,        offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE              },
     { "wasNetworkVisible",        LVT_U8,        offsetof(struct MarioState, wasNetworkVisible),        false, LOT_NONE              },
     { "waterLevel",               LVT_S16,       offsetof(struct MarioState, waterLevel),               false, LOT_NONE              },
+};
+
+#define LUA_MOD_FIELD_COUNT 10
+static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
+    { "basePath",     LVT_STRING,   offsetof(struct Mod, basePath),     true, LOT_NONE },
+    { "description",  LVT_STRING_P, offsetof(struct Mod, description),  true, LOT_NONE },
+    { "enabled",      LVT_BOOL,     offsetof(struct Mod, enabled),      true, LOT_NONE },
+    { "fileCount",    LVT_U16,      offsetof(struct Mod, fileCount),    true, LOT_NONE },
+    { "incompatible", LVT_STRING_P, offsetof(struct Mod, incompatible), true, LOT_NONE },
+    { "index",        LVT_S32,      offsetof(struct Mod, index),        true, LOT_NONE },
+    { "isDirectory",  LVT_BOOL,     offsetof(struct Mod, isDirectory),  true, LOT_NONE },
+    { "name",         LVT_STRING_P, offsetof(struct Mod, name),         true, LOT_NONE },
+    { "relativePath", LVT_STRING,   offsetof(struct Mod, relativePath), true, LOT_NONE },
+    { "selectable",   LVT_BOOL,     offsetof(struct Mod, selectable),   true, LOT_NONE },
+//  { "size",         LVT_???,      offsetof(struct Mod, size),         true, LOT_???  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6
@@ -1908,6 +1924,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MARIOANIMATION,            sMarioAnimationFields,            LUA_MARIO_ANIMATION_FIELD_COUNT              },
     { LOT_MARIOBODYSTATE,            sMarioBodyStateFields,            LUA_MARIO_BODY_STATE_FIELD_COUNT             },
     { LOT_MARIOSTATE,                sMarioStateFields,                LUA_MARIO_STATE_FIELD_COUNT                  },
+    { LOT_MOD,                       sModFields,                       LUA_MOD_FIELD_COUNT                          },
     { LOT_MODETRANSITIONINFO,        sModeTransitionInfoFields,        LUA_MODE_TRANSITION_INFO_FIELD_COUNT         },
     { LOT_NETWORKPLAYER,             sNetworkPlayerFields,             LUA_NETWORK_PLAYER_FIELD_COUNT               },
     { LOT_OBJECT,                    sObjectFields,                    LUA_OBJECT_FIELD_COUNT                       },

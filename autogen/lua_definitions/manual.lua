@@ -8,6 +8,9 @@ gMarioStates = {}
 --- @type NetworkPlayer[]
 gNetworkPlayers = {}
 
+--- @type Mod[]
+gActiveMods = {}
+
 --- @type Character[]
 gCharacter = {}
 

@@ -34,6 +34,7 @@
 - [MarioAnimation](#MarioAnimation)
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
+- [Mod](#Mod)
 - [ModeTransitionInfo](#ModeTransitionInfo)
 - [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
@@ -969,6 +970,25 @@
 | wallKickTimer | `integer` |  |
 | wasNetworkVisible | `integer` |  |
 | waterLevel | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Mod](#Mod)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| basePath | `string` | read-only |
+| description | `string` | read-only |
+| enabled | `boolean` | read-only |
+| fileCount | `integer` | read-only |
+| incompatible | `string` | read-only |
+| index | `integer` | read-only |
+| isDirectory | `boolean` | read-only |
+| name | `string` | read-only |
+| relativePath | `string` | read-only |
+| selectable | `boolean` | read-only |
 
 [:arrow_up_small:](#)
 
