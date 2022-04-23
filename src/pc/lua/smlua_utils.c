@@ -103,6 +103,7 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index) {
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     s32 indexType = lua_type(L, index);
+    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TTABLE) {
         LOG_LUA_LINE("smlua_to_cobject received improper type '%d'", lua_type(L, index));
         gSmLuaConvertSuccess = false;
