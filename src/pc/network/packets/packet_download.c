@@ -68,9 +68,11 @@ static void mark_groups_loaded_from_hash(void) {
                 u64 ogIndexStart = fileStartOffset / GROUP_SIZE;
                 u64 ogIndexEnd = (fileStartOffset + mod->size) / GROUP_SIZE;
                 do {
-                    LOG_INFO("Marking group as required: %llu (%s)", ogIndexStart, file->relativePath);
-                    offsetGroupRequired[ogIndexStart] = 1;
-                    ogIndexStart++;
+                    if (ogIndexStart < sOffsetGroupCount) {
+                        LOG_INFO("Marking group as required: %llu (%s)", ogIndexStart, file->relativePath);
+                        offsetGroupRequired[ogIndexStart] = 1;
+                        ogIndexStart++;
+                    }
                 } while (ogIndexStart <= ogIndexEnd);
             }
             fileStartOffset += file->size;
