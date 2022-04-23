@@ -2371,7 +2371,6 @@ u8 gTextCourseArr[][7] = {
 void render_pause_my_score_coins(void) {
     // sanity check
     if (!COURSE_IS_VALID_COURSE(gCurrCourseNum)) { return; }
-    if (gCurrActNum <= 0 || gCurrActNum > 6) { return; }
 
 #ifdef VERSION_EU
     u8 textMyScore[][10] = {
@@ -2452,7 +2451,9 @@ void render_pause_my_score_coins(void) {
         print_generic_string(CRS_NUM_X1, 157, strCourseNum);
 #endif
 
-        actName = segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + gDialogCourseActNum - 1]);
+        if (gDialogCourseActNum >= 1 && gCurrActNum <= 6) {
+            actName = segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + gDialogCourseActNum - 1]);
+        }
 
         if (starFlags & (1 << (gDialogCourseActNum - 1))) {
             print_generic_string(TXT_STAR_X, 140, textStar);
