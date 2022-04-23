@@ -1503,7 +1503,7 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum) {
     gCurrCourseNum = COURSE_NONE;
     gSavedCourseNum = COURSE_NONE;
     gCurrCreditsEntry = NULL;
-    gSpecialTripleJump = FALSE;
+    gMarioStates[0].specialTripleJump = FALSE;
 
     init_mario_from_save_file();
     disable_warp_checkpoint();
@@ -1570,7 +1570,7 @@ void fake_lvl_init_from_save_file(void) {
     if (gNetworkType == NT_NONE) { gNeverEnteredCastle = true; }
 
     gCurrCreditsEntry = NULL;
-    gSpecialTripleJump = 0;
+    gMarioStates[0].specialTripleJump = false;
 
     init_mario_from_save_file();
     disable_warp_checkpoint();

@@ -36,7 +36,6 @@ s8 sUnusedGotGlobalCoinHiScore = 0;
 u8 gGotFileCoinHiScore = FALSE;
 u8 gCurrCourseStarFlags = 0;
 
-u8 gSpecialTripleJump = FALSE;
 u8 gSaveFileUsingBackupSlot = FALSE;
 
 #define STUB_LEVEL(_0, _1, courseenum, _3, _4, _5, _6, _7, _8) courseenum,

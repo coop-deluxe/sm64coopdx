@@ -956,6 +956,7 @@
 | slideVelZ | `number` |  |
 | slideYaw | `integer` |  |
 | spawnInfo | [SpawnInfo](structs.md#SpawnInfo) |  |
+| specialTripleJump | `integer` |  |
 | splineKeyframeFraction | `number` |  |
 | splineState | `integer` |  |
 | squishTimer | `integer` |  |

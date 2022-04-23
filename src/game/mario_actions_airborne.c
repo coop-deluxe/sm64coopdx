@@ -483,7 +483,7 @@ s32 act_double_jump(struct MarioState *m) {
 }
 
 s32 act_triple_jump(struct MarioState *m) {
-    if (m == &gMarioStates[0] && gSpecialTripleJump) {
+    if (m == &gMarioStates[0] && m->specialTripleJump) {
         return set_mario_action(m, ACT_SPECIAL_TRIPLE_JUMP, 0);
     }
 

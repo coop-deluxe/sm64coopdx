@@ -665,6 +665,7 @@
 --- @field public slideVelZ number
 --- @field public slideYaw integer
 --- @field public spawnInfo SpawnInfo
+--- @field public specialTripleJump integer
 --- @field public splineKeyframeFraction number
 --- @field public splineState integer
 --- @field public squishTimer integer

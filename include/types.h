@@ -385,6 +385,7 @@ struct MarioState
     /*????*/ f32 minimumBoneY;
     /*????*/ f32 curAnimOffset;
     /*????*/ u8 knockbackTimer;
+    /*????*/ u8 specialTripleJump;
 };
 
 struct TextureInfo

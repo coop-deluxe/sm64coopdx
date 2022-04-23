@@ -150,7 +150,7 @@ void yoshi_give_present_loop(void) {
 
     if (gHudDisplay.lives == 100) {
         play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
-        gSpecialTripleJump = TRUE;
+        gMarioStates[0].specialTripleJump = true;
         o->oAction = YOSHI_ACT_WALK_JUMP_OFF_ROOF;
         return;
     }
@@ -226,7 +226,7 @@ void bhv_yoshi_loop(void) {
 
     if (sYoshiTalkingState > 2) {
         if (gHudDisplay.lives >= 100) {
-            gSpecialTripleJump = 1;
+            gMarioStates[0].specialTripleJump = true;
             sYoshiTalkingState = 3;
         } else if ((gGlobalTimer & 0x03) == 0) {
             play_sound(SOUND_MENU_YOSHI_GAIN_LIVES, gGlobalSoundSource);

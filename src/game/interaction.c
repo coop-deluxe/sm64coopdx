@@ -1282,7 +1282,7 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
             velY = fmax(fmin(55.0f, 15.0f + fabs(m->vel[1])), 35.0f);
         } else if (m->action == ACT_DOUBLE_JUMP) {
             mario_stop_riding_and_holding(m);
-            set_mario_action(m, (gSpecialTripleJump && m->playerIndex == 0) ? ACT_SPECIAL_TRIPLE_JUMP : ACT_TRIPLE_JUMP, 0);
+            set_mario_action(m, (m->specialTripleJump && m->playerIndex == 0) ? ACT_SPECIAL_TRIPLE_JUMP : ACT_TRIPLE_JUMP, 0);
             velY = fmax(fmin(60.0f, 20.0f + fabs(m->vel[1])), 40.0f);
         } else {
             mario_stop_riding_and_holding(m);

@@ -713,7 +713,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 73
+#define LUA_MARIO_STATE_FIELD_COUNT 74
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -774,6 +774,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "slideVelZ",                LVT_F32,       offsetof(struct MarioState, slideVelZ),                false, LOT_NONE              },
     { "slideYaw",                 LVT_S16,       offsetof(struct MarioState, slideYaw),                 false, LOT_NONE              },
     { "spawnInfo",                LVT_COBJECT_P, offsetof(struct MarioState, spawnInfo),                false, LOT_SPAWNINFO         },
+    { "specialTripleJump",        LVT_U8,        offsetof(struct MarioState, specialTripleJump),        false, LOT_NONE              },
 //  { "splineKeyframe",           LVT_???,       offsetof(struct MarioState, splineKeyframe),           false, LOT_???               }, <--- UNIMPLEMENTED
     { "splineKeyframeFraction",   LVT_F32,       offsetof(struct MarioState, splineKeyframeFraction),   false, LOT_NONE              },
     { "splineState",              LVT_S32,       offsetof(struct MarioState, splineState),              false, LOT_NONE              },
