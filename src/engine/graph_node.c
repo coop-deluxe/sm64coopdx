@@ -321,6 +321,7 @@ struct GraphNodeObject *init_graph_node_object(struct AllocOnlyPool *pool,
         graphNode->animInfo.animAccel = 0x10000;
         graphNode->animInfo.animTimer = 0;
         graphNode->node.flags |= GRAPH_RENDER_HAS_ANIMATION;
+        dynos_actor_override((void*)&graphNode->sharedChild);
     }
 
     return graphNode;
@@ -438,6 +439,7 @@ struct GraphNodeObjectParent *init_graph_node_object_parent(struct AllocOnlyPool
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_OBJECT_PARENT);
         graphNode->sharedChild = sharedChild;
+        dynos_actor_override((void*)&graphNode->sharedChild);
     }
 
     return graphNode;
@@ -725,6 +727,7 @@ void geo_obj_init(struct GraphNodeObject *graphNode, void *sharedChild, Vec3f po
     graphNode->unk4C = 0;
     graphNode->throwMatrix = NULL;
     graphNode->animInfo.curAnim = NULL;
+    dynos_actor_override((void*)&graphNode->sharedChild);
 
     graphNode->node.flags |= GRAPH_RENDER_ACTIVE;
     graphNode->node.flags &= ~GRAPH_RENDER_INVISIBLE;
@@ -749,6 +752,7 @@ void geo_obj_init_spawninfo(struct GraphNodeObject *graphNode, struct SpawnInfo 
     graphNode->unk4C = spawn;
     graphNode->throwMatrix = NULL;
     graphNode->animInfo.curAnim = 0;
+    dynos_actor_override((void*)&graphNode->sharedChild);
 
     graphNode->node.flags |= GRAPH_RENDER_ACTIVE;
     graphNode->node.flags &= ~GRAPH_RENDER_INVISIBLE;

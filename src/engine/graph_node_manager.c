@@ -70,7 +70,9 @@ void register_scene_graph_node(struct GraphNode *graphNode) {
             }
         } else {
             if (gCurGraphNodeList[gCurGraphNodeIndex - 1]->type == GRAPH_NODE_TYPE_OBJECT_PARENT) {
-                ((struct GraphNodeObjectParent *) gCurGraphNodeList[gCurGraphNodeIndex - 1])->sharedChild = graphNode;
+                struct GraphNodeObjectParent* objParent = ((struct GraphNodeObjectParent *) gCurGraphNodeList[gCurGraphNodeIndex - 1]);
+                objParent->sharedChild = graphNode;
+                dynos_actor_override((void*)&objParent->sharedChild);
             } else {
                 geo_add_child(gCurGraphNodeList[gCurGraphNodeIndex - 1], graphNode);
             }
