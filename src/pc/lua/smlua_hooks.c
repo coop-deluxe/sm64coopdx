@@ -9,9 +9,6 @@
 #include "game/print.h"
 #include "gfx_dimensions.h"
 
-extern u64 SDL_GetPerformanceCounter(void);
-extern u64 SDL_GetPerformanceFrequency(void);
-
 #define MAX_PROFILED_MODS 16
 #define REFRESH_RATE 15
 

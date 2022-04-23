@@ -1957,12 +1957,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
 
 struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key) {
     struct LuaObjectTable* ot = &sLuaObjectAutogenTable[lot - LOT_AUTOGEN_MIN - 1];
-    // TODO: change this to binary search or hash table or something
-    for (int i = 0; i < ot->fieldCount; i++) {
-        if (!strcmp(ot->fields[i].key, key)) {
-            return &ot->fields[i];
-        }
-    }
-    return NULL;
+    return smlua_get_object_field_from_ot(ot, key);
 }
 

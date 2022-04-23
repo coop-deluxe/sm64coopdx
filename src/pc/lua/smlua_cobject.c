@@ -33,13 +33,7 @@ struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
     { LOT_VEC3F, sVec3fFields, LUA_VEC3F_FIELD_COUNT },
 };
 
-struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
-    if (lot > LOT_AUTOGEN_MIN) {
-        return smlua_get_object_field_autogen(lot, key);
-    }
-
-    struct LuaObjectTable* ot = &sLuaObjectTable[lot];
-
+struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
     // binary search
     s32 min = 0;
     s32 max = ot->fieldCount - 1;
@@ -62,6 +56,15 @@ struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
     }
 
     return NULL;
+}
+
+struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
+    if (lot > LOT_AUTOGEN_MIN) {
+        return smlua_get_object_field_autogen(lot, key);
+    }
+
+    struct LuaObjectTable* ot = &sLuaObjectTable[lot];
+    return smlua_get_object_field_from_ot(ot, key);
 }
 
 bool smlua_valid_lot(u16 lot) {
