@@ -8,7 +8,7 @@ integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
 number_types = ["f32", "float"]
 param_override_build = {}
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
-out_filename_docs = 'docs/lua/functions.md'
+out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
 
 in_files = [
@@ -559,15 +559,23 @@ def process_files():
 
 ############################################################################
 
+def doc_page_link(page_num):
+    if page_num == 1:
+        return 'functions.md'
+    else:
+        return 'functions-%d.md' % page_num
+
 def doc_function_index(processed_files):
     s = '# Supported Functions\n'
     s += manual_index_documentation
+    count = 0
     for processed_file in processed_files:
+        page_num = processed_file['page_num']
         s += '- %s\n' % processed_file['filename']
         for function in processed_file['functions']:
             if not function['implemented']:
                 continue
-            s += '   - [%s](#%s)\n' % (function['identifier'], function['identifier'])
+            s += '   - [%s](%s#%s)\n' % (function['identifier'], doc_page_link(page_num), function['identifier'])
         s += '\n<br />\n\n'
 
     return s
@@ -655,16 +663,62 @@ def doc_functions(functions):
     return s
 
 def doc_files(processed_files):
+    pages = {}
+    page_num = 1
+    page_len_limit = 150000
+    extra_space = 25000
+
     s = '## [:rewind: Lua Reference](lua.md)\n\n'
-    s += doc_function_index(processed_files)
+    s += '---\n\n$[FUNCTION_NAV_HERE]\n\n---\n\n'
+    s += '$[FUNCTION_INDEX_HERE]'
     s += manual_documentation
     for processed_file in processed_files:
-        s += '\n---'
-        s += '\n# functions from %s\n\n<br />\n\n' % processed_file['filename']
-        s += doc_functions(processed_file['functions'])
+        s_file  = '\n---'
+        s_file += '\n# functions from %s\n\n<br />\n\n' % processed_file['filename']
+        s_file += doc_functions(processed_file['functions'])
 
-    with open(get_path(out_filename_docs), 'w') as out:
-        out.write(s)
+        if len(s) + len(s_file) + extra_space > page_len_limit:
+            s += '---\n\n$[FUNCTION_NAV_HERE]\n\n'
+            pages[page_num] = s
+            s = '## [:rewind: Lua Functions](functions.md)\n\n'
+            s += '---\n\n$[FUNCTION_NAV_HERE]\n\n'
+            page_num += 1
+            extra_space = 0
+
+        s += s_file
+        processed_file['page_num'] = page_num
+
+    s += '\n---\n\n$[FUNCTION_NAV_HERE]\n\n'
+    pages[page_num] = s
+
+    for pnum in pages:
+        buffer = pages[pnum]
+        page_name = ''
+        if pnum == 1:
+            buffer = buffer.replace('$[FUNCTION_INDEX_HERE]', doc_function_index(processed_files))
+            page_name = ''
+        else:
+            page_name = '-%d' % pnum
+
+        # build up nav
+        function_nav = ''
+        if (pnum - 1) in pages:
+            function_nav += '[< prev](%s) | ' % doc_page_link(pnum - 1)
+        for pnum_nav in pages:
+            if pnum_nav == pnum:
+                function_nav += '%d' % pnum_nav
+            else:
+                function_nav += '[%d](%s)' % (pnum_nav, doc_page_link(pnum_nav))
+
+            if (pnum_nav + 1) in pages:
+                function_nav += ' | '
+        if (pnum + 1) in pages:
+            function_nav += ' | [next >](%s)' % doc_page_link(pnum + 1)
+
+        buffer = buffer.replace('$[FUNCTION_NAV_HERE', function_nav)
+
+        with open(get_path(out_filename_docs % page_name), 'w') as out:
+            out.write(buffer)
 
 ############################################################################
 
