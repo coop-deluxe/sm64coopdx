@@ -51,11 +51,10 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     }
 
     // Alloc and init the actors gfx list
-    ActorGfx actorGfx = {
-        .mGfxData   = _GfxData,
-        .mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false),
-        .mPackIndex = 99,
-    };
+    ActorGfx actorGfx;
+    actorGfx.mGfxData   = _GfxData;
+    actorGfx.mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
+    actorGfx.mPackIndex = 99;
 
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);

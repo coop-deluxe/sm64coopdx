@@ -18,11 +18,10 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
     graphNode->georef = georef;
 
-    ActorGfx actorGfx = {
-        .mGfxData   = aGfxData,
-        .mGraphNode = graphNode,
-        .mPackIndex = aPackIndex,
-    };
+    ActorGfx actorGfx;
+    actorGfx.mGfxData   = aGfxData;
+    actorGfx.mGraphNode = graphNode;
+    actorGfx.mPackIndex = aPackIndex;
 
     // Check if we should disable billboards
     // TODO: make this smarter
