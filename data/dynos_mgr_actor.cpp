@@ -74,6 +74,13 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
         }
     }
 
+    // check custom actors
+    for (auto& pair : DynosCustomActors()) {
+        if (!strcmp(aActorName, pair.first)) {
+            return pair.second;
+        }
+    }
+
     // check loaded actors
     for (auto& pair : DynosValidActors()) {
         for (auto& geo : pair.second.mGfxData->mGeoLayouts) {
