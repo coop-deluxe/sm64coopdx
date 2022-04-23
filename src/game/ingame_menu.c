@@ -2390,7 +2390,7 @@ void render_pause_my_score_coins(void) {
     void **courseNameTbl;
     u8 *courseName;
     void **actNameTbl;
-    u8 *actName;
+    u8 *actName = NULL;
     u8 courseIndex;
     u8 starFlags;
 
@@ -2460,7 +2460,9 @@ void render_pause_my_score_coins(void) {
         } else {
             print_generic_string(TXT_STAR_X, 140, textUnfilledStar);
         }
-        print_generic_string(ACT_NAME_X, 140, actName);
+        if (actName != NULL) {
+            print_generic_string(ACT_NAME_X, 140, actName);
+        }
 #ifndef VERSION_JP
         print_generic_string(LVL_NAME_X, 157, &courseName[3]);
 #endif
