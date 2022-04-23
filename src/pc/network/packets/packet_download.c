@@ -71,8 +71,8 @@ static void mark_groups_loaded_from_hash(void) {
                     if (ogIndexStart < sOffsetGroupCount) {
                         LOG_INFO("Marking group as required: %llu (%s)", ogIndexStart, file->relativePath);
                         offsetGroupRequired[ogIndexStart] = 1;
-                        ogIndexStart++;
                     }
+                    ogIndexStart++;
                 } while (ogIndexStart <= ogIndexEnd);
             }
             fileStartOffset += file->size;
