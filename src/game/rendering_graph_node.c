@@ -1430,7 +1430,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;
             }
         }
-    } while (iterateChildren && (curGraphNode = curGraphNode->next) != firstNode);
+    } while (iterateChildren && curGraphNode && (curGraphNode = curGraphNode->next) != firstNode);
 }
 
 /**
