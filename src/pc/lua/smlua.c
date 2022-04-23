@@ -31,6 +31,7 @@ int smlua_error_handler(UNUSED lua_State* L) {
 }
 
 int smlua_pcall(lua_State* L, int nargs, int nresults, UNUSED int errfunc) {
+    gSmLuaConvertSuccess = true;
     lua_pushcfunction(L, smlua_error_handler);
     int errorHandlerIndex = 1;
     lua_insert(L, errorHandlerIndex);
@@ -60,6 +61,9 @@ static void smlua_exec_str(char* str) {
 static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex) {
     lua_State* L = gLuaState;
 
+    lua_settop(L, 0);
+
+    gSmLuaConvertSuccess = true;
     gLuaInitializingScript = 1;
     if (luaL_loadfile(L, file->cachedPath) != LUA_OK) {
         LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
