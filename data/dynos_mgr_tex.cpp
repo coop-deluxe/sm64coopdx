@@ -10,6 +10,13 @@ static std::set<DataNode<TexData> *>& DynosValidTextures() {
     return sDynosValidTextures;
 }
 
+static Array<DataNode<TexData> *>& DynosScheduledInvalidTextures() {
+    static Array<DataNode<TexData> *> sDynosScheduledInvalidTextures;
+    return sDynosScheduledInvalidTextures;
+}
+
+static bool sDynosDumpTextureCache = false;
+
 //
 // Conversion
 //
@@ -260,9 +267,19 @@ void DynOS_Tex_Valid(GfxData* aGfxData) {
 }
 
 void DynOS_Tex_Invalid(GfxData* aGfxData) {
+    auto& schedule = DynosScheduledInvalidTextures();
     for (auto &_Texture : aGfxData->mTextures) {
+        schedule.Add(_Texture);
+    }
+}
+
+void DynOS_Tex_Update() {
+    auto& schedule = DynosScheduledInvalidTextures();
+    if (schedule.Count() == 0) { return; }
+    for (auto &_Texture : schedule) {
         DynosValidTextures().erase(_Texture);
     }
+    schedule.Clear();
 }
 
 //

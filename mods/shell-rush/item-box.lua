@@ -35,7 +35,7 @@ function bhv_item_box_loop(obj)
     if obj.oItemBoxTouched == 1 then
         if obj.oTimer >= itemBoxTimeout then
             obj.oItemBoxTouched = 0
-            if get_network_player_smallest_global() == gNetworkPlayers[0] then
+            if network_is_server() then
                 network_send_object(obj, true)
             end
         elseif obj.oTimer < 5 then
