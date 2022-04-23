@@ -13,8 +13,7 @@ void network_send_lua_custom(bool broadcast) {
 
     // figure out mod index
     if (gLuaActiveMod == NULL) {
-        LOG_LUA("Could not figure out the current active mod!");
-        smlua_logline();
+        LOG_LUA_LINE("Could not figure out the current active mod!");
         return;
     }
     u16 modIndex = gLuaActiveMod->index;
@@ -24,8 +23,7 @@ void network_send_lua_custom(bool broadcast) {
     if (!broadcast) {
         s32 toLocalIndex = smlua_to_integer(L, paramIndex++);
         if (toLocalIndex <= 0 || toLocalIndex >= MAX_PLAYERS) {
-            LOG_LUA("Tried to send packet to invalid local index: %d", toLocalIndex)
-            smlua_logline();
+            LOG_LUA_LINE("Tried to send packet to invalid local index: %d", toLocalIndex)
             return;
         }
         if (!gSmLuaConvertSuccess) { return; }
@@ -45,8 +43,7 @@ void network_send_lua_custom(bool broadcast) {
     // make sure value passed in is a table
     s32 tableIndex = paramIndex;
     if (lua_type(L, tableIndex) != LUA_TTABLE) {
-        LOG_LUA("Tried to send a packet with a non-table");
-        smlua_logline();
+        LOG_LUA_LINE("Tried to send a packet with a non-table");
         return;
     }
 
@@ -57,8 +54,7 @@ void network_send_lua_custom(bool broadcast) {
         // convert and write key
         struct LSTNetworkType lntKey = smlua_to_lnt(L, -2);
         if (!gSmLuaConvertSuccess) {
-            LOG_LUA("Failed to convert key to LNT (tx)");
-            smlua_logline();
+            LOG_LUA_LINE("Failed to convert key to LNT (tx)");
             return;
         }
         if (!packet_write_lnt(&p, &lntKey)) {
@@ -68,8 +64,7 @@ void network_send_lua_custom(bool broadcast) {
         // convert and write value
         struct LSTNetworkType lntValue = smlua_to_lnt(L, -1);
         if (!gSmLuaConvertSuccess) {
-            LOG_LUA("Failed to convert value to LNT (tx)");
-            smlua_logline();
+            LOG_LUA_LINE("Failed to convert value to LNT (tx)");
             return;
         }
         if (!packet_write_lnt(&p, &lntValue)) {
@@ -103,16 +98,14 @@ void network_receive_lua_custom(struct Packet* p) {
     for(u16 i = 0; i < keyCount; i++) {
         struct LSTNetworkType lntKey = { 0 };
         if (!packet_read_lnt(p, &lntKey)) {
-            LOG_LUA("Failed to convert key to LNT (rx)");
-            smlua_logline();
+            LOG_LUA_LINE("Failed to convert key to LNT (rx)");
             return;
         }
         smlua_push_lnt(&lntKey);
 
         struct LSTNetworkType lntValue = { 0 };
         if (!packet_read_lnt(p, &lntValue)) {
-            LOG_LUA("Failed to convert value to LNT (rx)");
-            smlua_logline();
+            LOG_LUA_LINE("Failed to convert value to LNT (rx)");
             return;
         }
         smlua_push_lnt(&lntValue);

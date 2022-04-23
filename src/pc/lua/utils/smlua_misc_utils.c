@@ -22,7 +22,7 @@ s32* get_temp_s32_pointer(s32 initialValue) {
 
 s32 deref_s32_pointer(s32* pointer) {
     if (pointer == NULL) {
-        LOG_LUA("Tried to dereference null pointer!");
+        LOG_LUA_LINE("Tried to dereference null pointer!");
         return 0;
     }
     return *pointer;

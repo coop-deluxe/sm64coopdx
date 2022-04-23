@@ -58,9 +58,8 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
         lua_State* L = gLuaState;
         lua_rawgeti(L, LUA_REGISTRYINDEX, objSetupFunction);
         smlua_push_object(L, LOT_OBJECT, obj);
-        if (0 != lua_pcall(L, 1, 0, 0)) {
-            LOG_LUA("Failed to call the callback: %u, %s", objSetupFunction, lua_tostring(L, -1));
-            smlua_logline();
+        if (0 != smlua_pcall(L, 1, 0, 0)) {
+            LOG_LUA("Failed to call the object setup callback: %u", objSetupFunction);
         }
     }
 

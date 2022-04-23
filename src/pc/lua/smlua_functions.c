@@ -13,8 +13,7 @@
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
     if (top != expected) {
-        LOG_LUA("improper param count: expected %u, received %u", expected, top);
-        smlua_logline();
+        LOG_LUA_LINE("improper param count: expected %u, received %u", expected, top);
         return false;
     }
     return true;
@@ -23,8 +22,7 @@ bool smlua_functions_valid_param_count(lua_State* L, int expected) {
 bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
     int top = lua_gettop(L);
     if (top < min || top > max) {
-        LOG_LUA("improper param count: expected (%u - %u), received %u", min, max, top);
-        smlua_logline();
+        LOG_LUA_LINE("improper param count: expected (%u - %u), received %u", min, max, top);
         return false;
     }
     return true;
@@ -68,7 +66,7 @@ int smlua_func_atan2s(lua_State* L) {
 
 int smlua_func_init_mario_after_warp(lua_State* L) {
     if (network_player_connected_count() >= 2) {
-        LOG_LUA("This function can only be used in single-player");
+        LOG_LUA_LINE("This function can only be used in single-player");
         return 0;
     }
 
@@ -82,7 +80,7 @@ int smlua_func_init_mario_after_warp(lua_State* L) {
 
 int smlua_func_reset_level(lua_State* L) {
     if (network_player_connected_count() >= 2) {
-        LOG_LUA("This function can only be used in single-player");
+        LOG_LUA_LINE("This function can only be used in single-player");
         return 0;
     }
     
@@ -103,13 +101,13 @@ int smlua_func_network_init_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     if (lua_type(L, 3) != LUA_TNIL && lua_type(L, 3) != LUA_TTABLE) {
-        LOG_LUA("network_init_object() called with an invalid type for param 3: %u", lua_type(L, 3));
+        LOG_LUA_LINE("network_init_object() called with an invalid type for param 3: %u", lua_type(L, 3));
         return 0;
     }
 
     struct SyncObject* so = network_init_object(obj, standardSync ? 4000.0f : SYNC_DISTANCE_ONLY_EVENTS);
     if (so == NULL) {
-        LOG_LUA("Failed to allocate sync object.");
+        LOG_LUA_LINE("Failed to allocate sync object.");
         return 0;
     }
 
@@ -119,13 +117,13 @@ int smlua_func_network_init_object(lua_State* L) {
         while (lua_next(L, 3) != 0) {
             // uses 'key' (at index -2) and 'value' (at index -1)
             if (lua_type(L, -1) != LUA_TSTRING) {
-                LOG_LUA("Invalid type passed to network_init_object(): %u", lua_type(L, -1));
+                LOG_LUA_LINE("Invalid type passed to network_init_object(): %u", lua_type(L, -1));
                 lua_pop(L, 1); // pop value
                 continue;
             }
             const char* fieldIdentifier = smlua_to_string(L, -1);
             if (!gSmLuaConvertSuccess) {
-                LOG_LUA("Invalid field passed to network_init_object()");
+                LOG_LUA_LINE("Invalid field passed to network_init_object()");
                 lua_pop(L, 1); // pop value
                 continue;
             }
@@ -141,7 +139,7 @@ int smlua_func_network_init_object(lua_State* L) {
             if ((data->valueType == LVT_U8) || (data->valueType == LVT_S8)) { lvtSize = 8; }
 
             if (data == NULL || lvtSize == 0) {
-                LOG_LUA("Invalid field passed to network_init_object(): %s", fieldIdentifier);
+                LOG_LUA_LINE("Invalid field passed to network_init_object(): %s", fieldIdentifier);
                 lua_pop(L, 1); // pop value
                 continue;
             }
@@ -167,7 +165,7 @@ int smlua_func_network_send_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     if (obj->oSyncID == 0 || gSyncObjects[obj->oSyncID].o != obj) {
-        LOG_LUA("Failed to retrieve sync object.");
+        LOG_LUA_LINE("Failed to retrieve sync object.");
         return 0;
     }
 

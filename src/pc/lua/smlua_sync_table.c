@@ -44,8 +44,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     // get key
     sUnwoundLnts[sUnwoundLntsCount++] = smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("attempted to unwind sync table with invalid key type");
-        smlua_logline();
+        LOG_LUA_LINE("attempted to unwind sync table with invalid key type");
         return false;
     }
 
@@ -56,8 +55,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     while (true) {
         // make sure we remain within limits
         if (sUnwoundLntsCount >= MAX_UNWOUND_LNT) {
-            LOG_LUA("attempted to unwind sync table past its limit");
-            smlua_logline();
+            LOG_LUA_LINE("attempted to unwind sync table past its limit");
             return false;
         }
 
@@ -78,9 +76,8 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
 
         lua_pop(L, 1); // pop _name value
         if (!gSmLuaConvertSuccess) {
-            LOG_LUA("attempted to unwind sync table with invalid parent");
+            LOG_LUA_LINE("attempted to unwind sync table with invalid parent");
             lua_pop(L, 1); // pop iterative _parent
-            smlua_logline();
             return false;
         }
 
@@ -93,8 +90,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         // validate parent type
         if (parentType != LUA_TTABLE) {
             if (parentType != LUA_TNIL) {
-                LOG_LUA("attempted to unwind sync table into an invalid parent");
-                smlua_logline();
+                LOG_LUA_LINE("attempted to unwind sync table into an invalid parent");
                 return false;
             }
             break;
@@ -110,8 +106,7 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
     }
 
     if (unwoundSize >= MAX_UNWOUND_SIZE) {
-        LOG_LUA("attempted to unwind sync table with too long of a key/parent length");
-        smlua_logline();
+        LOG_LUA_LINE("attempted to unwind sync table with too long of a key/parent length");
         return false;
     }
 
@@ -147,9 +142,8 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         gLuaActiveMod = mod;
         gLuaLastHookMod = mod;
         gPcDebug.lastModRun = gLuaActiveMod;
-        if (0 != lua_pcall(L, 3, 0, 0)) {
-            LOG_LUA("Failed to call the hook_on_changed callback: %s", lua_tostring(L, -1));
-            smlua_logline();
+        if (0 != smlua_pcall(L, 3, 0, 0)) {
+            LOG_LUA_LINE("Failed to call the hook_on_changed callback");
         }
         gLuaActiveMod = prev;
     }
@@ -171,16 +165,14 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     // get modRemoteIndex
     u16 modRemoteIndex = smlua_get_integer_field(syncTableIndex, "_remoteIndex");
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("Error: tried to alter sync table with an invalid modRemoteIndex: %u", modRemoteIndex);
-        smlua_logline();
+        LOG_LUA_LINE("Error: tried to alter sync table with an invalid modRemoteIndex: %u", modRemoteIndex);
         return false;
     }
 
     // get key
     struct LSTNetworkType lntKey = smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("Error: tried to alter sync table with an invalid key");
-        smlua_logline();
+        LOG_LUA_LINE("Error: tried to alter sync table with an invalid key");
         return false;
     }
     lntKey = lntKey;
@@ -198,8 +190,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     int prevValueIndex = lua_gettop(L);
 
     if (prevValueType == LUA_TTABLE) {
-        LOG_LUA("Error: tried to assign on top of sync table");
-        smlua_logline();
+        LOG_LUA_LINE("Error: tried to assign on top of sync table");
         goto CLEANUP_STACK;
     }
 
@@ -211,14 +202,12 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     int valueType = lua_type(L, valueIndex);
     if (valueType == LUA_TTABLE) {
         if (prevValueType != LUA_TNIL) {
-            LOG_LUA("Error: tried to set a sync table field to a different sync table");
-            smlua_logline();
+            LOG_LUA_LINE("Error: tried to set a sync table field to a different sync table");
             goto CLEANUP_STACK;
         }
 
         if (!smlua_is_table_empty(valueIndex)) {
-            LOG_LUA("Error: tried to generate a sync table with a non-empty table");
-            smlua_logline();
+            LOG_LUA_LINE("Error: tried to generate a sync table with a non-empty table");
             goto CLEANUP_STACK;
         }
 
@@ -237,8 +226,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     }
     struct LSTNetworkType lntValue = smlua_to_lnt(L, valueIndex);
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("Error: tried to alter sync table with an invalid value");
-        smlua_logline();
+        LOG_LUA_LINE("Error: tried to alter sync table with an invalid value");
         goto CLEANUP_STACK;
     }
 
@@ -277,8 +265,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
     // unwind key + parent tables
     if (!smlua_sync_table_unwind(syncTableIndex, keyIndex)) {
-        LOG_LUA("Error: failed to unwind sync table for sending over the network");
-        smlua_logline();
+        LOG_LUA_LINE("Error: failed to unwind sync table for sending over the network");
         goto CLEANUP_STACK;
     }
 
@@ -429,17 +416,6 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     lua_pop(L, 1); // pop prevValue
     lua_pop(L, 1); // pop internal table
     lua_pop(L, syncTableSize); // pop sync table
-    LUA_STACK_CHECK_END();
-}
-
-static void smlua_exec_str(char* str) {
-    LUA_STACK_CHECK_BEGIN();
-    lua_State* L = gLuaState;
-    if (luaL_dostring(L, str) != LUA_OK) {
-        LOG_LUA("Failed to load lua string.");
-        puts(smlua_to_string(L, lua_gettop(L)));
-        smlua_logline();
-    }
     LUA_STACK_CHECK_END();
 }
 

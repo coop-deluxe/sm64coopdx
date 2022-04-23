@@ -89,18 +89,18 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name) {
     if (gLuaActiveMod == NULL) { return; }
     if (sequenceId >= MAX_OVERRIDE) {
-        LOG_LUA("Invalid sequenceId given to smlua_audio_utils_replace_sequence(): %d", sequenceId);
+        LOG_LUA_LINE("Invalid sequenceId given to smlua_audio_utils_replace_sequence(): %d", sequenceId);
         return;
     }
 
     if (bankId >= 64) {
-        LOG_LUA("Invalid bankId given to smlua_audio_utils_replace_sequence(): %d", bankId);
+        LOG_LUA_LINE("Invalid bankId given to smlua_audio_utils_replace_sequence(): %d", bankId);
         return;
     }
 
     char m64path[SYS_MAX_PATH] = { 0 };
     if (snprintf(m64path, SYS_MAX_PATH-1, "sound/%s.m64", m64Name) < 0) {
-        LOG_LUA("Could not concat m64path: %s", m64path);
+        LOG_LUA_LINE("Could not concat m64path: %s", m64path);
         return;
     }
     normalize_path(m64path);
@@ -122,5 +122,5 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         }
     }
 
-    LOG_LUA("Could not find m64 at path: %s", m64path);
+    LOG_LUA_LINE("Could not find m64 at path: %s", m64path);
 }

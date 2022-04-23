@@ -130,12 +130,12 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
-        LOG_LUA("Invalid parameter for define_custom_obj_fields()");
+        LOG_LUA_LINE("Invalid parameter for define_custom_obj_fields()");
         return 0;
     }
 
     if (gLuaLoadingMod == NULL) {
-        LOG_LUA("define_custom_obj_fields() can only be called on load.");
+        LOG_LUA_LINE("define_custom_obj_fields() can only be called on load.");
         return 0;
     }
 
@@ -160,25 +160,25 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         int valueIndex = lua_gettop(L) - 0;
         // uses 'key' (at index -2) and 'value' (at index -1)
         if (lua_type(L, keyIndex) != LUA_TSTRING) {
-            LOG_LUA("Invalid key type for define_custom_obj_fields() : %u", lua_type(L, keyIndex));
+            LOG_LUA_LINE("Invalid key type for define_custom_obj_fields() : %u", lua_type(L, keyIndex));
             lua_settop(L, iterationTop);
             continue;
         }
 
         if (lua_type(L, valueIndex) != LUA_TSTRING) {
-            LOG_LUA("Invalid value type for define_custom_obj_fields() : %u", lua_type(L, valueIndex));
+            LOG_LUA_LINE("Invalid value type for define_custom_obj_fields() : %u", lua_type(L, valueIndex));
             lua_settop(L, iterationTop);
             continue;
         }
 
         const char* key = smlua_to_string(L, keyIndex);
         if (key[0] != 'o') {
-            LOG_LUA("Invalid key name for define_custom_obj_fields()");
+            LOG_LUA_LINE("Invalid key name for define_custom_obj_fields()");
             lua_settop(L, iterationTop);
             continue;
         }
         if (strlen(key) >= CUSTOM_FIELD_ITEM_LEN) {
-            LOG_LUA("Too long of key name for define_custom_obj_fields()");
+            LOG_LUA_LINE("Too long of key name for define_custom_obj_fields()");
             lua_settop(L, iterationTop);
             continue;
         }
@@ -189,12 +189,12 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         else if (!strcmp(value, "s32")) { lvt = LVT_S32; }
         else if (!strcmp(value, "f32")) { lvt = LVT_F32; }
         else {
-            LOG_LUA("Invalid value name for define_custom_obj_fields()");
+            LOG_LUA_LINE("Invalid value name for define_custom_obj_fields()");
             return 0;
         }
 
         if (customFieldCount >= CUSTOM_FIELD_MAX) {
-            LOG_LUA("Ran out of custom fields!");
+            LOG_LUA_LINE("Ran out of custom fields!");
             return 0;
         }
 
@@ -215,7 +215,7 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
         } else if (fieldIndex > 0x22 && fieldIndex < 0x48) {
             fieldIndex = 0x48;
         } else if (fieldIndex > 0x4A) {
-            LOG_LUA("Ran out of custom fields!");
+            LOG_LUA_LINE("Ran out of custom fields!");
             return 0;
         }
 
@@ -254,7 +254,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (lot != LOT_OBJECT) { return NULL; }
 
     if (gLuaActiveMod == NULL) {
-        LOG_LUA("Failed to retrieve active mod entry.");
+        LOG_LUA_LINE("Failed to retrieve active mod entry.");
         return NULL;
     }
 
@@ -333,20 +333,17 @@ static int smlua__get_field(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     if (pointer == 0) {
-        LOG_LUA("_get_field on null pointer");
-        smlua_logline();
+        LOG_LUA_LINE("_get_field on null pointer");
         return 0;
     }
 
     if (!smlua_valid_lot(lot)) {
-        LOG_LUA("_get_field on invalid LOT '%u'", lot);
-        smlua_logline();
+        LOG_LUA_LINE("_get_field on invalid LOT '%u'", lot);
         return 0;
     }
 
     if (!smlua_cobject_allowlist_contains(lot, pointer)) {
-        LOG_LUA("_get_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
-        smlua_logline();
+        LOG_LUA_LINE("_get_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
         return 0;
     }
 
@@ -355,8 +352,7 @@ static int smlua__get_field(lua_State* L) {
         data = smlua_get_custom_field(L, lot, 3);
     }
     if (data == NULL) {
-        LOG_LUA("_get_field on invalid key '%s', lot '%d'", key, lot);
-        smlua_logline();
+        LOG_LUA_LINE("_get_field on invalid key '%s', lot '%d'", key, lot);
         return 0;
     }
 
@@ -399,8 +395,7 @@ static int smlua__get_field(lua_State* L) {
             break;
 
         default:
-            LOG_LUA("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
-            smlua_logline();
+            LOG_LUA_LINE("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;
     }
 
@@ -421,20 +416,17 @@ static int smlua__set_field(lua_State* L) {
     if (!gSmLuaConvertSuccess) { return 0; }
 
     if (pointer == 0) {
-        LOG_LUA("_set_field on null pointer");
-        smlua_logline();
+        LOG_LUA_LINE("_set_field on null pointer");
         return 0;
     }
 
     if (!smlua_valid_lot(lot)) {
-        LOG_LUA("_set_field on invalid LOT '%u'", lot);
-        smlua_logline();
+        LOG_LUA_LINE("_set_field on invalid LOT '%u'", lot);
         return 0;
     }
 
     if (!smlua_cobject_allowlist_contains(lot, pointer)) {
-        LOG_LUA("_set_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
-        smlua_logline();
+        LOG_LUA_LINE("_set_field received a pointer not in allow list. '%u', '%llu", lot, (u64)pointer);
         return 0;
     }
 
@@ -444,14 +436,12 @@ static int smlua__set_field(lua_State* L) {
     }
 
     if (data == NULL) {
-        LOG_LUA("_set_field on invalid key '%s'", key);
-        smlua_logline();
+        LOG_LUA_LINE("_set_field on invalid key '%s'", key);
         return 0;
     }
 
     if (data->immutable) {
-        LOG_LUA("_set_field on immutable key '%s'", key);
-        smlua_logline();
+        LOG_LUA_LINE("_set_field on immutable key '%s'", key);
         return 0;
     }
 
@@ -493,13 +483,11 @@ static int smlua__set_field(lua_State* L) {
             break;
 
         default:
-            LOG_LUA("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
-            smlua_logline();
+            LOG_LUA_LINE("_set_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;
     }
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
-        smlua_logline();
+        LOG_LUA_LINE("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
         return 0;
     }
 
