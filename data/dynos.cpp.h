@@ -452,6 +452,7 @@ struct ActorGfx {
 struct PackData {
     s32 mIndex;
     bool mEnabled;
+    bool mEnabledSet;
     SysPath mPath;
     String mDisplayName;
     Array<Pair<const char *, GfxData *>> mGfxData;
@@ -730,6 +731,7 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled);
 PackData* DynOS_Pack_GetFromIndex(s32 aIndex);
 PackData* DynOS_Pack_GetFromPath(const SysPath& aPath);
 PackData* DynOS_Pack_Add(const SysPath& aPath);
+void DynOS_Pack_Init();
 Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName);
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
 

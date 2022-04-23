@@ -222,6 +222,8 @@ void main_func(void) {
 
     mods_init();
     configfile_load(configfile_name());
+    dynos_pack_init();
+
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
     if (configPlayerPalette >= PALETTE_MAX) { configPlayerPalette = 0; }
 

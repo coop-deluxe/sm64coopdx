@@ -75,6 +75,10 @@ void dynos_pack_set_enabled(s32 index, bool value) {
     }
 }
 
+void dynos_pack_init(void) {
+    DynOS_Pack_Init();
+}
+
 void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
