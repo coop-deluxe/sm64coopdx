@@ -954,7 +954,7 @@ void find_surface_on_ray_list(struct SurfaceNode *list, Vec3f orig, Vec3f dir, f
 void find_surface_on_ray_cell(s16 cellX, s16 cellZ, Vec3f orig, Vec3f normalized_dir, f32 dir_length, struct Surface **hit_surface, Vec3f hit_pos, f32 *max_length)
 {
     // Skip if OOB
-    if (cellX >= 0 && cellX <= NUM_CELLS && cellZ >= 0 && cellZ <= NUM_CELLS)
+    if (cellX >= 0 && cellX < NUM_CELLS && cellZ >= 0 && cellZ < NUM_CELLS)
     {
         // Iterate through each surface in this partition
         if (normalized_dir[1] > -0.99f)
