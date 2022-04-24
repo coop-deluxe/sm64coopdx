@@ -200,11 +200,11 @@ endif
 ifeq ($(DEBUG),0)
   # Can't use O2 or higher right now for auto-builders, coop-compiler produces strange graphical errors
   # likely due to undefined behavior somewhere
-  ifeq ($(WINDOWS_AUTO_BUILDER),1)
-    OPT_FLAGS := -O1
-  else
-    OPT_FLAGS := -O2
-  endif
+  #ifeq ($(WINDOWS_AUTO_BUILDER),1)
+  #  OPT_FLAGS := -O1
+  #else
+  OPT_FLAGS := -O2
+  #endif
 else
   OPT_FLAGS := -O0
 endif
