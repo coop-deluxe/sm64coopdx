@@ -1,5 +1,6 @@
 #include "smlua.h"
 #include "src/pc/mods/mods.h"
+#include "audio/external.h"
 
 u8 gSmLuaConvertSuccess = false;
 
@@ -19,6 +20,21 @@ f32* smlua_get_vec3f_from_buffer(void) {
 s16* smlua_get_vec3s_from_buffer(void) {
     if (sVec3sBufferIndex >= VEC3S_BUFFER_COUNT) { sVec3sBufferIndex = 0; }
     return sVec3sBuffer[sVec3sBufferIndex++];
+}
+
+f32 *smlua_get_vec3f_for_play_sound(f32 *pos) {
+    if (pos < (f32 *) sVec3fBuffer || pos >= (f32 *) (sVec3fBuffer + VEC3F_BUFFER_COUNT)) {
+        return pos;
+    }
+    if (memcmp(pos, gGlobalSoundSource, sizeof(Vec3f)) == 0) {
+        return gGlobalSoundSource;
+    }
+    for (s32 i = 0; i != MAX_PLAYERS; ++i) {
+        if (gMarioStates[i].marioObj && memcmp(pos, gMarioStates[i].marioObj->header.gfx.cameraToObject, sizeof(Vec3f)) == 0) {
+            return gMarioStates[i].marioObj->header.gfx.cameraToObject;
+        }
+    }
+    return pos;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

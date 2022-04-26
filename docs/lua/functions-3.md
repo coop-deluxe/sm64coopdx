@@ -2924,6 +2924,117 @@
 
 <br />
 
+## [get_level_name_ascii](#get_level_name_ascii)
+
+### Lua Example
+`local stringValue = get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| charCase | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_level_name_sm64](#get_level_name_sm64)
+
+### Lua Example
+`local PointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| charCase | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`const u8 *get_level_name_sm64(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_star_name](#get_star_name)
+
+### Lua Example
+`local stringValue = get_star_name(courseNum, starNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| starNum | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *get_star_name(s16 courseNum, s16 starNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_star_name_ascii](#get_star_name_ascii)
+
+### Lua Example
+`local stringValue = get_star_name_ascii(courseNum, starNum, charCase)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| starNum | `integer` |
+| charCase | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_star_name_sm64](#get_star_name_sm64)
+
+### Lua Example
+`local PointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| starNum | `integer` |
+| charCase | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`const u8 *get_star_name_sm64(s16 courseNum, s16 starNum, s16 charCase);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from mario.h
 

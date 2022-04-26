@@ -29,4 +29,6 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 f32 get_environment_region(u8 index);
 void set_environment_region(u8 index, s32 value);
 
+void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
+
 #endif

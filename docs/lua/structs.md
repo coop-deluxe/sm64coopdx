@@ -709,6 +709,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | children | [GraphNode](structs.md#GraphNode) |  |
+| extraFlags | `integer` |  |
 | flags | `integer` |  |
 | next | [GraphNode](structs.md#GraphNode) |  |
 | parent | [GraphNode](structs.md#GraphNode) |  |

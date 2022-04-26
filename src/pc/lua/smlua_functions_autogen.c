@@ -7764,6 +7764,83 @@ int smlua_func_get_level_name(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_level_name_ascii(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 levelNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    s16 areaIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    s16 charCase = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+
+    lua_pushstring(L, get_level_name_ascii(courseNum, levelNum, areaIndex, charCase));
+
+    return 1;
+}
+
+int smlua_func_get_level_name_sm64(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 levelNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    s16 areaIndex = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    s16 charCase = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+
+    smlua_push_pointer(L, LVT_U8_P, (void*)get_level_name_sm64(courseNum, levelNum, areaIndex, charCase));
+
+    return 1;
+}
+
+int smlua_func_get_star_name(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 starNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    lua_pushstring(L, get_star_name(courseNum, starNum));
+
+    return 1;
+}
+
+int smlua_func_get_star_name_ascii(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 starNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    s16 charCase = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    lua_pushstring(L, get_star_name_ascii(courseNum, starNum, charCase));
+
+    return 1;
+}
+
+int smlua_func_get_star_name_sm64(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s16 courseNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 starNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    s16 charCase = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    smlua_push_pointer(L, LVT_U8_P, (void*)get_star_name_sm64(courseNum, starNum, charCase));
+
+    return 1;
+}
+
   /////////////
  // mario.h //
 /////////////
@@ -14727,6 +14804,25 @@ int smlua_func_movtexqc_register(lua_State* L) {
     return 1;
 }
 
+int smlua_func_play_transition(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
+
+    s16 transType = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 time = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    u8 red = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    u8 green = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+    u8 blue = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 5"); return 0; }
+
+    play_transition(transType, time, red, green, blue);
+
+    return 1;
+}
+
 int smlua_func_save_file_set_using_backup_slot(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -16398,6 +16494,11 @@ void smlua_bind_functions_autogen(void) {
 
     // level_info.h
     smlua_bind_function(L, "get_level_name", smlua_func_get_level_name);
+    smlua_bind_function(L, "get_level_name_ascii", smlua_func_get_level_name_ascii);
+    smlua_bind_function(L, "get_level_name_sm64", smlua_func_get_level_name_sm64);
+    smlua_bind_function(L, "get_star_name", smlua_func_get_star_name);
+    smlua_bind_function(L, "get_star_name_ascii", smlua_func_get_star_name_ascii);
+    smlua_bind_function(L, "get_star_name_sm64", smlua_func_get_star_name_sm64);
 
     // mario.h
     smlua_bind_function(L, "adjust_sound_for_speed", smlua_func_adjust_sound_for_speed);
@@ -16953,6 +17054,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
+    smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);

@@ -3199,6 +3199,9 @@ GEO_CONTEXT_RENDER = 1
 GFX_NUM_MASTER_LISTS = 8
 
 --- @type integer
+GRAPH_EXTRA_FORCE_3D = (1 << 0)
+
+--- @type integer
 GRAPH_NODE_TYPE_400 = 0x400
 
 --- @type integer
