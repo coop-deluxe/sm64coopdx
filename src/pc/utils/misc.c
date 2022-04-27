@@ -135,3 +135,39 @@ void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
         }
     }
 }
+
+/*
+
+void interpolate_vectors(Vec3f res, Vec3f a, Vec3f b) {
+    res[0] = (a[0] + b[0]) / 2.0f;
+    res[1] = (a[1] + b[1]) / 2.0f;
+    res[2] = (a[2] + b[2]) / 2.0f;
+}
+
+void interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b) {
+    res[0] = (a[0] + b[0]) / 2;
+    res[1] = (a[1] + b[1]) / 2;
+    res[2] = (a[2] + b[2]) / 2;
+}
+
+static s16 interpolate_angle(s16 a, s16 b) {
+    s32 absDiff = b - a;
+    if (absDiff < 0) {
+        absDiff = -absDiff;
+    }
+    if (absDiff >= 0x4000 && absDiff <= 0xC000) {
+        return b;
+    }
+    if (absDiff <= 0x8000) {
+        return (a + b) / 2;
+    } else {
+        return (a + b) / 2 + 0x8000;
+    }
+}
+
+static void interpolate_angles(Vec3s res, Vec3s a, Vec3s b) {
+    res[0] = interpolate_angle(a[0], b[0]);
+    res[1] = interpolate_angle(a[1], b[1]);
+    res[2] = interpolate_angle(a[2], b[2]);
+}
+*/

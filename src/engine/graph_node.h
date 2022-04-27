@@ -197,7 +197,7 @@ struct GraphNodeCamera
     Vec3f prevFocus;
     u32 prevTimestamp;
     /*0x34*/ Mat4 *matrixPtr; // pointer to look-at matrix of this camera as a Mat4
-    Mat4 *matrixPtrInterpolated;
+    Mat4 *matrixPtrPrev;
     /*0x38*/ s16 roll; // roll in look at matrix. Doesn't account for light direction unlike rollScreen.
     /*0x3A*/ s16 rollScreen; // rolls screen while keeping the light direction consistent
 };
@@ -290,6 +290,7 @@ struct GraphNodeScale
     /*0x00*/ struct GraphNode node;
     /*0x14*/ void *displayList;
     /*0x18*/ f32 scale;
+    /*????*/ f32 prevScale;
 };
 
 /** GraphNode that draws a shadow under an object.

@@ -511,9 +511,13 @@ Gfx *envfx_update_bubble_particles(s32 mode, UNUSED Vec3s marioPos, Vec3s camFro
     rotate_triangle_vertices(vertex1, vertex2, vertex3, pitch, yaw);
 
     if (gGlobalTimer == prevTimestamp + 1) {
-        interpolate_vectors_s16(interpolatedVertices[0], prevVertex1, vertex1);
-        interpolate_vectors_s16(interpolatedVertices[1], prevVertex2, vertex2);
-        interpolate_vectors_s16(interpolatedVertices[2], prevVertex3, vertex3);
+        // TODO: fixme
+        //interpolate_vectors_s16(interpolatedVertices[0], prevVertex1, vertex1);
+        vec3s_copy(interpolatedVertices[0], vertex1);
+        //interpolate_vectors_s16(interpolatedVertices[1], prevVertex2, vertex2);
+        vec3s_copy(interpolatedVertices[1], vertex2);
+        //interpolate_vectors_s16(interpolatedVertices[2], prevVertex3, vertex3);
+        vec3s_copy(interpolatedVertices[2], vertex3);
     }
     vec3s_copy(prevVertex1, vertex1);
     vec3s_copy(prevVertex2, vertex2);

@@ -64,6 +64,7 @@ s8 gShowDebugText;
 s32 gRumblePakPfs;
 u32 gNumVblanks = 0;
 
+f32 gRenderingDelta = 0;
 f32 gGameSpeed = 1.0f; // DO NOT COMMIT
 
 static struct AudioAPI *audio_api;
@@ -133,7 +134,8 @@ void produce_uncapped_frames(void) {
     u64 frames = 0;
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
         gfx_start_frame();
-        f32 delta = (curTime - startTime) / (sFrameTargetTime - startTime);
+        f32 delta = MIN((curTime - startTime) / (sFrameTargetTime - startTime), 1);
+        gRenderingDelta = delta;
         patch_interpolations(delta);
         send_display_list(gGfxSPTask);
         gfx_end_frame();

@@ -120,7 +120,11 @@ Gfx *geo_title_screen(s32 state, struct GraphNode *sp54, UNUSED void *context) {
             scaleZ = 0.0f;
         }
         vec3f_set(scale, scaleX, scaleY, scaleZ);
-        interpolate_vectors(scaleInterpolated, sIntroScale, scale);
+
+        // TODO: fixme
+        //interpolate_vectors(scaleInterpolated, sIntroScale, scale);
+        vec3f_copy(scaleInterpolated, scale);
+
         vec3f_set(sIntroScale, scaleX, scaleY, scaleZ);
         guScale(scaleMat, scaleInterpolated[0], scaleInterpolated[1], scaleInterpolated[2]);
         sIntroScalePos = dlIter;

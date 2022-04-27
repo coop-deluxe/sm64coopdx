@@ -290,6 +290,7 @@ struct GraphNodeScale *init_graph_node_scale(struct AllocOnlyPool *pool,
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_SCALE);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
         graphNode->scale = scale;
+        graphNode->prevScale = scale;
         graphNode->displayList = displayList;
     }
 
