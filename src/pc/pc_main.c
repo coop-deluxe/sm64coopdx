@@ -48,6 +48,7 @@
 #include "pc/network/version.h"
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
+#include "pc/utils/misc.h"
 
 #include "pc/mods/mods.h"
 
@@ -62,6 +63,8 @@ s8 gShowDebugText;
 
 s32 gRumblePakPfs;
 u32 gNumVblanks = 0;
+
+f32 gGameSpeed = 1.0f; // DO NOT COMMIT
 
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api;
@@ -94,8 +97,13 @@ void send_display_list(struct SPTask *spTask) {
 #define SAMPLES_LOW 528
 #endif
 
-static inline void patch_interpolations(void) {
-    extern void mtx_patch_interpolated(void);
+static void patch_interpolations_before(void) {
+    extern void mtx_patch_before(void);
+    mtx_patch_before();
+}
+
+static inline void patch_interpolations(f32 delta) {
+    extern void mtx_patch_interpolated(f32 delta);
     extern void patch_screen_transition_interpolated(void);
     extern void patch_title_screen_scales(void);
     extern void patch_interpolated_dialog(void);
@@ -104,19 +112,44 @@ static inline void patch_interpolations(void) {
     extern void patch_interpolated_bubble_particles(void);
     extern void patch_interpolated_snow_particles(void);
     extern void djui_render_patch(void);
-    mtx_patch_interpolated();
-    patch_screen_transition_interpolated();
+    mtx_patch_interpolated(delta);
+    /*patch_screen_transition_interpolated();
     patch_title_screen_scales();
     patch_interpolated_dialog();
     patch_interpolated_hud();
     patch_interpolated_paintings();
     patch_interpolated_bubble_particles();
     patch_interpolated_snow_particles();
-    djui_render_patch();
+    djui_render_patch();*/
+}
+
+void produce_uncapped_frames(void) {
+    #define FRAMERATE 30
+    static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
+    static f64 sFrameTargetTime = 0;
+
+    f64 startTime = clock_elapsed_f64();
+    f64 curTime = startTime;
+    u64 frames = 0;
+    while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
+        gfx_start_frame();
+        f32 delta = (curTime - startTime) / (sFrameTargetTime - startTime);
+        patch_interpolations(delta);
+        send_display_list(gGfxSPTask);
+        gfx_end_frame();
+        frames++;
+    }
+
+    printf(">> frames %llu | %f\n", frames, gGameSpeed);
+    fflush(stdout);
+
+    sFrameTargetTime += sFrameTime * gGameSpeed;
 }
 
 void produce_one_frame(void) {
     network_update();
+
+    patch_interpolations_before();
     gfx_start_frame();
 
     const f32 master_mod = (f32)configMasterVolume / 127.0f;
@@ -145,11 +178,9 @@ void produce_one_frame(void) {
 
     gfx_end_frame();
 
+    // uncapped
     if (config60Fps) {
-        gfx_start_frame();
-        patch_interpolations();
-        send_display_list(gGfxSPTask);
-        gfx_end_frame();
+        produce_uncapped_frames();
     }
 }
 

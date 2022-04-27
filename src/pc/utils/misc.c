@@ -113,3 +113,25 @@ next_get:
 
     *buffer = '\0';
 }
+
+/////////////////
+
+f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
+    return start * (1.0f - delta) + end * delta;
+}
+
+void delta_interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    res[0] = ((a[0] * antiDelta) + (b[0] * delta));
+    res[1] = ((a[1] * antiDelta) + (b[1] * delta));
+    res[2] = ((a[2] * antiDelta) + (b[2] * delta));
+}
+
+void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    for (s32 i = 0; i < 4; i++) {
+        for (s32 j = 0; j < 4; j++) {
+            out->m[i][j] = (a->m[i][j] * antiDelta) + (b->m[i][j] * delta);
+        }
+    }
+}

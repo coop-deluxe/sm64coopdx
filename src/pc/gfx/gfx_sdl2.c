@@ -247,6 +247,7 @@ static void gfx_sdl_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callbac
 }
 
 static bool gfx_sdl_start_frame(void) {
+    return true;
     f64 curTime = clock_elapsed_f64();
     f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
     if (curTime > sFrameTargetTime) {
@@ -260,6 +261,7 @@ static bool gfx_sdl_start_frame(void) {
 }
 
 static inline void sync_framerate_with_timer(void) {
+    return;
     f64 curTime = clock_elapsed_f64();
     if (curTime < sFrameTargetTime) {
         u32 delayMs = (sFrameTargetTime - curTime) * 1000.0;

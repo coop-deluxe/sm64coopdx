@@ -39,18 +39,24 @@ extern bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 
 static void debug_warp_level1() {
     // warp to credits
-    //set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
-    //return;
+    set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
+    return;
 
     dynos_warp_to_level(LEVEL_BOB, 1, 1);
 }
 
 static void debug_warp_level2() {
-    dynos_warp_to_level(gCurrLevelNum, gCurrAreaIndex^3, 1);
+    extern f32 gGameSpeed;
+    gGameSpeed = MAX(gGameSpeed - 0.1f, 0.1f);
+    printf("GAME SPEED: %f\n", gGameSpeed);
+    //dynos_warp_to_level(gCurrLevelNum, gCurrAreaIndex^3, 1);
 }
 
 static void debug_warp_level3() {
-    dynos_warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 1);
+    extern f32 gGameSpeed;
+    gGameSpeed = MIN(gGameSpeed + 0.1f, 10.0f);
+    printf("GAME SPEED: %f\n", gGameSpeed);
+    //dynos_warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 1);
 }
 
 static void debug_grand_star(void) {

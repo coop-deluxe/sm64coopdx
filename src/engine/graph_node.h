@@ -124,9 +124,9 @@ struct GraphNodePerspective
 struct DisplayListNode
 {
     Mtx *transform;
-    void *transformInterpolated;
+    void *transformPrev;
     void *displayList;
-    void *displayListInterpolated;
+    void *displayListPrev;
     struct DisplayListNode *next;
 };
 
