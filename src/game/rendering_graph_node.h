@@ -33,4 +33,15 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor);
 void interpolate_vectors(Vec3f res, Vec3f a, Vec3f b);
 void interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b);
 
+struct ShadowInterp {
+    Gfx*  gfx;
+    Vec3f shadowPos;
+    Vec3f shadowPosPrev;
+    Vtx *verts;
+    Gfx *displayList;
+    struct GraphNodeShadow *node;
+    f32 shadowScale;
+    struct GraphNodeObject *obj;
+};
+
 #endif // RENDERING_GRAPH_NODE_H

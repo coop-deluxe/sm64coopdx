@@ -16,6 +16,9 @@
 // Avoid Z-fighting
 #define find_floor_height_and_data 0.4 + find_floor_height_and_data
 
+extern u8 gRenderingInterpolated;
+extern struct ShadowInterp* gShadowInterpCurrent;
+
 /**
  * @file shadow.c
  * This file implements a self-contained subsystem used to draw shadows.
@@ -113,6 +116,39 @@ s8 gShadowAboveWaterOrLava;
 s8 gMarioOnIceOrCarpet;
 s8 sMarioOnFlyingCarpet;
 s16 sSurfaceTypeBelowShadow;
+
+static Vtx* shadow_get_or_alloc_verts(u8 vertCount) {
+    if (gRenderingInterpolated) {
+        if (gShadowInterpCurrent == NULL) {
+            return NULL;
+        }
+        return gShadowInterpCurrent->verts;
+    } else {
+        Vtx* verts = alloc_display_list(vertCount * sizeof(Vtx));
+        if (gShadowInterpCurrent) {
+            gShadowInterpCurrent->verts = verts;
+        }
+        return verts;
+    }
+    return NULL;
+}
+
+static Gfx* shadow_get_or_alloc_display_list(u8 dlCount) {
+    if (gRenderingInterpolated) {
+        if (gShadowInterpCurrent == NULL) {
+            return NULL;
+        }
+        return gShadowInterpCurrent->displayList;
+    } else {
+        Gfx *displayList = alloc_display_list(dlCount * sizeof(Gfx));
+        if (gShadowInterpCurrent) {
+            gShadowInterpCurrent->displayList = displayList;
+        }
+        return displayList;
+    }
+    return NULL;
+
+}
 
 /**
  * Let (oldZ, oldX) be the relative coordinates of a point on a rectangle,
@@ -622,8 +658,8 @@ Gfx *create_shadow_player(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, u8 soli
         return NULL;
     }
 
-    verts = alloc_display_list(9 * sizeof(Vtx));
-    displayList = alloc_display_list(5 * sizeof(Gfx));
+    verts = shadow_get_or_alloc_verts(9);
+    displayList = shadow_get_or_alloc_display_list(5);
     if (verts == NULL || displayList == NULL) {
         return NULL;
     }
@@ -650,8 +686,8 @@ Gfx *create_shadow_circle_9_verts(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale,
         return NULL;
     }
 
-    verts = alloc_display_list(9 * sizeof(Vtx));
-    displayList = alloc_display_list(5 * sizeof(Gfx));
+    verts = shadow_get_or_alloc_verts(9);
+    displayList = shadow_get_or_alloc_display_list(5);
 
     if (verts == NULL || displayList == NULL) {
         return 0;
@@ -676,8 +712,8 @@ Gfx *create_shadow_circle_4_verts(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale,
         return NULL;
     }
 
-    verts = alloc_display_list(4 * sizeof(Vtx));
-    displayList = alloc_display_list(5 * sizeof(Gfx));
+    verts = shadow_get_or_alloc_verts(4);
+    displayList = shadow_get_or_alloc_display_list(5);
 
     if (verts == NULL || displayList == NULL) {
         return 0;
@@ -709,8 +745,8 @@ Gfx *create_shadow_circle_assuming_flat_ground(f32 xPos, f32 yPos, f32 zPos, s16
         distBelowFloor = floorHeight - yPos;
     }
 
-    verts = alloc_display_list(4 * sizeof(Vtx));
-    displayList = alloc_display_list(5 * sizeof(Gfx));
+    verts = shadow_get_or_alloc_verts(4);
+    displayList = shadow_get_or_alloc_display_list(5);
 
     if (verts == NULL || displayList == NULL) {
         return 0;
@@ -738,8 +774,8 @@ Gfx *create_shadow_spike_ext(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, u8 s
         return NULL;
     }
 
-    verts = alloc_display_list(4 * sizeof(Vtx));
-    displayList = alloc_display_list(5 * sizeof(Gfx));
+    verts = shadow_get_or_alloc_verts(4);
+    displayList = shadow_get_or_alloc_display_list(5);
 
     if (verts == NULL || displayList == NULL) {
         return 0;
@@ -757,8 +793,9 @@ Gfx *create_shadow_spike_ext(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, u8 s
  * underneath the shadow is totally flat.
  */
 Gfx *create_shadow_rectangle(f32 halfWidth, f32 halfLength, f32 relY, u8 solidity) {
-    Vtx *verts = alloc_display_list(4 * sizeof(Vtx));
-    Gfx *displayList = alloc_display_list(5 * sizeof(Gfx));
+    Vtx *verts = shadow_get_or_alloc_verts(4);
+    Gfx *displayList = shadow_get_or_alloc_display_list(5);
+
     f32 frontLeftX, frontLeftZ, frontRightX, frontRightZ, backLeftX, backLeftZ, backRightX, backRightZ;
 
     if (verts == NULL || displayList == NULL) {

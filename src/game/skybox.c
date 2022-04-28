@@ -45,10 +45,10 @@
  * first, in a display list with the Z buffer disabled
  */
 struct Skybox {
-    /// The camera's yaw, from 0 to 65536, which maps to 0 to 360 degrees
-    u16 yaw;
-    /// The camera's pitch, which is bounded by +-16384, which maps to -90 to 90 degrees
-    s16 pitch;
+    /// The camera's yaw, from 0 to (M_PI*2), which maps to 0 to 360 degrees
+    f32 yaw;
+    /// The camera's pitch, which is bounded by +-(M_PI/2), which maps to -90 to 90 degrees
+    f32 pitch;
     /// The skybox's X position in world space
     f32 scaledX;
     /// The skybox's Y position in world space
@@ -138,11 +138,11 @@ u8 sSkyboxColors[][3] = {
  *                 (how far is the camera rotated from 0, scaled 0 to 1)   *
  *                 (the screen width)
  */
-s32 calculate_skybox_scaled_x(s8 player, f32 fov) {
+f32 calculate_skybox_scaled_x(s8 player, f32 fov) {
     f32 yaw = sSkyBoxInfo[player].yaw;
 
     //! double literals are used instead of floats
-    f32 scaledX = SCREEN_WIDTH * 360.0 * yaw / (fov * 65536.0);
+    f32 scaledX = SCREEN_WIDTH * 180.0 * yaw / (fov * M_PI);
 
     if (scaledX > SKYBOX_WIDTH) {
         scaledX -= (s32) scaledX / SKYBOX_WIDTH * SKYBOX_WIDTH;
@@ -156,9 +156,9 @@ s32 calculate_skybox_scaled_x(s8 player, f32 fov) {
  * fov may have been used in an earlier version, but the developers changed the function to always use
  * 90 degrees.
  */
-s32 calculate_skybox_scaled_y(s8 player, UNUSED f32 fov) {
+f32 calculate_skybox_scaled_y(s8 player, UNUSED f32 fov) {
     // Convert pitch to degrees. Pitch is bounded between -90 (looking down) and 90 (looking up).
-    f32 pitchInDegrees = (f32) sSkyBoxInfo[player].pitch * 360.0 / 65535.0;
+    f32 pitchInDegrees = sSkyBoxInfo[player].pitch * 180.0 / M_PI;
 
     // Scale by 360 / fov
     f32 degreesToScale = 360.0f * pitchInDegrees / 90.0;
@@ -193,7 +193,7 @@ static s32 get_top_left_tile_idx(s8 player) {
  *                  into an x and y by modulus and division by SKYBOX_COLS. x and y are then scaled by
  *                  SKYBOX_TILE_WIDTH to get a point in world space.
  */
-Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex, s32 row, s32 col, s8 player) {
+Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex, s32 row, s32 col) {
     extern Vtx* gBackgroundSkyboxVerts[3][3];
 
     Vtx *verts;
@@ -242,7 +242,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
                 texture = (Texture*)(*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
             }
 
-            Vtx *vertices = make_skybox_rect(tileIndex, colorIndex, row, col, player);
+            Vtx *vertices = make_skybox_rect(tileIndex, colorIndex, row, col);
 
             gLoadBlockTexture((*dlist)++, 32, 32, G_IM_FMT_RGBA, texture);
             gSPVertex((*dlist)++, VIRTUAL_TO_PHYSICAL(vertices), 4, 0);
@@ -342,8 +342,11 @@ Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
     //! fov is always set to 90.0f. If this line is removed, then the game crashes because fov is 0 on
     //! the first frame, which causes a floating point divide by 0
     fov = 90.0f;
-    sSkyBoxInfo[player].yaw = atan2s(cameraFaceZ, cameraFaceX);
-    sSkyBoxInfo[player].pitch = atan2s(sqrtf(cameraFaceX * cameraFaceX + cameraFaceZ * cameraFaceZ), cameraFaceY);
+
+    sSkyBoxInfo[player].yaw = (M_PI / 2.0) - atan2(cameraFaceZ, cameraFaceX);
+    if (sSkyBoxInfo[player].yaw < 0) { sSkyBoxInfo[player].yaw += M_PI * 2.0; }
+    sSkyBoxInfo[player].pitch = (M_PI / 2.0) - atan2(sqrtf(cameraFaceX * cameraFaceX + cameraFaceZ * cameraFaceZ), cameraFaceY);
+
     sSkyBoxInfo[player].scaledX = calculate_skybox_scaled_x(player, fov);
     sSkyBoxInfo[player].scaledY = calculate_skybox_scaled_y(player, fov);
     sSkyBoxInfo[player].upperLeftTile = get_top_left_tile_idx(player);
