@@ -25,6 +25,7 @@ UNUSED Vec3s gVec3sOne = { 1, 1, 1 };
 void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
     graphNode->type = type;
     graphNode->flags = GRAPH_RENDER_ACTIVE;
+    graphNode->extraFlags = 0;
     graphNode->prev = graphNode;
     graphNode->next = graphNode;
     graphNode->parent = NULL;
