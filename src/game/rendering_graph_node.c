@@ -254,9 +254,6 @@ void patch_mtx_interpolated(f32 delta) {
         delta_interpolate_mtx(&gMtxTbl[i].interp, (Mtx*) gMtxTbl[i].mtxPrev, (Mtx*) gMtxTbl[i].mtx, delta);
         gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
                   G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
-        if (delta >= 0.5f) {
-            gSPDisplayList(pos++, gMtxTbl[i].displayList);
-        }
     }
 
 }

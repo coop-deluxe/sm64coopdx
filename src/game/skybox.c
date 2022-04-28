@@ -234,6 +234,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
         for (col = 0; col < 3; col++) {
             s32 tileIndex = sSkyBoxInfo[player].upperLeftTile + row * SKYBOX_COLS + col;
             // UGLY HACK: if the camera moves weird after a level transition this can go too high
+            if (tileIndex < 0)  { tileIndex = 0;  }
             if (tileIndex > 79) { tileIndex = 79; }
             Texture* texture = NULL;
             if (background >= 10) {
