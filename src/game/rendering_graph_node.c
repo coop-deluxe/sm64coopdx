@@ -149,6 +149,12 @@ static Gfx* sViewportClipPos = NULL;
 static Vp   sViewportPrev    = { 0 };
 static Vp   sViewportInterp  = { 0 };
 
+static struct GraphNodeBackground* sBackgroundNode;
+Gfx* gBackgroundSkyboxGfx = NULL;
+Vtx* gBackgroundSkyboxVerts[3][3] = { 0 };
+Mtx* gBackgroundSkyboxMtx = NULL;
+struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
+
 struct {
     Gfx *pos;
     void *mtx;
@@ -161,7 +167,31 @@ s32 gMtxTblSize;
 struct Object* gCurGraphNodeProcessingObject = NULL;
 struct MarioState* gCurGraphNodeMarioState = NULL;
 
-void mtx_patch_interpolated(f32 delta) {
+void patch_mtx_before(void) {
+    gMtxTblSize = 0;
+
+    if (sPerspectiveNode != NULL) {
+        sPerspectiveNode->prevFov = sPerspectiveNode->fov;
+        sPerspectiveNode = NULL;
+    }
+
+    if (sViewport != NULL) {
+        sViewportPrev    = *sViewport;
+        sViewport        = NULL;
+        sViewportPos     = NULL;
+        sViewportClipPos = NULL;
+    }
+
+    if (sBackgroundNode != NULL) {
+        vec3f_copy(sBackgroundNode->prevCameraPos, gLakituState.pos);
+        vec3f_copy(sBackgroundNode->prevCameraFocus, gLakituState.focus);
+        sBackgroundNode->prevCameraTimestamp = gGlobalTimer;
+        sBackgroundNode = NULL;
+        gBackgroundSkyboxGfx = NULL;
+    }
+}
+
+void patch_mtx_interpolated(f32 delta) {
     if (sPerspectiveNode != NULL) {
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
@@ -182,6 +212,26 @@ void mtx_patch_interpolated(f32 delta) {
         gDisplayListHead = saved;
     }
 
+    if (sBackgroundNode != NULL) {
+        Vec3f posCopy;
+        Vec3f focusCopy;
+        struct GraphNodeRoot* rootCopy = gCurGraphNodeRoot;
+
+        gCurGraphNodeRoot = sBackgroundNodeRoot;
+        vec3f_copy(posCopy, gLakituState.pos);
+        vec3f_copy(focusCopy, gLakituState.focus);
+        /*if (gGlobalTimer == sBackgroundNode->prevCameraTimestamp + 1 &&
+            gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {*/
+            delta_interpolate_vec3f(gLakituState.pos, sBackgroundNode->prevCameraPos, posCopy, delta);
+            delta_interpolate_vec3f(gLakituState.focus, sBackgroundNode->prevCameraFocus, focusCopy, delta);
+        //}
+        /*list = */sBackgroundNode->fnNode.func(GEO_CONTEXT_RENDER, &sBackgroundNode->fnNode.node, NULL);
+
+        vec3f_copy(gLakituState.pos, posCopy);
+        vec3f_copy(gLakituState.focus, focusCopy);
+        gCurGraphNodeRoot = rootCopy;
+    }
+
     for (s32 i = 0; i < gMtxTblSize; i++) {
         Gfx *pos = gMtxTbl[i].pos;
         delta_interpolate_mtx(&gMtxTbl[i].interp, (Mtx*) gMtxTbl[i].mtxPrev, (Mtx*) gMtxTbl[i].mtx, delta);
@@ -190,22 +240,6 @@ void mtx_patch_interpolated(f32 delta) {
         if (delta >= 0.5f) {
             gSPDisplayList(pos++, gMtxTbl[i].displayList);
         }
-    }
-}
-
-void mtx_patch_before(void) {
-    gMtxTblSize = 0;
-
-    if (sPerspectiveNode != NULL) {
-        sPerspectiveNode->prevFov = sPerspectiveNode->fov;
-        sPerspectiveNode = NULL;
-    }
-
-    if (sViewport != NULL) {
-        sViewportPrev    = *sViewport;
-        sViewport        = NULL;
-        sViewportPos     = NULL;
-        sViewportClipPos = NULL;
     }
 }
 
@@ -661,33 +695,27 @@ static void geo_process_generated_list(struct GraphNodeGenerated *node) {
  */
 static void geo_process_background(struct GraphNodeBackground *node) {
     Gfx *list = NULL;
-    Gfx *listPrev = NULL;
 
     if (node->fnNode.func != NULL) {
         Vec3f posCopy;
         Vec3f focusCopy;
 
-        list = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node,
-                                 (struct AllocOnlyPool *) gMatStack[gMatStackIndex]);
-
         vec3f_copy(posCopy, gLakituState.pos);
         vec3f_copy(focusCopy, gLakituState.focus);
-        if (gGlobalTimer == node->prevCameraTimestamp + 1 &&
-            gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
+        /*if (gGlobalTimer == node->prevCameraTimestamp + 1 &&
+            gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {*/
             vec3f_copy(gLakituState.pos, node->prevCameraPos);
             vec3f_copy(gLakituState.focus, node->prevCameraFocus);
-        }
-        listPrev = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, NULL);
+            sBackgroundNode = node;
+            sBackgroundNodeRoot = gCurGraphNodeRoot;
+        //}
+        list = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, NULL);
         vec3f_copy(gLakituState.pos, posCopy);
         vec3f_copy(gLakituState.focus, focusCopy);
-
-        vec3f_copy(node->prevCameraPos, gLakituState.pos);
-        vec3f_copy(node->prevCameraFocus, gLakituState.focus);
-        node->prevCameraTimestamp = gGlobalTimer;
     }
 
     if (list != NULL) {
-        geo_append_display_list2((void *) VIRTUAL_TO_PHYSICAL(list), (void *) VIRTUAL_TO_PHYSICAL(listPrev), node->fnNode.node.flags >> 8);
+        geo_append_display_list2((void *) VIRTUAL_TO_PHYSICAL(list), (void *) VIRTUAL_TO_PHYSICAL(list), node->fnNode.node.flags >> 8);
     } else if (gCurGraphNodeMasterList != NULL) {
 #ifndef F3DEX_GBI_2E
         Gfx *gfxStart = alloc_display_list(sizeof(Gfx) * 7);

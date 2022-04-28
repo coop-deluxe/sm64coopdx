@@ -64,7 +64,9 @@ s8 gShowDebugText;
 s32 gRumblePakPfs;
 u32 gNumVblanks = 0;
 
+u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
+
 f32 gGameSpeed = 1.0f; // DO NOT COMMIT
 
 static struct AudioAPI *audio_api;
@@ -99,7 +101,7 @@ void send_display_list(struct SPTask *spTask) {
 #endif
 
 static void patch_interpolations_before(void) {
-    extern void mtx_patch_before(void);
+    extern void patch_mtx_before(void);
     extern void patch_screen_transition_before(void);
     extern void patch_title_screen_before(void);
     extern void patch_dialog_before(void);
@@ -107,7 +109,7 @@ static void patch_interpolations_before(void) {
     extern void patch_paintings_before(void);
     extern void patch_bubble_particles_before(void);
     extern void patch_snow_particles_before(void);
-    mtx_patch_before();
+    patch_mtx_before();
     patch_screen_transition_before();
     patch_title_screen_before();
     patch_dialog_before();
@@ -118,7 +120,7 @@ static void patch_interpolations_before(void) {
 }
 
 static inline void patch_interpolations(f32 delta) {
-    extern void mtx_patch_interpolated(f32 delta);
+    extern void patch_mtx_interpolated(f32 delta);
     extern void patch_screen_transition_interpolated(f32 delta);
     extern void patch_title_screen_interpolated(f32 delta);
     extern void patch_dialog_interpolated(f32 delta);
@@ -127,7 +129,7 @@ static inline void patch_interpolations(f32 delta) {
     extern void patch_bubble_particles_interpolated(f32 delta);
     extern void patch_snow_particles_interpolated(f32 delta);
     extern void djui_render_patch(void);
-    mtx_patch_interpolated(delta);
+    patch_mtx_interpolated(delta);
     patch_screen_transition_interpolated(delta);
     patch_title_screen_interpolated(delta);
     patch_dialog_interpolated(delta);
@@ -143,6 +145,8 @@ void produce_uncapped_frames(void) {
     static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
     static f64 sFrameTargetTime = 0;
 
+    gRenderingInterpolated = true;
+
     f64 startTime = clock_elapsed_f64();
     f64 curTime = startTime;
     u64 frames = 0;
@@ -155,6 +159,8 @@ void produce_uncapped_frames(void) {
         gfx_end_frame();
         frames++;
     }
+
+    gRenderingInterpolated = false;
 
     printf(">> frames %llu | %f\n", frames, gGameSpeed);
     fflush(stdout);

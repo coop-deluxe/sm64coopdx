@@ -62,6 +62,8 @@ struct Skybox sSkyBoxInfo[2];
 
 typedef const Texture *const SkyboxTexture[80];
 
+extern u8 gRenderingInterpolated;
+
 extern SkyboxTexture bbh_skybox_ptrlist;
 extern SkyboxTexture bidw_skybox_ptrlist;
 extern SkyboxTexture bitfs_skybox_ptrlist;
@@ -191,10 +193,19 @@ static s32 get_top_left_tile_idx(s8 player) {
  *                  into an x and y by modulus and division by SKYBOX_COLS. x and y are then scaled by
  *                  SKYBOX_TILE_WIDTH to get a point in world space.
  */
-Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex) {
-    Vtx *verts = alloc_display_list(4 * sizeof(*verts));
-    s16 x = tileIndex % SKYBOX_COLS * SKYBOX_TILE_WIDTH;
-    s16 y = SKYBOX_HEIGHT - tileIndex / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
+Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex, s32 row, s32 col, s8 player) {
+    extern Vtx* gBackgroundSkyboxVerts[3][3];
+
+    Vtx *verts;
+    if (gRenderingInterpolated) {
+        verts = gBackgroundSkyboxVerts[row][col];
+    } else {
+        verts = alloc_display_list(4 * sizeof(*verts));
+        gBackgroundSkyboxVerts[row][col] = verts;
+    }
+
+    f32 x = tileIndex % SKYBOX_COLS * SKYBOX_TILE_WIDTH;
+    f32 y = SKYBOX_HEIGHT - tileIndex / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
 
     if (verts != NULL) {
         make_vertex(verts, 0, x, y, -1, 0, 0, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
@@ -231,7 +242,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
                 texture = (Texture*)(*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
             }
 
-            Vtx *vertices = make_skybox_rect(tileIndex, colorIndex);
+            Vtx *vertices = make_skybox_rect(tileIndex, colorIndex, row, col, player);
 
             gLoadBlockTexture((*dlist)++, 32, 32, G_IM_FMT_RGBA, texture);
             gSPVertex((*dlist)++, VIRTUAL_TO_PHYSICAL(vertices), 4, 0);
@@ -245,7 +256,15 @@ void *create_skybox_ortho_matrix(s8 player) {
     f32 right = sSkyBoxInfo[player].scaledX + SCREEN_WIDTH;
     f32 bottom = sSkyBoxInfo[player].scaledY - SCREEN_HEIGHT;
     f32 top = sSkyBoxInfo[player].scaledY;
-    Mtx *mtx = alloc_display_list(sizeof(*mtx));
+
+    extern Mtx* gBackgroundSkyboxMtx;
+    Mtx *mtx;
+    if (gRenderingInterpolated) {
+        mtx = gBackgroundSkyboxMtx;
+    } else {
+        mtx = alloc_display_list(sizeof(*mtx));
+        gBackgroundSkyboxMtx = mtx;
+    }
 
     f32 half_width = (4.0f / 3.0f) / GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_WIDTH / 2;
     f32 center = (sSkyBoxInfo[player].scaledX + SCREEN_WIDTH / 2);
@@ -267,8 +286,18 @@ void *create_skybox_ortho_matrix(s8 player) {
  * Creates the skybox's display list, then draws the 3x3 grid of tiles.
  */
 Gfx *init_skybox_display_list(s8 player, s8 background, s8 colorIndex) {
+    extern Gfx* gBackgroundSkyboxGfx;
+
     s32 dlCommandCount = 5 + (3 * 3) * 7; // 5 for the start and end, plus 9 skybox tiles
-    void *skybox = alloc_display_list(dlCommandCount * sizeof(Gfx));
+
+    void *skybox;
+    if (gRenderingInterpolated) {
+        skybox = gBackgroundSkyboxGfx;
+    } else {
+        skybox = alloc_display_list(dlCommandCount * sizeof(Gfx));
+        gBackgroundSkyboxGfx = (Gfx*)skybox;
+    }
+
     Gfx *dlist = skybox;
 
     if (skybox == NULL) {

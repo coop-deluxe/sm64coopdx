@@ -445,10 +445,10 @@ void append_bubble_vertex_buffer(Gfx *gfx, s32 index, Vec3s vertex1, Vec3s verte
 
     for (i = 0; i < 15; i += 3) {
         vertBuf[i] = template[0];
+
         s32 xPos;
         s32 yPos;
         s32 zPos;
-
         s32 particleIndex = (index + i / 3);
         struct EnvFxParticle* particle = (gEnvFxBuffer + particleIndex);
 
