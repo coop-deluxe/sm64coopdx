@@ -929,7 +929,7 @@ static void bubbled_offset_visual(struct MarioState* m) {
 }
 
 s32 act_bubbled(struct MarioState* m) {
-    if (m->playerIndex == 0) {
+    if (m->playerIndex == 0 && m->area->camera->mode == CAMERA_MODE_WATER_SURFACE) {
         set_camera_mode(m->area->camera, CAMERA_MODE_FREE_ROAM, 1);
     }
     struct MarioState* targetMarioState = nearest_mario_state_to_object(m->marioObj);
