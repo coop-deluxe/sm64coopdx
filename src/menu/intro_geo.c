@@ -15,6 +15,7 @@
 
 #include "gfx_dimensions.h"
 #include "game/rendering_graph_node.h"
+#include "pc/utils/misc.h"
 
 // frame counts for the zoom in, hold, and zoom out of title model
 #define INTRO_STEPS_ZOOM_IN 20
@@ -60,14 +61,20 @@ s8 gameOverBackgroundFlipOrder[] = { 0x00, 0x01, 0x02, 0x03, 0x07, 0x0B,
 
 static Gfx *sIntroScalePos;
 static Vec3f sIntroScale;
+static Vec3f sIntroScalePrev;
 
-void patch_title_screen_scales(void) {
+void patch_title_screen_before(void) {
+    sIntroScalePos = NULL;
+}
+
+void patch_title_screen_interpolated(f32 delta) {
     if (sIntroScalePos != NULL) {
         Mtx *scaleMat = alloc_display_list(sizeof(*scaleMat));
         if (scaleMat == NULL) { return; }
-        guScale(scaleMat, sIntroScale[0], sIntroScale[1], sIntroScale[2]);
+        Vec3f scaleInterp;
+        delta_interpolate_vec3f(scaleInterp, sIntroScalePrev, sIntroScale, delta);
+        guScale(scaleMat, scaleInterp[0], scaleInterp[1], scaleInterp[2]);
         gSPMatrix(sIntroScalePos, scaleMat, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
-        sIntroScalePos = NULL;
     }
 }
 
@@ -82,7 +89,6 @@ Gfx *geo_title_screen(s32 state, struct GraphNode *sp54, UNUSED void *context) {
     f32 scaleY;                  // sp30
     f32 scaleZ;                  // sp2c
     Vec3f scale;
-    Vec3f scaleInterpolated;
     graphNode = sp54;
     dl = NULL;
     dlIter = NULL;
@@ -119,14 +125,12 @@ Gfx *geo_title_screen(s32 state, struct GraphNode *sp54, UNUSED void *context) {
             scaleY = 0.0f;
             scaleZ = 0.0f;
         }
+
+        vec3f_copy(sIntroScalePrev, sIntroScale);
         vec3f_set(scale, scaleX, scaleY, scaleZ);
-
-        // TODO: fixme
-        //interpolate_vectors(scaleInterpolated, sIntroScale, scale);
-        vec3f_copy(scaleInterpolated, scale);
-
         vec3f_set(sIntroScale, scaleX, scaleY, scaleZ);
-        guScale(scaleMat, scaleInterpolated[0], scaleInterpolated[1], scaleInterpolated[2]);
+
+        guScale(scaleMat, sIntroScalePrev[0], sIntroScalePrev[1], sIntroScalePrev[2]);
         sIntroScalePos = dlIter;
         gSPMatrix(dlIter++, scaleMat, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
         gSPDisplayList(dlIter++, &intro_seg7_dl_0700B3A0);   // draw model

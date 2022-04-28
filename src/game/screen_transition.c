@@ -12,25 +12,42 @@
 #include "screen_transition.h"
 #include "segment2.h"
 #include "sm64.h"
+#include "pc/utils/misc.h"
 
 u8 sTransitionColorFadeCount[4] = { 0 };
 u16 sTransitionTextureFadeCount[2] = { 0 };
 
 static Gfx *sScreenTransitionVerticesPos[2];
 static Vtx *sScreenTransitionVertices;
+static Vtx *sScreenTransitionVerticesPrev;
+static Vtx sScreenTransitionInterp[8] = { 0 };
 
 void reset_screen_transition_timers(void) {
     for (s32 i = 0; i < 4; i++) { sTransitionColorFadeCount[i] = 0; }
     for (s32 i = 0; i < 2; i++) { sTransitionTextureFadeCount[i] = 0; }
 }
 
-void patch_screen_transition_interpolated(void) {
+
+extern void patch_screen_transition_before(void) {
+    sScreenTransitionVerticesPos[0] = NULL;
+    sScreenTransitionVerticesPos[1] = NULL;
+    sScreenTransitionVertices = NULL;
+    sScreenTransitionVerticesPrev = NULL;
+}
+
+void patch_screen_transition_interpolated(f32 delta) {
     if (sScreenTransitionVerticesPos[0] != NULL) {
-        gSPVertex(sScreenTransitionVerticesPos[0], VIRTUAL_TO_PHYSICAL(sScreenTransitionVertices), 8, 0);
-        gSPVertex(sScreenTransitionVerticesPos[1], VIRTUAL_TO_PHYSICAL(sScreenTransitionVertices), 4, 0);
-        sScreenTransitionVerticesPos[0] = NULL;
-        sScreenTransitionVerticesPos[1] = NULL;
-        sScreenTransitionVertices = NULL;
+        for (s32 i = 0; i < 8; i++) {
+            sScreenTransitionInterp[i] = sScreenTransitionVerticesPrev[i];
+            delta_interpolate_vec3f(sScreenTransitionInterp[i].n.ob,
+                                    sScreenTransitionVerticesPrev[i].n.ob,
+                                    sScreenTransitionVertices[i].n.ob, delta);
+            delta_interpolate_rgba(sScreenTransitionInterp[i].v.cn,
+                                   sScreenTransitionVerticesPrev[i].v.cn,
+                                   sScreenTransitionVertices[i].v.cn, delta);
+        }
+        gSPVertex(sScreenTransitionVerticesPos[0], VIRTUAL_TO_PHYSICAL(sScreenTransitionInterp), 8, 0);
+        gSPVertex(sScreenTransitionVerticesPos[1], VIRTUAL_TO_PHYSICAL(sScreenTransitionInterp), 4, 0);
     }
 }
 
@@ -249,19 +266,20 @@ s32 render_textured_transition(s8 fadeTimer, s8 transTime, struct WarpTransition
     s16 centerTransX = center_tex_transition_x(transData, texTransTime, texTransPos);
     s16 centerTransY = center_tex_transition_y(transData, texTransTime, texTransPos);
     s16 texTransRadius = calc_tex_transition_radius(fadeTimer, 1.0f, transTime, transData);
-    s16 texTransRadiusInterpolated = calc_tex_transition_radius(fadeTimer, 0.5f, transTime, transData);
+    s16 texTransRadiusPrev = calc_tex_transition_radius(fadeTimer, 0.0f, transTime, transData);
     Vtx *verts = alloc_display_list(8 * sizeof(*verts));
-    Vtx *vertsInterpolated = alloc_display_list(8 * sizeof(*vertsInterpolated));
+    Vtx *vertsPrev = alloc_display_list(8 * sizeof(*vertsPrev));
 
-    if (verts != NULL && vertsInterpolated != NULL) {
+    if (verts != NULL && vertsPrev != NULL) {
         load_tex_transition_vertex(verts, fadeTimer, transData, centerTransX, centerTransY, texTransRadius, transTexType);
-        load_tex_transition_vertex(vertsInterpolated, fadeTimer, transData, centerTransX, centerTransY, texTransRadiusInterpolated, transTexType);
+        load_tex_transition_vertex(vertsPrev, fadeTimer, transData, centerTransX, centerTransY, texTransRadiusPrev, transTexType);
         sScreenTransitionVertices = verts;
+        sScreenTransitionVerticesPrev = vertsPrev;
         gSPDisplayList(gDisplayListHead++, dl_proj_mtx_fullscreen)
         gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
         gDPSetRenderMode(gDisplayListHead++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
         sScreenTransitionVerticesPos[0] = gDisplayListHead;
-        gSPVertex(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(vertsInterpolated), 8, 0);
+        gSPVertex(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(vertsPrev), 8, 0);
         gSPDisplayList(gDisplayListHead++, dl_transition_draw_filled_region);
         gDPPipeSync(gDisplayListHead++);
         gDPSetCombineMode(gDisplayListHead++, G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA);
@@ -279,7 +297,7 @@ s32 render_textured_transition(s8 fadeTimer, s8 transTime, struct WarpTransition
         }
         gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
         sScreenTransitionVerticesPos[1] = gDisplayListHead;
-        gSPVertex(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(vertsInterpolated), 4, 0);
+        gSPVertex(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(vertsPrev), 4, 0);
         gSPDisplayList(gDisplayListHead++, dl_draw_quad_verts_0123);
         gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
         gSPDisplayList(gDisplayListHead++, dl_screen_transition_end);

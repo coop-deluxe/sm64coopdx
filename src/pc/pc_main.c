@@ -100,28 +100,42 @@ void send_display_list(struct SPTask *spTask) {
 
 static void patch_interpolations_before(void) {
     extern void mtx_patch_before(void);
+    extern void patch_screen_transition_before(void);
+    extern void patch_title_screen_before(void);
+    extern void patch_dialog_before(void);
+    extern void patch_hud_before(void);
+    extern void patch_paintings_before(void);
+    extern void patch_bubble_particles_before(void);
+    extern void patch_snow_particles_before(void);
     mtx_patch_before();
+    patch_screen_transition_before();
+    patch_title_screen_before();
+    patch_dialog_before();
+    patch_hud_before();
+    patch_paintings_before();
+    patch_bubble_particles_before();
+    patch_snow_particles_before();
 }
 
 static inline void patch_interpolations(f32 delta) {
     extern void mtx_patch_interpolated(f32 delta);
-    extern void patch_screen_transition_interpolated(void);
-    extern void patch_title_screen_scales(void);
-    extern void patch_interpolated_dialog(void);
-    extern void patch_interpolated_hud(void);
-    extern void patch_interpolated_paintings(void);
-    extern void patch_interpolated_bubble_particles(void);
-    extern void patch_interpolated_snow_particles(void);
+    extern void patch_screen_transition_interpolated(f32 delta);
+    extern void patch_title_screen_interpolated(f32 delta);
+    extern void patch_dialog_interpolated(f32 delta);
+    extern void patch_hud_interpolated(f32 delta);
+    extern void patch_paintings_interpolated(f32 delta);
+    extern void patch_bubble_particles_interpolated(f32 delta);
+    extern void patch_snow_particles_interpolated(f32 delta);
     extern void djui_render_patch(void);
     mtx_patch_interpolated(delta);
-    /*patch_screen_transition_interpolated();
-    patch_title_screen_scales();
-    patch_interpolated_dialog();
-    patch_interpolated_hud();
-    patch_interpolated_paintings();
-    patch_interpolated_bubble_particles();
-    patch_interpolated_snow_particles();
-    djui_render_patch();*/
+    patch_screen_transition_interpolated(delta);
+    patch_title_screen_interpolated(delta);
+    patch_dialog_interpolated(delta);
+    patch_hud_interpolated(delta);
+    patch_paintings_interpolated(delta);
+    patch_bubble_particles_interpolated(delta);
+    patch_snow_particles_interpolated(delta);
+    /*djui_render_patch();*/
 }
 
 void produce_uncapped_frames(void) {

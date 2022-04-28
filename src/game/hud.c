@@ -17,6 +17,7 @@
 #include "print.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
+#include "pc/utils/misc.h"
 
 extern bool gDjuiInMainMenu;
 u8 gOverrideHideHud;
@@ -64,18 +65,26 @@ static struct UnusedHUDStruct sUnusedHUDValues = { 0x00, 0x0A, 0x00 };
 
 static struct CameraHUD sCameraHUD = { CAM_STATUS_NONE };
 
-static u32 sPowerMeterLastRenderTimestamp;
-static s16 sPowerMeterLastY;
+static u32 sPowerMeterPrevTimestamp;
+static f32 sPowerMeterPrevY;
 static Gfx *sPowerMeterDisplayListPos;
 
-void patch_interpolated_hud(void) {
+void patch_hud_before(void) {
+    if (sPowerMeterDisplayListPos != NULL) {
+        sPowerMeterPrevY = sPowerMeterHUD.y;
+        sPowerMeterPrevTimestamp = gGlobalTimer;
+        sPowerMeterDisplayListPos = NULL;
+    }
+}
+
+void patch_hud_interpolated(f32 delta) {
     if (sPowerMeterDisplayListPos != NULL) {
         Mtx *mtx = alloc_display_list(sizeof(Mtx));
         if (mtx == NULL) { return; }
-        guTranslate(mtx, (f32) sPowerMeterHUD.x, (f32) sPowerMeterHUD.y, 0);
+        f32 interpY = delta_interpolate_f32(sPowerMeterPrevY, (f32)sPowerMeterHUD.y, delta);
+        guTranslate(mtx, (f32) sPowerMeterHUD.x, interpY, 0);
         gSPMatrix(sPowerMeterDisplayListPos, VIRTUAL_TO_PHYSICAL(mtx),
               G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
-        sPowerMeterDisplayListPos = NULL;
     }
 }
 
@@ -131,7 +140,6 @@ void render_power_meter_health_segment(s16 numHealthWedges) {
  */
 void render_dl_power_meter(s16 numHealthWedges) {
     Mtx *mtx;
-    f32 interpolatedY;
 
     mtx = alloc_display_list(sizeof(Mtx));
 
@@ -139,14 +147,7 @@ void render_dl_power_meter(s16 numHealthWedges) {
         return;
     }
 
-    if (gGlobalTimer == sPowerMeterLastRenderTimestamp + 1) {
-        interpolatedY = (sPowerMeterLastY + sPowerMeterHUD.y) / 2.0f;
-    } else {
-        interpolatedY = sPowerMeterHUD.y;
-    }
-    guTranslate(mtx, (f32) sPowerMeterHUD.x, interpolatedY, 0);
-    sPowerMeterLastY = sPowerMeterHUD.y;
-    sPowerMeterLastRenderTimestamp = gGlobalTimer;
+    guTranslate(mtx, (f32) sPowerMeterHUD.x, sPowerMeterPrevY, 0);
     sPowerMeterDisplayListPos = gDisplayListHead;
 
     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx++),
@@ -202,6 +203,7 @@ static void animate_power_meter_deemphasizing(void) {
 
     if (sPowerMeterHUD.y >= 201) {
         sPowerMeterHUD.y = 200;
+        sPowerMeterPrevY = 200;
         sPowerMeterHUD.animation = POWER_METER_VISIBLE;
     }
 }
@@ -226,6 +228,7 @@ void handle_power_meter_actions(s16 numHealthWedges) {
     if (numHealthWedges < 8 && sPowerMeterStoredHealth == 8 && sPowerMeterHUD.animation == POWER_METER_HIDDEN) {
         sPowerMeterHUD.animation = POWER_METER_EMPHASIZED;
         sPowerMeterHUD.y = 166;
+        sPowerMeterPrevY = 166;
     }
 
     // Show power meter if health is full, has 8

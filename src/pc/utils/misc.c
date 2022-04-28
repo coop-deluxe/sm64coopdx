@@ -120,7 +120,25 @@ f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
     return start * (1.0f - delta) + end * delta;
 }
 
-void delta_interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+s32 delta_interpolate_s32(s32 a, s32 b, f32 delta) {
+    return a * (1.0f - delta) + b * delta;
+}
+
+void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    res[0] = ((a[0] * antiDelta) + (b[0] * delta));
+    res[1] = ((a[1] * antiDelta) + (b[1] * delta));
+    res[2] = ((a[2] * antiDelta) + (b[2] * delta));
+}
+
+void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    res[0] = ((a[0] * antiDelta) + (b[0] * delta));
+    res[1] = ((a[1] * antiDelta) + (b[1] * delta));
+    res[2] = ((a[2] * antiDelta) + (b[2] * delta));
+}
+
+void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
@@ -134,6 +152,14 @@ void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
             out->m[i][j] = (a->m[i][j] * antiDelta) + (b->m[i][j] * delta);
         }
     }
+}
+
+void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    res[0] = ((a[0] * antiDelta) + (b[0] * delta));
+    res[1] = ((a[1] * antiDelta) + (b[1] * delta));
+    res[2] = ((a[2] * antiDelta) + (b[2] * delta));
+    res[3] = ((a[3] * antiDelta) + (b[3] * delta));
 }
 
 /*

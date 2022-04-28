@@ -27,6 +27,7 @@ struct EnvFxParticle {
     s32 bubbleY; // for Bubbles, yPos is always set to this
     //s8 filler20[56 - 0x20];
     u32 spawnTimestamp;
+    Vec3s prevPos;
 };
 
 extern s8 gEnvFxMode;

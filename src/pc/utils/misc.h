@@ -15,7 +15,11 @@ u32 clock_elapsed_ticks(void);
 void file_get_line(char* buffer, size_t maxLength, FILE* fp);
 
 f32 delta_interpolate_f32(f32 start, f32 end, f32 delta);
-void delta_interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b, f32 delta);
+s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);
+void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta);
+void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);
+void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta);
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);
+void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta);
 
 #endif

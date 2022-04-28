@@ -170,8 +170,8 @@ void mtx_patch_interpolated(f32 delta) {
     }
 
     if (sViewportClipPos != NULL) {
-        delta_interpolate_vectors_s16(sViewportInterp.vp.vtrans, sViewportPrev.vp.vtrans, sViewport->vp.vtrans, delta);
-        delta_interpolate_vectors_s16(sViewportInterp.vp.vscale, sViewportPrev.vp.vscale, sViewport->vp.vscale, delta);
+        delta_interpolate_vec3s(sViewportInterp.vp.vtrans, sViewportPrev.vp.vtrans, sViewport->vp.vtrans, delta);
+        delta_interpolate_vec3s(sViewportInterp.vp.vscale, sViewportPrev.vp.vscale, sViewport->vp.vscale, delta);
 
         Gfx *saved = gDisplayListHead;
 

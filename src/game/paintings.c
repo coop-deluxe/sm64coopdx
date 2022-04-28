@@ -16,6 +16,7 @@
 #include "paintings.h"
 #include "save_file.h"
 #include "segment2.h"
+#include "pc/utils/misc.h"
 
 /**
  * @file paintings.c
@@ -189,29 +190,74 @@ struct Painting **sPaintingGroups[] = {
 s16 gPaintingUpdateCounter = 1;
 s16 gLastPaintingUpdateCounter = 0;
 
-static Vtx sLastVertices[2 * 264 * 3];
-static u32 sLastVerticesTimestamp;
+
+typedef struct {
+	float		ob[3];	/* x, y, z */
+	signed char	n[3];	/* normal */
+} Vtx_Interp;
+
+static Vtx_Interp sVertexBuffers[2][2 * 264 * 3];
+static u8 sVerticesCurIndex = 0;
+static u8 sVertexSwaps = 0;
+static Vtx_Interp* sVerticesCur  = sVertexBuffers[0];
+static Vtx_Interp* sVerticesPrev = NULL;
+static u32 sVerticesPrevTimestamp;
 static Vtx *sVerticesPtr[2];
 static s32 sVerticesCount;
 
-void patch_interpolated_paintings(void) {
-    if (sVerticesPtr[0] != NULL) {
+void patch_paintings_before(void) {
+
+    if (gGlobalTimer == sVerticesPrevTimestamp + 1) {
+        sVerticesCurIndex = !sVerticesCurIndex;
+        sVerticesCur      = sVertexBuffers[sVerticesCurIndex];
+        sVerticesPrev     = sVertexBuffers[!sVerticesCurIndex];
+        sVertexSwaps++;
+    } else {
+        sVerticesPrev = NULL;
+        sVertexSwaps = 0;
+    }
+
+    sVerticesPtr[0] = NULL;
+    sVerticesPtr[1] = NULL;
+    sVerticesCount = 0;
+}
+
+void patch_paintings_interpolated(f32 delta) {
+    if (sVerticesPtr[0] != NULL && sVerticesPrev != NULL && sVertexSwaps > 2) {
         s32 i;
         if (sVerticesPtr[1] != NULL) {
             for (i = 0; i < sVerticesCount / 2; i++) {
-                sVerticesPtr[0][i] = sLastVertices[i];
+                Vec3f obInterp;
+                delta_interpolate_vec3f(obInterp, sVerticesPrev[i].ob, sVerticesCur[i].ob, delta);
+                s8 nInterp[3];
+                delta_interpolate_normal(nInterp, sVerticesPrev[i].n, sVerticesCur[i].n, delta);
+                for (u8 j = 0; j < 3; j++) {
+                    sVerticesPtr[0][i].n.ob[j] = obInterp[j];
+                    sVerticesPtr[0][i].n.n[j]  = nInterp[j];
+                }
             }
             for (; i < sVerticesCount; i++) {
-                sVerticesPtr[1][i - sVerticesCount / 2] = sLastVertices[i];
+                Vec3f obInterp;
+                delta_interpolate_vec3f(obInterp, sVerticesPrev[i].ob, sVerticesCur[i].ob, delta);
+                s8 nInterp[3];
+                delta_interpolate_normal(nInterp, sVerticesPrev[i].n, sVerticesCur[i].n, delta);
+                for (u8 j = 0; j < 3; j++) {
+                    sVerticesPtr[1][i - sVerticesCount / 2].n.ob[j] = obInterp[j];
+                    sVerticesPtr[1][i - sVerticesCount / 2].n.n[j]  = nInterp[j];
+                }
             }
         } else {
             for (i = 0; i < sVerticesCount; i++) {
-                sVerticesPtr[0][i] = sLastVertices[i];
+                Vec3f obInterp;
+                delta_interpolate_vec3f(obInterp, sVerticesPrev[i].ob, sVerticesCur[i].ob, delta);
+                s8 nInterp[3];
+                delta_interpolate_normal(nInterp, sVerticesPrev[i].n, sVerticesCur[i].n, delta);
+                for (u8 j = 0; j < 3; j++) {
+                    sVerticesPtr[0][i].n.ob[j] = obInterp[j];
+                    sVerticesPtr[0][i].n.n[j]  = nInterp[j];
+                }
             }
         }
-        sVerticesPtr[0] = NULL;
-        sVerticesPtr[1] = NULL;
-        sVerticesCount = 0;
     }
 }
 
@@ -932,16 +978,25 @@ Gfx *render_painting(u8 *img, s16 tWidth, s16 tHeight, s16 *textureMap, s16 mapV
         sVerticesCount = 0;
     }
     for (map = 0; map < numVtx; map++) {
-        Vtx v = verts[map];
-        if (gGlobalTimer == sLastVerticesTimestamp + 1) {
+        Vtx* v = &verts[map];
+        if (gGlobalTimer == sVerticesPrevTimestamp + 1) {
             s32 i;
+            Vtx_Interp* vCur  = &sVerticesCur[sVerticesCount + map];
+            Vtx_Interp* vPrev = (sVerticesPrev && sVertexSwaps > 2) ? &sVerticesPrev[sVerticesCount + map] : NULL;
             for (i = 0; i < 3; i++) {
-                verts[map].n.ob[i] = (v.n.ob[i] + sLastVertices[sVerticesCount + map].n.ob[i]) / 2;
-                verts[map].n.n[i] = (v.n.n[i] + sLastVertices[sVerticesCount + map].n.n[i]) / 2;
+                // save current
+                vCur->ob[i] = v->n.ob[i];
+                vCur->n[i]  = v->n.n[i];
+
+                // override verts with prev
+                if (vPrev) {
+                    v->n.ob[i] = vPrev->ob[i];
+                    v->n.n[i]  = vPrev->n[i];
+                }
             }
         }
-        sLastVertices[sVerticesCount + map] = v;
     }
+
     sVerticesPtr[sVerticesCount / numVtx] = verts;
     sVerticesCount += numVtx;
 
@@ -1010,7 +1065,7 @@ Gfx *painting_ripple_image(struct Painting *painting) {
         meshTris = textureMap[meshVerts * 3 + 1];
         gSPDisplayList(gfx++, render_painting(textures[i], tWidth, tHeight, textureMap, meshVerts, meshTris, painting->alpha));
     }
-    sLastVerticesTimestamp = gGlobalTimer;
+    sVerticesPrevTimestamp = gGlobalTimer;
 
     // Update the ripple, may automatically reset the painting's state.
     painting_update_ripple_state(painting);
@@ -1048,7 +1103,7 @@ Gfx *painting_ripple_env_mapped(struct Painting *painting) {
     meshVerts = textureMap[0];
     meshTris = textureMap[meshVerts * 3 + 1];
     gSPDisplayList(gfx++, render_painting(tArray[0], tWidth, tHeight, textureMap, meshVerts, meshTris, painting->alpha));
-    sLastVerticesTimestamp = gGlobalTimer;
+    sVerticesPrevTimestamp = gGlobalTimer;
 
     // Update the ripple, may automatically reset the painting's state.
     painting_update_ripple_state(painting);
