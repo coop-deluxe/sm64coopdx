@@ -227,12 +227,11 @@ void patch_mtx_interpolated(f32 delta) {
         gCurGraphNodeRoot = sBackgroundNodeRoot;
         vec3f_copy(posCopy, gLakituState.pos);
         vec3f_copy(focusCopy, gLakituState.focus);
-        /*if (gGlobalTimer == sBackgroundNode->prevCameraTimestamp + 1 &&
-            gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {*/
+        if (gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
             delta_interpolate_vec3f(gLakituState.pos, sBackgroundNode->prevCameraPos, posCopy, delta);
             delta_interpolate_vec3f(gLakituState.focus, sBackgroundNode->prevCameraFocus, focusCopy, delta);
-        //}
-        /*list = */sBackgroundNode->fnNode.func(GEO_CONTEXT_RENDER, &sBackgroundNode->fnNode.node, NULL);
+        }
+        sBackgroundNode->fnNode.func(GEO_CONTEXT_RENDER, &sBackgroundNode->fnNode.node, NULL);
 
         vec3f_copy(gLakituState.pos, posCopy);
         vec3f_copy(gLakituState.focus, focusCopy);
@@ -245,9 +244,6 @@ void patch_mtx_interpolated(f32 delta) {
         gShadowInterpCurrent = interp;
         Vec3f posInterp;
         delta_interpolate_vec3f(posInterp, interp->shadowPosPrev, interp->shadowPos, delta);
-        if (i == 0) {
-            printf("XXX: %f <--> %f == %f\n", interp->shadowPosPrev[1], interp->shadowPos[1], posInterp[1]);
-        }
         gCurGraphNodeObject = interp->obj;
         create_shadow_below_xyz(posInterp[0], posInterp[1], posInterp[2], interp->shadowScale, interp->node->shadowSolidity, interp->node->shadowType);
     }
@@ -315,7 +311,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
                 }
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
-                gSPDisplayList(gDisplayListHead++, currList->displayListPrev);
+                gSPDisplayList(gDisplayListHead++, currList->displayList);
                 currList = currList->next;
             }
         }
@@ -331,7 +327,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
  * parameter. Look at the RenderModeContainer struct to see the corresponding
  * render modes of layers.
  */
-static void geo_append_display_list2(void *displayList, void *displayListPrev, s16 layer) {
+static void geo_append_display_list(void *displayList, s16 layer) {
 
 #ifdef F3DEX_GBI_2
     gSPLookAt(gDisplayListHead++, &lookAt);
@@ -343,7 +339,6 @@ static void geo_append_display_list2(void *displayList, void *displayListPrev, s
         listNode->transform = gMatStackFixed[gMatStackIndex];
         listNode->transformPrev = gMatStackPrevFixed[gMatStackIndex];
         listNode->displayList = displayList;
-        listNode->displayListPrev = displayListPrev;
         listNode->next = 0;
         if (gCurGraphNodeMasterList->listHeads[layer] == 0) {
             gCurGraphNodeMasterList->listHeads[layer] = listNode;
@@ -352,10 +347,6 @@ static void geo_append_display_list2(void *displayList, void *displayListPrev, s
         }
         gCurGraphNodeMasterList->listTails[layer] = listNode;
     }
-}
-
-static void geo_append_display_list(void *displayList, s16 layer) {
-    geo_append_display_list2(displayList, displayList, layer);
 }
 
 /**
@@ -724,20 +715,19 @@ static void geo_process_background(struct GraphNodeBackground *node) {
 
         vec3f_copy(posCopy, gLakituState.pos);
         vec3f_copy(focusCopy, gLakituState.focus);
-        /*if (gGlobalTimer == node->prevCameraTimestamp + 1 &&
-            gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {*/
+        if (gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
             vec3f_copy(gLakituState.pos, node->prevCameraPos);
             vec3f_copy(gLakituState.focus, node->prevCameraFocus);
             sBackgroundNode = node;
             sBackgroundNodeRoot = gCurGraphNodeRoot;
-        //}
+        }
         list = node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, NULL);
         vec3f_copy(gLakituState.pos, posCopy);
         vec3f_copy(gLakituState.focus, focusCopy);
     }
 
     if (list != NULL) {
-        geo_append_display_list2((void *) VIRTUAL_TO_PHYSICAL(list), (void *) VIRTUAL_TO_PHYSICAL(list), node->fnNode.node.flags >> 8);
+        geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(list), node->fnNode.node.flags >> 8);
     } else if (gCurGraphNodeMasterList != NULL) {
 #ifndef F3DEX_GBI_2E
         Gfx *gfxStart = alloc_display_list(sizeof(Gfx) * 7);
@@ -1002,14 +992,11 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             if (!increment_mat_stack()) { return; }
 
             if (gShadowAboveWaterOrLava == TRUE) {
-                geo_append_display_list2((void *) VIRTUAL_TO_PHYSICAL(shadowListPrev),
-                                         (void *) VIRTUAL_TO_PHYSICAL(shadowListPrev), 4);
+                geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(shadowListPrev), 4);
             } else if (gMarioOnIceOrCarpet == TRUE) {
-                geo_append_display_list2((void *) VIRTUAL_TO_PHYSICAL(shadowListPrev),
-                                         (void *) VIRTUAL_TO_PHYSICAL(shadowListPrev), 5);
+                geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(shadowListPrev), 5);
             } else {
-                geo_append_display_list2((void *) VIRTUAL_TO_PHYSICAL(shadowListPrev),
-                                         (void *) VIRTUAL_TO_PHYSICAL(shadowListPrev), 6);
+                geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(shadowListPrev), 6);
             }
             gMatStackIndex--;
         }

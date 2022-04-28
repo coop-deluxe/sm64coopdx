@@ -42,7 +42,7 @@ static void debug_warp_level1() {
     //set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
     //return;
 
-    dynos_warp_to_level(LEVEL_CCM, 1, 1);
+    dynos_warp_to_level(LEVEL_BOB, 1, 1);
 }
 
 static void debug_warp_level2() {

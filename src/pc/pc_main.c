@@ -109,6 +109,7 @@ static void patch_interpolations_before(void) {
     extern void patch_paintings_before(void);
     extern void patch_bubble_particles_before(void);
     extern void patch_snow_particles_before(void);
+    extern void patch_djui_before(void);
     patch_mtx_before();
     patch_screen_transition_before();
     patch_title_screen_before();
@@ -117,6 +118,7 @@ static void patch_interpolations_before(void) {
     patch_paintings_before();
     patch_bubble_particles_before();
     patch_snow_particles_before();
+    patch_djui_before();
 }
 
 static inline void patch_interpolations(f32 delta) {
@@ -128,7 +130,7 @@ static inline void patch_interpolations(f32 delta) {
     extern void patch_paintings_interpolated(f32 delta);
     extern void patch_bubble_particles_interpolated(f32 delta);
     extern void patch_snow_particles_interpolated(f32 delta);
-    extern void djui_render_patch(void);
+    extern void patch_djui_interpolated(f32 delta);
     patch_mtx_interpolated(delta);
     patch_screen_transition_interpolated(delta);
     patch_title_screen_interpolated(delta);
@@ -137,7 +139,7 @@ static inline void patch_interpolations(f32 delta) {
     patch_paintings_interpolated(delta);
     patch_bubble_particles_interpolated(delta);
     patch_snow_particles_interpolated(delta);
-    /*djui_render_patch();*/
+    patch_djui_interpolated(delta);
 }
 
 void produce_uncapped_frames(void) {

@@ -126,7 +126,6 @@ struct DisplayListNode
     Mtx *transform;
     void *transformPrev;
     void *displayList;
-    void *displayListPrev;
     struct DisplayListNode *next;
 };
 

@@ -5,6 +5,8 @@
 #include "pc/lua/smlua_hooks.h"
 #include "djui_panel_playerlist.h"
 #include "djui_hud_utils.h"
+#include "engine/math_util.h"
+#include "pc/utils/misc.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
 
@@ -14,6 +16,24 @@ static struct DjuiText* sDjuiLuaError = NULL;
 static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
 bool gDjuiDisabled = false;
+
+bool sDjuiRendered60fps = false;
+
+void patch_djui_before(void) {
+    sDjuiRendered60fps = false;
+}
+
+void patch_djui_interpolated(UNUSED f32 delta) {
+    // reset the head and re-render DJUI
+    if (delta >= 0.5f && !sDjuiRendered60fps) {
+        sDjuiRendered60fps = true;
+        if (sSavedDisplayListHead == NULL) { return; }
+        gDisplayListHead = sSavedDisplayListHead;
+        djui_render();
+        gDPFullSync(gDisplayListHead++);
+        gSPEndDisplayList(gDisplayListHead++);
+    }
+}
 
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
@@ -56,15 +76,6 @@ void djui_lua_error(char* text) {
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
     sDjuiLuaErrorTimeout = 30 * 5;
-}
-
-void djui_render_patch(void) {
-    // reset the head and re-render DJUI
-    if (sSavedDisplayListHead == NULL) { return; }
-    gDisplayListHead = sSavedDisplayListHead;
-    djui_render();
-    gDPFullSync(gDisplayListHead++);
-    gSPEndDisplayList(gDisplayListHead++);
 }
 
 void djui_render(void) {
