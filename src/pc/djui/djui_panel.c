@@ -114,7 +114,8 @@ void djui_panel_update(void) {
         return;
     }
 
-    sMoveAmount += (config60Fps ? 1.0f : 2.0f) * (moveMax / 10.0f);
+    extern u8 gRenderingInterpolated;
+    sMoveAmount += (gRenderingInterpolated ? 1.0f : 2.0f) * (moveMax / 10.0f);
     if (sMoveAmount >= moveMax) {
         sMoveAmount = moveMax;
         if (parentBase != NULL) {

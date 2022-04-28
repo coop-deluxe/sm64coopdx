@@ -25,7 +25,7 @@ void patch_djui_before(void) {
 
 void patch_djui_interpolated(UNUSED f32 delta) {
     // reset the head and re-render DJUI
-    if (delta >= 0.5f && !sDjuiRendered60fps) {
+    if (delta >= 0.5f && !sDjuiRendered60fps && gDjuiInMainMenu) {
         sDjuiRendered60fps = true;
         if (sSavedDisplayListHead == NULL) { return; }
         gDisplayListHead = sSavedDisplayListHead;

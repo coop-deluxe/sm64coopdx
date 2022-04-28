@@ -250,6 +250,7 @@ void handle_power_meter_actions(s16 numHealthWedges) {
             || sPowerMeterHUD.animation == POWER_METER_EMPHASIZED) {
             sPowerMeterHUD.animation = POWER_METER_DEEMPHASIZING;
             sPowerMeterHUD.y = 166;
+            sPowerMeterPrevY = 166;
         }
         sPowerMeterVisibleTimer = 0;
     }
