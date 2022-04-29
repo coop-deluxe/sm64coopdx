@@ -7262,6 +7262,12 @@ function obj_check_hitbox_overlap(o1, o2)
     -- ...
 end
 
+--- @param behaviorId BehaviorId
+--- @return integer
+function obj_count_objects_with_behavior_id(behaviorId)
+    -- ...
+end
+
 --- @param objList ObjectList
 --- @return Object
 function obj_get_first(objList)
@@ -7287,6 +7293,13 @@ end
 --- @param value integer
 --- @return Object
 function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param behaviorId BehaviorId
+--- @return Object
+function obj_get_nearest_object_with_behavior_id(o, behaviorId)
     -- ...
 end
 
