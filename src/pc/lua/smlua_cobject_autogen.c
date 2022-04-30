@@ -597,7 +597,7 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
     { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                false, LOT_GRAPHNODE },
     { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), false, LOT_NONE      },
 //  { "throwMatrix",                LVT_???,       offsetof(struct GraphNodeObject, throwMatrix),                false, LOT_???       }, <--- UNIMPLEMENTED
-//  { "throwMatrixPrev",    LVT_???,       offsetof(struct GraphNodeObject, throwMatrixPrev),    false, LOT_???       }, <--- UNIMPLEMENTED
+//  { "throwMatrixPrev",            LVT_???,       offsetof(struct GraphNodeObject, throwMatrixPrev),            false, LOT_???       }, <--- UNIMPLEMENTED
     { "unk4C",                      LVT_COBJECT_P, offsetof(struct GraphNodeObject, unk4C),                      false, LOT_SPAWNINFO },
 };
 
