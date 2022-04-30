@@ -58,37 +58,6 @@ static void (*kb_text_input)(char*) = NULL;
 
 #define IS_FULLSCREEN() ((SDL_GetWindowFlags(wnd) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
 
-int test_vsync(void) {
-    // Even if SDL_GL_SetSwapInterval succeeds, it doesn't mean that VSync actually works.
-    // A 60 Hz monitor should have a swap interval of 16.67 milliseconds.
-    // Try to detect the length of a vsync by swapping buffers some times.
-    // Since the graphics card may enqueue a fixed number of frames,
-    // first send in four dummy frames to hopefully fill the queue.
-    // This method will fail if the refresh rate is changed, which, in
-    // combination with that we can't control the queue size (i.e. lag)
-    // is a reason this generic SDL2 backend should only be used as last resort.
-
-    for (int32_t i = 0; i < 8; ++i)
-        SDL_GL_SwapWindow(wnd);
-
-    Uint32 start = SDL_GetTicks();
-    SDL_GL_SwapWindow(wnd);
-    SDL_GL_SwapWindow(wnd);
-    SDL_GL_SwapWindow(wnd);
-    SDL_GL_SwapWindow(wnd);
-    Uint32 end = SDL_GetTicks();
-
-    const float average = 4.0 * 1000.0 / (end - start);
-
-    if (average > 27.0f && average < 33.0f) return 1;
-    if (average > 57.0f && average < 63.0f) return 2;
-    if (average > 86.0f && average < 94.0f) return 3;
-    if (average > 115.0f && average < 125.0f) return 4;
-    if (average > 234.0f && average < 246.0f) return 8;
-
-    return 0;
-}
-
 static inline void gfx_sdl_set_vsync(const bool enabled) {
     SDL_GL_SetSwapInterval(enabled);
 }
@@ -248,33 +217,9 @@ static void gfx_sdl_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callbac
 
 static bool gfx_sdl_start_frame(void) {
     return true;
-    f64 curTime = clock_elapsed_f64();
-    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
-    if (curTime > sFrameTargetTime) {
-        sFrameTargetTime += frameTime;
-        if (curTime > sFrameTargetTime + frameTime * 3) {
-            sFrameTargetTime = curTime;
-        }
-        return false;
-    }
-    return true;
-}
-
-static inline void sync_framerate_with_timer(void) {
-    return;
-    f64 curTime = clock_elapsed_f64();
-    if (curTime < sFrameTargetTime) {
-        u32 delayMs = (sFrameTargetTime - curTime) * 1000.0;
-        if (delayMs > 0) {
-            SDL_Delay(delayMs);
-        }
-    }
-    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
-    sFrameTargetTime += frameTime;
 }
 
 static void gfx_sdl_swap_buffers_begin(void) {
-    sync_framerate_with_timer();
     SDL_GL_SwapWindow(wnd);
 }
 
@@ -285,6 +230,9 @@ static double gfx_sdl_get_time(void) {
     return 0.0;
 }
 
+static void gfx_sdl_delay(u32 ms) {
+    SDL_Delay(ms);
+}
 
 static void gfx_sdl_shutdown(void) {
     if (SDL_WasInit(0)) {
@@ -316,6 +264,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_get_clipboard_text,
     gfx_sdl_set_clipboard_text,
     gfx_sdl_set_cursor_visible,
+    gfx_sdl_delay,
 };
 
 #endif // BACKEND_WM

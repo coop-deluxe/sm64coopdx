@@ -69,6 +69,14 @@ f32 gRenderingDelta = 0;
 
 f32 gGameSpeed = 1.0f; // DO NOT COMMIT
 
+#define FRAMERATE 30
+static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
+static f64 sFrameTargetTime = 0;
+static f64 sFrameTimeStart;
+static f64 sLastFrameTimeStart;
+static f32 sAvgFrames = 1;
+static f32 sAvgFps = 0;
+
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api;
 static struct GfxRenderingAPI *rendering_api;
@@ -142,36 +150,58 @@ static inline void patch_interpolations(f32 delta) {
     patch_djui_interpolated(delta);
 }
 
-void produce_uncapped_frames(void) {
-    #define FRAMERATE 30
-    static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
-    static f64 sFrameTargetTime = 0;
+static void delay_frame(void) {
+    if (configUncappedFramerate) { return; }
+    static f32 sDelayRounding = 0;
+    f64 targetDelta = 1.0 / (f64)configFrameLimit;
 
+    f64 actualDelta = clock_elapsed_f64() - sLastFrameTimeStart;
+    if (actualDelta < targetDelta) {
+        f64 delay = sDelayRounding + ((targetDelta - actualDelta) * 1000.0);
+        sDelayRounding = delay - (u32)delay;
+        wm_api->delay((u32)delay);
+    }
+}
+
+void produce_interpolation_frames_and_delay(void) {
     gRenderingInterpolated = true;
 
-    f64 startTime = clock_elapsed_f64();
-    f64 curTime = startTime;
-    u64 frames = 0;
+    // sanity check target time to deal with hangs and such
+    f64 curTime = clock_elapsed_f64();
+    if (fabs(sFrameTargetTime - curTime) > 1) {
+        sFrameTargetTime = curTime;
+    }
+    delay_frame();
+
+    u64 frames = 1;
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
+        sLastFrameTimeStart = curTime;
         gfx_start_frame();
-        f32 delta = MIN((curTime - startTime) / (sFrameTargetTime - startTime), 1);
+        f32 delta = (configWindow.vsync || !configUncappedFramerate)
+                  ? frames / sAvgFrames
+                  : MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1);
         gRenderingDelta = delta;
         patch_interpolations(delta);
         send_display_list(gGfxSPTask);
         gfx_end_frame();
         frames++;
+        delay_frame();
     }
 
+    f32 fps = frames / (clock_elapsed_f64() - sFrameTimeStart);
+    sAvgFps = sAvgFps * 0.99 + fps * 0.01;
+    sAvgFrames = sAvgFrames * 0.9 + frames * 0.1;
+    sFrameTargetTime += sFrameTime * gGameSpeed;
     gRenderingInterpolated = false;
 
-    printf(">> frames %llu | %f\n", frames, gGameSpeed);
-    fflush(stdout);
-
-    sFrameTargetTime += sFrameTime * gGameSpeed;
+    //printf(">>> fpt: %llu, fps: %f :: %f\n", frames, sAvgFps, fps);
 }
 
 void produce_one_frame(void) {
     network_update();
+
+    sFrameTimeStart = clock_elapsed_f64();
+    sLastFrameTimeStart = sFrameTimeStart;
 
     patch_interpolations_before();
     gfx_start_frame();
@@ -202,10 +232,7 @@ void produce_one_frame(void) {
 
     gfx_end_frame();
 
-    // uncapped
-    if (config60Fps) {
-        produce_uncapped_frames();
-    }
+    produce_interpolation_frames_and_delay();
 }
 
 void audio_shutdown(void) {
@@ -334,7 +361,7 @@ void main_func(void) {
     wm_api->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up, keyboard_on_text_input);
 
     #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (audio_api == NULL && audio_sdl.init()) 
+    if (audio_api == NULL && audio_sdl.init())
         audio_api = &audio_sdl;
     #endif
 

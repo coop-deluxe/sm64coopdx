@@ -22,8 +22,25 @@
 // The full height for the body.
 #define BODY_HEIGHT CHECKBOXES_FULL_SIZE + SELECTION_BOXES_FULL_SIZE + BUTTON_SIZES
 
+static struct DjuiInputbox* sFrameLimitInput = NULL;
+
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
+}
+
+static void djui_panel_display_uncapped_change(UNUSED struct DjuiBase* caller) {
+    djui_base_set_enabled(&sFrameLimitInput->base, !configUncappedFramerate);
+}
+
+static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
+    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    s32 frameLimit = atoi(inputbox1->buffer);
+    if (frameLimit >= 30 && frameLimit <= 3000) {
+        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+        configFrameLimit = frameLimit;
+    } else {
+        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
+    }
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
@@ -40,38 +57,59 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_interactable_hook_value_change(&checkbox1->base, djui_panel_display_apply);
         defaultBase = &checkbox1->base;
 
+        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups);
+        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox5->base, 1.0f, 32);
+
+        struct DjuiCheckbox* checkbox6 = djui_checkbox_create(&body->base, "Disable Downloaded Models", &configDisableDownloadedModels);
+        djui_base_set_size_type(&checkbox6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox6->base, 1.0f, 32);
+
+    #ifdef EXTERNAL_DATA
+        struct DjuiCheckbox* checkbox7 = djui_checkbox_create(&body->base, "Preload Textures", &configPrecacheRes);
+        djui_base_set_size_type(&checkbox7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox7->base, 1.0f, 32);
+    #endif
+
         struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "VSync", &configWindow.vsync);
         djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox2->base, 1.0f, 32);
         djui_interactable_hook_value_change(&checkbox2->base, djui_panel_display_apply);
 
-        struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "HUD", &configHUD);
+        struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "Uncapped Framerate", &configUncappedFramerate);
         djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox3->base, 1.0f, 32);
+        djui_interactable_hook_value_change(&checkbox3->base, djui_panel_display_uncapped_change);
 
-        struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups);
-        djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox4->base, 1.0f, 32);
+        struct DjuiRect* rect1 = djui_rect_create(&body->base);
+        djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&rect1->base, 1.0f, 32);
+        djui_base_set_color(&rect1->base, 0, 0, 0, 0);
+        {
+            if (configFrameLimit < 30) { configFrameLimit = 30; }
+            if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+            struct DjuiText* text1 = djui_text_create(&rect1->base, "Frame Limit");
+            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&text1->base, 200, 200, 200, 255);
+            djui_base_set_size(&text1->base, 0.485f, 64);
+            djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Disable Downloaded Models", &configDisableDownloadedModels);
-        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox5->base, 1.0f, 32);
-        
-    #ifdef EXTERNAL_DATA
-        struct DjuiCheckbox* checkbox6 = djui_checkbox_create(&body->base, "Preload Textures", &configPrecacheRes);
-        djui_base_set_size_type(&checkbox6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox6->base, 1.0f, 32);
-    #endif
+            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
+            djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&inputbox1->base, 0.5f, 32);
+            djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            char frameLimitString[32] = { 0 };
+            snprintf(frameLimitString, 32, "%d", configFrameLimit);
+            djui_inputbox_set_text(inputbox1, frameLimitString);
+            djui_interactable_hook_value_change(&inputbox1->base, djui_panel_display_frame_limit_text_change);
+            djui_base_set_enabled(&inputbox1->base, !configUncappedFramerate);
+            sFrameLimitInput = inputbox1;
+        }
 
         char* filterChoices[3] = { "Nearest", "Linear", "Tripoint" };
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Filtering", filterChoices, 3, &configFiltering);
         djui_base_set_size_type(&selectionbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox1->base, 1.0f, 32);
-
-        char* fpsChoices[3] = { "30", "60" };
-        struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "FPS", fpsChoices, 2, &config60Fps);
-        djui_base_set_size_type(&selectionbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&selectionbox2->base, 1.0f, 32);
 
         char* drawDistanceChoices[6] = { "0.5x", "1x", "1.5x", "3x", "10x", "100x" };
         struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(&body->base, "Draw Distance", drawDistanceChoices, 6, &configDrawDistance);

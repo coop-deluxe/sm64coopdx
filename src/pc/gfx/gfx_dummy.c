@@ -76,20 +76,11 @@ static bool gfx_dummy_wm_start_frame(void) {
     return true;
 }
 
-static inline void sync_framerate_with_timer(void) {
-    f64 curTime = clock_elapsed_f64();
-    if (curTime < sFrameTargetTime) {
-        u32 delayMs = (sFrameTargetTime - curTime) * 1000.0;
-        if (delayMs > 0) {
-            sleep_ms(delayMs);
-        }
-    }
-    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
-    sFrameTargetTime += frameTime;
+static void gfx_dummy_wm_delay(u32 ms) {
+    sleep_ms(ms);
 }
 
 static void gfx_dummy_wm_swap_buffers_begin(void) {
-    sync_framerate_with_timer();
 }
 
 static void gfx_dummy_wm_swap_buffers_end(void) {
@@ -209,7 +200,8 @@ struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_stop_text_input,
     gfx_dummy_wm_get_clipboard_text,
     gfx_dummy_wm_set_clipboard_text,
-    gfx_dummy_wm_set_cursor_visible
+    gfx_dummy_wm_set_cursor_visible,
+    gfx_dummy_wm_delay
 };
 
 struct GfxRenderingAPI gfx_dummy_renderer_api = {

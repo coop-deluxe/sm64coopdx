@@ -131,7 +131,8 @@ unsigned int configNetworkSystem                 = 0;
 char         configPlayerName[MAX_PLAYER_STRING] = "";
 unsigned int configPlayerModel                   = 0;
 unsigned int configPlayerPalette                 = 0;
-unsigned int config60Fps                         = 1;
+bool         configUncappedFramerate             = true;
+unsigned int configFrameLimit                    = 60;
 unsigned int configDrawDistance                  = 5;
 bool         configDisablePopups                 = 0;
 bool         configDisableDownloadedModels       = 0;
@@ -196,9 +197,10 @@ static const struct ConfigOption options[] = {
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},
     // coop-specific
+    {.name = "uncapped_framerate",             .type = CONFIG_TYPE_BOOL  , .boolValue   = &configUncappedFramerate},
+    {.name = "frame_limit"       ,             .type = CONFIG_TYPE_UINT  , .uintValue   = &configFrameLimit},
     {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configAmountofPlayers},
     {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configBubbleDeath},
-    {.name = "coop_60fps",                     .type = CONFIG_TYPE_UINT  , .uintValue   = &config60Fps},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configDrawDistance},
     {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
     {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},

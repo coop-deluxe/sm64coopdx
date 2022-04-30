@@ -10,6 +10,7 @@
 #include "game/area.h"
 #include "game/level_update.h"
 #include "game/save_file.h"
+#include "engine/math_util.h"
 
 float smoothstep(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);
@@ -116,6 +117,49 @@ next_get:
 
 /////////////////
 
+static f32 sm64_to_radians(f32 val) {
+    return val * M_PI / 0x8000;
+}
+
+static f32 radians_to_sm64(f32 val) {
+    return val * 0x8000 / M_PI;
+}
+
+static f32 asins(f32 val) {
+    return radians_to_sm64(asin(sm64_to_radians(val)));
+}
+
+void mtx_to_euler1(Mtx* mat, Vec3s rot) {
+    if (mat->m[1][1] == 1.0f) {
+        rot[0] = 0;
+        rot[1] = atan2(mat->m[1][3], mat->m[3][4]);
+        rot[2] = 0;
+    } else if (mat->m[1][1] == -1.0f) {
+        rot[0] = 0;
+        rot[1] = atan2(mat->m[1][3], mat->m[3][4]);
+        rot[2] = 0;
+    } else {
+        rot[0] = asin(mat->m[2][1]);
+        rot[1] = atan2(-mat->m[3][1], mat->m[1][1]);
+        rot[2] = atan2(-mat->m[2][3], mat->m[2][2]);
+    }
+}
+void mtx_to_euler2(Mtx* mat, Vec3s rot) {
+    if (mat->m[1][1] == 1.0f) {
+        rot[0] = 0;
+        rot[1] = atan2(mat->m[3][1], mat->m[4][3]);
+        rot[2] = 0;
+    } else if (mat->m[1][1] == -1.0f) {
+        rot[0] = 0;
+        rot[1] = atan2(mat->m[3][1], mat->m[4][3]);
+        rot[2] = 0;
+    } else {
+        rot[0] = asin(mat->m[1][2]);
+        rot[1] = atan2(-mat->m[1][3], mat->m[1][1]);
+        rot[2] = atan2(-mat->m[3][2], mat->m[2][2]);
+    }
+}
+
 f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
     return start * (1.0f - delta) + end * delta;
 }
@@ -145,15 +189,6 @@ void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta) {
     res[2] = ((a[2] * antiDelta) + (b[2] * delta));
 }
 
-void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
-    f32 antiDelta = 1.0f - delta;
-    for (s32 i = 0; i < 4; i++) {
-        for (s32 j = 0; j < 4; j++) {
-            out->m[i][j] = (a->m[i][j] * antiDelta) + (b->m[i][j] * delta);
-        }
-    }
-}
-
 void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
@@ -162,21 +197,7 @@ void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta) {
     res[3] = ((a[3] * antiDelta) + (b[3] * delta));
 }
 
-/*
-
-void interpolate_vectors(Vec3f res, Vec3f a, Vec3f b) {
-    res[0] = (a[0] + b[0]) / 2.0f;
-    res[1] = (a[1] + b[1]) / 2.0f;
-    res[2] = (a[2] + b[2]) / 2.0f;
-}
-
-void interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b) {
-    res[0] = (a[0] + b[0]) / 2;
-    res[1] = (a[1] + b[1]) / 2;
-    res[2] = (a[2] + b[2]) / 2;
-}
-
-static s16 interpolate_angle(s16 a, s16 b) {
+static s16 delta_interpolate_angle(s16 a, s16 b, f32 delta) {
     s32 absDiff = b - a;
     if (absDiff < 0) {
         absDiff = -absDiff;
@@ -184,16 +205,47 @@ static s16 interpolate_angle(s16 a, s16 b) {
     if (absDiff >= 0x4000 && absDiff <= 0xC000) {
         return b;
     }
+
+    f32 antiDelta = 1.0f - delta;
     if (absDiff <= 0x8000) {
-        return (a + b) / 2;
+        return (a * antiDelta) + (b * delta);
     } else {
-        return (a + b) / 2 + 0x8000;
+        return (a * antiDelta) + (b * delta) + 0x8000;
     }
 }
 
-static void interpolate_angles(Vec3s res, Vec3s a, Vec3s b) {
-    res[0] = interpolate_angle(a[0], b[0]);
-    res[1] = interpolate_angle(a[1], b[1]);
-    res[2] = interpolate_angle(a[2], b[2]);
+static void delta_interpolate_angles(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+    res[0] = delta_interpolate_angle(a[0], b[0], delta);
+    res[1] = delta_interpolate_angle(a[1], b[1], delta);
+    res[2] = delta_interpolate_angle(a[2], b[2], delta);
 }
-*/
+
+void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+    // this isn't the right way to do things.
+    f32 antiDelta = 1.0f - delta;
+    for (s32 i = 0; i < 4; i++) {
+        for (s32 j = 0; j < 4; j++) {
+            out->m[i][j] = (a->m[i][j] * antiDelta) + (b->m[i][j] * delta);
+        }
+    }
+}
+
+void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx) {
+    // if the matrix has changed "too much", then skip interpolation
+    const f32 minDot = sqrt(2.0f) / -2.0f;
+    Vec3f prevX; vec3f_copy(prevX, (f32*)(*mtxPrev)->m[0]); vec3f_normalize(prevX);
+    Vec3f prevY; vec3f_copy(prevY, (f32*)(*mtxPrev)->m[1]); vec3f_normalize(prevY);
+    Vec3f prevZ; vec3f_copy(prevZ, (f32*)(*mtxPrev)->m[2]); vec3f_normalize(prevZ);
+
+    Vec3f nextX; vec3f_copy(nextX, (f32*)(*mtx)->m[0]); vec3f_normalize(nextX);
+    Vec3f nextY; vec3f_copy(nextY, (f32*)(*mtx)->m[1]); vec3f_normalize(nextY);
+    Vec3f nextZ; vec3f_copy(nextZ, (f32*)(*mtx)->m[2]); vec3f_normalize(nextZ);
+
+    f32 dotX = vec3f_dot(prevX, nextX);
+    f32 dotY = vec3f_dot(prevY, nextY);
+    f32 dotZ = vec3f_dot(prevZ, nextZ);
+
+    if ((dotX < minDot) | (dotY < minDot) || (dotZ < minDot)) {
+        *mtx = *mtxPrev;
+    }
+}

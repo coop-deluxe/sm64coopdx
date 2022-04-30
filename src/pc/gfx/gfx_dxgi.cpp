@@ -522,35 +522,12 @@ static bool gfx_dxgi_start_frame(void) {
     }*/
 
     dxgi.length_in_vsync_frames = configWindow.vsync;
-    f64 curTime = clock_elapsed_f64();
-    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
-    if (curTime > sFrameTargetTime) {
-        sFrameTargetTime += frameTime;
-        if (curTime > sFrameTargetTime + frameTime * 3) {
-            sFrameTargetTime = curTime;
-        }
-        dxgi.dropped_frame = true;
-        return false;
-    }
     dxgi.dropped_frame = false;
 
     return true;
 }
 
-static inline void sync_framerate_with_timer(void) {
-    f64 curTime = clock_elapsed_f64();
-    if (curTime < sFrameTargetTime) {
-        u32 delayMs = (sFrameTargetTime - curTime) * 1000.0;
-        if (delayMs > 0) {
-            Sleep(delayMs);
-        }
-    }
-    f64 frameTime = config60Fps ? (sFrameTime / 2.0) : sFrameTime;
-    sFrameTargetTime += frameTime;
-}
-
 static void gfx_dxgi_swap_buffers_begin(void) {
-    sync_framerate_with_timer();
     ThrowIfFailed(dxgi.swap_chain->Present(dxgi.length_in_vsync_frames, 0));
     UINT this_present_id;
     if (dxgi.swap_chain->GetLastPresentCount(&this_present_id) == S_OK) {
@@ -654,6 +631,10 @@ ComPtr<IDXGISwapChain1> gfx_dxgi_create_swap_chain(IUnknown *device) {
     return dxgi.swap_chain;
 }
 
+void gfx_dxgi_delay(u32 ms) {
+    Sleep(ms);
+}
+
 HWND gfx_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }
@@ -722,6 +703,7 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_get_clipboard_text,
     gfx_dxgi_set_clipboard_text,
     gfx_dxgi_set_cursor_visible,
+    gfx_dxgi_delay,
 };
 
 #endif

@@ -168,18 +168,7 @@ static bool gfx_sdl_start_frame(void) {
     return true;
 }
 
-static inline void sync_framerate_with_timer(void) {
-    static Uint32 last_time = 0;
-    // get base timestamp on the first frame (might be different from 0)
-    if (last_time == 0) last_time = SDL_GetTicks();
-    const int elapsed = SDL_GetTicks() - last_time;
-    if (elapsed < frame_time)
-        SDL_Delay(frame_time - elapsed);
-    last_time += frame_time;
-}
-
 static void gfx_sdl_swap_buffers_begin(void) {
-    sync_framerate_with_timer();
     SDL_GL_SwapBuffers();
 }
 
@@ -190,6 +179,9 @@ static double gfx_sdl_get_time(void) {
     return 0.0;
 }
 
+static void gfx_sdl_delay(u32 ms) {
+    SDL_Delay(ms);
+}
 
 static void gfx_sdl_shutdown(void) {
     if (SDL_WasInit(0))
@@ -218,6 +210,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_get_clipboard_text,
     gfx_sdl_set_clipboard_text,
     gfx_sdl_set_cursor_visible,
+    gfx_sdl_delay,
 };
 
 #endif // BACKEND_WM

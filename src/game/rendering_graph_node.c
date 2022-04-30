@@ -162,9 +162,9 @@ static u8 sShadowInterpCount = 0;
 
 struct {
     Gfx *pos;
-    void *mtx;
+    Mtx *mtx;
+    Mtx *mtxPrev;
     void *displayList;
-    void *mtxPrev;
     Mtx interp;
 } gMtxTbl[6400];
 s32 gMtxTblSize;
@@ -300,11 +300,13 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
         if ((currList = node->listHeads[i]) != NULL) {
             gDPSetRenderMode(gDisplayListHead++, modeList->modes[i], mode2List->modes[i]);
             while (currList != NULL) {
+                detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
                 if ((u32) gMtxTblSize < sizeof(gMtxTbl) / sizeof(gMtxTbl[0])) {
                     gMtxTbl[gMtxTblSize].pos = gDisplayListHead;
                     gMtxTbl[gMtxTblSize].mtx = currList->transform;
                     gMtxTbl[gMtxTblSize].mtxPrev = currList->transformPrev;
-                    gMtxTbl[gMtxTblSize++].displayList = currList->displayList;
+                    gMtxTbl[gMtxTblSize].displayList = currList->displayList;
+                    gMtxTblSize++;
                 }
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
