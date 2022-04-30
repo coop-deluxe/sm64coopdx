@@ -468,6 +468,9 @@ NEXT_OPTION:
 
     fs_close(file);
 
+    if (configFrameLimit < 30)   { configFrameLimit = 30; }
+    if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+
 #ifndef DISCORD_SDK
     configNetworkSystem = 1;
 #endif
