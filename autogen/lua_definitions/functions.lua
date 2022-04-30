@@ -3860,6 +3860,47 @@ function get_level_name(courseNum, levelNum, areaIndex)
     -- ...
 end
 
+--- @param courseNum integer
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param charCase integer
+--- @return string
+function get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param charCase integer
+--- @return Pointer_integer
+function get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param starNum integer
+--- @return string
+function get_star_name(courseNum, starNum)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param starNum integer
+--- @param charCase integer
+--- @return string
+function get_star_name_ascii(courseNum, starNum, charCase)
+    -- ...
+end
+
+--- @param courseNum integer
+--- @param starNum integer
+--- @param charCase integer
+--- @return Pointer_integer
+function get_star_name_sm64(courseNum, starNum, charCase)
+    -- ...
+end
+
 --- @param m MarioState
 --- @return nil
 function adjust_sound_for_speed(m)
@@ -7149,6 +7190,16 @@ function movtexqc_register(name, level, area, type)
     -- ...
 end
 
+--- @param transType integer
+--- @param time integer
+--- @param red integer
+--- @param green integer
+--- @param blue integer
+--- @return nil
+function play_transition(transType, time, red, green, blue)
+    -- ...
+end
+
 --- @param usingBackupSlot boolean
 --- @return nil
 function save_file_set_using_backup_slot(usingBackupSlot)
@@ -7211,6 +7262,12 @@ function obj_check_hitbox_overlap(o1, o2)
     -- ...
 end
 
+--- @param behaviorId BehaviorId
+--- @return integer
+function obj_count_objects_with_behavior_id(behaviorId)
+    -- ...
+end
+
 --- @param objList ObjectList
 --- @return Object
 function obj_get_first(objList)
@@ -7236,6 +7293,13 @@ end
 --- @param value integer
 --- @return Object
 function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)
+    -- ...
+end
+
+--- @param o Object
+--- @param behaviorId BehaviorId
+--- @return Object
+function obj_get_nearest_object_with_behavior_id(o, behaviorId)
     -- ...
 end
 

@@ -4919,6 +4919,30 @@
 
 <br />
 
+## [play_transition](#play_transition)
+
+### Lua Example
+`play_transition(transType, time, red, green, blue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| transType | `integer` |
+| time | `integer` |
+| red | `integer` |
+| green | `integer` |
+| blue | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
 
 ### Lua Example
@@ -5131,6 +5155,26 @@
 
 <br />
 
+## [obj_count_objects_with_behavior_id](#obj_count_objects_with_behavior_id)
+
+### Lua Example
+`local integerValue = obj_count_objects_with_behavior_id(behaviorId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_get_first](#obj_get_first)
 
 ### Lua Example
@@ -5210,6 +5254,27 @@
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_nearest_object_with_behavior_id](#obj_get_nearest_object_with_behavior_id)
+
+### Lua Example
+`local ObjectValue = obj_get_nearest_object_with_behavior_id(o, behaviorId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum BehaviorId behaviorId);`
 
 [:arrow_up_small:](#)
 

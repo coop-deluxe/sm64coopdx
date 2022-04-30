@@ -156,6 +156,40 @@ struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId beha
     return NULL;
 }
 
+struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
+    f32 minDist = 0x20000;
+    const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    struct Object *closestObj = NULL;
+    
+    if (behavior) {
+        enum ObjectList objList = get_object_list_from_behavior(behavior);
+        for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED) {
+                f32 objDist = dist_between_objects(o, obj);
+                if (objDist < minDist) {
+                    closestObj = obj;
+                    minDist = objDist;
+                }
+            }
+        }
+    }
+    return closestObj;
+}
+
+s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId) {
+    const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    s32 count = 0;
+    
+    if (behavior) {
+        enum ObjectList objList = get_object_list_from_behavior(behavior);
+        for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
+            if (obj->behavior == behavior) { count++; }
+        }
+    }
+    
+    return count;
+}
+
 struct Object *obj_get_next(struct Object *o) {
     if (gObjectLists && o) {
         enum ObjectList objList = get_object_list_from_behavior(o->behavior);

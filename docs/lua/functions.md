@@ -759,6 +759,11 @@
 
 - level_info.h
    - [get_level_name](functions-3.md#get_level_name)
+   - [get_level_name_ascii](functions-3.md#get_level_name_ascii)
+   - [get_level_name_sm64](functions-3.md#get_level_name_sm64)
+   - [get_star_name](functions-3.md#get_star_name)
+   - [get_star_name_ascii](functions-3.md#get_star_name_ascii)
+   - [get_star_name_sm64](functions-3.md#get_star_name_sm64)
 
 <br />
 
@@ -1339,6 +1344,7 @@
    - [hud_hide](functions-4.md#hud_hide)
    - [hud_show](functions-4.md#hud_show)
    - [movtexqc_register](functions-4.md#movtexqc_register)
+   - [play_transition](functions-4.md#play_transition)
    - [save_file_set_using_backup_slot](functions-4.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-4.md#set_environment_region)
    - [warp_exit_level](functions-4.md#warp_exit_level)
@@ -1357,10 +1363,12 @@
    - [get_temp_object_hitbox](functions-4.md#get_temp_object_hitbox)
    - [get_trajectory](functions-4.md#get_trajectory)
    - [obj_check_hitbox_overlap](functions-4.md#obj_check_hitbox_overlap)
+   - [obj_count_objects_with_behavior_id](functions-4.md#obj_count_objects_with_behavior_id)
    - [obj_get_first](functions-4.md#obj_get_first)
    - [obj_get_first_with_behavior_id](functions-4.md#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](functions-4.md#obj_get_first_with_behavior_id_and_field_f32)
    - [obj_get_first_with_behavior_id_and_field_s32](functions-4.md#obj_get_first_with_behavior_id_and_field_s32)
+   - [obj_get_nearest_object_with_behavior_id](functions-4.md#obj_get_nearest_object_with_behavior_id)
    - [obj_get_next](functions-4.md#obj_get_next)
    - [obj_get_next_with_same_behavior_id](functions-4.md#obj_get_next_with_same_behavior_id)
    - [obj_get_next_with_same_behavior_id_and_field_f32](functions-4.md#obj_get_next_with_same_behavior_id_and_field_f32)

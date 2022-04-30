@@ -803,7 +803,10 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
 /**
  * Called from threads: thread5_game_loop
  */
+extern f32 *smlua_get_vec3f_for_play_sound(f32 *pos);
+
 void play_sound(s32 soundBits, f32 *pos) {
+    pos = smlua_get_vec3f_for_play_sound(pos);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = 0;
@@ -811,6 +814,7 @@ void play_sound(s32 soundBits, f32 *pos) {
 }
 
 void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
+    pos = smlua_get_vec3f_for_play_sound(pos);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;

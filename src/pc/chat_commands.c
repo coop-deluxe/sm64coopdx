@@ -5,6 +5,7 @@
 #include "chat_commands.h"
 #include "pc/network/ban_list.h"
 #include "pc/debuglog.h"
+#include "level_table.h"
 
 enum ChatConfirmCommand {
     CCC_NONE,
@@ -181,6 +182,88 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
+#if defined(DEBUG) && defined(DEVELOPMENT)
+    if (gNetworkSystem == &gNetworkSystemSocket && str_starts_with("/warp ", command)) {
+        static const struct { const char *name; s32 num; } sLevelNumByName[] = {
+#undef STUB_LEVEL
+#undef DEFINE_LEVEL
+#define STUB_LEVEL(...)
+#define DEFINE_LEVEL(_0, levelnum, _2, levelname, ...) { #levelname, levelnum },
+#include "levels/level_defines.h"
+#undef STUB_LEVEL
+#undef DEFINE_LEVEL
+        };
+
+        // Params
+        char *paramLevel = command + 6;
+        if (*paramLevel == 0 || *paramLevel == ' ') {
+            djui_chat_message_create("Missing parameters: [LEVEL] [AREA] [ACT]");
+            return true;
+        }
+        char *paramArea = strchr(paramLevel, ' ');
+        if (paramArea++ == NULL || *paramArea == 0 || *paramArea == ' ') {
+            djui_chat_message_create("Missing parameters: [AREA] [ACT]");
+            return true;
+        }
+        char *paramAct = strchr(paramArea, ' ');
+        if (paramAct++ == NULL || *paramAct == 0 || *paramAct == ' ') {
+            djui_chat_message_create("Missing parameters: [ACT]");
+            return true;
+        }
+        *(paramArea - 1) = 0;
+        *(paramAct - 1) = 0;
+        
+        // Level
+        s32 level = -1;
+        if (sscanf(paramLevel, "%d", &level) <= 0) {
+            for (s32 i = 0; i != (s32) (sizeof(sLevelNumByName) / sizeof(sLevelNumByName[0])); ++i) {
+                if (strstr(paramLevel, sLevelNumByName[i].name) == paramLevel) {
+                    level = sLevelNumByName[i].num;
+                    break;
+                }
+            }
+            if (level == -1) {
+                char message[256];
+                snprintf(message, 256, "Invalid [LEVEL] parameter: %s", paramLevel);
+                djui_chat_message_create(message);
+                return true;
+            }
+        }
+
+        // Area
+        s32 area = -1;
+        if (sscanf(paramArea, "%d", &area) <= 0) {
+            char message[256];
+            snprintf(message, 256, "Invalid [AREA] parameter: %s", paramArea);
+            djui_chat_message_create(message);
+            return true;
+        }
+
+        // Act
+        s32 act = -1;
+        if (sscanf(paramAct, "%d", &act) <= 0) {
+            char message[256];
+            snprintf(message, 256, "Invalid [ACT] parameter: %s", paramAct);
+            djui_chat_message_create(message);
+            return true;
+        }
+
+        // Warp
+        if (!dynos_warp_to_level(level, area, act)) {
+            char message[256];
+            snprintf(message, 256, "Unable to warp to: %s %s %s", paramLevel, paramArea, paramAct);
+            djui_chat_message_create(message);
+            return true;
+        }
+
+        // OK
+        char message[256];
+        snprintf(message, 256, "Warping to: %s %s %s...", paramLevel, paramArea, paramAct);
+        djui_chat_message_create(message);
+        return true;
+    }
+#endif
+
     return smlua_call_chat_command_hook(command);
 }
 
@@ -191,6 +274,9 @@ void display_chat_commands(void) {
         djui_chat_message_create("/ban [NAME|ID] - Ban this player from the current game");
         djui_chat_message_create("/permban [NAME|ID] - Ban this player from any game you host");
     }
+#if defined(DEBUG) && defined(DEVELOPMENT)
+    djui_chat_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");
+#endif
     if (sConfirming != CCC_NONE) { djui_chat_message_create("/confirm"); }
     smlua_display_chat_commands();
 }
