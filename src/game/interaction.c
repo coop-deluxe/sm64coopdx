@@ -1332,12 +1332,12 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
     u8 isAttackerInvulnerable = (attacker->action & ACT_FLAG_INVULNERABLE) || attacker->invincTimer != 0 || attacker->hurtCounter != 0;
     u8 isInvulnerable = (victim->action & ACT_FLAG_INVULNERABLE) || victim->invincTimer != 0 || victim->hurtCounter != 0 || isInCutscene;
     u8 isIgnoredAttack = (attacker->action == ACT_JUMP || attacker->action == ACT_DOUBLE_JUMP || attacker->action == ACT_LONG_JUMP || attacker->action == ACT_SIDE_FLIP);
-
+    u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     if (victim->knockbackTimer > 0) {
         return false;
     }
 
-    return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable);
+    return (!isInvulnerable && !isIgnoredAttack && !isAttackerInvulnerable && !isVictimIntangible);
 }
 
 u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object* o) {
