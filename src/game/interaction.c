@@ -2164,7 +2164,7 @@ void mario_process_interactions(struct MarioState *m) {
         s32 i;
         for (i = 0; i < 32; i++) {
             u32 interactType = sInteractionHandlers[i].interactType;
-            if (m->playerIndex != 0 && interactType != (u32)INTERACT_PLAYER) {
+            if (m->playerIndex != 0 && interactType != (u32)INTERACT_PLAYER && interactType != (u32)INTERACT_POLE) {
                 // skip interactions for remote
                 continue;
             }
