@@ -7171,8 +7171,31 @@ function get_temp_s32_pointer(initialValue)
     -- ...
 end
 
+--- @param type HudDisplayValue
+--- @return integer
+function hud_get_value(type)
+    -- ...
+end
+
 --- @return nil
 function hud_hide()
+    -- ...
+end
+
+--- @param health integer
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @return nil
+function hud_render_power_meter(health, x, y, width, height)
+    -- ...
+end
+
+--- @param type HudDisplayValue
+--- @param value integer
+--- @return nil
+function hud_set_value(type, value)
     -- ...
 end
 

@@ -2174,11 +2174,15 @@ void mario_process_interactions(struct MarioState *m) {
                 m->collidedObjInteractTypes &= ~interactType;
 
                 if (!(object->oInteractStatus & INT_STATUS_INTERACTED)) {
-                    if (sInteractionHandlers[i].handler(m, interactType, object)) {
-                        smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, object, interactType, true);
-                        break;
-                    } else {
-                        smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, object, interactType, false);
+                    bool allow = true;
+                    smlua_call_event_hooks_interact_params_ret_bool(HOOK_ALLOW_INTERACT, m, object, interactType, &allow);
+                    if (allow) {
+                        if (sInteractionHandlers[i].handler(m, interactType, object)) {
+                            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, object, interactType, true);
+                            break;
+                        } else {
+                            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, object, interactType, false);
+                        }
                     }
                 }
             }

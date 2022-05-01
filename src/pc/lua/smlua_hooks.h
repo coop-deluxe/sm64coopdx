@@ -18,6 +18,7 @@ enum LuaHookedEventType {
     HOOK_ON_PLAYER_CONNECTED,
     HOOK_ON_PLAYER_DISCONNECTED,
     HOOK_ON_HUD_RENDER,
+    HOOK_ALLOW_INTERACT,
     HOOK_ON_INTERACT,
     HOOK_ON_LEVEL_INIT,
     HOOK_ON_WARP,
@@ -44,6 +45,7 @@ static char* LuaHookedEventTypeName[] = {
     "HOOK_ON_PLAYER_CONNECTED",
     "HOOK_ON_PLAYER_DISCONNECTED",
     "HOOK_ON_HUD_RENDER",
+    "HOOK_ALLOW_INTERACT",
     "HOOK_ON_INTERACT",
     "HOOK_ON_LEVEL_INIT",
     "HOOK_ON_WARP",
@@ -69,6 +71,7 @@ void smlua_call_event_hooks_mario_param_ret_bool(enum LuaHookedEventType hookTyp
 void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2);
 void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, bool* returnValue);
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
+void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool* returnValue);
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);

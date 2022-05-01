@@ -44,6 +44,9 @@
 - [sm64.h](#sm64h)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
+- [smlua_misc_utils.h](#smlua_misc_utilsh)
+    - [enum HudDisplayFlags](#enum-HudDisplayFlags)
+    - [enum HudDisplayValue](#enum-HudDisplayValue)
 - [smlua_model_utils.h](#smlua_model_utilsh)
     - [enum ModelExtendedId](#enum-ModelExtendedId)
 - [sounds.h](#soundsh)
@@ -2745,19 +2748,50 @@
 | HOOK_ON_PLAYER_CONNECTED | 7 |
 | HOOK_ON_PLAYER_DISCONNECTED | 8 |
 | HOOK_ON_HUD_RENDER | 9 |
-| HOOK_ON_INTERACT | 10 |
-| HOOK_ON_LEVEL_INIT | 11 |
-| HOOK_ON_WARP | 12 |
-| HOOK_ON_SYNC_VALID | 13 |
-| HOOK_ON_OBJECT_UNLOAD | 14 |
-| HOOK_ON_SYNC_OBJECT_UNLOAD | 15 |
-| HOOK_ON_PAUSE_EXIT | 16 |
-| HOOK_GET_STAR_COLLECTION_DIALOG | 17 |
-| HOOK_ON_SET_CAMERA_MODE | 18 |
-| HOOK_ON_OBJECT_RENDER | 19 |
-| HOOK_ON_DEATH | 20 |
-| HOOK_ON_PACKET_RECEIVE | 21 |
-| HOOK_MAX | 22 |
+| HOOK_ALLOW_INTERACT | 10 |
+| HOOK_ON_INTERACT | 11 |
+| HOOK_ON_LEVEL_INIT | 12 |
+| HOOK_ON_WARP | 13 |
+| HOOK_ON_SYNC_VALID | 14 |
+| HOOK_ON_OBJECT_UNLOAD | 15 |
+| HOOK_ON_SYNC_OBJECT_UNLOAD | 16 |
+| HOOK_ON_PAUSE_EXIT | 17 |
+| HOOK_GET_STAR_COLLECTION_DIALOG | 18 |
+| HOOK_ON_SET_CAMERA_MODE | 19 |
+| HOOK_ON_OBJECT_RENDER | 20 |
+| HOOK_ON_DEATH | 21 |
+| HOOK_ON_PACKET_RECEIVE | 22 |
+| HOOK_MAX | 23 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_misc_utils.h](#smlua_misc_utils.h)
+
+### [enum HudDisplayFlags](#HudDisplayFlags)
+| Identifier | Value |
+| :--------- | :---- |
+| HUD_DISPLAY_FLAGS_NONE | 0x0000 |
+| HUD_DISPLAY_FLAGS_LIVES | 0x0001 |
+| HUD_DISPLAY_FLAGS_COIN_COUNT | 0x0002 |
+| HUD_DISPLAY_FLAGS_STAR_COUNT | 0x0004 |
+| HUD_DISPLAY_FLAGS_CAMERA_AND_POWER | 0x0008 |
+| HUD_DISPLAY_FLAGS_KEYS | 0x0010 |
+| HUD_DISPLAY_FLAGS_UNKNOWN_0020 | 0x0020 |
+| HUD_DISPLAY_FLAGS_TIMER | 0x0040 |
+| HUD_DISPLAY_FLAGS_EMPHASIZE_POWER | 0x8000 |
+
+### [enum HudDisplayValue](#HudDisplayValue)
+| Identifier | Value |
+| :--------- | :---- |
+| HUD_DISPLAY_LIVES | 0 |
+| HUD_DISPLAY_COINS | 1 |
+| HUD_DISPLAY_STARS | 2 |
+| HUD_DISPLAY_WEDGES | 3 |
+| HUD_DISPLAY_KEYS | 4 |
+| HUD_DISPLAY_FLAGS | 5 |
+| HUD_DISPLAY_TIMER | 6 |
 
 [:arrow_up_small:](#)
 

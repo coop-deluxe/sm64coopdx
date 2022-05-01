@@ -24,6 +24,7 @@ in_files = [
     "src/pc/djui/djui_hud_utils.h",
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_model_utils.h",
+    "src/pc/lua/utils/smlua_misc_utils.h",
     "include/object_constants.h",
     "include/mario_geo_switch_case_ids.h",
     "src/game/object_list_processor.h",

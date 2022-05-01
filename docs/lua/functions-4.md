@@ -4860,6 +4860,26 @@
 
 <br />
 
+## [hud_get_value](#hud_get_value)
+
+### Lua Example
+`local integerValue = hud_get_value(type)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| type | [enum HudDisplayValue](constants.md#enum-HudDisplayValue) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 hud_get_value(enum HudDisplayValue type);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hud_hide](#hud_hide)
 
 ### Lua Example
@@ -4873,6 +4893,51 @@
 
 ### C Prototype
 `void hud_hide(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_render_power_meter](#hud_render_power_meter)
+
+### Lua Example
+`hud_render_power_meter(health, x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| health | `integer` |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_set_value](#hud_set_value)
+
+### Lua Example
+`hud_set_value(type, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| type | [enum HudDisplayValue](constants.md#enum-HudDisplayValue) |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void hud_set_value(enum HudDisplayValue type, s32 value);`
 
 [:arrow_up_small:](#)
 

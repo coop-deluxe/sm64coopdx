@@ -164,7 +164,7 @@ static void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 widt
 }
 
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
-    djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->width, x, y, scaleW, scaleH);
+    djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH);
 }
 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
