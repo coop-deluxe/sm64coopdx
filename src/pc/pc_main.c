@@ -67,7 +67,7 @@ u32 gNumVblanks = 0;
 u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
 
-f32 gGameSpeed = 1.0f; // DO NOT COMMIT
+f32 gGameSpeed = 1.0f; // TODO: should probably remove
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));

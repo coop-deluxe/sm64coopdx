@@ -246,7 +246,10 @@ void patch_mtx_interpolated(f32 delta) {
         Vec3f posInterp;
         delta_interpolate_vec3f(posInterp, interp->shadowPosPrev, interp->shadowPos, delta);
         gCurGraphNodeObject = interp->obj;
+        extern u8 gInterpolatingSurfaces;
+        gInterpolatingSurfaces = true;
         create_shadow_below_xyz(posInterp[0], posInterp[1], posInterp[2], interp->shadowScale, interp->node->shadowSolidity, interp->node->shadowType);
+        gInterpolatingSurfaces = false;
     }
     gCurGraphNodeObject = savedObj;
 

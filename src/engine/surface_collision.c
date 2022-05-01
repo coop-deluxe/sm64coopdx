@@ -9,6 +9,7 @@
 #include "surface_load.h"
 #include "math_util.h"
 #include "game/game_init.h"
+#include "pc/utils/misc.h"
 
 /**************************************************
  *                      WALLS                     *
@@ -412,6 +413,9 @@ f32 find_floor_height_and_data(f32 xPos, f32 yPos, f32 zPos, struct FloorGeometr
     return floorHeight;
 }
 
+extern f32 gRenderingDelta;
+u8 gInterpolatingSurfaces;
+
 /**
  * Iterate through the list of floors and find the first floor under a given point.
  */
@@ -422,12 +426,14 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
     f32 oo;
     f32 height;
     struct Surface *floor = NULL;
+    s32 interpolate;
 
     // Iterate through the list of floors until there are no more floors.
     while (surfaceNode != NULL) {
         surf = surfaceNode->surface;
         if (surf == NULL) { break; }
         surfaceNode = surfaceNode->next;
+        interpolate = gInterpolatingSurfaces;
 
         if (gCheckingSurfaceCollisionsForObject != NULL) {
             if (surf->object != gCheckingSurfaceCollisionsForObject) {
@@ -439,6 +445,20 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         z1 = surf->vertex1[2];
         x2 = surf->vertex2[0];
         z2 = surf->vertex2[2];
+        if (interpolate) {
+            f32 diff = (surf->prevVertex1[0] - x1) * (surf->prevVertex1[0] - x1);
+            diff += (surf->prevVertex1[1] - surf->vertex1[1]) * (surf->prevVertex1[1] - surf->vertex1[1]);
+            diff += (surf->prevVertex1[2] - z1) * (surf->prevVertex1[2] - z1);
+            //printf("%f\n", sqrtf(diff));
+            if (diff > 10000) {
+                interpolate = FALSE;
+            } else {
+                x1 = delta_interpolate_f32(surf->prevVertex1[0], x1, gRenderingDelta);
+                z1 = delta_interpolate_f32(surf->prevVertex1[2], z1, gRenderingDelta);
+                x2 = delta_interpolate_f32(surf->prevVertex2[0], x2, gRenderingDelta);
+                z2 = delta_interpolate_f32(surf->prevVertex2[2], z2, gRenderingDelta);
+            }
+        }
 
         // Check that the point is within the triangle bounds.
         if ((z1 - z) * (x2 - x1) - (x1 - x) * (z2 - z1) < 0) {
@@ -448,6 +468,10 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         // To slightly save on computation time, set this later.
         x3 = surf->vertex3[0];
         z3 = surf->vertex3[2];
+        if (interpolate) {
+            x3 = delta_interpolate_f32(surf->prevVertex3[0], x3, gRenderingDelta);
+            z3 = delta_interpolate_f32(surf->prevVertex3[2], z3, gRenderingDelta);
+        }
 
         if ((z2 - z) * (x3 - x2) - (x2 - x) * (z3 - z2) < 0) {
             continue;
@@ -467,10 +491,31 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
             continue;
         }
 
-        nx = surf->normal.x;
-        ny = surf->normal.y;
-        nz = surf->normal.z;
-        oo = surf->originOffset;
+
+        if (interpolate) {
+            f32 y1, y2, y3;
+            f32 mag;
+            y1 = delta_interpolate_f32(surf->prevVertex1[1], surf->vertex1[1], gRenderingDelta);
+            y2 = delta_interpolate_f32(surf->prevVertex2[1], surf->vertex2[1], gRenderingDelta);
+            y3 = delta_interpolate_f32(surf->prevVertex3[1], surf->vertex3[1], gRenderingDelta);
+            nx = (y2 - y1) * (z3 - z2) - (z2 - z1) * (y3 - y2);
+            ny = (z2 - z1) * (x3 - x2) - (x2 - x1) * (z3 - z2);
+            nz = (x2 - x1) * (y3 - y2) - (y2 - y1) * (x3 - x2);
+            mag = sqrtf(nx * nx + ny * ny + nz * nz);
+            if (mag < 0.0001) {
+                continue;
+            }
+            mag = (f32)(1.0 / mag);
+            nx *= mag;
+            ny *= mag;
+            nz *= mag;
+            oo = -(nx * x1 + ny * y1 + nz * z1);
+        } else {
+            nx = surf->normal.x;
+            ny = surf->normal.y;
+            nz = surf->normal.z;
+            oo = surf->originOffset;
+        }
 
         // If a wall, ignore it. Likely a remnant, should never occur.
         if (ny == 0.0f) {
@@ -486,6 +531,16 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
 
         if (pheight != NULL) {
             *pheight = height;
+        }
+
+        if (interpolate) {
+            static struct Surface s;
+            s.type = surf->type;
+            s.normal.x = nx;
+            s.normal.y = ny;
+            s.normal.z = nz;
+            s.originOffset = oo;
+            return &s;
         }
 
         floor = surf;
