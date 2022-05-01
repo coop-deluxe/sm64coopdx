@@ -699,6 +699,8 @@
 <br />
 
 - djui_hud_utils.h
+   - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
+   - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_screen_height](functions-3.md#djui_hud_get_screen_height)
    - [djui_hud_get_screen_width](functions-3.md#djui_hud_get_screen_width)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
@@ -1333,6 +1335,8 @@
 
 - smlua_misc_utils.h
    - [allocate_mario_action](functions-4.md#allocate_mario_action)
+   - [camera_freeze](functions-4.md#camera_freeze)
+   - [camera_unfreeze](functions-4.md#camera_unfreeze)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
    - [get_environment_region](functions-4.md#get_environment_region)
@@ -1350,6 +1354,9 @@
    - [play_transition](functions-4.md#play_transition)
    - [save_file_set_using_backup_slot](functions-4.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-4.md#set_environment_region)
+   - [set_override_far](functions-4.md#set_override_far)
+   - [set_override_fov](functions-4.md#set_override_fov)
+   - [set_override_near](functions-4.md#set_override_near)
    - [warp_exit_level](functions-4.md#warp_exit_level)
    - [warp_restart_level](functions-4.md#warp_restart_level)
    - [warp_to_castle](functions-4.md#warp_to_castle)

@@ -173,6 +173,10 @@ s32 gMtxTblSize;
 struct Object* gCurGraphNodeProcessingObject = NULL;
 struct MarioState* gCurGraphNodeMarioState = NULL;
 
+f32 gOverrideFOV = 0;
+f32 gOverrideNear = 0;
+f32 gOverrideFar = 0;
+
 void patch_mtx_before(void) {
     gMtxTblSize = 0;
 
@@ -203,7 +207,7 @@ void patch_mtx_interpolated(f32 delta) {
     if (sPerspectiveNode != NULL) {
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
-        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, sPerspectiveNode->near, sPerspectiveNode->far, 1.0f);
+        guPerspective(sPerspectiveMtx, &perspNorm, not_zero(fovInterpolated, gOverrideFOV), sPerspectiveAspect, not_zero(sPerspectiveNode->near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -406,7 +410,7 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     f32 aspect = (f32) gCurGraphNodeRoot->width / (f32) gCurGraphNodeRoot->height;
 #endif
 
-    guPerspective(mtx, &perspNorm, node->prevFov, aspect, node->near, node->far, 1.0f);
+    guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, not_zero(node->near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;

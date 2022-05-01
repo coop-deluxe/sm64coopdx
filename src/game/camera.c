@@ -37,6 +37,7 @@
 
 static u8 sSoftResettingCamera = FALSE;
 u8 gCameraUseCourseSpecificSettings = TRUE;
+u8 gOverrideFreezeCamera;
 
 /**
  * @file camera.c
@@ -3049,6 +3050,9 @@ void update_lakitu(struct Camera *c) {
  * Gets controller input, checks for cutscenes, handles mode changes, and moves the camera
  */
 void update_camera(struct Camera *c) {
+    if (gOverrideFreezeCamera) {
+        return;
+    }
     UNUSED u8 unused[24];
 
     gCamera = c;

@@ -4701,6 +4701,42 @@
 
 <br />
 
+## [camera_freeze](#camera_freeze)
+
+### Lua Example
+`camera_freeze()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_freeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_unfreeze](#camera_unfreeze)
+
+### Lua Example
+`camera_unfreeze()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_unfreeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [deref_s32_pointer](#deref_s32_pointer)
 
 ### Lua Example
@@ -5044,6 +5080,66 @@
 
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_far](#set_override_far)
+
+### Lua Example
+`local numberValue = set_override_far(far)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| far | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 set_override_far(f32 far);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_fov](#set_override_fov)
+
+### Lua Example
+`local numberValue = set_override_fov(fov)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fov | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 set_override_fov(f32 fov);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_near](#set_override_near)
+
+### Lua Example
+`local numberValue = set_override_near(near)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| near | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 set_override_near(f32 near);`
 
 [:arrow_up_small:](#)
 

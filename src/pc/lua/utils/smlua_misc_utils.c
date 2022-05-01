@@ -2,11 +2,13 @@
 #include "types.h"
 
 #include "data/dynos.c.h"
+#include "game/camera.h"
 #include "game/hud.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
 #include "game/object_list_processor.h"
+#include "game/rendering_graph_node.h"
 #include "game/level_update.h"
 #include "pc/djui/djui_hud_utils.h"
 
@@ -98,6 +100,16 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
 
 ///
 
+void camera_freeze(void) {
+    gOverrideFreezeCamera = TRUE;
+}
+
+void camera_unfreeze(void) {
+    gOverrideFreezeCamera = FALSE;
+}
+
+///
+
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return dynos_warp_to_level(aLevel, aArea, aAct);
 }
@@ -167,4 +179,16 @@ void set_environment_region(u8 index, s32 value) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
+}
+
+f32 set_override_fov(f32 fov) {
+    gOverrideFOV = fov;
+}
+
+f32 set_override_near(f32 near) {
+    gOverrideNear = near;
+}
+
+f32 set_override_far(f32 far) {
+    gOverrideFar = far;
 }

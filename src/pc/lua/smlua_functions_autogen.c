@@ -7186,6 +7186,24 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
  // djui_hud_utils.h //
 //////////////////////
 
+int smlua_func_djui_hud_get_mouse_x(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushnumber(L, djui_hud_get_mouse_x());
+
+    return 1;
+}
+
+int smlua_func_djui_hud_get_mouse_y(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushnumber(L, djui_hud_get_mouse_y());
+
+    return 1;
+}
+
 int smlua_func_djui_hud_get_screen_height(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -14679,6 +14697,24 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_freeze(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    camera_freeze();
+
+    return 1;
+}
+
+int smlua_func_camera_unfreeze(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    camera_unfreeze();
+
+    return 1;
+}
+
 int smlua_func_deref_s32_pointer(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -14886,6 +14922,39 @@ int smlua_func_set_environment_region(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
 
     set_environment_region(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_override_far(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    f32 far = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, set_override_far(far));
+
+    return 1;
+}
+
+int smlua_func_set_override_fov(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    f32 fov = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, set_override_fov(fov));
+
+    return 1;
+}
+
+int smlua_func_set_override_near(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    f32 near = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, set_override_near(near));
 
     return 1;
 }
@@ -16509,6 +16578,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
     // djui_hud_utils.h
+    smlua_bind_function(L, "djui_hud_get_mouse_x", smlua_func_djui_hud_get_mouse_x);
+    smlua_bind_function(L, "djui_hud_get_mouse_y", smlua_func_djui_hud_get_mouse_y);
     smlua_bind_function(L, "djui_hud_get_screen_height", smlua_func_djui_hud_get_screen_height);
     smlua_bind_function(L, "djui_hud_get_screen_width", smlua_func_djui_hud_get_screen_width);
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
@@ -17110,6 +17181,8 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
+    smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
@@ -17127,6 +17200,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
+    smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
+    smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
+    smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);

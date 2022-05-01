@@ -3565,6 +3565,16 @@ function djui_chat_message_create(message)
     -- ...
 end
 
+--- @return number
+function djui_hud_get_mouse_x()
+    -- ...
+end
+
+--- @return number
+function djui_hud_get_mouse_y()
+    -- ...
+end
+
 --- @return integer
 function djui_hud_get_screen_height()
     -- ...
@@ -7122,6 +7132,16 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
+--- @return nil
+function camera_freeze()
+    -- ...
+end
+
+--- @return nil
+function camera_unfreeze()
+    -- ...
+end
+
 --- @param pointer Pointer_integer
 --- @return integer
 function deref_s32_pointer(pointer)
@@ -7233,6 +7253,24 @@ end
 --- @param value integer
 --- @return nil
 function set_environment_region(index, value)
+    -- ...
+end
+
+--- @param far number
+--- @return number
+function set_override_far(far)
+    -- ...
+end
+
+--- @param fov number
+--- @return number
+function set_override_fov(fov)
+    -- ...
+end
+
+--- @param near number
+--- @return number
+function set_override_near(near)
     -- ...
 end
 

@@ -1997,6 +1997,42 @@
 <br />
 
 
+## [djui_hud_get_mouse_x](#djui_hud_get_mouse_x)
+
+### Lua Example
+`local numberValue = djui_hud_get_mouse_x()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 djui_hud_get_mouse_x(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_mouse_y](#djui_hud_get_mouse_y)
+
+### Lua Example
+`local numberValue = djui_hud_get_mouse_y()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 djui_hud_get_mouse_y(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
 
 ### Lua Example

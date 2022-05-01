@@ -80,4 +80,6 @@ void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c)
 void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);
 s32 anim_spline_poll(struct MarioState* m, Vec3f result);
 
+f32 not_zero(f32 value, f32 replacement);
+
 #endif // MATH_UTIL_H

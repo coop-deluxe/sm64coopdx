@@ -28,6 +28,10 @@ extern struct Object* gCurGraphNodeProcessingObject;
 // translation types the type is set to this
 #define ANIM_TYPE_ROTATION              5
 
+extern f32 gOverrideFOV;
+extern f32 gOverrideNear;
+extern f32 gOverrideFar;
+
 void geo_process_node_and_siblings(struct GraphNode *firstNode);
 void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor);
 void interpolate_vectors(Vec3f res, Vec3f a, Vec3f b);

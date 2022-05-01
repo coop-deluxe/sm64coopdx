@@ -10,6 +10,8 @@
 
 #include "level_table.h"
 
+extern u8 gOverrideFreezeCamera;
+
 /**
  * @file camera.h
  * Constants, defines, and structs used by the camera system.

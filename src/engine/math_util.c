@@ -917,3 +917,13 @@ s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
 
     return hasEnded;
 }
+
+/**
+ * Returns the second value if it does not equal zero.
+ */
+f32 not_zero(f32 value, f32 replacement) {
+    if (replacement != 0) {
+        return replacement;
+    }
+    return value;
+}

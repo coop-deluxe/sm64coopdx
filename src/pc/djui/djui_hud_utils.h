@@ -34,6 +34,9 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
 u32 djui_hud_get_screen_width(void);
 u32 djui_hud_get_screen_height(void);
 
+f32 djui_hud_get_mouse_x(void);
+f32 djui_hud_get_mouse_y(void);
+
 f32 djui_hud_measure_text(const char* message);
 void djui_hud_print_text(const char* message, float x, float y, float scale);
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
