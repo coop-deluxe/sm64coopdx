@@ -35,6 +35,7 @@ in_files = [
     "src/game/obj_behaviors_2.h",
     "include/dialog_ids.h",
     "include/seq_ids.h",
+    "include/surface_terrains.h"
 ]
 
 exclude_constants = {

@@ -10525,6 +10525,507 @@ SOUND_TERRAIN_WATER = 2
 SOUND_VIBRATO = 0x2000000
 
 --- @type integer
+SURFACE_0004 = 0x0004
+
+--- @type integer
+SURFACE_BOSS_FIGHT_CAMERA = 0x0065
+
+--- @type integer
+SURFACE_BURNING = 0x0001
+
+--- @type integer
+SURFACE_CAMERA_8_DIR = 0x0069
+
+--- @type integer
+SURFACE_CAMERA_BOUNDARY = 0x0072
+
+--- @type integer
+SURFACE_CAMERA_FREE_ROAM = 0x0066
+
+--- @type integer
+SURFACE_CAMERA_MIDDLE = 0x006E
+
+--- @type integer
+SURFACE_CAMERA_ROTATE_LEFT = 0x0070
+
+--- @type integer
+SURFACE_CAMERA_ROTATE_RIGHT = 0x006F
+
+--- @type integer
+SURFACE_CLASS_DEFAULT = 0x0000
+
+--- @type integer
+SURFACE_CLASS_NOT_SLIPPERY = 0x0015
+
+--- @type integer
+SURFACE_CLASS_SLIPPERY = 0x0014
+
+--- @type integer
+SURFACE_CLASS_VERY_SLIPPERY = 0x0013
+
+--- @type integer
+SURFACE_CLOSE_CAMERA = 0x000B
+
+--- @type integer
+SURFACE_DEATH_PLANE = 0x000A
+
+--- @type integer
+SURFACE_DEEP_MOVING_QUICKSAND = 0x0024
+
+--- @type integer
+SURFACE_DEEP_QUICKSAND = 0x0022
+
+--- @type integer
+SURFACE_DEFAULT = 0x0000
+
+--- @type integer
+SURFACE_FLAG_DYNAMIC = (1 << 0)
+
+--- @type integer
+SURFACE_FLAG_NO_CAM_COLLISION = (1 << 1)
+
+--- @type integer
+SURFACE_FLAG_X_PROJECTION = (1 << 3)
+
+--- @type integer
+SURFACE_FLOWING_WATER = 0x000E
+
+--- @type integer
+SURFACE_HANGABLE = 0x0005
+
+--- @type integer
+SURFACE_HARD = 0x0030
+
+--- @type integer
+SURFACE_HARD_NOT_SLIPPERY = 0x0037
+
+--- @type integer
+SURFACE_HARD_SLIPPERY = 0x0035
+
+--- @type integer
+SURFACE_HARD_VERY_SLIPPERY = 0x0036
+
+--- @type integer
+SURFACE_HORIZONTAL_WIND = 0x002C
+
+--- @type integer
+SURFACE_ICE = 0x002E
+
+--- @type integer
+SURFACE_INSTANT_MOVING_QUICKSAND = 0x002D
+
+--- @type integer
+SURFACE_INSTANT_QUICKSAND = 0x0023
+
+--- @type integer
+SURFACE_INSTANT_WARP_1B = 0x001B
+
+--- @type integer
+SURFACE_INSTANT_WARP_1C = 0x001C
+
+--- @type integer
+SURFACE_INSTANT_WARP_1D = 0x001D
+
+--- @type integer
+SURFACE_INSTANT_WARP_1E = 0x001E
+
+--- @type integer
+SURFACE_INTANGIBLE = 0x0012
+
+--- @type integer
+SURFACE_LOOK_UP_WARP = 0x002F
+
+--- @type integer
+SURFACE_MGR_MUSIC = 0x001A
+
+--- @type integer
+SURFACE_MOVING_QUICKSAND = 0x0027
+
+--- @type integer
+SURFACE_NOISE_DEFAULT = 0x0029
+
+--- @type integer
+SURFACE_NOISE_SLIPPERY = 0x002A
+
+--- @type integer
+SURFACE_NOISE_VERY_SLIPPERY = 0x0075
+
+--- @type integer
+SURFACE_NOISE_VERY_SLIPPERY_73 = 0x0073
+
+--- @type integer
+SURFACE_NOISE_VERY_SLIPPERY_74 = 0x0074
+
+--- @type integer
+SURFACE_NOT_SLIPPERY = 0x0015
+
+--- @type integer
+SURFACE_NO_CAM_COLLISION = 0x0076
+
+--- @type integer
+SURFACE_NO_CAM_COLLISION_77 = 0x0077
+
+--- @type integer
+SURFACE_NO_CAM_COL_SLIPPERY = 0x0079
+
+--- @type integer
+SURFACE_NO_CAM_COL_VERY_SLIPPERY = 0x0078
+
+--- @type integer
+SURFACE_PAINTING_WARP_D3 = 0x00D3
+
+--- @type integer
+SURFACE_PAINTING_WARP_D4 = 0x00D4
+
+--- @type integer
+SURFACE_PAINTING_WARP_D5 = 0x00D5
+
+--- @type integer
+SURFACE_PAINTING_WARP_D6 = 0x00D6
+
+--- @type integer
+SURFACE_PAINTING_WARP_D7 = 0x00D7
+
+--- @type integer
+SURFACE_PAINTING_WARP_D8 = 0x00D8
+
+--- @type integer
+SURFACE_PAINTING_WARP_D9 = 0x00D9
+
+--- @type integer
+SURFACE_PAINTING_WARP_DA = 0x00DA
+
+--- @type integer
+SURFACE_PAINTING_WARP_DB = 0x00DB
+
+--- @type integer
+SURFACE_PAINTING_WARP_DC = 0x00DC
+
+--- @type integer
+SURFACE_PAINTING_WARP_DD = 0x00DD
+
+--- @type integer
+SURFACE_PAINTING_WARP_DE = 0x00DE
+
+--- @type integer
+SURFACE_PAINTING_WARP_DF = 0x00DF
+
+--- @type integer
+SURFACE_PAINTING_WARP_E0 = 0x00E0
+
+--- @type integer
+SURFACE_PAINTING_WARP_E1 = 0x00E1
+
+--- @type integer
+SURFACE_PAINTING_WARP_E2 = 0x00E2
+
+--- @type integer
+SURFACE_PAINTING_WARP_E3 = 0x00E3
+
+--- @type integer
+SURFACE_PAINTING_WARP_E4 = 0x00E4
+
+--- @type integer
+SURFACE_PAINTING_WARP_E5 = 0x00E5
+
+--- @type integer
+SURFACE_PAINTING_WARP_E6 = 0x00E6
+
+--- @type integer
+SURFACE_PAINTING_WARP_E7 = 0x00E7
+
+--- @type integer
+SURFACE_PAINTING_WARP_E8 = 0x00E8
+
+--- @type integer
+SURFACE_PAINTING_WARP_E9 = 0x00E9
+
+--- @type integer
+SURFACE_PAINTING_WARP_EA = 0x00EA
+
+--- @type integer
+SURFACE_PAINTING_WARP_EB = 0x00EB
+
+--- @type integer
+SURFACE_PAINTING_WARP_EC = 0x00EC
+
+--- @type integer
+SURFACE_PAINTING_WARP_ED = 0x00ED
+
+--- @type integer
+SURFACE_PAINTING_WARP_EE = 0x00EE
+
+--- @type integer
+SURFACE_PAINTING_WARP_EF = 0x00EF
+
+--- @type integer
+SURFACE_PAINTING_WARP_F0 = 0x00F0
+
+--- @type integer
+SURFACE_PAINTING_WARP_F1 = 0x00F1
+
+--- @type integer
+SURFACE_PAINTING_WARP_F2 = 0x00F2
+
+--- @type integer
+SURFACE_PAINTING_WARP_F3 = 0x00F3
+
+--- @type integer
+SURFACE_PAINTING_WARP_F7 = 0x00F7
+
+--- @type integer
+SURFACE_PAINTING_WARP_F8 = 0x00F8
+
+--- @type integer
+SURFACE_PAINTING_WARP_F9 = 0x00F9
+
+--- @type integer
+SURFACE_PAINTING_WARP_FA = 0x00FA
+
+--- @type integer
+SURFACE_PAINTING_WARP_FB = 0x00FB
+
+--- @type integer
+SURFACE_PAINTING_WARP_FC = 0x00FC
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_A6 = 0x00A6
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_A7 = 0x00A7
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_A8 = 0x00A8
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_A9 = 0x00A9
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_AA = 0x00AA
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_AB = 0x00AB
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_AC = 0x00AC
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_AD = 0x00AD
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_AE = 0x00AE
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_AF = 0x00AF
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B0 = 0x00B0
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B1 = 0x00B1
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B2 = 0x00B2
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B3 = 0x00B3
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B4 = 0x00B4
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B5 = 0x00B5
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B6 = 0x00B6
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B7 = 0x00B7
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B8 = 0x00B8
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_B9 = 0x00B9
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_BA = 0x00BA
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_BB = 0x00BB
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_BC = 0x00BC
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_BD = 0x00BD
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_BE = 0x00BE
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_BF = 0x00BF
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C0 = 0x00C0
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C1 = 0x00C1
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C2 = 0x00C2
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C3 = 0x00C3
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C4 = 0x00C4
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C5 = 0x00C5
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C6 = 0x00C6
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C7 = 0x00C7
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C8 = 0x00C8
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_C9 = 0x00C9
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_CA = 0x00CA
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_CB = 0x00CB
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_CC = 0x00CC
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_CD = 0x00CD
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_CE = 0x00CE
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_CF = 0x00CF
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_D0 = 0x00D0
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_D1 = 0x00D1
+
+--- @type integer
+SURFACE_PAINTING_WOBBLE_D2 = 0x00D2
+
+--- @type integer
+SURFACE_QUICKSAND = 0x0026
+
+--- @type integer
+SURFACE_SHALLOW_MOVING_QUICKSAND = 0x0025
+
+--- @type integer
+SURFACE_SHALLOW_QUICKSAND = 0x0021
+
+--- @type integer
+SURFACE_SLIPPERY = 0x0014
+
+--- @type integer
+SURFACE_SLOW = 0x0009
+
+--- @type integer
+SURFACE_SWITCH = 0x007A
+
+--- @type integer
+SURFACE_THI3_WALLKICK = 0x0068
+
+--- @type integer
+SURFACE_TIMER_END = 0x0034
+
+--- @type integer
+SURFACE_TIMER_START = 0x0033
+
+--- @type integer
+SURFACE_TRAPDOOR = 0x00FF
+
+--- @type integer
+SURFACE_TTC_PAINTING_1 = 0x00F4
+
+--- @type integer
+SURFACE_TTC_PAINTING_2 = 0x00F5
+
+--- @type integer
+SURFACE_TTC_PAINTING_3 = 0x00F6
+
+--- @type integer
+SURFACE_TTM_VINES = 0x0016
+
+--- @type integer
+SURFACE_VANISH_CAP_WALLS = 0x007B
+
+--- @type integer
+SURFACE_VERTICAL_WIND = 0x0038
+
+--- @type integer
+SURFACE_VERY_SLIPPERY = 0x0013
+
+--- @type integer
+SURFACE_WALL_MISC = 0x0028
+
+--- @type integer
+SURFACE_WARP = 0x0032
+
+--- @type integer
+SURFACE_WATER = 0x000D
+
+--- @type integer
+SURFACE_WOBBLING_WARP = 0x00FD
+
+--- @type integer
+TERRAIN_GRASS = 0x0000
+
+--- @type integer
+TERRAIN_LOAD_CONTINUE = 0x0041
+
+--- @type integer
+TERRAIN_LOAD_END = 0x0042
+
+--- @type integer
+TERRAIN_LOAD_ENVIRONMENT = 0x0044
+
+--- @type integer
+TERRAIN_LOAD_OBJECTS = 0x0043
+
+--- @type integer
+TERRAIN_LOAD_VERTICES = 0x0040
+
+--- @type integer
+TERRAIN_MASK = 0x0007
+
+--- @type integer
+TERRAIN_SAND = 0x0003
+
+--- @type integer
+TERRAIN_SLIDE = 0x0006
+
+--- @type integer
+TERRAIN_SNOW = 0x0002
+
+--- @type integer
+TERRAIN_SPOOKY = 0x0004
+
+--- @type integer
+TERRAIN_STONE = 0x0001
+
+--- @type integer
+TERRAIN_WATER = 0x0005
+
+--- @type integer
 ANIM_FLAG_2 = (1 << 2)
 
 --- @type integer
