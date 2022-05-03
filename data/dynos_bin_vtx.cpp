@@ -1,5 +1,27 @@
 #include "dynos.cpp.h"
 
+#define F32VTX_SENTINEL_0 0x3346
+#define F32VTX_SENTINEL_1 0x5632
+#define F32VTX_SENTINEL_2 0x5854
+
+static inline bool ShouldUseF32Vtx(DataNode<Vtx>* aNode) {
+    for (u32 i = 0; i != aNode->mSize; ++i) {
+        for (u32 j = 0; j != 3; ++j) {
+            if (aNode->mData[i].n.ob[j] < -0x7FFF || 
+                aNode->mData[i].n.ob[j] > +0x7FFF) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static inline bool IsUsingF32Vtx(Vec3f ob) {
+    return ob[0] == F32VTX_SENTINEL_0 &&
+           ob[1] == F32VTX_SENTINEL_1 &&
+           ob[2] == F32VTX_SENTINEL_2;
+}
+
   /////////////
  // Parsing //
 /////////////
@@ -39,11 +61,34 @@ void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode) {
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    bool shouldUseF32Vtx = ShouldUseF32Vtx(aNode);
+    if (shouldUseF32Vtx) {
+        WriteBytes<u32>(aFile, aNode->mSize + 1);
+
+        // Write sentinel
+        WriteBytes<s16>(aFile, F32VTX_SENTINEL_0);
+        WriteBytes<s16>(aFile, F32VTX_SENTINEL_1);
+        WriteBytes<s16>(aFile, F32VTX_SENTINEL_2);
+        WriteBytes<s16>(aFile, 0);
+        WriteBytes<s16>(aFile, 0);
+        WriteBytes<s16>(aFile, 0);
+        WriteBytes<s8> (aFile, 0);
+        WriteBytes<s8> (aFile, 0);
+        WriteBytes<s8> (aFile, 0);
+        WriteBytes<u8> (aFile, 0);
+    } else {
+        WriteBytes<u32>(aFile, aNode->mSize);
+    }
     for (u32 i = 0; i != aNode->mSize; ++i) {
-        WriteBytes<s16>(aFile, aNode->mData[i].n.ob[0]);
-        WriteBytes<s16>(aFile, aNode->mData[i].n.ob[1]);
-        WriteBytes<s16>(aFile, aNode->mData[i].n.ob[2]);
+        if (shouldUseF32Vtx) {
+            WriteBytes<f32>(aFile, aNode->mData[i].n.ob[0]);
+            WriteBytes<f32>(aFile, aNode->mData[i].n.ob[1]);
+            WriteBytes<f32>(aFile, aNode->mData[i].n.ob[2]);
+        } else {
+            WriteBytes<s16>(aFile, aNode->mData[i].n.ob[0]);
+            WriteBytes<s16>(aFile, aNode->mData[i].n.ob[1]);
+            WriteBytes<s16>(aFile, aNode->mData[i].n.ob[2]);
+        }
         WriteBytes<s16>(aFile, aNode->mData[i].n.flag);
         WriteBytes<s16>(aFile, aNode->mData[i].n.tc[0]);
         WriteBytes<s16>(aFile, aNode->mData[i].n.tc[1]);
@@ -65,19 +110,32 @@ void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData) {
     _Node->mName.Read(aFile);
 
     // Data
+    bool isUsingF32Vtx = false;
     _Node->mSize = ReadBytes<u32>(aFile);
     _Node->mData = New<Vtx>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        _Node->mData[i].n.ob[0] = ReadBytes<s16>(aFile);
-        _Node->mData[i].n.ob[1] = ReadBytes<s16>(aFile);
-        _Node->mData[i].n.ob[2] = ReadBytes<s16>(aFile);
+        if (isUsingF32Vtx) {
+            _Node->mData[i].n.ob[0] = ReadBytes<f32>(aFile);
+            _Node->mData[i].n.ob[1] = ReadBytes<f32>(aFile);
+            _Node->mData[i].n.ob[2] = ReadBytes<f32>(aFile);
+        } else {
+            _Node->mData[i].n.ob[0] = ReadBytes<s16>(aFile);
+            _Node->mData[i].n.ob[1] = ReadBytes<s16>(aFile);
+            _Node->mData[i].n.ob[2] = ReadBytes<s16>(aFile);
+        }
         _Node->mData[i].n.flag  = ReadBytes<s16>(aFile);
         _Node->mData[i].n.tc[0] = ReadBytes<s16>(aFile);
         _Node->mData[i].n.tc[1] = ReadBytes<s16>(aFile);
         _Node->mData[i].n.n[0]  = ReadBytes<s8> (aFile);
         _Node->mData[i].n.n[1]  = ReadBytes<s8> (aFile);
         _Node->mData[i].n.n[2]  = ReadBytes<s8> (aFile);
-        _Node->mData[i].n.a     = ReadBytes<u8>(aFile);
+        _Node->mData[i].n.a     = ReadBytes<u8> (aFile);
+
+        // Check sentinel on first vertex
+        if (!isUsingF32Vtx && i == 0 && IsUsingF32Vtx(_Node->mData[i].n.ob)) {
+            _Node->mSize--; i--;
+            isUsingF32Vtx = true;
+        }
     }
 
     // Append
