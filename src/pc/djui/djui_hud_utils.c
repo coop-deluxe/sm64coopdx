@@ -86,12 +86,16 @@ u32 djui_hud_get_screen_height(void) {
 }
 
 f32 djui_hud_get_mouse_x(void) {
+#ifdef HAVE_SDL2
     controller_sdl_read_mouse_window();
+#endif
     return mouse_window_x / djui_gfx_get_scale();
 }
 
 f32 djui_hud_get_mouse_y(void) {
+#ifdef HAVE_SDL2
     controller_sdl_read_mouse_window();
+#endif
     return mouse_window_y / djui_gfx_get_scale();
 }
 

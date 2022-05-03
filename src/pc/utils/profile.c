@@ -2,7 +2,9 @@
 #include "PR/gbi.h"
 #include "pc/utils/stb_ds.h"
 #include "pc/debuglog.h"
+#ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
+#endif
 
 struct ProfileCounters {
     const char* key;
@@ -44,8 +46,12 @@ void profiler_start_counter(const char* keyName) {
     }
 
     counters = counters;
-    f64 freq = SDL_GetPerformanceFrequency();
-    f64 curr = SDL_GetPerformanceCounter();
+    f64 freq;
+    f64 curr;
+#ifdef HAVE_SDL2
+    freq = SDL_GetPerformanceFrequency();
+    curr = SDL_GetPerformanceCounter();
+#endif
     v->key = keyName;
     v->start = curr / freq;
     v->indent = sProfileIndent++;
@@ -57,8 +63,12 @@ void profiler_stop_counter(const char* keyName) {
         return;
     }
 
-    f64 freq = SDL_GetPerformanceFrequency();
-    f64 curr = SDL_GetPerformanceCounter();
+    f64 freq;
+    f64 curr;
+#ifdef HAVE_SDL2
+    freq = SDL_GetPerformanceFrequency();
+    curr = SDL_GetPerformanceCounter();
+#endif
     v->end = curr / freq;
     v->sum += v->end - v->start;
     sProfileIndent--;
