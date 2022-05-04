@@ -120,6 +120,9 @@ void render_create_dl_ortho_matrix() {
 }
 
 static void crash_handler_produce_one_frame() {
+    extern u8 gRenderingInterpolated;
+    gRenderingInterpolated = false;
+
     // Start frame
     gfx_start_frame();
     load_gfx_memory_pool();
