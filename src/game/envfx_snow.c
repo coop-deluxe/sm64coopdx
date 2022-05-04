@@ -431,7 +431,7 @@ Gfx *envfx_update_snow_internal(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec
     s16 radius, pitch, yaw;
     Vec3s snowCylinderPos;
     struct SnowFlakeVertex vertex1, vertex2, vertex3;
-    Gfx *gfxStart;
+    Gfx *gfxStart = NULL;
     Gfx *gfx;
 
     vertex1 = gSnowFlakeVertex1;
