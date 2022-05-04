@@ -431,7 +431,7 @@ Gfx *envfx_update_snow_internal(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec
     s16 radius, pitch, yaw;
     Vec3s snowCylinderPos;
     struct SnowFlakeVertex vertex1, vertex2, vertex3;
-    Gfx *gfxStart;
+    Gfx *gfxStart = NULL;
     Gfx *gfx;
 
     vertex1 = gSnowFlakeVertex1;
@@ -455,7 +455,9 @@ Gfx *envfx_update_snow_internal(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec
         return NULL;
     }
 
-    envfx_update_snowflake_count(snowMode, marioPos);
+    if (!interpolated) {
+        envfx_update_snowflake_count(snowMode, marioPos);
+    }
 
     // Note: to and from are inverted here, so the resulting vector goes towards the camera
     orbit_from_positions(camTo, camFrom, &radius, &pitch, &yaw);
