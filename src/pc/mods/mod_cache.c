@@ -4,6 +4,7 @@
 #include "mods.h"
 #include "mod.h"
 #include "mods_utils.h"
+#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 #include "pc/utils/md5.h"
 

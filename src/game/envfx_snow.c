@@ -438,7 +438,7 @@ Gfx *envfx_update_snow_internal(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec
     vertex2 = gSnowFlakeVertex2;
     vertex3 = gSnowFlakeVertex3;
 
-    if (interpolated) {
+    if (interpolated && sSnowGfxPos) {
         gfxStart = sSnowGfxPos;
     } else {
         gfxStart = (Gfx *) alloc_display_list((gSnowParticleCount * 6 + 3) * sizeof(Gfx));
