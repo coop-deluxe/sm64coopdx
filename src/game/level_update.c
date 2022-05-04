@@ -975,7 +975,7 @@ void initiate_delayed_warp(void) {
 
                     if ((gCurrCreditsEntry != NULL) && (gCurrCreditsEntry->levelNum == gLevelValues.skipCreditsAt)) {
                         lvl_skip_credits();
-                    } else {
+                    } else if (gCurrCreditsEntry != NULL) {
                         // instance players in the credits
                         gCurrActStarNum = 99;
                         gCurrActNum = 99;
@@ -991,7 +991,7 @@ void initiate_delayed_warp(void) {
 
                     if ((gCurrCreditsEntry != NULL) && (gCurrCreditsEntry->levelNum == gLevelValues.skipCreditsAt)) {
                         lvl_skip_credits();
-                    } else {
+                    } else if (gCurrCreditsEntry != NULL) {
                         gCurrActNum = gCurrCreditsEntry->unk02 & 0x07;
                         if ((gCurrCreditsEntry + 1)->levelNum == LEVEL_NONE) {
                             destWarpNode = WARP_NODE_CREDITS_END;
@@ -1006,12 +1006,14 @@ void initiate_delayed_warp(void) {
 
                 default:
                     warpNode = area_get_warp_node(sSourceWarpNodeId);
-                    initiate_warp(warpNode->node.destLevel & 0x7F, warpNode->node.destArea,
-                                    warpNode->node.destNode, sDelayedWarpArg);
+                    if (warpNode != NULL) {
+                        initiate_warp(warpNode->node.destLevel & 0x7F, warpNode->node.destArea,
+                                        warpNode->node.destNode, sDelayedWarpArg);
 
-                    check_if_should_set_warp_checkpoint(&warpNode->node);
-                    if (sWarpDest.type != WARP_TYPE_CHANGE_LEVEL) {
-                        level_set_transition(2, NULL);
+                        check_if_should_set_warp_checkpoint(&warpNode->node);
+                        if (sWarpDest.type != WARP_TYPE_CHANGE_LEVEL) {
+                            level_set_transition(2, NULL);
+                        }
                     }
                     break;
             }
