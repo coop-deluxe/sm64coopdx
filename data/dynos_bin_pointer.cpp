@@ -2,6 +2,7 @@
 extern "C" {
 #include "behavior_table.h"
 #include "levels/scripts.h"
+#include "engine/graph_node.h"
 }
 
   /////////////
@@ -224,7 +225,7 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
  // Reading //
 /////////////
 
-static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 aPtrData) {
+static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 aPtrData, u8* outFlags) {
 
     // Lights
     for (auto& _Node : aGfxData->mLights) {
@@ -285,6 +286,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     // Display lists
     for (auto &_Node : aGfxData->mDisplayLists) {
         if (_Node->mName == aPtrName) {
+            *outFlags |= _Node->mFlags;
             return (void *) _Node->mData;
         }
     }
@@ -292,6 +294,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     // Geo layouts
     for (auto &_Node : aGfxData->mGeoLayouts) {
         if (_Node->mName == aPtrName) {
+            *outFlags |= _Node->mFlags;
             return (void *) _Node->mData;
         }
     }
@@ -299,6 +302,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     // Vertices
     for (auto &_Node : aGfxData->mVertices) {
         if (_Node->mName == aPtrName) {
+            *outFlags |= _Node->mFlags;
             return (void *) (_Node->mData + aPtrData);
         }
     }
@@ -393,7 +397,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     return NULL;
 }
 
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue) {
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags) {
 
     // LUAV
     if (aValue == LUA_VAR_CODE) {
@@ -418,7 +422,7 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue) {
     if (aValue == POINTER_CODE) {
         String _PtrName; _PtrName.Read(aFile);
         u32   _PtrData = ReadBytes<u32>(aFile);
-        return GetPointerFromData(aGfxData, _PtrName, _PtrData);
+        return GetPointerFromData(aGfxData, _PtrName, _PtrData, outFlags);
     }
 
     // Not a pointer

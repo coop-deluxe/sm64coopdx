@@ -12,7 +12,8 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
     const char* aActorName = pair.first;
     GfxData* aGfxData = pair.second;
     
-    GraphNode* graphNode = (GraphNode *) DynOS_Geo_GetGraphNode((*(aGfxData->mGeoLayouts.end() - 1))->mData, false);
+    auto& geoNode = *(aGfxData->mGeoLayouts.end() - 1);
+    GraphNode* graphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoNode->mData, false);
     if (graphNode == NULL) { return; }
 
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
@@ -23,15 +24,9 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
     actorGfx.mGraphNode = graphNode;
     actorGfx.mPackIndex = aPackIndex;
 
-    // Check if we should disable billboards
-    // TODO: make this smarter
-    /*u32 vertices = 0;
-    for (auto& vtx : aGfxData->mVertices) {
-        vertices += vtx->mSize;
-    }
-    if (vertices > 6) {
+    if (geoNode->mFlags & GRAPH_EXTRA_FORCE_3D) {
         actorGfx.mGraphNode->extraFlags |= GRAPH_EXTRA_FORCE_3D;
-    }*/
+    }
 
     DynOS_Actor_Valid(georef, actorGfx);
 }

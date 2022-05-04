@@ -1,4 +1,7 @@
 #include "dynos.cpp.h"
+extern "C" {
+#include "engine/graph_node.h"
+}
 
 #define F32VTX_SENTINEL_0 0x3346
 #define F32VTX_SENTINEL_1 0x5632
@@ -136,6 +139,10 @@ void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData) {
             _Node->mSize--; i--;
             isUsingF32Vtx = true;
         }
+    }
+
+    if (_Node->mSize > 6) {
+        _Node->mFlags |= GRAPH_EXTRA_FORCE_3D;
     }
 
     // Append

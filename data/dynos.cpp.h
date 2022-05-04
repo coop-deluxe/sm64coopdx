@@ -390,6 +390,7 @@ struct DataNode : NoCopy {
     Array<String> mTokens;
     u64 mModelIdentifier = 0;
     u64 mLoadIndex = 0;
+    u8 mFlags = 0;
 };
 template <typename T>
 using DataNodes = Array<DataNode<T>*>;
@@ -819,6 +820,7 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
 
 DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent);
 void DynOS_Geo_Write(FILE *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode);
+DataNode<GeoLayout>** DynOS_Geo_GetLoading(void);
 void DynOS_Geo_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
@@ -873,7 +875,7 @@ void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData);
 
 void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData);
 void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData);
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue);
+void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags);
 
 void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData);
 
