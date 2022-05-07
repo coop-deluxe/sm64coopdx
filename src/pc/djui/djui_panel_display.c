@@ -116,7 +116,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&selectionbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox3->base, 1.0f, 32);
 
-        struct DjuiButton* button1 = djui_button_create(&body->base, "DynOS Model Packs");
+        struct DjuiButton* button1 = djui_button_create(&body->base, "DynOS Packs");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button1->base, 1.0f, 64);
         djui_interactable_hook_click(&button1->base, djui_panel_dynos_create);
