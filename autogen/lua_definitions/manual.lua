@@ -137,3 +137,25 @@ end
 function network_send_to(toLocalIndex, reliable, dataTable)
     -- ...
 end
+
+--- @param textureName string
+--- @return TextureInfo
+function get_texture_info(textureName)
+    -- ...
+end
+
+--- @param textureName string
+--- @return TextureInfo
+function get_texture_info(textureName)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @return nil
+function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
+    -- ...
+end

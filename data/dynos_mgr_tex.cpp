@@ -452,7 +452,6 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                 default: return false;
             }
 
-            //aOutTexInfo->format  = _Data->mRawFormat;
             aOutTexInfo->width   = _Data->mRawWidth;
             aOutTexInfo->height  = _Data->mRawHeight;
             aOutTexInfo->texture = _Data->mRawData.begin();
@@ -461,6 +460,11 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
     }
 
     // check builtin textures
-    //return DynOS_Builtin_Tex_GetFromName(aTexName);
-    return false;
+    const struct BuiltinTexInfo* info = DynOS_Builtin_Tex_GetInfoFromName(aTexName);
+    if (!info) { return false; }
+    aOutTexInfo->bitSize = info->bitSize;
+    aOutTexInfo->width   = info->width;
+    aOutTexInfo->height  = info->height;
+    aOutTexInfo->texture = (u8*)info->pointer;
+    return true;
 }
