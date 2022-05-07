@@ -58,6 +58,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Instant Clip](examples/instant-clip.lua)
 - [Water Height Changer](examples/water-level.lua)
 - [Custom Level](examples/custom-level)
+- [Custom HUD Texture](examples/custom-hud-texture)
 
 ## Example Lua mods (large)
 - [Extended Moveset](../../mods/extended-moveset.lua)
