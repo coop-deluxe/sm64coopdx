@@ -30,7 +30,9 @@ static TexData* LoadTextureFromFile(GfxData *aGfxData, const char* aFile) {
     // Image file
     SysPath _Filename;
     int fileNameLen = strlen(aFile);
-    if (fileNameLen > 4 && !strcmp(&aFile[fileNameLen - 4], ".png")) {
+    if (aGfxData->mPackFolder.length() == 0) {
+        _Filename = aFile;
+    } else if (fileNameLen > 4 && !strcmp(&aFile[fileNameLen - 4], ".png")) {
         _Filename = fstring("%s/%s", aGfxData->mPackFolder.c_str(), aFile);
     } else {
         _Filename = fstring("%s/%s.png", aGfxData->mPackFolder.c_str(), aFile);
@@ -322,7 +324,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         if (SysPath(_PackEnt->d_name) == ".") continue;
         if (SysPath(_PackEnt->d_name) == "..") continue;
 
-        SysPath _Path = fstring("%s/%s", _DirPath.c_str(), _PackEnt->d_name);
+        SysPath _Path = fstring("%s%s", _DirPath.c_str(), _PackEnt->d_name);
 
         // Recurse through subfolders
         if (fs_sys_dir_exists(_Path.c_str())) {
