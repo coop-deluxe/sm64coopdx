@@ -87,6 +87,7 @@ override_disallowed_functions = {
     "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
     "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override"],
+    "src/pc/djui/djui_hud_utils.h":        [ "djui_hud_render_texture", "djui_hud_render_texture_raw" ],
 }
 
 lua_function_params = {
@@ -157,6 +158,8 @@ manual_index_documentation = """
    - [network_send_object](#network_send_object)
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
+   - [djui_hud_render_texture](#djui_hud_render_texture)
+   - [get_texture_info](#get_texture_info)
 
 <br />
 
@@ -275,6 +278,54 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | ----- | ---- |
 | reliable | `bool` |
 | dataTable | `table` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+Renders a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_texture_info](#get_texture_info)
+
+Retrieves a texture by name.
+
+### Lua Example
+`get_texture_info(textureName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- [TextureInfo](structs.md#TextureInfo)
 
 ### C Prototype
 `N/A`

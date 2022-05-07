@@ -38,6 +38,10 @@ const void* dynos_geolayout_get(const char *name);
 void dynos_add_collision(const char *filePath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
 
+// -- textures -- //
+void dynos_add_texture(const char *filePath, const char* textureName);
+bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo);
+
 // -- movtexqcs -- //
 void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 struct MovtexQuadCollection* dynos_movtexqc_get_from_id(u32 id);

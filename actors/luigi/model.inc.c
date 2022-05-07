@@ -28,72 +28,41 @@ static const Lights1 luigi_brown2_lights_group = gdSPDefLights1(
     0x73, 0x06, 0x00, 0x28, 0x28, 0x28
 );
 
-ALIGNED8 static const u8 luigi_texture_metal[] = {
-#include "actors/mario/mario_metal.rgba16.inc.c"
-};
+#include "actors/mario/mario_externs.h"
+#define luigi_texture_metal              mario_texture_metal
+#define luigi_texture_yellow_button      mario_texture_yellow_button
+#define luigi_texture_eyes_left          mario_texture_eyes_left
+#define luigi_texture_eyes_right         mario_texture_eyes_right
+#define luigi_texture_eyes_up            mario_texture_eyes_up
+#define luigi_texture_eyes_down          mario_texture_eyes_down
+#define luigi_texture_eyes_dead          mario_texture_eyes_dead
+#define luigi_texture_wings_half_1       mario_texture_wings_half_1
+#define luigi_texture_wings_half_2       mario_texture_wings_half_2
+#define luigi_texture_metal_wings_half_1 mario_texture_metal_wings_half_1
+#define luigi_texture_metal_wings_half_2 mario_texture_metal_wings_half_2
 
-ALIGNED8 static const u8 luigi_texture_yellow_button[] = {
-#include "actors/mario/mario_overalls_button.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_l_logo[] = {
+ALIGNED8 const Texture luigi_texture_l_logo[] = {
 #include "actors/luigi/custom_luigi_logo.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 luigi_texture_hair_sideburn[] = {
+ALIGNED8 const Texture luigi_texture_hair_sideburn[] = {
 #include "actors/luigi/custom_luigi_sideburn.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 luigi_texture_mustache[] = {
+ALIGNED8 const Texture luigi_texture_mustache[] = {
 #include "actors/luigi/custom_luigi_mustache.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 luigi_texture_eyes_front[] = {
+ALIGNED8 const Texture luigi_texture_eyes_front[] = {
 #include "actors/luigi/custom_luigi_eyes_center.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 luigi_texture_eyes_half_closed[] = {
+ALIGNED8 const Texture luigi_texture_eyes_half_closed[] = {
 #include "actors/luigi/custom_luigi_eyes_half_closed.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 luigi_texture_eyes_closed[] = {
+ALIGNED8 const Texture luigi_texture_eyes_closed[] = {
 #include "actors/luigi/custom_luigi_eyes_closed.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_eyes_right[] = {
-#include "actors/mario/mario_eyes_left_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_eyes_left[] = {
-#include "actors/mario/mario_eyes_right_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_eyes_up[] = {
-#include "actors/mario/mario_eyes_up_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_eyes_down[] = {
-#include "actors/mario/mario_eyes_down_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_eyes_dead[] = {
-#include "actors/mario/mario_eyes_dead.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_wings_half_1[] = {
-#include "actors/mario/mario_wing.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_wings_half_2[] = {
-#include "actors/mario/mario_wing_tip.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_metal_wings_half_1[] = {
-#include "actors/mario/mario_metal_wing_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 luigi_texture_metal_wings_half_2[] = {
-#include "actors/mario/mario_metal_wing_tip_unused.rgba16.inc.c"
 };
 
 static const Vtx luigi_butt_dl_vertex[76] = {

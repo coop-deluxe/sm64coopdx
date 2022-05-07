@@ -40,6 +40,7 @@ f32 djui_hud_get_mouse_y(void);
 f32 djui_hud_measure_text(const char* message);
 void djui_hud_print_text(const char* message, float x, float y, float scale);
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
+void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH);
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);
 
 #endif

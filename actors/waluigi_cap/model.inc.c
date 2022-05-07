@@ -18,34 +18,16 @@ static const Lights1 waluigi_cap_seg3_lights_0301CF38 = gdSPDefLights1(
     0xff, 0x00, 0x00, 0x28, 0x28, 0x28
 );
 
-// 0x0301CF50
-ALIGNED8 static const u8 waluigi_cap_seg3_texture_0301CF50[] = {
-#include "actors/mario/mario_metal.rgba16.inc.c"
-};
+#include "actors/mario_cap/mario_cap_externs.h"
+#define waluigi_cap_seg3_texture_0301CF50 mario_cap_seg3_texture_0301CF50
+#define waluigi_cap_seg3_texture_0301E750 mario_cap_seg3_texture_0301E750
+#define waluigi_cap_seg3_texture_0301F750 mario_cap_seg3_texture_0301F750
+#define waluigi_cap_seg3_texture_03020750 mario_cap_seg3_texture_03020750
+#define waluigi_cap_seg3_texture_03021750 mario_cap_seg3_texture_03021750
 
 // 0x0301DF50
-ALIGNED8 static const u8 waluigi_cap_seg3_texture_0301DF50[] = {
+ALIGNED8 const Texture waluigi_cap_seg3_texture_0301DF50[] = {
 #include "actors/waluigi/custom_waluigi_cap.rgba16.inc.c"
-};
-
-// 0x0301E750
-ALIGNED8 static const u8 waluigi_cap_seg3_texture_0301E750[] = {
-#include "actors/mario/mario_wing.rgba16.inc.c"
-};
-
-// 0x0301F750
-ALIGNED8 static const u8 waluigi_cap_seg3_texture_0301F750[] = {
-#include "actors/mario/mario_wing_tip.rgba16.inc.c"
-};
-
-// 0x03020750
-ALIGNED8 static const u8 waluigi_cap_seg3_texture_03020750[] = {
-#include "actors/mario/mario_metal_wing_unused.rgba16.inc.c"
-};
-
-// 0x03021750
-ALIGNED8 static const u8 waluigi_cap_seg3_texture_03021750[] = {
-#include "actors/mario/mario_metal_wing_tip_unused.rgba16.inc.c"
 };
 
 // 0x03022750

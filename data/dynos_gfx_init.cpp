@@ -19,6 +19,11 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
             DynOS_Actor_GeneratePack(_ActorPackFolder);
         }
+        SysPath _TexturePackFolder = fstring("%s/%s", directory, dir->d_name);
+        SysPath _TexturePackOutputFolder = fstring("%s/%s/textures", directory, dir->d_name);
+        if (fs_sys_dir_exists(_TexturePackFolder.c_str())) {
+            DynOS_Tex_GeneratePack(_TexturePackFolder, _TexturePackOutputFolder);
+        }
     }
 
     closedir(modsDir);
@@ -34,17 +39,22 @@ static void ScanPackBins(SysPath aPackFolder) {
         if (SysPath(_PackEnt->d_name) == ".") continue;
         if (SysPath(_PackEnt->d_name) == "..") continue;
 
-        // Skip non .bin
-        s32 length = strlen(_PackEnt->d_name);
-        if (length < 5) { continue; }
-        if (strncmp(&_PackEnt->d_name[length - 4], ".bin", 4)) { continue; }
-
-        String _ActorName = _PackEnt->d_name;
-        _ActorName[length - 4] = '\0';
-
         SysPath _FileName = fstring("%s/%s", aPackFolder.begin(), _PackEnt->d_name);
+        s32 length = strlen(_PackEnt->d_name);
 
-        DynOS_Actor_LoadFromBinary(aPackFolder, strdup(_ActorName.begin()), _FileName, true);
+        // check for actors
+        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".bin", 4)) {
+            String _ActorName = _PackEnt->d_name;
+            _ActorName[length - 4] = '\0';
+            DynOS_Actor_LoadFromBinary(aPackFolder, strdup(_ActorName.begin()), _FileName, true);
+        }
+
+        // check for textures
+        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".tex", 4)) {
+            String _TexName = _PackEnt->d_name;
+            _TexName[length - 4] = '\0';
+            DynOS_Tex_LoadFromBinary(aPackFolder, _FileName, _TexName.begin(), true);
+        }
     }
 }
 
@@ -63,6 +73,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
             if (fs_sys_dir_exists(_PackFolder.c_str())) {
                 struct PackData* _Pack = DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
+                DynOS_Tex_GeneratePack(_PackFolder, _PackFolder);
                 ScanPackBins(_PackFolder);
             }
         }

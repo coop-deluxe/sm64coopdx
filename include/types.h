@@ -391,10 +391,10 @@ struct MarioState
 
 struct TextureInfo
 {
-    const u8* texture;
-    const u8 bitSize;
-    const u32 width;
-    const u32 height;
+    u8* texture;
+    u8 bitSize;
+    u32 width;
+    u32 height;
 };
 
 #define PLAY_MODE_NORMAL 0

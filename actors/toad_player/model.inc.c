@@ -1,15 +1,20 @@
 // Toad player
+
+#include "actors/mario/mario_externs.h"
+#define toad_player_texture_metal              mario_texture_metal
+#define toad_player_texture_wings_half_1       mario_texture_wings_half_1
+#define toad_player_texture_wings_half_2       mario_texture_wings_half_2
+#define toad_player_texture_metal_wings_half_1 mario_texture_metal_wings_half_1
+#define toad_player_texture_metal_wings_half_2 mario_texture_metal_wings_half_2
+
   ///////////
  // metal //
 ///////////
+
 static const Lights1 toad_player_lights_white = gdSPDefLights1(
     0x7f, 0x7f, 0x7f,
     0xff, 0xff, 0xff, 0x28, 0x28, 0x28
 );
-
-ALIGNED8 static const u8 toad_player_texture_metal[] = {
-#include "actors/mario/mario_metal.rgba16.inc.c"
-};
 
 const Gfx toad_player_metal_start[] = {
     gsDPPipeSync(),
@@ -40,19 +45,19 @@ static const Lights1 toad_player_lights_face = gdSPDefLights1(
     0x7f, 0x7f, 0x7f, 0xff, 0xff, 0xff, 0x28, 0x28, 0x28
 );
 
-ALIGNED8 static const u8 toad_player_texture_face[] = {
+ALIGNED8 const Texture toad_player_texture_face[] = {
 #include "actors/toad_player/custom_toad_face.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 toad_player_texture_eyes_closed[] = {
+ALIGNED8 const Texture toad_player_texture_eyes_closed[] = {
 #include "actors/toad_player/custom_toad_eyes_closed.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 toad_player_texture_eyes_half_closed[] = {
+ALIGNED8 const Texture toad_player_texture_eyes_half_closed[] = {
 #include "actors/toad_player/custom_toad_eyes_half_closed.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 toad_player_texture_eyes_dead[] = {
+ALIGNED8 const Texture toad_player_texture_eyes_dead[] = {
 #include "actors/toad_player/custom_toad_eyes_dead.rgba16.inc.c"
 };
 
@@ -374,7 +379,7 @@ const Gfx toad_player_dl_eyes_dead[] = {
  // hair //
 //////////
 
-ALIGNED8 static const u8 toad_player_texture_hair[] = {
+ALIGNED8 const Texture toad_player_texture_hair[] = {
 #include "actors/toad_player/custom_toad_hair.rgba16.inc.c"
 };
 
@@ -413,7 +418,7 @@ const Gfx toad_player_dl_hair[] = {
  // cap //
 /////////
 
-ALIGNED8 static const u8 toad_player_texture_cap[] = {
+ALIGNED8 const Texture toad_player_texture_cap[] = {
 #include "actors/toad_player/custom_toad_cap.rgba16.inc.c"
 };
 
@@ -818,22 +823,6 @@ static const Lights1 toad_player_lights_wings = gdSPDefLights1(
     0x7f, 0x7f, 0x7f,
     0xff, 0xff, 0xff, 0x28, 0x28, 0x28
 );
-
-ALIGNED8 static const u8 toad_player_texture_wings_half_1[] = {
-#include "actors/mario/mario_wing.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 toad_player_texture_wings_half_2[] = {
-#include "actors/mario/mario_wing_tip.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 toad_player_texture_metal_wings_half_1[] = {
-#include "actors/mario/mario_metal_wing_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 toad_player_texture_metal_wings_half_2[] = {
-#include "actors/mario/mario_metal_wing_tip_unused.rgba16.inc.c"
-};
 
 static const Vtx toad_player_vertex_wings_half_1[] = {
     {{{  -105,    212,      0}, 0, {     0,      0}, {0x00, 0x00, 0x7f, 0xff}}},

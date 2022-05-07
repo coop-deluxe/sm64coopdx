@@ -3609,16 +3609,6 @@ function djui_hud_render_rect(x, y, width, height)
     -- ...
 end
 
---- @param texInfo TextureInfo
---- @param x number
---- @param y number
---- @param scaleW number
---- @param scaleH number
---- @return nil
-function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
-    -- ...
-end
-
 --- @param r integer
 --- @param g integer
 --- @param b integer

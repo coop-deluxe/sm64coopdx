@@ -11,7 +11,7 @@ static Array<PackData>& DynosPacks() {
 static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData *>& pair) {
     const char* aActorName = pair.first;
     GfxData* aGfxData = pair.second;
-    
+
     auto& geoNode = *(aGfxData->mGeoLayouts.end() - 1);
     GraphNode* graphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoNode->mData, false);
     if (graphNode == NULL) { return; }
@@ -65,9 +65,15 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
         for (auto& pair : aPack->mGfxData) {
             DynOS_Pack_ActivateActor(aPack->mIndex, pair);
         }
+        for (auto& _Tex : aPack->mTextures) {
+            DynOS_Tex_Activate(_Tex, false);
+        }
     } else {
         for (auto& pair : aPack->mGfxData) {
             DynOS_Pack_DeactivateActor(aPack->mIndex, pair);
+        }
+        for (auto& _Tex : aPack->mTextures) {
+            DynOS_Tex_Deactivate(_Tex);
         }
     }
     DynOS_Actor_Override_All();
@@ -153,5 +159,30 @@ void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* a
 
     if (aPackData->mEnabled) {
         DynOS_Pack_ActivateActor(aPackData->mIndex, aPackData->mGfxData[index]);
+    }
+}
+
+DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName) {
+    if (aPackData == NULL || aTexName == NULL) {
+        return NULL;
+    }
+
+    for (auto& _Tex : aPackData->mTextures) {
+        if (!strcmp(_Tex->mName.begin(), aTexName)) {
+            return _Tex;
+        }
+    }
+    return NULL;
+}
+
+void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData) {
+    if (aPackData == NULL || aTexData == NULL) {
+        return;
+    }
+
+    aPackData->mTextures.Add(aTexData);
+
+    if (aPackData->mEnabled) {
+        DynOS_Tex_Activate(aTexData, false);
     }
 }

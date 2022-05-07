@@ -7267,25 +7267,6 @@ int smlua_func_djui_hud_render_rect(lua_State* L) {
     return 1;
 }
 
-int smlua_func_djui_hud_render_texture(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
-
-    struct TextureInfo* texInfo = (struct TextureInfo*)smlua_to_cobject(L, 1, LOT_TEXTUREINFO);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    f32 x = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-    f32 y = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
-    f32 scaleW = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
-    f32 scaleH = smlua_to_number(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 5"); return 0; }
-
-    djui_hud_render_texture(texInfo, x, y, scaleW, scaleH);
-
-    return 1;
-}
-
 int smlua_func_djui_hud_set_color(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -16585,7 +16566,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_render_rect", smlua_func_djui_hud_render_rect);
-    smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
     smlua_bind_function(L, "djui_hud_set_color", smlua_func_djui_hud_set_color);
     smlua_bind_function(L, "djui_hud_set_font", smlua_func_djui_hud_set_font);
     smlua_bind_function(L, "djui_hud_set_resolution", smlua_func_djui_hud_set_resolution);

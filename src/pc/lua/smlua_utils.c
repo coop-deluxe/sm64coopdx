@@ -117,6 +117,39 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index) {
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
+bool smlua_is_cobject(lua_State* L, int index, u16 lot) {
+    int top = lua_gettop(L);
+    bool ret = true;
+
+    s32 indexType = lua_type(L, index);
+    if (indexType != LUA_TTABLE) {
+        ret = false;
+        goto result;
+    }
+
+    lua_getfield(L, index, "_lot");
+    if (lua_type(L, -1) != LUA_TNUMBER) {
+        ret = false;
+        goto result;
+    }
+
+    enum LuaObjectType objLot = smlua_to_integer(L, -1);
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        ret = false;
+        goto result;
+    }
+
+    if (lot != objLot) {
+        ret = false;
+        goto result;
+    }
+
+result:
+    lua_settop(L, top);
+    return ret;
+}
+
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     s32 indexType = lua_type(L, index);
     if (indexType == LUA_TNIL) { return NULL; }

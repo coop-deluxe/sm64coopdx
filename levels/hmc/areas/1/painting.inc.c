@@ -501,7 +501,7 @@ UNUSED static const u64 hmc_unused_0 = 0;
 
 
 // 0x07024CE0 - 0x070254E0
-ALIGNED8 static const Texture hmc_seg7_texture_07024CE0[] = {
+ALIGNED8 const Texture hmc_seg7_texture_07024CE0[] = {
 #include "levels/hmc/7.rgba16.inc.c"
 };
 

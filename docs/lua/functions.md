@@ -706,7 +706,6 @@
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_render_rect](functions-3.md#djui_hud_render_rect)
-   - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
    - [djui_hud_set_font](functions-3.md#djui_hud_set_font)
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)

@@ -31,7 +31,7 @@ static void mod_activate_bin(struct ModFile* file) {
 }
 
 static void mod_activate_col(struct ModFile* file) {
-    // copy geo name
+    // copy col name
     char colName[64] = { 0 };
     if (snprintf(colName, 63, "%s", path_basename(file->relativePath)) < 0) {
         LOG_ERROR("Truncated col name");
@@ -53,8 +53,31 @@ static void mod_activate_col(struct ModFile* file) {
     dynos_add_collision(file->cachedPath, colName);
 }
 
+static void mod_activate_tex(struct ModFile* file) {
+    // copy tex name
+    char texName[64] = { 0 };
+    if (snprintf(texName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated tex name");
+        return;
+    }
+
+    // remove '.tex'
+    char* g = texName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to custom actors
+    LOG_INFO("Activating DynOS tex: '%s', '%s'", file->cachedPath, texName);
+    dynos_add_texture(file->cachedPath, texName);
+}
+
 static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
-    // copy geo name
+    // copy lvl name
     char lvlName[64] = { 0 };
     if (snprintf(lvlName, 63, "%s", path_basename(file->relativePath)) < 0) {
         LOG_ERROR("Truncated lvl name");
@@ -89,6 +112,9 @@ void mod_activate(struct Mod* mod) {
         }
         if (str_ends_with(file->relativePath, ".lvl")) {
             mod_activate_lvl(mod, file);
+        }
+        if (str_ends_with(file->relativePath, ".tex")) {
+            mod_activate_tex(file);
         }
     }
 }
@@ -236,6 +262,44 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
 
                 // only consider bin, and col files
                 if (!str_ends_with(path, ".bin") && !str_ends_with(path, ".col")) {
+                    continue;
+                }
+
+                // allocate file
+                struct ModFile* file = mod_allocate_file(mod, relativePath);
+                if (file == NULL) { return false; }
+            }
+
+            closedir(d);
+        }
+    }
+
+    // deal with textures directory
+    {
+        // concat textures directory
+        char texturesPath[SYS_MAX_PATH] = { 0 };
+        if (!concat_path(texturesPath, fullPath, "textures")) {
+            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "textures");
+            return false;
+        }
+
+        // open textures directory
+        struct dirent* dir = NULL;
+        DIR* d = opendir(texturesPath);
+        if (d) {
+            // iterate mod directory
+            char path[SYS_MAX_PATH] = { 0 };
+            char relativePath[SYS_MAX_PATH] = { 0 };
+            while ((dir = readdir(d)) != NULL) {
+                // sanity check / fill path[]
+                if (!directory_sanity_check(dir, texturesPath, path)) { continue; }
+                if (snprintf(relativePath, SYS_MAX_PATH - 1, "textures/%s", dir->d_name) < 0) {
+                    LOG_ERROR("Could not concat textures path!");
+                    return false;
+                }
+
+                // only consider tex files
+                if (!str_ends_with(path, ".tex")) {
                     continue;
                 }
 

@@ -29,13 +29,13 @@ extern ALIGNED8 const u8 texture_hud_char_coin[];
 extern ALIGNED8 const u8 texture_hud_char_star[];
 
 struct GlobalTextures gGlobalTextures = {
-    .camera     = { .texture = texture_hud_char_camera,     .bitSize = 8, .width = 16, .height = 16 },
-    .lakitu     = { .texture = texture_hud_char_lakitu,     .bitSize = 8, .width = 16, .height = 16 },
-    .no_camera  = { .texture = texture_hud_char_no_camera,  .bitSize = 8, .width = 16, .height = 16 },
-    .arrow_up   = { .texture = texture_hud_char_arrow_up,   .bitSize = 8, .width =  8, .height =  8 },
-    .arrow_down = { .texture = texture_hud_char_arrow_down, .bitSize = 8, .width =  8, .height =  8 },
-    .coin       = { .texture = texture_hud_char_coin,       .bitSize = 8, .width = 16, .height = 16 },
-    .star       = { .texture = texture_hud_char_star,       .bitSize = 8, .width = 16, .height = 16 },
+    .camera     = { .texture = (u8*)texture_hud_char_camera,     .bitSize = 8, .width = 16, .height = 16 },
+    .lakitu     = { .texture = (u8*)texture_hud_char_lakitu,     .bitSize = 8, .width = 16, .height = 16 },
+    .no_camera  = { .texture = (u8*)texture_hud_char_no_camera,  .bitSize = 8, .width = 16, .height = 16 },
+    .arrow_up   = { .texture = (u8*)texture_hud_char_arrow_up,   .bitSize = 8, .width =  8, .height =  8 },
+    .arrow_down = { .texture = (u8*)texture_hud_char_arrow_down, .bitSize = 8, .width =  8, .height =  8 },
+    .coin       = { .texture = (u8*)texture_hud_char_coin,       .bitSize = 8, .width = 16, .height = 16 },
+    .star       = { .texture = (u8*)texture_hud_char_star,       .bitSize = 8, .width = 16, .height = 16 },
 };
 
 static void djui_hud_position_translate(f32* x, f32* y) {
@@ -156,7 +156,7 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-static void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     gDjuiHudUtilsZ += 0.01f;
 
     // translate position

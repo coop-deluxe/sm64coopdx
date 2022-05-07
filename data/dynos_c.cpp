@@ -107,6 +107,17 @@ Collision* dynos_collision_get(const char* collisionName) {
     return DynOS_Col_Get(collisionName);
 }
 
+// -- textures -- //
+
+void dynos_add_texture(const char *filePath, const char* textureName) {
+    SysPath _FilePath = filePath;
+    DynOS_Tex_AddCustom(_FilePath, textureName);
+}
+
+bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo) {
+    return DynOS_Tex_Get(textureName, outTextureInfo);
+}
+
 // -- movtexqcs -- //
 
 void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type) {

@@ -38,72 +38,59 @@ static const Lights1 wario_pink_lights_group = gdSPDefLights1(
 	0xFF, 0x6F, 0xAF, 0x28, 0x28, 0x28
 );
 
-ALIGNED8 static const u8 wario_texture_metal[] = {
-#include "actors/mario/mario_metal.rgba16.inc.c"
-};
+#include "actors/mario/mario_externs.h"
+#define wario_texture_metal              mario_texture_metal
+#define wario_texture_wings_half_1       mario_texture_wings_half_1
+#define wario_texture_wings_half_2       mario_texture_wings_half_2
+#define wario_texture_metal_wings_half_1 mario_texture_metal_wings_half_1
+#define wario_texture_metal_wings_half_2 mario_texture_metal_wings_half_2
 
-ALIGNED8 static const u8 wario_texture_white_button[] = {
+ALIGNED8 const Texture wario_texture_white_button[] = {
 #include "actors/wario/custom_wario_overalls_button.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_w_logo[] = {
+ALIGNED8 const Texture wario_texture_w_logo[] = {
 #include "actors/wario/custom_wario_logo.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_hair_sideburn[] = {
+ALIGNED8 const Texture wario_texture_hair_sideburn[] = {
 #include "actors/wario/custom_wario_sideburn.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_mouth[] = {
+ALIGNED8 const Texture wario_texture_mouth[] = {
 #include "actors/wario/custom_wario_mouth.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_front[] = {
+ALIGNED8 const Texture wario_texture_eyes_front[] = {
 #include "actors/wario/custom_wario_eyes_center.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_half_closed[] = {
+ALIGNED8 const Texture wario_texture_eyes_half_closed[] = {
 #include "actors/wario/custom_wario_eyes_half_closed.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_closed[] = {
+ALIGNED8 const Texture wario_texture_eyes_closed[] = {
 #include "actors/wario/custom_wario_eyes_closed.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_right[] = {
+ALIGNED8 const Texture wario_texture_eyes_right[] = {
 #include "actors/wario/custom_wario_eyes_left_unused.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_left[] = {
+ALIGNED8 const Texture wario_texture_eyes_left[] = {
 #include "actors/wario/custom_wario_eyes_right_unused.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_up[] = {
+ALIGNED8 const Texture wario_texture_eyes_up[] = {
 #include "actors/wario/custom_wario_eyes_up_unused.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_down[] = {
+ALIGNED8 const Texture wario_texture_eyes_down[] = {
 #include "actors/wario/custom_wario_eyes_down_unused.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 wario_texture_eyes_dead[] = {
+ALIGNED8 const Texture wario_texture_eyes_dead[] = {
 #include "actors/wario/custom_wario_eyes_dead.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 wario_texture_wings_half_1[] = {
-#include "actors/mario/mario_wing.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 wario_texture_wings_half_2[] = {
-#include "actors/mario/mario_wing_tip.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 wario_texture_metal_wings_half_1[] = {
-#include "actors/mario/mario_metal_wing_unused.rgba16.inc.c"
-};
-
-ALIGNED8 static const u8 wario_texture_metal_wings_half_2[] = {
-#include "actors/mario/mario_metal_wing_tip_unused.rgba16.inc.c"
 };
 
 Vtx wario_000_offset_pelvis_mesh_layer_1_vtx_0[76] = {

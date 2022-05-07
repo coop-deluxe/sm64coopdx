@@ -38,6 +38,7 @@ enum {
     DATA_TYPE_LIGHT_T,
     DATA_TYPE_AMBIENT_T,
     DATA_TYPE_TEXTURE_LIST,
+    DATA_TYPE_TEXTURE_RAW,
     DATA_TYPE_UNUSED,
 };
 
@@ -457,6 +458,7 @@ struct PackData {
     SysPath mPath;
     String mDisplayName;
     Array<Pair<const char *, GfxData *>> mGfxData;
+    Array<DataNode<TexData>*> mTextures;
 };
 
 typedef Pair<String, const u8 *> Label;
@@ -719,6 +721,7 @@ const Collision* DynOS_Builtin_LvlCol_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_LvlCol_GetFromData(const Collision* aData);
 const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
+const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
@@ -735,6 +738,8 @@ PackData* DynOS_Pack_Add(const SysPath& aPath);
 void DynOS_Pack_Init();
 Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName);
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
+DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName);
+void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 
 //
 // Actor Manager
@@ -763,6 +768,10 @@ void DynOS_Tex_Invalid(GfxData* aGfxData);
 void DynOS_Tex_Update();
 u8 *DynOS_Tex_ConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize, const u8 *aPalette);
 bool DynOS_Tex_Import(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
+void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
+void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
+void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
+bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
 
 //
 // Lvl Manager
@@ -862,8 +871,10 @@ DataNode<u8>* DynOS_Rooms_Load(FILE *aFile, GfxData *aGfxData);
 
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
-void DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData);
+DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData);
+DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const SysPath &aFilename, const char *aTexName, bool aAddToPack);
 void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
+void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder);
 
 DataNode<TexData*>* DynOS_TexList_Parse(GfxData* aGfxData, DataNode<TexData*>* aNode);
 void DynOS_TexList_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode);

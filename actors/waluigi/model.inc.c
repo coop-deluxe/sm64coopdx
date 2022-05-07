@@ -54,63 +54,54 @@ Lights1 waluigi_shoes_v3_lights = gdSPDefLights1(
     0x7D, 0x3D, 0x0,
     0xFB, 0x7A, 0x0, 0x28, 0x28, 0x28);
 
-Gfx waluigi_mario_button_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_mario_button_rgba16[] = {
-    #include "actors/mario/mario_overalls_button.rgba16.inc.c"
-};
+#include "actors/mario/mario_externs.h"
+#define waluigi_metal_rgba16             mario_texture_metal
+#define waluigi_mario_button_rgba16      mario_texture_yellow_button
+#define waluigi_mario_sideburn_rgba16    mario_texture_hair_sideburn
+#define waluigi_wing1_rgba16             mario_texture_wings_half_1
+#define waluigi_wing_2_rgba16            mario_texture_wings_half_2
 
+Gfx waluigi_mario_button_rgba16_aligner[] = {gsSPEndDisplayList()};
 Gfx waluigi_metal_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_metal_rgba16[] = {
-    #include "actors/mario/mario_metal.rgba16.inc.c"
-};
 
 Gfx waluigi_custom_waluigi_cap_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_custom_waluigi_cap_rgba16[] = {
+ALIGNED8 const Texture waluigi_custom_waluigi_cap_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_cap.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes0_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_waluigi_eyes0_rgba16[] = {
+ALIGNED8 const Texture waluigi_waluigi_eyes0_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_eyes0.rgba16.inc.c"
 };
 
 Gfx waluigi_mario_sideburn_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_mario_sideburn_rgba16[] = {
-    #include "actors/mario/mario_sideburn.rgba16.inc.c"
-};
 
 Gfx waluigi_waluigi_mouth_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_waluigi_mouth_rgba16[] = {
+ALIGNED8 const Texture waluigi_waluigi_mouth_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_mouth.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes1_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_waluigi_eyes1_rgba16[] = {
+ALIGNED8 const Texture waluigi_waluigi_eyes1_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_eyes1.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes2_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_waluigi_eyes2_rgba16[] = {
+ALIGNED8 const Texture waluigi_waluigi_eyes2_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_eyes2.rgba16.inc.c"
 };
 
 Gfx waluigi_waluigi_eyes3_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_waluigi_eyes3_rgba16[] = {
+ALIGNED8 const Texture waluigi_waluigi_eyes3_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_eyes3.rgba16.inc.c"
 };
 
 Gfx waluigi_wing_2_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_wing_2_rgba16[] = {
-    #include "actors/mario/mario_wing_tip.rgba16.inc.c"
-};
 
 Gfx waluigi_wing1_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_wing1_rgba16[] = {
-    #include "actors/mario/mario_wing.rgba16.inc.c"
-};
 
 Gfx waluigi_waluigi_glove_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 waluigi_waluigi_glove_rgba16[] = {
+ALIGNED8 const Texture waluigi_waluigi_glove_rgba16[] = {
     #include "actors/waluigi/custom_waluigi_glove.rgba16.inc.c"
 };
 

@@ -30,6 +30,7 @@ void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
     graphNode->next = graphNode;
     graphNode->parent = NULL;
     graphNode->children = NULL;
+    graphNode->georef = NULL;
 }
 
 /**

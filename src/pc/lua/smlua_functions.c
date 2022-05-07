@@ -9,6 +9,7 @@
 #include "audio/external.h"
 #include "object_fields.h"
 #include "engine/math_util.h"
+#include "pc/djui/djui_hud_utils.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
@@ -83,7 +84,7 @@ int smlua_func_reset_level(lua_State* L) {
         LOG_LUA_LINE("This function can only be used in single-player");
         return 0;
     }
-    
+
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
     gChangeLevel = gCurrLevelNum;
@@ -184,6 +185,92 @@ int smlua_func_network_send_to(lua_State* L) {
     network_send_lua_custom(false);
 }
 
+  //////////////
+ // Textures //
+//////////////
+
+int smlua_func_get_texture_info(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    if (lua_type(L, -1) != LUA_TSTRING) {
+        LOG_LUA_LINE("Invalid type passed to get_texture_info(): %u", lua_type(L, -1));
+        lua_pop(L, 1); // pop value
+        return 0;
+    }
+
+    struct TextureInfo texInfo = { 0 };
+    const char* textureName = smlua_to_string(L, -1);
+    if (!dynos_texture_get(textureName, &texInfo)) {
+        LOG_LUA_LINE("Could not find texture info for '%s'", textureName);
+        return 0;
+    }
+
+    lua_newtable(L);
+
+    lua_pushstring(L, "texture");
+    smlua_push_pointer(L, LVT_U8_P, texInfo.texture);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "bitSize");
+    lua_pushinteger(L, texInfo.bitSize);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "width");
+    lua_pushinteger(L, texInfo.width);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "height");
+    lua_pushinteger(L, texInfo.height);
+    lua_settable(L, -3);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 5)) { return 0; }
+
+    struct TextureInfo tmpTexInfo = { 0 };
+    struct TextureInfo* texInfo = &tmpTexInfo;
+
+    if (smlua_is_cobject(L, 1, LOT_TEXTUREINFO)) {
+        texInfo = (struct TextureInfo*)smlua_to_cobject(L, 1, LOT_TEXTUREINFO);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, 1);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top+1);
+        tmpTexInfo.texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'texture' field"); return 0; }
+
+        tmpTexInfo.bitSize = smlua_get_integer_field(top+1, "bitSize");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'bitSize' field"); return 0; }
+
+        tmpTexInfo.width   = smlua_get_integer_field(top+1, "width");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'width' field"); return 0; }
+
+        tmpTexInfo.height  = smlua_get_integer_field(top+1, "height");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field"); return 0; }
+
+        lua_settop(L, top);
+    }
+
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    f32 scaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+    f32 scaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 5"); return 0; }
+
+    djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -201,4 +288,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "reset_level", smlua_func_reset_level);
     smlua_bind_function(L, "network_send", smlua_func_network_send);
     smlua_bind_function(L, "network_send_to", smlua_func_network_send_to);
+    smlua_bind_function(L, "get_texture_info", smlua_func_get_texture_info);
+    smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
 }

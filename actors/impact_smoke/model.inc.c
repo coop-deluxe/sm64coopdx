@@ -3,22 +3,22 @@
 // TODO: These 64x64 textures are referenced as two different texture addresses in the DLs
 
 // 0x0605AA28
-ALIGNED8 static const u8 impact_smoke_seg6_texture_0605AA28[] = {
+ALIGNED8 const Texture impact_smoke_seg6_texture_0605AA28[] = {
 #include "actors/impact_smoke/impact_smoke_0.ia16.inc.c"
 };
 
 // 0x0605CA28
-ALIGNED8 static const u8 impact_smoke_seg6_texture_0605CA28[] = {
+ALIGNED8 const Texture impact_smoke_seg6_texture_0605CA28[] = {
 #include "actors/impact_smoke/impact_smoke_1.ia16.inc.c"
 };
 
 // 0x0605EA28
-ALIGNED8 static const u8 impact_smoke_seg6_texture_0605EA28[] = {
+ALIGNED8 const Texture impact_smoke_seg6_texture_0605EA28[] = {
 #include "actors/impact_smoke/impact_smoke_2.ia16.inc.c"
 };
 
 // 0x06060A28
-ALIGNED8 static const u8 impact_smoke_seg6_texture_06060A28[] = {
+ALIGNED8 const Texture impact_smoke_seg6_texture_06060A28[] = {
 #include "actors/impact_smoke/impact_smoke_3.ia16.inc.c"
 };
 
