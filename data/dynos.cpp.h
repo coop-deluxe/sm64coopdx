@@ -885,7 +885,7 @@ void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
 DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData);
 DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const SysPath &aFilename, const char *aTexName, bool aAddToPack);
 void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
-void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder);
+void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, bool aAllowCustomTextures);
 
 DataNode<TexData*>* DynOS_TexList_Parse(GfxData* aGfxData, DataNode<TexData*>* aNode);
 void DynOS_TexList_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode);

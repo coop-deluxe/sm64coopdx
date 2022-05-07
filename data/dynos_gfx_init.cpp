@@ -22,7 +22,7 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         SysPath _TexturePackFolder = fstring("%s/%s", directory, dir->d_name);
         SysPath _TexturePackOutputFolder = fstring("%s/%s/textures", directory, dir->d_name);
         if (fs_sys_dir_exists(_TexturePackFolder.c_str())) {
-            DynOS_Tex_GeneratePack(_TexturePackFolder, _TexturePackOutputFolder);
+            DynOS_Tex_GeneratePack(_TexturePackFolder, _TexturePackOutputFolder, true);
         }
     }
 
@@ -73,7 +73,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
             if (fs_sys_dir_exists(_PackFolder.c_str())) {
                 struct PackData* _Pack = DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
-                DynOS_Tex_GeneratePack(_PackFolder, _PackFolder);
+                DynOS_Tex_GeneratePack(_PackFolder, _PackFolder, false);
                 ScanPackBins(_PackFolder);
             }
         }

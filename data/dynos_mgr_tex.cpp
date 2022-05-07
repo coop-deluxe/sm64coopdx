@@ -435,7 +435,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
         if (!strcmp(_DynosCustomTexs[i].first, aTexName)) {
             auto& _Data = _DynosCustomTexs[i].second->mData;
 
-            // load the texture if it hasn't  been yet
+            // load the texture if it hasn't been yet
             if (_Data->mRawData.begin() == NULL) {
                 u8 *_RawData = stbi_load_from_memory(_Data->mPngData.begin(), _Data->mPngData.Count(), &_Data->mRawWidth, &_Data->mRawHeight, NULL, 4);
                 _Data->mRawFormat = G_IM_FMT_RGBA;

@@ -304,13 +304,14 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
  // Generate //
 //////////////
 
-static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath &aOutputFolder, SysPath& aRelativePath, SysPath& aPrefix, GfxData *aGfxData) {
-    // skip generation if any .c files exist
-    if (FileTypeExists(aOutputFolder, ".c")) {
+static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath &aOutputFolder, SysPath& aRelativePath, SysPath& aPrefix, GfxData *aGfxData, bool aAllowCustomTextures) {
+    SysPath _DirPath = fstring("%s/%s", aPackFolder.c_str(), aRelativePath.c_str());
+
+     // skip generation if any .c files exist
+    if (FileTypeExists(_DirPath, ".c")) {
         return;
     }
 
-    SysPath _DirPath = fstring("%s/%s", aPackFolder.c_str(), aRelativePath.c_str());
     DIR *_PackDir = opendir(_DirPath.c_str());
     if (!_PackDir) { return; }
 
@@ -327,7 +328,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         if (fs_sys_dir_exists(_Path.c_str())) {
             SysPath _NextPath = fstring("%s%s/", aRelativePath.c_str(), _PackEnt->d_name);
             SysPath _Prefix = fstring("%s.", _PackEnt->d_name);
-            DynOS_Tex_GeneratePack_Recursive(aPackFolder, aOutputFolder, _NextPath, _Prefix, aGfxData);
+            DynOS_Tex_GeneratePack_Recursive(aPackFolder, aOutputFolder, _NextPath, _Prefix, aGfxData, aAllowCustomTextures);
             continue;
         }
 
@@ -356,6 +357,13 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
             _BaseName = _PackEnt->d_name;
             _BaseName = _BaseName.SubString(0, nameLen - 4);
         }
+
+        // if we aren't overriding a texture, only generate textures in the output directory
+        SysPath _OutputFolder = fstring("%s/", aOutputFolder.c_str());
+        if (_OverrideName == NULL && (!aAllowCustomTextures || strcmp(_DirPath.c_str(), _OutputFolder.c_str()))) {
+            continue;
+        }
+
         SysPath _OutputPath = fstring("%s/%s.tex", aOutputFolder.c_str(), _BaseName.begin());
 
         // create output dir if it doesn't exist
@@ -369,7 +377,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
     closedir(_PackDir);
 }
 
-void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder) {
+void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, bool aAllowCustomTextures) {
     Print("---------- Texture pack folder: \"%s\" ----------", aPackFolder.c_str());
 
     // skip generation if any .tex files exist
@@ -380,6 +388,6 @@ void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder) 
     GfxData *_GfxData = New<GfxData>();
     _GfxData->mModelIdentifier = 0;
     SysPath _Empty = "";
-    DynOS_Tex_GeneratePack_Recursive(aPackFolder, aOutputFolder, _Empty, _Empty, _GfxData);
+    DynOS_Tex_GeneratePack_Recursive(aPackFolder, aOutputFolder, _Empty, _Empty, _GfxData, aAllowCustomTextures);
     DynOS_Gfx_Free(_GfxData);
 }
