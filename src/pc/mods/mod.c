@@ -248,6 +248,7 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
         // open actors directory
         struct dirent* dir = NULL;
         DIR* d = opendir(actorsPath);
+
         if (d) {
             // iterate mod directory
             char path[SYS_MAX_PATH] = { 0 };
@@ -260,14 +261,16 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
                     return false;
                 }
 
-                // only consider bin, and col files
+                // only consider bin and col files
                 if (!str_ends_with(path, ".bin") && !str_ends_with(path, ".col")) {
                     continue;
                 }
 
                 // allocate file
                 struct ModFile* file = mod_allocate_file(mod, relativePath);
-                if (file == NULL) { return false; }
+                if (file == NULL) { 
+                    return false;
+                }
             }
 
             closedir(d);
@@ -372,11 +375,6 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
                 if (snprintf(relativePath, SYS_MAX_PATH - 1, "sound/%s", dir->d_name) < 0) {
                     LOG_ERROR("Could not concat sound path!");
                     return false;
-                }
-
-                // only consider m64 files
-                if (!str_ends_with(path, ".m64")) {
-                    continue;
                 }
 
                 // allocate file

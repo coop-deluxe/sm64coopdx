@@ -57,6 +57,33 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 f32 get_environment_region(u8 index);
 void set_environment_region(u8 index, s32 value);
 
+u32 load_audio(const char* file_name);
+u32 load_sample(const char* file_name);
+void destroy_audio(u32 audio_stream);
+void destroy_sample(u32 audio_stream);
+
+u32 get_audio_from_sample(u32 sample);
+
+void play_audio(u32 audio_stream, bool restart);
+void pause_audio(u32 audio_stream);
+void stop_audio(u32 audio_stream);
+
+f32 get_position_audio(u32 audio_stream);
+void set_position_audio(u32 audio_stream, f32 pos);
+
+bool get_looping_audio(u32 audio_stream);
+void set_looping_audio(u32 audio_stream, bool looping);
+
+f32 get_frequency_audio(u32 audio_stream);
+void set_frequency_audio(u32 audio_stream, f32 freq);
+f32 get_tempo_audio(u32 audio_stream);
+void set_tempo_audio(u32 audio_stream, f32 tempo);
+
+void set_volume_audio(u32 audio_stream, f32 volume);
+f32 get_volume_audio(u32 audio_stream);
+
+void set_speed_audio(u32 audio_stream, f32 initial_freq, f32 speed, bool pitch);
+
 f32 set_override_fov(f32 fov);
 f32 set_override_near(f32 near);
 f32 set_override_far(f32 far);

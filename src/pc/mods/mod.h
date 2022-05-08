@@ -15,6 +15,9 @@ struct ModFile {
     u64 curOffset;
     bool complete;
 
+    //A pointer to a char array of data with size: (ModFile.size * sizeof(char))
+    char* data_ptr;
+    u32 audio_stream;
     u8 dataHash[16];
     char* cachedPath;
 };

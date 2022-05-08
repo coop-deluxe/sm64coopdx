@@ -42,12 +42,17 @@
 #include "game/main.h"
 #include "game/rumble_init.h"
 
+#include "include/bass/bass.h"
+#include "include/bass/bass_fx.h"
+#include "src/bass_audio/bass_audio_helpers.h"
+
 #ifdef DISCORDRPC
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
+#include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
 #include "pc/mods/mods.h"
@@ -388,6 +393,7 @@ void main_func(void) {
 
     audio_init();
     sound_init();
+    bassh_init();
     network_player_init();
 
     thread5_game_loop(NULL);
@@ -422,6 +428,8 @@ void main_func(void) {
 #endif
     }
 #endif
+
+    bassh_deinit();
 }
 
 int main(int argc, char *argv[]) {

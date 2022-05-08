@@ -7138,6 +7138,24 @@ function deref_s32_pointer(pointer)
     -- ...
 end
 
+--- @param audio_stream integer
+--- @return nil
+function destroy_audio(audio_stream)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @return nil
+function destroy_sample(audio_stream)
+    -- ...
+end
+
+--- @param sample integer
+--- @return integer
+function get_audio_from_sample(sample)
+    -- ...
+end
+
 --- @return integer
 function get_current_save_file_num()
     -- ...
@@ -7146,6 +7164,12 @@ end
 --- @param index integer
 --- @return number
 function get_environment_region(index)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @return number
+function get_frequency_audio(audio_stream)
     -- ...
 end
 
@@ -7170,8 +7194,20 @@ function get_hand_foot_pos_z(m, index)
     -- ...
 end
 
+--- @param audio_stream integer
+--- @return boolean
+function get_looping_audio(audio_stream)
+    -- ...
+end
+
 --- @return integer
 function get_network_area_timer()
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @return number
+function get_position_audio(audio_stream)
     -- ...
 end
 
@@ -7211,6 +7247,18 @@ end
 
 --- @return nil
 function hud_show()
+    -- ...
+end
+
+--- @param file_name string
+--- @return integer
+function load_audio(file_name)
+    -- ...
+end
+
+--- @param file_name string
+--- @return integer
+function load_sample(file_name)
     -- ...
 end
 

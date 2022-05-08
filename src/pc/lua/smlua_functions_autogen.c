@@ -14707,6 +14707,39 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_destroy_audio(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 audio_stream = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    destroy_audio(audio_stream);
+
+    return 1;
+}
+
+int smlua_func_destroy_sample(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 audio_stream = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    destroy_sample(audio_stream);
+
+    return 1;
+}
+
+int smlua_func_get_audio_from_sample(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 sample = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, get_audio_from_sample(sample));
+
+    return 1;
+}
+
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -14723,6 +14756,17 @@ int smlua_func_get_environment_region(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     lua_pushnumber(L, get_environment_region(index));
+
+    return 1;
+}
+
+int smlua_func_get_frequency_audio(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 audio_stream = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, get_frequency_audio(audio_stream));
 
     return 1;
 }
@@ -14766,11 +14810,33 @@ int smlua_func_get_hand_foot_pos_z(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_looping_audio(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 audio_stream = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushboolean(L, get_looping_audio(audio_stream));
+
+    return 1;
+}
+
 int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
 
     lua_pushinteger(L, get_network_area_timer());
+
+    return 1;
+}
+
+int smlua_func_get_position_audio(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 audio_stream = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushnumber(L, get_position_audio(audio_stream));
 
     return 1;
 }
@@ -14843,6 +14909,28 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
 
 
     hud_show();
+
+    return 1;
+}
+
+int smlua_func_load_audio(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* file_name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, load_audio(file_name));
+
+    return 1;
+}
+
+int smlua_func_load_sample(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* file_name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { return 0; }
+
+    lua_pushinteger(L, load_sample(file_name));
 
     return 1;
 }
@@ -17164,18 +17252,26 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
+    smlua_bind_function(L, "destroy_audio", smlua_func_destroy_audio);
+    smlua_bind_function(L, "destroy_sample", smlua_func_destroy_sample);
+    smlua_bind_function(L, "get_audio_from_sample", smlua_func_get_audio_from_sample);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
+    smlua_bind_function(L, "get_frequency_audio", smlua_func_get_frequency_audio);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
+    smlua_bind_function(L, "get_looping_audio", smlua_func_get_looping_audio);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
+    smlua_bind_function(L, "get_position_audio", smlua_func_get_position_audio);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
+    smlua_bind_function(L, "load_audio", smlua_func_load_audio);
+    smlua_bind_function(L, "load_sample", smlua_func_load_sample);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);

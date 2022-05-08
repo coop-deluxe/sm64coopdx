@@ -7,10 +7,16 @@
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
+#include "pc/mods/mod.h"
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
+
 #include "game/object_list_processor.h"
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
 #include "pc/djui/djui_hud_utils.h"
+
+#include "src/bass_audio/bass_audio_helpers.h"
 
 u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
@@ -175,10 +181,210 @@ f32 get_environment_region(u8 index) {
     return -11000;
 }
 
+u32 load_audio(const char* file_name) {
+    u16 fileCount = gLuaActiveMod->fileCount;
+    BOOL found = FALSE;
+    struct ModFile* file;
+    for(u16 i = 0; i < fileCount; i++) {
+        LOG_INFO("file path %s", gLuaActiveMod->files[i].relativePath);
+        if(str_ends_with(gLuaActiveMod->files[i].relativePath, (char *)file_name)) {
+            // char fullPath[SYS_MAX_PATH] = { 0 };
+            // mod_file_full_path(fullPath, gLuaActiveMod, &(gLuaActiveMod->files[i]));
+            
+            file = &gLuaActiveMod->files[i];
+            found = TRUE;
+        }
+    }
+
+    if(found == FALSE) {
+        return 0;
+    }
+
+    //smh free your stuff first...
+    if(file->audio_stream != 0) {
+        LOG_LUA("You need to destroy your stream/sapmle!");
+        return -1;
+    }
+
+    rewind(file->fp); //seek to the start of the file
+
+    //Allocate a buffer to the data
+    file->data_ptr = (char *)malloc(file->size * sizeof(char));
+    //Read the file data into the buffer
+    fread(file->data_ptr, file->size, 1, file->fp);
+
+    file->audio_stream = bassh_create_fx_stream_from_file(file->data_ptr, file->size, 0);
+
+    return file->audio_stream;
+
+    // return bassh_create_fx_stream_from_file();
+}
+
+void destroy_audio(u32 audio_stream) {
+    u16 fileCount = gLuaActiveMod->fileCount;
+    BOOL found = FALSE;
+    struct ModFile* file;
+    for(u16 i = 0; i < fileCount; i++) {
+        if(audio_stream == gLuaActiveMod->files[i].audio_stream) {
+            // char fullPath[SYS_MAX_PATH] = { 0 };
+            // mod_file_full_path(fullPath, gLuaActiveMod, &(gLuaActiveMod->files[i]));
+            
+            file = &gLuaActiveMod->files[i];
+            found = TRUE;
+        }
+    }
+
+    if(found == FALSE) {
+        return;
+    }
+
+    if(file->audio_stream == 0) {
+        LOG_LUA("You cant double destroy audio!");
+        return;
+    }
+
+    //This frees the stream
+    bassh_free_stream(audio_stream);
+
+    file->audio_stream = 0;
+
+    //This frees the data the stream uses
+    free(file->data_ptr);
+}
+
+void play_audio(u32 audio_stream, bool restart) {
+    bassh_play_stream(audio_stream, restart);
+}
+
+void pause_audio(u32 audio_stream) {
+    bassh_pause_stream(audio_stream);
+}
+
+void stop_audio(u32 audio_stream) {
+    bassh_stop_stream(audio_stream);
+}  
+
+f32 get_position_audio(u32 audio_stream) {
+    return (f32)bassh_get_stream_pos(audio_stream);
+}
+
+void set_looping_audio(u32 audio_stream, bool looping) {
+    bassh_set_looping(audio_stream, looping);
+}
+
+bool get_looping_audio(u32 audio_stream) {
+    return bassh_get_looping(audio_stream);
+}
+
+f32 get_frequency_audio(u32 audio_stream) {
+    return bassh_get_frequency(audio_stream);
+}
+
+void set_frequency_audio(u32 audio_stream, f32 freq) {
+    bassh_set_frequency(audio_stream, freq);
+}
+
+f32 get_tempo_audio(u32 audio_stream) {
+    return bassh_get_tempo(audio_stream);
+}
+
+void set_tempo_audio(u32 audio_stream, f32 tempo) {
+    bassh_set_tempo(audio_stream, tempo);
+}
+
+void set_speed_audio(u32 audio_stream, f32 initial_freq, f32 speed, bool pitch) {
+    bassh_set_speed(audio_stream, initial_freq, speed, pitch);
+}
+
+void set_volume_audio(u32 audio_stream, f32 volume) {
+    bassh_set_stream_volume(audio_stream, volume);
+}
+
+f32 get_volume_audio(u32 audio_stream) {
+    return bassh_get_stream_volume(audio_stream);
+}
+
+void set_position_audio(u32 audio_stream, f32 pos) {
+    bassh_set_stream_pos(audio_stream, (double)pos);
+}
+
 void set_environment_region(u8 index, s32 value) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
+}
+
+u32 load_sample(const char* file_name) {
+    u16 fileCount = gLuaActiveMod->fileCount;
+    BOOL found = FALSE;
+    struct ModFile* file;
+    for(u16 i = 0; i < fileCount; i++) {
+        LOG_INFO("file path %s", gLuaActiveMod->files[i].relativePath);
+        if(str_ends_with(gLuaActiveMod->files[i].relativePath, (char *)file_name)) {
+            // char fullPath[SYS_MAX_PATH] = { 0 };
+            // mod_file_full_path(fullPath, gLuaActiveMod, &(gLuaActiveMod->files[i]));
+            
+            file = &gLuaActiveMod->files[i];
+            found = TRUE;
+        }
+    }
+
+    if(found == FALSE) {
+        return 0;
+    }
+
+    //smh free your stuff first...
+    if(file->audio_stream != 0) {
+        LOG_LUA("You need to destroy your stream/sapmle!");
+        return -1;
+    }
+
+    rewind(file->fp); //seek to the start of the file
+
+    //Allocate a buffer to the data
+    file->data_ptr = (char *)malloc(file->size * sizeof(char));
+    //Read the file data into the buffer
+    fread(file->data_ptr, file->size, 1, file->fp);
+
+    file->audio_stream = bassh_create_sample_from_file(file->data_ptr, file->size, 0);
+
+    return file->audio_stream;
+}
+
+void destroy_sample(u32 audio_stream) {
+    u16 fileCount = gLuaActiveMod->fileCount;
+    BOOL found = FALSE;
+    struct ModFile* file;
+    for(u16 i = 0; i < fileCount; i++) {
+        if(audio_stream == gLuaActiveMod->files[i].audio_stream) {
+            // char fullPath[SYS_MAX_PATH] = { 0 };
+            // mod_file_full_path(fullPath, gLuaActiveMod, &(gLuaActiveMod->files[i]));
+            
+            file = &gLuaActiveMod->files[i];
+            found = TRUE;
+        }
+    }
+
+    if(found == FALSE) {
+        return;
+    }
+
+    if(file->audio_stream == 0) {
+        LOG_LUA("You cant double destroy audio!");
+        return;
+    }
+
+    //This frees the stream
+    bassh_free_sample(audio_stream);
+
+    file->audio_stream = 0;
+
+    //This frees the data the stream uses
+    free(file->data_ptr);
+}
+
+u32 get_audio_from_sample(u32 sample) {
+    return bassh_sample_get_stream(sample);
 }
 
 f32 set_override_fov(f32 fov) {
