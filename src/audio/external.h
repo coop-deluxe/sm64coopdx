@@ -76,4 +76,7 @@ struct SPTask *unused_80321460();
 struct SPTask *unused_80321460(void);
 #endif
 
+f32 get_sound_pan(f32 x, f32 z);
+f32 sound_get_level_intensity(f32 distance);
+
 #endif // AUDIO_EXTERNAL_H

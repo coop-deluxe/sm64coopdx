@@ -7080,6 +7080,132 @@ function save_file_set_flags(flags)
     -- ...
 end
 
+--- @param audio BassAudio
+--- @return nil
+function audio_sample_destroy(audio)
+    -- ...
+end
+
+--- @param filename string
+--- @return BassAudio
+function audio_sample_load(filename)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param position Vec3f
+--- @param volume number
+--- @return nil
+function audio_sample_play(audio, position, volume)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
+function audio_stream_destroy(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_frequency(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return boolean
+function audio_stream_get_looping(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_position(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_tempo(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_volume(audio)
+    -- ...
+end
+
+--- @param filename string
+--- @return BassAudio
+function audio_stream_load(filename)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
+function audio_stream_pause(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param restart boolean
+--- @param volume number
+--- @return nil
+function audio_stream_play(audio, restart, volume)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param freq number
+--- @return nil
+function audio_stream_set_frequency(audio, freq)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param looping boolean
+--- @return nil
+function audio_stream_set_looping(audio, looping)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param pos number
+--- @return nil
+function audio_stream_set_position(audio, pos)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param initial_freq number
+--- @param speed number
+--- @param pitch boolean
+--- @return nil
+function audio_stream_set_speed(audio, initial_freq, speed, pitch)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param tempo number
+--- @return nil
+function audio_stream_set_tempo(audio, tempo)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param volume number
+--- @return nil
+function audio_stream_set_volume(audio, volume)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
+function audio_stream_stop(audio)
+    -- ...
+end
+
 --- @param sequenceId integer
 --- @param bankId integer
 --- @param defaultVolume integer

@@ -14,6 +14,8 @@
    - [network_send_object](#network_send_object)
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
+   - [djui_hud_render_texture](#djui_hud_render_texture)
+   - [get_texture_info](#get_texture_info)
 
 <br />
 
@@ -1320,6 +1322,25 @@
 <br />
 
 - smlua_audio_utils.h
+   - [audio_sample_destroy](functions-4.md#audio_sample_destroy)
+   - [audio_sample_load](functions-4.md#audio_sample_load)
+   - [audio_sample_play](functions-4.md#audio_sample_play)
+   - [audio_stream_destroy](functions-4.md#audio_stream_destroy)
+   - [audio_stream_get_frequency](functions-4.md#audio_stream_get_frequency)
+   - [audio_stream_get_looping](functions-4.md#audio_stream_get_looping)
+   - [audio_stream_get_position](functions-4.md#audio_stream_get_position)
+   - [audio_stream_get_tempo](functions-4.md#audio_stream_get_tempo)
+   - [audio_stream_get_volume](functions-4.md#audio_stream_get_volume)
+   - [audio_stream_load](functions-4.md#audio_stream_load)
+   - [audio_stream_pause](functions-4.md#audio_stream_pause)
+   - [audio_stream_play](functions-4.md#audio_stream_play)
+   - [audio_stream_set_frequency](functions-4.md#audio_stream_set_frequency)
+   - [audio_stream_set_looping](functions-4.md#audio_stream_set_looping)
+   - [audio_stream_set_position](functions-4.md#audio_stream_set_position)
+   - [audio_stream_set_speed](functions-4.md#audio_stream_set_speed)
+   - [audio_stream_set_tempo](functions-4.md#audio_stream_set_tempo)
+   - [audio_stream_set_volume](functions-4.md#audio_stream_set_volume)
+   - [audio_stream_stop](functions-4.md#audio_stream_stop)
    - [smlua_audio_utils_replace_sequence](functions-4.md#smlua_audio_utils_replace_sequence)
    - [smlua_audio_utils_reset_all](functions-4.md#smlua_audio_utils_reset_all)
 
@@ -1566,6 +1587,54 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | ----- | ---- |
 | reliable | `bool` |
 | dataTable | `table` |
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+Renders a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_texture_info](#get_texture_info)
+
+Retrieves a texture by name.
+
+### Lua Example
+`get_texture_info(textureName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- [TextureInfo](structs.md#TextureInfo)
 
 ### C Prototype
 `N/A`

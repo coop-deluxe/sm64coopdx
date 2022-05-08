@@ -22,6 +22,7 @@ in_files = [
     'src/pc/network/network.h',
     'src/game/hardcoded.h',
     'src/pc/mods/mod.h',
+    'src/pc/lua/utils/smlua_audio_utils.h',
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -81,11 +82,11 @@ override_field_immutable = {
     "Area": [ "localAreaTimer" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
+    "BassAudio": [ "*" ],
 }
 
 override_allowed_structs = {
     "src/pc/network/network.h": [ 'ServerSettings' ],
-    "src/pc/mods/mod.h":        [ 'Mod' ],
 }
 
 sLuaManuallyDefinedStructs = [{

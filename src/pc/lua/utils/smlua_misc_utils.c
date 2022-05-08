@@ -7,6 +7,10 @@
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
+#include "pc/mods/mod.h"
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
+
 #include "game/object_list_processor.h"
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"

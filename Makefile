@@ -494,7 +494,7 @@ ACTOR_DIR      := actors
 LEVEL_DIRS     := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 
 # Directories containing source files
-SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets asm lib sound
+SRC_DIRS := src src/engine src/game src/audio src/bass_audio src/menu src/buffers actors levels bin data assets asm lib sound
 BIN_DIRS := bin bin/$(VERSION)
 
 # PC files
@@ -605,6 +605,23 @@ ifeq ($(DISCORD_SDK), 1)
   else
     DISCORD_SDK_LIBS := lib/discordsdk/libdiscord_game_sdk.so
   endif
+endif
+
+BASS_LIBS :=
+ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(TARGET_BITS), 32)
+    BASS_LIBS := lib/bass/x86/bass.dll lib/bass/x86/bass_fx.dll
+  else
+    BASS_LIBS := lib/bass/bass.dll lib/bass/bass_fx.dll
+  endif
+else ifeq ($(OSX_BUILD),1)
+  # needs testing
+  # HACKY! Instead of figuring out all of the dynamic library linking madness...
+  # I copied the library and gave it two names.
+  # This really shouldn't be required, but I got tired of trying to do it the "right way"
+  BASS_LIBS := lib/bass/bass.dylib lib/bass/libbass.dylib lib/bass/bass_fx.dylib lib/bass/libbass_fx.dylib
+else
+  BASS_LIBS := lib/bass/libbass.so lib/bass/libbass_fx.so
 endif
 
 MOD_DIR := mods
@@ -893,14 +910,13 @@ endif
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
+    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -L./lib/bass/ -ldiscord_game_sdk -lbass -lbass_fx -Wl,-Bstatic
   endif
 else
   ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+    LDFLAGS += -ldiscord_game_sdk -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/discordsdk -Wl,-rpath lib/bass
   endif
 endif
-
 # Prevent a crash with -sopt
 export LANG := C
 
@@ -1141,6 +1157,9 @@ $(BUILD_DIR)/$(RPC_LIBS):
 	
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
+
+$(BUILD_DIR)/$(BASS_LIBS):
+	@$(CP) -f $(BASS_LIBS) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
 	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
@@ -1504,7 +1523,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(MOD_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(MOD_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
 endif

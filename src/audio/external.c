@@ -1165,7 +1165,7 @@ static void select_current_sounds(u8 bank) {
  *
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
-static f32 get_sound_pan(f32 x, f32 z) {
+f32 get_sound_pan(f32 x, f32 z) {
     f32 absX;
     f32 absZ;
     f32 pan;
@@ -2767,3 +2767,20 @@ void sound_set_background_music_default_volume(u8 seqId, u8 volume) {
 }
 
 #endif
+
+f32 sound_get_level_intensity(f32 distance) {
+    f32 intensity = 0;
+    if (distance > AUDIO_MAX_DISTANCE) {
+        intensity = 0;
+    }
+
+    f32 volumeRange = VOLUME_RANGE_UNK1;
+    f32 maxSoundDistance = sLevelAcousticReaches[gCurrLevelNum] / 2.0f;
+    if (maxSoundDistance < distance) {
+        intensity = ((AUDIO_MAX_DISTANCE - distance) / (AUDIO_MAX_DISTANCE - maxSoundDistance)) * (1.0f - volumeRange);
+    } else {
+        intensity = 1.0f - distance / maxSoundDistance * volumeRange;
+    }
+
+    return volumeRange * intensity * intensity + 1.0f - volumeRange;
+}

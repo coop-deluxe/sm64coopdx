@@ -14,7 +14,6 @@ struct ModFile {
     FILE* fp;
     u64 curOffset;
     bool complete;
-
     u8 dataHash[16];
     char* cachedPath;
 };

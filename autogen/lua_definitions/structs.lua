@@ -43,6 +43,13 @@
 --- @field public terrainType integer
 --- @field public warpNodes ObjectWarpNode
 
+--- @class BassAudio
+--- @field public file ModFile
+--- @field public handle integer
+--- @field public isStream boolean
+--- @field public loaded boolean
+--- @field public rawData string
+
 --- @class BehaviorDialogs
 --- @field public BobombBuddyBob1Dialog DialogId
 --- @field public BobombBuddyBob2Dialog DialogId
@@ -704,6 +711,12 @@
 --- @field public name string
 --- @field public relativePath string
 --- @field public selectable boolean
+
+--- @class ModFile
+--- @field public cachedPath string
+--- @field public complete boolean
+--- @field public curOffset integer
+--- @field public relativePath string
 
 --- @class ModeTransitionInfo
 --- @field public frame integer

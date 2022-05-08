@@ -4565,6 +4565,398 @@
 <br />
 
 
+## [audio_sample_destroy](#audio_sample_destroy)
+
+### Lua Example
+`audio_sample_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_destroy(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_load](#audio_sample_load)
+
+### Lua Example
+`local BassAudioValue = audio_sample_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[BassAudio](structs.md#BassAudio)
+
+### C Prototype
+`struct BassAudio* audio_sample_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_play](#audio_sample_play)
+
+### Lua Example
+`audio_sample_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_play(struct BassAudio* audio, Vec3f position, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_destroy](#audio_stream_destroy)
+
+### Lua Example
+`audio_stream_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_destroy(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_frequency](#audio_stream_get_frequency)
+
+### Lua Example
+`local numberValue = audio_stream_get_frequency(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_frequency(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_looping](#audio_stream_get_looping)
+
+### Lua Example
+`local booleanValue = audio_stream_get_looping(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool audio_stream_get_looping(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_position](#audio_stream_get_position)
+
+### Lua Example
+`local numberValue = audio_stream_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_position(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_tempo](#audio_stream_get_tempo)
+
+### Lua Example
+`local numberValue = audio_stream_get_tempo(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_tempo(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_volume](#audio_stream_get_volume)
+
+### Lua Example
+`local numberValue = audio_stream_get_volume(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_volume(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_load](#audio_stream_load)
+
+### Lua Example
+`local BassAudioValue = audio_stream_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[BassAudio](structs.md#BassAudio)
+
+### C Prototype
+`struct BassAudio* audio_stream_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_pause](#audio_stream_pause)
+
+### Lua Example
+`audio_stream_pause(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_pause(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_play](#audio_stream_play)
+
+### Lua Example
+`audio_stream_play(audio, restart, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| restart | `boolean` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_play(struct BassAudio* audio, bool restart, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_frequency](#audio_stream_set_frequency)
+
+### Lua Example
+`audio_stream_set_frequency(audio, freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_frequency(struct BassAudio* audio, f32 freq);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_looping](#audio_stream_set_looping)
+
+### Lua Example
+`audio_stream_set_looping(audio, looping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| looping | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_looping(struct BassAudio* audio, bool looping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_position](#audio_stream_set_position)
+
+### Lua Example
+`audio_stream_set_position(audio, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| pos | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_position(struct BassAudio* audio, f32 pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_speed](#audio_stream_set_speed)
+
+### Lua Example
+`audio_stream_set_speed(audio, initial_freq, speed, pitch)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| initial_freq | `number` |
+| speed | `number` |
+| pitch | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_speed(struct BassAudio* audio, f32 initial_freq, f32 speed, bool pitch);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_tempo](#audio_stream_set_tempo)
+
+### Lua Example
+`audio_stream_set_tempo(audio, tempo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| tempo | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_tempo(struct BassAudio* audio, f32 tempo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_volume](#audio_stream_set_volume)
+
+### Lua Example
+`audio_stream_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_volume(struct BassAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_stop](#audio_stream_stop)
+
+### Lua Example
+`audio_stream_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_stop(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
 
 ### Lua Example
