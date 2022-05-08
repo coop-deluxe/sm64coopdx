@@ -102,6 +102,19 @@ struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
     return NULL;
 }
 
+static bool mod_cache_has_path(const char* path) {
+    if (path == NULL || strlen(path) == 0) { return NULL; }
+    struct ModCacheEntry* node = sModCacheHead;
+    while (node != NULL) {
+        struct ModCacheEntry* next = node->next;
+        if (!strcmp(node->path, path)) {
+            return true;
+        }
+        node = next;
+    }
+    return false;
+}
+
 struct ModCacheEntry* mod_cache_get_from_path(const char* path) {
     if (path == NULL || strlen(path) == 0) { return NULL; }
     struct ModCacheEntry* node = sModCacheHead;
@@ -183,7 +196,7 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
     LOG_ERROR("Did not add node for some reason?");
 }
 
-void mod_cache_add(struct Mod* mod, struct ModFile* file) {
+void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
     // sanity check
     if (mod == NULL || file == NULL) {
         LOG_ERROR("Could not add to cache, mod or file is null");
@@ -205,6 +218,11 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file) {
     // set path
     normalize_path(modFilePath);
     file->cachedPath = strdup(modFilePath);
+
+    // if we already have the filepath, don't MD5 it again
+    if (useFilePath && mod_cache_has_path(file->cachedPath)) {
+        return;
+    }
 
     // hash and cache
     mod_cache_md5(file->cachedPath, file->dataHash);

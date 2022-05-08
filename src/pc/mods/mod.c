@@ -103,7 +103,7 @@ void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        mod_cache_add(mod, file);
+        mod_cache_add(mod, file, false);
         if (str_ends_with(file->relativePath, ".bin")) {
             mod_activate_bin(file);
         }
@@ -567,7 +567,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     if (isDirectory) {
         for (int i = 0; i < mod->fileCount; i++) {
             struct ModFile* file = &mod->files[i];
-            mod_cache_add(mod, file);
+            mod_cache_add(mod, file, true);
             LOG_INFO("      - %s", file->relativePath);
         }
     }
