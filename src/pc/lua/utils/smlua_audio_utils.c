@@ -387,3 +387,16 @@ void audio_sample_play(struct BassAudio* audio, Vec3f position, f32 volume) {
 
     bassh_play_stream(stream, true);
 }
+
+void audio_custom_shutdown(void) {
+    for(u16 i = 0; i < sBassAudioCount; i++) {
+        struct BassAudio* audio = &sBassAudio[i];
+        if (!audio->loaded) { continue; }
+        if (audio->isStream) {
+            audio_stream_destroy(audio);
+        } else {
+            audio_sample_destroy(audio);
+        }
+    }
+    sBassAudioCount = 0;
+}

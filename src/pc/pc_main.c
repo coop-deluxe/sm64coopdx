@@ -45,6 +45,7 @@
 #include "include/bass/bass.h"
 #include "include/bass/bass_fx.h"
 #include "src/bass_audio/bass_audio_helpers.h"
+#include "pc/lua/utils/smlua_audio_utils.h"
 
 #ifdef DISCORDRPC
 #include "pc/discord/discordrpc.h"
@@ -241,6 +242,7 @@ void produce_one_frame(void) {
 }
 
 void audio_shutdown(void) {
+    audio_custom_shutdown();
     if (audio_api) {
         if (audio_api->shutdown) audio_api->shutdown();
         audio_api = NULL;
@@ -253,6 +255,7 @@ void game_deinit(void) {
 #endif
     configfile_save(configfile_name());
     controller_shutdown();
+    audio_custom_shutdown();
     audio_shutdown();
     gfx_shutdown();
     network_shutdown(true);

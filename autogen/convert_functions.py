@@ -86,7 +86,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_obj_utils.h":  [ "spawn_object_remember_field" ],
     "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
     "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ],
-    "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override"],
+    "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override", "audio_custom_shutdown"],
     "src/pc/djui/djui_hud_utils.h":        [ "djui_hud_render_texture", "djui_hud_render_texture_raw" ],
 }
 

@@ -377,6 +377,11 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
                     return false;
                 }
 
+                // only consider m64, mp3, aiff, and ogg files
+                if (!str_ends_with(path, ".m64") && !str_ends_with(path, ".mp3") && !str_ends_with(path, ".aiff") && !str_ends_with(path, ".ogg")) {
+                    continue;
+                }
+
                 // allocate file
                 struct ModFile* file = mod_allocate_file(mod, relativePath);
                 if (file == NULL) { return false; }
