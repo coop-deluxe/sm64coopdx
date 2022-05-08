@@ -122,6 +122,8 @@
 | macroObjectsAltered | `Pointer` <`integer`> | read-only |
 | musicParam | `integer` |  |
 | musicParam2 | `integer` |  |
+| numRedCoins | `integer` |  |
+| numSecrets | `integer` |  |
 | objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) |  |
 | paintingWarpNodes | [WarpNode](structs.md#WarpNode) |  |
 | surfaceRooms | `Pointer` <`integer`> | read-only |

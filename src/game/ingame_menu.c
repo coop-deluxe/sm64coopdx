@@ -4,6 +4,7 @@
 #include "actors/common1.h"
 #include "area.h"
 #include "audio/external.h"
+#include "behavior_data.h"
 #include "camera.h"
 #include "course_table.h"
 #include "dialog_ids.h"
@@ -15,6 +16,7 @@
 #include "level_update.h"
 #include "levels/castle_grounds/header.h"
 #include "memory.h"
+#include "object_helpers.h"
 #include "print.h"
 #include "save_file.h"
 #include "segment2.h"
@@ -42,7 +44,6 @@ s16 gDialogY; // D_8032F69C
 #endif
 s16 gCutsceneMsgXOffset;
 s16 gCutsceneMsgYOffset;
-s8 gRedCoinsCollected;
 
 extern u8 gLastCompletedCourseNum;
 extern u8 gLastCompletedStarNum;
@@ -2308,7 +2309,6 @@ void render_hud_cannon_reticle(void) {
 }
 
 void reset_red_coins_collected(void) {
-    gRedCoinsCollected = 0;
 }
 
 void change_dialog_camera_angle(void) {
@@ -2359,11 +2359,28 @@ void print_animated_red_coin(s16 x, s16 y) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void render_pause_red_coins(void) {
-    s8 x;
+static inline void red_coins_print_glyph(s16 *x, u8 glyph, u8 width) {
+    u8 text[] = { glyph, GLYPH_SPACE };
+    print_hud_lut_string(HUD_LUT_GLOBAL, *x, SCREEN_HEIGHT - 35, text);
+    *x += width;
+}
 
-    for (x = 0; x < gRedCoinsCollected; x++) {
-        print_animated_red_coin(GFX_DIMENSIONS_FROM_RIGHT_EDGE(30) - x * 20, 16);
+void render_pause_red_coins(void) {
+    if (gCurrentArea->numRedCoins > 0) {
+        u8 collected = gCurrentArea->numRedCoins - count_objects_with_behavior(bhvRedCoin);
+        s16 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(38);
+        print_animated_red_coin(x - 8, 20);
+        gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+        red_coins_print_glyph(&x, GLYPH_MULTIPLY, 16);
+        if (collected >= 100) red_coins_print_glyph(&x, (collected / 100) % 10, 12);
+        if (collected >= 10) red_coins_print_glyph(&x, (collected / 10) % 10, 12);
+        red_coins_print_glyph(&x, collected % 10, 15);
+        red_coins_print_glyph(&x, GLYPH_MULTIPLY - 1, 15);
+        if (gCurrentArea->numRedCoins >= 100) red_coins_print_glyph(&x, (gCurrentArea->numRedCoins / 100) % 10, 12);
+        if (gCurrentArea->numRedCoins >= 10) red_coins_print_glyph(&x, (gCurrentArea->numRedCoins / 10) % 10, 12);
+        red_coins_print_glyph(&x, gCurrentArea->numRedCoins % 10, 15);
+        gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
     }
 }
 

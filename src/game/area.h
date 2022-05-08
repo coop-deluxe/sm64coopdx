@@ -85,6 +85,8 @@ struct Area
     /*????*/ Vec3f cachedPositions[256];
     /*????*/ u32 localAreaTimer;
     /*????*/ u8 *macroObjectsAltered;
+    /*????*/ u8 numRedCoins;
+    /*????*/ u8 numSecrets;
 };
 
 // All the transition data to be used in screen_transition.c
