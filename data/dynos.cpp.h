@@ -459,6 +459,7 @@ struct PackData {
     String mDisplayName;
     Array<Pair<const char *, GfxData *>> mGfxData;
     Array<DataNode<TexData>*> mTextures;
+    bool mLoaded;
 };
 
 typedef Pair<String, const u8 *> Label;

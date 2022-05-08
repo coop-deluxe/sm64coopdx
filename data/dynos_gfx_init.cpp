@@ -29,35 +29,6 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
     closedir(modsDir);
 }
 
-static void ScanPackBins(SysPath aPackFolder) {
-    DIR *_PackDir = opendir(aPackFolder.c_str());
-    if (!_PackDir) { return; }
-
-    struct dirent *_PackEnt = NULL;
-    while ((_PackEnt = readdir(_PackDir)) != NULL) {
-        // Skip . and ..
-        if (SysPath(_PackEnt->d_name) == ".") continue;
-        if (SysPath(_PackEnt->d_name) == "..") continue;
-
-        SysPath _FileName = fstring("%s/%s", aPackFolder.begin(), _PackEnt->d_name);
-        s32 length = strlen(_PackEnt->d_name);
-
-        // check for actors
-        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".bin", 4)) {
-            String _ActorName = _PackEnt->d_name;
-            _ActorName[length - 4] = '\0';
-            DynOS_Actor_LoadFromBinary(aPackFolder, strdup(_ActorName.begin()), _FileName, true);
-        }
-
-        // check for textures
-        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".tex", 4)) {
-            String _TexName = _PackEnt->d_name;
-            _TexName[length - 4] = '\0';
-            DynOS_Tex_LoadFromBinary(aPackFolder, _FileName, _TexName.begin(), true);
-        }
-    }
-}
-
 static void ScanPacksFolder(SysPath _DynosPacksFolder) {
     DIR *_DynosPacksDir = opendir(_DynosPacksFolder.c_str());
     if (_DynosPacksDir) {
@@ -74,7 +45,6 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
                 struct PackData* _Pack = DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
                 DynOS_Tex_GeneratePack(_PackFolder, _PackFolder, false);
-                ScanPackBins(_PackFolder);
             }
         }
         closedir(_DynosPacksDir);

@@ -8,6 +8,35 @@ static Array<PackData>& DynosPacks() {
     return sDynosPacks;
 }
 
+static void ScanPackBins(struct PackData* aPack) {
+    DIR *_PackDir = opendir(aPack->mPath.c_str());
+    if (!_PackDir) { return; }
+
+    struct dirent *_PackEnt = NULL;
+    while ((_PackEnt = readdir(_PackDir)) != NULL) {
+        // Skip . and ..
+        if (SysPath(_PackEnt->d_name) == ".") continue;
+        if (SysPath(_PackEnt->d_name) == "..") continue;
+
+        SysPath _FileName = fstring("%s/%s", aPack->mPath.c_str(), _PackEnt->d_name);
+        s32 length = strlen(_PackEnt->d_name);
+
+        // check for actors
+        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".bin", 4)) {
+            String _ActorName = _PackEnt->d_name;
+            _ActorName[length - 4] = '\0';
+            DynOS_Actor_LoadFromBinary(aPack->mPath, strdup(_ActorName.begin()), _FileName, true);
+        }
+
+        // check for textures
+        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".tex", 4)) {
+            String _TexName = _PackEnt->d_name;
+            _TexName[length - 4] = '\0';
+            DynOS_Tex_LoadFromBinary(aPack->mPath, _FileName, _TexName.begin(), true);
+        }
+    }
+}
+
 static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData *>& pair) {
     const char* aActorName = pair.first;
     GfxData* aGfxData = pair.second;
@@ -61,6 +90,11 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
     aPack->mEnabled = aEnabled;
     aPack->mEnabledSet = true;
 
+    if (aEnabled && !aPack->mLoaded) {
+        ScanPackBins(aPack);
+        aPack->mLoaded = true;
+    }
+
     if (aEnabled) {
         for (auto& pair : aPack->mGfxData) {
             DynOS_Pack_ActivateActor(aPack->mIndex, pair);
@@ -106,6 +140,8 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
         .mIndex = index,
         .mPath = aPath,
         .mGfxData = {},
+        .mTextures = {},
+        .mLoaded = false,
     });
 
     PackData* _Pack = &_DynosPacks[index];
