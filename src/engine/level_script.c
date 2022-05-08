@@ -20,6 +20,7 @@
 #include "graph_node.h"
 #include "level_script.h"
 #include "level_misc_macros.h"
+#include "macro_presets.h"
 #include "math_util.h"
 #include "surface_collision.h"
 #include "surface_load.h"
@@ -97,6 +98,23 @@ static s32 eval_script_op(s8 op, s32 arg) {
     }
 
     return result;
+}
+
+static void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
+    const BehaviorScript *bhv = NULL;
+    if (isMacroObject) {
+        MacroObject index = (*((MacroObject *) arg) & 0x1FF) - 0x1F;
+        if (index >= 0 && index < 366) {
+            bhv = MacroObjectPresets[index].behavior;
+        }
+    } else {
+        bhv = (const BehaviorScript *) arg;
+    }
+    if (bhv == bhvRedCoin) {
+        gAreas[sCurrAreaIndex].numRedCoins++;
+    } else if (bhv == bhvHiddenStarTrigger) {
+        gAreas[sCurrAreaIndex].numSecrets++;
+    }
 }
 
 static void level_cmd_load_and_execute(void) {
@@ -384,6 +402,8 @@ static void level_cmd_begin_area(void) {
         sCurrAreaIndex = areaIndex;
         screenArea->areaIndex = areaIndex;
         gAreas[areaIndex].unk04 = screenArea;
+        gAreas[areaIndex].numRedCoins = 0;
+        gAreas[areaIndex].numSecrets = 0;
 
         if (node != NULL) {
             gAreas[areaIndex].camera = (struct Camera *) node->config.camera;
@@ -506,6 +526,7 @@ static void level_cmd_place_object(void) {
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
+        area_check_red_coin_or_secret(spawnInfo->behaviorScript, false);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -669,6 +690,7 @@ static void level_cmd_set_macro_objects(void) {
         MacroObject *data = segmented_to_virtual(CMD_GET(void *, 4));
         s32 len = 0;
         while (data[len++] != MACRO_OBJECT_END()) {
+            area_check_red_coin_or_secret(&data[len - 1], true);
             len += 4;
         }
         gAreas[sCurrAreaIndex].macroObjects = alloc_only_pool_alloc(sLevelPool, len * sizeof(MacroObject));
@@ -902,6 +924,7 @@ static void level_cmd_place_object_ext(void) {
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
+        area_check_red_coin_or_secret(spawnInfo->behaviorScript, false);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -971,6 +994,7 @@ static void level_cmd_place_object_ext2(void) {
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
+        area_check_red_coin_or_secret(spawnInfo->behaviorScript, false);
     }
 
     sCurrentCmd = CMD_NEXT;

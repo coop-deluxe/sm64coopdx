@@ -25,7 +25,6 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
 
         // level variables
         packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
-        packet_write(&p, &gRedCoinsCollected,       sizeof(u8));
         packet_write(&p, &gPssSlideStarted,         sizeof(u8));
         packet_write(&p, &gTTCSpeedSetting,         sizeof(s16));
 
@@ -73,13 +72,4 @@ void network_receive_level(struct Packet* p) {
     packet_read(p, &gPssSlideStarted,         sizeof(u8));
     packet_read(p, &gTTCSpeedSetting,         sizeof(s16)); // likely doesn't work after level load.. but it could
     gHudDisplay.coins = gMarioStates[0].numCoins;
-
-    // hacky way to override red coins collected
-    gRedCoinsCollected = redCoinsCollected;
-    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        struct Object* o = &gObjectPool[i];
-        if (o->behavior == bhvBowserCourseRedCoinStar || o->behavior == bhvHiddenRedCoinStar) {
-            o->oHiddenStarTriggerCounter = redCoinsCollected;
-        }
-    }
 }

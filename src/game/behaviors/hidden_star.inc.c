@@ -8,7 +8,7 @@ void bhv_hidden_star_init(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 
-    o->oHiddenStarTriggerCounter = 5 - count;
+    o->oHiddenStarTriggerCounter = gCurrentArea->numSecrets - count;
     
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
@@ -34,7 +34,7 @@ void bhv_hidden_star_init(void) {
 void bhv_hidden_star_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (o->oHiddenStarTriggerCounter == 5) {
+            if (o->oHiddenStarTriggerCounter >= gCurrentArea->numSecrets) {
                 o->oAction = 1;
             }
             break;
@@ -63,11 +63,8 @@ void bhv_hidden_star_trigger_loop(void) {
         if (hiddenStar != NULL) {
 
             s16 count = (count_objects_with_behavior(bhvHiddenStarTrigger) - 1);
-            hiddenStar->oHiddenStarTriggerCounter = 5 - count;
-
-            if (hiddenStar->oHiddenStarTriggerCounter != 5) {
-                spawn_orange_number(hiddenStar->oHiddenStarTriggerCounter, 0, 0, 0);
-            }
+            hiddenStar->oHiddenStarTriggerCounter = gCurrentArea->numSecrets - count;
+            spawn_orange_number(hiddenStar->oHiddenStarTriggerCounter, 0, 0, 0);
             
             // Set the last person who interacted with a secret to the 
             // parent so only they get the star cutscene.
@@ -79,9 +76,11 @@ void bhv_hidden_star_trigger_loop(void) {
 #ifdef VERSION_JP
             play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #else
-            play_sound(SOUND_MENU_COLLECT_SECRET
-                           + (((u8) hiddenStar->oHiddenStarTriggerCounter - 1) << 16),
-                       gGlobalSoundSource);
+            if (count < 5) {
+                play_sound(SOUND_MENU_COLLECT_SECRET + ((4 - count) << 16), gGlobalSoundSource);
+            } else {
+                play_sound(SOUND_MENU_COLLECT_SECRET, gGlobalSoundSource);
+            }
 #endif
         }
 
@@ -93,10 +92,9 @@ void bhv_hidden_star_trigger_loop(void) {
 }
 
 void bhv_bowser_course_red_coin_star_loop(void) {
-    gRedCoinsCollected = o->oHiddenStarTriggerCounter;
     switch (o->oAction) {
         case 0:
-            if (o->oHiddenStarTriggerCounter == 8) {
+            if (o->oHiddenStarTriggerCounter >= gCurrentArea->numRedCoins) {
                 o->oAction = 1;
             }
             break;

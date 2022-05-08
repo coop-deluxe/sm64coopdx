@@ -205,6 +205,10 @@ ALIGNED8 const Texture texture_hud_char_percent[] = {
 };
 #endif
 
+ALIGNED8 const Texture texture_hud_char_slash[] = {
+#include "textures/segment2/custom_hud_slash.rgba16.inc.c"
+};
+
 ALIGNED8 const Texture texture_hud_char_multiply[] = {
 #include "textures/segment2/segment2.05600.rgba16.inc.c"
 };
@@ -1840,7 +1844,7 @@ const Texture *const main_hud_lut[] = {
                   0x0,               0x0,               0x0,               0x0,
                   0x0,               0x0,               0x0,               0x0,
                   0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0, texture_hud_char_multiply, texture_hud_char_coin,
+                  0x0, texture_hud_char_slash, texture_hud_char_multiply, texture_hud_char_coin,
     texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_luigi_head, 0x0,
     texture_hud_char_apostrophe, texture_hud_char_double_quote, texture_hud_char_umlaut,
 #elif defined(VERSION_US)
@@ -1856,7 +1860,7 @@ const Texture *const main_hud_lut[] = {
                   0x0,               0x0,               0x0,               0x0,
                   0x0,               0x0,               0x0,               0x0,
                   0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0, texture_hud_char_multiply, texture_hud_char_coin,
+                  0x0, texture_hud_char_slash, texture_hud_char_multiply, texture_hud_char_coin,
     texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_luigi_head, texture_hud_char_toad_head,
     texture_hud_char_apostrophe, texture_hud_char_double_quote,
 #else
@@ -1872,7 +1876,7 @@ const Texture *const main_hud_lut[] = {
     texture_hud_char_exclamation, texture_hud_char_double_exclamation, texture_hud_char_question, texture_hud_char_ampersand,
     texture_hud_char_percent,                 0x0,                      0x0,                  0x0,
                       0x0,                   0x0,                      0x0,                  0x0,
-                      0x0,                   0x0, texture_hud_char_multiply, texture_hud_char_coin,
+                      0x0, texture_hud_char_slash, texture_hud_char_multiply, texture_hud_char_coin,
     texture_hud_char_mario_head, texture_hud_char_star, texture_hud_char_decimal_point, texture_hud_char_beta_key,
     texture_hud_char_apostrophe, texture_hud_char_double_quote,
 #endif
@@ -2474,6 +2478,109 @@ const Gfx dl_billboard_num_9[] = {
     gsSPDisplayList(dl_billboard_num_end),
     gsSPEndDisplayList(),
 };
+
+//
+// Three-digits orange number
+//
+
+const Vtx vertex_billboard_num3[] = {
+    { { { -32, -32, 0 }, 0, {    0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +32, -32, 0 }, 0, { 1024, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +32, +32, 0 }, 0, { 1024,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -32, +32, 0 }, 0, {    0,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -56, -32, 0 }, 0, {    0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { {  +8, -32, 0 }, 0, { 1024, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { {  +8, +32, 0 }, 0, { 1024,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -56, +32, 0 }, 0, {    0,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { {  -8, -32, 0 }, 0, {    0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +56, -32, 0 }, 0, { 1024, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +56, +32, 0 }, 0, { 1024,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { {  -8, +32, 0 }, 0, {    0,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -80, -32, 0 }, 0, {    0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -16, -32, 0 }, 0, { 1024, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -16, +32, 0 }, 0, { 1024,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -80, +32, 0 }, 0, {    0,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -32, -32, 0 }, 0, {    0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +32, -32, 0 }, 0, { 1024, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +32, +32, 0 }, 0, { 1024,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -32, +32, 0 }, 0, {    0,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +16, -32, 0 }, 0, {    0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +80, -32, 0 }, 0, { 1024, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +80, +32, 0 }, 0, { 1024,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { +16, +32, 0 }, 0, {    0,    0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+};
+
+#define define_dl_billboard_num3(type, digit, offset) \
+const Gfx dl_billboard_num3_##type[] = { \
+    gsSPDisplayList(dl_billboard_num_begin), \
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texture_hud_char_##digit), \
+    gsDPLoadSync(), \
+    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 16 * 16 - 1, CALC_DXT(16, G_IM_SIZ_16b_BYTES)), \
+    gsSPVertex(vertex_billboard_num3 + (4 * (offset)), 4, 0), \
+    gsSPDisplayList(dl_billboard_num_end + 1), \
+    gsSPEndDisplayList(), \
+};
+
+define_dl_billboard_num3(0, 0, 0);
+define_dl_billboard_num3(1, 1, 0);
+define_dl_billboard_num3(2, 2, 0);
+define_dl_billboard_num3(3, 3, 0);
+define_dl_billboard_num3(4, 4, 0);
+define_dl_billboard_num3(5, 5, 0);
+define_dl_billboard_num3(6, 6, 0);
+define_dl_billboard_num3(7, 7, 0);
+define_dl_billboard_num3(8, 8, 0);
+define_dl_billboard_num3(9, 9, 0);
+define_dl_billboard_num3(0x, 0, 1);
+define_dl_billboard_num3(1x, 1, 1);
+define_dl_billboard_num3(2x, 2, 1);
+define_dl_billboard_num3(3x, 3, 1);
+define_dl_billboard_num3(4x, 4, 1);
+define_dl_billboard_num3(5x, 5, 1);
+define_dl_billboard_num3(6x, 6, 1);
+define_dl_billboard_num3(7x, 7, 1);
+define_dl_billboard_num3(8x, 8, 1);
+define_dl_billboard_num3(9x, 9, 1);
+define_dl_billboard_num3(x0, 0, 2);
+define_dl_billboard_num3(x1, 1, 2);
+define_dl_billboard_num3(x2, 2, 2);
+define_dl_billboard_num3(x3, 3, 2);
+define_dl_billboard_num3(x4, 4, 2);
+define_dl_billboard_num3(x5, 5, 2);
+define_dl_billboard_num3(x6, 6, 2);
+define_dl_billboard_num3(x7, 7, 2);
+define_dl_billboard_num3(x8, 8, 2);
+define_dl_billboard_num3(x9, 9, 2);
+define_dl_billboard_num3(0xx, 0, 3);
+define_dl_billboard_num3(1xx, 1, 3);
+define_dl_billboard_num3(2xx, 2, 3);
+define_dl_billboard_num3(3xx, 3, 3);
+define_dl_billboard_num3(4xx, 4, 3);
+define_dl_billboard_num3(5xx, 5, 3);
+define_dl_billboard_num3(6xx, 6, 3);
+define_dl_billboard_num3(7xx, 7, 3);
+define_dl_billboard_num3(8xx, 8, 3);
+define_dl_billboard_num3(9xx, 9, 3);
+define_dl_billboard_num3(x0x, 0, 4);
+define_dl_billboard_num3(x1x, 1, 4);
+define_dl_billboard_num3(x2x, 2, 4);
+define_dl_billboard_num3(x3x, 3, 4);
+define_dl_billboard_num3(x4x, 4, 4);
+define_dl_billboard_num3(x5x, 5, 4);
+define_dl_billboard_num3(x6x, 6, 4);
+define_dl_billboard_num3(x7x, 7, 4);
+define_dl_billboard_num3(x8x, 8, 4);
+define_dl_billboard_num3(x9x, 9, 4);
+define_dl_billboard_num3(xx0, 0, 5);
+define_dl_billboard_num3(xx1, 1, 5);
+define_dl_billboard_num3(xx2, 2, 5);
+define_dl_billboard_num3(xx3, 3, 5);
+define_dl_billboard_num3(xx4, 4, 5);
+define_dl_billboard_num3(xx5, 5, 5);
+define_dl_billboard_num3(xx6, 6, 5);
+define_dl_billboard_num3(xx7, 7, 5);
+define_dl_billboard_num3(xx8, 8, 5);
+define_dl_billboard_num3(xx9, 9, 5);
 
 ALIGNED8 const Texture texture_shadow_quarter_circle[] = {
 #include "textures/segment2/shadow_quarter_circle.ia8.inc.c"

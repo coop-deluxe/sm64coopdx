@@ -48,7 +48,7 @@ static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "values",            LVT_S16_P, offsetof(struct Animation, values),            true,  LOT_POINTER },
 };
 
-#define LUA_AREA_FIELD_COUNT 15
+#define LUA_AREA_FIELD_COUNT 17
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "cachedBehaviors",     LOT_???,       offsetof(struct Area, cachedBehaviors),     false, LOT_???            }, <--- UNIMPLEMENTED
 //  { "cachedPositions",     LOT_???,       offsetof(struct Area, cachedPositions),     false, LOT_???            }, <--- UNIMPLEMENTED
@@ -62,6 +62,8 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "macroObjectsAltered", LVT_U8_P,      offsetof(struct Area, macroObjectsAltered), true,  LOT_POINTER        },
     { "musicParam",          LVT_U16,       offsetof(struct Area, musicParam),          false, LOT_NONE           },
     { "musicParam2",         LVT_U16,       offsetof(struct Area, musicParam2),         false, LOT_NONE           },
+    { "numRedCoins",         LVT_U8,        offsetof(struct Area, numRedCoins),         false, LOT_NONE           },
+    { "numSecrets",          LVT_U8,        offsetof(struct Area, numSecrets),          false, LOT_NONE           },
     { "objectSpawnInfos",    LVT_COBJECT_P, offsetof(struct Area, objectSpawnInfos),    false, LOT_SPAWNINFO      },
     { "paintingWarpNodes",   LVT_COBJECT_P, offsetof(struct Area, paintingWarpNodes),   false, LOT_WARPNODE       },
     { "surfaceRooms",        LVT_S8_P,      offsetof(struct Area, surfaceRooms),        true,  LOT_POINTER        },

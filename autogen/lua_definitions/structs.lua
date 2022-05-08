@@ -34,6 +34,8 @@
 --- @field public macroObjectsAltered Pointer_integer
 --- @field public musicParam integer
 --- @field public musicParam2 integer
+--- @field public numRedCoins integer
+--- @field public numSecrets integer
 --- @field public objectSpawnInfos SpawnInfo
 --- @field public paintingWarpNodes WarpNode
 --- @field public surfaceRooms Pointer_integer

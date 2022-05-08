@@ -49,8 +49,8 @@ void bhv_red_coin_loop(void) {
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         // ...and there is a red coin star in the level...
         if (o->parentObj != NULL) {
-            // ...increment the star's counter.
-            o->parentObj->oHiddenStarTriggerCounter++;
+            s16 redCoins = count_objects_with_behavior(bhvRedCoin) - 1;
+            o->parentObj->oHiddenStarTriggerCounter = gCurrentArea->numRedCoins - redCoins;
             
             // Set the last person who interacted with a red coin to the 
             // parent so only they get the star cutscene.
@@ -63,16 +63,16 @@ void bhv_red_coin_loop(void) {
 #ifdef VERSION_JP
             create_sound_spawner(SOUND_GENERAL_RED_COIN);
 #endif
-            // Spawn the orange number counter, as long as it isn't the last coin.
-            if (o->parentObj->oHiddenStarTriggerCounter != 8) {
-                spawn_orange_number(o->parentObj->oHiddenStarTriggerCounter, 0, 0, 0);
-            }
+            // Spawn the orange number counter
+            spawn_orange_number(o->parentObj->oHiddenStarTriggerCounter, 0, 0, 0);
 
             // On all versions but the JP version, each coin collected plays a higher noise.
 #ifndef VERSION_JP
-            play_sound(SOUND_MENU_COLLECT_RED_COIN
-                           + (((u8) o->parentObj->oHiddenStarTriggerCounter - 1) << 16),
-                       gGlobalSoundSource);
+            if (redCoins < 8) {
+                play_sound(SOUND_MENU_COLLECT_RED_COIN + ((7 - redCoins) << 16), gGlobalSoundSource);
+            } else {
+                play_sound(SOUND_MENU_COLLECT_RED_COIN, gGlobalSoundSource);
+            }
 #endif
         }
 

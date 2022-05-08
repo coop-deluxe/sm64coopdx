@@ -236,7 +236,7 @@ void bhv_hidden_red_coin_star_init(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 
-    o->oHiddenStarTriggerCounter = 8 - redCoins;
+    o->oHiddenStarTriggerCounter = gCurrentArea->numRedCoins - redCoins;
     
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
@@ -260,10 +260,9 @@ void bhv_hidden_red_coin_star_init(void) {
 }
 
 void bhv_hidden_red_coin_star_loop(void) {
-    gRedCoinsCollected = o->oHiddenStarTriggerCounter;
     switch (o->oAction) {
         case 0:
-            if (o->oHiddenStarTriggerCounter == 8) {
+            if (o->oHiddenStarTriggerCounter >= gCurrentArea->numRedCoins) {
                 o->oAction = 1;
             }
             break;

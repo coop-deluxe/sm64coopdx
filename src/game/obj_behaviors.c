@@ -909,11 +909,6 @@ s8 obj_lava_death(void) {
  */
 void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ) {
     struct Object *orangeNumber;
-
-    if (behParam >= 10) {
-        return;
-    }
-
     orangeNumber = spawn_object_relative(behParam, relX, relY, relZ, o, MODEL_NUMBER, bhvOrangeNumber);
     if (orangeNumber == NULL) { return; }
     orangeNumber->oPosY += 25.0f;
