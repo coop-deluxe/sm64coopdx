@@ -7080,6 +7080,132 @@ function save_file_set_flags(flags)
     -- ...
 end
 
+--- @param audio BassAudio
+--- @return nil
+function audio_sample_destroy(audio)
+    -- ...
+end
+
+--- @param filename string
+--- @return BassAudio
+function audio_sample_load(filename)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param position Vec3f
+--- @param volume number
+--- @return nil
+function audio_sample_play(audio, position, volume)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
+function audio_stream_destroy(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_frequency(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return boolean
+function audio_stream_get_looping(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_position(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_tempo(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return number
+function audio_stream_get_volume(audio)
+    -- ...
+end
+
+--- @param filename string
+--- @return BassAudio
+function audio_stream_load(filename)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
+function audio_stream_pause(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param restart boolean
+--- @param volume number
+--- @return nil
+function audio_stream_play(audio, restart, volume)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param freq number
+--- @return nil
+function audio_stream_set_frequency(audio, freq)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param looping boolean
+--- @return nil
+function audio_stream_set_looping(audio, looping)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param pos number
+--- @return nil
+function audio_stream_set_position(audio, pos)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param initial_freq number
+--- @param speed number
+--- @param pitch boolean
+--- @return nil
+function audio_stream_set_speed(audio, initial_freq, speed, pitch)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param tempo number
+--- @return nil
+function audio_stream_set_tempo(audio, tempo)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @param volume number
+--- @return nil
+function audio_stream_set_volume(audio, volume)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
+function audio_stream_stop(audio)
+    -- ...
+end
+
 --- @param sequenceId integer
 --- @param bankId integer
 --- @param defaultVolume integer
@@ -7138,24 +7264,6 @@ function deref_s32_pointer(pointer)
     -- ...
 end
 
---- @param audio_stream integer
---- @return nil
-function destroy_audio(audio_stream)
-    -- ...
-end
-
---- @param audio_stream integer
---- @return nil
-function destroy_sample(audio_stream)
-    -- ...
-end
-
---- @param sample integer
---- @return integer
-function get_audio_from_sample(sample)
-    -- ...
-end
-
 --- @return integer
 function get_current_save_file_num()
     -- ...
@@ -7164,12 +7272,6 @@ end
 --- @param index integer
 --- @return number
 function get_environment_region(index)
-    -- ...
-end
-
---- @param audio_stream integer
---- @return number
-function get_frequency_audio(audio_stream)
     -- ...
 end
 
@@ -7194,38 +7296,14 @@ function get_hand_foot_pos_z(m, index)
     -- ...
 end
 
---- @param audio_stream integer
---- @return boolean
-function get_looping_audio(audio_stream)
-    -- ...
-end
-
 --- @return integer
 function get_network_area_timer()
-    -- ...
-end
-
---- @param audio_stream integer
---- @return number
-function get_position_audio(audio_stream)
     -- ...
 end
 
 --- @param initialValue integer
 --- @return Pointer_integer
 function get_temp_s32_pointer(initialValue)
-    -- ...
-end
-
---- @param audio_stream integer
---- @return number
-function get_tempo_audio(audio_stream)
-    -- ...
-end
-
---- @param audio_stream integer
---- @return number
-function get_volume_audio(audio_stream)
     -- ...
 end
 
@@ -7262,37 +7340,12 @@ function hud_show()
     -- ...
 end
 
---- @param file_name string
---- @return integer
-function load_audio(file_name)
-    -- ...
-end
-
---- @param file_name string
---- @return integer
-function load_sample(file_name)
-    -- ...
-end
-
 --- @param name string
 --- @param level integer
 --- @param area integer
 --- @param type integer
 --- @return nil
 function movtexqc_register(name, level, area, type)
-    -- ...
-end
-
---- @param audio_stream integer
---- @return nil
-function pause_audio(audio_stream)
-    -- ...
-end
-
---- @param audio_stream integer
---- @param restart boolean
---- @return nil
-function play_audio(audio_stream, restart)
     -- ...
 end
 
@@ -7319,20 +7372,6 @@ function set_environment_region(index, value)
     -- ...
 end
 
---- @param audio_stream integer
---- @param freq number
---- @return nil
-function set_frequency_audio(audio_stream, freq)
-    -- ...
-end
-
---- @param audio_stream integer
---- @param looping boolean
---- @return nil
-function set_looping_audio(audio_stream, looping)
-    -- ...
-end
-
 --- @param far number
 --- @return number
 function set_override_far(far)
@@ -7348,42 +7387,6 @@ end
 --- @param near number
 --- @return number
 function set_override_near(near)
-    -- ...
-end
-
---- @param audio_stream integer
---- @param pos number
---- @return nil
-function set_position_audio(audio_stream, pos)
-    -- ...
-end
-
---- @param audio_stream integer
---- @param initial_freq number
---- @param speed number
---- @param pitch boolean
---- @return nil
-function set_speed_audio(audio_stream, initial_freq, speed, pitch)
-    -- ...
-end
-
---- @param audio_stream integer
---- @param tempo number
---- @return nil
-function set_tempo_audio(audio_stream, tempo)
-    -- ...
-end
-
---- @param audio_stream integer
---- @param volume number
---- @return nil
-function set_volume_audio(audio_stream, volume)
-    -- ...
-end
-
---- @param audio_stream integer
---- @return nil
-function stop_audio(audio_stream)
     -- ...
 end
 

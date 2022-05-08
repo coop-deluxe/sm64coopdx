@@ -566,6 +566,7 @@ struct Camera
     /// The y coordinate of the "center" of the area. Unlike areaCenX and areaCenZ, this is only used
     /// when paused. See zoom_out_if_paused_and_outside
     /*0x68*/ f32 areaCenY;
+    /*????*/ Mat4 mtx;
 };
 
 /**

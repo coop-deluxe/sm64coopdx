@@ -4,6 +4,7 @@
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
 - [Area](#Area)
+- [BassAudio](#BassAudio)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
@@ -35,6 +36,7 @@
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [Mod](#Mod)
+- [ModFile](#ModFile)
 - [ModeTransitionInfo](#ModeTransitionInfo)
 - [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
@@ -130,6 +132,20 @@
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
 | warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [BassAudio](#BassAudio)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| file | [ModFile](structs.md#ModFile) | read-only |
+| handle | `integer` | read-only |
+| isStream | `boolean` | read-only |
+| loaded | `boolean` | read-only |
+| rawData | `string` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -993,6 +1009,19 @@
 | name | `string` | read-only |
 | relativePath | `string` | read-only |
 | selectable | `boolean` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModFile](#ModFile)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| cachedPath | `string` | read-only |
+| complete | `boolean` | read-only |
+| curOffset | `integer` | read-only |
+| relativePath | `string` | read-only |
 
 [:arrow_up_small:](#)
 

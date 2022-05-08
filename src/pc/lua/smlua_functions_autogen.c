@@ -14592,6 +14592,247 @@ int smlua_func_save_file_set_flags(lua_State* L) {
  // smlua_audio_utils.h //
 /////////////////////////
 
+int smlua_func_audio_sample_destroy(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    audio_sample_destroy(audio);
+
+    return 1;
+}
+
+int smlua_func_audio_sample_load(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* filename = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    smlua_push_object(L, LOT_BASSAUDIO, audio_sample_load(filename));
+
+    return 1;
+}
+
+int smlua_func_audio_sample_play(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    f32* position = smlua_get_vec3f_from_buffer();
+    position[0] = smlua_get_number_field(2, "x");
+    position[1] = smlua_get_number_field(2, "y");
+    position[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    f32 volume = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    audio_sample_play(audio, position, volume);
+
+    smlua_push_number_field(2, "x", position[0]);
+    smlua_push_number_field(2, "y", position[1]);
+    smlua_push_number_field(2, "z", position[2]);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_destroy(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    audio_stream_destroy(audio);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_get_frequency(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, audio_stream_get_frequency(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_get_looping(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushboolean(L, audio_stream_get_looping(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_get_position(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, audio_stream_get_position(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_get_tempo(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, audio_stream_get_tempo(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_get_volume(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushnumber(L, audio_stream_get_volume(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_load(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* filename = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    smlua_push_object(L, LOT_BASSAUDIO, audio_stream_load(filename));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_pause(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    audio_stream_pause(audio);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_play(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    bool restart = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    f32 volume = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    audio_stream_play(audio, restart, volume);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_frequency(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 freq = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    audio_stream_set_frequency(audio, freq);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_looping(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    bool looping = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    audio_stream_set_looping(audio, looping);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_position(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 pos = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    audio_stream_set_position(audio, pos);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_speed(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 initial_freq = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    f32 speed = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    bool pitch = smlua_to_boolean(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+
+    audio_stream_set_speed(audio, initial_freq, speed, pitch);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_tempo(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 tempo = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    audio_stream_set_tempo(audio, tempo);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_volume(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 volume = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    audio_stream_set_volume(audio, volume);
+
+    return 1;
+}
+
+int smlua_func_audio_stream_stop(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    audio_stream_stop(audio);
+
+    return 1;
+}
+
 int smlua_func_smlua_audio_utils_replace_sequence(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -14707,39 +14948,6 @@ int smlua_func_deref_s32_pointer(lua_State* L) {
     return 1;
 }
 
-int smlua_func_destroy_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    destroy_audio(audio_stream);
-
-    return 1;
-}
-
-int smlua_func_destroy_sample(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    destroy_sample(audio_stream);
-
-    return 1;
-}
-
-int smlua_func_get_audio_from_sample(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 sample = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushinteger(L, get_audio_from_sample(sample));
-
-    return 1;
-}
-
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -14756,17 +14964,6 @@ int smlua_func_get_environment_region(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     lua_pushnumber(L, get_environment_region(index));
-
-    return 1;
-}
-
-int smlua_func_get_frequency_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushnumber(L, get_frequency_audio(audio_stream));
 
     return 1;
 }
@@ -14810,33 +15007,11 @@ int smlua_func_get_hand_foot_pos_z(lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_looping_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushboolean(L, get_looping_audio(audio_stream));
-
-    return 1;
-}
-
 int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
 
     lua_pushinteger(L, get_network_area_timer());
-
-    return 1;
-}
-
-int smlua_func_get_position_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushnumber(L, get_position_audio(audio_stream));
 
     return 1;
 }
@@ -14848,28 +15023,6 @@ int smlua_func_get_temp_s32_pointer(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     smlua_push_pointer(L, LVT_S32_P, (void*)get_temp_s32_pointer(initialValue));
-
-    return 1;
-}
-
-int smlua_func_get_tempo_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushnumber(L, get_tempo_audio(audio_stream));
-
-    return 1;
-}
-
-int smlua_func_get_volume_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushnumber(L, get_volume_audio(audio_stream));
 
     return 1;
 }
@@ -14935,28 +15088,6 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_load_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    const char* file_name = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushinteger(L, load_audio(file_name));
-
-    return 1;
-}
-
-int smlua_func_load_sample(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    const char* file_name = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushinteger(L, load_sample(file_name));
-
-    return 1;
-}
-
 int smlua_func_movtexqc_register(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -14970,30 +15101,6 @@ int smlua_func_movtexqc_register(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
 
     movtexqc_register(name, level, area, type);
-
-    return 1;
-}
-
-int smlua_func_pause_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    pause_audio(audio_stream);
-
-    return 1;
-}
-
-int smlua_func_play_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    bool restart = smlua_to_boolean(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-
-    play_audio(audio_stream, restart);
 
     return 1;
 }
@@ -15041,32 +15148,6 @@ int smlua_func_set_environment_region(lua_State* L) {
     return 1;
 }
 
-int smlua_func_set_frequency_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    f32 freq = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-
-    set_frequency_audio(audio_stream, freq);
-
-    return 1;
-}
-
-int smlua_func_set_looping_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    bool looping = smlua_to_boolean(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-
-    set_looping_audio(audio_stream, looping);
-
-    return 1;
-}
-
 int smlua_func_set_override_far(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -15096,73 +15177,6 @@ int smlua_func_set_override_near(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     lua_pushnumber(L, set_override_near(near));
-
-    return 1;
-}
-
-int smlua_func_set_position_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    f32 pos = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-
-    set_position_audio(audio_stream, pos);
-
-    return 1;
-}
-
-int smlua_func_set_speed_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    f32 initial_freq = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-    f32 speed = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
-    bool pitch = smlua_to_boolean(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
-
-    set_speed_audio(audio_stream, initial_freq, speed, pitch);
-
-    return 1;
-}
-
-int smlua_func_set_tempo_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    f32 tempo = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-
-    set_tempo_audio(audio_stream, tempo);
-
-    return 1;
-}
-
-int smlua_func_set_volume_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    f32 volume = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-
-    set_volume_audio(audio_stream, volume);
-
-    return 1;
-}
-
-int smlua_func_stop_audio(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    u32 audio_stream = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    stop_audio(audio_stream);
 
     return 1;
 }
@@ -17378,6 +17392,25 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
 
     // smlua_audio_utils.h
+    smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);
+    smlua_bind_function(L, "audio_sample_load", smlua_func_audio_sample_load);
+    smlua_bind_function(L, "audio_sample_play", smlua_func_audio_sample_play);
+    smlua_bind_function(L, "audio_stream_destroy", smlua_func_audio_stream_destroy);
+    smlua_bind_function(L, "audio_stream_get_frequency", smlua_func_audio_stream_get_frequency);
+    smlua_bind_function(L, "audio_stream_get_looping", smlua_func_audio_stream_get_looping);
+    smlua_bind_function(L, "audio_stream_get_position", smlua_func_audio_stream_get_position);
+    smlua_bind_function(L, "audio_stream_get_tempo", smlua_func_audio_stream_get_tempo);
+    smlua_bind_function(L, "audio_stream_get_volume", smlua_func_audio_stream_get_volume);
+    smlua_bind_function(L, "audio_stream_load", smlua_func_audio_stream_load);
+    smlua_bind_function(L, "audio_stream_pause", smlua_func_audio_stream_pause);
+    smlua_bind_function(L, "audio_stream_play", smlua_func_audio_stream_play);
+    smlua_bind_function(L, "audio_stream_set_frequency", smlua_func_audio_stream_set_frequency);
+    smlua_bind_function(L, "audio_stream_set_looping", smlua_func_audio_stream_set_looping);
+    smlua_bind_function(L, "audio_stream_set_position", smlua_func_audio_stream_set_position);
+    smlua_bind_function(L, "audio_stream_set_speed", smlua_func_audio_stream_set_speed);
+    smlua_bind_function(L, "audio_stream_set_tempo", smlua_func_audio_stream_set_tempo);
+    smlua_bind_function(L, "audio_stream_set_volume", smlua_func_audio_stream_set_volume);
+    smlua_bind_function(L, "audio_stream_stop", smlua_func_audio_stream_stop);
     smlua_bind_function(L, "smlua_audio_utils_replace_sequence", smlua_func_smlua_audio_utils_replace_sequence);
     smlua_bind_function(L, "smlua_audio_utils_reset_all", smlua_func_smlua_audio_utils_reset_all);
 
@@ -17391,44 +17424,25 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
-    smlua_bind_function(L, "destroy_audio", smlua_func_destroy_audio);
-    smlua_bind_function(L, "destroy_sample", smlua_func_destroy_sample);
-    smlua_bind_function(L, "get_audio_from_sample", smlua_func_get_audio_from_sample);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
-    smlua_bind_function(L, "get_frequency_audio", smlua_func_get_frequency_audio);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
-    smlua_bind_function(L, "get_looping_audio", smlua_func_get_looping_audio);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
-    smlua_bind_function(L, "get_position_audio", smlua_func_get_position_audio);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
-    smlua_bind_function(L, "get_tempo_audio", smlua_func_get_tempo_audio);
-    smlua_bind_function(L, "get_volume_audio", smlua_func_get_volume_audio);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
-    smlua_bind_function(L, "load_audio", smlua_func_load_audio);
-    smlua_bind_function(L, "load_sample", smlua_func_load_sample);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
-    smlua_bind_function(L, "pause_audio", smlua_func_pause_audio);
-    smlua_bind_function(L, "play_audio", smlua_func_play_audio);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
-    smlua_bind_function(L, "set_frequency_audio", smlua_func_set_frequency_audio);
-    smlua_bind_function(L, "set_looping_audio", smlua_func_set_looping_audio);
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
-    smlua_bind_function(L, "set_position_audio", smlua_func_set_position_audio);
-    smlua_bind_function(L, "set_speed_audio", smlua_func_set_speed_audio);
-    smlua_bind_function(L, "set_tempo_audio", smlua_func_set_tempo_audio);
-    smlua_bind_function(L, "set_volume_audio", smlua_func_set_volume_audio);
-    smlua_bind_function(L, "stop_audio", smlua_func_stop_audio);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);

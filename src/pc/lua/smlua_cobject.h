@@ -17,6 +17,8 @@ enum LuaValueType {
     LVT_S32_P,
     LVT_F32,
     LVT_F32_P,
+    LVT_U64,
+    LVT_U64_P,
     LVT_COBJECT,
     LVT_COBJECT_P,
     LVT_STRING,

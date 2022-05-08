@@ -17,6 +17,7 @@
 #include "src/pc/network/network.h"
 #include "src/game/hardcoded.h"
 #include "src/pc/mods/mod.h"
+#include "src/pc/lua/utils/smlua_audio_utils.h"
 
 #include "include/object_fields.h"
 
@@ -73,6 +74,15 @@ static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
 //  { "unused28",            LVT_COBJECT_P, offsetof(struct Area, unused28),            false, LOT_???            }, <--- UNIMPLEMENTED
     { "warpNodes",           LVT_COBJECT_P, offsetof(struct Area, warpNodes),           false, LOT_OBJECTWARPNODE },
 //  { "whirlpools",          LOT_???,       offsetof(struct Area, whirlpools),          false, LOT_???            }, <--- UNIMPLEMENTED
+};
+
+#define LUA_BASS_AUDIO_FIELD_COUNT 5
+static struct LuaObjectField sBassAudioFields[LUA_BASS_AUDIO_FIELD_COUNT] = {
+    { "file",     LVT_COBJECT_P, offsetof(struct BassAudio, file),     true, LOT_MODFILE },
+    { "handle",   LVT_U32,       offsetof(struct BassAudio, handle),   true, LOT_NONE    },
+    { "isStream", LVT_BOOL,      offsetof(struct BassAudio, isStream), true, LOT_NONE    },
+    { "loaded",   LVT_BOOL,      offsetof(struct BassAudio, loaded),   true, LOT_NONE    },
+    { "rawData",  LVT_STRING_P,  offsetof(struct BassAudio, rawData),  true, LOT_NONE    },
 };
 
 #define LUA_BEHAVIOR_DIALOGS_FIELD_COUNT 84
@@ -233,6 +243,7 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
 //  { "filler3C",   LOT_???,     offsetof(struct Camera, filler3C),   false, LOT_???   }, <--- UNIMPLEMENTED
     { "focus",      LVT_COBJECT, offsetof(struct Camera, focus),      true,  LOT_VEC3F },
     { "mode",       LVT_U8,      offsetof(struct Camera, mode),       false, LOT_NONE  },
+//  { "mtx",        LVT_???,     offsetof(struct Camera, mtx),        false, LOT_???   }, <--- UNIMPLEMENTED
     { "nextYaw",    LVT_S16,     offsetof(struct Camera, nextYaw),    false, LOT_NONE  },
     { "pos",        LVT_COBJECT, offsetof(struct Camera, pos),        true,  LOT_VEC3F },
     { "unusedVec1", LVT_COBJECT, offsetof(struct Camera, unusedVec1), true,  LOT_VEC3F },
@@ -808,6 +819,17 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "relativePath", LVT_STRING,   offsetof(struct Mod, relativePath), true, LOT_NONE },
     { "selectable",   LVT_BOOL,     offsetof(struct Mod, selectable),   true, LOT_NONE },
 //  { "size",         LVT_???,      offsetof(struct Mod, size),         true, LOT_???  }, <--- UNIMPLEMENTED
+};
+
+#define LUA_MOD_FILE_FIELD_COUNT 4
+static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
+    { "cachedPath",   LVT_STRING_P, offsetof(struct ModFile, cachedPath),   true, LOT_NONE },
+    { "complete",     LVT_BOOL,     offsetof(struct ModFile, complete),     true, LOT_NONE },
+    { "curOffset",    LVT_U64,      offsetof(struct ModFile, curOffset),    true, LOT_NONE },
+//  { "dataHash",     LOT_???,      offsetof(struct ModFile, dataHash),     true, LOT_???  }, <--- UNIMPLEMENTED
+//  { "fp",           LVT_???,      offsetof(struct ModFile, fp),           true, LOT_???  }, <--- UNIMPLEMENTED
+    { "relativePath", LVT_STRING,   offsetof(struct ModFile, relativePath), true, LOT_NONE },
+//  { "size",         LVT_???,      offsetof(struct ModFile, size),         true, LOT_???  }, <--- UNIMPLEMENTED
 };
 
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6
@@ -1899,6 +1921,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_ANIMINFO,                  sAnimInfoFields,                  LUA_ANIM_INFO_FIELD_COUNT                    },
     { LOT_ANIMATION,                 sAnimationFields,                 LUA_ANIMATION_FIELD_COUNT                    },
     { LOT_AREA,                      sAreaFields,                      LUA_AREA_FIELD_COUNT                         },
+    { LOT_BASSAUDIO,                 sBassAudioFields,                 LUA_BASS_AUDIO_FIELD_COUNT                   },
     { LOT_BEHAVIORDIALOGS,           sBehaviorDialogsFields,           LUA_BEHAVIOR_DIALOGS_FIELD_COUNT             },
     { LOT_BEHAVIORTRAJECTORIES,      sBehaviorTrajectoriesFields,      LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT        },
     { LOT_BEHAVIORVALUES,            sBehaviorValuesFields,            LUA_BEHAVIOR_VALUES_FIELD_COUNT              },
@@ -1929,6 +1952,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MARIOBODYSTATE,            sMarioBodyStateFields,            LUA_MARIO_BODY_STATE_FIELD_COUNT             },
     { LOT_MARIOSTATE,                sMarioStateFields,                LUA_MARIO_STATE_FIELD_COUNT                  },
     { LOT_MOD,                       sModFields,                       LUA_MOD_FIELD_COUNT                          },
+    { LOT_MODFILE,                   sModFileFields,                   LUA_MOD_FILE_FIELD_COUNT                     },
     { LOT_MODETRANSITIONINFO,        sModeTransitionInfoFields,        LUA_MODE_TRANSITION_INFO_FIELD_COUNT         },
     { LOT_NETWORKPLAYER,             sNetworkPlayerFields,             LUA_NETWORK_PLAYER_FIELD_COUNT               },
     { LOT_OBJECT,                    sObjectFields,                    LUA_OBJECT_FIELD_COUNT                       },
