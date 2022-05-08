@@ -42,7 +42,7 @@ All of this is a holdover from when there were only two players. It was a reason
 <br />
 
 ## Example Lua mods (small)
-- [Low Gravity](examples/mods/low-gravity.lua)
+- [Low Gravity](examples/low-gravity.lua)
 - [Faster Swimming](../../mods/faster-swimming.lua)
 - [Mario Run](examples/Mario-Run.lua)
 - [HUD Rendering](examples/hud.lua)
@@ -59,6 +59,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Water Height Changer](examples/water-level.lua)
 - [Custom Level](examples/custom-level)
 - [Custom HUD Texture](examples/custom-hud-texture)
+- [Custom Audio Test](examples/audio-test)
 
 ## Example Lua mods (large)
 - [Extended Moveset](../../mods/extended-moveset.lua)
