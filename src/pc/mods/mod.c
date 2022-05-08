@@ -201,6 +201,61 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     return file;
 }
 
+static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, const char** fileTypes) {
+
+    // concat directory
+    char dirPath[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dirPath, fullPath, (char*)subDir)) {
+        LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, subDir);
+        return false;
+    }
+
+    // open subdirectory
+    struct dirent* dir = NULL;
+    DIR* d = opendir(dirPath);
+    if (!d) { return true; }
+
+    // iterate subdirectory
+    char path[SYS_MAX_PATH] = { 0 };
+    char relativePath[SYS_MAX_PATH] = { 0 };
+    while ((dir = readdir(d)) != NULL) {
+        // sanity check / fill path[]
+        if (!directory_sanity_check(dir, dirPath, path)) { continue; }
+
+        if (strlen(subDir) > 0) {
+            if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s/%s", subDir, dir->d_name) < 0) {
+                LOG_ERROR("Could not concat %s path!", subDir);
+                return false;
+            }
+        } else {
+            if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s", dir->d_name) < 0) {
+                LOG_ERROR("Could not concat %s path!", subDir);
+                return false;
+            }
+        }
+
+        // only consider certain file types
+        bool fileTypeMatch = false;
+        const char** ft = fileTypes;
+        while (*ft != NULL) {
+            if (str_ends_with(path, (char*)*ft)) {
+                fileTypeMatch = true;
+            }
+            ft++;
+        }
+        if (!fileTypeMatch) { continue; }
+
+        // allocate file
+        struct ModFile* file = mod_allocate_file(mod, relativePath);
+        if (file == NULL) {
+            return false;
+        }
+    }
+
+    closedir(d);
+    return true;
+}
+
 static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
     // read single lua file
     if (!mod->isDirectory) {
@@ -209,187 +264,34 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
 
     // deal with mod directory
     {
-        // open mod directory
-        struct dirent* dir = NULL;
-        DIR* d = opendir(fullPath);
-        if (!d) {
-            LOG_ERROR("Could not open directory '%s'", fullPath);
-            return false;
-        }
-
-        // iterate mod directory
-        char path[SYS_MAX_PATH] = { 0 };
-        while ((dir = readdir(d)) != NULL) {
-            // sanity check / fill path[]
-            if (!directory_sanity_check(dir, fullPath, path)) { continue; }
-
-            // only consider lua files
-            if (!str_ends_with(path, ".lua")) {
-                continue;
-            }
-
-            // allocate file
-            struct ModFile* file = mod_allocate_file(mod, dir->d_name);
-            if (file == NULL) { return false; }
-        }
-
-        closedir(d);
+        const char* fileTypes[] = { ".lua", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "", fileTypes)) { return false; }
     }
 
     // deal with actors directory
     {
-        // concat actors directory
-        char actorsPath[SYS_MAX_PATH] = { 0 };
-        if (!concat_path(actorsPath, fullPath, "actors")) {
-            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "actors");
-            return false;
-        }
-
-        // open actors directory
-        struct dirent* dir = NULL;
-        DIR* d = opendir(actorsPath);
-
-        if (d) {
-            // iterate mod directory
-            char path[SYS_MAX_PATH] = { 0 };
-            char relativePath[SYS_MAX_PATH] = { 0 };
-            while ((dir = readdir(d)) != NULL) {
-                // sanity check / fill path[]
-                if (!directory_sanity_check(dir, actorsPath, path)) { continue; }
-                if (snprintf(relativePath, SYS_MAX_PATH - 1, "actors/%s", dir->d_name) < 0) {
-                    LOG_ERROR("Could not concat actor path!");
-                    return false;
-                }
-
-                // only consider bin and col files
-                if (!str_ends_with(path, ".bin") && !str_ends_with(path, ".col")) {
-                    continue;
-                }
-
-                // allocate file
-                struct ModFile* file = mod_allocate_file(mod, relativePath);
-                if (file == NULL) { 
-                    return false;
-                }
-            }
-
-            closedir(d);
-        }
+        const char* fileTypes[] = { ".bin", ".col", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "actors", fileTypes)) { return false; }
     }
 
     // deal with textures directory
     {
-        // concat textures directory
-        char texturesPath[SYS_MAX_PATH] = { 0 };
-        if (!concat_path(texturesPath, fullPath, "textures")) {
-            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "textures");
-            return false;
-        }
-
-        // open textures directory
-        struct dirent* dir = NULL;
-        DIR* d = opendir(texturesPath);
-        if (d) {
-            // iterate mod directory
-            char path[SYS_MAX_PATH] = { 0 };
-            char relativePath[SYS_MAX_PATH] = { 0 };
-            while ((dir = readdir(d)) != NULL) {
-                // sanity check / fill path[]
-                if (!directory_sanity_check(dir, texturesPath, path)) { continue; }
-                if (snprintf(relativePath, SYS_MAX_PATH - 1, "textures/%s", dir->d_name) < 0) {
-                    LOG_ERROR("Could not concat textures path!");
-                    return false;
-                }
-
-                // only consider tex files
-                if (!str_ends_with(path, ".tex")) {
-                    continue;
-                }
-
-                // allocate file
-                struct ModFile* file = mod_allocate_file(mod, relativePath);
-                if (file == NULL) { return false; }
-            }
-
-            closedir(d);
-        }
+        const char* fileTypes[] = { ".tex", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes)) { return false; }
     }
 
     // deal with levels directory
     {
-        // concat levels directory
-        char levelsPath[SYS_MAX_PATH] = { 0 };
-        if (!concat_path(levelsPath, fullPath, "levels")) {
-            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "levels");
-            return false;
-        }
-
-        // open levels directory
-        struct dirent* dir = NULL;
-        DIR* d = opendir(levelsPath);
-        if (d) {
-            // iterate mod directory
-            char path[SYS_MAX_PATH] = { 0 };
-            char relativePath[SYS_MAX_PATH] = { 0 };
-            while ((dir = readdir(d)) != NULL) {
-                // sanity check / fill path[]
-                if (!directory_sanity_check(dir, levelsPath, path)) { continue; }
-                if (snprintf(relativePath, SYS_MAX_PATH - 1, "levels/%s", dir->d_name) < 0) {
-                    LOG_ERROR("Could not concat level path!");
-                    return false;
-                }
-
-                // only consider lvl files
-                if (!str_ends_with(path, ".lvl")) {
-                    continue;
-                }
-
-                // allocate file
-                struct ModFile* file = mod_allocate_file(mod, relativePath);
-                if (file == NULL) { return false; }
-            }
-
-            closedir(d);
-        }
+        const char* fileTypes[] = { ".lvl", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes)) { return false; }
     }
 
     // deal with sound directory
     {
-        // concat sound directory
-        char soundPath[SYS_MAX_PATH] = { 0 };
-        if (!concat_path(soundPath, fullPath, "sound")) {
-            LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, "sound");
-            return false;
-        }
-
-        // open sound directory
-        struct dirent* dir = NULL;
-        DIR* d = opendir(soundPath);
-        if (d) {
-            // iterate mod directory
-            char path[SYS_MAX_PATH] = { 0 };
-            char relativePath[SYS_MAX_PATH] = { 0 };
-            while ((dir = readdir(d)) != NULL) {
-                // sanity check / fill path[]
-                if (!directory_sanity_check(dir, soundPath, path)) { continue; }
-                if (snprintf(relativePath, SYS_MAX_PATH - 1, "sound/%s", dir->d_name) < 0) {
-                    LOG_ERROR("Could not concat sound path!");
-                    return false;
-                }
-
-                // only consider m64, mp3, aiff, and ogg files
-                if (!str_ends_with(path, ".m64") && !str_ends_with(path, ".mp3") && !str_ends_with(path, ".aiff") && !str_ends_with(path, ".ogg")) {
-                    continue;
-                }
-
-                // allocate file
-                struct ModFile* file = mod_allocate_file(mod, relativePath);
-                if (file == NULL) { return false; }
-            }
-
-            closedir(d);
-        }
+        const char* fileTypes[] = { ".m64", ".mp3", ".aiff", ".ogg", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes)) { return false; }
     }
+
     return true;
 }
 
