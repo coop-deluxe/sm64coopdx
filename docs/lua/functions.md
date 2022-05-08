@@ -14,6 +14,8 @@
    - [network_send_object](#network_send_object)
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
+   - [djui_hud_render_texture](#djui_hud_render_texture)
+   - [get_texture_info](#get_texture_info)
 
 <br />
 
@@ -1337,25 +1339,44 @@
    - [camera_freeze](functions-4.md#camera_freeze)
    - [camera_unfreeze](functions-4.md#camera_unfreeze)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
+   - [destroy_audio](functions-4.md#destroy_audio)
+   - [destroy_sample](functions-4.md#destroy_sample)
+   - [get_audio_from_sample](functions-4.md#get_audio_from_sample)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
    - [get_environment_region](functions-4.md#get_environment_region)
+   - [get_frequency_audio](functions-4.md#get_frequency_audio)
    - [get_hand_foot_pos_x](functions-4.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-4.md#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](functions-4.md#get_hand_foot_pos_z)
+   - [get_looping_audio](functions-4.md#get_looping_audio)
    - [get_network_area_timer](functions-4.md#get_network_area_timer)
+   - [get_position_audio](functions-4.md#get_position_audio)
    - [get_temp_s32_pointer](functions-4.md#get_temp_s32_pointer)
+   - [get_tempo_audio](functions-4.md#get_tempo_audio)
+   - [get_volume_audio](functions-4.md#get_volume_audio)
    - [hud_get_value](functions-4.md#hud_get_value)
    - [hud_hide](functions-4.md#hud_hide)
    - [hud_render_power_meter](functions-4.md#hud_render_power_meter)
    - [hud_set_value](functions-4.md#hud_set_value)
    - [hud_show](functions-4.md#hud_show)
+   - [load_audio](functions-4.md#load_audio)
+   - [load_sample](functions-4.md#load_sample)
    - [movtexqc_register](functions-4.md#movtexqc_register)
+   - [pause_audio](functions-4.md#pause_audio)
+   - [play_audio](functions-4.md#play_audio)
    - [play_transition](functions-4.md#play_transition)
    - [save_file_set_using_backup_slot](functions-4.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-4.md#set_environment_region)
+   - [set_frequency_audio](functions-4.md#set_frequency_audio)
+   - [set_looping_audio](functions-4.md#set_looping_audio)
    - [set_override_far](functions-4.md#set_override_far)
    - [set_override_fov](functions-4.md#set_override_fov)
    - [set_override_near](functions-4.md#set_override_near)
+   - [set_position_audio](functions-4.md#set_position_audio)
+   - [set_speed_audio](functions-4.md#set_speed_audio)
+   - [set_tempo_audio](functions-4.md#set_tempo_audio)
+   - [set_volume_audio](functions-4.md#set_volume_audio)
+   - [stop_audio](functions-4.md#stop_audio)
    - [warp_exit_level](functions-4.md#warp_exit_level)
    - [warp_restart_level](functions-4.md#warp_restart_level)
    - [warp_to_castle](functions-4.md#warp_to_castle)
@@ -1574,6 +1595,55 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 <br />
 
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+Renders a texture to the screen.
+
+### Lua Example
+`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_texture_info](#get_texture_info)
+
+Retrieves a texture by name.
+
+### Lua Example
+`get_texture_info(textureName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- [TextureInfo](structs.md#TextureInfo)
+
+### C Prototype
+`N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 
 1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [next >](functions-2.md)]
+

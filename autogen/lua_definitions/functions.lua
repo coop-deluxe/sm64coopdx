@@ -7217,6 +7217,18 @@ function get_temp_s32_pointer(initialValue)
     -- ...
 end
 
+--- @param audio_stream integer
+--- @return number
+function get_tempo_audio(audio_stream)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @return number
+function get_volume_audio(audio_stream)
+    -- ...
+end
+
 --- @param type HudDisplayValue
 --- @return integer
 function hud_get_value(type)
@@ -7271,6 +7283,19 @@ function movtexqc_register(name, level, area, type)
     -- ...
 end
 
+--- @param audio_stream integer
+--- @return nil
+function pause_audio(audio_stream)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @param restart boolean
+--- @return nil
+function play_audio(audio_stream, restart)
+    -- ...
+end
+
 --- @param transType integer
 --- @param time integer
 --- @param red integer
@@ -7294,6 +7319,20 @@ function set_environment_region(index, value)
     -- ...
 end
 
+--- @param audio_stream integer
+--- @param freq number
+--- @return nil
+function set_frequency_audio(audio_stream, freq)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @param looping boolean
+--- @return nil
+function set_looping_audio(audio_stream, looping)
+    -- ...
+end
+
 --- @param far number
 --- @return number
 function set_override_far(far)
@@ -7309,6 +7348,42 @@ end
 --- @param near number
 --- @return number
 function set_override_near(near)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @param pos number
+--- @return nil
+function set_position_audio(audio_stream, pos)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @param initial_freq number
+--- @param speed number
+--- @param pitch boolean
+--- @return nil
+function set_speed_audio(audio_stream, initial_freq, speed, pitch)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @param tempo number
+--- @return nil
+function set_tempo_audio(audio_stream, tempo)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @param volume number
+--- @return nil
+function set_volume_audio(audio_stream, volume)
+    -- ...
+end
+
+--- @param audio_stream integer
+--- @return nil
+function stop_audio(audio_stream)
     -- ...
 end
 

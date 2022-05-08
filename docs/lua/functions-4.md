@@ -4757,6 +4757,66 @@
 
 <br />
 
+## [destroy_audio](#destroy_audio)
+
+### Lua Example
+`destroy_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void destroy_audio(u32 audio_stream);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [destroy_sample](#destroy_sample)
+
+### Lua Example
+`destroy_sample(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void destroy_sample(u32 audio_stream);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_audio_from_sample](#get_audio_from_sample)
+
+### Lua Example
+`local integerValue = get_audio_from_sample(sample)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sample | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_audio_from_sample(u32 sample);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Lua Example
@@ -4790,6 +4850,26 @@
 
 ### C Prototype
 `f32 get_environment_region(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_frequency_audio](#get_frequency_audio)
+
+### Lua Example
+`local numberValue = get_frequency_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_frequency_audio(u32 audio_stream);`
 
 [:arrow_up_small:](#)
 
@@ -4858,6 +4938,26 @@
 
 <br />
 
+## [get_looping_audio](#get_looping_audio)
+
+### Lua Example
+`local booleanValue = get_looping_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_looping_audio(u32 audio_stream);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_network_area_timer](#get_network_area_timer)
 
 ### Lua Example
@@ -4871,6 +4971,26 @@
 
 ### C Prototype
 `u32 get_network_area_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_position_audio](#get_position_audio)
+
+### Lua Example
+`local numberValue = get_position_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_position_audio(u32 audio_stream);`
 
 [:arrow_up_small:](#)
 
@@ -4891,6 +5011,46 @@
 
 ### C Prototype
 `s32* get_temp_s32_pointer(s32 initialValue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_tempo_audio](#get_tempo_audio)
+
+### Lua Example
+`local numberValue = get_tempo_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_tempo_audio(u32 audio_stream);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_volume_audio](#get_volume_audio)
+
+### Lua Example
+`local numberValue = get_volume_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_volume_audio(u32 audio_stream);`
 
 [:arrow_up_small:](#)
 
@@ -4997,6 +5157,46 @@
 
 <br />
 
+## [load_audio](#load_audio)
+
+### Lua Example
+`local integerValue = load_audio(file_name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file_name | `string` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 load_audio(const char* file_name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [load_sample](#load_sample)
+
+### Lua Example
+`local integerValue = load_sample(file_name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file_name | `string` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 load_sample(const char* file_name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [movtexqc_register](#movtexqc_register)
 
 ### Lua Example
@@ -5015,6 +5215,47 @@
 
 ### C Prototype
 `void movtexqc_register(const char* name, s16 level, s16 area, s16 type);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [pause_audio](#pause_audio)
+
+### Lua Example
+`pause_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void pause_audio(u32 audio_stream);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_audio](#play_audio)
+
+### Lua Example
+`play_audio(audio_stream, restart)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| restart | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_audio(u32 audio_stream, bool restart);`
 
 [:arrow_up_small:](#)
 
@@ -5085,6 +5326,48 @@
 
 <br />
 
+## [set_frequency_audio](#set_frequency_audio)
+
+### Lua Example
+`set_frequency_audio(audio_stream, freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_frequency_audio(u32 audio_stream, f32 freq);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_looping_audio](#set_looping_audio)
+
+### Lua Example
+`set_looping_audio(audio_stream, looping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| looping | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_looping_audio(u32 audio_stream, bool looping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_override_far](#set_override_far)
 
 ### Lua Example
@@ -5140,6 +5423,112 @@
 
 ### C Prototype
 `f32 set_override_near(f32 near);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_position_audio](#set_position_audio)
+
+### Lua Example
+`set_position_audio(audio_stream, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| pos | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_position_audio(u32 audio_stream, f32 pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_speed_audio](#set_speed_audio)
+
+### Lua Example
+`set_speed_audio(audio_stream, initial_freq, speed, pitch)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| initial_freq | `number` |
+| speed | `number` |
+| pitch | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_speed_audio(u32 audio_stream, f32 initial_freq, f32 speed, bool pitch);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_tempo_audio](#set_tempo_audio)
+
+### Lua Example
+`set_tempo_audio(audio_stream, tempo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| tempo | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_tempo_audio(u32 audio_stream, f32 tempo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_volume_audio](#set_volume_audio)
+
+### Lua Example
+`set_volume_audio(audio_stream, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_volume_audio(u32 audio_stream, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_audio](#stop_audio)
+
+### Lua Example
+`stop_audio(audio_stream)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio_stream | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void stop_audio(u32 audio_stream);`
 
 [:arrow_up_small:](#)
 
