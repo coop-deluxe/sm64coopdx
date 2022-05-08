@@ -375,7 +375,7 @@ void audio_sample_play(struct BassAudio* audio, Vec3f position, f32 volume) {
         Mat4 mtx;
         mtxf_translate(mtx, position);
         mtxf_mul(mtx, mtx, gCamera->mtx);
-        f32 factor = 5;
+        f32 factor = 10;
         pan = (get_sound_pan(mtx[3][0] * factor, mtx[3][2] * factor) - 0.5f) * 2.0f;
     }
 

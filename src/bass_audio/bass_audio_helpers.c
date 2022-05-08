@@ -25,7 +25,7 @@ void bassh_free_sample(HSAMPLE sample) {
 }
 
 void bassh_set_looping(HSTREAM stream, BOOL loop) {
-    BASS_ChannelFlags(stream, loop == TRUE ? 0 : BASS_SAMPLE_LOOP, BASS_SAMPLE_LOOP);
+    BASS_ChannelFlags(stream, loop == TRUE ? BASS_SAMPLE_LOOP : 0, BASS_SAMPLE_LOOP);
 }
 
 BOOL bassh_get_looping(HSTREAM stream) {
@@ -75,6 +75,7 @@ void bassh_set_speed(HSTREAM stream, float initial_freq, float speed, BOOL pitch
 }
 
 void bassh_set_stream_volume(HSTREAM stream, float volume) {
+    BASS_ChannelSetAttribute(stream, BASS_ATTRIB_VOL, volume);
     BASS_ChannelSetAttribute(stream, BASS_ATTRIB_MUSIC_VOL_CHAN, volume);
 }
 
