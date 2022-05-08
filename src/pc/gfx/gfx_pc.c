@@ -332,8 +332,6 @@ static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, co
     #undef CMPADDR
 }
 
-#ifndef EXTERNAL_DATA
-
 static void import_texture_rgba32(int tile) {
     uint32_t width = rdp.texture_tile.line_size_bytes / 2;
     uint32_t height = (rdp.loaded_texture[tile].size_bytes / 2) / rdp.texture_tile.line_size_bytes;
@@ -506,7 +504,8 @@ static void import_texture_ci8(int tile) {
     gfx_rapi->upload_texture(rgba32_buf, width, height);
 }
 
-#else // EXTERNAL_DATA
+
+#ifdef EXTERNAL_DATA
 
 static inline void load_texture(const char *fullpath) {
     int w, h;
@@ -620,10 +619,25 @@ static void import_texture(int tile) {
 #ifdef EXTERNAL_DATA
     // the "texture data" is actually a C string with the path to our texture in it
     // load it from an external image in our data path
-    char texname[SYS_MAX_PATH];
-    snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
-    load_texture(texname);
-#else
+    const char* texid = (const char*)rdp.loaded_texture[tile].addr;
+
+    // make sure the texture id is a printable ascii string
+    bool texidIsPrintable = true;
+    char* c = (char*)texid;
+    while (c != NULL && *c != '\0') {
+        if (*c < 33 || *c > 126) {
+            texidIsPrintable = false;
+            break;
+        }
+        c++;
+    }
+    if (texidIsPrintable) {
+        char texname[SYS_MAX_PATH];
+        snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", texid);
+        load_texture(texname);
+        return;
+    }
+#endif
     // the texture data is actual texture data
     //int t0 = get_time();
     if (fmt == G_IM_FMT_RGBA) {
@@ -666,7 +680,6 @@ static void import_texture(int tile) {
     }
     //int t1 = get_time();
     //printf("Time diff: %d\n", t1 - t0);
-#endif
 }
 
 static void gfx_normalize_vector(float v[3]) {
