@@ -853,8 +853,8 @@ u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *
 
     o->oInteractStatus = INT_STATUS_INTERACTED;
 
-    if (COURSE_IS_MAIN_COURSE(gCurrCourseNum) && m->numCoins - o->oDamageOrCoinValue < 100
-        && m->numCoins >= 100) {
+    if (COURSE_IS_MAIN_COURSE(gCurrCourseNum) && m->numCoins - o->oDamageOrCoinValue < gLevelValues.coinsRequiredForCoinStar
+        && m->numCoins >= gLevelValues.coinsRequiredForCoinStar) {
         bhv_spawn_star_no_level_exit(m->marioObj, 6, FALSE);
     }
 
@@ -1969,17 +1969,17 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
 
         switch (capFlag) {
             case MARIO_VANISH_CAP:
-                capTime = 600;
+                capTime = gLevelValues.vanishCapDuration;
                 capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP);
                 break;
 
             case MARIO_METAL_CAP:
-                capTime = 600;
+                capTime = gLevelValues.metalCapDuration;
                 capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP);
                 break;
 
             case MARIO_WING_CAP:
-                capTime = 1800;
+                capTime = gLevelValues.wingCapDuration;
                 capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP);
                 break;
         }
@@ -2266,10 +2266,10 @@ void pss_end_slide(struct MarioState *m) {
     //! This flag isn't set on death or level entry, allowing double star spawn
     if (gPssSlideStarted) {
         u16 slideTime = level_control_timer(TIMER_CONTROL_STOP);
-        if (slideTime < 630) {
+        if (slideTime < gLevelValues.pssSlideStarTime) {
             // PSS secret star uses oBehParams to spawn
             s32 tmp = m->marioObj->oBehParams;
-            m->marioObj->oBehParams = (1 << 24);
+            m->marioObj->oBehParams = (gLevelValues.pssSlideStarIndex << 24);
             f32* starPos = gLevelValues.starPositions.PssSlideStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
             m->marioObj->oBehParams = tmp;

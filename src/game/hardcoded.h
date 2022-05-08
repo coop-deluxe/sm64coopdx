@@ -42,6 +42,15 @@ struct LevelValues {
     s16 exitCastleArea;
     u8 exitCastleWarpNode;
     enum LevelNum skipCreditsAt;
+    u16 pssSlideStarTime;
+    u8 pssSlideStarIndex;
+    s16 coinsRequiredForCoinStar;
+    u16 wingCapDuration;
+    u16 metalCapDuration;
+    u16 vanishCapDuration;
+    u16 wingCapDurationTotwc;
+    u16 metalCapDurationCotmc;
+    u16 vanishCapDurationVcutm;
     struct StarPositions starPositions;
 };
 

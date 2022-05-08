@@ -574,12 +574,21 @@
 --- @field public yaw integer
 
 --- @class LevelValues
+--- @field public coinsRequiredForCoinStar integer
 --- @field public entryLevel LevelNum
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
+--- @field public metalCapDuration integer
+--- @field public metalCapDurationCotmc integer
+--- @field public pssSlideStarIndex integer
+--- @field public pssSlideStarTime integer
 --- @field public skipCreditsAt LevelNum
 --- @field public starPositions StarPositions
+--- @field public vanishCapDuration integer
+--- @field public vanishCapDurationVcutm integer
+--- @field public wingCapDuration integer
+--- @field public wingCapDurationTotwc integer
 
 --- @class LinearTransitionPoint
 --- @field public dist number

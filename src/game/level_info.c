@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "course_table.h"
+#include "game/hardcoded.h"
 #include "game/memory.h"
 #include "level_info.h"
 #include "level_table.h"
@@ -240,7 +241,7 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
             const u8 *starName = segmented_to_virtual(actNameTable[(courseNum - COURSE_BOB) * 6 + (starNum - 1)]);
             convert_string_sm64_to_ascii(output, starName);
         } else if (starNum == 7) {
-            snprintf(output, 256, "100 Coins Star");
+            snprintf(output, 256, "%d Coins Star", (s32) gLevelValues.coinsRequiredForCoinStar);
         } else {
             snprintf(output, 256, "A Secret Star!");
         }

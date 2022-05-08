@@ -4,6 +4,7 @@
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "course_table.h"
+#include "src/game/hardcoded.h"
 #include "src/game/interaction.h"
 #include "src/engine/math_util.h"
 #include "src/game/memory.h"
@@ -96,8 +97,8 @@ SANITY_CHECK_COINS:;
 
     // check for 100-coin star
     if (COURSE_IS_MAIN_COURSE(gCurrCourseNum)
-        && oldNumCoins < 100
-        && gMarioStates[0].numCoins >= 100
+        && oldNumCoins < gLevelValues.coinsRequiredForCoinStar
+        && gMarioStates[0].numCoins >= gLevelValues.coinsRequiredForCoinStar
         && gCurrAreaIndex == areaIndex) {
         bhv_spawn_star_no_level_exit(gMarioStates[p->localIndex].marioObj, 6, FALSE);
     }

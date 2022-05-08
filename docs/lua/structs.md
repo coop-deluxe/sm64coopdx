@@ -837,12 +837,21 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| coinsRequiredForCoinStar | `integer` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
+| metalCapDuration | `integer` |  |
+| metalCapDurationCotmc | `integer` |  |
+| pssSlideStarIndex | `integer` |  |
+| pssSlideStarTime | `integer` |  |
 | skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
+| vanishCapDuration | `integer` |  |
+| vanishCapDurationVcutm | `integer` |  |
+| wingCapDuration | `integer` |  |
+| wingCapDurationTotwc | `integer` |  |
 
 [:arrow_up_small:](#)
 

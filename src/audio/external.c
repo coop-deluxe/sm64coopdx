@@ -2435,6 +2435,23 @@ void stop_background_music(u16 seqId) {
     // queue slot).
     foundIndex = sBackgroundMusicQueueSize;
 
+    // BUG: If the boss sequence is missing, the level music is not going to restart...
+    // So, add the boss music in the queue to force the stop_background_music
+    // function to remove it from the queue and restart the level music.
+    if ((seqId & 0xFF) == SEQ_EVENT_BOSS) {
+        for (i = 0; i <= sBackgroundMusicQueueSize; ++i) {
+            if (i == sBackgroundMusicQueueSize) {
+                sBackgroundMusicQueueSize = MIN(sBackgroundMusicQueueSize + 1, MAX_BACKGROUND_MUSIC_QUEUE_SIZE);
+                memmove(sBackgroundMusicQueue + 1, sBackgroundMusicQueue, sizeof(sBackgroundMusicQueue[0]) * (MAX_BACKGROUND_MUSIC_QUEUE_SIZE - 1));
+                sBackgroundMusicQueue[0].seqId = SEQ_EVENT_BOSS;
+                sBackgroundMusicQueue[0].priority = 4;
+                break;
+            } else if (sBackgroundMusicQueue[i].seqId == SEQ_EVENT_BOSS) {
+                break;
+            }
+        }
+    }
+
     // Search for the sequence.
     for (i = 0; i < sBackgroundMusicQueueSize; i++) {
         if (sBackgroundMusicQueue[i].seqId == (u8)(seqId & 0xff)) {

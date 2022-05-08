@@ -670,14 +670,23 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 6
+#define LUA_LEVEL_VALUES_FIELD_COUNT 15
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
-    { "entryLevel",         LVT_S32,     offsetof(struct LevelValues, entryLevel),         false, LOT_NONE          },
-    { "exitCastleArea",     LVT_S16,     offsetof(struct LevelValues, exitCastleArea),     false, LOT_NONE          },
-    { "exitCastleLevel",    LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),    false, LOT_NONE          },
-    { "exitCastleWarpNode", LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode), false, LOT_NONE          },
-    { "skipCreditsAt",      LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),      false, LOT_NONE          },
-    { "starPositions",      LVT_COBJECT, offsetof(struct LevelValues, starPositions),      true,  LOT_STARPOSITIONS },
+    { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
+    { "entryLevel",               LVT_S32,     offsetof(struct LevelValues, entryLevel),               false, LOT_NONE          },
+    { "exitCastleArea",           LVT_S16,     offsetof(struct LevelValues, exitCastleArea),           false, LOT_NONE          },
+    { "exitCastleLevel",          LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),          false, LOT_NONE          },
+    { "exitCastleWarpNode",       LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode),       false, LOT_NONE          },
+    { "metalCapDuration",         LVT_U16,     offsetof(struct LevelValues, metalCapDuration),         false, LOT_NONE          },
+    { "metalCapDurationCotmc",    LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),    false, LOT_NONE          },
+    { "pssSlideStarIndex",        LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),        false, LOT_NONE          },
+    { "pssSlideStarTime",         LVT_U16,     offsetof(struct LevelValues, pssSlideStarTime),         false, LOT_NONE          },
+    { "skipCreditsAt",            LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),            false, LOT_NONE          },
+    { "starPositions",            LVT_COBJECT, offsetof(struct LevelValues, starPositions),            true,  LOT_STARPOSITIONS },
+    { "vanishCapDuration",        LVT_U16,     offsetof(struct LevelValues, vanishCapDuration),        false, LOT_NONE          },
+    { "vanishCapDurationVcutm",   LVT_U16,     offsetof(struct LevelValues, vanishCapDurationVcutm),   false, LOT_NONE          },
+    { "wingCapDuration",          LVT_U16,     offsetof(struct LevelValues, wingCapDuration),          false, LOT_NONE          },
+    { "wingCapDurationTotwc",     LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),     false, LOT_NONE          },
 };
 
 #define LUA_LINEAR_TRANSITION_POINT_FIELD_COUNT 5

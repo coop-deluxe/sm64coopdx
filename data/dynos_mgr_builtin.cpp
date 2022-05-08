@@ -1079,9 +1079,13 @@ static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
         struct Object *obj = (struct Object *) gCurGraphNodeObject;
         struct GraphNodeRotation *rotNode = (struct GraphNodeRotation *) ((struct GraphNode *) node)->next;
         rotNode->rotation[0] = 0;
-        rotNode->rotation[1] = obj->oAnimState;
+        rotNode->rotation[1] = obj->oAnimState * 0x0800;
         rotNode->rotation[2] = 0;
-        obj->oAnimState += 0x0800;
+        obj->oFaceAnglePitch = 0;
+        obj->oMoveAnglePitch = 0;
+        obj->oFaceAngleRoll = 0;
+        obj->oMoveAngleRoll = 0;
+        obj->header.gfx.node.flags &= ~(GRAPH_RENDER_BILLBOARD | GRAPH_RENDER_CYLBOARD);
     }
     return NULL;
 }
