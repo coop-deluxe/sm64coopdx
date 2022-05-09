@@ -47,7 +47,7 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     // Add to custom actors
     if (georef == NULL) {
         DynosCustomActors().Add({ actorName, geoLayout });
-        georef = geoLayout;
+        georef = NULL;
     }
 
     // Alloc and init the actors gfx list
