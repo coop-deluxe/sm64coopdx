@@ -453,10 +453,13 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
 
-    // TODO: enable
-    /*extern bool gDjuiInMainMenu;
+    extern s16 gMenuMode;
+    gMenuMode = -1;
+
+    djui_panel_shutdown();
+    extern bool gDjuiInMainMenu;
     if (!gDjuiInMainMenu) {
         gDjuiInMainMenu = true;
         djui_panel_main_create(NULL);
-    }*/
+    }
 }
