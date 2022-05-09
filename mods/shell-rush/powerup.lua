@@ -261,6 +261,20 @@ function select_powerup()
     local s = gPlayerSyncTable[0]
     local pick = math.random(1, POWERUP_MAX-1)
     local luck = math.random() < 0.33
+
+    -- don't give mushrooms when first place
+    local rank = 0
+    for i in pairs(gRankings) do
+        if gRankings[i].playerIndex == 0 then
+            rank = i
+        end
+    end
+    if rank <= 1 then
+        if pick == POWERUP_MUSHROOM then
+            pick = POWERUP_GREEN_SHELL
+        end
+    end
+
     if luck then
         s.powerup[0] = pick
         s.powerup[1] = pick

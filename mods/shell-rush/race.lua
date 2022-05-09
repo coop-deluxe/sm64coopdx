@@ -123,7 +123,7 @@ function race_update()
     end
 
     local np = gNetworkPlayers[0]
-    if gGlobalSyncTable.gotoLevel ~= -1 then
+    if gGlobalSyncTable.gotoLevel ~= -1 and np.currAreaSyncValid and np.currLevelSyncValid then
         if np.currLevelNum ~= gGlobalSyncTable.gotoLevel then
             if gGlobalSyncTable.gotoLevel == LEVEL_CASTLE_GROUNDS then
                 warp_to_castle(LEVEL_VCUTM)
