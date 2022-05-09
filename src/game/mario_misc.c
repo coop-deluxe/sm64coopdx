@@ -652,6 +652,7 @@ Gfx* geo_switch_mario_cap_on_off(s32 callContext, struct GraphNode* node, UNUSED
     struct MarioBodyState* bodyState = geo_get_body_state();
 
     if (callContext == GEO_CONTEXT_RENDER) {
+        if (switchCase == NULL || bodyState == NULL) { return NULL; }
         switchCase->selectedCase = bodyState->capState & 1;
         while (next != node) {
             if (next->type == GRAPH_NODE_TYPE_TRANSLATION_ROTATION) {
