@@ -54,3 +54,13 @@ Collision* DynOS_Col_Get(const char* collisionName) {
     // check builtin collisions
     return (Collision*)DynOS_Builtin_LvlCol_GetFromName(collisionName);
 }
+
+void DynOS_Col_ModShutdown() {
+    auto& _DynosCollisions = DynosCollisions();
+    while (_DynosCollisions.Count() > 0) {
+        auto& pair = _DynosCollisions[0];
+        free((void*)pair.first);
+        Delete(pair.second);
+        _DynosCollisions.Remove(0);
+    }
+}

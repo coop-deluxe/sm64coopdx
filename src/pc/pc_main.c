@@ -258,7 +258,7 @@ void game_deinit(void) {
     audio_custom_shutdown();
     audio_shutdown();
     gfx_shutdown();
-    network_shutdown(true);
+    network_shutdown(true, true);
     smlua_shutdown();
     mods_shutdown();
     inited = false;

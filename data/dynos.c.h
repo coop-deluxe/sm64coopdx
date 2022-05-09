@@ -53,5 +53,8 @@ const char* dynos_level_get_token(u32 index);
 Trajectory* dynos_level_get_trajectory(const char* name);
 void dynos_level_load_background(void *ptr);
 
+// -- other -- //
+void dynos_mod_shutdown(void);
+
 #endif
 #endif

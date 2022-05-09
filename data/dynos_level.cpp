@@ -46,6 +46,7 @@ struct DynosWarp {
 };
 
 static void *sDynosLevelScripts[LEVEL_COUNT] = { NULL };
+static void *sDynosLevelScriptsOriginal[LEVEL_COUNT] = { NULL };
 static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 static Array<s32> sDynosLevelList = Array<s32>(); // Ordered by Course Id, COURSE_NONE excluded
 
@@ -90,6 +91,7 @@ static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
             void *_Script = (void *) DynOS_Level_CmdGet(aCmd, 0x0C);
             if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum]) {
                 sDynosLevelScripts[sDynosLevelNum] = _Script;
+                sDynosLevelScriptsOriginal[sDynosLevelNum] = _Script;
             }
             sDynosLevelNum = -1;
             return 2;
@@ -234,6 +236,15 @@ void DynOS_Level_Override(void* originalScript, void* newScript) {
             sDynosLevelScripts[i] = newScript;
             return;
         }
+    }
+}
+
+void DynOS_Level_Unoverride() {
+    for (s32 i = 0; i < LEVEL_COUNT; i++) {
+        sDynosCurrentLevelNum = i;
+        sDynosLevelWarps[i].Clear();
+        sDynosLevelScripts[i] = sDynosLevelScriptsOriginal[i];
+        DynOS_Level_ParseScript(sDynosLevelScripts[i], DynOS_Level_PreprocessScript);
     }
 }
 

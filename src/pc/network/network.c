@@ -418,7 +418,7 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(bool sendLeaving) {
+void network_shutdown(bool sendLeaving, bool exiting) {
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;
@@ -440,4 +440,23 @@ void network_shutdown(bool sendLeaving) {
     }
 
     gNetworkType = NT_NONE;
+
+    if (exiting) { return; }
+
+    // reset other stuff
+    extern u8* gOverrideEeprom;
+    gOverrideEeprom = NULL;
+    dynos_mod_shutdown();
+    mods_clear(&gActiveMods);
+    mods_clear(&gRemoteMods);
+    smlua_shutdown();
+    extern s16 gChangeLevel;
+    gChangeLevel = LEVEL_CASTLE_GROUNDS;
+
+    // TODO: enable
+    /*extern bool gDjuiInMainMenu;
+    if (!gDjuiInMainMenu) {
+        gDjuiInMainMenu = true;
+        djui_panel_main_create(NULL);
+    }*/
 }
