@@ -44,17 +44,18 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
         return;
     }
 
-    // Add to custom actors
-    if (georef == NULL) {
-        DynosCustomActors().Add({ actorName, geoLayout });
-        georef = NULL;
-    }
-
     // Alloc and init the actors gfx list
     ActorGfx actorGfx   = { 0 };
     actorGfx.mGfxData   = _GfxData;
     actorGfx.mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
     actorGfx.mPackIndex = MOD_PACK_INDEX;
+    actorGfx.mGraphNode->georef = georef;
+
+    // Add to custom actors
+    if (georef == NULL) {
+        DynosCustomActors().Add({ actorName, geoLayout });
+        georef = geoLayout;
+    }
 
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);
