@@ -183,6 +183,7 @@ void smlua_shutdown(void) {
     audio_custom_shutdown();
     smlua_cobject_allowlist_shutdown();
     smlua_cpointer_allowlist_shutdown();
+    smlua_clear_hooks();
     lua_State* L = gLuaState;
     if (L != NULL) {
         lua_close(L);

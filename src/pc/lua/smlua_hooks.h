@@ -88,6 +88,7 @@ u32 smlua_get_action_interaction_type(struct MarioState* m);
 bool smlua_call_chat_command_hook(char* command);
 void smlua_display_chat_commands(void);
 
+void smlua_clear_hooks(void);
 void smlua_bind_hooks(void);
 
 #endif
