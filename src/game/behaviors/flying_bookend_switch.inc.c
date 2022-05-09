@@ -208,11 +208,13 @@ void bookshelf_manager_act_2(void) {
                 if (o->oTimer > 100) {
                     if (o->oSyncID != 0 && gSyncObjects[o->oSyncID].owned) {
                         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
-                        o->parentObj->oAction = 1;
-                        o->oPosX = o->parentObj->oPosX;
                         o->oAction = 3;
                         network_send_object(o);
-                        network_send_object(o->parentObj);
+                        if (o->parentObj != NULL) {
+                            o->parentObj->oAction = 1;
+                            o->oPosX = o->parentObj->oPosX;
+                            network_send_object(o->parentObj);
+                        }
                     }
                 } else if (o->oTimer == 30) {
                     play_puzzle_jingle();
