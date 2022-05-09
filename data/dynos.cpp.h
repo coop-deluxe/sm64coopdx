@@ -646,6 +646,7 @@ void *DynOS_SwapCmd(void *aCmd);
 void *DynOS_UpdateCmd(void *aCmd);
 void DynOS_UpdateGfx();
 bool DynOS_IsTransitionActive();
+void DynOS_Mod_Update();
 void DynOS_Mod_Shutdown();
 void DynOS_ReturnToMainMenu();
 
