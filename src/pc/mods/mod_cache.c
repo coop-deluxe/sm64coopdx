@@ -102,27 +102,16 @@ struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
     return NULL;
 }
 
-static bool mod_cache_has_path(const char* path) {
-    if (path == NULL || strlen(path) == 0) { return NULL; }
-    struct ModCacheEntry* node = sModCacheHead;
-    while (node != NULL) {
-        struct ModCacheEntry* next = node->next;
-        if (!strcmp(node->path, path)) {
-            return true;
-        }
-        node = next;
-    }
-    return false;
-}
-
-struct ModCacheEntry* mod_cache_get_from_path(const char* path) {
+struct ModCacheEntry* mod_cache_get_from_path(const char* path, bool validate) {
     if (path == NULL || strlen(path) == 0) { return NULL; }
     struct ModCacheEntry* node = sModCacheHead;
     struct ModCacheEntry* prev = NULL;
     while (node != NULL) {
         struct ModCacheEntry* next = node->next;
         if (!strcmp(node->path, path)) {
-            if (mod_cache_is_valid(node)) {
+            if (!validate) {
+                return node;
+            } else if (mod_cache_is_valid(node)) {
                 return node;
             } else {
                 mod_cache_remove_node(node, prev);
@@ -220,7 +209,10 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
     file->cachedPath = strdup(modFilePath);
 
     // if we already have the filepath, don't MD5 it again
-    if (useFilePath && mod_cache_has_path(file->cachedPath)) {
+    struct ModCacheEntry* entry = mod_cache_get_from_path(file->cachedPath, false);
+    if (useFilePath && entry) {
+        memcpy(file->dataHash, entry->dataHash, 16);
+        mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
         return;
     }
 
