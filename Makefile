@@ -728,7 +728,7 @@ else ifeq ($(WINDOWS_BUILD),1)
     LD := $(CXX)
   endif
 else
-  LD := $(CROSS)ld
+  LD := $(CXX)
 endif
 
 AR        := $(CROSS)ar
@@ -906,17 +906,22 @@ else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a
 endif
 
-# Network
+# Network/Discord/Bass (ugh, needs cleanup)
 ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS += -L"ws2_32" -lwsock32
   ifeq ($(DISCORD_SDK),1)
     LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -L./lib/bass/ -ldiscord_game_sdk -lbass -lbass_fx -Wl,-Bstatic
+  else
+    LDFLAGS += -Wl,-Bdynamic -L./lib/bass/ -lbass -lbass_fx -Wl,-Bstatic
   endif
 else
   ifeq ($(DISCORD_SDK),1)
     LDFLAGS += -ldiscord_game_sdk -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/discordsdk -Wl,-rpath lib/bass
+  else
+    LDFLAGS += -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/bass
   endif
 endif
+
 # Prevent a crash with -sopt
 export LANG := C
 
