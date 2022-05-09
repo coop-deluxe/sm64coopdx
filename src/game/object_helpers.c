@@ -436,6 +436,8 @@ s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment) {
 }
 
 s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
+    if (obj1 == NULL || obj2 == NULL) { return 0; }
+
     f32 z1, x1, z2, x2;
     s16 angle;
 
