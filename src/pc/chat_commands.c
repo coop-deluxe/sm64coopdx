@@ -4,16 +4,12 @@
 #include "pc/djui/djui_chat_message.h"
 #include "chat_commands.h"
 #include "pc/network/ban_list.h"
+#include "pc/network/moderator_list.h"
 #include "pc/debuglog.h"
 #include "level_table.h"
 
-enum ChatConfirmCommand {
-    CCC_NONE,
-    CCC_KICK,
-    CCC_BAN,
-    CCC_PERMBAN,
-};
 
+extern int gIsModerator;
 static enum ChatConfirmCommand sConfirming = CCC_NONE;
 static u8 sConfirmPlayerIndex = 0;
 
@@ -49,26 +45,38 @@ bool exec_chat_command(char* command) {
     sConfirming = CCC_NONE;
 
     if (ccc != CCC_NONE && strcmp("/confirm", command) == 0) {
-        if (gNetworkType == NT_SERVER && ccc == CCC_KICK) {
-            struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
-            if (!np->connected) { return true; }
-            char message[256] = { 0 };
-            snprintf(message, 256, "\\#fff982\\Kicking '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
-            djui_chat_message_create(message);
-            network_send_kick(np->localIndex, EKT_KICKED);
-            network_player_disconnected(np->localIndex);
-            return true;
+        if (gNetworkType == NT_SERVER || gIsModerator == 1) {
+            if (ccc == CCC_KICK) {
+                struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
+                if (!np->connected) { return true; }
+                char message[256] = { 0 };
+                snprintf(message, 256, "\\#fff982\\Kicking '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
+                djui_chat_message_create(message);
+                if (gNetworkType == NT_SERVER) {
+                    network_send_kick(np->localIndex, EKT_KICKED);
+                    network_player_disconnected(np->localIndex);
+                } else {
+                    network_send_chat_command(np->globalIndex, CCC_KICK);
+                }
+                return true;
+            }
         }
-        if (gNetworkType == NT_SERVER && ccc == CCC_BAN) {
-            struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
-            if (!np->connected) { return true; }
-            char message[256] = { 0 };
-            snprintf(message, 256, "\\#fff982\\Banning '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
-            djui_chat_message_create(message);
-            network_send_kick(np->localIndex, EKT_BANNED);
-            ban_list_add(gNetworkSystem->get_id_str(np->localIndex), false);
-            network_player_disconnected(np->localIndex);
-            return true;
+        if (gNetworkType == NT_SERVER || gIsModerator == 1) {
+            if (ccc == CCC_BAN) {
+                struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
+                if (!np->connected) { return true; }
+                char message[256] = { 0 };          
+                snprintf(message, 256, "\\#fff982\\Banning '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
+                djui_chat_message_create(message);
+                if (gNetworkType == NT_SERVER) {
+                    network_send_kick(np->localIndex, EKT_BANNED);
+                    ban_list_add(gNetworkSystem->get_id_str(np->localIndex), false);
+                    network_player_disconnected(np->localIndex);
+                } else {
+                    network_send_chat_command(np->globalIndex, CCC_BAN);
+                }
+                return true;
+            }
         }
         if (gNetworkType == NT_SERVER && ccc == CCC_PERMBAN) {
             struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
@@ -79,6 +87,16 @@ bool exec_chat_command(char* command) {
             network_send_kick(np->localIndex, EKT_BANNED);
             ban_list_add(gNetworkSystem->get_id_str(np->localIndex), true);
             network_player_disconnected(np->localIndex);
+            return true;
+        }
+        if (gNetworkType == NT_SERVER && ccc == CCC_MODERATOR) {
+            struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
+            if (!np->connected) { return true; }
+            char message[256] = { 0 };
+            snprintf(message, 256, "\\#fff982\\Adding '%s%s\\#fff982\\' as a Moderator!", network_get_player_text_color_string(np->localIndex), np->name);
+            djui_chat_message_create(message);
+            network_send_moderator(np->localIndex);
+            moderator_list_add(gNetworkSystem->get_id_str(np->localIndex), true);
             return true;
         }
     }
@@ -102,8 +120,8 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/kick ", command)) {
-        if (gNetworkType != NT_SERVER) {
-            djui_chat_message_create("Only the server can use this command.");
+        if (gNetworkType != NT_SERVER && gIsModerator == 0) {
+            djui_chat_message_create("You do not have permission to use this command.");
             return true;
         }
 
@@ -129,8 +147,8 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/ban ", command)) {
-        if (gNetworkType != NT_SERVER) {
-            djui_chat_message_create("Only the server can use this command.");
+        if (gNetworkType != NT_SERVER && gIsModerator == 0) {
+            djui_chat_message_create("You do not have permission to use this command.");
             return true;
         }
 
@@ -156,8 +174,8 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/permban ", command)) {
-        if (gNetworkType != NT_SERVER) {
-            djui_chat_message_create("Only the server can use this command.");
+        if (gNetworkType != NT_SERVER && gIsModerator == 0) {
+            djui_chat_message_create("You do not have permission to use this command.");
             return true;
         }
 
@@ -182,6 +200,32 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
+    if (str_starts_with("/moderator ", command)) {
+        if (gNetworkType != NT_SERVER) {
+            djui_chat_message_create("Only the server can use this command.");
+            return true;
+        }
+
+        struct NetworkPlayer* np = chat_get_network_player(&command[11]);
+        if (np == NULL) {
+            djui_chat_message_create("Could not find player.");
+            return true;
+        }
+
+        if (np->localIndex == 0) {
+            djui_chat_message_create("Can not make yourself a moderator.");
+            return true;
+        }
+
+        char message[256] = { 0 };
+        snprintf(message, 256, "\\#fff982\\Are you sure you want to make '%s%s\\#fff982\\' a moderator?\nType '\\#a0ffa0\\/confirm\\#fff982\\' to moderate.", network_get_player_text_color_string(np->localIndex), np->name);
+        djui_chat_message_create(message);
+
+        sConfirming = CCC_MODERATOR;
+        sConfirmPlayerIndex = np->localIndex;
+
+        return true;
+    }
 #if defined(DEBUG) && defined(DEVELOPMENT)
     if (gNetworkSystem == &gNetworkSystemSocket && str_starts_with("/warp ", command)) {
         static const struct { const char *name; s32 num; } sLevelNumByName[] = {
@@ -269,10 +313,11 @@ bool exec_chat_command(char* command) {
 
 void display_chat_commands(void) {
     djui_chat_message_create("/players - List all players and their IDs");
-    if (gNetworkType == NT_SERVER) {
+    if (gNetworkType == NT_SERVER || gIsModerator == 1) {
         djui_chat_message_create("/kick [NAME|ID] - Kick this player from the current game");
         djui_chat_message_create("/ban [NAME|ID] - Ban this player from the current game");
         djui_chat_message_create("/permban [NAME|ID] - Ban this player from any game you host");
+        djui_chat_message_create("/moderator [NAME|ID] - Make this player able to use commands like /kick, /ban, /permban on any game you host");
     }
 #if defined(DEBUG) && defined(DEVELOPMENT)
     djui_chat_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");

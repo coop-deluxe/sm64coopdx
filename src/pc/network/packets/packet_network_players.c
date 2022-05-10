@@ -5,6 +5,7 @@
 #include "src/game/behavior_actions.h"
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
+#include "pc/network/moderator_list.h"
 
 static void network_send_to_network_players(u8 sendToLocalIndex) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
@@ -57,6 +58,11 @@ void network_receive_network_players_request(struct Packet* p) {
         return;
     }
     network_send_to_network_players(localIndex);
+
+    if (moderator_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
+        LOG_INFO("sending moderator packet to localIndex: %d", p->localIndex);
+        network_send_moderator(p->localIndex);
+    }
 }
 
 void network_send_network_players(u8 exceptLocalIndex) {

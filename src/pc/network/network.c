@@ -192,7 +192,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
     if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
         LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
-        SOFT_ASSERT(false);
+        // SOFT_ASSERT(false); - Crash?
         return;
     }
 
