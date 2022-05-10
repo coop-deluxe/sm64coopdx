@@ -977,7 +977,7 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
  // misc //
 //////////
 
-static void smlua_clear_hooks(void) {
+void smlua_clear_hooks(void) {
     for (int i = 0; i < HOOK_MAX; i++) {
         struct LuaHookedEvent* hooked = &sHookedEvents[i];
         for (int j = 0; j < hooked->count; j++) {

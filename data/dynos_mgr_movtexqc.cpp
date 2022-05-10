@@ -67,3 +67,12 @@ DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index) {
 
     return mMovtexQCs[index];
 }
+
+void DynOS_MovtexQC_ModShutdown() {
+    auto& _DynosRegisteredMovtexQCs = DynosRegisteredMovtexQCs();
+    while (_DynosRegisteredMovtexQCs.Count() > 0) {
+        auto& registered = _DynosRegisteredMovtexQCs[0];
+        Delete(registered.dataNode);
+        _DynosRegisteredMovtexQCs.Remove(0);
+    }
+}

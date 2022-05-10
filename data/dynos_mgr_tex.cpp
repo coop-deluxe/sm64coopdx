@@ -422,6 +422,7 @@ void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     // Load
     SysPath _PackFolder = "";
     DataNode<TexData>* _Node = DynOS_Tex_LoadFromBinary(_PackFolder, aFilename, _TexName, false);
+    free(_TexName);
     if (_Node) {
         DynOS_Tex_Activate(_Node, true);
     }
@@ -467,4 +468,12 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
     aOutTexInfo->height  = info->height;
     aOutTexInfo->texture = (u8*)info->pointer;
     return true;
+}
+
+void DynOS_Tex_ModShutdown() {
+    auto& _DynosCustomTexs = DynosCustomTexs();
+    while (_DynosCustomTexs.Count() > 0) {
+        auto& pair = _DynosCustomTexs[0];
+        DynOS_Tex_Deactivate(pair.second);
+    }
 }

@@ -28,10 +28,12 @@ void bhv_piranha_plant_waking_bubbles_loop(void) {
  */
 void bhv_piranha_plant_bubble_loop(void) {
     struct Object *parent = o->parentObj; // the Piranha Plant
+    if (parent == NULL) { return; }
     f32 scale = 0;
     s32 i;
     s32 frame = parent->header.gfx.animInfo.animFrame;
     // TODO: rename lastFrame if it is inaccurate
+    if (parent->header.gfx.animInfo.curAnim == NULL) { return; }
     s32 lastFrame = parent->header.gfx.animInfo.curAnim->loopEnd - 2;
     s32 UNUSED unused;
     f32 doneShrinkingFrame; // the first frame after shrinking is done

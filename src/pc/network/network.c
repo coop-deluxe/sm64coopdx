@@ -192,7 +192,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
     if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
         LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
-        SOFT_ASSERT(false);
+        // SOFT_ASSERT(false); - Crash?
         return;
     }
 
@@ -418,7 +418,7 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(bool sendLeaving) {
+void network_shutdown(bool sendLeaving, bool exiting) {
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;
@@ -440,4 +440,26 @@ void network_shutdown(bool sendLeaving) {
     }
 
     gNetworkType = NT_NONE;
+
+    if (exiting) { return; }
+
+    // reset other stuff
+    extern u8* gOverrideEeprom;
+    gOverrideEeprom = NULL;
+    dynos_mod_shutdown();
+    mods_clear(&gActiveMods);
+    mods_clear(&gRemoteMods);
+    smlua_shutdown();
+    extern s16 gChangeLevel;
+    gChangeLevel = LEVEL_CASTLE_GROUNDS;
+
+    extern s16 gMenuMode;
+    gMenuMode = -1;
+
+    djui_panel_shutdown();
+    extern bool gDjuiInMainMenu;
+    if (!gDjuiInMainMenu) {
+        gDjuiInMainMenu = true;
+        djui_panel_main_create(NULL);
+    }
 }

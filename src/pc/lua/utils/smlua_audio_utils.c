@@ -163,6 +163,22 @@ static bool audio_sanity_check(struct BassAudio* audio, bool isStream, const cha
 }
 
 struct BassAudio* audio_load_internal(const char* filename, bool isStream) {
+    // check file type
+    bool validFileType = false;
+    const char* fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
+    const char** ft = fileTypes;
+    while (*ft != NULL) {
+        if (str_ends_with((char*)filename, (char*)*ft)) {
+            validFileType = true;
+            break;
+        }
+        ft++;
+    }
+    if (!validFileType) {
+        LOG_LUA_LINE("Tried to load audio file with invalid file type: %s", filename);
+        return NULL;
+    }
+
     // find mod file in mod list
     bool foundModFile = false;
     struct ModFile* modFile = NULL;

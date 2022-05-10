@@ -157,7 +157,7 @@ void network_player_update(void) {
 #ifndef DEVELOPMENT
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
             LOG_INFO("dropping due to no server connectivity");
-            network_shutdown(false);
+            network_shutdown(false, false);
         }
 #endif
 
@@ -264,6 +264,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
+
     return localIndex;
 }
 
@@ -273,7 +274,7 @@ u8 network_player_disconnected(u8 globalIndex) {
             LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
-            network_shutdown(true);
+            network_shutdown(true, false);
         }
     }
 

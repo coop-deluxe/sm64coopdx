@@ -245,6 +245,7 @@ Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED 
 }
 
 void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
+    if (a1 == NULL) { return; }
     f32 spC = a1->oParentRelativePosX;
     f32 sp8 = a1->oParentRelativePosY;
     f32 sp4 = a1->oParentRelativePosZ;
@@ -255,6 +256,7 @@ void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
 }
 
 void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
+    if (obj == NULL) { return; }
     dst[0][0] = src[0][0] * obj->header.gfx.scale[0];
     dst[1][0] = src[1][0] * obj->header.gfx.scale[1];
     dst[2][0] = src[2][0] * obj->header.gfx.scale[2];
@@ -306,6 +308,7 @@ void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2) {
 }
 
 void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) {
+    if (obj == NULL) { return; }
     obj->parentObj = o;
 
     if (obj->oFlags & OBJ_FLAG_HOLDABLE) {
@@ -363,6 +366,7 @@ void cur_obj_forward_vel_approach_upward(f32 target, f32 increment) {
 }
 
 s32 approach_f32_signed(f32 *value, f32 target, f32 increment) {
+    if (value == NULL) { return 0; }
     s32 reachedTarget = FALSE;
 
     *value += increment;
@@ -436,6 +440,8 @@ s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment) {
 }
 
 s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
+    if (obj1 == NULL || obj2 == NULL) { return 0; }
+
     f32 z1, x1, z2, x2;
     s16 angle;
 
@@ -447,6 +453,7 @@ s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
 }
 
 s16 obj_pitch_to_object(struct Object* obj, struct Object* target) {
+    if (obj == NULL) { return 0; }
     f32 a, b, c, d;
     a = target->oPosX - obj->oPosX;
     c = target->oPosZ - obj->oPosZ;
@@ -459,6 +466,7 @@ s16 obj_pitch_to_object(struct Object* obj, struct Object* target) {
 }
 
 s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
+    if (obj == NULL) { return 0; }
     f32 z1, x1, z2, x2;
     s16 angle;
 
@@ -470,6 +478,7 @@ s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
 }
 
 s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount) {
+    if (obj == NULL || target == NULL) { return 0; }
     f32 a, b, c, d;
     UNUSED s32 unused;
     s16 targetAngle = 0;
@@ -505,18 +514,21 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
 }
 
 void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ) {
+    if (obj == NULL) { return; }
     obj->oParentRelativePosX = relX;
     obj->oParentRelativePosY = relY;
     obj->oParentRelativePosZ = relZ;
 }
 
 void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
+    if (obj == NULL) { return; }
     obj->oPosX = x;
     obj->oPosY = y;
     obj->oPosZ = z;
 }
 
 void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
+    if (obj == NULL) { return; }
     obj->oFaceAnglePitch = pitch;
     obj->oFaceAngleYaw = yaw;
     obj->oFaceAngleRoll = roll;
@@ -762,6 +774,7 @@ void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
 }
 
 void obj_apply_scale_to_transform(struct Object *obj) {
+    if (obj == NULL) { return; }
     f32 scaleX = obj->header.gfx.scale[0];
     f32 scaleY = obj->header.gfx.scale[1];
     f32 scaleZ = obj->header.gfx.scale[2];
@@ -780,18 +793,21 @@ void obj_apply_scale_to_transform(struct Object *obj) {
 }
 
 void obj_copy_scale(struct Object *dst, struct Object *src) {
+    if (dst == NULL || src == NULL) { return; }
     dst->header.gfx.scale[0] = src->header.gfx.scale[0];
     dst->header.gfx.scale[1] = src->header.gfx.scale[1];
     dst->header.gfx.scale[2] = src->header.gfx.scale[2];
 }
 
 void obj_scale_xyz(struct Object *obj, f32 xScale, f32 yScale, f32 zScale) {
+    if (obj == NULL) { return; }
     obj->header.gfx.scale[0] = xScale;
     obj->header.gfx.scale[1] = yScale;
     obj->header.gfx.scale[2] = zScale;
 }
 
 void obj_scale(struct Object *obj, f32 scale) {
+    if (obj == NULL) { return; }
     obj->header.gfx.scale[0] = scale;
     obj->header.gfx.scale[1] = scale;
     obj->header.gfx.scale[2] = scale;
@@ -828,6 +844,7 @@ void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
 }
 
 void obj_init_animation_with_sound(struct Object *obj, const struct Animation * const* animations, s32 animIndex) {
+    if (obj == NULL) { return; }
     struct Animation **anims = (struct Animation **)animations;
     obj->oAnimations = (struct Animation **)animations;
     if (anims != NULL) {
@@ -837,6 +854,7 @@ void obj_init_animation_with_sound(struct Object *obj, const struct Animation * 
 }
 
 void cur_obj_enable_rendering_and_become_tangible(struct Object *obj) {
+    if (obj == NULL) { return; }
     obj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
     obj->oIntangibleTimer = 0;
 }
@@ -846,6 +864,7 @@ void cur_obj_enable_rendering(void) {
 }
 
 void cur_obj_disable_rendering_and_become_intangible(struct Object *obj) {
+    if (obj == NULL) { return; }
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     obj->oIntangibleTimer = -1;
 }
@@ -863,6 +882,7 @@ void cur_obj_hide(void) {
 }
 
 void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforward) {
+    if (other == NULL) { return; }
     f32 facingZ = coss(other->oMoveAngleYaw);
     f32 facingX = sins(other->oMoveAngleYaw);
 
@@ -895,6 +915,7 @@ void cur_obj_unused_init_on_floor(void) {
 }
 
 void obj_set_face_angle_to_move_angle(struct Object *obj) {
+    if (obj == NULL) { return; }
     obj->oFaceAnglePitch = obj->oMoveAnglePitch;
     obj->oFaceAngleYaw = obj->oMoveAngleYaw;
     obj->oFaceAngleRoll = obj->oMoveAngleRoll;
@@ -1614,6 +1635,7 @@ f32 increment_velocity_toward_range(f32 value, f32 center, f32 zeroThreshold, f3
 }
 
 s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2) {
+    if (obj1 == NULL) { return FALSE; }
     s32 i;
     for (i = 0; i < obj1->numCollidedObjs; i++) {
         if (obj1->collidedObjs[i] == obj2) {
@@ -1751,10 +1773,12 @@ void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8
 }
 
 void obj_set_billboard(struct Object *obj) {
+    if (obj == NULL) { return; }
     obj->header.gfx.node.flags |= GRAPH_RENDER_BILLBOARD;
 }
 
 void obj_set_cylboard(struct Object *obj) {
+    if (obj == NULL) { return; }
     obj->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
 }
 
@@ -1771,6 +1795,7 @@ void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height) {
 void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30,
                                     const BehaviorScript *coinBehavior,
                                     s16 posJitter, s16 model) {
+    if (obj == NULL) { return; }
     s32 i;
     f32 spawnHeight;
     struct Surface *floor;
@@ -2076,6 +2101,7 @@ void obj_set_gfx_pos_at_obj_pos(struct Object *obj1, struct Object *obj2) {
  * coordinates, and then add it to the vector at posIndex.
  */
 void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateIndex) {
+    if (obj == NULL) { return; }
     f32 dx = obj->rawData.asF32[localTranslateIndex + 0];
     f32 dy = obj->rawData.asF32[localTranslateIndex + 1];
     f32 dz = obj->rawData.asF32[localTranslateIndex + 2];
@@ -2089,6 +2115,7 @@ void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateInd
 }
 
 void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s16 angleIndex) {
+    if (obj == NULL) { return; }
     f32 translate[3];
     s16 rotation[3];
 
@@ -2104,6 +2131,7 @@ void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s1
 }
 
 void obj_set_throw_matrix_from_transform(struct Object *obj) {
+    if (obj == NULL) { return; }
     if (obj->oFlags & OBJ_FLAG_0020) {
         obj_build_transform_from_pos_and_angle(obj, O_POS_INDEX, O_FACE_ANGLE_INDEX);
         obj_apply_scale_to_transform(obj);
@@ -2117,6 +2145,7 @@ void obj_set_throw_matrix_from_transform(struct Object *obj) {
 }
 
 void obj_build_transform_relative_to_parent(struct Object *obj) {
+    if (obj == NULL) { return; }
     struct Object *parent = obj->parentObj;
 
     obj_build_transform_from_pos_and_angle(obj, O_PARENT_RELATIVE_POS_INDEX, O_FACE_ANGLE_INDEX);
@@ -2135,6 +2164,7 @@ void obj_build_transform_relative_to_parent(struct Object *obj) {
 }
 
 void obj_create_transform_from_self(struct Object *obj) {
+    if (obj == NULL) { return; }
     obj->oFlags &= ~OBJ_FLAG_TRANSFORM_RELATIVE_TO_PARENT;
     obj->oFlags |= OBJ_FLAG_SET_THROW_MATRIX_FROM_TRANSFORM;
 
@@ -2219,6 +2249,7 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
 }
 
 void chain_segment_init(struct ChainSegment *segment) {
+    if (segment == NULL) { return; }
     segment->posX = 0.0f;
     segment->posY = 0.0f;
     segment->posZ = 0.0f;
@@ -2238,17 +2269,20 @@ void obj_scale_random(struct Object *obj, f32 rangeLength, f32 minScale) {
 }
 
 void obj_translate_xyz_random(struct Object *obj, f32 rangeLength) {
+    if (obj == NULL) { return; }
     obj->oPosX += random_float() * rangeLength - rangeLength * 0.5f;
     obj->oPosY += random_float() * rangeLength - rangeLength * 0.5f;
     obj->oPosZ += random_float() * rangeLength - rangeLength * 0.5f;
 }
 
 void obj_translate_xz_random(struct Object *obj, f32 rangeLength) {
+    if (obj == NULL) { return; }
     obj->oPosX += random_float() * rangeLength - rangeLength * 0.5f;
     obj->oPosZ += random_float() * rangeLength - rangeLength * 0.5f;
 }
 
 void obj_build_vel_from_transform(struct Object *a0) {
+    if (a0 == NULL) { return; }
     f32 spC = a0->oUnkC0;
     f32 sp8 = a0->oUnkBC;
     f32 sp4 = a0->oForwardVel;
@@ -2272,6 +2306,7 @@ s16 cur_obj_reflect_move_angle_off_wall(void) {
 }
 
 void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
+    if (info == NULL) { return; }
     struct Object *particle;
     s32 i;
     f32 scale;
@@ -2309,6 +2344,7 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
 }
 
 void obj_set_hitbox(struct Object *obj, struct ObjectHitbox *hitbox) {
+    if (obj == NULL || hitbox == NULL) { return; }
     if (!(obj->oFlags & OBJ_FLAG_30)) {
         obj->oFlags |= OBJ_FLAG_30;
 
@@ -3018,6 +3054,7 @@ void cur_obj_shake_screen(s32 shake) {
 }
 
 s32 obj_attack_collided_from_other_object(struct Object *obj) {
+    if (obj == NULL) { return FALSE; }
     s32 numCollidedObjs;
     struct Object *other;
     s32 touchedOtherObject = FALSE;
@@ -3053,6 +3090,7 @@ s32 cur_obj_was_attacked_or_ground_pounded(void) {
 }
 
 void obj_copy_behavior_params(struct Object *dst, struct Object *src) {
+    if (dst == NULL || src == NULL) { return; }
     dst->oBehParams = src->oBehParams;
     dst->oBehParams2ndByte = src->oBehParams2ndByte;
 }

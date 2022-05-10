@@ -1,7 +1,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define UNSTABLE_BRANCH
 #define VERSION_NUMBER 27
 #define MINOR_VERSION_NUMBER 0
 

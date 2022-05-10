@@ -95,26 +95,10 @@ function spawn_custom_level_objects()
         return
     end
 
-    -- look for existing powerups
-    local obj = obj_get_first(OBJ_LIST_LEVEL)
-    while obj ~= nil do
-        local behaviorId = get_id_from_behavior(obj.behavior)
-
-        if behaviorId == id_bhvItemBox then
-            -- find closest position to put it in
-            local objPos = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
-            for i in pairs(gLevelData.powerups) do
-                local powPos = gLevelData.powerups[i].pos
-                local tempPos = { x = powPos.x, y = objPos.y, z = powPos.z }
-                local dist = vec3f_dist(objPos, tempPos)
-                if dist < 5 then
-                    gLevelData.powerups[i].obj = obj
-                end
-            end
-        end
-
-        -- iterate
-        obj = obj_get_next(obj)
+    -- only handle powerups if we're sync valid
+    np = gNetworkPlayers[0]
+    if (not np.currAreaSyncValid) or (not np.currLevelSyncValid) then
+        return
     end
 
     -- spawn missing powerups

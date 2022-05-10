@@ -652,6 +652,7 @@ Gfx* geo_switch_mario_cap_on_off(s32 callContext, struct GraphNode* node, UNUSED
     struct MarioBodyState* bodyState = geo_get_body_state();
 
     if (callContext == GEO_CONTEXT_RENDER) {
+        if (switchCase == NULL || bodyState == NULL) { return NULL; }
         switchCase->selectedCase = bodyState->capState & 1;
         while (next != node) {
             if (next->type == GRAPH_NODE_TYPE_TRANSLATION_ROTATION) {
@@ -773,9 +774,9 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].pos[0] = mirroredX + MIRROR_X;
                     gMirrorMario[i].angle[1] = -gMirrorMario[i].angle[1];
                     gMirrorMario[i].scale[0] *= -1.0f;
-                    ((struct GraphNode *) &gMirrorMario)->flags |= 1;
+                    gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
                 } else {
-                    ((struct GraphNode *) &gMirrorMario)->flags &= ~1;
+                    gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }
                 break;
         }

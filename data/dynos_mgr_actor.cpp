@@ -44,17 +44,18 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
         return;
     }
 
+    // Alloc and init the actors gfx list
+    ActorGfx actorGfx   = { 0 };
+    actorGfx.mGfxData   = _GfxData;
+    actorGfx.mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
+    actorGfx.mPackIndex = MOD_PACK_INDEX;
+    actorGfx.mGraphNode->georef = georef;
+
     // Add to custom actors
     if (georef == NULL) {
         DynosCustomActors().Add({ actorName, geoLayout });
         georef = geoLayout;
     }
-
-    // Alloc and init the actors gfx list
-    ActorGfx actorGfx;
-    actorGfx.mGfxData   = _GfxData;
-    actorGfx.mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
-    actorGfx.mPackIndex = 99;
 
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);
@@ -149,4 +150,28 @@ void DynOS_Actor_Override_All(void) {
             DynOS_Actor_Override((void**)&_Object->header.gfx.sharedChild);
         }
     }
+}
+
+void DynOS_Actor_ModShutdown() {
+    auto& _DynosCustomActors = DynosCustomActors();
+    while (_DynosCustomActors.Count() > 0) {
+        auto& pair = _DynosCustomActors[0];
+        DynOS_Actor_Invalid(pair.second, MOD_PACK_INDEX);
+        free((void*)pair.first);
+        _DynosCustomActors.Remove(0);
+    }
+
+    auto& _ValidActors = DynosValidActors();
+    for (auto it = _ValidActors.cbegin(); it != _ValidActors.cend();) {
+        auto& actorGfx = it->second;
+        if (actorGfx.mPackIndex == MOD_PACK_INDEX) {
+            free(actorGfx.mGraphNode);
+            DynOS_Gfx_Free(actorGfx.mGfxData);
+            _ValidActors.erase(it++);
+        } else {
+            ++it;
+        }
+    }
+
+    DynOS_Actor_Override_All();
 }

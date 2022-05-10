@@ -20,6 +20,22 @@ Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
 }
 
+void DynOS_Lvl_ModShutdown() {
+    DynOS_Level_Unoverride();
+
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+    while (_CustomLevelScripts.Count() > 0) {
+        auto& pair = _CustomLevelScripts[0];
+        DynOS_Tex_Invalid(pair.second);
+        Delete(pair.second);
+        free((void*)pair.first);
+        _CustomLevelScripts.Remove(0);
+    }
+
+    auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
+    _OverrideLevelScripts.Clear();
+}
+
 void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLevelName) {
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();

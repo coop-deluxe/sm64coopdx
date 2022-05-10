@@ -66,3 +66,23 @@ void DynOS_UpdateGfx() {
 bool DynOS_IsTransitionActive() {
     return gWarpTransition.isActive;
 }
+
+//
+// Misc
+//
+static bool sDynosModShutdown = false;
+
+void DynOS_Mod_Update() {
+    if (sDynosModShutdown) {
+        sDynosModShutdown = false;
+        DynOS_Actor_ModShutdown();
+        DynOS_Col_ModShutdown();
+        DynOS_Lvl_ModShutdown();
+        DynOS_MovtexQC_ModShutdown();
+        DynOS_Tex_ModShutdown();
+    }
+}
+
+void DynOS_Mod_Shutdown() {
+    sDynosModShutdown = true;
+}

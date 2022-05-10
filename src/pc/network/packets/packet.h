@@ -70,6 +70,9 @@ enum PacketType {
     PACKET_REQUEST_FAILED,
 
     PACKET_LUA_CUSTOM,
+    
+    PACKET_COMMAND,
+    PACKET_MODERATOR,
 
     ///
     PACKET_CUSTOM = 255,
@@ -111,6 +114,14 @@ enum KickReasonType {
     EKT_FULL_PARTY,
     EKT_KICKED,
     EKT_BANNED,
+};
+
+enum ChatConfirmCommand {
+    CCC_NONE,
+    CCC_KICK,
+    CCC_BAN,
+    CCC_PERMBAN,
+    CCC_MODERATOR,
 };
 
 struct LSTNetworkType {
@@ -229,6 +240,14 @@ void network_receive_chat(struct Packet* p);
 // packet_kick.c
 void network_send_kick(u8 localIndex, enum KickReasonType kickReason);
 void network_receive_kick(struct Packet* p);
+
+// packet_command_mod.c
+void network_send_chat_command(u8 localIndex, enum ChatConfirmCommand CCC);
+void network_recieve_chat_command(struct Packet* p);
+
+// packet_moderator.c
+void network_send_moderator(u8 localIndex);
+void network_recieve_moderator(void);
 
 // packet_keep_alive.c
 void network_send_keep_alive(u8 localIndex);

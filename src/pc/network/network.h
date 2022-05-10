@@ -130,6 +130,6 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength);
 void* network_duplicate_address(u8 localIndex);
 void network_update(void);
 void network_register_mod(char* modName);
-void network_shutdown(bool sendLeaving);
+void network_shutdown(bool sendLeaving, bool exiting);
 
 #endif

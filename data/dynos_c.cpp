@@ -156,4 +156,9 @@ void dynos_level_load_background(void *ptr) {
     DynOS_Lvl_LoadBackground(ptr);
 }
 
+// -- other -- //
+void dynos_mod_shutdown(void) {
+    DynOS_Mod_Shutdown();
+}
+
 }

@@ -12,6 +12,8 @@ extern "C" {
 #define POINTER_CODE    (u32) 0x52544E50
 #define LUA_VAR_CODE    (u32) 0x5641554C
 
+#define MOD_PACK_INDEX 99
+
 //
 // Enums
 //
@@ -644,6 +646,8 @@ void *DynOS_SwapCmd(void *aCmd);
 void *DynOS_UpdateCmd(void *aCmd);
 void DynOS_UpdateGfx();
 bool DynOS_IsTransitionActive();
+void DynOS_Mod_Update();
+void DynOS_Mod_Shutdown();
 void DynOS_ReturnToMainMenu();
 
 //
@@ -695,6 +699,7 @@ s32 DynOS_Level_GetCount();
 const s32 *DynOS_Level_GetList();
 s32 DynOS_Level_GetCourse(s32 aLevel);
 void DynOS_Level_Override(void* originalScript, void* newScript);
+void DynOS_Level_Unoverride();
 const void *DynOS_Level_GetScript(s32 aLevel);
 const u8 *DynOS_Level_GetName(s32 aLevel, bool aDecaps, bool aAddCourseNumber);
 const u8 *DynOS_Level_GetActName(s32 aLevel, s32 aAct, bool aDecaps, bool aAddStarNumber);
@@ -764,6 +769,7 @@ void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
 void DynOS_Actor_Override(void** aSharedChild);
 void DynOS_Actor_Override_All(void);
+void DynOS_Actor_ModShutdown();
 
 //
 // Anim Manager
@@ -784,6 +790,7 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
 void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
+void DynOS_Tex_ModShutdown();
 
 //
 // Lvl Manager
@@ -797,6 +804,7 @@ DataNode<MovtexQC>* DynOS_Lvl_GetMovtexQuadCollection(s32 index);
 Trajectory* DynOS_Lvl_GetTrajectory(const char* aName);
 void DynOS_Lvl_LoadBackground(void *aPtr);
 void* DynOS_Lvl_Override(void *aCmd);
+void DynOS_Lvl_ModShutdown();
 
 //
 // Col Manager
@@ -804,6 +812,7 @@ void* DynOS_Lvl_Override(void *aCmd);
 
 void DynOS_Col_Activate(const SysPath &aFilePath, const char *aCollisionName);
 Collision* DynOS_Col_Get(const char* collisionName);
+void DynOS_Col_ModShutdown();
 
 //
 // Movtexqc Manager
@@ -812,6 +821,7 @@ Collision* DynOS_Col_Get(const char* collisionName);
 void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type);
 DataNode<MovtexQC>* DynOS_MovtexQC_GetFromId(u32 id);
 DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index);
+void DynOS_MovtexQC_ModShutdown();
 
 //
 // Bin

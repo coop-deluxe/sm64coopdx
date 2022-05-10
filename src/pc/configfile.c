@@ -16,6 +16,8 @@
 #include "pc/mods/mods.h"
 #include "pc/network/ban_list.h"
 #include "pc/crash_handler.h"
+#include "pc/network/moderator_list.h"
+
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -258,6 +260,19 @@ static void ban_write(FILE* file) {
     }
 }
 
+static void moderator_read(char** tokens, UNUSED int numTokens) {
+    moderator_list_add(tokens[1], true);
+}
+
+static void moderator_write(FILE* file) {
+    for (unsigned int i = 0; i < gModeratorCount; i++) {
+        if (gModeratorAddresses == NULL) { break; }
+        if (gModeratorAddresses[i] == NULL) { continue; }
+        if (!gModerator[i]) { continue; }
+        fprintf(file, "%s %s\n", "moderator:", gModeratorAddresses[i]);
+    }
+}
+
 static void dynos_pack_read(char** tokens, int numTokens) {
     if (numTokens < 3) { return; }
     char fullPackName[256] = { 0 };
@@ -290,6 +305,7 @@ static void dynos_pack_write(FILE* file) {
 static const struct FunctionConfigOption functionOptions[] = {
     { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
     { .name = "ban:",        .read = ban_read,        .write = ban_write        },
+    { .name = "moderator:",  .read = moderator_read,  .write = moderator_write  },
     { .name = "dynos-pack:", .read = dynos_pack_read, .write = dynos_pack_write },
 };
 

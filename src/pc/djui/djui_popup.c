@@ -68,30 +68,25 @@ void djui_popup_update(void) {
         struct DjuiPopupList* next = node->next;
         djui_base_set_location(&node->popup->base, 4, y);
         y += node->popup->base.height.value + 4;
-        if (gNetworkType != NT_NONE && gNetworkPlayerLocal != NULL) {
-            f32 elapsed = (clock_elapsed() - node->createTime);
+        f32 elapsed = (clock_elapsed() - node->createTime);
 
-            // fade out
-            f32 alpha = fmin(DJUI_POPUP_LIFETIME - elapsed, 1.0f);
-            alpha *= alpha;
-            if (elapsed > DJUI_POPUP_LIFETIME) { alpha = 0; }
-            djui_base_set_color(&node->popup->base, 0, 0, 0, 220 * alpha);
-            djui_base_set_border_color(&node->popup->base, 0, 0, 0, 180 * alpha);
-            djui_base_set_color(&node->popup->text->base, 220, 220, 220, 255 * alpha);
-            djui_text_set_drop_shadow(node->popup->text, 0, 0, 0, 64 * alpha);
+        // fade out
+        f32 alpha = fmin(DJUI_POPUP_LIFETIME - elapsed, 1.0f);
+        alpha *= alpha;
+        if (elapsed > DJUI_POPUP_LIFETIME) { alpha = 0; }
+        djui_base_set_color(&node->popup->base, 0, 0, 0, 220 * alpha);
+        djui_base_set_border_color(&node->popup->base, 0, 0, 0, 180 * alpha);
+        djui_base_set_color(&node->popup->text->base, 220, 220, 220, 255 * alpha);
+        djui_text_set_drop_shadow(node->popup->text, 0, 0, 0, 64 * alpha);
 
-            // remove/deallocate popup
-            if (alpha == 0) {
-                if (last != NULL) { last->next = next; }
-                if (node == sPopupListHead) { sPopupListHead = next; }
-                djui_base_destroy(&node->popup->base);
-                free(node);
-                node = next;
-                continue;
-            }
-        } else {
-            // prevent popups from fading out when we're not connected
-            node->createTime = clock_elapsed();
+        // remove/deallocate popup
+        if (alpha == 0) {
+            if (last != NULL) { last->next = next; }
+            if (node == sPopupListHead) { sPopupListHead = next; }
+            djui_base_destroy(&node->popup->base);
+            free(node);
+            node = next;
+            continue;
         }
 
         // iterate
