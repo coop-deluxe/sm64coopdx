@@ -247,7 +247,7 @@ void network_recieve_chat_command(struct Packet* p);
 
 // packet_moderator.c
 void network_send_moderator(u8 localIndex);
-void network_recieve_moderator(void);
+void network_recieve_moderator(struct Packet* p);
 
 // packet_keep_alive.c
 void network_send_keep_alive(u8 localIndex);
