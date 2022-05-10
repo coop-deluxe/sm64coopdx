@@ -11,7 +11,7 @@ ROUND_STATE_ACTIVE      = 1
 ROUND_STATE_SEEKERS_WIN = 2
 ROUND_STATE_HIDERS_WIN  = 3
 ROUND_STATE_UNKNOWN_END = 4
-gGlobalSyncTable.campingTimer = true -- enable/disable camping timer
+gGlobalSyncTable.campingTimer = false -- enable/disable camping timer
 gGlobalSyncTable.roundState   = ROUND_STATE_WAIT -- current round state
 gGlobalSyncTable.displayTimer = 0 -- the displayed timer
 sRoundTimer        = 0            -- the server's round timer
@@ -108,6 +108,8 @@ function server_update(m)
         gGlobalSyncTable.roundState = ROUND_STATE_ACTIVE
         sRoundTimer = 0
         gGlobalSyncTable.displayTimer = 0
+
+        
     end
 end
 
@@ -122,6 +124,10 @@ function camping_detection(m)
     -- clamp between 0 to 100
     if sDistanceMoved < 0   then sDistanceMoved = 0   end
     if sDistanceMoved > 100 then sDistanceMoved = 100 end
+
+    if obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil then
+        sDistanceMoved = 0
+    end
 
     -- if player hasn't moved enough, start a timer
     if sDistanceMoved < 10 and not s.seeking then
@@ -157,7 +163,7 @@ function update()
 
     -- check if local player is camping
     if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-        if gGlobalSyncTable.campingTimer then
+        if gGlobalSyncTable.campingTimer or obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil then
             camping_detection(gMarioStates[0])
         else
             sDistanceTimer = 0
@@ -173,6 +179,8 @@ function mario_update(m)
         return
     end
 
+    m.flags = m.flags & ~MARIO_VANISH_CAP --Always Remove Vanish Cap Cuz Broken
+
     -- this code runs for all players
     local s = gPlayerSyncTable[m.playerIndex]
 
@@ -181,9 +189,33 @@ function mario_update(m)
         s.seeking = true
     end
 
+    if m.playerIndex == 0 and not s.seeking or gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then   
+        m.flags = m.flags & ~MARIO_WING_CAP --Remove wing cap if hider
+        m.flags = m.flags & ~MARIO_METAL_CAP --Remove metal cap if hider
+
+        m.capTimer = 0
+    end
+
+    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_RR and m.playerIndex == 0 then
+        warp_to_castle(LEVEL_RR)
+    end
+
+    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_1 and m.playerIndex == 0 then
+        warp_to_castle(LEVEL_BITDW)
+    end
+
+    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_2 and m.playerIndex == 0 then
+        warp_to_castle(LEVEL_BITFS)
+    end
+
+    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_3 and m.playerIndex == 0 then
+        warp_to_castle(LEVEL_BITS)
+    end
+
     -- display all seekers as metal
     if s.seeking then
         m.marioBodyState.modelState = MODEL_STATE_METAL
+       
         m.health = 0x880
     end
 end
@@ -471,6 +503,22 @@ function on_seeking_changed(tag, oldVal, newVal)
     end
 end
 
+function on_interact(m, obj, intee)
+    if intee == INTERACT_PLAYER then
+        if m ~= gMarioStates[0] then
+            for i=0,(MAX_PLAYERS-1) do
+                if gNetworkPlayers[i].connected then
+                    if gPlayerSyncTable[m.playerIndex].seeking and not gPlayerSyncTable[i].seeking and obj == gMarioStates[i].marioObj then
+                        gPlayerSyncTable[i].seeking = true
+
+                        network_player_set_description(gNetworkPlayers[i], "seeker", 255, 64, 64, 255)
+                    end
+                end
+            end
+        end
+    end
+end
+
 -----------
 -- hooks --
 -----------
@@ -483,6 +531,7 @@ hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
+hook_event(HOOK_ON_INTERACT, on_interact)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
 hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
