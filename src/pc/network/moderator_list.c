@@ -8,6 +8,23 @@ char** gModeratorAddresses = NULL;
 bool* gModerator = NULL;
 u16 gModeratorCount = 0;
 
+void moderator_list_clear(void) {
+    for (u16 i = 0; i < gModeratorCount; i++) {
+        if (gModeratorAddresses[i] == NULL) { continue; }
+        free(gModeratorAddresses[i]);
+    }
+    gModeratorCount = 0;
+
+    if (gModeratorAddresses != NULL) {
+        free(gModeratorAddresses);
+        gModeratorAddresses = NULL;
+    }
+    if (gModerator != NULL) {
+        free(gModerator);
+        gModerator = NULL;
+    }
+}
+
 void moderator_list_add(char* address, bool perm) {
     u16 index = gModeratorCount++;
     if (gModeratorAddresses == NULL) {

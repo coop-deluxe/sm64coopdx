@@ -9,7 +9,7 @@
 #include "level_table.h"
 
 
-extern int gIsModerator;
+extern u8 gIsModerator;
 static enum ChatConfirmCommand sConfirming = CCC_NONE;
 static u8 sConfirmPlayerIndex = 0;
 
@@ -65,7 +65,7 @@ bool exec_chat_command(char* command) {
             if (ccc == CCC_BAN) {
                 struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
                 if (!np->connected) { return true; }
-                char message[256] = { 0 };          
+                char message[256] = { 0 };
                 snprintf(message, 256, "\\#fff982\\Banning '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
                 djui_chat_message_create(message);
                 if (gNetworkType == NT_SERVER) {
@@ -256,7 +256,7 @@ bool exec_chat_command(char* command) {
         }
         *(paramArea - 1) = 0;
         *(paramAct - 1) = 0;
-        
+
         // Level
         s32 level = -1;
         if (sscanf(paramLevel, "%d", &level) <= 0) {

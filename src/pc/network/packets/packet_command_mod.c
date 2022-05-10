@@ -4,7 +4,7 @@
 #include "pc/network/ban_list.h"
 #include "pc/network/moderator_list.h"
 
-int gIsModerator;
+u8 gIsModerator = 0;
 
 void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     if (gIsModerator == 1) {

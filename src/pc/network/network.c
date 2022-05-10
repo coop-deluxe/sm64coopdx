@@ -456,6 +456,9 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     extern s16 gMenuMode;
     gMenuMode = -1;
 
+    extern u8 gIsModerator;
+    gIsModerator = 0;
+
     djui_panel_shutdown();
     extern bool gDjuiInMainMenu;
     if (!gDjuiInMainMenu) {
