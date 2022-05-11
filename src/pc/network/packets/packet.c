@@ -52,7 +52,7 @@ void packet_process(struct Packet* p) {
         case PACKET_CHAT:                    network_receive_chat(p);                    break;
         case PACKET_KICK:                    network_receive_kick(p);                    break;
         case PACKET_COMMAND:                 network_recieve_chat_command(p);            break;
-        case PACKET_MODERATOR:               network_recieve_moderator();                break;
+        case PACKET_MODERATOR:               network_recieve_moderator(p);               break;
         case PACKET_KEEP_ALIVE:              network_receive_keep_alive(p);              break;
         case PACKET_LEAVING:                 network_receive_leaving(p);                 break;
         case PACKET_SAVE_FILE:               network_receive_save_file(p);               break;

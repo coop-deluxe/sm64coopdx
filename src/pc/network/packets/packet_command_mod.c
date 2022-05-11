@@ -52,10 +52,15 @@ void network_send_moderator(u8 localIndex) {
     network_send_to(localIndex, &p);
 }
 
-void network_recieve_moderator(void) {
+void network_recieve_moderator(struct Packet* p) {
     if (gIsModerator == 1) {
         return;
     }
+
+    if (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER) {
+        return;
+    }
+    
     gIsModerator = 1;
     djui_chat_message_create("\\#fff982\\You are now a Moderator.");
 }
