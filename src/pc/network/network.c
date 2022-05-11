@@ -438,7 +438,8 @@ void network_shutdown(bool sendLeaving, bool exiting) {
         free(gNetworkServerAddr);
         gNetworkServerAddr = NULL;
     }
-
+    gNetworkPlayerServer = NULL;
+ 
     gNetworkType = NT_NONE;
 
     if (exiting) { return; }

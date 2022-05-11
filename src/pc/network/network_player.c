@@ -311,6 +311,8 @@ u8 network_player_disconnected(u8 globalIndex) {
 
         smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_DISCONNECTED, &gMarioStates[i]);
 
+        memset(np, 0, sizeof(struct NetworkPlayer));
+
         return i;
     }
     return UNKNOWN_GLOBAL_INDEX;
@@ -381,6 +383,7 @@ void network_player_shutdown(void) {
     gNetworkPlayerServer = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer *networkPlayer = &gNetworkPlayers[i];
+        memset(networkPlayer, 0, sizeof(struct NetworkPlayer));
         networkPlayer->connected = false;
         gNetworkSystem->clear_id(i);
     }
