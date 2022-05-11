@@ -186,6 +186,10 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
 }
 
 void network_send_to(u8 localIndex, struct Packet* p) {
+    if (p == NULL) {
+        LOG_ERROR("no data to send");
+        return;
+    }
     // sanity checks
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
@@ -272,6 +276,10 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 }
 
 void network_send(struct Packet* p) {
+    if (p == NULL) {
+        LOG_ERROR("no data to send");
+        return;
+    }
     // prevent errors during writing from propagating
     if (p->writeError) {
         LOG_ERROR("packet has write error: %u", p->packetType);
