@@ -77,6 +77,7 @@ bool network_init(enum NetworkType inNetworkType) {
         return false;
     }
 
+    network_forget_all_reliable();
     crash_handler_init();
 
     // set server settings

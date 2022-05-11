@@ -115,6 +115,13 @@ void discord_lobby_leave(void) {
 
     LOGFILE_INFO(LFT_DISCORD, "left lobby " DISCORD_ID_FORMAT, gCurLobbyId);
 
+    if (snprintf(gCurActivity.party.id, 128, "%s", "none") < 0) {
+        LOGFILE_ERROR(LFT_DISCORD, "Truncating party id");
+    }
+    gCurActivity.party.size.current_size = 1;
+    gCurActivity.party.size.max_size = 1;
+    discord_activity_update(gNetworkType == NT_SERVER);
+
     isHosting = false;
     gCurLobbyId = 0;
 }

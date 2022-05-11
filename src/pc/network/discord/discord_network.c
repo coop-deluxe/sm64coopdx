@@ -76,8 +76,9 @@ void discord_network_init(int64_t lobbyId) {
 }
 
 void discord_network_shutdown(void) {
-    app.lobbies->flush_network(app.lobbies);
     if (gCurLobbyId == 0) { return; }
+    app.lobbies->flush_network(app.lobbies);
     app.lobbies->disconnect_network(app.lobbies, gCurLobbyId);
+    app.lobbies->flush_network(app.lobbies);
     LOGFILE_INFO(LFT_DISCORD, "shutdown network, lobby = " DISCORD_ID_FORMAT, gCurLobbyId);
 }
