@@ -166,9 +166,13 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
     }
 
     // create lobby
-    if (networkType == NT_SERVER) { discord_lobby_create(); }
+    if (networkType == NT_SERVER) {
+        discord_lobby_create();
+        gActivityLock = true;
+    } else {
+        gActivityLock = false;
+    }
 
-    gActivityLock = false;
     gDiscordInitialized = true;
     LOGFILE_INFO(LFT_DISCORD, "initialized");
 
