@@ -254,7 +254,6 @@ void bhv_hidden_red_coin_star_init(void) {
             network_init_object_field(o, &o->oPosX);
             network_init_object_field(o, &o->oPosY);
             network_init_object_field(o, &o->oPosZ);
-            network_init_object_field(o, &o->oTimer);
         }
     }
 }
@@ -268,7 +267,7 @@ void bhv_hidden_red_coin_star_loop(void) {
             break;
 
         case 1:
-            if (o->oTimer > 2) {
+            if (o->oTimer == 3) {
                 struct Object *obj = spawn_red_coin_cutscene_star(o->oPosX, o->oPosY, o->oPosZ);
                 if (obj != NULL) {
                     if (o->oHiddenStarLastInteractedObject == &gMarioStates[0]) {
@@ -278,7 +277,7 @@ void bhv_hidden_red_coin_star_loop(void) {
                     }
                     spawn_mist_particles();
                 }
-                o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+                network_send_object(o);
             }
             break;
     }
