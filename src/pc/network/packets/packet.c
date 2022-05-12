@@ -4,6 +4,7 @@
 #include "pc/debuglog.h"
 
 void packet_process(struct Packet* p) {
+    if (gNetworkType == NT_NONE) { return; }
     if (p->levelAreaMustMatch) {
         extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
         bool levelAreaMismatch =
