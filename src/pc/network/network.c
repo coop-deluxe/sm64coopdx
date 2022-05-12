@@ -451,6 +451,10 @@ void network_shutdown(bool sendLeaving, bool exiting) {
  
     gNetworkType = NT_NONE;
 
+#ifdef DISCORD_SDK
+    network_set_system(NS_DISCORD);
+#endif
+
     if (exiting) { return; }
 
     // reset other stuff
