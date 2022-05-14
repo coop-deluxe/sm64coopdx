@@ -2378,6 +2378,78 @@
 
 <br />
 
+## [get_current_background_music](#get_current_background_music)
+
+### Lua Example
+`local integerValue = get_current_background_music()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 get_current_background_music(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_background_music_max_target_volume](#get_current_background_music_max_target_volume)
+
+### Lua Example
+`local integerValue = get_current_background_music_max_target_volume()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_current_background_music_max_target_volume(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_background_music_target_volume](#get_current_background_music_target_volume)
+
+### Lua Example
+`local integerValue = get_current_background_music_target_volume()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_current_background_music_target_volume(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_current_background_music_volume_lowered](#is_current_background_music_volume_lowered)
+
+### Lua Example
+`local integerValue = is_current_background_music_volume_lowered()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_current_background_music_volume_lowered(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [play_course_clear](#play_course_clear)
 
 ### Lua Example

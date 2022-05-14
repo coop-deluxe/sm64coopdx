@@ -114,6 +114,13 @@ void camera_unfreeze(void) {
 
 ///
 
+extern s16 gMenuMode;
+bool is_game_paused(void) {
+    return gMenuMode != -1;
+}
+
+///
+
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return dynos_warp_to_level(aLevel, aArea, aAct);
 }

@@ -7438,6 +7438,42 @@ int smlua_func_fadeout_background_music(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_current_background_music(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_current_background_music());
+
+    return 1;
+}
+
+int smlua_func_get_current_background_music_max_target_volume(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_current_background_music_max_target_volume());
+
+    return 1;
+}
+
+int smlua_func_get_current_background_music_target_volume(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_current_background_music_target_volume());
+
+    return 1;
+}
+
+int smlua_func_is_current_background_music_volume_lowered(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, is_current_background_music_volume_lowered());
+
+    return 1;
+}
+
 int smlua_func_play_course_clear(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -15171,6 +15207,15 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_is_game_paused(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, is_game_paused());
+
+    return 1;
+}
+
 int smlua_func_movtexqc_register(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -16905,6 +16950,10 @@ void smlua_bind_functions_autogen(void) {
     // external.h
     smlua_bind_function(L, "fade_volume_scale", smlua_func_fade_volume_scale);
     smlua_bind_function(L, "fadeout_background_music", smlua_func_fadeout_background_music);
+    smlua_bind_function(L, "get_current_background_music", smlua_func_get_current_background_music);
+    smlua_bind_function(L, "get_current_background_music_max_target_volume", smlua_func_get_current_background_music_max_target_volume);
+    smlua_bind_function(L, "get_current_background_music_target_volume", smlua_func_get_current_background_music_target_volume);
+    smlua_bind_function(L, "is_current_background_music_volume_lowered", smlua_func_is_current_background_music_volume_lowered);
     smlua_bind_function(L, "play_course_clear", smlua_func_play_course_clear);
     smlua_bind_function(L, "play_dialog_sound", smlua_func_play_dialog_sound);
     smlua_bind_function(L, "play_music", smlua_func_play_music);
@@ -17524,6 +17573,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
+    smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);

@@ -728,6 +728,10 @@
 - external.h
    - [fade_volume_scale](functions-3.md#fade_volume_scale)
    - [fadeout_background_music](functions-3.md#fadeout_background_music)
+   - [get_current_background_music](functions-3.md#get_current_background_music)
+   - [get_current_background_music_max_target_volume](functions-3.md#get_current_background_music_max_target_volume)
+   - [get_current_background_music_target_volume](functions-3.md#get_current_background_music_target_volume)
+   - [is_current_background_music_volume_lowered](functions-3.md#is_current_background_music_volume_lowered)
    - [play_course_clear](functions-3.md#play_course_clear)
    - [play_dialog_sound](functions-3.md#play_dialog_sound)
    - [play_music](functions-3.md#play_music)
@@ -1376,6 +1380,7 @@
    - [hud_render_power_meter](functions-4.md#hud_render_power_meter)
    - [hud_set_value](functions-4.md#hud_set_value)
    - [hud_show](functions-4.md#hud_show)
+   - [is_game_paused](functions-4.md#is_game_paused)
    - [movtexqc_register](functions-4.md#movtexqc_register)
    - [play_transition](functions-4.md#play_transition)
    - [save_file_set_using_backup_slot](functions-4.md#save_file_set_using_backup_slot)

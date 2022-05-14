@@ -39,6 +39,8 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);
 void camera_freeze(void);
 void camera_unfreeze(void);
 
+bool is_game_paused(void);
+
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool warp_restart_level(void);
 bool warp_exit_level(s32 aDelay);

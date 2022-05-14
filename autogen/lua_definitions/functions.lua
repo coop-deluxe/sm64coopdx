@@ -3688,6 +3688,26 @@ function fadeout_background_music(arg0, fadeOut)
     -- ...
 end
 
+--- @return integer
+function get_current_background_music()
+    -- ...
+end
+
+--- @return integer
+function get_current_background_music_max_target_volume()
+    -- ...
+end
+
+--- @return integer
+function get_current_background_music_target_volume()
+    -- ...
+end
+
+--- @return integer
+function is_current_background_music_volume_lowered()
+    -- ...
+end
+
 --- @return nil
 function play_course_clear()
     -- ...
@@ -7373,6 +7393,11 @@ end
 
 --- @return nil
 function hud_show()
+    -- ...
+end
+
+--- @return boolean
+function is_game_paused()
     -- ...
 end
 

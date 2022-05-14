@@ -11,6 +11,7 @@ extern "C" {
 #include "game/sound_init.h"
 #include "game/object_list_processor.h"
 #include "game/options_menu.h"
+#include "pc/lua/smlua_hooks.h"
 extern s8 gDialogBoxState;
 extern s16 gMenuMode;
 extern s32 gWdwWaterLevelSet;
@@ -305,6 +306,9 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
                 sound_banks_enable(0, 0xFFFF); // Bowser levels sound fix
             }
 
+            // lua hooks
+            smlua_call_event_hooks(HOOK_ON_WARP);
+
             // Reset values
             sDynosWarpTargetArea = -1;
             sDynosWarpLevelNum   = -1;
@@ -441,6 +445,9 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             // Set music
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
             sDynosExitTargetWarp = NULL;
+            
+            // lua hooks
+            smlua_call_event_hooks(HOOK_ON_WARP);
         }
 
         // Phase 4 - Unlock Mario as soon as the second transition is ended

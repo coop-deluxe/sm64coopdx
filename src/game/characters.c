@@ -515,6 +515,10 @@ void update_character_anim_offset(struct MarioState* m) {
     if (m->curAnimOffset > 40)  { m->curAnimOffset = 40; }
     if (m->curAnimOffset < -40) { m->curAnimOffset = -40; }
 
-    marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;
+    if (m->action == ACT_JUMBO_STAR_CUTSCENE) {
+        marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;
+    } else {
+        marioObj->header.gfx.pos[1] += m->curAnimOffset;
+    }
     marioObj->header.gfx.node.flags |= GRAPH_RENDER_PLAYER;
 }

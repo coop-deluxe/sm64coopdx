@@ -2509,6 +2509,18 @@ u16 get_current_background_music(void) {
     return -1;
 }
 
+u8 get_current_background_music_target_volume(void) {
+    return sBackgroundMusicTargetVolume;
+}
+
+u8 get_current_background_music_max_target_volume(void) {
+    return sBackgroundMusicMaxTargetVolume;
+}
+
+u8 is_current_background_music_volume_lowered(void) {
+    return sLowerBackgroundMusicVolume;
+}
+
 /**
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */

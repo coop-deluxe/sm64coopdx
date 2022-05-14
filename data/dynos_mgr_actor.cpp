@@ -1,4 +1,5 @@
 #include <map>
+#include <algorithm>
 #include "dynos.cpp.h"
 
 extern "C" {
@@ -101,11 +102,28 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     return NULL;
 }
 
-ActorGfx* DynOS_Actor_GetActorGfx(const void* aGeoref) {
-    if (aGeoref == NULL) { return NULL; }
+ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode) {
+    if (aGraphNode == NULL) { return NULL; }
     auto& _ValidActors = DynosValidActors();
-    if (_ValidActors.count(aGeoref) == 0) { return NULL; }
-    return &_ValidActors[aGeoref];
+
+    // If georef is not NULL, check georef
+    if (aGraphNode->georef != NULL) {
+        if (_ValidActors.count(aGraphNode->georef) != 0) {
+            return &_ValidActors[aGraphNode->georef];
+        }
+        return NULL;
+    }
+
+    // Check graph node
+    auto it = std::find_if(_ValidActors.begin(), _ValidActors.end(),
+        [&aGraphNode](const auto& _Actor) { return _Actor.second.mGraphNode == aGraphNode; }
+    );
+    if (it != _ValidActors.end()) {
+        return &it->second;
+    }
+
+    // No actor found
+    return NULL;
 }
 
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx) {

@@ -5389,6 +5389,24 @@
 
 <br />
 
+## [is_game_paused](#is_game_paused)
+
+### Lua Example
+`local booleanValue = is_game_paused()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_game_paused(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [movtexqc_register](#movtexqc_register)
 
 ### Lua Example
