@@ -26,6 +26,7 @@ struct GlobalTextures {
 
 extern struct GlobalTextures gGlobalTextures;
 extern f32 gDjuiHudUtilsZ;
+extern u8 gDjuiHudLockMouse;
 
 void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);
 void djui_hud_set_font(enum DjuiFontType fontType);
@@ -36,6 +37,9 @@ u32 djui_hud_get_screen_height(void);
 
 f32 djui_hud_get_mouse_x(void);
 f32 djui_hud_get_mouse_y(void);
+f32 djui_hud_get_raw_mouse_x(void);
+f32 djui_hud_get_raw_mouse_y(void);
+void djui_hud_set_mouse_locked(bool locked);
 
 f32 djui_hud_measure_text(const char* message);
 void djui_hud_print_text(const char* message, float x, float y, float scale);

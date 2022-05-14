@@ -22,6 +22,7 @@ static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum DjuiFontType sFont = FONT_NORMAL;
 
 f32 gDjuiHudUtilsZ = 0;
+u8 gDjuiHudLockMouse = FALSE;
 
 extern ALIGNED8 const u8 texture_hud_char_camera[];
 extern ALIGNED8 const u8 texture_hud_char_lakitu[];
@@ -160,6 +161,18 @@ f32 djui_hud_get_mouse_y(void) {
     controller_sdl_read_mouse_window();
 #endif
     return mouse_window_y / djui_gfx_get_scale();
+}
+
+f32 djui_hud_get_raw_mouse_x(void) {
+    return mouse_x;
+}
+
+f32 djui_hud_get_raw_mouse_y(void) {
+    return mouse_y;
+}
+
+void djui_hud_set_mouse_locked(bool locked) {
+    gDjuiHudLockMouse = locked;
 }
 
 f32 djui_hud_measure_text(const char* message) {

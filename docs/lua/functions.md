@@ -704,6 +704,8 @@
 - djui_hud_utils.h
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
+   - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
+   - [djui_hud_get_raw_mouse_y](functions-3.md#djui_hud_get_raw_mouse_y)
    - [djui_hud_get_screen_height](functions-3.md#djui_hud_get_screen_height)
    - [djui_hud_get_screen_width](functions-3.md#djui_hud_get_screen_width)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
@@ -712,6 +714,7 @@
    - [djui_hud_render_rect_interpolated](functions-3.md#djui_hud_render_rect_interpolated)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
    - [djui_hud_set_font](functions-3.md#djui_hud_set_font)
+   - [djui_hud_set_mouse_locked](functions-3.md#djui_hud_set_mouse_locked)
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
 

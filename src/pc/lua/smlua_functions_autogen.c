@@ -7204,6 +7204,24 @@ int smlua_func_djui_hud_get_mouse_y(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_get_raw_mouse_x(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushnumber(L, djui_hud_get_raw_mouse_x());
+
+    return 1;
+}
+
+int smlua_func_djui_hud_get_raw_mouse_y(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushnumber(L, djui_hud_get_raw_mouse_y());
+
+    return 1;
+}
+
 int smlua_func_djui_hud_get_screen_height(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -7316,6 +7334,17 @@ int smlua_func_djui_hud_set_font(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     djui_hud_set_font(fontType);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_set_mouse_locked(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool locked = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    djui_hud_set_mouse_locked(locked);
 
     return 1;
 }
@@ -16856,6 +16885,8 @@ void smlua_bind_functions_autogen(void) {
     // djui_hud_utils.h
     smlua_bind_function(L, "djui_hud_get_mouse_x", smlua_func_djui_hud_get_mouse_x);
     smlua_bind_function(L, "djui_hud_get_mouse_y", smlua_func_djui_hud_get_mouse_y);
+    smlua_bind_function(L, "djui_hud_get_raw_mouse_x", smlua_func_djui_hud_get_raw_mouse_x);
+    smlua_bind_function(L, "djui_hud_get_raw_mouse_y", smlua_func_djui_hud_get_raw_mouse_y);
     smlua_bind_function(L, "djui_hud_get_screen_height", smlua_func_djui_hud_get_screen_height);
     smlua_bind_function(L, "djui_hud_get_screen_width", smlua_func_djui_hud_get_screen_width);
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
@@ -16864,6 +16895,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_render_rect_interpolated", smlua_func_djui_hud_render_rect_interpolated);
     smlua_bind_function(L, "djui_hud_set_color", smlua_func_djui_hud_set_color);
     smlua_bind_function(L, "djui_hud_set_font", smlua_func_djui_hud_set_font);
+    smlua_bind_function(L, "djui_hud_set_mouse_locked", smlua_func_djui_hud_set_mouse_locked);
     smlua_bind_function(L, "djui_hud_set_resolution", smlua_func_djui_hud_set_resolution);
     smlua_bind_function(L, "djui_hud_world_pos_to_screen_pos", smlua_func_djui_hud_world_pos_to_screen_pos);
 

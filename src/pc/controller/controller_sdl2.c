@@ -26,6 +26,7 @@
 #include "game/level_update.h"
 
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_hud_utils.h"
 
 #define MAX_JOYBINDS 32
 #define MAX_MOUSEBUTTONS 8 // arbitrary
@@ -160,16 +161,20 @@ static inline void update_button(const int i, const bool new) {
     }
 }
 
+u8 ignore_lock = FALSE;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) {
         return;
     }
 
 #ifdef BETTERCAMERA
-    if (newcam_mouse == 1 && sCurrPlayMode != 2)
+    if (newcam_mouse == 1 && sCurrPlayMode != 2) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
-    else
+        ignore_lock = TRUE;
+    } else {
         SDL_SetRelativeMouseMode(SDL_FALSE);
+        ignore_lock = FALSE;
+    }
 
     u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 
@@ -182,6 +187,22 @@ static void controller_sdl_read(OSContPad *pad) {
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
 #endif
+    if (!ignore_lock && sCurrPlayMode != 2) {
+        SDL_SetRelativeMouseMode(gDjuiHudLockMouse ? SDL_TRUE : SDL_FALSE);
+
+#ifndef BETTERCAMERA
+        u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
+
+        if (!gInteractableOverridePad) {
+            for (u32 i = 0; i < num_mouse_binds; ++i)
+                if (mouse & SDL_BUTTON(mouse_binds[i][0]))
+                    pad->button |= mouse_binds[i][1];
+        }
+        // remember buttons that changed from 0 to 1
+        last_mouse = (mouse_buttons ^ mouse) & mouse;
+        mouse_buttons = mouse;
+#endif
+    }
 
     SDL_GameControllerUpdate();
 

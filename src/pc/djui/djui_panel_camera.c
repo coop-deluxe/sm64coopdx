@@ -26,10 +26,12 @@ void djui_panel_camera_create(struct DjuiBase* caller) {
         djui_interactable_hook_value_change(&checkbox2->base, djui_panel_camera_value_changed);
         djui_base_set_size(&checkbox2->base, 1.0f, 32);
 
+#ifdef BETTERCAMERA
         struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "Mouse Look", &configCameraMouse);
         djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_interactable_hook_value_change(&checkbox3->base, djui_panel_camera_value_changed);
         djui_base_set_size(&checkbox3->base, 1.0f, 32);
+#endif
 
         struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "Invert X", &configCameraInvertX);
         djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

@@ -3575,6 +3575,16 @@ function djui_hud_get_mouse_y()
     -- ...
 end
 
+--- @return number
+function djui_hud_get_raw_mouse_x()
+    -- ...
+end
+
+--- @return number
+function djui_hud_get_raw_mouse_y()
+    -- ...
+end
+
 --- @return integer
 function djui_hud_get_screen_height()
     -- ...
@@ -3634,6 +3644,12 @@ end
 --- @param fontType DjuiFontType
 --- @return nil
 function djui_hud_set_font(fontType)
+    -- ...
+end
+
+--- @param locked boolean
+--- @return nil
+function djui_hud_set_mouse_locked(locked)
     -- ...
 end
 
