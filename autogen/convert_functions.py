@@ -160,6 +160,7 @@ manual_index_documentation = """
    - [network_send](#network_send)
    - [djui_hud_render_texture](#djui_hud_render_texture)
    - [get_texture_info](#get_texture_info)
+   - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
 
 <br />
 
@@ -329,6 +330,34 @@ Retrieves a texture by name.
 
 ### C Prototype
 `N/A`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+
+### Lua Example
+`djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleW | `number` |
+| prevScaleH | `number` |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
 
 [:arrow_up_small:](#)
 

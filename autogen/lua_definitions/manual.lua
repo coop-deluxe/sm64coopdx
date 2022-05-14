@@ -159,3 +159,17 @@ end
 function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
     -- ...
 end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @return nil
+function djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)
+    -- ...
+end

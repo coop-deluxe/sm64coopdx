@@ -41,6 +41,10 @@ f32 djui_hud_measure_text(const char* message);
 void djui_hud_print_text(const char* message, float x, float y, float scale);
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
 void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH);
+void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);
+void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);
+
+void djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);
 
 #endif

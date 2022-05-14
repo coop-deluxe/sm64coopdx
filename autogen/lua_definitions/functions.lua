@@ -3609,6 +3609,19 @@ function djui_hud_render_rect(x, y, width, height)
     -- ...
 end
 
+--- @param prevX number
+--- @param prevY number
+--- @param prevWidth number
+--- @param prevHeight number
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @return nil
+function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
+    -- ...
+end
+
 --- @param r integer
 --- @param g integer
 --- @param b integer
@@ -3627,6 +3640,13 @@ end
 --- @param resolutionType HudUtilsResolution
 --- @return nil
 function djui_hud_set_resolution(resolutionType)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param out Vec3f
+--- @return nil
+function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end
 

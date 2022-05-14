@@ -2135,6 +2135,33 @@
 
 <br />
 
+## [djui_hud_render_rect_interpolated](#djui_hud_render_rect_interpolated)
+
+### Lua Example
+`djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevX | `number` |
+| prevY | `number` |
+| prevWidth | `number` |
+| prevHeight | `number` |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_set_color](#djui_hud_set_color)
 
 ### Lua Example
@@ -2193,6 +2220,27 @@
 
 ### C Prototype
 `void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
+
+### Lua Example
+`djui_hud_world_pos_to_screen_pos(pos, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);`
 
 [:arrow_up_small:](#)
 

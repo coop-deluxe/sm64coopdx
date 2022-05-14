@@ -7267,6 +7267,31 @@ int smlua_func_djui_hud_render_rect(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_render_rect_interpolated(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 8)) { return 0; }
+
+    f32 prevX = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 prevY = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    f32 prevWidth = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    f32 prevHeight = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+    f32 x = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 5"); return 0; }
+    f32 y = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 6"); return 0; }
+    f32 width = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 7"); return 0; }
+    f32 height = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 8"); return 0; }
+
+    djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height);
+
+    return 1;
+}
+
 int smlua_func_djui_hud_set_color(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -7302,6 +7327,35 @@ int smlua_func_djui_hud_set_resolution(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     djui_hud_set_resolution(resolutionType);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_world_pos_to_screen_pos(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(1, "x");
+    pos[1] = smlua_get_number_field(1, "y");
+    pos[2] = smlua_get_number_field(1, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    f32* out = smlua_get_vec3f_from_buffer();
+    out[0] = smlua_get_number_field(2, "x");
+    out[1] = smlua_get_number_field(2, "y");
+    out[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    djui_hud_world_pos_to_screen_pos(pos, out);
+
+    smlua_push_number_field(1, "x", pos[0]);
+    smlua_push_number_field(1, "y", pos[1]);
+    smlua_push_number_field(1, "z", pos[2]);
+
+    smlua_push_number_field(2, "x", out[0]);
+    smlua_push_number_field(2, "y", out[1]);
+    smlua_push_number_field(2, "z", out[2]);
 
     return 1;
 }
@@ -16807,9 +16861,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_render_rect", smlua_func_djui_hud_render_rect);
+    smlua_bind_function(L, "djui_hud_render_rect_interpolated", smlua_func_djui_hud_render_rect_interpolated);
     smlua_bind_function(L, "djui_hud_set_color", smlua_func_djui_hud_set_color);
     smlua_bind_function(L, "djui_hud_set_font", smlua_func_djui_hud_set_font);
     smlua_bind_function(L, "djui_hud_set_resolution", smlua_func_djui_hud_set_resolution);
+    smlua_bind_function(L, "djui_hud_world_pos_to_screen_pos", smlua_func_djui_hud_world_pos_to_screen_pos);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);

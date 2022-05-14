@@ -271,6 +271,59 @@ int smlua_func_djui_hud_render_texture(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_render_texture_interpolated(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 9)) { return 0; }
+
+    struct TextureInfo tmpTexInfo = { 0 };
+    struct TextureInfo* texInfo = &tmpTexInfo;
+
+    if (smlua_is_cobject(L, 1, LOT_TEXTUREINFO)) {
+        texInfo = (struct TextureInfo*)smlua_to_cobject(L, 1, LOT_TEXTUREINFO);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, 1);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top+1);
+        tmpTexInfo.texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'texture' field"); return 0; }
+
+        tmpTexInfo.bitSize = smlua_get_integer_field(top+1, "bitSize");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'bitSize' field"); return 0; }
+
+        tmpTexInfo.width   = smlua_get_integer_field(top+1, "width");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'width' field"); return 0; }
+
+        tmpTexInfo.height  = smlua_get_integer_field(top+1, "height");
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1's 'height' field"); return 0; }
+
+        lua_settop(L, top);
+    }
+
+    f32 prevX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    f32 prevY = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    f32 prevScaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+    f32 prevScaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 5"); return 0; }
+    f32 x = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 6"); return 0; }
+    f32 y = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 7"); return 0; }
+    f32 scaleW = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 8"); return 0; }
+    f32 scaleH = smlua_to_number(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 9"); return 0; }
+
+    djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -290,4 +343,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "network_send_to", smlua_func_network_send_to);
     smlua_bind_function(L, "get_texture_info", smlua_func_get_texture_info);
     smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
+    smlua_bind_function(L, "djui_hud_render_texture_interpolated", smlua_func_djui_hud_render_texture_interpolated);
 }
