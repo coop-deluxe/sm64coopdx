@@ -91,9 +91,9 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
 
         struct DjuiText* t3 = djui_text_create(&row->base, "");
         djui_base_set_size_type(&t3->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&t3->base, 100, 32.0f);
+        djui_base_set_size(&t3->base, 103, 32.0f);
         djui_base_set_color(&t3->base, 220, 220, 220, 255);
-        djui_text_set_alignment(t3, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djui_text_set_alignment(t3, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
         djuiTextDescriptions[i] = t3;
 
         struct DjuiText* t4 = djui_text_create(&row->base, "location");
