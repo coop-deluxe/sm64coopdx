@@ -223,6 +223,13 @@ struct BassAudio* audio_load_internal(const char* filename, bool isStream) {
     bassAudio->file = modFile;
 
     // copy audio into rawData
+    if (modFile->fp == NULL) {
+        modFile->fp = fopen(modFile->cachedPath, "rb");
+        if (modFile->fp == NULL) {
+            LOG_ERROR("Could not open mod file: %s", modFile->cachedPath);
+            return NULL;
+        }
+    }
     rewind(modFile->fp);
     bassAudio->rawData = (char*)malloc(modFile->size * sizeof(char));
     fread(bassAudio->rawData, modFile->size, 1, modFile->fp);
