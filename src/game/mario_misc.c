@@ -759,7 +759,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                 geo_remove_child_from_parent(node, &gMirrorMario[i].node);
                 break;
             case GEO_CONTEXT_RENDER:
-                if (mario->header.gfx.pos[0] > 1700.0f) {
+                if (mario && (((struct GraphNode*)&mario->header.gfx)->flags & GRAPH_RENDER_ACTIVE)) {
                     // TODO: Is this a geo layout copy or a graph node copy?
                     gMirrorMario[i].sharedChild = mario->header.gfx.sharedChild;
                     dynos_actor_override((void*)&gMirrorMario[i].sharedChild);
@@ -774,7 +774,9 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].pos[0] = mirroredX + MIRROR_X;
                     gMirrorMario[i].angle[1] = -gMirrorMario[i].angle[1];
                     gMirrorMario[i].scale[0] *= -1.0f;
-                    gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
+                    // TODO: enabling rendering can cause the game to crash when two players are in the mirror room
+                    //gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
+                    gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 } else {
                     gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }
