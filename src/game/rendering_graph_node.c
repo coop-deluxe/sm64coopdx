@@ -378,10 +378,10 @@ static void geo_process_ortho_projection(struct GraphNodeOrthoProjection *node) 
     if (node->node.children != NULL) {
         Mtx *mtx = alloc_display_list(sizeof(*mtx));
         if (mtx == NULL) { return; }
-        f32 left = (gCurGraphNodeRoot->x - gCurGraphNodeRoot->width) / 2.0f * node->scale;
-        f32 right = (gCurGraphNodeRoot->x + gCurGraphNodeRoot->width) / 2.0f * node->scale;
-        f32 top = (gCurGraphNodeRoot->y - gCurGraphNodeRoot->height) / 2.0f * node->scale;
-        f32 bottom = (gCurGraphNodeRoot->y + gCurGraphNodeRoot->height) / 2.0f * node->scale;
+        f32 left   = ((gCurGraphNodeRoot->x - gCurGraphNodeRoot->width)  / 2.0f) * node->scale;
+        f32 right  = ((gCurGraphNodeRoot->x + gCurGraphNodeRoot->width)  / 2.0f) * node->scale;
+        f32 top    = ((gCurGraphNodeRoot->y - gCurGraphNodeRoot->height) / 2.0f) * node->scale;
+        f32 bottom = ((gCurGraphNodeRoot->y + gCurGraphNodeRoot->height) / 2.0f) * node->scale;
 
         guOrtho(mtx, left, right, bottom, top, -2.0f, 2.0f, 1.0f);
         gSPPerspNormalize(gDisplayListHead++, 0xFFFF);
@@ -404,10 +404,12 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     if (mtx == NULL) { return; }
 
+    f32 divisor = (f32) gCurGraphNodeRoot->height;
+    if (divisor == 0) { divisor = 1; }
 #ifdef VERSION_EU
-    f32 aspect = ((f32) gCurGraphNodeRoot->width / (f32) gCurGraphNodeRoot->height) * 1.1f;
+    f32 aspect = ((f32) gCurGraphNodeRoot->width / divisor) * 1.1f;
 #else
-    f32 aspect = (f32) gCurGraphNodeRoot->width / (f32) gCurGraphNodeRoot->height;
+    f32 aspect = (f32) gCurGraphNodeRoot->width / divisor;
 #endif
 
     guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, not_zero(node->near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
@@ -1066,7 +1068,9 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     // Half of the fov in in-game angle units instead of degrees.
     s16 halfFov = (gCurGraphNodeCamFrustum->fov / 2.0f + 1.0f) * 32768.0f / 180.0f + 0.5f;
 
-    f32 hScreenEdge = -matrix[3][2] * sins(halfFov) / coss(halfFov);
+    f32 divisor = coss(halfFov);
+    if (divisor == 0) { divisor = 1; }
+    f32 hScreenEdge = -matrix[3][2] * sins(halfFov) / divisor;
     // -matrix[3][2] is the depth, which gets multiplied by tan(halfFov) to get
     // the amount of units between the center of the screen and the horizontal edge
     // given the distance from the object to the camera.

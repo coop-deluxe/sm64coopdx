@@ -195,4 +195,6 @@ struct BehaviorValues {
 
 extern struct BehaviorValues gBehaviorValues;
 
+void hardcoded_reset_default_values(void);
+
 #endif
