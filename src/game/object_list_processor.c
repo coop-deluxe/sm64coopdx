@@ -281,7 +281,10 @@ void bhv_mario_update(void) {
         vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
     }
 
-    gMarioState->particleFlags = 0;
+    if (stateIndex == 0) {
+        gMarioState->particleFlags = 0;
+    }
+    
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
 
     u32 particleFlags = 0;

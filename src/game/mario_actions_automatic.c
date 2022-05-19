@@ -44,7 +44,7 @@ void add_tree_leaf_particles(struct MarioState *m) {
             leafHeight = 100.0f;
         }
         if (m->pos[1] - m->floorHeight > leafHeight) {
-            m->particleFlags |= PARTICLE_LEAF;
+            set_mario_particle_flags(m, PARTICLE_LEAF, FALSE);
         }
     }
 }
@@ -187,7 +187,7 @@ s32 act_holding_pole(struct MarioState *m) {
             //! The Shifting Sand Land palm tree check is done climbing up in
             // add_tree_leaf_particles, but not here, when climbing down.
             if (m->pos[1] - m->floorHeight > 100.0f) {
-                m->particleFlags |= PARTICLE_LEAF;
+                set_mario_particle_flags(m, PARTICLE_LEAF, FALSE);
             }
         }
         play_climbing_sounds(m, 2);

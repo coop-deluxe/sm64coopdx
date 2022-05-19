@@ -515,7 +515,7 @@ s32 mario_execute_object_action(struct MarioState *m) {
     }
 
     if (!cancel && (m->input & INPUT_IN_WATER)) {
-        m->particleFlags |= PARTICLE_IDLE_WATER_WAVE;
+        set_mario_particle_flags(m, PARTICLE_IDLE_WATER_WAVE, FALSE);
     }
 
     return cancel;

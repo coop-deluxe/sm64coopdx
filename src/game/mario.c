@@ -302,15 +302,15 @@ void adjust_sound_for_speed(struct MarioState *m) {
 void play_sound_and_spawn_particles(struct MarioState *m, u32 soundBits, u32 waveParticleType) {
     if (m->terrainSoundAddend == (SOUND_TERRAIN_WATER << 16)) {
         if (waveParticleType != 0) {
-            m->particleFlags |= PARTICLE_SHALLOW_WATER_SPLASH;
+            set_mario_particle_flags(m, PARTICLE_SHALLOW_WATER_SPLASH, FALSE);
         } else {
-            m->particleFlags |= PARTICLE_SHALLOW_WATER_WAVE;
+            set_mario_particle_flags(m, PARTICLE_SHALLOW_WATER_WAVE, FALSE);
         }
     } else {
         if (m->terrainSoundAddend == (SOUND_TERRAIN_SAND << 16)) {
-            m->particleFlags |= PARTICLE_DIRT;
+            set_mario_particle_flags(m, PARTICLE_DIRT, FALSE);
         } else if (m->terrainSoundAddend == (SOUND_TERRAIN_SNOW << 16)) {
-            m->particleFlags |= PARTICLE_SNOW;
+            set_mario_particle_flags(m, PARTICLE_SNOW, FALSE);
         }
     }
 
@@ -1596,7 +1596,7 @@ void set_submerged_cam_preset_and_spawn_bubbles(struct MarioState *m) {
             // of the water with his head out, spawn bubbles.
             if (!(m->action & ACT_FLAG_INTANGIBLE)) {
                 if ((m->pos[1] < (f32)(m->waterLevel - 160)) || (m->faceAngle[0] < -0x800)) {
-                    m->particleFlags |= PARTICLE_BUBBLE;
+                    set_mario_particle_flags(m, PARTICLE_BUBBLE, FALSE);
                 }
             }
         }
@@ -2247,4 +2247,16 @@ void init_mario_from_save_file(void) {
     }
     gHudDisplay.coins = 0;
     gHudDisplay.wedges = 8;
+}
+
+void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear) {
+    if (m->playerIndex != 0) {
+        return;
+    }
+
+    if (clear) {
+        m->particleFlags &= ~flags;
+    } else {
+        m->particleFlags |= flags;
+    }
 }

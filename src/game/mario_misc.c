@@ -539,9 +539,9 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
 
         if (!marioActive) {
             node->flags &= ~GRAPH_RENDER_ACTIVE;
-        } else if (camera->mode == CAMERA_MODE_C_UP) {
-            rotNode->rotation[0] = gPlayerCameraState->headRotation[1];
-            rotNode->rotation[2] = gPlayerCameraState->headRotation[0];
+        } else if (((plrIdx == 0) && (camera->mode == CAMERA_MODE_C_UP)) || ((plrIdx != 0) && (action == ACT_FIRST_PERSON))) {
+            rotNode->rotation[0] = gPlayerCameraState[plrIdx].headRotation[1];
+            rotNode->rotation[2] = gPlayerCameraState[plrIdx].headRotation[0];
         }
         else if (action & ACT_FLAG_WATER_OR_TEXT) {
             rotNode->rotation[0] = bodyState->headAngle[1];
