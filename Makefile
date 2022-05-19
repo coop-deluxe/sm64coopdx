@@ -64,6 +64,8 @@ DOCKERBUILD ?= 0
 DEBUG_INFO_LEVEL ?= 2
 # Enable profiling
 PROFILE ?= 0
+# Enable Game ICON
+ICON ?= 1
 
 # Various workarounds for weird toolchains
 
@@ -891,6 +893,19 @@ else
 #  endif
 endif
 
+#icon
+ifeq ($(WINDOWS_BUILD),1)
+	ifeq ($(ICON),1)
+		Command := mkdir $(BUILD_DIR)/res
+		Resp := $(shell $(call Command))
+
+		Command := windres -o "$(BUILD_DIR)/res/icon.o" -i res/icon.rc
+		Resp := $(shell $(call Command))
+
+		LDFLAGS += $(BUILD_DIR)/res/icon.o
+	endif
+endif
+
 # Coop specific libraries
 
 # Lua
@@ -1092,6 +1107,8 @@ endef
 #==============================================================================#
 # Main Targets                                                                 #
 #==============================================================================#
+
+
 
 ifeq ($(EXTERNAL_DATA),1)
 
