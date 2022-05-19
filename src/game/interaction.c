@@ -2237,7 +2237,7 @@ void check_death_barrier(struct MarioState *m) {
         }
 
         if (level_trigger_warp(m, WARP_OP_WARP_FLOOR) == 20 && !(m->flags & MARIO_UNKNOWN_18)) {
-            play_sound(SOUND_MARIO_WAAAOOOW, m->marioObj->header.gfx.cameraToObject);
+            play_character_sound(m, CHAR_SOUND_WAAAOOOW);
         }
     }
 }

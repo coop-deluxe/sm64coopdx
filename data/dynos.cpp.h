@@ -11,6 +11,7 @@ extern "C" {
 #define FUNCTION_CODE   (u32) 0x434E5546
 #define POINTER_CODE    (u32) 0x52544E50
 #define LUA_VAR_CODE    (u32) 0x5641554C
+#define TEX_REF_CODE    (u32) 0x52584554
 
 #define MOD_PACK_INDEX 99
 

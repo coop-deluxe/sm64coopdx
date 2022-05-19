@@ -2615,7 +2615,13 @@ CHAR_SOUND_SO_LONGA_BOWSER = 40
 CHAR_SOUND_IMA_TIRED = 41
 
 --- @type CharacterSound
-CHAR_SOUND_MAX = 42
+CHAR_SOUND_LETS_A_GO = 42
+
+--- @type CharacterSound
+CHAR_SOUND_OKEY_DOKEY = 43
+
+--- @type CharacterSound
+CHAR_SOUND_MAX = 44
 
 --- @class CharacterType
 

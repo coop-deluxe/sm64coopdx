@@ -159,6 +159,22 @@ void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode) {
     aNode->mName.Write(aFile);
 
     // Data
+    // Look for texture duplicates
+    // If that's the case, store the name of the texture node instead of the whole PNG data
+    // (Don't bother to look for duplicates if there is no data to write)
+    if (!aNode->mData->mPngData.Empty()) {
+        for (const auto& _Node : aGfxData->mTextures) {
+            if (_Node->mLoadIndex < aNode->mLoadIndex &&    // Check load order: duplicates should reference only an already loaded node
+                _Node->mData != NULL &&                     // Check node data
+                aNode->mData->mPngData.Count() == _Node->mData->mPngData.Count() &&     // Check PNG data lengths
+                memcmp(aNode->mData->mPngData.begin(), _Node->mData->mPngData.begin(), aNode->mData->mPngData.Count()) == 0)    // Check PNG data content
+            {
+                WriteBytes<u32>(aFile, TEX_REF_CODE);
+                _Node->mName.Write(aFile);
+                return;
+            }
+        }
+    }
     aNode->mData->mPngData.Write(aFile);
 }
 
@@ -220,19 +236,41 @@ DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData) {
     // Data
     _Node->mData = New<TexData>();
     _Node->mData->mUploaded = false;
-    _Node->mData->mPngData.Read(aFile);
-    if (!_Node->mData->mPngData.Empty()) {
-        u8 *_RawData = stbi_load_from_memory(_Node->mData->mPngData.begin(), _Node->mData->mPngData.Count(), &_Node->mData->mRawWidth, &_Node->mData->mRawHeight, NULL, 4);
-        _Node->mData->mRawFormat = G_IM_FMT_RGBA;
-        _Node->mData->mRawSize   = G_IM_SIZ_32b;
-        _Node->mData->mRawData   = Array<u8>(_RawData, _RawData + (_Node->mData->mRawWidth * _Node->mData->mRawHeight * 4));
-        free(_RawData);
-    } else { // Probably a palette
-        _Node->mData->mRawData   = Array<u8>();
-        _Node->mData->mRawWidth  = 0;
-        _Node->mData->mRawHeight = 0;
-        _Node->mData->mRawFormat = 0;
-        _Node->mData->mRawSize   = 0;
+
+    // Check for the texture ref magic
+    s32 _FileOffset = (s32) ftell(aFile);
+    u32 _TexRefCode = ReadBytes<u32>(aFile);
+    if (_TexRefCode == TEX_REF_CODE) {
+
+        // That's a duplicate, find the original node and copy its content
+        String _NodeName; _NodeName.Read(aFile);
+        for (const auto& _LoadedNode : aGfxData->mTextures) {
+            if (_LoadedNode->mName == _NodeName) {
+                _Node->mData->mPngData   = _LoadedNode->mData->mPngData;
+                _Node->mData->mRawData   = _LoadedNode->mData->mRawData;
+                _Node->mData->mRawWidth  = _LoadedNode->mData->mRawWidth;
+                _Node->mData->mRawHeight = _LoadedNode->mData->mRawHeight;
+                _Node->mData->mRawFormat = _LoadedNode->mData->mRawFormat;
+                _Node->mData->mRawSize   = _LoadedNode->mData->mRawSize;
+                break;
+            }
+        }
+    } else {
+        fseek(aFile, _FileOffset, SEEK_SET);
+        _Node->mData->mPngData.Read(aFile);
+        if (!_Node->mData->mPngData.Empty()) {
+            u8 *_RawData = stbi_load_from_memory(_Node->mData->mPngData.begin(), _Node->mData->mPngData.Count(), &_Node->mData->mRawWidth, &_Node->mData->mRawHeight, NULL, 4);
+            _Node->mData->mRawFormat = G_IM_FMT_RGBA;
+            _Node->mData->mRawSize   = G_IM_SIZ_32b;
+            _Node->mData->mRawData   = Array<u8>(_RawData, _RawData + (_Node->mData->mRawWidth * _Node->mData->mRawHeight * 4));
+            free(_RawData);
+        } else { // Probably a palette
+            _Node->mData->mRawData   = Array<u8>();
+            _Node->mData->mRawWidth  = 0;
+            _Node->mData->mRawHeight = 0;
+            _Node->mData->mRawFormat = 0;
+            _Node->mData->mRawSize   = 0;
+        }
     }
 
     // Append

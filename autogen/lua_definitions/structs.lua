@@ -269,7 +269,9 @@
 --- @field public soundHoohoo integer
 --- @field public soundHrmm integer
 --- @field public soundImaTired integer
+--- @field public soundLetsAGo integer
 --- @field public soundMamaMia integer
+--- @field public soundOkeyDokey integer
 --- @field public soundOnFire integer
 --- @field public soundOoof integer
 --- @field public soundOoof2 integer

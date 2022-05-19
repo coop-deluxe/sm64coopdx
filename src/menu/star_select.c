@@ -501,7 +501,9 @@ void star_select_finish_selection(void) {
 #if defined(VERSION_JP)
     play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #else
-    play_sound(SOUND_MENU_STAR_SOUND_LETS_A_GO, gGlobalSoundSource);
+    if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
+    play_character_sound(gMarioState, CHAR_SOUND_LETS_A_GO);
+    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #endif
 #ifdef VERSION_SH
     queue_rumble_data(60, 70);

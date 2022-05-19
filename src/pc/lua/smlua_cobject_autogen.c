@@ -293,7 +293,7 @@ static struct LuaObjectField sChainSegmentFields[LUA_CHAIN_SEGMENT_FIELD_COUNT] 
     { "yaw",   LVT_S16, offsetof(struct ChainSegment, yaw),   false, LOT_NONE },
 };
 
-#define LUA_CHARACTER_FIELD_COUNT 59
+#define LUA_CHARACTER_FIELD_COUNT 61
 static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "animOffsetEnabled",     LVT_U8,       offsetof(struct Character, animOffsetEnabled),     true, LOT_NONE        },
     { "animOffsetFeet",        LVT_F32,      offsetof(struct Character, animOffsetFeet),        true, LOT_NONE        },
@@ -329,7 +329,9 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "soundHoohoo",           LVT_S32,      offsetof(struct Character, soundHoohoo),           true, LOT_NONE        },
     { "soundHrmm",             LVT_S32,      offsetof(struct Character, soundHrmm),             true, LOT_NONE        },
     { "soundImaTired",         LVT_S32,      offsetof(struct Character, soundImaTired),         true, LOT_NONE        },
+    { "soundLetsAGo",          LVT_S32,      offsetof(struct Character, soundLetsAGo),          true, LOT_NONE        },
     { "soundMamaMia",          LVT_S32,      offsetof(struct Character, soundMamaMia),          true, LOT_NONE        },
+    { "soundOkeyDokey",        LVT_S32,      offsetof(struct Character, soundOkeyDokey),        true, LOT_NONE        },
     { "soundOnFire",           LVT_S32,      offsetof(struct Character, soundOnFire),           true, LOT_NONE        },
     { "soundOoof",             LVT_S32,      offsetof(struct Character, soundOoof),             true, LOT_NONE        },
     { "soundOoof2",            LVT_S32,      offsetof(struct Character, soundOoof2),            true, LOT_NONE        },

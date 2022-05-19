@@ -836,7 +836,9 @@
 | CHAR_SOUND_SNORING3 | 39 |
 | CHAR_SOUND_SO_LONGA_BOWSER | 40 |
 | CHAR_SOUND_IMA_TIRED | 41 |
-| CHAR_SOUND_MAX | 42 |
+| CHAR_SOUND_LETS_A_GO | 42 |
+| CHAR_SOUND_OKEY_DOKEY | 43 |
+| CHAR_SOUND_MAX | 44 |
 
 ### [enum CharacterType](#CharacterType)
 | Identifier | Value |

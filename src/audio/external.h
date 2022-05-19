@@ -53,6 +53,7 @@ void stop_background_music(u16 seqId);
 void fadeout_background_music(u16 arg0, u16 fadeOut);
 void drop_queued_background_music(void);
 u16 get_current_background_music(void);
+u8 get_current_background_music_default_volume(void);
 u8 get_current_background_music_target_volume(void);
 u8 get_current_background_music_max_target_volume(void);
 u8 is_current_background_music_volume_lowered(void);

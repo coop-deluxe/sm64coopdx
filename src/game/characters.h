@@ -81,6 +81,8 @@ struct Character {
     s32 soundSnoring3;
     s32 soundSoLongaBowser;
     s32 soundImaTired;
+    s32 soundLetsAGo;
+    s32 soundOkeyDokey;
 };
 
 enum CharacterSound {
@@ -126,6 +128,8 @@ enum CharacterSound {
     CHAR_SOUND_SNORING3,
     CHAR_SOUND_SO_LONGA_BOWSER,
     CHAR_SOUND_IMA_TIRED,
+    CHAR_SOUND_LETS_A_GO,
+    CHAR_SOUND_OKEY_DOKEY,
     CHAR_SOUND_MAX // MUST BE LAST
 };
 

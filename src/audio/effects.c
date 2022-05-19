@@ -63,6 +63,16 @@ static void sequence_channel_process_sound(struct SequenceChannel *seqChannel) {
     f32 panFromChannel;
     s32 i;
 
+    // Rom-hacks audio fix
+    // Force the BGM sequence channels to follow the BGM sequence player mute behavior
+    // Make the audio completely silent if MUTE_BEHAVIOR_STOP_SCRIPT or MUTE_BEHAVIOR_STOP_NOTES is set
+    if (seqChannel->seqPlayer == &gSequencePlayers[0]) {
+        seqChannel->muteBehavior = seqChannel->seqPlayer->muteBehavior;
+        if (seqChannel->seqPlayer->muted && (seqChannel->muteBehavior & (MUTE_BEHAVIOR_STOP_SCRIPT | MUTE_BEHAVIOR_STOP_NOTES)) != 0) {
+            seqChannel->seqPlayer->muteVolumeScale = 0.f;
+        }
+    }
+
     channelVolume = seqChannel->volume * seqChannel->volumeScale *
         seqChannel->seqPlayer->fadeVolume * seqChannel->seqPlayer->volumeScale;
     if (seqChannel->seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_SOFTEN) != 0) {

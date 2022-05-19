@@ -2643,7 +2643,7 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
         cutscene_put_cap_on(m);
     }
     if (animFrame == 88 && m->playerIndex == 0) {
-        play_sound(SOUND_MARIO_HERE_WE_GO, m->marioObj->header.gfx.cameraToObject);
+        play_character_sound(m, CHAR_SOUND_HERE_WE_GO);
     }
     if (!nonMario && animFrame >= 98) {
         m->marioBodyState->handState = MARIO_HAND_PEACE_SIGN;
