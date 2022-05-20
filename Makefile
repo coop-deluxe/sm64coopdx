@@ -64,9 +64,10 @@ DOCKERBUILD ?= 0
 DEBUG_INFO_LEVEL ?= 2
 # Enable profiling
 PROFILE ?= 0
+# Compile headless
+HEADLESS ?= 0
 # Enable Game ICON
 ICON ?= 1
-
 # Various workarounds for weird toolchains
 
 NO_BZERO_BCOPY ?= 0
@@ -349,6 +350,13 @@ else
   endif
 endif
 
+ifeq ($(HEADLESS),1)
+  $(warning Compiling headless)
+  RENDER_API := DUMMY
+  WINDOW_API := DUMMY
+  AUDIO_API := DUMMY
+  CONTROLLER_API := 
+endif
 
 # NON_MATCHING - whether to build a matching, identical copy of the ROM
 #   1 - enable some alternate, more portable code that does not produce a matching ROM
