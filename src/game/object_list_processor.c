@@ -16,6 +16,7 @@
 #include "object_collision.h"
 #include "object_helpers.h"
 #include "object_list_processor.h"
+#include "obj_behaviors.h"
 #include "platform_displacement.h"
 #include "profiler.h"
 #include "spawn_object.h"
@@ -281,7 +282,7 @@ void bhv_mario_update(void) {
         vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
     }
 
-    if (stateIndex == 0) {
+    if ((stateIndex == 0) || (!is_player_active(gMarioState))) {
         gMarioState->particleFlags = 0;
     }
     
