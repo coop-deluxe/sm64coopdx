@@ -3694,6 +3694,11 @@ function get_current_background_music()
 end
 
 --- @return integer
+function get_current_background_music_default_volume()
+    -- ...
+end
+
+--- @return integer
 function get_current_background_music_max_target_volume()
     -- ...
 end
@@ -4229,6 +4234,14 @@ end
 --- @param targetAnimID integer
 --- @return integer
 function set_mario_animation(m, targetAnimID)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param flags integer
+--- @param clear integer
+--- @return nil
+function set_mario_particle_flags(m, flags, clear)
     -- ...
 end
 
@@ -7434,19 +7447,19 @@ function set_environment_region(index, value)
 end
 
 --- @param far number
---- @return number
+--- @return nil
 function set_override_far(far)
     -- ...
 end
 
 --- @param fov number
---- @return number
+--- @return nil
 function set_override_fov(fov)
     -- ...
 end
 
 --- @param near number
---- @return number
+--- @return nil
 function set_override_near(near)
     -- ...
 end

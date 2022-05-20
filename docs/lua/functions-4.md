@@ -5498,7 +5498,7 @@
 ## [set_override_far](#set_override_far)
 
 ### Lua Example
-`local numberValue = set_override_far(far)`
+`set_override_far(far)`
 
 ### Parameters
 | Field | Type |
@@ -5506,10 +5506,10 @@
 | far | `number` |
 
 ### Returns
-- `number`
+- None
 
 ### C Prototype
-`f32 set_override_far(f32 far);`
+`void set_override_far(f32 far);`
 
 [:arrow_up_small:](#)
 
@@ -5518,7 +5518,7 @@
 ## [set_override_fov](#set_override_fov)
 
 ### Lua Example
-`local numberValue = set_override_fov(fov)`
+`set_override_fov(fov)`
 
 ### Parameters
 | Field | Type |
@@ -5526,10 +5526,10 @@
 | fov | `number` |
 
 ### Returns
-- `number`
+- None
 
 ### C Prototype
-`f32 set_override_fov(f32 fov);`
+`void set_override_fov(f32 fov);`
 
 [:arrow_up_small:](#)
 
@@ -5538,7 +5538,7 @@
 ## [set_override_near](#set_override_near)
 
 ### Lua Example
-`local numberValue = set_override_near(near)`
+`set_override_near(near)`
 
 ### Parameters
 | Field | Type |
@@ -5546,10 +5546,10 @@
 | near | `number` |
 
 ### Returns
-- `number`
+- None
 
 ### C Prototype
-`f32 set_override_near(f32 near);`
+`void set_override_near(f32 near);`
 
 [:arrow_up_small:](#)
 

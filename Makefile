@@ -678,7 +678,7 @@ else ifeq ($(COMPILER),clang)
   CC      := clang
   CXX     := clang++
   CPP     := clang++
-  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas
+  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result
 else ifeq ($(TARGET_WEB),1) # As in, web PC port
   CC     := emcc
   CXX    := emcc

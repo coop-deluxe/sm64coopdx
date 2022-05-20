@@ -7447,6 +7447,15 @@ int smlua_func_get_current_background_music(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_current_background_music_default_volume(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_current_background_music_default_volume());
+
+    return 1;
+}
+
 int smlua_func_get_current_background_music_max_target_volume(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -8485,6 +8494,21 @@ int smlua_func_set_mario_animation(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
 
     lua_pushinteger(L, set_mario_animation(m, targetAnimID));
+
+    return 1;
+}
+
+int smlua_func_set_mario_particle_flags(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    u32 flags = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    u8 clear = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    set_mario_particle_flags(m, flags, clear);
 
     return 1;
 }
@@ -15282,7 +15306,7 @@ int smlua_func_set_override_far(lua_State* L) {
     f32 far = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
-    lua_pushnumber(L, set_override_far(far));
+    set_override_far(far);
 
     return 1;
 }
@@ -15293,7 +15317,7 @@ int smlua_func_set_override_fov(lua_State* L) {
     f32 fov = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
-    lua_pushnumber(L, set_override_fov(fov));
+    set_override_fov(fov);
 
     return 1;
 }
@@ -15304,7 +15328,7 @@ int smlua_func_set_override_near(lua_State* L) {
     f32 near = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
-    lua_pushnumber(L, set_override_near(near));
+    set_override_near(near);
 
     return 1;
 }
@@ -16951,6 +16975,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "fade_volume_scale", smlua_func_fade_volume_scale);
     smlua_bind_function(L, "fadeout_background_music", smlua_func_fadeout_background_music);
     smlua_bind_function(L, "get_current_background_music", smlua_func_get_current_background_music);
+    smlua_bind_function(L, "get_current_background_music_default_volume", smlua_func_get_current_background_music_default_volume);
     smlua_bind_function(L, "get_current_background_music_max_target_volume", smlua_func_get_current_background_music_max_target_volume);
     smlua_bind_function(L, "get_current_background_music_target_volume", smlua_func_get_current_background_music_target_volume);
     smlua_bind_function(L, "is_current_background_music_volume_lowered", smlua_func_is_current_background_music_volume_lowered);
@@ -17037,6 +17062,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_mario_action", smlua_func_set_mario_action);
     smlua_bind_function(L, "set_mario_anim_with_accel", smlua_func_set_mario_anim_with_accel);
     smlua_bind_function(L, "set_mario_animation", smlua_func_set_mario_animation);
+    smlua_bind_function(L, "set_mario_particle_flags", smlua_func_set_mario_particle_flags);
     smlua_bind_function(L, "set_mario_y_vel_based_on_fspeed", smlua_func_set_mario_y_vel_based_on_fspeed);
     smlua_bind_function(L, "set_steep_jump_action", smlua_func_set_steep_jump_action);
     smlua_bind_function(L, "set_water_plunge_action", smlua_func_set_water_plunge_action);

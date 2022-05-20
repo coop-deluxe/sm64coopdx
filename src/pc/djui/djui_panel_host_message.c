@@ -7,6 +7,7 @@
 #include "pc/utils/misc.h"
 #include "src/game/level_update.h"
 #include "src/game/hardcoded.h"
+#include "src/engine/math_util.h"
 #include "audio/external.h"
 #include "sounds.h"
 

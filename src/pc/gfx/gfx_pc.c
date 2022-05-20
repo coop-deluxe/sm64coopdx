@@ -624,14 +624,16 @@ static void import_texture(int tile) {
     // make sure the texture id is a printable ascii string
     bool texidIsPrintable = true;
     char* c = (char*)texid;
+    u16 length = 0;
     while (c != NULL && *c != '\0') {
         if (*c < 33 || *c > 126) {
             texidIsPrintable = false;
             break;
         }
+        length++;
         c++;
     }
-    if (texidIsPrintable) {
+    if (texidIsPrintable && length > 0) {
         char texname[SYS_MAX_PATH];
         snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", texid);
         load_texture(texname);

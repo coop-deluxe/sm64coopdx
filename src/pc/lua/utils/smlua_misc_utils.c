@@ -192,14 +192,14 @@ void set_environment_region(u8 index, s32 value) {
     }
 }
 
-f32 set_override_fov(f32 fov) {
+void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
 }
 
-f32 set_override_near(f32 near) {
+void set_override_near(f32 near) {
     gOverrideNear = near;
 }
 
-f32 set_override_far(f32 far) {
+void set_override_far(f32 far) {
     gOverrideFar = far;
 }
