@@ -470,6 +470,7 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     smlua_shutdown();
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
+    network_player_init();
 
     extern s16 gMenuMode;
     gMenuMode = -1;
