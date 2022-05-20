@@ -336,6 +336,45 @@ COURSE_COUNT = 25
 --- @type integer
 COURSE_MIN = 1
 
+--- @type integer
+INSTANT_WARP_INDEX_START = 0x00
+
+--- @type integer
+INSTANT_WARP_INDEX_STOP = 0x04
+
+--- @type integer
+MAX_LOADED_GRAPH_NODES = 0x100
+
+--- @type integer
+WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
+
+--- @type integer
+WARP_TRANSITION_FADE_FROM_CIRCLE = 0x0A
+
+--- @type integer
+WARP_TRANSITION_FADE_FROM_COLOR = 0x00
+
+--- @type integer
+WARP_TRANSITION_FADE_FROM_MARIO = 0x10
+
+--- @type integer
+WARP_TRANSITION_FADE_FROM_STAR = 0x08
+
+--- @type integer
+WARP_TRANSITION_FADE_INTO_BOWSER = 0x13
+
+--- @type integer
+WARP_TRANSITION_FADE_INTO_CIRCLE = 0x0B
+
+--- @type integer
+WARP_TRANSITION_FADE_INTO_COLOR = 0x01
+
+--- @type integer
+WARP_TRANSITION_FADE_INTO_MARIO = 0x11
+
+--- @type integer
+WARP_TRANSITION_FADE_INTO_STAR = 0x09
+
 --- @class BehaviorId
 
 --- @type BehaviorId

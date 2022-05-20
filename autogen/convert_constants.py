@@ -12,6 +12,7 @@ in_files = [
     "include/types.h",
     "include/sm64.h",
     "src/pc/lua/smlua_hooks.h",
+    "src/game/area.h",
     "src/game/camera.h",
     "include/mario_animation_ids.h",
     "include/sounds.h",

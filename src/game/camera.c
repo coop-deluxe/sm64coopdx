@@ -32,6 +32,7 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/djui/djui.h"
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
@@ -3050,7 +3051,7 @@ void update_lakitu(struct Camera *c) {
  * Gets controller input, checks for cutscenes, handles mode changes, and moves the camera
  */
 void update_camera(struct Camera *c) {
-    if (gOverrideFreezeCamera) {
+    if (gOverrideFreezeCamera && !gDjuiInMainMenu) {
         return;
     }
     UNUSED u8 unused[24];
