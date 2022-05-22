@@ -11,6 +11,7 @@
 #include "game/level_update.h"
 #include "game/save_file.h"
 #include "engine/math_util.h"
+#include "pc/configfile.h"
 
 float smoothstep(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);
@@ -117,7 +118,6 @@ next_get:
 
 /////////////////
 
-/*
 static f32 sm64_to_radians(f32 val) {
     return val * M_PI / 0x8000;
 }
@@ -474,7 +474,7 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
     }
 }
 
-void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     register int i;
     f32 matTranfsA[13], matTranfsB[13];
 
@@ -496,31 +496,12 @@ void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     rematrix(out, matTranfsB);
 }
 
-/*
-static s16 delta_interpolate_angle(s16 a, s16 b, f32 delta) {
-    s32 absDiff = b - a;
-    if (absDiff < 0) {
-        absDiff = -absDiff;
-    }
-    if (absDiff >= 0x4000 && absDiff <= 0xC000) {
-        return b;
-    }
-
-    f32 antiDelta = 1.0f - delta;
-    if (absDiff <= 0x8000) {
-        return (a * antiDelta) + (b * delta);
-    } else {
-        return (a * antiDelta) + (b * delta) + 0x8000;
-    }
-}
-
-static void delta_interpolate_angles(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
-    res[0] = delta_interpolate_angle(a[0], b[0], delta);
-    res[1] = delta_interpolate_angle(a[1], b[1], delta);
-    res[2] = delta_interpolate_angle(a[2], b[2], delta);
-}
-
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+    if (configInterpolationMode) {
+        delta_interpolate_mtx_accurate(out, a, b, delta);
+        return;
+    }
+
     // this isn't the right way to do things.
     f32 antiDelta = 1.0f - delta;
     for (s32 i = 0; i < 4; i++) {
@@ -545,8 +526,7 @@ void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx) {
     f32 dotY = vec3f_dot(prevY, nextY);
     f32 dotZ = vec3f_dot(prevZ, nextZ);
 
-    if ((dotX < minDot) | (dotY < minDot) || (dotZ < minDot)) {
+    if ((dotX < minDot) || (dotY < minDot) || (dotZ < minDot)) {
         *mtx = *mtxPrev;
     }
 }
-*/

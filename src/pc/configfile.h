@@ -92,6 +92,7 @@ extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;
 extern bool         configDisablePopups;
 extern bool         configDisableDownloadedModels;
+extern unsigned int configInterpolationMode;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

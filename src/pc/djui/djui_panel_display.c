@@ -61,10 +61,6 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox5->base, 1.0f, 32);
 
-        struct DjuiCheckbox* checkbox6 = djui_checkbox_create(&body->base, "Disable Downloaded Models", &configDisableDownloadedModels);
-        djui_base_set_size_type(&checkbox6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox6->base, 1.0f, 32);
-
     #ifdef EXTERNAL_DATA
         struct DjuiCheckbox* checkbox7 = djui_checkbox_create(&body->base, "Preload Textures", &configPrecacheRes);
         djui_base_set_size_type(&checkbox7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -106,10 +102,15 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             sFrameLimitInput = inputbox1;
         }
 
-        char* filterChoices[3] = { "Nearest", "Linear", "Tripoint" };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Filtering", filterChoices, 3, &configFiltering);
+        char* interpChoices[2] = { "Fast", "Accurate" };
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Interpolation", interpChoices, 2, &configInterpolationMode);
         djui_base_set_size_type(&selectionbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox1->base, 1.0f, 32);
+
+        char* filterChoices[3] = { "Nearest", "Linear", "Tripoint" };
+        struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Filtering", filterChoices, 3, &configFiltering);
+        djui_base_set_size_type(&selectionbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&selectionbox2->base, 1.0f, 32);
 
         char* drawDistanceChoices[6] = { "0.5x", "1x", "1.5x", "3x", "10x", "100x" };
         struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(&body->base, "Draw Distance", drawDistanceChoices, 6, &configDrawDistance);
