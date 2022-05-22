@@ -408,11 +408,6 @@ function on_update()
 end
 
 function on_gamemode_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
-
     local setMode = nil
 
     for i, gm in ipairs(gGameModes) do
@@ -455,4 +450,6 @@ for i, gm in ipairs(gGameModes) do
     sGameModeShortTimes = sGameModeShortTimes .. gm.shortName
 end
 
-hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
+if network_is_server() then
+    hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
+end

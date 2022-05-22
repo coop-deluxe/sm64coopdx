@@ -428,10 +428,6 @@ function on_hud_render()
 end
 
 function on_hide_and_seek_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'on' then
         djui_chat_message_create('Hide-and-seek mod: enabled')
         gGlobalSyncTable.hideAndSeek = true
@@ -452,10 +448,6 @@ function on_hide_and_seek_command(msg)
 end
 
 function on_anti_camp_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'on' then
         djui_chat_message_create('Anti-camping timer: enabled')
         gGlobalSyncTable.campingTimer = true
@@ -469,10 +461,6 @@ function on_anti_camp_command(msg)
 end
 
 function on_touch_tag_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'on' then
         djui_chat_message_create('Touch tag: enabled')
         gGlobalSyncTable.touchTag = true
@@ -486,10 +474,6 @@ function on_touch_tag_command(msg)
 end
 
 function on_koopa_shell_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'on' then
         djui_chat_message_create('Koopa Shell: enabled')
         gGlobalSyncTable.banKoopaShell = false
@@ -503,10 +487,6 @@ function on_koopa_shell_command(msg)
 end
 
 function on_hider_cap_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'on' then
         djui_chat_message_create('Hider Caps: enabled')
         gGlobalSyncTable.hiderCaps = false
@@ -520,10 +500,6 @@ function on_hider_cap_command(msg)
 end
 
 function on_seeker_cap_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'on' then
         djui_chat_message_create('Seeker Caps: enabled')
         gGlobalSyncTable.seekerCaps = false
@@ -649,12 +625,14 @@ hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 hook_event(HOOK_ON_INTERACT, on_interact)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 
-hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
-hook_chat_command('touch-to-tag', "[on|off] turn touch tag on or off", on_touch_tag_command)
-hook_chat_command('hiders-caps', "[on|off] turn caps for hiders on or off", on_hider_cap_command)
-hook_chat_command('seekers-caps', "[on|off] turn caps for seekers on or off", on_seeker_cap_command)
-hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
-hook_chat_command('koopa-shell', "[on|off] Turn the koopa shell on or off", on_koopa_shell_command)
+if network_is_server() then
+  hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
+  hook_chat_command('touch-to-tag', "[on|off] turn touch tag on or off", on_touch_tag_command)
+  hook_chat_command('hiders-caps', "[on|off] turn caps for hiders on or off", on_hider_cap_command)
+  hook_chat_command('seekers-caps', "[on|off] turn caps for seekers on or off", on_seeker_cap_command)
+  hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
+  hook_chat_command('koopa-shell', "[on|off] Turn the koopa shell on or off", on_koopa_shell_command)
+end
 
 -- call functions when certain sync table values change
 hook_on_sync_table_change(gGlobalSyncTable, 'roundState', 0, on_round_state_changed)

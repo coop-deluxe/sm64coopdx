@@ -227,6 +227,8 @@ function on_game_state_changed(tag, oldVal, newVal)
     end
 end
 
-hook_chat_command('race', "[CG|SL|BOB]", on_race_command)
-hook_chat_command('laps', "[number]", on_laps_command)
+if network_is_server() then
+    hook_chat_command('race', "[CG|SL|BOB]", on_race_command)
+    hook_chat_command('laps', "[number]", on_laps_command)
+end
 hook_on_sync_table_change(gGlobalSyncTable, 'gameState', i, on_game_state_changed)

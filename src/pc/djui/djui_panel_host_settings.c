@@ -28,7 +28,7 @@ static bool djui_panel_host_limit_valid(void) {
         limit += (*buffer - '0');
         buffer++;
     }
-    return limit >= 2 && limit <= 16;
+    return limit >= 2 && limit <= MAX_PLAYERS;
 }
 
 static void djui_panel_host_player_text_change(struct DjuiBase* caller) {

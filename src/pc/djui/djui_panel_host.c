@@ -51,7 +51,7 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     }
     
     // Doesn't let you host if the player limit is not good
-    if (configAmountofPlayers < 2 || configAmountofPlayers > 16) {
+    if (configAmountofPlayers < 2 || configAmountofPlayers > MAX_PLAYERS) {
         return;
     }
     

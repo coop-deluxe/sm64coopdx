@@ -87,10 +87,6 @@ function mario_update_local(m)
 end
 
 function on_speed_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if tonumber(msg) > 0 then
         gGlobalSyncTable.speed = tonumber(msg)
         return true
@@ -138,4 +134,6 @@ hook_event(HOOK_UPDATE, on_update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
-hook_chat_command('speed', "[decimal number, default: 0.8]", on_speed_command)
+if network_is_server() then
+    hook_chat_command('speed', "[decimal number, default: 0.8]", on_speed_command)
+ end

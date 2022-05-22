@@ -1153,10 +1153,6 @@ function on_hud_render()
 end
 
 function on_football_reset_command(msg)
-    if not network_is_server() then
-        djui_chat_message_create('Only the server can change this setting!')
-        return true
-    end
     if msg == 'ball' then
         djui_chat_message_create('Resetting the ball.')
         sSoccerBall = spawn_or_move_ball(sBallSpawnPos.x, sBallSpawnPos.y, sBallSpawnPos.z)
@@ -1311,7 +1307,9 @@ hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
-hook_chat_command('football-reset', "[game|ball] resets the game or ball", on_football_reset_command)
+if network_is_server() then
+    hook_chat_command('football-reset', "[game|ball] resets the game or ball", on_football_reset_command)
+ end
 
 for i=0,(MAX_PLAYERS-1) do
     local s = gPlayerSyncTable[i]
