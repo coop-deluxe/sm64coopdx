@@ -1,0 +1,12 @@
+extern const GeoLayout hammer_geo[];
+extern Lights1 hammer_f3d_material_002_lights;
+extern u8 hammer_hammer_i8[];
+extern Vtx hammer_hammer_mesh_layer_1_vtx_0[18];
+extern Gfx hammer_hammer_mesh_layer_1_tri_0[];
+extern Vtx hammer_hammer_mesh_layer_1_vtx_1[195];
+extern Gfx hammer_hammer_mesh_layer_1_tri_1[];
+extern Gfx mat_hammer_f3d_material_002[];
+extern Gfx mat_hammer_Material_001_f3d[];
+extern Gfx mat_revert_hammer_Material_001_f3d[];
+extern Gfx hammer_hammer_mesh_layer_1[];
+extern Gfx hammer_material_revert_render_settings[];
