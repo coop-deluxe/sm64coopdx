@@ -901,17 +901,17 @@ else
 #  endif
 endif
 
-#icon
+# icon
 ifeq ($(WINDOWS_BUILD),1)
 	ifeq ($(ICON),1)
 		Command := mkdir -p "$(BUILD_DIR)/res"
-    		Resp := $(shell $(call Command))
+    Resp := $(shell $(call Command))
 
 		Command := windres -o "$(BUILD_DIR)/res/icon.o" -i "res/icon.rc"
-    		Resp := $(shell $(call Command))
+    Resp := $(shell $(call Command))
 
-    		ifeq ($(.SHELLSTATUS),0)
-     			LDFLAGS += $(BUILD_DIR)/res/icon.o
+    ifeq ($(.SHELLSTATUS),0)
+      LDFLAGS += $(BUILD_DIR)/res/icon.o
 		endif
 	endif
 endif
