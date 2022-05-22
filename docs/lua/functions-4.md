@@ -4767,6 +4767,26 @@
 
 <br />
 
+## [audio_stream_loadURL](#audio_stream_loadURL)
+
+### Lua Example
+`local BassAudioValue = audio_stream_loadURL(url)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| url | `string` |
+
+### Returns
+[BassAudio](structs.md#BassAudio)
+
+### C Prototype
+`struct BassAudio* audio_stream_loadURL(const char* url);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_stream_pause](#audio_stream_pause)
 
 ### Lua Example

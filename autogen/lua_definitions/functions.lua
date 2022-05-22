@@ -7211,6 +7211,12 @@ function audio_stream_load(filename)
     -- ...
 end
 
+--- @param url string
+--- @return BassAudio
+function audio_stream_loadURL(url)
+    -- ...
+end
+
 --- @param audio BassAudio
 --- @return nil
 function audio_stream_pause(audio)

@@ -423,3 +423,11 @@ void audio_custom_shutdown(void) {
     }
     sBassAudioCount = 0;
 }
+
+struct BassAudio* audio_stream_loadURL(const char* url) {
+    HSTREAM stream = BASS_StreamCreateURL(url, 0, 0, NULL, NULL);
+    struct BassAudio* res = malloc(sizeof(struct BassAudio));
+    res->handle = stream;
+    res->rawData = NULL;
+    return res;
+}
