@@ -11,7 +11,11 @@ ROUND_STATE_ACTIVE      = 1
 ROUND_STATE_SEEKERS_WIN = 2
 ROUND_STATE_HIDERS_WIN  = 3
 ROUND_STATE_UNKNOWN_END = 4
+gGlobalSyncTable.touchTag = true
 gGlobalSyncTable.campingTimer = false -- enable/disable camping timer
+gGlobalSyncTable.hiderCaps = true
+gGlobalSyncTable.banKoopaShell = true
+gGlobalSyncTable.seekerCaps = false
 gGlobalSyncTable.roundState   = ROUND_STATE_WAIT -- current round state
 gGlobalSyncTable.displayTimer = 0 -- the displayed timer
 sRoundTimer        = 0            -- the server's round timer
@@ -100,7 +104,8 @@ function server_update(m)
 
         -- pick random seeker if last turned to seeker is invalid
         if not hasSeeker then
-            local s = activePlayers[math.random(#activePlayers)]
+            local randNum = math.random(#activePlayers)
+            local s = activePlayers[randNum]
             s.seeking = true
         end
 
@@ -179,7 +184,10 @@ function mario_update(m)
         return
     end
 
-    m.flags = m.flags & ~MARIO_VANISH_CAP --Always Remove Vanish Cap Cuz Broken
+    if (m.flags & MARIO_VANISH_CAP) ~= 0 then
+        m.flags = m.flags & ~MARIO_VANISH_CAP --Always Remove Vanish Cap Cuz Broken
+        stop_cap_music()
+    end
 
     -- this code runs for all players
     local s = gPlayerSyncTable[m.playerIndex]
@@ -189,11 +197,18 @@ function mario_update(m)
         s.seeking = true
     end
 
-    if m.playerIndex == 0 and not s.seeking or gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then   
-        m.flags = m.flags & ~MARIO_WING_CAP --Remove wing cap if hider
-        m.flags = m.flags & ~MARIO_METAL_CAP --Remove metal cap if hider
-
-        m.capTimer = 0
+    if m.playerIndex == 0 or gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
+        if gGlobalSyncTable.seekerCaps and gPlayerSyncTable[m.playerIndex].seeking then
+            m.flags = m.flags & ~MARIO_WING_CAP --Remove wing cap if seeking
+            m.flags = m.flags & ~MARIO_METAL_CAP --Remove metal cap if seeking
+            stop_cap_music()
+            m.capTimer = 0
+        elseif gGlobalSyncTable.hiderCaps and not gPlayerSyncTable[m.playerIndex].seeking then
+            m.flags = m.flags & ~MARIO_WING_CAP --Remove wing cap if hiding
+            m.flags = m.flags & ~MARIO_METAL_CAP --Remove metal cap if hiding
+            stop_cap_music()
+            m.capTimer = 0
+        end
     end
 
     if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_RR and m.playerIndex == 0 then
@@ -210,6 +225,10 @@ function mario_update(m)
 
     if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_3 and m.playerIndex == 0 then
         warp_to_castle(LEVEL_BITS)
+    end
+
+    if m.playerIndex == 0 and gPlayerSyncTable[m.playerIndex].seeking and gGlobalSyncTable.displayTimer == 0 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+        warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0) 
     end
 
     -- display all seekers as metal
@@ -281,7 +300,7 @@ function on_pvp_attack(attacker, victim)
 end
 
 function on_player_connected(m)
-    -- start out as a non-seeker
+    -- start out as a seeker
     local s = gPlayerSyncTable[m.playerIndex]
     s.seeking = true
     network_player_set_description(gNetworkPlayers[m.playerIndex], "seeker", 255, 64, 64, 255)
@@ -416,6 +435,13 @@ function on_hide_and_seek_command(msg)
     if msg == 'on' then
         djui_chat_message_create('Hide-and-seek mod: enabled')
         gGlobalSyncTable.hideAndSeek = true
+        gGlobalSyncTable.roundState = ROUND_STATE_WAIT
+        sRoundTimer = 0
+        for i=0,(MAX_PLAYERS-1) do
+            gPlayerSyncTable[i].seeking = true
+        end
+        sLastSeekerIndex = 0
+
         return true
     elseif msg == 'off' then
         djui_chat_message_create('Hide-and-seek mod: disabled')
@@ -437,6 +463,74 @@ function on_anti_camp_command(msg)
     elseif msg == 'off' then
         djui_chat_message_create('Anti-camping timer: disabled')
         gGlobalSyncTable.campingTimer = false
+        return true
+    end
+    return false
+end
+
+function on_touch_tag_command(msg)
+    if not network_is_server() then
+        djui_chat_message_create('Only the server can change this setting!')
+        return true
+    end
+    if msg == 'on' then
+        djui_chat_message_create('Touch tag: enabled')
+        gGlobalSyncTable.touchTag = true
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Touch tag: disabled')
+        gGlobalSyncTable.touchTag = false
+        return true
+    end
+    return false
+end
+
+function on_koopa_shell_command(msg)
+    if not network_is_server() then
+        djui_chat_message_create('Only the server can change this setting!')
+        return true
+    end
+    if msg == 'on' then
+        djui_chat_message_create('Koopa Shell: enabled')
+        gGlobalSyncTable.banKoopaShell = false
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Koopa Shell: disabled')
+        gGlobalSyncTable.banKoopaShell = true
+        return true
+    end
+    return false
+end
+
+function on_hider_cap_command(msg)
+    if not network_is_server() then
+        djui_chat_message_create('Only the server can change this setting!')
+        return true
+    end
+    if msg == 'on' then
+        djui_chat_message_create('Hider Caps: enabled')
+        gGlobalSyncTable.hiderCaps = false
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Hider Caps: disabled')
+        gGlobalSyncTable.hiderCaps = true
+        return true
+    end
+    return false
+end
+
+function on_seeker_cap_command(msg)
+    if not network_is_server() then
+        djui_chat_message_create('Only the server can change this setting!')
+        return true
+    end
+    if msg == 'on' then
+        djui_chat_message_create('Seeker Caps: enabled')
+        gGlobalSyncTable.seekerCaps = false
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Seeker Caps: disabled')
+        gGlobalSyncTable.seekerCaps = true
         return true
     end
     return false
@@ -493,7 +587,9 @@ function on_seeking_changed(tag, oldVal, newVal)
         if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
             sLastSeekerIndex = m.playerIndex
         end
-        sRoundTimer = 0
+        sRoundTimer = 32
+
+
     end
 
     if newVal then
@@ -505,10 +601,15 @@ end
 
 function on_interact(m, obj, intee)
     if intee == INTERACT_PLAYER then
+
+        if not gGlobalSyncTable.touchTag then
+            return
+        end
+
         if m ~= gMarioStates[0] then
             for i=0,(MAX_PLAYERS-1) do
-                if gNetworkPlayers[i].connected then
-                    if gPlayerSyncTable[m.playerIndex].seeking and not gPlayerSyncTable[i].seeking and obj == gMarioStates[i].marioObj then
+                if gNetworkPlayers[i].connected and gNetworkPlayers[i].currAreaSyncValid then
+                    if gPlayerSyncTable[m.playerIndex].seeking and not gPlayerSyncTable[i].seeking and obj == gMarioStates[i].marioObj and check_touch_tag_allowed(i)  then
                         gPlayerSyncTable[i].seeking = true
 
                         network_player_set_description(gNetworkPlayers[i], "seeker", 255, 64, 64, 255)
@@ -516,6 +617,20 @@ function on_interact(m, obj, intee)
                 end
             end
         end
+    end
+end
+
+function check_touch_tag_allowed(i)
+    if gMarioStates[i].action ~= ACT_TELEPORT_FADE_IN and gMarioStates[i].action ~= ACT_TELEPORT_FADE_OUT and gMarioStates[i].action ~= ACT_PULLING_DOOR and gMarioStates[i].action ~= ACT_PUSHING_DOOR and gMarioStates[i].action ~= ACT_WARP_DOOR_SPAWN and gMarioStates[i].action ~= ACT_ENTERING_STAR_DOOR and gMarioStates[i].action ~= ACT_STAR_DANCE_EXIT and gMarioStates[i].action ~= ACT_STAR_DANCE_NO_EXIT and gMarioStates[i].action ~= ACT_STAR_DANCE_WATER and gMarioStates[i].action ~= ACT_PANTING then
+        return true
+    end
+    
+    return false
+end
+
+function allow_interact(m, obj, intee)
+    if intee == INTERACT_KOOPA_SHELL and gGlobalSyncTable.banKoopaShell then
+        return false
     end
 end
 
@@ -532,9 +647,14 @@ hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 hook_event(HOOK_ON_INTERACT, on_interact)
+hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 
 hook_chat_command('hide-and-seek', "[on|off] turn hide-and-seek on or off", on_hide_and_seek_command)
+hook_chat_command('touch-to-tag', "[on|off] turn touch tag on or off", on_touch_tag_command)
+hook_chat_command('hiders-caps', "[on|off] turn caps for hiders on or off", on_hider_cap_command)
+hook_chat_command('seekers-caps', "[on|off] turn caps for seekers on or off", on_seeker_cap_command)
 hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
+hook_chat_command('koopa-shell', "[on|off] Turn the koopa shell on or off", on_koopa_shell_command)
 
 -- call functions when certain sync table values change
 hook_on_sync_table_change(gGlobalSyncTable, 'roundState', 0, on_round_state_changed)
