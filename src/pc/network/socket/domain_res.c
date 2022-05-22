@@ -10,7 +10,7 @@
 #include <netdb.h>
 #endif
 
-char* gGetHostName;
+char* gGetHostName = NULL;
 
 void domain_resolution(void) {
     struct in_addr addr;
