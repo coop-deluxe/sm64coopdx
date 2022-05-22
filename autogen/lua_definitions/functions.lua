@@ -7213,7 +7213,7 @@ end
 
 --- @param url string
 --- @return BassAudio
-function audio_stream_loadURL(url)
+function audio_stream_load_url(url)
     -- ...
 end
 

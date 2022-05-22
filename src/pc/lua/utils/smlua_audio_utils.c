@@ -250,6 +250,18 @@ struct BassAudio* audio_stream_load(const char* filename) {
     return audio_load_internal(filename, true);
 }
 
+struct BassAudio* audio_stream_load_url(const char* url) {
+    if (url == NULL || strlen(url) == 0) {
+        LOG_LUA_LINE("Failed to load url");
+        return NULL;
+    }
+    HSTREAM stream = BASS_StreamCreateURL(url, 0, 0, NULL, NULL);
+    struct BassAudio* res = malloc(sizeof(struct BassAudio));
+    res->handle = stream;
+    res->rawData = NULL;
+    return res;
+}
+
 void audio_stream_destroy(struct BassAudio* audio) {
     if (!audio_sanity_check(audio, true, "destroy")) {
         return;
@@ -258,7 +270,9 @@ void audio_stream_destroy(struct BassAudio* audio) {
     bassh_free_stream(audio->handle);
     audio->handle = 0;
     audio->loaded = false;
-    free(audio->rawData);
+    if (audio->rawData != NULL) {
+        free(audio->rawData);
+    }
     audio->rawData = NULL;
 }
 
@@ -377,7 +391,9 @@ void audio_sample_destroy(struct BassAudio* audio) {
     bassh_free_stream(audio->handle);
     audio->handle = 0;
     audio->loaded = false;
-    free(audio->rawData);
+    if (audio->rawData) {
+        free(audio->rawData);
+    }
     audio->rawData = NULL;
 }
 
@@ -422,12 +438,4 @@ void audio_custom_shutdown(void) {
         }
     }
     sBassAudioCount = 0;
-}
-
-struct BassAudio* audio_stream_loadURL(const char* url) {
-    HSTREAM stream = BASS_StreamCreateURL(url, 0, 0, NULL, NULL);
-    struct BassAudio* res = malloc(sizeof(struct BassAudio));
-    res->handle = stream;
-    res->rawData = NULL;
-    return res;
 }

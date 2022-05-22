@@ -14857,13 +14857,13 @@ int smlua_func_audio_stream_load(lua_State* L) {
     return 1;
 }
 
-int smlua_func_audio_stream_loadURL(lua_State* L) {
+int smlua_func_audio_stream_load_url(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     const char* url = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
-    smlua_push_object(L, LOT_BASSAUDIO, audio_stream_loadURL(url));
+    smlua_push_object(L, LOT_BASSAUDIO, audio_stream_load_url(url));
 
     return 1;
 }
@@ -17576,7 +17576,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_get_tempo", smlua_func_audio_stream_get_tempo);
     smlua_bind_function(L, "audio_stream_get_volume", smlua_func_audio_stream_get_volume);
     smlua_bind_function(L, "audio_stream_load", smlua_func_audio_stream_load);
-    smlua_bind_function(L, "audio_stream_loadURL", smlua_func_audio_stream_loadURL);
+    smlua_bind_function(L, "audio_stream_load_url", smlua_func_audio_stream_load_url);
     smlua_bind_function(L, "audio_stream_pause", smlua_func_audio_stream_pause);
     smlua_bind_function(L, "audio_stream_play", smlua_func_audio_stream_play);
     smlua_bind_function(L, "audio_stream_set_frequency", smlua_func_audio_stream_set_frequency);

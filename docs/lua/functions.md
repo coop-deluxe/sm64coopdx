@@ -1344,7 +1344,7 @@
    - [audio_stream_get_tempo](functions-4.md#audio_stream_get_tempo)
    - [audio_stream_get_volume](functions-4.md#audio_stream_get_volume)
    - [audio_stream_load](functions-4.md#audio_stream_load)
-   - [audio_stream_loadURL](functions-4.md#audio_stream_loadURL)
+   - [audio_stream_load_url](functions-4.md#audio_stream_load_url)
    - [audio_stream_pause](functions-4.md#audio_stream_pause)
    - [audio_stream_play](functions-4.md#audio_stream_play)
    - [audio_stream_set_frequency](functions-4.md#audio_stream_set_frequency)

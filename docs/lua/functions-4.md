@@ -4767,10 +4767,10 @@
 
 <br />
 
-## [audio_stream_loadURL](#audio_stream_loadURL)
+## [audio_stream_load_url](#audio_stream_load_url)
 
 ### Lua Example
-`local BassAudioValue = audio_stream_loadURL(url)`
+`local BassAudioValue = audio_stream_load_url(url)`
 
 ### Parameters
 | Field | Type |
@@ -4781,7 +4781,7 @@
 [BassAudio](structs.md#BassAudio)
 
 ### C Prototype
-`struct BassAudio* audio_stream_loadURL(const char* url);`
+`struct BassAudio* audio_stream_load_url(const char* url);`
 
 [:arrow_up_small:](#)
 

@@ -18,6 +18,7 @@ struct BassAudio {
 };
 
 struct BassAudio* audio_stream_load(const char* filename);
+struct BassAudio* audio_stream_load_url(const char* url);
 void audio_stream_destroy(struct BassAudio* audio);
 void audio_stream_play(struct BassAudio* audio, bool restart, f32 volume);
 void audio_stream_pause(struct BassAudio* audio);
@@ -33,8 +34,6 @@ void audio_stream_set_tempo(struct BassAudio* audio, f32 tempo);
 f32 audio_stream_get_volume(struct BassAudio* audio);
 void audio_stream_set_volume(struct BassAudio* audio, f32 volume);
 void audio_stream_set_speed(struct BassAudio* audio, f32 initial_freq, f32 speed, bool pitch);
-struct BassAudio* audio_stream_loadURL(const char* url);
-
 
 struct BassAudio* audio_sample_load(const char* filename);
 void audio_sample_destroy(struct BassAudio* audio);
