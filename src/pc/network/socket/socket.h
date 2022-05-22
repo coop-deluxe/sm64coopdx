@@ -10,9 +10,11 @@
 #include "../network.h"
 
 extern struct NetworkSystem gNetworkSystemSocket;
+extern char *gGetHostName;
 
 SOCKET socket_initialize(void);
 void socket_shutdown(SOCKET socket);
 void domain_resolution(void);
+void save_domain(void);
 
 #endif

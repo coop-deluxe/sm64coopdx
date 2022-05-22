@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "djui.h"
 #include "src/pc/network/network.h"
+#include "src/pc/network/socket/socket.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 #include "src/pc/debuglog.h"
@@ -88,8 +89,18 @@ static bool djui_panel_join_ip_valid(char* buffer) {
     return (**msg == '\0');
 }
 
+static void djui_panel_join_ip_text_change(struct DjuiBase* caller) {
+    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    if (strlen(inputbox1->buffer) > 2) {
+        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+    } else {
+        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
+    }
+}
+
 static void djui_panel_join_ip_text_set_new(void) {
     char buffer[256] = { 0 };
+    gGetHostName = sInputboxIp->buffer;
     if (snprintf(buffer, 256, "%s", sInputboxIp->buffer) < 0) {
         LOG_INFO("truncating IP");
     }
@@ -125,7 +136,7 @@ static void djui_panel_join_ip_text_set(struct DjuiInputbox* inputbox1) {
     } else if (strlen(configJoinIp) > 0) {
         if (snprintf(buffer, 256, "%s", configJoinIp) < 0) { LOG_INFO("truncating IP"); }
     } else {
-        if (snprintf(buffer, 256, "127.0.0.1") < 0) { LOG_INFO("truncating IP"); }
+        if (snprintf(buffer, 256, "localhost") < 0) { LOG_INFO("truncating IP"); }
     }
 
     djui_inputbox_set_text(inputbox1, buffer);
@@ -133,11 +144,11 @@ static void djui_panel_join_ip_text_set(struct DjuiInputbox* inputbox1) {
 }
 
 void djui_panel_join_do_join(struct DjuiBase* caller) {
-    if (!(strlen(sInputboxIp->buffer) > 0)) { 
+    if (!(strlen(sInputboxIp->buffer) > 2)) {
         djui_interactable_set_input_focus(&sInputboxIp->base);
         djui_inputbox_select_all(sInputboxIp);
         return;
-     }
+    }
     djui_panel_join_ip_text_set_new();
     network_set_system(NS_SOCKET);
     network_init(NT_CLIENT);
@@ -180,6 +191,7 @@ void djui_panel_join_create(struct DjuiBase* caller) {
         struct DjuiInputbox* inputbox1 = djui_inputbox_create(&body->base, 256);
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&inputbox1->base, 1.0f, 32.0f);
+        djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_ip_text_change);
         sInputboxIp = inputbox1;
         djui_panel_join_ip_text_set(inputbox1);
 

@@ -10,15 +10,15 @@
 #include <netdb.h>
 #endif
 
+char* gGetHostName;
 
 void domain_resolution(void) {
     struct in_addr addr;
     char *host_name = configJoinIp;
     struct hostent *remoteHost;
     char* domainname = "";
-    host_name = configJoinIp;
 
-    if (host_name == NULL) {
+    if (gGetHostName == NULL) {
         return;
     }
 
@@ -34,5 +34,12 @@ void domain_resolution(void) {
             domainname = inet_ntoa(addr);
             snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", domainname);
         }
+    }
+}
+
+void save_domain(void) {
+    if (gGetHostName != NULL) {
+        snprintf(configJoinIp, 256, "%s", gGetHostName);
+        gGetHostName = NULL;
     }
 }
