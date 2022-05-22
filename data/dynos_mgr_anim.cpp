@@ -52,7 +52,7 @@ void DynOS_Anim_Swap(void *aPtr) {
         pDefaultAnimation = _Object->header.gfx.animInfo.curAnim;
 
         // ActorGfx data
-        ActorGfx* _ActorGfx = DynOS_Actor_GetActorGfx(_Object->header.gfx.sharedChild->georef);
+        ActorGfx* _ActorGfx = DynOS_Actor_GetActorGfx(_Object->header.gfx.sharedChild);
         if (!_ActorGfx) {
             return;
         }

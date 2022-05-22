@@ -762,7 +762,7 @@ s32 act_star_dance_water(struct MarioState *m) {
 s32 act_fall_after_star_grab(struct MarioState *m) {
     if (m->pos[1] < m->waterLevel - 130) {
         play_sound(SOUND_ACTION_UNKNOWN430, m->marioObj->header.gfx.cameraToObject);
-        m->particleFlags |= PARTICLE_WATER_SPLASH;
+        set_mario_particle_flags(m, PARTICLE_WATER_SPLASH, FALSE);
         return set_mario_action(m, ACT_STAR_DANCE_WATER, m->actionArg);
     }
     if (perform_air_step(m, 1) == AIR_STEP_LANDED) {
@@ -1241,7 +1241,7 @@ s32 act_exit_airborne(struct MarioState *m) {
     }
     // rotate him to face away from the entrance
     m->marioObj->header.gfx.angle[1] += 0x8000;
-    m->particleFlags |= PARTICLE_SPARKLES;
+    set_mario_particle_flags(m, PARTICLE_SPARKLES, FALSE);
     return FALSE;
 }
 
@@ -1252,7 +1252,7 @@ s32 act_falling_exit_airborne(struct MarioState *m) {
     }
     // rotate Mario to face away from the entrance
     m->marioObj->header.gfx.angle[1] += 0x8000;
-    m->particleFlags |= PARTICLE_SPARKLES;
+    set_mario_particle_flags(m, PARTICLE_SPARKLES, FALSE);
     return FALSE;
 }
 
@@ -1409,7 +1409,7 @@ s32 act_special_exit_airborne(struct MarioState *m) {
         m->actionArg = 1;
     }
 
-    m->particleFlags |= PARTICLE_SPARKLES;
+    set_mario_particle_flags(m, PARTICLE_SPARKLES, FALSE);
     // rotate Mario to face away from the entrance
     marioObj->header.gfx.angle[1] += 0x8000;
     // show Mario
@@ -2121,7 +2121,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
                 play_character_sound(m, CHAR_SOUND_YAHOO);
                 break;
         }
-        m->particleFlags |= PARTICLE_SPARKLES;
+        set_mario_particle_flags(m, PARTICLE_SPARKLES, FALSE);
 
         if (is_anim_past_end(m)) {
             advance_cutscene_step(m);
@@ -2180,7 +2180,7 @@ static s32 jumbo_star_cutscene_flying(struct MarioState *m) {
 
     m->marioBodyState->handState = MARIO_HAND_RIGHT_OPEN;
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
-    m->particleFlags |= PARTICLE_SPARKLES;
+    set_mario_particle_flags(m, PARTICLE_SPARKLES, FALSE);
 
     if (m->actionTimer++ == 500 && m->playerIndex == 0) {
         level_trigger_warp(m, WARP_OP_CREDITS_START);
@@ -2419,7 +2419,7 @@ static void end_peach_cutscene_run_to_peach(struct MarioState *m) {
     play_step_sound(m, 9, 45);
 
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
-    m->particleFlags |= PARTICLE_DUST;
+    set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
 }
 
 // dialog 1
@@ -2643,7 +2643,7 @@ static void end_peach_cutscene_star_dance(struct MarioState *m) {
         cutscene_put_cap_on(m);
     }
     if (animFrame == 88 && m->playerIndex == 0) {
-        play_sound(SOUND_MARIO_HERE_WE_GO, m->marioObj->header.gfx.cameraToObject);
+        play_character_sound(m, CHAR_SOUND_HERE_WE_GO);
     }
     if (!nonMario && animFrame >= 98) {
         m->marioBodyState->handState = MARIO_HAND_PEACE_SIGN;
@@ -2858,7 +2858,7 @@ static s32 act_credits_cutscene(struct MarioState *m) {
         vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
         // will copy over roll and pitch, if set
         vec3s_copy(m->marioObj->header.gfx.angle, m->faceAngle);
-        m->particleFlags |= PARTICLE_BUBBLE;
+        set_mario_particle_flags(m, PARTICLE_BUBBLE, FALSE);
     } else {
         set_mario_animation(m, MARIO_ANIM_FIRST_PERSON);
         if (m->actionTimer > 0) {
@@ -3027,7 +3027,7 @@ s32 mario_execute_cutscene_action(struct MarioState *m) {
     }
 
     if (!cancel && (m->input & INPUT_IN_WATER)) {
-        m->particleFlags |= PARTICLE_IDLE_WATER_WAVE;
+        set_mario_particle_flags(m, PARTICLE_IDLE_WATER_WAVE, FALSE);
     }
 
     return cancel;

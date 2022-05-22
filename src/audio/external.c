@@ -2356,6 +2356,21 @@ void play_dialog_sound(u8 dialogID) {
 
 void set_sequence_player_volume(s32 player, f32 volume) {
     gSequencePlayers[player].volumeScale = volume;
+
+    // Rom-hacks audio fix
+    // Custom sequences tend to ignore volume scaling and muting...
+    // Force the BGM sequence player to follow the Vanilla behavior:
+    // - Volume can't go higher than default volume
+    // - Volume is reduced to 31% when the game is paused
+    // - Audio is stopped when the game is paused outside the Castle levels
+    if (player == SEQ_PLAYER_LEVEL && sCurrentBackgroundMusicSeqId != 0xff) {
+        struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
+        f32 maxVolume = get_current_background_music_default_volume() / 127.f;
+        seqPlayer->volume = MIN(seqPlayer->volume, maxVolume);
+        seqPlayer->fadeVolume = MIN(seqPlayer->fadeVolume, maxVolume);
+        seqPlayer->muteVolumeScale = 0.31f;
+        seqPlayer->muteBehavior = MUTE_BEHAVIOR_SOFTEN | ((gCurrCourseNum != 0) * (MUTE_BEHAVIOR_STOP_SCRIPT | MUTE_BEHAVIOR_STOP_NOTES));
+    }
 }
 
 /**
@@ -2507,6 +2522,25 @@ u16 get_current_background_music(void) {
         return (sBackgroundMusicQueue[0].priority << 8) + sBackgroundMusicQueue[0].seqId;
     }
     return -1;
+}
+
+u8 get_current_background_music_default_volume(void) {
+    if (sCurrentBackgroundMusicSeqId != 0xff) {
+        return sBackgroundMusicDefaultVolume[sCurrentBackgroundMusicSeqId];
+    }
+    return 0;
+}
+
+u8 get_current_background_music_target_volume(void) {
+    return sBackgroundMusicTargetVolume;
+}
+
+u8 get_current_background_music_max_target_volume(void) {
+    return sBackgroundMusicMaxTargetVolume;
+}
+
+u8 is_current_background_music_volume_lowered(void) {
+    return sLowerBackgroundMusicVolume;
 }
 
 /**

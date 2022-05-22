@@ -34,7 +34,7 @@ enum LuaHookedEventType {
     HOOK_MAX,
 };
 
-static char* LuaHookedEventTypeName[] = {
+static const char* LuaHookedEventTypeName[] = {
     "HOOK_UPDATE",
     "HOOK_MARIO_UPDATE",
     "HOOK_BEFORE_MARIO_UPDATE",

@@ -139,7 +139,7 @@ s32 check_fall_damage_or_get_stuck(struct MarioState *m, u32 hardFallAction) {
 #else
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
-        m->particleFlags |= PARTICLE_MIST_CIRCLE;
+        set_mario_particle_flags(m, PARTICLE_MIST_CIRCLE, FALSE);
         drop_and_set_mario_action(m, ACT_FEET_STUCK_IN_GROUND, 0);
 
         queue_rumble_data_mario(m, 5, 80);
@@ -417,7 +417,7 @@ u32 common_air_action_step(struct MarioState *m, u32 landAction, s32 animation, 
                     // that the final quarter step detects a ledge, but you are
                     // not able to ledge grab it.
                     if (m->forwardVel >= 38.0f) {
-                        m->particleFlags |= PARTICLE_VERTICAL_STAR;
+                        set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
                         set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
                     } else {
                         if (m->forwardVel > 8.0f) {
@@ -762,7 +762,7 @@ s32 act_dive(struct MarioState *m) {
 #else
                 play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
-                m->particleFlags |= PARTICLE_MIST_CIRCLE;
+                set_mario_particle_flags(m, PARTICLE_MIST_CIRCLE, FALSE);
                 drop_and_set_mario_action(m, ACT_HEAD_STUCK_IN_GROUND, 0);
             } else if (!check_fall_damage(m, ACT_HARD_FORWARD_GROUND_KB)) {
                 if (m->heldObj == NULL) {
@@ -782,7 +782,7 @@ s32 act_dive(struct MarioState *m) {
                 m->vel[1] = 0.0f;
             }
 
-            m->particleFlags |= PARTICLE_VERTICAL_STAR;
+            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             drop_and_set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
             break;
 
@@ -958,12 +958,12 @@ s32 act_ground_pound(struct MarioState *m) {
 #else
                 play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
-                m->particleFlags |= PARTICLE_MIST_CIRCLE;
+                set_mario_particle_flags(m, PARTICLE_MIST_CIRCLE, FALSE);
                 set_mario_action(m, ACT_BUTT_STUCK_IN_GROUND, 0);
             } else {
                 play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_HEAVY_LANDING);
                 if (!check_fall_damage(m, ACT_HARD_BACKWARD_GROUND_KB)) {
-                    m->particleFlags |= PARTICLE_MIST_CIRCLE | PARTICLE_HORIZONTAL_STAR;
+                    set_mario_particle_flags(m, (PARTICLE_MIST_CIRCLE | PARTICLE_HORIZONTAL_STAR), FALSE);
                     set_mario_action(m, ACT_GROUND_POUND_LAND, 0);
                 }
             }
@@ -974,7 +974,7 @@ s32 act_ground_pound(struct MarioState *m) {
                 m->vel[1] = 0.0f;
             }
 
-            m->particleFlags |= PARTICLE_VERTICAL_STAR;
+            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
         }
     }
@@ -992,7 +992,7 @@ s32 act_burning_jump(struct MarioState *m) {
     }
 
     set_mario_animation(m, m->actionArg == 0 ? MARIO_ANIM_SINGLE_JUMP : MARIO_ANIM_FIRE_LAVA_BURN);
-    m->particleFlags |= PARTICLE_FIRE;
+    set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
     play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
 
     m->marioObj->oMarioBurnTimer += 3;
@@ -1020,7 +1020,7 @@ s32 act_burning_fall(struct MarioState *m) {
     }
 
     set_mario_animation(m, MARIO_ANIM_GENERAL_FALL);
-    m->particleFlags |= PARTICLE_FIRE;
+    set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
     m->marioObj->oMarioBurnTimer += 3;
 
     m->health -= 10;
@@ -1085,7 +1085,7 @@ s32 act_crazy_box_bounce(struct MarioState *m) {
                 set_mario_action(m, ACT_STOMACH_SLIDE, 0);
             }
             queue_rumble_data_mario(m, 5, 80);
-            m->particleFlags |= PARTICLE_MIST_CIRCLE;
+            set_mario_particle_flags(m, PARTICLE_MIST_CIRCLE, FALSE);
             break;
 
         case AIR_STEP_HIT_WALL:
@@ -1334,7 +1334,7 @@ s32 act_air_hit_wall(struct MarioState *m) {
             m->vel[1] = 0.0f;
         }
 
-        m->particleFlags |= PARTICLE_VERTICAL_STAR;
+        set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
         return set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
     } else {
         m->wallKickTimer = 5;
@@ -1465,7 +1465,7 @@ s32 act_butt_slide_air(struct MarioState *m) {
             if (m->vel[1] > 0.0f) {
                 m->vel[1] = 0.0f;
             }
-            m->particleFlags |= PARTICLE_VERTICAL_STAR;
+            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
             break;
 
@@ -1506,7 +1506,7 @@ s32 act_hold_butt_slide_air(struct MarioState *m) {
             }
 
             mario_drop_held_object(m);
-            m->particleFlags |= PARTICLE_VERTICAL_STAR;
+            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
             break;
 
@@ -1566,7 +1566,7 @@ s32 act_lava_boost(struct MarioState *m) {
     set_mario_animation(m, MARIO_ANIM_FIRE_LAVA_BURN);
     if ((m->area->terrainType & TERRAIN_MASK) != TERRAIN_SNOW && !(m->flags & MARIO_METAL_CAP)
         && m->vel[1] > 0.0f) {
-        m->particleFlags |= PARTICLE_FIRE;
+        set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
         if (m->actionState == 0) {
             play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
         }
@@ -1637,7 +1637,7 @@ s32 act_slide_kick(struct MarioState *m) {
                 m->vel[1] = 0.0f;
             }
 
-            m->particleFlags |= PARTICLE_VERTICAL_STAR;
+            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
 
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
             break;
@@ -1731,7 +1731,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
                 m->vel[1] = 0.0f;
             }
 
-            m->particleFlags |= PARTICLE_VERTICAL_STAR;
+            set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
 #ifndef BETTERCAMERA
             if (allowCameraChange) { set_camera_mode(m->area->camera, m->area->camera->defMode, 1); }
@@ -1762,7 +1762,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
     }
 
     if (m->vel[1] > 0.0f) {
-        m->particleFlags |= PARTICLE_DUST;
+        set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     }
 
     reset_rumble_timers(m);
@@ -1897,7 +1897,7 @@ s32 act_flying(struct MarioState *m) {
                                                         : SOUND_ACTION_BONK,
                            m->marioObj->header.gfx.cameraToObject);
 
-                m->particleFlags |= PARTICLE_VERTICAL_STAR;
+                set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
                 set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
 
                 if (m->playerIndex == 0) {
@@ -1938,7 +1938,7 @@ s32 act_flying(struct MarioState *m) {
     }
 
     if (m->faceAngle[0] > 0x800 && m->forwardVel >= 48.0f) {
-        m->particleFlags |= PARTICLE_DUST;
+        set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     }
 
     if (startPitch <= 0 && m->faceAngle[0] > 0 && m->forwardVel >= 48.0f) {
@@ -2170,7 +2170,7 @@ s32 act_special_triple_jump(struct MarioState *m) {
         set_mario_animation(m, MARIO_ANIM_GENERAL_FALL);
     }
 
-    m->particleFlags |= PARTICLE_SPARKLES;
+    set_mario_particle_flags(m, PARTICLE_SPARKLES, FALSE);
     return FALSE;
 }
 

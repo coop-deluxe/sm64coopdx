@@ -755,7 +755,7 @@ void bounce_back_from_attack(struct MarioState *m, u32 interaction) {
         }
 
         if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_ATTACK); }
-        m->particleFlags |= PARTICLE_TRIANGLE;
+        set_mario_particle_flags(m, PARTICLE_TRIANGLE, FALSE);
     }
 
     if (interaction & (INT_PUNCH | INT_KICK | INT_TRIP | INT_FAST_ATTACK_OR_SHELL)) {
@@ -2146,11 +2146,11 @@ void check_kick_or_punch_wall(struct MarioState *m) {
 
                 mario_set_forward_vel(m, -48.0f);
                 play_sound(SOUND_ACTION_HIT_2, m->marioObj->header.gfx.cameraToObject);
-                m->particleFlags |= PARTICLE_TRIANGLE;
+                set_mario_particle_flags(m, PARTICLE_TRIANGLE, FALSE);
             } else if (m->action & ACT_FLAG_AIR) {
                 mario_set_forward_vel(m, -16.0f);
                 play_sound(SOUND_ACTION_HIT_2, m->marioObj->header.gfx.cameraToObject);
-                m->particleFlags |= PARTICLE_TRIANGLE;
+                set_mario_particle_flags(m, PARTICLE_TRIANGLE, FALSE);
             }
         }
     }
@@ -2237,7 +2237,7 @@ void check_death_barrier(struct MarioState *m) {
         }
 
         if (level_trigger_warp(m, WARP_OP_WARP_FLOOR) == 20 && !(m->flags & MARIO_UNKNOWN_18)) {
-            play_sound(SOUND_MARIO_WAAAOOOW, m->marioObj->header.gfx.cameraToObject);
+            play_character_sound(m, CHAR_SOUND_WAAAOOOW);
         }
     }
 }

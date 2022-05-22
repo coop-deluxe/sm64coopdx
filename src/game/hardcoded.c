@@ -37,7 +37,7 @@
  // Levels //
 ////////////
 
-struct LevelValues gLevelValues = {
+struct LevelValues gDefaultLevelValues = {
     .entryLevel = LEVEL_CASTLE_GROUNDS,
     .exitCastleLevel = LEVEL_CASTLE,
     .exitCastleArea = 1,
@@ -86,11 +86,13 @@ struct LevelValues gLevelValues = {
     },
 };
 
+struct LevelValues gLevelValues = { 0 };
+
   ///////////////
  // Behaviors //
 ///////////////
 
-struct BehaviorValues gBehaviorValues = {
+struct BehaviorValues gDefaultBehaviorValues = {
     .KoopaBobAgility     = 4.0f,
     .KoopaCatchupAgility = 8.0f,
     .KoopaThiAgility     = 6.0f,
@@ -218,3 +220,14 @@ struct BehaviorValues gBehaviorValues = {
         .PlatformLll2Trajectory    = (Trajectory*) lll_seg7_trajectory_07028660,
     },
 };
+
+struct BehaviorValues gBehaviorValues = { 0 };
+
+  ///////////////
+ // functions //
+///////////////
+
+void hardcoded_reset_default_values(void) {
+    gLevelValues = gDefaultLevelValues;
+    gBehaviorValues = gDefaultBehaviorValues;
+}

@@ -45,7 +45,7 @@ void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
     u16 pIndex = m->playerIndex;
 
     if (atSurface) {
-        m->particleFlags |= particleFlag;
+        set_mario_particle_flags(m, particleFlag, FALSE);
         if (atSurface ^ sWasAtSurface[pIndex]) {
             play_sound(SOUND_ACTION_UNKNOWN431, m->marioObj->header.gfx.cameraToObject);
         }
@@ -1024,7 +1024,7 @@ static s32 act_water_plunge(struct MarioState *m) {
             play_character_sound(m, CHAR_SOUND_HAHA_2);
         }
 
-        m->particleFlags |= PARTICLE_WATER_SPLASH;
+        set_mario_particle_flags(m, PARTICLE_WATER_SPLASH, FALSE);
         m->actionState = 1;
         if (m->prevAction & ACT_FLAG_AIR) {
             queue_rumble_data_mario(m, 5, 80);
@@ -1076,7 +1076,7 @@ static s32 act_water_plunge(struct MarioState *m) {
             break;
     }
 
-    m->particleFlags |= PARTICLE_PLUNGE_BUBBLE;
+    set_mario_particle_flags(m, PARTICLE_PLUNGE_BUBBLE, FALSE);
     return FALSE;
 }
 
@@ -1157,7 +1157,7 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
 
 static void play_metal_water_jumping_sound(struct MarioState *m, u32 landing) {
     if (!(m->flags & MARIO_ACTION_SOUND_PLAYED)) {
-        m->particleFlags |= PARTICLE_MIST_CIRCLE;
+        set_mario_particle_flags(m, PARTICLE_MIST_CIRCLE, FALSE);
     }
 
     play_sound_if_no_flag(m, landing ? SOUND_ACTION_METAL_LAND_WATER : SOUND_ACTION_METAL_JUMP_WATER,
@@ -1167,7 +1167,7 @@ static void play_metal_water_jumping_sound(struct MarioState *m, u32 landing) {
 static void play_metal_water_walking_sound(struct MarioState *m) {
     if (is_anim_past_frame(m, 10) || is_anim_past_frame(m, 49)) {
         play_sound(SOUND_ACTION_METAL_STEP_WATER, m->marioObj->header.gfx.cameraToObject);
-        m->particleFlags |= PARTICLE_DUST;
+        set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     }
 }
 
@@ -1257,7 +1257,7 @@ static s32 act_metal_water_standing(struct MarioState *m) {
 
     stop_and_set_height_to_floor(m);
     if (m->pos[1] >= m->waterLevel - 150) {
-        m->particleFlags |= PARTICLE_IDLE_WATER_WAVE;
+        set_mario_particle_flags(m, PARTICLE_IDLE_WATER_WAVE, FALSE);
     }
 
     return FALSE;

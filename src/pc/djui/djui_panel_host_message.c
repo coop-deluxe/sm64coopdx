@@ -7,6 +7,7 @@
 #include "pc/utils/misc.h"
 #include "src/game/level_update.h"
 #include "src/game/hardcoded.h"
+#include "src/engine/math_util.h"
 #include "audio/external.h"
 #include "sounds.h"
 
@@ -46,7 +47,8 @@ void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
     fake_lvl_init_from_save_file();
     extern s16 gChangeLevelTransition;
     gChangeLevelTransition = gLevelValues.entryLevel;
-    play_sound(SOUND_MENU_STAR_SOUND_OKEY_DOKEY, gGlobalSoundSource);
+    if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
+    play_character_sound(gMarioState, CHAR_SOUND_OKEY_DOKEY);
     extern void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
     play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
 }

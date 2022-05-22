@@ -436,7 +436,9 @@
 | soundHoohoo | `integer` | read-only |
 | soundHrmm | `integer` | read-only |
 | soundImaTired | `integer` | read-only |
+| soundLetsAGo | `integer` | read-only |
 | soundMamaMia | `integer` | read-only |
+| soundOkeyDokey | `integer` | read-only |
 | soundOnFire | `integer` | read-only |
 | soundOoof | `integer` | read-only |
 | soundOoof2 | `integer` | read-only |

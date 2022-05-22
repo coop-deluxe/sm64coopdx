@@ -15,9 +15,16 @@ static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextNames[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextDescriptions[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
+static struct DjuiText* djuiTextAct[MAX_PLAYERS] = { 0 };
 
 static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     u8 charIndex = np->overrideModelIndex;
+    char sActNum[7];
+    if (np->currActNum != 99) {
+        snprintf(sActNum, 7, "# %d", np->currActNum);
+    } else {
+        snprintf(sActNum, 7, "Done");
+    }
     if (charIndex >= CT_MAX) { charIndex = 0; }
     djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture.texture;
 
@@ -36,6 +43,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     djui_text_set_text(djuiTextDescriptions[i], np->description);
 
     djui_text_set_text(djuiTextLocations[i], get_level_name(np->currCourseNum, np->currLevelNum, np->currAreaIndex));
+    djui_text_set_text(djuiTextAct[i], sActNum);
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
@@ -61,7 +69,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     panel->base.on_render_pre = djui_panel_playerlist_on_render_pre;
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&panel->base, 585, bodyHeight + (32 + 16) + 32 + 32);
+    djui_base_set_size(&panel->base, 710, bodyHeight + (32 + 16) + 32 + 32);
     djui_base_set_visible(&panel->base, false);
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     djui_flow_layout_set_margin(body, 4);
@@ -91,9 +99,9 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
 
         struct DjuiText* t3 = djui_text_create(&row->base, "");
         djui_base_set_size_type(&t3->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&t3->base, 103, 32.0f);
+        djui_base_set_size(&t3->base, 100, 32.0f);
         djui_base_set_color(&t3->base, 220, 220, 220, 255);
-        djui_text_set_alignment(t3, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+        djui_text_set_alignment(t3, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djuiTextDescriptions[i] = t3;
 
         struct DjuiText* t4 = djui_text_create(&row->base, "location");
@@ -102,5 +110,12 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_base_set_color(&t4->base, t, t, t, 255);
         djui_text_set_alignment(t4, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         djuiTextLocations[i] = t4;
+
+        struct DjuiText* t5 = djui_text_create(&row->base, "act");
+        djui_base_set_size_type(&t5->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&t5->base, 100, 32.0f);
+        djui_base_set_color(&t5->base, t, t, t, 255);
+        djui_text_set_alignment(t5, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+        djuiTextAct[i] = t5;
     }
 }

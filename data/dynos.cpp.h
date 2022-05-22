@@ -11,6 +11,7 @@ extern "C" {
 #define FUNCTION_CODE   (u32) 0x434E5546
 #define POINTER_CODE    (u32) 0x52544E50
 #define LUA_VAR_CODE    (u32) 0x5641554C
+#define TEX_REF_CODE    (u32) 0x52584554
 
 #define MOD_PACK_INDEX 99
 
@@ -764,7 +765,7 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 
 void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
-ActorGfx* DynOS_Actor_GetActorGfx(const void* aGeoref);
+ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
 void DynOS_Actor_Override(void** aSharedChild);

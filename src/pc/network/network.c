@@ -11,11 +11,13 @@
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_hud_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
+#include "game/camera.h"
 
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
@@ -460,12 +462,15 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     // reset other stuff
     extern u8* gOverrideEeprom;
     gOverrideEeprom = NULL;
+    gOverrideFreezeCamera = false;
+    gDjuiHudLockMouse = false;
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
     smlua_shutdown();
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
+    network_player_init();
 
     extern s16 gMenuMode;
     gMenuMode = -1;

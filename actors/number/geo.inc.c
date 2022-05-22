@@ -47,6 +47,7 @@ Gfx *geo_num3_switch(s32 callContext, struct GraphNode *node, UNUSED void *conte
             switchCase->selectedCase = 10;
         }
     }
+    return NULL;
 }
 
 extern const Gfx dl_billboard_num3_0[];

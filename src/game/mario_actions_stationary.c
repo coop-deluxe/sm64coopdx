@@ -397,7 +397,7 @@ s32 act_shivering(struct MarioState *m) {
         case 0:
             animFrame = set_mario_animation(m, MARIO_ANIM_SHIVERING_WARMING_HAND);
             if (animFrame == 49) {
-                m->particleFlags |= PARTICLE_BREATH;
+                set_mario_particle_flags(m, PARTICLE_BREATH, FALSE);
                 play_character_sound(m, CHAR_SOUND_PANTING_COLD);
             }
             if (animFrame == 7 || animFrame == 81) {
@@ -1178,7 +1178,7 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
     }
 
     if (!cancel && (m->input & INPUT_IN_WATER)) {
-        m->particleFlags |= PARTICLE_IDLE_WATER_WAVE;
+        set_mario_particle_flags(m, PARTICLE_IDLE_WATER_WAVE, FALSE);
     }
 
     return cancel;

@@ -97,6 +97,10 @@ const void* dynos_geolayout_get(const char *name) {
     return DynOS_Actor_GetLayoutFromName(name);
 }
 
+void *dynos_geolayout_to_graphnode(const void *geoLayout, bool keepInMemory) {
+    return DynOS_Geo_GetGraphNode(geoLayout, keepInMemory);
+}
+
 // -- collisions -- //
 
 void dynos_add_collision(const char *filePath, const char* collisionName) {

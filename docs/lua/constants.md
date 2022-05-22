@@ -1,6 +1,7 @@
 ## [:rewind: Lua Reference](lua.md)
 
 # Supported Constants
+- [area.h](#areah)
 - [behavior_table.h](#behavior_tableh)
     - [enum BehaviorId](#enum-BehaviorId)
 - [camera.h](#camerah)
@@ -54,6 +55,25 @@
 - [types.h](#typesh)
     - [enum AreaTimerType](#enum-AreaTimerType)
     - [enum SpTaskState](#enum-SpTaskState)
+
+<br />
+
+## [area.h](#area.h)
+- INSTANT_WARP_INDEX_START
+- INSTANT_WARP_INDEX_STOP
+- MAX_LOADED_GRAPH_NODES
+- WARP_TRANSITION_FADE_FROM_BOWSER
+- WARP_TRANSITION_FADE_FROM_CIRCLE
+- WARP_TRANSITION_FADE_FROM_COLOR
+- WARP_TRANSITION_FADE_FROM_MARIO
+- WARP_TRANSITION_FADE_FROM_STAR
+- WARP_TRANSITION_FADE_INTO_BOWSER
+- WARP_TRANSITION_FADE_INTO_CIRCLE
+- WARP_TRANSITION_FADE_INTO_COLOR
+- WARP_TRANSITION_FADE_INTO_MARIO
+- WARP_TRANSITION_FADE_INTO_STAR
+
+[:arrow_up_small:](#)
 
 <br />
 
@@ -836,7 +856,9 @@
 | CHAR_SOUND_SNORING3 | 39 |
 | CHAR_SOUND_SO_LONGA_BOWSER | 40 |
 | CHAR_SOUND_IMA_TIRED | 41 |
-| CHAR_SOUND_MAX | 42 |
+| CHAR_SOUND_LETS_A_GO | 42 |
+| CHAR_SOUND_OKEY_DOKEY | 43 |
+| CHAR_SOUND_MAX | 44 |
 
 ### [enum CharacterType](#CharacterType)
 | Identifier | Value |

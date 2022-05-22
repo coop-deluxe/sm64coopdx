@@ -59,6 +59,7 @@ struct PacketPlayerData {
     u8  squishTimer;
     f32 peakHeight;
     s16 currentRoom;
+    Vec3s headRotation;
 
     u8  customFlags;
     u8 heldSyncID;
@@ -121,6 +122,7 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->squishTimer     = m->squishTimer;
     data->peakHeight      = m->peakHeight;
     data->currentRoom     = m->currentRoom;
+    memcpy(data->headRotation, gPlayerCameraState[m->playerIndex].headRotation, sizeof(s16) * 3);
 
     data->customFlags    = customFlags;
     data->heldSyncID     = heldSyncID;
@@ -176,6 +178,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     m->squishTimer     = data->squishTimer;
     m->peakHeight      = data->peakHeight;
     m->currentRoom     = data->currentRoom;
+    memcpy(gPlayerCameraState[m->playerIndex].headRotation, data->headRotation, sizeof(s16) * 3);
 
     *customFlags    = data->customFlags;
     *heldSyncID     = data->heldSyncID;

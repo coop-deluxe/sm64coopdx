@@ -129,37 +129,6 @@ static f32 asins(f32 val) {
     return radians_to_sm64(asin(sm64_to_radians(val)));
 }
 
-void mtx_to_euler1(Mtx* mat, Vec3s rot) {
-    if (mat->m[1][1] == 1.0f) {
-        rot[0] = 0;
-        rot[1] = atan2(mat->m[1][3], mat->m[3][4]);
-        rot[2] = 0;
-    } else if (mat->m[1][1] == -1.0f) {
-        rot[0] = 0;
-        rot[1] = atan2(mat->m[1][3], mat->m[3][4]);
-        rot[2] = 0;
-    } else {
-        rot[0] = asin(mat->m[2][1]);
-        rot[1] = atan2(-mat->m[3][1], mat->m[1][1]);
-        rot[2] = atan2(-mat->m[2][3], mat->m[2][2]);
-    }
-}
-void mtx_to_euler2(Mtx* mat, Vec3s rot) {
-    if (mat->m[1][1] == 1.0f) {
-        rot[0] = 0;
-        rot[1] = atan2(mat->m[3][1], mat->m[4][3]);
-        rot[2] = 0;
-    } else if (mat->m[1][1] == -1.0f) {
-        rot[0] = 0;
-        rot[1] = atan2(mat->m[3][1], mat->m[4][3]);
-        rot[2] = 0;
-    } else {
-        rot[0] = asin(mat->m[1][2]);
-        rot[1] = atan2(-mat->m[1][3], mat->m[1][1]);
-        rot[2] = atan2(-mat->m[3][2], mat->m[2][2]);
-    }
-}
-
 f32 delta_interpolate_f32(f32 start, f32 end, f32 delta) {
     return start * (1.0f - delta) + end * delta;
 }

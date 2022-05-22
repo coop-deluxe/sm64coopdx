@@ -313,6 +313,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->header.gfx.throwMatrix = NULL;
 
     obj->coopFlags = 0;
+    obj->hookRender = 0;
 
     obj->areaTimerType = AREA_TIMER_TYPE_NONE;
     obj->areaTimer = 0;

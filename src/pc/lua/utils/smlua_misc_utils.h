@@ -39,6 +39,8 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);
 void camera_freeze(void);
 void camera_unfreeze(void);
 
+bool is_game_paused(void);
+
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool warp_restart_level(void);
 bool warp_exit_level(s32 aDelay);
@@ -57,9 +59,9 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type);
 f32 get_environment_region(u8 index);
 void set_environment_region(u8 index, s32 value);
 
-f32 set_override_fov(f32 fov);
-f32 set_override_near(f32 near);
-f32 set_override_far(f32 far);
+void set_override_fov(f32 fov);
+void set_override_near(f32 near);
+void set_override_far(f32 far);
 
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 

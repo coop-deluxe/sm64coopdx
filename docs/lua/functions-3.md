@@ -2378,6 +2378,96 @@
 
 <br />
 
+## [get_current_background_music](#get_current_background_music)
+
+### Lua Example
+`local integerValue = get_current_background_music()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 get_current_background_music(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_background_music_default_volume](#get_current_background_music_default_volume)
+
+### Lua Example
+`local integerValue = get_current_background_music_default_volume()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_current_background_music_default_volume(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_background_music_max_target_volume](#get_current_background_music_max_target_volume)
+
+### Lua Example
+`local integerValue = get_current_background_music_max_target_volume()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_current_background_music_max_target_volume(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_current_background_music_target_volume](#get_current_background_music_target_volume)
+
+### Lua Example
+`local integerValue = get_current_background_music_target_volume()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 get_current_background_music_target_volume(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_current_background_music_volume_lowered](#is_current_background_music_volume_lowered)
+
+### Lua Example
+`local integerValue = is_current_background_music_volume_lowered()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_current_background_music_volume_lowered(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [play_course_clear](#play_course_clear)
 
 ### Lua Example
@@ -3987,6 +4077,28 @@
 
 ### C Prototype
 `s16 set_mario_animation(struct MarioState *m, s32 targetAnimID);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_mario_particle_flags](#set_mario_particle_flags)
+
+### Lua Example
+`set_mario_particle_flags(m, flags, clear)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| flags | `integer` |
+| clear | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);`
 
 [:arrow_up_small:](#)
 

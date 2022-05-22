@@ -64,7 +64,10 @@ DOCKERBUILD ?= 0
 DEBUG_INFO_LEVEL ?= 2
 # Enable profiling
 PROFILE ?= 0
-
+# Compile headless
+HEADLESS ?= 0
+# Enable Game ICON
+ICON ?= 1
 # Various workarounds for weird toolchains
 
 NO_BZERO_BCOPY ?= 0
@@ -347,6 +350,13 @@ else
   endif
 endif
 
+ifeq ($(HEADLESS),1)
+  $(warning Compiling headless)
+  RENDER_API := DUMMY
+  WINDOW_API := DUMMY
+  AUDIO_API := DUMMY
+  CONTROLLER_API := 
+endif
 
 # NON_MATCHING - whether to build a matching, identical copy of the ROM
 #   1 - enable some alternate, more portable code that does not produce a matching ROM
@@ -668,7 +678,7 @@ else ifeq ($(COMPILER),clang)
   CC      := clang
   CXX     := clang++
   CPP     := clang++
-  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas
+  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result
 else ifeq ($(TARGET_WEB),1) # As in, web PC port
   CC     := emcc
   CXX    := emcc
@@ -891,6 +901,19 @@ else
 #  endif
 endif
 
+#icon
+ifeq ($(WINDOWS_BUILD),1)
+	ifeq ($(ICON),1)
+		Command := mkdir $(BUILD_DIR)/res
+		Resp := $(shell $(call Command))
+
+		Command := windres -o "$(BUILD_DIR)/res/icon.o" -i res/icon.rc
+		Resp := $(shell $(call Command))
+
+		LDFLAGS += $(BUILD_DIR)/res/icon.o
+	endif
+endif
+
 # Coop specific libraries
 
 # Lua
@@ -1093,6 +1116,8 @@ endef
 # Main Targets                                                                 #
 #==============================================================================#
 
+
+
 ifeq ($(EXTERNAL_DATA),1)
 
 BASEPACK_PATH := $(BUILD_DIR)/$(BASEDIR)/$(BASEPACK)
@@ -1177,6 +1202,7 @@ ifeq ($(TARGET_N64),1)
 	$(BUILD_DIR)/lib/rsp.o:               $(BUILD_DIR)/rsp/rspboot.bin $(BUILD_DIR)/rsp/fast3d.bin $(BUILD_DIR)/rsp/audio.bin
 endif
 
+$(BUILD_DIR)/src/game/characters.o:   $(SOUND_SAMPLE_TABLES)
 $(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl.inc.c $(SOUND_BIN_DIR)/sound_data.tbl.inc.c $(SOUND_BIN_DIR)/sequences.bin.inc.c $(SOUND_BIN_DIR)/bank_sets.inc.c
 $(BUILD_DIR)/levels/scripts.o:        $(BUILD_DIR)/include/level_headers.h
 
@@ -1304,6 +1330,9 @@ endif
 $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
 	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
+	$(call print,Piping:,$<,$@.inc.c)
+	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
+	$(V)echo >> $@.inc.c
 
 $(BUILD_DIR)/%.aifc: $(BUILD_DIR)/%.table %.aiff
 	$(call print,Encoding VADPCM:,$<,$@)

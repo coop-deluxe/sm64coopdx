@@ -10,7 +10,7 @@
 #include "pc/configfile.h"
 #include "audio/external.h"
 #include "engine/graph_node.h"
-#include "types.h"
+#include "characters_bass_sounds.h"
 
 extern Gfx mario_cap_seg3_dl_03022F48[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
@@ -87,6 +87,8 @@ struct Character gCharacters[CT_MAX] = {
         .soundSnoring3         = SOUND_MARIO_SNORING3,
         .soundSoLongaBowser    = SOUND_MARIO_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_MARIO_IMA_TIRED,
+        .soundLetsAGo          = CHAR_BASS_SOUND(SOUND_MARIO_LETS_A_GO),
+        .soundOkeyDokey        = CHAR_BASS_SOUND(SOUND_MARIO_OKEY_DOKEY),
     },
 
     [CT_LUIGI] = {
@@ -150,6 +152,8 @@ struct Character gCharacters[CT_MAX] = {
         .soundSnoring3         = SOUND_LUIGI_SNORING3,
         .soundSoLongaBowser    = SOUND_LUIGI_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_LUIGI_IMA_TIRED,
+        .soundLetsAGo          = CHAR_BASS_SOUND(SOUND_LUIGI_LETS_A_GO),
+        .soundOkeyDokey        = CHAR_BASS_SOUND(SOUND_LUIGI_OKEY_DOKEY),
     },
 
     [CT_TOAD] = {
@@ -213,6 +217,8 @@ struct Character gCharacters[CT_MAX] = {
         .soundSnoring3         = SOUND_MARIO_SNORING3,
         .soundSoLongaBowser    = SOUND_MARIO_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_MARIO_IMA_TIRED,
+        .soundLetsAGo          = CHAR_BASS_SOUND(SOUND_MARIO_LETS_A_GO),
+        .soundOkeyDokey        = CHAR_BASS_SOUND(SOUND_MARIO_OKEY_DOKEY),
     },
 
     [CT_WALUIGI] = {
@@ -279,6 +285,8 @@ struct Character gCharacters[CT_MAX] = {
         .soundSnoring3         = SOUND_LUIGI_SNORING3,
         .soundSoLongaBowser    = SOUND_LUIGI_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_LUIGI_IMA_TIRED,
+        .soundLetsAGo          = CHAR_BASS_SOUND(SOUND_LUIGI_LETS_A_GO),
+        .soundOkeyDokey        = CHAR_BASS_SOUND(SOUND_LUIGI_OKEY_DOKEY),
     },
 
     [CT_WARIO] = {
@@ -342,6 +350,8 @@ struct Character gCharacters[CT_MAX] = {
         .soundSnoring3         = SOUND_WARIO_SNORING3,
         .soundSoLongaBowser    = SOUND_WARIO_SO_LONGA_BOWSER,
         .soundImaTired         = SOUND_WARIO_IMA_TIRED,
+        .soundLetsAGo          = CHAR_BASS_SOUND(SOUND_WARIO_LETS_A_GO),
+        .soundOkeyDokey        = CHAR_BASS_SOUND(SOUND_WARIO_OKEY_DOKEY),
     },
 };
 
@@ -450,29 +460,41 @@ static s32 get_character_sound(struct MarioState* m, enum CharacterSound charact
         case CHAR_SOUND_SNORING3:            return character->soundSnoring3;
         case CHAR_SOUND_SO_LONGA_BOWSER:     return character->soundSoLongaBowser;
         case CHAR_SOUND_IMA_TIRED:           return character->soundImaTired;
+        case CHAR_SOUND_LETS_A_GO:           return character->soundLetsAGo;
+        case CHAR_SOUND_OKEY_DOKEY:          return character->soundOkeyDokey;
         default:                             return 0;
     }
 }
 
+static void play_character_sound_internal(struct MarioState *m, enum CharacterSound characterSound, u32 offset, u32 flags) {
+    if (m != NULL && (m->flags & flags) == 0) {
+        s32 sound = get_character_sound(m, characterSound);
+        if (sound != 0) {
+            struct Character* character = get_character(m);
+            f32 *pos = (m->marioObj != NULL ? m->marioObj->header.gfx.cameraToObject : gGlobalSoundSource);
+            if ((u32) (sound & CHAR_BASS_MAGIC) == CHAR_BASS_MAGIC) {
+                CharacterBassSound *cbs = get_character_bass_sound(sound);
+                if (cbs != NULL) {
+                    play_character_bass_sound(cbs, pos, character->soundFreqScale);
+                }
+            } else {
+                play_sound_with_freq_scale(sound + offset, pos, character->soundFreqScale);
+            }
+        }
+        m->flags |= flags;
+    }
+}
+
 void play_character_sound(struct MarioState* m, enum CharacterSound characterSound) {
-    s32 sound = get_character_sound(m, characterSound);
-    if (sound == 0) { return; }
-    struct Character* character = get_character(m);
-    play_sound_with_freq_scale(sound, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
+    play_character_sound_internal(m, characterSound, 0, 0);
 }
 
 void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u32 offset) {
-    s32 sound = get_character_sound(m, characterSound);
-    if (sound == 0) { return; }
-    struct Character* character = get_character(m);
-    play_sound_with_freq_scale(sound + offset, m->marioObj->header.gfx.cameraToObject, character->soundFreqScale);
+    play_character_sound_internal(m, characterSound, offset, 0);
 }
 
 void play_character_sound_if_no_flag(struct MarioState* m, enum CharacterSound characterSound, u32 flags) {
-    if ((m->flags & flags) == 0) {
-        play_character_sound(m, characterSound);
-        m->flags |= flags;
-    }
+    play_character_sound_internal(m, characterSound, 0, flags);
 }
 
 f32 get_character_anim_offset(struct MarioState* m) {
@@ -515,6 +537,10 @@ void update_character_anim_offset(struct MarioState* m) {
     if (m->curAnimOffset > 40)  { m->curAnimOffset = 40; }
     if (m->curAnimOffset < -40) { m->curAnimOffset = -40; }
 
-    marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;
+    if (m->action == ACT_JUMBO_STAR_CUTSCENE) {
+        marioObj->header.gfx.pos[1] = m->pos[1] + m->curAnimOffset;
+    } else {
+        marioObj->header.gfx.pos[1] += m->curAnimOffset;
+    }
     marioObj->header.gfx.node.flags |= GRAPH_RENDER_PLAYER;
 }

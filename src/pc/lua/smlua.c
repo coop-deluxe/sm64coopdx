@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "game/hardcoded.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/crash_handler.h"
@@ -178,6 +179,7 @@ void smlua_update(void) {
 }
 
 void smlua_shutdown(void) {
+    hardcoded_reset_default_values();
     smlua_text_utils_reset_all();
     smlua_audio_utils_reset_all();
     audio_custom_shutdown();

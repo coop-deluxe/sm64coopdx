@@ -539,9 +539,9 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
 
         if (!marioActive) {
             node->flags &= ~GRAPH_RENDER_ACTIVE;
-        } else if (camera->mode == CAMERA_MODE_C_UP) {
-            rotNode->rotation[0] = gPlayerCameraState->headRotation[1];
-            rotNode->rotation[2] = gPlayerCameraState->headRotation[0];
+        } else if (((plrIdx == 0) && (camera->mode == CAMERA_MODE_C_UP)) || ((plrIdx != 0) && (action == ACT_FIRST_PERSON))) {
+            rotNode->rotation[0] = gPlayerCameraState[plrIdx].headRotation[1];
+            rotNode->rotation[2] = gPlayerCameraState[plrIdx].headRotation[0];
         }
         else if (action & ACT_FLAG_WATER_OR_TEXT) {
             rotNode->rotation[0] = bodyState->headAngle[1];
@@ -743,46 +743,46 @@ Gfx* geo_switch_mario_hand_grab_pos(s32 callContext, struct GraphNode* b, Mat4* 
  * a mirror image of the player.
  */
 Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        f32 mirroredX;
-        struct MarioState* marioState = &gMarioStates[i];
-        struct Object* mario = marioState->marioObj;
+    struct MarioState* mariolocalState = &gMarioStates[0];
+    struct Object* marioLocal = mariolocalState->marioObj;
+    
+    f32 mirroredX;
+    struct MarioState* marioState = &gMarioStates[0];
+    struct Object* mario = marioState->marioObj;
 
-        switch (callContext) {
-            case GEO_CONTEXT_CREATE:
-                init_graph_node_object(NULL, &gMirrorMario[i], NULL, gVec3fZero, gVec3sZero, gVec3fOne);
-                break;
-            case GEO_CONTEXT_AREA_LOAD:
-                geo_add_child(node, &gMirrorMario[i].node);
-                break;
-            case GEO_CONTEXT_AREA_UNLOAD:
-                geo_remove_child_from_parent(node, &gMirrorMario[i].node);
-                break;
-            case GEO_CONTEXT_RENDER:
-                if (mario && (((struct GraphNode*)&mario->header.gfx)->flags & GRAPH_RENDER_ACTIVE)) {
-                    // TODO: Is this a geo layout copy or a graph node copy?
-                    gMirrorMario[i].sharedChild = mario->header.gfx.sharedChild;
-                    dynos_actor_override((void*)&gMirrorMario[i].sharedChild);
-                    gMirrorMario[i].areaIndex = mario->header.gfx.areaIndex;
-                    vec3s_copy(gMirrorMario[i].angle, mario->header.gfx.angle);
-                    vec3f_copy(gMirrorMario[i].pos, mario->header.gfx.pos);
-                    vec3f_copy(gMirrorMario[i].scale, mario->header.gfx.scale);
-                    // FIXME: why does this set unk38, an inline struct, to a ptr to another one? wrong
-                    // GraphNode types again?
-                    gMirrorMario[i].animInfo = *(struct AnimInfo*) & mario->header.gfx.animInfo.animID;
-                    mirroredX = MIRROR_X - gMirrorMario[i].pos[0];
-                    gMirrorMario[i].pos[0] = mirroredX + MIRROR_X;
-                    gMirrorMario[i].angle[1] = -gMirrorMario[i].angle[1];
-                    gMirrorMario[i].scale[0] *= -1.0f;
-                    // TODO: enabling rendering can cause the game to crash when two players are in the mirror room
-                    //gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
-                    gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
-                } else {
-                    gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
-                }
-                break;
-        }
+    switch (callContext) {
+        case GEO_CONTEXT_CREATE:
+            init_graph_node_object(NULL, &gMirrorMario[0], NULL, gVec3fZero, gVec3sZero, gVec3fOne);
+            break;
+        case GEO_CONTEXT_AREA_LOAD:
+            geo_add_child(node, &gMirrorMario[0].node);
+            break;
+        case GEO_CONTEXT_AREA_UNLOAD:
+            geo_remove_child_from_parent(node, &gMirrorMario[0].node);
+            break;
+        case GEO_CONTEXT_RENDER:
+            if (marioLocal->header.gfx.pos[0] > 1700.0f) {
+                // TODO: Is this a geo layout copy or a graph node copy?
+                gMirrorMario[0].sharedChild = mario->header.gfx.sharedChild;
+                dynos_actor_override((void*)&gMirrorMario[0].sharedChild);
+                gMirrorMario[0].areaIndex = mario->header.gfx.areaIndex;
+                vec3s_copy(gMirrorMario[0].angle, mario->header.gfx.angle);
+                vec3f_copy(gMirrorMario[0].pos, mario->header.gfx.pos);
+                vec3f_copy(gMirrorMario[0].scale, mario->header.gfx.scale);
+                // FIXME: why does this set unk38, an inline struct, to a ptr to another one? wrong
+                // GraphNode types again?
+                gMirrorMario[0].animInfo = *(struct AnimInfo*) & mario->header.gfx.animInfo.animID;
+                mirroredX = MIRROR_X - gMirrorMario[0].pos[0];
+                gMirrorMario[0].pos[0] = mirroredX + MIRROR_X;
+                gMirrorMario[0].angle[1] = -gMirrorMario[0].angle[1];
+                gMirrorMario[0].scale[0] *= -1.0f;
+                gMirrorMario[0].node.flags |= GRAPH_RENDER_ACTIVE;
+            } else {
+                gMirrorMario[0].node.flags &= ~GRAPH_RENDER_ACTIVE;
+            }
+            break;
     }
+    
     return NULL;
 }
 

@@ -24,6 +24,7 @@
 #include "../fs/fs.h"
 
 #include "game/level_update.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -168,12 +169,14 @@ static void controller_sdl_read(OSContPad *pad) {
     }
 
 #ifdef BETTERCAMERA
-    if (newcam_mouse == 1 && sCurrPlayMode != 2) {
-        SDL_SetRelativeMouseMode(SDL_TRUE);
-        ignore_lock = TRUE;
-    } else {
-        SDL_SetRelativeMouseMode(SDL_FALSE);
-        ignore_lock = FALSE;
+    if (!gDjuiHudLockMouse) {
+        if (newcam_mouse == 1 && (!is_game_paused() || sCurrPlayMode != 2) && !gDjuiInMainMenu) {
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+            ignore_lock = true;
+        } else {
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+            ignore_lock = false;
+        }
     }
 
     u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
@@ -187,7 +190,7 @@ static void controller_sdl_read(OSContPad *pad) {
     last_mouse = (mouse_buttons ^ mouse) & mouse;
     mouse_buttons = mouse;
 #endif
-    if (!ignore_lock && sCurrPlayMode != 2) {
+    if (!ignore_lock && (!is_game_paused() || sCurrPlayMode != 2) && !gDjuiInMainMenu) {
         SDL_SetRelativeMouseMode(gDjuiHudLockMouse ? SDL_TRUE : SDL_FALSE);
 
 #ifndef BETTERCAMERA

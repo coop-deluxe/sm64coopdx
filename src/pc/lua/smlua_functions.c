@@ -178,11 +178,13 @@ int smlua_func_network_send_object(lua_State* L) {
 int smlua_func_network_send(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
     network_send_lua_custom(true);
+    return 1;
 }
 
 int smlua_func_network_send_to(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
     network_send_lua_custom(false);
+    return 1;
 }
 
   //////////////

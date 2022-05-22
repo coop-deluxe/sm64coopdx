@@ -1,5 +1,6 @@
 #include "sm64.h"
 #include "types.h"
+#include "geo_commands.h"
 
 #include "src/game/area.h"
 #include "src/engine/graph_node.h"
@@ -566,14 +567,28 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
         resizePool = true;
     }
 
-    if (info->isDisplayList) {
-        gLoadedGraphNodes[pickLoadedId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
-    } else {
-        gLoadedGraphNodes[pickLoadedId] = process_geo_layout(pool, (void*)info->asset);
+    if (pool != NULL) {
+        if (info->isDisplayList) {
+            gLoadedGraphNodes[pickLoadedId] = (struct GraphNode *) init_graph_node_display_list(pool, NULL, info->layer, (void*)info->asset);
+        } else {
+            gLoadedGraphNodes[pickLoadedId] = process_geo_layout(pool, (void*)info->asset);
+        }
+
+        if (resizePool) {
+            alloc_only_pool_resize(pool, pool->usedSpace);
+        }
     }
 
-    if (resizePool) {
-        alloc_only_pool_resize(pool, pool->usedSpace);
+    // If no pool is available, use DynOS to generate the graph node
+    else {
+
+        // Turn the display list into a geo layout
+        if (info->isDisplayList) {
+            const GeoLayout displayListToGeoLayout[] = { GEO_NODE_START(), GEO_DISPLAY_LIST(info->layer, info->asset), GEO_END() };
+            info->asset = memcpy(calloc(1, sizeof(displayListToGeoLayout)), displayListToGeoLayout, sizeof(displayListToGeoLayout));
+            info->isDisplayList = false;
+        }
+        gLoadedGraphNodes[pickLoadedId] = dynos_geolayout_to_graphnode(info->asset, true);
     }
 
     // remember

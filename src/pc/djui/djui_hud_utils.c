@@ -22,7 +22,7 @@ static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum DjuiFontType sFont = FONT_NORMAL;
 
 f32 gDjuiHudUtilsZ = 0;
-u8 gDjuiHudLockMouse = FALSE;
+u8 gDjuiHudLockMouse = false;
 
 extern ALIGNED8 const u8 texture_hud_char_camera[];
 extern ALIGNED8 const u8 texture_hud_char_lakitu[];
