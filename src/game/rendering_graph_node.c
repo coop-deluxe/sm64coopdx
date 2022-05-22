@@ -40,13 +40,23 @@
  *
  */
 
-#define MATRIX_STACK_SIZE 32 
+#define MATRIX_STACK_SIZE 32
 
 s16 gMatStackIndex;
 Mat4 gMatStack[MATRIX_STACK_SIZE] = {};
 Mat4 gMatStackPrev[MATRIX_STACK_SIZE] = {};
 Mtx *gMatStackFixed[MATRIX_STACK_SIZE] = { 0 };
 Mtx *gMatStackPrevFixed[MATRIX_STACK_SIZE] = { 0 };
+
+u8 sUsingCamSpace = FALSE;
+Mtx sPrevCamTranf, sCurrCamTranf = {
+    .m = {
+        {1.0f, 0.0f, 0.0f, 0.0f},
+        {0.0f, 1.0f, 0.0f, 0.0f},
+        {0.0f, 0.0f, 1.0f, 0.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f}
+    }
+};
 
 /**
  * Animation nodes have state in global variables, so this struct captures
@@ -161,12 +171,15 @@ struct ShadowInterp sShadowInterp[MAX_SHADOW_NODES] = { 0 };
 struct ShadowInterp* gShadowInterpCurrent = NULL;
 static u8 sShadowInterpCount = 0;
 
+static struct GraphNodeCamera * sCameraNode = NULL;
+
 struct {
     Gfx *pos;
     Mtx *mtx;
     Mtx *mtxPrev;
     void *displayList;
     Mtx interp;
+    u8 usingCamSpace;
 } gMtxTbl[6400];
 s32 gMtxTblSize;
 
@@ -204,6 +217,8 @@ void patch_mtx_before(void) {
 }
 
 void patch_mtx_interpolated(f32 delta) {
+    Mtx camTranfInv, prevCamTranfInv;
+
     if (sPerspectiveNode != NULL) {
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
@@ -257,9 +272,37 @@ void patch_mtx_interpolated(f32 delta) {
     }
     gCurGraphNodeObject = savedObj;
 
+    // calculate outside of for loop to reduce overhead
+    // technically this is improper use of mtxf functions, but coop doesn't target N64
+    mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
+    mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+
     for (s32 i = 0; i < gMtxTblSize; i++) {
+        Mtx bufMtx, bufMtxPrev;
+
+        memcpy(bufMtx.m, ((Mtx*) gMtxTbl[i].mtx)->m, sizeof(f32) * 4 * 4);
+        memcpy(bufMtxPrev.m, ((Mtx*) gMtxTbl[i].mtxPrev)->m, sizeof(f32) * 4 * 4);
+
         Gfx *pos = gMtxTbl[i].pos;
-        delta_interpolate_mtx(&gMtxTbl[i].interp, (Mtx*) gMtxTbl[i].mtxPrev, (Mtx*) gMtxTbl[i].mtx, delta);
+
+        if (gMtxTbl[i].usingCamSpace) {
+            // transform out of camera space so the matrix can interp in world space
+            mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
+            mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+        }
+        delta_interpolate_mtx(&gMtxTbl[i].interp, &bufMtxPrev, &bufMtx, delta);
+        if (gMtxTbl[i].usingCamSpace) {
+            // transform back to camera space, respecting camera interpolation
+            Mtx camInterp;
+            Vec3f posInterp, focusInterp;
+
+            // use camera node's stored information to calculate interpolated camera transform
+            delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
+            delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
+            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
+            mtxf_to_mtx(&camInterp, camInterp.m);
+            mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
+        }
         gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
                   G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
     }
@@ -308,13 +351,13 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
         if ((currList = node->listHeads[i]) != NULL) {
             gDPSetRenderMode(gDisplayListHead++, modeList->modes[i], mode2List->modes[i]);
             while (currList != NULL) {
-                detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
+                //detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
                 if ((u32) gMtxTblSize < sizeof(gMtxTbl) / sizeof(gMtxTbl[0])) {
                     gMtxTbl[gMtxTblSize].pos = gDisplayListHead;
                     gMtxTbl[gMtxTblSize].mtx = currList->transform;
                     gMtxTbl[gMtxTblSize].mtxPrev = currList->transformPrev;
                     gMtxTbl[gMtxTblSize].displayList = currList->displayList;
-                    gMtxTblSize++;
+                    gMtxTbl[gMtxTblSize++].usingCamSpace = currList->usingCamSpace;
                 }
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -347,6 +390,7 @@ static void geo_append_display_list(void *displayList, s16 layer) {
         listNode->transformPrev = gMatStackPrevFixed[gMatStackIndex];
         listNode->displayList = displayList;
         listNode->next = 0;
+        listNode->usingCamSpace = sUsingCamSpace;
         if (gCurGraphNodeMasterList->listHeads[layer] == 0) {
             gCurGraphNodeMasterList->listHeads[layer] = listNode;
         } else {
@@ -475,6 +519,9 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     Mtx *rollMtx = alloc_display_list(sizeof(*rollMtx));
     if (rollMtx == NULL) { return; }
 
+    vec3f_copy(node->prevPos, node->pos);
+    vec3f_copy(node->prevFocus, node->focus);
+
     if (node->fnNode.func != NULL) {
         node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
     }
@@ -492,10 +539,8 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
         mtxf_lookat(cameraTransform, node->pos, node->focus, node->roll);
         mtxf_mul(gMatStackPrev[gMatStackIndex + 1], cameraTransform, gMatStackPrev[gMatStackIndex]);
     }
-
-    vec3f_copy(node->prevPos, node->pos);
-    vec3f_copy(node->prevFocus, node->focus);
     node->prevTimestamp = gGlobalTimer;
+    sCameraNode = node;
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
@@ -505,10 +550,12 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
 
     if (node->fnNode.node.children != 0) {
         gCurGraphNodeCamera = node;
+        sUsingCamSpace = TRUE;
         node->matrixPtr = &gMatStack[gMatStackIndex];
         node->matrixPtrPrev = &gMatStackPrev[gMatStackIndex];
         geo_process_node_and_siblings(node->fnNode.node.children);
         gCurGraphNodeCamera = NULL;
+        sUsingCamSpace = FALSE;
     }
     gMatStackIndex--;
 }

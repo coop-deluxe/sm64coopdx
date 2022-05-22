@@ -117,6 +117,7 @@ next_get:
 
 /////////////////
 
+/*
 static f32 sm64_to_radians(f32 val) {
     return val * M_PI / 0x8000;
 }
@@ -166,6 +167,336 @@ void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta) {
     res[3] = ((a[3] * antiDelta) + (b[3] * delta));
 }
 
+/*
+void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+    f32 antiDelta = 1.0f - delta;
+    for (s32 i = 0; i < 4; i++) {
+        for (s32 j = 0; j < 4; j++) {
+            out->m[i][j] = (a->m[i][j] * antiDelta) + (b->m[i][j] * delta);
+        }
+    }
+}
+*/
+
+static f32 get_quat_compo_abs(f32 xPiece, f32 yPiece, f32 zPiece) {
+    return sqrt((1.0f + xPiece + yPiece + zPiece) * 0.25f);
+}
+
+static u8 float_ge_with_nan_check(f32 a, f32 b) {
+    return !isnan(a) && (isnan(b) || a >= b);
+}
+
+// this function expects an orthonormal rotation matrix
+static void rot_mat_to_rot_quat(Vec4f q, Vec3f a[3]) {
+    // get absolute value of coefficients
+    q[0] = get_quat_compo_abs(a[0][0], a[1][1], a[2][2]);
+    q[1] = get_quat_compo_abs(a[0][0], -a[1][1], -a[2][2]);
+    q[2] = get_quat_compo_abs(-a[0][0], a[1][1], -a[2][2]);
+    q[3] = get_quat_compo_abs(-a[0][0], -a[1][1], a[2][2]);
+
+    // find the coefficient with greatest magnitude
+    // NaN checks are because of possible square root of negative number in get_quat_compo_abs
+    int maxCompoMagCase = float_ge_with_nan_check(q[0], q[1])
+        ? float_ge_with_nan_check(q[0], q[2])
+            ? float_ge_with_nan_check(q[0], q[3])
+                ? 0
+                : 3
+            : float_ge_with_nan_check(q[2], q[3])
+                ? 2
+                : 3
+        : float_ge_with_nan_check(q[1], q[2])
+            ? float_ge_with_nan_check(q[1], q[3])
+                ? 1
+                : 3
+            : float_ge_with_nan_check(q[2], q[3])
+                ? 2
+                : 3;
+
+    // adjust signs of coefficients; base on greatest magnitude to improve float accuracy
+    switch (maxCompoMagCase) {
+        f32 divFactor;
+
+        case 0:
+            divFactor = 0.25f / q[0];
+            q[1] = (a[1][2] - a[2][1]) * divFactor;
+            q[2] = (a[2][0] - a[0][2]) * divFactor;
+            q[3] = (a[0][1] - a[1][0]) * divFactor;
+            return;
+
+        case 1:
+            divFactor = 0.25f / q[1];
+            q[0] = (a[1][2] - a[2][1]) * divFactor;
+            q[2] = (a[1][0] + a[0][1]) * divFactor;
+            q[3] = (a[2][0] + a[0][2]) * divFactor;
+            return;
+
+        case 2:
+            divFactor = 0.25f / q[2];
+            q[0] = (a[2][0] - a[0][2]) * divFactor;
+            q[1] = (a[1][0] + a[0][1]) * divFactor;
+            q[3] = (a[2][1] + a[1][2]) * divFactor;
+            return;
+
+        case 3:
+            divFactor = 0.25f / q[3];
+            q[0] = (a[0][1] - a[1][0]) * divFactor;
+            q[1] = (a[2][0] + a[0][2]) * divFactor;
+            q[2] = (a[2][1] + a[1][2]) * divFactor;
+            return;
+    }
+}
+
+static void rot_quat_to_mtx_rot(Vec3f a[3], Vec4f q) {
+    f32 dq0s = 2.0f * sqr(q[0]), dq1s = 2.0f * sqr(q[1]), dq2s = 2.0f * sqr(q[2]),
+        dq3s = 2.0f * sqr(q[3]), dq12 = 2.0f * q[1] * q[2], dq03 = 2.0f * q[0] * q[3],
+        dq13 = 2.0f * q[1] * q[3], dq02 = 2.0f * q[0] * q[2], dq23 = 2.0f * q[2] * q[3],
+        dq01 = 2.0f * q[0] * q[1];
+
+    a[0][0] = dq0s + dq1s - 1.0f;
+    a[0][1] = dq12 + dq03;
+    a[0][2] = dq13 - dq02;
+    a[1][0] = dq12 - dq03;
+    a[1][1] = dq0s + dq2s - 1.0f;
+    a[1][2] = dq23 + dq01;
+    a[2][0] = dq13 + dq02;
+    a[2][1] = dq23 - dq01;
+    a[2][2] = dq0s + dq3s - 1.0f;
+}
+
+// rotation quaternion spherical linear interpolation
+static void rot_quat_slerp(Vec4f out, Vec4f a, Vec4f b, f32 t) {
+    // credit where it's due:
+    // Martin John Baker
+    // https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
+
+    f32 halfTh, halfSin, st, sat, halfCos = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+
+    memcpy(out, b, sizeof(f32) * 4);
+
+    // if the abs of cos is 1, then there is no rotation
+    if (fabs(halfCos) >= 1.0f) {
+        return;
+    }
+
+    // if cos is negative, rotation takes long path; invert to take short path
+    if (halfCos < 0.0f) {
+        out[0] *= -1.0f;
+        out[1] *= -1.0f;
+        out[2] *= -1.0f;
+        out[3] *= -1.0f;
+        halfCos *= -1.0f;
+    }
+
+    halfTh = acos(halfCos);
+    halfSin = sqrt(1.0f - sqr(halfCos));
+
+    if (halfSin == 0.0f) {
+        // this shouldn't happen, but float imprecision can make it happen anyway
+        halfSin = FLT_EPSILON;
+    }
+
+    sat = sin((1 - t) * halfTh) / halfSin;
+    st = sin(t * halfTh) / halfSin;
+    out[0] = a[0] * sat + out[0] * st;
+    out[1] = a[1] * sat + out[1] * st;
+    out[2] = a[2] * sat + out[2] * st;
+    out[3] = a[3] * sat + out[3] * st;
+}
+
+// removes scaling from the shear value
+static f32 unmat_unscale_shear(f32 shear, f32 scale) {
+    if (scale == 0.0f) {
+        // assume no shear
+        return 0.0f;
+    }
+
+    return shear / scale;
+}
+
+// matrix decomposition code is brought over from "unmatrix.c" from Graphics Gems II
+// Author: Spencer W. Thomas of University of Michigan
+// additional Graphics Gems II code by Andrew Glassner and Rod G. Bogart
+// thanks to fgsfds for informing me of this
+// http://www.realtimerendering.com/resources/GraphicsGems/gemsii/unmatrix.c
+//
+// matrix perspective is not used in SM64, so those indices are stripped from the output parameter
+// return value was related to if matrix was non-singular, which was necessary for perspective
+// since perspective is not used, the return value is also strippped
+//
+// additionally, rotation is not converted to euler angles
+// instead, it is converted to a quaternion to avoid gimbal lock
+//
+// tranfs is returned as follows:
+// scale(x, y, z), shear(xy, xz, zy), rotation(a, b, c, d), translation(x, y, z)
+static void unmatrix(Mtx * mat, f32 tranfs[13]) {
+    register int i;
+    Vec3f axisVecs[3], yzCross;
+
+    Mtx locMat = *mat;
+
+    // matrix normalization skipped since all SM64 matrices are normalized
+
+    // perspective is not used in SM64 matrices, so the steps for it are skipped
+
+    for (i = 0; i < 3; ++i) {
+        // translation (position)
+        tranfs[10 + i] = locMat.m[3][i];
+
+        // axis vector
+        memcpy(axisVecs[i], locMat.m[i], sizeof(f32) * 3);
+    }
+
+    // X-scale
+    tranfs[0] = vec3f_length(axisVecs[0]);
+
+    // normalize X-axis vector
+    if (tranfs[0] == 0.0f) {
+        axisVecs[0][0] = 1.0f;
+        axisVecs[0][1] = 0.0f;
+        axisVecs[0][2] = 0.0f;
+    } else {
+        for (i = 0; i < 3; ++i) {
+            axisVecs[0][i] /= tranfs[0];
+        }
+    }
+
+    // XY-shear
+    tranfs[3] = vec3f_dot(axisVecs[0], axisVecs[1]);
+
+    // orthogonalize Y-axis vector to X-axis vector
+    vec3f_combine(axisVecs[1], axisVecs[1], axisVecs[0], 1.0f, -tranfs[3]);
+
+    // Y-scale
+    tranfs[1] = vec3f_length(axisVecs[1]);
+
+    // normalize Y-axis vector
+    if (tranfs[1] == 0.0f) {
+        axisVecs[1][0] = 0.0f;
+        axisVecs[1][1] = 1.0f;
+        axisVecs[1][2] = 0.0f;
+    } else {
+        for (i = 0; i < 3; ++i) {
+            axisVecs[1][i] /= tranfs[1];
+        }
+    }
+
+    // unscale XY-shear
+    tranfs[3] = unmat_unscale_shear(tranfs[3], tranfs[1]);
+
+    // XZ-shear
+    tranfs[4] = vec3f_dot(axisVecs[0], axisVecs[2]);
+
+    // orthogonalize Z-axis vector to X-axis vector
+    vec3f_combine(axisVecs[2], axisVecs[2], axisVecs[0], 1.0f, -tranfs[4]);
+
+    // ZY-shear
+    tranfs[5] = vec3f_dot(axisVecs[1], axisVecs[2]);
+
+    // orthogonalize Z-axis vector to Y-axis vector
+    vec3f_combine(axisVecs[2], axisVecs[2], axisVecs[1], 1.0f, -tranfs[5]);
+
+    // Z-scale
+    tranfs[2] = vec3f_length(axisVecs[2]);
+
+    // normalize Z-axis vector
+    if (tranfs[2] == 0.0f) {
+        axisVecs[2][0] = 0.0f;
+        axisVecs[2][1] = 0.0f;
+        axisVecs[2][2] = 1.0f;
+    } else {
+        for (i = 0; i < 3; ++i) {
+            axisVecs[2][i] /= tranfs[2];
+        }
+    }
+
+    // unscale remaining shears
+    tranfs[4] = unmat_unscale_shear(tranfs[4], tranfs[2]);
+    tranfs[5] = unmat_unscale_shear(tranfs[5], tranfs[2]);
+
+    // check if coordinate system needs to be flipped
+    vec3f_cross(yzCross, axisVecs[1], axisVecs[2]);
+    if (vec3f_dot(axisVecs[0], yzCross) < 0.0f) {
+        for (i = 0; i < 3; ++i) {
+            tranfs[i] *= -1.0f;
+            vec3f_mul(axisVecs[i], -1.0f);
+        }
+    }
+
+    // rotation
+    rot_mat_to_rot_quat(tranfs + 6, axisVecs);
+}
+
+// builds a transformation matrix from a decomposed sequence from unmatrix
+// see unmatrix for what tranfs means
+static void rematrix(Mtx * mat, f32 tranfs[13]) {
+    register int i;
+    Vec3f rotAxes[3];
+    Mat4 rotMat;
+
+    // start with the identity matrix
+    for (i = 0; i < 4; ++i) {
+        register int j;
+
+        mat->m[i][i] = 1.0f;
+        for (j = 3; j > i; --j) {
+            mat->m[i][j] = mat->m[j][i] = 0.0f;
+        }
+    }
+
+    // scale
+    for (i = 0; i < 3; ++i) {
+        vec3f_mul(mat->m[i], tranfs[i]);
+    }
+
+    // shear
+    mat->m[1][0] = mat->m[1][1] * tranfs[3];
+    mat->m[2][0] = mat->m[2][2] * tranfs[4];
+    mat->m[2][1] = mat->m[2][2] * tranfs[5];
+
+    // rotate
+    // get the rotation matrix for the quat
+    rot_quat_to_mtx_rot(rotAxes, tranfs + 6);
+
+    // transfer to the Mat4 struct
+    for (i = 0; i < 3; ++i) {
+        memcpy(rotMat[i], rotAxes[i], sizeof(f32) * 3);
+        rotMat[i][3] = rotMat[3][i] = 0.0f;
+    }
+    rotMat[3][3] = 1.0f;
+
+    // apply the rotation
+    // this is technically abuse of Mat4 vs. Mtx, but Coop doesn't target N64 anyway
+    mtxf_mul(mat->m, mat->m, rotMat);
+
+    // translate
+    for (i = 0; i < 3; ++i) {
+        mat->m[3][i] = tranfs[10 + i];
+    }
+}
+
+void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+    register int i;
+    f32 matTranfsA[13], matTranfsB[13];
+
+    f32 antiDelta = 1.0f - delta;
+
+    unmatrix(a, matTranfsA);
+    unmatrix(b, matTranfsB);
+
+    // skip rot quat
+    for (i = 0; i < 6; ++i) {
+        matTranfsB[i] = matTranfsA[i] * antiDelta + matTranfsB[i] * delta;
+    }
+    for (i = 10; i < 13; ++i) {
+        matTranfsB[i] = matTranfsA[i] * antiDelta + matTranfsB[i] * delta;
+    }
+
+    rot_quat_slerp(matTranfsB + 6, matTranfsA + 6, matTranfsB + 6, delta);
+
+    rematrix(out, matTranfsB);
+}
+
+/*
 static s16 delta_interpolate_angle(s16 a, s16 b, f32 delta) {
     s32 absDiff = b - a;
     if (absDiff < 0) {
@@ -218,3 +549,4 @@ void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx) {
         *mtx = *mtxPrev;
     }
 }
+*/

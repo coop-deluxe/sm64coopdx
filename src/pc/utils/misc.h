@@ -21,6 +21,6 @@ void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);
 void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta);
 void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta);
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);
-void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx);
+//void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx);
 
 #endif

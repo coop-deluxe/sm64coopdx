@@ -127,6 +127,7 @@ struct DisplayListNode
     Mtx *transformPrev;
     void *displayList;
     struct DisplayListNode *next;
+    u8 usingCamSpace;
 };
 
 /** GraphNode that manages the 8 top-level display lists that will be drawn

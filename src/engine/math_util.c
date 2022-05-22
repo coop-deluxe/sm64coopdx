@@ -155,6 +155,15 @@ f32 vec3f_dot(Vec3f a, Vec3f b)
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
+/// takes respective scales of vecA and vecB, and sums them
+void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
+    register int i;
+
+    for (i = 0; i < 3; ++i) {
+        dest[i] = vecA[i] * sclA + vecB[i] * sclB;
+    }
+}
+
 #pragma GCC diagnostic pop
 
 /// Copy matrix 'src' to 'dest'
@@ -636,6 +645,55 @@ void mtxf_rotate_xy(Mtx *mtx, s16 angle) {
     temp[1][0] = -temp[0][1];
     temp[1][1] = temp[0][0];
     mtxf_to_mtx(mtx, temp);
+}
+
+/**
+ * Get inverse matrix 'dest' of matrix 'src'.
+ *
+ * fast inverse matrix code is brought over from "inverse.c" from Graphics Gems II
+ * Author: Kevin Wu
+ * additional Graphics Gems code by Andrew Glassner and Rod G. Bogart
+ * http://www.realtimerendering.com/resources/GraphicsGems/gemsii/inverse.c
+ *
+ * this function assumes the transform is affine
+ * matrix perspective is not used in SM64, so this isn't a concern
+ * furthermore, this is currently only used to get the inverse of the camera transform
+ * because that is always orthonormal, the determinant will never be 0, so that check is removed
+ */
+void mtxf_inverse(register Mat4 dest, register Mat4 src) {
+    register f32 det_1;
+    Mat4 buf;
+
+    // calculating the determinant has been reduced since the check is removed
+    det_1 = 1.0f / (
+          src[0][0] * src[1][1] * src[2][2]
+        + src[0][1] * src[1][2] * src[2][0]
+        + src[0][2] * src[1][0] * src[2][1]
+        - src[0][2] * src[1][1] * src[2][0]
+        - src[0][1] * src[1][0] * src[2][2]
+        - src[0][0] * src[1][2] * src[2][1]
+    );
+
+    // inverse of axis vectors (adj(A) / det(A))
+    buf[0][0] = (src[1][1] * src[2][2] - src[1][2] * src[2][1]) * det_1;
+    buf[1][0] = (src[1][2] * src[2][0] - src[1][0] * src[2][2]) * det_1;
+    buf[2][0] = (src[1][0] * src[2][1] - src[1][1] * src[2][0]) * det_1;
+    buf[0][1] = (src[0][2] * src[2][1] - src[0][1] * src[2][2]) * det_1;
+    buf[1][1] = (src[0][0] * src[2][2] - src[0][2] * src[2][0]) * det_1;
+    buf[2][1] = (src[0][1] * src[2][0] - src[0][0] * src[2][1]) * det_1;
+    buf[0][2] = (src[0][1] * src[1][2] - src[0][2] * src[1][1]) * det_1;
+    buf[1][2] = (src[0][2] * src[1][0] - src[0][0] * src[1][2]) * det_1;
+    buf[2][2] = (src[0][0] * src[1][1] - src[0][1] * src[1][0]) * det_1;
+
+    // inverse of translation (-C * inv(A))
+    buf[3][0] = -src[3][0] * buf[0][0] - src[3][1] * buf[1][0] - src[3][2] * buf[2][0];
+    buf[3][1] = -src[3][0] * buf[0][1] - src[3][1] * buf[1][1] - src[3][2] * buf[2][1];
+    buf[3][2] = -src[3][0] * buf[0][2] - src[3][1] * buf[1][2] - src[3][2] * buf[2][2];
+
+    buf[0][3] = buf[1][3] = buf[2][3] = 0.0f;
+    buf[3][3] = 1.0f;
+
+    memcpy(dest, buf, sizeof(f32) * 4 * 4);
 }
 
 /**
