@@ -15073,6 +15073,206 @@ int smlua_func_allocate_mario_action(lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_config_enable_analog_cam(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_enable_analog_cam(enable);
+
+    return 1;
+}
+
+int smlua_func_camera_config_enable_free_cam(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_enable_free_cam(enable);
+
+    return 1;
+}
+
+int smlua_func_camera_config_enable_mouse_look(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_enable_mouse_look(enable);
+
+    return 1;
+}
+
+int smlua_func_camera_config_get_aggression(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, camera_config_get_aggression());
+
+    return 1;
+}
+
+int smlua_func_camera_config_get_deceleration(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, camera_config_get_deceleration());
+
+    return 1;
+}
+
+int smlua_func_camera_config_get_pan_level(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, camera_config_get_pan_level());
+
+    return 1;
+}
+
+int smlua_func_camera_config_get_x_sensitivity(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, camera_config_get_x_sensitivity());
+
+    return 1;
+}
+
+int smlua_func_camera_config_get_y_sensitivity(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, camera_config_get_y_sensitivity());
+
+    return 1;
+}
+
+int smlua_func_camera_config_invert_x(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool invert = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_invert_x(invert);
+
+    return 1;
+}
+
+int smlua_func_camera_config_invert_y(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    bool invert = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_invert_y(invert);
+
+    return 1;
+}
+
+int smlua_func_camera_config_is_analog_cam_enabled(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, camera_config_is_analog_cam_enabled());
+
+    return 1;
+}
+
+int smlua_func_camera_config_is_free_cam_enabled(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, camera_config_is_free_cam_enabled());
+
+    return 1;
+}
+
+int smlua_func_camera_config_is_mouse_look_enabled(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, camera_config_is_mouse_look_enabled());
+
+    return 1;
+}
+
+int smlua_func_camera_config_is_x_inverted(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, camera_config_is_x_inverted());
+
+    return 1;
+}
+
+int smlua_func_camera_config_is_y_inverted(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, camera_config_is_y_inverted());
+
+    return 1;
+}
+
+int smlua_func_camera_config_set_aggression(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_set_aggression(value);
+
+    return 1;
+}
+
+int smlua_func_camera_config_set_deceleration(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_set_deceleration(value);
+
+    return 1;
+}
+
+int smlua_func_camera_config_set_pan_level(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_set_pan_level(value);
+
+    return 1;
+}
+
+int smlua_func_camera_config_set_x_sensitivity(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_set_x_sensitivity(value);
+
+    return 1;
+}
+
+int smlua_func_camera_config_set_y_sensitivity(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u32 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    camera_config_set_y_sensitivity(value);
+
+    return 1;
+}
+
 int smlua_func_camera_freeze(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -17596,6 +17796,26 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
+    smlua_bind_function(L, "camera_config_enable_analog_cam", smlua_func_camera_config_enable_analog_cam);
+    smlua_bind_function(L, "camera_config_enable_free_cam", smlua_func_camera_config_enable_free_cam);
+    smlua_bind_function(L, "camera_config_enable_mouse_look", smlua_func_camera_config_enable_mouse_look);
+    smlua_bind_function(L, "camera_config_get_aggression", smlua_func_camera_config_get_aggression);
+    smlua_bind_function(L, "camera_config_get_deceleration", smlua_func_camera_config_get_deceleration);
+    smlua_bind_function(L, "camera_config_get_pan_level", smlua_func_camera_config_get_pan_level);
+    smlua_bind_function(L, "camera_config_get_x_sensitivity", smlua_func_camera_config_get_x_sensitivity);
+    smlua_bind_function(L, "camera_config_get_y_sensitivity", smlua_func_camera_config_get_y_sensitivity);
+    smlua_bind_function(L, "camera_config_invert_x", smlua_func_camera_config_invert_x);
+    smlua_bind_function(L, "camera_config_invert_y", smlua_func_camera_config_invert_y);
+    smlua_bind_function(L, "camera_config_is_analog_cam_enabled", smlua_func_camera_config_is_analog_cam_enabled);
+    smlua_bind_function(L, "camera_config_is_free_cam_enabled", smlua_func_camera_config_is_free_cam_enabled);
+    smlua_bind_function(L, "camera_config_is_mouse_look_enabled", smlua_func_camera_config_is_mouse_look_enabled);
+    smlua_bind_function(L, "camera_config_is_x_inverted", smlua_func_camera_config_is_x_inverted);
+    smlua_bind_function(L, "camera_config_is_y_inverted", smlua_func_camera_config_is_y_inverted);
+    smlua_bind_function(L, "camera_config_set_aggression", smlua_func_camera_config_set_aggression);
+    smlua_bind_function(L, "camera_config_set_deceleration", smlua_func_camera_config_set_deceleration);
+    smlua_bind_function(L, "camera_config_set_pan_level", smlua_func_camera_config_set_pan_level);
+    smlua_bind_function(L, "camera_config_set_x_sensitivity", smlua_func_camera_config_set_x_sensitivity);
+    smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);

@@ -7323,6 +7323,116 @@ function allocate_mario_action(actFlags)
     -- ...
 end
 
+--- @param enable boolean
+--- @return nil
+function camera_config_enable_analog_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+--- @return nil
+function camera_config_enable_free_cam(enable)
+    -- ...
+end
+
+--- @param enable boolean
+--- @return nil
+function camera_config_enable_mouse_look(enable)
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_aggression()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_deceleration()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_pan_level()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_x_sensitivity()
+    -- ...
+end
+
+--- @return integer
+function camera_config_get_y_sensitivity()
+    -- ...
+end
+
+--- @param invert boolean
+--- @return nil
+function camera_config_invert_x(invert)
+    -- ...
+end
+
+--- @param invert boolean
+--- @return nil
+function camera_config_invert_y(invert)
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_analog_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_free_cam_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_mouse_look_enabled()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_x_inverted()
+    -- ...
+end
+
+--- @return boolean
+function camera_config_is_y_inverted()
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function camera_config_set_aggression(value)
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function camera_config_set_deceleration(value)
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function camera_config_set_pan_level(value)
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function camera_config_set_x_sensitivity(value)
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function camera_config_set_y_sensitivity(value)
+    -- ...
+end
+
 --- @return nil
 function camera_freeze()
     -- ...

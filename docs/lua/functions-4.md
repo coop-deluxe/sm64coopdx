@@ -5113,6 +5113,386 @@
 
 <br />
 
+## [camera_config_enable_analog_cam](#camera_config_enable_analog_cam)
+
+### Lua Example
+`camera_config_enable_analog_cam(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_analog_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_free_cam](#camera_config_enable_free_cam)
+
+### Lua Example
+`camera_config_enable_free_cam(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_free_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_mouse_look](#camera_config_enable_mouse_look)
+
+### Lua Example
+`camera_config_enable_mouse_look(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_mouse_look(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_aggression](#camera_config_get_aggression)
+
+### Lua Example
+`local integerValue = camera_config_get_aggression()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_aggression(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_deceleration](#camera_config_get_deceleration)
+
+### Lua Example
+`local integerValue = camera_config_get_deceleration()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_deceleration(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_pan_level](#camera_config_get_pan_level)
+
+### Lua Example
+`local integerValue = camera_config_get_pan_level()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_pan_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_x_sensitivity](#camera_config_get_x_sensitivity)
+
+### Lua Example
+`local integerValue = camera_config_get_x_sensitivity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_x_sensitivity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_y_sensitivity](#camera_config_get_y_sensitivity)
+
+### Lua Example
+`local integerValue = camera_config_get_y_sensitivity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_y_sensitivity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_invert_x](#camera_config_invert_x)
+
+### Lua Example
+`camera_config_invert_x(invert)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| invert | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_invert_x(bool invert);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_invert_y](#camera_config_invert_y)
+
+### Lua Example
+`camera_config_invert_y(invert)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| invert | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_invert_y(bool invert);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_analog_cam_enabled](#camera_config_is_analog_cam_enabled)
+
+### Lua Example
+`local booleanValue = camera_config_is_analog_cam_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_analog_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_free_cam_enabled](#camera_config_is_free_cam_enabled)
+
+### Lua Example
+`local booleanValue = camera_config_is_free_cam_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_free_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_mouse_look_enabled](#camera_config_is_mouse_look_enabled)
+
+### Lua Example
+`local booleanValue = camera_config_is_mouse_look_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_mouse_look_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_x_inverted](#camera_config_is_x_inverted)
+
+### Lua Example
+`local booleanValue = camera_config_is_x_inverted()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_x_inverted(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_y_inverted](#camera_config_is_y_inverted)
+
+### Lua Example
+`local booleanValue = camera_config_is_y_inverted()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_y_inverted(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_aggression](#camera_config_set_aggression)
+
+### Lua Example
+`camera_config_set_aggression(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_aggression(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_deceleration](#camera_config_set_deceleration)
+
+### Lua Example
+`camera_config_set_deceleration(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_deceleration(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_pan_level](#camera_config_set_pan_level)
+
+### Lua Example
+`camera_config_set_pan_level(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_pan_level(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_x_sensitivity](#camera_config_set_x_sensitivity)
+
+### Lua Example
+`camera_config_set_x_sensitivity(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_x_sensitivity(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_y_sensitivity](#camera_config_set_y_sensitivity)
+
+### Lua Example
+`camera_config_set_y_sensitivity(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_y_sensitivity(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_freeze](#camera_freeze)
 
 ### Lua Example
