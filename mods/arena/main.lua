@@ -38,7 +38,7 @@ smlua_text_utils_course_acts_replace(COURSE_JRB, " 3 Forts", "?", "?", "?", "?",
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
 gGlobalSyncTable.gameMode  = GAME_MODE_DM
-gGlobalSyncTable.currentLevel = LEVEL_JRB
+gGlobalSyncTable.currentLevel = gGameLevels[math.random(#gGameLevels)].level
 gGlobalSyncTable.roundsPerShuffle = 3
 gGlobalSyncTable.capTeam1 = 0
 gGlobalSyncTable.capTeam2 = 0
@@ -240,7 +240,7 @@ function round_begin()
         end
 
         if curLevel ~= nil then
-            if curLevel >= 3 then
+            if curLevel >= #gGameLevels then
                 curLevel = 1
             else
                 curLevel = curLevel + 1
@@ -496,7 +496,15 @@ for i, gm in ipairs(gGameModes) do
     sGameModeShortTimes = sGameModeShortTimes .. gm.shortName
 end
 
+sLevelChoices = ''
+for i, gl in ipairs(gGameLevels) do
+    if string.len(sLevelChoices) > 0 then
+        sLevelChoices = sLevelChoices .. '|'
+    end
+    sLevelChoices = sLevelChoices .. gl.name
+end
+
 if network_is_server() then
     hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
-    hook_chat_command('arena-level', '[Origin|Sky Beach|Pillars] sets level', on_level_command)
+    hook_chat_command('arena-level', string.format('[%s] sets level', sLevelChoices), on_level_command)
 end
