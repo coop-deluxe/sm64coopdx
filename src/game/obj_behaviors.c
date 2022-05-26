@@ -112,10 +112,14 @@ Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *no
         gfxHead = alloc_display_list(3 * sizeof(Gfx));
         if (gfxHead == NULL) { return NULL; }
         gfx = gfxHead;
-        obj->header.gfx.node.flags =
-            (obj->header.gfx.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
+        if (obj != NULL) {
+            obj->header.gfx.node.flags =
+                (obj->header.gfx.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
+        }
 
-        gDPSetEnvColor(gfx++, 255, 255, 255, heldObject->oOpacity);
+        if (heldObject != NULL) {
+            gDPSetEnvColor(gfx++, 255, 255, 255, heldObject->oOpacity);
+        }
 
         gSPEndDisplayList(gfx);
     }
@@ -138,6 +142,7 @@ f32 absf_2(f32 f) {
  */
 void turn_obj_away_from_surface(f32 velX, f32 velZ, f32 nX, UNUSED f32 nY, f32 nZ, f32 *objYawX,
                             f32 *objYawZ) {
+    if (!objYawX || !objYawZ) { return; }
     *objYawX = (nZ * nZ - nX * nX) * velX / (nX * nX + nZ * nZ)
                - 2 * velZ * (nX * nZ) / (nX * nX + nZ * nZ);
     if (isnan(*objYawX)) { *objYawX = 0; }
@@ -215,6 +220,7 @@ s8 turn_obj_away_from_steep_floor(struct Surface *objFloor, f32 floorY, f32 objV
  * Orients an object with the given normals, typically the surface under the object.
  */
 void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ) {
+    if (!obj) { return; }
     Vec3f objVisualPosition, surfaceNormals;
 
     Mat4 *throwMatrix;
@@ -251,6 +257,7 @@ void obj_orient_graph(struct Object *obj, f32 normalX, f32 normalY, f32 normalZ)
  * Determines an object's forward speed multiplier.
  */
 void calc_obj_friction(f32 *objFriction, f32 floor_nY) {
+    if (!objFriction) { return; }
     if (floor_nY < 0.2 && o->oFriction < 0.9999) {
         *objFriction = 0;
     } else {
@@ -262,6 +269,7 @@ void calc_obj_friction(f32 *objFriction, f32 floor_nY) {
  * Updates an objects speed for gravity and updates Y position.
  */
 void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 objVelX, f32 objVelZ) {
+    if (!objFloor) { return; }
     f32 floor_nX = objFloor->normal.x;
     f32 floor_nY = objFloor->normal.y;
     f32 floor_nZ = objFloor->normal.z;
@@ -320,6 +328,7 @@ void calc_new_obj_vel_and_pos_y(struct Surface *objFloor, f32 objFloorY, f32 obj
 
 void calc_new_obj_vel_and_pos_y_underwater(struct Surface *objFloor, f32 floorY, f32 objVelX, f32 objVelZ,
                                     f32 waterY) {
+    if (!objFloor) { return; }
     f32 floor_nX = objFloor->normal.x;
     f32 floor_nY = objFloor->normal.y;
     f32 floor_nZ = objFloor->normal.z;
@@ -490,6 +499,7 @@ s16 object_step_without_floor_orient(void) {
  * position.
  */
 void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
+    if (!obj) { return; }
     o->oVelX = obj->oForwardVel * sins(obj->oMoveAngleYaw);
     o->oVelZ = obj->oForwardVel * coss(obj->oMoveAngleYaw);
 
@@ -519,6 +529,7 @@ s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
 }
 
 u8 is_player_active(struct MarioState* m) {
+    if (!m) { return FALSE; }
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
     if (m->action == ACT_BUBBLED) { return FALSE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
@@ -545,6 +556,7 @@ u8 is_other_player_active(void) {
 }
 
 u8 is_player_in_local_area(struct MarioState* m) {
+    if (!m) { return FALSE; }
     if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
@@ -565,6 +577,7 @@ u8 is_player_in_local_area(struct MarioState* m) {
  * Returns closest MarioState
  */
 struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
+    if (!obj) { return NULL; }
     struct MarioState* nearest = NULL;
     f32 nearestDist = 0;
     u8 checkActive = TRUE;
@@ -593,7 +606,9 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
  * Returns closest marioObj
  */
 struct Object* nearest_player_to_object(struct Object *obj) {
+    if (!obj) { return NULL; }
     struct MarioState* nearest = nearest_mario_state_to_object(obj);
+    if (nearest == NULL) { return NULL; }
     return nearest->marioObj;
 }
 
@@ -601,6 +616,7 @@ struct Object* nearest_player_to_object(struct Object *obj) {
  * Returns closest MarioState that's interacting with the object.
  */
 struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj) {
+    if (!obj) { return NULL; }
     struct MarioState *nearest = NULL;
     f32 nearestDist = 0;
     u8 checkActive = TRUE;
@@ -630,7 +646,9 @@ struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj)
  * Returns closest marioObj that's interacting with the object.
  */
 struct Object *nearest_interacting_player_to_object(struct Object *obj) {
+    if (!obj) { return NULL; }
     struct MarioState *nearest = nearest_interacting_mario_state_to_object(obj);
+    if (!nearest) { return NULL; }
     return nearest->marioObj;
 }
 
@@ -658,6 +676,7 @@ u8 is_nearest_player_to_object(struct Object *m, struct Object *obj) {
  * Checks whether a point is within distance of a given point. Test is exclusive.
  */
 s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {
+    if (!obj) { return FALSE; }
     f32 objX = obj->oPosX;
     f32 objY = obj->oPosY;
     f32 objZ = obj->oPosZ;
@@ -674,6 +693,7 @@ s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {
  * Sets an object as visible if within a certain distance of Mario's graphical position.
  */
 void set_object_visibility(struct Object *obj, s32 dist) {
+    if (!obj) { return; }
     s32 distanceToPlayer = dist_between_objects(obj, gMarioStates[0].marioObj);
     if (distanceToPlayer < dist * draw_distance_scalar()) {
         obj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
@@ -686,6 +706,7 @@ void set_object_visibility(struct Object *obj, s32 dist) {
  * Turns an object towards home if Mario is not near to it.
  */
 s8 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 dist) {
+    if (!obj) { return FALSE; }
     f32 homeDistX = homeX - obj->oPosX;
     f32 homeDistZ = homeZ - obj->oPosZ;
     s16 angleTowardsHome = atan2s(homeDistZ, homeDistX);
@@ -703,6 +724,7 @@ s8 obj_return_home_if_safe(struct Object *obj, f32 homeX, f32 y, f32 homeZ, s32 
  * Randomly displaces an objects home if RNG says to, and turns the object towards its home.
  */
 void obj_return_and_displace_home(struct Object *obj, f32 homeX, UNUSED f32 homeY, f32 homeZ, s32 baseDisp) {
+    if (!obj) { return; }
     s16 angleToNewHome;
     f32 homeDistX, homeDistZ;
 
@@ -760,6 +782,7 @@ s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius) {
  * with a random forward velocity, y velocity, and direction.
  */
 void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
+    if (!obj) { return; }
     struct Object *coin;
     s8 count;
 
@@ -779,6 +802,7 @@ void obj_spawn_yellow_coins(struct Object *obj, s8 nCoins) {
  * Controls whether certain objects should flicker/when to despawn.
  */
 s8 obj_flicker_and_disappear(struct Object *obj, s16 lifeSpan) {
+    if (!obj) { return FALSE; }
     if (obj->oTimer < lifeSpan) {
         return FALSE;
     }
@@ -828,6 +852,7 @@ s8 current_mario_room_check(s16 room) {
  * Triggers dialog when Mario is facing an object and controls it while in the dialog.
  */
 s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
+    if (!m || !inDialog) { return 0; }
     s16 dialogueResponse;
 
     s32 angleToPlayer = obj_angle_to_object(o, m->marioObj);
