@@ -14,11 +14,11 @@
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "game/camera.h"
-
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
 extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
@@ -468,6 +468,7 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
     smlua_shutdown();
+    smlua_model_util_clear();
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
