@@ -482,16 +482,6 @@ static void newcam_update_values(void) {
     }
 }
 
-static void debug_pos(f32 x, f32 y, f32 z, u8 hit) { // DO NOT COMMIT
-    if(gMarioStates[0].marioObj == NULL) { return; }
-    struct Object* obj = spawn_object(gMarioStates[0].marioObj, hit ? MODEL_RED_COIN : MODEL_YELLOW_COIN, bhvSparkle);
-    if (obj == NULL) { return; }
-    obj->oPosX = x;
-    obj->oPosY = y;
-    obj->oPosZ = z;
-    obj_scale(obj, 0.5f);
-}
-
 static void newcam_collision(void) {
     // check if we can see player
     Vec3f up = { 0, 1, 0 };
@@ -549,7 +539,6 @@ static void newcam_collision(void) {
             struct Surface* surf;
             Vec3f hitpos;
             find_surface_on_ray(camorig, camray, &surf, hitpos);
-            debug_pos(camorig[0], camorig[1], camorig[2], surf != NULL);
 
             if (surf == NULL) {
                 allhit = false;
