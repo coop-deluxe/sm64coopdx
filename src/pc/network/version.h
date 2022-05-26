@@ -1,7 +1,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define VERSION_NUMBER 27
+#define VERSION_NUMBER 28
 #define MINOR_VERSION_NUMBER 0
 
 #define MAX_VERSION_LENGTH 10
