@@ -11829,15 +11829,8 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
     pos[0] = hitpos[0];
     pos[1] = hitpos[1];
     pos[2] = hitpos[2];
-    vec3f_mul(dirNorm, 100);
+    vec3f_mul(dirNorm, 5);
     vec3f_sub(pos, dirNorm);
-
-    // figure out remaining length
-    f32 moveDist = vec3f_dist(prevPos, pos);
-    dist = dist * 0.7 - moveDist;
-    if (dist > 10 && vec3f_length(dir) > 0 && moveDist > 1) {
-        rom_hack_cam_walk(pos, dir, dist);
-    }
 }
 
 static s16 sRomHackOffset = 0;
