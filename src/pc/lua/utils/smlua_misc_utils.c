@@ -2,6 +2,7 @@
 #include "types.h"
 
 #include "data/dynos.c.h"
+#include "game/bettercamera.h"
 #include "game/camera.h"
 #include "game/hud.h"
 #include "pc/lua/smlua.h"
@@ -110,6 +111,156 @@ void camera_freeze(void) {
 
 void camera_unfreeze(void) {
     gOverrideFreezeCamera = FALSE;
+}
+
+bool camera_config_is_free_cam_enabled(void) {
+#ifdef BETTERCAMERA
+    return configEnableCamera;
+#else
+    return false;
+#endif
+}
+
+bool camera_config_is_analog_cam_enabled(void) {
+#ifdef BETTERCAMERA
+    return configCameraAnalog;
+#else
+    return false;
+#endif
+}
+
+bool camera_config_is_mouse_look_enabled(void) {
+#ifdef BETTERCAMERA
+    return configCameraMouse;
+#else
+    return false;
+#endif
+}
+
+bool camera_config_is_x_inverted(void) {
+#ifdef BETTERCAMERA
+    return configCameraInvertX;
+#else
+    return false;
+#endif
+}
+
+bool camera_config_is_y_inverted(void) {
+#ifdef BETTERCAMERA
+    return configCameraInvertY;
+#else
+    return false;
+#endif
+}
+
+u32 camera_config_get_x_sensitivity(void) {
+#ifdef BETTERCAMERA
+    return configCameraXSens;
+#else
+    return 0;
+#endif
+}
+
+u32 camera_config_get_y_sensitivity(void) {
+#ifdef BETTERCAMERA
+    return configCameraYSens;
+#else
+    return 0;
+#endif
+}
+
+u32 camera_config_get_aggression(void) {
+#ifdef BETTERCAMERA
+    return configCameraAggr;
+#else
+    return 0;
+#endif
+}
+
+u32 camera_config_get_pan_level(void) {
+#ifdef BETTERCAMERA
+    return configCameraPan;
+#else
+    return 0;
+#endif
+}
+
+u32 camera_config_get_deceleration(void) {
+#ifdef BETTERCAMERA
+    return configCameraDegrade;
+#else
+    return 0;
+#endif
+}
+
+void camera_config_enable_free_cam(bool enable) {
+#ifdef BETTERCAMERA
+    configEnableCamera = enable;
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_enable_analog_cam(bool enable) {
+#ifdef BETTERCAMERA
+    configCameraAnalog = enable;
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_enable_mouse_look(bool enable) {
+#ifdef BETTERCAMERA
+    configCameraMouse = enable;
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_invert_x(bool invert) {
+#ifdef BETTERCAMERA
+    configCameraInvertX = invert;
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_invert_y(bool invert) {
+#ifdef BETTERCAMERA
+    configCameraInvertY = invert;
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_set_x_sensitivity(u32 value) {
+#ifdef BETTERCAMERA
+    configCameraXSens = MIN(MAX(value, 1), 100);
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_set_y_sensitivity(u32 value) {
+#ifdef BETTERCAMERA
+    configCameraYSens = MIN(MAX(value, 1), 100);
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_set_aggression(u32 value) {
+#ifdef BETTERCAMERA
+    configCameraAggr = MIN(MAX(value, 0), 100);
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_set_pan_level(u32 value) {
+#ifdef BETTERCAMERA
+    configCameraPan = MIN(MAX(value, 0), 100);
+    newcam_init_settings();
+#endif
+}
+
+void camera_config_set_deceleration(u32 value) {
+#ifdef BETTERCAMERA
+    configCameraDegrade = MIN(MAX(value, 0), 100);
+    newcam_init_settings();
+#endif
 }
 
 ///

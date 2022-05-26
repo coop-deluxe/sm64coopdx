@@ -230,7 +230,25 @@ function round_begin()
     end
 
     if roundShuffle then
-        gGlobalSyncTable.currentLevel = gGameLevels[math.random(#gGameLevels)].level
+
+        local curLevel = nil
+
+        for i, gl in ipairs(gGameLevels) do
+            if gGlobalSyncTable.currentLevel == gl.level then
+                curLevel = i
+            end
+        end
+
+        if curLevel ~= nil then
+            if curLevel >= 3 then
+                curLevel = 1
+            else
+                curLevel = curLevel + 1
+            end
+            gGlobalSyncTable.currentLevel = gGameLevels[curLevel].level
+        else
+            gGlobalSyncTable.currentLevel = gGameLevels[math.random(#gGameLevels)].level
+        end
     end
 
     for i = 0, (MAX_PLAYERS - 1) do
@@ -414,6 +432,7 @@ function on_update()
 end
 
 function on_gamemode_command(msg)
+
     local setMode = nil
 
     for i, gm in ipairs(gGameModes) do
@@ -444,6 +463,27 @@ function on_gamemode_command(msg)
     return false
 end
 
+function on_level_command(msg)
+
+    local setLevel = nil
+
+    for i, gl in ipairs(gGameLevels) do
+        if msg == gl.name then
+            setLevel = i
+        end
+    end
+
+    if setLevel ~= nil then
+        gGlobalSyncTable.currentLevel = gGameLevels[setLevel].level
+        round_end()
+        sWaitTimer = 1
+        sRoundCount = 0
+        return true
+    end
+
+    return false
+end
+
 hook_event(HOOK_ON_SYNC_VALID, on_sync_valid)
 hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
 hook_event(HOOK_UPDATE, on_update)
@@ -458,4 +498,5 @@ end
 
 if network_is_server() then
     hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
+    hook_chat_command('arena-level', '[Origin|Sky Beach|Pillars] sets level', on_level_command)
 end
