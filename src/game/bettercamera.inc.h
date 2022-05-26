@@ -482,74 +482,116 @@ static void newcam_update_values(void) {
     }
 }
 
-static void newcam_bounding_box(void) {
-    Vec3f camdirs[NEW_CAM_BOUNDING_BOX_RAYS] = { 0 };
-    Vec3f raypos[NEW_CAM_BOUNDING_BOX_RAYS] = { 0 };
-    s16 antiYaw = newcam_yaw - 0x4000;
-
-    // sideways ray 1
-    camdirs[0][0] = coss(antiYaw) * NEW_CAM_BOUNDING_BOX_HRADIUS;
-    camdirs[0][2] = sins(antiYaw) * NEW_CAM_BOUNDING_BOX_HRADIUS;
-
-    // sideways ray 2
-    camdirs[1][0] = -coss(antiYaw) * NEW_CAM_BOUNDING_BOX_HRADIUS;
-    camdirs[1][2] = -sins(antiYaw) * NEW_CAM_BOUNDING_BOX_HRADIUS;
-
-    // vertical rays
-    camdirs[2][1] = -NEW_CAM_BOUNDING_BOX_VRADIUS;
-    camdirs[3][1] =  NEW_CAM_BOUNDING_BOX_VRADIUS;
-
-    for (s32 i = 0; i < NEW_CAM_BOUNDING_BOX_RAYS; i++) {
-        struct Surface* surf;
-        Vec3f offset = { 0 };
-
-        Vec3f startpos = { 0 };
-        vec3f_copy(startpos, newcam_pos);
-        vec3f_add(startpos, offset);
-
-        find_surface_on_ray(startpos, camdirs[i], &surf, raypos[i]);
-        if (!surf) {
-            vec3f_copy(raypos[i], startpos);
-            vec3f_add(raypos[i], camdirs[i]);
-        }
-    }
-
-    Vec3f avg = { 0 };
-    for (s32 i = 0; i < NEW_CAM_BOUNDING_BOX_RAYS; i++) {
-        vec3f_add(avg, raypos[i]);
-    }
-    vec3f_mul(avg, 1.0f / ((f32)NEW_CAM_BOUNDING_BOX_RAYS));
-
-    vec3f_copy(newcam_pos, avg);
+static void debug_pos(f32 x, f32 y, f32 z, u8 hit) { // DO NOT COMMIT
+    if(gMarioStates[0].marioObj == NULL) { return; }
+    struct Object* obj = spawn_object(gMarioStates[0].marioObj, hit ? MODEL_RED_COIN : MODEL_YELLOW_COIN, bhvSparkle);
+    if (obj == NULL) { return; }
+    obj->oPosX = x;
+    obj->oPosY = y;
+    obj->oPosZ = z;
+    obj_scale(obj, 0.5f);
 }
 
 static void newcam_collision(void) {
-    struct Surface *surf;
-    Vec3f camdir;
-    Vec3f hitpos;
+    // check if we can see player
+    Vec3f up = { 0, 1, 0 };
+    Vec3f mainRay = {
+        newcam_pos[0]-newcam_lookat[0],
+        newcam_pos[1]-newcam_lookat[1],
+        newcam_pos[2]-newcam_lookat[2],
+    };
+    Vec3f sideway;
+    vec3f_normalize(mainRay);
+    vec3f_cross(sideway, mainRay, up);
 
-    camdir[0] = newcam_pos[0]-newcam_lookat[0];
-    camdir[1] = newcam_pos[1]-newcam_lookat[1];
-    camdir[2] = newcam_pos[2]-newcam_lookat[2];
+    f32 checkWidth = 75;
+    f32 checkHeight = 90;
 
-    find_surface_on_ray(newcam_pos_target, camdir, &surf, hitpos);
+    bool allhit = true;
+    for (f32 x = -1; x <= 1; x++) {
+        for (f32 y = 0; y <= 1; y++) {
+            if (fabs(x) + fabs(y) != 1) { continue; }
+            Vec3f offset = {
+                sideway[0] * x * checkWidth,
+                -checkHeight / 2 + y * checkHeight,
+                sideway[2] * x * checkWidth,
+            };
 
-    newcam_coldist = sqrtf((newcam_pos_target[0] - hitpos[0]) * (newcam_pos_target[0] - hitpos[0]) + (newcam_pos_target[1] - hitpos[1]) * (newcam_pos_target[1] - hitpos[1]) + (newcam_pos_target[2] - hitpos[2]) * (newcam_pos_target[2] - hitpos[2]));
+            if (x != 0) {
+                struct Surface* surf;
+                Vec3f hitpos;
+                Vec3f move = {
+                    offset[0] * 1.2f,
+                    offset[1],
+                    offset[2] * 1.2f,
+                };
+                find_surface_on_ray(newcam_pos_target, move, &surf, hitpos);
+                vec3f_copy(offset, hitpos);
+                vec3f_sub(offset, newcam_pos_target);
+                if (surf) {
+                    offset[0] *= 0;
+                    offset[2] *= 0;
+                }
+            }
 
-    if (surf) {
-        // offset the hit pos by the hit normal
-        Vec3f offset = { 0 };
-        offset[0] = surf->normal.x;
-        offset[1] = surf->normal.y;
-        offset[2] = surf->normal.z;
-        vec3f_mul(offset, 5.0f);
-        vec3f_add(hitpos, offset);
+            Vec3f camray = {
+                newcam_pos[0] - newcam_lookat[0] - offset[0],
+                newcam_pos[1] - newcam_lookat[1] - offset[1],
+                newcam_pos[2] - newcam_lookat[2] - offset[2],
+            };
 
-        newcam_pos[0] = hitpos[0];
-        newcam_pos[1] = hitpos[1];
-        newcam_pos[2] = hitpos[2];
-        newcam_pan_x = 0;
-        newcam_pan_z = 0;
+            Vec3f camorig = {
+                newcam_pos_target[0] + offset[0],
+                newcam_pos_target[1] + offset[1],
+                newcam_pos_target[2] + offset[2],
+            };
+
+            struct Surface* surf;
+            Vec3f hitpos;
+            find_surface_on_ray(camorig, camray, &surf, hitpos);
+            debug_pos(camorig[0], camorig[1], camorig[2], surf != NULL);
+
+            if (surf == NULL) {
+                allhit = false;
+            }
+        }
+    }
+
+    Vec3f camdir = {
+        newcam_pos[0]-newcam_lookat[0],
+        newcam_pos[1]-newcam_lookat[1],
+        newcam_pos[2]-newcam_lookat[2],
+    };
+
+    if (allhit) {
+        struct Surface *surf = NULL;
+        Vec3f hitpos;
+
+        find_surface_on_ray(newcam_pos_target, camdir, &surf, hitpos);
+
+        if (surf) {
+            // offset the hit pos by the hit normal
+            Vec3f offset = { 0 };
+            offset[0] = surf->normal.x;
+            offset[1] = surf->normal.y;
+            offset[2] = surf->normal.z;
+            vec3f_mul(offset, 5.0f);
+            vec3f_add(hitpos, offset);
+
+            newcam_pos[0] = hitpos[0];
+            newcam_pos[1] = hitpos[1];
+            newcam_pos[2] = hitpos[2];
+            newcam_pan_x = 0;
+            newcam_pan_z = 0;
+        }
+
+        newcam_coldist = vec3f_dist(newcam_pos_target, hitpos);
+
+    } else {
+        newcam_pos[0] = newcam_pos_target[0] + camdir[0];
+        newcam_pos[1] = newcam_pos_target[1] + camdir[1];
+        newcam_pos[2] = newcam_pos_target[2] + camdir[2];
+        newcam_coldist = vec3f_length(camdir);
     }
 }
 
@@ -611,7 +653,6 @@ static void newcam_position_cam(void) {
     newcam_level_bounds();
     if (newcam_modeflags & NC_FLAG_COLLISION) {
         newcam_collision();
-        newcam_bounding_box();
     }
 
 }

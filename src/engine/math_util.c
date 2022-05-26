@@ -985,3 +985,25 @@ f32 not_zero(f32 value, f32 replacement) {
     }
     return value;
 }
+
+void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
+    f32 numerator = vec3f_dot(vec, onto);
+    f32 denominator = vec3f_dot(onto, onto);
+    if (denominator == 0) {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        return;
+    }
+    vec3f_copy(out, onto);
+    vec3f_mul(out, numerator / denominator);
+}
+
+f32 vec3f_dist(Vec3f v1, Vec3f v2) {
+    Vec3f diff = {
+        v1[0] - v2[0],
+        v1[1] - v2[1],
+        v1[2] - v2[2],
+    };
+    return vec3f_length(diff);
+}

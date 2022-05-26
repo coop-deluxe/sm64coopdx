@@ -42,6 +42,8 @@
 
 #define MATRIX_STACK_SIZE 32
 
+#define MAX_PROJECTION_NEAR_VALUE 5
+
 s16 gMatStackIndex;
 Mat4 gMatStack[MATRIX_STACK_SIZE] = {};
 Mat4 gMatStackPrev[MATRIX_STACK_SIZE] = {};
@@ -222,7 +224,8 @@ void patch_mtx_interpolated(f32 delta) {
     if (sPerspectiveNode != NULL) {
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
-        guPerspective(sPerspectiveMtx, &perspNorm, not_zero(fovInterpolated, gOverrideFOV), sPerspectiveAspect, not_zero(sPerspectiveNode->near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
+        f32 near = MIN(sPerspectiveNode->near, MAX_PROJECTION_NEAR_VALUE);
+        guPerspective(sPerspectiveMtx, &perspNorm, not_zero(fovInterpolated, gOverrideFOV), sPerspectiveAspect, not_zero(near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -456,7 +459,8 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     f32 aspect = (f32) gCurGraphNodeRoot->width / divisor;
 #endif
 
-    guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, not_zero(node->near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
+    f32 near = MIN(node->near, MAX_PROJECTION_NEAR_VALUE);
+    guPerspective(mtx, &perspNorm, not_zero(node->prevFov, gOverrideFOV), aspect, not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;

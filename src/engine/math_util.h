@@ -84,4 +84,7 @@ s32 anim_spline_poll(struct MarioState* m, Vec3f result);
 
 f32 not_zero(f32 value, f32 replacement);
 
+void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);
+f32 vec3f_dist(Vec3f v1, Vec3f v2);
+
 #endif // MATH_UTIL_H

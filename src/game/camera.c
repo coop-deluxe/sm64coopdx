@@ -11741,28 +11741,6 @@ static s8 sRomHackIsUpdate = 0;
 static f32 sRomHackWaterFocus = 0;
 static f32 sRomHackWaterPitchOffset = 0;
 
-static void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
-    f32 numerator = vec3f_dot(vec, onto);
-    f32 denominator = vec3f_dot(onto, onto);
-    if (denominator == 0) {
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        return;
-    }
-    vec3f_copy(out, onto);
-    vec3f_mul(out, numerator / denominator);
-}
-
-static f32 vec3f_dist(Vec3f v1, Vec3f v2) {
-    Vec3f diff = {
-        v1[0] - v2[0],
-        v1[1] - v2[1],
-        v1[2] - v2[2],
-    };
-    return vec3f_length(diff);
-}
-
 static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
     // do collision checking
     struct Surface *surf = NULL;
