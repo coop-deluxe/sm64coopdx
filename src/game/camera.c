@@ -11840,6 +11840,8 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
     }
 }
 
+static s16 sRomHackOffset = 0;
+
 /**
  * A mode that has 8 camera angles, 45 degrees apart, that is slightly smarter
  */
@@ -11931,9 +11933,9 @@ void mode_rom_hack_camera(struct Camera *c) {
 
     // tween
     oldPos[0] = oldPos[0];
-    c->pos[0] = c->pos[0] * 0.15 + oldPos[0] * 0.85;
-    c->pos[1] = c->pos[1] * 0.15 + oldPos[1] * 0.85;
-    c->pos[2] = c->pos[2] * 0.15 + oldPos[2] * 0.85;
+    c->pos[0] = c->pos[0] * 0.6 + oldPos[0] * 0.4;
+    c->pos[1] = c->pos[1] * 0.6 + oldPos[1] * 0.4;
+    c->pos[2] = c->pos[2] * 0.6 + oldPos[2] * 0.4;
 
     // update HUD
     if (sRomHackZoom) {
@@ -11943,9 +11945,8 @@ void mode_rom_hack_camera(struct Camera *c) {
     }
 
     // update camera yaw
-    c->yaw = atan2s(
-        c->pos[2] - gMarioStates[0].pos[2],
-        c->pos[0] - gMarioStates[0].pos[0]);
+    c->yaw = DEGREES(90) - sRomHackYaw + sRomHackOffset;
+    c->nextYaw = c->yaw;
 
     // update area yaw
     sAreaYaw = sRomHackYaw;
@@ -11961,6 +11962,7 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
         sRomHackYaw = DEGREES(90) - atan2s(
             c->pos[2] - gMarioStates[0].pos[2],
             c->pos[0] - gMarioStates[0].pos[0]);
+        sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
     }
 
     s16 camYaw = c->yaw;
@@ -12001,7 +12003,8 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
         sRomHackWaterPitchOffset = m->pos[1];
     }
 
-    c->yaw = DEGREES(90) - sRomHackYaw;
+    c->yaw = DEGREES(90) - sRomHackYaw + sRomHackOffset;
+    c->nextYaw = c->yaw;
     return camYaw;
 }
 
