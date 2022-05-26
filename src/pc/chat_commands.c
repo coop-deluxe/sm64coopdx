@@ -102,20 +102,19 @@ bool exec_chat_command(char* command) {
     }
 
     if (strcmp("/players", command) == 0) {
-        char message[600] = { 0 };
         char line[128] = { 0 };
-        strncat(message, "\\#fff982\\Players:\n", 599);
+        strncat(line, "\\#fff982\\Players:\n", 127);
+        djui_chat_message_create(line);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
             if (gNetworkSystem == &gNetworkSystemSocket) {
-                snprintf(line, 128, "\\#82f9ff\\%u\\#fff982\\ - %s%s\n", np->globalIndex, network_get_player_text_color_string(np->localIndex), np->name);
+                snprintf(line, 127, "\\#82f9ff\\%u\\#fff982\\ - %s%s\n", np->globalIndex, network_get_player_text_color_string(np->localIndex), np->name);
             } else {
-                snprintf(line, 128, "\\#82f9ff\\%u\\#fff982\\ - \\#82f9ff\\%s\\#fff982\\ - %s%s\n", np->globalIndex, gNetworkSystem->get_id_str(np->localIndex), network_get_player_text_color_string(np->localIndex), np->name);
+                snprintf(line, 127, "\\#82f9ff\\%u\\#fff982\\ - \\#82f9ff\\%s\\#fff982\\ - %s%s\n", np->globalIndex, gNetworkSystem->get_id_str(np->localIndex), network_get_player_text_color_string(np->localIndex), np->name);
             }
-            strncat(message, line, 599);
+            djui_chat_message_create(line);
         }
-        djui_chat_message_create(message);
         return true;
     }
 
