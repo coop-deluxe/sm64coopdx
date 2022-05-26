@@ -27,12 +27,18 @@ gGameLevels = {
     { level = LEVEL_BOB, name = 'Origin'    },
     { level = LEVEL_CCM, name = 'Sky Beach' },
     { level = LEVEL_WF,  name = 'Pillars' },
+    { level = LEVEL_JRB, name = 'Forts' },
 }
+
+smlua_text_utils_course_acts_replace(COURSE_BOB, " 1 Origin", "?", "?", "?", "?", "?", "?")
+smlua_text_utils_course_acts_replace(COURSE_CCM, " 4 Sky Beach", "?", "?", "?", "?", "?", "?")
+smlua_text_utils_course_acts_replace(COURSE_WF, " 2 Pillars", "?", "?", "?", "?", "?", "?")
+smlua_text_utils_course_acts_replace(COURSE_JRB, " 3 Forts", "?", "?", "?", "?", "?", "?")
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
 gGlobalSyncTable.gameMode  = GAME_MODE_DM
-gGlobalSyncTable.currentLevel = LEVEL_BOB
+gGlobalSyncTable.currentLevel = LEVEL_JRB
 gGlobalSyncTable.roundsPerShuffle = 3
 gGlobalSyncTable.capTeam1 = 0
 gGlobalSyncTable.capTeam2 = 0
