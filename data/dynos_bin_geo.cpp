@@ -17,21 +17,9 @@ extern "C" {
 #define GEO_LAYOUT_SIZE_PER_TOKEN 4
 
 #define geo_constant(x) if (_Arg == #x) { return (s64) (x); }
-static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64& aTokenIndex) {
-    const String& _Arg = aNode->mTokens[aTokenIndex++];
 
-    // Integers
-    bool integerFound = false;
-    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
-    if (integerFound) {
-        return integerValue;
-    }
-
-    // Built-in functions
-    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
-    if (_FunctionPtr != NULL) {
-        return (s64) _FunctionPtr;
-    }
+static s64 DynOS_Geo_ParseConstants(const String& _Arg, bool* found) {
+    *found = true;
 
     // Layer constants
     geo_constant(LAYER_FORCE);
@@ -102,6 +90,33 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     geo_constant(SCREEN_WIDTH/2);
     geo_constant(SCREEN_HEIGHT/2);
 
+    *found = false;
+    return 0;
+}
+
+static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64& aTokenIndex) {
+    const String& _Arg = aNode->mTokens[aTokenIndex++];
+
+    // Integers
+    bool integerFound = false;
+    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+    if (integerFound) {
+        return integerValue;
+    }
+
+    // Built-in functions
+    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
+    if (_FunctionPtr != NULL) {
+        return (s64) _FunctionPtr;
+    }
+
+    // Constants
+    bool constantFound = false;
+    s64 constantValue = DynOS_Geo_ParseConstants(_Arg, &constantFound);
+    if (constantFound) {
+        return constantValue;
+    }
+
     // Display lists
     for (auto& _Node : aGfxData->mDisplayLists) {
         if (_Arg == _Node->mName) {
@@ -123,6 +138,13 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     s32 b;
     if (sscanf(_Arg.begin(), "PAINTING_ID(%d,%d)", &a, &b) == 2) {
         return PAINTING_ID(a, b);
+    }
+
+    // Recursive descent parsing
+    bool rdSuccess = false;
+    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Geo_ParseConstants);
+    if (rdSuccess) {
+        return rdValue;
     }
 
     // Unknown
