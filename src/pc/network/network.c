@@ -4,6 +4,7 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "behavior_table.h"
+#include "game/save_file.h"
 #include "src/game/hardcoded.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
@@ -19,6 +20,7 @@
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "game/camera.h"
+
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
 extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
@@ -483,6 +485,8 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     cnt->buttonPressed = 0;
     cnt->extStickX = 0;
     cnt->extStickY = 0;
+
+    save_file_load_all(TRUE);
 
     extern s16 gMenuMode;
     gMenuMode = -1;
