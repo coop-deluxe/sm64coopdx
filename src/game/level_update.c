@@ -397,7 +397,7 @@ void init_mario_after_warp(void) {
     if (spawnNode == NULL || spawnNode->object == NULL) { return; }
     u32 marioSpawnType = get_mario_spawn_type(spawnNode->object);
 
-    if (gMarioState->action != ACT_UNINITIALIZED) {
+    if (gMarioState && gMarioState->action != ACT_UNINITIALIZED) {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             gPlayerSpawnInfos[i].startPos[0] = (s16) spawnNode->object->oPosX;
             gPlayerSpawnInfos[i].startPos[1] = (s16) spawnNode->object->oPosY;
@@ -454,7 +454,9 @@ void init_mario_after_warp(void) {
         gMarioState->usedObj = spawnNode->object;
     }
 
-    reset_camera(gCurrentArea->camera);
+    if (gCurrentArea) {
+        reset_camera(gCurrentArea->camera);
+    }
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
 
@@ -482,8 +484,10 @@ void init_mario_after_warp(void) {
             break;
     }
 
-    if (gCurrDemoInput == NULL) {
-        set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+    if (gCurrDemoInput == NULL && gMarioState) {
+        if (gCurrentArea) {
+            set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+        }
 
         if (gMarioState->flags & MARIO_METAL_CAP) {
             play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
