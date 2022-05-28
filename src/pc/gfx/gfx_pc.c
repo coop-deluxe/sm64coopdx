@@ -1257,7 +1257,7 @@ static void gfx_dp_set_tile_size(uint8_t tile, uint16_t uls, uint16_t ult, uint1
 }
 
 static void gfx_dp_load_tlut(uint8_t tile, UNUSED uint32_t high_index) {
-    SUPPORT_CHECK(tile == G_TX_LOADTILE);
+    if (tile != G_TX_LOADTILE) { return; }
     SUPPORT_CHECK(rdp.texture_to_load.siz == G_IM_SIZ_16b);
     rdp.palette = rdp.texture_to_load.addr;
 }
