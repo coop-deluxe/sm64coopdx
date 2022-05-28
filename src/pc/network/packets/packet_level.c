@@ -66,9 +66,7 @@ void network_receive_level(struct Packet* p) {
     }
 
     // read level variables
-    u8 redCoinsCollected;
     packet_read(p, &gMarioStates[0].numCoins, sizeof(s16));
-    packet_read(p, &redCoinsCollected,        sizeof(u8));
     packet_read(p, &gPssSlideStarted,         sizeof(u8));
     packet_read(p, &gTTCSpeedSetting,         sizeof(s16)); // likely doesn't work after level load.. but it could
     gHudDisplay.coins = gMarioStates[0].numCoins;
