@@ -82,7 +82,7 @@ s32 mario_update_punch_sequence(struct MarioState *m) {
             break;
 
         case 3:
-            play_character_sound(m, CHAR_SOUND_PUNCH_YAH);
+            play_character_sound(m, CHAR_SOUND_PUNCH_WAH);
             // Fall-through:
         case 4:
             set_mario_animation(m, MARIO_ANIM_SECOND_PUNCH);

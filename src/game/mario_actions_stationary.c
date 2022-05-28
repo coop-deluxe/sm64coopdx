@@ -240,12 +240,12 @@ s32 act_start_sleeping(struct MarioState *m) {
     }
 
 #ifndef VERSION_JP
-    if (m->actionState == 2 && animFrame == -1) {
-        play_character_sound(m, CHAR_SOUND_YAWNING);
+    if (m->actionState == 1 && animFrame == -1) {
+        play_character_sound(m, CHAR_SOUND_IMA_TIRED);
     }
 
     if (m->actionState == 2 && animFrame == -1) {
-        play_character_sound(m, CHAR_SOUND_IMA_TIRED);
+        play_character_sound(m, CHAR_SOUND_YAWNING);
     }
 #else
     if (m->actionState == 2) {
