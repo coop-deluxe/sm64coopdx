@@ -59,6 +59,7 @@ void unused_init_free_list(struct LinkedList *usedList, struct LinkedList **pFre
  */
 struct LinkedList *unused_try_allocate(struct LinkedList *destList,
                                        struct LinkedList *freeList) {
+    if (!destList || !freeList) { return; }
     struct LinkedList *node = freeList->next;
 
     if (node != NULL) {
@@ -117,6 +118,7 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
  * This function seems to have been replaced by deallocate_object.
  */
 void unused_deallocate(struct LinkedList *freeList, struct LinkedList *node) {
+    if (!node || !freeList) { return; }
     // Remove from doubly linked list
     node->next->prev = node->prev;
     node->prev->next = node->next;
@@ -130,6 +132,7 @@ void unused_deallocate(struct LinkedList *freeList, struct LinkedList *node) {
  * insert it at the beginning of the free list (singly linked).
  */
 static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *obj) {
+    if (!obj || !freeList) { return; }
     // Remove from object list
     obj->next->prev = obj->prev;
     obj->prev->next = obj->next;
@@ -163,6 +166,7 @@ void init_free_object_list(void) {
  * Clear each object list, without adding the objects back to the free list.
  */
 void clear_object_lists(struct ObjectNode *objLists) {
+    if (!objLists) { return; }
     for (s32 i = 0; i < NUM_OBJ_LISTS; i++) {
         objLists[i].next = &objLists[i];
         objLists[i].prev = &objLists[i];
@@ -173,6 +177,7 @@ void clear_object_lists(struct ObjectNode *objLists) {
  * Delete the leaf graph nodes under obj and obj's siblings.
  */
 static void unused_delete_leaf_nodes(struct Object *obj) {
+    if (!obj) { return; }
     struct Object *children;
     struct Object *sibling;
     struct Object *obj0 = obj;
@@ -194,6 +199,7 @@ static void unused_delete_leaf_nodes(struct Object *obj) {
  * Free the given object.
  */
 void unload_object(struct Object *obj) {
+    if (!obj) { return; }
     obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     obj->prevObj = NULL;
 
@@ -235,6 +241,7 @@ void unload_object(struct Object *obj) {
  * infinite loop.
  */
 struct Object *allocate_object(struct ObjectNode *objList) {
+    if (!objList) { return NULL; }
     struct Object *obj = try_allocate_object(objList, &gFreeObjectList);
 
     // The object list is full if the newly created pointer is NULL.
@@ -329,6 +336,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
  * If the object is close to being on the floor, move it to be exactly on the floor.
  */
 static void snap_object_to_floor(struct Object *obj) {
+    if (!obj) { return; }
     struct Surface *surface;
 
     obj->oFloorHeight = find_floor(obj->oPosX, obj->oPosY, obj->oPosZ, &surface);
@@ -343,6 +351,7 @@ static void snap_object_to_floor(struct Object *obj) {
  * Spawn an object at the origin with the behavior script at virtual address bhvScript.
  */
 struct Object *create_object(const BehaviorScript *bhvScript) {
+    if (!bhvScript) { return NULL; }
     s32 objListIndex = OBJ_LIST_DEFAULT;
     const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
 
@@ -390,6 +399,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
  * Mark an object to be unloaded at the end of the frame.
  */
 void mark_obj_for_deletion(struct Object *obj) {
+    if (!obj) { return; }
     //! Same issue as obj_mark_for_deletion
     obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }
