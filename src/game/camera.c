@@ -11802,12 +11802,6 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
         return;
     }
 
-    Vec3f prevPos = {
-        pos[0],
-        pos[1],
-        pos[2],
-    };
-
     // figure out dir normal
     Vec3f dirNorm;
     vec3f_copy(dirNorm, dir);

@@ -15,8 +15,8 @@
 #include "pc/lua/smlua.h"
 #include "pc/network/socket/socket.h"
 
-
 static bool sHoldingAlt = false;
+static bool sHoldingShift = false;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
@@ -30,6 +30,7 @@ static bool sHoldingAlt = false;
 #define SCANCODE_9 0x0A
 #define SCANCODE_F5 0x3f
 #define SCANCODE_ALT 0x38
+#define SCANCODE_SHIFT 0x2A
 
 static void debug_breakpoint_here(void) {
     // create easy breakpoint position for debugging
@@ -96,6 +97,7 @@ void debug_keyboard_on_key_down(int scancode) {
     if (gNetworkSystem == &gNetworkSystemSocket) {
         switch (scancode & 0xFF) {
             case SCANCODE_ALT: sHoldingAlt = true; break;
+            case SCANCODE_SHIFT: sHoldingShift = true; break;
             case SCANCODE_3: debug_breakpoint_here(); break;
 #ifdef DEVELOPMENT
             case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
@@ -114,6 +116,7 @@ void debug_keyboard_on_key_up(int scancode) {
     if (gNetworkSystem == &gNetworkSystemSocket) {
         switch (scancode & 0xFF) {
             case SCANCODE_ALT: sHoldingAlt = false; break;
+            case SCANCODE_SHIFT: sHoldingShift = false; break;
         }
     }
 }

@@ -28,6 +28,8 @@
 
 #include "macros.h"
 
+#include "game/rendering_graph_node.h"
+
 #define SUPPORT_CHECK(x) assert(x)
 
 // SCALE_M_N: upscale/downscale M-bit integer to N-bit
@@ -170,6 +172,10 @@ static size_t buf_vbo_num_tris;
 
 static struct GfxWindowManagerAPI *gfx_wapi;
 static struct GfxRenderingAPI *gfx_rapi;
+
+static f32 sDepthZAdd = 0;
+static f32 sDepthZMult = 1;
+static f32 sDepthZSub = 0;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
@@ -866,8 +872,13 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             if (winv < 0.0f) {
                 winv = 32767.0f;
             }
-            
+
+            z -= sDepthZSub;
+            z *= sDepthZMult;
+            z += sDepthZAdd;
+
             float fog_z = z * winv * rsp.fog_mul + rsp.fog_offset;
+
             if (fog_z < 0) fog_z = 0;
             if (fog_z > 255) fog_z = 255;
             d->color.a = fog_z; // Use alpha variable to store fog factor
@@ -1182,6 +1193,12 @@ static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data
         case G_MW_FOG:
             rsp.fog_mul = (int16_t)(data >> 16);
             rsp.fog_offset = (int16_t)data;
+
+            // Alter depth buffer to deal with new near plane
+            sDepthZAdd = (gProjectionMaxNearValue - gProjectionVanillaNearValue) + gProjectionMaxNearValue;
+            sDepthZMult = (gProjectionVanillaFarValue - gProjectionMaxNearValue) / (gProjectionVanillaFarValue - gProjectionVanillaNearValue);
+            sDepthZSub = gProjectionVanillaNearValue;
+
             break;
     }
 }
