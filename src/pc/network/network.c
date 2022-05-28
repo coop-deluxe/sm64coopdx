@@ -472,7 +472,17 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
-    memset(gMarioStates[0].controller, 0, sizeof(struct Controller));
+
+    struct Controller* cnt = gMarioStates[0].controller;
+    cnt->rawStickX = 0;
+    cnt->rawStickY = 0;
+    cnt->stickX = 0;
+    cnt->stickY = 0;
+    cnt->stickMag = 0;
+    cnt->buttonDown = 0;
+    cnt->buttonPressed = 0;
+    cnt->extStickX = 0;
+    cnt->extStickY = 0;
 
     extern s16 gMenuMode;
     gMenuMode = -1;
