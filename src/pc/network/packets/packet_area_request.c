@@ -4,6 +4,7 @@
 #include "pc/debuglog.h"
 
 void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp) {
+    gNetworkRequestLocationTimer = 0;
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
         // requesting server's area, send it immediately
         network_send_area(fromNp);

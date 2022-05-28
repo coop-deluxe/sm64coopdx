@@ -42,6 +42,7 @@ u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
+u8 gNetworkRequestLocationTimer = 0;
 
 u8 gDebugPacketIdBuffer[256] = { 0xFF };
 u8 gDebugPacketSentBuffer[256] = { 0 };
@@ -424,6 +425,33 @@ void network_update(void) {
         network_update_reliable();
         packet_ordered_update();
     }
+
+    // update level/area request timers
+    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    if (np != NULL && !np->currLevelSyncValid) {
+        gNetworkRequestLocationTimer++;
+        if (gNetworkRequestLocationTimer > 90) {
+            // find a NetworkPlayer around that location
+            struct NetworkPlayer *npLevelAreaMatch = get_network_player_from_area(np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
+            struct NetworkPlayer *npLevelMatch     = get_network_player_from_level(np->currCourseNum, np->currActNum, np->currLevelNum);
+            struct NetworkPlayer *npAny = (npLevelAreaMatch == NULL) ? npLevelMatch : npLevelAreaMatch;
+
+            bool inCredits = (np->currActNum == 99);
+            if (npAny == NULL || inCredits) {
+                // no NetworkPlayer in the level
+                network_send_sync_valid(np, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
+                return;
+            }
+
+            // matching NetworkPlayer is client
+            if (npAny == npLevelAreaMatch) {
+                network_send_level_area_request(np, npAny);
+            } else {
+                network_send_level_request(np, npAny);
+            }
+        }
+    }
+
 }
 
 void network_register_mod(char* modName) {
