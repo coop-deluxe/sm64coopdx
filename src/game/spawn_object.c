@@ -59,7 +59,7 @@ void unused_init_free_list(struct LinkedList *usedList, struct LinkedList **pFre
  */
 struct LinkedList *unused_try_allocate(struct LinkedList *destList,
                                        struct LinkedList *freeList) {
-    if (!destList || !freeList) { return; }
+    if (!destList || !freeList) { return NULL; }
     struct LinkedList *node = freeList->next;
 
     if (node != NULL) {

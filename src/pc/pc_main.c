@@ -38,6 +38,7 @@
 #include "controller/controller_keyboard.h"
 #include "fs/fs.h"
 
+#include "game/display.h" // for gGlobalTimer
 #include "game/game_init.h"
 #include "game/main.h"
 #include "game/rumble_init.h"
@@ -73,7 +74,7 @@ u32 gNumVblanks = 0;
 u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
 
-f32 gGameSpeed = 1.0f; // TODO: should probably remove
+f64 gGameSpeed = 1.0f; // TODO: should probably remove
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
@@ -100,7 +101,6 @@ void set_vblank_handler(UNUSED s32 index, UNUSED struct VblankHandler *handler, 
 
 static bool inited = false;
 
-#include "game/display.h" // for gGlobalTimer
 void send_display_list(struct SPTask *spTask) {
     if (!inited) return;
     gfx_run((Gfx *)spTask->task.t.data_ptr);
@@ -160,18 +160,6 @@ static inline void patch_interpolations(f32 delta) {
     patch_djui_hud(delta);
 }
 
-static void delay_frame(void) {
-    if (configUncappedFramerate) { return; }
-    static f32 sDelayRounding = 0;
-    f64 targetDelta = 1.0 / (f64)configFrameLimit;
-
-    f64 actualDelta = clock_elapsed_f64() - sLastFrameTimeStart;
-    if (actualDelta < targetDelta) {
-        f64 delay = sDelayRounding + ((targetDelta - actualDelta) * 1000.0);
-        sDelayRounding = delay - (u32)delay;
-        wm_api->delay((u32)delay);
-    }
-}
 
 void produce_interpolation_frames_and_delay(void) {
     gRenderingInterpolated = true;
@@ -179,28 +167,37 @@ void produce_interpolation_frames_and_delay(void) {
     // sanity check target time to deal with hangs and such
     f64 curTime = clock_elapsed_f64();
     if (fabs(sFrameTargetTime - curTime) > 1) {
-        sFrameTargetTime = curTime;
+        sFrameTargetTime = curTime - 0.01f;
     }
-    delay_frame();
 
-    u64 frames = 1;
+    u64 frames = 0;
     while ((curTime = clock_elapsed_f64()) < sFrameTargetTime) {
-        sLastFrameTimeStart = curTime;
+        // interpolate and render
         gfx_start_frame();
-        f32 delta = (configWindow.vsync || !configUncappedFramerate)
-                  ? frames / sAvgFrames
-                  : MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1);
+        f32 delta = MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1);
         gRenderingDelta = delta;
         patch_interpolations(delta);
         send_display_list(gGfxSPTask);
         gfx_end_frame();
+
+        // delay
+        if (!configUncappedFramerate) {
+            f64 targetDelta = 1.0 / (f64)configFrameLimit;
+            f64 now = clock_elapsed_f64();
+            f64 actualDelta = now - curTime;
+            if (actualDelta < targetDelta) {
+                f64 delay = ((targetDelta - actualDelta) * 1000.0);
+                wm_api->delay((u32)delay);
+            }
+        }
+
         frames++;
-        delay_frame();
     }
 
     f32 fps = frames / (clock_elapsed_f64() - sFrameTimeStart);
-    sAvgFps = sAvgFps * 0.99 + fps * 0.01;
+    sAvgFps = sAvgFps * 0.6 + fps * 0.4;
     sAvgFrames = sAvgFrames * 0.9 + frames * 0.1;
+    sFrameTimeStart = sFrameTargetTime;
     sFrameTargetTime += sFrameTime * gGameSpeed;
     gRenderingInterpolated = false;
 
@@ -210,11 +207,7 @@ void produce_interpolation_frames_and_delay(void) {
 void produce_one_frame(void) {
     network_update();
 
-    sFrameTimeStart = clock_elapsed_f64();
-    sLastFrameTimeStart = sFrameTimeStart;
-
     patch_interpolations_before();
-    gfx_start_frame();
 
     const f32 master_mod = (f32)configMasterVolume / 127.0f;
     set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
@@ -239,8 +232,6 @@ void produce_one_frame(void) {
     //printf("Audio samples before submitting: %d\n", audio_api->buffered());
 
     audio_api->play((u8 *)audio_buffer, 2 * num_audio_samples * 4);
-
-    gfx_end_frame();
 
     produce_interpolation_frames_and_delay();
 }

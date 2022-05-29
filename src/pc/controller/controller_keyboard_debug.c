@@ -47,14 +47,14 @@ static void debug_warp_level1() {
 }
 
 static void debug_warp_level2() {
-    extern f32 gGameSpeed;
+    extern f64 gGameSpeed;
     gGameSpeed = MAX(gGameSpeed - 0.1f, 0.1f);
     printf("GAME SPEED: %f\n", gGameSpeed);
     //dynos_warp_to_level(gCurrLevelNum, gCurrAreaIndex^3, 1);
 }
 
 static void debug_warp_level3() {
-    extern f32 gGameSpeed;
+    extern f64 gGameSpeed;
     gGameSpeed = MIN(gGameSpeed + 0.1f, 10.0f);
     printf("GAME SPEED: %f\n", gGameSpeed);
     //dynos_warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 1);
