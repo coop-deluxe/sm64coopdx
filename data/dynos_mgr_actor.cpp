@@ -115,11 +115,10 @@ ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode) {
     }
 
     // Check graph node
-    auto it = std::find_if(_ValidActors.begin(), _ValidActors.end(),
-        [&aGraphNode](const auto& _Actor) { return _Actor.second.mGraphNode == aGraphNode; }
-    );
-    if (it != _ValidActors.end()) {
-        return &it->second;
+    for (const auto& _Actor : _ValidActors) {
+        if (_Actor.second.mGraphNode == aGraphNode) {
+            return (ActorGfx*)&_Actor.second;
+        }
     }
 
     // No actor found
