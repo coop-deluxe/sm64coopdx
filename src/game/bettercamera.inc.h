@@ -556,7 +556,7 @@ static void newcam_collision(void) {
         struct Surface *surf = NULL;
         Vec3f hitpos;
 
-        find_surface_on_ray(newcam_pos_target, camdir, &surf, hitpos);
+        find_surface_on_ray(newcam_lookat, camdir, &surf, hitpos);
 
         if (surf) {
             // offset the hit pos by the hit normal
@@ -577,9 +577,9 @@ static void newcam_collision(void) {
         newcam_coldist = vec3f_dist(newcam_pos_target, hitpos);
 
     } else {
-        newcam_pos[0] = newcam_pos_target[0] + camdir[0];
-        newcam_pos[1] = newcam_pos_target[1] + camdir[1];
-        newcam_pos[2] = newcam_pos_target[2] + camdir[2];
+        newcam_pos[0] = newcam_lookat[0] + camdir[0];
+        newcam_pos[1] = newcam_lookat[1] + camdir[1];
+        newcam_pos[2] = newcam_lookat[2] + camdir[2];
         newcam_coldist = vec3f_length(camdir);
     }
 }
