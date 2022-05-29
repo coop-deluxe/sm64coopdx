@@ -279,8 +279,11 @@ void patch_mtx_interpolated(f32 delta) {
 
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
-    mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
-    mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+    bool translateCamSpace = (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
+    if (translateCamSpace) {
+        mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
+        mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+    }
 
     for (s32 i = 0; i < gMtxTblSize; i++) {
         Mtx bufMtx, bufMtxPrev;
@@ -290,7 +293,7 @@ void patch_mtx_interpolated(f32 delta) {
 
         Gfx *pos = gMtxTbl[i].pos;
 
-        if (gMtxTbl[i].usingCamSpace) {
+        if (gMtxTbl[i].usingCamSpace && translateCamSpace) {
             // transform out of camera space so the matrix can interp in world space
             mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
             mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
