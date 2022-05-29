@@ -903,17 +903,15 @@ endif
 
 # icon
 ifeq ($(WINDOWS_BUILD),1)
-	ifeq ($(ICON),1)
-		Command := mkdir -p "$(BUILD_DIR)/res"
+  ifeq ($(ICON),1)
+    Command := mkdir -p "$(BUILD_DIR)/res"
     Resp := $(shell $(call Command))
-
-		Command := windres -o "$(BUILD_DIR)/res/icon.o" -i "res/icon.rc"
+    Command := windres -o "$(BUILD_DIR)/res/icon.o" -i "res/icon.rc" --preprocessor $(CC) --preprocessor-arg -E --preprocessor-arg -xc-header --preprocessor-arg -DRC_INVOKED
     Resp := $(shell $(call Command))
-
     ifeq ($(.SHELLSTATUS),0)
       LDFLAGS += $(BUILD_DIR)/res/icon.o
-		endif
-	endif
+    endif
+  endif
 endif
 
 # Coop specific libraries
