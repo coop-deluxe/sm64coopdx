@@ -4,7 +4,6 @@
 #include "object_fields.h"
 #include "object_constants.h"
 #include "behavior_table.h"
-#include "game/save_file.h"
 #include "src/game/hardcoded.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
@@ -19,7 +18,6 @@
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
-#include "game/camera.h"
 
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
@@ -492,6 +490,7 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     // reset other stuff
     extern u8* gOverrideEeprom;
     gOverrideEeprom = NULL;
+    extern u8 gOverrideFreezeCamera;
     gOverrideFreezeCamera = false;
     gDjuiHudLockMouse = false;
     dynos_mod_shutdown();
@@ -514,6 +513,7 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     cnt->extStickX = 0;
     cnt->extStickY = 0;
 
+    extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);
 
     extern s16 gMenuMode;

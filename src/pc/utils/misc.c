@@ -3,6 +3,7 @@
 #include <PR/ultratypes.h>
 #include <stdbool.h>
 #include <time.h>
+#include <float.h>
 
 #include "misc.h"
 
