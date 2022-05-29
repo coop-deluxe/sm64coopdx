@@ -227,9 +227,10 @@ function mario_update(m)
         warp_to_castle(LEVEL_BITS)
     end
 
-    if m.playerIndex == 0 and gPlayerSyncTable[m.playerIndex].seeking and gGlobalSyncTable.displayTimer == 0 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-        warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0) 
-    end
+    -- this doesn't work properly, it automatically ends the round again
+    --if m.playerIndex == 0 and gPlayerSyncTable[m.playerIndex].seeking and gGlobalSyncTable.displayTimer == 0 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+    --    warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0)
+    --end
 
     -- display all seekers as metal
     if s.seeking then
