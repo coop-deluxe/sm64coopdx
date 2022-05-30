@@ -391,6 +391,7 @@ enum ModelExtendedId {
 };
 
 void smlua_model_util_remember(u8 loadedId, u8 layer, const void* asset, u8 isDisplayList);
+void smlua_model_util_reset(void);
 void smlua_model_util_clear(void);
 u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u8 loadedId);
 u8 smlua_model_util_load_with_pool(enum ModelExtendedId extId, struct AllocOnlyPool* pool);

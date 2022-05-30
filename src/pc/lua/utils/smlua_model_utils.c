@@ -62,6 +62,7 @@ struct ModelUtilsInfo {
     bool permanent;
     bool isDisplayList;
     const void* asset;
+    u8 shouldFreeAsset;
 };
 
 #define UNLOADED_ID 0xFF
@@ -509,6 +510,20 @@ void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, 
     //LOG_INFO("Remember model: %u -> %u", found->extId, loadedId);
 }
 
+void smlua_model_util_reset(void) {
+    smlua_model_util_clear();
+    for (u32 i = 0; i < sCustomModelsCount; i++) {
+        struct ModelUtilsInfo* m = &sCustomModels[i];
+        m->loadedId = UNLOADED_ID;
+        if (m->asset && m->shouldFreeAsset) {
+            free((void*)m->asset);
+            m->asset = NULL;
+        }
+        m->shouldFreeAsset = false;
+    }
+    sCustomModelsCount = 0;
+}
+
 void smlua_model_util_clear(void) {
     // TODO: we need to restore replaced permanent models
     for (int i = 0; i < MAX_CACHED_ASSETS; i++) {
@@ -516,6 +531,11 @@ void smlua_model_util_clear(void) {
         if (m == NULL || m->permanent) { continue; }
         //LOG_INFO("Forget: %u -> %u", m->extId, m->loadedId);
         m->loadedId = UNLOADED_ID;
+        if (m->asset && m->shouldFreeAsset) {
+            free((void*)m->asset);
+            m->asset = NULL;
+        }
+        m->shouldFreeAsset = false;
         sCachedAssets[i] = NULL;
         sCachedAssetTaken[i] = false;
     }
@@ -566,6 +586,7 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
         pool = alloc_only_pool_init(main_pool_available() - sizeof(struct AllocOnlyPool), MEMORY_POOL_LEFT);
         resizePool = true;
     }
+    info->shouldFreeAsset = false;
 
     if (pool != NULL) {
         if (info->isDisplayList) {
@@ -586,6 +607,7 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
         if (info->isDisplayList) {
             const GeoLayout displayListToGeoLayout[] = { GEO_NODE_START(), GEO_DISPLAY_LIST(info->layer, info->asset), GEO_END() };
             info->asset = memcpy(calloc(1, sizeof(displayListToGeoLayout)), displayListToGeoLayout, sizeof(displayListToGeoLayout));
+            info->shouldFreeAsset = true;
             info->isDisplayList = false;
         }
         gLoadedGraphNodes[pickLoadedId] = dynos_geolayout_to_graphnode(info->asset, true);
@@ -634,6 +656,7 @@ u32 smlua_model_util_get_id(const char* name) {
     u16 customIndex = sCustomModelsCount++;
     struct ModelUtilsInfo* info = &sCustomModels[customIndex];
     info->asset = layout;
+    info->shouldFreeAsset = false;
     info->loadedId = UNLOADED_ID;
     info->extId = E_MODEL_MAX + customIndex;
     info->isDisplayList = false;

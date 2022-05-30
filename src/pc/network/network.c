@@ -497,7 +497,6 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
     smlua_shutdown();
-    smlua_model_util_clear();
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
