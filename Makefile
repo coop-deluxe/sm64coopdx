@@ -906,7 +906,7 @@ ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(ICON),1)
     Command := mkdir -p "$(BUILD_DIR)/res"
     Resp := $(shell $(call Command))
-    Command := windres -o "$(BUILD_DIR)/res/icon.o" -i "res/icon.rc" --preprocessor $(CC) --preprocessor-arg -E --preprocessor-arg -xc-header --preprocessor-arg -DRC_INVOKED
+    Command := windres -o "$(BUILD_DIR)/res/icon.o" -i "res/icon.rc" --preprocessor $(word 1, $(CC)) --preprocessor-arg -E --preprocessor-arg -xc-header --preprocessor-arg -DRC_INVOKED
     Resp := $(shell $(call Command))
     ifeq ($(.SHELLSTATUS),0)
       LDFLAGS += $(BUILD_DIR)/res/icon.o
