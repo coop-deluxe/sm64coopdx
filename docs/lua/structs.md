@@ -1979,6 +1979,7 @@
 | ----- | ---- | ------ |
 | bubbleDeath | `integer` |  |
 | enableCheats | `integer` |  |
+| fixCollisionBugs | `integer` |  |
 | headlessServer | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |

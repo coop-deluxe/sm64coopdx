@@ -1573,6 +1573,7 @@
 --- @class ServerSettings
 --- @field public bubbleDeath integer
 --- @field public enableCheats integer
+--- @field public fixCollisionBugs integer
 --- @field public headlessServer integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer

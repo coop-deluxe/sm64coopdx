@@ -624,6 +624,18 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
 }
 
 /**
+ * Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
+ * Prevents exposed ceiling bug
+ */
+// Prevent exposed ceilings
+f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
+    if (gServerSettings.fixCollisionBugs) {
+        height = MAX(height, pos[1]) + 3.0f;
+    }
+    return vec3f_find_ceil(pos, height, ceil);
+}
+
+/**
  * Determines if Mario is facing "downhill."
  */
 s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw) {
@@ -1434,7 +1446,7 @@ copyPlayerGoto:;
         m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
     }
 
-    m->ceilHeight = vec3f_find_ceil(&m->pos[0], m->floorHeight, &m->ceil);
+    m->ceilHeight = vec3f_mario_ceil(&m->pos[0], m->floorHeight, &m->ceil);
     gasLevel = find_poison_gas_level(m->pos[0], m->pos[2]);
     m->waterLevel = find_water_level(m->pos[0], m->pos[2]);
 

@@ -10,6 +10,7 @@
 #include "math_util.h"
 #include "game/game_init.h"
 #include "pc/utils/misc.h"
+#include "pc/network/network.h"
 
 /**************************************************
  *                      WALLS                     *
@@ -240,6 +241,11 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
 
     ceil = NULL;
 
+    // set pheight to highest value
+    if (gServerSettings.fixCollisionBugs) {
+        *pheight = CELL_HEIGHT_LIMIT;
+    }
+
     // Stay in this loop until out of ceilings.
     while (surfaceNode != NULL) {
         surf = surfaceNode->surface;
@@ -284,29 +290,39 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             f32 height;
 
             // If a wall, ignore it. Likely a remnant, should never occur.
-            if (ny == 0.0f) {
-                continue;
-            }
+            if (ny == 0.0f) { continue; }
 
             // Find the ceil height at the specific point.
             height = -(x * nx + nz * z + oo) / ny;
+
+            // Reject ceilings below previously found ceiling
+            if (gServerSettings.fixCollisionBugs && (height > *pheight)) {
+                continue;
+            }
 
             // Checks for ceiling interaction with a 78 unit buffer.
             //! (Exposed Ceilings) Because any point above a ceiling counts
             //  as interacting with a ceiling, ceilings far below can cause
             // "invisible walls" that are really just exposed ceilings.
-            if (y - (height - -78.0f) > 0.0f) {
-                continue;
+            //  <Fixed when gServerSettings.fixCollisionBugs != 0>
+            if (gServerSettings.fixCollisionBugs) {
+                if (y > height) { continue; }
+            } else {
+                if (y - (height - -78.0f) > 0.0f) { continue; }
             }
 
             *pheight = height;
             ceil = surf;
-            break;
+
+            if (!gServerSettings.fixCollisionBugs) {
+                break;
+            }
         }
     }
 
     //! (Surface Cucking) Since only the first ceil is returned and not the lowest,
     //  lower ceilings can be "cucked" by higher ceilings.
+    //  <Fixed when gServerSettings.fixCollisionBugs != 0>
     return ceil;
 }
 
@@ -428,6 +444,11 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
     struct Surface *floor = NULL;
     s32 interpolate;
 
+    // set pheight to lowest value
+    if (gServerSettings.fixCollisionBugs) {
+        *pheight = FLOOR_LOWER_LIMIT;
+    }
+
     // Iterate through the list of floors until there are no more floors.
     while (surfaceNode != NULL) {
         surf = surfaceNode->surface;
@@ -524,6 +545,12 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
 
         // Find the height of the floor at a given location.
         height = -(x * nx + nz * z + oo) / ny;
+
+        // Find highest floor
+        if (gServerSettings.fixCollisionBugs && (height < *pheight)) {
+            continue;
+        }
+
         // Checks for floor interaction with a 78 unit buffer.
         if (y - (height + -78.0f) < 0.0f) {
             continue;
@@ -544,11 +571,15 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         }
 
         floor = surf;
-        break;
+
+        if (!gServerSettings.fixCollisionBugs) {
+            break;
+        }
     }
 
     //! (Surface Cucking) Since only the first floor is returned and not the highest,
     //  higher floors can be "cucked" by lower floors.
+    //  <Fixed when gServerSettings.fixCollisionBugs != 0>
     return floor;
 }
 

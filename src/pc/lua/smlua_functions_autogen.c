@@ -8608,6 +8608,31 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
 }
 */
 
+/*
+int smlua_func_vec3f_mario_ceil(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(1, "x");
+    pos[1] = smlua_get_number_field(1, "y");
+    pos[2] = smlua_get_number_field(1, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    f32 height = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+//  struct Surface** ceil = (struct Surface**)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    lua_pushnumber(L, vec3f_mario_ceil(pos, height, ceil));
+
+    smlua_push_number_field(1, "x", pos[0]);
+    smlua_push_number_field(1, "y", pos[1]);
+    smlua_push_number_field(1, "z", pos[2]);
+
+    return 1;
+}
+*/
+
   //////////////////////////////
  // mario_actions_airborne.c //
 //////////////////////////////
@@ -17281,6 +17306,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "update_mario_pos_for_anim", smlua_func_update_mario_pos_for_anim);
     smlua_bind_function(L, "update_mario_sound_and_camera", smlua_func_update_mario_sound_and_camera);
     //smlua_bind_function(L, "vec3f_find_ceil", smlua_func_vec3f_find_ceil); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "vec3f_mario_ceil", smlua_func_vec3f_mario_ceil); <--- UNIMPLEMENTED
 
     // mario_actions_airborne.c
     smlua_bind_function(L, "check_common_airborne_cancels", smlua_func_check_common_airborne_cancels);

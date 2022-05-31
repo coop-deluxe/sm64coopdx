@@ -1729,10 +1729,11 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 8
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 9
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bubbleDeath",             LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),             false, LOT_NONE },
     { "enableCheats",            LVT_U8,  offsetof(struct ServerSettings, enableCheats),            false, LOT_NONE },
+    { "fixCollisionBugs",        LVT_U8,  offsetof(struct ServerSettings, fixCollisionBugs),        false, LOT_NONE },
     { "headlessServer",          LVT_U8,  offsetof(struct ServerSettings, headlessServer),          false, LOT_NONE },
     { "playerInteractions",      LVT_S32, offsetof(struct ServerSettings, playerInteractions),      false, LOT_NONE },
     { "playerKnockbackStrength", LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength), false, LOT_NONE },
