@@ -258,23 +258,25 @@ s32 stationary_ground_step(struct MarioState *m) {
 }
 
 static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
-    UNUSED struct Surface *lowerWall;
-    struct Surface *upperWall;
+    struct WallCollisionData lowerWcd = { 0 };
+    struct WallCollisionData upperWcd = { 0 };
     struct Surface *ceil;
     struct Surface *floor;
     f32 ceilHeight;
     f32 floorHeight;
     f32 waterLevel;
 
-    lowerWall = resolve_and_return_wall_collisions(nextPos, 30.0f, 24.0f);
-    upperWall = resolve_and_return_wall_collisions(nextPos, 60.0f, 50.0f);
+    resolve_and_return_wall_collisions(nextPos, 30.0f, 24.0f, &lowerWcd);
+    resolve_and_return_wall_collisions(nextPos, 60.0f, 50.0f, &upperWcd);
 
     floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     ceilHeight = vec3f_mario_ceil(nextPos, floorHeight, &ceil);
 
     waterLevel = find_water_level(nextPos[0], nextPos[2]);
 
-    m->wall = upperWall;
+    m->wall = (upperWcd.numWalls > 0)
+            ? upperWcd.walls[upperWcd.numWalls - 1]
+            : NULL;
 
     if (floor == NULL) {
         return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
@@ -305,17 +307,22 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     m->floor = floor;
     m->floorHeight = floorHeight;
 
-    if (upperWall != NULL) {
-        s16 wallDYaw = atan2s(upperWall->normal.z, upperWall->normal.x) - m->faceAngle[1];
+    if (upperWcd.numWalls > 0) {
+        for (u8 i = 0; i < upperWcd.numWalls; i++) {
+            if (!gServerSettings.fixCollisionBugs) {
+                i = (upperWcd.numWalls - 1);
+            }
+            struct Surface* wall = upperWcd.walls[i];
+            s16 wallDYaw = atan2s(wall->normal.z, wall->normal.x) - m->faceAngle[1];
 
-        if (wallDYaw >= 0x2AAA && wallDYaw <= 0x5555) {
-            return GROUND_STEP_NONE;
+            if (wallDYaw >= 0x2AAA && wallDYaw <= 0x5555) {
+                // nothing
+            } else if (wallDYaw <= -0x2AAA && wallDYaw >= -0x5555) {
+                // nothing
+            } else {
+                return GROUND_STEP_HIT_WALL_CONTINUE_QSTEPS;
+            }
         }
-        if (wallDYaw <= -0x2AAA && wallDYaw >= -0x5555) {
-            return GROUND_STEP_NONE;
-        }
-
-        return GROUND_STEP_HIT_WALL_CONTINUE_QSTEPS;
     }
 
     return GROUND_STEP_NONE;
@@ -392,8 +399,8 @@ u32 check_ledge_grab(struct MarioState *m, struct Surface *wall, Vec3f intendedP
 s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepArg) {
     s16 wallDYaw;
     Vec3f nextPos;
-    struct Surface *upperWall;
-    struct Surface *lowerWall;
+    struct WallCollisionData lowerWcd = { 0 };
+    struct WallCollisionData upperWcd = { 0 };
     struct Surface *ceil;
     struct Surface *floor;
     f32 ceilHeight;
@@ -402,8 +409,8 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
 
     vec3f_copy(nextPos, intendedPos);
 
-    upperWall = resolve_and_return_wall_collisions(nextPos, 150.0f, 50.0f);
-    lowerWall = resolve_and_return_wall_collisions(nextPos, 30.0f, 50.0f);
+    resolve_and_return_wall_collisions(nextPos, 150.0f, 50.0f, &upperWcd);
+    resolve_and_return_wall_collisions(nextPos, 30.0f, 50.0f, &lowerWcd);
 
     floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     ceilHeight = vec3f_mario_ceil(nextPos, floorHeight, &ceil);
@@ -472,9 +479,15 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
 
     //! When the wall is not completely vertical or there is a slight wall
     // misalignment, you can activate these conditions in unexpected situations
-    if ((stepArg & AIR_STEP_CHECK_LEDGE_GRAB) && upperWall == NULL && lowerWall != NULL) {
-        if (check_ledge_grab(m, lowerWall, intendedPos, nextPos)) {
-            return AIR_STEP_GRABBED_LEDGE;
+    if ((stepArg & AIR_STEP_CHECK_LEDGE_GRAB) && upperWcd.numWalls == 0 && lowerWcd.numWalls > 0) {
+        for (u8 i = 0; i < lowerWcd.numWalls; i++) {
+            if (!gServerSettings.fixCollisionBugs) {
+                i = (lowerWcd.numWalls - 1);
+            }
+            struct Surface* wall = lowerWcd.walls[i];
+            if (check_ledge_grab(m, wall, intendedPos, nextPos)) {
+                return AIR_STEP_GRABBED_LEDGE;
+            }
         }
 
         vec3f_copy(m->pos, nextPos);
@@ -487,17 +500,45 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
     m->floor = floor;
     m->floorHeight = floorHeight;
 
-    if (upperWall != NULL || lowerWall != NULL) {
-        m->wall = upperWall != NULL ? upperWall : lowerWall;
-        wallDYaw = atan2s(m->wall->normal.z, m->wall->normal.x) - m->faceAngle[1];
+    if (upperWcd.numWalls > 0) {
+        for (u8 i = 0; i < upperWcd.numWalls; i++) {
+            if (!gServerSettings.fixCollisionBugs) {
+                i = (upperWcd.numWalls - 1);
+            }
 
-        if (m->wall->type == SURFACE_BURNING) {
-            return AIR_STEP_HIT_LAVA_WALL;
+            struct Surface* wall = upperWcd.walls[i];
+            m->wall = wall;
+
+            wallDYaw = atan2s(m->wall->normal.z, m->wall->normal.x) - m->faceAngle[1];
+
+            if (m->wall->type == SURFACE_BURNING) {
+                return AIR_STEP_HIT_LAVA_WALL;
+            }
+
+            if (wallDYaw < -0x6000 || wallDYaw > 0x6000) {
+                m->flags |= MARIO_UNKNOWN_30;
+                return AIR_STEP_HIT_WALL;
+            }
         }
+    } else if (lowerWcd.numWalls > 0) {
+        for (u8 i = 0; i < lowerWcd.numWalls; i++) {
+            if (!gServerSettings.fixCollisionBugs) {
+                i = (lowerWcd.numWalls - 1);
+            }
 
-        if (wallDYaw < -0x6000 || wallDYaw > 0x6000) {
-            m->flags |= MARIO_UNKNOWN_30;
-            return AIR_STEP_HIT_WALL;
+            struct Surface* wall = lowerWcd.walls[i];
+            m->wall = wall;
+
+            wallDYaw = atan2s(m->wall->normal.z, m->wall->normal.x) - m->faceAngle[1];
+
+            if (m->wall->type == SURFACE_BURNING) {
+                return AIR_STEP_HIT_LAVA_WALL;
+            }
+
+            if (wallDYaw < -0x6000 || wallDYaw > 0x6000) {
+                m->flags |= MARIO_UNKNOWN_30;
+                return AIR_STEP_HIT_WALL;
+            }
         }
     }
 

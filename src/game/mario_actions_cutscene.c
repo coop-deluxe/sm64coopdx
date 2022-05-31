@@ -637,7 +637,8 @@ s32 act_debug_free_move(struct MarioState *m) {
         pos[2] += 26.0f * speed * coss(m->intendedYaw);
     }
 
-    resolve_and_return_wall_collisions(pos, 60.0f, 50.0f);
+    struct WallCollisionData wcd = { 0 };
+    resolve_and_return_wall_collisions(pos, 60.0f, 50.0f, &wcd);
 
     struct Surface *surf = NULL;
     f32 floorHeight = find_floor(pos[0], pos[1], pos[2], &surf);

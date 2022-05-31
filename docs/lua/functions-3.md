@@ -3915,7 +3915,7 @@
 ## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
 
 ### Lua Example
-`local SurfaceValue = resolve_and_return_wall_collisions(pos, offset, radius)`
+`resolve_and_return_wall_collisions(pos, offset, radius, collisionData)`
 
 ### Parameters
 | Field | Type |
@@ -3923,12 +3923,13 @@
 | pos | [Vec3f](structs.md#Vec3f) |
 | offset | `number` |
 | radius | `number` |
+| collisionData | [WallCollisionData](structs.md#WallCollisionData) |
 
 ### Returns
-[Surface](structs.md#Surface)
+- None
 
 ### C Prototype
-`struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);`
+`void resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);`
 
 [:arrow_up_small:](#)
 

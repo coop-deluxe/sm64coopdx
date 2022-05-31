@@ -591,27 +591,20 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
 /**
  * Collides with walls and returns the most recent wall.
  */
-struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius) {
-    struct WallCollisionData collisionData;
-    struct Surface *wall = NULL;
+void resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
+    if (!collisionData || !pos) { return; }
 
-    collisionData.x = pos[0];
-    collisionData.y = pos[1];
-    collisionData.z = pos[2];
-    collisionData.radius = radius;
-    collisionData.offsetY = offset;
+    collisionData->x = pos[0];
+    collisionData->y = pos[1];
+    collisionData->z = pos[2];
+    collisionData->radius = radius;
+    collisionData->offsetY = offset;
 
-    if (find_wall_collisions(&collisionData)) {
-        wall = collisionData.walls[collisionData.numWalls - 1];
-    }
+    find_wall_collisions(collisionData);
 
-    pos[0] = collisionData.x;
-    pos[1] = collisionData.y;
-    pos[2] = collisionData.z;
-
-    // This only returns the most recent wall and can also return NULL
-    // there are no wall collisions.
-    return wall;
+    pos[0] = collisionData->x;
+    pos[1] = collisionData->y;
+    pos[2] = collisionData->z;
 }
 
 /**
@@ -630,7 +623,7 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
 // Prevent exposed ceilings
 f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
     if (gServerSettings.fixCollisionBugs) {
-        height = MAX(height, pos[1]) + 3.0f;
+        height = MAX(height, pos[1]);
     }
     return vec3f_find_ceil(pos, height, ceil);
 }

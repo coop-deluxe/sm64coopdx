@@ -4182,8 +4182,9 @@ end
 --- @param pos Vec3f
 --- @param offset number
 --- @param radius number
---- @return Surface
-function resolve_and_return_wall_collisions(pos, offset, radius)
+--- @param collisionData WallCollisionData
+--- @return nil
+function resolve_and_return_wall_collisions(pos, offset, radius, collisionData)
     -- ...
 end
 

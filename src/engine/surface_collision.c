@@ -146,8 +146,13 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
 
         //! (Wall Overlaps) Because this doesn't update the x and z local variables,
         //  multiple walls can push mario more than is required.
+        //  <Fixed when gServerSettings.fixCollisionBugs != 0>
         data->x += surf->normal.x * (radius - offset);
         data->z += surf->normal.z * (radius - offset);
+        if (gServerSettings.fixCollisionBugs) {
+            x = data->x;
+            z = data->z;
+        }
 
         //! (Unreferenced Walls) Since this only returns the first four walls,
         //  this can lead to wall interaction being missed. Typically unreferenced walls
@@ -305,10 +310,8 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             //  as interacting with a ceiling, ceilings far below can cause
             // "invisible walls" that are really just exposed ceilings.
             //  <Fixed when gServerSettings.fixCollisionBugs != 0>
-            if (gServerSettings.fixCollisionBugs) {
-                if (y > height) { continue; }
-            } else {
-                if (y - (height - -78.0f) > 0.0f) { continue; }
+            if (y - (height - -78.0f) > 0.0f) {
+                continue;
             }
 
             *pheight = height;

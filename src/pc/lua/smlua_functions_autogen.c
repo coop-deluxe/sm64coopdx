@@ -8383,7 +8383,7 @@ int smlua_func_play_sound_if_no_flag(lua_State* L) {
 }
 
 int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
 
     f32* pos = smlua_get_vec3f_from_buffer();
@@ -8395,8 +8395,10 @@ int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
     f32 radius = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    struct WallCollisionData* collisionData = (struct WallCollisionData*)smlua_to_cobject(L, 4, LOT_WALLCOLLISIONDATA);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, resolve_and_return_wall_collisions(pos, offset, radius));
+    resolve_and_return_wall_collisions(pos, offset, radius, collisionData);
 
     smlua_push_number_field(1, "x", pos[0]);
     smlua_push_number_field(1, "y", pos[1]);

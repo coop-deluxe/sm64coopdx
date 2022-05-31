@@ -736,8 +736,12 @@ void push_mario_out_of_object(struct MarioState *m, struct Object *o, f32 paddin
         if (floor != NULL) {
             //! Doesn't update Mario's referenced floor (allows oob death when
             // an object pushes you into a steep slope while in a ground action)
+            //  <Fixed when gServerSettings.fixCollisionBugs != 0>
             m->pos[0] = newMarioX;
             m->pos[2] = newMarioZ;
+            if (gServerSettings.fixCollisionBugs) {
+                m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
+            }
         }
     }
 }
@@ -2138,7 +2142,9 @@ void check_kick_or_punch_wall(struct MarioState *m) {
         detector[2] = m->pos[2] + 50.0f * coss(m->faceAngle[1]);
         detector[1] = m->pos[1];
 
-        if (resolve_and_return_wall_collisions(detector, 80.0f, 5.0f) != NULL) {
+        struct WallCollisionData wcd = { 0 };
+        resolve_and_return_wall_collisions(detector, 80.0f, 5.0f, &wcd);
+        if (wcd.numWalls > 0) {
             if (m->action != ACT_MOVE_PUNCHING || m->forwardVel >= 0.0f) {
                 if (m->action == ACT_PUNCHING) {
                     m->action = ACT_MOVE_PUNCHING;
