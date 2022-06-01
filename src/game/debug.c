@@ -4,6 +4,7 @@
 #include "debug.h"
 #include "engine/behavior_script.h"
 #include "engine/surface_collision.h"
+#include "game/level_update.h"
 #include "game_init.h"
 #include "main.h"
 #include "object_constants.h"
@@ -567,4 +568,16 @@ void debug_enemy_unknown(s16 *enemyArr) {
     enemyArr[5] = gDebugInfo[DEBUG_PAGE_ENEMYINFO][2];
     enemyArr[6] = gDebugInfo[DEBUG_PAGE_ENEMYINFO][3];
     enemyArr[7] = gDebugInfo[DEBUG_PAGE_ENEMYINFO][4];
+}
+
+void debug_position(f32 x, f32 y, f32 z, bool red) {
+    struct Object* player = gMarioStates[0].marioObj;
+    if (player == NULL) { return; }
+    struct Object* obj = spawn_object(player, red ? MODEL_RED_COIN : MODEL_YELLOW_COIN, bhvSparkle);
+    if (obj != NULL) {
+        obj_scale(obj, 0.25f);
+        obj->oPosX = x;
+        obj->oPosY = y;
+        obj->oPosZ = z;
+    }
 }

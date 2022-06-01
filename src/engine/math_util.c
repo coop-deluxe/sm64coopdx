@@ -134,8 +134,15 @@ void *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b) {
 
 /// Scale vector 'dest' so it has length 1
 void *vec3f_normalize(Vec3f dest) {
-    //! Possible division by zero
-    f32 invsqrt = 1.0f / sqrtf(dest[0] * dest[0] + dest[1] * dest[1] + dest[2] * dest[2]);
+    f32 div = sqrtf(dest[0] * dest[0] + dest[1] * dest[1] + dest[2] * dest[2]);
+    if (div == 0) {
+        dest[0] = 0;
+        dest[1] = 0;
+        dest[2] = 0;
+        return dest;
+    }
+
+    f32 invsqrt = 1.0f / div;
 
     dest[0] *= invsqrt;
     dest[1] *= invsqrt;

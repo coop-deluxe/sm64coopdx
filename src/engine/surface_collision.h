@@ -23,6 +23,8 @@ struct WallCollisionData
     /*0x14*/ s16 unused;
     /*0x16*/ s16 numWalls;
     /*0x18*/ struct Surface *walls[4];
+    /*????*/ Vec3f normalAddition;
+    /*????*/ u8 normalCount;
 };
 
 struct FloorGeometry
@@ -33,6 +35,9 @@ struct FloorGeometry
     f32 normalZ;
     f32 originOffset;
 };
+
+extern Vec3f gFindWallDirection;
+extern u8 gFindWallDirectionActive;
 
 s32 f32_find_wall_collision(f32 *xPtr, f32 *yPtr, f32 *zPtr, f32 offsetY, f32 radius);
 s32 find_wall_collisions(struct WallCollisionData *colData);

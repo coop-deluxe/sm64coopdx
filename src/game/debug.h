@@ -25,4 +25,6 @@ void try_print_debug_mario_object_info(void);
 void try_do_mario_debug_object_spawn(void);
 void try_print_debug_mario_level_info(void);
 
+void debug_position(f32 x, f32 y, f32 z, bool red);
+
 #endif // DEBUG_H

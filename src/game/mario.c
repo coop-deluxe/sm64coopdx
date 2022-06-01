@@ -623,9 +623,9 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
 // Prevent exposed ceilings
 f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
     if (gServerSettings.fixCollisionBugs) {
-        height = MAX(height, pos[1]);
+        height = MAX(height + 80.0f, pos[1] - 2);
     }
-    return vec3f_find_ceil(pos, height, ceil);
+    return find_ceil(pos[0], height, pos[2], ceil);
 }
 
 /**
@@ -2273,17 +2273,15 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
         ? wcd->walls[wcd->numWalls - 1]
         : NULL;
 
-    vec3f_set(m->wallNormal, 0, 0, 0);
-    for (u8 i = 0; i < wcd->numWalls; i++) {
-        if (!gServerSettings.fixCollisionBugs) {
-            i = (wcd->numWalls - 1);
-        }
-        struct Surface* wall = wcd->walls[i];
-        Vec3f normal = { wall->normal.x, wall->normal.y, wall->normal.z };
-        vec3f_add(m->wallNormal, normal);
-    }
-
-    if (m->wall) {
-        vec3f_normalize(m->wallNormal);
+    if (gServerSettings.fixCollisionBugs && wcd->normalCount > 0) {
+        vec3f_set(m->wallNormal,
+                  wcd->normalAddition[0] / wcd->normalCount,
+                  wcd->normalAddition[1] / wcd->normalCount,
+                  wcd->normalAddition[2] / wcd->normalCount);
+    } else if (m->wall) {
+        vec3f_set(m->wallNormal,
+                  m->wall->normal.x,
+                  m->wall->normal.y,
+                  m->wall->normal.z);
     }
 }

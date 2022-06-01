@@ -334,11 +334,24 @@ s32 perform_ground_step(struct MarioState *m) {
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
 
     for (i = 0; i < 4; i++) {
-        intendedPos[0] = m->pos[0] + m->floor->normal.y * (m->vel[0] / 4.0f);
-        intendedPos[2] = m->pos[2] + m->floor->normal.y * (m->vel[2] / 4.0f);
-        intendedPos[1] = m->pos[1];
+        Vec3f step = {
+            m->floor->normal.y * (m->vel[0] / 4.0f),
+            0,
+            m->floor->normal.y * (m->vel[2] / 4.0f),
+        };
 
+        intendedPos[0] = m->pos[0] + step[0];
+        intendedPos[1] = m->pos[1];
+        intendedPos[2] = m->pos[2] + step[2];
+
+        vec3f_normalize(step);
+
+        vec3f_copy(gFindWallDirection, step);
+
+        gFindWallDirectionActive = true;
         stepResult = perform_ground_quarter_step(m, intendedPos);
+        gFindWallDirectionActive = false;
+
         if (stepResult == GROUND_STEP_LEFT_GROUND || stepResult == GROUND_STEP_HIT_WALL_STOP_QSTEPS) {
             break;
         }
@@ -665,11 +678,22 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
     m->wall = NULL;
 
     for (i = 0; i < 4; i++) {
-        intendedPos[0] = m->pos[0] + m->vel[0] / 4.0f;
-        intendedPos[1] = m->pos[1] + m->vel[1] / 4.0f;
-        intendedPos[2] = m->pos[2] + m->vel[2] / 4.0f;
+        Vec3f step = {
+            m->vel[0] / 4.0f,
+            m->vel[1] / 4.0f,
+            m->vel[2] / 4.0f,
+        };
 
+        intendedPos[0] = m->pos[0] + step[0];
+        intendedPos[1] = m->pos[1] + step[1];
+        intendedPos[2] = m->pos[2] + step[2];
+
+        vec3f_normalize(step);
+        vec3f_copy(gFindWallDirection, step);
+
+        gFindWallDirectionActive = true;
         quarterStepResult = perform_air_quarter_step(m, intendedPos, stepArg);
+        gFindWallDirectionActive = false;
 
         //! On one qf, hit OOB/ceil/wall to store the 2 return value, and continue
         // getting 0s until your last qf. Graze a wall on your last qf, and it will
