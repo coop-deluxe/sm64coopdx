@@ -699,6 +699,7 @@
 --- @field public vel Vec3f
 --- @field public wall Surface
 --- @field public wallKickTimer integer
+--- @field public wallNormal Vec3f
 --- @field public wasNetworkVisible integer
 --- @field public waterLevel integer
 
@@ -1678,6 +1679,8 @@
 --- @field public posYaw integer
 
 --- @class WallCollisionData
+--- @field public normalAddition Vec3f
+--- @field public normalCount integer
 --- @field public numWalls integer
 --- @field public offsetY number
 --- @field public radius number

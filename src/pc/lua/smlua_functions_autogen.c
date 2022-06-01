@@ -8259,6 +8259,19 @@ int smlua_func_mario_set_forward_vel(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mario_update_wall(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    struct WallCollisionData* wcd = (struct WallCollisionData*)smlua_to_cobject(L, 2, LOT_WALLCOLLISIONDATA);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+
+    mario_update_wall(m, wcd);
+
+    return 1;
+}
+
 int smlua_func_play_mario_action_sound(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
@@ -17283,6 +17296,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mario_get_terrain_sound_addend", smlua_func_mario_get_terrain_sound_addend);
     smlua_bind_function(L, "mario_set_bubbled", smlua_func_mario_set_bubbled);
     smlua_bind_function(L, "mario_set_forward_vel", smlua_func_mario_set_forward_vel);
+    smlua_bind_function(L, "mario_update_wall", smlua_func_mario_update_wall);
     smlua_bind_function(L, "play_mario_action_sound", smlua_func_play_mario_action_sound);
     smlua_bind_function(L, "play_mario_heavy_landing_sound", smlua_func_play_mario_heavy_landing_sound);
     smlua_bind_function(L, "play_mario_heavy_landing_sound_once", smlua_func_play_mario_heavy_landing_sound_once);

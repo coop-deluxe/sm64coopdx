@@ -999,6 +999,7 @@
 | vel | [Vec3f](structs.md#Vec3f) | read-only |
 | wall | [Surface](structs.md#Surface) |  |
 | wallKickTimer | `integer` |  |
+| wallNormal | [Vec3f](structs.md#Vec3f) | read-only |
 | wasNetworkVisible | `integer` |  |
 | waterLevel | `integer` |  |
 
@@ -2171,6 +2172,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| normalAddition | [Vec3f](structs.md#Vec3f) | read-only |
+| normalCount | `integer` |  |
 | numWalls | `integer` |  |
 | offsetY | `number` |  |
 | radius | `number` |  |

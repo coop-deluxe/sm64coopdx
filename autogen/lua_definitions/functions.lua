@@ -4114,6 +4114,13 @@ function mario_set_forward_vel(m, speed)
 end
 
 --- @param m MarioState
+--- @param wcd WallCollisionData
+--- @return nil
+function mario_update_wall(m, wcd)
+    -- ...
+end
+
+--- @param m MarioState
 --- @param soundBits integer
 --- @param waveParticleType integer
 --- @return nil

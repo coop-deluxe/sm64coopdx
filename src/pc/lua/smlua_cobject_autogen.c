@@ -738,7 +738,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 74
+#define LUA_MARIO_STATE_FIELD_COUNT 75
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -813,6 +813,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "vel",                      LVT_COBJECT,   offsetof(struct MarioState, vel),                      true,  LOT_VEC3F             },
     { "wall",                     LVT_COBJECT_P, offsetof(struct MarioState, wall),                     false, LOT_SURFACE           },
     { "wallKickTimer",            LVT_U8,        offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE              },
+    { "wallNormal",               LVT_COBJECT,   offsetof(struct MarioState, wallNormal),               true,  LOT_VEC3F             },
     { "wasNetworkVisible",        LVT_U8,        offsetof(struct MarioState, wasNetworkVisible),        false, LOT_NONE              },
     { "waterLevel",               LVT_S16,       offsetof(struct MarioState, waterLevel),               false, LOT_NONE              },
 };
@@ -1855,14 +1856,16 @@ static struct LuaObjectField sTransitionInfoFields[LUA_TRANSITION_INFO_FIELD_COU
     { "posYaw",     LVT_S16,     offsetof(struct TransitionInfo, posYaw),     false, LOT_NONE  },
 };
 
-#define LUA_WALL_COLLISION_DATA_FIELD_COUNT 4
+#define LUA_WALL_COLLISION_DATA_FIELD_COUNT 6
 static struct LuaObjectField sWallCollisionDataFields[LUA_WALL_COLLISION_DATA_FIELD_COUNT] = {
-    { "numWalls", LVT_S16, offsetof(struct WallCollisionData, numWalls), false, LOT_NONE },
-    { "offsetY",  LVT_F32, offsetof(struct WallCollisionData, offsetY),  false, LOT_NONE },
-    { "radius",   LVT_F32, offsetof(struct WallCollisionData, radius),   false, LOT_NONE },
-    { "unused",   LVT_S16, offsetof(struct WallCollisionData, unused),   false, LOT_NONE },
-//  { "walls",    LOT_???, offsetof(struct WallCollisionData, walls),    false, LOT_???  }, <--- UNIMPLEMENTED
-//  { "z",        LVT_???, offsetof(struct WallCollisionData, z),        false, LOT_???  }, <--- UNIMPLEMENTED
+    { "normalAddition", LVT_COBJECT, offsetof(struct WallCollisionData, normalAddition), true,  LOT_VEC3F },
+    { "normalCount",    LVT_U8,      offsetof(struct WallCollisionData, normalCount),    false, LOT_NONE  },
+    { "numWalls",       LVT_S16,     offsetof(struct WallCollisionData, numWalls),       false, LOT_NONE  },
+    { "offsetY",        LVT_F32,     offsetof(struct WallCollisionData, offsetY),        false, LOT_NONE  },
+    { "radius",         LVT_F32,     offsetof(struct WallCollisionData, radius),         false, LOT_NONE  },
+    { "unused",         LVT_S16,     offsetof(struct WallCollisionData, unused),         false, LOT_NONE  },
+//  { "walls",          LOT_???,     offsetof(struct WallCollisionData, walls),          false, LOT_???   }, <--- UNIMPLEMENTED
+//  { "z",              LVT_???,     offsetof(struct WallCollisionData, z),              false, LOT_???   }, <--- UNIMPLEMENTED
 };
 
 #define LUA_WARP_NODE_FIELD_COUNT 4
