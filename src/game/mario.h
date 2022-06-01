@@ -60,5 +60,6 @@ void init_single_mario(struct MarioState* m);
 void init_mario(void);
 void init_mario_from_save_file(void);
 void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);
+void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);
 
 #endif // MARIO_H

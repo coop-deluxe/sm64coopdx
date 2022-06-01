@@ -387,6 +387,7 @@ struct MarioState
     /*????*/ f32 curAnimOffset;
     /*????*/ u8 knockbackTimer;
     /*????*/ u8 specialTripleJump;
+    /*????*/ Vec3f wallNormal;
 };
 
 struct TextureInfo

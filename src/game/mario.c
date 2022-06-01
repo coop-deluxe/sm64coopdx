@@ -2265,3 +2265,25 @@ void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear) {
         m->particleFlags |= flags;
     }
 }
+
+void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
+    if (!m || !wcd) { return; }
+
+    m->wall = (wcd->numWalls > 0)
+        ? wcd->walls[wcd->numWalls - 1]
+        : NULL;
+
+    vec3f_set(m->wallNormal, 0, 0, 0);
+    for (u8 i = 0; i < wcd->numWalls; i++) {
+        if (!gServerSettings.fixCollisionBugs) {
+            i = (wcd->numWalls - 1);
+        }
+        struct Surface* wall = wcd->walls[i];
+        Vec3f normal = { wall->normal.x, wall->normal.y, wall->normal.z };
+        vec3f_add(m->wallNormal, normal);
+    }
+
+    if (m->wall) {
+        vec3f_normalize(m->wallNormal);
+    }
+}

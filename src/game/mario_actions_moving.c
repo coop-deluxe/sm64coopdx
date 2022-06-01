@@ -695,7 +695,7 @@ void push_or_sidle_wall(struct MarioState *m, Vec3f startPos) {
     }
 
     if (m->wall != NULL) {
-        wallAngle = atan2s(m->wall->normal.z, m->wall->normal.x);
+        wallAngle = atan2s(m->wallNormal[2], m->wallNormal[0]);
         dWallAngle = wallAngle - m->faceAngle[1];
     }
 
@@ -1407,7 +1407,7 @@ void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32
 #endif
                 slide_bonk(m, ACT_GROUND_BONK, endAction);
             } else if (m->wall != NULL) {
-                s16 wallAngle = atan2s(m->wall->normal.z, m->wall->normal.x);
+                s16 wallAngle = atan2s(m->wallNormal[2], m->wallNormal[0]);
                 f32 slideSpeed = sqrtf(m->slideVelX * m->slideVelX + m->slideVelZ * m->slideVelZ);
 
                 if ((slideSpeed *= 0.9) < 4.0f) {
