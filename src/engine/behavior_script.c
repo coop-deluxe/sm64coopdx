@@ -3,6 +3,7 @@
 #include "sm64.h"
 #include "behavior_data.h"
 #include "behavior_script.h"
+#include "engine/level_script.h"
 #include "game/area.h"
 #include "game/behavior_actions.h"
 #include "game/game_init.h"
@@ -14,7 +15,10 @@
 #include "graph_node.h"
 #include "surface_collision.h"
 #include "pc/network/network.h"
+#include "pc/mods/mods.h"
+#include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/smlua_utils.h"
 #include "game/rng_position.h"
 
 // Macros for retrieving arguments from behavior scripts.
@@ -892,6 +896,295 @@ static s32 bhv_cmd_id(void) {
     return BHV_PROC_CONTINUE;
 }
 
+// Command 0x3A: Jumps to a new behavior command and stores the return address in the object's behavior stack.
+// Usage: CALL_EXT(addr)
+static s32 bhv_cmd_call_ext(void) {
+    gCurBhvCommand++;
+
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
+    if (modIndex == -1) {
+        LOG_ERROR("Could not find behavior script mod index.");
+        return BHV_PROC_CONTINUE;
+    }
+
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(0));
+
+    gSmLuaConvertSuccess = true;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
+
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_integer_mod_variable(behStr);
+    }
+
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to call address, could not find behavior '%s'", behStr);
+        return BHV_PROC_CONTINUE;
+    }
+
+    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the next bhv command in the stack.
+    const BehaviorScript *jumpAddress = (BehaviorScript *)get_behavior_from_id(behId);
+    gCurBhvCommand = jumpAddress; // Jump to the new address.
+
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x3B: Jumps to a new behavior script without saving anything.
+// Usage: GOTO_EXT(addr)
+static s32 bhv_cmd_goto_ext(void) {
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
+    if (modIndex == -1) {
+        LOG_ERROR("Could not find behavior script mod index.");
+        return BHV_PROC_CONTINUE;
+    }
+
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(0));
+
+    gSmLuaConvertSuccess = true;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
+
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_integer_mod_variable(behStr);
+    }
+
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to jump to address, could not find behavior '%s'", behStr);
+        return BHV_PROC_CONTINUE;
+    }
+
+    gCurBhvCommand = (BehaviorScript *)get_behavior_from_id(behId); // Jump directly to address
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x3C: Executes a lua function. Function must not take or return any values.
+// Usage: CALL_NATIVE_EXT(func)
+static s32 bhv_cmd_call_native_ext(void) {
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
+    if (modIndex == -1) {
+        LOG_ERROR("Could not find behavior script mod index.");
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
+
+    const char *funcStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
+
+    gSmLuaConvertSuccess = true;
+    LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);
+
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        funcRef = smlua_get_any_function_mod_variable(funcStr);
+    }
+
+    if (!gSmLuaConvertSuccess || funcRef == 0) {
+        LOG_LUA("Failed to call lua function, could not find lua function '%s'", funcStr);
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
+    
+    // Get our mod.
+    struct Mod *mod = gActiveMods.entries[modIndex];
+
+    // Push the callback onto the stack
+    lua_rawgeti(gLuaState, LUA_REGISTRYINDEX, funcRef);
+
+    // Push object
+    smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject);
+
+    // Call the callback
+    if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod)) {
+        LOG_LUA("Failed to call the function callback: '%s'", funcStr);
+    }
+
+    gCurBhvCommand += 2;
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x3D: Spawns a child object with the specified model and behavior.
+// Usage: SPAWN_CHILD_EXT(modelID, behavior)
+static s32 bhv_cmd_spawn_child_ext(void) {
+    u32 model = BHV_CMD_GET_U32(1);
+
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
+    if (modIndex == -1) {
+        LOG_ERROR("Could not find behavior script mod index.");
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(2));
+
+    gSmLuaConvertSuccess = true;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
+
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_integer_mod_variable(behStr);
+    }
+
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to spawn custom child, could not find behavior '%s'", behStr);
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+    
+    BehaviorScript *childBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
+    if (childBhvScript == NULL) {
+        LOG_LUA("Failed to spawn custom child, could not get behavior '%s' from the id %u.", behStr, behId);
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+
+    struct Object *child = spawn_object_at_origin(gCurrentObject, 0, model, childBhvScript);
+    if (child != NULL) {
+        obj_copy_pos_and_angle(child, gCurrentObject);
+    }
+
+    gCurBhvCommand += 3;
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x3E: Spawns a child object with the specified model and behavior, plus a behavior param.
+// Usage: SPAWN_CHILD_WITH_PARAM_EXT(bhvParam, modelID, behavior)
+static s32 bhv_cmd_spawn_child_with_param_ext(void) {
+    u32 bhvParam = BHV_CMD_GET_2ND_S16(0);
+    u32 modelID = BHV_CMD_GET_U32(1);
+
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
+    if (modIndex == -1) {
+        LOG_ERROR("Could not find behavior script mod index.");
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(2));
+
+    gSmLuaConvertSuccess = true;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
+
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_integer_mod_variable(behStr);
+    }
+
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to spawn custom child with params, could not find behavior '%s'", behStr);
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+    
+    BehaviorScript *childBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
+    if (childBhvScript == NULL) {
+        LOG_LUA("Failed to spawn custom child with params, could not get behavior '%s' from the id %u.", behStr, behId);
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+
+    struct Object *child = spawn_object_at_origin(gCurrentObject, 0, modelID, childBhvScript);
+    if (child != NULL) {
+        obj_copy_pos_and_angle(child, gCurrentObject);
+        child->oBehParams2ndByte = bhvParam;
+    }
+
+    gCurBhvCommand += 3;
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x3F: Spawns a new object with the specified model and behavior.
+// Usage: SPAWN_OBJ_EXT(modelID, behavior)
+static s32 bhv_cmd_spawn_obj_ext(void) {
+    u32 modelID = BHV_CMD_GET_U32(1);
+
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
+    if (modIndex == -1) {
+        LOG_ERROR("Could not find behavior script mod index.");
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(2));
+
+    gSmLuaConvertSuccess = true;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
+
+    if (!gSmLuaConvertSuccess) {
+        gSmLuaConvertSuccess = true;
+        behId = smlua_get_any_integer_mod_variable(behStr);
+    }
+
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to spawn custom object, could not find behavior '%s'", behStr);
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+    
+    BehaviorScript *objBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
+    if (objBhvScript == NULL) {
+        LOG_LUA("Failed to spawn custom object, could not get behavior '%s' from the id %u.", behStr, behId);
+        gCurBhvCommand += 3;
+        return BHV_PROC_CONTINUE;
+    }
+
+    struct Object *object = spawn_object_at_origin(gCurrentObject, 0, modelID, objBhvScript);
+    if (object != NULL) {
+        obj_copy_pos_and_angle(object, gCurrentObject);
+        gCurrentObject->prevObj = object;
+    }
+
+    gCurBhvCommand += 3;
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x40: Loads the animations for the object. <field> is always set to oAnimations.
+// Usage: LOAD_ANIMATIONS_EXT(field, anims)
+static s32 bhv_cmd_load_animations_ext(void) {
+    u8 field = BHV_CMD_GET_2ND_U8(0);
+    
+    printf("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
+    
+    //BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    //const char *animStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
+
+    //cur_obj_set_vptr(field, BHV_CMD_GET_VPTR(1));
+
+    gCurBhvCommand += 2;
+    return BHV_PROC_CONTINUE;
+}
+
+// Command 0x41: Loads collision data for the object.
+// Usage: LOAD_COLLISION_DATA_EXT(collisionData)
+static s32 bhv_cmd_load_collision_data_ext(void) {
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+
+    const char *collisionDataStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
+    
+    Collision *collisionData = dynos_collision_get(collisionDataStr);
+    if (collisionData == NULL) {
+        LOG_ERROR("Failed to load custom collision, could not get collision from name '%s'", collisionDataStr);
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
+
+    gCurrentObject->collisionData = collisionData;
+
+    gCurBhvCommand += 2;
+    return BHV_PROC_CONTINUE;
+}
+
 void stub_behavior_script_2(void) {
 }
 
@@ -954,7 +1247,15 @@ static BhvCommandProc BehaviorCmdTable[] = {
     bhv_cmd_set_int_unused, //36
     bhv_cmd_spawn_water_droplet, //37
     bhv_cmd_cylboard, //38
-    bhv_cmd_id //39
+    bhv_cmd_id, //39
+    bhv_cmd_call_ext, //3A
+    bhv_cmd_goto_ext, //3B
+    bhv_cmd_call_native_ext, //3C
+    bhv_cmd_spawn_child_ext, //3D
+    bhv_cmd_spawn_child_with_param_ext, //3E
+    bhv_cmd_spawn_obj_ext, //3F
+    bhv_cmd_load_animations_ext, //40
+    bhv_cmd_load_collision_data_ext, //41
 };
 
 // Execute the behavior script of the current object, process the object flags, and other miscellaneous code for updating objects.
@@ -1000,7 +1301,7 @@ cur_obj_update_begin:;
 
     s16 objFlags = gCurrentObject->oFlags;
     f32 distanceFromMario;
-    BhvCommandProc bhvCmdProc;
+    BhvCommandProc bhvCmdProc = NULL;
     s32 bhvProcResult;
 
     // Calculate the distance from the object to Mario.

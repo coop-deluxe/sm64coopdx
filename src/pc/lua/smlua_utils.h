@@ -37,11 +37,14 @@ void smlua_push_lnt(struct LSTNetworkType* lnt);
 
 lua_Integer smlua_get_integer_field(int index, char* name);
 lua_Number smlua_get_number_field(int index, char* name);
+LuaFunction smlua_get_function_field(int index, char *name);
 
 char* smlua_lnt_to_str(struct LSTNetworkType* lnt);
 
-s64 smlua_get_mod_variable(u16 modIndex, const char* variable) ;
-s64 smlua_get_any_mod_variable(const char* variable) ;
+s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable);
+s64 smlua_get_any_integer_mod_variable(const char* variable);
+LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable);
+LuaFunction smlua_get_any_function_mod_variable(const char *variable);
 
 void smlua_logline(void);
 void smlua_dump_stack(void);

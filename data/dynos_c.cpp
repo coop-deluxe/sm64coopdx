@@ -160,6 +160,24 @@ void dynos_level_load_background(void *ptr) {
     DynOS_Lvl_LoadBackground(ptr);
 }
 
+// -- Behaviors -- //
+
+void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName) {
+    DynOS_Bhv_Activate(modIndex, filePath, behaviorName);
+}
+
+s32 dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript) {
+    return DynOS_Bhv_GetActiveModIndex(bhvScript);
+}
+
+const char *dynos_behavior_get_token(BehaviorScript *bhvScript, u32 index) {
+    return DynOS_Bhv_GetToken(bhvScript, index);
+}
+
+void dynos_behavior_hook_all_custom_behaviors(void) {
+    DynOS_Bhv_HookAllCustomBehaviors();
+}
+
 // -- other -- //
 void dynos_mod_shutdown(void) {
     DynOS_Mod_Shutdown();

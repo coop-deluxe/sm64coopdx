@@ -1494,8 +1494,8 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         return (LevelScript)builtinGeo;
     }
 
-    // Built-in Lvl Cols
-    auto builtinCol = DynOS_Builtin_LvlCol_GetFromName(_Arg.begin());
+    // Built-in Cols
+    auto builtinCol = DynOS_Builtin_Col_GetFromName(_Arg.begin());
     if (builtinCol != NULL) {
         return (LevelScript)builtinCol;
     }

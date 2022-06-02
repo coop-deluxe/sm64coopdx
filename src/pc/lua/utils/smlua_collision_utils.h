@@ -32,6 +32,7 @@ struct GlobalObjectCollisionData {
     Collision* ddd_seg7_collision_submarine;
     Collision* door_seg3_collision_0301CE78;
     Collision* dorrie_seg6_collision_0600F644;
+    Collision* dorrie_seg6_collision_0600FBB8;
     Collision* exclamation_box_outline_seg8_collision_08025F78;
     Collision* hmc_seg7_collision_controllable_platform;
     Collision* hmc_seg7_collision_controllable_platform_sub;
@@ -88,6 +89,7 @@ struct GlobalObjectCollisionData {
     Collision* ttm_seg7_collision_pitoune_2;
     Collision* ttm_seg7_collision_podium_warp;
     Collision* ttm_seg7_collision_ukiki_cage;
+    Collision* unknown_seg8_collision_080262F8;
     Collision* warp_pipe_seg3_collision_03009AC8;
     Collision* wdw_seg7_collision_arrow_lift;
     Collision* wdw_seg7_collision_express_elevator_platform;

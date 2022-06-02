@@ -236,6 +236,7 @@ void network_receive_join(struct Packet* p) {
     mods_activate(&gRemoteMods);
     djui_panel_modlist_create(NULL);
     smlua_init();
+    dynos_behavior_hook_all_custom_behaviors();
 
     network_send_network_players_request();
     network_send_lua_sync_table_request();

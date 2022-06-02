@@ -3,7 +3,11 @@
 #ifdef __cplusplus
 
 #include "dynos.h"
+
+#include <string>
+
 extern "C" {
+#include "engine/behavior_script.h"
 #include "engine/math_util.h"
 #include "src/game/moving_texture.h"
 }
@@ -42,6 +46,7 @@ enum {
     DATA_TYPE_AMBIENT_T,
     DATA_TYPE_TEXTURE_LIST,
     DATA_TYPE_TEXTURE_RAW,
+    DATA_TYPE_BEHAVIOR_SCRIPT,
     DATA_TYPE_UNUSED,
 };
 
@@ -190,7 +195,7 @@ private:
 // A fixed-size string that doesn't require heap memory allocation
 //
 
-#define STRING_SIZE 127
+#define STRING_SIZE 256
 class String {
 public:
     inline String() : mCount(0) {
@@ -418,6 +423,7 @@ struct GfxData : NoCopy {
     DataNodes<Gfx> mDisplayLists;
     DataNodes<GeoLayout> mGeoLayouts;
     DataNodes<Collision> mCollisions;
+    DataNodes<BehaviorScript> mBehaviorScripts;
     DataNodes<LevelScript> mLevelScripts;
     DataNodes<MacroObject> mMacroObjects;
     DataNodes<Trajectory> mTrajectories;
@@ -548,13 +554,6 @@ void Delete(T *& aPtr) {
     aPtr = NULL;
 }
 
-template <typename T>
-T *CopyBytes(const T *aPtr, u64 aSize) {
-    T *_Ptr = (T *) calloc(1, aSize);
-    memcpy(_Ptr, aPtr, aSize);
-    return _Ptr;
-}
-
 template <typename T = void>
 Array<String> Split(const char *aBuffer, const String &aDelimiters, const String &aEndCharacters = {}, bool aHandleDoubleQuotedStrings = false) {
     Array<String> _Tokens;
@@ -586,16 +585,33 @@ Array<String> Split(const char *aBuffer, const String &aDelimiters, const String
 }
 
 template <typename T>
+T *CopyBytes(const T *aPtr, u64 aSize) {
+    T *_Ptr = (T *) calloc(1, aSize);
+    memcpy(_Ptr, aPtr, aSize);
+    return _Ptr;
+}
+
+template <typename T>
 T ReadBytes(FILE* aFile) {
     T _Item = { 0 };
-    fread(&_Item, sizeof(T), 1, aFile);
+    
+    // If we're at end of file. Just return the default.
+    if (feof(aFile)) { return _Item; }
+    
+    size_t nread = fread(&_Item, sizeof(T), 1, aFile);
+    // If we failed to read bytes. Print the error.
+    //if (nread != sizeof(T)) { perror("The following error occured when reading bytes"); }
     return _Item;
 }
 
 template <typename T>
 void WriteBytes(FILE* aFile, const T& aItem) {
-    fwrite(&aItem, sizeof(T), 1, aFile);
+    size_t nwrote = fwrite(&aItem, sizeof(T), 1, aFile);
+    // If we failed to write bytes. Print the error.
+    //if (nwrote != sizeof(T)) { perror("The following error occured when writing bytes"); }
 }
+
+void SkipBytes(FILE *aFile, size_t amount);
 
 template <typename... Args>
 void PrintNoNewLine(const char *aFmt, Args... aArgs) {
@@ -734,14 +750,17 @@ const char*      DynOS_Builtin_Actor_GetNameFromIndex(s32 aIndex);
 s32              DynOS_Builtin_Actor_GetCount();
 const GeoLayout* DynOS_Builtin_LvlGeo_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_LvlGeo_GetFromData(const GeoLayout* aData);
-const Collision* DynOS_Builtin_LvlCol_GetFromName(const char* aDataName);
-const char*      DynOS_Builtin_LvlCol_GetFromData(const Collision* aData);
+const Collision* DynOS_Builtin_Col_GetFromName(const char* aDataName);
+const char*      DynOS_Builtin_Col_GetFromData(const Collision* aData);
+const Animation *DynOS_Builtin_Anim_GetFromName(const char *aDataName);
+const char *     DynOS_Builtin_Anim_GetFromData(const Animation *aData);
 const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
+const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
 s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
 
 //
@@ -806,6 +825,18 @@ Trajectory* DynOS_Lvl_GetTrajectory(const char* aName);
 void DynOS_Lvl_LoadBackground(void *aPtr);
 void* DynOS_Lvl_Override(void *aCmd);
 void DynOS_Lvl_ModShutdown();
+
+//
+// Bhv Manager
+//
+
+Array<Pair<const char *, GfxData *>> &DynOS_Bhv_GetArray();
+void DynOS_Bhv_Activate(s32 modIndex, const SysPath &aFilename, const char *aBehaviorName);
+GfxData *DynOS_Bhv_GetActiveGfx(BehaviorScript *bhvScript);
+s32 DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript);
+const char *DynOS_Bhv_GetToken(BehaviorScript *bhvScript, u32 index);
+void DynOS_Bhv_HookAllCustomBehaviors();
+void DynOS_Bhv_ModShutdown();
 
 //
 // Col Manager
@@ -920,6 +951,12 @@ DataNode<LevelScript>* DynOS_Lvl_Parse(GfxData* aGfxData, DataNode<LevelScript>*
 GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelName);
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found);
+
+DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, bool aDisplayPercent);
+GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehaviorName);
+void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder);
+s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found);
+s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *found);
 
 #endif
 #endif

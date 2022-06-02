@@ -121,6 +121,8 @@ bool network_init(enum NetworkType inNetworkType) {
 
         mods_activate(&gLocalMods);
         smlua_init();
+        
+        dynos_behavior_hook_all_custom_behaviors();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);
         extern u8* gOverrideEeprom;

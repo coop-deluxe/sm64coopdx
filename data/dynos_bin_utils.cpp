@@ -89,6 +89,10 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
             Delete(_Node->mData);
             Delete(_Node);
         }
+        for (auto& _Node : aGfxData->mBehaviorScripts) {
+            Delete(_Node->mData);
+            Delete(_Node);
+        }
         for (auto& _Node : aGfxData->mLevelScripts) {
             Delete(_Node->mData);
             Delete(_Node);

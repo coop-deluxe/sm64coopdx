@@ -71,7 +71,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
             return { _Node->mName, 0 };
         }
     }
-
+    
     // Collisions
     for (auto& _Node : aGfxData->mCollisions) {
         if (_Node->mData == aPtr) {
@@ -132,10 +132,16 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         return { builtinGeo, 0 };
     }
 
-    // Built-in Lvl Cols
-    auto builtinCol = DynOS_Builtin_LvlCol_GetFromData((const Collision*)aPtr);
+    // Built-in Cols
+    auto builtinCol = DynOS_Builtin_Col_GetFromData((const Collision*)aPtr);
     if (builtinCol != NULL) {
         return { builtinCol, 0 };
+    }
+    
+    // Built-in Animations
+    auto builtinAnim = DynOS_Builtin_Anim_GetFromData((const Animation *)aPtr);
+    if (builtinAnim != NULL) {
+        return { builtinAnim, 0 };
     }
 
     // Built-in Script Pointers
@@ -177,7 +183,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
-    PrintError("Unable to find pointer!");
+    PrintError("Unable to find pointer %x!", aPtr);
     return { "", 0 };
 }
 
@@ -320,6 +326,13 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
             return (void *) (_Node->mData + aPtrData);
         }
     }
+    
+    // Behavior scripts
+    for (auto &_Node : aGfxData->mBehaviorScripts) {
+        if (_Node->mName == aPtrName) {
+            return (void *) _Node->mData;
+        }
+    }
 
     // Macro objects
     for (auto &_Node : aGfxData->mMacroObjects) {
@@ -356,7 +369,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         }
     }
 
-    // Behaviors
+    // Lua Behaviors
     enum BehaviorId id = get_id_from_behavior_name(aPtrName.begin());
     if (id >= 0 && id < id_bhv_max_count) {
         return (void*)get_behavior_from_id(id);
@@ -374,10 +387,16 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
         return (void*)builtinGeo;
     }
 
-    // Built-in Lvl Cols
-    auto builtinCol = DynOS_Builtin_LvlCol_GetFromName(aPtrName.begin());
+    // Built-in Cols
+    auto builtinCol = DynOS_Builtin_Col_GetFromName(aPtrName.begin());
     if (builtinCol != NULL) {
         return (void*)builtinCol;
+    }
+    
+    // Built-in Animations
+    auto builtinAnim = DynOS_Builtin_Anim_GetFromName(aPtrName.begin());
+    if (builtinAnim != NULL) {
+        return (void *)builtinAnim;
     }
 
     // Built-in Script Pointers

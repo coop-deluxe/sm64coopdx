@@ -887,13 +887,11 @@ static void level_cmd_place_object_ext(void) {
     }
 
     gSmLuaConvertSuccess = true;
-    gSmLuaSuppressErrors = true;
-    enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
-    gSmLuaSuppressErrors = false;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
 
     if (!gSmLuaConvertSuccess) {
         gSmLuaConvertSuccess = true;
-        behId = smlua_get_any_mod_variable(behStr);
+        behId = smlua_get_any_integer_mod_variable(behStr);
     }
 
     if (!gSmLuaConvertSuccess) {
@@ -945,12 +943,10 @@ static void level_cmd_place_object_ext2(void) {
     }
 
     gSmLuaConvertSuccess = true;
-    gSmLuaSuppressErrors = true;
-    enum ModelExtendedId modelId = smlua_get_mod_variable(modIndex, modelStr);
-    gSmLuaSuppressErrors = false;
+    enum ModelExtendedId modelId = smlua_get_integer_mod_variable(modIndex, modelStr);
     if (!gSmLuaConvertSuccess) {
         gSmLuaConvertSuccess = true;
-        modelId = smlua_get_any_mod_variable(modelStr);
+        modelId = smlua_get_any_integer_mod_variable(modelStr);
     }
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Failed to place custom object, could not find model '%s'", modelStr);
@@ -959,12 +955,10 @@ static void level_cmd_place_object_ext2(void) {
     }
 
     gSmLuaConvertSuccess = true;
-    gSmLuaSuppressErrors = true;
-    enum BehaviorId behId = smlua_get_mod_variable(modIndex, behStr);
-    gSmLuaSuppressErrors = false;
+    enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
     if (!gSmLuaConvertSuccess) {
         gSmLuaConvertSuccess = true;
-        behId = smlua_get_any_mod_variable(behStr);
+        behId = smlua_get_any_integer_mod_variable(behStr);
     }
 
     if (!gSmLuaConvertSuccess) {

@@ -52,7 +52,7 @@ Collision* DynOS_Col_Get(const char* collisionName) {
     }
 
     // check builtin collisions
-    return (Collision*)DynOS_Builtin_LvlCol_GetFromName(collisionName);
+    return (Collision*)DynOS_Builtin_Col_GetFromName(collisionName);
 }
 
 void DynOS_Col_ModShutdown() {

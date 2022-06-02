@@ -99,6 +99,29 @@ static void mod_activate_lvl(struct Mod* mod, struct ModFile* file) {
     dynos_add_level(mod->index, file->cachedPath, lvlName);
 }
 
+static void mod_activate_bhv(struct Mod *mod, struct ModFile *file) {
+    // copy bhv name
+    char bhvName[64] = { 0 };
+    if (snprintf(bhvName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated bhv name");
+        return;
+    }
+
+    // remove '.bhv'
+    char *g = bhvName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to levels
+    LOG_INFO("Activating DynOS bhv: '%s', '%s'", file->cachedPath, bhvName);
+    dynos_add_behavior(mod->index, file->cachedPath, bhvName);
+}
+
 void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
@@ -112,6 +135,9 @@ void mod_activate(struct Mod* mod) {
         }
         if (str_ends_with(file->relativePath, ".lvl")) {
             mod_activate_lvl(mod, file);
+        }
+        if (str_ends_with(file->relativePath, ".bhv")) {
+            mod_activate_bhv(mod, file);
         }
         if (str_ends_with(file->relativePath, ".tex")) {
             mod_activate_tex(file);
@@ -272,6 +298,12 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
     {
         const char* fileTypes[] = { ".bin", ".col", NULL };
         if (!mod_load_files_dir(mod, fullPath, "actors", fileTypes)) { return false; }
+    }
+    
+    // deal with behaviors directory
+    {
+        const char* fileTypes[] = { ".bhv", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "data", fileTypes)) { return false; }
     }
 
     // deal with textures directory

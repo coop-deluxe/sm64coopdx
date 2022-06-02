@@ -6,6 +6,7 @@ typedef struct Animation* ObjectAnimPointer;
 struct GlobalObjectAnimations {
     ObjectAnimPointer* amp_seg8_anims_08004034;
     ObjectAnimPointer* birds_seg5_anims_050009E8;
+    ObjectAnimPointer* blargg_seg5_anims_0500616C;
     ObjectAnimPointer* blue_fish_seg3_anims_0301C2B0;
     ObjectAnimPointer* bobomb_seg8_anims_0802396C;
     ObjectAnimPointer* bookend_seg5_anims_05002540;
@@ -20,6 +21,7 @@ struct GlobalObjectAnimations {
     ObjectAnimPointer* chilly_chief_seg6_anims_06003994;
     ObjectAnimPointer* chuckya_seg8_anims_0800C070;
     ObjectAnimPointer* clam_shell_seg5_anims_05001744;
+    ObjectAnimPointer* cyan_fish_seg6_anims_0600E264;
     ObjectAnimPointer* door_seg3_anims_030156C0;
     ObjectAnimPointer* dorrie_seg6_anims_0600F638;
     ObjectAnimPointer* eyerok_seg5_anims_050116E4;
@@ -47,6 +49,7 @@ struct GlobalObjectAnimations {
     ObjectAnimPointer* snowman_seg5_anims_0500D118;
     ObjectAnimPointer* spindrift_seg5_anims_05002D68;
     ObjectAnimPointer* spiny_seg5_anims_05016EAC;
+    ObjectAnimPointer* spiny_egg_seg5_anims_050157E4;
     ObjectAnimPointer* sushi_seg5_anims_0500AE54;
     ObjectAnimPointer* swoop_seg6_anims_060070D0;
     ObjectAnimPointer* toad_seg6_anims_0600FB58;

@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include "include/behavior_table.h"
 
+#include "smlua.h"
+#include "pc/mods/mod.h"
+
 // forward declare
 struct Camera;
 
@@ -63,6 +66,8 @@ static const char* LuaHookedEventTypeName[] = {
 
 extern u32 gLuaMarioActionIndex;
 
+int hook_behavior(BehaviorScript *bhvScript, const char *bhvName);
+
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value);
 void smlua_call_event_hooks_bool_param_ret_bool(enum LuaHookedEventType hookType, bool value, bool* returnValue);
@@ -79,9 +84,11 @@ void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int mo
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
-const BehaviorScript* get_lua_behavior_from_id(enum BehaviorId id, bool returnOriginal);
+const BehaviorScript* get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal);
+bool is_behavior_hooked_from_lua(const BehaviorScript *behavior);
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before);
 
+int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod);
 bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
 

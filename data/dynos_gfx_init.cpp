@@ -19,6 +19,12 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
             DynOS_Actor_GeneratePack(_ActorPackFolder);
         }
+        
+        SysPath _BehaviorPackFolder = fstring("%s/%s/data", directory, dir->d_name);
+        if (fs_sys_dir_exists(_BehaviorPackFolder.c_str())) {
+            DynOS_Bhv_GeneratePack(_BehaviorPackFolder);
+        }
+        
         SysPath _TexturePackFolder = fstring("%s/%s", directory, dir->d_name);
         SysPath _TexturePackOutputFolder = fstring("%s/%s/textures", directory, dir->d_name);
         if (fs_sys_dir_exists(_TexturePackFolder.c_str())) {

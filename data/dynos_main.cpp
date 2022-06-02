@@ -78,6 +78,7 @@ void DynOS_Mod_Update() {
         DynOS_Actor_ModShutdown();
         DynOS_Col_ModShutdown();
         DynOS_Lvl_ModShutdown();
+        DynOS_Bhv_ModShutdown();
         DynOS_MovtexQC_ModShutdown();
         DynOS_Tex_ModShutdown();
     }

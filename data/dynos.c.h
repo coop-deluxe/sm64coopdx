@@ -4,6 +4,7 @@
 
 #include "dynos.h"
 #include "types.h"
+#include "engine/behavior_script.h"
 #include "src/game/moving_texture.h"
 
 void *dynos_swap_cmd(void *cmd);
@@ -53,6 +54,12 @@ void dynos_add_level(s32 modIndex, const char *filePath, const char* levelName);
 const char* dynos_level_get_token(u32 index);
 Trajectory* dynos_level_get_trajectory(const char* name);
 void dynos_level_load_background(void *ptr);
+
+// -- behaviors -- //
+void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName);
+s32 dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript);
+const char *dynos_behavior_get_token(BehaviorScript *bhvScript, u32 index);
+void dynos_behavior_hook_all_custom_behaviors(void);
 
 // -- other -- //
 void dynos_mod_shutdown(void);
