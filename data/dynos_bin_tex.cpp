@@ -344,13 +344,41 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
  // Generate //
 //////////////
 
+static bool is_level_number_png(SysPath& aPath) {
+    // normalize
+    String path = aPath.c_str();
+    char* p = path.begin();
+    while (*p != '\0') {
+        if (*p == '\\') {
+            *p = '/';
+        }
+        break;
+    }
+    p = path.begin();
+
+    // compare 'levels/'
+    s16 levelsLength = strlen("levels/");
+    if (strncmp(p, "levels/", levelsLength)) {
+        return false;
+    }
+
+    // skip past level name
+    p += levelsLength;
+    while (*p != '\0') {
+        if (*p == '/') { break; }
+        p++;
+    }
+    if (*p != '/') { return false; }
+    p++;
+
+    return (*p >= '0' && *p <= '9');
+}
+
 static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath &aOutputFolder, SysPath& aRelativePath, SysPath& aPrefix, GfxData *aGfxData, bool aAllowCustomTextures) {
     SysPath _DirPath = fstring("%s/%s", aPackFolder.c_str(), aRelativePath.c_str());
 
-     // skip generation if any .c files exist
-    if (FileTypeExists(_DirPath, ".c")) {
-        return;
-    }
+    // skip generation if any .c files exist, and it isn't levels/xxx/NUMBER
+    bool containsC = FileTypeExists(_DirPath, ".c");
 
     DIR *_PackDir = opendir(_DirPath.c_str());
     if (!_PackDir) { return; }
@@ -387,8 +415,12 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
             continue;
         }
 
-        // write the file
         SysPath _RelativePath = fstring("%s%s", aRelativePath.c_str(), _PackEnt->d_name);
+        if (containsC && !is_level_number_png(_RelativePath)) {
+            continue;
+        }
+
+        // write the file
         String _BaseName;
         const char* _OverrideName = DynOS_Builtin_Tex_GetNameFromFileName(_RelativePath.c_str());
         if (_OverrideName) {

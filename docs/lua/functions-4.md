@@ -2973,6 +2973,24 @@
 
 <br />
 
+## [cur_obj_set_home_once](#cur_obj_set_home_once)
+
+### Lua Example
+`cur_obj_set_home_once()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_set_home_once(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [cur_obj_set_hurtbox_radius_and_height](#cur_obj_set_hurtbox_radius_and_height)
 
 ### Lua Example

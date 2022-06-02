@@ -12872,6 +12872,16 @@ int smlua_func_cur_obj_set_hitbox_radius_and_height(lua_State* L) {
     return 1;
 }
 
+int smlua_func_cur_obj_set_home_once(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    extern void cur_obj_set_home_once(void);
+    cur_obj_set_home_once();
+
+    return 1;
+}
+
 int smlua_func_cur_obj_set_hurtbox_radius_and_height(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -17664,6 +17674,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_set_face_angle_to_move_angle", smlua_func_cur_obj_set_face_angle_to_move_angle);
     smlua_bind_function(L, "cur_obj_set_hitbox_and_die_if_attacked", smlua_func_cur_obj_set_hitbox_and_die_if_attacked);
     smlua_bind_function(L, "cur_obj_set_hitbox_radius_and_height", smlua_func_cur_obj_set_hitbox_radius_and_height);
+    smlua_bind_function(L, "cur_obj_set_home_once", smlua_func_cur_obj_set_home_once);
     smlua_bind_function(L, "cur_obj_set_hurtbox_radius_and_height", smlua_func_cur_obj_set_hurtbox_radius_and_height);
     smlua_bind_function(L, "cur_obj_set_pos_relative", smlua_func_cur_obj_set_pos_relative);
     smlua_bind_function(L, "cur_obj_set_pos_relative_to_parent", smlua_func_cur_obj_set_pos_relative_to_parent);

@@ -6332,6 +6332,11 @@ function cur_obj_set_hitbox_radius_and_height(radius, height)
     -- ...
 end
 
+--- @return nil
+function cur_obj_set_home_once()
+    -- ...
+end
+
 --- @param radius number
 --- @param height number
 --- @return nil

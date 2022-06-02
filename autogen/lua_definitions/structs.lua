@@ -167,17 +167,25 @@
 --- @field public UnagiTrajectory Pointer_Trajectory
 
 --- @class BehaviorValues
+--- @field public KingBobombFVel number
+--- @field public KingBobombHealth integer
+--- @field public KingBobombYawVel integer
+--- @field public KingWhompHealth integer
 --- @field public KoopaBobAgility number
 --- @field public KoopaCatchupAgility number
 --- @field public KoopaThiAgility number
+--- @field public MipsStar1Requirement integer
+--- @field public MipsStar2Requirement integer
 --- @field public RacingPenguinBigHeight number
 --- @field public RacingPenguinBigRadius number
 --- @field public RacingPenguinHeight number
 --- @field public RacingPenguinRadius number
+--- @field public ShowStarMilestones integer
 --- @field public ToadStar1Requirement integer
 --- @field public ToadStar2Requirement integer
 --- @field public ToadStar3Requirement integer
 --- @field public dialogs BehaviorDialogs
+--- @field public starsNeededForDialog StarsNeededForDialog
 --- @field public trajectories BehaviorTrajectories
 
 --- @class BullyCollisionData
@@ -1509,6 +1517,7 @@
 --- @field public platform Object
 --- @field public prevObj Object
 --- @field public respawnInfoType integer
+--- @field public setHome integer
 --- @field public unused1 integer
 --- @field public usingObj Object
 
@@ -1638,6 +1647,14 @@
 --- @field public UkikiCageStarPos Vec3f
 --- @field public UnagiStarPos Vec3f
 --- @field public WigglerStarPos Vec3f
+
+--- @class StarsNeededForDialog
+--- @field public dialog1 integer
+--- @field public dialog2 integer
+--- @field public dialog3 integer
+--- @field public dialog4 integer
+--- @field public dialog5 integer
+--- @field public dialog6 integer
 
 --- @class Struct802A272C
 --- @field public vecF Vec3f

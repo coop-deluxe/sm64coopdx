@@ -789,6 +789,7 @@ static s32 bhv_cmd_set_home(void) {
         gCurrentObject->oHomeX = gCurrentObject->oPosX;
         gCurrentObject->oHomeY = gCurrentObject->oPosY;
         gCurrentObject->oHomeZ = gCurrentObject->oPosZ;
+        gCurrentObject->setHome = TRUE;
     }
     gCurBhvCommand++;
     return BHV_PROC_CONTINUE;

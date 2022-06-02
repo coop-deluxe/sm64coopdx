@@ -56,7 +56,7 @@ void king_bobomb_act_0(void) {
         gSecondCameraFocus = o;
         cur_obj_init_animation_with_sound(5);
         cur_obj_set_pos_to_home();
-        o->oHealth = 3;
+        o->oHealth = gBehaviorValues.KingBobombHealth;
         if (should_start_or_continue_dialog(marioState, o) && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 500.0f, 100.0f)) {
             o->oSubAction++;
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
@@ -93,11 +93,11 @@ void king_bobomb_act_2(void) {
         } else
             cur_obj_init_animation_with_sound(11);
         if (o->oKingBobombUnk108 == 0) {
-            o->oForwardVel = 3.0f;
+            o->oForwardVel = gBehaviorValues.KingBobombFVel;
             struct MarioState* marioState = king_bobomb_nearest_mario_state();
             if (marioState != NULL) {
                 s32 angleToPlayer = obj_angle_to_object(o, marioState->marioObj);
-                cur_obj_rotate_yaw_toward(angleToPlayer, 0x100);
+                cur_obj_rotate_yaw_toward(angleToPlayer, gBehaviorValues.KingBobombYawVel);
             }
         } else {
             o->oForwardVel = 0.0f;

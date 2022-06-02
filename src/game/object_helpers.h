@@ -313,4 +313,6 @@ f32 cur_obj_lateral_dist_from_obj_to_home(struct Object* obj);
 void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 offsetY);
 #endif
 
+void cur_obj_set_home_once(void);
+
 #endif // OBJECT_HELPERS_H

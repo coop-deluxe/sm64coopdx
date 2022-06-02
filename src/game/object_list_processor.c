@@ -532,7 +532,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
                 // as it is the most frequently used by objects.
                 object->oBehParams2ndByte = ((spawnInfo->behaviorArg) >> 16) & 0xFF;
 
-                object->behavior = script;
+                object->behavior = smlua_override_behavior(script);
                 object->unused1 = 0;
 
                 // Record death/collection in the SpawnInfo

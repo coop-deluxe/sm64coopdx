@@ -57,8 +57,6 @@ static s8 D_8032CBE4 = 0;
 static s8 D_8032CBE8 = 0;
 static s8 D_8032CBEC[7] = { 2, 3, 2, 1, 2, 3, 2 };
 
-static u8 sStarsNeededForDialog[] = { 1, 3, 8, 30, 50, 70 };
-
 static BehaviorScript* localDialogNPCBehavior = NULL;
 
 /**
@@ -247,8 +245,19 @@ s32 get_star_collection_dialog(struct MarioState *m) {
         return dialogID;
     }
 
-    for (s32 i = 0; i < ARRAY_COUNT(sStarsNeededForDialog); i++) {
-        s32 numStarsRequired = sStarsNeededForDialog[i];
+    if (!gBehaviorValues.ShowStarMilestones) { return 0; }
+
+    for (s32 i = 0; i < STARS_NEEDED_FOR_DIALOG_COUNT; i++) {
+        s32 numStarsRequired = 999;
+        switch (i) {
+            case 0: numStarsRequired = gBehaviorValues.starsNeededForDialog.dialog1; break;
+            case 1: numStarsRequired = gBehaviorValues.starsNeededForDialog.dialog2; break;
+            case 2: numStarsRequired = gBehaviorValues.starsNeededForDialog.dialog3; break;
+            case 3: numStarsRequired = gBehaviorValues.starsNeededForDialog.dialog4; break;
+            case 4: numStarsRequired = gBehaviorValues.starsNeededForDialog.dialog5; break;
+            case 5: numStarsRequired = gBehaviorValues.starsNeededForDialog.dialog6; break;
+        }
+
         if (m->prevNumStarsForDialog < numStarsRequired && m->numStars >= numStarsRequired) {
             dialogID = i + gBehaviorValues.dialogs.StarCollectionBaseDialog;
             break;

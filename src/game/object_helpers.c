@@ -27,6 +27,7 @@
 #include "spawn_object.h"
 #include "spawn_sound.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua_hooks.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
 struct Object* gContinueDialogFunctionObject = NULL;
@@ -117,7 +118,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 }
             }
 #else // gDebugInfo accesses were removed in all non-JP versions.
-            if (objectOpacity == 0 && segmented_to_virtual(bhvBowser) == objectGraphNode->behavior) {
+            if (objectOpacity == 0 && segmented_to_virtual(smlua_override_behavior(bhvBowser)) == objectGraphNode->behavior) {
                 objectGraphNode->oAnimState = 2;
             }
             // the debug info check was removed in US. so we need to
@@ -982,6 +983,7 @@ struct Object* cur_obj_find_nearest_pole(void) {
 }
 
 struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist) {
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
     struct Object *closestObj = NULL;
     struct Object *obj;
@@ -1074,6 +1076,7 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior) {
 }
 
 struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
     struct ObjectNode *listHead = &gObjectLists[get_object_list_from_behavior(behaviorAddr)];
     struct ObjectNode *obj = listHead->next;
@@ -1269,7 +1272,7 @@ void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
 }
 
 void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction) {
-    if (o->behavior == segmented_to_virtual(bhvBowser)) {
+    if (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvBowser))) {
         // Interestingly, when bowser is thrown, he is offset slightly to
         // Mario's right
         cur_obj_set_pos_relative_to_parent(-41.684f, 85.859f, 321.577f);
@@ -3180,3 +3183,11 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
     o->oPosY = objectPosY;
 }
 #endif
+
+void cur_obj_set_home_once(void) {
+    if (o->setHome) { return; }
+    o->setHome = TRUE;
+    o->oHomeX = o->oPosX;
+    o->oHomeY = o->oPosY;
+    o->oHomeZ = o->oPosZ;
+}

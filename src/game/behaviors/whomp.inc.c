@@ -32,7 +32,7 @@ void whomp_act_0(void) {
                 seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             } else {
                 cur_obj_set_pos_to_home();
-                o->oHealth = 3;
+                o->oHealth = gBehaviorValues.KingWhompHealth;
             }
         } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDialog, whomp_act_0_continue_dialog)) {
             o->oAction = 2;

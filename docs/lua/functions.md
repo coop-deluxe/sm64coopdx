@@ -1195,6 +1195,7 @@
    - [cur_obj_set_face_angle_to_move_angle](functions-4.md#cur_obj_set_face_angle_to_move_angle)
    - [cur_obj_set_hitbox_and_die_if_attacked](functions-4.md#cur_obj_set_hitbox_and_die_if_attacked)
    - [cur_obj_set_hitbox_radius_and_height](functions-4.md#cur_obj_set_hitbox_radius_and_height)
+   - [cur_obj_set_home_once](functions-4.md#cur_obj_set_home_once)
    - [cur_obj_set_hurtbox_radius_and_height](functions-4.md#cur_obj_set_hurtbox_radius_and_height)
    - [cur_obj_set_pos_relative](functions-4.md#cur_obj_set_pos_relative)
    - [cur_obj_set_pos_relative_to_parent](functions-4.md#cur_obj_set_pos_relative_to_parent)

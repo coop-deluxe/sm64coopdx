@@ -326,6 +326,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->areaTimer = 0;
     obj->areaTimerDuration = 0;
     obj->areaTimerRunOnceCallback = NULL;
+    obj->setHome = FALSE;
 
     obj->usingObj = NULL;
 

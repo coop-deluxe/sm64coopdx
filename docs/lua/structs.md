@@ -54,6 +54,7 @@
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
+- [StarsNeededForDialog](#StarsNeededForDialog)
 - [Struct802A272C](#Struct802A272C)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
@@ -285,17 +286,25 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| KingBobombFVel | `number` |  |
+| KingBobombHealth | `integer` |  |
+| KingBobombYawVel | `integer` |  |
+| KingWhompHealth | `integer` |  |
 | KoopaBobAgility | `number` |  |
 | KoopaCatchupAgility | `number` |  |
 | KoopaThiAgility | `number` |  |
+| MipsStar1Requirement | `integer` |  |
+| MipsStar2Requirement | `integer` |  |
 | RacingPenguinBigHeight | `number` |  |
 | RacingPenguinBigRadius | `number` |  |
 | RacingPenguinHeight | `number` |  |
 | RacingPenguinRadius | `number` |  |
+| ShowStarMilestones | `integer` |  |
 | ToadStar1Requirement | `integer` |  |
 | ToadStar2Requirement | `integer` |  |
 | ToadStar3Requirement | `integer` |  |
 | dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
+| starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
 | trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
 
 [:arrow_up_small:](#)
@@ -1117,6 +1126,7 @@
 | platform | [Object](structs.md#Object) |  |
 | prevObj | [Object](structs.md#Object) |  |
 | respawnInfoType | `integer` |  |
+| setHome | `integer` |  |
 | unused1 | `integer` |  |
 | usingObj | [Object](structs.md#Object) |  |
 
@@ -2072,6 +2082,21 @@
 | UkikiCageStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | UnagiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | WigglerStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [StarsNeededForDialog](#StarsNeededForDialog)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| dialog1 | `integer` |  |
+| dialog2 | `integer` |  |
+| dialog3 | `integer` |  |
+| dialog4 | `integer` |  |
+| dialog5 | `integer` |  |
+| dialog6 | `integer` |  |
 
 [:arrow_up_small:](#)
 

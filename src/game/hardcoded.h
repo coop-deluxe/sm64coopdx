@@ -178,6 +178,16 @@ struct BehaviorDialogs {
     enum DialogId YoshiDialog;
 };
 
+#define STARS_NEEDED_FOR_DIALOG_COUNT 6
+struct StarsNeededForDialog {
+    u16 dialog1;
+    u16 dialog2;
+    u16 dialog3;
+    u16 dialog4;
+    u16 dialog5;
+    u16 dialog6;
+};
+
 struct BehaviorValues {
     f32 KoopaBobAgility;
     f32 KoopaCatchupAgility;
@@ -189,6 +199,14 @@ struct BehaviorValues {
     u16 ToadStar1Requirement;
     u16 ToadStar2Requirement;
     u16 ToadStar3Requirement;
+    f32 KingBobombFVel;
+    s16 KingBobombYawVel;
+    s16 KingBobombHealth;
+    s16 KingWhompHealth;
+    s16 MipsStar1Requirement;
+    s16 MipsStar2Requirement;
+    u8  ShowStarMilestones;
+    struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;
 };

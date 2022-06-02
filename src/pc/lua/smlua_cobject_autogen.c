@@ -205,19 +205,27 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",           LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),           false, LOT_POINTER },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 12
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 20
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
+    { "KingBobombFVel",         LVT_F32,     offsetof(struct BehaviorValues, KingBobombFVel),         false, LOT_NONE                 },
+    { "KingBobombHealth",       LVT_S16,     offsetof(struct BehaviorValues, KingBobombHealth),       false, LOT_NONE                 },
+    { "KingBobombYawVel",       LVT_S16,     offsetof(struct BehaviorValues, KingBobombYawVel),       false, LOT_NONE                 },
+    { "KingWhompHealth",        LVT_S16,     offsetof(struct BehaviorValues, KingWhompHealth),        false, LOT_NONE                 },
     { "KoopaBobAgility",        LVT_F32,     offsetof(struct BehaviorValues, KoopaBobAgility),        false, LOT_NONE                 },
     { "KoopaCatchupAgility",    LVT_F32,     offsetof(struct BehaviorValues, KoopaCatchupAgility),    false, LOT_NONE                 },
     { "KoopaThiAgility",        LVT_F32,     offsetof(struct BehaviorValues, KoopaThiAgility),        false, LOT_NONE                 },
+    { "MipsStar1Requirement",   LVT_S16,     offsetof(struct BehaviorValues, MipsStar1Requirement),   false, LOT_NONE                 },
+    { "MipsStar2Requirement",   LVT_S16,     offsetof(struct BehaviorValues, MipsStar2Requirement),   false, LOT_NONE                 },
     { "RacingPenguinBigHeight", LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigHeight), false, LOT_NONE                 },
     { "RacingPenguinBigRadius", LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigRadius), false, LOT_NONE                 },
     { "RacingPenguinHeight",    LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinHeight),    false, LOT_NONE                 },
     { "RacingPenguinRadius",    LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinRadius),    false, LOT_NONE                 },
+    { "ShowStarMilestones",     LVT_U8,      offsetof(struct BehaviorValues, ShowStarMilestones),     false, LOT_NONE                 },
     { "ToadStar1Requirement",   LVT_U16,     offsetof(struct BehaviorValues, ToadStar1Requirement),   false, LOT_NONE                 },
     { "ToadStar2Requirement",   LVT_U16,     offsetof(struct BehaviorValues, ToadStar2Requirement),   false, LOT_NONE                 },
     { "ToadStar3Requirement",   LVT_U16,     offsetof(struct BehaviorValues, ToadStar3Requirement),   false, LOT_NONE                 },
     { "dialogs",                LVT_COBJECT, offsetof(struct BehaviorValues, dialogs),                true,  LOT_BEHAVIORDIALOGS      },
+    { "starsNeededForDialog",   LVT_COBJECT, offsetof(struct BehaviorValues, starsNeededForDialog),   true,  LOT_STARSNEEDEDFORDIALOG },
     { "trajectories",           LVT_COBJECT, offsetof(struct BehaviorValues, trajectories),           true,  LOT_BEHAVIORTRAJECTORIES },
 };
 
@@ -885,7 +893,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                 LVT_U8,     offsetof(struct NetworkPlayer, type),                 true,  LOT_NONE },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 754
+#define LUA_OBJECT_FIELD_COUNT 755
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -1650,6 +1658,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
 //  { "rawData",                                    LOT_???,                 offsetof(struct Object, rawData),                                    false, LOT_???          }, <--- UNIMPLEMENTED
 //  { "respawnInfo",                                LVT_???,                 offsetof(struct Object, respawnInfo),                                false, LOT_???          }, <--- UNIMPLEMENTED
     { "respawnInfoType",                            LVT_S16,                 offsetof(struct Object, respawnInfoType),                            false, LOT_NONE         },
+    { "setHome",                                    LVT_U8,                  offsetof(struct Object, setHome),                                    false, LOT_NONE         },
 //  { "transform",                                  LVT_???,                 offsetof(struct Object, transform),                                  false, LOT_???          }, <--- UNIMPLEMENTED
     { "unused1",                                    LVT_U32,                 offsetof(struct Object, unused1),                                    false, LOT_NONE         },
     { "usingObj",                                   LVT_COBJECT_P,           offsetof(struct Object, usingObj),                                   false, LOT_OBJECT       },
@@ -1807,6 +1816,16 @@ static struct LuaObjectField sStarPositionsFields[LUA_STAR_POSITIONS_FIELD_COUNT
     { "UkikiCageStarPos",     LVT_COBJECT, offsetof(struct StarPositions, UkikiCageStarPos),     true, LOT_VEC3F },
     { "UnagiStarPos",         LVT_COBJECT, offsetof(struct StarPositions, UnagiStarPos),         true, LOT_VEC3F },
     { "WigglerStarPos",       LVT_COBJECT, offsetof(struct StarPositions, WigglerStarPos),       true, LOT_VEC3F },
+};
+
+#define LUA_STARS_NEEDED_FOR_DIALOG_FIELD_COUNT 6
+static struct LuaObjectField sStarsNeededForDialogFields[LUA_STARS_NEEDED_FOR_DIALOG_FIELD_COUNT] = {
+    { "dialog1", LVT_U16, offsetof(struct StarsNeededForDialog, dialog1), false, LOT_NONE },
+    { "dialog2", LVT_U16, offsetof(struct StarsNeededForDialog, dialog2), false, LOT_NONE },
+    { "dialog3", LVT_U16, offsetof(struct StarsNeededForDialog, dialog3), false, LOT_NONE },
+    { "dialog4", LVT_U16, offsetof(struct StarsNeededForDialog, dialog4), false, LOT_NONE },
+    { "dialog5", LVT_U16, offsetof(struct StarsNeededForDialog, dialog5), false, LOT_NONE },
+    { "dialog6", LVT_U16, offsetof(struct StarsNeededForDialog, dialog6), false, LOT_NONE },
 };
 
 #define LUA_STRUCT802_A272_C_FIELD_COUNT 2
@@ -1984,6 +2003,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SPAWNINFO,                 sSpawnInfoFields,                 LUA_SPAWN_INFO_FIELD_COUNT                   },
     { LOT_SPAWNPARTICLESINFO,        sSpawnParticlesInfoFields,        LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT         },
     { LOT_STARPOSITIONS,             sStarPositionsFields,             LUA_STAR_POSITIONS_FIELD_COUNT               },
+    { LOT_STARSNEEDEDFORDIALOG,      sStarsNeededForDialogFields,      LUA_STARS_NEEDED_FOR_DIALOG_FIELD_COUNT      },
     { LOT_STRUCT802A272C,            sStruct802A272CFields,            LUA_STRUCT802_A272_C_FIELD_COUNT             },
     { LOT_SURFACE,                   sSurfaceFields,                   LUA_SURFACE_FIELD_COUNT                      },
     { LOT_TEXTUREINFO,               sTextureInfoFields,               LUA_TEXTURE_INFO_FIELD_COUNT                 },

@@ -480,7 +480,7 @@ u32 mario_check_object_grab(struct MarioState *m) {
     if (m->input & INPUT_INTERACT_OBJ_GRABBABLE) {
         script = virtual_to_segmented(0x13, m->interactObj->behavior);
 
-        if (script == bhvBowser) {
+        if (script == smlua_override_behavior(bhvBowser)) {
             s16 facingDYaw = m->faceAngle[1] - m->interactObj->oMoveAngleYaw;
             if (facingDYaw >= -0x5555 && facingDYaw <= 0x5555) {
                 m->faceAngle[1] = m->interactObj->oMoveAngleYaw;
@@ -2042,7 +2042,7 @@ u32 interact_grabbable(struct MarioState *m, u32 interactType, struct Object *o)
         }
     }
 
-    if (script != bhvBowser) {
+    if (script != smlua_override_behavior(bhvBowser)) {
         push_mario_out_of_object(m, o, -5.0f);
     }
 
