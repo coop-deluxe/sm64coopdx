@@ -3,6 +3,7 @@
 #include "object_fields.h"
 #include "behavior_data.h"
 #include "src/game/behavior_actions.h"
+#include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 
 extern struct Object* gCurrentObject;
@@ -68,7 +69,7 @@ void network_receive_spawn_star(struct Packet* p) {
 
 void network_send_spawn_star_nle(struct Object* o, u32 params) {
     u8 globalIndex = UNKNOWN_GLOBAL_INDEX;
-    if (o->behavior == bhvMario) {
+    if (o->behavior == smlua_override_behavior(bhvMario)) {
         u8 localIndex = o->oBehParams - 1;
         globalIndex = gNetworkPlayers[localIndex].globalIndex;
     }

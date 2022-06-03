@@ -32,7 +32,7 @@ void bhv_chain_chomp_chain_part_update(void) {
         network_init_object(o, SYNC_DISTANCE_ONLY_DEATH);
     }
     
-    if (o->parentObj->behavior != (BehaviorScript *)&bhvChainChomp || o->parentObj->oAction == CHAIN_CHOMP_ACT_UNLOAD_CHAIN) {
+    if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED || o->parentObj->oAction == CHAIN_CHOMP_ACT_UNLOAD_CHAIN) {
         obj_mark_for_deletion(o);
         network_send_object(o);
     } else if (o->oBehParams2ndByte != CHAIN_CHOMP_CHAIN_PART_BP_PIVOT) {

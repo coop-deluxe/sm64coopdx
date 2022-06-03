@@ -8,6 +8,7 @@
 #include "src/engine/math_util.h"
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
+#include "pc/lua/smlua_hooks.h"
 
 static f32 dist_to_pos(struct Object* o, f32* pos) {
     f32 x = o->oPosX - pos[0]; x *= x;
@@ -17,6 +18,7 @@ static f32 dist_to_pos(struct Object* o, f32* pos) {
 }
 
 static struct Object* find_nearest_item(const BehaviorScript *behavior, f32* pos, float minDist) {
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
     struct Object *closestObj = NULL;
     struct Object *obj;

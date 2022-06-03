@@ -36,7 +36,7 @@
 void add_tree_leaf_particles(struct MarioState *m) {
     f32 leafHeight;
 
-    if (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(bhvTree)) {
+    if (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvTree))) {
         // make leaf effect spawn higher on the Shifting Sand Land palm tree
         if (gCurrLevelNum == LEVEL_SSL) {
             leafHeight = 250.0f;
@@ -50,7 +50,7 @@ void add_tree_leaf_particles(struct MarioState *m) {
 }
 
 void play_climbing_sounds(struct MarioState *m, s32 b) {
-    s32 isOnTree = (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(bhvTree));
+    s32 isOnTree = (m->usedObj != NULL && m->usedObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvTree)));
 
     if (b == 1) {
         if (is_anim_past_frame(m, 1)) {
@@ -169,7 +169,7 @@ s32 act_holding_pole(struct MarioState *m) {
             return set_mario_action(m, ACT_CLIMBING_POLE, 0);
         }
 
-        if (poleBehavior != bhvGiantPole && m->controller->stickY > 50.0f) {
+        if (poleBehavior != smlua_override_behavior(bhvGiantPole) && m->controller->stickY > 50.0f) {
             return set_mario_action(m, ACT_TOP_OF_POLE_TRANSITION, 0);
         }
     }
@@ -183,7 +183,7 @@ s32 act_holding_pole(struct MarioState *m) {
         m->faceAngle[1] += marioObj->oMarioPoleYawVel;
         marioObj->oMarioPolePos -= marioObj->oMarioPoleYawVel / 0x100;
 
-        if (m->usedObj->behavior == segmented_to_virtual(bhvTree)) {
+        if (m->usedObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvTree))) {
             //! The Shifting Sand Land palm tree check is done climbing up in
             // add_tree_leaf_particles, but not here, when climbing down.
             if (m->pos[1] - m->floorHeight > 100.0f) {

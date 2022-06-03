@@ -1955,7 +1955,7 @@ s32 act_flying(struct MarioState *m) {
 }
 
 s32 act_riding_hoot(struct MarioState *m) {
-    if (m->usedObj == NULL || m->usedObj->behavior != bhvHoot) {
+    if (m->usedObj == NULL || m->usedObj->behavior != smlua_override_behavior(bhvHoot)) {
         m->usedObj = cur_obj_nearest_object_with_behavior(bhvHoot);
         if (m->usedObj == NULL) { return FALSE; }
         m->usedObj->heldByPlayerIndex = m->playerIndex;

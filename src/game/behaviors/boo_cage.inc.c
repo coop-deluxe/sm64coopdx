@@ -61,10 +61,10 @@ void bhv_boo_cage_loop(void) {
             // If the cage's parent boo is killed, set the action to BOO_CAGE_ACT_FALLING,
             // give the cage an initial Y velocity of 60 units/frame, and play the puzzle jingle.
             // Otherwise, stay inside the boo.
-            if (o->parentObj == NULL || o->parentObj->behavior != bhvBooWithCage || o->parentObj->oBooDeathStatus != BOO_DEATH_STATUS_ALIVE) {
+            if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvBooWithCage) || o->parentObj->oBooDeathStatus != BOO_DEATH_STATUS_ALIVE) {
                 o->oAction++;
                 o->oVelY = 60.0f;
-                if (o->parentObj != NULL && o->parentObj->behavior == bhvBooWithCage) {
+                if (o->parentObj != NULL && o->parentObj->behavior == smlua_override_behavior(bhvBooWithCage)) {
                     play_puzzle_jingle();
                 }
                 struct MarioState* marioState = nearest_mario_state_to_object(o);

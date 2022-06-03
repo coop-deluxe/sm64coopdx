@@ -11,6 +11,7 @@
 #include "object_fields.h"
 #include "model_ids.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -68,7 +69,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         u8 respawnerCount = 0;
         for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
-            if (so == NULL || so->o == NULL || so->o->behavior != bhvRespawner) { continue; }
+            if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
             respawnerCount++;
         }
         packet_write(&p, &respawnerCount, sizeof(u8));
@@ -76,7 +77,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         // write respawners
         for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
-            if (so == NULL || so->o == NULL || so->o->behavior != bhvRespawner) { continue; }
+            if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
             u32 behaviorToRespawn = get_id_from_behavior(so->o->oRespawnerBehaviorToRespawn);
             packet_write(&p, &so->o->oPosX, sizeof(f32));
             packet_write(&p, &so->o->oPosY, sizeof(f32));
@@ -96,7 +97,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         for (s32 i = RESERVED_IDS_SYNC_OBJECT_OFFSET; i < MAX_SYNC_OBJECTS; i++) {
             struct SyncObject* so = &gSyncObjects[i];
             if (so == NULL || so->o == NULL || so->o->oSyncID != (u32)i) { continue; }
-            if (so->o->behavior == bhvRespawner) { continue; }
+            if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
             struct Object* spawn_objects[] = { so->o };
 
             // TODO: move find model to a utility file/function

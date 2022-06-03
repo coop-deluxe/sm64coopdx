@@ -326,7 +326,7 @@ void mario_drop_held_object(struct MarioState *m) {
     if (m->playerIndex != 0) { return; }
 
     if (m->heldObj != NULL) {
-        if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {
+        if (m->heldObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvKoopaShellUnderwater))) {
             stop_shell_music();
         }
 
@@ -353,7 +353,7 @@ void mario_throw_held_object(struct MarioState *m) {
     if (m->playerIndex != 0) { return; }
 
     if (m->heldObj != NULL) {
-        if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {
+        if (m->heldObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvKoopaShellUnderwater))) {
             if (m->playerIndex == 0) { stop_shell_music(); }
         }
 

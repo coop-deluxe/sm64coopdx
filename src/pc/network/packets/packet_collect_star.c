@@ -8,6 +8,7 @@
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
 #include "src/game/save_file.h"
+#include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 
 extern s16 gCurrSaveFileNum;
@@ -22,6 +23,7 @@ static f32 dist_to_pos(struct Object* o, f32* pos) {
 }
 
 static struct Object* find_nearest_star(const BehaviorScript* behavior, f32* pos, f32 minDist) {
+    behavior = smlua_override_behavior(behavior);
     uintptr_t* behaviorAddr = segmented_to_virtual(behavior);
     struct Object* closestObj = NULL;
     struct Object* obj;

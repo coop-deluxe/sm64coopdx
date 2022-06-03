@@ -199,7 +199,7 @@ static void enemy_lakitu_act_main(void) {
     obj_update_blinking(&o->oEnemyLakituBlinkTimer, 20, 40, 4);
 
     if (o->prevObj != NULL) {
-        if (o->prevObj->behavior != bhvSpiny || o->prevObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
+        if (o->prevObj->behavior != smlua_override_behavior(bhvSpiny) || o->prevObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
             o->prevObj = NULL;
         }
     }

@@ -45,7 +45,7 @@ void bhv_pokey_body_part_update(void) {
     s16 offsetAngle;
     f32 baseHeight;
 
-    if (o->parentObj == NULL || o->parentObj->behavior != bhvPokey || o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
+    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvPokey) || o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         obj_mark_for_deletion(o);
         return;
     }

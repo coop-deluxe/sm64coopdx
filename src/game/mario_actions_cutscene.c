@@ -432,7 +432,7 @@ s32 act_reading_npc_dialog(struct MarioState *m) {
             continueDialogCallback = gContinueDialogFunction();
             gCurrentObject = tmp;
         }
-        if (!continueDialogCallback || m->usedObj == NULL || m->usedObj->activeFlags == ACTIVE_FLAG_DEACTIVATED || m->usedObj->behavior != localDialogNPCBehavior) {
+        if (!continueDialogCallback || m->usedObj == NULL || m->usedObj->activeFlags == ACTIVE_FLAG_DEACTIVATED || m->usedObj->behavior != smlua_override_behavior(localDialogNPCBehavior)) {
             set_mario_npc_dialog(m, 0, NULL);
         }
     }

@@ -147,9 +147,9 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
 
             // send non-star spawn events
             // stars cant be sent here to due jankiness in oBehParams
-            if (a0->behavior != bhvSpawnedStar && sp1C != NULL) {
+            if (a0->behavior != smlua_override_behavior(bhvSpawnedStar) && sp1C != NULL) {
                 // hack: if any other sync objects get spawned here we have to check for them
-                if (a0->behavior == bhvKoopaShell) {
+                if (a0->behavior == smlua_override_behavior(bhvKoopaShell)) {
                     network_set_sync_id(sp1C);
                 }
                 struct Object* spawn_objects[] = { sp1C };

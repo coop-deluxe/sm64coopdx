@@ -76,7 +76,7 @@ static s32 spiny_check_active(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = dist_between_objects(o, player);
 
-    if (o->parentObj == NULL || o->parentObj->behavior != bhvEnemyLakitu) {
+    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvEnemyLakitu)) {
         obj_mark_for_deletion(o);
         return FALSE;
     }
@@ -224,7 +224,7 @@ static void spiny_act_thrown_by_lakitu(void) {
 
 void bhv_spiny_override_ownership(u8* shouldOverride, u8* shouldOwn) {
     if (o->parentObj == NULL || o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) { return; }
-    *shouldOverride = (o->parentObj->behavior == bhvEnemyLakitu);
+    *shouldOverride = (o->parentObj->behavior == smlua_override_behavior(bhvEnemyLakitu));
     *shouldOwn = network_owns_object(o->parentObj);
 }
 

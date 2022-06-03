@@ -313,21 +313,21 @@ void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) 
     obj->parentObj = o;
 
     if (obj->oFlags & OBJ_FLAG_HOLDABLE) {
-        if (heldBehavior == bhvCarrySomething3) {
+        if (heldBehavior == smlua_override_behavior(bhvCarrySomething3)) {
             obj->oHeldState = HELD_HELD;
         }
 
-        if (heldBehavior == bhvCarrySomething5) {
+        if (heldBehavior == smlua_override_behavior(bhvCarrySomething5)) {
             obj->oHeldState = HELD_THROWN;
             obj->heldByPlayerIndex = 0;
         }
 
-        if (heldBehavior == bhvCarrySomething4) {
+        if (heldBehavior == smlua_override_behavior(bhvCarrySomething4)) {
             obj->oHeldState = HELD_DROPPED;
             obj->heldByPlayerIndex = 0;
         }
     } else {
-        obj->curBhvCommand = segmented_to_virtual(heldBehavior);
+        obj->curBhvCommand = segmented_to_virtual(smlua_override_behavior(heldBehavior));
         obj->bhvStackIndex = 0;
     }
 }
@@ -1011,6 +1011,7 @@ struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *b
 }
 
 u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist) {
+    behavior = smlua_override_behavior(behavior);
     u16 numObjs = 0;
     uintptr_t* behaviorAddr = segmented_to_virtual(behavior);
     struct Object* obj;
@@ -1093,6 +1094,7 @@ struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
 }
 
 struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist) {
+    behavior = smlua_override_behavior(behavior);
     const BehaviorScript *behaviorAddr = segmented_to_virtual(behavior);
     struct ObjectNode *listHead;
     struct Object *obj;
@@ -1658,6 +1660,7 @@ void obj_set_behavior(struct Object *obj, const BehaviorScript *behavior) {
 }
 
 s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
+    behavior = smlua_override_behavior(behavior);
     if (o->behavior == segmented_to_virtual(behavior)) {
         return TRUE;
     } else {
@@ -1666,6 +1669,7 @@ s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
 }
 
 s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior) {
+    behavior = smlua_override_behavior(behavior);
     if (obj->behavior == segmented_to_virtual(behavior)) {
         return TRUE;
     } else {

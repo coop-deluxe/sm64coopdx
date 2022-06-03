@@ -229,7 +229,7 @@ void bookshelf_manager_act_2(void) {
 void bookshelf_manager_act_3(void) {
     // opening bookshelf
 
-    if (o->parentObj == NULL || o->parentObj->behavior != bhvHauntedBookshelf) {
+    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvHauntedBookshelf)) {
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
     }
 

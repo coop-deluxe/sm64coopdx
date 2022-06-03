@@ -11,6 +11,7 @@
 #include "object_fields.h"
 #include "behavior_table.h"
 #include "model_ids.h"
+#include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -190,7 +191,7 @@ void network_receive_level_macro(struct Packet* p) {
         if (o != NULL) {
             LOG_INFO("rx macro special: object");
             // coin formation
-            if (behavior == bhvCoinFormation) {
+            if (behavior == smlua_override_behavior(bhvCoinFormation)) {
                 o->oBehParams = *respawnInfo;
                 o->oCoinUnkF4 = (o->oBehParams >> 8) & 0xFF;
 
@@ -199,7 +200,7 @@ void network_receive_level_macro(struct Packet* p) {
                     struct Object* o2 = &gObjectPool[i];
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
-                    if (o2->behavior != bhvCoinFormationSpawn && o2->behavior != bhvYellowCoin) { continue; }
+                    if (o2->behavior != smlua_override_behavior(bhvCoinFormationSpawn) && o2->behavior != smlua_override_behavior(bhvYellowCoin)) { continue; }
                     if (o->oCoinUnkF4 & (1 << childIndex++)) {
                         obj_mark_for_deletion(o2);
                     }
@@ -210,7 +211,7 @@ void network_receive_level_macro(struct Packet* p) {
                     struct Object* o2 = &gObjectPool[i];
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
-                    if (o2->behavior != bhvGoomba) { continue; }
+                    if (o2->behavior != smlua_override_behavior(bhvGoomba)) { continue; }
                     u16 info = (*respawnInfo >> 8);
                     u8 mask = ((o2->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) >> 2);
                     if (info & mask) {

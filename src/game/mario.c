@@ -1854,7 +1854,7 @@ void func_sh_8025574C(void) {
     } else if (gMarioState->particleFlags & PARTICLE_TRIANGLE) {
         queue_rumble_data_mario(gMarioState, 5, 80);
     }
-    if(gMarioState->heldObj && gMarioState->heldObj->behavior == segmented_to_virtual(bhvBobomb)) {
+    if(gMarioState->heldObj && gMarioState->heldObj->behavior == segmented_to_virtual(smlua_override_behavior(bhvBobomb))) {
         reset_rumble_timers(gMarioState);
     }
 }

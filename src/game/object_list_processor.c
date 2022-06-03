@@ -540,7 +540,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
                 object->respawnInfo = &spawnInfo->behaviorArg;
 
                 // found a player
-                if (spawnInfo->behaviorArg & ((u32)1 << 31) && object->behavior == bhvMario) {
+                if (spawnInfo->behaviorArg & ((u32)1 << 31) && object->behavior == smlua_override_behavior(bhvMario)) {
                     u16 playerIndex = (spawnInfo->behaviorArg & ~(1 << 31));
                     object->oBehParams = playerIndex + 1;
                     gMarioObjects[playerIndex] = object;

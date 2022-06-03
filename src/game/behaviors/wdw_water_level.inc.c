@@ -3,9 +3,9 @@ static u32 sWaterDiamondPicked = 0;
 
 static void bhv_init_changing_water_level_on_received_post(UNUSED u8 fromLocalIndex) {
     struct SyncObject* diamondSo = &gSyncObjects[sWaterDiamondPicked];
-    if (diamondSo == NULL || diamondSo->behavior != bhvWaterLevelDiamond) { return; }
+    if (diamondSo == NULL || diamondSo->behavior != smlua_override_behavior(bhvWaterLevelDiamond)) { return; }
     struct Object* diamond = get_sync_objects_object(sWaterDiamondPicked);
-    if (diamond == NULL || diamond->behavior != bhvWaterLevelDiamond) { return; }
+    if (diamond == NULL || diamond->behavior != smlua_override_behavior(bhvWaterLevelDiamond)) { return; }
 
     diamond->oAction = WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL;
     gWDWWaterLevelChanging = 1;

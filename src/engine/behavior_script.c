@@ -1151,7 +1151,7 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 // Command 0x40: Loads the animations for the object. <field> is always set to oAnimations.
 // Usage: LOAD_ANIMATIONS_EXT(field, anims)
 static s32 bhv_cmd_load_animations_ext(void) {
-    u8 field = BHV_CMD_GET_2ND_U8(0);
+    //u8 field = BHV_CMD_GET_2ND_U8(0);
     
     printf("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
     

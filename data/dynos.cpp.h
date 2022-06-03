@@ -4,8 +4,6 @@
 
 #include "dynos.h"
 
-#include <string>
-
 extern "C" {
 #include "engine/behavior_script.h"
 #include "engine/math_util.h"
@@ -957,6 +955,9 @@ GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehavio
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder);
 s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found);
 s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *found);
+
+s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found);
+s64 DynOS_Common_ParseModelConstants(const String &_Arg, bool *found);
 
 #endif
 #endif

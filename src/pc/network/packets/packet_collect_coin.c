@@ -9,6 +9,7 @@
 #include "src/engine/math_util.h"
 #include "src/game/memory.h"
 #include "src/game/object_helpers.h"
+#include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 
 extern s16 gCurrCourseNum, gCurrAreaIndex;
@@ -24,6 +25,7 @@ static f32 dist_to_pos(struct Object* o, f32* pos) {
 }
 
 static struct Object* find_nearest_coin(const BehaviorScript *behavior, f32* pos, s32 coinValue, float minDist) {
+    behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
     struct Object *closestObj = NULL;
     struct Object *obj;
@@ -84,7 +86,7 @@ void network_receive_collect_coin(struct Packet* p) {
         if (behavior == NULL) { goto SANITY_CHECK_COINS; }
 
         // find the coin
-        float minDist = (behavior == bhvRedCoin) ? 200 : 1000;
+        float minDist = (behavior == smlua_override_behavior(bhvRedCoin)) ? 200 : 1000;
         struct Object* coin = find_nearest_coin(behavior, pos, coinValue, minDist);
         if (coin == NULL) { goto SANITY_CHECK_COINS; }
 

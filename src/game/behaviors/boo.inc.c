@@ -751,7 +751,7 @@ u8 big_boo_ignore_update(void) {
 
 void big_boo_on_forget(void) {
     if (o == NULL) { return; }
-    if (o->behavior != bhvGhostHuntBigBoo) { return; }
+    if (o->behavior != smlua_override_behavior(bhvGhostHuntBigBoo)) { return; }
     struct Object* spawnedBridge = cur_obj_nearest_object_with_behavior(bhvBooBossSpawnedBridge);
     if (spawnedBridge == NULL && o->oBehParams2ndByte == 0) {
         obj_set_pos(o, 973, 0, 717);

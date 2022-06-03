@@ -30,6 +30,7 @@ f32 sMontyMoleLastKilledPosZ;
  * start of this list.
  */
 static struct Object *link_objects_with_behavior(const BehaviorScript *behavior) {
+    behavior = smlua_override_behavior(behavior);
     const BehaviorScript *behaviorAddr;
     struct Object *obj;
     struct Object *lastObject;

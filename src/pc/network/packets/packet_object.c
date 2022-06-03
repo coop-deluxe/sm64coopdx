@@ -11,6 +11,7 @@
 #include "src/game/obj_behaviors.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/area.h"
+#include "pc/lua/smlua_hooks.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
@@ -302,8 +303,8 @@ static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* beh
     struct Object* o = so->o;
 
     // bhvPenguinBaby can be set to bhvSmallPenguin
-    bool oBehaviorPenguin = (o->behavior == segmented_to_virtual(bhvPenguinBaby) || o->behavior == segmented_to_virtual(bhvSmallPenguin));
-    bool inBehaviorPenguin = (behavior == segmented_to_virtual(bhvPenguinBaby) || behavior == segmented_to_virtual(bhvSmallPenguin));
+    bool oBehaviorPenguin = (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvPenguinBaby)) || o->behavior == segmented_to_virtual(smlua_override_behavior(bhvSmallPenguin)));
+    bool inBehaviorPenguin = (behavior == segmented_to_virtual(smlua_override_behavior(bhvPenguinBaby)) || behavior == segmented_to_virtual(smlua_override_behavior(bhvSmallPenguin)));
     bool allow = (oBehaviorPenguin && inBehaviorPenguin);
 
     if (!allow) { return false; }
@@ -503,7 +504,7 @@ void network_send_object(struct Object* o) {
         LOG_ERROR("tried to send uninitialized sync obj");
         return;
     }
-    if (o->behavior == bhvRespawner) {
+    if (o->behavior == smlua_override_behavior(bhvRespawner)) {
         LOG_INFO("tried to send respawner sync obj");
         return;
     }

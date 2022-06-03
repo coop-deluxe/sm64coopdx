@@ -73,10 +73,15 @@ void ClearBhvDataNodes(DataNodes<T> &aDataNodes) {
 
 s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *found) {
     *found = true;
-    
+
+    // Behavior names
+    s64 cBhvConstant = DynOS_Common_ParseBhvConstants(_Arg, found);
+    if (*found) { return cBhvConstant; }
+    *found = true; // reset found value
+
     // All of these eveluate down into a integer which can be worked with.
     // Be it for flags or otherwise.
-    
+
     // Active Flags
     bhv_constant(ACTIVE_FLAG_DEACTIVATED);
     bhv_constant(ACTIVE_FLAG_ACTIVE);
@@ -126,9 +131,9 @@ s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *foun
     bhv_constant(INTERACT_IGLOO_BARRIER);
     bhv_constant(INTERACT_PLAYER);
 
-    
+
     // Interact Subtype Flags
-    
+
     // INTERACT_WARP
     bhv_constant(INT_SUBTYPE_FADING_WARP);
 
@@ -218,561 +223,17 @@ s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *foun
     bhv_constant(ACTIVE_PARTICLE_BREATH);
     bhv_constant(ACTIVE_PARTICLE_V_STAR);
     bhv_constant(ACTIVE_PARTICLE_TRIANGLE);
-    
+
     // Other constants
     bhv_constant(NULL);
     bhv_constant(FALSE);
-    
+
     *found = false;
     return 0;
 }
 
 s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     *found = true;
-    
-    // Behavior names
-    bhv_constant(bhvStarDoor);
-    bhv_constant(bhvMrI);
-    bhv_constant(bhvMrIBody);
-    bhv_constant(bhvMrIParticle);
-    bhv_constant(bhvPurpleParticle);
-    bhv_constant(bhvGiantPole);
-    bhv_constant(bhvPoleGrabbing);
-    bhv_constant(bhvThiHugeIslandTop);
-    bhv_constant(bhvThiTinyIslandTop);
-    bhv_constant(bhvCapSwitchBase);
-    bhv_constant(bhvCapSwitch);
-    bhv_constant(bhvKingBobomb);
-    bhv_constant(bhvBobombAnchorMario);
-    bhv_constant(bhvBetaChestBottom);
-    bhv_constant(bhvBetaChestLid);
-    bhv_constant(bhvBubbleParticleSpawner);
-    bhv_constant(bhvBubbleMaybe);
-    bhv_constant(bhvBubblePlayer);
-    bhv_constant(bhvSmallWaterWave);
-    bhv_constant(bhvSmallWaterWave398);
-    bhv_constant(bhvWaterAirBubble);
-    bhv_constant(bhvSmallParticle);
-    bhv_constant(bhvPlungeBubble);
-    bhv_constant(bhvSmallParticleSnow);
-    bhv_constant(bhvSmallParticleBubbles);
-    bhv_constant(bhvFishGroup);
-    bhv_constant(bhvCannon);
-    bhv_constant(bhvCannonBarrel);
-    bhv_constant(bhvCannonBaseUnused);
-    bhv_constant(bhvChuckya);
-    bhv_constant(bhvChuckyaAnchorMario);
-    bhv_constant(bhvUnused05A8);
-    bhv_constant(bhvRotatingPlatform);
-    bhv_constant(bhvTower);
-    bhv_constant(bhvBulletBillCannon);
-    bhv_constant(bhvWfBreakableWallRight);
-    bhv_constant(bhvWfBreakableWallLeft);
-    bhv_constant(bhvKickableBoard);
-    bhv_constant(bhvTowerDoor);
-    bhv_constant(bhvRotatingCounterClockwise);
-    bhv_constant(bhvWfRotatingWoodenPlatform);
-    bhv_constant(bhvKoopaShellUnderwater);
-    bhv_constant(bhvExitPodiumWarp);
-    bhv_constant(bhvFadingWarp);
-    bhv_constant(bhvWarp);
-    bhv_constant(bhvWarpPipe);
-    bhv_constant(bhvWhitePuffExplosion);
-    bhv_constant(bhvSpawnedStar);
-    bhv_constant(bhvSpawnedStarNoLevelExit);
-    bhv_constant(bhvMrIBlueCoin);
-    bhv_constant(bhvCoinInsideBoo);
-    bhv_constant(bhvCoinFormationSpawn);
-    bhv_constant(bhvCoinFormation);
-    bhv_constant(bhvOneCoin);
-    bhv_constant(bhvYellowCoin);
-    bhv_constant(bhvTemporaryYellowCoin);
-    bhv_constant(bhvThreeCoinsSpawn);
-    bhv_constant(bhvTenCoinsSpawn);
-    bhv_constant(bhvSingleCoinGetsSpawned);
-    bhv_constant(bhvCoinSparkles);
-    bhv_constant(bhvGoldenCoinSparkles);
-    bhv_constant(bhvWallTinyStarParticle);
-    bhv_constant(bhvVertStarParticleSpawner);
-    bhv_constant(bhvPoundTinyStarParticle);
-    bhv_constant(bhvHorStarParticleSpawner);
-    bhv_constant(bhvPunchTinyTriangle);
-    bhv_constant(bhvTriangleParticleSpawner);
-    bhv_constant(bhvDoorWarp);
-    bhv_constant(bhvDoor);
-    bhv_constant(bhvGrindel);
-    bhv_constant(bhvThwomp2);
-    bhv_constant(bhvThwomp);
-    bhv_constant(bhvTumblingBridgePlatform);
-    bhv_constant(bhvWfTumblingBridge);
-    bhv_constant(bhvBbhTumblingBridge);
-    bhv_constant(bhvLllTumblingBridge);
-    bhv_constant(bhvFlame);
-    bhv_constant(bhvAnotherElavator);
-    bhv_constant(bhvRrElevatorPlatform);
-    bhv_constant(bhvHmcElevatorPlatform);
-    bhv_constant(bhvWaterMist);
-    bhv_constant(bhvBreathParticleSpawner);
-    bhv_constant(bhvBreakBoxTriangle);
-    bhv_constant(bhvWaterMist2);
-    bhv_constant(bhvUnused0DFC);
-    bhv_constant(bhvMistCircParticleSpawner);
-    bhv_constant(bhvDirtParticleSpawner);
-    bhv_constant(bhvSnowParticleSpawner);
-    bhv_constant(bhvWind);
-    bhv_constant(bhvEndToad);
-    bhv_constant(bhvEndPeach);
-    bhv_constant(bhvUnusedParticleSpawn);
-    bhv_constant(bhvUkiki);
-    bhv_constant(bhvUkikiCageChild);
-    bhv_constant(bhvUkikiCageStar);
-    bhv_constant(bhvUkikiCage);
-    bhv_constant(bhvBitfsSinkingPlatforms);
-    bhv_constant(bhvBitfsSinkingCagePlatform);
-    bhv_constant(bhvDddMovingPole);
-    bhv_constant(bhvBitfsTiltingInvertedPyramid);
-    bhv_constant(bhvSquishablePlatform);
-    bhv_constant(bhvCutOutObject);
-    bhv_constant(bhvBetaMovingFlamesSpawn);
-    bhv_constant(bhvBetaMovingFlames);
-    bhv_constant(bhvRrRotatingBridgePlatform);
-    bhv_constant(bhvFlamethrower);
-    bhv_constant(bhvFlamethrowerFlame);
-    bhv_constant(bhvBouncingFireball);
-    bhv_constant(bhvBouncingFireballFlame);
-    bhv_constant(bhvBowserShockWave);
-    bhv_constant(bhvFireParticleSpawner);
-    bhv_constant(bhvBlackSmokeMario);
-    bhv_constant(bhvBlackSmokeBowser);
-    bhv_constant(bhvBlackSmokeUpward);
-    bhv_constant(bhvBetaFishSplashSpawner);
-    bhv_constant(bhvSpindrift);
-    bhv_constant(bhvTowerPlatformGroup);
-    bhv_constant(bhvWfSlidingTowerPlatform);
-    bhv_constant(bhvWfElevatorTowerPlatform);
-    bhv_constant(bhvWfSolidTowerPlatform);
-    bhv_constant(bhvLeafParticleSpawner);
-    bhv_constant(bhvTreeSnow);
-    bhv_constant(bhvTreeLeaf);
-    bhv_constant(bhvAnotherTiltingPlatform);
-    bhv_constant(bhvSquarishPathMoving);
-    bhv_constant(bhvSquarishPathParent);
-    bhv_constant(bhvPiranhaPlantBubble);
-    bhv_constant(bhvPiranhaPlantWakingBubbles);
-    bhv_constant(bhvFloorSwitchAnimatesObject);
-    bhv_constant(bhvFloorSwitchGrills);
-    bhv_constant(bhvFloorSwitchHardcodedModel);
-    bhv_constant(bhvFloorSwitchHiddenObjects);
-    bhv_constant(bhvHiddenObject);
-    bhv_constant(bhvBreakableBox);
-    bhv_constant(bhvPushableMetalBox);
-    bhv_constant(bhvHeaveHo);
-    bhv_constant(bhvHeaveHoThrowMario);
-    bhv_constant(bhvCcmTouchedStarSpawn);
-    bhv_constant(bhvUnusedPoundablePlatform);
-    bhv_constant(bhvBetaTrampolineTop);
-    bhv_constant(bhvBetaTrampolineSpring);
-    bhv_constant(bhvJumpingBox);
-    bhv_constant(bhvBooCage);
-    bhv_constant(bhvStub);
-    bhv_constant(bhvIgloo);
-    bhv_constant(bhvBowserKey);
-    bhv_constant(bhvGrandStar);
-    bhv_constant(bhvBetaBooKey);
-    bhv_constant(bhvAlphaBooKey);
-    bhv_constant(bhvBulletBill);
-    bhv_constant(bhvWhitePuffSmoke);
-    bhv_constant(bhvUnused1820);
-    bhv_constant(bhvBowserTailAnchor);
-    bhv_constant(bhvBowser);
-    bhv_constant(bhvBowserBodyAnchor);
-    bhv_constant(bhvBowserFlameSpawn);
-    bhv_constant(bhvTiltingBowserLavaPlatform);
-    bhv_constant(bhvFallingBowserPlatform);
-    bhv_constant(bhvBlueBowserFlame);
-    bhv_constant(bhvFlameFloatingLanding);
-    bhv_constant(bhvBlueFlamesGroup);
-    bhv_constant(bhvFlameBouncing);
-    bhv_constant(bhvFlameMovingForwardGrowing);
-    bhv_constant(bhvFlameBowser);
-    bhv_constant(bhvFlameLargeBurningOut);
-    bhv_constant(bhvBlueFish);
-    bhv_constant(bhvTankFishGroup);
-    bhv_constant(bhvCheckerboardElevatorGroup);
-    bhv_constant(bhvCheckerboardPlatformSub);
-    bhv_constant(bhvBowserKeyUnlockDoor);
-    bhv_constant(bhvBowserKeyCourseExit);
-    bhv_constant(bhvInvisibleObjectsUnderBridge);
-    bhv_constant(bhvWaterLevelPillar);
-    bhv_constant(bhvDddWarp);
-    bhv_constant(bhvMoatGrills);
-    bhv_constant(bhvClockMinuteHand);
-    bhv_constant(bhvClockHourHand);
-    bhv_constant(bhvMacroUkiki);
-    bhv_constant(bhvStub1D0C);
-    bhv_constant(bhvLllRotatingHexagonalPlatform);
-    bhv_constant(bhvLllSinkingRockBlock);
-    bhv_constant(bhvStub1D70);
-    bhv_constant(bhvLllMovingOctagonalMeshPlatform);
-    bhv_constant(bhvSnowBall);
-    bhv_constant(bhvLllRotatingBlockWithFireBars);
-    bhv_constant(bhvLllRotatingHexFlame);
-    bhv_constant(bhvLllWoodPiece);
-    bhv_constant(bhvLllFloatingWoodBridge);
-    bhv_constant(bhvVolcanoFlames);
-    bhv_constant(bhvLllRotatingHexagonalRing);
-    bhv_constant(bhvLllSinkingRectangularPlatform);
-    bhv_constant(bhvLllSinkingSquarePlatforms);
-    bhv_constant(bhvLllTiltingInvertedPyramid);
-    bhv_constant(bhvUnused1F30);
-    bhv_constant(bhvKoopaShell);
-    bhv_constant(bhvKoopaShellFlame);
-    bhv_constant(bhvToxBox);
-    bhv_constant(bhvPiranhaPlant);
-    bhv_constant(bhvLllHexagonalMesh);
-    bhv_constant(bhvLllBowserPuzzlePiece);
-    bhv_constant(bhvLllBowserPuzzle);
-    bhv_constant(bhvTuxiesMother);
-    bhv_constant(bhvPenguinBaby);
-    bhv_constant(bhvUnused20E0);
-    bhv_constant(bhvSmallPenguin);
-    bhv_constant(bhvManyBlueFishSpawner);
-    bhv_constant(bhvFewBlueFishSpawner);
-    bhv_constant(bhvFishSpawner);
-    bhv_constant(bhvFish);
-    bhv_constant(bhvWdwExpressElevator);
-    bhv_constant(bhvWdwExpressElevatorPlatform);
-    bhv_constant(bhvChirpChirp);
-    bhv_constant(bhvChirpChirpUnused);
-    bhv_constant(bhvBub);
-    bhv_constant(bhvExclamationBox);
-    bhv_constant(bhvRotatingExclamationMark);
-    bhv_constant(bhvSoundSpawner);
-    bhv_constant(bhvRockSolid);
-    bhv_constant(bhvBowserSubDoor);
-    bhv_constant(bhvBowsersSub);
-    bhv_constant(bhvSushiShark);
-    bhv_constant(bhvSushiSharkCollisionChild);
-    bhv_constant(bhvJrbSlidingBox);
-    bhv_constant(bhvShipPart3);
-    bhv_constant(bhvInSunkenShip3);
-    bhv_constant(bhvSunkenShipPart);
-    bhv_constant(bhvSunkenShipSetRotation);
-    bhv_constant(bhvSunkenShipPart2);
-    bhv_constant(bhvInSunkenShip);
-    bhv_constant(bhvInSunkenShip2);
-    bhv_constant(bhvMistParticleSpawner);
-    bhv_constant(bhvWhitePuff1);
-    bhv_constant(bhvWhitePuff2);
-    bhv_constant(bhvWhitePuffSmoke2);
-    bhv_constant(bhvPurpleSwitchHiddenBoxes);
-    bhv_constant(bhvBlueCoinSwitch);
-    bhv_constant(bhvHiddenBlueCoin);
-    bhv_constant(bhvOpenableCageDoor);
-    bhv_constant(bhvOpenableGrill);
-    bhv_constant(bhvWaterLevelDiamond);
-    bhv_constant(bhvInitializeChangingWaterLevel);
-    bhv_constant(bhvTweesterSandParticle);
-    bhv_constant(bhvTweester);
-    bhv_constant(bhvMerryGoRoundBooManager);
-    bhv_constant(bhvPlaysMusicTrackWhenTouched);
-    bhv_constant(bhvAnimatedTexture);
-    bhv_constant(bhvBooInCastle);
-    bhv_constant(bhvBooWithCage);
-    bhv_constant(bhvBalconyBigBoo);
-    bhv_constant(bhvMerryGoRoundBigBoo);
-    bhv_constant(bhvGhostHuntBigBoo);
-    bhv_constant(bhvCourtyardBooTriplet);
-    bhv_constant(bhvBoo);
-    bhv_constant(bhvMerryGoRoundBoo);
-    bhv_constant(bhvGhostHuntBoo);
-    bhv_constant(bhvHiddenStaircaseStep);
-    bhv_constant(bhvBooBossSpawnedBridge);
-    bhv_constant(bhvBbhTiltingTrapPlatform);
-    bhv_constant(bhvHauntedBookshelf);
-    bhv_constant(bhvMeshElevator);
-    bhv_constant(bhvMerryGoRound);
-    bhv_constant(bhvInsideCannon);
-    bhv_constant(bhvBetaBowserAnchor);
-    bhv_constant(bhvStaticCheckeredPlatform);
-    bhv_constant(bhvUnused2A10);
-    bhv_constant(bhvStar);
-    bhv_constant(bhvStaticObject);
-    bhv_constant(bhvUnused2A54);
-    bhv_constant(bhvCastleFloorTrap);
-    bhv_constant(bhvFloorTrapInCastle);
-    bhv_constant(bhvTree);
-    bhv_constant(bhvSparkle);
-    bhv_constant(bhvSparkleSpawn);
-    bhv_constant(bhvSparkleParticleSpawner);
-    bhv_constant(bhvScuttlebug);
-    bhv_constant(bhvScuttlebugSpawn);
-    bhv_constant(bhvWhompKingBoss);
-    bhv_constant(bhvSmallWhomp);
-    bhv_constant(bhvWaterSplash);
-    bhv_constant(bhvWaterDroplet);
-    bhv_constant(bhvWaterDropletSplash);
-    bhv_constant(bhvBubbleSplash);
-    bhv_constant(bhvIdleWaterWave);
-    bhv_constant(bhvObjectWaterSplash);
-    bhv_constant(bhvShallowWaterWave);
-    bhv_constant(bhvShallowWaterSplash);
-    bhv_constant(bhvObjectWaveTrail);
-    bhv_constant(bhvWaveTrail);
-    bhv_constant(bhvTinyStrongWindParticle);
-    bhv_constant(bhvStrongWindParticle);
-    bhv_constant(bhvSLSnowmanWind);
-    bhv_constant(bhvSLWalkingPenguin);
-    bhv_constant(bhvYellowBall);
-    bhv_constant(bhvMario);
-    bhv_constant(bhvToadMessage);
-    bhv_constant(bhvUnlockDoorStar);
-    bhv_constant(bhvInstantActiveWarp);
-    bhv_constant(bhvAirborneWarp);
-    bhv_constant(bhvHardAirKnockBackWarp);
-    bhv_constant(bhvSpinAirborneCircleWarp);
-    bhv_constant(bhvDeathWarp);
-    bhv_constant(bhvSpinAirborneWarp);
-    bhv_constant(bhvFlyingWarp);
-    bhv_constant(bhvPaintingStarCollectWarp);
-    bhv_constant(bhvPaintingDeathWarp);
-    bhv_constant(bhvAirborneDeathWarp);
-    bhv_constant(bhvAirborneStarCollectWarp);
-    bhv_constant(bhvLaunchStarCollectWarp);
-    bhv_constant(bhvLaunchDeathWarp);
-    bhv_constant(bhvSwimmingWarp);
-    bhv_constant(bhvRandomAnimatedTexture);
-    bhv_constant(bhvYellowBackgroundInMenu);
-    bhv_constant(bhvMenuButton);
-    bhv_constant(bhvMenuButtonManager);
-    bhv_constant(bhvActSelectorStarType);
-    bhv_constant(bhvActSelector);
-    bhv_constant(bhvMovingYellowCoin);
-    bhv_constant(bhvMovingBlueCoin);
-    bhv_constant(bhvBlueCoinSliding);
-    bhv_constant(bhvBlueCoinJumping);
-    bhv_constant(bhvSeaweed);
-    bhv_constant(bhvSeaweedBundle);
-    bhv_constant(bhvBobomb);
-    bhv_constant(bhvBobombFuseSmoke);
-    bhv_constant(bhvBobombBuddy);
-    bhv_constant(bhvBobombBuddyOpensCannon);
-    bhv_constant(bhvCannonClosed);
-    bhv_constant(bhvWhirlpool);
-    bhv_constant(bhvJetStream);
-    bhv_constant(bhvMessagePanel);
-    bhv_constant(bhvSignOnWall);
-    bhv_constant(bhvHomingAmp);
-    bhv_constant(bhvCirclingAmp);
-    bhv_constant(bhvButterfly);
-    bhv_constant(bhvHoot);
-    bhv_constant(bhvBetaHoldableObject);
-    bhv_constant(bhvCarrySomething1);
-    bhv_constant(bhvCarrySomething2);
-    bhv_constant(bhvCarrySomething3);
-    bhv_constant(bhvCarrySomething4);
-    bhv_constant(bhvCarrySomething5);
-    bhv_constant(bhvCarrySomething6);
-    bhv_constant(bhvObjectBubble);
-    bhv_constant(bhvObjectWaterWave);
-    bhv_constant(bhvExplosion);
-    bhv_constant(bhvBobombBullyDeathSmoke);
-    bhv_constant(bhvSmoke);
-    bhv_constant(bhvBobombExplosionBubble);
-    bhv_constant(bhvBobombExplosionBubble3600);
-    bhv_constant(bhvRespawner);
-    bhv_constant(bhvSmallBully);
-    bhv_constant(bhvBigBully);
-    bhv_constant(bhvBigBullyWithMinions);
-    bhv_constant(bhvSmallChillBully);
-    bhv_constant(bhvBigChillBully);
-    bhv_constant(bhvJetStreamRingSpawner);
-    bhv_constant(bhvJetStreamWaterRing);
-    bhv_constant(bhvMantaRayWaterRing);
-    bhv_constant(bhvMantaRayRingManager);
-    bhv_constant(bhvBowserBomb);
-    bhv_constant(bhvBowserBombExplosion);
-    bhv_constant(bhvBowserBombSmoke);
-    bhv_constant(bhvCelebrationStar);
-    bhv_constant(bhvCelebrationStarSparkle);
-    bhv_constant(bhvStarKeyCollectionPuffSpawner);
-    bhv_constant(bhvLllDrawbridgeSpawner);
-    bhv_constant(bhvLllDrawbridge);
-    bhv_constant(bhvSmallBomp);
-    bhv_constant(bhvLargeBomp);
-    bhv_constant(bhvWfSlidingPlatform);
-    bhv_constant(bhvMoneybag);
-    bhv_constant(bhvMoneybagHidden);
-    bhv_constant(bhvPitBowlingBall);
-    bhv_constant(bhvFreeBowlingBall);
-    bhv_constant(bhvBowlingBall);
-    bhv_constant(bhvTtmBowlingBallSpawner);
-    bhv_constant(bhvBobBowlingBallSpawner);
-    bhv_constant(bhvThiBowlingBallSpawner);
-    bhv_constant(bhvRrCruiserWing);
-    bhv_constant(bhvSpindel);
-    bhv_constant(bhvSslMovingPyramidWall);
-    bhv_constant(bhvPyramidElevator);
-    bhv_constant(bhvPyramidElevatorTrajectoryMarkerBall);
-    bhv_constant(bhvPyramidTop);
-    bhv_constant(bhvPyramidTopFragment);
-    bhv_constant(bhvPyramidPillarTouchDetector);
-    bhv_constant(bhvWaterfallSoundLoop);
-    bhv_constant(bhvVolcanoSoundLoop);
-    bhv_constant(bhvCastleFlagWaving);
-    bhv_constant(bhvBirdsSoundLoop);
-    bhv_constant(bhvAmbientSounds);
-    bhv_constant(bhvSandSoundLoop);
-    bhv_constant(bhvHiddenAt120Stars);
-    bhv_constant(bhvSnowmansBottom);
-    bhv_constant(bhvSnowmansHead);
-    bhv_constant(bhvSnowmansBodyCheckpoint);
-    bhv_constant(bhvBigSnowmanWhole);
-    bhv_constant(bhvBigBoulder);
-    bhv_constant(bhvBigBoulderGenerator);
-    bhv_constant(bhvWingCap);
-    bhv_constant(bhvMetalCap);
-    bhv_constant(bhvNormalCap);
-    bhv_constant(bhvVanishCap);
-    bhv_constant(bhvStar);
-    bhv_constant(bhvStarSpawnCoordinates);
-    bhv_constant(bhvHiddenRedCoinStar);
-    bhv_constant(bhvRedCoin);
-    bhv_constant(bhvBowserCourseRedCoinStar);
-    bhv_constant(bhvHiddenStar);
-    bhv_constant(bhvHiddenStarTrigger);
-    bhv_constant(bhvTtmRollingLog);
-    bhv_constant(bhvLllVolcanoFallingTrap);
-    bhv_constant(bhvLllRollingLog);
-    bhv_constant(bhv1upWalking);
-    bhv_constant(bhv1upRunningAway);
-    bhv_constant(bhv1upSliding);
-    bhv_constant(bhv1Up);
-    bhv_constant(bhv1upJumpOnApproach);
-    bhv_constant(bhvHidden1up);
-    bhv_constant(bhvHidden1upTrigger);
-    bhv_constant(bhvHidden1upInPole);
-    bhv_constant(bhvHidden1upInPoleTrigger);
-    bhv_constant(bhvHidden1upInPoleSpawner);
-    bhv_constant(bhvControllablePlatform);
-    bhv_constant(bhvControllablePlatformSub);
-    bhv_constant(bhvBreakableBoxSmall);
-    bhv_constant(bhvSlidingSnowMound);
-    bhv_constant(bhvSnowMoundSpawn);
-    bhv_constant(bhvWdwSquareFloatingPlatform);
-    bhv_constant(bhvWdwRectangularFloatingPlatform);
-    bhv_constant(bhvJrbFloatingPlatform);
-    bhv_constant(bhvArrowLift);
-    bhv_constant(bhvOrangeNumber);
-    bhv_constant(bhvMantaRay);
-    bhv_constant(bhvFallingPillar);
-    bhv_constant(bhvFallingPillarHitbox);
-    bhv_constant(bhvPillarBase);
-    bhv_constant(bhvJrbFloatingBox);
-    bhv_constant(bhvDecorativePendulum);
-    bhv_constant(bhvTreasureChestsShip);
-    bhv_constant(bhvTreasureChestsJrb);
-    bhv_constant(bhvTreasureChests);
-    bhv_constant(bhvTreasureChestBottom);
-    bhv_constant(bhvTreasureChestTop);
-    bhv_constant(bhvMips);
-    bhv_constant(bhvYoshi);
-    bhv_constant(bhvKoopa);
-    bhv_constant(bhvKoopaRaceEndpoint);
-    bhv_constant(bhvKoopaFlag);
-    bhv_constant(bhvPokey);
-    bhv_constant(bhvPokeyBodyPart);
-    bhv_constant(bhvSwoop);
-    bhv_constant(bhvFlyGuy);
-    bhv_constant(bhvGoomba);
-    bhv_constant(bhvGoombaTripletSpawner);
-    bhv_constant(bhvChainChomp);
-    bhv_constant(bhvChainChompChainPart);
-    bhv_constant(bhvWoodenPost);
-    bhv_constant(bhvChainChompGate);
-    bhv_constant(bhvWigglerHead);
-    bhv_constant(bhvWigglerBody);
-    bhv_constant(bhvEnemyLakitu);
-    bhv_constant(bhvCameraLakitu);
-    bhv_constant(bhvCloud);
-    bhv_constant(bhvCloudPart);
-    bhv_constant(bhvSpiny);
-    bhv_constant(bhvMontyMole);
-    bhv_constant(bhvMontyMoleHole);
-    bhv_constant(bhvMontyMoleRock);
-    bhv_constant(bhvPlatformOnTrack);
-    bhv_constant(bhvTrackBall);
-    bhv_constant(bhvSeesawPlatform);
-    bhv_constant(bhvFerrisWheelAxle);
-    bhv_constant(bhvFerrisWheelPlatform);
-    bhv_constant(bhvWaterBombSpawner);
-    bhv_constant(bhvWaterBomb);
-    bhv_constant(bhvWaterBombShadow);
-    bhv_constant(bhvTTCRotatingSolid);
-    bhv_constant(bhvTTCPendulum);
-    bhv_constant(bhvTTCTreadmill);
-    bhv_constant(bhvTTCMovingBar);
-    bhv_constant(bhvTTCCog);
-    bhv_constant(bhvTTCPitBlock);
-    bhv_constant(bhvTTCElevator);
-    bhv_constant(bhvTTC2DRotator);
-    bhv_constant(bhvTTCSpinner);
-    bhv_constant(bhvMrBlizzard);
-    bhv_constant(bhvMrBlizzardSnowball);
-    bhv_constant(bhvSlidingPlatform2);
-    bhv_constant(bhvOctagonalPlatformRotating);
-    bhv_constant(bhvAnimatesOnFloorSwitchPress);
-    bhv_constant(bhvActivatedBackAndForthPlatform);
-    bhv_constant(bhvRecoveryHeart);
-    bhv_constant(bhvWaterBombCannon);
-    bhv_constant(bhvCannonBarrelBubbles);
-    bhv_constant(bhvUnagi);
-    bhv_constant(bhvUnagiSubobject);
-    bhv_constant(bhvDorrie);
-    bhv_constant(bhvHauntedChair);
-    bhv_constant(bhvMadPiano);
-    bhv_constant(bhvFlyingBookend);
-    bhv_constant(bhvBookendSpawn);
-    bhv_constant(bhvHauntedBookshelfManager);
-    bhv_constant(bhvBookSwitch);
-    bhv_constant(bhvFirePiranhaPlant);
-    bhv_constant(bhvSmallPiranhaFlame);
-    bhv_constant(bhvFireSpitter);
-    bhv_constant(bhvFlyguyFlame);
-    bhv_constant(bhvSnufit);
-    bhv_constant(bhvSnufitBalls);
-    bhv_constant(bhvHorizontalGrindel);
-    bhv_constant(bhvEyerokBoss);
-    bhv_constant(bhvEyerokHand);
-    bhv_constant(bhvKlepto);
-    bhv_constant(bhvBird);
-    bhv_constant(bhvRacingPenguin);
-    bhv_constant(bhvPenguinRaceFinishLine);
-    bhv_constant(bhvPenguinRaceShortcutCheck);
-    bhv_constant(bhvCoffinSpawner);
-    bhv_constant(bhvCoffin);
-    bhv_constant(bhvClamShell);
-    bhv_constant(bhvSkeeter);
-    bhv_constant(bhvSkeeterWave);
-    bhv_constant(bhvSwingPlatform);
-    bhv_constant(bhvDonutPlatformSpawner);
-    bhv_constant(bhvDonutPlatform);
-    bhv_constant(bhvDDDPole);
-    bhv_constant(bhvRedCoinStarMarker);
-    bhv_constant(bhvTripletButterfly);
-    bhv_constant(bhvBubba);
-    bhv_constant(bhvBeginningLakitu);
-    bhv_constant(bhvBeginningPeach);
-    bhv_constant(bhvEndBirds1);
-    bhv_constant(bhvEndBirds2);
-    bhv_constant(bhvIntroScene);
-    bhv_constant(bhvUnusedFakeStar);
-
-    // Legacy behavior names
-    bhv_legacy_constant(bhvFish2, bhvManyBlueFishSpawner);
-    bhv_legacy_constant(bhvFish3, bhvFewBlueFishSpawner);
-    bhv_legacy_constant(bhvLargeFishGroup, bhvFishSpawner);
-
 
     // Behavior ids
     bhv_constant(id_bhv1Up);
@@ -1310,478 +771,19 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvYellowBall);
     bhv_constant(id_bhvYellowCoin);
     bhv_constant(id_bhvYoshi);
-    
+
     // Define a special type for new ids that don't override.
     if (_Arg == "id_bhvNewId") { return (BehaviorScript) (0xFFFF); }
-    
+
     // Legacy behavior ids
     bhv_legacy_constant(id_bhvFish2, id_bhvManyBlueFishSpawner);
     bhv_legacy_constant(id_bhvFish3, id_bhvFewBlueFishSpawner);
     bhv_legacy_constant(id_bhvLargeFishGroup, id_bhvFishSpawner);
-    
 
     // Model constants
-    bhv_constant(ACT_1);
-    bhv_constant(ACT_2);
-    bhv_constant(ACT_3);
-    bhv_constant(ACT_4);
-    bhv_constant(ACT_5);
-    bhv_constant(ACT_6);
-    bhv_constant(ALL_ACTS_MACRO);
-    bhv_constant(ALL_ACTS);
-    bhv_constant(COIN_FORMATION_FLAG_VERTICAL);
-    bhv_constant(COIN_FORMATION_FLAG_RING);
-    bhv_constant(COIN_FORMATION_FLAG_ARROW);
-    bhv_constant(COIN_FORMATION_FLAG_FLYING);
-    bhv_constant(MODEL_NONE);
-    bhv_constant(MODEL_MARIO);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_03);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_04);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_05);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_06);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_07);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_08);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_09);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_0A);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_0B);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_0C);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_0D);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_0E);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_0F);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_10);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_11);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_12);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_13);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_14);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_15);
-    bhv_constant(MODEL_LEVEL_GEOMETRY_16);
-    bhv_constant(MODEL_BOB_BUBBLY_TREE);
-    bhv_constant(MODEL_WDW_BUBBLY_TREE);
-    bhv_constant(MODEL_CASTLE_GROUNDS_BUBBLY_TREE);
-    bhv_constant(MODEL_WF_BUBBLY_TREE);
-    bhv_constant(MODEL_THI_BUBBLY_TREE);
-    bhv_constant(MODEL_COURTYARD_SPIKY_TREE);
-    bhv_constant(MODEL_CCM_SNOW_TREE);
-    bhv_constant(MODEL_SL_SNOW_TREE);
-    bhv_constant(MODEL_UNKNOWN_TREE_1A);
-    bhv_constant(MODEL_SSL_PALM_TREE);
-    bhv_constant(MODEL_CASTLE_CASTLE_DOOR_UNUSED);
-    bhv_constant(MODEL_CASTLE_WOODEN_DOOR_UNUSED);
-    bhv_constant(MODEL_BBH_HAUNTED_DOOR);
-    bhv_constant(MODEL_HMC_WOODEN_DOOR);
-    bhv_constant(MODEL_UNKNOWN_DOOR_1E);
-    bhv_constant(MODEL_HMC_METAL_DOOR);
-    bhv_constant(MODEL_HMC_HAZY_MAZE_DOOR);
-    bhv_constant(MODEL_UNKNOWN_DOOR_21);
-    bhv_constant(MODEL_CASTLE_DOOR_0_STARS);
-    bhv_constant(MODEL_CASTLE_DOOR_1_STAR);
-    bhv_constant(MODEL_CASTLE_DOOR_3_STARS);
-    bhv_constant(MODEL_CASTLE_KEY_DOOR);
-    bhv_constant(MODEL_CASTLE_CASTLE_DOOR);
-    bhv_constant(MODEL_CASTLE_GROUNDS_CASTLE_DOOR);
-    bhv_constant(MODEL_CASTLE_WOODEN_DOOR);
-    bhv_constant(MODEL_COURTYARD_WOODEN_DOOR);
-    bhv_constant(MODEL_CCM_CABIN_DOOR);
-    bhv_constant(MODEL_UNKNOWN_DOOR_28);
-    bhv_constant(MODEL_CASTLE_METAL_DOOR);
-    bhv_constant(MODEL_CASTLE_GROUNDS_METAL_DOOR);
-    bhv_constant(MODEL_UNKNOWN_DOOR_2A);
-    bhv_constant(MODEL_UNKNOWN_DOOR_2B);
-    bhv_constant(MODEL_WF_TOWER_TRAPEZOID_PLATORM);
-    bhv_constant(MODEL_WF_TOWER_SQUARE_PLATORM);
-    bhv_constant(MODEL_WF_TOWER_SQUARE_PLATORM_UNUSED);
-    bhv_constant(MODEL_WF_TOWER_SQUARE_PLATORM_ELEVATOR);
-    bhv_constant(MODEL_BBH_STAIRCASE_STEP);
-    bhv_constant(MODEL_BBH_TILTING_FLOOR_PLATFORM);
-    bhv_constant(MODEL_BBH_TUMBLING_PLATFORM);
-    bhv_constant(MODEL_BBH_TUMBLING_PLATFORM_PART);
-    bhv_constant(MODEL_BBH_MOVING_BOOKSHELF);
-    bhv_constant(MODEL_BBH_MESH_ELEVATOR);
-    bhv_constant(MODEL_BBH_MERRY_GO_ROUND);
-    bhv_constant(MODEL_BBH_WOODEN_TOMB);
-    bhv_constant(MODEL_CCM_ROPEWAY_LIFT);
-    bhv_constant(MODEL_CCM_SNOWMAN_HEAD);
-    bhv_constant(MODEL_CASTLE_BOWSER_TRAP);
-    bhv_constant(MODEL_CASTLE_WATER_LEVEL_PILLAR);
-    bhv_constant(MODEL_CASTLE_CLOCK_MINUTE_HAND);
-    bhv_constant(MODEL_CASTLE_CLOCK_HOUR_HAND);
-    bhv_constant(MODEL_CASTLE_CLOCK_PENDULUM);
-    bhv_constant(MODEL_HMC_METAL_PLATFORM);
-    bhv_constant(MODEL_HMC_METAL_ARROW_PLATFORM);
-    bhv_constant(MODEL_HMC_ELEVATOR_PLATFORM);
-    bhv_constant(MODEL_HMC_ROLLING_ROCK);
-    bhv_constant(MODEL_HMC_ROCK_PIECE);
-    bhv_constant(MODEL_HMC_ROCK_SMALL_PIECE);
-    bhv_constant(MODEL_HMC_RED_GRILLS);
-    bhv_constant(MODEL_SSL_PYRAMID_TOP);
-    bhv_constant(MODEL_SSL_GRINDEL);
-    bhv_constant(MODEL_SSL_SPINDEL);
-    bhv_constant(MODEL_SSL_MOVING_PYRAMID_WALL);
-    bhv_constant(MODEL_SSL_PYRAMID_ELEVATOR);
-    bhv_constant(MODEL_BOB_CHAIN_CHOMP_GATE);
-    bhv_constant(MODEL_BOB_SEESAW_PLATFORM);
-    bhv_constant(MODEL_BOB_BARS_GRILLS);
-    bhv_constant(MODEL_SL_SNOW_TRIANGLE);
-    bhv_constant(MODEL_SL_CRACKED_ICE);
-    bhv_constant(MODEL_SL_CRACKED_ICE_CHUNK);
-    bhv_constant(MODEL_WDW_SQUARE_FLOATING_PLATFORM);
-    bhv_constant(MODEL_WDW_ARROW_LIFT);
-    bhv_constant(MODEL_WDW_WATER_LEVEL_DIAMOND);
-    bhv_constant(MODEL_WDW_HIDDEN_PLATFORM);
-    bhv_constant(MODEL_WDW_EXPRESS_ELEVATOR);
-    bhv_constant(MODEL_WDW_RECTANGULAR_FLOATING_PLATFORM);
-    bhv_constant(MODEL_WDW_ROTATING_PLATFORM);
-    bhv_constant(MODEL_JRB_SHIP_LEFT_HALF_PART);
-    bhv_constant(MODEL_JRB_SHIP_BACK_LEFT_PART);
-    bhv_constant(MODEL_JRB_SHIP_RIGHT_HALF_PART);
-    bhv_constant(MODEL_JRB_SHIP_BACK_RIGHT_PART);
-    bhv_constant(MODEL_JRB_SUNKEN_SHIP);
-    bhv_constant(MODEL_JRB_SUNKEN_SHIP_BACK);
-    bhv_constant(MODEL_JRB_ROCK);
-    bhv_constant(MODEL_JRB_SLIDING_BOX);
-    bhv_constant(MODEL_JRB_FALLING_PILLAR);
-    bhv_constant(MODEL_JRB_FALLING_PILLAR_BASE);
-    bhv_constant(MODEL_JRB_FLOATING_PLATFORM);
-    bhv_constant(MODEL_THI_HUGE_ISLAND_TOP);
-    bhv_constant(MODEL_THI_TINY_ISLAND_TOP);
-    bhv_constant(MODEL_TTC_ROTATING_CUBE);
-    bhv_constant(MODEL_TTC_ROTATING_PRISM);
-    bhv_constant(MODEL_TTC_PENDULUM);
-    bhv_constant(MODEL_TTC_LARGE_TREADMILL);
-    bhv_constant(MODEL_TTC_SMALL_TREADMILL);
-    bhv_constant(MODEL_TTC_PUSH_BLOCK);
-    bhv_constant(MODEL_TTC_ROTATING_HEXAGON);
-    bhv_constant(MODEL_TTC_ROTATING_TRIANGLE);
-    bhv_constant(MODEL_TTC_PIT_BLOCK);
-    bhv_constant(MODEL_TTC_PIT_BLOCK_UNUSED);
-    bhv_constant(MODEL_TTC_ELEVATOR_PLATFORM);
-    bhv_constant(MODEL_TTC_CLOCK_HAND);
-    bhv_constant(MODEL_TTC_SPINNER);
-    bhv_constant(MODEL_TTC_SMALL_GEAR);
-    bhv_constant(MODEL_TTC_LARGE_GEAR);
-    bhv_constant(MODEL_RR_SLIDING_PLATFORM);
-    bhv_constant(MODEL_RR_FLYING_CARPET);
-    bhv_constant(MODEL_RR_OCTAGONAL_PLATFORM);
-    bhv_constant(MODEL_RR_ROTATING_BRIDGE_PLATFORM);
-    bhv_constant(MODEL_RR_TRIANGLE_PLATFORM);
-    bhv_constant(MODEL_RR_CRUISER_WING);
-    bhv_constant(MODEL_RR_SEESAW_PLATFORM);
-    bhv_constant(MODEL_RR_L_SHAPED_PLATFORM);
-    bhv_constant(MODEL_RR_SWINGING_PLATFORM);
-    bhv_constant(MODEL_RR_DONUT_PLATFORM);
-    bhv_constant(MODEL_RR_ELEVATOR_PLATFORM);
-    bhv_constant(MODEL_RR_TRICKY_TRIANGLES);
-    bhv_constant(MODEL_RR_TRICKY_TRIANGLES_FRAME1);
-    bhv_constant(MODEL_RR_TRICKY_TRIANGLES_FRAME2);
-    bhv_constant(MODEL_RR_TRICKY_TRIANGLES_FRAME3);
-    bhv_constant(MODEL_RR_TRICKY_TRIANGLES_FRAME4);
-    bhv_constant(MODEL_BITDW_SQUARE_PLATFORM);
-    bhv_constant(MODEL_BITDW_SEESAW_PLATFORM);
-    bhv_constant(MODEL_BITDW_SLIDING_PLATFORM);
-    bhv_constant(MODEL_BITDW_FERRIS_WHEEL_AXLE);
-    bhv_constant(MODEL_BITDW_BLUE_PLATFORM);
-    bhv_constant(MODEL_BITDW_STAIRCASE_FRAME4);
-    bhv_constant(MODEL_BITDW_STAIRCASE_FRAME3);
-    bhv_constant(MODEL_BITDW_STAIRCASE_FRAME2);
-    bhv_constant(MODEL_BITDW_STAIRCASE_FRAME1);
-    bhv_constant(MODEL_BITDW_STAIRCASE);
-    bhv_constant(MODEL_VCUTM_SEESAW_PLATFORM);
-    bhv_constant(MODEL_VCUTM_CHECKERBOARD_PLATFORM_SPAWNER);
-    bhv_constant(MODEL_BITFS_PLATFORM_ON_TRACK);
-    bhv_constant(MODEL_BITFS_TILTING_SQUARE_PLATFORM);
-    bhv_constant(MODEL_BITFS_SINKING_PLATFORMS);
-    bhv_constant(MODEL_BITFS_BLUE_POLE);
-    bhv_constant(MODEL_BITFS_SINKING_CAGE_PLATFORM);
-    bhv_constant(MODEL_BITFS_ELEVATOR);
-    bhv_constant(MODEL_BITFS_STRETCHING_PLATFORMS);
-    bhv_constant(MODEL_BITFS_SEESAW_PLATFORM);
-    bhv_constant(MODEL_BITFS_MOVING_SQUARE_PLATFORM);
-    bhv_constant(MODEL_BITFS_SLIDING_PLATFORM);
-    bhv_constant(MODEL_BITFS_TUMBLING_PLATFORM_PART);
-    bhv_constant(MODEL_BITFS_TUMBLING_PLATFORM);
-    bhv_constant(MODEL_BITS_SLIDING_PLATFORM);
-    bhv_constant(MODEL_BITS_TWIN_SLIDING_PLATFORMS);
-    bhv_constant(MODEL_BITS_OCTAGONAL_PLATFORM);
-    bhv_constant(MODEL_BITS_BLUE_PLATFORM);
-    bhv_constant(MODEL_BITS_FERRIS_WHEEL_AXLE);
-    bhv_constant(MODEL_BITS_ARROW_PLATFORM);
-    bhv_constant(MODEL_BITS_SEESAW_PLATFORM);
-    bhv_constant(MODEL_BITS_TILTING_W_PLATFORM);
-    bhv_constant(MODEL_BITS_STAIRCASE);
-    bhv_constant(MODEL_BITS_STAIRCASE_FRAME1);
-    bhv_constant(MODEL_BITS_STAIRCASE_FRAME2);
-    bhv_constant(MODEL_BITS_STAIRCASE_FRAME3);
-    bhv_constant(MODEL_BITS_STAIRCASE_FRAME4);
-    bhv_constant(MODEL_BITS_WARP_PIPE);
-    bhv_constant(MODEL_LLL_DRAWBRIDGE_PART);
-    bhv_constant(MODEL_LLL_ROTATING_BLOCK_FIRE_BARS);
-    bhv_constant(MODEL_LLL_ROTATING_HEXAGONAL_RING);
-    bhv_constant(MODEL_LLL_SINKING_RECTANGULAR_PLATFORM);
-    bhv_constant(MODEL_LLL_SINKING_SQUARE_PLATFORMS);
-    bhv_constant(MODEL_LLL_TILTING_SQUARE_PLATFORM);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_1);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_2);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_3);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_4);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_5);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_6);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_7);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_8);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_9);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_10);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_11);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_12);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_13);
-    bhv_constant(MODEL_LLL_BOWSER_PIECE_14);
-    bhv_constant(MODEL_LLL_MOVING_OCTAGONAL_MESH_PLATFORM);
-    bhv_constant(MODEL_LLL_SINKING_ROCK_BLOCK);
-    bhv_constant(MODEL_LLL_ROLLING_LOG);
-    bhv_constant(MODEL_LLL_WOOD_BRIDGE);
-    bhv_constant(MODEL_LLL_LARGE_WOOD_BRIDGE);
-    bhv_constant(MODEL_LLL_FALLING_PLATFORM);
-    bhv_constant(MODEL_LLL_LARGE_FALLING_PLATFORM);
-    bhv_constant(MODEL_LLL_VOLCANO_FALLING_TRAP);
-    bhv_constant(MODEL_DDD_BOWSER_SUB_DOOR);
-    bhv_constant(MODEL_DDD_BOWSER_SUB);
-    bhv_constant(MODEL_DDD_POLE);
-    bhv_constant(MODEL_WF_BREAKABLE_WALL_RIGHT);
-    bhv_constant(MODEL_WF_BREAKABLE_WALL_LEFT);
-    bhv_constant(MODEL_WF_KICKABLE_BOARD);
-    bhv_constant(MODEL_WF_TOWER_DOOR);
-    bhv_constant(MODEL_WF_KICKABLE_BOARD_FELLED);
-    bhv_constant(MODEL_CASTLE_GROUNDS_VCUTM_GRILL);
-    bhv_constant(MODEL_CASTLE_GROUNDS_FLAG);
-    bhv_constant(MODEL_CASTLE_GROUNDS_CANNON_GRILL);
-    bhv_constant(MODEL_BOWSER_2_TILTING_ARENA);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_1);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_2);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_3);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_4);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_5);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_6);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_7);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_8);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_9);
-    bhv_constant(MODEL_BOWSER_3_FALLING_PLATFORM_10);
-    bhv_constant(MODEL_TTM_ROLLING_LOG);
-    bhv_constant(MODEL_TTM_STAR_CAGE);
-    bhv_constant(MODEL_TTM_BLUE_SMILEY);
-    bhv_constant(MODEL_TTM_YELLOW_SMILEY);
-    bhv_constant(MODEL_TTM_STAR_SMILEY);
-    bhv_constant(MODEL_TTM_MOON_SMILEY);
-    bhv_constant(MODEL_BULLET_BILL);
-    bhv_constant(MODEL_YELLOW_SPHERE);
-    bhv_constant(MODEL_HOOT);
-    bhv_constant(MODEL_YOSHI_EGG);
-    bhv_constant(MODEL_THWOMP);
-    bhv_constant(MODEL_HEAVE_HO);
-    bhv_constant(MODEL_BLARGG);
-    bhv_constant(MODEL_BULLY);
-    bhv_constant(MODEL_BULLY_BOSS);
-    bhv_constant(MODEL_WATER_BOMB);
-    bhv_constant(MODEL_WATER_BOMB_SHADOW);
-    bhv_constant(MODEL_KING_BOBOMB);
-    bhv_constant(MODEL_MANTA_RAY);
-    bhv_constant(MODEL_UNAGI);
-    bhv_constant(MODEL_SUSHI);
-    bhv_constant(MODEL_DL_WHIRLPOOL);
-    bhv_constant(MODEL_CLAM_SHELL);
-    bhv_constant(MODEL_POKEY_HEAD);
-    bhv_constant(MODEL_POKEY_BODY_PART);
-    bhv_constant(MODEL_TWEESTER);
-    bhv_constant(MODEL_KLEPTO);
-    bhv_constant(MODEL_EYEROK_LEFT_HAND);
-    bhv_constant(MODEL_EYEROK_RIGHT_HAND);
-    bhv_constant(MODEL_DL_MONTY_MOLE_HOLE);
-    bhv_constant(MODEL_MONTY_MOLE);
-    bhv_constant(MODEL_UKIKI);
-    bhv_constant(MODEL_FWOOSH);
-    bhv_constant(MODEL_SPINDRIFT);
-    bhv_constant(MODEL_MR_BLIZZARD_HIDDEN);
-    bhv_constant(MODEL_MR_BLIZZARD);
-    bhv_constant(MODEL_PENGUIN);
-    bhv_constant(MODEL_CAP_SWITCH_EXCLAMATION);
-    bhv_constant(MODEL_CAP_SWITCH);
-    bhv_constant(MODEL_CAP_SWITCH_BASE);
-    bhv_constant(MODEL_BOO);
-    bhv_constant(MODEL_BETA_BOO_KEY);
-    bhv_constant(MODEL_HAUNTED_CHAIR);
-    bhv_constant(MODEL_MAD_PIANO);
-    bhv_constant(MODEL_BOOKEND_PART);
-    bhv_constant(MODEL_BOOKEND);
-    bhv_constant(MODEL_HAUNTED_CAGE);
-    bhv_constant(MODEL_BIRDS);
-    bhv_constant(MODEL_YOSHI);
-    bhv_constant(MODEL_ENEMY_LAKITU);
-    bhv_constant(MODEL_SPINY_BALL);
-    bhv_constant(MODEL_SPINY);
-    bhv_constant(MODEL_WIGGLER_HEAD);
-    bhv_constant(MODEL_WIGGLER_BODY);
-    bhv_constant(MODEL_BUBBA);
-    bhv_constant(MODEL_UNKNOWN_54);
-    bhv_constant(MODEL_UNKNOWN_58);
-    bhv_constant(MODEL_BOWSER);
-    bhv_constant(MODEL_BOWSER_BOMB_CHILD_OBJ);
-    bhv_constant(MODEL_BOWSER_SMOKE);
-    bhv_constant(MODEL_BOWSER_FLAMES);
-    bhv_constant(MODEL_BOWSER_WAVE);
-    bhv_constant(MODEL_BOWSER2);
-    bhv_constant(MODEL_BUB);
-    bhv_constant(MODEL_TREASURE_CHEST_BASE);
-    bhv_constant(MODEL_TREASURE_CHEST_LID);
-    bhv_constant(MODEL_CYAN_FISH);
-    bhv_constant(MODEL_WATER_RING);
-    bhv_constant(MODEL_SKEETER);
-    bhv_constant(MODEL_PIRANHA_PLANT);
-    bhv_constant(MODEL_WHOMP);
-    bhv_constant(MODEL_KOOPA_WITH_SHELL);
-    bhv_constant(MODEL_METALLIC_BALL);
-    bhv_constant(MODEL_CHAIN_CHOMP);
-    bhv_constant(MODEL_KOOPA_FLAG);
-    bhv_constant(MODEL_WOODEN_POST);
-    bhv_constant(MODEL_MIPS);
-    bhv_constant(MODEL_BOO_CASTLE);
-    bhv_constant(MODEL_LAKITU);
-    bhv_constant(MODEL_CHILL_BULLY);
-    bhv_constant(MODEL_BIG_CHILL_BULLY);
-    bhv_constant(MODEL_MONEYBAG);
-    bhv_constant(MODEL_SWOOP);
-    bhv_constant(MODEL_SCUTTLEBUG);
-    bhv_constant(MODEL_MR_I_IRIS);
-    bhv_constant(MODEL_MR_I);
-    bhv_constant(MODEL_DORRIE);
-    bhv_constant(MODEL_YELLOW_COIN);
-    bhv_constant(MODEL_YELLOW_COIN_NO_SHADOW);
-    bhv_constant(MODEL_BLUE_COIN);
-    bhv_constant(MODEL_BLUE_COIN_NO_SHADOW);
-    bhv_constant(MODEL_HEART);
-    bhv_constant(MODEL_TRANSPARENT_STAR);
-    bhv_constant(MODEL_STAR);
-    bhv_constant(MODEL_TTM_SLIDE_EXIT_PODIUM);
-    bhv_constant(MODEL_WOODEN_SIGNPOST);
-    bhv_constant(MODEL_UNKNOWN_7D);
-    bhv_constant(MODEL_CANNON_BARREL);
-    bhv_constant(MODEL_CANNON_BASE);
-    bhv_constant(MODEL_BREAKABLE_BOX);
-    bhv_constant(MODEL_BREAKABLE_BOX_SMALL);
-    bhv_constant(MODEL_EXCLAMATION_BOX_OUTLINE);
-    bhv_constant(MODEL_EXCLAMATION_POINT);
-    bhv_constant(MODEL_MARIOS_WINGED_METAL_CAP);
-    bhv_constant(MODEL_MARIOS_METAL_CAP);
-    bhv_constant(MODEL_MARIOS_WING_CAP);
-    bhv_constant(MODEL_MARIOS_CAP);
-    bhv_constant(MODEL_EXCLAMATION_BOX);
-    bhv_constant(MODEL_DIRT_ANIMATION);
-    bhv_constant(MODEL_CARTOON_STAR);
-    bhv_constant(MODEL_BLUE_COIN_SWITCH);
-    bhv_constant(MODEL_MIST);
-    bhv_constant(MODEL_SPARKLES_ANIMATION);
-    bhv_constant(MODEL_RED_FLAME);
-    bhv_constant(MODEL_BLUE_FLAME);
-    bhv_constant(MODEL_BURN_SMOKE);
-    bhv_constant(MODEL_SPARKLES);
-    bhv_constant(MODEL_SMOKE);
-    bhv_constant(MODEL_BURN_SMOKE_UNUSED);
-    bhv_constant(MODEL_WHITE_PARTICLE_DL);
-    bhv_constant(MODEL_SAND_DUST);
-    bhv_constant(MODEL_WHITE_PARTICLE);
-    bhv_constant(MODEL_PEBBLE);
-    bhv_constant(MODEL_LEAVES);
-    bhv_constant(MODEL_WAVE_TRAIL);
-    bhv_constant(MODEL_WHITE_PARTICLE_SMALL);
-    bhv_constant(MODEL_SMALL_WATER_SPLASH);
-    bhv_constant(MODEL_IDLE_WATER_WAVE);
-    bhv_constant(MODEL_WATER_SPLASH);
-    bhv_constant(MODEL_BUBBLE);
-    bhv_constant(MODEL_PURPLE_MARBLE);
-    bhv_constant(MODEL_UNKNOWN_AC);
-    bhv_constant(MODEL_WF_SLIDING_PLATFORM);
-    bhv_constant(MODEL_WF_SMALL_BOMP);
-    bhv_constant(MODEL_WF_ROTATING_WOODEN_PLATFORM);
-    bhv_constant(MODEL_WF_TUMBLING_BRIDGE_PART);
-    bhv_constant(MODEL_WF_LARGE_BOMP);
-    bhv_constant(MODEL_WF_TUMBLING_BRIDGE);
-    bhv_constant(MODEL_BOWSER_BOMB);
-    bhv_constant(MODEL_WATER_MINE);
-    bhv_constant(MODEL_BOWLING_BALL);
-    bhv_constant(MODEL_TRAMPOLINE);
-    bhv_constant(MODEL_TRAMPOLINE_CENTER);
-    bhv_constant(MODEL_TRAMPOLINE_BASE);
-    bhv_constant(MODEL_UNKNOWN_B8);
-    bhv_constant(MODEL_FISH);
-    bhv_constant(MODEL_FISH_SHADOW);
-    bhv_constant(MODEL_BUTTERFLY);
-    bhv_constant(MODEL_BLACK_BOBOMB);
-    bhv_constant(MODEL_KOOPA_SHELL);
-    bhv_constant(MODEL_KOOPA_WITHOUT_SHELL);
-    bhv_constant(MODEL_GOOMBA);
-    bhv_constant(MODEL_SEAWEED);
-    bhv_constant(MODEL_AMP);
-    bhv_constant(MODEL_BOBOMB_BUDDY);
-    bhv_constant(MODEL_SSL_TOX_BOX);
-    bhv_constant(MODEL_BOWSER_KEY_CUTSCENE);
-    bhv_constant(MODEL_DL_CANNON_LID);
-    bhv_constant(MODEL_CHECKERBOARD_PLATFORM);
-    bhv_constant(MODEL_RED_FLAME_SHADOW);
-    bhv_constant(MODEL_BOWSER_KEY);
-    bhv_constant(MODEL_EXPLOSION);
-    bhv_constant(MODEL_SNUFIT);
-    bhv_constant(MODEL_PURPLE_SWITCH);
-    bhv_constant(MODEL_CASTLE_STAR_DOOR_30_STARS);
-    bhv_constant(MODEL_CASTLE_STAR_DOOR_50_STARS);
-    bhv_constant(MODEL_CCM_SNOWMAN_BASE);
-    bhv_constant(MODEL_1UP);
-    bhv_constant(MODEL_CASTLE_STAR_DOOR_8_STARS);
-    bhv_constant(MODEL_CASTLE_STAR_DOOR_70_STARS);
-    bhv_constant(MODEL_RED_COIN);
-    bhv_constant(MODEL_RED_COIN_NO_SHADOW);
-    bhv_constant(MODEL_METAL_BOX);
-    bhv_constant(MODEL_METAL_BOX_DL);
-    bhv_constant(MODEL_NUMBER);
-    bhv_constant(MODEL_FLYGUY);
-    bhv_constant(MODEL_TOAD);
-    bhv_constant(MODEL_PEACH);
-    bhv_constant(MODEL_CHUCKYA);
-    bhv_constant(MODEL_WHITE_PUFF);
-    bhv_constant(MODEL_TRAJECTORY_MARKER_BALL);
-    bhv_constant(MODEL_MAIN_MENU_MARIO_SAVE_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_RED_ERASE_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_BLUE_COPY_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_YELLOW_FILE_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_GREEN_SCORE_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_MARIO_SAVE_BUTTON_FADE);
-    bhv_constant(MODEL_MAIN_MENU_MARIO_NEW_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_MARIO_NEW_BUTTON_FADE);
-    bhv_constant(MODEL_MAIN_MENU_PURPLE_SOUND_BUTTON);
-    bhv_constant(MODEL_MAIN_MENU_GENERIC_BUTTON);
-    bhv_constant(MODEL_LLL_ROTATING_HEXAGONAL_PLATFORM);
-    bhv_constant(MODEL_WF_GIANT_POLE);
-    bhv_constant(MODEL_WF_ROTATING_PLATFORM);
-    bhv_constant(MODEL_BITDW_WARP_PIPE);
-    bhv_constant(MODEL_THI_WARP_PIPE);
-    bhv_constant(MODEL_VCUTM_WARP_PIPE);
-    bhv_constant(MODEL_CASTLE_GROUNDS_WARP_PIPE);
-    bhv_constant(MODEL_BUBBLE_PLAYER);
-    bhv_constant(MODEL_LUIGI);
-    bhv_constant(MODEL_LUIGIS_CAP);
-    bhv_constant(MODEL_LUIGIS_METAL_CAP);
-    bhv_constant(MODEL_LUIGIS_WING_CAP);
-    bhv_constant(MODEL_LUIGIS_WINGED_METAL_CAP);
-    bhv_constant(MODEL_TOAD_PLAYER);
-    bhv_constant(MODEL_TOADS_CAP);
-    bhv_constant(MODEL_TOADS_METAL_CAP);
-    bhv_constant(MODEL_TOADS_WING_CAP);
-    bhv_constant(MODEL_WALUIGI);
-    bhv_constant(MODEL_WALUIGIS_CAP);
-    bhv_constant(MODEL_WALUIGIS_METAL_CAP);
-    bhv_constant(MODEL_WALUIGIS_WING_CAP);
-    bhv_constant(MODEL_WALUIGIS_WINGED_METAL_CAP);
-    bhv_constant(MODEL_WARIO);
-    bhv_constant(MODEL_WARIOS_CAP);
-    bhv_constant(MODEL_WARIOS_METAL_CAP);
-    bhv_constant(MODEL_WARIOS_WING_CAP);
-    bhv_constant(MODEL_WARIOS_WINGED_METAL_CAP);
-    bhv_constant(MODEL_ERROR_MODEL);
+    s64 cModelConstant = DynOS_Common_ParseModelConstants(_Arg, found);
+    if (*found) { return cModelConstant; }
+    *found = true; // reset found value
 
 
     // Object Fields
@@ -1923,7 +925,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oBobombBuddyPosXCopy);
     bhv_constant(oBobombBuddyPosYCopy);
     bhv_constant(oBobombBuddyPosZCopy);
-    
+
     /* Bob-ombExplosionBubble */
     bhv_constant(oBobombExpBubGfxScaleFacX);
     bhv_constant(oBobombExpBubGfxScaleFacY);
@@ -2049,7 +1051,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oTripletButterflyModel);
     bhv_constant(oTripletButterflySelectedButterfly);
     bhv_constant(oTripletButterflyScalePhase);
-    
+
     /* Cannon */
     bhv_constant(oCannonUnkF4);
     bhv_constant(oCannonUnkF8);
@@ -2208,7 +1210,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
 
     /* BlueFlame */
     bhv_constant(oBlueFlameNextScale);
-    
+
     /* SmallPiranhaFlame */
     bhv_constant(oSmallPiranhaFlameStartSpeed);
     bhv_constant(oSmallPiranhaFlameEndSpeed);
@@ -2356,7 +1358,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oEnemyLakituBlinkTimer);
     bhv_constant(oEnemyLakituSpinyCooldown);
     bhv_constant(oEnemyLakituFaceForwardCountdown);
-    
+
     /* IntroCutsceneLakitu */
     bhv_constant(oIntroLakituSplineSegmentProgress);
     bhv_constant(oIntroLakituSplineSegment);
@@ -2631,7 +1633,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     //Secrets/RedCoins
     bhv_constant(oHiddenStarTriggerCounter);
     bhv_constant(oHiddenStarLastInteractedObject);
-    
+
     //Overallverydifficulttodetermineusage,mostlystubbedcode.
     /* SparkleSpawnStar */
     bhv_constant(oSparkleSpawnUnk1B0);
@@ -2899,7 +1901,7 @@ static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, Da
     String _Arg = aNode->mTokens[aTokenIndex++];
     u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
-    
+
     // Built-in functions
     const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
     if (_FunctionPtr != NULL) {
@@ -2923,104 +1925,39 @@ static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, Da
     if (builtinCol != NULL) {
         return (BehaviorScript)builtinCol;
     }
-    
+
     // Built-in Animations
     auto builtinAnim = DynOS_Builtin_Anim_GetFromName(_Arg.begin());
     if (builtinAnim != NULL) {
         return (BehaviorScript)builtinAnim;
     }
-    
-    // Brackets
-    // Make sure we parse out the brackets if they are present.
-    if (_Arg[0] == '(') {
-        // Remove first bracket.
-        _Arg = _Arg.SubString(1);
-        
-        s32 _Brk = _Arg.FindLast(')');
-        
-        // Remove last bracket.
-        if (_Brk != -1) { _Arg = _Arg.SubString(0, _Brk); }
-    }
-    
-    /*
-    // Offset
-    s32 _Offset = 0;
-    s32 _Plus = -1;
-    // Make sure we parse out all additions or offsets.
-    do {
-        _Plus = _Arg.FindLast('+');
-        
-        // If we didn't find anything. Break early.
-        if (_Plus == -1) { break; }
-        
-        _Offset += _Arg.SubString(_Plus + 1).ParseInt();
-        _Arg = _Arg.SubString(0, _Plus);
-    }
-    while(_Plus != -1);
-    */
 
-    // OR Operations
-    s32 _OrValue = 0;
-    s32 _Or = -1;
-    // Make sure we parse out all or operations.
-    do {
-        _Or = _Arg.FindLast('|');
-        
-        // If we didn't find anything. Break early.
-        if (_Or == -1) { break; }
-        
-        bool constantFound = false;
-        s64 constantValue = DynOS_Bhv_ParseBehaviorIntegerScriptConstants(_Arg.SubString(_Or + 1), &constantFound);
-        
-        if (constantFound) {
-            _OrValue |= constantValue;
-        } else {
-            _OrValue |= _Arg.SubString(_Or + 1).ParseInt();
-        }
-        
-        _Arg = _Arg.SubString(0, _Or);
-    }
-    while(_Or != -1);
-    
     // Integers
     bool integerFound = false;
     s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
     if (integerFound) {
-        // Support OR operations on integers.
-        if (_OrValue != 0) { integerValue |= _OrValue; }
         return integerValue;
     }
-    
+
     // Parse integer constants
     bool intConstantFound = false;
     s64 constantIntValue = DynOS_Bhv_ParseBehaviorIntegerScriptConstants(_Arg, &intConstantFound);
     if (intConstantFound) {
-        // Support OR operations on integer constants.
-        if (_OrValue != 0) { constantIntValue |= _OrValue; }
         return (BehaviorScript) constantIntValue;
     }
-    
+
     // Recursive descent parsing
     bool rdIntSuccess = false;
     s64 rdIntValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdIntSuccess, DynOS_Bhv_ParseBehaviorIntegerScriptConstants);
     if (rdIntSuccess) {
-        // Support OR operations on integer constants.
-        if (_OrValue != 0) { rdIntValue |= _OrValue; }
         return (BehaviorScript)rdIntValue;
     }
-    
+
     // Parse all other constants last so everything else is found for certain.
     bool constantFound = false;
     s64 constantValue = DynOS_Bhv_ParseBehaviorScriptConstants(_Arg, &constantFound);
     if (constantFound) {
         return (BehaviorScript) constantValue;
-    }
-    
-    // Recursive descent parsing
-    bool rdSuccess = false;
-    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Bhv_ParseBehaviorScriptConstants);
-    if (rdSuccess) {
-        return (BehaviorScript)rdValue;
     }
 
     *found = false;
@@ -3048,7 +1985,7 @@ static BehaviorScript ParseBehaviorScriptSymbolArg(GfxData *aGfxData, DataNode<B
         aHead += (sizeof(_Bs) / sizeof(_Bs[0])); \
         return;                                  \
     }
-    
+
 #define bhv_symbol_1(symb, n)                                                              \
     if (_Symbol == #symb) {                                                                \
         BehaviorScript _Arg0 = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
@@ -3058,7 +1995,7 @@ static BehaviorScript ParseBehaviorScriptSymbolArg(GfxData *aGfxData, DataNode<B
         aHead += (sizeof(_Bs) / sizeof(_Bs[0]));                                           \
         return;                                                                            \
     }
-    
+
 #define bhv_symbol_2(symb, n1, n2)                                                         \
     if (_Symbol == #symb) {                                                                \
         BehaviorScript _Arg0 = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
@@ -3070,7 +2007,7 @@ static BehaviorScript ParseBehaviorScriptSymbolArg(GfxData *aGfxData, DataNode<B
         aHead += (sizeof(_Bs) / sizeof(_Bs[0]));                                           \
         return;                                                                            \
     }
-    
+
 #define bhv_symbol_3(symb, n1, n2, n3)                                                     \
     if (_Symbol == #symb) {                                                                \
         BehaviorScript _Arg0 = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex); \
@@ -3084,7 +2021,7 @@ static BehaviorScript ParseBehaviorScriptSymbolArg(GfxData *aGfxData, DataNode<B
         aHead += (sizeof(_Bs) / sizeof(_Bs[0]));                                           \
         return;                                                                            \
     }
-    
+
 #define bhv_symbol_4(symb, n1, n2, n3, n4)                                                       \
     if (_Symbol == #symb) {                                                                      \
         BehaviorScript _Arg0 = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);       \
@@ -3122,7 +2059,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     bhv_symbol_0(HIDE);
     bhv_symbol_0(SET_HOME);
     bhv_symbol_0(DISABLE_RENDERING);
-    
+
     bhv_symbol_1(ID, 0);
     bhv_symbol_1(BEGIN, 0);
     bhv_symbol_1(DELAY, 0);
@@ -3137,7 +2074,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     bhv_symbol_1(SET_INTERACT_TYPE, 0);
     bhv_symbol_1(SET_INTERACT_SUBTYPE, 0);
     //bhv_symbol_1(SPAWN_WATER_DROPLET, 1);
-    
+
     bhv_symbol_2(ADD_FLOAT, 0, 0);
     bhv_symbol_2(SET_FLOAT, 0, 0);
     bhv_symbol_2(ADD_INT, 0, 0);
@@ -3151,7 +2088,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     bhv_symbol_2(PARENT_BIT_CLEAR, 0, 0);
     bhv_symbol_2(ANIMATE_TEXTURE, 0, 0);
     bhv_symbol_2(SET_INT_UNUSED, 0, 0);
-    
+
     bhv_symbol_3(SET_INT_RAND_RSHIFT, 0, 0, 0);
     bhv_symbol_3(SET_RANDOM_INT, 0, 0, 0);
     bhv_symbol_3(ADD_RANDOM_FLOAT, 0, 0, 0);
@@ -3159,21 +2096,21 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     bhv_symbol_3(SUM_FLOAT, 0, 0, 0);
     bhv_symbol_3(SUM_INT, 0, 0, 0);
     bhv_symbol_3(SET_HITBOX_WITH_OFFSET, 0, 0, 0);
-    
+
     bhv_symbol_4(SET_OBJ_PHYSICS, 0, 0, 0, 0);
-    
+
     // Both CALL and GOTO can have a offset to their addresses
     // in their non-extended counterparts.
     // We might be able to support this in DynOS. But I would not know how.
-    
+
     // Call Behavior
     if (_Symbol == "CALL") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
-        
+
         BehaviorScript behavior = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         if (foundBeh) {
             aGfxData->mPointerList.Add(aHead + 1);
             BehaviorScript _Bs[] = { CALL(behavior) };
@@ -3187,15 +2124,15 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
+
     // Call Behavior
     if (_Symbol == "CALL_NATIVE") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundFunc = true;
-        
+
         BehaviorScript function = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundFunc);
-        
+
         if (foundFunc) {
             aGfxData->mPointerList.Add(aHead + 1);
             BehaviorScript _Bs[] = { CALL_NATIVE(function) };
@@ -3209,15 +2146,15 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
+
     // Jump to Behavior (Goto)
     if (_Symbol == "GOTO") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
-        
+
         BehaviorScript behavior = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         if (foundBeh) {
             aGfxData->mPointerList.Add(aHead + 1);
             BehaviorScript _Bs[] = { GOTO(behavior) };
@@ -3231,17 +2168,17 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
-    
+
+
     // Spawn Child
     if (_Symbol == "SPAWN_CHILD") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
-        
+
         BehaviorScript modelID = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         BehaviorScript behavior = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         if (foundBeh) {
             aGfxData->mPointerList.Add(aHead + 2);
             BehaviorScript _Bs[] = { SPAWN_CHILD(modelID, behavior) };
@@ -3255,17 +2192,17 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
+
     // Spawn Child with Parameter
     if (_Symbol == "SPAWN_CHILD_WITH_PARAM") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
-        
+
         BehaviorScript bhvParam = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         BehaviorScript modelID = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         BehaviorScript behavior = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         if (foundBeh) {
             aGfxData->mPointerList.Add(aHead + 2);
             BehaviorScript _Bs[] = { SPAWN_CHILD_WITH_PARAM(bhvParam, modelID, behavior) };
@@ -3279,16 +2216,16 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
+
     // Spawn Object
     if (_Symbol == "SPAWN_OBJ") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
-        
+
         BehaviorScript modelID = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         BehaviorScript behavior = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         if (foundBeh) {
             aGfxData->mPointerList.Add(aHead + 2);
             BehaviorScript _Bs[] = { SPAWN_OBJ(modelID, behavior) };
@@ -3305,12 +2242,12 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "LOAD_ANIMATIONS") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundAnimation = true;
-        
+
         BehaviorScript field = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         BehaviorScript animations = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundAnimation);
-        
+
         if (foundAnimation) {
             aGfxData->mPointerList.Add(aHead + 1);
             BehaviorScript _Bs[] = { LOAD_ANIMATIONS(field, animations) };
@@ -3325,15 +2262,15 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
-    
+
+
     if (_Symbol == "LOAD_COLLISION_DATA") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundCollisionData = true;
-        
+
         BehaviorScript collisionData = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundCollisionData);
-        
+
         if (foundCollisionData) {
             aGfxData->mPointerList.Add(aHead + 1);
             BehaviorScript _Bs[] = { LOAD_COLLISION_DATA(collisionData) };
@@ -3347,7 +2284,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         }
         return;
     }
-    
+
     // We support directly using some extended types if needed.
 
     if (_Symbol == "CALL_EXT" || _Symbol == "CALL_CUSTOM") {
@@ -3355,7 +2292,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
         bool foundBeh = true;
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         u32 behIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
         BehaviorScript _Bs[] = { CALL_EXT(behIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3365,10 +2302,10 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "CALL_NATIVE_EXT" || _Symbol == "CALL_CUSTOM_NATIVE") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundFunc = true;
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundFunc);
-        
+
         u32 funcIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
         BehaviorScript _Bs[] = { CALL_NATIVE_EXT(funcIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3378,10 +2315,10 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "GOTO_EXT") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         u32 behIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
         BehaviorScript _Bs[] = { GOTO_EXT(behIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3391,11 +2328,11 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "SPAWN_CHILD_EXT" || _Symbol == "SPAWN_LUA_CHILD") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
         BehaviorScript modelID = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         u32 behIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 2, aNode->mTokens[topTokenIndex + 1]);
         BehaviorScript _Bs[] = { SPAWN_CHILD_EXT(modelID, behIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3405,12 +2342,12 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "SPAWN_CHILD_WITH_PARAM_EXT" || _Symbol == "SPAWN_LUA_CHILD_WITH_PARAM") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
         BehaviorScript bhvParam = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         BehaviorScript modelID = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         u32 behIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 2, aNode->mTokens[topTokenIndex + 2]);
         BehaviorScript _Bs[] = { SPAWN_CHILD_WITH_PARAM_EXT(bhvParam, modelID, behIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3420,11 +2357,11 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "SPAWN_OBJ_EXT" || _Symbol == "SPAWN_LUA_OBJ") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundBeh = true;
         BehaviorScript modelID = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        
+
         u32 behIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 2, aNode->mTokens[topTokenIndex + 1]);
         BehaviorScript _Bs[] = { SPAWN_OBJ_EXT(modelID, behIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3435,11 +2372,11 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     /*
     if (_Symbol == "LOAD_ANIMATIONS_EXT" || _Symbol == "LOAD_CUSTOM_ANIMATIONS") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundAnimation = true;
         BehaviorScript field = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundAnimation);
-        
+
         u32 animIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
         BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3450,10 +2387,10 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     if (_Symbol == "LOAD_COLLISION_DATA_EXT" || _Symbol == "LOAD_CUSTOM_COLLISION_DATA") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         bool foundCollisionData = true;
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundCollisionData);
-        
+
         u32 colDataIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
         BehaviorScript _Bs[] = { LOAD_COLLISION_DATA_EXT(colDataIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
@@ -3501,7 +2438,7 @@ static void DynOS_Bhv_Write(FILE* aFile, GfxData* aGfxData, DataNode<BehaviorScr
     // Name
     WriteBytes<u8>(aFile, DATA_TYPE_BEHAVIOR_SCRIPT);
     aNode->mName.Write(aFile);
-    
+
     // Version
     WriteBytes<u8>(aFile, BEHAVIOR_MAJOR_VER);
     WriteBytes<u8>(aFile, BEHAVIOR_MINOR_VER);
@@ -3550,12 +2487,12 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(FILE *aFile, GfxData *aGfxData) 
 
     // Name
     _Node->mName.Read(aFile);
-    
+
     // Version
     u8 majorVersion = ReadBytes<u8>(aFile);
     u8 minorVersion = ReadBytes<u8>(aFile);
     u8 patchVersion = ReadBytes<u8>(aFile);
-    
+
     // Version Sanity Check
     //
     // If the major version doesn't match, then a drasitc change has happened and
@@ -3564,7 +2501,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(FILE *aFile, GfxData *aGfxData) 
     u32 dataSize = ReadBytes<u32>(aFile);
     if (majorVersion != BEHAVIOR_MIN_MAJOR_VER || (minorVersion < BEHAVIOR_MIN_MINOR_VER || patchVersion < BEHAVIOR_MIN_PATCH_VER)) {
         PrintError("  ERROR: Behavior version is %u.%u.%u, but reading behaviors under %u.%u.%u is not supported!", majorVersion, minorVersion, patchVersion, BEHAVIOR_MIN_MAJOR_VER, BEHAVIOR_MIN_MINOR_VER, BEHAVIOR_MIN_PATCH_VER);
-        
+
         // Skip the rest of the bytes saved for this behavior.
         SkipBytes(aFile, dataSize);
         // We don't return this since we failed to read the behavior.
@@ -3677,10 +2614,10 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
         } else {
             Print("  %u error(s): Unable to parse data", _GfxData->mErrorCount);
         }
-        
+
         // Clear data pointers
         ClearBhvDataNodes(_GfxData->mBehaviorScripts);
-        
+
         _GfxData->mPointerList.Clear();
         _GfxData->mPointerOffsetList.Clear();
         _GfxData->mLuaPointerList.Clear();
@@ -3694,7 +2631,7 @@ void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
     GfxData *_GfxData = New<GfxData>();
 
     // Read the behavior_data.c files from the pack folder and any subfolders.
-    
+
     // Read the main folder.
     if (fs_sys_dir_exists(aPackFolder.c_str())) {
         _GfxData->mModelIdentifier = 0;
@@ -3705,7 +2642,7 @@ void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
             _BehaviorsFolders.Add({ _GfxData->mModelIdentifier, String(aPackFolder.c_str()) });
         }
     }
-    
+
     // Read the subfolders.
     DIR *aPackDir = opendir(aPackFolder.c_str());
     if (aPackDir) {

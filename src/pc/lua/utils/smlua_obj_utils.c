@@ -86,7 +86,7 @@ struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExten
 
 s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
     const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
-    return o->behavior == behavior;
+    return o->behavior == smlua_override_behavior(behavior);
 }
 
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId) {
@@ -119,6 +119,7 @@ struct Object *obj_get_first(enum ObjectList objList) {
 
 struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
@@ -132,6 +133,7 @@ struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
 
 struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value) {
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
@@ -145,6 +147,7 @@ struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId beha
 
 struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value) {
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next(obj)) {
@@ -159,6 +162,7 @@ struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId beha
 struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
     f32 minDist = 0x20000;
     const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
     struct Object *closestObj = NULL;
     
     if (behavior) {
@@ -178,6 +182,7 @@ struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum Be
 
 s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId) {
     const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
     s32 count = 0;
     
     if (behavior) {

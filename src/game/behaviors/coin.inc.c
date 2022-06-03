@@ -224,7 +224,7 @@ void coin_inside_boo_act_0(void) {
     
     cur_obj_become_intangible();
     
-    if (parent == NULL || (parent->behavior != bhvMerryGoRoundBoo && parent->behavior != bhvGhostHuntBoo && parent->behavior != bhvBoo)) {
+    if (parent == NULL || (parent->behavior != smlua_override_behavior(bhvMerryGoRoundBoo) && parent->behavior != smlua_override_behavior(bhvGhostHuntBoo) && parent->behavior != smlua_override_behavior(bhvBoo))) {
         o->parentObj = NULL;
         obj_mark_for_deletion(o);
         return;

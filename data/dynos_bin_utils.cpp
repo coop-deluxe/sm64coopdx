@@ -179,6 +179,11 @@ static bool ParseOperator(const char* op) {
     return false;
 }
 
+static bool PeekOperator(const char* op) {
+    size_t opLen = strlen(op);
+    return (!strncmp(sRdString, op, opLen));
+}
+
 static s64 ParseNumeric() {
     String numeric = "";
     char* c = sRdString;
@@ -275,12 +280,14 @@ static s64 ParseFactor() {
 static s64 ParseTerm() {
     s64 f1 = ParseFactor();
 
-    if (ParseOperator("*")) {
-        return f1 * ParseFactor();
-    } else if (ParseOperator("/")) {
-        return f1 / ParseFactor();
-    } else if (ParseOperator("%")) {
-        return f1 % ParseFactor();
+    while (PeekOperator("*") || PeekOperator("/") || PeekOperator("%")) {
+        if (ParseOperator("*")) {
+            f1 *= ParseFactor();
+        } else if (ParseOperator("/")) {
+            f1 /= ParseFactor();
+        } else if (ParseOperator("%")) {
+            f1 %= ParseFactor();
+        }
     }
 
     return f1;
@@ -289,10 +296,12 @@ static s64 ParseTerm() {
 static s64 ParseAddSubExpression() {
     s64 t1 = ParseTerm();
 
-    if (ParseOperator("+")) {
-        return t1 + ParseTerm();
-    } else if (ParseOperator("-")) {
-        return t1 - ParseTerm();
+    while (PeekOperator("+") || PeekOperator("-")) {
+        if (ParseOperator("+")) {
+            t1 += ParseTerm();
+        } else if (ParseOperator("-")) {
+            t1 -= ParseTerm();
+        }
     }
 
     return t1;
@@ -301,10 +310,12 @@ static s64 ParseAddSubExpression() {
 static s64 ParseShiftExpression() {
     s64 e1 = ParseAddSubExpression();
 
-    if (ParseOperator("<<")) {
-        return e1 << ParseAddSubExpression();
-    } else if (ParseOperator(">>")) {
-        return e1 >> ParseAddSubExpression();
+    while (PeekOperator("<<") || PeekOperator(">>")) {
+        if (ParseOperator("<<")) {
+            e1 = e1 << ParseAddSubExpression();
+        } else if (ParseOperator(">>")) {
+            e1 = e1 >> ParseAddSubExpression();
+        }
     }
 
     return e1;
@@ -313,8 +324,10 @@ static s64 ParseShiftExpression() {
 static s64 ParseBitAndExpression() {
     s64 e1 = ParseShiftExpression();
 
-    if (ParseOperator("&")) {
-        return e1 & ParseShiftExpression();
+    while (PeekOperator("&")) {
+        if (ParseOperator("&")) {
+            e1 &= ParseShiftExpression();
+        }
     }
 
     return e1;
@@ -323,8 +336,10 @@ static s64 ParseBitAndExpression() {
 static s64 ParseBitXorExpression() {
     s64 e1 = ParseBitAndExpression();
 
-    if (ParseOperator("^")) {
-        return e1 ^ ParseBitAndExpression();
+    while (PeekOperator("^")) {
+        if (ParseOperator("^")) {
+            e1 ^= ParseBitAndExpression();
+        }
     }
 
     return e1;
@@ -333,8 +348,10 @@ static s64 ParseBitXorExpression() {
 static s64 ParseBitOrExpression() {
     s64 e1 = ParseBitXorExpression();
 
-    if (ParseOperator("|")) {
-        return e1 | ParseBitXorExpression();
+    while (PeekOperator("|")) {
+        if (ParseOperator("|")) {
+            e1 |= ParseBitXorExpression();
+        }
     }
 
     return e1;
@@ -349,6 +366,9 @@ s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc
     sRdError = false;
     sRdConstantFunc = func;
     s64 value = ParseExpression();
+    if (strlen(sRdString) > 0) {
+        sRdError = true;
+    }
     sRdString = NULL;
     *success = !sRdError;
     return value;

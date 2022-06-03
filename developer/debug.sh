@@ -15,4 +15,4 @@ if [ ! -f "$FILE" ]; then
     WINPTY=
 fi
 
-$WINPTY cgdb $FILE -ex 'r'
+$WINPTY cgdb $FILE

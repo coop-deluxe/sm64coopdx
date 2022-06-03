@@ -22,7 +22,7 @@ void bhv_spawned_star_init(void) {
 
     // exclamation box stars are not sent through the normal exclamation box
     // path due to jankiness in oBehParams. Send the spawn event here instead.
-    u8 spawnedFromExclamationBox = (o->parentObj != NULL && o->parentObj->behavior == bhvExclamationBox);
+    u8 spawnedFromExclamationBox = (o->parentObj != NULL && o->parentObj->behavior == smlua_override_behavior(bhvExclamationBox));
     if (gNetworkAreaLoaded && spawnedFromExclamationBox) {
         o->oStarSpawnExtCutsceneFlags = 1;
         o->parentObj = o;
