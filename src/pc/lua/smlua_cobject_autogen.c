@@ -415,10 +415,11 @@ static struct LuaObjectField sFloorGeometryFields[LUA_FLOOR_GEOMETRY_FIELD_COUNT
 //  { "unused",       LOT_???, offsetof(struct FloorGeometry, unused),       false, LOT_???  }, <--- UNIMPLEMENTED
 };
 
-#define LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT 53
+#define LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT 56
 static struct LuaObjectField sGlobalObjectAnimationsFields[LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT] = {
     { "amp_seg8_anims_08004034",           LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, amp_seg8_anims_08004034),           true, LOT_POINTER },
     { "birds_seg5_anims_050009E8",         LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, birds_seg5_anims_050009E8),         true, LOT_POINTER },
+    { "blargg_seg5_anims_0500616C",        LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, blargg_seg5_anims_0500616C),        true, LOT_POINTER },
     { "blue_fish_seg3_anims_0301C2B0",     LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, blue_fish_seg3_anims_0301C2B0),     true, LOT_POINTER },
     { "bobomb_seg8_anims_0802396C",        LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, bobomb_seg8_anims_0802396C),        true, LOT_POINTER },
     { "bookend_seg5_anims_05002540",       LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, bookend_seg5_anims_05002540),       true, LOT_POINTER },
@@ -433,6 +434,7 @@ static struct LuaObjectField sGlobalObjectAnimationsFields[LUA_GLOBAL_OBJECT_ANI
     { "chilly_chief_seg6_anims_06003994",  LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, chilly_chief_seg6_anims_06003994),  true, LOT_POINTER },
     { "chuckya_seg8_anims_0800C070",       LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, chuckya_seg8_anims_0800C070),       true, LOT_POINTER },
     { "clam_shell_seg5_anims_05001744",    LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, clam_shell_seg5_anims_05001744),    true, LOT_POINTER },
+    { "cyan_fish_seg6_anims_0600E264",     LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, cyan_fish_seg6_anims_0600E264),     true, LOT_POINTER },
     { "door_seg3_anims_030156C0",          LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, door_seg3_anims_030156C0),          true, LOT_POINTER },
     { "dorrie_seg6_anims_0600F638",        LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, dorrie_seg6_anims_0600F638),        true, LOT_POINTER },
     { "eyerok_seg5_anims_050116E4",        LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, eyerok_seg5_anims_050116E4),        true, LOT_POINTER },
@@ -459,6 +461,7 @@ static struct LuaObjectField sGlobalObjectAnimationsFields[LUA_GLOBAL_OBJECT_ANI
     { "skeeter_seg6_anims_06007DE0",       LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, skeeter_seg6_anims_06007DE0),       true, LOT_POINTER },
     { "snowman_seg5_anims_0500D118",       LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, snowman_seg5_anims_0500D118),       true, LOT_POINTER },
     { "spindrift_seg5_anims_05002D68",     LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, spindrift_seg5_anims_05002D68),     true, LOT_POINTER },
+    { "spiny_egg_seg5_anims_050157E4",     LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, spiny_egg_seg5_anims_050157E4),     true, LOT_POINTER },
     { "spiny_seg5_anims_05016EAC",         LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, spiny_seg5_anims_05016EAC),         true, LOT_POINTER },
     { "sushi_seg5_anims_0500AE54",         LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, sushi_seg5_anims_0500AE54),         true, LOT_POINTER },
     { "swoop_seg6_anims_060070D0",         LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, swoop_seg6_anims_060070D0),         true, LOT_POINTER },
@@ -472,7 +475,7 @@ static struct LuaObjectField sGlobalObjectAnimationsFields[LUA_GLOBAL_OBJECT_ANI
     { "yoshi_seg5_anims_05024100",         LVT_OBJECTANIMPOINTER_P, offsetof(struct GlobalObjectAnimations, yoshi_seg5_anims_05024100),         true, LOT_POINTER },
 };
 
-#define LUA_GLOBAL_OBJECT_COLLISION_DATA_FIELD_COUNT 99
+#define LUA_GLOBAL_OBJECT_COLLISION_DATA_FIELD_COUNT 101
 static struct LuaObjectField sGlobalObjectCollisionDataFields[LUA_GLOBAL_OBJECT_COLLISION_DATA_FIELD_COUNT] = {
     { "bbh_seg7_collision_coffin",                       LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, bbh_seg7_collision_coffin),                       false, LOT_POINTER },
     { "bbh_seg7_collision_haunted_bookshelf",            LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, bbh_seg7_collision_haunted_bookshelf),            false, LOT_POINTER },
@@ -499,6 +502,7 @@ static struct LuaObjectField sGlobalObjectCollisionDataFields[LUA_GLOBAL_OBJECT_
     { "ddd_seg7_collision_submarine",                    LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, ddd_seg7_collision_submarine),                    false, LOT_POINTER },
     { "door_seg3_collision_0301CE78",                    LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, door_seg3_collision_0301CE78),                    false, LOT_POINTER },
     { "dorrie_seg6_collision_0600F644",                  LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, dorrie_seg6_collision_0600F644),                  false, LOT_POINTER },
+    { "dorrie_seg6_collision_0600FBB8",                  LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, dorrie_seg6_collision_0600FBB8),                  false, LOT_POINTER },
     { "exclamation_box_outline_seg8_collision_08025F78", LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, exclamation_box_outline_seg8_collision_08025F78), false, LOT_POINTER },
     { "hmc_seg7_collision_controllable_platform",        LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, hmc_seg7_collision_controllable_platform),        false, LOT_POINTER },
     { "hmc_seg7_collision_controllable_platform_sub",    LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, hmc_seg7_collision_controllable_platform_sub),    false, LOT_POINTER },
@@ -555,6 +559,7 @@ static struct LuaObjectField sGlobalObjectCollisionDataFields[LUA_GLOBAL_OBJECT_
     { "ttm_seg7_collision_pitoune_2",                    LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, ttm_seg7_collision_pitoune_2),                    false, LOT_POINTER },
     { "ttm_seg7_collision_podium_warp",                  LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, ttm_seg7_collision_podium_warp),                  false, LOT_POINTER },
     { "ttm_seg7_collision_ukiki_cage",                   LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, ttm_seg7_collision_ukiki_cage),                   false, LOT_POINTER },
+    { "unknown_seg8_collision_080262F8",                 LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, unknown_seg8_collision_080262F8),                 false, LOT_POINTER },
     { "warp_pipe_seg3_collision_03009AC8",               LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, warp_pipe_seg3_collision_03009AC8),               false, LOT_POINTER },
     { "wdw_seg7_collision_arrow_lift",                   LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, wdw_seg7_collision_arrow_lift),                   false, LOT_POINTER },
     { "wdw_seg7_collision_express_elevator_platform",    LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, wdw_seg7_collision_express_elevator_platform),    false, LOT_POINTER },

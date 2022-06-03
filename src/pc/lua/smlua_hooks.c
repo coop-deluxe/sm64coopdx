@@ -649,15 +649,15 @@ const BehaviorScript* smlua_override_behavior(const BehaviorScript *behavior) {
     if (L == NULL) { return behavior; }
 
     enum BehaviorId id = get_id_from_behavior(behavior);
-    const BehaviorScript *hookedBehavior = get_hooked_behavior_from_id(id, false);
+    const BehaviorScript *hookedBehavior = smlua_get_hooked_behavior_from_id(id, false);
     if (hookedBehavior != NULL) { return hookedBehavior; }
     return behavior + *sBehaviorOffset;
 }
 
-const BehaviorScript* get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal) {
+const BehaviorScript* smlua_get_hooked_behavior_from_id(enum BehaviorId id, bool returnOriginal) {
     lua_State *L = gLuaState;
     if (L == NULL) { return NULL; }
-    
+
     for (int i = 0; i < sHookedBehaviorsCount; i++) {
         struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
         if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
@@ -667,29 +667,29 @@ const BehaviorScript* get_hooked_behavior_from_id(enum BehaviorId id, bool retur
     return NULL;
 }
 
-bool is_behavior_hooked_from_lua(const BehaviorScript *behavior) {
+bool smlua_is_behavior_hooked(const BehaviorScript *behavior) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
-    
+
     enum BehaviorId id = get_id_from_behavior(behavior);
     for (int i = 0; i < sHookedBehaviorsCount; i++) {
         struct LuaHookedBehavior *hooked = &sHookedBehaviors[i];
         if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
         return hooked->luaBehavior;
     }
-    
+
     return false;
 }
 
-int hook_behavior(BehaviorScript *bhvScript, const char *bhvName) {
+int smlua_hook_customn_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
         LOG_ERROR("Hooked behaviors exceeded maximum references!");
         return 0;
     }
-    
+
     u32 originalBehaviorId = get_id_from_behavior(bhvScript);
     u8 newBehavior = originalBehaviorId >= id_bhv_max_count;
-    
+
     struct LuaHookedBehavior *hooked = &sHookedBehaviors[sHookedBehaviorsCount];
     u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
     hooked->behavior = bhvScript;
@@ -705,7 +705,7 @@ int hook_behavior(BehaviorScript *bhvScript, const char *bhvName) {
     hooked->mod = gLuaActiveMod;
 
     sHookedBehaviorsCount++;
-    
+
     // We want to push the behavior into the global LUA state. So mods can access it.
     // It's also used for some things that would normally access a LUA behavior instead.
     lua_State* L = gLuaState;
@@ -713,7 +713,7 @@ int hook_behavior(BehaviorScript *bhvScript, const char *bhvName) {
         lua_pushinteger(L, customBehaviorId);
         lua_setglobal(L, bhvName);
     }
-    
+
     return 1;
 }
 
@@ -823,7 +823,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         if (!before && hooked->replace) {
             return false;
         }
-        
+
         // This behavior doesn't call it's LUA functions in this manner. It actually uses the normal behavior
         // system.
         if (!hooked->luaBehavior) {
@@ -1074,7 +1074,7 @@ void smlua_clear_hooks(void) {
 
     for (int i = 0; i < sHookedBehaviorsCount; i++) {
         struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
-        
+
         // If this is NULL. We can't do anything with it.
         if (hooked->behavior != NULL) {
             // If it's a LUA made behavior, The behavior is allocated so reset and free it.

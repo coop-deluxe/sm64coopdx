@@ -85,7 +85,7 @@ const char *DynOS_Bhv_GetToken(BehaviorScript *bhvScript, u32 index) {
     if (index >= gfxData->mLuaTokenList.Count()) {
         return NULL;
     }
- 
+
     return gfxData->mLuaTokenList[index].begin();
 }
 
@@ -96,9 +96,9 @@ void DynOS_Bhv_HookAllCustomBehaviors() {
         auto &scriptName = _CustomBehaviorScripts[i].first;
         auto &aGfxData = _CustomBehaviorScripts[i].second;
         auto &script = aGfxData->mBehaviorScripts[aGfxData->mBehaviorScripts.Count() - 1]->mData;
-        
+
         // Theres currently no better place but to do this here.
-        if (hook_behavior(script, scriptName) == 0) {
+        if (smlua_hook_customn_bhv(script, scriptName) == 0) {
             PrintError("  ERROR: Failed to add custom behavior '%s'!", scriptName);
         }
     }

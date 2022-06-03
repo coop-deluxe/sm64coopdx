@@ -553,6 +553,7 @@
 | ----- | ---- | ------ |
 | amp_seg8_anims_08004034 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | birds_seg5_anims_050009E8 | `Pointer` <`ObjectAnimPointer`> | read-only |
+| blargg_seg5_anims_0500616C | `Pointer` <`ObjectAnimPointer`> | read-only |
 | blue_fish_seg3_anims_0301C2B0 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | bobomb_seg8_anims_0802396C | `Pointer` <`ObjectAnimPointer`> | read-only |
 | bookend_seg5_anims_05002540 | `Pointer` <`ObjectAnimPointer`> | read-only |
@@ -567,6 +568,7 @@
 | chilly_chief_seg6_anims_06003994 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | chuckya_seg8_anims_0800C070 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | clam_shell_seg5_anims_05001744 | `Pointer` <`ObjectAnimPointer`> | read-only |
+| cyan_fish_seg6_anims_0600E264 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | door_seg3_anims_030156C0 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | dorrie_seg6_anims_0600F638 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | eyerok_seg5_anims_050116E4 | `Pointer` <`ObjectAnimPointer`> | read-only |
@@ -593,6 +595,7 @@
 | skeeter_seg6_anims_06007DE0 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | snowman_seg5_anims_0500D118 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | spindrift_seg5_anims_05002D68 | `Pointer` <`ObjectAnimPointer`> | read-only |
+| spiny_egg_seg5_anims_050157E4 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | spiny_seg5_anims_05016EAC | `Pointer` <`ObjectAnimPointer`> | read-only |
 | sushi_seg5_anims_0500AE54 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | swoop_seg6_anims_060070D0 | `Pointer` <`ObjectAnimPointer`> | read-only |
@@ -638,6 +641,7 @@
 | ddd_seg7_collision_submarine | `Pointer` <`Collision`> |  |
 | door_seg3_collision_0301CE78 | `Pointer` <`Collision`> |  |
 | dorrie_seg6_collision_0600F644 | `Pointer` <`Collision`> |  |
+| dorrie_seg6_collision_0600FBB8 | `Pointer` <`Collision`> |  |
 | exclamation_box_outline_seg8_collision_08025F78 | `Pointer` <`Collision`> |  |
 | hmc_seg7_collision_controllable_platform | `Pointer` <`Collision`> |  |
 | hmc_seg7_collision_controllable_platform_sub | `Pointer` <`Collision`> |  |
@@ -694,6 +698,7 @@
 | ttm_seg7_collision_pitoune_2 | `Pointer` <`Collision`> |  |
 | ttm_seg7_collision_podium_warp | `Pointer` <`Collision`> |  |
 | ttm_seg7_collision_ukiki_cage | `Pointer` <`Collision`> |  |
+| unknown_seg8_collision_080262F8 | `Pointer` <`Collision`> |  |
 | warp_pipe_seg3_collision_03009AC8 | `Pointer` <`Collision`> |  |
 | wdw_seg7_collision_arrow_lift | `Pointer` <`Collision`> |  |
 | wdw_seg7_collision_express_elevator_platform | `Pointer` <`Collision`> |  |

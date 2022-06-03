@@ -343,6 +343,7 @@
 --- @class GlobalObjectAnimations
 --- @field public amp_seg8_anims_08004034 Pointer_ObjectAnimPointer
 --- @field public birds_seg5_anims_050009E8 Pointer_ObjectAnimPointer
+--- @field public blargg_seg5_anims_0500616C Pointer_ObjectAnimPointer
 --- @field public blue_fish_seg3_anims_0301C2B0 Pointer_ObjectAnimPointer
 --- @field public bobomb_seg8_anims_0802396C Pointer_ObjectAnimPointer
 --- @field public bookend_seg5_anims_05002540 Pointer_ObjectAnimPointer
@@ -357,6 +358,7 @@
 --- @field public chilly_chief_seg6_anims_06003994 Pointer_ObjectAnimPointer
 --- @field public chuckya_seg8_anims_0800C070 Pointer_ObjectAnimPointer
 --- @field public clam_shell_seg5_anims_05001744 Pointer_ObjectAnimPointer
+--- @field public cyan_fish_seg6_anims_0600E264 Pointer_ObjectAnimPointer
 --- @field public door_seg3_anims_030156C0 Pointer_ObjectAnimPointer
 --- @field public dorrie_seg6_anims_0600F638 Pointer_ObjectAnimPointer
 --- @field public eyerok_seg5_anims_050116E4 Pointer_ObjectAnimPointer
@@ -383,6 +385,7 @@
 --- @field public skeeter_seg6_anims_06007DE0 Pointer_ObjectAnimPointer
 --- @field public snowman_seg5_anims_0500D118 Pointer_ObjectAnimPointer
 --- @field public spindrift_seg5_anims_05002D68 Pointer_ObjectAnimPointer
+--- @field public spiny_egg_seg5_anims_050157E4 Pointer_ObjectAnimPointer
 --- @field public spiny_seg5_anims_05016EAC Pointer_ObjectAnimPointer
 --- @field public sushi_seg5_anims_0500AE54 Pointer_ObjectAnimPointer
 --- @field public swoop_seg6_anims_060070D0 Pointer_ObjectAnimPointer
@@ -421,6 +424,7 @@
 --- @field public ddd_seg7_collision_submarine Pointer_Collision
 --- @field public door_seg3_collision_0301CE78 Pointer_Collision
 --- @field public dorrie_seg6_collision_0600F644 Pointer_Collision
+--- @field public dorrie_seg6_collision_0600FBB8 Pointer_Collision
 --- @field public exclamation_box_outline_seg8_collision_08025F78 Pointer_Collision
 --- @field public hmc_seg7_collision_controllable_platform Pointer_Collision
 --- @field public hmc_seg7_collision_controllable_platform_sub Pointer_Collision
@@ -477,6 +481,7 @@
 --- @field public ttm_seg7_collision_pitoune_2 Pointer_Collision
 --- @field public ttm_seg7_collision_podium_warp Pointer_Collision
 --- @field public ttm_seg7_collision_ukiki_cage Pointer_Collision
+--- @field public unknown_seg8_collision_080262F8 Pointer_Collision
 --- @field public warp_pipe_seg3_collision_03009AC8 Pointer_Collision
 --- @field public wdw_seg7_collision_arrow_lift Pointer_Collision
 --- @field public wdw_seg7_collision_express_elevator_platform Pointer_Collision

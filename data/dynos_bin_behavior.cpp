@@ -2547,7 +2547,7 @@ GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehavio
         for (bool _Done = false; !_Done;) {
             switch (ReadBytes<u8>(_File)) {
                 case DATA_TYPE_BEHAVIOR_SCRIPT: DynOS_Bhv_Load(_File, _GfxData); break;
-                default:                        _Done = true;                                   break;
+                default:                        _Done = true;                    break;
             }
         }
         fclose(_File);

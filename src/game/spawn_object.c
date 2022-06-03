@@ -83,7 +83,7 @@ struct LinkedList *unused_try_allocate(struct LinkedList *destList,
  */
 struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNode *freeList) {
     struct ObjectNode *nextObj = NULL;
-    
+
     if (destList == NULL || freeList == NULL) {
         fprintf(stderr, "FATAL ERROR: Failed to try and allocate a object because either the destList %p or freeList %p was NULL!\n", destList, freeList);
         return NULL;
@@ -105,7 +105,7 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
     } else {
         return NULL;
     }
-    
+
     geo_remove_child(&nextObj->gfx.node);
     geo_add_child(&gObjParentGraphNode, &nextObj->gfx.node);
 
@@ -354,7 +354,7 @@ static void snap_object_to_floor(struct Object *obj) {
 struct Object *create_object(const BehaviorScript *bhvScript) {
     if (!bhvScript) { return NULL; }
     s32 objListIndex = OBJ_LIST_DEFAULT;
-    bool luaBehavior = is_behavior_hooked_from_lua(bhvScript);
+    bool luaBehavior = smlua_is_behavior_hooked(bhvScript);
     const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
 
     // If the first behavior script command is "begin <object list>", then
@@ -362,7 +362,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     if ((behavior[0] >> 24) == 0) {
         objListIndex = (behavior[0] >> 16) & 0xFFFF;
     }
-    
+
     if (objListIndex >= NUM_OBJ_LISTS) {
         fprintf(stderr, "Failed to create object with non-existent object list index %i with behavior script %p.\n", objListIndex, bhvScript);
         return NULL;
