@@ -22,6 +22,7 @@ struct SpawnObjectData {
     u32 behaviorId;
     s16 activeFlags;
     s32 rawData[80];
+    u8 setHome;
     u8 globalPlayerIndex;
     u16 extendedModelId;
     u8 extraFieldCount;
@@ -88,6 +89,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         packet_write(&p, &o->header.gfx.scale[0], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
         packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
+        packet_write(&p, &o->setHome, sizeof(u8));
         packet_write(&p, &o->globalPlayerIndex, sizeof(u8));
         packet_write(&p, &extendedModelId, sizeof(u16));
     }
@@ -124,6 +126,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &scale[0], sizeof(f32));
         packet_read(p, &scale[1], sizeof(f32));
         packet_read(p, &scale[2], sizeof(f32));
+        packet_read(p, &data.setHome, sizeof(u8));
         packet_read(p, &data.globalPlayerIndex, sizeof(u8));
         packet_read(p, &data.extendedModelId, sizeof(u16));
 
@@ -174,6 +177,7 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         o->globalPlayerIndex = data.globalPlayerIndex;
         o->coopFlags |= COOP_OBJ_FLAG_NETWORK;
+        o->setHome = data.setHome;
 
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * 80);
 

@@ -1,4 +1,3 @@
-// 0x0701FDB8 - 0x0701FEA8
 static const Vtx bbh_seg7_vertex_0701FDB8[] = {
     {{{  -306,      0,    256}, 0, {     0,      0}, {0xff, 0xff, 0xff, 0xff}}},
     {{{   307,   -101,    256}, 0, {  6100,    990}, {0xff, 0xff, 0xff, 0xff}}},
