@@ -70,6 +70,8 @@ struct BehaviorTrajectories {
     Trajectory* BowlingBallBobTrajectory;
     Trajectory* BowlingBallBob2Trajectory;
     Trajectory* BowlingBallTtmTrajectory;
+    Trajectory* BowlingBallThiLargeTrajectory;
+    Trajectory* BowlingBallThiSmallTrajectory;
     Trajectory* MipsTrajectory;
     Trajectory* Mips2Trajectory;
     Trajectory* Mips3Trajectory;

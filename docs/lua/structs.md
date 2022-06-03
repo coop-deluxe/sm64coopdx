@@ -251,6 +251,8 @@
 | ----- | ---- | ------ |
 | BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> |  |
 | BowlingBallBobTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallThiLargeTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallThiSmallTrajectory | `Pointer` <`Trajectory`> |  |
 | BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> |  |
 | KoopaBobTrajectory | `Pointer` <`Trajectory`> |  |
 | KoopaThiTrajectory | `Pointer` <`Trajectory`> |  |

@@ -139,6 +139,8 @@
 --- @class BehaviorTrajectories
 --- @field public BowlingBallBob2Trajectory Pointer_Trajectory
 --- @field public BowlingBallBobTrajectory Pointer_Trajectory
+--- @field public BowlingBallThiLargeTrajectory Pointer_Trajectory
+--- @field public BowlingBallThiSmallTrajectory Pointer_Trajectory
 --- @field public BowlingBallTtmTrajectory Pointer_Trajectory
 --- @field public KoopaBobTrajectory Pointer_Trajectory
 --- @field public KoopaThiTrajectory Pointer_Trajectory

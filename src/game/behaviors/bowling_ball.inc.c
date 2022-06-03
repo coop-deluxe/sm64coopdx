@@ -12,7 +12,7 @@ static struct ObjectHitbox sBowlingBallHitbox = {
     /* hurtboxHeight:     */ 0,
 };
 
-static Trajectory sThiHugeMetalBallTraj[] = {
+Trajectory sThiHugeMetalBallTraj[] = {
     TRAJECTORY_POS(0, /*pos*/ -4786,   101, -2166),
     TRAJECTORY_POS(1, /*pos*/ -5000,    81, -2753),
     TRAJECTORY_POS(2, /*pos*/ -5040,    33, -3846),
@@ -26,7 +26,7 @@ static Trajectory sThiHugeMetalBallTraj[] = {
     TRAJECTORY_END(),
 };
 
-static Trajectory sThiTinyMetalBallTraj[] = {
+Trajectory sThiTinyMetalBallTraj[] = {
     TRAJECTORY_POS(0, /*pos*/ -1476,    29,  -680),
     TRAJECTORY_POS(1, /*pos*/ -1492,    14, -1072),
     TRAJECTORY_POS(2, /*pos*/ -1500,     3, -1331),
@@ -67,11 +67,11 @@ void bowling_ball_set_waypoints(void) {
             break;
 
         case BBALL_BP_STYPE_THI_LARGE:
-            o->oPathedStartWaypoint = (struct Waypoint *) sThiHugeMetalBallTraj;
+            o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.BowlingBallThiLargeTrajectory);
             break;
 
         case BBALL_BP_STYPE_THI_SMALL:
-            o->oPathedStartWaypoint = (struct Waypoint *) sThiTinyMetalBallTraj;
+            o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.BowlingBallThiSmallTrajectory);
             break;
     }
 }
@@ -117,23 +117,23 @@ void bhv_bowling_ball_initializeLoop(void) {
 
     switch (o->oBehParams2ndByte) {
         case BBALL_BP_STYPE_BOB_UPPER:
-            o->oForwardVel = 20.0f;
+            o->oForwardVel = gBehaviorValues.BowlingBallBobSpeed;
             break;
 
         case BBALL_BP_STYPE_TTM:
-            o->oForwardVel = 10.0f;
+            o->oForwardVel = gBehaviorValues.BowlingBallTtmSpeed;
             break;
 
         case BBALL_BP_STYPE_BOB_LOWER:
-            o->oForwardVel = 20.0f;
+            o->oForwardVel = gBehaviorValues.BowlingBallBob2Speed;
             break;
 
         case BBALL_BP_STYPE_THI_LARGE:
-            o->oForwardVel = 25.0f;
+            o->oForwardVel = gBehaviorValues.BowlingBallThiLargeSpeed;
             break;
 
         case BBALL_BP_STYPE_THI_SMALL:
-            o->oForwardVel = 10.0f;
+            o->oForwardVel = gBehaviorValues.BowlingBallThiSmallSpeed;
             cur_obj_scale(0.3f);
             o->oGraphYOffset = 39.0f;
             break;
