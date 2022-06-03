@@ -288,6 +288,11 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| BowlingBallBob2Speed | `number` |  |
+| BowlingBallBobSpeed | `number` |  |
+| BowlingBallThiLargeSpeed | `number` |  |
+| BowlingBallThiSmallSpeed | `number` |  |
+| BowlingBallTtmSpeed | `number` |  |
 | KingBobombFVel | `number` |  |
 | KingBobombHealth | `integer` |  |
 | KingBobombYawVel | `integer` |  |

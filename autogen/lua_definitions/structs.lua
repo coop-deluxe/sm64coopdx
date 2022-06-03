@@ -169,6 +169,11 @@
 --- @field public UnagiTrajectory Pointer_Trajectory
 
 --- @class BehaviorValues
+--- @field public BowlingBallBob2Speed number
+--- @field public BowlingBallBobSpeed number
+--- @field public BowlingBallThiLargeSpeed number
+--- @field public BowlingBallThiSmallSpeed number
+--- @field public BowlingBallTtmSpeed number
 --- @field public KingBobombFVel number
 --- @field public KingBobombHealth integer
 --- @field public KingBobombYawVel integer

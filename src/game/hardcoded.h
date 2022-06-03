@@ -207,6 +207,11 @@ struct BehaviorValues {
     s16 KingWhompHealth;
     s16 MipsStar1Requirement;
     s16 MipsStar2Requirement;
+    f32 BowlingBallBobSpeed;
+    f32 BowlingBallBob2Speed;
+    f32 BowlingBallTtmSpeed;
+    f32 BowlingBallThiLargeSpeed;
+    f32 BowlingBallThiSmallSpeed;
     u8  ShowStarMilestones;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
