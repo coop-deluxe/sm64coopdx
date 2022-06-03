@@ -117,6 +117,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .BowlingBallTtmSpeed      = 20.0f,
     .BowlingBallThiLargeSpeed = 25.0f,
     .BowlingBallThiSmallSpeed = 10.0f,
+    .GrateStarRequirement     = 120,
     .ShowStarMilestones       = TRUE,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {

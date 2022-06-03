@@ -212,6 +212,7 @@ struct BehaviorValues {
     f32 BowlingBallTtmSpeed;
     f32 BowlingBallThiLargeSpeed;
     f32 BowlingBallThiSmallSpeed;
+    u16 GrateStarRequirement;
     u8  ShowStarMilestones;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;

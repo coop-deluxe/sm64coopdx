@@ -174,6 +174,7 @@
 --- @field public BowlingBallThiLargeSpeed number
 --- @field public BowlingBallThiSmallSpeed number
 --- @field public BowlingBallTtmSpeed number
+--- @field public GrateStarRequirement integer
 --- @field public KingBobombFVel number
 --- @field public KingBobombHealth integer
 --- @field public KingBobombYawVel integer

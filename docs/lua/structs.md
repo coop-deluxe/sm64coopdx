@@ -293,6 +293,7 @@
 | BowlingBallThiLargeSpeed | `number` |  |
 | BowlingBallThiSmallSpeed | `number` |  |
 | BowlingBallTtmSpeed | `number` |  |
+| GrateStarRequirement | `integer` |  |
 | KingBobombFVel | `number` |  |
 | KingBobombHealth | `integer` |  |
 | KingBobombYawVel | `integer` |  |
