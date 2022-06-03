@@ -11,7 +11,6 @@
 #include "game/game_init.h"
 #include "pc/utils/misc.h"
 #include "pc/network/network.h"
-#include "src/game/debug.h" // DO NOT COMMIT
 
 Vec3f gFindWallDirection = { 0 };
 u8 gFindWallDirectionActive = false;

@@ -377,6 +377,7 @@ const u8 *DynOS_Level_GetAreaName(s32 aLevel, s32 aArea, bool aDecaps) {
         { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Castle grounds */
         { "FIRST FLOOR", "SECOND FLOOR", "BASEMENT", "NOT AVAILABLE" }, /* Castle inside */
         { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Castle courtyard */
+        { "ENDING", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Ending */
     };
     static u8 sBuffer[256];
     memset(sBuffer, 0xFF, 256);
@@ -413,6 +414,7 @@ const u8 *DynOS_Level_GetAreaName(s32 aLevel, s32 aArea, bool aDecaps) {
         case LEVEL_CASTLE_GROUNDS: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[28][MIN(MAX(aArea - 1, 0), 3)]); break;
         case LEVEL_CASTLE: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[29][MIN(MAX(aArea - 1, 0), 3)]); break;
         case LEVEL_CASTLE_COURTYARD: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[30][MIN(MAX(aArea - 1, 0), 3)]); break;
+        case LEVEL_ENDING: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[31][MIN(MAX(aArea - 1, 0), 3)]); break;
         default: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[0][MIN(MAX(aArea - 1, 0), 3)]); break;
     }
 

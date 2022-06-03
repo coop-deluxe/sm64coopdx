@@ -61,6 +61,7 @@ extern "C" {
 #include "levels/ccm/header.h"
 #include "levels/cotmc/header.h"
 #include "levels/ddd/header.h"
+#include "levels/ending/header.h"
 #include "levels/hmc/header.h"
 #include "levels/jrb/header.h"
 #include "levels/lll/header.h"
@@ -157,6 +158,7 @@ static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_ccm_entry),
     define_builtin(level_cotmc_entry),
     define_builtin(level_ddd_entry),
+    define_builtin(level_ending_entry),
     define_builtin(level_hmc_entry),
     define_builtin(level_jrb_entry),
     define_builtin(level_lll_entry),
