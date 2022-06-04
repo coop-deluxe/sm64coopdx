@@ -40,7 +40,7 @@ u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
-u8 gNetworkRequestLocationTimer = 0;
+u16 gNetworkRequestLocationTimer = 0;
 
 u8 gDebugPacketIdBuffer[256] = { 0xFF };
 u8 gDebugPacketSentBuffer[256] = { 0 };
