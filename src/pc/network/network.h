@@ -114,7 +114,7 @@ extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern struct StringLinkedList gRegisteredMods;
 extern bool gNetworkSentJoin;
-extern u8 gNetworkRequestLocationTimer;
+extern u16 gNetworkRequestLocationTimer;
 extern u8 gDebugPacketIdBuffer[];
 extern u8 gDebugPacketSentBuffer[];
 extern u8 gDebugPacketOnBuffer;
