@@ -1,5 +1,7 @@
 // tree_particles.c.inc
 
+#include "src/game/envfx_snow.h"
+
 void bhv_tree_snow_or_leaf_loop(void) {
     cur_obj_update_floor_height();
     if (o->oTimer == 0) {
@@ -32,17 +34,12 @@ void bhv_tree_snow_or_leaf_loop(void) {
 }
 
 void bhv_snow_leaf_particle_spawn_init(void) {
+    s32 isSnow = (gEnvFxMode == ENVFX_SNOW_NORMAL || gEnvFxMode == ENVFX_SNOW_BLIZZARD);
     struct Object *obj; // Either snow or leaf
-    UNUSED s32 unused;
-    s32 isSnow;
     f32 scale;
     UNUSED s32 unused2;
     struct Object* player = nearest_player_to_object(o);
     player->oActiveParticleFlags &= ~0x2000;
-    if (gCurrLevelNum == LEVEL_CCM || gCurrLevelNum == LEVEL_SL)
-        isSnow = 1;
-    else
-        isSnow = 0;
     if (isSnow) {
         if (random_float() < 0.5) {
             obj = spawn_object(o, MODEL_WHITE_PARTICLE_DL, bhvTreeSnow);
