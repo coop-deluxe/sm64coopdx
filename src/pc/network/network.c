@@ -432,14 +432,14 @@ void network_update(void) {
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL && !np->currLevelSyncValid) {
         gNetworkRequestLocationTimer++;
-        if (gNetworkRequestLocationTimer > 90) {
+        if (gNetworkRequestLocationTimer > 30 * 10) {
             // find a NetworkPlayer around that location
             struct NetworkPlayer *npLevelAreaMatch = get_network_player_from_area(np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
             struct NetworkPlayer *npLevelMatch     = get_network_player_from_level(np->currCourseNum, np->currActNum, np->currLevelNum);
             struct NetworkPlayer *npAny = (npLevelAreaMatch == NULL) ? npLevelMatch : npLevelAreaMatch;
 
             bool inCredits = (np->currActNum == 99);
-            if (npAny == NULL || inCredits) {
+            if (gNetworkType == NT_SERVER && (npAny == NULL || inCredits)) {
                 // no NetworkPlayer in the level
                 network_send_sync_valid(np, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
                 return;
