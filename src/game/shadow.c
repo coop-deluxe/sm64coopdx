@@ -914,7 +914,14 @@ Gfx *create_shadow_below_xyz(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, u8 s
                              s8 shadowType) {
     Gfx *displayList = NULL;
     struct Surface *pfloor;
-    find_floor(xPos, yPos, zPos, &pfloor);
+    f32 height = find_floor(xPos, yPos, zPos, &pfloor);
+
+    // if we're interpolating and the shadow isn't valid, just give up
+    if (gRenderingInterpolated) {
+        if (height <= FLOOR_LOWER_LIMIT || pfloor == NULL) {
+            return gShadowInterpCurrent->gfx;
+        }
+    }
 
     gShadowAboveWaterOrLava = FALSE;
     gMarioOnIceOrCarpet = 0;

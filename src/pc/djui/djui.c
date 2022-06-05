@@ -80,6 +80,7 @@ void djui_lua_error(char* text) {
 
 void djui_render(void) {
     if (gDjuiDisabled) { return; }
+
     sSavedDisplayListHead = gDisplayListHead;
     gDjuiHudUtilsZ = 0;
 

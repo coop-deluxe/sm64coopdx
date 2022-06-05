@@ -67,20 +67,21 @@ static struct CameraHUD sCameraHUD = { CAM_STATUS_NONE };
 
 static u32 sPowerMeterPrevTimestamp;
 static f32 sPowerMeterPrevY;
-static Gfx *sPowerMeterDisplayListPos;
+static Gfx *sPowerMeterDisplayListPos = NULL;
+static Mtx *sPowerMeterMtx = NULL;
 
 void patch_hud_before(void) {
     if (sPowerMeterDisplayListPos != NULL) {
         sPowerMeterPrevY = sPowerMeterHUD.y;
         sPowerMeterPrevTimestamp = gGlobalTimer;
         sPowerMeterDisplayListPos = NULL;
+        sPowerMeterMtx = NULL;
     }
 }
 
 void patch_hud_interpolated(f32 delta) {
-    if (sPowerMeterDisplayListPos != NULL) {
-        Mtx *mtx = alloc_display_list(sizeof(Mtx));
-        if (mtx == NULL) { return; }
+    if (sPowerMeterDisplayListPos && sPowerMeterMtx) {
+        Mtx* mtx = sPowerMeterMtx;
         f32 interpY = delta_interpolate_f32(sPowerMeterPrevY, (f32)sPowerMeterHUD.y, delta);
         guTranslate(mtx, (f32) sPowerMeterHUD.x, interpY, 0);
         gSPMatrix(sPowerMeterDisplayListPos, VIRTUAL_TO_PHYSICAL(mtx),
@@ -148,6 +149,7 @@ void render_dl_power_meter(s16 numHealthWedges) {
     }
 
     guTranslate(mtx, (f32) sPowerMeterHUD.x, sPowerMeterPrevY, 0);
+    sPowerMeterMtx = mtx;
     sPowerMeterDisplayListPos = gDisplayListHead;
 
     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx++),
