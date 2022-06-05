@@ -71,22 +71,6 @@ void mods_activate(struct Mods* mods) {
         }
     }
 
-    // open file pointers
-    if (mods != &gRemoteMods) {
-        for (int i = 0; i < gActiveMods.entryCount; i++) {
-            struct Mod* mod = gActiveMods.entries[i];
-            for (int j = 0; j < mod->fileCount; j++) {
-                struct ModFile* file = &mod->files[j];
-
-                file->fp = fopen(file->cachedPath, "rb");
-                if (file->fp == NULL) {
-                    LOG_ERROR("Failed to open file '%s'", file->cachedPath);
-                    continue;
-                }
-
-            }
-        }
-    }
     mod_cache_save();
 }
 

@@ -265,9 +265,26 @@ void network_send_download(u64 requestOffset) {
             u64 fileReadOffset = MAX(((s64)requestOffset - (s64)fileStartOffset), 0);
             u64 fileReadLength = MIN((modFile->size - fileReadOffset), (CHUNK_SIZE - chunkFill));
 
+            // open file pointer
+            bool opened = false;
+            if (modFile->fp == NULL) {
+                modFile->fp = fopen(modFile->cachedPath, "rb");
+                if (modFile->fp == NULL) {
+                    LOG_ERROR("Failed to open mod file during download: %s", modFile->cachedPath);
+                    return;
+                }
+                opened = true;
+            }
+
             // read from file, filling chunk
             fseek(modFile->fp, fileReadOffset, SEEK_SET);
             fread(&chunk[chunkFill], sizeof(u8), fileReadLength, modFile->fp);
+
+            // close file pointer
+            if (opened) {
+                fclose(modFile->fp);
+                modFile->fp = NULL;
+            }
 
             // increment counters
             chunkFill += fileReadLength;
@@ -384,8 +401,19 @@ after_group:;
             // read from file, filling chunk
             if (!modFile->cachedPath) {
                 open_mod_file(mod, modFile);
+                if (modFile->fp == NULL) {
+                    LOG_ERROR("Failed to open file for download write: %s", modFile->cachedPath);
+                    return;
+                }
                 fseek(modFile->fp, fileWriteOffset, SEEK_SET);
                 fwrite(&chunk[chunkPour], sizeof(u8), fileWriteLength, modFile->fp);
+
+                if (modFile->fp != NULL) {
+                    fflush(modFile->fp);
+                    fclose(modFile->fp);
+                    modFile->fp = NULL;
+                }
+
                 wroteBytes += fileWriteLength;
             }
 
