@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 #include "../network.h"
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
@@ -287,7 +289,7 @@ after_filled:;
     packet_write(&p, &chunk,        sizeof(u8) * chunkFill);
     network_send_to(0, &p);
 
-    LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
+    //LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
 }
 
 static void open_mod_file(struct Mod* mod, struct ModFile* file) {
@@ -305,7 +307,7 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 
     file->fp = fopen(fullPath, "wb");
     if (file->fp == NULL) {
-        LOG_ERROR("unable to open for write: '%s'", fullPath);
+        LOG_ERROR("unable to open for write: '%s' - '%s'", fullPath, strerror(errno));
         return;
     }
     LOG_INFO("Opened mod file pointer: %s", fullPath);
