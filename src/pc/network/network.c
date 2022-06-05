@@ -429,7 +429,7 @@ void network_update(void) {
     }
 
     // update level/area request timers
-    struct NetworkPlayer* np = gNetworkPlayerLocal;
+    /*struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL && !np->currLevelSyncValid) {
         gNetworkRequestLocationTimer++;
         if (gNetworkRequestLocationTimer > 30 * 10) {
@@ -452,7 +452,7 @@ void network_update(void) {
                 network_send_level_request(np, npAny);
             }
         }
-    }
+    }*/
 
 }
 
