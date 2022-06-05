@@ -366,10 +366,11 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     packet_read(p, &behaviorId, sizeof(u32));
 
     BehaviorScript* behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
+    BehaviorScript* lBehavior = (BehaviorScript*)smlua_override_behavior(behavior);
     if (behavior == NULL) {
         LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
         return NULL;
-    } if (o->behavior != behavior && !allowable_behavior_change(so, behavior)) {
+    } if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
         LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(behavior));
         return NULL;
     }
