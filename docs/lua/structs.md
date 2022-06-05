@@ -1053,9 +1053,8 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | cachedPath | `string` | read-only |
-| complete | `boolean` | read-only |
-| curOffset | `integer` | read-only |
 | relativePath | `string` | read-only |
+| wroteBytes | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

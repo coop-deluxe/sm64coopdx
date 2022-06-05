@@ -738,9 +738,8 @@
 
 --- @class ModFile
 --- @field public cachedPath string
---- @field public complete boolean
---- @field public curOffset integer
 --- @field public relativePath string
+--- @field public wroteBytes integer
 
 --- @class ModeTransitionInfo
 --- @field public frame integer

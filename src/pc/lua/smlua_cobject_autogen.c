@@ -854,15 +854,14 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
 //  { "size",         LVT_???,      offsetof(struct Mod, size),         true, LOT_???  }, <--- UNIMPLEMENTED
 };
 
-#define LUA_MOD_FILE_FIELD_COUNT 4
+#define LUA_MOD_FILE_FIELD_COUNT 3
 static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
     { "cachedPath",   LVT_STRING_P, offsetof(struct ModFile, cachedPath),   true, LOT_NONE },
-    { "complete",     LVT_BOOL,     offsetof(struct ModFile, complete),     true, LOT_NONE },
-    { "curOffset",    LVT_U64,      offsetof(struct ModFile, curOffset),    true, LOT_NONE },
 //  { "dataHash",     LOT_???,      offsetof(struct ModFile, dataHash),     true, LOT_???  }, <--- UNIMPLEMENTED
 //  { "fp",           LVT_???,      offsetof(struct ModFile, fp),           true, LOT_???  }, <--- UNIMPLEMENTED
     { "relativePath", LVT_STRING,   offsetof(struct ModFile, relativePath), true, LOT_NONE },
 //  { "size",         LVT_???,      offsetof(struct ModFile, size),         true, LOT_???  }, <--- UNIMPLEMENTED
+    { "wroteBytes",   LVT_U64,      offsetof(struct ModFile, wroteBytes),   true, LOT_NONE },
 };
 
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6

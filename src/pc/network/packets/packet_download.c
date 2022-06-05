@@ -322,6 +322,7 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 
     mod_file_create_directories(mod, file);
 
+    file->wroteBytes = 0;
     file->fp = fopen(fullPath, "wb");
     if (file->fp == NULL) {
         LOG_ERROR("unable to open for write: '%s' - '%s'", fullPath, strerror(errno));
@@ -399,7 +400,7 @@ after_group:;
             u64 fileWriteLength = MIN((modFile->size - fileWriteOffset), (chunkLength - chunkPour));
 
             // read from file, filling chunk
-            if (!modFile->cachedPath) {
+            if (!modFile->cachedPath && (modFile->wroteBytes < modFile->size)) {
                 open_mod_file(mod, modFile);
                 if (modFile->fp == NULL) {
                     LOG_ERROR("Failed to open file for download write: %s", modFile->cachedPath);
@@ -407,8 +408,9 @@ after_group:;
                 }
                 fseek(modFile->fp, fileWriteOffset, SEEK_SET);
                 fwrite(&chunk[chunkPour], sizeof(u8), fileWriteLength, modFile->fp);
+                modFile->wroteBytes += fileWriteLength;
 
-                if (modFile->fp != NULL) {
+                if (modFile->wroteBytes >= modFile->size) {
                     fflush(modFile->fp);
                     fclose(modFile->fp);
                     modFile->fp = NULL;

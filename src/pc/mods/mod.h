@@ -12,8 +12,7 @@ struct ModFile {
     size_t size;
 
     FILE* fp;
-    u64 curOffset;
-    bool complete;
+    u64 wroteBytes;
     u8 dataHash[16];
     char* cachedPath;
 };
