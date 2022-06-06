@@ -68,6 +68,8 @@ PROFILE ?= 0
 HEADLESS ?= 0
 # Enable Game ICON
 ICON ?= 1
+# Use .app (mac only)
+USE_APP ?= 1
 # Various workarounds for weird toolchains
 
 NO_BZERO_BCOPY ?= 0
@@ -380,11 +382,20 @@ endif
 COMPARE ?= 1
 $(eval $(call validate-option,COMPARE,0 1))
 
+ifeq ($(OSX_BUILD),0)
+	USE_APP := 0
+endif
+
+ifeq ($(USE_APP),0)
 TARGET_STRING := sm64.$(VERSION).$(GRUCODE)
+else
+TARGET_STRING := sm64.$(VERSION).$(GRUCODE).app
+endif
 # If non-default settings were chosen, disable COMPARE
 ifeq ($(filter $(TARGET_STRING), sm64.jp.f3d_old sm64.us.f3d_old sm64.eu.f3d_new sm64.sh.f3d_new),)
   COMPARE := 0
 endif
+
 
 # Whether to hide commands or not
 VERBOSE ?= 0
@@ -673,7 +684,11 @@ ifeq ($(WINDOWS_AUTO_BUILDER),1)
 else ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
-  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
+  ifeq ($(OSX_BUILD),0)
+	EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
+  else
+	EXTRA_CFLAGS += -Wno-unused-result
+  endif
 else ifeq ($(COMPILER),clang)
   CC      := clang
   CXX     := clang++
@@ -1166,14 +1181,13 @@ endif
 
 clean:
 	$(RM) -r $(BUILD_DIR_BASE)
-	
+
 cleantools:
 	$(MAKE) -s -C $(TOOLS_DIR) clean
 
 distclean: clean
 	$(PYTHON) extract_assets.py --clean
-	cleantools
-
+	
 test: $(ROM)
 	$(EMULATOR) $(EMU_FLAGS) $<
 
