@@ -23,7 +23,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     if (np->currActNum != 99 && np->currActNum != 0) {
         snprintf(sActNum, 7, "# %d", np->currActNum);
     } else if (np->currActNum == 0) {
-        snprintf(sActNum, 7, "");
+        snprintf(sActNum, 7, " ");
     } else {
         snprintf(sActNum, 7, "Done");
     }

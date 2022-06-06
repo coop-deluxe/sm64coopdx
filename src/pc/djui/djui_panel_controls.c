@@ -29,15 +29,11 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* checkboxGB = djui_checkbox_create(&body->base, "Background Gamepad (must restart)", &configBackgroundGamepad);
         djui_base_set_size_type(&checkboxGB->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkboxGB->base, 1.0f, 32);
-        // djui_interactable_hook_value_change(&checkboxGB->base, djui_panel_display_uncapped_change);
 
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
-        if (numJoys > 100) { numJoys = 100; }
+        if (numJoys > 10) { numJoys = 10; }
         int strSize = numJoys * 2;
-        if (numJoys > 10) {
-            strSize += (numJoys - 10);
-        }
         char* gamepadChoices[numJoys];
         char gamepadChoicesLong[strSize];
         for (int i = 0; i < numJoys; i++) {
@@ -45,10 +41,9 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
             if (i > 9) {
                 index += (i - 9);
             }
-            sprintf(&gamepadChoicesLong[index], "%d\0", i);
+            sprintf(&gamepadChoicesLong[index], "%d", i);
             gamepadChoices[i] = &gamepadChoicesLong[index];
         }
-        // char* gamepadChoices[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
         struct DjuiSelectionbox* selectionboxGamepad = djui_selectionbox_create(&body->base, "Gamepad", gamepadChoices, numJoys, &configGamepadNumber);
         djui_base_set_size_type(&selectionboxGamepad->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionboxGamepad->base, 1.0f, 32);
