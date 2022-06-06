@@ -20,8 +20,10 @@ static struct DjuiText* djuiTextAct[MAX_PLAYERS] = { 0 };
 static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     u8 charIndex = np->overrideModelIndex;
     char sActNum[7];
-    if (np->currActNum != 99) {
+    if (np->currActNum != 99 && np->currActNum != 0) {
         snprintf(sActNum, 7, "# %d", np->currActNum);
+    } else if (np->currActNum == 0) {
+        snprintf(sActNum, 7, "");
     } else {
         snprintf(sActNum, 7, "Done");
     }
