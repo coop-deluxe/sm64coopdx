@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 #ifdef TARGET_WEB
 #include <emscripten.h>
@@ -260,10 +261,15 @@ void game_deinit(void) {
 }
 
 void game_exit(void) {
+    LOG_INFO("exiting cleanly");
     game_deinit();
 #ifndef TARGET_WEB
     exit(0);
 #endif
+}
+
+void inthand(UNUSED int signum) {
+    game_exit();
 }
 
 #ifdef TARGET_WEB
@@ -431,6 +437,9 @@ void main_func(void) {
 }
 
 int main(int argc, char *argv[]) {
+    signal(SIGINT, inthand);
+    signal(SIGQUIT, inthand);
+    signal(SIGTERM, inthand);
     parse_cli_opts(argc, argv);
     main_func();
     return 0;
