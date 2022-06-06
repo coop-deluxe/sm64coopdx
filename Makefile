@@ -353,11 +353,16 @@ else
 endif
 
 ifeq ($(HEADLESS),1)
-  $(warning Compiling headless)
+  $(info Compiling headless)
   RENDER_API := DUMMY
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY
   CONTROLLER_API := 
+endif
+
+ifeq ($(TARGET_RPI),1)
+  $(info Compiling for Raspberry Pi)
+    DISCORD_SDK := 0
 endif
 
 # NON_MATCHING - whether to build a matching, identical copy of the ROM
@@ -641,6 +646,8 @@ else ifeq ($(OSX_BUILD),1)
   # I copied the library and gave it two names.
   # This really shouldn't be required, but I got tired of trying to do it the "right way"
   BASS_LIBS := lib/bass/bass.dylib lib/bass/libbass.dylib lib/bass/bass_fx.dylib lib/bass/libbass_fx.dylib
+else ifeq ($(TARGET_RPI),1)
+  BASS_LIBS := lib/bass/arm/libbass.so lib/bass/arm/libbass_fx.so
 else
   BASS_LIBS := lib/bass/libbass.so lib/bass/libbass_fx.so
 endif
@@ -940,6 +947,8 @@ ifeq ($(WINDOWS_BUILD),1)
   endif
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS += -L./lib/lua/mac/ -l lua53
+else ifeq ($(TARGET_RPI),1)
+  LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a
 endif
@@ -956,7 +965,11 @@ else
   ifeq ($(DISCORD_SDK),1)
     LDFLAGS += -ldiscord_game_sdk -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/discordsdk -Wl,-rpath lib/bass
   else
-    LDFLAGS += -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/bass
+    ifeq ($(TARGET_RPI),1)
+      LDFLAGS += -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/bass/arm
+    else
+      LDFLAGS += -lbass -lbass_fx -Wl,-rpath . -Wl,-rpath lib/bass
+    endif
   endif
 endif
 
@@ -1032,6 +1045,12 @@ endif
 ifeq ($(DEVELOPMENT),1)
   CC_CHECK_CFLAGS += -DDEVELOPMENT
   CFLAGS += -DDEVELOPMENT
+endif
+
+# Check for rpi option
+ifeq ($(TARGET_RPI),1)
+  CC_CHECK_CFLAGS += -DTARGET_RPI
+  CFLAGS += -DTARGET_RPI
 endif
 
 # Check for lua profiler option

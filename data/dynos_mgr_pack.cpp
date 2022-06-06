@@ -136,13 +136,14 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
 
     auto& _DynosPacks = DynosPacks();
     s32 index = _DynosPacks.Count();
-    _DynosPacks.Add({
+    const PackData packData = {
         .mIndex = index,
         .mPath = aPath,
         .mGfxData = {},
         .mTextures = {},
         .mLoaded = false,
-    });
+    };
+    _DynosPacks.Add(packData);
 
     PackData* _Pack = &_DynosPacks[index];
 
