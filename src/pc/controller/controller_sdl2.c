@@ -52,6 +52,7 @@ static bool joy_buttons[MAX_JOYBUTTONS] = { false };
 static u32 mouse_buttons = 0;
 static u32 last_mouse = VK_INVALID;
 static u32 last_joybutton = VK_INVALID;
+static u32 last_gamepad = 0;
 
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
     for (u32 i = 0; i < MAX_BINDS; ++i) {
@@ -98,6 +99,11 @@ static void controller_sdl_bind(void) {
 }
 
 static void controller_sdl_init(void) {
+    // Allows game to be controlled by gamepad when not in focus
+    if (configBackgroundGamepad) {
+        SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+    }
+
     if (SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS) != 0) {
         fprintf(stderr, "SDL init error: %s\n", SDL_GetError());
         return;
@@ -216,21 +222,22 @@ static void controller_sdl_read(OSContPad *pad) {
         sdl_haptic = NULL;
     }
 
-    if (sdl_cntrl == NULL) {
-        for (int i = 0; i < SDL_NumJoysticks(); i++) {
-            if (SDL_IsGameController(i)) {
-                sdl_cntrl = SDL_GameControllerOpen(i);
-                if (sdl_cntrl != NULL) {
-                    sdl_haptic = controller_sdl_init_haptics(i);
-                    break;
-                }
+    if (sdl_cntrl == NULL || last_gamepad != configGamepadNumber) {
+        if (SDL_IsGameController(configGamepadNumber)) {
+            sdl_cntrl = SDL_GameControllerOpen(configGamepadNumber);
+            if (sdl_cntrl != NULL) {
+                sdl_haptic = controller_sdl_init_haptics(configGamepadNumber);
+                last_gamepad = configGamepadNumber;
             }
-        }
-        if (sdl_cntrl == NULL) {
+            if (sdl_cntrl == NULL) {
+                return;
+            }
+        } else {
+            sdl_cntrl = NULL;
             return;
         }
     }
-
+    
     int16_t leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
     int16_t lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
     int16_t rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);

@@ -52,6 +52,7 @@
 *.swp
 .vscode/*
 .idea/*
+*.code-workspace
 
 # General project-specific ignores
 doxygen/doxygen/*
