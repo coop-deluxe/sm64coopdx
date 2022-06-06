@@ -13,6 +13,7 @@
 #include "macros.h"
 #include "pc/ini.h"
 #include "pc/network/network.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 
 #ifndef bcopy
 #define bcopy(b1,b2,len) (memmove((b2), (b1), (len)), (void) 0)
@@ -49,6 +50,19 @@ s8 gLevelToCourseNumTable[] = {
 
 STATIC_ASSERT(ARRAY_COUNT(gLevelToCourseNumTable) == LEVEL_COUNT - 1,
               "change this array if you are adding levels");
+
+s8 get_level_course_num(s16 levelNum) {
+    if (levelNum >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo* info = smlua_level_util_get_info(levelNum);
+        return (info ? info->courseNum : COURSE_NONE);
+    }
+
+    if (levelNum < 0 || levelNum >= LEVEL_COUNT) {
+        return COURSE_NONE;
+    }
+
+    return gLevelToCourseNumTable[levelNum];
+}
 
 // This was probably used to set progress to 100% for debugging, but
 // it was removed from the release ROM.
@@ -745,7 +759,7 @@ void check_if_should_set_warp_checkpoint(struct WarpNode *warpNode) {
  */
 s32 check_warp_checkpoint(struct WarpNode *warpNode) {
     s16 warpCheckpointActive = FALSE;
-    s16 currCourseNum = gLevelToCourseNumTable[(warpNode->destLevel & 0x7F) - 1];
+    s16 currCourseNum = get_level_course_num((warpNode->destLevel & 0x7F) - 1);
 
     // gSavedCourseNum is only used in this function.
     if (gWarpCheckpoint.courseNum != COURSE_NONE && gSavedCourseNum == currCourseNum

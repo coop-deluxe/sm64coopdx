@@ -21,6 +21,19 @@ Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
 }
 
+LevelScript* DynOS_Lvl_GetScript(char* aScriptEntryName) {
+    auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
+    for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
+        auto& pair = _CustomLevelScripts[i];
+        if (!strcmp(pair.first, aScriptEntryName)) {
+            auto& newScripts = pair.second->mLevelScripts;
+            auto& newScriptNode = newScripts[newScripts.Count() - 1];
+            return newScriptNode->mData;
+        }
+    }
+    return NULL;
+}
+
 void DynOS_Lvl_ModShutdown() {
     DynOS_Level_Unoverride();
 
@@ -66,6 +79,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
 
     // Add to levels
     _CustomLevelScripts.Add({ levelName, _Node });
+    DynOS_Tex_Valid(_Node);
 
     // Override vanilla script
     auto& newScripts = _Node->mLevelScripts;
@@ -78,7 +92,6 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
 
     DynOS_Level_Override((void*)originalScript, newScriptNode->mData);
     _OverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
-    DynOS_Tex_Valid(_Node);
 }
 
 GfxData* DynOS_Lvl_GetActiveGfx(void) {
@@ -170,3 +183,4 @@ void *DynOS_Lvl_Override(void *aCmd) {
     }
     return aCmd;
 }
+

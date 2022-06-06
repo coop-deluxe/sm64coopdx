@@ -6,6 +6,7 @@
 #include "pc/network/ban_list.h"
 #include "pc/network/moderator_list.h"
 #include "pc/debuglog.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 #include "level_table.h"
 
 
@@ -263,6 +264,12 @@ bool exec_chat_command(char* command) {
                 if (strstr(paramLevel, sLevelNumByName[i].name) == paramLevel) {
                     level = sLevelNumByName[i].num;
                     break;
+                }
+            }
+            if (level == -1) {
+                struct CustomLevelInfo* info = smlua_level_util_get_info_from_short_name(paramLevel);
+                if (info != NULL) {
+                    level = info->levelNum;
                 }
             }
             if (level == -1) {

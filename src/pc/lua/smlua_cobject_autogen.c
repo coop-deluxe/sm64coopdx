@@ -13,6 +13,7 @@
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
 #include "src/pc/lua/utils/smlua_collision_utils.h"
+#include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/game/spawn_sound.h"
 #include "src/pc/network/network.h"
 #include "src/game/hardcoded.h"
@@ -390,6 +391,21 @@ static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "stickMag",       LVT_F32, offsetof(struct Controller, stickMag),       false, LOT_NONE },
     { "stickX",         LVT_F32, offsetof(struct Controller, stickX),         false, LOT_NONE },
     { "stickY",         LVT_F32, offsetof(struct Controller, stickY),         false, LOT_NONE },
+};
+
+#define LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT 11
+static struct LuaObjectField sCustomLevelInfoFields[LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT] = {
+    { "acousticReach",   LVT_U32,           offsetof(struct CustomLevelInfo, acousticReach),   false, LOT_NONE            },
+    { "courseNum",       LVT_S16,           offsetof(struct CustomLevelInfo, courseNum),       false, LOT_NONE            },
+    { "echoLevel1",      LVT_U32,           offsetof(struct CustomLevelInfo, echoLevel1),      false, LOT_NONE            },
+    { "echoLevel2",      LVT_U32,           offsetof(struct CustomLevelInfo, echoLevel2),      false, LOT_NONE            },
+    { "echoLevel3",      LVT_U32,           offsetof(struct CustomLevelInfo, echoLevel3),      false, LOT_NONE            },
+    { "fullName",        LVT_STRING_P,      offsetof(struct CustomLevelInfo, fullName),        true,  LOT_NONE            },
+    { "levelNum",        LVT_S16,           offsetof(struct CustomLevelInfo, levelNum),        false, LOT_NONE            },
+    { "next",            LVT_COBJECT_P,     offsetof(struct CustomLevelInfo, next),            false, LOT_CUSTOMLEVELINFO },
+    { "script",          LVT_LEVELSCRIPT_P, offsetof(struct CustomLevelInfo, script),          true,  LOT_POINTER         },
+    { "scriptEntryName", LVT_STRING_P,      offsetof(struct CustomLevelInfo, scriptEntryName), true,  LOT_NONE            },
+    { "shortName",       LVT_STRING_P,      offsetof(struct CustomLevelInfo, shortName),       true,  LOT_NONE            },
 };
 
 #define LUA_CUTSCENE_FIELD_COUNT 1
@@ -1979,6 +1995,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CHAINSEGMENT,              sChainSegmentFields,              LUA_CHAIN_SEGMENT_FIELD_COUNT                },
     { LOT_CHARACTER,                 sCharacterFields,                 LUA_CHARACTER_FIELD_COUNT                    },
     { LOT_CONTROLLER,                sControllerFields,                LUA_CONTROLLER_FIELD_COUNT                   },
+    { LOT_CUSTOMLEVELINFO,           sCustomLevelInfoFields,           LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT            },
     { LOT_CUTSCENE,                  sCutsceneFields,                  LUA_CUTSCENE_FIELD_COUNT                     },
     { LOT_CUTSCENESPLINEPOINT,       sCutsceneSplinePointFields,       LUA_CUTSCENE_SPLINE_POINT_FIELD_COUNT        },
     { LOT_CUTSCENEVARIABLE,          sCutsceneVariableFields,          LUA_CUTSCENE_VARIABLE_FIELD_COUNT            },

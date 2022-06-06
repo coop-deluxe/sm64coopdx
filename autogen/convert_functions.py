@@ -42,6 +42,7 @@ in_files = [
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/pc/lua/utils/smlua_level_utils.h",
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
@@ -87,7 +88,8 @@ override_disallowed_functions = {
     "src/game/camera.h":                   [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline" ],
     "src/game/behavior_actions.h":         [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h": [ "smlua_audio_utils_override", "audio_custom_shutdown"],
-    "src/pc/djui/djui_hud_utils.h":        [ "djui_hud_render_texture", "djui_hud_render_texture_raw" ],
+    "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw" ],
+    "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
 }
 
 lua_function_params = {

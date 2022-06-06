@@ -63,11 +63,6 @@ void camera_config_set_deceleration(u32 value);
 
 bool is_game_paused(void);
 
-bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
-bool warp_restart_level(void);
-bool warp_exit_level(s32 aDelay);
-bool warp_to_castle(s32 aLevel);
-
 u32 allocate_mario_action(u32 actFlags);
 
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);

@@ -25,6 +25,7 @@
 #include "src/pc/lua/utils/smlua_model_utils.h"
 #include "src/pc/lua/utils/smlua_text_utils.h"
 #include "src/pc/lua/utils/smlua_audio_utils.h"
+#include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/engine/surface_load.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
@@ -15108,6 +15109,103 @@ int smlua_func_smlua_collision_util_get(lua_State* L) {
     return 1;
 }
 
+  /////////////////////////
+ // smlua_level_utils.h //
+/////////////////////////
+
+int smlua_func_level_register(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 8)) { return 0; }
+
+    const char* scriptEntryName = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 courseNum = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    const char* fullName = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    const char* shortName = smlua_to_string(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+    u32 acousticReach = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 5"); return 0; }
+    u32 echoLevel1 = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 6"); return 0; }
+    u32 echoLevel2 = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 7"); return 0; }
+    u32 echoLevel3 = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 8"); return 0; }
+
+    lua_pushinteger(L, level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3));
+
+    return 1;
+}
+
+int smlua_func_smlua_level_util_get_info(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s16 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info(levelNum));
+
+    return 1;
+}
+
+int smlua_func_smlua_level_util_get_info_from_short_name(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    char* shortName = (char*)smlua_to_cobject(L, 1, LOT_NONE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_short_name(shortName));
+
+    return 1;
+}
+
+int smlua_func_warp_exit_level(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 aDelay = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushboolean(L, warp_exit_level(aDelay));
+
+    return 1;
+}
+
+int smlua_func_warp_restart_level(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, warp_restart_level());
+
+    return 1;
+}
+
+int smlua_func_warp_to_castle(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+
+    lua_pushboolean(L, warp_to_castle(aLevel));
+
+    return 1;
+}
+
+int smlua_func_warp_to_level(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s32 aArea = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    s32 aAct = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    lua_pushboolean(L, warp_to_level(aLevel, aArea, aAct));
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -15590,52 +15688,6 @@ int smlua_func_set_override_near(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
 
     set_override_near(near);
-
-    return 1;
-}
-
-int smlua_func_warp_exit_level(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    s32 aDelay = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushboolean(L, warp_exit_level(aDelay));
-
-    return 1;
-}
-
-int smlua_func_warp_restart_level(UNUSED lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
-
-
-    lua_pushboolean(L, warp_restart_level());
-
-    return 1;
-}
-
-int smlua_func_warp_to_castle(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    s32 aLevel = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-
-    lua_pushboolean(L, warp_to_castle(aLevel));
-
-    return 1;
-}
-
-int smlua_func_warp_to_level(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
-
-    s32 aLevel = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
-    s32 aArea = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
-    s32 aAct = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
-
-    lua_pushboolean(L, warp_to_level(aLevel, aArea, aAct));
 
     return 1;
 }
@@ -17847,6 +17899,15 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
     smlua_bind_function(L, "smlua_collision_util_get", smlua_func_smlua_collision_util_get);
 
+    // smlua_level_utils.h
+    smlua_bind_function(L, "level_register", smlua_func_level_register);
+    smlua_bind_function(L, "smlua_level_util_get_info", smlua_func_smlua_level_util_get_info);
+    smlua_bind_function(L, "smlua_level_util_get_info_from_short_name", smlua_func_smlua_level_util_get_info_from_short_name);
+    smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
+    smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
+    smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
+    smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
+
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "camera_config_enable_analog_cam", smlua_func_camera_config_enable_analog_cam);
@@ -17892,10 +17953,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
-    smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
-    smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
-    smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
-    smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);

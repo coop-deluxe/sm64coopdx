@@ -3,6 +3,7 @@ extern "C" {
 #include "game/segment2.h"
 #include "game/save_file.h"
 #include "levels/scripts.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 }
 
 //
@@ -198,7 +199,7 @@ static void DynOS_Level_Init() {
         for (s32 i = COURSE_MIN; i <= COURSE_MAX; ++i) {
             if (i == COURSE_CAKE_END) continue;
             for (s32 j = 1; j != LEVEL_COUNT; ++j) {
-                if (gLevelToCourseNumTable[j - 1] == i) {
+                if (get_level_course_num(j - 1) == i) {
                     sDynosLevelList.Add(j);
                 }
             }
@@ -249,6 +250,12 @@ void DynOS_Level_Unoverride() {
 }
 
 const void *DynOS_Level_GetScript(s32 aLevel) {
+    if (aLevel >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo* info = smlua_level_util_get_info(aLevel);
+        if (!info || !info->script) { return NULL; }
+        return info->script;
+    }
+
     DynOS_Level_Init();
     return sDynosLevelScripts[aLevel];
 }
@@ -844,6 +851,21 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
 //
 
 s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
+    if (aLevel >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo* info = smlua_level_util_get_info(aLevel);
+        if (!info || !info->script) { return NULL; }
+        sDynosCurrentLevelNum = 1;
+        DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
+        for (const auto &_Warp : sDynosLevelWarps[1]) {
+            if (_Warp.mArea == aArea) {
+                if (_Warp.mId == aWarpId) {
+                    return (s16 *) &_Warp;
+                }
+            }
+        }
+        return NULL;
+    }
+
     DynOS_Level_Init();
     for (const auto &_Warp : sDynosLevelWarps[aLevel]) {
         if (_Warp.mArea == aArea) {

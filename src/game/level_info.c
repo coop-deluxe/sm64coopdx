@@ -7,6 +7,7 @@
 #include "level_info.h"
 #include "level_table.h"
 #include "types.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 
 #ifdef VERSION_EU
 extern u8 *course_name_table_eu_en[];
@@ -165,7 +166,17 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
 
     // Valid course: BOB to RR, Bowser stages and Secret courses
     // There is no course name for Cake Ending, make it defaults to "Peach's Castle"
-    if (courseNum >= COURSE_MIN && courseNum < COURSE_MAX) {
+
+    bool hasCustomName = false;
+    if (levelNum >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo* info = smlua_level_util_get_info(levelNum);
+        if (info) {
+            hasCustomName = true;
+            snprintf(output, 256, info->fullName);
+        }
+    }
+
+    if (!hasCustomName && courseNum >= COURSE_MIN && courseNum < COURSE_MAX) {
        void **courseNameTbl = NULL;
 #ifdef VERSION_EU
         switch (gInGameLanguage) {
@@ -181,7 +192,7 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
     }
     
     // Castle level
-    else if (courseNum == COURSE_NONE) {
+    else if (!hasCustomName && courseNum == COURSE_NONE) {
         switch (levelNum) {
             case LEVEL_CASTLE: {
                 switch (areaIndex) {
@@ -198,7 +209,7 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
     }
     
     // Default
-    else {
+    else if (!hasCustomName) {
         snprintf(output, 256, "Peach's Castle");
     }
 

@@ -1525,7 +1525,7 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
 
     sWarpCheckpointActive = FALSE;
     gCurrLevelNum = levelNum;
-    gCurrCourseNum = gLevelToCourseNumTable[levelNum - 1];
+    gCurrCourseNum = get_level_course_num(levelNum - 1);
 
     if (gCurrDemoInput != NULL || gCurrCreditsEntry != NULL || gCurrCourseNum == COURSE_NONE) {
         return 0;

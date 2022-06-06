@@ -6074,6 +6074,159 @@
 <br />
 
 ---
+# functions from smlua_level_utils.h
+
+<br />
+
+
+## [level_register](#level_register)
+
+### Lua Example
+`local integerValue = level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| scriptEntryName | `string` |
+| courseNum | `integer` |
+| fullName | `string` |
+| shortName | `string` |
+| acousticReach | `integer` |
+| echoLevel1 | `integer` |
+| echoLevel2 | `integer` |
+| echoLevel3 | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info](#smlua_level_util_get_info)
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_level_util_get_info_from_short_name](#smlua_level_util_get_info_from_short_name)
+
+### Lua Example
+`local CustomLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| shortName | `string` |
+
+### Returns
+[CustomLevelInfo](structs.md#CustomLevelInfo)
+
+### C Prototype
+`struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_exit_level](#warp_exit_level)
+
+### Lua Example
+`local booleanValue = warp_exit_level(aDelay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aDelay | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_exit_level(s32 aDelay);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_restart_level](#warp_restart_level)
+
+### Lua Example
+`local booleanValue = warp_restart_level()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_restart_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_castle](#warp_to_castle)
+
+### Lua Example
+`local booleanValue = warp_to_castle(aLevel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_castle(s32 aLevel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_to_level](#warp_to_level)
+
+### Lua Example
+`local booleanValue = warp_to_level(aLevel, aArea, aAct)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_misc_utils.h
 
 <br />
@@ -6936,86 +7089,6 @@
 
 ### C Prototype
 `void set_override_near(f32 near);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_exit_level](#warp_exit_level)
-
-### Lua Example
-`local booleanValue = warp_exit_level(aDelay)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| aDelay | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool warp_exit_level(s32 aDelay);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_restart_level](#warp_restart_level)
-
-### Lua Example
-`local booleanValue = warp_restart_level()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool warp_restart_level(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_to_castle](#warp_to_castle)
-
-### Lua Example
-`local booleanValue = warp_to_castle(aLevel)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| aLevel | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool warp_to_castle(s32 aLevel);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_to_level](#warp_to_level)
-
-### Lua Example
-`local booleanValue = warp_to_level(aLevel, aArea, aAct)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| aLevel | `integer` |
-| aArea | `integer` |
-| aAct | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
 
 [:arrow_up_small:](#)
 

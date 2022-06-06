@@ -6610,6 +6610,14 @@ struct CutsceneSplinePoint sEndingLookAtSkyFocus[] = {
     { -1, 0, { 636, 2027, -415 } }
 };
 
+static struct CameraTrigger* get_camera_trigger(s16 levelNum) {
+    if (levelNum < 0 || levelNum >= LEVEL_COUNT + 2) {
+        return NULL;
+    }
+
+    return sCameraTriggers[levelNum];
+}
+
 /**
  * Activates any CameraTriggers that Mario is inside.
  * Then, applies area-specific processing to the camera, such as setting the default mode, or changing
@@ -6638,40 +6646,41 @@ s16 camera_course_processing(struct Camera *c) {
         level = LEVEL_COUNT + 1;
     }
 
-    if (sCameraTriggers[level] != NULL) {
+    if (get_camera_trigger(level) != NULL) {
         b = 0;
 
         // Process positional triggers.
         // All triggered events are called, not just the first one.
-        while (sCameraTriggers[level][b].event != NULL) {
+        struct CameraTrigger* camTrigger = get_camera_trigger(level);
+        while (camTrigger[b].event != NULL) {
 
             // Check only the current area's triggers
-            if (sCameraTriggers[level][b].area == area) {
+            if (camTrigger[b].area == area) {
                 // Copy the bounding box into center and bounds
-                vec3f_set(center, sCameraTriggers[level][b].centerX,
-                                  sCameraTriggers[level][b].centerY,
-                                  sCameraTriggers[level][b].centerZ);
-                vec3f_set(bounds, sCameraTriggers[level][b].boundsX,
-                                  sCameraTriggers[level][b].boundsY,
-                                  sCameraTriggers[level][b].boundsZ);
+                vec3f_set(center, camTrigger[b].centerX,
+                                  camTrigger[b].centerY,
+                                  camTrigger[b].centerZ);
+                vec3f_set(bounds, camTrigger[b].boundsX,
+                                  camTrigger[b].boundsY,
+                                  camTrigger[b].boundsZ);
 
                 // Check if Mario is inside the bounds
                 if (is_pos_in_bounds(sMarioCamState->pos, center, bounds,
-                                                   sCameraTriggers[level][b].boundsYaw) == TRUE) {
+                                                   camTrigger[b].boundsYaw) == TRUE) {
                     //! This should be checked before calling is_pos_in_bounds. (It doesn't belong
                     //! outside the while loop because some events disable area processing)
                     if (!(sStatusFlags & CAM_FLAG_BLOCK_AREA_PROCESSING)) {
-                        sCameraTriggers[level][b].event(c);
+                        camTrigger[b].event(c);
                         insideBounds = TRUE;
                     }
                 }
             }
 
-            if ((sCameraTriggers[level])[b].area == -1) {
+            if ((camTrigger)[b].area == -1) {
                 // Default triggers are only active if Mario is not already inside another trigger
                 if (!insideBounds) {
                     if (!(sStatusFlags & CAM_FLAG_BLOCK_AREA_PROCESSING)) {
-                        sCameraTriggers[level][b].event(c);
+                        camTrigger[b].event(c);
                     }
                 }
             }

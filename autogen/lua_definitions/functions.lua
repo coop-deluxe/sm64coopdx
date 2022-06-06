@@ -7330,6 +7330,56 @@ function smlua_collision_util_get(name)
     -- ...
 end
 
+--- @param scriptEntryName string
+--- @param courseNum integer
+--- @param fullName string
+--- @param shortName string
+--- @param acousticReach integer
+--- @param echoLevel1 integer
+--- @param echoLevel2 integer
+--- @param echoLevel3 integer
+--- @return integer
+function level_register(scriptEntryName, courseNum, fullName, shortName, acousticReach, echoLevel1, echoLevel2, echoLevel3)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @return CustomLevelInfo
+function smlua_level_util_get_info(levelNum)
+    -- ...
+end
+
+--- @param shortName string
+--- @return CustomLevelInfo
+function smlua_level_util_get_info_from_short_name(shortName)
+    -- ...
+end
+
+--- @param aDelay integer
+--- @return boolean
+function warp_exit_level(aDelay)
+    -- ...
+end
+
+--- @return boolean
+function warp_restart_level()
+    -- ...
+end
+
+--- @param aLevel integer
+--- @return boolean
+function warp_to_castle(aLevel)
+    -- ...
+end
+
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
+--- @return boolean
+function warp_to_level(aLevel, aArea, aAct)
+    -- ...
+end
+
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)
@@ -7590,31 +7640,6 @@ end
 --- @param near number
 --- @return nil
 function set_override_near(near)
-    -- ...
-end
-
---- @param aDelay integer
---- @return boolean
-function warp_exit_level(aDelay)
-    -- ...
-end
-
---- @return boolean
-function warp_restart_level()
-    -- ...
-end
-
---- @param aLevel integer
---- @return boolean
-function warp_to_castle(aLevel)
-    -- ...
-end
-
---- @param aLevel integer
---- @param aArea integer
---- @param aAct integer
---- @return boolean
-function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 

@@ -30,6 +30,10 @@ void dynos_gfx_swap_animations(void *ptr) {
 
 // -- warps -- //
 
+LevelScript* dynos_get_level_script(char* scriptEntryName) {
+    return DynOS_Lvl_GetScript(scriptEntryName);
+}
+
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return DynOS_Warp_ToLevel(aLevel, aArea, aAct);
 }

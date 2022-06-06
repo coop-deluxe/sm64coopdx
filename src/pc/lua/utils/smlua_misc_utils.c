@@ -272,24 +272,6 @@ bool is_game_paused(void) {
 
 ///
 
-bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
-    return dynos_warp_to_level(aLevel, aArea, aAct);
-}
-
-bool warp_restart_level(void) {
-    return dynos_warp_restart_level();
-}
-
-bool warp_exit_level(s32 aDelay) {
-    return dynos_warp_exit_level(aDelay);
-}
-
-bool warp_to_castle(s32 aLevel) {
-    return dynos_warp_to_castle(aLevel);
-}
-
-///
-
 u32 allocate_mario_action(u32 actFlags) {
     actFlags = actFlags & (~((u32)0xFF));
     return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;

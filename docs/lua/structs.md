@@ -16,6 +16,7 @@
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Controller](#Controller)
+- [CustomLevelInfo](#CustomLevelInfo)
 - [Cutscene](#Cutscene)
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
@@ -501,6 +502,26 @@
 | stickMag | `number` |  |
 | stickX | `number` |  |
 | stickY | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [CustomLevelInfo](#CustomLevelInfo)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| acousticReach | `integer` |  |
+| courseNum | `integer` |  |
+| echoLevel1 | `integer` |  |
+| echoLevel2 | `integer` |  |
+| echoLevel3 | `integer` |  |
+| fullName | `string` | read-only |
+| levelNum | `integer` |  |
+| next | [CustomLevelInfo](structs.md#CustomLevelInfo) |  |
+| script | `Pointer` <`LevelScript`> | read-only |
+| scriptEntryName | `string` | read-only |
+| shortName | `string` | read-only |
 
 [:arrow_up_small:](#)
 

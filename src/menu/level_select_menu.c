@@ -14,6 +14,7 @@
 #include "level_table.h"
 #include "seq_ids.h"
 #include "sm64.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 
 #define PRESS_START_DEMO_TIMER 800
 
@@ -31,6 +32,19 @@ static u16 gDemoCountdown = 0;
 static s16 D_U_801A7C34 = 1;
 static s16 gameOverNotPlayed = 1;
 #endif
+
+static char* get_level_stage_names(s16 levelNum) {
+    if (levelNum >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo* info = smlua_level_util_get_info(levelNum);
+        return (info ? info->fullName : "Unknown");
+    }
+
+    if (levelNum < 0 || levelNum >= LEVEL_COUNT) {
+        return "Unknown";
+    }
+
+    return gLevelSelect_StageNamesText[levelNum];
+}
 
 // run the demo timer on the PRESS START screen.
 // this function will return a non-0 timer once
@@ -140,7 +154,7 @@ s16 level_select_input_loop(void) {
     print_text_centered(160, 80, "SELECT STAGE");
     print_text_centered(160, 30, "PRESS START BUTTON");
     print_text_fmt_int(40, 60, "%2d", gCurrLevelNum);
-    print_text(80, 60, gLevelSelect_StageNamesText[gCurrLevelNum - 1]); // print stage name
+    print_text(80, 60, get_level_stage_names(gCurrLevelNum - 1)); // print stage name
 
 #define QUIT_LEVEL_SELECT_COMBO (Z_TRIG | START_BUTTON | L_CBUTTONS | R_CBUTTONS)
 

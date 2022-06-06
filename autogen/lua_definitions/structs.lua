@@ -327,6 +327,19 @@
 --- @field public stickX number
 --- @field public stickY number
 
+--- @class CustomLevelInfo
+--- @field public acousticReach integer
+--- @field public courseNum integer
+--- @field public echoLevel1 integer
+--- @field public echoLevel2 integer
+--- @field public echoLevel3 integer
+--- @field public fullName string
+--- @field public levelNum integer
+--- @field public next CustomLevelInfo
+--- @field public script Pointer_LevelScript
+--- @field public scriptEntryName string
+--- @field public shortName string
+
 --- @class Cutscene
 --- @field public duration integer
 
@@ -1777,6 +1790,7 @@
 
 --- @class Pointer_integer
 --- @class Pointer_Trajectory
+--- @class Pointer_LevelScript
 --- @class Pointer_ObjectAnimPointer
 --- @class Pointer_Collision
 --- @class Pointer_BehaviorScript

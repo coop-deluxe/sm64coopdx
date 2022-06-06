@@ -1368,6 +1368,17 @@
 
 <br />
 
+- smlua_level_utils.h
+   - [level_register](functions-4.md#level_register)
+   - [smlua_level_util_get_info](functions-4.md#smlua_level_util_get_info)
+   - [smlua_level_util_get_info_from_short_name](functions-4.md#smlua_level_util_get_info_from_short_name)
+   - [warp_exit_level](functions-4.md#warp_exit_level)
+   - [warp_restart_level](functions-4.md#warp_restart_level)
+   - [warp_to_castle](functions-4.md#warp_to_castle)
+   - [warp_to_level](functions-4.md#warp_to_level)
+
+<br />
+
 - smlua_misc_utils.h
    - [allocate_mario_action](functions-4.md#allocate_mario_action)
    - [camera_config_enable_analog_cam](functions-4.md#camera_config_enable_analog_cam)
@@ -1413,10 +1424,6 @@
    - [set_override_far](functions-4.md#set_override_far)
    - [set_override_fov](functions-4.md#set_override_fov)
    - [set_override_near](functions-4.md#set_override_near)
-   - [warp_exit_level](functions-4.md#warp_exit_level)
-   - [warp_restart_level](functions-4.md#warp_restart_level)
-   - [warp_to_castle](functions-4.md#warp_to_castle)
-   - [warp_to_level](functions-4.md#warp_to_level)
 
 <br />
 
