@@ -25,6 +25,12 @@ gBehaviorValues.dialogs.KoopaQuickThiStartDialog = DIALOG_009
 gBehaviorValues.dialogs.KoopaQuickBobWinDialog = DIALOG_031
 gBehaviorValues.dialogs.KoopaQuickThiWinDialog = DIALOG_031
 
+---------------------------
+-- force server settings --
+---------------------------
+
+gServerSettings.fixCollisionBugs = 1
+
 --------------
 -- movtexs --
 --------------

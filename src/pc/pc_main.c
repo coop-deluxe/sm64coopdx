@@ -437,9 +437,15 @@ void main_func(void) {
 }
 
 int main(int argc, char *argv[]) {
+#ifdef SIGINT
     signal(SIGINT, inthand);
+#endif
+#ifdef SIGQUIT
     signal(SIGQUIT, inthand);
+#endif
+#ifdef SIGTERM
     signal(SIGTERM, inthand);
+#endif
     parse_cli_opts(argc, argv);
     main_func();
     return 0;
