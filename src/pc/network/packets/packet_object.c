@@ -468,13 +468,12 @@ void network_update_objects(void) {
     }
 #endif
 
-    for (u32 i = 1; i < MAX_SYNC_OBJECTS; i++) {
-        struct SyncObject* so = sync_object_get(i);
+    for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
         if (!so || !so->o) { continue; }
 
         // check for stale sync object
-        if (so->o->oSyncID != i) {
-            LOG_ERROR("sync id mismatch: %d vs %d (behavior %d)", so->o->oSyncID, i, get_id_from_behavior(so->o->behavior));
+        if (so->o->oSyncID != so->id) {
+            LOG_ERROR("sync id mismatch: %d vs %d (behavior %d)", so->o->oSyncID, so->id, get_id_from_behavior(so->o->behavior));
             sync_object_forget(so->id);
             continue;
         }

@@ -39,9 +39,11 @@ void bhv_chain_chomp_chain_part_update(void) {
         struct ChainSegment *segment = &o->parentObj->oChainChompSegments[o->oBehParams2ndByte];
 
         // Set position relative to the pivot
-        o->oPosX = o->parentObj->parentObj->oPosX + segment->posX;
-        o->oPosY = o->parentObj->parentObj->oPosY + segment->posY;
-        o->oPosZ = o->parentObj->parentObj->oPosZ + segment->posZ;
+        if (segment) {
+            o->oPosX = o->parentObj->parentObj->oPosX + segment->posX;
+            o->oPosY = o->parentObj->parentObj->oPosY + segment->posY;
+            o->oPosZ = o->parentObj->parentObj->oPosZ + segment->posZ;
+        }
     } else if (o->parentObj->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
         cur_obj_update_floor_and_walls();
         cur_obj_move_standard(78);
@@ -369,6 +371,11 @@ static void chain_chomp_act_move(void) {
     }
 
     cur_obj_move_standard(78);
+
+    // if we haven't initialized chain chomp segments, do it now
+    if (o->oChainChompSegments == NULL) {
+        chain_chomp_act_uninitialized();
+    }
 
     // Segment 0 connects the pivot to the chain chomp itself
     o->oChainChompSegments[0].posX = o->oPosX - o->parentObj->oPosX;

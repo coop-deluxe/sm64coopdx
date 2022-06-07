@@ -443,9 +443,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 3), "Players", network_player_connected_count());
 
     s32 syncObjects = 0;
-    for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        struct SyncObject* so = sync_object_get(i);
-        if (so && so->o != NULL) { syncObjects++; }
+    for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+        if (so->o != NULL) { syncObjects++; }
     }
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "SyncObj", syncObjects);
 

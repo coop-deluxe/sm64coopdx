@@ -191,10 +191,6 @@ void network_receive_spawn_objects(struct Packet* p) {
         if (data.parentId == (u32)-1) { o->parentObj = o; }
 
         if (o->oSyncID != 0 && o->oSyncID >= RESERVED_IDS_SYNC_OBJECT_OFFSET) {
-            if (o->oSyncID >= MAX_SYNC_OBJECTS) {
-                LOG_ERROR("Invalid spawn object sync id: %u", o->oSyncID);
-                return;
-            }
             // check if they've allocated one of their reserved sync objects
             struct SyncObject* so = sync_object_get(o->oSyncID);
             if (so) {
@@ -204,6 +200,9 @@ void network_receive_spawn_objects(struct Packet* p) {
                 for (s32 j = 0; j < MAX_PLAYERS; j++) {
                     so->rxEventId[j] = 0;
                 }
+            } else {
+                LOG_ERROR("Invalid spawn object sync id: %u", o->oSyncID);
+                return;
             }
         }
 

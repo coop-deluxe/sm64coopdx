@@ -12,8 +12,11 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
+#define MAX_SYNC_OBJECTS 256 // note: increasing this requires code to be rewritten
+
 struct SyncObject sSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
-u32 sNextSyncId = 0;
+static u32 sNextSyncId = 0;
+static u32 sIterateSyncId = 0;
 
   ////////////
  // system //
@@ -153,6 +156,22 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
 struct SyncObject* sync_object_get(u32 syncId) {
     if (syncId >= MAX_SYNC_OBJECTS) { return NULL; }
     return &sSyncObjects[syncId];
+}
+
+struct SyncObject* sync_object_get_first(void) {
+    sIterateSyncId = 0;
+    return &sSyncObjects[sIterateSyncId];
+}
+
+struct SyncObject* sync_object_get_first_non_static(void) {
+    sIterateSyncId = RESERVED_IDS_SYNC_OBJECT_OFFSET;
+    return &sSyncObjects[sIterateSyncId];
+}
+
+struct SyncObject* sync_object_get_next(void) {
+    sIterateSyncId++;
+    if (sIterateSyncId >= MAX_SYNC_OBJECTS) { return NULL; }
+    return &sSyncObjects[sIterateSyncId];
 }
 
 struct Object* sync_object_get_object(u32 syncId) {

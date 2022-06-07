@@ -67,16 +67,17 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // count respawners and write
         u8 respawnerCount = 0;
-        for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = sync_object_get(i);
-            if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
-            respawnerCount++;
+
+        for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+            if (so->o != NULL && so->o->behavior == smlua_override_behavior(bhvRespawner)) {
+                respawnerCount++;
+            }
         }
+
         packet_write(&p, &respawnerCount, sizeof(u8));
 
         // write respawners
-        for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = sync_object_get(i);
+        for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
             u32 behaviorToRespawn = get_id_from_behavior(so->o->oRespawnerBehaviorToRespawn);
             packet_write(&p, &so->o->oPosX, sizeof(f32));
@@ -94,9 +95,8 @@ void network_send_area(struct NetworkPlayer* toNp) {
         network_send_to(toNp->localIndex, &p);
 
         // send non-static objects
-        for (s32 i = RESERVED_IDS_SYNC_OBJECT_OFFSET; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = sync_object_get(i);
-            if (so == NULL || so->o == NULL || so->o->oSyncID != (u32)i) { continue; }
+        for (struct SyncObject* so = sync_object_get_first_non_static(); so != NULL; so = sync_object_get_next()) {
+            if (so == NULL || so->o == NULL || so->o->oSyncID != so->id) { continue; }
             if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
             struct Object* spawn_objects[] = { so->o };
 
@@ -116,11 +116,10 @@ void network_send_area(struct NetworkPlayer* toNp) {
         }
 
         // send last reliable ent packet
-        for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = sync_object_get(i);
+        for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL) { continue; }
             if (so->lastReliablePacketIsStale) { continue; }
-            struct Packet* entPacket = sync_object_get_last_reliable_packet(i);
+            struct Packet* entPacket = sync_object_get_last_reliable_packet(so->id);
             if (entPacket->error) { continue; }
             struct Packet p2 = { 0 };
             packet_duplicate(entPacket, &p2);
@@ -218,7 +217,7 @@ void network_receive_area(struct Packet* p) {
 
         struct SyncObject* so = sync_object_get(syncId);
 
-        if (so == NULL || syncId >= MAX_SYNC_OBJECTS) {
+        if (so == NULL) {
             LOG_ERROR("rx area: Sync object was NULL, Skipping respawner.");
             LOG_DEBUG("rx area debug: Sync Object DEBUG:\n\n \
                        POS X: %f\n \
