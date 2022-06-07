@@ -59,9 +59,9 @@ void network_send_area(struct NetworkPlayer* toNp) {
         packet_write(&p, &gControlTimerStopNat,     sizeof(u32));
 
         // write sync id removals
-        packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
+        packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u32));
         for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
-            packet_write(&p, &sRemoveSyncIds[i], sizeof(u8));
+            packet_write(&p, &sRemoveSyncIds[i], sizeof(u32));
             LOG_INFO("tx remove sync id %d", sRemoveSyncIds[i]);
         }
 
@@ -179,9 +179,9 @@ void network_receive_area(struct Packet* p) {
 
     // read removed sync ids
     area_remove_sync_ids_clear();
-    packet_read(p, &sRemoveSyncIdsIndex, sizeof(u8));
+    packet_read(p, &sRemoveSyncIdsIndex, sizeof(u32));
     for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
-        packet_read(p, &sRemoveSyncIds[i], sizeof(u8));
+        packet_read(p, &sRemoveSyncIds[i], sizeof(u32));
         struct SyncObject* so = sync_object_get(sRemoveSyncIds[i]);
         if (!so) { continue; }
 
