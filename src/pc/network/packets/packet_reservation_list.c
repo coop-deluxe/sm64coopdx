@@ -33,7 +33,7 @@ void network_receive_reservation_list(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     LOG_INFO("rx reservation list");
 
-    u8 courseNum, actNum, levelNum, areaIndex;
+    s16 courseNum, actNum, levelNum, areaIndex;
     packet_read(p, &courseNum, sizeof(s16));
     packet_read(p, &actNum,    sizeof(s16));
     packet_read(p, &levelNum,  sizeof(s16));

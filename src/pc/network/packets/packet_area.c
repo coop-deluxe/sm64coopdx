@@ -66,7 +66,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         }
 
         // count respawners and write
-        u8 respawnerCount = 0;
+        u16 respawnerCount = 0;
 
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so->o != NULL && so->o->behavior == smlua_override_behavior(bhvRespawner)) {
@@ -74,7 +74,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             }
         }
 
-        packet_write(&p, &respawnerCount, sizeof(u8));
+        packet_write(&p, &respawnerCount, sizeof(u16));
 
         // write respawners
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
@@ -194,8 +194,8 @@ void network_receive_area(struct Packet* p) {
     }
 
     // read respawner count
-    u8 respawnerCount = 0;
-    packet_read(p, &respawnerCount, sizeof(u8));
+    u16 respawnerCount = 0;
+    packet_read(p, &respawnerCount, sizeof(u16));
 
     // read respawners
     for (s32 i = 0; i < respawnerCount; i++) {
