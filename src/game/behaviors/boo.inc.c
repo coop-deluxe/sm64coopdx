@@ -23,24 +23,24 @@ static u8 boo_ignore_update(void) {
     return (o->oHealth == 0);
 }
 
-struct SyncObject* boo_network_init_object(void) {
-    struct SyncObject *so = network_init_object(o, 4000.0f);
+struct SyncObject* boo_sync_object_init(void) {
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so == NULL) { return NULL; }
     so->ignore_if_true = boo_ignore_update;
-    network_init_object_field(o, &o->oBooBaseScale);
-    network_init_object_field(o, &o->oBooNegatedAggressiveness);
-    network_init_object_field(o, &o->oBooOscillationTimer);
-    network_init_object_field(o, &o->oBooTargetOpacity);
-    network_init_object_field(o, &o->oBooTurningSpeed);
-    network_init_object_field(o, &o->oFaceAngleRoll);
-    network_init_object_field(o, &o->oFaceAngleYaw);
-    network_init_object_field(o, &o->oFlags);
-    network_init_object_field(o, &o->oForwardVel);
-    network_init_object_field(o, &o->oHealth);
-    network_init_object_field(o, &o->oInteractStatus);
-    network_init_object_field(o, &o->oInteractType);
-    network_init_object_field(o, &o->oOpacity);
-    network_init_object_field(o, &o->oRoom);
+    sync_object_init_field(o, &o->oBooBaseScale);
+    sync_object_init_field(o, &o->oBooNegatedAggressiveness);
+    sync_object_init_field(o, &o->oBooOscillationTimer);
+    sync_object_init_field(o, &o->oBooTargetOpacity);
+    sync_object_init_field(o, &o->oBooTurningSpeed);
+    sync_object_init_field(o, &o->oFaceAngleRoll);
+    sync_object_init_field(o, &o->oFaceAngleYaw);
+    sync_object_init_field(o, &o->oFlags);
+    sync_object_init_field(o, &o->oForwardVel);
+    sync_object_init_field(o, &o->oHealth);
+    sync_object_init_field(o, &o->oInteractStatus);
+    sync_object_init_field(o, &o->oInteractType);
+    sync_object_init_field(o, &o->oOpacity);
+    sync_object_init_field(o, &o->oRoom);
     return so;
 }
 
@@ -535,15 +535,15 @@ static void (*sBooActions[])(void) = {
 
 void bhv_boo_loop(void) {
     if (o->oAction < 3) {
-        if (!network_sync_object_initialized(o)) {
-            struct SyncObject* so = boo_network_init_object();
+        if (!sync_object_is_initialized(o->oSyncID)) {
+            struct SyncObject* so = boo_sync_object_init();
             if (so) { so->syncDeathEvent = FALSE; }
         }
     }
     else {
-        if (network_sync_object_initialized(o)) {
+        if (sync_object_is_initialized(o->oSyncID)) {
             network_send_object_reliability(o, TRUE);
-            network_forget_sync_object(&gSyncObjects[o->oSyncID]);
+            sync_object_forget(o->oSyncID);
         }
     }
 
@@ -765,9 +765,9 @@ void big_boo_on_forget(void) {
 
 void bhv_big_boo_loop(void) {
     if (o->oAction == 0) {
-        if (!network_sync_object_initialized(o)) {
+        if (!sync_object_is_initialized(o->oSyncID)) {
             bigBooActivated = FALSE;
-            struct SyncObject* so = boo_network_init_object();
+            struct SyncObject* so = boo_sync_object_init();
             if (so) {
                 so->syncDeathEvent = FALSE;
                 so->ignore_if_true = big_boo_ignore_update;
@@ -775,9 +775,9 @@ void bhv_big_boo_loop(void) {
             }
         }
     } else if (o->oHealth <= 0) {
-        if (network_sync_object_initialized(o)) {
+        if (sync_object_is_initialized(o->oSyncID)) {
             network_send_object_reliability(o, TRUE);
-            network_forget_sync_object(&gSyncObjects[o->oSyncID]);
+            sync_object_forget(o->oSyncID);
         }
     }
 
@@ -861,7 +861,7 @@ static void (*sBooWithCageActions[])(void) = {
 };
 
 void bhv_boo_with_cage_loop(void) {
-    if (!network_sync_object_initialized(o)) { boo_network_init_object(); }
+    if (!sync_object_is_initialized(o->oSyncID)) { boo_sync_object_init(); }
     //PARTIAL_UPDATE
 
     cur_obj_update_floor_and_walls();
@@ -873,10 +873,10 @@ void bhv_boo_with_cage_loop(void) {
 }
 
 void bhv_merry_go_round_boo_manager_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oMerryGoRoundBooManagerNumBoosSpawned);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oMerryGoRoundBooManagerNumBoosSpawned);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -890,7 +890,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
                         if (o->oMerryGoRoundBooManagerNumBoosSpawned - o->oMerryGoRoundBooManagerNumBoosKilled < 2) {
                             struct Object* boo = spawn_object(o, MODEL_BOO, bhvMerryGoRoundBoo);
                             if (boo != NULL) {
-                                network_set_sync_id(boo);
+                                sync_object_set_id(boo);
                                 struct Object* spawn_objects[] = { boo };
                                 u32 models[] = { MODEL_BOO };
                                 network_send_spawn_objects(spawn_objects, models, 1);
@@ -910,7 +910,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
                         if (boo != NULL) {
                             obj_copy_behavior_params(boo, o);
 
-                            network_set_sync_id(boo);
+                            sync_object_set_id(boo);
                             struct Object* spawn_objects[] = { boo };
                             u32 models[] = { MODEL_BOO };
                             network_send_spawn_objects(spawn_objects, models, 1);
@@ -948,7 +948,7 @@ void bhv_animated_texture_loop(void) {
 }
 
 void bhv_boo_in_castle_loop(void) {
-    if (!network_sync_object_initialized(o)) { boo_network_init_object(); }
+    if (!sync_object_is_initialized(o->oSyncID)) { boo_sync_object_init(); }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState->marioObj;

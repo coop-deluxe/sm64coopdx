@@ -25,7 +25,7 @@ static void fire_spitter_act_spit_fire(void) {
         if (scaleStatus < 0) {
             o->oAction = FIRE_SPITTER_ACT_IDLE;
         } else {
-            if (network_owns_object(o)) {
+            if (sync_object_is_owned_locally(o->oSyncID)) {
                 cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
 
                 struct Object* fire = obj_spit_fire(0, 0, 0, 5.0f, MODEL_RED_FLAME_SHADOW, 20.0f, 15.0f, 0x1000);
@@ -44,17 +44,17 @@ static void bhv_fire_spitter_on_received_post(UNUSED u8 localIndex) {
 }
 
 void bhv_fire_spitter_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->on_received_post = bhv_fire_spitter_on_received_post;
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oFireSpitterScaleVel);
-            network_init_object_field(o, &o->header.gfx.scale[0]);
-            network_init_object_field(o, &o->header.gfx.scale[1]);
-            network_init_object_field(o, &o->header.gfx.scale[2]);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oFireSpitterScaleVel);
+            sync_object_init_field(o, &o->header.gfx.scale[0]);
+            sync_object_init_field(o, &o->header.gfx.scale[1]);
+            sync_object_init_field(o, &o->header.gfx.scale[2]);
         }
     }
 

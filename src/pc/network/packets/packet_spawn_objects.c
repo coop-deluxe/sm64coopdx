@@ -17,7 +17,7 @@
 
 #pragma pack(1)
 struct SpawnObjectData {
-    u8 parentId;
+    u32 parentId;
     u32 model;
     u32 behaviorId;
     s16 activeFlags;
@@ -29,25 +29,25 @@ struct SpawnObjectData {
 };
 #pragma pack()
 
-static u8 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize) {
+static u32 generate_parent_id(struct Object* objects[], u8 onIndex, bool sanitize) {
     struct Object* o = objects[onIndex];
 
     // special case if the parent is itself
-    if (o->parentObj == o) { return (u8)-1; }
+    if (o->parentObj == o) { return (u32)-1; }
 
     if (onIndex == 0) {
         if (sanitize && o->parentObj->oSyncID == 0) {
-            return (u8)-1;
+            return (u32)-1;
         }
-        SOFT_ASSERT_RETURN(o->parentObj->oSyncID != 0, (u8)-1);
-        return (u8)o->parentObj->oSyncID;
+        SOFT_ASSERT_RETURN(o->parentObj->oSyncID != 0, (u32)-1);
+        return (u32)o->parentObj->oSyncID;
     }
 
     for (u8 i = onIndex; i != (u8)-1; i--) {
         if (o->parentObj == objects[i]) { return i; }
     }
 
-    SOFT_ASSERT_RETURN(false, (u8)-1);
+    SOFT_ASSERT_RETURN(false, (u32)-1);
 }
 
 void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objectCount) {
@@ -76,12 +76,13 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     for (u8 i = 0; i < objectCount; i++) {
         struct Object* o = objects[i];
         u32 model = models[i];
-        u8 parentId = generate_parent_id(objects, i, true);
+        u32 parentId = generate_parent_id(objects, i, true);
         u32 behaviorId = get_id_from_behavior(o->behavior);
-        u16 extendedModelId = (o->oSyncID != 0 && gSyncObjects[o->oSyncID].o == o)
-                            ? gSyncObjects[o->oSyncID].extendedModelId
+        struct SyncObject* so = sync_object_get(o->oSyncID);
+        u16 extendedModelId = (so && so->o == o)
+                            ? so->extendedModelId
                             : 0xFFFF;
-        packet_write(&p, &parentId, sizeof(u8));
+        packet_write(&p, &parentId, sizeof(u32));
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
         packet_write(&p, &o->activeFlags, sizeof(s16));
@@ -118,7 +119,7 @@ void network_receive_spawn_objects(struct Packet* p) {
     for (u8 i = 0; i < objectCount; i++) {
         struct SpawnObjectData data = { 0 };
         Vec3f scale = { 0 };
-        packet_read(p, &data.parentId, sizeof(u8));
+        packet_read(p, &data.parentId, sizeof(u32));
         packet_read(p, &data.model, sizeof(u32));
         packet_read(p, &data.behaviorId, sizeof(u32));
         packet_read(p, &data.activeFlags, sizeof(s16));
@@ -131,27 +132,28 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &data.extendedModelId, sizeof(u16));
 
         struct Object* parentObj = NULL;
-        if (data.parentId == (u8)-1) {
+        if (data.parentId == (u32)-1) {
             // this object is it's own parent, set it to a known object temporarily
             parentObj = gMarioStates[0].marioObj;
         } else {
-            // sanity check parent id
-            u32 maxSyncObjects = MAX_SYNC_OBJECTS;
-            if (i == 0 && data.parentId >= maxSyncObjects) {
+
+            // this object has a known parent
+            struct SyncObject* parentSo = sync_object_get(data.parentId);
+            if (i == 0 && !parentSo) {
                 LOG_ERROR("Invalid spawn object parentId: %u", data.parentId);
                 return;
             }
 
-            // this object has a known parent
             parentObj = (i == 0)
-                      ? gSyncObjects[data.parentId].o
+                      ? parentSo->o
                       : spawned[data.parentId];
+
             if (parentObj == NULL) {
                 // failed to find parent, make it it's own parent
                 // may cause issues, but we want it to spawn!
                 LOG_ERROR("ERROR: failed to find spawn object's parent (%d)!", data.parentId);
                 parentObj = gMarioStates[0].marioObj;
-                data.parentId = (u8)-1;
+                data.parentId = (u32)-1;
             }
         }
 
@@ -186,7 +188,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         o->header.gfx.scale[2] = scale[2];
 
         // correct the temporary parent with the object itself
-        if (data.parentId == (u8)-1) { o->parentObj = o; }
+        if (data.parentId == (u32)-1) { o->parentObj = o; }
 
         if (o->oSyncID != 0 && o->oSyncID >= RESERVED_IDS_SYNC_OBJECT_OFFSET) {
             if (o->oSyncID >= MAX_SYNC_OBJECTS) {
@@ -194,12 +196,14 @@ void network_receive_spawn_objects(struct Packet* p) {
                 return;
             }
             // check if they've allocated one of their reserved sync objects
-            struct SyncObject* so = &gSyncObjects[o->oSyncID];
-            so->o = o;
-            so->extendedModelId = data.extendedModelId;
-            so->txEventId = 0;
-            for (s32 j = 0; j < MAX_PLAYERS; j++) {
-                so->rxEventId[j] = 0;
+            struct SyncObject* so = sync_object_get(o->oSyncID);
+            if (so) {
+                so->o = o;
+                so->extendedModelId = data.extendedModelId;
+                so->txEventId = 0;
+                for (s32 j = 0; j < MAX_PLAYERS; j++) {
+                    so->rxEventId[j] = 0;
+                }
             }
         }
 

@@ -1539,8 +1539,6 @@
 <br />
 
 ## [network.h](#network.h)
-- MAX_SYNC_OBJECTS
-- MAX_SYNC_OBJECT_FIELDS
 - PACKET_LENGTH
 - SYNC_DISTANCE_INFINITE
 

@@ -270,13 +270,13 @@ void (*sWhompActions[])(void) = {
 
 // MM
 void bhv_whomp_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oAngleVelPitch);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oHealth);
-        network_init_object_field(o, &o->oFaceAnglePitch);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oAngleVelPitch);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, &o->oHealth);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
     }
 
     cur_obj_update_floor_and_walls();

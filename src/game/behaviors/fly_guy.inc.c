@@ -173,7 +173,7 @@ static void fly_guy_act_shoot_fire(void) {
                 cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
                 clamp_s16(&fireMovePitch, 0x800, 0x3000);
 
-                if (network_owns_object(o)) {
+                if (sync_object_is_owned_locally(o->oSyncID)) {
                     struct Object* fire = obj_spit_fire(
                         /*relativePos*/ 0, 38, 20,
                         /*scale      */ 2.5f,
@@ -203,13 +203,13 @@ static void fly_guy_act_shoot_fire(void) {
 void bhv_fly_guy_update(void) {
     // PARTIAL_UPDATE (appears in non-roomed levels)
 
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oFlyGuyOscTimer);
-        network_init_object_field(o, &o->oFlyGuyLungeYDecel);
-        network_init_object_field(o, &o->oFlyGuyLungeTargetPitch);
-        network_init_object_field(o, &o->oFlyGuyTargetRoll);
-        network_init_object_field(o, &o->oFlyGuyLungeTargetPitch);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oFlyGuyOscTimer);
+        sync_object_init_field(o, &o->oFlyGuyLungeYDecel);
+        sync_object_init_field(o, &o->oFlyGuyLungeTargetPitch);
+        sync_object_init_field(o, &o->oFlyGuyTargetRoll);
+        sync_object_init_field(o, &o->oFlyGuyLungeTargetPitch);
     }
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {

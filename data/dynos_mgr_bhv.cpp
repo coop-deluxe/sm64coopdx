@@ -98,7 +98,7 @@ void DynOS_Bhv_HookAllCustomBehaviors() {
         auto &script = aGfxData->mBehaviorScripts[aGfxData->mBehaviorScripts.Count() - 1]->mData;
 
         // Theres currently no better place but to do this here.
-        if (smlua_hook_customn_bhv(script, scriptName) == 0) {
+        if (smlua_hook_custom_bhv(script, scriptName) == 0) {
             PrintError("  ERROR: Failed to add custom behavior '%s'!", scriptName);
         }
     }

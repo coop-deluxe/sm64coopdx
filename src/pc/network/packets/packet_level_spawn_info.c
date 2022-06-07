@@ -121,9 +121,9 @@ void network_receive_level_spawn_info(struct Packet* p) {
                 obj_mark_for_deletion(o);
                 LOG_INFO("rx spawn info deletion: object");
                 if (o->oSyncID != 0) {
-                    struct SyncObject* so = &gSyncObjects[o->oSyncID];
-                    if (so->o == o) {
-                        network_forget_sync_object(so);
+                    struct SyncObject* so = sync_object_get(o->oSyncID);
+                    if (so && so->o == o) {
+                        sync_object_forget(so->id);
                         LOG_INFO("rx spawn info deletion: sync object");
                     }
                 }

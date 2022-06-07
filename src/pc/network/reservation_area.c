@@ -11,16 +11,16 @@
 #include "pc/debuglog.h"
 
 #define RESERVED_IDS_PER_AREA 127
-#define RESERVED_IDS_UNRESERVED ((u8)-1)
-#define RESERVED_IDS_USED ((u8)-2)
+#define RESERVED_IDS_UNRESERVED ((u32)-1)
+#define RESERVED_IDS_USED ((u32)-2)
 
 struct ReservationArea {
-    u8 courseNum;
-    u8 actNum;
-    u8 levelNum;
-    u8 areaIndex;
-    u8 playersActive;
-    u8 reservedIds[RESERVED_IDS_PER_AREA];
+    s16 courseNum;
+    s16 actNum;
+    s16 levelNum;
+    s16 areaIndex;
+    u16 playersActive;
+    u32 reservedIds[RESERVED_IDS_PER_AREA];
     struct ReservationArea* next;
 };
 
@@ -28,11 +28,11 @@ struct ReservationArea* sReservationAreas = NULL;
 struct ReservationArea* sReservationAreaPerPlayer[MAX_PLAYERS] = { NULL };
 
 struct LocalReservationArea {
-    u8 courseNum;
-    u8 actNum;
-    u8 levelNum;
-    u8 areaIndex;
-    u8 reservedIds[RESERVED_IDS_PER_PLAYER_COUNT];
+    s16 courseNum;
+    s16 actNum;
+    s16 levelNum;
+    s16 areaIndex;
+    u32 reservedIds[RESERVED_IDS_PER_PLAYER_COUNT];
 };
 struct LocalReservationArea sLocalReservationArea = { 0 };
 
@@ -54,7 +54,7 @@ void reservation_area_debug(void) {
         printf("  (%d, %d, %d, %d) : %d\n", ra->courseNum, ra->actNum, ra->levelNum, ra->areaIndex, ra->playersActive);
 
         printf("    ");
-        u8 idsUntilBreak = 10;
+        u32 idsUntilBreak = 10;
         for (int i = 0; i < RESERVED_IDS_PER_AREA; i++) {
             switch (ra->reservedIds[i])
             {
@@ -93,8 +93,8 @@ static void reservation_area_refresh_ids(struct NetworkPlayer* np) {
     if (ra == NULL) { return; }
 
     // count current reserved ids
-    u8 reservedIds[RESERVED_IDS_PER_PLAYER_COUNT] = { RESERVED_IDS_UNRESERVED };
-    u8 reservedIdCount = 0;
+    u32 reservedIds[RESERVED_IDS_PER_PLAYER_COUNT] = { RESERVED_IDS_UNRESERVED };
+    u32 reservedIdCount = 0;
     for (int i = 0; i < RESERVED_IDS_PER_AREA; i++) {
         if (ra->reservedIds[i] != np->globalIndex) { continue; }
         reservedIds[reservedIdCount] = i + RESERVED_IDS_SYNC_OBJECT_OFFSET;
@@ -225,12 +225,12 @@ void reservation_area_change(struct NetworkPlayer* np) {
     reservation_area_refresh_ids(np);
 }
 
-void reservation_area_use(struct NetworkPlayer* np, u8 syncId) {
+void reservation_area_use(struct NetworkPlayer* np, u32 syncId) {
     // make sure player has a RA
     struct ReservationArea* ra = sReservationAreaPerPlayer[np->globalIndex];
     if (ra == NULL) { return; }
 
-    u8 offset = syncId - RESERVED_IDS_SYNC_OBJECT_OFFSET;
+    u32 offset = syncId - RESERVED_IDS_SYNC_OBJECT_OFFSET;
 
     // sanity check
     if (offset >= RESERVED_IDS_PER_AREA) { return; }
@@ -240,12 +240,12 @@ void reservation_area_use(struct NetworkPlayer* np, u8 syncId) {
     reservation_area_refresh_ids(np);
 }
 
-void reservation_area_release(struct NetworkPlayer* np, u8 syncId) {
+void reservation_area_release(struct NetworkPlayer* np, u32 syncId) {
     // make sure player has a RA
     struct ReservationArea* ra = sReservationAreaPerPlayer[np->globalIndex];
     if (ra == NULL) { return; }
 
-    u8 offset = syncId - RESERVED_IDS_SYNC_OBJECT_OFFSET;
+    u32 offset = syncId - RESERVED_IDS_SYNC_OBJECT_OFFSET;
 
     // sanity check
     if (offset >= RESERVED_IDS_PER_AREA) { return; }
@@ -255,7 +255,7 @@ void reservation_area_release(struct NetworkPlayer* np, u8 syncId) {
     reservation_area_refresh_ids(np);
 }
 
-void reservation_area_local_update(u8 courseNum, u8 actNum, u8 levelNum, u8 areaIndex, u8 syncIds[]) {
+void reservation_area_local_update(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex, u32 syncIds[]) {
     sLocalReservationArea.courseNum = courseNum;
     sLocalReservationArea.actNum    = actNum;
     sLocalReservationArea.levelNum  = levelNum;
@@ -266,7 +266,7 @@ void reservation_area_local_update(u8 courseNum, u8 actNum, u8 levelNum, u8 area
     }
 }
 
-u8 reservation_area_local_grab_id(void) {
+u32 reservation_area_local_grab_id(void) {
     struct LocalReservationArea* la = &sLocalReservationArea;
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
@@ -276,7 +276,7 @@ u8 reservation_area_local_grab_id(void) {
     }
 
     // grab a sync id from reserved list
-    u8 syncId = 0;
+    u32 syncId = 0;
     for (int i = 0; i < RESERVED_IDS_PER_PLAYER_COUNT; i++) {
         if (la->reservedIds[i] == 0 || la->reservedIds[i] == RESERVED_IDS_UNRESERVED || la->reservedIds[i] == RESERVED_IDS_USED) { continue; }
 

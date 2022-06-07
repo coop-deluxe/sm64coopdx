@@ -56,20 +56,20 @@ void bhv_activated_back_and_forth_platform_init(void) {
 
     o->oActivatedBackAndForthPlatformStartYaw = o->oFaceAngleYaw;
 
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &o->oPosX);
-    network_init_object_field(o, &o->oPosY);
-    network_init_object_field(o, &o->oPosZ);
-    network_init_object_field(o, &o->oVelX);
-    network_init_object_field(o, &o->oVelY);
-    network_init_object_field(o, &o->oVelZ);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformMaxOffset);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformOffset);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformVel);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformCountdown);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformStartYaw);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformVertical);
-    network_init_object_field(o, &o->oActivatedBackAndForthPlatformFlipRotation);
+    sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    sync_object_init_field(o, &o->oPosX);
+    sync_object_init_field(o, &o->oPosY);
+    sync_object_init_field(o, &o->oPosZ);
+    sync_object_init_field(o, &o->oVelX);
+    sync_object_init_field(o, &o->oVelY);
+    sync_object_init_field(o, &o->oVelZ);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformMaxOffset);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformOffset);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformVel);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformCountdown);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformStartYaw);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformVertical);
+    sync_object_init_field(o, &o->oActivatedBackAndForthPlatformFlipRotation);
 }
 
 /**

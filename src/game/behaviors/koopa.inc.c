@@ -117,33 +117,33 @@ void bhv_koopa_init(void) {
     if (o->oKoopaMovementType >= KOOPA_BP_KOOPA_THE_QUICK_BASE) {
         // koopa the quick
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvKoopaRaceEndpoint);
-        struct SyncObject* so  = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject* so  = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->on_received_post   = bhv_koopa_the_quick_on_received_post;
             so->on_sent_pre        = bhv_koopa_the_quick_on_sent_pre;
             so->override_ownership = bhv_koopa_the_quick_override_ownership;
-            network_init_object_field(o, &koopaPathedStartWaypoint);
-            network_init_object_field(o, &koopaPathedPrevWaypoint);
-            network_init_object_field(o, &koopaShotFromCannon);
-            network_init_object_field(o, &o->oPathedPrevWaypointFlags);
-            network_init_object_field(o, &o->oPathedTargetPitch);
-            network_init_object_field(o, &o->oPathedTargetYaw);
-            network_init_object_field(o, &o->oPosX);
-            network_init_object_field(o, &o->oPosY);
-            network_init_object_field(o, &o->oPosZ);
-            network_init_object_field(o, &o->oVelX);
-            network_init_object_field(o, &o->oVelY);
-            network_init_object_field(o, &o->oVelZ);
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oSubAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oKoopaAgility);
-            network_init_object_field(o, &o->parentObj->oKoopaRaceEndpointRaceBegun);
-            network_init_object_field(o, &o->parentObj->oKoopaRaceEndpointRaceStatus);
-            network_init_object_field(o, &o->oForwardVel);
-            network_init_object_field(o, &o->oMoveAngleYaw);
-            network_init_object_field(o, &o->areaTimer);
+            sync_object_init_field(o, &koopaPathedStartWaypoint);
+            sync_object_init_field(o, &koopaPathedPrevWaypoint);
+            sync_object_init_field(o, &koopaShotFromCannon);
+            sync_object_init_field(o, &o->oPathedPrevWaypointFlags);
+            sync_object_init_field(o, &o->oPathedTargetPitch);
+            sync_object_init_field(o, &o->oPathedTargetYaw);
+            sync_object_init_field(o, &o->oPosX);
+            sync_object_init_field(o, &o->oPosY);
+            sync_object_init_field(o, &o->oPosZ);
+            sync_object_init_field(o, &o->oVelX);
+            sync_object_init_field(o, &o->oVelY);
+            sync_object_init_field(o, &o->oVelZ);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oSubAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oKoopaAgility);
+            sync_object_init_field(o, &o->parentObj->oKoopaRaceEndpointRaceBegun);
+            sync_object_init_field(o, &o->parentObj->oKoopaRaceEndpointRaceStatus);
+            sync_object_init_field(o, &o->oForwardVel);
+            sync_object_init_field(o, &o->oMoveAngleYaw);
+            sync_object_init_field(o, &o->areaTimer);
         }
         o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;
         o->areaTimer = 0;
@@ -151,11 +151,11 @@ void bhv_koopa_init(void) {
         o->areaTimerRunOnceCallback = bhv_koopa_the_quick_run_once;
     } else {
         // normal koopa
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oKoopaTargetYaw);
-        network_init_object_field(o, &o->oKoopaCountdown);
-        network_init_object_field(o, &o->oKoopaMovementType);
-        network_init_object_field(o, &o->oKoopaUnshelledTimeUntilTurn);
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oKoopaTargetYaw);
+        sync_object_init_field(o, &o->oKoopaCountdown);
+        sync_object_init_field(o, &o->oKoopaMovementType);
+        sync_object_init_field(o, &o->oKoopaUnshelledTimeUntilTurn);
     }
 }
 
@@ -355,7 +355,7 @@ void shelled_koopa_attack_handler(s32 attackType) {
         if (marioState->playerIndex == 0) {
             struct Object* shell = spawn_object(o, MODEL_KOOPA_SHELL, bhvKoopaShell);
             if (shell != NULL) {
-                network_set_sync_id(shell);
+                sync_object_set_id(shell);
 
                 struct Object* spawn_objects[] = { shell };
                 u32 models[] = { MODEL_KOOPA_SHELL };
@@ -720,7 +720,7 @@ static void koopa_the_quick_act_race(void) {
         struct Waypoint* lastPrevWaypoint = o->oPathedPrevWaypoint;
         if (cur_obj_follow_path(0) == PATH_REACHED_END) {
             o->oAction = KOOPA_THE_QUICK_ACT_DECELERATE;
-            if (network_owns_object(o)) { network_send_object(o); }
+            if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
         } else {
             downhillSteepness = 1.0f + sins((s16)(f32) o->oPathedTargetPitch);
             cur_obj_rotate_yaw_toward(o->oPathedTargetYaw, (s32)(o->oKoopaAgility * 150.0f));
@@ -794,7 +794,7 @@ static void koopa_the_quick_act_race(void) {
         }
 
         if (lastPrevWaypoint != o->oPathedPrevWaypoint) {
-            if (network_owns_object(o)) { network_send_object(o); }
+            if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
         }
     }
 }
@@ -809,7 +809,7 @@ static void koopa_the_quick_act_decelerate(void) {
     if (cur_obj_check_if_near_animation_end()) {
         o->oAction = KOOPA_THE_QUICK_ACT_STOP;
         o->oForwardVel = 3.0f;
-        if (network_owns_object(o)) { network_send_object(o); }
+        if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
     }
 }
 
@@ -823,7 +823,7 @@ static void koopa_the_quick_act_stop(void) {
     // KOOPA_SHELLED_ACT_STOPPED at the end
     if (o->oAction == KOOPA_SHELLED_ACT_STOPPED) {
         o->oAction = KOOPA_THE_QUICK_ACT_AFTER_RACE;
-        if (network_owns_object(o)) { network_send_object(o); }
+        if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
     }
 }
 

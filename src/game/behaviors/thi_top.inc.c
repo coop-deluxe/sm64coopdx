@@ -16,12 +16,12 @@ void bhv_thi_huge_island_top_loop(void) {
 }
 
 void bhv_thi_tiny_island_top_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oPrevAction);
+        sync_object_init_field(o, &o->oTimer);
+        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);

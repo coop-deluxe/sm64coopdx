@@ -29,10 +29,10 @@ void bhv_donut_platform_spawner_update(void) {
 }
 
 void bhv_donut_platform_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oGravity);
-        network_init_object_field(o, &o->oIntangibleTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oGravity);
+        sync_object_init_field(o, &o->oIntangibleTimer);
     }
 
     struct Object* player = nearest_player_to_object(o);

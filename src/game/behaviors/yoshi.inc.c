@@ -22,13 +22,13 @@ void bhv_yoshi_init(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 
-    network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oYoshiBlinkTimer);
-    network_init_object_field(o, &o->oYoshiChosenHome);
-    network_init_object_field(o, &o->oYoshiTargetYaw);
-    network_init_object_field(o, &o->oHomeX);
-    network_init_object_field(o, &o->oHomeY);
-    network_init_object_field(o, &o->oHomeZ);
+    sync_object_init(o, 4000.0f);
+    sync_object_init_field(o, &o->oYoshiBlinkTimer);
+    sync_object_init_field(o, &o->oYoshiChosenHome);
+    sync_object_init_field(o, &o->oYoshiTargetYaw);
+    sync_object_init_field(o, &o->oHomeX);
+    sync_object_init_field(o, &o->oHomeY);
+    sync_object_init_field(o, &o->oHomeZ);
 }
 
 void yoshi_walk_loop(void) {

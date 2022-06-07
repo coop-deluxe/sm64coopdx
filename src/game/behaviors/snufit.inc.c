@@ -107,7 +107,7 @@ void snufit_act_shoot(void) {
     if ((u16) o->oSnufitBodyScalePeriod == 0x8000 && o->oSnufitBodyBaseScale == 167) {
         o->oAction = SNUFIT_ACT_IDLE;
     } else if (o->oSnufitBullets < 3 && o->oTimer >= 3) {
-        if (network_owns_object(o)) {
+        if (sync_object_is_owned_locally(o->oSyncID)) {
             o->oSnufitBullets += 1;
             cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
             struct Object* bullet = spawn_object_relative(0, 0, -20, 40, o, MODEL_BOWLING_BALL, bhvSnufitBalls);
@@ -132,18 +132,18 @@ void snufit_act_shoot(void) {
  * and the action brain of the object.
  */
 void bhv_snufit_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oSnufitBullets);
-        network_init_object_field(o, &o->oSnufitRecoil);
-        network_init_object_field(o, &o->oSnufitYOffset);
-        network_init_object_field(o, &o->oSnufitZOffset);
-        network_init_object_field(o, &o->oSnufitScale);
-        network_init_object_field(o, &o->oSnufitBodyScale);
-        network_init_object_field(o, &o->oMoveAnglePitch);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oGravity);
-        network_init_object_field(o, &o->oDeathSound);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oSnufitBullets);
+        sync_object_init_field(o, &o->oSnufitRecoil);
+        sync_object_init_field(o, &o->oSnufitYOffset);
+        sync_object_init_field(o, &o->oSnufitZOffset);
+        sync_object_init_field(o, &o->oSnufitScale);
+        sync_object_init_field(o, &o->oSnufitBodyScale);
+        sync_object_init_field(o, &o->oMoveAnglePitch);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, &o->oGravity);
+        sync_object_init_field(o, &o->oDeathSound);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);

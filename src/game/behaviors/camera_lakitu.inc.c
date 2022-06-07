@@ -39,20 +39,20 @@ void bhv_camera_lakitu_init(void) {
     }
     lakituTargetLocalIndex = UNKNOWN_LOCAL_INDEX;
     
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
             so->ignore_if_true = bhv_camera_lakitu_ignore_if_true;
             so->override_ownership = bhv_camera_lakitu_override_ownership;
             so->on_received_post = bhv_camera_lakitu_on_received_post;
-            network_init_object_field(o, &o->oAngleVelPitch);
-            network_init_object_field(o, &o->oFaceAnglePitch);
-            network_init_object_field(o, &o->oCameraLakituBlinkTimer);
-            network_init_object_field(o, &o->oCameraLakituSpeed);
-            network_init_object_field(o, &o->oCameraLakituCircleRadius);
-            network_init_object_field(o, &o->oCameraLakituFinishedDialog);
-            network_init_object_field(o, &o->oCameraLakituUnk104);
-            network_init_object_field(o, &o->oCameraLakituPitchVel);
+            sync_object_init_field(o, &o->oAngleVelPitch);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oCameraLakituBlinkTimer);
+            sync_object_init_field(o, &o->oCameraLakituSpeed);
+            sync_object_init_field(o, &o->oCameraLakituCircleRadius);
+            sync_object_init_field(o, &o->oCameraLakituFinishedDialog);
+            sync_object_init_field(o, &o->oCameraLakituUnk104);
+            sync_object_init_field(o, &o->oCameraLakituPitchVel);
         }
     }
 }

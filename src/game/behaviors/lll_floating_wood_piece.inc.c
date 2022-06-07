@@ -1,9 +1,9 @@
 // lll_floating_wood_piece.c.inc
 
 void bhv_lll_wood_piece_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 1000.0f);
-        network_init_object_field(o, &o->oLllWoodPieceOscillationTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 1000.0f);
+        sync_object_init_field(o, &o->oLllWoodPieceOscillationTimer);
     }
 
     if (o->oTimer == 0)

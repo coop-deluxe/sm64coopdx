@@ -28,8 +28,8 @@ static struct ObjectHitbox sChainChompHitbox = {
  * Update function for chain chomp part / pivot.
  */
 void bhv_chain_chomp_chain_part_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_DEATH);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_DEATH);
     }
     
     if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED || o->parentObj->oAction == CHAIN_CHOMP_ACT_UNLOAD_CHAIN) {
@@ -450,12 +450,12 @@ static void chain_chomp_act_unload_chain(void) {
  * Update function for chain chomp.
  */
 void bhv_chain_chomp_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 1000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, 1000.0f);
         if (so) {
             so->syncDeathEvent = FALSE;
-            network_init_object_field(o, &o->oChainChompUnk104);
-            network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
+            sync_object_init_field(o, &o->oChainChompUnk104);
+            sync_object_init_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
         }
     }
 
@@ -476,13 +476,13 @@ void bhv_chain_chomp_update(void) {
  * Update function for wooden post.
  */
 void bhv_wooden_post_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oWoodenPostMarioPounding);
-        network_init_object_field(o, &o->oWoodenPostOffsetY);
-        network_init_object_field(o, &o->oWoodenPostSpeedY);
-        network_init_object_field(o, &o->oWoodenPostTotalMarioAngle);
-        network_init_object_field(o, &o->oTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oWoodenPostMarioPounding);
+        sync_object_init_field(o, &o->oWoodenPostOffsetY);
+        sync_object_init_field(o, &o->oWoodenPostSpeedY);
+        sync_object_init_field(o, &o->oWoodenPostTotalMarioAngle);
+        sync_object_init_field(o, &o->oTimer);
     }
 
     // When ground pounded by mario, drop by -45 + -20

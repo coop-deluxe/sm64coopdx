@@ -48,14 +48,14 @@ s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1
                         { -1, 80, 184 }, { 1, 160, 186 }, { -1, -160, 186 }, { 1, 0, 0 }, };
 
 void bhv_bowser_tail_anchor_init(void) {
-    network_init_object_field(o->parentObj, &o->oAction);
-    network_init_object_field(o->parentObj, &o->oPrevAction);
-    network_init_object_field(o->parentObj, &o->oTimer);
-    network_init_object_field(o->parentObj, &o->oIntangibleTimer);
-    network_init_object_field(o->parentObj, &o->oInteractStatus);
-    network_init_object_field(o->parentObj, &o->header.gfx.scale[0]);
-    network_init_object_field(o->parentObj, &o->header.gfx.scale[1]);
-    network_init_object_field(o->parentObj, &o->header.gfx.scale[2]);
+    sync_object_init_field(o->parentObj, &o->oAction);
+    sync_object_init_field(o->parentObj, &o->oPrevAction);
+    sync_object_init_field(o->parentObj, &o->oTimer);
+    sync_object_init_field(o->parentObj, &o->oIntangibleTimer);
+    sync_object_init_field(o->parentObj, &o->oInteractStatus);
+    sync_object_init_field(o->parentObj, &o->header.gfx.scale[0]);
+    sync_object_init_field(o->parentObj, &o->header.gfx.scale[1]);
+    sync_object_init_field(o->parentObj, &o->header.gfx.scale[2]);
 }
 
 void bhv_bowser_tail_anchor_loop(void) {
@@ -67,8 +67,8 @@ void bhv_bowser_tail_anchor_loop(void) {
 }
 
 void bhv_bowser_flame_spawn_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     }
     struct Object *bowser = o->parentObj;
     s32 sp30;
@@ -106,10 +106,10 @@ void bhv_bowser_flame_spawn_loop(void) {
 }
 
 void bhv_bowser_body_anchor_init(void) {
-    network_init_object_field(o->parentObj, &o->oInteractType);
-    network_init_object_field(o->parentObj, &o->oInteractStatus);
-    network_init_object_field(o->parentObj, &o->oIntangibleTimer);
-    network_init_object_field(o->parentObj, &o->oDamageOrCoinValue);
+    sync_object_init_field(o->parentObj, &o->oInteractType);
+    sync_object_init_field(o->parentObj, &o->oInteractStatus);
+    sync_object_init_field(o->parentObj, &o->oIntangibleTimer);
+    sync_object_init_field(o->parentObj, &o->oDamageOrCoinValue);
 }
 
 void bhv_bowser_body_anchor_loop(void) {
@@ -864,13 +864,13 @@ void bowser_spawn_grand_star_key(void) {
         reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_STAR, bhvGrandStar);
         gSecondCameraFocus = reward;
 
-        if (network_owns_object(o) && prevReward == NULL && reward != NULL) {
+        if (sync_object_is_owned_locally(o->oSyncID) && prevReward == NULL && reward != NULL) {
             // set the home position
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
             reward->oHomeZ = reward->oPosZ;
             
-            network_set_sync_id(reward);
+            sync_object_set_id(reward);
             
             struct Object* spawn_objects[] = { reward };
             u32 models[] = { MODEL_STAR };
@@ -1055,13 +1055,13 @@ void bowser_act_dead(void) {
 }
 
 void bhv_tilting_bowser_lava_platform_init(void) {
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &o->oAngleVelPitch);
-    network_init_object_field(o, &o->oAngleVelRoll);
-    network_init_object_field(o, &o->oFaceAnglePitch);
-    network_init_object_field(o, &o->oFaceAngleRoll);
-    network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->oMoveAngleRoll);
+    sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    sync_object_init_field(o, &o->oAngleVelPitch);
+    sync_object_init_field(o, &o->oAngleVelRoll);
+    sync_object_init_field(o, &o->oFaceAnglePitch);
+    sync_object_init_field(o, &o->oFaceAngleRoll);
+    sync_object_init_field(o, &o->oMoveAnglePitch);
+    sync_object_init_field(o, &o->oMoveAngleRoll);
 }
 
 void bowser_tilt_platform(struct Object* platform, s16 a1) {
@@ -1391,18 +1391,18 @@ void bhv_bowser_init(void) {
         o->oAction = 20; // bowser_act_nothing
     }
     
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 8000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, 8000.0f);
         if (so) {
             so->override_ownership = bhv_bowser_override_ownership;
             so->ignore_if_true = bhv_bowser_ignore_if_true;
             so->fullObjectSync = TRUE;
-            network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
-            network_init_object_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
-            network_init_object_field(o, &networkBowserAnimationIndex);
-            network_init_object_field(o, &o->header.gfx.scale[0]);
-            network_init_object_field(o, &o->header.gfx.scale[1]);
-            network_init_object_field(o, &o->header.gfx.scale[2]);
+            sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
+            sync_object_init_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
+            sync_object_init_field(o, &networkBowserAnimationIndex);
+            sync_object_init_field(o, &o->header.gfx.scale[0]);
+            sync_object_init_field(o, &o->header.gfx.scale[1]);
+            sync_object_init_field(o, &o->header.gfx.scale[2]);
         }
     }
 }
@@ -1637,13 +1637,13 @@ u8 bhv_falling_bowser_platform_ignore_if_true(void) {
 }
 
 void bhv_falling_bowser_platform_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->ignore_if_true = bhv_falling_bowser_platform_ignore_if_true;
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
         }
     }
 

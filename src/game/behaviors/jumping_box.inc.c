@@ -45,9 +45,9 @@ void jumping_box_free_update(void) {
 }
 
 void bhv_jumping_box_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 500.0f);
-        network_init_object_field(o, &o->oJumpingBoxUnkF4);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 500.0f);
+        sync_object_init_field(o, &o->oJumpingBoxUnkF4);
     }
 
     switch (o->oHeldState) {

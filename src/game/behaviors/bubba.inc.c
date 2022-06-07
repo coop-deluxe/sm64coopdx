@@ -109,19 +109,19 @@ void bubba_act_1(void) {
 }
 
 void bhv_bubba_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oBubbaUnkF4);
-        network_init_object_field(o, &o->oBubbaUnkF8);
-        network_init_object_field(o, &o->oBubbaUnkFC);
-        network_init_object_field(o, &o->oBubbaUnk100);
-        network_init_object_field(o, &o->oBubbaUnk104);
-        network_init_object_field(o, &o->oBubbaUnk108);
-        network_init_object_field(o, &o->oBubbaUnk10C);
-        network_init_object_field(o, &o->oBubbaUnk1AC);
-        network_init_object_field(o, &o->oBubbaUnk1B0);
-        network_init_object_field(o, &o->oAnimState);
-        network_init_object_field(o, &o->oMoveAnglePitch);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oBubbaUnkF4);
+        sync_object_init_field(o, &o->oBubbaUnkF8);
+        sync_object_init_field(o, &o->oBubbaUnkFC);
+        sync_object_init_field(o, &o->oBubbaUnk100);
+        sync_object_init_field(o, &o->oBubbaUnk104);
+        sync_object_init_field(o, &o->oBubbaUnk108);
+        sync_object_init_field(o, &o->oBubbaUnk10C);
+        sync_object_init_field(o, &o->oBubbaUnk1AC);
+        sync_object_init_field(o, &o->oBubbaUnk1B0);
+        sync_object_init_field(o, &o->oAnimState);
+        sync_object_init_field(o, &o->oMoveAnglePitch);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);

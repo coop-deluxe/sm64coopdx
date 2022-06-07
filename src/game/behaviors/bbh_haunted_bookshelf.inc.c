@@ -8,12 +8,12 @@
  * Update function for bhvHauntedBookshelf.
  */
 void bhv_haunted_bookshelf_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oHauntedBookshelfShouldOpen);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oTimer);
+        sync_object_init_field(o, &o->oPosX);
+        sync_object_init_field(o, &o->oHauntedBookshelfShouldOpen);
     }
 
     // oDistanceToMario is unused by this object.

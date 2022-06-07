@@ -18,15 +18,15 @@ void bhv_hidden_star_init(void) {
     // who last interacted to begin with.
     o->oHiddenStarLastInteractedObject = NULL;
     
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oHiddenStarTriggerCounter);
-            network_init_object_field(o, &o->oPosX);
-            network_init_object_field(o, &o->oPosY);
-            network_init_object_field(o, &o->oPosZ);
-            network_init_object_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oHiddenStarTriggerCounter);
+            sync_object_init_field(o, &o->oPosX);
+            sync_object_init_field(o, &o->oPosY);
+            sync_object_init_field(o, &o->oPosZ);
+            sync_object_init_field(o, &o->oTimer);
         }
     }
 }

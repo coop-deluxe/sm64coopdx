@@ -35,7 +35,7 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
         return NULL;
     }
 
-    if (doSync && !network_set_sync_id(obj)) {
+    if (doSync && !sync_object_set_id(obj)) {
         obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         LOG_ERROR("failed to set sync id");
         return NULL;
@@ -63,8 +63,8 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
         }
     }
 
-    if (doSync) {
-        struct SyncObject* so = &gSyncObjects[obj->oSyncID];
+    struct SyncObject* so = sync_object_get(obj->oSyncID);
+    if (doSync && so) {
         so->extendedModelId = modelId;
         so->o = obj;
 

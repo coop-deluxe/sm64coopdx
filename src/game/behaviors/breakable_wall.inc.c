@@ -1,9 +1,9 @@
 // breakable_wall.c.inc
 
 void bhv_wf_breakable_wall_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oBreakableWallForce);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oBreakableWallForce);
     }
 
     if (o->oBreakableWallForce || gMarioStates[0].action == ACT_SHOT_FROM_CANNON) {
@@ -12,7 +12,8 @@ void bhv_wf_breakable_wall_loop(void) {
             if (!o->oBreakableWallForce) {
                 o->oBreakableWallForce = TRUE;
                 network_send_object(o);
-                gSyncObjects[o->oSyncID].syncDeathEvent = FALSE;
+                struct SyncObject* so = sync_object_get(o->oSyncID);
+                if (so) { so->syncDeathEvent = FALSE; }
             }
             if (cur_obj_has_behavior(bhvWfBreakableWallRight))
                 play_puzzle_jingle();

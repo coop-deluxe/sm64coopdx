@@ -150,7 +150,7 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
             if (a0->behavior != smlua_override_behavior(bhvSpawnedStar) && sp1C != NULL) {
                 // hack: if any other sync objects get spawned here we have to check for them
                 if (a0->behavior == smlua_override_behavior(bhvKoopaShell)) {
-                    network_set_sync_id(sp1C);
+                    sync_object_set_id(sp1C);
                 }
                 struct Object* spawn_objects[] = { sp1C };
                 u32 models[] = { model };
@@ -181,7 +181,7 @@ void exclamation_box_act_5(void) {
     o->oExclamationBoxForce = FALSE;
     if (o->oTimer > 300) {
         o->oAction = 2;
-        forget_ent_reliable_packet(o);
+        sync_object_forget_last_reliable_packet(o->oSyncID);
     }
 }
 void exclamation_box_act_6(void) {
@@ -196,11 +196,11 @@ void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_bo
                                            exclamation_box_act_6 };
 
 void bhv_exclamation_box_init(void) {
-    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so) {
         so->syncDeathEvent = FALSE;
-        network_init_object_field(o, &o->oExclamationBoxForce);
-        network_init_object_field(o, &o->areaTimer);
+        sync_object_init_field(o, &o->oExclamationBoxForce);
+        sync_object_init_field(o, &o->areaTimer);
     }
 
     o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;

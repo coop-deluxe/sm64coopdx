@@ -135,10 +135,10 @@ void bhv_elevator_init(void) {
         o->oElevatorUnk100 = 2;
     }
 
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-    network_init_object_field(o, &o->oAction);
-    network_init_object_field(o, &o->oPosY);
-    network_init_object_field(o, &o->oVelY);
+    sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    sync_object_init_field(o, &o->oAction);
+    sync_object_init_field(o, &o->oPosY);
+    sync_object_init_field(o, &o->oVelY);
 }
 
 void (*sElevatorActions[])(void) = { elevator_act_0, elevator_act_1, elevator_act_2, elevator_act_3,

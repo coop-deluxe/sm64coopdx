@@ -56,14 +56,14 @@ static void cloud_act_fwoosh_hidden(void) {
  * long enough, blow wind at him.
  */
 static void cloud_fwoosh_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->header.gfx.scale[0]);
-        network_init_object_field(o, &o->oCloudCenterX);
-        network_init_object_field(o, &o->oCloudCenterY);
-        network_init_object_field(o, &o->oCloudBlowing);
-        network_init_object_field(o, &o->oCloudGrowSpeed);
-        network_init_object_field(o, &o->oCloudFwooshMovementRadius);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->header.gfx.scale[0]);
+        sync_object_init_field(o, &o->oCloudCenterX);
+        sync_object_init_field(o, &o->oCloudCenterY);
+        sync_object_init_field(o, &o->oCloudBlowing);
+        sync_object_init_field(o, &o->oCloudGrowSpeed);
+        sync_object_init_field(o, &o->oCloudFwooshMovementRadius);
     }
 
     struct Object* player = nearest_player_to_object(o);

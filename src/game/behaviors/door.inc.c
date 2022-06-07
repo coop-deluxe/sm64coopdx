@@ -152,7 +152,7 @@ void bhv_door_init(void) {
     }
 
     // give it an ID to make usedObj/interactObj sync
-    network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
 }
 
 void bhv_star_door_loop_2(void) {

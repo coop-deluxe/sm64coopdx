@@ -238,7 +238,11 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->onRxSeqId = 0;
 
     if (localIndex != 0) {
-        for (s32 j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[localIndex] = 0; }
+        for (s32 j = 0; j < MAX_SYNC_OBJECTS; j++) {
+            struct SyncObject* so = sync_object_get(j);
+            if (!so) { continue; }
+            so->rxEventId[localIndex] = 0;
+        }
     }
     for (s32 j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; np->rxPacketHash[j] = 0; }
     packet_ordered_clear(globalIndex);
@@ -297,7 +301,11 @@ u8 network_player_disconnected(u8 globalIndex) {
         np->currAreaSyncValid  = false;
         gNetworkSystem->clear_id(i);
         network_forget_all_reliable_from(i);
-        for (s32 j = 0; j < MAX_SYNC_OBJECTS; j++) { gSyncObjects[j].rxEventId[i] = 0; }
+        for (s32 j = 0; j < MAX_SYNC_OBJECTS; j++) {
+            struct SyncObject* so = sync_object_get(j);
+            if (!so) { continue; }
+            so->rxEventId[i] = 0;
+        }
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
@@ -361,7 +369,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
             network_send_level_area_inform();
 
             for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-                struct SyncObject* so = &gSyncObjects[i];
+                struct SyncObject* so = sync_object_get(i);
                 if (so == NULL) { continue; }
                 so->txEventId = 0;
             }
@@ -369,7 +377,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
         } else {
 
             for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-                struct SyncObject* so = &gSyncObjects[i];
+                struct SyncObject* so = sync_object_get(i);
                 if (so == NULL) { continue; }
                 so->rxEventId[np->localIndex] = 0;
             }

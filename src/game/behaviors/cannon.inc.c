@@ -213,21 +213,21 @@ void bhv_cannon_override_ownership(u8* shouldOverride, u8* shouldOwn) {
 }
 
 void bhv_cannon_base_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->on_received_post = cannon_on_received_post;
             so->override_ownership = bhv_cannon_override_ownership;
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oPosX);
-            network_init_object_field(o, &o->oPosY);
-            network_init_object_field(o, &o->oPosZ);
-            network_init_object_field(o, &o->oCannonUnk10C);
-            network_init_object_field(o, &o->oCannonUnk10C);
-            network_init_object_field(o, &o->oCannonUnkF8);
-            network_init_object_field(o, &o->oCannonUnkF4);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oPosX);
+            sync_object_init_field(o, &o->oPosY);
+            sync_object_init_field(o, &o->oPosZ);
+            sync_object_init_field(o, &o->oCannonUnk10C);
+            sync_object_init_field(o, &o->oCannonUnk10C);
+            sync_object_init_field(o, &o->oCannonUnkF8);
+            sync_object_init_field(o, &o->oCannonUnkF4);
         }
     }
 

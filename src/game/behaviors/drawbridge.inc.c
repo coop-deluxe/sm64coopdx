@@ -17,14 +17,14 @@ void bhv_lll_drawbridge_spawner_init(void) {
         drawbridge[1]->oPosZ += sins(o->oMoveAngleYaw) * -640.0f;
     }
 
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 3000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 3000.0f);
         for (s32 i = 0; i < 2; i++) {
             if (drawbridge[i] == NULL) { continue; }
-            network_init_object_field(o, &drawbridge[i]->oFaceAngleRoll);
-            network_init_object_field(o, &drawbridge[i]->oAction);
-            network_init_object_field(o, &drawbridge[i]->oPrevAction);
-            network_init_object_field(o, &drawbridge[i]->oTimer);
+            sync_object_init_field(o, &drawbridge[i]->oFaceAngleRoll);
+            sync_object_init_field(o, &drawbridge[i]->oAction);
+            sync_object_init_field(o, &drawbridge[i]->oPrevAction);
+            sync_object_init_field(o, &drawbridge[i]->oTimer);
         }
     }
 

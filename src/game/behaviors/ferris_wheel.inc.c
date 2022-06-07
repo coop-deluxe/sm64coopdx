@@ -44,11 +44,11 @@ void bhv_ferris_wheel_axle_init(void) {
         }
     }
 
-    struct SyncObject* so = network_init_object(o, 2000.0f);
+    struct SyncObject* so = sync_object_init(o, 2000.0f);
     if (so) {
         so->hasStandardFields = FALSE;
         so->maxUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oFaceAngleRoll);
+        sync_object_init_field(o, &o->oFaceAngleRoll);
     }
 }
 

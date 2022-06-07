@@ -198,17 +198,17 @@ static void amp_attack_cooldown_loop(void) {
  * Homing amp update function.
  */
 void bhv_homing_amp_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            network_init_object_field(o, &o->oAmpYPhase);
-            network_init_object_field(o, &o->oAnimState);
-            network_init_object_field(o, &o->oFaceAnglePitch);
-            network_init_object_field(o, &o->oFaceAngleYaw);
-            network_init_object_field(o, &o->oForwardVel);
-            network_init_object_field(o, &o->oFriction);
-            network_init_object_field(o, &o->oHomingAmpAvgY);
-            network_init_object_field(o, &o->oHomingAmpLockedOn);
+            sync_object_init_field(o, &o->oAmpYPhase);
+            sync_object_init_field(o, &o->oAnimState);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, &o->oForwardVel);
+            sync_object_init_field(o, &o->oFriction);
+            sync_object_init_field(o, &o->oHomingAmpAvgY);
+            sync_object_init_field(o, &o->oHomingAmpLockedOn);
         }
     }
 
@@ -343,15 +343,15 @@ static void circling_amp_idle_loop(void) {
  * and calls the common amp cooldown function when the amp is cooling down.
  */
 void bhv_circling_amp_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            network_init_object_field(o, &o->oAmpYPhase);
-            network_init_object_field(o, &o->oAnimState);
-            network_init_object_field(o, &o->oFaceAnglePitch);
-            network_init_object_field(o, &o->oFaceAngleYaw);
-            network_init_object_field(o, &o->oForwardVel);
-            network_init_object_field(o, &o->oFriction);
+            sync_object_init_field(o, &o->oAmpYPhase);
+            sync_object_init_field(o, &o->oAnimState);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, &o->oForwardVel);
+            sync_object_init_field(o, &o->oFriction);
         }
     }
 

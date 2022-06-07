@@ -19,7 +19,7 @@ void bhv_bobomb_init(void) {
     o->oFriction = 0.8;
     o->oBuoyancy = 1.3;
     o->oInteractionSubtype = INT_SUBTYPE_KICKABLE;
-    network_init_object(o, 4000.0f);
+    sync_object_init(o, 4000.0f);
 }
 
 void bobomb_spawn_coin(void) {
@@ -293,10 +293,10 @@ void bhv_bobomb_buddy_init(void) {
     o->oInteractionSubtype = INT_SUBTYPE_NPC;
 
     if (o->oBobombBuddyRole == BOBOMB_BUDDY_ROLE_CANNON) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oBobombBuddyHasTalkedToMario);
-        network_init_object_field(o, &o->oBobombBuddyCannonStatus);
-        network_init_object_field(o, &forceCannonOpen);
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oBobombBuddyHasTalkedToMario);
+        sync_object_init_field(o, &o->oBobombBuddyCannonStatus);
+        sync_object_init_field(o, &forceCannonOpen);
     }
 }
 

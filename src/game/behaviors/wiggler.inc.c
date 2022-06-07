@@ -450,24 +450,24 @@ void bhv_wiggler_on_received_post(UNUSED u8 localIndex) {
  */
 void bhv_wiggler_update(void) {
     // PARTIAL_UPDATE
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->ignore_if_true = bhv_wiggler_ignore_if_true;
             so->on_received_pre = bhv_wiggler_on_received_pre;
             so->on_received_post = bhv_wiggler_on_received_post;
-            network_init_object_field(o, &o->oFaceAnglePitch);
-            network_init_object_field(o, &o->oWigglerFallThroughFloorsHeight);
-            network_init_object_field(o, &o->oWigglerWalkAnimSpeed);
-            network_init_object_field(o, &o->oWigglerSquishSpeed);
-            network_init_object_field(o, &o->oWigglerTimeUntilRandomTurn);
-            network_init_object_field(o, &o->oWigglerTargetYaw);
-            network_init_object_field(o, &o->oWigglerWalkAwayFromWallTimer);
-            network_init_object_field(o, &o->oHealth);
-            network_init_object_field(o, &o->header.gfx.scale[0]);
-            network_init_object_field(o, &o->header.gfx.scale[1]);
-            network_init_object_field(o, &o->header.gfx.scale[2]);
-            network_init_object_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oWigglerFallThroughFloorsHeight);
+            sync_object_init_field(o, &o->oWigglerWalkAnimSpeed);
+            sync_object_init_field(o, &o->oWigglerSquishSpeed);
+            sync_object_init_field(o, &o->oWigglerTimeUntilRandomTurn);
+            sync_object_init_field(o, &o->oWigglerTargetYaw);
+            sync_object_init_field(o, &o->oWigglerWalkAwayFromWallTimer);
+            sync_object_init_field(o, &o->oHealth);
+            sync_object_init_field(o, &o->header.gfx.scale[0]);
+            sync_object_init_field(o, &o->header.gfx.scale[1]);
+            sync_object_init_field(o, &o->header.gfx.scale[2]);
+            sync_object_init_field(o, &o->oFaceAngleYaw);
         }
     }
 

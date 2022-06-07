@@ -88,13 +88,13 @@ void bhv_pyramid_top_explode(void) {
 }
 
 void bhv_pyramid_top_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field_with_size(o, &o->activeFlags, 16);
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
+            sync_object_init_field_with_size(o, &o->activeFlags, 16);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
         }
     }
     

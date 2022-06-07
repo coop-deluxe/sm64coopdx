@@ -7,11 +7,11 @@ void bhv_white_puff_smoke_init(void) {
 
 void bhv_bullet_bill_init(void) {
     o->oBulletBillInitialMoveYaw = o->oMoveAngleYaw;
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oFaceAngleRoll);
-        network_init_object_field(o, &o->oForwardVel);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, &o->oFaceAngleRoll);
+        sync_object_init_field(o, &o->oForwardVel);
     }
 }
 

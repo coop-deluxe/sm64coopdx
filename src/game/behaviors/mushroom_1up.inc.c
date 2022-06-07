@@ -216,20 +216,20 @@ void bhv_1up_jump_on_approach_loop(void) {
 }
 
 void bhv_1up_hidden_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oPosY);
-        network_init_object_field(o, &o->oPosZ);
-        network_init_object_field(o, &o->oVelX);
-        network_init_object_field(o, &o->oVelY);
-        network_init_object_field(o, &o->oVelZ);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->o1UpHiddenUnkF4);
-        network_init_object_field(o, &o->oIntangibleTimer);
-        network_init_object_field_with_size(o, &o->activeFlags, 16);
-        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oPosX);
+        sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, &o->oPosZ);
+        sync_object_init_field(o, &o->oVelX);
+        sync_object_init_field(o, &o->oVelY);
+        sync_object_init_field(o, &o->oVelZ);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, &o->o1UpHiddenUnkF4);
+        sync_object_init_field(o, &o->oIntangibleTimer);
+        sync_object_init_field_with_size(o, &o->activeFlags, 16);
+        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 
     s16 sp26;
@@ -279,9 +279,9 @@ void bhv_1up_hidden_loop(void) {
 }
 
 void bhv_1up_hidden_trigger_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field_with_size(o, &o->activeFlags, 16);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field_with_size(o, &o->activeFlags, 16);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -297,17 +297,17 @@ void bhv_1up_hidden_trigger_loop(void) {
 }
 
 void bhv_1up_hidden_in_pole_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oVelX);
-        network_init_object_field(o, &o->oVelY);
-        network_init_object_field(o, &o->oVelZ);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->o1UpHiddenUnkF4);
-        network_init_object_field(o, &o->oIntangibleTimer);
-        network_init_object_field_with_size(o, &o->activeFlags, 16);
-        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oVelX);
+        sync_object_init_field(o, &o->oVelY);
+        sync_object_init_field(o, &o->oVelZ);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, &o->o1UpHiddenUnkF4);
+        sync_object_init_field(o, &o->oIntangibleTimer);
+        sync_object_init_field_with_size(o, &o->activeFlags, 16);
+        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
     }
 
     UNUSED s16 sp26;
@@ -350,9 +350,9 @@ void bhv_1up_hidden_in_pole_loop(void) {
 }
 
 void bhv_1up_hidden_in_pole_trigger_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field_with_size(o, &o->activeFlags, 16);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field_with_size(o, &o->activeFlags, 16);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -368,9 +368,9 @@ void bhv_1up_hidden_in_pole_trigger_loop(void) {
 }
 
 void bhv_1up_hidden_in_pole_spawner_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field_with_size(o, &o->activeFlags, 16);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field_with_size(o, &o->activeFlags, 16);
     }
 
     if (gNetworkAreaSyncing || !gNetworkAreaLoaded) {
@@ -394,7 +394,7 @@ void bhv_1up_hidden_in_pole_spawner_loop(void) {
         for (s32 i = 0; i < 3; i++) {
             if (spawn_objects[i] == NULL) { continue; }
             spawn_objects[i]->parentObj = spawn_objects[i];
-            network_set_sync_id(spawn_objects[i]);
+            sync_object_set_id(spawn_objects[i]);
         }
 
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;

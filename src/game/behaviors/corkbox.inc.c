@@ -47,7 +47,7 @@ void bhv_respawner_loop(void) {
         if (spawnedObject != NULL) {
             spawnedObject->oBehParams = o->oBehParams;
             spawnedObject->oSyncID = syncID;
-            network_override_object(syncID, spawnedObject);
+            sync_object_override_object(syncID, spawnedObject);
         }
         o->oSyncID = 0;
 
@@ -62,7 +62,7 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
 
     struct Object *respawner = spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvRespawner, o->oHomeX,
                                                          o->oHomeY, o->oHomeZ, 0, 0, 0);
-    u8 syncID = o->oSyncID;
+    u32 syncID = o->oSyncID;
     if (respawner != NULL) {
         respawner->oBehParams = o->oBehParams;
         respawner->oRespawnerModelToRespawn = model;
@@ -73,7 +73,7 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
 
     if (syncID < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
         if (respawner != NULL) {
-            network_override_object(syncID, respawner);
+            sync_object_override_object(syncID, respawner);
         }
         o->oSyncID = 0;
         o->oFlags |= OBJ_FLAG_PERSISTENT_RESPAWN; // pretty sure this is required

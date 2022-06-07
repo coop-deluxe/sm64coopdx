@@ -67,14 +67,14 @@ void bhv_mips_init(void) {
 
     cur_obj_init_animation(0);
 
-    struct SyncObject* so = network_init_object(o, 4000.0f);
+    struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
-        network_init_object_field(o, &o->oMipsStartWaypointIndex);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oMipsStarStatus);
-        network_init_object_field(o, &o->oBehParams2ndByte);
-        network_init_object_field(o, &o->oHeldState);
-        network_init_object_field(o, &o->oFlags);
+        sync_object_init_field(o, &o->oMipsStartWaypointIndex);
+        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, &o->oMipsStarStatus);
+        sync_object_init_field(o, &o->oBehParams2ndByte);
+        sync_object_init_field(o, &o->oHeldState);
+        sync_object_init_field(o, &o->oFlags);
         so->on_received_pre = bhv_mips_on_received_pre;
         so->on_received_post = bhv_mips_on_received_post;
     }
@@ -303,7 +303,7 @@ void bhv_mips_dropped(void) {
     cur_obj_become_tangible();
     o->oForwardVel = 3.0f;
     o->oAction = MIPS_ACT_IDLE;
-    if (network_owns_object(o)) {
+    if (sync_object_is_owned_locally(o->oSyncID)) {
         network_send_object(o);
     }
 }
@@ -321,7 +321,7 @@ void bhv_mips_thrown(void) {
     o->oForwardVel = 25.0f;
     o->oVelY = 20.0f;
     o->oAction = MIPS_ACT_FALL_DOWN;
-    if (network_owns_object(o)) {
+    if (sync_object_is_owned_locally(o->oSyncID)) {
         network_send_object(o);
     }
 }

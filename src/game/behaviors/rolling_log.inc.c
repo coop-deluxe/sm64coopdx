@@ -7,16 +7,16 @@
 // a rolling log of another variation.
 
 static void bhv_rolling_log_network_init(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            network_init_object_field(o, &o->oAngleVelPitch);
-            network_init_object_field(o, &o->oFaceAnglePitch);
-            network_init_object_field(o, &o->oMoveAnglePitch);
-            network_init_object_field(o, &o->oPitouneUnkF4);
-            network_init_object_field(o, &o->oPitouneUnkF8);
-            network_init_object_field(o, &o->oPitouneUnkFC);
-            network_init_object_field(o, &o->oForwardVel);
+            sync_object_init_field(o, &o->oAngleVelPitch);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oMoveAnglePitch);
+            sync_object_init_field(o, &o->oPitouneUnkF4);
+            sync_object_init_field(o, &o->oPitouneUnkF8);
+            sync_object_init_field(o, &o->oPitouneUnkFC);
+            sync_object_init_field(o, &o->oForwardVel);
         }
     }
 }
@@ -146,12 +146,12 @@ void volcano_act_3(void) {
 }
 
 void bhv_volcano_trap_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 2000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 2000.0f);
         if (so) {
-            network_init_object_field(o, &o->oRollingLogUnkF4);
-            network_init_object_field(o, &o->oAngleVelPitch);
-            network_init_object_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oRollingLogUnkF4);
+            sync_object_init_field(o, &o->oAngleVelPitch);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
         }
     }
 

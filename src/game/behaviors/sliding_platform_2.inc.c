@@ -34,14 +34,14 @@ void bhv_sliding_plat_2_init(void) {
 }
 
 void bhv_sliding_plat_2_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->minUpdateRate = 5.0f;
-            network_init_object_field(o, &o->oBackAndForthPlatformDirection);
-            network_init_object_field(o, &o->oBackAndForthPlatformPathLength);
-            network_init_object_field(o, &o->oBackAndForthPlatformDistance);
-            network_init_object_field(o, &o->oBackAndForthPlatformVel);
+            sync_object_init_field(o, &o->oBackAndForthPlatformDirection);
+            sync_object_init_field(o, &o->oBackAndForthPlatformPathLength);
+            sync_object_init_field(o, &o->oBackAndForthPlatformDistance);
+            sync_object_init_field(o, &o->oBackAndForthPlatformVel);
         }
     }
 

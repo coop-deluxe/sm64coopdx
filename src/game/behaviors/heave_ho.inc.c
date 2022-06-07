@@ -125,16 +125,16 @@ u8 bhv_heave_ho_ignore_if_true(void) {
 }
 
 void bhv_heave_ho_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so != NULL) {
             so->override_ownership = bhv_heave_ho_override_ownership;
             so->ignore_if_true = bhv_heave_ho_ignore_if_true;
-            network_init_object_field(o, &o->oHeaveHoUnk88);
-            network_init_object_field(o, &o->oHeaveHoUnkF4);
-            network_init_object_field(o, &o->oInteractStatus);
-            network_init_object_field(o, &o->oGraphYOffset);
-            network_init_object_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, &o->oHeaveHoUnk88);
+            sync_object_init_field(o, &o->oHeaveHoUnkF4);
+            sync_object_init_field(o, &o->oInteractStatus);
+            sync_object_init_field(o, &o->oGraphYOffset);
+            sync_object_init_field(o, &o->oFaceAngleYaw);
         }
     }
 

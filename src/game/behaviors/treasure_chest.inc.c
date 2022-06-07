@@ -79,7 +79,7 @@ void bhv_treasure_chest_bottom_loop(void) {
     struct MarioState *player = nearest_mario_state_to_object(o);
     switch (o->oAction) {
         case 0:
-            if (player && network_owns_object(o->parentObj) && obj_check_if_facing_toward_angle(o->oMoveAngleYaw, player->marioObj->header.gfx.angle[1] + 0x8000, 0x3000)) {
+            if (player && sync_object_is_owned_locally(o->parentObj->oSyncID) && obj_check_if_facing_toward_angle(o->oMoveAngleYaw, player->marioObj->header.gfx.angle[1] + 0x8000, 0x3000)) {
                 if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 150)) {
                     if (!o->parentObj->oTreasureChestIsLastInteractionIncorrect) {
                         if (o->parentObj->oTreasureChestCurrentAnswer == o->oBehParams2ndByte) {
@@ -145,23 +145,23 @@ void bhv_treasure_chest_ship_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oTreasureChestCurrentAnswer);
-            network_init_object_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
-            network_init_object_field(o, &o->oTreasureChestIsAboveWater);
-            network_init_object_field(o, &o->oTreasureChestSound);
-            network_init_object_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oTreasureChestCurrentAnswer);
+            sync_object_init_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
+            sync_object_init_field(o, &o->oTreasureChestIsAboveWater);
+            sync_object_init_field(o, &o->oTreasureChestSound);
+            sync_object_init_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
             for (s32 i = 0; i < 4; i++) {
                 struct Object *chest = chests[i];
-                network_init_object_field(o, &chest->oAction);
-                network_init_object_field(o, &chest->oPrevAction);
-                network_init_object_field(o, &chest->oTimer);
-                network_init_object_field(o, &chest->oIntangibleTimer);
+                sync_object_init_field(o, &chest->oAction);
+                sync_object_init_field(o, &chest->oPrevAction);
+                sync_object_init_field(o, &chest->oTimer);
+                sync_object_init_field(o, &chest->oIntangibleTimer);
             }
         }
     }
@@ -170,7 +170,7 @@ void bhv_treasure_chest_ship_init(void) {
 void bhv_treasure_chest_ship_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (network_owns_object(o) && o->oTreasureChestCurrentAnswer == 5) {
+            if (sync_object_is_owned_locally(o->oSyncID) && o->oTreasureChestCurrentAnswer == 5) {
                 play_puzzle_jingle();
                 fade_volume_scale(0, 127, 1000);
                 o->oAction = 1;
@@ -215,23 +215,23 @@ void bhv_treasure_chest_jrb_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oTreasureChestCurrentAnswer);
-            network_init_object_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
-            network_init_object_field(o, &o->oTreasureChestIsAboveWater);
-            network_init_object_field(o, &o->oTreasureChestSound);
-            network_init_object_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oTreasureChestCurrentAnswer);
+            sync_object_init_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
+            sync_object_init_field(o, &o->oTreasureChestIsAboveWater);
+            sync_object_init_field(o, &o->oTreasureChestSound);
+            sync_object_init_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
             for (s32 i = 0; i < 4; i++) {
                 struct Object *chest = chests[i];
-                network_init_object_field(o, &chest->oAction);
-                network_init_object_field(o, &chest->oPrevAction);
-                network_init_object_field(o, &chest->oTimer);
-                network_init_object_field(o, &chest->oIntangibleTimer);
+                sync_object_init_field(o, &chest->oAction);
+                sync_object_init_field(o, &chest->oPrevAction);
+                sync_object_init_field(o, &chest->oTimer);
+                sync_object_init_field(o, &chest->oIntangibleTimer);
             }
         }
     }
@@ -240,7 +240,7 @@ void bhv_treasure_chest_jrb_init(void) {
 void bhv_treasure_chest_jrb_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (network_owns_object(o) && o->oTreasureChestCurrentAnswer == 5) {
+            if (sync_object_is_owned_locally(o->oSyncID) && o->oTreasureChestCurrentAnswer == 5) {
                 play_puzzle_jingle();
                 o->oAction = 1;
                 o->oTreasureChestSound = 4;
@@ -283,23 +283,23 @@ void bhv_treasure_chest_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oTreasureChestCurrentAnswer);
-            network_init_object_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
-            network_init_object_field(o, &o->oTreasureChestIsAboveWater);
-            network_init_object_field(o, &o->oTreasureChestSound);
-            network_init_object_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oTreasureChestCurrentAnswer);
+            sync_object_init_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
+            sync_object_init_field(o, &o->oTreasureChestIsAboveWater);
+            sync_object_init_field(o, &o->oTreasureChestSound);
+            sync_object_init_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
             for (s32 i = 0; i < 4; i++) {
                 struct Object *chest = chests[i];
-                network_init_object_field(o, &chest->oAction);
-                network_init_object_field(o, &chest->oPrevAction);
-                network_init_object_field(o, &chest->oTimer);
-                network_init_object_field(o, &chest->oIntangibleTimer);
+                sync_object_init_field(o, &chest->oAction);
+                sync_object_init_field(o, &chest->oPrevAction);
+                sync_object_init_field(o, &chest->oTimer);
+                sync_object_init_field(o, &chest->oIntangibleTimer);
             }
         }
     }
@@ -308,7 +308,7 @@ void bhv_treasure_chest_init(void) {
 void bhv_treasure_chest_loop(void) {
     switch (o->oAction) {
         case 0:
-            if (network_owns_object(o) && o->oTreasureChestCurrentAnswer == 5) {
+            if (sync_object_is_owned_locally(o->oSyncID) && o->oTreasureChestCurrentAnswer == 5) {
                 play_puzzle_jingle();
                 o->oAction = 1;
                 o->oTreasureChestSound = 4;

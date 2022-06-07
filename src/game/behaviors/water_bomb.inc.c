@@ -29,13 +29,13 @@ static struct ObjectHitbox sWaterBombHitbox = {
  * Spawn water bombs targeting mario when he comes in range.
  */
 void bhv_water_bomb_spawner_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->fullObjectSync = TRUE;
             so->maxUpdateRate = 5.0f;
-            network_init_object_field(o, &o->oWaterBombSpawnerBombActive);
-            network_init_object_field(o, &o->oWaterBombSpawnerTimeToSpawn);
+            sync_object_init_field(o, &o->oWaterBombSpawnerBombActive);
+            sync_object_init_field(o, &o->oWaterBombSpawnerTimeToSpawn);
         }
     }
 
@@ -61,7 +61,7 @@ void bhv_water_bomb_spawner_update(void) {
         && player->oPosY - o->oPosY < 1000.0f) {
         if (o->oWaterBombSpawnerTimeToSpawn != 0) {
             o->oWaterBombSpawnerTimeToSpawn -= 1;
-        } else if (network_owns_object(o)) {
+        } else if (sync_object_is_owned_locally(o->oSyncID)) {
             // this branch only runs for one player at a time
 
             struct Object *waterBomb = spawn_object_relative(0, 0, 2000, 0, o, MODEL_WATER_BOMB, bhvWaterBomb);

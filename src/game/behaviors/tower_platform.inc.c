@@ -11,11 +11,11 @@ void bhv_wf_solid_tower_platform_loop(void) {
 }
 
 void bhv_wf_elevator_tower_platform_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPosY);
-        network_init_object_field(o, &o->oTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, &o->oTimer);
     }
 
     switch (o->oAction) {

@@ -115,14 +115,14 @@ void bub_act_2(void) {
 void (*sCheepCheepActions[])(void) = { bub_act_0, bub_act_1, bub_act_2 };
 
 void bhv_bub_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            network_init_object_field(o, &o->oCheepCheepUnkF4);
-            network_init_object_field(o, &o->oCheepCheepUnkF8);
-            network_init_object_field(o, &o->oCheepCheepUnkFC);
-            network_init_object_field(o, &o->oCheepCheepUnk104);
-            network_init_object_field(o, &o->oCheepCheepUnk108);
+            sync_object_init_field(o, &o->oCheepCheepUnkF4);
+            sync_object_init_field(o, &o->oCheepCheepUnkF8);
+            sync_object_init_field(o, &o->oCheepCheepUnkFC);
+            sync_object_init_field(o, &o->oCheepCheepUnk104);
+            sync_object_init_field(o, &o->oCheepCheepUnk108);
         }
     }
 

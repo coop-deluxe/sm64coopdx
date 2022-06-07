@@ -41,15 +41,15 @@ void bhv_ttc_2d_rotator_init(void) {
         sTTC2DRotatorTimeBetweenTurns[o->oBehParams2ndByte][gTTCSpeedSetting];
     o->oTTC2DRotatorIncrement = o->oTTC2DRotatorSpeed = sTTC2DRotatorSpeeds[o->oBehParams2ndByte];
 
-    struct SyncObject* so = network_init_object(o, 4000.0f);
+    struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
-        network_init_object_field(o, &o->oTTC2DRotatorMinTimeUntilNextTurn);
-        network_init_object_field(o, &o->oTTC2DRotatorTargetYaw);
-        network_init_object_field(o, &o->oTTC2DRotatorIncrement);
-        network_init_object_field(o, &o->oTTC2DRotatorRandomDirTimer);
-        network_init_object_field(o, &o->oFaceAngleYaw);
-        network_init_object_field(o, &o->oAngleVelYaw);
+        sync_object_init_field(o, &o->oTTC2DRotatorMinTimeUntilNextTurn);
+        sync_object_init_field(o, &o->oTTC2DRotatorTargetYaw);
+        sync_object_init_field(o, &o->oTTC2DRotatorIncrement);
+        sync_object_init_field(o, &o->oTTC2DRotatorRandomDirTimer);
+        sync_object_init_field(o, &o->oFaceAngleYaw);
+        sync_object_init_field(o, &o->oAngleVelYaw);
     }
 }
 

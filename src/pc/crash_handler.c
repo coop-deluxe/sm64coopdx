@@ -444,7 +444,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 
     s32 syncObjects = 0;
     for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        if (gSyncObjects[i].o != NULL) { syncObjects++; }
+        struct SyncObject* so = sync_object_get(i);
+        if (so && so->o != NULL) { syncObjects++; }
     }
     crash_handler_add_info_int(&pText, 315, -4 + (8 * 4), "SyncObj", syncObjects);
 

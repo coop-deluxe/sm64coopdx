@@ -578,7 +578,7 @@ void stub_obj_list_processor_1(void) {
  */
 void clear_objects(void) {
     s32 i;
-    network_clear_sync_objects();
+    sync_objects_clear();
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
     gMarioObject = NULL;

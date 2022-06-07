@@ -105,14 +105,14 @@ static void swoop_act_move(void) {
  * Update function for swoop.
  */
 void bhv_swoop_update(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 4000.0f);
-        network_init_object_field(o, &o->oFaceAngleRoll);
-        network_init_object_field(o, &o->header.gfx.scale[0]);
-        network_init_object_field(o, &o->oSwoopBonkCountdown);
-        network_init_object_field(o, &o->oSwoopTargetPitch);
-        network_init_object_field(o, &o->oSwoopTargetYaw);
-        network_init_object_field(o, &o->oDeathSound);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000.0f);
+        sync_object_init_field(o, &o->oFaceAngleRoll);
+        sync_object_init_field(o, &o->header.gfx.scale[0]);
+        sync_object_init_field(o, &o->oSwoopBonkCountdown);
+        sync_object_init_field(o, &o->oSwoopTargetPitch);
+        sync_object_init_field(o, &o->oSwoopTargetYaw);
+        sync_object_init_field(o, &o->oDeathSound);
     }
 
     // No partial update (only appears in roomed levels)

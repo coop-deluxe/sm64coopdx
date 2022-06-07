@@ -39,7 +39,7 @@ void bhv_eyerok_boss_override_ownership(u8* shouldOverride, u8* shouldOwn) {
 }
 
 u8 bhv_eyerok_boss_ignore_if_true(void) {
-    return network_owns_object(o);
+    return sync_object_is_owned_locally(o->oSyncID);
 }
 
 void bhv_eyerok_boss_init(void) {
@@ -47,41 +47,41 @@ void bhv_eyerok_boss_init(void) {
     hands[0] = eyerok_spawn_hand(-1, MODEL_EYEROK_LEFT_HAND, bhvEyerokHand);
     hands[1] = eyerok_spawn_hand(1, MODEL_EYEROK_RIGHT_HAND, bhvEyerokHand);
 
-    struct SyncObject* so = network_init_object(o, 4000.0f);
+    struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (!so) { return; }
     so->override_ownership = bhv_eyerok_boss_override_ownership;
     so->ignore_if_true = bhv_eyerok_boss_ignore_if_true;
     so->minUpdateRate = 1.0f;
     so->maxUpdateRate = 1.0f;
     so->syncDeathEvent = FALSE;
-    network_init_object_field(o, &o->oEyerokBossNumHands);
-    network_init_object_field(o, &o->oEyerokBossUnkFC);
-    network_init_object_field(o, &o->oEyerokBossActiveHand);
-    network_init_object_field(o, &o->oEyerokBossUnk104);
-    network_init_object_field(o, &o->oEyerokBossUnk108);
-    network_init_object_field(o, &o->oEyerokBossUnk10C);
-    network_init_object_field(o, &o->oEyerokBossUnk110);
-    network_init_object_field(o, &o->oEyerokBossUnk1AC);
+    sync_object_init_field(o, &o->oEyerokBossNumHands);
+    sync_object_init_field(o, &o->oEyerokBossUnkFC);
+    sync_object_init_field(o, &o->oEyerokBossActiveHand);
+    sync_object_init_field(o, &o->oEyerokBossUnk104);
+    sync_object_init_field(o, &o->oEyerokBossUnk108);
+    sync_object_init_field(o, &o->oEyerokBossUnk10C);
+    sync_object_init_field(o, &o->oEyerokBossUnk110);
+    sync_object_init_field(o, &o->oEyerokBossUnk1AC);
     for (s32 i = 0; i < 2; i++) {
-        network_init_object_field(o, &hands[i]->oPosX);
-        network_init_object_field(o, &hands[i]->oPosY);
-        network_init_object_field(o, &hands[i]->oPosZ);
-        network_init_object_field(o, &hands[i]->oVelX);
-        network_init_object_field(o, &hands[i]->oVelY);
-        network_init_object_field(o, &hands[i]->oVelZ);
-        network_init_object_field(o, &hands[i]->oForwardVel);
-        network_init_object_field(o, &hands[i]->oAction);
-        network_init_object_field(o, &hands[i]->oPrevAction);
-        network_init_object_field(o, &hands[i]->oTimer);
-        network_init_object_field(o, &hands[i]->oHealth);
-        network_init_object_field(o, &hands[i]->oEyerokHandWakeUpTimer);
-        network_init_object_field(o, &hands[i]->oEyerokReceivedAttack);
-        network_init_object_field(o, &hands[i]->oEyerokHandUnkFC);
-        network_init_object_field(o, &hands[i]->oEyerokHandUnk100);
-        network_init_object_field(o, &hands[i]->oFaceAngleYaw);
-        network_init_object_field(o, &hands[i]->oMoveAngleYaw);
-        network_init_object_field(o, &hands[i]->oGravity);
-        network_init_object_field(o, &hands[i]->oAnimState);
+        sync_object_init_field(o, &hands[i]->oPosX);
+        sync_object_init_field(o, &hands[i]->oPosY);
+        sync_object_init_field(o, &hands[i]->oPosZ);
+        sync_object_init_field(o, &hands[i]->oVelX);
+        sync_object_init_field(o, &hands[i]->oVelY);
+        sync_object_init_field(o, &hands[i]->oVelZ);
+        sync_object_init_field(o, &hands[i]->oForwardVel);
+        sync_object_init_field(o, &hands[i]->oAction);
+        sync_object_init_field(o, &hands[i]->oPrevAction);
+        sync_object_init_field(o, &hands[i]->oTimer);
+        sync_object_init_field(o, &hands[i]->oHealth);
+        sync_object_init_field(o, &hands[i]->oEyerokHandWakeUpTimer);
+        sync_object_init_field(o, &hands[i]->oEyerokReceivedAttack);
+        sync_object_init_field(o, &hands[i]->oEyerokHandUnkFC);
+        sync_object_init_field(o, &hands[i]->oEyerokHandUnk100);
+        sync_object_init_field(o, &hands[i]->oFaceAngleYaw);
+        sync_object_init_field(o, &hands[i]->oMoveAngleYaw);
+        sync_object_init_field(o, &hands[i]->oGravity);
+        sync_object_init_field(o, &hands[i]->oAnimState);
     }
 }
 
@@ -132,7 +132,7 @@ static void eyerok_boss_act_show_intro_text(void) {
 
 static void eyerok_boss_act_fight(void) {
     if (o->oEyerokBossNumHands == 0) {
-        if (network_owns_object(o)) {
+        if (sync_object_is_owned_locally(o->oSyncID)) {
             o->oAction = EYEROK_BOSS_ACT_DIE;
         }
     } else if (o->oEyerokBossUnk1AC == 0 && o->oEyerokBossActiveHand == 0) {
@@ -197,7 +197,7 @@ static void eyerok_boss_act_die(void) {
         obj_mark_for_deletion(o);
     }*/
     stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
-    if (network_owns_object(o)) {
+    if (sync_object_is_owned_locally(o->oSyncID)) {
         f32* starPos = gLevelValues.starPositions.EyerockStarPos;
         spawn_default_star(starPos[0], starPos[1], starPos[2]);
         network_send_object_reliability(o, TRUE);
@@ -230,14 +230,14 @@ void bhv_eyerok_boss_loop(void) {
     }
 
     if (o->oAction != oldAction) {
-        if (network_owns_object(o->parentObj)) {
+        if (sync_object_is_owned_locally(o->parentObj->oSyncID)) {
             eyerokBossImmediateUpdate = TRUE;
         } else {
             o->oAction = EYEROK_BOSS_ACT_PAUSE;
         }
     }
 
-    if (eyerokBossImmediateUpdate && network_owns_object(o)) {
+    if (eyerokBossImmediateUpdate && sync_object_is_owned_locally(o->oSyncID)) {
         eyerokBossImmediateUpdate = FALSE;
         network_send_object(o);
     }
@@ -249,7 +249,7 @@ static s32 eyerok_hand_check_attacked(void) {
     if (o->oEyerokReceivedAttack != 0 && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x3000) {
         cur_obj_play_sound_2(SOUND_OBJ2_EYEROK_SOUND_SHORT);
 
-        if (--o->oHealth >= 2 || !network_owns_object(o->parentObj)) {
+        if (--o->oHealth >= 2 || !sync_object_is_owned_locally(o->parentObj->oSyncID)) {
             o->oAction = EYEROK_HAND_ACT_ATTACKED;
             o->oVelY = 30.0f;
         } else {
@@ -677,7 +677,7 @@ void bhv_eyerok_hand_loop(void) {
     o->header.gfx.scale[0] = 1.5f * o->oBehParams2ndByte;
 
     if (o->oAction != oldAction) {
-        if (network_owns_object(o->parentObj)) {
+        if (sync_object_is_owned_locally(o->parentObj->oSyncID)) {
             eyerokBossImmediateUpdate = TRUE;
         } else {
             o->oAction = EYEROK_HAND_ACT_PAUSE;

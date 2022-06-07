@@ -23,16 +23,16 @@ void bhv_haunted_chair_init(void) {
         o->oHauntedChairUnkF4 = 1;
     }
 
-    network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oFaceAnglePitch);
-    network_init_object_field(o, &o->oFaceAngleRoll);
-    network_init_object_field(o, &o->oFaceAngleYaw);
-    network_init_object_field(o, &o->oHauntedChairUnk104);
-    network_init_object_field(o, &o->oHauntedChairUnkF4);
-    network_init_object_field(o, &o->oHauntedChairUnkF8);
-    network_init_object_field(o, &o->oHauntedChairUnkFC);
-    network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->oMoveAngleYaw);
+    sync_object_init(o, 4000.0f);
+    sync_object_init_field(o, &o->oFaceAnglePitch);
+    sync_object_init_field(o, &o->oFaceAngleRoll);
+    sync_object_init_field(o, &o->oFaceAngleYaw);
+    sync_object_init_field(o, &o->oHauntedChairUnk104);
+    sync_object_init_field(o, &o->oHauntedChairUnkF4);
+    sync_object_init_field(o, &o->oHauntedChairUnkF8);
+    sync_object_init_field(o, &o->oHauntedChairUnkFC);
+    sync_object_init_field(o, &o->oMoveAnglePitch);
+    sync_object_init_field(o, &o->oMoveAngleYaw);
 }
 
 void haunted_chair_act_0(void) {

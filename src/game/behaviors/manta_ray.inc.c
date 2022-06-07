@@ -41,14 +41,14 @@ void bhv_manta_ray_init(void) {
     obj_set_hitbox(o, &sMantaRayHitbox);
     cur_obj_scale(2.5f);
 
-    network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oMantaTargetPitch);
-    network_init_object_field(o, &o->oMantaTargetYaw);
-    network_init_object_field(o, &o->oWaterRingSpawnerRingsCollected);
-    network_init_object_field(o, &o->oMoveAnglePitch);
-    network_init_object_field(o, &o->oMoveAngleRoll);
+    sync_object_init(o, 4000.0f);
+    sync_object_init_field(o, &o->oMantaTargetPitch);
+    sync_object_init_field(o, &o->oMantaTargetYaw);
+    sync_object_init_field(o, &o->oWaterRingSpawnerRingsCollected);
+    sync_object_init_field(o, &o->oMoveAnglePitch);
+    sync_object_init_field(o, &o->oMoveAngleRoll);
     if (ringManager != NULL) {
-        network_init_object_field(o, &ringManager->oWaterRingMgrNextRingIndex);
+        sync_object_init_field(o, &ringManager->oWaterRingMgrNextRingIndex);
     }
 }
 
@@ -93,7 +93,7 @@ static void manta_ray_act_spawn_ring(void) {
         o->oTimer = 0;
     }
     
-    if (!network_owns_object(o)) { return; }
+    if (!sync_object_is_owned_locally(o->oSyncID)) { return; }
 
     if (o->oTimer == 0 || o->oTimer == 50 || o->oTimer == 150 || o->oTimer == 200 || o->oTimer == 250) {
         ring = spawn_object(o, MODEL_WATER_RING, bhvMantaRayWaterRing);

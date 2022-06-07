@@ -182,21 +182,9 @@ void network_update_player(void);
 void network_receive_player(struct Packet* p);
 
 // packet_object.c
-struct Object* get_sync_objects_object(u32 index);
-struct Packet* get_last_sync_ent_reliable_packet(u8 syncId);
-void forget_ent_reliable_packet(struct Object* o);
-void network_override_object(u8 syncId, struct Object* o);
-struct SyncObject* network_init_object(struct Object* object, float maxSyncDistance);
-void network_init_object_field(struct Object* o, void* field);
-void network_init_object_field_with_size(struct Object *o, void* field, u8 size);
-bool network_owns_object(struct Object* o);
-bool network_sync_object_initialized(struct Object* o);
-void network_clear_sync_objects(void);
-bool network_set_sync_id(struct Object* o);
 void network_send_object(struct Object* o);
 void network_send_object_reliability(struct Object* o, bool reliable);
 void network_receive_object(struct Packet* p);
-void network_forget_sync_object(struct SyncObject* so);
 void network_update_objects(void);
 
 // packet_spawn_object.c
@@ -301,7 +289,7 @@ void network_receive_area_request(struct Packet* p);
 
 // packet_area.c
 
-void area_remove_sync_ids_add(u8 syncId);
+void area_remove_sync_ids_add(u32 syncId);
 void area_remove_sync_ids_clear(void);
 void network_send_area(struct NetworkPlayer* toNp);
 void network_receive_area(struct Packet* p);
@@ -327,15 +315,15 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits);
 void network_receive_level_respawn_info(struct Packet* p);
 
 // packet_reservation_list.c
-void network_send_reservation_list(struct NetworkPlayer* np, u8 syncIds[]);
+void network_send_reservation_list(struct NetworkPlayer* np, u32 syncIds[]);
 void network_receive_reservation_list(struct Packet* p);
 
 // packet_reservation_use.c
-void network_send_reservation_use(u8 syncId);
+void network_send_reservation_use(u32 syncId);
 void network_receive_reservation_use(struct Packet* p);
 
 // packet_reservation_release.c
-void network_send_reservation_release(u8 syncId);
+void network_send_reservation_release(u32 syncId);
 void network_receive_reservation_release(struct Packet* p);
 
 // packet_debug_sync.c

@@ -37,16 +37,16 @@ void bhv_sl_walking_penguin_loop(void) {
     f32 adjustedXPos, adjustedZPos;
     f32 perpendicularOffset = 100.0f;
 
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oSLWalkingPenguinCurStep);
-            network_init_object_field(o, &o->oSLWalkingPenguinCurStepTimer);
-            network_init_object_field(o, &o->oSLWalkingPenguinWindCollisionXPos);
-            network_init_object_field(o, &o->oSLWalkingPenguinWindCollisionZPos);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oSLWalkingPenguinCurStep);
+            sync_object_init_field(o, &o->oSLWalkingPenguinCurStepTimer);
+            sync_object_init_field(o, &o->oSLWalkingPenguinWindCollisionXPos);
+            sync_object_init_field(o, &o->oSLWalkingPenguinWindCollisionZPos);
         }
     }
 

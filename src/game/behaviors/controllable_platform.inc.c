@@ -80,33 +80,33 @@ void bhv_controllable_platform_init(void) {
 
     o->oControllablePlatformUnkFC = o->oPosY;
 
-    struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so != NULL) {
         so->on_received_post = bhv_controllable_platform_on_received_post;
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oPosY);
-        network_init_object_field(o, &o->oPosZ);
-        network_init_object_field(o, &o->oVelX);
-        network_init_object_field(o, &o->oVelY);
-        network_init_object_field(o, &o->oVelZ);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oPrevAction);
-        network_init_object_field(o, &o->oTimer);
-        network_init_object_field_with_size(o, &o->activeFlags, 16);
-        network_init_object_field_with_size(o, &D_80331694, 8);
-        network_init_object_field_with_size(o, &o->header.gfx.node.flags, 16);
+        sync_object_init_field(o, &o->oPosX);
+        sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, &o->oPosZ);
+        sync_object_init_field(o, &o->oVelX);
+        sync_object_init_field(o, &o->oVelY);
+        sync_object_init_field(o, &o->oVelZ);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oPrevAction);
+        sync_object_init_field(o, &o->oTimer);
+        sync_object_init_field_with_size(o, &o->activeFlags, 16);
+        sync_object_init_field_with_size(o, &D_80331694, 8);
+        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
 
-        network_init_object_field(o, &o->oControllablePlatformUnkF8);
-        network_init_object_field(o, &o->oControllablePlatformUnkFC);
-        network_init_object_field(o, &o->oControllablePlatformUnk100);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oFaceAngleRoll);
+        sync_object_init_field(o, &o->oControllablePlatformUnkF8);
+        sync_object_init_field(o, &o->oControllablePlatformUnkFC);
+        sync_object_init_field(o, &o->oControllablePlatformUnk100);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, &o->oFaceAngleRoll);
         for (s32 i = 0; i < 4; i++) {
             if (controllablePlatformSubs[i] == NULL) { continue; }
-            network_init_object_field(o, &controllablePlatformSubs[i]->oAction);
-            network_init_object_field(o, &controllablePlatformSubs[i]->oPrevAction);
-            network_init_object_field(o, &controllablePlatformSubs[i]->oTimer);
-            network_init_object_field(o, &controllablePlatformSubs[i]->oParentRelativePosY);
+            sync_object_init_field(o, &controllablePlatformSubs[i]->oAction);
+            sync_object_init_field(o, &controllablePlatformSubs[i]->oPrevAction);
+            sync_object_init_field(o, &controllablePlatformSubs[i]->oTimer);
+            sync_object_init_field(o, &controllablePlatformSubs[i]->oParentRelativePosY);
         }
     }
 }
@@ -294,7 +294,7 @@ void bhv_controllable_platform_loop(void) {
     if (D_80331694 != 0 && D_80331694 != 6)
         cur_obj_play_sound_1(SOUND_ENV_ELEVATOR2);
 
-    if (network_owns_object(o) && oldD_80331694 != D_80331694) {
+    if (sync_object_is_owned_locally(o->oSyncID) && oldD_80331694 != D_80331694) {
         network_send_object(o);
     }
     oldD_80331694 = D_80331694;

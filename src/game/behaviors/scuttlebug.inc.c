@@ -24,16 +24,16 @@ s32 update_angle_from_move_flags(s32 *angle) {
 }
 
 void bhv_scuttlebug_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            network_init_object_field(o, &o->oFlags);
-            network_init_object_field(o, &o->oForwardVel);
-            network_init_object_field(o, &o->oHomeX);
-            network_init_object_field(o, &o->oHomeY);
-            network_init_object_field(o, &o->oHomeZ);
-            network_init_object_field(o, &o->oInteractStatus);
-            network_init_object_field(o, &o->oScuttlebugUnkF4);
+            sync_object_init_field(o, &o->oFlags);
+            sync_object_init_field(o, &o->oForwardVel);
+            sync_object_init_field(o, &o->oHomeX);
+            sync_object_init_field(o, &o->oHomeY);
+            sync_object_init_field(o, &o->oHomeZ);
+            sync_object_init_field(o, &o->oInteractStatus);
+            sync_object_init_field(o, &o->oScuttlebugUnkF4);
         }
     }
 
@@ -136,13 +136,13 @@ void bhv_scuttlebug_loop(void) {
 }
 
 void bhv_scuttlebug_spawn_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oScuttlebugSpawnerUnkF4);
-            network_init_object_field(o, &o->oScuttlebugSpawnerUnk88);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oScuttlebugSpawnerUnkF4);
+            sync_object_init_field(o, &o->oScuttlebugSpawnerUnk88);
         }
     }
 
@@ -161,7 +161,7 @@ void bhv_scuttlebug_spawn_loop(void) {
                 scuttlebug->oForwardVel = 30.0f;
                 scuttlebug->oVelY = 80.0f;
 
-                network_set_sync_id(scuttlebug);
+                sync_object_set_id(scuttlebug);
                 struct Object *spawn_objects[] = { scuttlebug };
                 u32 models[] = { MODEL_SCUTTLEBUG };
                 network_send_spawn_objects(spawn_objects, models, 1);

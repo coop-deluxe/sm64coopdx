@@ -27,16 +27,16 @@ void init_kickable_board_rock(void) {
 
 void bhv_kickable_board_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oAngleVelPitch);
-        network_init_object_field(o, &o->oFaceAnglePitch);
-        network_init_object_field(o, &o->oKickableBoardF4);
-        network_init_object_field(o, &o->oKickableBoardF8);
-        network_init_object_field(o, &o->oMoveAngleYaw);
-        network_init_object_field(o, &o->oPosY);
-        network_init_object_field(o, &o->oTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oAngleVelPitch);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, &o->oKickableBoardF4);
+        sync_object_init_field(o, &o->oKickableBoardF8);
+        sync_object_init_field(o, &o->oMoveAngleYaw);
+        sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, &o->oTimer);
     }
     s32 sp24;
     switch (o->oAction) {
@@ -45,7 +45,7 @@ void bhv_kickable_board_loop(void) {
             if (check_mario_attacking(marioState)) {
                 init_kickable_board_rock();
                 o->oAction++;
-                if (network_owns_object(o)) { network_send_object(o); }
+                if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
             }
             load_object_collision_model();
             break;
@@ -57,7 +57,7 @@ void bhv_kickable_board_loop(void) {
                 if (marioState->marioObj->oPosY > o->oPosY + 160.0f && sp24 == 2) {
                     o->oAction++;
                     cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2);
-                    if (network_owns_object(o)) { network_send_object(o); }
+                    if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
                 } else
                     o->oTimer = 0;
             }
@@ -65,7 +65,7 @@ void bhv_kickable_board_loop(void) {
                 o->oKickableBoardF8 -= 8;
                 if (o->oKickableBoardF8 < 0) {
                     o->oAction = 0;
-                    if (network_owns_object(o)) { network_send_object(o); }
+                    if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
                 }
             } else
                 init_kickable_board_rock();
@@ -84,7 +84,7 @@ void bhv_kickable_board_loop(void) {
                 o->oAction++;
                 cur_obj_shake_screen(SHAKE_POS_SMALL);
                 cur_obj_play_sound_2(SOUND_GENERAL_UNKNOWN4);
-                if (network_owns_object(o)) { network_send_object(o); }
+                if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
             }
             load_object_collision_model();
             break;

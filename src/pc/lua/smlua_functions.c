@@ -106,7 +106,7 @@ int smlua_func_network_init_object(lua_State* L) {
         return 0;
     }
 
-    struct SyncObject* so = network_init_object(obj, standardSync ? 4000.0f : SYNC_DISTANCE_ONLY_EVENTS);
+    struct SyncObject* so = sync_object_init(obj, standardSync ? 4000.0f : SYNC_DISTANCE_ONLY_EVENTS);
     if (so == NULL) {
         LOG_LUA_LINE("Failed to allocate sync object.");
         return 0;
@@ -146,7 +146,7 @@ int smlua_func_network_init_object(lua_State* L) {
             }
 
             u8* field = ((u8*)(intptr_t)obj) + data->valueOffset;
-            network_init_object_field_with_size(obj, field, lvtSize);
+            sync_object_init_field_with_size(obj, field, lvtSize);
 
             lua_pop(L, 1); // pop value
         }
@@ -165,7 +165,8 @@ int smlua_func_network_send_object(lua_State* L) {
     bool reliable = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
 
-    if (obj->oSyncID == 0 || gSyncObjects[obj->oSyncID].o != obj) {
+    struct SyncObject* so = sync_object_get(obj->oSyncID);
+    if (!so || so->o != obj) {
         LOG_LUA_LINE("Failed to retrieve sync object.");
         return 0;
     }

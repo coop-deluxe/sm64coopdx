@@ -51,15 +51,15 @@ void bhv_big_boulder_loop(void) {
 }
 
 void bhv_big_boulder_generator_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oTimer);
     }
 
     struct Object *sp1C;
     if (o->oTimer >= 256) {
         o->oTimer = 0;
-        if (network_owns_object(o)) {
+        if (sync_object_is_owned_locally(o->oSyncID)) {
             network_send_object(o);
         }
     }
@@ -68,7 +68,7 @@ void bhv_big_boulder_generator_loop(void) {
     if (!current_mario_room_check(4) || is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1500))
         return;
 
-    if (network_owns_object(o)) {
+    if (sync_object_is_owned_locally(o->oSyncID)) {
         if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)) {
             if ((o->oTimer & 0x3F) == 0) {
                 sp1C = spawn_object(o, MODEL_HMC_ROLLING_ROCK, bhvBigBoulder);

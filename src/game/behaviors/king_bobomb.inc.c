@@ -385,15 +385,15 @@ u8 bhv_king_bobomb_ignore_if_true(void) {
 }
 
 void bhv_king_bobomb_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, 4000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->override_ownership = bhv_king_bobomb_override_ownership;
             so->ignore_if_true = bhv_king_bobomb_ignore_if_true;
-            network_init_object_field(o, &o->oKingBobombUnk88);
-            network_init_object_field(o, &o->oFlags);
-            network_init_object_field(o, &o->oHealth);
-            network_init_object_field(o, &o->oInteractStatus);
+            sync_object_init_field(o, &o->oKingBobombUnk88);
+            sync_object_init_field(o, &o->oFlags);
+            sync_object_init_field(o, &o->oHealth);
+            sync_object_init_field(o, &o->oInteractStatus);
         }
     }
 

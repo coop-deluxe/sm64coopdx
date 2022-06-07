@@ -26,14 +26,14 @@ void bhv_ssl_moving_pyramid_wall_init(void) {
             break;
     }
     
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oPrevAction);
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oVelY);
-            network_init_object_field(o, &o->oPosY);
+            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oVelY);
+            sync_object_init_field(o, &o->oPosY);
         }
     }
 }
@@ -48,7 +48,7 @@ void bhv_ssl_moving_pyramid_wall_loop(void) {
             o->oVelY = -5.12f;
             if (o->oTimer == 100) {
                 o->oAction = PYRAMID_WALL_ACT_MOVING_UP;
-                if (network_owns_object(o)) {
+                if (sync_object_is_owned_locally(o->oSyncID)) {
                     network_send_object(o);
                 }
             }

@@ -178,8 +178,8 @@ void bhv_generic_bowling_ball_spawner_init(void) {
 }
 
 void bhv_generic_bowling_ball_spawner_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     }
 
     struct Object *bowlingBall;
@@ -197,7 +197,7 @@ void bhv_generic_bowling_ball_spawner_loop(void) {
     {
         if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, o->oBBallSpawnerMaxSpawnDist)) {
             if ((s32)(random_float() * o->oBBallSpawnerSpawnOdds) == 0) {
-                if (!network_owns_object(o)) {
+                if (!sync_object_is_owned_locally(o->oSyncID)) {
                     return;
                 }
                 // this branch only runs for one player at a time
@@ -216,8 +216,8 @@ void bhv_generic_bowling_ball_spawner_loop(void) {
 }
 
 void bhv_thi_bowling_ball_spawner_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     }
 
     struct Object *bowlingBall;
@@ -232,7 +232,7 @@ void bhv_thi_bowling_ball_spawner_loop(void) {
 
     if ((o->oTimer % 64) == 0) {
         if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 12000)) {
-            if (network_owns_object(o) && (s32)(random_float() * 1.5) == 0) {
+            if (sync_object_is_owned_locally(o->oSyncID) && (s32)(random_float() * 1.5) == 0) {
                 // this branch only runs for one player at a time
                 bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
                 if (bowlingBall != NULL) {
@@ -253,7 +253,7 @@ void bhv_bob_pit_bowling_ball_init(void) {
     o->oFriction = 1.0f;
     o->oBuoyancy = 2.0f;
 
-    struct SyncObject* so = network_init_object(o, 5000.0f);
+    struct SyncObject* so = sync_object_init(o, 5000.0f);
     if (so) {
         so->maxUpdateRate = 5.0f;
     }

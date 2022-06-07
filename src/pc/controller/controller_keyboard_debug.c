@@ -83,7 +83,7 @@ static void debug_reload_lua(void) {
 static void debug_spawn_object(void) {
     struct Object* box = spawn_object(gMarioStates[0].marioObj, MODEL_BREAKABLE_BOX_SMALL, bhvBreakableBoxSmall);
     if (box == NULL) { return; }
-    if (!network_set_sync_id(box)) {
+    if (!sync_object_set_id(box)) {
         box->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         return;
     }

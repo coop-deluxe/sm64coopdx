@@ -24,11 +24,11 @@ void bhv_seesaw_platform_init(void) {
         o->oCollisionDistance = 2000.0f;
     }
 
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject *so = network_init_object(o, 1000.0f);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject *so = sync_object_init(o, 1000.0f);
         if (so) {
-            network_init_object_field(o, &o->oSeesawPlatformPitchVel);
-            network_init_object_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oSeesawPlatformPitchVel);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
         }
     }
 }

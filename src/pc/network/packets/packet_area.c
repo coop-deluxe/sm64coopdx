@@ -15,12 +15,12 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-u8 sRemoveSyncIds[RESERVED_IDS_SYNC_OBJECT_OFFSET] = { 0 };
-u8 sRemoveSyncIdsIndex = 0;
+u32 sRemoveSyncIds[RESERVED_IDS_SYNC_OBJECT_OFFSET] = { 0 };
+u32 sRemoveSyncIdsIndex = 0;
 
-void area_remove_sync_ids_add(u8 syncId) {
+void area_remove_sync_ids_add(u32 syncId) {
     if (syncId >= RESERVED_IDS_SYNC_OBJECT_OFFSET) { return; }
-    for (s32 i = 0; i < sRemoveSyncIdsIndex; i++) {
+    for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         if (sRemoveSyncIds[i] == syncId) { return; }
     }
     sRemoveSyncIds[sRemoveSyncIdsIndex++] = syncId;
@@ -60,7 +60,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // write sync id removals
         packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u8));
-        for (s32 i = 0; i < sRemoveSyncIdsIndex; i++) {
+        for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
             packet_write(&p, &sRemoveSyncIds[i], sizeof(u8));
             LOG_INFO("tx remove sync id %d", sRemoveSyncIds[i]);
         }
@@ -68,7 +68,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         // count respawners and write
         u8 respawnerCount = 0;
         for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = &gSyncObjects[i];
+            struct SyncObject* so = sync_object_get(i);
             if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
             respawnerCount++;
         }
@@ -76,7 +76,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // write respawners
         for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = &gSyncObjects[i];
+            struct SyncObject* so = sync_object_get(i);
             if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
             u32 behaviorToRespawn = get_id_from_behavior(so->o->oRespawnerBehaviorToRespawn);
             packet_write(&p, &so->o->oPosX, sizeof(f32));
@@ -95,7 +95,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // send non-static objects
         for (s32 i = RESERVED_IDS_SYNC_OBJECT_OFFSET; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = &gSyncObjects[i];
+            struct SyncObject* so = sync_object_get(i);
             if (so == NULL || so->o == NULL || so->o->oSyncID != (u32)i) { continue; }
             if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
             struct Object* spawn_objects[] = { so->o };
@@ -117,10 +117,10 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // send last reliable ent packet
         for (s32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-            struct SyncObject* so = &gSyncObjects[i];
+            struct SyncObject* so = sync_object_get(i);
             if (so == NULL || so->o == NULL) { continue; }
             if (so->lastReliablePacketIsStale) { continue; }
-            struct Packet* entPacket = get_last_sync_ent_reliable_packet(i);
+            struct Packet* entPacket = sync_object_get_last_reliable_packet(i);
             if (entPacket->error) { continue; }
             struct Packet p2 = { 0 };
             packet_duplicate(entPacket, &p2);
@@ -137,7 +137,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
 void network_receive_area(struct Packet* p) {
     LOG_INFO("rx area");
-    
+
     if (p == NULL) {
         LOG_ERROR("rx area: the packet was NULL, failed to recieve the area.");
         return;
@@ -181,13 +181,16 @@ void network_receive_area(struct Packet* p) {
     // read removed sync ids
     area_remove_sync_ids_clear();
     packet_read(p, &sRemoveSyncIdsIndex, sizeof(u8));
-    for (s32 i = 0; i < sRemoveSyncIdsIndex; i++) {
+    for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         packet_read(p, &sRemoveSyncIds[i], sizeof(u8));
-        struct SyncObject* so = &gSyncObjects[sRemoveSyncIds[i]];
+        struct SyncObject* so = sync_object_get(sRemoveSyncIds[i]);
+        if (!so) { continue; }
+
         if (so->o != NULL) {
             so->o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         }
-        network_forget_sync_object(so);
+
+        sync_object_forget(so->id);
         LOG_INFO("rx remove sync id %d", sRemoveSyncIds[i]);
     }
 
@@ -213,8 +216,8 @@ void network_receive_area(struct Packet* p) {
         packet_read(p, &behaviorToRespawn, sizeof(u32));
         packet_read(p, &syncId, sizeof(u32));
 
-        struct SyncObject* so = &gSyncObjects[syncId];
-        
+        struct SyncObject* so = sync_object_get(syncId);
+
         if (so == NULL || syncId >= MAX_SYNC_OBJECTS) {
             LOG_ERROR("rx area: Sync object was NULL, Skipping respawner.");
             LOG_DEBUG("rx area debug: Sync Object DEBUG:\n\n \

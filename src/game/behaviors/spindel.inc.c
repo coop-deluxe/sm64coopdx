@@ -5,11 +5,11 @@ void bhv_spindel_init(void) {
     o->oSpindelUnkF4 = 0;
     o->oSpindelUnkF8 = 0;
 
-    network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oSpindelUnkF4);
-    network_init_object_field(o, &o->oSpindelUnkF8);
-    network_init_object_field(o, &o->oAngleVelPitch);
-    network_init_object_field(o, &o->oMoveAnglePitch);
+    sync_object_init(o, 4000.0f);
+    sync_object_init_field(o, &o->oSpindelUnkF4);
+    sync_object_init_field(o, &o->oSpindelUnkF8);
+    sync_object_init_field(o, &o->oAngleVelPitch);
+    sync_object_init_field(o, &o->oMoveAnglePitch);
 }
 
 void bhv_spindel_loop(void) {

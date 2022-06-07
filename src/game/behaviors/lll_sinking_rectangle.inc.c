@@ -15,10 +15,10 @@ void sinking_rectangular_plat_actions(f32 a0, s32 a1) {
 }
 
 void bhv_lll_sinking_rectangular_platform_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 1000.0f);
-        network_init_object_field(o, &o->oLllWoodPieceOscillationTimer);
-        network_init_object_field(o, &o->oFaceAnglePitch);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 1000.0f);
+        sync_object_init_field(o, &o->oLllWoodPieceOscillationTimer);
+        sync_object_init_field(o, &o->oFaceAnglePitch);
     }
     f32 sp1C = 0.4f;
     s32 sp18 = 0x100;
@@ -31,9 +31,9 @@ void bhv_lll_sinking_rectangular_platform_loop(void) {
 }
 
 void bhv_lll_sinking_square_platforms_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        network_init_object(o, 1000.0f);
-        network_init_object_field(o, &o->oLllWoodPieceOscillationTimer);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 1000.0f);
+        sync_object_init_field(o, &o->oLllWoodPieceOscillationTimer);
     }
     f32 sp1C = 0.5f;
     s32 sp18 = 0x100;

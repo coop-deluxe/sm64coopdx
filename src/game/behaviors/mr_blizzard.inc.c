@@ -48,15 +48,15 @@ void bhv_mr_blizzard_init(void) {
         o->oMrBlizzardGraphYOffset = 24.0f;
         o->oMrBlizzardTargetMoveYaw = o->oMoveAngleYaw;
 
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oMrBlizzardTargetMoveYaw);
-        network_init_object_field(o, &o->oMrBlizzardTimer);
-        network_init_object_field(o, &o->oMrBlizzardDistFromHome);
-        network_init_object_field(o, &o->oForwardVel);
-        network_init_object_field(o, &o->oVelY);
-        network_init_object_field(o, &o->oPosX);
-        network_init_object_field(o, &o->oPosY);
-        network_init_object_field(o, &o->oPosZ);
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oMrBlizzardTargetMoveYaw);
+        sync_object_init_field(o, &o->oMrBlizzardTimer);
+        sync_object_init_field(o, &o->oMrBlizzardDistFromHome);
+        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, &o->oVelY);
+        sync_object_init_field(o, &o->oPosX);
+        sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, &o->oPosZ);
     } else {
         if (o->oBehParams2ndByte != MR_BLIZZARD_STYPE_NO_CAP) {
             // Cap wearing Mr. Blizzard from SL.
@@ -69,11 +69,11 @@ void bhv_mr_blizzard_init(void) {
         o->oMrBlizzardGraphYOffset = -200.0f;
         o->oMrBlizzardHeldObj = NULL;
 
-        network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
-        network_init_object_field(o, &o->oMrBlizzardTargetMoveYaw);
-        network_init_object_field(o, &o->oAction);
-        network_init_object_field(o, &o->oMrBlizzardGraphYOffset);
-        network_init_object_field(o, &o->oMoveAngleYaw);
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, &o->oMrBlizzardTargetMoveYaw);
+        sync_object_init_field(o, &o->oAction);
+        sync_object_init_field(o, &o->oMrBlizzardGraphYOffset);
+        sync_object_init_field(o, &o->oMoveAngleYaw);
     }
 }
 
@@ -217,7 +217,7 @@ static void mr_blizzard_act_rotate(void) {
             o->prevObj = o->oMrBlizzardHeldObj = NULL;
             // After 60 frames, if Mario is within 11.25 degrees of Mr. Blizzard, throw snowball action.
         } else if (o->oTimer > 60 && abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x800) {
-            if (network_owns_object(o)) {
+            if (sync_object_is_owned_locally(o->oSyncID)) {
                 o->oAction = MR_BLIZZARD_ACT_THROW_SNOWBALL;
                 network_send_object(o);
             } else {
@@ -356,13 +356,13 @@ static void mr_blizzard_act_jump(void) {
                 o->oVelY = 25.0f;
                 o->oMrBlizzardTimer = 30;
                 o->oMrBlizzardDistFromHome = 0;
-                if (network_owns_object(o) && distanceToPlayer < 2000) { network_send_object(o); }
+                if (sync_object_is_owned_locally(o->oSyncID) && distanceToPlayer < 2000) { network_send_object(o); }
                 // Jump forward.
             } else {
                 o->oForwardVel = 10.0f;
                 o->oVelY = 50.0f;
                 o->oMoveFlags = 0;
-                if (network_owns_object(o) && distanceToPlayer < 2000) { network_send_object(o); }
+                if (sync_object_is_owned_locally(o->oSyncID) && distanceToPlayer < 2000) { network_send_object(o); }
             }
         }
     } else if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
@@ -379,7 +379,7 @@ static void mr_blizzard_act_jump(void) {
 
         o->oForwardVel = 0.0f;
         o->oMrBlizzardTimer = 15;
-        if (network_owns_object(o) && distanceToPlayer < 2000) { network_send_object(o); }
+        if (sync_object_is_owned_locally(o->oSyncID) && distanceToPlayer < 2000) { network_send_object(o); }
     }
 }
 

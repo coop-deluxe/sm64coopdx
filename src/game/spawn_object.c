@@ -212,8 +212,9 @@ void unload_object(struct Object *obj) {
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_CYLBOARD;
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
-    if (obj->oSyncID != 0 && gNetworkType != NT_NONE) {
-        if (gSyncObjects[obj->oSyncID].syncDeathEvent) {
+    struct SyncObject* so = sync_object_get(obj->oSyncID);
+    if (so && gNetworkType != NT_NONE) {
+        if (so->syncDeathEvent) {
             network_send_object(obj);
         } else if (gNetworkType == NT_SERVER) {
             reservation_area_release(gNetworkPlayerLocal, obj->oSyncID);
@@ -222,9 +223,8 @@ void unload_object(struct Object *obj) {
         }
 
         // forget sync object
-        struct SyncObject* so = &gSyncObjects[obj->oSyncID];
         if ((obj == so->o) && (obj->behavior == so->behavior)) {
-            network_forget_sync_object(so);
+            sync_object_forget(so->id);
         }
 
         smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);

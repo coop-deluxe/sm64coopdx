@@ -66,7 +66,7 @@ static const char* LuaHookedEventTypeName[] = {
 
 extern u32 gLuaMarioActionIndex;
 
-int smlua_hook_customn_bhv(BehaviorScript *bhvScript, const char *bhvName);
+int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName);
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
 void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value);

@@ -33,13 +33,13 @@ void bhv_snow_mound_spawn_loop(void) {
 
     struct Object *sp1C = NULL;
 
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->override_ownership = bhv_snow_mound_spawn_override_ownership;
-            network_init_object_field(o, &o->oTimer);
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPrevAction);
+            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPrevAction);
         }
     }
 
@@ -48,7 +48,7 @@ void bhv_snow_mound_spawn_loop(void) {
         return;
 
     if (o->oTimer == 64 || o->oTimer == 128 || o->oTimer == 192 || o->oTimer == 224 || o->oTimer == 256) {
-        if (network_owns_object(o)) {
+        if (sync_object_is_owned_locally(o->oSyncID)) {
             sp1C = spawn_object(o, MODEL_SL_SNOW_TRIANGLE, bhvSlidingSnowMound);
             if (sp1C != NULL) {
                 sp1C->oHomeX = o->oPosX;

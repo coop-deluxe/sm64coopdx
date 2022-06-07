@@ -62,22 +62,22 @@ struct PacketPlayerData {
     Vec3s headRotation;
 
     u8  customFlags;
-    u8 heldSyncID;
-    u8 heldBySyncID;
-    u8 riddenSyncID;
-    u8 interactSyncID;
-    u8 usedSyncID;
-    u8 platformSyncID;
+    u32 heldSyncID;
+    u32 heldBySyncID;
+    u32 riddenSyncID;
+    u32 interactSyncID;
+    u32 usedSyncID;
+    u32 platformSyncID;
 };
 #pragma pack()
 
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
-    u8 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;
-    u8 heldBySyncID   = (m->heldByObj != NULL)          ? m->heldByObj->oSyncID          : 0;
-    u8 riddenSyncID   = (m->riddenObj != NULL)          ? m->riddenObj->oSyncID          : 0;
-    u8 interactSyncID = (m->interactObj != NULL)        ? m->interactObj->oSyncID        : 0;
-    u8 usedSyncID     = (m->usedObj != NULL)            ? m->usedObj->oSyncID            : 0;
-    u8 platformSyncID = (m->marioObj->platform != NULL) ? m->marioObj->platform->oSyncID : 0;
+    u32 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;
+    u32 heldBySyncID   = (m->heldByObj != NULL)          ? m->heldByObj->oSyncID          : 0;
+    u32 riddenSyncID   = (m->riddenObj != NULL)          ? m->riddenObj->oSyncID          : 0;
+    u32 interactSyncID = (m->interactObj != NULL)        ? m->interactObj->oSyncID        : 0;
+    u32 usedSyncID     = (m->usedObj != NULL)            ? m->usedObj->oSyncID            : 0;
+    u32 platformSyncID = (m->marioObj->platform != NULL) ? m->marioObj->platform->oSyncID : 0;
 
     u8 customFlags     = SET_BIT((m->freeze > 0), 0);
 
@@ -134,9 +134,9 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
 }
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
-                              u8* customFlags, u8* heldSyncID, u8* heldBySyncID,
-                              u8* riddenSyncID, u8* interactSyncID, u8* usedSyncID,
-                              u8* platformSyncID) {
+                              u8* customFlags, u32* heldSyncID, u32* heldBySyncID,
+                              u32* riddenSyncID, u32* interactSyncID, u32* usedSyncID,
+                              u32* platformSyncID) {
     memcpy(m->marioObj->rawData.asU32, data->rawData, sizeof(u32) * 80);
     m->marioObj->header.gfx.node.flags = data->nodeFlags;
 
@@ -240,13 +240,13 @@ void network_receive_player(struct Packet* p) {
     }
 
     // apply data from packet to mario state
-    u8 heldSyncID     = 0;
-    u8 heldBySyncID   = 0;
-    u8 riddenSyncID   = 0;
-    u8 interactSyncID = 0;
-    u8 usedSyncID     = 0;
-    u8 platformSyncID = 0;
-    u8 customFlags    = 0;
+    u32 heldSyncID     = 0;
+    u32 heldBySyncID   = 0;
+    u32 riddenSyncID   = 0;
+    u32 interactSyncID = 0;
+    u32 usedSyncID     = 0;
+    u32 platformSyncID = 0;
+    u8  customFlags    = 0;
     write_packet_data(&data, m, &customFlags,
                       &heldSyncID, &heldBySyncID,
                       &riddenSyncID, &interactSyncID,
@@ -265,7 +265,8 @@ void network_receive_player(struct Packet* p) {
     }
 
     // find and set their held object
-    m->heldObj = (heldSyncID != 0) ? gSyncObjects[heldSyncID].o : NULL;
+    struct SyncObject* heldSo = sync_object_get(heldSyncID);
+    m->heldObj = heldSo ? heldSo->o : NULL;
     if (m->heldObj != NULL) {
         if (gMarioStates[0].heldObj == m->heldObj && np->globalIndex < gNetworkPlayerLocal->globalIndex) {
             // drop the object if a higher priority player is holding our object
@@ -277,40 +278,45 @@ void network_receive_player(struct Packet* p) {
     }
 
     // find and set their held-by object
-    if (heldBySyncID != 0 && gSyncObjects[heldBySyncID].o != NULL) {
+    struct SyncObject* heldBySo = sync_object_get(heldBySyncID);
+    if (heldBySo && heldBySo->o) {
         // TODO: do we have to move graphics nodes around to make this visible?
-        m->heldByObj = gSyncObjects[heldBySyncID].o;
+        m->heldByObj = heldBySo->o;
     } else {
         m->heldByObj = NULL;
     }
 
     // find and set their ridden object
-    if (riddenSyncID != 0 && gSyncObjects[riddenSyncID].o != NULL) {
-        gSyncObjects[riddenSyncID].o->heldByPlayerIndex = np->localIndex;
-        m->riddenObj = gSyncObjects[riddenSyncID].o;
+    struct SyncObject* riddenSo = sync_object_get(riddenSyncID);
+    if (riddenSo && riddenSo->o) {
+        riddenSo->o->heldByPlayerIndex = np->localIndex;
+        m->riddenObj = riddenSo->o;
     } else {
         m->riddenObj = NULL;
     }
 
     // find and set their interact object
-    if (interactSyncID != 0 && gSyncObjects[interactSyncID].o != NULL) {
-        m->interactObj = gSyncObjects[interactSyncID].o;
+    struct SyncObject* interactSo = sync_object_get(interactSyncID);
+    if (interactSo && interactSo->o) {
+        m->interactObj = interactSo->o;
     }
 
     // find and set their used object
-    if (usedSyncID != 0 && gSyncObjects[usedSyncID].o != NULL) {
-        m->usedObj = gSyncObjects[usedSyncID].o;
+    struct SyncObject* usedSo = sync_object_get(usedSyncID);
+    if (usedSo && usedSo->o != NULL) {
+        m->usedObj = usedSo->o;
     }
 
     // place on top of platform
-    if (platformSyncID != 0 && gSyncObjects[platformSyncID].o != NULL) {
+    struct SyncObject* platformSo = sync_object_get(platformSyncID);
+    if (platformSo && platformSo->o) {
         struct Surface* floor = NULL;
         // search up to 500 units for the platform
         f32 maxDifference = 500;
         m->pos[1] += maxDifference;
 
         // find the platform
-        gCheckingSurfaceCollisionsForObject = gSyncObjects[platformSyncID].o;
+        gCheckingSurfaceCollisionsForObject = platformSo->o;
         f32 height = find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
         gCheckingSurfaceCollisionsForObject = NULL;
 

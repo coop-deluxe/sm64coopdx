@@ -8,6 +8,7 @@
 #include "network_player.h"
 #include "network_utils.h"
 #include "packets/packet.h"
+#include "sync_object.h"
 #include "pc/utils/string_linked_list.h"
 #include "../cliopts.h"
 
@@ -20,8 +21,6 @@ extern struct MarioState gMarioStates[];
 #define SYNC_DISTANCE_ONLY_DEATH -1.0f
 #define SYNC_DISTANCE_ONLY_EVENTS -2.0f
 #define SYNC_DISTANCE_INFINITE 0
-#define MAX_SYNC_OBJECTS 256 // note: increasing this requires code to be rewritten
-#define MAX_SYNC_OBJECT_FIELDS 64
 #define PACKET_LENGTH 3000
 #define NETWORKTYPESTR (gNetworkType == NT_CLIENT                            \
                         ? "Client"                                           \
@@ -55,35 +54,6 @@ struct NetworkSystem {
     char* name;
 };
 
-struct SyncObject {
-    struct Object* o;
-    float maxSyncDistance;
-    bool owned;
-    f32 clockSinceUpdate;
-    void* behavior;
-    u16 txEventId;
-    u16 rxEventId[MAX_PLAYERS];
-    u16 randomSeed;
-    u8 extraFieldCount;
-    bool fullObjectSync;
-    bool syncDeathEvent;
-    bool hasStandardFields;
-    float minUpdateRate;
-    float maxUpdateRate;
-    u8 (*ignore_if_true)(void);
-    void (*on_received_pre)(u8 fromLocalIndex);
-    void (*on_received_post)(u8 fromLocalIndex);
-    void (*on_sent_pre)(void);
-    void (*on_sent_post)(void);
-    void (*override_ownership)(u8* shouldOverride, u8* shouldOwn);
-    void (*on_forget)(void);
-    void* extraFields[MAX_SYNC_OBJECT_FIELDS];
-    u8 extraFieldsSize[MAX_SYNC_OBJECT_FIELDS];
-    bool rememberLastReliablePacket;
-    bool lastReliablePacketIsStale;
-    u16 extendedModelId;
-};
-
 enum PlayerInteractions {
     PLAYER_INTERACTIONS_NONE,
     PLAYER_INTERACTIONS_SOLID,
@@ -110,7 +80,6 @@ extern bool gNetworkAreaSyncing;
 extern u32 gNetworkAreaTimer;
 extern u32 gNetworkAreaTimerClock;
 extern void* gNetworkServerAddr;
-extern struct SyncObject gSyncObjects[];
 extern struct ServerSettings gServerSettings;
 extern struct StringLinkedList gRegisteredMods;
 extern bool gNetworkSentJoin;

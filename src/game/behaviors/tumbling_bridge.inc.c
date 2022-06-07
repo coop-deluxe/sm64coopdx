@@ -14,20 +14,20 @@ struct Struct8032F34C sTumblingBridgeParams[] = {
 
 void bhv_tumbling_bridge_platform_loop(void) {
     u8 isLLL = obj_has_behavior(o->parentObj, bhvLllTumblingBridge);
-    if (isLLL && !network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (isLLL && !sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field_with_size(o, &o->activeFlags, 16);
-            network_init_object_field(o, &o->oAction);
-            network_init_object_field(o, &o->oPosX);
-            network_init_object_field(o, &o->oPosY);
-            network_init_object_field(o, &o->oPosZ);
-            network_init_object_field(o, &o->oVelX);
-            network_init_object_field(o, &o->oVelY);
-            network_init_object_field(o, &o->oVelZ);
-            network_init_object_field(o, &o->oFaceAnglePitch);
-            network_init_object_field(o, &o->oFaceAngleYaw);
-            network_init_object_field(o, &o->oFaceAngleRoll);
+            sync_object_init_field_with_size(o, &o->activeFlags, 16);
+            sync_object_init_field(o, &o->oAction);
+            sync_object_init_field(o, &o->oPosX);
+            sync_object_init_field(o, &o->oPosY);
+            sync_object_init_field(o, &o->oPosZ);
+            sync_object_init_field(o, &o->oVelX);
+            sync_object_init_field(o, &o->oVelY);
+            sync_object_init_field(o, &o->oVelZ);
+            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, &o->oFaceAngleRoll);
         }
     }
 
@@ -155,10 +155,10 @@ s16 D_8032F38C[] = { -51, 0,     0, -461, 0,   0, -512, 0,   0,    -2611, 0,
                      0,   -2360, 0, 0,    214, 0, 0,    -50, 1945, 1,     0 };
 
 void bhv_tumbling_bridge_loop(void) {
-    if (!network_sync_object_initialized(o)) {
-        struct SyncObject* so = network_init_object(o, SYNC_DISTANCE_ONLY_EVENTS);
+    if (!sync_object_is_initialized(o->oSyncID)) {
+        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            network_init_object_field(o, &o->oIntangibleTimer);
+            sync_object_init_field(o, &o->oIntangibleTimer);
         }
     }
 

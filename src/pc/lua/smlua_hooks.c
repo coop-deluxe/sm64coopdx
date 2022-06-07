@@ -681,7 +681,7 @@ bool smlua_is_behavior_hooked(const BehaviorScript *behavior) {
     return false;
 }
 
-int smlua_hook_customn_bhv(BehaviorScript *bhvScript, const char *bhvName) {
+int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
         LOG_ERROR("Hooked behaviors exceeded maximum references!");
         return 0;

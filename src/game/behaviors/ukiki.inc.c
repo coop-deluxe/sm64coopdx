@@ -650,12 +650,12 @@ void bhv_ukiki_init(void) {
     //    }
     //}
 
-    network_init_object(o, 4000.0f);
-    network_init_object_field(o, &o->oUkikiTauntCounter);
-    network_init_object_field(o, &o->oUkikiChaseFleeRange);
-    network_init_object_field(o, &o->oUkikiCageSpinTimer);
-    network_init_object_field(o, &o->oIntangibleTimer);
-    network_init_object_field_with_size(o, &o->globalPlayerIndex, 8);
+    sync_object_init(o, 4000.0f);
+    sync_object_init_field(o, &o->oUkikiTauntCounter);
+    sync_object_init_field(o, &o->oUkikiChaseFleeRange);
+    sync_object_init_field(o, &o->oUkikiCageSpinTimer);
+    sync_object_init_field(o, &o->oIntangibleTimer);
+    sync_object_init_field_with_size(o, &o->globalPlayerIndex, 8);
 }
 
 /**
