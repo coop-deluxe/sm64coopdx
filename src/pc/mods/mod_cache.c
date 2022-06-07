@@ -221,6 +221,29 @@ void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
     mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
 }
 
+void mod_cache_update(struct Mod* mod, struct ModFile* file) {
+    // sanity check
+    if (mod == NULL || file == NULL) {
+        LOG_ERROR("Could not add to cache, mod or file is null");
+        return;
+    }
+
+    // build the path
+    char modFilePath[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(modFilePath, mod->basePath, file->relativePath)) {
+        LOG_ERROR("Could not concat mod file path");
+        return;
+    }
+
+    // set path
+    normalize_path(modFilePath);
+    file->cachedPath = strdup(modFilePath);
+
+    // hash and cache
+    mod_cache_md5(file->cachedPath, file->dataHash);
+    mod_cache_add_internal(file->dataHash, 0, strdup(file->cachedPath));
+}
+
 void mod_cache_load(void) {
     mod_cache_shutdown();
     LOG_INFO("Loading mod cache");

@@ -127,6 +127,12 @@ void mod_activate(struct Mod* mod) {
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
         mod_cache_add(mod, file, false);
+
+        // forcefully update md5 hash
+        if (gNetworkType == NT_SERVER) {
+            mod_cache_update(mod, file);
+        }
+
         if (str_ends_with(file->relativePath, ".bin")) {
             mod_activate_bin(file);
         }
