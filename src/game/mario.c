@@ -624,8 +624,10 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
 f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
     if (gServerSettings.fixCollisionBugs) {
         height = MAX(height + 80.0f, pos[1] - 2);
+        return find_ceil(pos[0], height, pos[2], ceil);
+    } else {
+        return vec3f_find_ceil(pos, height, ceil);
     }
-    return find_ceil(pos[0], height, pos[2], ceil);
 }
 
 /**

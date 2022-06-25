@@ -28,7 +28,7 @@ static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLev
 }
 
 void discord_fatal_message(int rc) {
-    return; // TODO FIGURE OUT WHY DISCORD DOES THIS
+    return; // Discord usually does this because of loss of connection to Discord
     char errorMessage[132] = { 0 };
     snprintf(errorMessage, 132, "Discord threw an error.\nTo fix: \n1. Close the game.\n2. Restart Discord.\n3. Start the game.\nRC: %d", rc);
     djui_popup_create(errorMessage, 6);

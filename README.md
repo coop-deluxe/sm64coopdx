@@ -13,7 +13,7 @@ Run `./extract_assets.py --clean && make clean` or `make distclean` to remove RO
 ## Goal (accomplished)
 Create a mod for the PC port where multiple people can play online together.
 
-Unlike previous online attempts, this one synchronized enemies and events. This allows player to be interacting with the same world at the same time.
+Unlike previous online attempts, this one synchronized enemies and events. This allows players to be interacting with the same world at the same time.
 
 ## Discord
 [https://discord.gg/TJVKHS4](https://discord.gg/TJVKHS4)
