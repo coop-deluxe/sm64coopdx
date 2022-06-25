@@ -30,6 +30,7 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkboxGB->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkboxGB->base, 1.0f, 32);
 
+#ifdef HAVE_SDL2
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
         if (numJoys > 10) { numJoys = 10; }
@@ -47,6 +48,7 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         struct DjuiSelectionbox* selectionboxGamepad = djui_selectionbox_create(&body->base, "Gamepad", gamepadChoices, numJoys, &configGamepadNumber);
         djui_base_set_size_type(&selectionboxGamepad->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionboxGamepad->base, 1.0f, 32);
+#endif
 
         struct DjuiSlider* slider1 = djui_slider_create(&body->base, "Deadzone", &configStickDeadzone, 0, 100);
         djui_base_set_size_type(&slider1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
