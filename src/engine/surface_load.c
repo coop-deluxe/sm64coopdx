@@ -17,6 +17,7 @@
 #include "game/game_init.h"
 #include "engine/math_util.h"
 #include "game/level_update.h"
+#include "game/hardcoded.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 
@@ -153,9 +154,9 @@ static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surfac
     //  many functions only use the first triangle in surface order that fits,
     //  missing higher surfaces.
     //  upperY would be a better sort method.
-    //  <Fixed when gServerSettings.fixCollisionBugs != 0>
+    //  <Fixed when gLevelValues.fixCollisionBugs != 0>
 
-    surfacePriority = gServerSettings.fixCollisionBugs
+    surfacePriority = gLevelValues.fixCollisionBugs
                     ? (surface->upperY * sortDir)
                     : (surface->vertex1[1] * sortDir);
 

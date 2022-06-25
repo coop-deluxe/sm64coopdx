@@ -116,7 +116,6 @@ bool         configSkipIntro     = 0;
 bool         configShareLives    = 0;
 bool         configEnableCheats  = 0;
 bool         configBubbleDeath   = true;
-bool         configFixCollBugs   = true;
 unsigned int configAmountofPlayers = 16;
 bool         configHUD           = true;
 #ifdef DISCORDRPC
@@ -207,7 +206,6 @@ static const struct ConfigOption options[] = {
     {.name = "frame_limit"       ,             .type = CONFIG_TYPE_UINT  , .uintValue   = &configFrameLimit},
     {.name = "amount_of_players",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configAmountofPlayers},
     {.name = "bubble_death",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configBubbleDeath},
-    {.name = "fix_collision_bugs",             .type = CONFIG_TYPE_BOOL  , .boolValue   = &configFixCollBugs},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configDrawDistance},
     {.name = "coop_host_port",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostPort},
     {.name = "coop_host_save_slot",            .type = CONFIG_TYPE_UINT  , .uintValue   = &configHostSaveSlot},

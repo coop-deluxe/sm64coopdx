@@ -43,7 +43,7 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 9 + 64 * 1 + 16 * 9;
+    f32 bodyHeight = 32 * 8 + 64 * 1 + 16 * 8;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\S\\#1be700\\E\\#00b3ff\\T\\#ffef00\\T\\#ff0800\\I\\#1be700\\N\\#00b3ff\\G\\#ffef00\\S");
@@ -83,10 +83,6 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Bubble on death", &configBubbleDeath);
         djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox5->base, 1.0f, 32);
-
-        struct DjuiCheckbox* checkbox6 = djui_checkbox_create(&body->base, "Fix collision bugs", &configFixCollBugs);
-        djui_base_set_size_type(&checkbox6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox6->base, 1.0f, 32);
 
         struct DjuiRect* rect1 = djui_rect_create(&body->base);
         djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

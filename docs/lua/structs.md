@@ -903,6 +903,7 @@
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
+| fixCollisionBugs | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
 | pssSlideStarIndex | `integer` |  |
@@ -2023,7 +2024,6 @@
 | ----- | ---- | ------ |
 | bubbleDeath | `integer` |  |
 | enableCheats | `integer` |  |
-| fixCollisionBugs | `integer` |  |
 | headlessServer | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |

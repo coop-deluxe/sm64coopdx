@@ -9,6 +9,7 @@
 #include "interaction.h"
 #include "mario_step.h"
 #include "pc/lua/smlua.h"
+#include "game/hardcoded.h"
 
 static s16 sMovingSandSpeeds[] = { 12, 8, 4, 0 };
 
@@ -307,7 +308,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
 
     if (upperWcd.numWalls > 0) {
         for (u8 i = 0; i < upperWcd.numWalls; i++) {
-            if (!gServerSettings.fixCollisionBugs) {
+            if (!gLevelValues.fixCollisionBugs) {
                 i = (upperWcd.numWalls - 1);
             }
             struct Surface* wall = upperWcd.walls[i];
@@ -492,7 +493,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
     // misalignment, you can activate these conditions in unexpected situations
     if ((stepArg & AIR_STEP_CHECK_LEDGE_GRAB) && upperWcd.numWalls == 0 && lowerWcd.numWalls > 0) {
         for (u8 i = 0; i < lowerWcd.numWalls; i++) {
-            if (!gServerSettings.fixCollisionBugs) {
+            if (!gLevelValues.fixCollisionBugs) {
                 i = (lowerWcd.numWalls - 1);
             }
             struct Surface* wall = lowerWcd.walls[i];
@@ -515,7 +516,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         mario_update_wall(m, &upperWcd);
 
         for (u8 i = 0; i < upperWcd.numWalls; i++) {
-            if (!gServerSettings.fixCollisionBugs) {
+            if (!gLevelValues.fixCollisionBugs) {
                 i = (upperWcd.numWalls - 1);
             }
 
@@ -537,7 +538,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         mario_update_wall(m, &lowerWcd);
 
         for (u8 i = 0; i < lowerWcd.numWalls; i++) {
-            if (!gServerSettings.fixCollisionBugs) {
+            if (!gLevelValues.fixCollisionBugs) {
                 i = (lowerWcd.numWalls - 1);
             }
 

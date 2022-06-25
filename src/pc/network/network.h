@@ -69,7 +69,6 @@ struct ServerSettings {
     u8 enableCheats;
     u8 bubbleDeath;
     u8 headlessServer;
-    u8 fixCollisionBugs;
 };
 
 // Networking-specific externs

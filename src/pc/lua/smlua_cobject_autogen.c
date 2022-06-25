@@ -720,13 +720,14 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 15
+#define LUA_LEVEL_VALUES_FIELD_COUNT 16
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
     { "entryLevel",               LVT_S32,     offsetof(struct LevelValues, entryLevel),               false, LOT_NONE          },
     { "exitCastleArea",           LVT_S16,     offsetof(struct LevelValues, exitCastleArea),           false, LOT_NONE          },
     { "exitCastleLevel",          LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),          false, LOT_NONE          },
     { "exitCastleWarpNode",       LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode),       false, LOT_NONE          },
+    { "fixCollisionBugs",         LVT_U8,      offsetof(struct LevelValues, fixCollisionBugs),         false, LOT_NONE          },
     { "metalCapDuration",         LVT_U16,     offsetof(struct LevelValues, metalCapDuration),         false, LOT_NONE          },
     { "metalCapDurationCotmc",    LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),    false, LOT_NONE          },
     { "pssSlideStarIndex",        LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),        false, LOT_NONE          },
@@ -1767,11 +1768,10 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
     { "surface", LVT_COBJECT_P, offsetof(struct RayIntersectionInfo, surface), false, LOT_SURFACE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 9
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 8
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bubbleDeath",             LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),             false, LOT_NONE },
     { "enableCheats",            LVT_U8,  offsetof(struct ServerSettings, enableCheats),            false, LOT_NONE },
-    { "fixCollisionBugs",        LVT_U8,  offsetof(struct ServerSettings, fixCollisionBugs),        false, LOT_NONE },
     { "headlessServer",          LVT_U8,  offsetof(struct ServerSettings, headlessServer),          false, LOT_NONE },
     { "playerInteractions",      LVT_S32, offsetof(struct ServerSettings, playerInteractions),      false, LOT_NONE },
     { "playerKnockbackStrength", LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength), false, LOT_NONE },

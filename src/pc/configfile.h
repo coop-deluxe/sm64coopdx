@@ -74,7 +74,6 @@ extern bool         configSkipIntro;
 extern bool         configShareLives;
 extern bool         configEnableCheats;
 extern bool         configBubbleDeath;
-extern bool         configFixCollBugs;
 extern unsigned int configAmountofPlayers;
 #ifdef DISCORDRPC
 extern bool         configDiscordRPC;

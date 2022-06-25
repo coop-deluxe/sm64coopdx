@@ -5,7 +5,6 @@
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "src/game/hardcoded.h"
-#include "src/game/rendering_graph_node.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
 #endif
@@ -19,6 +18,11 @@
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
+
+// fix warnings when including rendering_graph_node
+#undef near
+#undef far
+#include "src/game/rendering_graph_node.h"
 
 // Mario 64 specific externs
 extern s16 sCurrPlayMode;
@@ -57,7 +61,6 @@ struct ServerSettings gServerSettings = {
     .enableCheats = 0,
     .bubbleDeath = 1,
     .headlessServer = 0,
-    .fixCollisionBugs = 1,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -93,7 +96,6 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.shareLives = configShareLives;
     gServerSettings.enableCheats = configEnableCheats;
     gServerSettings.bubbleDeath = configBubbleDeath;
-    gServerSettings.fixCollisionBugs = configFixCollBugs;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else

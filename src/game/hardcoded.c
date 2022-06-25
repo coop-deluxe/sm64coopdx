@@ -41,6 +41,7 @@ extern Trajectory sThiTinyMetalBallTraj[];
 ////////////
 
 struct LevelValues gDefaultLevelValues = {
+    .fixCollisionBugs         = 0,
     .entryLevel               = LEVEL_CASTLE_GROUNDS,
     .exitCastleLevel          = LEVEL_CASTLE,
     .exitCastleArea           = 1,

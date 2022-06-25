@@ -736,10 +736,10 @@ void push_mario_out_of_object(struct MarioState *m, struct Object *o, f32 paddin
         if (floor != NULL) {
             //! Doesn't update Mario's referenced floor (allows oob death when
             // an object pushes you into a steep slope while in a ground action)
-            //  <Fixed when gServerSettings.fixCollisionBugs != 0>
+            //  <Fixed when gLevelValues.fixCollisionBugs != 0>
             m->pos[0] = newMarioX;
             m->pos[2] = newMarioZ;
-            if (gServerSettings.fixCollisionBugs) {
+            if (gLevelValues.fixCollisionBugs) {
                 m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
             }
         }

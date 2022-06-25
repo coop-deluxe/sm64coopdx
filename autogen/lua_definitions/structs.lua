@@ -622,6 +622,7 @@
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
+--- @field public fixCollisionBugs integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
 --- @field public pssSlideStarIndex integer
@@ -1608,7 +1609,6 @@
 --- @class ServerSettings
 --- @field public bubbleDeath integer
 --- @field public enableCheats integer
---- @field public fixCollisionBugs integer
 --- @field public headlessServer integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer

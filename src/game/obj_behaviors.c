@@ -170,7 +170,7 @@ s8 obj_find_wall(f32 objNewX, f32 objY, f32 objNewZ, f32 objVelX, f32 objVelZ) {
         o->oPosY = hitbox.y;
         o->oPosZ = hitbox.z;
 
-        if (gServerSettings.fixCollisionBugs && hitbox.normalCount > 0) {
+        if (gLevelValues.fixCollisionBugs && hitbox.normalCount > 0) {
             wall_nX = hitbox.normalAddition[0] / hitbox.normalCount;
             wall_nY = hitbox.normalAddition[1] / hitbox.normalCount;
             wall_nZ = hitbox.normalAddition[2] / hitbox.normalCount;

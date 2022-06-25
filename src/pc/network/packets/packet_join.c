@@ -107,7 +107,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.shareLives, sizeof(u8));
     packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
-    packet_write(&p, &gServerSettings.fixCollisionBugs, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
@@ -171,7 +170,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.shareLives, sizeof(u8));
     packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
-    packet_read(p, &gServerSettings.fixCollisionBugs, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
