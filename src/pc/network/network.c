@@ -5,6 +5,7 @@
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "src/game/hardcoded.h"
+#include "src/game/rendering_graph_node.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
 #endif
@@ -497,6 +498,9 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     extern u8 gOverrideFreezeCamera;
     gOverrideFreezeCamera = false;
     gDjuiHudLockMouse = false;
+    gOverrideNear = 0;
+    gOverrideFar = 0;
+    gOverrideFOV = 0;
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
