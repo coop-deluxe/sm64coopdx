@@ -37,22 +37,22 @@ DataNode<Light_t>* DynOS_LightT_Parse(GfxData* aGfxData, DataNode<Light_t>* aNod
  // Writing //
 /////////////
 
-void DynOS_LightT_Write(FILE* aFile, GfxData* aGfxData, DataNode<Light_t> *aNode) {
+void DynOS_LightT_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Light_t> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_LIGHT_T);
+    aFile->Write<u8>(DATA_TYPE_LIGHT_T);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<Light_t>(aFile, *aNode->mData);
+    aFile->Write<Light_t>(*aNode->mData);
 }
 
   /////////////
  // Reading //
 /////////////
 
-void DynOS_LightT_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_LightT_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Light_t> *_Node = New<DataNode<Light_t>>();
 
     // Name
@@ -60,7 +60,7 @@ void DynOS_LightT_Load(FILE *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mData = New<Light_t>();
-    *_Node->mData = ReadBytes<Light_t>(aFile);
+    *_Node->mData = aFile->Read<Light_t>();
 
     // Append
     aGfxData->mLightTs.Add(_Node);

@@ -937,23 +937,23 @@ DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode) {
  // Writing //
 /////////////
 
-void DynOS_Gfx_Write(FILE *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode) {
+void DynOS_Gfx_Write(BinFile *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_DISPLAY_LIST);
+    aFile->Write<u8>(DATA_TYPE_DISPLAY_LIST);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         Gfx *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
-            WriteBytes<u32>(aFile, _Head->words.w0);
+            aFile->Write<u32>(_Head->words.w0);
             DynOS_Pointer_Write(aFile, (const void *) _Head->words.w1, aGfxData);
         } else {
-            WriteBytes<u32>(aFile, _Head->words.w0);
-            WriteBytes<u32>(aFile, _Head->words.w1);
+            aFile->Write<u32>(_Head->words.w0);
+            aFile->Write<u32>(_Head->words.w1);
         }
     }
 }
@@ -961,18 +961,18 @@ void DynOS_Gfx_Write(FILE *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode) {
  // Reading //
 /////////////
 
-void DynOS_Gfx_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Gfx> *_Node = New<DataNode<Gfx>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<Gfx>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        u32 _WordsW0 = ReadBytes<u32>(aFile);
-        u32 _WordsW1 = ReadBytes<u32>(aFile);
+        u32 _WordsW0 = aFile->Read<u32>();
+        u32 _WordsW1 = aFile->Read<u32>();
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _WordsW1, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i].words.w0 = (uintptr_t) _WordsW0;

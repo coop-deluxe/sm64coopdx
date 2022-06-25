@@ -160,7 +160,7 @@ void DynOS_Anim_ScanFolder(GfxData *aGfxData, const SysPath &aAnimsFolder) {
  // Writing //
 /////////////
 
-void DynOS_Anim_Write(FILE* aFile, GfxData* aGfxData) {
+void DynOS_Anim_Write(BinFile* aFile, GfxData* aGfxData) {
     for (auto& _Node : aGfxData->mAnimations) {
 
         // Value buffer
@@ -182,27 +182,27 @@ void DynOS_Anim_Write(FILE* aFile, GfxData* aGfxData) {
         }
 
         // Header
-        WriteBytes<u8>(aFile, DATA_TYPE_ANIMATION);
+        aFile->Write<u8>(DATA_TYPE_ANIMATION);
         _Node->mName.Write(aFile);
 
         // Data
-        WriteBytes<s16>(aFile, _Node->mData->mFlags);
-        WriteBytes<s16>(aFile, _Node->mData->mUnk02);
-        WriteBytes<s16>(aFile, _Node->mData->mUnk04);
-        WriteBytes<s16>(aFile, _Node->mData->mUnk06);
-        WriteBytes<s16>(aFile, _Node->mData->mUnk08);
-        WriteBytes<s16>(aFile, (aGfxData->mAnimIndices[_Unk0ABufferIdx]->second.Count() / 6) - 1);
-        WriteBytes<u32>(aFile, _Node->mData->mLength);
+        aFile->Write<s16>(_Node->mData->mFlags);
+        aFile->Write<s16>(_Node->mData->mUnk02);
+        aFile->Write<s16>(_Node->mData->mUnk04);
+        aFile->Write<s16>(_Node->mData->mUnk06);
+        aFile->Write<s16>(_Node->mData->mUnk08);
+        aFile->Write<s16>((aGfxData->mAnimIndices[_Unk0ABufferIdx]->second.Count() / 6) - 1);
+        aFile->Write<u32>(_Node->mData->mLength);
         aGfxData->mAnimValues[_ValueBufferIdx]->second.Write(aFile);
         aGfxData->mAnimIndices[_IndexBufferIdx]->second.Write(aFile);
     }
 }
 
-void DynOS_Anim_Table_Write(FILE* aFile, GfxData* aGfxData) {
+void DynOS_Anim_Table_Write(BinFile* aFile, GfxData* aGfxData) {
     for (auto& _AnimName : aGfxData->mAnimationTable) {
 
         // Header
-        WriteBytes<u8>(aFile, DATA_TYPE_ANIMATION_TABLE);
+        aFile->Write<u8>(DATA_TYPE_ANIMATION_TABLE);
 
         // Data
         _AnimName.first.Write(aFile);
@@ -213,7 +213,7 @@ void DynOS_Anim_Table_Write(FILE* aFile, GfxData* aGfxData) {
  // Reading //
 /////////////
 
-void DynOS_Anim_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_Anim_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<AnimData> *_Node = New<DataNode<AnimData>>();
 
     // Name
@@ -221,13 +221,13 @@ void DynOS_Anim_Load(FILE *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mData = New<AnimData>();
-    _Node->mData->mFlags = ReadBytes<s16>(aFile);
-    _Node->mData->mUnk02 = ReadBytes<s16>(aFile);
-    _Node->mData->mUnk04 = ReadBytes<s16>(aFile);
-    _Node->mData->mUnk06 = ReadBytes<s16>(aFile);
-    _Node->mData->mUnk08 = ReadBytes<s16>(aFile);
-    _Node->mData->mUnk0A.second = ReadBytes<s16>(aFile);
-    _Node->mData->mLength = ReadBytes<u32>(aFile);
+    _Node->mData->mFlags = aFile->Read<s16>();
+    _Node->mData->mUnk02 = aFile->Read<s16>();
+    _Node->mData->mUnk04 = aFile->Read<s16>();
+    _Node->mData->mUnk06 = aFile->Read<s16>();
+    _Node->mData->mUnk08 = aFile->Read<s16>();
+    _Node->mData->mUnk0A.second = aFile->Read<s16>();
+    _Node->mData->mLength = aFile->Read<u32>();
     _Node->mData->mValues.second.Read(aFile);
     _Node->mData->mIndex.second.Read(aFile);
 
@@ -235,7 +235,7 @@ void DynOS_Anim_Load(FILE *aFile, GfxData *aGfxData) {
     aGfxData->mAnimations.Add(_Node);
 }
 
-void DynOS_Anim_Table_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_Anim_Table_Load(BinFile *aFile, GfxData *aGfxData) {
     void *_AnimationPtr = NULL;
 
     // Data

@@ -431,21 +431,21 @@ DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNo
  // Writing //
 /////////////
 
-void DynOS_Geo_Write(FILE *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode) {
+void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_GEO_LAYOUT);
+    aFile->Write<u8>(DATA_TYPE_GEO_LAYOUT);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         GeoLayout *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData);
         } else {
-            WriteBytes<u32>(aFile, *((u32 *) _Head));
+            aFile->Write<u32>(*((u32 *) _Head));
         }
     }
 }
@@ -454,17 +454,17 @@ void DynOS_Geo_Write(FILE *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode)
  // Reading //
 /////////////
 
-void DynOS_Geo_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<GeoLayout> *_Node = New<DataNode<GeoLayout>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<GeoLayout>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        u32 _Value = ReadBytes<u32>(aFile);
+        u32 _Value = aFile->Read<u32>();
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;

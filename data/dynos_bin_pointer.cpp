@@ -187,17 +187,17 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     return { "", 0 };
 }
 
-void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData) {
+void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData) {
     String& token = aGfxData->mLuaTokenList[index];
-    WriteBytes<u32>(aFile, LUA_VAR_CODE);
+    aFile->Write<u32>(LUA_VAR_CODE);
     token.Write(aFile);
 }
 
-void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData) {
 
     // NULL
     if (!aPtr) {
-        WriteBytes<u32>(aFile, 0);
+        aFile->Write<u32>(0);
         return;
     }
 
@@ -206,7 +206,7 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
         if (aPtr == aGfxData->mLuaPointerList[i]) {
             u32 index = *((u32*)aPtr);
             String& token = aGfxData->mLuaTokenList[index];
-            WriteBytes<u32>(aFile, LUA_VAR_CODE);
+            aFile->Write<u32>(LUA_VAR_CODE);
             token.Write(aFile);
             return;
         }
@@ -215,16 +215,16 @@ void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData) {
     // Built-in functions
     s32 _GeoFunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr);
     if (_GeoFunctionIndex != -1) {
-        WriteBytes<u32>(aFile, FUNCTION_CODE);
-        WriteBytes<s32>(aFile, _GeoFunctionIndex);
+        aFile->Write<u32>(FUNCTION_CODE);
+        aFile->Write<s32>(_GeoFunctionIndex);
         return;
     }
 
     // Pointer
     PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData);
-    WriteBytes<u32>(aFile, POINTER_CODE);
+    aFile->Write<u32>(POINTER_CODE);
     _PtrData.first.Write(aFile);
-    WriteBytes<u32>(aFile, _PtrData.second);
+    aFile->Write<u32>(_PtrData.second);
 }
 
   /////////////
@@ -416,7 +416,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     return NULL;
 }
 
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags) {
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags) {
 
     // LUAV
     if (aValue == LUA_VAR_CODE) {
@@ -433,14 +433,14 @@ void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, u8* outFlag
 
     // FUNC
     if (aValue == FUNCTION_CODE) {
-        s32 _FunctionIndex = ReadBytes<s32>(aFile);
+        s32 _FunctionIndex = aFile->Read<s32>();
         return (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex);
     }
 
     // PNTR
     if (aValue == POINTER_CODE) {
         String _PtrName; _PtrName.Read(aFile);
-        u32   _PtrData = ReadBytes<u32>(aFile);
+        u32   _PtrData = aFile->Read<u32>();
         return GetPointerFromData(aGfxData, _PtrName, _PtrData, outFlags);
     }
 

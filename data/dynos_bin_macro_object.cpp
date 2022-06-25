@@ -477,17 +477,17 @@ DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<Macro
  // Writing //
 /////////////
 
-void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode) {
+void DynOS_MacroObject_Write(BinFile* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_MACRO_OBJECT);
+    aFile->Write<u8>(DATA_TYPE_MACRO_OBJECT);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
-        WriteBytes<MacroObject>(aFile, aNode->mData[i]);
+        aFile->Write<MacroObject>(aNode->mData[i]);
     }
 }
 
@@ -495,17 +495,17 @@ void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObjec
  // Reading //
 /////////////
 
-DataNode<MacroObject>* DynOS_MacroObject_Load(FILE *aFile, GfxData *aGfxData) {
+DataNode<MacroObject>* DynOS_MacroObject_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<MacroObject> *_Node = New<DataNode<MacroObject>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<MacroObject>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        _Node->mData[i] = ReadBytes<MacroObject>(aFile);
+        _Node->mData[i] = aFile->Read<MacroObject>();
     }
 
     // Add it

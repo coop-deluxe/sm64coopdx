@@ -2432,20 +2432,20 @@ static DataNode<BehaviorScript> *GetBehaviorScript(GfxData *aGfxData, const Stri
  // Writing //
 /////////////
 
-static void DynOS_Bhv_Write(FILE* aFile, GfxData* aGfxData, DataNode<BehaviorScript> *aNode) {
+static void DynOS_Bhv_Write(BinFile* aFile, GfxData* aGfxData, DataNode<BehaviorScript> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_BEHAVIOR_SCRIPT);
+    aFile->Write<u8>(DATA_TYPE_BEHAVIOR_SCRIPT);
     aNode->mName.Write(aFile);
 
     // Version
-    WriteBytes<u8>(aFile, BEHAVIOR_MAJOR_VER);
-    WriteBytes<u8>(aFile, BEHAVIOR_MINOR_VER);
-    WriteBytes<u8>(aFile, BEHAVIOR_PATCH_VER);
+    aFile->Write<u8>(BEHAVIOR_MAJOR_VER);
+    aFile->Write<u8>(BEHAVIOR_MINOR_VER);
+    aFile->Write<u8>(BEHAVIOR_PATCH_VER);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         BehaviorScript *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
@@ -2453,14 +2453,14 @@ static void DynOS_Bhv_Write(FILE* aFile, GfxData* aGfxData, DataNode<BehaviorScr
         } else if (aGfxData->mLuaPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Lua_Write(aFile, *(u32 *)_Head, aGfxData);
         } else {
-            WriteBytes<u32>(aFile, *((u32 *) _Head));
+            aFile->Write<u32>(*((u32 *) _Head));
         }
     }
 }
 
 
 static bool DynOS_Bhv_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
-    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
         PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
@@ -2474,7 +2474,7 @@ static bool DynOS_Bhv_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
         }
     }
 
-    fclose(_File);
+    BinFile::Close(_File);
     return true;
 }
 
@@ -2482,28 +2482,28 @@ static bool DynOS_Bhv_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
  // Reading //
 /////////////
 
-static DataNode<BehaviorScript> *DynOS_Bhv_Load(FILE *aFile, GfxData *aGfxData) {
+static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<BehaviorScript> *_Node = New<DataNode<BehaviorScript>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Version
-    u8 majorVersion = ReadBytes<u8>(aFile);
-    u8 minorVersion = ReadBytes<u8>(aFile);
-    u8 patchVersion = ReadBytes<u8>(aFile);
+    u8 majorVersion = aFile->Read<u8>();
+    u8 minorVersion = aFile->Read<u8>();
+    u8 patchVersion = aFile->Read<u8>();
 
     // Version Sanity Check
     //
     // If the major version doesn't match, then a drasitc change has happened and
     // we can't read it no matter what. If it's just minor or patch. We might have
     // code to support it.
-    u32 dataSize = ReadBytes<u32>(aFile);
+    u32 dataSize = aFile->Read<u32>();
     if (majorVersion != BEHAVIOR_MIN_MAJOR_VER || (minorVersion < BEHAVIOR_MIN_MINOR_VER || patchVersion < BEHAVIOR_MIN_PATCH_VER)) {
         PrintError("  ERROR: Behavior version is %u.%u.%u, but reading behaviors under %u.%u.%u is not supported!", majorVersion, minorVersion, patchVersion, BEHAVIOR_MIN_MAJOR_VER, BEHAVIOR_MIN_MINOR_VER, BEHAVIOR_MIN_PATCH_VER);
 
         // Skip the rest of the bytes saved for this behavior.
-        SkipBytes(aFile, dataSize);
+        aFile->Skip(dataSize);
         // We don't return this since we failed to read the behavior.
         Delete(_Node);
         // We have nothing to return, So return NULL.
@@ -2521,11 +2521,11 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(FILE *aFile, GfxData *aGfxData) 
 
     // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        if (feof(aFile)) {
+        if (aFile->EoF()) {
             PrintError("  ERROR: Reached EOF when reading file! Expected %llx bytes!", _Node->mSize * sizeof(u32));
             break;
         }
-        u32 _Value = ReadBytes<u32>(aFile);
+        u32 _Value = aFile->Read<u32>();
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;
@@ -2541,16 +2541,16 @@ GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehavio
 
     // Load data from binary file
     GfxData *_GfxData = NULL;
-    FILE *_File = fopen(aFilename.c_str(), "rb");
+    BinFile *_File = BinFile::OpenR(aFilename.c_str());
     if (_File != NULL) {
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
-            switch (ReadBytes<u8>(_File)) {
+            switch (_File->Read<u8>()) {
                 case DATA_TYPE_BEHAVIOR_SCRIPT: DynOS_Bhv_Load(_File, _GfxData); break;
                 default:                        _Done = true;                    break;
             }
         }
-        fclose(_File);
+        BinFile::Close(_File);
     }
 
     return _GfxData;

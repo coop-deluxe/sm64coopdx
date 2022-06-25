@@ -24,17 +24,17 @@ DataNode<u8>* DynOS_Rooms_Parse(GfxData* aGfxData, DataNode<u8>* aNode) {
  // Writing //
 /////////////
 
-void DynOS_Rooms_Write(FILE* aFile, GfxData* aGfxData, DataNode<u8> *aNode) {
+void DynOS_Rooms_Write(BinFile* aFile, GfxData* aGfxData, DataNode<u8> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_ROOMS);
+    aFile->Write<u8>(DATA_TYPE_ROOMS);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
-        WriteBytes<u8>(aFile, aNode->mData[i]);
+        aFile->Write<u8>(aNode->mData[i]);
     }
 }
 
@@ -42,17 +42,17 @@ void DynOS_Rooms_Write(FILE* aFile, GfxData* aGfxData, DataNode<u8> *aNode) {
  // Reading //
 /////////////
 
-DataNode<u8>* DynOS_Rooms_Load(FILE *aFile, GfxData *aGfxData) {
+DataNode<u8>* DynOS_Rooms_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<u8> *_Node = New<DataNode<u8>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<u8>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        _Node->mData[i] = ReadBytes<u8>(aFile);
+        _Node->mData[i] = aFile->Read<u8>();
     }
 
     // Add it

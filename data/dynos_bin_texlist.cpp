@@ -36,15 +36,15 @@ DataNode<TexData*>* DynOS_TexList_Parse(GfxData* aGfxData, DataNode<TexData*>* a
  // Writing //
 /////////////
 
-void DynOS_TexList_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode) {
+void DynOS_TexList_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_TEXTURE_LIST);
+    aFile->Write<u8>(DATA_TYPE_TEXTURE_LIST);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         // find node
         bool found = false;
@@ -65,17 +65,17 @@ void DynOS_TexList_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData*> *aNo
  // Reading //
 /////////////
 
-DataNode<TexData*>* DynOS_TexList_Load(FILE *aFile, GfxData *aGfxData) {
+DataNode<TexData*>* DynOS_TexList_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<TexData*> *_Node = New<DataNode<TexData*>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<TexData*>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        u32 _Value = ReadBytes<u32>(aFile);
+        u32 _Value = aFile->Read<u32>();
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr == NULL) {
             PrintError("Could not read texture in texlist");

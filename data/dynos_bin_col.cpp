@@ -612,22 +612,22 @@ DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNo
  // Writing //
 /////////////
 
-void DynOS_Col_Write(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
+void DynOS_Col_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Collision> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_COLLISION);
+    aFile->Write<u8>(DATA_TYPE_COLLISION);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
-        WriteBytes<Collision>(aFile, aNode->mData[i]);
+        aFile->Write<Collision>(aNode->mData[i]);
     }
 }
 
 static bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData, DataNode<Collision>* _Node) {
-    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
         PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
@@ -635,25 +635,25 @@ static bool DynOS_Col_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
 
     DynOS_Col_Write(_File, aGfxData, _Node);
 
-    fclose(_File);
-    return true;
+    BinFile::Close(_File);
+    return DynOS_Bin_Compress(aOutputFilename);
 }
 
   /////////////
  // Loading //
 /////////////
 
-DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData) {
+DataNode<Collision>* DynOS_Col_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Collision> *_Node = New<DataNode<Collision>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<Collision>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        _Node->mData[i] = ReadBytes<Collision>(aFile);
+        _Node->mData[i] = aFile->Read<Collision>();
     }
 
     // Add it
@@ -667,13 +667,13 @@ DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData) {
 DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const char *aCollisionName) {
     // Load data from binary file
     DataNode<Collision>* collisionNode = NULL;
-    FILE *_File = fopen(aFilename.c_str(), "rb");
+    BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
-        u8 type = ReadBytes<u8>(_File);
+        u8 type = _File->Read<u8>();
         if (type == DATA_TYPE_COLLISION) {
             collisionNode = DynOS_Col_Load(_File, NULL);
         }
-        fclose(_File);
+        BinFile::Close(_File);
     }
 
     return collisionNode;
@@ -690,6 +690,12 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
         // If there is an existing binary file for this collision, skip and go to the next actor
         SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
         if (fs_sys_file_exists(_ColFilename.c_str())) {
+#ifdef DEVELOPMENT
+            // Compress file to gain some space
+            if (!DynOS_Bin_IsCompressed(_ColFilename)) {
+                DynOS_Bin_Compress(_ColFilename);
+            }
+#endif
             continue;
         }
 

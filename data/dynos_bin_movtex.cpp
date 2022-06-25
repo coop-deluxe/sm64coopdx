@@ -169,17 +169,17 @@ DataNode<Movtex>* DynOS_Movtex_Parse(GfxData* aGfxData, DataNode<Movtex>* aNode,
  // Writing //
 /////////////
 
-void DynOS_Movtex_Write(FILE* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode) {
+void DynOS_Movtex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_MOVTEX);
+    aFile->Write<u8>(DATA_TYPE_MOVTEX);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
-        WriteBytes<Movtex>(aFile, aNode->mData[i]);
+        aFile->Write<Movtex>(aNode->mData[i]);
     }
 }
 
@@ -187,17 +187,17 @@ void DynOS_Movtex_Write(FILE* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode)
  // Reading //
 /////////////
 
-DataNode<Movtex>* DynOS_Movtex_Load(FILE *aFile, GfxData *aGfxData) {
+DataNode<Movtex>* DynOS_Movtex_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Movtex> *_Node = New<DataNode<Movtex>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<Movtex>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        _Node->mData[i] = ReadBytes<Movtex>(aFile);
+        _Node->mData[i] = aFile->Read<Movtex>();
     }
 
     // Add it

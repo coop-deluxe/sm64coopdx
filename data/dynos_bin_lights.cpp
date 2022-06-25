@@ -39,22 +39,22 @@ DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNod
  // Writing //
 /////////////
 
-void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode) {
+void DynOS_Lights_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_LIGHT);
+    aFile->Write<u8>(DATA_TYPE_LIGHT);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<Lights1>(aFile, *aNode->mData);
+    aFile->Write<Lights1>(*aNode->mData);
 }
 
   /////////////
  // Reading //
 /////////////
 
-void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_Lights_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Lights1> *_Node = New<DataNode<Lights1>>();
 
     // Name
@@ -62,7 +62,7 @@ void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mData = New<Lights1>();
-    *_Node->mData = ReadBytes<Lights1>(aFile);
+    *_Node->mData = aFile->Read<Lights1>();
 
     // Append
     aGfxData->mLights.Add(_Node);

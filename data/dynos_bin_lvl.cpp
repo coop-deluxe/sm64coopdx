@@ -857,15 +857,15 @@ static DataNode<LevelScript> *GetLevelScript(GfxData *aGfxData, const String& aG
  // Writing //
 /////////////
 
-static void DynOS_Lvl_Write(FILE* aFile, GfxData* aGfxData, DataNode<LevelScript> *aNode) {
+static void DynOS_Lvl_Write(BinFile* aFile, GfxData* aGfxData, DataNode<LevelScript> *aNode) {
     if (!aNode->mData) return;
 
     // Name
-    WriteBytes<u8>(aFile, DATA_TYPE_LEVEL_SCRIPT);
+    aFile->Write<u8>(DATA_TYPE_LEVEL_SCRIPT);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<u32>(aFile, aNode->mSize);
+    aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         LevelScript *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
@@ -873,13 +873,13 @@ static void DynOS_Lvl_Write(FILE* aFile, GfxData* aGfxData, DataNode<LevelScript
         } else if (aGfxData->mLuaPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Lua_Write(aFile, *(u32 *)_Head, aGfxData);
         } else {
-            WriteBytes<u32>(aFile, *((u32 *) _Head));
+            aFile->Write<u32>(*((u32 *) _Head));
         }
     }
 }
 
 static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
-    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
         PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
@@ -962,22 +962,22 @@ static bool DynOS_Lvl_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
             }
         }
     }
-    fclose(_File);
-    return true;
+    BinFile::Close(_File);
+    return DynOS_Bin_Compress(aOutputFilename);
 }
 
   /////////////
  // Reading //
 /////////////
 
-static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
+static DataNode<LevelScript>* DynOS_Lvl_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<LevelScript> *_Node = New<DataNode<LevelScript>>();
 
     // Name
     _Node->mName.Read(aFile);
 
     // Data
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<LevelScript>(_Node->mSize);
 
     // Add it
@@ -987,7 +987,7 @@ static DataNode<LevelScript>* DynOS_Lvl_Load(FILE *aFile, GfxData *aGfxData) {
 
     // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
-        u32 _Value = ReadBytes<u32>(aFile);
+        u32 _Value = aFile->Read<u32>();
         void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;
@@ -1005,11 +1005,11 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelNa
 
     // Load data from binary file
     GfxData *_GfxData = NULL;
-    FILE *_File = fopen(aFilename.c_str(), "rb");
+    BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
-            switch (ReadBytes<u8>(_File)) {
+            switch (_File->Read<u8>()) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load     (_File, _GfxData); break;
                 case DATA_TYPE_LIGHT_T:         DynOS_LightT_Load     (_File, _GfxData); break;
                 case DATA_TYPE_AMBIENT_T:       DynOS_AmbientT_Load   (_File, _GfxData); break;
@@ -1031,7 +1031,7 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelNa
                 default:                        _Done = true;                            break;
             }
         }
-        fclose(_File);
+        BinFile::Close(_File);
     }
 
     return _GfxData;
@@ -1051,6 +1051,12 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         // If there is an existing binary file for this level, skip and go to the next level
         SysPath _LvlFilename = fstring("%s/%s.lvl", aPackFolder.c_str(), _LvlRootName.begin());
         if (fs_sys_file_exists(_LvlFilename.c_str())) {
+#ifdef DEVELOPMENT
+            // Compress file to gain some space
+            if (!DynOS_Bin_IsCompressed(_LvlFilename)) {
+                DynOS_Bin_Compress(_LvlFilename);
+            }
+#endif
             continue;
         }
 
@@ -1170,6 +1176,15 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             // Skip . and ..
             if (SysPath(_PackEnt->d_name) == ".") continue;
             if (SysPath(_PackEnt->d_name) == "..") continue;
+
+#ifdef DEVELOPMENT
+            // Compress .lvl files to gain some space
+            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                DynOS_Bin_Compress(_Filename);
+                continue;
+            }
+#endif
 
             // For each subfolder, read tokens from script.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);

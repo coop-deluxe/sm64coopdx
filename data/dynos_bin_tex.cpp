@@ -151,11 +151,11 @@ DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode) 
  // Writing //
 /////////////
 
-void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode) {
+void DynOS_Tex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_TEXTURE);
+    aFile->Write<u8>(DATA_TYPE_TEXTURE);
     aNode->mName.Write(aFile);
 
     // Data
@@ -169,7 +169,7 @@ void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode) {
                 aNode->mData->mPngData.Count() == _Node->mData->mPngData.Count() &&     // Check PNG data lengths
                 memcmp(aNode->mData->mPngData.begin(), _Node->mData->mPngData.begin(), aNode->mData->mPngData.Count()) == 0)    // Check PNG data content
             {
-                WriteBytes<u32>(aFile, TEX_REF_CODE);
+                aFile->Write<u32>(TEX_REF_CODE);
                 _Node->mName.Write(aFile);
                 return;
             }
@@ -179,7 +179,7 @@ void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode) {
 }
 
 static bool DynOS_Tex_WriteBinary(GfxData* aGfxData, const SysPath &aOutputFilename, String& aName, TexData* aTexData, bool aRawTexture) {
-    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
         PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
@@ -189,20 +189,20 @@ static bool DynOS_Tex_WriteBinary(GfxData* aGfxData, const SysPath &aOutputFilen
         // Write png-texture
 
         // Header
-        WriteBytes<u8>(_File, DATA_TYPE_TEXTURE);
+        _File->Write<u8>(DATA_TYPE_TEXTURE);
         aName.Write(_File);
 
         // Data
         aTexData->mPngData.Write(_File);
 
-        fclose(_File);
+        BinFile::Close(_File);
         return true;
     }
 
     // Write raw-texture
 
     // Header
-    WriteBytes<u8>(_File, DATA_TYPE_TEXTURE_RAW);
+    _File->Write<u8>(DATA_TYPE_TEXTURE_RAW);
     aName.Write(_File);
 
     // load
@@ -213,13 +213,13 @@ static bool DynOS_Tex_WriteBinary(GfxData* aGfxData, const SysPath &aOutputFilen
     free(_RawData);
 
     // Data
-    WriteBytes<s32>(_File, aTexData->mRawFormat);
-    WriteBytes<s32>(_File, aTexData->mRawSize);
-    WriteBytes<s32>(_File, aTexData->mRawWidth);
-    WriteBytes<s32>(_File, aTexData->mRawHeight);
+    _File->Write<s32>(aTexData->mRawFormat);
+    _File->Write<s32>(aTexData->mRawSize);
+    _File->Write<s32>(aTexData->mRawWidth);
+    _File->Write<s32>(aTexData->mRawHeight);
     aTexData->mRawData.Write(_File);
 
-    fclose(_File);
+    BinFile::Close(_File);
     return true;
 }
 
@@ -227,7 +227,7 @@ static bool DynOS_Tex_WriteBinary(GfxData* aGfxData, const SysPath &aOutputFilen
  // Reading //
 /////////////
 
-DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData) {
+DataNode<TexData>* DynOS_Tex_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<TexData> *_Node = New<DataNode<TexData>>();
 
     // Name
@@ -238,8 +238,8 @@ DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData) {
     _Node->mData->mUploaded = false;
 
     // Check for the texture ref magic
-    s32 _FileOffset = (s32) ftell(aFile);
-    u32 _TexRefCode = ReadBytes<u32>(aFile);
+    s32 _FileOffset = aFile->Offset();
+    u32 _TexRefCode = aFile->Read<u32>();
     if (_TexRefCode == TEX_REF_CODE) {
 
         // That's a duplicate, find the original node and copy its content
@@ -256,7 +256,7 @@ DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData) {
             }
         }
     } else {
-        fseek(aFile, _FileOffset, SEEK_SET);
+        aFile->SetOffset(_FileOffset);
         _Node->mData->mPngData.Read(aFile);
         if (!_Node->mData->mPngData.Empty()) {
             u8 *_RawData = stbi_load_from_memory(_Node->mData->mPngData.begin(), _Node->mData->mPngData.Count(), &_Node->mData->mRawWidth, &_Node->mData->mRawHeight, NULL, 4);
@@ -295,10 +295,10 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
 
     // Load data from binary file
     DataNode<TexData>* _TexNode = NULL;
-    FILE *_File = fopen(aFilename.c_str(), "rb");
+    BinFile *_File = BinFile::OpenR(aFilename.c_str());
     if (!_File) { return NULL; }
 
-    u8 type = ReadBytes<u8>(_File);
+    u8 type = _File->Read<u8>();
     if (type == DATA_TYPE_TEXTURE) {
         // load png-texture
         _TexNode = New<DataNode<TexData>>();
@@ -306,7 +306,7 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
 
         _TexNode->mName.Read(_File);
         _TexNode->mData->mPngData.Read(_File);
-        fclose(_File);
+        BinFile::Close(_File);
 
         if (aAddToPack) {
             if (!_Pack) { _Pack = DynOS_Pack_Add(aPackFolder); }
@@ -315,7 +315,7 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
 
         return _TexNode;
     } else if (type != DATA_TYPE_TEXTURE_RAW) {
-        fclose(_File);
+        BinFile::Close(_File);
         return NULL;
     }
 
@@ -324,13 +324,13 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
     _TexNode->mData = New<TexData>();
 
     _TexNode->mName.Read(_File);
-    _TexNode->mData->mRawFormat = ReadBytes<s32>(_File);
-    _TexNode->mData->mRawSize = ReadBytes<s32>(_File);
-    _TexNode->mData->mRawWidth = ReadBytes<s32>(_File);
-    _TexNode->mData->mRawHeight = ReadBytes<s32>(_File);
+    _TexNode->mData->mRawFormat = _File->Read<s32>();
+    _TexNode->mData->mRawSize = _File->Read<s32>();
+    _TexNode->mData->mRawWidth = _File->Read<s32>();
+    _TexNode->mData->mRawHeight = _File->Read<s32>();
     _TexNode->mData->mRawData.Read(_File);
 
-    fclose(_File);
+    BinFile::Close(_File);
 
     if (aAddToPack) {
         if (!_Pack) { _Pack = DynOS_Pack_Add(aPackFolder); }

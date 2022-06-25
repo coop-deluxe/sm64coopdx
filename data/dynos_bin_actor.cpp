@@ -14,7 +14,7 @@ void ClearGfxDataNodes(DataNodes<T> &aDataNodes) {
 /////////////
 
 static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxData) {
-    FILE *_File = fopen(aOutputFilename.c_str(), "wb");
+    BinFile *_File = BinFile::OpenW(aOutputFilename.c_str());
     if (!_File) {
         PrintError("  ERROR: Unable to create file \"%s\"", aOutputFilename.c_str());
         return false;
@@ -64,8 +64,8 @@ static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGf
     }
     DynOS_Anim_Write(_File, aGfxData);
     DynOS_Anim_Table_Write(_File, aGfxData);
-    fclose(_File);
-    return true;
+    BinFile::Close(_File);
+    return DynOS_Bin_Compress(aOutputFilename);
 }
 
   /////////////
@@ -86,11 +86,11 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
 
     // Load data from binary file
     GfxData *_GfxData = NULL;
-    FILE *_File = fopen(aFilename.c_str(), "rb");
+    BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
-            switch (ReadBytes<u8>(_File)) {
+            switch (_File->Read<u8>()) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load    (_File, _GfxData); break;
                 case DATA_TYPE_LIGHT_T:         DynOS_LightT_Load    (_File, _GfxData); break;
                 case DATA_TYPE_AMBIENT_T:       DynOS_AmbientT_Load  (_File, _GfxData); break;
@@ -105,7 +105,7 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
                 default:                        _Done = true;                           break;
             }
         }
-        fclose(_File);
+        BinFile::Close(_File);
     }
 
     // Add data to cache, even if not loaded
@@ -143,6 +143,12 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         // If there is an existing binary file for this layout, skip and go to the next actor
         SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
         if (fs_sys_file_exists(_BinFilename.c_str())) {
+#ifdef DEVELOPMENT
+            // Compress file to gain some space
+            if (!DynOS_Bin_IsCompressed(_BinFilename)) {
+                DynOS_Bin_Compress(_BinFilename);
+            }
+#endif
             return;
         }
     }
@@ -245,6 +251,15 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             // Skip . and ..
             if (SysPath(_PackEnt->d_name) == ".") continue;
             if (SysPath(_PackEnt->d_name) == "..") continue;
+
+#ifdef DEVELOPMENT
+            // Compress .bin files to gain some space
+            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                DynOS_Bin_Compress(_Filename);
+                continue;
+            }
+#endif
 
             // For each subfolder, read tokens from model.inc.c and geo.inc.c
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);

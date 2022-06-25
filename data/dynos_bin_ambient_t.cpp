@@ -33,22 +33,22 @@ DataNode<Ambient_t>* DynOS_AmbientT_Parse(GfxData* aGfxData, DataNode<Ambient_t>
  // Writing //
 /////////////
 
-void DynOS_AmbientT_Write(FILE* aFile, GfxData* aGfxData, DataNode<Ambient_t> *aNode) {
+void DynOS_AmbientT_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Ambient_t> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_AMBIENT_T);
+    aFile->Write<u8>(DATA_TYPE_AMBIENT_T);
     aNode->mName.Write(aFile);
 
     // Data
-    WriteBytes<Ambient_t>(aFile, *aNode->mData);
+    aFile->Write<Ambient_t>(*aNode->mData);
 }
 
   /////////////
  // Reading //
 /////////////
 
-void DynOS_AmbientT_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_AmbientT_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Ambient_t> *_Node = New<DataNode<Ambient_t>>();
 
     // Name
@@ -56,7 +56,7 @@ void DynOS_AmbientT_Load(FILE *aFile, GfxData *aGfxData) {
 
     // Data
     _Node->mData = New<Ambient_t>();
-    *_Node->mData = ReadBytes<Ambient_t>(aFile);
+    *_Node->mData = aFile->Read<Ambient_t>();
 
     // Append
     aGfxData->mAmbientTs.Add(_Node);

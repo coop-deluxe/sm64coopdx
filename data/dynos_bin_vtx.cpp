@@ -56,49 +56,49 @@ DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode) {
  // Writing //
 /////////////
 
-void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode) {
+void DynOS_Vtx_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode) {
     if (!aNode->mData) return;
 
     // Header
-    WriteBytes<u8>(aFile, DATA_TYPE_VERTEX);
+    aFile->Write<u8>(DATA_TYPE_VERTEX);
     aNode->mName.Write(aFile);
 
     // Data
     bool shouldUseF32Vtx = ShouldUseF32Vtx(aNode);
     if (shouldUseF32Vtx) {
-        WriteBytes<u32>(aFile, aNode->mSize + 1);
+        aFile->Write<u32>(aNode->mSize + 1);
 
         // Write sentinel
-        WriteBytes<s16>(aFile, F32VTX_SENTINEL_0);
-        WriteBytes<s16>(aFile, F32VTX_SENTINEL_1);
-        WriteBytes<s16>(aFile, F32VTX_SENTINEL_2);
-        WriteBytes<s16>(aFile, 0);
-        WriteBytes<s16>(aFile, 0);
-        WriteBytes<s16>(aFile, 0);
-        WriteBytes<s8> (aFile, 0);
-        WriteBytes<s8> (aFile, 0);
-        WriteBytes<s8> (aFile, 0);
-        WriteBytes<u8> (aFile, 0);
+        aFile->Write<s16>(F32VTX_SENTINEL_0);
+        aFile->Write<s16>(F32VTX_SENTINEL_1);
+        aFile->Write<s16>(F32VTX_SENTINEL_2);
+        aFile->Write<s16>(0);
+        aFile->Write<s16>(0);
+        aFile->Write<s16>(0);
+        aFile->Write<s8> (0);
+        aFile->Write<s8> (0);
+        aFile->Write<s8> (0);
+        aFile->Write<u8> (0);
     } else {
-        WriteBytes<u32>(aFile, aNode->mSize);
+        aFile->Write<u32>(aNode->mSize);
     }
     for (u32 i = 0; i != aNode->mSize; ++i) {
         if (shouldUseF32Vtx) {
-            WriteBytes<f32>(aFile, aNode->mData[i].n.ob[0]);
-            WriteBytes<f32>(aFile, aNode->mData[i].n.ob[1]);
-            WriteBytes<f32>(aFile, aNode->mData[i].n.ob[2]);
+            aFile->Write<f32>(aNode->mData[i].n.ob[0]);
+            aFile->Write<f32>(aNode->mData[i].n.ob[1]);
+            aFile->Write<f32>(aNode->mData[i].n.ob[2]);
         } else {
-            WriteBytes<s16>(aFile, aNode->mData[i].n.ob[0]);
-            WriteBytes<s16>(aFile, aNode->mData[i].n.ob[1]);
-            WriteBytes<s16>(aFile, aNode->mData[i].n.ob[2]);
+            aFile->Write<s16>(aNode->mData[i].n.ob[0]);
+            aFile->Write<s16>(aNode->mData[i].n.ob[1]);
+            aFile->Write<s16>(aNode->mData[i].n.ob[2]);
         }
-        WriteBytes<s16>(aFile, aNode->mData[i].n.flag);
-        WriteBytes<s16>(aFile, aNode->mData[i].n.tc[0]);
-        WriteBytes<s16>(aFile, aNode->mData[i].n.tc[1]);
-        WriteBytes<s8> (aFile, aNode->mData[i].n.n[0]);
-        WriteBytes<s8> (aFile, aNode->mData[i].n.n[1]);
-        WriteBytes<s8> (aFile, aNode->mData[i].n.n[2]);
-        WriteBytes<u8> (aFile, aNode->mData[i].n.a);
+        aFile->Write<s16>(aNode->mData[i].n.flag);
+        aFile->Write<s16>(aNode->mData[i].n.tc[0]);
+        aFile->Write<s16>(aNode->mData[i].n.tc[1]);
+        aFile->Write<s8> (aNode->mData[i].n.n[0]);
+        aFile->Write<s8> (aNode->mData[i].n.n[1]);
+        aFile->Write<s8> (aNode->mData[i].n.n[2]);
+        aFile->Write<u8> (aNode->mData[i].n.a);
     }
 }
 
@@ -106,7 +106,7 @@ void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode) {
  // Reading //
 /////////////
 
-void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<Vtx> *_Node = New<DataNode<Vtx>>();
 
     // Name
@@ -114,25 +114,25 @@ void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData) {
 
     // Data
     bool isUsingF32Vtx = false;
-    _Node->mSize = ReadBytes<u32>(aFile);
+    _Node->mSize = aFile->Read<u32>();
     _Node->mData = New<Vtx>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         if (isUsingF32Vtx) {
-            _Node->mData[i].n.ob[0] = ReadBytes<f32>(aFile);
-            _Node->mData[i].n.ob[1] = ReadBytes<f32>(aFile);
-            _Node->mData[i].n.ob[2] = ReadBytes<f32>(aFile);
+            _Node->mData[i].n.ob[0] = aFile->Read<f32>();
+            _Node->mData[i].n.ob[1] = aFile->Read<f32>();
+            _Node->mData[i].n.ob[2] = aFile->Read<f32>();
         } else {
-            _Node->mData[i].n.ob[0] = ReadBytes<s16>(aFile);
-            _Node->mData[i].n.ob[1] = ReadBytes<s16>(aFile);
-            _Node->mData[i].n.ob[2] = ReadBytes<s16>(aFile);
+            _Node->mData[i].n.ob[0] = aFile->Read<s16>();
+            _Node->mData[i].n.ob[1] = aFile->Read<s16>();
+            _Node->mData[i].n.ob[2] = aFile->Read<s16>();
         }
-        _Node->mData[i].n.flag  = ReadBytes<s16>(aFile);
-        _Node->mData[i].n.tc[0] = ReadBytes<s16>(aFile);
-        _Node->mData[i].n.tc[1] = ReadBytes<s16>(aFile);
-        _Node->mData[i].n.n[0]  = ReadBytes<s8> (aFile);
-        _Node->mData[i].n.n[1]  = ReadBytes<s8> (aFile);
-        _Node->mData[i].n.n[2]  = ReadBytes<s8> (aFile);
-        _Node->mData[i].n.a     = ReadBytes<u8> (aFile);
+        _Node->mData[i].n.flag  = aFile->Read<s16>();
+        _Node->mData[i].n.tc[0] = aFile->Read<s16>();
+        _Node->mData[i].n.tc[1] = aFile->Read<s16>();
+        _Node->mData[i].n.n[0]  = aFile->Read<s8> ();
+        _Node->mData[i].n.n[1]  = aFile->Read<s8> ();
+        _Node->mData[i].n.n[2]  = aFile->Read<s8> ();
+        _Node->mData[i].n.a     = aFile->Read<u8> ();
 
         // Check sentinel on first vertex
         if (!isUsingF32Vtx && i == 0 && IsUsingF32Vtx(_Node->mData[i].n.ob)) {

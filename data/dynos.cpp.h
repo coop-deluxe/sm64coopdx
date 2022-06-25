@@ -66,6 +66,129 @@ enum {
 };
 
 //
+// DynOS Binary file struct
+//
+
+class BinFile {
+private:
+    void Grow(s32 newSize) {
+        if (newSize >= mCapacity) {
+            mCapacity = MAX(newSize, MAX(256, mCapacity * 2));
+            u8 *newBuffer = (u8 *) calloc(mCapacity, 1);
+            if (mData) {
+                memcpy(newBuffer, mData, mSize);
+                free(mData);
+            }
+            mData = newBuffer;
+        }
+        mSize = MAX(mSize, newSize);
+    }
+
+public:
+    inline s32 Size() const { return mSize; }
+    inline s32 Offset() const { return mOffset; }
+    inline bool EoF() const { return mOffset >= mSize; }
+    inline void SetOffset(s32 aOffset) const { mOffset = aOffset; }
+
+public:
+    static BinFile *OpenR(const char *aFilename) {
+        FILE *f = fopen(aFilename, "rb");
+        if (f) {
+            fseek(f, 0, SEEK_END);
+            BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
+            _BinFile->mFilename = (const char *) memcpy(calloc(strlen(aFilename) + 1, 1), aFilename, strlen(aFilename));
+            _BinFile->mReadOnly = true;
+            _BinFile->Grow(ftell(f));
+            rewind(f);
+            fread(_BinFile->mData, 1, _BinFile->mSize, f);
+            fclose(f);
+            return _BinFile;
+        }
+        return NULL;
+    }
+
+    static BinFile *OpenW(const char *aFilename) {
+        BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
+        _BinFile->mFilename = (const char *) memcpy(calloc(strlen(aFilename) + 1, 1), aFilename, strlen(aFilename));
+        _BinFile->mReadOnly = false;
+        return _BinFile;
+    }
+
+    static BinFile *OpenB(const u8 *aBuffer, s32 aSize) {
+        BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
+        _BinFile->mReadOnly = true;
+        _BinFile->Grow(aSize);
+        memcpy(_BinFile->mData, aBuffer, aSize);
+        return _BinFile;
+    }
+
+    static void Close(BinFile *&aBinFile) {
+        if (aBinFile) {
+            if (!aBinFile->mReadOnly && aBinFile->mFilename && aBinFile->mData && aBinFile->mSize) {
+                FILE *f = fopen(aBinFile->mFilename, "wb");
+                if (f) {
+                    fwrite(aBinFile->mData, 1, aBinFile->mSize, f);
+                    fclose(f);
+                }
+            }
+            if (aBinFile->mFilename) free((void *) aBinFile->mFilename);
+            if (aBinFile->mData) free(aBinFile->mData);
+            free(aBinFile);
+        }
+    }
+
+public:
+    template <typename T>
+    T Read() const {
+        T _Item = { 0 };
+        if (mOffset + sizeof(T) <= mSize) {
+            memcpy(&_Item, mData + mOffset, sizeof(T));
+            mOffset += sizeof(T);
+        }
+        return _Item;
+    }
+
+    template <typename T>
+    T *Read(T *aBuffer, s32 aCount) const {
+        if (mOffset + aCount * sizeof(T) <= mSize) {
+            memcpy(aBuffer, mData + mOffset, aCount * sizeof(T));
+            mOffset += aCount * sizeof(T);
+        }
+        return aBuffer;
+    }
+
+    template <typename T>
+    void Write(const T& aItem) {
+        if (!mReadOnly) {
+            Grow(mOffset + sizeof(T));
+            memcpy(mData + mOffset, &aItem, sizeof(T));
+            mOffset += sizeof(T);
+        }
+    }
+
+    template <typename T>
+    void Write(const T *aBuffer, s32 aCount) {
+        if (!mReadOnly) {
+            Grow(mOffset + aCount * sizeof(T));
+            memcpy(mData + mOffset, aBuffer, aCount * sizeof(T));
+            mOffset += aCount * sizeof(T);
+        }
+    }
+
+    void Skip(s32 aAmount) const {
+        mOffset += aAmount;
+    }
+
+private:
+    const char *mFilename;
+    u8 *mData;
+    s32 mSize;
+    s32 mCapacity;
+    mutable s32 mOffset;
+    bool mReadOnly;
+};
+
+//
 // DynOS Array
 // A vector-like array, implemented to be processed really fast, but cannot handle C++ complex classes like std::string
 //
@@ -171,15 +294,15 @@ public:
     inline bool Empty() const { return mCount == 0; }
 
 public:
-    void Read(FILE *aFile) {
-        s32 _Length = 0; fread(&_Length, sizeof(s32), 1, aFile);
+    void Read(BinFile *aFile) {
+        s32 _Length = aFile->Read<s32>();
         Resize(_Length);
-        fread(mBuffer, sizeof(T), _Length, aFile);
+        aFile->Read<T>(mBuffer, _Length);
     }
 
-    void Write(FILE *aFile) const {
-        fwrite(&mCount, sizeof(s32), 1, aFile);
-        fwrite(mBuffer, sizeof(T), mCount, aFile);
+    void Write(BinFile *aFile) const {
+        aFile->Write<s32>(mCount);
+        aFile->Write<T>(mBuffer, mCount);
     }
 
 private:
@@ -193,7 +316,7 @@ private:
 // A fixed-size string that doesn't require heap memory allocation
 //
 
-#define STRING_SIZE 256
+#define STRING_SIZE 255
 class String {
 public:
     inline String() : mCount(0) {
@@ -315,15 +438,15 @@ public:
     }
 
 public:
-    void Read(FILE *aFile) {
-        fread(&mCount, sizeof(u8), 1, aFile);
-        fread(mBuffer, sizeof(char), mCount, aFile);
+    void Read(BinFile *aFile) {
+        mCount = aFile->Read<u8>();
+        aFile->Read<char>(mBuffer, mCount);
         mBuffer[mCount] = 0;
     }
 
-    void Write(FILE *aFile) const {
-        fwrite(&mCount, sizeof(u8), 1, aFile);
-        fwrite(mBuffer, sizeof(char), mCount, aFile);
+    void Write(BinFile *aFile) const {
+        aFile->Write<u8>(mCount);
+        aFile->Write<char>(mBuffer, mCount);
     }
 
     s32 ParseInt() const {
@@ -520,7 +643,6 @@ struct DynosOption : NoCopy {
 };
 typedef bool (*DynosLoopFunc)(DynosOption *, void *);
 
-
 struct BuiltinTexInfo {
     const char* identifier;
     const void* pointer;
@@ -588,28 +710,6 @@ T *CopyBytes(const T *aPtr, u64 aSize) {
     memcpy(_Ptr, aPtr, aSize);
     return _Ptr;
 }
-
-template <typename T>
-T ReadBytes(FILE* aFile) {
-    T _Item = { 0 };
-    
-    // If we're at end of file. Just return the default.
-    if (feof(aFile)) { return _Item; }
-    
-    size_t nread = fread(&_Item, sizeof(T), 1, aFile);
-    // If we failed to read bytes. Print the error.
-    //if (nread != sizeof(T)) { perror("The following error occured when reading bytes"); }
-    return _Item;
-}
-
-template <typename T>
-void WriteBytes(FILE* aFile, const T& aItem) {
-    size_t nwrote = fwrite(&aItem, sizeof(T), 1, aFile);
-    // If we failed to write bytes. Print the error.
-    //if (nwrote != sizeof(T)) { perror("The following error occured when writing bytes"); }
-}
-
-void SkipBytes(FILE *aFile, size_t amount);
 
 template <typename... Args>
 void PrintNoNewLine(const char *aFmt, Args... aArgs) {
@@ -869,79 +969,79 @@ char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
 s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found);
 
 void DynOS_Anim_ScanFolder(GfxData *aGfxData, const SysPath &aAnimsFolder);
-void DynOS_Anim_Table_Write(FILE* aFile, GfxData* aGfxData);
-void DynOS_Anim_Write(FILE* aFile, GfxData* aGfxData);
-void DynOS_Anim_Load(FILE *aFile, GfxData *aGfxData);
-void DynOS_Anim_Table_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Anim_Table_Write(BinFile* aFile, GfxData* aGfxData);
+void DynOS_Anim_Write(BinFile* aFile, GfxData* aGfxData);
+void DynOS_Anim_Load(BinFile *aFile, GfxData *aGfxData);
+void DynOS_Anim_Table_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent);
-void DynOS_Col_Write(FILE* aFile, GfxData* aGfxData, DataNode<Collision> *aNode);
-DataNode<Collision>* DynOS_Col_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Col_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Collision> *aNode);
+DataNode<Collision>* DynOS_Col_Load(BinFile *aFile, GfxData *aGfxData);
 DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const char *aCollisionName);
 void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 
 DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent);
-void DynOS_Geo_Write(FILE *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode);
+void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode);
 DataNode<GeoLayout>** DynOS_Geo_GetLoading(void);
-void DynOS_Geo_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
-void DynOS_Gfx_Write(FILE *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode);
-void DynOS_Gfx_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Gfx_Write(BinFile *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode);
+void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData);
 s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found);
 
 DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
-void DynOS_Lights_Write(FILE* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
-void DynOS_Lights_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Lights_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
+void DynOS_Lights_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Light_t>* DynOS_LightT_Parse(GfxData* aGfxData, DataNode<Light_t>* aNode);
-void DynOS_LightT_Write(FILE* aFile, GfxData* aGfxData, DataNode<Light_t> *aNode);
-void DynOS_LightT_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_LightT_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Light_t> *aNode);
+void DynOS_LightT_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Ambient_t>* DynOS_AmbientT_Parse(GfxData* aGfxData, DataNode<Ambient_t>* aNode);
-void DynOS_AmbientT_Write(FILE* aFile, GfxData* aGfxData, DataNode<Ambient_t> *aNode);
-void DynOS_AmbientT_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_AmbientT_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Ambient_t> *aNode);
+void DynOS_AmbientT_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<MacroObject>* aNode, bool aDisplayPercent);
-void DynOS_MacroObject_Write(FILE* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode);
-DataNode<MacroObject>* DynOS_MacroObject_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_MacroObject_Write(BinFile* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode);
+DataNode<MacroObject>* DynOS_MacroObject_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Trajectory>* DynOS_Trajectory_Parse(GfxData* aGfxData, DataNode<Trajectory>* aNode, bool aDisplayPercent);
-void DynOS_Trajectory_Write(FILE* aFile, GfxData* aGfxData, DataNode<Trajectory> *aNode);
-DataNode<Trajectory>* DynOS_Trajectory_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Trajectory_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Trajectory> *aNode);
+DataNode<Trajectory>* DynOS_Trajectory_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Movtex>* DynOS_Movtex_Parse(GfxData* aGfxData, DataNode<Movtex>* aNode, bool aDisplayPercent);
-void DynOS_Movtex_Write(FILE* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode);
-DataNode<Movtex>* DynOS_Movtex_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Movtex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode);
+DataNode<Movtex>* DynOS_Movtex_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<MovtexQC>* DynOS_MovtexQC_Parse(GfxData* aGfxData, DataNode<MovtexQC>* aNode);
-void DynOS_MovtexQC_Write(FILE* aFile, GfxData* aGfxData, DataNode<MovtexQC> *aNode);
-DataNode<MovtexQC>* DynOS_MovtexQC_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_MovtexQC_Write(BinFile* aFile, GfxData* aGfxData, DataNode<MovtexQC> *aNode);
+DataNode<MovtexQC>* DynOS_MovtexQC_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<u8>* DynOS_Rooms_Parse(GfxData* aGfxData, DataNode<u8>* aNode);
-void DynOS_Rooms_Write(FILE* aFile, GfxData* aGfxData, DataNode<u8> *aNode);
-DataNode<u8>* DynOS_Rooms_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Rooms_Write(BinFile* aFile, GfxData* aGfxData, DataNode<u8> *aNode);
+DataNode<u8>* DynOS_Rooms_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
-void DynOS_Tex_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
-DataNode<TexData>* DynOS_Tex_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Tex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
+DataNode<TexData>* DynOS_Tex_Load(BinFile *aFile, GfxData *aGfxData);
 DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const SysPath &aFilename, const char *aTexName, bool aAddToPack);
 void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
 void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, bool aAllowCustomTextures);
 
 DataNode<TexData*>* DynOS_TexList_Parse(GfxData* aGfxData, DataNode<TexData*>* aNode);
-void DynOS_TexList_Write(FILE* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode);
-DataNode<TexData*>* DynOS_TexList_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_TexList_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData*> *aNode);
+DataNode<TexData*>* DynOS_TexList_Load(BinFile *aFile, GfxData *aGfxData);
 
 DataNode<Vtx>* DynOS_Vtx_Parse(GfxData* aGfxData, DataNode<Vtx>* aNode);
-void DynOS_Vtx_Write(FILE* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
-void DynOS_Vtx_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_Vtx_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
+void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData);
 
-void DynOS_Pointer_Lua_Write(FILE* aFile, u32 index, GfxData* aGfxData);
-void DynOS_Pointer_Write(FILE* aFile, const void* aPtr, GfxData* aGfxData);
-void *DynOS_Pointer_Load(FILE *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags);
+void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData);
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData);
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags);
 
-void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData);
+void DynOS_GfxDynCmd_Load(BinFile *aFile, GfxData *aGfxData);
 
 GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aActorName, const SysPath &aFilename, bool aAddToPack);
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder);
@@ -959,6 +1059,10 @@ s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *foun
 
 s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found);
 s64 DynOS_Common_ParseModelConstants(const String &_Arg, bool *found);
+
+bool DynOS_Bin_IsCompressed(const SysPath &aFilename);
+bool DynOS_Bin_Compress(const SysPath &aFilename);
+BinFile *DynOS_Bin_Decompress(const SysPath &aFilename);
 
 #endif
 #endif

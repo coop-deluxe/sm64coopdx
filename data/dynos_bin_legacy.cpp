@@ -13,7 +13,7 @@
 /////////////
 
 // For retro-compatibility
-void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData) {
+void DynOS_GfxDynCmd_Load(BinFile *aFile, GfxData *aGfxData) {
     Gfx *_Data = NULL;
     String _DisplayListName; _DisplayListName.Read(aFile);
     for (auto& _DisplayList : aGfxData->mDisplayLists) {
@@ -25,6 +25,6 @@ void DynOS_GfxDynCmd_Load(FILE *aFile, GfxData *aGfxData) {
     if (!_Data) {
         sys_fatal("Display list not found: %s", _DisplayListName.begin());
     }
-    ReadBytes<u32>(aFile);
-    ReadBytes<u8>(aFile);
+    aFile->Read<u32>();
+    aFile->Read<u8>();
 }

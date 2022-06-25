@@ -938,6 +938,9 @@ endif
 
 # Coop specific libraries
 
+# Zlib
+LDFLAGS += -lz
+
 # Lua
 ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
