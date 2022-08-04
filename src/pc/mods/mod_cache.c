@@ -176,9 +176,10 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, const char* path) {
         if (!strcmp(n->path, path)) {
             LOG_INFO("Removing old node: %s", node->path);
             mod_cache_remove_node(n, prev);
+        } else {
+            prev = n;
         }
 
-        prev = n;
         n = next;
     }
 
