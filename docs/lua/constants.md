@@ -2782,7 +2782,8 @@
 | HOOK_ON_OBJECT_RENDER | 20 |
 | HOOK_ON_DEATH | 21 |
 | HOOK_ON_PACKET_RECEIVE | 22 |
-| HOOK_MAX | 23 |
+| HOOK_USE_ACT_SELECT | 23 |
+| HOOK_MAX | 24 |
 
 [:arrow_up_small:](#)
 

@@ -1527,8 +1527,14 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
     gCurrLevelNum = levelNum;
     gCurrCourseNum = get_level_course_num(levelNum - 1);
 
-    if (gCurrDemoInput != NULL || gCurrCreditsEntry != NULL || gCurrCourseNum == COURSE_NONE) {
-        return 0;
+    bool foundHook = false;
+    bool hookUseActSelect = false;
+    smlua_call_event_hooks_use_act_select(HOOK_USE_ACT_SELECT, levelNum, &foundHook, &hookUseActSelect);
+
+    if (!foundHook || !hookUseActSelect) {
+        if (gCurrDemoInput != NULL || gCurrCreditsEntry != NULL || gCurrCourseNum == COURSE_NONE) {
+            return 0;
+        }
     }
 
     if (gCurrLevelNum != LEVEL_BOWSER_1 && gCurrLevelNum != LEVEL_BOWSER_2
@@ -1542,6 +1548,10 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
         gSavedCourseNum = gCurrCourseNum;
         nop_change_course();
         disable_warp_checkpoint();
+    }
+
+    if (foundHook) {
+        return hookUseActSelect;
     }
 
     if (gCurrCourseNum > COURSE_STAGES_MAX || warpCheckpointActive) {

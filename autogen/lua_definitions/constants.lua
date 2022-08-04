@@ -7900,7 +7900,10 @@ HOOK_ON_DEATH = 21
 HOOK_ON_PACKET_RECEIVE = 22
 
 --- @type LuaHookedEventType
-HOOK_MAX = 23
+HOOK_USE_ACT_SELECT = 23
+
+--- @type LuaHookedEventType
+HOOK_MAX = 24
 
 --- @class HudDisplayFlags
 

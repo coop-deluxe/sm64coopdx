@@ -109,6 +109,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_OBJECT_RENDER | Called right before an object is rendered. **Note:** You must set the `hookRender` field of the object to a non-zero value | [Object](structs.md#Object) renderedObj |
 | HOOK_ON_DEATH | Called when the local player dies, return `false` to prevent normal death sequence | [MarioState](structs.md#MarioState) localMario |
 | HOOK_ON_PACKET_RECEIVE | Called when the mod receives a packet that used `network_send()` or `network_send_to()` | `table` dataTable |
+| HOOK_USE_ACT_SELECT | Called when the level changes, return `true` to show act selection screen and `false` otherwise | `integer` levelNum |
 
 ### Parameters
 

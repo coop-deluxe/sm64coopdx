@@ -34,6 +34,7 @@ enum LuaHookedEventType {
     HOOK_ON_OBJECT_RENDER,
     HOOK_ON_DEATH,
     HOOK_ON_PACKET_RECEIVE,
+    HOOK_USE_ACT_SELECT,
     HOOK_MAX,
 };
 
@@ -61,6 +62,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_OBJECT_RENDER",
     "HOOK_ON_DEATH",
     "HOOK_ON_PACKET_RECEIVE",
+    "HOOK_USE_ACT_SELECT",
     "HOOK_MAX"
 };
 
@@ -81,6 +83,7 @@ void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struc
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex);
+void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);
