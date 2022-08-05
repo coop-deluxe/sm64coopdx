@@ -16,10 +16,15 @@ static inline void DynOS_Bin_Compress_Init() {
     sLengthCompressed = 0;
 }
 
+static inline void DynOS_Bin_Compress_Close() {
+    if (sFile) fclose(sFile);
+    sFile = NULL;
+}
+
 static inline void DynOS_Bin_Compress_Free() {
     if (sBufferCompressed) free(sBufferCompressed);
     if (sBufferUncompressed) free(sBufferUncompressed);
-    if (sFile) fclose(sFile);
+    DynOS_Bin_Compress_Close();
 }
 
 static inline bool DynOS_Bin_Compress_Check(bool condition, const char *function, const char *filename, const char *message) {
@@ -90,7 +95,7 @@ bool DynOS_Bin_Compress(const SysPath &aFilename) {
     if (!DynOS_Bin_Compress_Check(
         fread(sBufferUncompressed, sizeof(Bytef), sLengthUncompressed, sFile) == sLengthUncompressed,
         __FUNCTION__, aFilename.c_str(), "Cannot read uncompressed data"
-    )) return false; else fclose(sFile);
+    )) return false; else DynOS_Bin_Compress_Close();
 
     // Compute maximum output file size
     if (!DynOS_Bin_Compress_Check(
@@ -200,7 +205,7 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
     if (!DynOS_Bin_Compress_Check(
         fread(sBufferCompressed, sizeof(Bytef), sLengthCompressed - _LengthHeader, sFile) == sLengthCompressed - _LengthHeader,
         __FUNCTION__, aFilename.c_str(), "Cannot read compressed data"
-    )) return NULL; else fclose(sFile);
+    )) return NULL; else DynOS_Bin_Compress_Close();
 
     // Allocate memory for uncompressed buffer
     if (!DynOS_Bin_Compress_Check(
