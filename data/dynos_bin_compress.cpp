@@ -3,10 +3,10 @@
 
 static const u64 DYNOS_BIN_COMPRESS_MAGIC = 0x4E4942534F4E5944llu;
 static FILE  *sFile = NULL;
-static Bytef *sBufferUncompressed = NULL;
-static Bytef *sBufferCompressed = NULL;
-static uLongf sLengthUncompressed = 0;
-static uLongf sLengthCompressed = 0;
+static u8 *sBufferUncompressed = NULL;
+static u8 *sBufferCompressed = NULL;
+static u64 sLengthUncompressed = 0;
+static u64 sLengthCompressed = 0;
 
 static inline void DynOS_Bin_Compress_Init() {
     sFile = NULL;
@@ -81,19 +81,19 @@ bool DynOS_Bin_Compress(const SysPath &aFilename) {
 
     // Check file length
     if (!DynOS_Bin_Compress_Check(
-        (sLengthUncompressed = (uLongf) ftell(sFile)) != 0,
+        (sLengthUncompressed = (u64) ftell(sFile)) != 0,
         __FUNCTION__, aFilename.c_str(), "Empty file"
     )) return false;
 
     // Allocate memory for uncompressed buffer
     if (!DynOS_Bin_Compress_Check(
-        (sBufferUncompressed = (Bytef *) calloc(sLengthUncompressed, sizeof(Bytef))) != NULL,
+        (sBufferUncompressed = (u8 *) calloc(sLengthUncompressed, sizeof(u8))) != NULL,
         __FUNCTION__, aFilename.c_str(), "Cannot allocate memory for compression"
     )) return false; else rewind(sFile);
 
     // Read input data
     if (!DynOS_Bin_Compress_Check(
-        fread(sBufferUncompressed, sizeof(Bytef), sLengthUncompressed, sFile) == sLengthUncompressed,
+        fread(sBufferUncompressed, sizeof(u8), sLengthUncompressed, sFile) == sLengthUncompressed,
         __FUNCTION__, aFilename.c_str(), "Cannot read uncompressed data"
     )) return false; else DynOS_Bin_Compress_Close();
 
@@ -105,15 +105,17 @@ bool DynOS_Bin_Compress(const SysPath &aFilename) {
 
     // Allocate memory for compressed buffer
     if (!DynOS_Bin_Compress_Check(
-        (sBufferCompressed = (Bytef *) calloc(sLengthCompressed, sizeof(Bytef))) != NULL,
+        (sBufferCompressed = (u8 *) calloc(sLengthCompressed, sizeof(u8))) != NULL,
         __FUNCTION__, aFilename.c_str(), "Cannot allocate memory for compression"
     )) return false;
 
     // Compress data
+    uLongf _LengthCompressed = (uLongf)sLengthCompressed;
     if (!DynOS_Bin_Compress_Check(
-        compress2(sBufferCompressed, &sLengthCompressed, sBufferUncompressed, sLengthUncompressed, Z_BEST_COMPRESSION) == Z_OK,
+        compress2(sBufferCompressed, &_LengthCompressed, sBufferUncompressed, sLengthUncompressed, Z_BEST_COMPRESSION) == Z_OK,
         __FUNCTION__, aFilename.c_str(), "Cannot compress data"
     )) return false;
+    sLengthCompressed = _LengthCompressed;
 
     // Check output length
     // If the compression generates a bigger file, skip the process, but don't return a failure
@@ -136,13 +138,13 @@ bool DynOS_Bin_Compress(const SysPath &aFilename) {
 
     // Write uncompressed file size
     if (!DynOS_Bin_Compress_Check(
-        fwrite(&sLengthUncompressed, sizeof(uLongf), 1, sFile) == 1,
+        fwrite(&sLengthUncompressed, sizeof(u64), 1, sFile) == 1,
         __FUNCTION__, aFilename.c_str(), "Cannot write uncompressed file size"
     )) return false;
 
     // Write compressed data
     if (!DynOS_Bin_Compress_Check(
-        fwrite(sBufferCompressed, sizeof(Bytef), sLengthCompressed, sFile) == sLengthCompressed,
+        fwrite(sBufferCompressed, sizeof(u8), sLengthCompressed, sFile) == sLengthCompressed,
         __FUNCTION__, aFilename.c_str(), "Cannot write compressed data"
     )) return false;
 
@@ -178,7 +180,7 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
 
     // Read expected uncompressed file size
     if (!DynOS_Bin_Compress_Check(
-        fread(&sLengthUncompressed, sizeof(uLongf), 1, sFile) == 1,
+        fread(&sLengthUncompressed, sizeof(u64), 1, sFile) == 1,
         __FUNCTION__, aFilename.c_str(), "Cannot read uncompressed file size"
     )) return NULL;
 
@@ -189,32 +191,34 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
     )) return NULL;
 
     // Check file length
-    uLongf _LengthHeader = (uLongf) (sizeof(u64) + sizeof(uLongf));
+    u64 _LengthHeader = (u64) (sizeof(u64) + sizeof(u64));
     if (!DynOS_Bin_Compress_Check(
-        (sLengthCompressed = (uLongf) ftell(sFile)) >= _LengthHeader,
+        (sLengthCompressed = (u64) ftell(sFile)) >= _LengthHeader,
         __FUNCTION__, aFilename.c_str(), "Empty file"
     )) return NULL;
 
     // Allocate memory for compressed buffer
     if (!DynOS_Bin_Compress_Check(
-        (sBufferCompressed = (Bytef *) calloc(sLengthCompressed - _LengthHeader, sizeof(Bytef))) != NULL,
+        (sBufferCompressed = (u8 *) calloc(sLengthCompressed - _LengthHeader, sizeof(u8))) != NULL,
         __FUNCTION__, aFilename.c_str(), "Cannot allocate memory for decompression"
     )) return NULL; else fseek(sFile, _LengthHeader, SEEK_SET);
 
     // Read input data
     if (!DynOS_Bin_Compress_Check(
-        fread(sBufferCompressed, sizeof(Bytef), sLengthCompressed - _LengthHeader, sFile) == sLengthCompressed - _LengthHeader,
+        fread(sBufferCompressed, sizeof(u8), sLengthCompressed - _LengthHeader, sFile) == sLengthCompressed - _LengthHeader,
         __FUNCTION__, aFilename.c_str(), "Cannot read compressed data"
     )) return NULL; else DynOS_Bin_Compress_Close();
 
     // Allocate memory for uncompressed buffer
     if (!DynOS_Bin_Compress_Check(
-        (sBufferUncompressed = (Bytef *) calloc(sLengthUncompressed, sizeof(Bytef))) != NULL,
+        (sBufferUncompressed = (u8 *) calloc(sLengthUncompressed, sizeof(u8))) != NULL,
         __FUNCTION__, aFilename.c_str(), "Cannot allocate memory for decompression"
     )) return NULL;
 
     // Uncompress data
-    int uncompressRc = uncompress(sBufferUncompressed, &sLengthUncompressed, sBufferCompressed, sLengthCompressed);
+    uLongf _LengthUncompressed = (uLongf)sLengthUncompressed;
+    int uncompressRc = uncompress(sBufferUncompressed, &_LengthUncompressed, sBufferCompressed, sLengthCompressed);
+    sLengthUncompressed = _LengthUncompressed;
     if (!DynOS_Bin_Compress_Check(
         uncompressRc == Z_OK,
         __FUNCTION__, aFilename.c_str(), "Cannot uncompress data"
@@ -222,6 +226,7 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
         Print("ERROR: uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
         return NULL;
     }
+    Print("uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
 
     // Return uncompressed data as a BinFile
     BinFile *_BinFile = BinFile::OpenB(sBufferUncompressed, sLengthUncompressed);
