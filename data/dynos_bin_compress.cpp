@@ -219,7 +219,7 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
         uncompressRc == Z_OK,
         __FUNCTION__, aFilename.c_str(), "Cannot uncompress data"
     )) {
-        Print("ERROR: uncompress RC: %d", uncompressRc);
+        Print("ERROR: uncompress rc: %d, length uncompressed: %lu, length compressed: %lu, length header: %lu", uncompressRc, sLengthUncompressed, sLengthCompressed, _LengthHeader);
         return NULL;
     }
 
