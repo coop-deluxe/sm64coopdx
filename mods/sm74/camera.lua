@@ -1,13 +1,8 @@
 sOverrideCameraModes = {
     [CAMERA_MODE_RADIAL]            = true,
     [CAMERA_MODE_OUTWARD_RADIAL]    = true,
-    [CAMERA_MODE_BEHIND_MARIO]      = true,
     [CAMERA_MODE_CLOSE]             = true,
-    --[CAMERA_MODE_C_UP]              = true,
-    [CAMERA_MODE_WATER_SURFACE]     = true,
     [CAMERA_MODE_SLIDE_HOOT]        = true,
-    --[CAMERA_MODE_INSIDE_CANNON]     = true,
-    --[CAMERA_MODE_BOSS_FIGHT]        = true,
     [CAMERA_MODE_PARALLEL_TRACKING] = true,
     [CAMERA_MODE_FIXED]             = true,
     [CAMERA_MODE_8_DIRECTIONS]      = true,
