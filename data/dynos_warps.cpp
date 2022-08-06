@@ -11,6 +11,7 @@ extern "C" {
 #include "game/sound_init.h"
 #include "game/object_list_processor.h"
 #include "game/options_menu.h"
+#include "pc/network/packets/packet.h"
 #include "pc/lua/smlua_hooks.h"
 extern s8 gDialogBoxState;
 extern s16 gMenuMode;

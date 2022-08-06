@@ -2,7 +2,8 @@
 
 extern "C" {
 #include "engine/behavior_script.h"
-#include "src/pc/lua/smlua_hooks.h"
+#include "pc/network/packets/packet.h"
+#include "pc/lua/smlua_hooks.h"
 }
 
 Array<Pair<const char *, GfxData *>> &DynOS_Bhv_GetArray() {
