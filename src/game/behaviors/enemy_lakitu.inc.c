@@ -2,7 +2,7 @@
 /**
  * Behavior for bhvEnemyLakitu.
  * Lakitu comes before it spawned spinies in processing order.
- * TODO: bhvCloud processing oredr
+ * TODO: bhvCloud processing order
  */
 
 /**
@@ -24,11 +24,16 @@ static struct ObjectHitbox sEnemyLakituHitbox = {
  * Wait for mario to approach, then spawn the cloud and become visible.
  */
 static void enemy_lakitu_act_uninitialized(void) {
-    spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
+    struct Object *player = nearest_player_to_object(o);
+    s32 distanceToPlayer = dist_between_objects(o, player);
 
-    cur_obj_unhide();
-    o->oAction = ENEMY_LAKITU_ACT_MAIN;
-}
+    if (distanceToPlayer < 2000.0f) {
+        spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
+
+        cur_obj_unhide();
+        o->oAction = ENEMY_LAKITU_ACT_MAIN;
+    }
+}   
 
 /**
  * Accelerate toward mario vertically.

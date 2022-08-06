@@ -137,6 +137,9 @@ bool         configUncappedFramerate             = true;
 unsigned int configFrameLimit                    = 60;
 unsigned int configDrawDistance                  = 5;
 bool         configDisablePopups                 = 0;
+#ifdef DEVELOPMENT
+bool         configDisableDevPause               = 1;
+#endif
 bool         configDisableDownloadedModels       = 0;
 unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
@@ -220,6 +223,9 @@ static const struct ConfigOption options[] = {
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "share_lives",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShareLives},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
+#ifdef DEVELOPMENT
+    {.name = "disable_devpause",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDevPause},
+#endif
     {.name = "disable_downloaded_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDownloadedModels},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configGamepadNumber},

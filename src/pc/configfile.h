@@ -93,6 +93,9 @@ extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;
 extern bool         configDisablePopups;
+#ifdef DEVELOPMENT
+extern bool         configDisableDevPause;
+#endif
 extern bool         configDisableDownloadedModels;
 extern unsigned int configInterpolationMode;
 

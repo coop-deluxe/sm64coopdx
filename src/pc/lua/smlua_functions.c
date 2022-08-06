@@ -79,6 +79,24 @@ int smlua_func_init_mario_after_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_initiate_warp(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    s16 destLevel = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s16 destArea = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    s16 destWarpNode = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    s32 arg3 = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4"); return 0; }
+
+    extern void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3);
+    initiate_warp(destLevel, destArea, destWarpNode, arg3);
+
+    return 1;
+}
+
 int smlua_func_reset_level(lua_State* L) {
     if (network_player_connected_count() >= 2) {
         LOG_LUA_LINE("This function can only be used in single-player");
@@ -339,6 +357,7 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "coss", smlua_func_coss);
     smlua_bind_function(L, "atan2s", smlua_func_atan2s);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
+    smlua_bind_function(L, "initiate_warp", smlua_func_initiate_warp);
     smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);
     smlua_bind_function(L, "network_send_object", smlua_func_network_send_object);
     smlua_bind_function(L, "reset_level", smlua_func_reset_level);

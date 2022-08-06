@@ -411,11 +411,6 @@ void init_mario_after_warp(void) {
                 init_door_warp(&gPlayerSpawnInfos[i], sWarpDest.arg);
             }
 
-            // set to a minimum of two lives on level change
-            if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL) {
-                gMarioStates[i].numLives = max(gMarioStates[i].numLives, 2);
-            }
-
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL || sWarpDest.type == WARP_TYPE_CHANGE_AREA) {
                 gPlayerSpawnInfos[i].areaIndex = sWarpDest.areaIdx;
                 // reset health
@@ -667,6 +662,10 @@ void check_instant_warp(void) {
 }
 
 s16 music_changed_through_warp(s16 arg) {
+    if (arg == 0) {
+        return false;
+    }
+
     struct ObjectWarpNode *warpNode = area_get_warp_node(arg);
     s16 levelNum = warpNode->node.destLevel & 0x7F;
 
@@ -842,12 +841,9 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_DEATH:
-                if (m->numLives < 2) {
-                    m->numLives = 2;
-                }
-                /*if (m->numLives == 0) {
+                if (m->numLives <= 0) {
                     sDelayedWarpOp = WARP_OP_GAME_OVER;
-                }*/
+                }
                 sDelayedWarpTimer = 48;
                 sSourceWarpNodeId = WARP_NODE_DEATH;
                 play_transition(WARP_TRANSITION_FADE_INTO_BOWSER, 0x30, 0x00, 0x00, 0x00);
@@ -863,11 +859,11 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
             case WARP_OP_WARP_FLOOR:
                 sSourceWarpNodeId = WARP_NODE_WARP_FLOOR;
                 if (area_get_warp_node(sSourceWarpNodeId) == NULL) {
-                    /*if (m->numLives == 0) {
+                    if (m->numLives <= 0) {
                         sDelayedWarpOp = WARP_OP_GAME_OVER;
-                    } else {*/
+                    } else {
                         sSourceWarpNodeId = WARP_NODE_DEATH;
-                    //}
+                    }
                 }
                 sDelayedWarpTimer = 20;
                 play_transition(WARP_TRANSITION_FADE_INTO_CIRCLE, 0x14, 0x00, 0x00, 0x00);
@@ -960,8 +956,9 @@ void initiate_delayed_warp(void) {
         } else {
             switch (sDelayedWarpOp) {
                 case WARP_OP_GAME_OVER:
-                    save_file_reload();
-                    warp_special(-3);
+                    gChangeLevel = gLevelValues.entryLevel;
+                    gMarioStates[0].numLives = 3;
+                    gMarioStates[0].health = 0x880;
                     break;
 
                 case WARP_OP_CREDITS_END:
@@ -1341,8 +1338,12 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
-#ifndef DEVELOPMENT
-            changeLevel = play_mode_normal();
+#ifdef DEVELOPMENT
+            if (configDisableDevPause) {
+                changeLevel = play_mode_normal();
+            }
+#else
+                changeLevel = play_mode_normal();
 #endif
             if (sCurrPlayMode == PLAY_MODE_PAUSED) {
                 changeLevel = play_mode_paused();
