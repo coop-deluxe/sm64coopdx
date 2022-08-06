@@ -4189,9 +4189,17 @@ end
 --- @param pos Vec3f
 --- @param offset number
 --- @param radius number
+--- @return Surface
+function resolve_and_return_wall_collisions(pos, offset, radius)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param offset number
+--- @param radius number
 --- @param collisionData WallCollisionData
 --- @return nil
-function resolve_and_return_wall_collisions(pos, offset, radius, collisionData)
+function resolve_and_return_wall_collisions_data(pos, offset, radius, collisionData)
     -- ...
 end
 
@@ -5063,6 +5071,96 @@ end
 --- @param arg0 MarioState
 --- @return nil
 function stop_and_set_height_to_floor(arg0)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param result Vec3f
+--- @return integer
+function anim_spline_poll(m, result)
+    -- ...
+end
+
+--- @param current number
+--- @param target number
+--- @param inc number
+--- @param dec number
+--- @return number
+function approach_f32(current, target, inc, dec)
+    -- ...
+end
+
+--- @param current integer
+--- @param target integer
+--- @param inc integer
+--- @param dec integer
+--- @return integer
+function approach_s32(current, target, inc, dec)
+    -- ...
+end
+
+--- @param value number
+--- @param replacement number
+--- @return number
+function not_zero(value, replacement)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param vecA Vec3f
+--- @param vecB Vec3f
+--- @param sclA number
+--- @param sclB number
+--- @return nil
+function vec3f_combine(dest, vecA, vecB, sclA, sclB)
+    -- ...
+end
+
+--- @param v1 Vec3f
+--- @param v2 Vec3f
+--- @return number
+function vec3f_dist(v1, v2)
+    -- ...
+end
+
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return number
+function vec3f_dot(a, b)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param dist Pointer_number
+--- @param pitch Pointer_integer
+--- @param yaw Pointer_integer
+--- @return nil
+function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
+    -- ...
+end
+
+--- @param a Vec3f
+--- @return number
+function vec3f_length(a)
+    -- ...
+end
+
+--- @param vec Vec3f
+--- @param onto Vec3f
+--- @param out Vec3f
+--- @return nil
+function vec3f_project(vec, onto, out)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param dist number
+--- @param pitch integer
+--- @param yaw integer
+--- @return nil
+function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
@@ -7662,8 +7760,20 @@ end
 
 --- @param o1 Object
 --- @param o2 Object
---- @return integer
+--- @return boolean
 function obj_check_hitbox_overlap(o1, o2)
+    -- ...
+end
+
+--- @param o Object
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param h number
+--- @param r number
+--- @param d number
+--- @return boolean
+function obj_check_overlap_with_hitbox_params(o, x, y, z, h, r, d)
     -- ...
 end
 
@@ -7757,7 +7867,7 @@ function obj_has_model_extended(o, modelId)
 end
 
 --- @param o Object
---- @return integer
+--- @return boolean
 function obj_is_valid_for_interaction(o)
     -- ...
 end

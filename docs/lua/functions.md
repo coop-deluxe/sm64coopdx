@@ -816,6 +816,7 @@
    - [play_sound_and_spawn_particles](functions-3.md#play_sound_and_spawn_particles)
    - [play_sound_if_no_flag](functions-3.md#play_sound_if_no_flag)
    - [resolve_and_return_wall_collisions](functions-3.md#resolve_and_return_wall_collisions)
+   - [resolve_and_return_wall_collisions_data](functions-3.md#resolve_and_return_wall_collisions_data)
    - [return_mario_anim_y_translation](functions-3.md#return_mario_anim_y_translation)
    - [set_anim_to_frame](functions-3.md#set_anim_to_frame)
    - [set_jump_from_landing](functions-3.md#set_jump_from_landing)
@@ -981,6 +982,21 @@
    - [set_vel_from_pitch_and_yaw](functions-3.md#set_vel_from_pitch_and_yaw)
    - [stationary_ground_step](functions-3.md#stationary_ground_step)
    - [stop_and_set_height_to_floor](functions-3.md#stop_and_set_height_to_floor)
+
+<br />
+
+- math_util.h
+   - [anim_spline_poll](functions-3.md#anim_spline_poll)
+   - [approach_f32](functions-3.md#approach_f32)
+   - [approach_s32](functions-3.md#approach_s32)
+   - [not_zero](functions-3.md#not_zero)
+   - [vec3f_combine](functions-3.md#vec3f_combine)
+   - [vec3f_dist](functions-3.md#vec3f_dist)
+   - [vec3f_dot](functions-3.md#vec3f_dot)
+   - [vec3f_get_dist_and_angle](functions-3.md#vec3f_get_dist_and_angle)
+   - [vec3f_length](functions-3.md#vec3f_length)
+   - [vec3f_project](functions-3.md#vec3f_project)
+   - [vec3f_set_dist_and_angle](functions-3.md#vec3f_set_dist_and_angle)
 
 <br />
 
@@ -1436,6 +1452,7 @@
    - [get_temp_object_hitbox](functions-4.md#get_temp_object_hitbox)
    - [get_trajectory](functions-4.md#get_trajectory)
    - [obj_check_hitbox_overlap](functions-4.md#obj_check_hitbox_overlap)
+   - [obj_check_overlap_with_hitbox_params](functions-4.md#obj_check_overlap_with_hitbox_params)
    - [obj_count_objects_with_behavior_id](functions-4.md#obj_count_objects_with_behavior_id)
    - [obj_get_first](functions-4.md#obj_get_first)
    - [obj_get_first_with_behavior_id](functions-4.md#obj_get_first_with_behavior_id)

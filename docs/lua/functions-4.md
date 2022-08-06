@@ -7167,7 +7167,7 @@
 ## [obj_check_hitbox_overlap](#obj_check_hitbox_overlap)
 
 ### Lua Example
-`local integerValue = obj_check_hitbox_overlap(o1, o2)`
+`local booleanValue = obj_check_hitbox_overlap(o1, o2)`
 
 ### Parameters
 | Field | Type |
@@ -7176,10 +7176,36 @@
 | o2 | [Object](structs.md#Object) |
 
 ### Returns
-- `integer`
+- `boolean`
 
 ### C Prototype
-`s32 obj_check_hitbox_overlap(struct Object *o1, struct Object *o2);`
+`bool obj_check_hitbox_overlap(struct Object *o1, struct Object *o2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_check_overlap_with_hitbox_params](#obj_check_overlap_with_hitbox_params)
+
+### Lua Example
+`local booleanValue = obj_check_overlap_with_hitbox_params(o, x, y, z, h, r, d)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| h | `number` |
+| r | `number` |
+| d | `number` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z, f32 h, f32 r, f32 d);`
 
 [:arrow_up_small:](#)
 
@@ -7459,7 +7485,7 @@
 ## [obj_is_valid_for_interaction](#obj_is_valid_for_interaction)
 
 ### Lua Example
-`local integerValue = obj_is_valid_for_interaction(o)`
+`local booleanValue = obj_is_valid_for_interaction(o)`
 
 ### Parameters
 | Field | Type |
@@ -7467,10 +7493,10 @@
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- `integer`
+- `boolean`
 
 ### C Prototype
-`s32 obj_is_valid_for_interaction(struct Object *o);`
+`bool obj_is_valid_for_interaction(struct Object *o);`
 
 [:arrow_up_small:](#)
 

@@ -3936,7 +3936,29 @@
 ## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
 
 ### Lua Example
-`resolve_and_return_wall_collisions(pos, offset, radius, collisionData)`
+`local SurfaceValue = resolve_and_return_wall_collisions(pos, offset, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| offset | `number` |
+| radius | `number` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [resolve_and_return_wall_collisions_data](#resolve_and_return_wall_collisions_data)
+
+### Lua Example
+`resolve_and_return_wall_collisions_data(pos, offset, radius, collisionData)`
 
 ### Parameters
 | Field | Type |
@@ -3950,7 +3972,7 @@
 - None
 
 ### C Prototype
-`void resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);`
+`void resolve_and_return_wall_collisions_data(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);`
 
 [:arrow_up_small:](#)
 
@@ -6674,6 +6696,256 @@
 
 ### C Prototype
 `void stop_and_set_height_to_floor(struct MarioState *);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util.h
+
+<br />
+
+
+## [anim_spline_poll](#anim_spline_poll)
+
+### Lua Example
+`local integerValue = anim_spline_poll(m, result)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| result | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 anim_spline_poll(struct MarioState* m, Vec3f result);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_f32](#approach_f32)
+
+### Lua Example
+`local numberValue = approach_f32(current, target, inc, dec)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `number` |
+| target | `number` |
+| inc | `number` |
+| dec | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_s32](#approach_s32)
+
+### Lua Example
+`local integerValue = approach_s32(current, target, inc, dec)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `integer` |
+| target | `integer` |
+| inc | `integer` |
+| dec | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [not_zero](#not_zero)
+
+### Lua Example
+`local numberValue = not_zero(value, replacement)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `number` |
+| replacement | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 not_zero(f32 value, f32 replacement);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_combine](#vec3f_combine)
+
+### Lua Example
+`vec3f_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| vecA | [Vec3f](structs.md#Vec3f) |
+| vecB | [Vec3f](structs.md#Vec3f) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_dist](#vec3f_dist)
+
+### Lua Example
+`local numberValue = vec3f_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3f](structs.md#Vec3f) |
+| v2 | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_dist(Vec3f v1, Vec3f v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_dot](#vec3f_dot)
+
+### Lua Example
+`local numberValue = vec3f_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_dot(Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
+
+### Lua Example
+`vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| dist | `Pointer` <`number`> |
+| pitch | `Pointer` <`integer`> |
+| yaw | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_length](#vec3f_length)
+
+### Lua Example
+`local numberValue = vec3f_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_length(Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_project](#vec3f_project)
+
+### Lua Example
+`vec3f_project(vec, onto, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vec | [Vec3f](structs.md#Vec3f) |
+| onto | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
+
+### Lua Example
+`vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| dist | `number` |
+| pitch | `integer` |
+| yaw | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
 
 [:arrow_up_small:](#)
 

@@ -13,7 +13,9 @@ out_filename_defs = 'autogen/lua_definitions/functions.lua'
 
 in_files = [
     "src/audio/external.h",
+    "src/engine/math_util.h",
     "src/engine/surface_collision.h",
+    "src/engine/surface_load.h",
     "src/game/camera.h",
     "src/game/characters.h",
     "src/game/mario_actions_airborne.c",
@@ -47,7 +49,6 @@ in_files = [
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
     "src/game/spawn_sound.c",
-    "src/engine/surface_load.h",
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
@@ -65,6 +66,7 @@ override_allowed_functions = {
 
 override_disallowed_functions = {
     "src/audio/external.h":                [ " func_" ],
+    "src/engine/math_util.h":              [ "atan2s", "atan2f" ],
     "src/engine/surface_collision.h":      [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
@@ -468,6 +470,7 @@ def build_call(function):
 
 def build_function(function, do_extern):
     s = ''
+    fid = function['identifier']
 
     if len(function['params']) <= 0:
         s = 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
@@ -479,7 +482,7 @@ def build_function(function, do_extern):
     i = 1
     for param in function['params']:
         s += build_param(param, i)
-        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %d"); return 0; }\n' % i
+        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %d for function \'%s\'"); return 0; }\n' % (i, fid)
         i += 1
     s += '\n'
 

@@ -37,8 +37,9 @@ s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId);
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);
 struct ObjectHitbox* get_temp_object_hitbox(void);
 
-s32 obj_is_valid_for_interaction(struct Object *o);
-s32 obj_check_hitbox_overlap(struct Object *o1, struct Object *o2);
+bool obj_is_valid_for_interaction(struct Object *o);
+bool obj_check_hitbox_overlap(struct Object *o1, struct Object *o2);
+bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z, f32 h, f32 r, f32 d);
 void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz);
 void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);
 

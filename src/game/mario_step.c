@@ -267,8 +267,8 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     f32 floorHeight;
     f32 waterLevel;
 
-    resolve_and_return_wall_collisions(nextPos, 30.0f, 24.0f, &lowerWcd);
-    resolve_and_return_wall_collisions(nextPos, 60.0f, 50.0f, &upperWcd);
+    resolve_and_return_wall_collisions_data(nextPos, 30.0f, 24.0f, &lowerWcd);
+    resolve_and_return_wall_collisions_data(nextPos, 60.0f, 50.0f, &upperWcd);
 
     floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     ceilHeight = vec3f_mario_ceil(nextPos, floorHeight, &ceil);
@@ -421,8 +421,8 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
 
     vec3f_copy(nextPos, intendedPos);
 
-    resolve_and_return_wall_collisions(nextPos, 150.0f, 50.0f, &upperWcd);
-    resolve_and_return_wall_collisions(nextPos, 30.0f, 50.0f, &lowerWcd);
+    resolve_and_return_wall_collisions_data(nextPos, 150.0f, 50.0f, &upperWcd);
+    resolve_and_return_wall_collisions_data(nextPos, 30.0f, 50.0f, &lowerWcd);
 
     floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     ceilHeight = vec3f_mario_ceil(nextPos, floorHeight, &ceil);

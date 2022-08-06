@@ -2143,7 +2143,7 @@ void check_kick_or_punch_wall(struct MarioState *m) {
         detector[1] = m->pos[1];
 
         struct WallCollisionData wcd = { 0 };
-        resolve_and_return_wall_collisions(detector, 80.0f, 5.0f, &wcd);
+        resolve_and_return_wall_collisions_data(detector, 80.0f, 5.0f, &wcd);
         if (wcd.numWalls > 0) {
             if (m->action != ACT_MOVE_PUNCHING || m->forwardVel >= 0.0f) {
                 if (m->action == ACT_PUNCHING) {

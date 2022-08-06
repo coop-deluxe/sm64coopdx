@@ -171,6 +171,34 @@ void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
     }
 }
 
+/**
+ * Returns a vector rotated around the z axis, then the x axis, then the y
+ * axis.
+ */
+void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
+    Vec3f v = { dest[0], dest[1], dest[2] };
+    
+    f32 sx = sins(rotate[0]);
+    f32 cx = coss(rotate[0]);
+
+    f32 sy = sins(rotate[1]);
+    f32 cy = coss(rotate[1]);
+
+    f32 sz = sins(rotate[2]);
+    f32 cz = coss(rotate[2]);
+    
+    f32 sysz = (sy * sz);
+    f32 cycz = (cy * cz);
+    f32 cysz = (cy * sz);
+    f32 sycz = (sy * cz);
+
+    dest[0] = v[0] * ((sysz * sx) + cycz) + v[1] * ((sycz * sx) - cysz) + v[2] * (cx * sy);
+    dest[1] = v[0] * (cx * sz) + v[1] * (cx * cz) + v[2] * -sx;
+    dest[2] = v[0] * ((cysz * sx) - sycz) + v[1] * ((cycz * sx) + sysz) + v[2] * (cx * cy);
+    
+    return &dest;
+}
+
 #pragma GCC diagnostic pop
 
 /// Copy matrix 'src' to 'dest'

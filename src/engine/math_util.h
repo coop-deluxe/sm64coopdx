@@ -63,6 +63,7 @@ void *vec3f_normalize(Vec3f dest);
 f32 vec3f_length(Vec3f a);
 f32 vec3f_dot(Vec3f a, Vec3f b);
 void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);
+void *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);
 void mtxf_copy(Mat4 dest, Mat4 src);
 void mtxf_identity(Mat4 mtx);
 void mtxf_translate(Mat4 dest, Vec3f b);

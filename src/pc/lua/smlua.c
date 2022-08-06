@@ -132,10 +132,12 @@ void smlua_init(void) {
     // load libraries
     luaopen_base(L);
     //luaopen_coroutine(L);
-    //luaopen_debug(L);
-    //luaopen_io(L);
+#if defined(LUA_PROFILER)
+    luaL_requiref(L, "debug", luaopen_debug, 1);
+    luaL_requiref(L, "io", luaopen_io, 1);
+    luaL_requiref(L, "os", luaopen_os, 1);
+#endif
     luaL_requiref(L, "math", luaopen_math, 1);
-    //luaopen_os(L);
     //luaopen_package(L);
     luaL_requiref(L, "string", luaopen_string, 1);
     luaL_requiref(L, "table", luaopen_table, 1);

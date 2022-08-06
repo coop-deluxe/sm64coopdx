@@ -260,20 +260,45 @@ struct ObjectHitbox* get_temp_object_hitbox(void) {
     return &sTmpHitbox;
 }
 
-s32 obj_is_valid_for_interaction(struct Object *o) {
+bool obj_is_valid_for_interaction(struct Object *o) {
     return o->activeFlags != ACTIVE_FLAG_DEACTIVATED && o->oIntangibleTimer == 0 && (o->oInteractStatus & INT_STATUS_INTERACTED) == 0;
 }
 
-s32 obj_check_hitbox_overlap(struct Object *o1, struct Object *o2) {
-    f32 r2 = sqr(max(o1->hitboxRadius, o1->hurtboxRadius) + max(o2->hitboxRadius, o2->hurtboxRadius));
+bool obj_check_hitbox_overlap(struct Object *o1, struct Object *o2) {
+    if (o1 == NULL || o2 == NULL) { return FALSE; }
+    
+    f32 o1H = max(o1->hitboxHeight, o1->hurtboxHeight);
+    f32 o1R = max(o1->hitboxRadius, o1->hurtboxRadius);
+    f32 o2H = max(o2->hitboxHeight, o2->hurtboxHeight);
+    f32 o2R = max(o2->hitboxRadius, o2->hurtboxRadius);
+    
+    f32 r2 = sqr(o1R + o2R);
     f32 d2 = sqr(o1->oPosX - o2->oPosX) + sqr(o1->oPosZ - o2->oPosZ);
     if (d2 > r2) return FALSE;
     f32 hb1lb = o1->oPosY - o1->hitboxDownOffset;
-    f32 hb1ub = hb1lb + max(o1->hitboxHeight, o1->hurtboxHeight);
+    f32 hb1ub = hb1lb + o1H;
     f32 hb2lb = o2->oPosY - o2->hitboxDownOffset;
-    f32 hb2ub = hb2lb + max(o2->hitboxHeight, o2->hurtboxHeight);
-    f32 hbsoh = max(o1->hitboxHeight, o1->hurtboxHeight) + max(o2->hitboxHeight, o2->hurtboxHeight);
-    if (hb2ub - hb1lb > hbsoh || hb1ub - hb2lb > hbsoh) return FALSE;
+    f32 hb2ub = hb2lb + o2H;
+    f32 hbsoh = o1H + o2H;
+    if ((hb2ub - hb1lb) > hbsoh || (hb1ub - hb2lb) > hbsoh) return FALSE;
+    return TRUE;
+}
+
+bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z, f32 h, f32 r, f32 d) {
+    if (o == NULL) { return FALSE; }
+    
+    f32 oH = max(o->hitboxHeight, o->hurtboxHeight);
+    f32 oR = max(o->hitboxRadius, o->hurtboxRadius);
+    
+    f32 r2 = sqr(oR + r);
+    f32 d2 = sqr(o->oPosX - x) + sqr(o->oPosZ - z);
+    if (d2 > r2) return FALSE;
+    f32 hb1lb = o->oPosY - o->hitboxDownOffset;
+    f32 hb1ub = hb1lb + oH;
+    f32 hb2lb = y - d;
+    f32 hb2ub = hb2lb + h;
+    f32 hbsoh = oH + h;
+    if ((hb2ub - hb1lb) > hbsoh || (hb1ub - hb2lb) > hbsoh) return FALSE;
     return TRUE;
 }
 
