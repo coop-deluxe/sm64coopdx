@@ -30,13 +30,31 @@ static void djui_panel_pause_quit(struct DjuiBase* caller) {
 void djui_panel_pause_create(struct DjuiBase* caller) {
     if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
 
-    f32 bodyHeight = 64 * 3 + 16 * 2;
+    f32 bodyHeight = 64 * 5 + 16 * 4;
     if (Cheats.EnableCheats) { bodyHeight += 64 + 16; }
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\A\\#00b3ff\\U\\#ffef00\\S\\#ff0800\\E");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
+        
+        struct DjuiRect* rect1 = djui_rect_create(&body->base);
+        djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&rect1->base, 1.0f, 64);
+        djui_base_set_color(&rect1->base, 0, 0, 0, 0);
+        {
+            struct DjuiButton* button4 = djui_button_create(&rect1->base, "Dynos Packs");
+            djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&button4->base, 0.5f, 64);
+            djui_base_set_alignment(&button4->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_interactable_hook_click(&button4->base, djui_panel_dynos_create);
+            
+            struct DjuiButton* button6 = djui_button_create(&rect1->base, "Player");
+            djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&button6->base, 0.47f, 64);
+            djui_interactable_hook_click(&button6->base, djui_panel_player_create);
+        }
+        
         struct DjuiButton* button1 = djui_button_create(&body->base, "Options");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button1->base, 1.0f, 64);
