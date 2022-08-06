@@ -214,10 +214,14 @@ BinFile *DynOS_Bin_Decompress(const SysPath &aFilename) {
     )) return NULL;
 
     // Uncompress data
+    int uncompressRc = uncompress(sBufferUncompressed, &sLengthUncompressed, sBufferCompressed, sLengthCompressed);
     if (!DynOS_Bin_Compress_Check(
-        uncompress(sBufferUncompressed, &sLengthUncompressed, sBufferCompressed, sLengthCompressed) == Z_OK,
+        uncompressRc == Z_OK,
         __FUNCTION__, aFilename.c_str(), "Cannot uncompress data"
-    )) return NULL;
+    )) {
+        Print("ERROR: uncompress RC: %d", uncompressRc);
+        return NULL;
+    }
 
     // Return uncompressed data as a BinFile
     BinFile *_BinFile = BinFile::OpenB(sBufferUncompressed, sLengthUncompressed);
