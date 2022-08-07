@@ -54,8 +54,7 @@ enum UnlockDoorStarStates {
 };
 
 struct PlayerColor {
-    Lights1 shirt;
-    Lights1 pants;
+    Lights1 parts[PLAYER_PART_MAX];
 };
 
 /**
@@ -80,94 +79,20 @@ struct MarioBodyState gBodyStates[MAX_PLAYERS];
 struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node for drawing mirror Mario
 
 // ambient color is always half the diffuse color, so we can pull a macro
-#define DEFINE_PLAYER_COLOR(sr, sg, sb, pr, pg, pb) \
-    { \
-        gdSPDefLights1((sr >> 1), (sg >> 1), (sb >> 1), sr, sg, sb, 0x28, 0x28, 0x28), \
-        gdSPDefLights1((pr >> 1), (pg >> 1), (pb >> 1), pr, pg, pb, 0x28, 0x28, 0x28), \
-    }
+#define PALETTE_TO_LIGHTS(palette) \
+    {{ \
+        gdSPDefLights1((palette.parts[SHIRT][0]  >> 1), (palette.parts[SHIRT][1]  >> 1), (palette.parts[SHIRT][2]  >> 1), palette.parts[SHIRT][0],  palette.parts[SHIRT][1],  palette.parts[SHIRT][2],  0x28, 0x28, 0x28), \
+        gdSPDefLights1((palette.parts[PANTS][0]  >> 1), (palette.parts[PANTS][1]  >> 1), (palette.parts[PANTS][2]  >> 1), palette.parts[PANTS][0],  palette.parts[PANTS][1],  palette.parts[PANTS][2],  0x28, 0x28, 0x28), \
+        gdSPDefLights1((palette.parts[GLOVES][0] >> 1), (palette.parts[GLOVES][1] >> 1), (palette.parts[GLOVES][2] >> 1), palette.parts[GLOVES][0], palette.parts[GLOVES][1], palette.parts[GLOVES][2], 0x28, 0x28, 0x28), \
+    }}
 
-struct PlayerColor gPlayerColors[PALETTE_MAX] = {
-    // default mario
-    DEFINE_PLAYER_COLOR(0xff, 0x00, 0x00, /**/ 0x00, 0x00, 0xff),
-    // default luigi
-    DEFINE_PLAYER_COLOR(0x00, 0x98, 0x00, /**/ 0x00, 0x00, 0xfe),
-    // fake waluigi
-    DEFINE_PLAYER_COLOR(0x6d, 0x3c, 0x9a, /**/ 0x2c, 0x26, 0x3f),
-    // fake wario
-    DEFINE_PLAYER_COLOR(0xf9, 0xeb, 0x30, /**/ 0x7f, 0x20, 0x7a),
-    
-    DEFINE_PLAYER_COLOR(0x7b, 0x00, 0xde, /**/ 0xff, 0x00, 0x00),
-    DEFINE_PLAYER_COLOR(0x95, 0x43, 0x01, /**/ 0xc6, 0xb1, 0x32),
-    DEFINE_PLAYER_COLOR(0x4c, 0x5f, 0x20, /**/ 0x07, 0x09, 0x07),
-    DEFINE_PLAYER_COLOR(0x00, 0x2f, 0xc8, /**/ 0xbf, 0xde, 0xff),
-    DEFINE_PLAYER_COLOR(0x11, 0x11, 0x11, /**/ 0xf8, 0x3b, 0x05),
-    DEFINE_PLAYER_COLOR(0xc1, 0x2c, 0x72, /**/ 0x34, 0x16, 0x0d),
-    DEFINE_PLAYER_COLOR(0xff, 0x96, 0xc8, /**/ 0xff, 0x00, 0x00),
-    DEFINE_PLAYER_COLOR(0x4c, 0xff, 0x4c, /**/ 0x81, 0x00, 0x00),
-    DEFINE_PLAYER_COLOR(0xa9, 0x78, 0xfc, /**/ 0x61, 0x3d, 0x2e),
-
-    DEFINE_PLAYER_COLOR(0x84, 0x60, 0x00, /**/ 0x00, 0x46, 0x5c),
-    DEFINE_PLAYER_COLOR(0x5a, 0x94, 0xff, /**/ 0x4f, 0x31, 0x8b),
-    DEFINE_PLAYER_COLOR(0x68, 0x0a, 0x17, /**/ 0x23, 0x11, 0x03),
-    DEFINE_PLAYER_COLOR(0x95, 0xd0, 0x8f, /**/ 0x53, 0x39, 0x3d),
-
-    DEFINE_PLAYER_COLOR(0x37, 0x32, 0x42, /**/ 0xe6, 0xe3, 0xff),
-    DEFINE_PLAYER_COLOR(0xff, 0x8a, 0x00, /**/ 0x00, 0x51, 0x10),
-    DEFINE_PLAYER_COLOR(0x65, 0xfa, 0xff, /**/ 0x4c, 0x1e, 0x3f),
-
-    DEFINE_PLAYER_COLOR(0xe6, 0xe6, 0xe6, /**/ 0xb2, 0x28, 0x18),
-    DEFINE_PLAYER_COLOR(0xe6, 0xe6, 0xe6, /**/ 0x00, 0x98, 0x00),
-    DEFINE_PLAYER_COLOR(0xe6, 0xe6, 0xe6, /**/ 0x6d, 0x3c, 0x9a),
-    DEFINE_PLAYER_COLOR(0xe6, 0xe6, 0xe6, /**/ 0xf9, 0xeb, 0x30),
-  
-    DEFINE_PLAYER_COLOR(0xe7, 0xe7, 0x21, /**/ 0x17, 0x18, 0x15),
-    DEFINE_PLAYER_COLOR(0xaa, 0x27, 0x31, /**/ 0xf7, 0x9a, 0x47),
-    DEFINE_PLAYER_COLOR(0x55, 0x92, 0xb2, /**/ 0xf7, 0xc2, 0x45),
-    DEFINE_PLAYER_COLOR(0x10, 0x1b, 0x2e, /**/ 0xeb, 0x8a, 0x4b),
-    DEFINE_PLAYER_COLOR(0x3b, 0x8f, 0xf7, /**/ 0xd6, 0x35, 0x4d),
-    DEFINE_PLAYER_COLOR(0xff, 0x8e, 0xb2, /**/ 0xd6, 0x35, 0x4d),
-
-    DEFINE_PLAYER_COLOR(0x47, 0xc5, 0xff, /**/ 0xb2, 0x28, 0x18),
-    DEFINE_PLAYER_COLOR(0x47, 0xc5, 0xff, /**/ 0x00, 0x98, 0x00),
-};
-
-const size_t gNumPlayerColors = sizeof(gPlayerColors) / sizeof(*gPlayerColors);
+struct PlayerColor gNetworkPlayerColors[MAX_PLAYERS];
 
 // This whole file is weirdly organized. It has to be the same file due
 // to rodata boundaries and function aligns, which means the programmer
 // treated this like a "misc" file for vaguely Mario related things
 // (message NPC related things, the Mario head geo, and Mario geo
 // functions)
-
-/**
- * Set the Light1 struct from player colors.
- * The 4th component is the shade factor (difference between ambient and diffuse),
- * usually set to 1.
- */
-void set_player_colors(u8 paletteIndex, const u8 shirt[4], const u8 pants[4]) {
-    // choose the last color in the table for extra players
-    if (paletteIndex >= gNumPlayerColors) paletteIndex = gNumPlayerColors - 1;
-    const u8 pAmb[3] = { pants[0] >> pants[3], pants[1] >> pants[3], pants[2] >> pants[3] };
-    const u8 sAmb[3] = { shirt[0] >> shirt[3], shirt[1] >> shirt[3], shirt[2] >> shirt[3] };
-    gPlayerColors[paletteIndex].pants =
-      (Lights1) gdSPDefLights1(pAmb[0], pAmb[1], pAmb[2], pants[0], pants[1], pants[2], 0x28, 0x28, 0x28);
-    gPlayerColors[paletteIndex].shirt =
-      (Lights1) gdSPDefLights1(sAmb[0], sAmb[1], sAmb[2], shirt[0], shirt[1], shirt[2], 0x28, 0x28, 0x28);
-}
-
-/**
- * Return the specified color for player globalIndex.
- * 0 = shirt, 1 = pants
- * Returns RGB, not RGBA!
- */
-u8 *get_player_color(u8 paletteIndex, const s32 which) {
-    // choose the last color in the table for extra players
-    if (paletteIndex >= gNumPlayerColors) paletteIndex = gNumPlayerColors - 1;
-    if (which == 0)
-        return gPlayerColors[paletteIndex].shirt.l[0].l.col;
-    else
-        return gPlayerColors[paletteIndex].pants.l[0].l.col;
-}
 
 /**
  * Geo node script that draws Mario's head on the title screen.
@@ -827,21 +752,26 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     Gfx* gfx = NULL;
     u8 index = geo_get_processing_object_index();
-    u8 colorIndex = gNetworkPlayers[index].overridePaletteIndex;
+
+    struct PlayerColor color = PALETTE_TO_LIGHTS(gNetworkPlayers[index].overridePalette);
+
+    gNetworkPlayerColors[index] = color;
+
     struct MarioBodyState* bodyState = &gBodyStates[index];
 
     if (callContext == GEO_CONTEXT_RENDER) {
         // extra players get last color
-        if (colorIndex >= gNumPlayerColors) colorIndex = gNumPlayerColors - 1;
-        gfx = alloc_display_list(5 * sizeof(*gfx));
+        gfx = alloc_display_list(7 * sizeof(*gfx));
         if (gfx == NULL) { return NULL; }
-        // put the player colors into lights 3, 4, 5, 6
+        // put the player colors into lights 3, 4, 5, 6, 7, 8
         // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
-        gSPLight(gfx + 0, &gPlayerColors[colorIndex].pants.l, 3);
-        gSPLight(gfx + 1, &gPlayerColors[colorIndex].pants.a, 4);
-        gSPLight(gfx + 2, &gPlayerColors[colorIndex].shirt.l, 5);
-        gSPLight(gfx + 3, &gPlayerColors[colorIndex].shirt.a, 6);
-        gSPEndDisplayList(gfx + 4);
+        gSPLight(gfx + 0, &gNetworkPlayerColors[index].parts[PANTS].l,  3);
+        gSPLight(gfx + 1, &gNetworkPlayerColors[index].parts[PANTS].a,  4);
+        gSPLight(gfx + 2, &gNetworkPlayerColors[index].parts[SHIRT].l,  5);
+        gSPLight(gfx + 3, &gNetworkPlayerColors[index].parts[SHIRT].a,  6);
+        gSPLight(gfx + 4, &gNetworkPlayerColors[index].parts[GLOVES].l, 7);
+        gSPLight(gfx + 5, &gNetworkPlayerColors[index].parts[GLOVES].a, 8);
+        gSPEndDisplayList(gfx + 6);
         u32 layer = LAYER_OPAQUE;
         if (asGenerated->parameter == 0) {
             // put on transparent layer if vanish effect, opaque otherwise
@@ -861,24 +791,30 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
 Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED Mat4* c) {
     if (callContext != GEO_CONTEXT_RENDER) { return NULL; }
     u8 globalIndex = geo_get_processing_object_index();
-    u8 colorIndex = gNetworkPlayers[globalIndex].overridePaletteIndex;
+
+    struct PlayerColor color = PALETTE_TO_LIGHTS(gNetworkPlayers[globalIndex].overridePalette);
+
+    gNetworkPlayerColors[globalIndex] = color;
+
     u8 charIndex = gNetworkPlayers[globalIndex].overrideModelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
     struct Character* character = &gCharacters[charIndex];
 
-    u8 dpLength = 5;
+    u8 dpLength = 7;
     if (character->capEnemyGfx      != NULL) { dpLength++; }
     if (character->capEnemyDecalGfx != NULL) { dpLength++; }
     Gfx* gfx = alloc_display_list(dpLength * sizeof(*gfx));
     if (gfx == NULL) { return NULL; }
     Gfx* onGfx = gfx;
 
-    // put the player colors into lights 3, 4, 5, 6
+    // put the player colors into lights 3, 4, 5, 6, 7, 8
     // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
-    gSPLight(onGfx++, &gPlayerColors[colorIndex].pants.l, 3);
-    gSPLight(onGfx++, &gPlayerColors[colorIndex].pants.a, 4);
-    gSPLight(onGfx++, &gPlayerColors[colorIndex].shirt.l, 5);
-    gSPLight(onGfx++, &gPlayerColors[colorIndex].shirt.a, 6);
+    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[PANTS].l,  3);
+    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[PANTS].a,  4);
+    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[SHIRT].l,  5);
+    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[SHIRT].a,  6);
+    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[GLOVES].l, 7);
+    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[GLOVES].a, 8);
     if (character->capEnemyGfx      != NULL) { gSPDisplayList(onGfx++, character->capEnemyGfx);      }
     if (character->capEnemyDecalGfx != NULL) { gSPDisplayList(onGfx++, character->capEnemyDecalGfx); }
     gSPEndDisplayList(onGfx++);

@@ -12,3 +12,4 @@ struct DjuiSlider {
 };
 
 struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max);
+void djui_slider_update_value(struct DjuiBase* base);

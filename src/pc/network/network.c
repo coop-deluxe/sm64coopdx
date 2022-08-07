@@ -127,7 +127,7 @@ bool network_init(enum NetworkType inNetworkType) {
         
         dynos_behavior_hook_all_custom_behaviors();
 
-        network_player_connected(NPT_LOCAL, 0, configPlayerModel, configPlayerPalette, configPlayerName);
+        network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName);
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 

@@ -64,7 +64,11 @@ override_field_types = {
 }
 
 override_field_mutable = {
-    "NetworkPlayer": [ "overrideModelIndex", "overridePaletteIndex" ],
+    "NetworkPlayer": [
+        "overrideModelIndex",
+        "overridePalette",
+        "overridePaletteIndex",
+    ],
 }
 
 override_field_invisible = {

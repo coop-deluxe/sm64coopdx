@@ -3687,7 +3687,8 @@ Gfx mat_waluigi_gloves_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPSetLights1(waluigi_gloves_v3_lights),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
     gsSPEndDisplayList(),
 };
 

@@ -2523,7 +2523,7 @@ SHAKE_SHOCK = 10
 SHAKE_SMALL_DAMAGE = 3
 
 --- @type integer
-PALETTE_MAX = 32
+PALETTE_PRESET_MAX = 32
 
 --- @class CharacterSound
 
@@ -2681,6 +2681,20 @@ CT_WARIO = 4
 
 --- @type CharacterType
 CT_MAX = 5
+
+--- @class PlayerParts
+
+--- @type PlayerParts
+SHIRT = 0
+
+--- @type PlayerParts
+PANTS = 1
+
+--- @type PlayerParts
+GLOVES = 2
+
+--- @type PlayerParts
+PLAYER_PART_MAX = 3
 
 --- @class DialogId
 
@@ -4459,6 +4473,9 @@ UNKNOWN_LOCAL_INDEX = (-1)
 
 --- @type integer
 UNKNOWN_NETWORK_INDEX = (-1)
+
+--- @type integer
+USE_REAL_PALETTE_VAR = 0xFF
 
 --- @class NetworkPlayerType
 

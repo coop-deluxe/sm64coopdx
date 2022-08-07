@@ -19,9 +19,9 @@ static char sDefaultPlayerName[] = "Player";
 
 void network_player_init(void) {
     gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : 0;
-    gNetworkPlayers[0].paletteIndex = configPlayerPalette;
+    gNetworkPlayers[0].palette = configPlayerPalette;
     gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
-    gNetworkPlayers[0].overridePaletteIndex = gNetworkPlayers[0].paletteIndex;
+    gNetworkPlayers[0].overridePalette = gNetworkPlayers[0].palette;
 }
 
 void network_player_update_model(u8 localIndex) {
@@ -169,7 +169,7 @@ void network_player_update(void) {
     }
 }
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char *name) {
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, char *name) {
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
     if (gNetworkType == NT_SERVER) {
@@ -198,9 +198,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }
 
         if (np->modelIndex   == np->overrideModelIndex)   { np->overrideModelIndex   = modelIndex;   }
-        if (np->paletteIndex == np->overridePaletteIndex) { np->overridePaletteIndex = paletteIndex; }
+        if (memcmp(&np->palette, &np->overridePalette, sizeof(struct PlayerPalette)) == 0) { np->overridePalette = *palette; }
         np->modelIndex = modelIndex;
-        np->paletteIndex = paletteIndex;
+        np->palette = *palette;
         network_player_update_model(localIndex);
 
         snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
@@ -228,9 +228,14 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     // update visuals
     np->fadeOpacity = 0;
     np->modelIndex = modelIndex;
-    np->paletteIndex = paletteIndex;
+    np->palette = *palette;
     np->overrideModelIndex = modelIndex;
-    np->overridePaletteIndex = paletteIndex;
+    np->overridePalette = *palette;
+
+    np->paletteIndex           = USE_REAL_PALETTE_VAR;
+    np->overridePaletteIndex   = USE_REAL_PALETTE_VAR;
+    np->overridePaletteIndexLp = USE_REAL_PALETTE_VAR;
+
     snprintf(np->name, MAX_PLAYER_STRING, "%s", name);
     network_player_update_model(localIndex);
 

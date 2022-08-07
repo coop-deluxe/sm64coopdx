@@ -8,6 +8,7 @@
 - [characters.h](#charactersh)
     - [enum CharacterSound](#enum-CharacterSound)
     - [enum CharacterType](#enum-CharacterType)
+    - [enum PlayerParts](#enum-PlayerParts)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_hud_utils.h](#djui_hud_utilsh)
@@ -809,7 +810,7 @@
 <br />
 
 ## [characters.h](#characters.h)
-- PALETTE_MAX
+- PALETTE_PRESET_MAX
 
 ### [enum CharacterSound](#CharacterSound)
 | Identifier | Value |
@@ -869,6 +870,14 @@
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
+
+### [enum PlayerParts](#PlayerParts)
+| Identifier | Value |
+| :--------- | :---- |
+| SHIRT | 0 |
+| PANTS | 1 |
+| GLOVES | 2 |
+| PLAYER_PART_MAX | 3 |
 
 [:arrow_up_small:](#)
 
@@ -1565,6 +1574,7 @@
 - UNKNOWN_GLOBAL_INDEX
 - UNKNOWN_LOCAL_INDEX
 - UNKNOWN_NETWORK_INDEX
+- USE_REAL_PALETTE_VAR
 
 ### [enum NetworkPlayerType](#NetworkPlayerType)
 | Identifier | Value |

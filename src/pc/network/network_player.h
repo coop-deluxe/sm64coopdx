@@ -10,6 +10,7 @@
 #define UNKNOWN_NETWORK_INDEX ((u64)-1)
 #define NETWORK_PLAYER_TIMEOUT 10
 #define MAX_RX_SEQ_IDS 64
+#define USE_REAL_PALETTE_VAR 0xFF
 
 enum NetworkPlayerType {
     NPT_UNKNOWN,
@@ -36,7 +37,7 @@ struct NetworkPlayer {
     u8 fadeOpacity;
     u8 onRxSeqId;
     u8 modelIndex;
-    u8 paletteIndex;
+    struct PlayerPalette palette;
     char name[MAX_PLAYER_STRING+1];
 
     char description[MAX_DESCRIPTION_STRING+1];
@@ -46,10 +47,15 @@ struct NetworkPlayer {
     u8 descriptionA;
 
     u8 overrideModelIndex;
-    u8 overridePaletteIndex;
+    struct PlayerPalette overridePalette;
 
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
     u32 rxPacketHash[MAX_RX_SEQ_IDS];
+
+    // legacy fields to allow mods not to break
+    u8 paletteIndex;
+    u8 overridePaletteIndex;
+    u8 overridePaletteIndexLp;
 };
 
 extern struct NetworkPlayer gNetworkPlayers[];
@@ -69,7 +75,7 @@ struct NetworkPlayer* get_network_player_smallest_global(void);
 
 void network_player_update(void);
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, u8 paletteIndex, char* name);
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, char* name);
 u8 network_player_disconnected(u8 globalIndex);
 
 void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);

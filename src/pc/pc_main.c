@@ -316,7 +316,6 @@ void main_func(void) {
     dynos_pack_init();
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
-    if (configPlayerPalette >= PALETTE_MAX) { configPlayerPalette = 0; }
 
     if (gCLIOpts.FullScreen == 1)
         configWindow.fullscreen = true;

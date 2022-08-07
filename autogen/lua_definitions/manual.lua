@@ -37,6 +37,12 @@ gLevelValues = {}
 --- @type BehaviorValues
 gBehaviorValues = {}
 
+--- @type BehaviorValues
+gBehaviorValues = {}
+
+--- @type PlayerPalette[]
+gPalettePresets = {}
+
 -----------
 -- hooks --
 -----------

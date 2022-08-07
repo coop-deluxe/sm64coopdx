@@ -2,6 +2,8 @@
 #define CONFIGFILE_H
 
 #include <stdbool.h>
+#include "PR/ultratypes.h"
+#include "game/characters.h"
 
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 
@@ -88,7 +90,7 @@ extern unsigned int configStayInLevelAfterStar;
 extern unsigned int configNetworkSystem;
 extern char         configPlayerName[];
 extern unsigned int configPlayerModel;
-extern unsigned int configPlayerPalette;
+extern struct PlayerPalette configPlayerPalette;
 extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;

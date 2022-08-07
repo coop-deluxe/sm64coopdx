@@ -45,17 +45,23 @@ static void djui_selectionbox_get_cursor_hover_location(struct DjuiBase* base, f
     *y = (rectBase->elem.y + rectBase->elem.height * 3.0f / 4.0f);
 }
 
+void djui_selectionbox_update_value(struct DjuiBase* base) {
+    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
+    djui_text_set_text(selectionbox->rectText, selectionbox->choices[*selectionbox->value]);
+}
+
 static void djui_selectionbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED bool inputCursor) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
     f32 x = selectionbox->rect->base.elem.x;
     if (gCursorX >= x) {
         *selectionbox->value = (*selectionbox->value + 1) % selectionbox->choiceCount;
-        djui_text_set_text(selectionbox->rectText, selectionbox->choices[*selectionbox->value]);
+        djui_selectionbox_update_value(base);
         if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
             base->interactable->on_value_change(base);
         }
     }
 }
+
 
 static void djui_selectionbox_destroy(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;

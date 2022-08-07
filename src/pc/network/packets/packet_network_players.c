@@ -33,7 +33,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
         packet_write(&p, &gNetworkPlayers[i].currAreaSyncValid,  sizeof(u8));
         packet_write(&p, &networkId,                             sizeof(s64));
         packet_write(&p, &gNetworkPlayers[i].modelIndex,         sizeof(u8));
-        packet_write(&p, &gNetworkPlayers[i].paletteIndex,       sizeof(u8));
+        packet_write(&p, &gNetworkPlayers[i].palette,            sizeof(struct PlayerPalette));
         packet_write(&p, &gNetworkPlayers[i].name,               sizeof(u8) * MAX_PLAYER_STRING);
         LOG_INFO("send network player [%d == %d]", gNetworkPlayers[i].globalIndex, npType);
     }
@@ -89,7 +89,8 @@ void network_receive_network_players(struct Packet *p) {
         s16 courseNum, actNum, levelNum, areaIndex;
         u8 levelSyncValid, areaSyncValid;
         s64 networkId;
-        u8 modelIndex, paletteIndex;
+        u8 modelIndex;
+        struct PlayerPalette palette;
         char playerName[MAX_PLAYER_STRING] = { 0 };
 
         packet_read(p, &npType,         sizeof(u8));
@@ -103,10 +104,10 @@ void network_receive_network_players(struct Packet *p) {
         packet_read(p, &areaSyncValid,  sizeof(u8));
         packet_read(p, &networkId,      sizeof(s64));
         packet_read(p, &modelIndex,     sizeof(u8));
-        packet_read(p, &paletteIndex,   sizeof(u8));
+        packet_read(p, &palette,        sizeof(struct PlayerPalette));
         packet_read(p, &playerName,     sizeof(u8) * MAX_PLAYER_STRING);
 
-        u8 localIndex = network_player_connected(npType, globalIndex, modelIndex, paletteIndex, playerName);
+        u8 localIndex = network_player_connected(npType, globalIndex, modelIndex, &palette, playerName);
         LOG_INFO("received network player [%d == %d] (%d)", globalIndex, npType, localIndex);
         if (localIndex != UNKNOWN_GLOBAL_INDEX) {
             struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
@@ -121,7 +122,7 @@ void network_receive_network_players(struct Packet *p) {
                 }
             } else {
                 np->modelIndex   = (modelIndex < CT_MAX) ? modelIndex : 0;
-                np->paletteIndex = paletteIndex;
+                np->palette      = palette;
                 network_player_update_model(localIndex);
             }
         }

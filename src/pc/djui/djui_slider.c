@@ -28,7 +28,7 @@ static void djui_slider_update_style(struct DjuiBase* base) {
     }
 }
 
-static void djui_slider_update_value(struct DjuiBase* base) {
+void djui_slider_update_value(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     u32  min   = slider->min;
     u32  max   = slider->max;

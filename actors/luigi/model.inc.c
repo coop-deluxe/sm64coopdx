@@ -473,8 +473,8 @@ const Gfx luigi_left_hand_closed_shared_dl[] = {
 };
 
 const Gfx luigi_left_hand_closed[] = {
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
 	gsSPDisplayList(luigi_left_hand_closed_shared_dl),
 	gsSPEndDisplayList(),
 };
@@ -711,8 +711,8 @@ const Gfx luigi_right_hand_closed_dl[] = {
 };
 
 const Gfx luigi_right_hand_closed[] = {
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
 	gsSPDisplayList(luigi_right_hand_closed_dl),
 	gsSPEndDisplayList(),
 };
@@ -3049,8 +3049,8 @@ const Gfx luigi_left_hand_open_shared_dl[] = {
 };
 
 const Gfx luigi_left_hand_open[] = {
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
     gsSPDisplayList(luigi_left_hand_open_shared_dl),
     gsSPEndDisplayList(),
 };
@@ -3191,8 +3191,8 @@ const Gfx luigi_right_hand_open_dl[] = {
 };
 
 const Gfx luigi_right_hand_open[] = {
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
     gsSPDisplayList(luigi_right_hand_open_dl),
     gsSPEndDisplayList(),
 };
@@ -3446,8 +3446,8 @@ const Gfx luigi_right_hand_cap_bottom_dl[] = {
 
 const Gfx luigi_right_hand_cap_dl[] = {
     gsSPDisplayList(luigi_right_hand_cap_top_dl),
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
     gsSPDisplayList(luigi_right_hand_cap_hand_position_dl),
     gsSPLight(&luigi_brown2_lights_group.l, 1),
     gsSPLight(&luigi_brown2_lights_group.a, 2),
@@ -3751,8 +3751,8 @@ const Gfx luigi_right_hand_peace_shared_dl[] = {
 };
 
 const Gfx luigi_right_hand_peace[] = {
-    gsSPLight(&luigi_white_lights_group.l, 1),
-    gsSPLight(&luigi_white_lights_group.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
     gsSPDisplayList(luigi_right_hand_peace_shared_dl),
     gsSPEndDisplayList(),
 };

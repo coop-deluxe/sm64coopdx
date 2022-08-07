@@ -26,7 +26,7 @@ extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
 static u8   sJoinRequestPlayerModel;
-static u8   sJoinRequestPlayerPalette;
+static struct PlayerPalette sJoinRequestPlayerPalette;
 static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
 
 void network_send_join_request(void) {
@@ -39,7 +39,7 @@ void network_send_join_request(void) {
     packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
-    packet_write(&p, &configPlayerPalette, sizeof(u8));
+    packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
     packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
@@ -52,11 +52,11 @@ void network_receive_join_request(struct Packet* p) {
 
     if (p->dataLength > 5) {
         packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
-        packet_read(p, &sJoinRequestPlayerPalette, sizeof(u8));
+        packet_read(p, &sJoinRequestPlayerPalette, sizeof(struct PlayerPalette));
         packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
     } else {
         sJoinRequestPlayerModel = 0;
-        sJoinRequestPlayerPalette = 0;
+        sJoinRequestPlayerPalette = DEFAULT_MARIO_PALETTE;
         snprintf(sJoinRequestPlayerName, MAX_PLAYER_STRING, "%s", "Player");
     }
 
@@ -83,7 +83,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     LOG_INFO("chose globalIndex: %d", globalIndex);
 
     // do connection event
-    network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, sJoinRequestPlayerPalette, sJoinRequestPlayerName);
+    network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName);
 
     fs_file_t* fp = fs_open(SAVE_FILENAME);
     if (fp != NULL) {
@@ -220,8 +220,8 @@ void network_receive_join(struct Packet* p) {
     }
     string_linked_list_free(&head);
 
-    network_player_connected(NPT_SERVER, 0, 0, 0, "Player");
-    network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, configPlayerPalette, configPlayerName);
+    network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player");
+    network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName);
     djui_chat_box_create();
 
     save_file_load_all(TRUE);

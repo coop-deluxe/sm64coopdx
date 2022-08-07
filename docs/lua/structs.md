@@ -48,6 +48,7 @@
 - [ParallelTrackingPoint](#ParallelTrackingPoint)
 - [PlayerCameraState](#PlayerCameraState)
 - [PlayerGeometry](#PlayerGeometry)
+- [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [SPTask](#SPTask)
 - [ServerSettings](#ServerSettings)
@@ -1123,7 +1124,10 @@
 | name | `string` | read-only |
 | onRxSeqId | `integer` | read-only |
 | overrideModelIndex | `integer` |  |
+| overridePalette | [PlayerPalette](structs.md#PlayerPalette) |  |
 | overridePaletteIndex | `integer` |  |
+| overridePaletteIndexLp | `integer` | read-only |
+| palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
 | paletteIndex | `integer` | read-only |
 | type | `integer` | read-only |
 
@@ -2002,6 +2006,15 @@
 | prevFloorHeight | `number` |  |
 | prevFloorType | `integer` |  |
 | waterHeight | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [PlayerPalette](#PlayerPalette)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
 
 [:arrow_up_small:](#)
 

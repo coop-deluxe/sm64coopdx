@@ -41,7 +41,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
 
     if (gNetworkType == NT_CLIENT) {
         if (gNetworkPlayerServer == NULL) {
-            network_player_connected(NPT_SERVER, 0, 0, 0, "Player");
+            network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player");
         }
         ns_discord_save_id(gNetworkPlayerServer->localIndex, lobby->owner_id);
         network_send_mod_list_request();

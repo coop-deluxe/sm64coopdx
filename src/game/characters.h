@@ -2,9 +2,25 @@
 #define CHARACTERS_H
 #include "PR/ultratypes.h"
 #include "types.h"
+#include "pc/configfile.h"
 // NOTE: do not include any additional headers
 
-#define PALETTE_MAX 32
+#define PALETTE_PRESET_MAX 32
+
+enum PlayerParts {
+    SHIRT, PANTS, GLOVES, PLAYER_PART_MAX
+    //SHOES (can't implement due to light limit)
+};
+
+#pragma pack(1)
+struct PlayerPalette {
+    //rgb
+    u8 parts[PLAYER_PART_MAX][3];
+};
+#pragma pack()
+
+extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
+extern const struct PlayerPalette gPalettePresets[PALETTE_PRESET_MAX];
 
 enum CharacterType {
     CT_MARIO,

@@ -807,8 +807,8 @@ const Gfx toad_player_dl_cap[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
 
-    gsSPLight(&toad_player_lights_cap.l, 1),
-    gsSPLight(&toad_player_lights_cap.a, 2),
+    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+    gsSPCopyLightEXT(2, 8),
 
     gsSPDisplayList(toad_player_dl_cap_inner),
 

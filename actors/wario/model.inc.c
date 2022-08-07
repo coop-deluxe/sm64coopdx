@@ -3670,7 +3670,8 @@ Gfx mat_wario_gloves[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsSPSetLights1(wario_white_lights_group),
+	gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
+	gsSPCopyLightEXT(2, 8),
 	gsSPEndDisplayList(),
 };
 

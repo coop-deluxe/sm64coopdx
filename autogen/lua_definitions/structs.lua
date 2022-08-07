@@ -786,7 +786,10 @@
 --- @field public name string
 --- @field public onRxSeqId integer
 --- @field public overrideModelIndex integer
+--- @field public overridePalette PlayerPalette
 --- @field public overridePaletteIndex integer
+--- @field public overridePaletteIndexLp integer
+--- @field public palette PlayerPalette
 --- @field public paletteIndex integer
 --- @field public type integer
 
@@ -1601,6 +1604,8 @@
 --- @field public prevFloorHeight number
 --- @field public prevFloorType integer
 --- @field public waterHeight number
+
+--- @class PlayerPalette
 
 --- @class RayIntersectionInfo
 --- @field public hitPos Vec3f
