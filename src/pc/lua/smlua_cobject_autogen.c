@@ -891,7 +891,7 @@ static struct LuaObjectField sModeTransitionInfoFields[LUA_MODE_TRANSITION_INFO_
     { "transitionStart", LVT_COBJECT, offsetof(struct ModeTransitionInfo, transitionStart), true,  LOT_LINEARTRANSITIONPOINT },
 };
 
-#define LUA_NETWORK_PLAYER_FIELD_COUNT 28
+#define LUA_NETWORK_PLAYER_FIELD_COUNT 29
 static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT] = {
     { "connected",              LVT_BOOL,    offsetof(struct NetworkPlayer, connected),              true,  LOT_NONE          },
     { "currActNum",             LVT_S16,     offsetof(struct NetworkPlayer, currActNum),             true,  LOT_NONE          },
@@ -901,6 +901,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "currLevelAreaSeqId",     LVT_U16,     offsetof(struct NetworkPlayer, currLevelAreaSeqId),     true,  LOT_NONE          },
     { "currLevelNum",           LVT_S16,     offsetof(struct NetworkPlayer, currLevelNum),           true,  LOT_NONE          },
     { "currLevelSyncValid",     LVT_BOOL,    offsetof(struct NetworkPlayer, currLevelSyncValid),     true,  LOT_NONE          },
+    { "currPositionValid",      LVT_BOOL,    offsetof(struct NetworkPlayer, currPositionValid),      true,  LOT_NONE          },
     { "description",            LVT_STRING,  offsetof(struct NetworkPlayer, description),            true,  LOT_NONE          },
     { "descriptionA",           LVT_U8,      offsetof(struct NetworkPlayer, descriptionA),           true,  LOT_NONE          },
     { "descriptionB",           LVT_U8,      offsetof(struct NetworkPlayer, descriptionB),           true,  LOT_NONE          },

@@ -7845,6 +7845,17 @@ WATER_STEP_HIT_WALL = 4
 --- @type integer
 WATER_STEP_NONE = 0
 
+--- @class LuaActionHookType
+
+--- @type LuaActionHookType
+ACTION_HOOK_EVERY_FRAME = 0
+
+--- @type LuaActionHookType
+ACTION_HOOK_GRAVITY = 1
+
+--- @type LuaActionHookType
+ACTION_HOOK_MAX = 2
+
 --- @class LuaHookedEventType
 
 --- @type LuaHookedEventType

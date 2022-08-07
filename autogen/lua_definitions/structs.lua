@@ -772,6 +772,7 @@
 --- @field public currLevelAreaSeqId integer
 --- @field public currLevelNum integer
 --- @field public currLevelSyncValid boolean
+--- @field public currPositionValid boolean
 --- @field public description string
 --- @field public descriptionA integer
 --- @field public descriptionB integer
