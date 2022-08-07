@@ -273,6 +273,6 @@ function act_race_shell_air(m)
     return 0
 end
 
-hook_mario_action(ACT_RIDING_SHELL_GROUND, act_race_shell_ground)
-hook_mario_action(ACT_RIDING_SHELL_JUMP, act_race_shell_air)
-hook_mario_action(ACT_RIDING_SHELL_FALL, act_race_shell_air)
+hook_mario_action(ACT_RIDING_SHELL_GROUND, { every_frame = act_race_shell_ground })
+hook_mario_action(ACT_RIDING_SHELL_JUMP, { every_frame = act_race_shell_air })
+hook_mario_action(ACT_RIDING_SHELL_FALL, { every_frame = act_race_shell_air })

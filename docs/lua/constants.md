@@ -45,6 +45,7 @@
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
 - [smlua_hooks.h](#smlua_hooksh)
+    - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
@@ -2765,6 +2766,13 @@
 <br />
 
 ## [smlua_hooks.h](#smlua_hooks.h)
+
+### [enum LuaActionHookType](#LuaActionHookType)
+| Identifier | Value |
+| :--------- | :---- |
+| ACTION_HOOK_EVERY_FRAME | 0 |
+| ACTION_HOOK_GRAVITY | 1 |
+| ACTION_HOOK_MAX | 2 |
 
 ### [enum LuaHookedEventType](#LuaHookedEventType)
 | Identifier | Value |

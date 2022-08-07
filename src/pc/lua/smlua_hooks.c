@@ -533,7 +533,7 @@ void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int
 struct LuaHookedMarioAction {
     u32 action;
     u32 interactionType;
-    int reference;
+    int actionHookRefs[ACTION_HOOK_MAX];
     struct Mod* mod;
 };
 
@@ -565,11 +565,11 @@ int smlua_hook_mario_action(lua_State* L) {
         return 0;
     }
 
-    lua_pushvalue(L, 2);
-    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    int secondParamType = lua_type(L, 2);
+    bool oldApi = secondParamType == LUA_TFUNCTION;
 
-    if (ref == -1) {
-        LOG_LUA_LINE("Hook Action: %lld tried to hook undefined function", action);
+    if (!oldApi && secondParamType != LUA_TTABLE) {
+        LOG_LUA_LINE("smlua_hook_mario_action received improper type '%d'", lua_type(L, 2));
         return 0;
     }
 
@@ -583,9 +583,45 @@ int smlua_hook_mario_action(lua_State* L) {
     }
 
     struct LuaHookedMarioAction* hooked = &sHookedMarioActions[sHookedMarioActionsCount];
+
+    // Support calling the function with just one function corresponding to the "every frame" hook instead of a full
+    // table with all hooks
+    if (oldApi) {
+        for (int i = 0; i < ACTION_HOOK_MAX; i++) {
+            hooked->actionHookRefs[i] = LUA_NOREF;
+        }
+
+        lua_pushvalue(L, 2);
+        int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+        if (ref == -1) {
+            LOG_LUA_LINE("Hook Action: %lld tried to hook undefined function", action);
+            return 0;
+        }
+
+        hooked->actionHookRefs[ACTION_HOOK_EVERY_FRAME] = ref;
+    }
+    else {
+        for (int i = 0; i < ACTION_HOOK_MAX; i++) {
+            lua_pushstring(L, LuaActionHookTypeArgName[i]);
+
+            if (lua_gettable(L, 2) == LUA_TNIL) {
+                hooked->actionHookRefs[i] = LUA_NOREF;
+            } else {
+                int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+                if (ref == -1) {
+                    LOG_LUA_LINE("Hook Action: %lld tried to hook undefined function", action);
+                    return 0;
+                }
+
+                hooked->actionHookRefs[i] = ref;
+            }
+        }
+    }
+
     hooked->action = action;
     hooked->interactionType = interactionType;
-    hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
     if (!gSmLuaConvertSuccess) { return 0; }
 
@@ -593,14 +629,16 @@ int smlua_hook_mario_action(lua_State* L) {
     return 1;
 }
 
-bool smlua_call_action_hook(struct MarioState* m, s32* returnValue) {
+bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
+
+    //TODO GAG: Set up things such that O(n) check isn't performed on every action hook? Maybe in MarioState?
     for (int i = 0; i < sHookedMarioActionsCount; i++) {
         struct LuaHookedMarioAction* hook = &sHookedMarioActions[i];
-        if (hook->action == m->action) {
+        if (hook->action == m->action && hook->actionHookRefs[hookType] != LUA_NOREF) {
             // push the callback onto the stack
-            lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference);
+            lua_rawgeti(L, LUA_REGISTRYINDEX, hook->actionHookRefs[hookType]);
 
             // push mario state
             lua_getglobal(L, "gMarioStates");
@@ -1084,7 +1122,7 @@ void smlua_clear_hooks(void) {
         struct LuaHookedMarioAction* hooked = &sHookedMarioActions[i];
         hooked->action = 0;
         hooked->mod = NULL;
-        hooked->reference = 0;
+        memset(hooked->actionHookRefs, 0, sizeof(hooked->actionHookRefs));
     }
     sHookedMarioActionsCount = 0;
 

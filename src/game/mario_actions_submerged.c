@@ -1593,7 +1593,7 @@ s32 mario_execute_submerged_action(struct MarioState *m) {
     m->marioBodyState->headAngle[1] = 0;
     m->marioBodyState->headAngle[2] = 0;
 
-    if (!smlua_call_action_hook(m, &cancel)) {
+    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, &cancel)) {
         /* clang-format off */
         switch (m->action) {
             case ACT_WATER_IDLE:                 cancel = act_water_idle(m);                 break;

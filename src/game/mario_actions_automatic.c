@@ -1072,7 +1072,7 @@ s32 mario_execute_automatic_action(struct MarioState *m) {
 
     m->quicksandDepth = 0.0f;
 
-    if (!smlua_call_action_hook(m, &cancel)) {
+    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, &cancel)) {
         /* clang-format off */
         switch (m->action) {
             case ACT_HOLDING_POLE:           cancel = act_holding_pole(m);           break;

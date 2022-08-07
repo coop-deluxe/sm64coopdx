@@ -273,7 +273,7 @@ bool is_game_paused(void) {
 ///
 
 u32 allocate_mario_action(u32 actFlags) {
-    actFlags = actFlags & (~((u32)0xFF));
+    actFlags = actFlags & (~((u32)0x3F));
     return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
 }
 

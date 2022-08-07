@@ -2200,7 +2200,7 @@ s32 mario_execute_airborne_action(struct MarioState *m) {
 
     play_far_fall_sound(m);
 
-    if (!smlua_call_action_hook(m, (s32*)&cancel)) {
+    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, (s32*)&cancel)) {
         /* clang-format off */
         switch (m->action) {
             case ACT_JUMP:                 cancel = act_jump(m);                 break;

@@ -36,8 +36,8 @@ end
 -- luigi --
 -----------
 
-ACT_SPIN_POUND_LAND = allocate_mario_action(ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
-ACT_SPIN_POUND      = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_SPIN_POUND_LAND = allocate_mario_action(ACT_GROUP_STATIONARY | ACT_FLAG_STATIONARY | ACT_FLAG_ATTACKING)
+ACT_SPIN_POUND      = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
 
 function act_spin_pound(m)
     local e = gStateExtras[m.playerIndex]
@@ -360,7 +360,7 @@ gEventTable[CT_TOAD] = {
 -- waluigi --
 -------------
 
-ACT_WALL_SLIDE = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WALL_SLIDE = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
 
 function act_wall_slide(m)
     if (m.input & INPUT_A_PRESSED) ~= 0 then
@@ -482,10 +482,10 @@ gEventTable[CT_WALUIGI] = {
 -- wario --
 -----------
 
-ACT_WARIO_DASH         = allocate_mario_action(ACT_FLAG_MOVING | ACT_FLAG_ATTACKING)
-ACT_WARIO_AIR_DASH     = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
-ACT_CORKSCREW_CONK     = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-ACT_WARIO_SPINNING_OBJ = allocate_mario_action(ACT_FLAG_STATIONARY)
+ACT_WARIO_DASH         = allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_ATTACKING)
+ACT_WARIO_AIR_DASH     = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_CORKSCREW_CONK     = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WARIO_SPINNING_OBJ = allocate_mario_action(ACT_GROUP_OBJECT | ACT_FLAG_STATIONARY)
 
 function act_corkscrew_conk(m)
     local e = gStateExtras[m.playerIndex]
@@ -1009,10 +1009,10 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
 hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 
-hook_mario_action(ACT_WALL_SLIDE, act_wall_slide)
-hook_mario_action(ACT_SPIN_POUND, act_spin_pound, INT_GROUND_POUND_OR_TWIRL)
-hook_mario_action(ACT_SPIN_POUND_LAND, act_spin_pound_land, INT_GROUND_POUND_OR_TWIRL)
-hook_mario_action(ACT_WARIO_DASH, act_wario_dash, INT_PUNCH)
-hook_mario_action(ACT_WARIO_AIR_DASH, act_wario_air_dash, INT_PUNCH)
-hook_mario_action(ACT_CORKSCREW_CONK, act_corkscrew_conk, INT_FAST_ATTACK_OR_SHELL)
-hook_mario_action(ACT_WARIO_SPINNING_OBJ, act_wario_spinning_obj)
+hook_mario_action(ACT_WALL_SLIDE,         { every_frame = act_wall_slide })
+hook_mario_action(ACT_SPIN_POUND,         { every_frame = act_spin_pound },      INT_GROUND_POUND_OR_TWIRL)
+hook_mario_action(ACT_SPIN_POUND_LAND,    { every_frame = act_spin_pound_land }, INT_GROUND_POUND_OR_TWIRL)
+hook_mario_action(ACT_WARIO_DASH,         { every_frame = act_wario_dash },      INT_PUNCH)
+hook_mario_action(ACT_WARIO_AIR_DASH,     { every_frame = act_wario_air_dash },  INT_PUNCH)
+hook_mario_action(ACT_CORKSCREW_CONK,     { every_frame = act_corkscrew_conk },  INT_FAST_ATTACK_OR_SHELL)
+hook_mario_action(ACT_WARIO_SPINNING_OBJ, { every_frame = act_wario_spinning_obj })

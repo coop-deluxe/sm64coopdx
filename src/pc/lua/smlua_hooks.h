@@ -66,6 +66,18 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_MAX"
 };
 
+enum LuaActionHookType {
+    ACTION_HOOK_EVERY_FRAME,
+    ACTION_HOOK_GRAVITY,
+    ACTION_HOOK_MAX,
+};
+
+static const char* LuaActionHookTypeArgName[] = {
+    "every_frame",
+    "gravity",
+    "max (dummy)",
+};
+
 extern u32 gLuaMarioActionIndex;
 
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName);
@@ -92,7 +104,7 @@ bool smlua_is_behavior_hooked(const BehaviorScript *behavior);
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before);
 
 int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod);
-bool smlua_call_action_hook(struct MarioState* m, s32* returnValue);
+bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* returnValue);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
 
 bool smlua_call_chat_command_hook(char* command);

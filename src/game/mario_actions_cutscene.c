@@ -2974,7 +2974,7 @@ s32 mario_execute_cutscene_action(struct MarioState *m) {
         return TRUE;
     }
 
-    if (!smlua_call_action_hook(m, &cancel)) {
+    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, &cancel)) {
         /* clang-format off */
         switch (m->action) {
             case ACT_DISAPPEARED:                cancel = act_disappeared(m);                break;

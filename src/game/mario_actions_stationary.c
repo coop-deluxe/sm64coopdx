@@ -1130,7 +1130,7 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
         return TRUE;
     }
 
-    if (!smlua_call_action_hook(m, &cancel)) {
+    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, &cancel)) {
         /* clang-format off */
         switch (m->action) {
             case ACT_IDLE:                    cancel = act_idle(m);                             break;
