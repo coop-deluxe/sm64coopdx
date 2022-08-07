@@ -574,4 +574,5 @@ struct Painting ttm_slide_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  460.8f,
+    /* Ripples */ { 0 },
 };

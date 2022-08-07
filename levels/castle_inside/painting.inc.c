@@ -1377,6 +1377,7 @@ struct Painting bob_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023698 - 0x07023710
@@ -1404,6 +1405,7 @@ struct Painting ccm_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023710 - 0x07023788
@@ -1431,6 +1433,7 @@ struct Painting wf_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023788 - 0x07023800
@@ -1458,6 +1461,7 @@ struct Painting jrb_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023800 - 0x07023878
@@ -1485,6 +1489,7 @@ struct Painting lll_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023878 - 0x070238F0
@@ -1512,6 +1517,7 @@ struct Painting ssl_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x070238F0 - 0x07023968
@@ -1539,6 +1545,7 @@ struct Painting hmc_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  768.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023968 - 0x070239E0
@@ -1566,6 +1573,7 @@ struct Painting ddd_painting = {
     /* Alpha */ 0xB4,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  819.2f,
+    /* Ripples */ { 0 },
 };
 
 // 0x070239E0 - 0x07023A58
@@ -1593,6 +1601,7 @@ struct Painting wdw_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  614.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023A58 - 0x07023AD0
@@ -1620,6 +1629,7 @@ struct Painting thi_tiny_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  393.216f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023AD0 - 0x07023B48
@@ -1647,6 +1657,7 @@ struct Painting ttm_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  256.0f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023B48 - 0x07023BC0
@@ -1674,6 +1685,7 @@ struct Painting ttc_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  409.6f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023BC0 - 0x07023C38
@@ -1701,6 +1713,7 @@ struct Painting sl_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  716.8f,
+    /* Ripples */ { 0 },
 };
 
 // 0x07023C38 - 0x07023CB0
@@ -1728,4 +1741,5 @@ struct Painting thi_huge_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  1638.4f,
+    /* Ripples */ { 0 },
 };

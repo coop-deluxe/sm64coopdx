@@ -132,37 +132,39 @@ struct Painting
     /// By default a painting is 614.0 x 614.0
     f32 size;
 
-    /// Index of MarioState who entered the painting this frame
-    s32 enteredMarioIndex;
-    /// Index of MarioState who went under the painting this frame
-    s32 underMarioIndex;
+    struct {
+        /// Index of MarioState who entered the painting this frame
+        s32 enteredMarioIndex;
+        /// Index of MarioState who went under the painting this frame
+        s32 underMarioIndex;
 
-    /// Painting floor and under state information for each Mario
-    s8 lastFloors[MAX_PLAYERS + 1];
-    s8 currFloors[MAX_PLAYERS + 1];
-    s8 floorEntereds[MAX_PLAYERS + 1];
-    s8 wasUnders[MAX_PLAYERS + 1];
-    s8 isUnders[MAX_PLAYERS + 1];
-    s8 wentUnders[MAX_PLAYERS + 1];
-    f32 rippleXs[MAX_PLAYERS + 1];
-    f32 rippleYs[MAX_PLAYERS + 1];
-    f32 rippleTimers[MAX_PLAYERS + 1];
-    f32 currRippleMags[MAX_PLAYERS + 1];
-    f32 rippleDecays[MAX_PLAYERS + 1];
-    f32 rippleRates[MAX_PLAYERS + 1];
-    f32 dispersionFactors[MAX_PLAYERS + 1];
+        /// Painting floor and under state information for each Mario
+        s8 lastFloors[MAX_PLAYERS + 1];
+        s8 currFloors[MAX_PLAYERS + 1];
+        s8 floorEntereds[MAX_PLAYERS + 1];
+        s8 wasUnders[MAX_PLAYERS + 1];
+        s8 isUnders[MAX_PLAYERS + 1];
+        s8 wentUnders[MAX_PLAYERS + 1];
+        f32 rippleXs[MAX_PLAYERS + 1];
+        f32 rippleYs[MAX_PLAYERS + 1];
+        f32 rippleTimers[MAX_PLAYERS + 1];
+        f32 currRippleMags[MAX_PLAYERS + 1];
+        f32 rippleDecays[MAX_PLAYERS + 1];
+        f32 rippleRates[MAX_PLAYERS + 1];
+        f32 dispersionFactors[MAX_PLAYERS + 1];
 
-    struct PaintingMeshVertex *paintingMesh;
-    Vec3f *paintingTriNorms;
+        struct PaintingMeshVertex *paintingMesh;
+        Vec3f *paintingTriNorms;
 
-    Vtx_Interp sVertexBuffers[2][2 * 264 * 3];
-    u8 sVerticesCurIndex;
-    u8 sVertexSwaps;
-    Vtx_Interp* sVerticesCur;
-    Vtx_Interp* sVerticesPrev;
-    u32 sVerticesPrevTimestamp;
-    Vtx *sVerticesPtr[2];
-    s32 sVerticesCount;
+        Vtx_Interp sVertexBuffers[2][2 * 264 * 3];
+        u8 sVerticesCurIndex;
+        u8 sVertexSwaps;
+        Vtx_Interp* sVerticesCur;
+        Vtx_Interp* sVerticesPrev;
+        u32 sVerticesPrevTimestamp;
+        Vtx *sVerticesPtr[2];
+        s32 sVerticesCount;
+    } ripples;
 };
 
 /**

@@ -545,4 +545,5 @@ struct Painting cotmc_painting = {
     /* Alpha */ 0xFF,
     /* Mario Below */  0x00, 0x00, 0x00, /* Whether or not Mario is below the painting */
     /* Size */  723.968018f,
+    /* Ripples */ { 0 },
 };
