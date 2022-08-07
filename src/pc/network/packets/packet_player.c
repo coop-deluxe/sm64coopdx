@@ -222,7 +222,7 @@ void network_receive_player(struct Packet* p) {
         || np->currActNum    != gNetworkPlayerLocal->currActNum
         || np->currLevelNum  != gNetworkPlayerLocal->currLevelNum
         || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
-    if (levelAreaMismatch) { return; }
+    if (levelAreaMismatch) { np->currPositionValid = false; return; }
 
     // save previous state
     struct PacketPlayerData oldData = { 0 };
@@ -369,6 +369,9 @@ void network_receive_player(struct Packet* p) {
         vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
         vec3s_copy(m->marioObj->header.gfx.angle, m->faceAngle);
     }
+
+    // Player's position is valid since it's updated and in the same area as the local player
+    np->currPositionValid = true;
 
 #ifndef DEVELOPMENT
     if (gNetworkType == NT_SERVER && gServerSettings.enableCheats == 0) {

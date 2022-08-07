@@ -32,6 +32,22 @@
 /// Painting that has one texture used for an environment map effect
 #define PAINTING_ENV_MAP 1
 
+// calculate_ripple_at_point modes
+
+/// Only one ripple
+#define SINGLE_RIPPLE 0
+/// The sum of the ripples
+#define ADD_RIPPLES 1
+/// The highest ripple
+#define HIGHEST_RIPPLE 2
+/// The ripple furthest from 0
+#define GREATEST_RIPPLE 3
+
+typedef struct {
+	float		ob[3];	/* x, y, z */
+	signed char	n[3];	/* normal */
+} Vtx_Interp;
+
 struct Painting
 {
     s16 id;
@@ -115,6 +131,38 @@ struct Painting
     /// Uniformly scales the painting to a multiple of PAINTING_SIZE.
     /// By default a painting is 614.0 x 614.0
     f32 size;
+
+    /// Index of MarioState who entered the painting this frame
+    s32 enteredMarioIndex;
+    /// Index of MarioState who went under the painting this frame
+    s32 underMarioIndex;
+
+    /// Painting floor and under state information for each Mario
+    s8 lastFloors[MAX_PLAYERS + 1];
+    s8 currFloors[MAX_PLAYERS + 1];
+    s8 floorEntereds[MAX_PLAYERS + 1];
+    s8 wasUnders[MAX_PLAYERS + 1];
+    s8 isUnders[MAX_PLAYERS + 1];
+    s8 wentUnders[MAX_PLAYERS + 1];
+    f32 rippleXs[MAX_PLAYERS + 1];
+    f32 rippleYs[MAX_PLAYERS + 1];
+    f32 rippleTimers[MAX_PLAYERS + 1];
+    f32 currRippleMags[MAX_PLAYERS + 1];
+    f32 rippleDecays[MAX_PLAYERS + 1];
+    f32 rippleRates[MAX_PLAYERS + 1];
+    f32 dispersionFactors[MAX_PLAYERS + 1];
+
+    struct PaintingMeshVertex *paintingMesh;
+    Vec3f *paintingTriNorms;
+
+    Vtx_Interp sVertexBuffers[2][2 * 264 * 3];
+    u8 sVerticesCurIndex;
+    u8 sVertexSwaps;
+    Vtx_Interp* sVerticesCur;
+    Vtx_Interp* sVerticesPrev;
+    u32 sVerticesPrevTimestamp;
+    Vtx *sVerticesPtr[2];
+    s32 sVerticesCount;
 };
 
 /**

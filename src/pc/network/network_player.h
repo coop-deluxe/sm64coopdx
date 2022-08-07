@@ -32,6 +32,7 @@ struct NetworkPlayer {
     s16 currAreaIndex;
     bool currLevelSyncValid;
     bool currAreaSyncValid;
+    bool currPositionValid;
     u8 fadeOpacity;
     u8 onRxSeqId;
     u8 modelIndex;

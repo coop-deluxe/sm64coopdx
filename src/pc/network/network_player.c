@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include "network_player.h"
+#include "types.h"
+#include "object_fields.h"
 #include "game/mario_misc.h"
 #include "reservation_area.h"
 #include "pc/djui/djui.h"
@@ -221,6 +222,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->currLevelAreaSeqId = 0;
     np->currLevelSyncValid = false;
     np->currAreaSyncValid = false;
+    np->currPositionValid = false;
     network_player_update_course_level(np, 0, 0, gLevelValues.entryLevel, 1);
 
     // update visuals
@@ -363,12 +365,28 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     np->currLevelNum  = levelNum;
     np->currAreaIndex = areaIndex;
 
+    // Whether the new np location differs from the local location
+    bool mismatchLocal = (np->currCourseNum != gCurrCourseNum)
+                      || (np->currActNum != gCurrActNum)
+                      || (np->currLevelNum != gCurrLevelNum)
+                      || (np->currAreaIndex != gCurrAreaIndex);
+    if (mismatchLocal) {
+        np->currPositionValid = false;
+    }
+
     if (mismatch) {
         if (np == gNetworkPlayerLocal) {
             network_send_level_area_inform();
 
             for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
                 so->txEventId = 0;
+            }
+
+            // If this machine's player changed to a different location, then all of the other np locations are no longer valid
+            for (u32 i = 0; i < MAX_PLAYERS + 1; i++) {
+                struct NetworkPlayer* npi = &gNetworkPlayers[i];
+                if ((!npi->connected) || npi == gNetworkPlayerLocal) { continue; }
+                npi->currPositionValid = false;
             }
 
         } else {
