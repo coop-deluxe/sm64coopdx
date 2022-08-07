@@ -1262,13 +1262,13 @@ function mario_update(m)
     local s = gPlayerSyncTable[m.playerIndex]
     local np = gNetworkPlayers[m.playerIndex]
     if s.team == 2 then
-        np.overridePalette = gPalettePresets[7]
+        np.overridePaletteIndex = 7
         m.marioBodyState.modelState = 0
     elseif s.team == 1 then
-        np.overridePalette = gPalettePresets[15]
+        np.overridePaletteIndex = 15
         m.marioBodyState.modelState = 0
     else
-        np.overridePalette = np.palette
+        np.overridePaletteIndex = np.paletteIndex
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
     end
     m.health = 0x880

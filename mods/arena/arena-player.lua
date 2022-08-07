@@ -372,11 +372,11 @@ function mario_update(m)
 
     -- update palette
     if s.team == 2 then
-        np.overridePalette = gPalettePresets[7]
+        np.overridePaletteIndex = 7
     elseif s.team == 1 then
-        np.overridePalette = gPalettePresets[15]
+        np.overridePaletteIndex = 15
     else
-        np.overridePalette = np.palette
+        np.overridePaletteIndex = np.paletteIndex
     end
 
     -- set metal
