@@ -193,6 +193,7 @@ struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool,
                                                f32 *focus, GraphNodeFunc func, s32 mode) {
     if (pool != NULL) {
         graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeCamera));
+        graphNode->config.camera = NULL;
     }
 
     if (graphNode != NULL) {
