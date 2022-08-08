@@ -1291,6 +1291,7 @@ s32 transition_submerged_to_walking(struct MarioState *m) {
  */
 s32 set_water_plunge_action(struct MarioState *m) {
     if (m->action == ACT_BUBBLED) { return FALSE; }
+    if (m->action == ACT_IN_CANNON) { return FALSE; }
 
     m->forwardVel = m->forwardVel / 4.0f;
     m->vel[1] = m->vel[1] / 2.0f;
