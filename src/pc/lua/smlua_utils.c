@@ -513,6 +513,11 @@ LuaFunction smlua_get_function_field(int index, char *name) {
 s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable) {
     lua_State* L = gLuaState;
 
+    if (!gActiveMods.entries) {
+        LOG_ERROR("Could not find mod list entries");
+        return 0;
+    }
+
     // figure out entry
     struct Mod* mod = gActiveMods.entries[modIndex];
     if (mod == NULL) {

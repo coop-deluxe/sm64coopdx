@@ -1,5 +1,6 @@
 #include <ultra64.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "sm64.h"
 #include "seq_ids.h"
@@ -61,6 +62,8 @@ s16 gChangeLevel = -1;
 s16 gChangeLevelTransition = -1;
 s16 gChangeAreaIndex = -1;
 s16 gChangeActNum = -1;
+
+static bool sFirstCastleGroundsMenu = true;
 
 // TODO: Make these ifdefs better
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
@@ -1309,54 +1312,166 @@ static s32 play_mode_unused(void) {
     return 0;
 }
 
-s32 update_level(void) {
+void update_menu_level(void) {
 
-    //Probably an awful spot to put this, but hey, it works.
-    if (gDjuiInMainMenu) {
-        
-        int curLevel = 0;
+    // figure out level
+    int curLevel = 0;
+    switch (configMenuLevel) {
+        case 0:  curLevel = LEVEL_CASTLE_GROUNDS; break;
+        case 1:  curLevel = LEVEL_BOB;            break;
+        case 2:  curLevel = LEVEL_WF;             break;
+        case 3:  curLevel = LEVEL_WMOTR;          break;
+        case 4:  curLevel = LEVEL_JRB;            break;
+        case 5:  curLevel = LEVEL_SSL;            break;
+        case 6:  curLevel = LEVEL_TTM;            break;
+        case 7:  curLevel = LEVEL_SL;             break;
+        case 8:  curLevel = LEVEL_BBH;            break;
+        case 9:  curLevel = LEVEL_LLL;            break;
+        case 10: curLevel = LEVEL_THI;            break;
+        default: curLevel = LEVEL_CASTLE_GROUNDS; break;
+    }
 
-        switch (configMenuLevel) {
-            case 0:
-                curLevel = LEVEL_CASTLE_GROUNDS;
-                break;
-            case 1:
-                curLevel = LEVEL_BOB;
-                break;
-            case 2:
-                curLevel = LEVEL_WF;
-                break;
-            case 3:
-                curLevel = LEVEL_WMOTR;
-                break;
-            case 4:
-                curLevel = LEVEL_JRB;
-                break;
-            case 5:
-                curLevel = LEVEL_SSL;
-                break;
-            case 6:
-                curLevel = LEVEL_TTM;
-                break;
-            case 7:
-                curLevel = LEVEL_SL;
-                break;
-            case 8:
-                curLevel = LEVEL_BBH;
-                break;
-            case 9:
-                curLevel = LEVEL_LLL;
-                break;
-            case 10:
-                curLevel = LEVEL_THI;
-                break;
-                
-            default:
-                curLevel = 16;
-                break;
+    // warp to level
+    if (gCurrLevelNum != curLevel) {
+        if (curLevel == LEVEL_JRB) {
+            dynos_warp_to_level(curLevel, 1, 2);
+        } else if (curLevel == LEVEL_THI) {
+            dynos_warp_to_level(curLevel, 2, 6);
+        } else {
+            dynos_warp_to_level(curLevel, 1, 6);
         }
+    }
+
+    // set mario/camera pos
+    if (gCurrLevelNum == LEVEL_CASTLE_GROUNDS) {
+        if (!sFirstCastleGroundsMenu) {
+            gMarioState->pos[0] = -1328;
+            gMarioState->pos[1] = 260;
+            gMarioState->pos[2] = 4664;
+            gMarioState->faceAngle[1] = 0x0;
+            gLakituState.curPos[1] = 390;
+            gLakituState.curPos[0] = -1328;
+            gLakituState.curPos[2] = 6064;
+        }
+    } else if (gCurrLevelNum == LEVEL_BOB) {
+        gMarioState->pos[0] = 7008;
+        gMarioState->pos[1] = 864;
+        gMarioState->pos[2] = 1943;
+        gLakituState.curPos[1] = 1064;
+        gLakituState.curPos[2] = 2843;
+        gLakituState.curPos[0] = 7908;
+        gMarioState->faceAngle[1] = 0x2000;
+
+        // delete all goombas as they interfere with the main menu
+
+        struct Object *o;
+
+        o = find_object_with_behavior(bhvGoomba);
+
+        if (o != NULL) {
+            if (obj_has_behavior(o, bhvGoomba)) {
+                obj_mark_for_deletion(o);
+            }
+        }
+
+    } else if (gCurrLevelNum == LEVEL_WF) {
+        gLakituState.curPos[1] = 2760;
+        gLakituState.curPos[2] = -777;
+        gLakituState.curPos[0] = -4504;
+        gMarioState->pos[1] = 2560;
+        gMarioState->pos[2] = -327;
+        gMarioState->pos[0] = -2904;
+        gMarioState->faceAngle[1] = -31072 / 2;
+    } else if (gCurrLevelNum == LEVEL_WMOTR) {
+        gLakituState.curPos[1] = -2438;
+        gLakituState.curPos[2] = 6063;
+        gLakituState.curPos[0] = 3548;
+        gMarioState->pos[1] = -2738;
+        gMarioState->pos[2] = 4663;
+        gMarioState->pos[0] = 3548;
+        gMarioState->faceAngle[1] = 0;
+    } else if (gCurrLevelNum == LEVEL_JRB) {
+        gLakituState.curPos[1] = 1736;
+        gLakituState.curPos[2] = 6402;
+        gLakituState.curPos[0] = 5039;
+        gMarioState->pos[1] = 1536;
+        gMarioState->pos[2] = 6202;
+        gMarioState->pos[0] = 3639;
+    } else if (gCurrLevelNum == LEVEL_SSL) {
+        gLakituState.curPos[1] = 356;
+        gLakituState.curPos[2] = 2461;
+        gLakituState.curPos[0] = -2048;
+        gMarioState->pos[1] = 256;
+        gMarioState->pos[2] = 961;
+        gMarioState->pos[0] = -2048;
+        gMarioState->faceAngle[1] = 0;
+    } else if (gCurrLevelNum == LEVEL_TTM) {
+        gLakituState.curPos[1] = 1763;
+        gLakituState.curPos[2] = 3411;
+        gLakituState.curPos[0] = 3488;
+        gMarioState->pos[1] = 1460;
+        gMarioState->pos[2] = 2011;
+        gMarioState->pos[0] = 2488;
+        gMarioState->faceAngle[1] = 0x1000;
+    } else if (gCurrLevelNum == LEVEL_SL) {
+        gLakituState.curPos[1] = 1124;
+        gLakituState.curPos[2] = 443;
+        gLakituState.curPos[0] = 6994;
+        gMarioState->pos[1] = 1024;
+        gMarioState->pos[2] = 443;
+        gMarioState->pos[0] = 5494;
+        gMarioState->faceAngle[1] = 0x4000;
+    } else if (gCurrLevelNum == LEVEL_BBH) {
+        gLakituState.curPos[1] = -204;
+        gLakituState.curPos[2] = 6803;
+        gLakituState.curPos[0] = 666;
+        gMarioState->pos[1] = -204;
+        gMarioState->pos[2] = 5303;
+        gMarioState->pos[0] = 666;
+        gMarioState->faceAngle[1] = 0;
+    } else if (gCurrLevelNum == LEVEL_LLL) {
+        gLakituState.curPos[1] = 938;
+        gLakituState.curPos[2] = 1576;
+        gLakituState.curPos[0] = -3576;
+        gMarioState->pos[1] = 638;
+        gMarioState->pos[2] = 956;
+        gMarioState->pos[0] = -2376;
+        gMarioState->faceAngle[1] = -0x2800;
+    } else if (gCurrLevelNum == LEVEL_THI) {
+        gLakituState.curPos[1] = 431;
+        gLakituState.curPos[2] = -324;
+        gLakituState.curPos[0] = -2246;
+        gMarioState->pos[1] = 341;
+        gMarioState->pos[2] = -324;
+        gMarioState->pos[0] = -1010;
+        gMarioState->faceAngle[1] = -0x4000;
+
+        // delete all goombas as they interfere with the main menu
+
+        struct Object *o;
+
+        o = find_object_with_behavior(bhvGoomba);
+
+        if (o != NULL) {
+            if (obj_has_behavior(o, bhvGoomba)) {
+                obj_mark_for_deletion(o);
+            }
+        }
+    }
+
+    // reset input
+    gMarioState->input = 0;
+
+    // figure out music
+    if (!configMenuSound) {
+        reset_volume();
+        disable_background_sound();
+        set_background_music(0, 0x0021, 0);
+    } else {
+        reset_volume();
+        disable_background_sound();
         
-        if (gCurrLevelNum != curLevel) {
+        if (get_current_background_music() == 0x0021) {
             if (curLevel == LEVEL_JRB) {
                 dynos_warp_to_level(curLevel, 1, 2);
             } else if (curLevel == LEVEL_THI) {
@@ -1364,144 +1479,17 @@ s32 update_level(void) {
             } else {
                 dynos_warp_to_level(curLevel, 1, 6);
             }
-        } else if (curLevel == LEVEL_CASTLE_GROUNDS && gCurrActNum != 16) {
-            dynos_warp_to_level(curLevel, 1, 16);
         }
-        
-        if (gCurrLevelNum == LEVEL_CASTLE_GROUNDS) {
-            gMarioState->pos[0] = -1328;
-            gMarioState->pos[1] = 260;
-            gMarioState->pos[2] = 4664;
-            gLakituState.curPos[1] = 390;
-            gLakituState.curPos[0] = -1328;
-            gLakituState.curPos[2] = 6064;
-        } else if (gCurrLevelNum == LEVEL_BOB) {
-            gMarioState->pos[0] = 7008;
-            gMarioState->pos[1] = 864;
-            gMarioState->pos[2] = 1943;
-            gLakituState.curPos[1] = 1064;
-            gLakituState.curPos[2] = 2843;
-            gLakituState.curPos[0] = 7908;
-            gMarioState->faceAngle[1] = 0x2000;
+    }
+}
 
-            // delete all goombas as they interfere with the main menu
+s32 update_level(void) {
 
-            struct Object *o;
-
-            o = find_object_with_behavior(bhvGoomba);
-
-            if (o != NULL) {
-                if (obj_has_behavior(o, bhvGoomba)) {
-                    obj_mark_for_deletion(o);
-                }
-            }
-
-        } else if (gCurrLevelNum == LEVEL_WF) {
-            gLakituState.curPos[1] = 2760;
-            gLakituState.curPos[2] = -777;
-            gLakituState.curPos[0] = -4504;
-            gMarioState->pos[1] = 2560;
-            gMarioState->pos[2] = -327;
-            gMarioState->pos[0] = -2904;
-            gMarioState->faceAngle[1] = -31072 / 2;
-        } else if (gCurrLevelNum == LEVEL_WMOTR) {
-            gLakituState.curPos[1] = -2438;
-            gLakituState.curPos[2] = 6063;
-            gLakituState.curPos[0] = 3548;
-            gMarioState->pos[1] = -2738;
-            gMarioState->pos[2] = 4663;
-            gMarioState->pos[0] = 3548;
-            gMarioState->faceAngle[1] = 0;
-        } else if (gCurrLevelNum == LEVEL_JRB) {
-            gLakituState.curPos[1] = 1736;
-            gLakituState.curPos[2] = 6402;
-            gLakituState.curPos[0] = 5039;
-            gMarioState->pos[1] = 1536;
-            gMarioState->pos[2] = 6202;
-            gMarioState->pos[0] = 3639;
-        } else if (gCurrLevelNum == LEVEL_SSL) {
-            gLakituState.curPos[1] = 356;
-            gLakituState.curPos[2] = 2461;
-            gLakituState.curPos[0] = -2048;
-            gMarioState->pos[1] = 256;
-            gMarioState->pos[2] = 961;
-            gMarioState->pos[0] = -2048;
-            gMarioState->faceAngle[1] = 0;
-        } else if (gCurrLevelNum == LEVEL_TTM) {
-            gLakituState.curPos[1] = 1763;
-            gLakituState.curPos[2] = 3411;
-            gLakituState.curPos[0] = 3488;
-            gMarioState->pos[1] = 1460;
-            gMarioState->pos[2] = 2011;
-            gMarioState->pos[0] = 2488;
-            gMarioState->faceAngle[1] = 0x1000;
-        } else if (gCurrLevelNum == LEVEL_SL) {
-            gLakituState.curPos[1] = 1124;
-            gLakituState.curPos[2] = 443;
-            gLakituState.curPos[0] = 6994;
-            gMarioState->pos[1] = 1024;
-            gMarioState->pos[2] = 443;
-            gMarioState->pos[0] = 5494;
-            gMarioState->faceAngle[1] = 0x4000;
-        } else if (gCurrLevelNum == LEVEL_BBH) {
-            gLakituState.curPos[1] = -204;
-            gLakituState.curPos[2] = 6803;
-            gLakituState.curPos[0] = 666;
-            gMarioState->pos[1] = -204;
-            gMarioState->pos[2] = 5303;
-            gMarioState->pos[0] = 666;
-            gMarioState->faceAngle[1] = 0;
-        } else if (gCurrLevelNum == LEVEL_LLL) {
-            gLakituState.curPos[1] = 938;
-            gLakituState.curPos[2] = 1576;
-            gLakituState.curPos[0] = -3576;
-            gMarioState->pos[1] = 638;
-            gMarioState->pos[2] = 956;
-            gMarioState->pos[0] = -2376;
-            gMarioState->faceAngle[1] = -0x2800;
-        } else if (gCurrLevelNum == LEVEL_THI) {
-            gLakituState.curPos[1] = 431;
-            gLakituState.curPos[2] = -324;
-            gLakituState.curPos[0] = -2246;
-            gMarioState->pos[1] = 341;
-            gMarioState->pos[2] = -324;
-            gMarioState->pos[0] = -1010;
-            gMarioState->faceAngle[1] = -0x4000;
-
-            // delete all goombas as they interfere with the main menu
-
-            struct Object *o;
-
-            o = find_object_with_behavior(bhvGoomba);
-
-            if (o != NULL) {
-                if (obj_has_behavior(o, bhvGoomba)) {
-                    obj_mark_for_deletion(o);
-                }
-            }
-        }
-        
-        gMarioState->input = 0;
-        
-        if (!configMenuSound) {
-            reset_volume();
-            disable_background_sound();
-            set_background_music(0, 0x0021, 0);
-        }
-        else {
-            reset_volume();
-            disable_background_sound();
-            
-            if (get_current_background_music() == 0x0021) {
-                if (curLevel == LEVEL_JRB) {
-                    dynos_warp_to_level(curLevel, 1, 2);
-                } else if (curLevel == LEVEL_THI) {
-                dynos_warp_to_level(curLevel, 2, 6);
-                } else {
-                    dynos_warp_to_level(curLevel, 1, 6);
-                }
-            }
-        }
+    // update main menu level
+    if (gDjuiInMainMenu) {
+        update_menu_level();
+    } else {
+        sFirstCastleGroundsMenu = false;
     }
     
     s32 changeLevel = 0;
@@ -1615,18 +1603,20 @@ s32 init_level(void) {
                 if (gMarioState->action != ACT_UNINITIALIZED) {
                     bool skipIntro = (gNetworkType == NT_NONE || gServerSettings.skipIntro != 0);
                     if (gDjuiInMainMenu && (gNetworkType == NT_NONE)) {
-                        set_mario_action(gMarioState, ACT_IDLE, 0);
+                        // pick random main menu level
                         if (configMenuRandom) {
-                            #include <time.h>
-                            
                             int lower = 0, upper = 10;
-                            
                             srand(time(0));
-                            
                             int randLevel = (rand() % (upper - lower + 1)) + lower;
-                            
                             configMenuLevel = randLevel;
                         }
+
+                        if (configMenuLevel == 0 && sFirstCastleGroundsMenu) {
+                            set_mario_action(gMarioState, ACT_INTRO_CUTSCENE, 7);
+                        } else {
+                            set_mario_action(gMarioState, ACT_IDLE, 0);
+                        }
+
                     } else if (skipIntro || save_file_exists(gCurrSaveFileNum - 1)) {
                         set_mario_action(gMarioState, ACT_IDLE, 0);
                     } else {

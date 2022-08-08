@@ -32,9 +32,9 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
 
 void djui_panel_options_create(struct DjuiBase* caller) {
 #ifdef DEVELOPMENT
-    f32 bodyHeight = 64 * 7 + 16 * 12;
+    f32 bodyHeight = 64 * 8 + 16 * 7;
 #else
-    f32 bodyHeight = 64 * 6 + 16 * 11;
+    f32 bodyHeight = 64 * 7 + 16 * 6;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
