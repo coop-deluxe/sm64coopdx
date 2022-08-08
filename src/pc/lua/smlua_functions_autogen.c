@@ -15996,7 +15996,7 @@ int smlua_func_save_file_erase(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     s32 fileIndex = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'save_file_erase'"); return 0; }
 
     save_file_erase(fileIndex);
 
@@ -16129,11 +16129,11 @@ int smlua_func_save_file_set_star_flags(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
     s32 fileIndex = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'save_file_set_star_flags'"); return 0; }
     s32 courseIndex = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'save_file_set_star_flags'"); return 0; }
     u32 starFlags = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'save_file_set_star_flags'"); return 0; }
 
     save_file_set_star_flags(fileIndex, courseIndex, starFlags);
 
