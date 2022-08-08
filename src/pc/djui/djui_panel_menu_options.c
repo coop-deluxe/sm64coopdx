@@ -34,6 +34,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         djui_base_set_size(&selectionbox1->base, 1.0f, 32);
         djui_base_set_enabled(&selectionbox1->base, !configMenuRandom);
         sLevelBox = selectionbox1;
+        defaultBase = &selectionbox1->base;
         
         struct DjuiCheckbox* checkbox1 = djui_checkbox_create(&body->base, "Use Stage Music", &configMenuSound);
         djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
