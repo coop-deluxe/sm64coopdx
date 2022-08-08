@@ -1339,6 +1339,7 @@
 
 - save_file.h
    - [save_file_clear_flags](functions-4.md#save_file_clear_flags)
+   - [save_file_erase](functions-4.md#save_file_erase)
    - [save_file_get_cap_pos](functions-4.md#save_file_get_cap_pos)
    - [save_file_get_course_coin_score](functions-4.md#save_file_get_course_coin_score)
    - [save_file_get_course_star_count](functions-4.md#save_file_get_course_star_count)
@@ -1347,6 +1348,7 @@
    - [save_file_get_sound_mode](functions-4.md#save_file_get_sound_mode)
    - [save_file_get_star_flags](functions-4.md#save_file_get_star_flags)
    - [save_file_get_total_star_count](functions-4.md#save_file_get_total_star_count)
+   - [save_file_reload](functions-4.md#save_file_reload)
    - [save_file_set_flags](functions-4.md#save_file_set_flags)
 
 <br />

@@ -5364,6 +5364,26 @@
 
 <br />
 
+## [save_file_erase](#save_file_erase)
+
+### Lua Example
+`save_file_erase(fileIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase(s32 fileIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Lua Example
@@ -5520,6 +5540,24 @@
 
 ### C Prototype
 `s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_reload](#save_file_reload)
+
+### Lua Example
+`save_file_reload()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_reload(void);`
 
 [:arrow_up_small:](#)
 
