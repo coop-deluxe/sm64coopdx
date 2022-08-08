@@ -329,6 +329,11 @@ void djui_base_destroy(struct DjuiBase* base) {
         gDjuiHovered = NULL;
     }
 
+    // remove focus
+    if (gInteractableFocus == base) {
+        gInteractableFocus = NULL;
+    }
+
     // remove binding
     if (gInteractableBinding == base) {
         gInteractableBinding = NULL;

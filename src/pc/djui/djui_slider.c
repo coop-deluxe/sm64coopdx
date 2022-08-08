@@ -136,5 +136,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
 
     base->get_cursor_hover_location = djui_slider_get_cursor_hover_location;
 
+    slider->base.interactable->update_style = NULL;
+
     return slider;
 }
