@@ -32,9 +32,9 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
 
 void djui_panel_options_create(struct DjuiBase* caller) {
 #ifdef DEVELOPMENT
-    f32 bodyHeight = 64 * 7 + 16 * 6;
+    f32 bodyHeight = 64 * 7 + 16 * 12;
 #else
-    f32 bodyHeight = 64 * 6 + 16 * 5;
+    f32 bodyHeight = 64 * 6 + 16 * 11;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -69,12 +69,18 @@ void djui_panel_options_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&button5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button5->base, 1.0f, 64);
         djui_interactable_hook_click(&button5->base, djui_panel_sound_create);
+
 #ifdef DEVELOPMENT
         struct DjuiButton* button6 = djui_button_create(&body->base, "Debug");
         djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button6->base, 1.0f, 64);
         djui_interactable_hook_click(&button6->base, djui_panel_options_debug_create);
 #endif
+
+        struct DjuiButton* button8 = djui_button_create(&body->base, "Menu Options");
+        djui_base_set_size_type(&button8->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button8->base, 1.0f, 64);
+        djui_interactable_hook_click(&button8->base, djui_panel_main_menu_create);
 
         struct DjuiButton* button7 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

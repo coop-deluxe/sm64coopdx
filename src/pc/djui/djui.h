@@ -56,6 +56,7 @@
 #include "djui_panel_display.h"
 #include "djui_panel_dynos.h"
 #include "djui_panel_sound.h"
+#include "djui_panel_menu_options.h"
 #include "djui_panel_confirm.h"
 #include "djui_panel_cheats.h"
 

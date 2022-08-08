@@ -133,6 +133,9 @@ unsigned int configStayInLevelAfterStar          = 0;
 unsigned int configNetworkSystem                 = 0;
 char         configPlayerName[MAX_PLAYER_STRING] = "";
 unsigned int configPlayerModel                   = 0;
+unsigned int configMenuLevel                     = 0;
+bool         configMenuSound                     = true;
+bool         configMenuRandom                    = true;
 struct PlayerPalette configPlayerPalette         = {{{0xff, 0x00, 0x00}, {0x00, 0x00, 0xff}, {0xff, 0xff, 0xff}}};
 bool         configUncappedFramerate             = true;
 unsigned int configFrameLimit                    = 60;
@@ -220,6 +223,9 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerKnockbackStrength},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT  , .uintValue   = &configPlayerModel},
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_PLAYER_STRING},
+    {.name = "coop_menu_level",                .type = CONFIG_TYPE_UINT  , .uintValue   = &configMenuLevel},
+    {.name = "coop_menu_sound",                .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuSound},
+    {.name = "coop_menu_random",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configMenuRandom},
     {.name = "coop_player_palette_shirt",      .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[SHIRT]},
     {.name = "coop_player_palette_pants",      .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[PANTS]},
     {.name = "coop_player_palette_gloves",     .type = CONFIG_TYPE_COLOR , .colorValue  = &configPlayerPalette.parts[GLOVES]},
