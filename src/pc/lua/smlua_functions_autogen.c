@@ -16125,6 +16125,21 @@ int smlua_func_save_file_set_flags(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_set_star_flags(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    s32 fileIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1"); return 0; }
+    s32 courseIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2"); return 0; }
+    u32 starFlags = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3"); return 0; }
+
+    save_file_set_star_flags(fileIndex, courseIndex, starFlags);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_audio_utils.h //
 /////////////////////////
@@ -19287,6 +19302,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_total_star_count", smlua_func_save_file_get_total_star_count);
     smlua_bind_function(L, "save_file_reload", smlua_func_save_file_reload);
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
+    smlua_bind_function(L, "save_file_set_star_flags", smlua_func_save_file_set_star_flags);
 
     // smlua_audio_utils.h
     smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);

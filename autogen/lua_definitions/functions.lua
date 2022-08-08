@@ -7271,6 +7271,14 @@ function save_file_set_flags(flags)
     -- ...
 end
 
+--- @param fileIndex integer
+--- @param courseIndex integer
+--- @param starFlags integer
+--- @return nil
+function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
+    -- ...
+end
+
 --- @param audio BassAudio
 --- @return nil
 function audio_sample_destroy(audio)

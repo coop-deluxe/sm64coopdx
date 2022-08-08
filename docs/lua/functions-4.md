@@ -5583,6 +5583,28 @@
 
 <br />
 
+## [save_file_set_star_flags](#save_file_set_star_flags)
+
+### Lua Example
+`save_file_set_star_flags(fileIndex, courseIndex, starFlags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| starFlags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_audio_utils.h
 

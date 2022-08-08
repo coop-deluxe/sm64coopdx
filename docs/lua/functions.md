@@ -1350,6 +1350,7 @@
    - [save_file_get_total_star_count](functions-4.md#save_file_get_total_star_count)
    - [save_file_reload](functions-4.md#save_file_reload)
    - [save_file_set_flags](functions-4.md#save_file_set_flags)
+   - [save_file_set_star_flags](functions-4.md#save_file_set_star_flags)
 
 <br />
 
