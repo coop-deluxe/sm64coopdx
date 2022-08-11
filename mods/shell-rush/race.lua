@@ -176,10 +176,14 @@ function race_update()
                 -- race is finished, start a new one
                 if gLevelData == gLevelDataTable[LEVEL_CASTLE_GROUNDS] then
                     race_start(LEVEL_BOB)
-                elseif gLevelData == gLevelDataTable[LEVEL_SL] then
-                    race_start(LEVEL_CASTLE_GROUNDS)
                 elseif gLevelData == gLevelDataTable[LEVEL_BOB] then
                     race_start(LEVEL_SL)
+                elseif gLevelData == gLevelDataTable[LEVEL_SL] then
+                    race_start(LEVEL_TTM)
+                elseif gLevelData == gLevelDataTable[LEVEL_TTM] then
+                    race_start(LEVEL_CCM)
+                elseif gLevelData == gLevelDataTable[LEVEL_CCM] then
+                    race_start(LEVEL_CASTLE_GROUNDS)
                 end
             end
         end
@@ -191,6 +195,10 @@ function on_race_command(msg)
         djui_chat_message_create('Only the server can change this setting!')
         return true
     end
+    if msg == 'CG' then
+        race_start(LEVEL_CASTLE_GROUNDS)
+        return true
+    end
     if msg == 'BOB' then
         race_start(LEVEL_BOB)
         return true
@@ -199,9 +207,12 @@ function on_race_command(msg)
         race_start(LEVEL_SL)
         return true
     end
-    if msg == 'CG' then
-        race_start(LEVEL_CASTLE_GROUNDS)
+    if msg == 'TTM' then
+        race_start(LEVEL_TTM)
         return true
+    end
+    if msg == 'CCM' then
+        race_start(LEVEL_CCM)
     end
     return false
 end
@@ -228,7 +239,7 @@ function on_game_state_changed(tag, oldVal, newVal)
 end
 
 if network_is_server() then
-    hook_chat_command('race', "[CG|SL|BOB]", on_race_command)
+    hook_chat_command('race', "[CG|BOB|SL|TTM|CCM]", on_race_command)
     hook_chat_command('laps', "[number]", on_laps_command)
 end
 hook_on_sync_table_change(gGlobalSyncTable, 'gameState', i, on_game_state_changed)
