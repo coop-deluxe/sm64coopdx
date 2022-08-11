@@ -1342,6 +1342,11 @@ void update_menu_level(void) {
         }
     }
 
+    // set sFirstCastleGroundsMenu to false to prevent wall hugging bug
+    if (curLevel != LEVEL_CASTLE_GROUNDS) {
+         sFirstCastleGroundsMenu = false;
+    }
+
     // set mario/camera pos
     if (gCurrLevelNum == LEVEL_CASTLE_GROUNDS) {
         if (!sFirstCastleGroundsMenu) {
