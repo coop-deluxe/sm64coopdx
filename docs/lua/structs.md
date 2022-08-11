@@ -805,6 +805,7 @@
 | prevTimestamp | `integer` |  |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) |  |
+| skipInViewCheck | `boolean` |  |
 | skipInterpolationTimestamp | `integer` |  |
 | unk4C | [SpawnInfo](structs.md#SpawnInfo) |  |
 

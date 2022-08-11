@@ -558,6 +558,7 @@
 --- @field public prevTimestamp integer
 --- @field public scale Vec3f
 --- @field public sharedChild GraphNode
+--- @field public skipInViewCheck boolean
 --- @field public skipInterpolationTimestamp integer
 --- @field public unk4C SpawnInfo
 

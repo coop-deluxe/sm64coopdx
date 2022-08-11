@@ -2267,7 +2267,7 @@ static void init_mario_single_from_save_file(struct MarioState* m, u16 index) {
     m->numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
     m->numKeys = 0;
 
-    m->numLives = 3;
+    m->numLives = 4;
     m->health = 0x880;
 
     m->prevNumStarsForDialog = m->numStars;
