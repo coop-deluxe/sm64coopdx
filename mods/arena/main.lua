@@ -28,12 +28,14 @@ gGameLevels = {
     { level = LEVEL_CCM, name = 'Sky Beach' },
     { level = LEVEL_WF,  name = 'Pillars' },
     { level = LEVEL_JRB, name = 'Forts' },
+    { level = LEVEL_DDD, name = 'Platforms' },
 }
 
 smlua_text_utils_course_acts_replace(COURSE_BOB, " 1 Origin", "?", "?", "?", "?", "?", "?")
 smlua_text_utils_course_acts_replace(COURSE_CCM, " 4 Sky Beach", "?", "?", "?", "?", "?", "?")
 smlua_text_utils_course_acts_replace(COURSE_WF, " 2 Pillars", "?", "?", "?", "?", "?", "?")
 smlua_text_utils_course_acts_replace(COURSE_JRB, " 3 Forts", "?", "?", "?", "?", "?", "?")
+smlua_text_utils_course_acts_replace(COURSE_DDD, " 4 Platforms", "?", "?", "?", "?", "?", "?")
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
