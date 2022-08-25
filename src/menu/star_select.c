@@ -402,7 +402,7 @@ void print_act_selector_strings(void) {
         if (playersInAct > 0) {
             char message[16] = { 0 };
             if (playersInAct == 1) {
-                if (snprintf(message, 16, "join") < 0) {
+                if (snprintf(message, 16, "     join      ") < 0) {
                     // do nothing
                 }
             } else {
