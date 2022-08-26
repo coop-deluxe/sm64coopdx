@@ -22,6 +22,11 @@ struct GlobalTextures {
     struct TextureInfo arrow_down;
     struct TextureInfo coin;
     struct TextureInfo star;
+    struct TextureInfo mario_head;
+    struct TextureInfo luigi_head;
+    struct TextureInfo toad_head;
+    struct TextureInfo waluigi_head;
+    struct TextureInfo wario_head;
 };
 
 extern struct GlobalTextures gGlobalTextures;
