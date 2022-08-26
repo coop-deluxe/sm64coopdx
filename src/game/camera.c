@@ -11749,10 +11749,19 @@ static u8 sRomHackZoom = 1;
 static s8 sRomHackIsUpdate = 0;
 static f32 sRomHackWaterFocus = 0;
 static f32 sRomHackWaterPitchOffset = 0;
+u8 gRomHackCamSetCollisions = TRUE;
+
+void rom_hack_cam_set_collisions(u8 enable) {
+    gRomHackCamSetCollisions = enable;
+}
 
 static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
     // do collision checking
     struct Surface *surf = NULL;
+    if (!gRomHackCamSetCollisions) {
+        return true;
+    }
+
     f32 floorHeight = find_floor(desiredPos[0], desiredPos[1], desiredPos[2], &surf);
     if (surf == NULL || floorHeight <= -11000) {
         return false;

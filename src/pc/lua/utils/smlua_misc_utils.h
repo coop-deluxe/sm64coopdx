@@ -63,6 +63,8 @@ void camera_config_set_deceleration(u32 value);
 
 bool is_game_paused(void);
 
+s16 get_dialog_id(void);
+
 u32 allocate_mario_action(u32 actFlags);
 
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index);

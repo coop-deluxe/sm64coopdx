@@ -6450,6 +6450,17 @@ int smlua_func_resolve_geometry_collisions(lua_State* L) {
     return 1;
 }
 
+int smlua_func_rom_hack_cam_set_collisions(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 enable = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'rom_hack_cam_set_collisions'"); return 0; }
+
+    rom_hack_cam_set_collisions(enable);
+
+    return 1;
+}
+
 int smlua_func_rotate_camera_around_walls(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -7674,6 +7685,66 @@ int smlua_func_seq_player_unlower_volume(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'seq_player_unlower_volume'"); return 0; }
 
     seq_player_unlower_volume(player, fadeDuration);
+
+    return 1;
+}
+
+int smlua_func_stop_background_music(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u16 seqId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'stop_background_music'"); return 0; }
+
+    stop_background_music(seqId);
+
+    return 1;
+}
+
+int smlua_func_stop_sound(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    u32 soundBits = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'stop_sound'"); return 0; }
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(2, "x");
+    pos[1] = smlua_get_number_field(2, "y");
+    pos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'stop_sound'"); return 0; }
+
+    stop_sound(soundBits, pos);
+
+    smlua_push_number_field(2, "x", pos[0]);
+    smlua_push_number_field(2, "y", pos[1]);
+    smlua_push_number_field(2, "z", pos[2]);
+
+    return 1;
+}
+
+int smlua_func_stop_sounds_from_source(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+
+    f32* pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(1, "x");
+    pos[1] = smlua_get_number_field(1, "y");
+    pos[2] = smlua_get_number_field(1, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'stop_sounds_from_source'"); return 0; }
+
+    stop_sounds_from_source(pos);
+
+    smlua_push_number_field(1, "x", pos[0]);
+    smlua_push_number_field(1, "y", pos[1]);
+    smlua_push_number_field(1, "z", pos[2]);
+
+    return 1;
+}
+
+int smlua_func_stop_sounds_in_continuous_banks(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    stop_sounds_in_continuous_banks();
 
     return 1;
 }
@@ -16817,6 +16888,15 @@ int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_dialog_id(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_dialog_id());
+
+    return 1;
+}
+
 int smlua_func_get_environment_region(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -18598,6 +18678,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "random_vec3s", smlua_func_random_vec3s);
     smlua_bind_function(L, "reset_camera", smlua_func_reset_camera);
     smlua_bind_function(L, "resolve_geometry_collisions", smlua_func_resolve_geometry_collisions);
+    smlua_bind_function(L, "rom_hack_cam_set_collisions", smlua_func_rom_hack_cam_set_collisions);
     smlua_bind_function(L, "rotate_camera_around_walls", smlua_func_rotate_camera_around_walls);
     smlua_bind_function(L, "rotate_in_xz", smlua_func_rotate_in_xz);
     smlua_bind_function(L, "rotate_in_yz", smlua_func_rotate_in_yz);
@@ -18688,6 +18769,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "seq_player_fade_out", smlua_func_seq_player_fade_out);
     smlua_bind_function(L, "seq_player_lower_volume", smlua_func_seq_player_lower_volume);
     smlua_bind_function(L, "seq_player_unlower_volume", smlua_func_seq_player_unlower_volume);
+    smlua_bind_function(L, "stop_background_music", smlua_func_stop_background_music);
+    smlua_bind_function(L, "stop_sound", smlua_func_stop_sound);
+    smlua_bind_function(L, "stop_sounds_from_source", smlua_func_stop_sounds_from_source);
+    smlua_bind_function(L, "stop_sounds_in_continuous_banks", smlua_func_stop_sounds_in_continuous_banks);
 
     // interaction.h
     smlua_bind_function(L, "does_mario_have_normal_cap_on_head", smlua_func_does_mario_have_normal_cap_on_head);
@@ -19368,6 +19453,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
+    smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);

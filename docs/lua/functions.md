@@ -648,6 +648,7 @@
    - [random_vec3s](functions-3.md#random_vec3s)
    - [reset_camera](functions-3.md#reset_camera)
    - [resolve_geometry_collisions](functions-3.md#resolve_geometry_collisions)
+   - [rom_hack_cam_set_collisions](functions-3.md#rom_hack_cam_set_collisions)
    - [rotate_camera_around_walls](functions-3.md#rotate_camera_around_walls)
    - [rotate_in_xz](functions-3.md#rotate_in_xz)
    - [rotate_in_yz](functions-3.md#rotate_in_yz)
@@ -748,6 +749,10 @@
    - [seq_player_fade_out](functions-3.md#seq_player_fade_out)
    - [seq_player_lower_volume](functions-3.md#seq_player_lower_volume)
    - [seq_player_unlower_volume](functions-3.md#seq_player_unlower_volume)
+   - [stop_background_music](functions-3.md#stop_background_music)
+   - [stop_sound](functions-3.md#stop_sound)
+   - [stop_sounds_from_source](functions-3.md#stop_sounds_from_source)
+   - [stop_sounds_in_continuous_banks](functions-3.md#stop_sounds_in_continuous_banks)
 
 <br />
 
@@ -1424,6 +1429,7 @@
    - [camera_unfreeze](functions-4.md#camera_unfreeze)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
+   - [get_dialog_id](functions-4.md#get_dialog_id)
    - [get_environment_region](functions-4.md#get_environment_region)
    - [get_hand_foot_pos_x](functions-4.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-4.md#get_hand_foot_pos_y)

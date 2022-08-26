@@ -6766,6 +6766,24 @@
 
 <br />
 
+## [get_dialog_id](#get_dialog_id)
+
+### Lua Example
+`local integerValue = get_dialog_id()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_dialog_id(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_environment_region](#get_environment_region)
 
 ### Lua Example

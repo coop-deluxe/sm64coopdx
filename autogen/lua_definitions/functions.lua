@@ -3257,6 +3257,12 @@ function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
 
+--- @param enable integer
+--- @return nil
+function rom_hack_cam_set_collisions(enable)
+    -- ...
+end
+
 --- @param c Camera
 --- @param cPos Vec3f
 --- @param avoidYaw Pointer_integer
@@ -3806,6 +3812,30 @@ end
 --- @param fadeDuration integer
 --- @return nil
 function seq_player_unlower_volume(player, fadeDuration)
+    -- ...
+end
+
+--- @param seqId integer
+--- @return nil
+function stop_background_music(seqId)
+    -- ...
+end
+
+--- @param soundBits integer
+--- @param pos Vec3f
+--- @return nil
+function stop_sound(soundBits, pos)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @return nil
+function stop_sounds_from_source(pos)
+    -- ...
+end
+
+--- @return nil
+function stop_sounds_in_continuous_banks()
     -- ...
 end
 
@@ -7631,6 +7661,11 @@ end
 
 --- @return integer
 function get_current_save_file_num()
+    -- ...
+end
+
+--- @return integer
+function get_dialog_id()
     -- ...
 end
 

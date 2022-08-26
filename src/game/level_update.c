@@ -525,6 +525,10 @@ void init_mario_after_warp(void) {
         network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     }
 
+    if (gMarioState->health <= 0x110) {
+        gMarioState->health = 0x880;
+    }
+
     smlua_call_event_hooks(HOOK_ON_WARP);
 }
 
@@ -845,7 +849,8 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_DEATH:
-                if (m->numLives <= 0) {
+                m->numLives--;
+                if (m->numLives <= -1) {
                     sDelayedWarpOp = WARP_OP_GAME_OVER;
                 }
                 sDelayedWarpTimer = 48;
@@ -863,7 +868,8 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
             case WARP_OP_WARP_FLOOR:
                 sSourceWarpNodeId = WARP_NODE_WARP_FLOOR;
                 if (area_get_warp_node(sSourceWarpNodeId) == NULL) {
-                    if (m->numLives <= 0) {
+                    m->numLives--;
+                    if (m->numLives <= -1) {
                         sDelayedWarpOp = WARP_OP_GAME_OVER;
                     } else {
                         sSourceWarpNodeId = WARP_NODE_DEATH;

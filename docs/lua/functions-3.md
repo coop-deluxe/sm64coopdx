@@ -1084,6 +1084,26 @@
 
 <br />
 
+## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
+
+### Lua Example
+`rom_hack_cam_set_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void rom_hack_cam_set_collisions(u8 enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [rotate_camera_around_walls](#rotate_camera_around_walls)
 
 ### Lua Example
@@ -2763,6 +2783,85 @@
 
 ### C Prototype
 `void seq_player_unlower_volume(u8 player, u16 fadeDuration);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_background_music](#stop_background_music)
+
+### Lua Example
+`stop_background_music(seqId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| seqId | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void stop_background_music(u16 seqId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_sound](#stop_sound)
+
+### Lua Example
+`stop_sound(soundBits, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| soundBits | `integer` |
+| pos | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void stop_sound(u32 soundBits, f32 *pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_sounds_from_source](#stop_sounds_from_source)
+
+### Lua Example
+`stop_sounds_from_source(pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void stop_sounds_from_source(f32 *pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_sounds_in_continuous_banks](#stop_sounds_in_continuous_banks)
+
+### Lua Example
+`stop_sounds_in_continuous_banks()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void stop_sounds_in_continuous_banks(void);`
 
 [:arrow_up_small:](#)
 
