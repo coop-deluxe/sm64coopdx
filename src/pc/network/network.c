@@ -483,7 +483,7 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(bool sendLeaving, bool exiting) {
+void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;
@@ -496,7 +496,7 @@ void network_shutdown(bool sendLeaving, bool exiting) {
     if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
 
     if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
-    network_player_shutdown();
+    network_player_shutdown(popup);
     gNetworkSystem->shutdown();
 
     if (gNetworkServerAddr != NULL) {

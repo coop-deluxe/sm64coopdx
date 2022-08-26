@@ -32,5 +32,5 @@ void network_receive_kick(struct Packet* p) {
         case EKT_BANNED:     djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The server banned you.");          break;
         default:             djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ Host has closed the connection."); break;
     }
-    network_shutdown(false, false);
+    network_shutdown(false, false, false);
 }

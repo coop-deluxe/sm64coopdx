@@ -16,7 +16,7 @@ void djui_panel_join_message_error(char* message) {
 }
 
 void djui_panel_join_message_cancel(struct DjuiBase* caller) {
-    network_shutdown(true, false);
+    network_shutdown(true, false, false);
     djui_panel_menu_back(caller);
 }
 

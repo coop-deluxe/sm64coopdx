@@ -13,7 +13,7 @@ static void djui_panel_pause_resume(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
-    network_shutdown(true, false);
+    network_shutdown(true, false, false);
 }
 
 static void djui_panel_pause_quit(struct DjuiBase* caller) {
