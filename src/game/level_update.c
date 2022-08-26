@@ -1340,11 +1340,15 @@ void update_menu_level(void) {
     // warp to level, this feels buggy
     if (gCurrLevelNum != curLevel) {
         if (curLevel == LEVEL_JRB) {
-            dynos_warp_to_level(curLevel, 1, 2);
+            gChangeLevel = curLevel;
+            gChangeActNum = 2;
         } else if (curLevel == LEVEL_THI) {
-            dynos_warp_to_level(curLevel, 2, 6);
+            gChangeLevel = curLevel;
+            gChangeAreaIndex = 2;
+            gChangeActNum = 6;
         } else {
-            dynos_warp_to_level(curLevel, 1, 6);
+            gChangeLevel = curLevel;
+            gChangeActNum = 6;
         }
     }
 
@@ -1452,11 +1456,15 @@ void update_menu_level(void) {
 
         if (get_current_background_music() == 0x0021) {
             if (curLevel == LEVEL_JRB) {
-                dynos_warp_to_level(curLevel, 1, 2);
+                gChangeLevel = curLevel;
+                gChangeActNum = 2;
             } else if (curLevel == LEVEL_THI) {
-                dynos_warp_to_level(curLevel, 2, 6);
+                gChangeLevel = curLevel;
+                gChangeAreaIndex = 2;
+                gChangeActNum = 6;
             } else {
-                dynos_warp_to_level(curLevel, 1, 6);
+                gChangeLevel = curLevel;
+                gChangeActNum = 6;
             }
         }
     }
@@ -1718,6 +1726,10 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
         gSavedCourseNum = gCurrCourseNum;
         nop_change_course();
         disable_warp_checkpoint();
+    }
+
+    if (gDjuiInMainMenu) {
+        return 0;
     }
 
     if (foundHook) {
