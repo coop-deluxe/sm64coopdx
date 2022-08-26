@@ -37,6 +37,10 @@ sDistanceTimeout = 10 * 30 -- ten seconds
 -- flashing 'keep moving' index
 sFlashingIndex = 0
 
+-- pu prevention
+local puX = 0
+local puZ = 0
+
 function server_update(m)
     -- increment timer
     sRoundTimer = sRoundTimer + 1
@@ -197,46 +201,66 @@ function mario_update(m)
         s.seeking = true
     end
 
+    -- remove caps
     if m.playerIndex == 0 or gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
         if gGlobalSyncTable.seekerCaps and gPlayerSyncTable[m.playerIndex].seeking then
-            m.flags = m.flags & ~MARIO_WING_CAP --Remove wing cap if seeking
-            m.flags = m.flags & ~MARIO_METAL_CAP --Remove metal cap if seeking
+            m.flags = m.flags & ~MARIO_WING_CAP -- remove wing cap if seeking
+            m.flags = m.flags & ~MARIO_METAL_CAP -- remove metal cap if seeking
             stop_cap_music()
             m.capTimer = 0
         elseif gGlobalSyncTable.hiderCaps and not gPlayerSyncTable[m.playerIndex].seeking then
-            m.flags = m.flags & ~MARIO_WING_CAP --Remove wing cap if hiding
-            m.flags = m.flags & ~MARIO_METAL_CAP --Remove metal cap if hiding
+            m.flags = m.flags & ~MARIO_WING_CAP -- remove wing cap if hiding
+            m.flags = m.flags & ~MARIO_METAL_CAP -- remove metal cap if hiding
             stop_cap_music()
             m.capTimer = 0
         end
     end
 
-    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_RR and m.playerIndex == 0 then
-        warp_to_castle(LEVEL_RR)
-    end
+    -- warp players out of banned levels
+    if m.playerIndex == 0 then
+        if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_RR then
+            warp_to_castle(LEVEL_RR)
+        end
 
-    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_1 and m.playerIndex == 0 then
-        warp_to_castle(LEVEL_BITDW)
-    end
+        if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_1 then
+            warp_to_castle(LEVEL_BITDW)
+        end
 
-    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_2 and m.playerIndex == 0 then
-        warp_to_castle(LEVEL_BITFS)
-    end
+        if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_2 then
+            warp_to_castle(LEVEL_BITFS)
+        end
 
-    if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_3 and m.playerIndex == 0 then
-        warp_to_castle(LEVEL_BITS)
-    end
+        if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_BOWSER_3 then
+            warp_to_castle(LEVEL_BITS)
+        end
 
-    -- this doesn't work properly, it automatically ends the round again
-    --if m.playerIndex == 0 and gPlayerSyncTable[m.playerIndex].seeking and gGlobalSyncTable.displayTimer == 0 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-    --    warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0)
-    --end
+        if gPlayerSyncTable[m.playerIndex].seeking and gGlobalSyncTable.displayTimer == 0 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+            warp_to_level(gLevelValues.entryLevel, 1, 0)
+        end
+    end
 
     -- display all seekers as metal
     if s.seeking then
         m.marioBodyState.modelState = MODEL_STATE_METAL
        
         m.health = 0x880
+    end
+    
+    -- pu prevention
+    if m.pos.x >= 0 then
+        puX = math.floor((8192 + m.pos.x) / 65536)
+    else
+        puX = math.ceil((-8192 + m.pos.x) / 65536)
+    end
+
+    if m.pos.z >= 0 then
+        puZ = math.floor((8192 + m.pos.z) / 65536)
+    else
+        puZ = math.ceil((-8192 + m.pos.z) / 65536)
+    end
+
+    if (puX ~= 0) or (puZ ~= 0) then
+        s.seeking = true
     end
 end
 
@@ -565,8 +589,6 @@ function on_seeking_changed(tag, oldVal, newVal)
             sLastSeekerIndex = m.playerIndex
         end
         sRoundTimer = 32
-
-
     end
 
     if newVal then

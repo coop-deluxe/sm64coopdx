@@ -583,6 +583,7 @@
    - [spawn_wind_particles](functions-2.md#spawn_wind_particles)
    - [tox_box_move](functions-2.md#tox_box_move)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
+   - [uv_update_scroll](functions-2.md#uv_update_scroll)
    - [vec3f_copy_2](functions-2.md#vec3f_copy_2)
 
 <br />
@@ -648,6 +649,7 @@
    - [random_vec3s](functions-3.md#random_vec3s)
    - [reset_camera](functions-3.md#reset_camera)
    - [resolve_geometry_collisions](functions-3.md#resolve_geometry_collisions)
+   - [rom_hack_cam_set_collisions](functions-3.md#rom_hack_cam_set_collisions)
    - [rotate_camera_around_walls](functions-3.md#rotate_camera_around_walls)
    - [rotate_in_xz](functions-3.md#rotate_in_xz)
    - [rotate_in_yz](functions-3.md#rotate_in_yz)
@@ -748,6 +750,10 @@
    - [seq_player_fade_out](functions-3.md#seq_player_fade_out)
    - [seq_player_lower_volume](functions-3.md#seq_player_lower_volume)
    - [seq_player_unlower_volume](functions-3.md#seq_player_unlower_volume)
+   - [stop_background_music](functions-3.md#stop_background_music)
+   - [stop_sound](functions-3.md#stop_sound)
+   - [stop_sounds_from_source](functions-3.md#stop_sounds_from_source)
+   - [stop_sounds_in_continuous_banks](functions-3.md#stop_sounds_in_continuous_banks)
 
 <br />
 
@@ -1395,10 +1401,12 @@
    - [warp_restart_level](functions-4.md#warp_restart_level)
    - [warp_to_castle](functions-4.md#warp_to_castle)
    - [warp_to_level](functions-4.md#warp_to_level)
+   - [warp_to_start_level](functions-4.md#warp_to_start_level)
 
 <br />
 
 - smlua_misc_utils.h
+   - [add_scroll_target](functions-4.md#add_scroll_target)
    - [allocate_mario_action](functions-4.md#allocate_mario_action)
    - [camera_config_enable_analog_cam](functions-4.md#camera_config_enable_analog_cam)
    - [camera_config_enable_free_cam](functions-4.md#camera_config_enable_free_cam)
@@ -1424,6 +1432,7 @@
    - [camera_unfreeze](functions-4.md#camera_unfreeze)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
+   - [get_dialog_id](functions-4.md#get_dialog_id)
    - [get_environment_region](functions-4.md#get_environment_region)
    - [get_hand_foot_pos_x](functions-4.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-4.md#get_hand_foot_pos_y)
@@ -1435,7 +1444,9 @@
    - [hud_render_power_meter](functions-4.md#hud_render_power_meter)
    - [hud_set_value](functions-4.md#hud_set_value)
    - [hud_show](functions-4.md#hud_show)
+   - [init_scroll_targets](functions-4.md#init_scroll_targets)
    - [is_game_paused](functions-4.md#is_game_paused)
+   - [is_transition_playing](functions-4.md#is_transition_playing)
    - [movtexqc_register](functions-4.md#movtexqc_register)
    - [play_transition](functions-4.md#play_transition)
    - [save_file_set_using_backup_slot](functions-4.md#save_file_set_using_backup_slot)

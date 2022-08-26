@@ -528,8 +528,13 @@
 --- @field public camera TextureInfo
 --- @field public coin TextureInfo
 --- @field public lakitu TextureInfo
+--- @field public luigi_head TextureInfo
+--- @field public mario_head TextureInfo
 --- @field public no_camera TextureInfo
 --- @field public star TextureInfo
+--- @field public toad_head TextureInfo
+--- @field public waluigi_head TextureInfo
+--- @field public wario_head TextureInfo
 
 --- @class GraphNode
 --- @field public children GraphNode
@@ -558,6 +563,7 @@
 --- @field public prevTimestamp integer
 --- @field public scale Vec3f
 --- @field public sharedChild GraphNode
+--- @field public skipInViewCheck boolean
 --- @field public skipInterpolationTimestamp integer
 --- @field public unk4C SpawnInfo
 

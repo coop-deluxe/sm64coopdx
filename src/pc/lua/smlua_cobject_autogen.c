@@ -604,15 +604,20 @@ static struct LuaObjectField sGlobalObjectCollisionDataFields[LUA_GLOBAL_OBJECT_
     { "wooden_signpost_seg3_collision_0302DD80",         LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, wooden_signpost_seg3_collision_0302DD80),         false, LOT_POINTER },
 };
 
-#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 7
+#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 12
 static struct LuaObjectField sGlobalTexturesFields[LUA_GLOBAL_TEXTURES_FIELD_COUNT] = {
-    { "arrow_down", LVT_COBJECT, offsetof(struct GlobalTextures, arrow_down), true, LOT_TEXTUREINFO },
-    { "arrow_up",   LVT_COBJECT, offsetof(struct GlobalTextures, arrow_up),   true, LOT_TEXTUREINFO },
-    { "camera",     LVT_COBJECT, offsetof(struct GlobalTextures, camera),     true, LOT_TEXTUREINFO },
-    { "coin",       LVT_COBJECT, offsetof(struct GlobalTextures, coin),       true, LOT_TEXTUREINFO },
-    { "lakitu",     LVT_COBJECT, offsetof(struct GlobalTextures, lakitu),     true, LOT_TEXTUREINFO },
-    { "no_camera",  LVT_COBJECT, offsetof(struct GlobalTextures, no_camera),  true, LOT_TEXTUREINFO },
-    { "star",       LVT_COBJECT, offsetof(struct GlobalTextures, star),       true, LOT_TEXTUREINFO },
+    { "arrow_down",   LVT_COBJECT, offsetof(struct GlobalTextures, arrow_down),   true, LOT_TEXTUREINFO },
+    { "arrow_up",     LVT_COBJECT, offsetof(struct GlobalTextures, arrow_up),     true, LOT_TEXTUREINFO },
+    { "camera",       LVT_COBJECT, offsetof(struct GlobalTextures, camera),       true, LOT_TEXTUREINFO },
+    { "coin",         LVT_COBJECT, offsetof(struct GlobalTextures, coin),         true, LOT_TEXTUREINFO },
+    { "lakitu",       LVT_COBJECT, offsetof(struct GlobalTextures, lakitu),       true, LOT_TEXTUREINFO },
+    { "luigi_head",   LVT_COBJECT, offsetof(struct GlobalTextures, luigi_head),   true, LOT_TEXTUREINFO },
+    { "mario_head",   LVT_COBJECT, offsetof(struct GlobalTextures, mario_head),   true, LOT_TEXTUREINFO },
+    { "no_camera",    LVT_COBJECT, offsetof(struct GlobalTextures, no_camera),    true, LOT_TEXTUREINFO },
+    { "star",         LVT_COBJECT, offsetof(struct GlobalTextures, star),         true, LOT_TEXTUREINFO },
+    { "toad_head",    LVT_COBJECT, offsetof(struct GlobalTextures, toad_head),    true, LOT_TEXTUREINFO },
+    { "waluigi_head", LVT_COBJECT, offsetof(struct GlobalTextures, waluigi_head), true, LOT_TEXTUREINFO },
+    { "wario_head",   LVT_COBJECT, offsetof(struct GlobalTextures, wario_head),   true, LOT_TEXTUREINFO },
 };
 
 #define LUA_GRAPH_NODE_FIELD_COUNT 7
@@ -627,7 +632,7 @@ static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
     { "type",       LVT_S16,       offsetof(struct GraphNode, type),       false, LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 19
+#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 20
 static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_COUNT] = {
     { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE      },
     { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S     },
@@ -647,6 +652,7 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
     { "prevTimestamp",              LVT_U32,       offsetof(struct GraphNodeObject, prevTimestamp),              false, LOT_NONE      },
     { "scale",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, scale),                      true,  LOT_VEC3F     },
     { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                false, LOT_GRAPHNODE },
+    { "skipInViewCheck",            LVT_BOOL,      offsetof(struct GraphNodeObject, skipInViewCheck),            false, LOT_NONE      },
     { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), false, LOT_NONE      },
 //  { "throwMatrix",                LVT_???,       offsetof(struct GraphNodeObject, throwMatrix),                false, LOT_???       }, <--- UNIMPLEMENTED
 //  { "throwMatrixPrev",            LVT_???,       offsetof(struct GraphNodeObject, throwMatrixPrev),            false, LOT_???       }, <--- UNIMPLEMENTED

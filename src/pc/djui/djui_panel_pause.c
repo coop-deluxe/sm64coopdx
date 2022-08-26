@@ -1,7 +1,10 @@
 #include "djui.h"
 #include "pc/cheats.h"
-#include "src/pc/pc_main.h"
-#include "src/pc/network/network.h"
+#include "pc/pc_main.h"
+#include "pc/network/network.h"
+#include "game/object_helpers.h"
+#include "behavior_table.h"
+#include "sm64.h"
 
 bool gDjuiPanelPauseCreated = false;
 
@@ -10,10 +13,12 @@ static void djui_panel_pause_resume(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
-    network_shutdown(true, false);
+    network_shutdown(true, false, false);
 }
 
 static void djui_panel_pause_quit(struct DjuiBase* caller) {
+    if (find_object_with_behavior(bhvActSelector) != NULL || gMarioStates[0].action == ACT_PUSHING_DOOR || gMarioStates[0].action == ACT_PULLING_DOOR) { return; }
+
     if (gNetworkType == NT_SERVER) {
         djui_panel_confirm_create(caller,
                                 "\\#ff0800\\Q\\#1be700\\U\\#00b3ff\\I\\#ffef00\\T",
@@ -31,7 +36,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
     if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
 
     f32 bodyHeight = 64 * 5 + 16 * 4;
-    if (Cheats.EnableCheats) { bodyHeight += 64 + 16; }
+    if (Cheats.enabled) { bodyHeight += 64 + 16; }
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\A\\#00b3ff\\U\\#ffef00\\S\\#ff0800\\E");
@@ -61,7 +66,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         djui_interactable_hook_click(&button1->base, djui_panel_options_create);
         defaultBase = &button1->base;
 
-        if (Cheats.EnableCheats) {
+        if (Cheats.enabled) {
             struct DjuiButton* button1 = djui_button_create(&body->base, "Cheats");
             djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button1->base, 1.0f, 64);

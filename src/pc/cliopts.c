@@ -67,7 +67,7 @@ void parse_cli_opts(int argc, char* argv[]) {
             arg_uint("--client <port>", argv[++i], &gCLIOpts.NetworkPort);
 
         } else if (strcmp(argv[i], "--cheats") == 0) // Enable cheats menu
-            Cheats.EnableCheats = true;
+            Cheats.enabled = true;
 
         else if (strcmp(argv[i], "--poolsize") == 0) // Main pool size
             arg_uint("--poolsize", argv[++i], &gCLIOpts.PoolSize);

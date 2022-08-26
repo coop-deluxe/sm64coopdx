@@ -30,9 +30,6 @@ TARGET_N64 = 0
 # Build and optimize for Raspberry Pi(s)
 TARGET_RPI ?= 0
 
-# Build for Emscripten/WebGL
-TARGET_WEB ?= 0
-
 # Makeflag to enable OSX fixes
 OSX_BUILD ?= 0
 
@@ -132,10 +129,8 @@ else
   endif
 endif
 
-ifeq ($(TARGET_WEB),0)
-  ifeq ($(HOST_OS),Windows)
-    WINDOWS_BUILD := 1
-  endif
+ifeq ($(HOST_OS),Windows)
+  WINDOWS_BUILD := 1
 endif
 
 # MXE overrides
@@ -228,7 +223,7 @@ else ifeq ($(DEBUG_INFO_LEVEL),1)
 else ifeq ($(DEBUG_INFO_LEVEL),0)
   # If we're compiling with -0g. I don't believe this will do anything worthwhile.
   OPT_FLAGS += -g0
-else 
+else
   # This is our default AND level 2.
   OPT_FLAGS += -g
 endif
@@ -237,10 +232,6 @@ ifeq ($(PROFILE),1)
   PROF_FLAGS := -pg
 else
   PROF_FLAGS :=
-endif
-
-ifeq ($(TARGET_WEB),1)
-  OPT_FLAGS := -O2 -g4 --source-map-base http://localhost:8080/
 endif
 
 ifeq ($(TARGET_RPI),1)
@@ -321,10 +312,6 @@ ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
      DEFINES += OSX_BUILD=1
 endif
 
-ifeq ($(TARGET_WEB),1)
-     DEFINES := $(DEFINES) -DTARGET_WEB -DUSE_GLES
-endif
-
 # Check backends
 
 ifneq (,$(filter $(RENDER_API),D3D11 D3D12))
@@ -357,7 +344,7 @@ ifeq ($(HEADLESS),1)
   RENDER_API := DUMMY
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY
-  CONTROLLER_API := 
+  CONTROLLER_API :=
 endif
 
 ifeq ($(TARGET_RPI),1)
@@ -490,23 +477,15 @@ _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
 
 BUILD_DIR_BASE := build
 # BUILD_DIR is the location where all build artifacts are placed
-ifeq ($(TARGET_WEB),1)
-  BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_web
-else
-  BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
-endif
+BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
-ifeq ($(TARGET_WEB),1)
-	EXE := $(BUILD_DIR)/$(TARGET_STRING).html
-else
-	ifeq ($(WINDOWS_BUILD),1)
-		EXE := $(BUILD_DIR)/$(TARGET_STRING).exe
-	else # Linux builds/binary namer
-		ifeq ($(TARGET_RPI),1)
-			EXE := $(BUILD_DIR)/$(TARGET_STRING).arm
-		else
-			EXE := $(BUILD_DIR)/$(TARGET_STRING)
-		endif
+ifeq ($(WINDOWS_BUILD),1)
+	EXE := $(BUILD_DIR)/$(TARGET_STRING).exe
+else # Linux builds/binary namer
+	ifeq ($(TARGET_RPI),1)
+		EXE := $(BUILD_DIR)/$(TARGET_STRING).arm
+	else
+		EXE := $(BUILD_DIR)/$(TARGET_STRING)
 	endif
 endif
 
@@ -606,7 +585,7 @@ RPC_LIBS :=
 #ifeq ($(DISCORDRPC),1)
 #  ifeq ($(WINDOWS_BUILD),1)
 #    RPC_LIBS := lib/discord/libdiscord-rpc.dll
-#  else ifeq ($(OSX_BUILD),1) 
+#  else ifeq ($(OSX_BUILD),1)
 #    # needs testing
 #    RPC_LIBS := lib/discord/libdiscord-rpc.dylib
 #  else
@@ -701,9 +680,6 @@ else ifeq ($(COMPILER),clang)
   CXX     := clang++
   CPP     := clang++
   EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result
-else ifeq ($(TARGET_WEB),1) # As in, web PC port
-  CC     := emcc
-  CXX    := emcc
 else
   ifeq ($(USE_QEMU_IRIX),1)
     IRIX_ROOT := $(TOOLS_DIR)/ido5.3_compiler
@@ -827,7 +803,7 @@ ifeq ($(SDL1_USED)$(SDL2_USED),11)
 endif
 
 # SDL can be used by different systems, so we consolidate all of that shit into this
- 
+
 ifeq ($(SDL2_USED),1)
   SDLCONFIG := $(CROSS)sdl2-config
   BACKEND_CFLAGS += -DHAVE_SDL2=1
@@ -844,7 +820,7 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
   else
     BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
   endif
-  
+
   ifeq ($(WINDOWS_BUILD),1)
     BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion
   else
@@ -865,9 +841,6 @@ ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
     BACKEND_LDFLAGS += -ldbghelp
   endif
-else ifeq ($(TARGET_WEB),1)
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra -Wno-format-security $(TARGET_CFLAGS) -s USE_SDL=2
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -s USE_SDL=2
 else ifeq ($(TARGET_N64),0) # Linux / Other builds below
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
   CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
@@ -886,7 +859,7 @@ ifeq ($(TARGET_N64),1)
   RSPASMFLAGS := $(foreach d,$(DEFINES),-definelabel $(subst =, ,$(d)))
 else
   ASFLAGS     := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(foreach d,$(DEFINES),--defsym $(d))
-  RSPASMFLAGS := 
+  RSPASMFLAGS :=
 endif
 
 # C preprocessor flags
@@ -902,9 +875,7 @@ ifeq ($(TARGET_N64),1)
   endif
 endif
 
-ifeq ($(TARGET_WEB),1)
-  LDFLAGS := -lm -lGL -lSDL2 -no-pie -s TOTAL_MEMORY=20MB -g4 --source-map-base http://localhost:8080/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
-else ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
@@ -1207,9 +1178,9 @@ clean:
 cleantools:
 	$(MAKE) -s -C $(TOOLS_DIR) clean
 
-distclean: clean
+distclean: clean cleantools
 	$(PYTHON) extract_assets.py --clean
-	
+
 test: $(ROM)
 	$(EMULATOR) $(EMU_FLAGS) $<
 
@@ -1220,7 +1191,7 @@ libultra: $(BUILD_DIR)/libultra.a
 
 $(BUILD_DIR)/$(RPC_LIBS):
 	@$(CP) -f $(RPC_LIBS) $(BUILD_DIR)
-	
+
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
 
@@ -1301,7 +1272,7 @@ else
   $(BUILD_DIR)/%: %.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS) -s raw -i $@ -g $< -f $(lastword $(subst ., ,$@))
-	
+
   $(BUILD_DIR)/%.inc.c: %.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS) -s $(TEXTURE_ENCODING) -i $@ -g $< -f $(lastword ,$(subst ., ,$(basename $<)))
@@ -1355,7 +1326,7 @@ $(BUILD_DIR)/%.mio0: $(BUILD_DIR)/%.bin
 $(BUILD_DIR)/%.mio0.o: $(BUILD_DIR)/%.mio0
 	$(call print,Converting MIO0 to ELF:,$<,$@)
 	$(V)printf ".section .data\n\n.incbin \"$<\"\n" | $(AS) $(ASFLAGS) -o $@
-	
+
 endif
 
 
@@ -1556,7 +1527,7 @@ endif
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
 	$(call print,Preprocessing linker script:,$<,$@)
 	$(V)$(CPP) $(PROF_FLAGS) $(CPPFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
-	
+
 # Assemble assembly code
 $(BUILD_DIR)/%.o: %.s
 	$(call print,Assembling:,$<,$@)
@@ -1567,7 +1538,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/rsp/%.bin $(BUILD_DIR)/rsp/%_data.bin: rsp/%.s
 	$(call print,Assembling:,$<,$@)
 	$(V)$(RSPASM) -sym $@.sym $(RSPASMFLAGS) -strequ CODE_FILE $(BUILD_DIR)/rsp/$*.bin -strequ DATA_FILE $(BUILD_DIR)/rsp/$*_data.bin $<
-	
+
   # Link libultra
   $(BUILD_DIR)/libultra.a: $(ULTRA_O_FILES)
 	@$(PRINT) "$(GREEN)Linking libultra:  $(BLUE)$@ $(NO_COL)\n"
@@ -1578,7 +1549,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/libgoddard.a: $(GODDARD_O_FILES)
 	@$(PRINT) "$(GREEN)Linking libgoddard:  $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(AR) rcs -o $@ $(GODDARD_O_FILES)
-	
+
   # Link SM64 ELF file
   $(ELF): $(O_FILES) $(MIO0_OBJ_FILES) $(SEG_FILES) $(BUILD_DIR)/$(LD_SCRIPT) undefined_syms.txt $(BUILD_DIR)/libultra.a $(BUILD_DIR)/libgoddard.a
 	@$(PRINT) "$(GREEN)Linking ELF file:  $(BLUE)$@ $(NO_COL)\n"
@@ -1589,7 +1560,7 @@ ifeq ($(TARGET_N64),1)
 	$(call print,Building ROM:,$<,$@)
 	$(V)$(OBJCOPY) --pad-to=0x800000 --gap-fill=0xFF $< $(@:.z64=.bin) -O binary
 	$(V)$(N64CKSUM) $(@:.z64=.bin) $@
-	
+
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else

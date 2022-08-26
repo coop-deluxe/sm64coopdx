@@ -1119,6 +1119,8 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
 static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     if (node->node.flags & GRAPH_RENDER_INVISIBLE) {
         return FALSE;
+    } else if (node->skipInViewCheck) {
+        return TRUE;
     }
 
     // ! @bug The aspect ratio is not accounted for. When the fov value is 45,

@@ -29,6 +29,7 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/cheats.h"
 
 enum InteractionFlag {
     INT_GROUND_POUND_OR_TWIRL      = (1 << 0), // 0x01
@@ -2249,7 +2250,7 @@ void check_death_barrier(struct MarioState *m) {
 }
 
 void check_lava_boost(struct MarioState *m) {
-    if (m->action == ACT_BUBBLED) { return; }
+    if (m->action == ACT_BUBBLED || (Cheats.enabled && Cheats.godMode)) { return; }
     if (!(m->action & ACT_FLAG_RIDING_SHELL) && m->pos[1] < m->floorHeight + 10.0f) {
         if (!(m->flags & MARIO_METAL_CAP)) {
             m->hurtCounter += (m->flags & MARIO_CAP_ON_HEAD) ? 12 : 18;

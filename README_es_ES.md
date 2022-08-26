@@ -164,8 +164,6 @@ make VERSION=jp -j6                           # Compila la versión (J) usando 6
 make VERSION=us MARCH=i686 TARGET_BITS=32     # Compila un ejecutable de la versión (U) de 32 bits
 make TARGET_RPI=1                             # Compila un ejecutable para Raspberry Pi
 ```
-## Compilar para la web
-Puedes compilar el juego para navegadores que admitan WebGL usando [Emscripten](https://github.com/emscripten-core). Para hacerlo, instala [emsdk](https://github.com/emscripten-core/emsdk) y ejecuta `make TARGET_WEB=1`.
 
 ## Script para compilar para Raspberry Pi
 
@@ -185,19 +183,13 @@ El script está incluído en la rama master, pero también puede descargarse [aq
   * La versión EU tiene bugs en los textos y no tiene audio.
   * El movimiento analógico horizontal de la cámara vuelve al estilo antiguo en el nivel Bowser in the Dark World (#72)
   * La cámara con el ratón falla cuando disparas a Mario hacia un árbol o un tubo. (#71)
-  * "make: Nothing to be done for 'default'" al compilar para web. (#67)
 
 ### Estos problemas están marcados como solucionados. Por favor, contacta si sigues teniendo estos problemas.
   * El juego se llena de flags aleatorias en las builds de 64 bits para Windows
   * Hazy Maze Cave se cuelga en pantalla completa (#57)
   * La pantalla de título no tiene el cursor para manipular a Mario en pantalla completa. (#28)
   
-## Parches
-En la carpeta `./enhancements` hay varios archivos `patch`, que pueden aplicarse de la siguiente manera:
 
-```
- git apply fps.patch --ignore-whitespace --reject
-```
 Si ocurre un rechazo, puedes buscarlo con el comando `find | grep .rej`.
 Intenta resolver los rechazos a través de [wiggle](https://github.com/neilbrown/wiggle).
 ```

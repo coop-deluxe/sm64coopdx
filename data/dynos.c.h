@@ -20,6 +20,7 @@ void  dynos_gfx_swap_animations(void *ptr);
 LevelScript* dynos_get_level_script(char* scriptEntryName);
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool dynos_warp_restart_level(void);
+bool dynos_warp_to_start_level(void);
 bool dynos_warp_exit_level(s32 aDelay);
 bool dynos_warp_to_castle(s32 aLevel);
 
@@ -64,6 +65,8 @@ void dynos_behavior_hook_all_custom_behaviors(void);
 
 // -- other -- //
 void dynos_mod_shutdown(void);
+void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);
+void dynos_init_scroll_targets(void);
 
 #endif
 #endif

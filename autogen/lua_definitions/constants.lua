@@ -1983,7 +1983,13 @@ id_bhvYellowCoin = 533
 id_bhvYoshi = 534
 
 --- @type BehaviorId
-id_bhv_max_count = 535
+id_RM_Scroll_Texture = 535
+
+--- @type BehaviorId
+id_editor_Scroll_Texture = 536
+
+--- @type BehaviorId
+id_bhv_max_count = 537
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E

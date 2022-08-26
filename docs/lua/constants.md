@@ -619,7 +619,9 @@
 | id_bhvYellowBall | 532 |
 | id_bhvYellowCoin | 533 |
 | id_bhvYoshi | 534 |
-| id_bhv_max_count | 535 |
+| id_RM_Scroll_Texture | 535 |
+| id_editor_Scroll_Texture | 536 |
+| id_bhv_max_count | 537 |
 
 [:arrow_up_small:](#)
 

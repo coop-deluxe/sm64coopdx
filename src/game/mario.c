@@ -1542,12 +1542,11 @@ void update_mario_inputs(struct MarioState *m) {
 
     debug_print_speed_action_normal(m);
 
-    /* Moonjump cheat */
-    while (Cheats.MoonJump == true && Cheats.EnableCheats == true && m->controller->buttonDown & L_TRIG ){
-        m->vel[1] = 25;
-        break;   // TODO: Unneeded break?
+    if (Cheats.enabled && Cheats.moonJump && m->controller->buttonDown & L_TRIG) {
+        set_mario_action(m, ACT_FREEFALL, 0);
+        m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
+        m->vel[1] = 30;
     }
-    /*End of moonjump cheat */
 
     /* Developer stuff */
 #ifdef DEVELOPMENT
@@ -1874,7 +1873,7 @@ static void debug_update_mario_cap(u16 button, s32 flags, u16 capTimer, u16 capM
     }
 }
 
-void func_sh_8025574C(void) {
+void queue_particle_rumble(void) {
     if (gMarioState->particleFlags & PARTICLE_HORIZONTAL_STAR) {
         queue_rumble_data_mario(gMarioState, 5, 80);
     } else if (gMarioState->particleFlags & PARTICLE_VERTICAL_STAR) {
@@ -1992,22 +1991,13 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         }
     }
 
-    /**
-    * Cheat stuff
-    */
-    if (Cheats.EnableCheats) {
-        if (Cheats.GodMode)
-            gMarioState->health = 0x880;
+    if (Cheats.enabled) {
+        if (Cheats.godMode) { gMarioState->health = 0x880; }
 
-        if (Cheats.InfiniteLives && gMarioState->numLives < 99)
-            gMarioState->numLives += 1;
+        if (Cheats.infiniteLives && gMarioState->numLives < 100) { gMarioState->numLives = 100; }
 
-        if (Cheats.SuperSpeed && gMarioState->controller->stickMag > 0.5f)
-            gMarioState->forwardVel += 100;
+        if (Cheats.superSpeed && gMarioState->controller->stickMag > 0.5f) { gMarioState->forwardVel += 100; }
     }
-    /**
-    * End of cheat stuff
-    */
 
     if (gMarioState->action) {
         if (gMarioState->action != ACT_BUBBLED) {
@@ -2122,7 +2112,7 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         play_infinite_stairs_music();
         gMarioState->marioObj->oInteractStatus = 0;
-        func_sh_8025574C();
+        queue_particle_rumble();
 
         return gMarioState->particleFlags;
     }
@@ -2267,7 +2257,7 @@ static void init_mario_single_from_save_file(struct MarioState* m, u16 index) {
     m->numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
     m->numKeys = 0;
 
-    m->numLives = 3;
+    m->numLives = 4;
     m->health = 0x880;
 
     m->prevNumStarsForDialog = m->numStars;

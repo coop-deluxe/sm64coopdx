@@ -732,6 +732,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_4(gsDPSetFogColor);
     gfx_symbol_2(gsSPFogPosition, false);
     gfx_symbol_1(gsDPSetAlphaCompare, false);
+    gfx_symbol_1(gsDPSetTextureFilter, false);
 
     gfx_symbol_2(gsSPCopyLightEXT, false);
     gfx_symbol_2(gsSPFogFactor, false);

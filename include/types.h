@@ -7,6 +7,7 @@
 #include <ultra64.h>
 #include "macros.h"
 #include "pc/network/version.h"
+#include "src/pc/platform.h"
 
 // Certain functions are marked as having return values, but do not
 // actually return a value. This causes undefined behavior, which we'd rather
@@ -155,6 +156,7 @@ struct GraphNodeObject
     Mat4 *throwMatrixPrev;
     /*0x54*/ Vec3f cameraToObject;
     u32 skipInterpolationTimestamp;
+    bool skipInViewCheck;
 };
 
 struct ObjectNode

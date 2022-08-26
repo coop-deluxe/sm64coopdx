@@ -6379,3 +6379,19 @@ const BehaviorScript bhvIntroScene[] = {
         CALL_NATIVE(bhv_intro_scene_loop),
     END_LOOP(),
 };
+
+const BehaviorScript RM_Scroll_Texture[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    ID(id_RM_Scroll_Texture),
+    BEGIN_LOOP(),
+        CALL_NATIVE(uv_update_scroll),
+    END_LOOP(),
+};
+
+const BehaviorScript editor_Scroll_Texture[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    ID(id_editor_Scroll_Texture),
+    BEGIN_LOOP(),
+        CALL_NATIVE(uv_update_scroll),
+    END_LOOP(),
+};

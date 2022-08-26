@@ -539,6 +539,8 @@ enum BehaviorId {
     id_bhvYellowBall,
     id_bhvYellowCoin,
     id_bhvYoshi,
+    id_RM_Scroll_Texture,
+    id_editor_Scroll_Texture,
 
     id_bhv_max_count // must be the last in the list
 };

@@ -2852,6 +2852,11 @@ function update_angle_from_move_flags(angle)
     -- ...
 end
 
+--- @return nil
+function uv_update_scroll()
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param src Vec3f
 --- @return nil
@@ -3254,6 +3259,12 @@ end
 --- @param lastGood Vec3f
 --- @return nil
 function resolve_geometry_collisions(pos, lastGood)
+    -- ...
+end
+
+--- @param enable integer
+--- @return nil
+function rom_hack_cam_set_collisions(enable)
     -- ...
 end
 
@@ -3806,6 +3817,30 @@ end
 --- @param fadeDuration integer
 --- @return nil
 function seq_player_unlower_volume(player, fadeDuration)
+    -- ...
+end
+
+--- @param seqId integer
+--- @return nil
+function stop_background_music(seqId)
+    -- ...
+end
+
+--- @param soundBits integer
+--- @param pos Vec3f
+--- @return nil
+function stop_sound(soundBits, pos)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @return nil
+function stop_sounds_from_source(pos)
+    -- ...
+end
+
+--- @return nil
+function stop_sounds_in_continuous_banks()
     -- ...
 end
 
@@ -7497,6 +7532,18 @@ function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
+--- @param index integer
+--- @param name string
+--- @param offset integer
+--- @param size integer
+--- @return nil
+function add_scroll_target(index, name, offset, size)
+
+--- @return boolean
+function warp_to_start_level()
+    -- ...
+end
+
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)
@@ -7634,6 +7681,11 @@ function get_current_save_file_num()
     -- ...
 end
 
+--- @return integer
+function get_dialog_id()
+    -- ...
+end
+
 --- @param index integer
 --- @return number
 function get_environment_region(index)
@@ -7705,8 +7757,18 @@ function hud_show()
     -- ...
 end
 
+--- @return nil
+function init_scroll_targets()
+    -- ...
+end
+
 --- @return boolean
 function is_game_paused()
+    -- ...
+end
+
+--- @return boolean
+function is_transition_playing()
     -- ...
 end
 

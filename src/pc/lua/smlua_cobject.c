@@ -4,6 +4,7 @@
 #include "game/area.h"
 #include "game/mario.h"
 #include "game/hardcoded.h"
+#include "game/scroll_targets.h"
 #include "audio/external.h"
 #include "object_fields.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -590,7 +591,6 @@ void smlua_cobject_init_globals(void) {
         smlua_push_object(L, LOT_BEHAVIORVALUES, &gBehaviorValues);
         lua_setglobal(L, "gBehaviorValues");
     }
-
 }
 
 void smlua_cobject_init_per_file_globals(char* path) {

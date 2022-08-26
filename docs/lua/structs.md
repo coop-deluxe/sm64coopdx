@@ -761,8 +761,13 @@
 | camera | [TextureInfo](structs.md#TextureInfo) | read-only |
 | coin | [TextureInfo](structs.md#TextureInfo) | read-only |
 | lakitu | [TextureInfo](structs.md#TextureInfo) | read-only |
+| luigi_head | [TextureInfo](structs.md#TextureInfo) | read-only |
+| mario_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 | no_camera | [TextureInfo](structs.md#TextureInfo) | read-only |
 | star | [TextureInfo](structs.md#TextureInfo) | read-only |
+| toad_head | [TextureInfo](structs.md#TextureInfo) | read-only |
+| waluigi_head | [TextureInfo](structs.md#TextureInfo) | read-only |
+| wario_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -805,6 +810,7 @@
 | prevTimestamp | `integer` |  |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) |  |
+| skipInViewCheck | `boolean` |  |
 | skipInterpolationTimestamp | `integer` |  |
 | unk4C | [SpawnInfo](structs.md#SpawnInfo) |  |
 

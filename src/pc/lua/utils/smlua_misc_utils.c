@@ -95,6 +95,7 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
         { (u8*)texture_power_meter_seven_segments, 8, 32, 32 },
         { (u8*)texture_power_meter_full,           8, 32, 32 },
     };
+    djui_hud_set_color(255, 255, 255, 255);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[0], x, y, width / 64, height / 64);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + width / 2, y, width / 64, height / 64);
     s32 numWedges = MIN(MAX(health >> 8, 0), 8);
@@ -272,6 +273,12 @@ bool is_game_paused(void) {
 
 ///
 
+bool is_transition_playing(void) {
+    return sTransitionUpdate != NULL || gWarpTransition.isActive;
+}
+
+///
+
 u32 allocate_mario_action(u32 actFlags) {
     actFlags = actFlags & (~((u32)0x3F));
     return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
@@ -312,6 +319,8 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
     dynos_movtexqc_register(name, level, area, type);
 }
 
+///
+
 f32 get_environment_region(u8 index) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         return gEnvironmentRegions[6 * (int)index];
@@ -319,20 +328,38 @@ f32 get_environment_region(u8 index) {
     return -11000;
 }
 
+///
+
 void set_environment_region(u8 index, s32 value) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
 }
 
+///
+
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
 }
+
+///
 
 void set_override_near(f32 near) {
     gOverrideNear = near;
 }
 
+///
+
 void set_override_far(f32 far) {
     gOverrideFar = far;
+}
+
+///
+
+void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
+    dynos_add_scroll_target(index, name, offset, size);
+}
+
+void init_scroll_targets(void) {
+    dynos_init_scroll_targets();
 }

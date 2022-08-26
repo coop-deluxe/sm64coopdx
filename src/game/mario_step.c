@@ -10,6 +10,7 @@
 #include "mario_step.h"
 #include "pc/lua/smlua.h"
 #include "game/hardcoded.h"
+#include "pc/cheats.h"
 
 static s16 sMovingSandSpeeds[] = { 12, 8, 4, 0 };
 
@@ -108,7 +109,7 @@ void mario_bonk_reflection(struct MarioState *m, u32 negateSpeed) {
 }
 
 u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
-    if (m->action & ACT_FLAG_RIDING_SHELL) {
+    if (m->action & ACT_FLAG_RIDING_SHELL || (Cheats.enabled && Cheats.godMode)) {
         m->quicksandDepth = 0.0f;
     } else {
         if (m->quicksandDepth < 1.1f) {

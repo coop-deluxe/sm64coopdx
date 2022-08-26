@@ -6286,11 +6286,52 @@
 
 <br />
 
+## [warp_to_start_level](#warp_to_start_level)
+
+### Lua Example
+`local booleanValue = warp_to_start_level()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_to_start_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_misc_utils.h
 
 <br />
 
+
+## [add_scroll_target](#add_scroll_target)
+
+### Lua Example
+`add_scroll_target(index, name, offset, size)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| name | `string` |
+| offset | `integer` |
+| size | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [allocate_mario_action](#allocate_mario_action)
 
@@ -6766,6 +6807,24 @@
 
 <br />
 
+## [get_dialog_id](#get_dialog_id)
+
+### Lua Example
+`local integerValue = get_dialog_id()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_dialog_id(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_environment_region](#get_environment_region)
 
 ### Lua Example
@@ -6988,6 +7047,24 @@
 
 <br />
 
+## [init_scroll_targets](#init_scroll_targets)
+
+### Lua Example
+`init_scroll_targets()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void init_scroll_targets(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_game_paused](#is_game_paused)
 
 ### Lua Example
@@ -7001,6 +7078,24 @@
 
 ### C Prototype
 `bool is_game_paused(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_transition_playing](#is_transition_playing)
+
+### Lua Example
+`local booleanValue = is_transition_playing()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_transition_playing(void);`
 
 [:arrow_up_small:](#)
 

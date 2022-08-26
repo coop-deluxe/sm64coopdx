@@ -167,8 +167,6 @@ static void gfx_sdl_handle_events(void) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-#ifndef TARGET_WEB
-            // Scancodes are broken in Emscripten SDL2: https://bugzilla.libsdl.org/show_bug.cgi?id=3259
             case SDL_TEXTINPUT:
                 kb_text_input(event.text.text);
                 break;
@@ -178,8 +176,7 @@ static void gfx_sdl_handle_events(void) {
             case SDL_KEYUP:
                 gfx_sdl_onkeyup(event.key.keysym.scancode);
                 break;
-#endif
-            case SDL_WINDOWEVENT: // TODO: Check if this makes sense to be included in the Web build
+            case SDL_WINDOWEVENT:
                 if (!IS_FULLSCREEN()) {
                     switch (event.window.event) {
                         case SDL_WINDOWEVENT_MOVED:

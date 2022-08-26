@@ -1341,7 +1341,9 @@ void obj_mark_for_deletion(struct Object *obj) {
     //  setting it to 0 could potentially enable unexpected behavior. After an
     //  object is marked for deletion, it still updates on that frame (I think),
     //  so this is worth looking into.
-    obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    if (obj != NULL) {
+        obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    }
 }
 
 void cur_obj_disable(void) {

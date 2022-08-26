@@ -158,7 +158,7 @@ void network_player_update(void) {
 #ifndef DEVELOPMENT
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
             LOG_INFO("dropping due to no server connectivity");
-            network_shutdown(false, false);
+            network_shutdown(false, false, true);
         }
 #endif
 
@@ -284,7 +284,7 @@ u8 network_player_disconnected(u8 globalIndex) {
             LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
-            network_shutdown(true, false);
+            network_shutdown(true, false, true);
         }
     }
 
@@ -402,7 +402,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     }
 }
 
-void network_player_shutdown(void) {
+void network_player_shutdown(bool popup) {
     gNetworkPlayerLocal = NULL;
     gNetworkPlayerServer = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -412,6 +412,6 @@ void network_player_shutdown(void) {
         gNetworkSystem->clear_id(i);
     }
 
-    djui_popup_create("\\#ffa0a0\\Error:\\#dcdcdc\\ network shutdown", 1);
+    if (popup) { djui_popup_create("\\#ffa0a0\\Disconnected:\\#dcdcdc\\ server closed", 1); }
     LOG_INFO("cleared all network players");
 }

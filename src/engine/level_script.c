@@ -27,6 +27,7 @@
 #include "level_table.h"
 #include "src/pc/lua/utils/smlua_model_utils.h"
 #include "src/pc/lua/smlua.h"
+#include "src/pc/djui/djui.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
 
@@ -763,7 +764,7 @@ static void level_cmd_nop(void) {
 }
 
 static void level_cmd_show_dialog(void) {
-    if (sCurrAreaIndex != -1) {
+    if (sCurrAreaIndex != -1 && !gDjuiInMainMenu) {
         if (CMD_GET(u8, 2) < 2) {
             gAreas[sCurrAreaIndex].dialog[CMD_GET(u8, 2)] = CMD_GET(u8, 3);
         }

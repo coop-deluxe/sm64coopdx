@@ -20,7 +20,7 @@
 #include "object_list_processor.h"
 #include "ingame_menu.h"
 #include "obj_behaviors.h"
-#include "game/object_helpers.h"
+#include "object_helpers.h"
 #include "save_file.h"
 #include "hardcoded.h"
 #include "debug_course.h"
@@ -438,7 +438,7 @@ void init_mario_after_warp(void) {
         set_mario_initial_action(gMarioState, marioSpawnType, sWarpDest.arg);
 
         // remove offset from local mario during warps
-        if (sWarpDest.type == WARP_TYPE_SAME_AREA) {
+        if (sWarpDest.type == WARP_TYPE_SAME_AREA && marioSpawnType != MARIO_SPAWN_DOOR_WARP) {
             gMarioState[0].pos[0] = (s16)spawnNode->object->oPosX;
             gMarioState[0].pos[1] = (s16)spawnNode->object->oPosY;
             gMarioState[0].pos[2] = (s16)spawnNode->object->oPosZ;
@@ -523,6 +523,10 @@ void init_mario_after_warp(void) {
 
     if (gNetworkPlayerLocal != NULL) {
         network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+    }
+
+    if (gMarioState->health <= 0x110) {
+        gMarioState->health = 0x880;
     }
 
     smlua_call_event_hooks(HOOK_ON_WARP);
@@ -845,7 +849,8 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_DEATH:
-                if (m->numLives <= 0) {
+                m->numLives--;
+                if (m->numLives <= -1) {
                     sDelayedWarpOp = WARP_OP_GAME_OVER;
                 }
                 sDelayedWarpTimer = 48;
@@ -863,7 +868,8 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
             case WARP_OP_WARP_FLOOR:
                 sSourceWarpNodeId = WARP_NODE_WARP_FLOOR;
                 if (area_get_warp_node(sSourceWarpNodeId) == NULL) {
-                    if (m->numLives <= 0) {
+                    m->numLives--;
+                    if (m->numLives <= -1) {
                         sDelayedWarpOp = WARP_OP_GAME_OVER;
                     } else {
                         sSourceWarpNodeId = WARP_NODE_DEATH;
@@ -961,7 +967,7 @@ void initiate_delayed_warp(void) {
             switch (sDelayedWarpOp) {
                 case WARP_OP_GAME_OVER:
                     gChangeLevel = gLevelValues.entryLevel;
-                    gMarioStates[0].numLives = 3;
+                    gMarioStates[0].numLives = 4;
                     gMarioStates[0].health = 0x880;
                     break;
 
@@ -1331,7 +1337,7 @@ void update_menu_level(void) {
         default: curLevel = LEVEL_CASTLE_GROUNDS; break;
     }
 
-    // warp to level
+    // warp to level, this feels buggy
     if (gCurrLevelNum != curLevel) {
         if (curLevel == LEVEL_JRB) {
             dynos_warp_to_level(curLevel, 1, 2);
@@ -1342,135 +1348,108 @@ void update_menu_level(void) {
         }
     }
 
-    // set mario/camera pos
-    if (gCurrLevelNum == LEVEL_CASTLE_GROUNDS) {
-        if (!sFirstCastleGroundsMenu) {
-            gMarioState->pos[0] = -1328;
-            gMarioState->pos[1] = 260;
-            gMarioState->pos[2] = 4664;
-            gMarioState->faceAngle[1] = 0x0;
-            gLakituState.curPos[1] = 390;
-            gLakituState.curPos[0] = -1328;
-            gLakituState.curPos[2] = 6064;
-        }
-    } else if (gCurrLevelNum == LEVEL_BOB) {
-        gMarioState->pos[0] = 7008;
-        gMarioState->pos[1] = 864;
-        gMarioState->pos[2] = 1943;
-        gLakituState.curPos[1] = 1064;
-        gLakituState.curPos[2] = 2843;
-        gLakituState.curPos[0] = 7908;
-        gMarioState->faceAngle[1] = 0x2000;
-
-        // delete all goombas as they interfere with the main menu
-
-        struct Object *o;
-
-        o = find_object_with_behavior(bhvGoomba);
-
-        if (o != NULL) {
-            if (obj_has_behavior(o, bhvGoomba)) {
-                obj_mark_for_deletion(o);
-            }
-        }
-
-    } else if (gCurrLevelNum == LEVEL_WF) {
-        gLakituState.curPos[1] = 2760;
-        gLakituState.curPos[2] = -777;
-        gLakituState.curPos[0] = -4504;
-        gMarioState->pos[1] = 2560;
-        gMarioState->pos[2] = -327;
-        gMarioState->pos[0] = -2904;
-        gMarioState->faceAngle[1] = -31072 / 2;
-    } else if (gCurrLevelNum == LEVEL_WMOTR) {
-        gLakituState.curPos[1] = -2438;
-        gLakituState.curPos[2] = 6063;
-        gLakituState.curPos[0] = 3548;
-        gMarioState->pos[1] = -2738;
-        gMarioState->pos[2] = 4663;
-        gMarioState->pos[0] = 3548;
-        gMarioState->faceAngle[1] = 0;
-    } else if (gCurrLevelNum == LEVEL_JRB) {
-        gLakituState.curPos[1] = 1736;
-        gLakituState.curPos[2] = 6402;
-        gLakituState.curPos[0] = 5039;
-        gMarioState->pos[1] = 1536;
-        gMarioState->pos[2] = 6202;
-        gMarioState->pos[0] = 3639;
-    } else if (gCurrLevelNum == LEVEL_SSL) {
-        gLakituState.curPos[1] = 356;
-        gLakituState.curPos[2] = 2461;
-        gLakituState.curPos[0] = -2048;
-        gMarioState->pos[1] = 256;
-        gMarioState->pos[2] = 961;
-        gMarioState->pos[0] = -2048;
-        gMarioState->faceAngle[1] = 0;
-    } else if (gCurrLevelNum == LEVEL_TTM) {
-        gLakituState.curPos[1] = 1763;
-        gLakituState.curPos[2] = 3411;
-        gLakituState.curPos[0] = 3488;
-        gMarioState->pos[1] = 1460;
-        gMarioState->pos[2] = 2011;
-        gMarioState->pos[0] = 2488;
-        gMarioState->faceAngle[1] = 0x1000;
-    } else if (gCurrLevelNum == LEVEL_SL) {
-        gLakituState.curPos[1] = 1124;
-        gLakituState.curPos[2] = 443;
-        gLakituState.curPos[0] = 6994;
-        gMarioState->pos[1] = 1024;
-        gMarioState->pos[2] = 443;
-        gMarioState->pos[0] = 5494;
-        gMarioState->faceAngle[1] = 0x4000;
-    } else if (gCurrLevelNum == LEVEL_BBH) {
-        gLakituState.curPos[1] = -204;
-        gLakituState.curPos[2] = 6803;
-        gLakituState.curPos[0] = 666;
-        gMarioState->pos[1] = -204;
-        gMarioState->pos[2] = 5303;
-        gMarioState->pos[0] = 666;
-        gMarioState->faceAngle[1] = 0;
-    } else if (gCurrLevelNum == LEVEL_LLL) {
-        gLakituState.curPos[1] = 938;
-        gLakituState.curPos[2] = 1576;
-        gLakituState.curPos[0] = -3576;
-        gMarioState->pos[1] = 638;
-        gMarioState->pos[2] = 956;
-        gMarioState->pos[0] = -2376;
-        gMarioState->faceAngle[1] = -0x2800;
-    } else if (gCurrLevelNum == LEVEL_THI) {
-        gLakituState.curPos[1] = 431;
-        gLakituState.curPos[2] = -324;
-        gLakituState.curPos[0] = -2246;
-        gMarioState->pos[1] = 341;
-        gMarioState->pos[2] = -324;
-        gMarioState->pos[0] = -1010;
-        gMarioState->faceAngle[1] = -0x4000;
-
-        // delete all goombas as they interfere with the main menu
-
-        struct Object *o;
-
-        o = find_object_with_behavior(bhvGoomba);
-
-        if (o != NULL) {
-            if (obj_has_behavior(o, bhvGoomba)) {
-                obj_mark_for_deletion(o);
-            }
-        }
+    // set sFirstCastleGroundsMenu to false to prevent wall hugging bug
+    if (curLevel != LEVEL_CASTLE_GROUNDS) {
+         sFirstCastleGroundsMenu = false;
     }
 
+    struct Object *o;
+    // set mario/camera pos
+    switch (gCurrLevelNum) {
+        case LEVEL_CASTLE_GROUNDS:
+            if (!sFirstCastleGroundsMenu) {
+                vec3f_set(gMarioState->pos, -1328, 260, 4664);
+                vec3f_set(gLakituState.curPos, -1328, 390, 6064);
+                gMarioState->faceAngle[1] = 0;
+                gLakituState.nextYaw = gMarioState->faceAngle[1] + 0x8000;
+            }
+            break;
+        case LEVEL_BOB:
+            vec3f_set(gMarioState->pos, 7008, 864, 1943);
+            vec3f_set(gLakituState.curPos, 7909, 1064, 2843);
+            gMarioState->faceAngle[1] = 0x2000;
+
+            // delete all goombas as they interfere with the main menu
+            o = find_object_with_behavior(bhvGoomba);
+            if (o != NULL) {
+                obj_mark_for_deletion(o);
+            }
+            break;
+        case LEVEL_WF:
+            vec3f_set(gMarioState->pos, -2904, 2560, -327);
+            vec3f_set(gLakituState.curPos, -4504, 2760, -777);
+            gMarioState->faceAngle[1] = -15536;
+            break;
+        case LEVEL_WMOTR:
+            vec3f_set(gMarioState->pos, 3548, -2738, 4663);
+            vec3f_set(gLakituState.curPos, 3548, -2438, 6063);
+            gMarioState->faceAngle[1] = 0;
+            break;
+        case LEVEL_JRB:
+            vec3f_set(gMarioState->pos, 3639, 1536, 6202);
+            vec3f_set(gLakituState.curPos, 5039, 1736, 6402);
+            break;
+        case LEVEL_SSL:
+            vec3f_set(gMarioState->pos, -2048, 256, 961);
+            vec3f_set(gLakituState.curPos, -2048, 356, 2461);
+            gMarioState->faceAngle[1] = 0;
+            break;
+        case LEVEL_TTM:
+            vec3f_set(gMarioState->pos, 2488, 1460, 2011);
+            vec3f_set(gLakituState.curPos, 3488, 1763, 3411);
+            gMarioState->faceAngle[1] = 0x1000;
+            break;
+        case LEVEL_SL:
+            vec3f_set(gMarioState->pos, 5494, 1024, 443);
+            vec3f_set(gLakituState.curPos, 6994, 1124, 443);
+            gMarioState->faceAngle[1] = 0x4000;
+            break;
+        case LEVEL_BBH:
+            vec3f_set(gMarioState->pos, 666, -204, 5303);
+            vec3f_set(gLakituState.curPos, 666, -204, 6803);
+            gMarioState->faceAngle[1] = 0;
+
+            // delete all scuttlebugs as they interfere with the main menu
+            o = find_object_with_behavior(bhvScuttlebug);
+            if (o != NULL) {
+                obj_mark_for_deletion(o);
+            }
+            break;
+        case LEVEL_LLL:
+            vec3f_set(gMarioState->pos, -2376, 638, 956);
+            vec3f_set(gLakituState.curPos, -3576, 938, 1576);
+            gMarioState->faceAngle[1] = -0x2800;
+            break;
+        case LEVEL_THI:
+            vec3f_set(gMarioState->pos, -1010, 341, -324);
+            vec3f_set(gLakituState.curPos, -2246, 431, -324);
+            gMarioState->faceAngle[1] = -0x4000;
+
+            // delete all goombas as they interfere with the main menu
+            o = find_object_with_behavior(bhvGoomba);
+            if (o != NULL) {
+                obj_mark_for_deletion(o);
+            }
+            break;
+    }
+
+    gMarioState->health = 0x880;
     // reset input
     gMarioState->input = 0;
+    gMarioState->controller->rawStickX = 0;
+    gMarioState->controller->rawStickY = 0;
+    gMarioState->controller->stickX = 0;
+    gMarioState->controller->stickY = 0;
 
     // figure out music
-    if (!configMenuSound) {
+    if (!configMenuSound || curLevel == LEVEL_CASTLE_GROUNDS) {
         reset_volume();
         disable_background_sound();
         set_background_music(0, 0x0021, 0);
     } else {
         reset_volume();
         disable_background_sound();
-        
+
         if (get_current_background_music() == 0x0021) {
             if (curLevel == LEVEL_JRB) {
                 dynos_warp_to_level(curLevel, 1, 2);
@@ -1491,7 +1470,7 @@ s32 update_level(void) {
     } else {
         sFirstCastleGroundsMenu = false;
     }
-    
+
     s32 changeLevel = 0;
 
     if (gChangeLevel != -1) {
