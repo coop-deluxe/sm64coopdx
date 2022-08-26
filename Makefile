@@ -30,9 +30,6 @@ TARGET_N64 = 0
 # Build and optimize for Raspberry Pi(s)
 TARGET_RPI ?= 0
 
-# Build for Emscripten/WebGL
-TARGET_WEB ?= 0
-
 # Makeflag to enable OSX fixes
 OSX_BUILD ?= 0
 
@@ -132,10 +129,8 @@ else
   endif
 endif
 
-ifeq ($(TARGET_WEB),0)
-  ifeq ($(HOST_OS),Windows)
-    WINDOWS_BUILD := 1
-  endif
+ifeq ($(HOST_OS),Windows)
+  WINDOWS_BUILD := 1
 endif
 
 # MXE overrides
@@ -239,10 +234,6 @@ else
   PROF_FLAGS :=
 endif
 
-ifeq ($(TARGET_WEB),1)
-  OPT_FLAGS := -O2 -g4 --source-map-base http://localhost:8080/
-endif
-
 ifeq ($(TARGET_RPI),1)
 	machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
 
@@ -319,10 +310,6 @@ endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
      DEFINES += OSX_BUILD=1
-endif
-
-ifeq ($(TARGET_WEB),1)
-     DEFINES := $(DEFINES) -DTARGET_WEB -DUSE_GLES
 endif
 
 # Check backends
@@ -490,23 +477,15 @@ _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
 
 BUILD_DIR_BASE := build
 # BUILD_DIR is the location where all build artifacts are placed
-ifeq ($(TARGET_WEB),1)
-  BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_web
-else
-  BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
-endif
+BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
-ifeq ($(TARGET_WEB),1)
-	EXE := $(BUILD_DIR)/$(TARGET_STRING).html
-else
-	ifeq ($(WINDOWS_BUILD),1)
-		EXE := $(BUILD_DIR)/$(TARGET_STRING).exe
-	else # Linux builds/binary namer
-		ifeq ($(TARGET_RPI),1)
-			EXE := $(BUILD_DIR)/$(TARGET_STRING).arm
-		else
-			EXE := $(BUILD_DIR)/$(TARGET_STRING)
-		endif
+ifeq ($(WINDOWS_BUILD),1)
+	EXE := $(BUILD_DIR)/$(TARGET_STRING).exe
+else # Linux builds/binary namer
+	ifeq ($(TARGET_RPI),1)
+		EXE := $(BUILD_DIR)/$(TARGET_STRING).arm
+	else
+		EXE := $(BUILD_DIR)/$(TARGET_STRING)
 	endif
 endif
 
@@ -701,9 +680,6 @@ else ifeq ($(COMPILER),clang)
   CXX     := clang++
   CPP     := clang++
   EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result
-else ifeq ($(TARGET_WEB),1) # As in, web PC port
-  CC     := emcc
-  CXX    := emcc
 else
   ifeq ($(USE_QEMU_IRIX),1)
     IRIX_ROOT := $(TOOLS_DIR)/ido5.3_compiler
@@ -865,9 +841,6 @@ ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
     BACKEND_LDFLAGS += -ldbghelp
   endif
-else ifeq ($(TARGET_WEB),1)
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra -Wno-format-security $(TARGET_CFLAGS) -s USE_SDL=2
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -s USE_SDL=2
 else ifeq ($(TARGET_N64),0) # Linux / Other builds below
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
   CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
@@ -902,9 +875,7 @@ ifeq ($(TARGET_N64),1)
   endif
 endif
 
-ifeq ($(TARGET_WEB),1)
-  LDFLAGS := -lm -lGL -lSDL2 -no-pie -s TOTAL_MEMORY=20MB -g4 --source-map-base http://localhost:8080/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['callMain']"
-else ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie

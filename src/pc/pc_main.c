@@ -3,11 +3,6 @@
 #include <string.h>
 #include <signal.h>
 
-#ifdef TARGET_WEB
-#include <emscripten.h>
-#include <emscripten/html5.h>
-#endif
-
 #include "sm64.h"
 
 #include "pc/lua/smlua.h"
@@ -263,48 +258,12 @@ void game_deinit(void) {
 void game_exit(void) {
     LOG_INFO("exiting cleanly");
     game_deinit();
-#ifndef TARGET_WEB
     exit(0);
-#endif
 }
 
 void inthand(UNUSED int signum) {
     game_exit();
 }
-
-#ifdef TARGET_WEB
-static void em_main_loop(void) {
-}
-
-static void request_anim_frame(void (*func)(double time)) {
-    EM_ASM(requestAnimationFrame(function(time) {
-        dynCall("vd", $0, [time]);
-    }), func);
-}
-
-static void on_anim_frame(double time) {
-    static double target_time;
-
-    time *= 0.03; // milliseconds to frame count (33.333 ms -> 1)
-
-    if (time >= target_time + 10.0) {
-        // We are lagging 10 frames behind, probably due to coming back after inactivity,
-        // so reset, with a small margin to avoid potential jitter later.
-        target_time = time - 0.010;
-    }
-
-    for (s32 i = 0; i < 2; i++) {
-        // If refresh rate is 15 Hz or something we might need to generate two frames
-        if (time >= target_time) {
-            produce_one_frame();
-            target_time = target_time + 1.0;
-        }
-    }
-
-    if (inited) // only continue if the init flag is still set
-        request_anim_frame(on_anim_frame);
-}
-#endif
 
 void main_func(void) {
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
@@ -416,10 +375,6 @@ void main_func(void) {
     discord_init();
 #endif
 
-#ifdef TARGET_WEB
-    emscripten_set_main_loop(em_main_loop, 0, 0);
-    request_anim_frame(on_anim_frame);
-#else
     while (true) {
         wm_api->main_loop(produce_one_frame);
 #ifdef DISCORDRPC
@@ -430,7 +385,6 @@ void main_func(void) {
         fflush(stderr);
 #endif
     }
-#endif
 
     bassh_deinit();
 }

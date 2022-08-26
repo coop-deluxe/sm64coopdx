@@ -135,8 +135,6 @@ static void gfx_sdl_handle_events(void) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-#ifndef TARGET_WEB
-            // Scancodes are broken in Emscripten SDL2: https://bugzilla.libsdl.org/show_bug.cgi?id=3259
             case SDL_KEYDOWN:
                 gfx_sdl_onkeydown(event.key.keysym.sym);
                 // ALT+F4 in case the OS doesn't do it (SDL1 doesn't seem to do it on my machine)
@@ -146,7 +144,6 @@ static void gfx_sdl_handle_events(void) {
             case SDL_KEYUP:
                 gfx_sdl_onkeyup(event.key.keysym.sym);
                 break;
-#endif
             case SDL_VIDEORESIZE:
                 window_w = configWindow.w = event.resize.w;
                 window_h = configWindow.h = event.resize.h;
