@@ -10,28 +10,28 @@ void djui_panel_cheats_create(struct DjuiBase* caller) {
 
     {
         {
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Moon jump", &Cheats.MoonJump);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Moon jump", &Cheats.moonJump);
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
             defaultBase = &checkbox->base;
         }
         {
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "God mode", &Cheats.GodMode);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "God mode", &Cheats.godMode);
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
         }
         {
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Infinite lives", &Cheats.InfiniteLives);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Infinite lives", &Cheats.infiniteLives);
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
         }
         {
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Super speed", &Cheats.SuperSpeed);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Super speed", &Cheats.superSpeed);
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
         }
         {
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Responsive controls", &Cheats.Responsive);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(&body->base, "Responsive controls", &Cheats.responsive);
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&checkbox->base, 1.0f, 32);
         }

@@ -101,7 +101,7 @@ bool network_init(enum NetworkType inNetworkType) {
 #else
     gServerSettings.headlessServer = 0;
 #endif
-    Cheats.EnableCheats = gServerSettings.enableCheats;
+    Cheats.enabled = gServerSettings.enableCheats;
 
     // initialize the network system
     gNetworkSentJoin = false;

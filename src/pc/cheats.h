@@ -4,12 +4,12 @@
 #include <stdbool.h>
 
 struct CheatList {
-    bool         EnableCheats;
-    bool         MoonJump;
-    bool         GodMode;
-    bool         InfiniteLives;
-    bool         SuperSpeed;
-    bool         Responsive;
+    bool enabled;
+    bool moonJump;
+    bool godMode;
+    bool infiniteLives;
+    bool superSpeed;
+    bool responsive;
 };
 
 extern struct CheatList Cheats;
