@@ -228,7 +228,7 @@ else ifeq ($(DEBUG_INFO_LEVEL),1)
 else ifeq ($(DEBUG_INFO_LEVEL),0)
   # If we're compiling with -0g. I don't believe this will do anything worthwhile.
   OPT_FLAGS += -g0
-else 
+else
   # This is our default AND level 2.
   OPT_FLAGS += -g
 endif
@@ -357,7 +357,7 @@ ifeq ($(HEADLESS),1)
   RENDER_API := DUMMY
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY
-  CONTROLLER_API := 
+  CONTROLLER_API :=
 endif
 
 ifeq ($(TARGET_RPI),1)
@@ -606,7 +606,7 @@ RPC_LIBS :=
 #ifeq ($(DISCORDRPC),1)
 #  ifeq ($(WINDOWS_BUILD),1)
 #    RPC_LIBS := lib/discord/libdiscord-rpc.dll
-#  else ifeq ($(OSX_BUILD),1) 
+#  else ifeq ($(OSX_BUILD),1)
 #    # needs testing
 #    RPC_LIBS := lib/discord/libdiscord-rpc.dylib
 #  else
@@ -827,7 +827,7 @@ ifeq ($(SDL1_USED)$(SDL2_USED),11)
 endif
 
 # SDL can be used by different systems, so we consolidate all of that shit into this
- 
+
 ifeq ($(SDL2_USED),1)
   SDLCONFIG := $(CROSS)sdl2-config
   BACKEND_CFLAGS += -DHAVE_SDL2=1
@@ -844,7 +844,7 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
   else
     BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
   endif
-  
+
   ifeq ($(WINDOWS_BUILD),1)
     BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion
   else
@@ -886,7 +886,7 @@ ifeq ($(TARGET_N64),1)
   RSPASMFLAGS := $(foreach d,$(DEFINES),-definelabel $(subst =, ,$(d)))
 else
   ASFLAGS     := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(foreach d,$(DEFINES),--defsym $(d))
-  RSPASMFLAGS := 
+  RSPASMFLAGS :=
 endif
 
 # C preprocessor flags
@@ -1207,9 +1207,9 @@ clean:
 cleantools:
 	$(MAKE) -s -C $(TOOLS_DIR) clean
 
-distclean: clean
+distclean: clean cleantools
 	$(PYTHON) extract_assets.py --clean
-	
+
 test: $(ROM)
 	$(EMULATOR) $(EMU_FLAGS) $<
 
@@ -1220,7 +1220,7 @@ libultra: $(BUILD_DIR)/libultra.a
 
 $(BUILD_DIR)/$(RPC_LIBS):
 	@$(CP) -f $(RPC_LIBS) $(BUILD_DIR)
-	
+
 $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 	@$(CP) -f $(DISCORD_SDK_LIBS) $(BUILD_DIR)
 
@@ -1301,7 +1301,7 @@ else
   $(BUILD_DIR)/%: %.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS) -s raw -i $@ -g $< -f $(lastword $(subst ., ,$@))
-	
+
   $(BUILD_DIR)/%.inc.c: %.png
 	$(call print,Converting:,$<,$@)
 	$(V)$(N64GRAPHICS) -s $(TEXTURE_ENCODING) -i $@ -g $< -f $(lastword ,$(subst ., ,$(basename $<)))
@@ -1355,7 +1355,7 @@ $(BUILD_DIR)/%.mio0: $(BUILD_DIR)/%.bin
 $(BUILD_DIR)/%.mio0.o: $(BUILD_DIR)/%.mio0
 	$(call print,Converting MIO0 to ELF:,$<,$@)
 	$(V)printf ".section .data\n\n.incbin \"$<\"\n" | $(AS) $(ASFLAGS) -o $@
-	
+
 endif
 
 
@@ -1556,7 +1556,7 @@ endif
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
 	$(call print,Preprocessing linker script:,$<,$@)
 	$(V)$(CPP) $(PROF_FLAGS) $(CPPFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
-	
+
 # Assemble assembly code
 $(BUILD_DIR)/%.o: %.s
 	$(call print,Assembling:,$<,$@)
@@ -1567,7 +1567,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/rsp/%.bin $(BUILD_DIR)/rsp/%_data.bin: rsp/%.s
 	$(call print,Assembling:,$<,$@)
 	$(V)$(RSPASM) -sym $@.sym $(RSPASMFLAGS) -strequ CODE_FILE $(BUILD_DIR)/rsp/$*.bin -strequ DATA_FILE $(BUILD_DIR)/rsp/$*_data.bin $<
-	
+
   # Link libultra
   $(BUILD_DIR)/libultra.a: $(ULTRA_O_FILES)
 	@$(PRINT) "$(GREEN)Linking libultra:  $(BLUE)$@ $(NO_COL)\n"
@@ -1578,7 +1578,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/libgoddard.a: $(GODDARD_O_FILES)
 	@$(PRINT) "$(GREEN)Linking libgoddard:  $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(AR) rcs -o $@ $(GODDARD_O_FILES)
-	
+
   # Link SM64 ELF file
   $(ELF): $(O_FILES) $(MIO0_OBJ_FILES) $(SEG_FILES) $(BUILD_DIR)/$(LD_SCRIPT) undefined_syms.txt $(BUILD_DIR)/libultra.a $(BUILD_DIR)/libgoddard.a
 	@$(PRINT) "$(GREEN)Linking ELF file:  $(BLUE)$@ $(NO_COL)\n"
@@ -1589,7 +1589,7 @@ ifeq ($(TARGET_N64),1)
 	$(call print,Building ROM:,$<,$@)
 	$(V)$(OBJCOPY) --pad-to=0x800000 --gap-fill=0xFF $< $(@:.z64=.bin) -O binary
 	$(V)$(N64CKSUM) $(@:.z64=.bin) $@
-	
+
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
