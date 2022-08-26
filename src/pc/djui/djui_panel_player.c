@@ -72,8 +72,8 @@ static void djui_panel_player_edit_palette_hex_code_changed(struct DjuiBase* cal
     }
 
     for (int i = 0; i < 3; i++) {
-        configPlayerPalette.parts[sCurrentPlayerPart][i] = (char_to_hex_digit(input->buffer[2*i]) << 4) |
-                                                           char_to_hex_digit(input->buffer[2*i] + 1);
+        configPlayerPalette.parts[sCurrentPlayerPart][i] = (char_to_hex_digit(input->buffer[2 * i]) << 4) |
+                                                           char_to_hex_digit(input->buffer[2 * i + 1]);
     }
 
     djui_panel_player_edit_palette_update_sliders();
