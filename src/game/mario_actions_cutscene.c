@@ -682,6 +682,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                     struct MarioState* marioState = &gMarioStates[i];
                     if (!is_player_active(marioState)) { continue; }
                     if (marioState->marioObj == NULL) { continue; }
+                    if (marioState->playerIndex != m->playerIndex) { continue; }
                     struct Object* celebStar = spawn_object(marioState->marioObj, MODEL_STAR, bhvCelebrationStar);
                     if (m != marioState && celebStar != NULL) {
                         celebStar->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
