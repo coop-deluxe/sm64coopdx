@@ -7527,6 +7527,11 @@ function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
+--- @return boolean
+function warp_to_start_level()
+    -- ...
+end
+
 --- @param actFlags integer
 --- @return integer
 function allocate_mario_action(actFlags)

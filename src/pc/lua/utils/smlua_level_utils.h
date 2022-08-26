@@ -23,6 +23,7 @@ struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(char* shortNam
 s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullName, const char* shortName, u32 acousticReach, u32 echoLevel1, u32 echoLevel2, u32 echoLevel3);
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool warp_restart_level(void);
+bool warp_to_start_level(void);
 bool warp_exit_level(s32 aDelay);
 bool warp_to_castle(s32 aLevel);
 

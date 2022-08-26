@@ -16635,6 +16635,15 @@ int smlua_func_warp_to_level(lua_State* L) {
     return 1;
 }
 
+int smlua_func_warp_to_start_level(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, warp_to_start_level());
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -19426,6 +19435,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
     smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
+    smlua_bind_function(L, "warp_to_start_level", smlua_func_warp_to_start_level);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);

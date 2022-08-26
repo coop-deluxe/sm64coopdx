@@ -1,6 +1,7 @@
 #include "dynos.cpp.h"
 extern "C" {
 #include "src/game/moving_texture.h"
+#include "game/hardcoded.h"
 
 void *dynos_swap_cmd(void *cmd) {
     return DynOS_SwapCmd(cmd);
@@ -36,6 +37,16 @@ LevelScript* dynos_get_level_script(char* scriptEntryName) {
 
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return DynOS_Warp_ToLevel(aLevel, aArea, aAct);
+}
+
+bool dynos_warp_to_start_level(void) {
+
+    // change the level to the start level
+    extern s16 gChangeLevel;
+    gChangeLevel = gLevelValues.entryLevel;
+
+    // always return true since it will always suceed
+    return true;
 }
 
 bool dynos_warp_restart_level(void) {
