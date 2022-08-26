@@ -438,7 +438,7 @@ void init_mario_after_warp(void) {
         set_mario_initial_action(gMarioState, marioSpawnType, sWarpDest.arg);
 
         // remove offset from local mario during warps
-        if (sWarpDest.type == WARP_TYPE_SAME_AREA) {
+        if (sWarpDest.type == WARP_TYPE_SAME_AREA && marioSpawnType != MARIO_SPAWN_DOOR_WARP) {
             gMarioState[0].pos[0] = (s16)spawnNode->object->oPosX;
             gMarioState[0].pos[1] = (s16)spawnNode->object->oPosY;
             gMarioState[0].pos[2] = (s16)spawnNode->object->oPosZ;
@@ -1449,7 +1449,7 @@ void update_menu_level(void) {
     } else {
         reset_volume();
         disable_background_sound();
-        
+
         if (get_current_background_music() == 0x0021) {
             if (curLevel == LEVEL_JRB) {
                 dynos_warp_to_level(curLevel, 1, 2);
@@ -1470,7 +1470,7 @@ s32 update_level(void) {
     } else {
         sFirstCastleGroundsMenu = false;
     }
-    
+
     s32 changeLevel = 0;
 
     if (gChangeLevel != -1) {
