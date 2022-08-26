@@ -1002,7 +1002,9 @@ function act_dive_slide(m)
         if (m.input & INPUT_B_PRESSED) ~= 0 then
             -- dive hop
             m.vel.y = 21.0
-            return set_mario_action(m, ACT_DIVE, 1)
+            set_mario_action(m, ACT_DIVE, 1)
+	        set_mario_animation(m, MARIO_ANIM_DIVE)
+	        set_anim_to_frame(m, 15)
         end
     end
 
