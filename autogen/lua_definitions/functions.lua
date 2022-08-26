@@ -7532,15 +7532,17 @@ function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
+--- @return boolean
+function warp_to_start_level()
+    -- ...
+end
+
 --- @param index integer
 --- @param name string
 --- @param offset integer
 --- @param size integer
 --- @return nil
 function add_scroll_target(index, name, offset, size)
-
---- @return boolean
-function warp_to_start_level()
     -- ...
 end
 
