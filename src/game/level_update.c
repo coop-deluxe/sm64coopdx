@@ -1408,6 +1408,12 @@ void update_menu_level(void) {
             vec3f_set(gMarioState->pos, 666, -204, 5303);
             vec3f_set(gLakituState.curPos, 666, -204, 6803);
             gMarioState->faceAngle[1] = 0;
+
+            // delete all scuttlebugs as they interfere with the main menu
+            o = find_object_with_behavior(bhvScuttlebug);
+            if (o != NULL) {
+                obj_mark_for_deletion(o);
+            }
             break;
         case LEVEL_LLL:
             vec3f_set(gMarioState->pos, -2376, 638, 956);
