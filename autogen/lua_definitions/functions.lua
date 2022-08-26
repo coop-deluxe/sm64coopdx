@@ -7750,6 +7750,11 @@ function is_game_paused()
     -- ...
 end
 
+--- @return boolean
+function is_transition_playing()
+    -- ...
+end
+
 --- @param name string
 --- @param level integer
 --- @param area integer

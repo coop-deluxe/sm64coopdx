@@ -7042,6 +7042,24 @@
 
 <br />
 
+## [is_transition_playing](#is_transition_playing)
+
+### Lua Example
+`local booleanValue = is_transition_playing()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_transition_playing(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [movtexqc_register](#movtexqc_register)
 
 ### Lua Example

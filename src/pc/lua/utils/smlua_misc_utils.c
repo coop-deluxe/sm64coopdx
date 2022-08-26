@@ -273,6 +273,12 @@ bool is_game_paused(void) {
 
 ///
 
+bool is_transition_playing(void) {
+    return sTransitionUpdate != NULL || gWarpTransition.isActive;
+}
+
+///
+
 u32 allocate_mario_action(u32 actFlags) {
     actFlags = actFlags & (~((u32)0x3F));
     return actFlags | ACT_FLAG_CUSTOM_ACTION | gLuaMarioActionIndex++;
@@ -313,6 +319,8 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
     dynos_movtexqc_register(name, level, area, type);
 }
 
+///
+
 f32 get_environment_region(u8 index) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         return gEnvironmentRegions[6 * (int)index];
@@ -320,19 +328,27 @@ f32 get_environment_region(u8 index) {
     return -11000;
 }
 
+///
+
 void set_environment_region(u8 index, s32 value) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
 }
 
+///
+
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
 }
 
+///
+
 void set_override_near(f32 near) {
     gOverrideNear = near;
 }
+
+///
 
 void set_override_far(f32 far) {
     gOverrideFar = far;

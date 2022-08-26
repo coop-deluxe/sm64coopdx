@@ -62,6 +62,7 @@ void camera_config_set_pan_level(u32 value);
 void camera_config_set_deceleration(u32 value);
 
 bool is_game_paused(void);
+bool is_transition_playing(void);
 
 s16 get_dialog_id(void);
 
