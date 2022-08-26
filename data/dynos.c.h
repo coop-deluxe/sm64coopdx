@@ -65,6 +65,8 @@ void dynos_behavior_hook_all_custom_behaviors(void);
 
 // -- other -- //
 void dynos_mod_shutdown(void);
+void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);
+void dynos_init_scroll_targets(void);
 
 #endif
 #endif

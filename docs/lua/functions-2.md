@@ -10184,6 +10184,24 @@
 
 <br />
 
+## [uv_update_scroll](#uv_update_scroll)
+
+### Lua Example
+`uv_update_scroll()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void uv_update_scroll(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [vec3f_copy_2](#vec3f_copy_2)
 
 ### Lua Example

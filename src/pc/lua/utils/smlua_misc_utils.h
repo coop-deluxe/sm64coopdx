@@ -83,6 +83,9 @@ void set_override_fov(f32 fov);
 void set_override_near(f32 near);
 void set_override_far(f32 far);
 
+void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);
+void init_scroll_targets(void);
+
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
 #endif

@@ -2852,6 +2852,11 @@ function update_angle_from_move_flags(angle)
     -- ...
 end
 
+--- @return nil
+function uv_update_scroll()
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param src Vec3f
 --- @return nil
@@ -7527,6 +7532,13 @@ function warp_to_level(aLevel, aArea, aAct)
     -- ...
 end
 
+--- @param index integer
+--- @param name string
+--- @param offset integer
+--- @param size integer
+--- @return nil
+function add_scroll_target(index, name, offset, size)
+
 --- @return boolean
 function warp_to_start_level()
     -- ...
@@ -7742,6 +7754,11 @@ end
 
 --- @return nil
 function hud_show()
+    -- ...
+end
+
+--- @return nil
+function init_scroll_targets()
     -- ...
 end
 

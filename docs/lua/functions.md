@@ -583,6 +583,7 @@
    - [spawn_wind_particles](functions-2.md#spawn_wind_particles)
    - [tox_box_move](functions-2.md#tox_box_move)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
+   - [uv_update_scroll](functions-2.md#uv_update_scroll)
    - [vec3f_copy_2](functions-2.md#vec3f_copy_2)
 
 <br />
@@ -1405,6 +1406,7 @@
 <br />
 
 - smlua_misc_utils.h
+   - [add_scroll_target](functions-4.md#add_scroll_target)
    - [allocate_mario_action](functions-4.md#allocate_mario_action)
    - [camera_config_enable_analog_cam](functions-4.md#camera_config_enable_analog_cam)
    - [camera_config_enable_free_cam](functions-4.md#camera_config_enable_free_cam)
@@ -1442,6 +1444,7 @@
    - [hud_render_power_meter](functions-4.md#hud_render_power_meter)
    - [hud_set_value](functions-4.md#hud_set_value)
    - [hud_show](functions-4.md#hud_show)
+   - [init_scroll_targets](functions-4.md#init_scroll_targets)
    - [is_game_paused](functions-4.md#is_game_paused)
    - [is_transition_playing](functions-4.md#is_transition_playing)
    - [movtexqc_register](functions-4.md#movtexqc_register)

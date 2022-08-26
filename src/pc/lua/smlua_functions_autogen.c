@@ -5348,6 +5348,15 @@ int smlua_func_update_angle_from_move_flags(lua_State* L) {
     return 1;
 }
 
+int smlua_func_uv_update_scroll(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    uv_update_scroll();
+
+    return 1;
+}
+
 int smlua_func_vec3f_copy_2(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
@@ -16648,6 +16657,23 @@ int smlua_func_warp_to_start_level(UNUSED lua_State* L) {
  // smlua_misc_utils.h //
 ////////////////////////
 
+int smlua_func_add_scroll_target(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    u32 index = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'add_scroll_target'"); return 0; }
+    const char* name = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'add_scroll_target'"); return 0; }
+    u32 offset = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'add_scroll_target'"); return 0; }
+    u32 size = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4 for function 'add_scroll_target'"); return 0; }
+
+    add_scroll_target(index, name, offset, size);
+
+    return 1;
+}
+
 int smlua_func_allocate_mario_action(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -17033,6 +17059,15 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
 
 
     hud_show();
+
+    return 1;
+}
+
+int smlua_func_init_scroll_targets(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    init_scroll_targets();
 
     return 1;
 }
@@ -18632,6 +18667,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "spawn_wind_particles", smlua_func_spawn_wind_particles);
     smlua_bind_function(L, "tox_box_move", smlua_func_tox_box_move);
     smlua_bind_function(L, "update_angle_from_move_flags", smlua_func_update_angle_from_move_flags);
+    smlua_bind_function(L, "uv_update_scroll", smlua_func_uv_update_scroll);
     smlua_bind_function(L, "vec3f_copy_2", smlua_func_vec3f_copy_2);
 
     // behavior_table.h
@@ -19447,6 +19483,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_to_start_level", smlua_func_warp_to_start_level);
 
     // smlua_misc_utils.h
+    smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "camera_config_enable_analog_cam", smlua_func_camera_config_enable_analog_cam);
     smlua_bind_function(L, "camera_config_enable_free_cam", smlua_func_camera_config_enable_free_cam);
@@ -19484,6 +19521,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
+    smlua_bind_function(L, "init_scroll_targets", smlua_func_init_scroll_targets);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);

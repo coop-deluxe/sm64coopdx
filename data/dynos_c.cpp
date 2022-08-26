@@ -198,4 +198,12 @@ void dynos_mod_shutdown(void) {
     DynOS_Mod_Shutdown();
 }
 
+void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size) {
+    DynOS_Add_Scroll_Target(index, name, offset, size);
+}
+
+void dynos_init_scroll_targets(void) {
+    DynOS_Init_Scroll_Targets();
+}
+
 }

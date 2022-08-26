@@ -771,6 +771,8 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvYellowBall);
     bhv_constant(id_bhvYellowCoin);
     bhv_constant(id_bhvYoshi);
+    bhv_constant(id_RM_Scroll_Texture);
+    bhv_constant(id_editor_Scroll_Texture);
 
     // Define a special type for new ids that don't override.
     if (_Arg == "id_bhvNewId") { return (BehaviorScript) (0xFFFF); }
