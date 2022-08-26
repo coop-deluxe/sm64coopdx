@@ -563,7 +563,6 @@ function act_spin_pound_land(m)
         end
 
         if (m.input & INPUT_A_PRESSED) ~= 0 then
-            m.vel.y = 65.0
             return set_jumping_action(m, ACT_GROUND_POUND_JUMP, 0)
         end
 
@@ -1340,7 +1339,9 @@ function mario_on_set_action(m)
         end
     end
 
-    if m.action == ACT_WATER_PLUNGE and m.prevAction == ACT_GROUND_POUND then
+    if m.action == ACT_GROUND_POUND_JUMP then
+        m.vel.y = 65.0
+    elseif m.action == ACT_WATER_PLUNGE and m.prevAction == ACT_GROUND_POUND then
         return set_mario_action(m, ACT_WATER_GROUND_POUND, 1)
     elseif m.action == ACT_WALL_SLIDE then
         m.vel.y = 0.0
