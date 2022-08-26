@@ -20,7 +20,7 @@
 #include "object_list_processor.h"
 #include "ingame_menu.h"
 #include "obj_behaviors.h"
-#include "game/object_helpers.h"
+#include "object_helpers.h"
 #include "save_file.h"
 #include "hardcoded.h"
 #include "debug_course.h"

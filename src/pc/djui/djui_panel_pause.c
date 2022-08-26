@@ -1,7 +1,10 @@
 #include "djui.h"
 #include "pc/cheats.h"
-#include "src/pc/pc_main.h"
-#include "src/pc/network/network.h"
+#include "pc/pc_main.h"
+#include "pc/network/network.h"
+#include "game/object_helpers.h"
+#include "behavior_table.h"
+#include "sm64.h"
 
 bool gDjuiPanelPauseCreated = false;
 
@@ -14,6 +17,8 @@ static void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_pause_quit(struct DjuiBase* caller) {
+    if (find_object_with_behavior(bhvActSelector) != NULL || gMarioStates[0].action == ACT_PUSHING_DOOR || gMarioStates[0].action == ACT_PULLING_DOOR) { return; }
+
     if (gNetworkType == NT_SERVER) {
         djui_panel_confirm_create(caller,
                                 "\\#ff0800\\Q\\#1be700\\U\\#00b3ff\\I\\#ffef00\\T",
