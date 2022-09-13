@@ -417,11 +417,6 @@ void init_mario_after_warp(void) {
 
             if (sWarpDest.type == WARP_TYPE_CHANGE_LEVEL || sWarpDest.type == WARP_TYPE_CHANGE_AREA) {
                 gPlayerSpawnInfos[i].areaIndex = sWarpDest.areaIdx;
-                // reset health
-                gMarioStates[i].health = 0x880;
-                gMarioStates[i].healCounter = 0;
-                gMarioStates[i].hurtCounter = 0;
-
                 if (i == 0) { load_mario_area(); }
             }
 
