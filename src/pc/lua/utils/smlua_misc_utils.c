@@ -104,7 +104,6 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
         { (u8*)texture_power_meter_seven_segments, 8, 32, 32 },
         { (u8*)texture_power_meter_full,           8, 32, 32 },
     };
-    djui_hud_set_color(255, 255, 255, 255);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[0], x, y, width / 64, height / 64);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + width / 2, y, width / 64, height / 64);
     s32 numWedges = MIN(MAX(health >> 8, 0), 8);
