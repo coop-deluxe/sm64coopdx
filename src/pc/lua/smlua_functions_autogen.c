@@ -17063,15 +17063,6 @@ int smlua_func_hud_show(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_init_scroll_targets(UNUSED lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
-
-
-    init_scroll_targets();
-
-    return 1;
-}
-
 int smlua_func_is_game_paused(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -19521,7 +19512,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);
-    smlua_bind_function(L, "init_scroll_targets", smlua_func_init_scroll_targets);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "movtexqc_register", smlua_func_movtexqc_register);

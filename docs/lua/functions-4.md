@@ -7047,24 +7047,6 @@
 
 <br />
 
-## [init_scroll_targets](#init_scroll_targets)
-
-### Lua Example
-`init_scroll_targets()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void init_scroll_targets(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [is_game_paused](#is_game_paused)
 
 ### Lua Example

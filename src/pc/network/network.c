@@ -5,6 +5,7 @@
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "src/game/hardcoded.h"
+#include "src/game/scroll_targets.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
 #endif
@@ -124,7 +125,7 @@ bool network_init(enum NetworkType inNetworkType) {
 
         mods_activate(&gLocalMods);
         smlua_init();
-        
+
         dynos_behavior_hook_all_custom_behaviors();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName);
@@ -504,7 +505,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
         gNetworkServerAddr = NULL;
     }
     gNetworkPlayerServer = NULL;
- 
+
     gNetworkType = NT_NONE;
 
 
@@ -530,6 +531,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
+    free_vtx_scroll_targets();
 
     struct Controller* cnt = gMarioStates[0].controller;
     cnt->rawStickX = 0;

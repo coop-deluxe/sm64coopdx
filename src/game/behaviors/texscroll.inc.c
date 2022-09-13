@@ -20,8 +20,8 @@
 
 /* SCROLLING TYPES */
 #define MODE_SCROLL_UV 0
-#define MODE_SCROLL_SINE 182 // 1
-#define MODE_SCROLL_JUMP 108 // 2
+#define MODE_SCROLL_SINE 1
+#define MODE_SCROLL_JUMP 2
 
 // typedef struct {
     // float		  ob[3];	/* x, y, z */
@@ -36,12 +36,14 @@
     // Vtx_tn         n;  /* Use this one for normals */
     // long long int  force_structure_alignment;
 // } Vtx;
-extern Vtx *gScrollTargets[];
-extern f32 gRenderingDelta;
 
 static void shift_UV_JUMP(s32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {
     Vtx* *verts = get_scroll_targets(vtxIndex);
     u16 i;
+
+    if (verts == NULL) {
+        return;
+    }
 
     if (verts[0]->n.flag++ <= cycle) {
         return;
@@ -65,6 +67,10 @@ static void shift_UV_NORMAL(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16
     Vtx* *verts = get_scroll_targets(vtxIndex);
     u16 correction = 0;
     u16 i;
+
+    if (verts == NULL) {
+        return;
+    }
 
     if (bhv < SCROLL_UV_X) {
         if (verts[0]->n.flag >= cycle) {
@@ -103,6 +109,10 @@ static void shift_UV_SINE(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
     Vtx* *verts = get_scroll_targets(vtxIndex);
     u32 i;
 
+    if (verts == NULL) {
+        return;
+    }
+
     if (bhv < SCROLL_UV_X) {
         for (i = 0; i < vertcount; i++) {
             verts[i]->n.ob[bhv] += sins(verts[0]->n.flag) * speed;
@@ -115,14 +125,28 @@ static void shift_UV_SINE(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
     verts[0]->n.flag += cycle * 0x23;
 }
 
-// format I will use is x=spd, y=bhv, z=vert amount, rx=offset, ry=scrollType, rz=cycle, bparam=addr
+/*
+ * Scroll parameters are took from the object's properties:
+ *   Xpos = speed
+ *   Ypos = scrolling behavior/axis
+ *   Zpos = vertices amount
+ *   Xrot = offset (unused)
+ *   Yrot = scrolling type
+ *   Zrot = cycle
+ *   Behavior param = scroll target index
+ */
 void uv_update_scroll(void) {
     s16 speed = (s16) o->oPosX;
     u16 bhv = (u16) o->oPosY;
     u16 vertCount = (u16) o->oPosZ;
-    u8 scrollType = (u8) o->oFaceAngleYaw;
-    u16 cycle = (u16) o->oFaceAngleRoll * 180 / 0x8000;
+    u16 scrollType = (u16) round(o->oFaceAngleYaw * 180.0 / 0x8000);
+    u16 cycle = (u16) round(o->oFaceAngleRoll * 180.0 / 0x8000);
     u32 vtxIndex = (u32) o->oBehParams;
+
+    // Check for invalid scrolling behavior
+    if (bhv == 3 || bhv > SCROLL_UV_Y) {
+        return;
+    }
 
     switch (scrollType) {
         case MODE_SCROLL_UV:
@@ -133,6 +157,8 @@ void uv_update_scroll(void) {
             break;
         case MODE_SCROLL_JUMP:
             shift_UV_JUMP(vtxIndex, vertCount, speed, bhv, cycle);
+            break;
+        default:
             break;
     }
 }

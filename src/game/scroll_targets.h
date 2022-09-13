@@ -9,11 +9,6 @@
 #include "sm64.h"
 #include "types.h"
 
-//Q. Why does this exist instead of just directly referencing VBs?
-//A. Because gcc is dumb and will seg fault if you reference a VB by abstracting it through a bparam
-//instead of directly refencing it, causing this horrible shit.
-extern Vtx *gScrollTargets[];
-
 Vtx* *get_scroll_targets(u32 id);
 void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size);
-void init_vtx_scroll_targets(void);
+void free_vtx_scroll_targets(void);

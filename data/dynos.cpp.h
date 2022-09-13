@@ -1065,7 +1065,6 @@ bool DynOS_Bin_Compress(const SysPath &aFilename);
 BinFile *DynOS_Bin_Decompress(const SysPath &aFilename);
 
 void DynOS_Add_Scroll_Target(u32 index, const char *name, u32 offset, u32 size);
-void DynOS_Init_Scroll_Targets(void);
 
 #endif
 #endif

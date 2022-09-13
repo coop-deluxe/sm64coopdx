@@ -359,7 +359,3 @@ void set_override_far(f32 far) {
 void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
     dynos_add_scroll_target(index, name, offset, size);
 }
-
-void init_scroll_targets(void) {
-    dynos_init_scroll_targets();
-}

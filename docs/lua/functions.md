@@ -1444,7 +1444,6 @@
    - [hud_render_power_meter](functions-4.md#hud_render_power_meter)
    - [hud_set_value](functions-4.md#hud_set_value)
    - [hud_show](functions-4.md#hud_show)
-   - [init_scroll_targets](functions-4.md#init_scroll_targets)
    - [is_game_paused](functions-4.md#is_game_paused)
    - [is_transition_playing](functions-4.md#is_transition_playing)
    - [movtexqc_register](functions-4.md#movtexqc_register)

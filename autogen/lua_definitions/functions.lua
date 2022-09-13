@@ -7759,11 +7759,6 @@ function hud_show()
     -- ...
 end
 
---- @return nil
-function init_scroll_targets()
-    -- ...
-end
-
 --- @return boolean
 function is_game_paused()
     -- ...
