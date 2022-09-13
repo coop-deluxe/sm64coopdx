@@ -185,6 +185,7 @@ static s64 DynOS_Col_ParseConstants(const String& _Arg, bool* found) {
     // Surface constants
     col_constant(SURFACE_DEFAULT);
     col_constant(SURFACE_BURNING);
+    col_constant(SURFACE_RAYCAST);
     col_constant(SURFACE_0004);
     col_constant(SURFACE_HANGABLE);
     col_constant(SURFACE_SLOW);

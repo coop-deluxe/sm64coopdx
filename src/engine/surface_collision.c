@@ -245,7 +245,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             }
         } else {
             // Ignore camera only surfaces.
-            if (surf->type == SURFACE_CAMERA_BOUNDARY) {
+            if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
                 continue;
             }
 
@@ -415,7 +415,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             }
         }
         // Ignore camera only surfaces.
-        else if (surf->type == SURFACE_CAMERA_BOUNDARY) {
+        else if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
             continue;
         }
 
@@ -643,7 +643,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
             }
         }
         // If we are not checking for the camera, ignore camera only floors.
-        else if (surf->type == SURFACE_CAMERA_BOUNDARY) {
+        else if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
             continue;
         }
 
