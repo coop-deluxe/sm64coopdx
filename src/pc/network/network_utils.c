@@ -26,6 +26,11 @@ bool network_is_server(void) {
     return gNetworkType == NT_SERVER;
 }
 
+bool network_is_moderator(void) {
+    extern u8 gIsModerator;
+    return gIsModerator;
+}
+
 u8* network_get_player_text_color(u8 localIndex) {
     if (localIndex >= MAX_PLAYERS) { localIndex = 0; }
 

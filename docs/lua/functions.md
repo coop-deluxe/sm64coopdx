@@ -1019,6 +1019,7 @@
 - network_utils.h
    - [network_get_player_text_color_string](functions-3.md#network_get_player_text_color_string)
    - [network_global_index_from_local](functions-3.md#network_global_index_from_local)
+   - [network_is_moderator](functions-3.md#network_is_moderator)
    - [network_is_server](functions-3.md#network_is_server)
    - [network_local_index_from_global](functions-3.md#network_local_index_from_global)
 

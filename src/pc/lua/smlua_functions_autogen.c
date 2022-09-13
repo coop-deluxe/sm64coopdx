@@ -11802,6 +11802,15 @@ int smlua_func_network_global_index_from_local(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_is_moderator(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushboolean(L, network_is_moderator());
+
+    return 1;
+}
+
 int smlua_func_network_is_server(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -19093,6 +19102,7 @@ void smlua_bind_functions_autogen(void) {
     // network_utils.h
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
+    smlua_bind_function(L, "network_is_moderator", smlua_func_network_is_moderator);
     smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
     smlua_bind_function(L, "network_local_index_from_global", smlua_func_network_local_index_from_global);
 

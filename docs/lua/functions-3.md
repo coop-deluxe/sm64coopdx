@@ -7228,6 +7228,24 @@
 
 <br />
 
+## [network_is_moderator](#network_is_moderator)
+
+### Lua Example
+`local booleanValue = network_is_moderator()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_moderator(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [network_is_server](#network_is_server)
 
 ### Lua Example

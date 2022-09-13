@@ -5256,6 +5256,11 @@ function network_global_index_from_local(localIndex)
 end
 
 --- @return boolean
+function network_is_moderator()
+    -- ...
+end
+
+--- @return boolean
 function network_is_server()
     -- ...
 end
