@@ -443,7 +443,7 @@ s16 object_step(void) {
     f32 objZ = o->oPosZ;
 
     f32 floorY;
-    f32 waterY = FLOOR_LOWER_LIMIT_MISC;
+    f32 waterY = gLevelValues.floorLowerLimitMisc;
 
     f32 objVelX = o->oForwardVel * sins(o->oMoveAngleYaw);
     f32 objVelZ = o->oForwardVel * coss(o->oMoveAngleYaw);

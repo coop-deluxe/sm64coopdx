@@ -12,6 +12,7 @@
 #include "segment2.h"
 #include "shadow.h"
 #include "sm64.h"
+#include "game/hardcoded.h"
 
 // Avoid Z-fighting
 #define find_floor_height_and_data 0.4 + find_floor_height_and_data
@@ -223,7 +224,7 @@ u8 dim_shadow_with_distance(u8 solidity, f32 distFromFloor) {
  */
 f32 get_water_level_below_shadow(struct Shadow *s) {
     f32 waterLevel = find_water_level(s->parentX, s->parentZ);
-    if (waterLevel < FLOOR_LOWER_LIMIT_SHADOW) {
+    if (waterLevel < gLevelValues.floorLowerLimitShadow) {
         return 0;
     } else if (s->parentY >= waterLevel && s->floorHeight <= waterLevel) {
         gShadowAboveWaterOrLava = TRUE;
@@ -266,7 +267,7 @@ s8 init_shadow(struct Shadow *s, f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, 
     } else if (floorGeometry != NULL) {
         // Don't draw a shadow if the floor is lower than expected possible,
         // or if the y-normal is negative (an unexpected result).
-        if (s->floorHeight < FLOOR_LOWER_LIMIT_SHADOW || floorGeometry->normalY <= 0.0) {
+        if (s->floorHeight < gLevelValues.floorLowerLimitShadow || floorGeometry->normalY <= 0.0) {
             return 1;
         }
 
@@ -739,7 +740,7 @@ Gfx *create_shadow_circle_assuming_flat_ground(f32 xPos, f32 yPos, f32 zPos, s16
     f32 floorHeight = find_floor_height_and_data(xPos, yPos, zPos, &dummy);
     f32 radius = shadowScale / 2;
 
-    if (floorHeight < FLOOR_LOWER_LIMIT_SHADOW) {
+    if (floorHeight < gLevelValues.floorLowerLimitShadow) {
         return NULL;
     } else {
         distBelowFloor = floorHeight - yPos;
@@ -826,12 +827,12 @@ s32 get_shadow_height_solidity(f32 xPos, f32 yPos, f32 zPos, f32 *shadowHeight, 
     f32 waterLevel;
     *shadowHeight = find_floor_height_and_data(xPos, yPos, zPos, &dummy);
 
-    if (*shadowHeight < FLOOR_LOWER_LIMIT_SHADOW) {
+    if (*shadowHeight < gLevelValues.floorLowerLimitShadow) {
         return 1;
     } else {
         waterLevel = find_water_level(xPos, zPos);
 
-        if (waterLevel < FLOOR_LOWER_LIMIT_SHADOW) {
+        if (waterLevel < gLevelValues.floorLowerLimitShadow) {
             // Dead if-statement. There may have been an assert here.
         } else if (yPos >= waterLevel && waterLevel >= *shadowHeight) {
             gShadowAboveWaterOrLava = TRUE;
@@ -918,7 +919,7 @@ Gfx *create_shadow_below_xyz(f32 xPos, f32 yPos, f32 zPos, s16 shadowScale, u8 s
 
     // if we're interpolating and the shadow isn't valid, just give up
     if (gRenderingInterpolated) {
-        if (height <= FLOOR_LOWER_LIMIT || pfloor == NULL) {
+        if (height <= gLevelValues.floorLowerLimit || pfloor == NULL) {
             return gShadowInterpCurrent->gfx;
         }
     }

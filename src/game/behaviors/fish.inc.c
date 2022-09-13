@@ -259,7 +259,7 @@ void bhv_fish_loop(void)
 
     // Delete fish if it's drifted to an area with no water.
     if (gCurrLevelNum != LEVEL_UNKNOWN_32) {
-        if (o->oFishWaterLevel < FLOOR_LOWER_LIMIT_MISC) {
+        if (o->oFishWaterLevel < gLevelValues.floorLowerLimitMisc) {
             obj_mark_for_deletion(o);
             return;
         }

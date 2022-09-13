@@ -380,7 +380,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
 
     // set pheight to highest value
     if (gLevelValues.fixCollisionBugs) {
-        *pheight = CELL_HEIGHT_LIMIT;
+        *pheight = gLevelValues.ceilHeightLimit;
     }
 
     // Stay in this loop until out of ceilings.
@@ -468,8 +468,8 @@ f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil) {
     s16 cellZ, cellX;
     struct Surface *ceil, *dynamicCeil;
     struct SurfaceNode *surfaceList;
-    f32 height = CELL_HEIGHT_LIMIT;
-    f32 dynamicHeight = CELL_HEIGHT_LIMIT;
+    f32 height = gLevelValues.ceilHeightLimit;
+    f32 dynamicHeight = gLevelValues.ceilHeightLimit;
     s16 x, y, z;
 
     //! (Parallel Universes) Because position is casted to an s16, reaching higher
@@ -581,7 +581,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
 
     // set pheight to lowest value
     if (gLevelValues.fixCollisionBugs) {
-        *pheight = FLOOR_LOWER_LIMIT;
+        *pheight = gLevelValues.floorLowerLimit;
     }
 
     // Iterate through the list of floors until there are no more floors.
@@ -736,7 +736,7 @@ f32 find_floor_height(f32 x, f32 y, f32 z) {
 f32 unused_find_dynamic_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfloor) {
     struct SurfaceNode *surfaceList;
     struct Surface *floor;
-    f32 floorHeight = FLOOR_LOWER_LIMIT;
+    f32 floorHeight = gLevelValues.floorLowerLimit;
 
     // Would normally cause PUs, but dynamic floors unload at that range.
     s16 x = (s16) xPos;
@@ -764,8 +764,8 @@ f32 find_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfloor) {
     struct Surface *floor, *dynamicFloor;
     struct SurfaceNode *surfaceList;
 
-    f32 height = FLOOR_LOWER_LIMIT;
-    f32 dynamicHeight = FLOOR_LOWER_LIMIT;
+    f32 height = gLevelValues.floorLowerLimit;
+    f32 dynamicHeight = gLevelValues.floorLowerLimit;
 
     //! (Parallel Universes) Because position is casted to an s16, reaching higher
     // float locations  can return floors despite them not existing there.
@@ -843,7 +843,7 @@ f32 find_water_level(f32 x, f32 z) {
     s32 numRegions;
     s16 val;
     f32 loX, hiX, loZ, hiZ;
-    f32 waterLevel = FLOOR_LOWER_LIMIT;
+    f32 waterLevel = gLevelValues.floorLowerLimit;
     s16 *p = gEnvironmentRegions;
 
     if (p != NULL) {
@@ -879,7 +879,7 @@ f32 find_poison_gas_level(f32 x, f32 z) {
     UNUSED s32 unused;
     s16 val;
     f32 loX, hiX, loZ, hiZ;
-    f32 gasLevel = FLOOR_LOWER_LIMIT;
+    f32 gasLevel = gLevelValues.floorLowerLimit;
     s16 *p = gEnvironmentRegions;
 
     if (p != NULL) {

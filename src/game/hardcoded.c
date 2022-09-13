@@ -88,6 +88,10 @@ struct LevelValues gDefaultLevelValues = {
         .UnagiStarPos         = {  6833.0f, -3654.0f,  2230.0f },
         .JetstreamRingStarPos = {  3400.0f, -3200.0f,  -500.0f },
     },
+    .ceilHeightLimit          = 20000,
+    .floorLowerLimit          = -11000,
+    .floorLowerLimitMisc      = -10000,
+    .floorLowerLimitShadow   = -10000,
 };
 
 struct LevelValues gLevelValues = { 0 };

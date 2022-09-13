@@ -905,12 +905,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| ceilHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
 | fixCollisionBugs | `integer` |  |
+| floorLowerLimit | `integer` |  |
+| floorLowerLimitMisc | `integer` |  |
+| floorLowerLimitShadow | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
 | pssSlideStarIndex | `integer` |  |

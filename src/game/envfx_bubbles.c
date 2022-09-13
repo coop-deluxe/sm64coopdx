@@ -12,6 +12,7 @@
 #include "textures.h"
 #include "game/rendering_graph_node.h"
 #include "pc/utils/misc.h"
+#include "game/hardcoded.h"
 
 /**
  * This file implements environment effects that are not snow:
@@ -160,14 +161,14 @@ void envfx_set_lava_bubble_position(s32 index, Vec3s centerPos) {
 
     floorY = find_floor((gEnvFxBuffer + index)->xPos, centerY + 500, (gEnvFxBuffer + index)->zPos, &surface);
     if (surface == NULL) {
-        (gEnvFxBuffer + index)->yPos = FLOOR_LOWER_LIMIT_MISC;
+        (gEnvFxBuffer + index)->yPos = gLevelValues.floorLowerLimitMisc;
         return;
     }
 
     if (surface->type == SURFACE_BURNING) {
         (gEnvFxBuffer + index)->yPos = floorY;
     } else {
-        (gEnvFxBuffer + index)->yPos = FLOOR_LOWER_LIMIT_MISC;
+        (gEnvFxBuffer + index)->yPos = gLevelValues.floorLowerLimitMisc;
     }
 }
 

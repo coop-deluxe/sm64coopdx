@@ -623,12 +623,16 @@
 --- @field public yaw integer
 
 --- @class LevelValues
+--- @field public ceilHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
 --- @field public entryLevel LevelNum
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
 --- @field public fixCollisionBugs integer
+--- @field public floorLowerLimit integer
+--- @field public floorLowerLimitMisc integer
+--- @field public floorLowerLimitShadow integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
 --- @field public pssSlideStarIndex integer
