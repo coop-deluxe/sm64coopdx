@@ -15,7 +15,7 @@ function mario_update(m)
     end
 
     --Speed floor
-    if (m.forwardVel > 0-Threshold) and (m.forwardVel < Threshold) then --If Mario isn't moveing fast enough
+    if (m.forwardVel > Threshold) and (m.forwardVel < Threshold) then --If Mario isn't moveing fast enough
         m.forwardVel = Threshold --set forwards velocity to whatevet the threashold is set to
     end
 end

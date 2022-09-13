@@ -14,18 +14,19 @@ Lua scripts you make can be placed either the `mods` folder in the base director
 ## Tips
 - When developing Lua mods, run the game from a console. Lua errors and logs will appear there.
 - You can use the `print()` command when debugging. Your logs will show up in the console.
-- [Setting up Visual Studio Code](vs-code-setup.md) will give you autocomplete and other nice things.
 - You can create a folder within the mods folder containing multiple lua scripts as long as one script is called `main.lua`. Dynos actors can be placed inside this mod folder under `<your mod folder>/actors/`.
 <br />
 
 ## Sections
 - [Globals](globals.md)
-- [Hooks](hooks.md)
 - [Constants](constants.md)
 - [Functions](functions.md)
 - [Structs](structs.md)
 
-<br />
+### Guides
+- [Hooks](guides/hooks.md)
+- [gMarioStates](guides/mario-state.md)
+- [Setting up Visual Studio Code](vs-code-setup.md) 
 
 ## Important notes on player indices
 
