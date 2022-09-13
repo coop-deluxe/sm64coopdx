@@ -14,8 +14,9 @@ ROUND_STATE_UNKNOWN_END = 4
 gGlobalSyncTable.touchTag = true
 gGlobalSyncTable.campingTimer = false -- enable/disable camping timer
 gGlobalSyncTable.hiderCaps = true
-gGlobalSyncTable.banKoopaShell = true
 gGlobalSyncTable.seekerCaps = false
+gGlobalSyncTable.banKoopaShell = true
+gGlobalSyncTable.banRR = true
 gGlobalSyncTable.roundState   = ROUND_STATE_WAIT -- current round state
 gGlobalSyncTable.displayTimer = 0 -- the displayed timer
 sRoundTimer        = 0            -- the server's round timer
@@ -218,7 +219,7 @@ function mario_update(m)
 
     -- warp players out of banned levels
     if m.playerIndex == 0 then
-        if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_RR then
+        if gNetworkPlayers[m.playerIndex].currLevelNum == LEVEL_RR and gGlobalSyncTable.banRR then
             warp_to_castle(LEVEL_RR)
         end
 
@@ -469,6 +470,7 @@ function on_hide_and_seek_command(msg)
         gGlobalSyncTable.hideAndSeek = false
         return true
     end
+
     return false
 end
 
@@ -482,6 +484,7 @@ function on_anti_camp_command(msg)
         gGlobalSyncTable.campingTimer = false
         return true
     end
+
     return false
 end
 
@@ -495,19 +498,7 @@ function on_touch_tag_command(msg)
         gGlobalSyncTable.touchTag = false
         return true
     end
-    return false
-end
 
-function on_koopa_shell_command(msg)
-    if msg == 'on' then
-        djui_chat_message_create('Koopa Shell: enabled')
-        gGlobalSyncTable.banKoopaShell = false
-        return true
-    elseif msg == 'off' then
-        djui_chat_message_create('Koopa Shell: disabled')
-        gGlobalSyncTable.banKoopaShell = true
-        return true
-    end
     return false
 end
 
@@ -521,6 +512,7 @@ function on_hider_cap_command(msg)
         gGlobalSyncTable.hiderCaps = true
         return true
     end
+
     return false
 end
 
@@ -534,16 +526,52 @@ function on_seeker_cap_command(msg)
         gGlobalSyncTable.seekerCaps = true
         return true
     end
+
+    return false
+end
+
+function on_koopa_shell_command(msg)
+    if msg == 'on' then
+        djui_chat_message_create('Koopa Shell: enabled')
+        gGlobalSyncTable.banKoopaShell = false
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Koopa Shell: disabled')
+        gGlobalSyncTable.banKoopaShell = true
+        return true
+    end
+
+    return false
+end
+
+function on_ban_rr_command(msg)
+    if msg == 'on' then
+        djui_chat_message_create('Ban RR: enabled')
+        gGlobalSyncTable.banRR = true
+        return true
+    elseif msg == 'off' then
+        djui_chat_message_create('Ban RR: disabled')
+        gGlobalSyncTable.banRR = false
+        return true
+    end
+
     return false
 end
 
 function on_pause_exit(exitToCastle)
     local s = gPlayerSyncTable[0]
     if not s.seeking then
-        s.seeking = true
-        network_player_set_description(gNetworkPlayers[0], "seeker", 255, 64, 64, 255)
+        for i=1,(MAX_PLAYERS-1) do
+            if gNetworkPlayers[i].connected and gNetworkPlayers[i].currLevelNum == gNetworkPlayers[0].currLevelNum and gNetworkPlayers[i].currActNum == gNetworkPlayers[0].currActNum and gNetworkPlayers[i].currAreaIndex == gNetworkPlayers[0].currAreaIndex and gPlayerSyncTable[i].seeking then
+                local m = gMarioStates[0]
+                local a = gMarioStates[i]
+
+                if dist_between_objects(m.marioObj, a.marioObj) <= 4000 then
+                    return false
+                end
+            end
+        end
     end
-    return true
 end
 
 function allow_pvp_attack(m1, m2)
@@ -620,10 +648,10 @@ function on_interact(m, obj, intee)
 end
 
 function check_touch_tag_allowed(i)
-    if gMarioStates[i].action ~= ACT_TELEPORT_FADE_IN and gMarioStates[i].action ~= ACT_TELEPORT_FADE_OUT and gMarioStates[i].action ~= ACT_PULLING_DOOR and gMarioStates[i].action ~= ACT_PUSHING_DOOR and gMarioStates[i].action ~= ACT_WARP_DOOR_SPAWN and gMarioStates[i].action ~= ACT_ENTERING_STAR_DOOR and gMarioStates[i].action ~= ACT_STAR_DANCE_EXIT and gMarioStates[i].action ~= ACT_STAR_DANCE_NO_EXIT and gMarioStates[i].action ~= ACT_STAR_DANCE_WATER and gMarioStates[i].action ~= ACT_PANTING then
+    if gMarioStates[i].action ~= ACT_TELEPORT_FADE_IN and gMarioStates[i].action ~= ACT_TELEPORT_FADE_OUT and gMarioStates[i].action ~= ACT_PULLING_DOOR and gMarioStates[i].action ~= ACT_PUSHING_DOOR and gMarioStates[i].action ~= ACT_WARP_DOOR_SPAWN and gMarioStates[i].action ~= ACT_ENTERING_STAR_DOOR and gMarioStates[i].action ~= ACT_STAR_DANCE_EXIT and gMarioStates[i].action ~= ACT_STAR_DANCE_NO_EXIT and gMarioStates[i].action ~= ACT_STAR_DANCE_WATER and gMarioStates[i].action ~= ACT_PANTING and gMarioStates[i].action ~= ACT_UNINITIALIZED and gMarioStates[i].action ~= ACT_WARP_DOOR_SPAWN then
         return true
     end
-    
+
     return false
 end
 
@@ -655,6 +683,7 @@ if network_is_server() then
   hook_chat_command('seekers-caps', "[on|off] turn caps for seekers on or off", on_seeker_cap_command)
   hook_chat_command('anti-camp', "[on|off] turn the anti-camp timer on or off", on_anti_camp_command)
   hook_chat_command('koopa-shell', "[on|off] Turn the koopa shell on or off", on_koopa_shell_command)
+  hook_chat_command('ban-rr', "[on|off] Turn Banning RR on or off", on_ban_rr_command)
 end
 
 -- call functions when certain sync table values change
