@@ -3066,10 +3066,17 @@ void update_camera(struct Camera *c) {
 #endif
             ) {
             if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_TRIG) {
+                bool returnValue = true;
                 if (set_cam_angle(0) == CAM_ANGLE_LAKITU) {
-                    set_cam_angle(CAM_ANGLE_MARIO);
+                    smlua_call_event_hooks_change_camera_angle_params(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_MARIO, &returnValue);
+                    if (returnValue) {
+                        set_cam_angle(CAM_ANGLE_MARIO);
+                    }
                 } else {
-                    set_cam_angle(CAM_ANGLE_LAKITU);
+                    smlua_call_event_hooks_change_camera_angle_params(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_LAKITU, &returnValue);
+                    if (returnValue) {
+                        set_cam_angle(CAM_ANGLE_LAKITU);
+                    }
                 }
             }
         }
@@ -11847,6 +11854,11 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
 
 static s16 sRomHackOffset = 0;
 
+void center_rom_hack_camera(void) {
+    sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].intendedYaw;
+    sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
+}
+
 /**
  * A mode that has 8 camera angles, 45 degrees apart, that is slightly smarter
  */
@@ -11890,12 +11902,6 @@ void mode_rom_hack_camera(struct Camera *c) {
             play_sound_button_change_blocked();
         }
         sRomHackZoom = 0;
-    }
-
-    // center camera
-    if (gMarioStates[0].controller->buttonPressed & L_TRIG) {
-        sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].intendedYaw;
-        sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
     }
 
     // clamp yaw

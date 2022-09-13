@@ -5786,6 +5786,15 @@ int smlua_func_camera_set_use_course_specific_settings(lua_State* L) {
     return 1;
 }
 
+int smlua_func_center_rom_hack_camera(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    center_rom_hack_camera();
+
+    return 1;
+}
+
 int smlua_func_clamp_pitch(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -16991,6 +17000,15 @@ int smlua_func_get_hand_foot_pos_z(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_last_star_or_key(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_last_star_or_key());
+
+    return 1;
+}
+
 int smlua_func_get_network_area_timer(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -17146,6 +17164,17 @@ int smlua_func_set_environment_region(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'set_environment_region'"); return 0; }
 
     set_environment_region(index, value);
+
+    return 1;
+}
+
+int smlua_func_set_last_star_or_key(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 value = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'set_last_star_or_key'"); return 0; }
+
+    set_last_star_or_key(value);
 
     return 1;
 }
@@ -18695,6 +18724,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_approach_s16_symmetric_bool", smlua_func_camera_approach_s16_symmetric_bool);
     smlua_bind_function(L, "camera_course_processing", smlua_func_camera_course_processing);
     smlua_bind_function(L, "camera_set_use_course_specific_settings", smlua_func_camera_set_use_course_specific_settings);
+    smlua_bind_function(L, "center_rom_hack_camera", smlua_func_center_rom_hack_camera);
     smlua_bind_function(L, "clamp_pitch", smlua_func_clamp_pitch);
     smlua_bind_function(L, "clamp_positions_and_find_yaw", smlua_func_clamp_positions_and_find_yaw);
     smlua_bind_function(L, "collide_with_walls", smlua_func_collide_with_walls);
@@ -19515,6 +19545,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
+    smlua_bind_function(L, "get_last_star_or_key", smlua_func_get_last_star_or_key);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
@@ -19528,6 +19559,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "play_transition", smlua_func_play_transition);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
+    smlua_bind_function(L, "set_last_star_or_key", smlua_func_set_last_star_or_key);
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);

@@ -61,7 +61,7 @@ void bhv_scuttlebug_loop(void) {
         case 1:
             o->oForwardVel = 5.0f;
             if (cur_obj_lateral_dist_from_obj_to_home(player) > 1000.0f) {
-                //angleToPlayer = angleToPlayer;
+                angleToPlayer = cur_obj_angle_to_home();
             } else {
                 if (o->oScuttlebugUnkF8 == 0) {
                     o->oScuttlebugUnkFC = 0;

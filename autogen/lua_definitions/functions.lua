@@ -3023,6 +3023,11 @@ function camera_set_use_course_specific_settings(enable)
     -- ...
 end
 
+--- @return nil
+function center_rom_hack_camera()
+    -- ...
+end
+
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param maxPitch integer
@@ -7721,6 +7726,11 @@ function get_hand_foot_pos_z(m, index)
 end
 
 --- @return integer
+function get_last_star_or_key()
+    -- ...
+end
+
+--- @return integer
 function get_network_area_timer()
     -- ...
 end
@@ -7803,6 +7813,12 @@ end
 --- @param value integer
 --- @return nil
 function set_environment_region(index, value)
+    -- ...
+end
+
+--- @param value integer
+--- @return nil
+function set_last_star_or_key(value)
     -- ...
 end
 

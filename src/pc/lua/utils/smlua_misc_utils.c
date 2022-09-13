@@ -47,6 +47,15 @@ void hud_show(void) {
     gOverrideHideHud = 0;
 }
 
+extern u8 gLastCollectedStarOrKey;
+s32 get_last_star_or_key(void) {
+    return gLastCollectedStarOrKey;
+}
+
+void set_last_star_or_key(u8 value) {
+    gLastCollectedStarOrKey = value;
+}
+
 s32 hud_get_value(enum HudDisplayValue type) {
     switch (type) {
         case HUD_DISPLAY_LIVES:  return gHudDisplay.lives;

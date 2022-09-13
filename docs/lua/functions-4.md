@@ -6908,6 +6908,24 @@
 
 <br />
 
+## [get_last_star_or_key](#get_last_star_or_key)
+
+### Lua Example
+`local integerValue = get_last_star_or_key()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_last_star_or_key(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_network_area_timer](#get_network_area_timer)
 
 ### Lua Example
@@ -7166,6 +7184,26 @@
 
 ### C Prototype
 `void set_environment_region(u8 index, s32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_last_star_or_key](#set_last_star_or_key)
+
+### Lua Example
+`set_last_star_or_key(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_last_star_or_key(u8 value);`
 
 [:arrow_up_small:](#)
 

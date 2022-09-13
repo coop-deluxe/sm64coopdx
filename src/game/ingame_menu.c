@@ -47,6 +47,7 @@ s16 gCutsceneMsgYOffset;
 
 extern u8 gLastCompletedCourseNum;
 extern u8 gLastCompletedStarNum;
+u8 gLastCollectedStarOrKey = 0;
 
 enum DialogBoxState {
     DIALOG_STATE_OPENING,
@@ -3111,7 +3112,7 @@ void render_course_complete_lvl_info_and_hud_str(void) {
         print_generic_string(63, 167, textCourse);
         print_generic_string(CRS_NUM_X3, 167, strCourseNum);
         gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
-    } else if (gLastCompletedCourseNum == COURSE_BITDW || gLastCompletedCourseNum == COURSE_BITFS) {
+    } else if ((gLastCompletedCourseNum == COURSE_BITDW || gLastCompletedCourseNum == COURSE_BITFS) && gLastCollectedStarOrKey == 1) {
         name = segmented_to_virtual(courseNameTbl[gLastCompletedCourseNum - 1]);
         gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
         gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha);

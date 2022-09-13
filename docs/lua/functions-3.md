@@ -378,6 +378,24 @@
 
 <br />
 
+## [center_rom_hack_camera](#center_rom_hack_camera)
+
+### Lua Example
+`center_rom_hack_camera()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void center_rom_hack_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [clamp_pitch](#clamp_pitch)
 
 ### Lua Example

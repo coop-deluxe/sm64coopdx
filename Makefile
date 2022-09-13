@@ -235,6 +235,8 @@ else
 endif
 
 ifeq ($(TARGET_RPI),1)
+  $(info Compiling for Raspberry Pi)
+  DISCORD_SDK := 0
 	machine = $(shell sh -c 'uname -m 2>/dev/null || echo unknown')
 
     # Raspberry Pi B+, Zero, etc
@@ -244,6 +246,7 @@ ifeq ($(TARGET_RPI),1)
 
     # Raspberry Pi 2 and 3 in ARM 32bit mode
 	ifneq (,$(findstring armv7l,$(machine)))
+  $(info ARM 32bit mode)
 		model = $(shell sh -c 'cat /sys/firmware/devicetree/base/model 2>/dev/null || echo unknown')
 		ifneq (,$(findstring 3,$(model)))
 			 OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -O3
@@ -255,6 +258,7 @@ ifeq ($(TARGET_RPI),1)
     # RPi3 or RPi4, in ARM64 (aarch64) mode. NEEDS TESTING 32BIT.
     # DO NOT pass -mfpu stuff here, thats for 32bit ARM only and will fail for 64bit ARM.
 	ifneq (,$(findstring aarch64,$(machine)))
+    $(info ARM64 mode)
 		model = $(shell sh -c 'cat /sys/firmware/devicetree/base/model 2>/dev/null || echo unknown')
 		ifneq (,$(findstring 3,$(model)))
 			 OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -O3
@@ -345,11 +349,6 @@ ifeq ($(HEADLESS),1)
   WINDOW_API := DUMMY
   AUDIO_API := DUMMY
   CONTROLLER_API :=
-endif
-
-ifeq ($(TARGET_RPI),1)
-  $(info Compiling for Raspberry Pi)
-    DISCORD_SDK := 0
 endif
 
 # NON_MATCHING - whether to build a matching, identical copy of the ROM
@@ -626,7 +625,11 @@ else ifeq ($(OSX_BUILD),1)
   # This really shouldn't be required, but I got tired of trying to do it the "right way"
   BASS_LIBS := lib/bass/bass.dylib lib/bass/libbass.dylib lib/bass/bass_fx.dylib lib/bass/libbass_fx.dylib
 else ifeq ($(TARGET_RPI),1)
-  BASS_LIBS := lib/bass/arm/libbass.so lib/bass/arm/libbass_fx.so
+	ifneq (,$(findstring aarch64,$(machine)))
+    BASS_LIBS := lib/bass/arm/aarch64/libbass.so lib/bass/arm/aarch64/libbass_fx.so
+  else
+    BASS_LIBS := lib/bass/arm/libbass.so lib/bass/arm/libbass_fx.so
+  endif
 else
   BASS_LIBS := lib/bass/libbass.so lib/bass/libbass_fx.so
 endif
@@ -922,7 +925,11 @@ ifeq ($(WINDOWS_BUILD),1)
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS += -L./lib/lua/mac/ -l lua53
 else ifeq ($(TARGET_RPI),1)
-  LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
+	ifneq (,$(findstring aarch64,$(machine)))
+    LDFLAGS += -Llib/lua/linux -l:liblua53-arm64.a
+  else
+    LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
+  endif
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a
 endif

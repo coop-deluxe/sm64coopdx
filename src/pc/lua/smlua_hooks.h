@@ -35,6 +35,7 @@ enum LuaHookedEventType {
     HOOK_ON_DEATH,
     HOOK_ON_PACKET_RECEIVE,
     HOOK_USE_ACT_SELECT,
+    HOOK_ON_CHANGE_CAMERA_ANGLE,
     HOOK_MAX,
 };
 
@@ -63,6 +64,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_DEATH",
     "HOOK_ON_PACKET_RECEIVE",
     "HOOK_USE_ACT_SELECT",
+    "HOOK_ON_CHANGE_CAMERA_ANGLE",
     "HOOK_MAX"
 };
 
@@ -94,6 +96,7 @@ void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hoo
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
+void smlua_call_event_hooks_change_camera_angle_params(enum LuaHookedEventType hookType, s16 mode, bool* returnValue);
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex);
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
 

@@ -19,6 +19,7 @@
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
+#include "game/camera.h"
 
 // fix warnings when including rendering_graph_node
 #undef near
@@ -531,6 +532,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     extern s16 gChangeLevel;
     gChangeLevel = LEVEL_CASTLE_GROUNDS;
     network_player_init();
+    camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();
 
     struct Controller* cnt = gMarioStates[0].controller;

@@ -2803,7 +2803,8 @@
 | HOOK_ON_DEATH | 21 |
 | HOOK_ON_PACKET_RECEIVE | 22 |
 | HOOK_USE_ACT_SELECT | 23 |
-| HOOK_MAX | 24 |
+| HOOK_ON_CHANGE_CAMERA_ANGLE | 24 |
+| HOOK_MAX | 25 |
 
 [:arrow_up_small:](#)
 

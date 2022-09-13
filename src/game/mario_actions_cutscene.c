@@ -57,6 +57,8 @@ static s8 D_8032CBE4 = 0;
 static s8 D_8032CBE8 = 0;
 static s8 D_8032CBEC[7] = { 2, 3, 2, 1, 2, 3, 2 };
 
+extern u8 gLastCollectedStarOrKey;
+
 static BehaviorScript* localDialogNPCBehavior = NULL;
 
 /**
@@ -1288,8 +1290,8 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
                 if (!(m->flags & MARIO_CAP_ON_HEAD)) {
                     m->actionState = 2; // star exit without cap
                 }
-                if (gLastCompletedCourseNum == COURSE_BITDW
-                    || gLastCompletedCourseNum == COURSE_BITFS) {
+                if ((gLastCompletedCourseNum == COURSE_BITDW || gLastCompletedCourseNum == COURSE_BITFS)
+                    && gLastCollectedStarOrKey == 1) {
                     m->actionState = 1; // key exit
                 }
             }

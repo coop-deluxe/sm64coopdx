@@ -7937,7 +7937,10 @@ HOOK_ON_PACKET_RECEIVE = 22
 HOOK_USE_ACT_SELECT = 23
 
 --- @type LuaHookedEventType
-HOOK_MAX = 24
+HOOK_ON_CHANGE_CAMERA_ANGLE = 24
+
+--- @type LuaHookedEventType
+HOOK_MAX = 25
 
 --- @class HudDisplayFlags
 

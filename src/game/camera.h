@@ -785,5 +785,6 @@ s32 set_camera_mode_fixed(struct Camera* c, s16 x, s16 y, s16 z);
 
 void camera_set_use_course_specific_settings(u8 enable);
 void rom_hack_cam_set_collisions(u8 enable);
+void center_rom_hack_camera(void);
 
 #endif // CAMERA_H

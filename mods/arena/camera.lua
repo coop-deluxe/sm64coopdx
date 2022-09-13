@@ -1,16 +1,10 @@
-
 camera_set_use_course_specific_settings(false)
 
 sOverrideCameraModes = {
     [CAMERA_MODE_RADIAL]            = true,
     [CAMERA_MODE_OUTWARD_RADIAL]    = true,
-    [CAMERA_MODE_BEHIND_MARIO]      = true,
     [CAMERA_MODE_CLOSE]             = true,
-    --[CAMERA_MODE_C_UP]              = true,
-    [CAMERA_MODE_WATER_SURFACE]     = true,
     [CAMERA_MODE_SLIDE_HOOT]        = true,
-    --[CAMERA_MODE_INSIDE_CANNON]     = true,
-    --[CAMERA_MODE_BOSS_FIGHT]        = true,
     [CAMERA_MODE_PARALLEL_TRACKING] = true,
     [CAMERA_MODE_FIXED]             = true,
     [CAMERA_MODE_8_DIRECTIONS]      = true,
@@ -18,8 +12,9 @@ sOverrideCameraModes = {
     [CAMERA_MODE_SPIRAL_STAIRS]     = true,
 }
 
+local m = gMarioStates[0]
+
 function override_camera()
-    local m = gMarioStates[0]
     local np = gNetworkPlayers[0]
 
     if sOverrideCameraModes[m.area.camera.mode] == nil then
@@ -34,8 +29,6 @@ function override_camera()
 end
 
 function on_set_camera_mode(c, mode, frames)
-    local m = gMarioStates[0]
-
     if mode == CAMERA_MODE_ROM_HACK then
         return true
     end
@@ -54,3 +47,8 @@ function on_set_camera_mode(c, mode, frames)
 end
 
 hook_event(HOOK_ON_SET_CAMERA_MODE, on_set_camera_mode)
+hook_event(HOOK_UPDATE, function()
+    if (m.controller.buttonPressed & L_TRIG) ~= 0 then
+        center_rom_hack_camera()
+    end
+end)

@@ -477,6 +477,35 @@ void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookT
     }
 }
 
+void smlua_call_event_hooks_change_camera_angle_params(enum LuaHookedEventType hookType, s16 mode, bool* returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    *returnValue = true;
+
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        lua_pushinteger(L, mode);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TBOOLEAN) {
+            *returnValue = smlua_to_boolean(L, -1);
+        }
+        lua_settop(L, prevTop);
+    }
+}
+
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }

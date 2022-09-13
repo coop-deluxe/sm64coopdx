@@ -65,6 +65,8 @@ bool is_game_paused(void);
 bool is_transition_playing(void);
 
 s16 get_dialog_id(void);
+s32 get_last_star_or_key(void);
+void set_last_star_or_key(u8 value);
 
 u32 allocate_mario_action(u32 actFlags);
 
