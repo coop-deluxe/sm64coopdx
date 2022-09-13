@@ -7,7 +7,7 @@ Expect many more things to be supported in the future.
 <br />
 
 ## How to install Lua mods
-Lua scripts you make can be placed either the `mods` folder in the base directory, or in `<SAVE FILE LOCATION>/mods`
+Lua scripts you make can be placed either the `mods` folder in the base directory, or in `<SAVE FILE LOCATION>/mods`(On macos that is `~/Library/Application Support/sm64ex-coop` linux is `~/.local/share/sm64ex-coop` and Windows is `%Appdata%/sm64ex-coop`)
 
 <br />
 
