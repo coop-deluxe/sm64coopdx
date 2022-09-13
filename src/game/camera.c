@@ -11770,7 +11770,7 @@ static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
     }
 
     f32 floorHeight = find_floor(desiredPos[0], desiredPos[1], desiredPos[2], &surf);
-    if (surf == NULL || floorHeight <= -11000) {
+    if (surf == NULL || floorHeight <= gLevelValues.floorLowerLimit) {
         return false;
     }
 

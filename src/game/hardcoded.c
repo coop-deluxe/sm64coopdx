@@ -1,4 +1,5 @@
 #include "hardcoded.h"
+#include "engine/surface_collision.h"
 
 #include "levels/bbh/header.h"
 #include "levels/bitdw/header.h"
@@ -88,10 +89,10 @@ struct LevelValues gDefaultLevelValues = {
         .UnagiStarPos         = {  6833.0f, -3654.0f,  2230.0f },
         .JetstreamRingStarPos = {  3400.0f, -3200.0f,  -500.0f },
     },
-    .ceilHeightLimit          = 20000,
-    .floorLowerLimit          = -11000,
-    .floorLowerLimitMisc      = -10000,
-    .floorLowerLimitShadow   = -10000,
+    .ceilHeightLimit          = CEIL_HEIGHT_LIMIT,
+    .floorLowerLimit          = FLOOR_LOWER_LIMIT,
+    .floorLowerLimitMisc      = FLOOR_LOWER_LIMIT_MISC,
+    .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -251,6 +252,7 @@ struct BehaviorValues gBehaviorValues = { 0 };
  // functions //
 ///////////////
 
+__attribute__((constructor))
 void hardcoded_reset_default_values(void) {
     gLevelValues = gDefaultLevelValues;
     gBehaviorValues = gDefaultBehaviorValues;

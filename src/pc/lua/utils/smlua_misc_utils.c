@@ -4,6 +4,7 @@
 #include "data/dynos.c.h"
 #include "game/bettercamera.h"
 #include "game/camera.h"
+#include "game/hardcoded.h"
 #include "game/hud.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
@@ -333,7 +334,7 @@ f32 get_environment_region(u8 index) {
     if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
         return gEnvironmentRegions[6 * (int)index];
     }
-    return -11000;
+    return gLevelValues.floorLowerLimit;
 }
 
 ///

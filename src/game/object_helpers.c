@@ -12,6 +12,7 @@
 #include "engine/math_util.h"
 #include "engine/surface_collision.h"
 #include "game_init.h"
+#include "hardcoded.h"
 #include "helper_macros.h"
 #include "ingame_menu.h"
 #include "interaction.h"
@@ -909,7 +910,7 @@ void cur_obj_unused_init_on_floor(void) {
     cur_obj_enable_rendering();
 
     o->oPosY = find_floor_height(o->oPosX, o->oPosY, o->oPosZ);
-    if (o->oPosY < -10000.0f) {
+    if (o->oPosY < gLevelValues.floorLowerLimitMisc) {
         cur_obj_set_pos_relative_to_parent(0, 0, -70);
         o->oPosY = find_floor_height(o->oPosX, o->oPosY, o->oPosZ);
     }
@@ -1259,7 +1260,7 @@ void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
 
     if (o->oFloorHeight > o->oPosY) {
         o->oPosY = o->oFloorHeight;
-    } else if (o->oFloorHeight < -10000.0f) {
+    } else if (o->oFloorHeight < gLevelValues.floorLowerLimitMisc) {
         //! OoB failsafe
         obj_copy_pos(o, gMarioObject);
         o->oFloorHeight = find_floor_height(o->oPosX, o->oPosY, o->oPosZ);
@@ -1424,7 +1425,7 @@ s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
         }
     }
 
-    if (intendedFloorHeight < -10000.0f) {
+    if (intendedFloorHeight < gLevelValues.floorLowerLimitMisc) {
         // Don't move into OoB
         o->oMoveFlags |= OBJ_MOVE_HIT_EDGE;
         return FALSE;
@@ -1524,7 +1525,7 @@ f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
 
     o->oPosY += o->oVelY;
     if (o->activeFlags & ACTIVE_FLAG_UNK10) {
-        waterLevel = -11000.0f;
+        waterLevel = gLevelValues.floorLowerLimit;
     } else {
         waterLevel = find_water_level(o->oPosX, o->oPosZ);
     }
@@ -1895,7 +1896,7 @@ s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
         intendedFloorHeight = find_floor(intendedX, o->oPosY, intendedZ, &intendedFloor);
         deltaFloorHeight = intendedFloorHeight - o->oFloorHeight;
 
-        if (intendedFloorHeight < -10000.0f) {
+        if (intendedFloorHeight < gLevelValues.floorLowerLimitMisc) {
             o->oWallAngle = o->oMoveAngleYaw + 0x8000;
             return 2;
         } else if (intendedFloor->normal.y < steepNormalY && deltaFloorHeight > 0

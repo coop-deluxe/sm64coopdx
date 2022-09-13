@@ -12,7 +12,7 @@ void bhv_tree_snow_or_leaf_loop(void) {
     }
     if (o->oPosY < o->oFloorHeight)
         obj_mark_for_deletion(o);
-    if (o->oFloorHeight < -11000.0f)
+    if (o->oFloorHeight < gLevelValues.floorLowerLimit)
         obj_mark_for_deletion(o);
     if (o->oTimer > 100)
         obj_mark_for_deletion(o);
