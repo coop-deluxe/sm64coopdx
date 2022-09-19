@@ -877,10 +877,13 @@
 ### [enum PlayerParts](#PlayerParts)
 | Identifier | Value |
 | :--------- | :---- |
-| SHIRT | 0 |
-| PANTS | 1 |
+| PANTS | 0 |
+| SHIRT | 1 |
 | GLOVES | 2 |
-| PLAYER_PART_MAX | 3 |
+| SHOES | 3 |
+| HAIR | 4 |
+| SKIN | 5 |
+| PLAYER_PART_MAX | 6 |
 
 [:arrow_up_small:](#)
 

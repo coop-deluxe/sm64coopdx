@@ -49,7 +49,7 @@
 #define RATIO_Y (gfx_current_dimensions.height / (2.0f * HALF_SCREEN_HEIGHT))
 
 #define MAX_BUFFERED 256
-#define MAX_LIGHTS 8
+#define MAX_LIGHTS 16
 #define MAX_VERTICES 64
 
 # define MAX_CACHED_TEXTURES 4096 // for preloading purposes
@@ -1130,7 +1130,7 @@ static void gfx_calc_and_set_viewport(const Vp_t *viewport) {
     rdp.viewport_or_scissor_changed = true;
 }
 
-static void gfx_sp_movemem(uint8_t index, uint8_t offset, const void* data) {
+static void gfx_sp_movemem(uint8_t index, uint16_t offset, const void* data) {
     switch (index) {
         case G_MV_VIEWPORT:
             gfx_calc_and_set_viewport((const Vp_t *) data);
@@ -1167,7 +1167,7 @@ static void gfx_sp_movemem(uint8_t index, uint8_t offset, const void* data) {
 }
 
 #ifdef F3DEX_GBI_2E
-static void gfx_sp_copymem(uint8_t idx, uint8_t dstofs, uint8_t srcofs, UNUSED uint8_t words) {
+static void gfx_sp_copymem(uint8_t idx, uint16_t dstofs, uint16_t srcofs, UNUSED uint8_t words) {
     if (idx == G_MV_LIGHT) {
         const int srcidx = srcofs / 24 - 2;
         const int dstidx = dstofs / 24 - 2;

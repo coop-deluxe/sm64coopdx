@@ -3402,8 +3402,7 @@ Gfx mat_wario_overalls[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightEXT(1, 3), // gsSPSetLights1(wario_purple_lights_group),
-    gsSPCopyLightEXT(2, 4),
+    gsSPCopyLightsPlayerPart(PANTS), // gsSPSetLights1(wario_purple_lights_group),
 	gsSPEndDisplayList(),
 };
 
@@ -3420,8 +3419,7 @@ Gfx mat_wario_metal[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 
@@ -3435,8 +3433,7 @@ Gfx mat_wario_cap[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPCopyLightEXT(1, 5), // gsSPSetLights1(wario_yellow_lights_group),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 
@@ -3452,8 +3449,7 @@ Gfx mat_wario_button[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightEXT(1, 3), // gsSPSetLights1(wario_purple_lights_group),
-    gsSPCopyLightEXT(2, 4),
+    gsSPCopyLightsPlayerPart(PANTS), // gsSPSetLights1(wario_purple_lights_group),
 	gsSPEndDisplayList(),
 };
 
@@ -3469,8 +3465,7 @@ Gfx mat_wario_logo[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightEXT(1, 5), // gsSPSetLights1(wario_yellow_lights_group),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 
@@ -3478,7 +3473,7 @@ Gfx mat_wario_hair[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsSPSetLights1(wario_brown_lights_group),
+    gsSPCopyLightsPlayerPart(HAIR),
 	gsSPEndDisplayList(),
 };
 
@@ -3494,7 +3489,7 @@ Gfx mat_wario_eyes_center[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3510,7 +3505,7 @@ Gfx mat_wario_sideburn[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3518,7 +3513,7 @@ Gfx mat_wario_face[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3550,7 +3545,7 @@ Gfx mat_wario_mouth[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3566,7 +3561,7 @@ Gfx mat_wario_eyes_half_closed[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3582,7 +3577,7 @@ Gfx mat_wario_eyes_closed[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3598,7 +3593,7 @@ Gfx mat_wario_eyes_right[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3614,7 +3609,7 @@ Gfx mat_wario_eyes_left[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3630,7 +3625,7 @@ Gfx mat_wario_eyes_up[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3646,7 +3641,7 @@ Gfx mat_wario_eyes_down[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3662,7 +3657,7 @@ Gfx mat_wario_eyes_dead[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-	gsSPSetLights1(wario_beige_lights_group),
+    gsSPCopyLightsPlayerPart(SKIN),
 	gsSPEndDisplayList(),
 };
 
@@ -3670,8 +3665,7 @@ Gfx mat_wario_gloves[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
-	gsSPCopyLightEXT(2, 8),
+	gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
 	gsSPEndDisplayList(),
 };
 
@@ -3725,7 +3719,7 @@ Gfx mat_wario_shoes[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsSPSetLights1(wario_green_lights_group),
+    gsSPCopyLightsPlayerPart(SHOES),
 	gsSPEndDisplayList(),
 };
 

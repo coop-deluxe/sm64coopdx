@@ -3457,8 +3457,7 @@ Gfx mat_waluigi_body_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightEXT(1, 3),
-    gsSPCopyLightEXT(2, 4),
+    gsSPCopyLightsPlayerPart(PANTS),
     gsSPEndDisplayList(),
 };
 
@@ -3475,8 +3474,7 @@ Gfx mat_waluigi_metal_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPEndDisplayList(),
 };
 
@@ -3498,8 +3496,7 @@ Gfx mat_waluigi_cap_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightEXT(1, 5),
-    gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPEndDisplayList(),
 };
 
@@ -3515,7 +3512,7 @@ Gfx mat_waluigi_face_0___eye_open_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPSetLights1(waluigi_face_0___eye_open_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3523,7 +3520,7 @@ Gfx mat_waluigi_hair_v3[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
     gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPSetLights1(waluigi_hair_v3_lights),
+    gsSPCopyLightsPlayerPart(HAIR),
     gsSPEndDisplayList(),
 };
 
@@ -3539,7 +3536,7 @@ Gfx mat_waluigi_sideburns_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPSetLights1(waluigi_sideburns_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3547,7 +3544,7 @@ Gfx mat_waluigi_mustache_v3[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
     gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPSetLights1(waluigi_mustache_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3571,7 +3568,7 @@ Gfx mat_waluigi_mouth_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPSetLights1(waluigi_mouth_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3595,7 +3592,7 @@ Gfx mat_waluigi_face_1___eye_half_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPSetLights1(waluigi_face_1___eye_half_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3611,7 +3608,7 @@ Gfx mat_waluigi_face_2___eye_closed_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPSetLights1(waluigi_face_2___eye_closed_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3627,7 +3624,7 @@ Gfx mat_waluigi_face_7___eye_X_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPSetLights1(waluigi_face_7___eye_X_v3_lights),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPEndDisplayList(),
 };
 
@@ -3687,8 +3684,7 @@ Gfx mat_waluigi_gloves_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
     gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
-    gsSPCopyLightEXT(2, 8),
+    gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
     gsSPEndDisplayList(),
 };
 
@@ -3696,7 +3692,7 @@ Gfx mat_waluigi_shoes_v3[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
     gsSPTexture(65535, 65535, 0, 0, 1),
-    gsSPSetLights1(waluigi_shoes_v3_lights),
+    gsSPCopyLightsPlayerPart(SHOES),
     gsSPEndDisplayList(),
 };
 

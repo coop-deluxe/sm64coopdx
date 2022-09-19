@@ -2567,11 +2567,17 @@ typedef union {
  * EXTENDED COMMAND
  * Copy one light's parameters to the other.
  */
-#ifdef	F3DEX_GBI_2E
-# define gSPCopyLightEXT(pkt, dst, src)	\
-	  gCopyMemEXT((pkt),G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
-# define gsSPCopyLightEXT(dst, src)	\
-	 gsCopyMemEXT(      G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
+#ifdef F3DEX_GBI_2E
+#define gSPCopyLightEXT(pkt, dst, src) \
+    gCopyMemEXT((pkt),G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
+#define gsSPCopyLightEXT(dst, src) \
+    gsCopyMemEXT(     G_COPYMEM,G_MV_LIGHT,(dst)*24+24,(src)*24+24,sizeof(Light))
+#define gSPCopyLightsPlayerPart(pkt, part) \
+    gSPCopyLightEXT((pkt), 1, ((2 * ((part) + 1)) + 1)); \
+    gSPCopyLightEXT((pkt), 2, ((2 * ((part) + 1)) + 2));
+#define gsSPCopyLightsPlayerPart(part) \
+    gsSPCopyLightEXT(1, ((2 * ((part) + 1)) + 1)), \
+    gsSPCopyLightEXT(2, ((2 * ((part) + 1)) + 2))
 #endif
 
 /*

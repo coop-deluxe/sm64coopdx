@@ -8,8 +8,7 @@
 #define PALETTE_PRESET_MAX 32
 
 enum PlayerParts {
-    SHIRT, PANTS, GLOVES, PLAYER_PART_MAX
-    //SHOES (can't implement due to light limit)
+    PANTS, SHIRT, GLOVES, SHOES, HAIR, SKIN, PLAYER_PART_MAX
 };
 
 #pragma pack(1)

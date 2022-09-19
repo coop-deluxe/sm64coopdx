@@ -142,8 +142,7 @@ Gfx mat_koth_active_f3d_material[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_8b, 2, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 4, 0),
 	gsDPSetTileSize(0, 0, 0, 60, 124),
-    gsSPCopyLightEXT(1, 5),
-    gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 

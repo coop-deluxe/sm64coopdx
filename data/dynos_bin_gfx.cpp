@@ -303,6 +303,14 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_SCALE_FRAC);
     gfx_constant(G_ROTATE_FRAC);
 
+    // Player parts
+    gfx_constant(PANTS);
+    gfx_constant(SHIRT);
+    gfx_constant(GLOVES);
+    gfx_constant(SHOES);
+    gfx_constant(HAIR);
+    gfx_constant(SKIN);
+
     // Common values
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));
     gfx_constant(CALC_DXT(8,G_IM_SIZ_4b_BYTES));
@@ -735,6 +743,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
     gfx_symbol_1(gsDPSetTextureFilter, false);
 
     gfx_symbol_2(gsSPCopyLightEXT, false);
+    gfx_symbol_1(gsSPCopyLightsPlayerPart, false);
     gfx_symbol_2(gsSPFogFactor, false);
     gfx_symbol_1(gsDPSetTextureLOD, false);
     gfx_symbol_3(gsMoveWd, false);

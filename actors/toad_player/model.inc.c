@@ -11,21 +11,14 @@
  // metal //
 ///////////
 
-static const Lights1 toad_player_lights_white = gdSPDefLights1(
-    0x7f, 0x7f, 0x7f,
-    0xff, 0xff, 0xff, 0x28, 0x28, 0x28
-);
-
 const Gfx toad_player_metal_start[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsDPLoadTextureBlock(toad_player_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPEndDisplayList(),
 };
 
@@ -293,18 +286,13 @@ const Gfx toad_player_dl_face[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, toad_player_texture_face),
     gsDPLoadSync(),
-
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-
-    gsSPLight(&toad_player_lights_face.l, 1),
-    gsSPLight(&toad_player_lights_face.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(toad_player_dl_face_inner),
-
     gsDPTileSync(),
     gsSPEndDisplayList(),
 };
@@ -315,18 +303,13 @@ const Gfx toad_player_dl_eyes_closed[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, toad_player_texture_eyes_closed),
     gsDPLoadSync(),
-
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-
-    gsSPLight(&toad_player_lights_face.l, 1),
-    gsSPLight(&toad_player_lights_face.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(toad_player_dl_face_inner),
-
     gsDPTileSync(),
     gsSPEndDisplayList(),
 };
@@ -337,18 +320,13 @@ const Gfx toad_player_dl_eyes_half_closed[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, toad_player_texture_eyes_half_closed),
     gsDPLoadSync(),
-
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-
-    gsSPLight(&toad_player_lights_face.l, 1),
-    gsSPLight(&toad_player_lights_face.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(toad_player_dl_face_inner),
-
     gsDPTileSync(),
     gsSPEndDisplayList(),
 };
@@ -359,18 +337,13 @@ const Gfx toad_player_dl_eyes_dead[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
-
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 5, G_TX_NOLOD, G_TX_CLAMP, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, toad_player_texture_eyes_dead),
     gsDPLoadSync(),
-
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-
-    gsSPLight(&toad_player_lights_face.l, 1),
-    gsSPLight(&toad_player_lights_face.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(toad_player_dl_face_inner),
-
     gsDPTileSync(),
     gsSPEndDisplayList(),
 };
@@ -641,8 +614,7 @@ const Gfx toad_player_dl_cap_decal[] = {
 
     //gsSPClearGeometryMode(G_CULL_BACK),
 
-    gsSPCopyLightEXT(1, 5),
-    gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
 
     gsSPVertex(toad_player_vertex_cap_decal + 0, 16, 0),
     gsSP1Triangle(0, 1, 2, 0),
@@ -806,12 +778,8 @@ const Gfx toad_player_dl_cap_inner[] = {
 const Gfx toad_player_dl_cap[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-
-    gsSPCopyLightEXT(1, 7), // glove light, set in mario_misc.c
-    gsSPCopyLightEXT(2, 8),
-
+    gsSPCopyLightsPlayerPart(GLOVES), // glove light, set in mario_misc.c
     gsSPDisplayList(toad_player_dl_cap_inner),
-
     gsSPEndDisplayList(),
 };
 
@@ -961,8 +929,7 @@ const Gfx toad_player_dl_jacket_inner[] = {
 const Gfx toad_player_dl_jacket[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPCopyLightEXT(1, 3),
-    gsSPCopyLightEXT(2, 4),
+    gsSPCopyLightsPlayerPart(PANTS),
     gsSPDisplayList(toad_player_dl_jacket_inner),
     gsSPEndDisplayList(),
 };
@@ -1043,8 +1010,7 @@ const Gfx toad_player_dl_body_inner[] = {
     gsSP2Triangles( 5,  9,  0, 0x0,  0,  9,  1, 0x0),
     gsSP2Triangles(11,  6,  0, 0x0, 11,  0,  2, 0x0),
     gsSP1Triangle( 0,  6,  5, 0x0),
-    gsSPLight(&toad_player_lights_body_2.l, 1),
-    gsSPLight(&toad_player_lights_body_2.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPVertex(toad_player_vertex_body_3, 12, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  2,  3,  0, 0x0),
     gsSP2Triangles( 4,  2,  1, 0x0,  4,  1,  5, 0x0),
@@ -1075,8 +1041,7 @@ const Gfx toad_player_metal_dl_body_inner[] = {
     gsSP2Triangles( 5,  9,  0, 0x0,  0,  9,  1, 0x0),
     gsSP2Triangles(11,  6,  0, 0x0, 11,  0,  2, 0x0),
     gsSP1Triangle( 0,  6,  5, 0x0),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPVertex(toad_player_vertex_body_3, 12, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  2,  3,  0, 0x0),
     gsSP2Triangles( 4,  2,  1, 0x0,  4,  1,  5, 0x0),
@@ -1091,23 +1056,18 @@ const Gfx toad_player_metal_dl_body_inner[] = {
 const Gfx toad_player_dl_body[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPCopyLightEXT(1, 5),
-    gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPDisplayList(toad_player_dl_body_inner),
-    gsSPCopyLightEXT(1, 3),
-    gsSPCopyLightEXT(2, 4),
+    gsSPCopyLightsPlayerPart(PANTS),
     gsSPDisplayList(toad_player_dl_jacket_inner),
     gsSPEndDisplayList(),
 };
 
 const Gfx toad_player_metal_dl_body[] = {
     gsSPDisplayList(toad_player_metal_dl_body_inner),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
-
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPDisplayList(toad_player_dl_jacket_inner),
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPEndDisplayList(),
 };
 
@@ -1177,8 +1137,7 @@ const Gfx toad_player_dl_arm_left_inner[] = {
 const Gfx toad_player_dl_arm_left[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&toad_player_lights_arm_left.l, 1),
-    gsSPLight(&toad_player_lights_arm_left.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(toad_player_dl_arm_left_inner),
     gsSPEndDisplayList(),
 };
@@ -1247,8 +1206,7 @@ const Gfx toad_player_dl_arm_right_inner[] = {
 const Gfx toad_player_dl_arm_right[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&toad_player_lights_arm_right.l, 1),
-    gsSPLight(&toad_player_lights_arm_right.a, 2),
+    gsSPCopyLightsPlayerPart(SKIN),
     gsSPDisplayList(toad_player_dl_arm_right_inner),
     gsSPEndDisplayList(),
 };
@@ -1321,8 +1279,7 @@ const Gfx toad_player_dl_foot_left_inner[] = {
 const Gfx toad_player_dl_foot_left[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&toad_player_lights_foot_left.l, 1),
-    gsSPLight(&toad_player_lights_foot_left.a, 2),
+    gsSPCopyLightsPlayerPart(SHOES),
     gsSPDisplayList(toad_player_dl_foot_left_inner),
     gsSPEndDisplayList(),
 };
@@ -1393,8 +1350,7 @@ const Gfx toad_player_dl_foot_right_inner[] = {
 const Gfx toad_player_dl_foot_right[] = {
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADEFADEA, G_CC_SHADEFADEA),
-    gsSPLight(&toad_player_lights_foot_right.l, 1),
-    gsSPLight(&toad_player_lights_foot_right.a, 2),
+    gsSPCopyLightsPlayerPart(SHOES),
     gsSPDisplayList(toad_player_dl_foot_right_inner),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
@@ -1413,10 +1369,7 @@ const Gfx toad_player_dl_foot_right_metal[] = {
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetAlphaCompare(G_AC_NONE),
-
-    gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
-
+    gsSPCopyLightsPlayerPart(SHIRT),
     gsSPEndDisplayList(),
 };
 

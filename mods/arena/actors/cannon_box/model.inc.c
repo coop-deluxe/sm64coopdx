@@ -786,8 +786,7 @@ Gfx mat_cannon_box_f3d_material[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_I, G_IM_SIZ_8b, 4, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
-	gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+	gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 
@@ -817,8 +816,7 @@ Gfx mat_cannon_box_f3d_material_009[] = {
 	gsDPSetTile(G_IM_FMT_IA, G_IM_SIZ_8b, 4, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
 	gsDPSetPrimColor(0, 0, 254, 254, 254, 255),
-	gsSPCopyLightEXT(1, 5),
-	gsSPCopyLightEXT(2, 6),
+	gsSPCopyLightsPlayerPart(SHIRT),
 	gsSPEndDisplayList(),
 };
 

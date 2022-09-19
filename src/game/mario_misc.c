@@ -77,15 +77,6 @@ static s8 gMarioAttackScaleAnimation[3 * 6] = {
 
 struct MarioBodyState gBodyStates[MAX_PLAYERS];
 struct GraphNodeObject gMirrorMario[MAX_PLAYERS];  // copy of Mario's geo node for drawing mirror Mario
-
-// ambient color is always half the diffuse color, so we can pull a macro
-#define PALETTE_TO_LIGHTS(palette) \
-    {{ \
-        gdSPDefLights1((palette.parts[SHIRT][0]  >> 1), (palette.parts[SHIRT][1]  >> 1), (palette.parts[SHIRT][2]  >> 1), palette.parts[SHIRT][0],  palette.parts[SHIRT][1],  palette.parts[SHIRT][2],  0x28, 0x28, 0x28), \
-        gdSPDefLights1((palette.parts[PANTS][0]  >> 1), (palette.parts[PANTS][1]  >> 1), (palette.parts[PANTS][2]  >> 1), palette.parts[PANTS][0],  palette.parts[PANTS][1],  palette.parts[PANTS][2],  0x28, 0x28, 0x28), \
-        gdSPDefLights1((palette.parts[GLOVES][0] >> 1), (palette.parts[GLOVES][1] >> 1), (palette.parts[GLOVES][2] >> 1), palette.parts[GLOVES][0], palette.parts[GLOVES][1], palette.parts[GLOVES][2], 0x28, 0x28, 0x28), \
-    }}
-
 struct PlayerColor gNetworkPlayerColors[MAX_PLAYERS];
 
 // This whole file is weirdly organized. It has to be the same file due
@@ -745,6 +736,38 @@ Gfx* geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode* node, 
     return gfx;
 }
 
+static struct PlayerColor geo_mario_get_player_color(const struct PlayerPalette *palette) {
+    struct PlayerColor color = { 0 };
+    for (s32 part = 0; part != PLAYER_PART_MAX; ++part) {
+        color.parts[part] = (Lights1) gdSPDefLights1(
+            palette->parts[part][0] / 2,
+            palette->parts[part][1] / 2,
+            palette->parts[part][2] / 2,
+            palette->parts[part][0],
+            palette->parts[part][1],
+            palette->parts[part][2], 
+            0x28, 0x28, 0x28
+        );
+    }
+    return color;
+}
+
+static Gfx *geo_mario_create_player_colors_dl(s32 index, Gfx *capEnemyGfx, Gfx *capEnemyDecalGfx) {
+    s32 size = ((PLAYER_PART_MAX * 2) + 1) + (capEnemyGfx != NULL) + (capEnemyDecalGfx != NULL);
+    Gfx *gfx = alloc_display_list(size * sizeof(Gfx));
+    if (gfx) {
+        Gfx *gfxp = gfx;
+        for (s32 part = 0; part != PLAYER_PART_MAX; ++part) {
+            gSPLight(gfxp++, &gNetworkPlayerColors[index].parts[part].l, (2 * (part + 1)) + 1);
+            gSPLight(gfxp++, &gNetworkPlayerColors[index].parts[part].a, (2 * (part + 1)) + 2);
+        }
+        if (capEnemyGfx) { gSPDisplayList(gfxp++, capEnemyGfx); }
+        if (capEnemyDecalGfx) { gSPDisplayList(gfxp++, capEnemyDecalGfx); }
+        gSPEndDisplayList(gfxp);
+    }
+    return gfx;
+}
+
 /**
  * Generate DL that sets player color depending on player number.
  */
@@ -753,25 +776,13 @@ Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED
     Gfx* gfx = NULL;
     u8 index = geo_get_processing_object_index();
 
-    struct PlayerColor color = PALETTE_TO_LIGHTS(gNetworkPlayers[index].overridePalette);
-
+    struct PlayerColor color = geo_mario_get_player_color(&gNetworkPlayers[index].overridePalette);
     gNetworkPlayerColors[index] = color;
 
     struct MarioBodyState* bodyState = &gBodyStates[index];
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        // extra players get last color
-        gfx = alloc_display_list(7 * sizeof(*gfx));
-        if (gfx == NULL) { return NULL; }
-        // put the player colors into lights 3, 4, 5, 6, 7, 8
-        // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
-        gSPLight(gfx + 0, &gNetworkPlayerColors[index].parts[PANTS].l,  3);
-        gSPLight(gfx + 1, &gNetworkPlayerColors[index].parts[PANTS].a,  4);
-        gSPLight(gfx + 2, &gNetworkPlayerColors[index].parts[SHIRT].l,  5);
-        gSPLight(gfx + 3, &gNetworkPlayerColors[index].parts[SHIRT].a,  6);
-        gSPLight(gfx + 4, &gNetworkPlayerColors[index].parts[GLOVES].l, 7);
-        gSPLight(gfx + 5, &gNetworkPlayerColors[index].parts[GLOVES].a, 8);
-        gSPEndDisplayList(gfx + 6);
+        gfx = geo_mario_create_player_colors_dl(index, NULL, NULL);
         u32 layer = LAYER_OPAQUE;
         if (asGenerated->parameter == 0) {
             // put on transparent layer if vanish effect, opaque otherwise
@@ -792,33 +803,14 @@ Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED 
     if (callContext != GEO_CONTEXT_RENDER) { return NULL; }
     u8 globalIndex = geo_get_processing_object_index();
 
-    struct PlayerColor color = PALETTE_TO_LIGHTS(gNetworkPlayers[globalIndex].overridePalette);
-
+    struct PlayerColor color = geo_mario_get_player_color(&gNetworkPlayers[globalIndex].overridePalette);
     gNetworkPlayerColors[globalIndex] = color;
 
     u8 charIndex = gNetworkPlayers[globalIndex].overrideModelIndex;
     if (charIndex >= CT_MAX) { charIndex = 0; }
     struct Character* character = &gCharacters[charIndex];
 
-    u8 dpLength = 7;
-    if (character->capEnemyGfx      != NULL) { dpLength++; }
-    if (character->capEnemyDecalGfx != NULL) { dpLength++; }
-    Gfx* gfx = alloc_display_list(dpLength * sizeof(*gfx));
-    if (gfx == NULL) { return NULL; }
-    Gfx* onGfx = gfx;
-
-    // put the player colors into lights 3, 4, 5, 6, 7, 8
-    // they will be later copied to lights 1, 2 with gsSPCopyLightEXT
-    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[PANTS].l,  3);
-    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[PANTS].a,  4);
-    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[SHIRT].l,  5);
-    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[SHIRT].a,  6);
-    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[GLOVES].l, 7);
-    gSPLight(onGfx++, &gNetworkPlayerColors[globalIndex].parts[GLOVES].a, 8);
-    if (character->capEnemyGfx      != NULL) { gSPDisplayList(onGfx++, character->capEnemyGfx);      }
-    if (character->capEnemyDecalGfx != NULL) { gSPDisplayList(onGfx++, character->capEnemyDecalGfx); }
-    gSPEndDisplayList(onGfx++);
-
+    Gfx *gfx = geo_mario_create_player_colors_dl(globalIndex, character->capEnemyGfx, character->capEnemyDecalGfx);
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*)node;
     asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (character->capEnemyLayer << 8);
     return gfx;

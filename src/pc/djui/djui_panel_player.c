@@ -113,7 +113,7 @@ void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
 }
 
 static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
-    char* sPartStrings[PLAYER_PART_MAX] = { "Shirt", "Pants", "Gloves" };
+    char* sPartStrings[PLAYER_PART_MAX] = { "Pants", "Shirt", "Gloves", "Shoes", "Hair", "Skin" };
 
     f32 bodyHeight = 32 * 5 + 64 * 1 + 16 * 5;
 
