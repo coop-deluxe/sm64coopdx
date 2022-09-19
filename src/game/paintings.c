@@ -845,6 +845,7 @@ void painting_update_floors(struct Painting *painting) {
         struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
         // Skip non connected players
         if (!np->connected) { continue; }
+        if (m == NULL || m->marioObj == NULL) { continue; }
 
         bool consider = true;
         bool valid = true;
@@ -870,7 +871,6 @@ void painting_update_floors(struct Painting *painting) {
         enterMiddle = 0;
         enterRight = 0;
         struct Surface* surface;
-        if (m == NULL || m->marioObj == NULL) { continue; }
         find_floor(m->marioObj->oPosX, m->marioObj->oPosY, m->marioObj->oPosZ, &surface);
         s16 floorType = surface->type;
 
