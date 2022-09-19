@@ -60,7 +60,6 @@ u8 gRejectInstantWarp = 0;
 
 s16 gChangeLevel = -1;
 s16 gChangeLevelTransition = -1;
-s16 gChangeAreaIndex = -1;
 s16 gChangeActNum = -1;
 
 static bool sFirstCastleGroundsMenu = true;
@@ -1338,13 +1337,17 @@ void update_menu_level(void) {
             gChangeLevel = curLevel;
             gChangeActNum = 2;
         } else if (curLevel == LEVEL_THI) {
-            gChangeLevel = curLevel;
-            gChangeAreaIndex = 2;
-            gChangeActNum = 6;
+            gChangeLevel = LEVEL_THI;
         } else {
             gChangeLevel = curLevel;
             gChangeActNum = 6;
         }
+    }
+
+    if (gCurrAreaIndex != 2 && gCurrLevelNum == LEVEL_THI) {
+        sWarpDest.type = WARP_TYPE_CHANGE_AREA;
+        sWarpDest.areaIdx = 2;
+        sWarpDest.nodeId = 0x0A;
     }
 
     // set sFirstCastleGroundsMenu to false to prevent wall hugging bug
@@ -1455,7 +1458,6 @@ void update_menu_level(void) {
                 gChangeActNum = 2;
             } else if (curLevel == LEVEL_THI) {
                 gChangeLevel = curLevel;
-                gChangeAreaIndex = 2;
                 gChangeActNum = 6;
             } else {
                 gChangeLevel = curLevel;
