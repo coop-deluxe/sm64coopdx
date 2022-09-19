@@ -477,7 +477,7 @@ void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookT
     }
 }
 
-void smlua_call_event_hooks_change_camera_angle_params(enum LuaHookedEventType hookType, s16 mode, bool* returnValue) {
+void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     *returnValue = true;
@@ -490,7 +490,7 @@ void smlua_call_event_hooks_change_camera_angle_params(enum LuaHookedEventType h
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push params
-        lua_pushinteger(L, mode);
+        lua_pushinteger(L, param);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {

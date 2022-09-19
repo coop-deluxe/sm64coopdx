@@ -7940,7 +7940,10 @@ HOOK_USE_ACT_SELECT = 23
 HOOK_ON_CHANGE_CAMERA_ANGLE = 24
 
 --- @type LuaHookedEventType
-HOOK_MAX = 25
+HOOK_ON_SCREEN_TRANSITION = 25
+
+--- @type LuaHookedEventType
+HOOK_MAX = 26
 
 --- @class HudDisplayFlags
 

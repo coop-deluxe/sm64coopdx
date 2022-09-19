@@ -3068,12 +3068,12 @@ void update_camera(struct Camera *c) {
             if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_TRIG) {
                 bool returnValue = true;
                 if (set_cam_angle(0) == CAM_ANGLE_LAKITU) {
-                    smlua_call_event_hooks_change_camera_angle_params(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_MARIO, &returnValue);
+                    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_MARIO, &returnValue);
                     if (returnValue) {
                         set_cam_angle(CAM_ANGLE_MARIO);
                     }
                 } else {
-                    smlua_call_event_hooks_change_camera_angle_params(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_LAKITU, &returnValue);
+                    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_LAKITU, &returnValue);
                     if (returnValue) {
                         set_cam_angle(CAM_ANGLE_LAKITU);
                     }

@@ -111,6 +111,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_PACKET_RECEIVE | Called when the mod receives a packet that used `network_send()` or `network_send_to()` | `table` dataTable |
 | HOOK_USE_ACT_SELECT | Called when the level changes, return `true` to show act selection screen and `false` otherwise | `integer` levelNum |
 | HOOK_ON_CHANGE_CAMERA_ANGLE | Called when the player changes the camera mode to Lakitu cam or Mario cam, return `false` to prevent the change. | `integer` mode |
+| HOOK_ON_SCREEN_TRANSITION | Called when the game is about to play a transition, returun `false` to prevent the transition from playing. | `integer` type |
 
 ### Parameters
 
