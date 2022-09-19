@@ -172,21 +172,6 @@ void network_on_loaded_area(void) {
     }
 }
 
-// Same as network_on_loaded_area, but does not call area_remove_sync_ids_clear()
-void network_on_loaded_area_no_clear(void) {
-    struct NetworkPlayer* np = gNetworkPlayerLocal;
-    if (np != NULL) {
-        bool levelMatch = (np->currCourseNum == gCurrCourseNum
-                           && np->currActNum == gCurrActStarNum
-                           && np->currLevelNum == gCurrLevelNum);
-        if (np->currLevelSyncValid && levelMatch && np->currAreaIndex != gCurrAreaIndex) {
-            network_send_change_area();
-        } else {
-            network_send_change_level();
-        }
-    }
-}
-
 static void network_remember_debug_packet(u8 id, bool sent) {
     if (id == PACKET_ACK) { return; }
     if (id == PACKET_KEEP_ALIVE) { return; }
@@ -419,10 +404,6 @@ void network_update(void) {
     // check for level loaded event
     if (networkLoadingLevel < LOADING_LEVEL_THRESHOLD) {
         networkLoadingLevel++;
-        // Send area/level update without LOADING_LEVEL_THRESHOLD delay
-        if (networkLoadingLevel == 1) {
-            network_on_loaded_area_no_clear();
-        }
         if (!gNetworkAreaLoaded && networkLoadingLevel >= LOADING_LEVEL_THRESHOLD) {
             gNetworkAreaLoaded = true;
             network_on_loaded_area();

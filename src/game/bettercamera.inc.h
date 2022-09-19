@@ -122,7 +122,7 @@ s16 newcam_saved_defmode = -1;
 extern bool gDjuiInMainMenu;
 
 ///This is called at every level initialisation.
-void newcam_init(struct Camera *c, u8 dv) {
+void newcam_init(struct Camera *c, UNUSED u8 dv) {
     newcam_tilt = 1500;
     newcam_yaw = -c->yaw+0x4000; //Mario and the camera's yaw have this offset between them.
     newcam_mode = NC_MODE_NORMAL;
