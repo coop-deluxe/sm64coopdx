@@ -64,13 +64,13 @@ static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     u16 index = 0;
     struct DjuiBaseChild* node = sModLayout->base.child;
     while (node != NULL) {
+        index = node->base->tag;
         if (index >= gLocalMods.entryCount) { break; }
         struct Mod* mod = gLocalMods.entries[index];
 
         djui_base_set_enabled(node->base, mod->selectable);
  
         // iterate
-        index++;
         node = node->next;
     }
 }
@@ -87,11 +87,15 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
     f32 bodyHeight = (416) + 64 * 1 + 16 * 1;
+    bool isRomHacks = (caller->tag == 1);
 
     mods_update_selectable();
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, isRomHacks ?
+        "\\#ff0800\\R\\#1be700\\O\\#00b3ff\\M \\#ffef00\\H\\#ff0800\\A\\#1be700\\C\\#00b3ff\\K\\#ffef00\\S" :
+        "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S"
+    );
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
         struct DjuiPaginated* paginated = djui_paginated_create(&body->base, 8);
@@ -99,6 +103,9 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gLocalMods.entryCount; i++) {
             struct Mod* mod = gLocalMods.entries[i];
+            if (isRomHacks != (mod->incompatible && strstr(mod->incompatible, "romhack"))) {
+                continue;
+            }
             struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled);
             checkbox->base.tag = i;
             djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

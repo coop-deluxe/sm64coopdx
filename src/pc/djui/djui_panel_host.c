@@ -60,7 +60,7 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 }
 
 void djui_panel_host_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 3 + 64 * 3 + 16 * 5;
+    f32 bodyHeight = 32 * 4 + 64 * 4 + 16 * 5;
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\H\\#1be700\\O\\#00b3ff\\S\\#ffef00\\T");
@@ -130,6 +130,14 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         djui_base_set_size(&button2->base, 1.0f, 64);
         djui_base_set_alignment(&button2->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djui_interactable_hook_click(&button2->base, djui_panel_host_mods_create);
+        button2->base.tag = 0;
+
+        struct DjuiButton* button3 = djui_button_create(&body->base, "Rom-Hacks");
+        djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button3->base, 1.0f, 64);
+        djui_base_set_alignment(&button3->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+        djui_interactable_hook_click(&button3->base, djui_panel_host_mods_create);
+        button3->base.tag = 1;
 
         struct DjuiRect* rect3 = djui_rect_create(&body->base);
         djui_base_set_size_type(&rect3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
