@@ -1298,6 +1298,14 @@ function update()
     end
 end
 
+function on_level_init()
+    -- lower water level on castle grounds
+    if gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
+        set_environment_region(1, -800)
+        set_environment_region(2, -800)
+    end
+end
+
 -----------
 -- hooks --
 -----------
@@ -1307,6 +1315,7 @@ hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
+hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 if network_is_server() then
     hook_chat_command('football-reset', "[game|ball] resets the game or ball", on_football_reset_command)
  end

@@ -87,6 +87,12 @@ function on_level_init()
 
     -- reset rankings
     race_clear_rankings()
+
+    -- lower water level on castle grounds
+    if gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
+        set_environment_region(1, -800)
+        set_environment_region(2, -800)
+    end
 end
 
 function spawn_custom_level_objects()
