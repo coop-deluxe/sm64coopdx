@@ -788,6 +788,11 @@
 
 <br />
 
+- level_update.h
+   - [level_trigger_warp](functions-3.md#level_trigger_warp)
+
+<br />
+
 - mario.h
    - [adjust_sound_for_speed](functions-3.md#adjust_sound_for_speed)
    - [check_common_action_exits](functions-3.md#check_common_action_exits)

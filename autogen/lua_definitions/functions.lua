@@ -4003,6 +4003,13 @@ function get_star_name_sm64(courseNum, starNum, charCase)
 end
 
 --- @param m MarioState
+--- @param warpOp integer
+--- @return integer
+function level_trigger_warp(m, warpOp)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return nil
 function adjust_sound_for_speed(m)
     -- ...

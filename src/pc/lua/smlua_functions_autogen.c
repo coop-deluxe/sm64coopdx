@@ -31,6 +31,7 @@
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
+#include "src/game/level_update.h"
 
 
   ////////////////////////
@@ -8055,6 +8056,23 @@ int smlua_func_get_star_name_sm64(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'get_star_name_sm64'"); return 0; }
 
     smlua_push_pointer(L, LVT_U8_P, (void*)get_star_name_sm64(courseNum, starNum, charCase));
+
+    return 1;
+}
+
+  ////////////////////
+ // level_update.h //
+////////////////////
+
+int smlua_func_level_trigger_warp(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'level_trigger_warp'"); return 0; }
+    s32 warpOp = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'level_trigger_warp'"); return 0; }
+
+    lua_pushinteger(L, level_trigger_warp(m, warpOp));
 
     return 1;
 }
@@ -18872,6 +18890,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_star_name", smlua_func_get_star_name);
     smlua_bind_function(L, "get_star_name_ascii", smlua_func_get_star_name_ascii);
     smlua_bind_function(L, "get_star_name_sm64", smlua_func_get_star_name_sm64);
+
+    // level_update.h
+    smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
 
     // mario.h
     smlua_bind_function(L, "adjust_sound_for_speed", smlua_func_adjust_sound_for_speed);

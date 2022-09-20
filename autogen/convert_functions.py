@@ -52,6 +52,7 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
+    "src/game/level_update.h"
 ]
 
 override_allowed_functions = {
@@ -62,6 +63,7 @@ override_allowed_functions = {
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
+    "src/game/level_update.h":              [ "level_trigger_warp" ],
 }
 
 override_disallowed_functions = {
