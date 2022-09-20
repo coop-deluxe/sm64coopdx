@@ -186,7 +186,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                 } else if (_Buffer == "Ambient_t") {
                     _DataType = DATA_TYPE_AMBIENT_T;
                 } else if (_Buffer == "u8") {
-                    _DataType = strstr(aFilename.c_str(), "room")
+                    _DataType = strstr(aFilename.c_str(), "room.inc")
                               ? DATA_TYPE_ROOMS
                               : DATA_TYPE_TEXTURE;
                 } else if (_Buffer == "Texture") {
