@@ -7248,12 +7248,6 @@ function save_file_clear_flags(flags)
     -- ...
 end
 
---- @param fileIndex integer
---- @return nil
-function save_file_erase(fileIndex)
-    -- ...
-end
-
 --- @param capPos Vec3s
 --- @return integer
 function save_file_get_cap_pos(capPos)

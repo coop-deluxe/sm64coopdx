@@ -5364,26 +5364,6 @@
 
 <br />
 
-## [save_file_erase](#save_file_erase)
-
-### Lua Example
-`save_file_erase(fileIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_erase(s32 fileIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Lua Example
