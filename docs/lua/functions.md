@@ -1012,8 +1012,6 @@
 
 <br />
 
-- misc.h
-   - [update_all_mario_stars](functions-3.md#update_all_mario_stars)
 
 <br />
 
@@ -1030,6 +1028,7 @@
 <br />
 
 - network_utils.h
+   - [network_discord_id_from_local_index](functions-3.md#network_discord_id_from_local_index)
    - [network_get_player_text_color_string](functions-3.md#network_get_player_text_color_string)
    - [network_global_index_from_local](functions-3.md#network_global_index_from_local)
    - [network_is_moderator](functions-3.md#network_is_moderator)

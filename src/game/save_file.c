@@ -11,7 +11,6 @@
 #include "course_table.h"
 #include "rumble_init.h"
 #include "macros.h"
-#include "pc/ini.h"
 #include "pc/network/network.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/utils/misc.h"

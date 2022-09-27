@@ -5211,6 +5211,19 @@ function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
+--- @param key string
+--- @return string
+function mod_storage_load(key)
+    -- ...
+end
+
+--- @param key string
+--- @param value string
+--- @return boolean
+function mod_storage_save(key, value)
+    -- ...
+end
+
 --- @return nil
 function update_all_mario_stars()
     -- ...
@@ -5273,6 +5286,12 @@ end
 --- @param a integer
 --- @return nil
 function network_player_set_description(np, description, r, g, b, a)
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
+function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 

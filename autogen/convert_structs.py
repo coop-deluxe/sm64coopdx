@@ -424,7 +424,7 @@ def doc_structs(structs):
             continue
         s += doc_struct(struct) + '\n'
 
-    with open(get_path(out_filename_docs), 'w') as out:
+    with open(get_path(out_filename_docs), 'w', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -472,7 +472,7 @@ def def_structs(structs):
     for def_pointer in def_pointers:
         s += '--- @class %s\n' % def_pointer
 
-    with open(get_path(out_filename_defs), 'w') as out:
+    with open(get_path(out_filename_defs), 'w', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -494,11 +494,11 @@ def build_files():
     built_include = build_includes()
 
     out_c_filename = get_path(out_filename_c)
-    with open(out_c_filename, 'w') as out:
+    with open(out_c_filename, 'w', newline='\n') as out:
         out.write(c_template.replace("$[BODY]", built_body).replace('$[INCLUDES]', built_include))
 
     out_h_filename = get_path(out_filename_h)
-    with open(out_h_filename, 'w') as out:
+    with open(out_h_filename, 'w', newline='\n') as out:
         out.write(h_template.replace("$[BODY]", built_enum))
 
     doc_structs(parsed)

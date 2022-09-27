@@ -52,6 +52,7 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
+    "src/pc/mods/mod_storage.h"
     "src/pc/utils/misc.h",
     "src/game/level_update.h"
 ]
@@ -820,7 +821,7 @@ def doc_files(processed_files):
 
         buffer = buffer.replace('$[FUNCTION_NAV_HERE', function_nav)
 
-        with open(get_path(out_filename_docs % page_name), 'w') as out:
+        with open(get_path(out_filename_docs % page_name), 'w', newline='\n') as out:
             out.write(buffer)
 
 ############################################################################
@@ -869,7 +870,7 @@ def def_files(processed_files):
     for def_pointer in def_pointers:
         s += '--- @class %s\n' % def_pointer
 
-    with open(get_path(out_filename_defs), 'w') as out:
+    with open(get_path(out_filename_defs), 'w', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -888,7 +889,7 @@ def main():
         .replace("$[BINDS]", built_binds)         \
         .replace("$[INCLUDES]", built_includes)
 
-    with open(filename, 'w') as out:
+    with open(filename, 'w', newline='\n') as out:
         out.write(gen)
 
     print('REJECTS:\n%s' % rejects)

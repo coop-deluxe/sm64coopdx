@@ -33,6 +33,7 @@
 #include "src/game/mario_misc.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
+#include "src/pc/mods/mod_storage.h"
 
 
   ////////////////////////
@@ -11718,15 +11719,6 @@ int smlua_func_vec3s_to_vec3f(lua_State* L) {
 }
 */
 
-  ////////////
- // misc.h //
-////////////
-
-int smlua_func_update_all_mario_stars(UNUSED lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
-
-
-    update_all_mario_stars();
 
     return 1;
 }
@@ -11866,6 +11858,17 @@ int smlua_func_network_player_set_description(lua_State* L) {
   /////////////////////
  // network_utils.h //
 /////////////////////
+
+int smlua_func_network_discord_id_from_local_index(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    u8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'network_discord_id_from_local_index'"); return 0; }
+
+    lua_pushstring(L, network_discord_id_from_local_index(localIndex));
+
+    return 1;
+}
 
 int smlua_func_network_get_player_text_color_string(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
@@ -19202,8 +19205,6 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "vec3s_sum", smlua_func_vec3s_sum); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "vec3s_to_vec3f", smlua_func_vec3s_to_vec3f); <--- UNIMPLEMENTED
 
-    // misc.h
-    smlua_bind_function(L, "update_all_mario_stars", smlua_func_update_all_mario_stars);
 
     // network_player.h
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);
@@ -19216,6 +19217,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
 
     // network_utils.h
+    smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
     smlua_bind_function(L, "network_global_index_from_local", smlua_func_network_global_index_from_local);
     smlua_bind_function(L, "network_is_moderator", smlua_func_network_is_moderator);
