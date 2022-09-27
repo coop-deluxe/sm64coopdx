@@ -52,7 +52,7 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
-    "src/pc/mods/mod_storage.h"
+    "src/pc/mods/mod_storage.h",
     "src/pc/utils/misc.h",
     "src/game/level_update.h"
 ]

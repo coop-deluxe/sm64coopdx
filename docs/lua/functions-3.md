@@ -7095,10 +7095,72 @@
 
 <br />
 
+---
+# functions from misc.h
 
 <br />
 
 
+## [update_all_mario_stars](#update_all_mario_stars)
+
+### Lua Example
+`update_all_mario_stars()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void update_all_mario_stars(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from mod_storage.h
+
+<br />
+
+
+## [mod_storage_load](#mod_storage_load)
+
+### Lua Example
+`local stringValue = mod_storage_load(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_storage_load(const char *key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_save](#mod_storage_save)
+
+### Lua Example
+`local booleanValue = mod_storage_save(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save(const char *key, const char *value);`
 
 [:arrow_up_small:](#)
 

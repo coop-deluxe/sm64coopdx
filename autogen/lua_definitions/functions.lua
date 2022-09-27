@@ -5211,6 +5211,11 @@ function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
+--- @return nil
+function update_all_mario_stars()
+    -- ...
+end
+
 --- @param key string
 --- @return string
 function mod_storage_load(key)
@@ -5221,11 +5226,6 @@ end
 --- @param value string
 --- @return boolean
 function mod_storage_save(key, value)
-    -- ...
-end
-
---- @return nil
-function update_all_mario_stars()
     -- ...
 end
 

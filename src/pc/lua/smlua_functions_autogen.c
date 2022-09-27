@@ -31,9 +31,9 @@
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
+#include "src/pc/mods/mod_storage.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
-#include "src/pc/mods/mod_storage.h"
 
 
   ////////////////////////
@@ -11719,6 +11719,43 @@ int smlua_func_vec3s_to_vec3f(lua_State* L) {
 }
 */
 
+  ////////////
+ // misc.h //
+////////////
+
+int smlua_func_update_all_mario_stars(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    update_all_mario_stars();
+
+    return 1;
+}
+
+  ///////////////////
+ // mod_storage.h //
+///////////////////
+
+int smlua_func_mod_storage_load(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'mod_storage_load'"); return 0; }
+
+    lua_pushstring(L, mod_storage_load(key));
+
+    return 1;
+}
+
+int smlua_func_mod_storage_save(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const char* key = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'mod_storage_save'"); return 0; }
+    const char* value = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'mod_storage_save'"); return 0; }
+
+    lua_pushboolean(L, mod_storage_save(key, value));
 
     return 1;
 }
@@ -19205,6 +19242,12 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "vec3s_sum", smlua_func_vec3s_sum); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "vec3s_to_vec3f", smlua_func_vec3s_to_vec3f); <--- UNIMPLEMENTED
 
+    // misc.h
+    smlua_bind_function(L, "update_all_mario_stars", smlua_func_update_all_mario_stars);
+
+    // mod_storage.h
+    smlua_bind_function(L, "mod_storage_load", smlua_func_mod_storage_load);
+    smlua_bind_function(L, "mod_storage_save", smlua_func_mod_storage_save);
 
     // network_player.h
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);

@@ -1012,6 +1012,14 @@
 
 <br />
 
+- misc.h
+   - [update_all_mario_stars](functions-3.md#update_all_mario_stars)
+
+<br />
+
+- mod_storage.h
+   - [mod_storage_load](functions-3.md#mod_storage_load)
+   - [mod_storage_save](functions-3.md#mod_storage_save)
 
 <br />
 
