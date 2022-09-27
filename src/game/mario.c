@@ -1543,7 +1543,6 @@ void update_mario_inputs(struct MarioState *m) {
     debug_print_speed_action_normal(m);
 
     if (Cheats.enabled && Cheats.moonJump && m->controller->buttonDown & L_TRIG) {
-        set_mario_action(m, ACT_FREEFALL, 0);
         m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
         m->vel[1] = 30;
     }
