@@ -5364,6 +5364,24 @@
 
 <br />
 
+## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
+
+### Lua Example
+`save_file_erase_current_backup_save()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase_current_backup_save(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Lua Example
@@ -5528,16 +5546,18 @@
 ## [save_file_reload](#save_file_reload)
 
 ### Lua Example
-`save_file_reload()`
+`save_file_reload(load_all)`
 
 ### Parameters
-- None
+| Field | Type |
+| ----- | ---- |
+| load_all | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void save_file_reload(void);`
+`void save_file_reload(u8 load_all);`
 
 [:arrow_up_small:](#)
 

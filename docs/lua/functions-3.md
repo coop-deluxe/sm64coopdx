@@ -7096,6 +7096,30 @@
 <br />
 
 ---
+# functions from misc.h
+
+<br />
+
+
+## [update_all_mario_stars](#update_all_mario_stars)
+
+### Lua Example
+`update_all_mario_stars()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void update_all_mario_stars(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from network_player.h
 
 <br />

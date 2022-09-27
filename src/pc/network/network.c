@@ -529,6 +529,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);
+    extern void save_file_set_using_backup_slot(bool usingBackupSlot);
+    save_file_set_using_backup_slot(false);
 
     extern s16 gMenuMode;
     gMenuMode = -1;

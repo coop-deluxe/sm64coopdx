@@ -52,6 +52,7 @@ in_files = [
     "src/game/object_list_processor.h",
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
+    "src/pc/utils/misc.h",
     "src/game/level_update.h"
 ]
 
@@ -59,11 +60,12 @@ override_allowed_functions = {
     "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_" ],
     "src/game/rumble_init.c":               [ "queue_rumble_", "reset_rumble_timers" ],
     "src/pc/djui/djui_popup.h" :            [ "create" ],
-    "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_set_star_flags" ],
+    "src/game/save_file.h":                 [ "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags" ],
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
     "src/game/level_update.h":              [ "level_trigger_warp" ],
+    "src/pc/utils/misc.h":                  [ "update_all_mario_stars"],
 }
 
 override_disallowed_functions = {

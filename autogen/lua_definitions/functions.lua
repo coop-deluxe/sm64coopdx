@@ -5211,6 +5211,11 @@ function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
+--- @return nil
+function update_all_mario_stars()
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param actNum integer
 --- @param levelNum integer
@@ -7271,6 +7276,11 @@ function save_file_clear_flags(flags)
     -- ...
 end
 
+--- @return nil
+function save_file_erase_current_backup_save()
+    -- ...
+end
+
 --- @param capPos Vec3s
 --- @return integer
 function save_file_get_cap_pos(capPos)
@@ -7322,8 +7332,9 @@ function save_file_get_total_star_count(fileIndex, minCourse, maxCourse)
     -- ...
 end
 
+--- @param load_all integer
 --- @return nil
-function save_file_reload()
+function save_file_reload(load_all)
     -- ...
 end
 

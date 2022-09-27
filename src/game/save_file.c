@@ -14,6 +14,7 @@
 #include "pc/ini.h"
 #include "pc/network/network.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/utils/misc.h"
 
 #ifndef bcopy
 #define bcopy(b1,b2,len) (memmove((b2), (b1), (len)), (void) 0)
@@ -200,7 +201,7 @@ static u16 calc_checksum(u8 *data, s32 size) {
 /**
  * Verify the signature at the end of the block to check if the data is valid.
  */
-static s32 verify_save_block_signature(void *buffer, s32 size, u16 magic) {
+UNUSED static s32 verify_save_block_signature(void *buffer, s32 size, u16 magic) {
     struct SaveBlockSignature *sig = (struct SaveBlockSignature *) ((size - 4) + (u8 *) buffer);
 
     if (sig->magic != magic) {
@@ -225,7 +226,7 @@ static void add_save_block_signature(void *buffer, s32 size, u16 magic) {
 /**
  * Copy main menu data from one backup slot to the other slot.
  */
-static void restore_main_menu_data(s32 srcSlot) {
+UNUSED static void restore_main_menu_data(s32 srcSlot) {
     s32 destSlot = srcSlot ^ 1;
 
     // Compute checksum on source data
@@ -253,7 +254,7 @@ static void save_main_menu_data(void) {
     }
 }
 
-static void wipe_main_menu_data(void) {
+UNUSED static void wipe_main_menu_data(void) {
     bzero(&gSaveBuffer.menuData[0], sizeof(gSaveBuffer.menuData[0]));
 
     // Set score ages for all courses to 3, 2, 1, and 0, respectively.
@@ -311,7 +312,7 @@ static void touch_high_score_ages(s32 fileIndex) {
 /**
  * Copy save file data from one backup slot to the other slot.
  */
-static void restore_save_file_data(s32 fileIndex, s32 srcSlot) {
+UNUSED static void restore_save_file_data(s32 fileIndex, s32 srcSlot) {
     s32 destSlot = srcSlot ^ 1;
 
     // Compute checksum on source data
@@ -392,6 +393,28 @@ void save_file_erase(s32 fileIndex) {
     save_file_do_save(fileIndex, TRUE);
 }
 
+void save_file_reload(u8 load_all) {
+    gSaveFileModified = TRUE;
+    update_all_mario_stars();
+    
+    if (load_all == TRUE) {
+        save_file_load_all(TRUE);
+        save_file_do_save(gCurrSaveFileNum-1, TRUE);
+        update_all_mario_stars();
+    }
+}
+
+void save_file_erase_current_backup_save(void) {
+    if (network_is_server()) {
+        bzero(&gSaveBuffer.files[gCurrSaveFileNum-1][1], sizeof(gSaveBuffer.files[gCurrSaveFileNum-1][1]));
+
+        save_file_reload(FALSE);
+
+        save_file_do_save(gCurrSaveFileNum-1, TRUE);
+        network_send_save_file(gCurrSaveFileNum-1);
+    }
+}
+
 //! Needs to be s32 to match on -O2, despite no return value.
 BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
     if (srcFileIndex < 0 || srcFileIndex >= NUM_SAVE_FILES || destFileIndex < 0 || destFileIndex >= NUM_SAVE_FILES)
@@ -455,23 +478,6 @@ void save_file_load_all(UNUSED u8 reload) {
     }
     */
     stub_save_file_1();
-}
-
-/**
- * Reload the current save file from its backup copy, which is effectively a
- * a cached copy of what has been written to EEPROM.
- * This is used after getting a game over.
- */
-void save_file_reload(void) {
-    // Copy save file data from backup
-    /*bcopy(&gSaveBuffer.files[gCurrSaveFileNum - 1][1], &gSaveBuffer.files[gCurrSaveFileNum - 1][0],
-          sizeof(gSaveBuffer.files[gCurrSaveFileNum - 1][0]));
-
-    // Copy main menu data from backup
-    bcopy(&gSaveBuffer.menuData[1], &gSaveBuffer.menuData[0], sizeof(gSaveBuffer.menuData[0]));*/
-
-    gMainMenuDataModified = FALSE;
-    gSaveFileModified = FALSE;
 }
 
 /**

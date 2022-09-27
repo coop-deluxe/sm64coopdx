@@ -31,6 +31,7 @@
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
+#include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
 
 
@@ -11717,6 +11718,19 @@ int smlua_func_vec3s_to_vec3f(lua_State* L) {
 }
 */
 
+  ////////////
+ // misc.h //
+////////////
+
+int smlua_func_update_all_mario_stars(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    update_all_mario_stars();
+
+    return 1;
+}
+
   //////////////////////
  // network_player.h //
 //////////////////////
@@ -16154,6 +16168,15 @@ int smlua_func_save_file_clear_flags(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_erase_current_backup_save(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    save_file_erase_current_backup_save();
+
+    return 1;
+}
+
 int smlua_func_save_file_get_cap_pos(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -16256,11 +16279,13 @@ int smlua_func_save_file_get_total_star_count(lua_State* L) {
     return 1;
 }
 
-int smlua_func_save_file_reload(UNUSED lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+int smlua_func_save_file_reload(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
+    u8 load_all = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'save_file_reload'"); return 0; }
 
-    save_file_reload();
+    save_file_reload(load_all);
 
     return 1;
 }
@@ -19177,6 +19202,9 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "vec3s_sum", smlua_func_vec3s_sum); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "vec3s_to_vec3f", smlua_func_vec3s_to_vec3f); <--- UNIMPLEMENTED
 
+    // misc.h
+    smlua_bind_function(L, "update_all_mario_stars", smlua_func_update_all_mario_stars);
+
     // network_player.h
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);
     smlua_bind_function(L, "get_network_player_from_level", smlua_func_get_network_player_from_level);
@@ -19519,6 +19547,7 @@ void smlua_bind_functions_autogen(void) {
 
     // save_file.h
     smlua_bind_function(L, "save_file_clear_flags", smlua_func_save_file_clear_flags);
+    smlua_bind_function(L, "save_file_erase_current_backup_save", smlua_func_save_file_erase_current_backup_save);
     smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);
     smlua_bind_function(L, "save_file_get_course_coin_score", smlua_func_save_file_get_course_coin_score);
     smlua_bind_function(L, "save_file_get_course_star_count", smlua_func_save_file_get_course_star_count);
