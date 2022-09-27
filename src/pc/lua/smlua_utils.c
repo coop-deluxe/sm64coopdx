@@ -12,6 +12,10 @@ static u8 sVec3fBufferIndex = 0;
 static Vec3s sVec3sBuffer[VEC3S_BUFFER_COUNT] = { 0 };
 static u8 sVec3sBufferIndex = 0;
 
+#define COLOR_BUFFER_COUNT 64
+static Color sColorBuffer[COLOR_BUFFER_COUNT] = { 0 };
+static u8 sColorBufferIndex = 0;
+
 f32* smlua_get_vec3f_from_buffer(void) {
     if (sVec3fBufferIndex >= VEC3F_BUFFER_COUNT) { sVec3fBufferIndex = 0; }
     return sVec3fBuffer[sVec3fBufferIndex++];
@@ -20,6 +24,11 @@ f32* smlua_get_vec3f_from_buffer(void) {
 s16* smlua_get_vec3s_from_buffer(void) {
     if (sVec3sBufferIndex >= VEC3S_BUFFER_COUNT) { sVec3sBufferIndex = 0; }
     return sVec3sBuffer[sVec3sBufferIndex++];
+}
+
+u8* smlua_get_color_from_buffer(void) {
+    if (sColorBufferIndex >= COLOR_BUFFER_COUNT) { sColorBufferIndex = 0; }
+    return sColorBuffer[sColorBufferIndex++];
 }
 
 f32 *smlua_get_vec3f_for_play_sound(f32 *pos) {

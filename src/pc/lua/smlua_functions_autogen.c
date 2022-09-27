@@ -11762,6 +11762,29 @@ int smlua_func_get_network_player_smallest_global(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_player_color_to_palette(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'network_player_color_to_palette'"); return 0; }
+    int part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'network_player_color_to_palette'"); return 0; }
+
+    u8* color = smlua_get_color_from_buffer();
+    color[0] = smlua_get_integer_field(3, "r");
+    color[1] = smlua_get_integer_field(3, "g");
+    color[2] = smlua_get_integer_field(3, "b");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'network_player_color_to_palette'"); return 0; }
+
+    network_player_color_to_palette(np, part, color);
+
+    smlua_push_integer_field(3, "r", color[0]);
+    smlua_push_integer_field(3, "g", color[1]);
+    smlua_push_integer_field(3, "b", color[2]);
+
+    return 1;
+}
+
 int smlua_func_network_player_connected_count(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -11778,6 +11801,29 @@ int smlua_func_network_player_from_global_index(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'network_player_from_global_index'"); return 0; }
 
     smlua_push_object(L, LOT_NETWORKPLAYER, network_player_from_global_index(globalIndex));
+
+    return 1;
+}
+
+int smlua_func_network_player_palette_to_color(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    struct NetworkPlayer* np = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'network_player_palette_to_color'"); return 0; }
+    int part = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'network_player_palette_to_color'"); return 0; }
+
+    u8* out = smlua_get_color_from_buffer();
+    out[0] = smlua_get_integer_field(3, "r");
+    out[1] = smlua_get_integer_field(3, "g");
+    out[2] = smlua_get_integer_field(3, "b");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'network_player_palette_to_color'"); return 0; }
+
+    network_player_palette_to_color(np, part, out);
+
+    smlua_push_integer_field(3, "r", out[0]);
+    smlua_push_integer_field(3, "g", out[1]);
+    smlua_push_integer_field(3, "b", out[2]);
 
     return 1;
 }
@@ -19135,8 +19181,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_network_player_from_area", smlua_func_get_network_player_from_area);
     smlua_bind_function(L, "get_network_player_from_level", smlua_func_get_network_player_from_level);
     smlua_bind_function(L, "get_network_player_smallest_global", smlua_func_get_network_player_smallest_global);
+    smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
     smlua_bind_function(L, "network_player_connected_count", smlua_func_network_player_connected_count);
     smlua_bind_function(L, "network_player_from_global_index", smlua_func_network_player_from_global_index);
+    smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
 
     // network_utils.h

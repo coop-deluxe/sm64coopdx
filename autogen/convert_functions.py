@@ -155,6 +155,24 @@ param_override_build['Vec3s'] = {
     'after': param_vec3s_after_call
 }
 
+param_color_before_call = """
+    u8* $[IDENTIFIER] = smlua_get_color_from_buffer();
+    $[IDENTIFIER][0] = smlua_get_integer_field($[INDEX], "r");
+    $[IDENTIFIER][1] = smlua_get_integer_field($[INDEX], "g");
+    $[IDENTIFIER][2] = smlua_get_integer_field($[INDEX], "b");
+"""
+
+param_color_after_call = """
+    smlua_push_integer_field($[INDEX], "r", $[IDENTIFIER][0]);
+    smlua_push_integer_field($[INDEX], "g", $[IDENTIFIER][1]);
+    smlua_push_integer_field($[INDEX], "b", $[IDENTIFIER][2]);
+"""
+
+param_override_build['Color'] = {
+    'before': param_color_before_call,
+    'after': param_color_after_call
+}
+
 ############################################################################
 
 manual_index_documentation = """

@@ -1804,6 +1804,11 @@
 --- @field public y integer
 --- @field public z integer
 
+--- @class Color
+--- @field public b integer
+--- @field public g integer
+--- @field public r integer
+
 --- @class Pointer_integer
 --- @class Pointer_Trajectory
 --- @class Pointer_LevelScript

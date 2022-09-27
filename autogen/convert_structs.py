@@ -98,7 +98,8 @@ sLuaManuallyDefinedStructs = [{
     'path': 'n/a',
     'structs': [
         'struct Vec3f { float x; float y; float z; }',
-        'struct Vec3s { s16 x; s16 y; s16 z; }'
+        'struct Vec3s { s16 x; s16 y; s16 z; }',
+        'struct Color { u8 r; u8 g; u8 b; }'
     ]
 }]
 

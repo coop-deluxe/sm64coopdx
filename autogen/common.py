@@ -1,7 +1,7 @@
 import os
 
 usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32']
-vec3_types = ['Vec3s', 'Vec3f']
+vec3_types = ['Vec3s', 'Vec3f', 'Color']
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory']
 
 exclude_structs = [

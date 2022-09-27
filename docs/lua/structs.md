@@ -15,6 +15,7 @@
 - [CameraTrigger](#CameraTrigger)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
+- [Color](#Color)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
 - [Cutscene](#Cutscene)
@@ -484,6 +485,18 @@
 | soundYawning | `integer` | read-only |
 | torsoRotMult | `number` | read-only |
 | type | [enum CharacterType](constants.md#enum-CharacterType) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Color](#Color)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| b | `integer` |  |
+| g | `integer` |  |
+| r | `integer` |  |
 
 [:arrow_up_small:](#)
 

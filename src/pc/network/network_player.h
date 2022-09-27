@@ -73,6 +73,9 @@ struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s
 struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);
 struct NetworkPlayer* get_network_player_smallest_global(void);
 
+void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerParts part, Color color);
+void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts part, Color out);
+
 void network_player_update(void);
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, char* name);

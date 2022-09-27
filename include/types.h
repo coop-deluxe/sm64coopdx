@@ -54,6 +54,8 @@ typedef s16 PaintingData;
 typedef uintptr_t BehaviorScript;
 typedef u8 Texture;
 
+typedef u8 Color[3];
+
 enum SpTaskState {
     SPTASK_STATE_NOT_STARTED,
     SPTASK_STATE_RUNNING,

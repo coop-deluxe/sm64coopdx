@@ -7164,6 +7164,28 @@
 
 <br />
 
+## [network_player_color_to_palette](#network_player_color_to_palette)
+
+### Lua Example
+`network_player_color_to_palette(np, part, color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| part | [enum PlayerParts](constants.md#enum-PlayerParts) |
+| color | `Color` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerParts part, Color color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [network_player_connected_count](#network_player_connected_count)
 
 ### Lua Example
@@ -7197,6 +7219,28 @@
 
 ### C Prototype
 `struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_palette_to_color](#network_player_palette_to_color)
+
+### Lua Example
+`network_player_palette_to_color(np, part, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| part | [enum PlayerParts](constants.md#enum-PlayerParts) |
+| out | `Color` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts part, Color out);`
 
 [:arrow_up_small:](#)
 

@@ -42,6 +42,7 @@ enum LuaObjectType {
     LOT_NONE = 0,
     LOT_VEC3S,
     LOT_VEC3F,
+    LOT_COLOR,
     LOT_POINTER,
     LOT_MAX,
 };
