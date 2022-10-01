@@ -30,8 +30,30 @@ extern void set_play_mode(s16);
 static s32 sDynosWarpLevelNum = -1;
 static s32 sDynosWarpAreaNum  = -1;
 static s32 sDynosWarpActNum   = -1;
+static s32 sDynosWarpNodeNum  = -1;
 static s32 sDynosExitLevelNum = -1;
 static s32 sDynosExitAreaNum  = -1;
+
+//
+// Specific Warp Node
+//
+
+bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
+    if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
+        return false;
+    }
+
+    if (aLevel != gCurrLevelNum) {
+        // stop music
+        play_music(SEQ_PLAYER_LEVEL, 0, 0);
+    }
+
+    sDynosWarpLevelNum = aLevel;
+    sDynosWarpAreaNum  = aArea;
+    sDynosWarpActNum   = aAct;
+    sDynosWarpNodeNum  = aWarpId;
+    return true;
+}
 
 //
 // Level Entry
@@ -266,14 +288,21 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         // Phase 3 - End level initialization
         if (aIsLevelInitDone) {
 
+            // Get Warp
+            s16 *_Warp;
+            if (sDynosWarpNodeNum == -1) {
+                _Warp = DynOS_Level_GetWarpEntry(gCurrLevelNum, gCurrAreaIndex);
+            } else {
+                _Warp = DynOS_Level_GetWarp(gCurrLevelNum, gCurrAreaIndex, sDynosWarpNodeNum);
+            }
+            s16 sDynosWarpSpawnType = sSpawnTypeFromWarpBhv[_Warp[2]];
+
             // Init Mario
-            s16 *_LevelEntryWarp = DynOS_Level_GetWarpEntry(gCurrLevelNum, gCurrAreaIndex);
-            s16 sDynosWarpSpawnType = sSpawnTypeFromWarpBhv[_LevelEntryWarp[2]];
-            gMarioSpawnInfo->startPos[0] = _LevelEntryWarp[3] + (sDynosWarpSpawnType == MARIO_SPAWN_DOOR_WARP) * 300.0f * sins(_LevelEntryWarp[6]);
-            gMarioSpawnInfo->startPos[1] = _LevelEntryWarp[4];
-            gMarioSpawnInfo->startPos[2] = _LevelEntryWarp[5] + (sDynosWarpSpawnType == MARIO_SPAWN_DOOR_WARP) * 300.0f * coss(_LevelEntryWarp[6]);
+            gMarioSpawnInfo->startPos[0] = _Warp[3] + (sDynosWarpSpawnType == MARIO_SPAWN_DOOR_WARP) * 300.0f * sins(_Warp[6]);
+            gMarioSpawnInfo->startPos[1] = _Warp[4];
+            gMarioSpawnInfo->startPos[2] = _Warp[5] + (sDynosWarpSpawnType == MARIO_SPAWN_DOOR_WARP) * 300.0f * coss(_Warp[6]);
             gMarioSpawnInfo->startAngle[0] = 0;
-            gMarioSpawnInfo->startAngle[1] = _LevelEntryWarp[6];
+            gMarioSpawnInfo->startAngle[1] = _Warp[6];
             gMarioSpawnInfo->startAngle[2] = 0;
             gMarioSpawnInfo->areaIndex = gCurrAreaIndex;
             init_mario();
@@ -297,14 +326,16 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // Set music
-            set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
-            if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
-            if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
-            if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
-            if (gCurrLevelNum == LEVEL_BOWSER_1 ||
-                gCurrLevelNum == LEVEL_BOWSER_2 ||
-                gCurrLevelNum == LEVEL_BOWSER_3) {
-                sound_banks_enable(0, 0xFFFF); // Bowser levels sound fix
+            if (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING) {
+                set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+                if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
+                if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
+                if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
+                if (gCurrLevelNum == LEVEL_BOWSER_1 ||
+                    gCurrLevelNum == LEVEL_BOWSER_2 ||
+                    gCurrLevelNum == LEVEL_BOWSER_3) {
+                    sound_banks_enable(0, 0xFFFF); // Bowser levels sound fix
+                }
             }
 
             // lua hooks
@@ -315,6 +346,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             sDynosWarpLevelNum   = -1;
             sDynosWarpAreaNum    = -1;
             sDynosWarpActNum     = -1;
+            sDynosWarpNodeNum    = -1;
         }
     }
 
@@ -446,7 +478,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             // Set music
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
             sDynosExitTargetWarp = NULL;
-            
+
             // lua hooks
             smlua_call_event_hooks(HOOK_ON_WARP);
         }

@@ -126,6 +126,10 @@ s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullN
     return 0;
 }
 
+bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
+    return dynos_warp_to_warpnode(aLevel, aArea, aAct, aWarpId);
+}
+
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return dynos_warp_to_level(aLevel, aArea, aAct);
 }

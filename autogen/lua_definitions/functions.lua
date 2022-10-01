@@ -7594,6 +7594,15 @@ function warp_to_start_level()
     -- ...
 end
 
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
+--- @param aWarpId integer
+--- @return boolean
+function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
+    -- ...
+end
+
 --- @param index integer
 --- @param name string
 --- @param offset integer

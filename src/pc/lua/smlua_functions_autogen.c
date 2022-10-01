@@ -16789,6 +16789,23 @@ int smlua_func_warp_to_start_level(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_warp_to_warpnode(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'warp_to_warpnode'"); return 0; }
+    s32 aArea = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'warp_to_warpnode'"); return 0; }
+    s32 aAct = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'warp_to_warpnode'"); return 0; }
+    s32 aWarpId = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4 for function 'warp_to_warpnode'"); return 0; }
+
+    lua_pushboolean(L, warp_to_warpnode(aLevel, aArea, aAct, aWarpId));
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -19643,6 +19660,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
     smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
     smlua_bind_function(L, "warp_to_start_level", smlua_func_warp_to_start_level);
+    smlua_bind_function(L, "warp_to_warpnode", smlua_func_warp_to_warpnode);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);

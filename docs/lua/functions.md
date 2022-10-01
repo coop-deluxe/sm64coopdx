@@ -1423,6 +1423,7 @@
    - [warp_to_castle](functions-4.md#warp_to_castle)
    - [warp_to_level](functions-4.md#warp_to_level)
    - [warp_to_start_level](functions-4.md#warp_to_start_level)
+   - [warp_to_warpnode](functions-4.md#warp_to_warpnode)
 
 <br />
 

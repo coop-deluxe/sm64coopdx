@@ -828,6 +828,7 @@ s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 //
 
 void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone);
+bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
 bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct);
 bool DynOS_Warp_RestartLevel();
 bool DynOS_Warp_ExitLevel(s32 aDelay);
