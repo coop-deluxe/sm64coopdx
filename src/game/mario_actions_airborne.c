@@ -53,7 +53,7 @@ void play_knockback_sound(struct MarioState *m) {
 #endif
 
 s32 lava_boost_on_wall(struct MarioState *m) {
-    if (Cheats.enabled && Cheats.godMode) { return; }
+    if (Cheats.enabled && Cheats.godMode) { return FALSE; }
     m->faceAngle[1] = atan2s(m->wallNormal[2], m->wallNormal[0]);
 
     if (m->forwardVel < 24.0f) {
