@@ -1,5 +1,5 @@
 -- name: Shell Rush
--- description: Race around SM64 levels on shells.\n\nCollect powerups such as red shells, green shells, bananas, and mushrooms.\n\nOnly use a save that has lowered the water in the moat.
+-- description: Race around SM64 levels on shells.\n\nCollect powerups such as red shells, green shells, bananas, and mushrooms.
 -- incompatible: gamemode moveset
 
 DEBUG = false
