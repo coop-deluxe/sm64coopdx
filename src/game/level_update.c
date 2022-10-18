@@ -1477,6 +1477,8 @@ void update_menu_level(void) {
     gMarioState->controller->rawStickY = 0;
     gMarioState->controller->stickX = 0;
     gMarioState->controller->stickY = 0;
+    gMarioState->controller->stickMag = 0;
+    gMarioState->intendedMag = 0;
 
     // figure out music
     if (!configMenuSound || curLevel == LEVEL_CASTLE_GROUNDS) {
