@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifndef _WIN32
 #include <signal.h>
+#endif
 
 #include "sm64.h"
 
@@ -390,14 +392,10 @@ void main_func(void) {
 }
 
 int main(int argc, char *argv[]) {
+#ifndef _WIN32
 #ifdef SIGINT
     signal(SIGINT, inthand);
 #endif
-#ifdef SIGQUIT
-    signal(SIGQUIT, inthand);
-#endif
-#ifdef SIGTERM
-    signal(SIGTERM, inthand);
 #endif
     parse_cli_opts(argc, argv);
     main_func();

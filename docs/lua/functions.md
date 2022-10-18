@@ -1454,6 +1454,7 @@
    - [camera_unfreeze](functions-4.md#camera_unfreeze)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
+   - [get_dialog_box_state](functions-4.md#get_dialog_box_state)
    - [get_dialog_id](functions-4.md#get_dialog_id)
    - [get_environment_region](functions-4.md#get_environment_region)
    - [get_hand_foot_pos_x](functions-4.md#get_hand_foot_pos_x)

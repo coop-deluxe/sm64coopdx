@@ -1328,6 +1328,12 @@ void update_menu_level(void) {
         case 8:  curLevel = LEVEL_BBH;            break;
         case 9:  curLevel = LEVEL_LLL;            break;
         case 10: curLevel = LEVEL_THI;            break;
+        case 11: curLevel = LEVEL_HMC;            break;
+        case 12: curLevel = LEVEL_CCM;            break;
+        case 13: curLevel = LEVEL_RR;             break;
+        case 14: curLevel = LEVEL_BITDW;          break;
+        case 15: curLevel = LEVEL_PSS;            break;
+        case 16: curLevel = LEVEL_TTC;            break;
         default: curLevel = LEVEL_CASTLE_GROUNDS; break;
     }
 
@@ -1432,6 +1438,35 @@ void update_menu_level(void) {
             if (o != NULL) {
                 obj_mark_for_deletion(o);
             }
+            break;
+        case LEVEL_HMC:
+            vec3f_set(gMarioState->pos, -3600, -4279, 3616);
+            vec3f_set(gLakituState.curPos, -6000, -2938, 600);
+            gMarioState->faceAngle[1] = -0x6000;
+            break;
+        case LEVEL_CCM:
+            vec3f_set(gMarioState->pos, -1127, -3580, 6162);
+            vec3f_set(gLakituState.curPos, -1330, -2830, 9099);
+            gMarioState->faceAngle[1] = -0x1000;
+            break;
+        case LEVEL_RR:
+            vec3f_set(gMarioState->pos, 1418, 3167, -2349);
+            vec3f_set(gLakituState.curPos, -1518, 4567, -4549);
+            gMarioState->faceAngle[1] = -0x6000;
+            break;
+        case LEVEL_BITDW:
+            vec3f_set(gMarioState->pos, -4507, 1126, -285);
+            vec3f_set(gLakituState.curPos, -2507, 2126, -285);
+            break;
+        case LEVEL_PSS:
+            vec3f_set(gMarioState->pos, -4729, -3057, -3025);
+            vec3f_set(gLakituState.curPos, -2729, -1557, -5025);
+            gMarioState->faceAngle[1] = 0x5000;
+            break;
+        case LEVEL_TTC:
+            vec3f_set(gMarioState->pos, -645, 0, -750);
+            vec3f_set(gLakituState.curPos, 2500, 570, -240);
+            gMarioState->faceAngle[1] = 0x2000;
             break;
     }
 

@@ -10,13 +10,13 @@
 #include <netdb.h>
 #endif
 
-char* gGetHostName = NULL;
+char *gGetHostName = NULL;
 
 void domain_resolution(void) {
     struct in_addr addr;
     char *host_name = configJoinIp;
     struct hostent *remoteHost;
-    char* domainname = "";
+    char *domainname = "";
 
     if (gGetHostName == NULL) {
         return;

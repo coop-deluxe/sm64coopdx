@@ -17076,6 +17076,15 @@ int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_dialog_box_state(UNUSED lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
+
+
+    lua_pushinteger(L, get_dialog_box_state());
+
+    return 1;
+}
+
 int smlua_func_get_dialog_id(UNUSED lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 0)) { return 0; }
 
@@ -19689,6 +19698,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
+    smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);

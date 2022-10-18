@@ -31,8 +31,6 @@ void bhv_collect_star_loop(void) {
     o->oFaceAngleYaw += 0x800;
 
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-        extern u8 gLastCollectedStarOrKey;
-        gLastCollectedStarOrKey = 0;
         mark_obj_for_deletion(o);
         o->oInteractStatus = 0;
     }

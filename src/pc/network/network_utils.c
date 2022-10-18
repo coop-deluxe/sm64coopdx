@@ -23,8 +23,12 @@ u8 network_local_index_from_global(u8 globalIndex) {
     return globalIndex + ((globalIndex < gNetworkPlayerLocal->globalIndex) ? 1 : 0);
 }
 
+#ifdef DISCORD_SDK
 char* network_discord_id_from_local_index(u8 localIndex) {
     if (gNetworkSystem == &gNetworkSystemDiscord) { return gNetworkSystem->get_id_str(localIndex); }
+#else
+char* network_discord_id_from_local_index(UNUSED u8 localIndex) {
+#endif
     return NULL;
 }
 
@@ -33,7 +37,7 @@ bool network_is_server(void) {
 }
 
 bool network_is_moderator(void) {
-    extern u8 gIsModerator;
+    extern bool gIsModerator;
     return gIsModerator;
 }
 

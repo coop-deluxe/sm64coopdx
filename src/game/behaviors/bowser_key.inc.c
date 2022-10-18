@@ -45,8 +45,6 @@ void bhv_bowser_key_loop(void) {
     } else {
         obj_set_hitbox(o, &sBowserKeyHitbox);
         if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-            extern u8 gLastCollectedStarOrKey;
-            gLastCollectedStarOrKey = 1;
             mark_obj_for_deletion(o);
             o->oInteractStatus = 0;
         }

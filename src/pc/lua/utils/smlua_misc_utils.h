@@ -64,6 +64,7 @@ void camera_config_set_deceleration(u32 value);
 bool is_game_paused(void);
 bool is_transition_playing(void);
 
+s8 get_dialog_box_state();
 s16 get_dialog_id(void);
 s32 get_last_star_or_key(void);
 void set_last_star_or_key(u8 value);

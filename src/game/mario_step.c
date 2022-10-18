@@ -194,7 +194,8 @@ u32 mario_update_moving_sand(struct MarioState *m) {
 u32 mario_update_windy_ground(struct MarioState *m) {
     struct Surface *floor = m->floor;
 
-    if (floor->type == SURFACE_HORIZONTAL_WIND) {
+    extern bool gDjuiInMainMenu;
+    if (floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
         f32 pushSpeed;
         s16 pushAngle = floor->force << 8;
 

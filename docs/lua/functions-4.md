@@ -6830,6 +6830,24 @@
 
 <br />
 
+## [get_dialog_box_state](#get_dialog_box_state)
+
+### Lua Example
+`local integerValue = get_dialog_box_state()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_dialog_box_state();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_dialog_id](#get_dialog_id)
 
 ### Lua Example

@@ -7750,6 +7750,11 @@ function get_current_save_file_num()
 end
 
 --- @return integer
+function get_dialog_box_state()
+    -- ...
+end
+
+--- @return integer
 function get_dialog_id()
     -- ...
 end

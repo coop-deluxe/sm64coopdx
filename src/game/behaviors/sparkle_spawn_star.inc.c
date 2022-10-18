@@ -35,8 +35,6 @@ void bhv_spawned_star_init(void) {
 void set_sparkle_spawn_star_hitbox(void) {
     obj_set_hitbox(o, &sSparkleSpawnStarHitbox);
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-        extern u8 gLastCollectedStarOrKey;
-        gLastCollectedStarOrKey = 0;
         mark_obj_for_deletion(o);
         o->oInteractStatus = 0;
     }

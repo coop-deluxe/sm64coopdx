@@ -27,10 +27,10 @@ void network_receive_kick(struct Packet* p) {
     enum KickReasonType kickReason = kickReasonType;
 
     switch (kickReason) {
-        case EKT_FULL_PARTY: djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The party is full.");              break;
-        case EKT_KICKED:     djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The server kicked you.");          break;
-        case EKT_BANNED:     djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ The server banned you.");          break;
-        default:             djui_panel_join_message_error("\\#ffa0a0\\Error:\\#c8c8c8\\ Host has closed the connection."); break;
+        case EKT_FULL_PARTY: djui_popup_create("\\#ffa0a0\\Disconnected:\\#c8c8c8\\ The party is full.", 1);              break;
+        case EKT_KICKED:     djui_popup_create("\\#ffa0a0\\Disconnected:\\#c8c8c8\\ The server kicked you.", 1);          break;
+        case EKT_BANNED:     djui_popup_create("\\#ffa0a0\\Disconnected:\\#c8c8c8\\ The server banned you.", 1);          break;
+        default:             djui_popup_create("\\#ffa0a0\\Disconnected:\\#c8c8c8\\ Host has closed the connection.", 1); break;
     }
     network_shutdown(false, false, false);
 }

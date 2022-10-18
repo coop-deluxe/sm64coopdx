@@ -57,6 +57,11 @@ void set_last_star_or_key(u8 value) {
     gLastCollectedStarOrKey = value;
 }
 
+extern s8 gDialogBoxState;
+s8 get_dialog_box_state() {
+    return gDialogBoxState;
+}
+
 s32 hud_get_value(enum HudDisplayValue type) {
     switch (type) {
         case HUD_DISPLAY_LIVES:  return gHudDisplay.lives;

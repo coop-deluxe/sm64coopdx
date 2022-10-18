@@ -1,6 +1,7 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
+#include "game/hardcoded.h"
 
 #ifdef DEVELOPMENT
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
@@ -15,6 +16,11 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox1->base, 1.0f, 32);
         defaultBase = &checkbox1->base;
+
+        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Fixed Collisions", &gLevelValues.fixCollisionBugs);
+        djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox2->base, 1.0f, 32);
+        defaultBase = &checkbox2->base;
 
         struct DjuiButton* button2 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

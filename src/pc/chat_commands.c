@@ -10,7 +10,7 @@
 #include "level_table.h"
 
 
-extern u8 gIsModerator;
+extern bool gIsModerator;
 static enum ChatConfirmCommand sConfirming = CCC_NONE;
 static u8 sConfirmPlayerIndex = 0;
 
@@ -46,7 +46,7 @@ bool exec_chat_command(char* command) {
     sConfirming = CCC_NONE;
 
     if (ccc != CCC_NONE && strcmp("/confirm", command) == 0) {
-        if (gNetworkType == NT_SERVER || gIsModerator == 1) {
+        if (gNetworkType == NT_SERVER || gIsModerator) {
             if (ccc == CCC_KICK) {
                 struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
                 if (!np->connected) { return true; }
@@ -62,7 +62,7 @@ bool exec_chat_command(char* command) {
                 return true;
             }
         }
-        if (gNetworkType == NT_SERVER || gIsModerator == 1) {
+        if (gNetworkType == NT_SERVER || gIsModerator) {
             if (ccc == CCC_BAN) {
                 struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
                 if (!np->connected) { return true; }
@@ -120,7 +120,7 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/kick ", command)) {
-        if (gNetworkType != NT_SERVER && gIsModerator == 0) {
+        if (gNetworkType != NT_SERVER && !gIsModerator) {
             djui_chat_message_create("You do not have permission to use this command.");
             return true;
         }
@@ -147,7 +147,7 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/ban ", command)) {
-        if (gNetworkType != NT_SERVER && gIsModerator == 0) {
+        if (gNetworkType != NT_SERVER && !gIsModerator) {
             djui_chat_message_create("You do not have permission to use this command.");
             return true;
         }
@@ -174,7 +174,7 @@ bool exec_chat_command(char* command) {
     }
 
     if (str_starts_with("/permban ", command)) {
-        if (gNetworkType != NT_SERVER && gIsModerator == 0) {
+        if (gNetworkType != NT_SERVER && !gIsModerator) {
             djui_chat_message_create("You do not have permission to use this command.");
             return true;
         }
@@ -319,7 +319,7 @@ bool exec_chat_command(char* command) {
 
 void display_chat_commands(void) {
     djui_chat_message_create("/players - List all players and their IDs");
-    if (gNetworkType == NT_SERVER || gIsModerator == 1) {
+    if (gNetworkType == NT_SERVER || gIsModerator) {
         djui_chat_message_create("/kick [NAME|ID] - Kick this player from the current game");
         djui_chat_message_create("/ban [NAME|ID] - Ban this player from the current game");
         djui_chat_message_create("/permban [NAME|ID] - Ban this player from any game you host");

@@ -100,7 +100,6 @@ static void djui_panel_join_ip_text_change(struct DjuiBase* caller) {
 
 static void djui_panel_join_ip_text_set_new(void) {
     char buffer[256] = { 0 };
-    gGetHostName = sInputboxIp->buffer;
     if (snprintf(buffer, 256, "%s", sInputboxIp->buffer) < 0) {
         LOG_INFO("truncating IP");
     }
@@ -119,6 +118,9 @@ static void djui_panel_join_ip_text_set_new(void) {
         }
     }
 
+    gGetHostName = buffer;
+    printf("gGetHostName: %s\n", gGetHostName); /* Log the value of gGetHostName. 
+        For some reason this fixes some formatting issues? LOG_INFO isn't working at all in this file. */
     if (snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", buffer) < 0) {
         LOG_INFO("truncating IP");
     }
@@ -140,7 +142,6 @@ static void djui_panel_join_ip_text_set(struct DjuiInputbox* inputbox1) {
     }
 
     djui_inputbox_set_text(inputbox1, buffer);
-    djui_inputbox_select_all(inputbox1);
 }
 
 void djui_panel_join_do_join(struct DjuiBase* caller) {

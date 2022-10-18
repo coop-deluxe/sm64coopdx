@@ -144,6 +144,7 @@ static u32 sBackwardKnockbackActions[][3] = {
 static u8 sDisplayingDoorText = FALSE;
 static u8 sJustTeleported = FALSE;
 u8 gPssSlideStarted = FALSE;
+extern u8 gLastCollectedStarOrKey;
 
 /**
  * Returns the type of cap Mario is wearing.
@@ -890,6 +891,12 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
     u8 stayInLevelCommon = !(gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2 || gCurrLevelNum == LEVEL_BOWSER_3);
     if (stayInLevelCommon && gServerSettings.stayInLevelAfterStar) { noExit = TRUE; }
 
+    if (o->behavior == bhvBowserKey) {
+        gLastCollectedStarOrKey = 1;
+    } else {
+        gLastCollectedStarOrKey = 0;
+    }
+
     if (m->health >= 0x100) {
         mario_stop_riding_and_holding(m);
         queue_rumble_data_mario(m, 5, 80);
@@ -1336,7 +1343,11 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
     isInCutscene = isInCutscene || (attacker->action == ACT_IN_CANNON) || (victim->action == ACT_IN_CANNON);
     u8 isAttackerInvulnerable = (attacker->action & ACT_FLAG_INVULNERABLE) || attacker->invincTimer != 0 || attacker->hurtCounter != 0;
     u8 isInvulnerable = (victim->action & ACT_FLAG_INVULNERABLE) || victim->invincTimer != 0 || victim->hurtCounter != 0 || isInCutscene;
-    u8 isIgnoredAttack = (attacker->action == ACT_JUMP || attacker->action == ACT_DOUBLE_JUMP || attacker->action == ACT_LONG_JUMP || attacker->action == ACT_SIDE_FLIP);
+    u8 isIgnoredAttack = (attacker->action == ACT_JUMP || attacker->action == ACT_DOUBLE_JUMP
+                          || attacker->action == ACT_LONG_JUMP || attacker->action == ACT_SIDE_FLIP
+                          || attacker->action == ACT_BACKFLIP || attacker->action == ACT_TRIPLE_JUMP
+                          || attacker->action == ACT_WALL_KICK_AIR || attacker->action == ACT_WATER_JUMP
+                          || attacker->action == ACT_STEEP_JUMP || attacker->action == ACT_HOLD_JUMP);
     u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     if (victim->knockbackTimer > 0) {
         return false;

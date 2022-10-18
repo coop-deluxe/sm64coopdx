@@ -412,7 +412,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
             }
 
             // If this machine's player changed to a different location, then all of the other np locations are no longer valid
-            for (u32 i = 0; i < MAX_PLAYERS + 1; i++) {
+            for (u32 i = 1; i < configAmountofPlayers; i++) {
                 struct NetworkPlayer* npi = &gNetworkPlayers[i];
                 if ((!npi->connected) || npi == gNetworkPlayerLocal) { continue; }
                 npi->currPositionValid = false;

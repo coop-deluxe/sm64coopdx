@@ -2095,7 +2095,8 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // Both of the wind handling portions play wind audio only in
         // non-Japanese releases.
-        if (gMarioState->floor->type == SURFACE_HORIZONTAL_WIND) {
+        extern bool gDjuiInMainMenu;
+        if (gMarioState->floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
             spawn_wind_particles(0, (gMarioState->floor->force << 8));
 #ifndef VERSION_JP
             play_sound(SOUND_ENV_WIND2, gMarioState->marioObj->header.gfx.cameraToObject);

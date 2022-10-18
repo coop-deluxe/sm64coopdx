@@ -16,7 +16,7 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
 
     {
-        char* levelChoices[11] = {
+        char* levelChoices[17] = {
             "CG",
             "BOB",
             "WF",
@@ -28,8 +28,14 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
             "BBH",
             "LLL",
             "THI",
+            "HMC",
+            "CCM",
+            "RR",
+            "BITDW",
+            "PSS",
+            "TTC",
         };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Level", levelChoices, 11, &configMenuLevel);
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Level", levelChoices, 17, &configMenuLevel);
         djui_base_set_size_type(&selectionbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox1->base, 1.0f, 32);
         djui_base_set_enabled(&selectionbox1->base, !configMenuRandom);
