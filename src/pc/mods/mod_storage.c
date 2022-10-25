@@ -38,7 +38,7 @@ void strdelete(char string[], char substr[]) {
 bool char_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
     while (*buffer != '\0') {
-        if ((*buffer >= 'a' && *buffer <= 'z') || (*buffer >= 'A' && *buffer <= 'Z') || (*buffer >= '0' && *buffer <= '9') || *buffer == '_' || *buffer == '.') {
+        if ((*buffer >= 'a' && *buffer <= 'z') || (*buffer >= 'A' && *buffer <= 'Z') || (*buffer >= '0' && *buffer <= '9') || *buffer == '_' || *buffer == '.' || *buffer == '-') {
             buffer++;
             continue;
         }
