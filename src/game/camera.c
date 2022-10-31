@@ -806,10 +806,10 @@ void set_camera_height(struct Camera *c, f32 goalHeight) {
             }
         }
         approach_camera_height(c, goalHeight, 20.f);
-        if (camCeilHeight != gLevelValues.ceilHeightLimit) {
+        if (camCeilHeight != gLevelValues.cellHeightLimit) {
             camCeilHeight -= baseOff;
             if ((c->pos[1] > camCeilHeight && sMarioGeometry.currFloorHeight + baseOff < camCeilHeight)
-                || (sMarioGeometry.currCeilHeight != gLevelValues.ceilHeightLimit
+                || (sMarioGeometry.currCeilHeight != gLevelValues.cellHeightLimit
                     && sMarioGeometry.currCeilHeight > camCeilHeight && c->pos[1] > camCeilHeight)) {
                 c->pos[1] = camCeilHeight;
             }
@@ -1515,7 +1515,7 @@ s32 update_fixed_camera(struct Camera *c, Vec3f focus, UNUSED Vec3f pos) {
     }
 
     ceilHeight = find_ceil(c->pos[0], goalHeight - 100.f, c->pos[2], &ceiling);
-    if (ceilHeight != gLevelValues.ceilHeightLimit) {
+    if (ceilHeight != gLevelValues.cellHeightLimit) {
         if (goalHeight > (ceilHeight -= 125.f)) {
             goalHeight = ceilHeight;
         }
@@ -1614,7 +1614,7 @@ s32 update_boss_fight_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     // When C-Down is not active, this
     vec3f_set_dist_and_angle(focus, pos, focusDistance, 0x1000, yaw);
     // Find the floor of the arena
-    pos[1] = find_floor(c->areaCenX, gLevelValues.ceilHeightLimit, c->areaCenZ, &floor);
+    pos[1] = find_floor(c->areaCenX, gLevelValues.cellHeightLimit, c->areaCenZ, &floor);
     if (floor != NULL) {
         nx = floor->normal.x;
         ny = floor->normal.y;
@@ -2351,7 +2351,7 @@ s16 update_default_camera(struct Camera *c) {
         if (c->mode == CAMERA_MODE_FREE_ROAM) {
             camFloorHeight -= 100.f;
         }
-        ceilHeight = gLevelValues.ceilHeightLimit;
+        ceilHeight = gLevelValues.cellHeightLimit;
         vec3f_copy(c->focus, sMarioCamState->pos);
     }
 
@@ -2360,7 +2360,7 @@ s16 update_default_camera(struct Camera *c) {
         if (sMarioCamState->pos[1] - 100.f > camFloorHeight) {
             camFloorHeight = sMarioCamState->pos[1] - 100.f;
         }
-        ceilHeight = gLevelValues.ceilHeightLimit;
+        ceilHeight = gLevelValues.cellHeightLimit;
         vec3f_copy(c->focus, sMarioCamState->pos);
     }
     if (camFloorHeight != gLevelValues.floorLowerLimit) {
@@ -2385,7 +2385,7 @@ s16 update_default_camera(struct Camera *c) {
             vec3f_set_dist_and_angle(c->focus, c->pos, dist, tempPitch, tempYaw);
         }
     }
-    if (ceilHeight != gLevelValues.ceilHeightLimit) {
+    if (ceilHeight != gLevelValues.cellHeightLimit) {
         if (c->pos[1] > (ceilHeight -= 150.f)
             && (avoidStatus = is_range_behind_surface(c->pos, sMarioCamState->pos, ceil, 0, -1)) == 1) {
             c->pos[1] = ceilHeight;
@@ -6826,19 +6826,19 @@ void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood) {
     floorY = find_floor(pos[0], pos[1] + 50.f, pos[2], &surf);
     ceilY = find_ceil(pos[0], pos[1] - 50.f, pos[2], &surf);
 
-    if ((gLevelValues.floorLowerLimit != floorY) && (gLevelValues.ceilHeightLimit == ceilY)) {
+    if ((gLevelValues.floorLowerLimit != floorY) && (gLevelValues.cellHeightLimit == ceilY)) {
         if (pos[1] < (floorY += 125.f)) {
             pos[1] = floorY;
         }
     }
 
-    if ((gLevelValues.floorLowerLimit == floorY) && (gLevelValues.ceilHeightLimit != ceilY)) {
+    if ((gLevelValues.floorLowerLimit == floorY) && (gLevelValues.cellHeightLimit != ceilY)) {
         if (pos[1] > (ceilY -= 125.f)) {
             pos[1] = ceilY;
         }
     }
 
-    if ((gLevelValues.floorLowerLimit != floorY) && (gLevelValues.ceilHeightLimit != ceilY)) {
+    if ((gLevelValues.floorLowerLimit != floorY) && (gLevelValues.cellHeightLimit != ceilY)) {
         floorY += 125.f;
         ceilY -= 125.f;
 
@@ -6972,7 +6972,7 @@ void find_mario_floor_and_ceil(struct PlayerGeometry *pg) {
     }
 
     if (find_ceil(sMarioCamState->pos[0], sMarioCamState->pos[1] - 10.f,
-                  sMarioCamState->pos[2], &surf) != gLevelValues.ceilHeightLimit) {
+                  sMarioCamState->pos[2], &surf) != gLevelValues.cellHeightLimit) {
         pg->currCeilType = surf->type;
     } else {
         pg->currCeilType = 0;

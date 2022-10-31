@@ -728,7 +728,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
 
 #define LUA_LEVEL_VALUES_FIELD_COUNT 20
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
-    { "ceilHeightLimit",          LVT_S16,     offsetof(struct LevelValues, ceilHeightLimit),          false, LOT_NONE          },
+    { "cellHeightLimit",          LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),          false, LOT_NONE          },
     { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
     { "entryLevel",               LVT_S32,     offsetof(struct LevelValues, entryLevel),               false, LOT_NONE          },
     { "exitCastleArea",           LVT_S16,     offsetof(struct LevelValues, exitCastleArea),           false, LOT_NONE          },

@@ -424,6 +424,32 @@ bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* retur
     return false;
 }
 
+void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    *returnValue = true;
+
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TBOOLEAN && *returnValue) {
+            *returnValue = smlua_to_boolean(L, -1);
+        }
+        lua_settop(L, prevTop);
+    }
+}
+
 void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookType, struct NetworkPlayer* np) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }

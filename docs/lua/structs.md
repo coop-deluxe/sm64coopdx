@@ -918,7 +918,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| ceilHeightLimit | `integer` |  |
+| cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleArea | `integer` |  |

@@ -89,7 +89,7 @@ struct LevelValues gDefaultLevelValues = {
         .UnagiStarPos         = {  6833.0f, -3654.0f,  2230.0f },
         .JetstreamRingStarPos = {  3400.0f, -3200.0f,  -500.0f },
     },
-    .ceilHeightLimit          = CEIL_HEIGHT_LIMIT,
+    .cellHeightLimit          = CELL_HEIGHT_LIMIT,
     .floorLowerLimit          = FLOOR_LOWER_LIMIT,
     .floorLowerLimitMisc      = FLOOR_LOWER_LIMIT_MISC,
     .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,

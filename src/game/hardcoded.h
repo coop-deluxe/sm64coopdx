@@ -53,7 +53,7 @@ struct LevelValues {
     u16 metalCapDurationCotmc;
     u16 vanishCapDurationVcutm;
     struct StarPositions starPositions;
-    s16 ceilHeightLimit;
+    s16 cellHeightLimit;
     s16 floorLowerLimit;
     s16 floorLowerLimitMisc;
     s16 floorLowerLimitShadow;

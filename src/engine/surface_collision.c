@@ -380,7 +380,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
 
     // set pheight to highest value
     if (gLevelValues.fixCollisionBugs) {
-        *pheight = gLevelValues.ceilHeightLimit;
+        *pheight = gLevelValues.cellHeightLimit;
     }
 
     // Stay in this loop until out of ceilings.
@@ -468,8 +468,8 @@ f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil) {
     s16 cellZ, cellX;
     struct Surface *ceil, *dynamicCeil;
     struct SurfaceNode *surfaceList;
-    f32 height = gLevelValues.ceilHeightLimit;
-    f32 dynamicHeight = gLevelValues.ceilHeightLimit;
+    f32 height = gLevelValues.cellHeightLimit;
+    f32 dynamicHeight = gLevelValues.cellHeightLimit;
     s16 x, y, z;
 
     //! (Parallel Universes) Because position is casted to an s16, reaching higher

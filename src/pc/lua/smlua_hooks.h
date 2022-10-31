@@ -37,6 +37,7 @@ enum LuaHookedEventType {
     HOOK_USE_ACT_SELECT,
     HOOK_ON_CHANGE_CAMERA_ANGLE,
     HOOK_ON_SCREEN_TRANSITION,
+    HOOK_ALLOW_HAZARD_SURFACE,
     HOOK_MAX,
 };
 
@@ -67,6 +68,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_USE_ACT_SELECT",
     "HOOK_ON_CHANGE_CAMERA_ANGLE",
     "HOOK_ON_SCREEN_TRANSITION",
+    "HOOK_ALLOW_HAZARD_SURFACE",
     "HOOK_MAX"
 };
 
@@ -101,6 +103,7 @@ void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookT
 void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue);
 void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex);
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
+void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);

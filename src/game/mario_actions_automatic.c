@@ -1049,7 +1049,8 @@ s32 act_bubbled(struct MarioState* m) {
         if (m->playerIndex == 0) {
             soft_reset_camera(m->area->camera);
         }
-        return force_idle_state(m);
+        u8 underWater = (m->pos[1] < ((f32)m->waterLevel));
+        return set_mario_action(m, underWater ? ACT_WATER_IDLE : ACT_FREEFALL, 0);
     }
 
     return FALSE;
