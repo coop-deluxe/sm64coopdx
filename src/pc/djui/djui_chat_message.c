@@ -6,6 +6,7 @@
 #include "game/mario_misc.h"
 #include "djui.h"
 #include "pc/debuglog.h"
+#include "pc/lua/smlua_hooks.h"
 
 #define DJUI_CHAT_LIFE_TIME 10.0f
 
@@ -48,6 +49,12 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL) {
         LOG_ERROR("Could not find network player, global index: %u", globalIndex);
+        return;
+    }
+
+    bool returnValue = true;
+    smlua_call_event_hooks_on_chat_message(HOOK_ON_CHAT_MESSAGE, &gMarioStates[np->localIndex], message, &returnValue);
+    if (!returnValue) {
         return;
     }
 

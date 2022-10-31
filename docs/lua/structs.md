@@ -924,7 +924,7 @@
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
-| fixCollisionBugs | `integer` |  |
+| fixCollisionBugs | `boolean` |  |
 | floorLowerLimit | `integer` |  |
 | floorLowerLimitMisc | `integer` |  |
 | floorLowerLimitShadow | `integer` |  |
