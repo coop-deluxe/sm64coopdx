@@ -251,7 +251,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     memcpy(&p->buffer[p->dataLength], &hash, sizeof(u32));
 
     // redirect to server if required
-    if (localIndex != 0 && gNetworkType != NT_SERVER && gNetworkSystem->requireServerBroadcast) {
+    if (localIndex != 0 && gNetworkType != NT_SERVER && gNetworkSystem->requireServerBroadcast && gNetworkPlayerServer != NULL) {
         localIndex = gNetworkPlayerServer->localIndex;
     }
 

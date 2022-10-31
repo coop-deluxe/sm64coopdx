@@ -92,7 +92,7 @@ static bool ns_socket_initialize(enum NetworkType networkType) {
         domain_resolution();
         sAddr[0].sin_addr.s_addr = inet_addr(configJoinIp);
         LOG_INFO("connecting to %s %u", configJoinIp, port);
-        save_domain();
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gGetHostName);
     }
 
     // kick off first packet

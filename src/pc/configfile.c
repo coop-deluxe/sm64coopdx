@@ -144,6 +144,9 @@ bool         configDisablePopups                 = 0;
 #ifdef DEVELOPMENT
 bool         configDisableDevPause               = 1;
 #endif
+#ifdef LUA_PROFILER
+bool         configLuaProfiler                   = 1;
+#endif
 bool         configDisableDownloadedModels       = 0;
 unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
@@ -237,6 +240,9 @@ static const struct ConfigOption options[] = {
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
 #ifdef DEVELOPMENT
     {.name = "disable_devpause",               .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDevPause},
+#endif
+#ifdef LUA_PROFILER
+    {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
 #endif
     {.name = "disable_downloaded_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDownloadedModels},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},

@@ -22,6 +22,13 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
         djui_base_set_size(&checkbox2->base, 1.0f, 32);
         defaultBase = &checkbox2->base;
 
+#ifdef LUA_PROFILER
+        struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "Lua Profiler", &configLuaProfiler);
+        djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox3->base, 1.0f, 32);
+        defaultBase = &checkbox3->base;
+#endif
+
         struct DjuiButton* button2 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button2->base, 1.0f, 64);

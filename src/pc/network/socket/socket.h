@@ -10,7 +10,7 @@
 #include "../network.h"
 
 extern struct NetworkSystem gNetworkSystemSocket;
-extern char *gGetHostName;
+extern char gGetHostName[MAX_CONFIG_STRING];
 
 SOCKET socket_initialize(void);
 void socket_shutdown(SOCKET socket);

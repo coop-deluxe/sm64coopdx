@@ -118,9 +118,7 @@ static void djui_panel_join_ip_text_set_new(void) {
         }
     }
 
-    gGetHostName = buffer;
-    printf("gGetHostName: %s\n", gGetHostName); /* Log the value of gGetHostName. 
-        For some reason this fixes some formatting issues? LOG_INFO isn't working at all in this file. */
+    snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", buffer);
     if (snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", buffer) < 0) {
         LOG_INFO("truncating IP");
     }

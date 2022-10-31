@@ -5,6 +5,7 @@
 #include "src/pc/controller/controller_mouse.h"
 #include "src/pc/controller/controller_keyboard.h"
 #include "src/pc/utils/misc.h"
+#include "pc/network/network.h"
 
 #include "sounds.h"
 #include "audio/external.h"
@@ -223,7 +224,7 @@ bool djui_interactable_on_key_down(int scancode) {
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
         for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyPlayerList[i]) {
+            if (scancode == (int)configKeyPlayerList[i] && !gDjuiInMainMenu && gNetworkType != NT_NONE) {
                 if (gDjuiPlayerList != NULL) {
                     djui_base_set_visible(&gDjuiPlayerList->base, true);
                 }

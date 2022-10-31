@@ -534,8 +534,11 @@ void render_hud(void) {
         }
 
 #if defined(LUA_PROFILER)
-        extern void lua_profiler_update_counters();
-        lua_profiler_update_counters();
+        extern bool configLuaProfiler;
+        if (configLuaProfiler) {
+            extern void lua_profiler_update_counters();
+            lua_profiler_update_counters();
+        }
 #endif
     }
 }

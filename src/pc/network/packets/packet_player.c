@@ -380,6 +380,14 @@ void network_receive_player(struct Packet* p) {
             network_player_disconnected(np->localIndex);
         }
     }
+#else
+    if (m->action == ACT_DEBUG_FREE_MOVE && oldData.action != ACT_DEBUG_FREE_MOVE) {
+        char *playerColorString = network_get_player_text_color_string(np->localIndex);
+        char message[256];
+        snprintf(message, 256, "%s%s\\#dcdcdc\\ entered the debug free fly state", playerColorString, np->name);
+        djui_popup_create(message, 1);
+        LOG_INFO("%s entered the debug free fly state", np->name);
+    }
 #endif
 }
 
