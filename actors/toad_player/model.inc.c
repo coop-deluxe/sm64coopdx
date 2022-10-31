@@ -15,10 +15,10 @@ const Gfx toad_player_metal_start[] = {
     gsDPPipeSync(),
     gsSPSetGeometryMode(G_TEXTURE_GEN),
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsDPLoadTextureBlock(toad_player_texture_metal, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 32, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 6, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPEndDisplayList(),
 };
 
@@ -614,7 +614,7 @@ const Gfx toad_player_dl_cap_decal[] = {
 
     //gsSPClearGeometryMode(G_CULL_BACK),
 
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(CAP),
 
     gsSPVertex(toad_player_vertex_cap_decal + 0, 16, 0),
     gsSP1Triangle(0, 1, 2, 0),
@@ -1041,7 +1041,7 @@ const Gfx toad_player_metal_dl_body_inner[] = {
     gsSP2Triangles( 5,  9,  0, 0x0,  0,  9,  1, 0x0),
     gsSP2Triangles(11,  6,  0, 0x0, 11,  0,  2, 0x0),
     gsSP1Triangle( 0,  6,  5, 0x0),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPVertex(toad_player_vertex_body_3, 12, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  2,  3,  0, 0x0),
     gsSP2Triangles( 4,  2,  1, 0x0,  4,  1,  5, 0x0),
@@ -1065,9 +1065,9 @@ const Gfx toad_player_dl_body[] = {
 
 const Gfx toad_player_metal_dl_body[] = {
     gsSPDisplayList(toad_player_metal_dl_body_inner),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPDisplayList(toad_player_dl_jacket_inner),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPEndDisplayList(),
 };
 
@@ -1369,7 +1369,7 @@ const Gfx toad_player_dl_foot_right_metal[] = {
     gsSPTexture(0x0F80, 0x07C0, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetAlphaCompare(G_AC_NONE),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPEndDisplayList(),
 };
 

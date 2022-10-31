@@ -2709,7 +2709,13 @@ HAIR = 4
 SKIN = 5
 
 --- @type PlayerParts
-PLAYER_PART_MAX = 6
+CAP = 6
+
+--- @type PlayerParts
+PLAYER_PART_MAX = 7
+
+--- @type PlayerParts
+METAL = 6
 
 --- @class DialogId
 

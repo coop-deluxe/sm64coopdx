@@ -3474,7 +3474,7 @@ Gfx mat_waluigi_metal_v3[] = {
     gsDPPipeSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
     gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
     gsSPEndDisplayList(),
 };
 
@@ -3485,6 +3485,22 @@ Gfx mat_revert_waluigi_metal_v3[] = {
 };
 
 Gfx mat_waluigi_cap_v3[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT, TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT),
+    gsSPTexture(65535, 65535, 0, 0, 1),
+    gsDPTileSync(),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, waluigi_custom_waluigi_cap_rgba16),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPLoadSync(),
+    gsDPLoadBlock(7, 0, 0, 1023, 256),
+    gsDPPipeSync(),
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
+    gsDPSetTileSize(0, 0, 0, 124, 124),
+    gsSPCopyLightsPlayerPart(CAP),
+    gsSPEndDisplayList(),
+};
+
+Gfx mat_waluigi_shirt_v3[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT, TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT),
     gsSPTexture(65535, 65535, 0, 0, 1),
@@ -3712,7 +3728,7 @@ Gfx waluigi_000_offset_mesh_layer_1_mat_override_metal_v3_0[] = {
 Gfx waluigi_000_offset_001_mesh_layer_1[] = {
     gsSPDisplayList(mat_waluigi_body_v3),
     gsSPDisplayList(waluigi_000_offset_001_mesh_layer_1_tri_0),
-    gsSPDisplayList(mat_waluigi_cap_v3),
+    gsSPDisplayList(mat_waluigi_shirt_v3),
     gsSPDisplayList(waluigi_000_offset_001_mesh_layer_1_tri_1),
     gsSPEndDisplayList(),
 };
@@ -3973,7 +3989,7 @@ Gfx waluigi_000_displaylist_002_mesh_layer_4_mat_override_metal_v3_0[] = {
 };
 
 Gfx waluigi_000_offset_003_mesh_layer_1[] = {
-    gsSPDisplayList(mat_waluigi_cap_v3),
+    gsSPDisplayList(mat_waluigi_shirt_v3),
     gsSPDisplayList(waluigi_000_offset_003_mesh_layer_1_tri_0),
     gsSPEndDisplayList(),
 };
@@ -3986,7 +4002,7 @@ Gfx waluigi_000_offset_003_mesh_layer_1_mat_override_metal_v3_0[] = {
 };
 
 Gfx waluigi_000_offset_004_mesh_layer_1[] = {
-    gsSPDisplayList(mat_waluigi_cap_v3),
+    gsSPDisplayList(mat_waluigi_shirt_v3),
     gsSPDisplayList(waluigi_000_offset_004_mesh_layer_1_tri_0),
     gsSPEndDisplayList(),
 };
@@ -4025,7 +4041,7 @@ Gfx waluigi_002_switch_option_right_hand_open_mesh_layer_1_mat_override_metal_v3
 };
 
 Gfx waluigi_000_offset_006_mesh_layer_1[] = {
-    gsSPDisplayList(mat_waluigi_cap_v3),
+    gsSPDisplayList(mat_waluigi_shirt_v3),
     gsSPDisplayList(waluigi_000_offset_006_mesh_layer_1_tri_0),
     gsSPEndDisplayList(),
 };
@@ -4038,7 +4054,7 @@ Gfx waluigi_000_offset_006_mesh_layer_1_mat_override_metal_v3_0[] = {
 };
 
 Gfx waluigi_000_offset_007_mesh_layer_1[] = {
-    gsSPDisplayList(mat_waluigi_cap_v3),
+    gsSPDisplayList(mat_waluigi_shirt_v3),
     gsSPDisplayList(waluigi_000_offset_007_mesh_layer_1_tri_0),
     gsSPEndDisplayList(),
 };

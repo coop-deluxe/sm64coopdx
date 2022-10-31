@@ -885,7 +885,9 @@
 | SHOES | 3 |
 | HAIR | 4 |
 | SKIN | 5 |
-| PLAYER_PART_MAX | 6 |
+| CAP | 6 |
+| PLAYER_PART_MAX | 7 |
+| METAL | 6 |
 
 [:arrow_up_small:](#)
 

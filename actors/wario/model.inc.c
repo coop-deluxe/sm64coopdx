@@ -3419,7 +3419,7 @@ Gfx mat_wario_metal[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, 0),
 	gsDPSetTileSize(0, 0, 0, 252, 124),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(METAL),
 	gsSPEndDisplayList(),
 };
 
@@ -3430,6 +3430,14 @@ Gfx mat_revert_wario_metal[] = {
 };
 
 Gfx mat_wario_cap[] = {
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsSPTexture(65535, 65535, 0, 0, 1),
+    gsSPCopyLightsPlayerPart(CAP),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_wario_shirt[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
 	gsSPTexture(65535, 65535, 0, 0, 1),
@@ -3465,7 +3473,7 @@ Gfx mat_wario_logo[] = {
 	gsDPPipeSync(),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0, G_TX_CLAMP | G_TX_NOMIRROR, 5, 0),
 	gsDPSetTileSize(0, 0, 0, 124, 124),
-    gsSPCopyLightsPlayerPart(SHIRT),
+    gsSPCopyLightsPlayerPart(CAP),
 	gsSPEndDisplayList(),
 };
 
@@ -3739,7 +3747,7 @@ Gfx wario_000_offset_pelvis_mesh_layer_1_mat_override_metal_0[] = {
 Gfx wario_000_offset_chest_mesh_layer_1[] = {
 	gsSPDisplayList(mat_wario_overalls),
 	gsSPDisplayList(wario_000_offset_chest_mesh_layer_1_tri_0),
-	gsSPDisplayList(mat_wario_cap),
+	gsSPDisplayList(mat_wario_shirt),
 	gsSPDisplayList(wario_000_offset_chest_mesh_layer_1_tri_1),
 	gsSPDisplayList(mat_wario_button),
 	gsSPDisplayList(wario_000_offset_chest_mesh_layer_1_tri_2),
@@ -4136,7 +4144,7 @@ Gfx wario_000_switch_000_displaylist_head_capless_mesh_layer_1_mat_override_eyes
 };
 
 Gfx wario_000_offset_left_upper_arm_mesh_layer_1[] = {
-	gsSPDisplayList(mat_wario_cap),
+	gsSPDisplayList(mat_wario_shirt),
 	gsSPDisplayList(wario_000_offset_left_upper_arm_mesh_layer_1_tri_0),
 	gsSPEndDisplayList(),
 };
@@ -4149,7 +4157,7 @@ Gfx wario_000_offset_left_upper_arm_mesh_layer_1_mat_override_metal_0[] = {
 };
 
 Gfx wario_000_offset_left_lower_arm_mesh_layer_1[] = {
-	gsSPDisplayList(mat_wario_cap),
+	gsSPDisplayList(mat_wario_shirt),
 	gsSPDisplayList(wario_000_offset_left_lower_arm_mesh_layer_1_tri_0),
 	gsSPEndDisplayList(),
 };
@@ -4188,7 +4196,7 @@ Gfx wario_001_switch_000_offset_left_hand_open_mesh_layer_1_mat_override_metal_0
 };
 
 Gfx wario_000_offset_right_upper_arm_mesh_layer_1[] = {
-	gsSPDisplayList(mat_wario_cap),
+	gsSPDisplayList(mat_wario_shirt),
 	gsSPDisplayList(wario_000_offset_right_upper_arm_mesh_layer_1_tri_0),
 	gsSPEndDisplayList(),
 };
@@ -4201,7 +4209,7 @@ Gfx wario_000_offset_right_upper_arm_mesh_layer_1_mat_override_metal_0[] = {
 };
 
 Gfx wario_000_offset_right_lower_arm_mesh_layer_1[] = {
-	gsSPDisplayList(mat_wario_cap),
+	gsSPDisplayList(mat_wario_shirt),
 	gsSPDisplayList(wario_000_offset_right_lower_arm_mesh_layer_1_tri_0),
 	gsSPEndDisplayList(),
 };
@@ -4259,7 +4267,7 @@ Gfx wario_001_switch_000_offset_right_hand_cap_mesh_layer_1[] = {
 	gsSPDisplayList(wario_001_switch_000_offset_right_hand_cap_mesh_layer_1_tri_1),
 	gsSPDisplayList(mat_wario_cap),
 	gsSPDisplayList(wario_001_switch_000_offset_right_hand_cap_mesh_layer_1_tri_2),
-	gsSPDisplayList(mat_wario_hair),
+	gsSPDisplayList(mat_wario_cap),
 	gsSPDisplayList(wario_001_switch_000_offset_right_hand_cap_mesh_layer_1_tri_3),
 	gsSPEndDisplayList(),
 };
@@ -4287,7 +4295,7 @@ Gfx wario_001_switch_000_offset_right_hand_wing_cap_mesh_layer_1[] = {
 	gsSPDisplayList(wario_001_switch_000_offset_right_hand_wing_cap_mesh_layer_1_tri_1),
 	gsSPDisplayList(mat_wario_cap),
 	gsSPDisplayList(wario_001_switch_000_offset_right_hand_wing_cap_mesh_layer_1_tri_2),
-	gsSPDisplayList(mat_wario_hair),
+	gsSPDisplayList(mat_wario_cap),
 	gsSPDisplayList(wario_001_switch_000_offset_right_hand_wing_cap_mesh_layer_1_tri_3),
 	gsSPEndDisplayList(),
 };

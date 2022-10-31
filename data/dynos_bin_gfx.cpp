@@ -310,6 +310,8 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(SHOES);
     gfx_constant(HAIR);
     gfx_constant(SKIN);
+    gfx_constant(CAP);
+    gfx_constant(METAL);
 
     // Common values
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));
