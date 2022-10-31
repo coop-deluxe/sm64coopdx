@@ -1047,6 +1047,11 @@ void update_hud_values(void) {
 
                 gHudDisplay.coins += 1;
                 play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
+
+                if (gServerSettings.stayInLevelAfterStar > 0 && (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150)) {
+                    gMarioState->numLives++;
+                    play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                }
             }
         }
 
