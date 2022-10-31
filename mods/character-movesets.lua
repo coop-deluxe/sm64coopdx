@@ -225,14 +225,18 @@ function luigi_update(m)
 
     -- air scuttle
     e.scuttle = 0
-    local shouldScuttle = (m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP) and ((m.controller.buttonDown & A_BUTTON) ~= 0 and m.vel.y < -5)
+    local shouldScuttle = (m.action == ACT_JUMP or m.action == ACT_DOUBLE_JUMP or m.action == ACT_HOLD_JUMP) and ((m.controller.buttonDown & A_BUTTON) ~= 0 and m.vel.y < -5)
     if shouldScuttle then
         -- prevent wing flutter from glitching out while scuttling
         if m.marioBodyState.wingFlutter == 1 then
             m.vel.y = m.vel.y + 1
         else
             m.vel.y = m.vel.y + 3
-            set_mario_animation(m, MARIO_ANIM_RUNNING_UNUSED)
+            if m.action == ACT_HOLD_JUMP then
+                set_mario_animation(m, MARIO_ANIM_RUN_WITH_LIGHT_OBJ)
+            else
+                set_mario_animation(m, MARIO_ANIM_RUNNING_UNUSED)
+            end
             set_anim_to_frame(m, e.animFrame)
             e.animFrame = e.animFrame + 13
             if e.animFrame >= m.marioObj.header.gfx.animInfo.curAnim.loopEnd then
@@ -484,6 +488,8 @@ gEventTable[CT_WALUIGI] = {
 
 ACT_WARIO_DASH         = allocate_mario_action(ACT_GROUP_MOVING | ACT_FLAG_MOVING | ACT_FLAG_ATTACKING)
 ACT_WARIO_AIR_DASH     = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
+ACT_PILEDRIVER         = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_WARIO_HOLD_JUMP    = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
 ACT_CORKSCREW_CONK     = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_AIR | ACT_FLAG_ATTACKING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
 ACT_WARIO_SPINNING_OBJ = allocate_mario_action(ACT_GROUP_OBJECT | ACT_FLAG_STATIONARY)
 
@@ -562,6 +568,8 @@ function act_wario_dash(m)
     if (m.input & INPUT_Z_PRESSED) ~= 0 then
         return set_mario_action(m, ACT_SLIDE_KICK, 0)
     end
+    
+    m.faceAngle.y = m.intendedYaw - approach_s32(convert_s16(m.intendedYaw - m.faceAngle.y), 0, 0x400, 0x400)
 
     m.actionTimer = m.actionTimer + 1
     return 0
@@ -582,9 +590,9 @@ function act_wario_air_dash(m)
         return 0
     end
 
-    -- walk once dash is up
+    -- fall once dash is up
     if m.actionTimer > 15 then
-        return set_mario_action(m, ACT_JUMP_LAND, 0)
+        return set_mario_action(m, ACT_FREEFALL, 0)
     end
 
     -- slide and set animation
@@ -609,6 +617,8 @@ function act_wario_air_dash(m)
     if (m.input & INPUT_Z_PRESSED) ~= 0 then
         return set_mario_action(m, ACT_SLIDE_KICK, 0)
     end
+    
+    m.faceAngle.y = m.intendedYaw - approach_s32(convert_s16(m.intendedYaw - m.faceAngle.y), 0, 0x400, 0x400)
 
     m.actionTimer = m.actionTimer + 1
     return 0
@@ -773,6 +783,60 @@ function wario_update_spin_input(m)
     e.lastIntendedMag = m.intendedMag
 end
 
+-- patch wario's hold jump for piledriver
+function act_wario_hold_jump(m)
+    if (m.marioObj.oInteractStatus & INT_STATUS_MARIO_DROP_OBJECT) ~= 0 then
+        return drop_and_set_mario_action(m, ACT_FREEFALL, 0)
+    end
+
+    if (m.input & INPUT_B_PRESSED) ~= 0 and (m.heldObj ~= nil and (m.heldObj.oInteractionSubtype & INT_SUBTYPE_HOLDABLE_NPC) ~= nil) then
+        return set_mario_action(m, ACT_AIR_THROW, 0)
+    end
+
+    if (m.input & INPUT_Z_PRESSED) ~= 0 then
+        return set_mario_action(m, ACT_PILEDRIVER, 0)
+    end
+
+    play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0)
+    common_air_action_step(m, ACT_HOLD_JUMP_LAND, MARIO_ANIM_JUMP_WITH_LIGHT_OBJ,
+                           AIR_STEP_CHECK_LEDGE_GRAB)
+    return false
+end
+
+function act_piledriver(m)
+    local e = gStateExtras[m.playerIndex]
+    if m.actionTimer == 0 then
+        play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
+        play_character_sound(m, CHAR_SOUND_SO_LONGA_BOWSER)
+    end
+    set_mario_animation(m, MARIO_ANIM_HOLDING_BOWSER)
+    local stepResult = perform_air_step(m, 0)
+    if stepResult == AIR_STEP_LANDED then
+        if should_get_stuck_in_ground(m) ~= 0 then
+            queue_rumble_data_mario(m, 5, 80)
+            play_sound(SOUND_MARIO_OOOF2, m.marioObj.header.gfx.cameraToObject)
+            m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE
+            set_mario_action(m, ACT_BUTT_STUCK_IN_GROUND, 0)
+        else
+            play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_HEAVY_LANDING)
+            if check_fall_damage(m, ACT_HARD_BACKWARD_GROUND_KB) == 0 then
+                m.particleFlags = m.particleFlags | PARTICLE_MIST_CIRCLE | PARTICLE_HORIZONTAL_STAR
+                -- set facing direction
+                -- not part of original Extended Moveset
+                local yawDiff = m.faceAngle.y - m.intendedYaw
+                e.rotAngle = e.rotAngle + yawDiff
+                m.faceAngle.y = m.intendedYaw
+                return set_mario_action(m, ACT_RELEASING_BOWSER, 0)
+            end
+        end
+    end
+    m.vel.y = -32
+    mario_set_forward_vel(m, 0)
+    m.faceAngle.y = m.faceAngle.y + 0x3000
+    m.actionTimer = m.actionTimer + 1
+    return 0
+end
+
 function wario_before_phys_step(m)
     local hScale = 1.0
 
@@ -866,6 +930,11 @@ function wario_on_set_action(m)
     if m.action == ACT_TRIPLE_JUMP or m.action == ACT_SPECIAL_TRIPLE_JUMP then
         m.vel.y = m.vel.y * 1.15
     end
+    
+    -- patch wario's hold jump for piledriver
+    if m.action == ACT_HOLD_JUMP then
+        return set_mario_action(m, ACT_WARIO_HOLD_JUMP, 0)
+    end
 
     -- less height on other jumps
     if m.action == ACT_JUMP or
@@ -922,6 +991,7 @@ function wario_update(m)
     -- shake camera
     if m.action == ACT_GROUND_POUND_LAND then
         set_camera_shake_from_point(SHAKE_POS_MEDIUM, m.pos.x, m.pos.y, m.pos.z)
+        m.squishTimer = 5
     end
 
     -- faster ground pound
@@ -1001,6 +1071,18 @@ function mario_update(m)
     gEventTable[m.character.type].update(m)
 end
 
+function convert_s16(num)
+    local min = -32768
+    local max = 32767
+    while (num < min) do
+        num = max + (num - min)
+    end
+    while (num > max) do
+        num = min + (num - max)
+    end
+    return num
+end
+
 -----------
 -- hooks --
 -----------
@@ -1012,7 +1094,9 @@ hook_event(HOOK_BEFORE_PHYS_STEP, mario_before_phys_step)
 hook_mario_action(ACT_WALL_SLIDE,         { every_frame = act_wall_slide })
 hook_mario_action(ACT_SPIN_POUND,         { every_frame = act_spin_pound },      INT_GROUND_POUND_OR_TWIRL)
 hook_mario_action(ACT_SPIN_POUND_LAND,    { every_frame = act_spin_pound_land }, INT_GROUND_POUND_OR_TWIRL)
-hook_mario_action(ACT_WARIO_DASH,         { every_frame = act_wario_dash },      INT_PUNCH)
-hook_mario_action(ACT_WARIO_AIR_DASH,     { every_frame = act_wario_air_dash },  INT_PUNCH)
+hook_mario_action(ACT_WARIO_DASH,         { every_frame = act_wario_dash },      INT_KICK)
+hook_mario_action(ACT_WARIO_AIR_DASH,     { every_frame = act_wario_air_dash },  INT_KICK)
 hook_mario_action(ACT_CORKSCREW_CONK,     { every_frame = act_corkscrew_conk },  INT_FAST_ATTACK_OR_SHELL)
 hook_mario_action(ACT_WARIO_SPINNING_OBJ, { every_frame = act_wario_spinning_obj })
+hook_mario_action(ACT_PILEDRIVER,         { every_frame = act_piledriver})
+hook_mario_action(ACT_WARIO_HOLD_JUMP,    { every_frame = act_wario_hold_jump})
