@@ -12,6 +12,7 @@ extern const Gfx dl_djui_img_end[];
 f32 djui_gfx_get_scale(void);
 
 void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize);
+void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH);
 
 void djui_gfx_position_translate(f32* x, f32* y);
 void djui_gfx_scale_translate(f32* width, f32* height);

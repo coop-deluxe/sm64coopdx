@@ -167,6 +167,20 @@ function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
 end
 
 --- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX number
+--- @param tileY number
+--- @param tileW number
+--- @param tileH number
+--- @return nil
+function djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
 --- @param prevX number
 --- @param prevY number
 --- @param prevScaleW number
@@ -177,5 +191,23 @@ end
 --- @param scaleH number
 --- @return nil
 function djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX number
+--- @param tileY number
+--- @param tileW number
+--- @param tileH number
+--- @return nil
+function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
     -- ...
 end
