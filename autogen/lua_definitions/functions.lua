@@ -7393,6 +7393,12 @@ end
 
 --- @param audio BassAudio
 --- @return nil
+function audio_sample_stop(audio)
+    -- ...
+end
+
+--- @param audio BassAudio
+--- @return nil
 function audio_stream_destroy(audio)
     -- ...
 end

@@ -16405,6 +16405,17 @@ int smlua_func_audio_sample_play(lua_State* L) {
     return 1;
 }
 
+int smlua_func_audio_sample_stop(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct BassAudio* audio = (struct BassAudio*)smlua_to_cobject(L, 1, LOT_BASSAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'audio_sample_stop'"); return 0; }
+
+    audio_sample_stop(audio);
+
+    return 1;
+}
+
 int smlua_func_audio_stream_destroy(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
@@ -19635,6 +19646,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);
     smlua_bind_function(L, "audio_sample_load", smlua_func_audio_sample_load);
     smlua_bind_function(L, "audio_sample_play", smlua_func_audio_sample_play);
+    smlua_bind_function(L, "audio_sample_stop", smlua_func_audio_sample_stop);
     smlua_bind_function(L, "audio_stream_destroy", smlua_func_audio_stream_destroy);
     smlua_bind_function(L, "audio_stream_get_frequency", smlua_func_audio_stream_get_frequency);
     smlua_bind_function(L, "audio_stream_get_looping", smlua_func_audio_stream_get_looping);

@@ -24,6 +24,10 @@ void bassh_free_sample(HSAMPLE sample) {
     BASS_SampleFree(sample);
 }
 
+void bassh_stop_sample(HSAMPLE sample) {
+    BASS_SampleStop(sample);
+}
+
 void bassh_set_looping(HSTREAM stream, BOOL loop) {
     BASS_ChannelFlags(stream, loop == TRUE ? BASS_SAMPLE_LOOP : 0, BASS_SAMPLE_LOOP);
 }

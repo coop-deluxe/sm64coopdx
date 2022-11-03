@@ -7,6 +7,7 @@ HSAMPLE bassh_create_sample_from_file(char* data, QWORD length, QWORD offset);
 
 HSTREAM bassh_sample_get_stream(HSAMPLE sample);
 void bassh_free_sample(HSAMPLE sample);
+void bassh_stop_sample(HSAMPLE sample);
 void bassh_set_looping(HSTREAM stream, BOOL loop);
 
 void bassh_set_stream_volume(HSTREAM stream, float volume);

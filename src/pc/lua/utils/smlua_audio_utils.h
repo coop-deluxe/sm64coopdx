@@ -37,6 +37,7 @@ void audio_stream_set_speed(struct BassAudio* audio, f32 initial_freq, f32 speed
 
 struct BassAudio* audio_sample_load(const char* filename);
 void audio_sample_destroy(struct BassAudio* audio);
+void audio_sample_stop(struct BassAudio* audio);
 void audio_sample_play(struct BassAudio* audio, Vec3f position, f32 volume);
 
 void audio_custom_shutdown(void);

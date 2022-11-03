@@ -5673,6 +5673,26 @@
 
 <br />
 
+## [audio_sample_stop](#audio_sample_stop)
+
+### Lua Example
+`audio_sample_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [BassAudio](structs.md#BassAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_stop(struct BassAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_stream_destroy](#audio_stream_destroy)
 
 ### Lua Example

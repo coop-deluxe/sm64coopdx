@@ -1385,6 +1385,7 @@
    - [audio_sample_destroy](functions-4.md#audio_sample_destroy)
    - [audio_sample_load](functions-4.md#audio_sample_load)
    - [audio_sample_play](functions-4.md#audio_sample_play)
+   - [audio_sample_stop](functions-4.md#audio_sample_stop)
    - [audio_stream_destroy](functions-4.md#audio_stream_destroy)
    - [audio_stream_get_frequency](functions-4.md#audio_stream_get_frequency)
    - [audio_stream_get_looping](functions-4.md#audio_stream_get_looping)

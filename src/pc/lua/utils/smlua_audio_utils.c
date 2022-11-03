@@ -407,6 +407,13 @@ void audio_sample_destroy(struct BassAudio* audio) {
     audio->rawData = NULL;
 }
 
+void audio_sample_stop(struct BassAudio* audio) {
+    if (!audio_sanity_check(audio, false, "stop")) {
+        return;
+    }
+    bassh_stop_sample(audio->handle);
+}  
+
 void audio_sample_play(struct BassAudio* audio, Vec3f position, f32 volume) {
     if (!audio_sanity_check(audio, false, "play")) {
         return;
