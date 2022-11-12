@@ -2715,7 +2715,7 @@ CAP = 6
 PLAYER_PART_MAX = 7
 
 --- @type PlayerParts
-METAL = 6
+METAL = CAP
 
 --- @class DialogId
 

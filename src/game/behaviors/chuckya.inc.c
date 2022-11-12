@@ -39,8 +39,8 @@ void bhv_chuckya_anchor_mario_loop(void) {
 
 s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     s32 sp1C = 0;
     if (o->oChuckyaUnkF8 != 4) {
         if (sp24 < cur_obj_lateral_dist_from_mario_to_home()) {
@@ -51,8 +51,9 @@ s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
                 angleToPlayer = cur_obj_angle_to_home();
             }
         } else if (distanceToPlayer > sp28) {
-            if (gGlobalTimer % (s16) sp2C == 0)
+            if ((gGlobalTimer % (s16) sp2C == 0) && player) {
                 angleToPlayer = obj_angle_to_object(o, player);
+            }
             sp1C = 2;
         } else
             sp1C = 3;
@@ -82,7 +83,7 @@ s32 approach_forward_vel(f32 *arr, f32 spC, f32 sp10) {
 
 void chuckya_act_0(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     s32 sp3C = 0;
     UNUSED u8 pad[16];
     s32 sp28;

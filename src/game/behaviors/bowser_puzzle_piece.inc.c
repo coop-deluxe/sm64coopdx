@@ -127,7 +127,7 @@ void bhv_lll_bowser_puzzle_loop(void) {
     s32 i;
     UNUSED struct Object *sp28;
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);

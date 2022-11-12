@@ -213,8 +213,8 @@ static void pokey_act_uninitialized(void) {
  */
 static void pokey_act_wander(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s32 targetAngleOffset;
     struct Object *bodyPart;

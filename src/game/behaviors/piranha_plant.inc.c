@@ -23,7 +23,7 @@ void piranha_plant_act_idle(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer < 1200.0f) {
         o->oAction = PIRANHA_PLANT_ACT_SLEEPING;
         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
@@ -91,7 +91,7 @@ void piranha_plant_act_sleeping(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer < 400.0f) {
         if (mario_moving_fast_enough_to_make_piranha_plant_bite()) {
             o->oAction = PIRANHA_PLANT_ACT_WOKEN_UP;
@@ -209,7 +209,7 @@ void piranha_plant_act_shrink_and_die(void) {
  */
 void piranha_plant_act_wait_to_respawn(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer > 1200.0f) {
         o->oAction = PIRANHA_PLANT_ACT_RESPAWN;
         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
@@ -256,9 +256,9 @@ static s8 sPiranhaPlantBiteSoundFrames[] = { 12, 28, 50, 64, -1 };
  */
 void piranha_plant_act_biting(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s32 frame = o->header.gfx.animInfo.animFrame;
 
@@ -285,7 +285,7 @@ void piranha_plant_act_biting(void) {
     // If the player is wearing the Metal Cap and interacts with the Piranha
     // Plant, the Piranha Plant will die.
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-        if (marioState->flags & MARIO_METAL_CAP) {
+        if (marioState && marioState->flags & MARIO_METAL_CAP) {
             o->oAction = PIRANHA_PLANT_ACT_ATTACKED;
         }
     }
@@ -299,6 +299,7 @@ void piranha_plant_act_biting(void) {
  */
 s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return FALSE; }
     if (marioState->vel[1] > 10.0f)
         return TRUE;
     if (marioState->forwardVel > 10.0f)
@@ -313,7 +314,7 @@ s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
  */
 void piranha_plant_act_stopped_biting(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     cur_obj_become_intangible();
     cur_obj_init_animation_with_sound(6);
 

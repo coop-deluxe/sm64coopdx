@@ -43,6 +43,7 @@ void bhv_castle_floor_trap_open(void) {
 
 void bhv_castle_floor_trap_close_detect(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (distanceToPlayer > 1000.0f)
         o->oAction = 3; // close trapdoor

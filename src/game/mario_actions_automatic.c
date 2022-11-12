@@ -938,6 +938,10 @@ s32 act_bubbled(struct MarioState* m) {
         set_camera_mode(m->area->camera, CAMERA_MODE_FREE_ROAM, 1);
     }
     struct MarioState* targetMarioState = nearest_mario_state_to_object(m->marioObj);
+    if (targetMarioState == NULL) {
+        targetMarioState = &gMarioStates[0];
+    }
+
     struct Object* target = targetMarioState->marioObj;
     s32 angleToPlayer = obj_angle_to_object(m->marioObj, target);
     s32 pitchToPlayer = obj_pitch_to_object(m->marioObj, target);
@@ -948,6 +952,7 @@ s32 act_bubbled(struct MarioState* m) {
         u8 allInBubble = TRUE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (!gMarioStates[i].visibleToEnemies) { continue; }
             if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
                 allInBubble = FALSE;
                 break;

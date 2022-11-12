@@ -165,8 +165,8 @@ static void chain_chomp_sub_act_turn(void) {
     obj_move_pitch_approach(0, 0x100);
 
     struct Object *player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
@@ -524,8 +524,8 @@ void bhv_wooden_post_update(void) {
         o->oPosY = o->oHomeY + o->oWoodenPostOffsetY;
     } else if (!(o->oBehParams & WOODEN_POST_BP_NO_COINS_MASK)) {
         struct Object *player = nearest_player_to_object(o);
-        s32 distanceToPlayer = dist_between_objects(o, player);
-        s32 angleToPlayer = obj_angle_to_object(o, player);
+        s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+        s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
         // Reset the timer once mario is far enough
         if (distanceToPlayer > 400.0f) {

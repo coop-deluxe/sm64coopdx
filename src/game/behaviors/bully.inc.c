@@ -122,7 +122,9 @@ void bully_check_mario_collision(void) {
 
         // Get the player who interacted with us.
         struct MarioState *player = nearest_interacting_mario_state_to_object(o);
-        o->oBullyLastNetworkPlayerIndex = gNetworkPlayers[player->playerIndex].globalIndex;
+        if (player) {
+            o->oBullyLastNetworkPlayerIndex = gNetworkPlayers[player->playerIndex].globalIndex;
+        }
     }
 }
 
@@ -135,7 +137,9 @@ void bully_act_chase_mario(void) {
 
     if (o->oTimer < 10) {
         o->oForwardVel = 3.0;
-        obj_turn_toward_object(o, player, 16, 4096);
+        if (player) {
+            obj_turn_toward_object(o, player, 16, 4096);
+        }
     } else if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL) {
         o->oForwardVel = 20.0;
         if (o->oTimer >= 31) {
@@ -161,7 +165,9 @@ void bully_act_knockback(void) {
         o->oBullyKBTimerAndMinionKOCounter++;
         o->oFlags |= 0x8; /* bit 3 */
         o->oMoveAngleYaw = o->oFaceAngleYaw;
-        obj_turn_toward_object(o, player, 16, 1280);
+        if (player) {
+            obj_turn_toward_object(o, player, 16, 1280);
+        }
     } else {
         o->header.gfx.animInfo.animFrame = 0;
     }

@@ -188,6 +188,7 @@ void bhv_generic_bowling_ball_spawner_loop(void) {
         o->oTimer = 0;
 
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
 
     if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1000)
         || (o->oPosY < player->header.gfx.pos[1]))
@@ -222,6 +223,7 @@ void bhv_thi_bowling_ball_spawner_loop(void) {
 
     struct Object *bowlingBall;
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
 
     if (o->oTimer == 256)
         o->oTimer = 0;

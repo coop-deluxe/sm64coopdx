@@ -35,7 +35,7 @@ void bhv_init_changing_water_level_loop(void) {
 
 void bhv_water_level_diamond_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
+    struct Object* player = marioState ? marioState->marioObj : NULL;
 
     struct Object* manager = cur_obj_nearest_object_with_behavior(bhvInitializeChangingWaterLevel);
 
@@ -52,7 +52,7 @@ void bhv_water_level_diamond_loop(void) {
                     o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_IDLE
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE:
-                if (marioState == &gMarioStates[0] && obj_check_if_collided_with_object(o, player)) {
+                if (marioState == &gMarioStates[0] && player && obj_check_if_collided_with_object(o, player)) {
                     if (gWDWWaterLevelChanging == 0) {
                         o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL
                         gWDWWaterLevelChanging = 1;

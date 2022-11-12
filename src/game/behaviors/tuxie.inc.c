@@ -113,7 +113,7 @@ u8 tuxies_mother_act_0_continue_dialog(void) { return (o->oAction == 0 && o->oSu
 void tuxies_mother_act_0(void) {
     // only local can interact with mother
     struct MarioState* marioState = &gMarioStates[0];
-    s32 distanceToPlayer = dist_between_objects(o, marioState->marioObj);
+    s32 distanceToPlayer = marioState->visibleToEnemies ? dist_between_objects(o, marioState->marioObj) : 10000;
 
     s32 sp2C;
     f32 sp28;
@@ -136,7 +136,7 @@ void tuxies_mother_act_0(void) {
                         o->oSubAction++;
                 break;
             case 1:
-                if (cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.TuxieMotherDialog, tuxies_mother_act_0_continue_dialog))
+                if (marioState->visibleToEnemies && cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.TuxieMotherDialog, tuxies_mother_act_0_continue_dialog))
                     o->oSubAction++;
                 break;
             case 2:
@@ -175,8 +175,8 @@ void small_penguin_dive_with_mario(void) {
 
 void small_penguin_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s32 sp1C = 0;
     if (o->oTimer == 0)
@@ -194,8 +194,8 @@ void small_penguin_act_2(void) {
 
 void small_penguin_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_init_animation_with_sound(0);
     o->oForwardVel = o->oSmallPenguinUnk104 + 3.0f;
@@ -229,7 +229,7 @@ void small_penguin_act_4(void) {
 
 void small_penguin_act_0(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     s32 sp1C;
 
@@ -255,7 +255,7 @@ void small_penguin_act_0(void) {
 
 void small_penguin_act_5(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     f32 sp24;
     s16 sp22;

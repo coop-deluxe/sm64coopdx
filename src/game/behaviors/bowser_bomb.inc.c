@@ -38,9 +38,9 @@ void bhv_bowser_bomb_loop(void) {
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
+    struct Object* player = marioState ? marioState->marioObj : NULL;
 
-    if (networkBowserBombHit == o->oSyncID || (marioState->playerIndex == 0 && obj_check_if_collided_with_object(o, player) == 1)) {
+    if (networkBowserBombHit == o->oSyncID || (marioState && marioState->playerIndex == 0 && player && obj_check_if_collided_with_object(o, player) == 1)) {
         bhv_bowser_bomb_hit_player();
     }
 

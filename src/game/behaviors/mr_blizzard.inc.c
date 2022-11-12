@@ -108,8 +108,8 @@ static void mr_blizzard_act_spawn_snowball(void) {
 
 static void mr_blizzard_act_hide_unhide(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (distanceToPlayer < 1000.0f) {
         // If Mario is in range, move to rising action, make Mr. Blizzard visible,
@@ -164,8 +164,8 @@ static void mr_blizzard_act_rise_from_ground(void) {
 
 static void mr_blizzard_act_rotate(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s16 angleDiff;
     f32 prevDizziness;
@@ -233,7 +233,7 @@ static void mr_blizzard_act_rotate(void) {
 
 static void mr_blizzard_act_death(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     cur_obj_become_intangible();
     struct Object *cap;
@@ -341,7 +341,7 @@ static void mr_blizzard_act_burrow(void) {
 
 static void mr_blizzard_act_jump(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oMrBlizzardTimer != 0) {
         cur_obj_rotate_yaw_toward(o->oMrBlizzardTargetMoveYaw, 3400);
@@ -449,7 +449,7 @@ static void mr_blizzard_snowball_act_0(void) {
 
 static void mr_blizzard_snowball_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     f32 marioDist;
 

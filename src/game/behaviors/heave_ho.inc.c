@@ -7,7 +7,7 @@ void bhv_heave_ho_throw_mario_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (gMarioStates[0].heldByObj == o->parentObj) { marioState = &gMarioStates[0]; }
 
-    struct Object* player = marioState->marioObj;
+    struct Object* player = marioState ? marioState->marioObj : NULL;
     o->oParentRelativePosX = 200.0f;
     o->oParentRelativePosY = -50.0f;
     o->oParentRelativePosZ = 0.0f;
@@ -19,9 +19,13 @@ void bhv_heave_ho_throw_mario_loop(void) {
             break;
         case 2:
             cur_obj_play_sound_2(SOUND_OBJ_HEAVEHO_TOSSED);
-            player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
-            marioState->forwardVel = -45.0f;
-            marioState->vel[1] = 95.0f;
+            if (player) {
+                player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
+            }
+            if (marioState) {
+                marioState->forwardVel = -45.0f;
+                marioState->vel[1] = 95.0f;
+            }
             o->parentObj->oHeaveHoUnk88 = 0;
             o->parentObj->usingObj = NULL;
             break;
@@ -47,7 +51,7 @@ void heave_ho_act_1(void) {
 
 void heave_ho_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     UNUSED s32 unused;
     s16 angleVel;

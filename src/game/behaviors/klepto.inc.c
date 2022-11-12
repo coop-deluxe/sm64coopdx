@@ -20,6 +20,7 @@ static u8 sKleptoAttackHandlers[] = { 2, 2, 5, 5, 2, 2 };
 
 static void klepto_target_mario(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     struct Object* player = marioState->marioObj;
     s32 angleToPlayer = obj_angle_to_object(o, player);
     o->oKleptoDistanceToTarget = lateral_dist_between_objects(player, o);
@@ -131,14 +132,14 @@ static void klepto_change_target(void) {
     s32 newTarget = 0;
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (distanceToPlayer > 2000.0f) {
         f32 minTargetDist = 99999.0f;
 
         for (s32 i = 0; i < 3; i++) {
-            f32 dx = player->oPosX - sKleptoTargetPositions[i][0];
-            f32 dz = player->oPosZ - sKleptoTargetPositions[i][2];
+            f32 dx = player ? player->oPosX - sKleptoTargetPositions[i][0] : 10000;
+            f32 dz = player ? player->oPosZ - sKleptoTargetPositions[i][2] : 10000;
 
             f32 targetDist = sqrtf(dx * dx + dz * dz);
             if (targetDist < minTargetDist) {
@@ -162,7 +163,7 @@ static void klepto_change_target(void) {
 
 static void klepto_circle_target(f32 radius, f32 targetSpeed) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oAnimState != KLEPTO_ANIM_STATE_HOLDING_NOTHING
         && ((o->oTimer > 60 && distanceToPlayer > 2000.0f)
@@ -227,7 +228,7 @@ static void klepto_act_turn_toward_mario(void) {
     klepto_target_mario();
 
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (klepto_set_and_check_if_anim_at_end() && cur_obj_check_if_at_animation_end() && o->oKleptoDistanceToTarget > 800.0f
         && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x800 && o->oKleptoUnk1B0 < 0x400) {
@@ -245,9 +246,9 @@ static void klepto_act_turn_toward_mario(void) {
 
 static void klepto_act_dive_at_mario(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     approach_f32_ptr(&o->oKleptoSpeed, 60.0f, 10.0f);
     if (o->oSoundStateID == 2) {
@@ -264,7 +265,7 @@ static void klepto_act_dive_at_mario(void) {
             }
         }
     } else {
-        f32 dy = o->oPosY - player->oPosY;
+        f32 dy = player ? (o->oPosY - player->oPosY) : (o->oPosY);
         if (o->oSoundStateID == 3) {
             cur_obj_set_anim_if_at_end(4);
         } else if (o->oVelY > 0.0f && dy > 200.0f) {
@@ -274,7 +275,9 @@ static void klepto_act_dive_at_mario(void) {
         o->oKleptoUnk1B0 = -0x3000;
         if (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_NOTHING) {
             if (o->oSubAction == 0) {
-                o->oKleptoUnk1B0 = obj_turn_pitch_toward_mario(marioState, 0.0f, 0);
+                if (marioState) {
+                    o->oKleptoUnk1B0 = obj_turn_pitch_toward_mario(marioState, 0.0f, 0);
+                }
                 o->oKleptoYawToTarget = angleToPlayer;
 
                 if (dy < 160.0f) {
@@ -282,7 +285,8 @@ static void klepto_act_dive_at_mario(void) {
                 }
             }
 
-            if (marioState->action != ACT_SLEEPING
+            if (marioState
+                && marioState->action != ACT_SLEEPING
                 && !(marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))
                 && distanceToPlayer < 200.0f && dy > 50.0f && dy < 90.0f) {
                 if (sync_object_is_owned_locally(o->oSyncID) && mario_lose_cap_to_enemy(marioState, 1) && marioState->playerIndex == 0) {
@@ -366,8 +370,8 @@ void obj_set_speed_to_zero(void) {
 
 void bhv_klepto_update(void) {
     struct MarioState *marioState = nearest_mario_state_to_object(o);
-    struct Object *player = marioState->marioObj;
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_update_floor_and_walls();
 
@@ -447,7 +451,7 @@ void bhv_klepto_update(void) {
             o->oMoveAngleYaw = angleToPlayer + 0x8000;
             o->oFlags &= ~0x00000008;
             cur_obj_become_intangible();
-        } else if (marioState->action == ACT_SLEEPING || (marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))) {
+        } else if ((marioState && marioState->action == ACT_SLEEPING) || (marioState && marioState->action & (ACT_FLAG_SHORT_HITBOX | ACT_FLAG_BUTT_OR_STOMACH_SLIDE))) {
             cur_obj_become_intangible();
         } else {
             cur_obj_become_tangible();

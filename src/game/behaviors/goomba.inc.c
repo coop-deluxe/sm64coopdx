@@ -172,8 +172,8 @@ static void goomba_act_walk(void) {
         o->oGoombaTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oGoombaTargetYaw, 0x200);
     } else {
         struct Object* player = nearest_player_to_object(o);
-        s32 distanceToPlayer = dist_between_objects(o, player);
-        s32 angleToPlayer = obj_angle_to_object(o, player);
+        s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+        s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
         treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
 
         // If far from home, walk toward home.
@@ -234,7 +234,7 @@ static void goomba_act_attacked_mario(void) {
         //! This can happen even when the goomba is already in the air. It's
         //  hard to chain these in practice
         struct Object* player = nearest_player_to_object(o);
-        s32 angleToPlayer = obj_angle_to_object(o, player);
+        s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
         goomba_begin_jump();
         o->oGoombaTargetYaw = angleToPlayer;
         o->oGoombaTurningAwayFromWall = FALSE;

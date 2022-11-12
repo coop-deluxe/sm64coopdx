@@ -15,12 +15,12 @@ static void mad_piano_act_wait(void) {
     cur_obj_init_animation_with_sound(0);
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (distanceToPlayer < 500.0f) {
         if (o->oTimer > 20) {
-            if (marioState->forwardVel > 10.0f) {
+            if (marioState && marioState->forwardVel > 10.0f) {
                 o->oAction = MAD_PIANO_ACT_ATTACK;
                 cur_obj_become_tangible();
             }
@@ -38,9 +38,9 @@ static void mad_piano_act_attack(void) {
     cur_obj_play_sound_at_anim_range(0, 0, SOUND_OBJ_MAD_PIANO_CHOMPING);
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (distanceToPlayer < 500.0f) {
         o->oTimer = 0;

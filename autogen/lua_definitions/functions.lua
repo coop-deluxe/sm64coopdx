@@ -5407,6 +5407,15 @@ end
 --- @param z number
 --- @param dist integer
 --- @return integer
+function is_point_within_radius_of_any_player(x, y, z, dist)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param dist integer
+--- @return integer
 function is_point_within_radius_of_mario(x, y, z, dist)
     -- ...
 end
@@ -5432,6 +5441,12 @@ end
 --- @param obj Object
 --- @return Object
 function nearest_player_to_object(obj)
+    -- ...
+end
+
+--- @param obj Object
+--- @return MarioState
+function nearest_possible_mario_state_to_object(obj)
     -- ...
 end
 

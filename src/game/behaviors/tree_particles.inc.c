@@ -39,7 +39,9 @@ void bhv_snow_leaf_particle_spawn_init(void) {
     f32 scale;
     UNUSED s32 unused2;
     struct Object* player = nearest_player_to_object(o);
-    player->oActiveParticleFlags &= ~0x2000;
+    if (player) {
+        player->oActiveParticleFlags &= ~0x2000;
+    }
     if (isSnow) {
         if (random_float() < 0.5) {
             obj = spawn_object(o, MODEL_WHITE_PARTICLE_DL, bhvTreeSnow);

@@ -28,8 +28,8 @@ void bullet_bill_act_0(void) {
 
 void bullet_bill_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s16 sp1E = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
     if (sp1E < 0x2000 && 400.0f < distanceToPlayer && distanceToPlayer < 1500.0f)
@@ -38,8 +38,8 @@ void bullet_bill_act_1(void) {
 
 void bullet_bill_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (o->oTimer < 40)
         o->oForwardVel = 3.0f;

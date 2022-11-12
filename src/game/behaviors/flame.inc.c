@@ -2,7 +2,7 @@
 
 void bhv_small_piranha_flame_loop(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if ((u16)(o->oBehParams >> 16) == 0) {
         if (o->oTimer > 0) {

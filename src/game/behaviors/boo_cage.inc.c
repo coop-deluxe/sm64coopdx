@@ -68,7 +68,7 @@ void bhv_boo_cage_loop(void) {
                     play_puzzle_jingle();
                 }
                 struct MarioState* marioState = nearest_mario_state_to_object(o);
-                if (marioState->playerIndex == 0) {
+                if (marioState && marioState->playerIndex == 0) {
                     network_send_object(o);
                 }
                 o->parentObj = NULL;
@@ -104,7 +104,7 @@ void bhv_boo_cage_loop(void) {
                 o->oAction++;
 
                 struct MarioState* marioState = nearest_mario_state_to_object(o);
-                if (marioState->playerIndex == 0) {
+                if (marioState && marioState->playerIndex == 0) {
                     network_send_object(o);
                 }
             }

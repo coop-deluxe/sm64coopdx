@@ -11,7 +11,7 @@ void bowser_tail_anchor_act_0(void) {
     cur_obj_scale(1.0f);
     if (bowser->oAction == 5 || bowser->oAction == 6 || bowser->oAction == 19 || bowser->oAction == 20) {
         bowser->oIntangibleTimer = -1;
-    } else if (obj_check_if_collided_with_object(o, player)) {
+    } else if (player && obj_check_if_collided_with_object(o, player)) {
         bowser->oIntangibleTimer = 0;
         o->oAction = 2;
     } else {
@@ -92,7 +92,7 @@ void bhv_bowser_flame_spawn_loop(void) {
             o->oMoveAngleYaw = sp1C[5 * sp30 + 3] + (s16) bowser->oMoveAngleYaw;
             if (!(sp30 & 1)) {
                 struct MarioState* marioState = nearest_mario_state_to_object(o);
-                if (marioState->playerIndex == 0) {
+                if (marioState && marioState->playerIndex == 0) {
                     struct Object* flame = spawn_object(o, MODEL_RED_FLAME, bhvFlameMovingForwardGrowing);
                     if (flame != NULL) {
                         struct Object* spawn_objects[] = { flame };
@@ -141,7 +141,7 @@ s32 bowser_spawn_shockwave(void) {
     struct Object *wave;
     if (o->oBehParams2ndByte == 2) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (marioState->playerIndex == 0) {
+        if (marioState && marioState->playerIndex == 0) {
             wave = spawn_object(o, MODEL_BOWSER_WAVE, bhvBowserShockWave);
             if (wave != NULL) {
                 wave->oPosY = o->oFloorHeight;
@@ -248,6 +248,7 @@ static void bowser_debug_actions(void) // unused
 
 void bowser_bitdw_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     struct Object* player = marioState->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
@@ -285,6 +286,7 @@ void bowser_bitdw_act_controller(void) {
 
 void bowser_bitfs_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     struct Object* player = marioState->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
@@ -317,6 +319,7 @@ void bowser_bitfs_act_controller(void) {
 
 void bowser_general_bits_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     struct Object* player = marioState->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
@@ -345,6 +348,7 @@ void bowser_set_act_jump(void) {
 
 void bowser_bits_act_controller(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     if (marioState->playerIndex != 0) { return; }
     switch (o->oBowserUnk110) {
         case 0:
@@ -408,6 +412,7 @@ void bowser_act_breath_fire(void) {
 void bowser_act_walk_to_mario(void) // turn towards Mario
 {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
     UNUSED s32 facing; // is Bowser facing Mario?
@@ -441,6 +446,7 @@ void bowser_act_walk_to_mario(void) // turn towards Mario
 
 void bowser_act_teleport(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
@@ -488,7 +494,7 @@ void bowser_act_spit_fire_into_sky(void) // only in sky
     if (frame > 24 && frame < 36) {
         cur_obj_play_sound_1(SOUND_AIR_BOWSER_SPIT_FIRE);
         struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (marioState->playerIndex == 0) {
+        if (marioState && marioState->playerIndex == 0) {
             struct Object* flame = NULL;
             if (frame == 35) {
                 flame = spawn_object_relative(1, 0, 0x190, 0x64, o, MODEL_RED_FLAME, bhvBlueBowserFlame);
@@ -681,6 +687,7 @@ void bowser_act_turn_from_edge(void) {
 
 void bowser_act_charge_mario(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s32 sp34;
@@ -922,6 +929,7 @@ void bowser_dead_bounce(void) {
 
 s32 bowser_dead_wait_for_mario(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return 0; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
@@ -972,7 +980,7 @@ s32 bowser_dead_not_bits_end(void) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             o->oBowserUnkF8++;
         }
-        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog(marioState, 2, 18, *sBowserDefeatedDialogText[o->oBehParams2ndByte], 0, bowser_dead_not_bits_end_continue_dialog)) {
+        if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog(marioState, 2, 18, *sBowserDefeatedDialogText[o->oBehParams2ndByte], 0, bowser_dead_not_bits_end_continue_dialog)) {
             o->oBowserUnkF8++;
             cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_EXPLODE);
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
@@ -984,7 +992,9 @@ s32 bowser_dead_not_bits_end(void) {
         bowser_dead_hide();
         spawn_triangle_break_particles(20, 116, 1.0f, 0);
         bowser_spawn_grand_star_key();
-        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+        if (gMarioStates[0].visibleToEnemies) {
+            set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+        }
         return 1;
     }
     return 0;
@@ -1004,7 +1014,7 @@ s32 bowser_dead_bits_end(void) {
             seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
             o->oBowserUnkF8++;
         }
-        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog(marioState, 2, 18, dialogID, 0, bowser_dead_bits_end_continue_dialog)) {
+        if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog(marioState, 2, 18, dialogID, 0, bowser_dead_bits_end_continue_dialog)) {
             cur_obj_set_model(smlua_model_util_load(E_MODEL_BOWSER2));
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
             seq_player_fade_out(SEQ_PLAYER_LEVEL, 1);
@@ -1265,8 +1275,8 @@ void bowser_thrown_dropped_update(void) {
 
 void bhv_bowser_loop(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     // look for animation difference and override
     struct Animation* anim = NULL;
@@ -1428,7 +1438,7 @@ Gfx *geo_update_body_rot_from_parent(s32 run, UNUSED struct GraphNode *node, Mat
 
 void bowser_open_eye_switch(struct Object *a0, struct GraphNodeSwitchCase *switchCase) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s32 sp1C;
     s16 sp1A;
@@ -1849,7 +1859,9 @@ void bhv_blue_flames_group_loop(void) {
     struct Object *flame;
     s32 i;
     if (o->oTimer == 0) {
-        o->oMoveAngleYaw = obj_angle_to_object(o, player);
+        if (player) {
+            o->oMoveAngleYaw = obj_angle_to_object(o, player);
+        }
         o->oBlueFlameNextScale = 5.0f;
     }
     if (o->oTimer < 16) {

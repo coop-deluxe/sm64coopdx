@@ -156,8 +156,8 @@ void bhv_skeeter_update(void) {
     o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
     o->oDistanceToMario = distanceToPlayer;
     o->oAngleToMario = angleToPlayer;

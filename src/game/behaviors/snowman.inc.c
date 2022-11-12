@@ -56,7 +56,7 @@ void adjust_rolling_face_pitch(f32 f12) {
 
 void snowmans_bottom_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     UNUSED s16 sp26;
     s32 sp20 = 0;
@@ -137,7 +137,8 @@ void bhv_snowmans_bottom_loop(void) {
 
     switch (o->oAction) {
         case 0:
-            if (should_start_or_continue_dialog(marioState, o)
+            if (marioState
+                && should_start_or_continue_dialog(marioState, o)
                 && (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 400) == 1)
                 && set_mario_npc_dialog(&gMarioStates[0], 1, bhv_snowmans_bottom_loop_continue_dialog) == 2) {
                 sp1E = cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.SnowmanHeadBodyDialog);

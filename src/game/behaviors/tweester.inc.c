@@ -44,7 +44,7 @@ void tweester_scale_and_move(f32 preScale) {
  */
 void tweester_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oSubAction == TWEESTER_SUB_ACT_WAIT) {
         cur_obj_become_tangible();
@@ -73,16 +73,17 @@ void tweester_act_idle(void) {
  */
 void tweester_act_chase(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     f32 activationRadius = o->oBehParams2ndByte * 100;
 
     o->oAngleToHome = cur_obj_angle_to_home();
     cur_obj_play_sound_1(SOUND_ENV_WIND1);
 
-    if (cur_obj_lateral_dist_from_obj_to_home(player) < activationRadius
+    if (player
+        && cur_obj_lateral_dist_from_obj_to_home(player) < activationRadius
         && o->oSubAction == TWEESTER_SUB_ACT_CHASE) {
 
         o->oForwardVel = 20.0f;
@@ -123,7 +124,7 @@ void tweester_act_hide(void) {
         tweester_scale_and_move(shrinkTimer / 60.0f);
     else {
         cur_obj_become_intangible();
-        if (cur_obj_lateral_dist_from_obj_to_home(player) > 2500.0f)
+        if (player && cur_obj_lateral_dist_from_obj_to_home(player) > 2500.0f)
             o->oAction = TWEESTER_ACT_IDLE;
         if (o->oTimer > 360)
             o->oAction = TWEESTER_ACT_IDLE;

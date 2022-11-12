@@ -83,7 +83,7 @@ static s32 boo_should_be_stopped(void) {
 
 static s32 boo_should_be_active(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, marioState->marioObj);
+    s32 distanceToPlayer = marioState ? dist_between_objects(o, marioState->marioObj) : 10000;
 
     u8 inRoom = FALSE;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -178,6 +178,7 @@ static void boo_oscillate(s32 ignoreOpacity) {
 
 static s32 boo_vanish_or_appear(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return FALSE; }
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 relativeAngleToMario = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
@@ -207,7 +208,7 @@ static s32 boo_vanish_or_appear(void) {
 
 static void boo_set_move_yaw_for_during_hit(s32 hurt) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_become_intangible();
 
@@ -301,12 +302,13 @@ static s32 big_boo_update_during_nonlethal_hit(f32 a0) {
 // returns whether death is complete
 static s32 boo_update_during_death(void) {
     struct Object* player = nearest_player_to_object(o);
-
     struct Object *parentBigBoo;
 
     if (o->oTimer == 0) {
         o->oForwardVel = 40.0f;
-        o->oMoveAngleYaw = player->oMoveAngleYaw;
+        if (player) {
+            o->oMoveAngleYaw = player->oMoveAngleYaw;
+        }
         o->oBooDeathStatus = BOO_DEATH_STATUS_DYING;
         o->oFlags &= ~OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW;
     } else {
@@ -376,6 +378,7 @@ static s32 boo_get_attack_status(void) {
 // boo idle/chasing movement?
 static void boo_chase_mario(f32 a0, s16 a1, f32 a2) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     struct Object* player = marioState->marioObj;
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
@@ -514,12 +517,14 @@ static void boo_act_4(void) {
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState->playerIndex != 0 || cur_obj_update_dialog(&gMarioStates[0], 2, 2, dialogID, 0, boo_act_4_continue_dialog)) {
-        create_sound_spawner(SOUND_OBJ_DYING_ENEMY1);
-        obj_mark_for_deletion(o);
+    if (marioState) {
+        if (marioState->playerIndex != 0 || cur_obj_update_dialog(&gMarioStates[0], 2, 2, dialogID, 0, boo_act_4_continue_dialog)) {
+            create_sound_spawner(SOUND_OBJ_DYING_ENEMY1);
+            obj_mark_for_deletion(o);
 
-        if (dialogID == (s32) gBehaviorValues.dialogs.GhostHuntAfterDialog) { // If the Big Boo should spawn, play the jingle
-            play_puzzle_jingle();
+            if (dialogID == (s32) gBehaviorValues.dialogs.GhostHuntAfterDialog) { // If the Big Boo should spawn, play the jingle
+                play_puzzle_jingle();
+            }
         }
     }
 }
@@ -715,7 +720,7 @@ static void big_boo_act_4(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oBehParams2ndByte == 0) {
         obj_set_pos(o, 973, 0, 626);
@@ -880,7 +885,7 @@ void bhv_merry_go_round_boo_manager_loop(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     switch (o->oAction) {
         case 0:
@@ -951,13 +956,14 @@ void bhv_boo_in_castle_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) { boo_sync_object_init(); }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     u8 inRoom = FALSE;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (!marioState) { continue; }
         if (marioState->floor == NULL) { continue; }
         inRoom = inRoom || (marioState->floor->room == 1);
     }

@@ -520,6 +520,24 @@ void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
 s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        struct Object* player = gMarioStates[i].marioObj;
+        f32 mGfxX = player->header.gfx.pos[0];
+        f32 mGfxY = player->header.gfx.pos[1];
+        f32 mGfxZ = player->header.gfx.pos[2];
+
+        if ((x - mGfxX) * (x - mGfxX) + (y - mGfxY) * (y - mGfxY) + (z - mGfxZ) * (z - mGfxZ)
+            < (f32)(dist * dist)) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist) {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         f32 mGfxX = player->header.gfx.pos[0];
         f32 mGfxY = player->header.gfx.pos[1];
@@ -586,23 +604,32 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
     struct MarioState* nearest = NULL;
     f32 nearestDist = 0;
-    u8 checkActive = TRUE;
-    do {
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].marioObj == obj) { continue; }
-            if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
-            float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
-            if (nearest == NULL || dist < nearestDist) {
-                nearest = &gMarioStates[i];
-                nearestDist = dist;
-            }
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].marioObj == obj) { continue; }
+        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
+        if (nearest == NULL || dist < nearestDist) {
+            nearest = &gMarioStates[i];
+            nearestDist = dist;
         }
-        if (!checkActive) { break; }
-        checkActive = FALSE;
-    } while (nearest == NULL);
+    }
 
-    if (nearest == NULL) {
-        nearest = &gMarioStates[0];
+    return nearest;
+}
+
+struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj) {
+    if (!obj) { return NULL; }
+    struct MarioState* nearest = NULL;
+    f32 nearestDist = 0;
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].marioObj == obj) { continue; }
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
+        if (nearest == NULL || dist < nearestDist) {
+            nearest = &gMarioStates[i];
+            nearestDist = dist;
+        }
     }
 
     return nearest;
@@ -625,21 +652,18 @@ struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj)
     if (!obj) { return NULL; }
     struct MarioState *nearest = NULL;
     f32 nearestDist = 0;
-    u8 checkActive = TRUE;
-    do {
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].marioObj == obj) { continue; }
-            if (gMarioStates[i].interactObj != obj) { continue; }
-            if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
-            float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
-            if (nearest == NULL || dist < nearestDist) {
-                nearest = &gMarioStates[i];
-                nearestDist = dist;
-            }
+
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].marioObj == obj) { continue; }
+        if (gMarioStates[i].interactObj != obj) { continue; }
+        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (!is_player_active(&gMarioStates[i])) { continue; }
+        float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
+        if (nearest == NULL || dist < nearestDist) {
+            nearest = &gMarioStates[i];
+            nearestDist = dist;
         }
-        if (!checkActive) { break; }
-        checkActive = FALSE;
-    } while (nearest == NULL);
+    }
 
     if (nearest == NULL) {
         nearest = &gMarioStates[0];

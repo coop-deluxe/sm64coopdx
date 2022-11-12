@@ -112,6 +112,7 @@ void exclamation_box_act_3(void) {
 }
 
 static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
+    if (!m) { return model; }
     switch (model) {
         case MODEL_MARIOS_CAP:              return m->character->capModelId;
         case MODEL_MARIOS_METAL_CAP:        return m->character->capMetalModelId;
@@ -122,8 +123,8 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
 }
 
 void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
-    struct MarioState* m = nearest_mario_state_to_object(o);
-    struct Object* player = m->marioObj;
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
     struct Object *sp1C = NULL;
 
     if (o->oExclamationBoxForce) {
@@ -132,14 +133,16 @@ void exclamation_box_spawn_contents(struct Struct802C0DF0 *a0, u8 a1) {
 
     while (a0->unk0 != 99) {
         if (a1 == a0->unk0) {
-            s32 model = exclamation_replace_model(m, a0->model);
+            s32 model = exclamation_replace_model(marioState, a0->model);
 
             sp1C = spawn_object(o, model, a0->behavior);
             if (sp1C != NULL) {
                 sp1C->oVelY = 20.0f;
                 sp1C->oForwardVel = 3.0f;
-                sp1C->oMoveAngleYaw = player->oMoveAngleYaw;
-                sp1C->globalPlayerIndex = player->globalPlayerIndex;
+                if (player) {
+                    sp1C->oMoveAngleYaw = player->oMoveAngleYaw;
+                    sp1C->globalPlayerIndex = player->globalPlayerIndex;
+                }
             }
             o->oBehParams |= a0->unk2 << 24;
             if (a0->model == 122)

@@ -147,7 +147,7 @@ void controllable_platform_check_walls(s8 sp1B, s8 sp1C[3], Vec3f sp20, UNUSED V
         }
     }
 
-    if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 400)) {
+    if (!is_point_within_radius_of_any_player(o->oPosX, o->oPosY, o->oPosZ, 400)) {
         D_80331694 = 6;
         o->oControllablePlatformUnk100 = 1;
         o->oTimer = 0;
@@ -172,7 +172,9 @@ void controllable_platform_shake_on_wall_hit(void) {
 }
 
 void controllable_platform_tilt_from_mario(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    if (!player) { return; }
 
     u8 playerCount = 0;
     f32 x = 0;
@@ -200,7 +202,6 @@ void controllable_platform_tilt_from_mario(void) {
             o->oTimer = 0;
             o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         }
-    } else {
     }
 }
 

@@ -400,10 +400,12 @@ bool mario_can_bubble(struct MarioState* m) {
     if (!gServerSettings.bubbleDeath) { return false; }
     if (m->playerIndex != 0) { return false; }
     if (m->action == ACT_BUBBLED) { return false; }
+    if (!m->visibleToEnemies) { return false; }
 
     u8 allInBubble = TRUE;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (!gMarioStates[i].visibleToEnemies) { continue; }
         if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
             allInBubble = FALSE;
             break;
@@ -2142,6 +2144,7 @@ void init_single_mario(struct MarioState* m) {
     m->framesSinceB = 0xFF;
 
     m->invincTimer = 0;
+    m->visibleToEnemies = TRUE;
 
     // always put the cap on head
     /*if (save_file_get_flags() & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI | SAVE_FLAG_CAP_ON_MR_BLIZZARD)) {

@@ -25,8 +25,8 @@ static struct ObjectHitbox sSwoopHitbox = {
  */
 static void swoop_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_init_animation_with_sound(1);
 
@@ -47,7 +47,7 @@ static void swoop_act_idle(void) {
  */
 static void swoop_act_move(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_init_animation_with_accel_and_sound(0, 2.0f);
     if (cur_obj_check_if_near_animation_end()) {
@@ -73,7 +73,7 @@ static void swoop_act_move(void) {
             // If we're not done swooping, turn toward mario. When between
             // 0 and 200 units above mario, increase speed and stop swooping
             o->oSwoopTargetYaw = angleToPlayer;
-            if (o->oPosY < player->oPosY + 200.0f) {
+            if (player && o->oPosY < player->oPosY + 200.0f) {
                 if (obj_y_vel_approach(0.0f, 0.5f)) {
                     o->oForwardVel *= 2.0f;
                 }

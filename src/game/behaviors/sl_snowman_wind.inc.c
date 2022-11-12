@@ -14,8 +14,8 @@ void bhv_sl_snowman_wind_loop(void) {
     }
 
     struct Object *player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s16 marioAngleFromWindSource;
     Vec3f tempPos;
@@ -36,13 +36,13 @@ void bhv_sl_snowman_wind_loop(void) {
         
     // Mario has come close, begin dialog.
     } else if (o->oSubAction == SL_SNOWMAN_WIND_ACT_TALKING) {
-        if (cur_obj_update_dialog(&gMarioStates[0], 2, 2, gBehaviorValues.dialogs.SnowmanWindDialog, 0, bhv_sl_snowman_wind_loop_continue_dialog)) {
+        if (gMarioStates[0].visibleToEnemies && cur_obj_update_dialog(&gMarioStates[0], 2, 2, gBehaviorValues.dialogs.SnowmanWindDialog, 0, bhv_sl_snowman_wind_loop_continue_dialog)) {
             o->oSubAction++;
             network_send_object(o);
         }
         
     // Blowing, spawn wind particles (SL_SNOWMAN_WIND_ACT_BLOWING)
-    } else if (distanceToPlayer < 1500.0f && absf(player->oPosY - o->oHomeY) < 500.0f) {
+    } else if (distanceToPlayer < 1500.0f && player && absf(player->oPosY - o->oHomeY) < 500.0f) {
         // Point towards Mario, but only within 0x1500 angle units of the original angle.
         if ((marioAngleFromWindSource = angleToPlayer - o->oSLSnowmanWindOriginalYaw) > 0) {
             if (marioAngleFromWindSource < 0x1500)

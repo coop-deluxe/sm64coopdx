@@ -44,7 +44,7 @@ void bhv_snow_mound_spawn_loop(void) {
     }
 
     if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)
-        || o->oPosY + 1000.0f < player->header.gfx.pos[1])
+        || (player && (o->oPosY + 1000.0f < player->header.gfx.pos[1])))
         return;
 
     if (o->oTimer == 64 || o->oTimer == 128 || o->oTimer == 192 || o->oTimer == 224 || o->oTimer == 256) {

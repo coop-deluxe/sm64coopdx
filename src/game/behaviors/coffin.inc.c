@@ -94,11 +94,16 @@ void coffin_act_idle(void) {
             yawSin = sins(o->oFaceAngleYaw);
 
             struct MarioState* marioState = nearest_mario_state_to_object(o);
-            struct Object* player = marioState->marioObj;
-            s32 distanceToPlayer = dist_between_objects(o, player);
+            struct Object* player = marioState ? marioState->marioObj : NULL;
+            s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
-            dx = player->oPosX - o->oPosX;
-            dz = player->oPosZ - o->oPosZ;
+            if (player) {
+                dx = player->oPosX - o->oPosX;
+                dz = player->oPosZ - o->oPosZ;
+            } else {
+                dx = 10000;
+                dz = 10000;
+            }
 
             distForwards = dx * yawCos + dz * yawSin;
             distSideways = dz * yawCos - dx * yawSin;
@@ -106,8 +111,8 @@ void coffin_act_idle(void) {
             // This checks a box around the coffin and if it has been a bit since it stood up.
             // It also checks in the case Mario is squished, so he doesn't get permanently squished.
             if (o->oTimer > 60
-                && (distanceToPlayer > 100.0f || marioState->action == ACT_SQUISHED)) {
-                if (player->oPosY - o->oPosY < 200.0f && absf(distForwards) < 140.0f) {
+                && (distanceToPlayer > 100.0f || (marioState && marioState->action == ACT_SQUISHED))) {
+                if ((player && player->oPosY - o->oPosY < 200.0f) && absf(distForwards) < 140.0f) {
                     if (distSideways < 150.0f && distSideways > -450.0f) {
                         cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2_LOWPRIO);
                         o->oAction = COFFIN_ACT_STAND_UP;

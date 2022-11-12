@@ -1693,6 +1693,7 @@ f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj) {
 
 f32 cur_obj_lateral_dist_from_mario_to_home(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return 10000; }
     f32 dist;
     f32 dx = o->oHomeX - player->oPosX;
     f32 dz = o->oHomeZ - player->oPosZ;
@@ -2628,6 +2629,10 @@ s32 cur_obj_mario_far_away(void) {
 
 s32 is_mario_moving_fast_or_in_air(s32 speedThreshold) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) {
+        return FALSE;
+    }
+
     if (marioState->forwardVel > speedThreshold) {
         return TRUE;
     }
@@ -2830,6 +2835,7 @@ void clear_time_stop_flags(s32 flags) {
 }
 
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
+    if (!m->visibleToEnemies) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
         f32 latDistToMario = lateral_dist_between_objects(o, m->marioObj);
         UNUSED s16 angleFromMario = obj_angle_to_object(m->marioObj, o);
@@ -2944,6 +2950,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
     s32 doneTurning = TRUE;
 
     if (m->playerIndex != 0) { return 0; }
+    if (!m->visibleToEnemies) { return FALSE; }
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP

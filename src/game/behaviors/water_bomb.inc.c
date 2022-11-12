@@ -46,6 +46,7 @@ void bhv_water_bomb_spawner_update(void) {
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (!gMarioStates[0].visibleToEnemies) { continue; }
         f32 latDist = lateral_dist_between_objects(o, gMarioStates[i].marioObj);
         if (latDist < latDistToMario) {
             latDistToMario = latDist;
@@ -165,7 +166,7 @@ static void water_bomb_act_drop(void) {
 
             // Move toward mario
             struct Object* player = nearest_player_to_object(o);
-            s32 angleToPlayer = obj_angle_to_object(o, player);
+            s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
             o->oMoveAngleYaw = angleToPlayer;
             o->oForwardVel = 10.0f;
             o->oWaterBombStretchSpeed = -40.0f;

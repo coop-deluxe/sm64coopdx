@@ -132,8 +132,8 @@ void mr_i_act_3(void) {
 
 void mr_i_act_2(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s16 sp1E;
     s16 sp1C;
     sp1E = o->oMoveAngleYaw;
@@ -146,8 +146,10 @@ void mr_i_act_2(void) {
         o->oMrIUnk100 = 0;
         o->oMrIUnk104 = 0;
     }
-    obj_turn_toward_object(o, player, 0x10, 0x800);
-    obj_turn_toward_object(o, player, 0x0F, 0x400);
+    if (player) {
+        obj_turn_toward_object(o, player, 0x10, 0x800);
+        obj_turn_toward_object(o, player, 0x0F, 0x400);
+    }
     sp1C = sp1E - (s16)(o->oMoveAngleYaw);
     if (!sp1C) {
         o->oMrIUnkFC = 0;
@@ -178,7 +180,7 @@ void mr_i_act_2(void) {
         if (o->oMrIUnk104 == o->oMrIUnk108)
             o->oMrIUnk110 = 1;
         if (o->oMrIUnk104 == o->oMrIUnk108 + 20) {
-            if (marioState->playerIndex == 0) {
+            if (marioState && marioState->playerIndex == 0) {
                 spawn_mr_i_particle();
             }
             o->oMrIUnk104 = 0;
@@ -195,14 +197,14 @@ void mr_i_act_2(void) {
 
 void mr_i_act_1(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s16 sp1E;
     s16 sp1C;
     s16 sp1A;
-    sp1E = obj_angle_to_object(o, player);
-    sp1C = abs_angle_diff(o->oMoveAngleYaw, sp1E);
-    sp1A = abs_angle_diff(o->oMoveAngleYaw, player->oFaceAngleYaw);
+    sp1E = player ? obj_angle_to_object(o, player) : 0;
+    sp1C = player ? abs_angle_diff(o->oMoveAngleYaw, sp1E) : 0;
+    sp1A = player ? abs_angle_diff(o->oMoveAngleYaw, player->oFaceAngleYaw) : 0;
     if (o->oTimer == 0) {
         cur_obj_become_tangible();
         o->oMoveAnglePitch = 0;
@@ -215,7 +217,7 @@ void mr_i_act_1(void) {
     }
     if (sp1C < 1024 && sp1A > 0x4000) {
         if (distanceToPlayer < 700.0f) {
-            if (marioState->playerIndex == 0) {
+            if (marioState && marioState->playerIndex == 0) {
                 o->oAction = 2;
                 network_send_object(o);
             }
@@ -231,7 +233,7 @@ void mr_i_act_1(void) {
     if (o->oMrIUnk108 + 80 < o->oMrIUnk104) {
         o->oMrIUnk104 = 0;
         o->oMrIUnk108 = random_float() * 80.0f;
-        if (marioState->playerIndex == 0) {
+        if (marioState && marioState->playerIndex == 0) {
             spawn_mr_i_particle();
         }
     }
@@ -239,7 +241,7 @@ void mr_i_act_1(void) {
 
 void mr_i_act_0(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
 #ifndef VERSION_JP
     obj_set_angle(o, 0, 0, 0);
@@ -278,7 +280,7 @@ void bhv_mr_i_loop(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     obj_set_hitbox(o, &sMrIHitbox);
     cur_obj_call_action_function(sMrIActions);

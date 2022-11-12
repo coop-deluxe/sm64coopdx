@@ -84,6 +84,7 @@ void bhv_racing_penguin_init(void) {
 
 static void racing_penguin_act_wait_for_mario(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     if (o->oTimer > o->oRacingPenguinInitTextCooldown && o->oPosY - player->oPosY <= 0.0f
         && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
         o->oAction = RACING_PENGUIN_ACT_SHOW_INIT_TEXT;
@@ -93,6 +94,7 @@ static void racing_penguin_act_wait_for_mario(void) {
 u8 racing_penguin_act_show_init_text_continue_dialog(void) { return o->oAction == RACING_PENGUIN_ACT_SHOW_INIT_TEXT; }
 
 static void racing_penguin_act_show_init_text(void) {
+    if (!gMarioStates[0].visibleToEnemies) { return; }
     s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], *sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
 
     if (response == 1) {
@@ -152,7 +154,7 @@ static void racing_penguin_act_race(void) {
         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
     } else {
         struct Object* player = nearest_player_to_object(o);
-        targetSpeed = o->oPosY - player->oPosY;
+        targetSpeed = player ? (o->oPosY - player->oPosY) : o->oPosY;
         minSpeed = 70.0f;
 
         cur_obj_play_sound_1(SOUND_AIR_ROUGH_SLIDE);
@@ -292,10 +294,10 @@ void bhv_racing_penguin_update(void) {
 
 void bhv_penguin_race_finish_line_update(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->parentObj->oRacingPenguinReachedBottom
-        || (distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f)) {
+        || (player && distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f)) {
         if (!o->parentObj->oRacingPenguinReachedBottom && !o->parentObj->oRacingPenguinMarioWon) {
             o->parentObj->oRacingPenguinMarioWon = TRUE;
             network_send_object(o->parentObj);
@@ -305,7 +307,7 @@ void bhv_penguin_race_finish_line_update(void) {
 
 void bhv_penguin_race_shortcut_check_update(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer < 500.0f && !o->parentObj->oRacingPenguinMarioCheated) {
         o->parentObj->oRacingPenguinMarioCheated = TRUE;
         network_send_object(o->parentObj);

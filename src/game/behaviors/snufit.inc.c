@@ -72,7 +72,7 @@ Gfx *geo_snufit_scale_body(s32 callContext, struct GraphNode *node, UNUSED Mat4 
  */
 void snufit_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 marioDist;
 
     // This line would could cause a crash in certain PU situations,
@@ -147,9 +147,9 @@ void bhv_snufit_loop(void) {
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     // Only update if Mario is in the current room.
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
@@ -157,7 +157,9 @@ void bhv_snufit_loop(void) {
         
         // Face Mario if he is within range.
         if (distanceToPlayer < 800.0f) {
-            obj_turn_pitch_toward_mario(marioState, 120.0f, 2000);
+            if (marioState) {
+                obj_turn_pitch_toward_mario(marioState, 120.0f, 2000);
+            }
 
             if ((s16) o->oMoveAnglePitch > 0x2000) {
                 o->oMoveAnglePitch = 0x2000;

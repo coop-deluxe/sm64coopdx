@@ -38,7 +38,7 @@ void bhv_scuttlebug_loop(void) {
     }
 
     struct Object *player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_update_floor_and_walls();
     if (o->oSubAction != 0
@@ -60,12 +60,14 @@ void bhv_scuttlebug_loop(void) {
             break;
         case 1:
             o->oForwardVel = 5.0f;
-            if (cur_obj_lateral_dist_from_obj_to_home(player) > 1000.0f) {
+            if (player && cur_obj_lateral_dist_from_obj_to_home(player) > 1000.0f) {
                 angleToPlayer = cur_obj_angle_to_home();
             } else {
                 if (o->oScuttlebugUnkF8 == 0) {
                     o->oScuttlebugUnkFC = 0;
-                    angleToPlayer = obj_angle_to_object(o, player);
+                    if (player) {
+                        angleToPlayer = obj_angle_to_object(o, player);
+                    }
                     if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x800) {
                         o->oScuttlebugUnkF8 = 1;
                         o->oVelY = 20.0f;
@@ -147,10 +149,10 @@ void bhv_scuttlebug_spawn_loop(void) {
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState->playerIndex != 0) { return; }
+    if (marioState && marioState->playerIndex != 0) { return; }
 
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oAction == 0) {
         if (o->oTimer > 30 && 500.0f < distanceToPlayer && distanceToPlayer < 1500.0f) {

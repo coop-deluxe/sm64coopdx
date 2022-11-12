@@ -887,7 +887,7 @@
 | SKIN | 5 |
 | CAP | 6 |
 | PLAYER_PART_MAX | 7 |
-| METAL | 6 |
+| METAL | CAP |
 
 [:arrow_up_small:](#)
 

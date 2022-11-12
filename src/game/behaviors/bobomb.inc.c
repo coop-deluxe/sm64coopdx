@@ -54,7 +54,9 @@ void bobomb_check_interactions(void) {
         if ((o->oInteractStatus & INT_STATUS_MARIO_UNK1) != 0)
         {
             struct Object* player = nearest_player_to_object(o);
-            o->oMoveAngleYaw = player->header.gfx.angle[1];
+            if (player) {
+                o->oMoveAngleYaw = player->header.gfx.angle[1];
+            }
             o->oForwardVel = 25.0;
             o->oVelY = 30.0;
             o->oAction = BOBOMB_ACT_LAUNCHED;
@@ -80,7 +82,8 @@ void bobomb_act_patrol(void) {
 
     collisionFlags = object_step();
     struct Object* player = nearest_player_to_object(o);
-    if ((obj_return_home_if_safe(o, o->oHomeX, o->oHomeY, o->oHomeZ, 400) == 1)
+    if (player
+        && (obj_return_home_if_safe(o, o->oHomeX, o->oHomeY, o->oHomeZ, 400) == 1)
         && (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, obj_angle_to_object(o, player), 0x2000) == TRUE)) {
         o->oBobombFuseLit = 1;
         o->oAction = BOBOMB_ACT_CHASE_MARIO;
@@ -101,7 +104,9 @@ void bobomb_act_chase_mario(void) {
         cur_obj_play_sound_2(SOUND_OBJ_BOBOMB_WALK);
 
     struct Object* player = nearest_player_to_object(o);
-    obj_turn_toward_object(o, player, 16, 0x800);
+    if (player) {
+        obj_turn_toward_object(o, player, 16, 0x800);
+    }
     obj_check_floor_death(collisionFlags, sObjFloor);
 }
 
@@ -314,7 +319,7 @@ void bobomb_buddy_act_idle(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    if (dist_between_objects(o, player) < 1000.0f) {
+    if (player && dist_between_objects(o, player) < 1000.0f) {
         o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, obj_angle_to_object(o, player), 0x140);
     }
 
@@ -421,7 +426,7 @@ void bobomb_buddy_act_turn_to_talk(void) {
     }
 
     struct Object *player = nearest_interacting_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToPlayer, 0x1000);
     if ((s16) o->oMoveAngleYaw == (s16) angleToPlayer) {
         o->oAction = BOBOMB_BUDDY_ACT_TALK;

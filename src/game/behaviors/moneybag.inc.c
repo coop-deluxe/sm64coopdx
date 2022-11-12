@@ -41,7 +41,7 @@ void bhv_moneybag_init(void) {
 
 void moneybag_check_mario_collision(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     obj_set_hitbox(o, &sMoneybagHitbox);
 

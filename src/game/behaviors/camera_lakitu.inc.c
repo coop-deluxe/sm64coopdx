@@ -67,6 +67,7 @@ static u8 camera_lakitu_intro_act_trigger_cutscene_continue_dialog(void) {
  */
 static void camera_lakitu_intro_act_trigger_cutscene(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
     struct Object* player = marioState->marioObj;
 
     //! These bounds are slightly smaller than the actual bridge bounds, allowing
@@ -88,7 +89,7 @@ static u8 camera_lakitu_intro_act_spawn_cloud_continue_dialog(void) {
  */
 static void camera_lakitu_intro_act_spawn_cloud(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_spawn_cloud_continue_dialog) == 2) {
+    if (marioState && should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_spawn_cloud_continue_dialog) == 2) {
         o->oAction = CAMERA_LAKITU_INTRO_ACT_UNK2;
 
         o->oPosX = 1800.0f;
@@ -113,9 +114,9 @@ static void camera_lakitu_intro_act_show_dialog(void) {
     if (lakituTargetLocalIndex != UNKNOWN_LOCAL_INDEX) {
         marioState = &gMarioStates[lakituTargetLocalIndex];
     }
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s16 targetMovePitch = 0;
     s16 targetMoveYaw = 0;
@@ -123,7 +124,9 @@ static void camera_lakitu_intro_act_show_dialog(void) {
     cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY);
 
     // Face toward mario
-    o->oFaceAnglePitch = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+    if (marioState) {
+        o->oFaceAnglePitch = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+    }
     o->oFaceAngleYaw = angleToPlayer;
 
     // After finishing dialog, fly away and despawn
@@ -142,7 +145,7 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                 targetMoveYaw = angleToPlayer;
             } else {
                 if (lakituTargetLocalIndex == UNKNOWN_LOCAL_INDEX) {
-                    if (marioState->playerIndex == 0) {
+                    if (marioState && marioState->playerIndex == 0) {
                         lakituTargetLocalIndex = 0;
                     } else {
                         goto afterChase;
@@ -171,6 +174,7 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                     // Once within 1000 units, slow down
                     approach_f32_ptr(&o->oCameraLakituSpeed, 20.0f, 1.0f);
                     if (distanceToPlayer < 500.0f
+                        && player
                         && abs_angle_diff(player->oFaceAngleYaw, o->oFaceAngleYaw) > 0x7000) {
                         // Once within 500 units and facing toward mario, come
                         // to a stop
@@ -178,7 +182,7 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                     }
                 }
             }
-        } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.LakituIntroDialog, camera_lakitu_intro_act_show_dialog_continue_dialog) != 0) {
+        } else if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.LakituIntroDialog, camera_lakitu_intro_act_show_dialog_continue_dialog) != 0) {
             o->oCameraLakituFinishedDialog = TRUE;
         }
     }

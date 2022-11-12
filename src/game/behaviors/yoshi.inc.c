@@ -91,8 +91,8 @@ void yoshi_idle_loop(void) {
 
 void yoshi_talk_loop(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (marioState != &gMarioStates[0]) {
         return;

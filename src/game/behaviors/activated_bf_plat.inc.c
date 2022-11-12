@@ -79,8 +79,9 @@ void bhv_activated_back_and_forth_platform_update(void) {
     u8 doSendNetwork = FALSE;
     UNUSED s32 unused[3];
 
-    struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     // oVelY is used for vertical platforms' movement and also for
     // horizontal platforms' dipping up/down when Mario gets on/off them

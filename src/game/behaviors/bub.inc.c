@@ -48,6 +48,7 @@ void bub_act_0(void) {
 
 void bub_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
     f32 dy;
@@ -80,6 +81,7 @@ void bub_act_1(void) {
 
 void bub_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
     f32 dy;
@@ -129,7 +131,9 @@ void bhv_bub_loop(void) {
     struct Object* player = nearest_player_to_object(o);
 
     o->oCheepCheepUnkF4 = find_water_level(o->oPosX, o->oPosZ);
-    o->oCheepCheepUnkF8 = player->oPosY + o->oCheepCheepUnkFC;
+    if (player) {
+        o->oCheepCheepUnkF8 = player->oPosY + o->oCheepCheepUnkFC;
+    }
     o->oWallHitboxRadius = 30.0f;
     cur_obj_update_floor_and_walls();
     cur_obj_call_action_function(sCheepCheepActions);

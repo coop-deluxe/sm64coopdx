@@ -211,9 +211,9 @@ void wiggler_update_segments(void) {
  */
 static void wiggler_act_walk(void) {
     struct MarioState *marioState = nearest_mario_state_to_object(o);
-    struct Object *player = marioState->marioObj;
-    s32 distanceToPlayer = o->oDistanceToMario;
-    s32 angleToPlayer = o->oAngleToMario;
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     o->oWigglerWalkAnimSpeed = 0.06f * o->oForwardVel;
 
@@ -226,7 +226,7 @@ static void wiggler_act_walk(void) {
 
         // If Mario is positioned below the wiggler, assume he entered through the
         // lower cave entrance, so don't display text.
-        if (player->oPosY < o->oPosY || (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.WigglerDialog, wiggler_act_walk_continue_dialog) != 0)) {
+        if ((player && player->oPosY < o->oPosY) || (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.WigglerDialog, wiggler_act_walk_continue_dialog) != 0)) {
             o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
             network_send_object_reliability(o, TRUE);
         }
@@ -314,7 +314,7 @@ static void wiggler_act_jumped_on(void) {
     s16 dialogIndex = (o->oHealth - 2);
     if (o->header.gfx.scale[1] >= 4.0f) {
         if (o->oTimer > 30) {
-            if ((dialogIndex >= 0 && dialogIndex <= 2) && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, *attackText[dialogIndex], wiggler_act_jumped_on_continue_dialog) != 0) {
+            if ((dialogIndex >= 0 && dialogIndex <= 2) && marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, *attackText[dialogIndex], wiggler_act_jumped_on_continue_dialog) != 0) {
                 // Because we don't want the wiggler to disappear after being
                 // defeated, we leave its health at 1
                 if (--o->oHealth <= 1) {
@@ -472,8 +472,8 @@ void bhv_wiggler_update(void) {
     }
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     o->oDistanceToMario = distanceToPlayer;
     o->oAngleToMario = angleToPlayer;
 

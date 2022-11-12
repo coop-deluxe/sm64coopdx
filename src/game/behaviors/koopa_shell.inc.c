@@ -70,7 +70,9 @@ void bhv_koopa_shell_loop(void) {
             cur_obj_if_hit_wall_bounce_away();
             if (o->oInteractStatus & INT_STATUS_INTERACTED) {
                 o->oAction++;
-                o->heldByPlayerIndex = marioState->playerIndex;
+                if (marioState) {
+                    o->heldByPlayerIndex = marioState->playerIndex;
+                }
             }
             o->oFaceAngleYaw += 0x1000;
             cur_obj_move_standard(-20);
@@ -78,7 +80,9 @@ void bhv_koopa_shell_loop(void) {
             break;
         case 1:
             player = gMarioStates[o->heldByPlayerIndex].marioObj;
-            obj_copy_pos(o, player);
+            if (player) {
+                obj_copy_pos(o, player);
+            }
             sp34 = cur_obj_update_floor_height_and_get_floor();
             if (absf(find_water_level(o->oPosX, o->oPosZ) - o->oPosY) < 10.0f)
                 koopa_shell_spawn_water_drop();
@@ -89,7 +93,9 @@ void bhv_koopa_shell_loop(void) {
                     koopa_shell_spawn_sparkles(10.0f);
             } else
                 koopa_shell_spawn_sparkles(10.0f);
-            o->oFaceAngleYaw = player->oMoveAngleYaw;
+            if (player) {
+                o->oFaceAngleYaw = player->oMoveAngleYaw;
+            }
             if (o->oInteractStatus & INT_STATUS_STOP_RIDING) {
                 o->heldByPlayerIndex = 0;
                 obj_mark_for_deletion(o);

@@ -37,7 +37,7 @@ struct ObjectHitbox sBookSwitchHitbox = {
 
 void flying_bookend_act_0(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (obj_is_near_to_and_facing_mario(marioState, 400.0f, 0x3000)) {
+    if (marioState && obj_is_near_to_and_facing_mario(marioState, 400.0f, 0x3000)) {
         cur_obj_play_sound_2(SOUND_OBJ_DEFAULT_DEATH);
         o->oAction = 1;
         o->oBookendUnkF4 = o->oFaceAnglePitch + 0x7FFF;
@@ -70,14 +70,16 @@ void flying_bookend_act_1(void) {
 
 void flying_bookend_act_2(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_init_animation_with_sound(1);
     cur_obj_update_floor_and_walls();
 
     if (o->oForwardVel == 0.0f) {
-        obj_turn_pitch_toward_mario(marioState, 120.0f, 1000);
+        if (marioState) {
+            obj_turn_pitch_toward_mario(marioState, 120.0f, 1000);
+        }
         o->oFaceAnglePitch = o->oMoveAnglePitch + 0x7FFF;
         cur_obj_rotate_yaw_toward(angleToPlayer, 1000);
 
@@ -136,12 +138,12 @@ void bhv_bookend_spawn_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) { sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS); }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState->playerIndex != 0) { return; }
+    if (marioState && marioState->playerIndex != 0) { return; }
 
     struct Object* book;
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
-        if (o->oTimer > 40 && obj_is_near_to_and_facing_mario(marioState, 600.0f, 0x2000)) {
+        if (o->oTimer > 40 && marioState && obj_is_near_to_and_facing_mario(marioState, 600.0f, 0x2000)) {
             book = spawn_object(o, MODEL_BOOKEND, bhvFlyingBookend);
             if (book != NULL) {
                 book->oAction = 3;
@@ -177,7 +179,7 @@ void bookshelf_manager_act_1(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (o->oBookSwitchManagerUnkF8 == 0) {
-        if (so && so->owned && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
+        if (so && so->owned && marioState && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
             o->oBookSwitchManagerUnkF8 = 1;
             network_send_object(o);
         }
@@ -328,8 +330,8 @@ void bhv_book_switch_loop(void) {
     s16 sp34;
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     struct SyncObject* so = sync_object_get(o->oSyncID);
 
     o->header.gfx.scale[0] = 2.0f;
@@ -379,7 +381,7 @@ void bhv_book_switch_loop(void) {
                         }
                     } else {
                         sp36 = random_u16() & 0x1;
-                        sp34 = player->oPosZ + 1.5f * marioState->vel[2];
+                        sp34 = (marioState && player) ? player->oPosZ + 1.5f * marioState->vel[2] : 0;
 
                         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
                         if (sp34 > 0) {

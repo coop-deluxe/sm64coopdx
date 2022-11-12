@@ -19,7 +19,7 @@ void opened_cannon_act_0(void) {
     cur_obj_enable_rendering();
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (distanceToPlayer < 500.0f) {
         //cur_obj_become_tangible();

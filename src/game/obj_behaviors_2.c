@@ -383,6 +383,7 @@ s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
 }
 
 s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 turnAmount) {
+    if (!m) { return 0; }
     s16 targetPitch;
 
     o->oPosY -= targetOffsetY;
@@ -673,7 +674,9 @@ void obj_set_knockback_action(s32 attackType) {
     o->oFlags &= ~OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW;
 
     struct Object* player = nearest_player_to_object(o);
-    o->oMoveAngleYaw = obj_angle_to_object(player, o);
+    if (player) {
+        o->oMoveAngleYaw = obj_angle_to_object(player, o);
+    }
 }
 
 void obj_set_squished_action(void) {
@@ -900,12 +903,19 @@ void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToP
         }
     } else {
         struct Object* player = nearest_player_to_object(o);
-        dx = o->oHomeX - player->oPosX;
-        dy = o->oHomeY - player->oPosY;
-        dz = o->oHomeZ - player->oPosZ;
-        distance = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (player) {
+            dx = o->oHomeX - player->oPosX;
+            dy = o->oHomeY - player->oPosY;
+            dz = o->oHomeZ - player->oPosZ;
+            distance = sqrtf(dx * dx + dy * dy + dz * dz);
 
-        if (distance > threshold) {
+            if (distance > threshold) {
+                o->oDistanceToMario = 20000.0f;
+                if (distanceToPlayer != NULL) {
+                    *distanceToPlayer = o->oDistanceToMario;
+                }
+            }
+        } else {
             o->oDistanceToMario = 20000.0f;
             if (distanceToPlayer != NULL) {
                 *distanceToPlayer = o->oDistanceToMario;

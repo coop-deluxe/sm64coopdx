@@ -14,8 +14,8 @@ static struct ObjectHitbox sBubbaHitbox = {
 
 void bubba_act_0(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     f32 sp24;
 
@@ -54,9 +54,9 @@ void bubba_act_0(void) {
 
 void bubba_act_1(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     treat_far_home_as_mario(2500.0f, &distanceToPlayer, &angleToPlayer);
 
@@ -83,7 +83,7 @@ void bubba_act_1(void) {
             obj_move_pitch_approach(o->oBubbaUnk1AC, 400);
         }
     } else {
-        if (abs_angle_diff(player->oFaceAngleYaw, angleToPlayer) < 0x3000) {
+        if (player && abs_angle_diff(player->oFaceAngleYaw, angleToPlayer) < 0x3000) {
             s16 val04 = 0x4000 - atan2s(800.0f, distanceToPlayer - 800.0f);
             if ((s16)(o->oMoveAngleYaw - angleToPlayer) < 0) {
                 val04 = -val04;
@@ -125,14 +125,16 @@ void bhv_bubba_loop(void) {
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     UNUSED s32 unused;
 
     o->oInteractionSubtype &= ~INT_SUBTYPE_EATS_MARIO;
-    o->oBubbaUnk104 = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+    if (marioState) {
+        o->oBubbaUnk104 = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+    }
 
     if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) < 0x1000
         && abs_angle_diff(o->oBubbaUnk104 + 0x800, o->oMoveAnglePitch) < 0x2000) {

@@ -7702,6 +7702,29 @@
 
 <br />
 
+## [is_point_within_radius_of_any_player](#is_point_within_radius_of_any_player)
+
+### Lua Example
+`local integerValue = is_point_within_radius_of_any_player(x, y, z, dist)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| dist | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
 
 ### Lua Example
@@ -7800,6 +7823,26 @@
 
 ### C Prototype
 `struct Object* nearest_player_to_object(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [nearest_possible_mario_state_to_object](#nearest_possible_mario_state_to_object)
+
+### Lua Example
+`local MarioStateValue = nearest_possible_mario_state_to_object(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+[MarioState](structs.md#MarioState)
+
+### C Prototype
+`struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj);`
 
 [:arrow_up_small:](#)
 

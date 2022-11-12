@@ -367,6 +367,7 @@ s32 mario_ready_to_speak(struct MarioState* m) {
 }
 
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
+    if (!m->visibleToEnemies) { return FALSE; }
     if (m->playerIndex == 0) { return TRUE; }
     return (gContinueDialogFunctionObject == object);
 }

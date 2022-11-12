@@ -125,8 +125,8 @@ void idle_ukiki_taunt(void) {
  */
 void ukiki_act_idle(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     idle_ukiki_taunt();
 
@@ -147,7 +147,7 @@ void ukiki_act_idle(void) {
     }
 
     // Jump away from Mario after stealing his cap.
-    if (o->oUkikiTextState == UKIKI_TEXT_STOLE_CAP) {
+    if (player && o->oUkikiTextState == UKIKI_TEXT_STOLE_CAP) {
         o->oMoveAngleYaw = player->oMoveAngleYaw + 0x8000;
 
         if (check_if_moving_over_floor(50.0f, 150.0f)) {
@@ -213,7 +213,7 @@ void ukiki_act_wait_to_respawn(void) {
  */
 void ukiki_act_unused_turn(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     idle_ukiki_taunt();
 
     if (o->oSubAction == UKIKI_SUB_ACT_TAUNT_JUMP_CLAP) {
@@ -226,8 +226,8 @@ void ukiki_act_unused_turn(void) {
  */
 void ukiki_act_turn_to_mario(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     s32 facingMario;
 
     // Initialize the action with a random fVel from 2-5.
@@ -257,9 +257,9 @@ void ukiki_act_turn_to_mario(void) {
  */
 void ukiki_act_run(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s32 fleeMario = TRUE;
     s16 goalYaw = angleToPlayer + 0x8000;
@@ -278,7 +278,9 @@ void ukiki_act_run(void) {
 
     //! @bug (Ukikispeedia) This function sets forward speed to 0.9 * Mario's
     //! forward speed, which means ukiki can move at hyperspeed rates.
-    cur_obj_set_vel_from_mario_vel(marioState, 20.0f, 0.9f);
+    if (marioState) {
+        cur_obj_set_vel_from_mario_vel(marioState, 20.0f, 0.9f);
+    }
 
     if (fleeMario) {
         if (distanceToPlayer > o->oUkikiChaseFleeRange) {
@@ -357,8 +359,8 @@ u8 ukiki_act_go_to_cage_continue_dialog(void) { return o->oAction == UKIKI_ACT_G
  */
 void ukiki_act_go_to_cage(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     struct Object* obj;
     f32 latDistToCage = 0.0f;
@@ -405,7 +407,7 @@ void ukiki_act_go_to_cage(void) {
         case UKIKI_SUB_ACT_CAGE_TALK_TO_MARIO:
             cur_obj_init_animation_with_sound(UKIKI_ANIM_HANDSTAND);
 
-            if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 3, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.UkikiCageDialog, ukiki_act_go_to_cage_continue_dialog)) {
+            if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 3, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.UkikiCageDialog, ukiki_act_go_to_cage_continue_dialog)) {
                 o->oSubAction++;
                 network_send_object_reliability(o, TRUE);
             }

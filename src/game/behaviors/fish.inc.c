@@ -103,10 +103,10 @@ static void fish_vertical_roam(s32 speed) {
  */
 static void fish_act_roam(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    f32 fishY = o->oPosY - player->oPosY;
+    f32 fishY = player ? (o->oPosY - player->oPosY) : 0;
     
     // Alters speed of animation for natural movement.
     if (o->oTimer < 10) {
@@ -126,7 +126,9 @@ static void fish_act_roam(void) {
         o->oFishRoamDistance = random_float() * 500 + 200.0f;
     }
 
-    o->oFishGoalY = player->oPosY + o->oFishHeightOffset;
+    o->oFishGoalY = player
+                  ? (player->oPosY + o->oFishHeightOffset)
+                  : o->oFishHeightOffset;
     
     // If fish groups are too close, call fish_regroup()
     // Rotate the fish towards Mario.
@@ -161,12 +163,14 @@ static void fish_act_roam(void) {
  */
 static void fish_act_flee(void)  {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    f32 fishY = o->oPosY - gMarioObject->oPosY;
+    f32 fishY = player ? (o->oPosY - player->oPosY) : 0;
     UNUSED s32 distance;
-    o->oFishGoalY = gMarioObject->oPosY + o->oFishHeightOffset;
+    o->oFishGoalY = player
+                  ? (player->oPosY + o->oFishHeightOffset)
+                  : o->oFishHeightOffset;
 
     // Initialize some variables when the flee action first starts.
     if (o->oTimer == 0) {
@@ -193,7 +197,9 @@ static void fish_act_flee(void)  {
     if (o->oForwardVel < o->oFishGoalVel) {
         o->oForwardVel = o->oForwardVel + 0.5;
     }
-    o->oFishGoalY = player->oPosY + o->oFishHeightOffset;
+    o->oFishGoalY = player
+                  ? (player->oPosY + o->oFishHeightOffset)
+                  : o->oFishHeightOffset;
 
     // Rotate fish away from Mario.
     cur_obj_rotate_yaw_toward(angleToPlayer + 0x8000, o->oFishYawVel);

@@ -12138,6 +12138,24 @@ int smlua_func_is_point_close_to_object(lua_State* L) {
     return 1;
 }
 
+int smlua_func_is_point_within_radius_of_any_player(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'is_point_within_radius_of_any_player'"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 2 for function 'is_point_within_radius_of_any_player'"); return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 3 for function 'is_point_within_radius_of_any_player'"); return 0; }
+    s32 dist = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 4 for function 'is_point_within_radius_of_any_player'"); return 0; }
+
+    extern s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist);
+    lua_pushinteger(L, is_point_within_radius_of_any_player(x, y, z, dist));
+
+    return 1;
+}
+
 int smlua_func_is_point_within_radius_of_mario(lua_State* L) {
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -12200,6 +12218,18 @@ int smlua_func_nearest_player_to_object(lua_State* L) {
 
     extern struct Object* nearest_player_to_object(struct Object *obj);
     smlua_push_object(L, LOT_OBJECT, nearest_player_to_object(obj));
+
+    return 1;
+}
+
+int smlua_func_nearest_possible_mario_state_to_object(lua_State* L) {
+    if(!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function 'nearest_possible_mario_state_to_object'"); return 0; }
+
+    extern struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj);
+    smlua_push_object(L, LOT_MARIOSTATE, nearest_possible_mario_state_to_object(obj));
 
     return 1;
 }
@@ -19317,11 +19347,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "is_player_active", smlua_func_is_player_active);
     smlua_bind_function(L, "is_player_in_local_area", smlua_func_is_player_in_local_area);
     smlua_bind_function(L, "is_point_close_to_object", smlua_func_is_point_close_to_object);
+    smlua_bind_function(L, "is_point_within_radius_of_any_player", smlua_func_is_point_within_radius_of_any_player);
     smlua_bind_function(L, "is_point_within_radius_of_mario", smlua_func_is_point_within_radius_of_mario);
     smlua_bind_function(L, "nearest_interacting_mario_state_to_object", smlua_func_nearest_interacting_mario_state_to_object);
     smlua_bind_function(L, "nearest_interacting_player_to_object", smlua_func_nearest_interacting_player_to_object);
     smlua_bind_function(L, "nearest_mario_state_to_object", smlua_func_nearest_mario_state_to_object);
     smlua_bind_function(L, "nearest_player_to_object", smlua_func_nearest_player_to_object);
+    smlua_bind_function(L, "nearest_possible_mario_state_to_object", smlua_func_nearest_possible_mario_state_to_object);
     smlua_bind_function(L, "obj_check_floor_death", smlua_func_obj_check_floor_death);
     smlua_bind_function(L, "obj_check_if_facing_toward_angle", smlua_func_obj_check_if_facing_toward_angle);
     smlua_bind_function(L, "obj_find_wall", smlua_func_obj_find_wall);

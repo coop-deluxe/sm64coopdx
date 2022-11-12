@@ -39,7 +39,7 @@ void haunted_chair_act_0(void) {
     s16 val0E;
 
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->parentObj != o) {
         if (o->oHauntedChairUnk104 == 0) {
@@ -110,8 +110,8 @@ void haunted_chair_act_1(void) {
     cur_obj_update_floor_and_walls();
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (o->oTimer < 70) {
         if (o->oTimer < 50) {
@@ -127,7 +127,9 @@ void haunted_chair_act_1(void) {
         if (o->oHauntedChairUnkF4 != 0) {
             if (--o->oHauntedChairUnkF4 == 0) {
                 cur_obj_play_sound_2(SOUND_GENERAL_HAUNTED_CHAIR);
-                o->oMoveAnglePitch = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+                if (marioState) {
+                    o->oMoveAnglePitch = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
+                }
                 o->oMoveAngleYaw = angleToPlayer;
                 obj_compute_vel_from_move_pitch(50.0f);
             } else if (o->oHauntedChairUnkF4 > 20) {

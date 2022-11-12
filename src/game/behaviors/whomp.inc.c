@@ -18,8 +18,8 @@ u8 whomp_act_0_continue_dialog(void) { return o->oAction == 0; }
 
 void whomp_act_0(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState->marioObj;
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
     cur_obj_set_pos_to_home();
@@ -34,7 +34,7 @@ void whomp_act_0(void) {
                 cur_obj_set_pos_to_home();
                 o->oHealth = gBehaviorValues.KingWhompHealth;
             }
-        } else if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDialog, whomp_act_0_continue_dialog)) {
+        } else if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDialog, whomp_act_0_continue_dialog)) {
             o->oAction = 2;
             network_send_object(o);
         }
@@ -61,8 +61,8 @@ void whomp_act_7(void) {
 
 void whomp_act_1(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s16 sp26;
     f32 sp20;
@@ -90,8 +90,8 @@ void whomp_act_1(void) {
 
 void whomp_act_2(void) {
     struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
-    s32 angleToPlayer = obj_angle_to_object(o, player);
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s16 sp1E;
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
@@ -161,7 +161,9 @@ void king_whomp_on_ground(void) {
                 o->oAction = 8;
             else {
                 vec3f_copy_2(pos, &o->oPosX);
-                vec3f_copy_2(&o->oPosX, &player->oPosX);
+                if (player) {
+                    vec3f_copy_2(&o->oPosX, &player->oPosX);
+                }
                 spawn_mist_particles_variable(0, 0, 100.0f);
                 spawn_triangle_break_particles(20, 138, 3.0f, 4);
                 cur_obj_shake_screen(SHAKE_POS_SMALL);
@@ -192,7 +194,9 @@ void whomp_on_ground(void) {
                 o->oAction = 8;
             } else {
                 struct MarioState* marioState = nearest_mario_state_to_object(o);
-                cur_obj_spawn_loot_coin_at_mario_pos(marioState);
+                if (marioState) {
+                    cur_obj_spawn_loot_coin_at_mario_pos(marioState);
+                }
                 o->oSubAction++;
             }
         }
@@ -211,7 +215,7 @@ void whomp_act_6(void) {
         else
             whomp_on_ground();
         struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (o->oTimer > 100 || (marioState->action == ACT_SQUISHED && o->oTimer > 30))
+        if (o->oTimer > 100 || (marioState && marioState->action == ACT_SQUISHED && o->oTimer > 30))
             o->oSubAction = 10;
     } else {
         if (o->oFaceAnglePitch > 0) {
@@ -233,7 +237,7 @@ u8 whomp_act_8_continue_dialog(void) { return o->oAction == 8; }
 void whomp_act_8(void) {
     if (o->oBehParams2ndByte != 0) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDefeatDialog, whomp_act_8_continue_dialog)) {
+        if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDefeatDialog, whomp_act_8_continue_dialog)) {
             obj_set_angle(o, 0, 0, 0);
             cur_obj_hide();
             cur_obj_become_intangible();

@@ -123,8 +123,9 @@ void tumbling_bridge_act_1(void) {
 }
 
 void tumbling_bridge_act_2(void) {
-    struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     cur_obj_hide();
     if (cur_obj_has_behavior(bhvLllTumblingBridge))
@@ -141,8 +142,9 @@ void tumbling_bridge_act_3(void) {
 }
 
 void tumbling_bridge_act_0(void) {
-    struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = dist_between_objects(o, player);
+    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
+    struct Object* player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (cur_obj_has_behavior(bhvLllTumblingBridge) || distanceToPlayer < 1000.0f)
         o->oAction = 1;

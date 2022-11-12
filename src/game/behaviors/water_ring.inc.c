@@ -2,6 +2,7 @@
 
 f32 water_ring_calc_mario_dist(void) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return 10000; }
 
     f32 marioDistX = o->oPosX - player->header.gfx.pos[0];
     f32 marioDistY = o->oPosY - (player->header.gfx.pos[1] + 80.0f);
@@ -48,6 +49,7 @@ void bhv_jet_stream_water_ring_init(void) {
 
 void water_ring_check_collection(f32 avgScale, struct Object *ringManager) {
     struct Object* player = nearest_player_to_object(o);
+    if (!player) { return; }
     f32 marioDistInFront = water_ring_calc_mario_dist();
     struct Object *ringSpawner;
 

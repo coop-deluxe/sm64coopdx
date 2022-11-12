@@ -104,7 +104,7 @@ s16 bhv_mips_find_furthest_waypoint_to_mario(void) {
         // Is the waypoint within 800 units of MIPS?
         if (is_point_close_to_object(o, x, y, z, 800)) {
             // Is this further from Mario than the last waypoint?
-            distanceToMario = sqr(x - player->header.gfx.pos[0]) + sqr(z - player->header.gfx.pos[2]);
+            distanceToMario = player ? (sqr(x - player->header.gfx.pos[0]) + sqr(z - player->header.gfx.pos[2])) : 10000;
             if (furthestWaypointDistance < distanceToMario) {
                 furthestWaypointIndex = i;
                 furthestWaypointDistance = distanceToMario;
