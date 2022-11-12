@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [next >](functions-5.md)]
 
 
 ---
@@ -4592,6 +4592,29 @@
 
 <br />
 
+## [obj_set_face_angle](#obj_set_face_angle)
+
+### Lua Example
+`obj_set_face_angle(obj, pitch, yaw, roll)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| pitch | `integer` |
+| yaw | `integer` |
+| roll | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_set_face_angle_to_move_angle](#obj_set_face_angle_to_move_angle)
 
 ### Lua Example
@@ -4607,6 +4630,52 @@
 
 ### C Prototype
 `void obj_set_face_angle_to_move_angle(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_gfx_angle](#obj_set_gfx_angle)
+
+### Lua Example
+`obj_set_gfx_angle(obj, pitch, yaw, roll)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| pitch | `integer` |
+| yaw | `integer` |
+| roll | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_gfx_pos](#obj_set_gfx_pos)
+
+### Lua Example
+`obj_set_gfx_pos(obj, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z);`
 
 [:arrow_up_small:](#)
 
@@ -4653,6 +4722,29 @@
 
 <br />
 
+## [obj_set_gfx_scale](#obj_set_gfx_scale)
+
+### Lua Example
+`obj_set_gfx_scale(obj, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_gfx_scale(struct Object *obj, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_set_held_state](#obj_set_held_state)
 
 ### Lua Example
@@ -4690,6 +4782,73 @@
 
 ### C Prototype
 `void obj_set_hitbox(struct Object *obj, struct ObjectHitbox *hitbox);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_hitbox_radius_and_height](#obj_set_hitbox_radius_and_height)
+
+### Lua Example
+`obj_set_hitbox_radius_and_height(o, radius, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| radius | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_hurtbox_radius_and_height](#obj_set_hurtbox_radius_and_height)
+
+### Lua Example
+`obj_set_hurtbox_radius_and_height(o, radius, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| radius | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_set_move_angle](#obj_set_move_angle)
+
+### Lua Example
+`obj_set_move_angle(obj, pitch, yaw, roll)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| pitch | `integer` |
+| yaw | `integer` |
+| roll | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);`
 
 [:arrow_up_small:](#)
 
@@ -6348,6 +6507,180 @@
 <br />
 
 ---
+# functions from smlua_math_utils.h
+
+<br />
+
+
+## [clamp](#clamp)
+
+### Lua Example
+`local integerValue = clamp(a, b, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| c | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 clamp(s32 a, s32 b, s32 c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clampf](#clampf)
+
+### Lua Example
+`local numberValue = clampf(a, b, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+| c | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 clampf(f32 a, f32 b, f32 c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [max](#max)
+
+### Lua Example
+`local integerValue = max(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 max(s32 a, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [maxf](#maxf)
+
+### Lua Example
+`local numberValue = maxf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 maxf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [min](#min)
+
+### Lua Example
+`local integerValue = min(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 min(s32 a, s32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [minf](#minf)
+
+### Lua Example
+`local numberValue = minf(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 minf(f32 a, f32 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqr](#sqr)
+
+### Lua Example
+`local integerValue = sqr(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 sqr(s32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sqrf](#sqrf)
+
+### Lua Example
+`local numberValue = sqrf(x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sqrf(f32 x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_misc_utils.h
 
 <br />
@@ -7718,6 +8051,166 @@
 
 <br />
 
+## [obj_is_attackable](#obj_is_attackable)
+
+### Lua Example
+`local booleanValue = obj_is_attackable(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_attackable(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_breakable_object](#obj_is_breakable_object)
+
+### Lua Example
+`local booleanValue = obj_is_breakable_object(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_breakable_object(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_bully](#obj_is_bully)
+
+### Lua Example
+`local booleanValue = obj_is_bully(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_bully(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_coin](#obj_is_coin)
+
+### Lua Example
+`local booleanValue = obj_is_coin(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_coin(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_exclamation_box](#obj_is_exclamation_box)
+
+### Lua Example
+`local booleanValue = obj_is_exclamation_box(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_exclamation_box(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_grabbable](#obj_is_grabbable)
+
+### Lua Example
+`local booleanValue = obj_is_grabbable(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_grabbable(struct Object *o) ;`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_mushroom_1up](#obj_is_mushroom_1up)
+
+### Lua Example
+`local booleanValue = obj_is_mushroom_1up(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_mushroom_1up(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_is_secret](#obj_is_secret)
+
+### Lua Example
+`local booleanValue = obj_is_secret(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool obj_is_secret(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_is_valid_for_interaction](#obj_is_valid_for_interaction)
 
 ### Lua Example
@@ -8428,223 +8921,7 @@
 [:arrow_up_small:](#)
 
 <br />
-
----
-# functions from surface_collision.h
-
-<br />
-
-
-## [find_ceil_height](#find_ceil_height)
-
-### Lua Example
-`local numberValue = find_ceil_height(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 find_ceil_height(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_floor_height](#find_floor_height)
-
-### Lua Example
-`local numberValue = find_floor_height(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 find_floor_height(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_poison_gas_level](#find_poison_gas_level)
-
-### Lua Example
-`local numberValue = find_poison_gas_level(x, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| z | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 find_poison_gas_level(f32 x, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_wall_collisions](#find_wall_collisions)
-
-### Lua Example
-`local integerValue = find_wall_collisions(colData)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| colData | [WallCollisionData](structs.md#WallCollisionData) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 find_wall_collisions(struct WallCollisionData *colData);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_water_level](#find_water_level)
-
-### Lua Example
-`local numberValue = find_water_level(x, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| z | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 find_water_level(f32 x, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from surface_load.h
-
-<br />
-
-
-## [alloc_surface_pools](#alloc_surface_pools)
-
-### Lua Example
-`alloc_surface_pools()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void alloc_surface_pools(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clear_dynamic_surfaces](#clear_dynamic_surfaces)
-
-### Lua Example
-`clear_dynamic_surfaces()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void clear_dynamic_surfaces(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_area_terrain_size](#get_area_terrain_size)
-
-### Lua Example
-`local integerValue = get_area_terrain_size(data)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 get_area_terrain_size(s16 *data);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [load_area_terrain](#load_area_terrain)
-
-### Lua Example
-`load_area_terrain(index, data, surfaceRooms, macroObjects)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| data | `Pointer` <`integer`> |
-| surfaceRooms | `Pointer` <`integer`> |
-| macroObjects | `Pointer` <`integer`> |
-
-### Returns
-- None
-
-### C Prototype
-`void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [load_object_collision_model](#load_object_collision_model)
-
-### Lua Example
-`load_object_collision_model()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void load_object_collision_model(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [next >](functions-5.md)]
 

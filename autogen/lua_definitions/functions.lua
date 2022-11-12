@@ -7057,8 +7057,35 @@ function obj_set_cylboard(obj)
 end
 
 --- @param obj Object
+--- @param pitch integer
+--- @param yaw integer
+--- @param roll integer
+--- @return nil
+function obj_set_face_angle(obj, pitch, yaw, roll)
+    -- ...
+end
+
+--- @param obj Object
 --- @return nil
 function obj_set_face_angle_to_move_angle(obj)
+    -- ...
+end
+
+--- @param obj Object
+--- @param pitch integer
+--- @param yaw integer
+--- @param roll integer
+--- @return nil
+function obj_set_gfx_angle(obj, pitch, yaw, roll)
+    -- ...
+end
+
+--- @param obj Object
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return nil
+function obj_set_gfx_pos(obj, x, y, z)
     -- ...
 end
 
@@ -7076,6 +7103,15 @@ function obj_set_gfx_pos_from_pos(obj)
 end
 
 --- @param obj Object
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return nil
+function obj_set_gfx_scale(obj, x, y, z)
+    -- ...
+end
+
+--- @param obj Object
 --- @param heldBehavior Pointer_BehaviorScript
 --- @return nil
 function obj_set_held_state(obj, heldBehavior)
@@ -7086,6 +7122,31 @@ end
 --- @param hitbox ObjectHitbox
 --- @return nil
 function obj_set_hitbox(obj, hitbox)
+    -- ...
+end
+
+--- @param o Object
+--- @param radius number
+--- @param height number
+--- @return nil
+function obj_set_hitbox_radius_and_height(o, radius, height)
+    -- ...
+end
+
+--- @param o Object
+--- @param radius number
+--- @param height number
+--- @return nil
+function obj_set_hurtbox_radius_and_height(o, radius, height)
+    -- ...
+end
+
+--- @param obj Object
+--- @param pitch integer
+--- @param yaw integer
+--- @param roll integer
+--- @return nil
+function obj_set_move_angle(obj, pitch, yaw, roll)
     -- ...
 end
 
@@ -7624,6 +7685,62 @@ function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
     -- ...
 end
 
+--- @param a integer
+--- @param b integer
+--- @param c integer
+--- @return integer
+function clamp(a, b, c)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @param c number
+--- @return number
+function clampf(a, b, c)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function max(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function maxf(a, b)
+    -- ...
+end
+
+--- @param a integer
+--- @param b integer
+--- @return integer
+function min(a, b)
+    -- ...
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+function minf(a, b)
+    -- ...
+end
+
+--- @param x integer
+--- @return integer
+function sqr(x)
+    -- ...
+end
+
+--- @param x number
+--- @return number
+function sqrf(x)
+    -- ...
+end
+
 --- @param index integer
 --- @param name string
 --- @param offset integer
@@ -8044,6 +8161,54 @@ end
 --- @param modelId ModelExtendedId
 --- @return integer
 function obj_has_model_extended(o, modelId)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_attackable(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_breakable_object(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_bully(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_coin(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_exclamation_box(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_grabbable(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_mushroom_1up(o)
+    -- ...
+end
+
+--- @param o Object
+--- @return boolean
+function obj_is_secret(o)
     -- ...
 end
 

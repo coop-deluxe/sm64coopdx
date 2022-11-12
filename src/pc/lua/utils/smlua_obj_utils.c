@@ -260,7 +260,73 @@ struct ObjectHitbox* get_temp_object_hitbox(void) {
     return &sTmpHitbox;
 }
 
+bool obj_is_attackable(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return ((o->oInteractType & INTERACT_KOOPA) != 0 ||
+            (o->oInteractType & INTERACT_BOUNCE_TOP) != 0 ||
+            (o->oInteractType & INTERACT_BOUNCE_TOP2) != 0 ||
+            (o->oInteractType & INTERACT_HIT_FROM_BELOW) != 0);
+}
+
+bool obj_is_breakable_object(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return (obj_has_behavior_id(o, id_bhvBreakableBox) == 1 ||
+            obj_has_behavior_id(o, id_bhvBreakableBoxSmall) == 1 ||
+            obj_has_behavior_id(o, id_bhvHiddenObject) == 1 ||
+            obj_has_behavior_id(o, id_bhvJumpingBox) == 1);
+}
+
+bool obj_is_bully(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return (o->oInteractType & INTERACT_BULLY) != 0;
+}
+
+bool obj_is_coin(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return (o->oInteractType & INTERACT_COIN) != 0;
+}
+
+bool obj_is_exclamation_box(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return obj_has_behavior_id(o, id_bhvExclamationBox) == 1 && o->oAction == 2;
+}
+
+bool obj_is_grabbable(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return (o->oInteractType & INTERACT_GRABBABLE) != 0 && (o->oInteractionSubtype & INT_SUBTYPE_NOT_GRABBABLE) == 0;
+}
+
+bool obj_is_mushroom_1up(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return (o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE) == 0 && (
+            obj_has_behavior_id(o, id_bhv1Up) == 1 ||
+            obj_has_behavior_id(o, id_bhv1upJumpOnApproach) == 1 ||
+            obj_has_behavior_id(o, id_bhv1upRunningAway) == 1 ||
+            obj_has_behavior_id(o, id_bhv1upSliding) == 1 ||
+            obj_has_behavior_id(o, id_bhv1upWalking) == 1 ||
+            obj_has_behavior_id(o, id_bhvHidden1up) == 1 ||
+            obj_has_behavior_id(o, id_bhvHidden1upInPole) == 1 ||
+            obj_has_behavior_id(o, id_bhvHidden1upInPoleSpawner) == 1 ||
+            obj_has_behavior_id(o, id_bhvHidden1upInPoleTrigger) == 1 ||
+            obj_has_behavior_id(o, id_bhvHidden1upTrigger) == 1);
+}
+
+bool obj_is_secret(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
+    return obj_has_behavior_id(o, id_bhvHiddenStarTrigger) == 1;
+}
+
 bool obj_is_valid_for_interaction(struct Object *o) {
+    if (o == NULL) { return FALSE; }
+    
     return o->activeFlags != ACTIVE_FLAG_DEACTIVATED && o->oIntangibleTimer == 0 && (o->oInteractStatus & INT_STATUS_INTERACTED) == 0;
 }
 
@@ -303,12 +369,16 @@ bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z,
 }
 
 void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz) {
+    if (o == NULL) { return; }
+    
     o->oVelX = vx;
     o->oVelY = vy;
     o->oVelZ = vz;
 }
 
 void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz) {
+    if (o == NULL) { return; }
+    
     o->oPosX += dx;
     o->oPosY += dy;
     o->oPosZ += dz;

@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [next >](functions-3.md)]
+[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-3.md)]
 
 
 ---
@@ -10330,5 +10330,5 @@
 <br />
 ---
 
-[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [next >](functions-3.md)]
+[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-3.md)]
 

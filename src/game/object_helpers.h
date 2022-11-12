@@ -99,6 +99,11 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
 void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ);
 void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z);
 void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);
+void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);
+void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);
+void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll);
+void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z);
+void obj_set_gfx_scale(struct Object *obj, f32 x, f32 y, f32 z);
 struct Object *spawn_object_abs_with_rot(struct Object *parent, s16 uselessArg, u32 model,
                                          const BehaviorScript *behavior,
                                          s16 x, s16 y, s16 z, s16 rx, s16 ry, s16 rz);
@@ -199,6 +204,8 @@ void cur_obj_shake_y(f32 amount);
 void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent);
 void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8);
 void obj_set_billboard(struct Object *obj);
+void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height);
+void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height);
 void cur_obj_set_hitbox_radius_and_height(f32 radius, f32 height);
 void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height);
 void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter);

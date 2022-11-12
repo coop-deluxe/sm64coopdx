@@ -2,7 +2,7 @@
 
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-2.md)]
 
 ---
 
@@ -1320,11 +1320,18 @@
    - [obj_set_behavior](functions-4.md#obj_set_behavior)
    - [obj_set_billboard](functions-4.md#obj_set_billboard)
    - [obj_set_cylboard](functions-4.md#obj_set_cylboard)
+   - [obj_set_face_angle](functions-4.md#obj_set_face_angle)
    - [obj_set_face_angle_to_move_angle](functions-4.md#obj_set_face_angle_to_move_angle)
+   - [obj_set_gfx_angle](functions-4.md#obj_set_gfx_angle)
+   - [obj_set_gfx_pos](functions-4.md#obj_set_gfx_pos)
    - [obj_set_gfx_pos_at_obj_pos](functions-4.md#obj_set_gfx_pos_at_obj_pos)
    - [obj_set_gfx_pos_from_pos](functions-4.md#obj_set_gfx_pos_from_pos)
+   - [obj_set_gfx_scale](functions-4.md#obj_set_gfx_scale)
    - [obj_set_held_state](functions-4.md#obj_set_held_state)
    - [obj_set_hitbox](functions-4.md#obj_set_hitbox)
+   - [obj_set_hitbox_radius_and_height](functions-4.md#obj_set_hitbox_radius_and_height)
+   - [obj_set_hurtbox_radius_and_height](functions-4.md#obj_set_hurtbox_radius_and_height)
+   - [obj_set_move_angle](functions-4.md#obj_set_move_angle)
    - [obj_set_parent_relative_pos](functions-4.md#obj_set_parent_relative_pos)
    - [obj_set_pos](functions-4.md#obj_set_pos)
    - [obj_set_pos_relative](functions-4.md#obj_set_pos_relative)
@@ -1430,6 +1437,18 @@
 
 <br />
 
+- smlua_math_utils.h
+   - [clamp](functions-4.md#clamp)
+   - [clampf](functions-4.md#clampf)
+   - [max](functions-4.md#max)
+   - [maxf](functions-4.md#maxf)
+   - [min](functions-4.md#min)
+   - [minf](functions-4.md#minf)
+   - [sqr](functions-4.md#sqr)
+   - [sqrf](functions-4.md#sqrf)
+
+<br />
+
 - smlua_misc_utils.h
    - [add_scroll_target](functions-4.md#add_scroll_target)
    - [allocate_mario_action](functions-4.md#allocate_mario_action)
@@ -1507,6 +1526,14 @@
    - [obj_get_temp_spawn_particles_info](functions-4.md#obj_get_temp_spawn_particles_info)
    - [obj_has_behavior_id](functions-4.md#obj_has_behavior_id)
    - [obj_has_model_extended](functions-4.md#obj_has_model_extended)
+   - [obj_is_attackable](functions-4.md#obj_is_attackable)
+   - [obj_is_breakable_object](functions-4.md#obj_is_breakable_object)
+   - [obj_is_bully](functions-4.md#obj_is_bully)
+   - [obj_is_coin](functions-4.md#obj_is_coin)
+   - [obj_is_exclamation_box](functions-4.md#obj_is_exclamation_box)
+   - [obj_is_grabbable](functions-4.md#obj_is_grabbable)
+   - [obj_is_mushroom_1up](functions-4.md#obj_is_mushroom_1up)
+   - [obj_is_secret](functions-4.md#obj_is_secret)
    - [obj_is_valid_for_interaction](functions-4.md#obj_is_valid_for_interaction)
    - [obj_move_xyz](functions-4.md#obj_move_xyz)
    - [obj_set_model_extended](functions-4.md#obj_set_model_extended)
@@ -1557,20 +1584,20 @@
 <br />
 
 - surface_collision.h
-   - [find_ceil_height](functions-4.md#find_ceil_height)
-   - [find_floor_height](functions-4.md#find_floor_height)
-   - [find_poison_gas_level](functions-4.md#find_poison_gas_level)
-   - [find_wall_collisions](functions-4.md#find_wall_collisions)
-   - [find_water_level](functions-4.md#find_water_level)
+   - [find_ceil_height](functions-5.md#find_ceil_height)
+   - [find_floor_height](functions-5.md#find_floor_height)
+   - [find_poison_gas_level](functions-5.md#find_poison_gas_level)
+   - [find_wall_collisions](functions-5.md#find_wall_collisions)
+   - [find_water_level](functions-5.md#find_water_level)
 
 <br />
 
 - surface_load.h
-   - [alloc_surface_pools](functions-4.md#alloc_surface_pools)
-   - [clear_dynamic_surfaces](functions-4.md#clear_dynamic_surfaces)
-   - [get_area_terrain_size](functions-4.md#get_area_terrain_size)
-   - [load_area_terrain](functions-4.md#load_area_terrain)
-   - [load_object_collision_model](functions-4.md#load_object_collision_model)
+   - [alloc_surface_pools](functions-5.md#alloc_surface_pools)
+   - [clear_dynamic_surfaces](functions-5.md#clear_dynamic_surfaces)
+   - [get_area_terrain_size](functions-5.md#get_area_terrain_size)
+   - [load_area_terrain](functions-5.md#load_area_terrain)
+   - [load_object_collision_model](functions-5.md#load_object_collision_model)
 
 <br />
 
@@ -1774,5 +1801,5 @@ Retrieves a texture by name.
 
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-2.md)]
 

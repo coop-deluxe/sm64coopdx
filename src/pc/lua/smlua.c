@@ -136,9 +136,9 @@ void smlua_init(void) {
     luaL_requiref(L, "debug", luaopen_debug, 1);
     luaL_requiref(L, "io", luaopen_io, 1);
     luaL_requiref(L, "os", luaopen_os, 1);
+    luaL_requiref(L, "package ", luaopen_package, 1);
 #endif
     luaL_requiref(L, "math", luaopen_math, 1);
-    //luaopen_package(L);
     luaL_requiref(L, "string", luaopen_string, 1);
     luaL_requiref(L, "table", luaopen_table, 1);
     //luaopen_utf8(L);
@@ -179,7 +179,11 @@ void smlua_init(void) {
 void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
+    
     smlua_call_event_hooks(HOOK_UPDATE);
+    // Collect our garbage after calling our hooks.
+    // If we don't, Lag can quickly build up from our mods.
+    lua_gc(L, LUA_GCCOLLECT, 0);
 }
 
 void smlua_shutdown(void) {

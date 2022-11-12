@@ -41,6 +41,7 @@ in_files = [
     "src/pc/lua/utils/smlua_obj_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
+    "src/pc/lua/utils/smlua_math_utils.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
