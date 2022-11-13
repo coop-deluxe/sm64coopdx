@@ -1486,6 +1486,7 @@ void update_menu_level(void) {
     gMarioState->intendedMag = 0;
 
     // figure out music
+    stop_cap_music();
     if (!configMenuSound || curLevel == LEVEL_CASTLE_GROUNDS) {
         reset_volume();
         disable_background_sound();
