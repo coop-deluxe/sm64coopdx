@@ -17,7 +17,7 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
         djui_base_set_size(&checkbox1->base, 1.0f, 32);
         defaultBase = &checkbox1->base;
 
-        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Fixed Collisions", &gLevelValues.fixCollisionBugs);
+        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Fixed Collisions", (bool*)&gLevelValues.fixCollisionBugs);
         djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox2->base, 1.0f, 32);
         defaultBase = &checkbox2->base;

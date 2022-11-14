@@ -629,7 +629,7 @@
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
---- @field public fixCollisionBugs boolean
+--- @field public fixCollisionBugs integer
 --- @field public floorLowerLimit integer
 --- @field public floorLowerLimitMisc integer
 --- @field public floorLowerLimitShadow integer
