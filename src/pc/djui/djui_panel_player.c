@@ -23,8 +23,8 @@ static void djui_panel_player_edit_palette_update_hex_code_box() {
     static const char digitToChar[] = "0123456789abcdef";
 
     for (size_t i = 0; i < 3; i++) {
-        buf[2*i]   = digitToChar[configPlayerPalette.parts[sCurrentPlayerPart][i] >> 4];
-        buf[2*i+1] = digitToChar[configPlayerPalette.parts[sCurrentPlayerPart][i] & 0xF];
+        buf[2*i]   = digitToChar[configCustomPalette.parts[sCurrentPlayerPart][i] >> 4];
+        buf[2*i+1] = digitToChar[configCustomPalette.parts[sCurrentPlayerPart][i] & 0xF];
     }
 
     buf[6] = '\0';
@@ -41,7 +41,7 @@ static void djui_panel_player_edit_palette_update_palette_display() {
 }
 
 static void djui_panel_player_edit_palette_update_sliders() {
-    for (int i = 0; i < 3; i++) sSliderChannels[i] = configPlayerPalette.parts[sCurrentPlayerPart][i];
+    for (int i = 0; i < 3; i++) sSliderChannels[i] = configCustomPalette.parts[sCurrentPlayerPart][i];
 
     djui_slider_update_value(&sSliderR->base);
     djui_slider_update_value(&sSliderG->base);
@@ -72,9 +72,10 @@ static void djui_panel_player_edit_palette_hex_code_changed(struct DjuiBase* cal
     }
 
     for (int i = 0; i < 3; i++) {
-        configPlayerPalette.parts[sCurrentPlayerPart][i] = (char_to_hex_digit(input->buffer[2 * i]) << 4) |
+        configCustomPalette.parts[sCurrentPlayerPart][i] = (char_to_hex_digit(input->buffer[2 * i]) << 4) |
                                                            char_to_hex_digit(input->buffer[2 * i + 1]);
     }
+    configPlayerPalette = configCustomPalette;
 
     djui_panel_player_edit_palette_update_sliders();
     djui_panel_player_edit_palette_update_palette_display();
@@ -82,7 +83,8 @@ static void djui_panel_player_edit_palette_hex_code_changed(struct DjuiBase* cal
 }
 
 static void djui_panel_player_edit_palette_slider_changed(UNUSED struct DjuiBase* caller, size_t index) {
-    configPlayerPalette.parts[sCurrentPlayerPart][index] = sSliderChannels[index];
+    configCustomPalette.parts[sCurrentPlayerPart][index] = sSliderChannels[index];
+    configPlayerPalette = configCustomPalette;
 
     djui_panel_player_edit_palette_update_hex_code_box();
     djui_panel_player_edit_palette_update_palette_display();
@@ -120,6 +122,11 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\A\\#00b3ff\\L\\#ffef00\\E\\#ff0800\\T\\#1be700\\T\\#00b3ff\\E");
 
+    // Set current palette to custom when clicking on Edit Palette
+    sPalettePresetIndex = PALETTE_CUSTOM;
+    configPlayerPalette = configCustomPalette;
+    djui_panel_player_edit_palette_update_palette_display();
+
     // A bit of a gross hack to send out palette changes and update the palette preset selection box on unpause AND
     // pressing the Back button
     sSavedDestroy = panel->base.destroy;
@@ -153,7 +160,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&sHexColorTextBox->base, djui_panel_player_edit_palette_hex_code_changed);
         }
 
-        for (int i = 0; i < 3; i++) sSliderChannels[i] = configPlayerPalette.parts[SHIRT][i];
+        for (int i = 0; i < 3; i++) sSliderChannels[i] = configCustomPalette.parts[SHIRT][i];
 
         sSliderR = djui_slider_create(&body->base, "Red", &sSliderChannels[0], 0, 255);
         djui_base_set_size_type(&sSliderR->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -217,8 +224,10 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
 static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     if (sPalettePresetIndex != PALETTE_CUSTOM) {
         configPlayerPalette = gPalettePresets[sPalettePresetIndex];
-        djui_panel_player_edit_palette_update_palette_display();
+    } else {
+        configPlayerPalette = configCustomPalette;
     }
+    djui_panel_player_edit_palette_update_palette_display();
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
     if (gNetworkPlayers[0].overrideModelIndex == gNetworkPlayers[0].modelIndex) { gNetworkPlayers[0].overrideModelIndex = configPlayerModel; }

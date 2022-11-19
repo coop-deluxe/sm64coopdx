@@ -94,6 +94,7 @@ extern unsigned int configMenuLevel;
 extern bool         configMenuSound;
 extern bool         configMenuRandom;
 extern struct PlayerPalette configPlayerPalette;
+extern struct PlayerPalette configCustomPalette;
 extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;

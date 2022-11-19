@@ -273,6 +273,17 @@ void main_func(void) {
     configfile_load(configfile_name());
     dynos_pack_init();
 
+    // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)
+    // But if no preset is found, that means the current palette is a custom palette
+    for (int i = 0; i <= PALETTE_PRESET_MAX; i++) {
+        if (i == PALETTE_PRESET_MAX) {
+            configCustomPalette = configPlayerPalette;
+            configfile_save(configfile_name());
+        } else if (memcmp(&configPlayerPalette, &gPalettePresets[i], sizeof(struct PlayerPalette)) == 0) {
+            break;
+        }
+    }
+
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
 
     if (gCLIOpts.FullScreen == 1)
