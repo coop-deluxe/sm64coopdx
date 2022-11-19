@@ -263,7 +263,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                     if (gCurrentObject != NULL && gCurrentObject == gMarioStates[i].marioObj
                         && (gMarioStates[i].flags & MARIO_VANISH_CAP)) {
                         passThroughWall = TRUE;
-                        continue;
+                        break;
                     }
                 }
                 if (passThroughWall) { continue; }
@@ -414,9 +414,30 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
                 continue;
             }
         }
-        // Ignore camera only surfaces.
-        else if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
-            continue;
+        else {
+            // Ignore camera only surfaces.
+            if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
+                continue;
+            }
+
+            // If an object can pass through a vanish cap surface, pass through.
+            if (gLevelValues.fixVanishFloors && surf->type == SURFACE_VANISH_CAP_WALLS) {
+                if (gCurrentObject != NULL
+                    && (gCurrentObject->activeFlags & ACTIVE_FLAG_MOVE_THROUGH_GRATE)) {
+                    continue;
+                }
+
+                // If Mario has a vanish cap, pass through the vanish cap surface.
+                u8 passThrough = FALSE;
+                for (s32 i = 0; i < MAX_PLAYERS; i++) {
+                    if (gCurrentObject != NULL && gCurrentObject == gMarioStates[i].marioObj
+                        && (gMarioStates[i].flags & MARIO_VANISH_CAP)) {
+                        passThrough = TRUE;
+                        break;
+                    }
+                }
+                if (passThrough) { continue; }
+            }
         }
 
         {
@@ -642,11 +663,31 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
                 continue;
             }
         }
-        // If we are not checking for the camera, ignore camera only floors.
-        else if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
-            continue;
-        }
+        else {
+            // If we are not checking for the camera, ignore camera only floors.
+            if (surf->type == SURFACE_CAMERA_BOUNDARY || surf->type == SURFACE_RAYCAST) {
+                continue;
+            }
 
+            // If an object can pass through a vanish cap surface, pass through.
+            if (gLevelValues.fixVanishFloors && surf->type == SURFACE_VANISH_CAP_WALLS) {
+                if (gCurrentObject != NULL
+                    && (gCurrentObject->activeFlags & ACTIVE_FLAG_MOVE_THROUGH_GRATE)) {
+                    continue;
+                }
+
+                // If Mario has a vanish cap, pass through the vanish cap surface.
+                u8 passThrough = FALSE;
+                for (s32 i = 0; i < MAX_PLAYERS; i++) {
+                    if (gCurrentObject != NULL && gCurrentObject == gMarioStates[i].marioObj
+                        && (gMarioStates[i].flags & MARIO_VANISH_CAP)) {
+                        passThrough = TRUE;
+                        break;
+                    }
+                }
+                if (passThrough) { continue; }
+            }
+        }
 
         if (interpolate) {
             f32 y1, y2, y3;

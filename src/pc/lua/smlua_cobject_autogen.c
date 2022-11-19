@@ -726,7 +726,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 20
+#define LUA_LEVEL_VALUES_FIELD_COUNT 21
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "cellHeightLimit",          LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),          false, LOT_NONE          },
     { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
@@ -734,7 +734,8 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "exitCastleArea",           LVT_S16,     offsetof(struct LevelValues, exitCastleArea),           false, LOT_NONE          },
     { "exitCastleLevel",          LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),          false, LOT_NONE          },
     { "exitCastleWarpNode",       LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode),       false, LOT_NONE          },
-    { "fixCollisionBugs",         LVT_U8,      offsetof(struct LevelValues, fixCollisionBugs),         false, LOT_NONE          },
+    { "fixCollisionBugs",         LVT_BOOL,    offsetof(struct LevelValues, fixCollisionBugs),         false, LOT_NONE          },
+    { "fixVanishFloors",          LVT_BOOL,    offsetof(struct LevelValues, fixVanishFloors),          false, LOT_NONE          },
     { "floorLowerLimit",          LVT_S16,     offsetof(struct LevelValues, floorLowerLimit),          false, LOT_NONE          },
     { "floorLowerLimitMisc",      LVT_S16,     offsetof(struct LevelValues, floorLowerLimitMisc),      false, LOT_NONE          },
     { "floorLowerLimitShadow",    LVT_S16,     offsetof(struct LevelValues, floorLowerLimitShadow),    false, LOT_NONE          },
