@@ -1,4 +1,4 @@
-## [:rewind: Lua Reference](lua.md)
+## [:rewind: Lua Reference](../lua.md)
 
 # Hooks
 Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [functions](functions.md) allow Lua to trigger SM64 code.
