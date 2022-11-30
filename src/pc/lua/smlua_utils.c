@@ -12,6 +12,14 @@ static u8 sVec3fBufferIndex = 0;
 static Vec3s sVec3sBuffer[VEC3S_BUFFER_COUNT] = { 0 };
 static u8 sVec3sBufferIndex = 0;
 
+#define VEC4F_BUFFER_COUNT 64
+static Vec4f sVec4fBuffer[VEC4F_BUFFER_COUNT] = { 0 };
+static u8 sVec4fBufferIndex = 0;
+
+#define VEC4S_BUFFER_COUNT 64
+static Vec4s sVec4sBuffer[VEC4S_BUFFER_COUNT] = { 0 };
+static u8 sVec4sBufferIndex = 0;
+
 #define COLOR_BUFFER_COUNT 64
 static Color sColorBuffer[COLOR_BUFFER_COUNT] = { 0 };
 static u8 sColorBufferIndex = 0;
@@ -24,6 +32,16 @@ f32* smlua_get_vec3f_from_buffer(void) {
 s16* smlua_get_vec3s_from_buffer(void) {
     if (sVec3sBufferIndex >= VEC3S_BUFFER_COUNT) { sVec3sBufferIndex = 0; }
     return sVec3sBuffer[sVec3sBufferIndex++];
+}
+
+f32* smlua_get_vec4f_from_buffer(void) {
+    if (sVec4fBufferIndex >= VEC4F_BUFFER_COUNT) { sVec4fBufferIndex = 0; }
+    return sVec4fBuffer[sVec4fBufferIndex++];
+}
+
+s16* smlua_get_vec4s_from_buffer(void) {
+    if (sVec4sBufferIndex >= VEC4S_BUFFER_COUNT) { sVec4sBufferIndex = 0; }
+    return sVec4sBuffer[sVec4sBufferIndex++];
 }
 
 u8* smlua_get_color_from_buffer(void) {

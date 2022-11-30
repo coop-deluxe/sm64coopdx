@@ -2,6 +2,8 @@ import os
 
 usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32']
 vec3_types = ['Vec3s', 'Vec3f', 'Color']
+vec4_types = ['Vec4s', 'Vec4f']
+mat4_types = ['Mat4', 'Mtx']
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory']
 
 exclude_structs = [
@@ -16,54 +18,99 @@ def get_path(p):
     return os.path.dirname(os.path.realpath(__file__)) + '/../' + p
 
 def translate_type_to_lvt(ptype):
-    if ptype == 'char':
-        ptype = 'u8'
+    pointerLvl = 0
+    
+    if ptype == "char":
+        ptype = "u8"
 
-    if 'const ' in ptype:
-        ptype = ptype.replace('const ', '').strip()
+    if "const " in ptype:
+        ptype = ptype.replace("const ", "").strip()
 
-    if ('char' in ptype and '[' in ptype):
-        return 'LVT_STRING'
+    if ("char" in ptype and "[" in ptype):
+        return "LVT_STRING"
 
-    if ptype == 'char*':
-        return 'LVT_STRING_P'
+    if "[" in ptype or "{" in ptype:
+        return "LOT_???"
+        
+    # Strip out our pointer stars to get the true type.
+    if "*" in ptype:
+        # Count how many stars there is for our pointer level.
+        pointerLvl = ptype.count("*")
+        ptype = ptype.replace("*", "").strip()
+        
+    if ptype == "char" and pointerLvl == 1:
+        return "LVT_STRING_P"
 
-    if '[' in ptype or '{' in ptype:
-        return 'LOT_???'
+    if "enum " in ptype:
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_S32_P"
+        return "LVT_S32"
 
-    if 'enum ' in ptype:
-        return 'LVT_S32'
-
-    if ptype == 'bool':
-        return 'LVT_BOOL'
+    if ptype == "bool":
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_BOOL_P"
+        return "LVT_BOOL"
 
     if ptype in usf_types:
-        return 'LVT_' + ptype.upper()
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_" + ptype.upper() + "_P"
+        return "LVT_" + ptype.upper()
 
     if ptype in vec3_types:
-        return 'LVT_COBJECT'
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_COBJECT_P"
+        return "LVT_COBJECT"
+        
+    if ptype in vec4_types:
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_COBJECT_P"
+        return "LVT_COBJECT"
+        
+    if ptype in mat4_types:
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_COBJECT_P"
+        return "LVT_COBJECT"
 
-    if ptype == 'float':
-        return 'LVT_F32'
+    if ptype == "float":
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_F32_P"
+        return "LVT_F32"
 
-    if ptype == 'LuaFunction':
-        return 'LVT_LUAFUNCTION'
+    if ptype == "LuaFunction":
+        return "LVT_LUAFUNCTION"
 
-    if 'struct' in ptype:
-        if ptype.count('*') > 1:
-            return 'LVT_???'
-        if '*' in ptype:
-            return 'LVT_COBJECT_P'
-        return 'LVT_COBJECT'
+    if "struct" in ptype:
+        if pointerLvl > 1:
+            return "LVT_???"
+        if pointerLvl == 1:
+            return "LVT_COBJECT_P"
+        return "LVT_COBJECT"
 
-    if ptype.count('*') == 1 and '(' not in ptype and '[' not in ptype:
-        ptype = ptype.replace('const', '').replace('*', '').strip()
+    if pointerLvl == 1 and "(" not in ptype and "[" not in ptype:
+        ptype = ptype.replace("const", "").replace("*", "").strip()
         if ptype in usf_types or ptype in typedef_pointers:
-            return 'LVT_%s_P' % ptype.upper()
+            return "LVT_%s_P" % ptype.upper()
 
-    return 'LVT_???'
+    return "LVT_???"
 
 def translate_type_to_lot(ptype):
+    if ptype == 'void':
+        return 'LOT_NONE'
+        
     if ptype == 'const char*':
         return 'LOT_NONE'
 
@@ -90,6 +137,12 @@ def translate_type_to_lot(ptype):
 
     if ptype in vec3_types:
         return 'LOT_' + ptype.upper()
+        
+    if ptype in vec4_types:
+        return 'LOT_' + ptype.upper()
+
+    if ptype in mat4_types:
+        return 'LOT_' + ptype.upper()
 
     if ptype == 'float':
         return 'LOT_NONE'
@@ -110,7 +163,7 @@ def translate_type_to_lot(ptype):
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         return 'LOT_POINTER'
-
+    
     return 'LOT_???'
 
 def translate_type_to_lua(ptype):
@@ -135,8 +188,7 @@ def translate_type_to_lua(ptype):
     if ptype in usf_types:
         if ptype.startswith('f'):
             return '`number`', None
-        else:
-            return '`integer`', None
+        return '`integer`', None
 
     if ptype == 'char':
         return '`integer`', None

@@ -213,6 +213,7 @@
 --- @field public doorStatus integer
 --- @field public focus Vec3f
 --- @field public mode integer
+--- @field public mtx Mat4
 --- @field public nextYaw integer
 --- @field public pos Vec3f
 --- @field public unusedVec1 Vec3f
@@ -559,12 +560,15 @@
 --- @field public prevScaleTimestamp integer
 --- @field public prevShadowPos Vec3f
 --- @field public prevShadowPosTimestamp integer
+--- @field public prevThrowMatrix Mat4
 --- @field public prevThrowMatrixTimestamp integer
 --- @field public prevTimestamp integer
 --- @field public scale Vec3f
 --- @field public sharedChild GraphNode
 --- @field public skipInViewCheck boolean
 --- @field public skipInterpolationTimestamp integer
+--- @field public throwMatrix Pointer_Mat4
+--- @field public throwMatrixPrev Pointer_Mat4
 --- @field public unk4C SpawnInfo
 
 --- @class GraphNode_802A45E4
@@ -733,6 +737,7 @@
 --- @field public slideYaw integer
 --- @field public spawnInfo SpawnInfo
 --- @field public specialTripleJump integer
+--- @field public splineKeyframe Pointer_Vec4s
 --- @field public splineKeyframeFraction number
 --- @field public splineState integer
 --- @field public squishTimer integer
@@ -1560,6 +1565,7 @@
 --- @field public prevObj Object
 --- @field public respawnInfoType integer
 --- @field public setHome integer
+--- @field public transform Mat4
 --- @field public unused1 integer
 --- @field public usingObj Object
 
@@ -1816,4 +1822,6 @@
 --- @class Pointer_LevelScript
 --- @class Pointer_ObjectAnimPointer
 --- @class Pointer_Collision
+--- @class Pointer_Mat4
+--- @class Pointer_Vec4s
 --- @class Pointer_BehaviorScript

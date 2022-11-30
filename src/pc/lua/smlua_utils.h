@@ -8,6 +8,8 @@ struct LSTNetworkType;
 
 f32* smlua_get_vec3f_from_buffer(void);
 s16* smlua_get_vec3s_from_buffer(void);
+f32* smlua_get_vec4f_from_buffer(void);
+s16* smlua_get_vec4s_from_buffer(void);
 u8* smlua_get_color_from_buffer(void);
 
 void smlua_bind_function(lua_State* L, const char* name, void* func);

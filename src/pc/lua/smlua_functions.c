@@ -14,7 +14,7 @@
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
     if (top != expected) {
-        LOG_LUA_LINE("improper param count: expected %u, received %u", expected, top);
+        LOG_LUA_LINE("Improper param count: Expected %u, Received %u", expected, top);
         return false;
     }
     return true;
@@ -23,7 +23,7 @@ bool smlua_functions_valid_param_count(lua_State* L, int expected) {
 bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
     int top = lua_gettop(L);
     if (top < min || top > max) {
-        LOG_LUA_LINE("improper param count: expected (%u - %u), received %u", min, max, top);
+        LOG_LUA_LINE("Improper param count: Expected (%u - %u), Received %u", min, max, top);
         return false;
     }
     return true;

@@ -349,6 +349,7 @@
 | doorStatus | `integer` |  |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
 | mode | `integer` |  |
+| mtx | `Mat4` | read-only |
 | nextYaw | `integer` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
@@ -819,12 +820,15 @@
 | prevScaleTimestamp | `integer` |  |
 | prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevShadowPosTimestamp | `integer` |  |
+| prevThrowMatrix | `Mat4` | read-only |
 | prevThrowMatrixTimestamp | `integer` |  |
 | prevTimestamp | `integer` |  |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) |  |
 | skipInViewCheck | `boolean` |  |
 | skipInterpolationTimestamp | `integer` |  |
+| throwMatrix | `Pointer` <`Mat4`> |  |
+| throwMatrixPrev | `Pointer` <`Mat4`> |  |
 | unk4C | [SpawnInfo](structs.md#SpawnInfo) |  |
 
 [:arrow_up_small:](#)
@@ -1056,6 +1060,7 @@
 | slideYaw | `integer` |  |
 | spawnInfo | [SpawnInfo](structs.md#SpawnInfo) |  |
 | specialTripleJump | `integer` |  |
+| splineKeyframe | `Pointer` <`Vec4s`> |  |
 | splineKeyframeFraction | `number` |  |
 | splineState | `integer` |  |
 | squishTimer | `integer` |  |
@@ -1191,6 +1196,7 @@
 | prevObj | [Object](structs.md#Object) |  |
 | respawnInfoType | `integer` |  |
 | setHome | `integer` |  |
+| transform | `Mat4` | read-only |
 | unused1 | `integer` |  |
 | usingObj | [Object](structs.md#Object) |  |
 

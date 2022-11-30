@@ -4601,6 +4601,12 @@ function generate_yellow_sparkles(x, y, z, radius)
     -- ...
 end
 
+--- @param str Pointer_integer
+--- @return integer
+function get_credits_str_width(str)
+    -- ...
+end
+
 --- @param m MarioState
 --- @return integer
 function get_star_collection_dialog(m)
@@ -5122,6 +5128,13 @@ function stop_and_set_height_to_floor(arg0)
 end
 
 --- @param m MarioState
+--- @param keyFrames Pointer_Vec4s
+--- @return nil
+function anim_spline_init(m, keyFrames)
+    -- ...
+end
+
+--- @param m MarioState
 --- @param result Vec3f
 --- @return integer
 function anim_spline_poll(m, result)
@@ -5146,10 +5159,168 @@ function approach_s32(current, target, inc, dec)
     -- ...
 end
 
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @param c Vec3f
+--- @return void*
+function find_vector_perpendicular_to_plane(dest, a, b, c)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param objMtx Mat4
+--- @param camMtx Mat4
+--- @return nil
+function get_pos_from_transform_mtx(dest, objMtx, camMtx)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param upDir Vec3f
+--- @param pos Vec3f
+--- @param yaw integer
+--- @return nil
+function mtxf_align_terrain_normal(dest, upDir, pos, yaw)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- @param pos Vec3f
+--- @param yaw integer
+--- @param radius number
+--- @return nil
+function mtxf_align_terrain_triangle(mtx, pos, yaw, radius)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param mtx Mat4
+--- @param position Vec3f
+--- @param angle integer
+--- @return nil
+function mtxf_billboard(dest, mtx, position, angle)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- @return nil
+function mtxf_copy(dest, src)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param mtx Mat4
+--- @param position Vec3f
+--- @param angle integer
+--- @return nil
+function mtxf_cylboard(dest, mtx, position, angle)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- @return nil
+function mtxf_identity(mtx)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- @return nil
+function mtxf_inverse(dest, src)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param roll integer
+--- @return nil
+function mtxf_lookat(mtx, from, to, roll)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param a Mat4
+--- @param b Mat4
+--- @return nil
+function mtxf_mul(dest, a, b)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- @param b Vec3s
+--- @return nil
+function mtxf_mul_vec3s(mtx, b)
+    -- ...
+end
+
+--- @param mtx Pointer_Mtx
+--- @param angle integer
+--- @return nil
+function mtxf_rotate_xy(mtx, angle)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param b Vec3f
+--- @param c Vec3s
+--- @return nil
+function mtxf_rotate_xyz_and_translate(dest, b, c)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param translate Vec3f
+--- @param rotate Vec3s
+--- @return nil
+function mtxf_rotate_zxy_and_translate(dest, translate, rotate)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param mtx Mat4
+--- @param s Vec3f
+--- @return nil
+function mtxf_scale_vec3f(dest, mtx, s)
+    -- ...
+end
+
+--- @param dest Pointer_Mtx
+--- @param src Mat4
+--- @return nil
+function mtxf_to_mtx(dest, src)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param b Vec3f
+--- @return nil
+function mtxf_translate(dest, b)
+    -- ...
+end
+
 --- @param value number
 --- @param replacement number
 --- @return number
 function not_zero(value, replacement)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param result Vec4f
+--- @param t number
+--- @param c integer
+--- @return nil
+function spline_get_weights(m, result, t, c)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @return void*
+function vec3f_add(dest, a)
     -- ...
 end
 
@@ -5160,6 +5331,29 @@ end
 --- @param sclB number
 --- @return nil
 function vec3f_combine(dest, vecA, vecB, sclA, sclB)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param src Vec3f
+--- @return void*
+function vec3f_copy(dest, src)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return void*
+function vec3f_cross(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return void*
+function vec3f_dif(dest, a, b)
     -- ...
 end
 
@@ -5193,11 +5387,40 @@ function vec3f_length(a)
     -- ...
 end
 
+--- @param dest Vec3f
+--- @param a number
+--- @return void*
+function vec3f_mul(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @return void*
+function vec3f_normalize(dest)
+    -- ...
+end
+
 --- @param vec Vec3f
 --- @param onto Vec3f
 --- @param out Vec3f
 --- @return nil
 function vec3f_project(vec, onto, out)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @param rotate Vec3s
+--- @return void*
+function vec3f_rotate_zxy(v, rotate)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param x number
+--- @param y number
+--- @param z number
+--- @return void*
+function vec3f_set(dest, x, y, z)
     -- ...
 end
 
@@ -5208,6 +5431,59 @@ end
 --- @param yaw integer
 --- @return nil
 function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return void*
+function vec3f_sum(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3f
+--- @return void*
+function vec3f_to_vec3s(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @return void*
+function vec3s_add(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param src Vec3s
+--- @return void*
+function vec3s_copy(dest, src)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param x integer
+--- @param y integer
+--- @param z integer
+--- @return void*
+function vec3s_set(dest, x, y, z)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return void*
+function vec3s_sum(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3s
+--- @return void*
+function vec3s_to_vec3f(dest, a)
     -- ...
 end
 
@@ -6008,6 +6284,14 @@ end
 
 --- @return integer
 function count_unimportant_objects()
+    -- ...
+end
+
+--- @param a0 Mat4
+--- @param a1 Mat4
+--- @param a2 Mat4
+--- @return nil
+function create_transformation_from_matrices(a0, a1, a2)
     -- ...
 end
 
@@ -6823,6 +7107,22 @@ function lateral_dist_between_objects(obj1, obj2)
     -- ...
 end
 
+--- @param m Mat4
+--- @param dst Vec3f
+--- @param v Vec3f
+--- @return nil
+function linear_mtxf_mul_vec3f(m, dst, v)
+    -- ...
+end
+
+--- @param m Mat4
+--- @param dst Vec3f
+--- @param v Vec3f
+--- @return nil
+function linear_mtxf_transpose_mul_vec3f(m, dst, v)
+    -- ...
+end
+
 --- @param m MarioState
 --- @return integer
 function mario_is_dive_sliding(m)
@@ -6862,6 +7162,14 @@ end
 --- @param pointZ number
 --- @return integer
 function obj_angle_to_point(obj, pointX, pointZ)
+    -- ...
+end
+
+--- @param obj Object
+--- @param dst Mat4
+--- @param src Mat4
+--- @return nil
+function obj_apply_scale_to_matrix(obj, dst, src)
     -- ...
 end
 
@@ -7240,6 +7548,13 @@ end
 --- @param turnAmount integer
 --- @return integer
 function obj_turn_toward_object(obj, target, angleIndex, turnAmount)
+    -- ...
+end
+
+--- @param a0 Mat4
+--- @param a1 Object
+--- @return nil
+function obj_update_pos_from_parent_transformation(a0, a1)
     -- ...
 end
 
@@ -8508,5 +8823,7 @@ end
 --- @class Pointer_integer
 --- @class Pointer_BehaviorScript
 --- @class Pointer_number
+--- @class Pointer_Vec4s
+--- @class Pointer_Mtx
 --- @class Pointer_Collision
 --- @class Pointer_Trajectory

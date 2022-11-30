@@ -28,10 +28,50 @@ static struct LuaObjectField sVec3fFields[LUA_VEC3F_FIELD_COUNT] = {
     { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
 };
 
+#define LUA_VEC4S_FIELD_COUNT 4
+static struct LuaObjectField sVec4sFields[LUA_VEC4S_FIELD_COUNT] = {
+    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE },
+    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE },
+    { "z", LVT_S16, sizeof(s16) * 2, false, LOT_NONE },
+    { "w", LVT_S16, sizeof(s16) * 3, false, LOT_NONE },
+};
+
+#define LUA_VEC4F_FIELD_COUNT 4
+static struct LuaObjectField sVec4fFields[LUA_VEC4F_FIELD_COUNT] = {
+    { "x", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "y", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
+    { "w", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
+};
+
+#define LUA_MAT4_FIELD_COUNT 16
+static struct LuaObjectField sMat4Fields[LUA_MAT4_FIELD_COUNT] = {
+    { "a", LVT_F32, sizeof(f32) * 0, false, LOT_NONE },
+    { "b", LVT_F32, sizeof(f32) * 1, false, LOT_NONE },
+    { "c", LVT_F32, sizeof(f32) * 2, false, LOT_NONE },
+    { "d", LVT_F32, sizeof(f32) * 3, false, LOT_NONE },
+    { "e", LVT_F32, sizeof(f32) * 4, false, LOT_NONE },
+    { "f", LVT_F32, sizeof(f32) * 5, false, LOT_NONE },
+    { "g", LVT_F32, sizeof(f32) * 6, false, LOT_NONE },
+    { "h", LVT_F32, sizeof(f32) * 7, false, LOT_NONE },
+    { "i", LVT_F32, sizeof(f32) * 8, false, LOT_NONE },
+    { "j", LVT_F32, sizeof(f32) * 9, false, LOT_NONE },
+    { "k", LVT_F32, sizeof(f32) * 10, false, LOT_NONE },
+    { "l", LVT_F32, sizeof(f32) * 11, false, LOT_NONE },
+    { "m", LVT_F32, sizeof(f32) * 12, false, LOT_NONE },
+    { "n", LVT_F32, sizeof(f32) * 13, false, LOT_NONE },
+    { "o", LVT_F32, sizeof(f32) * 14, false, LOT_NONE },
+    { "p", LVT_F32, sizeof(f32) * 15, false, LOT_NONE },
+};
+
+
 struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
     { LOT_NONE,  NULL,         0                     },
     { LOT_VEC3S, sVec3sFields, LUA_VEC3S_FIELD_COUNT },
     { LOT_VEC3F, sVec3fFields, LUA_VEC3F_FIELD_COUNT },
+    { LOT_VEC4S, sVec4sFields, LUA_VEC4S_FIELD_COUNT },
+    { LOT_VEC4F, sVec4fFields, LUA_VEC4F_FIELD_COUNT },
+    { LOT_MAT4,  sMat4Fields,  LUA_MAT4_FIELD_COUNT  },
 };
 
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key) {
@@ -384,6 +424,7 @@ static int smlua__get_field(lua_State* L) {
         case LVT_TRAJECTORY:        lua_pushinteger(L, *(s16*)p);              break;
 
         // pointers
+        case LVT_BOOL_P:
         case LVT_U8_P:
         case LVT_U16_P:
         case LVT_U32_P:
@@ -475,6 +516,7 @@ static int smlua__set_field(lua_State* L) {
             break;
 
         // pointers
+        case LVT_BOOL_P:
         case LVT_U8_P:
         case LVT_U16_P:
         case LVT_U32_P:

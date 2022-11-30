@@ -72,7 +72,7 @@ override_allowed_functions = {
 
 override_disallowed_functions = {
     "src/audio/external.h":                [ " func_" ],
-    "src/engine/math_util.h":              [ "atan2s", "atan2f" ],
+    "src/engine/math_util.h":              [ "atan2s", "atan2f", "vec3s_sub" ],
     "src/engine/surface_collision.h":      [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":   [ "^[us]32 act_.*" ],
     "src/game/mario_actions_automatic.c":  [ "^[us]32 act_.*" ],
@@ -157,6 +157,90 @@ param_vec3s_after_call = """
 param_override_build['Vec3s'] = {
     'before': param_vec3s_before_call,
     'after': param_vec3s_after_call
+}
+
+param_vec4f_before_call = """
+    f32* $[IDENTIFIER] = smlua_get_vec4f_from_buffer();
+    $[IDENTIFIER][0] = smlua_get_number_field($[INDEX], "x");
+    $[IDENTIFIER][1] = smlua_get_number_field($[INDEX], "y");
+    $[IDENTIFIER][2] = smlua_get_number_field($[INDEX], "z");
+    $[IDENTIFIER][3] = smlua_get_number_field($[INDEX], "w");
+"""
+
+param_vec4f_after_call = """
+    smlua_push_number_field($[INDEX], "x", $[IDENTIFIER][0]);
+    smlua_push_number_field($[INDEX], "y", $[IDENTIFIER][1]);
+    smlua_push_number_field($[INDEX], "z", $[IDENTIFIER][2]);
+    smlua_push_number_field($[INDEX], "w", $[IDENTIFIER][3]);
+"""
+
+param_override_build['Vec4f'] = {
+    'before': param_vec4f_before_call,
+    'after': param_vec4f_after_call
+}
+
+param_vec4s_before_call = """
+    s16* $[IDENTIFIER] = smlua_get_vec4s_from_buffer();
+    $[IDENTIFIER][0] = smlua_get_integer_field($[INDEX], "x");
+    $[IDENTIFIER][1] = smlua_get_integer_field($[INDEX], "y");
+    $[IDENTIFIER][2] = smlua_get_integer_field($[INDEX], "z");
+    $[IDENTIFIER][3] = smlua_get_integer_field($[INDEX], "w");
+"""
+
+param_vec4s_after_call = """
+    smlua_push_integer_field($[INDEX], "x", $[IDENTIFIER][0]);
+    smlua_push_integer_field($[INDEX], "y", $[IDENTIFIER][1]);
+    smlua_push_integer_field($[INDEX], "z", $[IDENTIFIER][2]);
+    smlua_push_integer_field($[INDEX], "w", $[IDENTIFIER][3]);
+"""
+
+param_override_build['Vec4s'] = {
+    'before': param_vec4s_before_call,
+    'after': param_vec4s_after_call
+}
+
+param_mat4_before_call = """
+    Mat4 $[IDENTIFIER];
+    $[IDENTIFIER][0][0] = smlua_get_number_field($[INDEX], "a");
+    $[IDENTIFIER][0][1] = smlua_get_number_field($[INDEX], "b");
+    $[IDENTIFIER][0][2] = smlua_get_number_field($[INDEX], "c");
+    $[IDENTIFIER][0][3] = smlua_get_number_field($[INDEX], "d");
+    $[IDENTIFIER][1][0] = smlua_get_number_field($[INDEX], "e");
+    $[IDENTIFIER][1][1] = smlua_get_number_field($[INDEX], "f");
+    $[IDENTIFIER][1][2] = smlua_get_number_field($[INDEX], "g");
+    $[IDENTIFIER][1][3] = smlua_get_number_field($[INDEX], "h");
+    $[IDENTIFIER][2][0] = smlua_get_number_field($[INDEX], "i");
+    $[IDENTIFIER][2][1] = smlua_get_number_field($[INDEX], "j");
+    $[IDENTIFIER][2][2] = smlua_get_number_field($[INDEX], "k");
+    $[IDENTIFIER][2][3] = smlua_get_number_field($[INDEX], "l");
+    $[IDENTIFIER][3][0] = smlua_get_number_field($[INDEX], "m");
+    $[IDENTIFIER][3][1] = smlua_get_number_field($[INDEX], "n");
+    $[IDENTIFIER][3][2] = smlua_get_number_field($[INDEX], "o");
+    $[IDENTIFIER][3][3] = smlua_get_number_field($[INDEX], "p");
+"""
+
+param_mat4_after_call = """
+    smlua_push_number_field($[INDEX], "a", $[IDENTIFIER][0][0]);
+    smlua_push_number_field($[INDEX], "b", $[IDENTIFIER][0][1]);
+    smlua_push_number_field($[INDEX], "c", $[IDENTIFIER][0][2]);
+    smlua_push_number_field($[INDEX], "d", $[IDENTIFIER][0][3]);
+    smlua_push_number_field($[INDEX], "e", $[IDENTIFIER][1][0]);
+    smlua_push_number_field($[INDEX], "f", $[IDENTIFIER][1][1]);
+    smlua_push_number_field($[INDEX], "g", $[IDENTIFIER][1][2]);
+    smlua_push_number_field($[INDEX], "h", $[IDENTIFIER][1][3]);
+    smlua_push_number_field($[INDEX], "i", $[IDENTIFIER][2][0]);
+    smlua_push_number_field($[INDEX], "j", $[IDENTIFIER][2][1]);
+    smlua_push_number_field($[INDEX], "k", $[IDENTIFIER][2][2]);
+    smlua_push_number_field($[INDEX], "l", $[IDENTIFIER][2][3]);
+    smlua_push_number_field($[INDEX], "m", $[IDENTIFIER][3][0]);
+    smlua_push_number_field($[INDEX], "n", $[IDENTIFIER][3][1]);
+    smlua_push_number_field($[INDEX], "o", $[IDENTIFIER][3][2]);
+    smlua_push_number_field($[INDEX], "p", $[IDENTIFIER][3][3]);
+"""
+
+param_override_build['Mat4'] = {
+    'before': param_mat4_before_call,
+    'after': param_mat4_after_call
 }
 
 param_color_before_call = """
@@ -470,6 +554,10 @@ def build_call(function):
 
     if ftype == 'void':
         return '    %s;\n' % ccall
+    # We can't possibly know the type of a void pointer, 
+    # So we just don't return anything from it
+    elif ftype == 'void *':
+        return '    %s;\n' % ccall
 
     flot = translate_type_to_lot(ftype)
 
@@ -501,12 +589,17 @@ def build_function(function, do_extern):
     else:
         s = 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
 
-    s += '    if(!smlua_functions_valid_param_count(L, %d)) { return 0; }\n\n' % len(function['params'])
+    s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);
+    if (top != %d) {
+        LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
+        return 0;
+    }\n\n""" % (len(function['params']), function['identifier'], len(function['params']))
 
     i = 1
     for param in function['params']:
         s += build_param(param, i)
-        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %d for function \'%s\'"); return 0; }\n' % (i, fid)
+        s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
     s += '\n'
 

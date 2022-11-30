@@ -3,6 +3,7 @@
 
 enum LuaValueType {
     LVT_BOOL,
+    LVT_BOOL_P,
     LVT_U8,
     LVT_U8_P,
     LVT_U16,
@@ -42,6 +43,9 @@ enum LuaObjectType {
     LOT_NONE = 0,
     LOT_VEC3S,
     LOT_VEC3F,
+    LOT_VEC4S,
+    LOT_VEC4F,
+    LOT_MAT4,
     LOT_COLOR,
     LOT_POINTER,
     LOT_MAX,
