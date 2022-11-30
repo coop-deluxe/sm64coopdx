@@ -39,6 +39,7 @@ enum LuaHookedEventType {
     HOOK_ON_SCREEN_TRANSITION,
     HOOK_ALLOW_HAZARD_SURFACE,
     HOOK_ON_CHAT_MESSAGE,
+    HOOK_OBJECT_SET_MODEL,
     HOOK_MAX,
 };
 
@@ -71,6 +72,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_SCREEN_TRANSITION",
     "HOOK_ALLOW_HAZARD_SURFACE",
     "HOOK_ON_CHAT_MESSAGE",
+    "HOOK_OBJECT_SET_MODEL",
     "HOOK_MAX"
 };
 
@@ -107,6 +109,7 @@ void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int mo
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
 void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue);
 void smlua_call_event_hooks_on_chat_message(enum LuaHookedEventType hookType, struct MarioState* m, const char* message, bool* returnValue);
+void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);

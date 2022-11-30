@@ -43,6 +43,9 @@ gBehaviorValues = {}
 --- @type PlayerPalette[]
 gPalettePresets = {}
 
+--- @type LakituState
+gLakituState = {}
+
 -----------
 -- hooks --
 -----------

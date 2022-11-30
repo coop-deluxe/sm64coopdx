@@ -8131,7 +8131,10 @@ HOOK_ALLOW_HAZARD_SURFACE = 26
 HOOK_ON_CHAT_MESSAGE = 27
 
 --- @type LuaHookedEventType
-HOOK_MAX = 28
+HOOK_OBJECT_SET_MODEL = 28
+
+--- @type LuaHookedEventType
+HOOK_MAX = 29
 
 --- @class HudDisplayFlags
 

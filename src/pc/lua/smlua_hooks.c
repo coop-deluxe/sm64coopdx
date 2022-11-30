@@ -398,6 +398,26 @@ void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struc
     }
 }
 
+void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push params
+        smlua_push_object(L, LOT_OBJECT, obj);
+        lua_pushinteger(L, modelID);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+    }
+}
+
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }

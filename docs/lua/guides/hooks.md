@@ -114,6 +114,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_SCREEN_TRANSITION | Called when the game is about to play a transition, return `false` to prevent the transition from playing. | `integer` type |
 | HOOK_ALLOW_HAZARD_SURFACE | Called once per frame. Return `false` to prevent Mario from being affected by lava or quicksand. | [MarioState](structs.md#MarioState) localMario |
 | HOOK_ON_CHAT_MESSAGE | Called when a chat message gets sent. Return `false` to prevent the message from being sent. | [MarioState](structs.md#MarioState) messageSender |
+| HOOK_OBJECT_SET_MODEL | Called when a behavior changes models. Also runs when a behavior spawns. | [Object](structs.md#Object) obj, `integer` modelID |
 
 ### Parameters
 

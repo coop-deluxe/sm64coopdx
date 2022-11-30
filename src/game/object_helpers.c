@@ -677,6 +677,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
 
     geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, gLoadedGraphNodes[model], gVec3fZero,
                  gVec3sZero);
+    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, model);
 
     return obj;
 }
@@ -1363,6 +1364,7 @@ void cur_obj_set_model(s32 modelID) {
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
     dynos_actor_override((void*)&obj->header.gfx.sharedChild);
+    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
 }
 
 void mario_set_flag(s32 flag) {
