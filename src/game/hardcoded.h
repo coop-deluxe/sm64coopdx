@@ -37,7 +37,7 @@ struct StarPositions {
 };
 
 struct LevelValues {
-    bool fixCollisionBugs;
+    u8 fixCollisionBugs;
     bool fixVanishFloors;
     enum LevelNum entryLevel;
     enum LevelNum exitCastleLevel;
