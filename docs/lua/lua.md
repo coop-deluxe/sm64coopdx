@@ -31,7 +31,7 @@ Save file locations:
 ### Guides
 - [Hooks](guides/hooks.md)
 - [gMarioStates](guides/mario-state.md)
-- [Setting up Visual Studio Code](vs-code-setup.md) 
+- [Setting up Visual Studio Code](guides/vs-code-setup.md) 
 
 ## Important notes on player indices
 
