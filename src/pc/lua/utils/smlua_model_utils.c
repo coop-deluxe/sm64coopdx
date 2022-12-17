@@ -290,6 +290,7 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_SSL_SPINDEL,                        ssl_geo_000764),
     MODEL_UTIL_GEO(E_MODEL_SSL_MOVING_PYRAMID_WALL,            ssl_geo_000794),
     MODEL_UTIL_GEO(E_MODEL_SSL_PYRAMID_ELEVATOR,               ssl_geo_0007AC),
+    MODEL_UTIL_GEO(E_MODEL_SSL_TOX_BOX,                        ssl_geo_000630),
     MODEL_UTIL_GEO(E_MODEL_BOB_CHAIN_CHOMP_GATE,               bob_geo_000440),
     MODEL_UTIL_GEO(E_MODEL_BOB_SEESAW_PLATFORM,                bob_geo_000458),
     MODEL_UTIL_GEO(E_MODEL_BOB_BARS_GRILLS,                    bob_geo_000470),
