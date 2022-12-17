@@ -54,6 +54,8 @@
 
 #include "pc/mods/mods.h"
 
+#include "menu/intro_geo.h"
+
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
 
@@ -171,7 +173,7 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_start_frame();
         f32 delta = MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1);
         gRenderingDelta = delta;
-        patch_interpolations(delta);
+        if (!skipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 

@@ -1680,6 +1680,10 @@ void handle_controller_cursor_input(void) {
     if (sCursorPos[1] < -90.0f) {
         sCursorPos[1] = -90.0f;
     }
+
+    if (sCursorClickingTimer == 0) {
+        handle_cursor_button_input();
+    }
 }
 
 /**

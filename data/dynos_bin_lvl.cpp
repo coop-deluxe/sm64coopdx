@@ -9,6 +9,7 @@ extern "C" {
 #include "src/game/level_update.h"
 #include "include/dialog_ids.h"
 #include "levels/scripts.h"
+#include "levels/menu/header.h"
 #include "src/game/area.h"
 }
 
@@ -308,6 +309,7 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
 
     // global scripts
     lvl_constant(level_main_scripts_entry);
+    lvl_constant(level_main_menu_entry_1);
     lvl_constant(script_func_global_1);
     lvl_constant(script_func_global_2);
     lvl_constant(script_func_global_3);
@@ -365,6 +367,7 @@ s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found) {
 
     // Other constants
     lvl_constant(NULL);
+    lvl_constant(TRUE);
     lvl_constant(FALSE);
 
     *found = false;

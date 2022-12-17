@@ -21,6 +21,8 @@ extern "C" {
 #include "game/behavior_actions.h"
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
+#include "menu/level_select_menu.h"
+#include "menu/intro_geo.h"
 
 #include "actors/common0.h"
 #include "actors/common1.h"
@@ -78,6 +80,7 @@ extern "C" {
 #include "levels/wdw/header.h"
 #include "levels/wf/header.h"
 #include "levels/wmotr/header.h"
+#include "levels/menu/header.h"
 
 #include "dynos_mgr_builtin_externs.h"
 #include "textures.h"
@@ -175,6 +178,7 @@ static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_wdw_entry),
     define_builtin(level_wf_entry),
     define_builtin(level_wmotr_entry),
+    define_builtin(level_main_menu_entry_1),
 };
 
 const void* DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName) {
@@ -1900,6 +1904,13 @@ static const void* sDynosBuiltinFuncs[] = {
     // Other
     define_builtin(load_object_collision_model),
     define_builtin(obj_set_secondary_camera_focus),
+
+    // Menu related
+    define_builtin(lvl_intro_update),
+    define_builtin(geo_intro_super_mario_64_logo),
+    define_builtin(geo_intro_tm_copyright),
+    define_builtin(geo_intro_regular_backdrop),
+    define_builtin(geo_draw_mario_head_goddard),
 };
 
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName) {

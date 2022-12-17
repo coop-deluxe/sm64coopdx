@@ -15,6 +15,7 @@
 #include "seq_ids.h"
 #include "sm64.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "menu/intro_geo.h"
 
 #define PRESS_START_DEMO_TIMER 800
 
@@ -248,6 +249,13 @@ s32 lvl_intro_update(s16 arg1, UNUSED s32 arg2) {
             break;
         case 3:
             retVar = level_select_input_loop();
+            break;
+        case 4:
+            gGlobalTimer = 0;
+            skipInterpolationTitleScreen = true;
+            break;
+        case 5:
+            skipInterpolationTitleScreen = false;
             break;
     }
     return retVar;
