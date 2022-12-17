@@ -40,6 +40,7 @@ enum LuaHookedEventType {
     HOOK_ALLOW_HAZARD_SURFACE,
     HOOK_ON_CHAT_MESSAGE,
     HOOK_OBJECT_SET_MODEL,
+    HOOK_CHARACTER_SOUND,
     HOOK_MAX,
 };
 
@@ -73,6 +74,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ALLOW_HAZARD_SURFACE",
     "HOOK_ON_CHAT_MESSAGE",
     "HOOK_OBJECT_SET_MODEL",
+    "HOOK_CHARACTER_SOUND",
     "HOOK_MAX"
 };
 
@@ -102,6 +104,7 @@ void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookTy
 void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue);
 void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool* returnValue);
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
+void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID);
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
 void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue);
@@ -109,7 +112,7 @@ void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int mo
 void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue);
 void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue);
 void smlua_call_event_hooks_on_chat_message(enum LuaHookedEventType hookType, struct MarioState* m, const char* message, bool* returnValue);
-void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID);
+bool smlua_call_event_hooks_mario_charactersound_param_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, enum CharacterSound characterSound, s32* returnValue);
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);
 const BehaviorScript* smlua_override_behavior(const BehaviorScript* behavior);

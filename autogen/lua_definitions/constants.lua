@@ -8134,7 +8134,10 @@ HOOK_ON_CHAT_MESSAGE = 27
 HOOK_OBJECT_SET_MODEL = 28
 
 --- @type LuaHookedEventType
-HOOK_MAX = 29
+HOOK_CHARACTER_SOUND = 29
+
+--- @type LuaHookedEventType
+HOOK_MAX = 30
 
 --- @class HudDisplayFlags
 

@@ -11,6 +11,7 @@
 #include "audio/external.h"
 #include "engine/graph_node.h"
 #include "characters_bass_sounds.h"
+#include "pc/lua/smlua.h"
 
 extern Gfx mario_cap_seg3_dl_03022F48[];
 extern Gfx luigi_cap_seg3_dl_03022F48[];
@@ -455,6 +456,12 @@ struct Character* get_character(struct MarioState* m) {
 
 static s32 get_character_sound(struct MarioState* m, enum CharacterSound characterSound) {
     if (m == NULL || m->marioObj == NULL) { return 0; }
+	
+    s32 override = 0;
+    if (smlua_call_event_hooks_mario_charactersound_param_ret_int(HOOK_CHARACTER_SOUND, m, characterSound, &override)) {
+        return override;
+    }
+	
     struct Character* character = ((m == NULL || m->character == NULL) ? &gCharacters[CT_MARIO] : m->character);
     switch (characterSound) {
         case CHAR_SOUND_YAH_WAH_HOO:         return character->soundYahWahHoo;

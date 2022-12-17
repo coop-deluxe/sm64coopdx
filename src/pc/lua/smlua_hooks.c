@@ -634,6 +634,43 @@ void smlua_call_event_hooks_on_chat_message(enum LuaHookedEventType hookType, st
     }
 }
 
+bool smlua_call_event_hooks_mario_charactersound_param_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, enum CharacterSound characterSound, s32* returnValue) {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return false; }
+    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push mario state
+        lua_getglobal(L, "gMarioStates");
+        lua_pushinteger(L, m->playerIndex);
+        lua_gettable(L, -2);
+        lua_remove(L, -2);
+        
+        // push character sound
+        lua_pushinteger(L, characterSound);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback: %u", hookType);
+            continue;
+        }
+
+        // output the return value
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *returnValue = smlua_to_integer(L, -1);
+            lua_settop(L, prevTop);
+            return true;
+        } else {
+            lua_settop(L, prevTop);
+        }
+    }
+    return false;
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////
