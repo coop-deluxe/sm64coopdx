@@ -29,7 +29,7 @@ gBehaviorValues.dialogs.KoopaQuickThiWinDialog = DIALOG_031
 -- force server settings --
 ---------------------------
 
-gLevelValues.fixCollisionBugs = 1
+gServerSettings.skipIntro = 1
 
 --------------
 -- movtexs --
