@@ -748,6 +748,7 @@
 --- @field public unkC4 number
 --- @field public usedObj Object
 --- @field public vel Vec3f
+--- @field public visibleToEnemies integer
 --- @field public wall Surface
 --- @field public wallKickTimer integer
 --- @field public wallNormal Vec3f
