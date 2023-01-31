@@ -640,14 +640,17 @@
 --- @field public floorLowerLimitShadow integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
+--- @field public metalCapSequence integer
 --- @field public pssSlideStarIndex integer
 --- @field public pssSlideStarTime integer
 --- @field public skipCreditsAt LevelNum
 --- @field public starPositions StarPositions
 --- @field public vanishCapDuration integer
 --- @field public vanishCapDurationVcutm integer
+--- @field public vanishCapSequence integer
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
+--- @field public wingCapSequence integer
 
 --- @class LinearTransitionPoint
 --- @field public dist number
@@ -748,6 +751,7 @@
 --- @field public unkC4 number
 --- @field public usedObj Object
 --- @field public vel Vec3f
+--- @field public visibleToEnemies integer
 --- @field public wall Surface
 --- @field public wallKickTimer integer
 --- @field public wallNormal Vec3f

@@ -935,14 +935,17 @@
 | floorLowerLimitShadow | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
+| metalCapSequence | `integer` |  |
 | pssSlideStarIndex | `integer` |  |
 | pssSlideStarTime | `integer` |  |
 | skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 | vanishCapDuration | `integer` |  |
 | vanishCapDurationVcutm | `integer` |  |
+| vanishCapSequence | `integer` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
+| wingCapSequence | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1071,6 +1074,7 @@
 | unkC4 | `number` |  |
 | usedObj | [Object](structs.md#Object) |  |
 | vel | [Vec3f](structs.md#Vec3f) | read-only |
+| visibleToEnemies | `integer` |  |
 | wall | [Surface](structs.md#Surface) |  |
 | wallKickTimer | `integer` |  |
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |
