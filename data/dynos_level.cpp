@@ -51,17 +51,17 @@ static void *sDynosLevelScriptsOriginal[LEVEL_COUNT] = { NULL };
 static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 static Array<s32> sDynosLevelList = Array<s32>(); // Ordered by Course Id, COURSE_NONE excluded
 
-static u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
+u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
     u64 _Offset = (((aOffset) & 3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
     return *((u64 *) (u64(aCmd) + _Offset));
 }
 
-static void *DynOS_Level_CmdNext(void *aCmd, u64 aCmdSize) {
+void *DynOS_Level_CmdNext(void *aCmd, u64 aCmdSize) {
     u64 _Offset = (((aCmdSize) & 3llu) | (((aCmdSize) & ~3llu) << (sizeof(void *) >> 3llu)));
     return (void *) (u64(aCmd) + _Offset);
 }
 
-static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
+void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
 
 //
 // Init
@@ -752,7 +752,7 @@ static LvlCmd *DynOS_Level_CmdJumpArea(Stack &aStack, LvlCmd *aCmd, s32 (*aPrepr
     return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
 }
 
-static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *)) {
+void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *)) {
     Stack _Stack;
     _Stack.mBaseIndex = -1;
     _Stack.mTopIndex = 0;

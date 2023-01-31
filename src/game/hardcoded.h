@@ -62,6 +62,7 @@ struct LevelValues {
     s16 floorLowerLimit;
     s16 floorLowerLimitMisc;
     s16 floorLowerLimitShadow;
+    bool disableActs;
 };
 
 extern struct LevelValues gLevelValues;

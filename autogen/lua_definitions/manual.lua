@@ -214,3 +214,10 @@ end
 function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
     -- ...
 end
+
+--- @param levelNum number
+--- @param func fun(areaNum:number, bhv:table)
+--- @return nil
+function level_script_parse(levelNum, func)
+    -- ...
+end

@@ -97,6 +97,7 @@ struct LevelValues gDefaultLevelValues = {
     .floorLowerLimit          = FLOOR_LOWER_LIMIT,
     .floorLowerLimitMisc      = FLOOR_LOWER_LIMIT_MISC,
     .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,
+    .disableActs              = false,
 };
 
 struct LevelValues gLevelValues = { 0 };

@@ -924,6 +924,7 @@
 | ----- | ---- | ------ |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
+| disableActs | `boolean` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |

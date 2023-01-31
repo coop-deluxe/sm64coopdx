@@ -179,6 +179,22 @@ void dynos_level_load_background(void *ptr) {
     DynOS_Lvl_LoadBackground(ptr);
 }
 
+u64 dynos_level_cmd_get(void *cmd, u64 offset) {
+    return DynOS_Level_CmdGet(cmd, offset);
+}
+
+void dynos_level_cmd_next(void *cmd, u64 cmdsize) {
+    DynOS_Level_CmdNext(cmd, cmdsize);
+}
+
+void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *)) {
+    DynOS_Level_ParseScript(script, aPreprocessFunction);
+}
+
+void* dynos_level_get_script(s32 level) {
+    return (void *) DynOS_Level_GetScript(level);
+}
+
 // -- Behaviors -- //
 
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName) {

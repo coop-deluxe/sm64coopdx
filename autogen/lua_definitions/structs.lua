@@ -629,6 +629,7 @@
 --- @class LevelValues
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
+--- @field public disableActs boolean
 --- @field public entryLevel LevelNum
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
