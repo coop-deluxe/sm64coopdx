@@ -872,6 +872,7 @@ void painting_update_floors(struct Painting *painting) {
         enterRight = 0;
         struct Surface* surface;
         find_floor(m->marioObj->oPosX, m->marioObj->oPosY, m->marioObj->oPosZ, &surface);
+        if (surface == NULL) { continue; }
         s16 floorType = surface->type;
 
         /* The area in front of every painting in the game (except HMC and CotMC, which   *\
