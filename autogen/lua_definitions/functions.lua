@@ -8563,6 +8563,17 @@ function obj_set_vel(o, vx, vy, vz)
     -- ...
 end
 
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param strength integer
+--- @param area integer
+--- @param index integer
+--- @return nil
+function set_whirlpools(x, y, z, strength, area, index)
+    -- ...
+end
+
 --- @param behaviorId BehaviorId
 --- @param modelId ModelExtendedId
 --- @param x number

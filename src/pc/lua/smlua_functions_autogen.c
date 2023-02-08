@@ -27799,6 +27799,33 @@ int smlua_func_obj_set_vel(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_whirlpools(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_whirlpools", 6, top);
+        return 0;
+    }
+
+    f32 x = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_whirlpools"); return 0; }
+    f32 y = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_whirlpools"); return 0; }
+    f32 z = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_whirlpools"); return 0; }
+    s16 strength = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "set_whirlpools"); return 0; }
+    s16 area = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "set_whirlpools"); return 0; }
+    s32 index = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "set_whirlpools"); return 0; }
+
+    set_whirlpools(x, y, z, strength, area, index);
+
+    return 1;
+}
+
 int smlua_func_spawn_non_sync_object(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30185,6 +30212,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_move_xyz", smlua_func_obj_move_xyz);
     smlua_bind_function(L, "obj_set_model_extended", smlua_func_obj_set_model_extended);
     smlua_bind_function(L, "obj_set_vel", smlua_func_obj_set_vel);
+    smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
     smlua_bind_function(L, "spawn_non_sync_object", smlua_func_spawn_non_sync_object);
     smlua_bind_function(L, "spawn_sync_object", smlua_func_spawn_sync_object);
 

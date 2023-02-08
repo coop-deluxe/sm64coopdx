@@ -383,3 +383,13 @@ void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz) {
     o->oPosY += dy;
     o->oPosZ += dz;
 }
+
+void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index) {
+    static struct Whirlpool whirlpool;
+
+    gAreas[area].whirlpools[index] = &whirlpool;
+    gAreas[area].whirlpools[index]->pos[0] = x;
+    gAreas[area].whirlpools[index]->pos[1] = y;
+    gAreas[area].whirlpools[index]->pos[2] = z;
+    gAreas[area].whirlpools[index]->strength = strength;
+}

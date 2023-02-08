@@ -53,5 +53,6 @@ bool obj_check_overlap_with_hitbox_params(struct Object *o, f32 x, f32 y, f32 z,
 void obj_set_vel(struct Object *o, f32 vx, f32 vy, f32 vz);
 void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);
 
+void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index);
 
 #endif
