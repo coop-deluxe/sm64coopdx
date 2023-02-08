@@ -3726,6 +3726,24 @@
 
 <br />
 
+## [cur_obj_set_billboard_if_vanilla_cam](#cur_obj_set_billboard_if_vanilla_cam)
+
+### Lua Example
+`cur_obj_set_billboard_if_vanilla_cam()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cur_obj_set_billboard_if_vanilla_cam(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [cur_obj_set_direction_table](#cur_obj_set_direction_table)
 
 ### Lua Example

@@ -1077,7 +1077,7 @@ void update_hud_values(void) {
         gHudDisplay.lives = gMarioState->numLives;
         gHudDisplay.keys = gMarioState->numKeys;
 
-        if (numHealthWedges > gHudDisplay.wedges) {
+        if (numHealthWedges > gHudDisplay.wedges && !gDjuiInMainMenu) {
             play_sound(SOUND_MENU_POWER_METER, gGlobalSoundSource);
         }
         gHudDisplay.wedges = numHealthWedges;
@@ -1548,13 +1548,10 @@ s32 update_level(void) {
             changeLevel = play_mode_normal();
             break;
         case PLAY_MODE_PAUSED:
-#ifdef DEVELOPMENT
-            if (configDisableDevPause) {
+            if (!(configSingleplayerPause && network_player_connected_count() == 1)) {
                 changeLevel = play_mode_normal();
             }
-#else
-                changeLevel = play_mode_normal();
-#endif
+
             if (sCurrPlayMode == PLAY_MODE_PAUSED) {
                 changeLevel = play_mode_paused();
             }

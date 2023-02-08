@@ -208,7 +208,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 26
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 27
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE                 },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE                 },
@@ -229,6 +229,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "RacingPenguinBigRadius",   LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigRadius),   false, LOT_NONE                 },
     { "RacingPenguinHeight",      LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinHeight),      false, LOT_NONE                 },
     { "RacingPenguinRadius",      LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinRadius),      false, LOT_NONE                 },
+    { "RespawnShellBoxes",        LVT_U8,      offsetof(struct BehaviorValues, RespawnShellBoxes),        false, LOT_NONE                 },
     { "ShowStarMilestones",       LVT_U8,      offsetof(struct BehaviorValues, ShowStarMilestones),       false, LOT_NONE                 },
     { "ToadStar1Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar1Requirement),     false, LOT_NONE                 },
     { "ToadStar2Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar2Requirement),     false, LOT_NONE                 },
@@ -726,7 +727,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 25
+#define LUA_LEVEL_VALUES_FIELD_COUNT 26
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "cellHeightLimit",          LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),          false, LOT_NONE          },
     { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
@@ -742,6 +743,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "floorLowerLimitShadow",    LVT_S16,     offsetof(struct LevelValues, floorLowerLimitShadow),    false, LOT_NONE          },
     { "metalCapDuration",         LVT_U16,     offsetof(struct LevelValues, metalCapDuration),         false, LOT_NONE          },
     { "metalCapDurationCotmc",    LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),    false, LOT_NONE          },
+    { "pauseExitAnywhere",        LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),        false, LOT_NONE          },
     { "metalCapSequence",         LVT_U8,      offsetof(struct LevelValues, metalCapSequence),         false, LOT_NONE          },
     { "pssSlideStarIndex",        LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),        false, LOT_NONE          },
     { "pssSlideStarTime",         LVT_U16,     offsetof(struct LevelValues, pssSlideStarTime),         false, LOT_NONE          },

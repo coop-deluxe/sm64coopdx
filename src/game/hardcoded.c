@@ -97,6 +97,7 @@ struct LevelValues gDefaultLevelValues = {
     .floorLowerLimit          = FLOOR_LOWER_LIMIT,
     .floorLowerLimitMisc      = FLOOR_LOWER_LIMIT_MISC,
     .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,
+    .pauseExitAnywhere        = 1,
     .disableActs              = false,
 };
 
@@ -130,6 +131,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .BowlingBallThiSmallSpeed = 10.0f,
     .GrateStarRequirement     = 120,
     .ShowStarMilestones       = TRUE,
+    .RespawnShellBoxes        = TRUE,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {
         .BobombBuddyBob1Dialog         = DIALOG_004,

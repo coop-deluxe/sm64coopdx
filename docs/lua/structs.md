@@ -310,6 +310,7 @@
 | RacingPenguinBigRadius | `number` |  |
 | RacingPenguinHeight | `number` |  |
 | RacingPenguinRadius | `number` |  |
+| RespawnShellBoxes | `integer` |  |
 | ShowStarMilestones | `integer` |  |
 | ToadStar1Requirement | `integer` |  |
 | ToadStar2Requirement | `integer` |  |
@@ -936,6 +937,7 @@
 | floorLowerLimitShadow | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
+| pauseExitAnywhere | `boolean` |  |
 | metalCapSequence | `integer` |  |
 | pssSlideStarIndex | `integer` |  |
 | pssSlideStarTime | `integer` |  |

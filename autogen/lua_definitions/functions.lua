@@ -6795,6 +6795,11 @@ function cur_obj_set_behavior(behavior)
     -- ...
 end
 
+--- @return nil
+function cur_obj_set_billboard_if_vanilla_cam()
+    -- ...
+end
+
 --- @param a0 Pointer_integer
 --- @return integer
 function cur_obj_set_direction_table(a0)

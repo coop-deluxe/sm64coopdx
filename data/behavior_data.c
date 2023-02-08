@@ -3202,16 +3202,12 @@ const BehaviorScript bhvFloorTrapInCastle[] = {
 const BehaviorScript bhvTree[] = {
     BEGIN(OBJ_LIST_POLELIKE),
     ID(id_bhvTree),
-    #ifdef BETTERCAMERA
-    CYLBOARD(),
-    #else
-    BILLBOARD(),
-    #endif
     OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
     SET_INT(oInteractType, INTERACT_POLE),
     SET_HITBOX(/*Radius*/ 80, /*Height*/ 500),
     SET_INT(oIntangibleTimer, 0),
     BEGIN_LOOP(),
+        CALL_NATIVE(cur_obj_set_billboard_if_vanilla_cam),
         CALL_NATIVE(bhv_pole_base_loop),
     END_LOOP(),
 };

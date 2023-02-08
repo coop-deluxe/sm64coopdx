@@ -62,6 +62,7 @@ struct LevelValues {
     s16 floorLowerLimit;
     s16 floorLowerLimitMisc;
     s16 floorLowerLimitShadow;
+    bool pauseExitAnywhere;
     bool disableActs;
 };
 
@@ -225,6 +226,7 @@ struct BehaviorValues {
     f32 BowlingBallThiSmallSpeed;
     u16 GrateStarRequirement;
     u8  ShowStarMilestones;
+    u8  RespawnShellBoxes;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;

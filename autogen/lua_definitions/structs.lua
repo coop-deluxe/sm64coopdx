@@ -188,6 +188,7 @@
 --- @field public RacingPenguinBigRadius number
 --- @field public RacingPenguinHeight number
 --- @field public RacingPenguinRadius number
+--- @field public RespawnShellBoxes integer
 --- @field public ShowStarMilestones integer
 --- @field public ToadStar1Requirement integer
 --- @field public ToadStar2Requirement integer
@@ -641,6 +642,7 @@
 --- @field public floorLowerLimitShadow integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
+--- @field public pauseExitAnywhere boolean
 --- @field public metalCapSequence integer
 --- @field public pssSlideStarIndex integer
 --- @field public pssSlideStarTime integer

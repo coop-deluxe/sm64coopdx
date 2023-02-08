@@ -1840,6 +1840,16 @@ void obj_set_cylboard(struct Object *obj) {
     obj->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
 }
 
+void cur_obj_set_billboard_if_vanilla_cam(void) {
+    if (configEnableCamera) {
+        o->header.gfx.node.flags &= ~GRAPH_RENDER_BILLBOARD;
+        o->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
+    } else {
+        o->header.gfx.node.flags &= ~GRAPH_RENDER_CYLBOARD;
+        o->header.gfx.node.flags |= GRAPH_RENDER_BILLBOARD;
+    }
+}
+
 void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
     if (o == NULL) { return; }
     
