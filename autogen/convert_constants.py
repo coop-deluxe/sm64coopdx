@@ -37,7 +37,8 @@ in_files = [
     "include/dialog_ids.h",
     "include/seq_ids.h",
     "include/surface_terrains.h",
-    "src/game/level_update.h"
+    "src/game/level_update.h",
+    "src/pc/network/version.h"
 ]
 
 exclude_constants = {
