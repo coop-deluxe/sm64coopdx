@@ -2912,7 +2912,9 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
         vec3f_copy(end->pos, c->pos);
         vec3f_sub(end->pos, sMarioCamState->pos);
 
-        sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
+        if (sModeInfo.newMode != CAMERA_MODE_NONE) {
+            sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
+        }
 
         // End was updated by sModeTransitions
         vec3f_sub(end->focus, sMarioCamState->pos);
