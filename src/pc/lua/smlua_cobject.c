@@ -633,6 +633,11 @@ void smlua_cobject_init_globals(void) {
         smlua_push_object(L, LOT_BEHAVIORVALUES, &gBehaviorValues);
         lua_setglobal(L, "gBehaviorValues");
     }
+
+    {
+        smlua_push_object(L, LOT_PAINTINGVALUES, &gPaintingValues);
+        lua_setglobal(L, "gPaintingValues");
+    }
 }
 
 void smlua_cobject_init_per_file_globals(char* path) {

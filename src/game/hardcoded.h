@@ -3,6 +3,7 @@
 #include "level_table.h"
 #include "dialog_ids.h"
 #include "seq_ids.h"
+#include "paintings.h"
 
   ////////////
  // Levels //
@@ -233,6 +234,29 @@ struct BehaviorValues {
 };
 
 extern struct BehaviorValues gBehaviorValues;
+
+struct PaintingValues {
+    struct Painting* cotmc_painting;
+
+    struct Painting* bob_painting;
+    struct Painting* ccm_painting;
+    struct Painting* wf_painting;
+    struct Painting* jrb_painting;
+    struct Painting* lll_painting;
+    struct Painting* ssl_painting;
+    struct Painting* hmc_painting;
+    struct Painting* ddd_painting;
+    struct Painting* wdw_painting;
+    struct Painting* thi_tiny_painting;
+    struct Painting* ttm_painting;
+    struct Painting* ttc_painting;
+    struct Painting* sl_painting;
+    struct Painting* thi_huge_painting;
+
+    struct Painting* ttm_slide_painting;
+};
+
+extern struct PaintingValues gPaintingValues;
 
 void hardcoded_reset_default_values(void);
 

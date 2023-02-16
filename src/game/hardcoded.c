@@ -255,6 +255,29 @@ struct BehaviorValues gDefaultBehaviorValues = {
 
 struct BehaviorValues gBehaviorValues = { 0 };
 
+struct PaintingValues gDefaultPaintingValues = {
+    .cotmc_painting =     &cotmc_painting,
+
+    .bob_painting =       &bob_painting,
+    .ccm_painting =       &ccm_painting,
+    .wf_painting =        &wf_painting,
+    .jrb_painting =       &jrb_painting,
+    .lll_painting =       &lll_painting,
+    .ssl_painting =       &ssl_painting,
+    .hmc_painting =       &hmc_painting,
+    .ddd_painting =       &ddd_painting,
+    .wdw_painting =       &wdw_painting,
+    .thi_tiny_painting =  &thi_tiny_painting,
+    .ttm_painting =       &ttm_painting,
+    .ttc_painting =       &ttc_painting,
+    .sl_painting =        &sl_painting,
+    .thi_huge_painting =  &thi_huge_painting,
+
+    .ttm_slide_painting = &ttm_slide_painting,
+};
+
+struct PaintingValues gPaintingValues = { 0 };
+
   ///////////////
  // functions //
 ///////////////
@@ -263,4 +286,5 @@ __attribute__((constructor))
 void hardcoded_reset_default_values(void) {
     gLevelValues = gDefaultLevelValues;
     gBehaviorValues = gDefaultBehaviorValues;
+    gPaintingValues = gDefaultPaintingValues;
 }

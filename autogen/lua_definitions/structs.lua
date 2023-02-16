@@ -1601,6 +1601,63 @@
 --- @field public offset integer
 --- @field public size integer
 
+--- @class Painting
+--- @field public alpha integer
+--- @field public currFloor integer
+--- @field public currRippleMag number
+--- @field public currRippleRate number
+--- @field public dispersionFactor number
+--- @field public entryDispersionFactor number
+--- @field public entryRippleDecay number
+--- @field public entryRippleMag number
+--- @field public entryRippleRate number
+--- @field public floorEntered integer
+--- @field public id integer
+--- @field public imageCount integer
+--- @field public lastFloor integer
+--- @field public marioIsUnder integer
+--- @field public marioWasUnder integer
+--- @field public marioWentUnder integer
+--- @field public passiveDispersionFactor number
+--- @field public passiveRippleDecay number
+--- @field public passiveRippleMag number
+--- @field public passiveRippleRate number
+--- @field public pitch number
+--- @field public posX number
+--- @field public posY number
+--- @field public posZ number
+--- @field public rippleDecay number
+--- @field public rippleTimer number
+--- @field public rippleTrigger integer
+--- @field public rippleX number
+--- @field public rippleY number
+--- @field public size number
+--- @field public state integer
+--- @field public textureHeight integer
+--- @field public textureType integer
+--- @field public textureWidth integer
+--- @field public yaw number
+
+--- @class PaintingMeshVertex
+
+--- @class PaintingValues
+--- @field public bob_painting Painting
+--- @field public ccm_painting Painting
+--- @field public cotmc_painting Painting
+--- @field public ddd_painting Painting
+--- @field public hmc_painting Painting
+--- @field public jrb_painting Painting
+--- @field public lll_painting Painting
+--- @field public sl_painting Painting
+--- @field public ssl_painting Painting
+--- @field public thi_huge_painting Painting
+--- @field public thi_tiny_painting Painting
+--- @field public ttc_painting Painting
+--- @field public ttm_painting Painting
+--- @field public ttm_slide_painting Painting
+--- @field public wdw_painting Painting
+--- @field public wf_painting Painting
+
 --- @class ParallelTrackingPoint
 --- @field public distThresh number
 --- @field public pos Vec3f

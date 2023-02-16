@@ -19,6 +19,7 @@
 #include "src/game/hardcoded.h"
 #include "src/pc/mods/mod.h"
 #include "src/pc/lua/utils/smlua_audio_utils.h"
+#include "src/game/paintings.h"
 
 #include "include/object_fields.h"
 
@@ -1749,6 +1750,76 @@ static struct LuaObjectField sOffsetSizePairFields[LUA_OFFSET_SIZE_PAIR_FIELD_CO
     { "size",   LVT_U32, offsetof(struct OffsetSizePair, size),   false, LOT_NONE },
 };
 
+#define LUA_PAINTING_FIELD_COUNT 35
+static struct LuaObjectField sPaintingFields[LUA_PAINTING_FIELD_COUNT] = {
+    { "alpha",                   LVT_U8,  offsetof(struct Painting, alpha),                   false, LOT_NONE },
+    { "currFloor",               LVT_S8,  offsetof(struct Painting, currFloor),               false, LOT_NONE },
+    { "currRippleMag",           LVT_F32, offsetof(struct Painting, currRippleMag),           false, LOT_NONE },
+    { "currRippleRate",          LVT_F32, offsetof(struct Painting, currRippleRate),          false, LOT_NONE },
+    { "dispersionFactor",        LVT_F32, offsetof(struct Painting, dispersionFactor),        false, LOT_NONE },
+    { "entryDispersionFactor",   LVT_F32, offsetof(struct Painting, entryDispersionFactor),   false, LOT_NONE },
+    { "entryRippleDecay",        LVT_F32, offsetof(struct Painting, entryRippleDecay),        false, LOT_NONE },
+    { "entryRippleMag",          LVT_F32, offsetof(struct Painting, entryRippleMag),          false, LOT_NONE },
+    { "entryRippleRate",         LVT_F32, offsetof(struct Painting, entryRippleRate),         false, LOT_NONE },
+    { "floorEntered",            LVT_S8,  offsetof(struct Painting, floorEntered),            false, LOT_NONE },
+    { "id",                      LVT_S16, offsetof(struct Painting, id),                      true,  LOT_NONE },
+    { "imageCount",              LVT_S8,  offsetof(struct Painting, imageCount),              true,  LOT_NONE },
+    { "lastFloor",               LVT_S8,  offsetof(struct Painting, lastFloor),               false, LOT_NONE },
+    { "marioIsUnder",            LVT_S8,  offsetof(struct Painting, marioIsUnder),            false, LOT_NONE },
+    { "marioWasUnder",           LVT_S8,  offsetof(struct Painting, marioWasUnder),           false, LOT_NONE },
+    { "marioWentUnder",          LVT_S8,  offsetof(struct Painting, marioWentUnder),          false, LOT_NONE },
+//  { "normalDisplayList",       LVT_???, offsetof(struct Painting, normalDisplayList),       true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "passiveDispersionFactor", LVT_F32, offsetof(struct Painting, passiveDispersionFactor), false, LOT_NONE },
+    { "passiveRippleDecay",      LVT_F32, offsetof(struct Painting, passiveRippleDecay),      false, LOT_NONE },
+    { "passiveRippleMag",        LVT_F32, offsetof(struct Painting, passiveRippleMag),        false, LOT_NONE },
+    { "passiveRippleRate",       LVT_F32, offsetof(struct Painting, passiveRippleRate),       false, LOT_NONE },
+    { "pitch",                   LVT_F32, offsetof(struct Painting, pitch),                   false, LOT_NONE },
+    { "posX",                    LVT_F32, offsetof(struct Painting, posX),                    false, LOT_NONE },
+    { "posY",                    LVT_F32, offsetof(struct Painting, posY),                    false, LOT_NONE },
+    { "posZ",                    LVT_F32, offsetof(struct Painting, posZ),                    false, LOT_NONE },
+    { "rippleDecay",             LVT_F32, offsetof(struct Painting, rippleDecay),             false, LOT_NONE },
+//  { "rippleDisplayList",       LVT_???, offsetof(struct Painting, rippleDisplayList),       true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "rippleTimer",             LVT_F32, offsetof(struct Painting, rippleTimer),             false, LOT_NONE },
+    { "rippleTrigger",           LVT_S8,  offsetof(struct Painting, rippleTrigger),           false, LOT_NONE },
+    { "rippleX",                 LVT_F32, offsetof(struct Painting, rippleX),                 false, LOT_NONE },
+    { "rippleY",                 LVT_F32, offsetof(struct Painting, rippleY),                 false, LOT_NONE },
+//  { "ripples",                 LOT_???, offsetof(struct Painting, ripples),                 false, LOT_???  }, <--- UNIMPLEMENTED
+    { "size",                    LVT_F32, offsetof(struct Painting, size),                    false, LOT_NONE },
+    { "state",                   LVT_S8,  offsetof(struct Painting, state),                   false, LOT_NONE },
+//  { "textureArray",            LVT_???, offsetof(struct Painting, textureArray),            true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "textureHeight",           LVT_S16, offsetof(struct Painting, textureHeight),           true,  LOT_NONE },
+//  { "textureMaps",             LVT_???, offsetof(struct Painting, textureMaps),             true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "textureType",             LVT_S8,  offsetof(struct Painting, textureType),             true,  LOT_NONE },
+    { "textureWidth",            LVT_S16, offsetof(struct Painting, textureWidth),            true,  LOT_NONE },
+    { "yaw",                     LVT_F32, offsetof(struct Painting, yaw),                     false, LOT_NONE },
+};
+
+#define LUA_PAINTING_MESH_VERTEX_FIELD_COUNT 0
+static struct LuaObjectField sPaintingMeshVertexFields[LUA_PAINTING_MESH_VERTEX_FIELD_COUNT] = {
+//  { "norm", LOT_???, offsetof(struct PaintingMeshVertex, norm), false, LOT_??? }, <--- UNIMPLEMENTED
+//  { "pos",  LOT_???, offsetof(struct PaintingMeshVertex, pos),  false, LOT_??? }, <--- UNIMPLEMENTED
+};
+
+#define LUA_PAINTING_VALUES_FIELD_COUNT 16
+static struct LuaObjectField sPaintingValuesFields[LUA_PAINTING_VALUES_FIELD_COUNT] = {
+    { "bob_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, bob_painting),       false, LOT_PAINTING },
+    { "ccm_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ccm_painting),       false, LOT_PAINTING },
+    { "cotmc_painting",     LVT_COBJECT_P, offsetof(struct PaintingValues, cotmc_painting),     false, LOT_PAINTING },
+    { "ddd_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ddd_painting),       false, LOT_PAINTING },
+    { "hmc_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, hmc_painting),       false, LOT_PAINTING },
+    { "jrb_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, jrb_painting),       false, LOT_PAINTING },
+    { "lll_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, lll_painting),       false, LOT_PAINTING },
+    { "sl_painting",        LVT_COBJECT_P, offsetof(struct PaintingValues, sl_painting),        false, LOT_PAINTING },
+    { "ssl_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ssl_painting),       false, LOT_PAINTING },
+    { "thi_huge_painting",  LVT_COBJECT_P, offsetof(struct PaintingValues, thi_huge_painting),  false, LOT_PAINTING },
+    { "thi_tiny_painting",  LVT_COBJECT_P, offsetof(struct PaintingValues, thi_tiny_painting),  false, LOT_PAINTING },
+    { "ttc_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ttc_painting),       false, LOT_PAINTING },
+    { "ttm_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ttm_painting),       false, LOT_PAINTING },
+    { "ttm_slide_painting", LVT_COBJECT_P, offsetof(struct PaintingValues, ttm_slide_painting), false, LOT_PAINTING },
+    { "wdw_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, wdw_painting),       false, LOT_PAINTING },
+    { "wf_painting",        LVT_COBJECT_P, offsetof(struct PaintingValues, wf_painting),        false, LOT_PAINTING },
+};
+
 #define LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT 4
 static struct LuaObjectField sParallelTrackingPointFields[LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT] = {
     { "distThresh",  LVT_F32,     offsetof(struct ParallelTrackingPoint, distThresh),  false, LOT_NONE  },
@@ -2051,6 +2122,9 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_OBJECTNODE,                sObjectNodeFields,                LUA_OBJECT_NODE_FIELD_COUNT                  },
     { LOT_OBJECTWARPNODE,            sObjectWarpNodeFields,            LUA_OBJECT_WARP_NODE_FIELD_COUNT             },
     { LOT_OFFSETSIZEPAIR,            sOffsetSizePairFields,            LUA_OFFSET_SIZE_PAIR_FIELD_COUNT             },
+    { LOT_PAINTING,                  sPaintingFields,                  LUA_PAINTING_FIELD_COUNT                     },
+    { LOT_PAINTINGMESHVERTEX,        sPaintingMeshVertexFields,        LUA_PAINTING_MESH_VERTEX_FIELD_COUNT         },
+    { LOT_PAINTINGVALUES,            sPaintingValuesFields,            LUA_PAINTING_VALUES_FIELD_COUNT              },
     { LOT_PARALLELTRACKINGPOINT,     sParallelTrackingPointFields,     LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT      },
     { LOT_PLAYERCAMERASTATE,         sPlayerCameraStateFields,         LUA_PLAYER_CAMERA_STATE_FIELD_COUNT          },
     { LOT_PLAYERGEOMETRY,            sPlayerGeometryFields,            LUA_PLAYER_GEOMETRY_FIELD_COUNT              },

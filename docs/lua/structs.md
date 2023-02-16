@@ -46,6 +46,9 @@
 - [ObjectNode](#ObjectNode)
 - [ObjectWarpNode](#ObjectWarpNode)
 - [OffsetSizePair](#OffsetSizePair)
+- [Painting](#Painting)
+- [PaintingMeshVertex](#PaintingMeshVertex)
+- [PaintingValues](#PaintingValues)
 - [ParallelTrackingPoint](#ParallelTrackingPoint)
 - [PlayerCameraState](#PlayerCameraState)
 - [PlayerGeometry](#PlayerGeometry)
@@ -1994,6 +1997,84 @@
 | ----- | ---- | ------ |
 | offset | `integer` |  |
 | size | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Painting](#Painting)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| alpha | `integer` |  |
+| currFloor | `integer` |  |
+| currRippleMag | `number` |  |
+| currRippleRate | `number` |  |
+| dispersionFactor | `number` |  |
+| entryDispersionFactor | `number` |  |
+| entryRippleDecay | `number` |  |
+| entryRippleMag | `number` |  |
+| entryRippleRate | `number` |  |
+| floorEntered | `integer` |  |
+| id | `integer` | read-only |
+| imageCount | `integer` | read-only |
+| lastFloor | `integer` |  |
+| marioIsUnder | `integer` |  |
+| marioWasUnder | `integer` |  |
+| marioWentUnder | `integer` |  |
+| passiveDispersionFactor | `number` |  |
+| passiveRippleDecay | `number` |  |
+| passiveRippleMag | `number` |  |
+| passiveRippleRate | `number` |  |
+| pitch | `number` |  |
+| posX | `number` |  |
+| posY | `number` |  |
+| posZ | `number` |  |
+| rippleDecay | `number` |  |
+| rippleTimer | `number` |  |
+| rippleTrigger | `integer` |  |
+| rippleX | `number` |  |
+| rippleY | `number` |  |
+| size | `number` |  |
+| state | `integer` |  |
+| textureHeight | `integer` | read-only |
+| textureType | `integer` | read-only |
+| textureWidth | `integer` | read-only |
+| yaw | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [PaintingMeshVertex](#PaintingMeshVertex)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [PaintingValues](#PaintingValues)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| bob_painting | [Painting](structs.md#Painting) |  |
+| ccm_painting | [Painting](structs.md#Painting) |  |
+| cotmc_painting | [Painting](structs.md#Painting) |  |
+| ddd_painting | [Painting](structs.md#Painting) |  |
+| hmc_painting | [Painting](structs.md#Painting) |  |
+| jrb_painting | [Painting](structs.md#Painting) |  |
+| lll_painting | [Painting](structs.md#Painting) |  |
+| sl_painting | [Painting](structs.md#Painting) |  |
+| ssl_painting | [Painting](structs.md#Painting) |  |
+| thi_huge_painting | [Painting](structs.md#Painting) |  |
+| thi_tiny_painting | [Painting](structs.md#Painting) |  |
+| ttc_painting | [Painting](structs.md#Painting) |  |
+| ttm_painting | [Painting](structs.md#Painting) |  |
+| ttm_slide_painting | [Painting](structs.md#Painting) |  |
+| wdw_painting | [Painting](structs.md#Painting) |  |
+| wf_painting | [Painting](structs.md#Painting) |  |
 
 [:arrow_up_small:](#)
 
