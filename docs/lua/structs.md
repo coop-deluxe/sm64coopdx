@@ -771,10 +771,12 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| apostrophe | [TextureInfo](structs.md#TextureInfo) | read-only |
 | arrow_down | [TextureInfo](structs.md#TextureInfo) | read-only |
 | arrow_up | [TextureInfo](structs.md#TextureInfo) | read-only |
 | camera | [TextureInfo](structs.md#TextureInfo) | read-only |
 | coin | [TextureInfo](structs.md#TextureInfo) | read-only |
+| double_quote | [TextureInfo](structs.md#TextureInfo) | read-only |
 | lakitu | [TextureInfo](structs.md#TextureInfo) | read-only |
 | luigi_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 | mario_head | [TextureInfo](structs.md#TextureInfo) | read-only |
@@ -937,8 +939,8 @@
 | floorLowerLimitShadow | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
-| pauseExitAnywhere | `boolean` |  |
 | metalCapSequence | `integer` |  |
+| pauseExitAnywhere | `boolean` |  |
 | pssSlideStarIndex | `integer` |  |
 | pssSlideStarTime | `integer` |  |
 | skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
@@ -1077,7 +1079,6 @@
 | unkC4 | `number` |  |
 | usedObj | [Object](structs.md#Object) |  |
 | vel | [Vec3f](structs.md#Vec3f) | read-only |
-| visibleToEnemies | `integer` |  |
 | wall | [Surface](structs.md#Surface) |  |
 | wallKickTimer | `integer` |  |
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |

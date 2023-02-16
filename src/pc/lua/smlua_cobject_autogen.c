@@ -605,12 +605,14 @@ static struct LuaObjectField sGlobalObjectCollisionDataFields[LUA_GLOBAL_OBJECT_
     { "wooden_signpost_seg3_collision_0302DD80",         LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, wooden_signpost_seg3_collision_0302DD80),         false, LOT_POINTER },
 };
 
-#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 12
+#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 14
 static struct LuaObjectField sGlobalTexturesFields[LUA_GLOBAL_TEXTURES_FIELD_COUNT] = {
+    { "apostrophe",   LVT_COBJECT, offsetof(struct GlobalTextures, apostrophe),   true, LOT_TEXTUREINFO },
     { "arrow_down",   LVT_COBJECT, offsetof(struct GlobalTextures, arrow_down),   true, LOT_TEXTUREINFO },
     { "arrow_up",     LVT_COBJECT, offsetof(struct GlobalTextures, arrow_up),     true, LOT_TEXTUREINFO },
     { "camera",       LVT_COBJECT, offsetof(struct GlobalTextures, camera),       true, LOT_TEXTUREINFO },
     { "coin",         LVT_COBJECT, offsetof(struct GlobalTextures, coin),         true, LOT_TEXTUREINFO },
+    { "double_quote", LVT_COBJECT, offsetof(struct GlobalTextures, double_quote), true, LOT_TEXTUREINFO },
     { "lakitu",       LVT_COBJECT, offsetof(struct GlobalTextures, lakitu),       true, LOT_TEXTUREINFO },
     { "luigi_head",   LVT_COBJECT, offsetof(struct GlobalTextures, luigi_head),   true, LOT_TEXTUREINFO },
     { "mario_head",   LVT_COBJECT, offsetof(struct GlobalTextures, mario_head),   true, LOT_TEXTUREINFO },
@@ -743,8 +745,8 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "floorLowerLimitShadow",    LVT_S16,     offsetof(struct LevelValues, floorLowerLimitShadow),    false, LOT_NONE          },
     { "metalCapDuration",         LVT_U16,     offsetof(struct LevelValues, metalCapDuration),         false, LOT_NONE          },
     { "metalCapDurationCotmc",    LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),    false, LOT_NONE          },
-    { "pauseExitAnywhere",        LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),        false, LOT_NONE          },
     { "metalCapSequence",         LVT_U8,      offsetof(struct LevelValues, metalCapSequence),         false, LOT_NONE          },
+    { "pauseExitAnywhere",        LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),        false, LOT_NONE          },
     { "pssSlideStarIndex",        LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),        false, LOT_NONE          },
     { "pssSlideStarTime",         LVT_U16,     offsetof(struct LevelValues, pssSlideStarTime),         false, LOT_NONE          },
     { "skipCreditsAt",            LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),            false, LOT_NONE          },
@@ -793,7 +795,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 77
+#define LUA_MARIO_STATE_FIELD_COUNT 76
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -866,7 +868,6 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "unkC4",                    LVT_F32,       offsetof(struct MarioState, unkC4),                    false, LOT_NONE              },
     { "usedObj",                  LVT_COBJECT_P, offsetof(struct MarioState, usedObj),                  false, LOT_OBJECT            },
     { "vel",                      LVT_COBJECT,   offsetof(struct MarioState, vel),                      true,  LOT_VEC3F             },
-    { "visibleToEnemies",         LVT_U8,        offsetof(struct MarioState, visibleToEnemies),         false, LOT_NONE              },
     { "wall",                     LVT_COBJECT_P, offsetof(struct MarioState, wall),                     false, LOT_SURFACE           },
     { "wallKickTimer",            LVT_U8,        offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE              },
     { "wallNormal",               LVT_COBJECT,   offsetof(struct MarioState, wallNormal),               true,  LOT_VEC3F             },

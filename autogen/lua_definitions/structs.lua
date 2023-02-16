@@ -525,10 +525,12 @@
 --- @field public wooden_signpost_seg3_collision_0302DD80 Pointer_Collision
 
 --- @class GlobalTextures
+--- @field public apostrophe TextureInfo
 --- @field public arrow_down TextureInfo
 --- @field public arrow_up TextureInfo
 --- @field public camera TextureInfo
 --- @field public coin TextureInfo
+--- @field public double_quote TextureInfo
 --- @field public lakitu TextureInfo
 --- @field public luigi_head TextureInfo
 --- @field public mario_head TextureInfo
@@ -642,8 +644,8 @@
 --- @field public floorLowerLimitShadow integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
---- @field public pauseExitAnywhere boolean
 --- @field public metalCapSequence integer
+--- @field public pauseExitAnywhere boolean
 --- @field public pssSlideStarIndex integer
 --- @field public pssSlideStarTime integer
 --- @field public skipCreditsAt LevelNum
@@ -754,7 +756,6 @@
 --- @field public unkC4 number
 --- @field public usedObj Object
 --- @field public vel Vec3f
---- @field public visibleToEnemies integer
 --- @field public wall Surface
 --- @field public wallKickTimer integer
 --- @field public wallNormal Vec3f
