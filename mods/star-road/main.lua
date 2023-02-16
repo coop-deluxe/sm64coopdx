@@ -122,5 +122,15 @@ function on_death()
     end
 end
 
+function on_warp_and_init() -- 130 stars castle grounds music
+    local m = gMarioStates[0]
+    if m.numStars >= 130 and gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
+        play_music(0, 0x2F, 1)
+    end
+end
+
+
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_DEATH, on_death)
+hook_event(HOOK_ON_LEVEL_INIT, on_warp_and_init)
+hook_event(HOOK_ON_WARP, on_warp_and_init)
