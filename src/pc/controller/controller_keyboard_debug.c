@@ -11,7 +11,7 @@
 #include "behavior_data.h"
 #include "behavior_table.h"
 
-#ifdef DEBUG
+#ifdef DEVELOPMENT
 #include "pc/lua/smlua.h"
 #include "pc/network/socket/socket.h"
 
@@ -99,7 +99,6 @@ void debug_keyboard_on_key_down(int scancode) {
             case SCANCODE_ALT: sHoldingAlt = true; break;
             case SCANCODE_SHIFT: sHoldingShift = true; break;
             case SCANCODE_3: debug_breakpoint_here(); break;
-#ifdef DEVELOPMENT
             case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
             case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
             case SCANCODE_4:  if (sHoldingAlt) { debug_warp_level3();  } break;
@@ -107,7 +106,6 @@ void debug_keyboard_on_key_down(int scancode) {
             case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
             case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;
             case SCANCODE_F5: debug_reload_lua(); break;
-#endif
         }
     }
 }
