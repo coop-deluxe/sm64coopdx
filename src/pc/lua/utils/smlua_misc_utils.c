@@ -17,6 +17,7 @@
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "include/course_table.h"
 
 u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
@@ -372,4 +373,10 @@ void set_override_far(f32 far) {
 
 void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
     dynos_add_scroll_target(index, name, offset, size);
+}
+
+///
+
+bool course_is_main_course(u16 levelNum) {
+    return COURSE_IS_MAIN_COURSE(levelNum);
 }

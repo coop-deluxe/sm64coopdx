@@ -90,4 +90,6 @@ void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);
 
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
+bool course_is_main_course(u16 levelNum);
+
 #endif

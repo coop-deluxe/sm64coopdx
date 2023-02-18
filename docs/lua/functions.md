@@ -1516,6 +1516,7 @@
    - [camera_config_set_y_sensitivity](functions-4.md#camera_config_set_y_sensitivity)
    - [camera_freeze](functions-4.md#camera_freeze)
    - [camera_unfreeze](functions-4.md#camera_unfreeze)
+   - [course_is_main_course](functions-4.md#course_is_main_course)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
    - [get_dialog_box_state](functions-4.md#get_dialog_box_state)

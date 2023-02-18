@@ -8084,6 +8084,26 @@
 
 <br />
 
+## [course_is_main_course](#course_is_main_course)
+
+### Lua Example
+`local booleanValue = course_is_main_course(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool course_is_main_course(u16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [deref_s32_pointer](#deref_s32_pointer)
 
 ### Lua Example

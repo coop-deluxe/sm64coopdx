@@ -26777,6 +26777,23 @@ int smlua_func_camera_unfreeze(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_course_is_main_course(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "course_is_main_course", 1, top);
+        return 0;
+    }
+
+    u16 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "course_is_main_course"); return 0; }
+
+    lua_pushboolean(L, course_is_main_course(levelNum));
+
+    return 1;
+}
+
 int smlua_func_deref_s32_pointer(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30152,6 +30169,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
+    smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);

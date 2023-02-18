@@ -8196,6 +8196,12 @@ function camera_unfreeze()
     -- ...
 end
 
+--- @param levelNum integer
+--- @return boolean
+function course_is_main_course(levelNum)
+    -- ...
+end
+
 --- @param pointer Pointer_integer
 --- @return integer
 function deref_s32_pointer(pointer)
