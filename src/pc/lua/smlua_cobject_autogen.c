@@ -636,13 +636,14 @@ static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
     { "type",       LVT_S16,       offsetof(struct GraphNode, type),       false, LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 23
+#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 26
 static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_COUNT] = {
     { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE      },
     { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S     },
     { "animInfo",                   LVT_COBJECT,   offsetof(struct GraphNodeObject, animInfo),                   true,  LOT_ANIMINFO  },
     { "areaIndex",                  LVT_S8,        offsetof(struct GraphNodeObject, areaIndex),                  false, LOT_NONE      },
     { "cameraToObject",             LVT_COBJECT,   offsetof(struct GraphNodeObject, cameraToObject),             true,  LOT_VEC3F     },
+    { "disableAutomaticShadowPos",  LVT_BOOL,      offsetof(struct GraphNodeObject, disableAutomaticShadowPos),  false, LOT_NONE      },
     { "node",                       LVT_COBJECT,   offsetof(struct GraphNodeObject, node),                       true,  LOT_GRAPHNODE },
     { "pos",                        LVT_COBJECT,   offsetof(struct GraphNodeObject, pos),                        true,  LOT_VEC3F     },
     { "prevAngle",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevAngle),                  true,  LOT_VEC3S     },
@@ -655,6 +656,8 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
     { "prevThrowMatrixTimestamp",   LVT_U32,       offsetof(struct GraphNodeObject, prevThrowMatrixTimestamp),   false, LOT_NONE      },
     { "prevTimestamp",              LVT_U32,       offsetof(struct GraphNodeObject, prevTimestamp),              false, LOT_NONE      },
     { "scale",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, scale),                      true,  LOT_VEC3F     },
+    { "shadowInvisible",            LVT_BOOL,      offsetof(struct GraphNodeObject, shadowInvisible),            false, LOT_NONE      },
+    { "shadowPos",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, shadowPos),                  true,  LOT_VEC3F     },
     { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                false, LOT_GRAPHNODE },
     { "skipInViewCheck",            LVT_BOOL,      offsetof(struct GraphNodeObject, skipInViewCheck),            false, LOT_NONE      },
     { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), false, LOT_NONE      },
@@ -796,7 +799,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 76
+#define LUA_MARIO_STATE_FIELD_COUNT 77
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -869,6 +872,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "unkC4",                    LVT_F32,       offsetof(struct MarioState, unkC4),                    false, LOT_NONE              },
     { "usedObj",                  LVT_COBJECT_P, offsetof(struct MarioState, usedObj),                  false, LOT_OBJECT            },
     { "vel",                      LVT_COBJECT,   offsetof(struct MarioState, vel),                      true,  LOT_VEC3F             },
+    { "visibleToEnemies",         LVT_U8,        offsetof(struct MarioState, visibleToEnemies),         false, LOT_NONE              },
     { "wall",                     LVT_COBJECT_P, offsetof(struct MarioState, wall),                     false, LOT_SURFACE           },
     { "wallKickTimer",            LVT_U8,        offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE              },
     { "wallNormal",               LVT_COBJECT,   offsetof(struct MarioState, wallNormal),               true,  LOT_VEC3F             },

@@ -145,8 +145,11 @@ struct GraphNodeObject
     Vec3s prevAngle;
     Vec3f prevPos;
     u32 prevTimestamp;
+    Vec3f shadowPos;
     Vec3f prevShadowPos;
     u32 prevShadowPosTimestamp;
+    bool shadowInvisible;
+    bool disableAutomaticShadowPos;
     /*0x2C*/ Vec3f scale;
     Vec3f prevScale;
     u32 prevScaleTimestamp;

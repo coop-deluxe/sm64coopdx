@@ -555,6 +555,7 @@
 --- @field public animInfo AnimInfo
 --- @field public areaIndex integer
 --- @field public cameraToObject Vec3f
+--- @field public disableAutomaticShadowPos boolean
 --- @field public node GraphNode
 --- @field public pos Vec3f
 --- @field public prevAngle Vec3s
@@ -567,6 +568,8 @@
 --- @field public prevThrowMatrixTimestamp integer
 --- @field public prevTimestamp integer
 --- @field public scale Vec3f
+--- @field public shadowInvisible boolean
+--- @field public shadowPos Vec3f
 --- @field public sharedChild GraphNode
 --- @field public skipInViewCheck boolean
 --- @field public skipInterpolationTimestamp integer
@@ -756,6 +759,7 @@
 --- @field public unkC4 number
 --- @field public usedObj Object
 --- @field public vel Vec3f
+--- @field public visibleToEnemies integer
 --- @field public wall Surface
 --- @field public wallKickTimer integer
 --- @field public wallNormal Vec3f

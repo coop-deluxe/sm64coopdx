@@ -818,6 +818,7 @@
 | animInfo | [AnimInfo](structs.md#AnimInfo) | read-only |
 | areaIndex | `integer` |  |
 | cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
+| disableAutomaticShadowPos | `boolean` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevAngle | [Vec3s](structs.md#Vec3s) | read-only |
@@ -830,6 +831,8 @@
 | prevThrowMatrixTimestamp | `integer` |  |
 | prevTimestamp | `integer` |  |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
+| shadowInvisible | `boolean` |  |
+| shadowPos | [Vec3f](structs.md#Vec3f) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) |  |
 | skipInViewCheck | `boolean` |  |
 | skipInterpolationTimestamp | `integer` |  |
@@ -1082,6 +1085,7 @@
 | unkC4 | `number` |  |
 | usedObj | [Object](structs.md#Object) |  |
 | vel | [Vec3f](structs.md#Vec3f) | read-only |
+| visibleToEnemies | `integer` |  |
 | wall | [Surface](structs.md#Surface) |  |
 | wallKickTimer | `integer` |  |
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |
