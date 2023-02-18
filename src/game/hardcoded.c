@@ -99,6 +99,7 @@ struct LevelValues gDefaultLevelValues = {
     .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,
     .pauseExitAnywhere        = 1,
     .disableActs              = false,
+    .wingCapLookUpReq         = 10,
 };
 
 struct LevelValues gLevelValues = { 0 };

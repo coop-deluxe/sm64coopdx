@@ -17,6 +17,10 @@ gLevelValues.wingCapDurationTotwc   = 1800
 gLevelValues.metalCapDurationCotmc  = 900
 gLevelValues.vanishCapDurationVcutm = 900
 
+-- Hidden Palace look up req
+
+gLevelValues.wingCapLookUpReq = 120
+
 -- Replace Stars
 starPositions = gLevelValues.starPositions
 
