@@ -4740,6 +4740,9 @@ ACTIVE_FLAG_DEACTIVATED = 0
 ACTIVE_FLAG_DITHERED_ALPHA = (1 << 7)
 
 --- @type integer
+ACTIVE_FLAG_DORMANT = (1 << 11)
+
+--- @type integer
 ACTIVE_FLAG_FAR_AWAY = (1 << 1)
 
 --- @type integer

@@ -658,6 +658,7 @@
 --- @field public vanishCapSequence integer
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
+--- @field public wingCapLookUpReq integer
 --- @field public wingCapSequence integer
 
 --- @class LinearTransitionPoint
@@ -759,7 +760,6 @@
 --- @field public unkC4 number
 --- @field public usedObj Object
 --- @field public vel Vec3f
---- @field public visibleToEnemies integer
 --- @field public wall Surface
 --- @field public wallKickTimer integer
 --- @field public wallNormal Vec3f

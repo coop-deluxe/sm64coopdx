@@ -956,6 +956,7 @@
 | vanishCapSequence | `integer` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
+| wingCapLookUpReq | `integer` |  |
 | wingCapSequence | `integer` |  |
 
 [:arrow_up_small:](#)
@@ -1085,7 +1086,6 @@
 | unkC4 | `number` |  |
 | usedObj | [Object](structs.md#Object) |  |
 | vel | [Vec3f](structs.md#Vec3f) | read-only |
-| visibleToEnemies | `integer` |  |
 | wall | [Surface](structs.md#Surface) |  |
 | wallKickTimer | `integer` |  |
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |
