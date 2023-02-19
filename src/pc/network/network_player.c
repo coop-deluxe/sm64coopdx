@@ -193,6 +193,7 @@ void network_player_update(void) {
     }
 }
 
+extern bool gCurrentlyJoining;
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, char *name) {
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
@@ -288,7 +289,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
 
     // display connected popup
-    if (type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
+    if (!gCurrentlyJoining && type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
         char *playerColorString = network_get_player_text_color_string(np->localIndex);
         char popupMsg[128] = { 0 };
         snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ connected", playerColorString, np->name);
