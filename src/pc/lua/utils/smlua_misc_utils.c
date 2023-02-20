@@ -337,16 +337,14 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
 ///
 
 f32 get_environment_region(u8 index) {
-    if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
+    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0]) {
         return gEnvironmentRegions[6 * (int)index];
     }
     return gLevelValues.floorLowerLimit;
 }
 
-///
-
 void set_environment_region(u8 index, s32 value) {
-    if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
+    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0]) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
 }
