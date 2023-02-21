@@ -1645,7 +1645,6 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(toad_player_texture_eyes_dead, "actors/toad_player/custom_toad_eyes_dead.rgba16.png", 32, 32, 16),
     define_builtin_tex(toad_player_texture_hair, "actors/toad_player/custom_toad_hair.rgba16.png", 32, 32, 16),
     define_builtin_tex(toad_player_texture_cap, "actors/toad_player/custom_toad_cap.rgba16.png", 32, 32, 16),
-    define_builtin_tex(waluigi_cap_seg3_texture_0301DF50, "actors/waluigi/custom_waluigi_cap.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_white_button, "actors/wario/custom_wario_overalls_button.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_w_logo, "actors/wario/custom_wario_logo.rgba16.png", 32, 32, 16),
     define_builtin_tex(wario_texture_hair_sideburn, "actors/wario/custom_wario_sideburn.rgba16.png", 32, 32, 16),
@@ -1659,13 +1658,32 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(wario_texture_eyes_down, "actors/wario/custom_wario_eyes_down_unused.rgba16.png", 64, 32, 16),
     define_builtin_tex(wario_texture_eyes_dead, "actors/wario/custom_wario_eyes_dead.rgba16.png", 64, 32, 16),
     define_builtin_tex(wario_cap_seg3_texture_0301DF50, "actors/wario_cap/custom_wario_cap_logo.rgba16.png", 32, 32, 16),
+    
+    // Waluigi
+
+    define_builtin_tex(waluigi_custom_waluigi_overalls_button_rgba16, "actors/waluigi/custom_waluigi_overalls_button.rgba16.png", 32, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_metal_rgba16, "actors/waluigi/custom_waluigi_metal.rgba16.png", 64, 32, 16),
     define_builtin_tex(waluigi_custom_waluigi_cap_rgba16, "actors/waluigi/custom_waluigi_cap.rgba16.png", 32, 32, 16),
-    define_builtin_tex(waluigi_waluigi_eyes0_rgba16, "actors/waluigi/custom_waluigi_eyes0.rgba16.png", 64, 32, 16),
-    define_builtin_tex(waluigi_waluigi_mouth_rgba16, "actors/waluigi/custom_waluigi_mouth.rgba16.png", 64, 32, 16),
-    define_builtin_tex(waluigi_waluigi_eyes1_rgba16, "actors/waluigi/custom_waluigi_eyes1.rgba16.png", 64, 32, 16),
-    define_builtin_tex(waluigi_waluigi_eyes2_rgba16, "actors/waluigi/custom_waluigi_eyes2.rgba16.png", 64, 32, 16),
-    define_builtin_tex(waluigi_waluigi_eyes3_rgba16, "actors/waluigi/custom_waluigi_eyes3.rgba16.png", 64, 32, 16),
-    define_builtin_tex(waluigi_waluigi_glove_rgba16, "actors/waluigi/custom_waluigi_glove.rgba16.png", 32, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_glove_rgba16, "actors/waluigi/custom_waluigi_glove.rgba16.png", 32, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_sideburns_rgba16, "actors/waluigi/custom_waluigi_sideburns.rgba16.png", 32, 32, 16),
+
+    define_builtin_tex(waluigi_custom_waluigi_mouth_rgba16, "actors/waluigi/custom_waluigi_mouth.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_mouth_dead_rgba16, "actors/waluigi/custom_waluigi_mouth_dead.rgba16.png", 64, 32, 16),
+
+    define_builtin_tex(waluigi_wing_1_rgba16, "actors/waluigi/wing_1.rgba16.png", 32, 64, 16),
+    define_builtin_tex(waluigi_wing_2_rgba16, "actors/waluigi/wing_2.rgba16.png", 32, 64, 16),
+
+    // Eyes
+    define_builtin_tex(waluigi_custom_waluigi_eyes_center_rgba16, "actors/waluigi/custom_waluigi_eyes_center.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_eyes_half_closed_rgba16, "actors/waluigi/custom_waluigi_eyes_half_closed.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_eyes_closed_rgba16, "actors/waluigi/custom_waluigi_eyes_closed.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_eyes_dead_rgba16, "actors/waluigi/custom_waluigi_eyes_dead.rgba16.png", 64, 32, 16),
+    
+    // Unused
+    define_builtin_tex(waluigi_custom_waluigi_eyes_left_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_left_unused.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_eyes_right_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_right_unused.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_eyes_up_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_up_unused.rgba16.png", 64, 32, 16),
+    define_builtin_tex(waluigi_custom_waluigi_eyes_down_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_down_unused.rgba16.png", 64, 32, 16),
 };
 
 const Texture* DynOS_Builtin_Tex_GetFromName(const char* aDataName) {
