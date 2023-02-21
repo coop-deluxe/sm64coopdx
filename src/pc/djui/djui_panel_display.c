@@ -3,7 +3,7 @@
 #include "src/pc/configfile.h"
 
 // The checkbox size is determined by the base size they all have and the amount.
-#define CHECKBOXES_SIZE 32 * 6
+#define CHECKBOXES_SIZE 32 * 5
 // The checkbox pad size is determined by half the base size they all have and the amount plus one.
 #define CHECKBOXES_PAD_SIZE 16 * 7
 // The accumulative size of both the padding size and normal size for the checkboxes.
@@ -23,6 +23,7 @@
 #define BODY_HEIGHT CHECKBOXES_FULL_SIZE + SELECTION_BOXES_FULL_SIZE + BUTTON_SIZES
 
 static struct DjuiInputbox* sFrameLimitInput = NULL;
+static struct DjuiSelectionbox* sInterpolationSelectionBox = NULL;
 
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
@@ -30,6 +31,7 @@ static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
 
 static void djui_panel_display_uncapped_change(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(&sFrameLimitInput->base, !configUncappedFramerate);
+    djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
 }
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
@@ -41,6 +43,7 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
     }
+    djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
@@ -56,10 +59,6 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_base_set_size(&checkbox1->base, 1.0f, 32);
         djui_interactable_hook_value_change(&checkbox1->base, djui_panel_display_apply);
         defaultBase = &checkbox1->base;
-
-        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups);
-        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox5->base, 1.0f, 32);
 
     #ifdef EXTERNAL_DATA
         struct DjuiCheckbox* checkbox7 = djui_checkbox_create(&body->base, "Preload Textures", &configPrecacheRes);
@@ -106,6 +105,8 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Interpolation", interpChoices, 2, &configInterpolationMode);
         djui_base_set_size_type(&selectionbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&selectionbox1->base, 1.0f, 32);
+        djui_base_set_enabled(&selectionbox1->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
+        sInterpolationSelectionBox = selectionbox1;
 
         char* filterChoices[3] = { "Nearest", "Linear", "Tripoint" };
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(&body->base, "Filtering", filterChoices, 3, &configFiltering);
