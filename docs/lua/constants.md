@@ -19,6 +19,7 @@
     - [enum InteractionFlag](#enum-InteractionFlag)
 - [interaction.h](#interactionh)
     - [enum InteractionType](#enum-InteractionType)
+- [level_commands.h](#level_commandsh)
 - [level_defines.h](#level_definesh)
     - [enum LevelNum](#enum-LevelNum)
 - [level_update.h](#level_updateh)
@@ -1239,6 +1240,14 @@
 | INTERACT_SHOCK | (1 << 29) |
 | INTERACT_IGLOO_BARRIER | (1 << 30) |
 | INTERACT_PLAYER | (1 << 31) |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_commands.h](#level_commands.h)
+- WARP_CHECKPOINT
+- WARP_NO_CHECKPOINT
 
 [:arrow_up_small:](#)
 

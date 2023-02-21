@@ -170,6 +170,8 @@ struct ObjectWarpNode *area_get_warp_node(u8 id) {
 }
 
 struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o) {
+    if (o == NULL) { return NULL; }
+
     u8 sp1F = (o->oBehParams & 0x00FF0000) >> 16;
 
     return area_get_warp_node(sp1F);

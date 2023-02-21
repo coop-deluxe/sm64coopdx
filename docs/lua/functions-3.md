@@ -3359,6 +3359,37 @@
 <br />
 
 ---
+# functions from level_script.h
+
+<br />
+
+
+## [area_create_warp_node](#area_create_warp_node)
+
+### Lua Example
+`local ObjectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destNode | `integer` |
+| checkpoint | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+[ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from level_update.h
 
 <br />

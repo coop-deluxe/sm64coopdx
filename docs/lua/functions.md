@@ -20,6 +20,12 @@
 
 <br />
 
+- area.h
+   - [area_get_warp_node](functions.md#area_get_warp_node)
+   - [area_get_warp_node_from_params](functions.md#area_get_warp_node_from_params)
+
+<br />
+
 - behavior_actions.h
    - [arc_to_goal_pos](functions-2.md#arc_to_goal_pos)
    - [bhv_1up_common_init](functions-2.md#bhv_1up_common_init)
@@ -785,6 +791,11 @@
    - [get_star_name](functions-3.md#get_star_name)
    - [get_star_name_ascii](functions-3.md#get_star_name_ascii)
    - [get_star_name_sm64](functions-3.md#get_star_name_sm64)
+
+<br />
+
+- level_script.h
+   - [area_create_warp_node](functions-3.md#area_create_warp_node)
 
 <br />
 
@@ -1843,6 +1854,52 @@ Retrieves a texture by name.
 
 <br />
 
+
+---
+# functions from area.h
+
+<br />
+
+
+## [area_get_warp_node](#area_get_warp_node)
+
+### Lua Example
+`local ObjectWarpNodeValue = area_get_warp_node(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+[ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_get_warp_node(u8 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [area_get_warp_node_from_params](#area_get_warp_node_from_params)
+
+### Lua Example
+`local ObjectWarpNodeValue = area_get_warp_node_from_params(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+[ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
 ---
 
 1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-2.md)]

@@ -3627,6 +3627,12 @@ INTERACT_IGLOO_BARRIER = (1 << 30)
 --- @type InteractionType
 INTERACT_PLAYER = (1 << 31)
 
+--- @type integer
+WARP_CHECKPOINT = 0x80
+
+--- @type integer
+WARP_NO_CHECKPOINT = 0x00
+
 --- @class LevelNum
 
 --- @type LevelNum

@@ -35,7 +35,47 @@
 #include "src/pc/mods/mod_storage.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
+#include "src/game/area.h"
+#include "src/engine/level_script.h"
 
+
+  ////////////
+ // area.h //
+////////////
+
+int smlua_func_area_get_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_get_warp_node", 1, top);
+        return 0;
+    }
+
+    u8 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_get_warp_node"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node(id));
+
+    return 1;
+}
+
+int smlua_func_area_get_warp_node_from_params(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_get_warp_node_from_params", 1, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_get_warp_node_from_params"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node_from_params(o));
+
+    return 1;
+}
 
   ////////////////////////
  // behavior_actions.h //
@@ -12601,6 +12641,37 @@ int smlua_func_get_star_name_sm64(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_star_name_sm64"); return 0; }
 
     smlua_push_pointer(L, LVT_U8_P, (void*)get_star_name_sm64(courseNum, starNum, charCase));
+
+    return 1;
+}
+
+  ////////////////////
+ // level_script.h //
+////////////////////
+
+int smlua_func_area_create_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_create_warp_node", 6, top);
+        return 0;
+    }
+
+    u8 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_create_warp_node"); return 0; }
+    u8 destLevel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "area_create_warp_node"); return 0; }
+    u8 destArea = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "area_create_warp_node"); return 0; }
+    u8 destNode = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "area_create_warp_node"); return 0; }
+    u8 checkpoint = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "area_create_warp_node"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 6, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "area_create_warp_node"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o));
 
     return 1;
 }
@@ -28721,6 +28792,10 @@ int smlua_func_load_object_collision_model(UNUSED lua_State* L) {
 void smlua_bind_functions_autogen(void) {
     lua_State* L = gLuaState;
 
+    // area.h
+    smlua_bind_function(L, "area_get_warp_node", smlua_func_area_get_warp_node);
+    smlua_bind_function(L, "area_get_warp_node_from_params", smlua_func_area_get_warp_node_from_params);
+
     // behavior_actions.h
     smlua_bind_function(L, "arc_to_goal_pos", smlua_func_arc_to_goal_pos);
     smlua_bind_function(L, "bhv_1up_common_init", smlua_func_bhv_1up_common_init);
@@ -29480,6 +29555,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_star_name", smlua_func_get_star_name);
     smlua_bind_function(L, "get_star_name_ascii", smlua_func_get_star_name_ascii);
     smlua_bind_function(L, "get_star_name_sm64", smlua_func_get_star_name_sm64);
+
+    // level_script.h
+    smlua_bind_function(L, "area_create_warp_node", smlua_func_area_create_warp_node);
 
     // level_update.h
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
