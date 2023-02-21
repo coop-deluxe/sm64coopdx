@@ -49,6 +49,10 @@ void hud_show(void) {
     gOverrideHideHud = 0;
 }
 
+bool hud_is_hidden(void) {
+    return gOverrideHideHud;
+}
+
 extern u8 gLastCollectedStarOrKey;
 s32 get_last_star_or_key(void) {
     return gLastCollectedStarOrKey;
@@ -127,6 +131,10 @@ void camera_freeze(void) {
 
 void camera_unfreeze(void) {
     gOverrideFreezeCamera = FALSE;
+}
+
+bool camera_is_frozen(void) {
+    return gOverrideFreezeCamera;
 }
 
 bool camera_config_is_free_cam_enabled(void) {

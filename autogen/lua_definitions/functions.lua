@@ -8214,6 +8214,11 @@ function camera_freeze()
     -- ...
 end
 
+--- @return boolean
+function camera_is_frozen()
+    -- ...
+end
+
 --- @return nil
 function camera_unfreeze()
     -- ...
@@ -8297,6 +8302,11 @@ end
 
 --- @return nil
 function hud_hide()
+    -- ...
+end
+
+--- @return boolean
+function hud_is_hidden()
     -- ...
 end
 

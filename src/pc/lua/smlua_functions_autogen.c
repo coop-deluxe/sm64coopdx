@@ -26833,6 +26833,21 @@ int smlua_func_camera_freeze(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_is_frozen(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_is_frozen", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, camera_is_frozen());
+
+    return 1;
+}
+
 int smlua_func_camera_unfreeze(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27076,6 +27091,21 @@ int smlua_func_hud_hide(UNUSED lua_State* L) {
 
 
     hud_hide();
+
+    return 1;
+}
+
+int smlua_func_hud_is_hidden(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "hud_is_hidden", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, hud_is_hidden());
 
     return 1;
 }
@@ -30246,6 +30276,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_x_sensitivity", smlua_func_camera_config_set_x_sensitivity);
     smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
+    smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
     smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
@@ -30261,6 +30292,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
+    smlua_bind_function(L, "hud_is_hidden", smlua_func_hud_is_hidden);
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);

@@ -27,17 +27,21 @@ enum HudDisplayFlags {
     HUD_DISPLAY_FLAGS_KEYS = 0x0010,
     HUD_DISPLAY_FLAGS_UNKNOWN_0020 = 0x0020,
     HUD_DISPLAY_FLAGS_TIMER = 0x0040,
+    HUD_DISPLAY_FLAGS_CAMERA = 0x0080,
+    HUD_DISPLAY_FLAGS_POWER = 0x0100,
     HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000,
 };
 
 void hud_hide(void);
 void hud_show(void);
+bool hud_is_hidden(void);
 s32  hud_get_value(enum HudDisplayValue type);
 void hud_set_value(enum HudDisplayValue type, s32 value);
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height);
 
 void camera_freeze(void);
 void camera_unfreeze(void);
+bool camera_is_frozen(void);
 
 bool camera_config_is_free_cam_enabled(void);
 bool camera_config_is_analog_cam_enabled(void);

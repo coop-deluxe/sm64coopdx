@@ -494,7 +494,7 @@ void render_hud(void) {
 
         bool showHud = (configHUD && !gDjuiInMainMenu && !gOverrideHideHud);
 
-        if (gCurrentArea != NULL && gCurrentArea->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
+        if (gCurrentArea != NULL && gCurrentArea->camera != NULL && gCurrentArea->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             render_hud_cannon_reticle();
         }
 
@@ -515,21 +515,24 @@ void render_hud(void) {
         }
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && showHud) {
-            render_hud_power_meter();
-            render_hud_camera_status();
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA && showHud) {
+                render_hud_camera_status();
+            }
+
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_POWER && showHud) {
+                render_hud_power_meter();
+            }
         }
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
         }
 
-        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_SURFACES)
-        {
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_SURFACES) {
             print_text(10, 40, "SURFACE POOL FULL");
         }
 
-        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_NODES)
-        {
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_NODES) {
             print_text(10, 60, "SURFACE NODE POOL FULL");
         }
 
