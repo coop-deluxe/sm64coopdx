@@ -44,7 +44,7 @@ BETTERCAMERA ?= 1
 # Enable no drawing distance by default
 NODRAWINGDISTANCE ?= 1
 # Disable texture fixes by default (helps with them purists)
-TEXTURE_FIX ?= 1
+TEXTURE_FIX ?= 0
 # Enable extended options menu by default
 EXT_OPTIONS_MENU ?= 1
 # Disable text-based save-files by default
