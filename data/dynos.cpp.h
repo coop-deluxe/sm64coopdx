@@ -89,6 +89,7 @@ public:
     inline s32 Offset() const { return mOffset; }
     inline bool EoF() const { return mOffset >= mSize; }
     inline void SetOffset(s32 aOffset) const { mOffset = aOffset; }
+    inline const char *GetFilename() const { return mFilename; }
 
 public:
     static BinFile *OpenR(const char *aFilename) {
