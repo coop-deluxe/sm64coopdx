@@ -54,6 +54,7 @@ GfxData *DynOS_Bhv_GetActiveGfx(BehaviorScript *bhvScript) {
     for (s32 i = 0; i < _CustomBehaviorScripts.Count(); ++i) {
         auto &gfxData = _CustomBehaviorScripts[i].second;
         auto &scripts = gfxData->mBehaviorScripts;
+        if (scripts.Count() == 0) { continue; }
         if (bhvScript == scripts[scripts.Count() - 1]->mData) {
             return gfxData;
         }
@@ -67,6 +68,7 @@ s32 DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript) {
     for (s32 i = 0; i < _CustomBehaviorScripts.Count(); ++i) {
         auto &gfxData = _CustomBehaviorScripts[i].second;
         auto &scripts = gfxData->mBehaviorScripts;
+        if (scripts.Count() == 0) { continue; }
         if (bhvScript == scripts[scripts.Count() - 1]->mData) {
             return gfxData->mModIndex;
         }
@@ -96,7 +98,10 @@ void DynOS_Bhv_HookAllCustomBehaviors() {
     for (s32 i = 0; i < _CustomBehaviorScripts.Count(); ++i) {
         auto &scriptName = _CustomBehaviorScripts[i].first;
         auto &aGfxData = _CustomBehaviorScripts[i].second;
-        auto &script = aGfxData->mBehaviorScripts[aGfxData->mBehaviorScripts.Count() - 1]->mData;
+        if (aGfxData->mBehaviorScripts.Count() == 0) { continue; }
+        auto *node = aGfxData->mBehaviorScripts[aGfxData->mBehaviorScripts.Count() - 1];
+        if (node == nullptr) { continue; }
+        auto &script = node->mData;
 
         // Theres currently no better place but to do this here.
         if (smlua_hook_custom_bhv(script, scriptName) == 0) {
