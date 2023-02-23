@@ -138,7 +138,10 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
     s32 index = _DynosPacks.Count();
     const PackData packData = {
         .mIndex = index,
+        .mEnabled = false,
+        .mEnabledSet = false,
         .mPath = aPath,
+        .mDisplayName = "",
         .mGfxData = {},
         .mTextures = {},
         .mLoaded = false,
