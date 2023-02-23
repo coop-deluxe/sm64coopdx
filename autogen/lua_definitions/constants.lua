@@ -8152,7 +8152,10 @@ HOOK_OBJECT_SET_MODEL = 28
 HOOK_CHARACTER_SOUND = 29
 
 --- @type LuaHookedEventType
-HOOK_MAX = 30
+HOOK_BEFORE_SET_MARIO_ACTION = 30
+
+--- @type LuaHookedEventType
+HOOK_MAX = 31
 
 --- @class HudDisplayFlags
 

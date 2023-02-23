@@ -417,6 +417,8 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
 
         SysPath _RelativePath = fstring("%s%s", aRelativePath.c_str(), _PackEnt->d_name);
         if (containsC && !is_level_number_png(_RelativePath)) {
+            // Don't forgot to free the texture data we've read.
+            Delete<TexData>(_TexData);
             continue;
         }
 
@@ -433,6 +435,8 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         // if we aren't overriding a texture, only generate textures in the output directory
         SysPath _OutputFolder = fstring("%s/", aOutputFolder.c_str());
         if (_OverrideName == NULL && (!aAllowCustomTextures || strcmp(_DirPath.c_str(), _OutputFolder.c_str()))) {
+            // Don't forgot to free the texture data we've read.
+            Delete<TexData>(_TexData);
             continue;
         }
 
@@ -444,6 +448,9 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         }
 
         DynOS_Tex_WriteBinary(aGfxData, _OutputPath, _BaseName, _TexData, (_OverrideName != NULL));
+        
+        // Don't forgot to free the texture data we've read.
+        Delete<TexData>(_TexData);
     }
 
     closedir(_PackDir);

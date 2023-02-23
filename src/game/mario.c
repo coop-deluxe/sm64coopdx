@@ -1093,6 +1093,10 @@ static u32 set_mario_action_cutscene(struct MarioState *m, u32 action, UNUSED u3
  * specific function if needed.
  */
 u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
+    u32 returnValue = 0;
+    smlua_call_event_hooks_int_param_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, action, &returnValue);
+    if (returnValue == 1) { return TRUE; } else if (returnValue) { action = returnValue; }
+    
     switch (action & ACT_GROUP_MASK) {
         case ACT_GROUP_MOVING:
             action = set_mario_action_moving(m, action, actionArg);
