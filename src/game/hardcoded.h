@@ -1,7 +1,8 @@
 #ifndef HARDCODED_H
 #include "types.h"
 #include "level_table.h"
-#include  "dialog_ids.h"
+#include "dialog_ids.h"
+#include "seq_ids.h"
 
   ////////////
  // Levels //
@@ -53,11 +54,16 @@ struct LevelValues {
     u16 wingCapDurationTotwc;
     u16 metalCapDurationCotmc;
     u16 vanishCapDurationVcutm;
+    u8 wingCapSequence;
+    u8 metalCapSequence;
+    u8 vanishCapSequence;
     struct StarPositions starPositions;
     s16 cellHeightLimit;
     s16 floorLowerLimit;
     s16 floorLowerLimitMisc;
     s16 floorLowerLimitShadow;
+    bool pauseExitAnywhere;
+    bool disableActs;
 };
 
 extern struct LevelValues gLevelValues;
@@ -220,6 +226,7 @@ struct BehaviorValues {
     f32 BowlingBallThiSmallSpeed;
     u16 GrateStarRequirement;
     u8  ShowStarMilestones;
+    u8  RespawnShellBoxes;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;

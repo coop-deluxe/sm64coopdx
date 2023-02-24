@@ -28,6 +28,7 @@
 #include "src/pc/lua/utils/smlua_model_utils.h"
 #include "src/pc/lua/smlua.h"
 #include "src/pc/djui/djui.h"
+#include "game/hardcoded.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
 
@@ -506,7 +507,7 @@ static void level_cmd_place_object(void) {
     u16 model;
     struct SpawnInfo *spawnInfo;
 
-    if (sCurrAreaIndex != -1 && ((CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
+    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         model = CMD_GET(u8, 3);
         spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
 

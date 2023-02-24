@@ -188,6 +188,7 @@
 --- @field public RacingPenguinBigRadius number
 --- @field public RacingPenguinHeight number
 --- @field public RacingPenguinRadius number
+--- @field public RespawnShellBoxes integer
 --- @field public ShowStarMilestones integer
 --- @field public ToadStar1Requirement integer
 --- @field public ToadStar2Requirement integer
@@ -629,6 +630,7 @@
 --- @class LevelValues
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
+--- @field public disableActs boolean
 --- @field public entryLevel LevelNum
 --- @field public exitCastleArea integer
 --- @field public exitCastleLevel LevelNum
@@ -640,14 +642,18 @@
 --- @field public floorLowerLimitShadow integer
 --- @field public metalCapDuration integer
 --- @field public metalCapDurationCotmc integer
+--- @field public pauseExitAnywhere boolean
+--- @field public metalCapSequence integer
 --- @field public pssSlideStarIndex integer
 --- @field public pssSlideStarTime integer
 --- @field public skipCreditsAt LevelNum
 --- @field public starPositions StarPositions
 --- @field public vanishCapDuration integer
 --- @field public vanishCapDurationVcutm integer
+--- @field public vanishCapSequence integer
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
+--- @field public wingCapSequence integer
 
 --- @class LinearTransitionPoint
 --- @field public dist number

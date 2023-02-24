@@ -58,6 +58,9 @@ struct LevelValues gDefaultLevelValues = {
     .wingCapDurationTotwc     = 1200,
     .metalCapDurationCotmc    = 600,
     .vanishCapDurationVcutm   = 600,
+    .wingCapSequence          = SEQ_EVENT_POWERUP,
+    .metalCapSequence         = SEQ_EVENT_METAL_CAP,
+    .vanishCapSequence        = SEQ_EVENT_POWERUP,
     .starPositions = {
         .KoopaBobStarPos      = {  3030.0f,  4500.0f, -4600.0f },
         .KoopaThiStarPos      = {  7100.0f, -1300.0f, -6000.0f },
@@ -94,6 +97,8 @@ struct LevelValues gDefaultLevelValues = {
     .floorLowerLimit          = FLOOR_LOWER_LIMIT,
     .floorLowerLimitMisc      = FLOOR_LOWER_LIMIT_MISC,
     .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,
+    .pauseExitAnywhere        = 1,
+    .disableActs              = false,
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -126,6 +131,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .BowlingBallThiSmallSpeed = 10.0f,
     .GrateStarRequirement     = 120,
     .ShowStarMilestones       = TRUE,
+    .RespawnShellBoxes        = TRUE,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {
         .BobombBuddyBob1Dialog         = DIALOG_004,

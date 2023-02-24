@@ -1986,17 +1986,17 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
         switch (capFlag) {
             case MARIO_VANISH_CAP:
                 capTime = gLevelValues.vanishCapDuration;
-                capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP);
+                capMusic = SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence);
                 break;
 
             case MARIO_METAL_CAP:
                 capTime = gLevelValues.metalCapDuration;
-                capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP);
+                capMusic = SEQUENCE_ARGS(4, gLevelValues.metalCapSequence);
                 break;
 
             case MARIO_WING_CAP:
                 capTime = gLevelValues.wingCapDuration;
-                capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP);
+                capMusic = SEQUENCE_ARGS(4, gLevelValues.wingCapSequence);
                 break;
         }
 

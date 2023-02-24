@@ -310,6 +310,7 @@
 | RacingPenguinBigRadius | `number` |  |
 | RacingPenguinHeight | `number` |  |
 | RacingPenguinRadius | `number` |  |
+| RespawnShellBoxes | `integer` |  |
 | ShowStarMilestones | `integer` |  |
 | ToadStar1Requirement | `integer` |  |
 | ToadStar2Requirement | `integer` |  |
@@ -924,6 +925,7 @@
 | ----- | ---- | ------ |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
+| disableActs | `boolean` |  |
 | entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
@@ -935,14 +937,18 @@
 | floorLowerLimitShadow | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
+| pauseExitAnywhere | `boolean` |  |
+| metalCapSequence | `integer` |  |
 | pssSlideStarIndex | `integer` |  |
 | pssSlideStarTime | `integer` |  |
 | skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 | vanishCapDuration | `integer` |  |
 | vanishCapDurationVcutm | `integer` |  |
+| vanishCapSequence | `integer` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
+| wingCapSequence | `integer` |  |
 
 [:arrow_up_small:](#)
 

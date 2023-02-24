@@ -170,7 +170,8 @@ void exclamation_box_act_4(void) {
     spawn_mist_particles_variable(0, 0, 46.0f);
     spawn_triangle_break_particles(20, 139, 0.3f, o->oAnimState);
     create_sound_spawner(SOUND_GENERAL_BREAK_BOX);
-    if (o->oBehParams2ndByte <= 3) {
+    u8 threshold = gBehaviorValues.RespawnShellBoxes ? 3 : 2;
+    if (o->oBehParams2ndByte <= threshold) {
         o->oAction = 5;
         cur_obj_hide();
     } else {

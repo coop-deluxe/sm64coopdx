@@ -3976,4 +3976,7 @@ char gSmluaConstants[] = ""
 "COOP_OBJ_FLAG_NETWORK = (1 << 0)\n"
 "COOP_OBJ_FLAG_LUA = (1 << 1)\n"
 "COOP_OBJ_FLAG_NON_SYNC = (1 << 2)\n"
+"VERSION_NUMBER = 31\n"
+"MINOR_VERSION_NUMBER = 0\n"
+"MAX_VERSION_LENGTH = 10\n"
 ;

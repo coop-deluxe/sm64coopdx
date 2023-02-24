@@ -822,6 +822,9 @@ const u8 *DynOS_Level_GetAreaName(s32 aLevel, s32 aArea, bool aDecaps);
 s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId);
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea);
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
+u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset);
+void *DynOS_Level_CmdNext(void *aCmd, u64 aCmdSize);
+void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
 
 //
 // Warps

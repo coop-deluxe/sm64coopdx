@@ -6795,6 +6795,11 @@ function cur_obj_set_behavior(behavior)
     -- ...
 end
 
+--- @return nil
+function cur_obj_set_billboard_if_vanilla_cam()
+    -- ...
+end
+
 --- @param a0 Pointer_integer
 --- @return integer
 function cur_obj_set_direction_table(a0)
@@ -8555,6 +8560,17 @@ end
 --- @param vz number
 --- @return nil
 function obj_set_vel(o, vx, vy, vz)
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param strength integer
+--- @param area integer
+--- @param index integer
+--- @return nil
+function set_whirlpools(x, y, z, strength, area, index)
     -- ...
 end
 

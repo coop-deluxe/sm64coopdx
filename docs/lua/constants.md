@@ -59,6 +59,7 @@
 - [types.h](#typesh)
     - [enum AreaTimerType](#enum-AreaTimerType)
     - [enum SpTaskState](#enum-SpTaskState)
+- [version.h](#versionh)
 
 <br />
 
@@ -4016,6 +4017,15 @@
 | SPTASK_STATE_INTERRUPTED | 2 |
 | SPTASK_STATE_FINISHED | 3 |
 | SPTASK_STATE_FINISHED_DP | 4 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [version.h](#version.h)
+- MAX_VERSION_LENGTH
+- MINOR_VERSION_NUMBER
+- VERSION_NUMBER
 
 [:arrow_up_small:](#)
 

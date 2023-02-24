@@ -72,7 +72,8 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files" ]
+    "Mod": [ "files" ],
+    "MarioState": [ "visibleToEnemies" ],
 }
 
 override_field_immutable = {

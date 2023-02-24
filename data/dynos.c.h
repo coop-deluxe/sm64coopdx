@@ -57,6 +57,10 @@ void dynos_add_level(s32 modIndex, const char *filePath, const char* levelName);
 const char* dynos_level_get_token(u32 index);
 Trajectory* dynos_level_get_trajectory(const char* name);
 void dynos_level_load_background(void *ptr);
+u64 dynos_level_cmd_get(void *cmd, u64 offset);
+void dynos_level_cmd_next(void *cmd, u64 cmdsize);
+void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *));
+void* dynos_level_get_script(s32 level);
 
 // -- behaviors -- //
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName);

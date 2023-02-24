@@ -33,6 +33,7 @@
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
+#include "hardcoded.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -2859,7 +2860,7 @@ s16 render_pause_courses_and_castle(void) {
             render_pause_red_coins();
 
             /* Always allow exiting from course */
-            if (TRUE || (gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT)) {
+            if (gLevelValues.pauseExitAnywhere || (gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT)) {
                 render_pause_course_options(99, 93, &gDialogLineNum, 15);
             }
 
