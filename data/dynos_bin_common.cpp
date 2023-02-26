@@ -246,6 +246,7 @@ s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found) {
     common_constant(bhvWhitePuff2);
     common_constant(bhvWhitePuffSmoke2);
     common_constant(bhvPurpleSwitchHiddenBoxes);
+    common_constant(bhvBlueCoinNumber);
     common_constant(bhvBlueCoinSwitch);
     common_constant(bhvHiddenBlueCoin);
     common_constant(bhvOpenableCageDoor);
@@ -415,6 +416,7 @@ s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found) {
     common_constant(bhvNormalCap);
     common_constant(bhvVanishCap);
     common_constant(bhvStar);
+    common_constant(bhvStarNumber);
     common_constant(bhvStarSpawnCoordinates);
     common_constant(bhvHiddenRedCoinStar);
     common_constant(bhvRedCoin);

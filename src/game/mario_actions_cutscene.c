@@ -719,7 +719,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                         : gBehaviorValues.dialogs.CollectedStarDialog);
                     m->actionState = 1;
                 } else {
-                    set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
+                    set_mario_action(m, isInWater ? ACT_WATER_IDLE : (m->pos[1] <= m->floorHeight ? ACT_IDLE : ACT_FREEFALL), 0);
                 }
                 break;
         }
@@ -738,7 +738,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
             // look up for dialog
             set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, dialogID);
         } else {
-            set_mario_action(m, isInWater ? ACT_WATER_IDLE : ACT_IDLE, 0);
+            set_mario_action(m, isInWater ? ACT_WATER_IDLE : (m->pos[1] <= m->floorHeight ? ACT_IDLE : ACT_FREEFALL), 0);
         }
         if (gServerSettings.stayInLevelAfterStar) {
             soft_reset_camera(m->area->camera);
@@ -766,7 +766,7 @@ s32 act_star_dance_water(struct MarioState *m) {
     set_mario_animation(m, m->actionState == 2 ? MARIO_ANIM_RETURN_FROM_WATER_STAR_DANCE : MARIO_ANIM_WATER_STAR_DANCE);
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
     vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
-    general_star_dance_handler(m, 1);
+    general_star_dance_handler(m, m->pos[1] < m->waterLevel - 100);
     if (m->actionState != 2 && m->actionTimer >= 62) {
         m->marioBodyState->handState = MARIO_HAND_PEACE_SIGN;
     }

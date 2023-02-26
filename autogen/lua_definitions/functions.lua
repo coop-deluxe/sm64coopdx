@@ -287,12 +287,22 @@ function bhv_blue_coin_jumping_loop()
 end
 
 --- @return nil
+function bhv_blue_coin_number_loop()
+    -- ...
+end
+
+--- @return nil
 function bhv_blue_coin_sliding_jumping_init()
     -- ...
 end
 
 --- @return nil
 function bhv_blue_coin_sliding_loop()
+    -- ...
+end
+
+--- @return nil
+function bhv_blue_coin_switch_init()
     -- ...
 end
 
@@ -2170,6 +2180,11 @@ function bhv_star_key_collection_puff_spawner_loop()
 end
 
 --- @return nil
+function bhv_star_number_loop()
+    -- ...
+end
+
+--- @return nil
 function bhv_star_spawn_init()
     -- ...
 end
@@ -2830,6 +2845,11 @@ end
 --- @param z number
 --- @return Object
 function spawn_red_coin_cutscene_star(x, y, z)
+    -- ...
+end
+
+--- @return nil
+function spawn_star_number()
     -- ...
 end
 
