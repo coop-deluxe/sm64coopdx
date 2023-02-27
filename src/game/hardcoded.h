@@ -1,4 +1,5 @@
 #ifndef HARDCODED_H
+#define HARDCODED_H
 #include "types.h"
 #include "level_table.h"
 #include "dialog_ids.h"
