@@ -52,8 +52,11 @@ void network_send_mod_list(void) {
         u16 nameLength = strlen(mod->name);
         if (nameLength > 31) { nameLength = 31; }
 
-        u16 incompatibleLength = strlen(mod->incompatible);
-        if (incompatibleLength > 31) { incompatibleLength = 31; }
+        u16 incompatibleLength = 0;
+        if (mod->incompatible) {
+            incompatibleLength = strlen(mod->incompatible);
+            if (incompatibleLength > 31) { incompatibleLength = 31; }
+        }
 
         u16 relativePathLength = strlen(mod->relativePath);
         u64 modSize = mod->size;
