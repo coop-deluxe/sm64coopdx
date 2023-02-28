@@ -1290,6 +1290,14 @@ static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
     return NULL;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                     //
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   //
+//   !! IMPORTANT: ADD NEW ENTRIES AT THE END OF THE sDynosBuiltinFuncs LIST TO PRESERVE INDEXING !!   //
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   //
+//                                                                                                     //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const void* sDynosBuiltinFuncs[] = {
     define_builtin(geo_mirror_mario_set_alpha),
     define_builtin(geo_switch_mario_stand_run),
@@ -1911,6 +1919,12 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(geo_intro_tm_copyright),
     define_builtin(geo_intro_regular_backdrop),
     define_builtin(geo_draw_mario_head_goddard),
+
+    // Custom
+    define_builtin(bhv_blue_coin_number_loop),
+    define_builtin(bhv_blue_coin_switch_init),
+    define_builtin(bhv_star_number_loop),
+    define_builtin(spawn_star_number),
 };
 
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName) {

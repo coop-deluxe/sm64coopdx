@@ -914,6 +914,7 @@
 #define /*0x0F4*/ oStarSpawnDisFromHome      OBJECT_FIELD_F32(0x1B)
 #define /*0x0F8*/ oStarSpawnUnkFC            OBJECT_FIELD_F32(0x1D)
 #define /*0x0FC*/ oStarSpawnExtCutsceneFlags OBJECT_FIELD_S16(0x1E, 0)
+#define /*0x100*/ oStarBehavior              OBJECT_FIELD_CVPTR(0x1F)
 
 /* Hidden Star */
 // Secrets/Red Coins

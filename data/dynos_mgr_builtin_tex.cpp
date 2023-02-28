@@ -81,6 +81,8 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(flame_seg6_texture_06016000, "actors/bowser_flame/bowser_flame_11.rgba16.png", 64, 64, 16),
     define_builtin_tex(flame_seg6_texture_06018000, "actors/bowser_flame/bowser_flame_12.rgba16.png", 64, 64, 16),
     define_builtin_tex(flame_seg6_texture_0601A000, "actors/bowser_flame/bowser_flame_13.rgba16.png", 64, 64, 16),
+    define_builtin_tex(bowser_key_left_texture, "actors/bowser_key/bowser_key_left.rgba16.png", 32, 64, 16),
+    define_builtin_tex(bowser_key_right_texture, "actors/bowser_key/bowser_key_right.rgba16.png", 32, 64, 16),
     define_builtin_tex(breakable_box_seg8_texture_08011A90, "actors/breakable_box/crazy_box_surface.rgba16.png", 32, 32, 16),
     define_builtin_tex(breakable_box_seg8_texture_08012290, "actors/breakable_box/cork_box_surface.rgba16.png", 32, 32, 16),
     define_builtin_tex(bub_seg6_texture_0600E2A8, "actors/bub/bub_eye_border.rgba16.png", 32, 32, 16),

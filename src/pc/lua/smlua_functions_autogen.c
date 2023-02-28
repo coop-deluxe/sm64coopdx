@@ -915,6 +915,21 @@ int smlua_func_bhv_blue_coin_jumping_loop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_blue_coin_number_loop(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_blue_coin_number_loop", 0, top);
+        return 0;
+    }
+
+
+    bhv_blue_coin_number_loop();
+
+    return 1;
+}
+
 int smlua_func_bhv_blue_coin_sliding_jumping_init(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -941,6 +956,21 @@ int smlua_func_bhv_blue_coin_sliding_loop(UNUSED lua_State* L) {
 
 
     bhv_blue_coin_sliding_loop();
+
+    return 1;
+}
+
+int smlua_func_bhv_blue_coin_switch_init(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_blue_coin_switch_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_blue_coin_switch_init();
 
     return 1;
 }
@@ -6561,6 +6591,21 @@ int smlua_func_bhv_star_key_collection_puff_spawner_loop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_star_number_loop(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_star_number_loop", 0, top);
+        return 0;
+    }
+
+
+    bhv_star_number_loop();
+
+    return 1;
+}
+
 int smlua_func_bhv_star_spawn_init(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -8834,6 +8879,21 @@ int smlua_func_spawn_red_coin_cutscene_star(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_red_coin_cutscene_star"); return 0; }
 
     smlua_push_object(L, LOT_OBJECT, spawn_red_coin_cutscene_star(x, y, z));
+
+    return 1;
+}
+
+int smlua_func_spawn_star_number(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_star_number", 0, top);
+        return 0;
+    }
+
+
+    spawn_star_number();
 
     return 1;
 }
@@ -28881,8 +28941,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_blue_bowser_flame_init", smlua_func_bhv_blue_bowser_flame_init);
     smlua_bind_function(L, "bhv_blue_bowser_flame_loop", smlua_func_bhv_blue_bowser_flame_loop);
     smlua_bind_function(L, "bhv_blue_coin_jumping_loop", smlua_func_bhv_blue_coin_jumping_loop);
+    smlua_bind_function(L, "bhv_blue_coin_number_loop", smlua_func_bhv_blue_coin_number_loop);
     smlua_bind_function(L, "bhv_blue_coin_sliding_jumping_init", smlua_func_bhv_blue_coin_sliding_jumping_init);
     smlua_bind_function(L, "bhv_blue_coin_sliding_loop", smlua_func_bhv_blue_coin_sliding_loop);
+    smlua_bind_function(L, "bhv_blue_coin_switch_init", smlua_func_bhv_blue_coin_switch_init);
     smlua_bind_function(L, "bhv_blue_coin_switch_loop", smlua_func_bhv_blue_coin_switch_loop);
     smlua_bind_function(L, "bhv_blue_fish_movement_loop", smlua_func_bhv_blue_fish_movement_loop);
     smlua_bind_function(L, "bhv_blue_flames_group_loop", smlua_func_bhv_blue_flames_group_loop);
@@ -29257,6 +29319,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_star_door_loop", smlua_func_bhv_star_door_loop);
     smlua_bind_function(L, "bhv_star_door_loop_2", smlua_func_bhv_star_door_loop_2);
     smlua_bind_function(L, "bhv_star_key_collection_puff_spawner_loop", smlua_func_bhv_star_key_collection_puff_spawner_loop);
+    smlua_bind_function(L, "bhv_star_number_loop", smlua_func_bhv_star_number_loop);
     smlua_bind_function(L, "bhv_star_spawn_init", smlua_func_bhv_star_spawn_init);
     smlua_bind_function(L, "bhv_star_spawn_loop", smlua_func_bhv_star_spawn_loop);
     smlua_bind_function(L, "bhv_static_checkered_platform_loop", smlua_func_bhv_static_checkered_platform_loop);
@@ -29394,6 +29457,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "spawn_mist_particles_variable", smlua_func_spawn_mist_particles_variable);
     smlua_bind_function(L, "spawn_no_exit_star", smlua_func_spawn_no_exit_star);
     smlua_bind_function(L, "spawn_red_coin_cutscene_star", smlua_func_spawn_red_coin_cutscene_star);
+    smlua_bind_function(L, "spawn_star_number", smlua_func_spawn_star_number);
     smlua_bind_function(L, "spawn_triangle_break_particles", smlua_func_spawn_triangle_break_particles);
     smlua_bind_function(L, "spawn_wind_particles", smlua_func_spawn_wind_particles);
     smlua_bind_function(L, "tox_box_move", smlua_func_tox_box_move);

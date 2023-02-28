@@ -1989,7 +1989,13 @@ id_RM_Scroll_Texture = 535
 id_editor_Scroll_Texture = 536
 
 --- @type BehaviorId
-id_bhv_max_count = 537
+id_bhvBlueCoinNumber = 537
+
+--- @type BehaviorId
+id_bhvStarNumber = 538
+
+--- @type BehaviorId
+id_bhv_max_count = 539
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E
@@ -4945,6 +4951,9 @@ BLUE_COIN_SWITCH_ACT_IDLE = 0
 
 --- @type integer
 BLUE_COIN_SWITCH_ACT_RECEDING = 1
+
+--- @type integer
+BLUE_COIN_SWITCH_ACT_RESPAWNING = 3
 
 --- @type integer
 BLUE_COIN_SWITCH_ACT_TICKING = 2
@@ -11429,4 +11438,4 @@ MAX_VERSION_LENGTH = 10
 MINOR_VERSION_NUMBER = 0
 
 --- @type integer
-VERSION_NUMBER = 31
+VERSION_NUMBER = 32

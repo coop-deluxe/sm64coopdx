@@ -1,5 +1,47 @@
 // spawn_default_star.c.inc
 
+void bhv_star_number_loop(void) {
+
+    // Check if the star still exists
+    struct Object *star = o->parentObj;
+    const BehaviorScript *starBhv = (const BehaviorScript *) o->oStarBehavior;
+    if (star == NULL || star->activeFlags == ACTIVE_FLAG_DEACTIVATED || starBhv != smlua_override_behavior(star->behavior)) {
+        obj_mark_for_deletion(o);
+        return;
+    }
+
+    // Show the star number
+    if (gLevelValues.showStarNumber) {
+        obj_set_pos(o, star->header.gfx.pos[0], star->header.gfx.pos[1] + 150.f * star->header.gfx.scale[1], star->header.gfx.pos[2]);
+        obj_set_angle(o, 0, 0, 0);
+        obj_scale(o, 1.f);
+        o->oAnimState = o->oBehParams2ndByte = ((star->oBehParams >> 24) & 0xFF) + 1;
+        o->header.gfx.node.flags = star->header.gfx.node.flags;
+    } else {
+        cur_obj_disable_rendering();
+        cur_obj_hide();
+    }
+}
+
+void spawn_star_number(void) {
+
+    // Check if the star already has a number
+    struct Object *starNumber = obj_get_first_with_behavior_id(id_bhvStarNumber);
+    for (; starNumber; starNumber = obj_get_next_with_same_behavior_id(starNumber)) {
+        if (starNumber->parentObj == o) {
+            break;
+        }
+    }
+
+    // If not, spawn a number
+    if (!starNumber) {
+        starNumber = spawn_object(o, MODEL_NUMBER, bhvStarNumber);
+        starNumber->parentObj = o;
+        starNumber->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP; // to make sure it's updated even during time stop
+        starNumber->oStarBehavior = (const void *) smlua_override_behavior(o->behavior);
+    }
+}
+
 static struct ObjectHitbox sCollectStarHitbox = {
     /* interactType:      */ INTERACT_STAR_OR_KEY,
     /* downOffset:        */ 0,
@@ -25,6 +67,7 @@ void bhv_collect_star_init(void) {
     }
 
     obj_set_hitbox(o, &sCollectStarHitbox);
+    spawn_star_number();
 }
 
 void bhv_collect_star_loop(void) {
@@ -34,6 +77,7 @@ void bhv_collect_star_loop(void) {
         mark_obj_for_deletion(o);
         o->oInteractStatus = 0;
     }
+    spawn_star_number();
 }
 
 void bhv_star_spawn_init(void) {
@@ -54,6 +98,7 @@ void bhv_star_spawn_init(void) {
         o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
     }
     cur_obj_become_intangible();
+    spawn_star_number();
 }
 
 void bhv_star_spawn_loop(void) {
@@ -112,6 +157,7 @@ void bhv_star_spawn_loop(void) {
             }
             break;
     }
+    spawn_star_number();
 }
 
 struct Object *spawn_star(struct Object *obj, f32 x, f32 y, f32 z) {

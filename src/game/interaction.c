@@ -909,6 +909,11 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
             }
         }
 
+        if (gLevelValues.starHeal) {
+            m->healCounter = 31;
+            m->hurtCounter = 0;
+        }
+
         if (noExit) {
             starGrabAction = ACT_STAR_DANCE_NO_EXIT;
         }
@@ -923,6 +928,9 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
 
         if (m->action & ACT_FLAG_AIR) {
             starGrabAction = ACT_FALL_AFTER_STAR_GRAB;
+            if (gLevelValues.floatingStarDance && m->pos[1] - m->floorHeight > 1000) {
+                starGrabAction = ACT_STAR_DANCE_WATER;
+            }
         }
 
         for (s32 i = 0; i < MAX_PLAYERS; i++) {

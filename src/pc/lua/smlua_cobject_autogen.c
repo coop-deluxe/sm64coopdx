@@ -733,7 +733,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 27
+#define LUA_LEVEL_VALUES_FIELD_COUNT 38
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "cellHeightLimit",          LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),          false, LOT_NONE          },
     { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
@@ -742,22 +742,33 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "exitCastleArea",           LVT_S16,     offsetof(struct LevelValues, exitCastleArea),           false, LOT_NONE          },
     { "exitCastleLevel",          LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),          false, LOT_NONE          },
     { "exitCastleWarpNode",       LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode),       false, LOT_NONE          },
+    { "extendedPauseDisplay",     LVT_U8,      offsetof(struct LevelValues, extendedPauseDisplay),     false, LOT_NONE          },
     { "fixCollisionBugs",         LVT_U8,      offsetof(struct LevelValues, fixCollisionBugs),         false, LOT_NONE          },
-    { "fixVanishFloors",          LVT_BOOL,    offsetof(struct LevelValues, fixVanishFloors),          false, LOT_NONE          },
+    { "fixVanishFloors",          LVT_U8,      offsetof(struct LevelValues, fixVanishFloors),          false, LOT_NONE          },
+    { "floatingStarDance",        LVT_U8,      offsetof(struct LevelValues, floatingStarDance),        false, LOT_NONE          },
     { "floorLowerLimit",          LVT_S16,     offsetof(struct LevelValues, floorLowerLimit),          false, LOT_NONE          },
     { "floorLowerLimitMisc",      LVT_S16,     offsetof(struct LevelValues, floorLowerLimitMisc),      false, LOT_NONE          },
     { "floorLowerLimitShadow",    LVT_S16,     offsetof(struct LevelValues, floorLowerLimitShadow),    false, LOT_NONE          },
+    { "hudCapTimer",              LVT_U8,      offsetof(struct LevelValues, hudCapTimer),              false, LOT_NONE          },
+    { "hudRedCoinsRadar",         LVT_U8,      offsetof(struct LevelValues, hudRedCoinsRadar),         false, LOT_NONE          },
+    { "hudSecretsRadar",          LVT_U8,      offsetof(struct LevelValues, hudSecretsRadar),          false, LOT_NONE          },
     { "metalCapDuration",         LVT_U16,     offsetof(struct LevelValues, metalCapDuration),         false, LOT_NONE          },
     { "metalCapDurationCotmc",    LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),    false, LOT_NONE          },
     { "metalCapSequence",         LVT_U8,      offsetof(struct LevelValues, metalCapSequence),         false, LOT_NONE          },
+    { "mushroom1UpHeal",          LVT_U8,      offsetof(struct LevelValues, mushroom1UpHeal),          false, LOT_NONE          },
     { "pauseExitAnywhere",        LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),        false, LOT_NONE          },
+    { "previewBlueCoins",         LVT_U8,      offsetof(struct LevelValues, previewBlueCoins),         false, LOT_NONE          },
     { "pssSlideStarIndex",        LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),        false, LOT_NONE          },
     { "pssSlideStarTime",         LVT_U16,     offsetof(struct LevelValues, pssSlideStarTime),         false, LOT_NONE          },
+    { "respawnBlueCoinsSwitch",   LVT_U8,      offsetof(struct LevelValues, respawnBlueCoinsSwitch),   false, LOT_NONE          },
+    { "showStarNumber",           LVT_U8,      offsetof(struct LevelValues, showStarNumber),           false, LOT_NONE          },
     { "skipCreditsAt",            LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),            false, LOT_NONE          },
+    { "starHeal",                 LVT_U8,      offsetof(struct LevelValues, starHeal),                 false, LOT_NONE          },
     { "starPositions",            LVT_COBJECT, offsetof(struct LevelValues, starPositions),            true,  LOT_STARPOSITIONS },
     { "vanishCapDuration",        LVT_U16,     offsetof(struct LevelValues, vanishCapDuration),        false, LOT_NONE          },
     { "vanishCapDurationVcutm",   LVT_U16,     offsetof(struct LevelValues, vanishCapDurationVcutm),   false, LOT_NONE          },
     { "vanishCapSequence",        LVT_U8,      offsetof(struct LevelValues, vanishCapSequence),        false, LOT_NONE          },
+    { "visibleSecrets",           LVT_U8,      offsetof(struct LevelValues, visibleSecrets),           false, LOT_NONE          },
     { "wingCapDuration",          LVT_U16,     offsetof(struct LevelValues, wingCapDuration),          false, LOT_NONE          },
     { "wingCapDurationTotwc",     LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),     false, LOT_NONE          },
     { "wingCapLookUpReq",         LVT_U8,      offsetof(struct LevelValues, wingCapLookUpReq),         false, LOT_NONE          },
@@ -800,7 +811,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 77
+#define LUA_MARIO_STATE_FIELD_COUNT 76
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -873,7 +884,6 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "unkC4",                    LVT_F32,       offsetof(struct MarioState, unkC4),                    false, LOT_NONE              },
     { "usedObj",                  LVT_COBJECT_P, offsetof(struct MarioState, usedObj),                  false, LOT_OBJECT            },
     { "vel",                      LVT_COBJECT,   offsetof(struct MarioState, vel),                      true,  LOT_VEC3F             },
-    { "visibleToEnemies",         LVT_U8,        offsetof(struct MarioState, visibleToEnemies),         false, LOT_NONE              },
     { "wall",                     LVT_COBJECT_P, offsetof(struct MarioState, wall),                     false, LOT_SURFACE           },
     { "wallKickTimer",            LVT_U8,        offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE              },
     { "wallNormal",               LVT_COBJECT,   offsetof(struct MarioState, wallNormal),               true,  LOT_VEC3F             },
@@ -1544,6 +1554,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oSpinyTargetYaw",                            LVT_S32,                 offsetof(struct Object, oSpinyTargetYaw),                            false, LOT_NONE         },
     { "oSpinyTimeUntilTurn",                        LVT_S32,                 offsetof(struct Object, oSpinyTimeUntilTurn),                        false, LOT_NONE         },
     { "oSpinyTurningAwayFromWall",                  LVT_S32,                 offsetof(struct Object, oSpinyTurningAwayFromWall),                  false, LOT_NONE         },
+//  { "oStarBehavior",                              LVT_???,                 offsetof(struct Object, oStarBehavior),                              true,  LOT_???          }, <--- UNIMPLEMENTED
     { "oStarSelectorSize",                          LVT_F32,                 offsetof(struct Object, oStarSelectorSize),                          false, LOT_NONE         },
     { "oStarSelectorTimer",                         LVT_S32,                 offsetof(struct Object, oStarSelectorTimer),                         false, LOT_NONE         },
     { "oStarSelectorType",                          LVT_S32,                 offsetof(struct Object, oStarSelectorType),                          false, LOT_NONE         },
