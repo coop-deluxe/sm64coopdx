@@ -625,7 +625,9 @@
 | id_bhvYoshi | 534 |
 | id_RM_Scroll_Texture | 535 |
 | id_editor_Scroll_Texture | 536 |
-| id_bhv_max_count | 537 |
+| id_bhvBlueCoinNumber | 537 |
+| id_bhvStarNumber | 538 |
+| id_bhv_max_count | 539 |
 
 [:arrow_up_small:](#)
 
@@ -1773,6 +1775,7 @@
 - BIRD_BP_SPAWNER
 - BLUE_COIN_SWITCH_ACT_IDLE
 - BLUE_COIN_SWITCH_ACT_RECEDING
+- BLUE_COIN_SWITCH_ACT_RESPAWNING
 - BLUE_COIN_SWITCH_ACT_TICKING
 - BLUE_FISH_ACT_ASCEND
 - BLUE_FISH_ACT_DIVE

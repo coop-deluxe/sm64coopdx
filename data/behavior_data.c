@@ -2805,11 +2805,22 @@ const BehaviorScript bhvPurpleSwitchHiddenBoxes[] = {
     GOTO(bhvFloorSwitchHardcodedModel + 1 + 1),
 };
 
+const BehaviorScript bhvBlueCoinNumber[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvBlueCoinNumber),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    BILLBOARD(),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_blue_coin_number_loop),
+    END_LOOP(),
+};
+
 const BehaviorScript bhvBlueCoinSwitch[] = {
     BEGIN(OBJ_LIST_SURFACE),
     ID(id_bhvBlueCoinSwitch),
     OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
     LOAD_COLLISION_DATA(blue_coin_switch_seg8_collision_08000E98),
+    CALL_NATIVE(bhv_blue_coin_switch_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_blue_coin_switch_loop),
     END_LOOP(),
@@ -4735,6 +4746,16 @@ const BehaviorScript bhvVanishCap[] = {
     CALL_NATIVE(bhv_vanish_cap_init),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_wing_vanish_cap_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvStarNumber[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvStarNumber),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    BILLBOARD(),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_star_number_loop),
     END_LOOP(),
 };
 

@@ -36,7 +36,9 @@
 #include "pc/network/network.h"
 #include "pc/network/network_player.h"
 #include "pc/network/reservation_area.h"
+#include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 #include "game/rng_position.h"
 #include "rumble_init.h"
 

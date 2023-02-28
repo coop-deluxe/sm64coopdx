@@ -32,6 +32,17 @@ void bhv_hidden_blue_coin_loop(void) {
                 o->oAction++; // Set to HIDDEN_BLUE_COIN_ACT_ACTIVE
             }
 
+            // Show blue coins if a Mario is standing on the blue coins switch
+            cur_obj_disable_rendering();
+            if (gLevelValues.previewBlueCoins) {
+                for (s32 i = 0; i != MAX_PLAYERS; ++i) {
+                    if (gMarioStates[i].marioObj && gMarioStates[i].marioObj->platform == blueCoinSwitch) {
+                        cur_obj_enable_rendering();
+                        break;
+                    }
+                }
+            }
+
             break;
         case HIDDEN_BLUE_COIN_ACT_ACTIVE:
             // Become tangible
@@ -47,13 +58,58 @@ void bhv_hidden_blue_coin_loop(void) {
             // After 200 frames of waiting and 20 2-frame blinks (for 240 frames total),
             // delete the object.
             if (cur_obj_wait_then_blink(200, 20)) {
-                obj_mark_for_deletion(o);
+                if (gLevelValues.respawnBlueCoinsSwitch) {
+                    o->oAction = HIDDEN_BLUE_COIN_ACT_INACTIVE;
+                    cur_obj_unhide();
+                } else {
+                    obj_mark_for_deletion(o);
+                }
             }
 
             break;
     }
 
     o->oInteractStatus = 0;
+}
+
+/**
+ * Update function for bhvBlueCoinNumber.
+ */
+void bhv_blue_coin_number_loop(void) {
+
+    // Check if the blue coins switch still exists
+    struct Object *blueCoinSwitch = o->oHiddenBlueCoinSwitch;
+    if (blueCoinSwitch == NULL || blueCoinSwitch->activeFlags == ACTIVE_FLAG_DEACTIVATED || blueCoinSwitch->behavior != smlua_override_behavior(bhvBlueCoinSwitch)) {
+        obj_mark_for_deletion(o);
+        return;
+    }
+
+    // Show the number of blue coins remaining if a Mario is standing on the switch
+    cur_obj_disable_rendering();
+    cur_obj_hide();
+    if (gLevelValues.previewBlueCoins) {
+        for (s32 i = 0; i != MAX_PLAYERS; ++i) {
+            if (gMarioStates[i].marioObj && gMarioStates[i].marioObj->platform == blueCoinSwitch) {
+                cur_obj_enable_rendering();
+                cur_obj_unhide();
+                obj_set_pos(o, blueCoinSwitch->header.gfx.pos[0], blueCoinSwitch->header.gfx.pos[1] + 100.f * blueCoinSwitch->header.gfx.scale[1], blueCoinSwitch->header.gfx.pos[2]);
+                obj_set_angle(o, 0, 0, 0);
+                obj_scale(o, 1.f);
+                o->oAnimState = o->oBehParams2ndByte = count_objects_with_behavior(bhvHiddenBlueCoin);
+                break;
+            }
+        }
+    }
+}
+
+/**
+ * Init function for bhvBlueCoinSwitch.
+ */
+void bhv_blue_coin_switch_init(void) {
+    struct Object *blueCoinNumber = spawn_object(o, MODEL_NUMBER, bhvBlueCoinNumber);
+    blueCoinNumber->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP; // to make sure it's updated even during time stop
+    blueCoinNumber->oHiddenBlueCoinSwitch = o;
+    o->oHomeY = o->oPosY;
 }
 
 /**
@@ -67,6 +123,7 @@ void bhv_blue_coin_switch_loop(void) {
         sync_object_init_field(o, &o->oGravity);
         sync_object_init_field(o, &o->oTimer);
         sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, &o->oHomeY);
     }
 
     // The switch's model is 1/3 size.
@@ -128,9 +185,29 @@ void bhv_blue_coin_switch_loop(void) {
 
             // Delete the switch (which stops the sound) after the last coin is collected,
             // or after the coins unload after the 240-frame timer expires.
-            if (cur_obj_nearest_object_with_behavior(bhvHiddenBlueCoin) == NULL || o->oTimer > 240) {
-                obj_mark_for_deletion(o);
+            bool noBlueCoin = cur_obj_nearest_object_with_behavior(bhvHiddenBlueCoin) == NULL;
+            if (noBlueCoin || o->oTimer > 240) {
+                if (!noBlueCoin && gLevelValues.respawnBlueCoinsSwitch) {
+                    o->oAction = BLUE_COIN_SWITCH_ACT_RESPAWNING;
+                    o->oPosY = o->oHomeY - 120.0f;
+                    o->oVelY = 20.0f;
+                    o->oGravity = 0.0f;
+                    cur_obj_play_sound_2(SOUND_GENERAL_SWITCH_DOOR_OPEN);
+                    network_send_object(o);
+                } else {
+                    obj_mark_for_deletion(o);
+                }
             }
+
+            break;
+        case BLUE_COIN_SWITCH_ACT_RESPAWNING:
+            cur_obj_move_using_fvel_and_gravity();
+            if (o->oPosY >= o->oHomeY) {
+                o->oPosY = o->oHomeY;
+                o->oAction = BLUE_COIN_SWITCH_ACT_IDLE;
+            }
+            load_object_collision_model();
+            cur_obj_unhide();
 
             break;
     }

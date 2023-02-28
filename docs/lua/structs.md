@@ -938,22 +938,33 @@
 | exitCastleArea | `integer` |  |
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
+| extendedPauseDisplay | `integer` |  |
 | fixCollisionBugs | `integer` |  |
-| fixVanishFloors | `boolean` |  |
+| fixVanishFloors | `integer` |  |
+| floatingStarDance | `integer` |  |
 | floorLowerLimit | `integer` |  |
 | floorLowerLimitMisc | `integer` |  |
 | floorLowerLimitShadow | `integer` |  |
+| hudCapTimer | `integer` |  |
+| hudRedCoinsRadar | `integer` |  |
+| hudSecretsRadar | `integer` |  |
 | metalCapDuration | `integer` |  |
 | metalCapDurationCotmc | `integer` |  |
 | metalCapSequence | `integer` |  |
+| mushroom1UpHeal | `integer` |  |
 | pauseExitAnywhere | `boolean` |  |
+| previewBlueCoins | `integer` |  |
 | pssSlideStarIndex | `integer` |  |
 | pssSlideStarTime | `integer` |  |
+| respawnBlueCoinsSwitch | `integer` |  |
+| showStarNumber | `integer` |  |
 | skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| starHeal | `integer` |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 | vanishCapDuration | `integer` |  |
 | vanishCapDurationVcutm | `integer` |  |
 | vanishCapSequence | `integer` |  |
+| visibleSecrets | `integer` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
 | wingCapLookUpReq | `integer` |  |
@@ -1086,7 +1097,6 @@
 | unkC4 | `number` |  |
 | usedObj | [Object](structs.md#Object) |  |
 | vel | [Vec3f](structs.md#Vec3f) | read-only |
-| visibleToEnemies | `integer` |  |
 | wall | [Surface](structs.md#Surface) |  |
 | wallKickTimer | `integer` |  |
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |

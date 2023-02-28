@@ -68,6 +68,8 @@ extern ALIGNED8 const Texture flame_seg6_texture_06014000[];
 extern ALIGNED8 const Texture flame_seg6_texture_06016000[];
 extern ALIGNED8 const Texture flame_seg6_texture_06018000[];
 extern ALIGNED8 const Texture flame_seg6_texture_0601A000[];
+extern ALIGNED8 const Texture bowser_key_left_texture[];
+extern ALIGNED8 const Texture bowser_key_right_texture[];
 extern ALIGNED8 const Texture breakable_box_seg8_texture_08011A90[];
 extern ALIGNED8 const Texture breakable_box_seg8_texture_08012290[];
 extern ALIGNED8 const Texture bub_seg6_texture_0600E2A8[];

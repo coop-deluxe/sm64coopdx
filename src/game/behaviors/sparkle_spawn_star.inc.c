@@ -30,6 +30,7 @@ void bhv_spawned_star_init(void) {
         u32 models[] = { MODEL_STAR };
         network_send_spawn_objects(spawn_objects, models, 1);
     }
+    spawn_star_number();
 }
 
 void set_sparkle_spawn_star_hitbox(void) {
@@ -142,6 +143,7 @@ void bhv_spawned_star_loop(void) {
     cur_obj_move_using_fvel_and_gravity();
     o->oFaceAngleYaw += o->oAngleVelYaw;
     o->oInteractStatus = 0;
+    spawn_star_number();
 }
 
 void bhv_spawn_star_no_level_exit(struct Object* object, u32 params, u8 networkSendEvent) {

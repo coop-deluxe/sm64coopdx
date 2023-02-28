@@ -286,6 +286,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvBlueBowserFlame);
     bhv_constant(id_bhvBlueCoinJumping);
     bhv_constant(id_bhvBlueCoinSliding);
+    bhv_constant(id_bhvBlueCoinNumber);
     bhv_constant(id_bhvBlueCoinSwitch);
     bhv_constant(id_bhvBlueFish);
     bhv_constant(id_bhvBlueFlamesGroup);
@@ -648,6 +649,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvStar);
     bhv_constant(id_bhvStarDoor);
     bhv_constant(id_bhvStarKeyCollectionPuffSpawner);
+    bhv_constant(id_bhvStarNumber);
     bhv_constant(id_bhvStarSpawnCoordinates);
     bhv_constant(id_bhvStaticCheckeredPlatform);
     bhv_constant(id_bhvStaticObject);

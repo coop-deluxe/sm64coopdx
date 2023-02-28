@@ -1,4 +1,5 @@
 #ifndef HARDCODED_H
+#define HARDCODED_H
 #include "types.h"
 #include "level_table.h"
 #include "dialog_ids.h"
@@ -41,7 +42,18 @@ struct StarPositions {
 struct LevelValues {
     u8 fixCollisionBugs;
     u8 wingCapLookUpReq;
-    bool fixVanishFloors;
+    u8 fixVanishFloors;
+    u8 hudCapTimer;
+    u8 hudRedCoinsRadar;
+    u8 hudSecretsRadar;
+    u8 starHeal;
+    u8 mushroom1UpHeal;
+    u8 floatingStarDance;
+    u8 previewBlueCoins;
+    u8 respawnBlueCoinsSwitch;
+    u8 visibleSecrets;
+    u8 showStarNumber;
+    u8 extendedPauseDisplay;
     enum LevelNum entryLevel;
     enum LevelNum exitCastleLevel;
     s16 exitCastleArea;

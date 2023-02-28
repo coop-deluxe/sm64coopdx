@@ -988,6 +988,24 @@
 
 <br />
 
+## [bhv_blue_coin_number_loop](#bhv_blue_coin_number_loop)
+
+### Lua Example
+`bhv_blue_coin_number_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_blue_coin_number_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_blue_coin_sliding_jumping_init](#bhv_blue_coin_sliding_jumping_init)
 
 ### Lua Example
@@ -1019,6 +1037,24 @@
 
 ### C Prototype
 `void bhv_blue_coin_sliding_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_blue_coin_switch_init](#bhv_blue_coin_switch_init)
+
+### Lua Example
+`bhv_blue_coin_switch_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_blue_coin_switch_init(void);`
 
 [:arrow_up_small:](#)
 
@@ -7760,6 +7796,24 @@
 
 <br />
 
+## [bhv_star_number_loop](#bhv_star_number_loop)
+
+### Lua Example
+`bhv_star_number_loop()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_star_number_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_star_spawn_init](#bhv_star_spawn_init)
 
 ### Lua Example
@@ -10092,6 +10146,24 @@
 
 ### C Prototype
 `struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [spawn_star_number](#spawn_star_number)
+
+### Lua Example
+`spawn_star_number()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void spawn_star_number(void);`
 
 [:arrow_up_small:](#)
 
