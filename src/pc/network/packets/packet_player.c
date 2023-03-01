@@ -402,6 +402,10 @@ void network_receive_player(struct Packet* p) {
         LOG_INFO("%s entered the debug free fly state", np->name);
     }
 #endif
+
+    if (np->currLevelNum == LEVEL_BOWSER_3 && m->action == ACT_JUMBO_STAR_CUTSCENE && gMarioStates[0].action != ACT_JUMBO_STAR_CUTSCENE) {
+        set_mario_action((struct MarioState*) &gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
+    }
 }
 
 void network_update_player(void) {
