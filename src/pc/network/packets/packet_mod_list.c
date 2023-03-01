@@ -67,7 +67,11 @@ void network_send_mod_list(void) {
         packet_write(&p, &nameLength, sizeof(u16));
         packet_write(&p, mod->name, sizeof(u8) * nameLength);
         packet_write(&p, &incompatibleLength, sizeof(u16));
-        packet_write(&p, mod->incompatible, sizeof(u8) * incompatibleLength);
+        if (mod->incompatible) {
+            packet_write(&p, mod->incompatible, sizeof(u8) * incompatibleLength);
+        } else {
+            packet_write(&p, "", 0);
+        }
         packet_write(&p, &relativePathLength, sizeof(u16));
         packet_write(&p, mod->relativePath, sizeof(u8) * relativePathLength);
         packet_write(&p, &modSize, sizeof(u64));
@@ -196,9 +200,13 @@ void network_receive_mod_list_entry(struct Packet* p) {
     }
 
     // get incompatible
-    char incompatible[32] = { 0 };
-    packet_read(p, incompatible, incompatibleLength * sizeof(u8));
-    mod->incompatible = strdup(incompatible);
+    if (incompatibleLength > 0) {
+        char incompatible[32] = { 0 };
+        packet_read(p, incompatible, incompatibleLength * sizeof(u8));
+        mod->incompatible = strdup(incompatible);
+    } else {
+        packet_read(p, 0, 0);
+    }
 
     // get other fields
     u16 relativePathLength = 0;
