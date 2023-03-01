@@ -458,7 +458,7 @@ static s32 get_character_sound(struct MarioState* m, enum CharacterSound charact
     if (m == NULL || m->marioObj == NULL) { return 0; }
 	
     s32 override = 0;
-    if (smlua_call_event_hooks_mario_charactersound_param_ret_int(HOOK_CHARACTER_SOUND, m, characterSound, &override)) {
+    if (smlua_call_event_hooks_mario_character_sound_param_ret_int(HOOK_CHARACTER_SOUND, m, characterSound, &override)) {
         return override;
     }
 	
