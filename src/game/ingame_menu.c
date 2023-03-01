@@ -35,7 +35,6 @@
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
-#include "hardcoded.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
