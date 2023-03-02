@@ -47,6 +47,7 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
+#include "pc/network/socket/socket.h"
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
@@ -173,7 +174,7 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_start_frame();
         f32 delta = MIN((curTime - sFrameTimeStart) / (sFrameTargetTime - sFrameTimeStart), 1);
         gRenderingDelta = delta;
-        if (!skipInterpolationTitleScreen) { patch_interpolations(delta); }
+        if (!skipInterpolationTitleScreen || configFrameLimit > 30) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 
@@ -352,7 +353,8 @@ void main_func(void) {
 
     if (gCLIOpts.Network == NT_CLIENT) {
         network_set_system(NS_SOCKET);
-        strncpy(configJoinIp, gCLIOpts.JoinIp, IP_MAX_LEN);
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
         configJoinPort = gCLIOpts.NetworkPort;
         network_init(NT_CLIENT);
     } else if (gCLIOpts.Network == NT_SERVER) {

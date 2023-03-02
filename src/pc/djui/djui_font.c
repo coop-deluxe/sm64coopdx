@@ -123,7 +123,8 @@ static void djui_font_hud_render_char(char c) {
     djui_gfx_render_texture(main_hud_lut[index], 16, 16, 16);
 }
 
-static f32 djui_font_hud_char_width(UNUSED char c) {
+static f32 djui_font_hud_char_width(char c) {
+    if (c == ' ') { return 0.5; }
     return 0.75f;
 }
 

@@ -36,6 +36,8 @@ extern ALIGNED8 const u8 texture_hud_char_luigi_head[];
 extern ALIGNED8 const u8 texture_hud_char_toad_head[];
 extern ALIGNED8 const u8 texture_hud_char_waluigi_head[];
 extern ALIGNED8 const u8 texture_hud_char_wario_head[];
+extern ALIGNED8 const u8 texture_hud_char_apostrophe[];
+extern ALIGNED8 const u8 texture_hud_char_double_quote[];
 
 struct GlobalTextures gGlobalTextures = {
     .camera     =   { .texture = (u8*)texture_hud_char_camera,       .bitSize = 8, .width = 16, .height = 16 },
@@ -45,6 +47,8 @@ struct GlobalTextures gGlobalTextures = {
     .arrow_down =   { .texture = (u8*)texture_hud_char_arrow_down,   .bitSize = 8, .width =  8, .height =  8 },
     .coin       =   { .texture = (u8*)texture_hud_char_coin,         .bitSize = 8, .width = 16, .height = 16 },
     .star       =   { .texture = (u8*)texture_hud_char_star,         .bitSize = 8, .width = 16, .height = 16 },
+    .apostrophe =   { .texture = (u8*)texture_hud_char_apostrophe,   .bitSize = 8, .width = 16, .height = 16 },
+    .double_quote = { .texture = (u8*)texture_hud_char_double_quote, .bitSize = 8, .width = 16, .height = 16 },
     .mario_head =   { .texture = (u8*)texture_hud_char_mario_head,   .bitSize = 8, .width = 16, .height = 16 },
     .luigi_head =   { .texture = (u8*)texture_hud_char_luigi_head,   .bitSize = 8, .width = 16, .height = 16 },
     .toad_head =    { .texture = (u8*)texture_hud_char_toad_head,    .bitSize = 8, .width = 16, .height = 16 },

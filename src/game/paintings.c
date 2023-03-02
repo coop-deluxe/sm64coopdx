@@ -21,6 +21,7 @@
 #include "level_update.h"
 #include "src/pc/network/network_player.h"
 #include "print.h"
+#include "hardcoded.h"
 
 /**
  * @file paintings.c

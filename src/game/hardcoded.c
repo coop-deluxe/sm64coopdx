@@ -44,6 +44,17 @@ extern Trajectory sThiTinyMetalBallTraj[];
 struct LevelValues gDefaultLevelValues = {
     .fixCollisionBugs         = 0,
     .fixVanishFloors          = 0,
+    .hudCapTimer              = 0,
+    .hudRedCoinsRadar         = 0,
+    .hudSecretsRadar          = 0,
+    .starHeal                 = 0,
+    .mushroom1UpHeal          = 0,
+    .floatingStarDance        = 0,
+    .previewBlueCoins         = 0,
+    .respawnBlueCoinsSwitch   = 0,
+    .visibleSecrets           = 0,
+    .showStarNumber           = 0,
+    .extendedPauseDisplay     = 0,
     .entryLevel               = LEVEL_CASTLE_GROUNDS,
     .exitCastleLevel          = LEVEL_CASTLE,
     .exitCastleArea           = 1,
@@ -99,6 +110,7 @@ struct LevelValues gDefaultLevelValues = {
     .floorLowerLimitShadow    = FLOOR_LOWER_LIMIT_SHADOW,
     .pauseExitAnywhere        = 1,
     .disableActs              = false,
+    .wingCapLookUpReq         = 10,
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -255,6 +267,29 @@ struct BehaviorValues gDefaultBehaviorValues = {
 
 struct BehaviorValues gBehaviorValues = { 0 };
 
+struct PaintingValues gDefaultPaintingValues = {
+    .cotmc_painting =     &cotmc_painting,
+
+    .bob_painting =       &bob_painting,
+    .ccm_painting =       &ccm_painting,
+    .wf_painting =        &wf_painting,
+    .jrb_painting =       &jrb_painting,
+    .lll_painting =       &lll_painting,
+    .ssl_painting =       &ssl_painting,
+    .hmc_painting =       &hmc_painting,
+    .ddd_painting =       &ddd_painting,
+    .wdw_painting =       &wdw_painting,
+    .thi_tiny_painting =  &thi_tiny_painting,
+    .ttm_painting =       &ttm_painting,
+    .ttc_painting =       &ttc_painting,
+    .sl_painting =        &sl_painting,
+    .thi_huge_painting =  &thi_huge_painting,
+
+    .ttm_slide_painting = &ttm_slide_painting,
+};
+
+struct PaintingValues gPaintingValues = { 0 };
+
   ///////////////
  // functions //
 ///////////////
@@ -263,4 +298,5 @@ __attribute__((constructor))
 void hardcoded_reset_default_values(void) {
     gLevelValues = gDefaultLevelValues;
     gBehaviorValues = gDefaultBehaviorValues;
+    gPaintingValues = gDefaultPaintingValues;
 }

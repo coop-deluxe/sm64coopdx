@@ -46,6 +46,9 @@ gPalettePresets = {}
 --- @type LakituState
 gLakituState = {}
 
+--- @type PaintingValues
+gPaintingValues = {}
+
 -----------
 -- hooks --
 -----------

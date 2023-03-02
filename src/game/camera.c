@@ -2912,7 +2912,9 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
         vec3f_copy(end->pos, c->pos);
         vec3f_sub(end->pos, sMarioCamState->pos);
 
-        sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
+        if (sModeInfo.newMode != CAMERA_MODE_NONE) {
+            sAreaYaw = sModeTransitions[sModeInfo.newMode](c, end->focus, end->pos);
+        }
 
         // End was updated by sModeTransitions
         vec3f_sub(end->focus, sMarioCamState->pos);
@@ -5329,7 +5331,11 @@ u8 get_cutscene_from_mario_status(struct Camera *c) {
                 cutscene = determine_dance_cutscene(c);
                 break;
             case ACT_STAR_DANCE_WATER:
-                cutscene = determine_dance_cutscene(c);
+                if (gMarioStates[0].actionArg & 1) { // No exit
+                    cutscene = CUTSCENE_DANCE_DEFAULT;
+                } else {
+                    cutscene = determine_dance_cutscene(c);
+                }
                 break;
             case ACT_STAR_DANCE_NO_EXIT:
                 cutscene = CUTSCENE_DANCE_DEFAULT;

@@ -20,6 +20,12 @@
 
 <br />
 
+- area.h
+   - [area_get_warp_node](functions.md#area_get_warp_node)
+   - [area_get_warp_node_from_params](functions.md#area_get_warp_node_from_params)
+
+<br />
+
 - behavior_actions.h
    - [arc_to_goal_pos](functions-2.md#arc_to_goal_pos)
    - [bhv_1up_common_init](functions-2.md#bhv_1up_common_init)
@@ -75,8 +81,10 @@
    - [bhv_blue_bowser_flame_init](functions-2.md#bhv_blue_bowser_flame_init)
    - [bhv_blue_bowser_flame_loop](functions-2.md#bhv_blue_bowser_flame_loop)
    - [bhv_blue_coin_jumping_loop](functions-2.md#bhv_blue_coin_jumping_loop)
+   - [bhv_blue_coin_number_loop](functions-2.md#bhv_blue_coin_number_loop)
    - [bhv_blue_coin_sliding_jumping_init](functions-2.md#bhv_blue_coin_sliding_jumping_init)
    - [bhv_blue_coin_sliding_loop](functions-2.md#bhv_blue_coin_sliding_loop)
+   - [bhv_blue_coin_switch_init](functions-2.md#bhv_blue_coin_switch_init)
    - [bhv_blue_coin_switch_loop](functions-2.md#bhv_blue_coin_switch_loop)
    - [bhv_blue_fish_movement_loop](functions-2.md#bhv_blue_fish_movement_loop)
    - [bhv_blue_flames_group_loop](functions-2.md#bhv_blue_flames_group_loop)
@@ -451,6 +459,7 @@
    - [bhv_star_door_loop](functions-2.md#bhv_star_door_loop)
    - [bhv_star_door_loop_2](functions-2.md#bhv_star_door_loop_2)
    - [bhv_star_key_collection_puff_spawner_loop](functions-2.md#bhv_star_key_collection_puff_spawner_loop)
+   - [bhv_star_number_loop](functions-2.md#bhv_star_number_loop)
    - [bhv_star_spawn_init](functions-2.md#bhv_star_spawn_init)
    - [bhv_star_spawn_loop](functions-2.md#bhv_star_spawn_loop)
    - [bhv_static_checkered_platform_loop](functions-2.md#bhv_static_checkered_platform_loop)
@@ -579,6 +588,7 @@
    - [spawn_mist_particles_variable](functions-2.md#spawn_mist_particles_variable)
    - [spawn_no_exit_star](functions-2.md#spawn_no_exit_star)
    - [spawn_red_coin_cutscene_star](functions-2.md#spawn_red_coin_cutscene_star)
+   - [spawn_star_number](functions-2.md#spawn_star_number)
    - [spawn_triangle_break_particles](functions-2.md#spawn_triangle_break_particles)
    - [spawn_wind_particles](functions-2.md#spawn_wind_particles)
    - [tox_box_move](functions-2.md#tox_box_move)
@@ -785,6 +795,11 @@
    - [get_star_name](functions-3.md#get_star_name)
    - [get_star_name_ascii](functions-3.md#get_star_name_ascii)
    - [get_star_name_sm64](functions-3.md#get_star_name_sm64)
+
+<br />
+
+- level_script.h
+   - [area_create_warp_node](functions-3.md#area_create_warp_node)
 
 <br />
 
@@ -1515,7 +1530,9 @@
    - [camera_config_set_x_sensitivity](functions-4.md#camera_config_set_x_sensitivity)
    - [camera_config_set_y_sensitivity](functions-4.md#camera_config_set_y_sensitivity)
    - [camera_freeze](functions-4.md#camera_freeze)
+   - [camera_is_frozen](functions-4.md#camera_is_frozen)
    - [camera_unfreeze](functions-4.md#camera_unfreeze)
+   - [course_is_main_course](functions-4.md#course_is_main_course)
    - [deref_s32_pointer](functions-4.md#deref_s32_pointer)
    - [get_current_save_file_num](functions-4.md#get_current_save_file_num)
    - [get_dialog_box_state](functions-4.md#get_dialog_box_state)
@@ -1529,6 +1546,7 @@
    - [get_temp_s32_pointer](functions-4.md#get_temp_s32_pointer)
    - [hud_get_value](functions-4.md#hud_get_value)
    - [hud_hide](functions-4.md#hud_hide)
+   - [hud_is_hidden](functions-4.md#hud_is_hidden)
    - [hud_render_power_meter](functions-4.md#hud_render_power_meter)
    - [hud_set_value](functions-4.md#hud_set_value)
    - [hud_show](functions-4.md#hud_show)
@@ -1842,6 +1860,52 @@ Retrieves a texture by name.
 
 <br />
 
+
+---
+# functions from area.h
+
+<br />
+
+
+## [area_get_warp_node](#area_get_warp_node)
+
+### Lua Example
+`local ObjectWarpNodeValue = area_get_warp_node(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+[ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_get_warp_node(u8 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [area_get_warp_node_from_params](#area_get_warp_node_from_params)
+
+### Lua Example
+`local ObjectWarpNodeValue = area_get_warp_node_from_params(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+[ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
 ---
 
 1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [next >](functions-2.md)]

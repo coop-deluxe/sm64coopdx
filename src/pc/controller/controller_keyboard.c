@@ -34,7 +34,7 @@ static int keyboard_map_scancode(int scancode) {
 }
 
 bool keyboard_on_key_down(int scancode) {
-#ifdef DEBUG
+#ifdef DEVELOPMENT
     debug_keyboard_on_key_down(scancode);
 #endif
 
@@ -51,7 +51,7 @@ bool keyboard_on_key_down(int scancode) {
 }
 
 bool keyboard_on_key_up(int scancode) {
-#ifdef DEBUG
+#ifdef DEVELOPMENT
     debug_keyboard_on_key_up(scancode);
 #endif
     djui_interactable_on_key_up(scancode);

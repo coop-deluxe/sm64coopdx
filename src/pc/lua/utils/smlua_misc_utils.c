@@ -17,6 +17,7 @@
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "include/course_table.h"
 
 u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
@@ -46,6 +47,10 @@ void hud_hide(void) {
 
 void hud_show(void) {
     gOverrideHideHud = 0;
+}
+
+bool hud_is_hidden(void) {
+    return gOverrideHideHud;
 }
 
 extern u8 gLastCollectedStarOrKey;
@@ -126,6 +131,10 @@ void camera_freeze(void) {
 
 void camera_unfreeze(void) {
     gOverrideFreezeCamera = FALSE;
+}
+
+bool camera_is_frozen(void) {
+    return gOverrideFreezeCamera;
 }
 
 bool camera_config_is_free_cam_enabled(void) {
@@ -336,16 +345,14 @@ void movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
 ///
 
 f32 get_environment_region(u8 index) {
-    if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
+    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0]) {
         return gEnvironmentRegions[6 * (int)index];
     }
     return gLevelValues.floorLowerLimit;
 }
 
-///
-
 void set_environment_region(u8 index, s32 value) {
-    if (gEnvironmentRegions != NULL && index <= gEnvironmentRegions[0]) {
+    if (gEnvironmentRegions != NULL && index > 0 && index <= gEnvironmentRegions[0]) {
         gEnvironmentRegions[6 * (int)index] = value;
     }
 }
@@ -372,4 +379,10 @@ void set_override_far(f32 far) {
 
 void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
     dynos_add_scroll_target(index, name, offset, size);
+}
+
+///
+
+bool course_is_main_course(u16 levelNum) {
+    return COURSE_IS_MAIN_COURSE(levelNum);
 }

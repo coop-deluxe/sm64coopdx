@@ -6,6 +6,14 @@ static const Lights1 bowser_key_lights = gdSPDefLights1(
     0xff, 0xb2, 0x00, 0x28, 0x28, 0x28
 );
 
+ALIGNED8 const Texture bowser_key_left_texture[] = {
+#include "actors/bowser_key/bowser_key_left.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture bowser_key_right_texture[] = {
+#include "actors/bowser_key/bowser_key_right.rgba16.inc.c"
+};
+
 // 0x030156F8
 static const Vtx bowser_key_dl_vertex_group1[] = {
     {{{   219,     22,    -17}, 0, {     0,      0}, {0x88, 0x26, 0x00, 0x00}}},

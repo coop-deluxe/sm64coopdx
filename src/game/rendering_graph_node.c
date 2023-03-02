@@ -14,6 +14,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
+#include "include/course_table.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -282,7 +283,7 @@ void patch_mtx_interpolated(f32 delta) {
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
     bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
-    if (translateCamSpace) {
+    if (translateCamSpace && gCurrCourseNum != COURSE_CAKE_END) {
         mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
         mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
     }
@@ -973,7 +974,6 @@ void geo_set_animation_globals(struct AnimInfo *node, s32 hasAnimation) {
  */
 static void geo_process_shadow(struct GraphNodeShadow *node) {
     Mat4 mtxf;
-    Vec3f shadowPos;
     Vec3f shadowPosPrev;
     Vec3f animOffset;
     f32 shadowScale;
@@ -983,11 +983,13 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
 
     if (gCurGraphNodeCamera != NULL && gCurGraphNodeObject != NULL) {
         if (gCurGraphNodeHeldObject != NULL) {
-            get_pos_from_transform_mtx(shadowPos, gMatStack[gMatStackIndex],
+            get_pos_from_transform_mtx(gCurGraphNodeObject->shadowPos, gMatStack[gMatStackIndex],
                                        *gCurGraphNodeCamera->matrixPtr);
             shadowScale = node->shadowScale;
         } else {
-            vec3f_copy(shadowPos, gCurGraphNodeObject->pos);
+            if (!gCurGraphNodeObject->disableAutomaticShadowPos) {
+                vec3f_copy(gCurGraphNodeObject->shadowPos, gCurGraphNodeObject->pos);
+            }
             shadowScale = node->shadowScale * gCurGraphNodeObject->scale[0];
         }
 
@@ -1013,8 +1015,8 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
                 f32 sinAng = sins(gCurGraphNodeObject->angle[1]);
                 f32 cosAng = coss(gCurGraphNodeObject->angle[1]);
 
-                shadowPos[0] += animOffset[0] * cosAng + animOffset[2] * sinAng;
-                shadowPos[2] += -animOffset[0] * sinAng + animOffset[2] * cosAng;
+                gCurGraphNodeObject->shadowPos[0] += animOffset[0] * cosAng + animOffset[2] * sinAng;
+                gCurGraphNodeObject->shadowPos[2] += -animOffset[0] * sinAng + animOffset[2] * cosAng;
             }
         }
 
@@ -1023,10 +1025,10 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             if (gGlobalTimer == gCurGraphNodeHeldObject->prevShadowPosTimestamp + 1) {
                 vec3f_copy(shadowPosPrev, gCurGraphNodeHeldObject->prevShadowPos);
             } else {
-                vec3f_copy(shadowPosPrev, shadowPos);
+                vec3f_copy(shadowPosPrev, gCurGraphNodeObject->shadowPos);
             }
 
-            vec3f_copy(gCurGraphNodeHeldObject->prevShadowPos, shadowPos);
+            vec3f_copy(gCurGraphNodeHeldObject->prevShadowPos, gCurGraphNodeObject->shadowPos);
             gCurGraphNodeHeldObject->prevShadowPosTimestamp = gGlobalTimer;
         } else {
             if (gGlobalTimer == gCurGraphNodeObject->prevShadowPosTimestamp + 1 &&
@@ -1034,9 +1036,9 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
                 gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
                 vec3f_copy(shadowPosPrev, gCurGraphNodeObject->prevShadowPos);
             } else {
-                vec3f_copy(shadowPosPrev, shadowPos);
+                vec3f_copy(shadowPosPrev, gCurGraphNodeObject->shadowPos);
             }
-            vec3f_copy(gCurGraphNodeObject->prevShadowPos, shadowPos);
+            vec3f_copy(gCurGraphNodeObject->prevShadowPos, gCurGraphNodeObject->shadowPos);
             gCurGraphNodeObject->prevShadowPosTimestamp = gGlobalTimer;
         }
 
@@ -1047,7 +1049,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             interp->node = node;
             interp->shadowScale = shadowScale;
             interp->obj = gCurGraphNodeObject;
-            vec3f_copy(interp->shadowPos, shadowPos);
+            vec3f_copy(interp->shadowPos, gCurGraphNodeObject->shadowPos);
             vec3f_copy(interp->shadowPosPrev, shadowPosPrev);
         } else {
             gShadowInterpCurrent = NULL;
@@ -1061,8 +1063,12 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             gShadowInterpCurrent->gfx = shadowListPrev;
         }
 
+        if (gCurGraphNodeObject->shadowInvisible) {
+            shadowListPrev = NULL;
+        }
+
         if (shadowListPrev != NULL) {
-            mtxf_translate(mtxf, shadowPos);
+            mtxf_translate(mtxf, gCurGraphNodeObject->shadowPos);
             mtxf_mul(gMatStack[gMatStackIndex + 1], mtxf, *gCurGraphNodeCamera->matrixPtr);
             mtxf_translate(mtxf, shadowPosPrev);
             mtxf_mul(gMatStackPrev[gMatStackIndex + 1], mtxf, *gCurGraphNodeCamera->matrixPtrPrev);

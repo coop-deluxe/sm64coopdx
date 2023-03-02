@@ -1047,9 +1047,7 @@ s32 act_bubbled(struct MarioState* m) {
         m->health = 0x100;
         m->marioObj->oIntangibleTimer = 0;
         m->peakHeight = m->pos[1];
-        m->vel[0] = 0;
-        m->vel[1] = 0;
-        m->vel[2] = 0;
+        mario_set_forward_vel(m, 0.0f);
         m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         if (m->playerIndex == 0) {
             soft_reset_camera(m->area->camera);

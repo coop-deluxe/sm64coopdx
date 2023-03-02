@@ -411,6 +411,11 @@ static void wiggler_act_fall_through_floor(void) {
  */
 void wiggler_jumped_on_attack_handler(void) {
     cur_obj_play_sound_2(SOUND_OBJ_WIGGLER_ATTACKED);
+    // Check for if we've already defeated the Wiggler.
+    if (o->header.gfx.scale[0] == 1.0f) {
+        o->oAction = WIGGLER_ACT_KNOCKBACK;
+        return;
+    }
     o->oAction = WIGGLER_ACT_JUMPED_ON;
     o->oForwardVel = o->oVelY = 0.0f;
     o->oWigglerSquishSpeed = 0.4f;

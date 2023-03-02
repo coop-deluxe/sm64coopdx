@@ -48,7 +48,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
             // If pack folder exists, add it to the pack list
             SysPath _PackFolder = fstring("%s/%s", _DynosPacksFolder.c_str(), _DynosPacksEnt->d_name);
             if (fs_sys_dir_exists(_PackFolder.c_str())) {
-                struct PackData* _Pack = DynOS_Pack_Add(_PackFolder);
+                DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
                 DynOS_Tex_GeneratePack(_PackFolder, _PackFolder, false);
             }

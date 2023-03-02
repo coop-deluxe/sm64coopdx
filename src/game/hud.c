@@ -8,6 +8,7 @@
 #include "level_update.h"
 #include "camera.h"
 #include "print.h"
+#include "engine/math_util.h"
 #include "engine/surface_load.h"
 #include "ingame_menu.h"
 #include "hud.h"
@@ -15,9 +16,13 @@
 #include "area.h"
 #include "save_file.h"
 #include "print.h"
+#include "hardcoded.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
+#include "data/dynos_mgr_builtin_externs.h"
 
 extern bool gDjuiInMainMenu;
 u8 gOverrideHideHud;
@@ -313,6 +318,131 @@ void render_hud_mario_lives(void) {
     print_text_fmt_int(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(54), HUD_TOP_Y, "%d", gHudDisplay.lives);
 }
 
+static void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH) {
+    create_dl_ortho_matrix();
+    if (!vtx) {
+        vtx = alloc_display_list(sizeof(Vtx) * 4);
+        vtx[0] = (Vtx) {{{ x,     y - h, 0 }, 0, {  tileX          << 5, (tileY + tileH) << 5 }, { 0xFF, 0xFF, 0xFF, 0xFF }}};
+        vtx[1] = (Vtx) {{{ x + w, y - h, 0 }, 0, { (tileX + tileW) << 5, (tileY + tileH) << 5 }, { 0xFF, 0xFF, 0xFF, 0xFF }}};
+        vtx[2] = (Vtx) {{{ x + w, y,     0 }, 0, { (tileX + tileW) << 5,  tileY          << 5 }, { 0xFF, 0xFF, 0xFF, 0xFF }}};
+        vtx[3] = (Vtx) {{{ x,     y,     0 }, 0, {  tileX          << 5,  tileY          << 5 }, { 0xFF, 0xFF, 0xFF, 0xFF }}};
+    }
+    gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
+    gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
+    gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    switch (siz) {
+        case G_IM_SIZ_4b:  gDPLoadTextureBlock(gDisplayListHead++, texture, fmt, G_IM_SIZ_4b,  texW, texH, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0); break;
+        case G_IM_SIZ_8b:  gDPLoadTextureBlock(gDisplayListHead++, texture, fmt, G_IM_SIZ_8b,  texW, texH, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0); break;
+        case G_IM_SIZ_16b: gDPLoadTextureBlock(gDisplayListHead++, texture, fmt, G_IM_SIZ_16b, texW, texH, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0); break;
+        case G_IM_SIZ_32b: gDPLoadTextureBlock(gDisplayListHead++, texture, fmt, G_IM_SIZ_32b, texW, texH, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0); break;
+    }
+    gSPVertex(gDisplayListHead++, vtx, 4, 0);
+    gSP2Triangles(gDisplayListHead++, 0, 1, 2, 0x0, 0, 2, 3, 0x0);
+    gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+}
+
+/**
+ * Renders the number of seconds remaining of the current cap power-ups.
+ */
+void render_hud_cap_timer(void) {
+    static const u8 *sHudCapIcons[][4] = {
+        [MARIO_WING_CAP                                     ] = { exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08015E28 },
+        [                 MARIO_METAL_CAP                   ] = { exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08014628 },
+        [                                   MARIO_VANISH_CAP] = { exclamation_box_seg8_texture_08012E28, exclamation_box_seg8_texture_08012E28, exclamation_box_seg8_texture_08012E28, exclamation_box_seg8_texture_08012E28 },
+        [MARIO_WING_CAP | MARIO_METAL_CAP                   ] = { exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08014628 },
+        [MARIO_WING_CAP                   | MARIO_VANISH_CAP] = { exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08012E28, exclamation_box_seg8_texture_08012E28 },
+        [                 MARIO_METAL_CAP | MARIO_VANISH_CAP] = { exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08012E28, exclamation_box_seg8_texture_08012E28 },
+        [MARIO_WING_CAP | MARIO_METAL_CAP | MARIO_VANISH_CAP] = { exclamation_box_seg8_texture_08015E28, exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08014628, exclamation_box_seg8_texture_08012E28 },
+    };
+    struct MarioState *m = &gMarioStates[0];
+    u32 capFlags = m->flags & MARIO_SPECIAL_CAPS;
+    if (capFlags) {
+        s32 capTimer = m->capTimer;
+        if (capTimer > 0) {
+            s32 capSeconds = (capTimer + 29) / 30;
+            const u8 **capIcons = sHudCapIcons[capFlags];
+            gDPSetEnvColor(gDisplayListHead++, 0xFF, 0xFF, 0xFF, 0xFF);
+            render_hud_icon(NULL, capIcons[0], G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22), HUD_TOP_Y - 4, 5, 16,  0, 0, 10, 32);
+            render_hud_icon(NULL, capIcons[1], G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(27), HUD_TOP_Y - 4, 3, 16, 10, 0,  6, 32);
+            render_hud_icon(NULL, capIcons[2], G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(30), HUD_TOP_Y - 4, 3, 16, 16, 0,  6, 32);
+            render_hud_icon(NULL, capIcons[3], G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(33), HUD_TOP_Y - 4, 5, 16, 22, 0, 10, 32);
+            print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(38), HUD_TOP_Y - 20, "*"); // 'X' glyph
+            print_text_fmt_int(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(54), HUD_TOP_Y - 20, "%d", capSeconds);
+        }
+    }
+}
+
+static void render_hud_radar(struct MarioState *m, struct Object *target, const u8 *iconTexture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 tileX, s32 tileY, s32 tileW, s32 tileH, u8 r, u8 g, u8 b) {
+
+    // Icon
+    gDPSetEnvColor(gDisplayListHead++, r, g, b, 0xFF);
+    render_hud_icon(NULL, iconTexture, fmt, siz, texW, texH, x, y + 2, 12, 12, tileX, tileY, tileW, tileH);
+
+    // Direction
+    s16 angle = atan2s(
+        target->oPosZ - m->pos[2],
+        target->oPosX - m->pos[0]
+    ) - atan2s(
+        m->pos[2] - gCamera->pos[2],
+        m->pos[0] - gCamera->pos[0]
+    );
+    f32 invSqrt2 = 1.f / sqrtf(2.f);
+    Vtx *vtx = alloc_display_list(sizeof(Vtx) * 4);
+    for (s32 i = 0; i != 4; ++i) {
+        s16 a = angle + ((i * 0x4000) - 0x6000);
+        vtx[i] = (Vtx) { { {
+            x + 6 + 12 * coss(angle + 0x4000) + 8 * invSqrt2 * coss(a),
+            y - 4 + 12 * sins(angle + 0x4000) + 8 * invSqrt2 * sins(a), 0,
+        }, 0, {
+            256 * (((i + 1) / 2) % 2), // 0, 256, 256, 0
+            256 * (((i + 2) / 2) % 2), // 256, 256, 0, 0
+        }, { 0xFF, 0xFF, 0xFF, 0xFF } } };
+    }
+    gDPSetEnvColor(gDisplayListHead++, 0xFF, 0xFF, 0xFF, 0xFF);
+    render_hud_icon(vtx, texture_hud_char_arrow_up, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 8, 0, 0, 8, 8, 0, 0, 8, 8);
+
+    // Distance
+    s32 dist = vec3f_dist(&target->oPosX, m->pos);
+    print_text_fmt_int(x + 24, y - 12, "%d", dist);
+}
+
+/**
+ * Renders the direction and distance to the nearest red coin.
+ */
+void render_hud_red_coins_and_secrets_radar(void) {
+    struct MarioState *m = &gMarioStates[0];
+    if (m->marioObj && gCamera) {
+        s32 y = 31;
+
+        // Red coins radar
+        if (gLevelValues.hudRedCoinsRadar) {
+            static const u8 *sRedCoinTextures[] = {
+                coin_seg3_texture_03005780,
+                coin_seg3_texture_03005F80,
+                coin_seg3_texture_03006780,
+                coin_seg3_texture_03006F80,
+            };
+            struct Object *redCoin = obj_get_nearest_object_with_behavior_id(m->marioObj, id_bhvRedCoin);
+            if (redCoin) {
+                render_hud_radar(m, redCoin, sRedCoinTextures[(gGlobalTimer / 2) % 4], G_IM_FMT_IA, G_IM_SIZ_16b, 32, 32, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(24), y, 0, 0, 32, 32, 0xFF, 0x00, 0x00);
+                y += 30;
+            }
+        }
+
+        // Secrets radar
+        if (gLevelValues.hudSecretsRadar) {
+            struct Object *secret = obj_get_nearest_object_with_behavior_id(m->marioObj, id_bhvHiddenStarTrigger);
+            if (secret) {
+                render_hud_radar(m, secret, texture_hud_char_S, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(24), y, 0, 0, 14, 16, 0xFF, 0xFF, 0xFF);
+                y += 30;
+            }
+        }
+    }
+}
+
 /**
  * Renders the amount of coins collected.
  */
@@ -494,12 +624,20 @@ void render_hud(void) {
 
         bool showHud = (configHUD && !gDjuiInMainMenu && !gOverrideHideHud);
 
-        if (gCurrentArea != NULL && gCurrentArea->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
+        if (gCurrentArea != NULL && gCurrentArea->camera != NULL && gCurrentArea->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             render_hud_cannon_reticle();
         }
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud) {
             render_hud_mario_lives();
+        }
+
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud && gLevelValues.hudCapTimer) {
+            render_hud_cap_timer();
+        }
+
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud) {
+            render_hud_red_coins_and_secrets_radar();
         }
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT && showHud) {
@@ -515,21 +653,24 @@ void render_hud(void) {
         }
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && showHud) {
-            render_hud_power_meter();
-            render_hud_camera_status();
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA && showHud) {
+                render_hud_camera_status();
+            }
+
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_POWER && showHud) {
+                render_hud_power_meter();
+            }
         }
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
         }
 
-        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_SURFACES)
-        {
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_SURFACES) {
             print_text(10, 40, "SURFACE POOL FULL");
         }
 
-        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_NODES)
-        {
+        if (gSurfacePoolError & NOT_ENOUGH_ROOM_FOR_NODES) {
             print_text(10, 60, "SURFACE NODE POOL FULL");
         }
 

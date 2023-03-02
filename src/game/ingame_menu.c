@@ -26,14 +26,15 @@
 #include "text_strings.h"
 #include "types.h"
 #include "macros.h"
+#include "hardcoded.h"
 #include "pc/cheats.h"
 #include "pc/network/network.h"
 #include "pc/djui/djui.h"
 #include "pc/utils/misc.h"
+#include "data/dynos_mgr_builtin_externs.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
-#include "hardcoded.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -942,6 +943,14 @@ void handle_menu_scrolling(s8 scrollDirection, s8 *currentIndex, s8 minIndex, s8
             play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource);
             currentIndex[0]--;
         }
+    }
+
+    // Clamp currentIndex to prevent out of bounds access
+    if (currentIndex[0] < minIndex) {
+        currentIndex[0] = minIndex;
+    }
+    if (currentIndex[0] > maxIndex) {
+        currentIndex[0] = maxIndex;
     }
 
     if (gMenuHoldKeyTimer == 10) {
@@ -2661,6 +2670,25 @@ void render_pause_castle_menu_box(s16 x, s16 y) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
+void render_pause_castle_menu_box_extended(s16 x, s16 y) {
+    create_dl_translation_matrix(MENU_MTX_PUSH, x - 98, y - 32, 0);
+    create_dl_scale_matrix(MENU_MTX_NOPUSH, 1.5f, 0.8f, 1.0f);
+    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 105);
+    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+
+    create_dl_translation_matrix(MENU_MTX_PUSH, x + 6, y - 28, 0);
+    create_dl_rotation_matrix(MENU_MTX_NOPUSH, DEFAULT_DIALOG_BOX_ANGLE, 0, 0, 1.0f);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    gSPDisplayList(gDisplayListHead++, dl_draw_triangle);
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+
+    create_dl_translation_matrix(MENU_MTX_PUSH, x - 9, y - 101, 0);
+    create_dl_rotation_matrix(MENU_MTX_NOPUSH, 270.0f, 0, 0, 1.0f);
+    gSPDisplayList(gDisplayListHead++, dl_draw_triangle);
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+}
+
 void highlight_last_course_complete_stars(void) {
     u8 courseDone;
 
@@ -2824,6 +2852,186 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 }
 
+#define INDEX_CASTLE_STARS (COURSE_COUNT)
+#define INDEX_FLAGS (COURSE_COUNT + 1)
+#define INDEX_MIN (-1)
+#define INDEX_MAX (INDEX_FLAGS + 1)
+
+static u32 pause_castle_get_stars(s32 index) {
+
+    // Main courses (0-14), Secret courses (15-24)
+    if (index >= 0 && index < INDEX_CASTLE_STARS) {
+        return save_file_get_star_flags(gCurrSaveFileNum - 1, index);
+    }
+
+    // Castle stars (25)
+    if (index == INDEX_CASTLE_STARS) {
+        return save_file_get_star_flags(gCurrSaveFileNum - 1, -1);
+    }
+
+    // Flags (26)
+    if (index == INDEX_FLAGS) {
+        return save_file_get_flags();
+    }
+
+    return 0;
+}
+
+static void render_pause_castle_course_name(const u8 *courseName, s16 x, s16 y) {
+    s16 width = 0;
+    for (const u8 *c = courseName; *c != DIALOG_CHAR_TERMINATOR; c++) {
+        width += gDialogCharWidths[*c];
+    }
+    print_generic_string(x - width / 2, y, courseName);
+}
+
+static void render_pause_castle_flag_icon(const u8 *texture, s16 texW, s16 texH, s16 x, s16 y, s16 w, s16 h) {
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, texW, texH, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+    gSPTextureRectangle(gDisplayListHead++, (x) << 2, (SCREEN_HEIGHT - h - y) << 2, (x + w) << 2, (SCREEN_HEIGHT - y) << 2, G_TX_RENDERTILE, 0, 0, ((0x400 * texW) / w), ((0x400 * texH) / h));
+}
+
+static void render_pause_castle_flag(s16 x, s16 y, u32 flag) {
+    if (save_file_get_flags() & flag) {
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    } else {
+        gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha / 3);
+    }
+    switch (flag) {
+        case SAVE_FLAG_HAVE_WING_CAP:
+            render_pause_castle_flag_icon(exclamation_box_seg8_texture_08015E28, 32, 32, x, y, 12, 12);
+            break;
+
+        case SAVE_FLAG_HAVE_METAL_CAP:
+            render_pause_castle_flag_icon(exclamation_box_seg8_texture_08014628, 32, 32, x, y, 12, 12);
+            break;
+
+        case SAVE_FLAG_HAVE_VANISH_CAP:
+            render_pause_castle_flag_icon(exclamation_box_seg8_texture_08012E28, 32, 32, x, y, 12, 12);
+            break;
+
+        case SAVE_FLAG_HAVE_KEY_1 | SAVE_FLAG_UNLOCKED_BASEMENT_DOOR:
+        case SAVE_FLAG_HAVE_KEY_2 | SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR:
+            render_pause_castle_flag_icon(bowser_key_left_texture, 32, 64, x, y, 6, 12);
+            render_pause_castle_flag_icon(bowser_key_right_texture, 32, 64, x + 6, y, 6, 12);
+            break;
+    }
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+}
+
+static void render_pause_castle_course_stars_extended(s16 x, s16 y) {
+    bool isMainCourse = COURSE_IS_MAIN_COURSE(gDialogLineNum + 1);
+    u32 stars = pause_castle_get_stars(gDialogLineNum);
+    u8 str[32];
+
+    // Build the stars string
+    s32 lastCollectedStar = 0;
+    for (s32 i = 0; i != (isMainCourse ? 6 : 7); ++i) {
+        if (stars & (1 << i)) {
+            str[2 * i] = DIALOG_CHAR_STAR_FILLED;
+            lastCollectedStar = i + 1;
+        } else {
+            str[2 * i] = DIALOG_CHAR_STAR_OPEN;
+        }
+        str[2 * i + 1] = DIALOG_CHAR_SPACE;
+        str[2 * i + 2] = DIALOG_CHAR_TERMINATOR;
+    }
+
+    // Hide the not collected ones after the last collected for secret courses
+    if (!isMainCourse) {
+        str[2 * lastCollectedStar] = DIALOG_CHAR_TERMINATOR;
+    }
+
+    // Render the 100 coins star next to the coin counter for main courses
+    if (isMainCourse && (stars & 0x40)) {
+        const u8 textStar[] = { TEXT_STAR };
+        print_generic_string(x + 89, y - 5, textStar);
+    }
+
+    // Render the stars
+    print_generic_string(x + 14, y + 13, str);
+}
+
+void render_pause_castle_main_strings_extended(s16 x, s16 y) {
+
+    // Main courses (0-14), Secret courses (15-24), Castle stars (25), Flags (26)
+    // Indices -1 and 26 are used to loop back respectively to Flags and Course 1
+    s8 prevIndex = gDialogLineNum;
+    handle_menu_scrolling(MENU_SCROLL_VERTICAL, &gDialogLineNum, INDEX_MIN, INDEX_MAX);
+    s8 scrollDir = (gDialogLineNum >= prevIndex ? +1 : -1);
+    if (gDialogLineNum >= INDEX_MAX) {
+        gDialogLineNum = 0;
+        scrollDir = +1;
+    } else if (gDialogLineNum <= INDEX_MIN) {
+        gDialogLineNum = INDEX_FLAGS;
+        scrollDir = -1;
+    }
+
+    // Skip courses with 0 star collected
+    if (gDialogLineNum < INDEX_CASTLE_STARS) {
+        while (!pause_castle_get_stars(gDialogLineNum)) {
+            gDialogLineNum += scrollDir;
+            if (gDialogLineNum >= INDEX_CASTLE_STARS) {
+                gDialogLineNum = INDEX_CASTLE_STARS;
+                break;
+            }
+            if (gDialogLineNum <= INDEX_MIN) {
+                gDialogLineNum = INDEX_FLAGS;
+                break;
+            }
+        }
+    }
+
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+
+    // Main courses (0-14)
+    if (gDialogLineNum < COURSE_STAGES_COUNT) {
+        const u8 *courseName = seg2_course_name_table[gDialogLineNum];
+        const u8 textCoin[] = { TEXT_COIN_X };
+        u8 textCoinCount[8];
+        render_pause_castle_course_name(courseName, 160, y + 30);
+        render_pause_castle_course_stars_extended(x + 20, y);
+        print_generic_string(x + 54, y - 5, textCoin);
+        int_to_str(save_file_get_course_coin_score(gCurrSaveFileNum - 1, gDialogLineNum), textCoinCount);
+        print_generic_string(x + 74, y - 5, textCoinCount);
+    }
+
+    // Secret courses (15-24)
+    else if (gDialogLineNum >= COURSE_STAGES_COUNT && gDialogLineNum < INDEX_CASTLE_STARS) {
+        const u8 *courseName = seg2_course_name_table[gDialogLineNum];
+        render_pause_castle_course_name(courseName + 3, 160, y + 30);
+        render_pause_castle_course_stars_extended(x + 20, y);
+    }
+    
+    // Castle stars (25)
+    else if (gDialogLineNum == INDEX_CASTLE_STARS) {
+        const u8 *courseName = seg2_course_name_table[COURSE_MAX];
+        const u8 textStar[] = { TEXT_STAR_X };
+        u8 textStarCount[8];
+        render_pause_castle_course_name(courseName + 3, 160, y + 30);
+        print_generic_string(x + 60, y + 13, textStar);
+        int_to_str(save_file_get_course_star_count(gCurrSaveFileNum - 1, -1), textStarCount);
+        print_generic_string(x + 80, y + 13, textStarCount);
+    }
+
+    // Flags (26)
+    else if (gDialogLineNum == INDEX_FLAGS) {
+        const u8 textFlags[] = { ASCII_TO_DIALOG('P'), ASCII_TO_DIALOG('R'), ASCII_TO_DIALOG('O'), ASCII_TO_DIALOG('G'), ASCII_TO_DIALOG('R'), ASCII_TO_DIALOG('E'), ASCII_TO_DIALOG('S'), ASCII_TO_DIALOG('S'), DIALOG_CHAR_TERMINATOR };
+        const u8 textCaps[] = { ASCII_TO_DIALOG('C'), ASCII_TO_DIALOG('A'), ASCII_TO_DIALOG('P'), ASCII_TO_DIALOG('S'), 0xE6, DIALOG_CHAR_TERMINATOR };
+        const u8 textKeys[] = { ASCII_TO_DIALOG('K'), ASCII_TO_DIALOG('E'), ASCII_TO_DIALOG('Y'), ASCII_TO_DIALOG('S'), 0xE6, DIALOG_CHAR_TERMINATOR };
+        render_pause_castle_course_name(textFlags, 160, y + 30);
+        print_generic_string(x + 45, y + 13, textCaps);
+        render_pause_castle_flag(x + 80, y + 15, SAVE_FLAG_HAVE_WING_CAP);
+        render_pause_castle_flag(x + 96, y + 15, SAVE_FLAG_HAVE_METAL_CAP);
+        render_pause_castle_flag(x + 112, y + 15, SAVE_FLAG_HAVE_VANISH_CAP);
+        print_generic_string(x + 45, y - 5, textKeys);
+        render_pause_castle_flag(x + 80, y - 3, SAVE_FLAG_HAVE_KEY_1 | SAVE_FLAG_UNLOCKED_BASEMENT_DOOR);
+        render_pause_castle_flag(x + 96, y - 3, SAVE_FLAG_HAVE_KEY_2 | SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR);
+    }
+
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+}
+
 s8 gCourseCompleteCoinsEqual = 0;
 s32 gCourseDoneMenuTimer = 0;
 s32 gCourseCompleteCoins = 0;
@@ -2888,8 +3096,13 @@ s16 render_pause_courses_and_castle(void) {
         case DIALOG_STATE_HORIZONTAL:
             shade_screen();
             print_hud_pause_colorful_str();
-            render_pause_castle_menu_box(160, 143);
-            render_pause_castle_main_strings(104, 60);
+            if (gLevelValues.extendedPauseDisplay) {
+                render_pause_castle_menu_box_extended(160, 143);
+                render_pause_castle_main_strings_extended(84, 60);
+            } else {
+                render_pause_castle_menu_box(160, 143);
+                render_pause_castle_main_strings(104, 60);
+            }
 
 #ifdef VERSION_EU
             if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))

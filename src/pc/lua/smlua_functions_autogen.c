@@ -35,7 +35,47 @@
 #include "src/pc/mods/mod_storage.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
+#include "src/game/area.h"
+#include "src/engine/level_script.h"
 
+
+  ////////////
+ // area.h //
+////////////
+
+int smlua_func_area_get_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_get_warp_node", 1, top);
+        return 0;
+    }
+
+    u8 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_get_warp_node"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node(id));
+
+    return 1;
+}
+
+int smlua_func_area_get_warp_node_from_params(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_get_warp_node_from_params", 1, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_get_warp_node_from_params"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node_from_params(o));
+
+    return 1;
+}
 
   ////////////////////////
  // behavior_actions.h //
@@ -875,6 +915,21 @@ int smlua_func_bhv_blue_coin_jumping_loop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_blue_coin_number_loop(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_blue_coin_number_loop", 0, top);
+        return 0;
+    }
+
+
+    bhv_blue_coin_number_loop();
+
+    return 1;
+}
+
 int smlua_func_bhv_blue_coin_sliding_jumping_init(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -901,6 +956,21 @@ int smlua_func_bhv_blue_coin_sliding_loop(UNUSED lua_State* L) {
 
 
     bhv_blue_coin_sliding_loop();
+
+    return 1;
+}
+
+int smlua_func_bhv_blue_coin_switch_init(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_blue_coin_switch_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_blue_coin_switch_init();
 
     return 1;
 }
@@ -6521,6 +6591,21 @@ int smlua_func_bhv_star_key_collection_puff_spawner_loop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_star_number_loop(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_star_number_loop", 0, top);
+        return 0;
+    }
+
+
+    bhv_star_number_loop();
+
+    return 1;
+}
+
 int smlua_func_bhv_star_spawn_init(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -8794,6 +8879,21 @@ int smlua_func_spawn_red_coin_cutscene_star(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_red_coin_cutscene_star"); return 0; }
 
     smlua_push_object(L, LOT_OBJECT, spawn_red_coin_cutscene_star(x, y, z));
+
+    return 1;
+}
+
+int smlua_func_spawn_star_number(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_star_number", 0, top);
+        return 0;
+    }
+
+
+    spawn_star_number();
 
     return 1;
 }
@@ -12601,6 +12701,37 @@ int smlua_func_get_star_name_sm64(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_star_name_sm64"); return 0; }
 
     smlua_push_pointer(L, LVT_U8_P, (void*)get_star_name_sm64(courseNum, starNum, charCase));
+
+    return 1;
+}
+
+  ////////////////////
+ // level_script.h //
+////////////////////
+
+int smlua_func_area_create_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_create_warp_node", 6, top);
+        return 0;
+    }
+
+    u8 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_create_warp_node"); return 0; }
+    u8 destLevel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "area_create_warp_node"); return 0; }
+    u8 destArea = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "area_create_warp_node"); return 0; }
+    u8 destNode = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "area_create_warp_node"); return 0; }
+    u8 checkpoint = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "area_create_warp_node"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 6, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "area_create_warp_node"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o));
 
     return 1;
 }
@@ -26762,6 +26893,21 @@ int smlua_func_camera_freeze(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_camera_is_frozen(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_is_frozen", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, camera_is_frozen());
+
+    return 1;
+}
+
 int smlua_func_camera_unfreeze(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26773,6 +26919,23 @@ int smlua_func_camera_unfreeze(UNUSED lua_State* L) {
 
 
     camera_unfreeze();
+
+    return 1;
+}
+
+int smlua_func_course_is_main_course(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "course_is_main_course", 1, top);
+        return 0;
+    }
+
+    u16 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "course_is_main_course"); return 0; }
+
+    lua_pushboolean(L, course_is_main_course(levelNum));
 
     return 1;
 }
@@ -26988,6 +27151,21 @@ int smlua_func_hud_hide(UNUSED lua_State* L) {
 
 
     hud_hide();
+
+    return 1;
+}
+
+int smlua_func_hud_is_hidden(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "hud_is_hidden", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, hud_is_hidden());
 
     return 1;
 }
@@ -28704,6 +28882,10 @@ int smlua_func_load_object_collision_model(UNUSED lua_State* L) {
 void smlua_bind_functions_autogen(void) {
     lua_State* L = gLuaState;
 
+    // area.h
+    smlua_bind_function(L, "area_get_warp_node", smlua_func_area_get_warp_node);
+    smlua_bind_function(L, "area_get_warp_node_from_params", smlua_func_area_get_warp_node_from_params);
+
     // behavior_actions.h
     smlua_bind_function(L, "arc_to_goal_pos", smlua_func_arc_to_goal_pos);
     smlua_bind_function(L, "bhv_1up_common_init", smlua_func_bhv_1up_common_init);
@@ -28759,8 +28941,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_blue_bowser_flame_init", smlua_func_bhv_blue_bowser_flame_init);
     smlua_bind_function(L, "bhv_blue_bowser_flame_loop", smlua_func_bhv_blue_bowser_flame_loop);
     smlua_bind_function(L, "bhv_blue_coin_jumping_loop", smlua_func_bhv_blue_coin_jumping_loop);
+    smlua_bind_function(L, "bhv_blue_coin_number_loop", smlua_func_bhv_blue_coin_number_loop);
     smlua_bind_function(L, "bhv_blue_coin_sliding_jumping_init", smlua_func_bhv_blue_coin_sliding_jumping_init);
     smlua_bind_function(L, "bhv_blue_coin_sliding_loop", smlua_func_bhv_blue_coin_sliding_loop);
+    smlua_bind_function(L, "bhv_blue_coin_switch_init", smlua_func_bhv_blue_coin_switch_init);
     smlua_bind_function(L, "bhv_blue_coin_switch_loop", smlua_func_bhv_blue_coin_switch_loop);
     smlua_bind_function(L, "bhv_blue_fish_movement_loop", smlua_func_bhv_blue_fish_movement_loop);
     smlua_bind_function(L, "bhv_blue_flames_group_loop", smlua_func_bhv_blue_flames_group_loop);
@@ -29135,6 +29319,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_star_door_loop", smlua_func_bhv_star_door_loop);
     smlua_bind_function(L, "bhv_star_door_loop_2", smlua_func_bhv_star_door_loop_2);
     smlua_bind_function(L, "bhv_star_key_collection_puff_spawner_loop", smlua_func_bhv_star_key_collection_puff_spawner_loop);
+    smlua_bind_function(L, "bhv_star_number_loop", smlua_func_bhv_star_number_loop);
     smlua_bind_function(L, "bhv_star_spawn_init", smlua_func_bhv_star_spawn_init);
     smlua_bind_function(L, "bhv_star_spawn_loop", smlua_func_bhv_star_spawn_loop);
     smlua_bind_function(L, "bhv_static_checkered_platform_loop", smlua_func_bhv_static_checkered_platform_loop);
@@ -29272,6 +29457,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "spawn_mist_particles_variable", smlua_func_spawn_mist_particles_variable);
     smlua_bind_function(L, "spawn_no_exit_star", smlua_func_spawn_no_exit_star);
     smlua_bind_function(L, "spawn_red_coin_cutscene_star", smlua_func_spawn_red_coin_cutscene_star);
+    smlua_bind_function(L, "spawn_star_number", smlua_func_spawn_star_number);
     smlua_bind_function(L, "spawn_triangle_break_particles", smlua_func_spawn_triangle_break_particles);
     smlua_bind_function(L, "spawn_wind_particles", smlua_func_spawn_wind_particles);
     smlua_bind_function(L, "tox_box_move", smlua_func_tox_box_move);
@@ -29463,6 +29649,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_star_name", smlua_func_get_star_name);
     smlua_bind_function(L, "get_star_name_ascii", smlua_func_get_star_name_ascii);
     smlua_bind_function(L, "get_star_name_sm64", smlua_func_get_star_name_sm64);
+
+    // level_script.h
+    smlua_bind_function(L, "area_create_warp_node", smlua_func_area_create_warp_node);
 
     // level_update.h
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
@@ -30151,7 +30340,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_x_sensitivity", smlua_func_camera_config_set_x_sensitivity);
     smlua_bind_function(L, "camera_config_set_y_sensitivity", smlua_func_camera_config_set_y_sensitivity);
     smlua_bind_function(L, "camera_freeze", smlua_func_camera_freeze);
+    smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_unfreeze", smlua_func_camera_unfreeze);
+    smlua_bind_function(L, "course_is_main_course", smlua_func_course_is_main_course);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);
@@ -30165,6 +30356,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
+    smlua_bind_function(L, "hud_is_hidden", smlua_func_hud_is_hidden);
     smlua_bind_function(L, "hud_render_power_meter", smlua_func_hud_render_power_meter);
     smlua_bind_function(L, "hud_set_value", smlua_func_hud_set_value);
     smlua_bind_function(L, "hud_show", smlua_func_hud_show);

@@ -44,7 +44,7 @@ BETTERCAMERA ?= 1
 # Enable no drawing distance by default
 NODRAWINGDISTANCE ?= 1
 # Disable texture fixes by default (helps with them purists)
-TEXTURE_FIX ?= 1
+TEXTURE_FIX ?= 0
 # Enable extended options menu by default
 EXT_OPTIONS_MENU ?= 1
 # Disable text-based save-files by default
@@ -57,6 +57,9 @@ DISCORDRPC ?= 0
 DISCORD_SDK ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
+# Sets your optimization level for building.
+# A choose is chosen by default for you.
+OPT_LEVEL ?= -1
 # Enable compiling with more debug info.
 DEBUG_INFO_LEVEL ?= 2
 # Enable profiling
@@ -199,16 +202,37 @@ else ifeq ($(VERSION),sh)
 endif
 
 # Determine our optimization level.
-ifeq ($(DEBUG),0)
-  # Can't use O2 or higher right now for auto-builders, coop-compiler produces strange graphical errors
-  # likely due to undefined behavior somewhere
-  #ifeq ($(WINDOWS_AUTO_BUILDER),1)
-  #  OPT_FLAGS := -O1
-  #else
-  OPT_FLAGS := -O2
-  #endif
-else
+# Optimization Levels 0 through 5 optimize for speed,
+# While optimization levels 6, and 7 optimize for size.
+# If no optimization is specified, A default is chosen.
+ifeq ($(OPT_LEVEL),0) # No optimization
   OPT_FLAGS := -O0
+else ifeq ($(OPT_LEVEL),1) # Debugging optimization
+  OPT_FLAGS := -Og
+else ifeq ($(OPT_LEVEL),2) # Level 1 Optimization
+  OPT_FLAGS := -O1
+else ifeq ($(OPT_LEVEL),3) # Level 2 Optimization
+  OPT_FLAGS := -O2
+else ifeq ($(OPT_LEVEL),4) # Level 3 Optimization
+  OPT_FLAGS := -O3
+else ifeq ($(OPT_LEVEL),5) # Fastest Optimization
+  OPT_FLAGS := -Ofast
+else ifeq ($(OPT_LEVEL),6) # Size Optimization
+  OPT_FLAGS := -Os
+else ifeq ($(OPT_LEVEL),7) # Aggresive Size Optimization
+  OPT_FLAGS := -Oz
+else
+  ifeq ($(DEBUG),0)
+    # Can't use O2 or higher right now for auto-builders, coop-compiler produces strange graphical errors
+    # likely due to undefined behavior somewhere
+    #ifeq ($(WINDOWS_AUTO_BUILDER),1)
+    #  OPT_FLAGS := -O1
+    #else
+    OPT_FLAGS := -O2
+    #endif
+  else
+    OPT_FLAGS := -O0
+  endif
 endif
 
 # Set our level of debug symbol info,

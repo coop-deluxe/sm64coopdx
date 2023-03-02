@@ -1989,7 +1989,13 @@ id_RM_Scroll_Texture = 535
 id_editor_Scroll_Texture = 536
 
 --- @type BehaviorId
-id_bhv_max_count = 537
+id_bhvBlueCoinNumber = 537
+
+--- @type BehaviorId
+id_bhvStarNumber = 538
+
+--- @type BehaviorId
+id_bhv_max_count = 539
 
 --- @type integer
 CAMERA_MODE_8_DIRECTIONS = 0x0E
@@ -3627,6 +3633,12 @@ INTERACT_IGLOO_BARRIER = (1 << 30)
 --- @type InteractionType
 INTERACT_PLAYER = (1 << 31)
 
+--- @type integer
+WARP_CHECKPOINT = 0x80
+
+--- @type integer
+WARP_NO_CHECKPOINT = 0x00
+
 --- @class LevelNum
 
 --- @type LevelNum
@@ -3908,13 +3920,19 @@ HUD_DISPLAY_FLAG_UNKNOWN_0020 = 0x0020
 HUD_DISPLAY_FLAG_TIMER = 0x0040
 
 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_CAMERA = 0x0080
+
+--- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_POWER = 0x0100
+
+--- @type HUDDisplayFlag
 HUD_DISPLAY_FLAG_EMPHASIZE_POWER = 0x8000
 
 --- @type HUDDisplayFlag
 HUD_DISPLAY_NONE = 0x0000
 
 --- @type HUDDisplayFlag
-HUD_DISPLAY_DEFAULT = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020
+HUD_DISPLAY_DEFAULT = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020
 
 --- @class MarioAnimID
 
@@ -4740,6 +4758,9 @@ ACTIVE_FLAG_DEACTIVATED = 0
 ACTIVE_FLAG_DITHERED_ALPHA = (1 << 7)
 
 --- @type integer
+ACTIVE_FLAG_DORMANT = (1 << 11)
+
+--- @type integer
 ACTIVE_FLAG_FAR_AWAY = (1 << 1)
 
 --- @type integer
@@ -4930,6 +4951,9 @@ BLUE_COIN_SWITCH_ACT_IDLE = 0
 
 --- @type integer
 BLUE_COIN_SWITCH_ACT_RECEDING = 1
+
+--- @type integer
+BLUE_COIN_SWITCH_ACT_RESPAWNING = 3
 
 --- @type integer
 BLUE_COIN_SWITCH_ACT_TICKING = 2
@@ -8167,6 +8191,12 @@ HUD_DISPLAY_FLAGS_UNKNOWN_0020 = 0x0020
 
 --- @type HudDisplayFlags
 HUD_DISPLAY_FLAGS_TIMER = 0x0040
+
+--- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_CAMERA = 0x0080
+
+--- @type HudDisplayFlags
+HUD_DISPLAY_FLAGS_POWER = 0x0100
 
 --- @type HudDisplayFlags
 HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000
@@ -11408,4 +11438,4 @@ MAX_VERSION_LENGTH = 10
 MINOR_VERSION_NUMBER = 0
 
 --- @type integer
-VERSION_NUMBER = 31
+VERSION_NUMBER = 32

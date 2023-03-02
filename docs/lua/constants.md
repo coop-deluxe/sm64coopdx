@@ -19,6 +19,7 @@
     - [enum InteractionFlag](#enum-InteractionFlag)
 - [interaction.h](#interactionh)
     - [enum InteractionType](#enum-InteractionType)
+- [level_commands.h](#level_commandsh)
 - [level_defines.h](#level_definesh)
     - [enum LevelNum](#enum-LevelNum)
 - [level_update.h](#level_updateh)
@@ -624,7 +625,9 @@
 | id_bhvYoshi | 534 |
 | id_RM_Scroll_Texture | 535 |
 | id_editor_Scroll_Texture | 536 |
-| id_bhv_max_count | 537 |
+| id_bhvBlueCoinNumber | 537 |
+| id_bhvStarNumber | 538 |
+| id_bhv_max_count | 539 |
 
 [:arrow_up_small:](#)
 
@@ -1244,6 +1247,14 @@
 
 <br />
 
+## [level_commands.h](#level_commands.h)
+- WARP_CHECKPOINT
+- WARP_NO_CHECKPOINT
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [level_defines.h](#level_defines.h)
 
 ### [enum LevelNum](#LevelNum)
@@ -1351,9 +1362,11 @@
 | HUD_DISPLAY_FLAG_KEYS | 0x0010 |
 | HUD_DISPLAY_FLAG_UNKNOWN_0020 | 0x0020 |
 | HUD_DISPLAY_FLAG_TIMER | 0x0040 |
+| HUD_DISPLAY_FLAG_CAMERA | 0x0080 |
+| HUD_DISPLAY_FLAG_POWER | 0x0100 |
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
 | HUD_DISPLAY_NONE | 0x0000 |
-| HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+| HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
 
 [:arrow_up_small:](#)
 
@@ -1697,6 +1710,7 @@
 - ACTIVE_FLAG_ACTIVE
 - ACTIVE_FLAG_DEACTIVATED
 - ACTIVE_FLAG_DITHERED_ALPHA
+- ACTIVE_FLAG_DORMANT
 - ACTIVE_FLAG_FAR_AWAY
 - ACTIVE_FLAG_INITIATED_TIME_STOP
 - ACTIVE_FLAG_IN_DIFFERENT_ROOM
@@ -1761,6 +1775,7 @@
 - BIRD_BP_SPAWNER
 - BLUE_COIN_SWITCH_ACT_IDLE
 - BLUE_COIN_SWITCH_ACT_RECEDING
+- BLUE_COIN_SWITCH_ACT_RESPAWNING
 - BLUE_COIN_SWITCH_ACT_TICKING
 - BLUE_FISH_ACT_ASCEND
 - BLUE_FISH_ACT_DIVE
@@ -2902,6 +2917,8 @@
 | HUD_DISPLAY_FLAGS_KEYS | 0x0010 |
 | HUD_DISPLAY_FLAGS_UNKNOWN_0020 | 0x0020 |
 | HUD_DISPLAY_FLAGS_TIMER | 0x0040 |
+| HUD_DISPLAY_FLAGS_CAMERA | 0x0080 |
+| HUD_DISPLAY_FLAGS_POWER | 0x0100 |
 | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER | 0x8000 |
 
 ### [enum HudDisplayValue](#HudDisplayValue)

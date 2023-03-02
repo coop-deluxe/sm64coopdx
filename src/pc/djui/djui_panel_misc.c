@@ -37,9 +37,9 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
 
 void djui_panel_misc_create(struct DjuiBase* caller) {
 #ifdef DEVELOPMENT
-    f32 bodyHeight = 64 * 4 + 16 * 3;
+    f32 bodyHeight = 64 * 5 + 16 * 4;
 #else
-    f32 bodyHeight = 64 * 3 + 16 * 2;
+    f32 bodyHeight = 64 * 4 + 16 * 3;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -51,6 +51,10 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox1->base, 1.0f, 32);
         defaultBase = &checkbox1->base;
+
+        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups);
+        djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox2->base, 1.0f, 32);
 
         struct DjuiButton* button1 = djui_button_create(&body->base, "Menu Options");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

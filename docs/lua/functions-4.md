@@ -8066,6 +8066,24 @@
 
 <br />
 
+## [camera_is_frozen](#camera_is_frozen)
+
+### Lua Example
+`local booleanValue = camera_is_frozen()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_is_frozen(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [camera_unfreeze](#camera_unfreeze)
 
 ### Lua Example
@@ -8079,6 +8097,26 @@
 
 ### C Prototype
 `void camera_unfreeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [course_is_main_course](#course_is_main_course)
+
+### Lua Example
+`local booleanValue = course_is_main_course(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool course_is_main_course(u16 levelNum);`
 
 [:arrow_up_small:](#)
 
@@ -8330,6 +8368,24 @@
 
 ### C Prototype
 `void hud_hide(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hud_is_hidden](#hud_is_hidden)
+
+### Lua Example
+`local booleanValue = hud_is_hidden()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool hud_is_hidden(void);`
 
 [:arrow_up_small:](#)
 

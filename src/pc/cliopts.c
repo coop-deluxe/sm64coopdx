@@ -61,10 +61,14 @@ void parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.Network = NT_SERVER;
             arg_uint("--server <port>", argv[++i], &gCLIOpts.NetworkPort);
 
-        } else if (strcmp(argv[i], "--client") == 0 && (i + 2) < argc) { // Join server
+        } else if (strcmp(argv[i], "--client") == 0 && (((i + 1) < argc) || (i + 2) < argc)) { // Join server
             gCLIOpts.Network = NT_CLIENT;
             arg_string("--client <ip>", argv[++i], gCLIOpts.JoinIp, IP_MAX_LEN);
-            arg_uint("--client <port>", argv[++i], &gCLIOpts.NetworkPort);
+            if ((i + 2) < argc) {
+                arg_uint("--client <port>", argv[++i], &gCLIOpts.NetworkPort);
+            } else {
+                gCLIOpts.NetworkPort = 7777;
+            }
 
         } else if (strcmp(argv[i], "--cheats") == 0) // Enable cheats menu
             Cheats.enabled = true;

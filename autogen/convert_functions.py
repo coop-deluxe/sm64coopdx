@@ -55,7 +55,9 @@ in_files = [
     "src/game/mario_misc.h",
     "src/pc/mods/mod_storage.h",
     "src/pc/utils/misc.h",
-    "src/game/level_update.h"
+    "src/game/level_update.h",
+    "src/game/area.h",
+    "src/engine/level_script.h"
 ]
 
 override_allowed_functions = {
@@ -66,8 +68,10 @@ override_allowed_functions = {
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
+    "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
     "src/game/level_update.h":              [ "level_trigger_warp" ],
-    "src/pc/utils/misc.h":                  [ "update_all_mario_stars"],
+    "src/game/area.h":                      [ "area_get_warp_node" ],
+    "src/engine/level_script.h":            [ "area_create_warp_node" ]
 }
 
 override_disallowed_functions = {

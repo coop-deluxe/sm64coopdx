@@ -44,7 +44,7 @@ extern "C" {
 // Current Behavior Version
 #define BEHAVIOR_MAJOR_VER 1
 #define BEHAVIOR_MINOR_VER 0
-#define BEHAVIOR_PATCH_VER 0
+#define BEHAVIOR_PATCH_VER 1
 
 // Minimum Behavior Version (That can be read)
 #define BEHAVIOR_MIN_MAJOR_VER 1
@@ -286,6 +286,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvBlueBowserFlame);
     bhv_constant(id_bhvBlueCoinJumping);
     bhv_constant(id_bhvBlueCoinSliding);
+    bhv_constant(id_bhvBlueCoinNumber);
     bhv_constant(id_bhvBlueCoinSwitch);
     bhv_constant(id_bhvBlueFish);
     bhv_constant(id_bhvBlueFlamesGroup);
@@ -648,6 +649,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvStar);
     bhv_constant(id_bhvStarDoor);
     bhv_constant(id_bhvStarKeyCollectionPuffSpawner);
+    bhv_constant(id_bhvStarNumber);
     bhv_constant(id_bhvStarSpawnCoordinates);
     bhv_constant(id_bhvStaticCheckeredPlatform);
     bhv_constant(id_bhvStaticObject);
@@ -2485,6 +2487,15 @@ static bool DynOS_Bhv_WriteBinary(const SysPath &aOutputFilename, GfxData *aGfxD
 /////////////
 
 static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxData) {
+    // Sanity check the files size. The minimum valid size is 9 bytes.
+    // 1 byte for the type, 1 bytes for the name length, 3 bytes for the version, And 4 bytes for the behaviors size.
+    if (aFile->Size() < 9) {
+        PrintError("  ERROR: Behavior file is smaller then it should be, Rejecting '%s'.", aFile->GetFilename());
+        // We have nothing to return, So return NULL.
+        return NULL;
+    }
+    
+    // Allocate our node.
     DataNode<BehaviorScript> *_Node = New<DataNode<BehaviorScript>>();
 
     // Name
@@ -2500,12 +2511,19 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
     // If the major version doesn't match, then a drasitc change has happened and
     // we can't read it no matter what. If it's just minor or patch. We might have
     // code to support it.
-    u32 dataSize = aFile->Read<u32>();
     if (majorVersion != BEHAVIOR_MIN_MAJOR_VER || (minorVersion < BEHAVIOR_MIN_MINOR_VER || patchVersion < BEHAVIOR_MIN_PATCH_VER)) {
-        PrintError("  ERROR: Behavior version is %u.%u.%u, but reading behaviors under %u.%u.%u is not supported!", majorVersion, minorVersion, patchVersion, BEHAVIOR_MIN_MAJOR_VER, BEHAVIOR_MIN_MINOR_VER, BEHAVIOR_MIN_PATCH_VER);
-
-        // Skip the rest of the bytes saved for this behavior.
-        aFile->Skip(dataSize);
+        PrintError("  ERROR: Behavior file is version %u.%u.%u, which is not supported! Rejecting '%s'.", majorVersion, minorVersion, patchVersion, aFile->GetFilename());
+        // We don't return this since we failed to read the behavior.
+        Delete(_Node);
+        // We have nothing to return, So return NULL.
+        return NULL;
+    }
+    
+    // If we have nothing in the .bhv file, It compiled incorrectly or is maliciously crafted.
+    // We also check if the specified behavior size is valid for the file.
+    u32 dataSize = aFile->Read<u32>();
+    if (dataSize == 0 || (dataSize > (aFile->Size() - aFile->Offset()))) {
+        PrintError("  ERROR: Behavior file has a invalid behavior in it! Rejecting '%s'.", aFile->GetFilename());
         // We don't return this since we failed to read the behavior.
         Delete(_Node);
         // We have nothing to return, So return NULL.
@@ -2515,11 +2533,6 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
     // Data
     _Node->mSize = dataSize;
     _Node->mData = New<BehaviorScript>(_Node->mSize);
-
-    // Add it
-    if (aGfxData != NULL) {
-        aGfxData->mBehaviorScripts.Add(_Node);
-    }
 
     // Read it
     for (u32 i = 0; i != _Node->mSize; ++i) {
@@ -2534,6 +2547,11 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
         } else {
             _Node->mData[i] = (uintptr_t) _Value;
         }
+    }
+    
+    // Add it
+    if (aGfxData != NULL) {
+        aGfxData->mBehaviorScripts.Add(_Node);
     }
 
     return _Node;

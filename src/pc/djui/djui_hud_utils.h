@@ -22,6 +22,8 @@ struct GlobalTextures {
     struct TextureInfo arrow_down;
     struct TextureInfo coin;
     struct TextureInfo star;
+    struct TextureInfo apostrophe;
+    struct TextureInfo double_quote;
     struct TextureInfo mario_head;
     struct TextureInfo luigi_head;
     struct TextureInfo toad_head;

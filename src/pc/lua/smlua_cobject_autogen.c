@@ -19,6 +19,7 @@
 #include "src/game/hardcoded.h"
 #include "src/pc/mods/mod.h"
 #include "src/pc/lua/utils/smlua_audio_utils.h"
+#include "src/game/paintings.h"
 
 #include "include/object_fields.h"
 
@@ -605,12 +606,14 @@ static struct LuaObjectField sGlobalObjectCollisionDataFields[LUA_GLOBAL_OBJECT_
     { "wooden_signpost_seg3_collision_0302DD80",         LVT_COLLISION_P, offsetof(struct GlobalObjectCollisionData, wooden_signpost_seg3_collision_0302DD80),         false, LOT_POINTER },
 };
 
-#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 12
+#define LUA_GLOBAL_TEXTURES_FIELD_COUNT 14
 static struct LuaObjectField sGlobalTexturesFields[LUA_GLOBAL_TEXTURES_FIELD_COUNT] = {
+    { "apostrophe",   LVT_COBJECT, offsetof(struct GlobalTextures, apostrophe),   true, LOT_TEXTUREINFO },
     { "arrow_down",   LVT_COBJECT, offsetof(struct GlobalTextures, arrow_down),   true, LOT_TEXTUREINFO },
     { "arrow_up",     LVT_COBJECT, offsetof(struct GlobalTextures, arrow_up),     true, LOT_TEXTUREINFO },
     { "camera",       LVT_COBJECT, offsetof(struct GlobalTextures, camera),       true, LOT_TEXTUREINFO },
     { "coin",         LVT_COBJECT, offsetof(struct GlobalTextures, coin),         true, LOT_TEXTUREINFO },
+    { "double_quote", LVT_COBJECT, offsetof(struct GlobalTextures, double_quote), true, LOT_TEXTUREINFO },
     { "lakitu",       LVT_COBJECT, offsetof(struct GlobalTextures, lakitu),       true, LOT_TEXTUREINFO },
     { "luigi_head",   LVT_COBJECT, offsetof(struct GlobalTextures, luigi_head),   true, LOT_TEXTUREINFO },
     { "mario_head",   LVT_COBJECT, offsetof(struct GlobalTextures, mario_head),   true, LOT_TEXTUREINFO },
@@ -633,13 +636,14 @@ static struct LuaObjectField sGraphNodeFields[LUA_GRAPH_NODE_FIELD_COUNT] = {
     { "type",       LVT_S16,       offsetof(struct GraphNode, type),       false, LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 23
+#define LUA_GRAPH_NODE_OBJECT_FIELD_COUNT 26
 static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_COUNT] = {
     { "activeAreaIndex",            LVT_S8,        offsetof(struct GraphNodeObject, activeAreaIndex),            false, LOT_NONE      },
     { "angle",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, angle),                      true,  LOT_VEC3S     },
     { "animInfo",                   LVT_COBJECT,   offsetof(struct GraphNodeObject, animInfo),                   true,  LOT_ANIMINFO  },
     { "areaIndex",                  LVT_S8,        offsetof(struct GraphNodeObject, areaIndex),                  false, LOT_NONE      },
     { "cameraToObject",             LVT_COBJECT,   offsetof(struct GraphNodeObject, cameraToObject),             true,  LOT_VEC3F     },
+    { "disableAutomaticShadowPos",  LVT_BOOL,      offsetof(struct GraphNodeObject, disableAutomaticShadowPos),  false, LOT_NONE      },
     { "node",                       LVT_COBJECT,   offsetof(struct GraphNodeObject, node),                       true,  LOT_GRAPHNODE },
     { "pos",                        LVT_COBJECT,   offsetof(struct GraphNodeObject, pos),                        true,  LOT_VEC3F     },
     { "prevAngle",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, prevAngle),                  true,  LOT_VEC3S     },
@@ -652,6 +656,8 @@ static struct LuaObjectField sGraphNodeObjectFields[LUA_GRAPH_NODE_OBJECT_FIELD_
     { "prevThrowMatrixTimestamp",   LVT_U32,       offsetof(struct GraphNodeObject, prevThrowMatrixTimestamp),   false, LOT_NONE      },
     { "prevTimestamp",              LVT_U32,       offsetof(struct GraphNodeObject, prevTimestamp),              false, LOT_NONE      },
     { "scale",                      LVT_COBJECT,   offsetof(struct GraphNodeObject, scale),                      true,  LOT_VEC3F     },
+    { "shadowInvisible",            LVT_BOOL,      offsetof(struct GraphNodeObject, shadowInvisible),            false, LOT_NONE      },
+    { "shadowPos",                  LVT_COBJECT,   offsetof(struct GraphNodeObject, shadowPos),                  true,  LOT_VEC3F     },
     { "sharedChild",                LVT_COBJECT_P, offsetof(struct GraphNodeObject, sharedChild),                false, LOT_GRAPHNODE },
     { "skipInViewCheck",            LVT_BOOL,      offsetof(struct GraphNodeObject, skipInViewCheck),            false, LOT_NONE      },
     { "skipInterpolationTimestamp", LVT_U32,       offsetof(struct GraphNodeObject, skipInterpolationTimestamp), false, LOT_NONE      },
@@ -727,7 +733,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 26
+#define LUA_LEVEL_VALUES_FIELD_COUNT 38
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "cellHeightLimit",          LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),          false, LOT_NONE          },
     { "coinsRequiredForCoinStar", LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar), false, LOT_NONE          },
@@ -736,24 +742,36 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "exitCastleArea",           LVT_S16,     offsetof(struct LevelValues, exitCastleArea),           false, LOT_NONE          },
     { "exitCastleLevel",          LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),          false, LOT_NONE          },
     { "exitCastleWarpNode",       LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode),       false, LOT_NONE          },
+    { "extendedPauseDisplay",     LVT_U8,      offsetof(struct LevelValues, extendedPauseDisplay),     false, LOT_NONE          },
     { "fixCollisionBugs",         LVT_U8,      offsetof(struct LevelValues, fixCollisionBugs),         false, LOT_NONE          },
-    { "fixVanishFloors",          LVT_BOOL,    offsetof(struct LevelValues, fixVanishFloors),          false, LOT_NONE          },
+    { "fixVanishFloors",          LVT_U8,      offsetof(struct LevelValues, fixVanishFloors),          false, LOT_NONE          },
+    { "floatingStarDance",        LVT_U8,      offsetof(struct LevelValues, floatingStarDance),        false, LOT_NONE          },
     { "floorLowerLimit",          LVT_S16,     offsetof(struct LevelValues, floorLowerLimit),          false, LOT_NONE          },
     { "floorLowerLimitMisc",      LVT_S16,     offsetof(struct LevelValues, floorLowerLimitMisc),      false, LOT_NONE          },
     { "floorLowerLimitShadow",    LVT_S16,     offsetof(struct LevelValues, floorLowerLimitShadow),    false, LOT_NONE          },
+    { "hudCapTimer",              LVT_U8,      offsetof(struct LevelValues, hudCapTimer),              false, LOT_NONE          },
+    { "hudRedCoinsRadar",         LVT_U8,      offsetof(struct LevelValues, hudRedCoinsRadar),         false, LOT_NONE          },
+    { "hudSecretsRadar",          LVT_U8,      offsetof(struct LevelValues, hudSecretsRadar),          false, LOT_NONE          },
     { "metalCapDuration",         LVT_U16,     offsetof(struct LevelValues, metalCapDuration),         false, LOT_NONE          },
     { "metalCapDurationCotmc",    LVT_U16,     offsetof(struct LevelValues, metalCapDurationCotmc),    false, LOT_NONE          },
-    { "pauseExitAnywhere",        LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),        false, LOT_NONE          },
     { "metalCapSequence",         LVT_U8,      offsetof(struct LevelValues, metalCapSequence),         false, LOT_NONE          },
+    { "mushroom1UpHeal",          LVT_U8,      offsetof(struct LevelValues, mushroom1UpHeal),          false, LOT_NONE          },
+    { "pauseExitAnywhere",        LVT_BOOL,    offsetof(struct LevelValues, pauseExitAnywhere),        false, LOT_NONE          },
+    { "previewBlueCoins",         LVT_U8,      offsetof(struct LevelValues, previewBlueCoins),         false, LOT_NONE          },
     { "pssSlideStarIndex",        LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),        false, LOT_NONE          },
     { "pssSlideStarTime",         LVT_U16,     offsetof(struct LevelValues, pssSlideStarTime),         false, LOT_NONE          },
+    { "respawnBlueCoinsSwitch",   LVT_U8,      offsetof(struct LevelValues, respawnBlueCoinsSwitch),   false, LOT_NONE          },
+    { "showStarNumber",           LVT_U8,      offsetof(struct LevelValues, showStarNumber),           false, LOT_NONE          },
     { "skipCreditsAt",            LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),            false, LOT_NONE          },
+    { "starHeal",                 LVT_U8,      offsetof(struct LevelValues, starHeal),                 false, LOT_NONE          },
     { "starPositions",            LVT_COBJECT, offsetof(struct LevelValues, starPositions),            true,  LOT_STARPOSITIONS },
     { "vanishCapDuration",        LVT_U16,     offsetof(struct LevelValues, vanishCapDuration),        false, LOT_NONE          },
     { "vanishCapDurationVcutm",   LVT_U16,     offsetof(struct LevelValues, vanishCapDurationVcutm),   false, LOT_NONE          },
     { "vanishCapSequence",        LVT_U8,      offsetof(struct LevelValues, vanishCapSequence),        false, LOT_NONE          },
+    { "visibleSecrets",           LVT_U8,      offsetof(struct LevelValues, visibleSecrets),           false, LOT_NONE          },
     { "wingCapDuration",          LVT_U16,     offsetof(struct LevelValues, wingCapDuration),          false, LOT_NONE          },
     { "wingCapDurationTotwc",     LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),     false, LOT_NONE          },
+    { "wingCapLookUpReq",         LVT_U8,      offsetof(struct LevelValues, wingCapLookUpReq),         false, LOT_NONE          },
     { "wingCapSequence",          LVT_U8,      offsetof(struct LevelValues, wingCapSequence),          false, LOT_NONE          },
 };
 
@@ -793,7 +811,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE  },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 77
+#define LUA_MARIO_STATE_FIELD_COUNT 76
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                   LVT_U32,       offsetof(struct MarioState, action),                   false, LOT_NONE              },
     { "actionArg",                LVT_U32,       offsetof(struct MarioState, actionArg),                false, LOT_NONE              },
@@ -866,7 +884,6 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "unkC4",                    LVT_F32,       offsetof(struct MarioState, unkC4),                    false, LOT_NONE              },
     { "usedObj",                  LVT_COBJECT_P, offsetof(struct MarioState, usedObj),                  false, LOT_OBJECT            },
     { "vel",                      LVT_COBJECT,   offsetof(struct MarioState, vel),                      true,  LOT_VEC3F             },
-    { "visibleToEnemies",         LVT_U8,        offsetof(struct MarioState, visibleToEnemies),         false, LOT_NONE              },
     { "wall",                     LVT_COBJECT_P, offsetof(struct MarioState, wall),                     false, LOT_SURFACE           },
     { "wallKickTimer",            LVT_U8,        offsetof(struct MarioState, wallKickTimer),            false, LOT_NONE              },
     { "wallNormal",               LVT_COBJECT,   offsetof(struct MarioState, wallNormal),               true,  LOT_VEC3F             },
@@ -1537,6 +1554,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oSpinyTargetYaw",                            LVT_S32,                 offsetof(struct Object, oSpinyTargetYaw),                            false, LOT_NONE         },
     { "oSpinyTimeUntilTurn",                        LVT_S32,                 offsetof(struct Object, oSpinyTimeUntilTurn),                        false, LOT_NONE         },
     { "oSpinyTurningAwayFromWall",                  LVT_S32,                 offsetof(struct Object, oSpinyTurningAwayFromWall),                  false, LOT_NONE         },
+//  { "oStarBehavior",                              LVT_???,                 offsetof(struct Object, oStarBehavior),                              true,  LOT_???          }, <--- UNIMPLEMENTED
     { "oStarSelectorSize",                          LVT_F32,                 offsetof(struct Object, oStarSelectorSize),                          false, LOT_NONE         },
     { "oStarSelectorTimer",                         LVT_S32,                 offsetof(struct Object, oStarSelectorTimer),                         false, LOT_NONE         },
     { "oStarSelectorType",                          LVT_S32,                 offsetof(struct Object, oStarSelectorType),                          false, LOT_NONE         },
@@ -1746,6 +1764,76 @@ static struct LuaObjectField sObjectWarpNodeFields[LUA_OBJECT_WARP_NODE_FIELD_CO
 static struct LuaObjectField sOffsetSizePairFields[LUA_OFFSET_SIZE_PAIR_FIELD_COUNT] = {
     { "offset", LVT_U32, offsetof(struct OffsetSizePair, offset), false, LOT_NONE },
     { "size",   LVT_U32, offsetof(struct OffsetSizePair, size),   false, LOT_NONE },
+};
+
+#define LUA_PAINTING_FIELD_COUNT 35
+static struct LuaObjectField sPaintingFields[LUA_PAINTING_FIELD_COUNT] = {
+    { "alpha",                   LVT_U8,  offsetof(struct Painting, alpha),                   false, LOT_NONE },
+    { "currFloor",               LVT_S8,  offsetof(struct Painting, currFloor),               false, LOT_NONE },
+    { "currRippleMag",           LVT_F32, offsetof(struct Painting, currRippleMag),           false, LOT_NONE },
+    { "currRippleRate",          LVT_F32, offsetof(struct Painting, currRippleRate),          false, LOT_NONE },
+    { "dispersionFactor",        LVT_F32, offsetof(struct Painting, dispersionFactor),        false, LOT_NONE },
+    { "entryDispersionFactor",   LVT_F32, offsetof(struct Painting, entryDispersionFactor),   false, LOT_NONE },
+    { "entryRippleDecay",        LVT_F32, offsetof(struct Painting, entryRippleDecay),        false, LOT_NONE },
+    { "entryRippleMag",          LVT_F32, offsetof(struct Painting, entryRippleMag),          false, LOT_NONE },
+    { "entryRippleRate",         LVT_F32, offsetof(struct Painting, entryRippleRate),         false, LOT_NONE },
+    { "floorEntered",            LVT_S8,  offsetof(struct Painting, floorEntered),            false, LOT_NONE },
+    { "id",                      LVT_S16, offsetof(struct Painting, id),                      true,  LOT_NONE },
+    { "imageCount",              LVT_S8,  offsetof(struct Painting, imageCount),              true,  LOT_NONE },
+    { "lastFloor",               LVT_S8,  offsetof(struct Painting, lastFloor),               false, LOT_NONE },
+    { "marioIsUnder",            LVT_S8,  offsetof(struct Painting, marioIsUnder),            false, LOT_NONE },
+    { "marioWasUnder",           LVT_S8,  offsetof(struct Painting, marioWasUnder),           false, LOT_NONE },
+    { "marioWentUnder",          LVT_S8,  offsetof(struct Painting, marioWentUnder),          false, LOT_NONE },
+//  { "normalDisplayList",       LVT_???, offsetof(struct Painting, normalDisplayList),       true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "passiveDispersionFactor", LVT_F32, offsetof(struct Painting, passiveDispersionFactor), false, LOT_NONE },
+    { "passiveRippleDecay",      LVT_F32, offsetof(struct Painting, passiveRippleDecay),      false, LOT_NONE },
+    { "passiveRippleMag",        LVT_F32, offsetof(struct Painting, passiveRippleMag),        false, LOT_NONE },
+    { "passiveRippleRate",       LVT_F32, offsetof(struct Painting, passiveRippleRate),       false, LOT_NONE },
+    { "pitch",                   LVT_F32, offsetof(struct Painting, pitch),                   false, LOT_NONE },
+    { "posX",                    LVT_F32, offsetof(struct Painting, posX),                    false, LOT_NONE },
+    { "posY",                    LVT_F32, offsetof(struct Painting, posY),                    false, LOT_NONE },
+    { "posZ",                    LVT_F32, offsetof(struct Painting, posZ),                    false, LOT_NONE },
+    { "rippleDecay",             LVT_F32, offsetof(struct Painting, rippleDecay),             false, LOT_NONE },
+//  { "rippleDisplayList",       LVT_???, offsetof(struct Painting, rippleDisplayList),       true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "rippleTimer",             LVT_F32, offsetof(struct Painting, rippleTimer),             false, LOT_NONE },
+    { "rippleTrigger",           LVT_S8,  offsetof(struct Painting, rippleTrigger),           false, LOT_NONE },
+    { "rippleX",                 LVT_F32, offsetof(struct Painting, rippleX),                 false, LOT_NONE },
+    { "rippleY",                 LVT_F32, offsetof(struct Painting, rippleY),                 false, LOT_NONE },
+//  { "ripples",                 LOT_???, offsetof(struct Painting, ripples),                 false, LOT_???  }, <--- UNIMPLEMENTED
+    { "size",                    LVT_F32, offsetof(struct Painting, size),                    false, LOT_NONE },
+    { "state",                   LVT_S8,  offsetof(struct Painting, state),                   false, LOT_NONE },
+//  { "textureArray",            LVT_???, offsetof(struct Painting, textureArray),            true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "textureHeight",           LVT_S16, offsetof(struct Painting, textureHeight),           true,  LOT_NONE },
+//  { "textureMaps",             LVT_???, offsetof(struct Painting, textureMaps),             true,  LOT_???  }, <--- UNIMPLEMENTED
+    { "textureType",             LVT_S8,  offsetof(struct Painting, textureType),             true,  LOT_NONE },
+    { "textureWidth",            LVT_S16, offsetof(struct Painting, textureWidth),            true,  LOT_NONE },
+    { "yaw",                     LVT_F32, offsetof(struct Painting, yaw),                     false, LOT_NONE },
+};
+
+#define LUA_PAINTING_MESH_VERTEX_FIELD_COUNT 0
+static struct LuaObjectField sPaintingMeshVertexFields[LUA_PAINTING_MESH_VERTEX_FIELD_COUNT] = {
+//  { "norm", LOT_???, offsetof(struct PaintingMeshVertex, norm), false, LOT_??? }, <--- UNIMPLEMENTED
+//  { "pos",  LOT_???, offsetof(struct PaintingMeshVertex, pos),  false, LOT_??? }, <--- UNIMPLEMENTED
+};
+
+#define LUA_PAINTING_VALUES_FIELD_COUNT 16
+static struct LuaObjectField sPaintingValuesFields[LUA_PAINTING_VALUES_FIELD_COUNT] = {
+    { "bob_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, bob_painting),       false, LOT_PAINTING },
+    { "ccm_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ccm_painting),       false, LOT_PAINTING },
+    { "cotmc_painting",     LVT_COBJECT_P, offsetof(struct PaintingValues, cotmc_painting),     false, LOT_PAINTING },
+    { "ddd_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ddd_painting),       false, LOT_PAINTING },
+    { "hmc_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, hmc_painting),       false, LOT_PAINTING },
+    { "jrb_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, jrb_painting),       false, LOT_PAINTING },
+    { "lll_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, lll_painting),       false, LOT_PAINTING },
+    { "sl_painting",        LVT_COBJECT_P, offsetof(struct PaintingValues, sl_painting),        false, LOT_PAINTING },
+    { "ssl_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ssl_painting),       false, LOT_PAINTING },
+    { "thi_huge_painting",  LVT_COBJECT_P, offsetof(struct PaintingValues, thi_huge_painting),  false, LOT_PAINTING },
+    { "thi_tiny_painting",  LVT_COBJECT_P, offsetof(struct PaintingValues, thi_tiny_painting),  false, LOT_PAINTING },
+    { "ttc_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ttc_painting),       false, LOT_PAINTING },
+    { "ttm_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, ttm_painting),       false, LOT_PAINTING },
+    { "ttm_slide_painting", LVT_COBJECT_P, offsetof(struct PaintingValues, ttm_slide_painting), false, LOT_PAINTING },
+    { "wdw_painting",       LVT_COBJECT_P, offsetof(struct PaintingValues, wdw_painting),       false, LOT_PAINTING },
+    { "wf_painting",        LVT_COBJECT_P, offsetof(struct PaintingValues, wf_painting),        false, LOT_PAINTING },
 };
 
 #define LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT 4
@@ -2050,6 +2138,9 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_OBJECTNODE,                sObjectNodeFields,                LUA_OBJECT_NODE_FIELD_COUNT                  },
     { LOT_OBJECTWARPNODE,            sObjectWarpNodeFields,            LUA_OBJECT_WARP_NODE_FIELD_COUNT             },
     { LOT_OFFSETSIZEPAIR,            sOffsetSizePairFields,            LUA_OFFSET_SIZE_PAIR_FIELD_COUNT             },
+    { LOT_PAINTING,                  sPaintingFields,                  LUA_PAINTING_FIELD_COUNT                     },
+    { LOT_PAINTINGMESHVERTEX,        sPaintingMeshVertexFields,        LUA_PAINTING_MESH_VERTEX_FIELD_COUNT         },
+    { LOT_PAINTINGVALUES,            sPaintingValuesFields,            LUA_PAINTING_VALUES_FIELD_COUNT              },
     { LOT_PARALLELTRACKINGPOINT,     sParallelTrackingPointFields,     LUA_PARALLEL_TRACKING_POINT_FIELD_COUNT      },
     { LOT_PLAYERCAMERASTATE,         sPlayerCameraStateFields,         LUA_PLAYER_CAMERA_STATE_FIELD_COUNT          },
     { LOT_PLAYERGEOMETRY,            sPlayerGeometryFields,            LUA_PLAYER_GEOMETRY_FIELD_COUNT              },

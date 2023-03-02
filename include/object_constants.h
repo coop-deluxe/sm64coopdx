@@ -17,6 +17,7 @@
 #define ACTIVE_FLAG_UNK8                   (1 <<  8) // 0x0100
 #define ACTIVE_FLAG_UNK9                   (1 <<  9) // 0x0200
 #define ACTIVE_FLAG_UNK10                  (1 << 10) // 0x0400
+#define ACTIVE_FLAG_DORMANT                (1 << 11) // 0x0800
 
 
 /* respawnInfoType */
@@ -156,6 +157,7 @@
     #define BLUE_COIN_SWITCH_ACT_IDLE 0
     #define BLUE_COIN_SWITCH_ACT_RECEDING 1
     #define BLUE_COIN_SWITCH_ACT_TICKING 2
+    #define BLUE_COIN_SWITCH_ACT_RESPAWNING 3
 
 /* Moving Blue Coin */
     /* oAction */

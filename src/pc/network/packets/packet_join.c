@@ -28,6 +28,7 @@ static u8 eeprom[512] = { 0 };
 static u8   sJoinRequestPlayerModel;
 static struct PlayerPalette sJoinRequestPlayerPalette;
 static char sJoinRequestPlayerName[MAX_PLAYER_STRING];
+bool gCurrentlyJoining = false;
 
 void network_send_join_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
@@ -133,6 +134,7 @@ void network_receive_join(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     if (gNetworkPlayerLocal != NULL) { return; }
     LOG_INFO("received join packet");
+    gCurrentlyJoining = true;
 
     gOverrideEeprom = eeprom;
 
@@ -241,4 +243,5 @@ void network_receive_join(struct Packet* p) {
 
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
+    gCurrentlyJoining = false;
 }

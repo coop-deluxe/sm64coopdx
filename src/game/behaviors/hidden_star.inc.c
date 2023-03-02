@@ -89,6 +89,10 @@ void bhv_hidden_star_trigger_loop(void) {
             network_send_collect_item(o);
         }
     }
+    if (gLevelValues.visibleSecrets) {
+        obj_set_model(o, MODEL_PURPLE_MARBLE);
+        obj_set_billboard(o);
+    }
 }
 
 void bhv_bowser_course_red_coin_star_loop(void) {

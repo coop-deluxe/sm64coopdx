@@ -226,7 +226,7 @@ bool exec_chat_command(char* command) {
 
         return true;
     }
-#if defined(DEBUG) && defined(DEVELOPMENT)
+#if defined(DEVELOPMENT)
     if (gNetworkSystem == &gNetworkSystemSocket && str_starts_with("/warp ", command)) {
         static const struct { const char *name; s32 num; } sLevelNumByName[] = {
 #undef STUB_LEVEL
@@ -325,7 +325,7 @@ void display_chat_commands(void) {
         djui_chat_message_create("/permban [NAME|ID] - Ban this player from any game you host");
         djui_chat_message_create("/moderator [NAME|ID] - Make this player able to use commands like /kick, /ban, /permban on any game you host");
     }
-#if defined(DEBUG) && defined(DEVELOPMENT)
+#if defined(DEVELOPMENT)
     djui_chat_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");
 #endif
     if (sConfirming != CCC_NONE) { djui_chat_message_create("/confirm"); }
