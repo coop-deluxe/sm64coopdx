@@ -397,6 +397,7 @@ struct MarioState
     /*????*/ u8 specialTripleJump;
     /*????*/ Vec3f wallNormal;
     /*????*/ u8 visibleToEnemies;
+    /*????*/ u32 cap;
 };
 
 struct TextureInfo
