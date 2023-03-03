@@ -93,6 +93,7 @@ extern unsigned int configPlayerModel;
 extern unsigned int configMenuLevel;
 extern bool         configMenuSound;
 extern bool         configMenuRandom;
+extern bool         configMenuDemos;
 extern struct PlayerPalette configPlayerPalette;
 extern struct PlayerPalette configCustomPalette;
 extern bool         configUncappedFramerate;

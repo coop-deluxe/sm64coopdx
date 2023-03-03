@@ -63,6 +63,10 @@ s16 gChangeLevelTransition = -1;
 s16 gChangeActNum = -1;
 
 static bool sFirstCastleGroundsMenu = true;
+bool isDemoActive = false;
+bool inPlayerMenu = false;
+static u16 gDemoCountdown = 0;
+int demoNumber = -1;
 
 // TODO: Make these ifdefs better
 const char *credits01[] = { "1GAME DIRECTOR", "SHIGERU MIYAMOTO" };
@@ -821,10 +825,8 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
         switch (warpOp) {
             case WARP_OP_DEMO_NEXT:
             case WARP_OP_DEMO_END: sDelayedWarpTimer = 20; // Must be one line to match on -O2
-                sSourceWarpNodeId = WARP_NODE_F0;
-                gSavedCourseNum = COURSE_NONE;
                 val04 = FALSE;
-                play_transition(WARP_TRANSITION_FADE_INTO_STAR, 0x14, 0x00, 0x00, 0x00);
+                stop_demo(NULL);
                 break;
 
             case WARP_OP_CREDITS_END:
@@ -972,7 +974,6 @@ void initiate_delayed_warp(void) {
                     break;
 
                 case WARP_OP_DEMO_NEXT:
-                    warp_special(-2);
                     break;
 
                 case WARP_OP_CREDITS_START:
@@ -1105,19 +1106,90 @@ void basic_update(UNUSED s16 *arg) {
     }
 }
 
+bool find_demo_number(void) {
+    bool changeLevel = false;
+    switch (gCurrLevelNum) {
+        case LEVEL_BOWSER_1:
+            changeLevel = true;
+            demoNumber = 0;
+            break;
+        case LEVEL_WF:
+            changeLevel = true;
+            demoNumber = 1;
+            break;
+        case LEVEL_CCM:
+            changeLevel = true;
+            demoNumber = 2;
+            break;
+        case LEVEL_BBH:
+            changeLevel = true;
+            demoNumber = 3;
+            break;
+        case LEVEL_JRB:
+            changeLevel = true;
+            demoNumber = 4;
+            break;
+        case LEVEL_HMC:
+            changeLevel = true;
+            demoNumber = 5;
+            break;
+        case LEVEL_PSS:
+            changeLevel = true;
+            demoNumber = 6;
+            break;
+        default:
+            changeLevel = false;
+            demoNumber = -1;
+    }
+    return changeLevel;
+}
+
+static void start_demo(void) {
+    if (isDemoActive) {
+        isDemoActive = false;
+    } else {
+        isDemoActive = true;
+
+        if (find_demo_number()) {
+            gChangeLevel = gCurrLevelNum;
+        }
+
+        if (demoNumber <= 6 || demoNumber > -1) {
+            gCurrDemoInput = NULL;
+            func_80278A78(&gDemo, gDemoInputs, D_80339CF4);
+            load_patchable_table(&gDemo, demoNumber);
+            gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim);
+        } else {
+            isDemoActive = false;
+        }
+    }
+}
+
+void stop_demo(UNUSED struct DjuiBase* caller) {
+    if (isDemoActive) {
+        isDemoActive = false;
+        gCurrDemoInput = NULL;
+        gChangeLevel = gCurrLevelNum;
+        gDemoCountdown = 0;
+        if (gDjuiInMainMenu || gNetworkType == NT_NONE) {
+            update_menu_level();
+        }
+    }
+}
+
 int gPressedStart = 0;
 
 s32 play_mode_normal(void) {
-    if (gCurrDemoInput != NULL) {
-        print_intro_text();
-        if (gPlayer1Controller->buttonPressed & END_DEMO) {
-            level_trigger_warp(gMarioState,
-                               gCurrLevelNum == LEVEL_PSS ? WARP_OP_DEMO_END : WARP_OP_DEMO_NEXT);
-        } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
-                   && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
-            gPressedStart = 1;
-            level_trigger_warp(gMarioState, WARP_OP_DEMO_NEXT);
+    if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !inPlayerMenu) {
+        find_demo_number();
+        if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (demoNumber <= 6 || demoNumber > -1)) {
+            start_demo();
         }
+    }
+
+    if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !isDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || inPlayerMenu)) || (gCurrDemoInput == NULL && isDemoActive)) {
+        gPlayer1Controller->buttonPressed &= ~END_DEMO;
+        stop_demo(NULL);
     }
 
     warp_area();
@@ -1344,6 +1416,9 @@ void update_menu_level(void) {
 
     // warp to level, this feels buggy
     if (gCurrLevelNum != curLevel) {
+        if (isDemoActive) {
+            stop_demo(NULL);
+        }
         if (curLevel == LEVEL_JRB) {
             gChangeLevel = curLevel;
             gChangeActNum = 2;
@@ -1353,6 +1428,10 @@ void update_menu_level(void) {
             gChangeLevel = curLevel;
             gChangeActNum = 6;
         }
+        gDemoCountdown = 0;
+    }
+    if (isDemoActive) {
+        return;
     }
 
     if (gCurrAreaIndex != 2 && gCurrLevelNum == LEVEL_THI) {
