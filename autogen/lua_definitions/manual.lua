@@ -49,6 +49,9 @@ gLakituState = {}
 --- @type PaintingValues
 gPaintingValues = {}
 
+--- @type ServerSettings
+gServerSettings = {}
+
 -----------
 -- hooks --
 -----------
