@@ -7,6 +7,7 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/djui/djui.h"
 
 lua_State* gLuaState = NULL;
@@ -52,7 +53,7 @@ static void smlua_exec_file(char* path) {
     lua_pop(L, lua_gettop(L));
 }
 
-static void smlua_exec_str(char* str) {
+void smlua_exec_str(const char* str) {
     lua_State* L = gLuaState;
     if (luaL_dostring(L, str) != LUA_OK) {
         LOG_LUA("Failed to load lua string.");

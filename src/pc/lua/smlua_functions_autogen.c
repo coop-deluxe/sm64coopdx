@@ -27411,6 +27411,23 @@ int smlua_func_set_override_near(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_exec_str(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_exec_str", 1, top);
+        return 0;
+    }
+
+    const char* str = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_exec_str"); return 0; }
+
+    smlua_exec_str(str);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_model_utils.h //
 /////////////////////////
@@ -30370,6 +30387,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
+    smlua_bind_function(L, "smlua_exec_str", smlua_func_smlua_exec_str);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
