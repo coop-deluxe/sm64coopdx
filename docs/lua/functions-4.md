@@ -8658,26 +8658,6 @@
 
 <br />
 
-## [smlua_exec_str](#smlua_exec_str)
-
-### Lua Example
-`smlua_exec_str(str)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| str | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_exec_str(const char* str);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ---
 # functions from smlua_model_utils.h
 

@@ -8418,12 +8418,6 @@ function set_override_near(near)
     -- ...
 end
 
---- @param str string
---- @return nil
-function smlua_exec_str(str)
-    -- ...
-end
-
 --- @param name string
 --- @return integer
 function smlua_model_util_get_id(name)

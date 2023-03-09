@@ -1560,7 +1560,6 @@
    - [set_override_far](functions-4.md#set_override_far)
    - [set_override_fov](functions-4.md#set_override_fov)
    - [set_override_near](functions-4.md#set_override_near)
-   - [smlua_exec_str](functions-4.md#smlua_exec_str)
 
 <br />
 
