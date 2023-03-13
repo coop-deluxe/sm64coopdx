@@ -86,6 +86,7 @@ The `MarioState` structure contains 76 different variables, this guide will try 
 |`knockbackTimer`|`integer`|Used for invincibilty when flying through the air after a bonk or being hit by another player.
 |`specialTripleJump`|`integer`|Can be used as a bool, sets whether or not to use the special triple jump unlocked after talking to Yoshi.
 |`wallNormal`|`Vec3f`|The angle of the current wall on the x, y, and z axis.
+|`cap`|`integer`|Where Mario's cap is meant to be. Can be on Mario's head, the snowman's head in Snowman's Land, held by Klepto, or on Ukiki's head.
 
 ## Section 3: When should I use `gMarioStates`?
 Most of the time you won't be using `gMarioStates[0]` to access your Mario, but rather use a hook. A lot of hooks pass `m` through the function. What does this mean? Well, here is a example with comments to explain it as good as possible:

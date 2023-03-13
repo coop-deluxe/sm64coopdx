@@ -821,6 +821,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "animation",                LVT_COBJECT_P, offsetof(struct MarioState, animation),                false, LOT_MARIOANIMATION    },
     { "area",                     LVT_COBJECT_P, offsetof(struct MarioState, area),                     false, LOT_AREA              },
     { "bubbleObj",                LVT_COBJECT_P, offsetof(struct MarioState, bubbleObj),                false, LOT_OBJECT            },
+    { "cap",                      LVT_U32,       offsetof(struct MarioState, cap),                      false, LOT_NONE              },
     { "capTimer",                 LVT_U16,       offsetof(struct MarioState, capTimer),                 false, LOT_NONE              },
     { "ceil",                     LVT_COBJECT_P, offsetof(struct MarioState, ceil),                     false, LOT_SURFACE           },
     { "ceilHeight",               LVT_F32,       offsetof(struct MarioState, ceilHeight),               false, LOT_NONE              },

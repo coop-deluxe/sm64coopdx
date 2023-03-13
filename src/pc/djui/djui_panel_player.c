@@ -240,8 +240,19 @@ static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     }
 }
 
+static void djui_panel_player_prevent_demo(UNUSED struct DjuiBase* caller) {
+    if (inPlayerMenu) {
+        inPlayerMenu = false;
+        djui_panel_menu_back(NULL);
+    } else {
+        inPlayerMenu = true;
+    }
+}
+
 void djui_panel_player_create(struct DjuiBase* caller) {
     f32 bodyHeight = 32 * 3 + 64 * 2 + 16 * 5;
+
+    djui_panel_player_prevent_demo(NULL);
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\L\\#00b3ff\\A\\#ffef00\\Y\\#ff0800\\E\\#1be700\\R");
@@ -338,7 +349,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button6->base, 1.0f, 64);
         djui_button_set_style(button6, 1);
-        djui_interactable_hook_click(&button6->base, djui_panel_menu_back);
+        djui_interactable_hook_click(&button6->base, djui_panel_player_prevent_demo);
     }
 
     djui_panel_add(caller, &panel->base, defaultBase);

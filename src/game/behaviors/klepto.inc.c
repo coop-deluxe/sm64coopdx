@@ -97,12 +97,11 @@ void bhv_klepto_init(void) {
         o->oKleptoStartPosY = o->oPosY;
         o->oKleptoStartPosZ = o->oPosZ;
 
-        // skip hat save flags
-        //if (save_file_get_flags() & SAVE_FLAG_CAP_ON_KLEPTO) {
-        //    o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
-        //} else {
+        if (gMarioStates[0].cap & SAVE_FLAG_CAP_ON_KLEPTO) {
+            o->oAnimState = KLEPTO_ANIM_STATE_HOLDING_CAP;
+        } else {
             o->oAction = KLEPTO_ACT_WAIT_FOR_MARIO;
-        //}
+        }
     }
 
     struct SyncObject* so = sync_object_init(o, 4000.0f);
@@ -419,7 +418,7 @@ void bhv_klepto_update(void) {
                 u8 modelIndex = (np->overrideModelIndex < CT_MAX) ? np->overrideModelIndex : 0;
                 u32 capModel = gCharacters[modelIndex].capModelId;
 
-                save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO);
+                gMarioStates[0].cap &= ~SAVE_FLAG_CAP_ON_KLEPTO;
 
                 struct Object* cap = spawn_object(o, capModel, bhvNormalCap);
                 if (cap != NULL) {

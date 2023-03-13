@@ -1034,6 +1034,7 @@
 | animation | [MarioAnimation](structs.md#MarioAnimation) |  |
 | area | [Area](structs.md#Area) |  |
 | bubbleObj | [Object](structs.md#Object) |  |
+| cap | `integer` |  |
 | capTimer | `integer` |  |
 | ceil | [Surface](structs.md#Surface) |  |
 | ceilHeight | `number` |  |
