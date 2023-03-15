@@ -8314,6 +8314,11 @@ function get_temp_s32_pointer(initialValue)
     -- ...
 end
 
+--- @return integer
+function get_time()
+    -- ...
+end
+
 --- @param type HudDisplayValue
 --- @return integer
 function hud_get_value(type)
