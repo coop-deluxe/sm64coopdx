@@ -12197,6 +12197,44 @@ int smlua_func_seq_player_unlower_volume(lua_State* L) {
     return 1;
 }
 
+int smlua_func_sound_banks_disable(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sound_banks_disable", 2, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sound_banks_disable"); return 0; }
+    u16 bankMask = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sound_banks_disable"); return 0; }
+
+    sound_banks_disable(player, bankMask);
+
+    return 1;
+}
+
+int smlua_func_sound_banks_enable(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sound_banks_enable", 2, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sound_banks_enable"); return 0; }
+    u16 bankMask = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sound_banks_enable"); return 0; }
+
+    sound_banks_enable(player, bankMask);
+
+    return 1;
+}
+
 int smlua_func_stop_background_music(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29619,6 +29657,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "seq_player_fade_out", smlua_func_seq_player_fade_out);
     smlua_bind_function(L, "seq_player_lower_volume", smlua_func_seq_player_lower_volume);
     smlua_bind_function(L, "seq_player_unlower_volume", smlua_func_seq_player_unlower_volume);
+    smlua_bind_function(L, "sound_banks_disable", smlua_func_sound_banks_disable);
+    smlua_bind_function(L, "sound_banks_enable", smlua_func_sound_banks_enable);
     smlua_bind_function(L, "stop_background_music", smlua_func_stop_background_music);
     smlua_bind_function(L, "stop_sound", smlua_func_stop_sound);
     smlua_bind_function(L, "stop_sounds_from_source", smlua_func_stop_sounds_from_source);

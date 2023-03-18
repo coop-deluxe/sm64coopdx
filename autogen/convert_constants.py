@@ -39,7 +39,8 @@ in_files = [
     "include/surface_terrains.h",
     "src/game/level_update.h",
     "src/pc/network/version.h",
-    "include/level_commands.h"
+    "include/level_commands.h",
+    "src/audio/external.h"
 ]
 
 exclude_constants = {
@@ -49,6 +50,7 @@ exclude_constants = {
 
 include_constants = {
     'include/level_commands.h': [ "WARP_CHECKPOINT", "WARP_NO_CHECKPOINT" ],
+    'src/audio/external.h': [ "SEQ_PLAYER" ]
 }
 
 pretend_find = [

@@ -2806,6 +2806,48 @@
 
 <br />
 
+## [sound_banks_disable](#sound_banks_disable)
+
+### Lua Example
+`sound_banks_disable(player, bankMask)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| bankMask | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sound_banks_disable(u8 player, u16 bankMask);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sound_banks_enable](#sound_banks_enable)
+
+### Lua Example
+`sound_banks_enable(player, bankMask)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| bankMask | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sound_banks_enable(u8 player, u16 bankMask);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [stop_background_music](#stop_background_music)
 
 ### Lua Example

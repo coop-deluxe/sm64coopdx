@@ -761,6 +761,8 @@
    - [seq_player_fade_out](functions-3.md#seq_player_fade_out)
    - [seq_player_lower_volume](functions-3.md#seq_player_lower_volume)
    - [seq_player_unlower_volume](functions-3.md#seq_player_unlower_volume)
+   - [sound_banks_disable](functions-3.md#sound_banks_disable)
+   - [sound_banks_enable](functions-3.md#sound_banks_enable)
    - [stop_background_music](functions-3.md#stop_background_music)
    - [stop_sound](functions-3.md#stop_sound)
    - [stop_sounds_from_source](functions-3.md#stop_sounds_from_source)

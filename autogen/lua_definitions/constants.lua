@@ -3264,6 +3264,15 @@ RESOLUTION_N64 = 1
 RESOLUTION_COUNT = 2
 
 --- @type integer
+SEQ_PLAYER_ENV = 1
+
+--- @type integer
+SEQ_PLAYER_LEVEL = 0
+
+--- @type integer
+SEQ_PLAYER_SFX = 2
+
+--- @type integer
 GEO_CONTEXT_AREA_INIT = 4
 
 --- @type integer
@@ -3817,6 +3826,9 @@ MARIO_SPAWN_UNKNOWN_03 = 0x03
 
 --- @type integer
 MARIO_SPAWN_UNKNOWN_27 = 0x27
+
+--- @type integer
+PRESS_START_DEMO_TIMER = 800
 
 --- @type integer
 TIMER_CONTROL_HIDE = 3

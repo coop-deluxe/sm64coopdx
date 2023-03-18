@@ -14,6 +14,7 @@
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
+- [external.h](#externalh)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
     - [enum InteractionFlag](#enum-InteractionFlag)
@@ -1099,6 +1100,15 @@
 
 <br />
 
+## [external.h](#external.h)
+- SEQ_PLAYER_ENV
+- SEQ_PLAYER_LEVEL
+- SEQ_PLAYER_SFX
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [graph_node.h](#graph_node.h)
 - GEO_CONTEXT_AREA_INIT
 - GEO_CONTEXT_AREA_LOAD
@@ -1325,6 +1335,7 @@
 - MARIO_SPAWN_UNKNOWN_02
 - MARIO_SPAWN_UNKNOWN_03
 - MARIO_SPAWN_UNKNOWN_27
+- PRESS_START_DEMO_TIMER
 - TIMER_CONTROL_HIDE
 - TIMER_CONTROL_SHOW
 - TIMER_CONTROL_START
