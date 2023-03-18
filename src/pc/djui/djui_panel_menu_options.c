@@ -1,6 +1,7 @@
 #include "djui.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
+#include "src/game/level_update.h"
 
 static struct DjuiSelectionbox* sLevelBox = NULL;
 
@@ -50,6 +51,11 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&checkbox2->base, 1.0f, 32);
         djui_interactable_hook_value_change(&checkbox2->base, djui_panel_random_menu);
+
+        struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "Play Vanilla Demos", &configMenuDemos);
+        djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&checkbox3->base, 1.0f, 32);
+        djui_interactable_hook_value_change(&checkbox3->base, stop_demo);
 
         struct DjuiButton* button1 = djui_button_create(&body->base, "Back");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

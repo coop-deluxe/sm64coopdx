@@ -644,13 +644,12 @@ void cap_ukiki_held_loop(void) {
  * Initializatation for ukiki, determines if it has Mario's cap.
  */
 void bhv_ukiki_init(void) {
-    // skip hat save flags
-    //if (o->oBehParams2ndByte == UKIKI_CAP) {
-    //    if (save_file_get_flags() & SAVE_FLAG_CAP_ON_UKIKI) {
-    //        o->oUkikiTextState = UKIKI_TEXT_HAS_CAP;
-    //        o->oUkikiHasCap |= UKIKI_CAP_ON;
-    //    }
-    //}
+    if (o->oBehParams2ndByte == UKIKI_CAP) {
+        if (gMarioStates[0].cap & SAVE_FLAG_CAP_ON_UKIKI) {
+            o->oUkikiTextState = UKIKI_TEXT_HAS_CAP;
+            o->oUkikiHasCap |= UKIKI_CAP_ON;
+        }
+    }
 
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, &o->oUkikiTauntCounter);

@@ -5,6 +5,7 @@
 
 #include "types.h"
 
+#include "pc/djui/djui.h"
 
 #define TIMER_CONTROL_SHOW  0
 #define TIMER_CONTROL_START 1
@@ -55,6 +56,8 @@
 #define WARP_TYPE_CHANGE_LEVEL 1
 #define WARP_TYPE_CHANGE_AREA 2
 #define WARP_TYPE_SAME_AREA 3
+
+#define PRESS_START_DEMO_TIMER 800
 
 struct CreditsEntry
 {
@@ -125,6 +128,8 @@ extern s8 gNeverEnteredCastle;
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;
 
+extern bool inPlayerMenu;
+
 enum HUDDisplayFlag {
     HUD_DISPLAY_FLAG_LIVES = 0x0001,
     HUD_DISPLAY_FLAG_COIN_COUNT = 0x0002,
@@ -162,5 +167,8 @@ s32 lvl_exiting_credits(UNUSED s16 arg0, UNUSED s32 arg1);
 
 void fake_lvl_init_from_save_file(void);
 void lvl_skip_credits(void);
+
+void update_menu_level(void);
+void stop_demo(UNUSED struct DjuiBase* caller);
 
 #endif // LEVEL_UPDATE_H

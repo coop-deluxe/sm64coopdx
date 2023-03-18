@@ -708,6 +708,7 @@
 --- @field public animation MarioAnimation
 --- @field public area Area
 --- @field public bubbleObj Object
+--- @field public cap integer
 --- @field public capTimer integer
 --- @field public ceil Surface
 --- @field public ceilHeight number
