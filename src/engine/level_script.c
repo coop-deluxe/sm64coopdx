@@ -29,6 +29,7 @@
 #include "src/pc/lua/smlua.h"
 #include "src/pc/djui/djui.h"
 #include "game/hardcoded.h"
+#include "menu/intro_geo.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
 
@@ -332,6 +333,8 @@ static void level_cmd_load_mio0(void) {
 }
 
 static void level_cmd_load_mario_head(void) {
+    gSkipInterpolationTitleScreen = true;
+    gGlobalTimer = 0;
     // TODO: Fix these hardcoded sizes
     void *addr = main_pool_alloc(DOUBLE_SIZE_ON_64_BIT(0xE1000), MEMORY_POOL_LEFT);
     if (addr != NULL) {
@@ -357,6 +360,7 @@ static void level_cmd_init_level(void) {
     clear_areas();
     main_pool_push_state();
     smlua_model_util_clear();
+    gSkipInterpolationTitleScreen = false;
 
     sCurrentCmd = CMD_NEXT;
 }

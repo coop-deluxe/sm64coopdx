@@ -34,6 +34,7 @@
 #include "../../include/libc/stdlib.h"
 #include "rumble_init.h"
 #include "game/interaction.h"
+#include "menu/intro_geo.h"
 
 #include "pc/pc_main.h"
 #include "pc/cliopts.h"
@@ -826,7 +827,13 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
             case WARP_OP_DEMO_NEXT:
             case WARP_OP_DEMO_END: sDelayedWarpTimer = 20; // Must be one line to match on -O2
                 val04 = FALSE;
-                stop_demo(NULL);
+                if (!gDjuiInMainMenu) {
+                    sSourceWarpNodeId = WARP_NODE_F0;
+                    gSavedCourseNum = COURSE_NONE;
+                    play_transition(WARP_TRANSITION_FADE_INTO_STAR, 0x14, 0x00, 0x00, 0x00);
+                } else {
+                    stop_demo(NULL);
+                }
                 break;
 
             case WARP_OP_CREDITS_END:
@@ -974,6 +981,9 @@ void initiate_delayed_warp(void) {
                     break;
 
                 case WARP_OP_DEMO_NEXT:
+                    if (!gDjuiInMainMenu) {
+                        warp_special(-2);
+                    }
                     break;
 
                 case WARP_OP_CREDITS_START:
@@ -1180,16 +1190,30 @@ void stop_demo(UNUSED struct DjuiBase* caller) {
 int gPressedStart = 0;
 
 s32 play_mode_normal(void) {
-    if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !inPlayerMenu) {
-        find_demo_number();
-        if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (demoNumber <= 6 || demoNumber > -1)) {
-            start_demo();
+    if (!gDjuiInMainMenu) {
+        if (gCurrDemoInput != NULL) {
+            print_intro_text();
+            if (gPlayer1Controller->buttonPressed & END_DEMO) {
+                level_trigger_warp(gMarioState,
+                                   gCurrLevelNum == LEVEL_PSS ? WARP_OP_DEMO_END : WARP_OP_DEMO_NEXT);
+            } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
+                       && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
+                gPressedStart = 1;
+                level_trigger_warp(gMarioState, WARP_OP_DEMO_NEXT);
+            }
         }
-    }
+    } else {
+        if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !inPlayerMenu) {
+            find_demo_number();
+            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (demoNumber <= 6 || demoNumber > -1)) {
+                start_demo();
+            }
+        }
 
-    if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !isDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || inPlayerMenu)) || (gCurrDemoInput == NULL && isDemoActive)) {
-        gPlayer1Controller->buttonPressed &= ~END_DEMO;
-        stop_demo(NULL);
+        if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !isDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || inPlayerMenu)) || (gCurrDemoInput == NULL && isDemoActive)) {
+            gPlayer1Controller->buttonPressed &= ~END_DEMO;
+            stop_demo(NULL);
+        }
     }
 
     warp_area();

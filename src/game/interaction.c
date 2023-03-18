@@ -2183,6 +2183,8 @@ void check_kick_or_punch_wall(struct MarioState *m) {
 }
 
 void mario_process_interactions(struct MarioState *m) {
+    if (gDjuiInMainMenu) { return; }
+
     sDelayInvincTimer = FALSE;
     sInvulnerable = (m->action & ACT_FLAG_INVULNERABLE) || m->invincTimer != 0;
 

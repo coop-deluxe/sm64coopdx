@@ -63,7 +63,7 @@ static Gfx *sIntroScalePos;
 static Vec3f sIntroScale;
 static Vec3f sIntroScalePrev;
 
-bool skipInterpolationTitleScreen = false;
+bool gSkipInterpolationTitleScreen = false;
 
 void patch_title_screen_before(void) {
     sIntroScalePos = NULL;

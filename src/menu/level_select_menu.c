@@ -248,13 +248,6 @@ s32 lvl_intro_update(s16 arg1, UNUSED s32 arg2) {
         case 3:
             retVar = level_select_input_loop();
             break;
-        case 4:
-            gGlobalTimer = 0;
-            skipInterpolationTitleScreen = true;
-            break;
-        case 5:
-            skipInterpolationTitleScreen = false;
-            break;
     }
     return retVar;
 }

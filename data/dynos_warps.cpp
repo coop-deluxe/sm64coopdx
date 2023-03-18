@@ -312,8 +312,10 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
 #endif
 
             // Init transition
-            reset_camera(gCurrentArea->camera);
-            init_camera(gCurrentArea->camera);
+            if (gCurrentArea != NULL) {
+                reset_camera(gCurrentArea->camera);
+                init_camera(gCurrentArea->camera);
+            }
             sDelayedWarpOp = WARP_OP_NONE;
             switch (sDynosWarpSpawnType) {
                 case MARIO_SPAWN_UNKNOWN_03:           play_transition(WARP_TRANSITION_FADE_FROM_STAR,   0x10, 0x00, 0x00, 0x00); break;
@@ -327,7 +329,9 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
 
             // Set music
             if (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING) {
-                set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+                if (gCurrentArea != NULL) {
+                    set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
+                }
                 if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
                 if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
                 if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
