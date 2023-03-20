@@ -8335,6 +8335,24 @@
 
 <br />
 
+## [get_time](#get_time)
+
+### Lua Example
+`local integerValue = get_time()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_time(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hud_get_value](#hud_get_value)
 
 ### Lua Example

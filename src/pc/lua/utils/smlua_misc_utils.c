@@ -386,3 +386,9 @@ void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
 bool course_is_main_course(u16 levelNum) {
     return COURSE_IS_MAIN_COURSE(levelNum);
 }
+
+///
+
+u32 get_time(void) {
+    return time(NULL);
+}

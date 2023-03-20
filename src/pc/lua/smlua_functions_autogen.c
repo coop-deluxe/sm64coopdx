@@ -27161,6 +27161,21 @@ int smlua_func_get_temp_s32_pointer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_time(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_time", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_time());
+
+    return 1;
+}
+
 int smlua_func_hud_get_value(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30394,6 +30409,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_last_star_or_key", smlua_func_get_last_star_or_key);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
+    smlua_bind_function(L, "get_time", smlua_func_get_time);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_is_hidden", smlua_func_hud_is_hidden);

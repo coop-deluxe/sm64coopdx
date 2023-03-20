@@ -96,4 +96,6 @@ void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
 bool course_is_main_course(u16 levelNum);
 
+u32 get_time(void);
+
 #endif

@@ -1546,6 +1546,7 @@
    - [get_last_star_or_key](functions-4.md#get_last_star_or_key)
    - [get_network_area_timer](functions-4.md#get_network_area_timer)
    - [get_temp_s32_pointer](functions-4.md#get_temp_s32_pointer)
+   - [get_time](functions-4.md#get_time)
    - [hud_get_value](functions-4.md#hud_get_value)
    - [hud_hide](functions-4.md#hud_hide)
    - [hud_is_hidden](functions-4.md#hud_is_hidden)
