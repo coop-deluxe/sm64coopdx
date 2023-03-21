@@ -162,7 +162,7 @@ def process_define(filename, line):
         if p.startswith('0x'):
             continue
         p = re.sub(r'0x[a-fA-F0-9]+', '', p)
-        if re.search('[a-z]', p) != None:
+        if re.search('[a-z]', p) != None and 'VERSION_TEXT' not in line:
             if 'gCurrentObject' not in line:
                 print('UNRECOGNIZED DEFINE: ' + line)
             return None
@@ -327,7 +327,10 @@ def def_constant(processed_constant):
         return s
 
     for c in [processed_constant]:
-        s += '\n--- @type integer\n'
+        if "'" in c[1]:
+            s += '\n--- @type string\n'
+        else:
+            s += '\n--- @type integer\n'
         s += '%s = %s\n' % (c[0], c[1])
 
     return s

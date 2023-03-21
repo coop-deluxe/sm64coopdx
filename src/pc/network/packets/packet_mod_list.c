@@ -18,6 +18,9 @@ void network_send_mod_list_request(void) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_MOD_LIST_REQUEST, true, PLMT_NONE);
+    char version[MAX_VERSION_LENGTH] = { 0 };
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     LOG_INFO("sending mod list request");

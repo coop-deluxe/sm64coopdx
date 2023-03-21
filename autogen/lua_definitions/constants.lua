@@ -8209,7 +8209,10 @@ HOOK_CHARACTER_SOUND = 29
 HOOK_BEFORE_SET_MARIO_ACTION = 30
 
 --- @type LuaHookedEventType
-HOOK_MAX = 31
+HOOK_JOINED_GAME = 31
+
+--- @type LuaHookedEventType
+HOOK_MAX = 32
 
 --- @class HudDisplayFlags
 
@@ -11484,3 +11487,6 @@ MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 VERSION_NUMBER = 32
+
+--- @type string
+VERSION_TEXT = 'beta'

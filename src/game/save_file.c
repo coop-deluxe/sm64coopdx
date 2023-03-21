@@ -410,7 +410,6 @@ void save_file_erase_current_backup_save(void) {
         save_file_reload(FALSE);
 
         save_file_do_save(gCurrSaveFileNum-1, TRUE);
-        network_send_save_file(gCurrSaveFileNum-1);
     }
 }
 

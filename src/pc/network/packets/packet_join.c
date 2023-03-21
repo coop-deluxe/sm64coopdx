@@ -38,6 +38,9 @@ void network_send_join_request(void) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
+    char version[MAX_VERSION_LENGTH] = { 0 };
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
     packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
@@ -52,6 +55,8 @@ void network_receive_join_request(struct Packet* p) {
     LOG_INFO("received join request");
 
     if (p->dataLength > 5) {
+        char version[MAX_VERSION_LENGTH] = { 0 };
+        packet_read(p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
         packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
         packet_read(p, &sJoinRequestPlayerPalette, sizeof(struct PlayerPalette));
         packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_PLAYER_STRING);
@@ -241,7 +246,8 @@ void network_receive_join(struct Packet* p) {
     network_send_network_players_request();
     network_send_lua_sync_table_request();
 
+    gCurrentlyJoining = false;
+    smlua_call_event_hooks(HOOK_JOINED_GAME);
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
-    gCurrentlyJoining = false;
 }

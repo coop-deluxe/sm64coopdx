@@ -102,7 +102,7 @@ EXTRA_CFLAGS ?=
 EXTRA_CPP_FLAGS ?=
 EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs
 
-dev:; @$(MAKE) DEBUG=1 DEVELOPMENT=1
+dev:; @$(MAKE) DEVELOPMENT=1
 
 # COMPILER - selects the C compiler to use
 #   gcc - uses the GNU C Compiler
