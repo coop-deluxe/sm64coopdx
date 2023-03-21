@@ -14,6 +14,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
+#include "game/skybox.h"
 #include "include/course_table.h"
 
 /**
@@ -825,6 +826,7 @@ static void geo_process_background(struct GraphNodeBackground *node) {
         gDPPipeSync(gfx++);
         gDPSetCycleType(gfx++, G_CYC_1CYCLE);
         gSPEndDisplayList(gfx++);
+        gReadOnlyBackground = -1;
 
         geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(gfxStart), 0);
     }

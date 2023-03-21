@@ -177,6 +177,8 @@ static f32 sDepthZAdd = 0;
 static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
+Vec3f gLightingDir;
+
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -709,6 +711,11 @@ static void calculate_normal_dir(const Light_t *light, float coeffs[3]) {
         light->dir[1] / 127.0f,
         light->dir[2] / 127.0f
     };
+
+    light_dir[0] += gLightingDir[0];
+    light_dir[1] += gLightingDir[1];
+    light_dir[2] += gLightingDir[2];
+
     gfx_transposed_matrix_mul(coeffs, light_dir, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1]);
     gfx_normalize_vector(coeffs);
 }

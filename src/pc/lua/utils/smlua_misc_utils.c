@@ -17,6 +17,8 @@
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "game/skybox.h"
+#include "pc/gfx/gfx_pc.h"
 #include "include/course_table.h"
 
 u32 get_network_area_timer(void) {
@@ -379,6 +381,29 @@ void set_override_far(f32 far) {
 
 void add_scroll_target(u32 index, const char* name, u32 offset, u32 size) {
     dynos_add_scroll_target(index, name, offset, size);
+}
+
+///
+
+f32 get_lighting_dir(u8 index) {
+    if (index > 2) { return 0; }
+    return gLightingDir[index];
+}
+
+void set_lighting_dir(u8 index, f32 value) {
+    if (index > 2) { return; }
+
+    gLightingDir[index] = value;
+}
+
+///
+
+s8 get_skybox() {
+    return gReadOnlyBackground;
+}
+
+void set_override_skybox(s8 background) {
+    gOverrideBackground = background;
 }
 
 ///

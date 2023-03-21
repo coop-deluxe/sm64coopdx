@@ -64,6 +64,9 @@ typedef const Texture *const SkyboxTexture[80];
 
 extern u8 gRenderingInterpolated;
 
+s8 gReadOnlyBackground;
+s8 gOverrideBackground = -1;
+
 extern SkyboxTexture bbh_skybox_ptrlist;
 extern SkyboxTexture bidw_skybox_ptrlist;
 extern SkyboxTexture bitfs_skybox_ptrlist;
@@ -330,6 +333,9 @@ Gfx *init_skybox_display_list(s8 player, s8 background, s8 colorIndex) {
 Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
                                     f32 posX, f32 posY, f32 posZ,
                                     f32 focX, f32 focY, f32 focZ) {
+    gReadOnlyBackground = background;
+    background = gOverrideBackground == -1 ? background : gOverrideBackground;
+    
     f32 cameraFaceX = focX - posX;
     f32 cameraFaceY = focY - posY;
     f32 cameraFaceZ = focZ - posZ;

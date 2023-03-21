@@ -721,6 +721,7 @@
    - [djui_hud_get_raw_mouse_y](functions-3.md#djui_hud_get_raw_mouse_y)
    - [djui_hud_get_screen_height](functions-3.md#djui_hud_get_screen_height)
    - [djui_hud_get_screen_width](functions-3.md#djui_hud_get_screen_width)
+   - [djui_hud_is_pause_menu_created](functions-3.md#djui_hud_is_pause_menu_created)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_render_rect](functions-3.md#djui_hud_render_rect)
@@ -728,6 +729,7 @@
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
    - [djui_hud_set_font](functions-3.md#djui_hud_set_font)
    - [djui_hud_set_mouse_locked](functions-3.md#djui_hud_set_mouse_locked)
+   - [djui_hud_set_render_behind_hud](functions-3.md#djui_hud_set_render_behind_hud)
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
 
@@ -1544,7 +1546,9 @@
    - [get_hand_foot_pos_y](functions-4.md#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](functions-4.md#get_hand_foot_pos_z)
    - [get_last_star_or_key](functions-4.md#get_last_star_or_key)
+   - [get_lighting_dir](functions-4.md#get_lighting_dir)
    - [get_network_area_timer](functions-4.md#get_network_area_timer)
+   - [get_skybox](functions-4.md#get_skybox)
    - [get_temp_s32_pointer](functions-4.md#get_temp_s32_pointer)
    - [get_time](functions-4.md#get_time)
    - [get_ttc_speed_setting](functions-4.md#get_ttc_speed_setting)
@@ -1561,9 +1565,11 @@
    - [save_file_set_using_backup_slot](functions-4.md#save_file_set_using_backup_slot)
    - [set_environment_region](functions-4.md#set_environment_region)
    - [set_last_star_or_key](functions-4.md#set_last_star_or_key)
+   - [set_lighting_dir](functions-4.md#set_lighting_dir)
    - [set_override_far](functions-4.md#set_override_far)
    - [set_override_fov](functions-4.md#set_override_fov)
    - [set_override_near](functions-4.md#set_override_near)
+   - [set_override_skybox](functions-4.md#set_override_skybox)
    - [set_ttc_speed_setting](functions-4.md#set_ttc_speed_setting)
 
 <br />

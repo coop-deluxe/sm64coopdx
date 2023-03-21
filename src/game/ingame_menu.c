@@ -3063,62 +3063,69 @@ s16 render_pause_courses_and_castle(void) {
             }
             break;
         case DIALOG_STATE_VERTICAL:
-            shade_screen();
-            render_pause_my_score_coins();
-            render_pause_red_coins();
+            if (!gDjuiPanelPauseCreated) {
+                shade_screen();
+                render_pause_my_score_coins();
+                render_pause_red_coins();
 
-            /* Always allow exiting from course */
-            if (gLevelValues.pauseExitAnywhere || (gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT)) {
-                render_pause_course_options(99, 93, &gDialogLineNum, 15);
-            }
-
-#ifdef VERSION_EU
-            if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
-#else
-            if (gPlayer1Controller->buttonPressed & A_BUTTON
-             || gPlayer1Controller->buttonPressed & START_BUTTON)
-#endif
-            {
-                level_set_transition(0, NULL);
-                play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
-                gDialogBoxState = DIALOG_STATE_OPENING;
-                gMenuMode = -1;
-
-                if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                    num = gDialogLineNum;
-                } else {
-                    num = 1;
+                /* Always allow exiting from course */
+                if (gLevelValues.pauseExitAnywhere || (gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT)) {
+                    render_pause_course_options(99, 93, &gDialogLineNum, 15);
                 }
 
-                return num;
+#ifdef VERSION_EU
+                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
+#else
+                if (gPlayer1Controller->buttonPressed & A_BUTTON
+                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+#endif
+                {
+                    level_set_transition(0, NULL);
+                    play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
+                    gDialogBoxState = DIALOG_STATE_OPENING;
+                    gMenuMode = -1;
+
+                    if (gDialogLineNum == 2 || gDialogLineNum == 3) {
+                        num = gDialogLineNum;
+                    } else {
+                        num = 1;
+                    }
+
+                    return num;
+                }
             }
             break;
         case DIALOG_STATE_HORIZONTAL:
-            shade_screen();
-            print_hud_pause_colorful_str();
-            if (gLevelValues.extendedPauseDisplay) {
-                render_pause_castle_menu_box_extended(160, 143);
-                render_pause_castle_main_strings_extended(84, 60);
-            } else {
+            if (!gDjuiPanelPauseCreated) {
+                shade_screen();
+                print_hud_pause_colorful_str();
                 render_pause_castle_menu_box(160, 143);
                 render_pause_castle_main_strings(104, 60);
-            }
+
+                if (gLevelValues.extendedPauseDisplay) {
+                    render_pause_castle_menu_box_extended(160, 143);
+                    render_pause_castle_main_strings_extended(84, 60);
+                } else {
+                    render_pause_castle_menu_box(160, 143);
+                    render_pause_castle_main_strings(104, 60);
+                }
 
 #ifdef VERSION_EU
-            if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
+                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
-            if (gPlayer1Controller->buttonPressed & A_BUTTON
-             || gPlayer1Controller->buttonPressed & START_BUTTON)
+                if (gPlayer1Controller->buttonPressed & A_BUTTON
+                 || gPlayer1Controller->buttonPressed & START_BUTTON)
 #endif
-            {
-                level_set_transition(0, NULL);
-                play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
-                gMenuMode = -1;
-                gDialogBoxState = DIALOG_STATE_OPENING;
+                {
+                    level_set_transition(0, NULL);
+                    play_sound(SOUND_MENU_PAUSE_2, gGlobalSoundSource);
+                    gMenuMode = -1;
+                    gDialogBoxState = DIALOG_STATE_OPENING;
 
-                return 1;
-            }
-            break;
+                    return 1;
+                }
+          }
+          break;
     }
 
     if (gDialogTextAlpha < 250) {

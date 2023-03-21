@@ -61,4 +61,8 @@ void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 
 
 void djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);
 
+void djui_hud_set_render_behind_hud(bool enable);
+
+bool djui_hud_is_pause_menu_created(void);
+
 #endif

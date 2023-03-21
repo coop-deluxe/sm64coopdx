@@ -1,6 +1,8 @@
 #ifndef GFX_PC_H
 #define GFX_PC_H
 
+#include "types.h"
+
 struct GfxRenderingAPI;
 struct GfxWindowManagerAPI;
 
@@ -10,6 +12,8 @@ struct GfxDimensions {
 };
 
 extern struct GfxDimensions gfx_current_dimensions;
+
+extern Vec3f gLightingDir;
 
 #ifdef __cplusplus
 extern "C" {

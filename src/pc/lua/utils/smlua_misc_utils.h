@@ -92,6 +92,12 @@ void set_override_far(f32 far);
 
 void add_scroll_target(u32 index, const char* name, u32 offset, u32 size);
 
+f32 get_lighting_dir(u8 index);
+void set_lighting_dir(u8 index, f32 value);
+
+s8 get_skybox();
+void set_override_skybox(s8 background);
+
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
 bool course_is_main_course(u16 levelNum);

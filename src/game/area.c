@@ -25,6 +25,7 @@
 #include "game/ingame_menu.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/djui/djui.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
 struct GraphNode *D_8033A160[MAX_LOADED_GRAPH_NODES];
@@ -419,6 +420,9 @@ void render_game(void) {
 
         gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH,
                       SCREEN_HEIGHT - BORDER_HEIGHT);
+        if (gDjuiRenderBehindHud && !gDjuiPanelPauseCreated) {
+            djui_render();
+        }
         render_hud();
 
         gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

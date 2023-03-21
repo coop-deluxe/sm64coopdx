@@ -8297,6 +8297,26 @@
 
 <br />
 
+## [get_lighting_dir](#get_lighting_dir)
+
+### Lua Example
+`local numberValue = get_lighting_dir(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 get_lighting_dir(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_network_area_timer](#get_network_area_timer)
 
 ### Lua Example
@@ -8310,6 +8330,24 @@
 
 ### C Prototype
 `u32 get_network_area_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_skybox](#get_skybox)
+
+### Lua Example
+`local integerValue = get_skybox()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_skybox();`
 
 [:arrow_up_small:](#)
 
@@ -8634,6 +8672,27 @@
 
 <br />
 
+## [set_lighting_dir](#set_lighting_dir)
+
+### Lua Example
+`set_lighting_dir(index, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+| value | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_lighting_dir(u8 index, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [set_override_far](#set_override_far)
 
 ### Lua Example
@@ -8689,6 +8748,26 @@
 
 ### C Prototype
 `void set_override_near(f32 near);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_skybox](#set_override_skybox)
+
+### Lua Example
+`set_override_skybox(background)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| background | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_skybox(s8 background);`
 
 [:arrow_up_small:](#)
 

@@ -20,6 +20,8 @@
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "game/camera.h"
+#include "pc/gfx/gfx_pc.h"
+#include "game/skybox.h"
 #include "game/object_list_processor.h"
 #include "game/object_helpers.h"
 #include "menu/intro_geo.h"
@@ -509,6 +511,11 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     gOverrideNear = 0;
     gOverrideFar = 0;
     gOverrideFOV = 0;
+    gLightingDir[0] = 0;
+    gLightingDir[1] = 0;
+    gLightingDir[2] = 0;
+    gOverrideBackground = -1;
+    gDjuiRenderBehindHud = false;
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);

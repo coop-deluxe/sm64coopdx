@@ -15,6 +15,7 @@
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
 - [external.h](#externalh)
+- [geo_commands.h](#geo_commandsh)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
     - [enum InteractionFlag](#enum-InteractionFlag)
@@ -1104,6 +1105,23 @@
 - SEQ_PLAYER_ENV
 - SEQ_PLAYER_LEVEL
 - SEQ_PLAYER_SFX
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_commands.h](#geo_commands.h)
+- BACKGROUND_ABOVE_CLOUDS
+- BACKGROUND_BELOW_CLOUDS
+- BACKGROUND_CUSTOM
+- BACKGROUND_DESERT
+- BACKGROUND_FLAMING_SKY
+- BACKGROUND_GREEN_SKY
+- BACKGROUND_HAUNTED
+- BACKGROUND_OCEAN_SKY
+- BACKGROUND_PURPLE_SKY
+- BACKGROUND_SNOW_MOUNTAINS
+- BACKGROUND_UNDERWATER_CITY
 
 [:arrow_up_small:](#)
 

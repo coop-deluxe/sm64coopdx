@@ -48,7 +48,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         djui_base_set_size(&rect1->base, 1.0f, 64);
         djui_base_set_color(&rect1->base, 0, 0, 0, 0);
         {
-            struct DjuiButton* button4 = djui_button_create(&rect1->base, "Dynos Packs");
+            struct DjuiButton* button4 = djui_button_create(&rect1->base, "DynOS Packs");
             djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&button4->base, 0.5f, 64);
             djui_base_set_alignment(&button4->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

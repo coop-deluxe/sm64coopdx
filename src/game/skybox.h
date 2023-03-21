@@ -4,6 +4,9 @@
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
+extern s8 gReadOnlyBackground;
+extern s8 gOverrideBackground;
+
 extern Texture* gCustomSkyboxPtrList[];
 
 Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,

@@ -16,6 +16,7 @@ static struct DjuiText* sDjuiLuaError = NULL;
 static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
 bool gDjuiDisabled = false;
+bool gDjuiRenderBehindHud = false;
 
 bool sDjuiRendered60fps = false;
 
@@ -24,6 +25,8 @@ void patch_djui_before(void) {
 }
 
 void patch_djui_interpolated(UNUSED f32 delta) {
+    if (gDjuiRenderBehindHud && !gDjuiPanelPauseCreated) { return; }
+
     // reset the head and re-render DJUI
     if (delta >= 0.5f && !sDjuiRendered60fps && (gDjuiInMainMenu || gDjuiPanelPauseCreated)) {
         sDjuiRendered60fps = true;
@@ -92,6 +95,7 @@ void djui_render(void) {
     djui_popup_update();
 
     djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED));
+    djui_base_set_visible(&sDjuiPauseOptions->base, (sCurrPlayMode == PLAY_MODE_PAUSED) && !gDjuiPanelPauseCreated);
     if (gDjuiRoot != NULL) {
         djui_base_render(&gDjuiRoot->base);
     }
