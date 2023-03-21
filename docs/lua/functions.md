@@ -1547,6 +1547,7 @@
    - [get_network_area_timer](functions-4.md#get_network_area_timer)
    - [get_temp_s32_pointer](functions-4.md#get_temp_s32_pointer)
    - [get_time](functions-4.md#get_time)
+   - [get_ttc_speed_setting](functions-4.md#get_ttc_speed_setting)
    - [hud_get_value](functions-4.md#hud_get_value)
    - [hud_hide](functions-4.md#hud_hide)
    - [hud_is_hidden](functions-4.md#hud_is_hidden)
@@ -1563,6 +1564,7 @@
    - [set_override_far](functions-4.md#set_override_far)
    - [set_override_fov](functions-4.md#set_override_fov)
    - [set_override_near](functions-4.md#set_override_near)
+   - [set_ttc_speed_setting](functions-4.md#set_ttc_speed_setting)
 
 <br />
 

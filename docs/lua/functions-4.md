@@ -8353,6 +8353,24 @@
 
 <br />
 
+## [get_ttc_speed_setting](#get_ttc_speed_setting)
+
+### Lua Example
+`local integerValue = get_ttc_speed_setting()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_ttc_speed_setting();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [hud_get_value](#hud_get_value)
 
 ### Lua Example
@@ -8671,6 +8689,26 @@
 
 ### C Prototype
 `void set_override_near(f32 near);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_ttc_speed_setting](#set_ttc_speed_setting)
+
+### Lua Example
+`set_ttc_speed_setting(speed)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| speed | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_ttc_speed_setting(s16 speed);`
 
 [:arrow_up_small:](#)
 

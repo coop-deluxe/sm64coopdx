@@ -8333,6 +8333,11 @@ function get_time()
     -- ...
 end
 
+--- @return integer
+function get_ttc_speed_setting()
+    -- ...
+end
+
 --- @param type HudDisplayValue
 --- @return integer
 function hud_get_value(type)
@@ -8434,6 +8439,12 @@ end
 --- @param near number
 --- @return nil
 function set_override_near(near)
+    -- ...
+end
+
+--- @param speed integer
+--- @return nil
+function set_ttc_speed_setting(speed)
     -- ...
 end
 

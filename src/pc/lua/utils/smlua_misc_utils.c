@@ -389,6 +389,16 @@ bool course_is_main_course(u16 levelNum) {
 
 ///
 
+s16 get_ttc_speed_setting() {
+    return gTTCSpeedSetting;
+}
+
+void set_ttc_speed_setting(s16 speed) {
+    gTTCSpeedSetting = speed;
+}
+
+///
+
 u32 get_time(void) {
     return time(NULL);
 }

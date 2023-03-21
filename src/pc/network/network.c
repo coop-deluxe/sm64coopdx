@@ -20,6 +20,7 @@
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "game/camera.h"
+#include "game/object_list_processor.h"
 #include "game/object_helpers.h"
 #include "menu/intro_geo.h"
 
@@ -521,6 +522,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     camera_set_use_course_specific_settings(true);
     free_vtx_scroll_targets();
     gMarioStates[0].cap = 0;
+    extern s16 gTTCSpeedSetting;
+    gTTCSpeedSetting = 0;
 
     struct Controller* cnt = gMarioStates[0].controller;
     cnt->rawStickX = 0;

@@ -27176,6 +27176,21 @@ int smlua_func_get_time(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_ttc_speed_setting(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_ttc_speed_setting", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_ttc_speed_setting());
+
+    return 1;
+}
+
 int smlua_func_hud_get_value(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27460,6 +27475,23 @@ int smlua_func_set_override_near(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_override_near"); return 0; }
 
     set_override_near(near);
+
+    return 1;
+}
+
+int smlua_func_set_ttc_speed_setting(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_ttc_speed_setting", 1, top);
+        return 0;
+    }
+
+    s16 speed = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_ttc_speed_setting"); return 0; }
+
+    set_ttc_speed_setting(speed);
 
     return 1;
 }
@@ -30410,6 +30442,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "get_time", smlua_func_get_time);
+    smlua_bind_function(L, "get_ttc_speed_setting", smlua_func_get_ttc_speed_setting);
     smlua_bind_function(L, "hud_get_value", smlua_func_hud_get_value);
     smlua_bind_function(L, "hud_hide", smlua_func_hud_hide);
     smlua_bind_function(L, "hud_is_hidden", smlua_func_hud_is_hidden);
@@ -30426,6 +30459,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_override_far", smlua_func_set_override_far);
     smlua_bind_function(L, "set_override_fov", smlua_func_set_override_fov);
     smlua_bind_function(L, "set_override_near", smlua_func_set_override_near);
+    smlua_bind_function(L, "set_ttc_speed_setting", smlua_func_set_ttc_speed_setting);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
