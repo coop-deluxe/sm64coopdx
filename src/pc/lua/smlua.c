@@ -52,7 +52,7 @@ static void smlua_exec_file(char* path) {
     lua_pop(L, lua_gettop(L));
 }
 
-static void smlua_exec_str(char* str) {
+void smlua_exec_str(char* str) {
     lua_State* L = gLuaState;
     if (luaL_dostring(L, str) != LUA_OK) {
         LOG_LUA("Failed to load lua string.");

@@ -312,6 +312,11 @@ bool exec_chat_command(char* command) {
         djui_chat_message_create(message);
         return true;
     }
+
+    if (str_starts_with("/lua ", command)) {
+        smlua_exec_str(&command[5]);
+        return true;
+    }
 #endif
 
     return smlua_call_chat_command_hook(command);
@@ -327,6 +332,7 @@ void display_chat_commands(void) {
     }
 #if defined(DEVELOPMENT)
     djui_chat_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");
+    djui_chat_message_create("/lua [LUA] - Execute Lua code from a string");
 #endif
     if (sConfirming != CCC_NONE) { djui_chat_message_create("/confirm"); }
     smlua_display_chat_commands();
