@@ -164,6 +164,10 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             f32 dist = sqrtf(dX * dX + dZ * dZ);
             if (dist > radius) { continue; }
 
+            if (dist < __FLT_EPSILON__) {
+                dist = __FLT_EPSILON__;
+            }
+
             cNorm[0] = dX / dist;
             cNorm[1] = 0;
             cNorm[2] = dZ / dist;
