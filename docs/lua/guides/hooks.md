@@ -112,8 +112,8 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_USE_ACT_SELECT | Called when the level changes, return `true` to show act selection screen and `false` otherwise | `integer` levelNum |
 | HOOK_ON_CHANGE_CAMERA_ANGLE | Called when the player changes the camera mode to Lakitu cam or Mario cam, return `false` to prevent the change. | `integer` mode |
 | HOOK_ON_SCREEN_TRANSITION | Called when the game is about to play a transition, return `false` to prevent the transition from playing. | `integer` type |
-| HOOK_ALLOW_HAZARD_SURFACE | Called once per frame. Return `false` to prevent Mario from being affected by lava or quicksand. | [MarioState](structs.md#MarioState) localMario |
-| HOOK_ON_CHAT_MESSAGE | Called when a chat message gets sent. Return `false` to prevent the message from being sent. | [MarioState](structs.md#MarioState) messageSender |
+| HOOK_ALLOW_HAZARD_SURFACE | Called once per player per frame. Return `false` to prevent the player from being affected by lava or quicksand. | [MarioState](structs.md#MarioState) mario |
+| HOOK_ON_CHAT_MESSAGE | Called when a chat message gets sent. Return `false` to prevent the message from being sent. | [MarioState](structs.md#MarioState) messageSender, `string` messageSent |
 | HOOK_OBJECT_SET_MODEL | Called when a behavior changes models. Also runs when a behavior spawns. | [Object](structs.md#Object) obj, `integer` modelID |
 | HOOK_CHARACTER_SOUND | Called when mario retrieves a character sound to play, return a character sound or `0` to override it. | [MarioState](structs.md#MarioState) mario, [enum CharacterSound](constants.md#enum-CharacterSound) characterSound |
 | HOOK_BEFORE_SET_MARIO_ACTION | Called before Mario's action changes. Return an action to change the incoming action or `1` to cancel the action change. | [MarioState](structs.md#MarioState) mario, `integer` incomingAction |
