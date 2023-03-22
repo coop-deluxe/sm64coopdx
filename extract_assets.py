@@ -45,6 +45,10 @@ def remove_file(fname):
 
 
 def clean_assets(local_asset_file):
+    # If extended folder exists, delete it
+    if os.path.exists('sound/samples/extended/'):
+        os.system('rm -rf sound/samples/extended/')
+        print('Deleted extended soundbank folder')
     assets = set(read_asset_map().keys())
     assets.update(read_local_asset_list(local_asset_file))
     for fname in list(assets) + [".assets-local.txt"]:

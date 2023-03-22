@@ -496,6 +496,9 @@ endif
 # Copy missing character sounds from mario sound banks
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
 
+# Copy missing instrument samples from the music sound banks
+_ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
+
 #==============================================================================#
 # Target Executable and Sources                                                #
 #==============================================================================#
