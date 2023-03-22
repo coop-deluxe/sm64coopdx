@@ -47,47 +47,46 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&rect1->base, 1.0f, 64);
         djui_base_set_color(&rect1->base, 0, 0, 0, 0);
-        {
-            struct DjuiButton* button4 = djui_button_create(&rect1->base, "DynOS Packs");
-            djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button4->base, 0.5f, 64);
-            djui_base_set_alignment(&button4->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            djui_interactable_hook_click(&button4->base, djui_panel_dynos_create);
-            
-            struct DjuiButton* button6 = djui_button_create(&rect1->base, "Player");
-            djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button6->base, 0.47f, 64);
-            djui_interactable_hook_click(&button6->base, djui_panel_player_create);
-        }
-        
-        struct DjuiButton* button1 = djui_button_create(&body->base, "Options");
+
+        struct DjuiButton* button1 = djui_button_create(&rect1->base, "Player");
         djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button1->base, 1.0f, 64);
-        djui_interactable_hook_click(&button1->base, djui_panel_options_create);
-        defaultBase = &button1->base;
+        djui_base_set_size(&button1->base, 0.47f, 64);
+        djui_interactable_hook_click(&button1->base, djui_panel_player_create);
 
-        if (Cheats.enabled) {
-            struct DjuiButton* button1 = djui_button_create(&body->base, "Cheats");
-            djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button1->base, 1.0f, 64);
-            djui_interactable_hook_click(&button1->base, djui_panel_cheats_create);
-        }
-
-        struct DjuiButton* button2 = djui_button_create(&body->base, "Resume");
+        struct DjuiButton* button2 = djui_button_create(&rect1->base, "DynOS Packs");
         djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button2->base, 1.0f, 64);
-        djui_interactable_hook_click(&button2->base, djui_panel_pause_resume);
-
-        struct DjuiButton* button3;
-        if (gNetworkType == NT_SERVER) {
-            button3 = djui_button_create(&body->base, "Stop Hosting");
-        } else {
-            button3 = djui_button_create(&body->base, "Disconnect");
-        }
+        djui_base_set_size(&button2->base, 0.5f, 64);
+        djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+        djui_interactable_hook_click(&button2->base, djui_panel_dynos_create);
+        
+        struct DjuiButton* button3 = djui_button_create(&body->base, "Options");
         djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&button3->base, 1.0f, 64);
-        djui_interactable_hook_click(&button3->base, djui_panel_pause_quit);
-        djui_button_set_style(button3, 1);
+        djui_interactable_hook_click(&button3->base, djui_panel_options_create);
+        defaultBase = &button3->base;
+
+        if (Cheats.enabled) {
+            struct DjuiButton* button4 = djui_button_create(&body->base, "Cheats");
+            djui_base_set_size_type(&button4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&button4->base, 1.0f, 64);
+            djui_interactable_hook_click(&button4->base, djui_panel_cheats_create);
+        }
+
+        struct DjuiButton* button5 = djui_button_create(&body->base, "Resume");
+        djui_base_set_size_type(&button5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button5->base, 1.0f, 64);
+        djui_interactable_hook_click(&button5->base, djui_panel_pause_resume);
+
+        struct DjuiButton* button6;
+        if (gNetworkType == NT_SERVER) {
+            button6 = djui_button_create(&body->base, "Stop Hosting");
+        } else {
+            button6 = djui_button_create(&body->base, "Disconnect");
+        }
+        djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button6->base, 1.0f, 64);
+        djui_interactable_hook_click(&button6->base, djui_panel_pause_quit);
+        djui_button_set_style(button6, 1);
     }
     
     djui_panel_add(caller, &panel->base, defaultBase);

@@ -240,7 +240,14 @@ static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     }
 }
 
-static void djui_panel_player_prevent_demo(UNUSED struct DjuiBase* caller) {
+static void djui_panel_player_prevent_demo(struct DjuiBase* caller) {
+    if (!gDjuiInMainMenu) {
+        if (caller != NULL) {
+            djui_panel_menu_back(NULL);
+        }
+        return;
+    }
+
     if (inPlayerMenu) {
         inPlayerMenu = false;
         djui_panel_menu_back(NULL);
