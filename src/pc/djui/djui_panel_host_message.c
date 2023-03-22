@@ -28,6 +28,7 @@ Forward port '\\#d0d0ff\\%d\\#c8c8c8\\' for UDP.\
 ";
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
+    stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
     gCurrSaveFileNum = configHostSaveSlot;

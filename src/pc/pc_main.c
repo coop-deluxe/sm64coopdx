@@ -47,7 +47,7 @@
 #include "pc/discord/discordrpc.h"
 #endif
 #include "pc/network/version.h"
-#include "pc/network/socket/socket.h"
+#include "pc/network/socket/domain_res.h"
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"

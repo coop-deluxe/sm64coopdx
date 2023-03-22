@@ -2,6 +2,7 @@
 #include "djui.h"
 #include "src/pc/network/network.h"
 #include "src/pc/network/socket/socket.h"
+#include "src/pc/network/socket/domain_res.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 #include "src/pc/debuglog.h"

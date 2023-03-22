@@ -1,4 +1,5 @@
 #include "socket.h"
+#include "domain_res.h"
 #include <stdio.h>
 #include "pc/configfile.h"
 #include "pc/debuglog.h"

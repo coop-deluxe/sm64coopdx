@@ -11489,4 +11489,4 @@ MINOR_VERSION_NUMBER = 0
 VERSION_NUMBER = 32
 
 --- @type string
-VERSION_TEXT = 'beta'
+VERSION_TEXT = "beta"

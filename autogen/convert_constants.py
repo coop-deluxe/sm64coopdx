@@ -221,7 +221,7 @@ def build_constant(processed_constant):
         constants = [processed_constant]
 
     for c in constants:
-        s += '%s = %s\n' % (c[0], c[1])
+        s += '%s = %s\n' % (c[0], c[1].replace('"', "'"))
 
     return s
 
@@ -327,7 +327,7 @@ def def_constant(processed_constant):
         return s
 
     for c in [processed_constant]:
-        if "'" in c[1]:
+        if '"' in c[1]:
             s += '\n--- @type string\n'
         else:
             s += '\n--- @type integer\n'
