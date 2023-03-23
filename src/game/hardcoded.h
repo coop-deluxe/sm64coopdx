@@ -41,6 +41,7 @@ struct StarPositions {
 
 struct LevelValues {
     u8 fixCollisionBugs;
+    u8 fixCollisionBugsRoundedCorners;
     u8 wingCapLookUpReq;
     u8 fixVanishFloors;
     u8 hudCapTimer;

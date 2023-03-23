@@ -642,6 +642,7 @@
 --- @field public exitCastleWarpNode integer
 --- @field public extendedPauseDisplay integer
 --- @field public fixCollisionBugs integer
+--- @field public fixCollisionBugsRoundedCorners integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer
 --- @field public floorLowerLimit integer

@@ -940,6 +940,7 @@
 | exitCastleWarpNode | `integer` |  |
 | extendedPauseDisplay | `integer` |  |
 | fixCollisionBugs | `integer` |  |
+| fixCollisionBugsRoundedCorners | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |
 | floorLowerLimit | `integer` |  |

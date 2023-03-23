@@ -134,7 +134,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             continue;
         }
 
-        if (gLevelValues.fixCollisionBugs) {
+        if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsRoundedCorners) {
             // Check AABB to exclude walls before doing expensive triangle check
             f32 minX = MIN(MIN(surf->vertex1[0], surf->vertex2[0]), surf->vertex3[0]) - radius;
             f32 minZ = MIN(MIN(surf->vertex1[2], surf->vertex2[2]), surf->vertex3[2]) - radius;
@@ -277,7 +277,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         //! (Wall Overlaps) Because this doesn't update the x and z local variables,
         //  multiple walls can push mario more than is required.
         //  <Fixed when gLevelValues.fixCollisionBugs != 0>
-        if (gLevelValues.fixCollisionBugs) {
+        if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsRoundedCorners) {
             data->x = cPos[0] + cNorm[0] * radius;
             data->z = cPos[2] + cNorm[2] * radius;
             x = data->x;
