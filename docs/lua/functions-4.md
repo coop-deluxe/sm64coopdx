@@ -8196,6 +8196,24 @@
 
 <br />
 
+## [get_envfx](#get_envfx)
+
+### Lua Example
+`local integerValue = get_envfx()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 get_envfx(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_environment_region](#get_environment_region)
 
 ### Lua Example
@@ -8688,6 +8706,26 @@
 
 ### C Prototype
 `void set_lighting_dir(u8 index, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_override_envfx](#set_override_envfx)
+
+### Lua Example
+`set_override_envfx(envfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| envfx | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_override_envfx(s32 envfx);`
 
 [:arrow_up_small:](#)
 

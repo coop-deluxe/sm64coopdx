@@ -9,6 +9,9 @@
 #include "envfx_snow.h"
 #include "level_geo.h"
 
+u16 gReadOnlyEnvFx = 0;
+s32 gOverrideEnvFx = -1;
+
 /**
  * Geo function that generates a displaylist for environment effects such as
  * snow or jet stream bubbles.
@@ -27,7 +30,8 @@ Gfx *geo_envfx_main(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtxf) {
 
         if (GET_HIGH_U16_OF_32(*params) != gAreaUpdateCounter) {
             UNUSED struct Camera *sp2C = gCurGraphNodeCamera->config.camera;
-            s32 snowMode = GET_LOW_U16_OF_32(*params);
+            gReadOnlyEnvFx = GET_LOW_U16_OF_32(*params);
+            s32 snowMode = gOverrideEnvFx == -1 ? gReadOnlyEnvFx : gOverrideEnvFx;
 
             vec3f_to_vec3s(camTo, gCurGraphNodeCamera->focus);
             vec3f_to_vec3s(camFrom, gCurGraphNodeCamera->pos);

@@ -3264,6 +3264,33 @@ RESOLUTION_N64 = 1
 RESOLUTION_COUNT = 2
 
 --- @type integer
+ENVFX_BUBBLE_START = 10
+
+--- @type integer
+ENVFX_FLOWERS = 11
+
+--- @type integer
+ENVFX_JETSTREAM_BUBBLES = 14
+
+--- @type integer
+ENVFX_LAVA_BUBBLES = 12
+
+--- @type integer
+ENVFX_MODE_NONE = 0
+
+--- @type integer
+ENVFX_SNOW_BLIZZARD = 3
+
+--- @type integer
+ENVFX_SNOW_NORMAL = 1
+
+--- @type integer
+ENVFX_SNOW_WATER = 2
+
+--- @type integer
+ENVFX_WHIRLPOOL_BUBBLES = 13
+
+--- @type integer
 SEQ_PLAYER_ENV = 1
 
 --- @type integer

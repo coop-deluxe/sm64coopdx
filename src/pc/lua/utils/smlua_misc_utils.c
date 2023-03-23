@@ -20,6 +20,7 @@
 #include "game/skybox.h"
 #include "pc/gfx/gfx_pc.h"
 #include "include/course_table.h"
+#include "game/level_geo.h"
 
 u32 get_network_area_timer(void) {
     return gNetworkAreaTimer;
@@ -426,4 +427,14 @@ void set_ttc_speed_setting(s16 speed) {
 
 u32 get_time(void) {
     return time(NULL);
+}
+
+///
+
+u16 get_envfx(void) {
+    return gReadOnlyEnvFx;
+}
+
+void set_override_envfx(s32 envfx) {
+    gOverrideEnvFx = envfx;
 }

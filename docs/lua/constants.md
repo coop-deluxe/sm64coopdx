@@ -14,6 +14,7 @@
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum DjuiFontType](#enum-DjuiFontType)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
+- [envfx_snow.h](#envfx_snowh)
 - [external.h](#externalh)
 - [geo_commands.h](#geo_commandsh)
 - [graph_node.h](#graph_nodeh)
@@ -1096,6 +1097,21 @@
 | RESOLUTION_DJUI | 0 |
 | RESOLUTION_N64 | 1 |
 | RESOLUTION_COUNT | 2 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [envfx_snow.h](#envfx_snow.h)
+- ENVFX_BUBBLE_START
+- ENVFX_FLOWERS
+- ENVFX_JETSTREAM_BUBBLES
+- ENVFX_LAVA_BUBBLES
+- ENVFX_MODE_NONE
+- ENVFX_SNOW_BLIZZARD
+- ENVFX_SNOW_NORMAL
+- ENVFX_SNOW_WATER
+- ENVFX_WHIRLPOOL_BUBBLES
 
 [:arrow_up_small:](#)
 

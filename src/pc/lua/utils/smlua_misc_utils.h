@@ -107,4 +107,7 @@ void set_ttc_speed_setting(s16 speed);
 
 u32 get_time(void);
 
+u16 get_envfx(void);
+void set_override_envfx(s32 envfx);
+
 #endif

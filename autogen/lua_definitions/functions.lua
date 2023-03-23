@@ -8296,6 +8296,11 @@ function get_dialog_id()
     -- ...
 end
 
+--- @return integer
+function get_envfx()
+    -- ...
+end
+
 --- @param index integer
 --- @return number
 function get_environment_region(index)
@@ -8450,6 +8455,12 @@ end
 --- @param value number
 --- @return nil
 function set_lighting_dir(index, value)
+    -- ...
+end
+
+--- @param envfx integer
+--- @return nil
+function set_override_envfx(envfx)
     -- ...
 end
 

@@ -41,7 +41,8 @@ in_files = [
     "src/pc/network/version.h",
     "include/geo_commands.h",
     "include/level_commands.h",
-    "src/audio/external.h"
+    "src/audio/external.h",
+    "src/game/envfx_snow.h"
 ]
 
 exclude_constants = {
