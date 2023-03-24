@@ -68,6 +68,8 @@ struct ServerSettings {
     u8 shareLives;
     u8 enableCheats;
     u8 bubbleDeath;
+    u8 enablePlayersInLevelDisplay;
+    u8 enablePlayerList;
     u8 headlessServer;
 };
 

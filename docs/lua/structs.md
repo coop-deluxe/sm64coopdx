@@ -2174,6 +2174,8 @@
 | ----- | ---- | ------ |
 | bubbleDeath | `integer` |  |
 | enableCheats | `integer` |  |
+| enablePlayerList | `integer` |  |
+| enablePlayersInLevelDisplay | `integer` |  |
 | headlessServer | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |

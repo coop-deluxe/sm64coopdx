@@ -67,6 +67,8 @@ struct ServerSettings gServerSettings = {
     .shareLives = 0,
     .enableCheats = 0,
     .bubbleDeath = 1,
+    .enablePlayersInLevelDisplay = 1,
+    .enablePlayerList = 1,
     .headlessServer = 0,
 };
 

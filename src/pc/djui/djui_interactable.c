@@ -222,7 +222,7 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
+    if ((gDjuiPlayerList != NULL || gDjuiModList != NULL) && gServerSettings.enablePlayerList) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i] && !gDjuiInMainMenu && gNetworkType != NT_NONE) {
                 if (gDjuiPlayerList != NULL) {

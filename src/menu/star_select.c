@@ -376,15 +376,17 @@ void print_act_selector_strings(void) {
         print_menu_generic_string(x, 38, starNumbers);
 #endif
         // display player HUD head if they're in that act
-        for (int j = 0; j < MAX_PLAYERS; j++) {
-            struct NetworkPlayer* np = &gNetworkPlayers[j];
-            if (np == NULL || !np->connected) { continue; }
-            if (np->currCourseNum != gCurrCourseNum) { continue; }
-            if (np->currActNum != i) { continue; }
+        if (gServerSettings.enablePlayersInLevelDisplay) {
+            for (int j = 0; j < MAX_PLAYERS; j++) {
+                struct NetworkPlayer* np = &gNetworkPlayers[j];
+                if (np == NULL || !np->connected) { continue; }
+                if (np->currCourseNum != gCurrCourseNum) { continue; }
+                if (np->currActNum != i) { continue; }
 
-            char* displayHead = (gMarioStates[j].character) ? &gMarioStates[j].character->hudHead : ",";
-            print_text(x - 4, 207, displayHead); // 'Mario Head' glyph
-            break;
+                char* displayHead = (gMarioStates[j].character) ? &gMarioStates[j].character->hudHead : ",";
+                print_text(x - 4, 207, displayHead); // 'Mario Head' glyph
+                break;
+            }
         }
     }
 
@@ -399,7 +401,7 @@ void print_act_selector_strings(void) {
             playersInAct++;
         }
 
-        if (playersInAct > 0) {
+        if (playersInAct > 0 && gServerSettings.enablePlayersInLevelDisplay) {
             char message[16] = { 0 };
             if (playersInAct == 1) {
                 if (snprintf(message, 16, "     join      ") < 0) {
