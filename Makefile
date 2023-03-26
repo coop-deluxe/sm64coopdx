@@ -957,7 +957,7 @@ else ifeq ($(TARGET_RPI),1)
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
   endif
 else
-  LDFLAGS += -Llib/lua/linux -l:liblua53.a
+  LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
 endif
 
 # Network/Discord/Bass (ugh, needs cleanup)
