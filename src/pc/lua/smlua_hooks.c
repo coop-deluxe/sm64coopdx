@@ -5,7 +5,7 @@
 #include "pc/djui/djui_chat_message.h"
 #include "pc/crash_handler.h"
 
-#if defined(LUA_PROFILER)
+#if defined(DEVELOPMENT)
 #include "../mods/mods.h"
 #include "game/print.h"
 #include "gfx_dimensions.h"
@@ -70,6 +70,7 @@ void lua_profiler_update_counters() {
         print_text(GFX_DIMENSIONS_FROM_LEFT_EDGE(4), y, text);
     }
 }
+
 #endif
 
 #define MAX_HOOKED_REFERENCES 64
@@ -89,14 +90,14 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
     struct Mod* prev = gLuaActiveMod;
     gLuaActiveMod = activeMod;
     gLuaLastHookMod = activeMod;
-#if defined(LUA_PROFILER)
+#if defined(DEVELOPMENT)
     extern bool configLuaProfiler;
     if (configLuaProfiler) {
         lua_profiler_start_counter(activeMod);
     }
 #endif
     int rc = smlua_pcall(L, nargs, nresults, errfunc);
-#if defined(LUA_PROFILER)
+#if defined(DEVELOPMENT)
     if (configLuaProfiler) {
         lua_profiler_stop_counter(activeMod);
     }

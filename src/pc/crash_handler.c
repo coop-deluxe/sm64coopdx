@@ -490,7 +490,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
         }
     }
 
-    crash_handler_add_info_str(&pText, 335, 208, "Version", get_version());
+    crash_handler_add_info_str(&pText, 335, 208, "Version", get_version_local());
 
     // sounds
 #ifdef HAVE_SDL2

@@ -329,7 +329,7 @@ void main_func(void) {
     #error No rendering API!
     #endif
 
-    char* version = get_version();
+    char* version = get_version_local();
     char window_title[96] = { 0 };
 #ifdef GIT_HASH
     snprintf(window_title, 96, "sm64ex-coop: %s [%s]", version, GIT_HASH);

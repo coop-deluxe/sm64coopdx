@@ -47,7 +47,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_interactable_hook_click(&button4->base, djui_panel_main_quit);
         }
 
-        char* version = get_version();
+        char* version = get_version_local();
         struct DjuiText* footer = djui_text_create(&panel->base, version);
         djui_base_set_size_type(&footer->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&footer->base, 1.0f, 1.0f);

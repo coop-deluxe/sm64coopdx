@@ -436,8 +436,13 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         valid = true;
     } else if (is_directory(fullPath)) {
         char tmpPath[SYS_MAX_PATH] = { 0 };
+        char path1[SYS_MAX_PATH] = { 0 };
+        char path2[SYS_MAX_PATH] = { 0 };
         if (!concat_path(tmpPath, fullPath, "main.lua")) {
             LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, "main.lua");
+            return true;
+        }
+        if ((concat_path(path1, fullPath, "c-update.lua") && path_exists(path1)) || (concat_path(path2, fullPath, "m-update.lua") && path_exists(path2))) {
             return true;
         }
         valid = path_exists(tmpPath);

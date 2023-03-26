@@ -132,7 +132,7 @@ void smlua_init(void) {
     // load libraries
     luaopen_base(L);
     //luaopen_coroutine(L);
-#if defined(LUA_PROFILER)
+#if defined(DEVELOPMENT)
     luaL_requiref(L, "debug", luaopen_debug, 1);
     luaL_requiref(L, "io", luaopen_io, 1);
     luaL_requiref(L, "os", luaopen_os, 1);

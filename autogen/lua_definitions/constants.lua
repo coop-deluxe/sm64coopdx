@@ -11507,10 +11507,16 @@ SPTASK_STATE_FINISHED = 3
 SPTASK_STATE_FINISHED_DP = 4
 
 --- @type integer
+MAX_LOCAL_VERSION_LENGTH = 12
+
+--- @type integer
 MAX_VERSION_LENGTH = 10
 
 --- @type integer
 MINOR_VERSION_NUMBER = 0
+
+--- @type integer
+PATCH_VERSION_NUMBER = 1
 
 --- @type integer
 VERSION_NUMBER = 32

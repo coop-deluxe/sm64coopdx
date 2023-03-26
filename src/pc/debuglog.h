@@ -42,18 +42,8 @@ static void _debuglog_print_log(char* logType, char* filename) {
     _debuglog_print_short_filename(filename);
 }
 
-#if defined(DEBUG) && defined(DISABLE_MODULE_LOG)
-    #define LOG_DEBUG(...)
-    #define LOG_INFO(...)
-    #define LOG_ERROR(...) ( _debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") )
-#elif defined(DEBUG) && !defined(DISABLE_MODULE_LOG)
-    #define LOG_DEBUG(...) ( _debuglog_print_log("DEBUG", __FILE__), printf(__VA_ARGS__), printf("\n") )
-    #define LOG_INFO(...)  ( _debuglog_print_log("INFO",  __FILE__), printf(__VA_ARGS__), printf("\n") )
-    #define LOG_ERROR(...) ( _debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") )
-#else
-    #define LOG_DEBUG(...)
-    #define LOG_INFO(...)
-    #define LOG_ERROR(...)
-#endif
+#define LOG_DEBUG(...) if (configDebugPrint) { ( _debuglog_print_log("DEBUG", __FILE__), printf(__VA_ARGS__), printf("\n") ); }
+#define LOG_INFO(...)  if (configDebugInfo) { ( _debuglog_print_log("INFO",  __FILE__), printf(__VA_ARGS__), printf("\n") ); }
+#define LOG_ERROR(...) if (configDebugError) { ( _debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") ); }
 
 #endif

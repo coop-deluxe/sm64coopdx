@@ -143,14 +143,17 @@ bool         configUncappedFramerate             = true;
 unsigned int configFrameLimit                    = 60;
 unsigned int configDrawDistance                  = 5;
 bool         configDisablePopups                 = 0;
-#ifdef LUA_PROFILER
-bool         configLuaProfiler                   = 1;
+#if defined(DEVELOPMENT)
+bool         configLuaProfiler                   = 0;
 #endif
 bool         configDisableDownloadedModels       = 0;
 unsigned int configInterpolationMode             = 1;
 unsigned int configGamepadNumber                 = 0;
 bool         configBackgroundGamepad             = 1;
 bool         configSingleplayerPause             = 0;
+bool         configDebugPrint                    = 0;
+bool         configDebugInfo                     = 0;
+bool         configDebugError                    = 0;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -248,13 +251,16 @@ static const struct ConfigOption options[] = {
     {.name = "coop_singleplayer_pause",        .type = CONFIG_TYPE_BOOL  , .boolValue   = &configSingleplayerPause},
     {.name = "share_lives",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShareLives},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
-#ifdef LUA_PROFILER
+#if defined(DEVELOPMENT)
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
 #endif
     {.name = "disable_downloaded_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDownloadedModels},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT  , .uintValue   = &configGamepadNumber},
-    {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT  , .boolValue   = &configBackgroundGamepad}
+    {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT  , .boolValue   = &configBackgroundGamepad},
+    {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugPrint},
+    {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugInfo},
+    {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugError},
 };
 
 // FunctionConfigOption functions

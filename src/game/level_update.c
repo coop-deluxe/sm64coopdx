@@ -1117,41 +1117,32 @@ void basic_update(UNUSED s16 *arg) {
 }
 
 bool find_demo_number(void) {
-    bool changeLevel = false;
     switch (gCurrLevelNum) {
         case LEVEL_BOWSER_1:
-            changeLevel = true;
             demoNumber = 0;
-            break;
+            return true;
         case LEVEL_WF:
-            changeLevel = true;
             demoNumber = 1;
-            break;
+            return true;
         case LEVEL_CCM:
-            changeLevel = true;
             demoNumber = 2;
-            break;
+            return true;
         case LEVEL_BBH:
-            changeLevel = true;
             demoNumber = 3;
-            break;
+            return true;
         case LEVEL_JRB:
-            changeLevel = true;
             demoNumber = 4;
-            break;
+            return true;
         case LEVEL_HMC:
-            changeLevel = true;
             demoNumber = 5;
-            break;
+            return true;
         case LEVEL_PSS:
-            changeLevel = true;
             demoNumber = 6;
-            break;
+            return true;
         default:
-            changeLevel = false;
             demoNumber = -1;
     }
-    return changeLevel;
+    return false;
 }
 
 static void start_demo(void) {
@@ -1204,8 +1195,7 @@ s32 play_mode_normal(void) {
         }
     } else {
         if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !inPlayerMenu) {
-            find_demo_number();
-            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (demoNumber <= 6 || demoNumber > -1)) {
+            if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (demoNumber <= 6 || demoNumber > -1))) {
                 start_demo();
             }
         }

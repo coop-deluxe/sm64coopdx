@@ -100,12 +100,15 @@ extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configDrawDistance;
 extern bool         configDisablePopups;
-#ifdef LUA_PROFILER
+#if defined(DEVELOPMENT)
 extern bool         configLuaProfiler;
 #endif
 extern bool         configDisableDownloadedModels;
 extern unsigned int configInterpolationMode;
 extern bool         configSingleplayerPause;
+extern bool         configDebugPrint;
+extern bool         configDebugInfo;
+extern bool         configDebugError;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);
