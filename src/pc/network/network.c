@@ -24,6 +24,7 @@
 #include "game/skybox.h"
 #include "game/object_list_processor.h"
 #include "game/object_helpers.h"
+#include "game/level_geo.h"
 #include "menu/intro_geo.h"
 
 // fix warnings when including rendering_graph_node
@@ -517,6 +518,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     gLightingDir[1] = 0;
     gLightingDir[2] = 0;
     gOverrideBackground = -1;
+    gOverrideEnvFx = -1;
     gDjuiRenderBehindHud = false;
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
