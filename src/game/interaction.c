@@ -849,7 +849,7 @@ void reset_mario_pitch(struct MarioState *m) {
 }
 
 u32 interact_coin(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
-    if (m != &gMarioStates[0]) {
+    if (m != &gMarioStates[0] || (gDjuiInMainMenu && gCurrLevelNum == LEVEL_TTM)) {
         // only collect locally
         return FALSE;
     }
@@ -2183,8 +2183,6 @@ void check_kick_or_punch_wall(struct MarioState *m) {
 }
 
 void mario_process_interactions(struct MarioState *m) {
-    if (gDjuiInMainMenu) { return; }
-
     sDelayInvincTimer = FALSE;
     sInvulnerable = (m->action & ACT_FLAG_INVULNERABLE) || m->invincTimer != 0;
 
