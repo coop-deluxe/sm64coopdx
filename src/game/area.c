@@ -229,8 +229,6 @@ void clear_areas(void) {
         gAreaData[i].dialog[1] = 255;
         gAreaData[i].musicParam = 0;
         gAreaData[i].musicParam2 = 0;
-        memset(gAreaData[i].cachedBehaviors, 0, sizeof(u8) * 256);
-        memset(gAreaData[i].cachedPositions, 0, sizeof(Vec3f) * 256);
     }
 }
 

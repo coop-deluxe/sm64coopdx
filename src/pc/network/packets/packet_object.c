@@ -462,7 +462,7 @@ void network_update_objects(void) {
 
 #ifdef DEVELOPMENT
     static f32 lastDebugSync = 0;
-    if (clock_elapsed() - lastDebugSync >= 1) {
+    if (clock_elapsed() - lastDebugSync >= 5) {
         network_send_debug_sync();
         lastDebugSync = clock_elapsed();
     }

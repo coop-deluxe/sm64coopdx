@@ -81,16 +81,20 @@ static void debug_reload_lua(void) {
 }
 
 static void debug_spawn_object(void) {
-    struct Object* box = spawn_object(gMarioStates[0].marioObj, MODEL_BREAKABLE_BOX_SMALL, bhvBreakableBoxSmall);
-    if (box == NULL) { return; }
-    if (!sync_object_set_id(box)) {
-        box->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-        return;
-    }
+    for (int i = 0; i < 1; i++) {
+        struct Object* box = spawn_object(gMarioStates[0].marioObj, MODEL_BREAKABLE_BOX_SMALL, bhvBreakableBoxSmall);
+        if (box == NULL) { return; }
+        //box->oPosX += (random_float() - 0.5f) * 1000.0f;
+        //box->oPosZ += (random_float() - 0.5f) * 1000.0f;
+        if (!sync_object_set_id(box)) {
+            box->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            return;
+        }
 
-    struct Object* spawn_objects[] = { box };
-    u32 models[] = { MODEL_BREAKABLE_BOX_SMALL };
-    network_send_spawn_objects(spawn_objects, models, 1);
+        struct Object* spawn_objects[] = { box };
+        u32 models[] = { MODEL_BREAKABLE_BOX_SMALL };
+        network_send_spawn_objects(spawn_objects, models, 1);
+    }
 }
 
 void debug_keyboard_on_key_down(int scancode) {

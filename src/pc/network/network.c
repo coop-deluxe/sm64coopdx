@@ -441,6 +441,8 @@ void network_update(void) {
         packet_ordered_update();
     }
 
+    sync_objects_update();
+
     // update level/area request timers
     /*struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL && !np->currLevelSyncValid) {

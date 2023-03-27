@@ -8,7 +8,7 @@
 #include <stdbool.h>
 
 #define RESERVED_IDS_PER_PLAYER_COUNT 5
-#define RESERVED_IDS_SYNC_OBJECT_OFFSET 127
+#define RESERVED_IDS_SYNC_OBJECT_OFFSET 2048
 
 struct NetworkPlayer;
 

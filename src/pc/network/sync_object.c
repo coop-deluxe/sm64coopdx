@@ -12,22 +12,76 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
-#define MAX_SYNC_OBJECTS 256 // note: increasing this requires code to be rewritten
+#define STB_DS_IMPLEMENTATION 1
+#include "pc/utils/stb_ds.h"
 
-struct SyncObject sSyncObjects[MAX_SYNC_OBJECTS] = { 0 };
+struct SyncObjectEntry {
+    u64 key;
+    struct SyncObject* value;
+};
+struct SyncObjectEntry* sSoMap = NULL;
+
+struct SyncObjectForgetEntry {
+    struct SyncObject* so;
+    s32 forgetTimer;
+    struct SyncObjectForgetEntry* next;
+};
+struct SyncObjectForgetEntry* sForgetList = NULL;
+
 static u32 sNextSyncId = 0;
-static u32 sIterateSyncId = 0;
+static u32 sIterateIndex = 0;
+static bool sFreeingAll = false;
 
   ////////////
  // system //
 ////////////
 
+static bool sync_objects_forget_list_contains(struct SyncObject* so) {
+    struct SyncObjectForgetEntry* entry = sForgetList;
+    while (entry) {
+        struct SyncObjectForgetEntry* next = entry->next;
+        if (entry->so == so) {
+            return true;
+        }
+        entry = next;
+    }
+    return false;
+}
+
+void sync_objects_update(void) {
+    struct SyncObjectForgetEntry* prev = NULL;
+    struct SyncObjectForgetEntry* entry = sForgetList;
+    while (entry) {
+        struct SyncObjectForgetEntry* next = entry->next;
+
+        if (entry->forgetTimer-- <= 0) {
+            if (prev) {
+                prev->next = next;
+            } else {
+                sForgetList = next;
+            }
+            LOG_INFO("Freeing sync object... (%d)", entry->so->id);
+            free(entry->so);
+            free(entry);
+
+        } else {
+            prev = entry;
+        }
+
+        entry = next;
+    }
+}
+
 void sync_objects_clear(void) {
     sNextSyncId = 0;
     network_on_init_area();
-    for (u32 i = 0; i < MAX_SYNC_OBJECTS; i++) {
-        sync_object_forget(i);
+
+    sFreeingAll = true;
+    for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+        sync_object_forget(so->id);
     }
+    sFreeingAll = false;
+    hmfree(sSoMap);
 }
 
 void sync_object_forget(u32 syncId) {
@@ -44,16 +98,38 @@ void sync_object_forget(u32 syncId) {
         area_remove_sync_ids_add(syncId2);
     }
 
-    if (so->on_forget != NULL) {
+    if (so->on_forget != NULL && so->o) {
         struct Object* lastObject = gCurrentObject;
         gCurrentObject = so->o;
         so->on_forget();
         gCurrentObject = lastObject;
     }
 
+
     so->o = NULL;
     so->behavior = NULL;
     so->owned = false;
+
+    if (!sFreeingAll) {
+        hmdel(sSoMap, syncId);
+    }
+
+    // add it to a list to free later
+    s32 forgetCount = 1;
+    struct SyncObjectForgetEntry* newEntry = calloc(1, sizeof(struct SyncObjectForgetEntry));
+    newEntry->so = so;
+    newEntry->forgetTimer = 10;
+    if (sForgetList == NULL) {
+        sForgetList = newEntry;
+    } else {
+        struct SyncObjectForgetEntry* entry = sForgetList;
+        while (entry->next != NULL) {
+            entry = entry->next;
+            forgetCount++;
+        }
+        entry->next = newEntry;
+    }
+    LOG_INFO("Scheduling sync object to free... (%d)", so->id);
 }
 
 void sync_object_forget_last_reliable_packet(u32 syncId) {
@@ -129,7 +205,11 @@ void sync_object_init_field(struct Object *o, void* field) {
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     u32 index = so->extraFieldCount++;
-    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) { return; }
+    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) {
+        so->extraFieldCount = MAX_SYNC_OBJECT_FIELDS - 1;
+        LOG_ERROR("Sync Object %u tried to set too many extra fields!", o->oSyncID);
+        return;
+    }
     so->extraFields[index] = field;
     so->extraFieldsSize[index] = 32;
 }
@@ -144,7 +224,11 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     u32 index = so->extraFieldCount++;
-    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) { return; }
+    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) {
+        so->extraFieldCount = MAX_SYNC_OBJECT_FIELDS - 1;
+        LOG_ERROR("Sync Object %u tried to set too many extra fields!", o->oSyncID);
+        return;
+    }
     so->extraFields[index] = field;
     so->extraFieldsSize[index] = size;
 }
@@ -154,24 +238,23 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
 /////////////
 
 struct SyncObject* sync_object_get(u32 syncId) {
-    if (syncId >= MAX_SYNC_OBJECTS) { return NULL; }
-    return &sSyncObjects[syncId];
+    return hmget(sSoMap, syncId);
 }
 
 struct SyncObject* sync_object_get_first(void) {
-    sIterateSyncId = 0;
-    return &sSyncObjects[sIterateSyncId];
-}
-
-struct SyncObject* sync_object_get_first_non_static(void) {
-    sIterateSyncId = RESERVED_IDS_SYNC_OBJECT_OFFSET;
-    return &sSyncObjects[sIterateSyncId];
+    sIterateIndex = 0;
+    if (sSoMap && sIterateIndex < hmlen(sSoMap)) {
+        return sSoMap[sIterateIndex].value;
+    }
+    return NULL;
 }
 
 struct SyncObject* sync_object_get_next(void) {
-    sIterateSyncId++;
-    if (sIterateSyncId >= MAX_SYNC_OBJECTS) { return NULL; }
-    return &sSyncObjects[sIterateSyncId];
+    sIterateIndex++;
+    if (sSoMap && sIterateIndex < hmlen(sSoMap)) {
+        return sSoMap[sIterateIndex].value;
+    }
+    return NULL;
 }
 
 struct Object* sync_object_get_object(u32 syncId) {
@@ -277,49 +360,34 @@ bool sync_object_should_own(u32 syncId) {
     return true;
 }
 
-static u32 sync_object_find_cached_id(struct Object* o) {
-    u32 behaviorId = get_id_from_behavior(o->behavior);
-    for (s32 i = 1; i < 256; i++) {
-        struct SyncObject* so = sync_object_get(i);
-        if (!so) { continue; }
-        if (so->o != NULL) { continue; }
-        u32 cachedBehaviorId = gCurrentArea->cachedBehaviors[i];
-        if (cachedBehaviorId != behaviorId) { continue; }
-
-        f32 dist = dist_between_object_and_point(o, gCurrentArea->cachedPositions[i][0], gCurrentArea->cachedPositions[i][1], gCurrentArea->cachedPositions[i][2]);
-        if (dist > 1) { continue; }
-        return i;
+u32 sync_object_get_available_local_id() {
+    u32 startId = (gNetworkPlayers[0].globalIndex + 1) * RESERVED_IDS_SYNC_OBJECT_OFFSET;
+    u32 endId = startId + RESERVED_IDS_SYNC_OBJECT_OFFSET;
+    for (u32 id = startId; id < endId; id++) {
+        struct SyncObject* so = sync_object_get(id);
+        if (so) { continue; }
+        return id;
     }
     return 0;
 }
 
 bool sync_object_set_id(struct Object* o) {
-    // check for existing id
-    if (o->oSyncID != 0) { return true; }
-
-    u32 syncId = 0;
-    if (!gNetworkAreaLoaded) {
-        syncId = sync_object_find_cached_id(o);
-        if (syncId == 0) {
-            // while loading, just fill in sync ids from 1 to MAX_SYNC_OBJECTS
-            for (s32 i = 1; i < MAX_SYNC_OBJECTS; i++) {
+    u32 syncId = o->oSyncID;
+    if (syncId == 0) {
+        if (!gNetworkAreaLoaded) {
+            // while loading, just fill in sync ids from 1 to RESERVED_IDS_SYNC_OBJECT_OFFSET
+            for (s32 i = 1; i < RESERVED_IDS_SYNC_OBJECT_OFFSET; i++) {
                 sNextSyncId++;
                 sNextSyncId = sNextSyncId % RESERVED_IDS_SYNC_OBJECT_OFFSET;
                 struct SyncObject* so = sync_object_get(sNextSyncId);
-                if (!so || so->o != NULL) { continue; }
+                if (so && so->o != NULL) { continue; }
                 syncId = sNextSyncId;
                 break;
             }
-            // cache this object's id
-            gCurrentArea->cachedBehaviors[syncId] = get_id_from_behavior(o->behavior);
-            gCurrentArea->cachedPositions[syncId][0] = o->oPosX;
-            gCurrentArea->cachedPositions[syncId][1] = o->oPosY;
-            gCurrentArea->cachedPositions[syncId][2] = o->oPosZ;
-            //LOG_INFO("set cached sync id for %02X: %d", gCurrentArea->cachedBehaviors[syncId], syncId);
+        } else {
+            // no longer loading, require reserved id
+            syncId = sync_object_get_available_local_id();
         }
-    } else {
-        // no longer loading, require reserved id
-        syncId = reservation_area_local_grab_id();
     }
 
     if (syncId == 0) {
@@ -328,7 +396,16 @@ bool sync_object_set_id(struct Object* o) {
     }
     
     struct SyncObject* so = sync_object_get(syncId);
-    if (!so || so->o != NULL) {
+
+    if (!so) {
+        so = calloc(1, sizeof(struct SyncObject));
+        so->id = syncId;
+        so->extendedModelId = 0xFFFF;
+        hmput(sSoMap, syncId, so);
+        LOG_INFO("Allocated sync object @ %u, size %ld", syncId, hmlen(sSoMap));
+    }
+
+    if (!so) {
         LOG_ERROR("failed to set sync id (o) for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
         return false;
     }
@@ -339,6 +416,5 @@ bool sync_object_set_id(struct Object* o) {
         LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
     }
 
-    SOFT_ASSERT_RETURN(o->oSyncID < MAX_SYNC_OBJECTS, false);
     return true;
 }

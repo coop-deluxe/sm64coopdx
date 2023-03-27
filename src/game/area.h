@@ -45,6 +45,7 @@ struct SpawnInfo
     /*0x14*/ void *behaviorScript;
     /*0x18*/ struct GraphNode *unk18;
     /*0x1C*/ struct SpawnInfo *next;
+    /*0x20*/ u32 syncID;
 };
 
 struct UnusedArea28
@@ -81,8 +82,6 @@ struct Area
     /*0x34*/ u8 dialog[2]; // Level start dialog number (set by level script cmd 0x30)
     /*0x36*/ u16 musicParam;
     /*0x38*/ u16 musicParam2;
-    /*????*/ u8 cachedBehaviors[256];
-    /*????*/ Vec3f cachedPositions[256];
     /*????*/ u32 localAreaTimer;
     /*????*/ u8 *macroObjectsAltered;
     /*????*/ u8 numRedCoins;

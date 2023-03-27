@@ -95,9 +95,10 @@ void network_send_area(struct NetworkPlayer* toNp) {
         network_send_to(toNp->localIndex, &p);
 
         // send non-static objects
-        for (struct SyncObject* so = sync_object_get_first_non_static(); so != NULL; so = sync_object_get_next()) {
+        for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL || so->o->oSyncID != so->id) { continue; }
             if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
+            if (so->id < RESERVED_IDS_SYNC_OBJECT_OFFSET) { continue; }
             struct Object* spawn_objects[] = { so->o };
 
             // TODO: move find model to a utility file/function
