@@ -273,7 +273,7 @@ void network_send_object(struct Object* o) {
 
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        LOG_ERROR("tried to send uninitialized sync obj");
+        //LOG_ERROR("tried to send uninitialized sync obj");
         return;
     }
     if (o->behavior == smlua_override_behavior(bhvRespawner)) {
@@ -307,7 +307,7 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        LOG_ERROR("tried to send uninitialized sync obj");
+        //LOG_ERROR("tried to send uninitialized sync obj");
         return;
     }
 

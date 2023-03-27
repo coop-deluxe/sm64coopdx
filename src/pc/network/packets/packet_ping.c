@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/utils/misc.h"
-#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 void network_send_ping(struct NetworkPlayer* toNp) {
@@ -15,11 +14,11 @@ void network_send_ping(struct NetworkPlayer* toNp) {
     packet_write(&p, &timestamp,        sizeof(f64));
     network_send_to(toNp->localIndex, &p);
 
-    LOG_INFO("tx ping");
+    //LOG_INFO("tx ping");
 }
 
 void network_receive_ping(struct Packet* p) {
-    LOG_INFO("rx ping");
+    //LOG_INFO("rx ping");
 
     u8 globalIndex;
     f64 timestamp;
@@ -52,5 +51,5 @@ void network_receive_pong(struct Packet* p) {
     u32 ping = (now - timestamp) * 1000;
     np->ping = np->ping * 0.5f + ping * 0.5f;
     if (np->ping > 1000) { np->ping = 1000; }
-    LOG_INFO("rx pong from %u: %u", globalIndex, ping);
+    //LOG_INFO("rx pong from %u: %u", globalIndex, ping);
 }

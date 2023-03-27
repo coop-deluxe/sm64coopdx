@@ -251,7 +251,9 @@ void load_area(s32 index) {
     if (gCurrentArea == NULL && gAreaData[index].unk04 != NULL) {
         gCurrentArea = &gAreaData[index];
         gCurrentArea->localAreaTimer = 0;
-        gCurrentArea->nextSyncID = 10;
+        if (gCurrentArea->objectSpawnInfos) {
+            gCurrentArea->nextSyncID = gCurrentArea->objectSpawnInfos->syncID + 10;
+        }
         gCurrAreaIndex = gCurrentArea->index;
 
         if (gCurrentArea->terrainData != NULL) {

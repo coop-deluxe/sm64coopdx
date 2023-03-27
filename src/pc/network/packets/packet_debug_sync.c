@@ -1,6 +1,7 @@
 #include "../network.h"
 #include "behavior_table.h"
 #include "pc/debuglog.h"
+#include "object_fields.h"
 
 void print_sync_object_table(void) {
     LOG_INFO("Sync Object Table");
@@ -11,6 +12,9 @@ void print_sync_object_table(void) {
         char* behaviorName = (char*)get_behavior_name_from_id(behaviorId);
         if (!behaviorName) { behaviorName = "UNKNOWN"; }
         LOG_INFO("%04d: %08X :: %s", so->id, behaviorId, behaviorName);
+        if (so->o->oSyncID != so->id) {
+            LOG_INFO("^^^^^^^^^^^^^^^^^^^^^ %u != %u", so->o->oSyncID, so->id);
+        }
         behaviorId = behaviorId; // suppress warning
     }
     LOG_INFO(" ");

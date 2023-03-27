@@ -158,6 +158,11 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
         LOG_ERROR("Failed to get sync object in init");
         return NULL;
     }
+
+    if (o->coopFlags & COOP_OBJ_FLAG_INITIALIZED) {
+        return so;
+    }
+
     so->id = id;
     so->o = o;
     so->maxSyncDistance = maxSyncDistance;
@@ -191,6 +196,7 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     memset(so->extraFieldsSize, 0, sizeof(u8) * MAX_SYNC_OBJECT_FIELDS);
 
     so->lastReliablePacket.error = true;
+    o->coopFlags |= COOP_OBJ_FLAG_INITIALIZED;
 
     return so;
 }
@@ -256,8 +262,8 @@ struct Object* sync_object_get_object(u32 syncId) {
 bool sync_object_is_initialized(u32 syncId) {
     if (syncId == 0) { return false; }
     struct SyncObject* so = sync_object_get(syncId);
-    if (so == NULL || so->behavior == NULL) { return false; }
-    return true;
+    if (so == NULL || so->o == NULL) { return false; }
+    return so->o->coopFlags & COOP_OBJ_FLAG_INITIALIZED;
 }
 
 bool sync_object_is_owned_locally(u32 syncId) {
@@ -403,10 +409,11 @@ bool sync_object_set_id(struct Object* o) {
 
     if (!so) {
         so = calloc(1, sizeof(struct SyncObject));
-        so->id = syncId;
         so->extendedModelId = 0xFFFF;
         hmap_put(sSoMap, syncId, so);
         LOG_INFO("Allocated sync object @ %u, size %ld", syncId, hmap_len(sSoMap));
+    } else if (so->o != o) {
+        LOG_INFO("Already exists...");
     }
 
     if (!so) {
@@ -414,6 +421,9 @@ bool sync_object_set_id(struct Object* o) {
         return false;
     }
 
+    so->id = syncId;
+    so->o = o;
+    so->behavior = (BehaviorScript*) o->behavior;
     o->oSyncID = syncId;
 
     if (gNetworkAreaLoaded) {
