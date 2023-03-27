@@ -1,4 +1,5 @@
 #include <map>
+#include <cstdint>
 
 typedef std::map<int64_t, void*> Map;
 
