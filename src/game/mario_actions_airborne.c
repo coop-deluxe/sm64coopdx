@@ -55,7 +55,7 @@ void play_knockback_sound(struct MarioState *m) {
 s32 lava_boost_on_wall(struct MarioState *m) {
     bool allow = true;
     smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, &allow);
-    if ((Cheats.enabled && Cheats.godMode) || (!allow)) { return FALSE; }
+    if ((gServerSettings.enableCheats && gCheats.godMode) || (!allow)) { return FALSE; }
     m->faceAngle[1] = atan2s(m->wallNormal[2], m->wallNormal[0]);
 
     if (m->forwardVel < 24.0f) {
@@ -72,7 +72,7 @@ s32 lava_boost_on_wall(struct MarioState *m) {
 }
 
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
-    if (Cheats.enabled && Cheats.godMode) { return FALSE; }
+    if (gServerSettings.enableCheats && gCheats.godMode && m->playerIndex == 0) { return FALSE; }
     
     f32 fallHeight;
     f32 damageHeight;

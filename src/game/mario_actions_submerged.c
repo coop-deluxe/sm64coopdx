@@ -21,6 +21,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/cheats.h"
 
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f
@@ -185,6 +186,11 @@ u32 perform_water_step(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
 
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+
+    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
+        m->vel[0] *= SUPER_SPEED_MULTIPLIER;
+        m->vel[2] *= SUPER_SPEED_MULTIPLIER;
+    }
 
     vec3f_copy(step, m->vel);
 

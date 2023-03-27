@@ -1548,9 +1548,21 @@ void update_mario_inputs(struct MarioState *m) {
 
     debug_print_speed_action_normal(m);
 
-    if (Cheats.enabled && Cheats.moonJump && m->controller->buttonDown & L_TRIG) {
+    if (gServerSettings.enableCheats && gCheats.moonJump && m->playerIndex == 0 && m->controller->buttonDown & L_TRIG) {
+        if (m->action == ACT_FORWARD_GROUND_KB ||
+            m->action == ACT_BACKWARD_GROUND_KB ||
+            m->action == ACT_SOFT_FORWARD_GROUND_KB ||
+            m->action == ACT_HARD_BACKWARD_GROUND_KB ||
+            m->action == ACT_FORWARD_AIR_KB ||
+            m->action == ACT_BACKWARD_AIR_KB ||
+            m->action == ACT_HARD_FORWARD_AIR_KB ||
+            m->action == ACT_HARD_BACKWARD_AIR_KB ||
+            m->action == ACT_AIR_HIT_WALL) {
+            set_mario_action(m, ACT_FREEFALL, 0);
+        }
+
         m->faceAngle[1] = m->intendedYaw - approach_s32((s16)(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
-        m->vel[1] = 30;
+        m->vel[1] = 40;
     }
 
     /* Developer stuff */
@@ -1994,14 +2006,18 @@ s32 execute_mario_action(UNUSED struct Object *o) {
             np->fadeOpacity += 2;
             gMarioState->fadeWarpOpacity = np->fadeOpacity << 3;
         }
-    }
 
-    if (Cheats.enabled) {
-        if (Cheats.godMode) { gMarioState->health = 0x880; }
+        if (gServerSettings.enableCheats) {
+            if (gCheats.godMode) {
+                gMarioState->health = 0x880;
+                gMarioState->healCounter = 0;
+                gMarioState->hurtCounter = 0;
+            }
 
-        if (Cheats.infiniteLives && gMarioState->numLives < 100) { gMarioState->numLives = 100; }
-
-        if (Cheats.superSpeed && gMarioState->controller->stickMag > 0.5f) { gMarioState->forwardVel += 100; }
+            if (gCheats.infiniteLives && gMarioState->numLives < 100) {
+                gMarioState->numLives = 100;
+            }
+        }
     }
 
     if (gMarioState->action) {
@@ -2114,6 +2130,10 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 #ifndef VERSION_JP
             play_sound(SOUND_ENV_WIND2, gMarioState->marioObj->header.gfx.cameraToObject);
 #endif
+        }
+
+        if (gServerSettings.enableCheats && gCheats.bljAnywhere && gMarioState->playerIndex == 0 && gMarioState->action == ACT_LONG_JUMP && gMarioState->forwardVel < -15 && gMarioState->input & INPUT_Z_DOWN && gMarioState->pos[1] - gMarioState->floorHeight < 90) {
+            gMarioState->vel[1] = -30;
         }
 
         play_infinite_stairs_music();

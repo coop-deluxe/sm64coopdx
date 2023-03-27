@@ -1,3 +1,3 @@
 #include "cheats.h"
 
-struct CheatList Cheats;
+struct Cheats gCheats;

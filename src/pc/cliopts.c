@@ -71,7 +71,7 @@ void parse_cli_opts(int argc, char* argv[]) {
             }
 
         } else if (strcmp(argv[i], "--cheats") == 0) // Enable cheats menu
-            Cheats.enabled = true;
+            gServerSettings.enableCheats = true;
 
         else if (strcmp(argv[i], "--poolsize") == 0) // Main pool size
             arg_uint("--poolsize", argv[++i], &gCLIOpts.PoolSize);

@@ -111,7 +111,7 @@ void mario_bonk_reflection(struct MarioState *m, u32 negateSpeed) {
 u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
     bool allow = true;
     smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, &allow);
-    if (m->action & ACT_FLAG_RIDING_SHELL || (Cheats.enabled && Cheats.godMode) || (!allow)) {
+    if (m->action & ACT_FLAG_RIDING_SHELL || (gServerSettings.enableCheats && gCheats.godMode && m->playerIndex == 0) || (!allow)) {
         m->quicksandDepth = 0.0f;
     } else {
         if (m->quicksandDepth < 1.1f) {
@@ -337,6 +337,11 @@ s32 perform_ground_step(struct MarioState *m) {
     Vec3f intendedPos;
 
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+
+    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
+        m->vel[0] *= SUPER_SPEED_MULTIPLIER;
+        m->vel[2] *= SUPER_SPEED_MULTIPLIER;
+    }
 
     for (i = 0; i < 4; i++) {
         Vec3f step = {
@@ -683,6 +688,11 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
     s32 stepResult = AIR_STEP_NONE;
 
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
+
+    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
+        m->vel[0] *= SUPER_SPEED_MULTIPLIER;
+        m->vel[2] *= SUPER_SPEED_MULTIPLIER;
+    }
 
     m->wall = NULL;
 

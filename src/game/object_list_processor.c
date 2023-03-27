@@ -23,6 +23,7 @@
 #include "engine/math_util.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/cheats.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -295,6 +296,10 @@ void bhv_mario_update(void) {
     smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
     particleFlags |= gMarioState->particleFlags;
     gCurrentObject->oMarioParticleFlags = particleFlags;
+
+    if (gServerSettings.enableCheats && gCheats.rapidFireA && gMarioState->playerIndex == 0) {
+        gMarioState->controller->buttonDown &= ~A_BUTTON;
+    }
 
     // This code is meant to preserve old Lua mods' ability to set overridePaletteIndex and paletteIndex and still work
     // as they expected. USE_REAL_PALETTE_VAR is meant to help support cases where mods will do:

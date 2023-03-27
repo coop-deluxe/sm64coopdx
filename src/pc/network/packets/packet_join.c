@@ -181,8 +181,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
 
-    Cheats.enabled = gServerSettings.enableCheats;
-
     struct StringLinkedList head = { 0 };
     for (s32 i = 0; i < modCount; i++) {
         char* modName = (char*) &p->buffer[p->cursor];
