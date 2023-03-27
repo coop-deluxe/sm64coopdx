@@ -67,6 +67,7 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     if (doSync && so) {
         so->extendedModelId = modelId;
         so->o = obj;
+        so->behavior = (BehaviorScript*) behavior;
 
         struct Object* spawn_objects[] = { obj };
         u32 models[] = { loadedModelId };

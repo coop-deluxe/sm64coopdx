@@ -189,11 +189,16 @@ void network_receive_spawn_objects(struct Packet* p) {
         // correct the temporary parent with the object itself
         if (data.parentId == (u32)-1) { o->parentObj = o; }
 
-        if (o->oSyncID != 0 && o->oSyncID >= SYNC_ID_BLOCK_SIZE) {
+        if (o->oSyncID != 0) {
             // check if they've allocated one of their reserved sync objects
             struct SyncObject* so = sync_object_get(o->oSyncID);
+            if (!so) {
+                sync_object_set_id(o);
+                so = sync_object_get(o->oSyncID);
+            }
             if (so) {
                 so->o = o;
+                so->behavior = behavior;
                 so->extendedModelId = data.extendedModelId;
                 so->txEventId = 0;
                 for (s32 j = 0; j < MAX_PLAYERS; j++) {
