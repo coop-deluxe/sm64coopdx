@@ -374,14 +374,27 @@ bool sync_object_set_id(struct Object* o) {
     u32 syncId = o->oSyncID;
     if (syncId == 0) {
         if (!gNetworkAreaLoaded) {
+            // check if we should set our id based on our parent
+            if (o->parentObj != NULL && o->parentObj->oSyncID > 0 && (o->parentObj->oSyncID % 10) == 0) {
+                for (s32 i = 0; i < 10; i++) {
+                    u32 tSyncId = o->parentObj->oSyncID + i;
+                    struct SyncObject* so = sync_object_get(tSyncId);
+                    if (so && so->o != NULL) { continue; }
+                    syncId = tSyncId;
+                    break;
+                }
+            }
+
             // while loading, just fill in sync ids from 1 to SYNC_ID_BLOCK_SIZE
-            for (s32 i = 1; i < SYNC_ID_BLOCK_SIZE; i++) {
-                sNextSyncId++;
-                sNextSyncId = sNextSyncId % SYNC_ID_BLOCK_SIZE;
-                struct SyncObject* so = sync_object_get(sNextSyncId);
-                if (so && so->o != NULL) { continue; }
-                syncId = sNextSyncId;
-                break;
+            if (syncId == 0) {
+                for (s32 i = 1; i < SYNC_ID_BLOCK_SIZE; i++) {
+                    sNextSyncId++;
+                    sNextSyncId = sNextSyncId % SYNC_ID_BLOCK_SIZE;
+                    struct SyncObject* so = sync_object_get(sNextSyncId);
+                    if (so && so->o != NULL) { continue; }
+                    syncId = sNextSyncId;
+                    break;
+                }
             }
         } else {
             // no longer loading, require reserved id
