@@ -44,7 +44,7 @@ struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
 #endif
 
 #define LOADING_LEVEL_THRESHOLD 10
-#define MAX_PACKETS_PER_SECOND_PER_PLAYER ((u16)70)
+#define MAX_PACKETS_PER_SECOND_PER_PLAYER ((u16)100)
 
 u16 networkLoadingLevel = 0;
 bool gNetworkAreaLoaded = false;
