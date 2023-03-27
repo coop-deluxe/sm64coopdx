@@ -155,6 +155,16 @@ void network_player_update(void) {
 
     if (!network_player_any_connected()) { return; }
 
+
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer *np = &gNetworkPlayers[i];
+        if (!np->connected && i > 0) { continue; }
+        float elapsed = (clock_elapsed() - np->lastPingSent);
+        if (elapsed > NETWORK_PLAYER_PING_TIMEOUT) {
+            network_send_ping(np);
+        }
+    }
+
     if (gNetworkType == NT_SERVER) {
         for (s32 i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer *np = &gNetworkPlayers[i];
@@ -239,6 +249,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->type = type;
     np->localIndex = localIndex;
     np->globalIndex = globalIndex;
+    np->ping = 50;
     if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }
     network_player_set_description(np, NULL, 0, 0, 0, 0);
 

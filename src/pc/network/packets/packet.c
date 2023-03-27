@@ -61,6 +61,9 @@ void packet_process(struct Packet* p) {
         case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
         case PACKET_DEATH:                   network_receive_death(p);                   break;
 
+        case PACKET_PING:                    network_receive_ping(p);                    break;
+        case PACKET_PONG:                    network_receive_pong(p);                    break;
+
         // location
         case PACKET_CHANGE_LEVEL:            network_receive_change_level(p);            break;
         case PACKET_CHANGE_AREA:             network_receive_change_area(p);             break;

@@ -35,8 +35,8 @@ enum PacketType {
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
 
-    PACKET_UNUSED_21,
-    PACKET_UNUSED_22,
+    PACKET_PING,
+    PACKET_PONG,
     PACKET_UNUSED_23,
 
     PACKET_CHANGE_LEVEL,
@@ -262,6 +262,11 @@ void network_receive_network_players(struct Packet* p);
 // packet_death.c
 void network_send_death(void);
 void network_receive_death(struct Packet* p);
+
+// packet_ping.c
+void network_send_ping(struct NetworkPlayer* toNp);
+void network_receive_ping(struct Packet* p);
+void network_receive_pong(struct Packet* p);
 
 // packet_change_level.c
 void network_send_change_level(void);

@@ -143,9 +143,17 @@ static float get_max_elapsed_time(int sendAttempts) {
 void network_update_reliable(void) {
     struct PacketLinkedList* node = head;
     while (node != NULL) {
-        float elapsed = (clock_elapsed() - node->lastSend);
-        float maxElapsed = get_max_elapsed_time(node->sendAttempts);
+        f32 elapsed = (clock_elapsed() - node->lastSend);
+        f32 maxElapsed = get_max_elapsed_time(node->sendAttempts);
         maxElapsed = adjust_max_elapsed(node->p.packetType, maxElapsed);
+
+        // adjust resend time based on ping
+        struct NetworkPlayer* np = &gNetworkPlayers[node->p.localIndex];
+        f32 pingElapsed = np->ping / 1000.0f;
+        if (pingElapsed > 1.0f) { pingElapsed = 1.0f; }
+        pingElapsed *= 1.1f;
+        if (maxElapsed < pingElapsed) { maxElapsed = pingElapsed; }
+
         if (elapsed > maxElapsed) {
             if (node->p.packetType == PACKET_JOIN_REQUEST && gNetworkPlayerServer != NULL) {
                 node->p.localIndex = gNetworkPlayerServer->localIndex;

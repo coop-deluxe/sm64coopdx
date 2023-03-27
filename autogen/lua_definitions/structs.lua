@@ -34,6 +34,7 @@
 --- @field public macroObjectsAltered Pointer_integer
 --- @field public musicParam integer
 --- @field public musicParam2 integer
+--- @field public nextSyncID integer
 --- @field public numRedCoins integer
 --- @field public numSecrets integer
 --- @field public objectSpawnInfos SpawnInfo
@@ -821,6 +822,7 @@
 --- @field public descriptionR integer
 --- @field public fadeOpacity integer
 --- @field public globalIndex integer
+--- @field public lastPingSent number
 --- @field public lastReceived number
 --- @field public lastSent number
 --- @field public localIndex integer
@@ -833,6 +835,7 @@
 --- @field public overridePaletteIndexLp integer
 --- @field public palette PlayerPalette
 --- @field public paletteIndex integer
+--- @field public ping integer
 --- @field public type integer
 
 --- @class Object
@@ -1736,6 +1739,7 @@
 --- @field public next SpawnInfo
 --- @field public startAngle Vec3s
 --- @field public startPos Vec3s
+--- @field public syncID integer
 --- @field public unk18 GraphNode
 
 --- @class SpawnParticlesInfo
