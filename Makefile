@@ -1363,8 +1363,7 @@ endif
 
 $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
-	$(V)$(shell while ! test -s $@.tmp ; do $(AIFF_EXTRACT_CODEBOOK) $< >$@.tmp ; done)
-	$(V)$(shell mv $@.tmp $@ )
+	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
 	$(call print,Piping:,$<,$@.inc.c)
 	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
 	$(V)echo >> $@.inc.c
