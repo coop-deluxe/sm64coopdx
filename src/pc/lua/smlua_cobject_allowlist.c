@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "smlua.h"
+#define STB_DS_IMPLEMENTATION 1
 #include "pc/utils/stb_ds.h"
 
 struct AllowList {

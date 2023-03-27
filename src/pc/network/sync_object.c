@@ -10,15 +10,10 @@
 #include "game/object_helpers.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "data/dynos_cmap.cpp.h"
 
-#define STB_DS_IMPLEMENTATION 1
-#include "pc/utils/stb_ds.h"
-
-struct SyncObjectEntry {
-    u64 key;
-    struct SyncObject* value;
-};
-struct SyncObjectEntry* sSoMap = NULL;
+void* sSoMap = NULL;
+void* sSoIter = NULL;
 
 struct SyncObjectForgetEntry {
     struct SyncObject* so;
@@ -28,12 +23,16 @@ struct SyncObjectForgetEntry {
 struct SyncObjectForgetEntry* sForgetList = NULL;
 
 static u32 sNextSyncId = SYNC_ID_BLOCK_SIZE / 2;
-static u32 sIterateIndex = 0;
 static bool sFreeingAll = false;
 
   ////////////
  // system //
 ////////////
+
+void sync_objects_init_system(void) {
+    sSoMap = hmap_create();
+    sSoIter = hmap_iter(sSoMap);
+}
 
 static bool sync_objects_forget_list_contains(struct SyncObject* so) {
     struct SyncObjectForgetEntry* entry = sForgetList;
@@ -80,8 +79,7 @@ void sync_objects_clear(void) {
         sync_object_forget(so->id);
     }
     sFreeingAll = false;
-    hmfree(sSoMap);
-    hmdefault(sSoMap, NULL);
+    hmap_clear(sSoMap);
 }
 
 void sync_object_forget(u32 syncId) {
@@ -111,7 +109,7 @@ void sync_object_forget(u32 syncId) {
     so->owned = false;
 
     if (!sFreeingAll) {
-        hmdel(sSoMap, syncId);
+        hmap_del(sSoMap, syncId);
     }
 
     // add it to a list to free later
@@ -239,23 +237,15 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
 
 struct SyncObject* sync_object_get(u32 syncId) {
     if (syncId == 0) { return NULL; }
-    return hmget(sSoMap, syncId);
+    return hmap_get(sSoMap, syncId);
 }
 
 struct SyncObject* sync_object_get_first(void) {
-    sIterateIndex = 0;
-    if (sSoMap && sIterateIndex < hmlen(sSoMap)) {
-        return sSoMap[sIterateIndex].value;
-    }
-    return NULL;
+    return hmap_begin(sSoIter);
 }
 
 struct SyncObject* sync_object_get_next(void) {
-    sIterateIndex++;
-    if (sSoMap && sIterateIndex < hmlen(sSoMap)) {
-        return sSoMap[sIterateIndex].value;
-    }
-    return NULL;
+    return hmap_next(sSoIter);
 }
 
 struct Object* sync_object_get_object(u32 syncId) {
@@ -415,8 +405,8 @@ bool sync_object_set_id(struct Object* o) {
         so = calloc(1, sizeof(struct SyncObject));
         so->id = syncId;
         so->extendedModelId = 0xFFFF;
-        hmput(sSoMap, syncId, so);
-        LOG_INFO("Allocated sync object @ %u, size %ld", syncId, hmlen(sSoMap));
+        hmap_put(sSoMap, syncId, so);
+        LOG_INFO("Allocated sync object @ %u, size %ld", syncId, hmap_len(sSoMap));
     }
 
     if (!so) {

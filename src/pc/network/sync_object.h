@@ -41,6 +41,7 @@ struct SyncObject {
   ////////////
  // system //
 ////////////
+void sync_objects_init_system(void);
 void sync_objects_update(void);
 void sync_objects_clear(void);
 void sync_object_forget(u32 syncId);

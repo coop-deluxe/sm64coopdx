@@ -272,6 +272,7 @@ void main_func(void) {
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
+    sync_objects_init_system();
     mods_init();
     configfile_load(configfile_name());
     dynos_pack_init();
