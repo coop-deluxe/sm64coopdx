@@ -431,7 +431,7 @@ void calculate_vertex_xyz(s8 index, struct Shadow s, f32 *xPosVtx, f32 *yPosVtx,
                 // Clamp this vertex's y-position to that of the floor directly
                 // below it, which may differ from the floor below the center
                 // vertex.
-                *yPosVtx = find_floor_height_and_data(*xPosVtx, s.parentY, *zPosVtx, &dummy);
+                *yPosVtx = find_floor_height_and_data(*xPosVtx, s.parentY + 1, *zPosVtx, &dummy);
                 break;
             case SHADOW_WITH_4_VERTS:
                 // Do not clamp. Instead, extrapolate the y-position of this
@@ -492,10 +492,17 @@ void make_shadow_vertex(Vtx *vertices, s8 index, struct Shadow s, s8 shadowVerte
      * The gShadowAboveWaterOrLava check is redundant, since `floor_local_tilt`
      * will always be 0 over water or lava (since they are always flat).
      */
-    if (shadowVertexType == SHADOW_WITH_9_VERTS && !gShadowAboveWaterOrLava
+    /*if (shadowVertexType == SHADOW_WITH_9_VERTS && !gShadowAboveWaterOrLava
         && floor_local_tilt(s, xPosVtx, yPosVtx, zPosVtx) != 0) {
         yPosVtx = extrapolate_vertex_y_position(s, xPosVtx, zPosVtx);
         solidity = 0;
+    }*/
+    if (shadowVertexType == SHADOW_WITH_9_VERTS) {
+        f32 oldYPosVtx = yPosVtx;
+        yPosVtx = extrapolate_vertex_y_position(s, xPosVtx, zPosVtx);
+        f32 diff = fabs(oldYPosVtx - yPosVtx) / 200.0f;
+        if (diff > 1) { diff = 1; }
+        solidity = 200 * (1.0f - diff);
     }
     relX = xPosVtx - s.parentX;
     relY = yPosVtx - s.parentY;
