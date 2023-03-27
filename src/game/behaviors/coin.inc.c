@@ -110,6 +110,12 @@ void bhv_coin_loop(void) {
 }
 
 void bhv_coin_formation_spawn_loop(void) {
+
+    // give yellow coins a sync id to fix romhack coin formations
+    if (!gNetworkAreaLoaded && o->oSyncID == 0) {
+        sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    }
+
     if (o->oTimer == 0) {
         cur_obj_set_behavior(bhvYellowCoin);
         obj_set_hitbox(o, &sYellowCoinHitbox);
