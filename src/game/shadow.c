@@ -500,7 +500,7 @@ void make_shadow_vertex(Vtx *vertices, s8 index, struct Shadow s, s8 shadowVerte
     if (shadowVertexType == SHADOW_WITH_9_VERTS) {
         f32 oldYPosVtx = yPosVtx;
         yPosVtx = extrapolate_vertex_y_position(s, xPosVtx, zPosVtx);
-        f32 diff = fabs(oldYPosVtx - yPosVtx) / 200.0f;
+        f32 diff = fabs(oldYPosVtx - yPosVtx) / 5.0f;
         if (diff > 1) { diff = 1; }
         solidity = 200 * (1.0f - diff);
     }
