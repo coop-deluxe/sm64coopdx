@@ -2,12 +2,15 @@
 #include "behavior_table.h"
 #include "pc/debuglog.h"
 
-static void print_sync_object_table(void) {
+void print_sync_object_table(void) {
     LOG_INFO("Sync Object Table");
-    for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+    for (u32 i = 0; i < SYNC_ID_BLOCK_SIZE * (MAX_PLAYERS + 1); i++) {
+        struct SyncObject* so = sync_object_get(i);
         if (!so || !so->o) { continue; }
         u32 behaviorId = get_id_from_behavior(so->behavior);
-        LOG_INFO("%03d: %08X", so->id, behaviorId);
+        char* behaviorName = (char*)get_behavior_name_from_id(behaviorId);
+        if (!behaviorName) { behaviorName = "UNKNOWN"; }
+        LOG_INFO("%04d: %08X :: %s", so->id, behaviorId, behaviorName);
         behaviorId = behaviorId; // suppress warning
     }
     LOG_INFO(" ");
@@ -37,7 +40,7 @@ void network_receive_debug_sync(struct Packet* p) {
 
     struct SyncObject* so = sync_object_get(id);
     if (!so) {
-        LOG_INFO("Sync Table Missing: %03d : %08X :: %s", id, behaviorId, behaviorName);
+        LOG_INFO("Sync Table Missing: %04d : %08X :: %s", id, behaviorId, behaviorName);
         return;
     }
 
@@ -46,7 +49,7 @@ void network_receive_debug_sync(struct Packet* p) {
     if (!localBehaviorName) { localBehaviorName = "UNKNOWN"; }
 
     if (localBehaviorId != behaviorId) {
-        LOG_INFO("Sync Table MisMatch: %03d : %08X != %08X :: (%s != %s)", id, localBehaviorId, behaviorId, localBehaviorName, behaviorName);
+        LOG_INFO("Sync Table MisMatch: %04d : %08X != %08X :: (%s != %s)", id, localBehaviorId, behaviorId, localBehaviorName, behaviorName);
         return;
     }
 

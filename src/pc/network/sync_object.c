@@ -27,7 +27,7 @@ struct SyncObjectForgetEntry {
 };
 struct SyncObjectForgetEntry* sForgetList = NULL;
 
-static u32 sNextSyncId = 0;
+static u32 sNextSyncId = SYNC_ID_BLOCK_SIZE / 2;
 static u32 sIterateIndex = 0;
 static bool sFreeingAll = false;
 
@@ -72,7 +72,7 @@ void sync_objects_update(void) {
 }
 
 void sync_objects_clear(void) {
-    sNextSyncId = 0;
+    sNextSyncId = SYNC_ID_BLOCK_SIZE / 2;
     network_on_init_area();
 
     sFreeingAll = true;

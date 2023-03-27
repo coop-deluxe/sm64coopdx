@@ -554,6 +554,12 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
                 object->behavior = smlua_override_behavior(script);
                 object->unused1 = 0;
 
+                // set the sync id
+                if (spawnInfo->syncID) {
+                    object->oSyncID = spawnInfo->syncID;
+                    sync_object_set_id(object);
+                }
+
                 // Record death/collection in the SpawnInfo
                 object->respawnInfoType = RESPAWN_INFO_TYPE_32;
                 object->respawnInfo = &spawnInfo->behaviorArg;

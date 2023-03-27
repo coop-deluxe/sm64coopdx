@@ -86,6 +86,7 @@ struct Area
     /*????*/ u8 *macroObjectsAltered;
     /*????*/ u8 numRedCoins;
     /*????*/ u8 numSecrets;
+    /*????*/ u32 nextSyncID;
 };
 
 // All the transition data to be used in screen_transition.c

@@ -32,6 +32,8 @@ static bool sHoldingShift = false;
 #define SCANCODE_ALT 0x38
 #define SCANCODE_SHIFT 0x2A
 
+extern void print_sync_object_table(void);
+
 static void debug_breakpoint_here(void) {
     // create easy breakpoint position for debugging
 }
@@ -103,12 +105,13 @@ void debug_keyboard_on_key_down(int scancode) {
             case SCANCODE_ALT: sHoldingAlt = true; break;
             case SCANCODE_SHIFT: sHoldingShift = true; break;
             case SCANCODE_3: debug_breakpoint_here(); break;
-            case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();  } break;
-            case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();  } break;
-            case SCANCODE_4:  if (sHoldingAlt) { debug_warp_level3();  } break;
-            case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object(); } break;
-            case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();      } break;
-            case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();      } break;
+            case SCANCODE_1:  if (sHoldingAlt) { debug_warp_level1();       } break;
+            case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();       } break;
+            case SCANCODE_4:  if (sHoldingAlt) { debug_warp_level3();       } break;
+            case SCANCODE_5:  if (sHoldingAlt) { print_sync_object_table(); } break;
+            case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object();      } break;
+            case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();           } break;
+            case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();           } break;
             case SCANCODE_F5: debug_reload_lua(); break;
         }
     }

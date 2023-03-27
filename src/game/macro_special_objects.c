@@ -10,7 +10,7 @@
 #include "macro_presets.h"
 
 #include "special_presets.h"
-
+#include "src/pc/network/sync_object.h"
 /*
  * Converts the rotation value supplied by macro objects into one
  * that can be used by in-game objects.
@@ -43,14 +43,16 @@ s16 convert_rotation(s16 inRotation) {
  * parameters filling up the upper 2 bytes of newObj->oBehParams.
  * The object will not spawn if 'behavior' is NULL.
  */
-void spawn_macro_abs_yrot_2params(s32 model, const BehaviorScript *behavior, s16 x, s16 y, s16 z, s16 ry, s16 params) {
+struct Object* spawn_macro_abs_yrot_2params(s32 model, const BehaviorScript *behavior, s16 x, s16 y, s16 z, s16 ry, s16 params) {
     if (behavior != NULL) {
         struct Object *newObj = spawn_object_abs_with_rot(
             &gMacroObjectDefaultParent, 0, model, behavior, x, y, z, 0, convert_rotation(ry), 0);
         if (newObj != NULL) {
             newObj->oBehParams = ((u32) params) << 16;
         }
+        return newObj;
     }
+    return NULL;
 }
 
 /*
@@ -58,30 +60,34 @@ void spawn_macro_abs_yrot_2params(s32 model, const BehaviorScript *behavior, s16
  * a single parameter filling up the upper byte of newObj->oBehParams.
  * The object will not spawn if 'behavior' is NULL.
  */
-void spawn_macro_abs_yrot_param1(s32 model, const BehaviorScript *behavior, s16 x, s16 y, s16 z, s16 ry, s16 param) {
+struct Object*  spawn_macro_abs_yrot_param1(s32 model, const BehaviorScript *behavior, s16 x, s16 y, s16 z, s16 ry, s16 param) {
     if (behavior != NULL) {
         struct Object *newObj = spawn_object_abs_with_rot(
             &gMacroObjectDefaultParent, 0, model, behavior, x, y, z, 0, convert_rotation(ry), 0);
         if (newObj != NULL) {
             newObj->oBehParams = ((u32) param) << 24;
         }
+        return newObj;
     }
+    return NULL;
 }
 
 /*
  * Spawns an object at an absolute location with currently 3 unknown variables that get converted to
  * floats. Oddly enough, this function doesn't care if 'behavior' is NULL or not.
  */
-void spawn_macro_abs_special(s32 model, const BehaviorScript *behavior, s16 x, s16 y, s16 z, s16 unkA, s16 unkB,
+struct Object* spawn_macro_abs_special(s32 model, const BehaviorScript *behavior, s16 x, s16 y, s16 z, s16 unkA, s16 unkB,
                              s16 unkC) {
     struct Object *newObj =
         spawn_object_abs_with_rot(&gMacroObjectDefaultParent, 0, model, behavior, x, y, z, 0, 0, 0);
-    if (newObj == NULL) { return; }
+    if (newObj == NULL) { return NULL; }
 
     // Are all three of these values unused?
     newObj->oMacroUnk108 = (f32) unkA;
     newObj->oMacroUnk10C = (f32) unkB;
     newObj->oMacroUnk110 = (f32) unkC;
+
+    return newObj;
 }
 
 static void spawn_macro_coin_unknown(const BehaviorScript *behavior, s16 a1[]) {
@@ -174,8 +180,12 @@ void spawn_macro_objects(s16 areaIndex, s16 *macroObjList) {
                 newObj->respawnInfoType = RESPAWN_INFO_TYPE_16;
                 newObj->respawnInfo = macroObjList - 1;
                 newObj->parentObj = newObj;
+                newObj->oSyncID = gAreas[areaIndex].nextSyncID;
+                sync_object_set_id(newObj);
             }
         }
+
+        gAreas[areaIndex].nextSyncID += 10;
     }
 }
 
@@ -209,39 +219,47 @@ void spawn_macro_objects_hardcoded(s16 areaIndex, s16 *macroObjList) {
 
         // Spawn objects based on hardcoded presets, and most seem to be for Big Boo's Haunt.
         // However, BBH doesn't use this function so this might just be an early test?
+        struct Object* obj = NULL;
         switch (macroObjPreset) {
             case 0:
-                spawn_macro_abs_yrot_2params(MODEL_NONE, bhvBooBossSpawnedBridge, macroObjX, macroObjY,
-                                             macroObjZ, macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_NONE, bhvBooBossSpawnedBridge, macroObjX, macroObjY,
+                                                   macroObjZ, macroObjRY, 0);
                 break;
             case 1:
-                spawn_macro_abs_yrot_2params(MODEL_BBH_TILTING_FLOOR_PLATFORM,
-                                             bhvBbhTiltingTrapPlatform, macroObjX, macroObjY, macroObjZ,
-                                             macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_BBH_TILTING_FLOOR_PLATFORM,
+                                                   bhvBbhTiltingTrapPlatform, macroObjX, macroObjY, macroObjZ,
+                                                   macroObjRY, 0);
                 break;
             case 2:
-                spawn_macro_abs_yrot_2params(MODEL_BBH_TUMBLING_PLATFORM, bhvBbhTumblingBridge,
-                                             macroObjX, macroObjY, macroObjZ, macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_BBH_TUMBLING_PLATFORM, bhvBbhTumblingBridge,
+                                                   macroObjX, macroObjY, macroObjZ, macroObjRY, 0);
                 break;
             case 3:
-                spawn_macro_abs_yrot_2params(MODEL_BBH_MOVING_BOOKSHELF, bhvHauntedBookshelf, macroObjX,
-                                             macroObjY, macroObjZ, macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_BBH_MOVING_BOOKSHELF, bhvHauntedBookshelf, macroObjX,
+                                                   macroObjY, macroObjZ, macroObjRY, 0);
                 break;
             case 4:
-                spawn_macro_abs_yrot_2params(MODEL_BBH_MESH_ELEVATOR, bhvMeshElevator, macroObjX,
-                                             macroObjY, macroObjZ, macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_BBH_MESH_ELEVATOR, bhvMeshElevator, macroObjX,
+                                                   macroObjY, macroObjZ, macroObjRY, 0);
                 break;
             case 20:
-                spawn_macro_abs_yrot_2params(MODEL_YELLOW_COIN, bhvYellowCoin, macroObjX, macroObjY,
-                                             macroObjZ, macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_YELLOW_COIN, bhvYellowCoin, macroObjX, macroObjY,
+                                                   macroObjZ, macroObjRY, 0);
                 break;
             case 21:
-                spawn_macro_abs_yrot_2params(MODEL_YELLOW_COIN, bhvYellowCoin, macroObjX, macroObjY,
-                                             macroObjZ, macroObjRY, 0);
+                obj = spawn_macro_abs_yrot_2params(MODEL_YELLOW_COIN, bhvYellowCoin, macroObjX, macroObjY,
+                                                   macroObjZ, macroObjRY, 0);
                 break;
             default:
                 break;
         }
+
+        if (obj != NULL) {
+            obj->oSyncID = gAreas[areaIndex].nextSyncID;
+            sync_object_set_id(obj);
+        }
+
+        gAreas[areaIndex].nextSyncID += 10;
     }
 }
 
@@ -292,21 +310,22 @@ void spawn_special_objects(s16 areaIndex, s16 **specialObjList) {
         type = SpecialObjectPresets[offset].type;
         defaultParam = SpecialObjectPresets[offset].defParam;
 
+        struct Object* obj = NULL;
         switch (type) {
             case SPTYPE_NO_YROT_OR_PARAMS:
-                spawn_macro_abs_yrot_2params(model, behavior, x, y, z, 0, 0);
+                obj = spawn_macro_abs_yrot_2params(model, behavior, x, y, z, 0, 0);
                 break;
             case SPTYPE_YROT_NO_PARAMS:
                 extraParams[0] = **specialObjList; // Y-rotation
                 (*specialObjList)++;
-                spawn_macro_abs_yrot_2params(model, behavior, x, y, z, extraParams[0], 0);
+                obj = spawn_macro_abs_yrot_2params(model, behavior, x, y, z, extraParams[0], 0);
                 break;
             case SPTYPE_PARAMS_AND_YROT:
                 extraParams[0] = **specialObjList; // Y-rotation
                 (*specialObjList)++;
                 extraParams[1] = **specialObjList; // Params
                 (*specialObjList)++;
-                spawn_macro_abs_yrot_2params(model, behavior, x, y, z, extraParams[0], extraParams[1]);
+                obj = spawn_macro_abs_yrot_2params(model, behavior, x, y, z, extraParams[0], extraParams[1]);
                 break;
             case SPTYPE_UNKNOWN:
                 extraParams[0] =
@@ -318,17 +337,24 @@ void spawn_special_objects(s16 areaIndex, s16 **specialObjList) {
                 extraParams[2] =
                     **specialObjList; // Unknown, gets put into obj->oMacroUnk110 as a float
                 (*specialObjList)++;
-                spawn_macro_abs_special(model, behavior, x, y, z, extraParams[0], extraParams[1],
-                                        extraParams[2]);
+                obj = spawn_macro_abs_special(model, behavior, x, y, z, extraParams[0], extraParams[1],
+                                              extraParams[2]);
                 break;
             case SPTYPE_DEF_PARAM_AND_YROT:
                 extraParams[0] = **specialObjList; // Y-rotation
                 (*specialObjList)++;
-                spawn_macro_abs_yrot_param1(model, behavior, x, y, z, extraParams[0], defaultParam);
+                obj = spawn_macro_abs_yrot_param1(model, behavior, x, y, z, extraParams[0], defaultParam);
                 break;
             default:
                 break;
         }
+
+        if (obj != NULL) {
+            obj->oSyncID = gAreas[areaIndex].nextSyncID;
+            sync_object_set_id(obj);
+        }
+
+        gAreas[areaIndex].nextSyncID += 10;
     }
 }
 
