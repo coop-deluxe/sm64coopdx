@@ -690,90 +690,6 @@ function gamemode_initialize()
     -- hide the SM64 HUD
     hud_hide()
 
-    -- prevent warp doors from working
-    local wasRefreshed = false
-    local obj = obj_get_first(OBJ_LIST_SURFACE)
-    while obj ~= nil do
-        local behaviorId = get_id_from_behavior(obj.behavior)
-        if behaviorId == id_bhvDoorWarp then
-            obj.oInteractType = 0
-        end
-
-        -- hide exclamation box
-        if behaviorId == id_bhvExclamationBox then
-            obj.oPosX = sBallHidePos.x
-            obj.oPosY = sBallHidePos.y
-            obj.oPosZ = sBallHidePos.z
-        end
-
-        if behaviorId == id_bhvLllHexagonalMesh then
-            wasRefreshed = true
-        end
-        obj = obj_get_next(obj)
-    end
-
-    -- server spawns objects
-    if my_global_index() == 0 and not wasRefreshed then
-        -- block vanish cap
-        spawn_sync_object(
-            id_bhvLllHexagonalMesh,
-            E_MODEL_TRAMPOLINE,
-            -3390, -512, -2023,
-            function (obj)
-                obj.oOpacity = 255
-                obj.header.gfx.scale.x = 3
-                obj.header.gfx.scale.z = 3;
-            end)
-
-        -- block basement door
-        spawn_sync_object(
-            id_bhvLllHexagonalMesh,
-            E_MODEL_TRAMPOLINE,
-            3279 + 45, -511, -2937 + 45,
-            function (obj)
-                obj.oOpacity = 255
-                obj.header.gfx.scale.x = 2
-                obj.header.gfx.scale.z = 2
-                obj.oFaceAngleYaw = 0x6000
-                obj.oFaceAngleRoll = 0x4000
-            end)
-
-        -- block area near ramp
-        spawn_sync_object(
-            id_bhvStaticCheckeredPlatform,
-            E_MODEL_CHECKERBOARD_PLATFORM,
-            4430 - 65, 545 + 250 - 5, -6000 - 65,
-            function (obj)
-                obj.oOpacity = 255
-                obj.oFaceAngleYaw = 0x2000
-                obj.oFaceAngleRoll = 0x4000
-            end)
-
-        -- block area near ramp
-        for i=0,6 do
-            spawn_sync_object(
-                id_bhvStaticCheckeredPlatform,
-                E_MODEL_CHECKERBOARD_PLATFORM,
-                4460, 545 + 250, -6000 + i * 305,
-                function (obj)
-                    obj.oOpacity = 255
-                    obj.oFaceAngleYaw = 0
-                    obj.oFaceAngleRoll = 0x4000
-                end)
-        end
-
-        -- block cannon
-        spawn_sync_object(
-            id_bhvLllHexagonalMesh,
-            E_MODEL_TRAMPOLINE,
-            2385, 88, 1956,
-            function (obj)
-                obj.oOpacity = 255
-                obj.header.gfx.scale.x = 0.9
-                obj.header.gfx.scale.z = 0.9
-            end)
-    end
-
     sGameModeInitialized = true
 end
 
@@ -1306,6 +1222,92 @@ function on_level_init()
     end
 end
 
+function on_sync_valid()
+    -- prevent warp doors from working
+    local wasRefreshed = false
+    local obj = obj_get_first(OBJ_LIST_SURFACE)
+    while obj ~= nil do
+        local behaviorId = get_id_from_behavior(obj.behavior)
+        if behaviorId == id_bhvDoorWarp then
+            obj.oInteractType = 0
+        end
+
+        -- hide exclamation box
+        if behaviorId == id_bhvExclamationBox then
+            obj.oPosX = sBallHidePos.x
+            obj.oPosY = sBallHidePos.y
+            obj.oPosZ = sBallHidePos.z
+        end
+
+        if behaviorId == id_bhvLllHexagonalMesh then
+            wasRefreshed = true
+        end
+        obj = obj_get_next(obj)
+    end
+
+    -- server spawns objects
+    if my_global_index() == 0 and not wasRefreshed then
+        -- block vanish cap
+        spawn_sync_object(
+            id_bhvLllHexagonalMesh,
+            E_MODEL_TRAMPOLINE,
+            -3390, -512, -2023,
+            function (obj)
+                obj.oOpacity = 255
+                obj.header.gfx.scale.x = 3
+                obj.header.gfx.scale.z = 3;
+            end)
+
+        -- block basement door
+        spawn_sync_object(
+            id_bhvLllHexagonalMesh,
+            E_MODEL_TRAMPOLINE,
+            3279 + 45, -511, -2937 + 45,
+            function (obj)
+                obj.oOpacity = 255
+                obj.header.gfx.scale.x = 2
+                obj.header.gfx.scale.z = 2
+                obj.oFaceAngleYaw = 0x6000
+                obj.oFaceAngleRoll = 0x4000
+            end)
+
+        -- block area near ramp
+        spawn_sync_object(
+            id_bhvStaticCheckeredPlatform,
+            E_MODEL_CHECKERBOARD_PLATFORM,
+            4430 - 65, 545 + 250 - 5, -6000 - 65,
+            function (obj)
+                obj.oOpacity = 255
+                obj.oFaceAngleYaw = 0x2000
+                obj.oFaceAngleRoll = 0x4000
+            end)
+
+        -- block area near ramp
+        for i=0,6 do
+            spawn_sync_object(
+                id_bhvStaticCheckeredPlatform,
+                E_MODEL_CHECKERBOARD_PLATFORM,
+                4460, 545 + 250, -6000 + i * 305,
+                function (obj)
+                    obj.oOpacity = 255
+                    obj.oFaceAngleYaw = 0
+                    obj.oFaceAngleRoll = 0x4000
+                end)
+        end
+
+        -- block cannon
+        spawn_sync_object(
+            id_bhvLllHexagonalMesh,
+            E_MODEL_TRAMPOLINE,
+            2385, 88, 1956,
+            function (obj)
+                obj.oOpacity = 255
+                obj.header.gfx.scale.x = 0.9
+                obj.header.gfx.scale.z = 0.9
+            end)
+    end
+end
+
 -----------
 -- hooks --
 -----------
@@ -1316,6 +1318,7 @@ hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_ON_PLAYER_CONNECTED, on_player_connected)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
+hook_event(HOOK_ON_SYNC_VALID, on_sync_valid)
 if network_is_server() then
     hook_chat_command('football-reset', "[game|ball] resets the game or ball", on_football_reset_command)
  end
