@@ -284,7 +284,7 @@ void patch_mtx_interpolated(f32 delta) {
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
     bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
-    if (translateCamSpace && gCurrCourseNum != COURSE_CAKE_END) {
+    if (translateCamSpace) {
         mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
         mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
     }
