@@ -35,9 +35,9 @@ enum PacketType {
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
 
-    PACKET_RESERVATION_LIST,
-    PACKET_RESERVATION_USE,
-    PACKET_RESERVATION_RELEASE,
+    PACKET_UNUSED_21,
+    PACKET_UNUSED_22,
+    PACKET_UNUSED_23,
 
     PACKET_CHANGE_LEVEL,
     PACKET_CHANGE_AREA,
@@ -313,18 +313,6 @@ void network_receive_level_area_inform(struct Packet* p);
 // packet_level_respawn_info.c
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits);
 void network_receive_level_respawn_info(struct Packet* p);
-
-// packet_reservation_list.c
-void network_send_reservation_list(struct NetworkPlayer* np, u32 syncIds[]);
-void network_receive_reservation_list(struct Packet* p);
-
-// packet_reservation_use.c
-void network_send_reservation_use(u32 syncId);
-void network_receive_reservation_use(struct Packet* p);
-
-// packet_reservation_release.c
-void network_send_reservation_release(u32 syncId);
-void network_receive_reservation_release(struct Packet* p);
 
 // packet_debug_sync.c
 void network_send_debug_sync(void);

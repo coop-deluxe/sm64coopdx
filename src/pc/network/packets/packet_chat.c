@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "../network.h"
-#include "../reservation_area.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 

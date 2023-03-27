@@ -47,7 +47,6 @@
 #include "hardcoded.h"
 #include "engine/surface_load.h"
 #include "pc/network/network.h"
-#include "pc/network/reservation_area.h"
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/lua/smlua_hooks.h"
 

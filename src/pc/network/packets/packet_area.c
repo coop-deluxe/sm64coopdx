@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "../network.h"
-#include "../reservation_area.h"
 #include "game/interaction.h"
 #include "game/level_update.h"
 #include "game/area.h"
@@ -15,11 +14,11 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-u32 sRemoveSyncIds[RESERVED_IDS_SYNC_OBJECT_OFFSET] = { 0 };
+u32 sRemoveSyncIds[SYNC_ID_BLOCK_SIZE] = { 0 };
 u32 sRemoveSyncIdsIndex = 0;
 
 void area_remove_sync_ids_add(u32 syncId) {
-    if (syncId >= RESERVED_IDS_SYNC_OBJECT_OFFSET) { return; }
+    if (syncId >= SYNC_ID_BLOCK_SIZE) { return; }
     for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         if (sRemoveSyncIds[i] == syncId) { return; }
     }
@@ -98,7 +97,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL || so->o->oSyncID != so->id) { continue; }
             if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
-            if (so->id < RESERVED_IDS_SYNC_OBJECT_OFFSET) { continue; }
+            if (so->id < SYNC_ID_BLOCK_SIZE) { continue; }
             struct Object* spawn_objects[] = { so->o };
 
             // TODO: move find model to a utility file/function
@@ -235,7 +234,7 @@ void network_receive_area(struct Packet* p) {
         }
 
         LOG_INFO("rx respawner");
-        if (syncId < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
+        if (syncId < SYNC_ID_BLOCK_SIZE) {
             struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
             if (respawner != NULL) {
                 respawner->parentObj = respawner;

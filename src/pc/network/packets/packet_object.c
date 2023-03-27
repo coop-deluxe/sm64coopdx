@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <limits.h>
 #include "../network.h"
-#include "../reservation_area.h"
 #include "object_fields.h"
 #include "object_constants.h"
 #include "behavior_data.h"
@@ -353,11 +352,6 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     // check for object death
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         sync_object_forget(so->id);
-        if (gNetworkType == NT_SERVER) {
-            reservation_area_release(gNetworkPlayerLocal, syncId);
-        } else {
-            network_send_reservation_release(syncId);
-        }
     } else if (so->rememberLastReliablePacket) {
         // remember packet
         packet_duplicate(&p, &so->lastReliablePacket);

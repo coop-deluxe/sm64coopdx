@@ -2,6 +2,7 @@
 #define SYNC_OBJECT_H
 
 #define MAX_SYNC_OBJECT_FIELDS 64
+#define SYNC_ID_BLOCK_SIZE 4096
 
 #include "pc/network/packets/packet.h"
 

@@ -71,7 +71,7 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
         respawner->oSyncID = syncID;
     }
 
-    if (syncID < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
+    if (syncID < SYNC_ID_BLOCK_SIZE) {
         if (respawner != NULL) {
             sync_object_override_object(syncID, respawner);
         }

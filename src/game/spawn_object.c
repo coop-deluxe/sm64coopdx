@@ -14,7 +14,6 @@
 #include "spawn_object.h"
 #include "types.h"
 #include "pc/network/network.h"
-#include "pc/network/reservation_area.h"
 #include "pc/lua/smlua_hooks.h"
 
 /**
@@ -216,10 +215,6 @@ void unload_object(struct Object *obj) {
     if (so && gNetworkType != NT_NONE) {
         if (so->syncDeathEvent) {
             network_send_object(obj);
-        } else if (gNetworkType == NT_SERVER) {
-            reservation_area_release(gNetworkPlayerLocal, obj->oSyncID);
-        } else {
-            network_send_reservation_release(obj->oSyncID);
         }
 
         // forget sync object

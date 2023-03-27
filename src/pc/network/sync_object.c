@@ -4,7 +4,6 @@
 #include "behavior_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#include "reservation_area.h"
 #include "game/area.h"
 #include "game/object_list_processor.h"
 #include "game/obj_behaviors.h"
@@ -89,7 +88,7 @@ void sync_object_forget(u32 syncId) {
     if (!so) { return; }
 
     // invalidate last packet sent
-    if (so != NULL && so->o != NULL && so->o->oSyncID < RESERVED_IDS_SYNC_OBJECT_OFFSET) {
+    if (so != NULL && so->o != NULL && so->o->oSyncID < SYNC_ID_BLOCK_SIZE) {
         u32 syncId2 = so->o->oSyncID;
         struct SyncObject* so2 = sync_object_get(syncId2);
         if (so == so2) {
@@ -361,8 +360,8 @@ bool sync_object_should_own(u32 syncId) {
 }
 
 u32 sync_object_get_available_local_id() {
-    u32 startId = (gNetworkPlayers[0].globalIndex + 1) * RESERVED_IDS_SYNC_OBJECT_OFFSET;
-    u32 endId = startId + RESERVED_IDS_SYNC_OBJECT_OFFSET;
+    u32 startId = (gNetworkPlayers[0].globalIndex + 1) * SYNC_ID_BLOCK_SIZE;
+    u32 endId = startId + SYNC_ID_BLOCK_SIZE;
     for (u32 id = startId; id < endId; id++) {
         struct SyncObject* so = sync_object_get(id);
         if (so) { continue; }
@@ -375,10 +374,10 @@ bool sync_object_set_id(struct Object* o) {
     u32 syncId = o->oSyncID;
     if (syncId == 0) {
         if (!gNetworkAreaLoaded) {
-            // while loading, just fill in sync ids from 1 to RESERVED_IDS_SYNC_OBJECT_OFFSET
-            for (s32 i = 1; i < RESERVED_IDS_SYNC_OBJECT_OFFSET; i++) {
+            // while loading, just fill in sync ids from 1 to SYNC_ID_BLOCK_SIZE
+            for (s32 i = 1; i < SYNC_ID_BLOCK_SIZE; i++) {
                 sNextSyncId++;
-                sNextSyncId = sNextSyncId % RESERVED_IDS_SYNC_OBJECT_OFFSET;
+                sNextSyncId = sNextSyncId % SYNC_ID_BLOCK_SIZE;
                 struct SyncObject* so = sync_object_get(sNextSyncId);
                 if (so && so->o != NULL) { continue; }
                 syncId = sNextSyncId;

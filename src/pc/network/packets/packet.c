@@ -61,11 +61,6 @@ void packet_process(struct Packet* p) {
         case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
         case PACKET_DEATH:                   network_receive_death(p);                   break;
 
-        // reservation area
-        case PACKET_RESERVATION_LIST:        network_receive_reservation_list(p);        break;
-        case PACKET_RESERVATION_USE:         network_receive_reservation_use(p);         break;
-        case PACKET_RESERVATION_RELEASE:     network_receive_reservation_release(p);     break;
-
         // location
         case PACKET_CHANGE_LEVEL:            network_receive_change_level(p);            break;
         case PACKET_CHANGE_AREA:             network_receive_change_area(p);             break;

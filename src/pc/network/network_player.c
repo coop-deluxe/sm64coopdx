@@ -2,7 +2,6 @@
 #include "types.h"
 #include "object_fields.h"
 #include "game/mario_misc.h"
-#include "reservation_area.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
@@ -346,7 +345,6 @@ u8 network_player_disconnected(u8 globalIndex) {
         djui_popup_create(popupMsg, 1);
 
         packet_ordered_clear(globalIndex);
-        reservation_area_change(np);
 
         smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_DISCONNECTED, &gMarioStates[i]);
 
