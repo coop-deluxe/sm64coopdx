@@ -43,7 +43,7 @@ int smlua_pcall(lua_State* L, int nargs, int nresults, UNUSED int errfunc) {
     return rc;
 }
 
-static void smlua_exec_file(char* path) {
+void smlua_exec_file(char* path) {
     lua_State* L = gLuaState;
     if (luaL_dofile(L, path) != LUA_OK) {
         LOG_LUA("Failed to load lua file '%s'.", path);
