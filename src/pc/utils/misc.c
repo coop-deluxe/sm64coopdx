@@ -514,7 +514,7 @@ void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
 
 void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx) {
     // if the matrix has changed "too much", then skip interpolation
-    const f32 minDot = sqrt(2.0f) / -2.0f;
+    const f32 minDot = sqrt(2.0f) / -3.0f;
     Vec3f prevX; vec3f_copy(prevX, (f32*)(*mtxPrev)->m[0]); vec3f_normalize(prevX);
     Vec3f prevY; vec3f_copy(prevY, (f32*)(*mtxPrev)->m[1]); vec3f_normalize(prevY);
     Vec3f prevZ; vec3f_copy(prevZ, (f32*)(*mtxPrev)->m[2]); vec3f_normalize(prevZ);
