@@ -81,6 +81,7 @@ void sync_objects_clear(void) {
     }
     sFreeingAll = false;
     hmfree(sSoMap);
+    hmdefault(sSoMap, NULL);
 }
 
 void sync_object_forget(u32 syncId) {
@@ -237,6 +238,7 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
 /////////////
 
 struct SyncObject* sync_object_get(u32 syncId) {
+    if (syncId == 0) { return NULL; }
     return hmget(sSoMap, syncId);
 }
 
