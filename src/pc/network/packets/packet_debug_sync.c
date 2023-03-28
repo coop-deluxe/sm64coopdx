@@ -21,11 +21,12 @@ void print_sync_object_table(void) {
 }
 
 void network_send_debug_sync(void) {
+    return;
     for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
         if (!so || !so->o) { continue; }
         u32 behaviorId = get_id_from_behavior((so->behavior == NULL) ? so->behavior : so->o->behavior);
         struct Packet p = { 0 };
-        packet_init(&p, PACKET_DEBUG_SYNC, true, PLMT_AREA);
+        packet_init(&p, PACKET_DEBUG_SYNC, false, PLMT_AREA);
         packet_write(&p, &so->id, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
         network_send(&p);
