@@ -21,7 +21,13 @@ void print_sync_object_table(void) {
 }
 
 void network_send_debug_sync(void) {
-    return;
+    // check for lag
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np->connected) { continue; }
+        if (np->ping > 250) { return; }
+    }
+
     for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
         if (!so || !so->o) { continue; }
         u32 behaviorId = get_id_from_behavior((so->behavior == NULL) ? so->behavior : so->o->behavior);
