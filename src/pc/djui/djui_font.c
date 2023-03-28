@@ -2,42 +2,77 @@
 #include "game/segment2.h"
 
 struct SmCodeGlyph {
-    s8 unicode1;
-    s8 unicode2;
+    char unicode[3];
+    char base;
 };
 
 struct SmCodeGlyph sSmCodeGlyphs[] = {
-    { -61, -127 }, // Á
-    { -61, -126 }, // Â
-    { -61, -128 }, // À
-    { -61, -125 }, // Ã
-    { -61, -121 }, // Ç
-    { -61, -119 }, // É
-    { -61, -118 }, // Ê
-    { -61, -115 }, // Í
-    { -61, -111 }, // Ñ
-    { -61, -109 }, // Ó
-    { -61, -108 }, // Ô
-    { -61, -107 }, // Õ
-    { -61, -102 }, // Ú
-    { -61, -100 }, // Ü
-    { -61,  -95 }, // á
-    { -61,  -94 }, // â
-    { -61,  -96 }, // à
-    { -61,  -93 }, // ã
-    { -61,  -89 }, // ç
-    { -61,  -87 }, // é
-    { -61,  -86 }, // ê
-    { -61,  -83 }, // í
-    { -61,  -79 }, // ñ
-    { -61,  -77 }, // ó
-    { -61,  -76 }, // ô
-    { -61,  -75 }, // õ
-    { -61,  -70 }, // ú
-    { -61,  -68 }, // ü
-    { -62,  -95 }, // ¡
-    { -62,  -65 }, // ¿
+    { "Á", 'A' },
+    { "Â", 'A' },
+    { "À", 'A' },
+    { "Ã", 'A' },
+    { "Ä", 'A' },
+    { "Ç", 'C' },
+    { "É", 'E' },
+    { "Ê", 'E' },
+    { "È", 'E' },
+    { "Ë", 'E' },
+    { "Í", 'I' },
+    { "Ì", 'I' },
+    { "Ï", 'I' },
+    { "Ñ", 'N' },
+    { "Ó", 'O' },
+    { "Ô", 'O' },
+    { "Ò", 'O' },
+    { "Õ", 'O' },
+    { "Ö", 'O' },
+    { "Ú", 'U' },
+    { "Ù", 'U' },
+    { "Ü", 'U' },
+    { "Ý", 'Y' },
+    { "Ÿ", 'Y' },
+
+    { "á", 'a' },
+    { "â", 'a' },
+    { "à", 'a' },
+    { "ã", 'a' },
+    { "ä", 'a' },
+    { "ç", 'c' },
+    { "é", 'e' },
+    { "ê", 'e' },
+    { "è", 'e' },
+    { "ë", 'e' },
+    { "í", 'i' },
+    { "ì", 'i' },
+    { "ï", 'i' },
+    { "ñ", 'n' },
+    { "ó", 'o' },
+    { "ô", 'o' },
+    { "ò", 'o' },
+    { "õ", 'o' },
+    { "ö", 'o' },
+    { "ú", 'u' },
+    { "ù", 'u' },
+    { "ü", 'u' },
+    { "ý", 'y' },
+    { "ÿ", 'y' },
+
+    { "¡", '!' },
+    { "¿", '?' },
 };
+
+
+u8 djui_font_convert_smcode_to_base(char c) {
+    if ((u8)c < 128) {
+        return c;
+    }
+    size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
+    u8 max = 128 + glyphCount;
+    if ((u8)c > max) {
+        return '?';
+    }
+    return sSmCodeGlyphs[((u8)c - 128)].base;
+}
 
 void djui_font_convert_to_smcode(char* text) {
     size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
@@ -49,7 +84,7 @@ void djui_font_convert_to_smcode(char* text) {
         //printf("%d ", *t);
         for (size_t i = 0; i < glyphCount; i++) {
             struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
-            if (t[0] == glyph->unicode1 && t[1] == glyph->unicode2) {
+            if (t[0] == glyph->unicode[0] && t[1] == glyph->unicode[1]) {
                 // consume down to one character
                 char* t2 = t;
                 while (*t2 != '\0') { t2[0] = t2[1]; t2++; }
@@ -124,6 +159,7 @@ static void djui_font_normal_render_char(char c) {
 static f32 djui_font_normal_char_width(char c) {
     if (c == ' ') { return 0.30f; }
     extern const f32 font_normal_widths[];
+    c = djui_font_convert_smcode_to_base(c);
     return font_normal_widths[(u8)c - '!'];
 }
 

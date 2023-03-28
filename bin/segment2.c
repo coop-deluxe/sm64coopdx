@@ -3609,6 +3609,10 @@ ALIGNED8 static const u8 texture_font_normal_char_ca_t[] = {
 #include "textures/segment2/custom_font_normal_char_ca_t.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_ca_u[] = {
+#include "textures/segment2/custom_font_normal_char_ca_u.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_cc_ced[] = {
 #include "textures/segment2/custom_font_normal_char_cc_ced.ia4.inc.c"
 };
@@ -3621,8 +3625,24 @@ ALIGNED8 static const u8 texture_font_normal_char_ce_c[] = {
 #include "textures/segment2/custom_font_normal_char_ce_c.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_ce_g[] = {
+#include "textures/segment2/custom_font_normal_char_ce_g.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_ce_u[] = {
+#include "textures/segment2/custom_font_normal_char_ce_u.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_ci_a[] = {
 #include "textures/segment2/custom_font_normal_char_ci_a.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_ci_g[] = {
+#include "textures/segment2/custom_font_normal_char_ci_g.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_ci_u[] = {
+#include "textures/segment2/custom_font_normal_char_ci_u.ia4.inc.c"
 };
 
 ALIGNED8 static const u8 texture_font_normal_char_cn_t[] = {
@@ -3637,6 +3657,14 @@ ALIGNED8 static const u8 texture_font_normal_char_co_c[] = {
 #include "textures/segment2/custom_font_normal_char_co_c.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_co_g[] = {
+#include "textures/segment2/custom_font_normal_char_co_g.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_co_u[] = {
+#include "textures/segment2/custom_font_normal_char_co_u.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_co_t[] = {
 #include "textures/segment2/custom_font_normal_char_co_t.ia4.inc.c"
 };
@@ -3645,8 +3673,20 @@ ALIGNED8 static const u8 texture_font_normal_char_cu_a[] = {
 #include "textures/segment2/custom_font_normal_char_cu_a.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_cu_g[] = {
+#include "textures/segment2/custom_font_normal_char_cu_g.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_cu_u[] = {
 #include "textures/segment2/custom_font_normal_char_cu_u.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_cy_a[] = {
+#include "textures/segment2/custom_font_normal_char_cy_a.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_cy_u[] = {
+#include "textures/segment2/custom_font_normal_char_cy_u.ia4.inc.c"
 };
 
 ALIGNED8 static const u8 texture_font_normal_char_la_a[] = {
@@ -3665,6 +3705,10 @@ ALIGNED8 static const u8 texture_font_normal_char_la_t[] = {
 #include "textures/segment2/custom_font_normal_char_la_t.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_la_u[] = {
+#include "textures/segment2/custom_font_normal_char_la_u.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_lc_ced[] = {
 #include "textures/segment2/custom_font_normal_char_lc_ced.ia4.inc.c"
 };
@@ -3677,8 +3721,24 @@ ALIGNED8 static const u8 texture_font_normal_char_le_c[] = {
 #include "textures/segment2/custom_font_normal_char_le_c.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_le_g[] = {
+#include "textures/segment2/custom_font_normal_char_le_g.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_le_u[] = {
+#include "textures/segment2/custom_font_normal_char_le_u.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_li_a[] = {
 #include "textures/segment2/custom_font_normal_char_li_a.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_li_g[] = {
+#include "textures/segment2/custom_font_normal_char_li_g.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_li_u[] = {
+#include "textures/segment2/custom_font_normal_char_li_u.ia4.inc.c"
 };
 
 ALIGNED8 static const u8 texture_font_normal_char_ln_t[] = {
@@ -3693,6 +3753,14 @@ ALIGNED8 static const u8 texture_font_normal_char_lo_c[] = {
 #include "textures/segment2/custom_font_normal_char_lo_c.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_lo_g[] = {
+#include "textures/segment2/custom_font_normal_char_lo_g.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_lo_u[] = {
+#include "textures/segment2/custom_font_normal_char_lo_u.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_lo_t[] = {
 #include "textures/segment2/custom_font_normal_char_lo_t.ia4.inc.c"
 };
@@ -3701,8 +3769,20 @@ ALIGNED8 static const u8 texture_font_normal_char_lu_a[] = {
 #include "textures/segment2/custom_font_normal_char_lu_a.ia4.inc.c"
 };
 
+ALIGNED8 static const u8 texture_font_normal_char_lu_g[] = {
+#include "textures/segment2/custom_font_normal_char_lu_g.ia4.inc.c"
+};
+
 ALIGNED8 static const u8 texture_font_normal_char_lu_u[] = {
 #include "textures/segment2/custom_font_normal_char_lu_u.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_ly_a[] = {
+#include "textures/segment2/custom_font_normal_char_ly_a.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_ly_u[] = {
+#include "textures/segment2/custom_font_normal_char_ly_u.ia4.inc.c"
 };
 
 ALIGNED8 static const u8 texture_font_normal_char_punc_sp_ex[] = {
@@ -3815,31 +3895,51 @@ const u8* const font_normal_chars[] = {
     texture_font_normal_char_ca_c,           // Â
     texture_font_normal_char_ca_g,           // À
     texture_font_normal_char_ca_t,           // Ã
+    texture_font_normal_char_ca_u,           // Ä
     texture_font_normal_char_cc_ced,         // Ç
     texture_font_normal_char_ce_a,           // É
     texture_font_normal_char_ce_c,           // Ê
+    texture_font_normal_char_ce_g,           // È
+    texture_font_normal_char_ce_u,           // Ë
     texture_font_normal_char_ci_a,           // Í
+    texture_font_normal_char_ci_g,           // Ì
+    texture_font_normal_char_ci_u,           // Ï
     texture_font_normal_char_cn_t,           // Ñ
     texture_font_normal_char_co_a,           // Ó
     texture_font_normal_char_co_c,           // Ô
+    texture_font_normal_char_co_g,           // Ò
     texture_font_normal_char_co_t,           // Õ
+    texture_font_normal_char_co_u,           // Ö
     texture_font_normal_char_cu_a,           // Ú
+    texture_font_normal_char_cu_g,           // Ù
     texture_font_normal_char_cu_u,           // Ü
+    texture_font_normal_char_cy_a,           // Ý
+    texture_font_normal_char_cy_u,           // Ÿ
 
     texture_font_normal_char_la_a,           // á
     texture_font_normal_char_la_c,           // â
     texture_font_normal_char_la_g,           // à
     texture_font_normal_char_la_t,           // ã
+    texture_font_normal_char_la_u,           // ä
     texture_font_normal_char_lc_ced,         // ç
     texture_font_normal_char_le_a,           // é
     texture_font_normal_char_le_c,           // ê
+    texture_font_normal_char_le_g,           // è
+    texture_font_normal_char_le_u,           // ë
     texture_font_normal_char_li_a,           // í
+    texture_font_normal_char_li_g,           // ì
+    texture_font_normal_char_li_u,           // ï
     texture_font_normal_char_ln_t,           // ñ
     texture_font_normal_char_lo_a,           // ó
     texture_font_normal_char_lo_c,           // ô
+    texture_font_normal_char_lo_g,           // ò
     texture_font_normal_char_lo_t,           // õ
+    texture_font_normal_char_lo_u,           // ö
     texture_font_normal_char_lu_a,           // ú
+    texture_font_normal_char_lu_g,           // ù
     texture_font_normal_char_lu_u,           // ü
+    texture_font_normal_char_ly_a,           // ý
+    texture_font_normal_char_ly_u,           // ÿ
 
     texture_font_normal_char_punc_sp_ex,     // ¡
     texture_font_normal_char_punc_sp_qu,     // ¿
@@ -3861,14 +3961,6 @@ const f32 font_normal_widths[] = {
     0.3750f, 0.3125f, 0.3125f, 0.3750f, 0.3125f, 0.3125f, 0.3750f, 0.3125f, 0.2500f, 0.3125f, 0.3125f, 0.1875f, 0.4375f, 0.3125f, 0.3125f, 0.3125f, 0.3750f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.4375f, 0.4375f, 0.3125f, 0.3125f,
 /*        {        |        }        ~      DEL        */
     0.3125f, 0.2500f, 0.3125f, 0.5000f, 0.5000f,
-
-/*        Á        Â        À        Ã        Ç        É        Ê        Í        Ñ        Ó        Ô        Õ        Ú        Ü        */
-    0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3125f, 0.5000f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f,
-/*        á        â        à        ã        ç        é        ê        í        ñ        ó        ô        õ        ú        ü        */
-    0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3125f, 0.3125f, 0.3125f, 0.2500f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.3125f,
-/*        ¡        ¿        */
-    0.3125f, 0.4375f,
-
 };
 
 
