@@ -1,6 +1,66 @@
 #include "djui.h"
 #include "game/segment2.h"
 
+struct SmCodeGlyph {
+    s8 unicode1;
+    s8 unicode2;
+    u8 smcode;
+};
+
+struct SmCodeGlyph sSmCodeGlyphs[] = {
+    { -61, -95,  128 }, // á
+    { -61, -87,  129 }, // é
+    { -61, -83,  130 }, // í
+    { -61, -77,  131 }, // ó
+    { -61, -70,  132 }, // ú
+    { -61, -68,  133 }, // ü
+    { -61, -79,  134 }, // ñ
+    { -61, -127, 135 }, // Á
+    { -61, -119, 136 }, // É
+    { -61, -115, 137 }, // Í
+    { -61, -109, 138 }, // Ó
+    { -61, -102, 139 }, // Ú
+    { -61, -100, 140 }, // Ü
+    { -61, -111, 141 }, // Ñ
+    { -62, -95,  142 }, // ¡
+    { -62, -65,  143 }, // ¿
+};
+
+void djui_font_convert_to_smcode(char* text) {
+    size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
+
+    char* t = text;
+    while (*t != '\0') {
+        for (size_t i = 0; i < glyphCount; i++) {
+            struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
+            if (t[0] == glyph->unicode1 && t[1] == glyph->unicode2) {
+                // consume down to one character
+                char* t2 = t;
+                while (*t2 != '\0') { t2[0] = t2[1]; t2++; }
+                // replace
+                t[0] = (s8)glyph->smcode;
+            }
+        }
+        t++;
+    }
+}
+
+bool djui_font_valid_smcode(char c) {
+    if (c >= '!' && c <= '~') {
+        return true;
+    } else if (c == ' ') {
+        return true;
+    }
+
+    size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
+    for (size_t i = 0; i < glyphCount; i++) {
+        struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
+        if ((u8)c == glyph->smcode) { return true; }
+    }
+
+    return false;
+}
+
   ///////////////////////////////////
  // font 0 (built-in normal font) //
 ///////////////////////////////////
@@ -35,7 +95,8 @@ const Gfx dl_font_normal_display_list[] = {
 static void djui_font_normal_render_char(char c) {
     extern const u8* const font_normal_chars[];
     // replace undisplayable characters
-    if ((u8)c < ' ' || (u8)c > ('~' + 3)) { c = '?'; }
+    //if ((u8)c < ' ' || (u8)c > ('~' + 3)) { c = '?'; }
+    if (!djui_font_valid_smcode(c)) { c = '?'; }
     if (c == ' ') { return; }
     void* fontChar = (void*)font_normal_chars[(u8)c - '!'];
     if (fontChar == NULL) { fontChar = (void*)font_normal_chars[94]; }
