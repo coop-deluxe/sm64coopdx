@@ -291,20 +291,55 @@ static void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
     wm_api->stop_text_input();
 }
 
+#define SPANISH_UNICODE_START -61
+#define SPANISH_UNICODE_LOWER_N -79   // ñ
+#define SPANISH_UNICODE_UPPER_N -111  // Ñ
+#define SPANISH_SMCODE_LOWER_N ((s8)('~' + 2))
+#define SPANISH_SMCODE_UPPER_N ((s8)('~' + 3))
+
 static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     char* msg = inputbox->buffer;
     int msgLen = strlen(msg);
     int textLen = strlen(text);
 
+    // special case ñ and Ñ
+    char* tinput = text;
+    while (*tinput != '\0') {
+        if (tinput[0] == SPANISH_UNICODE_START) {
+            if ((tinput[1] == SPANISH_UNICODE_LOWER_N || tinput[1] == SPANISH_UNICODE_UPPER_N)) {
+                // consume SPANISH_UNICODE_START
+                char* t2 = tinput;
+                while (*t2 != '\0') {
+                    t2[0] = t2[1];
+                    t2++;
+                }
+
+                // translate
+                if (tinput[0] == SPANISH_UNICODE_LOWER_N) {
+                    tinput[0] = SPANISH_SMCODE_LOWER_N;
+                } else if (tinput[0] == SPANISH_UNICODE_UPPER_N) {
+                    tinput[0] = SPANISH_SMCODE_UPPER_N;
+                }
+            }
+        }
+        tinput++;
+    }
+
     // make sure we're not just printing garbage characters
     bool containsValidAscii = false;
-    char* tinput = text;
+    tinput = text;
     while (*tinput != '\0') {
         if (*tinput >= '!' && *tinput <= '~') {
             containsValidAscii = true;
             break;
         } else if (*tinput == ' ') {
+            containsValidAscii = true;
+            break;
+        } else if (*tinput == SPANISH_SMCODE_LOWER_N) {
+            containsValidAscii = true;
+            break;
+        } else if (*tinput == SPANISH_SMCODE_UPPER_N) {
             containsValidAscii = true;
             break;
         }
@@ -333,6 +368,8 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
         if (*t == '\n') { *t = ' '; }
         else if (*t == '\r') { *t = ' '; }
         else if (*t == ' ') { ; }
+        else if (*t == SPANISH_SMCODE_LOWER_N) { ; }
+        else if (*t == SPANISH_SMCODE_UPPER_N) { ; }
         else if (*t < '!' || *t > '~') { *t = '?'; }
         t++;
     }

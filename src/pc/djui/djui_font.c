@@ -35,9 +35,9 @@ const Gfx dl_font_normal_display_list[] = {
 static void djui_font_normal_render_char(char c) {
     extern const u8* const font_normal_chars[];
     // replace undisplayable characters
-    if (c < ' ' || (u8)c > ('~' + 1)) { c = '?'; }
+    if ((u8)c < ' ' || (u8)c > ('~' + 3)) { c = '?'; }
     if (c == ' ') { return; }
-    void* fontChar = (void*)font_normal_chars[c - '!'];
+    void* fontChar = (void*)font_normal_chars[(u8)c - '!'];
     if (fontChar == NULL) { fontChar = (void*)font_normal_chars[94]; }
 
     gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, (void*)fontChar);
@@ -47,7 +47,7 @@ static void djui_font_normal_render_char(char c) {
 static f32 djui_font_normal_char_width(char c) {
     if (c == ' ') { return 0.30f; }
     extern const f32 font_normal_widths[];
-    return font_normal_widths[c - '!'];
+    return font_normal_widths[(u8)c - '!'];
 }
 
 static const struct DjuiFont sDjuiFontNormal = {
@@ -76,7 +76,7 @@ static void djui_font_title_render_char(char c) {
 static f32 djui_font_title_char_width(char c) {
     if (c == ' ') { return 0.30f; }
     extern const f32 font_title_widths[];
-    return font_title_widths[c - '!'];
+    return font_title_widths[(u8)c - '!'];
 }
 
 static const struct DjuiFont sDjuiFontTitle = {
