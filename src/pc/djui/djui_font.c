@@ -24,13 +24,31 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
     { -61, -111, 141 }, // Ñ
     { -62, -95,  142 }, // ¡
     { -62, -65,  143 }, // ¿
+
+    { -61, -96,  144 }, // à
+    { -61, -94,  145 }, // â
+    { -61, -93,  146 }, // ã
+    { -61, -86,  147 }, // ê
+    { -61, -76,  148 }, // ô
+    { -61, -75,  149 }, // õ
+    { -61, -89,  150 }, // ç
+    { -61, -128, 151 }, // À
+    { -61, -126, 152 }, // Â
+    { -61, -125, 153 }, // Ã
+    { -61, -118, 154 }, // Ê
+    { -61, -108, 155 }, // Ô
+    { -61, -107, 156 }, // Õ
+    { -61, -121, 157 }, // Ç
 };
 
 void djui_font_convert_to_smcode(char* text) {
     size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
 
+    //printf("....................\n");
+    //printf("%s\n", text);
     char* t = text;
     while (*t != '\0') {
+        //printf("%d ", *t);
         for (size_t i = 0; i < glyphCount; i++) {
             struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
             if (t[0] == glyph->unicode1 && t[1] == glyph->unicode2) {
@@ -43,6 +61,7 @@ void djui_font_convert_to_smcode(char* text) {
         }
         t++;
     }
+    //printf("\n....................\n");
 }
 
 bool djui_font_valid_smcode(char c) {

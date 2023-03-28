@@ -3657,6 +3657,63 @@ ALIGNED8 static const u8 texture_font_normal_char_squ[] = {
 #include "textures/segment2/custom_font_normal_char_squ.ia4.inc.c"
 };
 
+// portuguese
+
+ALIGNED8 static const u8 texture_font_normal_char_pa[] = {
+#include "textures/segment2/custom_font_normal_char_pa.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pa2[] = {
+#include "textures/segment2/custom_font_normal_char_pa2.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pa3[] = {
+#include "textures/segment2/custom_font_normal_char_pa3.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pc[] = {
+#include "textures/segment2/custom_font_normal_char_pc.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pca[] = {
+#include "textures/segment2/custom_font_normal_char_pca.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pca2[] = {
+#include "textures/segment2/custom_font_normal_char_pca2.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pca3[] = {
+#include "textures/segment2/custom_font_normal_char_pca3.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pcc[] = {
+#include "textures/segment2/custom_font_normal_char_pcc.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pce2[] = {
+#include "textures/segment2/custom_font_normal_char_pce2.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pco2[] = {
+#include "textures/segment2/custom_font_normal_char_pco2.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pco3[] = {
+#include "textures/segment2/custom_font_normal_char_pco3.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_pe2[] = {
+#include "textures/segment2/custom_font_normal_char_pe2.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_po2[] = {
+#include "textures/segment2/custom_font_normal_char_po2.ia4.inc.c"
+};
+
+ALIGNED8 static const u8 texture_font_normal_char_po3[] = {
+#include "textures/segment2/custom_font_normal_char_po3.ia4.inc.c"
+};
 
 const u8* const font_normal_chars[] = {
     texture_font_char_us_exclamation,        // !
@@ -3772,6 +3829,20 @@ const u8* const font_normal_chars[] = {
     texture_font_normal_char_sex,            // ¡
     texture_font_normal_char_squ,            // ¿
 
+    texture_font_normal_char_pa,             // à
+    texture_font_normal_char_pa2,            // â
+    texture_font_normal_char_pa3,            // ã
+    texture_font_normal_char_pe2,            // ê
+    texture_font_normal_char_po2,            // ô
+    texture_font_normal_char_po3,            // õ
+    texture_font_normal_char_pc,             // ç
+    texture_font_normal_char_pca,            // À
+    texture_font_normal_char_pca2,           // Â
+    texture_font_normal_char_pca3,           // Ã
+    texture_font_normal_char_pce2,           // Ê
+    texture_font_normal_char_pco2,           // Ô
+    texture_font_normal_char_pco3,           // Õ
+    texture_font_normal_char_pcc,            // Ç
 };
 
 const f32 font_normal_widths[] = {
@@ -3796,6 +3867,12 @@ const f32 font_normal_widths[] = {
     0.3750f, 0.3750f, 0.3125f, 0.3750f, 0.3750f, 0.3750f, 0.5000f,
 /*        ¡        ¿        */
     0.3125f, 0.4375f,
+
+/*        à        â        ã        ê        ô        õ        ç       */
+    0.3750f, 0.3750f, 0.3750f, 0.3125f, 0.3125f, 0.3125f, 0.3125f,
+/*        À        Â        Ã        Ê        Ô        Õ        Ç       */
+    0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f,
+
 };
 
 
