@@ -236,7 +236,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     if (sHeldControl && (scancode == SCANCODE_C || scancode == SCANCODE_X)) {
         if (sel[0] != sel[1]) {
             char clipboardText[256] = { 0 };
-            snprintf(clipboardText, fmin(256, 1 + s2 - s1), "%s", &msg[s1]);
+            djui_font_convert_to_unicode(&msg[s1], clipboardText, fmin(256, 1 + s2 - s1), 255);
             wm_api->set_clipboard_text(clipboardText);
             if (scancode == SCANCODE_X) {
                 djui_inputbox_delete_selection(inputbox);

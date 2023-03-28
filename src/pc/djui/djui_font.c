@@ -4,61 +4,78 @@
 struct SmCodeGlyph {
     char unicode[3];
     char base;
+    f32 width;
 };
 
 struct SmCodeGlyph sSmCodeGlyphs[] = {
-    { "Á", 'A' },
-    { "Â", 'A' },
-    { "À", 'A' },
-    { "Ã", 'A' },
-    { "Ä", 'A' },
-    { "Ç", 'C' },
-    { "É", 'E' },
-    { "Ê", 'E' },
-    { "È", 'E' },
-    { "Ë", 'E' },
-    { "Í", 'I' },
-    { "Ì", 'I' },
-    { "Ï", 'I' },
-    { "Ñ", 'N' },
-    { "Ó", 'O' },
-    { "Ô", 'O' },
-    { "Ò", 'O' },
-    { "Õ", 'O' },
-    { "Ö", 'O' },
-    { "Ú", 'U' },
-    { "Ù", 'U' },
-    { "Ü", 'U' },
-    { "Ý", 'Y' },
-    { "Ÿ", 'Y' },
+    { "Á", 'A', 0 },
+    { "Å", 'A', 0 },
+    { "Â", 'A', 0 },
+    { "À", 'A', 0 },
+    { "Ã", 'A', 0 },
+    { "Ä", 'A', 0 },
+    { "Ç", 'C', 0 },
+    { "É", 'E', 0 },
+    { "Ê", 'E', 0 },
+    { "È", 'E', 0 },
+    { "Ë", 'E', 0 },
+    { "Í", 'I', 0 },
+    { "Î", 'I', 0 },
+    { "Ì", 'I', 0 },
+    { "Ï", 'I', 0 },
+    { "Ñ", 'N', 0 },
+    { "Ó", 'O', 0 },
+    { "Ô", 'O', 0 },
+    { "Ò", 'O', 0 },
+    { "Õ", 'O', 0 },
+    { "Ö", 'O', 0 },
+    { "Ú", 'U', 0 },
+    { "Û", 'U', 0 },
+    { "Ù", 'U', 0 },
+    { "Ü", 'U', 0 },
+    { "Ý", 'Y', 0 },
+    { "Ÿ", 'Y', 0 },
 
-    { "á", 'a' },
-    { "â", 'a' },
-    { "à", 'a' },
-    { "ã", 'a' },
-    { "ä", 'a' },
-    { "ç", 'c' },
-    { "é", 'e' },
-    { "ê", 'e' },
-    { "è", 'e' },
-    { "ë", 'e' },
-    { "í", 'i' },
-    { "ì", 'i' },
-    { "ï", 'i' },
-    { "ñ", 'n' },
-    { "ó", 'o' },
-    { "ô", 'o' },
-    { "ò", 'o' },
-    { "õ", 'o' },
-    { "ö", 'o' },
-    { "ú", 'u' },
-    { "ù", 'u' },
-    { "ü", 'u' },
-    { "ý", 'y' },
-    { "ÿ", 'y' },
+    { "á", 'a', 0 },
+    { "å", 'a', 0 },
+    { "â", 'a', 0 },
+    { "à", 'a', 0 },
+    { "ã", 'a', 0 },
+    { "ä", 'a', 0 },
+    { "ç", 'c', 0 },
+    { "é", 'e', 0 },
+    { "ê", 'e', 0 },
+    { "è", 'e', 0 },
+    { "ë", 'e', 0 },
+    { "í", 'i', 0 },
+    { "î", 'i', 0 },
+    { "ì", 'i', 0 },
+    { "ï", 'i', 0 },
+    { "ñ", 'n', 0 },
+    { "ó", 'o', 0 },
+    { "ô", 'o', 0 },
+    { "ò", 'o', 0 },
+    { "õ", 'o', 0 },
+    { "ö", 'o', 0 },
+    { "ú", 'u', 0 },
+    { "û", 'u', 0 },
+    { "ù", 'u', 0 },
+    { "ü", 'u', 0 },
+    { "ý", 'y', 0 },
+    { "ÿ", 'y', 0 },
 
-    { "¡", '!' },
-    { "¿", '?' },
+    { "æ", 'a', 0.5000f },
+    { "Æ", 'a', 0.6000f },
+    { "œ", 'o', 0.5000f },
+    { "Œ", 'o', 0.5000f },
+    { "ð", 'd', 0 },
+    { "Ð", 'D', 0.4375f },
+    { "ø", 'o', 0 },
+    { "Ø", 'O', 0 },
+    { "ß", 'S', 0 },
+
+    { "¡", '!', 0 },
+    { "¿", '?', 0 },
 };
 
 
@@ -72,6 +89,28 @@ u8 djui_font_convert_smcode_to_base(char c) {
         return '?';
     }
     return sSmCodeGlyphs[((u8)c - 128)].base;
+}
+
+void djui_font_convert_to_unicode(char* from, char* to, int length, int maxlength) {
+    int clen = 0;
+    int count = 0;
+    to[0] = '\0';
+    while (*from != '\0' && count < length) {
+        count++;
+        if ((u8)*from < 128 || !djui_font_valid_smcode(*from)) {
+            clen = strlen(to);
+            snprintf(to + clen, maxlength - clen, "%c", *from);
+            from++;
+            continue;
+        }
+
+        int i = (u8)*from - 128;
+        struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
+        clen = strlen(to);
+        snprintf(to + clen, maxlength - clen, "%s", glyph->unicode);
+
+        from++;
+    }
 }
 
 void djui_font_convert_to_smcode(char* text) {
@@ -159,6 +198,21 @@ static void djui_font_normal_render_char(char c) {
 static f32 djui_font_normal_char_width(char c) {
     if (c == ' ') { return 0.30f; }
     extern const f32 font_normal_widths[];
+
+    if ((u8)c < 128) {
+        return font_normal_widths[(u8)c - '!'];
+    }
+
+    size_t glyphCount = sizeof(sSmCodeGlyphs) / sizeof(sSmCodeGlyphs[0]);
+    u8 max = 128 + glyphCount;
+    if ((u8)c > max) {
+        return font_normal_widths[(u8)'?' - '!'];
+    }
+
+    if (sSmCodeGlyphs[(u8)c - 128].width > 0) {
+        return sSmCodeGlyphs[(u8)c - 128].width;
+    }
+
     c = djui_font_convert_smcode_to_base(c);
     return font_normal_widths[(u8)c - '!'];
 }
