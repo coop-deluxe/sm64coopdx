@@ -9,7 +9,7 @@ void network_send_ping(struct NetworkPlayer* toNp) {
 
     toNp->lastPingSent = clock_elapsed();
 
-    packet_init(&p, PACKET_PING, true, PLMT_NONE);
+    packet_init(&p, PACKET_PING, false, PLMT_NONE);
     packet_write(&p, &toNp->globalIndex, sizeof(u8));
     packet_write(&p, &timestamp,        sizeof(f64));
     network_send_to(toNp->localIndex, &p);
@@ -27,7 +27,7 @@ void network_receive_ping(struct Packet* p) {
     packet_read(p, &timestamp,   sizeof(f64));
 
     struct Packet p2 = { 0 };
-    packet_init(&p2, PACKET_PONG, true, PLMT_NONE);
+    packet_init(&p2, PACKET_PONG, false, PLMT_NONE);
     packet_write(&p2, &globalIndex, sizeof(u8));
     packet_write(&p2, &timestamp,   sizeof(f64));
     network_send_to(p->localIndex, &p2);
