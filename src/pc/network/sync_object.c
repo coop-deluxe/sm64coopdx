@@ -15,6 +15,8 @@
 void* sSoMap = NULL;
 void* sSoIter = NULL;
 
+#define FORGET_TIMEOUT 10
+
 struct SyncObjectForgetEntry {
     struct SyncObject* so;
     s32 forgetTimer;
@@ -51,6 +53,9 @@ void sync_objects_update(void) {
     struct SyncObjectForgetEntry* entry = sForgetList;
     while (entry) {
         struct SyncObjectForgetEntry* next = entry->next;
+        if (entry->forgetTimer == FORGET_TIMEOUT) {
+            hmap_del(sSoMap, entry->so->id);
+        }
 
         if (entry->forgetTimer-- <= 0) {
             if (prev) {
@@ -74,17 +79,16 @@ void sync_objects_clear(void) {
     sNextSyncId = SYNC_ID_BLOCK_SIZE / 2;
     network_on_init_area();
 
-    sFreeingAll = true;
     for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
         sync_object_forget(so->id);
     }
-    sFreeingAll = false;
     hmap_clear(sSoMap);
 }
 
 void sync_object_forget(u32 syncId) {
     struct SyncObject* so = sync_object_get(syncId);
     if (!so) { return; }
+    if (so->forgetting) { return; }
 
     // invalidate last packet sent
     if (so != NULL && so->o != NULL && so->o->oSyncID < SYNC_ID_BLOCK_SIZE) {
@@ -103,20 +107,17 @@ void sync_object_forget(u32 syncId) {
         gCurrentObject = lastObject;
     }
 
-
-    so->o = NULL;
-    so->behavior = NULL;
-    so->owned = false;
-
-    if (!sFreeingAll) {
-        hmap_del(sSoMap, syncId);
+    if (so->o) {
+        so->o->oSyncID = 0;
     }
+
+    so->forgetting = true;
 
     // add it to a list to free later
     s32 forgetCount = 1;
     struct SyncObjectForgetEntry* newEntry = calloc(1, sizeof(struct SyncObjectForgetEntry));
     newEntry->so = so;
-    newEntry->forgetTimer = 10;
+    newEntry->forgetTimer = FORGET_TIMEOUT;
     if (sForgetList == NULL) {
         sForgetList = newEntry;
     } else {
@@ -411,7 +412,7 @@ bool sync_object_set_id(struct Object* o) {
         so = calloc(1, sizeof(struct SyncObject));
         so->extendedModelId = 0xFFFF;
         hmap_put(sSoMap, syncId, so);
-        LOG_INFO("Allocated sync object @ %u, size %ld", syncId, hmap_len(sSoMap));
+        LOG_INFO("Allocated sync object @ %u, size %ld", syncId, (long int)hmap_len(sSoMap));
     } else if (so->o != o) {
         LOG_INFO("Already exists...");
     }

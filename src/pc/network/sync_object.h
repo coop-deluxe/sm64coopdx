@@ -35,6 +35,7 @@ struct SyncObject {
     bool lastReliablePacketIsStale;
     u16 extendedModelId;
     struct Packet lastReliablePacket;
+    u8 forgetting;
 };
 
 

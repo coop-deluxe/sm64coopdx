@@ -11455,6 +11455,9 @@ ANIM_FLAG_NOLOOP = (1 << 0)
 ANIM_FLAG_VERT_TRANS = (1 << 4)
 
 --- @type integer
+COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
+
+--- @type integer
 COOP_OBJ_FLAG_LUA = (1 << 1)
 
 --- @type integer
@@ -11519,10 +11522,10 @@ MAX_VERSION_LENGTH = 10
 MINOR_VERSION_NUMBER = 0
 
 --- @type integer
-PATCH_VERSION_NUMBER = 3
+PATCH_VERSION_NUMBER = 0
 
 --- @type integer
-VERSION_NUMBER = 32
+VERSION_NUMBER = 33
 
 --- @type string
 VERSION_TEXT = "beta"
