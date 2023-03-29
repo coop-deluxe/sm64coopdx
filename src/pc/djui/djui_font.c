@@ -137,7 +137,7 @@ void djui_font_convert_to_smcode(char* text) {
 }
 
 bool djui_font_valid_smcode(char c) {
-    if (c >= '!' && c <= '~') {
+    if (c >= '!' && (u8)c <= ((u8)'~' + 1)) {
         return true;
     } else if (c == ' ') {
         return true;
