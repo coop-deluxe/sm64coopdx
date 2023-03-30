@@ -22,6 +22,7 @@ struct DiscordApplication app = { 0 };
 bool gDiscordInitialized = false;
 bool gDiscordFailed = false;
 bool alreadyRun = false;
+bool gDiscordReconnecting = false;
 
 static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
     LOGFILE_INFO(LFT_DISCORD, "callback (%d): %s", level, message);
@@ -107,6 +108,7 @@ static void ns_discord_update(void) {
 }
 
 static bool ns_discord_initialize(enum NetworkType networkType) {
+    if (gDiscordReconnecting) { return true; }
 #ifdef DEBUG
     set_instance_env_variable();
 #endif
@@ -179,6 +181,7 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
 }
 
 static void ns_discord_shutdown(void) {
+    if (gDiscordReconnecting) { return; }
     if (!gDiscordInitialized) { return; }
     discord_lobby_leave();
     gActivityLock = false;

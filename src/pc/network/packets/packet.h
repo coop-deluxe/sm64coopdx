@@ -96,6 +96,7 @@ struct Packet {
     bool levelAreaMustMatch;
     bool levelMustMatch;
     bool requestBroadcast;
+    bool keepSendingAfterDisconnect;
     u8 destGlobalId;
     u16 seqId;
     bool sent;
@@ -114,6 +115,7 @@ enum KickReasonType {
     EKT_FULL_PARTY,
     EKT_KICKED,
     EKT_BANNED,
+    EKT_REJOIN,
 };
 
 enum ChatConfirmCommand {

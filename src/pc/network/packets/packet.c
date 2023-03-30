@@ -130,6 +130,10 @@ void packet_receive(struct Packet* p) {
 
     // refuse packets from unknown players other than join request
     if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && !network_allow_unknown_local_index(packetType)) {
+        if (gNetworkStartupTimer > 0) {
+            LOG_INFO("refusing packet from unknown player on startup, packetType: %d", packetType);
+            return;
+        }
         if (packetType != PACKET_PLAYER) {
             LOG_INFO("closing connection for packetType: %d", packetType);
             network_send_kick(0, EKT_CLOSE_CONNECTION);

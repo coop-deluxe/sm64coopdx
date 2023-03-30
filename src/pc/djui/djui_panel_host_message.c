@@ -27,12 +27,13 @@ Direct connections \\#ffa0a0\\require you\\#c8c8c8\\ to configure port forwardin
 Forward port '\\#d0d0ff\\%d\\#c8c8c8\\' for UDP.\
 ";
 
-void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
+void djui_panel_do_host(void) {
     stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
     gCurrSaveFileNum = configHostSaveSlot;
     update_all_mario_stars();
+
 #ifndef DISCORD_SDK
     configNetworkSystem = 1;
     network_set_system(NS_SOCKET);
@@ -43,15 +44,24 @@ void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
         network_set_system(NS_SOCKET);
     }
 #endif
+
     network_init(NT_SERVER);
     djui_panel_modlist_create(NULL);
     fake_lvl_init_from_save_file();
+
     extern s16 gChangeLevelTransition;
     gChangeLevelTransition = gLevelValues.entryLevel;
+
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
+
     play_character_sound(gMarioState, CHAR_SOUND_OKEY_DOKEY);
     extern void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
     play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
+}
+
+void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
+    network_reset_reconnect_and_rehost();
+    djui_panel_do_host();
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {

@@ -35,7 +35,14 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
 }
 
 void network_forget_all_reliable(void) {
-    while (head != NULL) { remove_node_from_list(head); }
+    struct PacketLinkedList* node = head;
+    while (node != NULL) {
+        struct PacketLinkedList* next = node->next;
+        if (!node->p.keepSendingAfterDisconnect) {
+            remove_node_from_list(head);
+        }
+        node = next;
+    }
 }
 
 void network_forget_all_reliable_from(u8 localIndex) {
@@ -44,7 +51,9 @@ void network_forget_all_reliable_from(u8 localIndex) {
     while (node != NULL) {
         struct PacketLinkedList* next = node->next;
         if (node->p.localIndex == localIndex) {
-            remove_node_from_list(node);
+            if (!node->p.keepSendingAfterDisconnect) {
+                remove_node_from_list(node);
+            }
         }
         node = next;
     }

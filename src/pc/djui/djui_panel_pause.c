@@ -13,6 +13,7 @@ static void djui_panel_pause_resume(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_pause_quit_yes(UNUSED struct DjuiBase* caller) {
+    network_reset_reconnect_and_rehost();
     network_shutdown(true, false, false);
 }
 
@@ -35,8 +36,9 @@ static void djui_panel_pause_quit(struct DjuiBase* caller) {
 void djui_panel_pause_create(struct DjuiBase* caller) {
     if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
 
-    f32 bodyHeight = 64 * 5 + 16 * 4;
+    f32 bodyHeight = 64 * 4 + 16 * 3;
     if (gServerSettings.enableCheats) { bodyHeight += 64 + 16; }
+    if (gNetworkType == NT_SERVER) { bodyHeight += 64 + 16; }
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\A\\#00b3ff\\U\\#ffef00\\S\\#ff0800\\E");
@@ -77,16 +79,23 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         djui_base_set_size(&button5->base, 1.0f, 64);
         djui_interactable_hook_click(&button5->base, djui_panel_pause_resume);
 
-        struct DjuiButton* button6;
         if (gNetworkType == NT_SERVER) {
-            button6 = djui_button_create(&body->base, "Stop Hosting");
-        } else {
-            button6 = djui_button_create(&body->base, "Disconnect");
+            struct DjuiButton* button6 = djui_button_create(&body->base, "Server Settings");
+            djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&button6->base, 1.0f, 64);
+            djui_interactable_hook_click(&button6->base, djui_panel_host_create);
         }
-        djui_base_set_size_type(&button6->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button6->base, 1.0f, 64);
-        djui_interactable_hook_click(&button6->base, djui_panel_pause_quit);
-        djui_button_set_style(button6, 1);
+
+        struct DjuiButton* button7;
+        if (gNetworkType == NT_SERVER) {
+            button7 = djui_button_create(&body->base, "Stop Hosting");
+        } else {
+            button7 = djui_button_create(&body->base, "Disconnect");
+        }
+        djui_base_set_size_type(&button7->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button7->base, 1.0f, 64);
+        djui_interactable_hook_click(&button7->base, djui_panel_pause_quit);
+        djui_button_set_style(button7, 1);
     }
     
     djui_panel_add(caller, &panel->base, defaultBase);

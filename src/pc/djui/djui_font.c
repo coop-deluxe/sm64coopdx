@@ -185,7 +185,6 @@ const Gfx dl_font_normal_display_list[] = {
 static void djui_font_normal_render_char(char c) {
     extern const u8* const font_normal_chars[];
     // replace undisplayable characters
-    //if ((u8)c < ' ' || (u8)c > ('~' + 3)) { c = '?'; }
     if (!djui_font_valid_smcode(c)) { c = '?'; }
     if (c == ' ') { return; }
     void* fontChar = (void*)font_normal_chars[(u8)c - '!'];

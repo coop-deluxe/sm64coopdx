@@ -149,6 +149,7 @@ void djui_panel_join_do_join(struct DjuiBase* caller) {
         djui_inputbox_select_all(sInputboxIp);
         return;
     }
+    network_reset_reconnect_and_rehost();
     djui_panel_join_ip_text_set_new();
     network_set_system(NS_SOCKET);
     network_init(NT_CLIENT);

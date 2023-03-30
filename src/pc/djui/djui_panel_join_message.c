@@ -16,6 +16,8 @@ void djui_panel_join_message_error(char* message) {
 }
 
 void djui_panel_join_message_cancel(struct DjuiBase* caller) {
+    if (network_is_reconnecting()) { return; }
+    network_reset_reconnect_and_rehost();
     network_shutdown(true, false, false);
     djui_panel_menu_back(caller);
 }

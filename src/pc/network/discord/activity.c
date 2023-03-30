@@ -24,6 +24,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
         LOGFILE_ERROR(LFT_DISCORD, "Joined lobby when already connected somewhere!");
         return;
     }
+    network_reset_reconnect_and_rehost();
     network_init(NT_CLIENT);
 
     gCurActivity.type = DiscordActivityType_Playing;

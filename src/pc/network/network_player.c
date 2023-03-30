@@ -148,9 +148,6 @@ void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts 
 void network_player_update(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer *np = &gNetworkPlayers[i];
-        if (np->connected && gMarioStates[np->localIndex].interactObj) {
-            //LOG_INFO("%u :: %u", np->globalIndex, gMarioStates[np->localIndex].interactObj->oSyncID); // DO NOT COMMIT
-        }
         if (!np->connected && i > 0) { continue; }
 
         network_player_update_model(i);

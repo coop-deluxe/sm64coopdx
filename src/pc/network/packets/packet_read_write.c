@@ -27,6 +27,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     packet->orderedFromGlobalId = sOrderedPackets ? gNetworkPlayerLocal->globalIndex : 0;
     packet->orderedGroupId      = sOrderedPackets ? sCurrentOrderedGroupId : 0;
     packet->orderedSeqId        = 0;
+    packet->keepSendingAfterDisconnect = false;
 
     packet_write(packet, &packetType, sizeof(u8));
 

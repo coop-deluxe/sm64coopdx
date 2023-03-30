@@ -88,6 +88,7 @@ extern u16 gNetworkRequestLocationTimer;
 extern u8 gDebugPacketIdBuffer[];
 extern u8 gDebugPacketSentBuffer[];
 extern u8 gDebugPacketOnBuffer;
+extern u32 gNetworkStartupTimer;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);
@@ -99,6 +100,10 @@ void network_send_to(u8 localIndex, struct Packet* p);
 void network_send(struct Packet* p);
 void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength);
 void* network_duplicate_address(u8 localIndex);
+void network_reset_reconnect_and_rehost(void);
+void network_reconnect_begin(void);
+bool network_is_reconnecting(void);
+void network_rehost_begin(void);
 void network_update(void);
 void network_register_mod(char* modName);
 void network_shutdown(bool sendLeaving, bool exiting, bool popup);
