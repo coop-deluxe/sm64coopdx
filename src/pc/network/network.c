@@ -219,6 +219,17 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         LOG_ERROR("no data to send");
         return;
     }
+
+    // set destination
+    if (localIndex == PACKET_DESTINATION_SERVER) {
+        packet_set_destination(p, 0);
+        localIndex = (gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0;
+    } else {
+        packet_set_destination(p, p->requestBroadcast
+                                ? PACKET_DESTINATION_BROADCAST
+                                : gNetworkPlayers[(localIndex == 0) ? p->localIndex : localIndex].globalIndex);
+    }
+
     // sanity checks
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
@@ -246,11 +257,6 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
     // set the flags again
     packet_set_flags(p);
-
-    // set destination
-    packet_set_destination(p, p->requestBroadcast
-                              ? PACKET_DESTINATION_BROADCAST
-                              : gNetworkPlayers[(localIndex == 0) ? p->localIndex : localIndex].globalIndex);
 
     p->localIndex = localIndex;
 

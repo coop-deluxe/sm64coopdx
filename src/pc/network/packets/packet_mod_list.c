@@ -22,7 +22,7 @@ void network_send_mod_list_request(void) {
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
-    network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
+    network_send_to(PACKET_DESTINATION_SERVER, &p);
     LOG_INFO("sending mod list request");
 }
 

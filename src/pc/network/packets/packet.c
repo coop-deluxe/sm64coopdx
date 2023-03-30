@@ -161,7 +161,7 @@ void packet_receive(struct Packet* p) {
 
     // parse the packet without processing the rest
     if (packet_initial_read(p)) {
-        if (gNetworkType == NT_SERVER && p->destGlobalId != PACKET_DESTINATION_BROADCAST && p->destGlobalId != 0 && packetType != PACKET_ACK) {
+        if (gNetworkType == NT_SERVER && p->destGlobalId != PACKET_DESTINATION_BROADCAST && p->destGlobalId != 0 && packetType != PACKET_ACK && packetType != PACKET_MOD_LIST_REQUEST) {
             // this packet is meant for someone else
             struct Packet p2 = { 0 };
             packet_duplicate(p, &p2);
