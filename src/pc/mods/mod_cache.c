@@ -18,7 +18,7 @@ static void mod_cache_remove_node(struct ModCacheEntry* node, struct ModCacheEnt
     if (node == NULL) { return; }
     if (node == sModCacheHead) { sModCacheHead = node->next; }
     if (parent != NULL) { parent->next = node->next; }
-    LOG_INFO("Removing node: %s", node->path);
+    //LOG_INFO("Removing node: %s", node->path);
     if (node->path) {
         free(node->path);
         node->path = NULL;

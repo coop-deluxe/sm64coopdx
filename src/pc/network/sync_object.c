@@ -63,7 +63,7 @@ void sync_objects_update(void) {
             } else {
                 sForgetList = next;
             }
-            LOG_INFO("Freeing sync object... (%d)", entry->so->id);
+            //LOG_INFO("Freeing sync object... (%d)", entry->so->id);
             free(entry->so);
             free(entry);
 
@@ -128,7 +128,7 @@ void sync_object_forget(u32 syncId) {
         }
         entry->next = newEntry;
     }
-    LOG_INFO("Scheduling sync object to free... (%d)", so->id);
+    //LOG_INFO("Scheduling sync object to free... (%d)", so->id);
 }
 
 void sync_object_forget_last_reliable_packet(u32 syncId) {
@@ -412,7 +412,7 @@ bool sync_object_set_id(struct Object* o) {
         so = calloc(1, sizeof(struct SyncObject));
         so->extendedModelId = 0xFFFF;
         hmap_put(sSoMap, syncId, so);
-        LOG_INFO("Allocated sync object @ %u, size %ld", syncId, (long int)hmap_len(sSoMap));
+        //LOG_INFO("Allocated sync object @ %u, size %ld", syncId, (long int)hmap_len(sSoMap));
     } else if (so->o != o) {
         LOG_INFO("Already exists...");
     }
