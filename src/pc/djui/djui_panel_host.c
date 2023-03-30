@@ -108,9 +108,13 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             snprintf(portString, 32, "%d", configHostPort);
             djui_inputbox_set_text(inputbox1, portString);
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_port_text_change);
+            if (gNetworkType == NT_SERVER) {
+                djui_base_set_enabled(&inputbox1->base, false);
 #ifdef DISCORD_SDK
-            djui_base_set_enabled(&inputbox1->base, DJUI_HOST_NS_IS_SOCKET);
+            } else {
+                djui_base_set_enabled(&inputbox1->base, DJUI_HOST_NS_IS_SOCKET);
 #endif
+            }
             sInputboxPort = inputbox1;
         }
         

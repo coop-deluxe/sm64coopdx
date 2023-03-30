@@ -8,6 +8,7 @@
 #include "src/game/scroll_targets.h"
 #ifdef DISCORD_SDK
 #include "discord/discord.h"
+#include "discord/activity.h"
 #endif
 #include "pc/configfile.h"
 #include "pc/cheats.h"
@@ -62,7 +63,7 @@ u8 gDebugPacketOnBuffer = 0;
 u32 gNetworkStartupTimer = 0;
 u32 sNetworkReconnectTimer = 0;
 u32 sNetworkRehostTimer = 0;
-enum NetworkSystemType sNetworkReconnectType = NT_NONE;
+enum NetworkSystemType sNetworkReconnectType = NS_SOCKET;
 
 struct StringLinkedList gRegisteredMods = { 0 };
 
@@ -390,7 +391,7 @@ void network_reset_reconnect_and_rehost(void) {
     gNetworkStartupTimer = 0;
     sNetworkReconnectTimer = 0;
     sNetworkRehostTimer = 0;
-    sNetworkReconnectType = NT_NONE;
+    sNetworkReconnectType = NS_SOCKET;
     gDiscordReconnecting = false;
 }
 
@@ -453,6 +454,11 @@ static void network_rehost_update(void) {
 
     gDiscordReconnecting = true;
     djui_panel_do_host();
+#ifdef DISCORD_SDK
+    if (sNetworkReconnectType == NS_DISCORD) {
+        discord_activity_update(true);
+    }
+#endif
     gDiscordReconnecting = false;
 }
 

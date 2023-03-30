@@ -1,6 +1,13 @@
 -- name: Visible Lakitu
 -- description: You can now see everyone's Lakitu camera like in the Mirror room.\n\nYou may use this code for your own mods.\n\nBy Isaac
 
+-- localized versions of globally defined functions exposed to C (that are used often), for performance
+local math_random, is_player_active, network_player_from_global_index, cur_obj_unhide, cur_obj_hide, cur_obj_angle_to_home, atan2s, cur_obj_lateral_dist_to_home, network_send_object =
+      math.random, is_player_active, network_player_from_global_index, cur_obj_unhide, cur_obj_hide, cur_obj_angle_to_home, atan2s, cur_obj_lateral_dist_to_home, network_send_object
+
+local l = gLakituState
+local npl = gNetworkPlayers[0]
+
 -- define our variables to hold the global id of each Lakitu's owner, and its blink timer
 define_custom_obj_fields({ oLakituOwner = 'u32', oLakituBlinkTimer = 's32' })
 
@@ -10,7 +17,7 @@ local boolToNumber = { [true] = 1, [false] = 0 }
 local function obj_update_blinking(o, timer, base, range, length)
     -- update our timer
     if timer > 0 then timer = timer - 1
-    else timer = base + (range * math.random()) end
+    else timer = base + (range * math_random()) end
 
     -- set Lakitu's blink state depending on what our timer is at
     o.oAnimState = boolToNumber[(timer <= length)]
@@ -98,16 +105,16 @@ local function bhv_custom_lakitu(o)
     end
 
     -- set the Lakitu position to the camera position of that player
-    o.oPosX = gLakituState.curPos.x
-    o.oPosY = gLakituState.curPos.y
-    o.oPosZ = gLakituState.curPos.z
+    o.oPosX = l.curPos.x
+    o.oPosY = l.curPos.y
+    o.oPosZ = l.curPos.z
 
     -- look at Mario
-    o.oHomeX = gLakituState.curFocus.x
-    o.oHomeZ = gLakituState.curFocus.z
+    o.oHomeX = l.curFocus.x
+    o.oHomeZ = l.curFocus.z
 
     o.oFaceAngleYaw = cur_obj_angle_to_home()
-    o.oFaceAnglePitch = atan2s(cur_obj_lateral_dist_to_home(), o.oPosY - gLakituState.curFocus.y)
+    o.oFaceAnglePitch = atan2s(cur_obj_lateral_dist_to_home(), o.oPosY - l.curFocus.y)
 
     -- send the current state of our Lakitu to other players if the area sync is valild
     if is_current_area_sync_valid() then
@@ -122,7 +129,7 @@ local function update_lakitu()
     -- spawn Lakitu with our custom Lakitu behavior and the default Lakitu model; and mark it as a sync object
     spawn_sync_object(bhvPlayerLakitu, E_MODEL_LAKITU, 0, 0, 0, function(o)
         -- save the global id of the player that owns this Lakitu
-        o.oLakituOwner = gNetworkPlayers[0].globalIndex
+        o.oLakituOwner = npl.globalIndex
     end)
 end
 
