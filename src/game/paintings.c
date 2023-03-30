@@ -839,7 +839,7 @@ void painting_update_floors(struct Painting *painting) {
     painting->ripples.enteredMarioIndex = -1;
     painting->ripples.underMarioIndex = -1;
 
-    for (int i = 0; i < MAX_PLAYERS + 1; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         // If the painting was entered (and not a floor painting) no need to look at everyone else this frame
         if (painting->floorEntered && !floorPainting) { continue; }
         struct MarioState* m = &gMarioStates[i];
