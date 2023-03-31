@@ -14,6 +14,7 @@
 #include "gfx_dimensions.h"
 #include "config.h"
 #include "djui.h"
+#include "djui_unicode.h"
 #include "djui_hud_utils.h"
 #include "game/camera.h"
 
@@ -195,8 +196,8 @@ f32 djui_hud_measure_text(const char* message) {
     f32 width = 0;
     const char* c = message;
     while(*c != '\0') {
-        width += font->char_width(*c);
-        c++;
+        width += font->char_width((char*)c);
+        c = djui_unicode_next_char((char*)c);
     }
     return width * font->defaultFontScale;
 }
@@ -226,13 +227,13 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
 
     // render the line
     f32 addX = 0;
-    size_t length = strlen(message);
-    for (size_t i = 0; i < length; i++) {
-        char c = message[i];
+    char* c = (char*)message;
+    while (*c != '\0') {
         f32 charWidth = font->char_width(c);
 
-        if (c == '\n' && c == ' ') {
+        if (*c == '\n' && *c == ' ') {
             addX += charWidth;
+            c++;
             continue;
         }
 
@@ -240,6 +241,8 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
         font->render_char(c);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, charWidth + addX, 0, 0);
         addX = 0;
+
+        c = djui_unicode_next_char(c);
     }
 
     // pop

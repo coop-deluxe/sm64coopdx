@@ -12,8 +12,8 @@
 #include "pc/utils/misc.h"
 #include "data/dynos_cmap.cpp.h"
 
-void* sSoMap = NULL;
-void* sSoIter = NULL;
+static void* sSoMap = NULL;
+static void* sSoIter = NULL;
 
 #define FORGET_TIMEOUT 10
 
