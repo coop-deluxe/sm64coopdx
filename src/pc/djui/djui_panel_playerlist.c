@@ -66,7 +66,8 @@ void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bo
 void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     f32 bodyHeight = (MAX_PLAYERS * 32) + (MAX_PLAYERS - 1) * 4;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\P\\#1be700\\L\\#00b3ff\\A\\#ffef00\\Y\\#ff0800\\E\\#1be700\\R\\#00b3ff\\S");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\P\\#1be700\\L\\#00b3ff\\A\\#ffef00\\Y\\#ff0800\\E\\#1be700\\R\\#00b3ff\\S");
+    djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiPlayerList = panel;
     panel->base.on_render_pre = djui_panel_playerlist_on_render_pre;
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

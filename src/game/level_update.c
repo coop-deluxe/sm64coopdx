@@ -65,7 +65,7 @@ s16 gChangeActNum = -1;
 
 static bool sFirstCastleGroundsMenu = true;
 bool isDemoActive = false;
-bool inPlayerMenu = false;
+bool gInPlayerMenu = false;
 static u16 gDemoCountdown = 0;
 int demoNumber = -1;
 
@@ -1194,13 +1194,13 @@ s32 play_mode_normal(void) {
             }
         }
     } else {
-        if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !inPlayerMenu) {
+        if (gDjuiInMainMenu && gCurrDemoInput == NULL && configMenuDemos && !gInPlayerMenu) {
             if ((++gDemoCountdown) == PRESS_START_DEMO_TIMER && (find_demo_number() && (demoNumber <= 6 || demoNumber > -1))) {
                 start_demo();
             }
         }
 
-        if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !isDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || inPlayerMenu)) || (gCurrDemoInput == NULL && isDemoActive)) {
+        if (((gCurrDemoInput != NULL) && (gPlayer1Controller->buttonPressed & END_DEMO || !isDemoActive || !gDjuiInMainMenu || gNetworkType != NT_NONE || gInPlayerMenu)) || (gCurrDemoInput == NULL && isDemoActive)) {
             gPlayer1Controller->buttonPressed &= ~END_DEMO;
             stop_demo(NULL);
         }

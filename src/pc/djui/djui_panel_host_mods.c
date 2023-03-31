@@ -69,7 +69,7 @@ static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
         struct Mod* mod = gLocalMods.entries[index];
 
         djui_base_set_enabled(node->base, mod->selectable);
- 
+
         // iterate
         node = node->next;
     }
@@ -86,13 +86,11 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
-    f32 bodyHeight = (416) + 64 * 1 + 16 * 1;
     bool isRomHacks = (caller->tag == 1);
 
     mods_update_selectable();
 
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, isRomHacks ?
+    struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks ?
         "\\#ff0800\\R\\#1be700\\O\\#00b3ff\\M \\#ffef00\\H\\#ff0800\\A\\#1be700\\C\\#00b3ff\\K\\#ffef00\\S" :
         "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S"
     );
@@ -106,29 +104,20 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             if (isRomHacks != (mod->incompatible && strstr(mod->incompatible, "romhack"))) {
                 continue;
             }
-            struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled);
+            struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
             checkbox->base.tag = i;
-            djui_base_set_size_type(&checkbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&checkbox->base, 1.0f, 32);
             djui_base_set_enabled(&checkbox->base, mod->selectable);
             djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
-            djui_interactable_hook_value_change(&checkbox->base, djui_mod_checkbox_on_value_change);
-            if (i == 0) { defaultBase = &checkbox->base; }
         }
         djui_paginated_calculate_height(paginated);
 
-        struct DjuiButton* button1 = djui_button_create(&body->base, "Back");
-        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button1->base, 1.0f, 64);
-        djui_button_set_style(button1, 1);
-        djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
-        if (defaultBase == NULL) { defaultBase = &button1->base; }
+        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
         panel->bodySize.value = paginated->base.height.value + 16 + 64;
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
     djui_panel_host_mods_description_create();
 }

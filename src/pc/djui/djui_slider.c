@@ -98,7 +98,7 @@ static void djui_slider_destroy(struct DjuiBase* base) {
     free(slider);
 }
 
-struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max) {
+struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max, void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiSlider* slider = calloc(1, sizeof(struct DjuiSlider));
     struct DjuiBase* base     = &slider->base;
 
@@ -135,6 +135,10 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     djui_slider_update_style(base);
 
     base->get_cursor_hover_location = djui_slider_get_cursor_hover_location;
+
+    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_interactable_hook_value_change(base, on_value_change);
+    djui_base_set_size(base, 1.0f, 32);
 
     return slider;
 }

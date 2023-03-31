@@ -495,7 +495,7 @@ void djui_interactable_create(struct DjuiBase* base, void (*update_style)(struct
     }
 
     struct DjuiInteractable* interactable = calloc(1, sizeof(struct DjuiInteractable));
-    memset(interactable, 0, sizeof(struct DjuiInteractable));
+    interactable->enabled = true;
     base->interactable = interactable;
 
     base->interactable->update_style = update_style;

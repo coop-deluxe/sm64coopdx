@@ -128,7 +128,7 @@ extern s8 gNeverEnteredCastle;
 extern u32 gControlTimerStartNat;
 extern u32 gControlTimerStopNat;
 
-extern bool inPlayerMenu;
+extern bool gInPlayerMenu;
 
 enum HUDDisplayFlag {
     HUD_DISPLAY_FLAG_LIVES = 0x0001,

@@ -25,7 +25,7 @@ static void djui_button_update_style(struct DjuiBase* base) {
     }
 }
 
-void djui_button_set_style(struct DjuiButton* button, u8 style) {
+void djui_button_set_style(struct DjuiButton* button, enum DjuiButtonStyle style) {
     button->style = style;
     djui_button_update_style(&button->base);
 }
@@ -35,7 +35,7 @@ static void djui_button_destroy(struct DjuiBase* base) {
     free(button);
 }
 
-struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message) {
+struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*)) {
     struct DjuiButton* button = calloc(1, sizeof(struct DjuiButton));
     struct DjuiBase* base     = &button->base;
 
@@ -58,7 +58,25 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     djui_text_set_drop_shadow(text, 0, 0, 0, 64);
     button->text = text;
 
+    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(base, 1.0f, 64);
+    djui_interactable_hook_click(base, on_click);
+    button->style = style;
     djui_button_update_style(base);
 
+    return button;
+}
+
+struct DjuiButton* djui_button_left_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*)) {
+    struct DjuiButton* button = djui_button_create(parent, message, style, on_click);
+    djui_base_set_size(&button->base, 0.485f, 64);
+    djui_base_set_alignment(&button->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+    return button;
+}
+
+struct DjuiButton* djui_button_right_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*)) {
+    struct DjuiButton* button = djui_button_create(parent, message, style, on_click);
+    djui_base_set_size(&button->base, 0.485f, 64);
+    djui_base_set_alignment(&button->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
     return button;
 }

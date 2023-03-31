@@ -4,12 +4,6 @@
 #include "audio/external.h"
 #include "src/game/bettercamera.h"
 
-struct DjuiPanel {
-    struct DjuiBase* base;
-    struct DjuiPanel* parent;
-    struct DjuiBase* defaultElementBase;
-};
-
 static struct DjuiPanel* sPanelList = NULL;
 static struct DjuiPanel* sPanelRemoving = NULL;
 static f32 sMoveAmount = 0;
@@ -18,8 +12,20 @@ bool djui_panel_is_active(void) {
     return (sPanelList != NULL);
 }
 
-void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct DjuiBase* defaultElementBase) {
-    if (sPanelRemoving != NULL) { return; }
+struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
+    while (child) {
+        if (child->base->interactable && child->base->interactable->enabled) {
+            return child->base;
+        }
+        struct DjuiBase* check = djui_panel_find_first_interactable(child->base->child);
+        if (check) { return check; }
+        child = child->next;
+    }
+}
+
+struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel* threePanel, struct DjuiBase* defaultElementBase) {
+    if (sPanelRemoving != NULL) { return NULL; }
+    struct DjuiBase* panelBase = &threePanel->base;
     bool firstPanel = (sPanelList == NULL);
     gDjuiPanelJoinMessageVisible = false;
 
@@ -33,12 +39,22 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
         djui_base_set_visible(sPanelList->parent->base, false);
     }
 
+    // calculate 3panel body height
+    djui_three_panel_recalculate_body_size(threePanel);
+
+
     // allocate panel
     struct DjuiPanel* panel = calloc(1, sizeof(struct DjuiPanel));
     panel->parent = sPanelList;
     panel->base = panelBase;
     panel->defaultElementBase = defaultElementBase;
+    panel->on_panel_destroy = NULL;
     sPanelList = panel;
+
+    // find better defaultElementBase
+    if (panel->defaultElementBase == NULL) {
+        panel->defaultElementBase = djui_panel_find_first_interactable(panel->base->child);
+    }
 
     // deselect cursor input
     djui_cursor_input_controlled_center(NULL);
@@ -63,6 +79,8 @@ void djui_panel_add(struct DjuiBase* caller, struct DjuiBase* panelBase, struct 
     } else {
         play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
     }
+
+    return panel;
 }
 
 void djui_panel_back(void) {
@@ -126,6 +144,9 @@ void djui_panel_update(void) {
         djui_cursor_input_controlled_center(sPanelList->defaultElementBase);
 
         if (removingBase != NULL) {
+            if (sPanelRemoving->on_panel_destroy) {
+                sPanelRemoving->on_panel_destroy(NULL);
+            }
             djui_base_destroy(removingBase);
             free(sPanelRemoving);
             sPanelRemoving = NULL;
@@ -147,12 +168,18 @@ void djui_panel_shutdown(void) {
     struct DjuiPanel* panel = sPanelList;
     while (panel != NULL) {
         struct DjuiPanel* next = panel->parent;
+        if (panel->on_panel_destroy) {
+            panel->on_panel_destroy(NULL);
+        }
         djui_base_destroy(panel->base);
         free(panel);
         panel = next;
     }
 
     if (sPanelRemoving != NULL) {
+        if (sPanelRemoving->on_panel_destroy) {
+            sPanelRemoving->on_panel_destroy(NULL);
+        }
         djui_base_destroy(sPanelRemoving->base);
         free(sPanelRemoving);
     }

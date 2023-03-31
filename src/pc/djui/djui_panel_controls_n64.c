@@ -3,10 +3,8 @@
 
 void djui_panel_controls_n64_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 28 * 14 + 1 * 13;
-    f32 bodyHeight = bindBodyHeight + 16 + 64;
 
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\C\\#1be700\\O\\#00b3ff\\N\\#ffef00\\T\\#ff0800\\R\\#1be700\\O\\#00b3ff\\L\\#ffef00\\S");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\C\\#1be700\\O\\#00b3ff\\N\\#ffef00\\T\\#ff0800\\R\\#1be700\\O\\#00b3ff\\L\\#ffef00\\S");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
         struct DjuiFlowLayout* bindBody = djui_flow_layout_create(&body->base);
@@ -31,13 +29,8 @@ void djui_panel_controls_n64_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, "C Right",     configKeyCRight);
         }
 
-        struct DjuiButton* buttonBack = djui_button_create(&body->base, "Back");
-        djui_base_set_size_type(&buttonBack->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&buttonBack->base, 1.0f, 64);
-        djui_button_set_style(buttonBack, 1);
-        djui_interactable_hook_click(&buttonBack->base, djui_panel_menu_back);
-        defaultBase = &buttonBack->base;
+        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
 }

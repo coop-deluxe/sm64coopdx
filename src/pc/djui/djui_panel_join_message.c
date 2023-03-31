@@ -44,14 +44,10 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     // don't recreate panel if it's already visible
     if (gDjuiPanelJoinMessageVisible) { return; }
 
-    f32 bodyHeight = 64 + 16 + 16;
-
     u16 directLines = 8;
     f32 directTextHeight = 32 * 0.8125f * directLines + 8;
-    bodyHeight += directTextHeight + 16;
 
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\J\\#1be700\\O\\#00b3ff\\I\\#ffef00\\N\\#1be700\\I\\#00b3ff\\N\\#ffef00\\G");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\J\\#1be700\\O\\#00b3ff\\I\\#ffef00\\N\\#1be700\\I\\#00b3ff\\N\\#ffef00\\G");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(&body->base, "...");
@@ -66,16 +62,10 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
         gDownloadProgress = 0;
         djui_progress_bar_create(&body->base, &gDownloadProgress, 0.0f, 1.0f);
 
-        struct DjuiButton* button1 = djui_button_create(&body->base, "Cancel");
-        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button1->base, 1.0f, 64);
-        djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-        djui_button_set_style(button1, 1);
-        djui_interactable_hook_click(&button1->base, djui_panel_join_message_cancel);
-        defaultBase = &button1->base;
+        djui_button_create(&body->base, "Cancel", DJUI_BUTTON_STYLE_BACK, djui_panel_join_message_cancel);
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
     gDjuiPanelJoinMessageVisible = true;
     sDisplayingError = false;
 }

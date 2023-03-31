@@ -40,3 +40,11 @@ struct DjuiRect* djui_rect_create(struct DjuiBase* parent) {
 
     return rect;
 }
+
+struct DjuiRect* djui_rect_container_create(struct DjuiBase* parent, f32 height) {
+    struct DjuiRect* rect = djui_rect_create(parent);
+    djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&rect->base, 1.0f, height);
+    djui_base_set_color(&rect->base, 0, 0, 0, 0);
+    return rect;
+}

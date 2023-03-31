@@ -72,7 +72,7 @@ static void djui_selectionbox_destroy(struct DjuiBase* base) {
     free(selectionbox);
 }
 
-struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const char* message, char* choices[], u8 choiceCount, unsigned int* value) {
+struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const char* message, char* choices[], u8 choiceCount, unsigned int* value, void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiSelectionbox* selectionbox = calloc(1, sizeof(struct DjuiSelectionbox));
     struct DjuiBase* base = &selectionbox->base;
 
@@ -123,6 +123,10 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     djui_selectionbox_update_style(base);
 
     base->get_cursor_hover_location = djui_selectionbox_get_cursor_hover_location;
+
+    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(base, 1.0f, 32);
+    djui_interactable_hook_value_change(base, on_value_change);
 
     return selectionbox;
 }

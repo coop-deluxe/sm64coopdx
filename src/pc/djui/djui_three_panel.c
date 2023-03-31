@@ -57,6 +57,29 @@ void djui_three_panel_set_min_footer_size(struct DjuiThreePanel* threePanel, f32
     threePanel->minFooterSize.value = minFooterSize;
 }
 
+void djui_three_panel_recalculate_body_size(struct DjuiThreePanel* threePanel) {
+    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(threePanel);
+    struct DjuiBaseChild* child = body->base.child;
+
+    if (threePanel->bodySize.value != 0) { return; }
+
+    if (body->margin.type != DJUI_SVT_ABSOLUTE) {
+        return;
+    }
+
+    f32 bodyHeight = body->margin.value;
+    while (child != NULL) {
+        bodyHeight += body->margin.value;
+        bodyHeight += child->base->height.value;
+        if (child->base->height.type != DJUI_SVT_ABSOLUTE) {
+            return;
+        }
+        child = child->next;
+    }
+    if (bodyHeight < 0) { bodyHeight = 0; }
+    djui_three_panel_set_body_size(threePanel, bodyHeight);
+}
+
   ////////////
  // events //
 ////////////

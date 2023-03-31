@@ -18,5 +18,6 @@ void djui_three_panel_set_body_size_type(struct DjuiThreePanel* threePanel, enum
 void djui_three_panel_set_body_size(struct DjuiThreePanel* threePanel, f32 bodySize);
 void djui_three_panel_set_min_footer_size_type(struct DjuiThreePanel* threePanel, enum DjuiScreenValueType minFooterSizeType);
 void djui_three_panel_set_min_footer_size(struct DjuiThreePanel* threePanel, f32 minFooterSize);
+void djui_three_panel_recalculate_body_size(struct DjuiThreePanel* threePanel);
 
 struct DjuiThreePanel* djui_three_panel_create(struct DjuiBase* parent, f32 minHeaderSize, f32 bodySize, f32 minFooterSize);

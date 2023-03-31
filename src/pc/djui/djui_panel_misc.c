@@ -5,88 +5,39 @@
 
 #ifdef DEVELOPMENT
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 7 + 64 * 1 + 16 * 1;
-
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\D\\#1be700\\E\\#00b3ff\\B\\#ffef00\\U\\#ff0800\\G");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\D\\#1be700\\E\\#00b3ff\\B\\#ffef00\\U\\#ff0800\\G");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
 
     {
-        struct DjuiCheckbox* checkbox1 = djui_checkbox_create(&body->base, "Fixed Collisions", (bool*)&gLevelValues.fixCollisionBugs);
-        djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox1->base, 1.0f, 32);
-        defaultBase = &checkbox1->base;
+        djui_checkbox_create(&body->base, "Fixed Collisions", (bool*)&gLevelValues.fixCollisionBugs, NULL);
+        djui_checkbox_create(&body->base, "Lua Profiler", &configLuaProfiler, NULL);
+        djui_checkbox_create(&body->base, "Debug Print", &configDebugPrint, NULL);
+        djui_checkbox_create(&body->base, "Debug Info", &configDebugInfo, NULL);
+        djui_checkbox_create(&body->base, "Debug Errors", &configDebugError, NULL);
 
-        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Lua Profiler", &configLuaProfiler);
-        djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox2->base, 1.0f, 32);
-        defaultBase = &checkbox2->base;
-
-        struct DjuiCheckbox* checkbox3 = djui_checkbox_create(&body->base, "Debug Print", &configDebugPrint);
-        djui_base_set_size_type(&checkbox3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox3->base, 1.0f, 32);
-        defaultBase = &checkbox3->base;
-
-        struct DjuiCheckbox* checkbox4 = djui_checkbox_create(&body->base, "Debug Info", &configDebugInfo);
-        djui_base_set_size_type(&checkbox4->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox4->base, 1.0f, 32);
-        defaultBase = &checkbox4->base;
-
-        struct DjuiCheckbox* checkbox5 = djui_checkbox_create(&body->base, "Debug Errors", &configDebugError);
-        djui_base_set_size_type(&checkbox5->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox5->base, 1.0f, 32);
-        defaultBase = &checkbox5->base;
-
-        struct DjuiButton* button1 = djui_button_create(&body->base, "Back");
-        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button1->base, 1.0f, 64);
-        djui_button_set_style(button1, 1);
-        djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
+        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
 }
 #endif
 
 void djui_panel_misc_create(struct DjuiBase* caller) {
-#ifdef DEVELOPMENT
-    f32 bodyHeight = 64 * 5 + 16 * 4;
-#else
-    f32 bodyHeight = 64 * 4 + 16 * 3;
-#endif
-
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\I\\#00b3ff\\S\\#ffef00\\C");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\M\\#1be700\\I\\#00b3ff\\S\\#ffef00\\C");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
 
     {
-        struct DjuiCheckbox* checkbox1 = djui_checkbox_create(&body->base, "Pause In Singleplayer", &configSingleplayerPause);
-        djui_base_set_size_type(&checkbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox1->base, 1.0f, 32);
-        defaultBase = &checkbox1->base;
+        djui_checkbox_create(&body->base, "Pause In Singleplayer", &configSingleplayerPause, NULL);
+        djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups, NULL);
 
-        struct DjuiCheckbox* checkbox2 = djui_checkbox_create(&body->base, "Disable Popups", &configDisablePopups);
-        djui_base_set_size_type(&checkbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&checkbox2->base, 1.0f, 32);
-
-        struct DjuiButton* button1 = djui_button_create(&body->base, "Menu Options");
-        djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button1->base, 1.0f, 64);
-        djui_interactable_hook_click(&button1->base, djui_panel_main_menu_create);
+        djui_button_create(&body->base, "Menu Options", DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
 
 #ifdef DEVELOPMENT
-        struct DjuiButton* button2 = djui_button_create(&body->base, "Debug");
-        djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button2->base, 1.0f, 64);
-        djui_interactable_hook_click(&button2->base, djui_panel_options_debug_create);
+        djui_button_create(&body->base, "Debug", DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
 #endif
 
-        struct DjuiButton* button3 = djui_button_create(&body->base, "Back");
-        djui_base_set_size_type(&button3->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button3->base, 1.0f, 64);
-        djui_button_set_style(button3, 1);
-        djui_interactable_hook_click(&button3->base, djui_panel_menu_back);
+        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
 }

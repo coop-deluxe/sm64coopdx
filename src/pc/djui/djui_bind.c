@@ -78,14 +78,13 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
     for (int i = 0; i < MAX_BINDS; i++) {
 #if defined(CAPI_SDL1) || defined(CAPI_SDL2)
         unsigned int key = configKey[i];
-        struct DjuiButton* button = djui_button_create(&rect->base, translate_bind_to_name(key));
+        struct DjuiButton* button = djui_button_create(&rect->base, translate_bind_to_name(key), DJUI_BUTTON_STYLE_NORMAL, djui_bind_button_on_click);
 #else
-        struct DjuiButton* button = djui_button_create(&rect->base, "???");
+        struct DjuiButton* button = djui_button_create(&rect->base, "???", DJUI_BUTTON_STYLE_NORMAL, djui_bind_button_on_click);
 #endif
         djui_base_set_size_type(&button->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&button->base, 0.33f, 1.0f);
         button->base.tag = i;
-        djui_interactable_hook_click(&button->base, djui_bind_button_on_click);
         djui_interactable_hook_bind(&button->base, djui_bind_button_on_bind);
 
         enum DjuiHAlign hAlign = DJUI_HALIGN_LEFT;

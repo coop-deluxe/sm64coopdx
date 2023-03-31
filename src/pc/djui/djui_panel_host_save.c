@@ -34,37 +34,27 @@ static void djui_panel_host_save_erase(struct DjuiBase* caller) {
 }
 
 void djui_panel_host_save_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 32 * 4 + 64 * 1 + 16 * 5;
     sSaveButtonCaller = caller;
 
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\S\\#1be700\\A\\#00b3ff\\V\\#ffef00\\E");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\S\\#1be700\\A\\#00b3ff\\V\\#ffef00\\E");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
         for (int i = 0; i < 4; i++) {
-            struct DjuiRect* rect1 = djui_rect_create(&body->base);
-            djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&rect1->base, 1.0f, 32);
-            djui_base_set_color(&rect1->base, 0, 0, 0, 0);
+            struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
             {
-                struct DjuiButton* button1 = djui_button_create(&rect1->base, "");
+                struct DjuiButton* button1 = djui_button_create(&rect1->base, "", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_button_click);
                 djui_panel_host_save_update_button(button1, i);
-                djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_size(&button1->base, 0.74f, 32);
-                djui_interactable_hook_click(&button1->base, djui_panel_host_save_button_click);
                 button1->base.tag = i;
-                if (i == (int)(configHostSaveSlot - 1)) { defaultBase = &button1->base; }
                 sSaveButtons[i] = button1;
 
-                struct DjuiButton* button2 = djui_button_create(&rect1->base, "erase");
+                struct DjuiButton* button2 = djui_button_create(&rect1->base, "erase", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_erase);
                 button2->base.tag = i;
-                djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_size(&button2->base, 0.24f, 32);
                 djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-                djui_interactable_hook_click(&button2->base, djui_panel_host_save_erase);
             }
         }
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
 }

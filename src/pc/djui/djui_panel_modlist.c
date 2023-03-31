@@ -20,7 +20,8 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
     if (gActiveMods.entryCount == 0) { return; }
 
     f32 bodyHeight = (gActiveMods.entryCount * 32) + (gActiveMods.entryCount - 1) * 4;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S");
+    djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiModList = panel;
 
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

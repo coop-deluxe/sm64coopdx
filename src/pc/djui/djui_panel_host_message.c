@@ -83,10 +83,8 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
     }
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
-    f32 bodyHeight = textHeight + 16 + 64;
 
-    struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\I\\#1be700\\N\\#00b3ff\\F\\#ffef00\\O");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\I\\#1be700\\N\\#00b3ff\\F\\#ffef00\\O");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(&body->base, warningMessage);
@@ -94,36 +92,20 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
         djui_base_set_size(&text1->base, 1.0f, textHeight);
         djui_base_set_color(&text1->base, 200, 200, 200, 255);
 
-        struct DjuiRect* rect1 = djui_rect_create(&body->base);
-        djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&rect1->base, 1.0f, 64);
-        djui_base_set_color(&rect1->base, 0, 0, 0, 0);
+        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect1->base, "Back");
-            djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button1->base, 0.485f, 64);
-            djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-            djui_button_set_style(button1, 1);
-            djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
-
-            struct DjuiButton* button2 = djui_button_create(&rect1->base, "Host");
-            djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&button2->base, 0.485f, 64);
-            djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            djui_interactable_hook_click(&button2->base, djui_panel_host_message_do_host);
-            defaultBase = &button2->base;
+            struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, "Host", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_message_do_host);
+            struct DjuiButton* btnBack = djui_button_left_create(&rect1->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
             if (hideHostButton) {
-                djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_size(&button1->base, 1.0f, 64);
-                defaultBase = &button1->base;
-                djui_base_set_visible(&button2->base, false);
-                djui_base_set_enabled(&button2->base, false);
+                djui_base_set_size(&btnBack->base, 1.0f, 64);
+                djui_base_set_visible(&btnHost->base, false);
+                djui_base_set_enabled(&btnHost->base, false);
             }
         }
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, NULL);
 #ifdef DISCORD_SDK
     if (configNetworkSystem)
 #endif

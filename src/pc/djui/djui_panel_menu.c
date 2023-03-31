@@ -6,8 +6,8 @@ void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
     djui_panel_back();
 }
 
-struct DjuiThreePanel* djui_panel_menu_create(f32 bodyHeight, char* headerText) {
-    struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
+struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
+    struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, 0, 0);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&panel->base, DJUI_DEFAULT_PANEL_WIDTH, 1.0f);
     djui_base_set_color(&panel->base, 0, 0, 0, 240);
@@ -27,7 +27,7 @@ struct DjuiThreePanel* djui_panel_menu_create(f32 bodyHeight, char* headerText) 
         struct DjuiFlowLayout* body = djui_flow_layout_create(&panel->base);
         djui_base_set_alignment(&body->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_size_type(&body->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&body->base, 1.0f, bodyHeight);
+        djui_base_set_size(&body->base, 1.0f, 0);
         djui_base_set_color(&body->base, 0, 0, 0, 0);
         djui_flow_layout_set_margin(body, 16);
         djui_flow_layout_set_flow_direction(body, DJUI_FLOW_DIR_DOWN);

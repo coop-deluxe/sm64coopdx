@@ -157,20 +157,16 @@ void djui_panel_join_do_join(struct DjuiBase* caller) {
 }
 
 void djui_panel_join_create(struct DjuiBase* caller) {
-    f32 bodyHeight = 2 + 32 + 16 * 2 + 64;
-
     u16 directLines = 1;
     f32 directTextHeight = 32 * 0.8125f * directLines + 8;
-    bodyHeight += directTextHeight + 16;
 
 #ifdef DISCORD_SDK
     u16 discordLines = 8;
     f32 discordTextHeight = 32 * 0.8125f * discordLines + 8;
-    bodyHeight += discordTextHeight + 16;
 #endif
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create(bodyHeight, "\\#ff0800\\J\\#1be700\\O\\#00b3ff\\I\\#ffef00\\N");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\J\\#1be700\\O\\#00b3ff\\I\\#ffef00\\N");
     struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
     {
 #ifdef DISCORD_SDK
@@ -196,26 +192,18 @@ void djui_panel_join_create(struct DjuiBase* caller) {
         sInputboxIp = inputbox1;
         djui_panel_join_ip_text_set(inputbox1);
 
-        struct DjuiRect* rect2 = djui_rect_create(&body->base);
-        djui_base_set_size_type(&rect2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&rect2->base, 1.0f, 64);
-        djui_base_set_color(&rect2->base, 0, 0, 0, 0);
+        struct DjuiRect* rect2 = djui_rect_container_create(&body->base, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect2->base, "Back");
-            djui_base_set_size_type(&button1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            struct DjuiButton* button1 = djui_button_create(&rect2->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-            djui_button_set_style(button1, 1);
-            djui_interactable_hook_click(&button1->base, djui_panel_menu_back);
 
-            struct DjuiButton* button2 = djui_button_create(&rect2->base, "Join");
-            djui_base_set_size_type(&button2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            struct DjuiButton* button2 = djui_button_create(&rect2->base, "Join", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_do_join);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            djui_interactable_hook_click(&button2->base, djui_panel_join_do_join);
             defaultBase = &button2->base;
         }
     }
 
-    djui_panel_add(caller, &panel->base, defaultBase);
+    djui_panel_add(caller, panel, defaultBase);
 }
