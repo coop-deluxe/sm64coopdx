@@ -67,13 +67,13 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 void djui_panel_host_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create((gNetworkType == NT_SERVER)
-            ? "SERVER"
-            : "HOST");
+            ? DLANG(HOST, SERVER_TITLE)
+            : DLANG(HOST, HOST_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
 #ifdef DISCORD_SDK
-        char* nChoices[2] = { "Discord", "Direct Connection" };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, "Network system", nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
+        char* nChoices[2] = { DLANG(HOST, DISCORD), DLANG(HOST, DIRECT_CONNECTION) };
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
         if (gNetworkType == NT_SERVER) {
             djui_base_set_enabled(&selectionbox1->base, false);
         }
@@ -82,7 +82,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
-            struct DjuiText* text1 = djui_text_create(&rect1->base, "Port");
+            struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(HOST, PORT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 200, 200, 200, 255);
             djui_base_set_size(&text1->base, 0.485f, 64);
@@ -111,7 +111,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
         {
-            struct DjuiText* text1 = djui_text_create(&rect2->base, "Save Slot");
+            struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(HOST, SAVE_SLOT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 200, 200, 200, 255);
             djui_base_set_size(&text1->base, 0.485f, 64);
@@ -124,21 +124,21 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         }
 
-        djui_button_create(body, "Settings", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
+        djui_button_create(body, DLANG(HOST, SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
 
-        struct DjuiButton* button2 = djui_button_create(body, "Mods", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
+        struct DjuiButton* button2 = djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
         button2->base.tag = 0;
 
-        struct DjuiButton* button3 = djui_button_create(body, "Rom-Hacks", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
+        struct DjuiButton* button3 = djui_button_create(body, DLANG(HOST, ROMHACKS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
         button3->base.tag = 1;
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? "Cancel" : "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(MENU, CANCEL) : DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? "Apply" : "Host", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
+            struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
 

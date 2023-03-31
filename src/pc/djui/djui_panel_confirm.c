@@ -13,8 +13,8 @@ void djui_panel_confirm_create(struct DjuiBase* caller, char* title, char* messa
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
-            djui_button_left_create(&rect1->base, "No", DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_back);
-            djui_button_right_create(&rect1->base, "Yes", DJUI_BUTTON_STYLE_NORMAL, on_yes_click);
+            djui_button_left_create(&rect1->base, DLANG(MENU, NO), DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_back);
+            djui_button_right_create(&rect1->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_NORMAL, on_yes_click);
         }
     }
 

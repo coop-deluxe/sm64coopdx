@@ -9,12 +9,12 @@ void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_controls_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("CONTROLS");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_button_create(body, "N64 Binds", DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_n64_create);
-        djui_button_create(body, "Extra Binds", DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_extra_create);
-        djui_checkbox_create(body, "Background Gamepad (must restart)", &configBackgroundGamepad, NULL);
+        djui_button_create(body, DLANG(CONTROLS, N64_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_n64_create);
+        djui_button_create(body, DLANG(CONTROLS, EXTRA_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_extra_create);
+        djui_checkbox_create(body, DLANG(CONTROLS, BACKGROUND_GAMEPAD), &configBackgroundGamepad, NULL);
 
 #ifdef HAVE_SDL2
         int numJoys = SDL_NumJoysticks();
@@ -31,13 +31,13 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
             sprintf(&gamepadChoicesLong[index], "%d", i);
             gamepadChoices[i] = &gamepadChoicesLong[index];
         }
-        djui_selectionbox_create(body, "Gamepad", gamepadChoices, numJoys, &configGamepadNumber, NULL);
+        djui_selectionbox_create(body, DLANG(CONTROLS, GAMEPAD), gamepadChoices, numJoys, &configGamepadNumber, NULL);
 #endif
 
-        djui_slider_create(body, "Deadzone", &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
-        djui_slider_create(body, "Rumble Strength", &configRumbleStrength, 0, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, RUMBLE_STRENGTH), &configRumbleStrength, 0, 100, djui_panel_controls_value_change);
 
-        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

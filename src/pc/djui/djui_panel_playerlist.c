@@ -66,7 +66,7 @@ void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bo
 void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     f32 bodyHeight = (MAX_PLAYERS * 32) + (MAX_PLAYERS - 1) * 4;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("PLAYERS");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER_LIST, PLAYERS));
     djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiPlayerList = panel;
     panel->base.on_render_pre = djui_panel_playerlist_on_render_pre;
@@ -94,7 +94,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djuiImages[i] = i1;
 
         int t = 220;
-        struct DjuiText* t2 = djui_text_create(&row->base, "name");
+        struct DjuiText* t2 = djui_text_create(&row->base, DLANG(PLAYER_LIST, NAME));
         djui_base_set_size_type(&t2->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&t2->base, 180, 32.0f);
         djui_base_set_color(&t2->base, t, t, t, 255);
@@ -107,14 +107,14 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_text_set_alignment(t3, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
         djuiTextDescriptions[i] = t3;
 
-        struct DjuiText* t4 = djui_text_create(&row->base, "location");
+        struct DjuiText* t4 = djui_text_create(&row->base, DLANG(PLAYER_LIST, LOCATION));
         djui_base_set_size_type(&t4->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&t4->base, 300 - 100, 32.0f);
         djui_base_set_color(&t4->base, t, t, t, 255);
         djui_text_set_alignment(t4, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         djuiTextLocations[i] = t4;
 
-        struct DjuiText* t5 = djui_text_create(&row->base, "act");
+        struct DjuiText* t5 = djui_text_create(&row->base, DLANG(PLAYER_LIST, ACT));
         djui_base_set_size_type(&t5->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&t5->base, 100, 32.0f);
         djui_base_set_color(&t5->base, t, t, t, 255);

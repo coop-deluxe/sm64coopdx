@@ -91,8 +91,8 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     mods_update_selectable();
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks
-        ? "ROMHACKS"
-        : "MODS"
+        ? DLANG(HOST_MODS, ROMHACKS)
+        : DLANG(HOST_MODS, MODS)
     );
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
@@ -111,7 +111,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         }
         djui_paginated_calculate_height(paginated);
 
-        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
         panel->bodySize.value = paginated->base.height.value + 16 + 64;
     }

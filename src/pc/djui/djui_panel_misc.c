@@ -5,17 +5,17 @@
 
 #ifdef DEVELOPMENT
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("DEBUG");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, DEBUG_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
-        djui_checkbox_create(body, "Fixed Collisions", (bool*)&gLevelValues.fixCollisionBugs, NULL);
-        djui_checkbox_create(body, "Lua Profiler", &configLuaProfiler, NULL);
-        djui_checkbox_create(body, "Debug Print", &configDebugPrint, NULL);
-        djui_checkbox_create(body, "Debug Info", &configDebugInfo, NULL);
-        djui_checkbox_create(body, "Debug Errors", &configDebugError, NULL);
+        djui_checkbox_create(body, DLANG(MISC, FIXED_COLLISIONS), (bool*)&gLevelValues.fixCollisionBugs, NULL);
+        djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
+        djui_checkbox_create(body, DLANG(MISC, DEBUG_PRINT), &configDebugPrint, NULL);
+        djui_checkbox_create(body, DLANG(MISC, DEBUG_INFO), &configDebugInfo, NULL);
+        djui_checkbox_create(body, DLANG(MISC, DEBUG_ERRORS), &configDebugError, NULL);
 
-        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
@@ -23,20 +23,17 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
 #endif
 
 void djui_panel_misc_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("MISC");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, MISC_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
-        djui_checkbox_create(body, "Pause In Singleplayer", &configSingleplayerPause, NULL);
-        djui_checkbox_create(body, "Disable Popups", &configDisablePopups, NULL);
-
-        djui_button_create(body, "Menu Options", DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
-
+        djui_checkbox_create(body, DLANG(MISC, PAUSE_IN_SINGLEPLAYER), &configSingleplayerPause, NULL);
+        djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
+        djui_button_create(body, DLANG(MISC, MENU_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
 #ifdef DEVELOPMENT
-        djui_button_create(body, "Debug", DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
+        djui_button_create(body, DLANG(MISC, DEBUG), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
 #endif
-
-        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

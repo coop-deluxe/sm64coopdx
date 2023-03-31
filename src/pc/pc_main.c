@@ -273,6 +273,7 @@ void main_func(void) {
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
+    djui_language_init("english.ini");
     sync_objects_init_system();
     djui_unicode_init();
     mods_init();

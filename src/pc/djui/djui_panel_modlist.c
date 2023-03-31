@@ -20,7 +20,7 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
     if (gActiveMods.entryCount == 0) { return; }
 
     f32 bodyHeight = (gActiveMods.entryCount * 32) + (gActiveMods.entryCount - 1) * 4;
-    struct DjuiThreePanel* panel = djui_panel_menu_create("MODS");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MODLIST, MODS));
     djui_three_panel_set_body_size(panel, bodyHeight);
     gDjuiModList = panel;
 

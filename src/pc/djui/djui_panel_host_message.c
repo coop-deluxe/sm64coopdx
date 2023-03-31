@@ -11,22 +11,6 @@
 #include "audio/external.h"
 #include "sounds.h"
 
-#ifdef DISCORD_SDK
-static char* sWarningDiscord = "\
-Invite friends by right clicking their name on Discord and clicking on\n\
-'\\#d0d0ff\\Invite to Game\\#c8c8c8\\'.\n\n\
-You can invite channels of servers as well by clicking the \\#d0d0ff\\plus\\#c8c8c8\\ button next to the place where you enter chat.\n\n\
-Game Activity \\#ffa0a0\\must be\\#c8c8c8\\ enabled in your\nDiscord user settings.\n\n\
-Appearing offline \\#ffa0a0\\will prevent\\#c8c8c8\\ invites from being sent.\
-";
-static char* sWarningDiscord2 = "\\#ffa0a0\\Error:\\#c8c8c8\\ Could not detect Discord.\n\n\\#a0a0a0\\Try closing the game,\nrestarting Discord,\nand opening the game again.";
-#endif
-
-static char* sWarningSocket = "\
-Direct connections \\#ffa0a0\\require you\\#c8c8c8\\ to configure port forwarding in your router.\n\n\
-Forward port '\\#d0d0ff\\%d\\#c8c8c8\\' for UDP.\
-";
-
 void djui_panel_do_host(void) {
     stop_demo(NULL);
     djui_panel_shutdown();
@@ -72,19 +56,19 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
     if (!configNetworkSystem) {
         warningLines = gDiscordFailed ? 5 : 13;
-        warningMessage = gDiscordFailed ? sWarningDiscord2 : sWarningDiscord;
+        warningMessage = gDiscordFailed ? DLANG(HOST_MESSAGE, WARN_DISCORD2) : DLANG(HOST_MESSAGE, WARN_DISCORD);
         hideHostButton = gDiscordFailed;
     } else
 #endif
     {
         warningLines = 5;
         warningMessage = calloc(256, sizeof(char));
-        sprintf(warningMessage, sWarningSocket, configHostPort);
+        sprintf(warningMessage, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
     }
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("INFO");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MESSAGE, INFO_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, warningMessage);
@@ -94,8 +78,8 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, "Host", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_message_do_host);
-            struct DjuiButton* btnBack = djui_button_left_create(&rect1->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, DLANG(HOST_MESSAGE, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_message_do_host);
+            struct DjuiButton* btnBack = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
             if (hideHostButton) {
                 djui_base_set_size(&btnBack->base, 1.0f, 64);

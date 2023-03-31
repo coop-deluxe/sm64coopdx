@@ -12,6 +12,7 @@
 #include "djui_gfx.h"
 #include "djui_base.h"
 #include "djui_interactable.h"
+#include "djui_language.h"
 
 #include "djui_root.h"
 #include "djui_cursor.h"

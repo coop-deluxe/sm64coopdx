@@ -47,7 +47,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     u16 directLines = 8;
     f32 directTextHeight = 32 * 0.8125f * directLines + 8;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("JOINING");
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiText* text1 = djui_text_create(body, "...");
@@ -62,7 +62,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
         gDownloadProgress = 0;
         djui_progress_bar_create(body, &gDownloadProgress, 0.0f, 1.0f);
 
-        djui_button_create(body, "Cancel", DJUI_BUTTON_STYLE_BACK, djui_panel_join_message_cancel);
+        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_join_message_cancel);
     }
 
     djui_panel_add(caller, panel, NULL);

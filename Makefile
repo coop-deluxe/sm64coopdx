@@ -660,6 +660,11 @@ else
   BASS_LIBS := lib/bass/libbass.so lib/bass/libbass_fx.so
 endif
 
+LANG_DIR := lang
+
+# Remove old lang dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(LANG_DIR))
+
 MOD_DIR := mods
 
 # Remove old mod dir
@@ -1225,6 +1230,9 @@ $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 $(BUILD_DIR)/$(BASS_LIBS):
 	@$(CP) -f $(BASS_LIBS) $(BUILD_DIR)
 
+$(BUILD_DIR)/$(LANG_DIR):
+	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
+
 $(BUILD_DIR)/$(MOD_DIR):
 	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
@@ -1591,7 +1599,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(MOD_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
 endif

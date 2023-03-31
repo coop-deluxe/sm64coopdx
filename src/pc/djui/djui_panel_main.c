@@ -10,8 +10,8 @@ static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
 
 static void djui_panel_main_quit(struct DjuiBase* caller) {
     djui_panel_confirm_create(caller,
-                              "QUIT",
-                              "Are you sure you want to quit?",
+                              DLANG(MAIN, QUIT_TITLE),
+                              DLANG(MAIN, QUIT_CONFIRM),
                               djui_panel_main_quit_yes);
 }
 
@@ -20,12 +20,12 @@ void djui_panel_main_create(struct DjuiBase* caller) {
     {
         struct DjuiBase* body = djui_three_panel_get_body(panel);
         {
-            struct DjuiButton* button1 = djui_button_create(body, "Host", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
+            struct DjuiButton* button1 = djui_button_create(body, DLANG(MAIN, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
             djui_cursor_input_controlled_center(&button1->base);
 
-            djui_button_create(body, "Join", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_create);
-            djui_button_create(body, "Options", DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
-            djui_button_create(body, "Quit", DJUI_BUTTON_STYLE_BACK, djui_panel_main_quit);
+            djui_button_create(body, DLANG(MAIN, JOIN), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_create);
+            djui_button_create(body, DLANG(MAIN, OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
+            djui_button_create(body, DLANG(MAIN, QUIT), DJUI_BUTTON_STYLE_BACK, djui_panel_main_quit);
         }
 
         char* version = get_version_local();
