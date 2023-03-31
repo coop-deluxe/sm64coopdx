@@ -50,6 +50,7 @@
 #include "pc/network/socket/domain_res.h"
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_unicode.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 
@@ -273,6 +274,7 @@ void main_func(void) {
     fs_init(sys_ropaths, gamedir, userpath);
 
     sync_objects_init_system();
+    djui_unicode_init();
     mods_init();
     configfile_load(configfile_name());
     dynos_pack_init();

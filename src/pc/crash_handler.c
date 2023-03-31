@@ -24,6 +24,7 @@
 #include "game/mario.h"
 #include "gfx_dimensions.h"
 #include "src/pc/djui/djui.h"
+#include "src/pc/djui/djui_unicode.h"
 #include "pc/network/network.h"
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
@@ -168,13 +169,13 @@ static void crash_handler_produce_one_frame() {
 
         // render the line
         f32 addX = 0;
-        size_t length = strlen(text->s);
-        for (size_t i = 0; i < length; i++) {
-            char c = text->s[i];
+        char* c = text->s;
+        while (*c != '\0') {
             f32 charWidth = 0.4f;
 
             if (c <= 0x20 || c >= 0x7F) {
                 addX += charWidth;
+                c = djui_unicode_next_char(c);
                 continue;
             }
 
@@ -185,6 +186,7 @@ static void crash_handler_produce_one_frame() {
             // render
             font->render_char(c);
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, charWidth, 0, 0);
+            c = djui_unicode_next_char(c);
         }
 
         // pop

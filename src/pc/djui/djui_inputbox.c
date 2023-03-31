@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "djui.h"
+#include "djui_unicode.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 #include "game/segment2.h"
@@ -50,7 +51,7 @@ void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
 
 void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
     inputbox->selection[1] = 0;
-    inputbox->selection[0] = strlen(inputbox->buffer);
+    inputbox->selection[0] = djui_unicode_len(inputbox->buffer);
 }
 
 void djui_inputbox_hook_enter_press(struct DjuiInputbox* inputbox, void (*on_enter_press)(struct DjuiInputbox*)) {
@@ -68,13 +69,16 @@ static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
     f32 cX = (gCursorX - (comp->x + inputbox->viewX)) / font->defaultFontScale;
     f32 x = 0;
     u16 index = 0;
-    for (u16 i = 0; i < inputbox->bufferSize; i++) {
-        char c = inputbox->buffer[i];
+    u16 i = 0;
+    char* c = inputbox->buffer;
+    while (*c != '\0') {
         if (x < cX) {
             index = i;
         }
-        if (c == '\0') { break; }
+        if (*c == '\0') { break; }
         x += font->char_width(c);
+        c = djui_unicode_next_char(c);
+        i++;
     }
 
     return index;
@@ -90,7 +94,7 @@ static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED boo
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
     u16 index = djui_inputbox_get_cursor_index(inputbox);
     u16 selLength = abs(inputbox->selection[0] - inputbox->selection[1]);
-    if (selLength != strlen(inputbox->buffer) || djui_interactable_is_input_focus(base)) {
+    if (selLength != djui_unicode_len(inputbox->buffer) || djui_interactable_is_input_focus(base)) {
         inputbox->selection[0] = index;
         inputbox->selection[1] = index;
         djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);
@@ -106,12 +110,14 @@ static u16 djui_inputbox_jump_word_left(char* msg, UNUSED u16 len, u16 i) {
 
     s32 lastI = i;
     bool seenNonSpace = false;
+    char* c = djui_unicode_at_index(msg, i);
     while (true) {
-        if (msg[i] == ' ' && seenNonSpace) { i = lastI; break; }
+        if (*c == ' ' && seenNonSpace) { i = lastI; break; }
         lastI = i;
         i--;
-        if (i <= 0)   { i = 0;   break; }
-        if (msg[i] != ' ') { seenNonSpace = true; }
+        c = djui_unicode_at_index(msg, i);
+        if (i <= 0) { i = 0; break; }
+        if (*c != ' ') { seenNonSpace = true; }
     }
 
     return i;
@@ -121,11 +127,13 @@ static u16 djui_inputbox_jump_word_right(char *msg, u16 len, u16 i) {
     if (i >= len) { return len; }
 
     bool seenSpace = false;
+    char* c = djui_unicode_at_index(msg, i);
     while (true) {
         i++;
+        c = djui_unicode_at_index(msg, i);
         if (i >= len) { i = len; break; }
-        if (msg[i] != ' ' && seenSpace) { break; }
-        if (msg[i] == ' ') { seenSpace = true; }
+        if (*c != ' ' && seenSpace) { break; }
+        if (*c == ' ') { seenSpace = true; }
     };
 
     return i;
@@ -139,7 +147,8 @@ static void djui_inputbox_delete_selection(struct DjuiInputbox *inputbox) {
     if (sel[0] != sel[1]) {
         u16 s1 = fmin(sel[0], sel[1]);
         u16 s2 = fmax(sel[0], sel[1]);
-        memmove(&msg[s1], &msg[s2], (len + 1) - s2);
+        size_t s2len = djui_unicode_at_index(msg, s2) - msg;
+        memmove(djui_unicode_at_index(msg, s1), djui_unicode_at_index(msg, s2), (len + 1) - s2len);
         sel[0] = s1;
         sel[1] = s1;
     }
@@ -150,7 +159,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     u16 *sel = inputbox->selection;
     char *msg = inputbox->buffer;
-    u16 len = strlen(msg);
+    u16 len = djui_unicode_len(msg);
     u16 s1 = fmin(sel[0], sel[1]);
     u16 s2 = fmax(sel[0], sel[1]);
 
@@ -236,7 +245,9 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     if (sHeldControl && (scancode == SCANCODE_C || scancode == SCANCODE_X)) {
         if (sel[0] != sel[1]) {
             char clipboardText[256] = { 0 };
-            djui_font_convert_to_unicode(&msg[s1], clipboardText, fmin(256, 1 + s2 - s1), 255);
+            char* cs1 = djui_unicode_at_index(msg, s1);
+            char* cs2 = djui_unicode_at_index(msg, s2);
+            snprintf(clipboardText, fmin(256, 1 + cs2 - cs1), "%s", cs1);
             wm_api->set_clipboard_text(clipboardText);
             if (scancode == SCANCODE_X) {
                 djui_inputbox_delete_selection(inputbox);
@@ -247,7 +258,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     }
 
     if (sHeldControl && scancode == SCANCODE_A) {
-        inputbox->selection[0] = len;
+        inputbox->selection[0] = djui_unicode_len(msg);
         inputbox->selection[1] = 0;
         sCursorBlink = 0;
         return true;
@@ -297,17 +308,15 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     int msgLen = strlen(msg);
     int textLen = strlen(text);
 
-    djui_font_convert_to_smcode(text);
-
     // make sure we're not just printing garbage characters
     bool containsValidAscii = false;
     char* tinput = text;
     while (*tinput != '\0') {
-        if (djui_font_valid_smcode(*tinput)) {
+        if (djui_unicode_valid_char(tinput)) {
             containsValidAscii = true;
             break;
         }
-        tinput++;
+        tinput = djui_unicode_next_char(tinput);
     }
     if (!containsValidAscii) {
         return;
@@ -331,9 +340,9 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     while (*t != '\0') {
         if (*t == '\n') { *t = ' '; }
         else if (*t == '\r') { *t = ' '; }
-        else if (djui_font_valid_smcode(*t)) { ; }
-        else if (*t < '!' || *t > '~') { *t = '?'; }
-        t++;
+        else if (djui_unicode_valid_char(t)) { ; }
+
+        t = djui_unicode_next_char(t);
     }
 
     // back up current message
@@ -341,18 +350,22 @@ static void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     memcpy(sMsg, msg, inputbox->bufferSize);
 
     // insert text
-    u16 sel = inputbox->selection[0];
+    size_t sel = djui_unicode_at_index(inputbox->buffer, inputbox->selection[0]) - inputbox->buffer;
+
     snprintf(&msg[sel], (inputbox->bufferSize - sel), "%s%s", text, &sMsg[sel]);
     free(sMsg);
+    djui_unicode_cleanup_end(msg);
 
     // adjust cursor
-    inputbox->selection[0] += strlen(text);
+    inputbox->selection[0] += djui_unicode_len(text);
+    s32 ulen = djui_unicode_len(msg);
+    if (inputbox->selection[0] > ulen) { inputbox->selection[0] = ulen; }
     inputbox->selection[1] = inputbox->selection[0];
     sCursorBlink = 0;
     djui_inputbox_on_change(inputbox);
 }
 
-static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char c, f32* drawX, f32* additionalShift) {
+static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f32* drawX, f32* additionalShift) {
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
     const struct DjuiFont* font = gDjuiFonts[0];
     f32 dX = comp->x + *drawX;
@@ -363,7 +376,7 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char c, f32
     f32 charWidth = font->char_width(c);
     *drawX += charWidth * font->defaultFontScale;
 
-    if (c != ' ' && !djui_gfx_add_clipping_specific(&inputbox->base, font->rotatedUV, dX, dY, dW, dH)) {
+    if (*c != ' ' && !djui_gfx_add_clipping_specific(&inputbox->base, font->rotatedUV, dX, dY, dW, dH)) {
         if (*additionalShift > 0) {
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, *additionalShift, 0, 0);
             *additionalShift = 0;
@@ -381,15 +394,16 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     selection[0] = fmin(inputbox->selection[0], inputbox->selection[1]);
     selection[1] = fmax(inputbox->selection[0], inputbox->selection[1]);
 
-    char* msg = inputbox->buffer;
+    char* c = inputbox->buffer;
     f32 x = 0;
     f32 width = 0;
     for (u16 i = 0; i < selection[1]; i++) {
         if (i < selection[0]) {
-            x += font->char_width(msg[i]);
+            x += font->char_width(c);
         } else {
-            width += font->char_width(msg[i]);
+            width += font->char_width(c);
         }
+        c = djui_unicode_next_char(c);
     }
     
     sCursorBlink = (sCursorBlink + 1) % DJUI_INPUTBOX_MAX_BLINK;
@@ -441,9 +455,11 @@ static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) 
 
     // calculate where our cursor is
     f32 cursorX = inputbox->viewX;
-    char* msg = inputbox->buffer;
+    char* c = inputbox->buffer;
     for (u16 i = 0; i < inputbox->selection[0]; i++) {
-        cursorX += font->char_width(msg[i]) * font->defaultFontScale;
+        if (*c == '\0') { break; }
+        cursorX += font->char_width(c) * font->defaultFontScale;
+        c = djui_unicode_next_char(c);
     }
 
     // shift viewing window
@@ -491,12 +507,12 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     selection[1] = fmax(inputbox->selection[0], inputbox->selection[1]);
 
     // render text
-    char* msg = inputbox->buffer;
+    char* c = inputbox->buffer;
     f32 drawX = inputbox->viewX;
     f32 additionalShift = 0;
     bool wasInsideSelection = false;
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
-        if (msg[i] == '\0') { break; }
+        if (*c == '\0') { break; }
 
         // deal with seleciton color
         if (selection[0] != selection[1]) {
@@ -510,7 +526,8 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
         }
 
         // render character
-        djui_inputbox_render_char(inputbox, msg[i], &drawX, &additionalShift);
+        djui_inputbox_render_char(inputbox, c, &drawX, &additionalShift);
+        c = djui_unicode_next_char(c);
     }
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
