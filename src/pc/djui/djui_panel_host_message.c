@@ -84,15 +84,15 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\I\\#1be700\\N\\#00b3ff\\F\\#ffef00\\O");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("INFO");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiText* text1 = djui_text_create(&body->base, warningMessage);
+        struct DjuiText* text1 = djui_text_create(body, warningMessage);
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, textHeight);
         djui_base_set_color(&text1->base, 200, 200, 200, 255);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 64);
+        struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
             struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, "Host", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_message_do_host);
             struct DjuiButton* btnBack = djui_button_left_create(&rect1->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

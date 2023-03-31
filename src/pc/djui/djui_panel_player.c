@@ -116,7 +116,7 @@ void djui_panel_player_edit_palette_destroy(struct DjuiBase* caller) {
 static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     char* sPartStrings[PLAYER_PART_MAX] = { "Overalls", "Shirt", "Gloves", "Shoes", "Hair", "Skin", "Cap" };
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\P\\#1be700\\A\\#00b3ff\\L\\#ffef00\\E\\#ff0800\\T\\#1be700\\T\\#00b3ff\\E");
+    struct DjuiThreePanel* panel = djui_panel_menu_create("PALETTE");
 
     // Set current palette to custom when clicking on Edit Palette
     sPalettePresetIndex = PALETTE_CUSTOM;
@@ -128,13 +128,13 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     sSavedDestroy = panel->base.destroy;
     panel->base.destroy = djui_panel_player_edit_palette_destroy;
 
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
         sCurrentPlayerPart = SHIRT;
-        djui_selectionbox_create(&body->base, "Part", sPartStrings, PLAYER_PART_MAX, &sCurrentPlayerPart, djui_panel_player_edit_palette_part_changed);
+        djui_selectionbox_create(body, "Part", sPartStrings, PLAYER_PART_MAX, &sCurrentPlayerPart, djui_panel_player_edit_palette_part_changed);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
+        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, "Hex Code");
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -152,11 +152,11 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 
         for (int i = 0; i < 3; i++) sSliderChannels[i] = configCustomPalette.parts[SHIRT][i];
 
-        sSliderR = djui_slider_create(&body->base, "Red", &sSliderChannels[0], 0, 255, djui_panel_player_edit_palette_red_changed);
-        sSliderG = djui_slider_create(&body->base, "Green", &sSliderChannels[1], 0, 255, djui_panel_player_edit_palette_green_changed);
-        sSliderB = djui_slider_create(&body->base, "Blue", &sSliderChannels[2], 0, 255, djui_panel_player_edit_palette_blue_changed);
+        sSliderR = djui_slider_create(body, "Red", &sSliderChannels[0], 0, 255, djui_panel_player_edit_palette_red_changed);
+        sSliderG = djui_slider_create(body, "Green", &sSliderChannels[1], 0, 255, djui_panel_player_edit_palette_green_changed);
+        sSliderB = djui_slider_create(body, "Blue", &sSliderChannels[2], 0, 255, djui_panel_player_edit_palette_blue_changed);
 
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
@@ -231,11 +231,11 @@ void djui_panel_player_create(struct DjuiBase* caller) {
     djui_panel_player_prevent_demo(NULL);
     gInPlayerMenu = true;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\P\\#1be700\\L\\#00b3ff\\A\\#ffef00\\Y\\#ff0800\\E\\#1be700\\R");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("PLAYER");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
-        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
+        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, "Name");
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -260,7 +260,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         for (int i = 0; i < CT_MAX; i++) {
             modelChoices[i] = gCharacters[i].name;
         }
-        djui_selectionbox_create(&body->base, "Model", modelChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
+        djui_selectionbox_create(body, "Model", modelChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
 
         char* paletteChoices[PALETTE_PRESET_MAX+1] = {
             "Mario",
@@ -305,10 +305,10 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             }
         }
 
-        sPalettePresetSelection = djui_selectionbox_create(&body->base, "Palette Preset", paletteChoices, PALETTE_PRESET_MAX+1, &sPalettePresetIndex, djui_panel_player_value_changed);
+        sPalettePresetSelection = djui_selectionbox_create(body, "Palette Preset", paletteChoices, PALETTE_PRESET_MAX+1, &sPalettePresetIndex, djui_panel_player_value_changed);
 
-        djui_button_create(&body->base, "Edit Palette", DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_create);
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Edit Palette", DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_create);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);

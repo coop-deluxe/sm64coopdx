@@ -257,3 +257,13 @@ char djui_unicode_get_base_char(char* text) {
     struct SmCodeGlyph* glyph = hmap_get(sCharMap, key);
     return (glyph != NULL) ? glyph->base : '?';
 }
+
+void djui_unicode_get_char(char* text, char* output) {
+    s32 bytes = count_bytes_for_char(text);
+    while (bytes-- > 0) {
+        *output = *text;
+        output++;
+        text++;
+    }
+    *output = '\0';
+}

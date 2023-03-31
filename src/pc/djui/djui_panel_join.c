@@ -166,33 +166,33 @@ void djui_panel_join_create(struct DjuiBase* caller) {
 #endif
 
     struct DjuiBase* defaultBase = NULL;
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\J\\#1be700\\O\\#00b3ff\\I\\#ffef00\\N");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("JOIN");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
 #ifdef DISCORD_SDK
-        struct DjuiText* text1 = djui_text_create(&body->base, sJoiningDiscord);
+        struct DjuiText* text1 = djui_text_create(body, sJoiningDiscord);
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, discordTextHeight);
         djui_base_set_color(&text1->base, 200, 200, 200, 255);
 #endif
-        struct DjuiRect* rect1 = djui_rect_create(&body->base);
+        struct DjuiRect* rect1 = djui_rect_create(body);
         djui_base_set_size_type(&rect1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&rect1->base, 1.0f, 2);
         djui_base_set_color(&rect1->base, 150, 150, 150, 255);
 
-        struct DjuiText* text2 = djui_text_create(&body->base, sJoiningDirect);
+        struct DjuiText* text2 = djui_text_create(body, sJoiningDirect);
         djui_base_set_size_type(&text2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text2->base, 1.0f, directTextHeight);
         djui_base_set_color(&text2->base, 200, 200, 200, 255);
 
-        struct DjuiInputbox* inputbox1 = djui_inputbox_create(&body->base, 256);
+        struct DjuiInputbox* inputbox1 = djui_inputbox_create(body, 256);
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&inputbox1->base, 1.0f, 32.0f);
         djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_ip_text_change);
         sInputboxIp = inputbox1;
         djui_panel_join_ip_text_set(inputbox1);
 
-        struct DjuiRect* rect2 = djui_rect_container_create(&body->base, 64);
+        struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
             struct DjuiButton* button1 = djui_button_create(&rect2->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);

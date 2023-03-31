@@ -36,11 +36,11 @@ static void djui_panel_host_save_erase(struct DjuiBase* caller) {
 void djui_panel_host_save_create(struct DjuiBase* caller) {
     sSaveButtonCaller = caller;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\S\\#1be700\\A\\#00b3ff\\V\\#ffef00\\E");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("SAVE");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         for (int i = 0; i < 4; i++) {
-            struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
+            struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
             {
                 struct DjuiButton* button1 = djui_button_create(&rect1->base, "", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_button_click);
                 djui_panel_host_save_update_button(button1, i);

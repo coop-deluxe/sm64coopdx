@@ -67,20 +67,20 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 void djui_panel_host_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create((gNetworkType == NT_SERVER)
-            ? "\\#ff0800\\S\\#1be700\\E\\#00b3ff\\R\\#ffef00\\V\\#ff0800\\E\\#1be700\\R"
-            : "\\#ff0800\\H\\#1be700\\O\\#00b3ff\\S\\#ffef00\\T");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+            ? "SERVER"
+            : "HOST");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
 #ifdef DISCORD_SDK
         char* nChoices[2] = { "Discord", "Direct Connection" };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Network system", nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, "Network system", nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
         if (gNetworkType == NT_SERVER) {
             djui_base_set_enabled(&selectionbox1->base, false);
         }
 
 #endif
 
-        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
+        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, "Port");
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -109,7 +109,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             sInputboxPort = inputbox1;
         }
         
-        struct DjuiRect* rect2 = djui_rect_container_create(&body->base, 32);
+        struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect2->base, "Save Slot");
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -124,15 +124,15 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         }
 
-        djui_button_create(&body->base, "Settings", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
+        djui_button_create(body, "Settings", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
 
-        struct DjuiButton* button2 = djui_button_create(&body->base, "Mods", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
+        struct DjuiButton* button2 = djui_button_create(body, "Mods", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
         button2->base.tag = 0;
 
-        struct DjuiButton* button3 = djui_button_create(&body->base, "Rom-Hacks", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
+        struct DjuiButton* button3 = djui_button_create(body, "Rom-Hacks", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
         button3->base.tag = 1;
 
-        struct DjuiRect* rect3 = djui_rect_container_create(&body->base, 64);
+        struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {
             struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? "Cancel" : "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);

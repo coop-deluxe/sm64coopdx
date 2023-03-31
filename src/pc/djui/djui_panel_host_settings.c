@@ -43,27 +43,27 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\S\\#1be700\\E\\#00b3ff\\T\\#ffef00\\T\\#ff0800\\I\\#1be700\\N\\#00b3ff\\G\\#ffef00\\S");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("SETTINGS");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         char* iChoices[3] = { "Non-solid", "Solid", "Friendly Fire" };
-        djui_selectionbox_create(&body->base, "Player interaction", iChoices, 3, &configPlayerInteraction, NULL);
+        djui_selectionbox_create(body, "Player interaction", iChoices, 3, &configPlayerInteraction, NULL);
 
         sKnockbackIndex = (configPlayerKnockbackStrength <= 20)
                         ? 0
                         : ((configPlayerKnockbackStrength <= 40) ? 1 : 2);
         char* kChoices[3] = { "Weak", "Normal", "Too much" };
-        djui_selectionbox_create(&body->base, "Knockback strength", kChoices, 3, &sKnockbackIndex, djui_panel_host_settings_knockback_change);
+        djui_selectionbox_create(body, "Knockback strength", kChoices, 3, &sKnockbackIndex, djui_panel_host_settings_knockback_change);
 
         char* lChoices[3] = { "Leave level", "Stay in level", "Non-stop" };
-        djui_selectionbox_create(&body->base, "On star collection", lChoices, 3, &configStayInLevelAfterStar, NULL);
+        djui_selectionbox_create(body, "On star collection", lChoices, 3, &configStayInLevelAfterStar, NULL);
 
-        djui_checkbox_create(&body->base, "Skip intro cutscene", &configSkipIntro, NULL);
-        djui_checkbox_create(&body->base, "Share lives", &configShareLives, NULL);
-        djui_checkbox_create(&body->base, "Enable cheats", &configEnableCheats, NULL);
-        djui_checkbox_create(&body->base, "Bubble on death", &configBubbleDeath, NULL);
+        djui_checkbox_create(body, "Skip intro cutscene", &configSkipIntro, NULL);
+        djui_checkbox_create(body, "Share lives", &configShareLives, NULL);
+        djui_checkbox_create(body, "Enable cheats", &configEnableCheats, NULL);
+        djui_checkbox_create(body, "Bubble on death", &configBubbleDeath, NULL);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
+        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, "Amount of players");
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -82,7 +82,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             sPlayerAmount = inputbox1;
         }
         
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
     djui_panel_add(caller, panel, NULL);
 }

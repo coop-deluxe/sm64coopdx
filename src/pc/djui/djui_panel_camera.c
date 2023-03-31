@@ -8,23 +8,23 @@ void djui_panel_camera_value_changed(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_camera_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\C\\#1be700\\A\\#00b3ff\\M\\#ffef00\\E\\#ff0800\\R\\#1be700\\A");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("CAMERA");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_checkbox_create(&body->base, "Free Camera", &configEnableCamera, djui_panel_camera_value_changed);
-        djui_checkbox_create(&body->base, "Analog Camera", &configCameraAnalog, djui_panel_camera_value_changed);
+        djui_checkbox_create(body, "Free Camera", &configEnableCamera, djui_panel_camera_value_changed);
+        djui_checkbox_create(body, "Analog Camera", &configCameraAnalog, djui_panel_camera_value_changed);
 #ifdef BETTERCAMERA
-        djui_checkbox_create(&body->base, "Mouse Look", &configCameraMouse, djui_panel_camera_value_changed);
+        djui_checkbox_create(body, "Mouse Look", &configCameraMouse, djui_panel_camera_value_changed);
 #endif
-        djui_checkbox_create(&body->base, "Invert X", &configCameraInvertX, djui_panel_camera_value_changed);
-        djui_checkbox_create(&body->base, "Invert Y", &configCameraInvertY, djui_panel_camera_value_changed);
-        djui_slider_create(&body->base, "X Sensitivity", &configCameraXSens, 1, 100, djui_panel_camera_value_changed);
-        djui_slider_create(&body->base, "Y Sensitivity", &configCameraYSens, 1, 100, djui_panel_camera_value_changed);
-        djui_slider_create(&body->base, "Aggression", &configCameraAggr, 0, 100, djui_panel_camera_value_changed);
-        djui_slider_create(&body->base, "Pan Level", &configCameraPan, 0, 100, djui_panel_camera_value_changed);
-        djui_slider_create(&body->base, "Deceleration", &configCameraDegrade, 0, 100, djui_panel_camera_value_changed);
+        djui_checkbox_create(body, "Invert X", &configCameraInvertX, djui_panel_camera_value_changed);
+        djui_checkbox_create(body, "Invert Y", &configCameraInvertY, djui_panel_camera_value_changed);
+        djui_slider_create(body, "X Sensitivity", &configCameraXSens, 1, 100, djui_panel_camera_value_changed);
+        djui_slider_create(body, "Y Sensitivity", &configCameraYSens, 1, 100, djui_panel_camera_value_changed);
+        djui_slider_create(body, "Aggression", &configCameraAggr, 0, 100, djui_panel_camera_value_changed);
+        djui_slider_create(body, "Pan Level", &configCameraPan, 0, 100, djui_panel_camera_value_changed);
+        djui_slider_create(body, "Deceleration", &configCameraDegrade, 0, 100, djui_panel_camera_value_changed);
 
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

@@ -27,20 +27,20 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\D\\#1be700\\I\\#00b3ff\\S\\#ffef00\\P\\#ff0800\\L\\#1be700\\A\\#00b3ff\\Y");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("DISPLAY");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
 
     {
-        djui_checkbox_create(&body->base, "Fullscreen", &configWindow.fullscreen, djui_panel_display_apply);
+        djui_checkbox_create(body, "Fullscreen", &configWindow.fullscreen, djui_panel_display_apply);
 
     #ifdef EXTERNAL_DATA
-        djui_checkbox_create(&body->base, "Preload Textures", &configPrecacheRes, NULL);
+        djui_checkbox_create(body, "Preload Textures", &configPrecacheRes, NULL);
     #endif
 
-        djui_checkbox_create(&body->base, "VSync", &configWindow.vsync, djui_panel_display_apply);
-        djui_checkbox_create(&body->base, "Uncapped Framerate", &configUncappedFramerate, djui_panel_display_apply);
+        djui_checkbox_create(body, "VSync", &configWindow.vsync, djui_panel_display_apply);
+        djui_checkbox_create(body, "Uncapped Framerate", &configUncappedFramerate, djui_panel_display_apply);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(&body->base, 32);
+        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             if (configFrameLimit < 30) { configFrameLimit = 30; }
             if (configFrameLimit > 3000) { configFrameLimit = 3000; }
@@ -63,19 +63,19 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         }
 
         char* interpChoices[2] = { "Fast", "Accurate" };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(&body->base, "Interpolation", interpChoices, 2, &configInterpolationMode, NULL);
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, "Interpolation", interpChoices, 2, &configInterpolationMode, NULL);
         djui_base_set_enabled(&selectionbox1->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
         sInterpolationSelectionBox = selectionbox1;
 
         char* filterChoices[3] = { "Nearest", "Linear", "Tripoint" };
-        djui_selectionbox_create(&body->base, "Filtering", filterChoices, 3, &configFiltering, NULL);
+        djui_selectionbox_create(body, "Filtering", filterChoices, 3, &configFiltering, NULL);
 
         char* drawDistanceChoices[6] = { "0.5x", "1x", "1.5x", "3x", "10x", "100x" };
-        djui_selectionbox_create(&body->base, "Draw Distance", drawDistanceChoices, 6, &configDrawDistance, NULL);
+        djui_selectionbox_create(body, "Draw Distance", drawDistanceChoices, 6, &configDrawDistance, NULL);
 
-        djui_button_create(&body->base, "DynOS Packs", DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_create);
+        djui_button_create(body, "DynOS Packs", DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_create);
 
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

@@ -1,6 +1,45 @@
 #include "djui.h"
+#include "djui_unicode.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
+
+#define RAINBOW_TEXT_LEN 127
+
+char* sRainbowColors[] = {
+    "\\#ff0800\\",
+    "\\#1be700\\",
+    "\\#00b3ff\\",
+    "\\#ffef00\\",
+};
+
+char sRainbowText[RAINBOW_TEXT_LEN + 1] = { 0 };
+
+static void generate_rainbow_text(char* text) {
+    char* src = text;
+    char* dst = sRainbowText;
+    char tmpChar[10] = { 0 };
+    int i = 0;
+    *dst = '\0';
+    while (*src) {
+        if (*src == '\\') {
+            snprintf(sRainbowText, RAINBOW_TEXT_LEN, "%s", text);
+            return;
+        }
+        s32 restrictSize = RAINBOW_TEXT_LEN - (s32)(dst - sRainbowText);
+        if (restrictSize <= 0) { break; }
+        snprintf(dst, restrictSize, "%s", sRainbowColors[i++ % 4]);
+        dst = &sRainbowText[strlen(sRainbowText)];
+
+        restrictSize = RAINBOW_TEXT_LEN - (s32)(dst - sRainbowText);
+        if (restrictSize <= 0) { break; }
+
+        djui_unicode_get_char(src, tmpChar);
+        snprintf(dst, restrictSize, "%s", tmpChar);
+        dst = &sRainbowText[strlen(sRainbowText)];
+
+        src = djui_unicode_next_char(src);
+    }
+}
 
 void djui_panel_menu_back(UNUSED struct DjuiBase* base) {
     djui_panel_back();
@@ -15,7 +54,8 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText) {
     djui_base_set_border_width(&panel->base, 8);
     djui_base_set_padding(&panel->base, 16, 16, 16, 16);
     {
-        struct DjuiText* header = djui_text_create(&panel->base, headerText);
+        generate_rainbow_text(headerText);
+        struct DjuiText* header = djui_text_create(&panel->base, sRainbowText);
         djui_base_set_size_type(&header->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&header->base, 1.0f, 1.0f);
         djui_base_set_color(&header->base, 255, 8, 0, 255);

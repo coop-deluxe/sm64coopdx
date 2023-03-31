@@ -4,10 +4,10 @@
 void djui_panel_controls_n64_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 28 * 14 + 1 * 13;
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create("\\#ff0800\\C\\#1be700\\O\\#00b3ff\\N\\#ffef00\\T\\#ff0800\\R\\#1be700\\O\\#00b3ff\\L\\#ffef00\\S");
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiThreePanel* panel = djui_panel_menu_create("CONTROLS");
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiFlowLayout* bindBody = djui_flow_layout_create(&body->base);
+        struct DjuiFlowLayout* bindBody = djui_flow_layout_create(body);
         djui_base_set_size_type(&bindBody->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&bindBody->base, 1.0f, bindBodyHeight);
         djui_base_set_color(&bindBody->base, 0, 0, 0, 0);
@@ -29,7 +29,7 @@ void djui_panel_controls_n64_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, "C Right",     configKeyCRight);
         }
 
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

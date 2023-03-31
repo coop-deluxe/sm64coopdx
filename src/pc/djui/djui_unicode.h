@@ -12,3 +12,4 @@ size_t djui_unicode_len(char* text);
 bool djui_unicode_valid_char(char* text);
 void djui_unicode_cleanup_end(char* text);
 char djui_unicode_get_base_char(char* text);
+void djui_unicode_get_char(char* text, char* output);

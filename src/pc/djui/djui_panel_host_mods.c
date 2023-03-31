@@ -90,13 +90,13 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
     mods_update_selectable();
 
-    struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks ?
-        "\\#ff0800\\R\\#1be700\\O\\#00b3ff\\M \\#ffef00\\H\\#ff0800\\A\\#1be700\\C\\#00b3ff\\K\\#ffef00\\S" :
-        "\\#ff0800\\M\\#1be700\\O\\#00b3ff\\D\\#ffef00\\S"
+    struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks
+        ? "ROMHACKS"
+        : "MODS"
     );
-    struct DjuiFlowLayout* body = (struct DjuiFlowLayout*)djui_three_panel_get_body(panel);
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiPaginated* paginated = djui_paginated_create(&body->base, 8);
+        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         sModLayout = paginated->layout;
         struct DjuiBase* layoutBase = &paginated->layout->base;
         for (int i = 0; i < gLocalMods.entryCount; i++) {
@@ -111,7 +111,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
         }
         djui_paginated_calculate_height(paginated);
 
-        djui_button_create(&body->base, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, "Back", DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
         panel->bodySize.value = paginated->base.height.value + 16 + 64;
     }
