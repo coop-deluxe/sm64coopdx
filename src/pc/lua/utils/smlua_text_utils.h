@@ -10,5 +10,6 @@ void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName,
 void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName);
 void smlua_text_utils_castle_secret_stars_replace(const char* name);
 void smlua_text_utils_extra_text_replace(s16 index, const char* text);
+char* smlua_text_utils_get_language(void);
 
 #endif

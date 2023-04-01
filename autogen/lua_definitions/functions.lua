@@ -8768,6 +8768,11 @@ function smlua_text_utils_extra_text_replace(index, text)
     -- ...
 end
 
+--- @return string
+function smlua_text_utils_get_language()
+    -- ...
+end
+
 --- @return nil
 function smlua_text_utils_reset_all()
     -- ...

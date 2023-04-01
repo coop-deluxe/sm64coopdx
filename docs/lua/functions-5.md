@@ -788,6 +788,24 @@
 
 <br />
 
+## [smlua_text_utils_get_language](#smlua_text_utils_get_language)
+
+### Lua Example
+`local stringValue = smlua_text_utils_get_language()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`char* smlua_text_utils_get_language(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_reset_all](#smlua_text_utils_reset_all)
 
 ### Lua Example

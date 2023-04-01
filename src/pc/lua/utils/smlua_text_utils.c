@@ -119,3 +119,7 @@ void smlua_text_utils_extra_text_replace(s16 index, const char* text) {
     seg2_act_name_table[index] = smlua_text_utils_convert(text);
     sReplacedActName[index] = true;
 }
+
+char* smlua_text_utils_get_language(void) {
+    return configLanguage;
+}
