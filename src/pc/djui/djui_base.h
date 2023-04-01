@@ -65,6 +65,7 @@ void djui_base_set_padding_type(struct DjuiBase* base, enum DjuiScreenValueType 
 void djui_base_set_alignment(struct DjuiBase* base, enum DjuiHAlign hAlign, enum DjuiVAlign vAlign);
 
 void djui_base_compute(struct DjuiBase* base);
+void djui_base_compute_tree(struct DjuiBase* base);
 
 bool djui_base_render(struct DjuiBase* base);
 void djui_base_destroy(struct DjuiBase* base);

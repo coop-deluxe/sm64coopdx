@@ -174,6 +174,13 @@ void djui_base_compute(struct DjuiBase* base) {
     djui_base_clip(base);
 }
 
+void djui_base_compute_tree(struct DjuiBase* base) {
+    if (base->parent != NULL) {
+        djui_base_compute_tree(base->parent);
+    }
+    djui_base_compute(base);
+}
+
 static void djui_base_add_child(struct DjuiBase* parent, struct DjuiBase* base) {
     if (parent == NULL) { return; }
 

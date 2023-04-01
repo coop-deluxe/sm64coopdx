@@ -7,7 +7,13 @@ void djui_panel_confirm_create(struct DjuiBase* caller, char* title, char* messa
     {
         struct DjuiText* text = djui_text_create(body, message);
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+
         djui_base_set_size(&text->base, 1.0f, 64);
+        djui_base_compute_tree(&text->base);
+        u16 lines = djui_text_count_lines(text, 12);
+        f32 textHeight = 32 * 0.8125f * lines + 8;
+        djui_base_set_size(&text->base, 1.0f, textHeight);
+
         djui_base_set_color(&text->base, 200, 200, 200, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
 

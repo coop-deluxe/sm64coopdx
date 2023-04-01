@@ -145,13 +145,6 @@ void djui_panel_join_do_join(struct DjuiBase* caller) {
 }
 
 void djui_panel_join_create(struct DjuiBase* caller) {
-    u16 directLines = 1;
-    f32 directTextHeight = 32 * 0.8125f * directLines + 8;
-
-#ifdef DISCORD_SDK
-    u16 discordLines = 8;
-    f32 discordTextHeight = 32 * 0.8125f * discordLines + 8;
-#endif
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE));
@@ -160,6 +153,10 @@ void djui_panel_join_create(struct DjuiBase* caller) {
 #ifdef DISCORD_SDK
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_DISCORD));
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&text1->base, 1.0f, 100);
+        djui_base_compute_tree(&text1->base);
+        u16 discordLines = djui_text_count_lines(text1, 12);
+        f32 discordTextHeight = 32 * 0.8125f * discordLines + 8;
         djui_base_set_size(&text1->base, 1.0f, discordTextHeight);
         djui_base_set_color(&text1->base, 200, 200, 200, 255);
 #endif
@@ -170,6 +167,10 @@ void djui_panel_join_create(struct DjuiBase* caller) {
 
         struct DjuiText* text2 = djui_text_create(body, DLANG(JOIN, JOIN_SOCKET));
         djui_base_set_size_type(&text2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&text2->base, 1.0f, 100);
+        djui_base_compute_tree(&text2->base);
+        u16 directLines = djui_text_count_lines(text2, 12);
+        f32 directTextHeight = 32 * 0.8125f * directLines + 8;
         djui_base_set_size(&text2->base, 1.0f, directTextHeight);
         djui_base_set_color(&text2->base, 200, 200, 200, 255);
 
