@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import sys
 import os
+import time
 import subprocess
 
 # example before: tools/aiff_extract_codebook sound/samples/sfx_custom_luigi/00.aiff >build/us_pc/sound/samples/sfx_custom_luigi/00.table
+
 
 s_size = 0
 
@@ -25,14 +27,29 @@ else:
     s_cmd = [ a_cmd, a_input ]
     with open(a_output, 'w') as outfile:
         subprocess.call(s_cmd, stdout=outfile, shell=False)
+        outfile.flush()
+        os.fsync(outfile.fileno())
 
-    # get size
+    # try to read the file length repeatedly
+    s_itr = 0
+    while s_size <= 0 and s_itr < 8:
+        # sleep between iterations
+        if s_itr > 0:
+            time.sleep(0.1 + 0.05 * s_itr)
+        s_itr += 1
+
+        # check for existence
+        if not os.path.isfile(a_output):
+            continue
+
+        # read file size
+        with open(a_output, 'r') as outfile:
+            s_text = outfile.read()
+            s_size = len(s_text)
+
+    # check final existence
     if not os.path.isfile(a_output):
         print(sys.argv[0] + ': original output file does not exist "' + a_output + '"', file=sys.stderr)
-    else:
-        with open(a_output, 'r') as outfile:
-            s_text = outfile.read().strip()
-            s_size = len(s_text)
 
 # check size
 if s_size > 6:
