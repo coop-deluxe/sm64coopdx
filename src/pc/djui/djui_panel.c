@@ -144,12 +144,13 @@ void djui_panel_update(void) {
         djui_cursor_input_controlled_center(sPanelList->defaultElementBase);
 
         if (removingBase != NULL) {
-            if (sPanelRemoving->on_panel_destroy) {
-                sPanelRemoving->on_panel_destroy(NULL);
+            struct DjuiPanel* panel = sPanelRemoving;
+            sPanelRemoving = NULL;
+            if (panel->on_panel_destroy) {
+                panel->on_panel_destroy(NULL);
             }
             djui_base_destroy(removingBase);
-            free(sPanelRemoving);
-            sPanelRemoving = NULL;
+            free(panel);
         }
     }
 
@@ -165,6 +166,9 @@ void djui_panel_update(void) {
 }
 
 void djui_panel_shutdown(void) {
+    static bool sShuttingDown = false;
+    if (sShuttingDown) { return; }
+    sShuttingDown = true;
     struct DjuiPanel* panel = sPanelList;
     while (panel != NULL) {
         struct DjuiPanel* next = panel->parent;
@@ -177,11 +181,13 @@ void djui_panel_shutdown(void) {
     }
 
     if (sPanelRemoving != NULL) {
-        if (sPanelRemoving->on_panel_destroy) {
-            sPanelRemoving->on_panel_destroy(NULL);
+        struct DjuiPanel* panel = sPanelRemoving;
+        sPanelRemoving = NULL;
+        if (panel->on_panel_destroy) {
+            panel->on_panel_destroy(NULL);
         }
-        djui_base_destroy(sPanelRemoving->base);
-        free(sPanelRemoving);
+        djui_base_destroy(panel->base);
+        free(panel);
     }
 
     sPanelList = NULL;
@@ -197,4 +203,5 @@ void djui_panel_shutdown(void) {
         gDjuiInMainMenu = false;
         newcam_init_settings();
     }
+    sShuttingDown = false;
 }

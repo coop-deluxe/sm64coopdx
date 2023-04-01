@@ -273,11 +273,13 @@ void main_func(void) {
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
-    djui_language_init("english.ini");
     sync_objects_init_system();
     djui_unicode_init();
     mods_init();
     configfile_load(configfile_name());
+    if (!djui_language_init(configLanguage)) {
+        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "");
+    }
     dynos_pack_init();
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)

@@ -154,6 +154,7 @@ bool         configSingleplayerPause             = 0;
 bool         configDebugPrint                    = 0;
 bool         configDebugInfo                     = 0;
 bool         configDebugError                    = 0;
+char         configLanguage[MAX_CONFIG_STRING]   = "";
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -261,6 +262,7 @@ static const struct ConfigOption options[] = {
     {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugPrint},
     {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugInfo},
     {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugError},
+    {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
 };
 
 // FunctionConfigOption functions

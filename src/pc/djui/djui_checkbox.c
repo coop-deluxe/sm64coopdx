@@ -22,6 +22,7 @@ static void djui_checkbox_update_style(struct DjuiBase* base) {
         djui_base_set_color(&checkbox->text->base, 200, 200, 200, 255);
         djui_base_set_color(&checkbox->rectValue->base, 200, 200, 200, 255);
     }
+    djui_base_set_visible(&checkbox->rectValue->base, *checkbox->value);
 }
 
 static void djui_checkbox_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {

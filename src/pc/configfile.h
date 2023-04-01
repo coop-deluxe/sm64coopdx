@@ -109,6 +109,7 @@ extern bool         configSingleplayerPause;
 extern bool         configDebugPrint;
 extern bool         configDebugInfo;
 extern bool         configDebugError;
+extern char         configLanguage[];
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);

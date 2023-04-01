@@ -5,16 +5,28 @@
 
 ini_t* sLang = NULL;
 
-void djui_language_init(char* filename) {
+bool djui_language_init(char* lang) {
+    // free old ini
+    if (sLang != NULL) {
+        ini_free(sLang);
+        sLang = NULL;
+    }
+
+    // construct path
     char path[SYS_MAX_PATH] = "";
-    snprintf(path, SYS_MAX_PATH, "%s/lang/%s", sys_exe_path(), filename);
+    if (!lang || lang[0] == '\0') { lang = "english"; }
+    snprintf(path, SYS_MAX_PATH, "%s/lang/%s.ini", sys_exe_path(), lang);
+
+    // load
     sLang = ini_load(path);
+
+    return sLang != NULL;
 }
 
 char* djui_language_get(const char *section, const char *key) {
-    if (!sLang) { return "???"; }
+    if (!sLang) { return (char*)key; }
     char* value = (char*)ini_get(sLang, section, key);
-    if (!value) { return "???"; }
+    if (!value) { return (char*)key; }
     return value;
 }
 
