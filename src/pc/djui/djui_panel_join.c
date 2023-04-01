@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
+#include "djui_panel_join_message.h"
+#include "djui_panel_modlist.h"
 #include "src/pc/network/network.h"
 #include "src/pc/network/socket/socket.h"
 #include "src/pc/network/socket/domain_res.h"

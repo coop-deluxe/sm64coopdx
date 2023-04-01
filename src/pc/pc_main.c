@@ -51,6 +51,8 @@
 #include "pc/network/network_player.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_unicode.h"
+#include "pc/djui/djui_panel.h"
+#include "pc/djui/djui_panel_modlist.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 

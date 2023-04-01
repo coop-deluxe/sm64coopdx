@@ -1,4 +1,8 @@
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_main.h"
+#include "djui_panel_pause.h"
+#include "djui_panel_join_message.h"
 #include "src/pc/utils/misc.h"
 #include "sounds.h"
 #include "audio/external.h"

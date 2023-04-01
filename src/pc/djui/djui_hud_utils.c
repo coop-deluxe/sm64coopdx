@@ -16,6 +16,7 @@
 #include "djui.h"
 #include "djui_unicode.h"
 #include "djui_hud_utils.h"
+#include "djui_panel_pause.h"
 #include "game/camera.h"
 
 

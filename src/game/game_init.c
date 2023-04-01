@@ -21,6 +21,7 @@
 #include "segment_symbols.h"
 #include "rng_position.h"
 #include "src/pc/djui/djui.h"
+#include "src/pc/djui/djui_panel_pause.h"
 #include "rumble_init.h"
 #include <prevent_bss_reordering.h>
 #ifdef BETTERCAMERA

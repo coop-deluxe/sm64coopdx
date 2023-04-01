@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
+#include "djui_panel_host_mods.h"
+#include "djui_panel_host_settings.h"
+#include "djui_panel_host_save.h"
+#include "djui_panel_host_message.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"

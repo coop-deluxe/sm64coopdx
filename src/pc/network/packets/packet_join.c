@@ -13,6 +13,11 @@
 #include "PR/os_eeprom.h"
 #include "pc/network/version.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_panel.h"
+#include "pc/djui/djui_panel_modlist.h"
+#include "pc/djui/djui_panel_playerlist.h"
+#include "pc/djui/djui_panel_menu.h"
+#include "pc/djui/djui_panel_join_message.h"
 #include "pc/cheats.h"
 #include "pc/utils/string_builder.h"
 //#define DISABLE_MODULE_LOG 1

@@ -1,4 +1,6 @@
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
 #include "src/pc/configfile.h"
 
 void djui_panel_controls_n64_create(struct DjuiBase* caller) {

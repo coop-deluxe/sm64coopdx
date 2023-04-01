@@ -26,6 +26,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_panel_pause.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
 struct GraphNode *D_8033A160[MAX_LOADED_GRAPH_NODES];

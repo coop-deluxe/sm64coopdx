@@ -1,4 +1,8 @@
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
+#include "djui_panel_main.h"
+#include "djui_panel_join_message.h"
 #include "src/pc/network/network.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"

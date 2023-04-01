@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
 #include "pc/configfile.h"
 #include "pc/network/network_player.h"
 #include "game/level_update.h"

@@ -1,4 +1,6 @@
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
 #include "pc/cheats.h"
 
 void djui_panel_cheats_create(struct DjuiBase* caller) {

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_menu.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"

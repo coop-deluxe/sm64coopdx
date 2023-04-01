@@ -1,5 +1,9 @@
 #include <string.h>
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_pause.h"
+#include "djui_panel_modlist.h"
+#include "djui_panel_playerlist.h"
 
 #include "src/pc/controller/controller_sdl.h"
 #include "src/pc/controller/controller_mouse.h"

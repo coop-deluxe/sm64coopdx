@@ -30,6 +30,7 @@
 #include "pc/cheats.h"
 #include "pc/network/network.h"
 #include "pc/djui/djui.h"
+#include "src/pc/djui/djui_panel_pause.h"
 #include "pc/utils/misc.h"
 #include "data/dynos_mgr_builtin_externs.h"
 #ifdef BETTERCAMERA

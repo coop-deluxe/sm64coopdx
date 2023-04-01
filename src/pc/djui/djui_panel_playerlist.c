@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "djui.h"
+#include "djui_panel_menu.h"
 #include "djui_panel_playerlist.h"
 #include "game/level_info.h"
 #include "game/mario_misc.h"

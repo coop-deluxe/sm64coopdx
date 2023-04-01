@@ -1,4 +1,5 @@
 #include "djui.h"
+#include "djui_panel.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/controller/controller_sdl.h"
 #include "pc/gfx/gfx_window_manager_api.h"

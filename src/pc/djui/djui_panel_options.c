@@ -1,4 +1,12 @@
 #include "djui.h"
+#include "djui_panel.h"
+#include "djui_panel_player.h"
+#include "djui_panel_camera.h"
+#include "djui_panel_controls.h"
+#include "djui_panel_display.h"
+#include "djui_panel_sound.h"
+#include "djui_panel_misc.h"
+#include "djui_panel_menu.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 
