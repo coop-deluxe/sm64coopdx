@@ -17,6 +17,7 @@
 #include "pc/network/ban_list.h"
 #include "pc/crash_handler.h"
 #include "pc/network/moderator_list.h"
+#include "debuglog.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -362,6 +363,7 @@ static char *read_file_line(fs_file_t *file) {
     size_t offset = 0; // offset in buffer to write
 
     buffer = malloc(bufferSize);
+    buffer[0] = '\0';
     while (1) {
         // Read a line from the file
         if (fs_readline(file, buffer + offset, bufferSize - offset) == NULL) {
@@ -369,7 +371,11 @@ static char *read_file_line(fs_file_t *file) {
             return NULL; // Nothing could be read.
         }
         offset = strlen(buffer);
-        assert(offset > 0);
+        if (offset <= 0) {
+            LOG_ERROR("Configfile offset <= 0");
+            return NULL;
+        }
+
 
         // If a newline was found, remove the trailing newline and exit
         if (buffer[offset - 1] == '\n') {
@@ -521,7 +527,8 @@ void configfile_load(const char *filename) {
                             }
                             break;
                         default:
-                            assert(0); // bad type
+                            LOG_ERROR("Configfile read bad type '%d': %s", (int)option->type, line);
+                            goto NEXT_OPTION;
                     }
                     printf("option: '%s', value:", tokens[0]);
                     for (int i = 1; i < numTokens; ++i) printf(" '%s'", tokens[i]);
@@ -585,7 +592,8 @@ void configfile_save(const char *filename) {
                 fprintf(file, "%s %02x %02x %02x\n", option->name, (*option->colorValue)[0], (*option->colorValue)[1], (*option->colorValue)[2]);
                 break;
             default:
-                assert(0); // unknown type
+                LOG_ERROR("Configfile wrote bad type '%d': %s", (int)option->type, option->name);
+                break;
         }
     }
 
