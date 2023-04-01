@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../network.h"
+#include "pc/djui/djui_language.h"
 #include "pc/djui/djui_chat_message.h"
 #include "pc/network/ban_list.h"
 #include "pc/network/moderator_list.h"
@@ -64,5 +65,5 @@ void network_recieve_moderator(struct Packet *p) {
     }
 
     gIsModerator = true;
-    djui_chat_message_create("\\#fff982\\You are now a Moderator.");
+    djui_chat_message_create(DLANG(CHAT, MOD_GRANTED));
 }

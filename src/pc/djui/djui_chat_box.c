@@ -41,7 +41,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     if (strlen(chatInput->buffer) != 0) {
         if (chatInput->buffer[0] == '/') {
             if (!exec_chat_command(chatInput->buffer)) {
-                djui_chat_message_create("Unrecognized chat command.");
+                djui_chat_message_create(DLANG(CHAT, UNRECOGNIZED));
                 display_chat_commands();
             }
         } else {

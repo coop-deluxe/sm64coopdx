@@ -13,6 +13,7 @@
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_language.h"
 #include "pc/debuglog.h"
 
 #pragma pack(1)
@@ -362,13 +363,7 @@ void network_receive_player(struct Packet* p) {
 
     // inform of player death
     if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
-        // display popup
-        char* playerColorString = network_get_player_text_color_string(np->localIndex);
-        char popupMsg[128] = { 0 };
-        snprintf(popupMsg, 128, "%s%s\\#dcdcdc\\ died", playerColorString, np->name);
-        if (configDisablePopups == 0) {
-            djui_popup_create(popupMsg, 1);
-        }
+        construct_player_popup(np, DLANG(NOTIF, DIED), NULL);
     }
 
     // action changed, reset timer
@@ -395,11 +390,7 @@ void network_receive_player(struct Packet* p) {
     }
 #else
     if (m->action == ACT_DEBUG_FREE_MOVE && oldData.action != ACT_DEBUG_FREE_MOVE) {
-        char *playerColorString = network_get_player_text_color_string(np->localIndex);
-        char message[256];
-        snprintf(message, 256, "%s%s\\#dcdcdc\\ entered the debug free fly state", playerColorString, np->name);
-        djui_popup_create(message, 1);
-        LOG_INFO("%s entered the debug free fly state", np->name);
+        construct_player_popup(np, DLANG(NOTIF, DEBUG_FLY), NULL);
     }
 #endif
 
