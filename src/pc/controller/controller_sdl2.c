@@ -43,6 +43,8 @@ static bool haptics_enabled;
 static SDL_GameController *sdl_cntrl;
 static SDL_Haptic *sdl_haptic;
 
+static bool sBackgroundGamepad = false;
+
 static u32 num_joy_binds = 0;
 static u32 num_mouse_binds = 0;
 static u32 joy_binds[MAX_JOYBINDS][2];
@@ -103,6 +105,7 @@ static void controller_sdl_init(void) {
     if (configBackgroundGamepad) {
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
     }
+    sBackgroundGamepad = configBackgroundGamepad;
 
     if (SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS) != 0) {
         fprintf(stderr, "SDL init error: %s\n", SDL_GetError());
@@ -212,6 +215,12 @@ static void controller_sdl_read(OSContPad *pad) {
         mouse_buttons = mouse;
 #endif
     }
+
+    if (configBackgroundGamepad != sBackgroundGamepad) {
+        sBackgroundGamepad = configBackgroundGamepad;
+        SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, sBackgroundGamepad ? "1" : "0");
+    }
+
 
     SDL_GameControllerUpdate();
 
