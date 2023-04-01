@@ -42,7 +42,6 @@ struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel*
     // calculate 3panel body height
     djui_three_panel_recalculate_body_size(threePanel);
 
-
     // allocate panel
     struct DjuiPanel* panel = calloc(1, sizeof(struct DjuiPanel));
     panel->parent = sPanelList;
@@ -149,17 +148,21 @@ void djui_panel_update(void) {
             if (panel->on_panel_destroy) {
                 panel->on_panel_destroy(NULL);
             }
+            if (activeBase == removingBase) { activeBase = NULL; }
+            if (parentBase == removingBase) { parentBase = NULL; }
             djui_base_destroy(removingBase);
             free(panel);
+            removingBase = NULL;
+            return;
         }
     }
 
-    if (removingBase != NULL) {
+    if (activeBase && removingBase) {
         activeBase->y.value = moveMax - moveMax * smoothstep(0, moveMax, sMoveAmount);
-        if (sPanelRemoving != NULL) {
+        if (sPanelRemoving) {
             removingBase->y.value = activeBase->y.value - 1.0f;
         }
-    } else if (parentBase != NULL) {
+    } else if (activeBase && parentBase) {
         activeBase->y.value = moveMax * smoothstep(0, moveMax, sMoveAmount) - moveMax;
         parentBase->y.value = activeBase->y.value + moveMax;
     }
