@@ -1115,6 +1115,7 @@ N64CKSUM              := $(TOOLS_DIR)/n64cksum
 N64GRAPHICS           := $(TOOLS_DIR)/n64graphics
 N64GRAPHICS_CI        := $(TOOLS_DIR)/n64graphics_ci
 TEXTCONV              := $(TOOLS_DIR)/textconv
+AIFF_EXTRACT_FAILSAFE := $(TOOLS_DIR)/aiff_extract_codebook_failsafe.py
 AIFF_EXTRACT_CODEBOOK := $(TOOLS_DIR)/aiff_extract_codebook
 VADPCM_ENC            := $(TOOLS_DIR)/vadpcm_enc
 EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
@@ -1371,7 +1372,7 @@ endif
 
 $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
-	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
+	$(V)$(PYTHON) $(AIFF_EXTRACT_FAILSAFE) $(AIFF_EXTRACT_CODEBOOK) $< $@
 	$(call print,Piping:,$<,$@.inc.c)
 	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
 	$(V)echo >> $@.inc.c
