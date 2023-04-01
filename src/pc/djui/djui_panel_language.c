@@ -61,7 +61,7 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
         }
     }
     if (configLanguage[0] == '\0') {
-        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "english");
+        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "English");
     }
     gPanelLanguageOnStartup = false;
 }
@@ -108,7 +108,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
             bool match = !strcmp(path, configLanguage);
             if (match) { foundMatch = true; }
             struct DjuiCheckbox* checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
-            if (!strcmp(path, "english")) { chkEnglish = checkbox; }
+            if (!strcmp(path, "English")) { chkEnglish = checkbox; }
         }
 
         closedir(d);
