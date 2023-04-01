@@ -85,7 +85,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(HOST, PORT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 200, 200, 200, 255);
-            djui_base_set_size(&text1->base, 0.485f, 64);
+            djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             if (gNetworkType == NT_SERVER) {
                 djui_base_set_enabled(&text1->base, false);
@@ -93,7 +93,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
             struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.5f, 32);
+            djui_base_set_size(&inputbox1->base, 0.4f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             char portString[32] = { 0 };
             snprintf(portString, 32, "%d", configHostPort);
@@ -114,13 +114,13 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(HOST, SAVE_SLOT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 200, 200, 200, 255);
-            djui_base_set_size(&text1->base, 0.485f, 64);
+            djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
             char starString[32] = { 0 };
             snprintf(starString, 32, "%c x%d", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24));
             struct DjuiButton* button1 = djui_button_create(&rect2->base, starString, DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_create);
-            djui_base_set_size(&button1->base, 0.5f, 32);
+            djui_base_set_size(&button1->base, 0.4f, 32);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         }
 

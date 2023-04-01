@@ -1,8 +1,8 @@
 #pragma once
 #include "djui.h"
 
-#define DJUI_DEFAULT_PANEL_WIDTH (410.0f + (16 * 2.0f))
-#define DJUI_PANEL_HEADER_OFFSET (-8)
+#define DJUI_DEFAULT_PANEL_WIDTH (500.0f + (16 * 2.0f))
+#define DJUI_PANEL_HEADER_OFFSET (-16)
 
 struct DjuiPanel {
     struct DjuiBase* base;

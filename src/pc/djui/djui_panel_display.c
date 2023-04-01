@@ -47,12 +47,12 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(DISPLAY, FRAME_LIMIT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 200, 200, 200, 255);
-            djui_base_set_size(&text1->base, 0.485f, 64);
+            djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
             struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.5f, 32);
+            djui_base_set_size(&inputbox1->base, 0.4f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             char frameLimitString[32] = { 0 };
             snprintf(frameLimitString, 32, "%d", configFrameLimit);

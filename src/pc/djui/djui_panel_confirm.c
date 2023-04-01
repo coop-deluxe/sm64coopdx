@@ -9,7 +9,7 @@ void djui_panel_confirm_create(struct DjuiBase* caller, char* title, char* messa
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text->base, 1.0f, 64);
         djui_base_set_color(&text->base, 200, 200, 200, 255);
-        djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {

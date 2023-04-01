@@ -114,7 +114,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     struct DjuiText* text = djui_text_create(&slider->base, message);
     djui_base_set_alignment(&text->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&text->base, 0.5f, 1.0f);
+    djui_base_set_size(&text->base, 0.6f, 1.0f);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_text_set_drop_shadow(text, 120, 120, 120, 64);
     slider->text = text;
@@ -122,7 +122,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     struct DjuiRect* rect = djui_rect_create(&slider->base);
     djui_base_set_alignment(&rect->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&rect->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&rect->base, 0.5f, 1.0f);
+    djui_base_set_size(&rect->base, 0.4f, 1.0f);
     djui_base_set_color(&rect->base, 0, 0, 0, 0);
     djui_base_set_border_width(&rect->base, 2);
     slider->rect = rect;
