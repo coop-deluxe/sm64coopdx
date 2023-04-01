@@ -173,7 +173,7 @@ static void crash_handler_produce_one_frame() {
         while (*c != '\0') {
             f32 charWidth = 0.4f;
 
-            if (c <= 0x20 || c >= 0x7F) {
+            if ((u8)*c <= 0x20 || (u8)*c >= 0x7F) {
                 addX += charWidth;
                 c = djui_unicode_next_char(c);
                 continue;
@@ -196,6 +196,8 @@ static void crash_handler_produce_one_frame() {
     // Render frame
     end_master_display_list();
     alloc_display_list(0);
+    extern void send_display_list(struct SPTask *spTask);
+    send_display_list(&gGfxPool->spTask);
     display_and_vsync();
     gfx_end_frame();
 }
