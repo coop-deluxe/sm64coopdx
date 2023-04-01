@@ -3,6 +3,7 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
+#include "djui_unicode.h"
 #include "pc/configfile.h"
 #include "pc/network/network_player.h"
 #include "game/level_update.h"
@@ -166,12 +167,11 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 
 static bool djui_panel_player_name_valid(char* buffer) {
     if (buffer[0] == '\0') { return false; }
-    while (*buffer != '\0') {
-        if (*buffer >= '!' && *buffer <= '~') {
-            buffer++;
-            continue;
-        }
-        return false;
+    char* c = buffer;
+    while (*c != '\0') {
+        if (*c == ' ') { return false; }
+        if (!djui_unicode_valid_char(c)) { return false; }
+        c = djui_unicode_next_char(c);
     }
     return true;
 }

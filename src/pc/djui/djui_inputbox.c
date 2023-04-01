@@ -71,7 +71,7 @@ static u16 djui_inputbox_get_cursor_index(struct DjuiInputbox* inputbox) {
     u16 index = 0;
     u16 i = 0;
     char* c = inputbox->buffer;
-    while (*c != '\0') {
+    while (true) {
         if (x < cX) {
             index = i;
         }
