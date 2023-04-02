@@ -278,7 +278,16 @@ void main_func(void) {
     sync_objects_init_system();
     djui_unicode_init();
     mods_init();
-    configfile_load(configfile_name());
+
+    // load config
+    bool configReadError = false;
+    configfile_load(configfile_name(), &configReadError);
+    if (configReadError) {
+        configfile_load(configfile_backup_name(), &configReadError);
+    } else {
+        configfile_save(configfile_backup_name());
+    }
+
     if (!djui_language_init(configLanguage)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "");
     }

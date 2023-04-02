@@ -357,10 +357,11 @@ static const struct FunctionConfigOption functionOptions[] = {
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
 // Returns NULL if no lines could be read from the file
-static char *read_file_line(fs_file_t *file) {
+static char *read_file_line(fs_file_t *file, bool* error) {
     char *buffer;
     size_t bufferSize = 8;
     size_t offset = 0; // offset in buffer to write
+    *error = false;
 
     buffer = malloc(bufferSize);
     buffer[0] = '\0';
@@ -373,6 +374,7 @@ static char *read_file_line(fs_file_t *file) {
         offset = strlen(buffer);
         if (offset <= 0) {
             LOG_ERROR("Configfile offset <= 0");
+            *error = true;
             return NULL;
         }
 
@@ -440,11 +442,16 @@ const char *configfile_name(void) {
     return (gCLIOpts.ConfigFile[0]) ? gCLIOpts.ConfigFile : CONFIGFILE_DEFAULT;
 }
 
+const char *configfile_backup_name(void) {
+    return CONFIGFILE_BACKUP;
+}
+
 // Loads the config file specified by 'filename'
-void configfile_load(const char *filename) {
+void configfile_load(const char *filename, bool* error) {
     fs_file_t *file;
     char *line;
     unsigned int temp;
+    *error = false;
 
     printf("Loading configuration from '%s'\n", filename);
 
@@ -457,7 +464,7 @@ void configfile_load(const char *filename) {
     }
 
     // Go through each line in the file
-    while ((line = read_file_line(file)) != NULL) {
+    while ((line = read_file_line(file, error)) != NULL && !*error) {
         char *p = line;
         char *tokens[20];
         int numTokens;
@@ -538,6 +545,11 @@ void configfile_load(const char *filename) {
                 puts("error: expected value");
         }
 NEXT_OPTION:
+        free(line);
+        line = NULL;
+    }
+
+    if (line) {
         free(line);
     }
 
