@@ -8,6 +8,9 @@ extern "C" {
  // Textures //
 //////////////
 
+extern ALIGNED8 const u8 texture_font_normal[];
+extern ALIGNED8 const u8 texture_font_title[];
+
 #define define_builtin_tex(_ptr, _path, _width, _height, _bitSize) { (const char*)#_ptr, (const void*)_ptr, (const char*)_path, _width, _height, _bitSize }
 #define define_builtin_tex_(_ptr, _path, _width, _height, _bitSize) { (const char*)#_ptr "_", (const void*)_ptr, (const char*)_path, _width, _height, _bitSize }
 
@@ -1686,6 +1689,10 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(waluigi_custom_waluigi_eyes_right_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_right_unused.rgba16.png", 64, 32, 16),
     define_builtin_tex(waluigi_custom_waluigi_eyes_up_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_up_unused.rgba16.png", 64, 32, 16),
     define_builtin_tex(waluigi_custom_waluigi_eyes_down_unused_rgba16, "actors/waluigi/custom_waluigi_eyes_down_unused.rgba16.png", 64, 32, 16),
+
+    // Fonts
+    define_builtin_tex(texture_font_normal, "textures/custom_font/custom_font_normal.rgba32.png", 512, 256, 32),
+    define_builtin_tex(texture_font_title, "textures/custom_font/custom_font_title.rgba32.png", 1024, 512, 32),
 };
 
 const Texture* DynOS_Builtin_Tex_GetFromName(const char* aDataName) {

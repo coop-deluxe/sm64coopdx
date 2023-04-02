@@ -4,7 +4,7 @@
 #include "make_const_nonconst.h"
 
 ALIGNED8 const u8 texture_font_normal[] = {
-#include "textures/custom_font_title/custom_font_normal.rgba32.inc.c"
+#include "textures/custom_font/custom_font_normal.rgba32.inc.c"
 };
 
 const f32 font_normal_widths[] = {
@@ -27,7 +27,7 @@ const f32 font_normal_widths[] = {
 //////////////////////////////////////////////////////////
 
 ALIGNED8 const u8 texture_font_title[] = {
-#include "textures/custom_font_title/custom_font_title.rgba32.inc.c"
+#include "textures/custom_font/custom_font_title.rgba32.inc.c"
 };
 
 const f32 font_title_widths[] = {

@@ -256,6 +256,7 @@ $(BUILD_DIR)/bin/machine.o:           $(MACHINE_TEXTURES:%.png=$(BUILD_DIR)/%.in
 $(BUILD_DIR)/bin/mountain.o:          $(MOUNTAIN_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 $(BUILD_DIR)/bin/grass.o:             $(GRASS_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 $(BUILD_DIR)/bin/custom_font.o:       $(CUSTOM_FONT_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
+$(BUILD_DIR)/bin/custom_textures.o:   $(SEGMENT2_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 
 # Others
 $(BUILD_DIR)/bin/segment2.elf:           SEGMENT_ADDRESS := 0x02000000
