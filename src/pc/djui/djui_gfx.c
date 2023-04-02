@@ -84,21 +84,25 @@ void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize) {
 
 void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     Vtx *vtx = alloc_display_list(sizeof(Vtx) * 4);
-    vtx[0] = (Vtx) {{{ 0, -1, 0 }, 0, { ( tileX          * 512) / w, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1, -1, 0 }, 0, { ((tileX + tileW) * 512) / w, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1,  0, 0 }, 0, { ((tileX + tileW) * 512) / w, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,  0, 0 }, 0, { ( tileX          * 512) / w, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
+    f32 aspect = w ? ((f32)h / (f32)w) : 1;
+    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 512) / w, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 512) / w, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 512) / w, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 512) / w, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
+
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);
     gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
-    gDPLoadTextureBlock(gDisplayListHead++, NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+    
+    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
+	gDPLoadTextureBlockWithoutTexture(gDisplayListHead++, NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
-    gSPVertex(gDisplayListHead++, vtx, 4, 0);
+    gSPVertexDjui(gDisplayListHead++, vtx, 4, 0);
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXCLIP_DJUI);
-    gSP2Triangles(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
+    gSP2TrianglesDjui(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
     gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
 }

@@ -3853,6 +3853,9 @@ ALIGNED8 static const u8 texture_font_normal_char_punc_sp_qu[] = {
 #include "textures/segment2/custom_font_normal_char_punc_sp_qu.ia4.inc.c"
 };
 
+ALIGNED8 const u8 texture_font_normal[] = {
+#include "textures/custom_font_title/custom_font_normal.rgba32.inc.c"
+};
 
 const u8* const font_normal_chars[] = {
     texture_font_char_us_exclamation,        // !

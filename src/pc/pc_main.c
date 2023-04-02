@@ -202,7 +202,7 @@ void produce_interpolation_frames_and_delay(void) {
     sFrameTargetTime += sFrameTime * gGameSpeed;
     gRenderingInterpolated = false;
 
-    //printf(">>> fpt: %llu, fps: %f :: %f\n", frames, sAvgFps, fps);
+    printf(">>> fpt: %llu, fps: %f :: %f\n", frames, sAvgFps, fps);
 }
 
 void produce_one_frame(void) {

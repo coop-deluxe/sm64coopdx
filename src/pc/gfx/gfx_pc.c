@@ -900,9 +900,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     struct LoadedVertex *v2 = &rsp.loaded_vertices[vtx2_idx];
     struct LoadedVertex *v3 = &rsp.loaded_vertices[vtx3_idx];
     struct LoadedVertex *v_arr[3] = {v1, v2, v3};
-    
-    //if (rand()%2) return;
-    
+
     if (v1->clip_rej & v2->clip_rej & v3->clip_rej) {
         // The whole triangle lies outside the visible area
         return;
@@ -1293,9 +1291,9 @@ static void gfx_dp_load_block(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t
     }
     uint32_t size_bytes = (lrs + 1) << word_size_shift;
     rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = size_bytes;
+    rdp.textures_changed[rdp.texture_to_load.tile_number] = rdp.loaded_texture[rdp.texture_to_load.tile_number].addr != rdp.texture_to_load.addr;
     rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
     
-    rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
 }
 
 static void gfx_dp_load_tile(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t lrs, uint32_t lrt) {
@@ -1997,8 +1995,9 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
     uint32_t sizeBytes = (lrs + 1) << wordSizeShift;
     rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = sizeBytes;
+    rdp.textures_changed[rdp.texture_to_load.tile_number] = rdp.loaded_texture[rdp.texture_to_load.tile_number].addr != rdp.texture_to_load.addr;
     rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
-    rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
+    //rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
 
     // gsDPSetTile
     uint32_t line = (((sDjuiOverrideW * 2) + 7) >> 3);
@@ -2009,8 +2008,6 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     rdp.texture_tile.ult = 0;
     rdp.texture_tile.lrs = (sDjuiOverrideW - 1) << G_TEXTURE_IMAGE_FRAC;
     rdp.texture_tile.lrt = (sDjuiOverrideH - 1) << G_TEXTURE_IMAGE_FRAC;*/
-    rdp.textures_changed[0] = true;
-    rdp.textures_changed[1] = true;
 }
 
 static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
@@ -2037,6 +2034,99 @@ static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint
     sDjuiOverride  = (texture != NULL);
 }
 
+static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
+    for (size_t i = 0; i < n_vertices; i++, dest_index++) {
+        const Vtx_t *v = &vertices[i].v;
+        struct LoadedVertex *d = &rsp.loaded_vertices[dest_index];
+        
+        float x = v->ob[0] * rsp.MP_matrix[0][0] + v->ob[1] * rsp.MP_matrix[1][0] + v->ob[2] * rsp.MP_matrix[2][0] + rsp.MP_matrix[3][0];
+        float y = v->ob[0] * rsp.MP_matrix[0][1] + v->ob[1] * rsp.MP_matrix[1][1] + v->ob[2] * rsp.MP_matrix[2][1] + rsp.MP_matrix[3][1];
+        float z = v->ob[0] * rsp.MP_matrix[0][2] + v->ob[1] * rsp.MP_matrix[1][2] + v->ob[2] * rsp.MP_matrix[2][2] + rsp.MP_matrix[3][2];
+        float w = v->ob[0] * rsp.MP_matrix[0][3] + v->ob[1] * rsp.MP_matrix[1][3] + v->ob[2] * rsp.MP_matrix[2][3] + rsp.MP_matrix[3][3];
+        
+        x = gfx_adjust_x_for_aspect_ratio(x);
+        
+        short U = v->tc[0] * rsp.texture_scaling_factor.s >> 16;
+        short V = v->tc[1] * rsp.texture_scaling_factor.t >> 16;
+        
+        d->color.r = v->cn[0];
+        d->color.g = v->cn[1];
+        d->color.b = v->cn[2];
+        
+        d->u = U;
+        d->v = V;
+
+        d->x = x;
+        d->y = y;
+        d->z = z;
+        d->w = w;
+        
+        d->color.a = v->cn[3];
+    }
+}
+
+static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
+    struct LoadedVertex *v1 = &rsp.loaded_vertices[vtx1_idx];
+    struct LoadedVertex *v2 = &rsp.loaded_vertices[vtx2_idx];
+    struct LoadedVertex *v3 = &rsp.loaded_vertices[vtx3_idx];
+    struct LoadedVertex *v_arr[3] = {v1, v2, v3};
+
+    uint32_t cc_id = rdp.combine_mode;
+    
+    bool use_alpha = true;
+    cc_id |= SHADER_OPT_ALPHA;
+
+    if (!use_alpha) {
+        cc_id &= ~0xfff000;
+    }
+    
+    struct ColorCombiner *comb = gfx_lookup_or_create_color_combiner(cc_id);
+    struct ShaderProgram *prg = comb->prg;
+    if (prg != rendering_state.shader_program) {
+        gfx_flush();
+        gfx_rapi->unload_shader(rendering_state.shader_program);
+        gfx_rapi->load_shader(prg);
+        rendering_state.shader_program = prg;
+    }
+
+    if (rdp.textures_changed[0]) {
+        gfx_flush();
+        import_texture(0);
+        rdp.textures_changed[0] = false;
+    }
+
+    uint32_t tex_width = (rdp.texture_tile.lrs - rdp.texture_tile.uls + 4) / 4;
+    uint32_t tex_height = (rdp.texture_tile.lrt - rdp.texture_tile.ult + 4) / 4;
+    
+    bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();
+    
+    for (int32_t i = 0; i < 3; i++) {
+        float z = v_arr[i]->z, w = v_arr[i]->w;
+        if (z_is_from_0_to_1) {
+            z = (z + w) / 2.0f;
+        }
+        buf_vbo[buf_vbo_len++] = v_arr[i]->x;
+        buf_vbo[buf_vbo_len++] = v_arr[i]->y;
+        buf_vbo[buf_vbo_len++] = z;
+        buf_vbo[buf_vbo_len++] = w;
+
+        float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
+        float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
+        buf_vbo[buf_vbo_len++] = u / tex_width;
+        buf_vbo[buf_vbo_len++] = v / tex_height;
+
+        struct RGBA *color;
+        color = &rdp.env_color;
+        buf_vbo[buf_vbo_len++] = color->r / 255.0f;
+        buf_vbo[buf_vbo_len++] = color->g / 255.0f;
+        buf_vbo[buf_vbo_len++] = color->b / 255.0f;
+        buf_vbo[buf_vbo_len++] = color->a / 255.0f;
+    }
+    if (++buf_vbo_num_tris == MAX_BUFFERED) {
+        gfx_flush();
+    }
+}
+
 void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {
     uint32_t opcode = cmd->words.w0 >> 24;
     switch (opcode) {
@@ -2045,6 +2135,13 @@ void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {
             break;
         case G_TEXOVERRIDE_DJUI:
             djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(0, 8));
+            break;
+        case G_DJUI_SIMPLE_VERT:
+            djui_gfx_sp_simple_vertex(C0(12, 8), C0(1, 7) - C0(12, 8), seg_addr(cmd->words.w1));
+            break;
+        case G_DJUI_SIMPLE_TRI2:
+            djui_gfx_sp_simple_tri1(C0(16, 8) / 2, C0(8, 8) / 2, C0(0, 8) / 2);
+            djui_gfx_sp_simple_tri1(C1(16, 8) / 2, C1(8, 8) / 2, C1(0, 8) / 2);
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);

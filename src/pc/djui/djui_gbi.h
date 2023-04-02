@@ -2,6 +2,8 @@
 
 #define G_TEXCLIP_DJUI     0xe1
 #define G_TEXOVERRIDE_DJUI 0xe0
+#define G_DJUI_SIMPLE_VERT 0x11
+#define G_DJUI_SIMPLE_TRI2 0x12
 #define G_EXECUTE_DJUI     0xdd
 
 #define gSetClippingDjui(pkt, cmd, rot, x1, y1, x2, y2)         \
@@ -20,10 +22,64 @@
     _g->words.w1 = (uintptr_t)(texture);                        \
 }
 
+# define gSPVertexDjui(pkt, v, n, v0)				\
+{									\
+	Gfx *_g = (Gfx *)(pkt);						\
+	_g->words.w0 =							\
+	  _SHIFTL(G_DJUI_SIMPLE_VERT,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7);	\
+	_g->words.w1 = (uintptr_t)(v);				\
+}
+
+#define gSP2TrianglesDjui(pkt, v00, v01, v02, flag0, v10, v11, v12, flag1)	\
+{									\
+	Gfx *_g = (Gfx *)(pkt);						\
+									\
+	_g->words.w0 = (_SHIFTL(G_DJUI_SIMPLE_TRI2, 24, 8)|				\
+			__gsSP1Triangle_w1f(v00, v01, v02, flag0));	\
+        _g->words.w1 =  __gsSP1Triangle_w1f(v10, v11, v12, flag1); 	\
+}
+
 #define gsSPExecuteDjui(word)                                   \
 {{                                                              \
     _SHIFTL(G_EXECUTE_DJUI, 24, 8), (unsigned int)(word)        \
 }}
 
+#define	gDPLoadTextureBlockWithoutTexture(pkt, timg, fmt, siz, width, height, \
+        pal, cms, cmt, masks, maskt, shifts, shiftt) \
+{ \
+    gDPSetTile(pkt, fmt, siz##_LOAD_BLOCK, 0, 0, G_TX_LOADTILE, 	\
+        0 , cmt, maskt, shiftt, cms, masks, shifts);		\
+    gDPLoadSync(pkt);						\
+    gDPLoadBlock(pkt, G_TX_LOADTILE, 0, 0, 				\
+        (((width)*(height) + siz##_INCR) >> siz##_SHIFT) -1,	\
+        CALC_DXT(width, siz##_BYTES)); 				\
+    gDPPipeSync(pkt);						\
+    gDPSetTile(pkt, fmt, siz,					\
+        (((width) * siz##_LINE_BYTES)+7)>>3, 0,			\
+        G_TX_RENDERTILE, pal, cmt, maskt, shiftt, cms, masks,	\
+        shifts);						\
+    gDPSetTileSize(pkt, G_TX_RENDERTILE, 0, 0,			\
+        ((width)-1) << G_TEXTURE_IMAGE_FRAC,			\
+        ((height)-1) << G_TEXTURE_IMAGE_FRAC)			\
+}
+
 #define gDPSetTextureClippingDjui(pkt, rot, x1, y1, x2, y2)    gSetClippingDjui(pkt, G_TEXCLIP_DJUI, rot, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
+
+
+// DO NOT COMMIT //
+
+# define gsSPVertexDjui(v, n, v0)					\
+{{									\
+	(_SHIFTL(G_DJUI_SIMPLE_VERT,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7)),	\
+        (uintptr_t)(v)						\
+}}
+
+#define gsSP2TrianglesDjui(v00, v01, v02, flag0, v10, v11, v12, flag1)	\
+{{									\
+	(_SHIFTL(G_DJUI_SIMPLE_TRI2, 24, 8)|					\
+	 __gsSP1Triangle_w1f(v00, v01, v02, flag0)),			\
+	 __gsSP1Triangle_w1f(v10, v11, v12, flag1)			\
+}}
+
+// DO NOT COMMIT //

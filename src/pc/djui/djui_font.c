@@ -27,9 +27,9 @@ const Gfx dl_font_normal_display_list_begin[] = {
 
 const Gfx dl_font_normal_display_list[] = {
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, ((16 * 8 + G_IM_SIZ_4b_INCR) >> G_IM_SIZ_4b_SHIFT) - 1, CALC_DXT(16, G_IM_SIZ_4b_BYTES)),
-    gsSPVertex(djui_font_normal_vertices, 4, 0),
+    gsSPVertexDjui(djui_font_normal_vertices, 4, 0),
     gsSPExecuteDjui(G_TEXCLIP_DJUI),
-    gsSP2Triangles(0,  1,  2, 0x0, 0,  2,  3, 0x0),
+    gsSP2TrianglesDjui(0,  1,  2, 0x0, 0,  2,  3, 0x0),
     gsSPEndDisplayList(),
 };
 
@@ -39,11 +39,19 @@ static void djui_font_normal_render_char(char* c) {
 
     u32 index = djui_unicode_get_sprite_index(c);
 
-    extern const u8* const font_normal_chars[];
-    void* fontChar = (void*)font_normal_chars[index];
+    //extern const u8* const font_normal_chars[];
+    //void* fontChar = (void*)font_normal_chars[index];
+    extern ALIGNED8 const u8 texture_font_normal[];
+    void* fontChar = texture_font_normal;
 
-    gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, (void*)fontChar);
-    gSPDisplayList(gDisplayListHead++, dl_font_normal_display_list);
+    //djui_gfx_render_texture(texture_font_normal, 256, 128, 32);
+    //djui_gfx_render_texture_tile(texture_font_normal, 8, 16, 32, 0, 0, 256, 128);
+    u32 tx = index % 32;
+    u32 ty = index / 32;
+    djui_gfx_render_texture_tile(texture_font_normal, 256, 128, 32, tx * 8, ty * 16, 8, 16);
+
+    //gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_IA, G_IM_SIZ_16b, 1, (void*)fontChar);
+    //gSPDisplayList(gDisplayListHead++, dl_font_normal_display_list);
 }
 
 static f32 djui_font_normal_char_width(char* c) {
@@ -57,8 +65,8 @@ static const struct DjuiFont sDjuiFontNormal = {
     .charHeight           = 1.0f,
     .lineHeight           = 0.8125f,
     .defaultFontScale     = 32.0f,
-    .rotatedUV            = true,
-    .textBeginDisplayList = dl_font_normal_display_list_begin,
+    .rotatedUV            = false,
+    .textBeginDisplayList = NULL, //dl_font_normal_display_list_begin,
     .render_char          = djui_font_normal_render_char,
     .char_width           = djui_font_normal_char_width,
 };
