@@ -476,6 +476,10 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     const struct DjuiFont* font   = gDjuiFonts[0];
     djui_rect_render(base);
 
+    // Shift the text away from the left side a tad
+    comp->x += 2;
+    comp->width -= 2;
+
     // shift the viewing window to keep the selection in view
     djui_inputbox_keep_selection_in_view(inputbox);
 
@@ -483,7 +487,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     f32 translatedX = comp->x + inputbox->viewX;
     f32 translatedY = comp->y + DJUI_INPUTBOX_YOFF;
     djui_gfx_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, (int)translatedX, (int)translatedY, 0);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // compute font size
     f32 translatedFontSize = font->defaultFontScale;

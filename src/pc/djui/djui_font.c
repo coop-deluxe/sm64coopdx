@@ -19,7 +19,7 @@ static void djui_font_normal_render_char(char* c) {
 }
 
 static f32 djui_font_normal_char_width(char* c) {
-    if (*c == ' ') { return 0.30f; }
+    if (*c == ' ') { return 0.20f; }
     extern const f32 font_normal_widths[];
     return djui_unicode_get_sprite_width(c, font_normal_widths);
 }
