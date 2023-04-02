@@ -1042,7 +1042,7 @@
 | ceilHeight | `number` |  |
 | character | [Character](structs.md#Character) |  |
 | collidedObjInteractTypes | `integer` |  |
-| controller | [Controller](structs.md#Controller) |  |
+| controller | [Controller](structs.md#Controller) | read-only |
 | curAnimOffset | `number` |  |
 | currentRoom | `integer` |  |
 | doubleJumpTimer | `integer` |  |

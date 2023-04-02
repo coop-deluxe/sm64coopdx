@@ -827,7 +827,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "ceilHeight",               LVT_F32,       offsetof(struct MarioState, ceilHeight),               false, LOT_NONE              },
     { "character",                LVT_COBJECT_P, offsetof(struct MarioState, character),                false, LOT_CHARACTER         },
     { "collidedObjInteractTypes", LVT_U32,       offsetof(struct MarioState, collidedObjInteractTypes), false, LOT_NONE              },
-    { "controller",               LVT_COBJECT_P, offsetof(struct MarioState, controller),               false, LOT_CONTROLLER        },
+    { "controller",               LVT_COBJECT_P, offsetof(struct MarioState, controller),               true,  LOT_CONTROLLER        },
     { "curAnimOffset",            LVT_F32,       offsetof(struct MarioState, curAnimOffset),            false, LOT_NONE              },
     { "currentRoom",              LVT_S16,       offsetof(struct MarioState, currentRoom),              false, LOT_NONE              },
     { "doubleJumpTimer",          LVT_U8,        offsetof(struct MarioState, doubleJumpTimer),          false, LOT_NONE              },

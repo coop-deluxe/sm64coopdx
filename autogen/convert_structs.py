@@ -78,7 +78,7 @@ override_field_invisible = {
 }
 
 override_field_immutable = {
-    "MarioState": [ "playerIndex" ],
+    "MarioState": [ "playerIndex", "controller" ],
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
