@@ -463,10 +463,16 @@ ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
     endif
   endif
 
-  # Make tools if out of date
   ifeq ($(WINDOWS_AUTO_BUILDER),0)
+    # if the tools are out of date, clean them
+    TOOLS_VER_FILE := $(TOOLS_DIR)/tools-ver-1.ver
+    ifeq ($(wildcard $(TOOLS_VER_FILE)),)
+        $(info Cleaning tools...)
+        DUMMY != touch $(TOOLS_VER_FILE)
+        DUMMY != $(MAKE) -C $(TOOLS_DIR) clean >&2
+    endif
+
     $(info Building tools...)
-    #DUMMY != $(MAKE) -s -C $(TOOLS_DIR) $(if $(filter-out ido0,$(COMPILER)$(USE_QEMU_IRIX)),all-except-recomp,) >&2 || echo FAIL
     DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
       ifeq ($(DUMMY),FAIL)
         $(error Failed to build tools)
