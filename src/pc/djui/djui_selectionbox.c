@@ -94,7 +94,7 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&text->base, 0.6f, 1.0f);
     djui_text_set_alignment(text, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
-    djui_text_set_drop_shadow(text, 120, 120, 120, 64);
+    djui_text_set_drop_shadow(text, 255, 255, 255, 128);
     selectionbox->text = text;
 
     struct DjuiRect* rect = djui_rect_create(&selectionbox->base);
@@ -111,7 +111,7 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     djui_base_set_size_type(&rectText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&rectText->base, 1.0f, 1.0f);
     djui_text_set_alignment(rectText, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
-    djui_text_set_drop_shadow(rectText, 120, 120, 120, 64);
+    djui_text_set_drop_shadow(rectText, 255, 255, 255, 128);
     selectionbox->rectText = rectText;
 
     struct DjuiImage* rectImage = djui_image_create(&rect->base, texture_selectionbox_icon, 16, 16, 16);

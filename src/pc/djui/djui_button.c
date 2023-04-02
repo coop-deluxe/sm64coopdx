@@ -11,11 +11,11 @@ static void djui_button_update_style(struct DjuiBase* base) {
     } else if (gDjuiCursorDownOn == base) {
         djui_base_set_border_color(base, 0, 84, 153, 255);
         djui_base_set_color(&button->rect->base, 204, 228, 247, 255);
-        djui_base_set_location(&button->text->base, 0.5f, 0.5f);
+        djui_base_set_location(&button->text->base, 1.0f, 1.0f);
     } else if (gDjuiHovered == base) {
         djui_base_set_border_color(base, 0, 120, 215, 255);
         djui_base_set_color(&button->rect->base, 229, 241, 251, 255);
-        djui_base_set_location(&button->text->base, -0.5f, -1.0f);
+        djui_base_set_location(&button->text->base, -1.0f, -1.0f);
     } else {
         u8 borderBrightness = button->style ? 100 : 150;
         u8 rectBrightness   = button->style ? 150 : 222;

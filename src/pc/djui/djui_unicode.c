@@ -81,7 +81,7 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
     { "ß", 'S', 0, 0 },
 
     { "¡", '!', 0, 0 },
-    { "¿", '?', 0, 0 },
+    { "¿", '?', 0.3750f, 0 },
 };
 
 static void* sCharMap = NULL;

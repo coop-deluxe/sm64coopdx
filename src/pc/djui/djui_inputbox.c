@@ -7,7 +7,7 @@
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
 
-#define DJUI_INPUTBOX_YOFF (-2)
+#define DJUI_INPUTBOX_YOFF (-3)
 #define DJUI_INPUTBOX_MAX_BLINK 50
 #define DJUI_INPUTBOX_MID_BLINK (DJUI_INPUTBOX_MAX_BLINK / 2)
 #define DJUI_INPUTBOX_CURSOR_WIDTH (2.0f / 32.0f)
@@ -376,7 +376,7 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f3
     f32 charWidth = font->char_width(c);
     *drawX += charWidth * font->defaultFontScale;
 
-    if (*c != ' ' && !djui_gfx_add_clipping_specific(&inputbox->base, font->rotatedUV, dX, dY, dW, dH)) {
+    if (*c != ' ' && !djui_gfx_add_clipping_specific(&inputbox->base, dX, dY, dW, dH)) {
         if (*additionalShift > 0) {
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, *additionalShift, 0, 0);
             *additionalShift = 0;
@@ -483,7 +483,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     f32 translatedX = comp->x + inputbox->viewX;
     f32 translatedY = comp->y + DJUI_INPUTBOX_YOFF;
     djui_gfx_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, (int)translatedX, (int)translatedY, 0);
 
     // compute font size
     f32 translatedFontSize = font->defaultFontScale;

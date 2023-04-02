@@ -18,5 +18,5 @@ void djui_gfx_position_translate(f32* x, f32* y);
 void djui_gfx_scale_translate(f32* width, f32* height);
 void djui_gfx_size_translate(f32* size);
 
-bool djui_gfx_add_clipping_specific(struct DjuiBase* base, bool rotatedUV, f32 dX, f32 dY, f32 dW, f32 dH);
+bool djui_gfx_add_clipping_specific(struct DjuiBase* base, f32 dX, f32 dY, f32 dW, f32 dH);
 bool djui_gfx_add_clipping(struct DjuiBase* base);

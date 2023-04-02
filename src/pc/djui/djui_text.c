@@ -71,7 +71,7 @@ static void djui_text_render_single_char(struct DjuiText* text, char* c) {
     f32 dW = text->font->charWidth  * text->fontScale;
     f32 dH = text->font->charHeight * text->fontScale;
 
-    if (djui_gfx_add_clipping_specific(&text->base, text->font->rotatedUV, dX, dY, dW, dH)) {
+    if (djui_gfx_add_clipping_specific(&text->base, dX, dY, dW, dH)) {
         return;
     }
 

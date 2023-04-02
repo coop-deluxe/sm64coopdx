@@ -94,15 +94,18 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
     gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
+
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
-    
+
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
 	gDPLoadTextureBlockWithoutTexture(gDisplayListHead++, NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
+
     gSPVertexDjui(gDisplayListHead++, vtx, 4, 0);
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXCLIP_DJUI);
     gSP2TrianglesDjui(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
+
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
     gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
 }
@@ -119,7 +122,7 @@ void djui_gfx_position_translate(f32* x, f32* y) {
 void djui_gfx_scale_translate(f32* width, f32* height) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
-    
+
     *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
     *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
@@ -131,7 +134,7 @@ void djui_gfx_size_translate(f32* size) {
     *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
-bool djui_gfx_add_clipping_specific(struct DjuiBase* base, bool rotatedUV, f32 dX, f32 dY, f32 dW, f32 dH) {
+bool djui_gfx_add_clipping_specific(struct DjuiBase* base, f32 dX, f32 dY, f32 dW, f32 dH) {
     struct DjuiBaseRect* clip = &base->clip;
 
     f32 clipX2 = clip->x + clip->width;
@@ -152,7 +155,7 @@ bool djui_gfx_add_clipping_specific(struct DjuiBase* base, bool rotatedUV, f32 d
     f32 dClipY2 = fmax((dY - (clipY2 - dH)) / dH, 0);
 
     if ((dClipX1 != 0) || (dClipY1 != 0) || (dClipX2 != 0) || (dClipY2 != 0)) {
-        gDPSetTextureClippingDjui(gDisplayListHead++, rotatedUV, (u8)(dClipX1 * 255), (u8)(dClipY1 * 255), (u8)(dClipX2 * 255), (u8)(dClipY2 * 255));
+        gDPSetTextureClippingDjui(gDisplayListHead++, (u8)(dClipX1 * 255), (u8)(dClipY1 * 255), (u8)(dClipX2 * 255), (u8)(dClipY2 * 255));
     }
 
     return false;
@@ -160,5 +163,5 @@ bool djui_gfx_add_clipping_specific(struct DjuiBase* base, bool rotatedUV, f32 d
 
 bool djui_gfx_add_clipping(struct DjuiBase* base) {
     struct DjuiBaseRect* comp = &base->comp;
-    return djui_gfx_add_clipping_specific(base, false, comp->x, comp->y, comp->width, comp->height);
+    return djui_gfx_add_clipping_specific(base, comp->x, comp->y, comp->width, comp->height);
 }

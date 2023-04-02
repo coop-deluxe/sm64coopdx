@@ -6,11 +6,11 @@
 #define G_DJUI_SIMPLE_TRI2 0x12
 #define G_EXECUTE_DJUI     0xdd
 
-#define gSetClippingDjui(pkt, cmd, rot, x1, y1, x2, y2)         \
+#define gSetClippingDjui(pkt, cmd, x1, y1, x2, y2)         \
 {                                                               \
     Gfx *_g = (Gfx *)(pkt);                                     \
     _g->words.w0 = _SHIFTL(cmd, 24, 8) | _SHIFTL( x1, 16, 8) |  \
-                   _SHIFTL( y1,  8, 8) | _SHIFTL(rot,  0, 8);   \
+                   _SHIFTL( y1,  8, 8) | _SHIFTL(0x00,  0, 8);   \
     _g->words.w1 = _SHIFTL(x2, 16, 8) | _SHIFTL(y2, 8, 8);      \
 }
 
@@ -63,7 +63,7 @@
         ((height)-1) << G_TEXTURE_IMAGE_FRAC)			\
 }
 
-#define gDPSetTextureClippingDjui(pkt, rot, x1, y1, x2, y2)    gSetClippingDjui(pkt, G_TEXCLIP_DJUI, rot, x1, y1, x2, y2)
+#define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
 
 
