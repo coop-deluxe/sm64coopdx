@@ -90,7 +90,6 @@ ALIGNED8 static const u8 texture_hud_char_J[] = {
 #include "textures/segment2/custom_hud_j.rgba16.inc.c"
 };
 
-
 #if defined(VERSION_JP) || defined(VERSION_SH)
 ALIGNED8 const Texture texture_hud_char_J[] = {
 #include "textures/segment2/segment2.02600.rgba16.inc.c"
@@ -219,22 +218,6 @@ ALIGNED8 const Texture texture_hud_char_coin[] = {
 
 ALIGNED8 const Texture texture_hud_char_mario_head[] = {
 #include "textures/segment2/segment2.05A00.rgba16.inc.c"
-};
-
-ALIGNED8 const Texture texture_hud_char_luigi_head[] = {
-#include "textures/segment2/custom_luigi_head.rgba16.inc.c"
-};
-
-ALIGNED8 const Texture texture_hud_char_toad_head[] = {
-#include "textures/segment2/custom_toad_head.rgba16.inc.c"
-};
-
-ALIGNED8 const Texture texture_hud_char_waluigi_head[] = {
-#include "textures/segment2/custom_waluigi_head.rgba16.inc.c"
-};
-
-ALIGNED8 const Texture texture_hud_char_wario_head[] = {
-#include "textures/segment2/custom_wario_head.rgba16.inc.c"
 };
 
 ALIGNED8 const Texture texture_hud_char_star[] = {
@@ -1829,6 +1812,12 @@ ALIGNED8 const Texture texture_hud_char_arrow_down[] = {
 #include "textures/segment2/segment2.081D0.rgba16.inc.c"
 };
 
+// TODO: move these out of the font
+extern ALIGNED8 const Texture texture_hud_char_luigi_head[];
+extern ALIGNED8 const Texture texture_hud_char_toad_head[];
+extern ALIGNED8 const Texture texture_hud_char_waluigi_head[];
+extern ALIGNED8 const Texture texture_hud_char_wario_head[];
+
 // Main HUD print table 0x02008250-0x02008337
 const Texture *const main_hud_lut[] = {
 #ifdef VERSION_EU
@@ -2590,10 +2579,6 @@ ALIGNED8 const Texture texture_shadow_quarter_square[] = {
 #include "textures/segment2/shadow_quarter_square.ia8.inc.c"
 };
 
-ALIGNED8 const Texture texture_shadow_spike_ext[] = {
-#include "textures/segment2/shadow_spike_custom.ia8.inc.c"
-};
-
 const Texture texture_transition_star_half[] = {
 #include "textures/segment2/segment2.0F458.ia8.inc.c"
 };
@@ -2686,6 +2671,7 @@ const Gfx dl_shadow_square[] = {
     gsSPEndDisplayList(),
 };
 
+extern ALIGNED8 const Texture texture_shadow_spike_ext[];
 const Gfx dl_shadow_spike_ext[] = {
     gsSPDisplayList(dl_shadow_begin),
     gsDPLoadTextureBlock(texture_shadow_spike_ext, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 16, 0, G_TX_WRAP | G_TX_MIRROR, G_TX_WRAP | G_TX_MIRROR, 4, 4, G_TX_NOLOD, G_TX_NOLOD),
@@ -3507,32 +3493,4 @@ const s16 seg2_painting_mesh_neighbor_tris[] = {
       3, 260, 261, 263,
       3, 240, 242, 244,
       1, 243,
-};
-
-//////////////////////////////////////////////////////////
-
-ALIGNED8 const u8 texture_font_normal[] = {
-#include "textures/custom_font_title/custom_font_normal.rgba32.inc.c"
-};
-
-const f32 font_normal_widths[] = {
-/*        !        "        #        $        %        &        '        (        )        *        +        ,        -        .        /        */
-    0.2200f, 0.3750f, 0.4375f, 0.3750f, 0.4375f, 0.5000f, 0.2500f, 0.3125f, 0.3125f, 0.3750f, 0.4375f, 0.2500f, 0.3750f, 0.2500f, 0.3125f,
-/*        0        1        2        3        4        5        6        7        8        9        */
-    0.4375f, 0.3800f, 0.4200f, 0.4375f, 0.4300f, 0.4375f, 0.4375f, 0.4000f, 0.4375f, 0.4375f,
-/*        :        ;        <        =        >        ?        @         */
-    0.2000f, 0.2500f, 0.3125f, 0.3750f, 0.3125f, 0.3125f, 0.5750f,
-/*        A        B        C        D        E        F        G        H        I        J        K        L        M        N        O        P        Q        R        S        T        U        V        W        X        Y        Z        */
-     0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3125f, 0.3750f, 0.3750f, 0.3125f, 0.3750f, 0.3750f, 0.3125f, 0.5000f, 0.5000f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3750f, 0.3125f, 0.3750f, 0.3750f, 0.5000f, 0.4375f, 0.3750f, 0.3750f,
-/*        [        \        ]        ^        _        `        */
-    0.3125f, 0.3125f, 0.3125f, 0.3750f, 0.3750f, 0.2500f,
-/*        a        b        c        d        e        f        g        h        i        j        k        l        m        n        o        p        q        r        s        t        u        v        w        x        y        z        */
-    0.3000f, 0.3125f, 0.3125f, 0.3125f, 0.3125f, 0.3000f, 0.3750f, 0.3125f, 0.2200f, 0.3125f, 0.3125f, 0.1700f, 0.4350f, 0.3125f, 0.3000f, 0.3000f, 0.3125f, 0.2700f, 0.3125f, 0.3125f, 0.3125f, 0.2750f, 0.4375f, 0.3750f, 0.3125f, 0.3125f,
-/*        {        |        }        ~      DEL        */
-    0.3125f, 0.2500f, 0.3125f, 0.5000f, 0.2000f,
-};
-
-
-ALIGNED8 u8 texture_selectionbox_icon[] = {
-#include "textures/segment2/custom_selectionbox_icon.rgba16.inc.c"
 };

@@ -55,7 +55,7 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     djui_base_set_size(&text->base, 1.0f, 1.0f);
     djui_base_set_color(&text->base, 11, 11, 11, 255);
     djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-    djui_text_set_drop_shadow(text, 0, 0, 0, 64);
+    djui_text_set_drop_shadow(text, 64, 64, 64, 100);
     button->text = text;
 
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

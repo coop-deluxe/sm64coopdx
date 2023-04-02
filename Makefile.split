@@ -237,7 +237,7 @@ SKY_TEXTURES                    := $(wildcard $(TEXTURE_DIR)/sky/*.png)
 MACHINE_TEXTURES                := $(wildcard $(TEXTURE_DIR)/machine/*.png)
 MOUNTAIN_TEXTURES               := $(wildcard $(TEXTURE_DIR)/mountain/*.png)
 GRASS_TEXTURES                  := $(wildcard $(TEXTURE_DIR)/grass/*.png)
-CUSTOM_FONT_TITLE_TEXTURES      := $(wildcard $(TEXTURE_DIR)/custom_font_title/*.png)
+CUSTOM_FONT_TEXTURES            := $(wildcard $(TEXTURE_DIR)/custom_font/*.png)
 
 # Texture Files
 $(BUILD_DIR)/bin/segment2.o:          $(SEGMENT2_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
@@ -255,7 +255,7 @@ $(BUILD_DIR)/bin/sky.o:               $(SKY_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 $(BUILD_DIR)/bin/machine.o:           $(MACHINE_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 $(BUILD_DIR)/bin/mountain.o:          $(MOUNTAIN_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 $(BUILD_DIR)/bin/grass.o:             $(GRASS_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
-$(BUILD_DIR)/bin/custom_font_title.o: $(CUSTOM_FONT_TITLE_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
+$(BUILD_DIR)/bin/custom_font.o:       $(CUSTOM_FONT_TEXTURES:%.png=$(BUILD_DIR)/%.inc.c)
 
 # Others
 $(BUILD_DIR)/bin/segment2.elf:           SEGMENT_ADDRESS := 0x02000000
@@ -274,7 +274,7 @@ $(BUILD_DIR)/bin/sky.elf:                SEGMENT_ADDRESS := 0x09000000
 $(BUILD_DIR)/bin/machine.elf:            SEGMENT_ADDRESS := 0x09000000
 $(BUILD_DIR)/bin/mountain.elf:           SEGMENT_ADDRESS := 0x09000000
 $(BUILD_DIR)/bin/grass.elf:              SEGMENT_ADDRESS := 0x09000000
-$(BUILD_DIR)/bin/custom_font_title.elf:  SEGMENT_ADDRESS := 0x09000000
+$(BUILD_DIR)/bin/custom_font.elf:  SEGMENT_ADDRESS := 0x09000000
 
 # EU segment 19 translations
 $(BUILD_DIR)/bin/eu/translation_de.elf:  SEGMENT_ADDRESS := 0x19000000

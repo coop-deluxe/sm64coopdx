@@ -38,13 +38,18 @@ static const struct DjuiFont sDjuiFontNormal = {
  // font 1 (custom title font) //
 ////////////////////////////////
 
-static void djui_font_title_render_char(char* text) {
-    char c = *text;
-    extern const u8* const font_title_chars[];
+static void djui_font_title_render_char(char* c) {
     // replace undisplayable characters
-    if (c == ' ') { return; }
-    c = djui_unicode_get_base_char(text);
-    djui_gfx_render_texture(font_title_chars[c - '!'], 64, 64, 32);
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+    if ((u8)*c < '!' || (u8)*c > '~' + 1) { index = djui_unicode_get_sprite_index("?"); }
+
+    u32 tx = index % 16;
+    u32 ty = index / 16;
+
+    extern ALIGNED8 const u8 texture_font_title[];
+    djui_gfx_render_texture_tile(texture_font_title, 1024, 512, 32, tx * 64 + 1, ty * 64, 64, 64);
 }
 
 static f32 djui_font_title_char_width(char* text) {
