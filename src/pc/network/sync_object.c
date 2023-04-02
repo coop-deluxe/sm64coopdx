@@ -54,7 +54,10 @@ void sync_objects_update(void) {
     while (entry) {
         struct SyncObjectForgetEntry* next = entry->next;
         if (entry->forgetTimer == FORGET_TIMEOUT) {
-            hmap_del(sSoMap, entry->so->id);
+            struct SyncObject* currentSo = sync_object_get(entry->so->id);
+            if (currentSo == entry->so) {
+                hmap_del(sSoMap, entry->so->id);
+            }
         }
 
         if (entry->forgetTimer-- <= 0) {
@@ -63,7 +66,7 @@ void sync_objects_update(void) {
             } else {
                 sForgetList = next;
             }
-            //LOG_INFO("Freeing sync object... (%d)", entry->so->id);
+            //LOG_INFO("Freeing sync object %u : %s\n", entry->so->id, get_behavior_name_from_id(get_id_from_behavior(entry->so->behavior)));
             free(entry->so);
             free(entry);
 
@@ -128,7 +131,8 @@ void sync_object_forget(u32 syncId) {
         }
         entry->next = newEntry;
     }
-    //LOG_INFO("Scheduling sync object to free... (%d)", so->id);
+    //LOG_INFO("Scheduling sync object to free %u : %s\n", so->id, get_behavior_name_from_id(get_id_from_behavior(so->behavior)));
+
 }
 
 void sync_object_forget_last_reliable_packet(u32 syncId) {
