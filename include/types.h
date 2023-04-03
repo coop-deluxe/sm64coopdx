@@ -398,6 +398,7 @@ struct MarioState
     /*????*/ Vec3f wallNormal;
     /*????*/ u8 visibleToEnemies;
     /*????*/ u32 cap;
+    /*????*/ u8 bounceSquishTimer;
 };
 
 struct TextureInfo

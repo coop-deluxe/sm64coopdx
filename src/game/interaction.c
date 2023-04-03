@@ -24,6 +24,7 @@
 #include "sm64.h"
 #include "sound_init.h"
 #include "rumble_init.h"
+#include "object_collision.h"
 #include "hardcoded.h"
 
 #include "pc/configfile.h"
@@ -210,11 +211,9 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
-                // 120 degrees total, or 60 each way
                 interaction = INT_PUNCH;
             }
             if (m->flags & MARIO_KICKING) {
-                // 120 degrees total, or 60 each way
                 interaction = INT_KICK;
             }
             if (m->flags & MARIO_TRIPPING) {
@@ -1281,10 +1280,8 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
     u32 interaction = determine_interaction(m, m2->marioObj);
     f32 aboveFloor = m2->pos[1] - m2->floorHeight;
     if ((interaction & INT_HIT_FROM_ABOVE) && (aboveFloor < 1)) {
-        if (m2->playerIndex == 0) {
-            network_player_local_restore_lag_state();
-            m2->squishTimer = max(m2->squishTimer, 4);
-        }
+        m2->bounceSquishTimer = max(m2->bounceSquishTimer, 4);
+
         f32 velY;
         if (m2->action == ACT_CROUCHING) {
             mario_stop_riding_and_holding(m);
@@ -1374,110 +1371,127 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     if (m2 == NULL) { return FALSE; }
     if (m2->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
-    // set my local player to the state I was in when they attacked
-    if (m2->playerIndex == 0) {
-        network_player_local_set_lag_state(&gNetworkPlayers[m->playerIndex]);
-    }
-
     // vanish cap players can't interact
     u32 vanishFlags = (MARIO_VANISH_CAP | MARIO_CAP_ON_HEAD);
     if ((m->flags & vanishFlags) == vanishFlags) {
-        network_player_local_restore_lag_state();
         return FALSE;
     }
     if ((m2->flags & vanishFlags) == vanishFlags) {
-        network_player_local_restore_lag_state();
         return FALSE;
     }
 
     // don't do further interactions if we've hopped on top
     if (resolve_player_collision(m, m2)) {
-        network_player_local_restore_lag_state();
         return FALSE;
     }
+
+    // don't touch each other on level load
+    if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) {
+        return FALSE;
+    }
+
+    return FALSE;
+}
+
+u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) {
+    if (!is_player_active(attacker)) { return FALSE; }
+    if (!is_player_active(victim)) { return FALSE; }
+    if (gServerSettings.playerInteractions == PLAYER_INTERACTIONS_NONE) { return FALSE; }
+    if (attacker->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
+    if (attacker->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
+
+    // vanish cap players can't interact
+    u32 vanishFlags = (MARIO_VANISH_CAP | MARIO_CAP_ON_HEAD);
+    if ((attacker->flags & vanishFlags) == vanishFlags) { return FALSE; }
+    if ((victim->flags   & vanishFlags) == vanishFlags) { return FALSE; }
 
     // don't attack each other on level load
-    if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) {
+    if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) { return FALSE; }
+
+    // make sure it passes pvp checks before rollback
+    if (!passes_pvp_interaction_checks(attacker, victim)) { return FALSE; }
+
+    // set my local player to the state I was in when they attacked
+    if (victim->playerIndex == 0) {
+        network_player_local_set_lag_state(&gNetworkPlayers[victim->playerIndex]);
+    }
+
+    // make sure we overlap
+    f32 overlapScale = (attacker->playerIndex == 0) ? 0.6f : 1.0f;
+    if (!detect_player_hitbox_overlap(attacker, victim, overlapScale)) {
         network_player_local_restore_lag_state();
         return FALSE;
     }
 
-    u32 interaction = determine_interaction(m, o);
-
-    if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && passes_pvp_interaction_checks(m, m2)) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, m, m2, &allow);
-
-        if (!allow) {
-            // Lua blocked the interaction
-            network_player_local_restore_lag_state();
-            return false;
-        }
-
-        // determine if slide attack should be ignored
-        if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(m2)) {
-            // determine the difference in velocities
-            Vec3f velDiff;
-            vec3f_dif(velDiff, m->vel, m2->vel);
-
-            if (m->action == ACT_SLIDE_KICK_SLIDE || m->action == ACT_SLIDE_KICK) {
-                if (vec3f_length(m->vel) < 15) {
-                    return FALSE;
-                }
-            } else {
-                if (vec3f_length(m->vel) < 40) {
-                    // the difference vectors are not different enough, do not attack
-                    return FALSE;
-                }
-            }
-            if (vec3f_length(m2->vel) > vec3f_length(m->vel)) {
-                // the one being attacked is going faster, do not attack
-                return FALSE;
-            }
-        }
-
-        // restore to current state
-        u32 m2action = m2->action;
-        u32 m2flags = m2->flags;
+    // see if it was an attack
+    u32 interaction = determine_interaction(attacker, victim->marioObj);
+    if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, victim)) {
         network_player_local_restore_lag_state();
-
-        // determine if ground pound should be ignored
-        if (m->action == ACT_GROUND_POUND) {
-            // not moving down yet?
-            if (m->actionState == 0) {
-                return FALSE;
-            }
-            m2->squishTimer = max(m2->squishTimer, 20);
-        }
-
-        if (m2->playerIndex == 0) {
-            m2->interactObj = m->marioObj;
-            if (interaction & INT_KICK) {
-                if (m2action == ACT_FIRST_PERSON) {
-                    // without this branch, the player will be stuck in first person
-                    raise_background_noise(2);
-                    set_camera_mode(m2->area->camera, -1, 1);
-                    m2->input &= ~INPUT_FIRST_PERSON;
-                }
-                set_mario_action(m2, ACT_FREEFALL, 0);
-            }
-            if (!(m2flags & MARIO_METAL_CAP)) {
-                m->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
-                if (m->flags & MARIO_METAL_CAP) {
-                    m->marioObj->oDamageOrCoinValue *= 2;
-                }
-            }
-        }
-        m2->invincTimer = max(m2->invincTimer, 3);
-        take_damage_and_knock_back(m2, m->marioObj);
-        bounce_back_from_attack(m, interaction);
-        m2->interactObj = NULL;
-
-        smlua_call_event_hooks_mario_params(HOOK_ON_PVP_ATTACK, m, m2);
         return FALSE;
     }
 
+    // call the lua hook
+    bool allow = true;
+    smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, victim, &allow);
+    if (!allow) {
+        // Lua blocked the interaction
+        network_player_local_restore_lag_state();
+        return FALSE;
+    }
+
+    // determine if slide attack should be ignored
+    if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(victim)) {
+        // determine the difference in velocities
+        Vec3f velDiff;
+        vec3f_dif(velDiff, attacker->vel, victim->vel);
+
+        if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
+            // if the difference vectors are not different enough, do not attack
+            if (vec3f_length(attacker->vel) < 15) { return FALSE; }
+        } else {
+            // if the difference vectors are not different enough, do not attack
+            if (vec3f_length(attacker->vel) < 40) { return FALSE; }
+        }
+
+        // if the victim is going faster, do not attack
+        if (vec3f_length(victim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
+    }
+
+    // restore to current state
+    u32 victimAction = victim->action;
+    u32 victimFlags = victim->flags;
     network_player_local_restore_lag_state();
+
+    // determine if ground pound should be ignored
+    if (attacker->action == ACT_GROUND_POUND) {
+        // not moving down yet?
+        if (attacker->actionState == 0) { return FALSE; }
+        victim->bounceSquishTimer = max(victim->bounceSquishTimer, 20);
+    }
+
+    if (victim->playerIndex == 0) {
+        victim->interactObj = attacker->marioObj;
+        if (interaction & INT_KICK) {
+            if (victimAction == ACT_FIRST_PERSON) {
+                // without this branch, the player will be stuck in first person
+                raise_background_noise(2);
+                set_camera_mode(victim->area->camera, -1, 1);
+                victim->input &= ~INPUT_FIRST_PERSON;
+            }
+            set_mario_action(victim, ACT_FREEFALL, 0);
+        }
+        if (!(victimFlags & MARIO_METAL_CAP)) {
+            attacker->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
+            if (attacker->flags & MARIO_METAL_CAP) { attacker->marioObj->oDamageOrCoinValue *= 2; }
+        }
+    }
+
+    victim->invincTimer = max(victim->invincTimer, 3);
+    take_damage_and_knock_back(victim, attacker->marioObj);
+    bounce_back_from_attack(attacker, interaction);
+    victim->interactObj = NULL;
+
+    smlua_call_event_hooks_mario_params(HOOK_ON_PVP_ATTACK, attacker, victim);
     return FALSE;
 }
 
@@ -2226,6 +2240,16 @@ void mario_process_interactions(struct MarioState *m) {
                 }
             }
         }
+    }
+
+    if (!(m->action & ACT_FLAG_INTANGIBLE) && is_player_active(m)) {
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
+            struct NetworkPlayer* np2 = &gNetworkPlayers[i];
+            if (!np2->connected) { continue; }
+            if (&gMarioStates[i] == m) { continue; }
+            interact_player_pvp(m, &gMarioStates[i]);
+        }
+        network_player_local_restore_lag_state();
     }
 
     if (m->invincTimer > 0 && !sDelayInvincTimer) {

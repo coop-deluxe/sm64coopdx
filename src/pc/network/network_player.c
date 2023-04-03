@@ -16,7 +16,7 @@ struct NetworkPlayer *gNetworkPlayerLocal = NULL;
 struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 
-#define MAX_LOCAL_PLAYER_STATES 15
+#define MAX_LOCAL_PLAYER_STATES 20
 struct LagState {
     struct MarioState m;
     struct MarioBodyState bodyState;
@@ -178,6 +178,7 @@ void network_player_local_set_lag_state(struct NetworkPlayer* otherNp) {
     if (!sLocalPlayerStatesReady) { return; }
 
     s32 pingToTicks = (otherNp->ping / 1000.0f) * 30;
+    pingToTicks += 2;
     if (pingToTicks > (MAX_LOCAL_PLAYER_STATES-1)) {
         pingToTicks = (MAX_LOCAL_PLAYER_STATES-1);
     }

@@ -21,11 +21,9 @@ struct Object *debug_print_obj_collision(struct Object *a) {
     return NULL;
 }
 
-int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* remote) {
+int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* remote, f32 scale) {
     if (local->marioObj == NULL || local->marioObj->oIntangibleTimer != 0) { return FALSE; }
     if (remote->marioObj == NULL || remote->marioObj->oIntangibleTimer != 0) { return FALSE; }
-
-    network_player_local_set_lag_state(&gNetworkPlayers[remote->playerIndex]);
 
     struct Object* a = local->marioObj;
     f32* aTorso = local->marioBodyState->torsoPos;
@@ -41,39 +39,26 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
     f32 collisionRadius = (a->hitboxRadius + b->hitboxRadius) * 2.25f;
     f32 distance = sqrtf(dx * dx + dz * dz);
 
-    if (collisionRadius > distance) {
+    if (collisionRadius * scale > distance) {
         f32 sp20 = a->hitboxHeight + sp3C;
         f32 sp1C = b->hitboxHeight + sp38;
 
         if (sp3C > sp1C) {
-            network_player_local_restore_lag_state();
             return FALSE;
         }
         if (sp20 < sp38) {
-            network_player_local_restore_lag_state();
             return FALSE;
         }
         if (a->numCollidedObjs >= 4) {
-            network_player_local_restore_lag_state();
             return FALSE;
         }
         if (b->numCollidedObjs >= 4) {
-            network_player_local_restore_lag_state();
             return FALSE;
         }
-        a->collidedObjs[a->numCollidedObjs] = b;
-        b->collidedObjs[b->numCollidedObjs] = a;
-        a->collidedObjInteractTypes |= b->oInteractType;
-        b->collidedObjInteractTypes |= a->oInteractType;
-        a->numCollidedObjs++;
-        b->numCollidedObjs++;
-        network_player_local_restore_lag_state();
 
         return TRUE;
     }
 
-    //! no return value
-    network_player_local_restore_lag_state();
     return FALSE;
 }
 
@@ -200,7 +185,16 @@ void check_player_object_collision(void) {
 
     extern struct MarioState gMarioStates[];
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
-        detect_player_hitbox_overlap(&gMarioStates[0], &gMarioStates[i]);
+        if (detect_player_hitbox_overlap(&gMarioStates[0], &gMarioStates[i], 1.0f)) {
+            struct Object* a = gMarioStates[0].marioObj;
+            struct Object* b = gMarioStates[i].marioObj;
+            a->collidedObjs[a->numCollidedObjs] = b;
+            b->collidedObjs[b->numCollidedObjs] = a;
+            a->collidedObjInteractTypes |= b->oInteractType;
+            b->collidedObjInteractTypes |= a->oInteractType;
+            a->numCollidedObjs++;
+            b->numCollidedObjs++;
+        }
     }
 }
 

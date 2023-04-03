@@ -1330,28 +1330,29 @@ u8 sSquishScaleOverTime[16] = { 0x46, 0x32, 0x32, 0x3C, 0x46, 0x50, 0x50, 0x3C,
  * Applies the squish to Mario's model via scaling.
  */
 void squish_mario_model(struct MarioState *m) {
-    if (m->squishTimer != 0xFF) {
-        // If no longer squished, scale back to default.
-        // Also handles the Tiny Mario and Huge Mario cheats.
-        if (m->squishTimer == 0) {
-            vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
-        }
-        // If timer is less than 16, rubber-band Mario's size scale up and down.
-        else if (m->squishTimer <= 16) {
-            m->squishTimer -= 1;
+    if (m->squishTimer == 0xFF && m->bounceSquishTimer == 0) { return; }
 
-            m->marioObj->header.gfx.scale[1] =
-                1.0f - ((sSquishScaleOverTime[15 - m->squishTimer] * 0.6f) / 100.0f);
-            m->marioObj->header.gfx.scale[0] =
-                ((sSquishScaleOverTime[15 - m->squishTimer] * 0.4f) / 100.0f) + 1.0f;
-
-            m->marioObj->header.gfx.scale[2] = m->marioObj->header.gfx.scale[0];
-        } else {
-            m->squishTimer -= 1;
-
-            vec3f_set(m->marioObj->header.gfx.scale, 1.4f, 0.4f, 1.4f);
-        }
+    // If no longer squished, scale back to default.
+    // Also handles the Tiny Mario and Huge Mario cheats.
+    u8 squishTimer = (m->squishTimer > m->bounceSquishTimer) ? m->squishTimer : m->bounceSquishTimer;
+    if (squishTimer == 0) {
+        vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
+        return;
     }
+
+    // If timer is less than 16, rubber-band Mario's size scale up and down.
+    if (squishTimer <= 16) {
+        squishTimer--;
+
+        m->marioObj->header.gfx.scale[1] = 1.0f - ((sSquishScaleOverTime[15 - squishTimer] * 0.6f) / 100.0f);
+        m->marioObj->header.gfx.scale[0] = ((sSquishScaleOverTime[15 - squishTimer] * 0.4f) / 100.0f) + 1.0f;
+        m->marioObj->header.gfx.scale[2] = m->marioObj->header.gfx.scale[0];
+    } else {
+        vec3f_set(m->marioObj->header.gfx.scale, 1.4f, 0.4f, 1.4f);
+    }
+
+    if (m->squishTimer > 0) { m->squishTimer--; }
+    if (m->bounceSquishTimer > 0) { m->bounceSquishTimer--; }
 }
 
 /**

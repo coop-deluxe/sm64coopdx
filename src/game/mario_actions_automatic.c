@@ -983,6 +983,7 @@ s32 act_bubbled(struct MarioState* m) {
     m->heldByObj = NULL;
     m->marioObj->oIntangibleTimer = -1;
     m->squishTimer = 0;
+    m->bounceSquishTimer = 0;
     set_mario_animation(m, MARIO_ANIM_SLEEP_IDLE);
 
     // force inputs
