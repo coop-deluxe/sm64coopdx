@@ -397,6 +397,8 @@ void network_receive_player(struct Packet* p) {
     if (np->currLevelNum == LEVEL_BOWSER_3 && m->action == ACT_JUMBO_STAR_CUTSCENE && gMarioStates[0].action != ACT_JUMBO_STAR_CUTSCENE) {
         set_mario_action((struct MarioState*) &gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
     }
+    m->marioObj->rawData.asU32[0x16] = oldData.rawData[0x16];
+
 }
 
 void network_update_player(void) {
