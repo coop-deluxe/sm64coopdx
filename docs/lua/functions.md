@@ -792,6 +792,13 @@
 
 <br />
 
+- lag_compensation.h
+   - [lag_compensation_clear](functions-3.md#lag_compensation_clear)
+   - [lag_compensation_get_local_state](functions-3.md#lag_compensation_get_local_state)
+   - [lag_compensation_store](functions-3.md#lag_compensation_store)
+
+<br />
+
 - level_info.h
    - [get_level_name](functions-3.md#get_level_name)
    - [get_level_name_ascii](functions-3.md#get_level_name_ascii)
@@ -1085,8 +1092,6 @@
    - [network_player_color_to_palette](functions-3.md#network_player_color_to_palette)
    - [network_player_connected_count](functions-3.md#network_player_connected_count)
    - [network_player_from_global_index](functions-3.md#network_player_from_global_index)
-   - [network_player_local_restore_lag_state](functions-3.md#network_player_local_restore_lag_state)
-   - [network_player_local_set_lag_state](functions-3.md#network_player_local_set_lag_state)
    - [network_player_palette_to_color](functions-3.md#network_player_palette_to_color)
    - [network_player_set_description](functions-3.md#network_player_set_description)
 

@@ -4010,6 +4010,22 @@ function take_damage_and_knock_back(m, o)
     -- ...
 end
 
+--- @return nil
+function lag_compensation_clear()
+    -- ...
+end
+
+--- @param otherNp NetworkPlayer
+--- @return MarioState
+function lag_compensation_get_local_state(otherNp)
+    -- ...
+end
+
+--- @return nil
+function lag_compensation_store()
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param levelNum integer
 --- @param areaIndex integer
@@ -5611,17 +5627,6 @@ end
 --- @param globalIndex integer
 --- @return NetworkPlayer
 function network_player_from_global_index(globalIndex)
-    -- ...
-end
-
---- @return nil
-function network_player_local_restore_lag_state()
-    -- ...
-end
-
---- @param otherNp NetworkPlayer
---- @return nil
-function network_player_local_set_lag_state(otherNp)
     -- ...
 end
 

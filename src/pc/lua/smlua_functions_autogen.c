@@ -20,6 +20,7 @@
 #include "src/game/sound_init.h"
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/pc/network/network_player.h"
+#include "src/pc/network/lag_compensation.h"
 #include "include/behavior_table.h"
 #include "src/pc/lua/utils/smlua_obj_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
@@ -12643,6 +12644,57 @@ int smlua_func_take_damage_and_knock_back(lua_State* L) {
     return 1;
 }
 
+  ////////////////////////
+ // lag_compensation.h //
+////////////////////////
+
+int smlua_func_lag_compensation_clear(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lag_compensation_clear", 0, top);
+        return 0;
+    }
+
+
+    lag_compensation_clear();
+
+    return 1;
+}
+
+int smlua_func_lag_compensation_get_local_state(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lag_compensation_get_local_state", 1, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* otherNp = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "lag_compensation_get_local_state"); return 0; }
+
+    smlua_push_object(L, LOT_MARIOSTATE, lag_compensation_get_local_state(otherNp));
+
+    return 1;
+}
+
+int smlua_func_lag_compensation_store(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lag_compensation_store", 0, top);
+        return 0;
+    }
+
+
+    lag_compensation_store();
+
+    return 1;
+}
+
   //////////////////
  // level_info.h //
 //////////////////
@@ -18655,38 +18707,6 @@ int smlua_func_network_player_from_global_index(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_from_global_index"); return 0; }
 
     smlua_push_object(L, LOT_NETWORKPLAYER, network_player_from_global_index(globalIndex));
-
-    return 1;
-}
-
-int smlua_func_network_player_local_restore_lag_state(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_local_restore_lag_state", 0, top);
-        return 0;
-    }
-
-
-    network_player_local_restore_lag_state();
-
-    return 1;
-}
-
-int smlua_func_network_player_local_set_lag_state(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_local_set_lag_state", 1, top);
-        return 0;
-    }
-
-    struct NetworkPlayer* otherNp = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_local_set_lag_state"); return 0; }
-
-    network_player_local_set_lag_state(otherNp);
 
     return 1;
 }
@@ -29910,6 +29930,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "passes_pvp_interaction_checks", smlua_func_passes_pvp_interaction_checks);
     smlua_bind_function(L, "take_damage_and_knock_back", smlua_func_take_damage_and_knock_back);
 
+    // lag_compensation.h
+    smlua_bind_function(L, "lag_compensation_clear", smlua_func_lag_compensation_clear);
+    smlua_bind_function(L, "lag_compensation_get_local_state", smlua_func_lag_compensation_get_local_state);
+    smlua_bind_function(L, "lag_compensation_store", smlua_func_lag_compensation_store);
+
     // level_info.h
     smlua_bind_function(L, "get_level_name", smlua_func_get_level_name);
     smlua_bind_function(L, "get_level_name_ascii", smlua_func_get_level_name_ascii);
@@ -30174,8 +30199,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
     smlua_bind_function(L, "network_player_connected_count", smlua_func_network_player_connected_count);
     smlua_bind_function(L, "network_player_from_global_index", smlua_func_network_player_from_global_index);
-    smlua_bind_function(L, "network_player_local_restore_lag_state", smlua_func_network_player_local_restore_lag_state);
-    smlua_bind_function(L, "network_player_local_set_lag_state", smlua_func_network_player_local_set_lag_state);
     smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
 

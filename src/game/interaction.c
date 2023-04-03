@@ -29,6 +29,7 @@
 
 #include "pc/configfile.h"
 #include "pc/network/network.h"
+#include "pc/network/lag_compensation.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/cheats.h"
 
@@ -1412,39 +1413,38 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     // make sure it passes pvp checks before rollback
     if (!passes_pvp_interaction_checks(attacker, victim)) { return FALSE; }
 
-    // set my local player to the state I was in when they attacked
+    // grab the lag compensation version of the victim
+    struct MarioState* cVictim = NULL;
     if (victim->playerIndex == 0) {
-        network_player_local_set_lag_state(&gNetworkPlayers[victim->playerIndex]);
+        cVictim = lag_compensation_get_local_state(&gNetworkPlayers[attacker->playerIndex]);
     }
+    if (cVictim == NULL) { cVictim = victim; }
 
     // make sure we overlap
     f32 overlapScale = (attacker->playerIndex == 0) ? 0.6f : 1.0f;
-    if (!detect_player_hitbox_overlap(attacker, victim, overlapScale)) {
-        network_player_local_restore_lag_state();
+    if (!detect_player_hitbox_overlap(attacker, cVictim, overlapScale)) {
         return FALSE;
     }
 
     // see if it was an attack
-    u32 interaction = determine_interaction(attacker, victim->marioObj);
-    if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, victim)) {
-        network_player_local_restore_lag_state();
+    u32 interaction = determine_interaction(attacker, cVictim->marioObj);
+    if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
         return FALSE;
     }
 
     // call the lua hook
     bool allow = true;
-    smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, victim, &allow);
+    smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, cVictim, &allow);
     if (!allow) {
         // Lua blocked the interaction
-        network_player_local_restore_lag_state();
         return FALSE;
     }
 
     // determine if slide attack should be ignored
-    if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(victim)) {
+    if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) {
         // determine the difference in velocities
         Vec3f velDiff;
-        vec3f_dif(velDiff, attacker->vel, victim->vel);
+        vec3f_dif(velDiff, attacker->vel, cVictim->vel);
 
         if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
             // if the difference vectors are not different enough, do not attack
@@ -1455,13 +1455,8 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         }
 
         // if the victim is going faster, do not attack
-        if (vec3f_length(victim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
+        if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel)) { return FALSE; }
     }
-
-    // restore to current state
-    u32 victimAction = victim->action;
-    u32 victimFlags = victim->flags;
-    network_player_local_restore_lag_state();
 
     // determine if ground pound should be ignored
     if (attacker->action == ACT_GROUND_POUND) {
@@ -1473,7 +1468,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     if (victim->playerIndex == 0) {
         victim->interactObj = attacker->marioObj;
         if (interaction & INT_KICK) {
-            if (victimAction == ACT_FIRST_PERSON) {
+            if (victim->action == ACT_FIRST_PERSON) {
                 // without this branch, the player will be stuck in first person
                 raise_background_noise(2);
                 set_camera_mode(victim->area->camera, -1, 1);
@@ -1481,7 +1476,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
             }
             set_mario_action(victim, ACT_FREEFALL, 0);
         }
-        if (!(victimFlags & MARIO_METAL_CAP)) {
+        if (!(victim->flags & MARIO_METAL_CAP)) {
             attacker->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
             if (attacker->flags & MARIO_METAL_CAP) { attacker->marioObj->oDamageOrCoinValue *= 2; }
         }
@@ -2250,7 +2245,6 @@ void mario_process_interactions(struct MarioState *m) {
             if (&gMarioStates[i] == m) { continue; }
             interact_player_pvp(m, &gMarioStates[i]);
         }
-        network_player_local_restore_lag_state();
     }
 
     if (m->invincTimer > 0 && !sDelayInvincTimer) {

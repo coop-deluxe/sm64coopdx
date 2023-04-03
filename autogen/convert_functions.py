@@ -37,6 +37,7 @@ in_files = [
     "src/game/sound_init.h",
     "src/pc/djui/djui_hud_utils.h",
     "src/pc/network/network_player.h",
+    "src/pc/network/lag_compensation.h",
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_obj_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",

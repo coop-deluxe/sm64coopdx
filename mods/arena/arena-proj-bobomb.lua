@@ -17,13 +17,15 @@ end
 
 function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
     local ownerNp = network_player_from_global_index(obj.oArenaBobombGlobalOwner)
-    network_player_local_set_lag_state(ownerNp)
+    local cm = m
+    if m.playerIndex == 0 then
+        cm = lag_compensation_get_local_state(ownerNp)
+    end
 
-    local mPos1 = { x = m.pos.x, y = m.pos.y + 50,  z = m.pos.z }
-    local mPos2 = { x = m.pos.x, y = m.pos.y + 150, z = m.pos.z }
+    local mPos1 = { x = cm.pos.x, y = cm.pos.y + 50,  z = cm.pos.z }
+    local mPos2 = { x = cm.pos.x, y = cm.pos.y + 150, z = cm.pos.z }
     local ret = (vec3f_dist(pos, mPos1) < radius or vec3f_dist(pos, mPos2) < radius)
 
-    network_player_local_restore_lag_state()
     return ret
 end
 

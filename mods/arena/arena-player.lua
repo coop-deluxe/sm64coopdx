@@ -105,49 +105,46 @@ function mario_local_hammer_check(m)
 
     -- check for hammer attacks
     for i = 1, (MAX_PLAYERS - 1) do
-        local m2  = gMarioStates[i]
-        local np2 = gNetworkPlayers[i]
-        local s2  = gPlayerSyncTable[i]
-        if passes_pvp_interaction_checks(m2, m) ~= 0 then
-            network_player_local_set_lag_state(np2)
-            if s2.item == ITEM_HAMMER and mario_hammer_is_attack(m2.action) and passes_pvp_interaction_checks(m2, m) ~= 0 and global_index_hurts_mario_state(np2.globalIndex, m) then
-                local pos = mario_hammer_position(m2)
-                local dist = vec3f_dist(pos, m.pos)
-                if dist <= 165 then
-                    local yOffset = 100
-                    if m2.action == ACT_JUMP_KICK then
-                        yOffset = yOffset + 100
-                    end
+        local mattacker  = gMarioStates[i]
+        local npattacker = gNetworkPlayers[i]
+        local sattacker  = gPlayerSyncTable[i]
+        local cmvictim = lag_compensation_get_local_state(npattacker)
 
-                    local vel = {
-                        x = m.pos.x - m2.pos.x,
-                        y = (m.pos.y + yOffset) - m2.pos.y,
-                        z = m.pos.z - m2.pos.z,
-                    }
-                    vec3f_normalize(vel)
-                    vec3f_mul(vel, 75 + 70 * (1 - mario_health_float(m)))
+        if sattacker.item == ITEM_HAMMER and mario_hammer_is_attack(mattacker.action) and passes_pvp_interaction_checks(mattacker, cmvictim) ~= 0 and passes_pvp_interaction_checks(mattacker, m) ~= 0 and global_index_hurts_mario_state(npattacker.globalIndex, m) then
+            local pos = mario_hammer_position(mattacker)
+            local dist = vec3f_dist(pos, cmvictim.pos)
+            if dist <= 165 then
+                local yOffset = 100
+                if mattacker.action == ACT_JUMP_KICK then
+                    yOffset = yOffset + 100
+                end
 
-                    network_player_local_restore_lag_state()
-                    set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
-                    m.invincTimer = 30
-                    m.knockbackTimer = 10
-                    m.vel.x = vel.x
-                    m.vel.y = vel.y
-                    m.vel.z = vel.z
-                    m.faceAngle.y = atan2s(vel.z, vel.x) + 0x8000
-                    s2.ammo = s2.ammo - 1
+                local vel = {
+                    x = cmvictim.pos.x - mattacker.pos.x,
+                    y = (cmvictim.pos.y + yOffset) - mattacker.pos.y,
+                    z = cmvictim.pos.z - mattacker.pos.z,
+                }
+                vec3f_normalize(vel)
+                vec3f_mul(vel, 75 + 70 * (1 - mario_health_float(cmvictim)))
 
-                    send_arena_hammer_hit(np.globalIndex, np2.globalIndex)
-                    e.lastDamagedByGlobal = np2.globalIndex
+                set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
+                m.invincTimer = 30
+                m.knockbackTimer = 10
+                m.vel.x = vel.x
+                m.vel.y = vel.y
+                m.vel.z = vel.z
+                m.faceAngle.y = atan2s(vel.z, vel.x) + 0x8000
+                sattacker.ammo = sattacker.ammo - 1
 
-                    if m2.action == ACT_PUNCHING or m2.action == ACT_MOVE_PUNCHING or m2.action == ACT_GROUND_POUND then
-                        m.hurtCounter = 12
-                    else
-                        m.hurtCounter = 8
-                    end
+                send_arena_hammer_hit(np.globalIndex, npattacker.globalIndex)
+                e.lastDamagedByGlobal = npattacker.globalIndex
+
+                if mattacker.action == ACT_PUNCHING or mattacker.action == ACT_MOVE_PUNCHING or mattacker.action == ACT_GROUND_POUND then
+                    m.hurtCounter = 12
+                else
+                    m.hurtCounter = 8
                 end
             end
-            network_player_local_restore_lag_state()
         end
     end
 

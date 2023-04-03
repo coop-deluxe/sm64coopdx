@@ -79,9 +79,6 @@ struct NetworkPlayer* get_network_player_smallest_global(void);
 void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerParts part, Color color);
 void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts part, Color out);
 
-void network_player_local_set_lag_state(struct NetworkPlayer* otherNp);
-void network_player_local_restore_lag_state(void);
-
 void network_player_update(void);
 
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, char* name);

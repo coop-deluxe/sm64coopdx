@@ -389,6 +389,14 @@ void adjust_analog_stick(struct Controller *controller) {
         controller->stickY *= 64 / controller->stickMag;
         controller->stickMag = 64;
     }
+
+    /*extern bool gDebugToggle;
+    if (gDebugToggle) {
+        controller->stickX = 64;
+        controller->stickY = 0;
+        controller->stickMag = 64;
+    }*/
+
 }
 
 // if a demo sequence exists, this will run the demo

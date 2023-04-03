@@ -10,32 +10,19 @@
 #include "game/hardcoded.h"
 #include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
+#include "lag_compensation.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
 struct NetworkPlayer *gNetworkPlayerServer = NULL;
 static char sDefaultPlayerName[] = "Player";
 
-#define MAX_LOCAL_PLAYER_STATES 20
-struct LagState {
-    struct MarioState m;
-    struct MarioBodyState bodyState;
-};
-
-static struct LagState sLocalPlayerStates[MAX_LOCAL_PLAYER_STATES] = { 0 };
-static struct LagState sLocalPlayerTmpState = { 0 };
-static bool sLocalPlayerTmpStateSet = false;
-static bool sLocalPlayerStatesReady = false;
-static u32 sLocalPlayerStateIndex = 0;
-
 void network_player_init(void) {
     gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : 0;
     gNetworkPlayers[0].palette = configPlayerPalette;
     gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
     gNetworkPlayers[0].overridePalette = gNetworkPlayers[0].palette;
-    sLocalPlayerTmpStateSet = false;
-    sLocalPlayerStatesReady = false;
-    sLocalPlayerStateIndex = 0;
+    lag_compensation_clear();
 }
 
 void network_player_update_model(u8 localIndex) {
@@ -160,55 +147,8 @@ void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerParts 
     out[2] = np->palette.parts[part][2];
 }
 
-static void network_player_local_save_state(void) {
-    if (!gMarioStates[0].marioBodyState) { return; }
-
-    memcpy(&sLocalPlayerStates[sLocalPlayerStateIndex].m, &gMarioStates[0], sizeof(struct MarioState));
-    memcpy(&sLocalPlayerStates[sLocalPlayerStateIndex].bodyState, gMarioStates[0].marioBodyState, sizeof(struct MarioBodyState));
-
-    if (sLocalPlayerStateIndex + 1 >= MAX_LOCAL_PLAYER_STATES) {
-        sLocalPlayerStatesReady = true;
-    }
-    sLocalPlayerStateIndex = (sLocalPlayerStateIndex + 1) % MAX_LOCAL_PLAYER_STATES;
-}
-
-void network_player_local_set_lag_state(struct NetworkPlayer* otherNp) {
-    if (!otherNp) { return; }
-    if (gNetworkType == NT_NONE) { return; }
-    if (!sLocalPlayerStatesReady) { return; }
-
-    s32 pingToTicks = (otherNp->ping / 1000.0f) * 30;
-    pingToTicks += 2;
-    if (pingToTicks > (MAX_LOCAL_PLAYER_STATES-1)) {
-        pingToTicks = (MAX_LOCAL_PLAYER_STATES-1);
-    }
-    if (pingToTicks == 0) { return; }
-
-    s32 index = (s32)sLocalPlayerStateIndex - pingToTicks;
-    while (index < 0) { index += MAX_LOCAL_PLAYER_STATES; }
-    index = index % MAX_LOCAL_PLAYER_STATES;
-
-    memcpy(&sLocalPlayerTmpState.m, &gMarioStates[0], sizeof(struct MarioState));
-    memcpy(&sLocalPlayerTmpState.bodyState, gMarioStates[0].marioBodyState, sizeof(struct MarioBodyState));
-
-    memcpy(&gMarioStates[0], &sLocalPlayerStates[index].m, sizeof(struct MarioState));
-    memcpy(gMarioStates[0].marioBodyState, &sLocalPlayerStates[index].bodyState, sizeof(struct MarioBodyState));
-
-    sLocalPlayerTmpStateSet = true;
-}
-
-void network_player_local_restore_lag_state(void) {
-    if (!sLocalPlayerTmpStateSet) { return; }
-
-    memcpy(&gMarioStates[0], &sLocalPlayerTmpState.m, sizeof(struct MarioState));
-    memcpy(gMarioStates[0].marioBodyState, &sLocalPlayerTmpState.bodyState, sizeof(struct MarioBodyState));
-
-    sLocalPlayerTmpStateSet = false;
-}
-
 void network_player_update(void) {
-    network_player_local_save_state();
-    network_player_local_restore_lag_state();
+    lag_compensation_store();
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer *np = &gNetworkPlayers[i];

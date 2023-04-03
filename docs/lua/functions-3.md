@@ -3300,6 +3300,68 @@
 <br />
 
 ---
+# functions from lag_compensation.h
+
+<br />
+
+
+## [lag_compensation_clear](#lag_compensation_clear)
+
+### Lua Example
+`lag_compensation_clear()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void lag_compensation_clear(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation_get_local_state](#lag_compensation_get_local_state)
+
+### Lua Example
+`local MarioStateValue = lag_compensation_get_local_state(otherNp)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| otherNp | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+[MarioState](structs.md#MarioState)
+
+### C Prototype
+`struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lag_compensation_store](#lag_compensation_store)
+
+### Lua Example
+`lag_compensation_store()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void lag_compensation_store(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from level_info.h
 
 <br />
@@ -8181,44 +8243,6 @@
 
 ### C Prototype
 `struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_local_restore_lag_state](#network_player_local_restore_lag_state)
-
-### Lua Example
-`network_player_local_restore_lag_state()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_local_restore_lag_state(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_local_set_lag_state](#network_player_local_set_lag_state)
-
-### Lua Example
-`network_player_local_set_lag_state(otherNp)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| otherNp | [NetworkPlayer](structs.md#NetworkPlayer) |
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_local_set_lag_state(struct NetworkPlayer* otherNp);`
 
 [:arrow_up_small:](#)
 
