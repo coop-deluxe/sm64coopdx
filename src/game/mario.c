@@ -2006,17 +2006,17 @@ s32 execute_mario_action(UNUSED struct Object *o) {
             np->fadeOpacity += 2;
             gMarioState->fadeWarpOpacity = np->fadeOpacity << 3;
         }
+    }
 
-        if (gServerSettings.enableCheats) {
-            if (gCheats.godMode) {
-                gMarioState->health = 0x880;
-                gMarioState->healCounter = 0;
-                gMarioState->hurtCounter = 0;
-            }
+    if (gServerSettings.enableCheats) {
+        if (gCheats.godMode) {
+            gMarioState->health = 0x880;
+            gMarioState->healCounter = 0;
+            gMarioState->hurtCounter = 0;
+        }
 
-            if (gCheats.infiniteLives && gMarioState->numLives < 100) {
-                gMarioState->numLives = 100;
-            }
+        if (gCheats.infiniteLives && gMarioState->numLives < 100) {
+            gMarioState->numLives = 100;
         }
     }
 
