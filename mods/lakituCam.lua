@@ -124,8 +124,22 @@ end
 
 local bhvPlayerLakitu = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_custom_lakitu_init, bhv_custom_lakitu)
 
+-- search for a Lakitu with our global index
+local function search_for_lakitu(index)
+    local o = obj_get_first_with_behavior_id(bhvPlayerLakitu)
+    while o ~= nil do
+        if o.oLakituOwner == index then
+            return o
+        end
+        o = obj_get_next_with_same_behavior_id(o)
+    end
+    return nil
+end
+
 -- spawn the local player's Lakitu when the area's sync state is valid (every time the player warps areas)
 local function update_lakitu()
+    -- if a Lakitu that we own already exists, don't spawn a new one
+    if search_for_lakitu(npl.globalIndex) then return end
     -- spawn Lakitu with our custom Lakitu behavior and the default Lakitu model; and mark it as a sync object
     spawn_sync_object(bhvPlayerLakitu, E_MODEL_LAKITU, 0, 0, 0, function(o)
         -- save the global id of the player that owns this Lakitu
