@@ -196,7 +196,7 @@ s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o) {
  * Determines Mario's interaction with a given object depending on their proximity,
  * action, speed, and position.
  */
-u32 determine_interaction(struct MarioState *m, struct Object *o) {
+static u32 determine_interaction_internal(struct MarioState *m, struct Object *o, u8 isPVP) {
     u32 interaction = 0;
     u32 action = m->action;
 
@@ -212,10 +212,16 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
-                interaction = INT_PUNCH;
+                // 120 degrees total, or 60 each way
+                if (isPVP || (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA)) {
+                    interaction = INT_PUNCH;
+                }
             }
             if (m->flags & MARIO_KICKING) {
-                interaction = INT_KICK;
+                // 120 degrees total, or 60 each way
+                if (isPVP || (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA)) {
+                    interaction = INT_KICK;
+                }
             }
             if (m->flags & MARIO_TRIPPING) {
                 // 180 degrees total, or 90 each way
@@ -223,6 +229,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
                     interaction = INT_TRIP;
                 }
             }
+
         } else if (action == ACT_GROUND_POUND || action == ACT_TWIRLING) {
             if (m->vel[1] < 0.0f) {
                 interaction = INT_GROUND_POUND_OR_TWIRL;
@@ -260,6 +267,14 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     }
 
     return interaction;
+}
+
+u32 determine_interaction(struct MarioState *m, struct Object *o) {
+    return determine_interaction_internal(m, o, FALSE);
+}
+
+u32 determine_interaction_pvp(struct MarioState *m, struct Object *o) {
+    return determine_interaction_internal(m, o, TRUE);
 }
 
 /**
@@ -1427,7 +1442,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     }
 
     // see if it was an attack
-    u32 interaction = determine_interaction(attacker, cVictim->marioObj);
+    u32 interaction = determine_interaction_pvp(attacker, cVictim->marioObj);
     if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
         return FALSE;
     }
