@@ -34,7 +34,6 @@ void network_receive_kick(struct Packet* p) {
         case EKT_FULL_PARTY: djui_popup_create(DLANG(NOTIF, DISCONNECT_FULL),   1); break;
         case EKT_KICKED:     djui_popup_create(DLANG(NOTIF, DISCONNECT_KICK),   1); break;
         case EKT_BANNED:     djui_popup_create(DLANG(NOTIF, DISCONNECT_BAN),    1); break;
-        case EKT_REJOIN:     djui_popup_create(DLANG(NOTIF, DISCONNECT_REJOIN), 1); break;
         default:             djui_popup_create(DLANG(NOTIF, DISCONNECT_CLOSED), 1); break;
     }
 
@@ -43,6 +42,7 @@ void network_receive_kick(struct Packet* p) {
         if ((now - lastReconnectTime) > 3) {
             lastReconnectTime = now;
             network_reconnect_begin();
+            djui_popup_create(DLANG(NOTIF, DISCONNECT_REJOIN), 1);
         }
     } else {
         network_shutdown(false, false, false);
