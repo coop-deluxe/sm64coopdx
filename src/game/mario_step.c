@@ -338,7 +338,7 @@ s32 perform_ground_step(struct MarioState *m) {
 
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
 
-    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
+    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0 && m->action != ACT_BUBBLED) {
         m->vel[0] *= SUPER_SPEED_MULTIPLIER;
         m->vel[2] *= SUPER_SPEED_MULTIPLIER;
     }
@@ -689,7 +689,7 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
 
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_PHYS_STEP, m);
 
-    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0) {
+    if (gServerSettings.enableCheats && gCheats.superSpeed && m->playerIndex == 0 && m->action != ACT_BUBBLED) {
         m->vel[0] *= SUPER_SPEED_MULTIPLIER;
         m->vel[2] *= SUPER_SPEED_MULTIPLIER;
     }
