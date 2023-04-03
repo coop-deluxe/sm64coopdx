@@ -18,11 +18,18 @@ function bhv_arena_cannon_ball_init(obj)
 end
 
 function bhv_arena_cannon_ball_intersects_local(obj, pos)
+
+    local ownerNp = network_player_from_global_index(obj.oArenaBobombGlobalOwner)
+    network_player_local_set_lag_state(ownerNp)
+
     local m = gMarioStates[0]
     local mPos1 = { x = m.pos.x, y = m.pos.y + 50,  z = m.pos.z }
     local mPos2 = { x = m.pos.x, y = m.pos.y + 150, z = m.pos.z }
     local radius = clamp(obj.oArenaCannonBallSize * 250, 75, 250)
-    return (vec3f_dist(pos, mPos1) < radius or vec3f_dist(pos, mPos2) < radius)
+    local ret = (vec3f_dist(pos, mPos1) < radius or vec3f_dist(pos, mPos2) < radius)
+
+    network_player_local_restore_lag_state()
+    return ret
 end
 
 function bhv_arena_cannon_ball_loop(obj)

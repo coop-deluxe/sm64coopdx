@@ -16,9 +16,15 @@ function bhv_arena_bobomb_init(obj)
 end
 
 function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
+    local ownerNp = network_player_from_global_index(obj.oArenaBobombGlobalOwner)
+    network_player_local_set_lag_state(ownerNp)
+
     local mPos1 = { x = m.pos.x, y = m.pos.y + 50,  z = m.pos.z }
     local mPos2 = { x = m.pos.x, y = m.pos.y + 150, z = m.pos.z }
-    return (vec3f_dist(pos, mPos1) < radius or vec3f_dist(pos, mPos2) < radius)
+    local ret = (vec3f_dist(pos, mPos1) < radius or vec3f_dist(pos, mPos2) < radius)
+
+    network_player_local_restore_lag_state()
+    return ret
 end
 
 function bhv_arena_bobomb_expode(obj)
