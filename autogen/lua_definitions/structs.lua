@@ -709,6 +709,7 @@
 --- @field public angleVel Vec3s
 --- @field public animation MarioAnimation
 --- @field public area Area
+--- @field public bounceSquishTimer integer
 --- @field public bubbleObj Object
 --- @field public cap integer
 --- @field public capTimer integer

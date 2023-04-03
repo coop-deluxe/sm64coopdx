@@ -1035,6 +1035,7 @@
 | angleVel | [Vec3s](structs.md#Vec3s) | read-only |
 | animation | [MarioAnimation](structs.md#MarioAnimation) |  |
 | area | [Area](structs.md#Area) |  |
+| bounceSquishTimer | `integer` |  |
 | bubbleObj | [Object](structs.md#Object) |  |
 | cap | `integer` |  |
 | capTimer | `integer` |  |

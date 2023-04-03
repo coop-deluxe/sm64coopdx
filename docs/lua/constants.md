@@ -1089,7 +1089,8 @@
 | FONT_NORMAL | 0 |
 | FONT_MENU | 1 |
 | FONT_HUD | 2 |
-| FONT_COUNT | 3 |
+| FONT_TINY | 3 |
+| FONT_COUNT | 4 |
 
 ### [enum HudUtilsResolution](#HudUtilsResolution)
 | Identifier | Value |

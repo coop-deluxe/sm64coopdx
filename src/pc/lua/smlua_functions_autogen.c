@@ -18659,6 +18659,38 @@ int smlua_func_network_player_from_global_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_player_local_restore_lag_state(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_local_restore_lag_state", 0, top);
+        return 0;
+    }
+
+
+    network_player_local_restore_lag_state();
+
+    return 1;
+}
+
+int smlua_func_network_player_local_set_lag_state(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_player_local_set_lag_state", 1, top);
+        return 0;
+    }
+
+    struct NetworkPlayer* otherNp = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_local_set_lag_state"); return 0; }
+
+    network_player_local_set_lag_state(otherNp);
+
+    return 1;
+}
+
 int smlua_func_network_player_palette_to_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30142,6 +30174,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
     smlua_bind_function(L, "network_player_connected_count", smlua_func_network_player_connected_count);
     smlua_bind_function(L, "network_player_from_global_index", smlua_func_network_player_from_global_index);
+    smlua_bind_function(L, "network_player_local_restore_lag_state", smlua_func_network_player_local_restore_lag_state);
+    smlua_bind_function(L, "network_player_local_set_lag_state", smlua_func_network_player_local_set_lag_state);
     smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
     smlua_bind_function(L, "network_player_set_description", smlua_func_network_player_set_description);
 

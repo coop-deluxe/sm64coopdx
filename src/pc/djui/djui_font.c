@@ -126,6 +126,38 @@ static const struct DjuiFont sDjuiFontHud = {
     .char_width           = djui_font_hud_char_width,
 };
 
+  /////////////////////////////////
+ // font 4 (built-in tiny font) //
+/////////////////////////////////
+
+static void djui_font_tiny_render_char(char* c) {
+    // replace undisplayable characters
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+    u32 tx = index % 32;
+    u32 ty = index / 32;
+
+    extern ALIGNED8 const u8 texture_font_tiny[];
+    djui_gfx_render_texture_tile(texture_font_tiny, 256, 128, 32, tx * 8, ty * 16, 8, 16);
+}
+
+static f32 djui_font_tiny_char_width(char* c) {
+    if (*c == ' ') { return 0.30f; }
+    extern const f32 font_tiny_widths[];
+    return djui_unicode_get_sprite_width(c, font_tiny_widths);
+}
+
+static const struct DjuiFont sDjuiFontTiny = {
+    .charWidth            = 0.5f,
+    .charHeight           = 1.0f,
+    .lineHeight           = 0.8125f,
+    .defaultFontScale     = 16.0f,
+    .textBeginDisplayList = NULL,
+    .render_char          = djui_font_tiny_render_char,
+    .char_width           = djui_font_tiny_char_width,
+};
+
   ///////////////
  // font list //
 ///////////////
@@ -134,4 +166,5 @@ const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontNormal,
     &sDjuiFontTitle,
     &sDjuiFontHud,
+    &sDjuiFontTiny,
 };

@@ -5614,6 +5614,17 @@ function network_player_from_global_index(globalIndex)
     -- ...
 end
 
+--- @return nil
+function network_player_local_restore_lag_state()
+    -- ...
+end
+
+--- @param otherNp NetworkPlayer
+--- @return nil
+function network_player_local_set_lag_state(otherNp)
+    -- ...
+end
+
 --- @param np NetworkPlayer
 --- @param part PlayerParts
 --- @param out Color

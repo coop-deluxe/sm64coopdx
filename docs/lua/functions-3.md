@@ -8186,6 +8186,44 @@
 
 <br />
 
+## [network_player_local_restore_lag_state](#network_player_local_restore_lag_state)
+
+### Lua Example
+`network_player_local_restore_lag_state()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_local_restore_lag_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_local_set_lag_state](#network_player_local_set_lag_state)
+
+### Lua Example
+`network_player_local_set_lag_state(otherNp)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| otherNp | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_local_set_lag_state(struct NetworkPlayer* otherNp);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [network_player_palette_to_color](#network_player_palette_to_color)
 
 ### Lua Example

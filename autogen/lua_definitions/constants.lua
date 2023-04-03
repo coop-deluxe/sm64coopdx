@@ -3250,7 +3250,10 @@ FONT_MENU = 1
 FONT_HUD = 2
 
 --- @type DjuiFontType
-FONT_COUNT = 3
+FONT_TINY = 3
+
+--- @type DjuiFontType
+FONT_COUNT = 4
 
 --- @class HudUtilsResolution
 
