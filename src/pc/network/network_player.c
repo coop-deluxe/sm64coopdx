@@ -226,6 +226,7 @@ void network_player_update(void) {
         if (elapsed > NETWORK_PLAYER_PING_TIMEOUT) {
             network_send_ping(np);
         }
+        //LOG_INFO("Ping %s: %u", np->name, np->ping / 2);
     }
 
     if (gNetworkType == NT_SERVER) {

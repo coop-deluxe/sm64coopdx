@@ -43,7 +43,11 @@ static void djui_font_title_render_char(char* c) {
     if (*c == ' ') { return; }
 
     u32 index = djui_unicode_get_sprite_index(c);
-    if ((u8)*c < '!' || (u8)*c > '~' + 1) { index = djui_unicode_get_sprite_index("?"); }
+    if ((u8)*c < '!' || (u8)*c > '~' + 1) {
+        char tmp[2] = { 0 };
+        tmp[0] = djui_unicode_get_base_char(c);
+        index = djui_unicode_get_sprite_index(tmp);
+    }
 
     u32 tx = index % 16;
     u32 ty = index / 16;
