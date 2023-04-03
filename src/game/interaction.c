@@ -202,10 +202,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     // hack: make water punch actually do something
     if (interaction == 0 && m->action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
-        s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
-        if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-            interaction = INT_PUNCH;
-        }
+        interaction = INT_PUNCH;
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
@@ -214,15 +211,11 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
             if (m->flags & MARIO_PUNCHING) {
                 // 120 degrees total, or 60 each way
-                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-                    interaction = INT_PUNCH;
-                }
+                interaction = INT_PUNCH;
             }
             if (m->flags & MARIO_KICKING) {
                 // 120 degrees total, or 60 each way
-                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-                    interaction = INT_KICK;
-                }
+                interaction = INT_KICK;
             }
             if (m->flags & MARIO_TRIPPING) {
                 // 180 degrees total, or 90 each way
@@ -1289,6 +1282,7 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
     f32 aboveFloor = m2->pos[1] - m2->floorHeight;
     if ((interaction & INT_HIT_FROM_ABOVE) && (aboveFloor < 1)) {
         if (m2->playerIndex == 0) {
+            network_player_local_restore_lag_state();
             m2->squishTimer = max(m2->squishTimer, 4);
         }
         f32 velY;
@@ -1380,22 +1374,31 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     if (m2 == NULL) { return FALSE; }
     if (m2->action == ACT_JUMBO_STAR_CUTSCENE) { return FALSE; }
 
+    // set my local player to the state I was in when they attacked
+    if (m2->playerIndex == 0) {
+        network_player_local_set_lag_state(&gNetworkPlayers[m->playerIndex]);
+    }
+
     // vanish cap players can't interact
     u32 vanishFlags = (MARIO_VANISH_CAP | MARIO_CAP_ON_HEAD);
     if ((m->flags & vanishFlags) == vanishFlags) {
+        network_player_local_restore_lag_state();
         return FALSE;
     }
     if ((m2->flags & vanishFlags) == vanishFlags) {
+        network_player_local_restore_lag_state();
         return FALSE;
     }
 
     // don't do further interactions if we've hopped on top
     if (resolve_player_collision(m, m2)) {
+        network_player_local_restore_lag_state();
         return FALSE;
     }
 
     // don't attack each other on level load
     if (gCurrentArea == NULL || gCurrentArea->localAreaTimer < 60) {
+        network_player_local_restore_lag_state();
         return FALSE;
     }
 
@@ -1404,8 +1407,10 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
     if ((interaction & INT_ANY_ATTACK) && !(interaction & INT_HIT_FROM_ABOVE) && passes_pvp_interaction_checks(m, m2)) {
         bool allow = true;
         smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, m, m2, &allow);
+
         if (!allow) {
             // Lua blocked the interaction
+            network_player_local_restore_lag_state();
             return false;
         }
 
@@ -1431,17 +1436,24 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
             }
         }
 
+        // restore to current state
+        u32 m2action = m2->action;
+        u32 m2flags = m2->flags;
+        network_player_local_restore_lag_state();
+
         // determine if ground pound should be ignored
         if (m->action == ACT_GROUND_POUND) {
             // not moving down yet?
-            if (m->actionState == 0) { return FALSE; }
+            if (m->actionState == 0) {
+                return FALSE;
+            }
             m2->squishTimer = max(m2->squishTimer, 20);
         }
 
         if (m2->playerIndex == 0) {
             m2->interactObj = m->marioObj;
             if (interaction & INT_KICK) {
-                if (m2->action == ACT_FIRST_PERSON) {
+                if (m2action == ACT_FIRST_PERSON) {
                     // without this branch, the player will be stuck in first person
                     raise_background_noise(2);
                     set_camera_mode(m2->area->camera, -1, 1);
@@ -1449,7 +1461,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
                 }
                 set_mario_action(m2, ACT_FREEFALL, 0);
             }
-            if (!(m2->flags & MARIO_METAL_CAP)) {
+            if (!(m2flags & MARIO_METAL_CAP)) {
                 m->marioObj->oDamageOrCoinValue = determine_player_damage_value(interaction);
                 if (m->flags & MARIO_METAL_CAP) {
                     m->marioObj->oDamageOrCoinValue *= 2;
@@ -1465,6 +1477,7 @@ u32 interact_player(struct MarioState* m, UNUSED u32 interactType, struct Object
         return FALSE;
     }
 
+    network_player_local_restore_lag_state();
     return FALSE;
 }
 

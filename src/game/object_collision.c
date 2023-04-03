@@ -6,6 +6,7 @@
 #include "mario.h"
 #include "object_list_processor.h"
 #include "spawn_object.h"
+#include "pc/network/network_player.h"
 
 struct Object *debug_print_obj_collision(struct Object *a) {
     struct Object *sp24;
@@ -23,6 +24,8 @@ struct Object *debug_print_obj_collision(struct Object *a) {
 int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* remote) {
     if (local->marioObj == NULL || local->marioObj->oIntangibleTimer != 0) { return FALSE; }
     if (remote->marioObj == NULL || remote->marioObj->oIntangibleTimer != 0) { return FALSE; }
+
+    network_player_local_set_lag_state(&gNetworkPlayers[remote->playerIndex]);
 
     struct Object* a = local->marioObj;
     f32* aTorso = local->marioBodyState->torsoPos;
@@ -43,15 +46,19 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
         f32 sp1C = b->hitboxHeight + sp38;
 
         if (sp3C > sp1C) {
+            network_player_local_restore_lag_state();
             return FALSE;
         }
         if (sp20 < sp38) {
+            network_player_local_restore_lag_state();
             return FALSE;
         }
         if (a->numCollidedObjs >= 4) {
+            network_player_local_restore_lag_state();
             return FALSE;
         }
         if (b->numCollidedObjs >= 4) {
+            network_player_local_restore_lag_state();
             return FALSE;
         }
         a->collidedObjs[a->numCollidedObjs] = b;
@@ -60,10 +67,13 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
         b->collidedObjInteractTypes |= a->oInteractType;
         a->numCollidedObjs++;
         b->numCollidedObjs++;
+        network_player_local_restore_lag_state();
+
         return TRUE;
     }
 
     //! no return value
+    network_player_local_restore_lag_state();
     return FALSE;
 }
 

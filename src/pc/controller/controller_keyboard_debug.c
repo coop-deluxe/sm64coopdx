@@ -17,6 +17,7 @@
 
 static bool sHoldingAlt = false;
 static bool sHoldingShift = false;
+bool gDebugToggle = false;
 
 #define SCANCODE_0 0x0B
 #define SCANCODE_1 0x02
@@ -109,6 +110,7 @@ void debug_keyboard_on_key_down(int scancode) {
             case SCANCODE_2:  if (sHoldingAlt) { debug_warp_level2();       } break;
             case SCANCODE_4:  if (sHoldingAlt) { debug_warp_level3();       } break;
             case SCANCODE_5:  if (sHoldingAlt) { print_sync_object_table(); } break;
+            case SCANCODE_6:  if (sHoldingAlt) { gDebugToggle = !gDebugToggle; } break;
             case SCANCODE_8:  if (sHoldingAlt) { debug_spawn_object();      } break;
             case SCANCODE_9:  if (sHoldingAlt) { debug_warp_to();           } break;
             case SCANCODE_0:  if (sHoldingAlt) { debug_suicide();           } break;

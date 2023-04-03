@@ -491,6 +491,7 @@ void read_controller_inputs(void) {
             controller->stickY = 0;
             controller->stickMag = 0;
         }
+
     }
 
     // For some reason, player 1's inputs are copied to player 3's port. This

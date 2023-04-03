@@ -65,21 +65,3 @@
 
 #define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
-
-
-// DO NOT COMMIT //
-
-# define gsSPVertexDjui(v, n, v0)					\
-{{									\
-	(_SHIFTL(G_DJUI_SIMPLE_VERT,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7)),	\
-        (uintptr_t)(v)						\
-}}
-
-#define gsSP2TrianglesDjui(v00, v01, v02, flag0, v10, v11, v12, flag1)	\
-{{									\
-	(_SHIFTL(G_DJUI_SIMPLE_TRI2, 24, 8)|					\
-	 __gsSP1Triangle_w1f(v00, v01, v02, flag0)),			\
-	 __gsSP1Triangle_w1f(v10, v11, v12, flag1)			\
-}}
-
-// DO NOT COMMIT //
