@@ -135,7 +135,7 @@ static float adjust_max_elapsed(enum PacketType packetType, float maxElapsed) {
         case PACKET_MOD_LIST_ENTRY:
         case PACKET_MOD_LIST_FILE:
         case PACKET_MOD_LIST_DONE:
-            return MIN(0.2f + maxElapsed * 2.0f, 5);
+            return MIN(0.5f + maxElapsed * 2.0f, 5);
         default:
             return MIN(maxElapsed, 5);
     }
