@@ -40,13 +40,13 @@ static bool mod_import_lua(char* src) {
         }
     } while ((rbytes > 0) && (rbytes == wbytes));
 
+    fclose(fout);
+    fclose(fin);
+
     if (wbytes) {
         LOG_ERROR("Write error on lua mod import");
         return false;
     }
-
-    fclose(fout);
-    fclose(fin);
 
     LOG_INFO("Imported lua mod: '%s' -> '%s'", src, dst);
 
@@ -137,7 +137,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         if (!p) {
             LOG_ERROR("mz_zip_reader_extract_file_to_heap() failed!");
             mz_zip_reader_end(&zip_archive);
-            return EXIT_FAILURE;
+            return false;
         }
 
         // Make sure the extraction really succeeded.
@@ -145,7 +145,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             LOG_ERROR("mz_zip_reader_extract_file_to_heap() failed to extract the proper data");
             mz_free((void*)p);
             mz_zip_reader_end(&zip_archive);
-            return EXIT_FAILURE;
+            return false;
         }
 
         // Write the data
@@ -155,12 +155,12 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             return false;
         }
 
+        fclose(fout);
+
         size_t wbytes = fwrite(p, 1, uncompSize, fout);
         if (wbytes != uncompSize) {
             LOG_ERROR("Write error on zip mod import");
         }
-
-        fclose(fout);
 
         LOG_INFO("Successfully extracted file \"%s\", size %u", file_stat.m_filename, (u32)uncompSize);
 
@@ -194,6 +194,7 @@ bool mod_import_file(char* path) {
 
     if (ret) {
         if (isLua) {
+            mods_refresh_local();
             djui_language_replace(DLANG(NOTIF, IMPORT_MOD_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         } else if (isDynos) {

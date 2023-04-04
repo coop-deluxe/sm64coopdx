@@ -23,6 +23,10 @@
 #include "../configfile.h"
 #include "../pc_main.h"
 
+extern "C" {
+#include "src/pc/mods/mod_import.h"
+}
+
 #include "gfx_window_manager_api.h"
 #include "gfx_rendering_api.h"
 #include "gfx_direct3d_common.h"
@@ -294,6 +298,18 @@ static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_par
             } else {
                 return DefWindowProcW(h_wnd, message, w_param, l_param);
             }
+        case WM_DROPFILES: {
+                HDROP hDrop = (HDROP)w_param;
+                UINT nFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+                for (UINT i = 0; i < nFiles; i++)
+                {
+                    char szFileName[MAX_PATH] = { 0 };
+                    DragQueryFile(hDrop, i, szFileName, MAX_PATH);
+                    mod_import_file(szFileName);
+                }
+                DragFinish(hDrop);
+            }
+            break;
         default:
             return DefWindowProcW(h_wnd, message, w_param, l_param);
     }
@@ -367,6 +383,10 @@ static void gfx_dxgi_init(const char *window_title) {
     if (configWindow.fullscreen) {
         ShowCursor(FALSE);
     }
+
+    // enable drag & drop
+    DragAcceptFiles(dxgi.h_wnd, TRUE);
+    SetWindowLongPtr(dxgi.h_wnd, GWL_EXSTYLE, GetWindowLongPtr(dxgi.h_wnd, GWL_EXSTYLE) | WS_EX_ACCEPTFILES);
 
     update_screen_settings();
 }

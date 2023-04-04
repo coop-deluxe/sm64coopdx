@@ -393,6 +393,7 @@ static void mod_extract_fields(struct Mod* mod) {
 
         // no longer in header
         if (buffer[0] != '-' || buffer[1] != '-') {
+            fclose(f);
             return;
         }
 

@@ -10,8 +10,6 @@ static void djui_panel_dynos_apply(struct DjuiBase* caller) {
 }
 
 void djui_panel_dynos_create(struct DjuiBase* caller) {
-    dynos_packs_init();
-
     int packCount = dynos_pack_get_count();
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS));
     struct DjuiBase* body = djui_three_panel_get_body(panel);

@@ -90,8 +90,6 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
     bool isRomHacks = (caller->tag == 1);
 
-
-    mods_refresh_local();
     mods_update_selectable();
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks
