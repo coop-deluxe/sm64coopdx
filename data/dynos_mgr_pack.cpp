@@ -130,9 +130,34 @@ PackData* DynOS_Pack_GetFromPath(const SysPath& aPath) {
     return NULL;
 }
 
+PackData* DynOS_Pack_GetFromDisplayName(const char* aDisplayName) {
+    for (auto& packData : DynosPacks()) {
+        if (!strcmp(packData.mDisplayName.begin(), aDisplayName)) {
+            return &packData;
+        }
+    }
+    return NULL;
+}
+
 PackData* DynOS_Pack_Add(const SysPath& aPath) {
     PackData* existing = DynOS_Pack_GetFromPath(aPath);
     if (existing != NULL) { return existing; }
+
+    // extract basename
+    const char* displayName = aPath.c_str();
+    const char* ctoken = displayName;
+    while (*ctoken != '\0') {
+        if (*ctoken == '/' || *ctoken == '\\') {
+            if (*(ctoken + 1) != '\0') {
+                displayName = (ctoken + 1);
+            }
+        }
+        ctoken++;
+    }
+
+    existing = DynOS_Pack_GetFromDisplayName(displayName);
+    if (existing != NULL) { return existing; }
+
 
     auto& _DynosPacks = DynosPacks();
     s32 index = _DynosPacks.Count();
@@ -150,18 +175,7 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
 
     PackData* _Pack = &_DynosPacks[index];
 
-    // extract basename
-    const char* cpath = aPath.c_str();
-    const char* ctoken = cpath;
-    while (*ctoken != '\0') {
-        if (*ctoken == '/' || *ctoken == '\\') {
-            if (*(ctoken + 1) != '\0') {
-                cpath = (ctoken + 1);
-            }
-        }
-        ctoken++;
-    }
-    _Pack->mDisplayName = cpath;
+    _Pack->mDisplayName = displayName;
 
     _Pack->mEnabled = true;
     _Pack->mEnabledSet = false;
