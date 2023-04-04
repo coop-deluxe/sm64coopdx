@@ -4010,19 +4010,9 @@ function take_damage_and_knock_back(m, o)
     -- ...
 end
 
---- @return nil
-function lag_compensation_clear()
-    -- ...
-end
-
 --- @param otherNp NetworkPlayer
 --- @return MarioState
 function lag_compensation_get_local_state(otherNp)
-    -- ...
-end
-
---- @return nil
-function lag_compensation_store()
     -- ...
 end
 

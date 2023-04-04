@@ -793,9 +793,7 @@
 <br />
 
 - lag_compensation.h
-   - [lag_compensation_clear](functions-3.md#lag_compensation_clear)
    - [lag_compensation_get_local_state](functions-3.md#lag_compensation_get_local_state)
-   - [lag_compensation_store](functions-3.md#lag_compensation_store)
 
 <br />
 

@@ -3305,24 +3305,6 @@
 <br />
 
 
-## [lag_compensation_clear](#lag_compensation_clear)
-
-### Lua Example
-`lag_compensation_clear()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void lag_compensation_clear(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [lag_compensation_get_local_state](#lag_compensation_get_local_state)
 
 ### Lua Example
@@ -3338,24 +3320,6 @@
 
 ### C Prototype
 `struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [lag_compensation_store](#lag_compensation_store)
-
-### Lua Example
-`lag_compensation_store()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void lag_compensation_store(void);`
 
 [:arrow_up_small:](#)
 
