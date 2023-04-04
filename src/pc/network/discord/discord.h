@@ -29,7 +29,6 @@ void discord_fatal(int rc);
 extern struct NetworkSystem gNetworkSystemDiscord;
 extern bool gDiscordInitialized;
 extern bool gDiscordFailed;
-extern bool gDiscordReconnecting;
 
 struct DiscordApplication {
     struct IDiscordCore* core;

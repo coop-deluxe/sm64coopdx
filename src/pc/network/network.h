@@ -89,6 +89,7 @@ extern u8 gDebugPacketIdBuffer[];
 extern u8 gDebugPacketSentBuffer[];
 extern u8 gDebugPacketOnBuffer;
 extern u32 gNetworkStartupTimer;
+extern bool gDiscordReconnecting;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);

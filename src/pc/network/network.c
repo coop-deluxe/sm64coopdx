@@ -57,6 +57,7 @@ u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
 u16 gNetworkRequestLocationTimer = 0;
+bool gDiscordReconnecting = false;
 
 u8 gDebugPacketIdBuffer[256] = { 0xFF };
 u8 gDebugPacketSentBuffer[256] = { 0 };
@@ -409,9 +410,14 @@ void network_reconnect_begin(void) {
     }
 
     sNetworkReconnectTimer = 2 * 30;
+
+#ifdef DISCORD_SDK
     sNetworkReconnectType = (gNetworkSystem == &gNetworkSystemDiscord)
                           ? NS_DISCORD
                           : NS_SOCKET;
+#else
+    sNetworkReconnectType = NS_SOCKET;
+#endif
 
     gDiscordReconnecting = true;
     network_shutdown(false, false, false);

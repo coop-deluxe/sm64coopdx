@@ -22,7 +22,6 @@ struct DiscordApplication app = { 0 };
 bool gDiscordInitialized = false;
 bool gDiscordFailed = false;
 bool alreadyRun = false;
-bool gDiscordReconnecting = false;
 
 static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
     LOGFILE_INFO(LFT_DISCORD, "callback (%d): %s", level, message);
