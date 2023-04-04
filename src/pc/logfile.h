@@ -60,9 +60,9 @@ static void _logfile_print_log(enum LogFileType logFileType, char* logType, char
 }
 
 #if defined(DEBUG) && defined(DISABLE_MODULE_LOG)
-    #define LOGFILE_DEBUG(_LFT, ...) ( _logfile_print_log(_LFT, "DEBUG", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
-    #define LOGFILE_INFO(_LFT,  ...) ( _logfile_print_log(_LFT, "INFO",  __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"))
-    #define LOGFILE_ERROR(_LFT, ...) ( _logfile_print_log(_LFT, "ERROR", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"), LOG_ERROR(__VA_ARGS__))
+    #define LOGFILE_DEBUG(_LFT, ...)
+    #define LOGFILE_INFO(_LFT,  ...)
+    #define LOGFILE_ERROR(_LFT, ...)
 #elif defined(DEBUG) && !defined(DISABLE_MODULE_LOG)
     #define LOGFILE_DEBUG(_LFT, ...) ( _logfile_print_log(_LFT, "DEBUG", __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"), LOG_DEBUG(__VA_ARGS__))
     #define LOGFILE_INFO(_LFT,  ...) ( _logfile_print_log(_LFT, "INFO",  __FILE__, __LINE__), fprintf(gLogFiles[_LFT].file, __VA_ARGS__), fprintf(gLogFiles[_LFT].file, "\n"), LOG_INFO (__VA_ARGS__))

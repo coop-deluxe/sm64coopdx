@@ -112,7 +112,7 @@ extern bool         configDebugInfo;
 extern bool         configDebugError;
 extern char         configLanguage[];
 
-void configfile_load(const char *filename, bool* error);
+void configfile_load(void);
 void configfile_save(const char *filename);
 const char *configfile_name(void);
 const char *configfile_backup_name(void);

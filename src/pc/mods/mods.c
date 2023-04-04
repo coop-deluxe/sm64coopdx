@@ -5,7 +5,6 @@
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
 
-#define MOD_DIRECTORY "mods"
 #define MAX_SESSION_CHARS 7
 
 struct Mods gLocalMods = { 0 };
@@ -13,6 +12,43 @@ struct Mods gRemoteMods = { 0 };
 struct Mods gActiveMods = { 0 };
 
 char gRemoteModsBasePath[SYS_MAX_PATH] = { 0 };
+
+struct LocalEnabledPath {
+    char* relativePath;
+    struct LocalEnabledPath* next;
+};
+
+struct LocalEnabledPath* sLocalEnabledPaths = NULL;
+
+static void mods_local_store_enabled(void) {
+    assert(sLocalEnabledPaths == NULL);
+    struct LocalEnabledPath* prev = NULL;
+    struct Mods* mods = &gLocalMods;
+
+    for (int i = 0; i < mods->entryCount; i ++) {
+        if (!mods->entries[i]->enabled) { continue; }
+
+        struct LocalEnabledPath* n = calloc(1, sizeof(struct LocalEnabledPath));
+        n->relativePath = sys_strdup(mods->entries[i]->relativePath);
+        if (!prev) {
+            sLocalEnabledPaths = n;
+        } else {
+            prev->next = n;
+        }
+    }
+}
+
+static void mods_local_restore_enabled(void) {
+    struct LocalEnabledPath* n = sLocalEnabledPaths;
+    while (n) {
+        struct LocalEnabledPath* next = n->next;
+        mods_enable(n->relativePath);
+        free(n->relativePath);
+        free(n);
+        n = next;
+    }
+    sLocalEnabledPaths = NULL;
+}
 
 bool mods_generate_remote_base_path(void) {
     srand(time(0));
@@ -137,9 +173,8 @@ static void mods_load(struct Mods* mods, char* modsBasePath) {
 
 }
 
-void mods_init(void) {
-    // load mod cache
-    mod_cache_load();
+void mods_refresh_local(void) {
+    mods_local_store_enabled();
 
     // figure out user path
     bool hasUserPath = true;
@@ -172,6 +207,26 @@ void mods_init(void) {
         struct Mod* mod = gLocalMods.entries[i];
         gLocalMods.size += mod->size;
     }
+
+    mods_local_restore_enabled();
+}
+
+void mods_enable(char* relativePath) {
+    if (!relativePath) { return; }
+
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (!strcmp(relativePath, mod->relativePath)) {
+            mod->enabled = true;
+            break;
+        }
+    }
+}
+
+void mods_init(void) {
+    // load mod cache
+    mod_cache_load();
+    mods_refresh_local();
 }
 
 void mods_clear(struct Mods* mods) {

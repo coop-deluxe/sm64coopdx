@@ -280,17 +280,11 @@ void main_func(void) {
     mods_init();
 
     // load config
-    bool configReadError = false;
-    configfile_load(configfile_name(), &configReadError);
-    if (configReadError) {
-        configfile_load(configfile_backup_name(), &configReadError);
-    } else {
-        configfile_save(configfile_backup_name());
-    }
-
+    configfile_load();
     if (!djui_language_init(configLanguage)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "");
     }
+
     dynos_pack_init();
 
     // If coop_custom_palette_* values are not found in sm64config.txt, the custom palette config will use the default values (Mario's palette)

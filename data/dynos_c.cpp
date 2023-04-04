@@ -67,6 +67,11 @@ bool dynos_warp_to_castle(s32 aLevel) {
 
 // -- dynos packs -- //
 
+void dynos_packs_init(void) {
+    DynOS_Gfx_Init();
+    DynOS_Pack_Init();
+}
+
 int dynos_pack_get_count(void) {
     return DynOS_Pack_GetCount();
 }

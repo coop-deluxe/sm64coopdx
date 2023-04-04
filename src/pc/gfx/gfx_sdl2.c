@@ -37,6 +37,7 @@
 #include "src/pc/controller/controller_sdl.h"
 #include "src/pc/controller/controller_bind_mapping.h"
 #include "pc/utils/misc.h"
+#include "pc/mods/mod_import.h"
 
 // TODO: figure out if this shit even works
 #ifdef VERSION_EU
@@ -163,6 +164,10 @@ static void gfx_sdl_onkeyup(int scancode) {
         kb_key_up(translate_sdl_scancode(scancode));
 }
 
+static void gfx_sdl_ondropfile(char* path) {
+    mod_import_file(path);
+}
+
 static void gfx_sdl_handle_events(void) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -191,6 +196,9 @@ static void gfx_sdl_handle_events(void) {
                             break;
                     }
                 }
+                break;
+            case SDL_DROPFILE:
+                gfx_sdl_ondropfile(event.drop.file);
                 break;
             case SDL_QUIT:
                 game_exit();

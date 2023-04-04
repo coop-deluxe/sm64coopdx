@@ -7,6 +7,7 @@
 #include "mod.h"
 
 #define MAX_MOD_SIZE (35 * 1048576) // 35MB
+#define MOD_DIRECTORY "mods"
 #define TMP_DIRECTORY "tmp"
 
 struct Mods {
@@ -24,6 +25,9 @@ extern char gRemoteModsBasePath[];
 bool mods_generate_remote_base_path(void);
 void mods_activate(struct Mods* mods);
 void mods_clear(struct Mods* mods);
+void mods_delete_folder(char* path);
+void mods_refresh_local(void);
+void mods_enable(char* relativePath);
 void mods_init(void);
 void mods_shutdown(void);
 

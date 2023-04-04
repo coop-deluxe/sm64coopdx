@@ -78,8 +78,8 @@ void mods_update_selectable(void) {
     mods_size_enforce(&gLocalMods);
 }
 
-static void mods_delete_folder(char* path) {
-    LOG_INFO("Deleting tmp folder '%s'", path);
+void mods_delete_folder(char* path) {
+    LOG_INFO("Deleting folder '%s'", path);
     struct dirent* dir;
     DIR* d = opendir(path);
     if (!d) { return; }
@@ -94,7 +94,7 @@ static void mods_delete_folder(char* path) {
             mods_delete_folder(fullPath);
         } else if (fs_sys_file_exists(fullPath)) {
             if (unlink(fullPath) == -1) {
-                LOG_ERROR("Failed to remove tmp file '%s'", fullPath);
+                LOG_ERROR("Failed to remove file '%s'", fullPath);
                 continue;
             }
         }

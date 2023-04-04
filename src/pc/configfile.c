@@ -275,13 +275,7 @@ static void enable_mod_read(char** tokens, UNUSED int numTokens) {
         strncat(combined, tokens[i], 255);
     }
 
-    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
-        struct Mod* mod = gLocalMods.entries[i];
-        if (!strcmp(combined, mod->relativePath)) {
-            mod->enabled = true;
-            break;
-        }
-    }
+    mods_enable(combined);
 }
 
 static void enable_mod_write(FILE* file) {
@@ -447,7 +441,7 @@ const char *configfile_backup_name(void) {
 }
 
 // Loads the config file specified by 'filename'
-void configfile_load(const char *filename, bool* error) {
+static void configfile_load_internal(const char *filename, bool* error) {
     fs_file_t *file;
     char *line;
     unsigned int temp;
@@ -561,6 +555,16 @@ NEXT_OPTION:
 #ifndef DISCORD_SDK
     configNetworkSystem = 1;
 #endif
+}
+
+void configfile_load(void) {
+    bool configReadError = false;
+    configfile_load_internal(configfile_name(), &configReadError);
+    if (configReadError) {
+        configfile_load_internal(configfile_backup_name(), &configReadError);
+    } else {
+        configfile_save(configfile_backup_name());
+    }
 }
 
 // Writes the config file to 'filename'
