@@ -132,7 +132,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         }
 
         // Try to extract all the files to the heap.
-        size_t uncompSize;
+        size_t uncompSize = 0;
         const char* p = mz_zip_reader_extract_file_to_heap(&zip_archive, file_stat.m_filename, &uncompSize, 0);
         if (!p) {
             LOG_ERROR("mz_zip_reader_extract_file_to_heap() failed!");
@@ -155,11 +155,11 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             return false;
         }
 
+        size_t wbytes = fwrite(p, 1, uncompSize, fout);
         fclose(fout);
 
-        size_t wbytes = fwrite(p, 1, uncompSize, fout);
         if (wbytes != uncompSize) {
-            LOG_ERROR("Write error on zip mod import");
+            LOG_ERROR("Write error on zip mod import: %u != %u", (u32)wbytes, (u32)uncompSize);
         }
 
         LOG_INFO("Successfully extracted file \"%s\", size %u", file_stat.m_filename, (u32)uncompSize);
