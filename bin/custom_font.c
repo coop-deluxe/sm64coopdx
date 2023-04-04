@@ -71,8 +71,3 @@ const f32 font_tiny_widths[] = {
 };
 
 //////////////////////////////////////////////////////////
-
-ALIGNED8 u8 texture_selectionbox_icon[] = {
-#include "textures/segment2/custom_selectionbox_icon.rgba16.inc.c"
-};
-

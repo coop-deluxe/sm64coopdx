@@ -22,3 +22,7 @@ ALIGNED8 const Texture texture_hud_char_wario_head[] = {
 ALIGNED8 const Texture texture_shadow_spike_ext[] = {
 #include "textures/segment2/shadow_spike_custom.ia8.inc.c"
 };
+
+ALIGNED8 u8 texture_selectionbox_icon[] = {
+#include "textures/segment2/custom_selectionbox_icon.rgba16.inc.c"
+};
