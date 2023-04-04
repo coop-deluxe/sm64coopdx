@@ -178,7 +178,7 @@ bool mod_import_file(char* path) {
     bool ret = false;
 
     if (gNetworkType != NT_NONE) {
-        djui_popup_create(DLANG(NOTIF, IMPORT_FAIL_INGAME), 1);
+        djui_popup_create(DLANG(NOTIF, IMPORT_FAIL_INGAME), 2);
         return false;
     }
 
@@ -195,15 +195,15 @@ bool mod_import_file(char* path) {
     if (ret) {
         if (isLua) {
             djui_language_replace(DLANG(NOTIF, IMPORT_MOD_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
-            djui_popup_create(msg, 1);
+            djui_popup_create(msg, 2);
         } else if (isDynos) {
             dynos_packs_init();
             djui_language_replace(DLANG(NOTIF, IMPORT_DYNOS_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
-            djui_popup_create(msg, 1);
+            djui_popup_create(msg, 2);
         }
     } else {
         djui_language_replace(DLANG(NOTIF, IMPORT_FAIL), msg, SYS_MAX_PATH, '@', basename);
-        djui_popup_create(msg, 1);
+        djui_popup_create(msg, 2);
     }
 
     return ret;
