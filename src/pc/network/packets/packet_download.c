@@ -332,6 +332,11 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 }
 
 void network_receive_download(struct Packet* p) {
+    if (p == NULL) {
+        LOG_ERROR("Received null packet");
+        return;
+    }
+
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
