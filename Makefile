@@ -1378,7 +1378,7 @@ endif
 
 $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
-	$(V)$(PYTHON) $(AIFF_EXTRACT_FAILSAFE) $(AIFF_EXTRACT_CODEBOOK) $< $@
+	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
 	$(call print,Piping:,$<,$@.inc.c)
 	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
 	$(V)echo >> $@.inc.c
