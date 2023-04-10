@@ -1554,6 +1554,7 @@
    - [get_last_star_or_key](functions-4.md#get_last_star_or_key)
    - [get_lighting_dir](functions-4.md#get_lighting_dir)
    - [get_network_area_timer](functions-4.md#get_network_area_timer)
+   - [get_os_name](functions-4.md#get_os_name)
    - [get_skybox](functions-4.md#get_skybox)
    - [get_temp_s32_pointer](functions-4.md#get_temp_s32_pointer)
    - [get_time](functions-4.md#get_time)

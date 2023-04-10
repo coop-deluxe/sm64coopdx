@@ -92,10 +92,17 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     if (*isLua) {
         snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)fs_get_write_path(MOD_DIRECTORY));
     } else if (*isDynos) {
+        char* dynosPath = (char*)fs_get_write_path(DYNOS_RES_FOLDER);
+        if (!fs_sys_dir_exists(dynosPath)) {
+            fs_sys_mkdir(dynosPath);
+        }
         snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)fs_get_write_path(DYNOS_PACKS_FOLDER));
     } else {
         LOG_ERROR("Could not figure out what type of mod this is");
         return false;
+    }
+    if (!fs_sys_dir_exists(dstDirectory)) {
+        fs_sys_mkdir(dstDirectory);
     }
 
     // Extract the archive

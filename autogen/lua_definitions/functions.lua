@@ -8350,6 +8350,11 @@ function get_network_area_timer()
     -- ...
 end
 
+--- @return string
+function get_os_name()
+    -- ...
+end
+
 --- @return integer
 function get_skybox()
     -- ...

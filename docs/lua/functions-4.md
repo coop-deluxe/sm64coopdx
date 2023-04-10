@@ -8353,6 +8353,24 @@
 
 <br />
 
+## [get_os_name](#get_os_name)
+
+### Lua Example
+`local stringValue = get_os_name()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`char* get_os_name(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_skybox](#get_skybox)
 
 ### Lua Example

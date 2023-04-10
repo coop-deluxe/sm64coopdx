@@ -464,14 +464,6 @@ ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
   endif
 
   ifeq ($(WINDOWS_AUTO_BUILDER),0)
-    # if the tools are out of date, clean them
-    TOOLS_VER_FILE := $(TOOLS_DIR)/tools-ver-1.ver
-    ifeq ($(wildcard $(TOOLS_VER_FILE)),)
-        $(info Cleaning tools...)
-        DUMMY != touch $(TOOLS_VER_FILE)
-        DUMMY != $(MAKE) -C $(TOOLS_DIR) clean >&2
-    endif
-
     $(info Building tools...)
     DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
       ifeq ($(DUMMY),FAIL)
@@ -947,6 +939,24 @@ ifeq ($(WINDOWS_BUILD),1)
   endif
 endif
 
+# precomp custom sounds
+# hacky stupid thing for windows builds (non-auto-builder)
+# this way it won't fail to compile custom sounds anymore
+ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(WINDOWS_AUTO_BUILDER),1)
+  else
+    ifeq ($(filter clean distclean,$(MAKECMDGOALS)),)
+      $(info Copying precomp samples...)
+      Command := mkdir -p "$(BUILD_DIR)/sound"
+      Resp := $(shell $(call Command))
+      Command := mkdir -p "$(BUILD_DIR)/sound/samples"
+      Resp := $(shell $(call Command))
+      Command := unzip -o "sound/precomp/samples.zip" -d "$(BUILD_DIR)/sound/"
+      Resp := $(shell $(call Command))
+    endif
+  endif
+endif
+
 # Coop specific libraries
 
 # Zlib
@@ -1146,6 +1156,7 @@ AIFF_EXTRACT_CODEBOOK := $(TOOLS_DIR)/aiff_extract_codebook
 VADPCM_ENC            := $(TOOLS_DIR)/vadpcm_enc
 EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
 SKYCONV               := $(TOOLS_DIR)/skyconv
+
 # Use the system installed armips if available. Otherwise use the one provided with this repository.
 ifneq (,$(call find-command,armips))
   RSPASM              := armips
@@ -1398,7 +1409,7 @@ endif
 
 $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
-	$(V)$(PYTHON) $(AIFF_EXTRACT_FAILSAFE) $(AIFF_EXTRACT_CODEBOOK) $< $@
+	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
 	$(call print,Piping:,$<,$@.inc.c)
 	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@.inc.c
 	$(V)echo >> $@.inc.c

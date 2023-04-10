@@ -2017,6 +2017,10 @@ static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint
 }
 
 static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
+    gfx_sp_vertex(n_vertices, dest_index, vertices);
+    return;
+    /*
+    TODO: Figure out why the background of text goes black when mods print text
     for (size_t i = 0; i < n_vertices; i++, dest_index++) {
         const Vtx_t *v = &vertices[i].v;
         struct LoadedVertex *d = &rsp.loaded_vertices[dest_index];
@@ -2045,9 +2049,14 @@ static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest
 
         d->color.a = v->cn[3];
     }
+    */
 }
 
 static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
+    gfx_sp_tri1(vtx1_idx, vtx2_idx, vtx3_idx);
+    return;
+    /*
+    TODO: Figure out why the background of text goes black when mods print text
     struct LoadedVertex *v1 = &rsp.loaded_vertices[vtx1_idx];
     struct LoadedVertex *v2 = &rsp.loaded_vertices[vtx2_idx];
     struct LoadedVertex *v3 = &rsp.loaded_vertices[vtx3_idx];
@@ -2107,6 +2116,7 @@ static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_i
     if (++buf_vbo_num_tris == MAX_BUFFERED) {
         gfx_flush();
     }
+    */
 }
 
 void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {

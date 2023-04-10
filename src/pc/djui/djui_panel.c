@@ -3,6 +3,7 @@
 #include "djui_panel_main.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_join_message.h"
+#include "src/pc/debuglog.h"
 #include "src/pc/utils/misc.h"
 #include "sounds.h"
 #include "audio/external.h"
@@ -25,6 +26,10 @@ struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child)
         if (check) { return check; }
         child = child->next;
     }
+
+    // If we didn't find anything at all. Return NULL.
+    LOG_ERROR("Failed to find a interactable for child %p.", child);
+    return NULL;
 }
 
 struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel* threePanel, struct DjuiBase* defaultElementBase) {

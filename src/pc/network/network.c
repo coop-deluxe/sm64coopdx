@@ -157,6 +157,12 @@ bool network_init(enum NetworkType inNetworkType) {
             gChangeLevelTransition = gLevelValues.entryLevel;
         }
 
+#ifdef DISCORD_SDK
+    if (gNetworkSystem == &gNetworkSystemDiscord) {
+        discord_activity_update(true);
+    }
+#endif
+
         djui_chat_box_create();
     }
 
@@ -470,11 +476,6 @@ static void network_rehost_update(void) {
 
     gDiscordReconnecting = true;
     djui_panel_do_host();
-#ifdef DISCORD_SDK
-    if (sNetworkReconnectType == NS_DISCORD) {
-        discord_activity_update(true);
-    }
-#endif
     gDiscordReconnecting = false;
 }
 

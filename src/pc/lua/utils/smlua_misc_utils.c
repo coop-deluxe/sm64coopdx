@@ -438,3 +438,19 @@ u16 get_envfx(void) {
 void set_override_envfx(s32 envfx) {
     gOverrideEnvFx = envfx;
 }
+
+char* get_os_name(void) {
+#if defined(_WIN32) || defined(_WIN64)
+    return "Windows";
+#elif __APPLE__ || __MACH__
+    return "Mac OSX";
+#elif __linux__
+    return "Linux";
+#elif __FreeBSD__
+    return "FreeBSD";
+#elif __unix || __unix__
+    return "Unix";
+#else
+    return "Unknown";
+#endif
+}
