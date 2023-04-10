@@ -473,66 +473,104 @@ struct LuaLevelScriptParse {
 struct LuaLevelScriptParse sLevelScriptParse = { 0 };
 
 s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
-    if (type != 0x24 && type != 0x39 && type != 0x1F) {
-        return 0;
+    u32 areaIndex, bhvId, bhvArgs;
+    u32 *pAreaIndex = NULL, *pBhvId = NULL, *pBhvArgs = NULL;
+    MacroObject *pMacroData = NULL;
+
+    // Gather arguments
+    switch (type) {
+
+        // AREA
+        case 0x1F: {
+            areaIndex = (u8) dynos_level_cmd_get(cmd, 2);
+            pAreaIndex = &areaIndex;
+        } break;
+
+        // OBJECT_WITH_ACTS
+        case 0x24: {
+            const BehaviorScript *bhv = (const BehaviorScript *) dynos_level_cmd_get(cmd, 20);
+            if (bhv) {
+                bhvId = (u32) get_id_from_behavior(bhv);
+                bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
+                pBhvId = &bhvId;
+                pBhvArgs = &bhvArgs;
+            }
+        } break;
+
+        // OBJECT_WITH_ACTS_EXT
+        case 0x3F: {
+            const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 20));
+            if (bhvStr) {
+                bhvId = (u32) smlua_get_any_integer_mod_variable(bhvStr);
+                bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
+                pBhvId = &bhvId;
+                pBhvArgs = &bhvArgs;
+            }
+        } break;
+
+        // OBJECT_WITH_ACTS_EXT2
+        case 0x40: {
+            const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 24));
+            if (bhvStr) {
+                bhvId = (u32) smlua_get_any_integer_mod_variable(bhvStr);
+                bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
+                pBhvId = &bhvId;
+                pBhvArgs = &bhvArgs;
+            }
+        } break;
+
+        // MACRO_OBJECTS
+        case 0x39: {
+            pMacroData = (MacroObject *) dynos_level_cmd_get(cmd, 4);
+        } break;
+
+        // None of the above
+        default: return 0;
     }
+
+    // Retrieve Lua state
     lua_State* L = gLuaState;
     if (L == NULL) { return 0; }
     struct LuaLevelScriptParse* preprocess = &sLevelScriptParse;
-
     lua_rawgeti(L, LUA_REGISTRYINDEX, preprocess->reference);
 
-    if (type == 0x1F) {
-        u8 area = (u8) dynos_level_cmd_get(cmd, 2);
-        lua_pushinteger(L, area);
+    // Push 'areaIndex'
+    if (pAreaIndex) {
+        lua_pushinteger(L, *pAreaIndex);
     } else {
         lua_pushnil(L);
     }
 
-    if (type == 0x24) {
-        const BehaviorScript *bhv = (const BehaviorScript *) dynos_level_cmd_get(cmd, 20);
-        u32 behaviorArg = (u32) dynos_level_cmd_get(cmd, 16);
-
+    // Push 'bhvData'
+    if (pBhvId && pBhvArgs) {
         lua_newtable(L);
-
         lua_pushstring(L, "behavior");
-        lua_pushinteger(L, get_id_from_behavior(bhv));
+        lua_pushinteger(L, *pBhvId);
         lua_settable(L, -3);
-
         lua_pushstring(L, "behaviorArg");
-        lua_pushinteger(L, behaviorArg);
+        lua_pushinteger(L, *pBhvArgs);
         lua_settable(L, -3);
     } else {
         lua_pushnil(L);
     }
 
-    if (type == 0x39) {
-        MacroObject *data = (MacroObject *) dynos_level_cmd_get(cmd, 4);
-        int i = 0;
-        s32 len = 0;
-
+    // Push 'macroBhvIds' and 'macroBhvArgs'
+    if (pMacroData) {
         lua_newtable(L);
-        int t = lua_gettop(gLuaState);
-
+        s32 macroBhvIdsIdx = lua_gettop(gLuaState);
         lua_newtable(L);
-        int args = lua_gettop(gLuaState);
-        while (data[len++] != MACRO_OBJECT_END()) {
-            s32 presetId = (s32) ((data[len - 1] & 0x1FF) - 0x1F);
-            const BehaviorScript *bhv = (const BehaviorScript *) MacroObjectPresets[presetId].behavior;
+        s32 macroBhvArgsIdx = lua_gettop(gLuaState);
+        for (s32 i = 0; *pMacroData != MACRO_OBJECT_END(); pMacroData += 5, i++) {
+            s32 presetId = (s32) ((pMacroData[0] & 0x1FF) - 0x1F);
             s32 presetParams = MacroObjectPresets[presetId].param;
-            s32 objParams = (data[4] & 0xFF00) + (presetParams & 0x00FF);
-            u32 behaviorArg = ((objParams & 0x00FF) << 16) + (objParams & 0xFF00);
-
+            s32 objParams = (pMacroData[4] & 0xFF00) | (presetParams & 0x00FF);
+            s32 bhvParams = ((objParams & 0x00FF) << 16) | (objParams & 0xFF00);
             lua_pushinteger(L, i);
-            lua_pushinteger(L, get_id_from_behavior(bhv));
-            lua_settable(L, t);
-
+            lua_pushinteger(L, get_id_from_behavior(MacroObjectPresets[presetId].behavior));
+            lua_settable(L, macroBhvIdsIdx);
             lua_pushinteger(L, i);
-            lua_pushinteger(L, behaviorArg);
-            lua_settable(L, args);
-
-            i++;
-            len += 4;
+            lua_pushinteger(L, bhvParams);
+            lua_settable(L, macroBhvArgsIdx);
         }
     } else {
         lua_pushnil(L);
