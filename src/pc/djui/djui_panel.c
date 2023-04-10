@@ -18,16 +18,15 @@ bool djui_panel_is_active(void) {
 }
 
 struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
-    struct DjuiBaseChild *i = child;
-    while (i) {
-        if (i->base->interactable && i->base->interactable->enabled) {
-            return i->base;
+    while (child) {
+        if (child->base->interactable && child->base->interactable->enabled) {
+            return child->base;
         }
-        struct DjuiBase* check = djui_panel_find_first_interactable(i->base->child);
+        struct DjuiBase* check = djui_panel_find_first_interactable(child->base->child);
         if (check) { return check; }
-        i = i->next;
+        child = child->next;
     }
-    
+
     // If we didn't find anything at all. Return NULL.
     LOG_ERROR("Failed to find a interactable for child %p.", child);
     return NULL;

@@ -76,6 +76,10 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     struct DjuiSelectionbox* selectionbox = calloc(1, sizeof(struct DjuiSelectionbox));
     struct DjuiBase* base = &selectionbox->base;
 
+    if (*value >= choiceCount) {
+        *value = choiceCount - 1;
+    }
+
     selectionbox->value = value;
     selectionbox->choices = calloc(choiceCount, sizeof(char*));
     for (int i = 0; i < choiceCount; i++) {
