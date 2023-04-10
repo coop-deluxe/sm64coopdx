@@ -99,6 +99,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)fs_get_write_path(DYNOS_PACKS_FOLDER));
     } else {
         LOG_ERROR("Could not figure out what type of mod this is");
+        mz_zip_reader_end(&zip_archive);
         return false;
     }
     if (!fs_sys_dir_exists(dstDirectory)) {
@@ -159,6 +160,8 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         FILE* fout = fopen(dst, "wb");
         if (fout == NULL) {
             LOG_ERROR("Failed to open dst path for zip mod import");
+            mz_free((void*)p);
+            mz_zip_reader_end(&zip_archive);
             return false;
         }
 
