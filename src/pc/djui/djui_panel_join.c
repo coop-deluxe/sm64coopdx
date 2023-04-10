@@ -4,6 +4,7 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_join_message.h"
 #include "djui_panel_modlist.h"
+#include "djui_lobby_entry.h"
 #include "src/pc/network/network.h"
 #include "src/pc/network/socket/socket.h"
 #include "src/pc/network/coopnet/coopnet.h"
@@ -160,15 +161,15 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
 }
 
 void djui_panel_join_query(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aTitle) {
-    char text[256];
-    snprintf(text, 255, "%s - %u/%u", aTitle, aConnections, aMaxConnections);
+    char playerText[64];
+    snprintf(playerText, 63, "%u/%u", aConnections, aMaxConnections);
 
-    bool btrue = TRUE;
     struct DjuiBase* layoutBase = &sLobbyLayout->base;
-    struct DjuiButton* button = djui_button_create(layoutBase, text, DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_lobby);
-    button->base.tag = (s64)aLobbyId;
-    djui_base_set_size_type(&button->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&button->base, 1.0f, 32);
+    struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aTitle, "Super Mario 64", playerText, djui_panel_join_lobby);
+    entry->base.tag = (s64)aLobbyId;
+
+    struct DjuiPaginated* paginated = (struct DjuiPaginated*)layoutBase->parent;
+    djui_paginated_calculate_height(paginated);
 }
 #endif
 
@@ -185,6 +186,19 @@ void djui_panel_join_create(struct DjuiBase* caller) {
 
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         sLobbyLayout = paginated->layout;
+        djui_flow_layout_set_margin(sLobbyLayout, 4);
+
+        struct DjuiBase* layoutBase = &sLobbyLayout->base;
+        #if 0
+        for (int i = 0; i < 4; i++) {
+            djui_lobby_entry_create(layoutBase, "MysterD", "Super Mario 64", "15/16");
+            djui_lobby_entry_create(layoutBase, "djoslin0", "Star Road", "1/16");
+            djui_lobby_entry_create(layoutBase, "abcdefghijklmnopqrs", "Snowstorm Avalanche", "16/16");
+            djui_lobby_entry_create(layoutBase, "Prince Frizzy", "Hide and Seek", "4/16");
+            djui_lobby_entry_create(layoutBase, "Sunk", "Super Mario 74 (+EE)", "5/8");
+        }
+        #endif
+        //djui_paginated_calculate_height(paginated);
 
         /*
 #ifdef DISCORD_SDK
