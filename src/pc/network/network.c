@@ -1,4 +1,5 @@
 #include "socket/socket.h"
+#include "coopnet/coopnet.h"
 #include <stdio.h>
 #include "network.h"
 #include "object_fields.h"
@@ -89,6 +90,7 @@ void network_set_system(enum NetworkSystemType nsType) {
 #ifdef DISCORD_SDK
         case NS_DISCORD: gNetworkSystem = &gNetworkSystemDiscord; break;
 #endif
+        case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
         default: LOG_ERROR("Unknown network system: %d", nsType);
     }
 }

@@ -22,15 +22,10 @@ void djui_panel_do_host(void) {
     update_all_mario_stars();
 
 #ifndef DISCORD_SDK
-    configNetworkSystem = 1;
-    network_set_system(NS_SOCKET);
-#else
-    if (configNetworkSystem == 0) {
-        network_set_system(NS_DISCORD);
-    } else {
-        network_set_system(NS_SOCKET);
-    }
+    if (configNetworkSystem == NS_DISCORD) { configNetworkSystem = NS_COOPNET; }
 #endif
+    if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
+    network_set_system(configNetworkSystem);
 
     network_init(NT_SERVER);
     djui_panel_modlist_create(NULL);
@@ -56,14 +51,11 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
     char* warningMessage = NULL;
     bool hideHostButton = false;
 
-#ifdef DISCORD_SDK
-    if (!configNetworkSystem) {
+    if (configNetworkSystem == NS_DISCORD) {
         warningLines = gDiscordFailed ? 5 : 13;
         warningMessage = gDiscordFailed ? DLANG(HOST_MESSAGE, WARN_DISCORD2) : DLANG(HOST_MESSAGE, WARN_DISCORD);
         hideHostButton = gDiscordFailed;
-    } else
-#endif
-    {
+    } else {
         warningLines = 5;
         warningMessage = calloc(256, sizeof(char));
         sprintf(warningMessage, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
@@ -93,10 +85,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
     }
 
     djui_panel_add(caller, panel, NULL);
-#ifdef DISCORD_SDK
-    if (configNetworkSystem)
-#endif
-    {
+    if (configNetworkSystem != NS_DISCORD) {
         free(warningMessage);
     }
 }

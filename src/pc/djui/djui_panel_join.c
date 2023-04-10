@@ -143,7 +143,7 @@ void djui_panel_join_do_join(struct DjuiBase* caller) {
     }
     network_reset_reconnect_and_rehost();
     djui_panel_join_ip_text_set_new();
-    network_set_system(NS_SOCKET);
+    network_set_system(NS_COOPNET); // DO NOT COMMIT
     network_init(NT_CLIENT);
     djui_panel_join_message_create(caller);
 }

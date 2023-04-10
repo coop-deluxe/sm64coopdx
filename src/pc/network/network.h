@@ -37,6 +37,8 @@ extern struct MarioState gMarioStates[];
 enum NetworkSystemType {
     NS_SOCKET,
     NS_DISCORD,
+    NS_COOPNET,
+    NS_MAX,
 };
 
 struct NetworkSystem {

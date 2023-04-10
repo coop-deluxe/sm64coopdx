@@ -534,7 +534,7 @@ SRC_DIRS := src src/engine src/game src/audio src/bass_audio src/menu src/buffer
 BIN_DIRS := bin bin/$(VERSION)
 
 # PC files
-SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils
+SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils
 
 #ifeq ($(DISCORDRPC),1)
 #  SRC_DIRS += src/pc/discord
@@ -794,7 +794,7 @@ INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src .
 ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
-  INCLUDE_DIRS += sound lib/lua/include $(EXTRA_INCLUDES)
+  INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
 endif
 
 # Connfigure backend flags
@@ -970,6 +970,26 @@ else ifeq ($(TARGET_RPI),1)
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
 endif
+
+# coopnet
+LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
+#ifeq ($(WINDOWS_BUILD),1)
+#  ifeq ($(TARGET_BITS), 32)
+#    LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a
+#  else
+#    LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a
+#  endif
+#else ifeq ($(OSX_BUILD),1)
+#  LDFLAGS += -L./lib/coopnet/mac/ -l coopnet
+#else ifeq ($(TARGET_RPI),1)
+#	ifneq (,$(findstring aarch64,$(machine)))
+#    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a
+#  else
+#    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a
+#  endif
+#else
+#  LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a
+#endif
 
 # Network/Discord/Bass (ugh, needs cleanup)
 ifeq ($(WINDOWS_BUILD),1)

@@ -12,16 +12,16 @@
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 
-#ifdef DISCORD_SDK
-#define DJUI_HOST_NS_IS_SOCKET (configNetworkSystem == 1)
-#else
-#define DJUI_HOST_NS_IS_SOCKET (true)
-#endif
-
 struct DjuiInputbox* sInputboxPort = NULL;
 
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
-    djui_base_set_enabled(&sInputboxPort->base, DJUI_HOST_NS_IS_SOCKET);
+#ifndef DISCORD_SDK
+    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*) base;
+    if (selectionbox->value == NS_DISCORD) {
+        selectionbox->value = NS_SOCKET;
+    }
+#endif
+    djui_base_set_enabled(&sInputboxPort->base, (configNetworkSystem == NS_SOCKET));
 }
 
 static bool djui_panel_host_port_valid(void) {
@@ -77,14 +77,11 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             : DLANG(HOST, HOST_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-#ifdef DISCORD_SDK
-        char* nChoices[2] = { DLANG(HOST, DISCORD), DLANG(HOST, DIRECT_CONNECTION) };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
+        char* nChoices[] = { DLANG(HOST, DISCORD), DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, COOPNET) };
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 3, &configNetworkSystem, djui_panel_host_network_system_change);
         if (gNetworkType == NT_SERVER) {
             djui_base_set_enabled(&selectionbox1->base, false);
         }
-
-#endif
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
@@ -107,10 +104,8 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_port_text_change);
             if (gNetworkType == NT_SERVER) {
                 djui_base_set_enabled(&inputbox1->base, false);
-#ifdef DISCORD_SDK
             } else {
-                djui_base_set_enabled(&inputbox1->base, DJUI_HOST_NS_IS_SOCKET);
-#endif
+                djui_base_set_enabled(&inputbox1->base, (configNetworkSystem == NS_SOCKET));
             }
             sInputboxPort = inputbox1;
         }
