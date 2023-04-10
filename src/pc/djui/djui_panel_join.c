@@ -6,11 +6,13 @@
 #include "djui_panel_modlist.h"
 #include "src/pc/network/network.h"
 #include "src/pc/network/socket/socket.h"
+#include "src/pc/network/coopnet/coopnet.h"
 #include "src/pc/network/socket/domain_res.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 #include "src/pc/debuglog.h"
 
+static struct DjuiFlowLayout* sLobbyLayout = NULL;
 static struct DjuiInputbox* sInputboxIp = NULL;
 
 static bool djui_panel_join_ip_parse_numbers(char** msg) {
@@ -143,17 +145,48 @@ void djui_panel_join_do_join(struct DjuiBase* caller) {
     }
     network_reset_reconnect_and_rehost();
     djui_panel_join_ip_text_set_new();
-    network_set_system(NS_COOPNET); // DO NOT COMMIT
+    network_set_system(NS_SOCKET);
     network_init(NT_CLIENT);
     djui_panel_join_message_create(caller);
 }
 
+#ifdef COOPNET
+void djui_panel_join_lobby(struct DjuiBase* caller) {
+    gCoopNetDesiredLobby = (uint64_t)caller->tag;
+    network_reset_reconnect_and_rehost();
+    network_set_system(NS_COOPNET);
+    network_init(NT_CLIENT);
+    djui_panel_join_message_create(caller);
+}
+
+void djui_panel_join_query(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aTitle) {
+    char text[256];
+    snprintf(text, 255, "%s - %u/%u", aTitle, aConnections, aMaxConnections);
+
+    bool btrue = TRUE;
+    struct DjuiBase* layoutBase = &sLobbyLayout->base;
+    struct DjuiButton* button = djui_button_create(layoutBase, text, DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_lobby);
+    button->base.tag = (s64)aLobbyId;
+    djui_base_set_size_type(&button->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&button->base, 1.0f, 32);
+}
+#endif
+
 void djui_panel_join_create(struct DjuiBase* caller) {
+
+#ifdef COOPNET
+    ns_coopnet_query(djui_panel_join_query);
+#endif
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+
+        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        sLobbyLayout = paginated->layout;
+
+        /*
 #ifdef DISCORD_SDK
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_DISCORD));
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -176,7 +209,7 @@ void djui_panel_join_create(struct DjuiBase* caller) {
         u16 directLines = djui_text_count_lines(text2, 12);
         f32 directTextHeight = 32 * 0.8125f * directLines + 8;
         djui_base_set_size(&text2->base, 1.0f, directTextHeight);
-        djui_base_set_color(&text2->base, 200, 200, 200, 255);
+        djui_base_set_color(&text2->base, 200, 200, 200, 255);*/
 
         struct DjuiInputbox* inputbox1 = djui_inputbox_create(body, 256);
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

@@ -1093,6 +1093,12 @@ ifeq ($(DISCORD_SDK),1)
   CFLAGS += -DDISCORD_SDK
 endif
 
+# Check for COOPNET option
+ifeq ($(COOPNET),1)
+  CC_CHECK_CFLAGS += -DCOOPNET
+  CFLAGS += -DCOOPNET
+endif
+
 # Check for development option
 ifeq ($(DEVELOPMENT),1)
   CC_CHECK_CFLAGS += -DDEVELOPMENT

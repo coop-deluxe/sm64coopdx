@@ -41,7 +41,7 @@ struct DjuiBase {
     struct DjuiInteractable* interactable;
     bool addChildrenToHead;
     bool abandonAfterChildRenderFail;
-    s32 tag;
+    s64 tag;
     bool bTag;
     void (*get_cursor_hover_location)(struct DjuiBase*, f32* x, f32* y);
     void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
