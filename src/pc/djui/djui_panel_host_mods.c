@@ -10,6 +10,8 @@
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 
+#define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
+
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
@@ -18,9 +20,10 @@ static void djui_panel_host_mods_description_create() {
     f32 bodyHeight = 600;
 
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
+
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&panel->base, DJUI_DEFAULT_PANEL_WIDTH, 1.0f);
+    djui_base_set_size(&panel->base, DJUI_MOD_PANEL_WIDTH, 1.0f);
     djui_base_set_color(&panel->base, 0, 0, 0, 240);
     djui_base_set_border_color(&panel->base, 0, 0, 0, 200);
     djui_base_set_border_width(&panel->base, 8);
@@ -91,11 +94,13 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     bool isRomHacks = (caller->tag == 1);
 
     mods_update_selectable();
+    djui_panel_host_mods_description_create();
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(isRomHacks
         ? DLANG(HOST_MODS, ROMHACKS)
         : DLANG(HOST_MODS, MODS)
     );
+
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
@@ -121,5 +126,4 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     panel->base.destroy = djui_panel_host_mods_destroy;
 
     djui_panel_add(caller, panel, NULL);
-    djui_panel_host_mods_description_create();
 }
