@@ -24,6 +24,9 @@ void djui_panel_do_host(void) {
 #ifndef DISCORD_SDK
     if (configNetworkSystem == NS_DISCORD) { configNetworkSystem = NS_COOPNET; }
 #endif
+#ifndef COOPNET
+    if (configNetworkSystem == NS_COOPNET) { configNetworkSystem = NS_SOCKET; }
+#endif
     if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
     network_set_system(configNetworkSystem);
 

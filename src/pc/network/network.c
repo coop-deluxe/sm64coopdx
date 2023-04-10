@@ -85,13 +85,19 @@ struct ServerSettings gServerSettings = {
 
 void network_set_system(enum NetworkSystemType nsType) {
     network_forget_all_reliable();
+
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
+
 #ifdef DISCORD_SDK
         case NS_DISCORD: gNetworkSystem = &gNetworkSystemDiscord; break;
 #endif
+
+#ifdef COOPNET
         case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
-        default: LOG_ERROR("Unknown network system: %d", nsType);
+#endif
+
+        default: gNetworkSystem = &gNetworkSystemSocket; LOG_ERROR("Unknown network system: %d", nsType); break;
     }
 }
 

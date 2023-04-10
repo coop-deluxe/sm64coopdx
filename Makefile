@@ -52,6 +52,8 @@ EXTERNAL_DATA ?= 0
 DISCORDRPC ?= 0
 # Enable Discord Game SDK (used for Discord server hosting)
 DISCORD_SDK ?= 1
+# Enable CoopNet SDK (used for CoopNet server hosting)
+COOPNET ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
 # Sets your optimization level for building.
@@ -982,7 +984,9 @@ else
 endif
 
 # coopnet
-LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
+ifeq ($(COOPNET),1)
+  LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
+endif
 #ifeq ($(WINDOWS_BUILD),1)
 #  ifeq ($(TARGET_BITS), 32)
 #    LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a

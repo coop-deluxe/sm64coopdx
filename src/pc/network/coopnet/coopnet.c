@@ -3,6 +3,8 @@
 #include "pc/network/network.h"
 #include "pc/debuglog.h"
 
+#ifdef COOPNET
+
 #define HOST "localhost"
 #define PORT 34197
 
@@ -30,9 +32,6 @@ static void coopnet_on_connected(uint64_t userId) {
     }
 }
 
-static void coopnet_on_peer_connected(UNUSED uint64_t peerId) {
-}
-
 static void coopnet_on_peer_disconnected(uint64_t peerId) {
     u8 localIndex = coopnet_user_id_to_local_index(peerId);
     if (localIndex != UNKNOWN_LOCAL_INDEX && gNetworkPlayers[localIndex].connected) {
@@ -56,7 +55,6 @@ static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t 
     }
 }
 
-
 static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
     LOG_INFO("coopnet_on_lobby_left!");
     if (lobbyId == sLocalLobbyId && userId == sLocalUserId) {
@@ -73,7 +71,6 @@ static bool ns_coopnet_initialize(enum NetworkType networkType) {
     gCoopNetCallbacks.OnReceive = coopnet_on_receive;
     gCoopNetCallbacks.OnLobbyJoined = coopnet_on_lobby_joined;
     gCoopNetCallbacks.OnLobbyLeft = coopnet_on_lobby_left;
-    gCoopNetCallbacks.OnPeerConnected = coopnet_on_peer_connected;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
     sNetworkType = networkType;
 
@@ -150,3 +147,5 @@ struct NetworkSystem gNetworkSystemCoopNet = {
     .requireServerBroadcast = false,
     .name       = "CoopNet",
 };
+
+#endif

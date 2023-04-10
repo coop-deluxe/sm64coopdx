@@ -16,9 +16,19 @@ struct DjuiInputbox* sInputboxPort = NULL;
 
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
 #ifndef DISCORD_SDK
-    struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*) base;
-    if (selectionbox->value == NS_DISCORD) {
-        selectionbox->value = NS_SOCKET;
+    {
+        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*) base;
+        if (*selectionbox->value == NS_DISCORD) {
+            selectionbox->value = NS_SOCKET;
+        }
+    }
+#endif
+#ifndef COOPNET
+    {
+        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*) base;
+        if (*selectionbox->value == NS_COOPNET) {
+            selectionbox->value = NS_SOCKET;
+        }
     }
 #endif
     djui_base_set_enabled(&sInputboxPort->base, (configNetworkSystem == NS_SOCKET));
