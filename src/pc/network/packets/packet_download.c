@@ -332,7 +332,7 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 }
 
 void network_receive_download(struct Packet* p) {
-    if (p == NULL) {
+    if (!p) {
         LOG_ERROR("Received null packet");
         return;
     }

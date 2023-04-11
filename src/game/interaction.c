@@ -1353,6 +1353,8 @@ u8 player_is_sliding(struct MarioState* m) {
 }
 
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim) {
+    if (!attacker || !victim) { return false; }
+
     // attacked
     u8 isInCutscene = ((attacker->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) || ((victim->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE);
     isInCutscene = isInCutscene || (attacker->action == ACT_IN_CANNON) || (victim->action == ACT_IN_CANNON);

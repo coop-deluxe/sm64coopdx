@@ -2664,7 +2664,10 @@ s32 cur_obj_move_up_and_down(s32 a0) {
 }
 
 void cur_obj_call_action_function(void (*actionFunctions[])(void)) {
+    if (!actionFunctions) { return; }
+
     void (*actionFunction)(void) = actionFunctions[o->oAction];
+    if (!actionFunction) { return; }
     actionFunction();
 }
 
