@@ -91,6 +91,7 @@ struct InterpHud {
     f32 scaleH;
     f32 width;
     f32 height;
+    enum HudUtilsResolution resolution;
 };
 static struct InterpHud sInterpHuds[MAX_INTERP_HUD] = { 0 };
 static u16 sInterpHudCount = 0;
@@ -102,12 +103,14 @@ void patch_djui_hud_before(void) {
 void patch_djui_hud(f32 delta) {
     f32 savedZ = gDjuiHudUtilsZ;
     Gfx* savedHeadPos = gDisplayListHead;
+    enum HudUtilsResolution savedResolution = sResolution;
     for (u16 i = 0; i < sInterpHudCount; i++) {
         struct InterpHud* interp = &sInterpHuds[i];
         f32 x = delta_interpolate_f32(interp->prevX, interp->x, delta);
         f32 y = delta_interpolate_f32(interp->prevY, interp->y, delta);
         f32 scaleW = delta_interpolate_f32(interp->prevScaleW, interp->scaleW, delta);
         f32 scaleH = delta_interpolate_f32(interp->prevScaleH, interp->scaleH, delta);
+        sResolution = interp->resolution;
 
         gDjuiHudUtilsZ = interp->z;
         gDisplayListHead = interp->headPos;
@@ -125,6 +128,7 @@ void patch_djui_hud(f32 delta) {
         djui_hud_size_translate(&translatedH);
         create_dl_scale_matrix(DJUI_MTX_NOPUSH, interp->width * translatedW, interp->height * translatedH, 1.0f);
     }
+    sResolution = savedResolution;
     gDisplayListHead = savedHeadPos;
     gDjuiHudUtilsZ = savedZ;
 }
@@ -326,6 +330,7 @@ void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX
     interp->width = texInfo->width;
     interp->height = texInfo->height;
     interp->z = savedZ;
+    interp->resolution = sResolution;
 }
 
 void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
