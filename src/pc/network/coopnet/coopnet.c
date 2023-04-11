@@ -1,7 +1,10 @@
 #include "libcoopnet.h"
 #include "coopnet.h"
+#include "coopnet_id.h"
 #include "pc/network/network.h"
 #include "pc/network/version.h"
+#include "pc/djui/djui_language.h"
+#include "pc/djui/djui_popup.h"
 #include "pc/debuglog.h"
 
 #ifdef COOPNET
@@ -12,31 +15,26 @@
 
 uint64_t gCoopNetDesiredLobby = 0;
 
-static uint64_t sLocalUserId = 0;
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
-static uint64_t sNetworkUserIds[MAX_PLAYERS] = { 0 };
 static enum NetworkType sNetworkType;
 
 static CoopNetRc coopnet_initialize(void);
 
-void ns_coopnet_query(QueryCallbackPtr callback) {
+void ns_coopnet_query(QueryCallbackPtr callback, const char* password) {
     gCoopNetCallbacks.OnLobbyListGot = callback;
     if (coopnet_initialize() != COOPNET_OK) { return; }
-    coopnet_lobby_list_get(CN_GAME_STR);
-}
-
-static u8 coopnet_user_id_to_local_index(uint64_t userId) {
-    for (int i = 1; i < MAX_PLAYERS; i++) {
-        if (gNetworkPlayers[i].connected && sNetworkUserIds[i] == userId) {
-            return i;
-        }
-    }
-    return UNKNOWN_LOCAL_INDEX;
+    coopnet_lobby_list_get(CN_GAME_STR, password);
 }
 
 static void coopnet_on_connected(uint64_t userId) {
-    sLocalUserId = userId;
+    coopnet_set_local_user_id(userId);
+}
+
+static void coopnet_on_disconnected(void) {
+    LOG_INFO("Coopnet shutdown!");
+    djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
+    coopnet_shutdown();
 }
 
 static void coopnet_on_peer_disconnected(uint64_t peerId) {
@@ -47,24 +45,24 @@ static void coopnet_on_peer_disconnected(uint64_t peerId) {
 }
 
 static void coopnet_on_receive(uint64_t userId, const uint8_t* data, uint64_t dataLength) {
-    sNetworkUserIds[0] = userId;
+    coopnet_set_user_id(0, userId);
     u8 localIndex = coopnet_user_id_to_local_index(userId);
     network_receive(localIndex, &userId, (u8*)data, dataLength);
 }
 
 static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t ownerId) {
     LOG_INFO("coopnet_on_lobby_joined!");
-    sNetworkUserIds[0] = ownerId;
+    coopnet_set_user_id(0, ownerId);
     sLocalLobbyId = lobbyId;
     sLocalLobbyOwnerId = ownerId;
-    if (userId == sLocalUserId && gNetworkType == NT_CLIENT) {
+    if (userId == coopnet_get_local_user_id() && gNetworkType == NT_CLIENT) {
         network_send_mod_list_request();
     }
 }
 
 static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
     LOG_INFO("coopnet_on_lobby_left!");
-    if (lobbyId == sLocalLobbyId && userId == sLocalUserId) {
+    if (lobbyId == sLocalLobbyId && userId == coopnet_get_local_user_id()) {
         network_shutdown(false, false, true);
     }
 }
@@ -76,11 +74,6 @@ static bool ns_coopnet_initialize(enum NetworkType networkType) {
         : (coopnet_initialize() == COOPNET_OK);
 }
 
-static s64 ns_coopnet_get_id(u8 localIndex) {
-    if (localIndex == 0) { return (s64)sLocalUserId; }
-    return (s64)sNetworkUserIds[localIndex];
-}
-
 static char* ns_coopnet_get_id_str(u8 localIndex) {
     static char id_str[22] = { 0 };
     if (localIndex == UNKNOWN_LOCAL_INDEX) {
@@ -89,24 +82,6 @@ static char* ns_coopnet_get_id_str(u8 localIndex) {
         snprintf(id_str, 22, "%lld", (long long int)ns_coopnet_get_id(localIndex));
     }
     return id_str;
-}
-
-static void ns_coopnet_save_id(u8 localIndex, s64 networkId) {
-    SOFT_ASSERT(localIndex > 0);
-    SOFT_ASSERT(localIndex < MAX_PLAYERS);
-    sNetworkUserIds[localIndex] = (networkId == 0) ? sNetworkUserIds[0] : (u64)networkId;
-}
-
-static void ns_coopnet_clear_id(u8 localIndex) {
-    if (localIndex == 0) { return; }
-    SOFT_ASSERT(localIndex < MAX_PLAYERS);
-    sNetworkUserIds[localIndex] = 0;
-}
-
-static void* ns_coopnet_dup_addr(u8 localIndex) {
-    void* address = malloc(sizeof(u64));
-    memcpy(address, &sNetworkUserIds[localIndex], sizeof(u64));
-    return address;
 }
 
 static bool ns_coopnet_match_addr(void* addr1, void* addr2) {
@@ -124,10 +99,10 @@ void ns_coopnet_update(void) {
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
             LOG_INFO("Create lobby");
-            coopnet_lobby_create(CN_GAME_STR, get_version(), "The lobby's title", configAmountofPlayers);
+            coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, "Super Mario 64", (uint16_t)configAmountofPlayers, "");
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
-            coopnet_lobby_join(gCoopNetDesiredLobby);
+            coopnet_lobby_join(gCoopNetDesiredLobby, "");
         }
         sNetworkType = NT_NONE;
     }
@@ -136,8 +111,7 @@ void ns_coopnet_update(void) {
 static int ns_coopnet_network_send(u8 localIndex, void* address, u8* data, u16 dataLength) {
     if (!coopnet_is_connected()) { return 1; }
     //if (gCurLobbyId == 0) { return 2; }
-
-    u64 userId = sNetworkUserIds[localIndex];
+    u64 userId = ns_coopnet_get_id(localIndex);
     if (localIndex == 0 && address != NULL) { userId = *(u64*)address; }
     coopnet_send_to(userId, data, dataLength);
 
@@ -153,12 +127,17 @@ static CoopNetRc coopnet_initialize(void) {
     if (coopnet_is_connected()) { return COOPNET_OK; }
 
     gCoopNetCallbacks.OnConnected = coopnet_on_connected;
+    gCoopNetCallbacks.OnDisconnected = coopnet_on_disconnected;
     gCoopNetCallbacks.OnReceive = coopnet_on_receive;
     gCoopNetCallbacks.OnLobbyJoined = coopnet_on_lobby_joined;
     gCoopNetCallbacks.OnLobbyLeft = coopnet_on_lobby_left;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
 
-    return coopnet_begin(CN_HOST, CN_PORT);
+    CoopNetRc rc = coopnet_begin(CN_HOST, CN_PORT);
+    if (rc == COOPNET_FAILED) {
+        djui_popup_create(DLANG(NOTIF, COOPNET_CONNECTION_FAILED), 2);
+    }
+    return rc;
 }
 
 struct NetworkSystem gNetworkSystemCoopNet = {

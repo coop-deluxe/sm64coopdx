@@ -161,23 +161,23 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
     djui_panel_join_message_create(caller);
 }
 
-void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, UNUSED const char* aVersion, const char* aTitle) {
+void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, UNUSED const char* aVersion, const char* aHostName, const char* aMode) {
     char playerText[64];
     snprintf(playerText, 63, "%u/%u", aConnections, aMaxConnections);
 
     struct DjuiBase* layoutBase = &sLobbyLayout->base;
-    struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aTitle, "Super Mario 64", playerText, djui_panel_join_lobby);
+    struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aHostName, (char*)aMode, playerText, djui_panel_join_lobby);
     entry->base.tag = (s64)aLobbyId;
 
-    struct DjuiPaginated* paginated = (struct DjuiPaginated*)layoutBase->parent;
-    djui_paginated_calculate_height(paginated);
+    /*struct DjuiPaginated* paginated = (struct DjuiPaginated*)layoutBase->parent;
+    djui_paginated_calculate_height(paginated);*/
 }
 #endif
 
 void djui_panel_join_create(struct DjuiBase* caller) {
 
 #ifdef COOPNET
-    ns_coopnet_query(djui_panel_join_query);
+    ns_coopnet_query(djui_panel_join_query, "");
 #endif
 
     struct DjuiBase* defaultBase = NULL;
@@ -191,15 +191,15 @@ void djui_panel_join_create(struct DjuiBase* caller) {
 
         #if 0
         struct DjuiBase* layoutBase = &sLobbyLayout->base;
-        for (int i = 0; i < 4; i++) {
-            djui_lobby_entry_create(layoutBase, "MysterD", "Super Mario 64", "15/16");
-            djui_lobby_entry_create(layoutBase, "djoslin0", "Star Road", "1/16");
-            djui_lobby_entry_create(layoutBase, "abcdefghijklmnopqrs", "Snowstorm Avalanche", "16/16");
-            djui_lobby_entry_create(layoutBase, "Prince Frizzy", "Hide and Seek", "4/16");
-            djui_lobby_entry_create(layoutBase, "Sunk", "Super Mario 74 (+EE)", "5/8");
+        for (int i = 0; i < 1; i++) {
+            djui_lobby_entry_create(layoutBase, "MysterD", "Super Mario 64", "15/16", NULL);
+            djui_lobby_entry_create(layoutBase, "djoslin0", "Star Road", "1/16", NULL);
+            djui_lobby_entry_create(layoutBase, "abcdefghijklmnopqrs", "Snowstorm Avalanche", "16/16", NULL);
+            djui_lobby_entry_create(layoutBase, "Prince Frizzy", "Hide and Seek", "4/16", NULL);
+            djui_lobby_entry_create(layoutBase, "Sunk", "Super Mario 74 (+EE)", "5/8", NULL);
         }
+        djui_paginated_calculate_height(paginated);
         #endif
-        //djui_paginated_calculate_height(paginated);
 
         /*
 #ifdef DISCORD_SDK
