@@ -70,7 +70,7 @@ struct DjuiLobbyEntry* djui_lobby_entry_create(struct DjuiBase* parent, char* ho
         djui_base_set_size(&text->base, width, 1.0f);
 
         djui_base_set_color(&text->base, 11, 11, 11, 255);
-        djui_text_set_alignment(&text->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
         x += width;
     }

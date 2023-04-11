@@ -12,6 +12,7 @@
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 #include "src/pc/debuglog.h"
+#include "macros.h"
 
 static struct DjuiFlowLayout* sLobbyLayout = NULL;
 static struct DjuiInputbox* sInputboxIp = NULL;
@@ -160,7 +161,7 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
     djui_panel_join_message_create(caller);
 }
 
-void djui_panel_join_query(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aTitle) {
+void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, UNUSED const char* aVersion, const char* aTitle) {
     char playerText[64];
     snprintf(playerText, 63, "%u/%u", aConnections, aMaxConnections);
 
@@ -188,8 +189,8 @@ void djui_panel_join_create(struct DjuiBase* caller) {
         sLobbyLayout = paginated->layout;
         djui_flow_layout_set_margin(sLobbyLayout, 4);
 
-        struct DjuiBase* layoutBase = &sLobbyLayout->base;
         #if 0
+        struct DjuiBase* layoutBase = &sLobbyLayout->base;
         for (int i = 0; i < 4; i++) {
             djui_lobby_entry_create(layoutBase, "MysterD", "Super Mario 64", "15/16");
             djui_lobby_entry_create(layoutBase, "djoslin0", "Star Road", "1/16");

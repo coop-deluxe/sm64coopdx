@@ -985,25 +985,24 @@ endif
 
 # coopnet
 ifeq ($(COOPNET),1)
-  LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
+  ifeq ($(WINDOWS_BUILD),1)
+    ifeq ($(TARGET_BITS), 32)
+      LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a
+    else
+      LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a
+    endif
+  else ifeq ($(OSX_BUILD),1)
+    LDFLAGS += -L./lib/coopnet/mac/ -l coopnet
+  else ifeq ($(TARGET_RPI),1)
+    ifneq (,$(findstring aarch64,$(machine)))
+      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a
+    else
+      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a
+    endif
+  else
+    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
+  endif
 endif
-#ifeq ($(WINDOWS_BUILD),1)
-#  ifeq ($(TARGET_BITS), 32)
-#    LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a
-#  else
-#    LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a
-#  endif
-#else ifeq ($(OSX_BUILD),1)
-#  LDFLAGS += -L./lib/coopnet/mac/ -l coopnet
-#else ifeq ($(TARGET_RPI),1)
-#	ifneq (,$(findstring aarch64,$(machine)))
-#    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a
-#  else
-#    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a
-#  endif
-#else
-#  LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a
-#endif
 
 # Network/Discord/Bass (ugh, needs cleanup)
 ifeq ($(WINDOWS_BUILD),1)
