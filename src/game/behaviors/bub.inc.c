@@ -28,7 +28,7 @@ void (*sBirdChirpChirpActions[])(void) = { bub_spawner_act_0, bub_spawner_act_1,
                                            bub_spawner_act_2, bub_spawner_act_3 };
 
 void bhv_bub_spawner_loop(void) {
-    cur_obj_call_action_function(sBirdChirpChirpActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBirdChirpChirpActions);
 }
 
 void bub_move_vertically(s32 a0) {
@@ -136,7 +136,7 @@ void bhv_bub_loop(void) {
     }
     o->oWallHitboxRadius = 30.0f;
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sCheepCheepActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sCheepCheepActions);
     cur_obj_move_using_fvel_and_gravity();
     if (o->parentObj->oAction == 2)
         obj_mark_for_deletion(o);

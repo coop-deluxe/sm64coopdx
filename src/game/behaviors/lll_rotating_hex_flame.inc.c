@@ -60,7 +60,7 @@ void bhv_lll_rotating_block_fire_bars_loop(void) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, &o->oAngleVelYaw);
     }
-    cur_obj_call_action_function(sRotatingCwFireBarsActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sRotatingCwFireBarsActions);
     if (o->oBehParams2ndByte == 0)
         load_object_collision_model();
 }

@@ -275,7 +275,7 @@ void (*sBowserPuzzlePieceActions[])(void) = {
 void bhv_lll_bowser_puzzle_piece_loop(void) {
     bhv_lll_bowser_puzzle_piece_update();
 
-    cur_obj_call_action_function(sBowserPuzzlePieceActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBowserPuzzlePieceActions);
 
     o->oPosX = o->oBowserPuzzlePieceOffsetX + o->oHomeX;
     o->oPosY = o->oBowserPuzzlePieceOffsetY + o->oHomeY;

@@ -256,6 +256,8 @@ struct GraphNode_802A45E4 {
     /*0x22*/ s16 unk22;
 };
 
+#define CUR_OBJ_CALL_ACTION_FUNCTION(_action_func) cur_obj_call_action_function(_action_func, (sizeof(_action_func) / sizeof(&_action_func[0])))
+
 void obj_set_hitbox(struct Object *obj, struct ObjectHitbox *hitbox);
 s32 signum_positive(s32 x);
 f32 absf(f32 x);
@@ -273,7 +275,7 @@ void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14);
 void cur_obj_set_pos_to_home_with_debug(void);
 s32 cur_obj_is_mario_on_platform(void);
 s32 cur_obj_move_up_and_down(s32 a0);
-void cur_obj_call_action_function(void (*actionFunctions[])(void));
+void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t actionFunctionsLength);
 void spawn_base_star_with_no_lvl_exit(void);
 s32 bit_shift_left(s32 a0);
 s32 cur_obj_mario_far_away(void);

@@ -2663,9 +2663,9 @@ s32 cur_obj_move_up_and_down(s32 a0) {
     return FALSE;
 }
 
-void cur_obj_call_action_function(void (*actionFunctions[])(void)) {
+void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t actionFunctionsLength) {
     if (!actionFunctions) { return; }
-
+    if ((uint32_t)o->oAction >= actionFunctionsLength) { return; }
     void (*actionFunction)(void) = actionFunctions[o->oAction];
     if (!actionFunction) { return; }
     actionFunction();

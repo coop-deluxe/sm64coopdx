@@ -284,7 +284,7 @@ void bhv_whomp_loop(void) {
     }
 
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sWhompActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sWhompActions);
     cur_obj_move_standard(-20);
     if (o->oAction != 9) {
         // o->oBehParams2ndByte here seems to be a flag

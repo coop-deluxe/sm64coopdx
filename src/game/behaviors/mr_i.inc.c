@@ -33,7 +33,7 @@ void mr_i_piranha_particle_act_1(void) {
 void (*sMrIParticleActions[])(void) = { mr_i_piranha_particle_act_0, mr_i_piranha_particle_act_1 };
 
 void bhv_mr_i_particle_loop(void) {
-    cur_obj_call_action_function(sMrIParticleActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sMrIParticleActions);
 }
 
 void spawn_mr_i_particle(void) {
@@ -283,7 +283,7 @@ void bhv_mr_i_loop(void) {
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     obj_set_hitbox(o, &sMrIHitbox);
-    cur_obj_call_action_function(sMrIActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sMrIActions);
     if (o->oAction != 3) {
         if (distanceToPlayer > 3000.0f || o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM) {
             o->oAction = 0;

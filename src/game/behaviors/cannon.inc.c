@@ -237,7 +237,7 @@ void bhv_cannon_base_loop(void) {
         cur_obj_push_mario_away_from_cylinder(220, 300);
     }
 
-    cur_obj_call_action_function(sOpenedCannonActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sOpenedCannonActions);
     if (o->oCannonUnkF8)
         o->oCannonUnkF8++;
     o->oInteractStatus = 0;

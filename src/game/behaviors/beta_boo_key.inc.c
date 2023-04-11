@@ -170,5 +170,5 @@ static void (*sBetaBooKeyActions[])(void) = { beta_boo_key_inside_boo_loop, beta
  * Update function for bhvBetaBooKey.
  */
 void bhv_beta_boo_key_loop(void) {
-    cur_obj_call_action_function(sBetaBooKeyActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBetaBooKeyActions);
 }

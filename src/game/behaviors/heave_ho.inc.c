@@ -99,7 +99,7 @@ void (*sHeaveHoActions[])(void) = { heave_ho_act_0, heave_ho_act_1, heave_ho_act
 
 void heave_ho_move(void) {
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sHeaveHoActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sHeaveHoActions);
     cur_obj_move_standard(-78);
     if (o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER)
         o->oGraphYOffset = -15.0f;

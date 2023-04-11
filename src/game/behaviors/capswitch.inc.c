@@ -65,5 +65,5 @@ void bhv_cap_switch_loop(void) {
         sync_object_init_field(o, &capSwitchForcePress);
     }
 
-    cur_obj_call_action_function(sCapSwitchActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sCapSwitchActions);
 }

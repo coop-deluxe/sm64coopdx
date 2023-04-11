@@ -41,7 +41,7 @@ void jumping_box_free_update(void) {
     obj_set_hitbox(o, &sJumpingBoxHitbox);
     cur_obj_update_floor_and_walls();
     cur_obj_move_standard(78);
-    cur_obj_call_action_function(sJumpingBoxActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sJumpingBoxActions);
 }
 
 void bhv_jumping_box_loop(void) {
