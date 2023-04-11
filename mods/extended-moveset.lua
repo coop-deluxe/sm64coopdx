@@ -1163,7 +1163,7 @@ function act_walking(m)
 end
 
 function act_hold_walking(m)
-    if m.heldObj.behavior == bhvJumpingBox then
+    if m.heldObj ~= nil and m.heldObj.behavior == bhvJumpingBox then
         return set_mario_action(m, ACT_CRAZY_BOX_BOUNCE, 0)
     end
 
