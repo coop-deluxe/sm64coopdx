@@ -40,16 +40,16 @@ void lag_compensation_store(void) {
 }
 
 struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp) {
-    if (!otherNp) { return NULL; }
-    if (gNetworkType == NT_NONE) { return NULL; }
-    if (!sLocalStateHistoryReady) { return NULL; }
+    if (!otherNp) { return &gMarioStates[0]; }
+    if (gNetworkType == NT_NONE) { return &gMarioStates[0]; }
+    if (!sLocalStateHistoryReady) { return &gMarioStates[0]; }
 
     s32 pingToTicks = (otherNp->ping / 1000.0f) * 30;
     if (pingToTicks > (MAX_LOCAL_STATE_HISTORY-1)) {
         pingToTicks = (MAX_LOCAL_STATE_HISTORY-1);
     }
     //LOG_INFO("Ping: %s :: %u :: %d", otherNp->name, otherNp->ping, pingToTicks);
-    if (pingToTicks == 0) { return NULL; }
+    if (pingToTicks == 0) { return &gMarioStates[0]; }
 
     s32 index = (s32)sLocalStateHistoryIndex - pingToTicks;
     while (index < 0) { index += MAX_LOCAL_STATE_HISTORY; }
