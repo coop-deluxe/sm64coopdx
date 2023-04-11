@@ -36,6 +36,7 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
         //LOG_INFO("  %s", smlua_lnt_to_str(&lntKeys[i]));
     }
     //LOG_INFO("    -> %s", smlua_lnt_to_str(lntValue));
+    //LOG_INFO("  count %u", lntKeyCount);
 
     if (!packet_write_lnt(&p, lntValue)) { return; }
 
@@ -66,6 +67,7 @@ void network_receive_lua_sync_table(struct Packet* p) {
         //LOG_INFO("  %s", smlua_lnt_to_str(&lntKeys[i]));
     }
     //LOG_INFO("    -> %s", smlua_lnt_to_str(&lntValue));
+    //LOG_INFO("  count %u", lntKeyCount);
 
     if (!packet_read_lnt(p, &lntValue)) { goto cleanup; }
 
