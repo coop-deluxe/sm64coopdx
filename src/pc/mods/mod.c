@@ -152,15 +152,19 @@ void mod_activate(struct Mod* mod) {
 }
 
 void mod_clear(struct Mod* mod) {
-    for (int j = 0; j < mod->fileCount; j++) {
-        struct ModFile* file = &mod->files[j];
-        if (file->fp != NULL) {
-            fclose(file->fp);
-            file->fp = NULL;
-        }
-        if (file->cachedPath != NULL) {
-            free((char*)file->cachedPath);
-            file->cachedPath = NULL;
+    if (!mod) { return; }
+
+    if (mod->files) {
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+            if (file->fp != NULL) {
+                fclose(file->fp);
+                file->fp = NULL;
+            }
+            if (file->cachedPath != NULL) {
+                free((char*)file->cachedPath);
+                file->cachedPath = NULL;
+            }
         }
     }
 
