@@ -517,12 +517,10 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
 
     // print
     LOG_INFO("    %s", mod->name);
-    if (isDirectory) {
-        for (int i = 0; i < mod->fileCount; i++) {
-            struct ModFile* file = &mod->files[i];
-            mod_cache_add(mod, file, true);
-            LOG_INFO("      - %s", file->relativePath);
-        }
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        mod_cache_add(mod, file, true);
+        LOG_INFO("      - %s", file->relativePath);
     }
 
     return true;
