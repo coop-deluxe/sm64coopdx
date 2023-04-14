@@ -29,11 +29,21 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
 void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, UNUSED const char* aVersion, const char* aHostName, const char* aMode) {
     if (!sLobbyLayout) { return; }
 
-    char playerText[64];
+    char playerText[64] = "";
     snprintf(playerText, 63, "%u/%u", aConnections, aMaxConnections);
 
+
+    char mode[64] = "";
+    snprintf(mode, 64, "%s", aMode);
+
+    char version[MAX_VERSION_LENGTH] = { 0 };
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    if (strcmp(version, aVersion) != 0) {
+        snprintf(mode, 64, "\\#ff0000\\[%s]", aVersion);
+    }
+
     struct DjuiBase* layoutBase = &sLobbyLayout->base;
-    struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aHostName, (char*)aMode, playerText, djui_panel_join_lobby);
+    struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aHostName, (char*)mode, playerText, djui_panel_join_lobby);
     entry->base.tag = (s64)aLobbyId;
 }
 
