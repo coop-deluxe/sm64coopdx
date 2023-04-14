@@ -156,6 +156,8 @@ bool         configDebugPrint                    = 0;
 bool         configDebugInfo                     = 0;
 bool         configDebugError                    = 0;
 char         configLanguage[MAX_CONFIG_STRING]   = "";
+char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
+unsigned int configCoopNetPort                   = DEFAULT_COOPNET_PORT;
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -264,6 +266,8 @@ static const struct ConfigOption options[] = {
     {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugInfo},
     {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDebugError},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT  , .uintValue   = &configCoopNetPort},
 };
 
 // FunctionConfigOption functions

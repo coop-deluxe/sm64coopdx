@@ -9,8 +9,6 @@
 
 #ifdef COOPNET
 
-#define CN_HOST "localhost"
-#define CN_PORT 34197
 #define CN_GAME_STR "sm64ex-coop"
 
 uint64_t gCoopNetDesiredLobby = 0;
@@ -138,7 +136,7 @@ static CoopNetRc coopnet_initialize(void) {
     gCoopNetCallbacks.OnLobbyLeft = coopnet_on_lobby_left;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
 
-    CoopNetRc rc = coopnet_begin(CN_HOST, CN_PORT);
+    CoopNetRc rc = coopnet_begin(configCoopNetIp, configCoopNetPort);
     if (rc == COOPNET_FAILED) {
         djui_popup_create(DLANG(NOTIF, COOPNET_CONNECTION_FAILED), 2);
     }

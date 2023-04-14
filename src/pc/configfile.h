@@ -15,6 +15,8 @@
 #define MAX_DESCRIPTION_STRING 20
 
 #define DEFAULT_PORT 7777
+#define DEFAULT_COOPNET_IP "localhost"
+#define DEFAULT_COOPNET_PORT 34197
 
 typedef struct {
     unsigned int x, y, w, h;
@@ -111,6 +113,8 @@ extern bool         configDebugPrint;
 extern bool         configDebugInfo;
 extern bool         configDebugError;
 extern char         configLanguage[];
+extern char         configCoopNetIp[];
+extern unsigned int configCoopNetPort;
 
 void configfile_load(void);
 void configfile_save(const char *filename);
