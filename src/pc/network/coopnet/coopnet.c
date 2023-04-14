@@ -127,7 +127,6 @@ static void ns_coopnet_shutdown(void) {
 }
 
 static CoopNetRc coopnet_initialize(void) {
-    if (coopnet_is_connected()) { return COOPNET_OK; }
 
     gCoopNetCallbacks.OnConnected = coopnet_on_connected;
     gCoopNetCallbacks.OnDisconnected = coopnet_on_disconnected;
@@ -135,6 +134,8 @@ static CoopNetRc coopnet_initialize(void) {
     gCoopNetCallbacks.OnLobbyJoined = coopnet_on_lobby_joined;
     gCoopNetCallbacks.OnLobbyLeft = coopnet_on_lobby_left;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
+
+    if (coopnet_is_connected()) { return COOPNET_OK; }
 
     CoopNetRc rc = coopnet_begin(configCoopNetIp, configCoopNetPort);
     if (rc == COOPNET_FAILED) {
