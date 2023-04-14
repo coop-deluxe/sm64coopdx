@@ -6,7 +6,7 @@
 #include "behavior_table.h"
 #include "model_ids.h"
 
-#define MAX_LOCAL_STATE_HISTORY 20
+#define MAX_LOCAL_STATE_HISTORY 30
 struct StateHistory {
     struct MarioState m;
     struct Object marioObj;
