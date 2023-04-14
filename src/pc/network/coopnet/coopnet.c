@@ -21,8 +21,9 @@ static enum NetworkType sNetworkType;
 
 static CoopNetRc coopnet_initialize(void);
 
-void ns_coopnet_query(QueryCallbackPtr callback, const char* password) {
+void ns_coopnet_query(QueryCallbackPtr callback, QueryFinishCallbackPtr finishCallback, const char* password) {
     gCoopNetCallbacks.OnLobbyListGot = callback;
+    gCoopNetCallbacks.OnLobbyListFinish = finishCallback;
     if (coopnet_initialize() != COOPNET_OK) { return; }
     coopnet_lobby_list_get(CN_GAME_STR, password);
 }
@@ -35,6 +36,8 @@ static void coopnet_on_disconnected(void) {
     LOG_INFO("Coopnet shutdown!");
     djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
     coopnet_shutdown();
+    gCoopNetCallbacks.OnLobbyListGot = NULL;
+    gCoopNetCallbacks.OnLobbyListFinish = NULL;
 }
 
 static void coopnet_on_peer_disconnected(uint64_t peerId) {
@@ -121,6 +124,8 @@ static int ns_coopnet_network_send(u8 localIndex, void* address, u8* data, u16 d
 static void ns_coopnet_shutdown(void) {
     LOG_INFO("Coopnet shutdown!");
     coopnet_shutdown();
+    gCoopNetCallbacks.OnLobbyListGot = NULL;
+    gCoopNetCallbacks.OnLobbyListFinish = NULL;
 }
 
 static CoopNetRc coopnet_initialize(void) {

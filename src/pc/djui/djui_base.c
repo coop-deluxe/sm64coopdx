@@ -393,6 +393,19 @@ void djui_base_destroy(struct DjuiBase* base) {
     base->destroy(base);
 }
 
+void djui_base_destroy_children(struct DjuiBase* base) {
+    // destroy all children and our linked list
+    struct DjuiBaseChild* child = base->child;
+    while (child != NULL) {
+        struct DjuiBaseChild* nextChild = child->next;
+        child->base->parent = NULL;
+        djui_base_destroy(child->base);
+        free(child);
+        child = nextChild;
+    }
+    base->child = NULL;
+}
+
 void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, bool (*render)(struct DjuiBase*), void (*destroy)(struct DjuiBase*)) {
     memset(base, 0, sizeof(struct DjuiBase));
     base->parent = parent;

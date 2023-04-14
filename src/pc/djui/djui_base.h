@@ -69,4 +69,5 @@ void djui_base_compute_tree(struct DjuiBase* base);
 
 bool djui_base_render(struct DjuiBase* base);
 void djui_base_destroy(struct DjuiBase* base);
+void djui_base_destroy_children(struct DjuiBase* base);
 void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, bool (*render)(struct DjuiBase*), void (*destroy)(struct DjuiBase*));

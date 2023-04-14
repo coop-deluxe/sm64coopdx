@@ -31,6 +31,7 @@ typedef struct {
     void (*OnLobbyJoined)(uint64_t aLobbyId, uint64_t aUserId, uint64_t aOwnerId);
     void (*OnLobbyLeft)(uint64_t aLobbyId, uint64_t aUserId);
     void (*OnLobbyListGot)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode);
+    void (*OnLobbyListFinish)(void);
     void (*OnReceive)(uint64_t aFromUserId, const uint8_t* aData, uint64_t aSize);
     void (*OnError)(enum MPacketErrorNumber aErrorNumber);
     void (*OnPeerConnected)(uint64_t aPeerId);
