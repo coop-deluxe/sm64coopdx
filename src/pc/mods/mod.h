@@ -32,6 +32,7 @@ struct Mod {
     size_t size;
 };
 
+size_t mod_get_lua_size(struct Mod* mod);
 void mod_activate(struct Mod* mod);
 void mod_clear(struct Mod* mod);
 bool mod_load(struct Mods* mods, char* basePath, char* modName);
