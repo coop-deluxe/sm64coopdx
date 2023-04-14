@@ -138,7 +138,7 @@ void network_receive_area(struct Packet* p) {
     LOG_INFO("rx area");
 
     if (p == NULL) {
-        LOG_ERROR("rx area: the packet was NULL, failed to recieve the area.");
+        LOG_ERROR("rx area: the packet was NULL, failed to receive the area.");
         return;
     }
 
