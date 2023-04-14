@@ -98,6 +98,7 @@ enum InteractionType {
 #define INT_STATUS_STOP_RIDING           (1 << 22) /* 0x00400000 */
 #define INT_STATUS_TOUCHED_BOB_OMB       (1 << 23) /* 0x00800000 */
 
+extern s16 gInteractionInvulnerable;
 extern u8 gPssSlideStarted;
 
 s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *o);

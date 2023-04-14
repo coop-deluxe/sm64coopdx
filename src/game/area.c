@@ -161,6 +161,8 @@ u32 get_mario_spawn_type(struct Object *o) {
 }
 
 struct ObjectWarpNode *area_get_warp_node(u8 id) {
+    if (!gCurrentArea || !gCurrentArea->warpNodes) { return NULL; }
+
     struct ObjectWarpNode *node = NULL;
 
     for (node = gCurrentArea->warpNodes; node != NULL; node = node->next) {

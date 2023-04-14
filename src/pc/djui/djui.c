@@ -98,6 +98,7 @@ void djui_render(void) {
     gDjuiHudUtilsZ = 0;
 
     create_dl_ortho_matrix();
+    djui_gfx_displaylist_begin();
 
     smlua_call_event_hooks(HOOK_ON_HUD_RENDER);
 
@@ -119,4 +120,5 @@ void djui_render(void) {
 
     djui_cursor_update();
     djui_interactable_update();
+    djui_gfx_displaylist_end();
 }

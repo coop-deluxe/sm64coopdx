@@ -3297,11 +3297,6 @@ void soft_reset_camera(struct Camera* c) {
  * Reset all the camera variables to their arcane defaults
  */
 void reset_camera(struct Camera *c) {
-    UNUSED s32 unused = 0;
-    UNUSED u8 unused1[16];
-    UNUSED struct LinearTransitionPoint *start = &sModeInfo.transitionStart;
-    UNUSED struct LinearTransitionPoint *end = &sModeInfo.transitionEnd;
-
     gCamera = c;
     gCameraMovementFlags = 0;
     s2ndRotateFlags = 0;
@@ -3315,7 +3310,6 @@ void reset_camera(struct Camera *c) {
     unused8032CFCC = 0;
     gSecondCameraFocus = NULL;
     sCButtonsPressed = 0;
-    vec3f_copy(sModeTransition.marioPos, sMarioCamState->pos);
     sModeTransition.framesLeft = 0;
     unused8032CFCC = -1;
     unused8032CFC8 = -1;
@@ -3340,11 +3334,19 @@ void reset_camera(struct Camera *c) {
     sCSideButtonYaw = 0;
     s8DirModeBaseYaw = 0;
     s8DirModeYawOffset = 0;
-    c->doorStatus = DOOR_DEFAULT;
-    sMarioCamState->headRotation[0] = 0;
-    sMarioCamState->headRotation[1] = 0;
-    sMarioCamState->cameraEvent = 0;
-    sMarioCamState->usedObj = NULL;
+
+    if (c) {
+        c->doorStatus = DOOR_DEFAULT;
+    }
+
+    if (sMarioCamState) {
+        vec3f_copy(sModeTransition.marioPos, sMarioCamState->pos);
+        sMarioCamState->headRotation[0] = 0;
+        sMarioCamState->headRotation[1] = 0;
+        sMarioCamState->cameraEvent = 0;
+        sMarioCamState->usedObj = NULL;
+    }
+
     gLakituState.shakeMagnitude[0] = 0;
     gLakituState.shakeMagnitude[1] = 0;
     gLakituState.shakeMagnitude[2] = 0;
@@ -3355,12 +3357,14 @@ void reset_camera(struct Camera *c) {
     gLakituState.unusedVec1[1] = 0.f;
     gLakituState.unusedVec1[2] = 0.f;
     gLakituState.lastFrameAction = 0;
+
     set_fov_function(CAM_FOV_DEFAULT);
     sFOVState.fov = 45.f;
     sFOVState.fovOffset = 0.f;
     sFOVState.unusedIsSleeping = 0;
     sFOVState.shakeAmplitude = 0.f;
     sFOVState.shakePhase = 0;
+
     sObjectCutscene = 0;
     gRecentCutscene = 0;
     unused8033B30C = 0;

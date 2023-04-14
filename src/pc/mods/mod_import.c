@@ -56,6 +56,7 @@ static bool mod_import_lua(char* src) {
 static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     LOG_INFO("Importing zip mod: %s", path);
 
+    char luaPath[SYS_MAX_PATH] = { 0 };
     mz_zip_archive zip_archive = { 0 };
     mz_bool status = mz_zip_reader_init_file(&zip_archive, path, 0);
     if (!status) {
@@ -75,6 +76,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         }
 
         if (str_ends_with(file_stat.m_filename, ".lua")) {
+            path_get_folder(file_stat.m_filename, luaPath);
             *isLua = true;
             break;
         } else if (str_ends_with(file_stat.m_filename, ".tex")) {
@@ -99,10 +101,30 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         snprintf(dstDirectory, SYS_MAX_PATH, "%s", (char*)fs_get_write_path(DYNOS_PACKS_FOLDER));
     } else {
         LOG_ERROR("Could not figure out what type of mod this is");
+        mz_zip_reader_end(&zip_archive);
         return false;
     }
+
+    // create mod/dynos path if it doesn't exist
     if (!fs_sys_dir_exists(dstDirectory)) {
         fs_sys_mkdir(dstDirectory);
+    }
+
+    // erase and create lua path
+    if (*isLua && strlen(luaPath) > 0) {
+        if (!concat_path(dst, dstDirectory, luaPath)) {
+            LOG_ERROR("Failed to concat path for base lua directory");
+            mz_zip_reader_end(&zip_archive);
+            return false;
+        }
+        if (fs_sys_dir_exists(dst)) {
+            mods_delete_folder(dst);
+        }
+        if (!fs_sys_mkdir(dst)) {
+            LOG_ERROR("Failed to mkdir for base lua directory");
+            mz_zip_reader_end(&zip_archive);
+            return false;
+        }
     }
 
     // Extract the archive
@@ -159,6 +181,8 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
         FILE* fout = fopen(dst, "wb");
         if (fout == NULL) {
             LOG_ERROR("Failed to open dst path for zip mod import");
+            mz_free((void*)p);
+            mz_zip_reader_end(&zip_archive);
             return false;
         }
 

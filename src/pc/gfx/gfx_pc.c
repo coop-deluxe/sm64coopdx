@@ -189,6 +189,18 @@ static const uint8_t missing_texture[MISSING_W * MISSING_H * 4] = {
     0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,
 };
 
+static bool sOnlyTextureChangeOnAddrChange = false;
+
+static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, const uint8_t* addr) {
+    if (!sOnlyTextureChangeOnAddrChange) {
+        rdp.textures_changed[tile_number] = true;
+    } else if (!rdp.textures_changed[tile_number]) {
+        rdp.textures_changed[tile_number] = rdp.loaded_texture[tile_number].addr != addr;
+    }
+    rdp.loaded_texture[tile_number].size_bytes = size_bytes;
+    rdp.loaded_texture[tile_number].addr = addr;
+}
+
 //////////////////////////////////
 // forward declaration for djui //
 //////////////////////////////////
@@ -210,15 +222,9 @@ static unsigned long get_time(void) {
 
 static void gfx_flush(void) {
     if (buf_vbo_len > 0) {
-        /*int num = buf_vbo_num_tris;
-        unsigned long t0 = get_time();*/
         gfx_rapi->draw_triangles(buf_vbo, buf_vbo_len, buf_vbo_num_tris);
         buf_vbo_len = 0;
         buf_vbo_num_tris = 0;
-        /*unsigned long t1 = get_time();
-        if (t1 - t0 > 1000) {
-            printf("f: %d %d\n", num, (int)(t1 - t0));
-        }*/
     }
 }
 
@@ -1241,8 +1247,11 @@ static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t t
         rdp.texture_tile.cms = cms;
         rdp.texture_tile.cmt = cmt;
         rdp.texture_tile.line_size_bytes = line * 8;
-        rdp.textures_changed[0] = true;
-        rdp.textures_changed[1] = true;
+        if (!sOnlyTextureChangeOnAddrChange) {
+            // I don't know if we ever need to set these...
+            rdp.textures_changed[0] = true;
+            rdp.textures_changed[1] = true;
+        }
     }
 
     if (tile == G_TX_LOADTILE) {
@@ -1256,8 +1265,11 @@ static void gfx_dp_set_tile_size(uint8_t tile, uint16_t uls, uint16_t ult, uint1
         rdp.texture_tile.ult = ult;
         rdp.texture_tile.lrs = lrs;
         rdp.texture_tile.lrt = lrt;
-        rdp.textures_changed[0] = true;
-        rdp.textures_changed[1] = true;
+        if (!sOnlyTextureChangeOnAddrChange) {
+            // I don't know if we ever need to set these...
+            rdp.textures_changed[0] = true;
+            rdp.textures_changed[1] = true;
+        }
     }
 }
 
@@ -1290,9 +1302,7 @@ static void gfx_dp_load_block(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t
             break;
     }
     uint32_t size_bytes = (lrs + 1) << word_size_shift;
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = size_bytes;
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
-    rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
+    gfx_update_loaded_texture(rdp.texture_to_load.tile_number, size_bytes, rdp.texture_to_load.addr);
 }
 
 static void gfx_dp_load_tile(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t lrs, uint32_t lrt) {
@@ -1318,15 +1328,11 @@ static void gfx_dp_load_tile(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t 
     }
 
     uint32_t size_bytes = (((lrs >> G_TEXTURE_IMAGE_FRAC) + 1) * ((lrt >> G_TEXTURE_IMAGE_FRAC) + 1)) << word_size_shift;
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = size_bytes;
-
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
+    gfx_update_loaded_texture(rdp.texture_to_load.tile_number, size_bytes, rdp.texture_to_load.addr);
     rdp.texture_tile.uls = uls;
     rdp.texture_tile.ult = ult;
     rdp.texture_tile.lrs = lrs;
     rdp.texture_tile.lrt = lrt;
-
-    rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
 }
 
 static uint8_t color_comb_component(uint32_t v) {
@@ -1977,10 +1983,7 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     uint32_t wordSizeShift = (sDjuiOverrideB == 32) ? 2 : 1;
     uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
     uint32_t sizeBytes = (lrs + 1) << wordSizeShift;
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].size_bytes = sizeBytes;
-    rdp.textures_changed[rdp.texture_to_load.tile_number] = rdp.loaded_texture[rdp.texture_to_load.tile_number].addr != rdp.texture_to_load.addr;
-    rdp.loaded_texture[rdp.texture_to_load.tile_number].addr = rdp.texture_to_load.addr;
-    //rdp.textures_changed[rdp.texture_to_load.tile_number] = true;
+    gfx_update_loaded_texture(rdp.texture_to_load.tile_number, sizeBytes, rdp.texture_to_load.addr);
 
     // gsDPSetTile
     uint32_t line = (((sDjuiOverrideW * 2) + 7) >> 3);
@@ -2134,6 +2137,9 @@ void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {
         case G_DJUI_SIMPLE_TRI2:
             djui_gfx_sp_simple_tri1(C0(16, 8) / 2, C0(8, 8) / 2, C0(0, 8) / 2);
             djui_gfx_sp_simple_tri1(C1(16, 8) / 2, C1(8, 8) / 2, C1(0, 8) / 2);
+            break;
+        case G_TEXADDR_DJUI:
+            sOnlyTextureChangeOnAddrChange = !(C0(0, 24) & 0x01);
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);

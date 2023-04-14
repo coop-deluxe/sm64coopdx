@@ -222,8 +222,12 @@ function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevSc
 end
 
 --- @param levelNum number
---- @param func fun(areaNum:number, bhv:table)
+--- @param func fun(areaIndex:number, bhvData:table, macroBhvIds:table, macroBhvArgs:table)
 --- @return nil
+--- When `func` is called, arguments are filled depending on the level command:
+--- - `AREA` command: only `areaIndex` is filled. It's a number.
+--- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with two fields: `behavior` and `behaviorArg`.
+--- - `MACRO` command: only `macroBhvIds` and `macroBhvArgs` are filled. `macrobhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. Both lists have the same size and start at index 0.
 function level_script_parse(levelNum, func)
     -- ...
 end

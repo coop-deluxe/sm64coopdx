@@ -14,6 +14,7 @@ u64 osClockRate = 62500000;
 s32 osPiStartDma(UNUSED OSIoMesg *mb, UNUSED s32 priority, UNUSED s32 direction,
                  uintptr_t devAddr, void *vAddr, size_t nbytes,
                  UNUSED OSMesgQueue *mq) {
+    if (!vAddr || !devAddr) { return 0; }
     memcpy(vAddr, (const void *) devAddr, nbytes);
     return 0;
 }

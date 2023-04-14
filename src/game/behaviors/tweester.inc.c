@@ -149,7 +149,7 @@ void bhv_tweester_loop(void) {
     }
 
     obj_set_hitbox(o, &sTweesterHitbox);
-    cur_obj_call_action_function(sTweesterActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sTweesterActions);
     o->oInteractStatus = 0;
 }
 

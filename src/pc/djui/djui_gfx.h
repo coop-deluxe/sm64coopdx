@@ -9,6 +9,9 @@ extern const Gfx dl_djui_simple_rect[];
 extern const Gfx dl_djui_img_begin[];
 extern const Gfx dl_djui_img_end[];
 
+void djui_gfx_displaylist_begin(void);
+void djui_gfx_displaylist_end(void);
+
 f32 djui_gfx_get_scale(void);
 
 void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize);

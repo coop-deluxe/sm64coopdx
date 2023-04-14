@@ -6,6 +6,25 @@
 #include "src/pc/pc_main.h"
 #include "src/pc/gfx/gfx_window_manager_api.h"
 #include "gfx_dimensions.h"
+#include "djui_gfx.h"
+
+const Gfx dl_djui_display_list_begin[] = {
+    gsSPTextureAddrDjui(1),
+    gsSPEndDisplayList(),
+};
+
+const Gfx dl_djui_display_list_end[] = {
+    gsSPTextureAddrDjui(0),
+    gsSPEndDisplayList(),
+};
+
+void djui_gfx_displaylist_begin(void) {
+    gSPDisplayList(gDisplayListHead++, dl_djui_display_list_begin);
+}
+
+void djui_gfx_displaylist_end(void) {
+    gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
+}
 
 static const Vtx vertex_djui_simple_rect[] = {
     {{{ 0, -1, 0}, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},

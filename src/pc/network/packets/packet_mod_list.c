@@ -28,7 +28,10 @@ void network_send_mod_list_request(void) {
 }
 
 void network_receive_mod_list_request(UNUSED struct Packet* p) {
-    SOFT_ASSERT(gNetworkType == NT_SERVER);
+    if (gNetworkType != NT_SERVER) {
+        LOG_ERROR("Network type should be server!");
+        return;
+    }
     LOG_INFO("received mod list request");
 
     network_send_mod_list();

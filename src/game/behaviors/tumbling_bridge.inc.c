@@ -164,5 +164,5 @@ void bhv_tumbling_bridge_loop(void) {
         }
     }
 
-    cur_obj_call_action_function(sTumblingBridgeActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sTumblingBridgeActions);
 }

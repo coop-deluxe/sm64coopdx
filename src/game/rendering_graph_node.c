@@ -1554,7 +1554,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                 }
             }
         } else {
-            if (curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
+            if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;
             }
         }

@@ -555,7 +555,7 @@ void bhv_boo_loop(void) {
     //PARTIAL_UPDATE
 
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sBooActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBooActions);
     cur_obj_move_standard(78);
     boo_approach_target_opacity_and_update_scale();
 
@@ -793,7 +793,7 @@ void bhv_big_boo_loop(void) {
     o->oGraphYOffset = o->oBooBaseScale * 60.0f;
 
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sBooGivingStarActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBooGivingStarActions);
     cur_obj_move_standard(78);
 
     boo_approach_target_opacity_and_update_scale();
@@ -870,7 +870,7 @@ void bhv_boo_with_cage_loop(void) {
     //PARTIAL_UPDATE
 
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sBooWithCageActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBooWithCageActions);
     cur_obj_move_standard(78);
 
     boo_approach_target_opacity_and_update_scale();

@@ -8,22 +8,46 @@
  // events //
 ////////////
 
-static void djui_paginated_prev(struct DjuiBase* base) {
-    struct DjuiPaginated* paginated = (struct DjuiPaginated*)base->parent;
-    paginated->startIndex -= paginated->showCount;
-    if (paginated->startIndex < 0) { paginated->startIndex = 0; }
-}
+static struct DjuiButton* sPrevButton = NULL;
+static struct DjuiButton* sNextButton = NULL;
+static struct DjuiText* sPageNumText = NULL;
 
-static void djui_paginated_next(struct DjuiBase* base) {
-    struct DjuiPaginated* paginated = (struct DjuiPaginated*)base->parent;
-    paginated->startIndex += paginated->showCount;
-
+static s32 djui_paginated_get_count(struct DjuiPaginated* paginated) {
     s32 count = 0;
     struct DjuiBaseChild* dbc = paginated->layout->base.child;
     while (dbc != NULL) {
         count++;
         dbc = dbc->next;
     }
+
+    return count;
+}
+
+static void djui_paginated_prev(struct DjuiBase* base) {
+    struct DjuiPaginated* paginated = (struct DjuiPaginated*)base->parent;
+    paginated->startIndex -= paginated->showCount;
+
+    djui_base_set_enabled(&sPrevButton->base, (paginated->startIndex > 0));
+    djui_base_set_enabled(&sNextButton->base, true);
+
+    char pageNumString[32] = { 0 };
+    snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, djui_paginated_get_count(paginated) / paginated->showCount + 1);
+    djui_text_set_text(sPageNumText, pageNumString);
+
+    if (paginated->startIndex < 0) { paginated->startIndex = 0; }
+}
+
+static void djui_paginated_next(struct DjuiBase* base) {
+    struct DjuiPaginated* paginated = (struct DjuiPaginated*)base->parent;
+    paginated->startIndex += paginated->showCount;
+    s32 count = djui_paginated_get_count(paginated);
+
+    djui_base_set_enabled(&sNextButton->base, (paginated->startIndex < count - 8));
+    djui_base_set_enabled(&sPrevButton->base, true);
+
+    char pageNumString[32] = { 0 };
+    snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, count / paginated->showCount + 1);
+    djui_text_set_text(sPageNumText, pageNumString);
 
     if (paginated->startIndex >= count) { paginated->startIndex -= paginated->showCount; }
 }
@@ -57,6 +81,10 @@ void djui_paginated_calculate_height(struct DjuiPaginated* paginated) {
     }
 
     djui_base_set_size(&paginated->base, paginated->base.width.value, height);
+
+    char pageNumString[32] = { 0 };
+    snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, count / paginated->showCount + 1);
+    djui_text_set_text(sPageNumText, pageNumString);
 }
 
 bool djui_paginated_render(struct DjuiBase* base) {
@@ -112,22 +140,23 @@ struct DjuiPaginated* djui_paginated_create(struct DjuiBase* parent, u32 showCou
         paginated->layout = layout;
     }
 
-    {
-        struct DjuiButton* button = djui_button_create(&paginated->base, "<", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_prev);
-        djui_base_set_alignment(&button->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
-        djui_base_set_size_type(&button->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button->base, 128, 32);
-        paginated->prevButton = button;
-    }
+    sPrevButton = djui_button_create(&paginated->base, "<", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_prev);
+    djui_base_set_alignment(&sPrevButton->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_size_type(&sPrevButton->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&sPrevButton->base, 128, 32);
+    djui_base_set_enabled(&sPrevButton->base, false);
+    paginated->prevButton = sPrevButton;
 
-    {
-        struct DjuiButton* button = djui_button_create(&paginated->base, ">", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_next);
-        djui_base_set_alignment(&button->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
-        djui_base_set_size_type(&button->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&button->base, 128, 32);
-        djui_interactable_hook_click(&button->base, djui_paginated_next);
-        paginated->nextButton = button;
-    }
+    sPageNumText = djui_text_create(&paginated->base, "");
+    djui_base_set_color(&sPageNumText->base, 200, 200, 200, 255);
+    djui_base_set_alignment(&sPageNumText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+    sPageNumText->base.y.value -= 30;
+
+    sNextButton = djui_button_create(&paginated->base, ">", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_next);
+    djui_base_set_alignment(&sNextButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_size_type(&sNextButton->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&sNextButton->base, 128, 32);
+    paginated->nextButton = sNextButton;
 
     return paginated;
 }

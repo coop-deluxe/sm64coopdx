@@ -332,6 +332,11 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 }
 
 void network_receive_download(struct Packet* p) {
+    if (!p) {
+        LOG_ERROR("Received null packet");
+        return;
+    }
+
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
@@ -343,9 +348,13 @@ void network_receive_download(struct Packet* p) {
     // read the chunk
     u64 receiveOffset     = 0;
     u64 chunkLength       = 0;
-    u8  chunk[CHUNK_SIZE] = { 0 };
+    u8  chunk[CHUNK_SIZE+1] = { 0 };
     packet_read(p, &receiveOffset, sizeof(u64));
     packet_read(p, &chunkLength,   sizeof(u64));
+    if (chunkLength > CHUNK_SIZE) {
+        LOG_ERROR("Received improper chunk length");
+        return;
+    }
     packet_read(p, &chunk,         sizeof(u8) * chunkLength);
 
     // mark the offset group as received
@@ -379,10 +388,19 @@ after_group:;
     u64 fileStartOffset = 0;
     for (u64 modIndex = 0; modIndex < gRemoteMods.entryCount; modIndex++) {
         struct Mod* mod = gRemoteMods.entries[modIndex];
+        if (!mod) {
+            LOG_ERROR("Null mod");
+            continue;
+        }
 
         // skip past mods to get to the right offset
         if ((fileStartOffset + mod->size) < receiveOffset) {
             fileStartOffset += mod->size;
+            continue;
+        }
+
+        if (mod->fileCount > 0 && !mod->files) {
+            LOG_ERROR("Null mod files");
             continue;
         }
 

@@ -59,7 +59,7 @@ void bhv_bowser_tail_anchor_init(void) {
 }
 
 void bhv_bowser_tail_anchor_loop(void) {
-    cur_obj_call_action_function(sBowserTailAnchorActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBowserTailAnchorActions);
     o->oParentRelativePosX = 90.0f;
     if (o->parentObj->oAction == 4)
         o->parentObj->oIntangibleTimer = -1;
@@ -1204,7 +1204,7 @@ void bowser_free_update(void) {
     o->oBowserUnk10E = 0;
 
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sBowserActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sBowserActions);
     cur_obj_move_standard(-78);
     if (bowser_check_fallen_off_stage())
         o->oAction = 2; // bowser go home?
@@ -1657,7 +1657,7 @@ void bhv_falling_bowser_platform_loop(void) {
         }
     }
 
-    cur_obj_call_action_function(sFallingBowserPlatformActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sFallingBowserPlatformActions);
 }
 
 void bowser_flame_despawn(void) {

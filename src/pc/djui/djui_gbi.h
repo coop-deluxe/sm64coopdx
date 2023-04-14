@@ -4,7 +4,13 @@
 #define G_TEXOVERRIDE_DJUI 0xe0
 #define G_DJUI_SIMPLE_VERT 0x11
 #define G_DJUI_SIMPLE_TRI2 0x12
+#define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
+
+#define	gsSPTextureAddrDjui(c) \
+{{ \
+	(_SHIFTL(G_TEXADDR_DJUI,24,8)|_SHIFTL(~(u32)(c),0,24)),(u32)(0)	\
+}}
 
 #define gSetClippingDjui(pkt, cmd, x1, y1, x2, y2)         \
 {                                                               \

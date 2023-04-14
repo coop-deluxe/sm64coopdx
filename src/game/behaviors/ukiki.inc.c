@@ -504,7 +504,7 @@ void ukiki_free_loop(void) {
     s32 steepSlopeAngleDegrees;
 
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sUkikiActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sUkikiActions);
 
     if (o->oAction == UKIKI_ACT_GO_TO_CAGE || o->oAction == UKIKI_ACT_RETURN_HOME) {
         steepSlopeAngleDegrees = -88;

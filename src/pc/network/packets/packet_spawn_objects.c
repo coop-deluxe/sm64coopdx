@@ -59,6 +59,11 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         return;
     }
 
+    if (objectCount == 0) {
+        LOG_ERROR("Tried to send 0 objects");
+        return;
+    }
+
     SOFT_ASSERT(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
     // prevent sending spawn objects during credits
     if (gCurrActStarNum == 99) {
@@ -74,6 +79,11 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 
     for (u8 i = 0; i < objectCount; i++) {
         struct Object* o = objects[i];
+        if (!o) {
+            LOG_ERROR("Tried to send null object");
+            return;
+        }
+
         u32 model = models[i];
         u32 parentId = generate_parent_id(objects, i, true);
         u32 behaviorId = get_id_from_behavior(o->behavior);
@@ -96,10 +106,14 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
         network_send(&p);
-        LOG_INFO("tx spawn objects (BROADCAST) | %u", get_id_from_behavior(objects[0]->behavior));
+        if (objects[0] && objects[0]->behavior) {
+            LOG_INFO("tx spawn objects (BROADCAST) | %u", get_id_from_behavior(objects[0]->behavior));
+        }
     } else {
         network_send_to(sendToLocalIndex, &p);
-        LOG_INFO("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
+        if (objects[0] && objects[0]->behavior) {
+            LOG_INFO("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
+        }
     }
 }
 

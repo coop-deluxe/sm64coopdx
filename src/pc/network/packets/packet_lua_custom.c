@@ -11,6 +11,11 @@ void network_send_lua_custom(bool broadcast) {
     u16 zero = 0;
     s32 paramIndex = 1;
 
+    if (!L) {
+        LOG_ERROR("Sent lua custom packet when lua is dead");
+        return;
+    }
+
     // figure out mod index
     if (gLuaActiveMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
@@ -98,6 +103,11 @@ void network_receive_lua_custom(struct Packet* p) {
     u8  keyCount = 0;
     packet_read(p, &modIndex, sizeof(u16));
     packet_read(p, &keyCount, sizeof(u8));
+
+    if (!L) {
+        LOG_ERROR("Received lua custom packet when lua is dead");
+        return;
+    }
 
     lua_newtable(L);
     s32 tableIndex = lua_gettop(L);

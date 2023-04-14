@@ -63,5 +63,5 @@ void bhv_grindel_thwomp_loop(void) {
         sync_object_init_field(o, &o->oTimer);
         sync_object_init_field(o, &o->oVelY);
     }
-    cur_obj_call_action_function(sGrindelThwompActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sGrindelThwompActions);
 }

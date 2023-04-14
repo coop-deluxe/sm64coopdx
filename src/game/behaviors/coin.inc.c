@@ -255,7 +255,7 @@ void coin_inside_boo_act_0(void) {
 void (*sCoinInsideBooActions[])(void) = { coin_inside_boo_act_0, coin_inside_boo_act_1 };
 
 void bhv_coin_inside_boo_loop(void) {
-    cur_obj_call_action_function(sCoinInsideBooActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sCoinInsideBooActions);
 }
 
 void bhv_coin_sparkles_loop(void) {

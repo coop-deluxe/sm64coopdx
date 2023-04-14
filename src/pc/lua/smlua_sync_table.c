@@ -271,7 +271,11 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
     // send over the network
     if (!gLuaInitializingScript) {
-        network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, sUnwoundLntsCount, sUnwoundLnts, &lntValue);
+        if (sUnwoundLntsCount < 2) {
+            LOG_ERROR("Sent sync table field packet with an invalid key count: %u", sUnwoundLntsCount);
+        } else {
+            network_send_lua_sync_table(toLocalIndex, seq, modRemoteIndex, sUnwoundLntsCount, sUnwoundLnts, &lntValue);
+        }
     }
 
 
@@ -308,6 +312,12 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     // sanity check lntValue
     if (lntValue->type >= LST_NETWORK_TYPE_MAX) {
         LOG_ERROR("Received sync table field packet with an invalid lnt type: %u", lntValue->type);
+        return;
+    }
+
+    // sanity check key count
+    if (lntKeyCount < 2) {
+        LOG_ERROR("Received sync table field packet with an invalid key count: %u", lntKeyCount);
         return;
     }
 

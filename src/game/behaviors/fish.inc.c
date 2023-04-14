@@ -73,7 +73,7 @@ static void (*sFishSpawnerActions[])(void) = {
 };
 
 void bhv_fish_spawner_loop(void) {
-    cur_obj_call_action_function(sFishSpawnerActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sFishSpawnerActions);
 }
 
 /**
@@ -276,7 +276,7 @@ void bhv_fish_loop(void)
     }
 
     // Call fish action methods and apply physics engine.
-    cur_obj_call_action_function(sFishActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sFishActions);
     cur_obj_move_using_fvel_and_gravity();
 
     // If the parent object has action set to two, then delete the fish object.

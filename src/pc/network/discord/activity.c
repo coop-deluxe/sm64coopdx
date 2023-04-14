@@ -132,6 +132,16 @@ void discord_activity_update(bool hosting) {
         LOGFILE_INFO(LFT_DISCORD, "truncating details");
     }
 
+    if (!app.activities) {
+        LOGFILE_INFO(LFT_DISCORD, "no activities");
+        return;
+    }
+
+    if (!app.activities->update_activity) {
+        LOGFILE_INFO(LFT_DISCORD, "no update_activity");
+        return;
+    }
+
     app.activities->update_activity(app.activities, &gCurActivity, NULL, on_activity_update_callback);
     LOGFILE_INFO(LFT_DISCORD, "set activity");
 }

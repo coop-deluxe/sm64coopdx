@@ -152,15 +152,19 @@ void mod_activate(struct Mod* mod) {
 }
 
 void mod_clear(struct Mod* mod) {
-    for (int j = 0; j < mod->fileCount; j++) {
-        struct ModFile* file = &mod->files[j];
-        if (file->fp != NULL) {
-            fclose(file->fp);
-            file->fp = NULL;
-        }
-        if (file->cachedPath != NULL) {
-            free((char*)file->cachedPath);
-            file->cachedPath = NULL;
+    if (!mod) { return; }
+
+    if (mod->files) {
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+            if (file->fp != NULL) {
+                fclose(file->fp);
+                file->fp = NULL;
+            }
+            if (file->cachedPath != NULL) {
+                free((char*)file->cachedPath);
+                file->cachedPath = NULL;
+            }
         }
     }
 
@@ -437,13 +441,8 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         valid = true;
     } else if (is_directory(fullPath)) {
         char tmpPath[SYS_MAX_PATH] = { 0 };
-        char path1[SYS_MAX_PATH] = { 0 };
-        char path2[SYS_MAX_PATH] = { 0 };
         if (!concat_path(tmpPath, fullPath, "main.lua")) {
             LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, "main.lua");
-            return true;
-        }
-        if ((concat_path(path1, fullPath, "c-update.lua") && path_exists(path1)) || (concat_path(path2, fullPath, "m-update.lua") && path_exists(path2))) {
             return true;
         }
         valid = path_exists(tmpPath);
@@ -513,12 +512,10 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
 
     // print
     LOG_INFO("    %s", mod->name);
-    if (isDirectory) {
-        for (int i = 0; i < mod->fileCount; i++) {
-            struct ModFile* file = &mod->files[i];
-            mod_cache_add(mod, file, true);
-            LOG_INFO("      - %s", file->relativePath);
-        }
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        mod_cache_add(mod, file, true);
+        LOG_INFO("      - %s", file->relativePath);
     }
 
     return true;

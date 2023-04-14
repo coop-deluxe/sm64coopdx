@@ -214,5 +214,5 @@ void bhv_exclamation_box_init(void) {
 
 void bhv_exclamation_box_loop(void) {
     cur_obj_scale(2.0f);
-    cur_obj_call_action_function(sExclamationBoxActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sExclamationBoxActions);
 }

@@ -369,7 +369,7 @@ void bhv_piranha_plant_loop(void) {
     cur_obj_set_hitbox_radius_and_height(150.0f, 100.0f);
     cur_obj_set_hurtbox_radius_and_height(150.0f, 100.0f);
 
-    cur_obj_call_action_function(TablePiranhaPlantActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(TablePiranhaPlantActions);
     // In WF, hide all Piranha Plants once high enough up.
     if (gCurrLevelNum == LEVEL_WF) {
         struct Object* player = gMarioStates[0].marioObj;

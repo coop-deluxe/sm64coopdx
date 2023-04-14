@@ -160,7 +160,7 @@ void bhv_tuxies_mother_loop(void) {
     }
     o->activeFlags |= ACTIVE_FLAG_UNK10;
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sTuxiesMotherActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sTuxiesMotherActions);
     cur_obj_move_standard(-78);
     play_penguin_walking_sound(PENGUIN_WALK_BIG);
     o->oInteractStatus = 0;
@@ -289,7 +289,7 @@ void small_penguin_free_actions(void) {
     cur_obj_become_tangible();
     cur_obj_enable_rendering();
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sSmallPenguinActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sSmallPenguinActions);
     cur_obj_move_standard(-78);
     play_penguin_walking_sound(PENGUIN_WALK_BABY);
 }

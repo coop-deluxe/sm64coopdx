@@ -85,6 +85,6 @@ void bhv_tox_box_loop(void) {
             sync_object_init_field(o, &o->oToxBoxMovementStep);
         }
     }
-    cur_obj_call_action_function(sToxBoxActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sToxBoxActions);
     load_object_collision_model();
 }

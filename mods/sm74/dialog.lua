@@ -2195,27 +2195,46 @@ possibility.\
 Good luck and\
 frustration resistance.")
 
+-- smlua_text_utils_dialog_replace(DIALOG_063,1,5,30,200, "It's really a shame but\
+-- this level was way too\
+-- big for the level importer\
+-- so I had to split it\
+-- into two parts.\
+-- That means I CAN'T place\
+-- red coins in the whole\
+-- level. Sad, isn't it?\
+-- I know that you would\
+-- enjoy collecting 30\
+-- red coins, right?\
+-- Well then, instead,\
+-- the red coins are all\
+-- beyond the cannon.\
+-- And since they are so\
+-- close together\
+-- I won't tell you how\
+-- many there are.\
+-- \
+-- (Well, honestly, I forgot\
+-- how many I placed.)")
+
 smlua_text_utils_dialog_replace(DIALOG_063,1,5,30,200, "It's really a shame but\
 this level was way too\
 big for the level importer\
 so I had to split it\
 into two parts.\
-That means I CAN'T place\
+Nah! Just kidding!\
+You're no longer playing\
+a Nintendo 64 rom-hack.\
+It's the pc port we're\
+talking about!\
+That means I CAN place\
 red coins in the whole\
-level. Sad, isn't it?\
+level. Great, isn't it?\
 I know that you would\
 enjoy collecting 30\
-red coins, right?\
-Well then, instead,\
-the red coins are all\
-beyond the cannon.\
-And since they are so\
-close together\
-I won't tell you how\
-many there are.\
-\
-(Well, honestly, I forgot\
-how many I placed.)")
+red coins. So, after 9\
+years, it's finally\
+possible. Have fun!")
 
 smlua_text_utils_dialog_replace(DIALOG_064,1,5,30,200, "You should already know\
 the concept of this\

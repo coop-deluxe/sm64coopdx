@@ -193,7 +193,7 @@ void (*sChuckyaActions[])(void) = { chuckya_act_0, chuckya_act_1, chuckya_act_2,
 
 void chuckya_move(void) {
     cur_obj_update_floor_and_walls();
-    cur_obj_call_action_function(sChuckyaActions);
+    CUR_OBJ_CALL_ACTION_FUNCTION(sChuckyaActions);
     cur_obj_move_standard(-30);
     if (o->oInteractStatus & INT_STATUS_GRABBED_MARIO) {
         o->oAction = 1;
