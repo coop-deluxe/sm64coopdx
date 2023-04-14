@@ -337,6 +337,7 @@ void bhv_mario_update(void) {
     update_character_anim_offset(gMarioState);
 
     // reset mario state to the local player
+    gInteractionInvulnerable = false;
     gMarioState = &gMarioStates[0];
 }
 
