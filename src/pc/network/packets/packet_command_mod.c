@@ -18,7 +18,7 @@ void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     }
 }
 
-void network_recieve_chat_command(struct Packet *p) {
+void network_receive_chat_command(struct Packet *p) {
     if (!moderator_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
         return;
     }
@@ -59,7 +59,7 @@ void network_send_moderator(u8 localIndex) {
     network_send_to(localIndex, &p);
 }
 
-void network_recieve_moderator(struct Packet *p) {
+void network_receive_moderator(struct Packet *p) {
     if ((gIsModerator) || (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER)) {
         return;
     }

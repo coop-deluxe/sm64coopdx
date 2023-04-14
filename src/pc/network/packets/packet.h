@@ -234,11 +234,11 @@ void network_receive_kick(struct Packet* p);
 
 // packet_command_mod.c
 void network_send_chat_command(u8 localIndex, enum ChatConfirmCommand CCC);
-void network_recieve_chat_command(struct Packet* p);
+void network_receive_chat_command(struct Packet* p);
 
 // packet_moderator.c
 void network_send_moderator(u8 localIndex);
-void network_recieve_moderator(struct Packet* p);
+void network_receive_moderator(struct Packet* p);
 
 // packet_keep_alive.c
 void network_send_keep_alive(u8 localIndex);
