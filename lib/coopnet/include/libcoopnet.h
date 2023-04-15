@@ -28,7 +28,7 @@ typedef struct {
     void (*OnConnected)(uint64_t aUserId);
     void (*OnDisconnected)(void);
     void (*OnLobbyCreated)(uint64_t aLobbyId, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections);
-    void (*OnLobbyJoined)(uint64_t aLobbyId, uint64_t aUserId, uint64_t aOwnerId);
+    void (*OnLobbyJoined)(uint64_t aLobbyId, uint64_t aUserId, uint64_t aOwnerId, uint64_t aDestId);
     void (*OnLobbyLeft)(uint64_t aLobbyId, uint64_t aUserId);
     void (*OnLobbyListGot)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode);
     void (*OnLobbyListFinish)(void);

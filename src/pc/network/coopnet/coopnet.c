@@ -53,11 +53,18 @@ static void coopnet_on_receive(uint64_t userId, const uint8_t* data, uint64_t da
     network_receive(localIndex, &userId, (u8*)data, dataLength);
 }
 
-static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t ownerId) {
+static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t ownerId, uint64_t destId) {
     LOG_INFO("coopnet_on_lobby_joined!");
     coopnet_set_user_id(0, ownerId);
     sLocalLobbyId = lobbyId;
     sLocalLobbyOwnerId = ownerId;
+
+    if (userId == coopnet_get_local_user_id()) {
+        coopnet_clear_dest_ids();
+    }
+
+    coopnet_save_dest_id(userId, destId);
+
     if (userId == coopnet_get_local_user_id() && gNetworkType == NT_CLIENT) {
         network_send_mod_list_request();
     }
@@ -65,6 +72,7 @@ static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t 
 
 static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
     LOG_INFO("coopnet_on_lobby_left!");
+    coopnet_clear_dest_id(userId);
     if (lobbyId == sLocalLobbyId && userId == coopnet_get_local_user_id()) {
         network_shutdown(false, false, true);
     }
@@ -78,11 +86,13 @@ static bool ns_coopnet_initialize(enum NetworkType networkType) {
 }
 
 static char* ns_coopnet_get_id_str(u8 localIndex) {
-    static char id_str[22] = { 0 };
+    static char id_str[32] = { 0 };
     if (localIndex == UNKNOWN_LOCAL_INDEX) {
-        snprintf(id_str, 22, "???");
+        snprintf(id_str, 32, "???");
     } else {
-        snprintf(id_str, 22, "%lld", (long long int)ns_coopnet_get_id(localIndex));
+        uint64_t userId = ns_coopnet_get_id(localIndex);
+        uint64_t destId = coopnet_get_dest_id(userId);
+        snprintf(id_str, 32, "%" PRIu64 "", destId);
     }
     return id_str;
 }

@@ -6,6 +6,54 @@
 static uint64_t sLocalUserId = 0;
 static uint64_t sNetworkUserIds[MAX_PLAYERS] = { 0 };
 
+#define MAX_DEST_IDS (MAX_PLAYERS * 2)
+struct DestinationId {
+    uint64_t userId;
+    uint64_t destId;
+};
+struct DestinationId sDestinationIds[MAX_DEST_IDS] = { 0 };
+
+void coopnet_save_dest_id(uint64_t userId, uint64_t destId) {
+    struct DestinationId* dest = NULL;
+    for (int i = 0; i < MAX_DEST_IDS; i++) {
+        if (sDestinationIds[i].userId == userId) {
+            sDestinationIds[i].destId = destId;
+            return;
+        } else if (dest == NULL && sDestinationIds[i].userId == 0) {
+            dest = &sDestinationIds[i];
+        }
+    }
+    if (dest) {
+        dest->userId = userId;
+        dest->destId = destId;
+    }
+}
+
+void coopnet_clear_dest_id(uint64_t userId) {
+    for (int i = 0; i < MAX_DEST_IDS; i++) {
+        if (sDestinationIds[i].userId == userId) {
+            sDestinationIds[i].userId = 0;
+            sDestinationIds[i].destId = 0;
+        }
+    }
+}
+
+void coopnet_clear_dest_ids(void) {
+    for (int i = 0; i < MAX_DEST_IDS; i++) {
+        sDestinationIds[i].userId = 0;
+        sDestinationIds[i].destId = 0;
+    }
+}
+
+uint64_t coopnet_get_dest_id(uint64_t userId) {
+    for (int i = 0; i < MAX_DEST_IDS; i++) {
+        if (sDestinationIds[i].userId == userId) {
+            return sDestinationIds[i].destId;
+        }
+    }
+    return 0;
+}
+
 u8 coopnet_user_id_to_local_index(uint64_t userId) {
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (gNetworkPlayers[i].connected && sNetworkUserIds[i] == userId) {
