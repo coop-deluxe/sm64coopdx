@@ -20,11 +20,12 @@ static enum NetworkType sNetworkType;
 
 static CoopNetRc coopnet_initialize(void);
 
-void ns_coopnet_query(QueryCallbackPtr callback, QueryFinishCallbackPtr finishCallback, const char* password) {
+bool ns_coopnet_query(QueryCallbackPtr callback, QueryFinishCallbackPtr finishCallback, const char* password) {
     gCoopNetCallbacks.OnLobbyListGot = callback;
     gCoopNetCallbacks.OnLobbyListFinish = finishCallback;
-    if (coopnet_initialize() != COOPNET_OK) { return; }
-    coopnet_lobby_list_get(CN_GAME_STR, password);
+    if (coopnet_initialize() != COOPNET_OK) { return false; }
+    if (coopnet_lobby_list_get(CN_GAME_STR, password) != COOPNET_OK) { return false; }
+    return true;
 }
 
 static void coopnet_on_connected(uint64_t userId) {

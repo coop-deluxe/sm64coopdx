@@ -51,6 +51,13 @@ void djui_panel_join_query_finish(void) {
     if (!sRefreshButton) { return; }
     djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESH));
     djui_base_set_enabled(&sRefreshButton->base, true);
+
+    if (sLobbyLayout->base.child == NULL) {
+        struct DjuiText* text = djui_text_create(&sLobbyLayout->base, DLANG(LOBBIES, NONE_FOUND));
+        djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+        djui_base_set_size(&text->base, 1, 1);
+        djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    }
 }
 
 void djui_panel_join_lobbies_on_destroy(UNUSED struct DjuiBase* caller) {
@@ -71,7 +78,7 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     if (sPassword) { free(sPassword); sPassword = NULL; }
     sPassword = strdup(password);
     bool private = (strlen(password) > 0);
-    ns_coopnet_query(djui_panel_join_query, djui_panel_join_query_finish, password);
+    bool querying = ns_coopnet_query(djui_panel_join_query, djui_panel_join_query_finish, password);
 
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES));
@@ -92,6 +99,12 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
         }
         djui_paginated_calculate_height(paginated);
         #endif
+        if (!querying) {
+            struct DjuiText* text = djui_text_create(&sLobbyLayout->base, DLANG(NOTIF, COOPNET_CONNECTION_FAILED));
+            djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+            djui_base_set_size(&text->base, 1, 1);
+            djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        }
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
@@ -99,7 +112,7 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            sRefreshButton = djui_button_create(&rect2->base, DLANG(LOBBIES, REFRESHING), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_lobbies_refresh);
+            sRefreshButton = djui_button_create(&rect2->base, querying ? DLANG(LOBBIES, REFRESHING) : DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_lobbies_refresh);
             djui_base_set_size(&sRefreshButton->base, 0.485f, 64);
             djui_base_set_alignment(&sRefreshButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             djui_base_set_enabled(&sRefreshButton->base, false);
