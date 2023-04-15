@@ -126,7 +126,7 @@ void ns_coopnet_update(void) {
 static int ns_coopnet_network_send(u8 localIndex, void* address, u8* data, u16 dataLength) {
     if (!coopnet_is_connected()) { return 1; }
     //if (gCurLobbyId == 0) { return 2; }
-    u64 userId = ns_coopnet_get_id(localIndex);
+    u64 userId = coopnet_raw_get_id(localIndex);
     if (localIndex == 0 && address != NULL) { userId = *(u64*)address; }
     coopnet_send_to(userId, data, dataLength);
 

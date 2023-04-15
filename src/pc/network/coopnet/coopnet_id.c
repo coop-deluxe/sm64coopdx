@@ -75,6 +75,10 @@ void coopnet_set_local_user_id(uint64_t userId) {
     sLocalUserId = userId;
 }
 
+s64 coopnet_raw_get_id(u8 localIndex) {
+    return (s64)sNetworkUserIds[localIndex];
+}
+
 s64 ns_coopnet_get_id(u8 localIndex) {
     if (localIndex == 0) { return (s64)sLocalUserId; }
     return (s64)sNetworkUserIds[localIndex];
