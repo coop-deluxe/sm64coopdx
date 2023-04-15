@@ -58,7 +58,6 @@ u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
 u16 gNetworkRequestLocationTimer = 0;
-bool gDiscordReconnecting = false;
 
 u8 gDebugPacketIdBuffer[256] = { 0xFF };
 u8 gDebugPacketSentBuffer[256] = { 0 };
@@ -101,7 +100,7 @@ void network_set_system(enum NetworkSystemType nsType) {
     }
 }
 
-bool network_init(enum NetworkType inNetworkType) {
+bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // reset override hide hud
     extern u8 gOverrideHideHud;
     gOverrideHideHud = 0;
@@ -132,7 +131,7 @@ bool network_init(enum NetworkType inNetworkType) {
 
     // initialize the network system
     gNetworkSentJoin = false;
-    int rc = gNetworkSystem->initialize(inNetworkType);
+    int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
     if (!rc) {
         LOG_ERROR("failed to initialize network system");
         return false;
@@ -415,7 +414,6 @@ void network_reset_reconnect_and_rehost(void) {
     sNetworkReconnectTimer = 0;
     sNetworkRehostTimer = 0;
     sNetworkReconnectType = NS_SOCKET;
-    gDiscordReconnecting = false;
 }
 
 void network_reconnect_begin(void) {
@@ -425,17 +423,15 @@ void network_reconnect_begin(void) {
 
     sNetworkReconnectTimer = 2 * 30;
 
-#ifdef DISCORD_SDK
-    sNetworkReconnectType = (gNetworkSystem == &gNetworkSystemDiscord)
-                          ? NS_DISCORD
+#ifdef COOPNET
+    sNetworkReconnectType = (gNetworkSystem == &gNetworkSystemCoopNet)
+                          ? NS_COOPNET
                           : NS_SOCKET;
 #else
     sNetworkReconnectType = NS_SOCKET;
 #endif
 
-    gDiscordReconnecting = true;
-    network_shutdown(false, false, false);
-    gDiscordReconnecting = false;
+    network_shutdown(false, false, false, true);
 
     djui_connect_menu_open();
 }
@@ -446,11 +442,11 @@ static void network_reconnect_update(void) {
 
     if (sNetworkReconnectType == NS_SOCKET) {
         network_set_system(NS_SOCKET);
+    } else if (sNetworkReconnectType == NS_COOPNET) {
+        network_set_system(NS_COOPNET);
     }
 
-    gDiscordReconnecting = true;
-    network_init(NT_CLIENT);
-    gDiscordReconnecting = false;
+    network_init(NT_CLIENT, true);
 
     network_send_mod_list_request();
 }
@@ -468,21 +464,17 @@ void network_rehost_begin(void) {
         network_player_disconnected(i);
     }
 
-    gDiscordReconnecting = true;
-    network_shutdown(false, false, false);
-    gDiscordReconnecting = false;
+    network_shutdown(false, false, false, true);
 
     sNetworkRehostTimer = 2;
 }
 
 static void network_rehost_update(void) {
-    extern void djui_panel_do_host(void);
+    extern void djui_panel_do_host(bool reconnecting);
     if (sNetworkRehostTimer <= 0) { return; }
     if (--sNetworkRehostTimer != 0) { return; }
 
-    gDiscordReconnecting = true;
-    djui_panel_do_host();
-    gDiscordReconnecting = false;
+    djui_panel_do_host(true);
 }
 
 static void network_update_area_timer(void) {
@@ -605,7 +597,7 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
+void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;
@@ -619,7 +611,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
 
     if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
     network_player_shutdown(popup);
-    gNetworkSystem->shutdown();
+    gNetworkSystem->shutdown(reconnecting);
 
     if (gNetworkServerAddr != NULL) {
         free(gNetworkServerAddr);
@@ -627,7 +619,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     }
     gNetworkPlayerServer = NULL;
 
-    if (sNetworkReconnectTimer <= 0 || sNetworkReconnectType != NS_DISCORD) {
+    if (sNetworkReconnectTimer <= 0 || sNetworkReconnectType != NS_COOPNET) {
         gNetworkType = NT_NONE;
     }
 

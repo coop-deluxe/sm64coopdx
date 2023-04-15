@@ -254,7 +254,7 @@ void game_deinit(void) {
     audio_custom_shutdown();
     audio_shutdown();
     gfx_shutdown();
-    network_shutdown(true, true, false);
+    network_shutdown(true, true, false, false);
     smlua_shutdown();
     mods_shutdown();
     inited = false;
@@ -367,15 +367,15 @@ void main_func(void) {
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.JoinIp);
         configJoinPort = gCLIOpts.NetworkPort;
-        network_init(NT_CLIENT);
+        network_init(NT_CLIENT, false);
     } else if (gCLIOpts.Network == NT_SERVER) {
         network_set_system(NS_SOCKET);
         configHostPort = gCLIOpts.NetworkPort;
-        network_init(NT_SERVER);
+        network_init(NT_SERVER, false);
         djui_panel_shutdown();
         djui_panel_modlist_create(NULL);
     } else {
-        network_init(NT_NONE);
+        network_init(NT_NONE, false);
     }
 
     audio_init();

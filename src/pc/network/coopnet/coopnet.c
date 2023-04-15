@@ -17,6 +17,7 @@ uint64_t gCoopNetDesiredLobby = 0;
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
 static enum NetworkType sNetworkType;
+static bool sReconecting = false;
 
 static CoopNetRc coopnet_initialize(void);
 
@@ -74,12 +75,14 @@ static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
     LOG_INFO("coopnet_on_lobby_left!");
     coopnet_clear_dest_id(userId);
     if (lobbyId == sLocalLobbyId && userId == coopnet_get_local_user_id()) {
-        network_shutdown(false, false, true);
+        network_shutdown(false, false, true, false);
     }
 }
 
-static bool ns_coopnet_initialize(enum NetworkType networkType) {
+static bool ns_coopnet_initialize(enum NetworkType networkType, bool reconnecting) {
     sNetworkType = networkType;
+    sReconecting = reconnecting;
+    if (reconnecting) { return true; }
     return coopnet_is_connected() 
         ? true
         : (coopnet_initialize() == COOPNET_OK);
@@ -111,10 +114,14 @@ void ns_coopnet_update(void) {
     coopnet_update();
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
-            LOG_INFO("Create lobby");
-            char mode[64] = "";
-            mods_get_main_mod_name(mode, 64);
-            coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, configPassword);
+            if (sReconecting) {
+
+            } else {
+                LOG_INFO("Create lobby");
+                char mode[64] = "";
+                mods_get_main_mod_name(mode, 64);
+                coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, configPassword);
+            }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
             coopnet_lobby_join(gCoopNetDesiredLobby, "");
@@ -133,7 +140,8 @@ static int ns_coopnet_network_send(u8 localIndex, void* address, u8* data, u16 d
     return 0;
 }
 
-static void ns_coopnet_shutdown(void) {
+static void ns_coopnet_shutdown(bool reconnecting) {
+    if (reconnecting) { return; }
     LOG_INFO("Coopnet shutdown!");
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;

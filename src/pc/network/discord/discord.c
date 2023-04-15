@@ -106,8 +106,8 @@ static void ns_discord_update(void) {
     discord_network_flush();
 }
 
-static bool ns_discord_initialize(enum NetworkType networkType) {
-    if (gDiscordReconnecting) { return true; }
+static bool ns_discord_initialize(enum NetworkType networkType, bool reconnecting) {
+    if (reconnecting) { return true; }
 #ifdef DEBUG
     set_instance_env_variable();
 #endif
@@ -179,8 +179,8 @@ static bool ns_discord_initialize(enum NetworkType networkType) {
     return true;
 }
 
-static void ns_discord_shutdown(void) {
-    if (gDiscordReconnecting) { return; }
+static void ns_discord_shutdown(bool reconnecting) {
+    if (reconnecting) { return; }
     if (!gDiscordInitialized) { return; }
     discord_lobby_leave();
     gActivityLock = false;

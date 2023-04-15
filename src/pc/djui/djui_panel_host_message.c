@@ -14,7 +14,7 @@
 #include "audio/external.h"
 #include "sounds.h"
 
-void djui_panel_do_host(void) {
+void djui_panel_do_host(bool reconnecting) {
     stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
@@ -30,7 +30,7 @@ void djui_panel_do_host(void) {
     if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
     network_set_system(configNetworkSystem);
 
-    network_init(NT_SERVER);
+    network_init(NT_SERVER, reconnecting);
     djui_panel_modlist_create(NULL);
     fake_lvl_init_from_save_file();
 
@@ -46,7 +46,7 @@ void djui_panel_do_host(void) {
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
     network_reset_reconnect_and_rehost();
-    djui_panel_do_host();
+    djui_panel_do_host(false);
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {

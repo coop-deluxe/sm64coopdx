@@ -25,7 +25,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
         return;
     }
     network_reset_reconnect_and_rehost();
-    network_init(NT_CLIENT);
+    network_init(NT_CLIENT, false);
 
     gCurActivity.type = DiscordActivityType_Playing;
     if (snprintf(gCurActivity.party.id, 128, DISCORD_ID_FORMAT, lobby->id) < 0) {

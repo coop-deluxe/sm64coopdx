@@ -165,7 +165,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
     LOG_INFO("server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
-        network_shutdown(true, false, false);
+        network_shutdown(true, false, false, false);
         LOG_ERROR("version mismatch");
         char mismatchMessage[256] = { 0 };
         snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#c8c8c8\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#c8c8c8\\\nTheir version: \\#a0a0ff\\%s\\#c8c8c8\\\n\nSomeone is out of date!\n", version, remoteVersion);
@@ -196,7 +196,7 @@ void network_receive_join(struct Packet* p) {
     }
 
     if (string_linked_list_mismatch(&gRegisteredMods, &head)) {
-        network_shutdown(true, false, false);
+        network_shutdown(true, false, false, false);
 
         struct StringBuilder* builder = string_builder_create(512);
         string_builder_append(builder, "\\#ffa0a0\\Error:\\#c8c8c8\\ mods don't match.\n\n");

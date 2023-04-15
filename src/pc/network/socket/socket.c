@@ -59,7 +59,7 @@ static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer,
     return NO_ERROR;
 }
 
-static bool ns_socket_initialize(enum NetworkType networkType) {
+static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
 
     // sanity check port
     unsigned int port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
@@ -180,7 +180,7 @@ static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength
     return rc;
 }
 
-static void ns_socket_shutdown(void) {
+static void ns_socket_shutdown(UNUSED bool reconnecting) {
     socket_shutdown(sCurSocket);
     sCurSocket = INVALID_SOCKET;
     for (u16 i = 0; i < MAX_PLAYERS; i++) {
