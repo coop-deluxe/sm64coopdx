@@ -115,6 +115,7 @@ extern bool         configDebugError;
 extern char         configLanguage[];
 extern char         configCoopNetIp[];
 extern unsigned int configCoopNetPort;
+extern char         configPassword[];
 
 void configfile_load(void);
 void configfile_save(const char *filename);

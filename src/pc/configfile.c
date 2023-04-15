@@ -158,6 +158,7 @@ bool         configDebugError                    = 0;
 char         configLanguage[MAX_CONFIG_STRING]   = "";
 char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                   = DEFAULT_COOPNET_PORT;
+char         configPassword[MAX_PLAYER_STRING]   = "";
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
@@ -268,6 +269,7 @@ static const struct ConfigOption options[] = {
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT  , .uintValue   = &configCoopNetPort},
+    {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
 };
 
 // FunctionConfigOption functions
@@ -556,8 +558,8 @@ NEXT_OPTION:
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
 
-#ifndef DISCORD_SDK
-    configNetworkSystem = 1;
+#ifndef COOPNET
+    configNetworkSystem = NS_SOCKET;
 #endif
 }
 

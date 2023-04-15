@@ -114,7 +114,7 @@ void ns_coopnet_update(void) {
             LOG_INFO("Create lobby");
             char mode[64] = "";
             mods_get_main_mod_name(mode, 64);
-            coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, "");
+            coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, configPassword);
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
             coopnet_lobby_join(gCoopNetDesiredLobby, "");

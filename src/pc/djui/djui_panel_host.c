@@ -12,7 +12,10 @@
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 
+struct DjuiRect* sRectPort = NULL;
+struct DjuiRect* sRectPassword = NULL;
 struct DjuiInputbox* sInputboxPort = NULL;
+struct DjuiInputbox* sInputboxPassword = NULL;
 
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
 #ifndef DISCORD_SDK
@@ -31,7 +34,11 @@ static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) 
         }
     }
 #endif
+
+    djui_base_set_visible(&sRectPort->base, (configNetworkSystem == NS_SOCKET));
+    djui_base_set_visible(&sRectPassword->base, (configNetworkSystem == NS_COOPNET));
     djui_base_set_enabled(&sInputboxPort->base, (configNetworkSystem == NS_SOCKET));
+    djui_base_set_enabled(&sInputboxPassword->base, (configNetworkSystem == NS_COOPNET));
 }
 
 static bool djui_panel_host_port_valid(void) {
@@ -51,11 +58,18 @@ static bool djui_panel_host_port_valid(void) {
 }
 
 static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
-    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    struct DjuiInputbox* sInputboxPort = (struct DjuiInputbox*)caller;
     if (djui_panel_host_port_valid()) {
-        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+        djui_inputbox_set_text_color(sInputboxPort, 0, 0, 0, 255);
     } else {
-        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
+        djui_inputbox_set_text_color(sInputboxPort, 255, 0, 0, 255);
+    }
+}
+
+static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller) {
+    snprintf(configPassword, 64, "%s", sInputboxPassword->buffer);
+    if (strlen(sInputboxPassword->buffer) >= 64) {
+        djui_inputbox_set_text(sInputboxPassword, configPassword);
     }
 }
 
@@ -87,7 +101,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             : DLANG(HOST, HOST_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        char* nChoices[] = { DLANG(HOST, DISCORD), DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, COOPNET) };
+        char* nChoices[] = { DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, DISCORD), DLANG(HOST, COOPNET) };
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 3, &configNetworkSystem, djui_panel_host_network_system_change);
         if (gNetworkType == NT_SERVER) {
             djui_base_set_enabled(&selectionbox1->base, false);
@@ -95,29 +109,61 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
-            struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(HOST, PORT));
-            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 200, 200, 200, 255);
-            djui_base_set_size(&text1->base, 0.585f, 64);
-            djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-            if (gNetworkType == NT_SERVER) {
-                djui_base_set_enabled(&text1->base, false);
+            sRectPort = djui_rect_container_create(&rect1->base, 32);
+            djui_base_set_location(&sRectPort->base, 0, 0);
+            djui_base_set_visible(&sRectPort->base, (configNetworkSystem == NS_SOCKET));
+            {
+                struct DjuiText* text1 = djui_text_create(&sRectPort->base, DLANG(HOST, PORT));
+                djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+                djui_base_set_color(&text1->base, 200, 200, 200, 255);
+                djui_base_set_size(&text1->base, 0.585f, 64);
+                djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+                if (gNetworkType == NT_SERVER) {
+                    djui_base_set_enabled(&text1->base, false);
+                }
+
+                sInputboxPort = djui_inputbox_create(&sRectPort->base, 32);
+                djui_base_set_size_type(&sInputboxPort->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+                djui_base_set_size(&sInputboxPort->base, 0.4f, 32);
+                djui_base_set_alignment(&sInputboxPort->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+                char portString[32] = { 0 };
+                snprintf(portString, 32, "%d", configHostPort);
+                djui_inputbox_set_text(sInputboxPort, portString);
+                djui_interactable_hook_value_change(&sInputboxPort->base, djui_panel_host_port_text_change);
+                if (gNetworkType == NT_SERVER) {
+                    djui_base_set_enabled(&sInputboxPort->base, false);
+                } else {
+                    djui_base_set_enabled(&sInputboxPort->base, (configNetworkSystem == NS_SOCKET));
+                }
             }
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
-            djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.4f, 32);
-            djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            char portString[32] = { 0 };
-            snprintf(portString, 32, "%d", configHostPort);
-            djui_inputbox_set_text(inputbox1, portString);
-            djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_port_text_change);
-            if (gNetworkType == NT_SERVER) {
-                djui_base_set_enabled(&inputbox1->base, false);
-            } else {
-                djui_base_set_enabled(&inputbox1->base, (configNetworkSystem == NS_SOCKET));
+            sRectPassword = djui_rect_container_create(&rect1->base, 32);
+            djui_base_set_location(&sRectPassword->base, 0, 0);
+            djui_base_set_visible(&sRectPassword->base, (configNetworkSystem == NS_COOPNET));
+            {
+                struct DjuiText* text1 = djui_text_create(&sRectPassword->base, DLANG(HOST, PASSWORD));
+                djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+                djui_base_set_color(&text1->base, 200, 200, 200, 255);
+                djui_base_set_size(&text1->base, 0.585f, 64);
+                djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+                if (gNetworkType == NT_SERVER) {
+                    djui_base_set_enabled(&text1->base, false);
+                }
+
+                sInputboxPassword = djui_inputbox_create(&sRectPassword->base, 32);
+                djui_base_set_size_type(&sInputboxPassword->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+                djui_base_set_size(&sInputboxPassword->base, 0.4f, 32);
+                djui_base_set_alignment(&sInputboxPassword->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+                char portPassword[64] = { 0 };
+                snprintf(portPassword, 64, "%s", configPassword);
+                djui_inputbox_set_text(sInputboxPassword, portPassword);
+                djui_interactable_hook_value_change(&sInputboxPassword->base, djui_panel_host_password_text_change);
+                if (gNetworkType == NT_SERVER) {
+                    djui_base_set_enabled(&sInputboxPassword->base, false);
+                } else {
+                    djui_base_set_enabled(&sInputboxPassword->base, (configNetworkSystem == NS_COOPNET));
+                }
             }
-            sInputboxPort = inputbox1;
         }
         
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
