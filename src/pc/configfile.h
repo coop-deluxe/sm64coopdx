@@ -15,7 +15,7 @@
 #define MAX_DESCRIPTION_STRING 20
 
 #define DEFAULT_PORT 7777
-#define DEFAULT_COOPNET_IP "localhost"
+#define DEFAULT_COOPNET_IP "net.coop64.us"
 #define DEFAULT_COOPNET_PORT 34197
 
 typedef struct {
