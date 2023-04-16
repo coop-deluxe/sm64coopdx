@@ -158,9 +158,8 @@ u64 discord_get_user_id(void) {
 
 void discord_update(void) {
     if (sDiscordFailed) { return; }
-    if (!sDiscordInitialized) {
-        discord_initialize();
-    }
+    if (!sDiscordInitialized) { discord_initialize(); }
+    if (sDiscordFailed) { return; }
 
     discord_activity_update_check();
     DISCORD_REQUIRE(app.core->run_callbacks(app.core));
