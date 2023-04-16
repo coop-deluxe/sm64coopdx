@@ -33,7 +33,7 @@ static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult res
 static void on_activity_join(UNUSED void* data, const char* secret) {
     LOG_INFO("> on_activity_join, secret: %s", secret);
     //djui_connect_menu_open();
-    app.lobbies->connect_lobby_with_activity_secret(app.lobbies, (char*)secret, NULL, on_activity_join_callback);
+    //app.lobbies->connect_lobby_with_activity_secret(app.lobbies, (char*)secret, NULL, on_activity_join_callback);
 }
 
 static void on_activity_join_request_callback(UNUSED void* data, enum EDiscordResult result) {

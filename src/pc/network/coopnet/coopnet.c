@@ -127,7 +127,8 @@ void ns_coopnet_update(void) {
                 LOG_INFO("Create lobby");
                 char mode[64] = "";
                 mods_get_main_mod_name(mode, 64);
-                coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, configPassword);
+                snprintf(gCoopNetPassword, 64, "%s", configPassword);
+                coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
@@ -151,7 +152,7 @@ static void ns_coopnet_get_lobby_id(UNUSED char* destination, UNUSED u32 destLen
     if (sLocalLobbyId == 0) {
         snprintf(destination, destLength, "%s", "");
     } else {
-        snprintf(destination, destLength, "coopnet-id:%" PRIu64 "", sLocalLobbyId);
+        snprintf(destination, destLength, "coopnet:%" PRIu64 "", sLocalLobbyId);
     }
 }
 
@@ -159,7 +160,7 @@ static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 des
     if (sLocalLobbyId == 0) {
         snprintf(destination, destLength, "%s", "");
     } else {
-        snprintf(destination, destLength, "coopnet-pw:%s", gCoopNetPassword);
+        snprintf(destination, destLength, "coopnet:%" PRIu64":%s", sLocalLobbyId, gCoopNetPassword);
     }
 }
 
