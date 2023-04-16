@@ -22,7 +22,6 @@ static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
 static enum NetworkType sNetworkType;
 static bool sReconnecting = false;
-static bool sIntentionalDisconnect = false;
 
 static CoopNetRc coopnet_initialize(void);
 
@@ -38,9 +37,9 @@ static void coopnet_on_connected(uint64_t userId) {
     coopnet_set_local_user_id(userId);
 }
 
-static void coopnet_on_disconnected(void) {
+static void coopnet_on_disconnected(bool intentional) {
     LOG_INFO("Coopnet shutdown!");
-    if (!sIntentionalDisconnect) {
+    if (!intentional) {
         djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
     }
     coopnet_shutdown();
@@ -89,6 +88,28 @@ static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
     }
 }
 
+static void coopnet_on_error(enum MPacketErrorNumber error) {
+    switch (error) {
+        case MERR_LOBBY_NOT_FOUND:
+            djui_popup_create(DLANG(NOTIF, LOBBY_NOT_FOUND), 2);
+            network_shutdown(false, false, false, false);
+            break;
+        case MERR_LOBBY_JOIN_FULL:
+            djui_popup_create(DLANG(NOTIF, LOBBY_JOIN_FULL), 2);
+            network_shutdown(false, false, false, false);
+            break;
+        case MERR_LOBBY_JOIN_FAILED:
+            djui_popup_create(DLANG(NOTIF, LOBBY_JOIN_FAILED), 2);
+            network_shutdown(false, false, false, false);
+            break;
+        case MERR_LOBBY_PASSWORD_INCORRECT:
+            djui_popup_create(DLANG(NOTIF, LOBBY_PASSWORD_INCORRECT), 2);
+            network_shutdown(false, false, false, false);
+            break;
+        default:
+            break;
+    }
+}
 static bool ns_coopnet_initialize(enum NetworkType networkType, bool reconnecting) {
     sNetworkType = networkType;
     sReconnecting = reconnecting;
@@ -170,12 +191,9 @@ static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 des
 static void ns_coopnet_shutdown(bool reconnecting) {
     if (reconnecting) { return; }
     LOG_INFO("Coopnet shutdown!");
-    sIntentionalDisconnect = true;
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;
-    //coopnet_update();
-    sIntentionalDisconnect = false;
 
     sLocalLobbyId = 0;
     sLocalLobbyOwnerId = 0;
@@ -188,6 +206,7 @@ static CoopNetRc coopnet_initialize(void) {
     gCoopNetCallbacks.OnReceive = coopnet_on_receive;
     gCoopNetCallbacks.OnLobbyJoined = coopnet_on_lobby_joined;
     gCoopNetCallbacks.OnLobbyLeft = coopnet_on_lobby_left;
+    gCoopNetCallbacks.OnError = coopnet_on_error;
     gCoopNetCallbacks.OnPeerDisconnected = coopnet_on_peer_disconnected;
 
     if (coopnet_is_connected()) { return COOPNET_OK; }
