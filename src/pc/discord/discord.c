@@ -16,6 +16,7 @@ static int64_t applicationId = 752700005210390568;
 struct DiscordApplication app = { 0 };
 static bool sFatalShown = false;
 static bool sDiscordInitialized = false;
+static bool sDiscordFailed = false;
 
 static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLevel level, const char* message) {
     LOG_INFO("callback (%d): %s", level, message);
@@ -126,6 +127,7 @@ static void discord_initialize(void) {
     if (rc) {
         LOG_ERROR("DiscordCreate failed: %d", rc);
         djui_popup_create(DLANG(NOTIF, DISCORD_DETECT), 3);
+        sDiscordFailed = true;
         return;
     }
 
@@ -145,6 +147,7 @@ static void discord_initialize(void) {
 
     // set activity
     discord_activity_update();
+    sDiscordFailed = false;
 
     LOG_INFO("initialized");
 }
@@ -154,6 +157,7 @@ u64 discord_get_user_id(void) {
 }
 
 void discord_update(void) {
+    if (sDiscordFailed) { return; }
     if (!sDiscordInitialized) {
         discord_initialize();
     }
