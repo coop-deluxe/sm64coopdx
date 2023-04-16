@@ -174,7 +174,7 @@ static void ns_coopnet_shutdown(bool reconnecting) {
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;
-    coopnet_update();
+    //coopnet_update();
     sIntentionalDisconnect = false;
 
     sLocalLobbyId = 0;
