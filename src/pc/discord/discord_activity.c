@@ -92,6 +92,8 @@ void discord_activity_update(void) {
         sCurActivity.party.size.current_size = network_player_connected_count();
         sCurActivity.party.size.max_size = gServerSettings.maxPlayers;
     } else {
+        snprintf(sCurActivity.party.id, 128, "%s", "");
+        snprintf(sCurActivity.secrets.join, 128, "%s", "");
         sCurActivity.party.size.current_size = 1;
         sCurActivity.party.size.max_size = 1;
     }
