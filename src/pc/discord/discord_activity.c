@@ -33,10 +33,15 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
 
     // extract lobby password
     token = strtok(NULL, ":");
+    if (token == NULL) { token = ""; }
 
     // join
+    if (gNetworkType != NT_NONE) {
+        network_shutdown(true, false, false, false);
+    }
     gCoopNetDesiredLobby = lobbyId;
     snprintf(gCoopNetPassword, 64, "%s", token);
+
     network_reset_reconnect_and_rehost();
     network_set_system(NS_COOPNET);
     network_init(NT_CLIENT, false);

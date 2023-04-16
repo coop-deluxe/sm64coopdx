@@ -22,6 +22,7 @@ static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
 static enum NetworkType sNetworkType;
 static bool sReconnecting = false;
+static bool sIntentionalDisconnect = false;
 
 static CoopNetRc coopnet_initialize(void);
 
@@ -39,7 +40,9 @@ static void coopnet_on_connected(uint64_t userId) {
 
 static void coopnet_on_disconnected(void) {
     LOG_INFO("Coopnet shutdown!");
-    djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
+    if (!sIntentionalDisconnect) {
+        djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
+    }
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;
@@ -167,9 +170,12 @@ static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 des
 static void ns_coopnet_shutdown(bool reconnecting) {
     if (reconnecting) { return; }
     LOG_INFO("Coopnet shutdown!");
+    sIntentionalDisconnect = true;
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;
+    coopnet_update();
+    sIntentionalDisconnect = false;
 
     sLocalLobbyId = 0;
     sLocalLobbyOwnerId = 0;
