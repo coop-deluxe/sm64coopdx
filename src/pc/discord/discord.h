@@ -34,3 +34,4 @@ void discord_fatal(int rc);
 void discord_activity_update_check(void);
 void discord_activity_update(void);
 struct IDiscordActivityEvents* discord_activity_initialize(void);
+u64 discord_get_user_id(void);

@@ -149,6 +149,10 @@ static void discord_initialize(void) {
     LOG_INFO("initialized");
 }
 
+u64 discord_get_user_id(void) {
+    return app.userId;
+}
+
 void discord_update(void) {
     if (!sDiscordInitialized) {
         discord_initialize();
