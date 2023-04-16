@@ -36,7 +36,6 @@ extern struct MarioState gMarioStates[];
 
 enum NetworkSystemType {
     NS_SOCKET,
-    NS_DISCORD,
     NS_COOPNET,
     NS_MAX,
 };
@@ -51,6 +50,8 @@ struct NetworkSystem {
     bool (*match_addr)(void* addr1, void* addr2);
     void (*update)(void);
     int  (*send)(u8 localIndex, void* addr, u8* data, u16 dataLength);
+    void (*get_lobby_id)(char* destination, u32 destLength);
+    void (*get_lobby_secret)(char* destination, u32 destLength);
     void (*shutdown)(bool reconnecting);
     bool requireServerBroadcast;
     char* name;
@@ -73,6 +74,7 @@ struct ServerSettings {
     u8 enablePlayersInLevelDisplay;
     u8 enablePlayerList;
     u8 headlessServer;
+    u8 maxPlayers;
 };
 
 // Networking-specific externs

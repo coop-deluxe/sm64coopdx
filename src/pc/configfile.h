@@ -80,9 +80,6 @@ extern bool         configShareLives;
 extern bool         configEnableCheats;
 extern bool         configBubbleDeath;
 extern unsigned int configAmountofPlayers;
-#ifdef DISCORDRPC
-extern bool         configDiscordRPC;
-#endif
 extern char         configJoinIp[];
 extern unsigned int configJoinPort;
 extern unsigned int configHostPort;

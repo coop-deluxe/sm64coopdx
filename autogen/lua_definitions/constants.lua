@@ -4727,7 +4727,10 @@ SYNC_DISTANCE_INFINITE = 0
 NS_SOCKET = 0
 
 --- @type NetworkSystemType
-NS_DISCORD = 1
+NS_COOPNET = 1
+
+--- @type NetworkSystemType
+NS_MAX = 2
 
 --- @class PlayerInteractions
 
@@ -11522,13 +11525,13 @@ MAX_LOCAL_VERSION_LENGTH = 12
 MAX_VERSION_LENGTH = 10
 
 --- @type integer
-MINOR_VERSION_NUMBER = 1
+MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
 
 --- @type integer
-VERSION_NUMBER = 33
+VERSION_NUMBER = 34
 
 --- @type string
 VERSION_TEXT = "beta"

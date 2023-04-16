@@ -1721,6 +1721,7 @@
 --- @field public enablePlayerList integer
 --- @field public enablePlayersInLevelDisplay integer
 --- @field public headlessServer integer
+--- @field public maxPlayers integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
 --- @field public shareLives integer

@@ -47,6 +47,7 @@ in_files = [
     "src/pc/lua/utils/smlua_text_utils.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
+    "src/pc/lua/utils/smlua_deprecated.h",
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
     "src/game/obj_behaviors_2.c",
@@ -104,6 +105,10 @@ override_disallowed_functions = {
     "src/pc/djui/djui_hud_utils.h":         [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h": [ "smlua_level_util_reset" ],
     "src/pc/network/lag_compensation.h":    [ "lag_compensation_clear", "lag_compensation_store" ],
+}
+
+override_hide_functions = {
+    "smlua_deprecated.h" : [ ".*" ],
 }
 
 lua_function_params = {
@@ -763,6 +768,16 @@ def process_files():
 
 ############################################################################
 
+def doc_should_document(fname, identifier):
+    if fname in override_hide_functions:
+        found_match = False
+        for pattern in override_hide_functions[fname]:
+            if re.search(pattern, identifier) != None:
+                found_match = True
+                break
+        return not found_match
+    return True
+
 def doc_page_link(page_num):
     if page_num == 1:
         return 'functions.md'
@@ -779,6 +794,9 @@ def doc_function_index(processed_files):
         for function in processed_file['functions']:
             if not function['implemented']:
                 continue
+            if not doc_should_document(processed_file['filename'], function['identifier']):
+                continue
+
             s += '   - [%s](%s#%s)\n' % (function['identifier'], doc_page_link(page_num), function['identifier'])
         s += '\n<br />\n\n'
 
@@ -805,8 +823,11 @@ def doc_lua_func_param(param):
     s += ')'
     return s
 
-def doc_function(function):
+def doc_function(fname, function):
     if not function['implemented']:
+        return ''
+
+    if not doc_should_document(fname, function['identifier']):
         return ''
 
     fid = function['identifier']
@@ -860,10 +881,10 @@ def doc_function(function):
 
     return s
 
-def doc_functions(functions):
+def doc_functions(fname, functions):
     s = ''
     for function in functions:
-        s += doc_function(function)
+        s += doc_function(fname, function)
     return s
 
 def doc_files(processed_files):
@@ -879,7 +900,7 @@ def doc_files(processed_files):
     for processed_file in processed_files:
         s_file  = '\n---'
         s_file += '\n# functions from %s\n\n<br />\n\n' % processed_file['filename']
-        s_file += doc_functions(processed_file['functions'])
+        s_file += doc_functions(processed_file['filename'], processed_file['functions'])
 
         if len(s) + len(s_file) + extra_space > page_len_limit:
             s += '---\n\n$[FUNCTION_NAV_HERE]\n\n'

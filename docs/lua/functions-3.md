@@ -8265,26 +8265,6 @@
 <br />
 
 
-## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
-
-### Lua Example
-`local stringValue = network_discord_id_from_local_index(localIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localIndex | `integer` |
-
-### Returns
-- `string`
-
-### C Prototype
-`char* network_discord_id_from_local_index(u8 localIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [network_get_player_text_color_string](#network_get_player_text_color_string)
 
 ### Lua Example

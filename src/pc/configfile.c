@@ -120,9 +120,6 @@ bool         configEnableCheats  = 0;
 bool         configBubbleDeath   = true;
 unsigned int configAmountofPlayers = 16;
 bool         configHUD           = true;
-#ifdef DISCORDRPC
-bool         configDiscordRPC    = true;
-#endif
 // coop-specific
 char         configJoinIp[MAX_CONFIG_STRING] = "";
 unsigned int configJoinPort                      = DEFAULT_PORT;
@@ -213,9 +210,6 @@ static const struct ConfigOption options[] = {
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
     {.name = "enable_cheats",        .type = CONFIG_TYPE_BOOL, .boolValue = &configEnableCheats},
-    #ifdef DISCORDRPC
-    {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
-    #endif
     // debug
     {.name = "debug_offset",                   .type = CONFIG_TYPE_U64   , .u64Value    = &gPcDebug.bhvOffset},
     {.name = "debug_tags",                     .type = CONFIG_TYPE_U64   , .u64Value    = gPcDebug.tags},

@@ -20,6 +20,7 @@ static char* sPassword = NULL;
 
 void djui_panel_join_lobby(struct DjuiBase* caller) {
     gCoopNetDesiredLobby = (uint64_t)caller->tag;
+    snprintf(gCoopNetPassword, 64, "%s", sPassword);
     network_reset_reconnect_and_rehost();
     network_set_system(NS_COOPNET);
     network_init(NT_CLIENT, false);

@@ -11,6 +11,9 @@
 #include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
 #include "lag_compensation.h"
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -311,6 +314,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
 
     return localIndex;
 }
@@ -359,6 +365,10 @@ u8 network_player_disconnected(u8 globalIndex) {
         smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_DISCONNECTED, &gMarioStates[i]);
 
         memset(np, 0, sizeof(struct NetworkPlayer));
+
+#ifdef DISCORD_SDK
+        discord_activity_update();
+#endif
 
         return i;
     }
@@ -428,7 +438,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
             }
 
             // If this machine's player changed to a different location, then all of the other np locations are no longer valid
-            for (u32 i = 1; i < configAmountofPlayers; i++) {
+            for (u32 i = 1; i < MAX_PLAYERS; i++) {
                 struct NetworkPlayer* npi = &gNetworkPlayers[i];
                 if ((!npi->connected) || npi == gNetworkPlayerLocal) { continue; }
                 npi->currPositionValid = false;

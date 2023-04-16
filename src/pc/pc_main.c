@@ -43,9 +43,6 @@
 #include "src/bass_audio/bass_audio_helpers.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 
-#ifdef DISCORDRPC
-#include "pc/discord/discordrpc.h"
-#endif
 #include "pc/network/version.h"
 #include "pc/network/socket/domain_res.h"
 #include "pc/network/network_player.h"
@@ -59,6 +56,10 @@
 #include "pc/mods/mods.h"
 
 #include "menu/intro_geo.h"
+
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -246,9 +247,6 @@ void audio_shutdown(void) {
 }
 
 void game_deinit(void) {
-#ifdef DISCORDRPC
-    discord_shutdown();
-#endif
     configfile_save(configfile_name());
     controller_shutdown();
     audio_custom_shutdown();
@@ -396,14 +394,10 @@ void main_func(void) {
     }
 #endif
 
-#ifdef DISCORDRPC
-    discord_init();
-#endif
-
     while (true) {
         wm_api->main_loop(produce_one_frame);
-#ifdef DISCORDRPC
-        discord_update_rich_presence();
+#ifdef DISCORD_SDK
+        discord_update();
 #endif
 #ifdef DEBUG
         fflush(stdout);

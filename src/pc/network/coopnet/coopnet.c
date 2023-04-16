@@ -7,17 +7,21 @@
 #include "pc/djui/djui_popup.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
 
 #ifdef COOPNET
 
 #define CN_GAME_STR "sm64ex-coop"
 
 uint64_t gCoopNetDesiredLobby = 0;
+char gCoopNetPassword[64] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
 static enum NetworkType sNetworkType;
-static bool sReconecting = false;
+static bool sReconnecting = false;
 
 static CoopNetRc coopnet_initialize(void);
 
@@ -69,6 +73,9 @@ static void coopnet_on_lobby_joined(uint64_t lobbyId, uint64_t userId, uint64_t 
     if (userId == coopnet_get_local_user_id() && gNetworkType == NT_CLIENT) {
         network_send_mod_list_request();
     }
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
 }
 
 static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
@@ -81,7 +88,7 @@ static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
 
 static bool ns_coopnet_initialize(enum NetworkType networkType, bool reconnecting) {
     sNetworkType = networkType;
-    sReconecting = reconnecting;
+    sReconnecting = reconnecting;
     if (reconnecting) { return true; }
     return coopnet_is_connected() 
         ? true
@@ -114,8 +121,8 @@ void ns_coopnet_update(void) {
     coopnet_update();
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
-            if (sReconecting) {
-
+            if (sReconnecting) {
+                // TODO: send lobby update packet
             } else {
                 LOG_INFO("Create lobby");
                 char mode[64] = "";
@@ -124,7 +131,7 @@ void ns_coopnet_update(void) {
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
-            coopnet_lobby_join(gCoopNetDesiredLobby, "");
+            coopnet_lobby_join(gCoopNetDesiredLobby, gCoopNetPassword);
         }
         sNetworkType = NT_NONE;
     }
@@ -140,12 +147,31 @@ static int ns_coopnet_network_send(u8 localIndex, void* address, u8* data, u16 d
     return 0;
 }
 
+static void ns_coopnet_get_lobby_id(UNUSED char* destination, UNUSED u32 destLength) {
+    if (sLocalLobbyId == 0) {
+        snprintf(destination, destLength, "%s", "");
+    } else {
+        snprintf(destination, destLength, "coopnet-id:%" PRIu64 "", sLocalLobbyId);
+    }
+}
+
+static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 destLength) {
+    if (sLocalLobbyId == 0) {
+        snprintf(destination, destLength, "%s", "");
+    } else {
+        snprintf(destination, destLength, "coopnet-pw:%s", gCoopNetPassword);
+    }
+}
+
 static void ns_coopnet_shutdown(bool reconnecting) {
     if (reconnecting) { return; }
     LOG_INFO("Coopnet shutdown!");
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;
+
+    sLocalLobbyId = 0;
+    sLocalLobbyOwnerId = 0;
 }
 
 static CoopNetRc coopnet_initialize(void) {
@@ -167,18 +193,20 @@ static CoopNetRc coopnet_initialize(void) {
 }
 
 struct NetworkSystem gNetworkSystemCoopNet = {
-    .initialize = ns_coopnet_initialize,
-    .get_id     = ns_coopnet_get_id,
-    .get_id_str = ns_coopnet_get_id_str,
-    .save_id    = ns_coopnet_save_id,
-    .clear_id   = ns_coopnet_clear_id,
-    .dup_addr   = ns_coopnet_dup_addr,
-    .match_addr = ns_coopnet_match_addr,
-    .update     = ns_coopnet_update,
-    .send       = ns_coopnet_network_send,
-    .shutdown   = ns_coopnet_shutdown,
+    .initialize       = ns_coopnet_initialize,
+    .get_id           = ns_coopnet_get_id,
+    .get_id_str       = ns_coopnet_get_id_str,
+    .save_id          = ns_coopnet_save_id,
+    .clear_id         = ns_coopnet_clear_id,
+    .dup_addr         = ns_coopnet_dup_addr,
+    .match_addr       = ns_coopnet_match_addr,
+    .update           = ns_coopnet_update,
+    .send             = ns_coopnet_network_send,
+    .get_lobby_id     = ns_coopnet_get_lobby_id,
+    .get_lobby_secret = ns_coopnet_get_lobby_secret,
+    .shutdown         = ns_coopnet_shutdown,
     .requireServerBroadcast = false,
-    .name       = "CoopNet",
+    .name             = "CoopNet",
 };
 
 #endif

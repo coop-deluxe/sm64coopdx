@@ -18,14 +18,6 @@ struct DjuiInputbox* sInputboxPort = NULL;
 struct DjuiInputbox* sInputboxPassword = NULL;
 
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
-#ifndef DISCORD_SDK
-    {
-        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*) base;
-        if (*selectionbox->value == NS_DISCORD) {
-            selectionbox->value = NS_SOCKET;
-        }
-    }
-#endif
 #ifndef COOPNET
     {
         struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*) base;
@@ -101,8 +93,8 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             : DLANG(HOST, HOST_TITLE));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        char* nChoices[] = { DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, DISCORD), DLANG(HOST, COOPNET) };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 3, &configNetworkSystem, djui_panel_host_network_system_change);
+        char* nChoices[] = { DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, COOPNET) };
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
         if (gNetworkType == NT_SERVER) {
             djui_base_set_enabled(&selectionbox1->base, false);
         }

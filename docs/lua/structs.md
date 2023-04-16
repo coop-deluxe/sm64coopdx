@@ -2181,6 +2181,7 @@
 | enablePlayerList | `integer` |  |
 | enablePlayersInLevelDisplay | `integer` |  |
 | headlessServer | `integer` |  |
+| maxPlayers | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
 | shareLives | `integer` |  |

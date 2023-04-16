@@ -7,10 +7,6 @@
 #include "behavior_table.h"
 #include "src/game/hardcoded.h"
 #include "src/game/scroll_targets.h"
-#ifdef DISCORD_SDK
-#include "discord/discord.h"
-#include "discord/activity.h"
-#endif
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/djui/djui.h"
@@ -31,6 +27,10 @@
 #include "game/level_geo.h"
 #include "menu/intro_geo.h"
 
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
+
 // fix warnings when including rendering_graph_node
 #undef near
 #undef far
@@ -41,11 +41,7 @@ extern s16 sCurrPlayMode;
 extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
 enum NetworkType gNetworkType = NT_NONE;
-#ifdef DISCORD_SDK
-struct NetworkSystem* gNetworkSystem = &gNetworkSystemDiscord;
-#else
 struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
-#endif
 
 #define LOADING_LEVEL_THRESHOLD 10
 #define MAX_PACKETS_PER_SECOND_PER_PLAYER ((u16)100)
@@ -80,6 +76,7 @@ struct ServerSettings gServerSettings = {
     .enablePlayersInLevelDisplay = 1,
     .enablePlayerList = 1,
     .headlessServer = 0,
+    .maxPlayers = MAX_PLAYERS,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
@@ -87,15 +84,9 @@ void network_set_system(enum NetworkSystemType nsType) {
 
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
-
-#ifdef DISCORD_SDK
-        case NS_DISCORD: gNetworkSystem = &gNetworkSystemDiscord; break;
-#endif
-
 #ifdef COOPNET
         case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
 #endif
-
         default: gNetworkSystem = &gNetworkSystemSocket; LOG_ERROR("Unknown network system: %d", nsType); break;
     }
 }
@@ -123,6 +114,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.shareLives = configShareLives;
     gServerSettings.enableCheats = configEnableCheats;
     gServerSettings.bubbleDeath = configBubbleDeath;
+    gServerSettings.maxPlayers = configAmountofPlayers;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else
@@ -162,16 +154,14 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
             gChangeLevelTransition = gLevelValues.entryLevel;
         }
 
-#ifdef DISCORD_SDK
-    if (gNetworkSystem == &gNetworkSystemDiscord) {
-        discord_activity_update(true);
-    }
-#endif
-
         djui_chat_box_create();
     }
 
     configfile_save(configfile_name());
+
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
 
     LOG_INFO("initialized");
 
@@ -623,11 +613,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gNetworkType = NT_NONE;
     }
 
-
-#ifdef DISCORD_SDK
-    network_set_system(NS_DISCORD);
-#endif
-
     if (exiting) { return; }
 
     // reset other stuff
@@ -689,4 +674,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         gDjuiInMainMenu = true;
         djui_panel_main_create(NULL);
     }
+
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
 }

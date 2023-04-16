@@ -48,9 +48,7 @@ EXT_OPTIONS_MENU ?= 1
 TEXTSAVES ?= 0
 # Load resources from external files
 EXTERNAL_DATA ?= 0
-# Enable Discord Rich Presence (outdated, no longer supported)
-DISCORDRPC ?= 0
-# Enable Discord Game SDK (used for Discord server hosting)
+# Enable Discord Game SDK (used for Discord invites)
 DISCORD_SDK ?= 1
 # Enable CoopNet SDK (used for CoopNet server hosting)
 COOPNET ?= 1
@@ -530,12 +528,8 @@ BIN_DIRS := bin bin/$(VERSION)
 # PC files
 SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils
 
-#ifeq ($(DISCORDRPC),1)
-#  SRC_DIRS += src/pc/discord
-#endif
-
 ifeq ($(DISCORD_SDK),1)
-  SRC_DIRS += src/pc/network/discord
+  SRC_DIRS += src/pc/discord
 endif
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
@@ -607,18 +601,8 @@ ULTRA_O_FILES := $(foreach file,$(ULTRA_S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 GODDARD_O_FILES := $(foreach file,$(GODDARD_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 RPC_LIBS :=
-#ifeq ($(DISCORDRPC),1)
-#  ifeq ($(WINDOWS_BUILD),1)
-#    RPC_LIBS := lib/discord/libdiscord-rpc.dll
-#  else ifeq ($(OSX_BUILD),1)
-#    # needs testing
-#    RPC_LIBS := lib/discord/libdiscord-rpc.dylib
-#  else
-#    RPC_LIBS := lib/discord/libdiscord-rpc.so
-#  endif
-#endif
-
 DISCORD_SDK_LIBS :=
+
 ifeq ($(DISCORD_SDK), 1)
   ifeq ($(WINDOWS_BUILD),1)
     ifeq ($(TARGET_BITS), 32)
@@ -758,7 +742,6 @@ else
   CP := cp
 endif
 
-#ifeq ($(DISCORDRPC),1)
 ifeq ($(DISCORD_SDK),1)
   LD := $(CXX)
 else ifeq ($(WINDOWS_BUILD),1)
@@ -923,9 +906,6 @@ else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
-#  ifeq ($(DISCORDRPC),1)
-#    LDFLAGS += -ldl -Wl,-rpath .
-#  endif
 endif
 
 # icon
@@ -1078,12 +1058,6 @@ endif
 #ifeq ($(NODRAWINGDISTANCE),1)
   CC_CHECK_CFLAGS += -DNODRAWINGDISTANCE
   CFLAGS += -DNODRAWINGDISTANCE
-#endif
-
-# Check for Discord Rich Presence option
-#ifeq ($(DISCORDRPC),1)
-#  CC_CHECK_CFLAGS += -DDISCORDRPC
-#  CFLAGS += -DDISCORDRPC
 #endif
 
 # Check for Discord SDK option

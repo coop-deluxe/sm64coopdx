@@ -7,6 +7,7 @@ typedef void (*QueryFinishCallbackPtr)(void);
 
 extern struct NetworkSystem gNetworkSystemCoopNet;
 extern uint64_t gCoopNetDesiredLobby;
+extern char gCoopNetPassword[];
 
 bool ns_coopnet_query(QueryCallbackPtr callback, QueryFinishCallbackPtr finishCallback, const char* password);
 bool ns_coopnet_is_connected(void);
