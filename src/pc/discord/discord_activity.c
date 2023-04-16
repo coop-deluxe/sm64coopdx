@@ -2,6 +2,10 @@
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
+#include "pc/djui/djui_panel_join_message.h"
+#ifdef COOPNET
+#include "pc/network/coopnet/coopnet.h"
+#endif
 
 extern struct DiscordApplication app;
 struct DiscordActivity sCurActivity = { 0 };
@@ -11,29 +15,33 @@ static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult r
     DISCORD_REQUIRE(result);
 }
 
-static void on_activity_join_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordLobby* lobby) {
-    LOG_INFO("> on_activity_join_callback returned %d", result);
-    DISCORD_REQUIRE(result);
-
-    LOG_INFO("Discord join callback: %u, %lu, %d, %lu %s, %d",
-        lobby->capacity,
-        lobby->id,
-        lobby->locked,
-        lobby->owner_id,
-        lobby->secret,
-        lobby->type
-    );
-    /*sCurActivity.type = DiscordActivityType_Playing;
-    sCurActivity.party.size.current_size = 2;
-    sCurActivity.party.size.max_size = 16; // TODO: wrong
-    */
-    discord_activity_update();
-}
-
 static void on_activity_join(UNUSED void* data, const char* secret) {
     LOG_INFO("> on_activity_join, secret: %s", secret);
-    //djui_connect_menu_open();
-    //app.lobbies->connect_lobby_with_activity_secret(app.lobbies, (char*)secret, NULL, on_activity_join_callback);
+    char *token;
+
+    // extract lobby type
+    token = strtok((char*)secret, ":");
+    if (strcmp(token, "coopnet") != 0) {
+        LOG_ERROR("Tried to join unrecognized lobby type: %s", token);
+        return;
+    }
+
+#ifdef COOPNET
+    // extract lobby ID
+    token = strtok(NULL, ":");
+    u64 lobbyId = atoi(token);
+
+    // extract lobby password
+    token = strtok(NULL, ":");
+
+    // join
+    gCoopNetDesiredLobby = lobbyId;
+    snprintf(gCoopNetPassword, 64, "%s", token);
+    network_reset_reconnect_and_rehost();
+    network_set_system(NS_COOPNET);
+    network_init(NT_CLIENT, false);
+    djui_panel_join_message_create(NULL);
+#endif
 }
 
 static void on_activity_join_request_callback(UNUSED void* data, enum EDiscordResult result) {
