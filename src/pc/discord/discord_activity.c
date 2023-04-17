@@ -9,6 +9,7 @@
 
 extern struct DiscordApplication app;
 struct DiscordActivity sCurActivity = { 0 };
+static int sQueuedLobby = 0;
 
 static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult result) {
     LOG_INFO("> on_activity_update_callback returned %d", result);
@@ -42,11 +43,7 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
     }
     gCoopNetDesiredLobby = lobbyId;
     snprintf(gCoopNetPassword, 64, "%s", token);
-
-    network_reset_reconnect_and_rehost();
-    network_set_system(NS_COOPNET);
-    network_init(NT_CLIENT, false);
-    djui_panel_join_message_create(NULL);
+    sQueuedLobby = 2;
 #endif
 }
 
@@ -139,6 +136,15 @@ void discord_activity_update(void) {
 }
 
 void discord_activity_update_check(void) {
+    if (sQueuedLobby > 0) {
+        if (--sQueuedLobby == 0) {
+            network_reset_reconnect_and_rehost();
+            network_set_system(NS_COOPNET);
+            network_init(NT_CLIENT, false);
+            djui_panel_join_message_create(NULL);
+        }
+    }
+
     if (gNetworkType == NT_NONE) { return; }
     bool shouldUpdate = false;
     u8 connectedCount = network_player_connected_count();
