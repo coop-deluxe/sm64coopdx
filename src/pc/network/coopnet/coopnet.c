@@ -173,6 +173,11 @@ static int ns_coopnet_network_send(u8 localIndex, void* address, u8* data, u16 d
     return 0;
 }
 
+static bool coopnet_allow_invite(void) {
+    if (sLocalLobbyId == 0) { return false; }
+    return (sLocalLobbyOwnerId == coopnet_get_local_user_id()) || (strlen(gCoopNetPassword) == 0);
+}
+
 static void ns_coopnet_get_lobby_id(UNUSED char* destination, UNUSED u32 destLength) {
     if (sLocalLobbyId == 0) {
         snprintf(destination, destLength, "%s", "");
@@ -182,7 +187,7 @@ static void ns_coopnet_get_lobby_id(UNUSED char* destination, UNUSED u32 destLen
 }
 
 static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 destLength) {
-    if (sLocalLobbyId == 0) {
+    if (sLocalLobbyId == 0 || !coopnet_allow_invite()) {
         snprintf(destination, destLength, "%s", "");
     } else {
         snprintf(destination, destLength, "coopnet:%" PRIu64":%s", sLocalLobbyId, gCoopNetPassword);

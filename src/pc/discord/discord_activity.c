@@ -10,6 +10,8 @@
 extern struct DiscordApplication app;
 struct DiscordActivity sCurActivity = { 0 };
 static int sQueuedLobby = 0;
+static uint64_t sQueuedLobbyId = 0;
+static char sQueuedLobbyPassword[64] = "";
 
 static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult result) {
     LOG_INFO("> on_activity_update_callback returned %d", result);
@@ -31,7 +33,7 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
     // extract lobby ID
     token = strtok(NULL, ":");
     char* end;
-    u64 lobbyId = strtoll(token, &end, 10);
+    u64 lobbyId = strtoull(token, &end, 10);
 
     // extract lobby password
     token = strtok(NULL, ":");
@@ -41,8 +43,8 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
     if (gNetworkType != NT_NONE) {
         network_shutdown(true, false, false, false);
     }
-    gCoopNetDesiredLobby = lobbyId;
-    snprintf(gCoopNetPassword, 64, "%s", token);
+    sQueuedLobbyId = lobbyId;
+    snprintf(sQueuedLobbyPassword, 64, "%s", token);
     sQueuedLobby = 2;
 #endif
 }
@@ -138,6 +140,8 @@ void discord_activity_update(void) {
 void discord_activity_update_check(void) {
     if (sQueuedLobby > 0) {
         if (--sQueuedLobby == 0) {
+            gCoopNetDesiredLobby = sQueuedLobbyId;
+            snprintf(gCoopNetPassword, 64, "%s", sQueuedLobbyPassword);
             network_reset_reconnect_and_rehost();
             network_set_system(NS_COOPNET);
             network_init(NT_CLIENT, false);

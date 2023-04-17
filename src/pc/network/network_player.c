@@ -10,6 +10,7 @@
 #include "game/hardcoded.h"
 #include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/network/socket/socket.h"
 #include "lag_compensation.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -179,13 +180,15 @@ void network_player_update(void) {
             if (!np->connected && i > 0) { continue; }
 
             float elapsed = (clock_elapsed() - np->lastReceived);
-#ifndef DEVELOPMENT
+#ifdef DEVELOPMENT
+            if (elapsed > NETWORK_PLAYER_TIMEOUT && (gNetworkSystem != &gNetworkSystemSocket)) {
+#else
             if (elapsed > NETWORK_PLAYER_TIMEOUT) {
+#endif
                 LOG_INFO("dropping player %d", i);
                 network_player_disconnected(i);
                 continue;
             }
-#endif
             elapsed = (clock_elapsed() - np->lastSent);
             if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
                 network_send_keep_alive(np->localIndex);
@@ -196,12 +199,14 @@ void network_player_update(void) {
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);
 
-#ifndef DEVELOPMENT
+#ifdef DEVELOPMENT
+        if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f && (gNetworkSystem != &gNetworkSystemSocket)) {
+#else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
+#endif
             LOG_INFO("dropping due to no server connectivity");
             network_shutdown(false, false, true, false);
         }
-#endif
 
         elapsed = (clock_elapsed() - np->lastSent);
         if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
