@@ -30,6 +30,7 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
         djui_base_set_color(&text1->base, 200, 200, 200, 255);
 
         struct DjuiInputbox* inputbox1 = djui_inputbox_create(body, 256);
+        inputbox1->passwordChar[0] = '#';
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&inputbox1->base, 1.0f, 32.0f);
         sInputboxPassword = inputbox1;

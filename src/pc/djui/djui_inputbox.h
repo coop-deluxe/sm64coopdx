@@ -4,6 +4,7 @@
 struct DjuiInputbox {
     struct DjuiBase base;
     char* buffer;
+    char passwordChar[2];
     u16 bufferSize;
     u16 selection[2];
     f32 viewX;

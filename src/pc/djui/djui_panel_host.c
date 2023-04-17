@@ -147,6 +147,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
                 }
 
                 sInputboxPassword = djui_inputbox_create(&sRectPassword->base, 32);
+                sInputboxPassword->passwordChar[0] = '#';
                 djui_base_set_size_type(&sInputboxPassword->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_size(&sInputboxPassword->base, 0.4f, 32);
                 djui_base_set_alignment(&sInputboxPassword->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
