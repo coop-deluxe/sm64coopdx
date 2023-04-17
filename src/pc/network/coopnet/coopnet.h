@@ -2,7 +2,7 @@
 #define COOPNET_H
 #ifdef COOPNET
 
-typedef void (*QueryCallbackPtr)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode);
+typedef void (*QueryCallbackPtr)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription);
 typedef void (*QueryFinishCallbackPtr)(void);
 
 extern struct NetworkSystem gNetworkSystemCoopNet;

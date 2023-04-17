@@ -2,6 +2,7 @@
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
+#include "pc/utils/misc.h"
 #include "pc/djui/djui_panel_join_message.h"
 #ifdef COOPNET
 #include "pc/network/coopnet/coopnet.h"
@@ -9,6 +10,9 @@
 
 extern struct DiscordApplication app;
 struct DiscordActivity sCurActivity = { 0 };
+static int sQueuedLobby = 0;
+static uint64_t sQueuedLobbyId = 0;
+static char sQueuedLobbyPassword[64] = "";
 
 static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult result) {
     LOG_INFO("> on_activity_update_callback returned %d", result);
@@ -30,7 +34,7 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
     // extract lobby ID
     token = strtok(NULL, ":");
     char* end;
-    u64 lobbyId = strtoll(token, &end, 10);
+    u64 lobbyId = strtoull(token, &end, 10);
 
     // extract lobby password
     token = strtok(NULL, ":");
@@ -40,13 +44,9 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
     if (gNetworkType != NT_NONE) {
         network_shutdown(true, false, false, false);
     }
-    gCoopNetDesiredLobby = lobbyId;
-    snprintf(gCoopNetPassword, 64, "%s", token);
-
-    network_reset_reconnect_and_rehost();
-    network_set_system(NS_COOPNET);
-    network_init(NT_CLIENT, false);
-    djui_panel_join_message_create(NULL);
+    sQueuedLobbyId = lobbyId;
+    snprintf(sQueuedLobbyPassword, 64, "%s", token);
+    sQueuedLobby = 2;
 #endif
 }
 
@@ -65,28 +65,28 @@ static void strncat_len(char* destination, char* source, size_t destinationLengt
     strncat(destination, altered, destinationLength);
 }
 
-static bool discord_populate_details(char* details, bool shorten) {
-    snprintf(details, 127, "%s", get_version());
+static void discord_populate_details(char* buffer, int bufferLength) {
+    // get version
+    char* version = get_version();
+    int versionLength = strlen(version);
+    snprintf(buffer, bufferLength, "%s", version);
+    buffer += versionLength;
+    bufferLength -= versionLength;
 
-    bool displayDash = true;
-    bool displayComma = false;
-    size_t catLength = shorten ? 14 : 64;
-
-    // add mods to activity
-    if (gActiveMods.entryCount > 0) {
-        for (int i = 0; i < gActiveMods.entryCount; i++) {
-            struct Mod* mod = gActiveMods.entries[i];
-            if (displayDash) { strncat_len(details, " - ", 127, catLength); }
-            if (displayComma) { strncat_len(details, ", ", 127, catLength); }
-
-            strncat_len(details, mod->name, 127, catLength);
-
-            displayDash = false;
-            displayComma = true;
-        }
+    // get mod strings
+    if (gActiveMods.entryCount <= 0) { return; }
+    char* strings[gActiveMods.entryCount];
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        strings[i] = gActiveMods.entries[i]->name;
     }
 
-    return (strlen(details) >= 125);
+    // add seperator
+    snprintf(buffer, bufferLength, "%s", " - ");
+    buffer += 3;
+    bufferLength -= 3;
+
+    // concat mod strings
+    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, ", ");
 }
 
 void discord_activity_update(void) {
@@ -114,13 +114,10 @@ void discord_activity_update(void) {
         if (sCurActivity.party.size.max_size < 1) { sCurActivity.party.size.max_size = 1; }
     }
 
-    char details[256] = { 0 };
-    bool overrun = discord_populate_details(details, false);
-    if (overrun) {
-        discord_populate_details(details, true);
-    }
+    char details[128] = { 0 };
+    discord_populate_details(details, 128);
 
-    if (snprintf(sCurActivity.details, 125, "%s", details) < 0) {
+    if (snprintf(sCurActivity.details, 128, "%s", details) < 0) {
         LOG_INFO("truncating details");
     }
 
@@ -139,6 +136,17 @@ void discord_activity_update(void) {
 }
 
 void discord_activity_update_check(void) {
+    if (sQueuedLobby > 0) {
+        if (--sQueuedLobby == 0) {
+            gCoopNetDesiredLobby = sQueuedLobbyId;
+            snprintf(gCoopNetPassword, 64, "%s", sQueuedLobbyPassword);
+            network_reset_reconnect_and_rehost();
+            network_set_system(NS_COOPNET);
+            network_init(NT_CLIENT, false);
+            djui_panel_join_message_create(NULL);
+        }
+    }
+
     if (gNetworkType == NT_NONE) { return; }
     bool shouldUpdate = false;
     u8 connectedCount = network_player_connected_count();

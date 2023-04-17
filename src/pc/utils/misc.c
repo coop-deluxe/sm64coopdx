@@ -531,3 +531,53 @@ void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx) {
         *mtx = *mtxPrev;
     }
 }
+
+void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, int num_strings, char* seperator) {
+    // empty buffer
+    memset(output_buffer, 0, buffer_size);
+    if (num_strings <= 0) { return; }
+
+    // Calculate the total length of all strings
+    int string_length[num_strings];
+    int total_length = 0;
+    for (int i = 0; i < num_strings; i++) {
+        string_length[i] = strlen(strings[i]);
+        total_length += string_length[i];
+    }
+
+    // get the seperator length
+    int seperator_length = strlen(seperator);
+    int seperators_length = (num_strings - 1) * seperator_length;
+    if (seperators_length + 8 < buffer_size) {
+        // Shorten the largest string over and over until we fit
+        while (total_length + seperators_length >= buffer_size) {
+            int* largest = NULL;
+            for (int i = 0; i < num_strings; i++) {
+                if (largest == NULL || string_length[i] >= *largest) {
+                    largest = &string_length[i];
+                }
+            }
+            if (largest == NULL || *largest == 0) { break; }
+            *largest = *largest - 1;
+            total_length--;
+        }
+    }
+
+    // Fill the buffer
+    int buffer_index = 0;
+    for (int i = 0; i < num_strings; i++) {
+        // Concat string
+        int amount = MIN(buffer_size - buffer_index, string_length[i] + 1);
+        if (amount <= 0) { break; }
+        snprintf(&output_buffer[buffer_index], amount, "%s", strings[i]);
+        buffer_index += string_length[i];
+
+        // Concat seperator
+        if (i != (num_strings - 1)) {
+            int amount = MIN(buffer_size - buffer_index, seperator_length + 1);
+            if (amount <= 0) { break; }
+            snprintf(&output_buffer[buffer_index], amount, "%s", seperator);
+            buffer_index += seperator_length;
+        }
+    }
+}
