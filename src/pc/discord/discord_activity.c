@@ -29,7 +29,8 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
 #ifdef COOPNET
     // extract lobby ID
     token = strtok(NULL, ":");
-    u64 lobbyId = atoi(token);
+    char* end;
+    u64 lobbyId = strtoll(token, &end, 10);
 
     // extract lobby password
     token = strtok(NULL, ":");

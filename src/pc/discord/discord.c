@@ -56,15 +56,16 @@ static void register_launch_command(void) {
     }
     GetModuleFileName(hModule, cmd, sizeof(cmd));
 #else
-    char path[MAX_LAUNCH_CMD] = { 0 };
-    snprintf(path, MAX_LAUNCH_CMD - 1, "/proc/%d/exe", getpid());
-    rc = readlink(path, cmd, MAX_LAUNCH_CMD - 1);
+    char pidpath[MAX_LAUNCH_CMD] = { 0 };
+    char fullpath[MAX_LAUNCH_CMD] = { 0 };
+    snprintf(pidpath, MAX_LAUNCH_CMD - 1, "/proc/%d/exe", getpid());
+    rc = readlink(pidpath, fullpath, MAX_LAUNCH_CMD - 1);
     if (rc <= 0) {
         LOG_ERROR("unable to retrieve absolute path! rc = %d", rc);
         return;
     }
+    snprintf(cmd, MAX_LAUNCH_CMD, "%s", fullpath);
 #endif
-    strncat(cmd, " --discord 1", MAX_LAUNCH_CMD - 1);
     rc = app.activities->register_command(app.activities, cmd);
     if (rc != DiscordResult_Ok) {
         LOG_ERROR("register command failed %d", rc);
@@ -139,15 +140,15 @@ static void discord_initialize(void) {
         app.application = app.core->get_application_manager(app.core);
     }
 
-    // register launch params
-    register_launch_command();
-
     // get oath2 token
     app.application->get_oauth2_token(app.application, NULL, get_oauth2_token_callback);
 
     // set activity
     discord_activity_update();
     sDiscordFailed = false;
+
+    // register launch params
+    register_launch_command();
 
     LOG_INFO("initialized");
 }
