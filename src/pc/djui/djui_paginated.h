@@ -6,6 +6,7 @@ struct DjuiPaginated {
     struct DjuiFlowLayout* layout;
     struct DjuiButton* prevButton;
     struct DjuiButton* nextButton;
+    struct DjuiText* pageNumText;
     s32 startIndex;
     s32 showCount;
 };
