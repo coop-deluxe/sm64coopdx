@@ -50,6 +50,7 @@ CoopNetRc coopnet_begin(const char* aHost, uint32_t aPort);
 CoopNetRc coopnet_shutdown(void);
 CoopNetRc coopnet_update(void);
 CoopNetRc coopnet_lobby_create(const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections, const char* aPassword);
+CoopNetRc coopnet_lobby_update(uint64_t aLobbyId, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode);
 CoopNetRc coopnet_lobby_join(uint64_t aLobbyId, const char* aPassword);
 CoopNetRc coopnet_lobby_leave(uint64_t aLobbyId);
 CoopNetRc coopnet_lobby_list_get(const char* aGame, const char* aPassword);

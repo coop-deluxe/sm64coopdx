@@ -145,12 +145,13 @@ void ns_coopnet_update(void) {
     coopnet_update();
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
+            char mode[64] = "";
+            mods_get_main_mod_name(mode, 64);
             if (sReconnecting) {
-                // TODO: send lobby update packet
+                LOG_INFO("Update lobby");
+                coopnet_lobby_update(sLocalLobbyId, CN_GAME_STR, get_version(), configPlayerName, mode);
             } else {
                 LOG_INFO("Create lobby");
-                char mode[64] = "";
-                mods_get_main_mod_name(mode, 64);
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
                 coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword);
             }
