@@ -9,6 +9,7 @@
 #include "save_file.h"
 #include "segment2.h"
 #include "sm64.h"
+#include "hud.h"
 
 
 /**
@@ -270,12 +271,14 @@ void *create_skybox_ortho_matrix(s8 player) {
         gBackgroundSkyboxMtx = mtx;
     }
 
-    f32 half_width = (4.0f / 3.0f) / GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_WIDTH / 2;
-    f32 center = (sSkyBoxInfo[player].scaledX + SCREEN_WIDTH / 2);
-    if (half_width < SCREEN_WIDTH / 2) {
-        // A wider screen than 4:3
-        left = center - half_width;
-        right = center + half_width;
+    if (!use_forced_4by3()) {
+        f32 half_width = (4.0f / 3.0f) / GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_WIDTH / 2;
+        f32 center = (sSkyBoxInfo[player].scaledX + SCREEN_WIDTH / 2);
+        if (half_width < SCREEN_WIDTH / 2) {
+            // A wider screen than 4:3
+            left = center - half_width;
+            right = center + half_width;
+        }
     }
 
     if (mtx != NULL) {

@@ -111,6 +111,7 @@ extern bool         configDebugPrint;
 extern bool         configDebugInfo;
 extern bool         configDebugError;
 extern char         configLanguage[];
+extern bool         configForce4By3;
 
 void configfile_load(void);
 void configfile_save(const char *filename);

@@ -36,6 +36,8 @@ void djui_panel_display_create(struct DjuiBase* caller) {
     {
         djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
 
+        djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
+
     #ifdef EXTERNAL_DATA
         djui_checkbox_create(body, DLANG(DISPLAY, PRELOAD_TEXTURES), &configPrecacheRes, NULL);
     #endif

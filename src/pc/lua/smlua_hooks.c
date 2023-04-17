@@ -4,6 +4,7 @@
 #include "src/game/object_list_processor.h"
 #include "pc/djui/djui_chat_message.h"
 #include "pc/crash_handler.h"
+#include "src/game/hud.h"
 
 #if defined(DEVELOPMENT)
 #include "../mods/mods.h"
@@ -67,7 +68,7 @@ void lua_profiler_update_counters() {
             if ((c < '0' || c > '9') && (c < 'A' || c > 'Z')) c = ' ';
             text[j] = c;
         }
-        print_text(GFX_DIMENSIONS_FROM_LEFT_EDGE(4), y, text);
+        print_text(gfx_dimensions_rect_from_left_edge(4), y, text);
     }
 }
 

@@ -471,6 +471,12 @@ void render_game(void) {
         }
     }
 
+    if (use_forced_4by3()) {
+        gDPSetFillColor(gDisplayListHead++, GPACK_RGBA5551(0, 0, 0, 1));
+        gDPFillRectangle(gDisplayListHead++, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), 0, 0, SCREEN_HEIGHT);
+        gDPFillRectangle(gDisplayListHead++, SCREEN_WIDTH, 0, GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(0), SCREEN_HEIGHT);
+    }
+
     D_8032CE74 = NULL;
     D_8032CE78 = NULL;
 }

@@ -27,6 +27,10 @@ enum CameraHUDLut {
 
 extern u8 gOverrideHideHud;
 
+bool use_forced_4by3(void);
+extern s32 gfx_dimensions_rect_from_left_edge(s32 v);
+extern s32 gfx_dimensions_rect_from_right_edge(s32 v);
+
 void set_hud_camera_status(s16 status);
 void render_hud(void);
 

@@ -18,6 +18,7 @@
 #include "djui_hud_utils.h"
 #include "djui_panel_pause.h"
 #include "game/camera.h"
+#include "game/hud.h"
 
 
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
@@ -62,7 +63,7 @@ static void djui_hud_position_translate(f32* x, f32* y) {
     if (sResolution == RESOLUTION_DJUI) {
         djui_gfx_position_translate(x, y);
     } else {
-        *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x;
+        *x = gfx_dimensions_rect_from_left_edge(0) + *x;
         *y = SCREEN_HEIGHT - *y;
     }
 }
@@ -155,8 +156,12 @@ u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
     wm_api->get_dimensions(&windowWidth, &windowHeight);
 
+    if (use_forced_4by3() && sResolution == RESOLUTION_DJUI) {
+        windowWidth -= (GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + GFX_DIMENSIONS_FROM_RIGHT_EDGE(0));
+    }
+
     return (sResolution == RESOLUTION_N64)
-        ? (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT)
+        ? ((use_forced_4by3() ? (4.0f / 3.0f) : GFX_DIMENSIONS_ASPECT_RATIO) * SCREEN_HEIGHT)
         : (windowWidth / djui_gfx_get_scale());
 }
 
