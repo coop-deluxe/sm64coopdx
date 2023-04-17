@@ -148,6 +148,8 @@ struct LSTNetworkType {
 };
 
 // packet.c
+void packet_compress(struct Packet* p, u8** compBuffer, u32* compSize);
+bool packet_decompress(struct Packet* p, u8* compBuffer, u32 compSize);
 void packet_process(struct Packet* p);
 void packet_receive(struct Packet* packet);
 bool packet_spoofed(struct Packet* p, u8 globalIndex);

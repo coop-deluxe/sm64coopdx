@@ -309,8 +309,15 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         if (p->keepSendingAfterDisconnect) {
             localIndex = 0; // Force this type of packet to use the saved addr
         }
-        int rc = gNetworkSystem->send(localIndex, p->addr, p->buffer, p->cursor + sizeof(u32));
-        if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+        u8* buffer = NULL;
+        u32 len = 0;
+        packet_compress(p, &buffer, &len);
+        if (!buffer || len == 0) {
+            LOG_ERROR("Failed to compress!");
+        } else {
+            int rc = gNetworkSystem->send(localIndex, p->addr, buffer, len);
+            if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+        }
     }
     p->sent = true;
 
@@ -375,14 +382,16 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         .buffer = { 0 },
         .dataLength = dataLength,
     };
-    memcpy(p.buffer, data, dataLength);
+    if (!packet_decompress(&p, data, dataLength)) {
+        LOG_ERROR("Failed to decompress!");
+        return;
+    }
 
     if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
         gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
     }
 
     // subtract and check hash
-    p.dataLength -= sizeof(u32);
     if (!packet_check_hash(&p)) {
         LOG_ERROR("invalid packet hash!");
         return;
