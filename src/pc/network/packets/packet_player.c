@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <zlib.h>
 #include "../network.h"
 #include "object_fields.h"
 #include "object_constants.h"
@@ -75,37 +74,6 @@ struct PacketPlayerData {
     u8 areaSyncValid;
 };
 #pragma pack()
-
-uLong sourceLen = sizeof(struct PacketPlayerData);
-static u32 sCompBufferLen = 0;
-static Bytef* sCompBuffer = NULL;
-
-static void increase_comp_buffer(u32 compressedLen) {
-    if (compressedLen <= sCompBufferLen && sCompBuffer) { return; }
-
-    if (sCompBuffer != NULL) { free(sCompBuffer); }
-
-    sCompBufferLen = compressedLen;
-    sCompBuffer = (Bytef*)malloc(sCompBufferLen);
-}
-
-static u32 compress_player_data(struct PacketPlayerData* data) {
-    uLongf compressedLen = compressBound(sizeof(struct PacketPlayerData));
-    increase_comp_buffer(compressedLen);
-    if (!sCompBuffer) { return 0; }
-
-    if (compress2((Bytef*)sCompBuffer, &compressedLen, (Bytef*)data, sourceLen, Z_BEST_COMPRESSION) == Z_OK) {
-        return compressedLen;
-    } else {
-        return 0;
-    }
-}
-
-static bool decompress_player_data(u32 compressedLen, struct PacketPlayerData* data) {
-    if (!sCompBuffer) { return false; }
-    uLong decompLen = sizeof(struct PacketPlayerData);
-    return uncompress((Bytef*)data, &decompLen, sCompBuffer, compressedLen) == Z_OK;
-}
 
 static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
     u32 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;
@@ -243,19 +211,10 @@ void network_send_player(u8 localIndex) {
     struct PacketPlayerData data = { 0 };
     read_packet_data(&data, &gMarioStates[localIndex]);
 
-
-    // compress
-    u32 compressedSize = compress_player_data(&data);
-
     struct Packet p = { 0 };
     packet_init(&p, PACKET_PLAYER, false, PLMT_AREA);
     packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
-    packet_write(&p, &compressedSize, sizeof(u32));
-    if (compressedSize > 0) {
-        packet_write(&p, sCompBuffer, compressedSize);
-    } else {
-        packet_write(&p, &data, sizeof(struct PacketPlayerData));
-    }
+    packet_write(&p, &data, sizeof(struct PacketPlayerData));
     network_send(&p);
 }
 
@@ -285,22 +244,9 @@ void network_receive_player(struct Packet* p) {
     u16 playerIndex  = np->localIndex;
     u32 oldBehParams = m->marioObj->oBehParams;
 
-    // read compressed size
-    u32 compressedSize = 0;
-    packet_read(p, &compressedSize, sizeof(u32));
-
     // load mario information from packet
     struct PacketPlayerData data = { 0 };
-    if (compressedSize > 0) {
-        // read compressed data
-        increase_comp_buffer(compressedSize);
-        if (!sCompBuffer) { LOG_ERROR("No compressed buffer!"); return; }
-        packet_read(p, sCompBuffer, compressedSize);
-        if (!decompress_player_data(compressedSize, &data)) { LOG_ERROR("Failed to decompress data!"); return; }
-    } else {
-        // read uncompressed data
-        packet_read(p, &data, sizeof(struct PacketPlayerData));
-    }
+    packet_read(p, &data, sizeof(struct PacketPlayerData));
 
     // check to see if we should just drop this packet
     if (oldData.action == ACT_JUMBO_STAR_CUTSCENE && data.action == ACT_JUMBO_STAR_CUTSCENE) {
