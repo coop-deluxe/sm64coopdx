@@ -85,7 +85,6 @@ static void discord_populate_details(char* buffer, int bufferLength) {
     buffer += 3;
     bufferLength -= 3;
 
-
     // concat mod strings
     str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, ", ");
 }

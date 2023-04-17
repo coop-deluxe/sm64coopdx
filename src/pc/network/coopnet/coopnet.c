@@ -6,6 +6,7 @@
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
 #include "pc/mods/mods.h"
+#include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -17,6 +18,7 @@
 
 uint64_t gCoopNetDesiredLobby = 0;
 char gCoopNetPassword[64] = "";
+char sCoopNetDescription[256] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
@@ -139,6 +141,33 @@ bool ns_coopnet_is_connected(void) {
     return coopnet_is_connected();
 }
 
+static void coopnet_populate_description(void) {
+    char* buffer = sCoopNetDescription;
+    int bufferLength = 256;
+    // get version
+    char* version = get_version();
+    int versionLength = strlen(version);
+    snprintf(buffer, bufferLength, "%s", version);
+    buffer += versionLength;
+    bufferLength -= versionLength;
+
+    // get mod strings
+    if (gActiveMods.entryCount <= 0) { return; }
+    char* strings[gActiveMods.entryCount];
+    for (int i = 0; i < gActiveMods.entryCount; i++) {
+        strings[i] = gActiveMods.entries[i]->name;
+    }
+
+    // add seperator
+    char* sep = "\n\nMods:\n";
+    snprintf(buffer, bufferLength, "%s", sep);
+    buffer += strlen(sep);
+    bufferLength -= strlen(sep);
+
+    // concat mod strings
+    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, "\n");
+}
+
 void ns_coopnet_update(void) {
     if (!coopnet_is_connected()) { return; }
 
@@ -149,11 +178,13 @@ void ns_coopnet_update(void) {
             mods_get_main_mod_name(mode, 64);
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
-                coopnet_lobby_update(sLocalLobbyId, CN_GAME_STR, get_version(), configPlayerName, mode);
+                coopnet_populate_description();
+                coopnet_lobby_update(sLocalLobbyId, CN_GAME_STR, get_version(), configPlayerName, mode, sCoopNetDescription);
             } else {
                 LOG_INFO("Create lobby");
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
-                coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword);
+                coopnet_populate_description();
+                coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");

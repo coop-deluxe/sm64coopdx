@@ -32,12 +32,15 @@ static void djui_lobby_entry_update_style(struct DjuiBase* base) {
 
 static void djui_lobby_entry_destroy(struct DjuiBase* base) {
     struct DjuiLobbyEntry* lobbyEntry = (struct DjuiLobbyEntry*)base;
+    if (lobbyEntry->description) { free((char*)lobbyEntry->description); }
     free(lobbyEntry);
 }
 
-struct DjuiLobbyEntry* djui_lobby_entry_create(struct DjuiBase* parent, char* host, char* mode, char* players, void (*on_click)(struct DjuiBase*)) {
+struct DjuiLobbyEntry* djui_lobby_entry_create(struct DjuiBase* parent, char* host, char* mode, char* players, char* description, void (*on_click)(struct DjuiBase*), void (*on_hover)(struct DjuiBase*), void (*on_hover_end)(struct DjuiBase*)) {
     struct DjuiLobbyEntry* lobbyEntry = calloc(1, sizeof(struct DjuiLobbyEntry));
     struct DjuiBase* base = &lobbyEntry->base;
+
+    lobbyEntry->description = strdup(description);
 
     djui_base_init(parent, base, djui_rect_render, djui_lobby_entry_destroy);
     djui_base_set_size_type(&lobbyEntry->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -48,6 +51,7 @@ struct DjuiLobbyEntry* djui_lobby_entry_create(struct DjuiBase* parent, char* ho
     djui_base_set_border_width_type(&lobbyEntry->base, DJUI_SVT_ABSOLUTE);
     djui_interactable_create(base, djui_lobby_entry_update_style);
     djui_interactable_hook_click(base, on_click);
+    djui_interactable_hook_hover(base, on_hover, on_hover_end);
 
     u8 numColumns = 3;
     f32 x = 0;
