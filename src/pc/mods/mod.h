@@ -5,6 +5,10 @@
 #include <types.h>
 #include "src/pc/platform.h"
 
+#define MOD_NAME_MAX_LENGTH 32
+#define MOD_INCOMPATIBLE_MAX_LENGTH 256
+#define MOD_DESCRIPTION_MAX_LENGTH 512
+
 struct Mods;
 
 struct ModFile {
@@ -30,6 +34,7 @@ struct Mod {
     bool enabled;
     bool selectable;
     size_t size;
+    u8 customBehaviorIndex;
 };
 
 void mod_activate(struct Mod* mod);

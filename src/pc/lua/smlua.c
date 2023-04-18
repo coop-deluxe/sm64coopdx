@@ -163,6 +163,7 @@ void smlua_init(void) {
         gLuaLoadingMod = mod;
         gLuaActiveMod = mod;
         gLuaLastHookMod = mod;
+        gLuaLoadingMod->customBehaviorIndex = 0;
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];

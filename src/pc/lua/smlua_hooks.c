@@ -964,6 +964,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     if (L != NULL) {
         lua_pushinteger(L, customBehaviorId);
         lua_setglobal(L, bhvName);
+        LOG_INFO("Registered custom behavior: %04hX - %s", customBehaviorId, bhvName);
     }
 
     return 1;
@@ -971,12 +972,14 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
 
 int smlua_hook_behavior(lua_State* L) {
     if (L == NULL) { return 0; }
-    if (!smlua_functions_valid_param_count(L, 5)) { return 0; }
+    if (!smlua_functions_valid_param_range(L, 5, 6)) { return 0; }
 
     if (gLuaLoadingMod == NULL) {
         LOG_LUA_LINE("hook_behavior() can only be called on load.");
         return 0;
     }
+
+    int paramCount = lua_gettop(L);
 
     if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
         LOG_LUA_LINE("Hooked behaviors exceeded maximum references!");
@@ -1033,6 +1036,49 @@ int smlua_hook_behavior(lua_State* L) {
         return 0;
     }
 
+    const char *bhvName = NULL;
+    if (paramCount >= 6) {
+        int bhvNameType = lua_type(L, 6);
+        if (bhvNameType == LUA_TNIL) {
+            // nothing
+        } else if (bhvNameType == LUA_TSTRING) {
+            bhvName = smlua_to_string(L, 6);
+            if (!bhvName || !gSmLuaConvertSuccess) {
+                LOG_LUA_LINE("Hook behavior: could not parse bhvName");
+                return 0;
+            }
+        } else {
+            LOG_LUA_LINE("Hook behavior: invalid type passed for argument bhvName: %u", bhvNameType);
+            return 0;
+        }
+    }
+
+    // If not provided, generate generic behavior name: bhv<ModName>Custom<Index>
+    // - <ModName> is the mod name in CamelCase format, alphanumeric chars only
+    // - <Index> is in 3-digit numeric format, ranged from 001 to 256
+    // For example, the 4th unnamed behavior of the mod "my-great_MOD" will be named "bhvMyGreatMODCustom004"
+    if (!bhvName) {
+        static char sGenericBhvName[MOD_NAME_MAX_LENGTH + 16];
+        s32 i = 3;
+        snprintf(sGenericBhvName, 4, "bhv");
+        for (char caps = TRUE, *c = gLuaLoadingMod->name; *c && i < MOD_NAME_MAX_LENGTH + 3; ++c) {
+            if ('0' <= *c && *c <= '9') {
+                sGenericBhvName[i++] = *c;
+                caps = TRUE;
+            } else if ('A' <= *c && *c <= 'Z') {
+                sGenericBhvName[i++] = *c;
+                caps = FALSE;
+            } else if ('a' <= *c && *c <= 'z') {
+                sGenericBhvName[i++] = *c + (caps ? 'A' - 'a' : 0);
+                caps = FALSE;
+            } else {
+                caps = TRUE;
+            }
+        }
+        snprintf(sGenericBhvName + i, 12, "Custom%03u", (u32) (gLuaLoadingMod->customBehaviorIndex++) + 1);
+        bhvName = sGenericBhvName;
+    }
+
     struct LuaHookedBehavior* hooked = &sHookedBehaviors[sHookedBehaviorsCount];
     u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
     hooked->behavior = calloc(3, sizeof(BehaviorScript));
@@ -1050,6 +1096,12 @@ int smlua_hook_behavior(lua_State* L) {
     hooked->mod = gLuaActiveMod;
 
     sHookedBehaviorsCount++;
+
+    // We want to push the behavior into the global LUA state. So mods can access it.
+    // It's also used for some things that would normally access a LUA behavior instead.
+    lua_pushinteger(L, customBehaviorId);
+    lua_setglobal(L, bhvName);
+    LOG_INFO("Registered custom behavior: %04hX - %s", customBehaviorId, bhvName);
 
     // return behavior ID
     lua_pushinteger(L, customBehaviorId);

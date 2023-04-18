@@ -24,6 +24,7 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 | replaceBehavior | `bool` | Prevents the original behavior code from running |
 | initFunction | `Lua Function` ([Object](structs.md#Object) obj) | Runs once per object |
 | loopFunction | `Lua Function` ([Object](structs.md#Object) obj) | Runs once per frame per object |
+| behaviorName | `string` | Optional, name to give to the behavior |
 
 ### Returns
 - [enum BehaviorId](constants.md#enum-BehaviorId)
@@ -40,7 +41,7 @@ function bhv_example_loop(obj)
     obj.oPosY = obj.oPosY + 1
 end
 
-id_bhvExample = hook_behavior(0, OBJ_LIST_DEFAULT, bhv_example_init, bhv_example_loop)
+id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv_example_loop, "bhvExample")
 ```
 
 [:arrow_up_small:](#)

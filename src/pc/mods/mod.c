@@ -391,9 +391,10 @@ static void mod_extract_fields(struct Mod* mod) {
     mod->description = NULL;
 
     // read line-by-line
-    char buffer[512] = { 0 };
+    #define BUFFER_SIZE MAX(MAX(MOD_NAME_MAX_LENGTH, MOD_INCOMPATIBLE_MAX_LENGTH), MOD_DESCRIPTION_MAX_LENGTH)
+    char buffer[BUFFER_SIZE] = { 0 };
     while (!feof(f)) {
-        file_get_line(buffer, 512, f);
+        file_get_line(buffer, BUFFER_SIZE, f);
 
         // no longer in header
         if (buffer[0] != '-' || buffer[1] != '-') {
@@ -404,18 +405,18 @@ static void mod_extract_fields(struct Mod* mod) {
         // extract the field
         char* extracted = NULL;
         if (mod->name == NULL && (extracted = extract_lua_field("-- name:", buffer))) {
-            mod->name = calloc(33, sizeof(char));
-            if (snprintf(mod->name, 32, "%s", extracted) < 0) {
+            mod->name = calloc(MOD_NAME_MAX_LENGTH + 1, sizeof(char));
+            if (snprintf(mod->name, MOD_NAME_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod name field '%s'", mod->name);
             }
         } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
-            mod->incompatible = calloc(257, sizeof(char));
-            if (snprintf(mod->incompatible, 256, "%s", extracted) < 0) {
+            mod->incompatible = calloc(MOD_INCOMPATIBLE_MAX_LENGTH + 1, sizeof(char));
+            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
             }
         } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
-            mod->description = calloc(513, sizeof(char));
-            if (snprintf(mod->description, 512, "%s", extracted) < 0) {
+            mod->description = calloc(MOD_DESCRIPTION_MAX_LENGTH + 1, sizeof(char));
+            if (snprintf(mod->description, MOD_DESCRIPTION_MAX_LENGTH, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod description field '%s'", mod->description);
             }
         }

@@ -61,8 +61,9 @@ gServerSettings = {}
 --- @param replaceBehavior boolean
 --- @param initFunction fun(obj:Object)
 --- @param loopFunction fun(obj:Object)
+--- @param behaviorName string
 --- @return BehaviorId
-function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, loopFunction)
+function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, loopFunction, behaviorName)
     -- ...
 end
 
