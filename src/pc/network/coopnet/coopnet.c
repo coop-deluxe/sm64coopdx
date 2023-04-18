@@ -92,6 +92,10 @@ static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
 
 static void coopnet_on_error(enum MPacketErrorNumber error) {
     switch (error) {
+        case MERR_COOPNET_VERSION:
+            djui_popup_create(DLANG(NOTIF, COOPNET_VERSION), 2);
+            network_shutdown(false, false, false, false);
+            break;
         case MERR_LOBBY_NOT_FOUND:
             djui_popup_create(DLANG(NOTIF, LOBBY_NOT_FOUND), 2);
             network_shutdown(false, false, false, false);
