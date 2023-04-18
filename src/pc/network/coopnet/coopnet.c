@@ -106,7 +106,7 @@ static void coopnet_on_error(enum MPacketErrorNumber error, uint64_t tag) {
                 } else if (localIndex != UNKNOWN_LOCAL_INDEX && gNetworkPlayers[localIndex].connected) {
                     name = gNetworkPlayers[localIndex].name;
                 }
-                djui_language_replace(DLANG(NOTIF, IMPORT_MOD_SUCCESS), built, 256, '@', name);
+                djui_language_replace(DLANG(NOTIF, PEER_FAILED), built, 256, '@', name);
                 djui_popup_create(built, 2);
             }
             break;
