@@ -22,6 +22,7 @@ enum MPacketErrorNumber {
     MERR_LOBBY_JOIN_FAILED,
     MERR_LOBBY_PASSWORD_INCORRECT,
     MERR_COOPNET_VERSION,
+    MERR_PEER_FAILED,
     MERR_MAX,
 };
 
@@ -34,7 +35,7 @@ typedef struct {
     void (*OnLobbyListGot)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription);
     void (*OnLobbyListFinish)(void);
     void (*OnReceive)(uint64_t aFromUserId, const uint8_t* aData, uint64_t aSize);
-    void (*OnError)(enum MPacketErrorNumber aErrorNumber);
+    void (*OnError)(enum MPacketErrorNumber aErrorNumber, uint64_t tag);
     void (*OnPeerConnected)(uint64_t aPeerId);
     void (*OnPeerDisconnected)(uint64_t aPeerId);
 } CoopNetCallbacks;

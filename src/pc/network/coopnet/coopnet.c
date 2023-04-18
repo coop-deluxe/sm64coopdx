@@ -90,11 +90,23 @@ static void coopnet_on_lobby_left(uint64_t lobbyId, uint64_t userId) {
     }
 }
 
-static void coopnet_on_error(enum MPacketErrorNumber error) {
+static void coopnet_on_error(enum MPacketErrorNumber error, uint64_t tag) {
     switch (error) {
         case MERR_COOPNET_VERSION:
             djui_popup_create(DLANG(NOTIF, COOPNET_VERSION), 2);
             network_shutdown(false, false, false, false);
+            break;
+        case MERR_PEER_FAILED:
+            {
+                char built[256] = { 0 };
+                u8 localIndex = coopnet_user_id_to_local_index(tag);
+                if (localIndex == UNKNOWN_LOCAL_INDEX || gNetworkPlayers[localIndex].name[0] == '\0') {
+                    snprintf(built, 256, "%s", "unknown");
+                } else {
+                    djui_language_replace(DLANG(NOTIF, IMPORT_MOD_SUCCESS), built, 256, '@', gNetworkPlayers[localIndex].name);
+                }
+                djui_popup_create(built, 2);
+            }
             break;
         case MERR_LOBBY_NOT_FOUND:
             djui_popup_create(DLANG(NOTIF, LOBBY_NOT_FOUND), 2);
@@ -112,7 +124,8 @@ static void coopnet_on_error(enum MPacketErrorNumber error) {
             djui_popup_create(DLANG(NOTIF, LOBBY_PASSWORD_INCORRECT), 2);
             network_shutdown(false, false, false, false);
             break;
-        default:
+        case MERR_NONE:
+        case MERR_MAX:
             break;
     }
 }
@@ -241,7 +254,6 @@ static void ns_coopnet_shutdown(bool reconnecting) {
 }
 
 static CoopNetRc coopnet_initialize(void) {
-
     gCoopNetCallbacks.OnConnected = coopnet_on_connected;
     gCoopNetCallbacks.OnDisconnected = coopnet_on_disconnected;
     gCoopNetCallbacks.OnReceive = coopnet_on_receive;
