@@ -100,11 +100,13 @@ static void coopnet_on_error(enum MPacketErrorNumber error, uint64_t tag) {
             {
                 char built[256] = { 0 };
                 u8 localIndex = coopnet_user_id_to_local_index(tag);
-                if (localIndex == UNKNOWN_LOCAL_INDEX || gNetworkPlayers[localIndex].name[0] == '\0') {
-                    snprintf(built, 256, "%s", "unknown");
-                } else {
-                    djui_language_replace(DLANG(NOTIF, IMPORT_MOD_SUCCESS), built, 256, '@', gNetworkPlayers[localIndex].name);
+                char* name = DLANG(NOTIF, UNKNOWN);
+                if (localIndex == 0) {
+                    name = DLANG(NOTIF, LOBBY_HOST);
+                } else if (localIndex != UNKNOWN_LOCAL_INDEX && gNetworkPlayers[localIndex].connected) {
+                    name = gNetworkPlayers[localIndex].name;
                 }
+                djui_language_replace(DLANG(NOTIF, IMPORT_MOD_SUCCESS), built, 256, '@', name);
                 djui_popup_create(built, 2);
             }
             break;
