@@ -16,6 +16,7 @@
 
 #define DJUI_DESC_PANEL_WIDTH (410.0f + (16 * 2.0f))
 
+static struct DjuiPaginated* sLobbyPaginated = NULL;
 static struct DjuiFlowLayout* sLobbyLayout = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
@@ -90,6 +91,7 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     struct DjuiBase* layoutBase = &sLobbyLayout->base;
     struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aHostName, (char*)mode, playerText, (char*)aDescription, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
     entry->base.tag = (s64)aLobbyId;
+    djui_paginated_update_page_buttons(sLobbyPaginated);
 }
 
 void djui_panel_join_query_finish(void) {
@@ -103,6 +105,7 @@ void djui_panel_join_query_finish(void) {
         djui_base_set_size(&text->base, 1, 1);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     }
+    djui_paginated_update_page_buttons(sLobbyPaginated);
 }
 
 void djui_panel_join_lobbies_on_destroy(UNUSED struct DjuiBase* caller) {
@@ -110,6 +113,7 @@ void djui_panel_join_lobbies_on_destroy(UNUSED struct DjuiBase* caller) {
     sPassword = NULL;
     sRefreshButton = NULL;
     sLobbyLayout = NULL;
+    sLobbyPaginated = NULL;
 
     if (sDescriptionPanel != NULL) {
         djui_base_destroy(&sDescriptionPanel->base);
@@ -121,6 +125,7 @@ void djui_panel_join_lobbies_refresh(UNUSED struct DjuiBase* caller) {
     djui_base_destroy_children(&sLobbyLayout->base);
     djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESHING));
     djui_base_set_enabled(&sRefreshButton->base, false);
+    djui_paginated_update_page_buttons(sLobbyPaginated);
     ns_coopnet_query(djui_panel_join_query, djui_panel_join_query_finish, sPassword);
 }
 
@@ -135,8 +140,8 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
     struct DjuiThreePanel* panel = djui_panel_menu_create(private ? DLANG(LOBBIES, PRIVATE_LOBBIES) : DLANG(LOBBIES, PUBLIC_LOBBIES));
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
-        sLobbyLayout = paginated->layout;
+        sLobbyPaginated = djui_paginated_create(body, 8);
+        sLobbyLayout = sLobbyPaginated->layout;
         djui_flow_layout_set_margin(sLobbyLayout, 4);
 
         bool querying = ns_coopnet_query(djui_panel_join_query, djui_panel_join_query_finish, password);

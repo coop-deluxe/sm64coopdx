@@ -58,6 +58,7 @@
 struct SavedWarpValues gReceiveWarp = { 0 };
 extern s8 sReceivedLoadedActNum;
 u8 gRejectInstantWarp = 0;
+u16 gFanFareDebounce = 0;
 
 s16 gChangeLevel = -1;
 s16 gChangeLevelTransition = -1;
@@ -1611,6 +1612,8 @@ s32 update_level(void) {
     } else {
         sFirstCastleGroundsMenu = false;
     }
+
+    if (gFanFareDebounce > 0) { gFanFareDebounce--; }
 
     s32 changeLevel = 0;
 
