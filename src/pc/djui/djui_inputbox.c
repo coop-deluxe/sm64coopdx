@@ -292,13 +292,13 @@ void djui_inputbox_on_key_up(UNUSED struct DjuiBase *base, int scancode) {
     }
 }
 
-static void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
+void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     sHeldControl = 0;
     sHeldShift   = 0;
     wm_api->start_text_input();
 }
 
-static void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
+void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
     wm_api->stop_text_input();
 }
 
