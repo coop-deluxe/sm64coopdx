@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "network.h"
 #include "object_fields.h"
+#include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "src/game/hardcoded.h"
@@ -633,6 +634,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideNear = 0;
     gOverrideFar = 0;
     gOverrideFOV = 0;
+    gCurrActStarNum = 0;
+    gCurrActNum = 0;
+    gCurrCreditsEntry = NULL;
     gLightingDir[0] = 0;
     gLightingDir[1] = 0;
     gLightingDir[2] = 0;
