@@ -195,7 +195,7 @@ void packet_receive(struct Packet* p) {
         np->rxSeqIds[np->onRxSeqId] = p->seqId;
         np->rxPacketHash[np->onRxSeqId] = packetHash;
         np->onRxSeqId++;
-        if (np->onRxSeqId >= MAX_RX_SEQ_IDS) { np->onRxSeqId = 0; }
+        //if (np->onRxSeqId >= MAX_RX_SEQ_IDS) { np->onRxSeqId = 0; }
     }
 
     // parse the packet without processing the rest
