@@ -62,7 +62,6 @@ static f32 djui_cursor_base_distance(struct DjuiBase* base, f32 xScale, f32 ySca
 
 static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, struct DjuiBase* base) {
     if (!base->visible) { return; }
-    if (!base->enabled) { return; }
 
     if (base->interactable != NULL) {
         f32 x1, y1, x2, y2;

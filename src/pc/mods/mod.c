@@ -7,6 +7,19 @@
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
 
+size_t mod_get_lua_size(struct Mod* mod) {
+    if (!mod) { return 0; }
+    size_t size = 0;
+
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        if (!str_ends_with(file->relativePath, ".lua")) { continue; }
+        size += file->size;
+    }
+
+    return size;
+}
+
 static void mod_activate_bin(struct ModFile* file) {
     // copy geo name
     char geoName[64] = { 0 };

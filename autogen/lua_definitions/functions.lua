@@ -5641,12 +5641,6 @@ end
 
 --- @param localIndex integer
 --- @return string
-function network_discord_id_from_local_index(localIndex)
-    -- ...
-end
-
---- @param localIndex integer
---- @return string
 function network_get_player_text_color_string(localIndex)
     -- ...
 end
@@ -8012,6 +8006,12 @@ end
 --- @param name string
 --- @return Pointer_Collision
 function smlua_collision_util_get(name)
+    -- ...
+end
+
+--- @param localIndex integer
+--- @return string
+function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 

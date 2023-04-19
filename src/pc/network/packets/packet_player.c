@@ -403,9 +403,33 @@ void network_receive_player(struct Packet* p) {
 
 void network_update_player(void) {
     if (!network_player_any_connected()) { return; }
+    struct MarioState* m = &gMarioStates[0];
 
     u8 localIsHeadless = (&gNetworkPlayers[0] == gNetworkPlayerServer && gServerSettings.headlessServer);
-    if (!localIsHeadless) {
-        network_send_player(0);
-    }
+    if (localIsHeadless) { return; }
+
+    // figure out if we should send it or not
+    static u8 sTicksSinceSend = 0;
+    static u32 sLastPlayerAction = 0;
+    static f32 sLastStickX = 0;
+    static f32 sLastStickY = 0;
+    static u32 sLastButtonDown = 0;
+    static u32 sLastButtonPressed = 0;
+
+    f32 stickDist = sqrtf(powf(sLastStickX - m->controller->stickX, 2) + powf(sLastStickY - m->controller->stickY, 2));
+    bool shouldSend = (sTicksSinceSend > 2)
+        || (sLastPlayerAction  != m->action)
+        || (sLastButtonDown    != m->controller->buttonDown)
+        || (sLastButtonPressed != m->controller->buttonPressed)
+        || (stickDist          > 5.0f);
+
+    if (!shouldSend) { sTicksSinceSend++; return; }
+    network_send_player(0);
+    sTicksSinceSend = 0;
+
+    sLastPlayerAction  = m->action;
+    sLastStickX        = m->controller->stickX;
+    sLastStickY        = m->controller->stickY;
+    sLastButtonDown    = m->controller->buttonDown;
+    sLastButtonPressed = m->controller->buttonPressed;
 }

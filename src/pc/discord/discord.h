@@ -1,22 +1,14 @@
-#ifndef DISCORD_H
-#define DISCORD_H
-#include <stdint.h>
-#include <stdio.h>
-#include <assert.h>
-#pragma pack(push, 8)
+#pragma once
+
+#include "PR/ultratypes.h"
 #include "discord_game_sdk.h"
-#pragma pack(pop)
+
 #ifdef _WIN32
 #define DISCORD_ID_FORMAT "%lld"
 #include <Windows.h>
 #else
 #define DISCORD_ID_FORMAT "%ld"
-#include <unistd.h>
-#include <string.h>
 #endif
-#include "../network.h"
-
-void discord_fatal(int rc);
 
 // disgusting but descriptive
 #define DISCORD_REQUIRE(x) {                      \
@@ -25,10 +17,6 @@ void discord_fatal(int rc);
         discord_fatal(DISCORD_REQUIRE_RC);        \
     }                                             \
 }
-
-extern struct NetworkSystem gNetworkSystemDiscord;
-extern bool gDiscordInitialized;
-extern bool gDiscordFailed;
 
 struct DiscordApplication {
     struct IDiscordCore* core;
@@ -41,6 +29,9 @@ struct DiscordApplication {
     DiscordUserId userId;
 };
 
-extern struct DiscordApplication app;
-
-#endif
+void discord_update(void);
+void discord_fatal(int rc);
+void discord_activity_update_check(void);
+void discord_activity_update(void);
+struct IDiscordActivityEvents* discord_activity_initialize(void);
+u64 discord_get_user_id(void);

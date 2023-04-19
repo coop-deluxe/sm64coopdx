@@ -23,4 +23,6 @@ void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta);
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);
 void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx);
 
+void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, int num_strings, char* seperator);
+
 #endif

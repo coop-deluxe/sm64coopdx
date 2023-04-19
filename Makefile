@@ -48,10 +48,10 @@ EXT_OPTIONS_MENU ?= 1
 TEXTSAVES ?= 0
 # Load resources from external files
 EXTERNAL_DATA ?= 0
-# Enable Discord Rich Presence (outdated, no longer supported)
-DISCORDRPC ?= 0
-# Enable Discord Game SDK (used for Discord server hosting)
+# Enable Discord Game SDK (used for Discord invites)
 DISCORD_SDK ?= 1
+# Enable CoopNet SDK (used for CoopNet server hosting)
+COOPNET ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
 # Sets your optimization level for building.
@@ -526,14 +526,10 @@ SRC_DIRS := src src/engine src/game src/audio src/bass_audio src/menu src/buffer
 BIN_DIRS := bin bin/$(VERSION)
 
 # PC files
-SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/network src/pc/network/packets src/pc/network/socket src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils
-
-#ifeq ($(DISCORDRPC),1)
-#  SRC_DIRS += src/pc/discord
-#endif
+SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils
 
 ifeq ($(DISCORD_SDK),1)
-  SRC_DIRS += src/pc/network/discord
+  SRC_DIRS += src/pc/discord
 endif
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
@@ -605,18 +601,8 @@ ULTRA_O_FILES := $(foreach file,$(ULTRA_S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 GODDARD_O_FILES := $(foreach file,$(GODDARD_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 RPC_LIBS :=
-#ifeq ($(DISCORDRPC),1)
-#  ifeq ($(WINDOWS_BUILD),1)
-#    RPC_LIBS := lib/discord/libdiscord-rpc.dll
-#  else ifeq ($(OSX_BUILD),1)
-#    # needs testing
-#    RPC_LIBS := lib/discord/libdiscord-rpc.dylib
-#  else
-#    RPC_LIBS := lib/discord/libdiscord-rpc.so
-#  endif
-#endif
-
 DISCORD_SDK_LIBS :=
+
 ifeq ($(DISCORD_SDK), 1)
   ifeq ($(WINDOWS_BUILD),1)
     ifeq ($(TARGET_BITS), 32)
@@ -756,7 +742,6 @@ else
   CP := cp
 endif
 
-#ifeq ($(DISCORDRPC),1)
 ifeq ($(DISCORD_SDK),1)
   LD := $(CXX)
 else ifeq ($(WINDOWS_BUILD),1)
@@ -786,7 +771,7 @@ INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src .
 ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
-  INCLUDE_DIRS += sound lib/lua/include $(EXTRA_INCLUDES)
+  INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
 endif
 
 # Connfigure backend flags
@@ -921,9 +906,6 @@ else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
-#  ifeq ($(DISCORDRPC),1)
-#    LDFLAGS += -ldl -Wl,-rpath .
-#  endif
 endif
 
 # icon
@@ -979,6 +961,27 @@ else ifeq ($(TARGET_RPI),1)
   endif
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
+endif
+
+# coopnet
+ifeq ($(COOPNET),1)
+  ifeq ($(WINDOWS_BUILD),1)
+    ifeq ($(TARGET_BITS), 32)
+      LDFLAGS += -Llib/coopnet/win32 -l:libcoopnet.a -l:libjuice.a -lbcrypt -lws2_32
+    else
+      LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a -l:libjuice.a -lbcrypt -lws2_32
+    endif
+  else ifeq ($(OSX_BUILD),1)
+    LDFLAGS += -L./lib/coopnet/mac/ -l coopnet
+  else ifeq ($(TARGET_RPI),1)
+    ifneq (,$(findstring aarch64,$(machine)))
+      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
+    else
+      LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm.a -l:libjuice.a
+    endif
+  else
+    LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
+  endif
 endif
 
 # Network/Discord/Bass (ugh, needs cleanup)
@@ -1057,16 +1060,16 @@ endif
   CFLAGS += -DNODRAWINGDISTANCE
 #endif
 
-# Check for Discord Rich Presence option
-#ifeq ($(DISCORDRPC),1)
-#  CC_CHECK_CFLAGS += -DDISCORDRPC
-#  CFLAGS += -DDISCORDRPC
-#endif
-
 # Check for Discord SDK option
 ifeq ($(DISCORD_SDK),1)
   CC_CHECK_CFLAGS += -DDISCORD_SDK
   CFLAGS += -DDISCORD_SDK
+endif
+
+# Check for COOPNET option
+ifeq ($(COOPNET),1)
+  CC_CHECK_CFLAGS += -DCOOPNET
+  CFLAGS += -DCOOPNET
 endif
 
 # Check for development option

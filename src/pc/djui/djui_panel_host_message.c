@@ -4,7 +4,6 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_modlist.h"
 #include "src/pc/network/network.h"
-#include "src/pc/network/discord/discord.h"
 #include "src/pc/utils/misc.h"
 #include "src/pc/configfile.h"
 #include "pc/utils/misc.h"
@@ -14,25 +13,20 @@
 #include "audio/external.h"
 #include "sounds.h"
 
-void djui_panel_do_host(void) {
+void djui_panel_do_host(bool reconnecting) {
     stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
     gCurrSaveFileNum = configHostSaveSlot;
     update_all_mario_stars();
 
-#ifndef DISCORD_SDK
-    configNetworkSystem = 1;
-    network_set_system(NS_SOCKET);
-#else
-    if (configNetworkSystem == 0) {
-        network_set_system(NS_DISCORD);
-    } else {
-        network_set_system(NS_SOCKET);
-    }
+#ifndef COOPNET
+    if (configNetworkSystem == NS_COOPNET) { configNetworkSystem = NS_SOCKET; }
 #endif
+    if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
+    network_set_system(configNetworkSystem);
 
-    network_init(NT_SERVER);
+    network_init(NT_SERVER, reconnecting);
     djui_panel_modlist_create(NULL);
     fake_lvl_init_from_save_file();
 
@@ -48,7 +42,7 @@ void djui_panel_do_host(void) {
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
     network_reset_reconnect_and_rehost();
-    djui_panel_do_host();
+    djui_panel_do_host(false);
 }
 
 void djui_panel_host_message_create(struct DjuiBase* caller) {
@@ -56,18 +50,9 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
     char* warningMessage = NULL;
     bool hideHostButton = false;
 
-#ifdef DISCORD_SDK
-    if (!configNetworkSystem) {
-        warningLines = gDiscordFailed ? 5 : 13;
-        warningMessage = gDiscordFailed ? DLANG(HOST_MESSAGE, WARN_DISCORD2) : DLANG(HOST_MESSAGE, WARN_DISCORD);
-        hideHostButton = gDiscordFailed;
-    } else
-#endif
-    {
-        warningLines = 5;
-        warningMessage = calloc(256, sizeof(char));
-        sprintf(warningMessage, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
-    }
+    warningLines = 5;
+    warningMessage = calloc(256, sizeof(char));
+    snprintf(warningMessage, 256, DLANG(HOST_MESSAGE, WARN_SOCKET), configHostPort);
 
     f32 textHeight = 32 * 0.8125f * warningLines + 8;
 
@@ -93,10 +78,5 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
     }
 
     djui_panel_add(caller, panel, NULL);
-#ifdef DISCORD_SDK
-    if (configNetworkSystem)
-#endif
-    {
-        free(warningMessage);
-    }
+    free(warningMessage);
 }

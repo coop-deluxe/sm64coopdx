@@ -22,6 +22,7 @@ extern struct Mods gActiveMods;
 
 extern char gRemoteModsBasePath[];
 
+void mods_get_main_mod_name(char* destination, u32 maxSize);
 bool mods_generate_remote_base_path(void);
 void mods_activate(struct Mods* mods);
 void mods_clear(struct Mods* mods);

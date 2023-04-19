@@ -80,7 +80,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
-        for (u32 i = 1; i < configAmountofPlayers; i++) {
+        for (u32 i = 1; i < MAX_PLAYERS; i++) {
             if (!gNetworkPlayers[i].connected) {
                 globalIndex = i;
                 break;
@@ -119,6 +119,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.enableCheats, sizeof(u8));
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
+    packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     u8 modCount = string_linked_list_count(&gRegisteredMods);
@@ -165,7 +166,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
     LOG_INFO("server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
-        network_shutdown(true, false, false);
+        network_shutdown(true, false, false, false);
         LOG_ERROR("version mismatch");
         char mismatchMessage[256] = { 0 };
         snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#c8c8c8\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#c8c8c8\\\nTheir version: \\#a0a0ff\\%s\\#c8c8c8\\\n\nSomeone is out of date!\n", version, remoteVersion);
@@ -183,6 +184,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.enableCheats, sizeof(u8));
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
+    packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
     packet_read(p, &modCount, sizeof(u8));
 
@@ -196,7 +198,7 @@ void network_receive_join(struct Packet* p) {
     }
 
     if (string_linked_list_mismatch(&gRegisteredMods, &head)) {
-        network_shutdown(true, false, false);
+        network_shutdown(true, false, false, false);
 
         struct StringBuilder* builder = string_builder_create(512);
         string_builder_append(builder, "\\#ffa0a0\\Error:\\#c8c8c8\\ mods don't match.\n\n");
@@ -253,4 +255,6 @@ void network_receive_join(struct Packet* p) {
     smlua_call_event_hooks(HOOK_JOINED_GAME);
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
+
+    gAllowOrderedPacketClear = 1;
 }

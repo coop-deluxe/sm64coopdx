@@ -25,6 +25,7 @@ void network_send_mod_list_request(void) {
 
     network_send_to(PACKET_DESTINATION_SERVER, &p);
     LOG_INFO("sending mod list request");
+    gAllowOrderedPacketClear = 0;
 }
 
 void network_receive_mod_list_request(UNUSED struct Packet* p) {
@@ -140,7 +141,7 @@ void network_receive_mod_list(struct Packet* p) {
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
     LOG_INFO("server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
-        network_shutdown(true, false, false);
+        network_shutdown(true, false, false, false);
         LOG_ERROR("version mismatch");
         char mismatchMessage[256] = { 0 };
         snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#c8c8c8\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#c8c8c8\\\nTheir version: \\#a0a0ff\\%s\\#c8c8c8\\\n\nSomeone is out of date!\n", version, remoteVersion);
@@ -241,7 +242,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     // sanity check mod size
     if (mod->size >= MAX_MOD_SIZE) {
         djui_popup_create(DLANG(NOTIF, DISCONNECT_BIG_MOD), 4);
-        network_shutdown(false, false, false);
+        network_shutdown(false, false, false, false);
         return;
     }
 

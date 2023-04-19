@@ -4,6 +4,7 @@
 struct DjuiInputbox {
     struct DjuiBase base;
     char* buffer;
+    char passwordChar[2];
     u16 bufferSize;
     u16 selection[2];
     f32 viewX;
@@ -12,6 +13,8 @@ struct DjuiInputbox {
     void (*on_escape_press)(struct DjuiInputbox*);
 };
 
+void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base);
+void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base);
 void djui_inputbox_set_text_color(struct DjuiInputbox* inputbox, u8 r, u8 g, u8 b, u8 a);
 void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text);
 void djui_inputbox_select_all(struct DjuiInputbox* inputbox);

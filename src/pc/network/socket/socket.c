@@ -59,7 +59,7 @@ static int socket_receive(SOCKET socket, struct sockaddr_in* rxAddr, u8* buffer,
     return NO_ERROR;
 }
 
-static bool ns_socket_initialize(enum NetworkType networkType) {
+static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
 
     // sanity check port
     unsigned int port = (networkType == NT_CLIENT) ? configJoinPort : configHostPort;
@@ -180,7 +180,15 @@ static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength
     return rc;
 }
 
-static void ns_socket_shutdown(void) {
+static void ns_socket_get_lobby_id(char* destination, u32 destLength) {
+    snprintf(destination, destLength, "%s", ""); // TODO: we can probably hook this up
+}
+
+static void ns_socket_get_lobby_secret(char* destination, u32 destLength) {
+    snprintf(destination, destLength, "%s", ""); // TODO: we can probably hook this up
+}
+
+static void ns_socket_shutdown(UNUSED bool reconnecting) {
     socket_shutdown(sCurSocket);
     sCurSocket = INVALID_SOCKET;
     for (u16 i = 0; i < MAX_PLAYERS; i++) {
@@ -190,16 +198,18 @@ static void ns_socket_shutdown(void) {
 }
 
 struct NetworkSystem gNetworkSystemSocket = {
-    .initialize = ns_socket_initialize,
-    .get_id     = ns_socket_get_id,
-    .get_id_str = ns_socket_get_id_str,
-    .save_id    = ns_socket_save_id,
-    .clear_id   = ns_socket_clear_id,
-    .dup_addr   = ns_socket_dup_addr,
-    .match_addr = ns_socket_match_addr,
-    .update     = ns_socket_update,
-    .send       = ns_socket_send,
-    .shutdown   = ns_socket_shutdown,
+    .initialize       = ns_socket_initialize,
+    .get_id           = ns_socket_get_id,
+    .get_id_str       = ns_socket_get_id_str,
+    .save_id          = ns_socket_save_id,
+    .clear_id         = ns_socket_clear_id,
+    .dup_addr         = ns_socket_dup_addr,
+    .match_addr       = ns_socket_match_addr,
+    .update           = ns_socket_update,
+    .send             = ns_socket_send,
+    .get_lobby_id     = ns_socket_get_lobby_id,
+    .get_lobby_secret = ns_socket_get_lobby_secret,
+    .shutdown         = ns_socket_shutdown,
     .requireServerBroadcast = true,
-    .name       = "Socket",
+    .name             = "Socket",
 };

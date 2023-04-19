@@ -292,13 +292,13 @@ void djui_inputbox_on_key_up(UNUSED struct DjuiBase *base, int scancode) {
     }
 }
 
-static void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
+void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     sHeldControl = 0;
     sHeldShift   = 0;
     wm_api->start_text_input();
 }
 
-static void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
+void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
     wm_api->stop_text_input();
 }
 
@@ -373,15 +373,17 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f3
     f32 dW = font->charWidth  * font->defaultFontScale;
     f32 dH = font->charHeight * font->defaultFontScale;
 
-    f32 charWidth = font->char_width(c);
+    char* dc = inputbox->passwordChar[0] ? inputbox->passwordChar : c;
+
+    f32 charWidth = font->char_width(dc);
     *drawX += charWidth * font->defaultFontScale;
 
-    if (*c != ' ' && !djui_gfx_add_clipping_specific(&inputbox->base, dX, dY, dW, dH)) {
+    if (*dc != ' ' && !djui_gfx_add_clipping_specific(&inputbox->base, dX, dY, dW, dH)) {
         if (*additionalShift > 0) {
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, *additionalShift, 0, 0);
             *additionalShift = 0;
         }
-        font->render_char(c);
+        font->render_char(dc);
     }
     *additionalShift += charWidth;
 }
@@ -398,10 +400,11 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     f32 x = 0;
     f32 width = 0;
     for (u16 i = 0; i < selection[1]; i++) {
+        char* dc = inputbox->passwordChar[0] ? inputbox->passwordChar : c;
         if (i < selection[0]) {
-            x += font->char_width(c);
+            x += font->char_width(dc);
         } else {
-            width += font->char_width(c);
+            width += font->char_width(dc);
         }
         c = djui_unicode_next_char(c);
     }
@@ -458,7 +461,8 @@ static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) 
     char* c = inputbox->buffer;
     for (u16 i = 0; i < inputbox->selection[0]; i++) {
         if (*c == '\0') { break; }
-        cursorX += font->char_width(c) * font->defaultFontScale;
+        char* dc = inputbox->passwordChar[0] ? inputbox->passwordChar : c;
+        cursorX += font->char_width(dc) * font->defaultFontScale;
         c = djui_unicode_next_char(c);
     }
 

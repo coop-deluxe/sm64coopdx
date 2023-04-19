@@ -7,7 +7,6 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/cheats.h"
-#include "pc/network/discord/lobby.h"
 #include "djui_inputbox.h"
 
 static unsigned int sKnockbackIndex = 0;

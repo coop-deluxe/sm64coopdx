@@ -20,6 +20,23 @@ struct LocalEnabledPath {
 
 struct LocalEnabledPath* sLocalEnabledPaths = NULL;
 
+void mods_get_main_mod_name(char* destination, u32 maxSize) {
+    struct Mod* picked = NULL;
+    size_t pickedSize = 0;
+
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (!mod->enabled) { continue; }
+        size_t size = mod_get_lua_size(mod);
+        if (size > pickedSize) {
+            picked = mod;
+            pickedSize = size;
+        }
+    }
+
+    snprintf(destination, maxSize, "%s", picked ? picked->name : "Super Mario 64");
+}
+
 static void mods_local_store_enabled(void) {
     assert(sLocalEnabledPaths == NULL);
     struct LocalEnabledPath* prev = NULL;

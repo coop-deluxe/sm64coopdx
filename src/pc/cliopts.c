@@ -85,9 +85,6 @@ void parse_cli_opts(int argc, char* argv[]) {
         else if (strcmp(argv[i], "--savepath") == 0 && (i + 1) < argc)
             arg_string("--savepath", argv[++i], gCLIOpts.SavePath, SYS_MAX_PATH);
 
-        else if (strcmp(argv[i], "--discord") == 0 && (i + 1) < argc)
-            arg_uint("--discord", argv[++i], &gCLIOpts.Discord);
-
         // Print help
         else if (strcmp(argv[i], "--help") == 0) {
             print_help();

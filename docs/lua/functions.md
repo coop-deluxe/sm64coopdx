@@ -1096,7 +1096,6 @@
 <br />
 
 - network_utils.h
-   - [network_discord_id_from_local_index](functions-3.md#network_discord_id_from_local_index)
    - [network_get_player_text_color_string](functions-3.md#network_get_player_text_color_string)
    - [network_global_index_from_local](functions-3.md#network_global_index_from_local)
    - [network_is_moderator](functions-3.md#network_is_moderator)
@@ -1487,6 +1486,10 @@
    - [collision_find_surface_on_ray](functions-4.md#collision_find_surface_on_ray)
    - [get_water_surface_pseudo_floor](functions-4.md#get_water_surface_pseudo_floor)
    - [smlua_collision_util_get](functions-4.md#smlua_collision_util_get)
+
+<br />
+
+- smlua_deprecated.h
 
 <br />
 

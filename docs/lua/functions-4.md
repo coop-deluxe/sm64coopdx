@@ -7252,6 +7252,12 @@
 <br />
 
 ---
+# functions from smlua_deprecated.h
+
+<br />
+
+
+---
 # functions from smlua_level_utils.h
 
 <br />

@@ -28,6 +28,19 @@ for i = 0, (MAX_PLAYERS - 1) do
     s.rank     = 0
 end
 
+local sKnockbackActions = {
+    ACT_SOFT_FORWARD_GROUND_KB, ACT_FORWARD_GROUND_KB, ACT_HARD_FORWARD_GROUND_KB,
+    ACT_FORWARD_AIR_KB, ACT_FORWARD_AIR_KB, ACT_HARD_FORWARD_AIR_KB,
+    ACT_FORWARD_WATER_KB, ACT_FORWARD_WATER_KB, ACT_FORWARD_WATER_KB,
+    ACT_SOFT_BACKWARD_GROUND_KB, ACT_BACKWARD_GROUND_KB, ACT_HARD_BACKWARD_GROUND_KB,
+    ACT_BACKWARD_AIR_KB, ACT_BACKWARD_AIR_KB, ACT_HARD_BACKWARD_AIR_KB,
+    ACT_BACKWARD_WATER_KB, ACT_BACKWARD_WATER_KB, ACT_BACKWARD_WATER_KB,
+
+    ACT_LEDGE_GRAB, ACT_LEDGE_CLIMB_SLOW_1, ACT_LEDGE_CLIMB_SLOW_2, ACT_LEDGE_CLIMB_DOWN, ACT_LEDGE_CLIMB_FAST,
+    ACT_GROUND_BONK, ACT_SOFT_BONK,
+
+    ACT_STOP_CROUCHING, ACT_STOMACH_SLIDE_STOP,
+}
 ------------
 -- hammer --
 ------------
@@ -360,6 +373,27 @@ function mario_update(m)
     local e  = gMarioStateExtras[m.playerIndex]
     local s  = gPlayerSyncTable[m.playerIndex]
     local np = gNetworkPlayers[m.playerIndex]
+
+    -- increase knockback animations
+    local animInfo = nil
+    if m.marioObj ~= nil then
+        animInfo = m.marioObj.header.gfx.animInfo
+    end
+    for i, value in ipairs(sKnockbackActions) do
+        if m.action == value then
+            local frame = animInfo.animFrame
+            local loopEnd = frame
+            if animInfo.curAnim ~= nil then
+                loopEnd = animInfo.curAnim.loopEnd
+            end
+
+            if frame < loopEnd - 2 then
+                frame = frame + 1
+            end
+
+            animInfo.animFrame = frame
+        end
+    end
 
     -- clear invincibilities
     m.invincTimer = 0

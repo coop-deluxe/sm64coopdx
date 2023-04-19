@@ -10,7 +10,11 @@
 #include "game/hardcoded.h"
 #include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/network/socket/socket.h"
 #include "lag_compensation.h"
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -176,13 +180,15 @@ void network_player_update(void) {
             if (!np->connected && i > 0) { continue; }
 
             float elapsed = (clock_elapsed() - np->lastReceived);
-#ifndef DEVELOPMENT
+#ifdef DEVELOPMENT
+            if (elapsed > NETWORK_PLAYER_TIMEOUT && (gNetworkSystem != &gNetworkSystemSocket)) {
+#else
             if (elapsed > NETWORK_PLAYER_TIMEOUT) {
+#endif
                 LOG_INFO("dropping player %d", i);
                 network_player_disconnected(i);
                 continue;
             }
-#endif
             elapsed = (clock_elapsed() - np->lastSent);
             if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
                 network_send_keep_alive(np->localIndex);
@@ -193,12 +199,14 @@ void network_player_update(void) {
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);
 
-#ifndef DEVELOPMENT
+#ifdef DEVELOPMENT
+        if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f && (gNetworkSystem != &gNetworkSystemSocket)) {
+#else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
-            LOG_INFO("dropping due to no server connectivity");
-            network_shutdown(false, false, true);
-        }
 #endif
+            LOG_INFO("dropping due to no server connectivity");
+            network_shutdown(false, false, true, false);
+        }
 
         elapsed = (clock_elapsed() - np->lastSent);
         if (elapsed > NETWORK_PLAYER_TIMEOUT / 3.0f) {
@@ -254,7 +262,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     np->type = type;
     np->localIndex = localIndex;
     np->globalIndex = globalIndex;
-    np->ping = 50;
+    np->ping = 600;
     if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }
     network_player_set_description(np, NULL, 0, 0, 0, 0);
 
@@ -291,7 +299,6 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
 
     for (s32 j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; np->rxPacketHash[j] = 0; }
-    packet_ordered_clear(globalIndex);
 
     // set up network player pointers
     if (type == NPT_LOCAL) {
@@ -311,6 +318,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
 
     smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
 
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
 
     return localIndex;
 }
@@ -321,7 +331,7 @@ u8 network_player_disconnected(u8 globalIndex) {
             LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
-            network_shutdown(true, false, true);
+            network_shutdown(true, false, true, false);
         }
     }
 
@@ -359,6 +369,10 @@ u8 network_player_disconnected(u8 globalIndex) {
         smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_DISCONNECTED, &gMarioStates[i]);
 
         memset(np, 0, sizeof(struct NetworkPlayer));
+
+#ifdef DISCORD_SDK
+        discord_activity_update();
+#endif
 
         return i;
     }
@@ -428,7 +442,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
             }
 
             // If this machine's player changed to a different location, then all of the other np locations are no longer valid
-            for (u32 i = 1; i < configAmountofPlayers; i++) {
+            for (u32 i = 1; i < MAX_PLAYERS; i++) {
                 struct NetworkPlayer* npi = &gNetworkPlayers[i];
                 if ((!npi->connected) || npi == gNetworkPlayerLocal) { continue; }
                 npi->currPositionValid = false;

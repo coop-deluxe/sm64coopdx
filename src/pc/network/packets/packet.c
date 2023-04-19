@@ -1,7 +1,46 @@
 #include <stdio.h>
+#include <zlib.h>
 #include "../network.h"
 #include "pc/network/ban_list.h"
 #include "pc/debuglog.h"
+
+static u32 sCompBufferLen = 0;
+static Bytef* sCompBuffer = NULL;
+
+static void increase_comp_buffer(u32 compressedLen) {
+    if (compressedLen <= sCompBufferLen && sCompBuffer) { return; }
+
+    if (sCompBuffer != NULL) { free(sCompBuffer); }
+
+    sCompBufferLen = compressedLen;
+    sCompBuffer = (Bytef*)malloc(sCompBufferLen);
+}
+
+void packet_compress(struct Packet* p, u8** compBuffer, u32* compSize) {
+    uLong sourceSize = p->dataLength + sizeof(u32);
+    uLongf compressedLen = compressBound(sourceSize);
+    increase_comp_buffer(PACKET_LENGTH);
+
+    if (sCompBuffer && compress2((Bytef*)sCompBuffer, &compressedLen, (Bytef*)p->buffer, sourceSize, Z_BEST_COMPRESSION) == Z_OK) {
+        *compBuffer = sCompBuffer;
+        *compSize = compressedLen;
+    } else {
+        *compBuffer = NULL;
+        *compSize = 0;
+    }
+}
+
+bool packet_decompress(struct Packet* p, u8* compBuffer, u32 compSize) {
+    increase_comp_buffer(PACKET_LENGTH);
+    if (!sCompBuffer) { return false; }
+    uLong decompSize = PACKET_LENGTH;
+    if (uncompress((Bytef*)p->buffer, &decompSize, (Bytef*)compBuffer, compSize) == Z_OK) {
+        p->dataLength = decompSize - sizeof(u32);
+        return true;
+    } else {
+        return false;
+    }
+}
 
 void packet_process(struct Packet* p) {
     if (gNetworkType == NT_NONE) { return; }
@@ -156,7 +195,7 @@ void packet_receive(struct Packet* p) {
         np->rxSeqIds[np->onRxSeqId] = p->seqId;
         np->rxPacketHash[np->onRxSeqId] = packetHash;
         np->onRxSeqId++;
-        if (np->onRxSeqId >= MAX_RX_SEQ_IDS) { np->onRxSeqId = 0; }
+        //if (np->onRxSeqId >= MAX_RX_SEQ_IDS) { np->onRxSeqId = 0; }
     }
 
     // parse the packet without processing the rest

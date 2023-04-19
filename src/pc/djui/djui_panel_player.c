@@ -196,6 +196,7 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
     if (gNetworkType != NT_NONE) {
         network_send_player_settings();
     }
+    djui_inputbox_on_focus_end(&inputbox1->base);
 }
 
 static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
@@ -255,7 +256,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
                 djui_inputbox_set_text(inputbox1, DLANG(PLAYER, PLAYER));
             }
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_player_name_text_change);
-            djui_interactable_hook_focus(&inputbox1->base, NULL, NULL, djui_panel_player_name_on_focus_end);
+            djui_interactable_hook_focus(&inputbox1->base, djui_inputbox_on_focus_begin, NULL, djui_panel_player_name_on_focus_end);
         }
 
         char* modelChoices[CT_MAX] = { 0 };

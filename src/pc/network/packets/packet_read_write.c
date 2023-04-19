@@ -4,13 +4,13 @@
 
 #define PACKET_FLAG_BUFFER_OFFSET        3
 #define PACKET_DESTINATION_BUFFER_OFFSET 4
-#define PACKET_ORDERED_SEQ_ID_OFFSET     7
+#define PACKET_ORDERED_SEQ_ID_OFFSET     8
 
 static u16 sNextSeqNum = 1;
 
 static bool sOrderedPackets = false;
-static u8 sCurrentOrderedGroupId = 0;
-static u8 sCurrentOrderedSeqId = 0;
+static u16 sCurrentOrderedGroupId = 0;
+static u16 sCurrentOrderedSeqId = 0;
 
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch) {
     memset(packet->buffer, 0, PACKET_LENGTH);
@@ -54,8 +54,8 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     // write ordered packet information
     if (sOrderedPackets) {
         packet_write(packet, &packet->orderedFromGlobalId, sizeof(u8));
-        packet_write(packet, &packet->orderedGroupId,      sizeof(u8));
-        packet_write(packet, &packet->orderedSeqId,        sizeof(u8));
+        packet_write(packet, &packet->orderedGroupId,      sizeof(u16));
+        packet_write(packet, &packet->orderedSeqId,        sizeof(u16));
     }
 
     // write location
@@ -162,8 +162,8 @@ u8 packet_initial_read(struct Packet* packet) {
     // read ordered packet information
     if (packetIsOrdered) {
         packet_read(packet, &packet->orderedFromGlobalId, sizeof(u8));
-        packet_read(packet, &packet->orderedGroupId,      sizeof(u8));
-        packet_read(packet, &packet->orderedSeqId,        sizeof(u8));
+        packet_read(packet, &packet->orderedGroupId,      sizeof(u16));
+        packet_read(packet, &packet->orderedSeqId,        sizeof(u16));
     }
 
     // read location
@@ -231,5 +231,6 @@ void packet_set_ordered_data(struct Packet* packet) {
     if (packet->orderedGroupId == 0) { return; }
     if (packet->orderedSeqId != 0) { return; }
     packet->orderedSeqId = sCurrentOrderedSeqId++;
-    packet->buffer[PACKET_ORDERED_SEQ_ID_OFFSET] = packet->orderedSeqId;
+    u16* seqId = (u16*)&packet->buffer[PACKET_ORDERED_SEQ_ID_OFFSET];
+    *seqId = packet->orderedSeqId;
 }

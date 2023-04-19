@@ -1,15 +1,13 @@
 #include "socket/socket.h"
+#include "coopnet/coopnet.h"
 #include <stdio.h>
 #include "network.h"
 #include "object_fields.h"
+#include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
 #include "src/game/hardcoded.h"
 #include "src/game/scroll_targets.h"
-#ifdef DISCORD_SDK
-#include "discord/discord.h"
-#include "discord/activity.h"
-#endif
 #include "pc/configfile.h"
 #include "pc/cheats.h"
 #include "pc/djui/djui.h"
@@ -30,6 +28,10 @@
 #include "game/level_geo.h"
 #include "menu/intro_geo.h"
 
+#ifdef DISCORD_SDK
+#include "pc/discord/discord.h"
+#endif
+
 // fix warnings when including rendering_graph_node
 #undef near
 #undef far
@@ -40,11 +42,7 @@ extern s16 sCurrPlayMode;
 extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
 
 enum NetworkType gNetworkType = NT_NONE;
-#ifdef DISCORD_SDK
-struct NetworkSystem* gNetworkSystem = &gNetworkSystemDiscord;
-#else
 struct NetworkSystem* gNetworkSystem = &gNetworkSystemSocket;
-#endif
 
 #define LOADING_LEVEL_THRESHOLD 10
 #define MAX_PACKETS_PER_SECOND_PER_PLAYER ((u16)100)
@@ -57,7 +55,6 @@ u32 gNetworkAreaTimer = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
 u16 gNetworkRequestLocationTimer = 0;
-bool gDiscordReconnecting = false;
 
 u8 gDebugPacketIdBuffer[256] = { 0xFF };
 u8 gDebugPacketSentBuffer[256] = { 0 };
@@ -80,20 +77,22 @@ struct ServerSettings gServerSettings = {
     .enablePlayersInLevelDisplay = 1,
     .enablePlayerList = 1,
     .headlessServer = 0,
+    .maxPlayers = MAX_PLAYERS,
 };
 
 void network_set_system(enum NetworkSystemType nsType) {
     network_forget_all_reliable();
+
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
-#ifdef DISCORD_SDK
-        case NS_DISCORD: gNetworkSystem = &gNetworkSystemDiscord; break;
+#ifdef COOPNET
+        case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
 #endif
-        default: LOG_ERROR("Unknown network system: %d", nsType);
+        default: gNetworkSystem = &gNetworkSystemSocket; LOG_ERROR("Unknown network system: %d", nsType); break;
     }
 }
 
-bool network_init(enum NetworkType inNetworkType) {
+bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // reset override hide hud
     extern u8 gOverrideHideHud;
     gOverrideHideHud = 0;
@@ -116,6 +115,7 @@ bool network_init(enum NetworkType inNetworkType) {
     gServerSettings.shareLives = configShareLives;
     gServerSettings.enableCheats = configEnableCheats;
     gServerSettings.bubbleDeath = configBubbleDeath;
+    gServerSettings.maxPlayers = configAmountofPlayers;
 #if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
     gServerSettings.headlessServer = (inNetworkType == NT_SERVER);
 #else
@@ -124,7 +124,7 @@ bool network_init(enum NetworkType inNetworkType) {
 
     // initialize the network system
     gNetworkSentJoin = false;
-    int rc = gNetworkSystem->initialize(inNetworkType);
+    int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
     if (!rc) {
         LOG_ERROR("failed to initialize network system");
         return false;
@@ -155,16 +155,14 @@ bool network_init(enum NetworkType inNetworkType) {
             gChangeLevelTransition = gLevelValues.entryLevel;
         }
 
-#ifdef DISCORD_SDK
-    if (gNetworkSystem == &gNetworkSystemDiscord) {
-        discord_activity_update(true);
-    }
-#endif
-
         djui_chat_box_create();
     }
 
     configfile_save(configfile_name());
+
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
 
     LOG_INFO("initialized");
 
@@ -312,8 +310,15 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         if (p->keepSendingAfterDisconnect) {
             localIndex = 0; // Force this type of packet to use the saved addr
         }
-        int rc = gNetworkSystem->send(localIndex, p->addr, p->buffer, p->cursor + sizeof(u32));
-        if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+        u8* buffer = NULL;
+        u32 len = 0;
+        packet_compress(p, &buffer, &len);
+        if (!buffer || len == 0) {
+            LOG_ERROR("Failed to compress!");
+        } else {
+            int rc = gNetworkSystem->send(localIndex, p->addr, buffer, len);
+            if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+        }
     }
     p->sent = true;
 
@@ -378,14 +383,16 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         .buffer = { 0 },
         .dataLength = dataLength,
     };
-    memcpy(p.buffer, data, dataLength);
+    if (!packet_decompress(&p, data, dataLength)) {
+        LOG_ERROR("Failed to decompress!");
+        return;
+    }
 
     if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
         gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
     }
 
     // subtract and check hash
-    p.dataLength -= sizeof(u32);
     if (!packet_check_hash(&p)) {
         LOG_ERROR("invalid packet hash!");
         return;
@@ -407,7 +414,6 @@ void network_reset_reconnect_and_rehost(void) {
     sNetworkReconnectTimer = 0;
     sNetworkRehostTimer = 0;
     sNetworkReconnectType = NS_SOCKET;
-    gDiscordReconnecting = false;
 }
 
 void network_reconnect_begin(void) {
@@ -417,17 +423,15 @@ void network_reconnect_begin(void) {
 
     sNetworkReconnectTimer = 2 * 30;
 
-#ifdef DISCORD_SDK
-    sNetworkReconnectType = (gNetworkSystem == &gNetworkSystemDiscord)
-                          ? NS_DISCORD
+#ifdef COOPNET
+    sNetworkReconnectType = (gNetworkSystem == &gNetworkSystemCoopNet)
+                          ? NS_COOPNET
                           : NS_SOCKET;
 #else
     sNetworkReconnectType = NS_SOCKET;
 #endif
 
-    gDiscordReconnecting = true;
-    network_shutdown(false, false, false);
-    gDiscordReconnecting = false;
+    network_shutdown(false, false, false, true);
 
     djui_connect_menu_open();
 }
@@ -438,11 +442,11 @@ static void network_reconnect_update(void) {
 
     if (sNetworkReconnectType == NS_SOCKET) {
         network_set_system(NS_SOCKET);
+    } else if (sNetworkReconnectType == NS_COOPNET) {
+        network_set_system(NS_COOPNET);
     }
 
-    gDiscordReconnecting = true;
-    network_init(NT_CLIENT);
-    gDiscordReconnecting = false;
+    network_init(NT_CLIENT, true);
 
     network_send_mod_list_request();
 }
@@ -460,21 +464,17 @@ void network_rehost_begin(void) {
         network_player_disconnected(i);
     }
 
-    gDiscordReconnecting = true;
-    network_shutdown(false, false, false);
-    gDiscordReconnecting = false;
+    network_shutdown(false, false, false, true);
 
     sNetworkRehostTimer = 2;
 }
 
 static void network_rehost_update(void) {
-    extern void djui_panel_do_host(void);
+    extern void djui_panel_do_host(bool reconnecting);
     if (sNetworkRehostTimer <= 0) { return; }
     if (--sNetworkRehostTimer != 0) { return; }
 
-    gDiscordReconnecting = true;
-    djui_panel_do_host();
-    gDiscordReconnecting = false;
+    djui_panel_do_host(true);
 }
 
 static void network_update_area_timer(void) {
@@ -509,14 +509,25 @@ static void network_update_area_timer(void) {
     }
 }
 
-void network_update(void) {
+#ifdef COOPNET
+void network_update_coopnet(void) {
+    if (gNetworkType != NT_NONE) { return; }
+    if (!ns_coopnet_is_connected()) { return; }
+    ns_coopnet_update();
+}
+#endif
 
+void network_update(void) {
     if (gNetworkStartupTimer > 0) {
         gNetworkStartupTimer--;
     }
 
     network_rehost_update();
     network_reconnect_update();
+
+#ifdef COOPNET
+    network_update_coopnet();
+#endif
 
     // check for level loaded event
     if (networkLoadingLevel < LOADING_LEVEL_THRESHOLD) {
@@ -585,7 +596,7 @@ void network_register_mod(char* modName) {
     string_linked_list_append(&gRegisteredMods, modName);
 }
 
-void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
+void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
         gDjuiChatBox = NULL;
@@ -599,7 +610,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
 
     if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
     network_player_shutdown(popup);
-    gNetworkSystem->shutdown();
+    gNetworkSystem->shutdown(reconnecting);
 
     if (gNetworkServerAddr != NULL) {
         free(gNetworkServerAddr);
@@ -607,14 +618,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     }
     gNetworkPlayerServer = NULL;
 
-    if (sNetworkReconnectTimer <= 0 || sNetworkReconnectType != NS_DISCORD) {
+    if (sNetworkReconnectTimer <= 0 || sNetworkReconnectType != NS_COOPNET) {
         gNetworkType = NT_NONE;
     }
-
-
-#ifdef DISCORD_SDK
-    network_set_system(NS_DISCORD);
-#endif
 
     if (exiting) { return; }
 
@@ -627,6 +633,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
     gOverrideNear = 0;
     gOverrideFar = 0;
     gOverrideFOV = 0;
+    gCurrActStarNum = 0;
+    gCurrActNum = 0;
+    gCurrCreditsEntry = NULL;
     gLightingDir[0] = 0;
     gLightingDir[1] = 0;
     gLightingDir[2] = 0;
@@ -677,4 +686,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup) {
         gDjuiInMainMenu = true;
         djui_panel_main_create(NULL);
     }
+
+#ifdef DISCORD_SDK
+    discord_activity_update();
+#endif
+    packet_ordered_clear_all();
 }
