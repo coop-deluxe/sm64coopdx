@@ -102,8 +102,8 @@ struct Packet {
     u16 seqId;
     bool sent;
     u8 orderedFromGlobalId;
-    u8 orderedGroupId;
-    u8 orderedSeqId;
+    u16 orderedGroupId;
+    u16 orderedSeqId;
     u8 courseNum;
     u8 actNum;
     u8 levelNum;
@@ -147,6 +147,8 @@ struct LSTNetworkType {
     size_t size;
 };
 
+extern u8 gAllowOrderedPacketClear;
+
 // packet.c
 void packet_compress(struct Packet* p, u8** compBuffer, u32* compSize);
 bool packet_decompress(struct Packet* p, u8* compBuffer, u32 compSize);
@@ -166,6 +168,7 @@ u32 packet_hash(struct Packet* packet);
 bool packet_check_hash(struct Packet* packet);
 void packet_ordered_begin(void);
 void packet_ordered_end(void);
+void packet_ordered_clear_all(void);
 void packet_set_ordered_data(struct Packet* packet);
 
 // packet_reliable.c
@@ -178,7 +181,7 @@ void network_update_reliable(void);
 
 // packet_ordered.c
 void packet_ordered_add(struct Packet* p);
-void packet_ordered_clear_table(u8 globalIndex, u8 groupdId);
+void packet_ordered_clear_table(u8 globalIndex, u16 groupdId);
 void packet_ordered_clear(u8 globalIndex);
 void packet_ordered_update(void);
 

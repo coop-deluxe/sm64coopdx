@@ -255,4 +255,6 @@ void network_receive_join(struct Packet* p) {
     smlua_call_event_hooks(HOOK_JOINED_GAME);
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
+
+    gAllowOrderedPacketClear = 1;
 }

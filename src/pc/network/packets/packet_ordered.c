@@ -13,14 +13,15 @@ struct OrderedPacketList {
 
 struct OrderedPacketTable {
     u8 fromGlobalId;
-    u8 groupId;
-    u8 processSeqId;
+    u16 groupId;
+    u16 processSeqId;
     f32 lastReceived;
     struct OrderedPacketList* packets;
     struct OrderedPacketTable* next;
 };
 
 static struct OrderedPacketTable* orderedPacketTable[MAX_PLAYERS] = { 0 };
+u8 gAllowOrderedPacketClear = 1;
 
 static void packet_ordered_check_for_processing(struct OrderedPacketTable* opt) {
     // sanity check
@@ -159,7 +160,7 @@ void packet_ordered_add(struct Packet* p) {
     packet_ordered_add_to_table(opt, p);
 }
 
-void packet_ordered_clear_table(u8 globalIndex, u8 groupId) {
+void packet_ordered_clear_table(u8 globalIndex, u16 groupId) {
     LOG_INFO("clearing out ordered packet table for %d (%d)", globalIndex, groupId);
 
     struct OrderedPacketTable* opt = orderedPacketTable[globalIndex];
@@ -196,6 +197,11 @@ void packet_ordered_clear_table(u8 globalIndex, u8 groupId) {
 }
 
 void packet_ordered_clear(u8 globalIndex) {
+    if (!gAllowOrderedPacketClear) {
+        LOG_INFO("disallowed ordered packets to be cleared");
+        return;
+    }
+
     LOG_INFO("clearing out all ordered packet tables for %d", globalIndex);
     struct OrderedPacketTable* opt = orderedPacketTable[globalIndex];
 
@@ -217,6 +223,14 @@ void packet_ordered_clear(u8 globalIndex) {
     }
 
     orderedPacketTable[globalIndex] = NULL;
+}
+
+
+void packet_ordered_clear_all(void) {
+    gAllowOrderedPacketClear = 1;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        packet_ordered_clear(i);
+    }
 }
 
 void packet_ordered_update(void) {

@@ -518,7 +518,6 @@ void network_update_coopnet(void) {
 #endif
 
 void network_update(void) {
-
     if (gNetworkStartupTimer > 0) {
         gNetworkStartupTimer--;
     }
@@ -691,4 +690,5 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 #ifdef DISCORD_SDK
     discord_activity_update();
 #endif
+    packet_ordered_clear_all();
 }
