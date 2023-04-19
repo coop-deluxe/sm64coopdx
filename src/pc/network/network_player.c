@@ -299,7 +299,6 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
 
     for (s32 j = 0; j < MAX_RX_SEQ_IDS; j++) { np->rxSeqIds[j] = 0; np->rxPacketHash[j] = 0; }
-    packet_ordered_clear(globalIndex);
 
     // set up network player pointers
     if (type == NPT_LOCAL) {

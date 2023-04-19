@@ -4,7 +4,7 @@
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
-#define PACKET_ORDERED_TIMEOUT 15
+#define PACKET_ORDERED_TIMEOUT 30
 
 struct OrderedPacketList {
     struct Packet p;
