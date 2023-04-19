@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/utils/misc.h"
-#define DISABLE_MODULE_LOG 1
+//#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
 #define PACKET_ORDERED_TIMEOUT 15
