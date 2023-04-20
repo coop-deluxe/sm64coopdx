@@ -156,11 +156,11 @@ struct GlobalObjectCollisionData gGlobalObjectCollisionData = {
     .wooden_signpost_seg3_collision_0302DD80         = (Collision*) wooden_signpost_seg3_collision_0302DD80,
 };
 
-struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ) {
+struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ) {
     static struct RayIntersectionInfo info = { 0 };
     Vec3f orig = { startX, startY, startZ };
-    Vec3f end = { endX, endY, endZ };
-    find_surface_on_ray(orig, end, &info.surface, info.hitPos);
+    Vec3f dir = { dirX, dirY, dirZ };
+    find_surface_on_ray(orig, dir, &info.surface, info.hitPos);
     return &info;
 }
 
