@@ -369,9 +369,9 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f3
     struct DjuiBaseRect*   comp = &inputbox->base.comp;
     const struct DjuiFont* font = gDjuiFonts[0];
     f32 dX = comp->x + *drawX;
-    f32 dY = comp->y + DJUI_INPUTBOX_YOFF;
+    f32 dY = comp->y;
     f32 dW = font->charWidth  * font->defaultFontScale;
-    f32 dH = font->charHeight * font->defaultFontScale;
+    f32 dH = font->charHeight * font->defaultFontScale - inputbox->base.borderWidth.value * 2;
 
     char* dc = inputbox->passwordChar[0] ? inputbox->passwordChar : c;
 

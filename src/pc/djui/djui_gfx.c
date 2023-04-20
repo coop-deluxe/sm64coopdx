@@ -104,10 +104,11 @@ void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize) {
 void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     Vtx *vtx = alloc_display_list(sizeof(Vtx) * 4);
     f32 aspect = tileH ? ((f32)tileW / (f32)tileH) : 1;
-    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 512) / w, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 512) / w, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 512) / w, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 512) / w, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
+    // I don't know why adding 1 to all of the UVs seems to fix rendering, but it does...
+    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 512) / w + 1, ((tileY + tileH) * 512) / h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 512) / w + 1, ((tileY + tileH) * 512) / h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 512) / w + 1, ( tileY          * 512) / h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 512) / w + 1, ( tileY          * 512) / h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);
     gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
