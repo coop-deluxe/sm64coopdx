@@ -761,7 +761,7 @@ int smlua_hook_mario_action(lua_State* L) {
     lua_Integer interactionType = 0;
     if (paramCount >= 3) {
         interactionType = smlua_to_integer(L, 3);
-        if (interactionType == 0 || !gSmLuaConvertSuccess) {
+        if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Hook Action: tried to hook invalid interactionType: %lld, %u", interactionType, gSmLuaConvertSuccess);
             return 0;
         }

@@ -11529,9 +11529,3 @@ MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
-
---- @type integer
-VERSION_NUMBER = 34
-
---- @type string
-VERSION_TEXT = "beta"
