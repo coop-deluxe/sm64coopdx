@@ -783,6 +783,7 @@
 
 --- @class Mod
 --- @field public basePath string
+--- @field public customBehaviorIndex integer
 --- @field public description string
 --- @field public enabled boolean
 --- @field public fileCount integer
