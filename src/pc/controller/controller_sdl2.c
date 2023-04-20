@@ -38,17 +38,17 @@
 extern u8 newcam_mouse;
 #endif
 
-static bool init_ok;
-static bool haptics_enabled;
-static SDL_GameController *sdl_cntrl;
-static SDL_Haptic *sdl_haptic;
+static bool init_ok = false;
+static bool haptics_enabled = false;
+static SDL_GameController *sdl_cntrl = NULL;
+static SDL_Haptic *sdl_haptic = NULL;
 
 static bool sBackgroundGamepad = false;
 
 static u32 num_joy_binds = 0;
 static u32 num_mouse_binds = 0;
-static u32 joy_binds[MAX_JOYBINDS][2];
-static u32 mouse_binds[MAX_JOYBINDS][2];
+static u32 joy_binds[MAX_JOYBINDS][2] = { 0 };
+static u32 mouse_binds[MAX_JOYBINDS][2] = { 0 };
 
 static bool joy_buttons[MAX_JOYBUTTONS] = { false };
 static u32 mouse_buttons = 0;

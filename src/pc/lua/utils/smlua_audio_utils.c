@@ -43,6 +43,7 @@ static void smlua_audio_utils_reset(struct AudioOverride* override) {
 }
 
 void smlua_audio_utils_reset_all(void) {
+    audio_init();
     for (s32 i = 0; i < MAX_AUDIO_OVERRIDE; i++) {
         if (sAudioOverrides[i].enabled) { sound_reset_background_music_default_volume(i); }
         smlua_audio_utils_reset(&sAudioOverrides[i]);
@@ -116,6 +117,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         normalize_path(relPath);
         if (str_ends_with(relPath, m64path)) {
             struct AudioOverride* override = &sAudioOverrides[sequenceId];
+            if (override->enabled) { audio_init(); }
             smlua_audio_utils_reset(override);
             LOG_INFO("Loading audio: %s", file->cachedPath);
             override->filename = strdup(file->cachedPath);
