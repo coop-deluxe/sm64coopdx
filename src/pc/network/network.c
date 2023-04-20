@@ -65,8 +65,6 @@ u32 sNetworkReconnectTimer = 0;
 u32 sNetworkRehostTimer = 0;
 enum NetworkSystemType sNetworkReconnectType = NS_SOCKET;
 
-struct StringLinkedList gRegisteredMods = { 0 };
-
 struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
     .playerKnockbackStrength = 25,
@@ -589,11 +587,6 @@ void network_update(void) {
         }
     }*/
 
-}
-
-void network_register_mod(char* modName) {
-    if (string_linked_list_contains(&gRegisteredMods, modName)) { return; }
-    string_linked_list_append(&gRegisteredMods, modName);
 }
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {

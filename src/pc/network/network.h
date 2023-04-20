@@ -86,7 +86,6 @@ extern u32 gNetworkAreaTimer;
 extern u32 gNetworkAreaTimerClock;
 extern void* gNetworkServerAddr;
 extern struct ServerSettings gServerSettings;
-extern struct StringLinkedList gRegisteredMods;
 extern bool gNetworkSentJoin;
 extern u16 gNetworkRequestLocationTimer;
 extern u8 gDebugPacketIdBuffer[];
@@ -109,7 +108,6 @@ void network_reconnect_begin(void);
 bool network_is_reconnecting(void);
 void network_rehost_begin(void);
 void network_update(void);
-void network_register_mod(char* modName);
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting);
 
 #endif

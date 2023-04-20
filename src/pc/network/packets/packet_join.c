@@ -122,19 +122,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
-    u8 modCount = string_linked_list_count(&gRegisteredMods);
-    packet_write(&p, &modCount, sizeof(u8));
-
-    struct StringLinkedList* node = &gRegisteredMods;
-    char nullchar = '\0';
-    while (node != NULL && node->string != NULL) {
-        s32 length = strlen(node->string);
-        packet_write(&p, node->string, sizeof(u8) * length);
-        packet_write(&p, &nullchar, sizeof(u8));
-        LOG_INFO("sending registered mod: %s", node->string);
-        node = node->next;
-    }
-
     network_send_to(globalIndex, &p);
     LOG_INFO("sending join packet");
 
@@ -155,7 +142,6 @@ void network_receive_join(struct Packet* p) {
 
     char remoteVersion[MAX_VERSION_LENGTH] = { 0 };
     u8 myGlobalIndex = UNKNOWN_GLOBAL_INDEX;
-    u8 modCount = 0;
 
     if (gNetworkPlayerLocal != NULL && gNetworkPlayerLocal->connected) {
         LOG_ERROR("Received join packet, but already in-game!");
@@ -186,51 +172,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
-    packet_read(p, &modCount, sizeof(u8));
-
-    struct StringLinkedList head = { 0 };
-    for (s32 i = 0; i < modCount; i++) {
-        char* modName = (char*) &p->buffer[p->cursor];
-        s32 length = strlen(modName);
-        LOG_INFO("host has mod: %s", modName);
-        string_linked_list_append(&head, modName);
-        p->cursor += length + 1;
-    }
-
-    if (string_linked_list_mismatch(&gRegisteredMods, &head)) {
-        network_shutdown(true, false, false, false);
-
-        struct StringBuilder* builder = string_builder_create(512);
-        string_builder_append(builder, "\\#ffa0a0\\Error:\\#c8c8c8\\ mods don't match.\n\n");
-
-        string_builder_append(builder, "\\#c8c8c8\\Yours: ");
-        struct StringLinkedList* node = &gRegisteredMods;
-        bool first = true;
-        while (node != NULL && node->string != NULL) {
-            string_builder_append(builder, first ? "\\#%s\\%s" : ", \\#%s\\%s",
-                string_linked_list_contains(&head, node->string) ? "a0ffa0" : "ffa0a0"
-                , node->string);
-            first = false;
-            node = node->next;
-        }
-
-        string_builder_append(builder, "\n\n\\#c8c8c8\\Theirs: ");
-        node = &head;
-        first = true;
-        while (node != NULL && node->string != NULL) {
-            string_builder_append(builder, first ? "\\#%s\\%s" : ", \\#%s\\%s",
-                string_linked_list_contains(&gRegisteredMods, node->string) ? "a0ffa0" : "ffa0a0"
-                , node->string);
-            first = false;
-            node = node->next;
-        }
-
-        djui_panel_join_message_error(builder->string);
-        string_builder_destroy(builder);
-        string_linked_list_free(&head);
-        return;
-    }
-    string_linked_list_free(&head);
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player");
     network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName);
