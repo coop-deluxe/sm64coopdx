@@ -68,7 +68,6 @@ struct ServerSettings {
     u8 playerKnockbackStrength;
     u8 stayInLevelAfterStar;
     u8 skipIntro;
-    u8 shareLives;
     u8 enableCheats;
     u8 bubbleDeath;
     u8 enablePlayersInLevelDisplay;

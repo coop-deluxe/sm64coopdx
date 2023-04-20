@@ -428,9 +428,6 @@ void mario_set_bubbled(struct MarioState* m) {
     set_mario_action(m, ACT_BUBBLED, 0);
     if (m->numLives != -1) {
         m->numLives--;
-        if (gServerSettings.shareLives) {
-            network_send_death();
-        }
     }
     m->healCounter = 0;
     m->hurtCounter = 31;
@@ -503,7 +500,7 @@ s32 mario_get_floor_class(struct MarioState *m) {
     }
 
     // Crawling allows Mario to not slide on certain steeper surfaces.
-    if (m->action == ACT_CRAWLING && m->floor->normal.y > 0.5f && floorClass == SURFACE_CLASS_DEFAULT) {
+    if (m->action == ACT_CRAWLING && m->floor && m->floor->normal.y > 0.5f && floorClass == SURFACE_CLASS_DEFAULT) {
         floorClass = SURFACE_CLASS_NOT_SLIPPERY;
     }
 

@@ -2185,7 +2185,6 @@
 | maxPlayers | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
 | playerKnockbackStrength | `integer` |  |
-| shareLives | `integer` |  |
 | skipIntro | `integer` |  |
 | stayInLevelAfterStar | `integer` |  |
 

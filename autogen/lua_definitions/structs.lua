@@ -1725,7 +1725,6 @@
 --- @field public maxPlayers integer
 --- @field public playerInteractions PlayerInteractions
 --- @field public playerKnockbackStrength integer
---- @field public shareLives integer
 --- @field public skipIntro integer
 --- @field public stayInLevelAfterStar integer
 
