@@ -69,7 +69,6 @@ struct ServerSettings gServerSettings = {
     .playerInteractions = PLAYER_INTERACTIONS_SOLID,
     .playerKnockbackStrength = 25,
     .skipIntro = 0,
-    .shareLives = 0,
     .enableCheats = 0,
     .bubbleDeath = 1,
     .enablePlayersInLevelDisplay = 1,
@@ -110,7 +109,6 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.playerKnockbackStrength = configPlayerKnockbackStrength;
     gServerSettings.stayInLevelAfterStar = configStayInLevelAfterStar;
     gServerSettings.skipIntro = configSkipIntro;
-    gServerSettings.shareLives = configShareLives;
     gServerSettings.enableCheats = configEnableCheats;
     gServerSettings.bubbleDeath = configBubbleDeath;
     gServerSettings.maxPlayers = configAmountofPlayers;

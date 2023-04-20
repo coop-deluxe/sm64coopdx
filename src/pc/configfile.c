@@ -115,7 +115,6 @@ bool         configCameraAnalog  = true;
 bool         configCameraMouse   = false;
 #endif
 bool         configSkipIntro     = 0;
-bool         configShareLives    = 0;
 bool         configEnableCheats  = 0;
 bool         configBubbleDeath   = true;
 unsigned int configAmountofPlayers = 16;
@@ -249,7 +248,6 @@ static const struct ConfigOption options[] = {
     {.name = "coop_custom_palette_cap",        .type = CONFIG_TYPE_COLOR , .colorValue  = &configCustomPalette.parts[CAP]},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT  , .uintValue   = &configStayInLevelAfterStar},
     {.name = "coop_singleplayer_pause",        .type = CONFIG_TYPE_BOOL  , .boolValue   = &configSingleplayerPause},
-    {.name = "share_lives",                    .type = CONFIG_TYPE_BOOL  , .boolValue   = &configShareLives},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
 #if defined(DEVELOPMENT)
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
