@@ -525,7 +525,7 @@ void init_mario_after_warp(void) {
         network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     }
 
-    if (gMarioState->health <= 0x110) {
+    if (gMarioState && gMarioState->health <= 0x110) {
         gMarioState->health = 0x880;
     }
 
