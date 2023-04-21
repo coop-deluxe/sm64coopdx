@@ -951,13 +951,16 @@ void init_note_free_list(void) {
 }
 
 void note_pool_clear(struct NotePool *pool) {
+    if (!pool) { return; }
     s32 i;
-    struct AudioListItem *source;
-    struct AudioListItem *cur;
-    struct AudioListItem *dest;
+    struct AudioListItem *source = NULL;
+    struct AudioListItem *cur = NULL;
+    struct AudioListItem *dest = NULL;
     UNUSED s32 j; // unused in EU
 
     for (i = 0; i < 4; i++) {
+        source = NULL;
+        dest = NULL;
         switch (i) {
             case 0:
                 source = &pool->disabled;
@@ -979,7 +982,7 @@ void note_pool_clear(struct NotePool *pool) {
                 dest = &gNoteFreeLists.active;
                 break;
         }
-
+        if (!source || !dest) { continue; }
 #if defined(VERSION_EU) || defined(VERSION_SH)
         for (;;) {
             cur = source->next;
