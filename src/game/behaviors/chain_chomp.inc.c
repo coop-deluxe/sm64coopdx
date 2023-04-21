@@ -31,7 +31,9 @@ void bhv_chain_chomp_chain_part_update(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_DEATH);
     }
-    
+
+    if (!o->parentObj) { return; }
+
     if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED || o->parentObj->oAction == CHAIN_CHOMP_ACT_UNLOAD_CHAIN) {
         obj_mark_for_deletion(o);
         network_send_object(o);
