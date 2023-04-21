@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 #include "data/dynos_cmap.cpp.h"
 
 #define SPRITE_INDEX_START_CHAR '!'
@@ -82,6 +83,80 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
 
     { "¡", '!', 0, 0 },
     { "¿", '?', 0.3750f, 0 },
+
+    { "Б", 15, 0, 0 },
+    { "Г", 14, 0, 0 },
+    { "Д", 17, 0, 0 },
+    { "Ж", 17, 0, 0 },
+    { "З", 13, 0, 0 },
+    { "И", 15, 0, 0 },
+    { "Й", 15, 0, 0 },
+    { "Л", 13, 0, 0 },
+    { "П", 14, 0, 0 },
+    { "У", 12, 0, 0 },
+    { "Ф", 17, 0, 0 },
+    { "Ц", 14, 0, 0 },
+    { "Ч", 11, 0, 0 },
+    { "Ш", 17, 0, 0 },
+    { "Щ", 17, 0, 0 },
+    { "Ъ", 13, 0, 0 },
+    { "Ы", 17, 0, 0 },
+    { "Ь", 12, 0, 0 },
+    { "Ѣ", 14, 0, 0 },
+    { "Э", 13, 0, 0 },
+    { "Ю", 17, 0, 0 },
+    { "Я", 13, 0, 0 },
+    { "Є", 12, 0, 0 },
+
+    { "а", 13, 0, 0 },
+    { "б", 11, 0, 0 },
+    { "в", 11, 0, 0 },
+    { "г", 10, 0, 0 },
+    { "д", 12, 0, 0 },
+    { "ж", 15, 0, 0 },
+    { "з", 13, 0, 0 },
+    { "и", 12, 0, 0 },
+    { "й", 12, 0, 0 },
+    { "к",  9, 0, 0 },
+    { "л", 10, 0, 0 },
+    { "м", 11, 0, 0 },
+    { "н", 11, 0, 0 },
+    { "п", 11, 0, 0 },
+    { "т", 11, 0, 0 },
+    { "ф", 14, 0, 0 },
+    { "ц", 11, 0, 0 },
+    { "ч",  9, 0, 0 },
+    { "ш", 17, 0, 0 },
+    { "щ", 17, 0, 0 },
+    { "ъ", 14, 0, 0 },
+    { "ы", 17, 0, 0 },
+    { "ь", 12, 0, 0 },
+    { "ѣ", 13, 0, 0 },
+    { "э", 12, 0, 0 },
+    { "ю", 16, 0, 0 },
+    { "я", 12, 0, 0 },
+    { "є", 12, 0, 0 },
+
+};
+
+struct SmCodeGlyph sSmCodeDuplicateGlyphs[] = {
+    { "А", 'A', 0, 0 },
+    { "В", 'B', 0, 0 },
+    { "Е", 'E', 0, 0 },
+    { "К", 'K', 0, 0 },
+    { "М", 'M', 0, 0 },
+    { "Н", 'H', 0, 0 },
+    { "О", 'O', 0, 0 },
+    { "Р", 'P', 0, 0 },
+    { "С", 'C', 0, 0 },
+    { "Т", 'T', 0, 0 },
+    { "Х", 'X', 0, 0 },
+    { "е", 'e', 0, 0 },
+    { "о", 'o', 0, 0 },
+    { "р", 'p', 0, 0 },
+    { "с", 'c', 0, 0 },
+    { "у", 'y', 0, 0 },
+    { "х", 'x', 0, 0 },
 };
 
 static void* sCharMap = NULL;
@@ -122,6 +197,22 @@ void djui_unicode_init(void) {
     for (size_t i = 0; i < glyphCount; i++) {
         struct SmCodeGlyph* glyph = &sSmCodeGlyphs[i];
         glyph->spriteIndex = (128 + i) - SPRITE_INDEX_START_CHAR;
+
+        u64 key = convert_unicode_char_to_u64(glyph->unicode);
+        s32 bytes = count_bytes_for_char(glyph->unicode);
+        assert(bytes >= 2 && bytes <= 4);
+        assert(key > 127);
+        hmap_put(sCharMap, key, glyph);
+        printf(">>> %llu\n", key);
+    }
+
+    // add duplicate glyphs
+    size_t dupCount = sizeof(sSmCodeDuplicateGlyphs) / sizeof(sSmCodeDuplicateGlyphs[0]);
+    for (size_t i = 0; i < dupCount; i++) {
+        struct SmCodeGlyph* glyph = &sSmCodeDuplicateGlyphs[i];
+        assert((u32)glyph->base < 128);
+        assert((u32)glyph->base > SPRITE_INDEX_START_CHAR);
+        glyph->spriteIndex = ((u32)glyph->base) - SPRITE_INDEX_START_CHAR;
 
         u64 key = convert_unicode_char_to_u64(glyph->unicode);
         s32 bytes = count_bytes_for_char(glyph->unicode);
@@ -177,6 +268,9 @@ f32 djui_unicode_get_sprite_width(char* text, const f32 font_widths[]) {
         if (glyph->width) {
             // use the custom width
             return glyph->width;
+        }
+        if ((u8)glyph->base < (u8)'!') {
+            return glyph->base;
         }
         // use the base width
         return font_widths[(u8)glyph->base - SPRITE_INDEX_START_CHAR];
@@ -255,7 +349,7 @@ char djui_unicode_get_base_char(char* text) {
     if ((u8)*text < 128) { return *text; }
     u64 key = convert_unicode_char_to_u64(text);
     struct SmCodeGlyph* glyph = hmap_get(sCharMap, key);
-    return (glyph != NULL) ? glyph->base : '?';
+    return (glyph != NULL || ((u8)glyph->base < (u8)'!')) ? glyph->base : '?';
 }
 
 void djui_unicode_get_char(char* text, char* output) {
