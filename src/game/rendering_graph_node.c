@@ -166,7 +166,7 @@ static Gfx* sViewportClipPos = NULL;
 static Vp   sViewportPrev    = { 0 };
 static Vp   sViewportInterp  = { 0 };
 
-static struct GraphNodeBackground* sBackgroundNode;
+static struct GraphNodeBackground* sBackgroundNode = NULL;
 Gfx* gBackgroundSkyboxGfx = NULL;
 Vtx* gBackgroundSkyboxVerts[3][3] = { 0 };
 Mtx* gBackgroundSkyboxMtx = NULL;
@@ -187,7 +187,7 @@ struct {
     Mtx interp;
     u8 usingCamSpace;
 } gMtxTbl[6400];
-s32 gMtxTblSize;
+s32 gMtxTblSize = 0;
 
 struct Object* gCurGraphNodeProcessingObject = NULL;
 struct MarioState* gCurGraphNodeMarioState = NULL;
@@ -1561,12 +1561,40 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     } while (iterateChildren && curGraphNode && (curGraphNode = curGraphNode->next) != firstNode);
 }
 
+static void geo_clear_interp_variables(void) {
+    sPerspectiveNode = NULL;
+    sPerspectivePos   = NULL;
+    sPerspectiveMtx   = NULL;
+    sPerspectiveAspect = 0;
+
+    sViewport        = NULL;
+    sViewportPos     = NULL;
+    sViewportClipPos = NULL;
+
+    sBackgroundNode = NULL;
+    gBackgroundSkyboxGfx = NULL;
+    memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * 3 * 3);
+    gBackgroundSkyboxMtx = NULL;
+    sBackgroundNodeRoot = NULL;
+
+    gShadowInterpCurrent = NULL;
+    sShadowInterpCount = 0;
+
+    sCameraNode = NULL;
+    gMtxTblSize = 0;
+    gCurGraphNodeProcessingObject = NULL;
+    gCurGraphNodeMarioState = NULL;
+}
+
 /**
  * Process a root node. This is the entry point for processing the scene graph.
  * The root node itself sets up the viewport, then all its children are processed
  * to set up the projection and draw display lists.
  */
 void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) {
+    // clear interp stuff
+    geo_clear_interp_variables();
+
     if (node->node.flags & GRAPH_RENDER_ACTIVE) {
         Vp *viewport = alloc_display_list(sizeof(*viewport));
         if (viewport == NULL) { return; }
