@@ -148,9 +148,10 @@ void print_intro_text(void) {
 }
 
 u32 get_mario_spawn_type(struct Object *o) {
-    if (o == NULL) { return 0; }
+    if (o == NULL || o->behavior == NULL) { return 0; }
 
     const BehaviorScript *behavior = virtual_to_segmented(0x13, o->behavior);
+    if (behavior == NULL) { return 0; }
 
     for (s32 i = 0; i < 20; i++) {
         if (sWarpBhvSpawnTable[i] == behavior) {
@@ -182,7 +183,7 @@ struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o) {
 }
 
 void load_obj_warp_nodes(void) {
-    struct ObjectWarpNode *sp24;
+    struct ObjectWarpNode *sp24 = NULL;
     struct Object *sp20 = (struct Object *) gObjParentGraphNode.children;
 
     do {
