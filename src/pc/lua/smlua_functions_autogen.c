@@ -24343,6 +24343,28 @@ int smlua_func_obj_init_animation(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_init_animation_with_accel_and_sound(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_init_animation_with_accel_and_sound", 3, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_init_animation_with_accel_and_sound"); return 0; }
+    s32 animIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_init_animation_with_accel_and_sound"); return 0; }
+    f32 accel = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_init_animation_with_accel_and_sound"); return 0; }
+
+    extern void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel);
+    obj_init_animation_with_accel_and_sound(obj, animIndex, accel);
+
+    return 1;
+}
+
 /*
 int smlua_func_obj_init_animation_with_sound(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -26213,14 +26235,14 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "collision_find_surface_on_ray"); return 0; }
     f32 startZ = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "collision_find_surface_on_ray"); return 0; }
-    f32 endX = smlua_to_number(L, 4);
+    f32 dirX = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "collision_find_surface_on_ray"); return 0; }
-    f32 endY = smlua_to_number(L, 5);
+    f32 dirY = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "collision_find_surface_on_ray"); return 0; }
-    f32 endZ = smlua_to_number(L, 6);
+    f32 dirZ = smlua_to_number(L, 6);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "collision_find_surface_on_ray"); return 0; }
 
-    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ));
+    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ));
 
     return 1;
 }
@@ -30470,6 +30492,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_explode_and_spawn_coins", smlua_func_obj_explode_and_spawn_coins);
     smlua_bind_function(L, "obj_has_behavior", smlua_func_obj_has_behavior);
     smlua_bind_function(L, "obj_init_animation", smlua_func_obj_init_animation);
+    smlua_bind_function(L, "obj_init_animation_with_accel_and_sound", smlua_func_obj_init_animation_with_accel_and_sound);
     //smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound); <--- UNIMPLEMENTED
     smlua_bind_function(L, "obj_is_hidden", smlua_func_obj_is_hidden);
     smlua_bind_function(L, "obj_mark_for_deletion", smlua_func_obj_mark_for_deletion);

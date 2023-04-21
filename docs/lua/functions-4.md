@@ -5299,6 +5299,28 @@
 
 <br />
 
+## [obj_init_animation_with_accel_and_sound](#obj_init_animation_with_accel_and_sound)
+
+### Lua Example
+`obj_init_animation_with_accel_and_sound(obj, animIndex, accel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| animIndex | `integer` |
+| accel | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_is_hidden](#obj_is_hidden)
 
 ### Lua Example
@@ -7191,7 +7213,7 @@
 ## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
 ### Lua Example
-`local RayIntersectionInfoValue = collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ)`
+`local RayIntersectionInfoValue = collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)`
 
 ### Parameters
 | Field | Type |
@@ -7199,15 +7221,15 @@
 | startX | `number` |
 | startY | `number` |
 | startZ | `number` |
-| endX | `number` |
-| endY | `number` |
-| endZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
 
 ### Returns
 [RayIntersectionInfo](structs.md#RayIntersectionInfo)
 
 ### C Prototype
-`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ);`
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ);`
 
 [:arrow_up_small:](#)
 

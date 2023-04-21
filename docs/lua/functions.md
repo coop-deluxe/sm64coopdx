@@ -1374,6 +1374,7 @@
    - [obj_explode_and_spawn_coins](functions-4.md#obj_explode_and_spawn_coins)
    - [obj_has_behavior](functions-4.md#obj_has_behavior)
    - [obj_init_animation](functions-4.md#obj_init_animation)
+   - [obj_init_animation_with_accel_and_sound](functions-4.md#obj_init_animation_with_accel_and_sound)
    - [obj_is_hidden](functions-4.md#obj_is_hidden)
    - [obj_mark_for_deletion](functions-4.md#obj_mark_for_deletion)
    - [obj_pitch_to_object](functions-4.md#obj_pitch_to_object)

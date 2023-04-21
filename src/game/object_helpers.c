@@ -880,6 +880,17 @@ void cur_obj_init_animation_with_sound(s32 animIndex) {
     o->oSoundStateID = animIndex;
 }
 
+void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel) {
+    if (obj != NULL) {
+        struct Animation **anims = obj->oAnimations;
+        if (anims != NULL) {
+            s32 animAccel = (s32)(accel * 65536.0f);
+            geo_obj_init_animation_accel(&obj->header.gfx, &anims[animIndex], animAccel);
+        }
+        obj->oSoundStateID = animIndex;
+    }
+}
+
 void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
     struct Animation **anims = o->oAnimations;
     if (anims != NULL) {

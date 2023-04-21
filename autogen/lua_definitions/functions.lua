@@ -7367,6 +7367,14 @@ function obj_init_animation(obj, animIndex)
 end
 
 --- @param obj Object
+--- @param animIndex integer
+--- @param accel number
+--- @return nil
+function obj_init_animation_with_accel_and_sound(obj, animIndex, accel)
+    -- ...
+end
+
+--- @param obj Object
 --- @return integer
 function obj_is_hidden(obj)
     -- ...
@@ -7990,11 +7998,11 @@ end
 --- @param startX number
 --- @param startY number
 --- @param startZ number
---- @param endX number
---- @param endY number
---- @param endZ number
+--- @param dirX number
+--- @param dirY number
+--- @param dirZ number
 --- @return RayIntersectionInfo
-function collision_find_surface_on_ray(startX, startY, startZ, endX, endY, endZ)
+function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)
     -- ...
 end
 
