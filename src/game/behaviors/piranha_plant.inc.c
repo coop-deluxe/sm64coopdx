@@ -91,13 +91,15 @@ void piranha_plant_act_sleeping(void) {
 #endif
 
     struct Object* player = nearest_player_to_object(o);
+    struct Object* localPlayer = gMarioStates[0].marioObj;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    s32 distanceToLocalPlayer = localPlayer ? dist_between_objects(o, localPlayer) : 10000;
     if (distanceToPlayer < 400.0f) {
         if (mario_moving_fast_enough_to_make_piranha_plant_bite()) {
             o->oAction = PIRANHA_PLANT_ACT_WOKEN_UP;
             if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
         }
-    } else if (distanceToPlayer < 1000.0f) {
+    } else if (distanceToLocalPlayer < 1000.0f) {
         play_secondary_music(SEQ_EVENT_PIRANHA_PLANT, 0, 255, 1000);
         o->oPiranhaPlantSleepMusicState = PIRANHA_PLANT_SLEEP_MUSIC_PLAYING;
     } else if (o->oPiranhaPlantSleepMusicState == PIRANHA_PLANT_SLEEP_MUSIC_PLAYING) {
