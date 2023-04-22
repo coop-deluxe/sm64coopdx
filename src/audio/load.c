@@ -1567,7 +1567,7 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
         if (smlua_audio_utils_override(seqId, &bankId, &sequenceData)) {
             sequence_player_disable(seqPlayer);
             seqPlayer->defaultBank[0] = bankId;
-            if (!bank_load_immediate(bankId, 2)) { return; }
+            if (!bank_load_immediate(bankId, 0)) { return; }
             seqPlayer->seqId = seqId;
             gSeqLoadStatus[seqId] = SOUND_LOAD_STATUS_COMPLETE;
             init_sequence_player(player);
