@@ -46,6 +46,7 @@ extern struct DjuiBase* gDjuiHovered;
 extern struct DjuiBase* gDjuiCursorDownOn;
 extern struct DjuiBase* gInteractableFocus;
 extern struct DjuiBase* gInteractableBinding;
+extern struct DjuiBase* gInteractableMouseDown;
 
 bool djui_interactable_is_binding(void);
 void djui_interactable_set_binding(struct DjuiBase* base);

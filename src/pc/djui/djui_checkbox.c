@@ -2,6 +2,7 @@
 
 static void djui_checkbox_update_style(struct DjuiBase* base) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
+    if (!checkbox) { return; }
     if (!checkbox->base.enabled) {
         djui_base_set_border_color(&checkbox->rect->base, 93, 93, 93, 255);
         djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);

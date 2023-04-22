@@ -1,5 +1,6 @@
 #include <string.h>
 #include "djui.h"
+#include "djui_interactable.h"
 
   ////////////////
  // properties //
@@ -388,6 +389,13 @@ void djui_base_destroy(struct DjuiBase* base) {
         free(base->interactable);
         base->interactable = NULL;
     }
+
+    // remove from interactable variable
+    if (base == gDjuiHovered)           { gDjuiHovered = NULL; }
+    if (base == gDjuiCursorDownOn)      { gDjuiCursorDownOn = NULL; }
+    if (base == gInteractableFocus)     { gInteractableFocus = NULL; }
+    if (base == gInteractableBinding)   { gInteractableBinding = NULL; }
+    if (base == gInteractableMouseDown) { gInteractableMouseDown = NULL; }
 
     // destroy this
     base->destroy(base);
