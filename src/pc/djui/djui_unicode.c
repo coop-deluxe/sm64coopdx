@@ -203,7 +203,6 @@ void djui_unicode_init(void) {
         assert(bytes >= 2 && bytes <= 4);
         assert(key > 127);
         hmap_put(sCharMap, key, glyph);
-        printf(">>> %llu\n", key);
     }
 
     // add duplicate glyphs

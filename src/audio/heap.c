@@ -28,17 +28,17 @@ s8 gReverbDownsampleRate;
 u8 sReverbDownsampleRateLog; // never read
 #endif
 
-struct SoundAllocPool gAudioSessionPool = {};
-struct SoundAllocPool gAudioInitPool = {};
-struct SoundAllocPool gNotesAndBuffersPool = {};
+struct SoundAllocPool gAudioSessionPool = { 0 };
+struct SoundAllocPool gAudioInitPool = { 0 };
+struct SoundAllocPool gNotesAndBuffersPool = { 0 };
 u8 sAudioHeapPad[0x20]; // probably two unused pools
-struct SoundAllocPool gSeqAndBankPool = {};
-struct SoundAllocPool gPersistentCommonPool = {};
-struct SoundAllocPool gTemporaryCommonPool = {};
+struct SoundAllocPool gSeqAndBankPool = { 0 };
+struct SoundAllocPool gPersistentCommonPool = { 0 };
+struct SoundAllocPool gTemporaryCommonPool = { 0 };
 
-struct SoundMultiPool gSeqLoadedPool = {};
-struct SoundMultiPool gBankLoadedPool = {};
-struct SoundMultiPool gUnusedLoadedPool = {};
+struct SoundMultiPool gSeqLoadedPool = { 0 };
+struct SoundMultiPool gBankLoadedPool = { 0 };
+struct SoundMultiPool gUnusedLoadedPool = { 0 };
 
 #ifdef VERSION_SH
 struct Unk1Pool gUnkPool1;
@@ -396,32 +396,32 @@ void *alloc_bank_or_seq(struct SoundMultiPool *arg0, s32 arg1, s32 size, s32 arg
     // arg3 = 0, 1 or 2?
 
 #ifdef VERSION_SH
-    struct SoundMultiPool *arg0;
+    struct SoundMultiPool *arg0 = NULL;
 #define isSound poolIdx
 #endif
-    struct TemporaryPool *tp;
-    struct SoundAllocPool *pool;
-    void *ret;
+    struct TemporaryPool *tp = NULL;
+    struct SoundAllocPool *pool = NULL;
+    void *ret = NULL;
 #if defined(VERSION_JP) || defined(VERSION_US)
-    u16 UNUSED _firstVal;
-    u16 UNUSED _secondVal;
+    u16 UNUSED _firstVal = 0;
+    u16 UNUSED _secondVal = 0;
 #else
-    u16 firstVal;
-    u16 secondVal;
+    u16 firstVal = 0;
+    u16 secondVal = 0;
 #endif
     u32 nullID = -1;
-    UNUSED s32 i;
+    UNUSED s32 i = 0;
     u8 *table = NULL;
 #ifndef VERSION_SH
-    u8 isSound;
+    u8 isSound = 0;
 #endif
 #if defined(VERSION_JP) || defined(VERSION_US)
-    u16 firstVal;
-    u16 secondVal;
-    u32 bothDiscardable;
-    u32 leftDiscardable, rightDiscardable;
-    u32 leftNotLoaded, rightNotLoaded;
-    u32 leftAvail, rightAvail;
+    u16 firstVal = 0;
+    u16 secondVal = 0;
+    u32 bothDiscardable = 0;
+    u32 leftDiscardable, rightDiscardable = 0;
+    u32 leftNotLoaded, rightNotLoaded = 0;
+    u32 leftAvail, rightAvail = 0;
 #endif
 
 #ifdef VERSION_SH
@@ -735,6 +735,12 @@ void *alloc_bank_or_seq(struct SoundMultiPool *arg0, s32 arg1, s32 size, s32 arg
         return ret;
     }
 
+    // Force the numEntries to stay in bounds
+    if (arg0->persistent.numEntries >= 32) {
+        arg0->persistent.numEntries = 31;
+    }
+
+
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #ifdef VERSION_SH
     ret = sound_alloc_uninitialized(&arg0->persistent.pool, size);
@@ -778,7 +784,13 @@ void *alloc_bank_or_seq(struct SoundMultiPool *arg0, s32 arg1, s32 size, s32 arg
 #if defined(VERSION_EU) || defined(VERSION_SH)
     return arg0->persistent.entries[arg0->persistent.numEntries++].ptr;
 #else
-    arg0->persistent.numEntries++; return arg0->persistent.entries[arg0->persistent.numEntries - 1].ptr;
+    arg0->persistent.numEntries++;
+    // Force the numEntries to stay in bounds
+    if (arg0->persistent.numEntries >= 32) {
+        arg0->persistent.numEntries = 31;
+        return arg0->persistent.entries[arg0->persistent.numEntries].ptr;
+    }
+    return arg0->persistent.entries[arg0->persistent.numEntries - 1].ptr;
 #endif
 #ifdef VERSION_SH
 #undef isSound
