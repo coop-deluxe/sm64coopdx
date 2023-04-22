@@ -47,7 +47,7 @@ function bhv_arena_cannon_ball_loop(obj)
         local b = { x = a.x + dir.x / 2, y = a.y + dir.y / 2, z = a.z + dir.z / 2 }
         if bhv_arena_cannon_ball_intersects_local(obj, a) or bhv_arena_cannon_ball_intersects_local(obj, b) then
             if obj.oArenaCannonBallDamages ~= 0 then
-                obj.oDamageOrCoinValue = clamp(obj.oArenaCannonBallSize * 8, 1, 5)
+                obj.oDamageOrCoinValue = clamp(obj.oArenaCannonBallSize * 7, 1, 4)
                 interact_damage(m, INTERACT_DAMAGE, obj)
                 obj.oArenaCannonBallDamages = 0
             end

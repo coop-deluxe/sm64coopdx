@@ -127,21 +127,21 @@ function mario_local_hammer_check(m)
             local pos = mario_hammer_position(mattacker)
             local dist = vec3f_dist(pos, cmvictim.pos)
             if dist <= 165 then
-                local yOffset = 100
+                local yOffset = 0.6
                 if mattacker.action == ACT_JUMP_KICK then
-                    yOffset = yOffset + 100
+                    yOffset = 1.0
                 end
 
                 local vel = {
-                    x = cmvictim.pos.x - mattacker.pos.x,
-                    y = (cmvictim.pos.y + yOffset) - mattacker.pos.y,
-                    z = cmvictim.pos.z - mattacker.pos.z,
+                    x = sins(mattacker.faceAngle.y),
+                    y = yOffset,
+                    z = coss(mattacker.faceAngle.y),
                 }
                 vec3f_normalize(vel)
-                vec3f_mul(vel, 75 + 70 * (1 - mario_health_float(cmvictim)))
+                vec3f_mul(vel, 80 + 10 * (1 - mario_health_float(cmvictim)))
 
                 set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
-                m.invincTimer = 30
+                m.invincTimer = 20
                 m.knockbackTimer = 10
                 m.vel.x = vel.x
                 m.vel.y = vel.y
@@ -152,16 +152,18 @@ function mario_local_hammer_check(m)
                 send_arena_hammer_hit(np.globalIndex, npattacker.globalIndex)
                 e.lastDamagedByGlobal = npattacker.globalIndex
 
-                if mattacker.action == ACT_PUNCHING or mattacker.action == ACT_MOVE_PUNCHING or mattacker.action == ACT_GROUND_POUND then
-                    m.hurtCounter = 12
+                if mattacker.action == ACT_JUMP_KICK or mattacker.action == ACT_DIVE then
+                    m.hurtCounter = 1
                 else
-                    m.hurtCounter = 8
+                    m.hurtCounter = 14
                 end
             end
         end
     end
 
-    m.knockbackTimer = savedKb
+    if savedKb > m.knockbackTimer then
+        m.knockbackTimer = savedKb
+    end
 end
 
 -----------------
@@ -243,6 +245,7 @@ function mario_cannon_box_update(m)
     end
 
     if (m.controller.buttonDown & Y_BUTTON) ~= 0 and s.charging > 0 then
+        local cannonBallSize = clamp((get_network_area_timer() - s.charging) / (30 * 5) + 0.1, 0, 1)
         local held = gItemHeld[m.playerIndex]
         if held ~= nil then
             for i = 0, 2 do
@@ -250,6 +253,7 @@ function mario_cannon_box_update(m)
                     held.oPosX, held.oPosY, held.oPosZ,
                     function (obj)
                         obj.oArenaSparkleOwner = m.playerIndex
+                        obj.oArenaSparkleSize = cannonBallSize
                     end)
             end
         end

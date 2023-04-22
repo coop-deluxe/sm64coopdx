@@ -134,7 +134,7 @@ function bhv_arena_flame_loop(obj)
     -- find nearest target
     local pos = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
     local target = nil
-    local targetDist = 2000
+    local targetDist = 2500
     for i = 0, (MAX_PLAYERS - 1) do
         local m = gMarioStates[i]
         if global_index_hurts_mario_state(obj.oArenaFlameGlobalOwner, m) and active_player(m) then
@@ -149,7 +149,7 @@ function bhv_arena_flame_loop(obj)
     if target ~= nil then
         -- aim toward target
         local targetYaw = atan2s(target.pos.z - pos.z, target.pos.x - pos.x)
-        obj.oMoveAngleYaw = approach_s16_symmetric(obj.oMoveAngleYaw, targetYaw, 0x350)
+        obj.oMoveAngleYaw = approach_s16_symmetric(obj.oMoveAngleYaw, targetYaw, 0x100)
 
         -- jump
         local floorDiff = obj.oFloorHeight - obj.oPosY
@@ -158,7 +158,7 @@ function bhv_arena_flame_loop(obj)
         end
     end
 
-    cur_obj_move_standard(78)
+    cur_obj_move_standard(200)
     obj.oInteractStatus = 0
     obj.oIntangibleTimer = 0
 

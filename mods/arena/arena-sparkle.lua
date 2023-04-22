@@ -3,6 +3,7 @@ define_custom_obj_fields({
     oArenaSparkleOffsetX = 'f32',
     oArenaSparkleOffsetY = 'f32',
     oArenaSparkleOffsetZ = 'f32',
+    oArenaSparkleSize = 'f32',
 })
 
 function bhv_arena_sparkle_init(obj)
@@ -25,11 +26,12 @@ function bhv_arena_sparkle_loop(obj)
     local held = gItemHeld[obj.oArenaSparkleOwner]
     if held ~= nil then
         local offset = {
-            x = held.oPosX + sins(m.faceAngle.y) * 70,
+            x = held.oPosX + sins(m.faceAngle.y) * 75,
             y = held.oPosY - 25,
-            z = held.oPosZ + coss(m.faceAngle.y) * 70,
+            z = held.oPosZ + coss(m.faceAngle.y) * 75,
         }
         local scalar = (obj.oArenaSparkleOffsetZ * (1 - (obj.oTimer / 10) ^ 3))
+        scalar = scalar * ((1 - obj.oArenaSparkleSize) + 0.25)
         local offset2 = {
             x = offset.x + sins(m.faceAngle.y + obj.oArenaSparkleOffsetX) * scalar,
             y = offset.y + sins(obj.oArenaSparkleOffsetY) * scalar,
@@ -42,7 +44,7 @@ function bhv_arena_sparkle_loop(obj)
         obj.oPosY = offset2.y
         obj.oPosZ = offset2.z
     end
-    obj_scale(obj, (obj.oTimer / 10) * 1)
+    obj_scale(obj, (obj.oTimer / 10) * (obj.oArenaSparkleSize * 0.5 + 1))
 end
 
 id_bhvArenaSparkle = hook_behavior(nil, OBJ_LIST_UNIMPORTANT, true, bhv_arena_sparkle_init, bhv_arena_sparkle_loop)

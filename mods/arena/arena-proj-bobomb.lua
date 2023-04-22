@@ -18,7 +18,7 @@ end
 function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
     local ownerNp = network_player_from_global_index(obj.oArenaBobombGlobalOwner)
     local cm = m
-    if m.playerIndex == 0 then
+    if m.playerIndex == 0 and ownerNp.localIndex ~= 0 then
         cm = lag_compensation_get_local_state(ownerNp)
     end
 
@@ -45,12 +45,38 @@ function bhv_arena_bobomb_expode(obj)
     local e = gMarioStateExtras[0]
     local a = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
     local validAttack = global_index_hurts_mario_state(obj.oArenaBobombGlobalOwner, m) or np.globalIndex == obj.oArenaBobombGlobalOwner
-    local radius = 650
-    if np.globalIndex == obj.oArenaBobombGlobalOwner then radius = 200 end
+    local radius = 500
+    if np.globalIndex == obj.oArenaBobombGlobalOwner then radius = 300 end
     if validAttack and bhv_arena_bobomb_intersects_player(obj, m, a, radius) and mario_health_float(m) > 0 then
         obj.oDamageOrCoinValue = 3
         interact_damage(m, INTERACT_DAMAGE, obj)
         e.lastDamagedByGlobal = obj.oArenaBobombGlobalOwner
+
+        -- knockback
+        local ownerNp = network_player_from_global_index(obj.oArenaBobombGlobalOwner)
+        local cm = m
+        if np.globalIndex ~= obj.oArenaBobombGlobalOwner then
+            cm = lag_compensation_get_local_state(ownerNp)
+        end
+        local vel = {
+            x = cm.pos.x - obj.oPosX,
+            y = 0.5,
+            z = cm.pos.z - obj.oPosZ,
+        }
+        vec3f_normalize(vel)
+        vel.y = 0.5
+        vec3f_normalize(vel)
+        vec3f_mul(vel, 40)
+
+        set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
+        m.invincTimer = 10
+        m.knockbackTimer = 10
+        m.vel.x = vel.x
+        m.vel.y = vel.y
+        m.vel.z = vel.z
+        m.forwardVel = 0
+        m.faceAngle.y = atan2s(vel.z, vel.x) + 0x8000
+
     end
 end
 
