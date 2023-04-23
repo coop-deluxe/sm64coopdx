@@ -924,7 +924,7 @@ endif
 # precomp custom sounds
 # hacky stupid thing for windows builds (non-auto-builder)
 # this way it won't fail to compile custom sounds anymore
-ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(WINDOWS_BUILD),999)
   ifeq ($(WINDOWS_AUTO_BUILDER),1)
   else
     ifeq ($(filter clean distclean,$(MAKECMDGOALS)),)
