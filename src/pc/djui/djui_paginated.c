@@ -8,6 +8,9 @@
  // events //
 ////////////
 
+static bool lTrigDown = false;
+static bool rTrigDown = false;
+
 static struct DjuiButton* sPrevButton = NULL;
 static struct DjuiButton* sNextButton = NULL;
 static struct DjuiText* sPageNumText = NULL;
@@ -106,6 +109,21 @@ bool djui_paginated_render(struct DjuiBase* base) {
     }
 
     djui_rect_render(base);
+
+    OSContPad* pad = &gInteractablePad;
+
+    if (pad->button & L_TRIG) {
+        lTrigDown = true;
+    } else if (pad->button & R_TRIG) {
+        rTrigDown = true;
+    } else if (lTrigDown) {
+        djui_paginated_prev(&paginated->prevButton->base);
+        lTrigDown = false;
+    } else if (rTrigDown) {
+        djui_paginated_next(&paginated->nextButton->base);
+        rTrigDown = false;
+    }
+
     return true;
 }
 

@@ -72,13 +72,16 @@ static void gfx_sdl_set_fullscreen(void) {
         SDL_SetWindowFullscreen(wnd, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
         SDL_SetWindowFullscreen(wnd, 0);
+        SDL_ShowCursor(1);
         configWindow.exiting_fullscreen = true;
     }
 }
 
 static void gfx_sdl_reset_dimension_and_pos(void) {
-    if (configWindow.exiting_fullscreen)
+    if (configWindow.exiting_fullscreen) {
         configWindow.exiting_fullscreen = false;
+        SDL_ShowCursor(0);
+    }
 
     if (configWindow.reset) {
         configWindow.x = WAPI_WIN_CENTERPOS;

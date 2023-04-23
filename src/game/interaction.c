@@ -2319,7 +2319,7 @@ void check_death_barrier(struct MarioState *m) {
 
 void check_lava_boost(struct MarioState *m) {
     bool allow = true;
-    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, &allow);
+    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_LAVA_FLOOR, &allow);
     if (m->action == ACT_BUBBLED || (gServerSettings.enableCheats && gCheats.godMode) || (!allow)) { return; }
     if (!(m->action & ACT_FLAG_RIDING_SHELL) && m->pos[1] < m->floorHeight + 10.0f) {
         if (!(m->flags & MARIO_METAL_CAP)) {

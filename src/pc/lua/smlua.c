@@ -68,6 +68,7 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
 
     gSmLuaConvertSuccess = true;
     gLuaInitializingScript = 1;
+    LOG_INFO("Loading lua script '%s'", file->cachedPath);
     if (luaL_loadfile(L, file->cachedPath) != LUA_OK) {
         LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
         LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
