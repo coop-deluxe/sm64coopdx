@@ -26,7 +26,7 @@ static s32 djui_paginated_get_count(struct DjuiPaginated* paginated) {
 void djui_paginated_update_page_buttons(struct DjuiPaginated* paginated) {
     s32 count = djui_paginated_get_count(paginated);
     char pageNumString[32] = { 0 };
-    snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, count / paginated->showCount + 1);
+    snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, (count - 1) / paginated->showCount + 1);
     djui_text_set_text(sPageNumText, pageNumString);
     djui_base_set_visible(&sPageNumText->base, (count > paginated->showCount));
 
