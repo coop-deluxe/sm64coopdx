@@ -19,7 +19,7 @@ else
   endif
 endif
 ifeq ($(HOST_OS),Windows)
-  NATIVE_CFLAGS += -DWIN32 -D_WIN32 -D__CYGWIN__
+  NATIVE_CFLAGS += -DWIN32 -D_WIN32
 endif
 
 default: native

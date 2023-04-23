@@ -13,7 +13,7 @@ else
   endif
 endif
 ifeq ($(HOST_OS),Windows)
-  CFLAGS += -DWIN32 -D_WIN32 -D__CYGWIN__
+  CFLAGS += -DWIN32 -D_WIN32
 endif
 
 libaudiofile.a: audiofile.o
