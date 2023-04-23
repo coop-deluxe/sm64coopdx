@@ -10,6 +10,20 @@ LDFLAGS      := -lm
 ALL_PROGRAMS := n64graphics n64graphics_ci mio0 n64cksum textconv patch_libultra_math aifc_decode aiff_extract_codebook vadpcm_enc tabledesign extract_data_for_mio skyconv
 LIBAUDIOFILE := audiofile/libaudiofile.a
 
+# Attempt to detect OS
+ifeq ($(OS),Windows_NT)
+  HOST_OS ?= Windows
+else
+  HOST_OS ?= $(shell uname -s 2>/dev/null || echo Unknown)
+  # some weird MINGW/Cygwin env that doesn't define $OS
+  ifneq (,$(findstring MINGW,HOST_OS))
+    HOST_OS := Windows
+  endif
+endif
+ifeq ($(HOST_OS),Windows)
+  CFLAGS += -DWIN32 -D_WIN32 -D__CYGWIN__
+endif
+
 BUILD_PROGRAMS := $(ALL_PROGRAMS)
 
 default: all

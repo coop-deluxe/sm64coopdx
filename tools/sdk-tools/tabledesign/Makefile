@@ -8,6 +8,20 @@ IRIX_CFLAGS := -fullwarn -Wab,-r4300_mul -Xcpluscomm -mips1 -O2
 NATIVE_CC := gcc
 NATIVE_CFLAGS := -Wall -Wno-uninitialized -O2
 
+# Attempt to detect OS
+ifeq ($(OS),Windows_NT)
+  HOST_OS ?= Windows
+else
+  HOST_OS ?= $(shell uname -s 2>/dev/null || echo Unknown)
+  # some weird MINGW/Cygwin env that doesn't define $OS
+  ifneq (,$(findstring MINGW,HOST_OS))
+    HOST_OS := Windows
+  endif
+endif
+ifeq ($(HOST_OS),Windows)
+  NATIVE_CFLAGS += -DWIN32 -D_WIN32 -D__CYGWIN__
+endif
+
 LDFLAGS := -lm -laudiofile
 
 default: native

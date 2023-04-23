@@ -8,6 +8,20 @@ IRIX_CFLAGS := -fullwarn -woff 515,608,658,799 -Wab,-r4300_mul -g -Xcpluscomm -m
 NATIVE_CC := gcc
 NATIVE_CFLAGS := -g -Wall -O2 -Wno-unused-result -Wno-uninitialized
 
+# Attempt to detect OS
+ifeq ($(OS),Windows_NT)
+  HOST_OS ?= Windows
+else
+  HOST_OS ?= $(shell uname -s 2>/dev/null || echo Unknown)
+  # some weird MINGW/Cygwin env that doesn't define $OS
+  ifneq (,$(findstring MINGW,HOST_OS))
+    HOST_OS := Windows
+  endif
+endif
+ifeq ($(HOST_OS),Windows)
+  NATIVE_CFLAGS += -DWIN32 -D_WIN32 -D__CYGWIN__
+endif
+
 default: native
 all: irix native
 
