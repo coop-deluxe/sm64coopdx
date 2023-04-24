@@ -97,6 +97,7 @@ struct InterpHud {
 };
 static struct InterpHud sInterpHuds[MAX_INTERP_HUD] = { 0 };
 static u16 sInterpHudCount = 0;
+static u8 sColorAltered = FALSE;
 
 void patch_djui_hud_before(void) {
     sInterpHudCount = 0;
@@ -151,6 +152,14 @@ void djui_hud_set_font(enum DjuiFontType fontType) {
 
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
+    sColorAltered = TRUE;
+}
+
+void djui_hud_reset_color(void) {
+    if (sColorAltered) {
+        sColorAltered = FALSE;
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+    }
 }
 
 void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY) {
