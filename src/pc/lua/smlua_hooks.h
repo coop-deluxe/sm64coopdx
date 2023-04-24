@@ -99,6 +99,7 @@ extern u32 gLuaMarioActionIndex;
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName);
 
 void smlua_call_event_hooks(enum LuaHookedEventType hookType);
+void smlua_call_event_hooks_with_reset_func(enum LuaHookedEventType hookType, void (*resetFunc)(void));
 void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value);
 void smlua_call_event_hooks_bool_param_ret_bool(enum LuaHookedEventType hookType, bool value, bool* returnValue);
 void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m);
