@@ -177,8 +177,8 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         // load extended model
         if (data.extendedModelId != 0xFFFF) {
-            u8 loadedModelId = smlua_model_util_load(data.extendedModelId);
-            if (loadedModelId != 0xFF) {
+            u16 loadedModelId = smlua_model_util_load(data.extendedModelId);
+            if (loadedModelId < MAX_LOADED_GRAPH_NODES) {
                 data.model = loadedModelId;
             }
         }

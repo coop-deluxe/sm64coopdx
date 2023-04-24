@@ -7,7 +7,9 @@
 #include "camera.h"
 #include "engine/graph_node.h"
 
-#define MAX_LOADED_GRAPH_NODES 0x100
+#define LOADED_GRAPH_NODES_VANILLA 256
+#define LOADED_GRAPH_NODES_EXTENDED 512
+#define MAX_LOADED_GRAPH_NODES (LOADED_GRAPH_NODES_VANILLA + LOADED_GRAPH_NODES_EXTENDED)
 
 struct WarpNode
 {

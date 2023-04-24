@@ -675,6 +675,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
     obj->header.gfx.activeAreaIndex = parent->header.gfx.areaIndex;
     obj->globalPlayerIndex = 0;
 
+    if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
     geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, gLoadedGraphNodes[model], gVec3fZero,
                  gVec3sZero);
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, model);
@@ -1373,6 +1374,7 @@ void cur_obj_set_model(s32 modelID) {
 }
 
 void obj_set_model(struct Object* obj, s32 modelID) {
+    if (modelID >= MAX_LOADED_GRAPH_NODES) { modelID = MODEL_NONE; }
     obj->header.gfx.sharedChild = gLoadedGraphNodes[modelID];
     dynos_actor_override((void*)&obj->header.gfx.sharedChild);
     smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
@@ -3115,6 +3117,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
 }
 
 s32 cur_obj_has_model(u16 modelID) {
+    if (modelID >= MAX_LOADED_GRAPH_NODES) { return FALSE; }
     if (o->header.gfx.sharedChild == gLoadedGraphNodes[modelID]) {
         return TRUE;
     } else if (o->header.gfx.sharedChild && gLoadedGraphNodes[modelID] && o->header.gfx.sharedChild->georef == gLoadedGraphNodes[modelID]->georef) {

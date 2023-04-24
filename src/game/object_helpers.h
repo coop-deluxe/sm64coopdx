@@ -55,7 +55,7 @@ struct SpawnParticlesInfo
 {
     /*0x00*/ s8 behParam;
     /*0x01*/ s8 count;
-    /*0x02*/ u8 model;
+    /*0x02*/ u16 model;
     /*0x03*/ s8 offsetY;
     /*0x04*/ s8 forwardVelBase;
     /*0x05*/ s8 forwardVelRange;

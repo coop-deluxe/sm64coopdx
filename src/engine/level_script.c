@@ -452,9 +452,8 @@ static void level_cmd_load_model_from_dl(void) {
     s16 val2 = ((u16)CMD_GET(s16, 2)) >> 12;
     void *val3 = CMD_GET(void *, 4);
 
-    if (val1 < 256) {
-        gLoadedGraphNodes[val1] =
-            (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
+    if (val1 < MAX_LOADED_GRAPH_NODES) {
+        gLoadedGraphNodes[val1] = (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
         sLevelOwnedGraphNodes[val1] = true;
         smlua_model_util_remember(val1, val2, val3, 1);
     }
@@ -466,7 +465,7 @@ static void level_cmd_load_model_from_geo(void) {
     s16 arg0 = CMD_GET(s16, 2);
     void *arg1 = CMD_GET(void *, 4);
 
-    if (arg0 < 256) {
+    if (arg0 < MAX_LOADED_GRAPH_NODES) {
         gLoadedGraphNodes[arg0] = process_geo_layout(sLevelPool, arg1);
         sLevelOwnedGraphNodes[arg0] = true;
         smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1, 0);
@@ -487,11 +486,10 @@ static void level_cmd_23(void) {
     // load an f32, but using an integer load instruction for some reason (hence the union)
     arg2.i = CMD_GET(s32, 8);
 
-    if (model < 256) {
+    if (model < MAX_LOADED_GRAPH_NODES) {
         // GraphNodeScale has a GraphNode at the top. This
         // is being stored to the array, so cast the pointer.
-        gLoadedGraphNodes[model] =
-            (struct GraphNode *) init_graph_node_scale(sLevelPool, 0, arg0H, arg1, arg2.f);
+        gLoadedGraphNodes[model] = (struct GraphNode *) init_graph_node_scale(sLevelPool, 0, arg0H, arg1, arg2.f);
         sLevelOwnedGraphNodes[model] = true;
         smlua_model_util_remember(model, arg0H, arg1, 1);
     }
@@ -503,7 +501,9 @@ static void level_cmd_init_mario(void) {
     u32 behaviorArg = CMD_GET(u32, 4);
     behaviorArg = behaviorArg;
     void* behaviorScript = CMD_GET(void*, 8);
-    struct GraphNode* unk18 = gLoadedGraphNodes[CMD_GET(u8, 3)];
+    u16 slot = CMD_GET(u8, 3);
+    if (slot >= MAX_LOADED_GRAPH_NODES) { slot = MODEL_NONE; }
+    struct GraphNode* unk18 = gLoadedGraphNodes[slot];
 
     struct SpawnInfo* lastSpawnInfo = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -535,6 +535,7 @@ static void level_cmd_place_object(void) {
 
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         model = CMD_GET(u8, 3);
+        if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
         spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
@@ -933,6 +934,7 @@ static void level_cmd_place_object_ext(void) {
 
     if (sCurrAreaIndex != -1 && ((CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         u16 model = CMD_GET(u8, 3);
+        if (model >= MAX_LOADED_GRAPH_NODES) { model = MODEL_NONE; }
         spawnInfo = alloc_only_pool_alloc(sLevelPool, sizeof(struct SpawnInfo));
 
         spawnInfo->startPos[0] = CMD_GET(s16, 4);
@@ -1019,7 +1021,9 @@ static void level_cmd_place_object_ext2(void) {
         spawnInfo->behaviorArg = CMD_GET(u32, 16);
 
         spawnInfo->behaviorScript = (BehaviorScript*)get_behavior_from_id(behId);
-        spawnInfo->unk18 = gLoadedGraphNodes[smlua_model_util_load_with_pool(modelId, sLevelPool)];
+        u16 slot = smlua_model_util_load_with_pool(modelId, sLevelPool);
+        if (slot >= MAX_LOADED_GRAPH_NODES) { slot = MODEL_NONE; }
+        spawnInfo->unk18 = gLoadedGraphNodes[slot];
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
         spawnInfo->syncID = spawnInfo->next
@@ -1039,7 +1043,7 @@ static void level_cmd_load_model_from_geo_ext(void) {
     const char* geoName = dynos_level_get_token(CMD_GET(u32, 4));
     u32 modelId = smlua_model_util_get_id(geoName);
 
-    if (modelSlot < 256) {
+    if (modelSlot < MAX_LOADED_GRAPH_NODES) {
         smlua_model_util_load_with_pool_and_cache_id(modelId, sLevelPool, modelSlot);
     }
 

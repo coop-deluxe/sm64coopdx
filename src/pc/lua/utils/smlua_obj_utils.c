@@ -22,8 +22,8 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
         return NULL;
     }
 
-    u8 loadedModelId = smlua_model_util_load(modelId);
-    if (loadedModelId == 0xFF) {
+    u16 loadedModelId = smlua_model_util_load(modelId);
+    if (loadedModelId >= MAX_LOADED_GRAPH_NODES) {
         LOG_ERROR("failed to load model  %u", modelId);
         return NULL;
     }
@@ -92,7 +92,9 @@ s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId) {
 }
 
 s32 obj_has_model_extended(struct Object *o, enum ModelExtendedId modelId) {
-    struct GraphNode *model = gLoadedGraphNodes[smlua_model_util_load(modelId)];
+    u16 slot = smlua_model_util_load(modelId);
+    if (slot >= MAX_LOADED_GRAPH_NODES) { return false; }
+    struct GraphNode *model = gLoadedGraphNodes[slot];
     return o->header.gfx.sharedChild == model;
 }
 
@@ -246,8 +248,8 @@ struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedI
     static struct SpawnParticlesInfo sTmpSpi = { 0 };
     memset(&sTmpSpi, 0, sizeof(struct SpawnParticlesInfo));
 
-    u8 loadedModelId = smlua_model_util_load(modelId);
-    if (loadedModelId == 0xFF) {
+    u16 loadedModelId = smlua_model_util_load(modelId);
+    if (loadedModelId >= MAX_LOADED_GRAPH_NODES) {
         LOG_ERROR("failed to load model  %u", modelId);
         return NULL;
     }

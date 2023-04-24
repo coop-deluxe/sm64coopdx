@@ -58,14 +58,14 @@
 struct ModelUtilsInfo {
     enum ModelExtendedId extId;
     u8 layer;
-    u8 loadedId;
+    u16 loadedId;
     bool permanent;
     bool isDisplayList;
     const void* asset;
     u8 shouldFreeAsset;
 };
 
-#define UNLOADED_ID 0xFF
+#define UNLOADED_ID 0xFFFF
 
 #define MODEL_UTIL_GEO(x, y)        [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = false }
 #define MODEL_UTIL_DL(x, y, z)      [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = false }
@@ -468,11 +468,10 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
 struct ModelUtilsInfo sCustomModels[MAX_CUSTOM_MODELS] = { 0 };
 static u16 sCustomModelsCount = 0;
 
-#define MAX_CACHED_ASSETS 256
-struct ModelUtilsInfo* sCachedAssets[MAX_CACHED_ASSETS] = { 0 };
-bool sCachedAssetTaken[MAX_CACHED_ASSETS] = { 0 };
+struct ModelUtilsInfo* sCachedAssets[MAX_LOADED_GRAPH_NODES] = { 0 };
+bool sCachedAssetTaken[MAX_LOADED_GRAPH_NODES] = { 0 };
 
-void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, UNUSED u8 isDisplayList) {
+void smlua_model_util_remember(u16 loadedId, UNUSED u8 layer, const void* asset, UNUSED u8 isDisplayList) {
     struct ModelUtilsInfo* found = NULL;
 
     // find in sModels
@@ -502,10 +501,10 @@ void smlua_model_util_remember(u8 loadedId, UNUSED u8 layer, const void* asset, 
     // remember
     if (sCachedAssetTaken[loadedId] && sCachedAssets[loadedId] != found) {
         if (sCachedAssets[loadedId]->permanent) {
-            // TODO: we need to restore the permanent model afterward
-            LOG_ERROR("OVERRIDING PERMANENT MODEL: %u -> %u", sCachedAssets[loadedId]->loadedId, loadedId);
+            LOG_ERROR("Tried to override permanent model: %u -> %u", sCachedAssets[loadedId]->loadedId, loadedId);
+            return;
         } else {
-            LOG_INFO("Overriding model: loadedId %u was extId %u, now extId %u", loadedId, sCachedAssets[loadedId]->extId, found->extId);
+            //LOG_INFO("Overriding model: loadedId %u was extId %u, now extId %u", loadedId, sCachedAssets[loadedId]->extId, found->extId);
         }
         sCachedAssets[loadedId]->loadedId = UNLOADED_ID;
     }
@@ -530,10 +529,9 @@ void smlua_model_util_reset(void) {
 }
 
 void smlua_model_util_clear(void) {
-    // TODO: we need to restore replaced permanent models
-    for (int i = 0; i < MAX_CACHED_ASSETS; i++) {
+    for (int i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
         struct ModelUtilsInfo* m = sCachedAssets[i];
-        if (m == NULL || m->permanent) { continue; }
+        if (m == NULL) { continue; }
         //LOG_INFO("Forget: %u -> %u", m->extId, m->loadedId);
         m->loadedId = UNLOADED_ID;
         if (m->asset && m->shouldFreeAsset) {
@@ -545,10 +543,10 @@ void smlua_model_util_clear(void) {
         sCachedAssetTaken[i] = false;
     }
 
-    //LOG_INFO("Cleared runtime model cache.");
+    LOG_INFO("Cleared runtime model cache.");
 }
 
-u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u8 loadedId) {
+u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u16 loadedId) {
     if (extId == E_MODEL_NONE) { return MODEL_NONE; }
     if (extId >= (u16)(E_MODEL_MAX + sCustomModelsCount)) {
         LOG_ERROR("Tried to load invalid extId: %u >= %u (%u)", extId, (E_MODEL_MAX + sCustomModelsCount), sCustomModelsCount);
@@ -566,15 +564,15 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
     }
 
     // find cached asset
-    u8 pickLoadedId = loadedId;
+    u16 pickLoadedId = loadedId;
     if (loadedId == UNLOADED_ID) {
-        for (s32 i = 0; i < (MAX_CACHED_ASSETS-1); i++) {
+        for (s32 i = 0; i < (MAX_LOADED_GRAPH_NODES-1); i++) {
             struct ModelUtilsInfo* m = sCachedAssets[i];
             if (m == info) {
                 //LOG_INFO("Found in cache (but late, confused?) - %u -> %u", extId, i);
                 info->loadedId = m->loadedId;
                 return info->loadedId;
-            } else if (!sCachedAssetTaken[i]) {
+            } else if (i >= LOADED_GRAPH_NODES_VANILLA && !sCachedAssetTaken[i]) {
                 pickLoadedId = i;
             }
         }
@@ -616,6 +614,7 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
             info->isDisplayList = false;
         }
         gLoadedGraphNodes[pickLoadedId] = dynos_geolayout_to_graphnode(info->asset, true);
+        LOG_ERROR("XXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 
     // remember
@@ -625,11 +624,11 @@ u8 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, stru
     return pickLoadedId;
 }
 
-u8 smlua_model_util_load_with_pool(enum ModelExtendedId extId, struct AllocOnlyPool* pool) {
+u16 smlua_model_util_load_with_pool(enum ModelExtendedId extId, struct AllocOnlyPool* pool) {
     return smlua_model_util_load_with_pool_and_cache_id(extId, pool, UNLOADED_ID);
 }
 
-u8 smlua_model_util_load(enum ModelExtendedId extId) {
+u16 smlua_model_util_load(enum ModelExtendedId extId) {
     return smlua_model_util_load_with_pool(extId, NULL);
 }
 
