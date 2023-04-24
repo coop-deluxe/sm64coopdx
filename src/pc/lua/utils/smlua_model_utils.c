@@ -614,7 +614,7 @@ u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, str
             info->isDisplayList = false;
         }
         gLoadedGraphNodes[pickLoadedId] = dynos_geolayout_to_graphnode(info->asset, true);
-        LOG_ERROR("XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        LOG_ERROR("Out of memory in the main pool - using dynos");
     }
 
     // remember
