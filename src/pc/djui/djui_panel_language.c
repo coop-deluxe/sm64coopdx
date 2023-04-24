@@ -78,9 +78,6 @@ void djui_panel_language_create(struct DjuiBase* caller) {
     sLanguageChanged = false;
 
     {
-        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
-        sLayoutBase = &paginated->layout->base;
-
         // construct lang path
         char lpath[SYS_MAX_PATH] = "";
         snprintf(lpath, SYS_MAX_PATH, "%s/lang", sys_exe_path());
@@ -90,8 +87,19 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         DIR* d = opendir(lpath);
         if (!d) {
             LOG_ERROR("Could not open directory '%s'", lpath);
-            return;
+
+            char buffer[512] = "";
+            snprintf(buffer, 512, "\\#ffa0a0\\Failed to load language folder:\n\\#c8c8c8\\%s", lpath);
+            struct DjuiText* text = djui_text_create(body, buffer);
+            djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+            djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&text->base, 1.0f, 128.0f);
+
+            goto skip_langs;
         }
+
+        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        sLayoutBase = &paginated->layout->base;
 
         struct DjuiCheckbox* chkEnglish = NULL;
         bool foundMatch = false;
@@ -106,7 +114,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
             // strip the name before the .
             char* c = path;
             while (*c != '\0') {
-                if (*c == '.') { *c = '\0'; break;}
+                if (*c == '.') { *c = '\0'; break; }
                 c++;
             }
             if (strlen(path) == 0) { continue; }
@@ -125,12 +133,14 @@ void djui_panel_language_create(struct DjuiBase* caller) {
         }
 
         djui_paginated_calculate_height(paginated);
+        panel->bodySize.value = paginated->base.height.value + 16 + 64;
 
+skip_langs:
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
-        panel->bodySize.value = paginated->base.height.value + 16 + 64;
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
     p->on_panel_destroy = djui_panel_language_destroy;
+
 }

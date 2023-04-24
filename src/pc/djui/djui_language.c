@@ -4,6 +4,8 @@
 #include "pc/platform.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
+#include "pc/djui/djui_language.h"
+#include "pc/djui/djui_popup.h"
 
 ini_t* sLang = NULL;
 
