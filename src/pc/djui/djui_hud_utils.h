@@ -39,6 +39,7 @@ extern u8 gDjuiHudLockMouse;
 void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);
 void djui_hud_set_font(enum DjuiFontType fontType);
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
+void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
 
 u32 djui_hud_get_screen_width(void);
 u32 djui_hud_get_screen_height(void);

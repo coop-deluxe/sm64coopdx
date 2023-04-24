@@ -2357,6 +2357,28 @@
 
 <br />
 
+## [djui_hud_set_rotation](#djui_hud_set_rotation)
+
+### Lua Example
+`djui_hud_set_rotation(rotation, pivotX, pivotY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| rotation | `integer` |
+| pivotX | `number` |
+| pivotY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
 
 ### Lua Example

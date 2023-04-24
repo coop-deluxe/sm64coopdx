@@ -118,6 +118,7 @@ extern s16 gCutsceneMsgYOffset;
 
 void create_dl_identity_matrix(void);
 void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);
+void create_dl_rotation_matrix(s8 pushOp, f32 a, f32 x, f32 y, f32 z);
 void create_dl_ortho_matrix(void);
 void render_generic_char(u8 c);
 u8 str_ascii_char_to_dialog(char c);

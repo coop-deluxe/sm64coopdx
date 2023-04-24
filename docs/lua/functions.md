@@ -731,6 +731,7 @@
    - [djui_hud_set_mouse_locked](functions-3.md#djui_hud_set_mouse_locked)
    - [djui_hud_set_render_behind_hud](functions-3.md#djui_hud_set_render_behind_hud)
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)
+   - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
 
 <br />
