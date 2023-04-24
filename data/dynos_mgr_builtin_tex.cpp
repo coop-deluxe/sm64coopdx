@@ -1695,6 +1695,32 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_font_normal, "textures/custom_font/custom_font_normal.rgba32.png", 512, 256, 32),
     define_builtin_tex(texture_font_title, "textures/custom_font/custom_font_title.rgba32.png", 1024, 512, 32),
     define_builtin_tex(texture_font_tiny, "textures/custom_font/custom_font_tiny.rgba32.png", 256, 128, 32),
+
+    // Goddard
+    define_builtin_tex(gd_texture_hand_open, "textures/intro_raw/hand_open.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_hand_closed, "textures/intro_raw/hand_closed.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_0, "textures/intro_raw/red_star_0.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_1, "textures/intro_raw/red_star_1.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_2, "textures/intro_raw/red_star_2.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_3, "textures/intro_raw/red_star_3.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_4, "textures/intro_raw/red_star_4.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_5, "textures/intro_raw/red_star_5.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_6, "textures/intro_raw/red_star_6.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_red_star_7, "textures/intro_raw/red_star_7.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_0, "textures/intro_raw/white_star_0.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_1, "textures/intro_raw/white_star_1.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_2, "textures/intro_raw/white_star_2.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_3, "textures/intro_raw/white_star_3.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_4, "textures/intro_raw/white_star_4.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_5, "textures/intro_raw/white_star_5.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_6, "textures/intro_raw/white_star_6.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_white_star_7, "textures/intro_raw/white_star_7.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_sparkle_0, "textures/intro_raw/sparkle_0.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_sparkle_1, "textures/intro_raw/sparkle_1.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_sparkle_2, "textures/intro_raw/sparkle_2.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_sparkle_3, "textures/intro_raw/sparkle_3.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_sparkle_4, "textures/intro_raw/sparkle_4.rgba16.png", 32, 32, 16),
+    define_builtin_tex(gd_texture_sparkle_5, "textures/intro_raw/sparkle_5.rgba16.png", 32, 32, 16),
 };
 
 const Texture* DynOS_Builtin_Tex_GetFromName(const char* aDataName) {

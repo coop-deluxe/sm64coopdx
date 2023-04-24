@@ -3718,6 +3718,14 @@ function djui_hud_set_resolution(resolutionType)
     -- ...
 end
 
+--- @param rotation integer
+--- @param pivotX number
+--- @param pivotY number
+--- @return nil
+function djui_hud_set_rotation(rotation, pivotX, pivotY)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Vec3f
 --- @return nil
