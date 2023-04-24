@@ -99,6 +99,7 @@ static void djui_reset_hud_params(void) {
 
 void djui_render(void) {
     if (gDjuiDisabled) { return; }
+    djui_reset_hud_params();
 
     sSavedDisplayListHead = gDisplayListHead;
     gDjuiHudUtilsZ = 0;
