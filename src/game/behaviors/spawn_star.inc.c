@@ -28,7 +28,7 @@ void spawn_star_number(void) {
     // Check if the star already has a number
     struct Object *starNumber = obj_get_first_with_behavior_id(id_bhvStarNumber);
     for (; starNumber; starNumber = obj_get_next_with_same_behavior_id(starNumber)) {
-        if (starNumber->parentObj == o) {
+        if (!starNumber || starNumber->parentObj == o) {
             break;
         }
     }
@@ -36,6 +36,8 @@ void spawn_star_number(void) {
     // If not, spawn a number
     if (!starNumber) {
         starNumber = spawn_object(o, MODEL_NUMBER, bhvStarNumber);
+    }
+    if (starNumber) {
         starNumber->parentObj = o;
         starNumber->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP; // to make sure it's updated even during time stop
         starNumber->oStarBehavior = (const void *) smlua_override_behavior(o->behavior);
