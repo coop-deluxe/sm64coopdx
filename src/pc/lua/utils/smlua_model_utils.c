@@ -67,61 +67,61 @@ struct ModelUtilsInfo {
 
 #define UNLOADED_ID 0xFFFF
 
-#define MODEL_UTIL_GEO(x, y)        [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = false }
-#define MODEL_UTIL_DL(x, y, z)      [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = false }
-#define MODEL_UTIL_GEO_PERM(x, y)   [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = true  }
-#define MODEL_UTIL_DL_PERM(x, y, z) [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = true  }
+#define MODEL_UTIL_GEO(x, y)           [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = UNLOADED_ID, .permanent = false }
+#define MODEL_UTIL_DL(x, y, z)         [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = UNLOADED_ID, .permanent = false }
+#define MODEL_UTIL_GEO_PERM(x, y, w)   [x] = { .extId = x, .asset = y, .layer = LAYER_OPAQUE, .isDisplayList = false, .loadedId = w,           .permanent = true  }
+#define MODEL_UTIL_DL_PERM(x, y, z, w) [x] = { .extId = x, .asset = y, .layer = z,            .isDisplayList = true,  .loadedId = w,           .permanent = true  }
 
 struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_NONE,                    NULL),
 
     // actors
-    MODEL_UTIL_GEO_PERM(E_MODEL_MARIO,                   mario_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_SMOKE,                   smoke_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_SPARKLES,                sparkles_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BUBBLE,                  bubble_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_SMALL_WATER_SPLASH,      small_water_splash_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_IDLE_WATER_WAVE,         idle_water_wave_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WATER_SPLASH,            water_splash_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WAVE_TRAIL,              wave_trail_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_YELLOW_COIN,             yellow_coin_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_STAR,                    star_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_TRANSPARENT_STAR,        transparent_star_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WOODEN_SIGNPOST,         wooden_signpost_geo),
-    MODEL_UTIL_DL_PERM (E_MODEL_WHITE_PARTICLE_SMALL,    white_particle_small_dl, LAYER_ALPHA),
-    MODEL_UTIL_GEO_PERM(E_MODEL_RED_FLAME,               red_flame_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_FLAME,              blue_flame_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BURN_SMOKE,              burn_smoke_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_LEAVES,                  leaves_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_PURPLE_MARBLE,           purple_marble_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_FISH,                    fish_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_FISH_SHADOW,             fish_shadow_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_SPARKLES_ANIMATION,      sparkles_animation_geo),
-    MODEL_UTIL_DL_PERM (E_MODEL_SAND_DUST,               sand_seg3_dl_0302BCD0, LAYER_ALPHA),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BUTTERFLY,               butterfly_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BURN_SMOKE_UNUSED,       burn_smoke_geo),
-    MODEL_UTIL_DL_PERM (E_MODEL_PEBBLE,                  pebble_seg3_dl_0301CB00, LAYER_ALPHA),
-    MODEL_UTIL_GEO_PERM(E_MODEL_MIST,                    mist_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WHITE_PUFF,              white_puff_geo),
-    MODEL_UTIL_DL_PERM (E_MODEL_WHITE_PARTICLE_DL,       white_particle_dl, LAYER_ALPHA),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WHITE_PARTICLE,          white_particle_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_YELLOW_COIN_NO_SHADOW,   yellow_coin_no_shadow_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_COIN,               blue_coin_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_COIN_NO_SHADOW,     blue_coin_no_shadow_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_WINGED_METAL_CAP, marios_winged_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_METAL_CAP,        marios_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_WING_CAP,         marios_wing_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_CAP,              marios_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BOWSER_KEY_CUTSCENE,     bowser_key_cutscene_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_BOWSER_KEY,              bowser_key_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_RED_FLAME_SHADOW,        red_flame_shadow_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_1UP,                     mushroom_1up_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_RED_COIN,                red_coin_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_RED_COIN_NO_SHADOW,      red_coin_no_shadow_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_NUMBER,                  number_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_EXPLOSION,               explosion_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_DIRT_ANIMATION,          dirt_animation_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_CARTOON_STAR,            cartoon_star_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIO,                   mario_geo,                            MODEL_MARIO),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SMOKE,                   smoke_geo,                            MODEL_SMOKE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SPARKLES,                sparkles_geo,                         MODEL_SPARKLES),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BUBBLE,                  bubble_geo,                           MODEL_BUBBLE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SMALL_WATER_SPLASH,      small_water_splash_geo,               MODEL_SMALL_WATER_SPLASH),
+    MODEL_UTIL_GEO_PERM(E_MODEL_IDLE_WATER_WAVE,         idle_water_wave_geo,                  MODEL_IDLE_WATER_WAVE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WATER_SPLASH,            water_splash_geo,                     MODEL_WATER_SPLASH),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WAVE_TRAIL,              wave_trail_geo,                       MODEL_WAVE_TRAIL),
+    MODEL_UTIL_GEO_PERM(E_MODEL_YELLOW_COIN,             yellow_coin_geo,                      MODEL_YELLOW_COIN),
+    MODEL_UTIL_GEO_PERM(E_MODEL_STAR,                    star_geo,                             MODEL_STAR),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TRANSPARENT_STAR,        transparent_star_geo,                 MODEL_TRANSPARENT_STAR),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WOODEN_SIGNPOST,         wooden_signpost_geo,                  MODEL_WOODEN_SIGNPOST),
+    MODEL_UTIL_DL_PERM (E_MODEL_WHITE_PARTICLE_SMALL,    white_particle_small_dl, LAYER_ALPHA, MODEL_WHITE_PARTICLE_SMALL),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_FLAME,               red_flame_geo,                        MODEL_RED_FLAME),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_FLAME,              blue_flame_geo,                       MODEL_BLUE_FLAME),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BURN_SMOKE,              burn_smoke_geo,                       MODEL_BURN_SMOKE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LEAVES,                  leaves_geo,                           MODEL_LEAVES),
+    MODEL_UTIL_GEO_PERM(E_MODEL_PURPLE_MARBLE,           purple_marble_geo,                    MODEL_PURPLE_MARBLE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_FISH,                    fish_geo,                             MODEL_FISH),
+    MODEL_UTIL_GEO_PERM(E_MODEL_FISH_SHADOW,             fish_shadow_geo,                      MODEL_FISH_SHADOW),
+    MODEL_UTIL_GEO_PERM(E_MODEL_SPARKLES_ANIMATION,      sparkles_animation_geo,               MODEL_SPARKLES_ANIMATION),
+    MODEL_UTIL_DL_PERM (E_MODEL_SAND_DUST,               sand_seg3_dl_0302BCD0, LAYER_ALPHA,   MODEL_SAND_DUST),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BUTTERFLY,               butterfly_geo,                        MODEL_BUTTERFLY),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BURN_SMOKE_UNUSED,       burn_smoke_geo,                       MODEL_BURN_SMOKE_UNUSED),
+    MODEL_UTIL_DL_PERM (E_MODEL_PEBBLE,                  pebble_seg3_dl_0301CB00, LAYER_ALPHA, MODEL_PEBBLE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MIST,                    mist_geo,                             MODEL_MIST),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WHITE_PUFF,              white_puff_geo,                       MODEL_WHITE_PUFF),
+    MODEL_UTIL_DL_PERM (E_MODEL_WHITE_PARTICLE_DL,       white_particle_dl, LAYER_ALPHA,       MODEL_WHITE_PARTICLE_DL),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WHITE_PARTICLE,          white_particle_geo,                   MODEL_WHITE_PARTICLE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_YELLOW_COIN_NO_SHADOW,   yellow_coin_no_shadow_geo,            MODEL_YELLOW_COIN_NO_SHADOW),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_COIN,               blue_coin_geo,                        MODEL_BLUE_COIN),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BLUE_COIN_NO_SHADOW,     blue_coin_no_shadow_geo,              MODEL_BLUE_COIN_NO_SHADOW),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_WINGED_METAL_CAP, marios_winged_metal_cap_geo,          MODEL_MARIOS_WINGED_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_METAL_CAP,        marios_metal_cap_geo,                 MODEL_MARIOS_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_WING_CAP,         marios_wing_cap_geo,                  MODEL_MARIOS_WING_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_MARIOS_CAP,              marios_cap_geo,                       MODEL_MARIOS_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BOWSER_KEY_CUTSCENE,     bowser_key_cutscene_geo,              MODEL_BOWSER_KEY_CUTSCENE),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BOWSER_KEY,              bowser_key_geo,                       MODEL_BOWSER_KEY),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_FLAME_SHADOW,        red_flame_shadow_geo,                 MODEL_RED_FLAME_SHADOW),
+    MODEL_UTIL_GEO_PERM(E_MODEL_1UP,                     mushroom_1up_geo,                     MODEL_1UP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_COIN,                red_coin_geo,                         MODEL_RED_COIN),
+    MODEL_UTIL_GEO_PERM(E_MODEL_RED_COIN_NO_SHADOW,      red_coin_no_shadow_geo,               MODEL_RED_COIN_NO_SHADOW),
+    MODEL_UTIL_GEO_PERM(E_MODEL_NUMBER,                  number_geo,                           MODEL_NUMBER),
+    MODEL_UTIL_GEO_PERM(E_MODEL_EXPLOSION,               explosion_geo,                        MODEL_EXPLOSION),
+    MODEL_UTIL_GEO_PERM(E_MODEL_DIRT_ANIMATION,          dirt_animation_geo,                   MODEL_DIRT_ANIMATION),
+    MODEL_UTIL_GEO_PERM(E_MODEL_CARTOON_STAR,            cartoon_star_geo,                     MODEL_CARTOON_STAR),
 
     // Non-permanent actors
     MODEL_UTIL_GEO(E_MODEL_TRAMPOLINE,              springboard_top_geo),
@@ -442,26 +442,26 @@ struct ModelUtilsInfo sModels[E_MODEL_MAX] = {
     MODEL_UTIL_GEO(E_MODEL_TTM_MOON_SMILEY,                    ttm_geo_000DBC),
 
     // custom models
-    MODEL_UTIL_GEO_PERM(E_MODEL_BUBBLE_PLAYER,             water_bomb_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGI,                     luigi_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_CAP,                luigis_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_METAL_CAP,          luigis_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_WING_CAP,           luigis_wing_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_WINGED_METAL_CAP,   luigis_winged_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_TOAD_PLAYER,               toad_player_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_CAP,                 toads_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_METAL_CAP,           toads_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_WING_CAP,            toads_wing_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGI,                   waluigi_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_CAP,              waluigis_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_METAL_CAP,        waluigis_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_WING_CAP,         waluigis_wing_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_WINGED_METAL_CAP, waluigis_winged_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WARIO,                     wario_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_CAP,                warios_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_METAL_CAP,          warios_metal_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo),
-    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo),
+    MODEL_UTIL_GEO_PERM(E_MODEL_BUBBLE_PLAYER,             water_bomb_geo,                MODEL_BUBBLE_PLAYER),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGI,                     luigi_geo,                     MODEL_LUIGI),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_CAP,                luigis_cap_geo,                MODEL_LUIGIS_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_METAL_CAP,          luigis_metal_cap_geo,          MODEL_LUIGIS_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_WING_CAP,           luigis_wing_cap_geo,           MODEL_LUIGIS_WING_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_LUIGIS_WINGED_METAL_CAP,   luigis_winged_metal_cap_geo,   MODEL_LUIGIS_WINGED_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOAD_PLAYER,               toad_player_geo,               MODEL_TOAD_PLAYER),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_CAP,                 toads_cap_geo,                 MODEL_TOADS_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_METAL_CAP,           toads_metal_cap_geo,           MODEL_TOADS_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_TOADS_WING_CAP,            toads_wing_cap_geo,            MODEL_TOADS_WING_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGI,                   waluigi_geo,                   MODEL_WALUIGI),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_CAP,              waluigis_cap_geo,              MODEL_WALUIGIS_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_METAL_CAP,        waluigis_metal_cap_geo,        MODEL_WALUIGIS_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_WING_CAP,         waluigis_wing_cap_geo,         MODEL_WALUIGIS_WING_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WALUIGIS_WINGED_METAL_CAP, waluigis_winged_metal_cap_geo, MODEL_WALUIGIS_WINGED_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIO,                     wario_geo,                     MODEL_WARIO),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_CAP,                warios_cap_geo,                MODEL_WARIOS_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_METAL_CAP,          warios_metal_cap_geo,          MODEL_WARIOS_METAL_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WING_CAP,           warios_wing_cap_geo,           MODEL_WARIOS_WING_CAP),
+    MODEL_UTIL_GEO_PERM(E_MODEL_WARIOS_WINGED_METAL_CAP,   warios_winged_metal_cap_geo,   MODEL_WARIOS_WINGED_METAL_CAP),
 };
 
 #define MAX_CUSTOM_MODELS 256
@@ -533,17 +533,19 @@ void smlua_model_util_clear(void) {
         struct ModelUtilsInfo* m = sCachedAssets[i];
         if (m == NULL) { continue; }
         //LOG_INFO("Forget: %u -> %u", m->extId, m->loadedId);
-        m->loadedId = UNLOADED_ID;
-        if (m->asset && m->shouldFreeAsset) {
-            free((void*)m->asset);
-            m->asset = NULL;
+        if (!m->permanent) {
+            m->loadedId = UNLOADED_ID;
+            if (m->asset && m->shouldFreeAsset) {
+                free((void*)m->asset);
+                m->asset = NULL;
+            }
         }
         m->shouldFreeAsset = false;
         sCachedAssets[i] = NULL;
         sCachedAssetTaken[i] = false;
     }
 
-    LOG_INFO("Cleared runtime model cache.");
+    //LOG_INFO("Cleared runtime model cache.");
 }
 
 u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, struct AllocOnlyPool* pool, u16 loadedId) {
