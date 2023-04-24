@@ -621,7 +621,7 @@ function bhv_ball_loop(obj)
     end
 
     -- send out object if we touched it
-    local updateRateSend = (obj.oGlobalOwner == my_global_index() and (get_network_area_timer() - obj.oNetworkTime) > 5)
+    local updateRateSend = (obj.oGlobalOwner == my_global_index() and (get_network_area_timer() - obj.oNetworkTime) > 2)
     if gBallTouchedLocal or updateRateSend then
         if gBallTouchedLocal then
             obj.oGlobalOwner = my_global_index()

@@ -5,6 +5,8 @@
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
+#include "pc/utils/misc.h"
+#include "pc/djui/djui_panel_join_message.h"
 //#define DISABLE_MODULE_LOG 1
 #include "pc/debuglog.h"
 
@@ -22,8 +24,9 @@ static struct OffsetGroup sOffsetGroup[2] = { 0 };
 static bool* sOffsetGroupsCompleted = NULL;
 static u64 sOffsetGroupCount = 0;
 
-u64 sTotalDownloadBytes = 0;
-extern float gDownloadProgress;
+static u64 sTotalDownloadBytes = 0;
+static f32 sDownloadStartTime = 0;
+static u64 sDownloadReceivedBytes = 0;
 
 static bool network_start_offset_group(struct OffsetGroup* og);
 static void network_update_offset_groups(void);
@@ -32,6 +35,9 @@ static void mark_groups_loaded_from_hash(void);
 void network_start_download_requests(void) {
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
+    gDownloadProgressInf = 0;
+    sDownloadStartTime = clock_elapsed();
+    sDownloadReceivedBytes = 0;
 
     sOffsetGroupCount = (gRemoteMods.size / GROUP_SIZE) + 1;
 
@@ -453,7 +459,31 @@ after_poured:;
 
     // update progress
     sTotalDownloadBytes += wroteBytes;
-    gDownloadProgress = (float)sTotalDownloadBytes / (float)gRemoteMods.size;
+    gDownloadProgress = (f32)sTotalDownloadBytes / (f32)gRemoteMods.size;
+    gDownloadProgressInf += 0.01f * ((f32)wroteBytes / (f32)CHUNK_SIZE);
+
+    // update speed
+    f32 elapsed = clock_elapsed() - sDownloadStartTime;
+    sDownloadReceivedBytes += wroteBytes;
+    f32 bytesPerSecond = (f32)sDownloadReceivedBytes / elapsed;
+
+    // update estimated time
+    u64 remaining = gRemoteMods.size - sTotalDownloadBytes;
+    if (sTotalDownloadBytes > 0 && remaining > 0) {
+        u32 seconds = (remaining / bytesPerSecond) + 1;
+        u32 minutes = seconds / 60;
+        u32 hours = minutes / 60;
+
+        seconds = seconds % 60;
+        minutes = minutes % 60;
+        if (hours) {
+            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%uh %um %us", hours, minutes, seconds);
+        } else if (minutes) {
+            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%um %us", minutes, seconds);
+        } else {
+            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%us", seconds);
+        }
+    }
 
     network_update_offset_groups();
 }

@@ -11,4 +11,4 @@ struct DjuiProgressBar {
     float max;
 };
 
-struct DjuiProgressBar* djui_progress_bar_create(struct DjuiBase* parent, float* value, float min, float max);
+struct DjuiProgressBar* djui_progress_bar_create(struct DjuiBase* parent, float* value, float min, float max, bool infinite);

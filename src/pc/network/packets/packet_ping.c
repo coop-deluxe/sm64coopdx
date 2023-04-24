@@ -14,11 +14,11 @@ void network_send_ping(struct NetworkPlayer* toNp) {
     packet_write(&p, &timestamp,        sizeof(f64));
     network_send_to(toNp->localIndex, &p);
 
-    LOG_INFO("tx ping");
+    //LOG_INFO("tx ping");
 }
 
 void network_receive_ping(struct Packet* p) {
-    LOG_INFO("rx ping");
+    //LOG_INFO("rx ping");
 
     u8 globalIndex;
     f64 timestamp;
