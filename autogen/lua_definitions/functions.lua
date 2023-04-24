@@ -3663,6 +3663,18 @@ function djui_hud_print_text(message, x, y, scale)
     -- ...
 end
 
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- @return nil
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
 --- @param x number
 --- @param y number
 --- @param width number
@@ -3682,6 +3694,11 @@ end
 --- @param height number
 --- @return nil
 function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
+    -- ...
+end
+
+--- @return nil
+function djui_hud_reset_color()
     -- ...
 end
 
@@ -8415,6 +8432,20 @@ end
 --- @param height number
 --- @return nil
 function hud_render_power_meter(health, x, y, width, height)
+    -- ...
+end
+
+--- @param health integer
+--- @param prevX number
+--- @param prevY number
+--- @param prevWidth number
+--- @param prevHeight number
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @return nil
+function hud_render_power_meter_interpolated(health, prevX, prevY, prevWidth, prevHeight, x, y, width, height)
     -- ...
 end
 

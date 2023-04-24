@@ -9,6 +9,17 @@ gGlobalSyncTable.health = true
 
 showSelfTag = false
 
+gStateExtras = {}
+for i = 0, (MAX_PLAYERS - 1) do
+    gStateExtras[i] = {}
+    local e = gStateExtras[i]
+    e.prevPos = {}
+    e.prevPos.x = 0
+    e.prevPos.y = 0
+    e.prevPos.z = 0
+    e.prevScale = 1
+end
+
 for k, v in pairs(gActiveMods) do
     local name = v.name:lower()
     if v.enabled and (name:find("hide") or name:find("hns") or name:find("hunt")) then
@@ -62,16 +73,19 @@ function djui_hud_set_adjusted_color(r, g, b, a)
     djui_hud_set_color(r * multiplier, g * multiplier, b * multiplier, a)
 end
 
-function djui_hud_print_outlined_text(text, x, y, scale, r, g, b, a, outlineDarkness)
+function djui_hud_print_outlined_text(text, prevx, prevy, prevscale, x, y, scale, r, g, b, a, outlineDarkness)
+    djui_hud_set_resolution(RESOLUTION_N64)
     -- render outline
     djui_hud_set_adjusted_color(r * outlineDarkness, g * outlineDarkness, b * outlineDarkness, a)
-    djui_hud_print_text(text, x - (1*(scale*2)), y, scale)
-    djui_hud_print_text(text, x + (1*(scale*2)), y, scale)
-    djui_hud_print_text(text, x, y - (1*(scale*2)), scale)
-    djui_hud_print_text(text, x, y + (1*(scale*2)), scale)
+    local offset = (1*(scale*2))
+    local prevoffset = (1*(prevscale*2))
+    djui_hud_print_text_interpolated(text, prevx - prevoffset, prevy,              prevscale, x - offset, y,          scale)
+    djui_hud_print_text_interpolated(text, prevx + prevoffset, prevy,              prevscale, x + offset, y,          scale)
+    djui_hud_print_text_interpolated(text, prevx,              prevy - prevoffset, prevscale, x,          y - offset, scale)
+    djui_hud_print_text_interpolated(text, prevx,              prevy + prevoffset, prevscale, x,          y + offset, scale)
     -- render text
     djui_hud_set_adjusted_color(r, g, b, 255)
-    djui_hud_print_text(text, x, y, scale)
+    djui_hud_print_text_interpolated(text, prevx, prevy, prevscale, x, y, scale)
     djui_hud_set_color(255, 255, 255, 255)
 end
 
@@ -113,13 +127,24 @@ function on_hud_render()
             network_player_palette_to_color(gNetworkPlayers[i], SHIRT, color)
             local measure = djui_hud_measure_text(name) * scale * 0.5
             local alpha = if_then_else(m.action ~= ACT_CROUCHING and m.action ~= ACT_START_CRAWLING and m.action ~= ACT_CRAWLING and m.action ~= ACT_STOP_CRAWLING, 255, 100)
-            djui_hud_print_outlined_text(name, out.x - measure, out.y, scale, color.r, color.g, color.b, alpha, 0.25)
+
+            local e = gStateExtras[i]
+
+            djui_hud_print_outlined_text(name, e.prevPos.x - measure, e.prevPos.y, e.prevScale, out.x - measure, out.y, scale, color.r, color.g, color.b, alpha, 0.25)
 
             if m.playerIndex ~= 0 and gGlobalSyncTable.health then
                 djui_hud_set_adjusted_color(255, 255, 255, alpha)
                 local healthScale = 75 * scale
-                hud_render_power_meter(m.health, out.x - (healthScale * 0.5), out.y - healthScale, healthScale, healthScale)
+                local prevHealthScale = 75 * e.prevScale
+                hud_render_power_meter_interpolated(m.health,
+                    e.prevPos.x - (prevHealthScale * 0.5), e.prevPos.y - prevHealthScale, prevHealthScale, prevHealthScale,
+                    out.x - (healthScale * 0.5), out.y - healthScale, healthScale, healthScale)
             end
+
+            e.prevPos.x = out.x
+            e.prevPos.y = out.y
+            e.prevPos.z = out.z
+            e.prevScale = scale
         end
     end
 end

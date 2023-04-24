@@ -1931,7 +1931,7 @@ static struct LuaObjectField sSpawnParticlesInfoFields[LUA_SPAWN_PARTICLES_INFO_
     { "forwardVelBase",  LVT_S8,  offsetof(struct SpawnParticlesInfo, forwardVelBase),  false, LOT_NONE },
     { "forwardVelRange", LVT_S8,  offsetof(struct SpawnParticlesInfo, forwardVelRange), false, LOT_NONE },
     { "gravity",         LVT_S8,  offsetof(struct SpawnParticlesInfo, gravity),         false, LOT_NONE },
-    { "model",           LVT_U8,  offsetof(struct SpawnParticlesInfo, model),           true,  LOT_NONE },
+    { "model",           LVT_U16, offsetof(struct SpawnParticlesInfo, model),           true,  LOT_NONE },
     { "offsetY",         LVT_S8,  offsetof(struct SpawnParticlesInfo, offsetY),         false, LOT_NONE },
     { "sizeBase",        LVT_F32, offsetof(struct SpawnParticlesInfo, sizeBase),        false, LOT_NONE },
     { "sizeRange",       LVT_F32, offsetof(struct SpawnParticlesInfo, sizeRange),       false, LOT_NONE },

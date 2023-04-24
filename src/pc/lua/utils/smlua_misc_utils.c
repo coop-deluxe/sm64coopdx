@@ -125,6 +125,45 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
         djui_hud_render_texture(&sPowerMeterTexturesInfo[numWedges + 1], x + width / 4, y + height / 4, width / 64,  height / 64);
     }
 }
+void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
+    extern const u8 texture_power_meter_left_side[];
+    extern const u8 texture_power_meter_right_side[];
+    extern const u8 texture_power_meter_full[];
+    extern const u8 texture_power_meter_seven_segments[];
+    extern const u8 texture_power_meter_six_segments[];
+    extern const u8 texture_power_meter_five_segments[];
+    extern const u8 texture_power_meter_four_segments[];
+    extern const u8 texture_power_meter_three_segments[];
+    extern const u8 texture_power_meter_two_segments[];
+    extern const u8 texture_power_meter_one_segments[];
+    static struct TextureInfo sPowerMeterTexturesInfo[] = {
+        { (u8*)texture_power_meter_left_side,      8, 32, 64 },
+        { (u8*)texture_power_meter_right_side,     8, 32, 64 },
+        { (u8*)texture_power_meter_one_segments,   8, 32, 32 },
+        { (u8*)texture_power_meter_two_segments,   8, 32, 32 },
+        { (u8*)texture_power_meter_three_segments, 8, 32, 32 },
+        { (u8*)texture_power_meter_four_segments,  8, 32, 32 },
+        { (u8*)texture_power_meter_five_segments,  8, 32, 32 },
+        { (u8*)texture_power_meter_six_segments,   8, 32, 32 },
+        { (u8*)texture_power_meter_seven_segments, 8, 32, 32 },
+        { (u8*)texture_power_meter_full,           8, 32, 32 },
+    };
+
+    djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[0],
+        prevX, prevY, prevWidth / 64, prevHeight / 64,
+        x,     y,     width     / 64, height     / 64);
+
+    djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[1],
+        prevX + prevWidth / 2, prevY, prevWidth / 64, prevHeight / 64,
+        x     + width     / 2, y,     width     / 64, height     / 64);
+
+    s32 numWedges = MIN(MAX(health >> 8, 0), 8);
+    if (numWedges != 0) {
+        djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[numWedges + 1],
+            prevX + prevWidth / 4, prevY + prevHeight / 4, prevWidth / 64, prevHeight / 64,
+            x     + width     / 4, y     + height     / 4, width     / 64, height     / 64);
+    }
+}
 
 ///
 

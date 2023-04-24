@@ -79,7 +79,7 @@ static void djui_hud_size_translate(f32* size) {
  // interp //
 ////////////
 
-#define MAX_INTERP_HUD 128
+#define MAX_INTERP_HUD 512
 struct InterpHud {
     Gfx* headPos;
     f32 z;
@@ -228,7 +228,7 @@ f32 djui_hud_measure_text(const char* message) {
     return width * font->defaultFontScale;
 }
 
-void djui_hud_print_text(const char* message, float x, float y, float scale) {
+void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
     if (message == NULL) { return; }
     gDjuiHudUtilsZ += 0.01f;
 
@@ -273,6 +273,72 @@ void djui_hud_print_text(const char* message, float x, float y, float scale) {
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+}
+
+void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
+    if (message == NULL) { return; }
+    f32 savedZ = gDjuiHudUtilsZ;
+    gDjuiHudUtilsZ += 0.01f;
+
+    const struct DjuiFont* font = gDjuiFonts[sFont];
+    f32 fontScale = font->defaultFontScale * scale;
+
+    // setup display list
+    if (font->textBeginDisplayList != NULL) {
+        gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
+    }
+
+    Gfx* savedHeadPos = gDisplayListHead;
+
+    // translate position
+    f32 translatedX = x;
+    f32 translatedY = y;
+    djui_hud_position_translate(&translatedX, &translatedY);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+
+    // compute font size
+    f32 translatedFontSize = fontScale;
+    djui_hud_size_translate(&translatedFontSize);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
+
+    // render the line
+    f32 addX = 0;
+    char* c = (char*)message;
+    while (*c != '\0') {
+        f32 charWidth = font->char_width(c);
+
+        if (*c == '\n' && *c == ' ') {
+            addX += charWidth;
+            c++;
+            continue;
+        }
+
+        // render
+        font->render_char(c);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, charWidth + addX, 0, 0);
+        addX = 0;
+
+        c = djui_unicode_next_char(c);
+    }
+
+    // pop
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+
+    if (sInterpHudCount >= MAX_INTERP_HUD) { return; }
+    struct InterpHud* interp = &sInterpHuds[sInterpHudCount++];
+    interp->headPos = savedHeadPos;
+    interp->prevX = prevX;
+    interp->prevY = prevY;
+    interp->prevScaleW = prevScale;
+    interp->prevScaleH = prevScale;
+    interp->x = x;
+    interp->y = y;
+    interp->scaleW = scale;
+    interp->scaleH = scale;
+    interp->width = font->defaultFontScale;
+    interp->height = font->defaultFontScale;
+    interp->z = savedZ;
+    interp->resolution = sResolution;
 }
 
 void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
