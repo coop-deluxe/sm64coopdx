@@ -81,55 +81,55 @@
             "sound": "0D"
         },
         "inst14": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "0E"
         },
         "inst15": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "0F"
         },
         "inst16": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "10"
         },
         "inst17": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "11"
         },
         "inst18": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "12"
         },
         "inst19": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "13"
         },
         "inst20": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "14"
         },
         "inst21": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "15"
         },
         "inst22": {
-            "ifdef": ["VERSION_US", "VERSION_EU"],
+            "ifdef": ["EXTENDED_CHAR_SOUNDS"],
             "release_rate": 208,
             "envelope": "envelope0",
             "sound": "16"

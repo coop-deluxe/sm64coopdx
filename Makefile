@@ -486,10 +486,11 @@ ifeq ($(TARGET_BITS), 32)
   _ := $(shell rm -rf sound/samples/sfx_custom_luigi_peach/*.aiff)
   _ := $(shell rm -rf sound/samples/sfx_custom_wario/*.aiff)
   _ := $(shell rm -rf sound/samples/sfx_custom_wario_peach/*.aiff)
-endif
 
 # Copy missing character sounds from mario sound banks
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_mario_sounds.py)
+
+endif
 
 # Copy missing instrument samples from the music sound banks
 _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
