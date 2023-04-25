@@ -11,7 +11,9 @@ void bhv_1up_interact(void) {
             marioState->hurtCounter = 0;
         }
 #ifdef VERSION_SH
-        queue_rumble_data(5, 80);
+        if (marioState->playerIndex == 0) {
+            queue_rumble_data(5, 80);
+        }
 #endif
         network_send_collect_item(o);
     }

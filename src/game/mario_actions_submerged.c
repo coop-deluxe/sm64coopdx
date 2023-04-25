@@ -577,7 +577,7 @@ static s32 act_breaststroke(struct MarioState *m) {
         reset_float_globals(m);
     }
 
-    if (m->actionTimer < 6) {
+    if (m->actionTimer < 6 && m->playerIndex == 0) {
         func_sh_8024CA04();
     }
 

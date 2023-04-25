@@ -1593,7 +1593,9 @@ s32 act_teleport_fade_out(struct MarioState *m) {
 
     if (m->actionTimer == 0) {
         queue_rumble_data_mario(m, 30, 70);
-        func_sh_8024C89C(2);
+        if (m->playerIndex == 0) {
+            func_sh_8024C89C(2);
+        }
     }
 
     m->flags |= MARIO_TELEPORTING;
@@ -1620,7 +1622,9 @@ s32 act_teleport_fade_in(struct MarioState *m) {
 
     if (m->actionTimer == 0) {
         queue_rumble_data_mario(m, 30, 70);
-        func_sh_8024C89C(2);
+        if (m->playerIndex == 0) {
+            func_sh_8024C89C(2);
+        }
     }
 
     if (m->actionTimer < 32) {
