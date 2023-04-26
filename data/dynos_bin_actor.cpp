@@ -269,6 +269,7 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
                 // Remember the geo layout count
                 s32 prevGeoLayoutCount = _GfxData->mGeoLayouts.Count();
 
+                DynOS_Read_Source(_GfxData, fstring("%s/texture.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/geo.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/collision.inc.c", _Folder.c_str()));
