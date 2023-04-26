@@ -91,7 +91,7 @@ void djui_lua_error(char* text) {
     sDjuiLuaErrorTimeout = 30 * 5;
 }
 
-static void djui_reset_hud_params(void) {
+void djui_reset_hud_params(void) {
     djui_hud_set_resolution(RESOLUTION_DJUI);
     djui_hud_set_font(FONT_NORMAL);
     djui_hud_set_rotation(0, 0, 0);
@@ -108,8 +108,10 @@ void djui_render(void) {
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 
-    djui_reset_hud_params();
-    smlua_call_event_hooks_with_reset_func(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
+    if (!gDjuiRenderBehindHud) {
+        djui_reset_hud_params();
+        smlua_call_event_hooks_with_reset_func(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
+    }
 
     djui_panel_update();
     djui_popup_update();

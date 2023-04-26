@@ -27912,6 +27912,25 @@ int smlua_func_obj_count_objects_with_behavior_id(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_collided_object(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_collided_object", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_collided_object"); return 0; }
+    s16 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_collided_object"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, obj_get_collided_object(o, index));
+
+    return 1;
+}
+
 int smlua_func_obj_get_first(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30798,6 +30817,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_check_hitbox_overlap", smlua_func_obj_check_hitbox_overlap);
     smlua_bind_function(L, "obj_check_overlap_with_hitbox_params", smlua_func_obj_check_overlap_with_hitbox_params);
     smlua_bind_function(L, "obj_count_objects_with_behavior_id", smlua_func_obj_count_objects_with_behavior_id);
+    smlua_bind_function(L, "obj_get_collided_object", smlua_func_obj_get_collided_object);
     smlua_bind_function(L, "obj_get_first", smlua_func_obj_get_first);
     smlua_bind_function(L, "obj_get_first_with_behavior_id", smlua_func_obj_get_first_with_behavior_id);
     smlua_bind_function(L, "obj_get_first_with_behavior_id_and_field_f32", smlua_func_obj_get_first_with_behavior_id_and_field_f32);

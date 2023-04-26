@@ -260,10 +260,8 @@ void end_master_display_list(void) {
         draw_profiler();
     }
 
-    if (!gDjuiRenderBehindHud || gDjuiPanelPauseCreated) {
-        extern void djui_render(void);
-        djui_render();
-    }
+    extern void djui_render(void);
+    djui_render();
 
     gDPFullSync(gDisplayListHead++);
     gSPEndDisplayList(gDisplayListHead++);
