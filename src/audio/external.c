@@ -25,7 +25,7 @@
 // N.B. sound banks are different from the audio banks referred to in other
 // files. We should really fix our naming to be less ambiguous...
 #define MAX_BACKGROUND_MUSIC_QUEUE_SIZE 6
-#define MAX_CHANNELS_PER_SOUND_BANK 1
+#define MAX_CHANNELS_PER_SOUND_BANK 8
 #define SOUND_INDEX_COUNT 40
 
 #define SEQUENCE_NONE 0xFF
@@ -393,9 +393,9 @@ STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == 64,
 u8 sCurrentBackgroundMusicSeqId = SEQUENCE_NONE;
 u8 sMusicDynamicDelay = 0;
 u8 sSoundBankUsedListBack[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-u8 sSoundBankFreeListFront[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+u8 sSoundBankFreeListFront[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 8, 8 };
 u8 sNumSoundsInBank[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // only used for debugging
-u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 8, 8, 8, 4, 4, 4, 4, 1, 4, 3, 8, 8 };
 
 // Banks 2 and 7 both grew from 0x30 sounds to 0x40 in size in US.
 #ifdef VERSION_JP
@@ -452,10 +452,9 @@ s8 D_SH_80343E48_pad[0x8];
 #endif
 
 struct Sound sSoundRequests[0x100];
-// Curiously, this has size 3, despite SEQUENCE_PLAYERS == 4 on EU
-struct ChannelVolumeScaleFade D_80360928[3][CHANNELS_MAX];
-u8 sUsedChannelsForSoundBank[SOUND_BANK_COUNT];
-u8 sCurrentSound[SOUND_BANK_COUNT][MAX_CHANNELS_PER_SOUND_BANK]; // index into sSoundBanks
+struct ChannelVolumeScaleFade D_80360928[SEQUENCE_PLAYERS][CHANNELS_MAX] = { 0 };
+u8 sUsedChannelsForSoundBank[SOUND_BANK_COUNT] = { 0 };
+u8 sCurrentSound[SOUND_BANK_COUNT][MAX_CHANNELS_PER_SOUND_BANK] = { 0 }; // index into sSoundBanks
 
 /**
  * For each sound bank, a pool containing the currently active sounds for that bank.
@@ -1401,7 +1400,7 @@ static void update_game_sound(void) {
     for (bank = 0; bank < SOUND_BANK_COUNT; bank++) {
         select_current_sounds(bank);
 
-        for (i = 0; i < MAX_CHANNELS_PER_SOUND_BANK; i++) {
+        for (i = 0; i < sUsedChannelsForSoundBank[bank]; i++) {
             soundIndex = sCurrentSound[bank][i];
 
             if (soundIndex < SOUND_INDEX_COUNT && sSoundBanks[bank][soundIndex].soundStatus != SOUND_STATUS_STOPPED) {
@@ -1750,11 +1749,12 @@ static void update_game_sound(void) {
             // Increment to the next channel that this bank owns
             channelIndex++;
         }
-
+        
         // Increment to the first channel index of the next bank
         // (In practice sUsedChannelsForSoundBank[i] = sMaxChannelsForSoundBank[i] = 1, so this
         // doesn't do anything)
         channelIndex += sMaxChannelsForSoundBank[bank] - sUsedChannelsForSoundBank[bank];
+        
     }
 }
 
