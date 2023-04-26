@@ -7,11 +7,11 @@
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #define SEQUENCE_PLAYERS 4
-#define SEQUENCE_CHANNELS 128
+#define SEQUENCE_CHANNELS 48
 #define SEQUENCE_LAYERS 64
 #else
 #define SEQUENCE_PLAYERS 3
-#define SEQUENCE_CHANNELS 129
+#define SEQUENCE_CHANNELS 32
 #ifdef VERSION_JP
 #define SEQUENCE_LAYERS 48
 #else
@@ -20,7 +20,7 @@
 #endif
 
 #define LAYERS_MAX       8
-#define CHANNELS_MAX     64
+#define CHANNELS_MAX     32
 
 #define NO_LAYER ((struct SequenceChannelLayer *)(-1))
 

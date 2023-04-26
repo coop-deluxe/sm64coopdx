@@ -38,9 +38,9 @@ struct Note *gNotes;
 static u8 pad[4];
 #endif
 
-struct SequencePlayer gSequencePlayers[SEQUENCE_PLAYERS] = { 0 };
-struct SequenceChannel gSequenceChannels[SEQUENCE_CHANNELS] = { 0 };
-struct SequenceChannelLayer gSequenceLayers[SEQUENCE_LAYERS] = { 0 };
+struct SequencePlayer gSequencePlayers[SEQUENCE_PLAYERS];
+struct SequenceChannel gSequenceChannels[SEQUENCE_CHANNELS];
+struct SequenceChannelLayer gSequenceLayers[SEQUENCE_LAYERS];
 
 struct SequenceChannel gSequenceChannelNone;
 struct AudioListItem gLayerFreeList;

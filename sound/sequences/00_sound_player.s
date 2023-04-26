@@ -18,96 +18,20 @@ seq_setmutescale 0
   seq_setvol 127
 .endif
 seq_settempo 120
-seq_initchannels_extended 0xffffffffffffffff
-
-# SOUND_BANK_ACTION
-seq_startchannel_extended 0, .channel0
-seq_startchannel_extended 1, .channel0
-seq_startchannel_extended 2, .channel0
-seq_startchannel_extended 3, .channel0
-seq_startchannel_extended 4, .channel0
-seq_startchannel_extended 5, .channel0
-seq_startchannel_extended 6, .channel0
-seq_startchannel_extended 7, .channel0
-
-# SOUND_BANK_MOVING
-seq_startchannel_extended 8, .channel1
-seq_startchannel_extended 9, .channel1
-seq_startchannel_extended 10, .channel1
-seq_startchannel_extended 11, .channel1
-seq_startchannel_extended 12, .channel1
-seq_startchannel_extended 13, .channel1
-seq_startchannel_extended 14, .channel1
-seq_startchannel_extended 15, .channel1
-
-# SOUND_BANK_MARIO_VOICE
-seq_startchannel_extended 16, .channel2
-seq_startchannel_extended 17, .channel2
-seq_startchannel_extended 18, .channel2
-seq_startchannel_extended 19, .channel2
-seq_startchannel_extended 20, .channel2
-seq_startchannel_extended 21, .channel2
-seq_startchannel_extended 22, .channel2
-seq_startchannel_extended 23, .channel2
-
-# SOUND_BANK_GENERAL
-seq_startchannel_extended 24, .channel38
-seq_startchannel_extended 25, .channel38
-seq_startchannel_extended 26, .channel38
-seq_startchannel_extended 27, .channel38
-
-# SOUND_BANK_ENV
-seq_startchannel_extended 28, .channel4
-seq_startchannel_extended 29, .channel4
-seq_startchannel_extended 30, .channel4
-seq_startchannel_extended 31, .channel4
-
-# SOUND_BANK_OBJ
-seq_startchannel_extended 32, .channel59
-seq_startchannel_extended 33, .channel59
-seq_startchannel_extended 34, .channel59
-seq_startchannel_extended 35, .channel59
-
-# SOUND_BANK_AIR
-seq_startchannel_extended 36, .channel6
-seq_startchannel_extended 37, .channel6
-seq_startchannel_extended 38, .channel6
-seq_startchannel_extended 39, .channel6
-
-# SOUND_BANK_MENU
-seq_startchannel_extended 40, .channel7
-
-# SOUND_BANK_GENERAL2
-seq_startchannel_extended 41, .channel38
-seq_startchannel_extended 42, .channel38
-seq_startchannel_extended 43, .channel38
-seq_startchannel_extended 44, .channel38
-
-# SOUND_BANK_OBJ2
-seq_startchannel_extended 45, .channel59
-seq_startchannel_extended 46, .channel59
-seq_startchannel_extended 47, .channel59
-
-# SOUND_BANK_LUIGI_VOICE
-seq_startchannel_extended 48, .channel10
-seq_startchannel_extended 49, .channel10
-seq_startchannel_extended 50, .channel10
-seq_startchannel_extended 51, .channel10
-seq_startchannel_extended 52, .channel10
-seq_startchannel_extended 53, .channel10
-seq_startchannel_extended 54, .channel10
-seq_startchannel_extended 55, .channel10
-
-# SOUND_BANK_WARIO_VOICE
-seq_startchannel_extended 56, .channel11
-seq_startchannel_extended 57, .channel11
-seq_startchannel_extended 58, .channel11
-seq_startchannel_extended 59, .channel11
-seq_startchannel_extended 60, .channel11
-seq_startchannel_extended 61, .channel11
-seq_startchannel_extended 62, .channel11
-seq_startchannel_extended 63, .channel11
-
+#seq_initchannels 0xfff
+seq_initchannels_extended 0xfff
+seq_startchannel 0, .channel0
+seq_startchannel 1, .channel1
+seq_startchannel 2, .channel2
+seq_startchannel 3, .channel38
+seq_startchannel 4, .channel4
+seq_startchannel 5, .channel59
+seq_startchannel 6, .channel6
+seq_startchannel 7, .channel7
+seq_startchannel 8, .channel38
+seq_startchannel 9, .channel59
+seq_startchannel 10, .channel10
+seq_startchannel 11, .channel11
 .seq_loop:
 seq_delay 20000
 seq_jump .seq_loop

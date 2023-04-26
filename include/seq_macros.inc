@@ -24,12 +24,6 @@
     .byte (\b - sequence_start) >> 8, (\b - sequence_start) & 0xff
 .endm
 
-.macro seq_startchannel_extended a, b
-    .byte 0xb0
-    .byte \a
-    .byte (\b - sequence_start) >> 8, (\b - sequence_start) & 0xff
-.endm
-
 .macro seq_subtract a
     .byte 0xc8
     .byte \a
@@ -86,12 +80,12 @@
 
 .macro seq_disablechannels_extended a
     .byte 0xc0
-    .byte (\a >> 56) & 0xff, (\a >> 48) & 0xff, (\a >> 40) & 0xff, (\a >> 32) & 0xff, (\a >> 24) & 0xff, (\a >> 16) & 0xff, (\a >> 8) & 0xff, \a & 0xff
+    .byte \a >> 24, \a >> 16, \a >> 8, \a & 0xff
 .endm
 
 .macro seq_initchannels_extended a
     .byte 0xc1
-    .byte (\a >> 56) & 0xff, (\a >> 48) & 0xff, (\a >> 40) & 0xff, (\a >> 32) & 0xff, (\a >> 24) & 0xff, (\a >> 16) & 0xff, (\a >> 8) & 0xff, \a & 0xff
+    .byte \a >> 24, \a >> 16, \a >> 8, \a & 0xff
 .endm
 
 .macro seq_changevol a
