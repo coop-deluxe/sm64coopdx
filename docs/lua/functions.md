@@ -1601,6 +1601,7 @@
    - [obj_check_hitbox_overlap](functions-5.md#obj_check_hitbox_overlap)
    - [obj_check_overlap_with_hitbox_params](functions-5.md#obj_check_overlap_with_hitbox_params)
    - [obj_count_objects_with_behavior_id](functions-5.md#obj_count_objects_with_behavior_id)
+   - [obj_get_collided_object](functions-5.md#obj_get_collided_object)
    - [obj_get_first](functions-5.md#obj_get_first)
    - [obj_get_first_with_behavior_id](functions-5.md#obj_get_first_with_behavior_id)
    - [obj_get_first_with_behavior_id_and_field_f32](functions-5.md#obj_get_first_with_behavior_id_and_field_f32)

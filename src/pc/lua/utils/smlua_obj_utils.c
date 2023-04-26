@@ -244,6 +244,13 @@ struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o
     return NULL;
 }
 
+struct Object *obj_get_collided_object(struct Object *o, s16 index) {
+    if (o && o->numCollidedObjs != 0 && o->numCollidedObjs > index) {
+        return o->collidedObjs[index];
+    }
+    return NULL;
+}
+
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId) {
     static struct SpawnParticlesInfo sTmpSpi = { 0 };
     memset(&sTmpSpi, 0, sizeof(struct SpawnParticlesInfo));

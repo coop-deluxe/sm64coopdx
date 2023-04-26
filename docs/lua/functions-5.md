@@ -116,6 +116,27 @@
 
 <br />
 
+## [obj_get_collided_object](#obj_get_collided_object)
+
+### Lua Example
+`local ObjectValue = obj_get_collided_object(o, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| index | `integer` |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object *obj_get_collided_object(struct Object *o, s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_get_first](#obj_get_first)
 
 ### Lua Example

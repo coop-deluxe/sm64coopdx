@@ -8594,6 +8594,13 @@ function obj_count_objects_with_behavior_id(behaviorId)
     -- ...
 end
 
+--- @param o Object
+--- @param index integer
+--- @return Object
+function obj_get_collided_object(o, index)
+    -- ...
+end
+
 --- @param objList ObjectList
 --- @return Object
 function obj_get_first(objList)

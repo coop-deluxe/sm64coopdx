@@ -32,6 +32,8 @@ struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum Be
 
 s32 obj_count_objects_with_behavior_id(enum BehaviorId behaviorId);
 
+struct Object *obj_get_collided_object(struct Object *o, s16 index);
+
 // misc obj helpers
 
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);
