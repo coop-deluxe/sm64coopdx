@@ -26,6 +26,7 @@ struct GfxWindowManagerAPI {
     void (*set_clipboard_text)(char*);
     void (*set_cursor_visible)(bool);
     void (*delay)(unsigned int ms);
+    int  (*get_max_msaa)(void);
 };
 
 #endif

@@ -58,10 +58,10 @@ f32 djui_gfx_get_scale(void) {
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {
-    {{{ 0, -1, 0 }, 0, {   0, 512 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 512, 512 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 512,   0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0,     0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, -1, 0 }, 0, {   0,  2048 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, -1, 0 }, 0, { 2048, 2048 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1,  0, 0 }, 0, { 2048,    0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0,  0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_image[] = {
@@ -71,7 +71,7 @@ const Gfx dl_djui_image[] = {
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsDPSetTextureFilter(G_TF_POINT),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPLoadTextureBlock(NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
+    gsDPLoadTextureBlock(NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0),
     gsSPExecuteDjui(G_TEXOVERRIDE_DJUI),
     gsSPVertex(vertex_djui_image, 4, 0),
     gsSPExecuteDjui(G_TEXCLIP_DJUI),
@@ -121,10 +121,10 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
 
     f32 aspect = tileH ? ((f32)tileW / (f32)tileH) : 1;
     // I don't know why adding 1 to all of the UVs seems to fix rendering, but it does...
-    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 512) / w + 1, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 512) / w + 1, ((tileY + tileH) * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 512) / w + 1, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 512) / w + 1, ( tileY          * 512) / h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w, ((tileY + tileH) * 2048.0f) / (f32)h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w, ((tileY + tileH) * 2048.0f) / (f32)h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w, ( tileY          * 2048.0f) / (f32)h }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w, ( tileY          * 2048.0f) / (f32)h }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);
     gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
@@ -134,7 +134,7 @@ void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, 
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
 
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
-	gDPLoadTextureBlockWithoutTexture(gDisplayListHead++, NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
+	gDPLoadTextureBlockWithoutTexture(gDisplayListHead++, NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
 
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
 

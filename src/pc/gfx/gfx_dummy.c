@@ -80,6 +80,10 @@ static void gfx_dummy_wm_delay(u32 ms) {
     sleep_ms(ms);
 }
 
+static int gfx_dummy_get_max_msaa(void) {
+    return 0;
+}
+
 static void gfx_dummy_wm_swap_buffers_begin(void) {
 }
 
@@ -201,7 +205,8 @@ struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_get_clipboard_text,
     gfx_dummy_wm_set_clipboard_text,
     gfx_dummy_wm_set_cursor_visible,
-    gfx_dummy_wm_delay
+    gfx_dummy_wm_delay,
+    gfx_dummy_get_max_msaa,
 };
 
 struct GfxRenderingAPI gfx_dummy_renderer_api = {

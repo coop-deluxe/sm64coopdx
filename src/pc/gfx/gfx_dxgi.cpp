@@ -655,6 +655,10 @@ void gfx_dxgi_delay(u32 ms) {
     Sleep(ms);
 }
 
+static int gfx_dxgi_get_max_msaa(void) {
+    return 0;
+}
+
 HWND gfx_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }
@@ -724,6 +728,7 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_set_clipboard_text,
     gfx_dxgi_set_cursor_visible,
     gfx_dxgi_delay,
+    gfx_dxgi_get_max_msaa,
 };
 
 #endif

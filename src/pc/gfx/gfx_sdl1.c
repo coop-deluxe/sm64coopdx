@@ -180,6 +180,10 @@ static void gfx_sdl_delay(u32 ms) {
     SDL_Delay(ms);
 }
 
+static int gfx_sdl_get_max_msaa(void) {
+    return 0;
+}
+
 static void gfx_sdl_shutdown(void) {
     if (SDL_WasInit(0))
         SDL_Quit();
@@ -208,6 +212,7 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_set_clipboard_text,
     gfx_sdl_set_cursor_visible,
     gfx_sdl_delay,
+    gfx_sdl_get_max_msaa,
 };
 
 #endif // BACKEND_WM
