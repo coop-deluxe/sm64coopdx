@@ -32,6 +32,11 @@
 
 #define SUPPORT_CHECK(x) assert(x)
 
+// this is used for multi-textures
+// and it's quite a hack... instead of allowing 8 tiles, we basically only allow 2
+#define G_TX_LOADTILE_6_UNKNOWN 6
+//////////////////////////////////
+
 // SCALE_M_N: upscale/downscale M-bit integer to N-bit
 #define SCALE_5_8(VAL_) (((VAL_) * 0xFF) / 0x1F)
 #define SCALE_8_5(VAL_) ((((VAL_) + 4) * 0x1F) / 0xFF)
@@ -1018,12 +1023,15 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
                 rdp.textures_changed[i] = false;
             }
             bool linear_filter = configFiltering && ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT);
-            if (linear_filter != rendering_state.textures[i]->linear_filter || rdp.texture_tile.cms != rendering_state.textures[i]->cms || rdp.texture_tile.cmt != rendering_state.textures[i]->cmt) {
-                gfx_flush();
-                gfx_rapi->set_sampler_parameters(i, linear_filter, rdp.texture_tile.cms, rdp.texture_tile.cmt);
-                rendering_state.textures[i]->linear_filter = linear_filter;
-                rendering_state.textures[i]->cms = rdp.texture_tile.cms;
-                rendering_state.textures[i]->cmt = rdp.texture_tile.cmt;
+            struct TextureHashmapNode* tex = rendering_state.textures[i];
+            if (tex) {
+                if (linear_filter != tex->linear_filter || rdp.texture_tile.cms != tex->cms || rdp.texture_tile.cmt != rendering_state.textures[i]->cmt) {
+                    gfx_flush();
+                    gfx_rapi->set_sampler_parameters(i, linear_filter, rdp.texture_tile.cms, rdp.texture_tile.cmt);
+                    tex->linear_filter = linear_filter;
+                    tex->cms = rdp.texture_tile.cms;
+                    tex->cmt = rdp.texture_tile.cmt;
+                }
             }
         }
     }
@@ -1256,6 +1264,9 @@ static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t t
 
     if (tile == G_TX_LOADTILE) {
         rdp.texture_to_load.tile_number = tmem / 256;
+    } else if (tile == G_TX_LOADTILE_6_UNKNOWN) {
+        // this is a hack, because it seems like we can only load two tiles at once currently
+        rdp.texture_to_load.tile_number = 1;
     }
 }
 
@@ -1274,14 +1285,14 @@ static void gfx_dp_set_tile_size(uint8_t tile, uint16_t uls, uint16_t ult, uint1
 }
 
 static void gfx_dp_load_tlut(uint8_t tile, UNUSED uint32_t high_index) {
-    if (tile != G_TX_LOADTILE) { return; }
+    SUPPORT_CHECK(tile == G_TX_LOADTILE || tile == G_TX_LOADTILE_6_UNKNOWN);
     SUPPORT_CHECK(rdp.texture_to_load.siz == G_IM_SIZ_16b);
     rdp.palette = rdp.texture_to_load.addr;
 }
 
 static void gfx_dp_load_block(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t lrs, UNUSED uint32_t dxt) {
-    if (tile == 1) return;
-    SUPPORT_CHECK(tile == G_TX_LOADTILE);
+    //if (tile == 1) return;
+    SUPPORT_CHECK(tile == G_TX_LOADTILE || tile == G_TX_LOADTILE_6_UNKNOWN);
     SUPPORT_CHECK(uls == 0);
     SUPPORT_CHECK(ult == 0);
 
@@ -1306,8 +1317,7 @@ static void gfx_dp_load_block(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t
 }
 
 static void gfx_dp_load_tile(uint8_t tile, uint32_t uls, uint32_t ult, uint32_t lrs, uint32_t lrt) {
-    if (tile == 1) return;
-    SUPPORT_CHECK(tile == G_TX_LOADTILE);
+    SUPPORT_CHECK(tile == G_TX_LOADTILE || tile == G_TX_LOADTILE_6_UNKNOWN);
     SUPPORT_CHECK(uls == 0);
     SUPPORT_CHECK(ult == 0);
 
