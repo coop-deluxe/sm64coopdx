@@ -197,6 +197,7 @@ static const uint8_t missing_texture[MISSING_W * MISSING_H * 4] = {
 static bool sOnlyTextureChangeOnAddrChange = false;
 
 static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, const uint8_t* addr) {
+    if (tile_number > 1) { return; }
     if (!sOnlyTextureChangeOnAddrChange) {
         rdp.textures_changed[tile_number] = true;
     } else if (!rdp.textures_changed[tile_number]) {
