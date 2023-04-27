@@ -335,6 +335,7 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
     struct ColorCombiner *comb = &color_combiner_pool[color_combiner_pool_size++];
     comb->cm = *cm;
     gfx_generate_cc(comb);
+
     return prev_combiner = comb;
 }
 

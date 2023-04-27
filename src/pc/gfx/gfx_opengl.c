@@ -266,7 +266,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     for (int i = 0; i < 16 / 4; i++) {
         u8* c = &cc->shader_commands[i * 4];
         do_single[i]   = (c[2] == 0);
-        do_multiply[i] = (c[1] == c[3]);
+        do_multiply[i] = (c[1] == 0 && c[3] == 0);
         do_mix[i]      = (c[1] == c[3]);
     }
 
