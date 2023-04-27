@@ -30,7 +30,7 @@ void get_cc_features(uint32_t shader_id, CCFeatures *cc_features) {
             if (cc_features->c[i][j] == SHADER_TEXEL0 || cc_features->c[i][j] == SHADER_TEXEL0A) {
                 cc_features->used_textures[0] = true;
             }
-            if (cc_features->c[i][j] == SHADER_TEXEL1) {
+            if (cc_features->c[i][j] == SHADER_TEXEL1 || cc_features->c[i][j] == SHADER_TEXEL1A) {
                 cc_features->used_textures[1] = true;
             }
         }
@@ -61,6 +61,8 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
             default:
             case SHADER_0:
                 return with_alpha ? "float4(0.0, 0.0, 0.0, 0.0)" : "float3(0.0, 0.0, 0.0)";
+            case SHADER_1:
+                return with_alpha ? "float4(1.0, 1.0, 1.0, 1.0)" : "float3(1.0, 1.0, 1.0)";
             case SHADER_INPUT_1:
                 return with_alpha || !inputs_have_alpha ? "input.input1" : "input.input1.rgb";
             case SHADER_INPUT_2:
@@ -75,12 +77,16 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return hint_single_element ? "texVal0.a" : (with_alpha ? "float4(texVal0.a, texVal0.a, texVal0.a, texVal0.a)" : "float3(texVal0.a, texVal0.a, texVal0.a)");
             case SHADER_TEXEL1:
                 return with_alpha ? "texVal1" : "texVal1.rgb";
+            case SHADER_TEXEL1A:
+                return hint_single_element ? "texVal1.a" : (with_alpha ? "float4(texVal1.a, texVal1.a, texVal1.a, texVal1.a)" : "float3(texVal1.a, texVal1.a, texVal1.a)");
         }
     } else {
         switch (item) {
             default:
             case SHADER_0:
                 return "0.0";
+            case SHADER_1:
+                return "1.0";
             case SHADER_INPUT_1:
                 return "input.input1.a";
             case SHADER_INPUT_2:
@@ -94,6 +100,8 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
             case SHADER_TEXEL0A:
                 return "texVal0.a";
             case SHADER_TEXEL1:
+                return "texVal1.a";
+            case SHADER_TEXEL1A:
                 return "texVal1.a";
         }
     }

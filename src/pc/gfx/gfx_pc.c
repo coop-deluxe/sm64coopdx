@@ -94,13 +94,7 @@ static struct {
     uint32_t pool_pos;
 } gfx_texture_cache;
 
-struct ColorCombiner {
-    uint32_t cc_id;
-    struct ShaderProgram *prg;
-    uint8_t shader_input_mapping[2][4];
-};
-
-static struct ColorCombiner color_combiner_pool[64];
+static struct ColorCombiner color_combiner_pool[64] = { 0 };
 static uint8_t color_combiner_pool_size;
 
 static struct RSP {
@@ -148,7 +142,7 @@ static struct RDP {
     bool textures_changed[2];
 
     uint32_t other_mode_l, other_mode_h;
-    uint32_t combine_mode;
+    struct CombineMode combine_mode;
 
     struct RGBA env_color, prim_color, fog_color, fill_color;
     struct XYWidthHeight viewport, scissor;
@@ -234,77 +228,110 @@ static void gfx_flush(void) {
     }
 }
 
-static struct ShaderProgram *gfx_lookup_or_create_shader_program(uint32_t shader_id) {
-    struct ShaderProgram *prg = gfx_rapi->lookup_shader(shader_id);
+static void combine_mode_update_hash(struct CombineMode* mode) {
+    uint64_t hash = 5381;
+
+    hash = (hash << 5) + hash + mode->rgb1;
+    hash = (hash << 5) + hash + mode->alpha1;
+    hash = (hash << 5) + hash + mode->rgb2;
+    hash = (hash << 5) + hash + mode->alpha2;
+    hash = (hash << 5) + hash + mode->flags;
+
+    mode->hash = hash;
+}
+
+static void color_combiner_update_hash(struct ColorCombiner* cc) {
+    uint64_t hash = cc->cm.hash;
+
+    for (int i = 0; i < SHADER_CMD_LENGTH; i++) {
+        hash = (hash << 5) + hash + cc->shader_commands[i];
+    }
+
+    cc->hash = hash;
+}
+
+static struct ShaderProgram *gfx_lookup_or_create_shader_program(struct ColorCombiner* cc) {
+    struct ShaderProgram *prg = gfx_rapi->lookup_shader(cc);
     if (prg == NULL) {
         gfx_rapi->unload_shader(rendering_state.shader_program);
-        prg = gfx_rapi->create_and_load_new_shader(shader_id);
+        prg = gfx_rapi->create_and_load_new_shader(cc);
         rendering_state.shader_program = prg;
     }
     return prg;
 }
 
-static void gfx_generate_cc(struct ColorCombiner *comb, uint32_t cc_id) {
-    uint8_t c[2][4];
-    uint32_t shader_id = (cc_id >> 24) << 24;
-    uint8_t shader_input_mapping[2][4] = {{0}};
-    for (int32_t i = 0; i < 4; i++) {
-        c[0][i] = (cc_id >> (i * 3)) & 7;
-        c[1][i] = (cc_id >> (12 + i * 3)) & 7;
-    }
-    for (int32_t i = 0; i < 2; i++) {
-        if (c[i][0] == c[i][1] || c[i][2] == CC_0) {
-            c[i][0] = c[i][1] = c[i][2] = 0;
+static void gfx_generate_cc(struct ColorCombiner *cc) {
+    u8 next_input_number = 0;
+    u8 input_number[CC_MAX] = { 0 };
+
+    for  (int i = 0; i < SHADER_CMD_LENGTH; i++) {
+        u8 cm_cmd = cc->cm.all_values[i];
+        u8 shader_cmd = 0;
+        switch (cm_cmd) {
+            case CC_0:
+                shader_cmd = SHADER_0;
+                break;
+            case CC_1:
+                shader_cmd = SHADER_1;
+                break;
+            case CC_TEXEL0:
+                shader_cmd = SHADER_TEXEL0;
+                break;
+            case CC_TEXEL1:
+                shader_cmd = SHADER_TEXEL1;
+                break;
+            case CC_TEXEL0A:
+                shader_cmd = SHADER_TEXEL0A;
+                break;
+            case CC_TEXEL1A:
+                shader_cmd = SHADER_TEXEL1A;
+                break;
+            case CC_COMBINED:
+                shader_cmd = SHADER_COMBINED;
+                break;
+            case CC_COMBINEDA:
+                shader_cmd = SHADER_COMBINEDA;
+                break;
+            case CC_PRIM:
+            case CC_SHADE:
+            case CC_ENV:
+            case CC_LOD:
+                if (input_number[cm_cmd] == 0) {
+                    cc->shader_input_mapping[next_input_number] = cm_cmd;
+                    input_number[cm_cmd] = SHADER_INPUT_1 + next_input_number;
+                    next_input_number++;
+                }
+                shader_cmd = input_number[cm_cmd];
+                break;
+            default:
+                shader_cmd = SHADER_0;
+                break;
         }
-        uint8_t input_number[8] = {0};
-        int next_input_number = SHADER_INPUT_1;
-        for (int j = 0; j < 4; j++) {
-            int val = 0;
-            switch (c[i][j]) {
-                case CC_0:
-                    break;
-                case CC_TEXEL0:
-                    val = SHADER_TEXEL0;
-                    break;
-                case CC_TEXEL1:
-                    val = SHADER_TEXEL1;
-                    break;
-                case CC_TEXEL0A:
-                    val = SHADER_TEXEL0A;
-                    break;
-                case CC_PRIM:
-                case CC_SHADE:
-                case CC_ENV:
-                case CC_LOD:
-                    if (input_number[c[i][j]] == 0) {
-                        shader_input_mapping[i][next_input_number - 1] = c[i][j];
-                        input_number[c[i][j]] = next_input_number++;
-                    }
-                    val = input_number[c[i][j]];
-                    break;
-            }
-            shader_id |= val << (i * 12 + j * 3);
-        }
+        cc->shader_commands[i] = shader_cmd;
     }
-    comb->cc_id = cc_id;
-    comb->prg = gfx_lookup_or_create_shader_program(shader_id);
-    memcpy(comb->shader_input_mapping, shader_input_mapping, sizeof(shader_input_mapping));
+
+    color_combiner_update_hash(cc);
+    cc->prg = gfx_lookup_or_create_shader_program(cc);
 }
 
-static struct ColorCombiner *gfx_lookup_or_create_color_combiner(uint32_t cc_id) {
+static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineMode* cm) {
+    combine_mode_update_hash(cm);
+
     static struct ColorCombiner *prev_combiner;
-    if (prev_combiner != NULL && prev_combiner->cc_id == cc_id) {
+    if (prev_combiner != NULL && prev_combiner->cm.hash == cm->hash) {
         return prev_combiner;
     }
 
     for (size_t i = 0; i < color_combiner_pool_size; i++) {
-        if (color_combiner_pool[i].cc_id == cc_id) {
+        if (color_combiner_pool[i].cm.hash == cm->hash) {
             return prev_combiner = &color_combiner_pool[i];
         }
     }
     gfx_flush();
+
     struct ColorCombiner *comb = &color_combiner_pool[color_combiner_pool_size++];
-    gfx_generate_cc(comb, cc_id);
+    comb->cm = *cm;
+    gfx_generate_cc(comb);
     return prev_combiner = comb;
 }
 
@@ -979,27 +1006,20 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         rdp.viewport_or_scissor_changed = false;
     }
 
-    uint32_t cc_id = rdp.combine_mode;
+    struct CombineMode* cm = &rdp.combine_mode;
 
-    bool use_alpha = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
-    bool use_fog = (rdp.other_mode_l >> 30) == G_BL_CLR_FOG;
-    bool texture_edge = (rdp.other_mode_l & CVG_X_ALPHA) == CVG_X_ALPHA;
-    bool use_noise = (rdp.other_mode_l & G_AC_DITHER) == G_AC_DITHER;
+    cm->use_alpha    = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
+    cm->texture_edge = (rdp.other_mode_l & CVG_X_ALPHA)        == CVG_X_ALPHA;
+    cm->use_noise    = (rdp.other_mode_l & G_AC_DITHER)        == G_AC_DITHER;
+    cm->use_fog      = (rdp.other_mode_l >> 30)                == G_BL_CLR_FOG;
 
-    if (texture_edge) {
-        use_alpha = true;
+    if (cm->texture_edge) {
+        cm->use_alpha = true;
     }
 
-    if (use_alpha) cc_id |= SHADER_OPT_ALPHA;
-    if (use_fog) cc_id |= SHADER_OPT_FOG;
-    if (texture_edge) cc_id |= SHADER_OPT_TEXTURE_EDGE;
-    if (use_noise) cc_id |= SHADER_OPT_NOISE;
+    struct ColorCombiner *comb = gfx_lookup_or_create_color_combiner(cm);
+    cm = &comb->cm;
 
-    if (!use_alpha) {
-        cc_id &= ~0xfff000;
-    }
-
-    struct ColorCombiner *comb = gfx_lookup_or_create_color_combiner(cc_id);
     struct ShaderProgram *prg = comb->prg;
     if (prg != rendering_state.shader_program) {
         gfx_flush();
@@ -1007,10 +1027,10 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         gfx_rapi->load_shader(prg);
         rendering_state.shader_program = prg;
     }
-    if (use_alpha != rendering_state.alpha_blend) {
+    if (cm->use_alpha != rendering_state.alpha_blend) {
         gfx_flush();
-        gfx_rapi->set_use_alpha(use_alpha);
-        rendering_state.alpha_blend = use_alpha;
+        gfx_rapi->set_use_alpha(cm->use_alpha);
+        rendering_state.alpha_blend = cm->use_alpha;
     }
     uint8_t num_inputs;
     bool used_textures[2];
@@ -1065,7 +1085,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
             buf_vbo[buf_vbo_len++] = v / tex_height;
         }
 
-        if (use_fog) {
+        if (cm->use_fog) {
             buf_vbo[buf_vbo_len++] = rdp.fog_color.r / 255.0f;
             buf_vbo[buf_vbo_len++] = rdp.fog_color.g / 255.0f;
             buf_vbo[buf_vbo_len++] = rdp.fog_color.b / 255.0f;
@@ -1073,10 +1093,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         }
 
         for (int j = 0; j < num_inputs; j++) {
-            struct RGBA *color;
-            struct RGBA tmp;
-            for (int k = 0; k < 1 + (use_alpha ? 1 : 0); k++) {
-                switch (comb->shader_input_mapping[k][j]) {
+            struct RGBA *color = NULL;
+            struct RGBA tmp = { 0 };
+            for (int a = 0; a < (cm->use_alpha ? 2 : 1 ); a++) {
+                u8 mapping = comb->shader_input_mapping[j];
+                switch (mapping) {
                     case CC_PRIM:
                         color = &rdp.prim_color;
                         break;
@@ -1100,12 +1121,12 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
                         color = &tmp;
                         break;
                 }
-                if (k == 0) {
+                if (a == 0) {
                     buf_vbo[buf_vbo_len++] = color->r / 255.0f;
                     buf_vbo[buf_vbo_len++] = color->g / 255.0f;
                     buf_vbo[buf_vbo_len++] = color->b / 255.0f;
                 } else {
-                    if (use_fog && color == &v_arr[i]->color) {
+                    if (cm->use_fog && color == &v_arr[i]->color) {
                         // Shade alpha is 100% for fog
                         buf_vbo[buf_vbo_len++] = 1.0f;
                     } else {
@@ -1360,22 +1381,34 @@ static uint8_t color_comb_component(uint32_t v) {
             return CC_ENV;
         case G_CCMUX_TEXEL0_ALPHA:
             return CC_TEXEL0A;
+        /*case G_CCMUX_TEXEL1_ALPHA:
+            return CC_TEXEL1A;*/
         case G_CCMUX_LOD_FRACTION:
             return CC_LOD;
+        /*case G_CCMUX_1:
+            return CC_1;
+        case G_CCMUX_COMBINED:
+            return CC_0; // return CC_COMBINED; TODO
+        case G_CCMUX_COMBINED_ALPHA:
+            return CC_0; //return CC_COMBINEDA; TODO*/
         default:
             return CC_0;
     }
 }
 
 static inline uint32_t color_comb(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
-    return color_comb_component(a) |
-           (color_comb_component(b) << 3) |
-           (color_comb_component(c) << 6) |
-           (color_comb_component(d) << 9);
+    return color_comb_component(a)
+        | (color_comb_component(b) << 8)
+        | (color_comb_component(c) << 16)
+        | (color_comb_component(d) << 24);
 }
 
-static void gfx_dp_set_combine_mode(uint32_t rgb, uint32_t alpha) {
-    rdp.combine_mode = rgb | (alpha << 12);
+static void gfx_dp_set_combine_mode(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2) {
+    rdp.combine_mode.rgb1 = rgb1;
+    rdp.combine_mode.alpha1 = alpha1;
+
+    rdp.combine_mode.rgb2 = rgb2;
+    rdp.combine_mode.alpha2 = alpha2;
 }
 
 static void gfx_dp_set_env_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -1480,14 +1513,14 @@ static void gfx_draw_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int32_t lr
 }
 
 static void gfx_dp_texture_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int32_t lry, UNUSED uint8_t tile, int16_t uls, int16_t ult, int16_t dsdx, int16_t dtdy, bool flip) {
-    uint32_t saved_combine_mode = rdp.combine_mode;
+    struct CombineMode saved_combine_mode = rdp.combine_mode;
     if ((rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_COPY) {
         // Per RDP Command Summary Set Tile's shift s and this dsdx should be set to 4 texels
         // Divide by 4 to get 1 instead
         dsdx >>= 2;
 
         // Color combiner is turned off in copy mode
-        gfx_dp_set_combine_mode(color_comb(0, 0, 0, G_CCMUX_TEXEL0), color_comb(0, 0, 0, G_ACMUX_TEXEL0));
+        gfx_dp_set_combine_mode(color_comb(0, 0, 0, G_CCMUX_TEXEL0), color_comb(0, 0, 0, G_ACMUX_TEXEL0), color_comb(0, 0, 0, G_CCMUX_TEXEL0), color_comb(0, 0, 0, G_ACMUX_TEXEL0));
 
         // Per documentation one extra pixel is added in this modes to each edge
         lrx += 1 << 2;
@@ -1528,7 +1561,10 @@ static void gfx_dp_texture_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int3
     }
 
     gfx_draw_rectangle(ulx, uly, lrx, lry);
+
+    u32 cflags = rdp.combine_mode.flags;
     rdp.combine_mode = saved_combine_mode;
+    rdp.combine_mode.flags = cflags;
 }
 
 static void gfx_dp_fill_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int32_t lry) {
@@ -1549,10 +1585,13 @@ static void gfx_dp_fill_rectangle(int32_t ulx, int32_t uly, int32_t lrx, int32_t
         v->color = rdp.fill_color;
     }
 
-    uint32_t saved_combine_mode = rdp.combine_mode;
-    gfx_dp_set_combine_mode(color_comb(0, 0, 0, G_CCMUX_SHADE), color_comb(0, 0, 0, G_ACMUX_SHADE));
+    struct CombineMode saved_combine_mode = rdp.combine_mode;
+    gfx_dp_set_combine_mode(color_comb(0, 0, 0, G_CCMUX_SHADE), color_comb(0, 0, 0, G_ACMUX_SHADE), color_comb(0, 0, 0, G_CCMUX_SHADE), color_comb(0, 0, 0, G_ACMUX_SHADE));
     gfx_draw_rectangle(ulx, uly, lrx, lry);
+
+    u32 cflags = rdp.combine_mode.flags;
     rdp.combine_mode = saved_combine_mode;
+    rdp.combine_mode.flags = cflags;
 }
 
 static void gfx_dp_set_z_image(void *z_buf_address) {
@@ -1720,9 +1759,9 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
             case G_SETCOMBINE:
                 gfx_dp_set_combine_mode(
                     color_comb(C0(20, 4), C1(28, 4), C0(15, 5), C1(15, 3)),
-                    color_comb(C0(12, 3), C1(12, 3), C0(9, 3), C1(9, 3)));
-                    /*color_comb(C0(5, 4), C1(24, 4), C0(0, 5), C1(6, 3)),
-                    color_comb(C1(21, 3), C1(3, 3), C1(18, 3), C1(0, 3)));*/
+                    color_comb(C0(12, 3), C1(12, 3), C0(9, 3), C1(9, 3)),
+                    color_comb(C0(5, 4), C1(24, 4), C0(0, 5), C1(6, 3)),
+                    color_comb(C1(21, 3), C1(3, 3), C1(18, 3), C1(0, 3)));
                 break;
             // G_SETPRIMCOLOR, G_CCMUX_PRIMITIVE, G_ACMUX_PRIMITIVE, is used by Goddard
             // G_CCMUX_TEXEL1, LOD_FRACTION is used in Bowser room 1
@@ -1808,6 +1847,8 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
     gfx_wapi->init(window_title);
     gfx_rapi->init();
 
+    // DO NOT COMMIT: must update these!
+    /*
     // Used in the 120 star TAS
     static uint32_t precomp_shaders[] = {
         0x01200200,
@@ -1840,6 +1881,7 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
 
     for (size_t i = 0; i < sizeof(precomp_shaders) / sizeof(uint32_t); i++)
         gfx_lookup_or_create_shader_program(precomp_shaders[i]);
+    */
 }
 
 #ifdef EXTERNAL_DATA

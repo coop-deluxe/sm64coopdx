@@ -12,7 +12,12 @@ enum {
     CC_SHADE,
     CC_ENV,
     CC_TEXEL0A,
-    CC_LOD
+    CC_LOD,
+    CC_1,
+    CC_TEXEL1A,
+    CC_COMBINED,
+    CC_COMBINEDA,
+    CC_MAX,
 };
 
 enum {
@@ -23,7 +28,11 @@ enum {
     SHADER_INPUT_4,
     SHADER_TEXEL0,
     SHADER_TEXEL0A,
-    SHADER_TEXEL1
+    SHADER_TEXEL1,
+    SHADER_TEXEL1A,
+    SHADER_1,
+    SHADER_COMBINED,
+    SHADER_COMBINEDA,
 };
 
 #define SHADER_OPT_ALPHA (1 << 24)
@@ -43,6 +52,40 @@ struct CCFeatures {
     bool do_multiply[2];
     bool do_mix[2];
     bool color_alpha_same;
+};
+
+#pragma pack(1)
+struct CombineMode {
+    union {
+        struct {
+            uint32_t rgb1;
+            uint32_t alpha1;
+            uint32_t rgb2;
+            uint32_t alpha2;
+        };
+        uint8_t all_values[16];
+    };
+    union {
+        struct {
+            uint8_t use_alpha    : 1;
+            uint8_t use_fog      : 1;
+            uint8_t texture_edge : 1;
+            uint8_t use_noise    : 1;
+        };
+        uint32_t flags;
+    };
+    uint64_t hash;
+};
+#pragma pack()
+
+#define SHADER_CMD_LENGTH 16
+
+struct ColorCombiner {
+    struct CombineMode cm;
+    struct ShaderProgram *prg;
+    uint8_t shader_input_mapping[16];
+    uint8_t shader_commands[16];
+    uint64_t hash;
 };
 
 #ifdef __cplusplus

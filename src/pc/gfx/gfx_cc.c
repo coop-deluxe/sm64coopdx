@@ -25,7 +25,7 @@ void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features) {
             if (cc_features->c[i][j] == SHADER_TEXEL0 || cc_features->c[i][j] == SHADER_TEXEL0A) {
                 cc_features->used_textures[0] = true;
             }
-            if (cc_features->c[i][j] == SHADER_TEXEL1) {
+            if (cc_features->c[i][j] == SHADER_TEXEL1 || cc_features->c[i][j] == SHADER_TEXEL1A) {
                 cc_features->used_textures[1] = true;
             }
         }
