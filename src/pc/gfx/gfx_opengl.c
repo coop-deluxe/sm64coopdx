@@ -263,12 +263,22 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool do_single[4]        = { 0 };
     bool do_multiply[4]      = { 0 };
     bool do_mix[4]           = { 0 };
-    bool color_alpha_same[2] = { 0 }; // TODO: gotta compare shader commands
     for (int i = 0; i < 16 / 4; i++) {
         u8* c = &cc->shader_commands[i * 4];
         do_single[i]   = (c[2] == 0);
         do_multiply[i] = (c[1] == c[3]);
         do_mix[i]      = (c[1] == c[3]);
+    }
+
+    bool color_alpha_same[2] = { 1, 1 };
+    for (int i = 0; i < 2; i++) {
+        u8* cmd = &cc->shader_commands[i * 8];
+        for (int j = 0; j < 4; j++) {
+            if (cmd[j] != cmd[j + 4]) {
+                color_alpha_same[i] = 0;
+                break;
+            }
+        }
     }
 
     char vs_buf[1024];

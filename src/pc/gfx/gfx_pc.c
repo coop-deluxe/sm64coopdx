@@ -2029,8 +2029,8 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
     gfx_wapi->init(window_title);
     gfx_rapi->init();
 
-    // DO NOT COMMIT: must update these!
     /*
+    // DO NOT COMMIT: TODO must update these!
     // Used in the 120 star TAS
     static uint32_t precomp_shaders[] = {
         0x01200200,
@@ -2062,8 +2062,7 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
     };
 
     for (size_t i = 0; i < sizeof(precomp_shaders) / sizeof(uint32_t); i++)
-        gfx_lookup_or_create_shader_program(precomp_shaders[i]);
-    */
+        gfx_precomp_shaders(precomp_shaders[i]);*/
 }
 
 #ifdef EXTERNAL_DATA

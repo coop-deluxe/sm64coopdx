@@ -1,6 +1,7 @@
 #include "gfx_cc.h"
 
 void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features) {
+    // DO NOT COMMIT: TODO - need to fix this
     for (int32_t i = 0; i < 4; i++) {
         cc_features->c[0][i] = (shader_id >> (i * 3)) & 7;
         cc_features->c[1][i] = (shader_id >> (12 + i * 3)) & 7;
