@@ -22,7 +22,7 @@ void get_cc_features(uint32_t shader_id, CCFeatures *cc_features) {
 
     for (int32_t i = 0; i < 2; i++) {
         for (int32_t j = 0; j < 4; j++) {
-            if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_4) {
+            if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_8) {
                 if (cc_features->c[i][j] > cc_features->num_inputs) {
                     cc_features->num_inputs = cc_features->c[i][j];
                 }
@@ -71,6 +71,14 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return with_alpha || !inputs_have_alpha ? "input.input3" : "input.input3.rgb";
             case SHADER_INPUT_4:
                 return with_alpha || !inputs_have_alpha ? "input.input4" : "input.input4.rgb";
+            case SHADER_INPUT_5:
+                return with_alpha || !inputs_have_alpha ? "input.input4" : "input.input5.rgb";
+            case SHADER_INPUT_6:
+                return with_alpha || !inputs_have_alpha ? "input.input4" : "input.input6.rgb";
+            case SHADER_INPUT_7:
+                return with_alpha || !inputs_have_alpha ? "input.input4" : "input.input7.rgb";
+            case SHADER_INPUT_8:
+                return with_alpha || !inputs_have_alpha ? "input.input4" : "input.input8.rgb";
             case SHADER_TEXEL0:
                 return with_alpha ? "texVal0" : "texVal0.rgb";
             case SHADER_TEXEL0A:
@@ -79,6 +87,10 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return with_alpha ? "texVal1" : "texVal1.rgb";
             case SHADER_TEXEL1A:
                 return hint_single_element ? "texVal1.a" : (with_alpha ? "float4(texVal1.a, texVal1.a, texVal1.a, texVal1.a)" : "float3(texVal1.a, texVal1.a, texVal1.a)");
+            case SHADER_COMBINED:
+                return with_alpha ? "texel" : "texel.rgb";
+            case SHADER_COMBINEDA:
+                return hint_single_element ? "texel.a" : (with_alpha ? "float4(texel.a, texel.a, texel.a, texel.a)" : "float3(texel.a, texel.a, texel.a)");
         }
     } else {
         switch (item) {
@@ -95,6 +107,14 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return "input.input3.a";
             case SHADER_INPUT_4:
                 return "input.input4.a";
+            case SHADER_INPUT_5:
+                return "input.input5.a";
+            case SHADER_INPUT_6:
+                return "input.input6.a";
+            case SHADER_INPUT_7:
+                return "input.input7.a";
+            case SHADER_INPUT_8:
+                return "input.input8.a";
             case SHADER_TEXEL0:
                 return "texVal0.a";
             case SHADER_TEXEL0A:
@@ -103,6 +123,10 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return "texVal1.a";
             case SHADER_TEXEL1A:
                 return "texVal1.a";
+            case SHADER_COMBINED:
+                return "texel.a";
+            case SHADER_COMBINEDA:
+                return "texel.a";
         }
     }
 }

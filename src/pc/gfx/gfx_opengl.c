@@ -146,6 +146,14 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
                 return with_alpha || !inputs_have_alpha ? "vInput3" : "vInput3.rgb";
             case SHADER_INPUT_4:
                 return with_alpha || !inputs_have_alpha ? "vInput4" : "vInput4.rgb";
+            case SHADER_INPUT_5:
+                return with_alpha || !inputs_have_alpha ? "vInput4" : "vInput5.rgb";
+            case SHADER_INPUT_6:
+                return with_alpha || !inputs_have_alpha ? "vInput4" : "vInput6.rgb";
+            case SHADER_INPUT_7:
+                return with_alpha || !inputs_have_alpha ? "vInput4" : "vInput7.rgb";
+            case SHADER_INPUT_8:
+                return with_alpha || !inputs_have_alpha ? "vInput4" : "vInput8.rgb";
             case SHADER_TEXEL0:
                 return with_alpha ? "texVal0" : "texVal0.rgb";
             case SHADER_TEXEL0A:
@@ -156,6 +164,11 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
             case SHADER_TEXEL1A:
                 return hint_single_element ? "texVal1.a" :
                     (with_alpha ? "vec4(texelVal1.a, texelVal1.a, texelVal1.a, texelVal1.a)" : "vec3(texelVal1.a, texelVal1.a, texelVal1.a)");
+            case SHADER_COMBINED:
+                return with_alpha ? "texel" : "texel.rgb";
+            case SHADER_COMBINEDA:
+                return hint_single_element ? "texel.a" :
+                    (with_alpha ? "vec4(texel.a, texel.a, texel.a, texel.a)" : "vec3(texel.a, texel.a, texel.a)");
         }
     } else {
         switch (item) {
@@ -171,6 +184,14 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
                 return "vInput3.a";
             case SHADER_INPUT_4:
                 return "vInput4.a";
+            case SHADER_INPUT_5:
+                return "vInput5.a";
+            case SHADER_INPUT_6:
+                return "vInput6.a";
+            case SHADER_INPUT_7:
+                return "vInput7.a";
+            case SHADER_INPUT_8:
+                return "vInput8.a";
             case SHADER_TEXEL0:
                 return "texVal0.a";
             case SHADER_TEXEL0A:
@@ -179,6 +200,10 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
                 return "texVal1.a";
             case SHADER_TEXEL1A:
                 return "texVal1.a";
+            case SHADER_COMBINED:
+                return "texel.a";
+            case SHADER_COMBINEDA:
+                return "texel.a";
         }
     }
     return "unknown";
@@ -227,14 +252,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     int cmd_length = opt_2cycle ? 16 : 8;
     for (int i = 0; i < cmd_length; i++) {
         u8 c = cc->shader_commands[i];
-        if (c >= SHADER_INPUT_1 && c <= SHADER_INPUT_4) {
+        if (c >= SHADER_INPUT_1 && c <= SHADER_INPUT_8) {
             if (c > num_inputs) { num_inputs = c; }
         }
         used_textures[0] = used_textures[0] || c == SHADER_TEXEL0 || c == SHADER_TEXEL0A;
         used_textures[1] = used_textures[1] || c == SHADER_TEXEL1 || c == SHADER_TEXEL1A;
     }
-
-    u8* cmd = cc->shader_commands;
 
     // figure out optimizations
     bool do_single[4]        = { 0 };
@@ -363,17 +386,24 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
     }
 
-    append_str(fs_buf, &fs_len, opt_alpha ? "vec4 texel = " : "vec3 texel = ");
-    if (!color_alpha_same[0] && opt_alpha) {
-        append_str(fs_buf, &fs_len, "vec4(");
-        append_formula(fs_buf, &fs_len, cmd, do_single[0], do_multiply[0], do_mix[0], false, false, true);
-        append_str(fs_buf, &fs_len, ", ");
-        append_formula(fs_buf, &fs_len, cmd, do_single[1], do_multiply[1], do_mix[1], true, true, true);
-        append_str(fs_buf, &fs_len, ")");
-    } else {
-        append_formula(fs_buf, &fs_len, cmd, do_single[0], do_multiply[0], do_mix[0], opt_alpha, false, opt_alpha);
+    append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
+    for (int i = 0; i < (opt_2cycle + 1); i++) {
+        u8* cmd = &cc->shader_commands[i * 8];
+        if (!color_alpha_same[i*2] && opt_alpha) {
+            append_str(fs_buf, &fs_len, "vec4(");
+            append_formula(fs_buf, &fs_len, cmd, do_single[i*2+0], do_multiply[i*2+0], do_mix[i*2+0], false, false, true);
+            append_str(fs_buf, &fs_len, ", ");
+            append_formula(fs_buf, &fs_len, cmd, do_single[i*2+1], do_multiply[i*2+1], do_mix[i*2+1], true, true, true);
+            append_str(fs_buf, &fs_len, ")");
+        } else {
+            append_formula(fs_buf, &fs_len, cmd, do_single[i*2+0], do_multiply[i*2+0], do_mix[i*2+0], opt_alpha, false, opt_alpha);
+        }
+        append_line(fs_buf, &fs_len, ";");
+
+        if (i == 0 && opt_2cycle) {
+            append_str(fs_buf, &fs_len, "texel = ");
+        }
     }
-    append_line(fs_buf, &fs_len, ";");
 
     if (opt_texture_edge && opt_alpha) {
         append_line(fs_buf, &fs_len, "if (texel.a > 0.3) texel.a = 1.0; else discard;");

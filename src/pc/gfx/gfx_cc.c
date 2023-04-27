@@ -17,7 +17,7 @@ void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features) {
 
     for (int32_t i = 0; i < 2; i++) {
         for (int32_t j = 0; j < 4; j++) {
-            if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_4) {
+            if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_8) {
                 if (cc_features->c[i][j] > cc_features->num_inputs) {
                     cc_features->num_inputs = cc_features->c[i][j];
                 }
