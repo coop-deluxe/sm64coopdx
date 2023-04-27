@@ -71,6 +71,7 @@ struct CombineMode {
             uint8_t use_fog      : 1;
             uint8_t texture_edge : 1;
             uint8_t use_noise    : 1;
+            uint8_t use_2cycle   : 1;
         };
         uint32_t flags;
     };

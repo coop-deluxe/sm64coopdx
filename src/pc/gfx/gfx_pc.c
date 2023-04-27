@@ -1008,10 +1008,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
 
     struct CombineMode* cm = &rdp.combine_mode;
 
-    cm->use_alpha    = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
-    cm->texture_edge = (rdp.other_mode_l & CVG_X_ALPHA)        == CVG_X_ALPHA;
-    cm->use_noise    = (rdp.other_mode_l & G_AC_DITHER)        == G_AC_DITHER;
-    cm->use_fog      = (rdp.other_mode_l >> 30)                == G_BL_CLR_FOG;
+    cm->use_alpha    = (rdp.other_mode_l & (G_BL_A_MEM << 18))        == 0;
+    cm->texture_edge = (rdp.other_mode_l & CVG_X_ALPHA)               == CVG_X_ALPHA;
+    cm->use_noise    = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
+    cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
+    cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
 
     if (cm->texture_edge) {
         cm->use_alpha = true;

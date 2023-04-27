@@ -215,17 +215,18 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_alpha = cc->cm.use_alpha;
     bool opt_fog = cc->cm.use_fog;
     bool opt_texture_edge = cc->cm.texture_edge;
+    bool opt_2cycle = cc->cm.use_2cycle;
 #ifdef USE_GLES
     bool opt_noise = false;
 #else
     bool opt_noise = cc->cm.use_noise;
 #endif
 
-    u8* cmd = cc->shader_commands;
     bool used_textures[2] = { 0 };
     int num_inputs = 0;
-    for (int i = 0; i < SHADER_CMD_LENGTH; i++) {
-        u8 c = cmd[i];
+    int cmd_length = opt_2cycle ? 16 : 8;
+    for (int i = 0; i < cmd_length; i++) {
+        u8 c = cc->shader_commands[i];
         if (c >= SHADER_INPUT_1 && c <= SHADER_INPUT_4) {
             if (c > num_inputs) { num_inputs = c; }
         }
@@ -233,10 +234,19 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         used_textures[1] = used_textures[1] || c == SHADER_TEXEL1 || c == SHADER_TEXEL1A;
     }
 
-    bool do_single[2] = { cmd[0 * 4 + 2] == 0, cmd[1 * 4 + 2] == 0 };
-    bool do_multiply[2] = { cmd[0 * 4 + 1] == 0 && cmd[0 * 4 + 3] == 0, cmd[1 * 4 + 1] == 0 && cmd[1 * 4 + 3] == 0 };
-    bool do_mix[2] = { cmd[0 * 4 + 1] == cmd[0 * 4 + 3], cmd[1 * 4 + 1] == cmd[1 * 4 + 3] };
-    bool color_alpha_same = false; // TODO: gotta check shader comamndssadasda
+    u8* cmd = cc->shader_commands;
+
+    // figure out optimizations
+    bool do_single[4]        = { 0 };
+    bool do_multiply[4]      = { 0 };
+    bool do_mix[4]           = { 0 };
+    bool color_alpha_same[2] = { 0 }; // TODO: gotta compare shader commands
+    for (int i = 0; i < 16 / 4; i++) {
+        u8* c = &cc->shader_commands[i * 4];
+        do_single[i]   = (c[2] == 0);
+        do_multiply[i] = (c[1] == c[3]);
+        do_mix[i]      = (c[1] == c[3]);
+    }
 
     char vs_buf[1024];
     char fs_buf[2048];
@@ -354,7 +364,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     append_str(fs_buf, &fs_len, opt_alpha ? "vec4 texel = " : "vec3 texel = ");
-    if (!color_alpha_same && opt_alpha) {
+    if (!color_alpha_same[0] && opt_alpha) {
         append_str(fs_buf, &fs_len, "vec4(");
         append_formula(fs_buf, &fs_len, cmd, do_single[0], do_multiply[0], do_mix[0], false, false, true);
         append_str(fs_buf, &fs_len, ", ");
@@ -368,7 +378,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     if (opt_texture_edge && opt_alpha) {
         append_line(fs_buf, &fs_len, "if (texel.a > 0.3) texel.a = 1.0; else discard;");
     }
+
     // TODO discard if alpha is 0?
+
     if (opt_fog) {
         if (opt_alpha) {
             append_line(fs_buf, &fs_len, "texel = vec4(mix(texel.rgb, vFog.rgb, vFog.a), texel.a);");
