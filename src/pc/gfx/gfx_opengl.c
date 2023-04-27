@@ -389,7 +389,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
     for (int i = 0; i < (opt_2cycle + 1); i++) {
         u8* cmd = &cc->shader_commands[i * 8];
-        if (!color_alpha_same[i*2] && opt_alpha) {
+        if (!color_alpha_same[i] && opt_alpha) {
             append_str(fs_buf, &fs_len, "vec4(");
             append_formula(fs_buf, &fs_len, cmd, do_single[i*2+0], do_multiply[i*2+0], do_mix[i*2+0], false, false, true);
             append_str(fs_buf, &fs_len, ", ");

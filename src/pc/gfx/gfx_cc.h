@@ -17,6 +17,9 @@ enum {
     CC_TEXEL1A,
     CC_COMBINED,
     CC_COMBINEDA,
+    CC_PRIMA,
+    CC_SHADEA,
+    CC_ENVA,
     CC_MAX,
 };
 
