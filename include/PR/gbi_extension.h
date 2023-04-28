@@ -1,5 +1,15 @@
 #pragma once
 
+///////////////////////
+// G_SETGEOMETRYMODE //
+///////////////////////
+
+#define G_LIGHT_MAP_EXT 0x00000800
+
+//////////
+// DJUI //
+//////////
+
 #define G_TEXCLIP_DJUI     0xe1
 #define G_TEXOVERRIDE_DJUI 0xe0
 #define G_DJUI_SIMPLE_VERT 0x11

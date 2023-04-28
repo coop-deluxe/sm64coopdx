@@ -1032,9 +1032,9 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     cm->use_noise    = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
     cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
     cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
-    cm->light_map    = (cm->alpha1 == 0x08040000);
+    cm->light_map    = (rsp.geometry_mode & G_LIGHT_MAP_EXT)          == G_LIGHT_MAP_EXT;
 
-    if (cm->texture_edge || cm->light_map) {
+    if (cm->texture_edge) {
         cm->use_alpha = true;
     }
 
@@ -1113,26 +1113,17 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
             buf_vbo[buf_vbo_len++] = v_arr[i]->color.a / 255.0f; // fog factor (not alpha)
         }
 
+        if (cm->light_map) {
+            struct RGBA* col = &v_arr[i]->color;
+            buf_vbo[buf_vbo_len++] = ( (((uint16_t)col->g) << 8) | ((uint16_t)col->r) ) / 65535.0f;
+            buf_vbo[buf_vbo_len++] = 1.0f - (( (((uint16_t)col->a) << 8) | ((uint16_t)col->b) ) / 65535.0f);
+        }
+
         for (int j = 0; j < num_inputs; j++) {
             struct RGBA *color = NULL;
             struct RGBA tmp = { 0 };
             for (int a = 0; a < (cm->use_alpha ? 2 : 1 ); a++) {
                 u8 mapping = comb->shader_input_mapping[j];
-
-                if (cm->light_map && mapping == CC_SHADE) {
-                    if (a == 0) {
-                        struct RGBA* col = &v_arr[i]->color;
-                        printf("light: ");
-                        buf_vbo[buf_vbo_len++] = ( (((uint16_t)col->g) << 8) | ((uint16_t)col->r) ) / 65535.0f;
-                        printf(" %f", buf_vbo[buf_vbo_len-1]);
-                        buf_vbo[buf_vbo_len++] = 1.0f - (( (((uint16_t)col->a) << 8) | ((uint16_t)col->b) ) / 65535.0f);
-                        printf(", %f\n", buf_vbo[buf_vbo_len-1]);
-                        buf_vbo[buf_vbo_len++] = 0;
-                    } else {
-                        buf_vbo[buf_vbo_len++] = 1;
-                    }
-                    continue;
-                }
 
                 switch (mapping) {
                     case CC_PRIM:

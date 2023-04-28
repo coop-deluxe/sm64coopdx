@@ -241,6 +241,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_fog = cc->cm.use_fog;
     bool opt_texture_edge = cc->cm.texture_edge;
     bool opt_2cycle = cc->cm.use_2cycle;
+    bool opt_light_map = cc->cm.light_map;
+
 #ifdef USE_GLES
     bool opt_noise = false;
 #else
@@ -304,6 +306,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(vs_buf, &vs_len, "varying vec4 vFog;");
         num_floats += 4;
     }
+    if (opt_light_map) {
+        append_line(vs_buf, &vs_len, "attribute vec2 aLightMap;");
+        append_line(vs_buf, &vs_len, "varying vec2 vLightMap;");
+        num_floats += 2;
+    }
     for (int i = 0; i < num_inputs; i++) {
         vs_len += sprintf(vs_buf + vs_len, "attribute vec%d aInput%d;\n", opt_alpha ? 4 : 3, i + 1);
         vs_len += sprintf(vs_buf + vs_len, "varying vec%d vInput%d;\n", opt_alpha ? 4 : 3, i + 1);
@@ -315,6 +322,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
     if (opt_fog) {
         append_line(vs_buf, &vs_len, "vFog = aFog;");
+    }
+    if (opt_light_map) {
+        append_line(vs_buf, &vs_len, "vLightMap = aLightMap;");
     }
     for (int i = 0; i < num_inputs; i++) {
         vs_len += sprintf(vs_buf + vs_len, "vInput%d = aInput%d;\n", i + 1, i + 1);
@@ -335,6 +345,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
     if (opt_fog) {
         append_line(fs_buf, &fs_len, "varying vec4 vFog;");
+    }
+    if (opt_light_map) {
+        append_line(fs_buf, &fs_len, "varying vec2 vLightMap;");
     }
     for (int i = 0; i < num_inputs; i++) {
         fs_len += sprintf(fs_buf + fs_len, "varying vec%d vInput%d;\n", opt_alpha ? 4 : 3, i + 1);
@@ -394,7 +407,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
     if (used_textures[1]) {
         if (cc->cm.light_map) {
-            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vInput1.rg, uTex1Size, uTex1Filter);");
+            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vLightMap, uTex1Size, uTex1Filter);");
         } else {
             append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
         }
@@ -505,6 +518,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     if (opt_fog) {
         prg->attrib_locations[cnt] = glGetAttribLocation(shader_program, "aFog");
         prg->attrib_sizes[cnt] = 4;
+        ++cnt;
+    }
+
+    if (opt_light_map) {
+        prg->attrib_locations[cnt] = glGetAttribLocation(shader_program, "aLightMap");
+        prg->attrib_sizes[cnt] = 2;
         ++cnt;
     }
 

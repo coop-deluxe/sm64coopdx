@@ -313,6 +313,9 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(CAP);
     gfx_constant(METAL);
 
+    // Extended
+    gfx_constant(G_LIGHT_MAP_EXT);
+
     // Common values
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));
     gfx_constant(CALC_DXT(8,G_IM_SIZ_4b_BYTES));
