@@ -147,13 +147,14 @@ function mario_local_hammer_check(m)
                 m.vel.y = vel.y
                 m.vel.z = vel.z
                 m.faceAngle.y = atan2s(vel.z, vel.x) + 0x8000
+                m.forwardVel = 0
                 sattacker.ammo = sattacker.ammo - 1
 
                 send_arena_hammer_hit(np.globalIndex, npattacker.globalIndex)
                 e.lastDamagedByGlobal = npattacker.globalIndex
 
                 if mattacker.action == ACT_JUMP_KICK or mattacker.action == ACT_DIVE then
-                    m.hurtCounter = 1
+                    m.hurtCounter = 9
                 else
                     m.hurtCounter = 14
                 end
