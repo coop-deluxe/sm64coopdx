@@ -228,23 +228,34 @@ static void gfx_flush(void) {
     }
 }
 
-static void combine_mode_update_hash(struct CombineMode* mode) {
+static void combine_mode_update_hash(struct CombineMode* cm) {
     uint64_t hash = 5381;
 
-    hash = (hash << 5) + hash + mode->rgb1;
-    hash = (hash << 5) + hash + mode->alpha1;
-    hash = (hash << 5) + hash + mode->rgb2;
-    hash = (hash << 5) + hash + mode->alpha2;
-    hash = (hash << 5) + hash + mode->flags;
+    cm->hash = 0;
 
-    mode->hash = hash;
+    hash = (hash << 5) + hash + ((u64)cm->rgb1 << 32);
+    if (cm->use_alpha) {
+        hash = (hash << 5) + hash + ((u64)cm->alpha1);
+    }
+
+    if (cm->use_2cycle) {
+        hash = (hash << 5) + hash + ((u64)cm->rgb2 << 32);
+        if (cm->use_alpha) {
+            hash = (hash << 5) + hash + ((u64)cm->alpha2);
+        }
+    }
+
+    hash = (hash << 5) + hash + cm->flags;
+
+    cm->hash = hash;
 }
 
 static void color_combiner_update_hash(struct ColorCombiner* cc) {
     uint64_t hash = cc->cm.hash;
 
-    for (int i = 0; i < SHADER_CMD_LENGTH; i++) {
-        hash = (hash << 5) + hash + cc->shader_commands[i];
+    for (int i = 0; i < 8; i++) {
+        hash = (hash << 5) + hash + cc->shader_input_mapping_as_u64[i];
+        hash = (hash << 5) + hash + cc->shader_commands_as_u64[i];
     }
 
     cc->hash = hash;
@@ -315,6 +326,7 @@ static void gfx_generate_cc(struct ColorCombiner *cc) {
 
     color_combiner_update_hash(cc);
     cc->prg = gfx_lookup_or_create_shader_program(cc);
+    gfx_cc_print(cc);
 }
 
 static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineMode* cm) {
@@ -330,11 +342,14 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
             return prev_combiner = &color_combiner_pool[i];
         }
     }
+
     gfx_flush();
 
     struct ColorCombiner *comb = &color_combiner_pool[color_combiner_pool_size++];
-    comb->cm = *cm;
+    memcpy(&comb->cm, cm, sizeof(struct CombineMode));
     gfx_generate_cc(comb);
+
+    printf(">> added %016lx\n", comb->cm.hash);
 
     return prev_combiner = comb;
 }
@@ -1017,8 +1032,9 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     cm->use_noise    = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
     cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
     cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
+    cm->light_map    = (cm->alpha1 == 0x08040000);
 
-    if (cm->texture_edge) {
+    if (cm->texture_edge || cm->light_map) {
         cm->use_alpha = true;
     }
 
@@ -1102,6 +1118,22 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
             struct RGBA tmp = { 0 };
             for (int a = 0; a < (cm->use_alpha ? 2 : 1 ); a++) {
                 u8 mapping = comb->shader_input_mapping[j];
+
+                if (cm->light_map && mapping == CC_SHADE) {
+                    if (a == 0) {
+                        struct RGBA* col = &v_arr[i]->color;
+                        printf("light: ");
+                        buf_vbo[buf_vbo_len++] = ( (((uint16_t)col->g) << 8) | ((uint16_t)col->r) ) / 65535.0f;
+                        printf(" %f", buf_vbo[buf_vbo_len-1]);
+                        buf_vbo[buf_vbo_len++] = 1.0f - (( (((uint16_t)col->a) << 8) | ((uint16_t)col->b) ) / 65535.0f);
+                        printf(", %f\n", buf_vbo[buf_vbo_len-1]);
+                        buf_vbo[buf_vbo_len++] = 0;
+                    } else {
+                        buf_vbo[buf_vbo_len++] = 1;
+                    }
+                    continue;
+                }
+
                 switch (mapping) {
                     case CC_PRIM:
                         color = &rdp.prim_color;
@@ -1577,6 +1609,8 @@ static inline uint32_t color_comb_alpha(uint32_t a, uint32_t b, uint32_t c, uint
 
 static void gfx_dp_set_combine_mode(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2) {
     //printf(">>> combine: %08x %08x %08x %08x\n", rgb1, alpha1, rgb2, alpha2);
+    memset(&rdp.combine_mode, 0, sizeof(struct CombineMode));
+
     rdp.combine_mode.rgb1 = rgb1;
     rdp.combine_mode.alpha1 = alpha1;
 
@@ -2030,40 +2064,7 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
     gfx_wapi->init(window_title);
     gfx_rapi->init();
 
-    /*
-    // DO NOT COMMIT: TODO must update these!
-    // Used in the 120 star TAS
-    static uint32_t precomp_shaders[] = {
-        0x01200200,
-        0x00000045,
-        0x00000200,
-        0x01200a00,
-        0x00000a00,
-        0x01a00045,
-        0x00000551,
-        0x01045045,
-        0x05a00a00,
-        0x01200045,
-        0x05045045,
-        0x01045a00,
-        0x01a00a00,
-        0x0000038d,
-        0x01081081,
-        0x0120038d,
-        0x03200045,
-        0x03200a00,
-        0x01a00a6f,
-        0x01141045,
-        0x07a00a00,
-        0x05200200,
-        0x03200200,
-        0x09200200,
-        0x0920038d,
-        0x09200045
-    };
-
-    for (size_t i = 0; i < sizeof(precomp_shaders) / sizeof(uint32_t); i++)
-        gfx_precomp_shaders(precomp_shaders[i]);*/
+    gfx_cc_precomp();
 }
 
 #ifdef EXTERNAL_DATA
@@ -2355,6 +2356,15 @@ static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_i
         gfx_flush();
     }
     */
+}
+
+void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2, uint32_t flags) {
+    gfx_dp_set_combine_mode(rgb1, alpha1, rgb2, alpha2);
+
+    struct CombineMode* cm = &rdp.combine_mode;
+    cm->flags = flags;
+
+    gfx_lookup_or_create_color_combiner(cm);
 }
 
 void OPTIMIZE_O3 djui_gfx_run_dl(Gfx* cmd) {

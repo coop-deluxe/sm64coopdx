@@ -393,7 +393,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter);");
     }
     if (used_textures[1]) {
-        append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
+        if (cc->cm.light_map) {
+            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vInput1.rg, uTex1Size, uTex1Filter);");
+        } else {
+            append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
+        }
     }
 
     append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");

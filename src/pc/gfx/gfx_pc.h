@@ -26,6 +26,7 @@ void gfx_run(Gfx *commands);
 void gfx_end_frame(void);
 void gfx_precache_textures(void);
 void gfx_shutdown(void);
+void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2, uint32_t flags);
 
 #ifdef __cplusplus
 }

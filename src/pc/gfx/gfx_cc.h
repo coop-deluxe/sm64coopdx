@@ -79,6 +79,7 @@ struct CombineMode {
             uint8_t texture_edge : 1;
             uint8_t use_noise    : 1;
             uint8_t use_2cycle   : 1;
+            uint8_t light_map    : 1;
         };
         uint32_t flags;
     };
@@ -91,8 +92,14 @@ struct CombineMode {
 struct ColorCombiner {
     struct CombineMode cm;
     struct ShaderProgram *prg;
-    uint8_t shader_input_mapping[16];
-    uint8_t shader_commands[16];
+    union {
+        uint8_t shader_input_mapping[16];
+        uint64_t shader_input_mapping_as_u64[8];
+    };
+    union {
+        uint8_t shader_commands[16];
+        uint64_t shader_commands_as_u64[8];
+    };
     uint64_t hash;
 };
 
@@ -101,6 +108,8 @@ extern "C" {
 #endif
 
 void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features);
+void gfx_cc_print(struct ColorCombiner *cc);
+void gfx_cc_precomp(void);
 
 #ifdef __cplusplus
 }
