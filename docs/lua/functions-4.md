@@ -7285,6 +7285,26 @@
 <br />
 
 
+## [level_is_vanilla_level](#level_is_vanilla_level)
+
+### Lua Example
+`local booleanValue = level_is_vanilla_level(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool level_is_vanilla_level(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [level_register](#level_register)
 
 ### Lua Example
@@ -8133,18 +8153,18 @@
 ## [course_is_main_course](#course_is_main_course)
 
 ### Lua Example
-`local booleanValue = course_is_main_course(levelNum)`
+`local booleanValue = course_is_main_course(courseNum)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | `integer` |
+| courseNum | `integer` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool course_is_main_course(u16 levelNum);`
+`bool course_is_main_course(u16 courseNum);`
 
 [:arrow_up_small:](#)
 

@@ -46,7 +46,14 @@ struct DynosWarp {
 /* 9 */ s16 mDestId = 0;
 };
 
-static void *sDynosLevelScripts[LEVEL_COUNT] = { NULL };
+struct DynosLevelScript {
+    void *mLevelScript;
+    s32 mModIndex;
+};
+
+#define DYNOS_LEVEL_MOD_INDEX_VANILLA (-1)
+
+static DynosLevelScript sDynosLevelScripts[LEVEL_COUNT] = { { NULL, DYNOS_LEVEL_MOD_INDEX_VANILLA } };
 static void *sDynosLevelScriptsOriginal[LEVEL_COUNT] = { NULL };
 static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 static Array<s32> sDynosLevelList = Array<s32>(); // Ordered by Course Id, COURSE_NONE excluded
@@ -90,8 +97,9 @@ static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
         // EXECUTE
         if (aType == 0x00) {
             void *_Script = (void *) DynOS_Level_CmdGet(aCmd, 0x0C);
-            if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum]) {
-                sDynosLevelScripts[sDynosLevelNum] = _Script;
+            if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum].mLevelScript) {
+                sDynosLevelScripts[sDynosLevelNum].mLevelScript = _Script;
+                sDynosLevelScripts[sDynosLevelNum].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
                 sDynosLevelScriptsOriginal[sDynosLevelNum] = _Script;
             }
             sDynosLevelNum = -1;
@@ -190,8 +198,8 @@ static void DynOS_Level_Init() {
 
         // Level warps
         for (sDynosCurrentLevelNum = 0; sDynosCurrentLevelNum != LEVEL_COUNT; ++sDynosCurrentLevelNum) {
-            if (sDynosLevelScripts[sDynosCurrentLevelNum]) {
-                DynOS_Level_ParseScript(sDynosLevelScripts[sDynosCurrentLevelNum], DynOS_Level_PreprocessScript);
+            if (sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript) {
+                DynOS_Level_ParseScript(sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript, DynOS_Level_PreprocessScript);
             }
         }
 
@@ -228,13 +236,14 @@ s32 DynOS_Level_GetCourse(s32 aLevel) {
     return (s32) gLevelToCourseNumTable[aLevel - 1];
 }
 
-void DynOS_Level_Override(void* originalScript, void* newScript) {
+void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex) {
     for (s32 i = 0; i < LEVEL_COUNT; i++) {
-        if (sDynosLevelScripts[i] == originalScript) {
+        if (sDynosLevelScripts[i].mLevelScript == originalScript) {
             sDynosCurrentLevelNum = i;
             sDynosLevelWarps[i].Clear();
             DynOS_Level_ParseScript(newScript, DynOS_Level_PreprocessScript);
-            sDynosLevelScripts[i] = newScript;
+            sDynosLevelScripts[i].mLevelScript = newScript;
+            sDynosLevelScripts[i].mModIndex = modIndex;
             return;
         }
     }
@@ -244,8 +253,9 @@ void DynOS_Level_Unoverride() {
     for (s32 i = 0; i < LEVEL_COUNT; i++) {
         sDynosCurrentLevelNum = i;
         sDynosLevelWarps[i].Clear();
-        sDynosLevelScripts[i] = sDynosLevelScriptsOriginal[i];
-        DynOS_Level_ParseScript(sDynosLevelScripts[i], DynOS_Level_PreprocessScript);
+        sDynosLevelScripts[i].mLevelScript = sDynosLevelScriptsOriginal[i];
+        sDynosLevelScripts[i].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
+        DynOS_Level_ParseScript(sDynosLevelScripts[i].mLevelScript, DynOS_Level_PreprocessScript);
     }
 }
 
@@ -257,7 +267,25 @@ const void *DynOS_Level_GetScript(s32 aLevel) {
     }
 
     DynOS_Level_Init();
-    return sDynosLevelScripts[aLevel];
+    return sDynosLevelScripts[aLevel].mLevelScript;
+}
+
+s32 DynOS_Level_GetModIndex(s32 aLevel) {
+    if (aLevel >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo* info = smlua_level_util_get_info(aLevel);
+        if (!info || !info->script) { return DYNOS_LEVEL_MOD_INDEX_VANILLA; }
+        return info->modIndex;
+    }
+
+    DynOS_Level_Init();
+    return sDynosLevelScripts[aLevel].mModIndex;
+}
+
+bool DynOS_Level_IsVanillaLevel(s32 aLevel) {
+    if (aLevel >= 0 && aLevel < LEVEL_COUNT) {
+        return sDynosLevelScripts[aLevel].mLevelScript == sDynosLevelScriptsOriginal[aLevel];
+    }
+    return false;
 }
 
 //
@@ -886,11 +914,11 @@ s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea) {
         extern const LevelScript level_castle_grounds_entry[];
         extern const LevelScript level_castle_inside_entry[];
         extern const LevelScript level_castle_courtyard_entry[];
-        if (sDynosLevelScripts[aLevel] == level_castle_inside_entry) {
+        if (sDynosLevelScripts[aLevel].mLevelScript == level_castle_inside_entry) {
             return DynOS_Level_GetWarp(aLevel, aArea, (aArea == 3) ? 0x00 : 0x01);
-        } else if (sDynosLevelScripts[aLevel] == level_castle_grounds_entry) {
+        } else if (sDynosLevelScripts[aLevel].mLevelScript == level_castle_grounds_entry) {
             return DynOS_Level_GetWarp(aLevel, aArea, 0x00);
-        } else if (sDynosLevelScripts[aLevel] == level_castle_courtyard_entry) {
+        } else if (sDynosLevelScripts[aLevel].mLevelScript == level_castle_courtyard_entry) {
             return DynOS_Level_GetWarp(aLevel, aArea, 0x01);
         }
     }

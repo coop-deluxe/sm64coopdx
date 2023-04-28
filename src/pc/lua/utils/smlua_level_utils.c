@@ -106,6 +106,27 @@ s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullN
     info->echoLevel1 = echoLevel1;
     info->echoLevel2 = echoLevel2;
     info->echoLevel3 = echoLevel3;
+    if (gLuaLoadingMod) {
+        info->modIndex = gLuaLoadingMod->index;
+    } else if (gLuaActiveMod) {
+        info->modIndex = gLuaActiveMod->index;
+    } else {
+        if (info->scriptEntryName) {
+            free(info->scriptEntryName);
+            info->scriptEntryName = NULL;
+        }
+        if (info->fullName) {
+            free(info->fullName);
+            info->fullName = NULL;
+        }
+        if (info->shortName) {
+            free(info->shortName);
+            info->shortName = NULL;
+        }
+        free(info);
+        LOG_LUA("Failed to find mod index for level: %s", scriptEntryName);
+        return 0;
+    }
 
     // add to list
     if (!sCustomLevelHead) {
@@ -124,6 +145,10 @@ s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullN
 
     // just in case, should never trigger
     return 0;
+}
+
+bool level_is_vanilla_level(s16 levelNum) {
+    return dynos_level_is_vanilla_level(levelNum);
 }
 
 bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {

@@ -90,7 +90,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
         return;
     }
 
-    DynOS_Level_Override((void*)originalScript, newScriptNode->mData);
+    DynOS_Level_Override((void*)originalScript, newScriptNode->mData, modIndex);
     _OverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
 }
 

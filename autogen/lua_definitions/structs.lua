@@ -338,6 +338,7 @@
 --- @field public echoLevel3 integer
 --- @field public fullName string
 --- @field public levelNum integer
+--- @field public modIndex integer
 --- @field public next CustomLevelInfo
 --- @field public script Pointer_LevelScript
 --- @field public scriptEntryName string

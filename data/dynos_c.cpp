@@ -200,6 +200,14 @@ void* dynos_level_get_script(s32 level) {
     return (void *) DynOS_Level_GetScript(level);
 }
 
+s32 dynos_level_get_mod_index(s32 level) {
+    return DynOS_Level_GetModIndex(level);
+}
+
+bool dynos_level_is_vanilla_level(s32 level) {
+    return DynOS_Level_IsVanillaLevel(level);
+}
+
 // -- Behaviors -- //
 
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName) {

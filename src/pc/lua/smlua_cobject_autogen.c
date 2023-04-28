@@ -394,7 +394,7 @@ static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "stickY",         LVT_F32, offsetof(struct Controller, stickY),         false, LOT_NONE },
 };
 
-#define LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT 11
+#define LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT 12
 static struct LuaObjectField sCustomLevelInfoFields[LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT] = {
     { "acousticReach",   LVT_U32,           offsetof(struct CustomLevelInfo, acousticReach),   false, LOT_NONE            },
     { "courseNum",       LVT_S16,           offsetof(struct CustomLevelInfo, courseNum),       false, LOT_NONE            },
@@ -403,6 +403,7 @@ static struct LuaObjectField sCustomLevelInfoFields[LUA_CUSTOM_LEVEL_INFO_FIELD_
     { "echoLevel3",      LVT_U32,           offsetof(struct CustomLevelInfo, echoLevel3),      false, LOT_NONE            },
     { "fullName",        LVT_STRING_P,      offsetof(struct CustomLevelInfo, fullName),        true,  LOT_NONE            },
     { "levelNum",        LVT_S16,           offsetof(struct CustomLevelInfo, levelNum),        false, LOT_NONE            },
+    { "modIndex",        LVT_S32,           offsetof(struct CustomLevelInfo, modIndex),        false, LOT_NONE            },
     { "next",            LVT_COBJECT_P,     offsetof(struct CustomLevelInfo, next),            false, LOT_CUSTOMLEVELINFO },
     { "script",          LVT_LEVELSCRIPT_P, offsetof(struct CustomLevelInfo, script),          true,  LOT_POINTER         },
     { "scriptEntryName", LVT_STRING_P,      offsetof(struct CustomLevelInfo, scriptEntryName), true,  LOT_NONE            },

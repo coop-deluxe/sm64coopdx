@@ -26369,6 +26369,23 @@ int smlua_func_network_discord_id_from_local_index(lua_State* L) {
  // smlua_level_utils.h //
 /////////////////////////
 
+int smlua_func_level_is_vanilla_level(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_is_vanilla_level", 1, top);
+        return 0;
+    }
+
+    s16 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_is_vanilla_level"); return 0; }
+
+    lua_pushboolean(L, level_is_vanilla_level(levelNum));
+
+    return 1;
+}
+
 int smlua_func_level_register(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -27116,10 +27133,10 @@ int smlua_func_course_is_main_course(lua_State* L) {
         return 0;
     }
 
-    u16 levelNum = smlua_to_integer(L, 1);
+    u16 courseNum = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "course_is_main_course"); return 0; }
 
-    lua_pushboolean(L, course_is_main_course(levelNum));
+    lua_pushboolean(L, course_is_main_course(courseNum));
 
     return 1;
 }
@@ -30722,6 +30739,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
 
     // smlua_level_utils.h
+    smlua_bind_function(L, "level_is_vanilla_level", smlua_func_level_is_vanilla_level);
     smlua_bind_function(L, "level_register", smlua_func_level_register);
     smlua_bind_function(L, "smlua_level_util_get_info", smlua_func_smlua_level_util_get_info);
     smlua_bind_function(L, "smlua_level_util_get_info_from_short_name", smlua_func_smlua_level_util_get_info_from_short_name);

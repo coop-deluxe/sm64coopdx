@@ -101,7 +101,7 @@ void set_override_skybox(s8 background);
 
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
 
-bool course_is_main_course(u16 levelNum);
+bool course_is_main_course(u16 courseNum);
 
 s16 get_ttc_speed_setting();
 void set_ttc_speed_setting(s16 speed);

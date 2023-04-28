@@ -9,6 +9,7 @@
 #include "audio/external.h"
 #include "object_fields.h"
 #include "engine/math_util.h"
+#include "engine/level_script.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "include/level_misc_macros.h"
 #include "include/macro_presets.h"
@@ -499,23 +500,41 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
 
         // OBJECT_WITH_ACTS_EXT
         case 0x3F: {
-            const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 20));
-            if (bhvStr) {
-                bhvId = (u32) smlua_get_any_integer_mod_variable(bhvStr);
-                bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
-                pBhvId = &bhvId;
-                pBhvArgs = &bhvArgs;
+            if (gLevelScriptModIndex != -1) {
+                const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 20));
+                if (bhvStr) {
+                    gSmLuaConvertSuccess = true;
+                    bhvId = (u32) smlua_get_integer_mod_variable(gLevelScriptModIndex, bhvStr);
+                    if (!gSmLuaConvertSuccess) {
+                        gSmLuaConvertSuccess = true;
+                        bhvId = (u32) smlua_get_any_integer_mod_variable(bhvStr);
+                    }
+                    if (gSmLuaConvertSuccess) {
+                        bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
+                        pBhvId = &bhvId;
+                        pBhvArgs = &bhvArgs;
+                    }
+                }
             }
         } break;
 
         // OBJECT_WITH_ACTS_EXT2
         case 0x40: {
-            const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 24));
-            if (bhvStr) {
-                bhvId = (u32) smlua_get_any_integer_mod_variable(bhvStr);
-                bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
-                pBhvId = &bhvId;
-                pBhvArgs = &bhvArgs;
+            if (gLevelScriptModIndex != -1) {
+                const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 24));
+                if (bhvStr) {
+                    gSmLuaConvertSuccess = true;
+                    bhvId = (u32) smlua_get_integer_mod_variable(gLevelScriptModIndex, bhvStr);
+                    if (!gSmLuaConvertSuccess) {
+                        gSmLuaConvertSuccess = true;
+                        bhvId = (u32) smlua_get_any_integer_mod_variable(bhvStr);
+                    }
+                    if (gSmLuaConvertSuccess) {
+                        bhvArgs = (u32) dynos_level_cmd_get(cmd, 16);
+                        pBhvId = &bhvId;
+                        pBhvArgs = &bhvArgs;
+                    }
+                }
             }
         } break;
 
@@ -612,7 +631,20 @@ void smlua_func_level_script_parse(lua_State* L) {
         LOG_LUA("Failed to find script: %lld", levelNum);
         return;
     }
+    s32 modIndex = dynos_level_get_mod_index(levelNum);
+
+    // Back up current values
+    LevelScript *currLevelScript = gLevelScriptActive;
+    s32 currModIndex = gLevelScriptModIndex;
+
+    // Parse script
+    gLevelScriptActive = (LevelScript *) script;
+    gLevelScriptModIndex = modIndex;
     dynos_level_parse_script(script, smlua_func_level_script_parse_callback);
+
+    // Restore current values
+    gLevelScriptActive = currLevelScript;
+    gLevelScriptModIndex = currModIndex;
 }
 
   //////////

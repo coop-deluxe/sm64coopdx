@@ -8048,6 +8048,12 @@ function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
+--- @param levelNum integer
+--- @return boolean
+function level_is_vanilla_level(levelNum)
+    -- ...
+end
+
 --- @param scriptEntryName string
 --- @param courseNum integer
 --- @param fullName string
@@ -8308,9 +8314,9 @@ function camera_unfreeze()
     -- ...
 end
 
---- @param levelNum integer
+--- @param courseNum integer
 --- @return boolean
-function course_is_main_course(levelNum)
+function course_is_main_course(courseNum)
     -- ...
 end
 

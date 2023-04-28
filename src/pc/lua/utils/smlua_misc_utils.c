@@ -448,8 +448,8 @@ void set_override_skybox(s8 background) {
 
 ///
 
-bool course_is_main_course(u16 levelNum) {
-    return COURSE_IS_MAIN_COURSE(levelNum);
+bool course_is_main_course(u16 courseNum) {
+    return COURSE_IS_MAIN_COURSE(courseNum);
 }
 
 ///

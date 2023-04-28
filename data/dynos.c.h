@@ -62,6 +62,8 @@ u64 dynos_level_cmd_get(void *cmd, u64 offset);
 void dynos_level_cmd_next(void *cmd, u64 cmdsize);
 void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *));
 void* dynos_level_get_script(s32 level);
+s32 dynos_level_get_mod_index(s32 level);
+bool dynos_level_is_vanilla_level(s32 level);
 
 // -- behaviors -- //
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName);

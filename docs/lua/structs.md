@@ -538,6 +538,7 @@
 | echoLevel3 | `integer` |  |
 | fullName | `string` | read-only |
 | levelNum | `integer` |  |
+| modIndex | `integer` |  |
 | next | [CustomLevelInfo](structs.md#CustomLevelInfo) |  |
 | script | `Pointer` <`LevelScript`> | read-only |
 | scriptEntryName | `string` | read-only |
