@@ -72,6 +72,7 @@ struct PacketPlayerData {
 
     u8 levelSyncValid;
     u8 areaSyncValid;
+    u8 knockbackTimer;
 };
 #pragma pack()
 
@@ -139,6 +140,8 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     data->areaSyncValid  = np->currAreaSyncValid;
     data->levelSyncValid = np->currLevelSyncValid;
+
+    data->knockbackTimer = m->knockbackTimer;
 }
 
 static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
@@ -201,6 +204,8 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
         np->currAreaSyncValid  = data->areaSyncValid;
         np->currLevelSyncValid = data->levelSyncValid;
     }
+
+    m->knockbackTimer = data->knockbackTimer;
 }
 
 void network_send_player(u8 localIndex) {
