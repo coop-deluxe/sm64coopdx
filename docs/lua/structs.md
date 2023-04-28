@@ -106,13 +106,13 @@
 | ----- | ---- | ------ |
 | animYTransDivisor | `integer` |  |
 | flags | `integer` |  |
-| index | `Pointer` <`integer`> | read-only |
+| index | `Pointer` <`integer`> |  |
 | length | `integer` |  |
 | loopEnd | `integer` |  |
 | loopStart | `integer` |  |
 | startFrame | `integer` |  |
 | unusedBoneCount | `integer` |  |
-| values | `Pointer` <`integer`> | read-only |
+| values | `Pointer` <`integer`> |  |
 
 [:arrow_up_small:](#)
 

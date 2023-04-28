@@ -42,13 +42,13 @@ static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), false, LOT_NONE    },
     { "flags",             LVT_S16,   offsetof(struct Animation, flags),             false, LOT_NONE    },
-    { "index",             LVT_U16_P, offsetof(struct Animation, index),             true,  LOT_POINTER },
+    { "index",             LVT_U16_P, offsetof(struct Animation, index),             false, LOT_POINTER },
     { "length",            LVT_U32,   offsetof(struct Animation, length),            false, LOT_NONE    },
     { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           false, LOT_NONE    },
     { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE    },
     { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE    },
     { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),   false, LOT_NONE    },
-    { "values",            LVT_S16_P, offsetof(struct Animation, values),            true,  LOT_POINTER },
+    { "values",            LVT_S16_P, offsetof(struct Animation, values),            false, LOT_POINTER },
 };
 
 #define LUA_AREA_FIELD_COUNT 18

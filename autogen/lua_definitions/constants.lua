@@ -8254,7 +8254,10 @@ HOOK_BEFORE_SET_MARIO_ACTION = 30
 HOOK_JOINED_GAME = 31
 
 --- @type LuaHookedEventType
-HOOK_MAX = 32
+HOOK_ON_OBJECT_ANIM_UPDATE = 32
+
+--- @type LuaHookedEventType
+HOOK_MAX = 33
 
 --- @class HudDisplayFlags
 

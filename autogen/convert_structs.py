@@ -70,6 +70,10 @@ override_field_mutable = {
         "overridePalette",
         "overridePaletteIndex",
     ],
+    "Animation": [
+        "values",
+        "index",
+    ],
 }
 
 override_field_invisible = {
