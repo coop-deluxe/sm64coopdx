@@ -7868,6 +7868,19 @@ function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
     -- ...
 end
 
+--- @param obj Object
+--- @return string
+function smlua_anim_util_get_current_animation_name(obj)
+    -- ...
+end
+
+--- @param obj Object
+--- @param name string
+--- @return nil
+function smlua_anim_util_set_animation(obj, name)
+    -- ...
+end
+
 --- @param audio BassAudio
 --- @return nil
 function audio_sample_destroy(audio)

@@ -222,6 +222,19 @@ function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevSc
     -- ...
 end
 
+--- @param name string
+--- @param flags integer
+--- @param animYTransDivisor integer
+--- @param startFrame integer
+--- @param loopStart integer
+--- @param loopEnd integer
+--- @param values table
+--- @param index table
+--- @return nil
+function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
+    -- ...
+end
+
 --- @param levelNum number
 --- @param func fun(areaIndex:number, bhvData:table, macroBhvIds:table, macroBhvArgs:table)
 --- @return nil

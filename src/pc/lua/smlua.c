@@ -7,6 +7,7 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/djui/djui.h"
 
 lua_State* gLuaState = NULL;
@@ -198,6 +199,7 @@ void smlua_shutdown(void) {
     smlua_clear_hooks();
     smlua_model_util_reset();
     smlua_level_util_reset();
+    smlua_anim_util_reset();
     lua_State* L = gLuaState;
     if (L != NULL) {
         lua_close(L);

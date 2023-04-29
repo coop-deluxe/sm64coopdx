@@ -30,6 +30,7 @@
 #include "src/pc/lua/utils/smlua_text_utils.h"
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/pc/lua/utils/smlua_level_utils.h"
+#include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_deprecated.h"
 #include "src/game/object_list_processor.h"
 #include "src/game/behavior_actions.h"
@@ -25850,6 +25851,46 @@ int smlua_func_save_file_set_star_flags(lua_State* L) {
     return 1;
 }
 
+  ////////////////////////
+ // smlua_anim_utils.h //
+////////////////////////
+
+int smlua_func_smlua_anim_util_get_current_animation_name(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_get_current_animation_name", 1, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_get_current_animation_name"); return 0; }
+
+    lua_pushstring(L, smlua_anim_util_get_current_animation_name(obj));
+
+    return 1;
+}
+
+int smlua_func_smlua_anim_util_set_animation(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_set_animation", 2, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_set_animation"); return 0; }
+    const char* name = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_set_animation"); return 0; }
+
+    smlua_anim_util_set_animation(obj, name);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_audio_utils.h //
 /////////////////////////
@@ -30704,6 +30745,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_reload", smlua_func_save_file_reload);
     smlua_bind_function(L, "save_file_set_flags", smlua_func_save_file_set_flags);
     smlua_bind_function(L, "save_file_set_star_flags", smlua_func_save_file_set_star_flags);
+
+    // smlua_anim_utils.h
+    smlua_bind_function(L, "smlua_anim_util_get_current_animation_name", smlua_func_smlua_anim_util_get_current_animation_name);
+    smlua_bind_function(L, "smlua_anim_util_set_animation", smlua_func_smlua_anim_util_set_animation);
 
     // smlua_audio_utils.h
     smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);

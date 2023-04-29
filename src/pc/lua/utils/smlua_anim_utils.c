@@ -87,3 +87,116 @@ struct GlobalObjectAnimations gGlobalObjectAnimations = {
     .wiggler_seg5_anims_0500EC8C      = (struct Animation**) wiggler_seg5_anims_0500EC8C,
     .yoshi_seg5_anims_05024100        = (struct Animation**) yoshi_seg5_anims_05024100,
 };
+
+  ///////////////////////
+ // custom animations //
+///////////////////////
+
+struct CustomAnimation {
+    const char *name;
+    struct Animation *anim;
+    struct CustomAnimation *next;
+};
+
+struct CustomAnimation* sCustomAnimationHead = NULL;
+
+static struct CustomAnimation *get_custom_animation_node(const char *name) {
+    for (struct CustomAnimation *node = sCustomAnimationHead; node; node = node->next) {
+        if (node->name && strcmp(node->name, name) == 0) {
+            return node;
+        }
+    }
+    return NULL;
+}
+
+void smlua_anim_util_reset() {
+    for (struct CustomAnimation *node = sCustomAnimationHead; node;) {
+        struct CustomAnimation *next = node->next;
+        if (node->name) {
+            free((void *) node->name);
+        }
+        if (node->anim) {
+            if (node->anim->index) {
+                free((void *) node->anim->index);
+            }
+            if (node->anim->values) {
+                free((void *) node->anim->values);
+            }
+        }
+        free(node);
+        node = next;
+    }
+    sCustomAnimationHead = NULL;
+}
+
+void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, const s16 *values, const u16 *index) {
+
+    // NULL-checks
+    if (!name) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Parameter 'name' is NULL");
+        return;
+    }
+
+    // Check if the name is not already taken
+    if (get_custom_animation_node(name)) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: An animation named '%s' already exists", name);
+        return;
+    }
+
+    // Create a new node
+    struct CustomAnimation *node = calloc(1, sizeof(struct CustomAnimation));
+    node->name = strdup(name);
+    node->anim = calloc(1, sizeof(struct Animation));
+    node->anim->flags = flags;
+    node->anim->animYTransDivisor = animYTransDivisor;
+    node->anim->startFrame = startFrame;
+    node->anim->loopStart = loopStart;
+    node->anim->loopEnd = loopEnd;
+    node->anim->unusedBoneCount = 0;
+    node->anim->values = values;
+    node->anim->index = index;
+    node->anim->length = 0;
+    node->next = sCustomAnimationHead;
+    sCustomAnimationHead = node;
+    LOG_INFO("Registered custom animation: %s", name);
+}
+
+void smlua_anim_util_set_animation(struct Object *obj, const char *name) {
+
+    // NULL-checks
+    if (!obj) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'obj' is NULL");
+        return;
+    }
+    if (!name) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'name' is NULL");
+        return;
+    }
+
+    // Check if the animation exists
+    struct CustomAnimation *node = get_custom_animation_node(name);
+    if (!node) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Animation '%s' doesn't exist", name);
+        return;
+    }
+
+    // Set animation
+    obj->header.gfx.animInfo.curAnim = node->anim;
+}
+
+const char *smlua_anim_util_get_current_animation_name(struct Object *obj) {
+
+    // NULL-checks
+    if (!obj) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'obj' is NULL");
+        return NULL;
+    }
+
+    // Check the animations
+    for (struct CustomAnimation *node = sCustomAnimationHead; node; node = node->next) {
+        if (node->anim == obj->header.gfx.animInfo.curAnim) {
+            return node->name;
+        }
+    }
+    return NULL;
+}

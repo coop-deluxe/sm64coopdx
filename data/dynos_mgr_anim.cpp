@@ -4,6 +4,7 @@ extern "C" {
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
 #include "pc/configfile.h"
+#include "pc/lua/utils/smlua_anim_utils.h"
 }
 
 //
@@ -25,7 +26,7 @@ static s32 RetrieveCurrentMarioAnimationIndex(u32 aPlayerIndex) {
 // Retrieve the current animation index
 // As we don't know the length of the table, let's hope that we'll always find the animation...
 static s32 RetrieveCurrentAnimationIndex(struct Object *aObject) {
-    if (!aObject->oAnimations || !aObject->header.gfx.animInfo.curAnim) {
+    if (!aObject->oAnimations || !aObject->header.gfx.animInfo.curAnim || smlua_anim_util_get_current_animation_name(aObject)) {
         return -1;
     }
     for (s32 i = 0; aObject->oAnimations[i] != NULL; ++i) {
