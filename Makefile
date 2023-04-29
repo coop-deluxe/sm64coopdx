@@ -965,6 +965,7 @@ else
 endif
 
 # coopnet
+COOPNET_LIBS :=
 ifeq ($(COOPNET),1)
   ifeq ($(WINDOWS_BUILD),1)
     ifeq ($(TARGET_BITS), 32)
@@ -973,7 +974,9 @@ ifeq ($(COOPNET),1)
       LDFLAGS += -Llib/coopnet/win64 -l:libcoopnet.a -l:libjuice.a -lbcrypt -lws2_32
     endif
   else ifeq ($(OSX_BUILD),1)
-    LDFLAGS += -L./lib/coopnet/mac/ -l coopnet
+    LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac/ -l coopnet
+    COOPNET_LIBS += ./lib/coopnet/mac/libcoopnet.dylib
+    COOPNET_LIBS += ./lib/coopnet/mac/libjuice.1.2.2.dylib
   else ifeq ($(TARGET_RPI),1)
     ifneq (,$(findstring aarch64,$(machine)))
       LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
@@ -1251,6 +1254,9 @@ $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 
 $(BUILD_DIR)/$(BASS_LIBS):
 	@$(CP) -f $(BASS_LIBS) $(BUILD_DIR)
+
+$(BUILD_DIR)/$(COOPNET_LIBS):
+	@$(CP) -f $(COOPNET_LIBS) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
@@ -1621,7 +1627,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
 endif
