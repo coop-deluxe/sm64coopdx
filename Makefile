@@ -106,19 +106,6 @@ dev:; @$(MAKE) DEVELOPMENT=1
 COMPILER = gcc
 $(eval $(call validate-option,COMPILER,ido gcc clang))
 
-ifeq ($(WINDOWS_AUTO_BUILDER),1)
-  export SHELL=sh.exe
-  EXTRA_INCLUDES := -I ../include/1 -I ../include/2 -I ../include/3 -I ../include/4
-  EXTRA_CFLAGS += -Wno-expansion-to-defined
-
-  EXTRA_CPP_INCLUDES := -I ../include/cpp
-  EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
-else
-  EXTRA_INCLUDES ?=
-
-  EXTRA_CPP_INCLUDES ?=
-endif
-
 # Attempt to detect OS
 
 ifeq ($(OS),Windows_NT)
@@ -166,6 +153,24 @@ endif
 
 ifneq ($(TARGET_BITS),0)
   BITS := -m$(TARGET_BITS)
+endif
+
+ifeq ($(WINDOWS_AUTO_BUILDER),1)
+  export SHELL=sh.exe
+
+  ifeq ($(TARGET_BITS), 32)
+    EXTRA_INCLUDES := ../include/1 ../include/2 ../include/3 ../include/4
+    EXTRA_CPP_INCLUDES := ../include/cpp
+  else
+    EXTRA_INCLUDES :=
+    EXTRA_CPP_INCLUDES :=
+  endif
+
+  EXTRA_CFLAGS += -Wno-expansion-to-defined
+  EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
+else
+  EXTRA_INCLUDES ?=
+  EXTRA_CPP_INCLUDES ?=
 endif
 
 
@@ -1508,17 +1513,17 @@ $(GLOBAL_ASM_DEP).$(NON_MATCHING):
 # Compile C++ code
 $(BUILD_DIR)/%.o: %.cpp
 	$(call print,Compiling:,$<,$@)
-	@$(CXX) $(PROF_FLAGS) -fsyntax-only $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CXX) $(PROF_FLAGS) -fsyntax-only $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CXX) $(PROF_FLAGS) -c $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -o $@ $<
 
 # Compile C code
 $(BUILD_DIR)/%.o: %.c
 	$(call print,Compiling:,$<,$@)
-	@$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) $(PROF_FLAGS) -c $(CFLAGS) -o $@ $<
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c
 	$(call print,Compiling:,$<,$@)
-	@$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CC_CHECK) $(PROF_FLAGS) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) $(PROF_FLAGS) -c $(CFLAGS) -o $@ $<
 
 # Alternate compiler flags needed for matching
