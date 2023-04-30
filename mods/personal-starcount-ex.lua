@@ -169,3 +169,17 @@ end
 hook_event(HOOK_ON_INTERACT, localStarCounter)
 hook_event(HOOK_ON_HUD_RENDER, displayStarCounter)
 hook_chat_command('pstarcount', 'On|Off - Displays stars you"ve collected. Default is On.', PSToggle)
+
+_G.PersonalStarCounter = {
+	get_star_counter = function ()
+		return StarCounter
+	end,
+
+	get_total_star_counter = function ()
+		return TotalStarCounter
+	end,
+
+	hide_star_counters = function (hide)
+		if hide then psToggle = 0 else psToggle = 1 end
+	end,
+}
