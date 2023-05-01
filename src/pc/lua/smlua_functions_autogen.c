@@ -11859,7 +11859,7 @@ int smlua_func_djui_hud_world_pos_to_screen_pos(lua_State* L) {
     out[2] = smlua_get_number_field(2, "z");
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_world_pos_to_screen_pos"); return 0; }
 
-    djui_hud_world_pos_to_screen_pos(pos, out);
+    lua_pushboolean(L, djui_hud_world_pos_to_screen_pos(pos, out));
 
     smlua_push_number_field(1, "x", pos[0]);
     smlua_push_number_field(1, "y", pos[1]);

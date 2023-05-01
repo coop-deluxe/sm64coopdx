@@ -177,7 +177,7 @@ u32 djui_hud_get_screen_width(void) {
     }
 
     return (sResolution == RESOLUTION_N64)
-        ? ((use_forced_4by3() ? (4.0f / 3.0f) : GFX_DIMENSIONS_ASPECT_RATIO) * SCREEN_HEIGHT)
+        ? (use_forced_4by3() ? (4.0f / 3.0f) : (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT))
         : (windowWidth / djui_gfx_get_scale());
 }
 
@@ -524,21 +524,28 @@ static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
     out[2] += (*mtx)[3][2];
 }
 
-void djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
+bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
     hud_rotate_and_translate_vec3f(pos, &gCamera->mtx, out);
-    if (out[2] > -256.0f) {
-        return;
+    if (out[2] >= 0.0f) {
+        return false;
     }
 
-    out[0] *= 256.0 / -out[2];
-    out[1] *= 256.0 / out[2];
-    
-    // TODO: this is a hack to correct for the FOV. It only sort of works for the default fov
-    out[0] *= 1.135;
-    out[1] *= 1.135;
+    out[0] *= 256.0f / -out[2];
+    out[1] *= 256.0f / out[2];
+
+    // fov of 45.0 is the default fov
+    f32 fovDefault = tanf(45.0f * ((f32)M_PI / 360.0f));
+    f32 fovCurrent = tanf((gFOVState.fov + gFOVState.fovOffset) * ((f32)M_PI / 360.0f));
+
+    f32 fovDifference = (fovDefault / fovCurrent) * 1.13f;
+
+    out[0] *= fovDifference;
+    out[1] *= fovDifference;
 
     out[0] += djui_hud_get_screen_width()  / 2.0f;
     out[1] += djui_hud_get_screen_height() / 2.0f;
+
+    return true;
 }
 
 void djui_hud_set_render_behind_hud(bool enable) {

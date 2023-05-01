@@ -678,6 +678,7 @@ extern s32 gObjCutsceneDone;
 extern struct Camera *gCamera;
 #endif
 
+extern struct CameraFOVStatus gFOVState;
 extern u8 gCameraUseCourseSpecificSettings;
 extern struct Object *gCutsceneFocus;
 extern struct Object *gSecondCameraFocus;

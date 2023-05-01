@@ -3745,7 +3745,7 @@ end
 
 --- @param pos Vec3f
 --- @param out Vec3f
---- @return nil
+--- @return boolean
 function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end

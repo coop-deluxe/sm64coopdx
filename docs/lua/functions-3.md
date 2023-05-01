@@ -2426,7 +2426,7 @@
 ## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
 
 ### Lua Example
-`djui_hud_world_pos_to_screen_pos(pos, out)`
+`local booleanValue = djui_hud_world_pos_to_screen_pos(pos, out)`
 
 ### Parameters
 | Field | Type |
@@ -2435,10 +2435,10 @@
 | out | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);`
+`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);`
 
 [:arrow_up_small:](#)
 
