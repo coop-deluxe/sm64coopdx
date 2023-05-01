@@ -120,7 +120,6 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 }
 
 void network_receive_spawn_objects(struct Packet* p) {
-    LOG_INFO("rx spawn objects");
     // prevent receiving spawn objects during credits
     if (gCurrActStarNum == 99) {
         LOG_ERROR("rx failed: in credits");
@@ -147,6 +146,14 @@ void network_receive_spawn_objects(struct Packet* p) {
         packet_read(p, &data.setHome, sizeof(u8));
         packet_read(p, &data.globalPlayerIndex, sizeof(u8));
         packet_read(p, &data.extendedModelId, sizeof(u16));
+
+        char* id = "unknown";
+        char* name = "unknown";
+        if (gNetworkSystem && p->localIndex) {
+            id = gNetworkSystem->get_id_str(p->localIndex);
+            name = gNetworkPlayers[p->localIndex].name;
+        }
+        LOG_INFO("rx spawn object %s from %s (%s)", get_behavior_name_from_id(data.behaviorId), name, id);
 
         struct Object* parentObj = NULL;
         if (data.parentId == (u32)-1) {
