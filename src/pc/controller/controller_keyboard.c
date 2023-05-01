@@ -7,7 +7,10 @@
 
 #include "../configfile.h"
 #include "controller_keyboard.h"
-#include "controller_keyboard_debug.h"
+
+#ifdef DEVELOPMENT
+#include "dev/controller_keyboard_debug.h"
+#endif
 
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
