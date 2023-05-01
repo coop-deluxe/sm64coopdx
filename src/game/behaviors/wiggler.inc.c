@@ -71,7 +71,7 @@ void bhv_wiggler_body_part_update(void) {
     // Sanity check the array size of our segments,
     // This should never be higher then 3
     // in normal circumstances.
-    if (o->oBehParams2ndByte > 3) { return; }
+    if (o->oBehParams2ndByte > 3 || o->oBehParams2ndByte < 0) { return; }
     
     struct ChainSegment *segment = &parent->oWigglerSegments[o->oBehParams2ndByte];
     
