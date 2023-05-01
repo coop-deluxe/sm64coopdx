@@ -143,6 +143,7 @@ unsigned int configDrawDistance                  = 5;
 bool         configDisablePopups                 = 0;
 #if defined(DEVELOPMENT)
 bool         configLuaProfiler                   = 0;
+bool         configCtxProfiler                   = 0;
 #endif
 bool         configDisableDownloadedModels       = 0;
 unsigned int configInterpolationMode             = 1;
@@ -253,6 +254,7 @@ static const struct ConfigOption options[] = {
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisablePopups},
 #if defined(DEVELOPMENT)
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configLuaProfiler},
+    {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL  , .boolValue   = &configCtxProfiler},
 #endif
     {.name = "disable_downloaded_models",      .type = CONFIG_TYPE_BOOL  , .boolValue   = &configDisableDownloadedModels},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT  , .uintValue   = &configInterpolationMode},

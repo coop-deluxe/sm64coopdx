@@ -36,6 +36,7 @@ struct SyncObject {
     u16 extendedModelId;
     struct Packet lastReliablePacket;
     u8 forgetting;
+    u8 ctx;
 };
 
 

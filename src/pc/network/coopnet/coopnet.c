@@ -14,7 +14,11 @@
 
 #ifdef COOPNET
 
+#ifdef DEVELOPMENT
+#define CN_GAME_STR "sm64ex-dev"
+#else
 #define CN_GAME_STR "sm64ex-coop"
+#endif
 
 uint64_t gCoopNetDesiredLobby = 0;
 char gCoopNetPassword[64] = "";

@@ -11,6 +11,7 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "data/dynos_cmap.cpp.h"
+#include "pc/debug_context.h"
 
 static void* sSoMap = NULL;
 static void* sSoIter = NULL;
@@ -193,6 +194,7 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     so->override_ownership = NULL;
     so->on_forget = NULL;
     so->syncDeathEvent = true;
+    so->ctx = 0;
     if (!hadSyncId) {
         so->extendedModelId = 0xFFFF;
     }
@@ -375,6 +377,8 @@ u32 sync_object_get_available_local_id() {
 
 bool sync_object_set_id(struct Object* o) {
     u32 syncId = o->oSyncID;
+    u8 ctx = o->ctx;
+
     if (syncId == 0) {
         if (!gNetworkAreaLoaded) {
             // check if we should set our id based on our parent
@@ -405,11 +409,12 @@ bool sync_object_set_id(struct Object* o) {
         }
     }
 
-    if (syncId == 0) {
+    if (syncId == 0 || !ctx) {
+        o->oSyncID = 0;
         LOG_ERROR("failed to set sync id for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
-        return false;
+        return !ctx;
     }
-    
+
     struct SyncObject* so = sync_object_get(syncId);
 
     if (!so) {
@@ -422,17 +427,18 @@ bool sync_object_set_id(struct Object* o) {
     }
 
     if (!so) {
-        LOG_ERROR("failed to set sync id (o) for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
+        LOG_ERROR("failed to set sync id (o) for object w/behavior %d (set_sync_id) %u, ctx %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded, ctx);
         return false;
     }
 
     so->id = syncId;
     so->o = o;
     so->behavior = (BehaviorScript*) o->behavior;
+    so->ctx = ctx;
     o->oSyncID = syncId;
 
     if (gNetworkAreaLoaded) {
-        LOG_INFO("set sync id for object w/behavior %d", get_id_from_behavior(o->behavior));
+        LOG_INFO("set sync id for object w/behavior %d, ctx %u", get_id_from_behavior(o->behavior), ctx);
     }
 
     return true;

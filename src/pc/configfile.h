@@ -102,6 +102,7 @@ extern unsigned int configDrawDistance;
 extern bool         configDisablePopups;
 #if defined(DEVELOPMENT)
 extern bool         configLuaProfiler;
+extern bool         configCtxProfiler;
 #endif
 extern bool         configDisableDownloadedModels;
 extern unsigned int configInterpolationMode;

@@ -16,6 +16,7 @@
 
 #pragma pack(1)
 struct SpawnObjectData {
+    u8 ctx;
     u32 parentId;
     u32 model;
     u32 behaviorId;
@@ -79,7 +80,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
 
     for (u8 i = 0; i < objectCount; i++) {
         struct Object* o = objects[i];
-        if (!o) {
+        if (!o || !o->ctx) {
             LOG_ERROR("Tried to send null object");
             return;
         }
@@ -91,6 +92,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         u16 extendedModelId = (so && so->o == o)
                             ? so->extendedModelId
                             : 0xFFFF;
+        packet_write(&p, &o->ctx, sizeof(u8));
         packet_write(&p, &parentId, sizeof(u32));
         packet_write(&p, &model, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
@@ -132,6 +134,8 @@ void network_receive_spawn_objects(struct Packet* p) {
     for (u8 i = 0; i < objectCount; i++) {
         struct SpawnObjectData data = { 0 };
         Vec3f scale = { 0 };
+        u8 ctx = 0;
+        packet_read(p, &ctx, sizeof(u8));
         packet_read(p, &data.parentId, sizeof(u32));
         packet_read(p, &data.model, sizeof(u32));
         packet_read(p, &data.behaviorId, sizeof(u32));
@@ -184,12 +188,14 @@ void network_receive_spawn_objects(struct Packet* p) {
         }
 
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
-        struct Object* o = spawn_object(parentObj, data.model, behavior);
+        struct Object* o = NULL;
+        if (ctx) { o = spawn_object(parentObj, data.model, behavior); }
         if (o == NULL) {
             LOG_ERROR("ERROR: failed to allocate object!");
             return;
         }
 
+        o->ctx = ctx;
         o->globalPlayerIndex = data.globalPlayerIndex;
         o->coopFlags |= COOP_OBJ_FLAG_NETWORK;
         o->setHome = data.setHome;

@@ -55,6 +55,7 @@
 
 #include "pc/mods/mods.h"
 
+#include "debug_context.h"
 #include "menu/intro_geo.h"
 
 #ifdef DISCORD_SDK
@@ -207,19 +208,30 @@ void produce_interpolation_frames_and_delay(void) {
 }
 
 void produce_one_frame(void) {
+    CTX_BEGIN(CTX_NETWORK);
     network_update();
+    CTX_END(CTX_NETWORK);
 
+    CTX_BEGIN(CTX_INTERP);
     patch_interpolations_before();
+    CTX_END(CTX_INTERP);
 
     const f32 master_mod = (f32)configMasterVolume / 127.0f;
     set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
     set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * master_mod);
     set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
 
+    CTX_BEGIN(CTX_GAME_LOOP);
     game_loop_one_iteration();
+    CTX_END(CTX_GAME_LOOP);
+
+    CTX_BEGIN(CTX_SMLUA);
     smlua_update();
+    CTX_END(CTX_SMLUA);
+
     thread6_rumble_loop(NULL);
 
+    CTX_BEGIN(CTX_AUDIO);
     int samples_left = audio_api->buffered();
     u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
     //printf("Audio samples: %d %u\n", samples_left, num_audio_samples);
@@ -234,8 +246,11 @@ void produce_one_frame(void) {
     //printf("Audio samples before submitting: %d\n", audio_api->buffered());
 
     audio_api->play((u8 *)audio_buffer, 2 * num_audio_samples * 4);
+    CTX_END(CTX_AUDIO);
 
+    CTX_BEGIN(CTX_RENDER);
     produce_interpolation_frames_and_delay();
+    CTX_END(CTX_RENDER);
 }
 
 void audio_shutdown(void) {
@@ -395,6 +410,8 @@ void main_func(void) {
 #endif
 
     while (true) {
+        debug_context_reset();
+        CTX_BEGIN(CTX_FRAME);
         wm_api->main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
         discord_update();
@@ -403,6 +420,7 @@ void main_func(void) {
         fflush(stdout);
         fflush(stderr);
 #endif
+        CTX_END(CTX_FRAME);
     }
 
     bassh_deinit();

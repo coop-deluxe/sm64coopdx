@@ -15,6 +15,7 @@
 #include "types.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/debug_context.h"
 
 /**
  * An unused linked list struct that seems to have been replaced by ObjectNode.
@@ -107,6 +108,10 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
 
     geo_remove_child(&nextObj->gfx.node);
     geo_add_child(&gObjParentGraphNode, &nextObj->gfx.node);
+
+    ((struct Object *)nextObj)->ctx = 0
+        | ((u8)CTX_WITHIN(CTX_LEVEL_SCRIPT) << 0)
+        | ((u8)CTX_WITHIN(CTX_HOOK)         << 1);
 
     return (struct Object *) nextObj;
 }

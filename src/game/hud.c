@@ -692,6 +692,11 @@ void render_hud(void) {
             extern void lua_profiler_update_counters();
             lua_profiler_update_counters();
         }
+        extern bool configCtxProfiler;
+        if (configCtxProfiler) {
+            extern void ctx_profiler_update_counters();
+            ctx_profiler_update_counters();
+        }
 #endif
     }
 }

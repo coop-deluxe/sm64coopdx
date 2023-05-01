@@ -5,6 +5,7 @@
 #include "pc/djui/djui_chat_message.h"
 #include "pc/crash_handler.h"
 #include "src/game/hud.h"
+#include "pc/debug_context.h"
 
 #if defined(DEVELOPMENT)
 #include "../mods/mods.h"
@@ -97,7 +98,11 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
         lua_profiler_start_counter(activeMod);
     }
 #endif
+
+    CTX_BEGIN(CTX_HOOK);
     int rc = smlua_pcall(L, nargs, nresults, errfunc);
+    CTX_END(CTX_HOOK);
+
 #if defined(DEVELOPMENT)
     if (configLuaProfiler) {
         lua_profiler_stop_counter(activeMod);
