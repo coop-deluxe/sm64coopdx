@@ -151,7 +151,7 @@ const LevelScript level_main_scripts_entry[] = {
     LOOP_BEGIN(),
         EXECUTE(/*seg*/ 0x14, _menuSegmentRomStart, _menuSegmentRomEnd, level_main_menu_entry_2),
         JUMP_LINK(script_exec_level_table),
-        SLEEP(/*frames*/ 1),
+        //SLEEP(/*frames*/ 1),
     LOOP_UNTIL(/*op*/ OP_LT, /*arg*/ 0),
     JUMP_IF(/*op*/ OP_EQ, /*arg*/ -1, script_L2),
     JUMP_IF(/*op*/ OP_EQ, /*arg*/ -2, goto_mario_head_regular),

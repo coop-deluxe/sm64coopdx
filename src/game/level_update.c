@@ -278,7 +278,7 @@ void fade_into_special_warp(u32 arg, u32 color) {
 
     fadeout_music(190);
     play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 0x10, color, color, color);
-    level_set_transition(30, NULL);
+    level_set_transition(16, NULL);
 
     warp_special(arg);
 }
