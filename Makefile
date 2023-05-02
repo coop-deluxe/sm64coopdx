@@ -914,6 +914,10 @@ else
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
 endif
 
+ifeq ($(WINDOWS_BUILD),0)
+  LDFLAGS += -rdynamic
+endif
+
 # icon
 ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(ICON),1)
