@@ -1,18 +1,14 @@
-// Adapted from PeachyPeach's sm64pc-omm
+// Adapted from PeachyPeach's sm64pc-omm (now sm64ex-omm)
 #include "crash_handler.h"
 
-#if defined(_WIN32) && !defined(WAPI_DUMMY)
+#if (defined(_WIN32) || defined(__linux__)) && !defined(WAPI_DUMMY)
 
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
 #endif
 
-#include <stdio.h>
-#include <windows.h>
-#include <dbghelp.h>
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
-#include <crtdbg.h>
 #include "config.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/gfx/gfx_dxgi.h"
@@ -28,7 +24,23 @@
 #include "pc/network/network.h"
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
-#include "dbghelp.h"
+
+typedef struct {
+    s32 x, y;
+    u8 r, g, b;
+    char s[128];
+} CrashHandlerText;
+static CrashHandlerText sCrashHandlerText[128 + 256];
+
+#define PTR long long unsigned int)(uintptr_t
+
+#define ARRAY_SIZE(a)               (sizeof(a) / sizeof(a[0]))
+#define MEMNEW(typ, cnt)            calloc(sizeof(typ), cnt)
+#define STRING(str, size, fmt, ...) char str[size]; snprintf(str, size, fmt, __VA_ARGS__);
+
+#ifdef _WIN32
+
+#define OS_NAME "Windows"
 
 #if IS_64_BIT
     #define CRASH_HANDLER_TYPE LONG
@@ -44,15 +56,11 @@
     #define ARCHITECTURE_STR "32-bit"
 #endif
 
-#define PTR long long unsigned int)(uintptr_t
-
-#define ARRAY_SIZE(a)               (sizeof(a) / sizeof(a[0]))
-#define MEMNEW(typ, cnt)            calloc(sizeof(typ), cnt)
-#define STRING(str, size, fmt, ...) char str[size]; snprintf(str, size, fmt, __VA_ARGS__);
-
-#define DEF(smex, smms, r96a, xalo, sm74, smsr) smex
-#define load_gfx_memory_pool()          DEF(config_gfx_pool(), config_gfx_pool(), config_gfx_pool(), select_gfx_pool(), select_gfx_pool(), select_gfx_pool())
-#define init_scene_rendering()          DEF(init_render_image(), init_render_image(), init_render_image(), init_rcp(), init_rcp(), init_rcp())
+#include <stdio.h>
+#include <windows.h>
+#include <dbghelp.h>
+#include <crtdbg.h>
+#include "dbghelp.h"
 
 static struct {
     u32 code;
@@ -79,12 +87,79 @@ static struct {
     { 0,                                "Unknown Exception",        "An unknown exception occurred." },
 };
 
-typedef struct {
-    s32 x, y;
-    u8 r, g, b;
-    char s[128];
-} CrashHandlerText;
-static CrashHandlerText sCrashHandlerText[128 + 256];
+
+#if !IS_64_BIT
+static ULONG CaptureStackWalkBackTrace(CONTEXT* ctx, DWORD FramesToSkip, DWORD FramesToCapture, void* BackTrace[]) {
+
+    HANDLE process = GetCurrentProcess();
+    HANDLE thread = GetCurrentThread();
+
+    STACKFRAME64 stack;
+    memset(&stack, 0, sizeof(STACKFRAME64));
+#if IS_64_BIT
+    stack.AddrPC.Offset = (*ctx).Rip;
+    stack.AddrPC.Mode = AddrModeFlat;
+    stack.AddrStack.Offset = (*ctx).Rsp;
+    stack.AddrStack.Mode = AddrModeFlat;
+    stack.AddrFrame.Offset = (*ctx).Rbp;
+    stack.AddrFrame.Mode = AddrModeFlat;
+#else
+    stack.AddrPC.Offset = (*ctx).Eip;
+    stack.AddrPC.Mode = AddrModeFlat;
+    stack.AddrStack.Offset = (*ctx).Esp;
+    stack.AddrStack.Mode = AddrModeFlat;
+    stack.AddrFrame.Offset = (*ctx).Ebp;
+    stack.AddrFrame.Mode = AddrModeFlat;
+#endif
+
+    ULONG frame = 0;
+    for (frame = 0; ; frame++)
+    {
+        if (!StackWalk64(MACHINE_TYPE, process, thread, &stack, ctx, NULL, NULL, NULL, NULL)) { break; }
+        if (frame < FramesToSkip || frame >= FramesToCapture) { continue; }
+        BackTrace[frame+1] = (void*)(intptr_t)stack.AddrPC.Offset;
+    }
+    return frame;
+}
+#endif
+
+#elif __linux__
+
+#define OS_NAME "Linux"
+
+#if IS_64_BIT
+    #define CRASH_HANDLER_TYPE LONG
+    #define SYMBOL_INCREMENT 16
+    #define SYMBOL_SCAN_FORMAT "%ld"
+    #define MACHINE_TYPE IMAGE_FILE_MACHINE_AMD64
+    #define ARCHITECTURE_STR "64-bit"
+#else
+    #define CRASH_HANDLER_TYPE LONG WINAPI
+    #define SYMBOL_INCREMENT 9
+    #define SYMBOL_SCAN_FORMAT "%ld"
+    #define MACHINE_TYPE IMAGE_FILE_MACHINE_I386
+    #define ARCHITECTURE_STR "32-bit"
+#endif
+
+#define __USE_GNU
+
+#include <signal.h>
+#include <execinfo.h>
+#include <ucontext.h>
+#include <dlfcn.h>
+
+static struct {
+    u32 code;
+    const char *error;
+    const char *message;
+} sCrashHandlerErrors[] = {
+    { SIGBUS,       "Bad Memory Access",        "The game tried to access memory out of bounds." },
+    { SIGFPE,       "Floating Point Exception", "The game tried to perform illegal arithmetic on a floating point." },
+    { SIGILL,       "Illegal Instruction",      "The game tried to execute an invalid instruction." },
+    { SIGSEGV,      "Segmentation Fault",       "The game tried to %s at address 0x%016llX." },
+};
+
+#endif
 
 #define crash_handler_set_text(_x_, _y_, _r_, _g_, _b_, _fmt_, ...)     \
 {                                                                       \
@@ -126,8 +201,8 @@ static void crash_handler_produce_one_frame() {
 
     // Start frame
     gfx_start_frame();
-    load_gfx_memory_pool();
-    init_scene_rendering();
+    config_gfx_pool();
+    init_render_image();
 
     float minAspectRatio = 1.743468f;
     float aspectScale = 1.0f;
@@ -202,41 +277,6 @@ static void crash_handler_produce_one_frame() {
     gfx_end_frame();
 }
 
-#if !IS_64_BIT
-static ULONG CaptureStackWalkBackTrace(CONTEXT* ctx, DWORD FramesToSkip, DWORD FramesToCapture, void* BackTrace[]) {
-
-    HANDLE process = GetCurrentProcess();
-    HANDLE thread = GetCurrentThread();
-
-    STACKFRAME64 stack;
-    memset(&stack, 0, sizeof(STACKFRAME64));
-#if IS_64_BIT
-    stack.AddrPC.Offset = (*ctx).Rip;
-    stack.AddrPC.Mode = AddrModeFlat;
-    stack.AddrStack.Offset = (*ctx).Rsp;
-    stack.AddrStack.Mode = AddrModeFlat;
-    stack.AddrFrame.Offset = (*ctx).Rbp;
-    stack.AddrFrame.Mode = AddrModeFlat;
-#else
-    stack.AddrPC.Offset = (*ctx).Eip;
-    stack.AddrPC.Mode = AddrModeFlat;
-    stack.AddrStack.Offset = (*ctx).Esp;
-    stack.AddrStack.Mode = AddrModeFlat;
-    stack.AddrFrame.Offset = (*ctx).Ebp;
-    stack.AddrFrame.Mode = AddrModeFlat;
-#endif
-
-    ULONG frame = 0;
-    for (frame = 0; ; frame++)
-    {
-        if (!StackWalk64(MACHINE_TYPE, process, thread, &stack, ctx, NULL, NULL, NULL, NULL)) { break; }
-        if (frame < FramesToSkip || frame >= FramesToCapture) { continue; }
-        BackTrace[frame+1] = (void*)(intptr_t)stack.AddrPC.Offset;
-    }
-    return frame;
-}
-#endif
-
 static void crash_handler_add_info_str(CrashHandlerText** pTextP, f32 x, f32 y, char* title, char* value) {
     CrashHandlerText* pText = *pTextP;
     crash_handler_set_text(x, y, 0xFF, 0xFF, 0x00, "%s", title);
@@ -253,7 +293,11 @@ static void crash_handler_add_info_int(CrashHandlerText** pTextP, f32 x, f32 y, 
     *pTextP = pText;
 }
 
+#ifdef _WIN32
 static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
+#elif __linux__
+static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *context) {
+#endif
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
     CrashHandlerText *pText = &sCrashHandlerText[0];
     gDjuiDisabled = true;
@@ -262,6 +306,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     crash_handler_set_text(8, -4, 0xFF, 0x80, 0x00, "%s", "Please report this crash with a consistent way to reproduce it.");
 
     // Exception address, code, type and info
+#ifdef _WIN32
     if (ExceptionInfo && ExceptionInfo->ExceptionRecord) {
         PEXCEPTION_RECORD er = ExceptionInfo->ExceptionRecord;
         crash_handler_set_text( 8, 4, 0xFF, 0x00, 0x00, "%s", "Exception occurred at address ");
@@ -281,15 +326,45 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
                 break;
             }
         }
+#elif __linux__
+    if (signalNum != 0 && info != NULL) {
+        crash_handler_set_text( 8, 4, 0xFF, 0x00, 0x00, "%s", "Exception occurred at address ");
+        crash_handler_set_text(-1, 4, 0xFF, 0xFF, 0x00, "0x%016llX", (u64) info->si_addr);
+        crash_handler_set_text(-1, 4, 0xFF, 0x00, 0x00, "%s", " with error code ");
+        crash_handler_set_text(-1, 4, 0xFF, 0x00, 0xFF, "0x%08X", (u32) signalNum);
+        crash_handler_set_text(-1, 4, 0xFF, 0x00, 0x00, "%s", ":");
+        for (s32 i = 0; i != ARRAY_SIZE(sCrashHandlerErrors); ++i) {
+            if (sCrashHandlerErrors[i].code == (u32) signalNum || sCrashHandlerErrors[i].code == 0) {
+                crash_handler_set_text( 8, 12, 0xFF, 0x00, 0x00, "%s", sCrashHandlerErrors[i].error);
+                crash_handler_set_text(-1, 12, 0xFF, 0xFF, 0xFF, "%s", " - ");
+                if (signalNum == SIGSEGV) {
+                    char segFaultStr[255] = "";
+                    if (info->si_code == SEGV_MAPERR) {
+                        snprintf(segFaultStr, 255, "The game tried to read unmapped memory at address %p", info->si_addr);
+                    } else if (info->si_code == SEGV_ACCERR) {
+                        snprintf(segFaultStr, 255, "The game tried to %s at address %016llX", ((context->uc_mcontext.gregs[REG_ERR] & 0x2) != 0 ? "write" : "read"), (u64) info->si_addr);
+                    } else {
+                        snprintf(segFaultStr, 255, "Unknown segmentation fault at address %p", info->si_addr);
+                    }
+
+                    crash_handler_set_text(-1, 12, 0xFF, 0xFF, 0xFF, "%s", segFaultStr);
+                } else {
+                    crash_handler_set_text(-1, 12, 0xFF, 0xFF, 0xFF, "%s", sCrashHandlerErrors[i].message);
+                }
+                break;
+            }
+        }
+#endif
     } else {
         crash_handler_set_text(8,  4, 0xFF, 0x00, 0x00, "%s", "An unknown exception occurred somewhere in the game's code.");
         crash_handler_set_text(8, 12, 0x80, 0x80, 0x80, "%s", "Unable to retrieve the exception info.");
     }
 
     // Registers
+    crash_handler_set_text(8, 22, 0xFF, 0xFF, 0xFF, "%s", "Registers:");
+#ifdef _WIN32
     if (ExceptionInfo && ExceptionInfo->ContextRecord) {
         PCONTEXT cr = ExceptionInfo->ContextRecord;
-        crash_handler_set_text( 8, 22, 0xFF, 0xFF, 0xFF,   "%s", "Registers:");
 #if IS_64_BIT
         crash_handler_set_text( 8, 30, 0xFF, 0xFF, 0xFF,   "RSP: 0x%016llX", (PTR)cr->Rsp);
         crash_handler_set_text(-1, 30, 0xFF, 0xFF, 0xFF, "  RBP: 0x%016llX", (PTR)cr->Rbp);
@@ -327,13 +402,53 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
         crash_handler_set_text( 8, 62, 0xFF, 0xFF, 0xFF,   "DR0: 0x%016llX", (PTR)cr->Dr0);
         crash_handler_set_text(-1, 62, 0xFF, 0xFF, 0xFF, "  DR1: 0x%016llX", (PTR)cr->Dr1);
 #endif
+#elif __linux__
+    if (context->uc_mcontext.gregs[REG_RSP] != 0) {
+#if IS_64_BIT
+        crash_handler_set_text( 8, 30, 0xFF, 0xFF, 0xFF,   "RSP: 0x%016llX", context->uc_mcontext.gregs[REG_RSP]);
+        crash_handler_set_text(-1, 30, 0xFF, 0xFF, 0xFF, "  RBP: 0x%016llX", context->uc_mcontext.gregs[REG_RBP]);
+        crash_handler_set_text(-1, 30, 0xFF, 0xFF, 0xFF, "  RIP: 0x%016llX", context->uc_mcontext.gregs[REG_RIP]);
+        crash_handler_set_text( 8, 38, 0xFF, 0xFF, 0xFF,   "RAX: 0x%016llX", context->uc_mcontext.gregs[REG_RAX]);
+        crash_handler_set_text(-1, 38, 0xFF, 0xFF, 0xFF, "  RBX: 0x%016llX", context->uc_mcontext.gregs[REG_RBX]);
+        crash_handler_set_text(-1, 38, 0xFF, 0xFF, 0xFF, "  RCX: 0x%016llX", context->uc_mcontext.gregs[REG_RCX]);
+        crash_handler_set_text(-1, 38, 0xFF, 0xFF, 0xFF, "  RDX: 0x%016llX", context->uc_mcontext.gregs[REG_RDX]);
+        crash_handler_set_text( 8, 46, 0xFF, 0xFF, 0xFF,   "R08: 0x%016llX", context->uc_mcontext.gregs[REG_R8]);
+        crash_handler_set_text(-1, 46, 0xFF, 0xFF, 0xFF, "  R09: 0x%016llX", context->uc_mcontext.gregs[REG_R9]);
+        crash_handler_set_text(-1, 46, 0xFF, 0xFF, 0xFF, "  R10: 0x%016llX", context->uc_mcontext.gregs[REG_R10]);
+        crash_handler_set_text(-1, 46, 0xFF, 0xFF, 0xFF, "  R11: 0x%016llX", context->uc_mcontext.gregs[REG_R11]);
+        crash_handler_set_text( 8, 54, 0xFF, 0xFF, 0xFF,   "R12: 0x%016llX", context->uc_mcontext.gregs[REG_R12]);
+        crash_handler_set_text(-1, 54, 0xFF, 0xFF, 0xFF, "  R13: 0x%016llX", context->uc_mcontext.gregs[REG_R13]);
+        crash_handler_set_text(-1, 54, 0xFF, 0xFF, 0xFF, "  R14: 0x%016llX", context->uc_mcontext.gregs[REG_R14]);
+        crash_handler_set_text(-1, 54, 0xFF, 0xFF, 0xFF, "  R15: 0x%016llX", context->uc_mcontext.gregs[REG_R15]);
+        crash_handler_set_text( 8, 62, 0xFF, 0xFF, 0xFF,   "RSI: 0x%016llX", context->uc_mcontext.gregs[REG_RSI]);
+        crash_handler_set_text(-1, 62, 0xFF, 0xFF, 0xFF, "  RDI: 0x%016llX", context->uc_mcontext.gregs[REG_RDI]);
+#else
+        crash_handler_set_text( 8, 30, 0xFF, 0xFF, 0xFF,   "EAX: 0x%016llX", context->uc_mcontext.gregs[REG_EAX]);
+        crash_handler_set_text(-1, 30, 0xFF, 0xFF, 0xFF, "  EBX: 0x%016llX", context->uc_mcontext.gregs[REG_EBX]);
+        crash_handler_set_text(-1, 30, 0xFF, 0xFF, 0xFF, "  ECX: 0x%016llX", context->uc_mcontext.gregs[REG_ECX]);
+        crash_handler_set_text( 8, 38, 0xFF, 0xFF, 0xFF,   "EDX: 0x%016llX", context->uc_mcontext.gregs[REG_EDX]);
+        crash_handler_set_text(-1, 38, 0xFF, 0xFF, 0xFF, "  ESI: 0x%016llX", context->uc_mcontext.gregs[REG_ESI]);
+        crash_handler_set_text(-1, 38, 0xFF, 0xFF, 0xFF, "  EDI: 0x%016llX", context->uc_mcontext.gregs[REG_EDI]);
+        crash_handler_set_text(-1, 38, 0xFF, 0xFF, 0xFF, "  EBP: 0x%016llX", context->uc_mcontext.gregs[REG_EBP]);
+        crash_handler_set_text( 8, 46, 0xFF, 0xFF, 0xFF,   "EIP: 0x%016llX", context->uc_mcontext.gregs[REG_EIP]);
+        crash_handler_set_text(-1, 46, 0xFF, 0xFF, 0xFF, "  ESP: 0x%016llX", context->uc_mcontext.gregs[REG_ESP]);
+        crash_handler_set_text(-1, 46, 0xFF, 0xFF, 0xFF, "   CS: 0x%016llX", context->uc_mcontext.gregs[REG_CS]);
+        crash_handler_set_text(-1, 46, 0xFF, 0xFF, 0xFF, "   DS: 0x%016llX", context->uc_mcontext.gregs[REG_DS]);
+        crash_handler_set_text( 8, 54, 0xFF, 0xFF, 0xFF,   " ES: 0x%016llX", context->uc_mcontext.gregs[REG_ES]);
+        crash_handler_set_text(-1, 54, 0xFF, 0xFF, 0xFF, "   FS: 0x%016llX", context->uc_mcontext.gregs[REG_FS]);
+        crash_handler_set_text(-1, 54, 0xFF, 0xFF, 0xFF, "   GS: 0x%016llX", context->uc_mcontext.gregs[REG_GS]);
+        crash_handler_set_text(-1, 54, 0xFF, 0xFF, 0xFF, "   SS: 0x%016llX", context->uc_mcontext.gregs[REG_SS]);
+        crash_handler_set_text( 8, 62, 0xFF, 0xFF, 0xFF,   "DR0: 0x%016llX", context->uc_mcontext.gregs[REG_RDI]);
+        crash_handler_set_text(-1, 62, 0xFF, 0xFF, 0xFF, "  DR1: 0x%016llX", context->uc_mcontext.gregs[REG_RDX]);
+#endif
+#endif
     } else {
-        crash_handler_set_text(8, 22, 0xFF, 0xFF, 0xFF, "%s", "Registers:");
         crash_handler_set_text(8, 30, 0x80, 0x80, 0x80, "%s", "Unable to access the registers.");
     }
 
     // Stack trace
     crash_handler_set_text(8, 72, 0xFF, 0xFF, 0xFF, "%s", "Stack trace:");
+#ifdef _WIN32
     if (ExceptionInfo && ExceptionInfo->ContextRecord) {
         static const char sGlobalFunctionIdentifier[] = "(sec1)(fl0x00)(ty20)(scl2)(nx0)0x";
         static const char sStaticFunctionIdentifier[] = "(sec1)(fl0x00)(ty20)(scl3)(nx0)0x";
@@ -436,6 +551,28 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
                 }
             }
         }
+#elif __linux__
+    void *trace[15];
+    int traceSize = backtrace(trace, 15);
+
+    if (traceSize > 0) {
+        // Unwind and print call stack
+        char **messages = backtrace_symbols(trace, traceSize);
+        for (s32 i = 1, j = 0; i < traceSize && j < 15; ++i) {
+            s32 y = 80 + j++ * 8;
+            crash_handler_set_text( 8, y, 0xFF, 0xFF, 0x00, "0x%016llX", (u64) strtoul(strstr(messages[i], "[") + 1, NULL, 16));
+            crash_handler_set_text(-1, y, 0xFF, 0xFF, 0xFF, "%s", ": ");
+
+            // dladdr gives us function names if -rdynamic/-export-dynamic is set in compiler flags
+            Dl_info info;
+            if (dladdr(trace[i], &info) && info.dli_sname) {
+                crash_handler_set_text(-1, y, 0x00, 0xFF, 0xFF, "%s", info.dli_sname);
+                crash_handler_set_text(-1, y, 0xFF, 0xFF, 0xFF, " + 0x%lX", trace[i] - info.dli_saddr);
+            } else {
+                crash_handler_set_text(-1, y, 0x00, 0xFF, 0xFF, "%s", "????");
+            }
+        }
+#endif
     } else {
         crash_handler_set_text(8, 116, 0x80, 0x80, 0x80, "%s", "Unable to unwind the call stack.");
     }
@@ -458,6 +595,8 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 4), "Objs", gPrevFrameObjectCount);
 
     crash_handler_add_info_int(&pText, 380, -4 + (8 * 2), "Mods", gActiveMods.entryCount);
+
+    crash_handler_add_info_str(&pText, 380, -4 + (8 * 3), "OS", OS_NAME);
 
     // Mods
     crash_handler_set_text(245, 64, 0xFF, 0xFF, 0xFF, "%s", "Mods:");
@@ -525,7 +664,22 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 }
 
 __attribute__((constructor)) static void init_crash_handler() {
+#ifdef _WIN32
+    // Windows
     SetUnhandledExceptionFilter(crash_handler);
+#elif __linux__
+    // Linux
+    struct sigaction linux_crash_handler;
+
+    linux_crash_handler.sa_handler = (void *)crash_handler;
+    sigemptyset(&linux_crash_handler.sa_mask);
+    linux_crash_handler.sa_flags = SA_SIGINFO; // Get extra info about the crash
+
+    sigaction(SIGBUS, &linux_crash_handler, NULL);
+    sigaction(SIGFPE, &linux_crash_handler, NULL);
+    sigaction(SIGILL, &linux_crash_handler, NULL);
+    sigaction(SIGSEGV, &linux_crash_handler, NULL);
+#endif
 }
 
 #endif
