@@ -279,7 +279,7 @@ void bhv_mario_update(void) {
 
     // sanity check torsoPos, it isn't updated off-screen otherwise
     extern u32 gGlobalTimer;
-    if (gMarioState->marioBodyState->updateTorsoTime != (gGlobalTimer - 1)) {
+    if (gMarioState->marioBodyState && gMarioState->marioBodyState->updateTorsoTime != (gGlobalTimer - 1)) {
         vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
     }
 
