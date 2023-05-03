@@ -4101,6 +4101,17 @@ function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
     -- ...
 end
 
+--- @return WarpNode
+function get_painting_warp_node()
+    -- ...
+end
+
+--- @param paintingIndex integer
+--- @return nil
+function initiate_painting_warp(paintingIndex)
+    -- ...
+end
+
 --- @param m MarioState
 --- @param warpOp integer
 --- @return integer

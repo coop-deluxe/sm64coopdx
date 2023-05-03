@@ -72,7 +72,7 @@ override_allowed_functions = {
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*" ],
     "src/pc/utils/misc.h":                  [ "update_all_mario_stars" ],
-    "src/game/level_update.h":              [ "level_trigger_warp" ],
+    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp" ],
     "src/game/area.h":                      [ "area_get_warp_node" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ]
 }
