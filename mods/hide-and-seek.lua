@@ -537,3 +537,13 @@ for i = 0, (MAX_PLAYERS - 1) do
     hook_on_sync_table_change(gPlayerSyncTable[i], "seeking", i, on_seeking_changed)
     network_player_set_description(gNetworkPlayers[i], "seeker", 255, 64, 64, 255)
 end
+
+_G.HideAndSeek = {
+    is_player_seeker = function (playerIndex)
+        return gPlayerSyncTable[playerIndex].seeking
+    end,
+
+    set_player_seeker = function (playerIndex, seeking)
+        gPlayerSyncTable[playerIndex].seeking = seeking
+    end,
+}
