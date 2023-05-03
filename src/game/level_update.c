@@ -788,7 +788,7 @@ static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
  * Check is Mario has entered a painting, and if so, initiate a warp.
  */
 void initiate_painting_warp(s16 paintingIndex) {
-    if (gCurrentArea && gCurrentArea->paintingWarpNodes && gMarioState && gMarioState->floor && paintingIndex >= 0 && paintingIndex < MAX_PAINTING_WARP_NODES) {
+    if (gCurrentArea && gCurrentArea->paintingWarpNodes && gMarioState && gMarioState->floor && paintingIndex >= -1 && paintingIndex < MAX_PAINTING_WARP_NODES) {
         struct WarpNode *pWarpNode = paintingIndex == -1 ? get_painting_warp_node() : &gCurrentArea->paintingWarpNodes[paintingIndex];
 
         if (pWarpNode != NULL) {
