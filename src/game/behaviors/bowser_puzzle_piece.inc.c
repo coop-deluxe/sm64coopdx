@@ -181,9 +181,10 @@ void bhv_lll_bowser_puzzle_piece_action_1(void) {
  */
 void bhv_lll_bowser_puzzle_piece_update(void) {
     s8* nextAction = o->oBowserPuzzlePieceNextAction;
+    if (!nextAction) { return; }
 
     // If Mario is standing on this puzzle piece, set a flag in the parent.
-    if (cur_obj_is_any_player_on_platform())
+    if (cur_obj_is_any_player_on_platform() && o->parentObj)
         o->parentObj->oBowserPuzzleCompletionFlags = 1;
 
     // If we should advance to the next action...
@@ -199,7 +200,9 @@ void bhv_lll_bowser_puzzle_piece_update(void) {
         // If we're at the end of the list...
         if (*nextAction == -1) {
             // Set the other completion flag in the parent.
-            o->parentObj->oBowserPuzzleCompletionFlags |= 2;
+            if (o->parentObj) {
+                o->parentObj->oBowserPuzzleCompletionFlags |= 2;
+            }
 
             // The next action is the first action in the list again.
             o->oBowserPuzzlePieceNextAction = o->oBowserPuzzlePieceActionList;
