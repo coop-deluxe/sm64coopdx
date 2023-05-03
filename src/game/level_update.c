@@ -45,6 +45,8 @@
 
 #include "game/screen_transition.h"
 
+#include "engine/level_script.h"
+
 #define WARP_NODE_F0 0xF0
 #define WARP_NODE_DEATH 0xF1
 #define WARP_NODE_F2 0xF2
@@ -748,6 +750,8 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3) {
  * corresponding warp node.
  */
 struct WarpNode *get_painting_warp_node(void) {
+    if (!gMarioState || !gMarioState->floor || !gCurrentArea || !gCurrentArea->paintingWarpNodes) { return NULL; }
+
     struct WarpNode *warpNode = NULL;
     s32 paintingIndex = gMarioState->floor->type - SURFACE_PAINTING_WARP_D3;
 
@@ -783,9 +787,9 @@ static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
 /**
  * Check is Mario has entered a painting, and if so, initiate a warp.
  */
-void initiate_painting_warp(void) {
-    if (gCurrentArea != NULL && gCurrentArea->paintingWarpNodes != NULL && gMarioState->floor != NULL) {
-        struct WarpNode *pWarpNode = get_painting_warp_node();
+void initiate_painting_warp(s16 paintingIndex) {
+    if (gCurrentArea && gCurrentArea->paintingWarpNodes && gMarioState && gMarioState->floor && paintingIndex >= 0 && paintingIndex < MAX_PAINTING_WARP_NODES) {
+        struct WarpNode *pWarpNode = paintingIndex == -1 ? get_painting_warp_node() : &gCurrentArea->paintingWarpNodes[paintingIndex];
 
         if (pWarpNode != NULL) {
             if (gMarioState->action & ACT_FLAG_INTANGIBLE) {
@@ -1229,7 +1233,7 @@ s32 play_mode_normal(void) {
         update_camera(gCurrentArea->camera);
     }
 
-    initiate_painting_warp();
+    initiate_painting_warp(-1);
     initiate_delayed_warp();
 
     // If either initiate_painting_warp or initiate_delayed_warp initiated a

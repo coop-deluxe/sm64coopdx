@@ -3,6 +3,8 @@
 
 #include <PR/ultratypes.h>
 
+#define MAX_PAINTING_WARP_NODES 45
+
 struct LevelCommand;
 
 extern s32 gLevelScriptModIndex;

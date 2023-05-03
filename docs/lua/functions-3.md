@@ -3567,6 +3567,44 @@
 <br />
 
 
+## [get_painting_warp_node](#get_painting_warp_node)
+
+### Lua Example
+`local WarpNodeValue = get_painting_warp_node()`
+
+### Parameters
+- None
+
+### Returns
+[WarpNode](structs.md#WarpNode)
+
+### C Prototype
+`struct WarpNode *get_painting_warp_node(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [initiate_painting_warp](#initiate_painting_warp)
+
+### Lua Example
+`initiate_painting_warp(paintingIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| paintingIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void initiate_painting_warp(s16 paintingIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [level_trigger_warp](#level_trigger_warp)
 
 ### Lua Example
