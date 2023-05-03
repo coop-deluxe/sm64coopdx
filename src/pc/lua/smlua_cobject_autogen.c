@@ -967,7 +967,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE          },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 756
+#define LUA_OBJECT_FIELD_COUNT 757
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE         },
     { "areaTimer",                                  LVT_U32,                 offsetof(struct Object, areaTimer),                                  false, LOT_NONE         },
@@ -982,6 +982,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
 //  { "collidedObjs",                               LOT_???,                 offsetof(struct Object, collidedObjs),                               false, LOT_???          }, <--- UNIMPLEMENTED
     { "collisionData",                              LVT_COLLISION_P,         offsetof(struct Object, collisionData),                              false, LOT_POINTER      },
     { "coopFlags",                                  LVT_U8,                  offsetof(struct Object, coopFlags),                                  true,  LOT_NONE         },
+    { "ctx",                                        LVT_U8,                  offsetof(struct Object, ctx),                                        false, LOT_NONE         },
     { "curBhvCommand",                              LVT_BEHAVIORSCRIPT_P,    offsetof(struct Object, curBhvCommand),                              true,  LOT_POINTER      },
     { "globalPlayerIndex",                          LVT_U8,                  offsetof(struct Object, globalPlayerIndex),                          false, LOT_NONE         },
     { "header",                                     LVT_COBJECT,             offsetof(struct Object, header),                                     true,  LOT_OBJECTNODE   },

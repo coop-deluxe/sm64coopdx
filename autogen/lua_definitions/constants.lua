@@ -2541,7 +2541,7 @@ SHAKE_SHOCK = 10
 SHAKE_SMALL_DAMAGE = 3
 
 --- @type integer
-PALETTE_PRESET_MAX = 32
+PALETTE_PRESET_MAX = 33
 
 --- @class CharacterSound
 
@@ -11537,19 +11537,31 @@ SPTASK_STATE_FINISHED = 3
 SPTASK_STATE_FINISHED_DP = 4
 
 --- @type integer
-MAX_LOCAL_VERSION_LENGTH = 32
+MAX_LOCAL_VERSION_LENGTH = 36
 
 --- @type integer
-MAX_VERSION_LENGTH = 28
+MAX_VERSION_LENGTH = 32
 
 --- @type integer
-MINOR_VERSION_NUMBER = 0
+MINOR_VERSION_NUMBER = 1
 
 --- @type integer
 PATCH_VERSION_NUMBER = 0
 
 --- @type integer
 VERSION_NUMBER = 34
+
+--- @type string
+VERSION_REGION = "JP"
+
+--- @type string
+VERSION_REGION = "EU"
+
+--- @type string
+VERSION_REGION = "SH"
+
+--- @type string
+VERSION_REGION = "US"
 
 --- @type string
 VERSION_TEXT = "beta"

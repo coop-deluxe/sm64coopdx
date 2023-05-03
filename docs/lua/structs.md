@@ -1213,6 +1213,7 @@
 | collidedObjInteractTypes | `integer` |  |
 | collisionData | `Pointer` <`Collision`> |  |
 | coopFlags | `integer` | read-only |
+| ctx | `integer` |  |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | globalPlayerIndex | `integer` |  |
 | header | [ObjectNode](structs.md#ObjectNode) | read-only |

@@ -852,6 +852,7 @@
 --- @field public collidedObjInteractTypes integer
 --- @field public collisionData Pointer_Collision
 --- @field public coopFlags integer
+--- @field public ctx integer
 --- @field public curBhvCommand Pointer_BehaviorScript
 --- @field public globalPlayerIndex integer
 --- @field public header ObjectNode
