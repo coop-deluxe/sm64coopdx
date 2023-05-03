@@ -49,8 +49,9 @@ enum MixType {
 
 struct ShaderProgram {
     bool enabled;
-    uint32_t shader_id;
-    struct CCFeatures cc;
+    uint64_t hash;
+    struct ColorCombiner cc;
+    struct CCFeatures ccf;
     enum MixType mix;
     bool texture_used[2];
     int texture_ord[2];
@@ -140,25 +141,12 @@ static inline GLenum texenv_set_texture(UNUSED struct ShaderProgram *prg) {
 }
 
 static inline GLenum texenv_set_texture_color(struct ShaderProgram *prg) {
-    GLenum mode;
-
     // HACK: lord forgive me for this, but this is easier
-
-    switch (prg->shader_id) {
-        case 0x0000038D: // mario's eyes
-        case 0x01045A00: // peach letter
-        case 0x01200A00: // intro copyright fade in
-            mode = GL_DECAL;
-            break;
-        case 0x00000551: // goddard
-            mode = GL_BLEND;
-            break;
-        default:
-            mode = GL_MODULATE;
-            break;
+    if (prg->cc.cm.rgb1 == color_comb_rgb(G_CCMUX_TEXEL0, G_CCMUX_SHADE, G_CCMUX_TEXEL0_ALPHA, G_CCMUX_SHADE, 0)) {
+        return GL_DECAL;
+    } else {
+        return GL_MODULATE;
     }
-
-    return mode;
 }
 
 static inline GLenum texenv_set_texture_texture(UNUSED struct ShaderProgram *prg) {
@@ -183,7 +171,7 @@ static void gfx_opengl_apply_shader(struct ShaderProgram *prg) {
         glDisable(GL_TEXTURE_2D);
     }
 
-    if (prg->shader_id & SHADER_OPT_FOG) {
+    if (prg->cc.cm.use_fog) {
         // blend it on top of normal tris later
         cur_fog_ofs = ofs;
         ofs += 4;
@@ -195,10 +183,10 @@ static void gfx_opengl_apply_shader(struct ShaderProgram *prg) {
         // HACK: if there's a texture and two colors, one of them is likely for speculars or some shit (see mario head)
         //       if there's two colors but no texture, the real color is likely the second one
         // HACKHACK: alpha is 0 in the transition shader (0x01A00045), maybe figure out the flags instead
-        const int vlen = (prg->cc.opt_alpha && prg->shader_id != 0x01A00045) ? 4 : 3;
+        const int vlen = (prg->cc.cm.use_alpha /*&& prg->shader_id != 0x01A00045*/) ? 4 : 3;
         const int hack = vlen * (prg->num_inputs > 1);
 
-        if (prg->texture_used[1] && prg->cc.do_mix[0]) {
+        if (prg->texture_used[1] && prg->ccf.do_mix[0]) {
             // HACK: when two textures are mixed by vertex color, store the color
             //       it will be used later when rendering two texture passes
             c_mix[0] = *(ofs + hack + 0);
@@ -224,7 +212,7 @@ static void gfx_opengl_apply_shader(struct ShaderProgram *prg) {
         // we only need to do this once
         prg->enabled = true;
 
-        if (prg->shader_id & SHADER_OPT_TEXTURE_EDGE) {
+        if (prg->cc.cm.texture_edge) {
             // (horrible) alpha discard
             glEnable(GL_ALPHA_TEST);
             glAlphaFunc(GL_GREATER, 0.666f);
@@ -258,14 +246,15 @@ static void gfx_opengl_load_shader(struct ShaderProgram *new_prg) {
         cur_shader->enabled = false;
 }
 
-static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shader_id) {
-    struct CCFeatures ccf;
-    gfx_cc_get_features(shader_id, &ccf);
-
+static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorCombiner* cc) {
     struct ShaderProgram *prg = &shader_program_pool[shader_program_pool_size++];
 
-    prg->shader_id = shader_id;
-    prg->cc = ccf;
+    struct CCFeatures ccf = { 0 };
+    gfx_cc_get_features(cc, &ccf);
+
+    prg->hash = cc->hash;
+    prg->cc = *cc;
+    prg->ccf = ccf;
     prg->num_inputs = ccf.num_inputs;
     prg->texture_used[0] = ccf.used_textures[0];
     prg->texture_used[1] = ccf.used_textures[1];
@@ -296,9 +285,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
     return prg;
 }
 
-static struct ShaderProgram *gfx_opengl_lookup_shader(uint32_t shader_id) {
+static struct ShaderProgram *gfx_opengl_lookup_shader(struct ColorCombiner* cc) {
     for (size_t i = 0; i < shader_program_pool_size; i++)
-        if (shader_program_pool[i].shader_id == shader_id)
+        if (shader_program_pool[i].hash == cc->hash)
             return &shader_program_pool[i];
     return NULL;
 }

@@ -237,6 +237,9 @@ static void append_formula(char *buf, size_t *len, uint8_t* cmd, bool do_single,
 }
 
 static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorCombiner* cc) {
+    struct CCFeatures ccf = { 0 };
+    gfx_cc_get_features(cc, &ccf);
+
     bool opt_alpha = cc->cm.use_alpha;
     bool opt_fog = cc->cm.use_fog;
     bool opt_texture_edge = cc->cm.texture_edge;
@@ -248,40 +251,6 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 #else
     bool opt_noise = cc->cm.use_noise;
 #endif
-
-    bool used_textures[2] = { 0 };
-    int num_inputs = 0;
-    int cmd_length = opt_2cycle ? 16 : 8;
-    for (int i = 0; i < cmd_length; i++) {
-        u8 c = cc->shader_commands[i];
-        if (c >= SHADER_INPUT_1 && c <= SHADER_INPUT_8) {
-            if (c > num_inputs) { num_inputs = c; }
-        }
-        used_textures[0] = used_textures[0] || c == SHADER_TEXEL0 || c == SHADER_TEXEL0A;
-        used_textures[1] = used_textures[1] || c == SHADER_TEXEL1 || c == SHADER_TEXEL1A;
-    }
-
-    // figure out optimizations
-    bool do_single[4]        = { 0 };
-    bool do_multiply[4]      = { 0 };
-    bool do_mix[4]           = { 0 };
-    for (int i = 0; i < 16 / 4; i++) {
-        u8* c = &cc->shader_commands[i * 4];
-        do_single[i]   = (c[2] == 0);
-        do_multiply[i] = (c[1] == 0 && c[3] == 0);
-        do_mix[i]      = (c[1] == c[3]);
-    }
-
-    bool color_alpha_same[2] = { 1, 1 };
-    for (int i = 0; i < 2; i++) {
-        u8* cmd = &cc->shader_commands[i * 8];
-        for (int j = 0; j < 4; j++) {
-            if (cmd[j] != cmd[j + 4]) {
-                color_alpha_same[i] = 0;
-                break;
-            }
-        }
-    }
 
     char vs_buf[1024];
     char fs_buf[2048];
@@ -296,7 +265,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_line(vs_buf, &vs_len, "#version 120");
 #endif
     append_line(vs_buf, &vs_len, "attribute vec4 aVtxPos;");
-    if (used_textures[0] || used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_line(vs_buf, &vs_len, "attribute vec2 aTexCoord;");
         append_line(vs_buf, &vs_len, "varying vec2 vTexCoord;");
         num_floats += 2;
@@ -311,13 +280,13 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(vs_buf, &vs_len, "varying vec2 vLightMap;");
         num_floats += 2;
     }
-    for (int i = 0; i < num_inputs; i++) {
+    for (int i = 0; i < ccf.num_inputs; i++) {
         vs_len += sprintf(vs_buf + vs_len, "attribute vec%d aInput%d;\n", opt_alpha ? 4 : 3, i + 1);
         vs_len += sprintf(vs_buf + vs_len, "varying vec%d vInput%d;\n", opt_alpha ? 4 : 3, i + 1);
         num_floats += opt_alpha ? 4 : 3;
     }
     append_line(vs_buf, &vs_len, "void main() {");
-    if (used_textures[0] || used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_line(vs_buf, &vs_len, "vTexCoord = aTexCoord;");
     }
     if (opt_fog) {
@@ -326,7 +295,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     if (opt_light_map) {
         append_line(vs_buf, &vs_len, "vLightMap = aLightMap;");
     }
-    for (int i = 0; i < num_inputs; i++) {
+    for (int i = 0; i < ccf.num_inputs; i++) {
         vs_len += sprintf(vs_buf + vs_len, "vInput%d = aInput%d;\n", i + 1, i + 1);
     }
     append_line(vs_buf, &vs_len, "gl_Position = aVtxPos;");
@@ -340,7 +309,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_line(fs_buf, &fs_len, "#version 120");
 #endif
 
-    if (used_textures[0] || used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_line(fs_buf, &fs_len, "varying vec2 vTexCoord;");
     }
     if (opt_fog) {
@@ -349,15 +318,15 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     if (opt_light_map) {
         append_line(fs_buf, &fs_len, "varying vec2 vLightMap;");
     }
-    for (int i = 0; i < num_inputs; i++) {
+    for (int i = 0; i < ccf.num_inputs; i++) {
         fs_len += sprintf(fs_buf + fs_len, "varying vec%d vInput%d;\n", opt_alpha ? 4 : 3, i + 1);
     }
-    if (used_textures[0]) {
+    if (ccf.used_textures[0]) {
         append_line(fs_buf, &fs_len, "uniform sampler2D uTex0;");
         append_line(fs_buf, &fs_len, "uniform vec2 uTex0Size;");
         append_line(fs_buf, &fs_len, "uniform bool uTex0Filter;");
     }
-    if (used_textures[1]) {
+    if (ccf.used_textures[1]) {
         append_line(fs_buf, &fs_len, "uniform sampler2D uTex1;");
         append_line(fs_buf, &fs_len, "uniform vec2 uTex1Size;");
         append_line(fs_buf, &fs_len, "uniform bool uTex1Filter;");
@@ -367,7 +336,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     // Original author: ArthurCarvalho
     // Slightly modified GLSL implementation by twinaphex, mupen64plus-libretro project.
 
-    if (used_textures[0] || used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         if (configFiltering == 2) {
             append_line(fs_buf, &fs_len, "#define TEX_OFFSET(off) texture2D(tex, texCoord - (off)/texSize)");
             append_line(fs_buf, &fs_len, "vec4 filter3point(in sampler2D tex, in vec2 texCoord, in vec2 texSize) {");
@@ -402,10 +371,10 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
     append_line(fs_buf, &fs_len, "void main() {");
 
-    if (used_textures[0]) {
+    if (ccf.used_textures[0]) {
         append_line(fs_buf, &fs_len, "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter);");
     }
-    if (used_textures[1]) {
+    if (ccf.used_textures[1]) {
         if (cc->cm.light_map) {
             append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vLightMap, uTex1Size, uTex1Filter);");
         } else {
@@ -416,14 +385,14 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
     for (int i = 0; i < (opt_2cycle + 1); i++) {
         u8* cmd = &cc->shader_commands[i * 8];
-        if (!color_alpha_same[i] && opt_alpha) {
+        if (!ccf.color_alpha_same[i] && opt_alpha) {
             append_str(fs_buf, &fs_len, "vec4(");
-            append_formula(fs_buf, &fs_len, cmd, do_single[i*2+0], do_multiply[i*2+0], do_mix[i*2+0], false, false, true);
+            append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], false, false, true);
             append_str(fs_buf, &fs_len, ", ");
-            append_formula(fs_buf, &fs_len, cmd, do_single[i*2+1], do_multiply[i*2+1], do_mix[i*2+1], true, true, true);
+            append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+1], ccf.do_multiply[i*2+1], ccf.do_mix[i*2+1], true, true, true);
             append_str(fs_buf, &fs_len, ")");
         } else {
-            append_formula(fs_buf, &fs_len, cmd, do_single[i*2+0], do_multiply[i*2+0], do_mix[i*2+0], opt_alpha, false, opt_alpha);
+            append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], opt_alpha, false, opt_alpha);
         }
         append_line(fs_buf, &fs_len, ";");
 
@@ -509,7 +478,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     prg->attrib_sizes[cnt] = 4;
     ++cnt;
 
-    if (used_textures[0] || used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         prg->attrib_locations[cnt] = glGetAttribLocation(shader_program, "aTexCoord");
         prg->attrib_sizes[cnt] = 2;
         ++cnt;
@@ -527,7 +496,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         ++cnt;
     }
 
-    for (int i = 0; i < num_inputs; i++) {
+    for (int i = 0; i < ccf.num_inputs; i++) {
         char name[16];
         sprintf(name, "aInput%d", i + 1);
         prg->attrib_locations[cnt] = glGetAttribLocation(shader_program, name);
@@ -537,21 +506,21 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
     prg->hash = cc->hash;
     prg->opengl_program_id = shader_program;
-    prg->num_inputs = num_inputs;
-    prg->used_textures[0] = used_textures[0];
-    prg->used_textures[1] = used_textures[1];
+    prg->num_inputs = ccf.num_inputs;
+    prg->used_textures[0] = ccf.used_textures[0];
+    prg->used_textures[1] = ccf.used_textures[1];
     prg->num_floats = num_floats;
     prg->num_attribs = cnt;
 
     gfx_opengl_load_shader(prg);
 
-    if (used_textures[0]) {
+    if (ccf.used_textures[0]) {
         GLint sampler_location = glGetUniformLocation(shader_program, "uTex0");
         prg->uniform_locations[0] = glGetUniformLocation(shader_program, "uTex0Size");
         prg->uniform_locations[1] = glGetUniformLocation(shader_program, "uTex0Filter");
         glUniform1i(sampler_location, 0);
     }
-    if (used_textures[1]) {
+    if (ccf.used_textures[1]) {
         GLint sampler_location = glGetUniformLocation(shader_program, "uTex1");
         prg->uniform_locations[2] = glGetUniformLocation(shader_program, "uTex1Size");
         prg->uniform_locations[3] = glGetUniformLocation(shader_program, "uTex1Filter");

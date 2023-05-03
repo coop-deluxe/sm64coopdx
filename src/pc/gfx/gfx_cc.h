@@ -48,17 +48,12 @@ enum {
 #define SHADER_OPT_NOISE (1 << 27)
 
 struct CCFeatures {
-    uint8_t c[2][4];
-    bool opt_alpha;
-    bool opt_fog;
-    bool opt_texture_edge;
-    bool opt_noise;
     bool used_textures[2];
     int num_inputs;
-    bool do_single[2];
-    bool do_multiply[2];
-    bool do_mix[2];
-    bool color_alpha_same;
+    bool do_single[4];
+    bool do_multiply[4];
+    bool do_mix[4];
+    bool color_alpha_same[2];
 };
 
 #pragma pack(1)
@@ -107,9 +102,11 @@ struct ColorCombiner {
 extern "C" {
 #endif
 
-void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features);
+void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures *cc_features);
 void gfx_cc_print(struct ColorCombiner *cc);
 void gfx_cc_precomp(void);
+uint32_t color_comb_rgb(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint8_t cycle);
+uint32_t color_comb_alpha(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint8_t cycle);
 
 #ifdef __cplusplus
 }
