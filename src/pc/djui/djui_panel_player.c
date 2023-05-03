@@ -298,6 +298,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             DLANG(PALETTE, BUBBLEGUM),
             DLANG(PALETTE, ICE_MARIO),
             DLANG(PALETTE, ICE_LUIGI),
+            DLANG(PALETTE, TOAD),
             DLANG(PALETTE, CUSTOM),
         };
 
