@@ -63,7 +63,7 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);
 void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);
 
-void djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);
+bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);
 
 void djui_hud_set_render_behind_hud(bool enable);
 

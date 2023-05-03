@@ -626,9 +626,9 @@ static void level_cmd_create_painting_warp_node(void) {
     if (sCurrAreaIndex != -1) {
         if (gAreas[sCurrAreaIndex].paintingWarpNodes == NULL) {
             gAreas[sCurrAreaIndex].paintingWarpNodes =
-                alloc_only_pool_alloc(sLevelPool, 45 * sizeof(struct WarpNode));
+                alloc_only_pool_alloc(sLevelPool, MAX_PAINTING_WARP_NODES * sizeof(struct WarpNode));
 
-            for (i = 0; i < 45; i++) {
+            for (i = 0; i < MAX_PAINTING_WARP_NODES; i++) {
                 gAreas[sCurrAreaIndex].paintingWarpNodes[i].id = 0;
             }
         }

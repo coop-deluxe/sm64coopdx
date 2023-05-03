@@ -3745,7 +3745,7 @@ end
 
 --- @param pos Vec3f
 --- @param out Vec3f
---- @return nil
+--- @return boolean
 function djui_hud_world_pos_to_screen_pos(pos, out)
     -- ...
 end
@@ -4098,6 +4098,17 @@ end
 --- @param o Object
 --- @return ObjectWarpNode
 function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
+    -- ...
+end
+
+--- @return WarpNode
+function get_painting_warp_node()
+    -- ...
+end
+
+--- @param paintingIndex integer
+--- @return nil
+function initiate_painting_warp(paintingIndex)
     -- ...
 end
 
