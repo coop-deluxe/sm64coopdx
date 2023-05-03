@@ -98,6 +98,11 @@ override_field_immutable = {
     "SpawnInfo": [ "syncID" ]
 }
 
+override_field_version_excludes = {
+    "oCameraLakituUnk104": "VERSION_JP",
+    "oCoinUnk1B0": "VERSION_JP"
+}
+
 override_allowed_structs = {
     "src/pc/network/network.h": [ 'ServerSettings' ],
 }
@@ -157,6 +162,8 @@ def table_to_string(table):
 
     for row in table:
         for i in range(columns):
+            if '#' in row[i]:
+                continue
             if len(row[i]) > column_width[i]:
                 column_width[i] = len(row[i])
 
@@ -268,15 +275,24 @@ def build_struct(struct):
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
                 continue
+                
+        version = None
 
         row = []
-        row.append('    { '                                                 )
+        
+        startStr = ''
+        endStr = ' },'
+        if fid in override_field_version_excludes:
+            startStr += '#ifndef ' + override_field_version_excludes[fid] + '\n'
+            endStr += '\n#endif'
+        startStr += '    { '
+        row.append(startStr                                                 )
         row.append('"%s", '                    % fid                        )
         row.append('%s, '                      % lvt                        )
         row.append('offsetof(struct %s, %s), ' % (sid, field['identifier']) )
         row.append('%s, '                      % fimmutable                 )
         row.append("%s"                        % lot                        )
-        row.append(' },'                                                    )
+        row.append(endStr                                                   )
         field_table.append(row)
 
     field_table_str, field_count = table_to_string(field_table)

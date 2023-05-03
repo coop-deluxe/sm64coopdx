@@ -256,7 +256,6 @@ s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found) {
     common_constant(bhvTweesterSandParticle);
     common_constant(bhvTweester);
     common_constant(bhvMerryGoRoundBooManager);
-    common_constant(bhvPlaysMusicTrackWhenTouched);
     common_constant(bhvAnimatedTexture);
     common_constant(bhvBooInCastle);
     common_constant(bhvBooWithCage);
@@ -556,6 +555,11 @@ s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found) {
     common_legacy_constant(bhvFish2, bhvManyBlueFishSpawner);
     common_legacy_constant(bhvFish3, bhvFewBlueFishSpawner);
     common_legacy_constant(bhvLargeFishGroup, bhvFishSpawner);
+    
+    // Version exclusive behaviors
+#ifndef VERSION_JP
+    common_constant(bhvPlaysMusicTrackWhenTouched);
+#endif
 
     *found = false;
     return 0;

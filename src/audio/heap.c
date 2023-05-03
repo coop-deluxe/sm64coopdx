@@ -8,6 +8,8 @@
 #include "seqplayer.h"
 #include "effects.h"
 
+#include "pc/debuglog.h"
+
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
 struct PoolSplit {
@@ -248,16 +250,23 @@ void discard_sequence(s32 seqId) {
 
 void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
 #if defined(VERSION_EU) || defined(VERSION_SH)
-    u8 *start;
-    u8 *pos;
     u32 alignedSize = ALIGN16(size);
+    
+    if (pool == NULL || pool->cur == NULL) {
+        LOG_ERROR("Failed to allocate for sound pool! Pool is NULL!");
+        return NULL;
+    }
 
-    start = pool->cur;
+    u8 *start = pool->cur;
     if (start + alignedSize <= pool->start + pool->size) {
         bzero(start, alignedSize);
         pool->cur += alignedSize;
     } else {
-        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes at %p (%i free)\n", ALIGN16(size), (void*)pool, pool->start + pool->size - pool->cur);
+        LOG_ERROR("Tried to alloc %u bytes at %p (%i free) and failed!", ALIGN16(size), (void*)pool, pool->start + pool->size - pool->cur);
+        return NULL;
+    }
+    if (start == NULL) {
+        LOG_ERROR("An unknown error occured when allocating %u bytes at %p (%i free)!", ALIGN16(size), (void*)pool, pool->start + pool->size - pool->cur);
         return NULL;
     }
 #ifdef VERSION_SH
@@ -268,7 +277,7 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
     u32 alignedSize = ALIGN16(size);
 
     if (pool == NULL || pool->cur == NULL) {
-        fprintf(stderr, "soundAlloc failed: pull was invalid\n");
+        LOG_ERROR("Failed to allocate for sound pool! Pool is NULL!");
         return NULL;
     }
 
@@ -277,7 +286,7 @@ void *soundAlloc(struct SoundAllocPool *pool, u32 size) {
         bzero(start, alignedSize);
         pool->cur += alignedSize;
     } else {
-        fprintf(stderr, "soundAlloc failed: tried to alloc %u bytes at %p (%i free)\n", (unsigned int)ALIGN16(size), (void*)pool, (int)(pool->start + pool->size - pool->cur));
+        LOG_ERROR("Tried to alloc %u bytes at %p (%i free) and failed!", (unsigned int)ALIGN16(size), (void*)pool, (int)(pool->start + pool->size - pool->cur));
         return NULL;
     }
     return start;
@@ -1199,6 +1208,7 @@ void audio_reset_session(void) {
     gAudioBufferParameters.samplesPerFrameTarget = ALIGN16(gAudioBufferParameters.frequency / gRefreshRate);
     gAudioBufferParameters.minAiBufferLength = gAudioBufferParameters.samplesPerFrameTarget - 0x10;
     gAudioBufferParameters.maxAiBufferLength = gAudioBufferParameters.samplesPerFrameTarget + 0x10;
+    //printf("samplesPerFrameTarget: %d, maxAiBufferLength: %d, minAiBufferLength: %d\n", gAudioBufferParameters.samplesPerFrameTarget, gAudioBufferParameters.maxAiBufferLength, gAudioBufferParameters.minAiBufferLength);
 #ifdef VERSION_SH
     gAudioBufferParameters.updatesPerFrame = (gAudioBufferParameters.samplesPerFrameTarget + 0x10) / 192 + 1;
     gAudioBufferParameters.samplesPerUpdate = (gAudioBufferParameters.samplesPerFrameTarget / gAudioBufferParameters.updatesPerFrame) & -8;

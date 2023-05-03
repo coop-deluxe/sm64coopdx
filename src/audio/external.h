@@ -10,6 +10,10 @@
 // bit which may be read by the sequence script.
 #define SEQUENCE_ARGS(priority, seqId) ((priority << 8) | seqId)
 
+#if defined(VERSION_EU) || defined(VERSION_SH)
+#define AUDIO_CMD_ARGS(cmd, arg1, arg2, arg3) (((cmd & 0xff) << 24) | ((arg1 & 0xff) << 16) | ((arg2 & 0xff) << 8) | (arg3 & 0xff))
+#endif
+
 #define SOUND_MODE_STEREO           0
 #define SOUND_MODE_MONO             3
 #define SOUND_MODE_HEADSET          1
@@ -20,6 +24,9 @@
 
 extern s32 gAudioErrorFlags;
 extern f32 gGlobalSoundSource[3];
+
+extern const u8 sBackgroundMusicDefaultVolumeDefault[35];
+extern u8 sBackgroundMusicDefaultVolume[64];
 
 // defined in data.c, used by the game
 extern u32 gAudioRandom;

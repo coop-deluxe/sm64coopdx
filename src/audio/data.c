@@ -902,8 +902,8 @@ volatile s32 gAudioLoadLock = AUDIO_LOCK_UNINITIALIZED;
 
 #if defined(VERSION_EU)
 u8 bufferDelete2[12] = { 0 };
-u8 D_EU_80302010 = 0;
-u8 D_EU_80302014 = 0;
+u8 gQueuedAudioCmdCount = 0;
+u8 gLastQueuedAudioCmdCount = 0;
 
 struct OSMesgQueue *OSMesgQueues[4] = { &OSMesgQueue0, &OSMesgQueue1, &OSMesgQueue2, &OSMesgQueue3 };
 #elif defined(VERSION_JP) || defined(VERSION_US)

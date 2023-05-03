@@ -51,8 +51,10 @@ void bhv_camera_lakitu_init(void) {
             sync_object_init_field(o, &o->oCameraLakituSpeed);
             sync_object_init_field(o, &o->oCameraLakituCircleRadius);
             sync_object_init_field(o, &o->oCameraLakituFinishedDialog);
-            sync_object_init_field(o, &o->oCameraLakituUnk104);
             sync_object_init_field(o, &o->oCameraLakituPitchVel);
+#ifndef VERSION_JP
+            sync_object_init_field(o, &o->oCameraLakituUnk104);
+#endif
         }
     }
 }

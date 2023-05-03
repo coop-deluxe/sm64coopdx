@@ -346,24 +346,21 @@ void process_notes(void) {
     f32 cap;
 #endif
 #endif
-    struct Note *note;
+    struct Note *note = NULL;
 #if defined(VERSION_EU) || defined(VERSION_SH)
-    struct NotePlaybackState *playbackState;
-    struct NoteSubEu *noteSubEu;
+    struct NotePlaybackState *playbackState = NULL;
+    struct NoteSubEu *noteSubEu = NULL;
 #ifndef VERSION_SH
-    UNUSED u8 pad[12];
     u8 reverb;
-    UNUSED u8 pad3;
     u8 pan;
 #else
-    u8 pad[8];
     struct ReverbInfo reverbInfo;
 #endif
     u8 bookOffset;
 #endif
-    struct NoteAttributes *attributes;
+    struct NoteAttributes *attributes = NULL;
 #if defined(VERSION_JP) || defined(VERSION_US)
-    struct AudioListItem *it;
+    struct AudioListItem *it = NULL;
 #endif
     s32 i;
 
@@ -443,9 +440,6 @@ void process_notes(void) {
 #endif
         d:
         if (playbackState->priority != NOTE_PRIORITY_DISABLED) {
-#ifdef VERSION_SH
-            if (1) {}
-#endif
             noteSubEu = &note->noteSubEu;
 #ifdef VERSION_SH
             if (playbackState->unkSH34 >= 1 || noteSubEu->finished) {
@@ -477,10 +471,6 @@ void process_notes(void) {
                         goto skip;
                     }
                 }
-#ifndef VERSION_SH
-                if (1) {
-                }
-#endif
             } else if (playbackState->adsr.state == ADSR_STATE_DISABLED) {
                 note_disable(note);
                 audio_list_remove(&note->listItem);

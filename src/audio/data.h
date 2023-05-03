@@ -122,8 +122,8 @@ extern u32 gAudioRandom;
 #define AUDIO_INIT_POOL_SIZE (0x2500 + EXT_AUDIO_INIT_POOL_SIZE)
 #endif
 
-// Normal Heap Size, Extended Heap Size, Extended Audio Init Pool Size
-#define AUDIO_HEAP_SIZE (AUDIO_HEAP_BASE + EXT_AUDIO_HEAP_SIZE + EXT_AUDIO_INIT_POOL_SIZE)
+// Normal Heap Size, Extended Heap Size
+#define AUDIO_HEAP_SIZE (AUDIO_HEAP_BASE + EXT_AUDIO_HEAP_SIZE)
 
 #ifdef VERSION_SH
 extern f32 unk_sh_data_1[];

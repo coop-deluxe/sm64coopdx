@@ -341,7 +341,9 @@ const struct BehaviorTableEntry gBehaviorTable[id_bhv_max_count] = {
     BHV_ENTRY(bhvPiranhaPlantWakingBubbles),
     BHV_ENTRY(bhvPitBowlingBall),
     BHV_ENTRY(bhvPlatformOnTrack),
+#ifndef VERSION_JP
     BHV_ENTRY(bhvPlaysMusicTrackWhenTouched),
+#endif
     BHV_ENTRY(bhvPlungeBubble),
     BHV_ENTRY(bhvPokey),
     BHV_ENTRY(bhvPokeyBodyPart),

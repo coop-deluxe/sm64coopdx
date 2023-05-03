@@ -259,7 +259,7 @@ void func_sh_802f6330(void) {
 }
 
 extern struct EuAudioCmd sAudioCmd[0x100]; // sAudioCmd, maybe?
-void func_802ad6f0(s32 arg0, s32 *arg1) { // func_sh_802f63f8
+void queue_audio_cmd(s32 arg0, s32 *arg1) { // func_sh_802f63f8
     struct EuAudioCmd *cmd = &sAudioCmd[D_SH_80350F18 & 0xff];
     cmd->u.first = arg0;
     cmd->u2.as_u32 = *arg1;
@@ -269,17 +269,17 @@ void func_802ad6f0(s32 arg0, s32 *arg1) { // func_sh_802f63f8
     }
 }
 
-void func_802ad728(u32 arg0, f32 arg1) { // func_sh_802f6450
-    func_802ad6f0(arg0, (s32 *) &arg1);
+void queue_audio_cmd_f32(u32 arg0, f32 arg1) { // func_sh_802f6450
+    queue_audio_cmd(arg0, (s32 *) &arg1);
 }
 
-void func_802ad74c(u32 arg0, u32 arg1) { // func_sh_802f6474
-    func_802ad6f0(arg0, (s32 *) &arg1);
+void queue_audio_cmd_u32(u32 arg0, u32 arg1) { // func_sh_802f6474
+    queue_audio_cmd(arg0, (s32 *) &arg1);
 }
 
-void func_802ad770(u32 arg0, s8 arg1) { // func_sh_802f6498
+void queue_audio_cmd_s8(u32 arg0, s8 arg1) { // func_sh_802f6498
     s32 sp1C = arg1 << 24;
-    func_802ad6f0(arg0, &sp1C);
+    queue_audio_cmd(arg0, &sp1C);
 }
 
 char shindouDebugPrint133[] = "AudioSend: %d -> %d (%d)\n";

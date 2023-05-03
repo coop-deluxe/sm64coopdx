@@ -514,6 +514,9 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
 }
 
 f32 get_generic_dialog_width(u8* dialog) {
+#ifdef VERSION_JP
+    return 0;
+#else
     f32 largestWidth = 0;
     f32 width = 0;
     u8* d = dialog;
@@ -528,6 +531,7 @@ f32 get_generic_dialog_width(u8* dialog) {
         d++;
     }
     return largestWidth;
+#endif
 }
 
 f32 get_generic_ascii_string_width(const char* ascii) {
@@ -2881,9 +2885,11 @@ static u32 pause_castle_get_stars(s32 index) {
 
 static void render_pause_castle_course_name(const u8 *courseName, s16 x, s16 y) {
     s16 width = 0;
+#ifndef VERSION_JP
     for (const u8 *c = courseName; *c != DIALOG_CHAR_TERMINATOR; c++) {
         width += gDialogCharWidths[*c];
     }
+#endif
     print_generic_string(x - width / 2, y, courseName);
 }
 
@@ -2985,10 +2991,28 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    
+    void **courseNameTbl = NULL;
+    
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH:
+            courseNameTbl = segmented_to_virtual(course_name_table_eu_en);
+            break;
+        case LANGUAGE_FRENCH:
+            courseNameTbl = segmented_to_virtual(course_name_table_eu_fr);
+            break;
+        case LANGUAGE_GERMAN:
+            courseNameTbl = segmented_to_virtual(course_name_table_eu_de);
+            break;
+    }
+#else
+    courseNameTbl = segmented_to_virtual(seg2_course_name_table);
+#endif
 
     // Main courses (0-14)
     if (gDialogLineNum < COURSE_STAGES_COUNT) {
-        const u8 *courseName = seg2_course_name_table[gDialogLineNum];
+        const u8 *courseName = courseNameTbl[gDialogLineNum];
         const u8 textCoin[] = { TEXT_COIN_X };
         u8 textCoinCount[8];
         render_pause_castle_course_name(courseName, 160, y + 30);
@@ -3000,14 +3024,14 @@ void render_pause_castle_main_strings_extended(s16 x, s16 y) {
 
     // Secret courses (15-24)
     else if (gDialogLineNum >= COURSE_STAGES_COUNT && gDialogLineNum < INDEX_CASTLE_STARS) {
-        const u8 *courseName = seg2_course_name_table[gDialogLineNum];
+        const u8 *courseName = courseNameTbl[gDialogLineNum];
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
         render_pause_castle_course_stars_extended(x + 20, y);
     }
     
     // Castle stars (25)
     else if (gDialogLineNum == INDEX_CASTLE_STARS) {
-        const u8 *courseName = seg2_course_name_table[COURSE_MAX];
+        const u8 *courseName = courseNameTbl[COURSE_MAX];
         const u8 textStar[] = { TEXT_STAR_X };
         u8 textStarCount[8];
         render_pause_castle_course_name(courseName + 3, 160, y + 30);
@@ -3409,24 +3433,24 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 #endif
 {
 #ifdef VERSION_EU
-    u8 textSaveAndContinueArr[][24] = {
+    u8 textSaveAndContinueArr[][30] = {
         { TEXT_SAVE_AND_CONTINUE },
         { TEXT_SAVE_AND_CONTINUE_FR },
         { TEXT_SAVE_AND_CONTINUE_DE }
     };
-    u8 textSaveAndQuitArr[][22] = {
+    u8 textSaveAndQuitArr[][30] = {
         { TEXT_SAVE_AND_QUIT },
         { TEXT_SAVE_AND_QUIT_FR },
         { TEXT_SAVE_AND_QUIT_DE }
     };
 
-    u8 textSaveExitGame[][26] = { // New function to exit game
+    u8 textSaveExitGame[][30] = { // New function to exit game
         { TEXT_SAVE_EXIT_GAME },
         { TEXT_SAVE_EXIT_GAME_FR },
         { TEXT_SAVE_EXIT_GAME_DE }
     };
 
-    u8 textContinueWithoutSaveArr[][27] = {
+    u8 textContinueWithoutSaveArr[][30] = {
         { TEXT_CONTINUE_WITHOUT_SAVING },
         { TEXT_CONTINUE_WITHOUT_SAVING_FR },
         { TEXT_CONTINUE_WITHOUT_SAVING_DE }

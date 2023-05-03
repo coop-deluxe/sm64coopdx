@@ -110,8 +110,8 @@ void send_display_list(struct SPTask *spTask) {
 }
 
 #ifdef VERSION_EU
-#define SAMPLES_HIGH 656
-#define SAMPLES_LOW 640
+#define SAMPLES_HIGH 560 // gAudioBufferParameters.maxAiBufferLength
+#define SAMPLES_LOW 528 // gAudioBufferParameters.minAiBufferLength
 #else
 #define SAMPLES_HIGH 544
 #define SAMPLES_LOW 528

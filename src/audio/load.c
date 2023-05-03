@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <ultra64.h>
 
 #include "data.h"
@@ -32,7 +33,7 @@ void func_sh_802f6a9c(void);
 void func_sh_802f51d4(struct AudioBankSound *sound, struct AudioBank *memBase, struct PatchStruct *patchInfo);
 #endif
 
-struct Note *gNotes;
+struct Note *gNotes = NULL;
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
 static u8 pad[4];
@@ -76,27 +77,31 @@ OSMesg gUnkMesgBufs2[0x10];
 #endif
 
 OSMesgQueue gCurrAudioFrameDmaQueue;
-OSMesg gCurrAudioFrameDmaMesgBufs[AUDIO_FRAME_DMA_QUEUE_SIZE];
-OSIoMesg gCurrAudioFrameDmaIoMesgBufs[AUDIO_FRAME_DMA_QUEUE_SIZE];
+OSMesg gCurrAudioFrameDmaMesgBufs[AUDIO_FRAME_DMA_QUEUE_SIZE] = { 0 };
+OSIoMesg gCurrAudioFrameDmaIoMesgBufs[AUDIO_FRAME_DMA_QUEUE_SIZE] = { 0 };
 
 OSMesgQueue gAudioDmaMesgQueue;
 OSMesg gAudioDmaMesg;
 OSIoMesg gAudioDmaIoMesg;
 
+#ifdef VERSION_EU
+#define SAMPLE_DMA_COUNT 0x100
+#else
 #define SAMPLE_DMA_COUNT 0x90
+#endif
 
 #ifdef VERSION_SH
-struct SharedDma *sSampleDmas; // sh: 0x803503D0
+struct SharedDma *sSampleDmas = NULL; // sh: 0x803503D0
 #else
-struct SharedDma sSampleDmas[SAMPLE_DMA_COUNT];
+struct SharedDma sSampleDmas[SAMPLE_DMA_COUNT] = { 0 };
 #endif
 u32 gSampleDmaNumListItems; // sh: 0x803503D4
 u32 sSampleDmaListSize1; // sh: 0x803503D8
 u32 sUnused80226B40; // set to 0, never read, sh: 0x803503DC
 
 // Circular buffer of DMAs with ttl = 0. tail <= head, wrapping around mod 256.
-u8 sSampleDmaReuseQueue1[256];
-u8 sSampleDmaReuseQueue2[256];
+u8 sSampleDmaReuseQueue1[256] = { 0 };
+u8 sSampleDmaReuseQueue2[256] = { 0 };
 u8 sSampleDmaReuseQueueTail1;
 u8 sSampleDmaReuseQueueTail2;
 u8 sSampleDmaReuseQueueHead1; // sh: 0x803505E2
@@ -104,11 +109,11 @@ u8 sSampleDmaReuseQueueHead2; // sh: 0x803505E3
 
 // bss correct up to here
 
-ALSeqFile *gSeqFileHeader;
-ALSeqFile *gAlCtlHeader;
-ALSeqFile *gAlTbl;
-u8 *gAlBankSets;
-u16 gSequenceCount;
+ALSeqFile *gSeqFileHeader = NULL;
+ALSeqFile *gAlCtlHeader = NULL;
+ALSeqFile *gAlTbl = NULL;
+u8 *gAlBankSets = NULL;
+u16 gSequenceCount = 0;
 
 struct CtlEntry *gCtlEntries; // sh: 0x803505F8
 
@@ -416,6 +421,9 @@ void init_sample_dma_buffers(UNUSED s32 arg0) {
 #else
     sDmaBufSize = 144 * 9 * 4;
 #endif
+
+    // Sanity check to prevent a buffer overflow into memory we're not supposed to touch.
+    assert(gSampleDmaNumListItems < SAMPLE_DMA_COUNT);
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
     for (s32 i = 0; i < gMaxSimultaneousNotes * 3 * gAudioBufferParameters.presetUnk4; i++)
@@ -1850,8 +1858,10 @@ void audio_init() {
     }
 
 #ifdef VERSION_EU
-    D_EU_802298D0 = 20.03042f;
-    gRefreshRate = 50;
+    // We want the refresh rate to be 60 FPS on PC. 
+    // We shouldn't need to worry about PAL specfic computers anymore.
+    D_EU_802298D0 = 16.713f;
+    gRefreshRate = 60;
     port_eu_init();
     if (k) {
     }

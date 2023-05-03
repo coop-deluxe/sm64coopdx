@@ -113,6 +113,12 @@ override_hide_functions = {
     "smlua_deprecated.h" : [ ".*" ],
 }
 
+override_function_version_excludes = {
+    "bhv_play_music_track_when_touched_loop": "VERSION_JP",
+    "play_knockback_sound": "VERSION_JP",
+    "cur_obj_spawn_star_at_y_offset": "VERSION_JP"
+}
+
 lua_function_params = {
     "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
 }
@@ -596,11 +602,14 @@ def build_call(function):
 def build_function(function, do_extern):
     s = ''
     fid = function['identifier']
+    
+    if fid in override_function_version_excludes:
+        s += '#ifndef ' + override_function_version_excludes[fid] + '\n'
 
     if len(function['params']) <= 0:
-        s = 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
+        s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
     else:
-        s = 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
+        s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
 
     s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
@@ -628,6 +637,9 @@ def build_function(function, do_extern):
     s += '\n'
 
     s += '    return 1;\n}\n'
+    
+    if fid in override_function_version_excludes:
+        s += '#endif\n'
 
     function['implemented'] = 'UNIMPLEMENTED' not in s
     if 'UNIMPLEMENTED' in s:
@@ -648,9 +660,15 @@ def build_functions(processed_files):
     return s
 
 def build_bind(function):
-    s = 'smlua_bind_function(L, "%s", smlua_func_%s);' % (function['identifier'], function['identifier'])
+    fid = function['identifier']
+    s = 'smlua_bind_function(L, "%s", smlua_func_%s);' % (fid, fid)
     if function['implemented']:
         s = '    ' + s
+        # There is no point in adding the ifndef statement if the function is commented out here anyways.
+        # So we only do it on implemented functions.
+        if fid in override_function_version_excludes:
+            s = '#ifndef ' + override_function_version_excludes[fid] + '\n' + s
+            s += '\n#endif'
     else:
         s = '    //' + s + ' <--- UNIMPLEMENTED'
     return s + "\n"

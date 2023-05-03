@@ -6,16 +6,13 @@
 #include "game/memory.h"
 #include "level_info.h"
 #include "level_table.h"
+#include "save_file.h"
 #include "types.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 
 #ifdef VERSION_EU
-extern u8 *course_name_table_eu_en[];
-extern u8 *course_name_table_eu_fr[];
-extern u8 *course_name_table_eu_de[];
-extern u8 *act_name_table_eu_en[];
-extern u8 *act_name_table_eu_fr[];
-extern u8 *act_name_table_eu_de[];
+extern s32 gInGameLanguage;
+#include "eu_translation.h"
 #else
 extern u8 *seg2_course_name_table[];
 extern u8 *seg2_act_name_table[];

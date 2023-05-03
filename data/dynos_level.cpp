@@ -4,6 +4,11 @@ extern "C" {
 #include "game/save_file.h"
 #include "levels/scripts.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+
+#ifdef VERSION_EU
+#include "eu_translation.h"
+#endif
+
 }
 
 //
@@ -310,7 +315,11 @@ const u8 *DynOS_Level_GetName(s32 aLevel, bool aDecaps, bool aAddCourseNumber) {
     } else if (_Course >= COURSE_CAKE_END) {
         SetConvertedTextToBuffer(sBuffer, DYNOS_LEVEL_TEXT_CASTLE);
     } else {
+#ifdef VERSION_EU
+        const u8 *_CourseName = ((const u8 **) course_name_table_eu_en)[_Course - COURSE_BOB] + 3;
+#else
         const u8 *_CourseName = ((const u8 **) seg2_course_name_table)[_Course - COURSE_BOB] + 3;
+#endif
         memcpy(sBuffer, _CourseName, DynOS_String_Length(_CourseName));
     }
 
@@ -356,7 +365,11 @@ const u8 *DynOS_Level_GetActName(s32 aLevel, s32 aAct, bool aDecaps, bool aAddSt
     } else if (aAct >= 7) {
         SetConvertedTextToBuffer(sBuffer, DYNOS_LEVEL_TEXT_100_COINS_STAR);
     } else {
+#ifdef VERSION_EU
+        const u8 *_ActName = ((const u8 **) act_name_table_eu_en)[(_Course - COURSE_BOB) * 6 + (aAct - 1)];
+#else
         const u8 *_ActName = ((const u8 **) seg2_act_name_table)[(_Course - COURSE_BOB) * 6 + (aAct - 1)];
+#endif
         memcpy(sBuffer, _ActName, DynOS_String_Length(_ActName));
     }
 

@@ -3,6 +3,7 @@ extern "C" {
 #include "behavior_table.h"
 #include "levels/scripts.h"
 #include "object_fields.h"
+#include "engine/behavior_script.h"
 #include "engine/level_script.h"
 #include "engine/surface_load.h"
 #include "game/object_helpers.h"
@@ -1584,7 +1585,12 @@ static const void* sDynosBuiltinFuncs[] = {
     define_builtin(bhv_bbh_tilting_trap_platform_loop),
     define_builtin(bhv_haunted_bookshelf_loop),
     define_builtin(bhv_merry_go_round_loop),
+    // We can't move this without forcing all old mods to possibly need to recompile. How annoying.
+#ifndef VERSION_JP
     define_builtin(bhv_play_music_track_when_touched_loop),
+#else
+    (const void *) "bhv_play_music_track_when_touched_loop", (const void *) stub_behavior_script_2,
+#endif
     define_builtin(bhv_beta_bowser_anchor_loop),
     define_builtin(bhv_static_checkered_platform_loop),
     define_builtin(bhv_castle_floor_trap_init),

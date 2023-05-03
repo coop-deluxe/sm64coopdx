@@ -9,7 +9,10 @@
 // Include text/define_text.inc.c, preprocessed with -I text/de/ to get the
 // right translation strings, with symbols renamed as below.
 #define seg2_course_name_table course_name_table_eu_de
+#define seg2_course_name_table_original course_name_table_eu_de_original
 #define seg2_act_name_table act_name_table_eu_de
+#define seg2_act_name_table_original act_name_table_eu_de_original
 #define seg2_dialog_table dialog_table_eu_de
+#define seg2_dialog_original dialog_table_eu_de_original
 
 #include "text/de/define_text.inc.c"

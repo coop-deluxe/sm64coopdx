@@ -1,4 +1,5 @@
 #include "types.h"
+#include "seq_ids.h"
 #include "audio/external.h"
 #include "game/camera.h"
 #include "engine/math_util.h"
@@ -45,7 +46,17 @@ static void smlua_audio_utils_reset(struct AudioOverride* override) {
 void smlua_audio_utils_reset_all(void) {
     audio_init();
     for (s32 i = 0; i < MAX_AUDIO_OVERRIDE; i++) {
+#ifdef VERSION_EU
+        if (sAudioOverrides[i].enabled) {
+            if (i >= SEQ_EVENT_CUTSCENE_LAKITU) {
+                sBackgroundMusicDefaultVolume[i] = 75;
+                return;
+            }
+            sBackgroundMusicDefaultVolume[i] = sBackgroundMusicDefaultVolumeDefault[i];
+        }
+#else
         if (sAudioOverrides[i].enabled) { sound_reset_background_music_default_volume(i); }
+#endif
         smlua_audio_utils_reset(&sAudioOverrides[i]);
     }
 }
@@ -123,7 +134,11 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
             override->filename = strdup(file->cachedPath);
             override->enabled = true;
             override->bank = bankId;
+#ifdef VERSION_EU
+            //sBackgroundMusicDefaultVolume[sequenceId] = defaultVolume;
+#else
             sound_set_background_music_default_volume(sequenceId, defaultVolume);
+#endif
             return;
         }
     }

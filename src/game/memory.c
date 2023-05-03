@@ -134,7 +134,7 @@ void *main_pool_alloc(u32 size, u32 side) {
         }
     }
     if (addr == NULL) {
-        LOG_ERROR("Main pool alloc failed!");
+        LOG_ERROR("Main pool failed to allocate memory of size 0x%X on side %d.", size, side);
     }
     return addr;
 }
@@ -182,7 +182,7 @@ void *main_pool_realloc(void *addr, u32 size) {
         newAddr = main_pool_alloc(size, MEMORY_POOL_LEFT);
     }
     if (addr == NULL) {
-        LOG_ERROR("Main pool realloc failed!");
+        LOG_ERROR("Main pool failed to reallocate memory of size 0x%X at %p!", size, addr);
     }
     return newAddr;
 }
@@ -267,7 +267,7 @@ struct AllocOnlyPool *alloc_only_pool_init(u32 size, u32 side) {
         subPool->freePtr = (u8 *) addr + sizeof(struct AllocOnlyPool);
     }
     if (addr == NULL) {
-        LOG_ERROR("Alloc only pool init failed!");
+        LOG_ERROR("Allocate only pool failed to initalize memory of size 0x%X on side %d.", size, side);
     }
     return subPool;
 }
@@ -286,7 +286,7 @@ void *alloc_only_pool_alloc(struct AllocOnlyPool *pool, s32 size) {
         pool->usedSpace += size;
     }
     if (addr == NULL) {
-        LOG_ERROR("Alloc only pool alloc failed!");
+        LOG_ERROR("Allocate only pool failed to allocate memory of size 0x%X on at pool %p.", size, pool);
     }
     return addr;
 }
@@ -306,7 +306,7 @@ struct AllocOnlyPool *alloc_only_pool_resize(struct AllocOnlyPool *pool, u32 siz
         pool->totalSpace = size;
     }
     if (newPool == NULL) {
-        LOG_ERROR("Alloc only pool realloc failed!");
+        LOG_ERROR("Allocate only pool failed to reallocate memory of size 0x%X on at pool %p.", size, pool);
     }
     return newPool;
 }
@@ -335,7 +335,7 @@ struct MemoryPool *mem_pool_init(u32 size, u32 side) {
         block->size = pool->totalSpace;
     }
     if (addr == NULL) {
-        LOG_ERROR("Mem pool init failed!");
+        LOG_ERROR("Memory pool failed to initalize memory of size 0x%X on side %d.", size, side);
     }
     return pool;
 }
@@ -365,7 +365,7 @@ void *mem_pool_alloc(struct MemoryPool *pool, u32 size) {
         freeBlock = freeBlock->next;
     }
     if (addr == NULL) {
-        LOG_ERROR("Mem pool alloc failed!");
+        LOG_ERROR("Memory pool failed to allocate memory of size 0x%X on at pool %p.", size, pool);
     }
     return addr;
 }
@@ -420,7 +420,7 @@ void *alloc_display_list(u32 size) {
         gGfxPoolEnd -= size;
         ptr = gGfxPoolEnd;
     } else {
-        LOG_ERROR("Failed to alloc display list!");
+        LOG_ERROR("Failed to allocate display list of size 0x%X!", size);
     }
     return ptr;
 }

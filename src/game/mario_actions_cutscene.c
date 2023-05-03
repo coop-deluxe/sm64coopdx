@@ -1880,7 +1880,8 @@ static void intro_cutscene_hide_hud_and_mario(struct MarioState *m) {
 }
 
 #ifdef VERSION_EU
-    #define TIMER_SPAWN_PIPE 47
+    //#define TIMER_SPAWN_PIPE 47
+    #define TIMER_SPAWN_PIPE 37
 #else
     #define TIMER_SPAWN_PIPE 37
 #endif
@@ -1900,7 +1901,8 @@ static void intro_cutscene_peach_lakitu_scene(struct MarioState *m) {
 #undef TIMER_SPAWN_PIPE
 
 #ifdef VERSION_EU
-    #define TIMER_RAISE_PIPE 28
+    //#define TIMER_RAISE_PIPE 28
+    #define TIMER_RAISE_PIPE 38
 #else
     #define TIMER_RAISE_PIPE 38
 #endif
@@ -2317,8 +2319,10 @@ static void end_peach_cutscene_summon_jumbo_star(struct MarioState *m) {
 }
 
 #if defined(VERSION_EU)
-    #define TIMER_FADE_IN_PEACH 201
-    #define TIMER_DESCEND_PEACH 280
+    //#define TIMER_FADE_IN_PEACH 201
+    //#define TIMER_DESCEND_PEACH 280
+    #define TIMER_FADE_IN_PEACH 276
+    #define TIMER_DESCEND_PEACH 355
 #elif defined(VERSION_SH)
     #define TIMER_FADE_IN_PEACH 276
     #define TIMER_DESCEND_PEACH 400
@@ -2380,7 +2384,8 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
 }
 
 #ifdef VERSION_EU
-    #define TIMER_RUN_TO_PEACH 531
+    //#define TIMER_RUN_TO_PEACH 531
+    #define TIMER_RUN_TO_PEACH 584
 #else
     #define TIMER_RUN_TO_PEACH 584
 #endif
@@ -2532,8 +2537,10 @@ static void end_peach_cutscene_dialog_1(struct MarioState *m) {
 }
 
 #if defined(VERSION_EU)
-    #define TIMER_SOMETHING_SPECIAL 150
-    #define TIMER_PEACH_KISS        260
+    //#define TIMER_SOMETHING_SPECIAL 150
+    //#define TIMER_PEACH_KISS        260
+    #define TIMER_SOMETHING_SPECIAL 130
+    #define TIMER_PEACH_KISS        200
 #elif defined(VERSION_SH)
     #define TIMER_SOMETHING_SPECIAL 170
     #define TIMER_PEACH_KISS        250
@@ -2848,9 +2855,12 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
 }
 
 #if defined(VERSION_EU)
-    #define TIMER_CREDITS_SHOW      51
-    #define TIMER_CREDITS_PROGRESS  80
-    #define TIMER_CREDITS_WARP     160
+    //#define TIMER_CREDITS_SHOW      51
+    //#define TIMER_CREDITS_PROGRESS  80
+    //#define TIMER_CREDITS_WARP     160
+    #define TIMER_CREDITS_SHOW      61
+    #define TIMER_CREDITS_PROGRESS  90
+    #define TIMER_CREDITS_WARP     200
 #elif defined(VERSION_SH)
     #define TIMER_CREDITS_SHOW      61
     #define TIMER_CREDITS_PROGRESS  90

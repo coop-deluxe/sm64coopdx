@@ -50,7 +50,7 @@ const LevelScript level_main_menu_entry_1[] = {
     GET_OR_SET(/*op*/ OP_SET, /*var*/ VAR_CURR_SAVE_FILE_NUM),
     STOP_MUSIC(/*fadeOutTime*/ 0x00BE),
     TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
-    SLEEP(/*frames*/ 16),
+    SLEEP(/*frames*/ 8), // Was 16 frames
     CLEAR_LEVEL(),
     SLEEP_BEFORE_EXIT(/*frames*/ 1),
     SET_REG(/*value*/ LEVEL_CASTLE_GROUNDS),
@@ -80,13 +80,13 @@ const LevelScript level_main_menu_entry_2[] = {
            CALL(/*arg*/ 0, /*func*/ lvl_init_act_selector_values_and_stars),
 
     /*27*/ TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
-    /*29*/ SLEEP(/*frames*/ 16),
+    /*29*/ SLEEP(/*frames*/ 8), // Was 16 frames
     /*30*/ SET_MENU_MUSIC(/*seq*/ 0x000D),
     /*33*/ CALL_LOOP(/*arg*/ 0, /*func*/ lvl_update_obj_and_load_act_button_actions),
     /*35*/ GET_OR_SET(/*op*/ OP_SET, /*var*/ VAR_CURR_ACT_NUM),
     /*36*/ STOP_MUSIC(/*fadeOutTime*/ 0x00BE),
     /*37*/ TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
-    /*39*/ SLEEP(/*frames*/ 16),
+    /*39*/ SLEEP(/*frames*/ 10), // Was 16 frames
     /*40*/ CLEAR_LEVEL(),
     /*41*/ SLEEP_BEFORE_EXIT(/*frames*/ 1),
     // L1:

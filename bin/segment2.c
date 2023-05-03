@@ -86,13 +86,13 @@ ALIGNED8 const Texture texture_hud_char_I[] = {
 #include "textures/segment2/segment2.02400.rgba16.inc.c"
 };
 
-ALIGNED8 static const u8 texture_hud_char_J[] = {
-#include "textures/segment2/custom_hud_j.rgba16.inc.c"
-};
-
 #if defined(VERSION_JP) || defined(VERSION_SH)
 ALIGNED8 const Texture texture_hud_char_J[] = {
 #include "textures/segment2/segment2.02600.rgba16.inc.c"
+};
+#else
+ALIGNED8 static const u8 texture_hud_char_J[] = {
+#include "textures/segment2/custom_hud_j.rgba16.inc.c"
 };
 #endif
 
