@@ -530,14 +530,15 @@ s64 m64_read_s64(struct M64ScriptState* state) {
     assert(state != NULL);
     assert(state->pc != NULL);
 #endif
-    s64 ret = *(state->pc++) << 56;
-    ret = (*(state->pc++) << 48) | ret;
-    ret = (*(state->pc++) << 40) | ret;
-    ret = (*(state->pc++) << 32) | ret;
-    ret = (*(state->pc++) << 24) | ret;
-    ret = (*(state->pc++) << 16) | ret;
-    ret = (*(state->pc++) << 8) | ret;
-    ret = *(state->pc++) | ret;
+    s64 ret = 0;
+    ret = (((u64)*(state->pc++)) << 56) | ret;
+    ret = (((u64)*(state->pc++)) << 48) | ret;
+    ret = (((u64)*(state->pc++)) << 40) | ret;
+    ret = (((u64)*(state->pc++)) << 32) | ret;
+    ret = (((u64)*(state->pc++)) << 24) | ret;
+    ret = (((u64)*(state->pc++)) << 16) | ret;
+    ret = (((u64)*(state->pc++)) <<  8) | ret;
+    ret = (((u64)*(state->pc++)) <<  0) | ret;
     return ret;
 }
 
@@ -2365,7 +2366,6 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
     s32 i;
     u8 u8v;
     u16 u16v;
-    u32 u32v;
     u64 u64v;
     u8 *tempPtr;
     struct M64ScriptState *state;

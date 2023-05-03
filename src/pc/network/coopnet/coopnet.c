@@ -14,12 +14,6 @@
 
 #ifdef COOPNET
 
-#ifdef DEVELOPMENT
-#define CN_GAME_STR "sm64ex-dev"
-#else
-#define CN_GAME_STR "sm64ex-coop"
-#endif
-
 uint64_t gCoopNetDesiredLobby = 0;
 char gCoopNetPassword[64] = "";
 char sCoopNetDescription[256] = "";
@@ -35,7 +29,7 @@ bool ns_coopnet_query(QueryCallbackPtr callback, QueryFinishCallbackPtr finishCa
     gCoopNetCallbacks.OnLobbyListGot = callback;
     gCoopNetCallbacks.OnLobbyListFinish = finishCallback;
     if (coopnet_initialize() != COOPNET_OK) { return false; }
-    if (coopnet_lobby_list_get(CN_GAME_STR, password) != COOPNET_OK) { return false; }
+    if (coopnet_lobby_list_get(get_game_name(), password) != COOPNET_OK) { return false; }
     return true;
 }
 
@@ -202,12 +196,12 @@ void ns_coopnet_update(void) {
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
-                coopnet_lobby_update(sLocalLobbyId, CN_GAME_STR, get_version(), configPlayerName, mode, sCoopNetDescription);
+                coopnet_lobby_update(sLocalLobbyId, get_game_name(), get_version(), configPlayerName, mode, sCoopNetDescription);
             } else {
                 LOG_INFO("Create lobby");
                 snprintf(gCoopNetPassword, 64, "%s", configPassword);
                 coopnet_populate_description();
-                coopnet_lobby_create(CN_GAME_STR, get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
+                coopnet_lobby_create(get_game_name(), get_version(), configPlayerName, mode, (uint16_t)configAmountofPlayers, gCoopNetPassword, sCoopNetDescription);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");

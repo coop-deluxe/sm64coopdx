@@ -20,5 +20,6 @@
 #define MAX_LOCAL_VERSION_LENGTH 36
 char* get_version(void);
 char* get_version_local(void);
+char* get_game_name(void);
 
 #endif
