@@ -50,28 +50,29 @@ using namespace Microsoft::WRL; // For ComPtr
 namespace {
 
 struct ShaderProgramD3D12 {
-    uint32_t shader_id;
+    struct ColorCombiner cc;
+    uint64_t hash;
     uint8_t num_inputs;
     bool used_textures[2];
     uint8_t num_floats;
     uint8_t num_attribs;
-    
+
     ComPtr<ID3DBlob> vertex_shader;
     ComPtr<ID3DBlob> pixel_shader;
     ComPtr<ID3D12RootSignature> root_signature;
 };
 
 struct PipelineDesc {
-    uint32_t shader_id;
+    uint64_t hash;
     bool depth_test;
     bool depth_mask;
     bool zmode_decal;
     bool _padding;
-    
+
     bool operator==(const PipelineDesc& o) const {
         return memcmp(this, &o, sizeof(*this)) == 0;
     }
-    
+
     bool operator<(const PipelineDesc& o) const {
         return memcmp(this, &o, sizeof(*this)) < 0;
     }
@@ -86,7 +87,7 @@ struct TextureData {
     ComPtr<ID3D12Resource> resource;
     struct TextureHeap *heap;
     uint8_t heap_offset;
-    
+
     uint64_t last_frame_counter;
     uint32_t descriptor_index;
     int sampler_parameters;
@@ -103,15 +104,15 @@ static struct {
     HMODULE d3d12_module;
     PFN_D3D12_CREATE_DEVICE D3D12CreateDevice;
     PFN_D3D12_GET_DEBUG_INTERFACE D3D12GetDebugInterface;
-    
+
     HMODULE d3dcompiler_module;
     pD3DCompile D3DCompile;
-    
+
     struct ShaderProgramD3D12 shader_program_pool[64];
     uint8_t shader_program_pool_size;
-    
+
     uint32_t current_width, current_height;
-    
+
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> command_queue;
     ComPtr<ID3D12CommandQueue> copy_command_queue;
@@ -129,14 +130,14 @@ static struct {
     UINT srv_descriptor_size;
     ComPtr<ID3D12DescriptorHeap> sampler_heap;
     UINT sampler_descriptor_size;
-    
+
     std::map<std::pair<uint32_t, uint32_t>, std::list<struct TextureHeap>> texture_heaps;
-    
+
     std::map<size_t, std::vector<ComPtr<ID3D12Resource>>> upload_heaps;
     std::vector<std::pair<size_t, ComPtr<ID3D12Resource>>> upload_heaps_in_flight;
     ComPtr<ID3D12Fence> copy_fence;
     uint64_t copy_fence_value;
-    
+
     std::vector<struct TextureData> textures;
     int current_tile;
     uint32_t current_texture_ids[2];
@@ -145,30 +146,30 @@ static struct {
     int frame_index;
     ComPtr<ID3D12Fence> fence;
     HANDLE fence_event;
-    
+
     uint64_t frame_counter;
-    
+
     ComPtr<ID3D12Resource> noise_cb;
     void *mapped_noise_cb_address;
     struct NoiseCB noise_cb_data;
-    
+
     ComPtr<ID3D12Resource> vertex_buffer;
     void *mapped_vbuf_address;
     int vbuf_pos;
-    
+
     std::vector<ComPtr<ID3D12Resource>> resources_to_clean_at_end_of_frame;
     std::vector<std::pair<struct TextureHeap *, uint8_t>> texture_heap_allocations_to_reclaim_at_end_of_frame;
-    
+
     std::map<PipelineDesc, ComPtr<ID3D12PipelineState>> pipeline_states;
     bool must_reload_pipeline;
-    
+
     // Current state:
     ID3D12PipelineState *pipeline_state;
     struct ShaderProgramD3D12 *shader_program;
     bool depth_test;
     bool depth_mask;
     bool zmode_decal;
-    
+
     CD3DX12_VIEWPORT viewport;
     CD3DX12_RECT scissor;
 } d3d;
@@ -234,45 +235,36 @@ static void gfx_direct3d12_load_shader(struct ShaderProgram *new_prg) {
     d3d.must_reload_pipeline = true;
 }
 
-static struct ShaderProgram *gfx_direct3d12_create_and_load_new_shader(uint32_t shader_id) {
-    /*static FILE *fp;
-    if (!fp) {
-        fp = fopen("shaders.txt", "w");
-    }
-    fprintf(fp, "0x%08x\n", shader_id);
-    fflush(fp);*/
-    
+static struct ShaderProgram *gfx_direct3d12_create_and_load_new_shader(struct ColorCombiner* cc) {
     struct ShaderProgramD3D12 *prg = &d3d.shader_program_pool[d3d.shader_program_pool_size++];
-    
-    CCFeatures cc_features;
-    gfx_cc_get_features(shader_id, &cc_features);
-    
+
+    CCFeatures cc_features = { 0 };
+    gfx_cc_get_features(cc, &cc_features);
+
     char buf[2048];
     size_t len, num_floats;
-    
+
     gfx_direct3d_common_build_shader(buf, len, num_floats, *cc, cc_features, true, false);
-    
-    //fwrite(buf, 1, len, stdout);
-    
+
     ThrowIfFailed(d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_5_1", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &prg->vertex_shader, nullptr));
     ThrowIfFailed(d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_5_1", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &prg->pixel_shader, nullptr));
-    
+
     ThrowIfFailed(d3d.device->CreateRootSignature(0, prg->pixel_shader->GetBufferPointer(), prg->pixel_shader->GetBufferSize(), IID_PPV_ARGS(&prg->root_signature)));
-    
-    prg->shader_id = shader_id;
+
+    prg->hash = cc->hash;
+    prg->cc = *cc;
     prg->num_inputs = cc_features.num_inputs;
     prg->used_textures[0] = cc_features.used_textures[0];
     prg->used_textures[1] = cc_features.used_textures[1];
     prg->num_floats = num_floats;
-    //prg->num_attribs = cnt;
-    
+
     d3d.must_reload_pipeline = true;
     return (struct ShaderProgram *)(d3d.shader_program = prg);
 }
 
-static struct ShaderProgram *gfx_direct3d12_lookup_shader(uint32_t shader_id) {
+static struct ShaderProgram *gfx_direct3d12_lookup_shader(struct ColorCombiner* cc) {
     for (size_t i = 0; i < d3d.shader_program_pool_size; i++) {
-        if (d3d.shader_program_pool[i].shader_id == shader_id) {
+        if (d3d.shader_program_pool[i].hash == cc->hash) {
             return (struct ShaderProgram *)&d3d.shader_program_pool[i];
         }
     }
@@ -281,7 +273,7 @@ static struct ShaderProgram *gfx_direct3d12_lookup_shader(uint32_t shader_id) {
 
 static void gfx_direct3d12_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
     struct ShaderProgramD3D12 *p = (struct ShaderProgramD3D12 *)prg;
-    
+
     *num_inputs = p->num_inputs;
     used_textures[0] = p->used_textures[0];
     used_textures[1] = p->used_textures[1];
@@ -299,9 +291,9 @@ static void gfx_direct3d12_select_texture(int tile, uint32_t texture_id) {
 
 static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, int height) {
     texture_uploads++;
-    
+
     ComPtr<ID3D12Resource> texture_resource;
-    
+
     // Describe and create a Texture2D.
     D3D12_RESOURCE_DESC texture_desc = {};
     texture_desc.MipLevels = 1;
@@ -314,11 +306,11 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
     texture_desc.SampleDesc.Quality = 0;
     texture_desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     texture_desc.Alignment = ((width + 31) / 32) * ((height + 31) / 32) > 16 ? 0 : D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-    
+
     D3D12_RESOURCE_ALLOCATION_INFO alloc_info = get_resource_allocation_info(&texture_desc);
-    
+
     std::list<struct TextureHeap>& heaps = d3d.texture_heaps[std::pair<uint32_t, uint32_t>(alloc_info.SizeInBytes, alloc_info.Alignment)];
-    
+
     struct TextureHeap *found_heap = nullptr;
     for (struct TextureHeap& heap : heaps) {
         if (!heap.free_list.empty()) {
@@ -328,7 +320,7 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
     if (found_heap == nullptr) {
         heaps.resize(heaps.size() + 1);
         found_heap = &heaps.back();
-        
+
         // In case of HD textures, make sure too much memory isn't wasted
         int textures_per_heap = 524288 / alloc_info.SizeInBytes;
         if (textures_per_heap < 1) {
@@ -336,7 +328,7 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
         } else if (textures_per_heap > 64) {
             textures_per_heap = 64;
         }
-        
+
         D3D12_HEAP_DESC heap_desc = {};
         heap_desc.SizeInBytes = alloc_info.SizeInBytes * textures_per_heap;
         if (alloc_info.Alignment == D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT) {
@@ -353,17 +345,17 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
             found_heap->free_list.push_back(i);
         }
     }
-    
+
     uint8_t heap_offset = found_heap->free_list.back();
     found_heap->free_list.pop_back();
     ThrowIfFailed(d3d.device->CreatePlacedResource(found_heap->heap.Get(), heap_offset * alloc_info.SizeInBytes, &texture_desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texture_resource)));
-    
+
     D3D12_PLACED_SUBRESOURCE_FOOTPRINT layout;
     UINT num_rows;
     UINT64 row_size_in_bytes;
     UINT64 upload_buffer_size;
     d3d.device->GetCopyableFootprints(&texture_desc, 0, 1, 0, &layout, &num_rows, &row_size_in_bytes, &upload_buffer_size);
-    
+
     std::vector<ComPtr<ID3D12Resource>>& upload_heaps = d3d.upload_heaps[upload_buffer_size];
     ComPtr<ID3D12Resource> upload_heap;
     if (upload_heaps.empty()) {
@@ -380,13 +372,13 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
         upload_heap = upload_heaps.back();
         upload_heaps.pop_back();
     }
-    
+
     {
         D3D12_SUBRESOURCE_DATA texture_data = {};
         texture_data.pData = rgba32_buf;
         texture_data.RowPitch = width * 4; // RGBA
         texture_data.SlicePitch = texture_data.RowPitch * height;
-        
+
         void *data;
         upload_heap->Map(0, nullptr, &data);
         D3D12_MEMCPY_DEST dest_data = { (uint8_t *)data + layout.Offset, layout.Footprint.RowPitch, SIZE_T(layout.Footprint.RowPitch) * SIZE_T(num_rows) };
@@ -397,12 +389,12 @@ static void gfx_direct3d12_upload_texture(const uint8_t *rgba32_buf, int width, 
         CD3DX12_TEXTURE_COPY_LOCATION src(upload_heap.Get(), layout);
         d3d.copy_command_list->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
     }
-    
+
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(texture_resource.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
     d3d.command_list->ResourceBarrier(1, &barrier);
-    
+
     d3d.upload_heaps_in_flight.push_back(std::make_pair((size_t)upload_buffer_size, std::move(upload_heap)));
-    
+
     struct TextureData& td = d3d.textures[d3d.current_texture_ids[d3d.current_tile]];
     if (td.resource.Get() != nullptr) {
         d3d.resources_to_clean_at_end_of_frame.push_back(std::move(td.resource));
@@ -454,10 +446,10 @@ static void gfx_direct3d12_set_use_alpha(bool use_alpha) {
 
 static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     struct ShaderProgramD3D12 *prg = d3d.shader_program;
-    
+
     if (d3d.must_reload_pipeline) {
         ComPtr<ID3D12PipelineState>& pipeline_state = d3d.pipeline_states[PipelineDesc{
-            prg->shader_id,
+            prg->hash,
             d3d.depth_test,
             d3d.depth_mask,
             d3d.zmode_decal,
@@ -471,14 +463,17 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
             if (prg->used_textures[0] || prg->used_textures[1]) {
                 ied[ied_pos++] = D3D12_INPUT_ELEMENT_DESC{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0};
             }
-            if (prg->shader_id & SHADER_OPT_FOG) {
+            if (prg->cc.cm.use_fog) {
                 ied[ied_pos++] = D3D12_INPUT_ELEMENT_DESC{"FOG", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0};
             }
+            if (prg->cc.cm.light_map) {
+                ied[ied_pos++] = D3D12_INPUT_ELEMENT_DESC{"LIGHTMAP", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0};
+            }
             for (int32_t i = 0; i < prg->num_inputs; i++) {
-                DXGI_FORMAT format = (prg->shader_id & SHADER_OPT_ALPHA) ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
+                DXGI_FORMAT format = (prg->cc.cm.use_alpha) ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
                 ied[ied_pos++] = D3D12_INPUT_ELEMENT_DESC{"INPUT", (UINT)i, format, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0};
             }
-            
+
             D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
             desc.InputLayout = { ied, ied_pos };
             desc.pRootSignature = prg->root_signature.Get();
@@ -489,7 +484,7 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
                 desc.RasterizerState.SlopeScaledDepthBias = -2.0f;
             }
             desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-            if (prg->shader_id & SHADER_OPT_ALPHA) {
+            if (prg->cc.cm.use_alpha) {
                 D3D12_BLEND_DESC bd = {};
                 bd.AlphaToCoverageEnable = FALSE;
                 bd.IndependentBlendEnable = FALSE;
@@ -521,51 +516,51 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
         d3d.pipeline_state = pipeline_state.Get();
         d3d.must_reload_pipeline = false;
     }
-    
+
     d3d.command_list->SetGraphicsRootSignature(prg->root_signature.Get());
     d3d.command_list->SetPipelineState(d3d.pipeline_state);
-    
+
     ID3D12DescriptorHeap *heaps[] = { d3d.srv_heap.Get(), d3d.sampler_heap.Get() };
     d3d.command_list->SetDescriptorHeaps(2, heaps);
-    
+
     int root_param_index = 0;
-    
-    if ((prg->shader_id & (SHADER_OPT_ALPHA | SHADER_OPT_NOISE)) == (SHADER_OPT_ALPHA | SHADER_OPT_NOISE)) {
+
+    if (prg->cc.cm.use_alpha && prg->cc.cm.use_noise) {
         d3d.command_list->SetGraphicsRootConstantBufferView(root_param_index++, d3d.noise_cb->GetGPUVirtualAddress());
     }
-    
+
     for (int32_t i = 0; i < 2; i++) {
         if (prg->used_textures[i]) {
             struct TextureData& td = d3d.textures[d3d.current_texture_ids[i]];
             if (td.last_frame_counter != d3d.frame_counter) {
                 td.descriptor_index = d3d.srv_pos;
                 td.last_frame_counter = d3d.frame_counter;
-                
+
                 D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
                 srv_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
                 srv_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
                 srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
                 srv_desc.Texture2D.MipLevels = 1;
-                
+
                 CD3DX12_CPU_DESCRIPTOR_HANDLE srv_handle(get_cpu_descriptor_handle(d3d.srv_heap), d3d.srv_pos++, d3d.srv_descriptor_size);
                 d3d.device->CreateShaderResourceView(td.resource.Get(), &srv_desc, srv_handle);
             }
-            
+
             CD3DX12_GPU_DESCRIPTOR_HANDLE srv_gpu_handle(get_gpu_descriptor_handle(d3d.srv_heap), td.descriptor_index, d3d.srv_descriptor_size);
             d3d.command_list->SetGraphicsRootDescriptorTable(root_param_index++, srv_gpu_handle);
-            
+
             CD3DX12_GPU_DESCRIPTOR_HANDLE sampler_gpu_handle(get_gpu_descriptor_handle(d3d.sampler_heap), td.sampler_parameters, d3d.sampler_descriptor_size);
             d3d.command_list->SetGraphicsRootDescriptorTable(root_param_index++, sampler_gpu_handle);
         }
     }
-    
+
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtv_handle(get_cpu_descriptor_handle(d3d.rtv_heap), d3d.frame_index, d3d.rtv_descriptor_size);
     D3D12_CPU_DESCRIPTOR_HANDLE dsv_handle = get_cpu_descriptor_handle(d3d.dsv_heap);
     d3d.command_list->OMSetRenderTargets(1, &rtv_handle, FALSE, &dsv_handle);
-    
+
     d3d.command_list->RSSetViewports(1, &d3d.viewport);
     d3d.command_list->RSSetScissorRects(1, &d3d.scissor);
-    
+
     int current_pos = d3d.vbuf_pos;
     memcpy((uint8_t *)d3d.mapped_vbuf_address + current_pos, buf_vbo, buf_vbo_len * sizeof(float));
     d3d.vbuf_pos += buf_vbo_len * sizeof(float);
@@ -574,12 +569,12 @@ static void gfx_direct3d12_draw_triangles(float buf_vbo[], size_t buf_vbo_len, s
         maxpos = d3d.vbuf_pos;
         //printf("NEW MAXPOS: %d\n", maxpos);
     }
-    
+
     D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view;
     vertex_buffer_view.BufferLocation = d3d.vertex_buffer->GetGPUVirtualAddress() + current_pos;
     vertex_buffer_view.StrideInBytes = buf_vbo_len / (3 * buf_vbo_num_tris) * sizeof(float);
     vertex_buffer_view.SizeInBytes = buf_vbo_len * sizeof(float);
-    
+
     d3d.command_list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     d3d.command_list->IASetVertexBuffers(0, 1, &vertex_buffer_view);
     d3d.command_list->DrawInstanced(3 * buf_vbo_num_tris, 1, 0, 0);
@@ -591,22 +586,22 @@ static void gfx_direct3d12_start_frame(void) {
     texture_uploads = 0;
     ThrowIfFailed(d3d.command_allocator->Reset());
     ThrowIfFailed(d3d.command_list->Reset(d3d.command_allocator.Get(), nullptr));
-    
+
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
         d3d.render_targets[d3d.frame_index].Get(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
     d3d.command_list->ResourceBarrier(1, &barrier);
-    
+
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtv_handle(get_cpu_descriptor_handle(d3d.rtv_heap), d3d.frame_index, d3d.rtv_descriptor_size);
     D3D12_CPU_DESCRIPTOR_HANDLE dsv_handle = get_cpu_descriptor_handle(d3d.dsv_heap);
     d3d.command_list->OMSetRenderTargets(1, &rtv_handle, FALSE, &dsv_handle);
-    
+
     static unsigned char c;
     const float clear_color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     d3d.command_list->ClearRenderTargetView(rtv_handle, clear_color, 0, nullptr);
     d3d.command_list->ClearDepthStencilView(dsv_handle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-    
+
     d3d.noise_cb_data.noise_frame++;
     if (d3d.noise_cb_data.noise_frame > 150) {
         // No high values, as noise starts to look ugly
@@ -616,7 +611,7 @@ static void gfx_direct3d12_start_frame(void) {
     d3d.noise_cb_data.noise_scale_x = 120 * aspect_ratio; // 120 = N64 height resolution (240) / 2
     d3d.noise_cb_data.noise_scale_y = 120;
     memcpy(d3d.mapped_noise_cb_address, &d3d.noise_cb_data, sizeof(struct NoiseCB));
-    
+
     d3d.vbuf_pos = 0;
 }
 
@@ -634,10 +629,10 @@ static void create_depth_buffer(void) {
     ThrowIfFailed(d3d.swap_chain->GetDesc1(&desc1));
     UINT width = desc1.Width;
     UINT height = desc1.Height;
-    
+
     d3d.current_width = width;
     d3d.current_height = height;
-    
+
     D3D12_DEPTH_STENCIL_VIEW_DESC dsv_desc = {};
     dsv_desc.Format = DXGI_FORMAT_D32_FLOAT;
     dsv_desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -667,7 +662,7 @@ static void create_depth_buffer(void) {
     rd.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
     rd.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
     ThrowIfFailed(d3d.device->CreateCommittedResource(&hp, D3D12_HEAP_FLAG_NONE, &rd, D3D12_RESOURCE_STATE_DEPTH_WRITE, &depth_optimized_cv, IID_PPV_ARGS(&d3d.depth_stencil_buffer)));
-    
+
     d3d.device->CreateDepthStencilView(d3d.depth_stencil_buffer.Get(), &dsv_desc, get_cpu_descriptor_handle(d3d.dsv_heap));
 }
 
@@ -699,7 +694,7 @@ static void gfx_direct3d12_init(void ) {
         ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(), "D3DCompiler_47.dll could not be loaded");
     }
     d3d.D3DCompile = (pD3DCompile)GetProcAddress(d3d.d3dcompiler_module, "D3DCompile");
-    
+
     // Create device
     {
         UINT debug_flags = 0;
@@ -710,14 +705,14 @@ static void gfx_direct3d12_init(void ) {
             debug_flags |= DXGI_CREATE_FACTORY_DEBUG;
         }
 #endif
-        
+
         gfx_dxgi_create_factory_and_device(DEBUG_D3D, 12, [](IDXGIAdapter1 *adapter, bool test_only) {
             HRESULT res = d3d.D3D12CreateDevice(
                 adapter,
                 D3D_FEATURE_LEVEL_11_0,
                 IID_ID3D12Device,
                 test_only ? nullptr : IID_PPV_ARGS_Helper(&d3d.device));
-            
+
             if (test_only) {
                 return SUCCEEDED(res);
             } else {
@@ -726,7 +721,7 @@ static void gfx_direct3d12_init(void ) {
             }
         });
     }
-    
+
     // Create command queues
     {
         D3D12_COMMAND_QUEUE_DESC queue_desc = {};
@@ -740,14 +735,14 @@ static void gfx_direct3d12_init(void ) {
         queue_desc.Type = D3D12_COMMAND_LIST_TYPE_COPY;
         ThrowIfFailed(d3d.device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&d3d.copy_command_queue)));
     }
-    
+
     // Create swap chain
     {
         ComPtr<IDXGISwapChain1> swap_chain1 = gfx_dxgi_create_swap_chain(d3d.command_queue.Get());
         ThrowIfFailed(swap_chain1->QueryInterface(__uuidof(IDXGISwapChain3), &d3d.swap_chain));
         d3d.frame_index = d3d.swap_chain->GetCurrentBackBufferIndex();
     }
-    
+
     // Create render target views
     {
         D3D12_DESCRIPTOR_HEAP_DESC rtv_heap_desc = {};
@@ -759,7 +754,7 @@ static void gfx_direct3d12_init(void ) {
 
         create_render_target_views();
     }
-    
+
     // Create Z-buffer
     {
         D3D12_DESCRIPTOR_HEAP_DESC dsv_heap_desc = {};
@@ -770,7 +765,7 @@ static void gfx_direct3d12_init(void ) {
 
         create_depth_buffer();
     }
-    
+
     // Create SRV heap for texture descriptors
     {
         D3D12_DESCRIPTOR_HEAP_DESC srv_heap_desc = {};
@@ -780,7 +775,7 @@ static void gfx_direct3d12_init(void ) {
         ThrowIfFailed(d3d.device->CreateDescriptorHeap(&srv_heap_desc, IID_PPV_ARGS(&d3d.srv_heap)));
         d3d.srv_descriptor_size = d3d.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
-    
+
     // Create sampler heap and descriptors
     {
         D3D12_DESCRIPTOR_HEAP_DESC sampler_heap_desc = {};
@@ -789,13 +784,13 @@ static void gfx_direct3d12_init(void ) {
         sampler_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         ThrowIfFailed(d3d.device->CreateDescriptorHeap(&sampler_heap_desc, IID_PPV_ARGS(&d3d.sampler_heap)));
         d3d.sampler_descriptor_size = d3d.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
-        
+
         static const D3D12_TEXTURE_ADDRESS_MODE address_modes[] = {
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
             D3D12_TEXTURE_ADDRESS_MODE_CLAMP
         };
-        
+
         D3D12_CPU_DESCRIPTOR_HANDLE sampler_handle = get_cpu_descriptor_handle(d3d.sampler_heap);
         int pos = 0;
         for (int linear_filter = 0; linear_filter < 2; linear_filter++) {
@@ -816,7 +811,7 @@ static void gfx_direct3d12_init(void ) {
             }
         }
     }
-    
+
     // Create constant buffer view for noise
     {
         /*D3D12_DESCRIPTOR_HEAP_DESC cbv_heap_desc = {};
@@ -824,7 +819,7 @@ static void gfx_direct3d12_init(void ) {
         cbv_heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         srv_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         ThrowIfFailed(d3d.device->CreateDescriptorHeap*/
-        
+
         CD3DX12_HEAP_PROPERTIES hp(D3D12_HEAP_TYPE_UPLOAD);
         CD3DX12_RESOURCE_DESC rdb = CD3DX12_RESOURCE_DESC::Buffer(256);
         ThrowIfFailed(d3d.device->CreateCommittedResource(
@@ -834,27 +829,27 @@ static void gfx_direct3d12_init(void ) {
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
             IID_PPV_ARGS(&d3d.noise_cb)));
-        
+
         CD3DX12_RANGE read_range(0, 0); // Read not possible from CPU
         ThrowIfFailed(d3d.noise_cb->Map(0, &read_range, &d3d.mapped_noise_cb_address));
     }
-    
+
     ThrowIfFailed(d3d.device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&d3d.command_allocator)));
     ThrowIfFailed(d3d.device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COPY, IID_PPV_ARGS(&d3d.copy_command_allocator)));
-    
+
     ThrowIfFailed(d3d.device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, d3d.command_allocator.Get(), nullptr, IID_PPV_ARGS(&d3d.command_list)));
     ThrowIfFailed(d3d.device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COPY, d3d.copy_command_allocator.Get(), nullptr, IID_PPV_ARGS(&d3d.copy_command_list)));
-    
+
     ThrowIfFailed(d3d.command_list->Close());
-    
+
     ThrowIfFailed(d3d.device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&d3d.fence)));
     d3d.fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
     if (d3d.fence_event == nullptr) {
         ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
     }
-    
+
     ThrowIfFailed(d3d.device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&d3d.copy_fence)));
-    
+
     {
         // Create a buffer of 1 MB in size. With a 120 star speed run 192 kB seems to be max usage.
         CD3DX12_HEAP_PROPERTIES hp(D3D12_HEAP_TYPE_UPLOAD);
@@ -866,7 +861,7 @@ static void gfx_direct3d12_init(void ) {
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
             IID_PPV_ARGS(&d3d.vertex_buffer)));
-        
+
         CD3DX12_RANGE read_range(0, 0); // Read not possible from CPU
         ThrowIfFailed(d3d.vertex_buffer->Map(0, &read_range, &d3d.mapped_vbuf_address));
     }
@@ -880,29 +875,29 @@ static void gfx_direct3d12_end_frame(void) {
     }
     //printf("Texture uploads: %d %d\n", max_texture_uploads, texture_uploads);
     texture_uploads = 0;
-    
+
     ThrowIfFailed(d3d.copy_command_list->Close());
     {
         ID3D12CommandList *lists[] = { d3d.copy_command_list.Get() };
         d3d.copy_command_queue->ExecuteCommandLists(1, lists);
         d3d.copy_command_queue->Signal(d3d.copy_fence.Get(), ++d3d.copy_fence_value);
     }
-    
+
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
         d3d.render_targets[d3d.frame_index].Get(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
     d3d.command_list->ResourceBarrier(1, &barrier);
-    
+
     d3d.command_queue->Wait(d3d.copy_fence.Get(), d3d.copy_fence_value);
-    
+
     ThrowIfFailed(d3d.command_list->Close());
-    
+
     {
         ID3D12CommandList *lists[] = { d3d.command_list.Get() };
         d3d.command_queue->ExecuteCommandLists(1, lists);
     }
-    
+
     {
         LARGE_INTEGER t0;
         QueryPerformanceCounter(&t0);
@@ -913,7 +908,7 @@ static void gfx_direct3d12_end_frame(void) {
 static void gfx_direct3d12_finish_render(void) {
     LARGE_INTEGER t0, t1, t2;
     QueryPerformanceCounter(&t0);
-    
+
     static UINT64 fence_value;
     ThrowIfFailed(d3d.command_queue->Signal(d3d.fence.Get(), ++fence_value));
     if (d3d.fence->GetCompletedValue() < fence_value) {
@@ -921,7 +916,7 @@ static void gfx_direct3d12_finish_render(void) {
         WaitForSingleObject(d3d.fence_event, INFINITE);
     }
     QueryPerformanceCounter(&t1);
-    
+
     d3d.resources_to_clean_at_end_of_frame.clear();
     for (std::pair<size_t, ComPtr<ID3D12Resource>>& heap : d3d.upload_heaps_in_flight) {
         d3d.upload_heaps[heap.first].push_back(std::move(heap.second));
@@ -931,14 +926,14 @@ static void gfx_direct3d12_finish_render(void) {
         item.first->free_list.push_back(item.second);
     }
     d3d.texture_heap_allocations_to_reclaim_at_end_of_frame.clear();
-    
+
     QueryPerformanceCounter(&t2);
-    
+
     d3d.frame_index = d3d.swap_chain->GetCurrentBackBufferIndex();
-    
+
     ThrowIfFailed(d3d.copy_command_allocator->Reset());
     ThrowIfFailed(d3d.copy_command_list->Reset(d3d.copy_command_allocator.Get(), nullptr));
-    
+
     //printf("done %llu gpu:%d wait:%d freed:%llu frame:%u %u monitor:%u t:%llu\n", (unsigned long long)(t0.QuadPart - d3d.qpc_init), (int)(t1.QuadPart - t0.QuadPart), (int)(t2.QuadPart - t0.QuadPart), (unsigned long long)(t2.QuadPart - d3d.qpc_init), d3d.pending_frame_stats.rbegin()->first, stats.PresentCount, stats.SyncRefreshCount, (unsigned long long)(stats.SyncQPCTime.QuadPart - d3d.qpc_init));
 }
 
