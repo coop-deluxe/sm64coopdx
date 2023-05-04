@@ -561,7 +561,9 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     if (!increment_mat_stack()) { return; }
 
     // save the camera matrix
-    mtxf_copy(gCamera->mtx, gMatStack[gMatStackIndex]);
+    if (gCamera) {
+        mtxf_copy(gCamera->mtx, gMatStack[gMatStackIndex]);
+    }
 
     if (node->fnNode.node.children != 0) {
         gCurGraphNodeCamera = node;

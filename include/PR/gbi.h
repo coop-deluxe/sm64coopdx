@@ -21,7 +21,7 @@
 #define _GBI_H_
 
 #include <PR/ultratypes.h>
-#include "src/pc/djui/djui_gbi.h"
+#include "gbi_extension.h"
 
 /*
  * To use the F3DEX ucodes, define F3DEX_GBI before include this file.

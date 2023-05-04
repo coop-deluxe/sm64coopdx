@@ -5,46 +5,6 @@
 #include "gfx_direct3d_common.h"
 #include "gfx_cc.h"
 
-void get_cc_features(uint32_t shader_id, CCFeatures *cc_features) {
-    for (int32_t i = 0; i < 4; i++) {
-        cc_features->c[0][i] = (shader_id >> (i * 3)) & 7;
-        cc_features->c[1][i] = (shader_id >> (12 + i * 3)) & 7;
-    }
-
-    cc_features->opt_alpha = (shader_id & SHADER_OPT_ALPHA) != 0;
-    cc_features->opt_fog = (shader_id & SHADER_OPT_FOG) != 0;
-    cc_features->opt_texture_edge = (shader_id & SHADER_OPT_TEXTURE_EDGE) != 0;
-    cc_features->opt_noise = (shader_id & SHADER_OPT_NOISE) != 0;
-
-    cc_features->used_textures[0] = false;
-    cc_features->used_textures[1] = false;
-    cc_features->num_inputs = 0;
-
-    for (int32_t i = 0; i < 2; i++) {
-        for (int32_t j = 0; j < 4; j++) {
-            if (cc_features->c[i][j] >= SHADER_INPUT_1 && cc_features->c[i][j] <= SHADER_INPUT_4) {
-                if (cc_features->c[i][j] > cc_features->num_inputs) {
-                    cc_features->num_inputs = cc_features->c[i][j];
-                }
-            }
-            if (cc_features->c[i][j] == SHADER_TEXEL0 || cc_features->c[i][j] == SHADER_TEXEL0A) {
-                cc_features->used_textures[0] = true;
-            }
-            if (cc_features->c[i][j] == SHADER_TEXEL1) {
-                cc_features->used_textures[1] = true;
-            }
-        }
-    }
-
-    cc_features->do_single[0] = cc_features->c[0][2] == 0;
-    cc_features->do_single[1] = cc_features->c[1][2] == 0;
-    cc_features->do_multiply[0] = cc_features->c[0][1] == 0 && cc_features->c[0][3] == 0;
-    cc_features->do_multiply[1] = cc_features->c[1][1] == 0 && cc_features->c[1][3] == 0;
-    cc_features->do_mix[0] = cc_features->c[0][1] == cc_features->c[0][3];
-    cc_features->do_mix[1] = cc_features->c[1][1] == cc_features->c[1][3];
-    cc_features->color_alpha_same = (shader_id & 0xfff) == ((shader_id >> 12) & 0xfff);
-}
-
 static void append_str(char *buf, size_t *len, const char *str) {
     while (*str != '\0') buf[(*len)++] = *str++;
 }
@@ -61,6 +21,8 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
             default:
             case SHADER_0:
                 return with_alpha ? "float4(0.0, 0.0, 0.0, 0.0)" : "float3(0.0, 0.0, 0.0)";
+            case SHADER_1:
+                return with_alpha ? "float4(1.0, 1.0, 1.0, 1.0)" : "float3(1.0, 1.0, 1.0)";
             case SHADER_INPUT_1:
                 return with_alpha || !inputs_have_alpha ? "input.input1" : "input.input1.rgb";
             case SHADER_INPUT_2:
@@ -69,18 +31,34 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return with_alpha || !inputs_have_alpha ? "input.input3" : "input.input3.rgb";
             case SHADER_INPUT_4:
                 return with_alpha || !inputs_have_alpha ? "input.input4" : "input.input4.rgb";
+            case SHADER_INPUT_5:
+                return with_alpha || !inputs_have_alpha ? "input.input5" : "input.input5.rgb";
+            case SHADER_INPUT_6:
+                return with_alpha || !inputs_have_alpha ? "input.input6" : "input.input6.rgb";
+            case SHADER_INPUT_7:
+                return with_alpha || !inputs_have_alpha ? "input.input7" : "input.input7.rgb";
+            case SHADER_INPUT_8:
+                return with_alpha || !inputs_have_alpha ? "input.input8" : "input.input8.rgb";
             case SHADER_TEXEL0:
                 return with_alpha ? "texVal0" : "texVal0.rgb";
             case SHADER_TEXEL0A:
                 return hint_single_element ? "texVal0.a" : (with_alpha ? "float4(texVal0.a, texVal0.a, texVal0.a, texVal0.a)" : "float3(texVal0.a, texVal0.a, texVal0.a)");
             case SHADER_TEXEL1:
                 return with_alpha ? "texVal1" : "texVal1.rgb";
+            case SHADER_TEXEL1A:
+                return hint_single_element ? "texVal1.a" : (with_alpha ? "float4(texVal1.a, texVal1.a, texVal1.a, texVal1.a)" : "float3(texVal1.a, texVal1.a, texVal1.a)");
+            case SHADER_COMBINED:
+                return with_alpha ? "texel" : "texel.rgb";
+            case SHADER_COMBINEDA:
+                return hint_single_element ? "texel.a" : (with_alpha ? "float4(texel.a, texel.a, texel.a, texel.a)" : "float3(texel.a, texel.a, texel.a)");
         }
     } else {
         switch (item) {
             default:
             case SHADER_0:
                 return "0.0";
+            case SHADER_1:
+                return "1.0";
             case SHADER_INPUT_1:
                 return "input.input1.a";
             case SHADER_INPUT_2:
@@ -89,44 +67,58 @@ static const char *shader_item_to_str(int32_t item, bool with_alpha, bool only_a
                 return "input.input3.a";
             case SHADER_INPUT_4:
                 return "input.input4.a";
+            case SHADER_INPUT_5:
+                return "input.input5.a";
+            case SHADER_INPUT_6:
+                return "input.input6.a";
+            case SHADER_INPUT_7:
+                return "input.input7.a";
+            case SHADER_INPUT_8:
+                return "input.input8.a";
             case SHADER_TEXEL0:
                 return "texVal0.a";
             case SHADER_TEXEL0A:
                 return "texVal0.a";
             case SHADER_TEXEL1:
                 return "texVal1.a";
+            case SHADER_TEXEL1A:
+                return "texVal1.a";
+            case SHADER_COMBINED:
+                return "texel.a";
+            case SHADER_COMBINEDA:
+                return "texel.a";
         }
     }
 }
 
-static void append_formula(char *buf, size_t *len, const uint8_t c[2][4], bool do_single, bool do_multiply, bool do_mix, bool with_alpha, bool only_alpha, bool opt_alpha) {
+static void append_formula(char *buf, size_t *len, const uint8_t* c, bool do_single, bool do_multiply, bool do_mix, bool with_alpha, bool only_alpha, bool opt_alpha) {
     if (do_single) {
-        append_str(buf, len, shader_item_to_str(c[only_alpha][3], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 3], with_alpha, only_alpha, opt_alpha, false));
     } else if (do_multiply) {
-        append_str(buf, len, shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 0], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, " * ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 2], with_alpha, only_alpha, opt_alpha, true));
     } else if (do_mix) {
         append_str(buf, len, "lerp(");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][1], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 1], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, ", ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 0], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, ", ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 2], with_alpha, only_alpha, opt_alpha, true));
         append_str(buf, len, ")");
     } else {
         append_str(buf, len, "(");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 0], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, " - ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][1], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 1], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, ") * ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 2], with_alpha, only_alpha, opt_alpha, true));
         append_str(buf, len, " + ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][3], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len, shader_item_to_str(c[only_alpha * 4 + 3], with_alpha, only_alpha, opt_alpha, false));
     }
 }
 
-void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_floats, const CCFeatures& cc_features, bool include_root_signature, bool three_point_filtering) {
+void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_floats, struct ColorCombiner& cc, const CCFeatures& ccf, bool include_root_signature, bool three_point_filtering) {
     len = 0;
     num_floats = 4;
 
@@ -134,14 +126,14 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     if (include_root_signature) {
         append_str(buf, &len, "#define RS \"RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | DENY_VERTEX_SHADER_ROOT_ACCESS)");
-        if (cc_features.opt_alpha && cc_features.opt_noise) {
+        if (cc.cm.use_alpha && cc.cm.use_noise) {
             append_str(buf, &len, ",CBV(b0, visibility = SHADER_VISIBILITY_PIXEL)");
         }
-        if (cc_features.used_textures[0]) {
+        if (ccf.used_textures[0]) {
             append_str(buf, &len, ",DescriptorTable(SRV(t0), visibility = SHADER_VISIBILITY_PIXEL)");
             append_str(buf, &len, ",DescriptorTable(Sampler(s0), visibility = SHADER_VISIBILITY_PIXEL)");
         }
-        if (cc_features.used_textures[1]) {
+        if (ccf.used_textures[1]) {
             append_str(buf, &len, ",DescriptorTable(SRV(t1), visibility = SHADER_VISIBILITY_PIXEL)");
             append_str(buf, &len, ",DescriptorTable(Sampler(s1), visibility = SHADER_VISIBILITY_PIXEL)");
         }
@@ -150,37 +142,41 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     append_line(buf, &len, "struct PSInput {");
     append_line(buf, &len, "    float4 position : SV_POSITION;");
-    if (cc_features.used_textures[0] || cc_features.used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_line(buf, &len, "    float2 uv : TEXCOORD;");
         num_floats += 2;
     }
-    if (cc_features.opt_alpha && cc_features.opt_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_noise) {
         append_line(buf, &len, "    float4 screenPos : TEXCOORD1;");
     }
-    if (cc_features.opt_fog) {
+    if (cc.cm.use_fog) {
         append_line(buf, &len, "    float4 fog : FOG;");
         num_floats += 4;
     }
-    for (int32_t i = 0; i < cc_features.num_inputs; i++) {
-        len += sprintf(buf + len, "    float%d input%d : INPUT%d;\r\n", cc_features.opt_alpha ? 4 : 3, i + 1, i);
-        num_floats += cc_features.opt_alpha ? 4 : 3;
+    if (cc.cm.light_map) {
+        append_line(buf, &len, "    float2 lightmap : LIGHTMAP;");
+        num_floats += 2;
+    }
+    for (int32_t i = 0; i < ccf.num_inputs; i++) {
+        len += sprintf(buf + len, "    float%d input%d : INPUT%d;\r\n", cc.cm.use_alpha ? 4 : 3, i + 1, i);
+        num_floats += cc.cm.use_alpha ? 4 : 3;
     }
     append_line(buf, &len, "};");
 
     // Textures and samplers
 
-    if (cc_features.used_textures[0]) {
+    if (ccf.used_textures[0]) {
         append_line(buf, &len, "Texture2D g_texture0 : register(t0);");
         append_line(buf, &len, "SamplerState g_sampler0 : register(s0);");
     }
-    if (cc_features.used_textures[1]) {
+    if (ccf.used_textures[1]) {
         append_line(buf, &len, "Texture2D g_texture1 : register(t1);");
         append_line(buf, &len, "SamplerState g_sampler1 : register(s1);");
     }
 
     // Constant buffer and random function
 
-    if (cc_features.opt_alpha && cc_features.opt_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_noise) {
         append_line(buf, &len, "cbuffer PerFrameCB : register(b0) {");
         append_line(buf, &len, "    uint noise_frame;");
         append_line(buf, &len, "    float2 noise_scale;");
@@ -196,7 +192,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     // Original author: ArthurCarvalho
     // Based on GLSL implementation by twinaphex, mupen64plus-libretro project.
 
-    if (three_point_filtering && (cc_features.used_textures[0] || cc_features.used_textures[1])) {
+    if (three_point_filtering && (ccf.used_textures[0] || ccf.used_textures[1])) {
         append_line(buf, &len, "cbuffer PerDrawCB : register(b1) {");
         append_line(buf, &len, "    struct {");
         append_line(buf, &len, "        uint width;");
@@ -218,28 +214,34 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     // Vertex shader
 
     append_str(buf, &len, "PSInput VSMain(float4 position : POSITION");
-    if (cc_features.used_textures[0] || cc_features.used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_str(buf, &len, ", float2 uv : TEXCOORD");
     }
-    if (cc_features.opt_fog) {
+    if (cc.cm.use_fog) {
         append_str(buf, &len, ", float4 fog : FOG");
     }
-    for (int32_t i = 0; i < cc_features.num_inputs; i++) {
-        len += sprintf(buf + len, ", float%d input%d : INPUT%d", cc_features.opt_alpha ? 4 : 3, i + 1, i);
+    if (cc.cm.light_map) {
+        append_str(buf, &len, ", float2 lightmap : LIGHTMAP");
+    }
+    for (int32_t i = 0; i < ccf.num_inputs; i++) {
+        len += sprintf(buf + len, ", float%d input%d : INPUT%d", cc.cm.use_alpha ? 4 : 3, i + 1, i);
     }
     append_line(buf, &len, ") {");
     append_line(buf, &len, "    PSInput result;");
     append_line(buf, &len, "    result.position = position;");
-    if (cc_features.opt_alpha && cc_features.opt_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_noise) {
         append_line(buf, &len, "    result.screenPos = position;");
     }
-    if (cc_features.used_textures[0] || cc_features.used_textures[1]) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_line(buf, &len, "    result.uv = uv;");
     }
-    if (cc_features.opt_fog) {
+    if (cc.cm.use_fog) {
         append_line(buf, &len, "    result.fog = fog;");
     }
-    for (int32_t i = 0; i < cc_features.num_inputs; i++) {
+    if (cc.cm.light_map) {
+        append_line(buf, &len, "    result.lightmap = lightmap;");
+    }
+    for (int32_t i = 0; i < ccf.num_inputs; i++) {
         len += sprintf(buf + len, "    result.input%d = input%d;\r\n", i + 1, i + 1);
     }
     append_line(buf, &len, "    return result;");
@@ -250,7 +252,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "[RootSignature(RS)]");
     }
     append_line(buf, &len, "float4 PSMain(PSInput input) : SV_TARGET {");
-    if (cc_features.used_textures[0]) {
+    if (ccf.used_textures[0]) {
         if (three_point_filtering) {
             append_line(buf, &len, "    float4 texVal0;");
             append_line(buf, &len, "    if (textures[0].linear_filtering)");
@@ -261,48 +263,67 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
             append_line(buf, &len, "    float4 texVal0 = g_texture0.Sample(g_sampler0, input.uv);");
         }
     }
-    if (cc_features.used_textures[1]) {
-        if (three_point_filtering) {
-            append_line(buf, &len, "    float4 texVal1;");
-            append_line(buf, &len, "    if (textures[1].linear_filtering)");
-            append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.uv, float2(textures[1].width, textures[1].height));");
-            append_line(buf, &len, "    else");
-            append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.uv);");
+    if (ccf.used_textures[1]) {
+        if (cc.cm.light_map) {
+            if (three_point_filtering) {
+                append_line(buf, &len, "    float4 texVal1;");
+                append_line(buf, &len, "    if (textures[1].linear_filtering)");
+                append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.lightmap, float2(textures[1].width, textures[1].height));");
+                append_line(buf, &len, "    else");
+                append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.lightmap);");
+            } else {
+                append_line(buf, &len, "    float4 texVal1 = g_texture1.Sample(g_sampler1, input.lightmap);");
+            }
         } else {
-            append_line(buf, &len, "    float4 texVal1 = g_texture1.Sample(g_sampler1, input.uv);");
+            if (three_point_filtering) {
+                append_line(buf, &len, "    float4 texVal1;");
+                append_line(buf, &len, "    if (textures[1].linear_filtering)");
+                append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.uv, float2(textures[1].width, textures[1].height));");
+                append_line(buf, &len, "    else");
+                append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.uv);");
+            } else {
+                append_line(buf, &len, "    float4 texVal1 = g_texture1.Sample(g_sampler1, input.uv);");
+            }
         }
     }
 
-    append_str(buf, &len, cc_features.opt_alpha ? "    float4 texel = " : "    float3 texel = ");
-    if (!cc_features.color_alpha_same && cc_features.opt_alpha) {
-        append_str(buf, &len, "float4(");
-        append_formula(buf, &len, cc_features.c, cc_features.do_single[0], cc_features.do_multiply[0], cc_features.do_mix[0], false, false, true);
-        append_str(buf, &len, ", ");
-        append_formula(buf, &len, cc_features.c, cc_features.do_single[1], cc_features.do_multiply[1], cc_features.do_mix[1], true, true, true);
-        append_str(buf, &len, ")");
-    } else {
-        append_formula(buf, &len, cc_features.c, cc_features.do_single[0], cc_features.do_multiply[0], cc_features.do_mix[0], cc_features.opt_alpha, false, cc_features.opt_alpha);
-    }
-    append_line(buf, &len, ";");
+    append_str(buf, &len, cc.cm.use_alpha ? "    float4 texel = " : "    float3 texel = ");
+    for (int i = 0; i < (cc.cm.use_2cycle + 1); i++) {
+        uint8_t* cmd = &cc.shader_commands[i * 8];
+        if (!ccf.color_alpha_same[i] && cc.cm.use_alpha) {
+            append_str(buf, &len, "float4(");
+            append_formula(buf, &len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], false, false, true);
+            append_str(buf, &len, ", ");
+            append_formula(buf, &len, cmd, ccf.do_single[i*2+1], ccf.do_multiply[i*2+1], ccf.do_mix[i*2+1], true, true, true);
+            append_str(buf, &len, ")");
+        } else {
+            append_formula(buf, &len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], cc.cm.use_alpha, false, cc.cm.use_alpha);
+        }
+        append_line(buf, &len, ";");
 
-    if (cc_features.opt_texture_edge && cc_features.opt_alpha) {
+        if (i == 0 && cc.cm.use_2cycle) {
+            append_str(buf, &len, "texel = ");
+        }
+    }
+
+    if (cc.cm.texture_edge && cc.cm.use_alpha) {
         append_line(buf, &len, "    if (texel.a > 0.3) texel.a = 1.0; else discard;");
     }
     // TODO discard if alpha is 0?
-    if (cc_features.opt_fog) {
-        if (cc_features.opt_alpha) {
+    if (cc.cm.use_fog) {
+        if (cc.cm.use_alpha) {
             append_line(buf, &len, "    texel = float4(lerp(texel.rgb, input.fog.rgb, input.fog.a), texel.a);");
         } else {
             append_line(buf, &len, "    texel = lerp(texel, input.fog.rgb, input.fog.a);");
         }
     }
 
-    if (cc_features.opt_alpha && cc_features.opt_noise) {
+    if (cc.cm.use_alpha && cc.cm.use_noise) {
         append_line(buf, &len, "    float2 coords = (input.screenPos.xy / input.screenPos.w) * noise_scale;");
         append_line(buf, &len, "    texel.a *= round(random(float3(floor(coords), noise_frame)));");
     }
 
-    if (cc_features.opt_alpha) {
+    if (cc.cm.use_alpha) {
         append_line(buf, &len, "    return texel;");
     } else {
         append_line(buf, &len, "    return float4(texel, 1.0);");
