@@ -43,6 +43,7 @@ void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures* ccf) {
 
 void gfx_cc_print(struct ColorCombiner *cc) {
     if (!sAllowCCPrint) { return; }
+#ifdef DEVELOPMENT
     printf("\n>> gfx_pc_precomp_shader(");
 
     struct CombineMode* cm = &cc->cm;
@@ -55,14 +56,12 @@ void gfx_cc_print(struct ColorCombiner *cc) {
     printf(");");
     printf("    // %016lx", cm->hash);
     printf("\n");
+#endif
 }
 
 void gfx_cc_precomp(void) {
     sAllowCCPrint = 0;
 
-    // DO NOT COMMIT - TODO - need to add an exhaustive list
-    // .. need to save the cc_prints to a file if dev mode and vanilla
-    // .. also what happens when we run out of ccs/shaders?
     gfx_pc_precomp_shader(0x00030001, 0x02000000, 0x000a0004, 0x0a000b0b, 0x00000011);    // 741f2ad014006ca1
     gfx_pc_precomp_shader(0x00040001, 0x00010005, 0x00040002, 0x0b020b05, 0x00000001);    // 110404410ba7b38b
     gfx_pc_precomp_shader(0x00040001, 0x00030001, 0x00040002, 0x0b030b02, 0x00000001);    // 110404410be9b307

@@ -429,11 +429,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     vs_buf[vs_len] = '\0';
     fs_buf[fs_len] = '\0';
 
-    puts("Vertex shader:");
+    /*puts("Vertex shader:");
     puts(vs_buf);
     puts("Fragment shader:");
     puts(fs_buf);
-    puts("End");
+    puts("End");*/
 
     const GLchar *sources[2] = { vs_buf, fs_buf };
     const GLint lengths[2] = { vs_len, fs_len };
