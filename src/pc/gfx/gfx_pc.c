@@ -353,8 +353,6 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
     memcpy(&comb->cm, cm, sizeof(struct CombineMode));
     gfx_generate_cc(comb);
 
-    printf(">> added %016lx\n", comb->cm.hash);
-
     return prev_combiner = comb;
 }
 
