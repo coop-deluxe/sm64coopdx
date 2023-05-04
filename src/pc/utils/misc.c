@@ -214,9 +214,8 @@ static void rot_mat_to_rot_quat(Vec4f q, Vec3f a[3]) {
                 : 3;
 
     // adjust signs of coefficients; base on greatest magnitude to improve float accuracy
+    f32 divFactor = 0;
     switch (maxCompoMagCase) {
-        f32 divFactor = 0;
-
         case 0:
             divFactor = 0.25f / q[0];
             q[1] = (a[1][2] - a[2][1]) * divFactor;
@@ -505,7 +504,7 @@ void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
 
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     // HACK: Limit accurate interpolation to 64-bit builds
-    if (sizeof(int) > 4) {
+    if (sizeof(void*) > 4) {
         if (configInterpolationMode) {
             delta_interpolate_mtx_accurate(out, a, b, delta);
             return;
