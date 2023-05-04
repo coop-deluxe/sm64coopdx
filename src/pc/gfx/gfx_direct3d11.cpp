@@ -68,7 +68,7 @@ struct ShaderProgramD3D11 {
     ComPtr<ID3D11InputLayout> input_layout;
     ComPtr<ID3D11BlendState> blend_state;
 
-    uint32_t shader_id;
+    uint64_t hash;
     uint8_t num_inputs;
     uint8_t num_floats;
     bool used_textures[2];
@@ -323,14 +323,14 @@ static void gfx_d3d11_load_shader(struct ShaderProgram *new_prg) {
     d3d.shader_program = (struct ShaderProgramD3D11 *)new_prg;
 }
 
-static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shader_id) {
-    CCFeatures cc_features;
-    gfx_cc_get_features(shader_id, &cc_features);
+static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCombiner* cc) {
+    CCFeatures cc_features = { 0 };
+    gfx_cc_get_features(cc, &cc_features);
 
     char buf[4096];
     size_t len, num_floats;
 
-    gfx_direct3d_common_build_shader(buf, len, num_floats, cc_features, false, THREE_POINT_FILTERING);
+    gfx_direct3d_common_build_shader(buf, len, num_floats, *cc, cc_features, false, THREE_POINT_FILTERING);
 
     ComPtr<ID3DBlob> vs, ps;
     ComPtr<ID3DBlob> error_blob;
@@ -368,11 +368,14 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shade
     if (cc_features.used_textures[0] || cc_features.used_textures[1]) {
         ied[ied_index++] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
     }
-    if (cc_features.opt_fog) {
+    if (cc->cm.use_fog) {
         ied[ied_index++] = { "FOG", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
     }
+    if (cc->cm.light_map) {
+        ied[ied_index++] = { "LIGHTMAP", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+    }
     for (uint32_t i = 0; i < cc_features.num_inputs; i++) {
-        DXGI_FORMAT format = cc_features.opt_alpha ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
+        DXGI_FORMAT format = cc->cm.use_alpha ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
         ied[ied_index++] = { "INPUT", i, format, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
     }
 
@@ -383,7 +386,7 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shade
     D3D11_BLEND_DESC blend_desc;
     ZeroMemory(&blend_desc, sizeof(D3D11_BLEND_DESC));
 
-    if (cc_features.opt_alpha) {
+    if (cc->cm.use_alpha) {
         blend_desc.RenderTarget[0].BlendEnable = true;
         blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
         blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -401,7 +404,7 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shade
 
     // Save some values
 
-    prg->shader_id = shader_id;
+    prg->hash = cc->hash;
     prg->num_inputs = cc_features.num_inputs;
     prg->num_floats = num_floats;
     prg->used_textures[0] = cc_features.used_textures[0];
@@ -410,9 +413,9 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shade
     return (struct ShaderProgram *)(d3d.shader_program = prg);
 }
 
-static struct ShaderProgram *gfx_d3d11_lookup_shader(uint32_t shader_id) {
+static struct ShaderProgram *gfx_d3d11_lookup_shader(struct ColorCombiner* cc) {
     for (size_t i = 0; i < d3d.shader_program_pool_size; i++) {
-        if (d3d.shader_program_pool[i].shader_id == shader_id) {
+        if (d3d.shader_program_pool[i].hash == cc->hash) {
             return (struct ShaderProgram *)&d3d.shader_program_pool[i];
         }
     }

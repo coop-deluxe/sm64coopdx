@@ -20,7 +20,7 @@ enum {
     CC_PRIMA,
     CC_SHADEA,
     CC_ENVA,
-    CC_MAX,
+    CC_ENUM_MAX,
 };
 
 enum {

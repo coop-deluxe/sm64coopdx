@@ -250,7 +250,7 @@ static struct ShaderProgram *gfx_direct3d12_create_and_load_new_shader(uint32_t 
     char buf[2048];
     size_t len, num_floats;
     
-    gfx_direct3d_common_build_shader(buf, len, num_floats, cc_features, true, false);
+    gfx_direct3d_common_build_shader(buf, len, num_floats, *cc, cc_features, true, false);
     
     //fwrite(buf, 1, len, stdout);
     

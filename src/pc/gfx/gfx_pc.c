@@ -273,7 +273,7 @@ static struct ShaderProgram *gfx_lookup_or_create_shader_program(struct ColorCom
 
 static void gfx_generate_cc(struct ColorCombiner *cc) {
     u8 next_input_number = 0;
-    u8 input_number[CC_MAX] = { 0 };
+    u8 input_number[CC_ENUM_MAX] = { 0 };
 
     for  (int i = 0; i < SHADER_CMD_LENGTH; i++) {
         u8 cm_cmd = cc->cm.all_values[i];
