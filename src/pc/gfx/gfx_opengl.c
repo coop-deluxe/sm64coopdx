@@ -61,8 +61,9 @@ struct GLTexture {
     bool filter;
 };
 
-static struct ShaderProgram shader_program_pool[64];
-static uint8_t shader_program_pool_size;
+static struct ShaderProgram shader_program_pool[CC_MAX_SHADERS];
+static uint8_t shader_program_pool_size = 0;
+static uint8_t shader_program_pool_index = 0;
 static GLuint opengl_vbo;
 
 static int tex_cache_size = 0;
@@ -473,7 +474,10 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
     size_t cnt = 0;
 
-    struct ShaderProgram *prg = &shader_program_pool[shader_program_pool_size++];
+    struct ShaderProgram *prg = &shader_program_pool[shader_program_pool_index];
+    shader_program_pool_index = (shader_program_pool_index + 1) % CC_MAX_SHADERS;
+    if (shader_program_pool_size < CC_MAX_SHADERS) { shader_program_pool_size++; }
+
     prg->attrib_locations[cnt] = glGetAttribLocation(shader_program, "aVtxPos");
     prg->attrib_sizes[cnt] = 4;
     ++cnt;

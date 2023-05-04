@@ -94,8 +94,9 @@ static struct {
     uint32_t pool_pos;
 } gfx_texture_cache;
 
-static struct ColorCombiner color_combiner_pool[64] = { 0 };
-static uint8_t color_combiner_pool_size;
+static struct ColorCombiner color_combiner_pool[CC_MAX_SHADERS] = { 0 };
+static uint8_t color_combiner_pool_size = 0;
+static uint8_t color_combiner_pool_index = 0;
 
 static struct RSP {
     float modelview_matrix_stack[11][4][4];
@@ -345,7 +346,10 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
 
     gfx_flush();
 
-    struct ColorCombiner *comb = &color_combiner_pool[color_combiner_pool_size++];
+    struct ColorCombiner *comb = &color_combiner_pool[color_combiner_pool_index];
+    color_combiner_pool_index = (color_combiner_pool_index + 1) % CC_MAX_SHADERS;
+    if (color_combiner_pool_size < CC_MAX_SHADERS) { color_combiner_pool_size++; }
+
     memcpy(&comb->cm, cm, sizeof(struct CombineMode));
     gfx_generate_cc(comb);
 

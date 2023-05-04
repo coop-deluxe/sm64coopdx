@@ -108,8 +108,9 @@ static struct {
     HMODULE d3dcompiler_module;
     pD3DCompile D3DCompile;
 
-    struct ShaderProgramD3D12 shader_program_pool[64];
+    struct ShaderProgramD3D12 shader_program_pool[CC_MAX_SHADERS];
     uint8_t shader_program_pool_size;
+    uint8_t shader_program_pool_index;
 
     uint32_t current_width, current_height;
 
@@ -236,7 +237,9 @@ static void gfx_direct3d12_load_shader(struct ShaderProgram *new_prg) {
 }
 
 static struct ShaderProgram *gfx_direct3d12_create_and_load_new_shader(struct ColorCombiner* cc) {
-    struct ShaderProgramD3D12 *prg = &d3d.shader_program_pool[d3d.shader_program_pool_size++];
+    struct ShaderProgramD3D12 *prg = &d3d.shader_program_pool[d3d.shader_program_pool_index];
+    d3d.shader_program_pool_index = (d3d.shader_program_pool_index + 1) % CC_MAX_SHADERS;
+    if (d3d.shader_program_pool_size < CC_MAX_SHADERS) { d3d.shader_program_pool_size++; }
 
     CCFeatures cc_features = { 0 };
     gfx_cc_get_features(cc, &cc_features);

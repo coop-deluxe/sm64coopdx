@@ -83,6 +83,7 @@ struct CombineMode {
 #pragma pack()
 
 #define SHADER_CMD_LENGTH 16
+#define CC_MAX_SHADERS 64
 
 struct ColorCombiner {
     struct CombineMode cm;

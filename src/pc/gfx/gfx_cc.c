@@ -6,8 +6,6 @@
 static u8 sAllowCCPrint = 1;
 
 void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures* ccf) {
-    // DO NOT COMMIT: TODO - need to convert dx and regular gl
-
     // reset ccf
     memset(ccf, 0, sizeof(struct CCFeatures));
 

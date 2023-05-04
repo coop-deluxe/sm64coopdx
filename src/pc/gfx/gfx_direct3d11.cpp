@@ -103,8 +103,9 @@ static struct {
     PerFrameCB per_frame_cb_data;
     PerDrawCB per_draw_cb_data;
 
-    struct ShaderProgramD3D11 shader_program_pool[64];
+    struct ShaderProgramD3D11 shader_program_pool[CC_MAX_SHADERS];
     uint8_t shader_program_pool_size;
+    uint8_t shader_program_pool_index;
 
     std::vector<struct TextureData> textures;
     int current_tile;
@@ -355,7 +356,9 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
         throw hr;
     }
 
-    struct ShaderProgramD3D11 *prg = &d3d.shader_program_pool[d3d.shader_program_pool_size++];
+    struct ShaderProgramD3D11 *prg = &d3d.shader_program_pool[d3d.shader_program_pool_index];
+    d3d.shader_program_pool_index = (d3d.shader_program_pool_index + 1) % CC_MAX_SHADERS;
+    if (d3d.shader_program_pool_size < CC_MAX_SHADERS) { d3d.shader_program_pool_size++; }
 
     ThrowIfFailed(d3d.device->CreateVertexShader(vs->GetBufferPointer(), vs->GetBufferSize(), nullptr, prg->vertex_shader.GetAddressOf()));
     ThrowIfFailed(d3d.device->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), nullptr, prg->pixel_shader.GetAddressOf()));
