@@ -164,7 +164,7 @@ f32 vec3f_dot(Vec3f a, Vec3f b)
 
 /// takes respective scales of vecA and vecB, and sums them
 void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
-    register int i;
+    int i = 0;
 
     for (i = 0; i < 3; ++i) {
         dest[i] = vecA[i] * sclA + vecB[i] * sclB;

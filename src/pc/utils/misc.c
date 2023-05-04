@@ -215,7 +215,7 @@ static void rot_mat_to_rot_quat(Vec4f q, Vec3f a[3]) {
 
     // adjust signs of coefficients; base on greatest magnitude to improve float accuracy
     switch (maxCompoMagCase) {
-        f32 divFactor;
+        f32 divFactor = 0;
 
         case 0:
             divFactor = 0.25f / q[0];
@@ -270,7 +270,11 @@ static void rot_quat_slerp(Vec4f out, Vec4f a, Vec4f b, f32 t) {
     // Martin John Baker
     // https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
 
-    f32 halfTh, halfSin, st, sat, halfCos = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+    f32 halfTh = 0;
+    f32 halfSin = 0;
+    f32 st = 0;
+    f32 sat = 0;
+    f32 halfCos = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 
     memcpy(out, b, sizeof(f32) * 4);
 
@@ -477,7 +481,7 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
 }
 
 void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
-    int i;
+    int i = 0;
     f32 matTranfsA[13] = { 0 };
     f32 matTranfsB[13] = { 0 };
 
@@ -500,9 +504,12 @@ void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
 }
 
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
-    if (configInterpolationMode) {
-        delta_interpolate_mtx_accurate(out, a, b, delta);
-        return;
+    // HACK: Limit accurate interpolation to 64-bit builds
+    if (sizeof(int) > 4) {
+        if (configInterpolationMode) {
+            delta_interpolate_mtx_accurate(out, a, b, delta);
+            return;
+        }
     }
 
     // this isn't the right way to do things.
