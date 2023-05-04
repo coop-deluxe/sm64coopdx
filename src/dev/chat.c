@@ -112,6 +112,8 @@ bool exec_dev_chat_command(char* command) {
         smlua_exec_file(&command[6]);
         return true;
     }
+
+    return false;
 }
 
 void dev_display_chat_commands(void) {

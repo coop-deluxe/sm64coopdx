@@ -24,6 +24,7 @@
 #include "pc/network/network.h"
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/mods/mods.h"
+#include "pc/debuglog.h"
 
 typedef struct {
     s32 x, y;
@@ -298,6 +299,7 @@ static CRASH_HANDLER_TYPE crash_handler(EXCEPTION_POINTERS *ExceptionInfo) {
 #elif __linux__
 static void crash_handler(const int signalNum, siginfo_t *info, ucontext_t *context) {
 #endif
+    LOG_INFO("game crashed! preparing crash screen...");
     memset(sCrashHandlerText, 0, sizeof(sCrashHandlerText));
     CrashHandlerText *pText = &sCrashHandlerText[0];
     gDjuiDisabled = true;

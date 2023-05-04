@@ -8,6 +8,8 @@
 #include "game/rendering_graph_node.h"
 #include "game/area.h"
 #include "geo_layout.h"
+#include "include/geo_commands.h"
+#include "pc/debuglog.h"
 
 // unused Mtx(s)
 s16 identityMtx[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
@@ -485,6 +487,11 @@ struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *poo
 
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_BACKGROUND);
+
+        if (background > BACKGROUND_CUSTOM) {
+            LOG_ERROR("invalid background id");
+            background = BACKGROUND_OCEAN_SKY;
+        }
 
         graphNode->background = (background << 16) | background;
         graphNode->fnNode.func = backgroundFunc;

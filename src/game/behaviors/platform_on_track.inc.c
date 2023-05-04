@@ -315,6 +315,8 @@ static void platform_on_track_rock_ski_lift(void) {
  * Update function for bhvPlatformOnTrack.
  */
 void bhv_platform_on_track_update(void) {
+    if (!o->oPlatformOnTrackStartWaypoint) { return; }
+
     switch (o->oAction) {
         case PLATFORM_ON_TRACK_ACT_INIT:
             platform_on_track_act_init();
