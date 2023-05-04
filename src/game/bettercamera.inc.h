@@ -431,6 +431,7 @@ static void newcam_zoom_button(void) {
 static void newcam_update_values(void) {
     //For tilt, this just limits it so it doesn't go further than 90 degrees either way. 90 degrees is actually 16384, but can sometimes lead to issues, so I just leave it shy of 90.
     u8 waterflag = 0;
+    u8 centering = 0;
 
     if (newcam_modeflags & NC_FLAG_XTURN)
         newcam_yaw -= ((newcam_yaw_acc*(newcam_sensitivityX/10))*ivrt(0));
@@ -455,16 +456,34 @@ static void newcam_update_values(void) {
 
     if (newcam_modeflags & NC_FLAG_SLIDECORRECT) {
         switch (gMarioStates[0].action) {
-            case ACT_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) waterflag = 1; break;
-            case ACT_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) waterflag = 1; break;
-            case ACT_HOLD_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) waterflag = 1; break;
-            case ACT_HOLD_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) waterflag = 1; break;
+            case ACT_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
+            case ACT_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
+            case ACT_HOLD_BUTT_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
+            case ACT_HOLD_STOMACH_SLIDE: if (gMarioStates[0].forwardVel > 8) centering = 1; break;
         }
     }
 
     switch (gMarioStates[0].action) {
-        case ACT_SHOT_FROM_CANNON: waterflag = 1; break;
-        case ACT_FLYING: waterflag = 1; break;
+        case ACT_FLYING: centering = 1; break;
+    }
+
+    static u32 sLastAction = 0;
+    static u8 sForceCentering = 10;
+    if (sLastAction != gMarioStates[0].action) {
+        sLastAction = gMarioStates[0].action;
+        sForceCentering = 1;
+        switch (gMarioStates[0].action) {
+            case ACT_SHOT_FROM_CANNON:
+                newcam_yaw = -gMarioStates[0].faceAngle[1]-0x4000;
+                break;
+        }
+    }
+
+    if (centering) {
+        if (fabs(newcam_yaw_acc) > 32 || fabs(newcam_tilt_acc) > 32) {
+            sForceCentering = 0;
+        }
+        if (sForceCentering) { waterflag = 1; }
     }
 
     if (gMarioStates[0].action & ACT_FLAG_SWIMMING) {
