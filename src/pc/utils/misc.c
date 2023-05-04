@@ -330,8 +330,9 @@ static f32 unmat_unscale_shear(f32 shear, f32 scale) {
 // tranfs is returned as follows:
 // scale(x, y, z), shear(xy, xz, zy), rotation(a, b, c, d), translation(x, y, z)
 static void unmatrix(Mtx * mat, f32 tranfs[13]) {
-    register int i;
-    Vec3f axisVecs[3], yzCross;
+    int i = 0;
+    Vec3f axisVecs[3] = { 0 };
+    Vec3f yzCross = { 0 };
 
     Mtx locMat = *mat;
 
@@ -430,13 +431,13 @@ static void unmatrix(Mtx * mat, f32 tranfs[13]) {
 // builds a transformation matrix from a decomposed sequence from unmatrix
 // see unmatrix for what tranfs means
 static void rematrix(Mtx * mat, f32 tranfs[13]) {
-    register int i;
-    Vec3f rotAxes[3];
-    Mat4 rotMat;
+    int i;
+    Vec3f rotAxes[3] = { 0 };
+    Mat4 rotMat = { 0 };
 
     // start with the identity matrix
     for (i = 0; i < 4; ++i) {
-        register int j;
+        int j;
 
         mat->m[i][i] = 1.0f;
         for (j = 3; j > i; --j) {
@@ -476,8 +477,9 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
 }
 
 void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
-    register int i;
-    f32 matTranfsA[13], matTranfsB[13];
+    int i;
+    f32 matTranfsA[13] = { 0 };
+    f32 matTranfsB[13] = { 0 };
 
     f32 antiDelta = 1.0f - delta;
 

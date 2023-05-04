@@ -158,9 +158,9 @@ endif
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   export SHELL=sh.exe
 
-  ifeq ($(TARGET_BITS), 32)
+  ifeq ($(TARGET_BITS),32)
     EXTRA_INCLUDES := ../include/1 ../include/2 ../include/3 ../include/4
-    EXTRA_CPP_INCLUDES := ../include/cpp
+    EXTRA_CPP_INCLUDES := -I../include/cpp
   else
     EXTRA_INCLUDES :=
     EXTRA_CPP_INCLUDES :=
@@ -1644,7 +1644,7 @@ ifeq ($(TARGET_N64),1)
 else
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(BASS_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) $(EXTRA_INCLUDES)
+	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif
 
 
