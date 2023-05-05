@@ -103,6 +103,7 @@ struct ColorCombiner {
 extern "C" {
 #endif
 
+bool gfx_cm_uses_second_texture(struct CombineMode* cm);
 void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures *cc_features);
 void gfx_cc_print(struct ColorCombiner *cc);
 void gfx_cc_precomp(void);

@@ -1040,6 +1040,13 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         cm->use_alpha = true;
     }
 
+    // hack: disable 2cycle if it uses a second texture that doesn't exist
+    // this is because old rom hacks were ported assuming that 2cycle didn't exist
+    // and were ported incorrectly
+    if (!rdp.loaded_texture[1].addr && cm->use_2cycle && gfx_cm_uses_second_texture(cm)) {
+        cm->use_2cycle = false;
+    }
+
     struct ColorCombiner *comb = gfx_lookup_or_create_color_combiner(cm);
     cm = &comb->cm;
 
@@ -1324,9 +1331,7 @@ static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t t
             rdp.textures_changed[0] = true;
             rdp.textures_changed[1] = true;
         }
-    }
-
-    if (tile == G_TX_LOADTILE) {
+    } else if (tile == G_TX_LOADTILE) {
         rdp.texture_to_load.tile_number = tmem / 256;
     } else if (tile == G_TX_LOADTILE_6_UNKNOWN) {
         // this is a hack, because it seems like we can only load two tiles at once currently

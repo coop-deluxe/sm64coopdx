@@ -5,6 +5,18 @@
 
 static u8 sAllowCCPrint = 1;
 
+bool gfx_cm_uses_second_texture(struct CombineMode* cm) {
+    for (int i = 0; i < 16; i++) {
+        u8 v = cm->all_values[i];
+        switch (v) {
+            case CC_TEXEL1:
+            case CC_TEXEL1A:
+                return true;
+        }
+    }
+    return false;
+}
+
 void gfx_cc_get_features(struct ColorCombiner* cc, struct CCFeatures* ccf) {
     // reset ccf
     memset(ccf, 0, sizeof(struct CCFeatures));
