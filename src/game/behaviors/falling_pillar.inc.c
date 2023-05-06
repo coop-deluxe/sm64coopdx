@@ -129,6 +129,7 @@ void bhv_falling_pillar_loop(void) {
  * Main loop for the invisible hitboxes.
  */
 void bhv_falling_pillar_hitbox_loop(void) {
+    if (!o->parentObj) { return; }
     // Get the state of the pillar.
     s32 pitch = o->parentObj->oFaceAnglePitch;
     s32 yaw = o->parentObj->oFaceAngleYaw;

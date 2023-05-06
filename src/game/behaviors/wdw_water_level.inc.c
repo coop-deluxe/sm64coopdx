@@ -22,9 +22,10 @@ void bhv_init_changing_water_level_loop(void) {
         }
     }
 
+    if (!gEnvironmentRegions) { return; }
+
     if (gCurrentObject->oAction == 0) {
-        if (gEnvironmentRegions != NULL)
-            gCurrentObject->oAction++;
+        gCurrentObject->oAction++;
     } else if (gCurrentObject->oTimer < 10)
         *gEnvironmentLevels = gEnvironmentRegions[6];
     else {

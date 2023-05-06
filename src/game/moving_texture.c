@@ -319,8 +319,10 @@ Gfx *geo_wdw_set_initial_water_level(s32 callContext, UNUSED struct GraphNode *n
         } else {
             wdwWaterHeight = 1024;
         }
-        for (i = 0; i < *gEnvironmentRegions; i++) {
-            gEnvironmentRegions[i * 6 + 6] = wdwWaterHeight;
+        if (gEnvironmentRegions) {
+            for (i = 0; i < *gEnvironmentRegions; i++) {
+                gEnvironmentRegions[i * 6 + 6] = wdwWaterHeight;
+            }
         }
         gWdwWaterLevelSet = TRUE;
     }

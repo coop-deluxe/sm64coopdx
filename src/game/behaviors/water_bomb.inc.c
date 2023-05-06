@@ -54,12 +54,12 @@ void bhv_water_bomb_spawner_update(void) {
             marioState = &gMarioStates[i];
         }
     }
+    if (!player) { return; }
 
     spawnerRadius = 50 * (u16)(o->oBehParams >> 16) + 200.0f;
 
     // When mario is in range and a water bomb isn't already active
-    if (!o->oWaterBombSpawnerBombActive && latDistToMario < spawnerRadius
-        && player->oPosY - o->oPosY < 1000.0f) {
+    if (!o->oWaterBombSpawnerBombActive && latDistToMario < spawnerRadius && player->oPosY - o->oPosY < 1000.0f) {
         if (o->oWaterBombSpawnerTimeToSpawn != 0) {
             o->oWaterBombSpawnerTimeToSpawn -= 1;
         } else if (sync_object_is_owned_locally(o->oSyncID)) {
@@ -206,7 +206,9 @@ static void water_bomb_act_drop(void) {
  */
 static void water_bomb_act_explode(void) {
     water_bomb_spawn_explode_particles(25, 60, 10);
-    o->parentObj->oWaterBombSpawnerBombActive = FALSE;
+    if (o->parentObj) {
+        o->parentObj->oWaterBombSpawnerBombActive = FALSE;
+    }
     obj_mark_for_deletion(o);
 }
 
@@ -278,7 +280,7 @@ void bhv_water_bomb_update(void) {
  * Despawn when the parent water bomb does.
  */
 void bhv_water_bomb_shadow_update(void) {
-    if (o->parentObj->oAction == WATER_BOMB_ACT_EXPLODE) {
+    if (!o->parentObj || o->parentObj->oAction == WATER_BOMB_ACT_EXPLODE) {
         obj_mark_for_deletion(o);
     } else {
         // TODO: What is happening here

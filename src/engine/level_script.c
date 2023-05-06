@@ -66,6 +66,7 @@ static s32 sRegister;
 static struct LevelCommand *sCurrentCmd;
 
 static u8 sLevelOwnedGraphNodes[MAX_LOADED_GRAPH_NODES] = { 0 };
+static u8 sFinishedLoadingPerm = false;
 
 static s32 eval_script_area(s32 arg) {
     return (sWarpDest.areaIdx == arg);
@@ -389,6 +390,7 @@ static void level_cmd_alloc_level_pool(void) {
     // reset level graph node ownership
     for (s32 i = 0; i < MAX_LOADED_GRAPH_NODES; i++) {
         if (sLevelOwnedGraphNodes[i]) {
+            gLoadedGraphNodes[i] = NULL;
             sLevelOwnedGraphNodes[i] = false;
         }
     }
@@ -455,7 +457,7 @@ static void level_cmd_load_model_from_dl(void) {
 
     if (val1 < MAX_LOADED_GRAPH_NODES) {
         gLoadedGraphNodes[val1] = (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
-        sLevelOwnedGraphNodes[val1] = true;
+        if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[val1] = true; }
         smlua_model_util_remember(val1, val2, val3, 1);
     }
 
@@ -468,8 +470,11 @@ static void level_cmd_load_model_from_geo(void) {
 
     if (arg0 < MAX_LOADED_GRAPH_NODES) {
         gLoadedGraphNodes[arg0] = process_geo_layout(sLevelPool, arg1);
-        sLevelOwnedGraphNodes[arg0] = true;
+        if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[arg0] = true; }
         smlua_model_util_remember(arg0, LAYER_OPAQUE, arg1, 0);
+        if (arg0 == MODEL_ERROR_MODEL) {
+            sFinishedLoadingPerm = true;
+        }
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -491,7 +496,7 @@ static void level_cmd_23(void) {
         // GraphNodeScale has a GraphNode at the top. This
         // is being stored to the array, so cast the pointer.
         gLoadedGraphNodes[model] = (struct GraphNode *) init_graph_node_scale(sLevelPool, 0, arg0H, arg1, arg2.f);
-        sLevelOwnedGraphNodes[model] = true;
+        if (sFinishedLoadingPerm) { sLevelOwnedGraphNodes[model] = true; }
         smlua_model_util_remember(model, arg0H, arg1, 1);
     }
 

@@ -488,7 +488,7 @@ struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *poo
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_BACKGROUND);
 
-        if (background > BACKGROUND_CUSTOM) {
+        if (backgroundFunc && background > BACKGROUND_CUSTOM) {
             LOG_ERROR("invalid background id");
             background = BACKGROUND_OCEAN_SKY;
         }

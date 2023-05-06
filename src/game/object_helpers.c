@@ -219,7 +219,7 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node) {
                 if (door == NULL) { continue; }
                 if (door->oInteractType != INTERACT_DOOR) { continue; }
                 if (door->oAction == 0) { continue; }
-                if (gDoorAdjacentRooms[door->oDoorUnkF8][0] != gMarioCurrentRoom && gDoorAdjacentRooms[door->oDoorUnkF8][1] != gMarioCurrentRoom) { continue; }
+                if (door->oDoorUnkF8 < 60 && gDoorAdjacentRooms[door->oDoorUnkF8][0] != gMarioCurrentRoom && gDoorAdjacentRooms[door->oDoorUnkF8][1] != gMarioCurrentRoom) { continue; }
 
                 find_floor(door->oHomeX, door->oHomeY, door->oHomeZ, &sp20);
                 if (!sp20) { continue; }
@@ -755,6 +755,7 @@ void cur_obj_move_using_vel(void) {
 }
 
 void obj_copy_graph_y_offset(struct Object *dst, struct Object *src) {
+    if (!dst || !src) { return; }
     dst->oGraphYOffset = src->oGraphYOffset;
 }
 
@@ -764,12 +765,14 @@ void obj_copy_pos_and_angle(struct Object *dst, struct Object *src) {
 }
 
 void obj_copy_pos(struct Object *dst, struct Object *src) {
+    if (!dst || !src) { return; }
     dst->oPosX = src->oPosX;
     dst->oPosY = src->oPosY;
     dst->oPosZ = src->oPosZ;
 }
 
 void obj_copy_angle(struct Object *dst, struct Object *src) {
+    if (!dst || !src) { return; }
     dst->oMoveAnglePitch = src->oMoveAnglePitch;
     dst->oMoveAngleYaw = src->oMoveAngleYaw;
     dst->oMoveAngleRoll = src->oMoveAngleRoll;
@@ -780,6 +783,7 @@ void obj_copy_angle(struct Object *dst, struct Object *src) {
 }
 
 void obj_set_gfx_pos_from_pos(struct Object *obj) {
+    if (!obj) { return; }
     obj->header.gfx.pos[0] = obj->oPosX;
     obj->header.gfx.pos[1] = obj->oPosY;
     obj->header.gfx.pos[2] = obj->oPosZ;
@@ -1211,15 +1215,15 @@ BAD_RETURN(s16) cur_obj_reverse_animation(void) {
 
 BAD_RETURN(s32) cur_obj_extend_animation_if_at_end(void) {
     s32 sp4 = o->header.gfx.animInfo.animFrame;
-    s32 sp0 = o->header.gfx.animInfo.curAnim->loopEnd - 2;
+    s32 sp0 = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 2 : 0;
 
     if (sp4 == sp0) o->header.gfx.animInfo.animFrame--;
 }
 
 s32 cur_obj_check_if_near_animation_end(void) {
-    u32 animFlags = (s32) o->header.gfx.animInfo.curAnim->flags;
+    u32 animFlags = o->header.gfx.animInfo.curAnim ? (s32) o->header.gfx.animInfo.curAnim->flags : 0;
     s32 animFrame = o->header.gfx.animInfo.animFrame;
-    s32 nearLoopEnd = o->header.gfx.animInfo.curAnim->loopEnd - 2;
+    s32 nearLoopEnd = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 2 : 0;
     s32 isNearEnd = FALSE;
 
     if (animFlags & ANIM_FLAG_NOLOOP && nearLoopEnd + 1 == animFrame) {
@@ -1235,7 +1239,7 @@ s32 cur_obj_check_if_near_animation_end(void) {
 
 s32 cur_obj_check_if_at_animation_end(void) {
     s32 animFrame = o->header.gfx.animInfo.animFrame;
-    s32 lastFrame = o->header.gfx.animInfo.curAnim->loopEnd - 1;
+    s32 lastFrame = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 1 : 0;
 
     if (animFrame == lastFrame) {
         return TRUE;
@@ -1732,6 +1736,7 @@ s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
 }
 
 s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior) {
+    if (!obj || !behavior) { return FALSE; }
     behavior = smlua_override_behavior(behavior);
     if (obj->behavior == segmented_to_virtual(behavior)) {
         return TRUE;
@@ -2242,6 +2247,7 @@ void obj_set_throw_matrix_from_transform(struct Object *obj) {
 void obj_build_transform_relative_to_parent(struct Object *obj) {
     if (obj == NULL) { return; }
     struct Object *parent = obj->parentObj;
+    if (!parent) { return; }
 
     obj_build_transform_from_pos_and_angle(obj, O_PARENT_RELATIVE_POS_INDEX, O_FACE_ANGLE_INDEX);
     obj_apply_scale_to_transform(obj);
@@ -2304,6 +2310,8 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
 
     startWaypoint = o->oPathedStartWaypoint;
     lastWaypoint = o->oPathedPrevWaypoint;
+
+    if (!startWaypoint) { return PATH_NONE; }
 
     // sanity check waypoints
     if (lastWaypoint == NULL) { lastWaypoint = startWaypoint; }
@@ -2593,6 +2601,7 @@ s32 cur_obj_progress_direction_table(void) {
     s8 spF;
     s8 *sp8 = o->oToxBoxMovementPattern;
     s32 sp4 = o->oToxBoxMovementStep + 1;
+    if (!sp8) { return 0; }
 
     if (sp8[sp4] != -1) {
         spF = sp8[sp4];
@@ -2701,7 +2710,7 @@ void spawn_base_star_with_no_lvl_exit(void) {
 }
 
 s32 bit_shift_left(s32 a0) {
-    return D_8032F0A4[a0];
+    return BHV_ARR(D_8032F0A4, a0, s16);
 }
 
 s32 cur_obj_mario_far_away(void) {
@@ -3297,4 +3306,15 @@ void cur_obj_set_home_once(void) {
     o->oHomeX = o->oPosX;
     o->oHomeY = o->oPosY;
     o->oHomeZ = o->oPosZ;
+}
+
+s32 get_trajectory_length(Trajectory* trajectory) {
+    if (!trajectory) { return 0; }
+    s32 count = 0;
+    s16* c = trajectory;
+    while (*c != -1) {
+        count++;
+        c += 4;
+    }
+    return count;
 }

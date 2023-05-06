@@ -1479,7 +1479,7 @@ void handle_dialog_text_and_pages(s8 colorMode, struct DialogEntry *dialog, s8 l
 
     while (pageState == DIALOG_PAGE_STATE_NONE) {
         change_and_flash_dialog_text_color_lines(colorMode, lineNum);
-        strChar = str[strIdx];
+        strChar = str ? str[strIdx] : DIALOG_CHAR_TERMINATOR;
 
         switch (strChar) {
             case DIALOG_CHAR_TERMINATOR:
@@ -1932,6 +1932,10 @@ void render_dialog_entries(void) {
             break;
     }
 #else
+    if (gDialogID >= DIALOG_COUNT || gDialogID < 0) {
+        gDialogID = -1;
+        return;
+    }
     dialogTable = segmented_to_virtual(seg2_dialog_table);
 #endif
     dialog = segmented_to_virtual(dialogTable[gDialogID]);

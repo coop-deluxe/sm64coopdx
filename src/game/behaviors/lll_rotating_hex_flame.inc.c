@@ -4,10 +4,15 @@ void bhv_lll_rotating_hex_flame_loop(void) {
     f32 sp24 = o->oLllRotatingHexFlameUnkF4;
     f32 sp20 = o->oLllRotatingHexFlameUnkF8;
     f32 sp1C = o->oLllRotatingHexFlameUnkFC;
-    cur_obj_set_pos_relative(o->parentObj, sp24, sp20, sp1C);
-    o->oPosY = o->parentObj->oPosY + 100.0f;
-    if (o->parentObj->oAction == 3)
+
+    if (o->parentObj) {
+        cur_obj_set_pos_relative(o->parentObj, sp24, sp20, sp1C);
+        o->oPosY = o->parentObj->oPosY + 100.0f;
+        if (o->parentObj->oAction == 3)
+            obj_mark_for_deletion(o);
+    } else {
         obj_mark_for_deletion(o);
+    }
 }
 
 void fire_bar_spawn_flames(s16 a0) {

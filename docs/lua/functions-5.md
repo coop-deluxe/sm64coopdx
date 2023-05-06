@@ -2569,18 +2569,19 @@
 ## [exec_anim_sound_state](#exec_anim_sound_state)
 
 ### Lua Example
-`exec_anim_sound_state(soundStates)`
+`exec_anim_sound_state(soundStates, maxSoundStates)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | soundStates | [SoundState](structs.md#SoundState) |
+| maxSoundStates | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void exec_anim_sound_state(struct SoundState *soundStates);`
+`void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates);`
 
 [:arrow_up_small:](#)
 

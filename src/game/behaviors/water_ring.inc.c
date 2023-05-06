@@ -116,7 +116,9 @@ void water_ring_act_not_collected(void) {
     //! In this case ringSpawner and ringManager are the same object,
     //  because the Jet Stream Ring Spawner is its own parent object.
     struct Object *ringSpawner = o->parentObj;
+    if (!ringSpawner) { return; }
     struct Object *ringManager = ringSpawner->parentObj;
+    if (!ringManager) { return; }
 
     if (o->oTimer >= 226) {
         o->oOpacity -= 2;
@@ -160,7 +162,8 @@ void water_ring_spawner_act_inactive(void) {
     //  from the Manta Ray, which spawns rings but also has a Ring Manager object as its
     //  parent. The Jet Stream Ring Spawner functions as both a spawner and a Ring Manager.
     struct Object *currentObj = o->parentObj;
-    struct Object *waterRing;
+    struct Object *waterRing = NULL;
+    if (!currentObj) { return; }
 
     //! Because the index counter overflows at 10000, it's possible to wait
     //  for about 4 hours and 38 minutes if you miss a ring, and the index will
@@ -217,7 +220,9 @@ void bhv_manta_ray_water_ring_init(void) {
 void manta_water_ring_act_not_collected(void) {
     f32 avgScale = (f32) o->oTimer / 50.0f * 1.3 + 0.1;
     struct Object *ringSpawner = o->parentObj;
+    if (!ringSpawner) { return; }
     struct Object *ringManager = ringSpawner->parentObj;
+    if (!ringManager) { return; }
 
     if (avgScale > 1.3)
         avgScale = 1.3;

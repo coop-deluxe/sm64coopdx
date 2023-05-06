@@ -15,8 +15,9 @@
  * of sound states. Used for the stepping sounds of various
  * objects. (King Bobomb, Bowser, King Whomp)
  */
-void exec_anim_sound_state(struct SoundState *soundStates) {
+void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates) {
     s32 stateIdx = gCurrentObject->oSoundStateID;
+    if (stateIdx >= maxSoundStates) { return; }
 
     switch (soundStates[stateIdx].playSound) {
         // since we have an array of sound states corresponding to

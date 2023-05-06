@@ -41,7 +41,7 @@ void bhv_thi_tiny_island_top_loop(void) {
                 }
         } else {
             if (o->oTimer < 50) {
-                gEnvironmentRegions[18]--;
+                if (gEnvironmentRegions) { gEnvironmentRegions[18]--; }
                 cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN);
             } else {
                 gTHIWaterDrained |= 1;
@@ -50,8 +50,9 @@ void bhv_thi_tiny_island_top_loop(void) {
             }
         }
     } else {
-        if (o->oTimer == 0)
-            gEnvironmentRegions[18] = 700;
+        if (o->oTimer == 0) {
+            if (gEnvironmentRegions) { gEnvironmentRegions[18] = 700; }
+        }
         cur_obj_hide();
     }
 }

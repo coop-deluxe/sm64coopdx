@@ -57,7 +57,7 @@ static void bhv_checkerboard_platform_run_once(void) {
 }
 
 void bhv_checkerboard_platform_init(void) {
-    o->oCheckerBoardPlatformUnkFC = o->parentObj->oBehParams2ndByte;
+    o->oCheckerBoardPlatformUnkFC = o->parentObj ? o->parentObj->oBehParams2ndByte : 0;
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 132 + o->oCheckerBoardPlatformUnkFC * 2;

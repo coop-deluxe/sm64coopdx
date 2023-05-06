@@ -146,12 +146,14 @@ void bhv_mips_act_wait_for_nearby_mario(void) {
 void bhv_mips_act_follow_path(void) {
     s16 collisionFlags = 0;
     s32 followStatus = 0;
-    struct Waypoint ***pathBase;
+    struct Waypoint **pathBase;
     struct Waypoint *waypoint;
 
     // Retrieve current waypoint.
-    pathBase = segmented_to_virtual(sMipsPaths);
-    waypoint = segmented_to_virtual(*(*pathBase + o->oMipsStartWaypointIndex));
+    pathBase = segmented_to_virtual(sMipsPaths[0]);
+    s32 length = get_trajectory_length((Trajectory*)pathBase);
+    if (o->oMipsStartWaypointIndex >= length) { return; }
+    waypoint = segmented_to_virtual(pathBase[o->oMipsStartWaypointIndex]);
 
     // Set start waypoint and follow the path from there.
     o->oPathedStartWaypoint = waypoint;

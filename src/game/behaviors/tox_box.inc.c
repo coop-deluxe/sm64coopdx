@@ -66,6 +66,7 @@ void tox_box_act_3(void) {
 }
 
 void tox_box_act_0(void) {
+    if (!BHV_ARR_CHECK(D_8032F96C, o->oBehParams2ndByte, s8*)) { return; }
     s8 *sp1C = D_8032F96C[o->oBehParams2ndByte];
     o->oAction = cur_obj_set_direction_table(sp1C);
 }

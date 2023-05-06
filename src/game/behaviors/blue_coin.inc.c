@@ -28,7 +28,7 @@ void bhv_hidden_blue_coin_loop(void) {
             // Wait until the blue coin switch starts ticking to activate.
             blueCoinSwitch = o->oHiddenBlueCoinSwitch;
 
-            if (blueCoinSwitch->oAction == BLUE_COIN_SWITCH_ACT_TICKING) {
+            if (blueCoinSwitch && blueCoinSwitch->oAction == BLUE_COIN_SWITCH_ACT_TICKING) {
                 o->oAction++; // Set to HIDDEN_BLUE_COIN_ACT_ACTIVE
             }
 
@@ -107,8 +107,10 @@ void bhv_blue_coin_number_loop(void) {
  */
 void bhv_blue_coin_switch_init(void) {
     struct Object *blueCoinNumber = spawn_object(o, MODEL_NUMBER, bhvBlueCoinNumber);
-    blueCoinNumber->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP; // to make sure it's updated even during time stop
-    blueCoinNumber->oHiddenBlueCoinSwitch = o;
+    if (blueCoinNumber) {
+        blueCoinNumber->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP; // to make sure it's updated even during time stop
+        blueCoinNumber->oHiddenBlueCoinSwitch = o;
+    }
     o->oHomeY = o->oPosY;
 }
 

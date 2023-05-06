@@ -31,7 +31,7 @@ void bhv_tumbling_bridge_platform_loop(void) {
         }
     }
 
-    if (o->parentObj != NULL && gCurrCourseNum == COURSE_LLL) {
+    if (o->parentObj && gCurrCourseNum == COURSE_LLL) {
         if (o->parentObj->oIntangibleTimer == -1) {
             cur_obj_hide();
             o->oIntangibleTimer = o->parentObj->oIntangibleTimer;
@@ -74,12 +74,12 @@ void bhv_tumbling_bridge_platform_loop(void) {
         case 3:
             break;
     }
-    if (o->parentObj->oAction == 3) {
+    if (o->parentObj && o->parentObj->oAction == 3) {
         obj_mark_for_deletion(o);
         if (isLLL) { network_send_object(o); }
     }
 
-    if (o->parentObj != NULL && o->parentObj->oIntangibleTimer != -1) {
+    if (o->parentObj && o->parentObj->oIntangibleTimer != -1) {
         load_object_collision_model();
     } else if (gCurrCourseNum != COURSE_LLL) {
         load_object_collision_model();
@@ -94,6 +94,7 @@ void tumbling_bridge_act_1(void) {
     s32 relativePlatformZ;
     s32 relativePlatformY = 0;
     s32 relativeInitialPlatformY = 0;
+    if (!BHV_ARR_CHECK(sTumblingBridgeParams, bridgeID, struct Struct8032F34C)) { return; }
 
     for (i = 0; i < sTumblingBridgeParams[bridgeID].numBridgeSections; i++) {
         relativePlatformX = 0;

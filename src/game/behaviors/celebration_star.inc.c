@@ -1,10 +1,12 @@
 // celebration_star.c.inc
 
 void bhv_celebration_star_init(void) {
-    o->oHomeX = o->parentObj->header.gfx.pos[0];
-    o->oPosY = o->parentObj->header.gfx.pos[1] + 30.0f;
-    o->oHomeZ = o->parentObj->header.gfx.pos[2];
-    o->oMoveAngleYaw = o->parentObj->header.gfx.angle[1] + 0x8000;
+    if (o->parentObj) {
+        o->oHomeX = o->parentObj->header.gfx.pos[0];
+        o->oPosY = o->parentObj->header.gfx.pos[1] + 30.0f;
+        o->oHomeZ = o->parentObj->header.gfx.pos[2];
+        o->oMoveAngleYaw = o->parentObj->header.gfx.angle[1] + 0x8000;
+    }
     o->oCelebStarDiameterOfRotation = 100;
 #if BUGFIX_STAR_BOWSER_KEY
     if (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2) {
@@ -57,7 +59,7 @@ void celeb_star_act_face_camera(void) {
         cur_obj_scale((f32) o->oTimer / 10.0);
 #endif
         o->oFaceAngleYaw += 0x1000;
-    } else {
+    } else if (o->parentObj) {
         o->oFaceAngleYaw = o->parentObj->header.gfx.angle[1];
     }
 

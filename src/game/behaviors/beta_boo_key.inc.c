@@ -35,7 +35,9 @@ void bhv_alpha_boo_key_loop(void) {
         // Another theory is that the boo key was intended to be spawned by a
         // spawner that used object field 0x00 for something else. This
         // is elaborated on more in beta_boo_key_dropped_loop.
-        o->parentObj->oBooDeathStatus = BOO_DEATH_STATUS_DYING;
+        if (o->parentObj) {
+            o->parentObj->oBooDeathStatus = BOO_DEATH_STATUS_DYING;
+        }
 
         // Delete the object and spawn sparkles
         obj_mark_for_deletion(o);
@@ -94,7 +96,7 @@ static void beta_boo_key_dropped_loop(void) {
             // One theory about this code is that there was a boo spawner, which
             // spawned "false" boos and one "true" boo with the key, and the player
             // was intended to find the one with the key to progress.
-            o->parentObj->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;
+            if (o->parentObj) { o->parentObj->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO; }
 
             // Delete the object and spawn sparkles
             obj_mark_for_deletion(o);
@@ -120,7 +122,9 @@ static void beta_boo_key_drop(void) {
     // which stops this function from running again.
     if (o->oTimer == 0) {
         // Separate from the parent boo
-        o->parentObj = parent->parentObj;
+        if (parent) {
+            o->parentObj = parent->parentObj;
+        }
 
         o->oAction = BETA_BOO_KEY_ACT_DROPPED;
 
@@ -154,7 +158,7 @@ static void beta_boo_key_inside_boo_loop(void) {
     o->oPosY += 40.0f;
 
     // If the boo is dying/dead, set the action to BETA_BOO_KEY_ACT_DROPPING.
-    if (parent->oBooDeathStatus != BOO_DEATH_STATUS_ALIVE) {
+    if (parent && parent->oBooDeathStatus != BOO_DEATH_STATUS_ALIVE) {
         o->oAction = BETA_BOO_KEY_ACT_DROPPING;
     }
 

@@ -29,7 +29,7 @@ void bhv_ukiki_cage_star_loop(void) {
             obj_copy_behavior_params(o, o->parentObj);
 
             // When they cage hides itself, spawn particles and the star.
-            if (o->parentObj->oAction == UKIKI_CAGE_ACT_HIDE) {
+            if (o->parentObj && o->parentObj->oAction == UKIKI_CAGE_ACT_HIDE) {
                 o->oAction++;
             }
             break;

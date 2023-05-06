@@ -8,10 +8,10 @@
  * These settings are animations, colour, and spawn quantity.
  */
 static void fish_spawner_act_spawn(void) {
-    s32 i;
-    s32 schoolQuantity;
-    s16 model;
-    const struct Animation * const *fishAnimation;
+    s32 i = 0;
+    s32 schoolQuantity = 0;
+    s16 model = MODEL_ERROR_MODEL;
+    const struct Animation * const *fishAnimation = NULL;
     struct Object *fishObject;
 
     switch (o->oBehParams2ndByte) {
@@ -280,7 +280,7 @@ void bhv_fish_loop(void)
     cur_obj_move_using_fvel_and_gravity();
 
     // If the parent object has action set to two, then delete the fish object.
-    if (o->parentObj->oAction == FISH_SPAWNER_ACT_RESPAWN) {
+    if (!o->parentObj || o->parentObj->oAction == FISH_SPAWNER_ACT_RESPAWN) {
         obj_mark_for_deletion(o);
     }
 }

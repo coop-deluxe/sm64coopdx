@@ -31,9 +31,11 @@ void bhv_racing_penguin_the_quick_override_ownership(u8* shouldOverride, u8* sho
 
 void bhv_racing_penguin_run_once(void) {
     cur_obj_align_gfx_with_floor();
-    cur_obj_push_mario_away_from_cylinder(
-        *sRacingPenguinData[o->oBehParams2ndByte].radius,
-        *sRacingPenguinData[o->oBehParams2ndByte].height);
+    if (BHV_ARR_CHECK(sRacingPenguinData, o->oBehParams2ndByte, struct RacingPenguinData)) {
+        cur_obj_push_mario_away_from_cylinder(
+            *sRacingPenguinData[o->oBehParams2ndByte].radius,
+            *sRacingPenguinData[o->oBehParams2ndByte].height);
+    }
 }
 
 void bhv_racing_penguin_init(void) {
@@ -44,10 +46,10 @@ void bhv_racing_penguin_init(void) {
     }
 
     struct Object* objFinishLine = cur_obj_nearest_object_with_behavior(bhvPenguinRaceFinishLine);
-    objFinishLine->parentObj = o;
+    if (objFinishLine) { objFinishLine->parentObj = o; }
 
     struct Object* objShortcutCheck = cur_obj_nearest_object_with_behavior(bhvPenguinRaceShortcutCheck);
-    objShortcutCheck->parentObj = o;
+    if (objShortcutCheck) { objShortcutCheck->parentObj = o; }
 
     struct SyncObject* so  = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so) {
@@ -95,6 +97,7 @@ u8 racing_penguin_act_show_init_text_continue_dialog(void) { return o->oAction =
 
 static void racing_penguin_act_show_init_text(void) {
     if (!gMarioStates[0].visibleToEnemies) { return; }
+    if (!BHV_ARR_CHECK(sRacingPenguinData, o->oBehParams2ndByte, struct RacingPenguinData)) { return; }
     s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], *sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
 
     if (response == 1) {
@@ -136,12 +139,12 @@ static void racing_penguin_act_race(void) {
 
     // prevent segfault / error state
     if (o->oPathedStartWaypoint == NULL) {
-        struct Object* child;
+        struct Object* child = NULL;
         child = cur_obj_nearest_object_with_behavior(bhvPenguinRaceFinishLine);
-        child->parentObj = o;
+        if (child) { child->parentObj = o; }
 
         child = cur_obj_nearest_object_with_behavior(bhvPenguinRaceShortcutCheck);
-        child->parentObj = o;
+        if (child) { child->parentObj = o; }
 
         o->oPathedStartWaypoint = o->oPathedPrevWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.RacingPenguinTrajectory);
         o->oPathedPrevWaypointFlags = 0;
@@ -295,6 +298,9 @@ void bhv_racing_penguin_update(void) {
 void bhv_penguin_race_finish_line_update(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    if (!o->parentObj) {
+        return;
+    }
 
     if (o->parentObj->oRacingPenguinReachedBottom
         || (player && distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f)) {
@@ -308,7 +314,7 @@ void bhv_penguin_race_finish_line_update(void) {
 void bhv_penguin_race_shortcut_check_update(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
-    if (distanceToPlayer < 500.0f && !o->parentObj->oRacingPenguinMarioCheated) {
+    if (distanceToPlayer < 500.0f && o->parentObj && !o->parentObj->oRacingPenguinMarioCheated) {
         o->parentObj->oRacingPenguinMarioCheated = TRUE;
         network_send_object(o->parentObj);
     }

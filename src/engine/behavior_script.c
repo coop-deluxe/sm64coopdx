@@ -130,6 +130,7 @@ void obj_update_gfx_pos_and_angle(struct Object *obj) {
 static void cur_obj_bhv_stack_push(uintptr_t bhvAddr) {
     gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex] = bhvAddr;
     gCurrentObject->bhvStackIndex++;
+    if (gCurrentObject->bhvStackIndex >= 8) { gCurrentObject->bhvStackIndex = 8 - 1; }
 }
 
 // Retrieve the last behavior command address from the object's behavior stack.
@@ -137,6 +138,7 @@ static uintptr_t cur_obj_bhv_stack_pop(void) {
     uintptr_t bhvAddr;
 
     gCurrentObject->bhvStackIndex--;
+    if (gCurrentObject->bhvStackIndex >= 8) { gCurrentObject->bhvStackIndex = 0; }
     bhvAddr = gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex];
 
     return bhvAddr;
@@ -858,7 +860,9 @@ static s32 bhv_cmd_parent_bit_clear(void) {
     s32 value = BHV_CMD_GET_U32(1);
 
     value = value ^ 0xFFFFFFFF;
-    obj_and_int(gCurrentObject->parentObj, field, value);
+    if (gCurrentObject->parentObj) {
+        obj_and_int(gCurrentObject->parentObj, field, value);
+    }
 
     gCurBhvCommand += 2;
     return BHV_PROC_CONTINUE;
@@ -1337,6 +1341,7 @@ cur_obj_update_begin:;
 
     if (!skipBehavior) {
         do {
+            if (!gCurBhvCommand) { break; }
             bhvCmdProc = BehaviorCmdTable[*gCurBhvCommand >> 24];
             bhvProcResult = bhvCmdProc();
         } while (bhvProcResult == BHV_PROC_CONTINUE);

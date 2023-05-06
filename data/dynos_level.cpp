@@ -908,10 +908,12 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
     }
 
     DynOS_Level_Init();
-    for (const auto &_Warp : sDynosLevelWarps[aLevel]) {
-        if (_Warp.mArea == aArea) {
-            if (_Warp.mId == aWarpId) {
-                return (s16 *) &_Warp;
+    if (aLevel < LEVEL_COUNT) {
+        for (const auto &_Warp : sDynosLevelWarps[aLevel]) {
+            if (_Warp.mArea == aArea) {
+                if (_Warp.mId == aWarpId) {
+                    return (s16 *) &_Warp;
+                }
             }
         }
     }

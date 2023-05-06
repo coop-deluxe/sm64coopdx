@@ -156,7 +156,7 @@ void coffin_act_stand_up(void) {
  */
 void bhv_coffin_loop(void) {
     // Gotta save those 6 object slots
-    if (o->parentObj->oAction == COFFIN_SPAWNER_ACT_COFFINS_UNLOADED) {
+    if (o->parentObj && o->parentObj->oAction == COFFIN_SPAWNER_ACT_COFFINS_UNLOADED) {
         obj_mark_for_deletion(o);
     } else {
         // Scale the coffin vertically? Must have thought it was too short?

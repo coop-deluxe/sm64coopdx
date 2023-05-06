@@ -266,7 +266,7 @@ void bhv_bob_pit_bowling_ball_loop(void) {
     UNUSED s16 collisionFlags = object_step();
 
     find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &sp1c);
-    if ((sp1c->normalX == 0) && (sp1c->normalZ == 0))
+    if (sp1c && (sp1c->normalX == 0) && (sp1c->normalZ == 0))
         o->oForwardVel = 28.0f;
 
     bowling_ball_set_hitbox();

@@ -31,11 +31,11 @@ void bhv_controllable_platform_sub_loop(void) {
             if (gMarioStates[0].marioObj->platform == o) {
                 D_80331694 = o->oBehParams2ndByte;
 #ifdef VERSION_SH
-                o->parentObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+                if (o->parentObj) { o->parentObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE; }
 #endif
                 o->oAction = 1;
                 cur_obj_play_sound_2(SOUND_GENERAL_MOVING_PLATFORM_SWITCH);
-                network_send_object(o->parentObj);
+                if (o->parentObj) { network_send_object(o->parentObj); }
             }
             break;
 
@@ -48,11 +48,13 @@ void bhv_controllable_platform_sub_loop(void) {
             break;
     }
 
-    o->oVelX = o->parentObj->oVelX;
-    o->oVelZ = o->parentObj->oVelZ;
+    if (o->parentObj) {
+        o->oVelX = o->parentObj->oVelX;
+        o->oVelZ = o->parentObj->oVelZ;
 
-    if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED)
-        o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED)
+            o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    }
 }
 
 static void bhv_controllable_platform_on_received_post(UNUSED u8 localIndex) {
@@ -279,6 +281,7 @@ void bhv_controllable_platform_loop(void) {
                 D_80331694 = 0;
                 o->oTimer = 0;
                 for (s32 i = 0; i < 4; i++) {
+                    if (!controllablePlatformSubs[i]) { continue; }
                     controllablePlatformSubs[i]->oParentRelativePosY = 51.0f;
                     controllablePlatformSubs[i]->oAction = 0;
                     controllablePlatformSubs[i]->oTimer = 0;

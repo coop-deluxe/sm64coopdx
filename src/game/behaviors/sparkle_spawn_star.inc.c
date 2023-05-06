@@ -13,8 +13,9 @@ struct ObjectHitbox sSparkleSpawnStarHitbox = {
 };
 
 void bhv_spawned_star_init(void) {
-    if (!(o->oInteractionSubtype & INT_SUBTYPE_NO_EXIT))
+    if (!(o->oInteractionSubtype & INT_SUBTYPE_NO_EXIT) && o->parentObj) {
         o->oBehParams = o->parentObj->oBehParams;
+    }
     s32 sp24 = (o->oBehParams >> 24) & 0xFF;
     if (bit_shift_left(sp24) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1))
         cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));

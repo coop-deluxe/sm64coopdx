@@ -208,6 +208,7 @@ static void eyerok_boss_act_die(void) {
 }
 
 void bhv_eyerok_boss_loop(void) {
+    if (!o->parentObj) { return; }
     if (o->oAction == EYEROK_BOSS_ACT_DEAD) {
         return;
     }
@@ -232,7 +233,7 @@ void bhv_eyerok_boss_loop(void) {
     }
 
     if (o->oAction != oldAction) {
-        if (sync_object_is_owned_locally(o->parentObj->oSyncID)) {
+        if (o->parentObj && sync_object_is_owned_locally(o->parentObj->oSyncID)) {
             eyerokBossImmediateUpdate = TRUE;
         } else {
             o->oAction = EYEROK_BOSS_ACT_PAUSE;
@@ -246,6 +247,7 @@ void bhv_eyerok_boss_loop(void) {
 }
 
 static s32 eyerok_hand_check_attacked(void) {
+    if (!o->parentObj) { return FALSE; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     if (o->oEyerokReceivedAttack != 0 && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x3000) {
@@ -279,7 +281,8 @@ static void eyerok_hand_pound_ground(void) {
 }
 
 static void eyerok_hand_act_sleep(void) {
-    if (o->parentObj->oAction != EYEROK_BOSS_ACT_SLEEP
+    if (!o->parentObj) { return; }
+    if (o->parentObj && o->parentObj->oAction != EYEROK_BOSS_ACT_SLEEP
         && ++o->oEyerokHandWakeUpTimer > -3 * o->oBehParams2ndByte) {
         if (cur_obj_check_if_near_animation_end()) {
             o->parentObj->oEyerokBossNumHands += 1;
@@ -305,6 +308,7 @@ static void eyerok_hand_act_sleep(void) {
 }
 
 static void eyerok_hand_act_idle(void) {
+    if (!o->parentObj) { return; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     cur_obj_init_animation_with_sound(2);
@@ -342,6 +346,7 @@ static void eyerok_hand_act_idle(void) {
 }
 
 static void eyerok_hand_act_open(void) {
+    if (!o->parentObj) { return; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     o->parentObj->oEyerokBossUnk1AC = o->oBehParams2ndByte;
@@ -365,6 +370,7 @@ static void eyerok_hand_act_open(void) {
 }
 
 static void eyerok_hand_act_show_eye(void) {
+    if (!o->parentObj) { return; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     UNUSED s16 val06;
@@ -373,7 +379,7 @@ static void eyerok_hand_act_show_eye(void) {
     cur_obj_play_sound_at_anim_range(0, 0, SOUND_OBJ_EYEROK_SHOW_EYE);
 
     if (!eyerok_hand_check_attacked()) {
-        if (o->parentObj->oEyerokBossActiveHand == 0) {
+        if (o->parentObj && o->parentObj->oEyerokBossActiveHand == 0) {
             if (o->oAnimState < 3) {
                 o->oAnimState += 1;
             } else if (cur_obj_check_if_near_animation_end()) {
@@ -385,13 +391,13 @@ static void eyerok_hand_act_show_eye(void) {
                 if (o->oEyerokHandUnkFC != 0) {
                     o->oEyerokHandUnkFC -= 1;
                 }
-                o->oAnimState = D_80331BA4[o->oEyerokHandUnkFC];
+                o->oAnimState = BHV_ARR(D_80331BA4, o->oEyerokHandUnkFC, s8);
             } else {
                 o->oEyerokHandUnkFC = 5;
                 o->oEyerokHandUnk100 = random_linear_offset(20, 50);
             }
 
-            if (o->parentObj->oEyerokBossNumHands != 2) {
+            if (o->parentObj && o->parentObj->oEyerokBossNumHands != 2) {
                 obj_face_yaw_approach(o->oMoveAngleYaw, 0x800);
                 if (o->oTimer > 10
                     && ((player && o->oPosZ - player->oPosZ > 0.0f) || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE))) {
@@ -404,6 +410,7 @@ static void eyerok_hand_act_show_eye(void) {
 }
 
 static void eyerok_hand_act_close(void) {
+    if (!o->parentObj) { return; }
     if (cur_obj_init_anim_check_frame(7, 1)) {
         o->collisionData = segmented_to_virtual(ssl_seg7_collision_07028274);
 
@@ -435,6 +442,7 @@ static void eyerok_hand_act_recover(void) {
 }
 
 static void eyerok_hand_act_become_active(void) {
+    if (!o->parentObj) { return; }
     if (o->parentObj->oEyerokBossActiveHand == 0 || o->parentObj->oEyerokBossNumHands != 2) {
         o->oAction = EYEROK_HAND_ACT_RETREAT;
         o->parentObj->oEyerokBossActiveHand = o->oBehParams2ndByte;
@@ -454,6 +462,7 @@ static void eyerok_hand_act_die_event(void) {
 }
 
 static void eyerok_hand_act_die(void) {
+    if (!o->parentObj) { return; }
     if (cur_obj_init_anim_and_check_if_end(1)) {
         o->parentObj->oEyerokBossUnk1AC = 0;
         eyerok_hand_act_die_event();
@@ -490,6 +499,7 @@ static void eyerok_hand_act_retreat(void) {
 }
 
 static void eyerok_hand_act_target_mario(void) {
+    if (!o->parentObj) { return; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     if (eyerok_check_mario_relative_z(400) != 0 || (player && o->oPosZ - player->oPosZ > 0.0f)
@@ -553,6 +563,7 @@ static void eyerok_hand_act_fist_push(void) {
 }
 
 static void eyerok_hand_act_fist_sweep(void) {
+    if (!o->parentObj) { return; }
     if (o->oPosZ - o->parentObj->oPosZ < 1000.0f || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE)) {
         o->oAction = EYEROK_HAND_ACT_RETREAT;
         o->oForwardVel = 0.0f;
@@ -564,6 +575,7 @@ static void eyerok_hand_act_fist_sweep(void) {
 }
 
 static void eyerok_hand_act_begin_double_pound(void) {
+    if (!o->parentObj) { return; }
     f32 sp4;
 
     if (o->parentObj->oEyerokBossUnk104 < 0
@@ -582,6 +594,7 @@ static void eyerok_hand_act_begin_double_pound(void) {
 }
 
 static void eyerok_hand_act_double_pound(void) {
+    if (!o->parentObj) { return; }
     if (o->parentObj->oEyerokBossNumHands != 2) {
         o->parentObj->oEyerokBossActiveHand = o->oBehParams2ndByte;
     }
@@ -608,6 +621,7 @@ static void eyerok_hand_act_double_pound(void) {
 }
 
 void bhv_eyerok_hand_loop(void) {
+    if (!o->parentObj) { return; }
     if (o->oAction == EYEROK_HAND_ACT_DEAD) {
         eyerok_hand_act_die_event();
         return;
@@ -679,7 +693,7 @@ void bhv_eyerok_hand_loop(void) {
     o->header.gfx.scale[0] = 1.5f * o->oBehParams2ndByte;
 
     if (o->oAction != oldAction) {
-        if (sync_object_is_owned_locally(o->parentObj->oSyncID)) {
+        if (o->parentObj && sync_object_is_owned_locally(o->parentObj->oSyncID)) {
             eyerokBossImmediateUpdate = TRUE;
         } else {
             o->oAction = EYEROK_HAND_ACT_PAUSE;

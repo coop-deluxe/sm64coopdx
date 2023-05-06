@@ -38,13 +38,17 @@ void bhv_chain_chomp_chain_part_update(void) {
         obj_mark_for_deletion(o);
         network_send_object(o);
     } else if (o->oBehParams2ndByte != CHAIN_CHOMP_CHAIN_PART_BP_PIVOT) {
-        struct ChainSegment *segment = &o->parentObj->oChainChompSegments[o->oBehParams2ndByte];
+        struct ChainSegment *segment = (o->oBehParams2ndByte <= 4 && o->parentObj)
+            ? &o->parentObj->oChainChompSegments[o->oBehParams2ndByte]
+            : NULL;
 
         // Set position relative to the pivot
-        if (segment) {
-            o->oPosX = o->parentObj->parentObj->oPosX + segment->posX;
-            o->oPosY = o->parentObj->parentObj->oPosY + segment->posY;
-            o->oPosZ = o->parentObj->parentObj->oPosZ + segment->posZ;
+        if (segment && o->parentObj && o->parentObj->parentObj) {
+            if (o->parentObj->oChainChompSegments) {
+                o->oPosX = o->parentObj->parentObj->oPosX + segment->posX;
+                o->oPosY = o->parentObj->parentObj->oPosY + segment->posY;
+                o->oPosZ = o->parentObj->parentObj->oPosZ + segment->posZ;
+            }
         }
     } else if (o->parentObj->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
         cur_obj_update_floor_and_walls();
@@ -379,6 +383,10 @@ static void chain_chomp_act_move(void) {
         chain_chomp_act_uninitialized();
     }
 
+    if (!o->parentObj) {
+        return;
+    }
+
     // Segment 0 connects the pivot to the chain chomp itself
     o->oChainChompSegments[0].posX = o->oPosX - o->parentObj->oPosX;
     o->oChainChompSegments[0].posY = o->oPosY - o->parentObj->oPosY;
@@ -447,8 +455,10 @@ static void chain_chomp_act_unload_chain(void) {
     o->oAction = CHAIN_CHOMP_ACT_UNINITIALIZED;
 
     if (o->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
-        for (u8 i = 0; i < 5; i++) {
-            obj_mark_for_deletion((struct Object*)&o->oChainChompSegments[i]);
+        if (o->oChainChompSegments) {
+            for (u8 i = 0; i < 5; i++) {
+                obj_mark_for_deletion((struct Object*)&o->oChainChompSegments[i]);
+            }
         }
         obj_mark_for_deletion(o);
         obj_mark_for_deletion(o->parentObj);

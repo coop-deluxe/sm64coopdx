@@ -138,12 +138,9 @@ static void goomba_begin_jump(void) {
  * comes back.
  */
 void mark_goomba_as_dead(void) {
-    if (o->parentObj != o) {
-        set_object_respawn_info_bits(o->parentObj,
-                                     (o->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) >> 2);
-
-        o->parentObj->oBehParams =
-            o->parentObj->oBehParams | (o->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) << 6;
+    if (o->parentObj && o->parentObj != o) {
+        set_object_respawn_info_bits(o->parentObj, (o->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) >> 2);
+        o->parentObj->oBehParams = o->parentObj->oBehParams | (o->oBehParams2ndByte & GOOMBA_BP_TRIPLET_FLAG_MASK) << 6;
     }
 }
 
@@ -282,7 +279,7 @@ void bhv_goomba_update(void) {
     if (obj_update_standard_actions(o->oGoombaScale)) {
         // If this goomba has a spawner and mario moved away from the spawner,
         // unload
-        if (o->parentObj != o) {
+        if (o->parentObj && o->parentObj != o) {
             if (o->parentObj->oAction == GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED) {
                 obj_mark_for_deletion(o);
             }

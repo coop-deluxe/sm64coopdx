@@ -31,6 +31,10 @@ void bhv_ferris_wheel_axle_init(void) {
     struct Object *platform;
     s32 i;
 
+    if (!BHV_ARR_CHECK(sFerrisWheelProperties, o->oBehParams2ndByte, struct FerrisWheelProperties)) {
+        return;
+    }
+
     o->collisionData = segmented_to_virtual(sFerrisWheelProperties[o->oBehParams2ndByte].axleCollision);
 
     for (i = 0; i < 4; i++) {
@@ -59,6 +63,8 @@ void bhv_ferris_wheel_axle_init(void) {
 void bhv_ferris_wheel_platform_update(void) {
     f32 offsetXZ;
     s16 offsetAngle;
+
+    if (!o->parentObj) { return; }
 
     obj_perform_position_op(POS_OP_SAVE_POSITION);
 

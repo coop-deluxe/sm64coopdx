@@ -122,15 +122,15 @@ void elevator_act_3(void) // nearly identical to action 2
 }
 
 void bhv_elevator_init(void) {
-    s32 sp1C = D_8032F38C[o->oBehParams2ndByte * 3 + 2];
+    s32 sp1C = BHV_ARR(D_8032F38C, o->oBehParams2ndByte * 3 + 2, s16);
     if (sp1C == 0) {
-        o->oElevatorUnkF4 = D_8032F38C[o->oBehParams2ndByte * 3];
+        o->oElevatorUnkF4 = BHV_ARR(D_8032F38C, o->oBehParams2ndByte * 3, s16);
         o->oElevatorUnkF8 = o->oHomeY;
         o->oElevatorUnkFC = (o->oElevatorUnkF4 + o->oElevatorUnkF8) / 2;
         o->oElevatorUnk100 = cur_obj_has_behavior(bhvRrElevatorPlatform);
     } else {
-        o->oElevatorUnkF4 = D_8032F38C[o->oBehParams2ndByte * 3];
-        o->oElevatorUnkF8 = D_8032F38C[o->oBehParams2ndByte * 3 + 1];
+        o->oElevatorUnkF4 = BHV_ARR(D_8032F38C, o->oBehParams2ndByte * 3, s16);
+        o->oElevatorUnkF8 = BHV_ARR(D_8032F38C, o->oBehParams2ndByte * 3 + 1, s16);
         o->oElevatorUnkFC = (o->oElevatorUnkF4 + o->oElevatorUnkF8) / 2;
         o->oElevatorUnk100 = 2;
     }

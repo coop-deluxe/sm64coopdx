@@ -16,7 +16,9 @@ static void const *sSeesawPlatformCollisionModels[] = {
  * Init function for bhvSeesawPlatform.
  */
 void bhv_seesaw_platform_init(void) {
-    o->collisionData = segmented_to_virtual(sSeesawPlatformCollisionModels[o->oBehParams2ndByte]);
+    if (BHV_ARR_CHECK(sSeesawPlatformCollisionModels, o->oBehParams2ndByte, void const*)) {
+        o->collisionData = segmented_to_virtual(sSeesawPlatformCollisionModels[o->oBehParams2ndByte]);
+    }
 
     // The S-shaped seesaw platform in BitS is large, so increase its collision
     // distance

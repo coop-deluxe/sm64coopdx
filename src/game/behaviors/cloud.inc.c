@@ -115,7 +115,7 @@ static void cloud_act_main(void) {
 
     localOffsetPhase = 0x800 * gGlobalTimer;
 
-    if (o->parentObj != o) {
+    if (o->parentObj && o->parentObj != o) {
         // Despawn if the parent lakitu does
         if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
             o->oAction = CLOUD_ACT_UNLOAD;
@@ -180,7 +180,7 @@ void bhv_cloud_update(void) {
  * Update function for bhvCloudPart. Follow the parent cloud with some oscillation.
  */
 void bhv_cloud_part_update(void) {
-    if (o->parentObj->oAction == CLOUD_ACT_UNLOAD) {
+    if (!o->parentObj || o->parentObj->oAction == CLOUD_ACT_UNLOAD) {
         obj_mark_for_deletion(o);
     } else {
         f32 size = 2.0f / 3.0f * o->parentObj->header.gfx.scale[0];
@@ -206,8 +206,7 @@ void bhv_cloud_part_update(void) {
 
         o->oPosX = o->parentObj->oCloudCenterX + cloudRadius * sins(angleFromCenter) + localOffset;
 
-        o->oPosY =
-            o->parentObj->oCloudCenterY + localOffset + size * sCloudPartHeights[o->oBehParams2ndByte];
+        o->oPosY = o->parentObj->oCloudCenterY + localOffset + size * BHV_ARR(sCloudPartHeights, o->oBehParams2ndByte, s8);
 
         o->oPosZ = o->parentObj->oPosZ + cloudRadius * coss(angleFromCenter) + localOffset;
 

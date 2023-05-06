@@ -196,7 +196,9 @@ void bhv_moneybag_loop(void) {
             o->oOpacity += 12;
             if (o->oOpacity >= 256) {
                 o->oOpacity = 255;
-                o->parentObj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+                if (o->parentObj) {
+                    o->parentObj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+                }
                 o->oAction = MONEYBAG_ACT_MOVE_AROUND;
             }
             break;

@@ -366,7 +366,7 @@ void king_bobomb_move(void) {
     else
         cur_obj_move_using_fvel_and_gravity();
     CUR_OBJ_CALL_ACTION_FUNCTION(sKingBobombActions);
-    exec_anim_sound_state(sKingBobombSoundStates);
+    exec_anim_sound_state(sKingBobombSoundStates, sizeof(sKingBobombSoundStates) / sizeof(struct SoundState));
     s32 distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
     if (distanceToPlayer < 5000.0f * draw_distance_scalar())
         cur_obj_enable_rendering();

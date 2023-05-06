@@ -19,6 +19,6 @@ struct SoundState
 void cur_obj_play_sound_1(s32 soundMagic);
 void cur_obj_play_sound_2(s32 soundMagic);
 void create_sound_spawner(s32 soundMagic);
-void exec_anim_sound_state(struct SoundState *soundStates);
+void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates);
 
 #endif // SPAWN_SOUND_H

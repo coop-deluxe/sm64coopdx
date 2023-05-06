@@ -53,9 +53,9 @@ void opened_cannon_act_4(void) {
         o->oPosZ += (f32)((o->oTimer / 2 & 1) - 0.5) * 4;
         o->oAction = 6;
     }
-    if (o->oCannonPlayerIndex != 0) {
+    if (o->oCannonPlayerIndex != 0 && o->oCannonPlayerIndex < MAX_PLAYERS) {
         struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
-        if (controlledBy->marioObj != NULL) {
+        if (controlledBy && controlledBy->marioObj != NULL) {
             controlledBy->marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
             controlledBy->marioObj->oMarioCannonInputYaw = 0;
         }
@@ -75,9 +75,9 @@ void opened_cannon_act_6(void) {
                 o->oMoveAngleYaw = sins(o->oCannonUnkF4) * 0x4000 + ((s16)(o->oBehParams2ndByte << 8));
                 o->oCannonUnkF4 += 0x400;
             } else if (o->oTimer < 26) {
-            } else {
+            } else if (o->oCannonPlayerIndex < MAX_PLAYERS) {
                 struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
-                if (controlledBy->marioObj != NULL) {
+                if (controlledBy && controlledBy->marioObj != NULL) {
                     controlledBy->marioObj->oMarioCannonObjectYaw = o->oMoveAngleYaw;
                     controlledBy->marioObj->oMarioCannonInputYaw = 0;
                 }
@@ -110,7 +110,7 @@ void opened_cannon_act_1(void) {
     if (o->oCannonPlayerIndex == 0) {
         cur_obj_become_intangible();
         cur_obj_disable_rendering();
-    } else {
+    } else if (o->oCannonPlayerIndex < MAX_PLAYERS) {
         struct MarioState* controlledBy = &gMarioStates[o->oCannonPlayerIndex];
         o->oMoveAnglePitch = 14563 + controlledBy->faceAngle[0] * -0.5f;
         if (controlledBy->marioObj != NULL) {
@@ -245,7 +245,7 @@ void bhv_cannon_base_loop(void) {
 
 void bhv_cannon_barrel_loop(void) {
     struct Object *parent = o->parentObj;
-    if (parent->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
+    if (parent && parent->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
         cur_obj_enable_rendering();
         obj_copy_pos(o, o->parentObj);
         o->oMoveAngleYaw = o->parentObj->oMoveAngleYaw;

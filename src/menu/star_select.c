@@ -34,20 +34,20 @@
  */
 
 // Star Selector count models printed in the act selector menu.
-static struct Object *sStarSelectorModels[8];
+static struct Object *sStarSelectorModels[8] = { 0 };
 
 // The act the course is loaded as, affects whether some objects spawn.
-s8 sLoadedActNum;
+s8 sLoadedActNum = 0;
 s8 sReceivedLoadedActNum = 0;
 
 // Number of obtained stars, excluding the coin star.
-static u8 sObtainedStars;
+static u8 sObtainedStars = 0;
 
 // Total number of stars that appear in the act selector menu.
-static s8 sVisibleStars;
+static s8 sVisibleStars = 0;
 
 // Act selected when the act menu is first opened.
-static u8 sInitSelectedActNum;
+static u8 sInitSelectedActNum = 0;
 
 // Index value of the act selected in the act menu.
 s8 sSelectedActIndex = 0;
@@ -96,7 +96,7 @@ void bhv_act_selector_star_type_loop(void) {
  * Renders the 100 coin star with an special star selector type.
  */
 void render_100_coin_star(u8 stars) {
-    if (stars & (1 << 6)) {
+    if ((stars & (1 << 6)) && sStarSelectorModels[6]) {
         // If the 100 coin star has been collected, create a new star selector next to the coin score.
         sStarSelectorModels[6] = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR,
                                                         bhvActSelectorStarType, 370, 24, -300, 0, 0, 0);
@@ -205,6 +205,7 @@ void bhv_act_selector_loop(void) {
 
     // Star selector type handler
     for (i = 0; i < sVisibleStars; i++) {
+        if (!sStarSelectorModels[i]) { continue; }
         if (sSelectedActIndex == i) {
             sStarSelectorModels[i]->oStarSelectorType = STAR_SELECTOR_SELECTED;
         } else {

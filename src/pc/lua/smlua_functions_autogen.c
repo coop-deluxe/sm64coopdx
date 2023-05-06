@@ -23663,6 +23663,24 @@ int smlua_func_get_object_list_from_behavior(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_trajectory_length(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_trajectory_length", 1, top);
+        return 0;
+    }
+
+    Trajectory* trajectory = (Trajectory*)smlua_to_cpointer(L, 1, LVT_TRAJECTORY_P);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_trajectory_length"); return 0; }
+
+    extern s32 get_trajectory_length(Trajectory* trajectory);
+    lua_pushinteger(L, get_trajectory_length(trajectory));
+
+    return 1;
+}
+
 int smlua_func_increment_velocity_toward_range(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29058,16 +29076,18 @@ int smlua_func_exec_anim_sound_state(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "exec_anim_sound_state", 1, top);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "exec_anim_sound_state", 2, top);
         return 0;
     }
 
     struct SoundState* soundStates = (struct SoundState*)smlua_to_cobject(L, 1, LOT_SOUNDSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "exec_anim_sound_state"); return 0; }
+    u16 maxSoundStates = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "exec_anim_sound_state"); return 0; }
 
-    extern void exec_anim_sound_state(struct SoundState *soundStates);
-    exec_anim_sound_state(soundStates);
+    extern void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates);
+    exec_anim_sound_state(soundStates, maxSoundStates);
 
     return 1;
 }
@@ -30685,6 +30705,7 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "geo_update_layer_transparency", smlua_func_geo_update_layer_transparency); <--- UNIMPLEMENTED
     //smlua_bind_function(L, "geo_update_projectile_pos_from_parent", smlua_func_geo_update_projectile_pos_from_parent); <--- UNIMPLEMENTED
     smlua_bind_function(L, "get_object_list_from_behavior", smlua_func_get_object_list_from_behavior);
+    smlua_bind_function(L, "get_trajectory_length", smlua_func_get_trajectory_length);
     smlua_bind_function(L, "increment_velocity_toward_range", smlua_func_increment_velocity_toward_range);
     smlua_bind_function(L, "is_item_in_array", smlua_func_is_item_in_array);
     smlua_bind_function(L, "is_mario_moving_fast_or_in_air", smlua_func_is_mario_moving_fast_or_in_air);

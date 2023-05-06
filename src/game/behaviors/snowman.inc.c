@@ -256,6 +256,10 @@ void bhv_snowmans_head_loop(void) {
 }
 
 void bhv_snowmans_body_checkpoint_loop(void) {
+    if (!o->parentObj) {
+        return;
+    }
+
     if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 800)) {
         o->parentObj->oSnowmansBottomUnk1AC++;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;

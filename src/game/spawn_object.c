@@ -109,11 +109,14 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
     geo_remove_child(&nextObj->gfx.node);
     geo_add_child(&gObjParentGraphNode, &nextObj->gfx.node);
 
-    ((struct Object *)nextObj)->ctx = 0
+    struct Object* ret = (struct Object *) nextObj;
+    ret->ctx = 0
         | ((u8)CTX_WITHIN(CTX_LEVEL_SCRIPT) << 0)
         | ((u8)CTX_WITHIN(CTX_HOOK)         << 1);
 
-    return (struct Object *) nextObj;
+    ret->header.gfx.sharedChild = NULL;
+
+    return ret;
 }
 
 /**

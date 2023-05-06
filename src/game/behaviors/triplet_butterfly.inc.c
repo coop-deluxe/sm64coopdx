@@ -36,10 +36,12 @@ static void triplet_butterfly_act_init(void) {
         }
 
         //! TODO: Describe this glitch
-        if (o->parentObj->oTripletButterflySelectedButterfly == o->oBehParams2ndByte) {
-            o->oTripletButterflyType = TRIPLET_BUTTERFLY_TYPE_SPAWN_1UP;
-        } else if (o->parentObj->oBehParams2ndByte & TRIPLET_BUTTERFLY_BP_NO_BOMBS) {
-            o->oTripletButterflyType = TRIPLET_BUTTERFLY_TYPE_NORMAL;
+        if (o->parentObj) {
+            if (o->parentObj->oTripletButterflySelectedButterfly == o->oBehParams2ndByte) {
+                o->oTripletButterflyType = TRIPLET_BUTTERFLY_TYPE_SPAWN_1UP;
+            } else if (o->parentObj->oBehParams2ndByte & TRIPLET_BUTTERFLY_BP_NO_BOMBS) {
+                o->oTripletButterflyType = TRIPLET_BUTTERFLY_TYPE_NORMAL;
+            }
         }
         // Default butterfly type is TRIPLET_BUTTERFLY_TYPE_EXPLODES
 
@@ -82,6 +84,7 @@ static void triplet_butterfly_act_wander(void) {
 }
 
 static void triplet_butterfly_act_activate(void) {
+    if (!BHV_ARR_CHECK(sTripletButterflyActivationData, o->oTripletButterflyType, struct TripletButterflyActivationData)) { return; }
     if (o->oTimer > 20) {
         if (o->oTripletButterflyModel == 0) {
             spawn_object_relative_with_scale(0, 0, -40, 0, 1.5f, o, MODEL_SMOKE, bhvWhitePuffSmoke2);
@@ -90,8 +93,7 @@ static void triplet_butterfly_act_activate(void) {
             obj_set_billboard(o);
             o->oTripletButterflyScale = 0.0f;
             o->oHomeY = o->oPosY;
-        } else if (o->oTripletButterflyScale
-                   >= sTripletButterflyActivationData[o->oTripletButterflyType].scale) {
+        } else if (o->oTripletButterflyScale >= sTripletButterflyActivationData[o->oTripletButterflyType].scale) {
             if (o->oTripletButterflyType != TRIPLET_BUTTERFLY_TYPE_EXPLODES) {
                 spawn_object(o, o->oTripletButterflyModel,
                              sTripletButterflyActivationData[o->oTripletButterflyType].behavior);
@@ -102,8 +104,7 @@ static void triplet_butterfly_act_activate(void) {
             }
         }
 
-        o->oTripletButterflyScale +=
-            sTripletButterflyActivationData[o->oTripletButterflyType].scale / 30.0f;
+        o->oTripletButterflyScale += sTripletButterflyActivationData[o->oTripletButterflyType].scale / 30.0f;
         if (o->oTripletButterflyType == TRIPLET_BUTTERFLY_TYPE_EXPLODES) {
             o->oGraphYOffset = 250.0f * o->oTripletButterflyScale;
             o->oPosY = o->oHomeY - o->oGraphYOffset;

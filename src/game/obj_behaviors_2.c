@@ -178,6 +178,7 @@ void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32
 
         do {
             prevWaypoint = nextWaypoint;
+            if (!prevWaypoint) { break; }
 
             nextWaypoint += 1;
             if (nextWaypoint->flags == WAYPOINT_FLAGS_END) {

@@ -326,5 +326,6 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
 #endif
 
 void cur_obj_set_home_once(void);
+s32 get_trajectory_length(Trajectory* trajectory);
 
 #endif // OBJECT_HELPERS_H

@@ -677,6 +677,7 @@ s16 music_changed_through_warp(s16 arg) {
     }
 
     struct ObjectWarpNode *warpNode = area_get_warp_node(arg);
+    if (!warpNode) { return FALSE; }
     s16 levelNum = warpNode->node.destLevel & 0x7F;
 
 #if BUGFIX_KOOPA_RACE_MUSIC

@@ -129,7 +129,7 @@ void bhv_scuttlebug_loop(void) {
     if (o->parentObj != o) {
         if (obj_is_hidden(o))
             obj_mark_for_deletion(o);
-        if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
+        if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED && o->parentObj) {
             o->parentObj->oScuttlebugSpawnerUnk88 = 1;
             network_send_object(o->parentObj);
         }

@@ -85,7 +85,7 @@ void bhv_blue_fish_movement_loop(void) {
     cur_obj_move_using_fvel_and_gravity();
     
     // Deletes object if the parent has oAction set to BLUE_FISH_ACT_DUPLICATE.
-    if (o->parentObj->oAction == BLUE_FISH_ACT_DUPLICATE) {
+    if (!o->parentObj || o->parentObj->oAction == BLUE_FISH_ACT_DUPLICATE) {
         obj_mark_for_deletion(o);
     }
 }

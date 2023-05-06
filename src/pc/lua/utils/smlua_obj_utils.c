@@ -404,3 +404,23 @@ void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index) {
     gAreas[area].whirlpools[index]->pos[2] = z;
     gAreas[area].whirlpools[index]->strength = strength;
 }
+
+#ifdef DEVELOPMENT
+void obj_randomize(struct Object* o) {
+    for (int i = 0; i < 80; i++) {
+        if (rand() % 10 < 5) {
+            o->rawData.asU32[i] = rand() % 10;
+        } else {
+            o->rawData.asU32[i] = rand();
+        }
+    }
+    struct Object* objs[] = { NULL, gMarioStates[0].marioObj, o };
+    if (rand()%4 > 0) { o->parentObj = objs[rand()%3]; }
+    if (rand()%4 > 0) { o->prevObj = objs[rand()%3]; }
+    if (rand()%4 > 0) { o->usingObj = objs[rand()%3]; }
+
+    if (rand() % 10 < 5) {
+        o->oAction = rand() % 10;
+    }
+}
+#endif

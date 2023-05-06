@@ -287,6 +287,8 @@ void *alloc_only_pool_alloc(struct AllocOnlyPool *pool, s32 size) {
     }
     if (addr == NULL) {
         LOG_ERROR("Allocate only pool failed to allocate memory of size 0x%X on at pool %p.", size, pool);
+    } else {
+        memset(addr, 0, size);
     }
     return addr;
 }
@@ -374,6 +376,7 @@ void *mem_pool_alloc(struct MemoryPool *pool, u32 size) {
  * Free a block that was allocated using mem_pool_alloc.
  */
 void mem_pool_free(struct MemoryPool *pool, void *addr) {
+    if (!addr) { return; }
     struct MemoryBlock *block = (struct MemoryBlock *) ((u8 *) addr - sizeof(struct MemoryBlock));
     struct MemoryBlock *freeList = pool->freeList.next;
 
@@ -419,6 +422,7 @@ void *alloc_display_list(u32 size) {
     if (gGfxPoolEnd - size >= (u8 *) gDisplayListHead) {
         gGfxPoolEnd -= size;
         ptr = gGfxPoolEnd;
+        memset(ptr, 0, size);
     } else {
         LOG_ERROR("Failed to allocate display list of size 0x%X!", size);
     }

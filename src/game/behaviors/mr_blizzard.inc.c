@@ -436,7 +436,7 @@ void bhv_mr_blizzard_update(void) {
 
 static void mr_blizzard_snowball_act_0(void) {
     cur_obj_move_using_fvel_and_gravity();
-    if (o->parentObj->prevObj == o) {
+    if (o->parentObj && o->parentObj->prevObj == o) {
         o->oAction = 1;
         o->oParentRelativePosX = 190.0f;
         o->oParentRelativePosY = o->oParentRelativePosZ = -38.0f;
@@ -453,7 +453,7 @@ static void mr_blizzard_snowball_act_1(void) {
 
     f32 marioDist;
 
-    if (o->parentObj->prevObj == NULL) {
+    if (o->parentObj && o->parentObj->prevObj == NULL) {
         if (o->parentObj->oAction == MR_BLIZZARD_ACT_THROW_SNOWBALL) {
             marioDist = distanceToPlayer;
             if (marioDist > 800.0f) {

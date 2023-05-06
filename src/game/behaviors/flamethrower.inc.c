@@ -20,9 +20,9 @@ void bhv_flamethrower_flame_loop(void) {
             o->oVelY = 0;
             o->oPosY = o->oFloorHeight + 25.0f * size;
         }
-        sp18 = o->parentObj->oFlameThowerFlameUnk110 / 1.2;
+        sp18 = o->parentObj ? o->parentObj->oFlameThowerFlameUnk110 / 1.2 : 0;
     } else
-        sp18 = o->parentObj->oFlameThowerFlameUnk110;
+        sp18 = o->parentObj ? o->parentObj->oFlameThowerFlameUnk110 : 0;
     cur_obj_scale(size);
     if (o->oBehParams2ndByte == 4)
         o->oPosY += o->oForwardVel; // weird?

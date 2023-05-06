@@ -2239,7 +2239,7 @@ void mario_process_interactions(struct MarioState *m) {
 
                 m->collidedObjInteractTypes &= ~interactType;
 
-                if (!(object->oInteractStatus & INT_STATUS_INTERACTED)) {
+                if (object && !(object->oInteractStatus & INT_STATUS_INTERACTED)) {
                     bool allow = true;
                     smlua_call_event_hooks_interact_params_ret_bool(HOOK_ALLOW_INTERACT, m, object, interactType, &allow);
                     if (allow) {

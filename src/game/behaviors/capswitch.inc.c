@@ -8,7 +8,7 @@ void cap_switch_act_0(void) {
     o->oPosY += 71.0f;
     spawn_object_relative_with_scale(0, 0, -71, 0, 0.5f, o, MODEL_CAP_SWITCH_BASE, bhvCapSwitchBase);
     if (gCurrLevelNum != LEVEL_UNKNOWN_32) {
-        if (save_file_get_flags() & D_8032F0C0[o->oBehParams2ndByte]) {
+        if (save_file_get_flags() & BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32)) {
             o->oAction = 3;
             o->header.gfx.scale[1] = 0.1f;
         } else
@@ -19,7 +19,7 @@ void cap_switch_act_0(void) {
 
 void cap_switch_act_1(void) {
     if (capSwitchForcePress || cur_obj_is_mario_on_platform()) {
-        save_file_set_flags(D_8032F0C0[o->oBehParams2ndByte]);
+        save_file_set_flags(BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32));
         o->oAction = 2;
         cur_obj_play_sound_2(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
         if (!capSwitchForcePress) {

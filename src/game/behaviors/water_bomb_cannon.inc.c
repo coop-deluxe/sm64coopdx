@@ -3,7 +3,7 @@
 void bhv_bubble_cannon_barrel_loop(void) {
     struct Object *val04;
 
-    if (o->parentObj->oAction == 2) {
+    if (!o->parentObj || o->parentObj->oAction == 2) {
         obj_mark_for_deletion(o);
     } else {
         o->oMoveAngleYaw = o->parentObj->oFaceAngleYaw;

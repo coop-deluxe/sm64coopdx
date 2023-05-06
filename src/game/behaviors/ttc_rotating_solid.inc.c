@@ -26,7 +26,9 @@ static u8 sTTCRotatingSolidInitialDelays[] = {
  * Init function for bhvTTCRotatingSolid.
  */
 void bhv_ttc_rotating_solid_init(void) {
-    o->collisionData = segmented_to_virtual(sTTCRotatingSolidCollisionModels[o->oBehParams2ndByte]);
+    if (BHV_ARR_CHECK(sTTCRotatingSolidCollisionModels, o->oBehParams2ndByte, void const*)) {
+        o->collisionData = segmented_to_virtual(sTTCRotatingSolidCollisionModels[o->oBehParams2ndByte]);
+    }
 
     o->oTTCRotatingSolidNumSides = o->oBehParams2ndByte == TTC_ROTATING_SOLID_BP_CUBE ? 4 : 3;
 
@@ -68,8 +70,9 @@ void bhv_ttc_rotating_solid_update(void) {
             if (o->oAngleVelRoll == 0) {
                 cur_obj_play_sound_2(SOUND_GENERAL2_ROTATING_BLOCK_CLICK);
 
-                o->oTTCRotatingSolidNumTurns =
-                    (o->oTTCRotatingSolidNumTurns + 1) % o->oTTCRotatingSolidNumSides;
+                if (o->oTTCRotatingSolidNumSides) {
+                    o->oTTCRotatingSolidNumTurns = (o->oTTCRotatingSolidNumTurns + 1) % o->oTTCRotatingSolidNumSides;
+                }
 
                 o->oTimer = 0;
                 if (gTTCSpeedSetting == TTC_SPEED_RANDOM) {

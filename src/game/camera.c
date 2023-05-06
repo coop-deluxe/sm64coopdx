@@ -3658,24 +3658,28 @@ void stub_camera_3(UNUSED struct Camera *c) {
 }
 
 void vec3f_sub(Vec3f dst, Vec3f src) {
+    if (!dst || !src) { return; }
     dst[0] -= src[0];
     dst[1] -= src[1];
     dst[2] -= src[2];
 }
 
 void object_pos_to_vec3f(Vec3f dst, struct Object *o) {
+    if (!dst || !o) { return; }
     dst[0] = o->oPosX;
     dst[1] = o->oPosY;
     dst[2] = o->oPosZ;
 }
 
 void vec3f_to_object_pos(struct Object *o, Vec3f src) {
+    if (!o || !src) { return; }
     o->oPosX = src[0];
     o->oPosY = src[1];
     o->oPosZ = src[2];
 }
 
 void unused_object_angle_to_vec3s(Vec3s dst, struct Object *o) {
+    if (!dst || !o) { return; }
     dst[0] = o->oMoveAnglePitch;
     dst[1] = o->oMoveAngleYaw;
     dst[2] = o->oMoveAngleRoll;

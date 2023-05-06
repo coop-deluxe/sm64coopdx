@@ -585,6 +585,11 @@ u16 smlua_model_util_load_with_pool_and_cache_id(enum ModelExtendedId extId, str
         }
     }
 
+    if (pickLoadedId >= MAX_LOADED_GRAPH_NODES) {
+        LOG_ERROR("Could not find slot for extId - %u", extId);
+        return UNLOADED_ID;
+    }
+
     // load
     bool resizePool = false;
     if (pool == NULL) {

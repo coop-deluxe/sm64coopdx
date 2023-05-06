@@ -336,6 +336,7 @@ void bhv_book_switch_loop(void) {
 
     o->header.gfx.scale[0] = 2.0f;
     o->header.gfx.scale[1] = 0.9f;
+    if (!o->parentObj) { return; }
 
     if (o->parentObj->oAction == 4) {
         obj_mark_for_deletion(o);

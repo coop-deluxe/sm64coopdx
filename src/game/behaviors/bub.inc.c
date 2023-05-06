@@ -8,6 +8,7 @@
 void bub_spawner_act_0(void) {
     s32 i;
     s32 sp18 = o->oBirdChirpChirpUnkF4;
+    if (sp18 > 20) { sp18 = 20; }
     for (i = 0; i < sp18; i++)
         spawn_object(o, MODEL_BUB, bhvBub);
     o->oAction = 1;
@@ -138,6 +139,6 @@ void bhv_bub_loop(void) {
     cur_obj_update_floor_and_walls();
     CUR_OBJ_CALL_ACTION_FUNCTION(sCheepCheepActions);
     cur_obj_move_using_fvel_and_gravity();
-    if (o->parentObj->oAction == 2)
+    if (!o->parentObj || o->parentObj->oAction == 2)
         obj_mark_for_deletion(o);
 }

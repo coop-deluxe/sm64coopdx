@@ -54,6 +54,10 @@ void spawn_mr_i_particle(void) {
 }
 
 void bhv_mr_i_body_loop(void) {
+    if (!o->parentObj) {
+        obj_mark_for_deletion(o);
+        return;
+    }
     obj_copy_pos_and_angle(o, o->parentObj);
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         obj_copy_scale(o, o->parentObj);

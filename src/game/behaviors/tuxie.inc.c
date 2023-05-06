@@ -57,7 +57,7 @@ void tuxies_mother_act_1(void) {
             cur_obj_init_animation_with_sound(3);
             if (!cur_obj_is_mario_on_platform()) {
                 sp2C = (o->oBehParams >> 0x10) & 0xFF;
-                sp28 = (o->prevObj->oBehParams >> 0x10) & 0xFF;
+                sp28 = o->prevObj ? ((o->prevObj->oBehParams >> 0x10) & 0xFF) : 0;
                 if (sp2C == sp28) {
                     dialogID = gBehaviorValues.dialogs.TuxieMotherBabyFoundDialog;
                 } else {
@@ -75,7 +75,7 @@ void tuxies_mother_act_1(void) {
                 cur_obj_init_animation_with_sound(0);
             break;
         case 1:
-            if (o->prevObj->oHeldState == HELD_FREE) {
+            if (o->prevObj && o->prevObj->oHeldState == HELD_FREE) {
                 //! This line is was almost certainly supposed to be something
                 // like o->prevObj->oInteractionSubtype &= ~INT_SUBTYPE_DROP_IMMEDIATELY;
                 // however, this code uses the value of o->oInteractionSubtype
@@ -98,7 +98,7 @@ void tuxies_mother_act_1(void) {
             }
             break;
         case 2:
-            if (o->prevObj->oHeldState == HELD_FREE) {
+            if (o->prevObj && o->prevObj->oHeldState == HELD_FREE) {
                 //! Same bug as above
                 o->prevObj->OBJECT_FIELD_S32(o->oInteractionSubtype) &= ~INT_SUBTYPE_DROP_IMMEDIATELY;
                 obj_set_behavior(o->prevObj, bhvPenguinBaby);

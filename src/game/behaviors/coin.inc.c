@@ -133,11 +133,12 @@ void bhv_coin_formation_spawn_loop(void) {
                 cur_obj_set_model(smlua_model_util_load(E_MODEL_YELLOW_COIN_NO_SHADOW));
         }
     } else {
-        if (bhv_coin_sparkles_init())
+        if (o->parentObj && bhv_coin_sparkles_init()) {
             o->parentObj->oCoinUnkF4 |= bit_shift_left(o->oBehParams2ndByte);
+        }
         o->oAnimState++;
     }
-    if (o->parentObj->oAction == 2)
+    if (!o->parentObj || o->parentObj->oAction == 2)
         obj_mark_for_deletion(o);
 }
 

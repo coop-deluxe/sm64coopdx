@@ -93,10 +93,13 @@ void bhv_platform_on_track_init(void) {
 
         o->oPlatformOnTrackIsNotSkiLift = o->oPlatformOnTrackType - PLATFORM_ON_TRACK_TYPE_SKI_LIFT;
 
-        o->collisionData =
-            segmented_to_virtual(sPlatformOnTrackCollisionModels[o->oPlatformOnTrackType]);
+        if (BHV_ARR_CHECK(sPlatformOnTrackCollisionModels, o->oPlatformOnTrackType, void const *)) {
+            o->collisionData = segmented_to_virtual(sPlatformOnTrackCollisionModels[o->oPlatformOnTrackType]);
+        }
 
-        o->oPlatformOnTrackStartWaypoint = segmented_to_virtual(*sPlatformOnTrackPaths[pathIndex]);
+        if (BHV_ARR_CHECK(sPlatformOnTrackPaths, pathIndex, Trajectory**)) {
+            o->oPlatformOnTrackStartWaypoint = segmented_to_virtual(*sPlatformOnTrackPaths[pathIndex]);
+        }
 
         o->oPlatformOnTrackIsNotHMC = pathIndex - 4;
 
@@ -353,8 +356,9 @@ void bhv_platform_on_track_update(void) {
  */
 void bhv_track_ball_update(void) {
     // Despawn after the elevator passes this ball
-    s16 relativeIndex =
-        (s16) o->oBehParams2ndByte - (s16) o->parentObj->oPlatformOnTrackBaseBallIndex - 1;
+    s16 relativeIndex = o->parentObj ?
+        ((s16) o->oBehParams2ndByte - (s16) o->parentObj->oPlatformOnTrackBaseBallIndex - 1)
+        : 0;
     if (relativeIndex < 1 || relativeIndex > 5) {
         obj_mark_for_deletion(o);
     }

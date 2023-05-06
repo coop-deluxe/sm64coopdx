@@ -11,24 +11,26 @@ void bhv_heave_ho_throw_mario_loop(void) {
     o->oParentRelativePosX = 200.0f;
     o->oParentRelativePosY = -50.0f;
     o->oParentRelativePosZ = 0.0f;
-    o->oMoveAngleYaw = o->parentObj->oMoveAngleYaw;
-    switch (o->parentObj->oHeaveHoUnk88) {
-        case 0:
-            break;
-        case 1:
-            break;
-        case 2:
-            cur_obj_play_sound_2(SOUND_OBJ_HEAVEHO_TOSSED);
-            if (player) {
-                player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
-            }
-            if (marioState) {
-                marioState->forwardVel = -45.0f;
-                marioState->vel[1] = 95.0f;
-            }
-            o->parentObj->oHeaveHoUnk88 = 0;
-            o->parentObj->usingObj = NULL;
-            break;
+    if (o->parentObj) {
+        o->oMoveAngleYaw = o->parentObj->oMoveAngleYaw;
+        switch (o->parentObj->oHeaveHoUnk88) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                cur_obj_play_sound_2(SOUND_OBJ_HEAVEHO_TOSSED);
+                if (player) {
+                    player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
+                }
+                if (marioState) {
+                    marioState->forwardVel = -45.0f;
+                    marioState->vel[1] = 95.0f;
+                }
+                o->parentObj->oHeaveHoUnk88 = 0;
+                o->parentObj->usingObj = NULL;
+                break;
+        }
     }
 }
 

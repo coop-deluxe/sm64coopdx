@@ -7187,6 +7187,12 @@ function get_object_list_from_behavior(behavior)
     -- ...
 end
 
+--- @param trajectory Pointer_Trajectory
+--- @return integer
+function get_trajectory_length(trajectory)
+    -- ...
+end
+
 --- @param value number
 --- @param center number
 --- @param zeroThreshold number
@@ -9000,8 +9006,9 @@ function cur_obj_play_sound_2(soundMagic)
 end
 
 --- @param soundStates SoundState
+--- @param maxSoundStates integer
 --- @return nil
-function exec_anim_sound_state(soundStates)
+function exec_anim_sound_state(soundStates, maxSoundStates)
     -- ...
 end
 
@@ -9076,5 +9083,5 @@ end
 --- @class Pointer_number
 --- @class Pointer_Vec4s
 --- @class Pointer_Mtx
---- @class Pointer_Collision
 --- @class Pointer_Trajectory
+--- @class Pointer_Collision

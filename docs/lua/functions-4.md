@@ -4650,6 +4650,26 @@
 
 <br />
 
+## [get_trajectory_length](#get_trajectory_length)
+
+### Lua Example
+`local integerValue = get_trajectory_length(trajectory)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| trajectory | `Pointer` <`Trajectory`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 get_trajectory_length(Trajectory* trajectory);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [increment_velocity_toward_range](#increment_velocity_toward_range)
 
 ### Lua Example

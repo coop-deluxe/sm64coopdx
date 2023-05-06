@@ -31,7 +31,7 @@ struct Struct802C0DF0 sExclamationBoxContents[] = { { 0, 0, 0, MODEL_MARIOS_WING
                                                     { 99, 0, 0, 0, NULL } };
 
 void bhv_rotating_exclamation_box_loop(void) {
-    if (o->parentObj->oAction != 1)
+    if (!o->parentObj || o->parentObj->oAction != 1)
         obj_mark_for_deletion(o);
 }
 
@@ -39,7 +39,7 @@ void exclamation_box_act_0(void) {
     o->oExclamationBoxForce = FALSE;
     if (o->oBehParams2ndByte < 3) {
         o->oAnimState = o->oBehParams2ndByte;
-        if ((save_file_get_flags() & D_8032F0C0[o->oBehParams2ndByte])
+        if ((save_file_get_flags() & BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32))
             || ((o->oBehParams >> 24) & 0xFF) != 0)
             o->oAction = 2;
         else
@@ -56,7 +56,7 @@ void exclamation_box_act_1(void) {
         spawn_object(o, smlua_model_util_load(E_MODEL_EXCLAMATION_POINT), bhvRotatingExclamationMark);
         cur_obj_set_model(smlua_model_util_load(E_MODEL_EXCLAMATION_BOX_OUTLINE));
     }
-    if ((save_file_get_flags() & D_8032F0C0[o->oBehParams2ndByte])
+    if ((save_file_get_flags() & BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32))
         || ((o->oBehParams >> 24) & 0xFF) != 0) {
         o->oAction = 2;
         cur_obj_set_model(smlua_model_util_load(E_MODEL_EXCLAMATION_BOX));

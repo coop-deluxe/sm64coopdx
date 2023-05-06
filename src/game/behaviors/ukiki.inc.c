@@ -516,7 +516,7 @@ void ukiki_free_loop(void) {
     handle_cap_ukiki_reset();
 
     if(!(o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER)) {
-        exec_anim_sound_state(sUkikiSoundStates);
+        exec_anim_sound_state(sUkikiSoundStates, sizeof(sUkikiSoundStates) / sizeof(struct SoundState));
     }
 }
 

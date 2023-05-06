@@ -2313,9 +2313,11 @@ static void end_peach_cutscene_summon_jumbo_star(struct MarioState *m) {
         advance_cutscene_step(m);
     }
 
-    sEndJumboStarObj->oFaceAngleYaw += 0x0400;
-    generate_yellow_sparkles(0, 2528, -1800, 250.0f);
-    play_sound(SOUND_AIR_PEACH_TWINKLE, sEndJumboStarObj->header.gfx.cameraToObject);
+    if (sEndJumboStarObj) {
+        sEndJumboStarObj->oFaceAngleYaw += 0x0400;
+        generate_yellow_sparkles(0, 2528, -1800, 250.0f);
+        play_sound(SOUND_AIR_PEACH_TWINKLE, sEndJumboStarObj->header.gfx.cameraToObject);
+    }
 }
 
 #if defined(VERSION_EU)
@@ -2344,7 +2346,7 @@ static void end_peach_cutscene_spawn_peach(struct MarioState *m) {
         play_transition(WARP_TRANSITION_FADE_FROM_COLOR, 192, 255, 255, 255);
     }
     if (m->actionTimer == 40) {
-        obj_mark_for_deletion(sEndJumboStarObj);
+        if (sEndJumboStarObj) { obj_mark_for_deletion(sEndJumboStarObj); }
 
         sEndPeachObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_PEACH, bhvEndPeach, 0, 2428,
                                                  -1300, 0, 0, 0);

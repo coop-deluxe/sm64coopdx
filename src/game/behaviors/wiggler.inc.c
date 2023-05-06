@@ -72,6 +72,7 @@ void bhv_wiggler_body_part_update(void) {
     // This should never be higher then 3
     // in normal circumstances.
     if (o->oBehParams2ndByte > 3 || o->oBehParams2ndByte < 0) { return; }
+    if (!parent->oWigglerSegments) { return; }
     
     struct ChainSegment *segment = &parent->oWigglerSegments[o->oBehParams2ndByte];
     
@@ -126,11 +127,13 @@ void bhv_wiggler_body_part_update(void) {
  */
 void wiggler_init_segments(void) {
     struct ChainSegment *segments = mem_pool_alloc(gObjectMemoryPool, 4 * sizeof(struct ChainSegment));
+
+    // Each segment represents the global position and orientation of each
+    // object. Segment 0 represents the wiggler's head, and segment i>0
+    // represents body part i.
+    o->oWigglerSegments = segments;
+
     if (segments != NULL) {
-        // Each segment represents the global position and orientation of each
-        // object. Segment 0 represents the wiggler's head, and segment i>0
-        // represents body part i.
-        o->oWigglerSegments = segments;
         for (s32 i = 0; i <= 3; i++) {
             chain_segment_init(segments + i);
 
@@ -171,11 +174,12 @@ void wiggler_init_segments(void) {
  */
 void wiggler_update_segments(void) {
     f32 segmentLength = 35.0f * o->header.gfx.scale[0];
+    if (!o->oWigglerSegments) { return; }
 
     for (s32 i = 1; i <= 3; i++) {
         struct ChainSegment *prevBodyPart = &o->oWigglerSegments[i - 1];
         struct ChainSegment *bodyPart = &o->oWigglerSegments[i];
-
+        if (!prevBodyPart || !bodyPart) { continue; }
         f32 dx = bodyPart->posX - prevBodyPart->posX;
         f32 dy = bodyPart->posY - prevBodyPart->posY;
         f32 dz = bodyPart->posZ - prevBodyPart->posZ;
@@ -235,7 +239,7 @@ static void wiggler_act_walk(void) {
         //  to 4 until after this runs the first time. It indexes out of bounds
         //  and uses the value 113762.3 for one frame on US. This is fixed up
         //  in wiggler_init_segments if AVOID_UB is defined.
-        obj_forward_vel_approach(sWigglerSpeeds[o->oHealth - 1], 1.0f);
+        obj_forward_vel_approach(BHV_ARR(sWigglerSpeeds, o->oHealth - 1, f32), 1.0f);
 
         if (o->oWigglerWalkAwayFromWallTimer != 0) {
             o->oWigglerWalkAwayFromWallTimer -= 1;
@@ -522,11 +526,13 @@ void bhv_wiggler_update(void) {
         }
 
         // Update segment 0 with data from the wiggler object
-        o->oWigglerSegments[0].posX = o->oPosX;
-        o->oWigglerSegments[0].posY = o->oPosY;
-        o->oWigglerSegments[0].posZ = o->oPosZ;
-        o->oWigglerSegments[0].pitch = o->oFaceAnglePitch;
-        o->oWigglerSegments[0].yaw = o->oFaceAngleYaw;
+        if (o->oWigglerSegments) {
+            o->oWigglerSegments[0].posX = o->oPosX;
+            o->oWigglerSegments[0].posY = o->oPosY;
+            o->oWigglerSegments[0].posZ = o->oPosZ;
+            o->oWigglerSegments[0].pitch = o->oFaceAnglePitch;
+            o->oWigglerSegments[0].yaw = o->oFaceAngleYaw;
+        }
 
         // Update the rest of the segments to follow segment 0
         wiggler_update_segments();

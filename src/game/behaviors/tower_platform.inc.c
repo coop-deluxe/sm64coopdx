@@ -1,6 +1,7 @@
 // tower_platform.c.inc
 
 void bhv_wf_solid_tower_platform_loop(void) {
+    if (!o->parentObj) { return; }
     if (o->parentObj->oAction == 1) {
         cur_obj_become_tangible();
         o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
@@ -45,12 +46,14 @@ void bhv_wf_elevator_tower_platform_loop(void) {
             break;
     }
 
-    if (o->parentObj->oAction == 1) {
-        cur_obj_become_tangible();
-        o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-    } else if (o->parentObj->oAction > 1) {
-        cur_obj_become_intangible();
-        o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+    if (o->parentObj) {
+        if (o->parentObj->oAction == 1) {
+            cur_obj_become_tangible();
+            o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+        } else if (o->parentObj->oAction > 1) {
+            cur_obj_become_intangible();
+            o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+        }
     }
 }
 
@@ -73,12 +76,14 @@ void bhv_wf_sliding_tower_platform_loop(void) {
     o->oPosX += o->oVelX;
     o->oPosZ += o->oVelZ;
 
-    if (o->parentObj->oAction == 1) {
-        cur_obj_become_tangible();
-        o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-    } else if (o->parentObj->oAction > 1) {
-        cur_obj_become_intangible();
-        o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+    if (o->parentObj) {
+        if (o->parentObj->oAction == 1) {
+            cur_obj_become_tangible();
+            o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+        } else if (o->parentObj->oAction > 1) {
+            cur_obj_become_intangible();
+            o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+        }
     }
 }
 

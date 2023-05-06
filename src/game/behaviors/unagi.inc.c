@@ -53,9 +53,11 @@ void unagi_act_0(void) {
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer > 4500.0f && o->oSubAction != 0) {
         o->oAction = 1;
-        o->oPosX = o->oPathedStartWaypoint->pos[0];
-        o->oPosY = o->oPathedStartWaypoint->pos[1];
-        o->oPosZ = o->oPathedStartWaypoint->pos[2];
+        if (o->oPathedStartWaypoint) {
+            o->oPosX = o->oPathedStartWaypoint->pos[0];
+            o->oPosY = o->oPathedStartWaypoint->pos[1];
+            o->oPosZ = o->oPathedStartWaypoint->pos[2];
+        }
     } else if (o->oUnagiUnk1AC < 700.0f) {
         o->oSubAction = 1;
     }
@@ -200,7 +202,7 @@ void bhv_unagi_subobject_loop(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
-    if (o->parentObj->oUnagiUnk1B2 == 0) {
+    if (!o->parentObj || o->parentObj->oUnagiUnk1B2 == 0) {
         obj_mark_for_deletion(o);
     } else {
         val04 = 300.0f * o->oBehParams2ndByte;

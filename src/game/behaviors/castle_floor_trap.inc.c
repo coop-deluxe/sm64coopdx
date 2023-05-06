@@ -6,9 +6,12 @@ void bhv_floor_trap_in_castle_loop(void) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         onPlatform = onPlatform || (gMarioStates[i].marioObj->platform == o);
     }
-    if (onPlatform)
-        o->parentObj->oInteractStatus |= INT_STATUS_TRAP_TURN;
-    o->oFaceAngleRoll = o->parentObj->oFaceAngleRoll;
+    if (o->parentObj) {
+        if (onPlatform) {
+            o->parentObj->oInteractStatus |= INT_STATUS_TRAP_TURN;
+        }
+        o->oFaceAngleRoll = o->parentObj->oFaceAngleRoll;
+    }
 }
 
 void bhv_castle_floor_trap_init(void) {

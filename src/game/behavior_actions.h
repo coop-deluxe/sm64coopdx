@@ -1,6 +1,9 @@
 #ifndef BEHAVIOR_ACTIONS_H
 #define BEHAVIOR_ACTIONS_H
 
+#define BHV_ARR_CHECK(_arr, _idx, _arritem) (((size_t)_idx) < (sizeof(_arr) / sizeof(_arritem)))
+#define BHV_ARR(_arr, _idx, _arritem) (BHV_ARR_CHECK(_arr, _idx, _arritem) ? _arr[_idx] : 0)
+
 void spawn_mist_particles_variable(s32 count, s32 offsetY, f32 size);
 void bhv_spawn_star_no_level_exit(struct Object* object, u32 params, u8 networkSendEvent);
 void bhv_star_door_loop_2(void);

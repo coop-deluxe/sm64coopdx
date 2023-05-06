@@ -103,7 +103,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             // TODO: move find model to a utility file/function
             // find model
             u32 model = 0;
-            for (s32 j = 0; j < 256; j++) {
+            for (s32 j = 0; j < MAX_LOADED_GRAPH_NODES; j++) {
                 if (so->o->header.gfx.sharedChild == gLoadedGraphNodes[j]) {
                     model = j;
                     break;

@@ -64,6 +64,7 @@ static struct Object *monty_mole_select_available_hole(f32 minDistToMario) {
 
     struct Object *hole = sMontyMoleHoleList;
     s32 numAvailableHoles = 0;
+    s32 sanity = 0;
 
     while (hole != NULL) {
         player = nearest_player_to_object(hole);
@@ -74,6 +75,8 @@ static struct Object *monty_mole_select_available_hole(f32 minDistToMario) {
             }
         }
 
+        if (sanity++ > 100) { break; }
+        if (hole == hole->parentObj) { break; }
         hole = hole->parentObj;
     }
 

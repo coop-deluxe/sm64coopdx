@@ -587,7 +587,7 @@ s32 obj_begin_race(s32 noTimer) {
             level_control_timer(TIMER_CONTROL_SHOW);
             level_control_timer(TIMER_CONTROL_START);
 
-            o->parentObj->oKoopaRaceEndpointRaceBegun = TRUE;
+            if (o->parentObj) { o->parentObj->oKoopaRaceEndpointRaceBegun = TRUE; }
         }
 
         // Unfreeze mario and disable time stop to begin the race
@@ -630,7 +630,7 @@ u8 koopa_the_quick_act_show_init_text_continue_dialog(void) { return o->oAction 
 static void koopa_the_quick_act_show_init_text(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     s32 response = 0;
-    if (marioState && should_start_or_continue_dialog(marioState, o)) {
+    if (marioState && should_start_or_continue_dialog(marioState, o) && BHV_ARR_CHECK(sKoopaTheQuickProperties, o->oKoopaTheQuickRaceIndex, struct KoopaTheQuickProperties)) {
         response = obj_update_race_proposition_dialog(&gMarioStates[0], *sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].initText, koopa_the_quick_act_show_init_text_continue_dialog);
     }
 
@@ -738,7 +738,7 @@ static void koopa_the_quick_act_race(void) {
                     struct Object* player = nearest_player_to_object(o);
                     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
-                    if (o->parentObj->oKoopaRaceEndpointRaceStatus != 0 && distanceToPlayer > 1500.0f
+                    if (o->parentObj  && o->parentObj->oKoopaRaceEndpointRaceStatus != 0 && distanceToPlayer > 1500.0f
                         && (o->oPathedPrevWaypointFlags & WAYPOINT_MASK_00FF) < 28) {
                         // Move faster if mario has already finished the race or
                         // cheated by shooting from cannon
@@ -840,6 +840,7 @@ static void koopa_the_quick_act_after_race(void) {
     cur_obj_init_animation_with_sound(7);
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!o->parentObj) { return; }
 
     if (o->parentObj->oKoopaRaceEndpointUnk100 == 0) {
         if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
@@ -913,7 +914,7 @@ static void koopa_the_quick_update(void) {
             break;
     }
 
-    if (o->parentObj != o) {
+    if (o->parentObj != o && o->parentObj) {
         if (dist_between_objects(o, o->parentObj) < 400.0f) {
             o->parentObj->oKoopaRaceEndpointKoopaFinished = TRUE;
         }
