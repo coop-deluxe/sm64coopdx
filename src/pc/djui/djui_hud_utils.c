@@ -176,9 +176,14 @@ u32 djui_hud_get_screen_width(void) {
         windowWidth -= (GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + GFX_DIMENSIONS_FROM_RIGHT_EDGE(0));
     }
 
-    return (sResolution == RESOLUTION_N64)
-        ? ((use_forced_4by3() ? (4.0f / 3.0f) : GFX_DIMENSIONS_ASPECT_RATIO) * SCREEN_HEIGHT)
-        : (windowWidth / djui_gfx_get_scale());
+    if (sResolution == RESOLUTION_N64) {
+        f32 aspect = use_forced_4by3()
+            ? (4.0f / 3.0f)
+            : GFX_DIMENSIONS_ASPECT_RATIO;
+        return (aspect) * SCREEN_HEIGHT;
+    } else {
+        return (windowWidth / djui_gfx_get_scale());
+    }
 }
 
 u32 djui_hud_get_screen_height(void) {
