@@ -177,7 +177,7 @@ u32 djui_hud_get_screen_width(void) {
     }
 
     return (sResolution == RESOLUTION_N64)
-        ? (use_forced_4by3() ? (4.0f / 3.0f) : (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT))
+        ? ((use_forced_4by3() ? (4.0f / 3.0f) : GFX_DIMENSIONS_ASPECT_RATIO) * SCREEN_HEIGHT)
         : (windowWidth / djui_gfx_get_scale());
 }
 
