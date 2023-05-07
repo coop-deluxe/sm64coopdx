@@ -48,8 +48,13 @@ void DynOS_Actor_AddCustom(const SysPath &aFilename, const char *aActorName) {
     // Alloc and init the actors gfx list
     ActorGfx actorGfx   = {  };
     actorGfx.mGfxData   = _GfxData;
-    actorGfx.mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
     actorGfx.mPackIndex = MOD_PACK_INDEX;
+    actorGfx.mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(geoLayout, false);
+    if (!actorGfx.mGraphNode) {
+        Print("  ERROR: Couldn't load graph node for \"%s\"", actorName);
+        free(actorName);
+        return;
+    }
     actorGfx.mGraphNode->georef = georef;
 
     // Add to custom actors
