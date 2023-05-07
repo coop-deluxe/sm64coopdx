@@ -136,6 +136,7 @@ static void shift_UV_SINE(u32 vtxIndex, u16 vertcount, s16 speed, u16 bhv, u16 c
  *   Behavior param = scroll target index
  */
 void uv_update_scroll(void) {
+    if (!o) { return; }
     s16 speed = (s16) o->oPosX;
     u16 bhv = (u16) o->oPosY;
     u16 vertCount = (u16) o->oPosZ;
