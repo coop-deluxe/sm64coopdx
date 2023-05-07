@@ -24,8 +24,7 @@ static struct OrderedPacketTable* orderedPacketTable[MAX_PLAYERS] = { 0 };
 u8 gAllowOrderedPacketClear = 1;
 
 static void packet_ordered_check_for_processing(struct OrderedPacketTable* opt) {
-    // sanity check
-    SOFT_ASSERT(opt != NULL);
+    if (!opt) { return; }
 
     struct OrderedPacketList* opl = opt->packets;
     struct OrderedPacketList* oplLast = opl;
@@ -52,7 +51,7 @@ static void packet_ordered_check_for_processing(struct OrderedPacketTable* opt) 
     if (oplLast == opl) {
         // we processed the head of the list
         opt->packets = opl->next;
-    } else {
+    } else if (oplLast) {
         // we processed from after the head
         oplLast->next = opl->next;
     }
