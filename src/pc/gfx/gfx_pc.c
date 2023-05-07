@@ -401,12 +401,14 @@ static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, co
 }
 
 static void import_texture_rgba32(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint32_t width = rdp.texture_tile.line_size_bytes / 2;
     uint32_t height = (rdp.loaded_texture[tile].size_bytes / 2) / rdp.texture_tile.line_size_bytes;
     gfx_rapi->upload_texture(rdp.loaded_texture[tile].addr, width, height);
 }
 
 static void import_texture_rgba16(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[8192];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
@@ -428,6 +430,7 @@ static void import_texture_rgba16(int tile) {
 }
 
 static void import_texture_ia4(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -451,6 +454,7 @@ static void import_texture_ia4(int tile) {
 }
 
 static void import_texture_ia8(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -472,6 +476,7 @@ static void import_texture_ia8(int tile) {
 }
 
 static void import_texture_ia16(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[8192];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
@@ -493,6 +498,7 @@ static void import_texture_ia16(int tile) {
 }
 
 static void import_texture_i4(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -511,6 +517,7 @@ static void import_texture_i4(int tile) {
 }
 
 static void import_texture_i8(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -528,6 +535,7 @@ static void import_texture_i8(int tile) {
 }
 
 static void import_texture_ci4(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -551,6 +559,7 @@ static void import_texture_ci4(int tile) {
 }
 
 static void import_texture_ci8(int tile) {
+    if (!rdp.loaded_texture[tile].addr) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
