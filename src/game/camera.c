@@ -8338,12 +8338,17 @@ BAD_RETURN(s32) cutscene_bowser_arena_dialog(struct Camera *c) {
  * End the bowser arena cutscene.
  */
 BAD_RETURN(s32) cutscene_bowser_arena_end(struct Camera *c) {
+    if (!c) { return; }
     cutscene_stop_dialog(c);
     c->cutscene = 0;
     transition_next_state(c, 20);
     sStatusFlags |= CAM_FLAG_UNUSED_CUTSCENE_ACTIVE;
-    sModeOffsetYaw = sMarioCamState->faceAngle[1] + DEGREES(90);
-    gSecondCameraFocus->oBowserUnk88 = 2;
+    if (sMarioCamState) {
+        sModeOffsetYaw = sMarioCamState->faceAngle[1] + DEGREES(90);
+    }
+    if (gSecondCameraFocus) {
+        gSecondCameraFocus->oBowserUnk88 = 2;
+    }
 }
 
 /**
