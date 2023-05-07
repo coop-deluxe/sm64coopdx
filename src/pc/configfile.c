@@ -157,7 +157,7 @@ char         configLanguage[MAX_CONFIG_STRING]   = "";
 bool         configForce4By3                     = false;
 char         configCoopNetIp[MAX_CONFIG_STRING]  = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                   = DEFAULT_COOPNET_PORT;
-char         configPassword[MAX_PLAYER_STRING]   = "";
+char         configPassword[MAX_CONFIG_STRING]   = "";
 
 static const struct ConfigOption options[] = {
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
