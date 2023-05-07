@@ -1044,17 +1044,21 @@ struct Object* cur_obj_find_nearest_pole(void) {
 }
 
 struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist) {
+    if (!behavior || !dist) { return NULL; }
+
     behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
     struct Object *closestObj = NULL;
     struct Object *obj;
     struct ObjectNode *listHead;
     f32 minDist = 0x20000;
+    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    if (objList >= NUM_OBJ_LISTS) { return NULL; }
 
-    listHead = &gObjectLists[get_object_list_from_behavior(behaviorAddr)];
+    listHead = &gObjectLists[objList];
     obj = (struct Object *) listHead->next;
 
-    while (obj != (struct Object *) listHead) {
+    while (obj && obj != (struct Object *) listHead) {
         if (obj->behavior == behaviorAddr) {
             if (obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj != o) {
                 f32 objDist = dist_between_objects(o, obj);
@@ -1072,16 +1076,20 @@ struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *b
 }
 
 u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist) {
+    if (!behavior) { return 0; }
     behavior = smlua_override_behavior(behavior);
     u16 numObjs = 0;
     uintptr_t* behaviorAddr = segmented_to_virtual(behavior);
     struct Object* obj;
     struct ObjectNode* listHead;
 
-    listHead = &gObjectLists[get_object_list_from_behavior(behaviorAddr)];
+    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    if (objList >= NUM_OBJ_LISTS) { return 0; }
+
+    listHead = &gObjectLists[objList];
     obj = (struct Object*)listHead->next;
 
-    while (obj != (struct Object*)listHead) {
+    while (obj && obj != (struct Object*)listHead) {
         if (obj->behavior == behaviorAddr) {
             if (obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj != o) {
                 f32 objDist = dist_between_objects(o, obj);
@@ -1112,7 +1120,7 @@ s32 count_unimportant_objects(void) {
     struct ObjectNode *obj = listHead->next;
     s32 count = 0;
 
-    while (listHead != obj) {
+    while (obj && listHead != obj) {
         count++;
         obj = obj->next;
     }
@@ -1122,11 +1130,15 @@ s32 count_unimportant_objects(void) {
 
 s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
-    struct ObjectNode *listHead = &gObjectLists[get_object_list_from_behavior(behaviorAddr)];
+
+    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    if (objList >= NUM_OBJ_LISTS) { return 0; }
+
+    struct ObjectNode *listHead = &gObjectLists[objList];
     struct ObjectNode *obj = listHead->next;
     s32 count = 0;
 
-    while (listHead != obj) {
+    while (obj && listHead != obj) {
         if (((struct Object *) obj)->behavior == behaviorAddr) {
             count++;
         }
@@ -1140,7 +1152,11 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior) {
 struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
     behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
-    struct ObjectNode *listHead = &gObjectLists[get_object_list_from_behavior(behaviorAddr)];
+
+    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    if (objList >= NUM_OBJ_LISTS) { return 0; }
+
+    struct ObjectNode *listHead = &gObjectLists[objList];
     struct ObjectNode *obj = listHead->next;
 
     while (listHead != obj) {
