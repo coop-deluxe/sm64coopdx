@@ -50,6 +50,7 @@ void network_receive_player_settings(struct Packet* p) {
     if (playerModel >= CT_MAX) { playerModel = CT_MARIO; }
 
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
+    if (!np) { LOG_ERROR("Failed to retrieve network player."); return; }
     if (snprintf(np->name, MAX_PLAYER_STRING, "%s", playerName) < 0) {
         LOG_INFO("truncating player name");
     }

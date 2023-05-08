@@ -39,6 +39,7 @@ struct NetworkPlayer {
     u8 fadeOpacity;
     u8 onRxSeqId;
     u8 modelIndex;
+    u8 gag;
     u32 ping;
     struct PlayerPalette palette;
     char name[MAX_PLAYER_STRING+1];
