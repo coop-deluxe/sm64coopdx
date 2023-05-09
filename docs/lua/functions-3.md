@@ -3037,6 +3037,27 @@
 <br />
 
 
+## [determine_interaction](#determine_interaction)
+
+### Lua Example
+`local integerValue = determine_interaction(m, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 determine_interaction(struct MarioState *m, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
 
 ### Lua Example

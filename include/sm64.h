@@ -169,6 +169,7 @@
 #define ACT_FLAG_WATER_OR_TEXT               /* 0x20000000 */ (1 << 29)
 #define ACT_FLAG_CUSTOM_ACTION               /* 0x40000000 */ (1 << 30)
 #define ACT_FLAG_THROWING                    /* 0x80000000 */ (1 << 31)
+#define ACT_FLAG_FLYING                      (ACT_FLAG_AIR | ACT_FLAG_DIVING | ACT_FLAG_ATTACKING | ACT_FLAG_SWIMMING_OR_FLYING)
 
 #define ACT_UNINITIALIZED              0x00000000 // (0x000)
 

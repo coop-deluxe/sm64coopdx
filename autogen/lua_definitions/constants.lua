@@ -3462,44 +3462,6 @@ GRAPH_RENDER_PLAYER = (1 << 7)
 GRAPH_RENDER_Z_BUFFER = (1 << 3)
 
 --- @type integer
-INT_ANY_ATTACK = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE | INT_HIT_FROM_BELOW)
-
---- @type integer
-INT_ATTACK_NOT_FROM_BELOW = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)
-
---- @type integer
-INT_ATTACK_NOT_WEAK_FROM_ABOVE = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_HIT_FROM_BELOW)
-
---- @type integer
-INT_ATTACK_SLIDE = (INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL)
-
---- @class InteractionFlag
-
---- @type InteractionFlag
-INT_GROUND_POUND_OR_TWIRL = (1 << 0)
-
---- @type InteractionFlag
-INT_PUNCH = (1 << 1)
-
---- @type InteractionFlag
-INT_KICK = (1 << 2)
-
---- @type InteractionFlag
-INT_TRIP = (1 << 3)
-
---- @type InteractionFlag
-INT_SLIDE_KICK = (1 << 4)
-
---- @type InteractionFlag
-INT_FAST_ATTACK_OR_SHELL = (1 << 5)
-
---- @type InteractionFlag
-INT_HIT_FROM_ABOVE = (1 << 6)
-
---- @type InteractionFlag
-INT_HIT_FROM_BELOW = (1 << 7)
-
---- @type integer
 ATTACK_FAST_ATTACK = 5
 
 --- @type integer
@@ -3516,6 +3478,18 @@ ATTACK_KICK_OR_TRIP = 2
 
 --- @type integer
 ATTACK_PUNCH = 1
+
+--- @type integer
+INT_ANY_ATTACK = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE | INT_HIT_FROM_BELOW)
+
+--- @type integer
+INT_ATTACK_NOT_FROM_BELOW = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)
+
+--- @type integer
+INT_ATTACK_NOT_WEAK_FROM_ABOVE = (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_HIT_FROM_BELOW)
+
+--- @type integer
+INT_ATTACK_SLIDE = (INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL)
 
 --- @type integer
 INT_STATUS_ATTACKED_MARIO = (1 << 13)
@@ -3612,6 +3586,38 @@ INT_SUBTYPE_STAR_DOOR = 0x00000020
 
 --- @type integer
 INT_SUBTYPE_TWIRL_BOUNCE = 0x00000080
+
+--- @class InteractionFlag
+
+--- @type InteractionFlag
+INT_GROUND_POUND = (1 << 0)
+
+--- @type InteractionFlag
+INT_PUNCH = (1 << 1)
+
+--- @type InteractionFlag
+INT_KICK = (1 << 2)
+
+--- @type InteractionFlag
+INT_TRIP = (1 << 3)
+
+--- @type InteractionFlag
+INT_SLIDE_KICK = (1 << 4)
+
+--- @type InteractionFlag
+INT_FAST_ATTACK_OR_SHELL = (1 << 5)
+
+--- @type InteractionFlag
+INT_HIT_FROM_ABOVE = (1 << 6)
+
+--- @type InteractionFlag
+INT_HIT_FROM_BELOW = (1 << 7)
+
+--- @type InteractionFlag
+INT_TWIRL = (1 << 8)
+
+--- @type InteractionFlag
+INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL)
 
 --- @class InteractionType
 
@@ -7285,6 +7291,9 @@ ACT_FLAG_CUSTOM_ACTION = (1 << 30)
 
 --- @type integer
 ACT_FLAG_DIVING = (1 << 19)
+
+--- @type integer
+ACT_FLAG_FLYING = (ACT_FLAG_AIR | ACT_FLAG_DIVING | ACT_FLAG_ATTACKING | ACT_FLAG_SWIMMING_OR_FLYING)
 
 --- @type integer
 ACT_FLAG_HANGING = (1 << 21)

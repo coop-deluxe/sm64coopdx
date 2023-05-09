@@ -12425,6 +12425,25 @@ int smlua_func_stop_sounds_in_continuous_banks(UNUSED lua_State* L) {
  // interaction.h //
 ///////////////////
 
+int smlua_func_determine_interaction(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "determine_interaction", 2, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "determine_interaction"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "determine_interaction"); return 0; }
+
+    lua_pushinteger(L, determine_interaction(m, o));
+
+    return 1;
+}
+
 int smlua_func_does_mario_have_normal_cap_on_head(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -30163,6 +30182,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stop_sounds_in_continuous_banks", smlua_func_stop_sounds_in_continuous_banks);
 
     // interaction.h
+    smlua_bind_function(L, "determine_interaction", smlua_func_determine_interaction);
     smlua_bind_function(L, "does_mario_have_normal_cap_on_head", smlua_func_does_mario_have_normal_cap_on_head);
     smlua_bind_function(L, "get_door_save_file_flag", smlua_func_get_door_save_file_flag);
     smlua_bind_function(L, "interact_damage", smlua_func_interact_damage);

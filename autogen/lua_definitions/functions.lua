@@ -3932,6 +3932,13 @@ function stop_sounds_in_continuous_banks()
 end
 
 --- @param m MarioState
+--- @param o Object
+--- @return integer
+function determine_interaction(m, o)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return integer
 function does_mario_have_normal_cap_on_head(m)
     -- ...

@@ -776,6 +776,7 @@
 <br />
 
 - interaction.h
+   - [determine_interaction](functions-3.md#determine_interaction)
    - [does_mario_have_normal_cap_on_head](functions-3.md#does_mario_have_normal_cap_on_head)
    - [get_door_save_file_flag](functions-3.md#get_door_save_file_flag)
    - [interact_damage](functions-3.md#interact_damage)

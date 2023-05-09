@@ -2533,7 +2533,7 @@ s32 cur_obj_is_mario_ground_pounding_platform(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
-            if (gMarioStates[i].action == ACT_GROUND_POUND_LAND) {
+            if (determine_interaction(&gMarioStates[i], o) & INT_GROUND_POUND) {
                 return TRUE;
             }
         }
