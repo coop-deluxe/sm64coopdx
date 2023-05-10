@@ -594,6 +594,7 @@ struct GraphNode *geo_remove_child(struct GraphNode *graphNode) {
     if (graphNode == NULL) { return NULL; }
 
     parent = graphNode->parent;
+    if (!parent) { return NULL; }
     firstChild = &parent->children;
 
     // Remove link with siblings

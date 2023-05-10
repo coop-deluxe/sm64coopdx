@@ -345,9 +345,11 @@ void mario_drop_held_object(struct MarioState *m) {
         // ! When dropping an object instead of throwing it, it will be put at Mario's
         // y-positon instead of the HOLP's y-position. This fact is often exploited when
         // cloning objects.
-        m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0];
-        m->heldObj->oPosY = m->pos[1];
-        m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2];
+        if (m->marioBodyState) {
+            m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0];
+            m->heldObj->oPosY = m->pos[1];
+            m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2];
+        }
 
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
 
@@ -369,9 +371,11 @@ void mario_throw_held_object(struct MarioState *m) {
 
         obj_set_held_state(m->heldObj, bhvCarrySomething5);
 
-        m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0] + 32.0f * sins(m->faceAngle[1]);
-        m->heldObj->oPosY = m->marioBodyState->heldObjLastPosition[1];
-        m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2] + 32.0f * coss(m->faceAngle[1]);
+        if (m->marioBodyState) {
+            m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0] + 32.0f * sins(m->faceAngle[1]);
+            m->heldObj->oPosY = m->marioBodyState->heldObjLastPosition[1];
+            m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2] + 32.0f * coss(m->faceAngle[1]);
+        }
 
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
 
@@ -1277,6 +1281,8 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
     // move player outside of other player
     f32 extentY = m->marioObj->hitboxHeight;
     f32 radius = m->marioObj->hitboxRadius * 2.0f;
+
+    if (!m->marioBodyState || !m2->marioBodyState) { return FALSE; }
 
     f32* localTorso = m->marioBodyState->torsoPos;
     f32* remoteTorso = m2->marioBodyState->torsoPos;

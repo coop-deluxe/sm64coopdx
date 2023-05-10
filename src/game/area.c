@@ -296,7 +296,10 @@ void load_mario_area(void) {
     stop_sounds_in_continuous_banks();
     load_area(gMarioSpawnInfo->areaIndex);
 
+    if (!gCurrentArea) { return; }
+
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (!gMarioStates[i].spawnInfo) { continue; }
         gMarioStates[i].spawnInfo->areaIndex = gCurrentArea->index;
     }
 

@@ -523,6 +523,7 @@ s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (!gMarioStates[i].visibleToEnemies) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
+        if (!player) { continue; }
         f32 mGfxX = player->header.gfx.pos[0];
         f32 mGfxY = player->header.gfx.pos[1];
         f32 mGfxZ = player->header.gfx.pos[2];
@@ -540,6 +541,7 @@ s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
+        if (!player) { continue; }
         f32 mGfxX = player->header.gfx.pos[0];
         f32 mGfxY = player->header.gfx.pos[1];
         f32 mGfxZ = player->header.gfx.pos[2];
@@ -606,6 +608,7 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     struct MarioState* nearest = NULL;
     f32 nearestDist = 0;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
         if (!gMarioStates[i].visibleToEnemies) { continue; }
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -624,6 +627,7 @@ struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj) {
     struct MarioState* nearest = NULL;
     f32 nearestDist = 0;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
         if (!is_player_active(&gMarioStates[i])) { continue; }
         float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
@@ -655,6 +659,7 @@ struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj)
     f32 nearestDist = 0;
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
         if (gMarioStates[i].interactObj != obj) { continue; }
         if (!gMarioStates[i].visibleToEnemies) { continue; }

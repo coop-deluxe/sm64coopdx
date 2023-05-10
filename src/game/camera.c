@@ -11579,7 +11579,7 @@ void fov_default(struct MarioState *m) {
         camera_approach_f32_symmetric_bool(&gFOVState.fov, 45.f, (45.f - gFOVState.fov) / 30.f);
         gFOVState.unusedIsSleeping = 0;
     }
-    if (m->area->camera->cutscene == CUTSCENE_0F_UNUSED) {
+    if (m->area && m->area->camera && m->area->camera->cutscene == CUTSCENE_0F_UNUSED) {
         gFOVState.fov = 45.f;
     }
 }
@@ -11600,7 +11600,7 @@ void approach_fov_60(UNUSED struct MarioState *m) {
 void approach_fov_45(struct MarioState *m) {
     f32 targetFoV = gFOVState.fov;
 
-    if (m->area->camera->mode == CAMERA_MODE_FIXED && m->area->camera->cutscene == 0) {
+    if (m->area && m->area->camera && m->area->camera->mode == CAMERA_MODE_FIXED && m->area->camera->cutscene == 0) {
         targetFoV = 45.f;
     } else {
         targetFoV = 45.f;
@@ -11620,7 +11620,7 @@ void approach_fov_80(UNUSED struct MarioState *m) {
 void set_fov_bbh(struct MarioState *m) {
     f32 targetFoV = gFOVState.fov;
 
-    if (m->area->camera->mode == CAMERA_MODE_FIXED && m->area->camera->cutscene == 0) {
+    if (m->area && m->area->camera && m->area->camera->mode == CAMERA_MODE_FIXED && m->area->camera->cutscene == 0) {
         targetFoV = 60.f;
     } else {
         targetFoV = 45.f;

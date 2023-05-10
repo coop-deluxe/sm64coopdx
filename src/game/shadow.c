@@ -583,6 +583,7 @@ s8 correct_shadow_solidity_for_animations(s32 playerIndex, u8 initialSolidity, s
 
     extern struct MarioState gMarioStates[];
     player = gMarioStates[playerIndex].marioObj;
+    if (!player) { return SHADOW_SOLIDITY_NO_SHADOW; }
 
     animFrame = player->header.gfx.animInfo.animFrame;
     switch (player->header.gfx.animInfo.animID) {

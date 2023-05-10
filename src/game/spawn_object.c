@@ -141,8 +141,8 @@ void unused_deallocate(struct LinkedList *freeList, struct LinkedList *node) {
 static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *obj) {
     if (!obj || !freeList) { return; }
     // Remove from object list
-    obj->next->prev = obj->prev;
-    obj->prev->next = obj->next;
+    if (obj->next) { obj->next->prev = obj->prev; }
+    if (obj->prev) { obj->prev->next = obj->next; }
 
     // Insert at beginning of free list
     obj->next = freeList->next;

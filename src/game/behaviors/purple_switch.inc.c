@@ -16,7 +16,7 @@ void bhv_purple_switch_loop(void) {
     u8 anyPlayerOnPlatform = FALSE;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) {
+        if (gMarioStates[i].marioObj && gMarioStates[i].marioObj->platform == o) {
             anyPlayerOnPlatform = TRUE;
             break;
         }

@@ -2532,6 +2532,7 @@ s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
 s32 cur_obj_is_mario_ground_pounding_platform(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj->platform == o) {
             if (gMarioStates[i].action == ACT_GROUND_POUND_LAND) {
                 return TRUE;
@@ -2554,6 +2555,7 @@ void spawn_mist_particles_with_sound(u32 sp18) {
 void cur_obj_push_mario_away(f32 radius) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
+        if (!player) { continue; }
         f32 marioRelX = player->oPosX - o->oPosX;
         f32 marioRelZ = player->oPosZ - o->oPosZ;
         f32 marioDist = sqrtf(sqr(marioRelX) + sqr(marioRelZ));
@@ -2570,6 +2572,7 @@ void cur_obj_push_mario_away(f32 radius) {
 void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct Object* player = gMarioStates[i].marioObj;
+        if (!player) { continue; }
         f32 marioRelY = player->oPosY - o->oPosY;
 
         if (marioRelY < 0.0f) {
@@ -2733,6 +2736,7 @@ s32 cur_obj_mario_far_away(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
+        if (!player) { continue; }
         f32 dx = o->oHomeX - player->oPosX;
         f32 dy = o->oHomeY - player->oPosY;
         f32 dz = o->oHomeZ - player->oPosZ;
@@ -2880,6 +2884,7 @@ void cur_obj_if_hit_wall_bounce_away(void) {
 }
 
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
+    if (!gMarioStates[0].marioObj) { return FALSE; }
     if (absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()) {
         cur_obj_unhide();
         return FALSE;

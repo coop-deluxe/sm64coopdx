@@ -347,10 +347,13 @@ void bhv_mario_update(void) {
  * including firstObj itself. Return the number of objects that were updated.
  */
 s32 update_objects_starting_at(struct ObjectNode *objList, struct ObjectNode *firstObj) {
+    if (!firstObj) { return 0; }
+
     s32 count = 0;
 
     while (objList != firstObj) {
         gCurrentObject = (struct Object *) firstObj;
+        if (!gCurrentObject) { break; }
 
         gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_HAS_ANIMATION;
         cur_obj_update();
@@ -372,11 +375,13 @@ s32 update_objects_starting_at(struct ObjectNode *objList, struct ObjectNode *fi
  * updated)
  */
 s32 update_objects_during_time_stop(struct ObjectNode *objList, struct ObjectNode *firstObj) {
+    if (!firstObj) { return 0; }
     s32 count = 0;
     s32 unfrozen;
 
     while (objList != firstObj) {
         gCurrentObject = (struct Object *) firstObj;
+        if (!gCurrentObject) { break; }
 
         unfrozen = FALSE;
 
@@ -433,10 +438,12 @@ s32 update_objects_in_list(struct ObjectNode *objList) {
  * Unload any objects in the list that have been deactivated.
  */
 s32 unload_deactivated_objects_in_list(struct ObjectNode *objList) {
+    if (!objList) { return 0; }
     struct ObjectNode *obj = objList->next;
 
     while (objList != obj) {
         gCurrentObject = (struct Object *) obj;
+        if (!gCurrentObject) { break; }
 
         obj = obj->next;
 

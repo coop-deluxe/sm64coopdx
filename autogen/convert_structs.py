@@ -83,7 +83,8 @@ override_field_invisible = {
 }
 
 override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller" ],
+    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera" ],
+    "ObjectNode": [ "next", "prev" ],
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
@@ -96,7 +97,11 @@ override_field_immutable = {
     "ModFile": [ "*" ],
     "BassAudio": [ "*" ],
     "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
-    "SpawnInfo": [ "syncID" ]
+    "SpawnInfo": [ "syncID" ],
+    "CustomLevelInfo": [ "next" ],
+    "GraphNode": [ "next", "prev", "parent" ],
+    "ObjectWarpNode": [ "next "],
+    "SpawnInfo": [ "next" ],
 }
 
 override_field_version_excludes = {
@@ -265,7 +270,29 @@ def get_struct_field_info(struct, field):
 
     return fid, ftype, fimmutable, lvt, lot
 
+def output_nuke_struct(struct):
+    sid = struct['identifier']
+    print('function Nuke' + sid + "(struct)")
+    for field in struct['fields']:
+        fid, ftype, fimmutable, lvt, lot = get_struct_field_info(struct, field)
+        if fimmutable == 'true':
+            continue
+        if sid in override_field_invisible:
+            if fid in override_field_invisible[sid]:
+                continue
+        if lvt == 'LVT_COBJECT':
+            print('    Nuke' + ftype.replace('struct ', '') + '(struct.' + fid + ')')
+        elif lvt == 'LVT_COBJECT_P':
+            print('    struct.' + fid + ' = nil')
+        else:
+            print('    struct.' + fid + ' = 0')
+    print('end')
+    print('')
+
 def build_struct(struct):
+    # debug print out lua nuke functions
+    # output_nuke_struct(struct)
+
     sid = struct['identifier']
 
     # build up table and track column width

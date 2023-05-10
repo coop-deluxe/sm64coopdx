@@ -85,6 +85,7 @@ s32 is_anim_past_end(struct MarioState *m) {
  */
 s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
     struct Object *o = m->marioObj;
+    if (!o || !m->animation) { return 0; }
     struct Animation *targetAnim = m->animation->targetAnim;
 
     if (load_patchable_table(m->animation, targetAnimID)) {
@@ -118,6 +119,7 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
  */
 s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel) {
     struct Object *o = m->marioObj;
+    if (!o || !m->animation) { return 0; }
     struct Animation *targetAnim = m->animation->targetAnim;
 
     if (load_patchable_table(m->animation, targetAnimID)) {
