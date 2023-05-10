@@ -1874,6 +1874,10 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
         return hookUseActSelect;
     }
 
+    if (gLevelValues.disableActs) {
+        return 0;
+    }
+
     if (gCurrCourseNum > COURSE_STAGES_MAX || warpCheckpointActive) {
         return 0;
     }
