@@ -99,7 +99,7 @@ bool DynOS_Warp_ExitLevel(s32 aDelay) {
     play_shell_music();
     stop_shell_music();
     stop_cap_music();
-    func_80321080(0);
+    stop_secondary_music(0);
     fadeout_music(0);
     fadeout_level_music(0);
 
@@ -131,7 +131,7 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
     play_shell_music();
     stop_shell_music();
     stop_cap_music();
-    func_80321080(0);
+    stop_secondary_music(0);
     fadeout_music(0);
     fadeout_level_music(0);
 
@@ -238,7 +238,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         play_shell_music();
         stop_shell_music();
         stop_cap_music();
-        func_80321080(0);
+        stop_secondary_music(0);
         fadeout_music(0);
         fadeout_level_music(0);
 
