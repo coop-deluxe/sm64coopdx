@@ -29,7 +29,7 @@ extern const Gfx eyerok_seg5_dl_0500CAE8[];
 extern const Gfx eyerok_seg5_dl_0500CB80[];
 extern const Gfx eyerok_seg5_dl_0500CC18[];
 extern const Gfx eyerok_seg5_dl_0500CC30[];
-extern const struct Animation *const eyerok_seg5_anims_050116E4[];
+extern const struct AnimationTable eyerok_seg5_anims_050116E4;
 
 // klepto
 extern const GeoLayout klepto_geo[];
@@ -65,7 +65,7 @@ extern const Gfx klepto_seg5_dl_05005020[];
 extern const Gfx klepto_seg5_dl_05005068[];
 extern const Gfx klepto_seg5_dl_05005130[];
 extern const Gfx klepto_seg5_dl_05005178[];
-extern const struct Animation *const klepto_seg5_anims_05008CFC[];
+extern const struct AnimationTable klepto_seg5_anims_05008CFC;
 
 // pokey
 extern const GeoLayout pokey_head_geo[];

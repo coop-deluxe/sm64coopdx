@@ -9,7 +9,7 @@ extern const Gfx birds_seg5_dl_05000528[];
 extern const Gfx birds_seg5_dl_05000598[];
 extern const Gfx birds_seg5_dl_05000600[];
 extern const Gfx birds_seg5_dl_05000670[];
-extern const struct Animation *const birds_seg5_anims_050009E8[];
+extern const struct AnimationTable birds_seg5_anims_050009E8;
 
 // peach
 extern const GeoLayout peach_geo_000098[];
@@ -65,7 +65,7 @@ extern const Gfx peach_seg5_dl_05009940[];
 extern const Gfx peach_seg5_dl_05009E20[];
 extern const Gfx peach_seg5_dl_0500A0A8[];
 extern const Gfx peach_seg5_us_dl_0500A188[];
-extern const struct Animation *const peach_seg5_anims_0501C41C[];
+extern const struct AnimationTable peach_seg5_anims_0501C41C;
 
 // yoshi
 extern const GeoLayout yoshi_geo[];
@@ -92,6 +92,6 @@ extern const Gfx yoshi_seg5_dl_05022160[];
 extern const Gfx yoshi_seg5_dl_050222A8[];
 extern const Gfx yoshi_seg5_dl_05022408[];
 extern const Gfx yoshi_seg5_dl_05022608[];
-extern const struct Animation *const yoshi_seg5_anims_05024100[];
+extern const struct AnimationTable yoshi_seg5_anims_05024100;
 
 #endif

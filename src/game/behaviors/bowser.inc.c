@@ -1287,14 +1287,16 @@ void bhv_bowser_loop(void) {
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     // look for animation difference and override
+
+    struct AnimationTable *animations = o->oAnimations;
     struct Animation* anim = NULL;
-    if (o->oAnimations != NULL && networkBowserAnimationIndex <= 26) {
-        anim = o->oAnimations[networkBowserAnimationIndex];
-        if (anim != NULL && o->header.gfx.animInfo.curAnim != anim) {
-            geo_obj_init_animation(&o->header.gfx, &anim);
+    if (animations && networkBowserAnimationIndex < animations->count) {
+        anim = (struct Animation*)animations->anims[networkBowserAnimationIndex];
+        if (o->header.gfx.animInfo.curAnim != anim) {
+            geo_obj_init_animation(&o->header.gfx, anim);
         }
     }
-    
+
     // If Bowser isn't in a cutscene, It's been played already.
     if (!bowserCutscenePlayed && (o->oAction != 5 && o->oAction != 6 && o->oAction != 20)) {
         bowserCutscenePlayed = TRUE;
@@ -1345,11 +1347,13 @@ void bhv_bowser_loop(void) {
         }
 
     // update animation index
-    anim = o->oAnimations[networkBowserAnimationIndex];
-    if (o->header.gfx.animInfo.curAnim != anim) {
-        for (s32 i = 0; i < 32; i++) {
-            if (o->header.gfx.animInfo.curAnim == o->oAnimations[i]) {
-                networkBowserAnimationIndex = i;
+    if (animations) {
+        anim = (struct Animation*)animations->anims[networkBowserAnimationIndex];
+        if (o->header.gfx.animInfo.curAnim != anim) {
+            for (u32 i = 0; i < animations->count; i++) {
+                if (o->header.gfx.animInfo.curAnim == o->oAnimations->anims[i]) {
+                    networkBowserAnimationIndex = i;
+                }
             }
         }
     }

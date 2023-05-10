@@ -24,6 +24,9 @@
 --- @field public unusedBoneCount integer
 --- @field public values Pointer_integer
 
+--- @class AnimationTable
+--- @field public count integer
+
 --- @class Area
 --- @field public camera Camera
 --- @field public flags integer

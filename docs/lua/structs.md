@@ -3,6 +3,7 @@
 # Supported Structs
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
+- [AnimationTable](#AnimationTable)
 - [Area](#Area)
 - [BassAudio](#BassAudio)
 - [BehaviorDialogs](#BehaviorDialogs)
@@ -107,12 +108,22 @@
 | animYTransDivisor | `integer` |  |
 | flags | `integer` |  |
 | index | `Pointer` <`integer`> |  |
-| length | `integer` |  |
+| length | `integer` | read-only |
 | loopEnd | `integer` |  |
 | loopStart | `integer` |  |
 | startFrame | `integer` |  |
 | unusedBoneCount | `integer` |  |
 | values | `Pointer` <`integer`> |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [AnimationTable](#AnimationTable)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| count | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

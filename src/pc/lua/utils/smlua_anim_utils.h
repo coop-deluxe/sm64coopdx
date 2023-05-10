@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-typedef struct Animation* ObjectAnimPointer;
+typedef struct AnimationTable ObjectAnimPointer;
 
 struct GlobalObjectAnimations {
     ObjectAnimPointer* amp_seg8_anims_08004034;

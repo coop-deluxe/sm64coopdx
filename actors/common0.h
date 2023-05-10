@@ -21,7 +21,7 @@ extern const Gfx amp_seg8_dl_080039D0[];
 extern const Gfx amp_seg8_dl_08003DA8[];
 extern const Gfx amp_seg8_dl_08003DD8[];
 extern const Gfx amp_seg8_dl_08003E00[];
-extern const struct Animation *const amp_seg8_anims_08004034[];
+extern const struct AnimationTable amp_seg8_anims_08004034;
 
 // blue_coin_switch
 extern const GeoLayout blue_coin_switch_geo[];
@@ -44,7 +44,7 @@ extern const Gfx bobomb_seg8_dl_08022D78[];
 extern const Gfx bobomb_seg8_dl_08023270[];
 extern const Gfx bobomb_seg8_dl_08023378[];
 extern const Gfx bobomb_seg8_dl_08023480[];
-extern const struct Animation *const bobomb_seg8_anims_0802396C[];
+extern const struct AnimationTable bobomb_seg8_anims_0802396C;
 
 // bowling_ball
 extern const GeoLayout bowling_ball_geo[];
@@ -108,7 +108,7 @@ extern const Gfx chuckya_seg8_dl_0800A958[];
 extern const Gfx chuckya_seg8_dl_0800A998[];
 extern const Gfx chuckya_seg8_dl_0800AB70[];
 extern const Gfx chuckya_seg8_dl_0800ABE8[];
-extern const struct Animation *const chuckya_seg8_anims_0800C070[];
+extern const struct AnimationTable chuckya_seg8_anims_0800C070;
 
 // exclamation_box
 extern const GeoLayout exclamation_box_geo[];
@@ -149,7 +149,7 @@ extern const Gfx flyguy_seg8_dl_080113A8[];
 extern const Gfx flyguy_seg8_dl_08011420[];
 extern const Gfx flyguy_seg8_dl_080116D0[];
 extern const Gfx flyguy_seg8_dl_08011710[];
-extern const struct Animation *const flyguy_seg8_anims_08011A64[];
+extern const struct AnimationTable flyguy_seg8_anims_08011A64;
 
 // goomba
 extern const GeoLayout goomba_geo[];
@@ -165,7 +165,7 @@ extern const Gfx goomba_seg8_dl_0801CF78[];
 extern const Gfx goomba_seg8_dl_0801D0D0[];
 extern const Gfx goomba_seg8_dl_0801D360[];
 extern const Gfx goomba_seg8_dl_0801D760[];
-extern const struct Animation *const goomba_seg8_anims_0801DA4C[];
+extern const struct AnimationTable goomba_seg8_anims_0801DA4C;
 
 // heart
 extern const GeoLayout heart_geo[];

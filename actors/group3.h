@@ -30,7 +30,7 @@ extern const Gfx king_bobomb_seg5_dl_0500B3C8[];
 extern const Gfx king_bobomb_seg5_dl_0500B418[];
 extern const Gfx king_bobomb_seg5_dl_0500B5F0[];
 extern const Gfx king_bobomb_seg5_dl_0500B6C0[];
-extern const struct Animation *const king_bobomb_seg5_anims_0500FE30[];
+extern const struct AnimationTable king_bobomb_seg5_anims_0500FE30;
 
 // water_bubble
 extern const GeoLayout water_bomb_geo[];

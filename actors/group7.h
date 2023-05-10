@@ -21,7 +21,7 @@ extern const Gfx penguin_seg5_dl_05007238[];
 extern const Gfx penguin_seg5_dl_050072C8[];
 extern const Gfx penguin_seg5_dl_05007358[];
 extern const Gfx penguin_seg5_dl_05007540[];
-extern const struct Animation *const penguin_seg5_anims_05008B74[];
+extern const struct AnimationTable penguin_seg5_anims_05008B74;
 extern const Collision penguin_seg5_collision_05008B88[];
 
 // snowman
@@ -41,7 +41,7 @@ extern const Gfx snowman_seg5_dl_0500CBC0[];
 extern const Gfx snowman_seg5_dl_0500CBF8[];
 extern const Gfx snowman_seg5_dl_0500CCB0[];
 extern const Gfx snowman_seg5_dl_0500CCE8[];
-extern const struct Animation *const snowman_seg5_anims_0500D118[];
+extern const struct AnimationTable snowman_seg5_anims_0500D118;
 
 // spindrift
 extern const GeoLayout spindrift_geo[];
@@ -59,6 +59,6 @@ extern const Gfx spindrift_seg5_dl_05002AD8[];
 extern const Gfx spindrift_seg5_dl_05002B30[];
 extern const Gfx spindrift_seg5_dl_05002C98[];
 extern const Gfx spindrift_seg5_dl_05002D08[];
-extern const struct Animation *const spindrift_seg5_anims_05002D68[];
+extern const struct AnimationTable spindrift_seg5_anims_05002D68;
 
 #endif

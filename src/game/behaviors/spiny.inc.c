@@ -36,28 +36,28 @@ static u8 sSpinyWalkAttackHandlers[] = {
 static u32 spinyAnimCache = 0;
 
 static void spiny_to_anim_cache(void) {
-    if (o->oAnimations == (struct Animation**)spiny_egg_seg5_anims_050157E4) {
+    if (o->oAnimations == &spiny_egg_seg5_anims_050157E4) {
         spinyAnimCache = 0;
-    } else if (o->oAnimations == (struct Animation**)spiny_seg5_anims_05016EAC) {
+    } else if (o->oAnimations == &spiny_seg5_anims_05016EAC) {
         spinyAnimCache = 1;
     }
 }
 
 static void spiny_from_anim_cache(void) {
-    struct Animation** anim = NULL;
+    struct AnimationTable* anim = NULL;
     switch (spinyAnimCache) {
         case 0:
-            anim = (struct Animation**)spiny_egg_seg5_anims_050157E4;
+            anim = (struct AnimationTable*)&spiny_egg_seg5_anims_050157E4;
             break;
         case 1:
-            anim = (struct Animation**)spiny_seg5_anims_05016EAC;
+            anim = (struct AnimationTable*)&spiny_seg5_anims_05016EAC;
             break;
         default:
             break;
     }
 
     if (anim != o->oAnimations) {
-        obj_init_animation_with_sound(o, (const struct Animation* const*)anim, 0);
+        obj_init_animation_with_sound(o, anim, 0);
     }
 }
 
@@ -203,7 +203,7 @@ static void spiny_act_thrown_by_lakitu(void) {
         if (o->oMoveFlags & OBJ_MOVE_LANDED) {
             cur_obj_play_sound_2(SOUND_OBJ_SPINY_UNK59);
             cur_obj_set_model(smlua_model_util_load(E_MODEL_SPINY));
-            obj_init_animation_with_sound(o, spiny_seg5_anims_05016EAC, 0);
+            obj_init_animation_with_sound(o, (struct AnimationTable*)&spiny_seg5_anims_05016EAC, 0);
             o->oGraphYOffset = -17.0f;
 
             o->oFaceAnglePitch = 0;
@@ -259,7 +259,7 @@ void bhv_spiny_update(void) {
             if ((lakitu->oSubAction == ENEMY_LAKITU_SUB_ACT_HOLD_SPINY) && (o->oAction == SPINY_ACT_HELD_BY_LAKITU)) {
                 lakitu->prevObj = o;
                 o->oAction = SPINY_ACT_HELD_BY_LAKITU;
-                obj_init_animation_with_sound(o, spiny_egg_seg5_anims_050157E4, 0);
+                obj_init_animation_with_sound(o, (struct AnimationTable*)&spiny_egg_seg5_anims_050157E4, 0);
             }
         }
     }

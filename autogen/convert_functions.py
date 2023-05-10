@@ -786,6 +786,32 @@ def process_files():
         processed_files.append(process_file(f))
     return processed_files
 
+
+############################################################################
+
+def output_nuke_function(fname, function):
+    first = True
+    comment = ''
+    fid = function['identifier']
+    print(fid + '(', end='')
+    for param in function['params']:
+        if first:
+            first = False
+        else:
+            print(', ', end='')
+            comment += ', '
+        pid = param['identifier']
+        ptype = param['type']
+        ptype, plink = translate_type_to_lua(ptype)
+
+        if ptype == '`integer`' or ptype == '`number`' or 'enum' in ptype:
+            print('0', end='')
+        else:
+            print('nil', end='')
+        comment += ptype
+
+    print(') -- ' + comment)
+
 ############################################################################
 
 def doc_should_document(fname, identifier):
@@ -846,6 +872,9 @@ def doc_lua_func_param(param):
 def doc_function(fname, function):
     if not function['implemented']:
         return ''
+
+    # debug print out lua nuke functions
+    # output_nuke_function(fname, function)
 
     if not doc_should_document(fname, function['identifier']):
         return ''

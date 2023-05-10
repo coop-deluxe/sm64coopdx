@@ -123,7 +123,7 @@ void bhv_shallow_water_splash_init(void) {
     {
         fishObj = spawn_water_droplet(o, &sWaterDropletFishParams);
         if (fishObj != NULL) {
-            obj_init_animation_with_sound(fishObj, blue_fish_seg3_anims_0301C2B0, 0);
+            obj_init_animation_with_sound(fishObj, &blue_fish_seg3_anims_0301C2B0, 0);
         }
     }
 }

@@ -89,7 +89,7 @@ extern const Gfx bowser_seg6_dl_060431F0[];
 extern const Gfx bowser_seg6_dl_06043548[];
 extern const Gfx bowser_seg6_dl_06043648[];
 extern const Gfx bowser_seg6_dl_06043698[];
-extern const struct Animation *const bowser_seg6_anims_06057690[];
+extern const struct AnimationTable bowser_seg6_anims_06057690;
 extern const s16 bowser_seg6_unkmoveshorts_060576FC[];
 
 // bowser_flame

@@ -34,7 +34,7 @@ extern const Gfx bookend_seg5_dl_050020E8[];
 extern const Gfx bookend_seg5_dl_05002140[];
 extern const Gfx bookend_seg5_dl_05002288[];
 extern const Gfx bookend_seg5_dl_050022E0[];
-extern const struct Animation *const bookend_seg5_anims_05002540[];
+extern const struct AnimationTable bookend_seg5_anims_05002540;
 
 // chair
 extern const GeoLayout haunted_chair_geo[];
@@ -46,7 +46,7 @@ extern const Gfx chair_seg5_dl_05005378[];
 extern const Gfx chair_seg5_dl_05005408[];
 extern const Gfx chair_seg5_dl_050055F0[];
 extern const Gfx chair_seg5_dl_05005680[];
-extern const struct Animation *const chair_seg5_anims_05005784[];
+extern const struct AnimationTable chair_seg5_anims_05005784;
 
 // haunted_cage
 extern const GeoLayout haunted_cage_geo[];
@@ -71,7 +71,7 @@ extern const Gfx mad_piano_seg5_dl_050097F8[];
 extern const Gfx mad_piano_seg5_dl_05009840[];
 extern const Gfx mad_piano_seg5_dl_05009888[];
 extern const Gfx mad_piano_seg5_dl_050098E8[];
-extern const struct Animation *const mad_piano_seg5_anims_05009B14[];
+extern const struct AnimationTable mad_piano_seg5_anims_05009B14;
 
 // small_key
 extern const GeoLayout small_key_geo[];

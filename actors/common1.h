@@ -10,19 +10,19 @@ extern const Gfx blue_fish_seg3_dl_0301BEC0[];
 extern const Gfx blue_fish_seg3_dl_0301BFB8[];
 extern const Gfx blue_fish_seg3_dl_0301C0A8[];
 extern const Gfx blue_fish_seg3_dl_0301C150[];
-extern const struct Animation *const blue_fish_seg3_anims_0301C2B0[];
+extern const struct AnimationTable blue_fish_seg3_anims_0301C2B0;
 
 // bowser_key
 extern const GeoLayout bowser_key_geo[];
 extern const GeoLayout bowser_key_cutscene_geo[];
 extern const Gfx bowser_key_dl[];
-extern const struct Animation *const bowser_key_seg3_anims_list[];
+extern const struct AnimationTable bowser_key_seg3_anims_list;
 
 // butterfly
 extern const GeoLayout butterfly_geo[];
 extern const Gfx butterfly_seg3_dl_03005408[];
 extern const Gfx butterfly_seg3_dl_030054A0[];
-extern const struct Animation *const butterfly_seg3_anims_030056B0[];
+extern const struct AnimationTable butterfly_seg3_anims_030056B0;
 
 // coin
 extern const GeoLayout yellow_coin_geo[];
@@ -112,7 +112,7 @@ extern const Gfx door_seg3_dl_03015008[];
 extern const Gfx door_seg3_dl_03015078[];
 extern const Gfx door_seg3_dl_030150E8[];
 extern const Gfx door_seg3_dl_03015158[];
-extern const struct Animation *const door_seg3_anims_030156C0[];
+extern const struct AnimationTable door_seg3_anims_030156C0;
 
 // explosion
 extern const GeoLayout explosion_geo[];

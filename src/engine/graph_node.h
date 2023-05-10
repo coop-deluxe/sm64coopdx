@@ -438,8 +438,8 @@ void geo_call_global_function_nodes(struct GraphNode *graphNode, s32 callContext
 void geo_reset_object_node(struct GraphNodeObject *graphNode);
 void geo_obj_init(struct GraphNodeObject *graphNode, void *sharedChild, Vec3f pos, Vec3s angle);
 void geo_obj_init_spawninfo(struct GraphNodeObject *graphNode, struct SpawnInfo *spawn);
-void geo_obj_init_animation(struct GraphNodeObject *graphNode, struct Animation **animPtrAddr);
-void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, struct Animation **animPtrAddr, u32 animAccel);
+void geo_obj_init_animation(struct GraphNodeObject *graphNode, const struct Animation * const anim);
+void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, const struct Animation * const anim, u32 animAccel);
 
 s32 retrieve_animation_index(s32 frame, u16 **attributes);
 

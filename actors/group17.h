@@ -31,7 +31,7 @@ extern const Gfx dorrie_seg6_dl_0600DDA0[];
 extern const Gfx dorrie_seg6_dl_0600DE38[];
 extern const Gfx dorrie_seg6_dl_0600DF60[];
 extern const Gfx dorrie_seg6_dl_0600DFA8[];
-extern const struct Animation *const dorrie_seg6_anims_0600F638[];
+extern const struct AnimationTable dorrie_seg6_anims_0600F638;
 extern const Collision dorrie_seg6_collision_0600F644[];
 extern const Collision dorrie_seg6_collision_0600FBB8[];
 
@@ -68,7 +68,7 @@ extern const Gfx scuttlebug_seg6_dl_06014238[];
 extern const Gfx scuttlebug_seg6_dl_06014270[];
 extern const Gfx scuttlebug_seg6_dl_06014338[];
 extern const Gfx scuttlebug_seg6_dl_06014378[];
-extern const struct Animation *const scuttlebug_seg6_anims_06015064[];
+extern const struct AnimationTable scuttlebug_seg6_anims_06015064;
 
 // snufit
 extern const GeoLayout snufit_geo[];
@@ -100,6 +100,6 @@ extern const Gfx swoop_seg6_dl_06006B98[];
 extern const Gfx swoop_seg6_dl_06006BD0[];
 extern const Gfx swoop_seg6_dl_06006CC8[];
 extern const Gfx swoop_seg6_dl_06006D00[];
-extern const struct Animation *const swoop_seg6_anims_060070D0[];
+extern const struct AnimationTable swoop_seg6_anims_060070D0;
 
 #endif

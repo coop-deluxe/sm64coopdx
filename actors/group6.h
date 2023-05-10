@@ -36,7 +36,7 @@ extern const Gfx monty_mole_seg5_dl_05004BE0[];
 extern const Gfx monty_mole_seg5_dl_05004C00[];
 extern const Gfx monty_mole_seg5_dl_05004CE8[];
 extern const Gfx monty_mole_seg5_dl_05004D30[];
-extern const struct Animation *const monty_mole_seg5_anims_05007248[];
+extern const struct AnimationTable monty_mole_seg5_anims_05007248;
 
 // monty_mole_hole
 extern const Gfx monty_mole_hole_seg5_dl_05000840[];
@@ -82,6 +82,6 @@ extern const Gfx ukiki_seg5_dl_0500CF68[];
 extern const Gfx ukiki_seg5_dl_0500CFF0[];
 extern const Gfx ukiki_seg5_dl_0500D078[];
 extern const Gfx ukiki_seg5_dl_0500D108[];
-extern const struct Animation *const ukiki_seg5_anims_05015784[];
+extern const struct AnimationTable ukiki_seg5_anims_05015784;
 
 #endif

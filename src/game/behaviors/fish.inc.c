@@ -11,26 +11,26 @@ static void fish_spawner_act_spawn(void) {
     s32 i = 0;
     s32 schoolQuantity = 0;
     s16 model = MODEL_ERROR_MODEL;
-    const struct Animation * const *fishAnimation = NULL;
+    const struct AnimationTable* fishAnimation = NULL;
     struct Object *fishObject;
 
     switch (o->oBehParams2ndByte) {
         
         // Cases need to be on one line to match with and without optimizations.
         case FISH_SPAWNER_BP_MANY_BLUE:
-            model = MODEL_FISH;      schoolQuantity = 20; fishAnimation = blue_fish_seg3_anims_0301C2B0;
+            model = MODEL_FISH;      schoolQuantity = 20; fishAnimation = &blue_fish_seg3_anims_0301C2B0;
             break;
 
         case FISH_SPAWNER_BP_FEW_BLUE:
-            model = MODEL_FISH;      schoolQuantity = 5;  fishAnimation = blue_fish_seg3_anims_0301C2B0;
+            model = MODEL_FISH;      schoolQuantity = 5;  fishAnimation = &blue_fish_seg3_anims_0301C2B0;
             break;
 
         case FISH_SPAWNER_BP_MANY_CYAN:
-            model = MODEL_CYAN_FISH; schoolQuantity = 20; fishAnimation = cyan_fish_seg6_anims_0600E264;
+            model = MODEL_CYAN_FISH; schoolQuantity = 20; fishAnimation = &cyan_fish_seg6_anims_0600E264;
             break;
 
         case FISH_SPAWNER_BP_FEW_CYAN:
-            model = MODEL_CYAN_FISH; schoolQuantity = 5;  fishAnimation = cyan_fish_seg6_anims_0600E264;
+            model = MODEL_CYAN_FISH; schoolQuantity = 5;  fishAnimation = &cyan_fish_seg6_anims_0600E264;
             break;
     }
 
@@ -41,7 +41,7 @@ static void fish_spawner_act_spawn(void) {
         fishObject = spawn_object(o, model, bhvFish);
         if (fishObject == NULL) { continue; }
         fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
-        obj_init_animation_with_sound(fishObject, fishAnimation, 0);
+        obj_init_animation_with_sound(fishObject, (struct AnimationTable*)fishAnimation, 0);
         obj_translate_xyz_random(fishObject, 700.0f);
     }
     o->oAction = FISH_SPAWNER_ACT_IDLE;

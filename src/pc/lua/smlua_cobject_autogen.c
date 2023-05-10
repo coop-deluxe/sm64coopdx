@@ -43,12 +43,18 @@ static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), false, LOT_NONE    },
     { "flags",             LVT_S16,   offsetof(struct Animation, flags),             false, LOT_NONE    },
     { "index",             LVT_U16_P, offsetof(struct Animation, index),             false, LOT_POINTER },
-    { "length",            LVT_U32,   offsetof(struct Animation, length),            false, LOT_NONE    },
+    { "length",            LVT_U32,   offsetof(struct Animation, length),            true,  LOT_NONE    },
     { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           false, LOT_NONE    },
     { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE    },
     { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE    },
     { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),   false, LOT_NONE    },
     { "values",            LVT_S16_P, offsetof(struct Animation, values),            false, LOT_POINTER },
+};
+
+#define LUA_ANIMATION_TABLE_FIELD_COUNT 1
+static struct LuaObjectField sAnimationTableFields[LUA_ANIMATION_TABLE_FIELD_COUNT] = {
+//  { "const anims", LOT_???, offsetof(struct AnimationTable, const anims), true, LOT_???  }, <--- UNIMPLEMENTED
+    { "count",       LVT_U32, offsetof(struct AnimationTable, count),       true, LOT_NONE },
 };
 
 #define LUA_AREA_FIELD_COUNT 18
@@ -2111,6 +2117,7 @@ static struct LuaObjectField sstruct802A1230Fields[LUA_STRUCT802_A1230_FIELD_COU
 struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] = {
     { LOT_ANIMINFO,                  sAnimInfoFields,                  LUA_ANIM_INFO_FIELD_COUNT                    },
     { LOT_ANIMATION,                 sAnimationFields,                 LUA_ANIMATION_FIELD_COUNT                    },
+    { LOT_ANIMATIONTABLE,            sAnimationTableFields,            LUA_ANIMATION_TABLE_FIELD_COUNT              },
     { LOT_AREA,                      sAreaFields,                      LUA_AREA_FIELD_COUNT                         },
     { LOT_BASSAUDIO,                 sBassAudioFields,                 LUA_BASS_AUDIO_FIELD_COUNT                   },
     { LOT_BEHAVIORDIALOGS,           sBehaviorDialogsFields,           LUA_BEHAVIOR_DIALOGS_FIELD_COUNT             },

@@ -29,8 +29,9 @@ static s32 RetrieveCurrentAnimationIndex(struct Object *aObject) {
     if (!aObject->oAnimations || !aObject->header.gfx.animInfo.curAnim || smlua_anim_util_get_current_animation_name(aObject)) {
         return -1;
     }
-    for (s32 i = 0; aObject->oAnimations[i] != NULL; ++i) {
-        if (aObject->oAnimations[i] == aObject->header.gfx.animInfo.curAnim) {
+    struct AnimationTable* animations = aObject->oAnimations;
+    for (s32 i = 0; i < animations->count; ++i) {
+        if (animations->anims[i] == aObject->header.gfx.animInfo.curAnim) {
             return i;
         }
     }

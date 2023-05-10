@@ -105,6 +105,11 @@ struct Animation {
     /*0x14*/ u32 length; // only used with Mario animations to determine how much to load. 0 otherwise.
 };
 
+struct AnimationTable {
+    u32 count;
+    const struct Animation* const anims[];
+};
+
 #define ANIMINDEX_NUMPARTS(animindex) (sizeof(animindex) / sizeof(u16) / 6 - 1)
 
 struct GraphNode
@@ -195,7 +200,7 @@ struct Object
     union {
         s16 *asS16P[0x50];
         s32 *asS32P[0x50];
-        struct Animation **asAnims[0x50];
+        struct AnimationTable *asAnims[0x50];
         struct Waypoint *asWaypoint[0x50];
         struct ChainSegment *asChainSegment[0x50];
         struct Object *asObject[0x50];

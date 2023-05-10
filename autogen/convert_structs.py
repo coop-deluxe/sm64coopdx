@@ -102,6 +102,8 @@ override_field_immutable = {
     "GraphNode": [ "next", "prev", "parent" ],
     "ObjectWarpNode": [ "next "],
     "SpawnInfo": [ "next" ],
+    "Animation": [ "length" ],
+    "AnimationTable": [ "count" ],
 }
 
 override_field_version_excludes = {

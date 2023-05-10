@@ -30,7 +30,7 @@ extern const Gfx lakitu_seg6_dl_06005360[];
 extern const Gfx lakitu_seg6_dl_06005598[];
 extern const Gfx lakitu_seg6_dl_060055E8[];
 extern const Gfx lakitu_seg6_dl_06005610[];
-extern const struct Animation *const lakitu_seg6_anims_060058F8[];
+extern const struct AnimationTable lakitu_seg6_anims_060058F8;
 
 // mips
 extern const GeoLayout mips_geo[];
@@ -59,7 +59,7 @@ extern const Gfx mips_seg6_dl_06011E88[];
 extern const Gfx mips_seg6_dl_06011ED8[];
 extern const Gfx mips_seg6_dl_06011F70[];
 extern const Gfx mips_seg6_dl_06011FC0[];
-extern const struct Animation *const mips_seg6_anims_06015634[];
+extern const struct AnimationTable mips_seg6_anims_06015634;
 
 // toad
 extern const GeoLayout toad_geo_000114[];
@@ -84,6 +84,6 @@ extern const Gfx toad_seg6_dl_06008748[];
 extern const Gfx toad_seg6_dl_06008890[];
 extern const Gfx toad_seg6_dl_06008A90[];
 extern const Gfx toad_seg6_dl_06008BD8[];
-extern const struct Animation *const toad_seg6_anims_0600FB58[];
+extern const struct AnimationTable toad_seg6_anims_0600FB58;
 
 #endif

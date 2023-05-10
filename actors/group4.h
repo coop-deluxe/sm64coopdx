@@ -11,7 +11,7 @@ extern const Gfx clam_shell_seg5_dl_050012B8[];
 extern const Gfx clam_shell_seg5_dl_05001478[];
 extern const Gfx clam_shell_seg5_dl_050014F8[];
 extern const Gfx clam_shell_seg5_dl_05001568[];
-extern const struct Animation *const clam_shell_seg5_anims_05001744[];
+extern const struct AnimationTable clam_shell_seg5_anims_05001744;
 
 // manta
 extern const Gfx manta_seg5_dl_05004960[];
@@ -55,7 +55,7 @@ extern const Gfx manta_seg5_dl_05006B08[];
 extern const Gfx manta_seg5_dl_05006B70[];
 extern const Gfx manta_seg5_dl_05006C08[];
 extern const GeoLayout manta_seg5_geo_05008D14[];
-extern const struct Animation *const manta_seg5_anims_05008EB4[];
+extern const struct AnimationTable manta_seg5_anims_05008EB4;
 
 // sushi
 extern const GeoLayout sushi_geo[];
@@ -72,7 +72,7 @@ extern const Gfx sushi_seg5_dl_0500A860[];
 extern const Gfx sushi_seg5_dl_0500A8A8[];
 extern const Gfx sushi_seg5_dl_0500A958[];
 extern const Gfx sushi_seg5_dl_0500A990[];
-extern const struct Animation *const sushi_seg5_anims_0500AE54[];
+extern const struct AnimationTable sushi_seg5_anims_0500AE54;
 
 // unagi
 extern const GeoLayout unagi_geo[];
@@ -99,7 +99,7 @@ extern const Gfx unagi_seg5_dl_0500E030[];
 extern const Gfx unagi_seg5_dl_0500E088[];
 extern const Gfx unagi_seg5_dl_0500E200[];
 extern const Gfx unagi_seg5_dl_0500E258[];
-extern const struct Animation *const unagi_seg5_anims_05012824[];
+extern const struct AnimationTable unagi_seg5_anims_05012824;
 
 // whirlpool
 extern const Gfx whirlpool_seg5_dl_05013B58[];

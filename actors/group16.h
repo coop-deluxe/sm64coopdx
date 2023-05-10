@@ -17,7 +17,7 @@ extern const Gfx chilly_chief_seg6_dl_06002FC8[];
 extern const Gfx chilly_chief_seg6_dl_06003010[];
 extern const GeoLayout chilly_chief_geo[];
 extern const GeoLayout chilly_chief_big_geo[];
-extern const struct Animation *const chilly_chief_seg6_anims_06003994[];
+extern const struct AnimationTable chilly_chief_seg6_anims_06003994;
 
 // moneybag
 extern const GeoLayout moneybag_geo_000000[];
@@ -33,6 +33,6 @@ extern const Gfx moneybag_seg6_dl_06005708[];
 extern const Gfx moneybag_seg6_dl_06005750[];
 extern const Gfx moneybag_seg6_dl_06005980[];
 extern const Gfx moneybag_seg6_dl_060059F0[];
-extern const struct Animation *const moneybag_seg6_anims_06005E5C[];
+extern const struct AnimationTable moneybag_seg6_anims_06005E5C;
 
 #endif

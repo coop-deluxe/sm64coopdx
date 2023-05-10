@@ -21,7 +21,7 @@ extern const Gfx chain_chomp_seg6_dl_06024CF0[];
 extern const Gfx chain_chomp_seg6_dl_06024D60[];
 extern const Gfx chain_chomp_seg6_dl_06024F50[];
 extern const Gfx chain_chomp_seg6_dl_06024FC0[];
-extern const struct Animation *const chain_chomp_seg6_anims_06025178[];
+extern const struct AnimationTable chain_chomp_seg6_anims_06025178;
 
 // koopa
 extern const GeoLayout koopa_without_shell_geo[];
@@ -57,7 +57,7 @@ extern const Gfx koopa_seg6_dl_0600BE10[];
 extern const Gfx koopa_seg6_dl_0600BE80[];
 extern const Gfx koopa_seg6_dl_0600C240[];
 extern const Gfx koopa_seg6_dl_0600C498[];
-extern const struct Animation *const koopa_seg6_anims_06011364[];
+extern const struct AnimationTable koopa_seg6_anims_06011364;
 
 // koopa_flag
 extern const GeoLayout koopa_flag_geo[];
@@ -74,7 +74,7 @@ extern const Gfx koopa_flag_seg6_dl_06000D90[];
 extern const Gfx koopa_flag_seg6_dl_06000DB0[];
 extern const Gfx koopa_flag_seg6_dl_06000E20[];
 extern const Gfx koopa_flag_seg6_dl_06000E38[];
-extern const struct Animation *const koopa_flag_seg6_anims_06001028[];
+extern const struct AnimationTable koopa_flag_seg6_anims_06001028;
 
 // piranha_plant
 extern const GeoLayout piranha_plant_geo[];
@@ -103,7 +103,7 @@ extern const Gfx piranha_plant_seg6_dl_06016D30[];
 extern const Gfx piranha_plant_seg6_dl_06016D98[];
 extern const Gfx piranha_plant_seg6_dl_06016EB8[];
 extern const Gfx piranha_plant_seg6_dl_06016F20[];
-extern const struct Animation *const piranha_plant_seg6_anims_0601C31C[];
+extern const struct AnimationTable piranha_plant_seg6_anims_0601C31C;
 
 // poundable_pole
 extern const GeoLayout wooden_post_geo[];
@@ -130,7 +130,7 @@ extern const Gfx whomp_seg6_dl_0601FE10[];
 extern const Gfx whomp_seg6_dl_0601FEA8[];
 extern const Gfx whomp_seg6_dl_0601FFA0[];
 extern const Gfx whomp_seg6_dl_06020038[];
-extern const struct Animation *const whomp_seg6_anims_06020A04[];
+extern const struct AnimationTable whomp_seg6_anims_06020A04;
 extern const Collision whomp_seg6_collision_06020A0C[];
 
 #endif

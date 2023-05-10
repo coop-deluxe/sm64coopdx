@@ -34,7 +34,7 @@ extern const Gfx lakitu_enemy_seg5_dl_050134A8[];
 extern const Gfx lakitu_enemy_seg5_dl_050136A0[];
 extern const Gfx lakitu_enemy_seg5_dl_05013860[];
 extern const Gfx lakitu_enemy_seg5_dl_050138B0[];
-extern const struct Animation *const lakitu_enemy_seg5_anims_050144D4[];
+extern const struct AnimationTable lakitu_enemy_seg5_anims_050144D4;
 
 // spiny
 extern const GeoLayout spiny_geo[];
@@ -44,7 +44,7 @@ extern const Gfx spiny_seg5_dl_050165A8[];
 extern const Gfx spiny_seg5_dl_05016670[];
 extern const Gfx spiny_seg5_dl_05016738[];
 extern const Gfx spiny_seg5_dl_05016A48[];
-extern const struct Animation *const spiny_seg5_anims_05016EAC[];
+extern const struct AnimationTable spiny_seg5_anims_05016EAC;
 
 // spiny_egg
 extern const GeoLayout spiny_ball_geo[];
@@ -58,7 +58,7 @@ extern const Gfx spiny_egg_seg5_dl_050152F8[];
 extern const Gfx spiny_egg_seg5_dl_05015330[];
 extern const Gfx spiny_egg_seg5_dl_05015368[];
 extern const Gfx spiny_egg_seg5_dl_05015740[];
-extern const struct Animation *const spiny_egg_seg5_anims_050157E4[];
+extern const struct AnimationTable spiny_egg_seg5_anims_050157E4;
 
 // wiggler_body
 extern const Gfx wiggler_seg5_dl_0500BCB8[];
@@ -71,7 +71,7 @@ extern const Gfx wiggler_seg5_dl_0500C208[];
 extern const Gfx wiggler_seg5_dl_0500C240[];
 extern const Gfx wiggler_seg5_dl_0500C278[];
 extern const GeoLayout wiggler_body_geo[];
-extern const struct Animation *const wiggler_seg5_anims_0500C874[];
+extern const struct AnimationTable wiggler_seg5_anims_0500C874;
 
 // wiggler_head
 extern const GeoLayout wiggler_head_geo[];
@@ -93,6 +93,6 @@ extern const Gfx wiggler_seg5_dl_0500E518[];
 extern const Gfx wiggler_seg5_dl_0500E608[];
 extern const Gfx wiggler_seg5_dl_0500E640[];
 extern const Gfx wiggler_seg5_dl_0500E678[];
-extern const struct Animation *const wiggler_seg5_anims_0500EC8C[];
+extern const struct AnimationTable wiggler_seg5_anims_0500EC8C;
 
 #endif

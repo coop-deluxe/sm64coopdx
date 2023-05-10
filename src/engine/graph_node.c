@@ -775,16 +775,12 @@ void geo_obj_init_spawninfo(struct GraphNodeObject *graphNode, struct SpawnInfo 
 /**
  * Initialize the animation of an object node
  */
-void geo_obj_init_animation(struct GraphNodeObject *graphNode, struct Animation **animPtrAddr) {
-    if (graphNode == NULL)    { return; }
-    if (animPtrAddr == NULL)  { return; }
-    if (*animPtrAddr == NULL) { return; }
-
-    struct Animation **animSegmented = segmented_to_virtual(animPtrAddr);
-    struct Animation *anim = segmented_to_virtual(*animSegmented);
+void geo_obj_init_animation(struct GraphNodeObject *graphNode, const struct Animation * const anim) {
+    if (!graphNode) { return; }
+    if (!anim) { return; }
 
     if (graphNode->animInfo.curAnim != anim) {
-        graphNode->animInfo.curAnim = anim;
+        graphNode->animInfo.curAnim = (struct Animation*)anim;
         graphNode->animInfo.animFrame = anim->startFrame + ((anim->flags & ANIM_FLAG_FORWARD) ? 1 : -1);
         graphNode->animInfo.animAccel = 0;
         graphNode->animInfo.animYTrans = 0;
@@ -794,16 +790,12 @@ void geo_obj_init_animation(struct GraphNodeObject *graphNode, struct Animation 
 /**
  * Initialize the animation of an object node
  */
-void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, struct Animation **animPtrAddr, u32 animAccel) {
-    if (graphNode == NULL)    { return; }
-    if (animPtrAddr == NULL)  { return; }
-    if (*animPtrAddr == NULL) { return; }
-
-    struct Animation **animSegmented = segmented_to_virtual(animPtrAddr);
-    struct Animation *anim = segmented_to_virtual(*animSegmented);
+void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, const struct Animation * const anim, u32 animAccel) {
+    if (!graphNode) { return; }
+    if (!anim) { return; }
 
     if (graphNode->animInfo.curAnim != anim) {
-        graphNode->animInfo.curAnim = anim;
+        graphNode->animInfo.curAnim = (struct Animation*)anim;
         graphNode->animInfo.animYTrans = 0;
         graphNode->animInfo.animFrameAccelAssist =
             (anim->startFrame << 16) + ((anim->flags & ANIM_FLAG_FORWARD) ? animAccel : -animAccel);

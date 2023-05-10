@@ -790,8 +790,10 @@ void obj_set_gfx_pos_from_pos(struct Object *obj) {
 }
 
 void obj_init_animation(struct Object *obj, s32 animIndex) {
-    struct Animation **anims = o->oAnimations;
-    geo_obj_init_animation(&obj->header.gfx, &anims[animIndex]);
+    struct AnimationTable *animations = o->oAnimations;
+    if (animations && (u32)animIndex < animations->count) {
+        geo_obj_init_animation(&obj->header.gfx, animations->anims[animIndex]);
+    }
 }
 
 /**
@@ -871,46 +873,44 @@ void cur_obj_scale(f32 scale) {
 }
 
 void cur_obj_init_animation(s32 animIndex) {
-    struct Animation **anims = o->oAnimations;
-    if (anims != NULL) {
-        geo_obj_init_animation(&o->header.gfx, &anims[animIndex]);
+    struct AnimationTable *animations = o->oAnimations;
+    if (animations && (u32)animIndex < animations->count) {
+        geo_obj_init_animation(&o->header.gfx, animations->anims[animIndex]);
     }
 }
 
 void cur_obj_init_animation_with_sound(s32 animIndex) {
-    struct Animation **anims = o->oAnimations;
-    if (anims != NULL) {
-        geo_obj_init_animation(&o->header.gfx, &anims[animIndex]);
+    struct AnimationTable *animations = o->oAnimations;
+    if (animations && (u32)animIndex < animations->count) {
+        geo_obj_init_animation(&o->header.gfx, animations->anims[animIndex]);
     }
     o->oSoundStateID = animIndex;
 }
 
 void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel) {
     if (obj != NULL) {
-        struct Animation **anims = obj->oAnimations;
-        if (anims != NULL) {
+        struct AnimationTable *animations = o->oAnimations;
+        if (animations && (u32)animIndex < animations->count) {
             s32 animAccel = (s32)(accel * 65536.0f);
-            geo_obj_init_animation_accel(&obj->header.gfx, &anims[animIndex], animAccel);
+            geo_obj_init_animation_accel(&obj->header.gfx, animations->anims[animIndex], animAccel);
         }
         obj->oSoundStateID = animIndex;
     }
 }
 
 void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
-    struct Animation **anims = o->oAnimations;
-    if (anims != NULL) {
+    struct AnimationTable *animations = o->oAnimations;
+    if (animations && (u32)animIndex < animations->count) {
         s32 animAccel = (s32)(accel * 65536.0f);
-        geo_obj_init_animation_accel(&o->header.gfx, &anims[animIndex], animAccel);
+        geo_obj_init_animation_accel(&o->header.gfx, animations->anims[animIndex], animAccel);
     }
     o->oSoundStateID = animIndex;
 }
 
-void obj_init_animation_with_sound(struct Object *obj, const struct Animation * const* animations, s32 animIndex) {
+void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTable* animations, s32 animIndex) {
     if (obj == NULL) { return; }
-    struct Animation **anims = (struct Animation **)animations;
-    obj->oAnimations = (struct Animation **)animations;
-    if (anims != NULL) {
-        geo_obj_init_animation(&obj->header.gfx, &anims[animIndex]);
+    if (animations && (u32)animIndex < animations->count) {
+        geo_obj_init_animation(&obj->header.gfx, animations->anims[animIndex]);
     }
     obj->oSoundStateID = animIndex;
 }

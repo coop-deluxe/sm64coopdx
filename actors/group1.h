@@ -35,7 +35,7 @@ extern const Gfx heave_ho_seg5_dl_05014560[];
 extern const Gfx heave_ho_seg5_dl_050145D0[];
 extern const Gfx heave_ho_seg5_dl_050149A8[];
 extern const Gfx heave_ho_seg5_dl_05014D80[];
-extern const struct Animation *const heave_ho_seg5_anims_0501534C[];
+extern const struct AnimationTable heave_ho_seg5_anims_0501534C;
 
 // hoot
 extern const GeoLayout hoot_geo[];
@@ -63,7 +63,7 @@ extern const Gfx hoot_seg5_dl_05004A98[];
 extern const Gfx hoot_seg5_dl_05004B38[];
 extern const Gfx hoot_seg5_dl_05004CA8[];
 extern const Gfx hoot_seg5_dl_05004D48[];
-extern const struct Animation *const hoot_seg5_anims_05005768[];
+extern const struct AnimationTable hoot_seg5_anims_05005768;
 
 // thwomp
 extern const GeoLayout thwomp_geo[];
