@@ -115,6 +115,14 @@ local function name_without_hex(name)
     return s
 end
 
+local function split(s)
+    local result = {}
+    for match in (s):gmatch(string.format("[^%s]+", " ")) do
+        table.insert(result, match)
+    end
+    return result
+end
+
 local function on_hud_render()
     if gGlobalSyncTable.dist == 0 or (not showSelfTag and network_player_connected_count() == 1) or not gNetworkPlayers[0].currAreaSyncValid or obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil then return end
 
@@ -123,13 +131,11 @@ local function on_hud_render()
 
     for i = if_then_else(showSelfTag, 0, 1), (MAX_PLAYERS - 1) do
         local m = gMarioStates[i]
-        if m.marioBodyState.updateTorsoTime == gMarioStates[0].marioBodyState.updateTorsoTime and active_player(m) ~= 0 and m.action ~= ACT_IN_CANNON and (m.playerIndex ~= 0 or (m.playerIndex == 0 and m.action ~= ACT_FIRST_PERSON)) then
-            local out = { x = 0, y = 0, z = 0 }
-            local pos = { x = m.marioObj.header.gfx.pos.x, y = m.pos.y + 210, z = m.marioObj.header.gfx.pos.z }
-            djui_hud_world_pos_to_screen_pos(pos, out)
-
+        local out = { x = 0, y = 0, z = 0 }
+        local pos = { x = m.marioObj.header.gfx.pos.x, y = m.pos.y + 210, z = m.marioObj.header.gfx.pos.z }
+        if djui_hud_world_pos_to_screen_pos(pos, out) and m.marioBodyState.updateTorsoTime == gMarioStates[0].marioBodyState.updateTorsoTime and active_player(m) ~= 0 and m.action ~= ACT_IN_CANNON and (m.playerIndex ~= 0 or (m.playerIndex == 0 and m.action ~= ACT_FIRST_PERSON)) then
             local scale = MAX_SCALE
-            local dist = vec3f_dist(gMarioStates[0].pos, m.pos)
+            local dist = vec3f_dist(gLakituState.pos, m.pos)
             if m.playerIndex ~= 0 and dist > 1000 then
                 scale = 0.5
                 scale = scale + dist / gGlobalSyncTable.dist
@@ -162,33 +168,58 @@ local function on_hud_render()
     end
 end
 
-local function on_nametag_distance_command(msg)
+local function on_distance_command(msg)
+    if not network_is_server() and not network_is_moderator() then
+        djui_chat_message_create("\\#d86464\\You do not have permission to run this command.")
+        return true
+    end
+
     local dist = tonumber(msg)
     if dist ~= nil then
         djui_chat_message_create("Set nametag distance to " .. msg)
         gGlobalSyncTable.dist = dist
         return true
+    else
+        djui_chat_message_create("/nametags \\#00ffff\\distance\\#ffff00\\ [number]\\#ffffff\\\nSets the distance at which nametags disappear,\ndefault is \\#ffff00\\7000\\#ffffff\\, \\#ffff00\\0\\#ffffff\\ turns nametags off")
+        return true
     end
     return false
 end
 
-local function on_show_health_command()
+local function on_show_health_command(msg)
+    if msg == "?" then
+        djui_chat_message_create("/nametags \\#00ffff\\show-health\\#ffffff\\\nToggles showing health above the nametag, default is \\#00ff00\\ON")
+        return true
+    end
+
     showHealth = not showHealth
     djui_chat_message_create("Show health status: " .. on_or_off(showHealth))
     return true
 end
 
-local function on_show_tag_command()
+local function on_show_tag_command(msg)
+    if msg == "?" then
+        djui_chat_message_create("/nametags \\#00ffff\\show-tag\\#ffffff\\\nToggles your own nametag on or off, default is \\#ff0000\\OFF")
+        return true
+    end
+
     showSelfTag = not showSelfTag
     djui_chat_message_create("Show my tag status: " .. on_or_off(showSelfTag))
     return true
 end
 
-hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
-
-if network_is_server() then
-    hook_chat_command("nametag-distance", "[number] set the distance at which nametags disappear, default is 7000, 0 turns nametags off", on_nametag_distance_command)
+local function on_nametags_command(msg)
+    local args = split(msg)
+    if args[1] == "distance" then
+        return on_distance_command(args[2])
+    elseif args[1] == "show-health" then
+        return on_show_health_command(args[2])
+    elseif args[1] == "show-tag" then
+        return on_show_tag_command(args[2])
+    end
+    return false
 end
 
-hook_chat_command("show-health", "to toggle showing health above the nametag, default is \\#00ff00\\ON", on_show_health_command)
-hook_chat_command("show-tag", "to toggle your own nametag on or off, default is \\#ff0000\\OFF", on_show_tag_command)
+hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
+
+hook_chat_command("nametags", "[show-tag|show-health|distance]", on_nametags_command)

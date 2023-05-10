@@ -33,31 +33,6 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/cheats.h"
 
-enum InteractionFlag {
-    INT_GROUND_POUND_OR_TWIRL      = (1 << 0), // 0x01
-    INT_PUNCH                      = (1 << 1), // 0x02
-    INT_KICK                       = (1 << 2), // 0x04
-    INT_TRIP                       = (1 << 3), // 0x08
-    INT_SLIDE_KICK                 = (1 << 4), // 0x10
-    INT_FAST_ATTACK_OR_SHELL       = (1 << 5), // 0x20
-    INT_HIT_FROM_ABOVE             = (1 << 6), // 0x40
-    INT_HIT_FROM_BELOW             = (1 << 7), // 0x80
-};
-
-#define INT_ATTACK_NOT_FROM_BELOW                                                 \
-    (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK \
-     | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)
-
-#define INT_ANY_ATTACK                                                            \
-    (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK \
-     | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE | INT_HIT_FROM_BELOW)
-
-#define INT_ATTACK_NOT_WEAK_FROM_ABOVE                                                \
-    (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_HIT_FROM_BELOW)
-
-#define INT_ATTACK_SLIDE                                                              \
-    (INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL)
-
 u8 sDelayInvincTimer;
 s16 gInteractionInvulnerable;
 u32 interact_coin(struct MarioState *, u32, struct Object *);
@@ -208,7 +183,7 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
     }
 
     if (interaction == 0 && action & ACT_FLAG_ATTACKING) {
-        if (action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) {
+        if (m->flags & (MARIO_PUNCHING | MARIO_KICKING | MARIO_TRIPPING)) {
             s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
             if (m->flags & MARIO_PUNCHING) {
@@ -230,17 +205,29 @@ static u32 determine_interaction_internal(struct MarioState *m, struct Object *o
                 }
             }
 
-        } else if (action == ACT_GROUND_POUND || action == ACT_TWIRLING) {
+        } else if (action == ACT_GROUND_POUND) {
             if (m->vel[1] < 0.0f) {
-                interaction = INT_GROUND_POUND_OR_TWIRL;
+                interaction = INT_GROUND_POUND;
             }
-        } else if (action == ACT_GROUND_POUND_LAND || action == ACT_TWIRL_LAND) {
+        } else if (action == ACT_TWIRLING) {
+            if (m->vel[1] < 0.0f) {
+                interaction = INT_TWIRL;
+            }
+        } else if (action == ACT_GROUND_POUND_LAND) {
             // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
             // so the speed check is nearly always true (perhaps not if you land while going upwards?)
             // Additionally, actionState it set on each first thing in their action, so this is
             // only true prior to the very first frame (i.e. active 1 frame prior to it run).
             if (m->vel[1] < 0.0f && m->actionState == 0) {
-                interaction = INT_GROUND_POUND_OR_TWIRL;
+                interaction = INT_GROUND_POUND;
+            }
+        } else if (action == ACT_TWIRL_LAND) {
+            // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
+            // so the speed check is nearly always true (perhaps not if you land while going upwards?)
+            // Additionally, actionState it set on each first thing in their action, so this is
+            // only true prior to the very first frame (i.e. active 1 frame prior to it run).
+            if (m->vel[1] < 0.0f && m->actionState == 0) {
+                interaction = INT_TWIRL;
             }
         } else if (action == ACT_SLIDE_KICK || action == ACT_SLIDE_KICK_SLIDE) {
             interaction = INT_SLIDE_KICK;
@@ -284,6 +271,8 @@ u32 attack_object(struct Object *o, s32 interaction) {
     u32 attackType = 0;
 
     switch (interaction) {
+        case INT_GROUND_POUND:
+        case INT_TWIRL:
         case INT_GROUND_POUND_OR_TWIRL:
             attackType = ATTACK_GROUND_POUND_OR_TWIRL;
             break;

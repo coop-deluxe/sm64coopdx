@@ -463,8 +463,8 @@ static void newcam_update_values(void) {
         }
     }
 
-    switch (gMarioStates[0].action) {
-        case ACT_FLYING: centering = 1; break;
+    if ((gMarioStates[0].action & ACT_FLAG_FLYING) == ACT_FLAG_FLYING) {
+        centering = 1;
     }
 
     static u32 sLastAction = 0;

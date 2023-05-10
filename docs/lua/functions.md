@@ -766,9 +766,11 @@
    - [seq_player_fade_out](functions-3.md#seq_player_fade_out)
    - [seq_player_lower_volume](functions-3.md#seq_player_lower_volume)
    - [seq_player_unlower_volume](functions-3.md#seq_player_unlower_volume)
+   - [set_audio_fadeout](functions-3.md#set_audio_fadeout)
    - [sound_banks_disable](functions-3.md#sound_banks_disable)
    - [sound_banks_enable](functions-3.md#sound_banks_enable)
    - [stop_background_music](functions-3.md#stop_background_music)
+   - [stop_secondary_music](functions-3.md#stop_secondary_music)
    - [stop_sound](functions-3.md#stop_sound)
    - [stop_sounds_from_source](functions-3.md#stop_sounds_from_source)
    - [stop_sounds_in_continuous_banks](functions-3.md#stop_sounds_in_continuous_banks)
@@ -776,6 +778,7 @@
 <br />
 
 - interaction.h
+   - [determine_interaction](functions-3.md#determine_interaction)
    - [does_mario_have_normal_cap_on_head](functions-3.md#does_mario_have_normal_cap_on_head)
    - [get_door_save_file_flag](functions-3.md#get_door_save_file_flag)
    - [interact_damage](functions-3.md#interact_damage)

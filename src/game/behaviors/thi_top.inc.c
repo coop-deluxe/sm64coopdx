@@ -31,7 +31,7 @@ void bhv_thi_tiny_island_top_loop(void) {
     if (!(gTHIWaterDrained & 1)) {
         if (o->oAction == 0) {
             if (distanceToPlayer < 500.0f)
-                if (marioState && marioState->action == ACT_GROUND_POUND_LAND) {
+                if (marioState && !(marioState->action & ACT_FLAG_AIR) && (determine_interaction(marioState, o) & INT_GROUND_POUND) != 0) {
                     o->oAction++;
                     cur_obj_spawn_particles(&D_8032F134);
                     spawn_triangle_break_particles(20, 138, 0.3f, 3);

@@ -19,8 +19,8 @@
 - [geo_commands.h](#geo_commandsh)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
-    - [enum InteractionFlag](#enum-InteractionFlag)
 - [interaction.h](#interactionh)
+    - [enum InteractionFlag](#enum-InteractionFlag)
     - [enum InteractionType](#enum-InteractionType)
 - [level_commands.h](#level_commandsh)
 - [level_defines.h](#level_definesh)
@@ -1193,22 +1193,6 @@
 <br />
 
 ## [interaction.c](#interaction.c)
-- INT_ANY_ATTACK
-- INT_ATTACK_NOT_FROM_BELOW
-- INT_ATTACK_NOT_WEAK_FROM_ABOVE
-- INT_ATTACK_SLIDE
-
-### [enum InteractionFlag](#InteractionFlag)
-| Identifier | Value |
-| :--------- | :---- |
-| INT_GROUND_POUND_OR_TWIRL | (1 << 0) |
-| INT_PUNCH | (1 << 1) |
-| INT_KICK | (1 << 2) |
-| INT_TRIP | (1 << 3) |
-| INT_SLIDE_KICK | (1 << 4) |
-| INT_FAST_ATTACK_OR_SHELL | (1 << 5) |
-| INT_HIT_FROM_ABOVE | (1 << 6) |
-| INT_HIT_FROM_BELOW | (1 << 7) |
 
 [:arrow_up_small:](#)
 
@@ -1221,6 +1205,10 @@
 - ATTACK_GROUND_POUND_OR_TWIRL
 - ATTACK_KICK_OR_TRIP
 - ATTACK_PUNCH
+- INT_ANY_ATTACK
+- INT_ATTACK_NOT_FROM_BELOW
+- INT_ATTACK_NOT_WEAK_FROM_ABOVE
+- INT_ATTACK_SLIDE
 - INT_STATUS_ATTACKED_MARIO
 - INT_STATUS_ATTACK_MASK
 - INT_STATUS_GRABBED_MARIO
@@ -1253,6 +1241,20 @@
 - INT_SUBTYPE_SIGN
 - INT_SUBTYPE_STAR_DOOR
 - INT_SUBTYPE_TWIRL_BOUNCE
+
+### [enum InteractionFlag](#InteractionFlag)
+| Identifier | Value |
+| :--------- | :---- |
+| INT_GROUND_POUND | (1 << 0) |
+| INT_PUNCH | (1 << 1) |
+| INT_KICK | (1 << 2) |
+| INT_TRIP | (1 << 3) |
+| INT_SLIDE_KICK | (1 << 4) |
+| INT_FAST_ATTACK_OR_SHELL | (1 << 5) |
+| INT_HIT_FROM_ABOVE | (1 << 6) |
+| INT_HIT_FROM_BELOW | (1 << 7) |
+| INT_TWIRL | (1 << 8) |
+| INT_GROUND_POUND_OR_TWIRL | (INT_GROUND_POUND | INT_TWIRL) |
 
 ### [enum InteractionType](#InteractionType)
 | Identifier | Value |
@@ -2614,6 +2616,7 @@
 - ACT_FLAG_CONTROL_JUMP_HEIGHT
 - ACT_FLAG_CUSTOM_ACTION
 - ACT_FLAG_DIVING
+- ACT_FLAG_FLYING
 - ACT_FLAG_HANGING
 - ACT_FLAG_IDLE
 - ACT_FLAG_INTANGIBLE

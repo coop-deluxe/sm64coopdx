@@ -40,6 +40,24 @@ enum InteractionType {
     INTERACT_PLAYER         = /* 0x80000000 */ (1 << 31),
 };
 
+enum InteractionFlag {
+    INT_GROUND_POUND          = /* 0x00000001 */ (1 << 0),
+    INT_PUNCH                 = /* 0x00000002 */ (1 << 1),
+    INT_KICK                  = /* 0x00000004 */ (1 << 2),
+    INT_TRIP                  = /* 0x00000008 */ (1 << 3),
+    INT_SLIDE_KICK            = /* 0x00000010 */ (1 << 4),
+    INT_FAST_ATTACK_OR_SHELL  = /* 0x00000020 */ (1 << 5),
+    INT_HIT_FROM_ABOVE        = /* 0x00000040 */ (1 << 6),
+    INT_HIT_FROM_BELOW        = /* 0x00000080 */ (1 << 7),
+    INT_TWIRL                 = /* 0x00000100 */ (1 << 8),
+    INT_GROUND_POUND_OR_TWIRL = (INT_GROUND_POUND | INT_TWIRL),
+};
+
+#define INT_ATTACK_NOT_FROM_BELOW       (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE)
+#define INT_ANY_ATTACK                  (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL | INT_HIT_FROM_ABOVE | INT_HIT_FROM_BELOW)
+#define INT_ATTACK_NOT_WEAK_FROM_ABOVE  (INT_GROUND_POUND_OR_TWIRL | INT_PUNCH | INT_KICK | INT_TRIP | INT_HIT_FROM_BELOW)
+#define INT_ATTACK_SLIDE                (INT_SLIDE_KICK | INT_FAST_ATTACK_OR_SHELL)
+
 // INTERACT_WARP
 #define INT_SUBTYPE_FADING_WARP 0x00000001
 
@@ -119,5 +137,6 @@ void mario_handle_special_floors(struct MarioState *m);
 u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState* victim);
 u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o);
 u32 interact_damage(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
+u32 determine_interaction(struct MarioState *m, struct Object *o);
 
 #endif // INTERACTION_H

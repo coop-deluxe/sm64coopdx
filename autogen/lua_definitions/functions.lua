@@ -3893,6 +3893,12 @@ function seq_player_unlower_volume(player, fadeDuration)
     -- ...
 end
 
+--- @param fadeOutTime integer
+--- @return nil
+function set_audio_fadeout(fadeOutTime)
+    -- ...
+end
+
 --- @param player integer
 --- @param bankMask integer
 --- @return nil
@@ -3913,6 +3919,12 @@ function stop_background_music(seqId)
     -- ...
 end
 
+--- @param fadeTimer integer
+--- @return nil
+function stop_secondary_music(fadeTimer)
+    -- ...
+end
+
 --- @param soundBits integer
 --- @param pos Vec3f
 --- @return nil
@@ -3928,6 +3940,13 @@ end
 
 --- @return nil
 function stop_sounds_in_continuous_banks()
+    -- ...
+end
+
+--- @param m MarioState
+--- @param o Object
+--- @return integer
+function determine_interaction(m, o)
     -- ...
 end
 

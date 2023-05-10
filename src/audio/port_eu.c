@@ -65,18 +65,18 @@ void eu_process_audio_cmd(struct EuAudioCmd *cmd) {
     s32 i;
 
     switch (cmd->u.s.op) {
-    case 0x81:
-        preload_sequence(cmd->u.s.arg2, 3);
+    case AUDIO_CMD_PRELOAD_SEQUENCE:
+        preload_sequence(cmd->u.s.arg2, PRELOAD_BANKS | PRELOAD_SEQUENCE);
         break;
 
-    case 0x82:
-    case 0x88:
+    case AUDIO_CMD_LOAD_SEQUENCE:
+    case AUDIO_CMD_LOAD_SEQUENCE2:
         load_sequence(cmd->u.s.arg1, cmd->u.s.arg2, cmd->u.s.arg3);
         seq_player_fade_from_zero_volume(cmd->u.s.arg1, cmd->u2.as_s32);
         //LOG_DEBUG("Playing sequence with arguments: %d, 0x%X, %d", cmd->u.s.arg1, cmd->u.s.arg2, cmd->u.s.arg3);
         break;
 
-    case 0x83:
+    case AUDIO_CMD_FADE_TO_ZERO_VOLUME:
         if (gSequencePlayers[cmd->u.s.arg1].enabled != FALSE) {
             if (cmd->u2.as_s32 == 0) {
                 sequence_player_disable(&gSequencePlayers[cmd->u.s.arg1]);
@@ -87,18 +87,18 @@ void eu_process_audio_cmd(struct EuAudioCmd *cmd) {
         }
         break;
 
-    case 0xf0:
+    case AUDIO_CMD_SOUND_MODE:
         gSoundMode = cmd->u2.as_s32;
         break;
 
-    case 0xf1:
+    case AUDIO_CMD_MUTE_ALL_SEQUENCE_PLAYERS:
         for (i = 0; i < 4; i++) {
             gSequencePlayers[i].muted = TRUE;
             gSequencePlayers[i].recalculateVolume = TRUE;
         }
         break;
 
-    case 0xf2:
+    case AUDIO_CMD_UNMUTE_ALL_SEQUENCE_PLAYERS:
         for (i = 0; i < 4; i++) {
             gSequencePlayers[i].muted = FALSE;
             gSequencePlayers[i].recalculateVolume = TRUE;
@@ -191,20 +191,20 @@ void process_queued_audio_cmds(u32 arg0) {
             }
             else if ((cmd->u.s.op & 0x40) != 0) {
                 switch (cmd->u.s.op) {
-                case 0x41:
+                case AUDIO_CMD_FADE_VOLUME_SCALE:
                     seqPlayer->fadeVolumeScale = cmd->u2.as_f32;
                     seqPlayer->recalculateVolume = TRUE;
                     break;
 
-                case 0x47:
+                case AUDIO_CMD_TEMPO:
                     seqPlayer->tempo = cmd->u2.as_s32 * TATUMS_PER_BEAT;
                     break;
 
-                case 0x48:
+                case AUDIO_CMD_TRANSPOSITION:
                     seqPlayer->transposition = cmd->u2.as_s8;
                     break;
 
-                case 0x46:
+                case AUDIO_CMD_SEQUENCE_VARIATION:
                     seqPlayer->seqVariationEu[cmd->u.s.arg3] = cmd->u2.as_s8;
                     break;
                 }
@@ -214,31 +214,31 @@ void process_queued_audio_cmds(u32 arg0) {
                 if (IS_SEQUENCE_CHANNEL_VALID(chan))
                 {
                     switch (cmd->u.s.op) {
-                    case 1:
+                    case AUDIO_CMD_VOLUME_SCALE:
                         chan->volumeScale = cmd->u2.as_f32;
                         chan->changes.as_bitfields.volume = TRUE;
                         break;
-                    case 2:
+                    case AUDIO_CMD_VOLUME:
                         chan->volume = cmd->u2.as_f32;
                         chan->changes.as_bitfields.volume = TRUE;
                         break;
-                    case 3:
+                    case AUDIO_CMD_NEW_PAN:
                         chan->newPan = cmd->u2.as_s8;
                         chan->changes.as_bitfields.pan = TRUE;
                         break;
-                    case 4:
+                    case AUDIO_CMD_FREQ_SCALE:
                         chan->freqScale = cmd->u2.as_f32;
                         chan->changes.as_bitfields.freqScale = TRUE;
                         break;
-                    case 5:
+                    case AUDIO_CMD_REVERB:
                         chan->reverb = cmd->u2.as_s8;
                         break;
-                    case 6:
+                    case AUDIO_CMD_SOUND_SCRIPT:
                         if (cmd->u.s.arg3 < 8) {
                             chan->soundScriptIO[cmd->u.s.arg3] = cmd->u2.as_s8;
                         }
                         break;
-                    case 8:
+                    case AUDIO_CMD_GENERAL_STOP:
                         chan->stopSomething2 = cmd->u2.as_s8;
                     }
                 }
