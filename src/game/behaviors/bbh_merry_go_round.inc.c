@@ -52,7 +52,7 @@ static void handle_merry_go_round_music(void) {
             // The merry-go-round is a dynamic surface.
             gMarioCurrentRoom != BBH_DYNAMIC_SURFACE_ROOM
             && gMarioCurrentRoom != BBH_NEAR_MERRY_GO_ROUND_ROOM) {
-            func_80321080(300); // Switch to BBH music? FIXME: Audio needs labelling
+            stop_secondary_music(300); // Switch to BBH music? FIXME: Audio needs labelling
             o->oMerryGoRoundMusicShouldPlay = FALSE;
         } else {
             cur_obj_play_sound_1(SOUND_ENV_MERRY_GO_ROUND_CREAKING);
@@ -93,6 +93,6 @@ void bhv_merry_go_round_loop(void) {
         handle_merry_go_round_music();
     } else {
         o->oAngleVelYaw = 0;
-        func_80321080(300); // Switch to BBH music? FIXME: Audio needs labelling
+        stop_secondary_music(300); // Switch to BBH music? FIXME: Audio needs labelling
     }
 }

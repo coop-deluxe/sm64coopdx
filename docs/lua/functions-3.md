@@ -2910,6 +2910,26 @@
 
 <br />
 
+## [set_audio_fadeout](#set_audio_fadeout)
+
+### Lua Example
+`set_audio_fadeout(fadeOutTime)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fadeOutTime | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_audio_fadeout(u16 fadeOutTime);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sound_banks_disable](#sound_banks_disable)
 
 ### Lua Example
@@ -2967,6 +2987,26 @@
 
 ### C Prototype
 `void stop_background_music(u16 seqId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_secondary_music](#stop_secondary_music)
+
+### Lua Example
+`stop_secondary_music(fadeTimer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fadeTimer | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void stop_secondary_music(u16 fadeTimer);`
 
 [:arrow_up_small:](#)
 

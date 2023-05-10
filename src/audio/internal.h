@@ -86,6 +86,37 @@
 #define eu_stubbed_printf_3(msg, a, b, c)
 #endif
 
+#if defined(VERSION_EU) || defined(VERSION_SH)
+#define AUDIO_CMD_ARGS(cmd, arg1, arg2, arg3) (((cmd & 0xff) << 24) | ((arg1 & 0xff) << 16) | ((arg2 & 0xff) << 8) | (arg3 & 0xff))
+
+// Channel audio commands
+#define AUDIO_CMD_VOLUME_SCALE 1
+#define AUDIO_CMD_VOLUME       2
+#define AUDIO_CMD_NEW_PAN      3
+#define AUDIO_CMD_FREQ_SCALE   4
+#define AUDIO_CMD_REVERB       5
+#define AUDIO_CMD_SOUND_SCRIPT 6 // Unused, There is spots it could be added, But it isn't in practice.
+#define AUDIO_CMD_GENERAL_STOP 8
+
+// Sequence player audio commands
+#define AUDIO_CMD_FADE_VOLUME_SCALE  0x41
+#define AUDIO_CMD_SEQUENCE_VARIATION 0x46
+#define AUDIO_CMD_TEMPO              0x47
+#define AUDIO_CMD_TRANSPOSITION      0x48
+
+// Sequence audio commands
+#define AUDIO_CMD_PRELOAD_SEQUENCE    0x81
+#define AUDIO_CMD_LOAD_SEQUENCE       0x82
+#define AUDIO_CMD_FADE_TO_ZERO_VOLUME 0x83
+#define AUDIO_CMD_LOAD_SEQUENCE2      0x88
+
+// Other audio commands
+#define AUDIO_CMD_SOUND_MODE                  0xf0
+#define AUDIO_CMD_MUTE_ALL_SEQUENCE_PLAYERS   0xf1
+#define AUDIO_CMD_UNMUTE_ALL_SEQUENCE_PLAYERS 0xf2
+
+#endif
+
 struct NotePool;
 
 struct AudioListItem

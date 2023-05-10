@@ -10,10 +10,6 @@
 // bit which may be read by the sequence script.
 #define SEQUENCE_ARGS(priority, seqId) ((priority << 8) | seqId)
 
-#if defined(VERSION_EU) || defined(VERSION_SH)
-#define AUDIO_CMD_ARGS(cmd, arg1, arg2, arg3) (((cmd & 0xff) << 24) | ((arg1 & 0xff) << 16) | ((arg2 & 0xff) << 8) | (arg3 & 0xff))
-#endif
-
 #define SOUND_MODE_STEREO           0
 #define SOUND_MODE_MONO             3
 #define SOUND_MODE_HEADSET          1
@@ -65,8 +61,8 @@ u8 get_current_background_music_target_volume(void);
 u8 get_current_background_music_max_target_volume(void);
 u8 is_current_background_music_volume_lowered(void);
 void play_secondary_music(u8 seqId, u8 bgMusicVolume, u8 volume, u16 fadeTimer);
-void func_80321080(u16 fadeTimer);
-void func_803210D4(u16 fadeOutTime);
+void stop_secondary_music(u16 fadeTimer);
+void set_audio_fadeout(u16 fadeOutTime);
 void play_course_clear(void);
 void play_peachs_jingle(void);
 void play_puzzle_jingle(void);

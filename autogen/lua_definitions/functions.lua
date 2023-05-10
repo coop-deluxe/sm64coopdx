@@ -3893,6 +3893,12 @@ function seq_player_unlower_volume(player, fadeDuration)
     -- ...
 end
 
+--- @param fadeOutTime integer
+--- @return nil
+function set_audio_fadeout(fadeOutTime)
+    -- ...
+end
+
 --- @param player integer
 --- @param bankMask integer
 --- @return nil
@@ -3910,6 +3916,12 @@ end
 --- @param seqId integer
 --- @return nil
 function stop_background_music(seqId)
+    -- ...
+end
+
+--- @param fadeTimer integer
+--- @return nil
+function stop_secondary_music(fadeTimer)
     -- ...
 end
 

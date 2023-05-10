@@ -214,7 +214,7 @@ void play_infinite_stairs_music(void) {
         if (shouldPlay) {
             play_secondary_music(SEQ_EVENT_ENDLESS_STAIRS, 0, 255, 1000);
         } else {
-            func_80321080(500);
+            stop_secondary_music(500);
         }
     }
 }
@@ -241,7 +241,7 @@ void set_background_music(u16 a, u16 seqArgs, s16 fadeTimer) {
  * Called from threads: thread3_main, thread5_game_loop
  */
 void fadeout_music(s16 fadeOutTime) {
-    func_803210D4(fadeOutTime);
+    set_audio_fadeout(fadeOutTime);
     sCurrentMusic = MUSIC_NONE;
     sCurrentShellMusic = MUSIC_NONE;
     sCurrentCapMusic = MUSIC_NONE;
