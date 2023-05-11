@@ -131,31 +131,31 @@ void djui_base_compute(struct DjuiBase* base) {
     struct DjuiBase* parent   = base->parent;
     struct DjuiBaseRect* comp = &base->comp;
 
-    f32 x = (base->x.type == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->x.value : base->x.value;
-    f32 y = (base->y.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->y.value : base->y.value;
+    f32 x = (parent && base->x.type == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->x.value : base->x.value;
+    f32 y = (parent && base->y.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->y.value : base->y.value;
 
-    f32 width  = (base->width.type  == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->width.value  : base->width.value;
-    f32 height = (base->height.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->height.value : base->height.value;
+    f32 width  = (parent && base->width.type  == DJUI_SVT_RELATIVE) ? parent->comp.width  * base->width.value  : base->width.value;
+    f32 height = (parent && base->height.type == DJUI_SVT_RELATIVE) ? parent->comp.height * base->height.value : base->height.value;
 
     width  = (base->width.type  == DJUI_SVT_ASPECT_RATIO) ? height * base->width.value  : width;
     height = (base->height.type == DJUI_SVT_ASPECT_RATIO) ? width  * base->height.value : height;
 
-    // horizontal alignment
-    if (base->hAlign == DJUI_HALIGN_CENTER) {
-        x += (parent->comp.width - width) / 2.0f;
-    } else if (base->hAlign == DJUI_HALIGN_RIGHT) {
-        x = parent->comp.width - width - x;
-    }
+    if (parent != NULL) {
+        // horizontal alignment
+        if (base->hAlign == DJUI_HALIGN_CENTER) {
+            x += (parent->comp.width - width) / 2.0f;
+        } else if (base->hAlign == DJUI_HALIGN_RIGHT) {
+            x = parent->comp.width - width - x;
+        }
 
-    // vertical alignment
-    if (base->vAlign == DJUI_VALIGN_CENTER) {
-        y += (parent->comp.height - height) / 2.0f;
-    } else if (base->vAlign == DJUI_VALIGN_BOTTOM) {
-        y = parent->comp.height - height - y;
-    }
+        // vertical alignment
+        if (base->vAlign == DJUI_VALIGN_CENTER) {
+            y += (parent->comp.height - height) / 2.0f;
+        } else if (base->vAlign == DJUI_VALIGN_BOTTOM) {
+            y = parent->comp.height - height - y;
+        }
 
-    // offset comp on parent's location
-    if (base->parent != NULL) {
+        // offset comp on parent's location
         x += parent->comp.x;
         y += parent->comp.y;
     }

@@ -106,7 +106,7 @@ static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out
 static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                                           struct WallCollisionData *data) {
     register struct Surface *surf;
-    register f32 offset;
+    register f32 offset = 0;
     register f32 radius = data->radius;
     register f32 x = data->x;
     register f32 y = data->y + data->offsetY;

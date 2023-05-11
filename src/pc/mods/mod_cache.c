@@ -94,6 +94,7 @@ struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
                 return node;
             } else {
                 mod_cache_remove_node(node, prev);
+                node = prev;
             }
         }
         prev = node;
@@ -115,6 +116,7 @@ struct ModCacheEntry* mod_cache_get_from_path(const char* path, bool validate) {
                 return node;
             } else {
                 mod_cache_remove_node(node, prev);
+                node = prev;
             }
         }
         prev = node;
@@ -278,8 +280,8 @@ void mod_cache_load(void) {
         fread(&lastLoaded, sizeof(u64), 1, fp);
         fread(&pathLen, sizeof(u16), 1, fp);
 
-        const char* path = calloc(pathLen + 1, sizeof(u8));
-        fread((char*)path, sizeof(u8), pathLen + 1, fp);
+        const char* path = calloc(pathLen + 1, sizeof(char*));
+        fread((char*)path, sizeof(char*), pathLen + 1, fp);
 
         mod_cache_add_internal(dataHash, lastLoaded, path);
         count++;

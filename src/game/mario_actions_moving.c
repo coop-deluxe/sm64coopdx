@@ -704,8 +704,8 @@ void anim_and_audio_for_heavy_walk(struct MarioState *m) {
 
 void push_or_sidle_wall(struct MarioState *m, Vec3f startPos) {
     if (!m) { return; }
-    s16 wallAngle;
-    s16 dWallAngle;
+    s16 wallAngle = 0;
+    s16 dWallAngle = 0;
     f32 dx = m->pos[0] - startPos[0];
     f32 dz = m->pos[2] - startPos[2];
     f32 movedDistance = sqrtf(dx * dx + dz * dz);

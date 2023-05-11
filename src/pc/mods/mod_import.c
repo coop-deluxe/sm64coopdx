@@ -25,6 +25,7 @@ static bool mod_import_lua(char* src) {
     FILE* fout = fopen(dst, "wb");
     if (fout == NULL) {
         LOG_ERROR("Failed to open dst path for lua mod import");
+        fclose(fin);
         return false;
     }
 

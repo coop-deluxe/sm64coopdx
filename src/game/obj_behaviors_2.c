@@ -162,7 +162,7 @@ void platform_on_track_update_pos_or_spawn_ball(s32 ballIndex, f32 x, f32 y, f32
     f32 dx;
     f32 dy;
     f32 dz;
-    f32 distToNextWaypoint;
+    f32 distToNextWaypoint = 100;
 
     if (ballIndex == 0 || ((u16)(o->oBehParams >> 16) & 0x0080)) {
         initialPrevWaypoint = o->oPlatformOnTrackPrevWaypoint;
