@@ -986,6 +986,7 @@ void obj_set_face_angle_to_move_angle(struct Object *obj) {
 }
 
 u32 get_object_list_from_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return OBJ_LIST_DEFAULT; }
     u32 objectList;
 
     // If the first behavior command is "begin", then get the object list header
@@ -1000,6 +1001,7 @@ u32 get_object_list_from_behavior(const BehaviorScript *behavior) {
 }
 
 struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return NULL; }
     struct Object *obj;
     f32 dist;
 
@@ -1009,6 +1011,7 @@ struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavi
 }
 
 f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return 0; }
     struct Object *obj;
     f32 dist;
 

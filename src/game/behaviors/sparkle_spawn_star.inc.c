@@ -131,7 +131,7 @@ void bhv_spawned_star_loop(void) {
         }
         spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
     } else if (o->oAction == 2) {
-        if (gCamera->cutscene == 0 && gRecentCutscene == 0) {
+        if (gCamera && gCamera->cutscene == 0 && gRecentCutscene == 0) {
             gMarioStates[0].freeze = 0;
             clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
             o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;

@@ -10,7 +10,7 @@
 #define PRELOAD_BANKS 2
 #define PRELOAD_SEQUENCE 1
 
-#define IS_SEQUENCE_CHANNEL_VALID(ptr) ((uintptr_t)(ptr) != (uintptr_t)&gSequenceChannelNone)
+#define IS_SEQUENCE_CHANNEL_VALID(ptr) ((uintptr_t)(ptr) != (uintptr_t)&gSequenceChannelNone && ptr != NULL)
 
 extern struct Note *gNotes;
 

@@ -1269,6 +1269,7 @@ static BhvCommandProc BehaviorCmdTable[BEHAVIOR_CMD_TABLE_MAX] = {
 
 // Execute the behavior script of the current object, process the object flags, and other miscellaneous code for updating objects.
 void cur_obj_update(void) {
+    if (!gCurrentObject) { return; }
     // Don't update if dormant
     if (gCurrentObject->activeFlags & ACTIVE_FLAG_DORMANT) {
         gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;

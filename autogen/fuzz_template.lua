@@ -64,6 +64,11 @@ function rnd_number()
     return t[math.random(#t)]
 end
 
+function rnd_boolean()
+    t = { nil, false, true }
+    return t[math.random(#t)]
+end
+
 function rnd_Vec3s()
     t = { nil, { x = rnd_integer(), y = rnd_integer(), z = rnd_integer() } }
     return t[math.random(#t)]
@@ -124,18 +129,30 @@ function rnd_PlayerGeometry()
     return t[math.random(#t)]
 end
 
+function rnd_Surface()
+    t = { nil, gMarioStates[0].ceil, gMarioStates[0].floor }
+    return t[math.random(#t)]
+end
+
 --------
 
 function fuzz_functions()
 -- $[FUNCS]
 end
 
+id_bhvFuncs = hook_behavior(nil, OBJ_LIST_DEFAULT, true, fuzz_functions, nil, 'id_bhvFuncs')
+
 --------
 
 function fuzz_structs()
 end
 
+function update()
+    fuzz_functions()
+end
+
 hook_chat_command('fuzz-funcs', 'funcs', fuzz_functions)
 hook_chat_command('fuzz-structs', 'structs', fuzz_structs)
-fuzz_functions()
-print('!')
+hook_event(HOOK_UPDATE, update)
+
+spawn_non_sync_object(id_bhvFuncs, E_MODEL_SPINY_BALL, 0, 0, 0, nil)

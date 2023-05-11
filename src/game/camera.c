@@ -2871,6 +2871,7 @@ void transition_to_camera_mode(struct Camera *c, s16 newMode, s16 numFrames) {
  * @param frames number of frames the transition should last, only used when entering C_UP
  */
 void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
+    if (!c) { return; }
     struct LinearTransitionPoint *start = &sModeInfo.transitionStart;
     struct LinearTransitionPoint *end = &sModeInfo.transitionEnd;
 
@@ -5183,6 +5184,7 @@ void clear_cutscene_vars(UNUSED struct Camera *c) {
  * Start the cutscene, `cutscene`, if it is not already playing.
  */
 void start_cutscene(struct Camera *c, u8 cutscene) {
+    if (!c) { return; }
     if (c->cutscene != cutscene) {
         c->cutscene = cutscene;
         clear_cutscene_vars(c);
@@ -11448,6 +11450,7 @@ struct CutsceneSplinePoint sCcmOutsideCreditsSplineFocus[] = {
  * the duration they want the flag to be active.
  */
 void play_cutscene(struct Camera *c) {
+    if (!c) { return; }
     UNUSED u32 pad[3];
     UNUSED s16 unusedYawFocToMario;
     s16 cutsceneDuration = 0;
@@ -11828,6 +11831,7 @@ static UNUSED void unused_rotate_obj_randomly(struct Object *o, f32 pitchRange, 
  * Rotate the object towards the point `point`.
  */
 void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 yawOff, s16 pitchDiv, s16 yawDiv) {
+    if (!o) { return; }
     f32 dist;
     s16 pitch, yaw;
     Vec3f oPos;

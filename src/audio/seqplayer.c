@@ -34,6 +34,7 @@ u8 get_instrument(struct SequenceChannel *seqChannel, u8 instId, struct Instrume
                   struct AdsrSettings *adsr);
 
 void sequence_channel_init(struct SequenceChannel *seqChannel) {
+    if (!seqChannel) { return; }
     s32 i;
 
     seqChannel->enabled = FALSE;
@@ -101,6 +102,7 @@ void sequence_channel_init(struct SequenceChannel *seqChannel) {
 }
 
 s32 seq_channel_set_layer(struct SequenceChannel *seqChannel, s32 layerIndex) {
+    if (layerIndex >= LAYERS_MAX) { return 0; }
     struct SequenceChannelLayer *layer;
 
     if (seqChannel->layers[layerIndex] == NULL) {
@@ -167,6 +169,7 @@ void seq_channel_layer_disable(struct SequenceChannelLayer *layer) {
 }
 
 void seq_channel_layer_free(struct SequenceChannel *seqChannel, s32 layerIndex) {
+    if (layerIndex >= LAYERS_MAX) { return; }
     struct SequenceChannelLayer *layer = seqChannel->layers[layerIndex];
 
     if (layer != NULL) {
@@ -189,6 +192,7 @@ void seq_channel_layer_free(struct SequenceChannel *seqChannel, s32 layerIndex) 
 }
 
 void sequence_channel_disable(struct SequenceChannel *seqChannel) {
+    if (!seqChannel) { return; }
     for (s32 i = 0; i < LAYERS_MAX; i++) {
         seq_channel_layer_free(seqChannel, i);
     }
@@ -214,6 +218,7 @@ struct SequenceChannel *allocate_sequence_channel(void) {
 }
 
 void sequence_player_init_channels(struct SequencePlayer *seqPlayer, u16 channelBits) {
+    if (!seqPlayer) { return; }
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
         if (channelBits & 1) {
             struct SequenceChannel *seqChannel = seqPlayer->channels[i];
@@ -244,6 +249,7 @@ void sequence_player_init_channels(struct SequencePlayer *seqPlayer, u16 channel
 }
 
 void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 channelBits) {
+    if (!seqPlayer) { return; }
     eu_stubbed_printf_0("SUBTRACK DIM\n");
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
         if (channelBits & 1) {
@@ -272,6 +278,7 @@ void sequence_player_disable_channels(struct SequencePlayer *seqPlayer, u16 chan
 }
 
 void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBits) {
+    if (!seqPlayer) { return; }
     LOG_DEBUG("Enabling channels (extended) with corresponding bits %llX", channelBits);
     
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
@@ -309,6 +316,7 @@ void sequence_player_init_channels_extended(struct SequencePlayer* seqPlayer, u6
 }
 
 void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer, u64 channelBits) {
+    if (!seqPlayer) { return; }
     LOG_DEBUG("Disabling channels (extended) with corresponding bits %llX", channelBits);
 
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
@@ -331,6 +339,7 @@ void sequence_player_disable_channels_extended(struct SequencePlayer* seqPlayer,
 }
 
 void sequence_player_disable_all_channels(struct SequencePlayer *seqPlayer) {
+    if (!seqPlayer) { return; }
     eu_stubbed_printf_0("SUBTRACK DIM\n");
     for (u32 i = 0; i < CHANNELS_MAX; i++) {
         struct SequenceChannel *seqChannel = seqPlayer->channels[i];
@@ -352,6 +361,8 @@ void sequence_player_disable_all_channels(struct SequencePlayer *seqPlayer) {
 }
 
 void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, void *script) {
+    if (!seqPlayer) { return; }
+    if (channelIndex >= CHANNELS_MAX) { return; }
     struct SequenceChannel *seqChannel = seqPlayer->channels[channelIndex];
     s32 i;
     if (IS_SEQUENCE_CHANNEL_VALID(seqChannel) == FALSE) {
@@ -386,6 +397,7 @@ void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, 
 }
 
 void sequence_player_disable(struct SequencePlayer *seqPlayer) {
+    if (!seqPlayer) { return; }
     LOG_DEBUG("Disabling sequence player %p", seqPlayer);
     
     sequence_player_disable_all_channels(seqPlayer);
@@ -435,6 +447,7 @@ void sequence_player_disable(struct SequencePlayer *seqPlayer) {
  * Add an item to the end of a list, if it's not already in any list.
  */
 void audio_list_push_back(struct AudioListItem *list, struct AudioListItem *item) {
+    if (!list || !item) { return; }
     if (item->prev != NULL) {
         eu_stubbed_printf_0("Error:Same List Add\n");
     } else {
@@ -451,6 +464,7 @@ void audio_list_push_back(struct AudioListItem *list, struct AudioListItem *item
  * Remove the last item from a list, and return it (or NULL if empty).
  */
 void *audio_list_pop_back(struct AudioListItem *list) {
+    if (!list) { return NULL; }
     struct AudioListItem *item = list->prev;
     if (item == list) {
         return NULL;
@@ -2902,6 +2916,7 @@ void process_sequences(UNUSED s32 iterationsRemaining) {
 }
 
 void init_sequence_player(u32 player) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     struct SequencePlayer *seqPlayer = &gSequencePlayers[player];
 #if defined(VERSION_EU) || defined(VERSION_SH)
     sequence_player_disable(seqPlayer);

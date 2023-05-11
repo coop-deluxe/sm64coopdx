@@ -1762,6 +1762,7 @@ static void update_game_sound(void) {
  * Called from threads: thread4_sound, thread5_game_loop
  */
 static void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     u8 targetVolume;
     u8 i;
 
@@ -1840,6 +1841,8 @@ void fade_volume_scale(u8 player, u8 targetScale, u16 fadeDuration) {
  */
 static void fade_channel_volume_scale(u8 player, u8 channelIndex, u8 targetScale, u16 fadeDuration) {
     struct ChannelVolumeScaleFade *temp;
+    if (player >= SEQUENCE_PLAYERS) { return; }
+    if (channelIndex >= CHANNELS_MAX) { return; }
 
     if (gSequencePlayers[player].channels[channelIndex] != &gSequenceChannelNone) {
         temp = &sVolumeScaleFades[player][channelIndex];
@@ -1856,6 +1859,7 @@ static void fade_channel_volume_scale(u8 player, u8 channelIndex, u8 targetScale
  * Called from threads: thread4_sound, thread5_game_loop (EU only)
  */
 static void fade_seqplayer_channels(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     // Loop over channels
     for (u8 i = 0; i < CHANNELS_MAX; i++) {
         if (gSequencePlayers[player].channels[i] != &gSequenceChannelNone
@@ -2260,6 +2264,9 @@ void stop_sound(u32 soundBits, f32 *pos) {
             sSoundBanks[bank][soundIndex].soundBits = NO_SOUND;
             soundIndex = 0xff; // break
         } else {
+            if (soundIndex == sSoundBanks[bank][soundIndex].next) {
+                break;
+            }
             soundIndex = sSoundBanks[bank][soundIndex].next;
         }
     }

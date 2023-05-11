@@ -530,6 +530,7 @@ static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
 }
 
 bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
+    if (!gCamera) { return false; }
     hud_rotate_and_translate_vec3f(pos, &gCamera->mtx, out);
     if (out[2] >= 0.0f) {
         return false;
