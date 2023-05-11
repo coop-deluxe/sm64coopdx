@@ -5341,6 +5341,28 @@
 
 <br />
 
+## [obj_init_animation_with_sound](#obj_init_animation_with_sound)
+
+### Lua Example
+`obj_init_animation_with_sound(obj, animations, animIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| animations | [AnimationTable](structs.md#AnimationTable) |
+| animIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTable* animations, s32 animIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_is_hidden](#obj_is_hidden)
 
 ### Lua Example

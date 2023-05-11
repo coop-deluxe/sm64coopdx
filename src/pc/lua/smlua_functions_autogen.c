@@ -9082,7 +9082,7 @@ int smlua_func_get_id_from_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript* behavior = (BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_id_from_behavior"); return 0; }
 
     lua_pushinteger(L, get_id_from_behavior(behavior));
@@ -9116,7 +9116,7 @@ int smlua_func_get_id_from_vanilla_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript* behavior = (BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_id_from_vanilla_behavior"); return 0; }
 
     lua_pushinteger(L, get_id_from_vanilla_behavior(behavior));
@@ -20955,7 +20955,7 @@ int smlua_func_count_objects_with_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "count_objects_with_behavior"); return 0; }
 
     extern s32 count_objects_with_behavior(const BehaviorScript *behavior);
@@ -21445,7 +21445,7 @@ int smlua_func_cur_obj_count_objects_with_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript* behavior = (BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_count_objects_with_behavior"); return 0; }
     f32 dist = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_count_objects_with_behavior"); return 0; }
@@ -21533,7 +21533,7 @@ int smlua_func_cur_obj_dist_to_nearest_object_with_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_dist_to_nearest_object_with_behavior"); return 0; }
 
     extern f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior);
@@ -21655,7 +21655,7 @@ int smlua_func_cur_obj_find_nearby_held_actor(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_find_nearby_held_actor"); return 0; }
     f32 maxDist = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_find_nearby_held_actor"); return 0; }
@@ -21675,7 +21675,7 @@ int smlua_func_cur_obj_find_nearest_object_with_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_find_nearest_object_with_behavior"); return 0; }
     f32 * dist = (f32 *)smlua_to_cpointer(L, 2, LVT_F32_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_find_nearest_object_with_behavior"); return 0; }
@@ -21787,7 +21787,7 @@ int smlua_func_cur_obj_has_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_has_behavior"); return 0; }
 
     extern s32 cur_obj_has_behavior(const BehaviorScript *behavior);
@@ -22333,7 +22333,7 @@ int smlua_func_cur_obj_nearest_object_with_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_nearest_object_with_behavior"); return 0; }
 
     extern struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior);
@@ -22605,7 +22605,7 @@ int smlua_func_cur_obj_set_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_set_behavior"); return 0; }
 
     extern void cur_obj_set_behavior(const BehaviorScript *behavior);
@@ -23409,7 +23409,7 @@ int smlua_func_find_object_with_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "find_object_with_behavior"); return 0; }
 
     extern struct Object *find_object_with_behavior(const BehaviorScript *behavior);
@@ -23707,7 +23707,7 @@ int smlua_func_get_object_list_from_behavior(lua_State* L) {
         return 0;
     }
 
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 1, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_object_list_from_behavior"); return 0; }
 
     extern u32 get_object_list_from_behavior(const BehaviorScript *behavior);
@@ -24489,7 +24489,7 @@ int smlua_func_obj_has_behavior(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_has_behavior"); return 0; }
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_has_behavior"); return 0; }
 
     extern s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior);
@@ -24540,7 +24540,6 @@ int smlua_func_obj_init_animation_with_accel_and_sound(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_obj_init_animation_with_sound(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -24552,17 +24551,16 @@ int smlua_func_obj_init_animation_with_sound(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_init_animation_with_sound"); return 0; }
-//  const structAnimation*const* animations = (const structAnimation*const*)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+    struct AnimationTable* animations = (struct AnimationTable*)smlua_to_cobject(L, 2, LOT_ANIMATIONTABLE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_init_animation_with_sound"); return 0; }
     s32 animIndex = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_init_animation_with_sound"); return 0; }
 
-    extern void obj_init_animation_with_sound(struct Object *obj, const struct Animation * const* animations, s32 animIndex);
+    extern void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTable* animations, s32 animIndex);
     obj_init_animation_with_sound(obj, animations, animIndex);
 
     return 1;
 }
-*/
 
 int smlua_func_obj_is_hidden(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -24721,7 +24719,7 @@ int smlua_func_obj_set_behavior(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_behavior"); return 0; }
-    const BehaviorScript* behavior = (const BehaviorScript*)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * behavior = (BehaviorScript *)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_behavior"); return 0; }
 
     extern void obj_set_behavior(struct Object *obj, const BehaviorScript *behavior);
@@ -24760,7 +24758,7 @@ int smlua_func_obj_set_collision_data(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_collision_data"); return 0; }
-//  const void* segAddr = (const void*)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+//  void * segAddr = (void *)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_collision_data"); return 0; }
 
     extern void obj_set_collision_data(struct Object *obj, const void *segAddr);
@@ -24951,7 +24949,7 @@ int smlua_func_obj_set_held_state(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_held_state"); return 0; }
-    const BehaviorScript* heldBehavior = (const BehaviorScript*)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * heldBehavior = (BehaviorScript *)smlua_to_cpointer(L, 2, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_held_state"); return 0; }
 
     extern void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior);
@@ -25179,7 +25177,7 @@ int smlua_func_obj_spawn_loot_coins(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_spawn_loot_coins"); return 0; }
     f32 sp30 = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_spawn_loot_coins"); return 0; }
-    const BehaviorScript* coinBehavior = (const BehaviorScript*)smlua_to_cpointer(L, 4, LVT_BEHAVIORSCRIPT_P);
+    BehaviorScript * coinBehavior = (BehaviorScript *)smlua_to_cpointer(L, 4, LVT_BEHAVIORSCRIPT_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "obj_spawn_loot_coins"); return 0; }
     s16 posJitter = smlua_to_integer(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "obj_spawn_loot_coins"); return 0; }
@@ -30794,7 +30792,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_has_behavior", smlua_func_obj_has_behavior);
     smlua_bind_function(L, "obj_init_animation", smlua_func_obj_init_animation);
     smlua_bind_function(L, "obj_init_animation_with_accel_and_sound", smlua_func_obj_init_animation_with_accel_and_sound);
-    //smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound);
     smlua_bind_function(L, "obj_is_hidden", smlua_func_obj_is_hidden);
     smlua_bind_function(L, "obj_mark_for_deletion", smlua_func_obj_mark_for_deletion);
     smlua_bind_function(L, "obj_pitch_to_object", smlua_func_obj_pitch_to_object);

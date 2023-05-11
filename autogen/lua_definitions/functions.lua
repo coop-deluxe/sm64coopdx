@@ -7436,6 +7436,14 @@ function obj_init_animation_with_accel_and_sound(obj, animIndex, accel)
 end
 
 --- @param obj Object
+--- @param animations AnimationTable
+--- @param animIndex integer
+--- @return nil
+function obj_init_animation_with_sound(obj, animations, animIndex)
+    -- ...
+end
+
+--- @param obj Object
 --- @return integer
 function obj_is_hidden(obj)
     -- ...

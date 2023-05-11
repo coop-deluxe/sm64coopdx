@@ -512,6 +512,9 @@ def reject_line(line):
         return True
 
 def normalize_type(t):
+    if 'char' not in t:
+        t = t.replace('const', '')
+
     t = t.strip()
     if ' ' in t:
         parts = t.split(' ', 1)
