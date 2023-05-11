@@ -323,6 +323,7 @@ s32 act_top_of_pole(struct MarioState *m) {
 }
 
 s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
+    if (!m) { return 0; }
     UNUSED s32 unused;
     struct Surface *ceil;
     struct Surface *floor;
@@ -1075,6 +1076,7 @@ s32 check_common_automatic_cancels(struct MarioState *m) {
 }
 
 s32 mario_execute_automatic_action(struct MarioState *m) {
+    if (!m) { return FALSE; }
     s32 cancel;
 
     if (check_common_automatic_cancels(m)) {

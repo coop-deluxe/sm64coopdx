@@ -4123,6 +4123,7 @@ s32 is_within_100_units_of_mario(f32 posX, f32 posY, f32 posZ) {
 }
 
 s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale) {
+    if (!dst) { return FALSE; }
     if (sStatusFlags & CAM_FLAG_SMOOTH_MOVEMENT) {
         approach_f32_asymptotic_bool(dst, goal, scale);
     } else {
@@ -4141,6 +4142,7 @@ s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale) {
  * Edits the current value directly, returns TRUE if the target has been reached, FALSE otherwise.
  */
 s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier) {
+    if (!current) { return FALSE; }
     if (multiplier > 1.f) {
         multiplier = 1.f;
     }
@@ -4166,6 +4168,7 @@ f32 approach_f32_asymptotic(f32 current, f32 target, f32 multiplier) {
  * reciprocal of what it would be in the previous two functions.
  */
 s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor) {
+    if (!current) { return FALSE; }
     s16 temp = *current;
 
     if (divisor == 0) {
@@ -4232,6 +4235,7 @@ void approach_vec3s_asymptotic(Vec3s current, Vec3s target, s16 xMul, s16 yMul, 
 }
 
 s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment) {
+    if (!current) { return FALSE; }
     s16 dist = target - *current;
 
     if (increment < 0) {
@@ -4284,6 +4288,7 @@ s32 camera_approach_s16_symmetric(s16 current, s16 target, s16 increment) {
 }
 
 s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment) {
+    if (!current) { return FALSE; }
     if (sStatusFlags & CAM_FLAG_SMOOTH_MOVEMENT) {
         camera_approach_s16_symmetric_bool(current, target, increment);
     } else {
@@ -4302,6 +4307,7 @@ s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment) {
  * It could possibly be an older version of the function
  */
 s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment) {
+    if (!current) { return FALSE; }
     f32 dist = target - *current;
 
     if (increment < 0) {
@@ -5098,7 +5104,8 @@ s32 trigger_cutscene_dialog(s32 trigger) {
  * Updates the camera based on which C buttons are pressed this frame
  */
 void handle_c_button_movement(struct Camera *c) {
-    s16 cSideYaw;
+    if (!c) { return; }
+    s16 cSideYaw = 0;
 
     // Zoom in
     if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & U_CBUTTONS) {
@@ -5238,9 +5245,8 @@ u8 open_door_cutscene(u8 pullResult, u8 pushResult) {
  * @return the cutscene that should start, 0 if none
  */
 u8 get_cutscene_from_mario_status(struct Camera *c) {
-    UNUSED u8 unused1[4];
+    if (!c) { return 0; }
     u8 cutscene = c->cutscene;
-    UNUSED u8 unused2[12];
 
     if (cutscene == 0) {
         // A cutscene started by an object, if any, will start if nothing else happened
@@ -5621,6 +5627,7 @@ static UNUSED void stop_transitional_movement(void) {
  * @return TRUE if the base pos was updated
  */
 s32 set_camera_mode_fixed(struct Camera *c, s16 x, s16 y, s16 z) {
+    if (!c) { return FALSE; }
     s32 basePosSet = FALSE;
     f32 posX = x;
     f32 posY = y;
@@ -5643,6 +5650,7 @@ s32 set_camera_mode_fixed(struct Camera *c, s16 x, s16 y, s16 z) {
 }
 
 void set_camera_mode_8_directions(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode != CAMERA_MODE_8_DIRECTIONS) {
         c->mode = CAMERA_MODE_8_DIRECTIONS;
         sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
@@ -5660,6 +5668,7 @@ void set_camera_mode_8_directions(struct Camera *c) {
  * set it to be so.
  */
 void set_camera_mode_boss_fight(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode != CAMERA_MODE_BOSS_FIGHT) {
         transition_to_camera_mode(c, CAMERA_MODE_BOSS_FIGHT, 15);
         sModeOffsetYaw = c->nextYaw - DEGREES(45);
@@ -5667,6 +5676,7 @@ void set_camera_mode_boss_fight(struct Camera *c) {
 }
 
 void set_camera_mode_close_cam(u8 *mode) {
+    if (!mode) { return; }
     if (*mode != CAMERA_MODE_CLOSE) {
         sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
         *mode = CAMERA_MODE_CLOSE;
@@ -5683,6 +5693,7 @@ void set_camera_mode_close_cam(u8 *mode) {
  * Otherwise jump to radial mode.
  */
 void set_camera_mode_radial(struct Camera *c, s16 transitionTime) {
+    if (!c) { return; }
     Vec3f focus;
     s16 yaw;
 
@@ -5709,6 +5720,7 @@ void set_camera_mode_radial(struct Camera *c, s16 transitionTime) {
  * Start parallel tracking mode using the path `path`
  */
 void parallel_tracking_init(struct Camera *c, struct ParallelTrackingPoint *path) {
+    if (!c) { return; }
     if (c->mode != CAMERA_MODE_PARALLEL_TRACKING) {
         sParTrackPath = path;
         sParTrackIndex = 0;
@@ -5758,10 +5770,12 @@ void check_blocking_area_processing(const u8 *mode) {
         sStatusFlags &= ~CAM_FLAG_BLOCK_AREA_PROCESSING;
     }
 
-    if ((*mode == CAMERA_MODE_BEHIND_MARIO &&
-            !(sMarioCamState->action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER))) ||
-         *mode == CAMERA_MODE_INSIDE_CANNON) {
-        sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
+    if (mode) {
+        if ((*mode == CAMERA_MODE_BEHIND_MARIO &&
+                !(sMarioCamState->action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER))) ||
+            *mode == CAMERA_MODE_INSIDE_CANNON) {
+            sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
+        }
     }
 }
 
@@ -5772,7 +5786,7 @@ BAD_RETURN(s32) cam_rr_exit_building_side(struct Camera *c) {
 
 BAD_RETURN(s32) cam_rr_exit_building_top(struct Camera *c) {
     set_camera_mode_8_directions(c);
-    if (c->pos[1] < 6343.f) {
+    if (c && c->pos[1] < 6343.f) {
         c->pos[1] = 7543.f;
         gLakituState.goalPos[1] = c->pos[1];
         gLakituState.curPos[1] = c->pos[1];
@@ -5781,12 +5795,13 @@ BAD_RETURN(s32) cam_rr_exit_building_top(struct Camera *c) {
 }
 
 BAD_RETURN(s32) cam_rr_enter_building_window(struct Camera *c) {
-    if (c->mode != CAMERA_MODE_FIXED) {
+    if (c && c->mode != CAMERA_MODE_FIXED) {
         set_camera_mode_fixed(c, -2974, 478, -3975);
     }
 }
 
 BAD_RETURN(s32) cam_rr_enter_building(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode != CAMERA_MODE_FIXED) {
         set_camera_mode_fixed(c, -2953, 798, -3943);
     }
@@ -5797,6 +5812,7 @@ BAD_RETURN(s32) cam_rr_enter_building(struct Camera *c) {
 }
 
 BAD_RETURN(s32) cam_rr_enter_building_side(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode != CAMERA_MODE_FIXED) {
         sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
         c->mode = CAMERA_MODE_FIXED;
@@ -5808,6 +5824,7 @@ BAD_RETURN(s32) cam_rr_enter_building_side(struct Camera *c) {
  * Fix the camera in place as Mario gets exits out the MC cave into the waterfall.
  */
 BAD_RETURN(s32) cam_cotmc_exit_waterfall(UNUSED struct Camera *c) {
+    if (!c) { return; }
     gCameraMovementFlags |= CAM_MOVE_FIX_IN_PLACE;
 }
 
@@ -5816,6 +5833,7 @@ BAD_RETURN(s32) cam_cotmc_exit_waterfall(UNUSED struct Camera *c) {
  * Activated when Mario is walking in front of the snowman's head.
  */
 BAD_RETURN(s32) cam_sl_snowman_head_8dir(struct Camera *c) {
+    if (!c) { return; }
     sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
     transition_to_camera_mode(c, CAMERA_MODE_8_DIRECTIONS, 60);
     s8DirModeBaseYaw = 0x1D27;
@@ -5826,6 +5844,7 @@ BAD_RETURN(s32) cam_sl_snowman_head_8dir(struct Camera *c) {
  * trigger.
  */
 BAD_RETURN(s32) cam_sl_free_roam(struct Camera *c) {
+    if (!c) { return; }
     transition_to_camera_mode(c, CAMERA_MODE_FREE_ROAM, 60);
 }
 
@@ -5833,6 +5852,7 @@ BAD_RETURN(s32) cam_sl_free_roam(struct Camera *c) {
  * Warps the camera underneath the floor, used in HMC to move under the elevator platforms
  */
 void move_camera_through_floor_while_descending(struct Camera *c, f32 height) {
+    if (!c) { return; }
     UNUSED f32 pad;
 
     if ((sMarioGeometry.currFloorHeight < height - 100.f)
@@ -5844,6 +5864,7 @@ void move_camera_through_floor_while_descending(struct Camera *c, f32 height) {
 }
 
 BAD_RETURN(s32) cam_hmc_enter_maze(struct Camera *c) {
+    if (!c) { return; }
     s16 pitch, yaw;
     f32 dist;
 
@@ -5860,18 +5881,22 @@ BAD_RETURN(s32) cam_hmc_enter_maze(struct Camera *c) {
 }
 
 BAD_RETURN(s32) cam_hmc_elevator_black_hole(struct Camera *c) {
+    if (!c) { return; }
     move_camera_through_floor_while_descending(c, 1536.f);
 }
 
 BAD_RETURN(s32) cam_hmc_elevator_maze_emergency_exit(struct Camera *c) {
+    if (!c) { return; }
     move_camera_through_floor_while_descending(c, 2355.f);
 }
 
 BAD_RETURN(s32) cam_hmc_elevator_lake(struct Camera *c) {
+    if (!c) { return; }
     move_camera_through_floor_while_descending(c, 1843.f);
 }
 
 BAD_RETURN(s32) cam_hmc_elevator_maze(struct Camera *c) {
+    if (!c) { return; }
     move_camera_through_floor_while_descending(c, 1843.f);
 }
 
@@ -5879,6 +5904,7 @@ BAD_RETURN(s32) cam_hmc_elevator_maze(struct Camera *c) {
  * Starts the "Enter Pyramid Top" cutscene.
  */
 BAD_RETURN(s32) cam_ssl_enter_pyramid_top(UNUSED struct Camera *c) {
+    if (!c) { return; }
     start_object_cutscene_without_focus(CUTSCENE_ENTER_PYRAMID_TOP);
 }
 
@@ -5887,6 +5913,7 @@ BAD_RETURN(s32) cam_ssl_enter_pyramid_top(UNUSED struct Camera *c) {
  * radial.
  */
 BAD_RETURN(s32) cam_ssl_pyramid_center(struct Camera *c) {
+    if (!c) { return; }
     sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
     transition_to_camera_mode(c, CAMERA_MODE_CLOSE, 90);
 }
@@ -5895,6 +5922,7 @@ BAD_RETURN(s32) cam_ssl_pyramid_center(struct Camera *c) {
  * Changes the mode back to outward radial in the boss room inside the pyramid.
  */
 BAD_RETURN(s32) cam_ssl_boss_room(struct Camera *c) {
+    if (!c) { return; }
     sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
     transition_to_camera_mode(c, CAMERA_MODE_OUTWARD_RADIAL, 90);
 }
@@ -5903,6 +5931,7 @@ BAD_RETURN(s32) cam_ssl_boss_room(struct Camera *c) {
  * Moves the camera to through the tunnel by forcing sModeOffsetYaw
  */
 BAD_RETURN(s32) cam_thi_move_cam_through_tunnel(UNUSED struct Camera *c) {
+    if (!c) { return; }
     if (sModeOffsetYaw < DEGREES(60)) {
         sModeOffsetYaw = DEGREES(60);
     }
@@ -5912,6 +5941,7 @@ BAD_RETURN(s32) cam_thi_move_cam_through_tunnel(UNUSED struct Camera *c) {
  * Aligns the camera to look through the tunnel
  */
 BAD_RETURN(s32) cam_thi_look_through_tunnel(UNUSED struct Camera *c) {
+    if (!c) { return; }
     // ~82.5 degrees
     if (sModeOffsetYaw > 0x3AAA) {
         sModeOffsetYaw = 0x3AAA;
@@ -5924,6 +5954,7 @@ BAD_RETURN(s32) cam_thi_look_through_tunnel(UNUSED struct Camera *c) {
  * @see sCamBOB for bounds.
  */
 BAD_RETURN(s32) cam_bob_tower(struct Camera *c) {
+    if (!c) { return; }
     sStatusFlags |= CAM_FLAG_BLOCK_AREA_PROCESSING;
     transition_to_camera_mode(c, CAMERA_MODE_RADIAL, 90);
 }
@@ -5937,6 +5968,7 @@ BAD_RETURN(s32) cam_bob_tower(struct Camera *c) {
  * @see sCamBOB
  */
 BAD_RETURN(s32) cam_bob_default_free_roam(struct Camera *c) {
+    if (!c) { return; }
     transition_to_camera_mode(c, CAMERA_MODE_FREE_ROAM, 90);
 }
 
@@ -5945,6 +5977,7 @@ BAD_RETURN(s32) cam_bob_default_free_roam(struct Camera *c) {
  * Used in both the castle and HMC.
  */
 BAD_RETURN(s32) cam_castle_hmc_start_pool_cutscene(struct Camera *c) {
+    if (!c) { return; }
     if ((sMarioCamState->action != ACT_SPECIAL_DEATH_EXIT)
         && (sMarioCamState->action != ACT_SPECIAL_EXIT_AIRBORNE)) {
         start_cutscene(c, CUTSCENE_ENTER_POOL);
@@ -5956,6 +5989,7 @@ BAD_RETURN(s32) cam_castle_hmc_start_pool_cutscene(struct Camera *c) {
  * to the castle lobby
  */
 BAD_RETURN(s32) cam_castle_lobby_entrance(UNUSED struct Camera *c) {
+    if (!c) { return; }
     vec3f_set(sCastleEntranceOffset, -813.f - sFixedModeBasePosition[0],
               378.f - sFixedModeBasePosition[1], 1103.f - sFixedModeBasePosition[2]);
 }
@@ -5964,6 +5998,7 @@ BAD_RETURN(s32) cam_castle_lobby_entrance(UNUSED struct Camera *c) {
  * Make the camera look up the stairs from the 2nd to 3rd floor of the castle
  */
 BAD_RETURN(s32) cam_castle_look_upstairs(struct Camera *c) {
+    if (!c) { return; }
     struct Surface *floor;
     f32 floorHeight = find_floor(c->pos[0], c->pos[1], c->pos[2], &floor);
 
@@ -5978,6 +6013,7 @@ BAD_RETURN(s32) cam_castle_look_upstairs(struct Camera *c) {
  * Make the camera look down the stairs towards the basement star door
  */
 BAD_RETURN(s32) cam_castle_basement_look_downstairs(struct Camera *c) {
+    if (!c) { return; }
     struct Surface *floor;
     f32 floorHeight = find_floor(c->pos[0], c->pos[1], c->pos[2], &floor);
 
@@ -5992,6 +6028,7 @@ BAD_RETURN(s32) cam_castle_basement_look_downstairs(struct Camera *c) {
  * changes to fixed mode.
  */
 BAD_RETURN(s32) cam_castle_enter_lobby(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode != CAMERA_MODE_FIXED) {
         sStatusFlags &= ~CAM_FLAG_SMOOTH_MOVEMENT;
         set_fixed_cam_axis_sa_lobby(c->mode);
@@ -6004,6 +6041,7 @@ BAD_RETURN(s32) cam_castle_enter_lobby(struct Camera *c) {
  * Starts spiral stairs mode.
  */
 BAD_RETURN(s32) cam_castle_enter_spiral_stairs(struct Camera *c) {
+    if (!c) { return; }
     transition_to_camera_mode(c, CAMERA_MODE_SPIRAL_STAIRS, 20);
 }
 
@@ -6012,6 +6050,7 @@ BAD_RETURN(s32) cam_castle_enter_spiral_stairs(struct Camera *c) {
  * This was replaced with cam_castle_close_mode
  */
 static UNUSED BAD_RETURN(s32) cam_castle_leave_spiral_stairs(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode == CAMERA_MODE_SPIRAL_STAIRS) {
         transition_to_camera_mode(c, CAMERA_MODE_CLOSE, 30);
     } else {
@@ -6024,6 +6063,7 @@ static UNUSED BAD_RETURN(s32) cam_castle_leave_spiral_stairs(struct Camera *c) {
  * every door leaving the lobby and spiral staircase.
  */
 BAD_RETURN(s32) cam_castle_close_mode(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_close_cam(&c->mode);
 }
 
@@ -6032,6 +6072,7 @@ BAD_RETURN(s32) cam_castle_close_mode(struct Camera *c) {
  * fixed-mode when Mario leaves the room.
  */
 BAD_RETURN(s32) cam_castle_leave_lobby_sliding_door(struct Camera *c) {
+    if (!c) { return; }
     cam_castle_close_mode(c);
     c->doorStatus = DOOR_ENTER_LOBBY;
 }
@@ -6040,18 +6081,22 @@ BAD_RETURN(s32) cam_castle_leave_lobby_sliding_door(struct Camera *c) {
  * Just calls cam_castle_enter_lobby
  */
 BAD_RETURN(s32) cam_castle_enter_lobby_sliding_door(struct Camera *c) {
+    if (!c) { return; }
     cam_castle_enter_lobby(c);
 }
 
 BAD_RETURN(s32) cam_bbh_room_6(struct Camera *c) {
+    if (!c) { return; }
     parallel_tracking_init(c, sBBHLibraryParTrackPath);
 }
 
 BAD_RETURN(s32) cam_bbh_fall_off_roof(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_close_cam(&c->mode);
 }
 
 BAD_RETURN(s32) cam_bbh_fall_into_pool(struct Camera *c) {
+    if (!c) { return; }
     Vec3f dir;
     set_camera_mode_close_cam(&c->mode);
     vec3f_set(dir, 0.f, 0.f, 300.f);
@@ -6062,23 +6107,28 @@ BAD_RETURN(s32) cam_bbh_fall_into_pool(struct Camera *c) {
 }
 
 BAD_RETURN(s32) cam_bbh_room_1(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 956, 440, 1994);
 }
 
 BAD_RETURN(s32) cam_bbh_leave_front_door(struct Camera *c) {
+    if (!c) { return; }
     c->doorStatus = DOOR_LEAVING_SPECIAL;
     cam_bbh_room_1(c);
 }
 
 BAD_RETURN(s32) cam_bbh_room_2_lower(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 2591, 400, 1284);
 }
 
 BAD_RETURN(s32) cam_bbh_room_4(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 3529, 340, -1384);
 }
 
 BAD_RETURN(s32) cam_bbh_room_8(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, -500, 740, -1306);
 }
 
@@ -6087,6 +6137,7 @@ BAD_RETURN(s32) cam_bbh_room_8(struct Camera *c) {
  * set the camera mode to fixed and position to (-2172, 200, 675)
  */
 BAD_RETURN(s32) cam_bbh_room_5_library(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, -2172, 200, 675);
 }
 
@@ -6096,52 +6147,62 @@ BAD_RETURN(s32) cam_bbh_room_5_library(struct Camera *c) {
  * if coming from the library.
  */
 BAD_RETURN(s32) cam_bbh_room_5_library_to_hidden_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, -2172, 200, 675) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_5_hidden_to_library_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, -1542, 320, -307) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_5_hidden(struct Camera *c) {
+    if (!c) { return; }
     c->doorStatus = DOOR_LEAVING_SPECIAL;
     set_camera_mode_fixed(c, -1542, 320, -307);
 }
 
 BAD_RETURN(s32) cam_bbh_room_3(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, -1893, 320, 2327);
 }
 
 BAD_RETURN(s32) cam_bbh_room_7_mr_i(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 1371, 360, -1302);
 }
 
 BAD_RETURN(s32) cam_bbh_room_7_mr_i_to_coffins_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, 1371, 360, -1302) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_7_coffins_to_mr_i_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, 2115, 260, -772) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_elevator_room_lower(struct Camera *c) {
+    if (!c) { return; }
     c->doorStatus = DOOR_LEAVING_SPECIAL;
     set_camera_mode_close_cam(&c->mode);
 }
 
 BAD_RETURN(s32) cam_bbh_room_0_back_entrance(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_close_cam(&c->mode);
 }
 
 BAD_RETURN(s32) cam_bbh_elevator(struct Camera *c) {
+    if (!c) { return; }
     if (c->mode == CAMERA_MODE_FIXED) {
         set_camera_mode_close_cam(&c->mode);
         c->pos[1] = -405.f;
@@ -6150,55 +6211,66 @@ BAD_RETURN(s32) cam_bbh_elevator(struct Camera *c) {
 }
 
 BAD_RETURN(s32) cam_bbh_room_12_upper(struct Camera *c) {
+    if (!c) { return; }
     c->doorStatus = DOOR_LEAVING_SPECIAL;
     set_camera_mode_fixed(c, -2932, 296, 4429);
 }
 
 BAD_RETURN(s32) cam_bbh_enter_front_door(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_close_cam(&c->mode);
 }
 
 BAD_RETURN(s32) cam_bbh_room_2_library(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 3493, 440, 617);
 }
 
 BAD_RETURN(s32) cam_bbh_room_2_library_to_trapdoor_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, 3493, 440, 617) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_2_trapdoor(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 3502, 440, 1217);
 }
 
 BAD_RETURN(s32) cam_bbh_room_2_trapdoor_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, 3502, 440, 1217) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_9_attic(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, -670, 460, 372);
 }
 
 BAD_RETURN(s32) cam_bbh_room_9_attic_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, -670, 460, 372) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_9_mr_i_transition(struct Camera *c) {
+    if (!c) { return; }
     if (set_camera_mode_fixed(c, 131, 380, -263) == 1) {
         transition_next_state(c, 20);
     }
 }
 
 BAD_RETURN(s32) cam_bbh_room_13_balcony(struct Camera *c) {
+    if (!c) { return; }
     set_camera_mode_fixed(c, 210, 420, 3109);
 }
 
 BAD_RETURN(s32) cam_bbh_room_0(struct Camera *c) {
+    if (!c) { return; }
     c->doorStatus = DOOR_LEAVING_SPECIAL;
     set_camera_mode_fixed(c, -204, 807, 204);
 }
@@ -6215,6 +6287,7 @@ BAD_RETURN(s32) cam_ccm_leave_slide_shortcut(UNUSED struct Camera *c) {
  * Apply any modes that are triggered by special floor surface types
  */
 u32 surface_type_modes(struct Camera *c) {
+    if (!c) { return 0; }
     u32 modeChanged = 0;
 
     switch (sMarioGeometry.currFloorType) {
@@ -6650,6 +6723,7 @@ static struct CameraTrigger* get_camera_trigger(s16 levelNum) {
  * @return the camera's mode after processing, although this is unused in the code
  */
 s16 camera_course_processing(struct Camera *c) {
+    if (!c) { return 0; }
     if (!gCameraUseCourseSpecificSettings) { return 0; }
     s16 level = gCurrLevelNum;
     s16 mode;
@@ -6977,7 +7051,8 @@ s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 
  * Note: Also finds the water level, but waterHeight is unused
  */
 void find_mario_floor_and_ceil(struct PlayerGeometry *pg) {
-    struct Surface *surf;
+    if (!pg) { return; }
+    struct Surface *surf = NULL;
     s16 tempCheckingSurfaceCollisionsForCamera = gCheckingSurfaceCollisionsForCamera;
     gCheckingSurfaceCollisionsForCamera = TRUE;
 

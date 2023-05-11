@@ -91,6 +91,7 @@ static Vec4s sJumboStarKeyframes[27] = {
  * that's the end of the string.
  */
 s32 get_credits_str_width(char *str) {
+    if (!str) { return 0; }
     u32 c;
     s32 length = 0;
 
@@ -240,6 +241,7 @@ static void stub_is_textbox_active(u16 *a0) {
  * numStars has reached a milestone and prevNumStarsForDialog has not reached it.
  */
 s32 get_star_collection_dialog(struct MarioState *m) {
+    if (!m) { return 0; }
     s32 dialogID = 0;
 
     if (smlua_call_event_hooks_ret_int(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
@@ -272,6 +274,8 @@ s32 get_star_collection_dialog(struct MarioState *m) {
 
 // save menu handler
 void handle_save_menu(struct MarioState *m) {
+    if (!m) { return; }
+
     // wait for the menu to show up
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
@@ -310,6 +314,7 @@ void handle_save_menu(struct MarioState *m) {
  * and yaw plus relative yaw.
  */
 struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, const BehaviorScript *behavior, s16 relYaw) {
+    if (!m || !behavior) { return NULL; }
     struct Object *o = spawn_object(m->marioObj, model, behavior);
     if (o == NULL) { return NULL; }
 
@@ -327,6 +332,7 @@ struct Object *spawn_obj_at_mario_rel_yaw(struct MarioState *m, s32 model, const
  * SOUND_ACTION_UNKNOWN43D.
  */
 void cutscene_take_cap_off(struct MarioState *m) {
+    if (!m) { return; }
     m->flags &= ~MARIO_CAP_ON_HEAD;
     m->flags |= MARIO_CAP_IN_HAND;
     play_sound(SOUND_ACTION_UNKNOWN43D, m->marioObj->header.gfx.cameraToObject);
@@ -338,6 +344,7 @@ void cutscene_take_cap_off(struct MarioState *m) {
  * SOUND_ACTION_UNKNOWN43E.
  */
 void cutscene_put_cap_on(struct MarioState *m) {
+    if (!m) { return; }
     m->flags &= ~MARIO_CAP_IN_HAND;
     m->flags |= MARIO_CAP_ON_HEAD;
     play_sound(SOUND_ACTION_UNKNOWN43E, m->marioObj->header.gfx.cameraToObject);
@@ -353,6 +360,7 @@ void cutscene_put_cap_on(struct MarioState *m) {
  * 3: Mario must not be in first person mode.
  */
 s32 mario_ready_to_speak(struct MarioState* m) {
+    if (!m) { return FALSE; }
     u32 actionGroup = m->action & ACT_GROUP_MASK;
     s32 isReadyToSpeak = FALSE;
 
@@ -367,6 +375,7 @@ s32 mario_ready_to_speak(struct MarioState* m) {
 }
 
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
+    if (!m) { return FALSE; }
     if (!m->visibleToEnemies) { return FALSE; }
     if (m->playerIndex == 0) { return TRUE; }
     return (gContinueDialogFunctionObject == object);
@@ -379,6 +388,8 @@ u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) 
 // 1 = starting dialog
 // 2 = speaking
 s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
+    if (!m) { return 0; }
+
     s32 dialogState = 0;
 
     if (m->playerIndex == 0) {
@@ -424,6 +435,7 @@ s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDia
 // 9 - 22: looking away from npc
 // 23: end
 s32 act_reading_npc_dialog(struct MarioState *m) {
+    if (!m) { return 23; }
     s32 headTurnAmount = 0;
     s16 angleToNPC;
 
@@ -1820,6 +1832,7 @@ s32 act_putting_on_cap(struct MarioState *m) {
 
 void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2,
                              s32 target3, s32 endAction) {
+    if (!m) { return; }
     s32 animFrame = set_mario_animation(m, animation);
 
     if (m->input & INPUT_A_PRESSED) {
@@ -2984,6 +2997,8 @@ static s32 check_for_instant_quicksand(struct MarioState *m) {
 }
 
 s32 mario_execute_cutscene_action(struct MarioState *m) {
+    if (!m) { return FALSE; }
+
     s32 cancel;
 
     if (check_for_instant_quicksand(m)) {

@@ -332,6 +332,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
 }
 
 s32 perform_ground_step(struct MarioState *m) {
+    if (!m) { return 0; }
     s32 i;
     u32 stepResult;
     Vec3f intendedPos;
@@ -682,6 +683,7 @@ void apply_vertical_wind(struct MarioState *m) {
 }
 
 s32 perform_air_step(struct MarioState *m, u32 stepArg) {
+    if (!m) { return 0; }
     Vec3f intendedPos;
     s32 i;
     s32 quarterStepResult;

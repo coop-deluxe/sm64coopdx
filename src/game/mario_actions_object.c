@@ -483,6 +483,7 @@ s32 check_common_object_cancels(struct MarioState *m) {
 }
 
 s32 mario_execute_object_action(struct MarioState *m) {
+    if (!m) { return FALSE; }
     s32 cancel;
 
     if (check_common_object_cancels(m)) {

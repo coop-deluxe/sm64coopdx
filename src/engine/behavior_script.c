@@ -1195,8 +1195,10 @@ static s32 bhv_cmd_load_collision_data_ext(void) {
 void stub_behavior_script_2(void) {
 }
 
+#define BEHAVIOR_CMD_TABLE_MAX 66
+
 typedef s32 (*BhvCommandProc)(void);
-static BhvCommandProc BehaviorCmdTable[] = {
+static BhvCommandProc BehaviorCmdTable[BEHAVIOR_CMD_TABLE_MAX] = {
     bhv_cmd_begin, //00
     bhv_cmd_delay, //01
     bhv_cmd_call,  //02
@@ -1344,7 +1346,11 @@ cur_obj_update_begin:;
     if (!skipBehavior) {
         do {
             if (!gCurBhvCommand) { break; }
-            bhvCmdProc = BehaviorCmdTable[*gCurBhvCommand >> 24];
+
+            u32 index = *gCurBhvCommand >> 24;
+            if (index >= BEHAVIOR_CMD_TABLE_MAX) { break; }
+
+            bhvCmdProc = BehaviorCmdTable[index];
             bhvProcResult = bhvCmdProc();
         } while (bhvProcResult == BHV_PROC_CONTINUE);
     }

@@ -179,6 +179,7 @@ void apply_water_current(struct MarioState *m, Vec3f step) {
 }
 
 u32 perform_water_step(struct MarioState *m) {
+    if (!m) { return 0; }
     UNUSED u32 unused;
     u32 stepResult;
     Vec3f nextPos;
@@ -1588,6 +1589,7 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
 }
 
 s32 mario_execute_submerged_action(struct MarioState *m) {
+    if (!m) { return FALSE; }
     s32 cancel;
 
     if (check_common_submerged_cancels(m)) {

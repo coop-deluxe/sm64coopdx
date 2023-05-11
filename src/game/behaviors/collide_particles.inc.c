@@ -56,7 +56,9 @@ void bhv_tiny_star_particles_init(void) {
     for (i = 0; i < 7; i++) {
         particle = spawn_object(o, MODEL_CARTOON_STAR, bhvWallTinyStarParticle);
         if (particle == NULL) { continue; }
-        particle->oMoveAngleYaw = o->parentObj->oMoveAngleYaw + D_8032F2E4[2 * i] + 0x8000;
+        if (o->parentObj) {
+            particle->oMoveAngleYaw = o->parentObj->oMoveAngleYaw + D_8032F2E4[2 * i] + 0x8000;
+        }
         particle->oVelY = sins(D_8032F2E4[2 * i + 1]) * 25.0f;
         particle->oForwardVel = coss(D_8032F2E4[2 * i + 1]) * 25.0f;
     }

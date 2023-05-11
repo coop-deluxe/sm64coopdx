@@ -322,6 +322,7 @@ void mario_grab_used_object(struct MarioState *m) {
 }
 
 void mario_drop_held_object(struct MarioState *m) {
+    if (!m) { return; }
     if (m->playerIndex != 0) { return; }
 
     if (m->heldObj != NULL) {
@@ -351,6 +352,7 @@ void mario_drop_held_object(struct MarioState *m) {
 }
 
 void mario_throw_held_object(struct MarioState *m) {
+    if (!m) { return; }
     if (m->playerIndex != 0) { return; }
 
     if (m->heldObj != NULL) {
@@ -377,6 +379,7 @@ void mario_throw_held_object(struct MarioState *m) {
 }
 
 void mario_stop_riding_and_holding(struct MarioState *m) {
+    if (!m) { return; }
     mario_drop_held_object(m);
     mario_stop_riding_object(m);
 
@@ -387,10 +390,12 @@ void mario_stop_riding_and_holding(struct MarioState *m) {
 }
 
 u32 does_mario_have_normal_cap_on_head(struct MarioState *m) {
+    if (!m) { return FALSE; }
     return (m->flags & (MARIO_CAPS | MARIO_CAP_ON_HEAD)) == (MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 }
 
 void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
+    if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     struct Object *capObject;
 
@@ -423,6 +428,7 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
 }
 
 u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg) {
+    if (!m) { return FALSE; }
     if (m->playerIndex != 0) { return FALSE; }
     u32 wasWearingCap = FALSE;
 
@@ -436,6 +442,7 @@ u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg) {
 }
 
 void mario_retrieve_cap(struct MarioState* m) {
+    if (!m) { return; }
     mario_drop_held_object(m);
     save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI);
     m->flags &= ~MARIO_CAP_ON_HEAD;
@@ -443,6 +450,7 @@ void mario_retrieve_cap(struct MarioState* m) {
 }
 
 u32 able_to_grab_object(struct MarioState *m, UNUSED struct Object *o) {
+    if (!m || !o) { return FALSE; }
     u32 action = m->action;
 
     if (action == ACT_DIVE_SLIDE || action == ACT_DIVE) {

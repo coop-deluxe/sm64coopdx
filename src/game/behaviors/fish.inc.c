@@ -80,6 +80,7 @@ void bhv_fish_spawner_loop(void) {
  * Allows the fish to swim vertically.
  */
 static void fish_vertical_roam(s32 speed) {
+    if (!o->parentObj) { return; }
     f32 parentY = o->parentObj->oPosY;
 
     // If the stage is Secret Aquarium, the fish can 
